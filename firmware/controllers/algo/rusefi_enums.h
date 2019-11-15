@@ -131,7 +131,7 @@ typedef enum {
 
 	LADA_KALINA = 39,
 
-	GEO_STORM = 40,
+	BMW_M73 = 40,
 
 	// Frankenso board
 	MIATA_NA6_MAP = 41,

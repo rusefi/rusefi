@@ -46,6 +46,9 @@
  * ECU pin 40: OUT YEL/BRN BRN starter enable
  *
  *
+ * set engine_type 40
+ *
+ *
  * @date Nov 1, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
@@ -61,6 +64,15 @@ void setEngineBMW_M73(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.displacement = 5.4;
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
+
+	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->camInputs[0] = GPIOC_6;
+	engineConfiguration->vvtMode = VVT_FIRST_HALF;
+
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	engineConfiguration->trigger.type = TT_60_2_VW;
+
 
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
