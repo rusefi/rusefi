@@ -63,7 +63,6 @@
 #include "citroenBerlingoTU3JP.h"
 #include "rover_v8.h"
 #include "mitsubishi.h"
-#include "prometheus.h"
 #include "subaru.h"
 #include "test_engine.h"
 #include "sachs.h"
@@ -1069,6 +1068,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MRE_MIATA_NB2:
 		setMiataNB2_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case PROMETHEUS_DEFAULTS:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		break;
@@ -1225,9 +1225,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case MAZDA_MIATA_2003_BOARD_TEST:
 		setMazdaMiata2003EngineConfigurationBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case PROMETHEUS_DEFAULTS:
-		setPrometheusDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SUBARUEJ20G_DEFAULTS:
 		setSubaruEJ20GDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
