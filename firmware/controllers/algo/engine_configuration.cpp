@@ -38,6 +38,7 @@
 #include "custom_engine.h"
 #include "engine_template.h"
 #include "bmw_e34.h"
+#include "bmw_m73.h"
 
 #include "dodge_neon.h"
 #include "dodge_ram.h"
@@ -1053,9 +1054,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	 */
 	switch (engineType) {
 	case DEFAULT_FRANKENSO:
-	case GEO_STORM:
 	case FRANKENSO_QA_ENGINE:
 		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73:
+		setEngineBMW_M73(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NA6:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);

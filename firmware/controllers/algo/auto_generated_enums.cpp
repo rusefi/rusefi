@@ -707,8 +707,8 @@ case FRANKENSO_QA_ENGINE:
   return "FRANKENSO_QA_ENGINE";
 case Force_4_bytes_size_engine_type:
   return "Force_4_bytes_size_engine_type";
-case GEO_STORM:
-  return "GEO_STORM";
+case BMW_M73:
+  return "BMW_M73";
 case MRE_BOARD_TEST:
   return "MRE_BOARD_TEST";
 case GY6_139QMB:
