@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef ADC_AVERAGING_H_
-#define ADC_AVERAGING_H_
+#pragma once
 
 #include "engine.h"
 
@@ -24,5 +23,3 @@ void postMapState(TunerStudioOutputChannels *tsOutputChannels);
 #endif
 
 #endif /* EFI_MAP_AVERAGING */
-
-#endif /* ADC_AVERAGING_H_ */
