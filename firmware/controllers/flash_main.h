@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef FLASH_MAIN_H_
-#define FLASH_MAIN_H_
+#pragma once
 
 #include "engine.h"
 
@@ -38,5 +37,3 @@ void setNeedToWriteConfiguration(void);
  */
 bool getNeedToWriteConfiguration(void);
 void writeToFlashIfPending(void);
-
-#endif /* FLASH_MAIN_H_ */

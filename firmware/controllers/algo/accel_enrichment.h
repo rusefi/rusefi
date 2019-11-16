@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef ACC_ENRICHMENT_H_
-#define ACC_ENRICHMENT_H_
+#pragma once
 
 #include "global.h"
 #include "cyclic_buffer.h"
@@ -93,6 +92,3 @@ void setDecelThr(float value);
 void setDecelMult(float value);
 
 void updateAccelParameters();
-
-#endif /* ACC_ENRICHMENT_H_ */
-

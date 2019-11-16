@@ -8,8 +8,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef RUSEFI_ENUMS_H_
-#define RUSEFI_ENUMS_H_
+#pragma once
 
 #include "efifeatures.h"
 #include "obd_error_codes.h"
@@ -131,7 +130,7 @@ typedef enum {
 
 	LADA_KALINA = 39,
 
-	GEO_STORM = 40,
+	BMW_M73 = 40,
 
 	// Frankenso board
 	MIATA_NA6_MAP = 41,
@@ -839,5 +838,3 @@ typedef enum {
 	 */
 	Force_4bytes_size_idle_state_e = ENUM_32_BITS,
 } idle_state_e;
-
-#endif /* RUSEFI_ENUMS_H_ */

@@ -32,11 +32,11 @@
  * ECU pin 22: IN  RED/BRN GRN CLT sensor
  * ECU pin 27: OUT             injector #6
  * ECU pin 28: OUT             injector #5
- * ECU pin 32: IN          ORG VR crankshaft sensor
+ * ECU pin 32: IN          ORG VR positive crankshaft sensor - only 2x 5k per channel, R111 not installed, W1002 not installed
  * ECU pin 40: OUT BRN/BLK     injector #3
  * ECU pin 41: OUT BRN/WHT     injector #1
  * ECU pin 45: GND             crankshaft shield
- * ECU pin 46: IN  BLK     BLU VR crankshaft sensor
+ * ECU pin 46: IN  BLK     BLU VR negative crankshaft sensor
  *
  *
  * Plug #4 40 pin
@@ -44,6 +44,9 @@
  * ECU pin 17: OUT BLK         engine speed output for gauge cluster
  * ECU pin 26: IN  GRN/BLK RED +12 hot in start & run
  * ECU pin 40: OUT YEL/BRN BRN starter enable
+ *
+ *
+ * set engine_type 40
  *
  *
  * @date Nov 1, 2019
@@ -61,6 +64,15 @@ void setEngineBMW_M73(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.displacement = 5.4;
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
+
+	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->camInputs[0] = GPIOC_6;
+	engineConfiguration->vvtMode = VVT_FIRST_HALF;
+
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	engineConfiguration->trigger.type = TT_60_2_VW;
+
 
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
