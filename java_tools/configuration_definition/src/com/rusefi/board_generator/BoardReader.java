@@ -45,6 +45,7 @@ public class BoardReader {
 
         Yaml yaml = new Yaml();
         Map<String, Object> data = yaml.load(new FileReader(firmwarePath + "/config/boards/" + boardName + "/mapping.yaml"));
+        Objects.requireNonNull(data, "mapping for " + boardName);
         SystemOut.println(data);
 
 
@@ -60,10 +61,12 @@ public class BoardReader {
     }
 
     private static String processSection(Map<String, Object> data, String headerEnumName, String outputEnumName, String sectionName, String NOTHING_NAME) {
+        Objects.requireNonNull(data, "data");
         Map<String, Object> outputs = (Map<String, Object>) data.get(sectionName);
         if (outputs == null)
             return "";
 
+        Objects.requireNonNull(data, "enums");
         Map<String, Value> enumMap = EnumsReader.enums.get(headerEnumName);
         Objects.requireNonNull(enumMap, "enum for " + headerEnumName);
         SystemOut.println(enumMap.size());
