@@ -7,7 +7,9 @@ cd ../../../..
 
 pwd
 
-java -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definition/lib/snakeyaml.jar ^
+java ^
+ -DSystemOut.name=gen_config ^
+ -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definition/lib/snakeyaml.jar ^
  com.rusefi.board_generator.BoardReader ^
  -board kinetis ^
  -firmware_path . ^
@@ -17,7 +19,9 @@ java -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definiti
 
 mkdir build_kinetis
 
-java -jar ../java_tools/ConfigDefinition.jar ^
+java ^
+ -DSystemOut.name=gen_config ^
+ -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration/rusefi_config.txt ^
  -ts_destination tunerstudio ^
  -ts_output_name rusefi_kinetis.ini ^
