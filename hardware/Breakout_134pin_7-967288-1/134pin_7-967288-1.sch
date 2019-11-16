@@ -5,8 +5,8 @@ EELAYER END
 $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
-Title "Breakout board"
-Date "2019-11-10"
+Title "134pin 7-967288-1 Breakout board"
+Date "2019-11-16"
 Rev "R0.1"
 Comp "rusEFI.com"
 Comment1 "DAECU"
@@ -897,4 +897,40 @@ F 3 "~" H 6550 4175 50  0001 C CNN
 	1    6550 4175
 	-1   0    0    -1  
 $EndComp
+$Comp
+L power:GND #PWR01
+U 1 1 5DD0B38F
+P 1100 7725
+F 0 "#PWR01" H 1100 7475 50  0001 C CNN
+F 1 "GND" H 1105 7552 50  0000 C CNN
+F 2 "" H 1100 7725 50  0001 C CNN
+F 3 "" H 1100 7725 50  0001 C CNN
+	1    1100 7725
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J37
+U 1 1 5DD1444D
+P 1100 7525
+F 0 "J37" V 1018 7437 50  0000 R CNN
+F 1 "Conn_01x01" V 973 7437 50  0001 R CNN
+F 2 "TestPoint:TestPoint_Keystone_5000-5004_Miniature" H 1100 7525 50  0001 C CNN
+F 3 "~" H 1100 7525 50  0001 C CNN
+	1    1100 7525
+	0    -1   -1   0   
+$EndComp
+Text Label 1100 7725 0    50   ~ 0
+GND
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 5DD43FA1
+P 1100 7725
+F 0 "#FLG0101" H 1100 7800 50  0001 C CNN
+F 1 "PWR_FLAG" V 1100 7852 50  0000 L CNN
+F 2 "" H 1100 7725 50  0001 C CNN
+F 3 "~" H 1100 7725 50  0001 C CNN
+	1    1100 7725
+	0    -1   -1   0   
+$EndComp
+Connection ~ 1100 7725
 $EndSCHEMATC
