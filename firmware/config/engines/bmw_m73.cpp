@@ -73,6 +73,33 @@ void setEngineBMW_M73(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_60_2_VW;
 
+	CONFIGB(idle).solenoidPin = GPIO_UNASSIGNED;
+	CONFIGB(mainRelayPin) = GPIO_UNASSIGNED;
+	CONFIGB(fanPin) = GPIO_UNASSIGNED;
+	CONFIGB(fuelPumpPin) = GPIO_UNASSIGNED;
+
+
+	engineConfiguration->ignitionMode = IM_TWO_COILS;
+	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+
+
+	boardConfiguration->injectionPins[0] = GPIOB_8;
+	boardConfiguration->injectionPins[1] = GPIOB_7;
+	boardConfiguration->injectionPins[2] = GPIOB_9;
+	boardConfiguration->injectionPins[3] = GPIOD_5;
+	boardConfiguration->injectionPins[4] = GPIOD_3;
+	boardConfiguration->injectionPins[5] = GPIOE_2;
+
+	boardConfiguration->injectionPins[6] = GPIOE_3;
+	boardConfiguration->injectionPins[7] = GPIOE_4;
+	boardConfiguration->injectionPins[8] = GPIOE_5;
+	boardConfiguration->injectionPins[9] = GPIOE_6;
+	boardConfiguration->injectionPins[10] = GPIOC_13;
+	boardConfiguration->injectionPins[11] = GPIOD_7;
+
 
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info

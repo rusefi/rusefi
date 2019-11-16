@@ -445,6 +445,8 @@ int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (mode) {
 	case IM_ONE_COIL:
 		return engineConfiguration->specs.cylindersCount;
+	case IM_TWO_COILS:
+		return engineConfiguration->specs.cylindersCount / 2;
 	case IM_INDIVIDUAL_COILS:
 		return 1;
 	case IM_WASTED_SPARK:
