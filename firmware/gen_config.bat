@@ -49,3 +49,6 @@ call gen_config_board prometheus
 IF NOT ERRORLEVEL 0 echo ERROR generating
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
+
+cd config\boards\kinetis\config
+!gen_config.bat

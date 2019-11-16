@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Nov 06 16:44:09 EET 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 16 14:43:20 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -454,6 +454,12 @@
 #define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"
 #define debugMode_offset 2092
 #define debugMode_offset_hex 82c
+#define debugSetTimer_offset 806
+#define debugSetTimer_offset_hex 326
+#define debugTimerCallback_offset 711
+#define debugTimerCallback_offset_hex 2c7
+#define debugTriggerSync_offset 676
+#define debugTriggerSync_offset_hex 2a4
 #define DIGIPOT_COUNT 4
 #define digitalPotentiometerChipSelect1_offset 668
 #define digitalPotentiometerChipSelect1_offset_hex 29c
@@ -1888,8 +1894,6 @@
 #define uartConsoleSerialSpeed_offset_hex 81c
 #define unrealisticRpmThreashold_offset 760
 #define unrealisticRpmThreashold_offset_hex 2f8
-#define unused1133_offset 676
-#define unused1133_offset_hex 2a4
 #define unused1234234_offset 2042
 #define unused1234234_offset_hex 7fa
 #define unused_1484_bit_21_offset 1476
@@ -1930,12 +1934,10 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1768
 #define unusedFormerWarmupAfrPid_offset_hex 6e8
-#define unusedMa2_offset 711
-#define unusedMa2_offset_hex 2c7
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
-#define unusedSpiPadding2_offset 806
-#define unusedSpiPadding2_offset_hex 326
+#define unusedSpiPadding2_offset 807
+#define unusedSpiPadding2_offset_hex 327
 #define unusedSpiPadding3_offset 4036
 #define unusedSpiPadding3_offset_hex fc4
 #define unusedSpiPadding4_offset 2593
@@ -2634,7 +2636,7 @@ struct board_configuration_s {
 	/**
 	 * offset 76
 	 */
-	brain_pin_e unused1133;
+	brain_pin_e debugTriggerSync;
 	/**
 	 * Digital Potentiometer is used by stock ECU stimulation code
 	 * offset 77
@@ -2709,7 +2711,7 @@ struct board_configuration_s {
 	/**
 	 * offset 111
 	 */
-	uint8_t unusedMa2 = (uint8_t)0;
+	brain_pin_e debugTimerCallback;
 	/**
 	 * offset 112
 	 */
@@ -2907,7 +2909,11 @@ struct board_configuration_s {
 	/**
 	 * offset 206
 	 */
-	uint8_t unusedSpiPadding2[2];
+	brain_pin_e debugSetTimer;
+	/**
+	 * offset 207
+	 */
+	uint8_t unusedSpiPadding2 = (uint8_t)0;
 	/**
 	 * offset 208
 	 */
@@ -4941,4 +4947,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Nov 06 16:44:09 EET 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 16 14:43:20 EST 2019

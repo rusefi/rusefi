@@ -5,6 +5,8 @@ rem the storage section of rusefi.ini is updated as well
 
 cd ../../../..
 
+pwd
+
 java -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definition/lib/snakeyaml.jar ^
  com.rusefi.board_generator.BoardReader ^
  -board kinetis ^
@@ -12,6 +14,8 @@ java -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definiti
  -out config/boards/kinetis/config/tunerstudio ^
  -enumInputFile controllers/algo/rusefi_enums.h ^
  -enumInputFile config/boards/kinetis/rusefi_hw_enums.h
+
+mkdir build_kinetis
 
 java -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration/rusefi_config.txt ^
