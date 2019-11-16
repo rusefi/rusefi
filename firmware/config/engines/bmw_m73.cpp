@@ -32,11 +32,11 @@
  * ECU pin 22: IN  RED/BRN GRN CLT sensor
  * ECU pin 27: OUT             injector #6
  * ECU pin 28: OUT             injector #5
- * ECU pin 32: IN          ORG VR crankshaft sensor
+ * ECU pin 32: IN          ORG VR positive crankshaft sensor - only 2x 5k per channel, R111 not installed, W1002 not installed
  * ECU pin 40: OUT BRN/BLK     injector #3
  * ECU pin 41: OUT BRN/WHT     injector #1
  * ECU pin 45: GND             crankshaft shield
- * ECU pin 46: IN  BLK     BLU VR crankshaft sensor
+ * ECU pin 46: IN  BLK     BLU VR negative crankshaft sensor
  *
  *
  * Plug #4 40 pin
