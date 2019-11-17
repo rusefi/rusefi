@@ -7,9 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-
 #include "engine_test_helper.h"
-
 
 TEST(fuel, testWallWettingEnrichmentMath) {
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);

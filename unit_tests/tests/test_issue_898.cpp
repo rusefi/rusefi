@@ -6,6 +6,7 @@
  */
 
 #include "engine_test_helper.h"
+
 extern WarningCodeState unitTestWarningCodeState;
 
 static void boardConfigurationForIssue898(engine_configuration_s *engineConfiguration) {
