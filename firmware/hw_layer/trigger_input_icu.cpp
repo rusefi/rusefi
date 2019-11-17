@@ -80,7 +80,7 @@ static void shaftPeriodCallback(bool isPrimary) {
 }
 
 void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
-
+	(void)msg;
 	brain_pin_e brainPin = isTriggerShaft ? CONFIGB(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 	if (brainPin == GPIO_UNASSIGNED) {
 		return;
@@ -103,7 +103,7 @@ void turnOffTriggerInputPin(brain_pin_e brainPin) {
 }
 
 void setPrimaryChannel(brain_pin_e brainPin) {
-
+	(void)brainPin;
 }
 
 /*==========================================================================*/
