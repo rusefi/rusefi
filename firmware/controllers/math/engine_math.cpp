@@ -440,7 +440,7 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 /**
- * @param cylinderIndex from 9 to cylinderCount, not cylinder number
+ * @param cylinderIndex from 0 to cylinderCount, not cylinder number
  */
 static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
