@@ -326,7 +326,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	}
 }
 
-static void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	IgnitionEventList *list = &engine->ignitionEvents;
 	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
 	floatms_t sparkDwell = ENGINE(engineState.sparkDwell);
