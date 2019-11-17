@@ -306,11 +306,11 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
  * read log file content for rusEfi console
  */
 static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, short offset, short length) {
-#if EFI_FILE_LOGGING
-	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
-#else
+//#if EFI_FILE_LOGGING
+//	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
+//#else
 	UNUSED(tsChannel); UNUSED(fileId); UNUSED(offset); UNUSED(length);
-#endif /* EFI_FILE_LOGGING */
+//#endif /* EFI_FILE_LOGGING */
 }
 
 /**
