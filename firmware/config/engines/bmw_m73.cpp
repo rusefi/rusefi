@@ -81,10 +81,11 @@ void setEngineBMW_M73(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	engineConfiguration->ignitionMode = IM_TWO_COILS;
-	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[ID2INDEX(1)] = GPIOE_14; // Frankenso high side - pin 1G
+	boardConfiguration->ignitionPins[ID2INDEX(2)] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[ID2INDEX(3)] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[ID2INDEX(4)] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[ID2INDEX(7)] = GPIOC_7; // Frankenso high side - pin 1H
 
 
 	boardConfiguration->injectionPins[0] = GPIOB_8;
