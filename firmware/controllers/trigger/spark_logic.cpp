@@ -326,7 +326,8 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	}
 }
 
-static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	IgnitionEventList *list = &engine->ignitionEvents;
 	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
 	floatms_t sparkDwell = ENGINE(engineState.sparkDwell);
 	if (cisnan(ENGINE(engineState.timingAdvance)) || cisnan(dwellAngle)) {
@@ -373,9 +374,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 
 	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
 
-	IgnitionEventList *list = &engine->ignitionEvents;
-
-	initializeIgnitionActions(list PASS_ENGINE_PARAMETER_SUFFIX);
+	initializeIgnitionActions(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->m.ignitionSchTime = getTimeNowLowerNt() - engine->m.beforeIgnitionSch;
 }
 
