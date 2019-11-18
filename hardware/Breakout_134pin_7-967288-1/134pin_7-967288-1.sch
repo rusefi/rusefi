@@ -933,4 +933,102 @@ F 3 "~" H 1100 7725 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 Connection ~ 1100 7725
+Text Label 2275 775  0    50   ~ 0
+101
+Text Label 2275 1575 0    50   ~ 0
+109
+Text Label 2250 3575 0    50   ~ 0
+201
+Text Label 2250 4075 0    50   ~ 0
+206
+Text Label 2250 4175 0    50   ~ 0
+207
+Text Label 2250 4675 0    50   ~ 0
+212
+Text Label 2250 4775 0    50   ~ 0
+213
+Text Label 2250 5275 0    50   ~ 0
+218
+Text Label 2250 5375 0    50   ~ 0
+219
+Text Label 2250 5875 0    50   ~ 0
+224
+Text Label 4700 5875 0    50   ~ 0
+352
+Text Label 4700 4675 0    50   ~ 0
+340
+Text Label 4700 5175 0    50   ~ 0
+345
+Text Label 4700 5675 0    50   ~ 0
+350
+Text Label 4700 4575 0    50   ~ 0
+339
+Text Label 4700 4175 0    50   ~ 0
+335
+Text Label 4700 3675 0    50   ~ 0
+330
+Text Label 4700 3375 0    50   ~ 0
+327
+Text Label 4700 3275 0    50   ~ 0
+326
+Text Label 4700 3175 0    50   ~ 0
+325
+Text Label 4700 2675 0    50   ~ 0
+320
+Text Label 4700 2175 0    50   ~ 0
+315
+Text Label 4700 2075 0    50   ~ 0
+314
+Text Label 4700 1975 0    50   ~ 0
+313
+Text Label 4700 1675 0    50   ~ 0
+310
+Text Label 4700 1175 0    50   ~ 0
+305
+Text Label 4700 775  0    50   ~ 0
+301
+Text Label 7050 775  0    50   ~ 0
+401
+Text Label 7050 1175 0    50   ~ 0
+405
+Text Label 7050 1675 0    50   ~ 0
+410
+Text Label 7050 1775 0    50   ~ 0
+411
+Text Label 7050 2175 0    50   ~ 0
+415
+Text Label 7050 2675 0    50   ~ 0
+420
+Text Label 7050 2775 0    50   ~ 0
+421
+Text Label 7050 3175 0    50   ~ 0
+425
+Text Label 7050 3675 0    50   ~ 0
+430
+Text Label 7050 3775 0    50   ~ 0
+431
+Text Label 7050 4175 0    50   ~ 0
+435
+Text Label 7050 4675 0    50   ~ 0
+440
+Text Label 7050 5075 0    50   ~ 0
+501
+Text Label 7050 5275 0    50   ~ 0
+503
+Text Label 7050 5375 0    50   ~ 0
+504
+Text Label 7050 5575 0    50   ~ 0
+506
+Text Label 7050 5675 0    50   ~ 0
+507
+Text Label 7050 5875 0    50   ~ 0
+509
+Text Label 2275 975  0    50   ~ 0
+103
+Text Label 2275 1075 0    50   ~ 0
+104
+Text Label 2275 1275 0    50   ~ 0
+106
+Text Label 2275 1375 0    50   ~ 0
+107
 $EndSCHEMATC
