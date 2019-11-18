@@ -46,6 +46,12 @@
  * ECU pin 40: OUT YEL/BRN BRN starter enable
  *
  *
+ * Plug #5 9 pin
+ * ECU pic 3:  OUT BLK         coil signal, low-side
+ * ECU pic 5:  GND BRN         ground
+ * ECU pic 6:  OUT BLK         coil signal, low-side
+ * ECU pic 9:  OUT BLK         coil signal, low-side
+ *
  * set engine_type 40
  *
  *
@@ -70,6 +76,8 @@ void setEngineBMW_M73(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIOC_6;
 	engineConfiguration->vvtMode = VVT_FIRST_HALF;
+
+	engineConfiguration->globalTriggerAngleOffset = 90;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_60_2_VW;
