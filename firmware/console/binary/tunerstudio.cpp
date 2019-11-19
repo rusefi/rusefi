@@ -720,7 +720,7 @@ static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomi
  */
 bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	// Bail fast if guaranteed not to be a plain command
-	if(command == 0)
+	if (command == 0)
 	{
 		return false;
 	}

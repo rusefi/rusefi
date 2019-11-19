@@ -32,16 +32,14 @@ bool TwoPinDcMotor::Set(float duty)
 
     bool isPositive = duty > 0;
 
-    if(!isPositive)
-    {
+    if (!isPositive) {
         duty = -duty;
     }
 
     // below here 'duty' is a not negative
 
     // Clamp to 100%
-    if(duty > 1.0f)
-    {
+    if (duty > 1.0f) {
         duty = 1.0f;
     }
     // Disable for very small duty
