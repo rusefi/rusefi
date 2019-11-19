@@ -52,8 +52,10 @@
  * ECU pic 6:  OUT BLK         coil signal, low-side
  * ECU pic 9:  OUT BLK         coil signal, low-side
  *
+ * Frankenso
  * set engine_type 40
- *
+ * Manhattan
+ * set engine_type 24
  *
  * @date Nov 1, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
@@ -119,6 +121,7 @@ void setEngineBMW_M73_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->injectionPins[11] = GPIOD_7;
 }
 
+// BMW_M73_M
 void setEngineBMW_M73_Manhattan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
 
