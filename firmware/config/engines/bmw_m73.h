@@ -9,4 +9,5 @@
 
 #include "engine_configuration.h"
 
-void setEngineBMW_M73(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setEngineBMW_M73_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setEngineBMW_M73_Manhattan(DECLARE_CONFIG_PARAMETER_SIGNATURE);

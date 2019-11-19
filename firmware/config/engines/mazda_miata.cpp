@@ -8,8 +8,7 @@
  * MIATA_1990 = 19 (Frankenstein board)
  * MIATA_1994_DEVIATOR = 20
  * MIATA_1996 = 21
- * MIATA_1994_SPAGS = 24
- * set engine_type 24
+ * set engine_type 21
  *
  * @date Apr 11, 2014
  * @author Andrey Belomutskiy, (c) 2012-2018

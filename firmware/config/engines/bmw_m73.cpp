@@ -64,23 +64,32 @@
 
 EXTERN_CONFIG;
 
-// BMW_M73
-void setEngineBMW_M73(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+static void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	// 13641435991 injector
+	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.displacement = 5.4;
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
 
-	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIOC_6;
 	engineConfiguration->vvtMode = VVT_FIRST_HALF;
 
 	engineConfiguration->globalTriggerAngleOffset = 90;
-
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_60_2_VW;
+
+	engineConfiguration->ignitionMode = IM_TWO_COILS;
+}
+
+
+// BMW_M73_F
+void setEngineBMW_M73_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->camInputs[0] = GPIOC_6;
 
 	CONFIGB(idle).solenoidPin = GPIO_UNASSIGNED;
 	CONFIGB(mainRelayPin) = GPIO_UNASSIGNED;
@@ -88,7 +97,6 @@ void setEngineBMW_M73(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIGB(fuelPumpPin) = GPIO_UNASSIGNED;
 
 
-	engineConfiguration->ignitionMode = IM_TWO_COILS;
 	boardConfiguration->ignitionPins[ID2INDEX(1)] = GPIOE_14; // Frankenso high side - pin 1G
 	boardConfiguration->ignitionPins[ID2INDEX(2)] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[ID2INDEX(3)] = GPIO_UNASSIGNED;
@@ -109,8 +117,10 @@ void setEngineBMW_M73(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->injectionPins[9] = GPIOE_6;
 	boardConfiguration->injectionPins[10] = GPIOC_13;
 	boardConfiguration->injectionPins[11] = GPIOD_7;
-
-
-	// 13641435991 injector
-	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 }
+
+void setEngineBMW_M73_Manhattan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+}
+

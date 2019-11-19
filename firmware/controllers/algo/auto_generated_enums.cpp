@@ -707,8 +707,10 @@ case FRANKENSO_QA_ENGINE:
   return "FRANKENSO_QA_ENGINE";
 case Force_4_bytes_size_engine_type:
   return "Force_4_bytes_size_engine_type";
-case BMW_M73:
-  return "BMW_M73";
+case BMW_M73_F:
+  return "BMW_M73_F";
+case BMW_M73_M:
+	return "BMW_M73_M";
 case MRE_BOARD_TEST:
   return "MRE_BOARD_TEST";
 case GY6_139QMB:
@@ -743,7 +745,6 @@ case MIATA_1990:
   return "MIATA_1990";
 case MIATA_1994_DEVIATOR:
   return "MIATA_1994_DEVIATOR";
-case MIATA_1994_SPAGS:
 case MIATA_1996:
   return "MIATA_1996";
 case MIATA_NA6_MAP:
