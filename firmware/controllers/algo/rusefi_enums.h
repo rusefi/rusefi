@@ -95,7 +95,7 @@ typedef enum {
 	SUBARU_2003_WRX = 22,
 
 	DODGE_NEON_2003_CAM = 23,
-	MIATA_1994_SPAGS = 24,
+	BMW_M73_M = 24,
 
 	BMW_E34 = 25,
 
@@ -130,7 +130,7 @@ typedef enum {
 
 	LADA_KALINA = 39,
 
-	BMW_M73 = 40,
+	BMW_M73_F = 40,
 
 	// Frankenso board
 	MIATA_NA6_MAP = 41,

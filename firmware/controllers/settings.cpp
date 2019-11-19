@@ -173,8 +173,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "MX590";
 	case MIATA_1994_DEVIATOR:
 		return "MX594d";
-	case MIATA_1994_SPAGS:
-		return "MX594s";
 	case MIATA_1996:
 		return "MX596";
 	case BMW_E34:

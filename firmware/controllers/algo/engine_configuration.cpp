@@ -1056,8 +1056,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case FRANKENSO_QA_ENGINE:
 		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case BMW_M73:
-		setEngineBMW_M73(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case BMW_M73_F:
+		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_M:
+		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NA6:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1177,7 +1180,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MIATA_1994_DEVIATOR:
 		setMiata1994_d(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MIATA_1994_SPAGS:
 	case MIATA_1996:
 		setMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
