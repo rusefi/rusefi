@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Nov 19 09:22:43 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Nov 19 09:23:08 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2737,7 +2737,8 @@ struct board_configuration_s {
 	 */
 	can_device_mode_e canDeviceMode;
 	/**
-	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board. See also directSelfStimulation which is different.
+	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
+	 * See also directSelfStimulation which is different.
 	 * offset 136
 	 */
 	brain_pin_e triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
@@ -4947,4 +4948,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Nov 19 09:22:43 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Nov 19 09:23:08 EST 2019

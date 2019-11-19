@@ -422,8 +422,7 @@ static void printFullAdcReport(Logging *logger) {
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
 
-		if(hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR)
-		{
+		if (hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
 
@@ -599,8 +598,6 @@ void initAdcInputs() {
 		pwmEnablePeriodicNotification(EFI_INTERNAL_FAST_ADC_PWM);
 #endif /* HAL_USE_PWM */
 	}
-
-	//if(slowAdcChannelCount > ADC_MAX_SLOW_CHANNELS_COUNT) // todo: do we need this logic? do we need this check
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
 #else

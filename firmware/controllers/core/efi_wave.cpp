@@ -36,7 +36,7 @@ MultiWave::MultiWave() {
 	reset();
 }
 
-MultiWave::MultiWave(float *switchTimes, SingleWave *waves) : MultiWave(){
+MultiWave::MultiWave(float *switchTimes, SingleWave *waves) : MultiWave() {
 	init(switchTimes, waves);
 }
 

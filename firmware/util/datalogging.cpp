@@ -298,7 +298,7 @@ void Logging::appendPrintf(const char *fmt, ...) {
 Logging::Logging() {
 }
 
-Logging::Logging(char const *name, char *buffer, int bufferSize) : Logging(){
+Logging::Logging(char const *name, char *buffer, int bufferSize) : Logging() {
 #if ! EFI_UNIT_TEST
 	initLoggingExt(name, buffer, bufferSize);
 #else
