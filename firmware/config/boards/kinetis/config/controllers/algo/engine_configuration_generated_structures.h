@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 16 14:43:20 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 18 19:05:51 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1926,8 +1926,6 @@
 #define unusedAnotherOne_offset_hex 2e8
 #define unusedAtBoardConfigurationEnd_offset 980
 #define unusedAtBoardConfigurationEnd_offset_hex 3d4
-#define unusedBit31_offset 1464
-#define unusedBit31_offset_hex 5b8
 #define unusedErrorPin_offset 2040
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
@@ -1982,6 +1980,8 @@
 #define useFSIO4ForSeriousEngineWarning_offset_hex 5b8
 #define useFSIO5ForCriticalIssueEngineStop_offset 1464
 #define useFSIO5ForCriticalIssueEngineStop_offset_hex 5b8
+#define useFSIO6ForRevLimiter_offset 1464
+#define useFSIO6ForRevLimiter_offset_hex 5b8
 #define useFSIO8ForServo1_offset 1464
 #define useFSIO8ForServo1_offset_hex 5b8
 #define useFSIO9ForServo2_offset 1464
@@ -3641,7 +3641,7 @@ struct engine_configuration_s {
 	bool useFSIO13ForIdleMinValue : 1;
 	/**
 	offset 1464 bit 31 */
-	bool unusedBit31 : 1;
+	bool useFSIO6ForRevLimiter : 1;
 	/**
 	 * offset 1468
 	 */
@@ -4947,4 +4947,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 16 14:43:20 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 18 19:05:51 EST 2019

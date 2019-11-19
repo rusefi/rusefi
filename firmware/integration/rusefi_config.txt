@@ -744,7 +744,7 @@ bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
 bit useFSIO12ForIdleOffset;
 bit useFSIO13ForIdleMinValue;
-bit unusedBit31
+bit useFSIO6ForRevLimiter;
 
 	adc_channel_e hipOutputChannel;
 	adc_channel_e acSwitchAdc;A/C button input handled as analogue input

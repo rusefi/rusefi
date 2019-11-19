@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Nov 10 11:14:31 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Nov 18 19:05:30 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1585,7 +1585,7 @@ struct engine_configuration_s {
 	bool useFSIO13ForIdleMinValue : 1;
 	/**
 	offset 1464 bit 31 */
-	bool unusedBit31 : 1;
+	bool useFSIO6ForRevLimiter : 1;
 	/**
 	 * offset 1468
 	 */
@@ -2891,4 +2891,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Nov 10 11:14:31 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Nov 18 19:05:30 EST 2019

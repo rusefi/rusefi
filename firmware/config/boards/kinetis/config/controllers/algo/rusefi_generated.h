@@ -1924,8 +1924,6 @@
 #define unusedAnotherOne_offset_hex 2e8
 #define unusedAtBoardConfigurationEnd_offset 980
 #define unusedAtBoardConfigurationEnd_offset_hex 3d4
-#define unusedBit31_offset 1464
-#define unusedBit31_offset_hex 5b8
 #define unusedErrorPin_offset 2040
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
@@ -1980,6 +1978,8 @@
 #define useFSIO4ForSeriousEngineWarning_offset_hex 5b8
 #define useFSIO5ForCriticalIssueEngineStop_offset 1464
 #define useFSIO5ForCriticalIssueEngineStop_offset_hex 5b8
+#define useFSIO6ForRevLimiter_offset 1464
+#define useFSIO6ForRevLimiter_offset_hex 5b8
 #define useFSIO8ForServo1_offset 1464
 #define useFSIO8ForServo1_offset_hex 5b8
 #define useFSIO9ForServo2_offset 1464
