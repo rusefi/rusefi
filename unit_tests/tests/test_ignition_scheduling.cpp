@@ -11,7 +11,7 @@
 extern EnginePins enginePins;
 
 TEST(ignition, twoCoils) {
-	WITH_ENGINE_TEST_HELPER(BMW_M73);
+	WITH_ENGINE_TEST_HELPER(BMW_M73_F);
 
 	// first one to fire uses first coil
 	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(1)]), 0);
