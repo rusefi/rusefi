@@ -37,7 +37,7 @@ static void turnOff(NamedOutputPin *output) {
 static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(ckpSignalType);
-#if EFI_PROD_CODE || EFI_SIMULATOR
+
 	if (index != SCHEDULING_TRIGGER_INDEX) {
 		return;
 	}
@@ -46,8 +46,7 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		return;
 	}
 
-	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT;
-			valveIndex++) {
+	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
 
 		NamedOutputPin *output = &enginePins.auxValve[valveIndex];
 
@@ -66,27 +65,22 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 			fixAngle(onTime, "onTime", CUSTOM_ERR_6556);
 			scheduleByAngle(rpm, &turnOnEvent[valveIndex][phaseIndex],
 					onTime,
-					(schfunc_t) &turnOn, output);
+					(schfunc_t) &turnOn, output PASS_ENGINE_PARAMETER_SUFFIX);
 			angle_t offTime = extra + engine->engineState.auxValveEnd;
 			fixAngle(offTime, "offTime", CUSTOM_ERR_6557);
 			scheduleByAngle(rpm, &turnOffEvent[valveIndex][phaseIndex],
 					offTime,
-					(schfunc_t) &turnOff, output);
-
+					(schfunc_t) &turnOff, output PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
-
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 }
 
-void initAuxValves(Logging *sharedLogger) {
+void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(sharedLogger);
-#if EFI_PROD_CODE || EFI_SIMULATOR
 	if (engineConfiguration->auxValves[0] == GPIO_UNASSIGNED) {
 		return;
 	}
 	addTriggerEventListener(auxValveTriggerCallback, "tach", engine);
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 }
 
 void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
