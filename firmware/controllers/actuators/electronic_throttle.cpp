@@ -173,10 +173,10 @@ static EtbControl etb1;
 extern percent_t mockPedalPosition;
 
 Pid etbPid;
+efitimems_t start_time;
 
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
-static systime_t start_time;
 
 #define ETB_DUTY_LIMIT 0.9
 // this macro clamps both positive and negative percentages from about -100% to 100%
@@ -278,7 +278,7 @@ static systime_t start_time;
 
         // ETB Deviation monitoring
         if (etbError < 3 ) {
-          start_time = chVTGetSystemTimeX(); //Updates timestamp as long as ETB-Error stays within 3% deviation
+          start_time = currentTimeMillis(); //Updates timestamp as long as ETB-Error stays within 3% deviation
         }
       else {
         }        // ETB Deviation outside limit detected, set timestamp and monitor it for two seconds
