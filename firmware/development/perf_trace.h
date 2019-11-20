@@ -85,16 +85,12 @@ public:
 
 	ScopePerf(PE event, uint8_t data) : m_event(event), m_data(data)
 	{
-#if ENABLE_PERF_TRACE
 		perfEventBegin(event, data);
-#endif /* ENABLE_PERF_TRACE */
 	}
 
 	~ScopePerf()
 	{
-#if ENABLE_PERF_TRACE
 		perfEventEnd(m_event, m_data);
-#endif /* ENABLE_PERF_TRACE */
 	}
 
 private:
