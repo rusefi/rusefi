@@ -387,6 +387,7 @@ static void etbReset() {
 }
 #endif /* EFI_PROD_CODE */
 
+#if !EFI_UNIT_TEST
 /**
  * set etb_p X
  */
@@ -422,6 +423,8 @@ void setEtbOffset(int value) {
 	etbPid.reset();
 	showEthInfo();
 }
+
+#endif /* EFI_UNIT_TEST */
 
 void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
