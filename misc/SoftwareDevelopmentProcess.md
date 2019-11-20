@@ -17,4 +17,4 @@ The primary hardware platform for rusEfi is stm32f4 - as of November 2019, only 
 
     
 
-See also [Functional tests CI info](jenkins\functional_test_and_build_bundle\readme.md)
+See also [Functional tests CI info](jenkins/functional_test_and_build_bundle/readme.md)
