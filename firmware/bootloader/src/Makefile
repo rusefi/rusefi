@@ -262,12 +262,6 @@ INCDIR = .. $(CHIBIOS)/os/license \
 	$(PROJECT_DIR)/development/test \
 	$(CONTROLLERS_INC) \
 	$(PROJECT_DIR)/controllers/sensors \
-	$(PROJECT_DIR)/controllers/system \
-	$(PROJECT_DIR)/controllers/algo \
-	$(PROJECT_DIR)/controllers/core \
-	$(PROJECT_DIR)/controllers/math \
-	$(PROJECT_DIR)/controllers/trigger/decoders \
-	$(PROJECT_DIR)/controllers/trigger \
 	config
 
 BUILDDIR=blbuild
