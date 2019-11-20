@@ -78,6 +78,7 @@ struct TraceBufferResult
 // Retrieve the trace buffer
 const TraceBufferResult perfTraceGetBuffer();
 
+#if ENABLE_PERF_TRACE
 class ScopePerf
 {
 public:
@@ -97,3 +98,13 @@ private:
 	const PE m_event;
 	const uint8_t m_data;
 };
+
+#else /* if ENABLE_PERF_TRACE */
+
+// For when disabled
+struct ScopePerf {
+	ScopePerf(PE event) { }
+	ScopePerf(PE event, uint8_t data) { }
+};
+
+#endif /* ENABLE_PERF_TRACE */
