@@ -853,14 +853,19 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 		break;
 	case TS_PERF_TRACE_BEGIN:
+#if ENABLE_PERF_TRACE
 		perfTraceEnable();
+#endif /* ENABLE_PERF_TRACE */
 		break;
 	case TS_PERF_TRACE_GET_BUFFER:
 		{
+#if ENABLE_PERF_TRACE
 			auto trace = perfTraceGetBuffer();
 			sr5SendResponse(tsChannel, TS_CRC, trace.Buffer, trace.Size);
+#endif /* ENABLE_PERF_TRACE */
 		}
 #endif /* EFI_TOOTH_LOGGER */
+		break;
 	default:
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;
