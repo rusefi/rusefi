@@ -8,6 +8,11 @@
  */
 
 #include "global.h"
+
+#if EFI_TUNER_STUDIO
+#include "tunerstudio_configuration.h"
+#endif /* EFI_TUNER_STUDIO */
+
 #if EFI_ALTERNATOR_CONTROL
 #include "engine.h"
 #include "rpm_calculator.h"
@@ -19,11 +24,11 @@
 
 #include "pwm_generator.h"
 #include "pin_repository.h"
-#include "tunerstudio_configuration.h"
+
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
-#endif
+#endif /* HAS_OS_ACCESS */
 
 EXTERN_ENGINE
 ;
