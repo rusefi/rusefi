@@ -1209,7 +1209,7 @@ const command_f_s commandsF[] = {
 #endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
 
-#if EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_ELECTRONIC_THROTTLE_BODY && (!EFI_UNIT_TEST)
 		{"etb_p", setEtbPFactor},
 		{"etb_i", setEtbIFactor},
 		{"etb_d", setEtbDFactor},
