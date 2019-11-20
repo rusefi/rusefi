@@ -52,6 +52,7 @@
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "engine.h"
+#include "perf_trace.h"
 
 #include "aux_valves.h"
 #include "backup_ram.h"
@@ -361,6 +362,8 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::HandleFuel);
+	
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
@@ -425,6 +428,8 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
  * Both injection and ignition are controlled from this method.
  */
 void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::MainTriggerCallback);
+
 	(void) ckpSignalType;
 
 	ENGINE(m.beforeMainTrigger) = getTimeNowLowerNt();
