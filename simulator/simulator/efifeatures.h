@@ -2,7 +2,7 @@
  * efifeatures.h
  *
  * @date Mar 7, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #ifndef EFIFEATURES_H_
@@ -61,7 +61,7 @@
 #define TS_UART_DMA_MODE FALSE
 
 #define EFI_MAP_AVERAGING TRUE
-#define EFI_ALTERNATOR_CONTROL FALSE
+#define EFI_ALTERNATOR_CONTROL TRUE
 
 #define EFI_SUPPORT_DODGE_NEON TRUE
 #define EFI_SUPPORT_FORD_ASPIRE TRUE
@@ -98,8 +98,8 @@
 #define BOARD_MC33972_COUNT			0
 #define BOARD_TLE8888_COUNT 	0
 
-#define EFI_ELECTRONIC_THROTTLE_BODY FALSE
-#define EFI_AUX_PID FALSE
+#define EFI_ELECTRONIC_THROTTLE_BODY TRUE
+#define EFI_AUX_PID TRUE
 #define EFI_ICU_INPUTS FALSE
 
 #ifndef HAL_TRIGGER_USE_PAL

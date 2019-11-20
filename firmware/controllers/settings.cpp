@@ -30,13 +30,16 @@
 
 #if EFI_PROD_CODE
 #include "vehicle_speed.h"
-#include "electronic_throttle.h"
 #include "rtc_helper.h"
 #include "can_hw.h"
 #include "rusefi.h"
 #include "pin_repository.h"
 #include "hardware.h"
 #endif /* EFI_PROD_CODE */
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+#include "electronic_throttle.h"
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #if EFI_INTERNAL_FLASH
 #include "flash_main.h"
@@ -1206,7 +1209,7 @@ const command_f_s commandsF[] = {
 #endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
 
-#if EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_ELECTRONIC_THROTTLE_BODY && (!EFI_UNIT_TEST)
 		{"etb_p", setEtbPFactor},
 		{"etb_i", setEtbIFactor},
 		{"etb_d", setEtbDFactor},

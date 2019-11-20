@@ -9,10 +9,9 @@
 #ifndef ENGINE_CONFIGURATION_H_
 #define ENGINE_CONFIGURATION_H_
 
-#include "global.h"
+#include "globalaccess.h"
 #include "crc.h"
 #include "engine_configuration_generated_structures.h"
-#include "globalaccess.h"
 
 #ifndef DEFAULT_ENGINE_TYPE
 #define DEFAULT_ENGINE_TYPE DEFAULT_FRANKENSO

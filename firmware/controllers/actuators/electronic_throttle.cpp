@@ -343,8 +343,8 @@ void setThrottleDutyCycle(percent_t level) {
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
 }
 
-#if EFI_PROD_CODE
 static void showEthInfo(void) {
+#if EFI_PROD_CODE
 	static char pinNameBuffer[16];
 
 	scheduleMsg(&logger, "etbAutoTune=%d",
@@ -366,16 +366,10 @@ static void showEthInfo(void) {
 	scheduleMsg(&logger, "dir1=%s", hwPortname(CONFIGB(etb1.directionPin1)));
 	scheduleMsg(&logger, "dir2=%s", hwPortname(CONFIGB(etb1.directionPin2)));
 	etbPid.showPidStatus(&logger, "ETB");
+#endif /* EFI_PROD_CODE */
 }
 
-/**
- * set etb_p X
- */
-void setEtbPFactor(float value) {
-	engineConfiguration->etb.pFactor = value;
-	etbPid.reset();
-	showEthInfo();
-}
+#if EFI_PROD_CODE
 
 static void setEtbFrequency(int frequency) {
 	engineConfiguration->etbFreq = frequency;
@@ -390,6 +384,17 @@ static void etbReset() {
 	etbPid.reset();
 
 	mockPedalPosition = MOCK_UNDEFINED;
+}
+#endif /* EFI_PROD_CODE */
+
+#if !EFI_UNIT_TEST
+/**
+ * set etb_p X
+ */
+void setEtbPFactor(float value) {
+	engineConfiguration->etb.pFactor = value;
+	etbPid.reset();
+	showEthInfo();
 }
 
 /**
@@ -418,7 +423,8 @@ void setEtbOffset(int value) {
 	etbPid.reset();
 	showEthInfo();
 }
-#endif /* EFI_PROD_CODE */
+
+#endif /* EFI_UNIT_TEST */
 
 void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
@@ -539,7 +545,7 @@ static void setAutoOffset(int offset) {
 	tuneWorkingPidSettings.offset = offset;
 	autoTune.reset();
 }
-#endif
+#endif /* EFI_PROD_CODE */
 
 void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
@@ -625,7 +631,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// manual duty cycle control without PID. Percent value from 0 to 100
 	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
-#endif
+#endif /* EFI_PROD_CODE */
 
 #if EFI_PROD_CODE && 0
 	tuneWorkingPidSettings.pFactor = 1;

@@ -10,7 +10,7 @@
 
 #include "engine.h"
 
-void initAuxValves(Logging *sharedLogger);
+void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONTROLLERS_TRIGGER_AUX_VALVES_H_ */
