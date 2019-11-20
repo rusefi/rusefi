@@ -13,7 +13,7 @@
 #endif /* _FROM_ASM_ */
 
 
-#if !defined(ENABLE_PERF_TRACE) || defined(__DOXYGEN__)
+#ifndef ENABLE_PERF_TRACE
 // looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
  #define ENABLE_PERF_TRACE FALSE
 #endif /* ENABLE_PERF_TRACE */
