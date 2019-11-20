@@ -87,9 +87,9 @@
 #endif
 
 #define ETB_MAX_COUNT 2
-	static systime_t start_time;
+
 static bool shouldResetPid = false;
-static bool etbErrorCondition = false;
+static bool etbDeviationError = false;
 static pid_s tuneWorkingPidSettings;
 static Pid tuneWorkingPid(&tuneWorkingPidSettings);
 static PID_AutoTune autoTune;
@@ -176,6 +176,7 @@ Pid etbPid;
 
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
+static systime_t start_time;
 
 #define ETB_DUTY_LIMIT 0.9
 // this macro clamps both positive and negative percentages from about -100% to 100%
@@ -199,7 +200,6 @@ static percent_t currentEtbDuty;
 			tsOutputChannels.debugFloatField1 = directPwmValue;
 #endif /* EFI_TUNER_STUDIO */
 		}
-
 
 		if (shouldResetPid) {
 			etbPid.reset();
@@ -253,7 +253,7 @@ static percent_t currentEtbDuty;
 		    targetPosition = 99.0f;
 		}
 		else if (targetPosition < 1.0f) {
-		    targetPosition = 1.0f;
+		    targetPosition = 0.5f;
 		}
 
 
@@ -269,8 +269,7 @@ static percent_t currentEtbDuty;
 		etbPid.iTermMin = engineConfiguration->etb_iTermMin;
 		etbPid.iTermMax = engineConfiguration->etb_iTermMax;
 
-		currentEtbDuty = engine->engineState.etbFeedForward +
-				etbPid.getOutput(targetPosition, actualThrottlePosition);
+		currentEtbDuty = engine->engineState.etbFeedForward + etbPid.getOutput(targetPosition, actualThrottlePosition);
 
 		etb1.dcMotor.Set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
 
@@ -278,20 +277,20 @@ static percent_t currentEtbDuty;
 
 
         // ETB Deviation monitoring
-        if(etbError < 3 ){
+        if (etbError < 3 ) {
           start_time = chVTGetSystemTimeX(); //Updates timestamp as long as ETB-Error stays within 3% deviation
         }
       else {
         }        // ETB Deviation outside limit detected, set timestamp and monitor it for two seconds
-        if(chVTIsSystemTimeWithinX(start_time, start_time + TIME_MS2I(2000))) {
+        if (chVTIsSystemTimeWithinX(start_time, start_time + TIME_MS2I(2000))) {
         	  //Less than two seconds, system OK: do nothing
             }
        else {
-         if(rpm > 600){  //We dont want or need any of this to execute if engine are not running
+    	   if (rpm > engineConfiguration->cranking.rpm) {  //We dont want or need any of this to execute if engine are not running
                          // It would make a huge issue while tuning ETB
-        	 etbErrorCondition = true;
-        	   warning(OBD_Throttle_Actuator_Control_Range_Performance_Bank_1, "ETB Deviation Error"); //Set Error-code
-        	   engineConfiguration->rpmHardLimit = 2000;  //Set RPM Limit to 2000 to not kill engine if ETB opening are too big
+        	   etbDeviationError = true;
+        	   warning(OBD_Throttle_Actuator_Control_Range_Performance_Bank_1, "Electronic throttle deviation limits exceeded"); //Set Error-code
+        	  // engineConfiguration->rpmHardLimit = 2000;  //Set RPM Limit to 2000 to not kill engine if ETB opening are too big
         	   etb1.dcMotor.Set(0); // Disable ETB Duty
       }
 
