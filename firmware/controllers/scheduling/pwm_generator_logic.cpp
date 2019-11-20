@@ -13,6 +13,7 @@
 #include "pwm_generator_logic.h"
 #include "pwm_generator.h"
 #include "error_handling.h"
+#include "perf_trace.h"
 
 /**
  * We need to limit the number of iterations in order to avoid precision loss while calculating
@@ -159,9 +160,12 @@ void PwmConfig::handleCycleStart() {
  * @return Next time for signal toggle
  */
 efitimeus_t PwmConfig::togglePwmState() {
+	ScopePerf perf(PE::PwmConfigTogglePwmState);
+
 	if (isStopRequested) {
 		return 0;
 	}
+
 #if DEBUG_PWM
 	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
 	scheduleMsg(&logger, "period=%.2f safe.period=%.2f", period, safe.periodNt);
@@ -196,7 +200,10 @@ efitimeus_t PwmConfig::togglePwmState() {
 		cbStateIndex = 1;
 	}
 
-	stateChangeCallback(cbStateIndex, arg);
+	{
+		ScopePerf perf(PE::PwmConfigStateChangeCallback);
+		stateChangeCallback(cbStateIndex, arg);
+	}
 
 	efitimeus_t nextSwitchTimeUs = getNextSwitchTimeUs(this);
 #if DEBUG_PWM
@@ -236,6 +243,8 @@ efitimeus_t PwmConfig::togglePwmState() {
  * First invocation happens on application thread
  */
 static void timerCallback(PwmConfig *state) {
+	ScopePerf perf(PE::PwmGeneratorCallback);
+
 	state->dbgNestingLevel++;
 	efiAssertVoid(CUSTOM_ERR_6581, state->dbgNestingLevel < 25, "PWM nesting issue");
 

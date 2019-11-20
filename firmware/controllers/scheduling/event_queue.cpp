@@ -16,6 +16,7 @@
 #include "event_queue.h"
 #include "efitime.h"
 #include "os_util.h"
+#include "perf_trace.h"
 
 #if EFI_UNIT_TEST
 extern bool verboseMode;
@@ -36,6 +37,8 @@ bool EventQueue::checkIfPending(scheduling_s *scheduling) {
  * @return true if inserted into the head of the list
  */
 bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
+	ScopePerf perf(PE::EventQueueInsertTask);
+
 #if EFI_UNIT_TEST
 	assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
@@ -118,6 +121,9 @@ static uint32_t lastEventCallbackDuration;
  * @return number of executed actions
  */
 int EventQueue::executeAll(efitime_t now) {
+	ScopePerf perf(PE::EventQueueExecuteAll);
+
+
 	scheduling_s * current, *tmp;
 
 	scheduling_s * executionList = nullptr;
@@ -171,7 +177,12 @@ int EventQueue::executeAll(efitime_t now) {
 #if EFI_UNIT_TEST
 		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->param);
 #endif
-		current->callback(current->param);
+
+		{
+			ScopePerf perf2(PE::EventQueueExecuteCallback);
+			current->callback(current->param);
+		}
+
 		// even with overflow it's safe to subtract here
 		lastEventCallbackDuration = getTimeNowLowerNt() - before;
 		if (lastEventCallbackDuration > maxEventCallbackDuration)

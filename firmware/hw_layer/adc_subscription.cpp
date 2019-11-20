@@ -2,6 +2,7 @@
 
 #include "adc_inputs.h"
 #include "engine.h"
+#include "perf_trace.h"
 
 #include <iterator>
 
@@ -46,6 +47,8 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 }
 
 void AdcSubscription::UpdateSubscribers() {
+	ScopePerf perf(PE::AdcSubscriptionUpdateSubscribers);
+
 	for (size_t i = 0; i < s_nextEntry; i++) {
 		auto &entry = s_entries[i];
 

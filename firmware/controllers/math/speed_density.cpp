@@ -15,6 +15,7 @@
 #include "engine_math.h"
 #include "maf2map.h"
 #include "config_engine_specs.h"
+#include "perf_trace.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -137,6 +138,8 @@ EXTERN_ENGINE;
  * @return per cylinder injection time, in Milliseconds
  */
 floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
+	ScopePerf perf(PE::GetSpeedDensityFuel);
+
 	/**
 	 * most of the values are pre-calculated for performance reasons
 	 */
