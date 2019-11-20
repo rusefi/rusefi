@@ -631,7 +631,7 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 	efiAssertVoid(CUSTOM_ERR_6631, engine!=NULL, "null engine");
 	initSparkLogic(logger);
 
-	initAuxValves(logger);
+	initAuxValves(logger PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_PROD_CODE
 	addConsoleAction("performanceinfo", showTriggerHistogram);
