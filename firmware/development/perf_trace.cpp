@@ -31,7 +31,7 @@ static_assert(sizeof(TraceEntry) == 8);
 static TraceEntry s_traceBuffer[TRACE_BUFFER_LENGTH];
 static size_t s_nextIdx = 0;
 
-static bool s_isTracing = true;
+static bool s_isTracing = false;
 
 void perfEventImpl(PE event, EPhase phase, uint8_t data)
 {
