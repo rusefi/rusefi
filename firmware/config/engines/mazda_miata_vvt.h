@@ -7,8 +7,7 @@
  * http://rusefi.com/forum/viewtopic.php?f=3&t=1095
  */
 
-#ifndef CONFIG_ENGINES_MAZDA_MIATA_VVT_H_
-#define CONFIG_ENGINES_MAZDA_MIATA_VVT_H_
+#pragma once
 
 #include "engine_configuration.h"
 
@@ -20,5 +19,3 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIG
 void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-
-#endif /* CONFIG_ENGINES_MAZDA_MIATA_VVT_H_ */

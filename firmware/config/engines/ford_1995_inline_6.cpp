@@ -24,6 +24,8 @@ EXTERN_CONFIG;
  * @brief Default values for persistent properties
  */
 void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 	engineConfiguration->specs.cylindersCount = 6;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);

@@ -9,6 +9,10 @@
 #include "global.h"
 #include "unit_test_framework.h"
 
+/**
+ * ASSERT_xxx macro could only be used from inside 'void' methods - for cases where non-void methods are asserting, these
+ * wrapper functions are still useful.
+ */
 void assertEqualsM2(const char *msg, float expected, float actual, float eps) {
 	ASSERT_NEAR(expected, actual, eps) << msg;
 }

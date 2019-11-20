@@ -32,7 +32,7 @@ static Logging *logger;
 
 static SimplePwm alternatorControl("alt");
 static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
-Pid alternatorPid(altPidS);
+static PidIndustrial alternatorPid(altPidS);
 
 static percent_t currentAltDuty;
 
@@ -55,6 +55,10 @@ class AlternatorController : public PeriodicTimerController {
 			shouldResetPid = false;
 		}
 #endif
+
+		// todo: move this to pid_s one day
+		alternatorPid.antiwindupFreq = engineConfiguration->alternator_antiwindupFreq;
+		alternatorPid.derivativeFilterLoss = engineConfiguration->alternator_derivativeFilterLoss;
 
 		if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
 			// this block could be executed even in on/off alternator control mode
@@ -148,7 +152,7 @@ void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousCon
 	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
 
-void initAlternatorCtrl(Logging *sharedLogger) {
+void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	addConsoleAction("altinfo", showAltInfo);
 	if (CONFIGB(alternatorControlPin) == GPIO_UNASSIGNED)

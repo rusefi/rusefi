@@ -76,11 +76,6 @@ void applyNewConfiguration(void);
 }
 #endif /* __cplusplus */
 
-/**
- * number of SysClock ticks in one ms
- */
-#define TICKS_IN_MS  (CH_FREQUENCY / 1000)
-
 #define hal_lld_get_counter_value() 0
 
 #endif /* GLOBAL_H_ */

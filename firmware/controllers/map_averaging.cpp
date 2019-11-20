@@ -234,14 +234,14 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
 		angle_t start = interpolate2d("mapa", rpm, c->samplingAngleBins, c->samplingAngle);
-		efiAssertVoid(CUSTOM_ERR_6690, !cisnan(start), "start");
+		efiAssertVoid(CUSTOM_ERR_MAP_START_ASSERT, !cisnan(start), "start");
 
 		angle_t offsetAngle = TRIGGER_SHAPE(eventAngles[CONFIG(mapAveragingSchedulingAtIndex)]);
 		efiAssertVoid(CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
 		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			angle_t cylinderOffset = getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) * i / engineConfiguration->specs.cylindersCount;
-			efiAssertVoid(CUSTOM_ERR_6692, !cisnan(cylinderOffset), "cylinderOffset");
+			efiAssertVoid(CUSTOM_ERR_MAP_CYL_OFFSET, !cisnan(cylinderOffset), "cylinderOffset");
 			// part of this formula related to specific cylinder offset is never changing - we can
 			// move the loop into start-up calculation and not have this loop as part of periodic calculation
 			// todo: change the logic as described above in order to reduce periodic CPU usage?
@@ -270,7 +270,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 #if EFI_ENGINE_CONTROL
 	// this callback is invoked on interrupt thread
 	UNUSED(ckpEventType);
-	if (index != CONFIG(mapAveragingSchedulingAtIndex))
+	if (index != (uint32_t)CONFIG(mapAveragingSchedulingAtIndex))
 		return;
 
 	engine->m.beforeMapAveragingCb = getTimeNowLowerNt();
@@ -314,9 +314,9 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
 		scheduleByAngle(rpm, &startTimer[i][structIndex], samplingStart,
-				startAveraging, NULL, &engine->rpmCalculator PASS_ENGINE_PARAMETER_SUFFIX);
+				startAveraging, NULL PASS_ENGINE_PARAMETER_SUFFIX);
 		scheduleByAngle(rpm, &endTimer[i][structIndex], samplingEnd,
-				endAveraging, NULL, &engine->rpmCalculator PASS_ENGINE_PARAMETER_SUFFIX);
+				endAveraging, NULL PASS_ENGINE_PARAMETER_SUFFIX);
 		engine->m.mapAveragingCbTime = getTimeNowLowerNt()
 				- engine->m.beforeMapAveragingCb;
 	}

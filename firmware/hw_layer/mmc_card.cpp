@@ -300,10 +300,10 @@ static void listDirectory(const char *path) {
 
 static int errorReported = FALSE; // this is used to report the error only once
 
+#if 0
 void readLogFileContent(char *buffer, short fileId, short offset, short length) {
-
 }
-
+#endif
 
 /**
  * @brief Appends specified line to the current log file
@@ -359,8 +359,10 @@ static void mmcUnMount(void) {
 	scheduleMsg(&logger, "MMC/SD card removed");
 }
 
+#if HAL_USE_USB_MSD
 #define RAMDISK_BLOCK_SIZE    512U
 static uint8_t blkbuf[RAMDISK_BLOCK_SIZE];
+#endif /* HAL_USE_USB_MSD */
 
 /*
  * MMC card mount.
@@ -433,6 +435,7 @@ static void MMCmount(void) {
 }
 
 static THD_FUNCTION(MMCmonThread, arg) {
+	(void)arg;
 	chRegSetThreadName("MMC_Monitor");
 
 	while (true) {

@@ -66,12 +66,12 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 			fixAngle(onTime, "onTime", CUSTOM_ERR_6556);
 			scheduleByAngle(rpm, &turnOnEvent[valveIndex][phaseIndex],
 					onTime,
-					(schfunc_t) &turnOn, output, &engine->rpmCalculator);
+					(schfunc_t) &turnOn, output);
 			angle_t offTime = extra + engine->engineState.auxValveEnd;
 			fixAngle(offTime, "offTime", CUSTOM_ERR_6557);
 			scheduleByAngle(rpm, &turnOffEvent[valveIndex][phaseIndex],
 					offTime,
-					(schfunc_t) &turnOff, output, &engine->rpmCalculator);
+					(schfunc_t) &turnOff, output);
 
 		}
 	}

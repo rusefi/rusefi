@@ -28,7 +28,7 @@ public:
 	void registerCallback(VoidInt handler, void *arg);
 	void registerCallback(Void listener);
 	void invokeJustArgCallbacks() const;
-	int currentListenersCount;
+	int currentListenersCount = 0;
 	VoidInt callbacks[MAX_INT_LISTENER_COUNT];
 	void * args[MAX_INT_LISTENER_COUNT];
 };

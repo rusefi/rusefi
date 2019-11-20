@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 29 11:56:14 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Nov 19 09:22:58 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -461,8 +461,8 @@ struct board_configuration_s {
 	 */
 	float mapFrequency100Kpa;
 	/**
-	 * See also triggerSimulatorPins
-	 * See also directSelfStimulation
+	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
+	 * See also directSelfStimulation (no wires, bypassing input hardware)
 	 * rpm X
 	 * offset 20
 	 */
@@ -580,7 +580,7 @@ struct board_configuration_s {
 	/**
 	 * offset 76
 	 */
-	brain_pin_e unused1133;
+	brain_pin_e debugTriggerSync;
 	/**
 	 * Digital Potentiometer is used by stock ECU stimulation code
 	 * offset 77
@@ -655,7 +655,7 @@ struct board_configuration_s {
 	/**
 	 * offset 111
 	 */
-	uint8_t unusedMa2;
+	brain_pin_e debugTimerCallback;
 	/**
 	 * offset 112
 	 */
@@ -681,7 +681,8 @@ struct board_configuration_s {
 	 */
 	can_device_mode_e canDeviceMode;
 	/**
-	 * See also directSelfStimulation
+	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
+	 * See also directSelfStimulation which is different.
 	 * offset 136
 	 */
 	brain_pin_e triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
@@ -853,7 +854,11 @@ struct board_configuration_s {
 	/**
 	 * offset 206
 	 */
-	uint8_t unusedSpiPadding2[2];
+	brain_pin_e debugSetTimer;
+	/**
+	 * offset 207
+	 */
+	uint8_t unusedSpiPadding2;
 	/**
 	 * offset 208
 	 */
@@ -1256,12 +1261,12 @@ struct engine_configuration_s {
 	 */
 	engine_load_mode_e fuelAlgorithm;
 	/**
-	 * This is the type of injection strategy (See Fuel/Injection settings for more detail) it is suggested to use "Simultaneous" for easiest starting.
+	 * This is the injection strategy during engine start. See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
 	 * offset 424
 	 */
 	injection_mode_e crankingInjectionMode;
 	/**
-	 * This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, only use this if you have individually wired injectors. "batched" will fire the injectors in groups, if your injectors are individually wired you will also need to enable "Two wire batch emulation". 
+	 * This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups. If your injectors are individually wired you will also need to enable "Two wire batch emulation". 
 	 * set injection_mode X
 	 * See also twoWireBatchInjection
 	 * offset 428
@@ -1581,7 +1586,7 @@ struct engine_configuration_s {
 	bool useFSIO13ForIdleMinValue : 1;
 	/**
 	offset 1464 bit 31 */
-	bool unusedBit31 : 1;
+	bool useFSIO6ForRevLimiter : 1;
 	/**
 	 * offset 1468
 	 */
@@ -1839,7 +1844,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 1760
 	 */
-	uint8_t unusedFormerWarmupAfrPid[16];
+	float alternator_derivativeFilterLoss;
+	/**
+	 * offset 1764
+	 */
+	float alternator_antiwindupFreq;
+	/**
+	 * offset 1768
+	 */
+	uint8_t unusedFormerWarmupAfrPid[8];
 	/**
 	 * kPa value which is too low to be true
 	 * offset 1776
@@ -2604,7 +2617,19 @@ struct engine_configuration_s {
 	/**
 	 * offset 4060
 	 */
-	int mainUnusedEnd[585];
+	iac_pid_mult_t iacPidMultTable;
+	/**
+	 * offset 4124
+	 */
+	uint8_t iacPidMultLoadBins[IAC_PID_MULT_SIZE];
+	/**
+	 * offset 4132
+	 */
+	uint8_t iacPidMultRpmBins[IAC_PID_MULT_SIZE];
+	/**
+	 * offset 4140
+	 */
+	int mainUnusedEnd[565];
 	/** total size 6400*/
 };
 
@@ -2867,4 +2892,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 29 11:56:14 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Nov 19 09:22:58 EST 2019

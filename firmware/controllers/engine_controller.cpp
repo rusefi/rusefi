@@ -266,11 +266,14 @@ efitick_t getTimeNowNt(void) {
 
 }
 
+#endif /* EFI_PROD_CODE */
+
+#if ! EFI_UNIT_TEST
+
 /**
  * number of SysClock ticks in one ms
  */
 #define TICKS_IN_MS  (CH_CFG_ST_FREQUENCY / 1000)
-
 
 // todo: this overflows pretty fast!
 efitimems_t currentTimeMillis(void) {
@@ -282,13 +285,16 @@ efitimems_t currentTimeMillis(void) {
 efitimesec_t getTimeNowSeconds(void) {
 	return currentTimeMillis() / 1000;
 }
-
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_UNIT_TEST */
 
 static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.resetAE();
 	engine->tpsAccelEnrichment.resetAE();
-	engine->wallFuel.resetWF();
+
+	for (unsigned int i = 0; i < sizeof(engine->wallFuel) / sizeof(engine->wallFuel[0]); i++)
+	{
+		engine->wallFuel[i].resetWF();
+	}
 }
 
 static int previousSecond;
@@ -748,7 +754,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initMalfunctionCentral();
 
 #if EFI_ALTERNATOR_CONTROL
-	initAlternatorCtrl(sharedLogger);
+	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 #if EFI_AUX_PID
@@ -812,6 +818,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20191013;
+	return 20191117;
 }
 #endif /* EFI_UNIT_TEST */

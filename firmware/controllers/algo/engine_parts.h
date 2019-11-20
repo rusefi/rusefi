@@ -34,7 +34,7 @@ public:
 	float s_h_c = 0;
 	bool isLinear;
 private:
-	thermistor_conf_s currentConfig = {};
+	thermistor_conf_s currentConfig = {0,0,0,0,0,0,0};
 };
 
 class Accelerometer {

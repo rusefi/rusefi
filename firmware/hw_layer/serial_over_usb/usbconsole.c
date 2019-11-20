@@ -44,7 +44,7 @@ void usb_serial_start(void) {
 	efiSetPadMode("USB DM", EFI_USB_SERIAL_DM, PAL_MODE_ALTERNATE(EFI_USB_AF));
 	efiSetPadMode("USB DP", EFI_USB_SERIAL_DP, PAL_MODE_ALTERNATE(EFI_USB_AF));
 	/*
-	 * Activates the serial driver 2 using the driver default configuration.
+	 * Activates the serial driver using the driver default configuration.
 	 */
 	sdStart(&USB_SERIAL_DRIVER, NULL);
 #endif /* HAL_USE_SERIAL */

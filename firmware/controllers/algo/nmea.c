@@ -108,7 +108,9 @@ void nmea_parse_gpgga(char *nmea, loc_t *loc) {
 
 	p = strchr(p, ',') + 1;					// in p string started with searching address
 	str_till_comma(p, dStr);				// str to float till comma saved modified string
-	if(strlen(p) == 0) return;				// if no data in field - empty data - we return
+	if (strlen(p) == 0) {
+		return;				// if no data in field - empty data - we return
+	}
 	
 	loc->latitude = atoff(dStr);				// fulfil data
 
@@ -182,7 +184,7 @@ void nmea_parse_gprmc(char *nmea, loc_t *loc) {
 
 	p = strchr(p, ',') + 1; 				//read time
 	str_till_comma(p, dStr);
-	if(strlen(dStr) > 5){
+	if (strlen(dStr) > 5) {
 		timp.tm_hour = str2int(dStr,2);
 		timp.tm_min  = str2int(dStr+2,2);
 		timp.tm_sec  = str2int(dStr+4,2);
@@ -191,7 +193,7 @@ void nmea_parse_gprmc(char *nmea, loc_t *loc) {
 	p = strchr(p, ',') + 1; 				//read field Valid status
 	str_till_comma(p, dStr);
 
-	if(dStr[0] == 'V') {					// if field is invalid
+	if (dStr[0] == 'V') {					// if field is invalid
 		loc->quality = 0;
 		return;
 	}
@@ -242,13 +244,13 @@ void nmea_parse_gprmc(char *nmea, loc_t *loc) {
 
 	p = strchr(p, ',') + 1; 				//read date
 	str_till_comma(p, dStr);
-	if(strlen(dStr) > 5){
+	if (strlen(dStr) > 5) {
 		timp.tm_mday = str2int(dStr,2);
 		timp.tm_mon  = str2int(dStr+2,2);
 		timp.tm_year = str2int(dStr+4,2)+100;	// we receive -200, but standard wait -1900 = add correction
 	}
 
-	if( timp.tm_year > 0 ) {				// check if date field is valid  
+	if (timp.tm_year > 0 ) {				// check if date field is valid
 		memcpy(&loc->GPStm, &timp, sizeof(timp));
 	}
 }

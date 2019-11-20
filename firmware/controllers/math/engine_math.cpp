@@ -80,7 +80,10 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
+/**
+ * see also setConstantDwell
+ */
+void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = i + 1;
 		engineConfiguration->sparkDwellValues[i] = 4;
@@ -436,22 +439,24 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return 1;
 }
 
-static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
+/**
+ * @param cylinderIndex from 0 to cylinderCount, not cylinder number
+ */
+static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 	case IM_ONE_COIL:
 		return 0;
-		break;
 	case IM_WASTED_SPARK: {
 		if (CONFIG(specs.cylindersCount) == 1) {
 			// we do not want to divide by zero
 			return 0;
 		}
-		return i % (CONFIG(specs.cylindersCount) / 2);
+		return cylinderIndex % (CONFIG(specs.cylindersCount) / 2);
 	}
-		break;
 	case IM_INDIVIDUAL_COILS:
-		return i;
-		break;
+		return cylinderIndex;
+	case IM_TWO_COILS:
+		return cylinderIndex % 2;
 
 	default:
 		warning(CUSTOM_OBD_IGNITION_MODE, "unsupported ignitionMode %d in getIgnitionPinForIndex()", engineConfiguration->ignitionMode);
@@ -462,8 +467,8 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (ignitionMode != engine->ignitionModeForPinIndices) {
 #if EFI_ENGINE_CONTROL
-		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-			ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER_SUFFIX);
+		for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+			ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 #endif /* EFI_ENGINE_CONTROL */
 		engine->ignitionModeForPinIndices = ignitionMode;
@@ -509,7 +514,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_UNIT_TEST */
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-		ENGINE(ignitionPositionWithinEngineCycle[i])= ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
+		ENGINE(ignitionPositionWithinEngineCycle[i]) = ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
 	}
 
 	prepareIgnitionPinIndices(CONFIG(ignitionMode) PASS_ENGINE_PARAMETER_SUFFIX);

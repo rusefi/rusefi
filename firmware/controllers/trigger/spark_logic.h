@@ -17,5 +17,6 @@ void turnSparkPinHigh(IgnitionEvent *event);
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event);
 int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
 percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONTROLLERS_TRIGGER_SPARK_LOGIC_H_ */

@@ -203,7 +203,14 @@ void uart_lld_start(UARTDriver *uartp) {
     }
 #endif
     // Enable UART
-	LPUART_Init(uartp->lpuart, &lpuartConfig, KINETIS_UART_FREQUENCY);
+	status_t status = LPUART_Init(uartp->lpuart, &lpuartConfig, KINETIS_UART_FREQUENCY);
+	if (status == kStatus_LPUART_BaudrateNotSupport) {
+		// the only reason we could fail is wrong 'baudRate_Bps'. So let's give it a second chance...
+		static const int defaultBaudRate = 115200;
+		lpuartConfig.baudRate_Bps = defaultBaudRate;
+		status = LPUART_Init(uartp->lpuart, &lpuartConfig, KINETIS_UART_FREQUENCY);
+		assert (status == kStatus_Success);
+	}
 
 	//LPUART_EnableInterrupts(uartp->lpuart, kLPUART_IdleLineInterruptEnable);
 

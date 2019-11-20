@@ -14,7 +14,8 @@
 #include "engine_controller.h"
 
 #if EFI_PROD_CODE
-#include "digital_input_hw.h"
+#include "digital_input_icu.h"
+#include "digital_input_exti.h"
 #include "pin_repository.h"
 #endif
 
@@ -246,7 +247,7 @@ static void printMAPInfo(void) {
 	}
 
 	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		scheduleMsg(logger, "baro type=%d value=%.2f", engineConfiguration->baroSensor.type, getBaroPressure());
+		scheduleMsg(logger, "baro type=%d value=%.2f", engineConfiguration->baroSensor.type, getBaroPressure(PASS_ENGINE_PARAMETER_SIGNATURE));
 		if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
 			scheduleMsg(logger, "min=%.2f@%.2f max=%.2f@%.2f",
 					engineConfiguration->baroSensor.lowValue,
@@ -265,12 +266,22 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	applyConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	//engine->configurationListeners.registerCallback(applyConfiguration);
 
-#if HAL_USE_ICU
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		digital_input_s* digitalMapInput = addWaveAnalyzerDriver("map freq", CONFIGB(frequencyReportingMapInputPin));
-		startInputDriver("MAP", digitalMapInput, true);
+#if HAL_USE_ICU
+		digital_input_s* digitalMapInput = startDigitalCapture("MAP freq", CONFIGB(frequencyReportingMapInputPin), true);
 
-		digitalMapInput->widthListeners.registerCallback((VoidInt) digitalMapWidthCallback, NULL);
+		digitalMapInput->setWidthCallback((VoidInt) digitalMapWidthCallback, NULL);
+#else
+ #if EFI_PROD_CODE
+	efiExtiEnablePin(
+				"Frequency MAP",
+				CONFIGB(frequencyReportingMapInputPin),
+				PAL_EVENT_MODE_RISING_EDGE,
+				(palcallback_t)digitalMapWidthCallback,
+				nullptr
+			);
+ #endif /* EFI_PROD_CODE */
+#endif /* HAL_USE_ICU */
 	}
 
 	if (CONFIG(useFixedBaroCorrFromMap)) {
@@ -278,7 +289,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		storedInitialBaroPressure = getRawMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 		scheduleMsg(logger, "Get initial baro MAP pressure = %.2fkPa", storedInitialBaroPressure);
 		// validate if it's within a reasonable range (the engine should not be spinning etc.)
-		storedInitialBaroPressure = validateBaroMap(storedInitialBaroPressure);
+		storedInitialBaroPressure = validateBaroMap(storedInitialBaroPressure PASS_ENGINE_PARAMETER_SUFFIX);
 		if (!cisnan(storedInitialBaroPressure)) {
 			scheduleMsg(logger, "Using this fixed MAP pressure to override the baro correction!");
 		} else {
@@ -286,6 +297,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		}
 	}
 	
+#if EFI_PROD_CODE
 	addConsoleAction("mapinfo", printMAPInfo);
 #endif
 }

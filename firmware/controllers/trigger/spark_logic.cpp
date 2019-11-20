@@ -129,13 +129,13 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	}
 #if !EFI_UNIT_TEST
 if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
+#if EFI_TUNER_STUDIO
 	uint32_t actualDwellDurationNt = getTimeNowLowerNt() - event->actualStartOfDwellNt;
 	/**
 	 * ratio of desired dwell duration to actual dwell duration gives us some idea of how good is input trigger jitter
 	 */
 	float ratio = NT2US(actualDwellDurationNt) / 1000.0 / event->sparkDwell;
 
-#if EFI_TUNER_STUDIO
 	// todo: smarted solution for index to field mapping
 	if (event->cylinderIndex == 0) {
 		tsOutputChannels.debugFloatField1 = ratio;
@@ -327,7 +327,8 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	}
 }
 
-static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	IgnitionEventList *list = &engine->ignitionEvents;
 	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
 	floatms_t sparkDwell = ENGINE(engineState.sparkDwell);
 	if (cisnan(ENGINE(engineState.timingAdvance)) || cisnan(dwellAngle)) {
@@ -374,9 +375,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 
 	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
 
-	IgnitionEventList *list = &engine->ignitionEvents;
-
-	initializeIgnitionActions(list PASS_ENGINE_PARAMETER_SUFFIX);
+	initializeIgnitionActions(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->m.ignitionSchTime = getTimeNowLowerNt() - engine->m.beforeIgnitionSch;
 }
 
@@ -448,6 +447,8 @@ int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (mode) {
 	case IM_ONE_COIL:
 		return engineConfiguration->specs.cylindersCount;
+	case IM_TWO_COILS:
+		return engineConfiguration->specs.cylindersCount / 2;
 	case IM_INDIVIDUAL_COILS:
 		return 1;
 	case IM_WASTED_SPARK:
@@ -462,7 +463,7 @@ int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * @see getInjectorDutyCycle
  */
 percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	floatms_t totalPerCycle = 1/**getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)*/ * getNumberOfSparks(getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+	floatms_t totalPerCycle = ENGINE(engineState.sparkDwell) * getNumberOfSparks(getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE) == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Tue Sep 24 18:13:29 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Tue Nov 05 23:21:45 EST 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -46,6 +46,9 @@ public class EngineState {
 	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 140, FieldType.FLOAT);
 	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 144, FieldType.FLOAT);
 	public static final Field TARGETFROMTABLE = Field.create("TARGETFROMTABLE", 148, FieldType.FLOAT);
+	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 152, FieldType.FLOAT);
+	public static final Field DWELLANGLE = Field.create("DWELLANGLE", 156, FieldType.FLOAT);
+	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 160, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	ISTCHARGEAIRMODEL,
 	AIRMASSINONECYLINDER,
@@ -87,5 +90,8 @@ public class EngineState {
 	RUNNING_FUEL,
 	ETBFEEDFORWARD,
 	TARGETFROMTABLE,
+	SPARKDWELL,
+	DWELLANGLE,
+	CLTTIMINGCORRECTION,
 	};
 }

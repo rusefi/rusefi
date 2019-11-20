@@ -280,7 +280,7 @@ void gpt_lld_start(GPTDriver *gptp) {
     /* Clock activation.*/
     SIM->SCGC6 |= SIM_SCGC6_PIT;
 #endif
-    gptp->clock = KINETIS_SYSCLK_FREQUENCY;
+    gptp->clock = KINETIS_SPLL_DIV2_FREQENCY/*KINETIS_SYSCLK_FREQUENCY*/;
 
 #if !KINETIS_HAS_PIT_COMMON_IRQ
 

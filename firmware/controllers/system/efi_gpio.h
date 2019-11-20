@@ -137,6 +137,10 @@ public:
 	OutputPin warningLedPin; // orange LED on brain board by default
 	OutputPin runningLedPin; // green LED on brain board by default
 
+	OutputPin debugTriggerSync;
+	OutputPin debugTimerCallback;
+	OutputPin debugSetTimer;
+
 	OutputPin idleSolenoidPin;
 	OutputPin alternatorPin;
 	/**

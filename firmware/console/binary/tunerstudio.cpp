@@ -267,7 +267,7 @@ static const void * getStructAddr(int structId) {
 	case LDS_ENGINE_STATE_INDEX:
 		return static_cast<engine_state2_s*>(&engine->engineState);
 	case LDS_FUEL_TRIM_STATE_INDEX:
-		return static_cast<wall_fuel_state*>(&engine->wallFuel);
+		return static_cast<wall_fuel_state*>(&engine->wallFuel[0]);
 	case LDS_TRIGGER_CENTRAL_STATE_INDEX:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
 	case LDS_TRIGGER_STATE_STATE_INDEX:
@@ -308,9 +308,11 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
  * read log file content for rusEfi console
  */
 static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, short offset, short length) {
-#if EFI_FILE_LOGGING
-	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
-#endif /* EFI_FILE_LOGGING */
+//#if EFI_FILE_LOGGING
+//	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
+//#else
+	UNUSED(tsChannel); UNUSED(fileId); UNUSED(offset); UNUSED(length);
+//#endif /* EFI_FILE_LOGGING */
 }
 
 /**
@@ -720,7 +722,7 @@ static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomi
  */
 bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	// Bail fast if guaranteed not to be a plain command
-	if(command == 0)
+	if (command == 0)
 	{
 		return false;
 	}
