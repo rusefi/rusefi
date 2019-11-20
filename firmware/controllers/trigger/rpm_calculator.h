@@ -9,7 +9,7 @@
 #ifndef RPM_REPORTER_H_
 #define RPM_REPORTER_H_
 
-#include "global.h"
+#include "globalaccess.h"
 #include "scheduler.h"
 
 // we use this value in case of noise on trigger input lines

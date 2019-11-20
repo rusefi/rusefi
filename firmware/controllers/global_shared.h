@@ -1,5 +1,5 @@
 /*
- * global_shared.h
+ * @file global_shared.h
  *
  * part of global.h which is shared between firmware and simulator
  * See also common_headers.h
@@ -8,8 +8,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef GLOBAL_SHARED_H_
-#define GLOBAL_SHARED_H_
+#pragma once
 
 /**
  * The following obscurantism is a hack to reduce stack usage, maybe even a questionable performance
@@ -24,6 +23,8 @@
  *
  * On the other hand, in order to have a meaningful unit test we are passing Engine * engine as a parameter
  */
+
+#include "global.h"
 
 #define EXTERN_CONFIG \
 		extern engine_configuration_s *engineConfiguration; \
@@ -70,5 +71,3 @@
 #define CONFIG_PARAM(x) CONFIG(x)
 #define PASS_CONFIG_PARAM(x)
 
-
-#endif /* GLOBAL_SHARED_H_ */

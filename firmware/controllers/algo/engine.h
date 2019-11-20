@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "global.h"
 #include "globalaccess.h"
 #include "engine_state.h"
 #include "rpm_calculator.h"
