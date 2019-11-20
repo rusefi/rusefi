@@ -173,8 +173,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "MX590";
 	case MIATA_1994_DEVIATOR:
 		return "MX594d";
-	case MIATA_1994_SPAGS:
-		return "MX594s";
 	case MIATA_1996:
 		return "MX596";
 	case BMW_E34:
@@ -887,13 +885,11 @@ static void setSpiMode(int index, bool mode) {
 	printSpiState(&logger, boardConfiguration);
 }
 
-extern bool hwTriggerInputEnabled;
-
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "fastadc")) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
-		hwTriggerInputEnabled = isEnabled;
+		engine->hwTriggerInputEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {

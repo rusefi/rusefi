@@ -29,7 +29,7 @@
 #include "global_execution_queue.h"
 #endif /* EFI_UNIT_TEST */
 
-#define FAST_CALLBACK_PERIOD_MS 20
+#define FAST_CALLBACK_PERIOD_MS 5
 
 class RpmCalculator;
 
@@ -61,6 +61,11 @@ public:
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
 	 */
 	int globalSparkIdCounter = 0;
+
+	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
+	// GND input pins instead of leaving them floating
+	bool hwTriggerInputEnabled = true;
+
 
 #if !EFI_PROD_CODE
 	float mockMapValue = 0;
@@ -94,7 +99,7 @@ public:
 	IgnitionEventList ignitionEvents;
 #endif /* EFI_ENGINE_CONTROL */
 
-	WallFuel wallFuel;
+	WallFuel wallFuel[INJECTION_PIN_COUNT];
 	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**

@@ -145,6 +145,8 @@ static const fuel_table_t veDodgeNeon2003Table = {
 EXTERN_CONFIG;
 
 void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
 
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
@@ -249,6 +251,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->trigger.type = TT_DODGE_NEON_2003_CAM;
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
@@ -498,10 +501,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->isCylinderCleanupEnabled = true;
 
 	// end of setDodgeNeonNGCEngineConfiguration
-}
-
-void setDodgeNeonNGCEngineConfigurationCrankBased(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */

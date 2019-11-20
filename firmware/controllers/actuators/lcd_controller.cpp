@@ -161,6 +161,7 @@ static const char* idleModeStr[] = { "I:A", "I:M" };
 //	}
 //}
 
+#if 0
 static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char *buffer) {
 	char *ptr = buffer;
 
@@ -176,6 +177,7 @@ static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char 
 	ptr = appendStr(ptr, " ");
 	return ptr;
 }
+#endif
 
 //static char * prepareStatusLine(char *buffer) {
 //	char *ptr = buffer;

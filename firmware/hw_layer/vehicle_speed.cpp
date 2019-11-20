@@ -10,7 +10,7 @@
 #if EFI_VEHICLE_SPEED
 
 #include "engine.h"
-#include "digital_input_hw.h"
+#include "digital_input_icu.h"
 #include "pin_repository.h"
 
 EXTERN_ENGINE
@@ -67,7 +67,7 @@ bool hasVehicleSpeedSensor() {
 }
 
 void stopVSSPins(void) {
-	removeWaveAnalyzerDriver("VSS", activeConfiguration.bc.vehicleSpeedSensorInputPin);
+	stopDigitalCapture("VSS", activeConfiguration.bc.vehicleSpeedSensorInputPin);
 }
 
 void startVSSPins(void) {

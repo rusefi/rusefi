@@ -186,6 +186,16 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 	ASSERT_FLOAT_EQ(0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
 }
 
+TEST(misc, testGetCoilDutyCycleIssue977) {
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+
+	int rpm = 2000;
+	engine->rpmCalculator.setRpmValue(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
+
+	ASSERT_NEAR( 26.66666, getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 0.0001);
+}
+
 TEST(misc, testFordAspire) {
 	printf("*************************************************** testFordAspire\r\n");
 
@@ -204,11 +214,13 @@ TEST(misc, testFordAspire) {
 
 	engine->rpmCalculator.setRpmValue(200 PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("cranking dwell", 54.166670, getSparkDwell(200 PASS_ENGINE_PARAMETER_SUFFIX));
-	engine->rpmCalculator.setRpmValue(2000 PASS_ENGINE_PARAMETER_SUFFIX);
-	ASSERT_EQ( 4,  getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
+	int rpm = 2000;
+	engine->rpmCalculator.setRpmValue(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
 
 	engine->rpmCalculator.setRpmValue(6000 PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER_SUFFIX));
+
 }
 
 static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
@@ -553,7 +565,7 @@ TEST(misc, testTriggerDecoder) {
 extern fuel_Map3D_t fuelMap;
 
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
-	assertEqualsM4(msg, "inj index", injectorIndex, ev->outputs[0]->injectorIndex);
+	ASSERT_EQ(injectorIndex, ev->outputs[0]->injectorIndex) << msg << "inj index";
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.triggerEventIndex);
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffsetFromTriggerEvent);
 }

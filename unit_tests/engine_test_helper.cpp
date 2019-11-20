@@ -22,7 +22,7 @@ extern WarningCodeState unitTestWarningCodeState;
 extern float testMafValue;
 extern float testCltValue;
 extern float testIatValue;
-extern engine_configuration_s activeConfiguration;
+extern engine_configuration_s & activeConfiguration;
 
 EngineTestHelperBase::EngineTestHelperBase() { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine

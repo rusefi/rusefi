@@ -4,6 +4,10 @@ import com.rusefi.ldmp.*;
 
 public class FuelMathMeta {
 	public static final Request[] CONTENT = new Request[]{
+			new FieldRequest("Engine", "sparkDwell"),
+			new FieldRequest("Engine", "dwellAngle"),
+			new FieldRequest("Engine", "cltTimingCorrection"),
+			new TextRequest("eol"),
 			new IfRequest("Engine", "isCrankingState",
 				new Request[]{
 				new TextRequest("Duration_coef"),

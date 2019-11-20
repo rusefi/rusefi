@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 29 11:56:14 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Nov 18 19:05:30 EST 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -40,6 +40,8 @@ public class Fields {
 	public static final int afterCrankingIACtaperDuration_offset = 2036;
 	public static final int alFIn_offset = 4024;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
+	public static final int alternator_antiwindupFreq_offset = 1764;
+	public static final int alternator_derivativeFilterLoss_offset = 1760;
 	public static final int alternatorControl_dFactor_offset = 1724;
 	public static final int alternatorControl_iFactor_offset = 1720;
 	public static final int alternatorControl_maxValue_offset = 1734;
@@ -295,6 +297,10 @@ public class Fields {
 	public static final int cylindersCount_offset = 400;
 	public static final int cylindersCount_offset_hex = 190;
 	public static final int debugMode_offset = 2092;
+	public static final int debugSetTimer_offset = 806;
+	public static final int debugSetTimer_offset_hex = 326;
+	public static final int debugTimerCallback_offset = 711;
+	public static final int debugTriggerSync_offset = 676;
 	public static final int DIGIPOT_COUNT = 4;
 	public static final int digitalPotentiometerChipSelect1_offset = 668;
 	public static final int digitalPotentiometerChipSelect2_offset = 669;
@@ -676,9 +682,14 @@ public class Fields {
 	public static final int hip9011SpiDevice_offset = 540;
 	public static final int hipOutputChannel_offset = 1468;
 	public static final int HW_MAX_ADC_INDEX = 17;
+	public static final int IAC_PID_MULT_SIZE = 8;
 	public static final int iacByTpsTaper_offset = 2038;
 	public static final int iacCoasting_offset = 3224;
 	public static final int iacCoastingBins_offset = 3160;
+	public static final int iacPidMultLoadBins_offset = 4124;
+	public static final int iacPidMultRpmBins_offset = 4132;
+	public static final int iacPidMultRpmBins_offset_hex = 1024;
+	public static final int iacPidMultTable_offset = 4060;
 	public static final int iat_adcChannel_offset = 312;
 	public static final int iat_adcChannel_offset_hex = 138;
 	public static final int iat_alignmentFill_offset = 313;
@@ -919,7 +930,7 @@ public class Fields {
 	public static final int mafSensorType_offset = 948;
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
-	public static final int mainUnusedEnd_offset = 4060;
+	public static final int mainUnusedEnd_offset = 4140;
 	public static final int malfunctionIndicatorPin_offset = 660;
 	public static final int malfunctionIndicatorPin_offset_hex = 294;
 	public static final int malfunctionIndicatorPinMode_offset = 661;
@@ -1223,7 +1234,6 @@ public class Fields {
 	public static final int twoWireBatchInjection_offset = 1476;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
 	public static final int unrealisticRpmThreashold_offset = 760;
-	public static final int unused1133_offset = 676;
 	public static final int unused1234234_offset = 2042;
 	public static final int unused_1484_bit_21_offset = 1476;
 	public static final int unused_1484_bit_22_offset = 1476;
@@ -1241,14 +1251,12 @@ public class Fields {
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
 	public static final int unusedAnotherOne_offset = 744;
 	public static final int unusedAtBoardConfigurationEnd_offset = 980;
-	public static final int unusedBit31_offset = 1464;
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
-	public static final int unusedFormerWarmupAfrPid_offset = 1760;
-	public static final int unusedMa2_offset = 711;
+	public static final int unusedFormerWarmupAfrPid_offset = 1768;
 	public static final int unusedOldWarmupAfr_offset = 744;
-	public static final int unusedSpiPadding2_offset = 806;
-	public static final int unusedSpiPadding2_offset_hex = 326;
+	public static final int unusedSpiPadding2_offset = 807;
+	public static final int unusedSpiPadding2_offset_hex = 327;
 	public static final int unusedSpiPadding3_offset = 4036;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
@@ -1272,6 +1280,7 @@ public class Fields {
 	public static final int useFSIO16ForTimingAdjustment_offset = 1464;
 	public static final int useFSIO4ForSeriousEngineWarning_offset = 1464;
 	public static final int useFSIO5ForCriticalIssueEngineStop_offset = 1464;
+	public static final int useFSIO6ForRevLimiter_offset = 1464;
 	public static final int useFSIO8ForServo1_offset = 1464;
 	public static final int useFSIO9ForServo2_offset = 1464;
 	public static final int useIacTableForCoasting_offset = 744;
@@ -1519,7 +1528,7 @@ public class Fields {
 	public static final Field WBOHEATERPIN = Field.create("WBOHEATERPIN", 673, FieldType.INT8, brain_pin_e);
 	public static final Field CJ125CSPIN = Field.create("CJ125CSPIN", 674, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855SPIDEVICE = Field.create("MAX31855SPIDEVICE", 675, FieldType.INT8);
-	public static final Field UNUSED1133 = Field.create("UNUSED1133", 676, FieldType.INT8, brain_pin_e);
+	public static final Field DEBUGTRIGGERSYNC = Field.create("DEBUGTRIGGERSYNC", 676, FieldType.INT8, brain_pin_e);
 	public static final Field DIGITALPOTENTIOMETERSPIDEVICE = Field.create("DIGITALPOTENTIOMETERSPIDEVICE", 677, FieldType.INT8);
 	public static final Field MC33972_CS = Field.create("MC33972_CS", 678, FieldType.INT8, brain_pin_e);
 	public static final Field MC33972_CSPINMODE = Field.create("MC33972_CSPINMODE", 679, FieldType.INT8, pin_output_mode_e);
@@ -1543,7 +1552,7 @@ public class Fields {
 	public static final Field CANTXPIN = Field.create("CANTXPIN", 708, FieldType.INT8, brain_pin_e);
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 709, FieldType.INT8, brain_pin_e);
 	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 710, FieldType.INT8);
-	public static final Field UNUSEDMA2 = Field.create("UNUSEDMA2", 711, FieldType.INT8);
+	public static final Field DEBUGTIMERCALLBACK = Field.create("DEBUGTIMERCALLBACK", 711, FieldType.INT8, brain_pin_e);
 	public static final Field IDLETHREADPERIODMS = Field.create("IDLETHREADPERIODMS", 712, FieldType.INT);
 	public static final Field CONSOLELOOPPERIODMS = Field.create("CONSOLELOOPPERIODMS", 716, FieldType.INT);
 	public static final Field LCDTHREADPERIODMS = Field.create("LCDTHREADPERIODMS", 720, FieldType.INT);
@@ -1641,6 +1650,8 @@ public class Fields {
 	public static final Field MAX31855_CS7 = Field.create("MAX31855_CS7", 802, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS8 = Field.create("MAX31855_CS8", 803, FieldType.INT8, brain_pin_e);
 	public static final Field SDCARDPERIODMS = Field.create("SDCARDPERIODMS", 804, FieldType.INT16);
+	public static final Field DEBUGSETTIMER = Field.create("DEBUGSETTIMER", 806, FieldType.INT8, brain_pin_e);
+	public static final Field UNUSEDSPIPADDING2 = Field.create("UNUSEDSPIPADDING2", 807, FieldType.INT8);
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
@@ -1756,7 +1767,7 @@ public class Fields {
 	public static final Field USEFSIO4FORSERIOUSENGINEWARNING = Field.create("USEFSIO4FORSERIOUSENGINEWARNING", 1464, FieldType.BIT, 28);
 	public static final Field USEFSIO12FORIDLEOFFSET = Field.create("USEFSIO12FORIDLEOFFSET", 1464, FieldType.BIT, 29);
 	public static final Field USEFSIO13FORIDLEMINVALUE = Field.create("USEFSIO13FORIDLEMINVALUE", 1464, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT31 = Field.create("UNUSEDBIT31", 1464, FieldType.BIT, 31);
+	public static final Field USEFSIO6FORREVLIMITER = Field.create("USEFSIO6FORREVLIMITER", 1464, FieldType.BIT, 31);
 	public static final Field HIPOUTPUTCHANNEL = Field.create("HIPOUTPUTCHANNEL", 1468, FieldType.INT8, adc_channel_e);
 	public static final Field ACSWITCHADC = Field.create("ACSWITCHADC", 1469, FieldType.INT8, adc_channel_e);
 	public static final Field VREFADCCHANNEL = Field.create("VREFADCCHANNEL", 1470, FieldType.INT8, adc_channel_e);
@@ -1844,6 +1855,8 @@ public class Fields {
 	public static final Field ETB_MINVALUE = Field.create("ETB_MINVALUE", 1752, FieldType.INT16);
 	public static final Field ETB_MAXVALUE = Field.create("ETB_MAXVALUE", 1754, FieldType.INT16);
 	public static final Field FUELRAILPRESSURE = Field.create("FUELRAILPRESSURE", 1756, FieldType.FLOAT);
+	public static final Field ALTERNATOR_DERIVATIVEFILTERLOSS = Field.create("ALTERNATOR_DERIVATIVEFILTERLOSS", 1760, FieldType.FLOAT);
+	public static final Field ALTERNATOR_ANTIWINDUPFREQ = Field.create("ALTERNATOR_ANTIWINDUPFREQ", 1764, FieldType.FLOAT);
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1776, FieldType.FLOAT);
 	public static final Field MAPERRORDETECTIONTOOHIGH = Field.create("MAPERRORDETECTIONTOOHIGH", 1780, FieldType.FLOAT);
 	public static final Field STEP1RPMWINDOW = Field.create("STEP1RPMWINDOW", 1784, FieldType.INT);
@@ -2091,6 +2104,7 @@ public class Fields {
 	public static final Field IDLERPMPID2_PERIODMS = Field.create("IDLERPMPID2_PERIODMS", 4054, FieldType.INT16);
 	public static final Field IDLERPMPID2_MINVALUE = Field.create("IDLERPMPID2_MINVALUE", 4056, FieldType.INT16);
 	public static final Field IDLERPMPID2_MAXVALUE = Field.create("IDLERPMPID2_MAXVALUE", 4058, FieldType.INT16);
+	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4060, FieldType.INT);
 	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 6400, FieldType.INT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
@@ -2315,7 +2329,7 @@ public class Fields {
 	WBOHEATERPIN,
 	CJ125CSPIN,
 	MAX31855SPIDEVICE,
-	UNUSED1133,
+	DEBUGTRIGGERSYNC,
 	DIGITALPOTENTIOMETERSPIDEVICE,
 	MC33972_CS,
 	MC33972_CSPINMODE,
@@ -2338,7 +2352,7 @@ public class Fields {
 	CANTXPIN,
 	CANRXPIN,
 	THROTTLEPEDALUPPINMODE,
-	UNUSEDMA2,
+	DEBUGTIMERCALLBACK,
 	IDLETHREADPERIODMS,
 	CONSOLELOOPPERIODMS,
 	LCDTHREADPERIODMS,
@@ -2435,6 +2449,8 @@ public class Fields {
 	MAX31855_CS7,
 	MAX31855_CS8,
 	SDCARDPERIODMS,
+	DEBUGSETTIMER,
+	UNUSEDSPIPADDING2,
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,
@@ -2548,7 +2564,7 @@ public class Fields {
 	USEFSIO4FORSERIOUSENGINEWARNING,
 	USEFSIO12FORIDLEOFFSET,
 	USEFSIO13FORIDLEMINVALUE,
-	UNUSEDBIT31,
+	USEFSIO6FORREVLIMITER,
 	HIPOUTPUTCHANNEL,
 	ACSWITCHADC,
 	VREFADCCHANNEL,
@@ -2636,6 +2652,8 @@ public class Fields {
 	ETB_MINVALUE,
 	ETB_MAXVALUE,
 	FUELRAILPRESSURE,
+	ALTERNATOR_DERIVATIVEFILTERLOSS,
+	ALTERNATOR_ANTIWINDUPFREQ,
 	MAPERRORDETECTIONTOOLOW,
 	MAPERRORDETECTIONTOOHIGH,
 	STEP1RPMWINDOW,
@@ -2878,6 +2896,7 @@ public class Fields {
 	IDLERPMPID2_PERIODMS,
 	IDLERPMPID2_MINVALUE,
 	IDLERPMPID2_MAXVALUE,
+	IACPIDMULTTABLE,
 	PEDALTOTPSTABLE,
 	FSIOFORMULAS1,
 	FSIOFORMULAS2,

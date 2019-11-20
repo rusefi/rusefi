@@ -426,7 +426,9 @@ bool PID_AutoTune::Runtime(Logging *logger)
     }
     avgInput /= (double)(inputCount + 1);
 
+#if defined(AUTOTUNE_DEBUG) || EFI_UNIT_TEST
     bool stable = (iMax - iMin) <= 2.0 * workingNoiseBand;
+#endif
 #if defined (AUTOTUNE_DEBUG)
   Serial.print(F("iMax "));
   Serial.println(iMax);

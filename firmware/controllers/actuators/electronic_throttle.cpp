@@ -15,15 +15,13 @@
  *  it is believed that more than just PID would be needed, as is this is probably
  *  not usable on a real vehicle. Needs to be tested :)
  *
- *
+ * https://raw.githubusercontent.com/wiki/rusefi/rusefi_documentation/oem_docs/VAG/Bosch_0280750009_pinout.jpg
  *
  *  ETB is controlled according to pedal position input (pedal position sensor is a potentiometer)
  *    pedal 0% means pedal not pressed / idle
  *    pedal 100% means pedal all the way down
  *  (not TPS - not the one you can calibrate in TunerStudio)
  *
- *  At the moment we only control opening motor - while relying on ETB spring to move throttle butterfly
- *  back. Throttle position sensor inside ETB is used for closed-loop PID control of ETB.
  *
  * See also pid.cpp
  *
@@ -481,7 +479,7 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.maxValue = 200;
 }
 
-static bool isSamePins(etb_io *current, etb_io *active) {
+static bool isEtbPinsChanged(etb_io *current, etb_io *active) {
 	return 	current->controlPin1 != active->controlPin1 ||
 			current->controlPinMode != active->controlPinMode ||
 			current->directionPin1 != active->directionPin1 ||
@@ -493,7 +491,7 @@ bool isETBRestartNeeded(void) {
 	/**
 	 * We do not want any interruption in HW pin while adjusting other properties
 	 */
-	return isSamePins(&engineConfiguration->bc.etb1, &activeConfiguration.bc.etb1);
+	return isEtbPinsChanged(&engineConfiguration->bc.etb1, &activeConfiguration.bc.etb1);
 }
 
 void stopETBPins(void) {
@@ -519,6 +517,7 @@ void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			);
 }
 
+#if EFI_PROD_CODE && 0
 static void setTempOutput(float value) {
 	autoTune.output = value;
 }
@@ -540,6 +539,7 @@ static void setAutoOffset(int offset) {
 	tuneWorkingPidSettings.offset = offset;
 	autoTune.reset();
 }
+#endif
 
 void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;

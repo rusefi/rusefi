@@ -211,7 +211,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIGB(useNoiselessTriggerDecoder)) {
-		if (!isUsefulSignal(signal, engineConfiguration)) {
+		if (!isUsefulSignal(signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
 	}
@@ -338,7 +338,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 			return;
 		}
 		// moved here from hwHandleShaftSignal()
-		if (!isUsefulSignal(signal, engineConfiguration)) {
+		if (!isUsefulSignal(signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
 	}
@@ -517,7 +517,6 @@ extern int perSecondIrqCounter;
 
 #if EFI_PROD_CODE
 extern uint32_t maxPrecisionCallbackDuration;
-extern bool hwTriggerInputEnabled;
 #endif /* EFI_PROD_CODE  */
 
 extern uint32_t maxSchedulingPrecisionLoss;
@@ -551,11 +550,11 @@ void triggerInfo(void) {
 
 
 #if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
-		scheduleMsg(logger, "trigger PAL mode %d", hwTriggerInputEnabled);
+		scheduleMsg(logger, "trigger PAL mode %d", engine->hwTriggerInputEnabled);
 #else
 
 #if HAL_USE_ICU == TRUE
-	scheduleMsg(logger, "trigger ICU hw: %d %d %d", icuWidthCallbackCounter, icuWidthPeriodCounter, hwTriggerInputEnabled);
+	scheduleMsg(logger, "trigger ICU hw: %d %d %d", icuWidthCallbackCounter, icuWidthPeriodCounter, engine->hwTriggerInputEnabled);
 #endif /* HAL_USE_ICU */
 
 #endif /* HAL_TRIGGER_USE_PAL */
@@ -673,31 +672,29 @@ static void resetRunningTriggerCounters() {
 #endif
 }
 
-#define COMPARE_CONFIG_PARAMS(param) (engineConfiguration->param != previousConfiguration->param)
-
-void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	bool changed = false;
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
-		changed |= COMPARE_CONFIG_PARAMS(camInputs[i]);
+		changed |= isConfigurationChanged(camInputs[i]);
 	}
 
 	changed |=
-		COMPARE_CONFIG_PARAMS(trigger.type) ||
-		COMPARE_CONFIG_PARAMS(ambiguousOperationMode) ||
-		COMPARE_CONFIG_PARAMS(useOnlyRisingEdgeForTrigger) ||
-		COMPARE_CONFIG_PARAMS(globalTriggerAngleOffset) ||
-		COMPARE_CONFIG_PARAMS(trigger.customTotalToothCount) ||
-		COMPARE_CONFIG_PARAMS(trigger.customSkippedToothCount) ||
-		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[0]) ||
-		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[1]) ||
-		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[2]) ||
-		COMPARE_CONFIG_PARAMS(vvtMode) ||
-		COMPARE_CONFIG_PARAMS(bc.vvtCamSensorUseRise) ||
-		COMPARE_CONFIG_PARAMS(vvtOffset) ||
-		COMPARE_CONFIG_PARAMS(vvtDisplayInverted) ||
-		COMPARE_CONFIG_PARAMS(bc.miataNb2VVTRatioFrom) ||
-		COMPARE_CONFIG_PARAMS(bc.miataNb2VVTRatioTo) ||
-		COMPARE_CONFIG_PARAMS(nbVvtIndex);
+		isConfigurationChanged(trigger.type) ||
+		isConfigurationChanged(ambiguousOperationMode) ||
+		isConfigurationChanged(useOnlyRisingEdgeForTrigger) ||
+		isConfigurationChanged(globalTriggerAngleOffset) ||
+		isConfigurationChanged(trigger.customTotalToothCount) ||
+		isConfigurationChanged(trigger.customSkippedToothCount) ||
+		isConfigurationChanged(bc.triggerInputPins[0]) ||
+		isConfigurationChanged(bc.triggerInputPins[1]) ||
+		isConfigurationChanged(bc.triggerInputPins[2]) ||
+		isConfigurationChanged(vvtMode) ||
+		isConfigurationChanged(bc.vvtCamSensorUseRise) ||
+		isConfigurationChanged(vvtOffset) ||
+		isConfigurationChanged(vvtDisplayInverted) ||
+		isConfigurationChanged(bc.miataNb2VVTRatioFrom) ||
+		isConfigurationChanged(bc.miataNb2VVTRatioTo) ||
+		isConfigurationChanged(nbVvtIndex);
 	if (changed) {
 		assertEngineReference();
 

@@ -50,6 +50,7 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 
 void baseMCUInit(void);
 void turnOnSpi(spi_device_e device);
+void jump_to_bootloader();
 
 #ifdef __cplusplus
 extern "C"

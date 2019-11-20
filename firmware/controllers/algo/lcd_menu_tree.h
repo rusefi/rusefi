@@ -4,8 +4,8 @@
  * @date Jan 6, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
-#ifndef CONTROLLERS_ALGO_LCD_MENU_TREE_H_
-#define CONTROLLERS_ALGO_LCD_MENU_TREE_H_
+
+#pragma once
 
 typedef enum {
 	LL_STRING,
@@ -73,7 +73,3 @@ public:
 	MenuItem *current = nullptr;
 	MenuItem *topVisible = nullptr;
 };
-
-
-
-#endif /* CONTROLLERS_ALGO_LCD_MENU_TREE_H_ */

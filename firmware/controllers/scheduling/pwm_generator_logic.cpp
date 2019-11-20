@@ -63,6 +63,10 @@ void PwmConfig::init(float *st, SingleWave *waves) {
  * See also setFrequency
  */
 void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
+	if (isStopRequested) {
+		// we are here in order to not change pin once PWM stop was requested
+		return;
+	}
 	if (cisnan(dutyCycle)) {
 		warning(CUSTOM_DUTY_INVALID, "spwd:dutyCycle %.2f", dutyCycle);
 		return;
@@ -129,6 +133,10 @@ void PwmConfig::setFrequency(float frequency) {
 	periodNt = US2NT(frequency2periodUs(frequency));
 }
 
+void PwmConfig::stop() {
+	isStopRequested = true;
+}
+
 void PwmConfig::handleCycleStart() {
 	efiAssertVoid(CUSTOM_ERR_6697, safe.phaseIndex == 0, "handleCycleStart");
 		if (pwmCycleCallback != NULL) {
@@ -153,6 +161,10 @@ void PwmConfig::handleCycleStart() {
  */
 efitimeus_t PwmConfig::togglePwmState() {
 	ScopePerf perf(PE::PwmConfigTogglePwmState);
+
+	if (isStopRequested) {
+		return 0;
+	}
 
 #if DEBUG_PWM
 	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
@@ -237,6 +249,10 @@ static void timerCallback(PwmConfig *state) {
 	efiAssertVoid(CUSTOM_ERR_6581, state->dbgNestingLevel < 25, "PWM nesting issue");
 
 	efitimeus_t switchTimeUs = state->togglePwmState();
+	if (switchTimeUs == 0) {
+		// we are here when PWM gets stopped
+		return;
+	}
 	if (state->executor == NULL) {
 		firmwareError(CUSTOM_ERR_6695, "exec on %s", state->name);
 		return;
@@ -279,6 +295,7 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 		pin_state_t *const*pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
 	UNUSED(msg);
 	this->executor = executor;
+	isStopRequested = false;
 
 	efiAssertVoid(CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
 	if (phaseCount == 0) {
@@ -308,9 +325,9 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 
 void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
 		OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
-	efiAssertVoid(CUSTOM_ERR_6692, state != NULL, "state");
-	efiAssertVoid(CUSTOM_ERR_6665, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
-	efiAssertVoid(CUSTOM_ERR_6693, stateChangeCallback != NULL, "listener");
+	efiAssertVoid(CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
+	efiAssertVoid(CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
+	efiAssertVoid(CUSTOM_ERR_PWM_CALLBACK_ASSERT, stateChangeCallback != NULL, "listener");
 	if (frequency < 1) {
 		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
 		return;

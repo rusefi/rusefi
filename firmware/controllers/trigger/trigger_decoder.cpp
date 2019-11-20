@@ -112,7 +112,7 @@ bool printTriggerDebug = false;
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
-static Logging * logger;
+static Logging * logger = NULL;
 
 /**
  * @return TRUE is something is wrong with trigger decoding
@@ -201,7 +201,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndexOut, 
 		return NOISY_RPM;
 	}
 	angle_t previousAngle = currentAngle - 90;
-	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_6560);
+	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_TRIGGER_ANGLE_RANGE);
 	// todo: prevIndex should be pre-calculated
 	int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)previousAngle]);
 
@@ -309,8 +309,6 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 #define needToSkipFall(type) ((!TRIGGER_SHAPE(gapBothDirections)) && (( TRIGGER_SHAPE(useRiseEdge)) && (type != TV_RISE)))
 #define needToSkipRise(type) ((!TRIGGER_SHAPE(gapBothDirections)) && ((!TRIGGER_SHAPE(useRiseEdge)) && (type != TV_FALL)))
 
-#define isLessImportant(type) (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap()) )
-
 int TriggerState::getCurrentIndex() const {
 	return currentCycle.current_index;
 }
@@ -377,7 +375,7 @@ void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	someSortOfTriggerError = true;
 
 	totalTriggerErrorCounter++;
-	if (CONFIG(verboseTriggerSynchDetails) || someSortOfTriggerError) {
+	if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !CONFIG(silentTriggerError))) {
 #if EFI_PROD_CODE
 		scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				currentCycle.current_index, TRIGGER_SHAPE(expectedEventCount[0]),
@@ -452,7 +450,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 	bool isPrimary = triggerWheel == T_PRIMARY;
 
-	if (isLessImportant(type)) {
+	if (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap())) {
 #if EFI_UNIT_TEST
 		if (printTriggerDebug) {
 			printf("%s isLessImportant %s now=%lld index=%d\r\n",
@@ -542,6 +540,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 			}
 			isSynchronizationPoint = isSync;
+			if (isSynchronizationPoint) {
+				enginePins.debugTriggerSync.setValue(1);
+			}
 
 
 			/**
@@ -555,7 +556,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			actualSynchGap = 1.0 * toothDurations[0] / toothDurations[1];
 #endif /* EFI_UNIT_TEST */
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_SIMULATOR
 			if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !silentTriggerError)) {
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
@@ -563,8 +564,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 						scheduleMsg(logger, "index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						scheduleMsg(logger, "time=%d index=%d: gap=%.2f expected from %.2f to %.2f error=%s",
-							getTimeNowSeconds(),
+						scheduleMsg(logger, "time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
+							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							i,
 							gap,
 							TRIGGER_SHAPE(syncronizationRatioFrom[i]),
@@ -589,6 +590,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 
 #endif /* EFI_PROD_CODE */
+			enginePins.debugTriggerSync.setValue(0);
 
 		} else {
 			/**

@@ -14,13 +14,8 @@
 #include "hal_comp.h"
 
 #include "trigger_input.h"
-#include "digital_input_hw.h"
-#include "pin_repository.h"
-#include "trigger_structure.h"
-#include "trigger_central.h"
-#include "engine_configuration.h"
+#include "digital_input_icu.h"
 
-#define TRIGGER_SUPPORTED_CHANNELS 2
 
 extern bool hasFirmwareErrorFlag;
 
@@ -109,22 +104,14 @@ void stopTriggerInputPins(void) {
 	isCompEnabled = false;
 #if 0
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (CONFIGB(triggerInputPins)[i]
-				!= activeConfiguration.bc.triggerInputPins[i]) {
+		if (isConfigurationChanged(bc.triggerInputPins[i])) {
 			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}
 	}
-	if (engineConfiguration->camInput != activeConfiguration.camInput) {
+	if (isConfigurationChanged(camInput)) {
 		turnOffTriggerInputPin(activeConfiguration.camInput);
 	}
 #endif
-}
-
-void applyNewTriggerInputPins(void) {
-	// first we will turn off all the changed pins
-	stopTriggerInputPins();
-	// then we will enable all the changed pins
-	startTriggerInputPins();
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT && HAL_USE_COMP */

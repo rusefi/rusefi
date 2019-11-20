@@ -70,6 +70,7 @@ public:
 	 * We need to handle zero duty cycle and 100% duty cycle in a special way
 	 */
 	pwm_mode_e mode;
+	bool isStopRequested = false;
 
 	/**
 	 * @param use NAN frequency to pause PWM
@@ -83,6 +84,7 @@ public:
 	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
 	MultiWave multiWave;
 	efitimeus_t togglePwmState();
+	void stop();
 
 	int dbgNestingLevel;
 
