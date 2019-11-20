@@ -12,6 +12,12 @@
 #include "obd_error_codes.h"
 #endif /* _FROM_ASM_ */
 
+
+#if !defined(ENABLE_PERF_TRACE) || defined(__DOXYGEN__)
+// looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
+ #define ENABLE_PERF_TRACE FALSE
+#endif /* ENABLE_PERF_TRACE */
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -22,34 +28,18 @@ extern "C"
     void irqEnterHook(void);
     void irqExitHook(void);
     void contextSwitchHook(void);
-  #else /* EFI_CLOCK_LOCKS */
+  #else /* ENABLE_PERF_TRACE */
     #define irqEnterHook() {}
     #define irqExitHook() {}
     #define contextSwitchHook() {}
-  #endif /*EFI_CLOCK_LOCKS */
+  #endif /*ENABLE_PERF_TRACE */
  #endif /* __ASSEMBLER__ */
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#if EFI_CLOCK_LOCKS
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-#ifndef __ASSEMBLER__
-  void onLockHook(void);
-  void onUnlockHook(void);
-#endif /* __ASSEMBLER__ */
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-  #define ON_LOCK_HOOK onLockHook()
-  #define ON_UNLOCK_HOOK onUnlockHook()
-#else /* EFI_CLOCK_LOCKS */
-  #define ON_LOCK_HOOK
-  #define ON_UNLOCK_HOOK
-#endif /* EFI_CLOCK_LOCKS */
+#define ON_LOCK_HOOK {}
+#define ON_UNLOCK_HOOK {}
 
 #if !defined(_FROM_ASM_)
 #ifdef __cplusplus

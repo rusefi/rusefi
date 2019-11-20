@@ -107,7 +107,7 @@ int warningEnabled = true;
 
 extern bool hasFirmwareErrorFlag;
 extern int maxTriggerReentraint;
-extern uint32_t maxLockedDuration;
+
 #define FULL_LOGGING_KEY "fl"
 
 #if !defined(STATUS_LOGGING_BUFFER_SIZE)
@@ -914,10 +914,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
 		break;
 	case DBG_METRICS:
-#if EFI_CLOCK_LOCKS
-		tsOutputChannels->debugIntField1 = maxLockedDuration;
 		tsOutputChannels->debugIntField2 = maxTriggerReentraint;
-#endif /* EFI_CLOCK_LOCKS */
 		break;
 	case DBG_TPS_ACCEL:
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();

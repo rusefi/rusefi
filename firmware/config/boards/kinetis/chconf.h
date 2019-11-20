@@ -53,47 +53,8 @@
 
 #define CHPRINTF_USE_FLOAT          	TRUE
 
-#if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
-// looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
- #define EFI_CLOCK_LOCKS FALSE
-#endif /* EFI_CLOCK_LOCKS */
-
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
- #ifndef __ASSEMBLER__
-  #if EFI_CLOCK_LOCKS
-    void irqEnterHook(void);
-    void irqExitHook(void);
-  #else /* EFI_CLOCK_LOCKS */
-    #define irqEnterHook() {}
-    #define irqExitHook() {}
-  #endif /*EFI_CLOCK_LOCKS */
- #endif /* __ASSEMBLER__ */
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-#if EFI_CLOCK_LOCKS
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-#ifndef __ASSEMBLER__
-  void onLockHook(void);
-  void onUnlockHook(void);
-#endif /* __ASSEMBLER__ */
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-  #define ON_LOCK_HOOK onLockHook()
-  #define ON_UNLOCK_HOOK onUnlockHook()
-#else /* EFI_CLOCK_LOCKS */
-  #define ON_LOCK_HOOK
-  #define ON_UNLOCK_HOOK
-#endif /* EFI_CLOCK_LOCKS */
+#define ON_LOCK_HOOK
+#define ON_UNLOCK_HOOK
 
 /*===========================================================================*/
 /**

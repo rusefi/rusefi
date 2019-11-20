@@ -45,7 +45,6 @@ static histogram_s engineSnifferHisto;
 
 EXTERN_ENGINE
 ;
-extern uint32_t maxLockedDuration;
 
 /**
  * This is the number of events in the digital chart which would be displayed
@@ -129,9 +128,6 @@ static void printStatus(void) {
 static void setChartActive(int value) {
 	engineConfiguration->isEngineChartEnabled = value;
 	printStatus();
-#if EFI_CLOCK_LOCKS
-	maxLockedDuration = 0; // todo: why do we reset this here? why only this and not all metrics?
-#endif /* EFI_CLOCK_LOCKS */
 }
 
 void setChartSize(int newSize) {
