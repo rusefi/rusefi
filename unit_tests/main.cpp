@@ -32,6 +32,8 @@ efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
 
+burn
+
 LoggingWithStorage sharedLogger("main");
 
 extern bool printTriggerDebug;
