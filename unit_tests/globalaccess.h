@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "global.h"
+
 #define DECLARE_CONFIG_PARAMETER_SIGNATURE engine_configuration_s *engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
 #define DECLARE_CONFIG_PARAMETER_SUFFIX , DECLARE_CONFIG_PARAMETER_SIGNATURE
 #define PASS_CONFIG_PARAMETER_SIGNATURE engineConfiguration, config, boardConfiguration

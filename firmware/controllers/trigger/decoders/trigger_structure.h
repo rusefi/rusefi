@@ -8,10 +8,9 @@
 #ifndef TRIGGER_STRUCTURE_H_
 #define TRIGGER_STRUCTURE_H_
 
-#include "global.h"
+#include "globalaccess.h"
 #include "engine_configuration_generated_structures.h"
 #include "efi_wave.h"
-#include "globalaccess.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
 
