@@ -89,7 +89,6 @@ PROJECT = rusefi_test
 #DDEFS += -D$(PROJECT_BOARD)
 
 # Imported source files and paths
-include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/controllers/algo/algo.mk
@@ -98,9 +97,11 @@ include $(PROJECT_DIR)/controllers/math/math.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
+include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
+include $(PROJECT_DIR)/util/util.mk
 include test.mk
 include tests/tests.mk
 
@@ -171,12 +172,7 @@ INCDIR = . \
 	$(PROJECT_DIR)/console \
 	$(PROJECT_DIR)/controllers/sensors \
 	$(PROJECT_DIR)/controllers/sensors/converters \
-	$(PROJECT_DIR)/controllers/algo \
-	$(PROJECT_DIR)/controllers/core \
-	$(PROJECT_DIR)/controllers/math \
-	$(PROJECT_DIR)/controllers/system \
-	$(PROJECT_DIR)/controllers/trigger \
-	$(PROJECT_DIR)/controllers/trigger/decoders \
+ 	$(DEVELOPMENT_DIR) \
 	$(PROJECT_DIR)/ext_algo \
 	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/hw_layer/algo \

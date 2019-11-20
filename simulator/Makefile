@@ -117,7 +117,8 @@ else
   include ${CHIBIOS}/os/hal/ports/simulator/posix/platform.mk
 endif
 
-include $(PROJECT_DIR)/util/util.mk
+include $(PROJECT_DIR)/console/binary/tunerstudio.mk
+include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/controllers/algo/algo.mk
@@ -126,13 +127,11 @@ include $(PROJECT_DIR)/controllers/math/math.mk
 include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
-include $(PROJECT_DIR)/console/console.mk
-include $(PROJECT_DIR)/init/init.mk
-include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
-
+include $(PROJECT_DIR)/init/init.mk
+include $(PROJECT_DIR)/util/util.mk
 
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
@@ -202,16 +201,10 @@ INCDIR = . \
           $(PROJECT_DIR)/hw_layer \
           $(PROJECT_DIR)/hw_layer/algo \
           $(HW_SENSORS_INC) \
-          $(CONTROLLERS_INC) \
-          $(PROJECT_DIR)/development \
-          $(PROJECT_DIR)/controllers/algo \
-          $(PROJECT_DIR)/controllers/core \
-          $(PROJECT_DIR)/controllers/math \
-          $(PROJECT_DIR)/controllers/sensors \
-          $(PROJECT_DIR)/controllers/sensors/converters \
-          $(PROJECT_DIR)/controllers/system \
-          $(PROJECT_DIR)/controllers/trigger \
-          $(PROJECT_DIR)/controllers/trigger/decoders \
+    $(CONTROLLERS_INC) \
+ 	$(DEVELOPMENT_DIR) \
+    $(PROJECT_DIR)/controllers/sensors \
+    $(PROJECT_DIR)/controllers/sensors/converters \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
           simulator

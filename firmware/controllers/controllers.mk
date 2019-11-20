@@ -28,6 +28,12 @@ CONTROLLERS_SRC_CPP = \
 CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR) \
 	$(CONTROLLERS_DIR)/scheduling \
+	$(CONTROLLERS_DIR)/system \
+	$(CONTROLLERS_DIR)/algo \
+	$(CONTROLLERS_DIR)/trigger/decoders \
+	$(CONTROLLERS_DIR)/trigger \
+	$(CONTROLLERS_DIR)/core \
+	$(CONTROLLERS_DIR)/math \
 	$(CONTROLLERS_DIR)/generated \
 	$(CONTROLLERS_DIR)/actuators \
 
