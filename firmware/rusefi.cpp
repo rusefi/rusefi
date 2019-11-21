@@ -211,7 +211,7 @@ void runRusEfi(void) {
 	 */
 	initHardware(&sharedLogger);
 
-	here is an obvious compile error
+	// but not any more, it should now succeed!
 
 	initStatusLoop();
 	/**
