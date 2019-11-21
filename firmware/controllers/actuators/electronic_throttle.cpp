@@ -86,7 +86,9 @@
 #error "Unexpected OS ACCESS HERE"
 #endif
 
+#ifndef ETB_MAX_COUNT
 #define ETB_MAX_COUNT 2
+#endif /* ETB_MAX_COUNT */
 
 static bool shouldResetPid = false;
 
