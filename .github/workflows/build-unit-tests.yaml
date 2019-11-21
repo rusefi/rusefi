@@ -1,0 +1,15 @@
+name: unit test ci
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+      
+    - name: make
+      working-directory: unit_tests/
+      run: make
