@@ -1,4 +1,4 @@
-name: simulator ci
+name: Simulator CI
 
 on: [push,pull_request]
 
