@@ -162,6 +162,8 @@ GPIOA_6
 	boardConfiguration->etb1.directionPin2 = GPIOC_8;
 	CONFIG(etb1_use_two_wires) = true;
 
+	CONFIG(etb2_use_two_wires) = true;
+
 
 	boardConfiguration->injectionPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[1] = GPIO_UNASSIGNED;

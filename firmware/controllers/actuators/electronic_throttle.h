@@ -14,9 +14,13 @@
 #include "engine.h"
 #include "periodic_task.h"
 
+class EtbControl;
+
 class EtbController : public PeriodicTimerController {
 public:
 	DECLARE_ENGINE_PTR;
+	EtbController(EtbControl *etb);
+	EtbControl *etb = nullptr;
 
 	int getPeriodMs() override;
 	void PeriodicTask() override;
