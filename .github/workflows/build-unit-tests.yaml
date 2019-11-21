@@ -15,7 +15,7 @@ jobs:
       
     - name: Build Tests
       working-directory: ./unit_tests/
-      run: make
+      run: make -j4
       
     - name: Run Tests
       run: ./unit_tests/build/rusefi_test
