@@ -36,6 +36,6 @@ cd ..
 rem We are back at root rusEfi folder
 pwd
 
-call misc\jenkins\compile_other_versions\build_version.bat
+call misc\jenkins\compile_other_versions\prepare_bundle.bat
 
 echo "exiting %script_name%"
