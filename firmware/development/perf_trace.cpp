@@ -26,19 +26,23 @@ struct TraceEntry
 	uint32_t Timestamp;
 };
 
+// Ensure that the struct is the size we think it is - the binary layout is important
 static_assert(sizeof(TraceEntry) == 8);
 
+// This buffer stores a trace - we write the full buffer once, then disable tracing
 static TraceEntry s_traceBuffer[TRACE_BUFFER_LENGTH];
 static size_t s_nextIdx = 0;
 
-static bool s_isTracing = true;
+static bool s_isTracing = false;
 
 void perfEventImpl(PE event, EPhase phase, uint8_t data)
 {
+	// Bail if we aren't allowed to trace
 	if constexpr (!ENABLE_PERF_TRACE) {
 		return;
 	}
 	
+	// Bail if we aren't tracing
 	if (!s_isTracing) {
 		return;
 	}
@@ -67,6 +71,7 @@ void perfEventImpl(PE event, EPhase phase, uint8_t data)
 
 	entry.Event = event;
 	entry.Phase = phase;
+	// Get the current active interrupt - this is the "thread ID"
 	entry.ThreadId = static_cast<uint8_t>(SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk);
 	entry.Timestamp = timestamp;
 	entry.Data = data;
