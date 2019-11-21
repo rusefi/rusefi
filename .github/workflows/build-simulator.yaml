@@ -1,0 +1,19 @@
+name: unit test ci
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+        submodules: recursive
+      
+    - name: Build Simulator
+      working-directory: ./simulator/
+      run: make -j4
+      
