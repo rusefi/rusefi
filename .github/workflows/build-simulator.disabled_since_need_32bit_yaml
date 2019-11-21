@@ -1,4 +1,4 @@
-name: unit test ci
+name: simulator ci
 
 on: [push]
 
