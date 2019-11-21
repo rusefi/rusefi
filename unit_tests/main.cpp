@@ -32,7 +32,7 @@ efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
 
-burn?
+burn only here
 
 LoggingWithStorage sharedLogger("main");
 
