@@ -7,11 +7,11 @@ BOARDSRC_CPP = $(PROJECT_DIR)/config/boards/Prometheus/board_configuration.cpp
 # Required include directories
 BOARDINC = $(PROJECT_DIR)/config/boards/prometheus
 
-# Override LD script
-ifeq ($(USE_BOOTLOADER),yes)
-  # include Prometheus bootloader code
-  BOOTLOADERINC= $(PROJECT_DIR)/bootloader/prometheus/$(PROMETHEUS_BOARD)
-endif
+# This board uses bootloader
+USE_BOOTLOADER=yes
+
+# include Prometheus bootloader code
+BOOTLOADERINC= $(PROJECT_DIR)/bootloader/prometheus/$(PROMETHEUS_BOARD)
 
 ifeq ($(PROMETHEUS_BOARD),405)
 LDSCRIPT= $(PROJECT_DIR)/config/boards/prometheus/STM32F405xG.ld
