@@ -1,6 +1,10 @@
 set script_name=build_version.bat
 echo Entering %script_name% with %bundle_name%
 
+if %RUSEFI_BUILD_FTP_USER%.==. (
+    echo RUSEFI_BUILD_FTP_USER not set - not packaging
+    exit 0
+)
 
 rm -rf temp
 rem This depends on Cygwin date copied under 'datecyg' name to avoid conflict with Windows date

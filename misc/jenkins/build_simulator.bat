@@ -9,3 +9,4 @@ rm -rf .dep
 call compile.bat
 cd ..
 if not exist simulator/build/rusefi_simulator.exe echo SIMULATOR COMPILATION FAILED
+if not exist simulator/build/rusefi_simulator.exe exit -1
