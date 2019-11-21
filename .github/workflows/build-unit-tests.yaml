@@ -9,7 +9,10 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+        submodules: recursive
       
-    - name: make
-      working-directory: unit_tests/
+    - name: Build tests
+      working-directory: ./unit_tests/
       run: make
