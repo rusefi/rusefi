@@ -1,4 +1,4 @@
-name: Build Firmware
+name: Firmware CI
 
 on: [push,pull_request]
 
