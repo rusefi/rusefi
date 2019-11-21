@@ -211,6 +211,8 @@ void runRusEfi(void) {
 	 */
 	initHardware(&sharedLogger);
 
+	here is an obvious compile error
+
 	initStatusLoop();
 	/**
 	 * Now let's initialize actual engine control logic
