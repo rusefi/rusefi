@@ -1,5 +1,6 @@
 set script_name=run.bat
 echo Entering %script_name%
+echo "RUSEFI_BUILD_FTP_USER=%RUSEFI_BUILD_FTP_USER%"
 
 pwd
 
