@@ -6,14 +6,16 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
     steps:
+    - name: Install Simulator Deps
+      run: sudo apt-get install gcc-multilib g++-multilib
+
     - uses: actions/checkout@v1
       with:
         fetch-depth: 1
         submodules: recursive
-      
+
     - name: Build Simulator
       working-directory: ./simulator/
       run: make -j4
-      
