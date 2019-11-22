@@ -62,15 +62,25 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 */
 			angle_t extra = phaseIndex * 360 + valveIndex * 180;
 			angle_t onTime = extra + engine->engineState.auxValveStart;
+			scheduling_s *onEvent = &turnOnEvent[valveIndex][phaseIndex];
+			scheduling_s *offEvent = &turnOffEvent[valveIndex][phaseIndex];
+			bool isOverlap = onEvent->isScheduled || offEvent->isScheduled;
+			if (isOverlap) {
+				enginePins.debugTriggerSync.setValue(1);
+			}
+
 			fixAngle(onTime, "onTime", CUSTOM_ERR_6556);
-			scheduleByAngle(rpm, &turnOnEvent[valveIndex][phaseIndex],
+			scheduleByAngle(rpm, onEvent,
 					onTime,
 					(schfunc_t) &turnOn, output PASS_ENGINE_PARAMETER_SUFFIX);
 			angle_t offTime = extra + engine->engineState.auxValveEnd;
 			fixAngle(offTime, "offTime", CUSTOM_ERR_6557);
-			scheduleByAngle(rpm, &turnOffEvent[valveIndex][phaseIndex],
+			scheduleByAngle(rpm, offEvent,
 					offTime,
 					(schfunc_t) &turnOff, output PASS_ENGINE_PARAMETER_SUFFIX);
+			if (isOverlap) {
+				enginePins.debugTriggerSync.setValue(0);
+			}
 		}
 	}
 }
