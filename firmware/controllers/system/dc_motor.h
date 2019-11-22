@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "pwm_generator_logic.h"
-
 /**
  * @brief Brushed or brushless DC motor interface
  * 
@@ -33,6 +31,8 @@ public:
 
     virtual bool isOpenDirection() const = 0;
 };
+
+class SimplePwm;
 
 /**
  * @brief Represents a DC motor controller (H bridge) with one pin for enable (PWM),

@@ -7,6 +7,7 @@
  */
 
 #include "dc_motor.h"
+#include "pwm_generator_logic.h"
 
 TwoPinDcMotor::TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2)
     : m_enable(enable)
