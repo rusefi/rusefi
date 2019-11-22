@@ -23,7 +23,15 @@ public:
      * @param duty +1.0f represents full power forward, and -1.0f represents full power backward.
      * @return True if any fault was detected driving the motor, and false if successful.
      */
-    virtual bool Set(float duty) = 0;
+    virtual bool set(float duty) = 0;
+
+    /**
+     * @brief Get the current motor duty cycle.
+     * @return The current duty cycle setting. +1.0f represents full power forward, and -1.0f represents full power backward.
+     */
+    virtual float get() const = 0;
+
+    virtual bool isOpenDirection() const = 0;
 };
 
 /**
@@ -70,9 +78,9 @@ public:
      */
     TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2);
 
-    virtual bool Set(float duty) override;
-    float Get() const;
-    bool isOpenDirection() const;
+    virtual bool set(float duty) override;
+    float get() const override;
+    bool isOpenDirection() const override;
 
-    void SetType(ControlType type) { m_type = type; }
+    void setType(ControlType type) { m_type = type; }
 };

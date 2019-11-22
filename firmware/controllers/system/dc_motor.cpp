@@ -19,14 +19,14 @@ bool TwoPinDcMotor::isOpenDirection() const {
 	return m_value >= 0;
 }
 
-float TwoPinDcMotor::Get() const {
+float TwoPinDcMotor::get() const {
 	return m_value;
 }
 
 /**
  * @param duty value between -1.0 and 1.0
  */
-bool TwoPinDcMotor::Set(float duty)
+bool TwoPinDcMotor::set(float duty)
 {
 	m_value = duty;
 
