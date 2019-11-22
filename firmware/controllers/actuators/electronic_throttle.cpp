@@ -136,7 +136,7 @@ public:
 			pin_output_mode_e *pinEnableMode,
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2) {
-		dcMotor.SetType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
+		dcMotor.setType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
 
 		m_pinEnable.initPin("ETB Enable", pinEnable, pinEnableMode);
 		m_pinDir1.initPin("ETB Dir 1", pinDir1);
@@ -211,7 +211,7 @@ static percent_t currentEtbDuty;
 		}
 
 		if (startupPositionError) {
-			etb->dcMotor.Set(0);
+			etb->dcMotor.set(0);
 			return;
 		}
 
@@ -221,12 +221,12 @@ static percent_t currentEtbDuty;
 		}
 
 		if (!cisnan(directPwmValue)) {
-			etb->dcMotor.Set(directPwmValue);
+			etb->dcMotor.set(directPwmValue);
 			return;
 		}
 
 		if (boardConfiguration->pauseEtbControl) {
-			etb->dcMotor.Set(0);
+			etb->dcMotor.set(0);
 			return;
 		}
 
@@ -243,7 +243,7 @@ static percent_t currentEtbDuty;
 					autoTune.output,
 					value);
 			scheduleMsg(&logger, "AT PID=%f", value);
-			etb->dcMotor.Set(ETB_PERCENT_TO_DUTY(value));
+			etb->dcMotor.set(ETB_PERCENT_TO_DUTY(value));
 
 			if (result) {
 				scheduleMsg(&logger, "GREAT NEWS! %f/%f/%f", autoTune.GetKp(), autoTune.GetKi(), autoTune.GetKd());
@@ -275,7 +275,7 @@ static percent_t currentEtbDuty;
 		currentEtbDuty = engine->engineState.etbFeedForward +
 				etbPid.getOutput(targetPosition, actualThrottlePosition);
 
-		etb->dcMotor.Set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
+		etb->dcMotor.set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
 
 		if (engineConfiguration->isVerboseETB) {
 			etbPid.showPidStatus(&logger, "ETB");
@@ -348,7 +348,7 @@ void setThrottleDutyCycle(percent_t level) {
 	float dc = ETB_PERCENT_TO_DUTY(level);
 	directPwmValue = dc;
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbControls[i].dcMotor.Set(dc);
+		etbControls[i].dcMotor.set(dc);
 	}
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
 }
@@ -379,7 +379,7 @@ static void showEthInfo(void) {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		EtbControl *etb = &etbControls[i];
 
-		scheduleMsg(&logger, "%d: dir=%d DC=%f", i, etb->dcMotor.isOpenDirection(), etb->dcMotor.Get());
+		scheduleMsg(&logger, "%d: dir=%d DC=%f", i, etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
 	}
 
 	etbPid.showPidStatus(&logger, "ETB");
@@ -400,7 +400,7 @@ static void etbReset() {
 	scheduleMsg(&logger, "etbReset");
 	
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbControls[i].dcMotor.Set(0);
+		etbControls[i].dcMotor.set(0);
 	}
 	etbPid.reset();
 
@@ -648,11 +648,11 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		for (int i = 0 ; i < ETB_COUNT; i++) {
 			EtbControl *etb = &etbControls[i];
 
-			etb->dcMotor.Set(70);
+			etb->dcMotor.set(70);
 			chThdSleep(600);
 			// todo: grab with proper index
 			grabTPSIsWideOpen();
-			etb->dcMotor.Set(-70);
+			etb->dcMotor.set(-70);
 			chThdSleep(600);
 			// todo: grab with proper index
 			grabTPSIsClosed();
