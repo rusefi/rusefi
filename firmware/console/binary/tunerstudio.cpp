@@ -487,7 +487,9 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_LOGGER_BUFFER
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
-			|| command == TS_GET_FIRMWARE_VERSION;
+			|| command == TS_GET_FIRMWARE_VERSION
+			|| command == TS_PERF_TRACE_BEGIN
+			|| command == TS_PERF_TRACE_GET_BUFFER;
 }
 
 // this function runs indefinitely
@@ -855,6 +857,8 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	case TS_PERF_TRACE_BEGIN:
 #if ENABLE_PERF_TRACE
 		perfTraceEnable();
+		sendOkResponse(tsChannel, TS_CRC);
+
 #endif /* ENABLE_PERF_TRACE */
 		break;
 	case TS_PERF_TRACE_GET_BUFFER:
