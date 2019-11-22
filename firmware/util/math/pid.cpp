@@ -12,6 +12,7 @@
 #include "os_access.h"
 #include "pid.h"
 #include "math.h"
+#include "engine_configuration_generated_structures.h"
 
 Pid::Pid() {
 	initPidClass(NULL);
@@ -28,7 +29,7 @@ void Pid::initPidClass(pid_s *parameters) {
 	reset();
 }
 
-bool Pid::isSame(pid_s *parameters) const {
+bool Pid::isSame(const pid_s *parameters) const {
 	efiAssert(OBD_PCM_Processor_Fault, this->parameters != NULL, "PID::isSame invalid", false);
 	efiAssert(OBD_PCM_Processor_Fault, parameters != NULL, "PID::isSame NULL", false);
 	return this->parameters->pFactor == parameters->pFactor
@@ -153,7 +154,7 @@ void Pid::sleep() {
 #endif /* EFI_UNIT_TEST */
 }
 
-void Pid::showPidStatus(Logging *logging, const char*msg) {
+void Pid::showPidStatus(Logging *logging, const char*msg) const {
 	scheduleMsg(logging, "%s settings: offset=%f P=%.5f I=%.5f D=%.5f period=%dms",
 			msg,
 			getOffset(),
