@@ -14,7 +14,7 @@ import static org.junit.Assert.fail;
  * @see DoubleEvaluator
  * @see Operator
  */
-public class ParserTest {
+public class ReversePolishNotationParserTest {
     @Test
     public void testFunctionParameters() {
         assertParseB("3 log", "log(3)");
