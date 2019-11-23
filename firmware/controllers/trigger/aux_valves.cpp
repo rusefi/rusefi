@@ -21,8 +21,10 @@
 EXTERN_ENGINE
 ;
 
-static scheduling_s turnOnEvent[AUX_DIGITAL_VALVE_COUNT][2];
-static scheduling_s turnOffEvent[AUX_DIGITAL_VALVE_COUNT][2];
+#define CYCLE_ALTERNATION 2
+
+static scheduling_s turnOnEvent[AUX_DIGITAL_VALVE_COUNT][/* we have two 180 cycles within engine 360 revolution */ 2][CYCLE_ALTERNATION];
+static scheduling_s turnOffEvent[AUX_DIGITAL_VALVE_COUNT][2][CYCLE_ALTERNATION];
 
 static void turnOn(NamedOutputPin *output) {
 	output->setHigh();
@@ -46,6 +48,13 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		return;
 	}
 
+	/**
+	 * Sometimes previous event has not yet been executed by the time we are scheduling new events.
+	 * We use this array alternation in order to bring events that are scheled and waiting to be executed from
+	 * events which are already being scheduled
+	 */
+	int engineCycleAlternation = engine->triggerCentral.triggerState.getTotalRevolutionCounter() % CYCLE_ALTERNATION;
+
 	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
 
 		NamedOutputPin *output = &enginePins.auxValve[valveIndex];
@@ -62,8 +71,8 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 */
 			angle_t extra = phaseIndex * 360 + valveIndex * 180;
 			angle_t onTime = extra + engine->engineState.auxValveStart;
-			scheduling_s *onEvent = &turnOnEvent[valveIndex][phaseIndex];
-			scheduling_s *offEvent = &turnOffEvent[valveIndex][phaseIndex];
+			scheduling_s *onEvent = &turnOnEvent[valveIndex][phaseIndex][engineCycleAlternation];
+			scheduling_s *offEvent = &turnOffEvent[valveIndex][phaseIndex][engineCycleAlternation];
 			bool isOverlap = onEvent->isScheduled || offEvent->isScheduled;
 			if (isOverlap) {
 				enginePins.debugTriggerSync.setValue(1);
