@@ -16,7 +16,7 @@ static MemoryStream warningStream;
 static MemoryStream firmwareErrorMessageStream;
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
-#define WARNING_BUFFER_SIZE 80
+#define WARNING_BUFFER_SIZE 81
 static char warningBuffer[WARNING_BUFFER_SIZE];
 static volatile bool isWarningStreamInitialized = false;
 
@@ -211,7 +211,7 @@ void onUnlockHook(void) {
  */
 void initErrorHandlingDataStructures(void) {
 #if EFI_SIMULATOR || EFI_PROD_CODE
-	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
+	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE - 1, 0);
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 #endif
 	isWarningStreamInitialized = true;
