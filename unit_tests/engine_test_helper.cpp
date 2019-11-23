@@ -165,7 +165,7 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 	TestExecutor *executor = &engine.executor;
 	EXPECT_TRUE(executor->size() > index) << msg;
 	scheduling_s *event = executor->getForUnitTest(index);
-	assertEqualsM4(msg, " up/down", (void*)event->callback == (void*) callback, 1);
+	assertEqualsM4(msg, " up/down", (void*)event->action.callback == (void*) callback, 1);
 	efitime_t start = getTimeNowUs();
 	assertEqualsM(msg, expectedTimestamp, event->momentX - start);
 	return event;
@@ -174,7 +174,7 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, efitime_t momentX, InjectionEvent *expectedEvent) {
 	scheduling_s *event = assertEvent5(msg, index, callback, momentX);
 
-	InjectionEvent *actualEvent = (InjectionEvent *)event->param;
+	InjectionEvent *actualEvent = (InjectionEvent *)event->action.param;
 
 	assertEqualsLM(msg, expectedEvent->outputs[0], (long)actualEvent->outputs[0]);
 // but this would not work	assertEqualsLM(msg, expectedPair, (long)eventPair);

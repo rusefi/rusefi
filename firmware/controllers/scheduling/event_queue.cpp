@@ -57,8 +57,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 	}
 
 	scheduling->momentX = timeX;
-	scheduling->callback = callback;
-	scheduling->param = param;
+	scheduling->action.setAction(callback, param);
 	scheduling->isScheduled = true;
 
 	if (head == NULL || timeX < head->momentX) {
@@ -134,7 +133,6 @@ int EventQueue::executeAll(efitime_t now) {
 	// we need safe iteration because we are removing elements inside the loop
 	LL_FOREACH_SAFE2(head, current, tmp, nextScheduling_s)
 	{
-		efiAssert(CUSTOM_ERR_ASSERT, current->callback != NULL, "callback==null1", 0);
 		if (++listIterationCounter > QUEUE_LENGTH_LIMIT) {
 			firmwareError(CUSTOM_LIST_LOOP, "Is this list looped?");
 			return false;
@@ -167,20 +165,18 @@ int EventQueue::executeAll(efitime_t now) {
 	 * we need safe iteration here because 'callback' might change change 'current->next'
 	 * while re-inserting it into the queue from within the callback
 	 */
-	LL_FOREACH_SAFE2(executionList, current, tmp, nextScheduling_s)
-	{
-		efiAssert(CUSTOM_ERR_ASSERT, current->callback != NULL, "callback==null2", 0);
+	LL_FOREACH_SAFE2(executionList, current, tmp, nextScheduling_s) {
 		uint32_t before = getTimeNowLowerNt();
 		current->isScheduled = false;
 		uint32_t howFarOff = now - current->momentX;
 		maxSchedulingPrecisionLoss = maxI(maxSchedulingPrecisionLoss, howFarOff);
 #if EFI_UNIT_TEST
-		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->param);
+		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.param);
 #endif
 
 		{
 			ScopePerf perf2(PE::EventQueueExecuteCallback);
-			current->callback(current->param);
+			current->action.execute();
 		}
 
 		// even with overflow it's safe to subtract here
