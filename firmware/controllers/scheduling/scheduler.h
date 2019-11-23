@@ -26,7 +26,7 @@ public:
 	bool isScheduled = false;
 
 	/**
-	 * Scheduler implementation has a linked list of these scheduling records.
+	 * Scheduler implementation uses a sorted linked list of these scheduling records.
 	 */
 	scheduling_s *next = nullptr;
 
