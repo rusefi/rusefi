@@ -211,6 +211,10 @@ static percent_t currentEtbDuty;
 #endif /* EFI_TUNER_STUDIO */
 		}
 
+		if !(m_motor) {
+			return;
+		}
+
 		if (startupPositionError) {
 			m_motor->set(0);
 			return;
