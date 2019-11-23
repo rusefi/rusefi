@@ -57,6 +57,8 @@
  * Manhattan
  * set engine_type 24
  *
+ * https://raw.githubusercontent.com/wiki/rusefi/rusefi_documentation/oem_docs/VAG/Bosch_0280750009_pinout.jpg
+ *
  * @date Nov 1, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
@@ -155,6 +157,7 @@ GPIOA_6
 	// For example TLE7209 - two control wires:
 	// PWM on both wires - one to open, another to close
 
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 	// PWM pin
 	boardConfiguration->etb1.controlPin1 = GPIO_UNASSIGNED;
 	// DIR pin

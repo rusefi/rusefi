@@ -340,7 +340,9 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 EtbController etbController(&etbHardware[0].dcMotor);
 
 /**
+ * At the moment there are TWO ways to use this
  * set_etb_duty X
+ * set etb X
  * manual duty cycle control without PID. Percent value from 0 to 100
  */
 void setThrottleDutyCycle(percent_t level) {
@@ -358,9 +360,15 @@ void setThrottleDutyCycle(percent_t level) {
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
 }
 
+static bool etbOperational = false;
+
 static void showEthInfo(void) {
 #if EFI_PROD_CODE
 	static char pinNameBuffer[16];
+
+	if (!etbOperational) {
+		scheduleMsg(&logger, "ETB DISABLED since no PPS");
+	}
 
 	scheduleMsg(&logger, "etbAutoTune=%d",
 			engine->etbAutoTune);
@@ -626,6 +634,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!engine->engineState.hasEtbPedalPositionSensor) {
 		return;
 	}
+	etbOperational = true;
 #if 0
 	// not alive code
 	autoTune.SetOutputStep(0.1);
