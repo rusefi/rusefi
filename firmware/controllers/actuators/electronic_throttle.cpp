@@ -211,7 +211,7 @@ static percent_t currentEtbDuty;
 #endif /* EFI_TUNER_STUDIO */
 		}
 
-		if !(m_motor) {
+		if (!m_motor) {
 			return;
 		}
 
