@@ -12,7 +12,6 @@
 #include "os_access.h"
 #include "pwm_generator_logic.h"
 #include "pwm_generator.h"
-#include "error_handling.h"
 #include "perf_trace.h"
 
 /**
