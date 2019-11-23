@@ -1103,7 +1103,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 #endif /* EFI_SUPPORT_FORD_FIESTA */
 #if EFI_SUPPORT_NISSAN_PRIMERA
 	case NISSAN_PRIMERA:
-		setNissanPrimeraEngineConfiguration(engineConfiguration);
+		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif
 	case HONDA_ACCORD_CD:
@@ -1163,7 +1163,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setMazdaMiataNb1EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_323:
-		setMazda323EngineConfiguration(engineConfiguration);
+		setMazda323EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_626:
 		setMazda626EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

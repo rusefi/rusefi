@@ -10,11 +10,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef MAZDA_323_H_
-#define MAZDA_323_H_
+#pragma once
 
 #include "engine_configuration.h"
 
-void setMazda323EngineConfiguration(engine_configuration_s *engineConfiguration);
-
-#endif /* MAZDA_323_H_ */
+void setMazda323EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
