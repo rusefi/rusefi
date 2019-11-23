@@ -283,7 +283,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 #if EFI_UNIT_TEST
 	if (verboseMode) {
 		printf("spark dwell@ %d/%d spark@ %d/%d id=%d\r\n", iEvent->dwellPosition.triggerEventIndex, (int)iEvent->dwellPosition.angleOffsetFromTriggerEvent,
-			iEvent->sparkPosition.triggerEventAngle, (int)iEvent->sparkPosition.angleOffsetFromTriggerEvent,
+			iEvent->sparkPosition.triggerEventIndex, (int)iEvent->sparkPosition.angleOffsetFromTriggerEvent,
 			iEvent->sparkId);
 	}
 #endif

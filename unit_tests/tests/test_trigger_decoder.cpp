@@ -351,7 +351,7 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("fuel #2", 4.5450, engine->injectionDuration);
 	assertEqualsM("one degree", 111.1111, engine->rpmCalculator.oneDegreeUs);
 	ASSERT_EQ( 1,  ilist->isReady) << "size #2";
-	ASSERT_EQ( 0,  ilist->elements[0].dwellPosition.triggerEventAngle) << "dwell angle";
+	ASSERT_EQ( 0,  ilist->elements[0].dwellPosition.triggerEventIndex) << "dwell @ index";
 	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffsetFromTriggerEvent);
 
 	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #2";
