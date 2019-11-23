@@ -163,15 +163,14 @@ void setRpmBin(float array[], int size, float idleRpm, float topRpm);
 
 void setTableBin(float array[], int size, float from, float to);
 
-#define setArrayValues(array, size, value) setTableBin(array, size, value, value)
-
 /**
  * @param precision for example '0.1' for one digit fractional part
  */
-template<typename vType>
-void setLinearCurveAny(vType array[], int size, float from, float to, float precision) {
-	for (int i = 0; i < size; i++) {
-		float value = interpolateMsg("setLinearCurve", 0, from, size - 1, to, i);
+template<typename TValue, int TSize>
+void setLinearCurve(TValue (&array)[TSize], float from, float to, float precision) {
+	for (int i = 0; i < TSize; i++) {
+		float value = interpolateMsg("setLinearCurve", 0, from, TSize - 1, to, i);
+
 		/**
 		 * rounded values look nicer, also we want to avoid precision mismatch with Tuner Studio
 		 */
@@ -179,7 +178,18 @@ void setLinearCurveAny(vType array[], int size, float from, float to, float prec
 	}
 }
 
-#define setLinearCurve setLinearCurveAny<float>
+template<typename TValue, int TSize>
+void setLinearCurve(TValue (&array)[TSize], float from, float to) {
+	setLinearCurve(array, from, to, 0.01f);
+}
+
+template<typename TValue, int TSize>
+void setArrayValues(TValue (&array)[TSize], TValue value) {
+	for (int i = 0; i < TSize; i++) {
+		array[i] = value;
+	}
+}
+
 void setRpmTableBin(float array[], int size);
 
 #endif /* TABLE_HELPER_H_ */
