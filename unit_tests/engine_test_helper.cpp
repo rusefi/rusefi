@@ -212,8 +212,8 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	// set cranking mode (it's used by getCurrentInjectionMode())
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 
-	setArrayValues(config->cltFuelCorrBins, 1);
-	setArrayValues(engineConfiguration->injector.battLagCorr, 0);
+	setArrayValues(config->cltFuelCorrBins, 1.0f);
+	setArrayValues(engineConfiguration->injector.battLagCorr, 0.0f);
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 

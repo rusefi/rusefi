@@ -26,10 +26,10 @@ float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
 float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-#define KPA_PER_PSI 6.89475728
+#define KPA_PER_PSI 6.89475728f
 
 // PSI (relative to atmosphere) to kPa (relative to vacuum)
-#define PSI2KPA(psi)  (101.32500411216164 + KPA_PER_PSI * (psi))
+#define PSI2KPA(psi)  (101.32500411216164f + KPA_PER_PSI * (psi))
 
 #define INHG2KPA(inhg) ((inhg) * 3.386375)
 #define KPA2INHG(kpa) ((kpa) / 3.386375)
