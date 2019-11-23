@@ -134,8 +134,8 @@ public:
 			pin_output_mode_e *pinEnableMode,
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2,
-            ExecutorInterface* executor,
-            int frequency) {
+			ExecutorInterface* executor,
+			int frequency) {
 		dcMotor.setType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
 
 		m_pinEnable.initPin("ETB Enable", pinEnable, pinEnableMode);
@@ -542,8 +542,8 @@ void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			&CONFIGB(etb1.controlPinMode),
 			CONFIGB(etb1.directionPin1),
 			CONFIGB(etb1.directionPin2),
-            &ENGINE(executor),
-            CONFIG(etbFreq)
+			&ENGINE(executor),
+			CONFIG(etbFreq)
 			);
 }
 
