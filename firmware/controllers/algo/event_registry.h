@@ -91,7 +91,7 @@ public:
 	/**
 	 * Ignition scheduler maintains a linked list of all pending ignition events.
 	 */
-	IgnitionEvent *next = nullptr;
+	IgnitionEvent *nextIgnitionEvent = nullptr;
 	/**
 	 * Sequential number of currently processed spark event
 	 * @see globalSparkIdCounter
