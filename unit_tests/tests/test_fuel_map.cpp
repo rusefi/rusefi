@@ -233,7 +233,7 @@ TEST(fuel, testTpsBasedVeDefect799) {
 
 	int mapFrom = 100;
 	// set MAP axis range
-	setLinearCurve(config->veLoadBins, FUEL_LOAD_COUNT, mapFrom, mapFrom + FUEL_LOAD_COUNT - 1, 1);
+	setLinearCurve(config->veLoadBins, mapFrom, mapFrom + FUEL_LOAD_COUNT - 1, 1);
 
 	// RPM does not matter - set table values to match load axis
 	for (int load = 0; load < FUEL_LOAD_COUNT;load++) {
@@ -246,7 +246,7 @@ TEST(fuel, testTpsBasedVeDefect799) {
 	ASSERT_EQ(107, veMap.getValue(2000, 107));
 
 	// set TPS axis range which does not overlap MAP range for this test
-	setLinearCurve(CONFIG(ignitionTpsBins), IGN_TPS_COUNT, 0, 15, 1);
+	setLinearCurve(CONFIG(ignitionTpsBins), 0, 15, 1);
 
 
 	engine->mockMapValue = 107;
