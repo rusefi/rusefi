@@ -47,11 +47,6 @@
 class event_trigger_position_s {
 public:
 	uint32_t triggerEventIndex = 0;
-	/**
-	 * angle of that 'triggerEventIndex' event
-	 * todo: Technically we can simply take angle of trigger event from trigger shape by 'triggerEventIndex'?
-	 */
-	angle_t triggerEventAngle = 0;
 
 	angle_t angleOffsetFromTriggerEvent = 0;
 };
