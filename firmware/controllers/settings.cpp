@@ -1146,11 +1146,11 @@ static void getValue(const char *paramStr) {
 }
 
 static void setFsioCurve1Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve1, FSIO_CURVE_16, value, value, 1);
+	setLinearCurve(engineConfiguration->fsioCurve1, value, value, 1);
 }
 
 static void setFsioCurve2Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve2, FSIO_CURVE_16, value, value, 1);
+	setLinearCurve(engineConfiguration->fsioCurve2, value, value, 1);
 }
 
 typedef struct {

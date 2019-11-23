@@ -57,7 +57,7 @@ void printConvertedTable() {
 	printf("\n");
 
 
-	setLinearCurve(PSI_BINS, ASIZE, PSI2KPA(18), PSI2KPA(-14.5), 0.1); // we invert PSI scale since voltage is inverted below
+	setLinearCurve(PSI_BINS, PSI2KPA(18), PSI2KPA(-14.5f), 0.1f); // we invert PSI scale since voltage is inverted below
 	for (int i = 0; i< ASIZE;i++) {
 		printf("%f, ", PSI_BINS[i]);
 	}
