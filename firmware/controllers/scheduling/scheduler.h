@@ -28,7 +28,7 @@ public:
 	/**
 	 * Scheduler implementation uses a sorted linked list of these scheduling records.
 	 */
-	scheduling_s *next = nullptr;
+	scheduling_s *nextScheduling_s = nullptr;
 
 	schfunc_t callback = nullptr;
 	void *param = nullptr;
