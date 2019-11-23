@@ -7,7 +7,9 @@
 
 #include "mazda_323.h"
 
-void setMazda323EngineConfiguration(engine_configuration_s *engineConfiguration) {
+EXTERN_CONFIG;
+
+void setMazda323EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 1.6;
 
