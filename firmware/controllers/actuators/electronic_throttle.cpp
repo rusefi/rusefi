@@ -105,7 +105,7 @@ static bool startupPositionError = false;
 
 #define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
 
-class EtbControl {
+class EtbHardware {
 private:
 	OutputPin m_pinEnable;
 	OutputPin m_pinDir1;
@@ -118,9 +118,7 @@ private:
 	SimplePwm etbPwmUp;
 
 public:
-	DECLARE_ENGINE_PTR;
-
-	EtbControl() : etbPwmUp("etbUp"), dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2) {}
+	EtbHardware() : etbPwmUp("etbUp"), dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2) {}
 
 	TwoPinDcMotor dcMotor;
 	
@@ -135,7 +133,9 @@ public:
 			// since we have pointer magic here we cannot simply have value parameter
 			pin_output_mode_e *pinEnableMode,
 			brain_pin_e pinDir1,
-			brain_pin_e pinDir2) {
+			brain_pin_e pinDir2,
+            ExecutorInterface* executor,
+            int frequency) {
 		dcMotor.setType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
 
 		m_pinEnable.initPin("ETB Enable", pinEnable, pinEnableMode);
@@ -143,29 +143,29 @@ public:
 		m_pinDir2.initPin("ETB Dir 2", pinDir2);
 
 		// Clamp to >100hz
-		int freq = maxI(100, engineConfiguration->etbFreq);
+		int clampedFrequency = maxI(100, frequency);
 
 
 // no need to complicate event queue with ETB PWM in unit tests
 #if ! EFI_UNIT_TEST
 		startSimplePwm(&m_pwmEnable, "ETB Enable",
-				&engine->executor,
+				executor,
 				&m_pinEnable,
-				freq,
+				clampedFrequency,
 				0,
 				(pwm_gen_callback*)applyPinState);
 
 		startSimplePwm(&m_pwmDir1, "ETB Dir 1",
-				&engine->executor,
+				executor,
 				&m_pinDir1,
-				freq,
+				clampedFrequency,
 				0,
 				(pwm_gen_callback*)applyPinState);
 
 		startSimplePwm(&m_pwmDir2, "ETB Dir 2",
-				&engine->executor,
+				executor,
 				&m_pinDir2,
-				freq,
+				clampedFrequency,
 				0,
 				(pwm_gen_callback*)applyPinState);
 #endif /* EFI_UNIT_TEST */
@@ -174,7 +174,7 @@ public:
 
 #define ETB_COUNT 2
 
-static EtbControl etbControls[ETB_COUNT];
+static EtbHardware etbHardware[ETB_COUNT];
 
 extern percent_t mockPedalPosition;
 
@@ -187,8 +187,9 @@ static percent_t currentEtbDuty;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(X) (maxF(minF((X * 0.01), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
 
-   EtbController::EtbController(EtbControl *etb) {
-	   this->etb = etb;
+   EtbController::EtbController(DcMotor *motor)
+   : m_motor(motor)
+   {
    }
 
 
@@ -211,7 +212,7 @@ static percent_t currentEtbDuty;
 		}
 
 		if (startupPositionError) {
-			etb->dcMotor.set(0);
+			m_motor->set(0);
 			return;
 		}
 
@@ -221,12 +222,12 @@ static percent_t currentEtbDuty;
 		}
 
 		if (!cisnan(directPwmValue)) {
-			etb->dcMotor.set(directPwmValue);
+			m_motor->set(directPwmValue);
 			return;
 		}
 
 		if (boardConfiguration->pauseEtbControl) {
-			etb->dcMotor.set(0);
+			m_motor->set(0);
 			return;
 		}
 
@@ -243,7 +244,7 @@ static percent_t currentEtbDuty;
 					autoTune.output,
 					value);
 			scheduleMsg(&logger, "AT PID=%f", value);
-			etb->dcMotor.set(ETB_PERCENT_TO_DUTY(value));
+			m_motor->set(ETB_PERCENT_TO_DUTY(value));
 
 			if (result) {
 				scheduleMsg(&logger, "GREAT NEWS! %f/%f/%f", autoTune.GetKp(), autoTune.GetKi(), autoTune.GetKd());
@@ -275,7 +276,7 @@ static percent_t currentEtbDuty;
 		currentEtbDuty = engine->engineState.etbFeedForward +
 				etbPid.getOutput(targetPosition, actualThrottlePosition);
 
-		etb->dcMotor.set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
+		m_motor->set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
 
 		if (engineConfiguration->isVerboseETB) {
 			etbPid.showPidStatus(&logger, "ETB");
@@ -332,7 +333,7 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 #endif /* EFI_TUNER_STUDIO */
 	}
 
-EtbController etbController(&etbControls[0]);
+EtbController etbController(&etbHardware[0].dcMotor);
 
 /**
  * set_etb_duty X
@@ -348,7 +349,7 @@ void setThrottleDutyCycle(percent_t level) {
 	float dc = ETB_PERCENT_TO_DUTY(level);
 	directPwmValue = dc;
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbControls[i].dcMotor.set(dc);
+		etbHardware[i].dcMotor.set(dc);
 	}
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
 }
@@ -377,7 +378,7 @@ static void showEthInfo(void) {
 	scheduleMsg(&logger, "dir2=%s", hwPortname(CONFIGB(etb1.directionPin2)));
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		EtbControl *etb = &etbControls[i];
+		EtbHardware *etb = &etbHardware[i];
 
 		scheduleMsg(&logger, "%d: dir=%d DC=%f", i, etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
 	}
@@ -392,7 +393,7 @@ static void setEtbFrequency(int frequency) {
 	engineConfiguration->etbFreq = frequency;
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbControls[i].setFrequency(frequency);
+		etbHardware[i].setFrequency(frequency);
 	}
 }
 
@@ -400,7 +401,7 @@ static void etbReset() {
 	scheduleMsg(&logger, "etbReset");
 	
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbControls[i].dcMotor.set(0);
+		etbHardware[i].dcMotor.set(0);
 	}
 	etbPid.reset();
 
@@ -535,12 +536,14 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
-	etbControls[0].start(
+	etbHardware[0].start(
 			CONFIG(etb1_use_two_wires),
 			CONFIGB(etb1.controlPin1),
 			&CONFIGB(etb1.controlPinMode),
 			CONFIGB(etb1.directionPin1),
-			CONFIGB(etb1.directionPin2)
+			CONFIGB(etb1.directionPin2),
+            &ENGINE(executor),
+            CONFIG(etbFreq)
 			);
 }
 
@@ -611,9 +614,6 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	etbPid.initPidClass(&engineConfiguration->etb);
 
-	for (int i = 0 ; i < ETB_COUNT; i++) {
-		INJECT_ENGINE_REFERENCE(etbControls[i]);
-	}
 	INJECT_ENGINE_REFERENCE(etbController);
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
@@ -646,7 +646,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->etbCalibrationOnStart) {
 
 		for (int i = 0 ; i < ETB_COUNT; i++) {
-			EtbControl *etb = &etbControls[i];
+			EtbHardware *etb = &etbHardware[i];
 
 			etb->dcMotor.set(70);
 			chThdSleep(600);
