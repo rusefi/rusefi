@@ -705,8 +705,8 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
 	ASSERT_EQ(8, engineLoadIndex);
-	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 25);
-	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 25);
+	setArrayValues(fuelMap.pointers[engineLoadIndex], 25);
+	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], 25);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_FLOAT_EQ(12.5, engine->injectionDuration) << "fuel#2_0";
@@ -866,8 +866,8 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 315);
 	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 45 + 90);
 
-	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
-	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
+	setArrayValues(fuelMap.pointers[engineLoadIndex], 35);
+	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], 35);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("fuel#3", 17.5, engine->injectionDuration);
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
@@ -957,8 +957,8 @@ TEST(big, testDifferentInjectionModes) {
 	// set fuel map values - extract method?
 	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
 	ASSERT_EQ(8, engineLoadIndex);
-	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 40);
-	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 40);
+	setArrayValues(fuelMap.pointers[engineLoadIndex], 40);
+	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], 40);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("injectionMode IM_BATCH", (int)IM_BATCH, (int)engineConfiguration->injectionMode);
@@ -988,8 +988,8 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	// set fuel map values - extract method?
 	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
 	ASSERT_EQ(8, engineLoadIndex);
-	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
-	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
+	setArrayValues(fuelMap.pointers[engineLoadIndex], 35);
+	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], 35);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_FLOAT_EQ(17.5, engine->injectionDuration) << "Lfuel#2_1";
@@ -1052,8 +1052,8 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	eth.executeActions();
 	ASSERT_EQ( 0,  engine->executor.size()) << "Lqs#04";
 
-	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 4);
-	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 4);
+	setArrayValues(fuelMap.pointers[engineLoadIndex], 4);
+	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], 4);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 2,  engine->injectionDuration) << "Lfuel#4";
