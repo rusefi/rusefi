@@ -94,7 +94,7 @@ static void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 	chvprintf((BaseSequentialStream *) stream, fmt, ap);
 
 	// Terminate, but don't write past the end of the buffer
-	int terminatorLocation = MIN(stream->eos, stream->size - 1);
+	int terminatorLocation = minI(stream->eos, stream->size - 1);
 	stream->buffer[terminatorLocation] = '\0';
 }
 
