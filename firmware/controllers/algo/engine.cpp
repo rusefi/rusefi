@@ -382,3 +382,13 @@ void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// let's close injectors or else if these happen to be open right now
 	enginePins.stopPins();
 }
+
+void action_s::setAction(schfunc_t callback, void *param) {
+	this->callback = callback;
+	this->param = param;
+}
+
+void action_s::execute() {
+	efiAssertVoid(CUSTOM_ERR_ASSERT, callback != NULL, "callback==null1");
+	callback(param);
+}

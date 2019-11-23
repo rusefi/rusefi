@@ -2,13 +2,25 @@
  * @file	scheduler.h
  *
  * @date May 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 #pragma once
 
 #include "global.h"
 
 typedef void (*schfunc_t)(void *);
+
+class action_s {
+public:
+	void setAction(schfunc_t callback, void *param);
+	void execute();
+
+#if EFI_PROD_CODE
+private:
+#endif /* EFI_PROD_CODE */
+	schfunc_t callback = nullptr;
+	void *param = nullptr;
+};
 
 /**
  * This structure holds information about an event scheduled in the future: when to execute what callback with what parameters
@@ -30,8 +42,7 @@ public:
 	 */
 	scheduling_s *nextScheduling_s = nullptr;
 
-	schfunc_t callback = nullptr;
-	void *param = nullptr;
+	action_s action;
 };
 
 class ExecutorInterface {

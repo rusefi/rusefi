@@ -39,16 +39,15 @@ void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t ti
 
 static void timerCallback(scheduling_s *scheduling) {
 #if EFI_PRINTF_FUEL_DETAILS
-	if (scheduling->callback == (schfunc_t)&seTurnPinLow) {
-		printf("executing cb=seTurnPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->param, (int)scheduling,
+	if (scheduling->action.callback == (schfunc_t)&seTurnPinLow) {
+		printf("executing cb=seTurnPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->action.param, (int)scheduling,
 				(int)getTimeNowUs());
 	} else {
 //		printf("exec cb=%d p=%d\r\n", (int)scheduling->callback, (int)scheduling->param);
 	}
 
 #endif /* EFI_SIMULATOR */
-		scheduling->callback(scheduling->param);
-
+	scheduling->action.execute();
 }
 
 static void doScheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
@@ -62,8 +61,7 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t 
 	}
 
 	bool alreadyLocked = lockAnyContext();
-	scheduling->callback = callback;
-	scheduling->param = param;
+	scheduling->action.setAction(callback, param);
 	int isArmed = chVTIsArmedI(&scheduling->timer);
 	if (isArmed) {
 		/**
