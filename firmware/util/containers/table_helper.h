@@ -161,13 +161,11 @@ typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t> pedal2tps_
 
 void setRpmBin(float array[], int size, float idleRpm, float topRpm);
 
-void setTableBin(float array[], int size, float from, float to);
-
 /**
- * @param precision for example '0.1' for one digit fractional part
+ * @param precision for example '0.1' for one digit fractional part. Default to 0.01, two digits.
  */
 template<typename TValue, int TSize>
-void setLinearCurve(TValue (&array)[TSize], float from, float to, float precision) {
+void setLinearCurve(TValue (&array)[TSize], float from, float to, float precision = 0.01f) {
 	for (int i = 0; i < TSize; i++) {
 		float value = interpolateMsg("setLinearCurve", 0, from, TSize - 1, to, i);
 
@@ -176,11 +174,6 @@ void setLinearCurve(TValue (&array)[TSize], float from, float to, float precisio
 		 */
 		array[i] = efiRound(value, precision);
 	}
-}
-
-template<typename TValue, int TSize>
-void setLinearCurve(TValue (&array)[TSize], float from, float to) {
-	setLinearCurve(array, from, to, 0.01f);
 }
 
 template<typename TValue, int TSize>
