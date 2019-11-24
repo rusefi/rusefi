@@ -181,7 +181,7 @@
 /**
  * Control the main power relay based on measured ignition voltage (Vbatt)
  */
-#define EFI_MAIN_RELAY_CONTROL FALSE
+#define EFI_MAIN_RELAY_CONTROL TRUE
 
 #ifndef EFI_PWM
 #define EFI_PWM FALSE
@@ -407,7 +407,7 @@
 #define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
 #define EFI_PRINT_MESSAGES_TO_TERMINAL TRUE
 
-#define EFI_ACTIVE_CONFIGURATION_IN_FLASH FLASH_ADDR
+#define EFI_ACTIVE_CONFIGURATION_IN_FLASH (FLASH_ADDR + offsetof(persistent_config_container_s, persistentConfiguration.engineConfiguration))
 
 //#define PWM_PHASE_MAX_COUNT 122
 
