@@ -91,7 +91,7 @@ public:
 	/**
 	 * Desired timing advance
 	 */
-	angle_t advance = NAN;
+	angle_t sparkAngle = NAN;
 	floatms_t sparkDwell;
 	/**
 	 * this timestamp allows us to measure actual dwell time
