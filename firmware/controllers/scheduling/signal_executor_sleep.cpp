@@ -39,8 +39,8 @@ void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t ti
 
 static void timerCallback(scheduling_s *scheduling) {
 #if EFI_PRINTF_FUEL_DETAILS
-	if (scheduling->action.callback == (schfunc_t)&seTurnPinLow) {
-		printf("executing cb=seTurnPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->action.param, (int)scheduling,
+	if (scheduling->action.getCallback() == (schfunc_t)&seTurnPinLow) {
+		printf("executing cb=seTurnPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->action.getArgument(), (int)scheduling,
 				(int)getTimeNowUs());
 	} else {
 //		printf("exec cb=%d p=%d\r\n", (int)scheduling->callback, (int)scheduling->param);

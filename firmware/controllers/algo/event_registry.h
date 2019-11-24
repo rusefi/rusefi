@@ -74,6 +74,10 @@ public:
 	scheduling_s scheduling;
 	event_trigger_position_s position;
 	action_s action;
+	/**
+	 * Trigger-based scheduler maintains a linked list of all pending tooth-based events.
+	 */
+	AngleBasedEvent *nextToothEvent = nullptr;
 };
 
 #define MAX_OUTPUTS_FOR_IGNITION 2
@@ -94,10 +98,6 @@ public:
 	 */
 	uint32_t actualStartOfDwellNt;
 	event_trigger_position_s dwellPosition;
-	/**
-	 * Ignition scheduler maintains a linked list of all pending ignition events.
-	 */
-	IgnitionEvent *nextIgnitionEvent = nullptr;
 	/**
 	 * Sequential number of currently processed spark event
 	 * @see globalSparkIdCounter
