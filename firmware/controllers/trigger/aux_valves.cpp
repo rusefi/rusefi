@@ -21,6 +21,35 @@
 EXTERN_ENGINE
 ;
 
+/**
+//void plainPinTurnOn(AuxActor *current) {
+//	NamedOutputPin *output = &enginePins.auxValve[current->valveIndex];
+if (!engine->auxStarted) {
+
+		for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
+			for (int phaseIndex = 0; phaseIndex < 2; phaseIndex++) {
+				AuxActor *current = &actors[phaseIndex][valveIndex];
+
+//				if ()
+
+
+				scheduleOrQueue(&current->open,
+						trgEventIndex,
+						current->extra + engine->engineState.auxValveStart,
+						(schfunc_t)plainPinTurnOn,
+						current
+						PASS_ENGINE_PARAMETER_SUFFIX);
+
+
+			}
+		}
+
+
+		engine->auxStarted = true;
+	}
+
+ */
+
 void plainPinTurnOn(NamedOutputPin *output) {
 	output->setHigh();
 }
