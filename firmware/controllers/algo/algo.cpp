@@ -19,7 +19,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
 #include "globalaccess.h"
 #include "algo.h"
 #include "advance_map.h"

@@ -10,6 +10,7 @@
 #include "engine.h"
 #include "efi_gpio.h"
 #include "drivers/gpio/gpio_ext.h"
+#include "perf_trace.h"
 
 #if EFI_GPIO_HARDWARE
 #include "pin_repository.h"
@@ -313,6 +314,8 @@ void OutputPin::toggle() {
 
 }
 void OutputPin::setValue(int logicValue) {
+	ScopePerf perf(PE::OutputPinSetValue);
+
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *modePtr;

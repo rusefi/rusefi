@@ -310,7 +310,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	//engineConfiguration->fuelAlgorithm = LM_ALPHA_N; // I want to start with a simple Alpha-N
 
 	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
-	setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 1);
+	setLinearCurve(config->ignitionLoadBins, 20, 120, 1);
 
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 

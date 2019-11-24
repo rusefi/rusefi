@@ -8,8 +8,6 @@
 #ifndef PID_H_
 #define PID_H_
 
-#include "global.h"
-#include "engine_configuration_generated_structures.h"
 #include "engine_state_generated.h"
 #include "pid_state_generated.h"
 
@@ -30,13 +28,16 @@
 
 #define MS2SEC(x) (x * 0.001)
 
+struct pid_s;
+class Logging;
+
 class Pid : public pid_state_s {
 
 public:
 	Pid();
 	explicit Pid(pid_s *parameters);
 	void initPidClass(pid_s *parameters);
-	bool isSame(pid_s *parameters) const;
+	bool isSame(const pid_s *parameters) const;
 
 	/**
 	 * This version of the method takes dTime from pid_s
@@ -62,7 +63,7 @@ public:
 	void postState(TunerStudioOutputChannels *tsOutputChannels);
 	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult);
 #endif /* EFI_TUNER_STUDIO */
-	void showPidStatus(Logging *logging, const char*msg);
+	void showPidStatus(Logging *logging, const char*msg) const;
 	void sleep();
 	int resetCounter;
 	// todo: move this to pid_s one day

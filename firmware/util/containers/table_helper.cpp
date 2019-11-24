@@ -18,10 +18,6 @@ void setRpmBin(float array[], int size, float idleRpm, float topRpm) {
 	array[size - 1] = topRpm;
 }
 
-void setTableBin(float array[], int size, float from, float to) {
-	setLinearCurve(array, size, from, to, 0.01);
-}
-
 /**
  * initialize RPM table axis using default RPM range
  */

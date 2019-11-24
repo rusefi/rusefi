@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 18 19:05:51 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 23 12:39:11 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -379,6 +379,7 @@
 #define CMD_DATE "date"
 #define CMD_DISABLE "disable"
 #define CMD_ENABLE "enable"
+#define CMD_ENGINE_TYPE "engine_type"
 #define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
@@ -2517,8 +2518,8 @@ struct board_configuration_s {
 	 */
 	float mapFrequency100Kpa = (float)0;
 	/**
-	 * See also triggerSimulatorPins
-	 * See also directSelfStimulation
+	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
+	 * See also directSelfStimulation (no wires, bypassing input hardware)
 	 * rpm X
 	 * offset 20
 	 */
@@ -2737,7 +2738,8 @@ struct board_configuration_s {
 	 */
 	can_device_mode_e canDeviceMode;
 	/**
-	 * See also directSelfStimulation
+	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
+	 * See also directSelfStimulation which is different.
 	 * offset 136
 	 */
 	brain_pin_e triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
@@ -4947,4 +4949,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 18 19:05:51 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 23 12:39:11 EST 2019

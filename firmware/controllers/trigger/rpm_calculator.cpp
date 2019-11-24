@@ -13,7 +13,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "global.h"
+#include "globalaccess.h"
 #include "os_access.h"
 #include "engine.h"
 #include "rpm_calculator.h"
@@ -21,6 +21,7 @@
 #include "trigger_central.h"
 #include "engine_configuration.h"
 #include "engine_math.h"
+#include "perf_trace.h"
 
 #if EFI_PROD_CODE
 #include "os_util.h"
@@ -290,12 +291,15 @@ static scheduling_s tdcScheduler[2];
 
 static char rpmBuffer[_MAX_FILLER];
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 /**
  * This callback has nothing to do with actual engine control, it just sends a Top Dead Center mark to the rusEfi console
  * digital sniffer.
  */
-static void onTdcCallback(void) {
+static void onTdcCallback(Engine *engine) {
+	if (!engine->needTdcCallback) {
+		return;
+	}
+	EXPAND_Engine;
 	itoa10(rpmBuffer, GET_RPM());
 #if EFI_ENGINE_SNIFFER
 	waveChart.startDataCollection();
@@ -316,11 +320,11 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 		// todo: use tooth event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
 			scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
-					(schfunc_t) onTdcCallback, NULL);
+					(schfunc_t) onTdcCallback, engine PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 }
-#endif
+
 
 /**
  * @return Current crankshaft angle, 0 to 720 for four-stroke
@@ -343,10 +347,8 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (hasFirmwareError()) {
 		return;
 	}
-#if EFI_PROD_CODE || EFI_SIMULATOR
 
 	addTriggerEventListener(tdcMarkCallback, "chart TDC mark", engine);
-#endif
 
 	addTriggerEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 }
@@ -358,6 +360,8 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
  */
 void scheduleByAngle(float rpm, scheduling_s *timer, angle_t angle,
 		schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::ScheduleByAngle);
+
 	efiAssertVoid(CUSTOM_ANGLE_NAN, !cisnan(angle), "NaN angle?");
 	efiAssertVoid(CUSTOM_ERR_6634, isValidRpm(rpm), "RPM check expected");
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;

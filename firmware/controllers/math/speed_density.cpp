@@ -15,6 +15,7 @@
 #include "engine_math.h"
 #include "maf2map.h"
 #include "config_engine_specs.h"
+#include "perf_trace.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -137,6 +138,8 @@ EXTERN_ENGINE;
  * @return per cylinder injection time, in Milliseconds
  */
 floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
+	ScopePerf perf(PE::GetSpeedDensityFuel);
+
 	/**
 	 * most of the values are pre-calculated for performance reasons
 	 */
@@ -171,14 +174,14 @@ void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	veMap.setAll(80);
 
 //	setRpmTableBin(engineConfiguration->ve2RpmBins, FUEL_RPM_COUNT);
-//	setLinearCurve(engineConfiguration->ve2LoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
+//	setLinearCurve(engineConfiguration->ve2LoadBins, 10, 300, 1);
 //	ve2Map.setAll(0.81);
 
 	setRpmTableBin(config->afrRpmBins, FUEL_RPM_COUNT);
 	afrMap.setAll(14.7);
 
 	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
-	setLinearCurve(engineConfiguration->baroCorrPressureBins, BARO_CORR_SIZE, 75, 105, 1);
+	setLinearCurve(engineConfiguration->baroCorrPressureBins, 75, 105, 1);
 	for (int i = 0; i < BARO_CORR_SIZE;i++) {
 		for (int j = 0; j < BARO_CORR_SIZE;j++) {
 			// Default baro table is all 1.0, we can't recommend a reasonable default here

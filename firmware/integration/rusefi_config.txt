@@ -507,7 +507,7 @@ float mapFrequency0Kpa;;"Hz",      1,      0,       0, 100000,      2
 float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 
 ! todo: rename to triggerSimulatorRpm
-	int triggerSimulatorFrequency;+See also triggerSimulatorPins\nSee also directSelfStimulation\nrpm X;"Rpm",     1,      0,       0,30000,      0
+	int triggerSimulatorFrequency;+Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X;"Rpm",     1,      0,       0,30000,      0
 
 	output_pin_e[INJECTION_PIN_COUNT iterate] injectionPins;
 	output_pin_e[IGNITION_PIN_COUNT iterate] ignitionPins;
@@ -582,7 +582,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	can_device_mode_e canDeviceMode;
 	
-	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;See also directSelfStimulation
+	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.\nSee also directSelfStimulation which is different.
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
 	output_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. See wboHeaterPin
 	pin_output_mode_e o2heaterPinModeTodO;
@@ -1276,6 +1276,7 @@ end_struct
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
 #define CMD_ETB_DUTY "set_etb_duty"
 
+#define CMD_ENGINE_TYPE "engine_type"
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"
 #define CMD_DATE "date"

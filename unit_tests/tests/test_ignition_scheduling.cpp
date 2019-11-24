@@ -26,14 +26,14 @@ TEST(ignition, twoCoils) {
 	engine->engineState.timingAdvance = 0;
 	initializeIgnitionActions(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	ASSERT_EQ(engine->ignitionEvents.elements[0].advance, 0);
+	ASSERT_EQ(engine->ignitionEvents.elements[0].sparkAngle, 0);
 	ASSERT_EQ((void*)engine->ignitionEvents.elements[0].outputs[0], (void*)&enginePins.coils[0]);
 
 
-	ASSERT_EQ(engine->ignitionEvents.elements[1].advance, 720 / 12);
+	ASSERT_EQ(engine->ignitionEvents.elements[1].sparkAngle, 720 / 12);
 	ASSERT_EQ((void*)engine->ignitionEvents.elements[1].outputs[0], (void*)&enginePins.coils[6]);
 
-	ASSERT_EQ(engine->ignitionEvents.elements[3].advance, 3 * 720 / 12);
+	ASSERT_EQ(engine->ignitionEvents.elements[3].sparkAngle, 3 * 720 / 12);
 	ASSERT_EQ((void*)engine->ignitionEvents.elements[3].outputs[0], (void*)&enginePins.coils[6]);
 
 

@@ -69,6 +69,17 @@ private:
 	void clear();
 };
 
+class AngleBasedEvent {
+public:
+	scheduling_s scheduling;
+	event_trigger_position_s position;
+	action_s action;
+	/**
+	 * Trigger-based scheduler maintains a linked list of all pending tooth-based events.
+	 */
+	AngleBasedEvent *nextToothEvent = nullptr;
+};
+
 #define MAX_OUTPUTS_FOR_IGNITION 2
 
 class IgnitionEvent {
@@ -76,22 +87,17 @@ public:
 	IgnitionEvent();
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
 	scheduling_s dwellStartTimer;
-	scheduling_s signalTimerDown;
+	AngleBasedEvent sparkEvent;
 	/**
 	 * Desired timing advance
 	 */
-	angle_t advance = NAN;
+	angle_t sparkAngle = NAN;
 	floatms_t sparkDwell;
 	/**
 	 * this timestamp allows us to measure actual dwell time
 	 */
 	uint32_t actualStartOfDwellNt;
 	event_trigger_position_s dwellPosition;
-	event_trigger_position_s sparkPosition;
-	/**
-	 * Ignition scheduler maintains a linked list of all pending ignition events.
-	 */
-	IgnitionEvent *next = nullptr;
 	/**
 	 * Sequential number of currently processed spark event
 	 * @see globalSparkIdCounter

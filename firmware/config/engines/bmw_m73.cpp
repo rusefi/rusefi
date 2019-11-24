@@ -57,6 +57,8 @@
  * Manhattan
  * set engine_type 24
  *
+ * https://raw.githubusercontent.com/wiki/rusefi/rusefi_documentation/oem_docs/VAG/Bosch_0280750009_pinout.jpg
+ *
  * @date Nov 1, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
@@ -124,6 +126,62 @@ void setEngineBMW_M73_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 // BMW_M73_M
 void setEngineBMW_M73_Manhattan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	/**
+Nucleo boards - first step is to confirm that I can blink via each pin
+going clockwise from top-right corner
+
+GPIOA_10 USD ID
+GPIOA_11 USD DM
+GPIOA_12 USD DP
+
+E_4: running
+
+Good GPIO:
+GPIOC_9 ETB#1
+GPIOC_8 ETB#1
+GPIOB_8
+GPIOB_9
+GPIOC_5
+GPIOA_7
+GPIOA_6
+	 */
+
+
+	CONFIGB(fsioOutputPins)[7] = GPIO_UNASSIGNED;
+	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
+
+
+	// For example TLE7209 - two control wires:
+	// PWM on both wires - one to open, another to close
+
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
+	// PWM pin
+	boardConfiguration->etb1.controlPin1 = GPIO_UNASSIGNED;
+	// DIR pin
+	boardConfiguration->etb1.directionPin1 = GPIOC_9;
+	boardConfiguration->etb1.directionPin2 = GPIOC_8;
+	CONFIG(etb1_use_two_wires) = true;
+
+	CONFIG(etb2_use_two_wires) = true;
+
+
+	boardConfiguration->injectionPins[0] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
+
+	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
+
 
 }
 

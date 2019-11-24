@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +41,7 @@ public class PresetsPane {
         private final String labelTest;
 
         public SetEngineTypeCommandControl(String labelTest, String imageFileName, int engineType) {
-            super(labelTest, imageFileName, CommandControl.SET, "set engine_type " + engineType);
+            super(labelTest, imageFileName, CommandControl.SET, "set " + Fields.CMD_ENGINE_TYPE + " " + engineType);
             this.labelTest = labelTest;
         }
 

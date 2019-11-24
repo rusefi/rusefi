@@ -65,18 +65,23 @@
 #define DISPLAY_SENSOR(x) {}
 #define DISPLAY_IF(x) x
 
-#define DECLARE_ENGINE_PTR                              \
+#define DECLARE_ENGINE_PTR                                 \
 	Engine *engine = nullptr;                              \
 	engine_configuration_s *engineConfiguration = nullptr; \
 	persistent_config_s *config = nullptr;                 \
 	board_configuration_s *boardConfiguration = nullptr;
 
 
-#define INJECT_ENGINE_REFERENCE(x)              \
+#define INJECT_ENGINE_REFERENCE(x)               \
 	x.engine = engine;                           \
 	x.engineConfiguration = engineConfiguration; \
 	x.config = config;                           \
 	x.boardConfiguration = boardConfiguration;
+
+#define EXPAND_Engine \
+	    engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr; \
+		persistent_config_s *config = engine->config; \
+		board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 #ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
 // We store a special changeable copy of configuration is RAM, so we can just compare them

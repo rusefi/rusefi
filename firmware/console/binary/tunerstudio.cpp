@@ -84,6 +84,8 @@
 #include "loggingcentral.h"
 #include "status_loop.h"
 #include "mmc_card.h"
+#include "perf_trace.h"
+
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif
@@ -485,7 +487,9 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_LOGGER_BUFFER
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
-			|| command == TS_GET_FIRMWARE_VERSION;
+			|| command == TS_GET_FIRMWARE_VERSION
+			|| command == TS_PERF_TRACE_BEGIN
+			|| command == TS_PERF_TRACE_GET_BUFFER;
 }
 
 // this function runs indefinitely
@@ -720,7 +724,7 @@ static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomi
  */
 bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	// Bail fast if guaranteed not to be a plain command
-	if(command == 0)
+	if (command == 0)
 	{
 		return false;
 	}
@@ -751,6 +755,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 
 
 int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
+	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
+
 	char command = data[0];
 	data++;
 
@@ -848,7 +854,22 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 
 		break;
+	case TS_PERF_TRACE_BEGIN:
+#if ENABLE_PERF_TRACE
+		perfTraceEnable();
+		sendOkResponse(tsChannel, TS_CRC);
+
+#endif /* ENABLE_PERF_TRACE */
+		break;
+	case TS_PERF_TRACE_GET_BUFFER:
+		{
+#if ENABLE_PERF_TRACE
+			auto trace = perfTraceGetBuffer();
+			sr5SendResponse(tsChannel, TS_CRC, trace.Buffer, trace.Size);
+#endif /* ENABLE_PERF_TRACE */
+		}
 #endif /* EFI_TOOTH_LOGGER */
+		break;
 	default:
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;

@@ -18,12 +18,14 @@ extern "C"
 #endif /* __cplusplus */
  #ifndef __ASSEMBLER__
  void firmwareError(obd_code_e code, const char *fmt, ...);
-  #if EFI_CLOCK_LOCKS
+  #if ENABLE_PERF_TRACE
     void irqEnterHook(void);
     void irqExitHook(void);
+    void contextSwitchHook(void);
   #else /* EFI_CLOCK_LOCKS */
     #define irqEnterHook() {}
     #define irqExitHook() {}
+    #define contextSwitchHook() {}
   #endif /*EFI_CLOCK_LOCKS */
  #endif /* __ASSEMBLER__ */
 #ifdef __cplusplus

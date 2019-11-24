@@ -12,7 +12,6 @@
 
 #include "mpu_util.h"
 #include "flash.h"
-#include "error_handling.h"
 #include "engine.h"
 #include "pin_repository.h"
 #include "os_util.h"

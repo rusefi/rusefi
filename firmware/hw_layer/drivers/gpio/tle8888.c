@@ -433,7 +433,7 @@ int tle8888SpiStartupExchange(void * data) {
 	if (response == 253) {
 		// I've seen this response on red board
 		initResponsesAccumulator += 4;
-	} else if (response == 2408){
+	} else if (response == 2408) {
 		// and I've seen this response on red board
 		initResponsesAccumulator += 100;
 	}

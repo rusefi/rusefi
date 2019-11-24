@@ -35,7 +35,7 @@
 #include "engine_math.h"
 #include "engine_controller.h"
 #include "maf.h"
-//#include "biquad.h"
+#include "perf_trace.h"
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define ADC_BUF_DEPTH_SLOW      8
@@ -228,6 +228,7 @@ void doSlowAdc(void) {
 		;
 		return;
 	}
+
 	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_BUF_DEPTH_SLOW);
 	chSysUnlockFromISR()
 	;
@@ -261,6 +262,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 		;
 		return;
 	}
+
 	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfg_fast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
 	chSysUnlockFromISR()
 	;
@@ -422,8 +424,7 @@ static void printFullAdcReport(Logging *logger) {
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
 
-		if(hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR)
-		{
+		if (hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
 
@@ -459,6 +460,8 @@ int getSlowAdcCounter() {
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	(void) buffer;
 	(void) n;
+
+	ScopePerf perf(PE::AdcCallbackSlow);
 
 	/* Note, only in the ADC_COMPLETE state because the ADC driver fires
 	 * an intermediate callback when the buffer is half full. */
@@ -599,8 +602,6 @@ void initAdcInputs() {
 		pwmEnablePeriodicNotification(EFI_INTERNAL_FAST_ADC_PWM);
 #endif /* HAL_USE_PWM */
 	}
-
-	//if(slowAdcChannelCount > ADC_MAX_SLOW_CHANNELS_COUNT) // todo: do we need this logic? do we need this check
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
 #else

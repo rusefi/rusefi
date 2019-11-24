@@ -147,24 +147,23 @@ ifeq ($(USE_FATFS),yes)
 include $(PROJECT_DIR)/ext/fatfs.mk
 endif
 
-include $(PROJECT_DIR)/hw_layer/hw_layer.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
-include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
-include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
-include $(PROJECT_DIR)/development/development.mk
-
-include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
-include $(PROJECT_DIR)/controllers/controllers.mk
+include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/controllers/algo/algo.mk
+include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/controllers/core/core.mk
 include $(PROJECT_DIR)/controllers/math/math.mk
 include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
-include $(PROJECT_DIR)/console/console.mk
+include $(PROJECT_DIR)/development/development.mk
+include $(PROJECT_DIR)/hw_layer/hw_layer.mk
+include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
+include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
+include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
 include $(PROJECT_DIR)/init/init.mk
+include $(PROJECT_DIR)/util/util.mk
 
 ifeq ($(BOOTLOADERINC),)
   # include default bootloader code
@@ -301,18 +300,12 @@ INCDIR = $(CHIBIOS)/os/license \
 	$(HW_LAYER_DRIVERS_INC) \
 	$(UTIL_INC) \
 	init \
-	development \
+	$(DEVELOPMENT_DIR) \
 	development/hw_layer \
 	development/test \
 	$(CONTROLLERS_INC) \
 	controllers/sensors \
-	controllers/sensors/converters \
-	controllers/system \
-	controllers/algo \
-	controllers/core \
-	controllers/math \
-	controllers/trigger/decoders \
-	controllers/trigger
+	controllers/sensors/converters
 
 #
 # Project, sources and paths

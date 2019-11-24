@@ -59,6 +59,7 @@
 #include "aux_pid.h"
 #include "accelerometer.h"
 #include "counter64.h"
+#include "perf_trace.h"
 
 #if HAL_USE_ADC
 #include "AdcConfiguration.h"
@@ -298,41 +299,24 @@ static void resetAccel(void) {
 
 static int previousSecond;
 
-#if EFI_CLOCK_LOCKS
-
-typedef FLStack<int, 16> irq_enter_timestamps_t;
-
-static irq_enter_timestamps_t irqEnterTimestamps;
+#if ENABLE_PERF_TRACE
 
 void irqEnterHook(void) {
-	irqEnterTimestamps.push(getTimeNowLowerNt());
+	perfEventBegin(PE::ISR);
 }
 
-static int currentIrqDurationAccumulator = 0;
-static int currentIrqCounter = 0;
-/**
- * See also maxLockedDuration
- */
-int perSecondIrqDuration = 0;
-int perSecondIrqCounter = 0;
 void irqExitHook(void) {
-	int enterTime = irqEnterTimestamps.pop();
-	currentIrqDurationAccumulator += (getTimeNowLowerNt() - enterTime);
-	currentIrqCounter++;
+	perfEventEnd(PE::ISR);
 }
-#endif /* EFI_CLOCK_LOCKS */
 
-static void invokePerSecond(void) {
-#if EFI_CLOCK_LOCKS
-	// this data transfer is not atomic but should be totally good enough
-	perSecondIrqDuration = currentIrqDurationAccumulator;
-	perSecondIrqCounter = currentIrqCounter;
-	currentIrqDurationAccumulator = currentIrqCounter = 0;
-#endif /* EFI_CLOCK_LOCKS */
+void contextSwitchHook() {
+	perfEventInstantGlobal(PE::ContextSwitch);
 }
+
+#endif /* ENABLE_PERF_TRACE */
 
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+	#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
@@ -343,11 +327,6 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	updateAndSet(&halTime.state, getTimeNowLowerNt());
     /* Leaving the critical zone.*/
     chSysRestoreStatusX(sts);
-	int timeSeconds = getTimeNowSeconds();
-	if (previousSecond != timeSeconds) {
-		previousSecond = timeSeconds;
-		invokePerSecond();
-	}
 #endif /* EFI_PROD_CODE */
 
 	/**
@@ -818,7 +797,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 19000
+#define RAM_UNUSED_SIZE 2500
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 4600
@@ -839,6 +818,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20191117;
+	return 20191123;
 }
 #endif /* EFI_UNIT_TEST */

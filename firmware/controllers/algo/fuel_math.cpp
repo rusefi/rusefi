@@ -29,6 +29,7 @@
 #include "engine_math.h"
 #include "rpm_calculator.h"
 #include "speed_density.h"
+#include "perf_trace.h"
 
 EXTERN_ENGINE
 ;
@@ -94,6 +95,8 @@ DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTem
 /* DISPLAY_ELSE */
 
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::GetRunningFuel);
+
 	DISPLAY_TEXT(Base_fuel);
 	ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(baseFuel)) = baseFuel;
 	DISPLAY_TEXT(eol);
@@ -161,6 +164,8 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * todo: rename this method since it's now base+TPSaccel
  */
 floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::GetBaseFuel);
+
 	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE));
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	ENGINE(engineState.tpsAccelEnrich) = tpsAccelEnrich;
@@ -235,6 +240,8 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
  *     in case of single point injection mode the amount of fuel into all cylinders, otherwise the amount for one cylinder
  */
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::GetInjectionDuration);
+
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 	injection_mode_e mode = isCranking ?

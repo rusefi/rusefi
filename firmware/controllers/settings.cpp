@@ -30,13 +30,16 @@
 
 #if EFI_PROD_CODE
 #include "vehicle_speed.h"
-#include "electronic_throttle.h"
 #include "rtc_helper.h"
 #include "can_hw.h"
 #include "rusefi.h"
 #include "pin_repository.h"
 #include "hardware.h"
 #endif /* EFI_PROD_CODE */
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+#include "electronic_throttle.h"
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #if EFI_INTERNAL_FLASH
 #include "flash_main.h"
@@ -1143,11 +1146,11 @@ static void getValue(const char *paramStr) {
 }
 
 static void setFsioCurve1Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve1, FSIO_CURVE_16, value, value, 1);
+	setLinearCurve(engineConfiguration->fsioCurve1, value, value, 1);
 }
 
 static void setFsioCurve2Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve2, FSIO_CURVE_16, value, value, 1);
+	setLinearCurve(engineConfiguration->fsioCurve2, value, value, 1);
 }
 
 typedef struct {
@@ -1206,7 +1209,7 @@ const command_f_s commandsF[] = {
 #endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
 
-#if EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_ELECTRONIC_THROTTLE_BODY && (!EFI_UNIT_TEST)
 		{"etb_p", setEtbPFactor},
 		{"etb_i", setEtbIFactor},
 		{"etb_d", setEtbDFactor},
@@ -1239,7 +1242,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"tpsErrorDetectionTooHigh", setTpsErrorDetectionTooHigh},
 		{"fixed_mode_timing", setFixedModeTiming},
 		{"timing_mode", setTimingMode},
-		{"engine_type", setEngineType},
+		{CMD_ENGINE_TYPE, setEngineType},
 		{"rpm_hard_limit", setRpmHardLimit},
 		{"firing_order", setFiringOrder},
 		{"algorithm", setAlgorithmInt},
