@@ -22,7 +22,7 @@ public class JsonOutput {
         writeToStream(testEntries, new FileOutputStream("hello_trace.json"));
     }
 
-    private static void writeToStream(List<Entry> testEntries, OutputStream outputStream) throws IOException {
+    public static void writeToStream(List<Entry> testEntries, OutputStream outputStream) throws IOException {
 
         Writer out = new OutputStreamWriter(outputStream);
         out.write("{\"traceEvents\": [\n");

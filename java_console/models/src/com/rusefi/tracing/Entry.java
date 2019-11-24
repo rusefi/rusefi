@@ -1,9 +1,16 @@
 package com.rusefi.tracing;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Entry {
     private final String name;
     private final Phase phase;
-    private final double timestampSeconds;
+    private double timestampSeconds;
 
     public Entry(String name, Phase phase, double timestampSeconds) {
         this.name = name;
@@ -31,6 +38,52 @@ public class Entry {
         sb.append(x);
         sb.append("\":");
         sb.append(y);
+    }
+
+    public static int readInt(DataInputStream in) throws IOException {
+        int ch1 = in.read();
+        int ch2 = in.read();
+        int ch3 = in.read();
+        int ch4 = in.read();
+        if ((ch1 | ch2 | ch3 | ch4) < 0)
+            throw new EOFException();
+        return ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
+    }
+
+
+    public static List<Entry> parseBuffer(byte[] packet) {
+        List<Entry> result = new ArrayList<>();
+        double minValue = Double.MAX_VALUE;
+        try {
+            DataInputStream is = new DataInputStream(new ByteArrayInputStream(packet));
+            is.readByte(); // skip TS result code
+            for (int i = 0; i < packet.length - 1; i += 8) {
+                byte type = is.readByte();
+                byte phase = is.readByte();
+                byte data = is.readByte();
+                byte thread = is.readByte();
+
+                int timestampNt = readInt(is);
+
+
+                double timestampSeconds = timestampNt / 1000000.0;
+                minValue = Math.min(minValue, timestampNt);
+                Entry e = new Entry("t" + type, Phase.decode(phase), timestampSeconds);
+                result.add(e);
+            }
+
+            for (Entry e : result)
+                e.adjustTimestamp(minValue);
+
+
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+        return result;
+    }
+
+    private void adjustTimestamp(double minValue) {
+        timestampSeconds -= minValue;
     }
 
     @Override
