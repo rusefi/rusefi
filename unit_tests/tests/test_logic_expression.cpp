@@ -7,7 +7,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "global.h"
 #include "fsio_impl.h"
 #include "cli_registry.h"
 #include "engine_test_helper.h"

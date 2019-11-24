@@ -5,8 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "global.h"
-#include "engine_configuration.h"
 #include "fuel_math.h"
 #include "trigger_structure.h"
 #include "allsensors.h"
