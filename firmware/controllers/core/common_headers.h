@@ -78,6 +78,17 @@
 	x.config = config;                           \
 	x.boardConfiguration = boardConfiguration;
 
+#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+// We store a special changeable copy of configuration is RAM, so we can just compare them
 #define isConfigurationChanged(x) (engineConfiguration->x != activeConfiguration.x)
+#else
+// We cannot call prepareVoidConfiguration() for activeConfiguration if it's stored in flash,
+// so we need to tell the firmware that it's "void" (i.e. zeroed, invalid) by setting a special flag variable,
+// and then we consider 'x' as changed if it's just non-zero.
+extern bool isActiveConfigurationVoid;
+#define isConfigurationChanged(x) ((engineConfiguration->x != activeConfiguration.x) || (isActiveConfigurationVoid && engineConfiguration->x != 0))
+#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+
+#define isPinOrModeChanged(pin, mode) (isConfigurationChanged(pin) || isConfigurationChanged(mode))
 
 #endif /* CONTROLLERS_CORE_COMMON_HEADERS_H_ */
