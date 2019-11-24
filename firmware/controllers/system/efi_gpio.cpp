@@ -84,6 +84,18 @@ EnginePins::EnginePins() {
     }                                                                              \
   }
 
+#define unregisterOutputIfPinChanged(output, pin) {                                \
+	if (isConfigurationChanged(pin)) {                                             \
+		(output).unregisterOutput(activeConfiguration.pin);                        \
+	}                                                                              \
+}
+
+#define unregisterOutputIfPinOrModeChanged(output, pin, mode) {                    \
+	if (isPinOrModeChanged(pin, mode)) {                                           \
+		(output).unregisterOutput(activeConfiguration.pin);                        \
+	}                                                                              \
+}
+
 #else /* EFI_PROD_CODE */
 
 #define setPinValue(outputPin, electricalValue, logicValue)                        \
@@ -113,37 +125,24 @@ void EnginePins::unregisterPins() {
 	unregisterEtbPins();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_PROD_CODE
-	fuelPumpRelay.unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin);
-	fanRelay.unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin);
-	acRelay.unregisterOutput(activeConfiguration.bc.acRelayPin, engineConfiguration->bc.acRelayPin);
-	hipCs.unregisterOutput(activeConfiguration.bc.hip9011CsPin, engineConfiguration->bc.hip9011CsPin);
-	triggerDecoderErrorPin.unregisterOutput(activeConfiguration.bc.triggerErrorPin,
-		engineConfiguration->bc.triggerErrorPin);
-
-	sdCsPin.unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin);
-	accelerometerCs.unregisterOutput(activeConfiguration.LIS302DLCsPin, engineConfiguration->LIS302DLCsPin);
-//	etbOutput1.unregisterOutput(activeConfiguration.bc.etb1.directionPin1,
-//			engineConfiguration->bc.etb1.directionPin1);
-//	etbOutput2.unregisterOutput(activeConfiguration.bc.etb1.directionPin2,
-//			engineConfiguration->bc.etb1.directionPin2);
-	checkEnginePin.unregisterOutput(activeConfiguration.bc.malfunctionIndicatorPin,
-			engineConfiguration->bc.malfunctionIndicatorPin);
-	dizzyOutput.unregisterOutput(activeConfiguration.dizzySparkOutputPin,
-			engineConfiguration->dizzySparkOutputPin);
-	tachOut.unregisterOutput(activeConfiguration.bc.tachOutputPin,
-			engineConfiguration->bc.tachOutputPin);
-	idleSolenoidPin.unregisterOutput(activeConfiguration.bc.idle.solenoidPin,
-			engineConfiguration->bc.idle.solenoidPin);
+	unregisterOutputIfPinOrModeChanged(fuelPumpRelay, bc.fuelPumpPin, bc.fuelPumpPinMode);
+	unregisterOutputIfPinOrModeChanged(fanRelay, bc.fanPin, bc.fanPinMode);
+	unregisterOutputIfPinOrModeChanged(acRelay, bc.acRelayPin, bc.acRelayPinMode);
+	unregisterOutputIfPinOrModeChanged(hipCs, bc.hip9011CsPin, bc.hip9011CsPinMode);
+	unregisterOutputIfPinOrModeChanged(triggerDecoderErrorPin, bc.triggerErrorPin, bc.triggerErrorPinMode);
+	unregisterOutputIfPinOrModeChanged(checkEnginePin, bc.malfunctionIndicatorPin, bc.malfunctionIndicatorPinMode);
+	unregisterOutputIfPinOrModeChanged(dizzyOutput, dizzySparkOutputPin, dizzySparkOutputPinMode);
+	unregisterOutputIfPinOrModeChanged(tachOut, bc.tachOutputPin, bc.tachOutputPinMode);
+	unregisterOutputIfPinOrModeChanged(idleSolenoidPin, bc.idle.solenoidPin, bc.idle.solenoidPinMode);
+	unregisterOutputIfPinChanged(sdCsPin, bc.sdCardCsPin);
+	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
 
 	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
-		fsioOutputs[i].unregisterOutput(activeConfiguration.bc.fsioOutputPins[i],
-				engineConfiguration->bc.fsioOutputPins[i]);
+		unregisterOutputIfPinChanged(fsioOutputs[i], bc.fsioOutputPins[i]);
 	}
 
-	alternatorPin.unregisterOutput(activeConfiguration.bc.alternatorControlPin,
-			engineConfiguration->bc.alternatorControlPin);
-	mainRelay.unregisterOutput(activeConfiguration.bc.mainRelayPin,
-			engineConfiguration->bc.mainRelayPin);
+	unregisterOutputIfPinOrModeChanged(alternatorPin, bc.alternatorControlPin, bc.alternatorControlPinMode);
+	unregisterOutputIfPinOrModeChanged(mainRelay, bc.mainRelayPin, bc.mainRelayPinMode);
 
 #endif /* EFI_PROD_CODE */
 }
@@ -160,9 +159,7 @@ void EnginePins::reset() {
 void EnginePins::stopIgnitionPins(void) {
 #if EFI_PROD_CODE
 	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
-		NamedOutputPin *output = &enginePins.coils[i];
-		output->unregisterOutput(activeConfiguration.bc.ignitionPins[i],
-				engineConfiguration->bc.ignitionPins[i]);
+		unregisterOutputIfPinOrModeChanged(enginePins.coils[i], bc.ignitionPins[i], bc.ignitionPinMode);
 	}
 #endif /* EFI_PROD_CODE */
 }
@@ -170,9 +167,7 @@ void EnginePins::stopIgnitionPins(void) {
 void EnginePins::stopInjectionPins(void) {
 #if EFI_PROD_CODE
 	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
-		NamedOutputPin *output = &enginePins.injectors[i];
-		output->unregisterOutput(activeConfiguration.bc.injectionPins[i],
-				engineConfiguration->bc.injectionPins[i]);
+		unregisterOutputIfPinOrModeChanged(enginePins.injectors[i], bc.injectionPins[i], bc.injectionPinMode);
 	}
 #endif /* EFI_PROD_CODE */
 }
@@ -190,13 +185,11 @@ void EnginePins::startIgnitionPins(void) {
 #if EFI_PROD_CODE
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
-		// todo: we need to check if mode has changed
-		if (isConfigurationChanged(bc.ignitionPins[i])) {
+		if (isPinOrModeChanged(bc.ignitionPins[i], bc.ignitionPinMode)) {
 			output->initPin(output->name, CONFIGB(ignitionPins)[i], &CONFIGB(ignitionPinMode));
 		}
 	}
-	// todo: we need to check if mode has changed
-	if (isConfigurationChanged(dizzySparkOutputPin)) {
+	if (isPinOrModeChanged(dizzySparkOutputPin, dizzySparkOutputPinMode)) {
 		enginePins.dizzyOutput.initPin("dizzy tach", engineConfiguration->dizzySparkOutputPin,
 				&engineConfiguration->dizzySparkOutputPinMode);
 
@@ -209,9 +202,7 @@ void EnginePins::startInjectionPins(void) {
 	// todo: should we move this code closer to the injection logic?
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
-		// todo: we need to check if mode has changed
-		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration.bc.injectionPins[i]) {
-
+		if (isPinOrModeChanged(bc.injectionPins[i], bc.injectionPinMode)) {
 			output->initPin(output->name, CONFIGB(injectionPins)[i],
 					&CONFIGB(injectionPinMode));
 		}
@@ -476,6 +467,16 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	setDefaultPinState(outputMode);
 	efiSetPadMode(msg, brainPin, mode);
 #endif /* EFI_GPIO_HARDWARE */
+}
+
+void OutputPin::unregisterOutput(brain_pin_e oldPin) {
+	if (oldPin != GPIO_UNASSIGNED) {
+		scheduleMsg(&sharedLogger, "unregistering %s", hwPortname(oldPin));
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
+		brain_pin_markUnused(oldPin);
+		port = nullptr;
+#endif /* EFI_GPIO_HARDWARE */
+	}
 }
 
 #if EFI_GPIO_HARDWARE
