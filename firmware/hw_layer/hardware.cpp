@@ -251,12 +251,6 @@ void turnOnHardware(Logging *sharedLogger) {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
-static void unregisterPin(brain_pin_e currentPin, brain_pin_e prevPin) {
-	if (currentPin != prevPin) {
-		brain_pin_markUnused(prevPin);
-	}
-}
-
 void stopSpi(spi_device_e device) {
 #if HAL_USE_SPI
 	if (!isSpiInitialized[device])
@@ -333,7 +327,8 @@ void applyNewHardwareSettings(void) {
 	stopHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-	unregisterPin(engineConfiguration->bc.clutchUpPin, activeConfiguration.bc.clutchUpPin);
+	if (isPinOrModeChanged(bc.clutchUpPin, bc.clutchUpPinMode))
+		brain_pin_markUnused(activeConfiguration.bc.clutchUpPin);
 
 	enginePins.unregisterPins();
 
