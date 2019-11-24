@@ -16,7 +16,7 @@ static MemoryStream warningStream;
 static MemoryStream firmwareErrorMessageStream;
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
-#define WARNING_BUFFER_SIZE 81
+#define WARNING_BUFFER_SIZE 80
 static char warningBuffer[WARNING_BUFFER_SIZE];
 static volatile bool isWarningStreamInitialized = false;
 
@@ -89,27 +89,22 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 
 // todo: look into chsnprintf
 // todo: move to some util file & reuse for 'firmwareError' method
-/**
- * @returns number of buffer bytes used
- */
-static int printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
+static void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 	stream->eos = 0; // reset
 	chvprintf((BaseSequentialStream *) stream, fmt, ap);
-	stream->buffer[stream->eos] = 0;
-	return stream->eos + 1;
+
+	// Terminate, but don't write past the end of the buffer
+	int terminatorLocation = minI(stream->eos, stream->size - 1);
+	stream->buffer[terminatorLocation] = '\0';
 }
 
-static void printWarning(obd_code_e code, const char *fmt, va_list ap) {
+static void printWarning(const char *fmt, va_list ap) {
 	resetLogging(&logger); // todo: is 'reset' really needed here?
 	appendMsgPrefix(&logger);
 
 	logger.append(WARNING_PREFIX);
 
-	int bufferUsage = printToStream(&warningStream, fmt, ap);
-	if (bufferUsage > WARNING_BUFFER_SIZE) {
-		firmwareError(CUSTOM_ERR_ASSERT, "stream overrun with %d", code);
-		return;
-	}
+	printToStream(&warningStream, fmt, ap);
 
 	logger.append(warningBuffer);
 	append(&logger, DELIMETER);
@@ -149,7 +144,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 
 	va_list ap;
 	va_start(ap, fmt);
-	printWarning(code, fmt, ap);
+	printWarning(fmt, ap);
 	va_end(ap);
 #else
 	// todo: we need access to 'engine' here so that we can migrate to real 'engine->engineState.warnings'
@@ -211,7 +206,7 @@ void onUnlockHook(void) {
  */
 void initErrorHandlingDataStructures(void) {
 #if EFI_SIMULATOR || EFI_PROD_CODE
-	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE - 1, 0);
+	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 #endif
 	isWarningStreamInitialized = true;
@@ -225,7 +220,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 #ifdef EFI_PRINT_ERRORS_AS_WARNINGS
 	va_list ap;
 	va_start(ap, fmt);
-	printWarning(code, fmt, ap);
+	printWarning(fmt, ap);
 	va_end(ap);
 #endif
 	ON_FATAL_ERROR()
