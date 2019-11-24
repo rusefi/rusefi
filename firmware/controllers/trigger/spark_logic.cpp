@@ -258,7 +258,7 @@ static bool scheduleOrQueue(AngleBasedEvent *event, uint32_t trgEventIndex, angl
 		bool isPending = assertNotInIgnitionList(ENGINE(ignitionEventsHead), event);
 		if (isPending) {
 #if SPARK_EXTREME_LOGGING
-			scheduleMsg(logger, "isPending thus nt adding to queue index=%d rev=%d now=%d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
+			scheduleMsg(logger, "isPending thus not adding to queue index=%d rev=%d now=%d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 		} else {
 			LL_APPEND2(ENGINE(ignitionEventsHead), event, nextToothEvent);
