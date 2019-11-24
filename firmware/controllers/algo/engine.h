@@ -45,6 +45,8 @@ class RpmCalculator;
 #define CLEANUP_MODE_TPS 90
 #define STEPPER_PARKING_TPS CLEANUP_MODE_TPS
 
+#define CYCLE_ALTERNATION 2
+
 class Engine {
 public:
 	explicit Engine(persistent_config_s *config);
@@ -55,6 +57,14 @@ public:
 	LocalVersionHolder versionForConfigurationListeners;
 	LocalVersionHolder auxParametersVersion;
 	operation_mode_e getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+
+	scheduling_s auxTurnOnEvent[AUX_DIGITAL_VALVE_COUNT][/* we have two 180 cycles within engine 360 revolution */ 2][CYCLE_ALTERNATION];
+	scheduling_s auxTurnOffEvent[AUX_DIGITAL_VALVE_COUNT][2][CYCLE_ALTERNATION];
+
+
+	int auxSchedulingIndex = 2;
+	bool needTdcCallback = true;
 
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
