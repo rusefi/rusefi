@@ -251,7 +251,6 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 * when an event is scheduled within the next revolution.
 	 */
 	scheduling_s * sUp = &iEvent->dwellStartTimer;
-	scheduling_s * sDown = &iEvent->signalTimerDown;
 
 
 	/**
@@ -278,12 +277,12 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 
 	efiAssertVoid(CUSTOM_ERR_6591, !cisnan(advance), "findAngle#4");
 	assertAngleRange(advance, "findAngle#a5", CUSTOM_ERR_6549);
-	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkPosition, advance PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
+	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkEvent.position, advance PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {
 		printf("spark dwell@ %d/%d spark@ %d/%d id=%d\r\n", iEvent->dwellPosition.triggerEventIndex, (int)iEvent->dwellPosition.angleOffsetFromTriggerEvent,
-			iEvent->sparkPosition.triggerEventIndex, (int)iEvent->sparkPosition.angleOffsetFromTriggerEvent,
+			iEvent->sparkEvent.position.triggerEventIndex, (int)iEvent->sparkEvent.position.angleOffsetFromTriggerEvent,
 			iEvent->sparkId);
 	}
 #endif
@@ -301,20 +300,22 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 * time-based schedule. This case we would be firing events with best possible angle precision.
 	 *
 	 */
-	if (iEvent->sparkPosition.triggerEventIndex == trgEventIndex) {
+	if (iEvent->sparkEvent.position.triggerEventIndex == trgEventIndex) {
 		/**
 		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
 		 */
-		float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * iEvent->sparkPosition.angleOffsetFromTriggerEvent;
+		float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * iEvent->sparkEvent.position.angleOffsetFromTriggerEvent;
 
 #if SPARK_EXTREME_LOGGING
 		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)timeTillIgnitionUs, iEvent->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
+		scheduling_s * sDown = &iEvent->sparkEvent.scheduling;
+
 		engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &fireSparkAndPrepareNextSchedule, iEvent);
 	} else {
 #if SPARK_EXTREME_LOGGING
-		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d for %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkPosition.triggerEventIndex);
+		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d for %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkEvent.position.triggerEventIndex);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
@@ -389,18 +390,18 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex D
 
 	LL_FOREACH_SAFE2(ENGINE(ignitionEventsHead), current, tmp, nextIgnitionEvent)
 	{
-		if (current->sparkPosition.triggerEventIndex == trgEventIndex) {
+		if (current->sparkEvent.position.triggerEventIndex == trgEventIndex) {
 			// time to fire a spark which was scheduled previously
 			LL_DELETE2(ENGINE(ignitionEventsHead), current, nextIgnitionEvent);
 
-			scheduling_s * sDown = &current->signalTimerDown;
+			scheduling_s * sDown = &current->sparkEvent.scheduling;
 
 #if SPARK_EXTREME_LOGGING
 	scheduleMsg(logger, "time to sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), current->getOutputForLoggins()->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 
-			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffsetFromTriggerEvent;
+			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkEvent.position.angleOffsetFromTriggerEvent;
 			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &fireSparkAndPrepareNextSchedule, current);
 		}
 	}
