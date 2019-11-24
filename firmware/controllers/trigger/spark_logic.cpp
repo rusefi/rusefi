@@ -215,8 +215,56 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	}
 }
 
-static bool assertNotInIgnitionList(IgnitionEvent *head, IgnitionEvent *element) {
-	assertNotInListMethodBody(IgnitionEvent, head, element, nextIgnitionEvent)
+static bool assertNotInIgnitionList(AngleBasedEvent *head, AngleBasedEvent *element) {
+	assertNotInListMethodBody(AngleBasedEvent, head, element, nextToothEvent)
+}
+
+/**
+ * @return true if event corresponds to current tooth and was time-based scheduler
+ *         false if event was put into queue for scheduling at a later tooth
+ */
+static bool scheduleOrQueue(AngleBasedEvent *event, uint32_t trgEventIndex, angle_t advance, schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	TRIGGER_SHAPE(findTriggerPosition(&event->position, advance PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
+
+	/**
+	 * todo: extract a "scheduleForAngle" method with best implementation into a separate utility method
+	 *
+	 * Here's the status as of Nov 2018:
+	 * "scheduleForLater" uses time only and for best precision it's best to use "scheduleForLater" only
+	 * once we hit the last trigger tooth prior to needed event. This case we use as much trigger position angle as possible
+	 * and only use less precise RPM-based time calculation for the last portion of the angle, the one between two teeth closest to the
+	 * desired angle moment.
+	 *
+	 * At the moment we only have time-based scheduler. I believe what needs to be added is a trigger-event based scheduler on top of the
+	 * time-based schedule. This case we would be firing events with best possible angle precision.
+	 *
+	 */
+	if (event->position.triggerEventIndex == trgEventIndex) {
+		/**
+		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
+		 */
+		float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * event->position.angleOffsetFromTriggerEvent;
+
+
+		scheduling_s * sDown = &event->scheduling;
+
+		engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, callback, param);
+		return true;
+	} else {
+		event->action.setAction(callback, param);
+		/**
+		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
+		 */
+		bool isPending = assertNotInIgnitionList(ENGINE(ignitionEventsHead), event);
+		if (isPending) {
+#if SPARK_EXTREME_LOGGING
+			scheduleMsg(logger, "isPending thus nt adding to queue index=%d rev=%d now=%d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+		} else {
+			LL_APPEND2(ENGINE(ignitionEventsHead), event, nextToothEvent);
+		}
+		return false;
+	}
 }
 
 static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,
@@ -277,7 +325,21 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 
 	efiAssertVoid(CUSTOM_ERR_6591, !cisnan(advance), "findAngle#4");
 	assertAngleRange(advance, "findAngle#a5", CUSTOM_ERR_6549);
-	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkEvent.position, advance PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
+
+
+	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, advance, (schfunc_t)fireSparkAndPrepareNextSchedule, iEvent PASS_ENGINE_PARAMETER_SUFFIX);
+
+	if (scheduled) {
+#if SPARK_EXTREME_LOGGING
+		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkId);
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+	} else {
+#if SPARK_EXTREME_LOGGING
+		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s now=%d for id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkEvent.position.triggerEventIndex);
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+	}
+
+
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {
@@ -286,50 +348,6 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 			iEvent->sparkId);
 	}
 #endif
-
-	/**
-	 * todo: extract a "scheduleForAngle" method with best implementation into a separate utility method
-	 *
-	 * Here's the status as of Nov 2018:
-	 * "scheduleForLater" uses time only and for best precision it's best to use "scheduleForLater" only
-	 * once we hit the last trigger tooth prior to needed event. This case we use as much trigger position angle as possible
-	 * and only use less precise RPM-based time calculation for the last portion of the angle, the one between two teeth closest to the
-	 * desired angle moment.
-	 *
-	 * At the moment we only have time-based scheduler. I believe what needs to be added is a trigger-event based scheduler on top of the
-	 * time-based schedule. This case we would be firing events with best possible angle precision.
-	 *
-	 */
-	if (iEvent->sparkEvent.position.triggerEventIndex == trgEventIndex) {
-		/**
-		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
-		 */
-		float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * iEvent->sparkEvent.position.angleOffsetFromTriggerEvent;
-
-#if SPARK_EXTREME_LOGGING
-		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)timeTillIgnitionUs, iEvent->sparkId);
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-		scheduling_s * sDown = &iEvent->sparkEvent.scheduling;
-
-		engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &fireSparkAndPrepareNextSchedule, iEvent);
-	} else {
-#if SPARK_EXTREME_LOGGING
-		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d for %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkEvent.position.triggerEventIndex);
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-		/**
-		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
-		 */
-		bool isPending = assertNotInIgnitionList(ENGINE(ignitionEventsHead), iEvent);
-		if (isPending) {
-#if SPARK_EXTREME_LOGGING
-			scheduleMsg(logger, "not adding to queue sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-			return;
-		}
-
-		LL_APPEND2(ENGINE(ignitionEventsHead), iEvent, nextIgnitionEvent);
-	}
 }
 
 void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -386,23 +404,23 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 
 
 static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	IgnitionEvent *current, *tmp;
+	AngleBasedEvent *current, *tmp;
 
-	LL_FOREACH_SAFE2(ENGINE(ignitionEventsHead), current, tmp, nextIgnitionEvent)
+	LL_FOREACH_SAFE2(ENGINE(ignitionEventsHead), current, tmp, nextToothEvent)
 	{
-		if (current->sparkEvent.position.triggerEventIndex == trgEventIndex) {
+		if (current->position.triggerEventIndex == trgEventIndex) {
 			// time to fire a spark which was scheduled previously
-			LL_DELETE2(ENGINE(ignitionEventsHead), current, nextIgnitionEvent);
+			LL_DELETE2(ENGINE(ignitionEventsHead), current, nextToothEvent);
 
-			scheduling_s * sDown = &current->sparkEvent.scheduling;
+			scheduling_s * sDown = &current->scheduling;
 
 #if SPARK_EXTREME_LOGGING
-	scheduleMsg(logger, "time to sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), current->getOutputForLoggins()->name, (int)getTimeNowUs());
+	scheduleMsg(logger, "time to invoke ind=%d %d %d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 
-			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkEvent.position.angleOffsetFromTriggerEvent;
-			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &fireSparkAndPrepareNextSchedule, current);
+			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->position.angleOffsetFromTriggerEvent;
+			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) current->action.getCallback(), current->action.getArgument());
 		}
 	}
 }

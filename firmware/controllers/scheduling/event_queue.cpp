@@ -171,7 +171,7 @@ int EventQueue::executeAll(efitime_t now) {
 		uint32_t howFarOff = now - current->momentX;
 		maxSchedulingPrecisionLoss = maxI(maxSchedulingPrecisionLoss, howFarOff);
 #if EFI_UNIT_TEST
-		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.param);
+		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.getArgument());
 #endif
 
 		{

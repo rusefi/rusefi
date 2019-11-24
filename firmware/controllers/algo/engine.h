@@ -104,7 +104,7 @@ public:
 	/**
 	 * That's the linked list of pending spark firing events
 	 */
-	IgnitionEvent *ignitionEventsHead = nullptr;
+	AngleBasedEvent *ignitionEventsHead = nullptr;
 	/**
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
 	 */

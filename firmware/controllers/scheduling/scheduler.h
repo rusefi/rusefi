@@ -14,10 +14,10 @@ class action_s {
 public:
 	void setAction(schfunc_t callback, void *param);
 	void execute();
+	schfunc_t getCallback() const;
+	void * getArgument() const;
 
-#if EFI_PROD_CODE
 private:
-#endif /* EFI_PROD_CODE */
 	schfunc_t callback = nullptr;
 	void *param = nullptr;
 };
