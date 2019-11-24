@@ -49,6 +49,8 @@ public:
 	uint32_t triggerEventIndex = 0;
 
 	angle_t angleOffsetFromTriggerEvent = 0;
+
+	void setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 #define TRIGGER_CHANNEL_COUNT 3

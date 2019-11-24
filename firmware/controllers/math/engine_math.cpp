@@ -213,7 +213,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "findAngle#3", false);
 	assertAngleRange(angle, "findAngle#a33", CUSTOM_ERR_6544);
-	TRIGGER_SHAPE(findTriggerPosition(&ev->injectionStart, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
+	ev->injectionStart.setAngle(angle PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_UNIT_TEST
 	printf("registerInjectionEvent angle=%.2f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.triggerEventIndex, injectorIndex);
 #endif

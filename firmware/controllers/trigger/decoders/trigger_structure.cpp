@@ -44,6 +44,11 @@
 #include "engine_configuration.h"
 		extern persistent_config_container_s persistentState;
 
+EXTERN_ENGINE;
+
+void event_trigger_position_s::setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	TRIGGER_SHAPE(findTriggerPosition(this, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
+}
 
 trigger_shape_helper::trigger_shape_helper() {
 	memset(&pinStates, 0, sizeof(pinStates));

@@ -113,7 +113,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	angle_t dwellStartAngle = sparkAngle - dwellAngleDuration;
 	efiAssertVoid(CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");
 	assertAngleRange(dwellStartAngle, "findAngle#a6", CUSTOM_ERR_6550);
-	TRIGGER_SHAPE(findTriggerPosition(&event->dwellPosition, dwellStartAngle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
+	event->dwellPosition.setAngle(dwellStartAngle PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if FUEL_MATH_EXTREME_LOGGING
 	printf("addIgnitionEvent %s ind=%d\n", output->name, event->dwellPosition.triggerEventIndex);
@@ -225,7 +225,7 @@ static bool assertNotInIgnitionList(AngleBasedEvent *head, AngleBasedEvent *elem
  *         false if event was put into queue for scheduling at a later tooth
  */
 static bool scheduleOrQueue(AngleBasedEvent *event, uint32_t trgEventIndex, angle_t angle, schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	TRIGGER_SHAPE(findTriggerPosition(&event->position, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
+	event->position.setAngle(angle PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * todo: extract a "scheduleForAngle" method with best implementation into a separate utility method
