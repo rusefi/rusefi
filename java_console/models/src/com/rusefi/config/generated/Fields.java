@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Nov 25 00:58:08 EST 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Nov 25 01:00:31 EST 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1110,8 +1110,10 @@ public class Fields {
 	public static final int spi3mosiPin_offset = 934;
 	public static final int spi3SckMode_offset = 2602;
 	public static final int spi3sckPin_offset = 936;
-	public static final int starterRelay_offset = 808;
-	public static final int starterRelay_offset_hex = 328;
+	public static final int starterRelayPin_offset = 808;
+	public static final int starterRelayPin_offset_hex = 328;
+	public static final int starterRelayPinMode_offset = 809;
+	public static final int starterRelayPinMode_offset_hex = 329;
 	public static final int startOfCrankingPrimingPulse_offset = 2032;
 	public static final int startUpFuelPumpDuration_offset = 1892;
 	public static final int startUpFuelPumpDuration_offset_hex = 764;
@@ -1265,8 +1267,7 @@ public class Fields {
 	public static final int unusedSpiPadding5_offset = 2713;
 	public static final int unusedSpiPadding7_offset = 4005;
 	public static final int unusedSpiPadding8_offset = 4009;
-	public static final int unuseduartPadding1_offset = 809;
-	public static final int unuseduartPadding1_offset_hex = 329;
+	public static final int unuseduartPadding1_offset = 810;
 	public static final int unusuedsw_offset = 4020;
 	public static final int unusuedvref_offset = 4016;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
@@ -1655,7 +1656,8 @@ public class Fields {
 	public static final Field SDCARDPERIODMS = Field.create("SDCARDPERIODMS", 804, FieldType.INT16);
 	public static final Field DEBUGSETTIMER = Field.create("DEBUGSETTIMER", 806, FieldType.INT8, brain_pin_e);
 	public static final Field DEBUGMAPAVERAGING = Field.create("DEBUGMAPAVERAGING", 807, FieldType.INT8, brain_pin_e);
-	public static final Field STARTERRELAY = Field.create("STARTERRELAY", 808, FieldType.INT8, brain_pin_e);
+	public static final Field STARTERRELAYPIN = Field.create("STARTERRELAYPIN", 808, FieldType.INT8, brain_pin_e);
+	public static final Field STARTERRELAYPINMODE = Field.create("STARTERRELAYPINMODE", 809, FieldType.INT8, pin_output_mode_e);
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
@@ -2455,7 +2457,8 @@ public class Fields {
 	SDCARDPERIODMS,
 	DEBUGSETTIMER,
 	DEBUGMAPAVERAGING,
-	STARTERRELAY,
+	STARTERRELAYPIN,
+	STARTERRELAYPINMODE,
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,

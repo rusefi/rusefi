@@ -1684,8 +1684,10 @@
 #define spi3SckMode_offset_hex a2a
 #define spi3sckPin_offset 936
 #define spi3sckPin_offset_hex 3a8
-#define starterRelay_offset 808
-#define starterRelay_offset_hex 328
+#define starterRelayPin_offset 808
+#define starterRelayPin_offset_hex 328
+#define starterRelayPinMode_offset 809
+#define starterRelayPinMode_offset_hex 329
 #define startOfCrankingPrimingPulse_offset 2032
 #define startOfCrankingPrimingPulse_offset_hex 7f0
 #define startUpFuelPumpDuration_offset 1892
@@ -1947,8 +1949,8 @@
 #define unusedSpiPadding7_offset_hex fa5
 #define unusedSpiPadding8_offset 4009
 #define unusedSpiPadding8_offset_hex fa9
-#define unuseduartPadding1_offset 809
-#define unuseduartPadding1_offset_hex 329
+#define unuseduartPadding1_offset 810
+#define unuseduartPadding1_offset_hex 32a
 #define unusuedsw_offset 4020
 #define unusuedsw_offset_hex fb4
 #define unusuedvref_offset 4016

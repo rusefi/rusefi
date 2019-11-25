@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 25 00:58:19 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 25 01:00:42 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1686,8 +1686,10 @@
 #define spi3SckMode_offset_hex a2a
 #define spi3sckPin_offset 936
 #define spi3sckPin_offset_hex 3a8
-#define starterRelay_offset 808
-#define starterRelay_offset_hex 328
+#define starterRelayPin_offset 808
+#define starterRelayPin_offset_hex 328
+#define starterRelayPinMode_offset 809
+#define starterRelayPinMode_offset_hex 329
 #define startOfCrankingPrimingPulse_offset 2032
 #define startOfCrankingPrimingPulse_offset_hex 7f0
 #define startUpFuelPumpDuration_offset 1892
@@ -1949,8 +1951,8 @@
 #define unusedSpiPadding7_offset_hex fa5
 #define unusedSpiPadding8_offset 4009
 #define unusedSpiPadding8_offset_hex fa9
-#define unuseduartPadding1_offset 809
-#define unuseduartPadding1_offset_hex 329
+#define unuseduartPadding1_offset 810
+#define unuseduartPadding1_offset_hex 32a
 #define unusuedsw_offset 4020
 #define unusuedsw_offset_hex fb4
 #define unusuedvref_offset 4016
@@ -2921,11 +2923,15 @@ struct board_configuration_s {
 	/**
 	 * offset 208
 	 */
-	brain_pin_e starterRelay;
+	brain_pin_e starterRelayPin;
 	/**
 	 * offset 209
 	 */
-	uint8_t unuseduartPadding1[3];
+	pin_output_mode_e starterRelayPinMode;
+	/**
+	 * offset 210
+	 */
+	uint8_t unuseduartPadding1[2];
 	/**
 	 * offset 212
 	 */
@@ -4955,4 +4961,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 25 00:58:19 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 25 01:00:42 EST 2019
