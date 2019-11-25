@@ -1,11 +1,24 @@
 package com.rusefi;
 
+import com.rusefi.tracing.Entry;
+import com.rusefi.tracing.EnumNames;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This tool generates C# or Java class based on enum values from C/C++ header related to rusEfi own Perf Trace
+ *
+ * This allows developers to only edit C/C++ header yet see proper names in chrome://tracing JSON file
+ *
+ * @see EnumNames
+ * @see Entry
+ *
+ */
 public class PerfTraceTool {
-
+    private static final String ENUM_START_TAG = "enum_start_tag";
+    private static final String ENUM_END_TAG = "enum_end_tag";
     private static final String EOL = "\r\n";
 
     public static void readPerfTrace(String inputFileName, String outputFileName, String topClassLine, String stringType) throws IOException {
@@ -46,12 +59,12 @@ public class PerfTraceTool {
 
         String line;
         while ((line = br.readLine()) != null) {
-            if (line.contains("enum_start_tag")) {
+            if (line.contains(ENUM_START_TAG)) {
                 weAreInBusiness = true;
                 continue;
             }
 
-            if (line.contains("enum_end_tag")) {
+            if (line.contains(ENUM_END_TAG)) {
                 // we are done here
                 break;
             }
