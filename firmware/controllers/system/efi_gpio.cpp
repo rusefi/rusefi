@@ -144,6 +144,7 @@ void EnginePins::unregisterPins() {
 
 	unregisterOutputIfPinOrModeChanged(alternatorPin, bc.alternatorControlPin, bc.alternatorControlPinMode);
 	unregisterOutputIfPinOrModeChanged(mainRelay, bc.mainRelayPin, bc.mainRelayPinMode);
+	unregisterOutputIfPinOrModeChanged(starterRelay, bc.starterRelayPin, bc.starterRelayPinMode);
 
 #endif /* EFI_PROD_CODE */
 }
@@ -374,6 +375,7 @@ void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	enginePins.fuelPumpRelay.initPin("fuel pump relay", CONFIGB(fuelPumpPin), &CONFIGB(fuelPumpPinMode));
 
 	enginePins.mainRelay.initPin("main relay", CONFIGB(mainRelayPin), &CONFIGB(mainRelayPinMode));
+	enginePins.starterRelay.initPin("starter relay", CONFIGB(starterRelayPin), &CONFIGB(starterRelayPinMode));
 
 	enginePins.fanRelay.initPin("fan relay", CONFIGB(fanPin), &CONFIGB(fanPinMode));
 	enginePins.o2heater.initPin("o2 heater", CONFIGB(o2heaterPin));

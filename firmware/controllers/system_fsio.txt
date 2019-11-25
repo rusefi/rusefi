@@ -46,7 +46,7 @@ RPM_ABOVE_6000_SOLENOID_80_DUTY=(rpm > 6000) * 0.8
 RPM_BELOW_USER_SETTING_1=rpm < fsio_setting(1)
 
 # starter block using configurable parameter
-STARTER_BLOCK=rpm < cranking_rpm
+STARTER_RELAY_LOGIC=rpm < cranking_rpm
 
 BOOST_CONTROLLER=fsio_table (3, rpm, map) / 100
 

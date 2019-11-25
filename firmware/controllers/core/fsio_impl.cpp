@@ -102,6 +102,7 @@ static LEElement * acRelayLogic;
 static LEElement * fuelPumpLogic;
 static LEElement * radiatorFanLogic;
 static LEElement * alternatorLogic;
+static LEElement * starterRelayLogic;
 
 #if EFI_MAIN_RELAY_CONTROL
 static LEElement * mainRelayLogic;
@@ -464,6 +465,9 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		enginePins.mainRelay.setValue(true);
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
+	if (CONFIGB(starterRelayPin) != GPIO_UNASSIGNED)
+		setPinState("starter_relay", &enginePins.starterRelay, starterRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
+
 	/**
 	 * o2 heater is off during cranking
 	 * todo: convert to FSIO?
@@ -673,6 +677,8 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIGB(mainRelayPin) != GPIO_UNASSIGNED)
 		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
 #endif /* EFI_MAIN_RELAY_CONTROL */
+	if (CONFIGB(starterRelayPin) != GPIO_UNASSIGNED)
+		starterRelayLogic = sysPool.parseExpression(STARTER_RELAY_LOGIC);
 
 #if EFI_PROD_CODE
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {

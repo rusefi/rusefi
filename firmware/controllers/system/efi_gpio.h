@@ -124,6 +124,7 @@ public:
 	void stopInjectionPins();
 	void stopIgnitionPins();
 	OutputPin mainRelay;
+	OutputPin starterRelay;
 	OutputPin fanRelay;
 	// see acRelayPin
 	OutputPin acRelay;
