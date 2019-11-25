@@ -143,6 +143,8 @@ static fuel_table_t alphaNfuel = {
  */
 #ifdef EFI_ACTIVE_CONFIGURATION_IN_FLASH
 engine_configuration_s & activeConfiguration = *(engine_configuration_s *)EFI_ACTIVE_CONFIGURATION_IN_FLASH;
+// we cannot use this activeConfiguration until we call rememberCurrentConfiguration()
+bool isActiveConfigurationVoid = true;
 #else
 static engine_configuration_s activeConfigurationLocalStorage;
 engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
@@ -153,6 +155,8 @@ extern engine_configuration_s *engineConfiguration;
 void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
+#else
+	isActiveConfigurationVoid = false;
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 }
 

@@ -41,7 +41,7 @@ public:
 	/**
 	 * dissociates pin from this output and un-registers it in pin repository
 	 */
-	void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin);
+	void unregisterOutput(brain_pin_e oldPin);
 
 	bool isInitialized();
 
