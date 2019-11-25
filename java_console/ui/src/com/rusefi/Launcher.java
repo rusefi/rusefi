@@ -29,6 +29,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,10 +56,13 @@ public class Launcher {
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
+
     private static final String TOOL_NAME_COMPILE_FSIO_FILE = "compile_fsio_file";
     private static final String TOOL_NAME_REBOOT_ECU = "reboot_ecu";
+    private static final String TOOL_NAME_FIRING_ORDER = "firing_order";
     // todo: rename to something more FSIO-specific? would need to update documentation somewhere
     private static final String TOOL_NAME_COMPILE = "compile";
+
     private final String port;
     // todo: the logic around 'fatalError' could be implemented nicer
     private String fatalError;
@@ -316,43 +320,32 @@ public class Launcher {
      */
     public static void main(final String[] args) throws Exception {
         String toolName = args.length == 0 ? null : args[0];
+
         if (TOOL_NAME_COMPILE_FSIO_FILE.equalsIgnoreCase(toolName)) {
-            /**
-             * re-packaging array which contains input and output file names
-             */
-            int returnCode = CompileTool.run(Arrays.asList(args).subList(1, args.length));
+            int returnCode = invokeCompileFileTool(args);
             System.exit(returnCode);
-            return;
         }
 
         if (TOOL_NAME_COMPILE.equals(toolName)) {
-            if (args.length != 2) {
-                System.err.println("input expression parameter expected");
-                System.exit(-1);
-                return;
-            }
-            String input = args[1];
-            System.out.println(DoubleEvaluator.process(input).getPosftfixExpression());
+            invokeCompileExpressionTool(args);
             System.exit(0);
         }
-        System.out.println("Optional tools: " + Arrays.asList(TOOL_NAME_COMPILE_FSIO_FILE, TOOL_NAME_COMPILE, TOOL_NAME_REBOOT_ECU));
+
+        if (TOOL_NAME_FIRING_ORDER.equals(toolName)) {
+            FiringOrderTSLogic.invoke(args[1]);
+            System.exit(0);
+        }
+
+        System.out.println("Optional tools: " + Arrays.asList(TOOL_NAME_COMPILE_FSIO_FILE,
+                TOOL_NAME_COMPILE,
+                TOOL_NAME_REBOOT_ECU,
+                TOOL_NAME_FIRING_ORDER));
         System.out.println("Starting rusEfi UI console " + CONSOLE_VERSION);
 
         FileLog.MAIN.start();
 
         if (TOOL_NAME_REBOOT_ECU.equalsIgnoreCase(toolName)) {
-            String autoDetectedPort = PortDetector.autoDetectPort(null);
-            if (autoDetectedPort == null) {
-                System.err.println("rusEfi not detected");
-                return;
-            }
-            PortHolder.EstablishConnection establishConnection = new PortHolder.EstablishConnection(autoDetectedPort).invoke();
-            if (!establishConnection.isConnected())
-                return;
-            IoStream stream = establishConnection.getStream();
-            byte[] commandBytes = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT);
-            stream.sendPacket(commandBytes, FileLog.LOGGER);
-
+            invokeRebootTool();
             return;
         }
 
@@ -366,6 +359,36 @@ public class Launcher {
                 awtCode(args);
             }
         });
+    }
+
+    private static int invokeCompileFileTool(String[] args) throws IOException {
+        /**
+         * re-packaging array which contains input and output file names
+         */
+        return CompileTool.run(Arrays.asList(args).subList(1, args.length));
+    }
+
+    private static void invokeRebootTool() throws IOException {
+        String autoDetectedPort = PortDetector.autoDetectPort(null);
+        if (autoDetectedPort == null) {
+            System.err.println("rusEfi not detected");
+            return;
+        }
+        PortHolder.EstablishConnection establishConnection = new PortHolder.EstablishConnection(autoDetectedPort).invoke();
+        if (!establishConnection.isConnected())
+            return;
+        IoStream stream = establishConnection.getStream();
+        byte[] commandBytes = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT);
+        stream.sendPacket(commandBytes, FileLog.LOGGER);
+    }
+
+    private static void invokeCompileExpressionTool(String[] args) {
+        if (args.length != 2) {
+            System.err.println("input expression parameter expected");
+            System.exit(-1);
+        }
+        String expression = args[1];
+        System.out.println(DoubleEvaluator.process(expression).getPosftfixExpression());
     }
 
     private static void awtCode(String[] args) {

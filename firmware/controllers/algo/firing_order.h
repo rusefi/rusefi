@@ -1,15 +1,15 @@
 /*
  * @file firing_order.h
  *
+ * See also FiringOrderTSLogic.java
+ *
  * @date Jul 20, 2016
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "rusefi_enums.h"
 
-
-#ifndef CONTROLLERS_ALGO_FIRING_ORDER_H_
-#define CONTROLLERS_ALGO_FIRING_ORDER_H_
+#pragma once
 
 typedef enum {
 	FO_1 = 0,
@@ -53,6 +53,3 @@ typedef enum {
 
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;
-
-
-#endif /* CONTROLLERS_ALGO_FIRING_ORDER_H_ */
