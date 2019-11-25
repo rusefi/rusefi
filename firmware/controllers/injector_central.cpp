@@ -250,16 +250,6 @@ private:
 
 static BenchController instance;
 
-void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
-	if (oldPin != GPIO_UNASSIGNED && oldPin != newPin) {
-		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
-#if EFI_GPIO_HARDWARE
-		brain_pin_markUnused(oldPin);
-		port = nullptr;
-#endif /* EFI_GPIO_HARDWARE */
-	}
-}
-
 static void handleCommandX14(uint16_t index) {
 	switch (index) {
 	case 1:

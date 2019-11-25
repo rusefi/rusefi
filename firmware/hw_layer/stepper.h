@@ -21,7 +21,7 @@ public:
 	int getTargetPosition() const;
 	void setDirection(bool isIncrementing);
 
-	OutputPin directionPin;
+	OutputPin directionPin, stepPin, enablePin;
 	int currentPosition;
 	bool currentDirection;
 	float reactionTime;
@@ -29,15 +29,7 @@ public:
 private:
 	int targetPosition;
 
-#if EFI_PROD_CODE
-	ioportid_t stepPort;
-	ioportmask_t stepPin;
-
-	ioportid_t enablePort;
-	ioportmask_t enablePin;
-#endif
-
-	pin_output_mode_e directionPinMode;
+	pin_output_mode_e directionPinMode, stepPinMode, enablePinMode;
 
 	THD_WORKING_AREA(stThreadStack, UTILITY_THREAD_STACK_SIZE);
 };
