@@ -57,6 +57,7 @@ public class Entry {
         try {
             DataInputStream is = new DataInputStream(new ByteArrayInputStream(packet));
             is.readByte(); // skip TS result code
+            int firstTimeStamp = 0;
             for (int i = 0; i < packet.length - 1; i += 8) {
                 byte type = is.readByte();
                 byte phase = is.readByte();
@@ -64,6 +65,15 @@ public class Entry {
                 byte thread = is.readByte();
 
                 int timestampNt = readInt(is);
+                if (i == 0) {
+                    firstTimeStamp = timestampNt;
+                } else {
+                    if (timestampNt < firstTimeStamp) {
+                        System.out.println("Dropping the remainder of the packet at " + i + " due to "
+                                + timestampNt + " below " + firstTimeStamp);
+                        break;
+                    }
+                }
 
 
                 double timestampSeconds = timestampNt / 1000000.0;
