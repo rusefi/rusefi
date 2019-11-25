@@ -49,7 +49,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20191124;
+    public static final int CONSOLE_VERSION = 20191125;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
@@ -60,6 +60,7 @@ public class Launcher {
     private static final String TOOL_NAME_COMPILE_FSIO_FILE = "compile_fsio_file";
     private static final String TOOL_NAME_REBOOT_ECU = "reboot_ecu";
     private static final String TOOL_NAME_FIRING_ORDER = "firing_order";
+    private static final String TOOL_NAME_PERF_ENUMS = "ptrace_enums";
     // todo: rename to something more FSIO-specific? would need to update documentation somewhere
     private static final String TOOL_NAME_COMPILE = "compile";
 
@@ -333,6 +334,11 @@ public class Launcher {
 
         if (TOOL_NAME_FIRING_ORDER.equals(toolName)) {
             FiringOrderTSLogic.invoke(args[1]);
+            System.exit(0);
+        }
+
+        if (TOOL_NAME_PERF_ENUMS.equals(toolName)) {
+            PerfTraceTool.readPerfTrace(args[1], args[2], args[3], args[4]);
             System.exit(0);
         }
 
