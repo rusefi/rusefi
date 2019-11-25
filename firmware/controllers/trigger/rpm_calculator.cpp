@@ -360,8 +360,6 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
  */
 void scheduleByAngle(scheduling_s *timer, angle_t angle,
 		schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	ScopePerf perf(PE::ScheduleByAngle);
-
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
 	ENGINE(executor.scheduleForLater(timer, (int) delayUs, callback, param));
 }
