@@ -313,9 +313,9 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		// at the moment we schedule based on time prediction based on current RPM and angle
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
-		scheduleByAngle(rpm, &startTimer[i][structIndex], samplingStart,
+		scheduleByAngle(&startTimer[i][structIndex], samplingStart,
 				startAveraging, NULL PASS_ENGINE_PARAMETER_SUFFIX);
-		scheduleByAngle(rpm, &endTimer[i][structIndex], samplingEnd,
+		scheduleByAngle(&endTimer[i][structIndex], samplingEnd,
 				endAveraging, NULL PASS_ENGINE_PARAMETER_SUFFIX);
 		engine->m.mapAveragingCbTime = getTimeNowLowerNt()
 				- engine->m.beforeMapAveragingCb;

@@ -319,7 +319,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 		int rpm = GET_RPM();
 		// todo: use tooth event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
-			scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
+			scheduleByAngle(&tdcScheduler[revIndex2], tdcPosition(),
 					(schfunc_t) onTdcCallback, engine PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
@@ -358,14 +358,11 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * The callback would be executed once after the duration of time which
  * it takes the crankshaft to rotate to the specified angle.
  */
-void scheduleByAngle(float rpm, scheduling_s *timer, angle_t angle,
+void scheduleByAngle(scheduling_s *timer, angle_t angle,
 		schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::ScheduleByAngle);
 
-	efiAssertVoid(CUSTOM_ANGLE_NAN, !cisnan(angle), "NaN angle?");
-	efiAssertVoid(CUSTOM_ERR_6634, isValidRpm(rpm), "RPM check expected");
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
-	efiAssertVoid(CUSTOM_ERR_6635, !cisnan(delayUs), "NaN delay?");
 	ENGINE(executor.scheduleForLater(timer, (int) delayUs, callback, param));
 }
 
