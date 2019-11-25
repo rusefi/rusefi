@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 23 12:39:11 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 25 00:58:19 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -453,6 +453,8 @@
 #define cylindersCount_offset 400
 #define cylindersCount_offset_hex 190
 #define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"
+#define debugMapAveraging_offset 807
+#define debugMapAveraging_offset_hex 327
 #define debugMode_offset 2092
 #define debugMode_offset_hex 82c
 #define debugSetTimer_offset 806
@@ -1684,6 +1686,8 @@
 #define spi3SckMode_offset_hex a2a
 #define spi3sckPin_offset 936
 #define spi3sckPin_offset_hex 3a8
+#define starterRelay_offset 808
+#define starterRelay_offset_hex 328
 #define startOfCrankingPrimingPulse_offset 2032
 #define startOfCrankingPrimingPulse_offset_hex 7f0
 #define startUpFuelPumpDuration_offset 1892
@@ -1935,8 +1939,6 @@
 #define unusedFormerWarmupAfrPid_offset_hex 6e8
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
-#define unusedSpiPadding2_offset 807
-#define unusedSpiPadding2_offset_hex 327
 #define unusedSpiPadding3_offset 4036
 #define unusedSpiPadding3_offset_hex fc4
 #define unusedSpiPadding4_offset 2593
@@ -1947,8 +1949,8 @@
 #define unusedSpiPadding7_offset_hex fa5
 #define unusedSpiPadding8_offset 4009
 #define unusedSpiPadding8_offset_hex fa9
-#define unuseduartPadding1_offset 808
-#define unuseduartPadding1_offset_hex 328
+#define unuseduartPadding1_offset 809
+#define unuseduartPadding1_offset_hex 329
 #define unusuedsw_offset 4020
 #define unusuedsw_offset_hex fb4
 #define unusuedvref_offset 4016
@@ -2915,11 +2917,15 @@ struct board_configuration_s {
 	/**
 	 * offset 207
 	 */
-	uint8_t unusedSpiPadding2 = (uint8_t)0;
+	brain_pin_e debugMapAveraging;
 	/**
 	 * offset 208
 	 */
-	uint8_t unuseduartPadding1[4];
+	brain_pin_e starterRelay;
+	/**
+	 * offset 209
+	 */
+	uint8_t unuseduartPadding1[3];
 	/**
 	 * offset 212
 	 */
@@ -4949,4 +4955,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 23 12:39:11 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 25 00:58:19 EST 2019
