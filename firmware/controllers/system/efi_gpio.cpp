@@ -30,7 +30,7 @@ extern WaveChart waveChart;
 
 // todo: clean this mess, this should become 'static'/private
 EnginePins enginePins;
-extern LoggingWithStorage sharedLogger;
+static Logging* logger;
 
 pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 
@@ -265,7 +265,7 @@ bool NamedOutputPin::stop() {
 #if EFI_GPIO_HARDWARE
 	if (isInitialized() && getLogicValue()) {
 		setValue(false);
-		scheduleMsg(&sharedLogger, "turning off %s", name);
+		scheduleMsg(logger, "turning off %s", name);
 		return true;
 	}
 #endif /* EFI_GPIO_HARDWARE */
@@ -476,7 +476,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 
 void OutputPin::unregisterOutput(brain_pin_e oldPin) {
 	if (oldPin != GPIO_UNASSIGNED) {
-		scheduleMsg(&sharedLogger, "unregistering %s", hwPortname(oldPin));
+		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 		brain_pin_markUnused(oldPin);
 		port = nullptr;
@@ -491,7 +491,8 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin) {
 ioportid_t errorLedPort;
 ioportmask_t errorLedPin;
 
-void initPrimaryPins(void) {
+void initPrimaryPins(Logging *sharedLogger) {
+	logger = sharedLogger;
 #if EFI_PROD_CODE
 	enginePins.errorLedPin.initPin("led: ERROR status", LED_ERROR_BRAIN_PIN);
 	errorLedPort = getHwPort("primary", LED_ERROR_BRAIN_PIN);

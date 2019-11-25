@@ -13,7 +13,7 @@
 #include "io_pins.h"
 #include "engine_configuration.h"
 
-void initPrimaryPins(void);
+void initPrimaryPins(Logging *sharedLogger);
 void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_GPIO_HARDWARE
