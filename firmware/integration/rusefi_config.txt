@@ -643,8 +643,9 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	int16_t sdCardPeriodMs;+SD card logging period, in milliseconds;"ms",        1,     0,  0,    30000,  0
 	brain_pin_e debugSetTimer
 	brain_pin_e debugMapAveraging;
-	brain_pin_e starterRelay;
-	uint8_t[3] unuseduartPadding1;
+	brain_pin_e starterRelayPin;
+	pin_output_mode_e starterRelayPinMode;
+	uint8_t[2] unuseduartPadding1;
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
