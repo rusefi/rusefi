@@ -137,10 +137,15 @@ void PwmConfig::stop() {
 }
 
 void PwmConfig::handleCycleStart() {
-	efiAssertVoid(CUSTOM_ERR_6697, safe.phaseIndex == 0, "handleCycleStart");
-		if (pwmCycleCallback != NULL) {
-			pwmCycleCallback(this);
-		}
+	if (safe.phaseIndex != 0) {
+		// https://github.com/rusefi/rusefi/issues/1030
+		firmwareError(CUSTOM_PWM_CYCLE_START, "handleCycleStart %d", safe.phaseIndex);
+		return;
+	}
+
+	if (pwmCycleCallback != NULL) {
+		pwmCycleCallback(this);
+	}
 		efiAssertVoid(CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
 		if (safe.periodNt != periodNt || safe.iteration == ITERATION_LIMIT) {
 			/**
