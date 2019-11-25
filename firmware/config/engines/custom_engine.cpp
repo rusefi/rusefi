@@ -253,6 +253,13 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set tps_max 540
 	engineConfiguration->tpsMax = 540;
 
+	// yes, 30K - that's a test configuration
+	engineConfiguration->rpmHardLimit = 30000;
+
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+
+
 	boardConfiguration->ignitionPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;

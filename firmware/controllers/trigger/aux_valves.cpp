@@ -101,12 +101,12 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 			}
 
 			fixAngle(onTime, "onTime", CUSTOM_ERR_6556);
-			scheduleByAngle(rpm, onEvent,
+			scheduleByAngle(onEvent,
 					onTime,
 					(schfunc_t) &plainPinTurnOn, output PASS_ENGINE_PARAMETER_SUFFIX);
 			angle_t offTime = extra + engine->engineState.auxValveEnd;
 			fixAngle(offTime, "offTime", CUSTOM_ERR_6557);
-			scheduleByAngle(rpm, offEvent,
+			scheduleByAngle(offEvent,
 					offTime,
 					(schfunc_t) &plainPinTurnOff, output PASS_ENGINE_PARAMETER_SUFFIX);
 			if (isOverlap) {
