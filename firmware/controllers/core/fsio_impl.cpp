@@ -12,13 +12,13 @@
  */
 
 #include "global.h"
+#include "fsio_impl.h"
+#include "allsensors.h"
 
 #if EFI_FSIO
 
 #include "os_access.h"
-#include "fsio_impl.h"
 #include "settings.h"
-#include "allsensors.h"
 #include "rpm_calculator.h"
 #include "efi_gpio.h"
 #include "pwm_generator_logic.h"
@@ -730,5 +730,37 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 }
 
+#else /* !EFI_FSIO */
+
+EXTERN_ENGINE
+;
+extern EnginePins enginePins;
+
+// "Limp-mode" implementation for some RAM-limited configs without FSIO
+void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// see MAIN_RELAY_LOGIC
+	if (CONFIGB(mainRelayPin) != GPIO_UNASSIGNED) {
+		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > 5) || engine->isInShutdownMode());
+	}
+	// see STARTER_RELAY_LOGIC
+	if (CONFIGB(starterRelayPin) != GPIO_UNASSIGNED) {
+		enginePins.starterRelay.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
+	}
+	// see FAN_CONTROL_LOGIC
+	if (CONFIGB(fanPin) != GPIO_UNASSIGNED) {
+		enginePins.fanRelay.setValue((enginePins.fanRelay.getLogicValue() && (getCoolantTemperature() > engineConfiguration->fanOffTemperature)) || 
+			(getCoolantTemperature() > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
+	}
+	// see AC_RELAY_LOGIC
+	if (CONFIGB(acRelayPin) != GPIO_UNASSIGNED) {
+		enginePins.acRelay.setValue(getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE) && engine->rpmCalculator.getRpm() > 850);
+	}
+	// see FUEL_PUMP_LOGIC
+	if (CONFIGB(fuelPumpPin) != GPIO_UNASSIGNED) {
+		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));
+	}
+	
+	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE));
+}
 
 #endif /* EFI_FSIO */
