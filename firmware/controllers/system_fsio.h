@@ -68,7 +68,7 @@
 // starter block using configurable parameter
 
 // Human-readable: rpm < cranking_rpm
-#define STARTER_BLOCK "rpm cranking_rpm <"
+#define STARTER_RELAY_LOGIC "rpm cranking_rpm <"
 
 // Human-readable: fsio_table (3, rpm, map) / 100
 #define BOOST_CONTROLLER "3 rpm map fsio_table 100 /"
