@@ -539,6 +539,7 @@ bool isIdleHardwareRestartNeeded() {
 }
 
 void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_PROD_CODE
 	brain_pin_markUnused(activeConfiguration.stepperEnablePin);
 	brain_pin_markUnused(activeConfiguration.bc.idle.stepperStepPin);
 	brain_pin_markUnused(activeConfiguration.bc.idle.solenoidPin);
@@ -546,7 +547,7 @@ void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	brain_pin_markUnused(activeConfiguration.bc.idle.);
 //	brain_pin_markUnused(activeConfiguration.bc.idle.);
 //	brain_pin_markUnused(activeConfiguration.bc.idle.);
-
+#endif /* EFI_PROD_CODE */
 }
 
 void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

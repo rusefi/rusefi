@@ -419,7 +419,7 @@ void initHardware(Logging *l) {
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
-	initPrimaryPins();
+	initPrimaryPins(sharedLogger);
 
 	if (hasFirmwareError()) {
 		return;
