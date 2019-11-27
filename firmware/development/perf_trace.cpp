@@ -4,9 +4,10 @@
 #include "efitime.h"
 #include "os_util.h"
 
+
 #ifndef TRACE_BUFFER_LENGTH
-#define TRACE_BUFFER_LENGTH 1
-#endif /*TRACE_BUFFER_LENGTH*/
+#define TRACE_BUFFER_LENGTH 2048
+#endif /* TRACE_BUFFER_LENGTH */
 
 enum class EPhase : char
 {
