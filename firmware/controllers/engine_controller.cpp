@@ -314,6 +314,14 @@ void contextSwitchHook() {
 	perfEventInstantGlobal(PE::ContextSwitch);
 }
 
+void onLockHook() {
+	perfEventInstantGlobal(PE::GlobalLock, 0);
+}
+
+void onUnlockHook() {
+	perfEventInstantGlobal(PE::GlobalUnlock, 0);
+}
+
 #endif /* ENABLE_PERF_TRACE */
 
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

@@ -28,18 +28,22 @@ extern "C"
     void irqEnterHook(void);
     void irqExitHook(void);
     void contextSwitchHook(void);
+	void onLockHook(void);
+	void onUnlockHook(void);
   #else /* ENABLE_PERF_TRACE */
     #define irqEnterHook() {}
     #define irqExitHook() {}
     #define contextSwitchHook() {}
+	#define onLockHook() {}
+	#define onUnlockHook() {}
   #endif /*ENABLE_PERF_TRACE */
  #endif /* __ASSEMBLER__ */
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#define ON_LOCK_HOOK {}
-#define ON_UNLOCK_HOOK {}
+#define ON_LOCK_HOOK {onLockHook();}
+#define ON_UNLOCK_HOOK {onUnlockHook();}
 
 #if !defined(_FROM_ASM_)
 #ifdef __cplusplus
