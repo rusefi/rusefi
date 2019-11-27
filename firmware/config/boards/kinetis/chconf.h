@@ -570,7 +570,7 @@
  * @note    The default is @p FALSE.
  */
 #ifndef CH_DBG_ENABLE_TRACE
-#define CH_DBG_ENABLE_TRACE                 TRUE
+#define CH_DBG_ENABLE_TRACE                 FALSE
 #endif
 
 /**
