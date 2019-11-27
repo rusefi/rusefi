@@ -85,8 +85,8 @@ void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// todo: extract a method? figure out something smarter
 	setFuelRpmBin(800, 15000 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 15000 PASS_CONFIG_PARAMETER_SUFFIX);
-	setLinearCurve(config->veRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
-	setLinearCurve(config->afrRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
+	setLinearCurve(config->veRpmBins, 15000, 7000, 1);
+	setLinearCurve(config->afrRpmBins, 15000, 7000, 1);
 
 	engineConfiguration->hasFrequencyReportingMapSensor = true;
 	boardConfiguration->frequencyReportingMapInputPin = GPIOC_6;

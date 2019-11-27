@@ -14,12 +14,18 @@
 #include "engine.h"
 #include "periodic_task.h"
 
-class EtbController : public PeriodicTimerController {
+class DcMotor;
+
+class EtbController final : public PeriodicTimerController {
 public:
 	DECLARE_ENGINE_PTR;
+	EtbController(DcMotor *etb);
 
 	int getPeriodMs() override;
 	void PeriodicTask() override;
+
+private:
+    DcMotor *m_motor;
 };
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);

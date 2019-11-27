@@ -1084,6 +1084,7 @@ menuDialog = main
 		
 		# Digital outputs
 		subMenu = mainRelay,				"Main relay"
+		subMenu = starterRelay,				"Starter relay"
 		subMenu = fuelPump,					"Fuel rail"
 		subMenu = fanSetting,				"Fan"
 		subMenu = tachSettings,				"Tachometer"
@@ -1652,6 +1653,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Fan Pin Mode",							fanPinMode
 		field = "Main Relay Pin",  						mainRelayPin
 		field = "Main Relay Mode",			         	mainRelayPinMode
+		field = "Starter Relay Pin",  					starterRelayPin
+		field = "Starter Relay Mode",			        starterRelayPinMode
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
 
@@ -1995,6 +1998,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Pin",  						mainRelayPin
 		field = "Pin mode",			         	mainRelayPinMode
 
+	dialog = starterRelay, "Starter relay output"
+		field = "Pin",  					starterRelayPin
+		field = "Pin mode",			        starterRelayPinMode
+		
 	dialog = statusLeds, "Status LEDs"
 		field = "Running status LED",					runningLedPin
 		field = "TS communication status LED",					communicationLedPin

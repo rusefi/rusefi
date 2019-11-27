@@ -642,8 +642,10 @@ pin_output_mode_e hip9011IntHoldPinMode;
 custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
 	int16_t sdCardPeriodMs;+SD card logging period, in milliseconds;"ms",        1,     0,  0,    30000,  0
 	brain_pin_e debugSetTimer
-	uint8_t[1] unusedSpiPadding2;
-	uint8_t[4] unuseduartPadding1;
+	brain_pin_e debugMapAveraging;
+	brain_pin_e starterRelayPin;
+	pin_output_mode_e starterRelayPinMode;
+	uint8_t[2] unuseduartPadding1;
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
@@ -1276,6 +1278,7 @@ end_struct
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
 #define CMD_ETB_DUTY "set_etb_duty"
 
+#define CMD_ENGINE_TYPE "engine_type"
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"
 #define CMD_DATE "date"

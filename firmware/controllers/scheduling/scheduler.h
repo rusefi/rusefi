@@ -2,13 +2,25 @@
  * @file	scheduler.h
  *
  * @date May 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 #pragma once
 
 #include "global.h"
 
 typedef void (*schfunc_t)(void *);
+
+class action_s {
+public:
+	void setAction(schfunc_t callback, void *param);
+	void execute();
+	schfunc_t getCallback() const;
+	void * getArgument() const;
+
+private:
+	schfunc_t callback = nullptr;
+	void *param = nullptr;
+};
 
 /**
  * This structure holds information about an event scheduled in the future: when to execute what callback with what parameters
@@ -26,12 +38,11 @@ public:
 	bool isScheduled = false;
 
 	/**
-	 * Scheduler implementation has a linked list of these scheduling records.
+	 * Scheduler implementation uses a sorted linked list of these scheduling records.
 	 */
-	scheduling_s *next = nullptr;
+	scheduling_s *nextScheduling_s = nullptr;
 
-	schfunc_t callback = nullptr;
-	void *param = nullptr;
+	action_s action;
 };
 
 class ExecutorInterface {

@@ -32,7 +32,7 @@ static_assert(sizeof(TraceEntry) == 8);
 static TraceEntry s_traceBuffer[TRACE_BUFFER_LENGTH];
 static size_t s_nextIdx = 0;
 
-static bool s_isTracing = true;
+static bool s_isTracing = false;
 
 void perfEventImpl(PE event, EPhase phase, uint8_t data)
 {
@@ -46,13 +46,19 @@ void perfEventImpl(PE event, EPhase phase, uint8_t data)
 		return;
 	}
 
-	uint32_t timestamp = getTimeNowLowerNt();
+	// todo: why doesn't getTimeNowLowerNt() work here?
+	// It returns 0 like we're in a unit test
+	uint32_t timestamp = port_rt_get_counter_value();
 
 	size_t idx;
 
-	// Critical section: reserve index under lock
+	// Critical section: disable interrupts to reserve an index.
+	// We could lock, but this gets called a LOT - so locks could
+	// significantly alter the results of the measurement.
+	// In addition, if we want to trace lock/unlock events, we can't
+	// be locking ourselves from the trace functionality.
 	{
-		bool wasLocked = lockAnyContext();
+		__disable_irq();
 
 		idx = s_nextIdx++;
 		if (s_nextIdx >= TRACE_BUFFER_LENGTH) {
@@ -60,9 +66,7 @@ void perfEventImpl(PE event, EPhase phase, uint8_t data)
 			s_isTracing = false;
 		}
 
-		if (!wasLocked) {
-			unlockAnyContext();
-		}
+		__enable_irq();
 	}
 
 	// We can safely write data out of the lock, our spot is reserved

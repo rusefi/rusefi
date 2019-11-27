@@ -377,6 +377,7 @@
 #define CMD_DATE "date"
 #define CMD_DISABLE "disable"
 #define CMD_ENABLE "enable"
+#define CMD_ENGINE_TYPE "engine_type"
 #define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
@@ -450,6 +451,8 @@
 #define cylindersCount_offset 400
 #define cylindersCount_offset_hex 190
 #define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"
+#define debugMapAveraging_offset 807
+#define debugMapAveraging_offset_hex 327
 #define debugMode_offset 2092
 #define debugMode_offset_hex 82c
 #define debugSetTimer_offset 806
@@ -1681,6 +1684,10 @@
 #define spi3SckMode_offset_hex a2a
 #define spi3sckPin_offset 936
 #define spi3sckPin_offset_hex 3a8
+#define starterRelayPin_offset 808
+#define starterRelayPin_offset_hex 328
+#define starterRelayPinMode_offset 809
+#define starterRelayPinMode_offset_hex 329
 #define startOfCrankingPrimingPulse_offset 2032
 #define startOfCrankingPrimingPulse_offset_hex 7f0
 #define startUpFuelPumpDuration_offset 1892
@@ -1932,8 +1939,6 @@
 #define unusedFormerWarmupAfrPid_offset_hex 6e8
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
-#define unusedSpiPadding2_offset 807
-#define unusedSpiPadding2_offset_hex 327
 #define unusedSpiPadding3_offset 4036
 #define unusedSpiPadding3_offset_hex fc4
 #define unusedSpiPadding4_offset 2593
@@ -1944,8 +1949,8 @@
 #define unusedSpiPadding7_offset_hex fa5
 #define unusedSpiPadding8_offset 4009
 #define unusedSpiPadding8_offset_hex fa9
-#define unuseduartPadding1_offset 808
-#define unuseduartPadding1_offset_hex 328
+#define unuseduartPadding1_offset 810
+#define unuseduartPadding1_offset_hex 32a
 #define unusuedsw_offset 4020
 #define unusuedsw_offset_hex fb4
 #define unusuedvref_offset 4016

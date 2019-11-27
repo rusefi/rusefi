@@ -1,4 +1,7 @@
-
+/**
+ * @file perf_trace.h
+ *
+ */
 #pragma once
 
 #include <cstdint>
@@ -9,6 +12,8 @@
 // each element in PE more than once, as they should each indicate that a specific thing began,
 // ended, or occured.
 enum class PE : uint8_t {
+	// The tag below is consumed by PerfTraceTool.java
+	// enum_start_tag
 	INVALID,
 	ISR,
 	ContextSwitch,
@@ -48,6 +53,9 @@ enum class PE : uint8_t {
 	TunerStudioHandleCrcCommand,
 	PwmConfigTogglePwmState,
 	PwmConfigStateChangeCallback,
+	// enum_end_tag
+	// The tag above is consumed by PerfTraceTool.java
+	// please note that the tool requires a comma at the end of last value
 };
 
 void perfEventBegin(PE event, uint8_t data);

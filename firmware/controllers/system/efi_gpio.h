@@ -13,7 +13,7 @@
 #include "io_pins.h"
 #include "engine_configuration.h"
 
-void initPrimaryPins(void);
+void initPrimaryPins(Logging *sharedLogger);
 void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_GPIO_HARDWARE
@@ -41,7 +41,7 @@ public:
 	/**
 	 * dissociates pin from this output and un-registers it in pin repository
 	 */
-	void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin);
+	void unregisterOutput(brain_pin_e oldPin);
 
 	bool isInitialized();
 
@@ -124,6 +124,7 @@ public:
 	void stopInjectionPins();
 	void stopIgnitionPins();
 	OutputPin mainRelay;
+	OutputPin starterRelay;
 	OutputPin fanRelay;
 	// see acRelayPin
 	OutputPin acRelay;

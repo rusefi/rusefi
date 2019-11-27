@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Nov 19 09:22:58 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Nov 25 01:00:31 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -858,11 +858,19 @@ struct board_configuration_s {
 	/**
 	 * offset 207
 	 */
-	uint8_t unusedSpiPadding2;
+	brain_pin_e debugMapAveraging;
 	/**
 	 * offset 208
 	 */
-	uint8_t unuseduartPadding1[4];
+	brain_pin_e starterRelayPin;
+	/**
+	 * offset 209
+	 */
+	pin_output_mode_e starterRelayPinMode;
+	/**
+	 * offset 210
+	 */
+	uint8_t unuseduartPadding1[2];
 	/**
 	 * offset 212
 	 */
@@ -2892,4 +2900,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Nov 19 09:22:58 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Nov 25 01:00:31 EST 2019

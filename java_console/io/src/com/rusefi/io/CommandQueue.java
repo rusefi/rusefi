@@ -53,7 +53,7 @@ public class CommandQueue {
 
     private static boolean isSlowCommand(String cmd) {
         String lc = cmd.toLowerCase();
-        return lc.startsWith("set_engine_type") || lc.startsWith("writeconfig") || lc.startsWith("rewriteconfig");
+        return lc.startsWith("set " + Fields.CMD_ENGINE_TYPE) || lc.startsWith("writeconfig") || lc.startsWith("rewriteconfig");
     }
 
     public static int getTimeout(String cmd) {

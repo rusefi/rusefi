@@ -163,18 +163,23 @@ void EngineTestHelper::assertInjectorDownEvent(const char *msg, int eventIndex, 
 
 scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp) {
 	TestExecutor *executor = &engine.executor;
-	EXPECT_TRUE(executor->size() > index) << msg;
+	EXPECT_TRUE(executor->size() > index) << msg << " valid index";
 	scheduling_s *event = executor->getForUnitTest(index);
-	assertEqualsM4(msg, " up/down", (void*)event->callback == (void*) callback, 1);
+	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
 	efitime_t start = getTimeNowUs();
-	assertEqualsM(msg, expectedTimestamp, event->momentX - start);
+	assertEqualsM4(msg, " timestamp", expectedTimestamp, event->momentX - start);
 	return event;
+}
+
+scheduling_s * EngineTestHelper::assertScheduling(const char *msg, int index, scheduling_s *expected, void *callback, efitime_t expectedTimestamp) {
+	scheduling_s * actual = assertEvent5(msg, index, callback, expectedTimestamp);
+
 }
 
 void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, efitime_t momentX, InjectionEvent *expectedEvent) {
 	scheduling_s *event = assertEvent5(msg, index, callback, momentX);
 
-	InjectionEvent *actualEvent = (InjectionEvent *)event->param;
+	InjectionEvent *actualEvent = (InjectionEvent *)event->action.getArgument();
 
 	assertEqualsLM(msg, expectedEvent->outputs[0], (long)actualEvent->outputs[0]);
 // but this would not work	assertEqualsLM(msg, expectedPair, (long)eventPair);
@@ -212,8 +217,8 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	// set cranking mode (it's used by getCurrentInjectionMode())
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 
-	setArrayValues(config->cltFuelCorrBins, CLT_CURVE_SIZE, 1);
-	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, 0);
+	setArrayValues(config->cltFuelCorrBins, 1.0f);
+	setArrayValues(engineConfiguration->injector.battLagCorr, 0.0f);
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 

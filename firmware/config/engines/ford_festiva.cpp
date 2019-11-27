@@ -149,7 +149,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->crankingTimingAngle = 3;
 	engineConfiguration->crankingChargeAngle = 70;
 
-	setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 105, 5);
+	setLinearCurve(config->ignitionLoadBins, 20, 105, 5);
 	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
 	// set_whole_fuel_map 5
 	setWholeFuelMap(5 PASS_CONFIG_PARAMETER_SUFFIX);

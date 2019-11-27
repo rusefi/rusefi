@@ -136,7 +136,7 @@ public class AutoTest {
 
     static void setEngineType(int type) {
         currentEngineType = type;
-        sendCommand("set engine_type " + type, COMPLEX_COMMAND_RETRY, 30);
+        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, 30);
         sleep(10);
         sendCommand("enable self_stimulation");
     }

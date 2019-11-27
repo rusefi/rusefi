@@ -244,7 +244,9 @@ public class GaugesPanel {
         gauges.setLayout(rows, columns);
 
         for (int i = 0; i < rows * columns; i++) {
-            Component element = GaugesGridElement.read(config.getChild("element_" + i), DEFAULT_LAYOUT[i]);
+            // sometimes grid is quite large so we shall be careful with default sensor index
+            Sensor defaultSensor = DEFAULT_LAYOUT[Math.min(i, DEFAULT_LAYOUT.length - 1)];
+            Component element = GaugesGridElement.read(config.getChild("element_" + i), defaultSensor);
 
             gauges.panel.add(element);
         }

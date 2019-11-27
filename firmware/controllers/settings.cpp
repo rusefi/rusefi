@@ -115,6 +115,9 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(boardConfiguration->mainRelayPinMode),
 			hwPortname(boardConfiguration->mainRelayPin));
 
+	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(boardConfiguration->starterRelayPinMode),
+			hwPortname(boardConfiguration->starterRelayPin));
+
 	scheduleMsg(&logger, "alternator field: mode %s @ %s",
 			getPin_output_mode_e(boardConfiguration->alternatorControlPinMode),
 			hwPortname(boardConfiguration->alternatorControlPin));
@@ -696,6 +699,10 @@ static void setMainRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &boardConfiguration->mainRelayPin, "main relay");
 }
 
+static void setStarterRelayPin(const char *pinName) {
+	setIndividualPin(pinName, &boardConfiguration->starterRelayPin, "starter relay");
+}
+
 static void setAlternatorPin(const char *pinName) {
 	setIndividualPin(pinName, &boardConfiguration->alternatorControlPin, "alternator");
 }
@@ -1146,11 +1153,11 @@ static void getValue(const char *paramStr) {
 }
 
 static void setFsioCurve1Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve1, FSIO_CURVE_16, value, value, 1);
+	setLinearCurve(engineConfiguration->fsioCurve1, value, value, 1);
 }
 
 static void setFsioCurve2Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve2, FSIO_CURVE_16, value, value, 1);
+	setLinearCurve(engineConfiguration->fsioCurve2, value, value, 1);
 }
 
 typedef struct {
@@ -1242,7 +1249,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"tpsErrorDetectionTooHigh", setTpsErrorDetectionTooHigh},
 		{"fixed_mode_timing", setFixedModeTiming},
 		{"timing_mode", setTimingMode},
-		{"engine_type", setEngineType},
+		{CMD_ENGINE_TYPE, setEngineType},
 		{"rpm_hard_limit", setRpmHardLimit},
 		{"firing_order", setFiringOrder},
 		{"algorithm", setAlgorithmInt},
@@ -1431,6 +1438,7 @@ void initSettings(void) {
 	addConsoleActionS("set_alternator_pin", setAlternatorPin);
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
+	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
 
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
