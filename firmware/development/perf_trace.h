@@ -60,21 +60,9 @@ enum class PE : uint8_t {
 	// please note that the tool requires a comma at the end of last value
 };
 
-void perfEventBegin(PE event, uint8_t data);
-void perfEventEnd(PE event, uint8_t data);
-void perfEventInstantGlobal(PE event, uint8_t data);
-
-inline void perfEventBegin(PE event) {
-	perfEventBegin(event, 0);
-}
-
-inline void perfEventEnd(PE event) {
-	perfEventEnd(event, 0);
-}
-
-inline void perfEventInstantGlobal(PE event) {
-	perfEventInstantGlobal(event, 0);
-}
+void perfEventBegin(PE event, uint8_t data = 0);
+void perfEventEnd(PE event, uint8_t data = 0);
+void perfEventInstantGlobal(PE event, uint8_t data = 0);
 
 // Enable one buffer's worth of perf tracing, and retrieve the buffer size in bytes
 void perfTraceEnable();
