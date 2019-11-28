@@ -23,6 +23,8 @@ public:
 
 	int getPeriodMs() override;
 	void PeriodicTask() override;
+	Pid etbPid;
+	bool shouldResetPid = false;
 
 private:
     DcMotor *m_motor;

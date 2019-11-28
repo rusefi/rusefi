@@ -76,6 +76,7 @@
 #include "bluetooth.h"
 #include "tunerstudio_io.h"
 #include "tooth_logger.h"
+#include "electronic_throttle.h"
 
 #include <string.h>
 #include "engine_configuration.h"
@@ -256,7 +257,7 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
 	}
 }
 
-extern Pid etbPid;
+extern EtbController etbController;
 
 static const void * getStructAddr(int structId) {
 	switch (structId) {
@@ -274,7 +275,7 @@ static const void * getStructAddr(int structId) {
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case LDS_ETB_PID_STATE_INDEX:
-		return static_cast<pid_state_s*>(&etbPid);
+		return static_cast<pid_state_s*>(&etbController.etbPid);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #ifndef EFI_IDLE_CONTROL
