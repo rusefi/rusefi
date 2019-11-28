@@ -90,8 +90,6 @@
 #define ETB_MAX_COUNT 2
 #endif /* ETB_MAX_COUNT */
 
-static bool shouldResetPid = false;
-
 static pid_s tuneWorkingPidSettings;
 static Pid tuneWorkingPid(&tuneWorkingPidSettings);
 static PID_AutoTune autoTune;
@@ -177,8 +175,6 @@ public:
 static EtbHardware etbHardware[ETB_COUNT];
 
 extern percent_t mockPedalPosition;
-
-Pid etbPid;
 
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
@@ -395,8 +391,12 @@ static void showEthInfo(void) {
 		scheduleMsg(&logger, "%d: dir=%d DC=%f", i, etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
 	}
 
-	etbPid.showPidStatus(&logger, "ETB");
+	etbController.etbPid.showPidStatus(&logger, "ETB");
 #endif /* EFI_PROD_CODE */
+}
+
+static void etbPidReset() {
+	etbController.etbPid.reset();
 }
 
 #if EFI_PROD_CODE
@@ -415,7 +415,7 @@ static void etbReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		etbHardware[i].dcMotor.set(0);
 	}
-	etbPid.reset();
+	etbPidReset();
 
 	mockPedalPosition = MOCK_UNDEFINED;
 }
@@ -427,7 +427,7 @@ static void etbReset() {
  */
 void setEtbPFactor(float value) {
 	engineConfiguration->etb.pFactor = value;
-	etbPid.reset();
+	etbPidReset();
 	showEthInfo();
 }
 
@@ -436,7 +436,7 @@ void setEtbPFactor(float value) {
  */
 void setEtbIFactor(float value) {
 	engineConfiguration->etb.iFactor = value;
-	etbPid.reset();
+	etbPidReset();
 	showEthInfo();
 }
 
@@ -445,7 +445,7 @@ void setEtbIFactor(float value) {
  */
 void setEtbDFactor(float value) {
 	engineConfiguration->etb.dFactor = value;
-	etbPid.reset();
+	etbPidReset();
 	showEthInfo();
 }
 
@@ -454,7 +454,7 @@ void setEtbDFactor(float value) {
  */
 void setEtbOffset(int value) {
 	engineConfiguration->etb.offset = value;
-	etbPid.reset();
+	etbPidReset();
 	showEthInfo();
 }
 
@@ -542,7 +542,8 @@ void stopETBPins(void) {
 #endif /* EFI_PROD_CODE */
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !etbPid.isSame(&previousConfiguration->etb);
+	bool shouldResetPid = !etbController.etbPid.isSame(&previousConfiguration->etb);
+	etbController.shouldResetPid = shouldResetPid;
 }
 
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -624,7 +625,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
-	etbPid.initPidClass(&engineConfiguration->etb);
+	etbController.etbPid.initPidClass(&engineConfiguration->etb);
 
 	INJECT_ENGINE_REFERENCE(etbController);
 
@@ -695,7 +696,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 
-	etbPid.reset();
+	etbPidReset();
 
 	etbController.Start();
 }
