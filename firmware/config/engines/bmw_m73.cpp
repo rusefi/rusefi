@@ -153,9 +153,17 @@ GPIOA_6
 	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 
+	/**
+	 * Yellow op-amp board
+	 *
+	 * AN6 tested pull-down 1M
+	 * AN8 tested no pull-down / no pull-up
+	 */
+
 
 	// For example TLE7209 - two control wires:
 	// PWM on both wires - one to open, another to close
+	// ETB motor NEG pin # - white wire - OUT 1
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 	// PWM pin
