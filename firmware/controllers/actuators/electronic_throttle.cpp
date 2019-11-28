@@ -170,9 +170,6 @@ public:
 	}
 };
 
-#define ETB_COUNT 2
-
-static EtbHardware etbHardware[ETB_COUNT];
 
 extern percent_t mockPedalPosition;
 
@@ -183,9 +180,8 @@ static percent_t currentEtbDuty;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(X) (maxF(minF((X * 0.01), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
 
-EtbController::EtbController(DcMotor *motor)
-: m_motor(motor)
-{
+void EtbController::init(DcMotor *motor) {
+	this->m_motor = motor;
 }
 
 
@@ -333,7 +329,8 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 #endif /* EFI_TUNER_STUDIO */
 }
 
-EtbController etbController(&etbHardware[0].dcMotor);
+static EtbHardware etbHardware[ETB_COUNT];
+EtbController etbController[ETB_COUNT];
 
 /**
  * At the moment there are TWO ways to use this
@@ -391,12 +388,14 @@ static void showEthInfo(void) {
 		scheduleMsg(&logger, "%d: dir=%d DC=%f", i, etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
 	}
 
-	etbController.etbPid.showPidStatus(&logger, "ETB");
+	etbController[0].etbPid.showPidStatus(&logger, "ETB");
 #endif /* EFI_PROD_CODE */
 }
 
 static void etbPidReset() {
-	etbController.etbPid.reset();
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etbController[i].etbPid.reset();
+	}
 }
 
 #if EFI_PROD_CODE
@@ -542,8 +541,10 @@ void stopETBPins(void) {
 #endif /* EFI_PROD_CODE */
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
-	bool shouldResetPid = !etbController.etbPid.isSame(&previousConfiguration->etb);
-	etbController.shouldResetPid = shouldResetPid;
+	bool shouldResetPid = !etbController[0].etbPid.isSame(&previousConfiguration->etb);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etbController[i].shouldResetPid = shouldResetPid;
+	}
 }
 
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -625,9 +626,12 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
-	etbController.etbPid.initPidClass(&engineConfiguration->etb);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etbController[i].init(&etbHardware[i].dcMotor);
+		etbController[i].etbPid.initPidClass(&engineConfiguration->etb);
+		INJECT_ENGINE_REFERENCE(etbController[i]);
+	}
 
-	INJECT_ENGINE_REFERENCE(etbController);
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
@@ -698,7 +702,9 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	etbPidReset();
 
-	etbController.Start();
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etbController[i].Start();
+	}
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
