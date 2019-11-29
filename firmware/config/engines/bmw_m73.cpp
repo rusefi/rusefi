@@ -158,7 +158,7 @@ GPIOA_6
 	 *
 	 * AN5 tested pull-down 1M               PA3 TPS1
 	 * AN6 tested pull-down 1M               PA4 TPS2
-	 * AN7 tested pull-down 1M                   PPS
+	 * AN7 tested pull-down 1M               PA6 PPS
 	 * AN8 tested no pull-down / no pull-up
 	 */
 
@@ -167,10 +167,10 @@ GPIOA_6
 	// PWM on both wires - one to open, another to close
 	// ETB motor NEG pin # - white wire - OUT 1
 
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_6;
 	// set_analog_input_pin tps PA3
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // PA3
-	// set_analog_input_pin tps2 PA3
+	// set_analog_input_pin tps2 PA4
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_4; // PA4
 
 	// PWM pin
