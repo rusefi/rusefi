@@ -156,7 +156,7 @@ GPIOA_6
 	/**
 	 * Yellow op-amp board
 	 *
-	 * AN5 tested pull-down 1M               PA3 TPS1
+	 * AN5 tested pull-down 1M               PA3 TPS1 orange wire
 	 * AN6 tested pull-down 1M               PA4 TPS2
 	 * AN7 tested pull-down 1M               PA6 PPS
 	 * AN8 tested no pull-down / no pull-up
@@ -178,14 +178,13 @@ GPIOA_6
 	// DIR pin
 	boardConfiguration->etb1.directionPin1 = GPIOC_9;
 	boardConfiguration->etb1.directionPin2 = GPIOC_8;
-	CONFIG(etb1_use_two_wires) = true;
+	CONFIG(etb_use_two_wires) = true;
 
 	// PWM pin
 	engineConfiguration->etb2.controlPin1 = GPIO_UNASSIGNED;
 	// DIR pin
 	engineConfiguration->etb2.directionPin1 = GPIOB_8;
 	engineConfiguration->etb2.directionPin2 = GPIOB_9;
-	CONFIG(etb2_use_two_wires) = true;
 
 
 	boardConfiguration->injectionPins[0] = GPIO_UNASSIGNED;

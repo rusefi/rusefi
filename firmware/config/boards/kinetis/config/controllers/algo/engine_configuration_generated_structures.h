@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 25 01:00:42 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Nov 29 16:20:29 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -523,8 +523,6 @@
 #define etb1_directionPin2_offset_hex 2a9
 #define etb1_offset 680
 #define etb1_offset_hex 2a8
-#define etb1_use_two_wires_offset 76
-#define etb1_use_two_wires_offset_hex 4c
 #define etb2_controlPin1_offset 3966
 #define etb2_controlPin1_offset_hex f7e
 #define etb2_controlPinMode_offset 3967
@@ -535,8 +533,6 @@
 #define etb2_directionPin2_offset_hex f7d
 #define etb2_offset 3964
 #define etb2_offset_hex f7c
-#define etb2_use_two_wires_offset 76
-#define etb2_use_two_wires_offset_hex 4c
 #define ETB_BIAS_CURVE_LENGTH 8
 #define etb_dFactor_offset 1744
 #define etb_dFactor_offset_hex 6d0
@@ -558,6 +554,8 @@
 #define etb_periodMs_offset_hex 6d6
 #define etb_pFactor_offset 1736
 #define etb_pFactor_offset_hex 6c8
+#define etb_use_two_wires_offset 76
+#define etb_use_two_wires_offset_hex 4c
 #define etbBiasBins_offset 3888
 #define etbBiasBins_offset_hex f30
 #define etbBiasValues_offset 3920
@@ -1939,6 +1937,8 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1768
 #define unusedFormerWarmupAfrPid_offset_hex 6e8
+#define unusedHereo_wires_offset 76
+#define unusedHereo_wires_offset_hex 4c
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
 #define unusedSpiPadding3_offset 4036
@@ -3155,10 +3155,10 @@ struct engine_configuration_s {
 	bool cj125isLsu49 : 1;
 	/**
 	offset 76 bit 12 */
-	bool etb1_use_two_wires : 1;
+	bool etb_use_two_wires : 1;
 	/**
 	offset 76 bit 13 */
-	bool etb2_use_two_wires : 1;
+	bool unusedHereo_wires : 1;
 	/**
 	offset 76 bit 14 */
 	bool showSdCardWarning : 1;
@@ -4961,4 +4961,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 25 01:00:42 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Nov 29 16:20:29 EST 2019

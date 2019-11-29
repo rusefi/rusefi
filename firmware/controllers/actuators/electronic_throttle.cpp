@@ -459,6 +459,12 @@ void setEtbOffset(int value) {
 
 #endif /* EFI_UNIT_TEST */
 
+static etb_io *getEtbIo(int index) {
+	if (index == 0)
+		return &CONFIGB(etb1);
+	return &CONFIG(etb2);
+}
+
 void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
 	engineConfiguration->etbBiasBins[1] = 1;
@@ -534,9 +540,12 @@ bool isETBRestartNeeded(void) {
 }
 
 void stopETBPins(void) {
-	brain_pin_markUnused(activeConfiguration.bc.etb1.controlPin1);
-	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin1);
-	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin2);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etb_io *io = getEtbIo(i);
+		brain_pin_markUnused(io->controlPin1);
+		brain_pin_markUnused(io->directionPin1);
+		brain_pin_markUnused(io->directionPin2);
+	}
 }
 #endif /* EFI_PROD_CODE */
 
@@ -549,16 +558,19 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
-	// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
-	etbHardware[0].start(
-			CONFIG(etb1_use_two_wires),
-			CONFIGB(etb1.controlPin1),
-			&CONFIGB(etb1.controlPinMode),
-			CONFIGB(etb1.directionPin1),
-			CONFIGB(etb1.directionPin2),
-			&ENGINE(executor),
-			CONFIG(etbFreq)
-			);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etb_io *io = getEtbIo(i);
+		// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
+		etbHardware[i].start(
+				CONFIG(etb_use_two_wires),
+				io->controlPin1,
+				&io->controlPinMode,
+				io->directionPin1,
+				io->directionPin2,
+				&ENGINE(executor),
+				CONFIG(etbFreq)
+				);
+	}
 }
 
 #if EFI_PROD_CODE && 0

@@ -297,8 +297,8 @@ bit isVerboseAuxPid4;
 bit useBiQuadAnalogFiltering;
 bit cj125isUaDivided;
 bit cj125isLsu49;
-bit etb1_use_two_wires;
-bit etb2_use_two_wires;
+bit etb_use_two_wires;
+bit unusedHereo_wires;
 bit showSdCardWarning;
 bit cj125isUrDivided;looks like 3v range should be enough, divider not needed
 bit useTLE8888_hall_mode;

@@ -140,7 +140,7 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	engineConfiguration->auxPidFrequency[3] = 25;
-	CONFIG(etb1_use_two_wires) = true;
+	CONFIG(etb_use_two_wires) = true;
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 	CONFIGB(etb1.directionPin1) = GPIOF_15;
 	CONFIGB(etb1.directionPin2) = GPIOF_14;
@@ -151,7 +151,6 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setFsio (13, GPIOE_5, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio (15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
-	CONFIG(etb2_use_two_wires) = true;
 	CONFIG(etb2.directionPin1) = GPIOE_2;
 	CONFIG(etb2.directionPin2) = GPIOE_4;
 
