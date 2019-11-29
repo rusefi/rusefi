@@ -520,6 +520,7 @@ static void configureInputs(void) {
 
 	addChannel("baro", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
 	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
+	addChannel("TPS2", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
 	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
 	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
