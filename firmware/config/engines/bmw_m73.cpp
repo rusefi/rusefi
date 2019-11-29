@@ -140,8 +140,8 @@ E_4: running
 Good GPIO:
 GPIOC_9 ETB#1
 GPIOC_8 ETB#1
-GPIOB_8
-GPIOB_9
+GPIOB_8 ETB#2
+GPIOB_9 ETB#2
 GPIOC_5
 GPIOA_7
 GPIOA_6
@@ -156,7 +156,9 @@ GPIOA_6
 	/**
 	 * Yellow op-amp board
 	 *
-	 * AN6 tested pull-down 1M
+	 * AN5 tested pull-down 1M               PA3 TPS1
+	 * AN6 tested pull-down 1M               PA4 TPS2
+	 * AN7 tested pull-down 1M                   PPS
 	 * AN8 tested no pull-down / no pull-up
 	 */
 
@@ -166,6 +168,11 @@ GPIOA_6
 	// ETB motor NEG pin # - white wire - OUT 1
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
+	// set_analog_input_pin tps PA3
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // PA3
+	// set_analog_input_pin tps2 PA3
+	engineConfiguration->tps2_1AdcChannel = EFI_ADC_4; // PA4
+
 	// PWM pin
 	boardConfiguration->etb1.controlPin1 = GPIO_UNASSIGNED;
 	// DIR pin
@@ -173,6 +180,11 @@ GPIOA_6
 	boardConfiguration->etb1.directionPin2 = GPIOC_8;
 	CONFIG(etb1_use_two_wires) = true;
 
+	// PWM pin
+	engineConfiguration->etb2.controlPin1 = GPIO_UNASSIGNED;
+	// DIR pin
+	engineConfiguration->etb2.directionPin1 = GPIOB_8;
+	engineConfiguration->etb2.directionPin2 = GPIOB_9;
 	CONFIG(etb2_use_two_wires) = true;
 
 
