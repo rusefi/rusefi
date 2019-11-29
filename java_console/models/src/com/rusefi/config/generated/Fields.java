@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Nov 25 01:00:31 EST 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Nov 29 16:19:44 EST 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -342,13 +342,11 @@ public class Fields {
 	public static final int etb1_directionPin1_offset = 680;
 	public static final int etb1_directionPin2_offset = 681;
 	public static final int etb1_offset = 680;
-	public static final int etb1_use_two_wires_offset = 76;
 	public static final int etb2_controlPin1_offset = 3966;
 	public static final int etb2_controlPinMode_offset = 3967;
 	public static final int etb2_directionPin1_offset = 3964;
 	public static final int etb2_directionPin2_offset = 3965;
 	public static final int etb2_offset = 3964;
-	public static final int etb2_use_two_wires_offset = 76;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int etb_dFactor_offset = 1744;
 	public static final int etb_iFactor_offset = 1740;
@@ -360,6 +358,7 @@ public class Fields {
 	public static final int etb_offset_offset = 1748;
 	public static final int etb_periodMs_offset = 1750;
 	public static final int etb_pFactor_offset = 1736;
+	public static final int etb_use_two_wires_offset = 76;
 	public static final int etbBiasBins_offset = 3888;
 	public static final int etbBiasValues_offset = 3920;
 	public static final int etbCalibrationOnStart_offset = 1476;
@@ -1261,6 +1260,7 @@ public class Fields {
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1768;
+	public static final int unusedHereo_wires_offset = 76;
 	public static final int unusedOldWarmupAfr_offset = 744;
 	public static final int unusedSpiPadding3_offset = 4036;
 	public static final int unusedSpiPadding4_offset = 2593;
@@ -1346,8 +1346,8 @@ public class Fields {
 	public static final Field USEBIQUADANALOGFILTERING = Field.create("USEBIQUADANALOGFILTERING", 76, FieldType.BIT, 9);
 	public static final Field CJ125ISUADIVIDED = Field.create("CJ125ISUADIVIDED", 76, FieldType.BIT, 10);
 	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 76, FieldType.BIT, 11);
-	public static final Field ETB1_USE_TWO_WIRES = Field.create("ETB1_USE_TWO_WIRES", 76, FieldType.BIT, 12);
-	public static final Field ETB2_USE_TWO_WIRES = Field.create("ETB2_USE_TWO_WIRES", 76, FieldType.BIT, 13);
+	public static final Field ETB_USE_TWO_WIRES = Field.create("ETB_USE_TWO_WIRES", 76, FieldType.BIT, 12);
+	public static final Field UNUSEDHEREO_WIRES = Field.create("UNUSEDHEREO_WIRES", 76, FieldType.BIT, 13);
 	public static final Field SHOWSDCARDWARNING = Field.create("SHOWSDCARDWARNING", 76, FieldType.BIT, 14);
 	public static final Field CJ125ISURDIVIDED = Field.create("CJ125ISURDIVIDED", 76, FieldType.BIT, 15);
 	public static final Field USETLE8888_HALL_MODE = Field.create("USETLE8888_HALL_MODE", 76, FieldType.BIT, 16);
@@ -2157,8 +2157,8 @@ public class Fields {
 	USEBIQUADANALOGFILTERING,
 	CJ125ISUADIVIDED,
 	CJ125ISLSU49,
-	ETB1_USE_TWO_WIRES,
-	ETB2_USE_TWO_WIRES,
+	ETB_USE_TWO_WIRES,
+	UNUSEDHEREO_WIRES,
 	SHOWSDCARDWARNING,
 	CJ125ISURDIVIDED,
 	USETLE8888_HALL_MODE,
