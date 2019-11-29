@@ -7,10 +7,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "global.h"
 #include "fsio_impl.h"
 #include "cli_registry.h"
 #include "engine_test_helper.h"
+#include "thermistors.h"
 
 #define TEST_POOL_SIZE 256
 
@@ -19,7 +19,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_FAN:
 		return engine->fsioState.mockFan;
 	case LE_METHOD_COOLANT:
-		return engine->sensors.clt;
+		return getCoolantTemperature();
 	case LE_METHOD_RPM:
 		return engine->fsioState.mockRpm;
 	case LE_METHOD_CRANKING_RPM:
@@ -228,7 +228,7 @@ TEST(fsio, testLogicExpressions) {
 		engine->fsioState.mockCrankingRpm = 200;
 		testExpression2(0, "rpm", 900, engine);
 		testExpression2(0, "cranking_rpm", 200, engine);
-		testExpression2(0, STARTER_BLOCK, 0, engine);
+		testExpression2(0, STARTER_RELAY_LOGIC, 0, engine);
 		testExpression2(0, "rpm cranking_rpm > ", 1, engine);
 	}
 }

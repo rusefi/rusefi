@@ -5,11 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef BMW_E34_H_
-#define BMW_E34_H_
+#pragma once
 
 #include "engine_configuration.h"
 
 void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-#endif /* BMW_E34_H_ */

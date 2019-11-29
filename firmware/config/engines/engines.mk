@@ -4,6 +4,7 @@ ENGINES_SRC =
 ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/custom_engine.cpp \
 	$(PROJECT_DIR)/config/engines/bmw_e34.cpp \
+	$(PROJECT_DIR)/config/engines/bmw_m73.cpp \
 	$(PROJECT_DIR)/config/engines/mazda_miata.cpp \
 	$(PROJECT_DIR)/config/engines/mazda_miata_base_maps.cpp \
 	$(PROJECT_DIR)/config/engines/mazda_miata_1_6.cpp \
@@ -22,7 +23,6 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/rover_v8.cpp \
 	$(PROJECT_DIR)/config/engines/mazda_323.cpp \
 	$(PROJECT_DIR)/config/engines/mazda_626.cpp \
-	$(PROJECT_DIR)/config/engines/prometheus.cpp \
 	$(PROJECT_DIR)/config/engines/sachs.cpp \
 	$(PROJECT_DIR)/config/engines/test_engine.cpp \
 	$(PROJECT_DIR)/config/engines/mitsubishi.cpp \
@@ -35,7 +35,6 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/chevrolet_c20_1973.cpp \
 	$(PROJECT_DIR)/config/engines/toyota_jzs147.cpp \
 	$(PROJECT_DIR)/config/engines/lada_kalina.cpp \
-	$(PROJECT_DIR)/config/engines/geo_storm.cpp \
 	$(PROJECT_DIR)/config/engines/zil130.cpp \
 	$(PROJECT_DIR)/config/engines/honda_600.cpp \
 	$(PROJECT_DIR)/config/engines/me7pnp.cpp \

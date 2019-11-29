@@ -46,7 +46,8 @@ int needInterpolationLogging(void);
  */
 template<typename kType>
 int findIndexMsgExt(const char *msg, const kType array[], int size, kType value) {
-	if (cisnan(value)) {
+	float fvalue = (float)value;
+	if (cisnan(fvalue)) {
 		firmwareError(ERROR_NAN_FIND_INDEX, "NaN in findIndex%s", msg);
 		return 0;
 	}

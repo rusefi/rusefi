@@ -1,15 +1,15 @@
 /*
  * @file firing_order.h
  *
+ * See also FiringOrderTSLogic.java
+ *
  * @date Jul 20, 2016
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "rusefi_enums.h"
 
-
-#ifndef CONTROLLERS_ALGO_FIRING_ORDER_H_
-#define CONTROLLERS_ALGO_FIRING_ORDER_H_
+#pragma once
 
 typedef enum {
 	FO_1 = 0,
@@ -45,7 +45,7 @@ typedef enum {
 	FO_1_10_9_4_3_6_5_8_7_2 = 14, // dodge and viper ram v10
 
 	// 12 cylinder
-	FO_1_7_5_11_3_9_6_12_2_8_4_10 = 15, // bmw M70 etc
+	FO_1_7_5_11_3_9_6_12_2_8_4_10 = 15, // bmw M70 & M73 etc
 	FO_1_7_4_10_2_8_6_12_3_9_5_11 = 16, // lamborghini, typical rusEfi use-case
 	FO_1_12_5_8_3_10_6_7_2_11_4_9 = 18, // VAG W12
 
@@ -53,6 +53,3 @@ typedef enum {
 
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;
-
-
-#endif /* CONTROLLERS_ALGO_FIRING_ORDER_H_ */

@@ -146,7 +146,7 @@ static void canDashboardBMW(void) {
 	sendCanMessage();
 
 	commonTxInit(CAN_BMW_E46_DME2);
-	setShortValue(&txmsg, (int) ((engine->sensors.clt + 48.373) / 0.75), 1);
+	setShortValue(&txmsg, (int) ((getCoolantTemperature() + 48.373) / 0.75), 1);
 	sendCanMessage();
 }
 
@@ -177,7 +177,7 @@ static void canMazdaRX8(void) {
 	sendCanMessage();
 
 	commonTxInit(CAN_MAZDA_RX_STATUS_2);
-	txmsg.data8[0] = (uint8_t)(engine->sensors.clt + 69); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
+	txmsg.data8[0] = (uint8_t)(getCoolantTemperature() + 69); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
 	txmsg.data8[1] = ((int16_t)(engine->engineState.vssEventCounter*(engineConfiguration->vehicleSpeedCoef*0.277*2.58))) & 0xff;
 	txmsg.data8[2] = 0x00; // unknown
 	txmsg.data8[3] = 0x00; //unknown
@@ -187,7 +187,7 @@ static void canMazdaRX8(void) {
 	if ((GET_RPM()>0) && (engine->sensors.vBatt<13)) {
 		setTxBit(6, 6); // battery light
 	}
-	if (engine->sensors.clt > 105) {
+	if (getCoolantTemperature() > 105) {
 		setTxBit(6, 1); // coolant light, 101 - red zone, light means its get too hot
 	}
 	//oil pressure warning lamp bit is 7
@@ -198,7 +198,7 @@ static void canMazdaRX8(void) {
 static void canDashboardFiat(void) {
 	//Fiat Dashboard
 	commonTxInit(CAN_FIAT_MOTOR_INFO);
-	setShortValue(&txmsg, (int) (engine->sensors.clt - 40), 3); //Coolant Temp
+	setShortValue(&txmsg, (int) (getCoolantTemperature() - 40), 3); //Coolant Temp
 	setShortValue(&txmsg, GET_RPM() / 32, 6); //RPM
 	sendCanMessage();
 }
@@ -210,11 +210,11 @@ static void canDashboardVAG(void) {
 	sendCanMessage();
 
 	commonTxInit(CAN_VAG_CLT);
-	setShortValue(&txmsg, (int) ((engine->sensors.clt + 48.373) / 0.75), 1); //Coolant Temp
+	setShortValue(&txmsg, (int) ((getCoolantTemperature() + 48.373) / 0.75), 1); //Coolant Temp
 	sendCanMessage();
 
 	commonTxInit(CAN_VAG_CLT_V2);
-		setShortValue(&txmsg, (int) ((engine->sensors.clt + 48.373) / 0.75), 4); //Coolant Temp
+		setShortValue(&txmsg, (int) ((getCoolantTemperature() + 48.373) / 0.75), 4); //Coolant Temp
 		sendCanMessage();
 
 	commonTxInit(CAN_VAG_IMMO);
@@ -305,11 +305,13 @@ void setCanType(int type) {
 	canInfo();
 }
 
+#if EFI_TUNER_STUDIO
 void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugIntField1 = isCanEnabled ? canReadCounter : -1;
 	tsOutputChannels->debugIntField2 = isCanEnabled ? canWriteOk : -1;
 	tsOutputChannels->debugIntField3 = isCanEnabled ? canWriteNotOk : -1;
 }
+#endif /* EFI_TUNER_STUDIO */
 
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIGB(canTxPin) = GPIOB_6;

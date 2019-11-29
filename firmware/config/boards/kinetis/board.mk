@@ -20,4 +20,4 @@ PLATFORMINC += $(PLATFORMINC_CONTRIB)
 # Using external ChibiOS-Contrib code for Comparator HAL
 HALSRC += $(CHIBIOS_CONTRIB)/os/hal/src/hal_comp.c
 
-HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/trigger_input_comp.cpp
+

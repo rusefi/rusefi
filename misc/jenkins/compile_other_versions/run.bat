@@ -1,5 +1,6 @@
 set script_name=run.bat
 echo Entering %script_name%
+echo "RUSEFI_BUILD_FTP_USER=%RUSEFI_BUILD_FTP_USER%"
 
 pwd
 
@@ -16,12 +17,22 @@ pwd
 
 set f7_console_setting=firmware\config\boards\nucleo_f767\rusefi_console_properties.xml
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre rusefi_microrusefi.ini %f7_console_setting%
+call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4 rusefi_microrusefi.ini
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-test rusefi_microrusefi.ini %f7_console_setting%
+call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4-test rusefi_microrusefi.ini
+IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
+IF NOT ERRORLEVEL 0 EXIT /B 1
+pwd
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f7 rusefi_microrusefi.ini %f7_console_setting%
+IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
+IF NOT ERRORLEVEL 0 EXIT /B 1
+pwd
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f7-test rusefi_microrusefi.ini %f7_console_setting%
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd

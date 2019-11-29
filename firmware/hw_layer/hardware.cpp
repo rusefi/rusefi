@@ -33,6 +33,7 @@
 
 #include "AdcConfiguration.h"
 #include "electronic_throttle.h"
+#include "idle_thread.h"
 #include "mcp3208.h"
 #include "hip9011.h"
 #include "histogram.h"
@@ -47,6 +48,7 @@
 #include "svnversion.h"
 #include "engine_configuration.h"
 #include "aux_pid.h"
+#include "perf_trace.h"
 
 #if EFI_MC33816
 #include "mc33816.h"
@@ -197,11 +199,16 @@ extern AdcDevice fastAdc;
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	(void) buffer;
 	(void) n;
+
+	ScopePerf perf(PE::AdcCallbackFast);
+
 	/**
 	 * Note, only in the ADC_COMPLETE state because the ADC driver fires an
 	 * intermediate callback when the buffer is half full.
 	 * */
 	if (adcp->state == ADC_COMPLETE) {
+		ScopePerf perf(PE::AdcCallbackFastComplete);
+
 		fastAdc.invalidateSamplesCache();
 
 		/**
@@ -250,12 +257,6 @@ void turnOnHardware(Logging *sharedLogger) {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
-static void unregisterPin(brain_pin_e currentPin, brain_pin_e prevPin) {
-	if (currentPin != prevPin) {
-		brain_pin_markUnused(prevPin);
-	}
-}
-
 void stopSpi(spi_device_e device) {
 #if HAL_USE_SPI
 	if (!isSpiInitialized[device])
@@ -267,12 +268,17 @@ void stopSpi(spi_device_e device) {
 #endif /* HAL_USE_SPI */
 }
 
+/**
+ * this method is NOT currently invoked on ECU start
+ * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
+ */
 void applyNewHardwareSettings(void) {
     // all 'stop' methods need to go before we begin starting pins
 
 #if EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
+
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	stopJoystickPins();
@@ -287,6 +293,13 @@ void applyNewHardwareSettings(void) {
 #if EFI_HIP_9011
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
+
+#if EFI_IDLE_CONTROL
+	bool isIdleRestartNeeded = isIdleHardwareRestartNeeded();
+	if (isIdleRestartNeeded) {
+		stopIdleHardware();
+	}
+#endif
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	bool etbRestartNeeded = isETBRestartNeeded();
@@ -307,20 +320,21 @@ void applyNewHardwareSettings(void) {
 	stopAuxPins();
 #endif /* EFI_AUX_PID */
 
-	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
+	if (isConfigurationChanged(bc.is_enabled_spi_1))
 		stopSpi(SPI_DEVICE_1);
 
-	if (engineConfiguration->bc.is_enabled_spi_2 != activeConfiguration.bc.is_enabled_spi_2)
+	if (isConfigurationChanged(bc.is_enabled_spi_2))
 		stopSpi(SPI_DEVICE_2);
 
-	if (engineConfiguration->bc.is_enabled_spi_3 != activeConfiguration.bc.is_enabled_spi_3)
+	if (isConfigurationChanged(bc.is_enabled_spi_3))
 		stopSpi(SPI_DEVICE_3);
 
 #if EFI_HD44780_LCD
 	stopHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-	unregisterPin(engineConfiguration->bc.clutchUpPin, activeConfiguration.bc.clutchUpPin);
+	if (isPinOrModeChanged(bc.clutchUpPin, bc.clutchUpPinMode))
+		brain_pin_markUnused(activeConfiguration.bc.clutchUpPin);
 
 	enginePins.unregisterPins();
 
@@ -347,6 +361,12 @@ void applyNewHardwareSettings(void) {
 	startHip9001_pins();
 #endif /* EFI_HIP_9011 */
 
+
+#if EFI_IDLE_CONTROL
+	if (isIdleRestartNeeded) {
+		 initIdleHardware();
+	}
+#endif
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	if (etbRestartNeeded) {
@@ -399,7 +419,7 @@ void initHardware(Logging *l) {
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
-	initPrimaryPins();
+	initPrimaryPins(sharedLogger);
 
 	if (hasFirmwareError()) {
 		return;

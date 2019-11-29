@@ -55,6 +55,7 @@ public class LazyFile {
     }
 
     private static String unifySpaces(String line) {
+        line = line.replace("\r", "");
         return line.replaceAll("\n[\n]*", "\n").trim();
     }
 

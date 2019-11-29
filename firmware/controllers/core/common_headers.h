@@ -65,17 +65,35 @@
 #define DISPLAY_SENSOR(x) {}
 #define DISPLAY_IF(x) x
 
-#define DECLARE_ENGINE_PTR                              \
+#define DECLARE_ENGINE_PTR                                 \
 	Engine *engine = nullptr;                              \
 	engine_configuration_s *engineConfiguration = nullptr; \
 	persistent_config_s *config = nullptr;                 \
 	board_configuration_s *boardConfiguration = nullptr;
 
 
-#define INJECT_ENGINE_REFERENCE(x)              \
+#define INJECT_ENGINE_REFERENCE(x)               \
 	x.engine = engine;                           \
 	x.engineConfiguration = engineConfiguration; \
 	x.config = config;                           \
 	x.boardConfiguration = boardConfiguration;
+
+#define EXPAND_Engine \
+	    engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr; \
+		persistent_config_s *config = engine->config; \
+		board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+
+#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+// We store a special changeable copy of configuration is RAM, so we can just compare them
+#define isConfigurationChanged(x) (engineConfiguration->x != activeConfiguration.x)
+#else
+// We cannot call prepareVoidConfiguration() for activeConfiguration if it's stored in flash,
+// so we need to tell the firmware that it's "void" (i.e. zeroed, invalid) by setting a special flag variable,
+// and then we consider 'x' as changed if it's just non-zero.
+extern bool isActiveConfigurationVoid;
+#define isConfigurationChanged(x) ((engineConfiguration->x != activeConfiguration.x) || (isActiveConfigurationVoid && engineConfiguration->x != 0))
+#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+
+#define isPinOrModeChanged(pin, mode) (isConfigurationChanged(pin) || isConfigurationChanged(mode))
 
 #endif /* CONTROLLERS_CORE_COMMON_HEADERS_H_ */

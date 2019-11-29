@@ -12,6 +12,7 @@
 #include "os_access.h"
 #include "pid.h"
 #include "math.h"
+#include "engine_configuration_generated_structures.h"
 
 Pid::Pid() {
 	initPidClass(NULL);
@@ -28,7 +29,7 @@ void Pid::initPidClass(pid_s *parameters) {
 	reset();
 }
 
-bool Pid::isSame(pid_s *parameters) const {
+bool Pid::isSame(const pid_s *parameters) const {
 	efiAssert(OBD_PCM_Processor_Fault, this->parameters != NULL, "PID::isSame invalid", false);
 	efiAssert(OBD_PCM_Processor_Fault, parameters != NULL, "PID::isSame NULL", false);
 	return this->parameters->pFactor == parameters->pFactor
@@ -153,7 +154,7 @@ void Pid::sleep() {
 #endif /* EFI_UNIT_TEST */
 }
 
-void Pid::showPidStatus(Logging *logging, const char*msg) {
+void Pid::showPidStatus(Logging *logging, const char*msg) const {
 	scheduleMsg(logging, "%s settings: offset=%f P=%.5f I=%.5f D=%.5f period=%dms",
 			msg,
 			getOffset(),
@@ -234,4 +235,58 @@ void PidCic::updateITerm(float value) {
 		iTermSum += iTermBuf[i];
 	}
 	iTerm = iTermSum * iTermInvNum;
+}
+
+PidIndustrial::PidIndustrial() : Pid() {
+}
+
+PidIndustrial::PidIndustrial(pid_s *parameters) : Pid(parameters) {
+}
+
+float PidIndustrial::getOutput(float target, float input, float dTime) {
+	float ad, bd;
+	float error = (target - input) * errorAmplificationCoef;
+	float pTerm = parameters->pFactor * error;
+
+	// update the I-term
+	iTerm += parameters->iFactor * dTime * error;
+	
+	// calculate dTerm coefficients
+	if (fabsf(derivativeFilterLoss) > DBL_EPSILON) {
+		// restore Td in the Standard form from the Parallel form: Td = Kd / Kc
+		float Td = parameters->dFactor / parameters->pFactor;
+		// calculate the backward differences approximation of the derivative term
+		ad = Td / (Td + dTime / derivativeFilterLoss);
+		bd = parameters->pFactor * ad / derivativeFilterLoss;
+	} else {
+		// According to the Theory of limits, if p.derivativeFilterLoss -> 0, then 
+		//   lim(ad) = 0; lim(bd) = p.pFactor * Td / dTime = p.dFactor / dTime
+		//   i.e. dTerm becomes equal to Pid's
+		ad = 0.0f;
+		bd = parameters->dFactor / dTime;
+	}
+	
+	// (error - previousError) = (target-input) - (target-prevousInput) = -(input - prevousInput)
+	dTerm = dTerm * ad + (error - previousError) * bd;
+
+	// calculate output and apply the limits
+	float output = pTerm + iTerm + dTerm + parameters->offset;
+	float limitedOutput = limitOutput(output);
+
+	// apply the integrator anti-windup
+	// If p.antiwindupFreq = 0, then iTerm is equal to PidParallelController's
+	iTerm += dTime * antiwindupFreq * (limitedOutput - output);
+	
+	// update the state
+	previousError = error;
+	
+	return limitedOutput;
+}
+
+float PidIndustrial::limitOutput(float v) const {
+	if (v < parameters->minValue)
+		v = parameters->minValue;
+	if (v > parameters->maxValue)
+		v = parameters->maxValue;
+	return v;
 }

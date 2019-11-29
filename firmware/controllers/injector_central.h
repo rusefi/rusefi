@@ -8,8 +8,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef INJECTOR_CENTRAL_H_
-#define INJECTOR_CENTRAL_H_
+#pragma once
 
 #include "engine.h"
 
@@ -21,5 +20,3 @@ void initInjectorCentral(Logging *sharedLogger);
 bool isRunningBenchTest(void);
 
 void executeTSCommand(uint16_t subsystem, uint16_t index);
-
-#endif /* INJECTOR_CENTRAL_H_ */

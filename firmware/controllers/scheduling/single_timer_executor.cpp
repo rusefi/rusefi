@@ -24,7 +24,7 @@
 #include "os_access.h"
 #include "single_timer_executor.h"
 #include "efitime.h"
-
+#include "perf_trace.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 
@@ -52,7 +52,7 @@ static void executorCallback(void *arg) {
 	efiAssertVoid(CUSTOM_ERR_6624, getCurrentRemainingStack() > 256, "lowstck#2y");
 
 //	callbackTime = getTimeNowNt();
-//	if((callbackTime > nextEventTimeNt) && (callbackTime - nextEventTimeNt > US2NT(5000))) {
+//	if ((callbackTime > nextEventTimeNt) && (callbackTime - nextEventTimeNt > US2NT(5000))) {
 //		timerIsLate++;
 //	}
 
@@ -84,6 +84,8 @@ void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs
  */
 void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
+	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
+
 	scheduleCounter++;
 	bool alreadyLocked = true;
 	if (!reentrantFlag) {
@@ -114,6 +116,8 @@ void SingleTimerExecutor::onTimerCallback() {
  * this private method is executed under lock
  */
 void SingleTimerExecutor::doExecute() {
+	ScopePerf perf(PE::SingleTimerExecutorDoExecute);
+
 	doExecuteCounter++;
 	/**
 	 * Let's execute actions we should execute at this point.
@@ -148,6 +152,8 @@ void SingleTimerExecutor::doExecute() {
  * This method is always invoked under a lock
  */
 void SingleTimerExecutor::scheduleTimerCallback() {
+	ScopePerf perf(PE::SingleTimerExecutorScheduleTimerCallback);
+
 	/**
 	 * Let's grab fresh time value
 	 */

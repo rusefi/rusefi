@@ -59,6 +59,7 @@
 #include "aux_pid.h"
 #include "accelerometer.h"
 #include "counter64.h"
+#include "perf_trace.h"
 
 #if HAL_USE_ADC
 #include "AdcConfiguration.h"
@@ -91,6 +92,8 @@
 #include "cj125.h"
 #endif /* EFI_CJ125 */
 
+EXTERN_ENGINE;
+
 // this method is used by real firmware and simulator and unit test
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
@@ -112,6 +115,12 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
+#if EFI_MAP_AVERAGING
+	if (engineConfiguration->isMapAveragingEnabled) {
+		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+#endif /* EFI_MAP_AVERAGING */
 
 }
 
@@ -198,6 +207,7 @@ static Overflow64Counter halTime;
  */
 //todo: macro to save method invocation
 efitimeus_t getTimeNowUs(void) {
+	ScopePerf perf(PE::ScheduleByAngle);
 	return getTimeNowNt() / (CORE_CLOCK / 1000000);
 }
 
@@ -257,11 +267,14 @@ efitick_t getTimeNowNt(void) {
 
 }
 
+#endif /* EFI_PROD_CODE */
+
+#if ! EFI_UNIT_TEST
+
 /**
  * number of SysClock ticks in one ms
  */
 #define TICKS_IN_MS  (CH_CFG_ST_FREQUENCY / 1000)
-
 
 // todo: this overflows pretty fast!
 efitimems_t currentTimeMillis(void) {
@@ -273,52 +286,38 @@ efitimems_t currentTimeMillis(void) {
 efitimesec_t getTimeNowSeconds(void) {
 	return currentTimeMillis() / 1000;
 }
-
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_UNIT_TEST */
 
 static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.resetAE();
 	engine->tpsAccelEnrichment.resetAE();
-	engine->wallFuel.resetWF();
+
+	for (unsigned int i = 0; i < sizeof(engine->wallFuel) / sizeof(engine->wallFuel[0]); i++)
+	{
+		engine->wallFuel[i].resetWF();
+	}
 }
 
 static int previousSecond;
 
-#if EFI_CLOCK_LOCKS
-
-typedef FLStack<int, 16> irq_enter_timestamps_t;
-
-static irq_enter_timestamps_t irqEnterTimestamps;
+#if ENABLE_PERF_TRACE
 
 void irqEnterHook(void) {
-	irqEnterTimestamps.push(getTimeNowLowerNt());
+	perfEventBegin(PE::ISR);
 }
 
-static int currentIrqDurationAccumulator = 0;
-static int currentIrqCounter = 0;
-/**
- * See also maxLockedDuration
- */
-int perSecondIrqDuration = 0;
-int perSecondIrqCounter = 0;
 void irqExitHook(void) {
-	int enterTime = irqEnterTimestamps.pop();
-	currentIrqDurationAccumulator += (getTimeNowLowerNt() - enterTime);
-	currentIrqCounter++;
+	perfEventEnd(PE::ISR);
 }
-#endif /* EFI_CLOCK_LOCKS */
 
-static void invokePerSecond(void) {
-#if EFI_CLOCK_LOCKS
-	// this data transfer is not atomic but should be totally good enough
-	perSecondIrqDuration = currentIrqDurationAccumulator;
-	perSecondIrqCounter = currentIrqCounter;
-	currentIrqDurationAccumulator = currentIrqCounter = 0;
-#endif /* EFI_CLOCK_LOCKS */
+void contextSwitchHook() {
+	perfEventInstantGlobal(PE::ContextSwitch);
 }
+
+#endif /* ENABLE_PERF_TRACE */
 
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+	#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
@@ -329,11 +328,6 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	updateAndSet(&halTime.state, getTimeNowLowerNt());
     /* Leaving the critical zone.*/
     chSysRestoreStatusX(sts);
-	int timeSeconds = getTimeNowSeconds();
-	if (previousSecond != timeSeconds) {
-		previousSecond = timeSeconds;
-		invokePerSecond();
-	}
 #endif /* EFI_PROD_CODE */
 
 	/**
@@ -761,7 +755,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initMalfunctionCentral();
 
 #if EFI_ALTERNATOR_CONTROL
-	initAlternatorCtrl(sharedLogger);
+	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 #if EFI_AUX_PID
@@ -771,12 +765,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #if EFI_MALFUNCTION_INDICATOR
 	initMalfunctionIndicator();
 #endif /* EFI_MALFUNCTION_INDICATOR */
-
-#if EFI_MAP_AVERAGING
-	if (engineConfiguration->isMapAveragingEnabled) {
-		initMapAveraging(sharedLogger, engine);
-	}
-#endif /* EFI_MAP_AVERAGING */
 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -810,7 +798,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 19000
+#define RAM_UNUSED_SIZE 2500
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 4600
@@ -831,6 +819,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20191007;
+	return 20191128;
 }
 #endif /* EFI_UNIT_TEST */

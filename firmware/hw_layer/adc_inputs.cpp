@@ -35,7 +35,7 @@
 #include "engine_math.h"
 #include "engine_controller.h"
 #include "maf.h"
-//#include "biquad.h"
+#include "perf_trace.h"
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define ADC_BUF_DEPTH_SLOW      8
@@ -76,7 +76,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 // todo: I guess we would have to use ChibiOS timer and not our own timer because
 // todo: adcStartConversionI requires OS lock. currently slow ADC is 20Hz
 #define PWM_FREQ_SLOW 5000   /* PWM clock frequency. I wonder what does this setting mean?  */
-#define PWM_PERIOD_SLOW 250  /* PWM period (in PWM ticks).    */
+#define PWM_PERIOD_SLOW 25  /* PWM period (in PWM ticks).    */
 #endif /* PWM_FREQ_SLOW PWM_PERIOD_SLOW */
 
 #if !defined(PWM_FREQ_FAST) || !defined(PWM_PERIOD_FAST)
@@ -119,7 +119,8 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 
-#define ADC_SAMPLING_SLOW ADC_SAMPLE_480
+// See https://github.com/rusefi/rusefi/issues/976 for discussion on these values
+#define ADC_SAMPLING_SLOW ADC_SAMPLE_56
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
 /*
  * ADC conversion group.
@@ -227,6 +228,7 @@ void doSlowAdc(void) {
 		;
 		return;
 	}
+
 	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_BUF_DEPTH_SLOW);
 	chSysUnlockFromISR()
 	;
@@ -260,6 +262,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 		;
 		return;
 	}
+
 	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfg_fast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
 	chSysUnlockFromISR()
 	;
@@ -421,8 +424,7 @@ static void printFullAdcReport(Logging *logger) {
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
 
-		if(hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR)
-		{
+		if (hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR) {
 			ioportid_t port = getAdcChannelPort("print", hwIndex);
 			int pin = getAdcChannelPin(hwIndex);
 
@@ -458,6 +460,8 @@ int getSlowAdcCounter() {
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	(void) buffer;
 	(void) n;
+
+	ScopePerf perf(PE::AdcCallbackSlow);
 
 	/* Note, only in the ADC_COMPLETE state because the ADC driver fires
 	 * an intermediate callback when the buffer is half full. */
@@ -515,9 +519,10 @@ static void configureInputs(void) {
 	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
 	addChannel("baro", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
-	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_FAST);
+	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
+	addChannel("TPS2", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
 	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
-	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_FAST);
+	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
@@ -598,8 +603,6 @@ void initAdcInputs() {
 		pwmEnablePeriodicNotification(EFI_INTERNAL_FAST_ADC_PWM);
 #endif /* HAL_USE_PWM */
 	}
-
-	//if(slowAdcChannelCount > ADC_MAX_SLOW_CHANNELS_COUNT) // todo: do we need this logic? do we need this check
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
 #else

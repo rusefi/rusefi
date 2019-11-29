@@ -50,10 +50,10 @@
 
 #define CHPRINTF_USE_FLOAT          	TRUE
 
-#if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
+#if !defined(ENABLE_PERF_TRACE) || defined(__DOXYGEN__)
 // looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
- #define EFI_CLOCK_LOCKS FALSE
-#endif /* EFI_CLOCK_LOCKS */
+ #define ENABLE_PERF_TRACE TRUE
+#endif /* ENABLE_PERF_TRACE */
 
 #include "chconf_common.h"
 
@@ -565,7 +565,7 @@
  * @note    The default is @p FALSE.
  */
 #ifndef CH_DBG_ENABLE_TRACE
-#define CH_DBG_ENABLE_TRACE                 TRUE
+#define CH_DBG_ENABLE_TRACE                 FALSE
 #endif
 
 /**
@@ -670,7 +670,7 @@
  * @details This hook is invoked just before switching between threads.
  */
 #define CH_CFG_CONTEXT_SWITCH_HOOK(ntp, otp) {                              \
-  /* Context switch code here.*/                                            \
+  contextSwitchHook();                                            \
 }
 
 /**
@@ -696,7 +696,6 @@
  * @note    This macro can be used to activate a power saving mode.
  */
 #define CH_CFG_IDLE_ENTER_HOOK() {                                          \
-  /* Idle-enter code here.*/                                                \
 }
 
 /**
@@ -706,7 +705,6 @@
  * @note    This macro can be used to deactivate a power saving mode.
  */
 #define CH_CFG_IDLE_LEAVE_HOOK() {                                          \
-  /* Idle-leave code here.*/                                                \
 }
 
 /**
@@ -754,6 +752,9 @@
 
 #ifndef __ASSEMBLER__
 
+#ifdef __cplusplus
+extern "C"
+#endif
 void chDbgPanic3(const char *msg, const char * file, int line);
 #endif
 

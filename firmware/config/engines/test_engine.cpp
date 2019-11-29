@@ -18,6 +18,7 @@
 EXTERN_CONFIG;
 
 void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
@@ -54,6 +55,7 @@ void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;

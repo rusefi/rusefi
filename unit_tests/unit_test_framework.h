@@ -12,6 +12,10 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
+// This lets us inspect private state from unit tests
+#define private public
+
+#define EPS0D 1
 #define EPS1D 0.1
 #define EPS2D 0.01
 #define EPS3D 0.001

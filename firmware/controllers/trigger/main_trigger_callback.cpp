@@ -52,6 +52,7 @@
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "engine.h"
+#include "perf_trace.h"
 
 #include "aux_valves.h"
 #include "backup_ram.h"
@@ -209,7 +210,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	 * wetting coefficient works the same way for any injection mode, or is something
 	 * x2 or /2?
 	 */
-	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(0/*event->outputs[0]->injectorIndex*/, ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
+
+	size_t injectorIndex = event->outputs[0]->injectorIndex;
+	const floatms_t injectionDuration = ENGINE(wallFuel[injectorIndex]).adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_PRINTF_FUEL_DETAILS
 	printf("fuel injectionDuration=%.2f adjusted=%.2f\t\n", ENGINE(injectionDuration), injectionDuration);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
@@ -337,7 +340,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_UNIT_TEST
 	if (GET_RPM_VALUE < CONFIG(fuelClosedLoopRpmThreshold) ||
-			ENGINE(sensors.clt) < CONFIG(fuelClosedLoopCltThreshold) ||
+			getCoolantTemperature() < CONFIG(fuelClosedLoopCltThreshold) ||
 			getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(fuelClosedLoopTpsThreshold) ||
 			ENGINE(sensors.currentAfr) < CONFIGB(fuelClosedLoopAfrLowThreshold) ||
 			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
@@ -359,6 +362,8 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::HandleFuel);
+	
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
@@ -388,12 +393,6 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
 		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
 	}
-
-	/**
-	 * we have same assignment of 'getInjectionDuration' to 'injectionDuration' in periodicFastCallback()
-	 * Open question why do we refresh that in two places?
-	 */
-	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 	for (int injEventIndex = 0; injEventIndex < CONFIG(specs.cylindersCount); injEventIndex++) {
 		InjectionEvent *event = &fs->elements[injEventIndex];
@@ -429,6 +428,8 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
  * Both injection and ignition are controlled from this method.
  */
 void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::MainTriggerCallback);
+
 	(void) ckpSignalType;
 
 	ENGINE(m.beforeMainTrigger) = getTimeNowLowerNt();
@@ -493,7 +494,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		}
 
 		if (checkIfTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			engine->ignitionEvents.isReady = false; // we need to rebuild ignition schedule
+			engine->ignitionEvents.isReady = false; // we need to rebuild complete ignition schedule
 			engine->injectionEvents.isReady = false;
 			// moved 'triggerIndexByAngle' into trigger initialization (why was it invoked from here if it's only about trigger shape & optimization?)
 			// see initializeTriggerShape() -> prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE)
@@ -509,7 +510,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 
 	efiAssertVoid(CUSTOM_IGN_MATH_STATE, !CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
 
-	if (trgEventIndex == CONFIG(ignMathCalculateAtIndex)) {
+	if (trgEventIndex == (uint32_t)CONFIG(ignMathCalculateAtIndex)) {
 		if (CONFIG(externalKnockSenseAdc) != EFI_ADC_NONE) {
 			float externalKnockValue = getVoltageDivided("knock", engineConfiguration->externalKnockSenseAdc PASS_ENGINE_PARAMETER_SUFFIX);
 			engine->knockLogic(externalKnockValue PASS_ENGINE_PARAMETER_SUFFIX);
@@ -578,7 +579,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
 		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, CONFIG(startOfCrankingPrimingPulse),
-			CONFIG(primeInjFalloffTemperature), 0.0f, ENGINE(sensors.clt));
+			CONFIG(primeInjFalloffTemperature), 0.0f, getCoolantTemperature());
 		if (pulseLength > 0) {
 			startSimultaniousInjection(engine);
 			efitimeus_t turnOffDelayUs = (efitimeus_t)efiRound(MS2US(pulseLength), 1.0f);
@@ -630,7 +631,7 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 	efiAssertVoid(CUSTOM_ERR_6631, engine!=NULL, "null engine");
 	initSparkLogic(logger);
 
-	initAuxValves(logger);
+	initAuxValves(logger PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_PROD_CODE
 	addConsoleAction("performanceinfo", showTriggerHistogram);

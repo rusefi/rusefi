@@ -1,5 +1,5 @@
 /*
- * global_shared.h
+ * @file global_shared.h
  *
  * part of global.h which is shared between firmware and simulator
  * See also common_headers.h
@@ -8,8 +8,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef GLOBAL_SHARED_H_
-#define GLOBAL_SHARED_H_
+#pragma once
 
 /**
  * The following obscurantism is a hack to reduce stack usage, maybe even a questionable performance
@@ -25,13 +24,14 @@
  * On the other hand, in order to have a meaningful unit test we are passing Engine * engine as a parameter
  */
 
+#include "global.h"
+
 #define EXTERN_CONFIG \
 		extern engine_configuration_s *engineConfiguration; \
 		extern board_configuration_s *boardConfiguration; \
-		extern engine_configuration_s activeConfiguration; \
+		extern engine_configuration_s & activeConfiguration; \
 		extern persistent_config_container_s persistentState; \
 		extern persistent_config_s *config; \
-
 
 #define EXTERN_ENGINE \
 		extern Engine ___engine; \
@@ -58,6 +58,10 @@
 /**
  * this macro allows the compiled to figure out the complete static address, that's a performance
  * optimization which is hopefully useful at least for anything trigger-related
+ *
+ * this is related to the fact that for unit tests we prefer to explicitly pass references in method signature thus code covered by
+ * unit tests would need to use by-reference access. These macro allow us to have faster by-address access in real firmware and by-reference
+ * access in unit tests
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 #define CONFIGB(x) persistentState.persistentConfiguration.engineConfiguration.bc.x
@@ -67,5 +71,3 @@
 #define CONFIG_PARAM(x) CONFIG(x)
 #define PASS_CONFIG_PARAM(x)
 
-
-#endif /* GLOBAL_SHARED_H_ */

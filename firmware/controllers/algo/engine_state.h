@@ -55,22 +55,10 @@ public:
 	angle_t mapAveragingStart[INJECTION_PIN_COUNT];
 	angle_t mapAveragingDuration = 0;
 
+	/**
+	 * timing advance is angle distance before Top Dead Center (TDP), i.e. "10 degree timing advance" means "happens 10 degrees before TDC"
+	 */
 	angle_t timingAdvance = 0;
-	// spark-related
-	/**
-	 * ignition dwell duration in ms
-	 * See also dwellAngle
-	 */
-	floatms_t sparkDwell = 0;
-	/**
-	 * ignition dwell duration as crankshaft angle
-	 * NAN if engine is stopped
-	 * See also sparkDwell
-	 */
-	angle_t dwellAngle = NAN;
-
-	angle_t cltTimingCorrection = 0;
-
 	// fuel-related;
 	float fuelCutoffCorrection = 0;
 	efitick_t coastingFuelCutStartTime = 0;

@@ -24,6 +24,7 @@
 #include "aux_valves.h"
 #include "map_averaging.h"
 #include "fsio_impl.h"
+#include "perf_trace.h"
 
 #if EFI_PROD_CODE
 #include "injector_central.h"
@@ -53,10 +54,8 @@ FsioState::FsioState() {
 
 void Engine::eInitializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-#if !EFI_UNIT_TEST
 	// we have a confusing threading model so some synchronization would not hurt
 	bool alreadyLocked = lockAnyContext();
-#endif /* EFI_UNIT_TEST */
 
 	TRIGGER_SHAPE(initializeTriggerShape(logger,
 			engineConfiguration->ambiguousOperationMode,
@@ -86,11 +85,9 @@ void Engine::eInitializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SU
 		engine->engineCycleEventCount = TRIGGER_SHAPE(getLength());
 	}
 
-#if !EFI_UNIT_TEST
 	if (!alreadyLocked) {
 		unlockAnyContext();
 	}
-#endif /* EFI_UNIT_TEST */
 
 	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
 		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -116,13 +113,17 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static efitick_t tle8888CrankingResetTime = 0;
 
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	ScopePerf perf(PE::EnginePeriodicSlowCallback);
+	
 	watchdog();
 	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	checkShutdown();
 
 #if EFI_FSIO
 	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_PROD_CODE && EFI_FSIO */
+#else
+	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_FSIO */
 
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -363,6 +364,7 @@ operation_mode_e Engine::getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * so that trigger event handler/IO scheduler tasks are faster.
  */
 void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	ScopePerf pc(PE::EnginePeriodicFastCallback);
 
 #if EFI_MAP_AVERAGING
 	refreshMapAveragingPreCalc(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -372,13 +374,9 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engine->m.beforeFuelCalc = getTimeNowLowerNt();
 	int rpm = GET_RPM();
-	/**
-	 * we have same assignment of 'getInjectionDuration' to 'injectionDuration' in handleFuel()
-	 * Open question why do we refresh that in two places?
-	 */
+
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->m.fuelCalcTime = getTimeNowLowerNt() - engine->m.beforeFuelCalc;
-
 }
 
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -386,3 +384,22 @@ void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// let's close injectors or else if these happen to be open right now
 	enginePins.stopPins();
 }
+
+void action_s::setAction(schfunc_t callback, void *param) {
+	this->callback = callback;
+	this->param = param;
+}
+
+void action_s::execute() {
+	efiAssertVoid(CUSTOM_ERR_ASSERT, callback != NULL, "callback==null1");
+	callback(param);
+}
+
+schfunc_t action_s::getCallback() const {
+	return callback;
+}
+
+void * action_s::getArgument() const {
+	return param;
+}
+

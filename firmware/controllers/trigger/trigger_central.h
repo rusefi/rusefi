@@ -69,7 +69,7 @@ void addTriggerEventListener(ShaftPositionListener handler, const char *name, En
 int isSignalDecoderError(void);
 void resetMaxValues();
 
-void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX);
+void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 

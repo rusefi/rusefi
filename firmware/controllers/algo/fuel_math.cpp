@@ -29,6 +29,7 @@
 #include "engine_math.h"
 #include "rpm_calculator.h"
 #include "speed_density.h"
+#include "perf_trace.h"
 
 EXTERN_ENGINE
 ;
@@ -42,6 +43,11 @@ extern baroCorr_Map3D_t baroCorrMap;
 #if EFI_ENGINE_CONTROL
 
 DISPLAY_STATE(Engine)
+
+DISPLAY(DISPLAY_FIELD(sparkDwell))
+DISPLAY(DISPLAY_FIELD(dwellAngle))
+DISPLAY(DISPLAY_FIELD(cltTimingCorrection))
+DISPLAY_TEXT(eol);
 
 DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTemperature,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -72,11 +78,13 @@ DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTem
 	DISPLAY_SENSOR(TPS);
 	DISPLAY_TEXT(eol);
 
-	DISPLAY_TEXT(Cranking_fuel);
-	floatms_t crankingFuel = engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(fuel) = baseCrankingFuel
+	floatms_t crankingFuel = baseCrankingFuel
 			* engine->engineState.cranking.durationCoefficient
 			* engine->engineState.cranking.coolantTemperatureCoefficient
 			* engine->engineState.cranking.tpsCoefficient;
+
+	DISPLAY_TEXT(Cranking_fuel);
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(fuel) = crankingFuel;
 
 	if (crankingFuel <= 0) {
 		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", crankingFuel);
@@ -87,6 +95,8 @@ DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTem
 /* DISPLAY_ELSE */
 
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::GetRunningFuel);
+
 	DISPLAY_TEXT(Base_fuel);
 	ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(baseFuel)) = baseFuel;
 	DISPLAY_TEXT(eol);
@@ -154,6 +164,8 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * todo: rename this method since it's now base+TPSaccel
  */
 floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::GetBaseFuel);
+
 	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE));
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	ENGINE(engineState.tpsAccelEnrich) = tpsAccelEnrich;
@@ -218,7 +230,7 @@ int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX)
  * @see getCoilDutyCycle
  */
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	floatms_t totalInjectiorAmountPerCycle = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX) * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX);
+	floatms_t totalInjectiorAmountPerCycle = ENGINE(injectionDuration) * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX);
 	floatms_t engineCycleDuration = getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
@@ -228,6 +240,8 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
  *     in case of single point injection mode the amount of fuel into all cylinders, otherwise the amount for one cylinder
  */
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::GetInjectionDuration);
+
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 	injection_mode_e mode = isCranking ?
@@ -303,15 +317,15 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @brief Engine warm-up fuel correction.
  */
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (cisnan(engine->sensors.clt))
+	if (!hasCltSensor())
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("cltf", engine->sensors.clt, config->cltFuelCorrBins, config->cltFuelCorr);
+	return interpolate2d("cltf", getCoolantTemperature(), config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (cisnan(engine->sensors.clt))
+	if (!hasCltSensor())
 		return 0; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("timc", engine->sensors.clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
+	return interpolate2d("timc", getCoolantTemperature(), engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
 }
 
 float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -337,7 +351,8 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 		// gather events
 		bool mapDeactivate = (map >= CONFIG(coastingFuelCutMap));
 		bool tpsDeactivate = (tpsPos >= CONFIG(coastingFuelCutTps));
-		bool cltDeactivate = cisnan(engine->sensors.clt) ? false : (engine->sensors.clt < (float)CONFIG(coastingFuelCutClt));
+		// If no CLT sensor (or broken), don't allow DFCO
+		bool cltDeactivate = hasCltSensor() ? (getCoolantTemperature() < (float)CONFIG(coastingFuelCutClt)) : true;
 		bool rpmDeactivate = (rpm < CONFIG(coastingFuelCutRpmLow));
 		bool rpmActivate = (rpm > CONFIG(coastingFuelCutRpmHigh));
 		
@@ -397,7 +412,7 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return Duration of fuel injection while craning
  */
 floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getCrankingFuel3(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE),
+	return getCrankingFuel3(getCoolantTemperature(),
 			engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 #endif

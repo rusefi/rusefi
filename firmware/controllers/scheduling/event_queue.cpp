@@ -16,6 +16,7 @@
 #include "event_queue.h"
 #include "efitime.h"
 #include "os_util.h"
+#include "perf_trace.h"
 
 #if EFI_UNIT_TEST
 extern bool verboseMode;
@@ -29,13 +30,15 @@ EventQueue::EventQueue() {
 }
 
 bool EventQueue::checkIfPending(scheduling_s *scheduling) {
-	return assertNotInList<scheduling_s>(head, scheduling);
+	assertNotInListMethodBody(scheduling_s, head, scheduling, nextScheduling_s);
 }
 
 /**
  * @return true if inserted into the head of the list
  */
 bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
+	ScopePerf perf(PE::EventQueueInsertTask);
+
 #if EFI_UNIT_TEST
 	assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
@@ -54,13 +57,12 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 	}
 
 	scheduling->momentX = timeX;
-	scheduling->callback = callback;
-	scheduling->param = param;
+	scheduling->action.setAction(callback, param);
 	scheduling->isScheduled = true;
 
 	if (head == NULL || timeX < head->momentX) {
 		// here we insert into head of the linked list
-		LL_PREPEND(head, scheduling);
+		LL_PREPEND2(head, scheduling, nextScheduling_s);
 #if EFI_UNIT_TEST
 		assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
@@ -68,12 +70,12 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 	} else {
 		// here we know we are not in the head of the list, let's find the position - linear search
 		scheduling_s *insertPosition = head;
-		while (insertPosition->next != NULL && insertPosition->next->momentX < timeX) {
-			insertPosition = insertPosition->next;
+		while (insertPosition->nextScheduling_s != NULL && insertPosition->nextScheduling_s->momentX < timeX) {
+			insertPosition = insertPosition->nextScheduling_s;
 		}
 
-		scheduling->next = insertPosition->next;
-		insertPosition->next = scheduling;
+		scheduling->nextScheduling_s = insertPosition->nextScheduling_s;
+		insertPosition->nextScheduling_s = scheduling;
 #if EFI_UNIT_TEST
 		assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
@@ -118,6 +120,9 @@ static uint32_t lastEventCallbackDuration;
  * @return number of executed actions
  */
 int EventQueue::executeAll(efitime_t now) {
+	ScopePerf perf(PE::EventQueueExecuteAll);
+
+
 	scheduling_s * current, *tmp;
 
 	scheduling_s * executionList = nullptr;
@@ -126,9 +131,8 @@ int EventQueue::executeAll(efitime_t now) {
 	int listIterationCounter = 0;
 	int executionCounter = 0;
 	// we need safe iteration because we are removing elements inside the loop
-	LL_FOREACH_SAFE(head, current, tmp)
+	LL_FOREACH_SAFE2(head, current, tmp, nextScheduling_s)
 	{
-		efiAssert(CUSTOM_ERR_ASSERT, current->callback != NULL, "callback==null1", 0);
 		if (++listIterationCounter > QUEUE_LENGTH_LIMIT) {
 			firmwareError(CUSTOM_LIST_LOOP, "Is this list looped?");
 			return false;
@@ -137,14 +141,14 @@ int EventQueue::executeAll(efitime_t now) {
 			executionCounter++;
 			efiAssert(CUSTOM_ERR_ASSERT, head == current, "removing from head", -1);
 			//LL_DELETE(head, current);
-			head = head->next;
+			head = head->nextScheduling_s;
 			if (executionList == NULL) {
 				lastInExecutionList = executionList = current;
 			} else {
-				lastInExecutionList->next = current;
+				lastInExecutionList->nextScheduling_s = current;
 				lastInExecutionList = current;
 			}
-			current->next = nullptr;
+			current->nextScheduling_s = nullptr;
 		} else {
 			/**
 			 * The list is sorted. Once we find one action in the future, all the remaining ones
@@ -161,17 +165,20 @@ int EventQueue::executeAll(efitime_t now) {
 	 * we need safe iteration here because 'callback' might change change 'current->next'
 	 * while re-inserting it into the queue from within the callback
 	 */
-	LL_FOREACH_SAFE(executionList, current, tmp)
-	{
-		efiAssert(CUSTOM_ERR_ASSERT, current->callback != NULL, "callback==null2", 0);
+	LL_FOREACH_SAFE2(executionList, current, tmp, nextScheduling_s) {
 		uint32_t before = getTimeNowLowerNt();
 		current->isScheduled = false;
 		uint32_t howFarOff = now - current->momentX;
 		maxSchedulingPrecisionLoss = maxI(maxSchedulingPrecisionLoss, howFarOff);
 #if EFI_UNIT_TEST
-		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->param);
+		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.getArgument());
 #endif
-		current->callback(current->param);
+
+		{
+			ScopePerf perf2(PE::EventQueueExecuteCallback);
+			current->action.execute();
+		}
+
 		// even with overflow it's safe to subtract here
 		lastEventCallbackDuration = getTimeNowLowerNt() - before;
 		if (lastEventCallbackDuration > maxEventCallbackDuration)
@@ -187,16 +194,16 @@ int EventQueue::executeAll(efitime_t now) {
 int EventQueue::size(void) const {
 	scheduling_s *tmp;
 	int result;
-	LL_COUNT(head, tmp, result);
+	LL_COUNT2(head, tmp, result, nextScheduling_s);
 	return result;
 }
 
 #if EFI_UNIT_TEST
 void EventQueue::assertListIsSorted() const {
 	scheduling_s *current = head;
-	while (current != NULL && current->next != NULL) {
-		efiAssertVoid(CUSTOM_ERR_6623, current->momentX <= current->next->momentX, "list order");
-		current = current->next;
+	while (current != NULL && current->nextScheduling_s != NULL) {
+		efiAssertVoid(CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
+		current = current->nextScheduling_s;
 	}
 }
 #endif
@@ -212,7 +219,7 @@ scheduling_s * EventQueue::getHead() {
 scheduling_s *EventQueue::getForUnitText(int index) {
 	scheduling_s * current;
 
-	LL_FOREACH(head, current)
+	LL_FOREACH2(head, current, nextScheduling_s)
 	{
 		if (index == 0)
 			return current;

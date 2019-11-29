@@ -1,5 +1,7 @@
 /*
- * globalaccess.h
+ * @file globalaccess.h
+ * @bried version of global.h with DECLARE_ENGINE_PARAMETER_SIGNATURE & PASS_ENGINE_PARAMETER_SUFFIX
+ *
  *
  * unit_tests have a more meaningful version of this header
  *
@@ -7,9 +9,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef GLOBALACCESS_H_
-#define GLOBALACCESS_H_
+#pragma once
 
 #include "global_shared.h"
 
-#endif /* GLOBALACCESS_H_ */

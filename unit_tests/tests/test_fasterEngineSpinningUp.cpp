@@ -23,8 +23,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	eth.moveTimeForwardMs(1000 /*ms*/);
-	eth.firePrimaryTriggerRise();
+	eth.fireRise(1000 /*ms*/);
 
 	// check if it's true
 	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -97,7 +96,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check real events for sequential injection
 	// Note: See addFuelEvents() fix inside setRpmValue()!
 	eth.assertEvent5("inj start#3", 0, (void*)seTurnPinHigh, -31875);
-	eth.assertEvent5("inj end#3", 1, (void*)seTurnPinLow, -28875);
+	eth.assertEvent5("inj end#3", 1, (void*)seTurnPinLow, -30000);
 }
 
 static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {

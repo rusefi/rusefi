@@ -80,7 +80,10 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
+/**
+ * see also setConstantDwell
+ */
+void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = i + 1;
 		engineConfiguration->sparkDwellValues[i] = 4;
@@ -210,7 +213,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "findAngle#3", false);
 	assertAngleRange(angle, "findAngle#a33", CUSTOM_ERR_6544);
-	TRIGGER_SHAPE(findTriggerPosition(&ev->injectionStart, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
+	ev->injectionStart.setAngle(angle PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_UNIT_TEST
 	printf("registerInjectionEvent angle=%.2f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.triggerEventIndex, injectorIndex);
 #endif
@@ -436,18 +439,24 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return 1;
 }
 
-static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
+/**
+ * @param cylinderIndex from 0 to cylinderCount, not cylinder number
+ */
+static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 	case IM_ONE_COIL:
 		return 0;
-		break;
 	case IM_WASTED_SPARK: {
-		return i % (CONFIG(specs.cylindersCount) / 2);
+		if (CONFIG(specs.cylindersCount) == 1) {
+			// we do not want to divide by zero
+			return 0;
+		}
+		return cylinderIndex % (CONFIG(specs.cylindersCount) / 2);
 	}
-		break;
 	case IM_INDIVIDUAL_COILS:
-		return i;
-		break;
+		return cylinderIndex;
+	case IM_TWO_COILS:
+		return cylinderIndex % 2;
 
 	default:
 		warning(CUSTOM_OBD_IGNITION_MODE, "unsupported ignitionMode %d in getIgnitionPinForIndex()", engineConfiguration->ignitionMode);
@@ -458,8 +467,8 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (ignitionMode != engine->ignitionModeForPinIndices) {
 #if EFI_ENGINE_CONTROL
-		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-			ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER_SUFFIX);
+		for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+			ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 #endif /* EFI_ENGINE_CONTROL */
 		engine->ignitionModeForPinIndices = ignitionMode;
@@ -505,7 +514,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_UNIT_TEST */
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-		ENGINE(ignitionPositionWithinEngineCycle[i])= ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
+		ENGINE(ignitionPositionWithinEngineCycle[i]) = ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
 	}
 
 	prepareIgnitionPinIndices(CONFIG(ignitionMode) PASS_ENGINE_PARAMETER_SUFFIX);
@@ -516,11 +525,11 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_ENGINE_CONTROL */
 
 void setFuelRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setTableBin(config->fuelRpmBins, FUEL_RPM_COUNT, from, to);
+	setLinearCurve(config->fuelRpmBins, from, to);
 }
 
 void setFuelLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setTableBin(config->fuelLoadBins, FUEL_LOAD_COUNT, from, to);
+	setLinearCurve(config->fuelLoadBins, from, to);
 }
 
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
@@ -528,7 +537,7 @@ void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
 }
 
 void setTimingLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setTableBin(config->ignitionLoadBins, IGN_LOAD_COUNT, from, to);
+	setLinearCurve(config->ignitionLoadBins, from, to);
 }
 
 /**
@@ -539,11 +548,11 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	if (algo == LM_ALPHA_N) {
 		setTimingLoadBin(20, 120 PASS_CONFIG_PARAMETER_SUFFIX);
 	} else if (algo == LM_SPEED_DENSITY) {
-		setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 3);
+		setLinearCurve(config->ignitionLoadBins, 20, 120, 3);
 		buildTimingMap(35 PASS_CONFIG_PARAMETER_SUFFIX);
 	}
 }
 
 void setFlatInjectorLag(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, value);
+	setArrayValues(engineConfiguration->injector.battLagCorr, value);
 }

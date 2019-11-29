@@ -2,6 +2,8 @@
 // was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt
 //
 
+#define absoluteFuelPressure_offset 76
+#define absoluteFuelPressure_offset_hex 4c
 #define accelerometerSpiDevice_offset 2712
 #define accelerometerSpiDevice_offset_hex a98
 #define acCutoffHighRpm_offset 1494
@@ -55,6 +57,10 @@
 #define alFIn_offset_hex fb8
 #define alignEngineSnifferAtTDC_offset 744
 #define alignEngineSnifferAtTDC_offset_hex 2e8
+#define alternator_antiwindupFreq_offset 1764
+#define alternator_antiwindupFreq_offset_hex 6e4
+#define alternator_derivativeFilterLoss_offset 1760
+#define alternator_derivativeFilterLoss_offset_hex 6e0
 #define alternatorControl_dFactor_offset 1724
 #define alternatorControl_dFactor_offset_hex 6bc
 #define alternatorControl_iFactor_offset 1720
@@ -79,6 +85,8 @@
 #define alternatorOffAboveTps_offset_hex 7ec
 #define alternatorPwmFrequency_offset 2256
 #define alternatorPwmFrequency_offset_hex 8d0
+#define ambiguousOperationMode_offset 488
+#define ambiguousOperationMode_offset_hex 1e8
 #define analogInputDividerCoefficient_offset 460
 #define analogInputDividerCoefficient_offset_hex 1cc
 #define autoTuneCltThreshold_offset 2420
@@ -255,8 +263,6 @@
 #define biQuad_offset 2332
 #define biQuad_offset_hex 91c
 #define BLOCKING_FACTOR 400
-#define boardTestModeJumperPin_offset 676
-#define boardTestModeJumperPin_offset_hex 2a4
 #define boostCutPressure_offset 2132
 #define boostCutPressure_offset_hex 854
 #define brain_input_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "N/A", "N/A", "PA10", "PA11", "PA12", "PA13", "N/A", "N/A", "N/A", "N/A", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "N/A", "N/A", "N/A", "N/A", "PB12", "PB13", "N/A", "N/A", "N/A", "N/A", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "N/A", "N/A", "N/A", "N/A", "PC14", "PC15", "PC16", "PC17", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "PD15", "PD16", "N/A", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A"
@@ -301,6 +307,8 @@
 #define cj125isLsu49_offset_hex 4c
 #define cj125isUaDivided_offset 76
 #define cj125isUaDivided_offset_hex 4c
+#define cj125isUrDivided_offset 76
+#define cj125isUrDivided_offset_hex 4c
 #define cj125SpiDevice_offset 2224
 #define cj125SpiDevice_offset_hex 8b0
 #define cj125ua_offset 2609
@@ -364,8 +372,15 @@
 #define clutchUpPinInverted_offset_hex 3d0
 #define clutchUpPinMode_offset 971
 #define clutchUpPinMode_offset_hex 3cb
+#define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
+#define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
+#define CMD_DATE "date"
 #define CMD_DISABLE "disable"
 #define CMD_ENABLE "enable"
+#define CMD_ENGINE_TYPE "engine_type"
+#define CMD_ETB_DUTY "set_etb_duty"
+#define CMD_REBOOT "reboot"
+#define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"
@@ -436,8 +451,16 @@
 #define cylindersCount_offset 400
 #define cylindersCount_offset_hex 190
 #define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"
+#define debugMapAveraging_offset 807
+#define debugMapAveraging_offset_hex 327
 #define debugMode_offset 2092
 #define debugMode_offset_hex 82c
+#define debugSetTimer_offset 806
+#define debugSetTimer_offset_hex 326
+#define debugTimerCallback_offset 711
+#define debugTimerCallback_offset_hex 2c7
+#define debugTriggerSync_offset 676
+#define debugTriggerSync_offset_hex 2a4
 #define DIGIPOT_COUNT 4
 #define digitalPotentiometerChipSelect1_offset 668
 #define digitalPotentiometerChipSelect1_offset_hex 29c
@@ -490,8 +513,8 @@
 #define engineType_offset_hex 0
 #define etb1_controlPin1_offset 682
 #define etb1_controlPin1_offset_hex 2aa
-#define etb1_controlPin2_offset 683
-#define etb1_controlPin2_offset_hex 2ab
+#define etb1_controlPinMode_offset 683
+#define etb1_controlPinMode_offset_hex 2ab
 #define etb1_directionPin1_offset 680
 #define etb1_directionPin1_offset_hex 2a8
 #define etb1_directionPin2_offset 681
@@ -502,8 +525,8 @@
 #define etb1_use_two_wires_offset_hex 4c
 #define etb2_controlPin1_offset 3966
 #define etb2_controlPin1_offset_hex f7e
-#define etb2_controlPin2_offset 3967
-#define etb2_controlPin2_offset_hex f7f
+#define etb2_controlPinMode_offset 3967
+#define etb2_controlPinMode_offset_hex f7f
 #define etb2_directionPin1_offset 3964
 #define etb2_directionPin1_offset_hex f7c
 #define etb2_directionPin2_offset 3965
@@ -537,6 +560,8 @@
 #define etbBiasBins_offset_hex f30
 #define etbBiasValues_offset 3920
 #define etbBiasValues_offset_hex f50
+#define etbCalibrationOnStart_offset 1476
+#define etbCalibrationOnStart_offset_hex 5c4
 #define etbDeadband_offset 3960
 #define etbDeadband_offset_hex f78
 #define etbFreq_offset 2514
@@ -545,6 +570,8 @@
 #define etbIdleRange_offset_hex 3cc
 #define etbIdleThrottleRange_offset 4012
 #define etbIdleThrottleRange_offset_hex fac
+#define etbNeutralPosition_offset 1471
+#define etbNeutralPosition_offset_hex 5bf
 #define externalKnockSenseAdc_offset 3103
 #define externalKnockSenseAdc_offset_hex c1f
 #define extraInjectionOffset_offset 432
@@ -557,16 +584,12 @@
 #define fanPin_offset_hex 297
 #define fanPinMode_offset 662
 #define fanPinMode_offset_hex 296
-#define fatalErrorPin_offset 2040
-#define fatalErrorPin_offset_hex 7f8
 #define firingOrder_offset 404
 #define firingOrder_offset_hex 194
 #define fixedModeTiming_offset 452
 #define fixedModeTiming_offset_hex 1c4
 #define fixedTiming_offset 2204
 #define fixedTiming_offset_hex 89c
-#define flexFuelSensor_offset 3100
-#define flexFuelSensor_offset_hex c1c
 #define frequencyReportingMapInputPin_offset 970
 #define frequencyReportingMapInputPin_offset_hex 3ca
 #define FSIO_ANALOG_INPUT_COUNT 4
@@ -858,6 +881,8 @@
 #define fuelPumpPin_offset_hex 292
 #define fuelPumpPinMode_offset 659
 #define fuelPumpPinMode_offset_hex 293
+#define fuelRailPressure_offset 1756
+#define fuelRailPressure_offset_hex 6dc
 #define fuelRpmBins_offset 16224
 #define fuelRpmBins_offset_hex 3f60
 #define fuelTable_offset 15136
@@ -867,6 +892,8 @@
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
+#define GAUGE_NAME_AIR_FLOW "air flow"
+#define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
 #define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
@@ -883,6 +910,10 @@
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
+#define GAUGE_NAME_ETB_DUTY "ETB duty cycle"
+#define GAUGE_NAME_ETB_ERROR "ETB position error"
+#define GAUGE_NAME_ETB_TARGET "ETB position target"
+#define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure correction"
 #define GAUGE_NAME_FUEL_BASE "fuel: base"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_CLT_CORR "fuel: CLT correction"
@@ -904,6 +935,7 @@
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
+#define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_VERSION "firmware"
@@ -992,12 +1024,19 @@
 #define hipOutputChannel_offset 1468
 #define hipOutputChannel_offset_hex 5bc
 #define HW_MAX_ADC_INDEX 17
+#define IAC_PID_MULT_SIZE 8
 #define iacByTpsTaper_offset 2038
 #define iacByTpsTaper_offset_hex 7f6
 #define iacCoasting_offset 3224
 #define iacCoasting_offset_hex c98
 #define iacCoastingBins_offset 3160
 #define iacCoastingBins_offset_hex c58
+#define iacPidMultLoadBins_offset 4124
+#define iacPidMultLoadBins_offset_hex 101c
+#define iacPidMultRpmBins_offset 4132
+#define iacPidMultRpmBins_offset_hex 1024
+#define iacPidMultTable_offset 4060
+#define iacPidMultTable_offset_hex fdc
 #define iat_adcChannel_offset 312
 #define iat_adcChannel_offset_hex 138
 #define iat_alignmentFill_offset 313
@@ -1057,10 +1096,30 @@
 #define idlePidRpmDeadZone_offset_hex 766
 #define idlePidRpmUpperLimit_offset 1484
 #define idlePidRpmUpperLimit_offset_hex 5cc
+#define idleRpmPid2_dFactor_offset 4048
+#define idleRpmPid2_dFactor_offset_hex fd0
+#define idleRpmPid2_iFactor_offset 4044
+#define idleRpmPid2_iFactor_offset_hex fcc
+#define idleRpmPid2_maxValue_offset 4058
+#define idleRpmPid2_maxValue_offset_hex fda
+#define idleRpmPid2_minValue_offset 4056
+#define idleRpmPid2_minValue_offset_hex fd8
+#define idleRpmPid2_offset 4040
+#define idleRpmPid2_offset_hex fc8
+#define idleRpmPid2_offset_offset 4052
+#define idleRpmPid2_offset_offset_hex fd4
+#define idleRpmPid2_periodMs_offset 4054
+#define idleRpmPid2_periodMs_offset_hex fd6
+#define idleRpmPid2_pFactor_offset 4040
+#define idleRpmPid2_pFactor_offset_hex fc8
 #define idleRpmPid_dFactor_offset 1796
 #define idleRpmPid_dFactor_offset_hex 704
 #define idleRpmPid_iFactor_offset 1792
 #define idleRpmPid_iFactor_offset_hex 700
+#define idlerpmpid_iTermMax_offset 4006
+#define idlerpmpid_iTermMax_offset_hex fa6
+#define idlerpmpid_iTermMin_offset 4002
+#define idlerpmpid_iTermMin_offset_hex fa2
 #define idleRpmPid_maxValue_offset 1806
 #define idleRpmPid_maxValue_offset_hex 70e
 #define idleRpmPid_minValue_offset 1804
@@ -1168,6 +1227,7 @@
 #define ignitionTpsTable_offset_hex cd8
 #define ignMathCalculateAtIndex_offset 1488
 #define ignMathCalculateAtIndex_offset_hex 5d0
+#define INDICATOR_NAME_AC_SWITCH "AC switch"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
 #define INDICATOR_NAME_CLUTCH_UP "clutch: up"
@@ -1252,16 +1312,6 @@
 #define isMapAveragingEnabled_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
-#define issue_294_15_offset 76
-#define issue_294_15_offset_hex 4c
-#define issue_294_16_offset 76
-#define issue_294_16_offset_hex 4c
-#define issue_294_17_offset 76
-#define issue_294_17_offset_hex 4c
-#define issue_294_18_offset 76
-#define issue_294_18_offset_hex 4c
-#define issue_294_19_offset 76
-#define issue_294_19_offset_hex 4c
 #define issue_294_21_offset 76
 #define issue_294_21_offset_hex 4c
 #define issue_294_22_offset 76
@@ -1326,13 +1376,18 @@
 #define knockVThreshold_offset_hex 5e8
 #define lcdThreadPeriodMs_offset 720
 #define lcdThreadPeriodMs_offset_hex 2d0
-#define LDS_CLT_INDEX 0
+#define LDS_ALTERNATOR_PID_STATE_INDEX 9
+#define LDS_CJ125_PID_STATE_INDEX 10
+#define LDS_CLT_STATE_INDEX 0
 #define LDS_ENGINE_STATE_INDEX 3
-#define LDS_FUEL_TRIM_INDEX 4
-#define LDS_IAT_INDEX 1
-#define LDS_SPEED_DENSITY_INDEX 2
-#define LDS_TPS_TPS_ENEICHMENT_INDEX 5
-#define LDS_TRIGGER_INDEX 6
+#define LDS_ETB_PID_STATE_INDEX 7
+#define LDS_FUEL_TRIM_STATE_INDEX 4
+#define LDS_IAT_STATE_INDEX 1
+#define LDS_IDLE_PID_STATE_INDEX 8
+#define LDS_SPEED_DENSITY_STATE_INDEX 2
+#define LDS_TPS_TPS_ENEICHMENT_STATE_INDEX 5
+#define LDS_TRIGGER_CENTRAL_STATE_INDEX 6
+#define LDS_TRIGGER_STATE_STATE_INDEX 11
 #define LE_COMMAND_LENGTH 200
 #define LIS302DLCsPin_offset 2043
 #define LIS302DLCsPin_offset_hex 7fb
@@ -1363,8 +1418,8 @@
 #define mainRelayPin_offset_hex 2c2
 #define mainRelayPinMode_offset 752
 #define mainRelayPinMode_offset_hex 2f0
-#define mainUnusedEnd_offset 4040
-#define mainUnusedEnd_offset_hex fc8
+#define mainUnusedEnd_offset 4140
+#define mainUnusedEnd_offset_hex 102c
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPin_offset_hex 294
 #define malfunctionIndicatorPinMode_offset 661
@@ -1457,7 +1512,14 @@
 #define miataNb2VVTRatioFrom_offset_hex 334
 #define miataNb2VVTRatioTo_offset 824
 #define miataNb2VVTRatioTo_offset_hex 338
+#define MOCK_AFR_COMMAND "mock_afr_voltage"
+#define MOCK_CLT_COMMAND "mock_clt_voltage"
 #define MOCK_IAT_COMMAND "mock_iat_voltage"
+#define MOCK_MAF_COMMAND "mock_maf_voltage"
+#define MOCK_MAP_COMMAND "mock_map_voltage"
+#define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
+#define MOCK_PPS_VOLTAGE_COMMAND "mock_pps_voltage"
+#define MOCK_TPS_COMMAND "mock_tps_voltage"
 #define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
 #define narrowToWideOxygen_offset 2296
 #define narrowToWideOxygen_offset_hex 8f8
@@ -1489,8 +1551,6 @@
 #define oilPressure_value2_offset_hex a94
 #define onOffAlternatorLogic_offset 744
 #define onOffAlternatorLogic_offset_hex 2e8
-#define operationMode_offset 488
-#define operationMode_offset_hex 1e8
 #define output_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "N/A", "N/A", "PA10", "PA11", "PA12", "PA13", "N/A", "N/A", "N/A", "N/A", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "N/A", "N/A", "N/A", "N/A", "PB12", "PB13", "N/A", "N/A", "N/A", "N/A", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "N/A", "N/A", "N/A", "N/A", "PC14", "PC15", "PC16", "PC17", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "PD15", "PD16", "N/A", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16"
 #define overrideCrankingIacSetting_offset 1476
 #define overrideCrankingIacSetting_offset_hex 5c4
@@ -1520,7 +1580,25 @@
 #define primingSquirtDurationMs_offset 96
 #define primingSquirtDurationMs_offset_hex 60
 #define PROTOCOL_ANALOG_CHART "analog_chart"
+#define PROTOCOL_COIL1_SHORT_NAME "c1"
+#define PROTOCOL_CRANK1 "t1"
+#define PROTOCOL_CRANK2 "t2"
+#define PROTOCOL_CRANK3 "t3"
+#define PROTOCOL_DIZZY_NAME "dizzy"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
+#define PROTOCOL_ES_DOWN "d"
+#define PROTOCOL_ES_UP "u"
+#define PROTOCOL_HIP_NAME "HIP"
+#define PROTOCOL_INJ1_SHORT_NAME "i1"
+#define PROTOCOL_OUTPIN "outpin"
+#define PROTOCOL_TACH_NAME "tach"
+#define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
+#define PROTOCOL_VERSION_TAG "rusEfiVersion"
+#define PROTOCOL_VVT_NAME "VVT"
+#define PROTOCOL_WA_CHANNEL_1 "input1"
+#define PROTOCOL_WA_CHANNEL_2 "input2"
+#define PROTOCOL_WA_CHANNEL_3 "input3"
+#define PROTOCOL_WA_CHANNEL_4 "input4"
 #define RPM_1_BYTE_PACKING_MULT 50
 #define rpmHardLimit_offset 416
 #define rpmHardLimit_offset_hex 1a0
@@ -1528,6 +1606,8 @@
 #define runningLedPin_offset_hex 715
 #define sdCardCsPin_offset 707
 #define sdCardCsPin_offset_hex 2c3
+#define sdCardPeriodMs_offset 804
+#define sdCardPeriodMs_offset_hex 324
 #define sdCardSpiDevice_offset 2592
 #define sdCardSpiDevice_offset_hex a20
 #define secondTriggerChannelEnabled_offset 1476
@@ -1604,6 +1684,10 @@
 #define spi3SckMode_offset_hex a2a
 #define spi3sckPin_offset 936
 #define spi3sckPin_offset_hex 3a8
+#define starterRelayPin_offset 808
+#define starterRelayPin_offset_hex 328
+#define starterRelayPinMode_offset 809
+#define starterRelayPinMode_offset_hex 329
 #define startOfCrankingPrimingPulse_offset 2032
 #define startOfCrankingPrimingPulse_offset_hex 7f0
 #define startUpFuelPumpDuration_offset 1892
@@ -1718,6 +1802,7 @@
 #define tle8888_csPinMode_offset_hex c22
 #define tle8888spiDevice_offset 4000
 #define tle8888spiDevice_offset_hex fa0
+#define TOP_DEAD_CENTER_MESSAGE "r"
 #define TOTAL_CONFIG_SIZE 20000
 #define TOTAL_CONFIG_SIZE_hex 4e20
 #define tps1_1AdcChannel_offset 512
@@ -1816,14 +1901,28 @@
 #define unrealisticRpmThreashold_offset_hex 2f8
 #define unused1234234_offset 2042
 #define unused1234234_offset_hex 7fa
-#define unused_1484_bit_20_offset 1476
-#define unused_1484_bit_20_offset_hex 5c4
 #define unused_1484_bit_21_offset 1476
 #define unused_1484_bit_21_offset_hex 5c4
-#define unused_bit_1472_29_offset 1464
-#define unused_bit_1472_29_offset_hex 5b8
-#define unused_bit_1472_30_offset 1464
-#define unused_bit_1472_30_offset_hex 5b8
+#define unused_1484_bit_22_offset 1476
+#define unused_1484_bit_22_offset_hex 5c4
+#define unused_1484_bit_23_offset 1476
+#define unused_1484_bit_23_offset_hex 5c4
+#define unused_1484_bit_24_offset 1476
+#define unused_1484_bit_24_offset_hex 5c4
+#define unused_1484_bit_25_offset 1476
+#define unused_1484_bit_25_offset_hex 5c4
+#define unused_1484_bit_26_offset 1476
+#define unused_1484_bit_26_offset_hex 5c4
+#define unused_1484_bit_27_offset 1476
+#define unused_1484_bit_27_offset_hex 5c4
+#define unused_1484_bit_28_offset 1476
+#define unused_1484_bit_28_offset_hex 5c4
+#define unused_1484_bit_29_offset 1476
+#define unused_1484_bit_29_offset_hex 5c4
+#define unused_1484_bit_30_offset 1476
+#define unused_1484_bit_30_offset_hex 5c4
+#define unused_1484_bit_31_offset 1476
+#define unused_1484_bit_31_offset_hex 5c4
 #define unused_board_984_31_offset 744
 #define unused_board_984_31_offset_hex 2e8
 #define unused_former_warmup_target_afr_offset 2096
@@ -1832,30 +1931,26 @@
 #define unusedAnotherOne_offset_hex 2e8
 #define unusedAtBoardConfigurationEnd_offset 980
 #define unusedAtBoardConfigurationEnd_offset_hex 3d4
-#define unusedFormerWarmupAfrPid_offset 1756
-#define unusedFormerWarmupAfrPid_offset_hex 6dc
-#define unusedh_offset 1471
-#define unusedh_offset_hex 5bf
-#define unusedMa2_offset 711
-#define unusedMa2_offset_hex 2c7
+#define unusedErrorPin_offset 2040
+#define unusedErrorPin_offset_hex 7f8
+#define unusedFlexFuelSensor_offset 3100
+#define unusedFlexFuelSensor_offset_hex c1c
+#define unusedFormerWarmupAfrPid_offset 1768
+#define unusedFormerWarmupAfrPid_offset_hex 6e8
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
-#define unusedSpiPadding2_offset 804
-#define unusedSpiPadding2_offset_hex 324
 #define unusedSpiPadding3_offset 4036
 #define unusedSpiPadding3_offset_hex fc4
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding4_offset_hex a21
 #define unusedSpiPadding5_offset 2713
 #define unusedSpiPadding5_offset_hex a99
-#define unusedSpiPadding6_offset 4002
-#define unusedSpiPadding6_offset_hex fa2
 #define unusedSpiPadding7_offset 4005
 #define unusedSpiPadding7_offset_hex fa5
 #define unusedSpiPadding8_offset 4009
 #define unusedSpiPadding8_offset_hex fa9
-#define unuseduartPadding1_offset 808
-#define unuseduartPadding1_offset_hex 328
+#define unuseduartPadding1_offset 810
+#define unuseduartPadding1_offset_hex 32a
 #define unusuedsw_offset 4020
 #define unusuedsw_offset_hex fb4
 #define unusuedvref_offset 4016
@@ -1874,8 +1969,12 @@
 #define useFSIO10ForServo3_offset_hex 5b8
 #define useFSIO11ForServo4_offset 1464
 #define useFSIO11ForServo4_offset_hex 5b8
+#define useFSIO12ForIdleOffset_offset 1464
+#define useFSIO12ForIdleOffset_offset_hex 5b8
 #define useFSIO12ForServo5_offset 1464
 #define useFSIO12ForServo5_offset_hex 5b8
+#define useFSIO13ForIdleMinValue_offset 1464
+#define useFSIO13ForIdleMinValue_offset_hex 5b8
 #define useFSIO15ForIdleRpmAdjustment_offset 1464
 #define useFSIO15ForIdleRpmAdjustment_offset_hex 5b8
 #define useFSIO16ForTimingAdjustment_offset 1464
@@ -1884,6 +1983,8 @@
 #define useFSIO4ForSeriousEngineWarning_offset_hex 5b8
 #define useFSIO5ForCriticalIssueEngineStop_offset 1464
 #define useFSIO5ForCriticalIssueEngineStop_offset_hex 5b8
+#define useFSIO6ForRevLimiter_offset 1464
+#define useFSIO6ForRevLimiter_offset_hex 5b8
 #define useFSIO8ForServo1_offset 1464
 #define useFSIO8ForServo1_offset_hex 5b8
 #define useFSIO9ForServo2_offset 1464
@@ -1892,6 +1993,8 @@
 #define useIacTableForCoasting_offset_hex 2e8
 #define useIdleTimingPidControl_offset 744
 #define useIdleTimingPidControl_offset_hex 2e8
+#define useInstantRpmForIdle_offset 76
+#define useInstantRpmForIdle_offset_hex 4c
 #define useLcdScreen_offset 744
 #define useLcdScreen_offset_hex 2e8
 #define useLinearCltSensor_offset 1464
@@ -1912,6 +2015,10 @@
 #define useSerialPort_offset_hex 2e8
 #define useStepperIdle_offset 744
 #define useStepperIdle_offset_hex 2e8
+#define useTLE8888_cranking_hack_offset 76
+#define useTLE8888_cranking_hack_offset_hex 4c
+#define useTLE8888_hall_mode_offset 76
+#define useTLE8888_hall_mode_offset_hex 4c
 #define useTpicAdvancedMode_offset 744
 #define useTpicAdvancedMode_offset_hex 2e8
 #define useTPSAdvanceTable_offset 1476

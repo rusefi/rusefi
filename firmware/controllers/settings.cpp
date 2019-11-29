@@ -30,13 +30,16 @@
 
 #if EFI_PROD_CODE
 #include "vehicle_speed.h"
-#include "electronic_throttle.h"
 #include "rtc_helper.h"
 #include "can_hw.h"
 #include "rusefi.h"
 #include "pin_repository.h"
 #include "hardware.h"
 #endif /* EFI_PROD_CODE */
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+#include "electronic_throttle.h"
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #if EFI_INTERNAL_FLASH
 #include "flash_main.h"
@@ -112,6 +115,9 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(boardConfiguration->mainRelayPinMode),
 			hwPortname(boardConfiguration->mainRelayPin));
 
+	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(boardConfiguration->starterRelayPinMode),
+			hwPortname(boardConfiguration->starterRelayPin));
+
 	scheduleMsg(&logger, "alternator field: mode %s @ %s",
 			getPin_output_mode_e(boardConfiguration->alternatorControlPinMode),
 			hwPortname(boardConfiguration->alternatorControlPin));
@@ -173,8 +179,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "MX590";
 	case MIATA_1994_DEVIATOR:
 		return "MX594d";
-	case MIATA_1994_SPAGS:
-		return "MX594s";
 	case MIATA_1996:
 		return "MX596";
 	case BMW_E34:
@@ -432,12 +436,12 @@ static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS
 	printThermistor("CLT", &engineConfiguration->clt, &engine->engineState.cltCurve,
 			engineConfiguration->useLinearCltSensor);
-	if (!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
+	if (!isValidCoolantTemperature(getCoolantTemperature())) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
 	printThermistor("IAT", &engineConfiguration->iat, &engine->engineState.iatCurve,
 			engineConfiguration->useLinearIatSensor);
-	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
+	if (!isValidIntakeAirTemperature(getIntakeAirTemperature())) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}
 
@@ -695,6 +699,10 @@ static void setMainRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &boardConfiguration->mainRelayPin, "main relay");
 }
 
+static void setStarterRelayPin(const char *pinName) {
+	setIndividualPin(pinName, &boardConfiguration->starterRelayPin, "starter relay");
+}
+
 static void setAlternatorPin(const char *pinName) {
 	setIndividualPin(pinName, &boardConfiguration->alternatorControlPin, "alternator");
 }
@@ -810,7 +818,10 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 		scheduleMsg(&logger, "setting IAT to %s/%d", pinName, channel);
 	} else if (strEqual("tps", sensorStr)) {
 		engineConfiguration->tps1_1AdcChannel = channel;
-		scheduleMsg(&logger, "setting TPS to %s/%d", pinName, channel);
+		scheduleMsg(&logger, "setting TPS1 to %s/%d", pinName, channel);
+	} else if (strEqual("tps2", sensorStr)) {
+		engineConfiguration->tps2_1AdcChannel = channel;
+		scheduleMsg(&logger, "setting TPS2 to %s/%d", pinName, channel);
 	}
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -887,13 +898,11 @@ static void setSpiMode(int index, bool mode) {
 	printSpiState(&logger, boardConfiguration);
 }
 
-extern bool hwTriggerInputEnabled;
-
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "fastadc")) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
-		hwTriggerInputEnabled = isEnabled;
+		engine->hwTriggerInputEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {
@@ -1147,11 +1156,11 @@ static void getValue(const char *paramStr) {
 }
 
 static void setFsioCurve1Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve1, FSIO_CURVE_16, value, value, 1);
+	setLinearCurve(engineConfiguration->fsioCurve1, value, value, 1);
 }
 
 static void setFsioCurve2Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve2, FSIO_CURVE_16, value, value, 1);
+	setLinearCurve(engineConfiguration->fsioCurve2, value, value, 1);
 }
 
 typedef struct {
@@ -1210,7 +1219,7 @@ const command_f_s commandsF[] = {
 #endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
 
-#if EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_ELECTRONIC_THROTTLE_BODY && (!EFI_UNIT_TEST)
 		{"etb_p", setEtbPFactor},
 		{"etb_i", setEtbIFactor},
 		{"etb_d", setEtbDFactor},
@@ -1243,7 +1252,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"tpsErrorDetectionTooHigh", setTpsErrorDetectionTooHigh},
 		{"fixed_mode_timing", setFixedModeTiming},
 		{"timing_mode", setTimingMode},
-		{"engine_type", setEngineType},
+		{CMD_ENGINE_TYPE, setEngineType},
 		{"rpm_hard_limit", setRpmHardLimit},
 		{"firing_order", setFiringOrder},
 		{"algorithm", setAlgorithmInt},
@@ -1432,6 +1441,7 @@ void initSettings(void) {
 	addConsoleActionS("set_alternator_pin", setAlternatorPin);
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
+	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
 
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);

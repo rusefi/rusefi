@@ -21,24 +21,48 @@
 EXTERN_ENGINE
 ;
 
-static scheduling_s turnOnEvent[AUX_DIGITAL_VALVE_COUNT][2];
-static scheduling_s turnOffEvent[AUX_DIGITAL_VALVE_COUNT][2];
+/**
+//void plainPinTurnOn(AuxActor *current) {
+//	NamedOutputPin *output = &enginePins.auxValve[current->valveIndex];
+if (!engine->auxStarted) {
 
-static void turnOn(NamedOutputPin *output) {
+		for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
+			for (int phaseIndex = 0; phaseIndex < 2; phaseIndex++) {
+				AuxActor *current = &actors[phaseIndex][valveIndex];
+
+//				if ()
+
+
+				scheduleOrQueue(&current->open,
+						trgEventIndex,
+						current->extra + engine->engineState.auxValveStart,
+						(schfunc_t)plainPinTurnOn,
+						current
+						PASS_ENGINE_PARAMETER_SUFFIX);
+
+
+			}
+		}
+
+
+		engine->auxStarted = true;
+	}
+
+ */
+
+void plainPinTurnOn(NamedOutputPin *output) {
 	output->setHigh();
 }
 
-static void turnOff(NamedOutputPin *output) {
+void plainPinTurnOff(NamedOutputPin *output) {
 	output->setLow();
 }
-
-#define SCHEDULING_TRIGGER_INDEX 2
 
 static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(ckpSignalType);
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	if (index != SCHEDULING_TRIGGER_INDEX) {
+
+	if (index != engine->auxSchedulingIndex) {
 		return;
 	}
 	int rpm = GET_RPM_VALUE;
@@ -46,8 +70,14 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		return;
 	}
 
-	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT;
-			valveIndex++) {
+	/**
+	 * Sometimes previous event has not yet been executed by the time we are scheduling new events.
+	 * We use this array alternation in order to bring events that are scheled and waiting to be executed from
+	 * events which are already being scheduled
+	 */
+	int engineCycleAlternation = engine->triggerCentral.triggerState.getTotalRevolutionCounter() % CYCLE_ALTERNATION;
+
+	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
 
 		NamedOutputPin *output = &enginePins.auxValve[valveIndex];
 
@@ -63,30 +93,35 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 */
 			angle_t extra = phaseIndex * 360 + valveIndex * 180;
 			angle_t onTime = extra + engine->engineState.auxValveStart;
+			scheduling_s *onEvent = &engine->auxTurnOnEvent[valveIndex][phaseIndex][engineCycleAlternation];
+			scheduling_s *offEvent = &engine->auxTurnOffEvent[valveIndex][phaseIndex][engineCycleAlternation];
+			bool isOverlap = onEvent->isScheduled || offEvent->isScheduled;
+			if (isOverlap) {
+				enginePins.debugTriggerSync.setValue(1);
+			}
+
 			fixAngle(onTime, "onTime", CUSTOM_ERR_6556);
-			scheduleByAngle(rpm, &turnOnEvent[valveIndex][phaseIndex],
+			scheduleByAngle(onEvent,
 					onTime,
-					(schfunc_t) &turnOn, output, &engine->rpmCalculator);
+					(schfunc_t) &plainPinTurnOn, output PASS_ENGINE_PARAMETER_SUFFIX);
 			angle_t offTime = extra + engine->engineState.auxValveEnd;
 			fixAngle(offTime, "offTime", CUSTOM_ERR_6557);
-			scheduleByAngle(rpm, &turnOffEvent[valveIndex][phaseIndex],
+			scheduleByAngle(offEvent,
 					offTime,
-					(schfunc_t) &turnOff, output, &engine->rpmCalculator);
-
+					(schfunc_t) &plainPinTurnOff, output PASS_ENGINE_PARAMETER_SUFFIX);
+			if (isOverlap) {
+				enginePins.debugTriggerSync.setValue(0);
+			}
 		}
 	}
-
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 }
 
-void initAuxValves(Logging *sharedLogger) {
+void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(sharedLogger);
-#if EFI_PROD_CODE || EFI_SIMULATOR
 	if (engineConfiguration->auxValves[0] == GPIO_UNASSIGNED) {
 		return;
 	}
 	addTriggerEventListener(auxValveTriggerCallback, "tach", engine);
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 }
 
 void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

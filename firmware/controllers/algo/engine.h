@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "global.h"
 #include "globalaccess.h"
 #include "engine_state.h"
 #include "rpm_calculator.h"
@@ -29,7 +28,7 @@
 #include "global_execution_queue.h"
 #endif /* EFI_UNIT_TEST */
 
-#define FAST_CALLBACK_PERIOD_MS 20
+#define FAST_CALLBACK_PERIOD_MS 5
 
 class RpmCalculator;
 
@@ -46,6 +45,8 @@ class RpmCalculator;
 #define CLEANUP_MODE_TPS 90
 #define STEPPER_PARKING_TPS CLEANUP_MODE_TPS
 
+#define CYCLE_ALTERNATION 2
+
 class Engine {
 public:
 	explicit Engine(persistent_config_s *config);
@@ -57,10 +58,23 @@ public:
 	LocalVersionHolder auxParametersVersion;
 	operation_mode_e getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+
+	scheduling_s auxTurnOnEvent[AUX_DIGITAL_VALVE_COUNT][/* we have two 180 cycles within engine 360 revolution */ 2][CYCLE_ALTERNATION];
+	scheduling_s auxTurnOffEvent[AUX_DIGITAL_VALVE_COUNT][2][CYCLE_ALTERNATION];
+
+
+	int auxSchedulingIndex = 2;
+	bool needTdcCallback = true;
+
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
 	 */
 	int globalSparkIdCounter = 0;
+
+	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
+	// GND input pins instead of leaving them floating
+	bool hwTriggerInputEnabled = true;
+
 
 #if !EFI_PROD_CODE
 	float mockMapValue = 0;
@@ -94,13 +108,13 @@ public:
 	IgnitionEventList ignitionEvents;
 #endif /* EFI_ENGINE_CONTROL */
 
-	WallFuel wallFuel;
+	WallFuel wallFuel[INJECTION_PIN_COUNT];
 	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**
 	 * That's the linked list of pending spark firing events
 	 */
-	IgnitionEvent *ignitionEventsHead = nullptr;
+	AngleBasedEvent *ignitionEventsHead = nullptr;
 	/**
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
 	 */

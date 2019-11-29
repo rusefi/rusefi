@@ -293,8 +293,8 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);
 	if (CONFIG(idlePidRpmUpperLimit) > 0) {
 		engine->engineState.idle.idleState = PID_UPPER;
-		if (CONFIGB(useIacTableForCoasting) && !cisnan(engine->sensors.clt)) {
-			percent_t iacPosForCoasting = interpolate2d("iacCoasting", engine->sensors.clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
+		if (CONFIGB(useIacTableForCoasting) && hasCltSensor()) {
+			percent_t iacPosForCoasting = interpolate2d("iacCoasting", getCoolantTemperature(), CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
 		} else {
 			// Well, just leave it as is, without PID regulation...
@@ -363,7 +363,7 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
-		float clt = engine->sensors.clt;
+		float clt = getCoolantTemperature();
 #if EFI_SHAFT_POSITION_INPUT
 		bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 #else
@@ -371,7 +371,7 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 		// cltCorrection is used only for cranking or running in manual mode
 		float cltCorrection;
-		if (cisnan(clt))
+		if (!hasCltSensor())
 			cltCorrection = 1.0f;
 		// Use separate CLT correction table for cranking
 		else if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {
@@ -526,7 +526,31 @@ static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_g
 	}
 }
 
-static void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool isIdleHardwareRestartNeeded() {
+	return  isConfigurationChanged(stepperEnablePin) ||
+			isConfigurationChanged(stepperEnablePinMode) ||
+			isConfigurationChanged(bc.idle.stepperStepPin) ||
+			isConfigurationChanged(bc.idle.solenoidFrequency) ||
+			isConfigurationChanged(bc.useStepperIdle) ||
+//			isConfigurationChanged() ||
+			isConfigurationChanged(bc.useETBforIdleControl) ||
+			isConfigurationChanged(bc.idle.solenoidPin);
+
+}
+
+void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_PROD_CODE
+	brain_pin_markUnused(activeConfiguration.stepperEnablePin);
+	brain_pin_markUnused(activeConfiguration.bc.idle.stepperStepPin);
+	brain_pin_markUnused(activeConfiguration.bc.idle.solenoidPin);
+//	brain_pin_markUnused(activeConfiguration.bc.idle.);
+//	brain_pin_markUnused(activeConfiguration.bc.idle.);
+//	brain_pin_markUnused(activeConfiguration.bc.idle.);
+//	brain_pin_markUnused(activeConfiguration.bc.idle.);
+#endif /* EFI_PROD_CODE */
+}
+
+void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIGB(useStepperIdle)) {
 		iacMotor.initialize(CONFIGB(idle).stepperStepPin,
 				CONFIGB(idle).stepperDirectionPin,
@@ -537,7 +561,7 @@ static void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				logger);
 		// This greatly improves PID accuracy for steppers with a small number of steps
 		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;
-	} else {
+	} else if (!engineConfiguration->bc.useETBforIdleControl) {
 		/**
 		 * Start PWM for idleValvePin
 		 */
@@ -559,7 +583,8 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	idlePid.initPidClass(&engineConfiguration->idleRpmPid);
 
 #if ! EFI_UNIT_TEST
-	// todo: re-initialize idle pins on the fly
+	// todo: we still have to explicitly init all hardware on start in addition to handling configuration change via
+	// 'applyNewHardwareSettings' todo: maybe unify these two use-cases?
 	initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_UNIT_TEST */
 

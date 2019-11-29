@@ -34,12 +34,6 @@ efitick_t getTimeNowNt(void) {
 
 LoggingWithStorage sharedLogger("main");
 
-extern int revolutionCounterSinceBootForUnitTest;
-
-int getRevolutionCounter(void) {
-	return revolutionCounterSinceBootForUnitTest;
-}
-
 extern bool printTriggerDebug;
 bool verboseMode = false;
 
@@ -47,7 +41,7 @@ GTEST_API_ int main(int argc, char **argv) {
 //	printTriggerDebug = true;
 
 	//	resizeMap();
-	printf("Success 20190825\r\n");
+	printf("Success 20191016\r\n");
 	printAllTriggers();
 //	printConvertedTable();
 	testing::InitGoogleTest(&argc, argv);

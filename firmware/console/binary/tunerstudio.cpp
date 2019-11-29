@@ -76,6 +76,7 @@
 #include "bluetooth.h"
 #include "tunerstudio_io.h"
 #include "tooth_logger.h"
+#include "electronic_throttle.h"
 
 #include <string.h>
 #include "engine_configuration.h"
@@ -84,6 +85,8 @@
 #include "loggingcentral.h"
 #include "status_loop.h"
 #include "mmc_card.h"
+#include "perf_trace.h"
+
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif
@@ -254,7 +257,7 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
 	}
 }
 
-extern Pid etbPid;
+extern EtbController etbController[ETB_COUNT];
 
 static const void * getStructAddr(int structId) {
 	switch (structId) {
@@ -265,14 +268,14 @@ static const void * getStructAddr(int structId) {
 	case LDS_ENGINE_STATE_INDEX:
 		return static_cast<engine_state2_s*>(&engine->engineState);
 	case LDS_FUEL_TRIM_STATE_INDEX:
-		return static_cast<wall_fuel_state*>(&engine->wallFuel);
+		return static_cast<wall_fuel_state*>(&engine->wallFuel[0]);
 	case LDS_TRIGGER_CENTRAL_STATE_INDEX:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
 	case LDS_TRIGGER_STATE_STATE_INDEX:
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case LDS_ETB_PID_STATE_INDEX:
-		return static_cast<pid_state_s*>(&etbPid);
+		return static_cast<pid_state_s*>(&etbController[0].etbPid);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #ifndef EFI_IDLE_CONTROL
@@ -306,9 +309,11 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
  * read log file content for rusEfi console
  */
 static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, short offset, short length) {
-#if EFI_FILE_LOGGING
-	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
-#endif /* EFI_FILE_LOGGING */
+//#if EFI_FILE_LOGGING
+//	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
+//#else
+	UNUSED(tsChannel); UNUSED(fileId); UNUSED(offset); UNUSED(length);
+//#endif /* EFI_FILE_LOGGING */
 }
 
 /**
@@ -483,7 +488,9 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_LOGGER_BUFFER
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
-			|| command == TS_GET_FIRMWARE_VERSION;
+			|| command == TS_GET_FIRMWARE_VERSION
+			|| command == TS_PERF_TRACE_BEGIN
+			|| command == TS_PERF_TRACE_GET_BUFFER;
 }
 
 // this function runs indefinitely
@@ -718,7 +725,7 @@ static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomi
  */
 bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	// Bail fast if guaranteed not to be a plain command
-	if(command == 0)
+	if (command == 0)
 	{
 		return false;
 	}
@@ -749,6 +756,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 
 
 int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
+	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
+
 	char command = data[0];
 	data++;
 
@@ -846,7 +855,22 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 
 		break;
+	case TS_PERF_TRACE_BEGIN:
+#if ENABLE_PERF_TRACE
+		perfTraceEnable();
+		sendOkResponse(tsChannel, TS_CRC);
+
+#endif /* ENABLE_PERF_TRACE */
+		break;
+	case TS_PERF_TRACE_GET_BUFFER:
+		{
+#if ENABLE_PERF_TRACE
+			auto trace = perfTraceGetBuffer();
+			sr5SendResponse(tsChannel, TS_CRC, trace.Buffer, trace.Size);
+#endif /* ENABLE_PERF_TRACE */
+		}
 #endif /* EFI_TOOTH_LOGGER */
+		break;
 	default:
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;

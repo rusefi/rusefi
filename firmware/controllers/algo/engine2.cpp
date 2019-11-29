@@ -15,6 +15,8 @@
 #include "engine_math.h"
 #include "advance_map.h"
 #include "aux_valves.h"
+#include "perf_trace.h"
+
 #if EFI_PROD_CODE
 #include "svnversion.h"
 #endif
@@ -116,8 +118,8 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->engineState.isCrankingState = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
-	engine->sensors.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
-	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->sensors.iat = getIntakeAirTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->sensors.clt = getCoolantTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// todo: reduce code duplication with 'getCoolantTemperature'
 	if (engineConfiguration->auxTempSensor1.adcChannel != EFI_ADC_NONE) {
@@ -139,6 +141,8 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	ScopePerf perf(PE::EngineStatePeriodicFastCallback);
+
 #if EFI_ENGINE_CONTROL
 	if (!engine->slowCallBackWasInvoked) {
 		warning(CUSTOM_ERR_6696, "Slow not invoked yet");
@@ -160,7 +164,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
-	running.intakeTemperatureCoefficient = getIatFuelCorrection(engine->sensors.iat PASS_ENGINE_PARAMETER_SUFFIX);
+	running.intakeTemperatureCoefficient = getIatFuelCorrection(getIntakeAirTemperature() PASS_ENGINE_PARAMETER_SUFFIX);
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	running.coolantTemperatureCoefficient = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -223,9 +227,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL
-	float coolantC = ENGINE(sensors.clt);
-	float intakeC = ENGINE(sensors.iat);
-	float newTCharge = getTCharge(rpm, tps, coolantC, intakeC PASS_ENGINE_PARAMETER_SUFFIX);
+	float newTCharge = getTCharge(rpm, tps, getCoolantTemperature(), getIntakeAirTemperature() PASS_ENGINE_PARAMETER_SUFFIX);
 	// convert to microsecs and then to seconds
 	efitick_t curTime = getTimeNowNt();
 	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / 1000000.0f;

@@ -5,8 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef GLOBALACCESS_H_
-#define GLOBALACCESS_H_
+#pragma once
+
+#include "global.h"
 
 #define DECLARE_CONFIG_PARAMETER_SIGNATURE engine_configuration_s *engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
 #define DECLARE_CONFIG_PARAMETER_SUFFIX , DECLARE_CONFIG_PARAMETER_SIGNATURE
@@ -26,5 +27,3 @@
 //#define CONFIGB(x) engine->engineConfigurationPtr->bc.x
 #define CONFIGB(x) CONFIG(bc.x)
 #define ENGINE(x) engine->x
-
-#endif /* GLOBALACCESS_H_ */

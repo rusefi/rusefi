@@ -108,9 +108,9 @@ TEST(misc, testSignalExecutor) {
 
 	ASSERT_EQ(4, eq.size());
 	ASSERT_EQ(10, eq.getHead()->momentX);
-	ASSERT_EQ(10, eq.getHead()->next->momentX);
-	ASSERT_EQ(11, eq.getHead()->next->next->momentX);
-	ASSERT_EQ(12, eq.getHead()->next->next->next->momentX);
+	ASSERT_EQ(10, eq.getHead()->nextScheduling_s->momentX);
+	ASSERT_EQ(11, eq.getHead()->nextScheduling_s->nextScheduling_s->momentX);
+	ASSERT_EQ(12, eq.getHead()->nextScheduling_s->nextScheduling_s->nextScheduling_s->momentX);
 
 	callbackCounter = 0;
 	eq.executeAll(10);

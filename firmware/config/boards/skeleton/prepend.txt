@@ -1,0 +1,8 @@
+#define ts_show_hip9011 false
+#define ts_show_cj125 false
+#define ts_show_full_pinout false
+#define ts_show_lcd false
+#define ts_show_joystick false
+#define ts_show_egt false
+#define ts_show_gps false
+#define ts_show_etb_pins false

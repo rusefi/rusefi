@@ -1,0 +1,21 @@
+name: Unit Test CI
+
+on: [push,pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+        submodules: recursive
+      
+    - name: Build Tests
+      working-directory: ./unit_tests/
+      run: make -j4
+      
+    - name: Run Tests
+      run: ./unit_tests/build/rusefi_test

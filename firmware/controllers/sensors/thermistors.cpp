@@ -124,15 +124,19 @@ bool isValidIntakeAirTemperature(temperature_t temperature) {
 	return !cisnan(temperature) && temperature > -50 && temperature < 100;
 }
 
-bool hasCltSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->clt.adcChannel != EFI_ADC_NONE;
+bool hasCltSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	bool haveSensorChannel = engineConfiguration->clt.adcChannel != EFI_ADC_NONE;
+	if (!haveSensorChannel) {
+		return false;
+	}
+	return !cisnan(engine->sensors.clt);
 }
 
 /**
  * @return coolant temperature, in Celsius
  */
-temperature_t getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!hasCltSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+temperature_t getCoolantTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engineConfiguration->clt.adcChannel == EFI_ADC_NONE) {
 		engine->isCltBroken = false;
 		return NO_CLT_SENSOR_TEMPERATURE;
 	}
@@ -206,15 +210,19 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 #endif
 }
 
-bool hasIatSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->iat.adcChannel != EFI_ADC_NONE;
+bool hasIatSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	bool haveSensorChannel = engineConfiguration->iat.adcChannel != EFI_ADC_NONE;
+	if (!haveSensorChannel) {
+		return false;
+	}
+	return !cisnan(engine->sensors.iat);
 }
 
 /**
  * @return Celsius value
  */
-temperature_t getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!hasIatSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+temperature_t getIntakeAirTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engineConfiguration->iat.adcChannel == EFI_ADC_NONE) {
 		return NO_IAT_SENSOR_TEMPERATURE;
 	}
 	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve,

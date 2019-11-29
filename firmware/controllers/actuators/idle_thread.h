@@ -3,11 +3,10 @@
  * @brief	Idle Valve Control thread
  *
  * @date May 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef IDLE_THREAD_H_
-#define IDLE_THREAD_H_
+#pragma once
 
 #include "engine.h"
 #include "periodic_task.h"
@@ -33,6 +32,8 @@ void setIdleDFactor(float value);
 void setIdleMode(idle_mode_e value);
 void setTargetIdleRpm(int value);
 void setIdleDT(int value);
+void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool isIdleHardwareRestartNeeded();
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration);
 
-#endif /* IDLE_THREAD_H_ */

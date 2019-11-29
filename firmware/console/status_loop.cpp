@@ -91,6 +91,10 @@ extern int icuWidthPeriodCounter;
 #include "fsio_impl.h"
 #endif /* EFI_FSIO */
 
+#if (BOARD_TLE8888_COUNT > 0)
+#include "tle8888.h"
+#endif /* BOARD_TLE8888_COUNT */
+
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 extern WaveChart waveChart;
@@ -121,9 +125,10 @@ static void setWarningEnabled(int value) {
 // this one needs to be in main ram so that SD card SPI DMA works fine
 static char FILE_LOGGER[1000] MAIN_RAM;
 static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
+static int logFileLineIndex = 0;
+
 #endif /* EFI_FILE_LOGGING */
 
-static int logFileLineIndex = 0;
 #define TAB "\t"
 
 static void reportSensorF(Logging *log, const char *caption, const char *units, float value,
@@ -147,6 +152,9 @@ static void reportSensorF(Logging *log, const char *caption, const char *units, 
 			appendFloat(log, value, precision);
 			append(log, TAB);
 		}
+#else
+		UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
+		UNUSED(precision);
 #endif /* EFI_FILE_LOGGING */
 	}
 }
@@ -162,6 +170,8 @@ static void reportSensorI(Logging *log, const char *caption, const char *units, 
 		} else {
 			appendPrintf(log, "%d%s", value, TAB);
 		}
+#else
+		UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
 #endif /* EFI_FILE_LOGGING */
 }
 
@@ -184,6 +194,7 @@ static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
 }
 
+#if EFI_FILE_LOGGING
 static void printSensors(Logging *log) {
 	bool fileFormat = true; // todo:remove this unused variable
 	// current time, in milliseconds
@@ -199,14 +210,14 @@ static void printSensors(Logging *log) {
 	// why do we still send data into console in text mode?
 
 	if (hasCltSensor()) {
-		reportSensorF(log, "CLT", "C", getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #4
+		reportSensorF(log, "CLT", "C", getCoolantTemperature(), 2); // log column #4
 	}
 	if (hasTpsSensor()) {
 		reportSensorF(log, "TPS", "%", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #5
 	}
 
 	if (hasIatSensor()) {
-		reportSensorF(log, "IAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #7
+		reportSensorF(log, "IAT", "C", getIntakeAirTemperature(), 2); // log column #7
 	}
 
 	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
@@ -324,8 +335,8 @@ static void printSensors(Logging *log) {
 		// 268
 		reportSensorF(log, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.running.pidCorrection), 2);
 
-		reportSensorF(log, GAUGE_NAME_FUEL_WALL_AMOUNT, "v", ENGINE(wallFuel).getWallFuel(0), 2);
-		reportSensorF(log, GAUGE_NAME_FUEL_WALL_CORRECTION, "v", ENGINE(wallFuel).wallFuelCorrection, 2);
+		reportSensorF(log, GAUGE_NAME_FUEL_WALL_AMOUNT, "v", ENGINE(wallFuel[0]).getWallFuel(), 2);
+		reportSensorF(log, GAUGE_NAME_FUEL_WALL_CORRECTION, "v", ENGINE(wallFuel[0]).wallFuelCorrection, 2);
 
 		reportSensorI(log, GAUGE_NAME_VERSION, "#", getRusEfiVersion());
 
@@ -377,6 +388,8 @@ static void printSensors(Logging *log) {
 		reportSensorI(log, INDICATOR_NAME_AC_SWITCH, "bool", engine->acSwitchState);
 
 }
+#endif /* EFI_FILE_LOGGING */
+
 
 void writeLogLine(void) {
 #if EFI_FILE_LOGGING
@@ -567,7 +580,7 @@ static void showFuelInfo(void) {
 }
 #endif
 
-static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin, &enginePins.checkEnginePin,
+static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
 static void initStatusLeds(void) {
@@ -577,6 +590,10 @@ static void initStatusLeds(void) {
 
 	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin);
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
+
+	enginePins.debugTriggerSync.initPin("debug: sync", CONFIGB(debugTriggerSync));
+	enginePins.debugTimerCallback.initPin("debug: timer callback", CONFIGB(debugTimerCallback));
+	enginePins.debugSetTimer.initPin("debug: set timer", CONFIGB(debugSetTimer));
 }
 
 #define BLINKING_PERIOD_MS 33
@@ -694,8 +711,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_PROD_CODE */
 
 	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-	float coolant = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
-	float intake = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float coolant = getCoolantTemperature();
+	float intake = getIntakeAirTemperature();
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -754,11 +771,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 148
 	tsOutputChannels->fuelTankLevel = engine->sensors.fuelTankLevel;
 	// 160
-	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
+	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel[0]).getWallFuel();
 	// 164
 	tsOutputChannels->iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
 	// 168
-	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuel).wallFuelCorrection;
+	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuel[0]).wallFuelCorrection;
 	// 184
 	tsOutputChannels->cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
 	// 188
@@ -803,7 +820,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
-	tsOutputChannels->isCltBroken = engine->isCltBroken;
 #if EFI_HIP_9011
 	tsOutputChannels->isKnockChipOk = (instance.invalidHip9011ResponsesCount == 0);
 #endif /* EFI_HIP_9011 */
@@ -856,9 +872,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->speedToRpmRatio = vehicleSpeed / rpm;
 
 #endif /* EFI_VEHICLE_SPEED */
-	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
-	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
 #endif /* EFI_PROD_CODE */
+
+	tsOutputChannels->isCltError = !hasCltSensor();
+	tsOutputChannels->isIatError = !hasIatSensor();
 
 	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
 
@@ -920,7 +937,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
 		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && HAL_USE_ICU == TRUE
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.vvtEventRiseCounter;
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.vvtEventFallCounter;
 		tsOutputChannels->debugFloatField5 = icuWidthCallbackCounter + icuWidthPeriodCounter;
@@ -999,6 +1016,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_CDM_INTEGRATION
 		ionPostState(tsOutputChannels);
 #endif /* EFI_CDM_INTEGRATION */
+		break;
+	case DBG_TLE8888:
+#if (BOARD_TLE8888_COUNT > 0)
+		tle8888PostState(tsOutputChannels);
+#endif /* BOARD_TLE8888_COUNT */
 		break;
 	default:
 		;

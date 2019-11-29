@@ -53,6 +53,11 @@ extern "C"
 int tle8888_add(unsigned int index, const struct tle8888_config *cfg);
 void requestTLE8888initialization(void);
 
+#if EFI_TUNER_STUDIO
+#include "tunerstudio_configuration.h"
+void tle8888PostState(TunerStudioOutputChannels *tsOutputChannels);
+#endif /* EFI_TUNER_STUDIO */
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

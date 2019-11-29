@@ -234,7 +234,7 @@ static void download_register(int r_target) {
 	   // retrieve data, send it, increase pointer
 	   // increase
 
-	   if(r_size > MAX_SPI_MODE_A_TRANSFER_SIZE)   //if size is too large, split into two sections ... MULTIPLE sections..
+	   if (r_size > MAX_SPI_MODE_A_TRANSFER_SIZE)   //if size is too large, split into two sections ... MULTIPLE sections..
 	   {
 	      remainder_size = r_size - MAX_SPI_MODE_A_TRANSFER_SIZE;  // creates remaining size
 	      r_size = MAX_SPI_MODE_A_TRANSFER_SIZE;                   // sets first size
@@ -249,7 +249,7 @@ static void download_register(int r_target) {
 
 	   spiSend(driver, r_size, reg_ptr);
 
-	   if(remainder_size > 0)                 // if remainder size is greater than 0, download the rest
+	   if (remainder_size > 0)                 // if remainder size is greater than 0, download the rest
 	   {
 	      r_start_address += r_size;          // new start address
 	      r_command = r_start_address << 5;   // start address

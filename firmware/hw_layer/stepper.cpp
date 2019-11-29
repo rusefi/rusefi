@@ -112,13 +112,6 @@ StepperMotor::StepperMotor() {
 	currentPosition = 0;
 	targetPosition = 0;
 
-#if EFI_PROD_CODE
-	enablePort = NULL;
-	enablePin = 0;
-	stepPort = NULL;
-	stepPin = 0;
-#endif
-
 	reactionTime = 0;
 	totalSteps = 0;
 }
@@ -142,16 +135,15 @@ void StepperMotor::setDirection(bool isIncrementing) {
 }
 
 void StepperMotor::pulse() {
-#if EFI_PROD_CODE
-	palWritePad(enablePort, enablePin, false); // enable stepper
-	palWritePad(stepPort, stepPin, true);
+	enablePin.setValue(false); // enable stepper
+
+	stepPin.setValue(true);
 	chThdSleepMilliseconds(reactionTime);
 
-	palWritePad(stepPort, stepPin, false);
+	stepPin.setValue(false);
 	chThdSleepMilliseconds(reactionTime);
 
-	palWritePad(enablePort, enablePin, true); // disable stepper
-#endif
+	enablePin.setValue(true); // disable stepper
 }
 
 void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode,
@@ -166,30 +158,18 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin
 		return;
 	}
 
-#if EFI_PROD_CODE
-	stepPort = getHwPort("step", stepPin);
-	this->stepPin = getHwPin("step", stepPin);
-#endif /* EFI_PROD_CODE */
-
 	this->directionPinMode = directionPinMode;
 	this->directionPin.initPin("stepper dir", directionPin, &this->directionPinMode);
 
-#if EFI_PROD_CODE
-	enablePort = getHwPort("enable", enablePin);
-	this->enablePin = getHwPin("enable", enablePin);
-#endif /* EFI_PROD_CODE */
+	this->stepPinMode = OM_DEFAULT;	// todo: do we need configurable stepPinMode?
+	this->stepPin.initPin("stepper step", stepPin, &this->stepPinMode);
 
-	efiSetPadMode("stepper step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
-	// todo: start using enablePinMode parameter here #718
-	efiSetPadMode("stepper enable", enablePin, PAL_MODE_OUTPUT_PUSHPULL);
-
-#if EFI_PROD_CODE
-	palWritePad(this->enablePort, enablePin, true); // disable stepper
+	this->enablePinMode = enablePinMode;
+	this->enablePin.initPin("stepper enable", enablePin, &this->enablePinMode);
 
 	// All pins must be 0 for correct hardware startup (e.g. stepper auto-disabling circuit etc.).
-	palWritePad(this->stepPort, this->stepPin, false);
-#endif
-
+	this->enablePin.setValue(true); // disable stepper
+	this->stepPin.setValue(false);
 	this->directionPin.setValue(false);
 	this->currentDirection = false;
 

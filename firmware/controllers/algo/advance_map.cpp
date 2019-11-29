@@ -26,6 +26,7 @@
 #include "engine_math.h"
 #include "tps.h"
 #include "idle_thread.h"
+#include "allsensors.h"
 
 EXTERN_ENGINE
 ;
@@ -112,10 +113,10 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 
 angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float iatCorrection;
-	if (cisnan(engine->sensors.iat)) {
+	if (!hasIatSensor()) {
 		iatCorrection = 0;
 	} else {
-		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->sensors.iat);
+		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, getIntakeAirTemperature());
 	}
 	// PID Ignition Advance angle correction
 	float pidTimingCorrection = 0.0f;
@@ -223,12 +224,12 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setLinearCurve(config->ignitionIatCorrLoadBins, IGN_LOAD_COUNT, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
+	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	memcpy(config->ignitionIatCorrRpmBins, iatTimingRpmBins, sizeof(iatTimingRpmBins));
 	copyTimingTable(defaultIatTiming, config->ignitionIatCorrTable);
 #else
-	setLinearCurve(config->ignitionIatCorrLoadBins, IGN_RPM_COUNT, /*from*/0, 6000, 1);
+	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/0, 6000, 1);
 #endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
 }
 

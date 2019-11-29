@@ -37,6 +37,11 @@
  #define EFI_CLOCK_LOCKS FALSE
 #endif /* EFI_CLOCK_LOCKS */
 
+#if !defined(ENABLE_PERF_TRACE) || defined(__DOXYGEN__)
+// looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
+ #define ENABLE_PERF_TRACE TRUE
+#endif /* ENABLE_PERF_TRACE */
+
 #include "chconf_common.h"
 
 
@@ -710,6 +715,9 @@
 
 #ifndef __ASSEMBLER__
 
+#ifdef __cplusplus
+extern "C"
+#endif
 void chDbgPanic3(const char *msg, const char * file, int line);
 #endif
 

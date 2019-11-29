@@ -797,6 +797,9 @@ extern "C"
 
 #ifndef __ASSEMBLER__
 
+#ifdef __cplusplus
+extern "C"
+#endif
 void chDbgPanic3(const char *msg, const char * file, int line);
 #endif
 
@@ -819,6 +822,9 @@ void chDbgPanic3(const char *msg, const char * file, int line);
     }                                                                       \
   }                                                                         \
 } while (false)
+
+#define ENABLE_PERF_TRACE FALSE
+#define TRACE_BUFFER_LENGTH 1
 
 #endif  /* CHCONF_H */
 

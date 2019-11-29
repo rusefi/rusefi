@@ -26,6 +26,7 @@
 #if EFI_ENGINE_CONTROL
 #if !EFI_UNIT_TEST
 
+#include "flash_main.h"
 #include "injector_central.h"
 #include "io_pins.h"
 #include "main_trigger_callback.h"
@@ -249,16 +250,6 @@ private:
 
 static BenchController instance;
 
-void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
-	if (oldPin != GPIO_UNASSIGNED && oldPin != newPin) {
-		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
-#if EFI_GPIO_HARDWARE
-		brain_pin_markUnused(oldPin);
-		port = nullptr;
-#endif /* EFI_GPIO_HARDWARE */
-	}
-}
-
 static void handleCommandX14(uint16_t index) {
 	switch (index) {
 	case 1:
@@ -286,6 +277,12 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case 9:
 		acRelayBench();
+		return;
+	case 10:
+		// cmd_write_config
+#if EFI_PROD_CODE
+		writeToFlashNow();
+#endif /* EFI_PROD_CODE */
 		return;
 
 	}

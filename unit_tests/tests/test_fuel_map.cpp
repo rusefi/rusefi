@@ -5,8 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "global.h"
-#include "engine_configuration.h"
 #include "fuel_math.h"
 #include "trigger_structure.h"
 #include "allsensors.h"
@@ -85,11 +83,10 @@ TEST(misc, testFuelMap) {
 
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	float iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_FALSE(cisnan(iat));
+	ASSERT_FALSE(cisnan(getIntakeAirTemperature()));
 	float iatCorrection = getIatFuelCorrection(-KELV PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 2,  iatCorrection) << "IAT";
-	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	ASSERT_FALSE(cisnan(getCoolantTemperature()));
 	float cltCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  cltCorrection) << "CLT";
 	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
@@ -234,7 +231,7 @@ TEST(fuel, testTpsBasedVeDefect799) {
 
 	int mapFrom = 100;
 	// set MAP axis range
-	setLinearCurve(config->veLoadBins, FUEL_LOAD_COUNT, mapFrom, mapFrom + FUEL_LOAD_COUNT - 1, 1);
+	setLinearCurve(config->veLoadBins, mapFrom, mapFrom + FUEL_LOAD_COUNT - 1, 1);
 
 	// RPM does not matter - set table values to match load axis
 	for (int load = 0; load < FUEL_LOAD_COUNT;load++) {
@@ -247,7 +244,7 @@ TEST(fuel, testTpsBasedVeDefect799) {
 	ASSERT_EQ(107, veMap.getValue(2000, 107));
 
 	// set TPS axis range which does not overlap MAP range for this test
-	setLinearCurve(CONFIG(ignitionTpsBins), IGN_TPS_COUNT, 0, 15, 1);
+	setLinearCurve(CONFIG(ignitionTpsBins), 0, 15, 1);
 
 
 	engine->mockMapValue = 107;

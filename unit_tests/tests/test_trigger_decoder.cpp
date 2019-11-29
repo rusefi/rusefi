@@ -186,6 +186,16 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 	ASSERT_FLOAT_EQ(0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
 }
 
+TEST(misc, testGetCoilDutyCycleIssue977) {
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+
+	int rpm = 2000;
+	engine->rpmCalculator.setRpmValue(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
+
+	ASSERT_NEAR( 26.66666, getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 0.0001);
+}
+
 TEST(misc, testFordAspire) {
 	printf("*************************************************** testFordAspire\r\n");
 
@@ -204,11 +214,13 @@ TEST(misc, testFordAspire) {
 
 	engine->rpmCalculator.setRpmValue(200 PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("cranking dwell", 54.166670, getSparkDwell(200 PASS_ENGINE_PARAMETER_SUFFIX));
-	engine->rpmCalculator.setRpmValue(2000 PASS_ENGINE_PARAMETER_SUFFIX);
-	ASSERT_EQ( 4,  getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
+	int rpm = 2000;
+	engine->rpmCalculator.setRpmValue(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
 
 	engine->rpmCalculator.setRpmValue(6000 PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER_SUFFIX));
+
 }
 
 static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
@@ -339,7 +351,7 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("fuel #2", 4.5450, engine->injectionDuration);
 	assertEqualsM("one degree", 111.1111, engine->rpmCalculator.oneDegreeUs);
 	ASSERT_EQ( 1,  ilist->isReady) << "size #2";
-	ASSERT_EQ( 0,  ilist->elements[0].dwellPosition.triggerEventAngle) << "dwell angle";
+	ASSERT_EQ( 0,  ilist->elements[0].dwellPosition.triggerEventIndex) << "dwell @ index";
 	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffsetFromTriggerEvent);
 
 	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #2";
@@ -347,14 +359,14 @@ TEST(misc, testRpmCalculator) {
 	{
 	scheduling_s *ev0 = engine->executor.getForUnitTest(0);
 
-	assertREqualsM("Call@0", (void*)ev0->callback, (void*)turnSparkPinHigh);
+	assertREqualsM("Call@0", (void*)ev0->action.getCallback(), (void*)turnSparkPinHigh);
 	assertEqualsM("ev 0", start + 944, ev0->momentX);
-	assertEqualsLM("coil 0", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev0->param)->outputs[0]);
+	assertEqualsLM("coil 0", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev0->action.getArgument())->outputs[0]);
 
 	scheduling_s *ev1 = engine->executor.getForUnitTest(1);
-	assertREqualsM("Call@1", (void*)ev1->callback, (void*)fireSparkAndPrepareNextSchedule);
+	assertREqualsM("Call@1", (void*)ev1->action.getCallback(), (void*)fireSparkAndPrepareNextSchedule);
 	assertEqualsM("ev 1", start + 1444, ev1->momentX);
-	assertEqualsLM("coil 1", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev1->param)->outputs[0]);
+	assertEqualsLM("coil 1", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev1->action.getArgument())->outputs[0]);
 
 	}
 
@@ -553,7 +565,7 @@ TEST(misc, testTriggerDecoder) {
 extern fuel_Map3D_t fuelMap;
 
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
-	assertEqualsM4(msg, "inj index", injectorIndex, ev->outputs[0]->injectorIndex);
+	ASSERT_EQ(injectorIndex, ev->outputs[0]->injectorIndex) << msg << "inj index";
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.triggerEventIndex);
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffsetFromTriggerEvent);
 }
@@ -584,7 +596,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #0 |.......#|........|.......#|........|
 	// inj #1 |........|.......#|........|.......#|
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#00";
-	ASSERT_EQ( 3,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#3";
+	ASSERT_EQ( 3,  getRevolutionCounter()) << "rev cnt#3";
 	eth->assertInjectorUpEvent("setTestBug299: 1@0", 0, MS2US(8.5), 0);
 	eth->assertInjectorDownEvent("@1", 1, MS2US(10), 0);
 	eth->assertInjectorUpEvent("1@2", 2, MS2US(18.5), 1);
@@ -607,7 +619,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #0 |.......#|........|.......#|........|
 	// inj #1 |........|.......#|........|.......#|
 	ASSERT_EQ( 8,  engine->executor.size()) << "qs#0";
-	ASSERT_EQ( 3,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#3";
+	ASSERT_EQ( 3,  getRevolutionCounter()) << "rev cnt#3";
 	eth->assertInjectorUpEvent("02@0", 0, MS2US(-11.5), 0);
 	eth->assertInjectorDownEvent("@1", 1, MS2US(-10), 0);
 	eth->assertInjectorUpEvent("@2", 2, MS2US(-1.5), 1);
@@ -650,7 +662,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #0 |.......#|........|........|........|
 	// inj #1 |........|.......#|........|........|
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#0-2";
-	ASSERT_EQ( 4,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#4";
+	ASSERT_EQ( 4,  getRevolutionCounter()) << "rev cnt#4";
 	eth->assertInjectorUpEvent("0@0", 0, MS2US(8.5), 0);
 	eth->assertInjectorDownEvent("0@1", 1, MS2US(10), 0);
 	eth->assertInjectorUpEvent("0@2", 2, MS2US(18.5), 1);
@@ -679,6 +691,12 @@ static void assertInjectors(const char *msg, int value0, int value1) {
 	assertEqualsM4(msg, "inj#1", value1, enginePins.injectors[1].currentLogicValue);
 }
 
+static void setArray(float* p, size_t count, float value) {
+	while (count--) {
+		*p++ = value;
+	}
+}
+
 void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
@@ -693,8 +711,9 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
 	ASSERT_EQ(8, engineLoadIndex);
-	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 25);
-	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 25);
+	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 25);
+	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 25);
+	
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_FLOAT_EQ(12.5, engine->injectionDuration) << "fuel#2_0";
@@ -706,9 +725,9 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	ASSERT_EQ( 0,  engine->executor.size()) << "qs#1#2";
 
 
-	ASSERT_EQ( 4,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#4#0";
+	ASSERT_EQ( 4,  getRevolutionCounter()) << "rev cnt#4#0";
 	eth.firePrimaryTriggerRise();
-	ASSERT_EQ( 5,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#4#1";
+	ASSERT_EQ( 5,  getRevolutionCounter()) << "rev cnt#4#1";
 	// time...|0.......|10......|20......|30......|40......|50......|60......|
 	// inj #0 |########|##...###|########|.....###|########|........|........|
 	// inj #1 |.....###|########|....####|########|........|........|........|
@@ -726,7 +745,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 //	{
 //		scheduling_s *ev = engine->executor.getForUnitTest(9);
-//		ASSERT_EQ( 5,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#4#2";
+//		ASSERT_EQ( 5,  getRevolutionCounter()) << "rev cnt#4#2";
 //		ASSERT_TRUE(ev == &engineConfiguration->fuelActuators[2].signalPair[1].signalTimerDown) << "down 50";
 //	}
 
@@ -736,7 +755,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	eth.fireFall(20);
 	ASSERT_EQ( 8,  engine->executor.size()) << "qs#2#1";
-	ASSERT_EQ( 5,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#5";
+	ASSERT_EQ( 5,  getRevolutionCounter()) << "rev cnt#5";
 	// using old fuel schedule - but already wider pulses
 	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
 	// inj #0 |........|.....###|########|.....###|########|........|........|
@@ -781,7 +800,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#2#2";
-	ASSERT_EQ( 6,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt6";
+	ASSERT_EQ( 6,  getRevolutionCounter()) << "rev cnt6";
 	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
 	// inj #0 |########|.....###|########|....####|........|........|........|
 	// inj #1 |.....###|########|.....###|########|........|........|........|
@@ -821,7 +840,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	eth.firePrimaryTriggerFall();
 
 	ASSERT_EQ( 5,  engine->executor.size()) << "qs#3";
-	ASSERT_EQ( 6,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt6";
+	ASSERT_EQ( 6,  getRevolutionCounter()) << "rev cnt6";
 	ASSERT_EQ( 0,  eth.executeActions()) << "executed #6";
 
 
@@ -854,8 +873,8 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 315);
 	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 45 + 90);
 
-	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
-	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
+	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
+	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("fuel#3", 17.5, engine->injectionDuration);
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
@@ -945,8 +964,8 @@ TEST(big, testDifferentInjectionModes) {
 	// set fuel map values - extract method?
 	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
 	ASSERT_EQ(8, engineLoadIndex);
-	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 40);
-	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 40);
+	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 40);
+	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 40);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("injectionMode IM_BATCH", (int)IM_BATCH, (int)engineConfiguration->injectionMode);
@@ -976,8 +995,8 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	// set fuel map values - extract method?
 	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
 	ASSERT_EQ(8, engineLoadIndex);
-	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
-	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
+	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
+	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_FLOAT_EQ(17.5, engine->injectionDuration) << "Lfuel#2_1";
@@ -1040,8 +1059,8 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	eth.executeActions();
 	ASSERT_EQ( 0,  engine->executor.size()) << "Lqs#04";
 
-	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 4);
-	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 4);
+	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 4);
+	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 4);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 2,  engine->injectionDuration) << "Lfuel#4";

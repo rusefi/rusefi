@@ -2,11 +2,10 @@
  * @file	electronic_throttle.h
  *
  * @date Dec 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef ELECTRONIC_THROTTLE_H_
-#define ELECTRONIC_THROTTLE_H_
+#pragma once
 
 // https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem
 #define DEFAULT_ETB_LOOP_FREQUENCY 200
@@ -15,12 +14,24 @@
 #include "engine.h"
 #include "periodic_task.h"
 
-class EtbController : public PeriodicTimerController {
+#ifndef ETB_COUNT
+#define ETB_COUNT 2
+#endif /* ETB_COUNT */
+
+class DcMotor;
+
+class EtbController final : public PeriodicTimerController {
 public:
 	DECLARE_ENGINE_PTR;
+	void init(DcMotor *motor);
 
 	int getPeriodMs() override;
 	void PeriodicTask() override;
+	Pid etbPid;
+	bool shouldResetPid = false;
+
+private:
+    DcMotor *m_motor;
 };
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -37,5 +48,3 @@ void stopETBPins(void);
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
-
-#endif /* ELECTRONIC_THROTTLE_H_ */

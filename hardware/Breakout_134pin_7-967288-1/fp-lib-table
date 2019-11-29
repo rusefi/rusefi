@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name rusEFI)(type KiCad)(uri ${KIPRJMOD}/../rusefi_lib/rusefi_lib.pretty)(options "")(descr ""))
+  (lib (name 134pin_7-967288-1_KC5_FOOTPRINT)(type KiCad)(uri ${KIPRJMOD}/Project_Specific_Libs/Breakout_134pin_7-967288-1_KC5.pretty)(options "")(descr ""))
+)

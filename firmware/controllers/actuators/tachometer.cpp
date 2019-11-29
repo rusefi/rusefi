@@ -25,7 +25,8 @@ static void turnTachPinLow(void) {
 
 static void tachSignalCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (index != engineConfiguration->tachPulseTriggerIndex) {
+	UNUSED(ckpSignalType);
+	if (index != (uint32_t)engineConfiguration->tachPulseTriggerIndex) {
 		return;
 	}
 	enginePins.tachOut.setHigh();

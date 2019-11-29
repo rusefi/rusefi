@@ -11,7 +11,7 @@
 EXTERN_ENGINE;
 
 CJ125::CJ125() : wboHeaterControl("wbo"),
-		heaterPid(&heaterPidConfig){
+		heaterPid(&heaterPidConfig) {
 }
 
 void CJ125::SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -109,7 +109,7 @@ bool CJ125::isValidState() const {
 }
 
 void CJ125::cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if(engineConfiguration->cj125isLsu49) {
+	if (engineConfiguration->cj125isLsu49) {
 		heaterPidConfig.pFactor = CJ125_PID_LSU49_P;
 		heaterPidConfig.iFactor = CJ125_PID_LSU49_I;
 	} else {

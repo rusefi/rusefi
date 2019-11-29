@@ -254,14 +254,14 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 
 	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
-	scheduleByAngle(rpm, &startTimer[structIndex], engineConfiguration->knockDetectionWindowStart,
-			(schfunc_t) &startIntegration, NULL, &engine->rpmCalculator);
+	scheduleByAngle(&startTimer[structIndex], engineConfiguration->knockDetectionWindowStart,
+			(schfunc_t) &startIntegration, NULL);
 #if EFI_PROD_CODE
 	hipLastExecutionCount = lastExecutionCount;
 #endif /* EFI_PROD_CODE */
-	scheduleByAngle(rpm, &endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd,
+	scheduleByAngle(&endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd,
 			(schfunc_t) &endIntegration,
-			NULL, &engine->rpmCalculator);
+			NULL);
 	engine->m.hipCbTime = getTimeNowLowerNt() - engine->m.beforeHipCb;
 }
 

@@ -77,7 +77,7 @@ static uint32_t skipUntilEngineCycle = 0;
 #if ! EFI_UNIT_TEST
 extern WaveChart waveChart;
 static void resetNow(void) {
-	skipUntilEngineCycle = engine->rpmCalculator.getRevolutionCounter() + 3;
+	skipUntilEngineCycle = getRevolutionCounter() + 3;
 	waveChart.reset();
 }
 #endif
@@ -169,7 +169,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	if (!ENGINE(isEngineChartEnabled)) {
 		return;
 	}
-	if (skipUntilEngineCycle != 0 && ENGINE(rpmCalculator.getRevolutionCounter()) < skipUntilEngineCycle)
+	if (skipUntilEngineCycle != 0 && getRevolutionCounter() < skipUntilEngineCycle)
 		return;
 #if EFI_SIMULATOR
 	// todo: add UI control to enable this for firmware if desired

@@ -7,6 +7,7 @@
  */
 
 #include "dc_motor.h"
+#include "pwm_generator_logic.h"
 
 TwoPinDcMotor::TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2)
     : m_enable(enable)
@@ -19,29 +20,27 @@ bool TwoPinDcMotor::isOpenDirection() const {
 	return m_value >= 0;
 }
 
-float TwoPinDcMotor::Get() const {
+float TwoPinDcMotor::get() const {
 	return m_value;
 }
 
 /**
  * @param duty value between -1.0 and 1.0
  */
-bool TwoPinDcMotor::Set(float duty)
+bool TwoPinDcMotor::set(float duty)
 {
 	m_value = duty;
 
     bool isPositive = duty > 0;
 
-    if(!isPositive)
-    {
+    if (!isPositive) {
         duty = -duty;
     }
 
     // below here 'duty' is a not negative
 
     // Clamp to 100%
-    if(duty > 1.0f)
-    {
+    if (duty > 1.0f) {
         duty = 1.0f;
     }
     // Disable for very small duty

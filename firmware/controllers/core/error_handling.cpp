@@ -18,7 +18,7 @@ static MemoryStream firmwareErrorMessageStream;
 
 #define WARNING_BUFFER_SIZE 80
 static char warningBuffer[WARNING_BUFFER_SIZE];
-static bool isWarningStreamInitialized = false;
+static volatile bool isWarningStreamInitialized = false;
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"
@@ -92,7 +92,10 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 static void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 	stream->eos = 0; // reset
 	chvprintf((BaseSequentialStream *) stream, fmt, ap);
-	stream->buffer[stream->eos] = 0;
+
+	// Terminate, but don't write past the end of the buffer
+	int terminatorLocation = minI(stream->eos, stream->size - 1);
+	stream->buffer[terminatorLocation] = '\0';
 }
 
 static void printWarning(const char *fmt, va_list ap) {

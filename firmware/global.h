@@ -15,13 +15,10 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 // todo: remove this from here and rely on os_access.h. unfortunately hal.h includes ch.h :(
 #include <hal.h>
+// *** IMPORTANT *** from painful experience we know that common_headers.h has to be included AFTER hal.h
+// *** https://github.com/rusefi/rusefi/issues/1007 ***
 #include "common_headers.h"
 
 // this is about MISRA not liking 'time.h'. todo: figure out something
@@ -96,10 +93,6 @@ typedef unsigned int time_t;
 #endif /* EFI_USE_CCM */
 
 #define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 
 // 168 ticks in microsecond in case of 168MHz 407

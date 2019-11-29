@@ -8,15 +8,14 @@
 #ifndef TRIGGER_STRUCTURE_H_
 #define TRIGGER_STRUCTURE_H_
 
-#include "global.h"
+#include "globalaccess.h"
 #include "engine_configuration_generated_structures.h"
 #include "efi_wave.h"
-#include "globalaccess.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
 
 #if EFI_ENABLE_ASSERTS
-#define assertAngleRange(angle, msg, code) if(angle > 10000000 || angle < -10000000) { firmwareError(code, "angle range %s %.2f", msg, angle);angle = 0;}
+#define assertAngleRange(angle, msg, code) if (angle > 10000000 || angle < -10000000) { firmwareError(code, "angle range %s %.2f", msg, angle);angle = 0;}
 #else
 #define assertAngleRange(angle, msg, code) {}
 #endif
@@ -48,13 +47,10 @@
 class event_trigger_position_s {
 public:
 	uint32_t triggerEventIndex = 0;
-	/**
-	 * angle of that 'triggerEventIndex' event
-	 * todo: Technically we can simply take angle of trigger event from trigger shape by 'triggerEventIndex'?
-	 */
-	angle_t triggerEventAngle = 0;
 
 	angle_t angleOffsetFromTriggerEvent = 0;
+
+	void setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 #define TRIGGER_CHANNEL_COUNT 3
