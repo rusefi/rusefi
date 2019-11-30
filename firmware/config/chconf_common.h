@@ -24,11 +24,19 @@ extern "C"
 #endif /* __cplusplus */
 #ifndef __ASSEMBLER__
   void firmwareError(obd_code_e code, const char *fmt, ...);
-  void irqEnterHook(void);
-  void irqExitHook(void);
-  void contextSwitchHook(void);
-	void onLockHook(void);
-	void onUnlockHook(void);
+  #if ENABLE_PERF_TRACE
+    void irqEnterHook(void);
+    void irqExitHook(void);
+    void contextSwitchHook(void);
+    void onLockHook(void);
+    void onUnlockHook(void);
+  #else /* ENABLE_PERF_TRACE */
+    #define irqEnterHook() {}
+    #define irqExitHook() {}
+    #define contextSwitchHook() {}
+    #define onLockHook() {}
+    #define onUnlockHook() {}
+  #endif /* ENABLE_PERF_TRACE */
 #endif /* __ASSEMBLER__ */
 #ifdef __cplusplus
 }
