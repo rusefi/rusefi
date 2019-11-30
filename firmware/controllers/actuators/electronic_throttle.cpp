@@ -546,10 +546,12 @@ bool isETBRestartNeeded(void) {
 
 void stopETBPins(void) {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etb_io *io = getEtbIo(i PASS_CONFIG_PARAMETER_SUFFIX);
-		brain_pin_markUnused(io->controlPin1);
-		brain_pin_markUnused(io->directionPin1);
-		brain_pin_markUnused(io->directionPin2);
+		int ioOffset = (char *)engineConfiguration - (char *)getEtbIo(i PASS_CONFIG_PARAMETER_SUFFIX);
+
+		etb_io *activeIo = (etb_io *)(((char *)&activeConfiguration) + offset);
+		brain_pin_markUnused(activeIo->controlPin1);
+		brain_pin_markUnused(activeIo->directionPin1);
+		brain_pin_markUnused(activeIo->directionPin2);
 	}
 }
 #endif /* EFI_PROD_CODE */
