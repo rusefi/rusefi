@@ -180,10 +180,10 @@ static percent_t currentEtbDuty;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(X) (maxF(minF((X * 0.01), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
 
-void EtbController::init(DcMotor *motor) {
+void EtbController::init(DcMotor *motor, int ownIndex) {
 	this->m_motor = motor;
+	this->ownIndex = ownIndex;
 }
-
 
 int EtbController::getPeriodMs() {
 	return GET_PERIOD_LIMITED(&engineConfiguration->etb);
@@ -227,7 +227,7 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
-	percent_t actualThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	percent_t actualThrottlePosition = getTPSWithIndex(ownIndex PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (engine->etbAutoTune) {
 		autoTune.input = actualThrottlePosition;
@@ -639,7 +639,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbController[i].init(&etbHardware[i].dcMotor);
+		etbController[i].init(&etbHardware[i].dcMotor, i);
 		etbController[i].etbPid.initPidClass(&engineConfiguration->etb);
 		INJECT_ENGINE_REFERENCE(etbController[i]);
 	}

@@ -141,7 +141,7 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * We need ADC value because TunerStudio has a nice TPS configuration wizard, and this wizard
  * wants a TPS value.
  */
-int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+int getTPS12bitAdc(int index PASS_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_PROD_CODE
 	if (engine->mockTpsAdcValue != MOCK_UNDEFINED) {
 		return engine->mockTpsAdcValue;
@@ -151,7 +151,11 @@ int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return -1;
 #if EFI_PROD_CODE
 
-	return getAdcValue("tps10", engineConfiguration->tps1_1AdcChannel);
+	if (index == 0) {
+		return getAdcValue("tps10", engineConfiguration->tps1_1AdcChannel);
+	} else {
+		return getAdcValue("tps20", engineConfiguration->tps2_1AdcChannel);
+	}
 	//	return tpsFastAdc / 4;
 #else
 	return 0;
@@ -193,8 +197,8 @@ void grabPedalIsWideOpen() {
 /**
  * @brief Position on physical primary TPS
  */
-static percent_t getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	percent_t tpsValue = getTpsValue(getTPS12bitAdc(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+static percent_t getPrimatyRawTPS(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	percent_t tpsValue = getTpsValue(getTPS12bitAdc(index PASS_ENGINE_PARAMETER_SUFFIX) PASS_ENGINE_PARAMETER_SUFFIX);
 	return tpsValue;
 }
 
@@ -222,7 +226,7 @@ bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->tps1_1AdcChannel != EFI_ADC_NONE;
 }
 
-percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+percent_t getTPSWithIndex(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_PROD_CODE
 	if (!cisnan(engine->mockTpsValue)) {
 		return engine->mockTpsValue;
@@ -234,7 +238,11 @@ percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: blah blah
 	// todo: if two TPS do not match - show OBD code via malfunction_central.c
 
-	return getPrimatyRawTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	return getPrimatyRawTPS(index PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return getTPSWithIndex(0 PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void setBosch0280750009(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
