@@ -28,7 +28,7 @@ percent_t getTPSWithIndex(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int convertVoltageTo10bitADC(float voltage);
 int getTPS12bitAdc(int index PASS_ENGINE_PARAMETER_SUFFIX);
-#define getTPS10bitAdc() (getTPS12bitAdc() / TPS_TS_CONVERSION)
+#define getTPS10bitAdc() (getTPS12bitAdc(0) / TPS_TS_CONVERSION)
 float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setBosch0280750009(DECLARE_ENGINE_PARAMETER_SIGNATURE);
