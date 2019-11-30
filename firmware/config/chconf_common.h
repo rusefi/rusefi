@@ -15,29 +15,21 @@
 
 #ifndef ENABLE_PERF_TRACE
 // looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
- #define ENABLE_PERF_TRACE FALSE
+ #define ENABLE_PERF_TRACE TRUE
 #endif /* ENABLE_PERF_TRACE */
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
- #ifndef __ASSEMBLER__
- void firmwareError(obd_code_e code, const char *fmt, ...);
-  #if ENABLE_PERF_TRACE
-    void irqEnterHook(void);
-    void irqExitHook(void);
-    void contextSwitchHook(void);
+#ifndef __ASSEMBLER__
+  void firmwareError(obd_code_e code, const char *fmt, ...);
+  void irqEnterHook(void);
+  void irqExitHook(void);
+  void contextSwitchHook(void);
 	void onLockHook(void);
 	void onUnlockHook(void);
-  #else /* ENABLE_PERF_TRACE */
-    #define irqEnterHook() {}
-    #define irqExitHook() {}
-    #define contextSwitchHook() {}
-	#define onLockHook() {}
-	#define onUnlockHook() {}
-  #endif /*ENABLE_PERF_TRACE */
- #endif /* __ASSEMBLER__ */
+#endif /* __ASSEMBLER__ */
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
@@ -60,5 +52,29 @@ extern "C" {
 #endif
 #endif /* _FROM_ASM_ */
 
+
+/**
+ * @brief   Context switch hook.
+ * @details This hook is invoked just before switching between threads.
+ */
+#define CH_CFG_CONTEXT_SWITCH_HOOK(ntp, otp) {                              \
+  contextSwitchHook();                                            \
+}
+
+/**
+ * @brief   ISR enter hook.
+ */
+#define CH_CFG_IRQ_PROLOGUE_HOOK() {                                        \
+  /* IRQ prologue code here.*/                                              \
+  irqEnterHook();                                                           \
+}
+
+/**
+ * @brief   ISR exit hook.
+ */
+#define CH_CFG_IRQ_EPILOGUE_HOOK() {                                        \
+  /* IRQ epilogue code here.*/                                              \
+  irqExitHook();                                                            \
+}
 
 #endif /* CONFIG_CHCONF_COMMON_H_ */
