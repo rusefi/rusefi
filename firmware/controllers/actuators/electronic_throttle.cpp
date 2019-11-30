@@ -545,14 +545,21 @@ bool isETBRestartNeeded(void) {
 }
 
 void stopETBPins(void) {
+	brain_pin_markUnused(activeConfiguration.bc.etb1.controlPin1);
+	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin1);
+	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin2);
+/*
 	for (int i = 0 ; i < ETB_COUNT; i++) {
+// todo: looks like this code has a bug?
+// todo: fix something here to get 2nd ETB pins un-register
 		int ioOffset = (char *)engineConfiguration - (char *)getEtbIo(i PASS_CONFIG_PARAMETER_SUFFIX);
 
-		etb_io *activeIo = (etb_io *)(((char *)&activeConfiguration) + offset);
+		etb_io *activeIo = (etb_io *)(((char *)&activeConfiguration) + ioOffset);
 		brain_pin_markUnused(activeIo->controlPin1);
 		brain_pin_markUnused(activeIo->directionPin1);
 		brain_pin_markUnused(activeIo->directionPin2);
 	}
+*/
 }
 #endif /* EFI_PROD_CODE */
 
