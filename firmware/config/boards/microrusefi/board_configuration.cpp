@@ -93,9 +93,9 @@ static void setupEtb() {
 	// DIS - disables motor (enable low)
 
 	// PWM pin
-	boardConfiguration->etb[0].controlPin1 = GPIOC_7;
+	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
 	// DIR pin
-	boardConfiguration->etb[0].directionPin1 = GPIOA_8;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
 
 	// set_fsio_output_pin 7 PC8
 #if EFI_FSIO
