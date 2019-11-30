@@ -31,11 +31,24 @@
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_5_1_
 
-#define CHPRINTF_USE_FLOAT          	TRUE
+/*
+ * __process_stack_size__ and __process_stack_size__ defaults are each hard-coded as 0x400 in ChibiOS rules.mk files
+ * rusEfi do not override these defaults.
+ *
+ * http://www.chibios.com/forum/viewtopic.php?t=309
+ * "__main_stack_size__ is the size of INTERRUPTS stack"
+ * "__process_stack_size__ is the stack of the C-runtime, in ChibiOS the "main" thread uses the C-runtime stack."
+ *
+ */
 
-#if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
- #define EFI_CLOCK_LOCKS FALSE
-#endif /* EFI_CLOCK_LOCKS */
+#define PORT_IDLE_THREAD_STACK_SIZE     1024
+
+// rusEfi main processing happens on IRQ so PORT_INT_REQUIRED_STACK has to be pretty large.
+// see also a strange comment about PORT_INT_REQUIRED_STACK in global_shared.h
+// see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
+#define PORT_INT_REQUIRED_STACK 	768
+
+#define CHPRINTF_USE_FLOAT          	TRUE
 
 #if !defined(ENABLE_PERF_TRACE) || defined(__DOXYGEN__)
 // looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
@@ -43,7 +56,6 @@
 #endif /* ENABLE_PERF_TRACE */
 
 #include "chconf_common.h"
-
 
 /*===========================================================================*/
 /**
@@ -56,18 +68,14 @@
  * @brief   System time counter resolution.
  * @note    Allowed values are 16 or 32 bits.
  */
-#if !defined(CH_CFG_ST_RESOLUTION)
 #define CH_CFG_ST_RESOLUTION                32
-#endif
 
 /**
  * @brief   System tick frequency.
  * @details Frequency of the system timer that drives the system ticks. This
  *          setting also defines the system tick time unit.
  */
-#if !defined(CH_CFG_ST_FREQUENCY)
 #define CH_CFG_ST_FREQUENCY                 1000
-#endif
 
 /**
  * @brief   Time intervals data size.
@@ -338,9 +346,15 @@
  * @note    The default is @p TRUE.
  * @note    Requires @p CH_CFG_USE_SEMAPHORES.
  */
-#if !defined(CH_CFG_USE_MAILBOXES)
-#define CH_CFG_USE_MAILBOXES                TRUE
-#endif
+#define CH_CFG_USE_MAILBOXES                FALSE
+
+/**
+ * @brief   I/O Queues APIs.
+ * @details If enabled then the I/O queues APIs are included in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#define CH_CFG_USE_QUEUES                   FALSE
 
 /**
  * @brief   Core Memory Manager APIs.
@@ -350,7 +364,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_MEMCORE)
-#define CH_CFG_USE_MEMCORE                  TRUE
+#define CH_CFG_USE_MEMCORE                  FALSE
 #endif
 
 /**
@@ -379,17 +393,6 @@
 #endif
 
 /**
- * @brief  Objects FIFOs APIs.
- * @details If enabled then the objects FIFOs APIs are included
- *          in the kernel.
- *
- * @note    The default is @p TRUE.
- */
-#if !defined(CH_CFG_USE_OBJ_FIFOS)
-#define CH_CFG_USE_OBJ_FIFOS                FALSE
-#endif
-
-/**
  * @brief   Dynamic Threads APIs.
  * @details If enabled then the dynamic threads creation APIs are included
  *          in the kernel.
@@ -400,6 +403,17 @@
  */
 #if !defined(CH_CFG_USE_DYNAMIC)
 #define CH_CFG_USE_DYNAMIC                  FALSE
+#endif
+
+/**
+ * @brief  Objects FIFOs APIs.
+ * @details If enabled then the objects FIFOs APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_OBJ_FIFOS)
+#define CH_CFG_USE_OBJ_FIFOS                FALSE
 #endif
 
 /** @} */
@@ -456,7 +470,7 @@
  * @brief   Enables factory for mailboxes.
  */
 #if !defined(CH_CFG_FACTORY_MAILBOXES)
-#define CH_CFG_FACTORY_MAILBOXES            TRUE
+#define CH_CFG_FACTORY_MAILBOXES            FALSE
 #endif
 
 /**
@@ -496,6 +510,12 @@
 #endif
 
 /**
+ * micro-optimization: use same (lower-level) api for lock/unlock regardless on context
+ * this saves us one branching
+ */
+#define USE_PORT_LOCK FALSE
+
+/**
  * @brief   Debug option, parameters checks.
  * @details If enabled then the checks on the API functions input
  *          parameters are activated.
@@ -503,7 +523,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_DBG_ENABLE_CHECKS)
-#define CH_DBG_ENABLE_CHECKS                FALSE
+#define CH_DBG_ENABLE_CHECKS                TRUE
 #endif
 
 /**
@@ -515,7 +535,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_DBG_ENABLE_ASSERTS)
-#define CH_DBG_ENABLE_ASSERTS               FALSE
+#define CH_DBG_ENABLE_ASSERTS               TRUE
 #endif
 
 /**
@@ -538,6 +558,17 @@
 #endif
 
 /**
+ * @brief   Debug option, trace buffer.
+ * @details If enabled then the context switch circular trace buffer is
+ *          activated.
+ *
+ * @note    The default is @p FALSE.
+ */
+#ifndef CH_DBG_ENABLE_TRACE
+#define CH_DBG_ENABLE_TRACE                 FALSE
+#endif
+
+/**
  * @brief   Debug option, stack checks.
  * @details If enabled then a runtime stack check is performed.
  *
@@ -548,7 +579,7 @@
  *          @p panic_msg variable set to @p NULL.
  */
 #if !defined(CH_DBG_ENABLE_STACK_CHECK)
-#define CH_DBG_ENABLE_STACK_CHECK           FALSE
+#define CH_DBG_ENABLE_STACK_CHECK           TRUE
 #endif
 
 /**
@@ -559,8 +590,9 @@
  *
  * @note    The default is @p FALSE.
  */
+// see also CH_DBG_STACK_FILL_VALUE
 #if !defined(CH_DBG_FILL_THREADS)
-#define CH_DBG_FILL_THREADS                 FALSE
+#define CH_DBG_FILL_THREADS                 TRUE
 #endif
 
 /**
@@ -606,13 +638,15 @@
  * @details User fields added to the end of the @p thread_t structure.
  */
 #define CH_CFG_THREAD_EXTRA_FIELDS                                          \
+  void *activeStack; \
+  int remainingStack; \
   /* Add threads custom fields here.*/
 
 /**
  * @brief   Threads initialization hook.
- * @details User initialization code added to the @p _thread_init() function.
+ * @details User initialization code added to the @p chThdInit() API.
  *
- * @note    It is invoked from within @p _thread_init() and implicitly from all
+ * @note    It is invoked from within @p chThdInit() and implicitly from all
  *          the threads creation APIs.
  */
 #define CH_CFG_THREAD_INIT_HOOK(tp) {                                       \
@@ -622,6 +656,10 @@
 /**
  * @brief   Threads finalization hook.
  * @details User finalization code added to the @p chThdExit() API.
+ *
+ * @note    It is inserted into lock zone.
+ * @note    It is also invoked when the threads simply return in order to
+ *          terminate.
  */
 #define CH_CFG_THREAD_EXIT_HOOK(tp) {                                       \
   /* Add threads finalization code here.*/                                  \
@@ -632,7 +670,7 @@
  * @details This hook is invoked just before switching between threads.
  */
 #define CH_CFG_CONTEXT_SWITCH_HOOK(ntp, otp) {                              \
-  /* Context switch code here.*/                                            \
+  contextSwitchHook();                                            \
 }
 
 /**
@@ -640,6 +678,7 @@
  */
 #define CH_CFG_IRQ_PROLOGUE_HOOK() {                                        \
   /* IRQ prologue code here.*/                                              \
+  irqEnterHook();                                                           \
 }
 
 /**
@@ -647,6 +686,7 @@
  */
 #define CH_CFG_IRQ_EPILOGUE_HOOK() {                                        \
   /* IRQ epilogue code here.*/                                              \
+  irqExitHook();                                                            \
 }
 
 /**
@@ -656,7 +696,6 @@
  * @note    This macro can be used to activate a power saving mode.
  */
 #define CH_CFG_IDLE_ENTER_HOOK() {                                          \
-  /* Idle-enter code here.*/                                                \
 }
 
 /**
@@ -666,7 +705,6 @@
  * @note    This macro can be used to deactivate a power saving mode.
  */
 #define CH_CFG_IDLE_LEAVE_HOOK() {                                          \
-  /* Idle-leave code here.*/                                                \
 }
 
 /**
@@ -693,7 +731,7 @@
  */
 #define CH_CFG_SYSTEM_HALT_HOOK(reason) {                                   \
   /* System halt code here.*/                                               \
-  chDbgPanic3(reason, __FILE__, __LINE__);                                  \
+  chDbgPanic3(reason, __FILE__, __LINE__); \
 }
 
 /**
@@ -704,6 +742,7 @@
 #define CH_CFG_TRACE_HOOK(tep) {                                            \
   /* Trace code here.*/                                                     \
 }
+
 
 /** @} */
 
