@@ -195,7 +195,7 @@ static void setFsioDigitalInputPin(const char *indexStr, const char *pinName) {
 		scheduleMsg(logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	CONFIGB(fsioDigitalInputs)[index] = pin;
+	CONFIG(fsioDigitalInputs)[index] = pin;
 	scheduleMsg(logger, "FSIO digital input pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
@@ -586,7 +586,7 @@ static void showFsioInfo(void) {
 		}
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		brain_pin_e inputPin = CONFIGB(fsioDigitalInputs)[i];
+		brain_pin_e inputPin = CONFIG(fsioDigitalInputs)[i];
 		if (inputPin != GPIO_UNASSIGNED) {
 			scheduleMsg(logger, "FSIO digital input #%d: %s", i, hwPortname(inputPin));
 		}
@@ -697,7 +697,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		brain_pin_e inputPin = CONFIGB(fsioDigitalInputs)[i];
+		brain_pin_e inputPin = CONFIG(fsioDigitalInputs)[i];
 
 		if (inputPin != GPIO_UNASSIGNED) {
 			efiSetPadMode("FSIO input", inputPin, getInputMode(engineConfiguration->fsioInputModes[i]));

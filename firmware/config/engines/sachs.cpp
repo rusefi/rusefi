@@ -89,7 +89,7 @@ void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setLinearCurve(config->afrRpmBins, 15000, 7000, 1);
 
 	engineConfiguration->hasFrequencyReportingMapSensor = true;
-	boardConfiguration->frequencyReportingMapInputPin = GPIOC_6;
+	engineConfiguration->frequencyReportingMapInputPin = GPIOC_6;
 	boardConfiguration->mapFrequency100Kpa = 159;
 	boardConfiguration->mapFrequency0Kpa = 80;
 }

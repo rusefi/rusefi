@@ -117,7 +117,7 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->triggerInputPins[0] = GPIOG_7;
 #endif /* STM32_HAS_GPIOF */
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIOF_14;
+	engineConfiguration->vehicleSpeedSensorInputPin = GPIOF_14;
 #endif /* STM32_HAS_GPIOF */
 
 

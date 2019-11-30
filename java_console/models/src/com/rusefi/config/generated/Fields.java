@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Nov 29 21:56:48 EST 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Nov 30 10:03:19 EST 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -233,10 +233,8 @@ public class Fields {
 	public static final int cltTimingExtra_offset_hex = 950;
 	public static final int clutchDownPin_offset = 664;
 	public static final int clutchDownPin_offset_hex = 298;
-	public static final int clutchDownPinInverted_offset = 976;
 	public static final int clutchDownPinMode_offset = 667;
 	public static final int clutchUpPin_offset = 969;
-	public static final int clutchUpPinInverted_offset = 976;
 	public static final int clutchUpPinMode_offset = 971;
 	public static final String CMD_CALIBRATE_PEDAL_DOWN = "calibrate_pedal_down";
 	public static final String CMD_CALIBRATE_PEDAL_UP = "calibrate_pedal_up";
@@ -365,7 +363,6 @@ public class Fields {
 	public static final int etbCalibrationOnStart_offset = 1476;
 	public static final int etbDeadband_offset = 3960;
 	public static final int etbFreq_offset = 2514;
-	public static final int etbIdleRange_offset = 972;
 	public static final int etbIdleThrottleRange_offset = 4012;
 	public static final int etbNeutralPosition_offset = 1471;
 	public static final int externalKnockSenseAdc_offset = 3103;
@@ -1180,6 +1177,8 @@ public class Fields {
 	public static final int tle8888_cs_offset = 3105;
 	public static final int tle8888_csPinMode_offset = 3106;
 	public static final int tle8888spiDevice_offset = 4000;
+	public static final int todoClutchDownPinInverted_offset = 976;
+	public static final int todoClutchUpPinInverted_offset = 976;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
 	public static final int TOTAL_CONFIG_SIZE = 20000;
 	public static final int tps1_1AdcChannel_offset = 512;
@@ -1256,8 +1255,9 @@ public class Fields {
 	public static final int unused_board_984_31_offset = 744;
 	public static final int unused_former_warmup_target_afr_offset = 2096;
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
+	public static final int unused_offset = 972;
 	public static final int unusedAnotherOne_offset = 744;
-	public static final int unusedAtBoardConfigurationEnd_offset = 980;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 980;
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1768;
@@ -1740,9 +1740,9 @@ public class Fields {
 	public static final Field CLUTCHUPPIN = Field.create("CLUTCHUPPIN", 969, FieldType.INT8, switch_input_pin_e);
 	public static final Field FREQUENCYREPORTINGMAPINPUTPIN = Field.create("FREQUENCYREPORTINGMAPINPUTPIN", 970, FieldType.INT8, brain_input_pin_e);
 	public static final Field CLUTCHUPPINMODE = Field.create("CLUTCHUPPINMODE", 971, FieldType.INT8);
-	public static final Field ETBIDLERANGE = Field.create("ETBIDLERANGE", 972, FieldType.FLOAT);
-	public static final Field CLUTCHUPPININVERTED = Field.create("CLUTCHUPPININVERTED", 976, FieldType.BIT, 0);
-	public static final Field CLUTCHDOWNPININVERTED = Field.create("CLUTCHDOWNPININVERTED", 976, FieldType.BIT, 1);
+	public static final Field UNUSED = Field.create("UNUSED", 972, FieldType.FLOAT);
+	public static final Field TODOCLUTCHUPPININVERTED = Field.create("TODOCLUTCHUPPININVERTED", 976, FieldType.BIT, 0);
+	public static final Field TODOCLUTCHDOWNPININVERTED = Field.create("TODOCLUTCHDOWNPININVERTED", 976, FieldType.BIT, 1);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -2539,9 +2539,9 @@ public class Fields {
 	CLUTCHUPPIN,
 	FREQUENCYREPORTINGMAPINPUTPIN,
 	CLUTCHUPPINMODE,
-	ETBIDLERANGE,
-	CLUTCHUPPININVERTED,
-	CLUTCHDOWNPININVERTED,
+	UNUSED,
+	TODOCLUTCHUPPININVERTED,
+	TODOCLUTCHDOWNPININVERTED,
 	VVTDISPLAYINVERTED,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,

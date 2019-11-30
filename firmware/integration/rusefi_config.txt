@@ -698,23 +698,27 @@ custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
 custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:2], @@maf_sensor_type_e_enum@@
 
-maf_sensor_type_e mafSensorType;
+! todo: keep moving all these fields at the end of board_configuration_s below 'board_configuration_s bc'
+! end of board_configuration_s
+end_struct	
 
+	
+board_configuration_s bc;
+	maf_sensor_type_e mafSensorType;
+
+	custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioDigitalInputs;todo:not finished\nThese input pins allow us to pull toggle buttons state;
 
 	brain_input_pin_e vehicleSpeedSensorInputPin;
 	switch_input_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
-	float etbIdleRange;;"angle",      1,      0,       -100, 100,      2
-	bit clutchUpPinInverted
-	bit clutchDownPinInverted
-	int[121] unusedAtBoardConfigurationEnd;
-end_struct	
-custom le_formula_t 200 string, ASCII, @OFFSET@, 200
-	
-board_configuration_s bc;
-bit vvtDisplayInverted
+	float unused
+	bit todoClutchUpPinInverted
+	bit todoClutchDownPinInverted
+	int[121] unusedAtOldBoardConfigurationEnd;
+
+	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;+Print details into rusEfi console
 	bit isVerboseETB;+Prints ETB details to rusEFI console
@@ -1085,6 +1089,7 @@ uint8_t[4] unusuedsw;
 
 	int[565] mainUnusedEnd;
 
+! end of engine_configuration_s
 end_struct
 
 engine_configuration_s engineConfiguration;
