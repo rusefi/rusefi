@@ -264,6 +264,11 @@ void EtbController::PeriodicTask() {
 #endif /* EFI_TUNER_STUDIO */
 	}
 
+	if (cisnan(targetPosition)) {
+		// this could happen while changing settings
+		warning(CUSTOM_ERR_ETB_TARGET, "target");
+		return;
+	}
 	engine->engineState.etbFeedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
 
 	etbPid.iTermMin = engineConfiguration->etb_iTermMin;

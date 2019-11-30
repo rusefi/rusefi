@@ -468,7 +468,7 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	if (adcp->state == ADC_COMPLETE) {
 		slowAdc.invalidateSamplesCache();
 
-		efiAssertVoid(CUSTOM_ERR_6671, getCurrentRemainingStack() > 128, "lowstck#9c");
+		efiAssertVoid(CUSTOM_STACK_ADC_6671, getCurrentRemainingStack() > 128, "lowstck#9c");
 
 		/* Calculates the average values from the ADC samples.*/
 		for (int i = 0; i < slowAdc.size(); i++) {
