@@ -87,6 +87,8 @@ struct_no_prefix engine_configuration_s
 #define CLT_TIMING_CURVE_SIZE 8
 #define IDLE_VE_CURVE_SIZE 8
 
+#define ETB_COUNT 2
+
 #define AUX_DIGITAL_VALVE_COUNT 2
 
 #define IAT_CURVE_SIZE 16

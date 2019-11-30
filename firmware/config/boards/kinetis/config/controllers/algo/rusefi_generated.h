@@ -529,6 +529,7 @@
 #define etb2_offset 3964
 #define etb2_offset_hex f7c
 #define ETB_BIAS_CURVE_LENGTH 8
+#define ETB_COUNT 2
 #define etb_dFactor_offset 1744
 #define etb_dFactor_offset_hex 6d0
 #define etb_iFactor_offset 1740

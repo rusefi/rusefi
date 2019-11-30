@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 30 10:08:11 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 30 16:44:43 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -531,6 +531,7 @@
 #define etb2_offset 3964
 #define etb2_offset_hex f7c
 #define ETB_BIAS_CURVE_LENGTH 8
+#define ETB_COUNT 2
 #define etb_dFactor_offset 1744
 #define etb_dFactor_offset_hex 6d0
 #define etb_iFactor_offset 1740
@@ -4962,4 +4963,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 30 10:08:11 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 30 16:44:43 EST 2019
