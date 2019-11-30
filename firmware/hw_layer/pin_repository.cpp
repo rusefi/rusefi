@@ -139,7 +139,7 @@ void initPinRepository(void) {
 
 	initialized = true;
 
-	addConsoleAction("pins", reportPins);
+	addConsoleAction(CMD_PINS, reportPins);
 }
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
