@@ -93,7 +93,7 @@ bool rtcWorks = true;
  */
 void lockSpi(spi_device_e device) {
 	UNUSED(device);
-	efiAssertVoid(CUSTOM_ERR_6674, getCurrentRemainingStack() > 128, "lockSpi");
+	efiAssertVoid(CUSTOM_STACK_SPI, getCurrentRemainingStack() > 128, "lockSpi");
 	// todo: different locks for different SPI devices!
 	chMtxLock(&spiMtx);
 }

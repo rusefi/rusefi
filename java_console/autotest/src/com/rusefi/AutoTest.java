@@ -15,6 +15,7 @@ import com.rusefi.waves.EngineReport;
 
 import static com.rusefi.IoUtil.sleep;
 import static com.rusefi.TestingUtils.*;
+import static com.rusefi.config.generated.Fields.CMD_PINS;
 import static com.rusefi.config.generated.Fields.MOCK_MAF_COMMAND;
 import static com.rusefi.io.CommandQueue.disableCommand;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
@@ -135,6 +136,7 @@ public class AutoTest {
     }
 
     static void setEngineType(int type) {
+        sendCommand(CMD_PINS);
         currentEngineType = type;
         sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, 30);
         sleep(10);

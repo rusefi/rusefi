@@ -21,7 +21,7 @@
 	#define BOARD_EXT_PINREPOPINS 0
 #endif
 
-static int initialized = FALSE;
+static bool initialized = false;
 
 static LoggingWithStorage logger("pin repos");
 static int totalPinsUsed = 0;
@@ -139,7 +139,7 @@ void initPinRepository(void) {
 
 	initialized = true;
 
-	addConsoleAction("pins", reportPins);
+	addConsoleAction(CMD_PINS, reportPins);
 }
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
@@ -197,8 +197,7 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
  * See also brain_pin_markUsed()
  */
 
-void brain_pin_markUnused(brain_pin_e brainPin)
-{
+void brain_pin_markUnused(brain_pin_e brainPin) {
 	int index;
 
 	if (!initialized) {
