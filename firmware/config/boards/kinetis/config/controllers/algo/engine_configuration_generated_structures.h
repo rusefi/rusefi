@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Nov 29 21:57:01 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 30 10:08:11 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -364,14 +364,10 @@
 #define cltTimingExtra_offset_hex 950
 #define clutchDownPin_offset 664
 #define clutchDownPin_offset_hex 298
-#define clutchDownPinInverted_offset 976
-#define clutchDownPinInverted_offset_hex 3d0
 #define clutchDownPinMode_offset 667
 #define clutchDownPinMode_offset_hex 29b
 #define clutchUpPin_offset 969
 #define clutchUpPin_offset_hex 3c9
-#define clutchUpPinInverted_offset 976
-#define clutchUpPinInverted_offset_hex 3d0
 #define clutchUpPinMode_offset 971
 #define clutchUpPinMode_offset_hex 3cb
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
@@ -567,8 +563,6 @@
 #define etbDeadband_offset_hex f78
 #define etbFreq_offset 2514
 #define etbFreq_offset_hex 9d2
-#define etbIdleRange_offset 972
-#define etbIdleRange_offset_hex 3cc
 #define etbIdleThrottleRange_offset 4012
 #define etbIdleThrottleRange_offset_hex fac
 #define etbNeutralPosition_offset 1471
@@ -1803,6 +1797,10 @@
 #define tle8888_csPinMode_offset_hex c22
 #define tle8888spiDevice_offset 4000
 #define tle8888spiDevice_offset_hex fa0
+#define todoClutchDownPinInverted_offset 976
+#define todoClutchDownPinInverted_offset_hex 3d0
+#define todoClutchUpPinInverted_offset 976
+#define todoClutchUpPinInverted_offset_hex 3d0
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TOTAL_CONFIG_SIZE 20000
 #define TOTAL_CONFIG_SIZE_hex 4e20
@@ -1928,10 +1926,12 @@
 #define unused_board_984_31_offset_hex 2e8
 #define unused_former_warmup_target_afr_offset 2096
 #define unused_former_warmup_target_afr_offset_hex 830
+#define unused_offset 972
+#define unused_offset_hex 3cc
 #define unusedAnotherOne_offset 744
 #define unusedAnotherOne_offset_hex 2e8
-#define unusedAtBoardConfigurationEnd_offset 980
-#define unusedAtBoardConfigurationEnd_offset_hex 3d4
+#define unusedAtOldBoardConfigurationEnd_offset 980
+#define unusedAtOldBoardConfigurationEnd_offset_hex 3d4
 #define unusedErrorPin_offset 2040
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
@@ -3051,48 +3051,7 @@ struct board_configuration_s {
 	 * offset 344
 	 */
 	sensor_chart_e sensorChartMode;
-	/**
-	 * offset 348
-	 */
-	maf_sensor_type_e mafSensorType;
-	/**
-	 * todo:not finished
-	 * These input pins allow us to pull toggle buttons state
-	 * offset 352
-	 */
-	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
-	/**
-	 * offset 368
-	 */
-	brain_input_pin_e vehicleSpeedSensorInputPin;
-	/**
-	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
-	 * offset 369
-	 */
-	switch_input_pin_e clutchUpPin;
-	/**
-	 * offset 370
-	 */
-	brain_input_pin_e frequencyReportingMapInputPin;
-	/**
-	 * offset 371
-	 */
-	pin_input_mode_e clutchUpPinMode;
-	/**
-	 * offset 372
-	 */
-	float etbIdleRange = (float)0;
-	/**
-	offset 376 bit 0 */
-	bool clutchUpPinInverted : 1;
-	/**
-	offset 376 bit 1 */
-	bool clutchDownPinInverted : 1;
-	/**
-	 * offset 380
-	 */
-	int unusedAtBoardConfigurationEnd[121];
-	/** total size 864*/
+	/** total size 348*/
 };
 
 typedef struct board_configuration_s board_configuration_s;
@@ -3549,6 +3508,47 @@ struct engine_configuration_s {
 	 * offset 600
 	 */
 	board_configuration_s bc;
+	/**
+	 * offset 948
+	 */
+	maf_sensor_type_e mafSensorType;
+	/**
+	 * todo:not finished
+	 * These input pins allow us to pull toggle buttons state
+	 * offset 952
+	 */
+	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 968
+	 */
+	brain_input_pin_e vehicleSpeedSensorInputPin;
+	/**
+	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
+	 * offset 969
+	 */
+	switch_input_pin_e clutchUpPin;
+	/**
+	 * offset 970
+	 */
+	brain_input_pin_e frequencyReportingMapInputPin;
+	/**
+	 * offset 971
+	 */
+	pin_input_mode_e clutchUpPinMode;
+	/**
+	 * offset 972
+	 */
+	float unused = (float)0;
+	/**
+	offset 976 bit 0 */
+	bool todoClutchUpPinInverted : 1;
+	/**
+	offset 976 bit 1 */
+	bool todoClutchDownPinInverted : 1;
+	/**
+	 * offset 980
+	 */
+	int unusedAtOldBoardConfigurationEnd[121];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -4962,4 +4962,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Nov 29 21:57:01 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 30 10:08:11 EST 2019

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Nov 29 16:19:44 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Nov 30 10:15:18 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -989,48 +989,7 @@ struct board_configuration_s {
 	 * offset 344
 	 */
 	sensor_chart_e sensorChartMode;
-	/**
-	 * offset 348
-	 */
-	maf_sensor_type_e mafSensorType;
-	/**
-	 * todo:not finished
-	 * These input pins allow us to pull toggle buttons state
-	 * offset 352
-	 */
-	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
-	/**
-	 * offset 368
-	 */
-	brain_input_pin_e vehicleSpeedSensorInputPin;
-	/**
-	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
-	 * offset 369
-	 */
-	switch_input_pin_e clutchUpPin;
-	/**
-	 * offset 370
-	 */
-	brain_input_pin_e frequencyReportingMapInputPin;
-	/**
-	 * offset 371
-	 */
-	pin_input_mode_e clutchUpPinMode;
-	/**
-	 * offset 372
-	 */
-	float etbIdleRange;
-	/**
-	offset 376 bit 0 */
-	bool clutchUpPinInverted : 1;
-	/**
-	offset 376 bit 1 */
-	bool clutchDownPinInverted : 1;
-	/**
-	 * offset 380
-	 */
-	int unusedAtBoardConfigurationEnd[121];
-	/** total size 864*/
+	/** total size 348*/
 };
 
 typedef struct board_configuration_s board_configuration_s;
@@ -1487,6 +1446,47 @@ struct engine_configuration_s {
 	 * offset 600
 	 */
 	board_configuration_s bc;
+	/**
+	 * offset 948
+	 */
+	maf_sensor_type_e mafSensorType;
+	/**
+	 * todo:not finished
+	 * These input pins allow us to pull toggle buttons state
+	 * offset 952
+	 */
+	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 968
+	 */
+	brain_input_pin_e vehicleSpeedSensorInputPin;
+	/**
+	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
+	 * offset 969
+	 */
+	switch_input_pin_e clutchUpPin;
+	/**
+	 * offset 970
+	 */
+	brain_input_pin_e frequencyReportingMapInputPin;
+	/**
+	 * offset 971
+	 */
+	pin_input_mode_e clutchUpPinMode;
+	/**
+	 * offset 972
+	 */
+	float unused;
+	/**
+	offset 976 bit 0 */
+	bool todoClutchUpPinInverted : 1;
+	/**
+	offset 976 bit 1 */
+	bool todoClutchDownPinInverted : 1;
+	/**
+	 * offset 980
+	 */
+	int unusedAtOldBoardConfigurationEnd[121];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -2900,4 +2900,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Nov 29 16:19:44 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Nov 30 10:15:18 EST 2019

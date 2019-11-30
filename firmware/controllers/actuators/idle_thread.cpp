@@ -348,8 +348,8 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			}
 			engine->acSwitchState = result;
 		}
-		if (CONFIGB(clutchUpPin) != GPIO_UNASSIGNED) {
-			engine->clutchUpState = efiReadPin(CONFIGB(clutchUpPin));
+		if (CONFIG(clutchUpPin) != GPIO_UNASSIGNED) {
+			engine->clutchUpState = efiReadPin(CONFIG(clutchUpPin));
 		}
 		if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
 			engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
@@ -642,9 +642,9 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 				getInputMode(CONFIGB(clutchDownPinMode)));
 	}
 
-	if (CONFIGB(clutchUpPin) != GPIO_UNASSIGNED) {
-		efiSetPadMode("clutch up switch", CONFIGB(clutchUpPin),
-				getInputMode(CONFIGB(clutchUpPinMode)));
+	if (CONFIG(clutchUpPin) != GPIO_UNASSIGNED) {
+		efiSetPadMode("clutch up switch", CONFIG(clutchUpPin),
+				getInputMode(CONFIG(clutchUpPinMode)));
 	}
 
 	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {

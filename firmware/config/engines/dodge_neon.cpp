@@ -434,8 +434,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	boardConfiguration->clutchDownPin = GPIOC_12;
 	boardConfiguration->clutchDownPinMode = PI_PULLUP;
-//	boardConfiguration->clutchUpPin = GPIOA_14; // note SWCLK - conflict with SWD
-	boardConfiguration->clutchUpPinMode = PI_PULLUP;
+//	engineConfiguration->clutchUpPin = GPIOA_14; // note SWCLK - conflict with SWD
+	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 
 	engineConfiguration->activateAuxPid1 = 1;
 	engineConfiguration->auxPidPins[0] = GPIOD_5; // playing with AUX PID for alternator
@@ -456,7 +456,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	setFsioExt(0, GPIOE_5, "0 fsio_setting", 400 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
 	engineConfiguration->fanOnTemperature = 92;
 	engineConfiguration->fanOffTemperature = 89;

@@ -304,7 +304,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->alternatorControlPin = GPIOE_10;
 	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 
-//	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+//	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
 
 	boardConfiguration->vvtCamSensorUseRise = true;

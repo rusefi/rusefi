@@ -333,8 +333,8 @@ void applyNewHardwareSettings(void) {
 	stopHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-	if (isPinOrModeChanged(bc.clutchUpPin, bc.clutchUpPinMode))
-		brain_pin_markUnused(activeConfiguration.bc.clutchUpPin);
+	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode))
+		brain_pin_markUnused(activeConfiguration.clutchUpPin);
 
 	enginePins.unregisterPins();
 
