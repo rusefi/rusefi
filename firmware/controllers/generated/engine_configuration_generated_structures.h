@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Nov 30 10:15:18 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Nov 30 17:04:45 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -597,7 +597,7 @@ struct board_configuration_s {
 	/**
 	 * offset 80
 	 */
-	etb_io etb1;
+	uint8_t unused556[4];
 	/**
 	 * offset 84
 	 */
@@ -1486,7 +1486,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 980
 	 */
-	int unusedAtOldBoardConfigurationEnd[121];
+	etb_io etbIo[ETB_COUNT];
+	/**
+	 * offset 988
+	 */
+	int unusedAtOldBoardConfigurationEnd[119];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -2532,7 +2536,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3964
 	 */
-	etb_io etb2;
+	uint8_t unused1059[4];
 	/**
 	 * See useIdleTimingPidControl
 	 * offset 3968
@@ -2900,4 +2904,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Nov 30 10:15:18 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Nov 30 17:04:45 EST 2019

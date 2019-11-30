@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 30 16:44:43 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 30 17:04:56 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -510,26 +510,6 @@
 #define engineSnifferRpmThreshold_offset_hex 4
 #define engineType_offset 0
 #define engineType_offset_hex 0
-#define etb1_controlPin1_offset 682
-#define etb1_controlPin1_offset_hex 2aa
-#define etb1_controlPinMode_offset 683
-#define etb1_controlPinMode_offset_hex 2ab
-#define etb1_directionPin1_offset 680
-#define etb1_directionPin1_offset_hex 2a8
-#define etb1_directionPin2_offset 681
-#define etb1_directionPin2_offset_hex 2a9
-#define etb1_offset 680
-#define etb1_offset_hex 2a8
-#define etb2_controlPin1_offset 3966
-#define etb2_controlPin1_offset_hex f7e
-#define etb2_controlPinMode_offset 3967
-#define etb2_controlPinMode_offset_hex f7f
-#define etb2_directionPin1_offset 3964
-#define etb2_directionPin1_offset_hex f7c
-#define etb2_directionPin2_offset 3965
-#define etb2_directionPin2_offset_hex f7d
-#define etb2_offset 3964
-#define etb2_offset_hex f7c
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
@@ -566,6 +546,26 @@
 #define etbFreq_offset_hex 9d2
 #define etbIdleThrottleRange_offset 4012
 #define etbIdleThrottleRange_offset_hex fac
+#define etbIo1_controlPin1_offset 982
+#define etbIo1_controlPin1_offset_hex 3d6
+#define etbIo1_controlPinMode_offset 983
+#define etbIo1_controlPinMode_offset_hex 3d7
+#define etbIo1_directionPin1_offset 980
+#define etbIo1_directionPin1_offset_hex 3d4
+#define etbIo1_directionPin2_offset 981
+#define etbIo1_directionPin2_offset_hex 3d5
+#define etbIo1_offset 980
+#define etbIo1_offset_hex 3d4
+#define etbIo2_controlPin1_offset 986
+#define etbIo2_controlPin1_offset_hex 3da
+#define etbIo2_controlPinMode_offset 987
+#define etbIo2_controlPinMode_offset_hex 3db
+#define etbIo2_directionPin1_offset 984
+#define etbIo2_directionPin1_offset_hex 3d8
+#define etbIo2_directionPin2_offset 985
+#define etbIo2_directionPin2_offset_hex 3d9
+#define etbIo2_offset 984
+#define etbIo2_offset_hex 3d8
 #define etbNeutralPosition_offset 1471
 #define etbNeutralPosition_offset_hex 5bf
 #define externalKnockSenseAdc_offset 3103
@@ -1899,8 +1899,12 @@
 #define uartConsoleSerialSpeed_offset_hex 81c
 #define unrealisticRpmThreashold_offset 760
 #define unrealisticRpmThreashold_offset_hex 2f8
+#define unused1059_offset 3964
+#define unused1059_offset_hex f7c
 #define unused1234234_offset 2042
 #define unused1234234_offset_hex 7fa
+#define unused556_offset 680
+#define unused556_offset_hex 2a8
 #define unused_1484_bit_21_offset 1476
 #define unused_1484_bit_21_offset_hex 5c4
 #define unused_1484_bit_22_offset 1476
@@ -1931,8 +1935,8 @@
 #define unused_offset_hex 3cc
 #define unusedAnotherOne_offset 744
 #define unusedAnotherOne_offset_hex 2e8
-#define unusedAtOldBoardConfigurationEnd_offset 980
-#define unusedAtOldBoardConfigurationEnd_offset_hex 3d4
+#define unusedAtOldBoardConfigurationEnd_offset 988
+#define unusedAtOldBoardConfigurationEnd_offset_hex 3dc
 #define unusedErrorPin_offset 2040
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
@@ -2660,7 +2664,7 @@ struct board_configuration_s {
 	/**
 	 * offset 80
 	 */
-	etb_io etb1;
+	uint8_t unused556[4];
 	/**
 	 * offset 84
 	 */
@@ -3549,7 +3553,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 980
 	 */
-	int unusedAtOldBoardConfigurationEnd[121];
+	etb_io etbIo[ETB_COUNT];
+	/**
+	 * offset 988
+	 */
+	int unusedAtOldBoardConfigurationEnd[119];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -4595,7 +4603,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3964
 	 */
-	etb_io etb2;
+	uint8_t unused1059[4];
 	/**
 	 * See useIdleTimingPidControl
 	 * offset 3968
@@ -4963,4 +4971,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 30 16:44:43 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Nov 30 17:04:56 EST 2019
