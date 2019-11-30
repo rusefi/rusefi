@@ -227,7 +227,7 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
-	percent_t actualThrottlePosition = getTPSWithIndex(ownIndex PASS_ENGINE_PARAMETER_SIGNATURE);
+	percent_t actualThrottlePosition = getTPSWithIndex(ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engine->etbAutoTune) {
 		autoTune.input = actualThrottlePosition;
