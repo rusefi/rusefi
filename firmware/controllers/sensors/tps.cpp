@@ -141,7 +141,7 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * We need ADC value because TunerStudio has a nice TPS configuration wizard, and this wizard
  * wants a TPS value.
  */
-int getTPS12bitAdc(int index PASS_ENGINE_PARAMETER_SUFFIX) {
+int getTPS12bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_PROD_CODE
 	if (engine->mockTpsAdcValue != MOCK_UNDEFINED) {
 		return engine->mockTpsAdcValue;

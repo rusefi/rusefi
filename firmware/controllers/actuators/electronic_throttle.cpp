@@ -227,7 +227,7 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
-	percent_t actualThrottlePosition = getTPSWithIndex(ownIndex PASS_ENGINE_PARAMETER_SIGNATURE);
+	percent_t actualThrottlePosition = getTPSWithIndex(ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engine->etbAutoTune) {
 		autoTune.input = actualThrottlePosition;
@@ -264,6 +264,11 @@ void EtbController::PeriodicTask() {
 #endif /* EFI_TUNER_STUDIO */
 	}
 
+	if (cisnan(targetPosition)) {
+		// this could happen while changing settings
+		warning(CUSTOM_ERR_ETB_TARGET, "target");
+		return;
+	}
 	engine->engineState.etbFeedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
 
 	etbPid.iTermMin = engineConfiguration->etb_iTermMin;
@@ -541,10 +546,14 @@ bool isETBRestartNeeded(void) {
 
 void stopETBPins(void) {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etb_io *io = getEtbIo(i PASS_CONFIG_PARAMETER_SUFFIX);
-		brain_pin_markUnused(io->controlPin1);
-		brain_pin_markUnused(io->directionPin1);
-		brain_pin_markUnused(io->directionPin2);
+// todo: make etb1 and etb2 an array in configuration - that would be an incompatible configuration change but would
+// remove of this nasty hack which has cost me a couple of hours troubleshooting
+		int ioOffset = (char *)getEtbIo(i PASS_CONFIG_PARAMETER_SUFFIX) - (char *)engineConfiguration;
+
+		etb_io *activeIo = (etb_io *)(((char *)&activeConfiguration) + ioOffset);
+		brain_pin_markUnused(activeIo->controlPin1);
+		brain_pin_markUnused(activeIo->directionPin1);
+		brain_pin_markUnused(activeIo->directionPin2);
 	}
 }
 #endif /* EFI_PROD_CODE */

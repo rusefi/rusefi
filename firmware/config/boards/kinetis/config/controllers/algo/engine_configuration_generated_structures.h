@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Nov 29 16:20:29 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Nov 29 21:57:01 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -381,6 +381,7 @@
 #define CMD_ENABLE "enable"
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_ETB_DUTY "set_etb_duty"
+#define CMD_PINS "pins"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
@@ -4961,4 +4962,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Nov 29 16:20:29 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Nov 29 21:57:01 EST 2019
