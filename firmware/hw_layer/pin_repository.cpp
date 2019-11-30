@@ -21,7 +21,7 @@
 	#define BOARD_EXT_PINREPOPINS 0
 #endif
 
-static int initialized = FALSE;
+static bool initialized = false;
 
 static LoggingWithStorage logger("pin repos");
 static int totalPinsUsed = 0;
