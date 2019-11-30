@@ -90,8 +90,6 @@
 #define ETB_MAX_COUNT 2
 #endif /* ETB_MAX_COUNT */
 
-static bool shouldResetPid = false;
-
 static pid_s tuneWorkingPidSettings;
 static Pid tuneWorkingPid(&tuneWorkingPidSettings);
 static PID_AutoTune autoTune;
@@ -172,13 +170,8 @@ public:
 	}
 };
 
-#define ETB_COUNT 2
-
-static EtbHardware etbHardware[ETB_COUNT];
 
 extern percent_t mockPedalPosition;
-
-Pid etbPid;
 
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
@@ -187,11 +180,10 @@ static percent_t currentEtbDuty;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(X) (maxF(minF((X * 0.01), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
 
-EtbController::EtbController(DcMotor *motor)
-: m_motor(motor)
-{
+void EtbController::init(DcMotor *motor, int ownIndex) {
+	this->m_motor = motor;
+	this->ownIndex = ownIndex;
 }
-
 
 int EtbController::getPeriodMs() {
 	return GET_PERIOD_LIMITED(&engineConfiguration->etb);
@@ -235,7 +227,7 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
-	percent_t actualThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	percent_t actualThrottlePosition = getTPSWithIndex(ownIndex PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (engine->etbAutoTune) {
 		autoTune.input = actualThrottlePosition;
@@ -337,7 +329,8 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 #endif /* EFI_TUNER_STUDIO */
 }
 
-EtbController etbController(&etbHardware[0].dcMotor);
+static EtbHardware etbHardware[ETB_COUNT];
+EtbController etbController[ETB_COUNT];
 
 /**
  * At the moment there are TWO ways to use this
@@ -395,8 +388,14 @@ static void showEthInfo(void) {
 		scheduleMsg(&logger, "%d: dir=%d DC=%f", i, etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
 	}
 
-	etbPid.showPidStatus(&logger, "ETB");
+	etbController[0].etbPid.showPidStatus(&logger, "ETB");
 #endif /* EFI_PROD_CODE */
+}
+
+static void etbPidReset() {
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etbController[i].etbPid.reset();
+	}
 }
 
 #if EFI_PROD_CODE
@@ -415,7 +414,7 @@ static void etbReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		etbHardware[i].dcMotor.set(0);
 	}
-	etbPid.reset();
+	etbPidReset();
 
 	mockPedalPosition = MOCK_UNDEFINED;
 }
@@ -427,7 +426,7 @@ static void etbReset() {
  */
 void setEtbPFactor(float value) {
 	engineConfiguration->etb.pFactor = value;
-	etbPid.reset();
+	etbPidReset();
 	showEthInfo();
 }
 
@@ -436,7 +435,7 @@ void setEtbPFactor(float value) {
  */
 void setEtbIFactor(float value) {
 	engineConfiguration->etb.iFactor = value;
-	etbPid.reset();
+	etbPidReset();
 	showEthInfo();
 }
 
@@ -445,7 +444,7 @@ void setEtbIFactor(float value) {
  */
 void setEtbDFactor(float value) {
 	engineConfiguration->etb.dFactor = value;
-	etbPid.reset();
+	etbPidReset();
 	showEthInfo();
 }
 
@@ -454,11 +453,17 @@ void setEtbDFactor(float value) {
  */
 void setEtbOffset(int value) {
 	engineConfiguration->etb.offset = value;
-	etbPid.reset();
+	etbPidReset();
 	showEthInfo();
 }
 
 #endif /* EFI_UNIT_TEST */
+
+static etb_io *getEtbIo(int index DECLARE_CONFIG_PARAMETER_SUFFIX) {
+	if (index == 0)
+		return &CONFIGB(etb1);
+	return &CONFIG(etb2);
+}
 
 void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
@@ -535,28 +540,37 @@ bool isETBRestartNeeded(void) {
 }
 
 void stopETBPins(void) {
-	brain_pin_markUnused(activeConfiguration.bc.etb1.controlPin1);
-	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin1);
-	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin2);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etb_io *io = getEtbIo(i PASS_CONFIG_PARAMETER_SUFFIX);
+		brain_pin_markUnused(io->controlPin1);
+		brain_pin_markUnused(io->directionPin1);
+		brain_pin_markUnused(io->directionPin2);
+	}
 }
 #endif /* EFI_PROD_CODE */
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !etbPid.isSame(&previousConfiguration->etb);
+	bool shouldResetPid = !etbController[0].etbPid.isSame(&previousConfiguration->etb);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etbController[i].shouldResetPid = shouldResetPid;
+	}
 }
 
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
-	// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
-	etbHardware[0].start(
-			CONFIG(etb1_use_two_wires),
-			CONFIGB(etb1.controlPin1),
-			&CONFIGB(etb1.controlPinMode),
-			CONFIGB(etb1.directionPin1),
-			CONFIGB(etb1.directionPin2),
-			&ENGINE(executor),
-			CONFIG(etbFreq)
-			);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etb_io *io = getEtbIo(i PASS_CONFIG_PARAMETER_SUFFIX);
+		// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
+		etbHardware[i].start(
+				CONFIG(etb_use_two_wires),
+				io->controlPin1,
+				&io->controlPinMode,
+				io->directionPin1,
+				io->directionPin2,
+				&ENGINE(executor),
+				CONFIG(etbFreq)
+				);
+	}
 }
 
 #if EFI_PROD_CODE && 0
@@ -624,9 +638,12 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
-	etbPid.initPidClass(&engineConfiguration->etb);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etbController[i].init(&etbHardware[i].dcMotor, i);
+		etbController[i].etbPid.initPidClass(&engineConfiguration->etb);
+		INJECT_ENGINE_REFERENCE(etbController[i]);
+	}
 
-	INJECT_ENGINE_REFERENCE(etbController);
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
@@ -695,9 +712,11 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 
-	etbPid.reset();
+	etbPidReset();
 
-	etbController.Start();
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etbController[i].Start();
+	}
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */

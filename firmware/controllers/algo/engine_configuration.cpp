@@ -308,6 +308,10 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+/* this breaks unit tests lovely TODO: fix this?
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
+*/
+	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;

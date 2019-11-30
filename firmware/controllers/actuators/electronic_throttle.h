@@ -14,17 +14,24 @@
 #include "engine.h"
 #include "periodic_task.h"
 
+#ifndef ETB_COUNT
+#define ETB_COUNT 2
+#endif /* ETB_COUNT */
+
 class DcMotor;
 
 class EtbController final : public PeriodicTimerController {
 public:
 	DECLARE_ENGINE_PTR;
-	EtbController(DcMotor *etb);
+	void init(DcMotor *motor, int ownIndex);
 
 	int getPeriodMs() override;
 	void PeriodicTask() override;
+	Pid etbPid;
+	bool shouldResetPid = false;
 
 private:
+	int ownIndex;
     DcMotor *m_motor;
 };
 

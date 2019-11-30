@@ -352,7 +352,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIGB(etb1.directionPin1) = GPIOF_15;
 	CONFIGB(etb1.directionPin2) = GPIOF_14;
 #endif /* STM32_HAS_GPIOF */
-	CONFIG(etb1_use_two_wires) = true;
+	CONFIG(etb_use_two_wires) = true;
 	boardConfiguration->isHip9011Enabled = false;
 
 	// ETB #2
@@ -365,7 +365,6 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFsio(13, GPIOE_5, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio(15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
-	CONFIG(etb2_use_two_wires) = true;
 	CONFIG(etb2.directionPin1) = GPIOE_2;
 	CONFIG(etb2.directionPin2) = GPIOE_4;
 

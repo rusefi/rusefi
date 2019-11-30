@@ -116,7 +116,7 @@ static void setupEtb() {
 	boardConfiguration->etb1.directionPin2 = GPIO_UNASSIGNED;
 
 	// we only have pwm/dir, no dira/dirb
-	engineConfiguration->etb1_use_two_wires = false;
+	engineConfiguration->etb_use_two_wires = false;
 
 	engineConfiguration->etbFreq = 800;
 }

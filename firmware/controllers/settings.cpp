@@ -818,7 +818,10 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 		scheduleMsg(&logger, "setting IAT to %s/%d", pinName, channel);
 	} else if (strEqual("tps", sensorStr)) {
 		engineConfiguration->tps1_1AdcChannel = channel;
-		scheduleMsg(&logger, "setting TPS to %s/%d", pinName, channel);
+		scheduleMsg(&logger, "setting TPS1 to %s/%d", pinName, channel);
+	} else if (strEqual("tps2", sensorStr)) {
+		engineConfiguration->tps2_1AdcChannel = channel;
+		scheduleMsg(&logger, "setting TPS2 to %s/%d", pinName, channel);
 	}
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
