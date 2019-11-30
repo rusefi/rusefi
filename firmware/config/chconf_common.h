@@ -15,7 +15,7 @@
 
 #ifndef ENABLE_PERF_TRACE
 // looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
- #define ENABLE_PERF_TRACE TRUE
+ #define ENABLE_PERF_TRACE FALSE
 #endif /* ENABLE_PERF_TRACE */
 
 #ifdef __cplusplus
