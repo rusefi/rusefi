@@ -142,8 +142,8 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPidFrequency[3] = 25;
 	CONFIG(etb_use_two_wires) = true;
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
-	CONFIGB(etb1.directionPin1) = GPIOF_15;
-	CONFIGB(etb1.directionPin2) = GPIOF_14;
+	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
+	CONFIG(etbIo[0].directionPin2) = GPIOF_14;
 #endif /* STM32_HAS_GPIOF */
 	boardConfiguration->isHip9011Enabled = false;
 
@@ -151,8 +151,8 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setFsio (13, GPIOE_5, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio (15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
-	CONFIG(etb2.directionPin1) = GPIOE_2;
-	CONFIG(etb2.directionPin2) = GPIOE_4;
+	CONFIG(etbIo[1].directionPin1) = GPIOE_2;
+	CONFIG(etbIo[1].directionPin2) = GPIOE_4;
 
 	engineConfiguration->etb.pFactor = 1.07;
 	engineConfiguration->etb.iFactor = 0.18;

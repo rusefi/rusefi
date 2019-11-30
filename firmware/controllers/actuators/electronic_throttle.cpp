@@ -381,11 +381,11 @@ static void showEthInfo(void) {
 
 
 	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
-			hwPortname(CONFIGB(etb1.controlPin1)),
+			hwPortname(CONFIG(etbIo[0].controlPin1)),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
-	scheduleMsg(&logger, "dir1=%s", hwPortname(CONFIGB(etb1.directionPin1)));
-	scheduleMsg(&logger, "dir2=%s", hwPortname(CONFIGB(etb1.directionPin2)));
+	scheduleMsg(&logger, "dir1=%s", hwPortname(CONFIG(etbIo[0].directionPin1)));
+	scheduleMsg(&logger, "dir2=%s", hwPortname(CONFIG(etbIo[0].directionPin2)));
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		EtbHardware *etb = &etbHardware[i];
@@ -464,12 +464,6 @@ void setEtbOffset(int value) {
 
 #endif /* EFI_UNIT_TEST */
 
-static etb_io *getEtbIo(int index DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	if (index == 0)
-		return &CONFIGB(etb1);
-	return &CONFIG(etb2);
-}
-
 void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
 	engineConfiguration->etbBiasBins[1] = 1;
@@ -538,19 +532,21 @@ static bool isEtbPinsChanged(etb_io *current, etb_io *active) {
 
 #if EFI_PROD_CODE
 bool isETBRestartNeeded(void) {
-	/**
-	 * We do not want any interruption in HW pin while adjusting other properties
-	 */
-	return isEtbPinsChanged(&engineConfiguration->bc.etb1, &activeConfiguration.bc.etb1);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		/**
+		 * We do not want any interruption in HW pin while adjusting other properties
+		 */
+		bool changed = isEtbPinsChanged(&engineConfiguration->etbIo[0], &activeConfiguration.etbIo[0]);
+		if (changed) {
+			return changed;
+		}
+	}
+	return false;
 }
 
 void stopETBPins(void) {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-// todo: make etb1 and etb2 an array in configuration - that would be an incompatible configuration change but would
-// remove of this nasty hack which has cost me a couple of hours troubleshooting
-		int ioOffset = (char *)getEtbIo(i PASS_CONFIG_PARAMETER_SUFFIX) - (char *)engineConfiguration;
-
-		etb_io *activeIo = (etb_io *)(((char *)&activeConfiguration) + ioOffset);
+		etb_io *activeIo = &activeConfiguration.etbIo[i];
 		brain_pin_markUnused(activeIo->controlPin1);
 		brain_pin_markUnused(activeIo->directionPin1);
 		brain_pin_markUnused(activeIo->directionPin2);
@@ -568,7 +564,7 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etb_io *io = getEtbIo(i PASS_CONFIG_PARAMETER_SUFFIX);
+		etb_io *io = &engineConfiguration->etbIo[i];
 		// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
 		etbHardware[i].start(
 				CONFIG(etb_use_two_wires),
