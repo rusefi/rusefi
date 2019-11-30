@@ -101,8 +101,8 @@ private:
 
 // For when disabled
 struct ScopePerf {
-	ScopePerf(PE event) { }
-	ScopePerf(PE event, uint8_t data) { }
+	ScopePerf(PE event) { (void)event; }
+	ScopePerf(PE event, uint8_t data) { (void)event; (void)data; }
 };
 
 #endif /* ENABLE_PERF_TRACE */
