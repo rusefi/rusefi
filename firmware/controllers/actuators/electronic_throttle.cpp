@@ -459,7 +459,7 @@ void setEtbOffset(int value) {
 
 #endif /* EFI_UNIT_TEST */
 
-static etb_io *getEtbIo(int index) {
+static etb_io *getEtbIo(int index DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	if (index == 0)
 		return &CONFIGB(etb1);
 	return &CONFIG(etb2);
@@ -541,7 +541,7 @@ bool isETBRestartNeeded(void) {
 
 void stopETBPins(void) {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etb_io *io = getEtbIo(i);
+		etb_io *io = getEtbIo(i PASS_CONFIG_PARAMETER_SUFFIX);
 		brain_pin_markUnused(io->controlPin1);
 		brain_pin_markUnused(io->directionPin1);
 		brain_pin_markUnused(io->directionPin2);
@@ -559,7 +559,7 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etb_io *io = getEtbIo(i);
+		etb_io *io = getEtbIo(i PASS_CONFIG_PARAMETER_SUFFIX);
 		// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
 		etbHardware[i].start(
 				CONFIG(etb_use_two_wires),
