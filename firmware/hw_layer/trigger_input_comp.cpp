@@ -23,25 +23,36 @@ EXTERN_ENGINE
 ;
 static Logging *logger;
 
+static int centeredDacValue = 127;
+
+static const int dacNoiseDeltaMin = 1;	// = 5V * 1/256 (8-bit DAC) = ~20mV
+static const int dacNoiseDeltaMax = 15;	// = ~300mV
+
+// todo: interpolate between min and max depending on the signal level (adaptive hysteresis)
+static const int dacNoiseDelta = dacNoiseDeltaMax;
+
 static void comp_shaft_callback(COMPDriver *comp) {
-	bool isRising = (comp_lld_get_status(comp) & COMP_IRQ_RISING) != 0;
+	uint32_t status = comp_lld_get_status(comp);
 	int isPrimary = (comp == EFI_COMP_PRIMARY_DEVICE);
 	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
 		return;
 	}
 	trigger_event_e signal;
-	if (isRising) {
+	if (status & COMP_IRQ_RISING) {
 		signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) : 
 			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
-	} else {
+		hwHandleShaftSignal(signal);
+		// shift the threshold down a little bit to avoid false-triggering (threshold hysteresis)
+		comp_lld_set_dac_value(comp, centeredDacValue - dacNoiseDelta);
+	}
+
+	if (status & COMP_IRQ_FALLING) {
 		signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) : 
 			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
+		hwHandleShaftSignal(signal);
+		// shift the threshold up a little bit to avoid false-triggering (threshold hysteresis)
+		comp_lld_set_dac_value(comp, centeredDacValue + dacNoiseDelta);
 	}
-	hwHandleShaftSignal(signal);
-
-#ifdef EFI_TRIGGER_DEBUG_BLINK
-	__blink(1);
-#endif
 }
 
 // todo: add cam support?
@@ -74,13 +85,9 @@ void turnOnTriggerInputPins(Logging *sharedLogger) {
 void startTriggerInputPins(void) {
 	//efiAssertVoid(CUSTOM_ERR_, !isCompEnabled, "isCompEnabled");
 
-	const float vRef = 5.0f;
-	const float vSensorRef = 2.5f;	// 2.5V resistor divider
-	// when VR sensor is silent, there's still some noise around vRef, so we need a small threshold to avoid false triggering
-	const float noSignalThreshold = 0.05f;	
-	
-	const int maxDacValue = 255;
-	const int vDac = (int)(int)efiRound(maxDacValue * (vSensorRef - noSignalThreshold) / vRef, 1.0f);
+	constexpr float vSensorRef = 2.5f;	// 2.5V resistor divider; todo: migrate to settings?
+	constexpr float maxDacValue = 255.0f;
+	centeredDacValue = (int)efiRound(maxDacValue / engineConfiguration->adcVcc * vSensorRef, 1.0f);
 	
 	int channel = EFI_COMP_TRIGGER_CHANNEL; // todo: use getInputCaptureChannel(hwPin);
 
@@ -89,7 +96,7 @@ void startTriggerInputPins(void) {
 	
 	// no generic hal support for extended COMP configuration, so we use hal_lld layer...
 	osalSysLock();
-	comp_lld_set_dac_value(EFI_COMP_PRIMARY_DEVICE, vDac);
+	comp_lld_set_dac_value(EFI_COMP_PRIMARY_DEVICE, centeredDacValue);
 	comp_lld_channel_enable(EFI_COMP_PRIMARY_DEVICE, channel);
     osalSysUnlock();
     

@@ -2214,7 +2214,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		commandButton = "Reinit",						cmd_tle8888_init
 
 	dialog = connection, "", 	yAxis
-		field = "STM32 vRef voltage",					adcVcc
+		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort
 		panel = canBus
 		panel = sdCard
