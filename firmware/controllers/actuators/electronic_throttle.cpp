@@ -536,7 +536,7 @@ bool isETBRestartNeeded(void) {
 		/**
 		 * We do not want any interruption in HW pin while adjusting other properties
 		 */
-		bool changed = isEtbPinsChanged(&engineConfiguration->etbIo[0], &activeConfiguration.etbIo[0]);
+		bool changed = isEtbPinsChanged(&engineConfiguration->etbIo[i], &activeConfiguration.etbIo[i]);
 		if (changed) {
 			return changed;
 		}
