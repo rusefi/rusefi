@@ -69,7 +69,7 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	boardConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
+	engineConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
 	boardConfiguration->max31855spiDevice = SPI_NONE;

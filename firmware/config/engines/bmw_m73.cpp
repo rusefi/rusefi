@@ -24,17 +24,17 @@
  * ECU pin 23: OUT BRN/BLK BLK ECU relay control, low-side
  *
  * Plug #3 52 pin
- * ECU pin 2:  OUT             injector #4
+ * ECU pin 2:  OUT         WHT injector #4
  * ECU pin 6:  GND             ECU
- * ECU pin 15: OUT             injector #2
+ * ECU pin 15: OUT         BLK injector #2
  * ECU pin 20: IN          WHT hall effect camshaft sensor signal
  * ECU pin 21: GND BRN     BLK CLT sensor
  * ECU pin 22: IN  RED/BRN GRN CLT sensor
- * ECU pin 27: OUT             injector #6
- * ECU pin 28: OUT             injector #5
+ * ECU pin 27: OUT         ORG injector #6
+ * ECU pin 28: OUT         RED injector #5
  * ECU pin 32: IN          ORG VR positive crankshaft sensor - only 2x 5k per channel, R111 not installed, W1002 not installed
- * ECU pin 40: OUT BRN/BLK     injector #3
- * ECU pin 41: OUT BRN/WHT     injector #1
+ * ECU pin 40: OUT BRN/BLK GRN injector #3
+ * ECU pin 41: OUT BRN/WHT BLU injector #1
  * ECU pin 45: GND             crankshaft shield
  * ECU pin 46: IN  BLK     BLU VR negative crankshaft sensor
  *
@@ -50,7 +50,7 @@
  * ECU pic 3:  OUT BLK         coil signal, low-side
  * ECU pic 5:  GND BRN         ground
  * ECU pic 6:  OUT BLK         coil signal, low-side
- * ECU pic 9:  OUT BLK         coil signal, low-side
+ * ECU pic 9:  OUT BLK     RED coil signal, low-side
  *
  * Frankenso
  * set engine_type 40
@@ -108,19 +108,19 @@ void setEngineBMW_M73_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[ID2INDEX(7)] = GPIOC_7; // Frankenso high side - pin 1H
 
 
-	boardConfiguration->injectionPins[0] = GPIOB_8;
-	boardConfiguration->injectionPins[1] = GPIOB_7;
-	boardConfiguration->injectionPins[2] = GPIOB_9;
-	boardConfiguration->injectionPins[3] = GPIOD_5;
-	boardConfiguration->injectionPins[4] = GPIOD_3;
-	boardConfiguration->injectionPins[5] = GPIOE_2;
+	boardConfiguration->injectionPins[0] = GPIOB_8; // BLU
+	boardConfiguration->injectionPins[1] = GPIOB_7; // BLK
+	boardConfiguration->injectionPins[2] = GPIOB_9; // GRN
+	boardConfiguration->injectionPins[3] = GPIOD_5; // WHT
+	boardConfiguration->injectionPins[4] = GPIOD_3; // RED
+	boardConfiguration->injectionPins[5] = GPIOE_2; // ORG
 
-	boardConfiguration->injectionPins[6] = GPIOE_3;
-	boardConfiguration->injectionPins[7] = GPIOE_4;
-	boardConfiguration->injectionPins[8] = GPIOE_5;
-	boardConfiguration->injectionPins[9] = GPIOE_6;
-	boardConfiguration->injectionPins[10] = GPIOC_13;
-	boardConfiguration->injectionPins[11] = GPIOD_7;
+	boardConfiguration->injectionPins[6] = GPIOE_3; // BLU
+	boardConfiguration->injectionPins[7] = GPIOE_4; // BLK
+	boardConfiguration->injectionPins[8] = GPIOE_5; // GRN
+	boardConfiguration->injectionPins[9] = GPIOE_6; // WHT
+	boardConfiguration->injectionPins[10] = GPIOC_13;//RED
+	boardConfiguration->injectionPins[11] = GPIOD_7;// ORG
 }
 
 // BMW_M73_M
@@ -174,17 +174,17 @@ GPIOA_6
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_4; // PA4
 
 	// PWM pin
-	boardConfiguration->etb1.controlPin1 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[0].controlPin1 = GPIO_UNASSIGNED;
 	// DIR pin
-	boardConfiguration->etb1.directionPin1 = GPIOC_9;
-	boardConfiguration->etb1.directionPin2 = GPIOC_8;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOC_9;
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_8;
 	CONFIG(etb_use_two_wires) = true;
 
 	// PWM pin
-	engineConfiguration->etb2.controlPin1 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[1].controlPin1 = GPIO_UNASSIGNED;
 	// DIR pin
-	engineConfiguration->etb2.directionPin1 = GPIOB_8;
-	engineConfiguration->etb2.directionPin2 = GPIOB_9;
+	engineConfiguration->etbIo[1].directionPin1 = GPIOB_8;
+	engineConfiguration->etbIo[1].directionPin2 = GPIOB_9;
 
 
 	boardConfiguration->injectionPins[0] = GPIO_UNASSIGNED;
