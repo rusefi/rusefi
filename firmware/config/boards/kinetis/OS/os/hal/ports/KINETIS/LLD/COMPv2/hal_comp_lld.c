@@ -112,8 +112,12 @@ void comp_lld_init(void) {
 static void comp_lld_irq_handler(COMPDriver *compp) {
   if (compp->config->cb != NULL)
     compp->config->cb(compp);
-  // clear flags to continue
-  ACMP_ClearStatusFlags(compp->reg, kACMP_OutputRisingEventFlag | kACMP_OutputFallingEventFlag);
+
+  /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
+     exception return operation might vector to incorrect interrupt */
+#if defined __CORTEX_M && (__CORTEX_M == 4U)
+    __DSB();
+#endif
 }
 
 /**
@@ -156,9 +160,10 @@ OSAL_IRQ_HANDLER(KINETIS_COMP2_IRQ_VECTOR) {
 void comp_lld_channel_enable(COMPDriver *compp, uint32_t channel) {
   osalDbgAssert(channel <= 7, "invalid channel number");
   memset(&compp->acmpChannelCfg, 0, sizeof(compp->acmpChannelCfg));
-  compp->acmpChannelCfg.positivePortInput = kACMP_PortInputFromDAC;
-  compp->acmpChannelCfg.negativePortInput = kACMP_PortInputFromMux;
-  compp->acmpChannelCfg.minusMuxInput = channel;
+  compp->acmpChannelCfg.positivePortInput = kACMP_PortInputFromMux;
+  compp->acmpChannelCfg.plusMuxInput = channel;
+  compp->acmpChannelCfg.negativePortInput = kACMP_PortInputFromDAC;
+  compp->acmpChannelCfg.minusMuxInput = 0U;
   ACMP_SetChannelConfig(compp->reg, &compp->acmpChannelCfg);
 }
 
@@ -183,8 +188,6 @@ void comp_lld_channel_disable(COMPDriver *compp, uint32_t channel) {
  * @notapi
  */
 void comp_lld_set_dac_value(COMPDriver *compp, uint32_t value) {
-  memset(&compp->acmpDacCfg, 0, sizeof(compp->acmpDacCfg));
-  compp->acmpDacCfg.referenceVoltageSource = kACMP_VrefSourceVin1;	// connected to VDDA on KE1xF
   compp->acmpDacCfg.DACValue = value;
   ACMP_SetDACConfig(compp->reg, &compp->acmpDacCfg);
 }
@@ -200,8 +203,23 @@ void comp_lld_start(COMPDriver *compp) {
   ACMP_GetDefaultConfig(&compp->acmpCfg);
   if (compp->config->output_mode == COMP_OUTPUT_INVERTED)
   	compp->acmpCfg.enableInvertOutput = true;
+  compp->acmpCfg.enableHighSpeed = true;
+  compp->acmpCfg.useUnfilteredOutput = true; //false;
+  compp->acmpCfg.hysteresisMode = kACMP_HysteresisLevel2;	// L1=~16mV, L2=~32mV
+
   ACMP_Init(compp->reg, &compp->acmpCfg);
   compp->irq_mask = 0;
+
+#if 0
+  acmp_filter_config_t filterCfg = { 0 };
+  filterCfg.filterCount = 2U;
+  filterCfg.filterPeriod = 2U;
+  filterCfg.enableSample = false;
+  ACMP_SetFilterConfig(compp->reg, &filterCfg);
+#endif  
+
+  memset(&compp->acmpDacCfg, 0, sizeof(compp->acmpDacCfg));
+  compp->acmpDacCfg.referenceVoltageSource = kACMP_VrefSourceVin1;	// connected to VDDA on KE1xF
 }
 
 /**
@@ -249,7 +267,10 @@ void comp_lld_disable(COMPDriver *compp) {
 }
 
 uint32_t comp_lld_get_status(COMPDriver *compp) {
-  return ACMP_GetStatusFlags(compp->reg);
+  uint32_t status = ACMP_GetStatusFlags(compp->reg);
+  // clear flags to continue
+  ACMP_ClearStatusFlags(compp->reg, status);
+  return status;
 }
 
 #endif /* HAL_USE_COMP */
