@@ -79,7 +79,7 @@ public class Entry {
 
 
                 double timestampSeconds = timestampNt / 1000000.0;
-                minValue = Math.min(minValue, timestampNt);
+                minValue = Math.min(minValue, timestampSeconds);
                 String name;
                 if (type == 1) {
                     name = "ISR: " + thread;
