@@ -18,6 +18,8 @@ RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
 
 include ../firmware/rusefi.mk
+RULESFILE = ../firmware/rusefi_rules.mk
+
 
 
 # Compiler options here.
@@ -28,13 +30,15 @@ ifeq ($(USE_OPT),)
 # this config producec a smaller binary file
 # 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
 # see https://github.com/rusefi/rusefi/issues/517
-  USE_OPT = -Wall -O2    -Wno-error=implicit-fallthrough       -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Werror=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
+  USE_OPT = -Wall -O2    -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
 
 	ifeq ($(OS),Windows_NT)
 	else
  	 USE_OPT +=  -m32
 	endif
 endif
+
+USE_OPT += $(RUSEFI_OPT)
 
 ifeq ($(CCACHE_DIR),)
  $(info No CCACHE_DIR)
