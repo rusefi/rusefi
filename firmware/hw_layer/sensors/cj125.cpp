@@ -173,6 +173,9 @@ static void cjPrintErrorCode(cj125_error_e errCode) {
 	case CJ125_ERROR_WRONG_INIT:
 		errString = "W_INIT";
 		break;
+	case CJ125_ERROR_DISABLED:
+		errString = "DISABLED";
+		break;
 	}
 	scheduleMsg(logger, "cj125 ERROR: %s.", errString);
 }
