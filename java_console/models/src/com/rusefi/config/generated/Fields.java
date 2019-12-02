@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Nov 30 17:04:45 EST 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Dec 02 16:11:57 EST 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -64,6 +64,7 @@ public class Fields {
 	public static final int autoTuneTpsRocThreshold_offset_hex = 978;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
 	public static final int AUX_PID_COUNT = 4;
+	public static final int auxFastSensor1_adcChannel_offset = 680;
 	public static final int auxPid1_dFactor_offset = 2620;
 	public static final int auxPid1_iFactor_offset = 2616;
 	public static final int auxPid1_maxValue_offset = 2630;
@@ -1243,7 +1244,7 @@ public class Fields {
 	public static final int unrealisticRpmThreashold_offset = 760;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1234234_offset = 2042;
-	public static final int unused556_offset = 680;
+	public static final int unused556_offset = 681;
 	public static final int unused_1484_bit_21_offset = 1476;
 	public static final int unused_1484_bit_22_offset = 1476;
 	public static final int unused_1484_bit_23_offset = 1476;
@@ -1540,6 +1541,7 @@ public class Fields {
 	public static final Field DIGITALPOTENTIOMETERSPIDEVICE = Field.create("DIGITALPOTENTIOMETERSPIDEVICE", 677, FieldType.INT8);
 	public static final Field MC33972_CS = Field.create("MC33972_CS", 678, FieldType.INT8, brain_pin_e);
 	public static final Field MC33972_CSPINMODE = Field.create("MC33972_CSPINMODE", 679, FieldType.INT8, pin_output_mode_e);
+	public static final Field AUXFASTSENSOR1_ADCCHANNEL = Field.create("AUXFASTSENSOR1_ADCCHANNEL", 680, FieldType.INT8, adc_channel_e);
 	public static final Field FUELLEVELEMPTYTANKVOLTAGE = Field.create("FUELLEVELEMPTYTANKVOLTAGE", 684, FieldType.FLOAT);
 	public static final Field FUELLEVELFULLTANKVOLTAGE = Field.create("FUELLEVELFULLTANKVOLTAGE", 688, FieldType.FLOAT);
 	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"};
@@ -1715,7 +1717,7 @@ public class Fields {
 	public static final Field JOYSTICKCPIN = Field.create("JOYSTICKCPIN", 941, FieldType.INT8, brain_pin_e);
 	public static final Field JOYSTICKDPIN = Field.create("JOYSTICKDPIN", 942, FieldType.INT8, brain_pin_e);
 	public static final Field CONSOLEUARTDEVICE = Field.create("CONSOLEUARTDEVICE", 943, FieldType.INT8);
-	public static final String[] sensor_chart_e = {"none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "INVALID"};
+	public static final String[] sensor_chart_e = {"none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1", "INVALID", "INVALID"};
 	public static final Field SENSORCHARTMODE = Field.create("SENSORCHARTMODE", 944, FieldType.INT, sensor_chart_e);
 	public static final String[] maf_sensor_type_e = {"v0", "v1", "v2", "v3"};
 	public static final Field MAFSENSORTYPE = Field.create("MAFSENSORTYPE", 948, FieldType.INT, maf_sensor_type_e);
@@ -2343,6 +2345,7 @@ public class Fields {
 	DIGITALPOTENTIOMETERSPIDEVICE,
 	MC33972_CS,
 	MC33972_CSPINMODE,
+	AUXFASTSENSOR1_ADCCHANNEL,
 	FUELLEVELEMPTYTANKVOLTAGE,
 	FUELLEVELFULLTANKVOLTAGE,
 	AFR_TYPE,
