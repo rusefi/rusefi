@@ -52,7 +52,7 @@ static void test100dutyCycle() {
 			&pin,
 			1000 /* frequency */,
 			1.0 /* duty cycle */,
-			&testApplyPinState);
+			(pwm_gen_callback*)&testApplyPinState);
 
 	expectedTimeOfNextEvent += 1000;
 	assertEqualsM2("1@1000/100", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
@@ -79,7 +79,7 @@ static void testSwitchToNanPeriod() {
 			&pin,
 			1000 /* frequency */,
 			0.60 /* duty cycle */,
-			&testApplyPinState);
+			(pwm_gen_callback*)&testApplyPinState);
 
 	expectedTimeOfNextEvent += 600;
 	assertEqualsM2("1@1000/70", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
@@ -118,7 +118,7 @@ TEST(misc, testPwmGenerator) {
 			&pin,
 			1000 /* frequency */,
 			0.80 /* duty cycle */,
-			&testApplyPinState);
+			(pwm_gen_callback*)&testApplyPinState);
 
 
 	expectedTimeOfNextEvent += 800;
