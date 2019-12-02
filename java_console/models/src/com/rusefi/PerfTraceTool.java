@@ -13,7 +13,7 @@ import java.util.List;
  *
  * This allows developers to only edit C/C++ header yet see proper names in chrome://tracing JSON file
  *
- * This is not used in runtime while profiling actual firmward
+ * This is not used in runtime while profiling actual firmware
  * @see JsonOutput
  * @see EnumNames
  *
