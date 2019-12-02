@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rusefi.tracing.EnumNames.TypeNames;
+
 public class Entry {
     private final String name;
     private final Phase phase;
@@ -78,7 +80,16 @@ public class Entry {
 
                 double timestampSeconds = timestampNt / 1000000.0;
                 minValue = Math.min(minValue, timestampNt);
-                Entry e = new Entry("t" + type, Phase.decode(phase), timestampSeconds);
+                String name;
+                if (type == 1) {
+                    name = "ISR: " + thread;
+                }
+                else
+                {
+                    name = TypeNames[type];
+                }
+
+                Entry e = new Entry(name, Phase.decode(phase), timestampSeconds);
                 result.add(e);
             }
 
