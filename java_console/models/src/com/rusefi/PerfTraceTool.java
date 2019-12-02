@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.tracing.Entry;
 import com.rusefi.tracing.EnumNames;
+import com.rusefi.tracing.JsonOutput;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,6 +12,10 @@ import java.util.List;
  * This tool generates C# or Java class based on enum values from C/C++ header related to rusEfi own Perf Trace
  *
  * This allows developers to only edit C/C++ header yet see proper names in chrome://tracing JSON file
+ *
+ * This is not used in runtime while profiling actual firmward
+ * @see JsonOutput
+ * @see EnumNames
  *
  * @see EnumNames
  * @see Entry

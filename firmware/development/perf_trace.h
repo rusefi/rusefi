@@ -10,7 +10,7 @@
 // Defines different events we want to trace.  These can be an interval (begin -> end), or an
 // instant.  Instants can be global, or specific to one thread.  You probably don't want to use
 // each element in PE more than once, as they should each indicate that a specific thing began,
-// ended, or occured.
+// ended, or occurred.
 enum class PE : uint8_t {
 	// The tag below is consumed by PerfTraceTool.java
 	// enum_start_tag

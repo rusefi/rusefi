@@ -1,3 +1,9 @@
+/**
+ * @file perf_trace.cpp
+ *
+ * See JsonOutput.java in rusEfi console
+ */
+
 
 #include "efifeatures.h"
 #include "perf_trace.h"
