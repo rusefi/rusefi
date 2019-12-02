@@ -164,7 +164,7 @@ static void cjPrintErrorCode(cj125_error_e errCode) {
 	case CJ125_ERROR_OVERHEAT:
 		errString = "Sensor overheating";
 		break;
-	case CJ125_ERROR_NONE:
+	case CJ125_NO_ERROR:
 		errString = "N/A";
 		break;
 	case CJ125_ERROR_WRONG_IDENT:
@@ -540,18 +540,22 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	globalInstance.spi = &spi;
 	globalInstance.logger = sharedLogger;
 
-	if (!CONFIGB(isCJ125Enabled))
+	if (!CONFIGB(isCJ125Enabled)) {
+		globalInstance.errorCode = CJ125_ERROR_DISABLED;
 		return;
+	}
 
 	if (CONFIG(cj125ur) == EFI_ADC_NONE || CONFIG(cj125ua) == EFI_ADC_NONE) {
 		scheduleMsg(logger, "cj125 init error! cj125ur and cj125ua are required.");
 		warning(CUSTOM_CJ125_0, "cj ur ua");
+		globalInstance.errorCode = CJ125_ERROR_DISABLED;
 		return;
 	}
 
 	if (CONFIGB(wboHeaterPin) == GPIO_UNASSIGNED) {
 		scheduleMsg(logger, "cj125 init error! wboHeaterPin is required.");
 		warning(CUSTOM_CJ125_1, "cj heater");
+		globalInstance.errorCode = CJ125_ERROR_DISABLED;
 		return;
 	}
 
