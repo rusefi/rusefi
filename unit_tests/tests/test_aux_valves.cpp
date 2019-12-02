@@ -20,11 +20,8 @@ TEST(misc, testAuxValves) {
 	eth.fireTriggerEvents2(2 /* count */ , 600 /* ms */);
 	ASSERT_EQ( 100,  GET_RPM()) << "spinning-RPM#1";
 
-	scheduling_s *sch;
-
-	sch = eth.assertScheduling("a0", 0, (void*)&engine->auxTurnOnEvent, &plainPinTurnOn, -600000);
-
-	sch = eth.assertScheduling("a1", 1, (void*)&engine->auxTurnOffEvent, &plainPinTurnOff, -550000);
-	sch = eth.assertScheduling("a2", 2, (void*)&engine->auxTurnOnEvent[1][0][0], &plainPinTurnOn, -300000);
+	eth.assertScheduling("a0", 0, &engine->auxTurnOnEvent[0][0][0], (void*)&plainPinTurnOn, -600000);
+	eth.assertScheduling("a1", 1, &engine->auxTurnOffEvent[0][0][0], (void*)&plainPinTurnOff, -550000);
+	eth.assertScheduling("a2", 2, &engine->auxTurnOnEvent[1][0][0], (void*)&plainPinTurnOn, -300000);
 
 }

@@ -173,7 +173,7 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 
 scheduling_s * EngineTestHelper::assertScheduling(const char *msg, int index, scheduling_s *expected, void *callback, efitime_t expectedTimestamp) {
 	scheduling_s * actual = assertEvent5(msg, index, callback, expectedTimestamp);
-
+	return actual;
 }
 
 void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, efitime_t momentX, InjectionEvent *expectedEvent) {
