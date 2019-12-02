@@ -10,6 +10,8 @@ import java.util.List;
 import static com.rusefi.tracing.EnumNames.TypeNames;
 
 public class Entry {
+    // todo: maybe convert on firmware side so that CPU MHz are not accounted for on the java side?
+    private static final double MAGIC_NT = 168.0;
     private final String name;
     private final Phase phase;
     private double timestampSeconds;
@@ -78,7 +80,7 @@ public class Entry {
                 }
 
 
-                double timestampSeconds = timestampNt / 1000000.0;
+                double timestampSeconds = timestampNt / MAGIC_NT;
                 minValue = Math.min(minValue, timestampSeconds);
                 String name;
                 if (type == 1) {
