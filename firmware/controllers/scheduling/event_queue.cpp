@@ -216,7 +216,8 @@ scheduling_s * EventQueue::getHead() {
 	return head;
 }
 
-scheduling_s *EventQueue::getForUnitText(int index) {
+// todo: reduce code duplication with another 'getElementAtIndexForUnitText'
+scheduling_s *EventQueue::getElementAtIndexForUnitText(int index) {
 	scheduling_s * current;
 
 	LL_FOREACH2(head, current, nextScheduling_s)
