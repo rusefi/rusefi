@@ -578,7 +578,7 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
-	INJECT_ENGINE_REFERENCE(idleControllerInstance);
+	INJECT_ENGINE_REFERENCE(&idleControllerInstance);
 
 	idlePid.initPidClass(&engineConfiguration->idleRpmPid);
 
