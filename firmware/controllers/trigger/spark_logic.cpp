@@ -260,13 +260,13 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
 		 */
-		bool isPending = assertNotInIgnitionList(ENGINE(ignitionEventsHead), event);
+		bool isPending = assertNotInIgnitionList(ENGINE(angleBasedEventsHead), event);
 		if (isPending) {
 #if SPARK_EXTREME_LOGGING
 			scheduleMsg(logger, "isPending thus not adding to queue index=%d rev=%d now=%d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 		} else {
-			LL_APPEND2(ENGINE(ignitionEventsHead), event, nextToothEvent);
+			LL_APPEND2(ENGINE(angleBasedEventsHead), event, nextToothEvent);
 		}
 		return false;
 	}
@@ -411,11 +411,11 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	AngleBasedEvent *current, *tmp;
 
-	LL_FOREACH_SAFE2(ENGINE(ignitionEventsHead), current, tmp, nextToothEvent)
+	LL_FOREACH_SAFE2(ENGINE(angleBasedEventsHead), current, tmp, nextToothEvent)
 	{
 		if (current->position.triggerEventIndex == trgEventIndex) {
 			// time to fire a spark which was scheduled previously
-			LL_DELETE2(ENGINE(ignitionEventsHead), current, nextToothEvent);
+			LL_DELETE2(ENGINE(angleBasedEventsHead), current, nextToothEvent);
 
 			scheduling_s * sDown = &current->scheduling;
 
