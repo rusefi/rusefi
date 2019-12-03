@@ -187,6 +187,8 @@ typedef enum {
 
 	MICRO_RUS_EFI = 60,
 
+	PROTEUS = 61,
+
 	/**
 	 * this configuration has as few pins configured as possible
 	 */
