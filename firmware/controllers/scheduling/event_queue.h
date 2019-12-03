@@ -58,7 +58,7 @@ public:
 	efitime_t getNextEventTime(efitime_t nowUs) const;
 	void clear(void);
 	int size(void) const;
-	scheduling_s *getForUnitText(int index);
+	scheduling_s *getElementAtIndexForUnitText(int index);
 	void setLateDelay(int value);
 	scheduling_s * getHead();
 	void assertListIsSorted() const;

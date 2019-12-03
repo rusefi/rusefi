@@ -30,7 +30,7 @@ int TestExecutor::size() {
 }
 
 scheduling_s* TestExecutor::getForUnitTest(int index) {
-	return schedulingQueue.getForUnitText(index);
+	return schedulingQueue.getElementAtIndexForUnitText(index);
 }
 
 void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
