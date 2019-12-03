@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "global.h"
+#include "spark_logic.h"
 #include "os_access.h"
 #include "engine_math.h"
 
@@ -224,7 +224,11 @@ static bool assertNotInIgnitionList(AngleBasedEvent *head, AngleBasedEvent *elem
  * @return true if event corresponds to current tooth and was time-based scheduler
  *         false if event was put into queue for scheduling at a later tooth
  */
-static bool scheduleOrQueue(AngleBasedEvent *event, uint32_t trgEventIndex, angle_t angle, schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool scheduleOrQueue(AngleBasedEvent *event,
+		uint32_t trgEventIndex,
+		angle_t angle,
+		schfunc_t callback,
+		void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	event->position.setAngle(angle PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
@@ -240,7 +244,7 @@ static bool scheduleOrQueue(AngleBasedEvent *event, uint32_t trgEventIndex, angl
 	 * time-based schedule. This case we would be firing events with best possible angle precision.
 	 *
 	 */
-	if (event->position.triggerEventIndex == trgEventIndex) {
+	if (trgEventIndex != TRIGGER_EVENT_UNDEFINED && event->position.triggerEventIndex == trgEventIndex) {
 		/**
 		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
 		 */

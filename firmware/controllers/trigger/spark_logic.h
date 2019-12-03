@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef CONTROLLERS_TRIGGER_SPARK_LOGIC_H_
-#define CONTROLLERS_TRIGGER_SPARK_LOGIC_H_
+#pragma once
 
 #include "engine.h"
 
@@ -19,4 +18,9 @@ int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
 percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-#endif /* CONTROLLERS_TRIGGER_SPARK_LOGIC_H_ */
+#define TRIGGER_EVENT_UNDEFINED -1
+bool scheduleOrQueue(AngleBasedEvent *event,
+		uint32_t trgEventIndex,
+		angle_t angle,
+		schfunc_t callback,
+		void *param DECLARE_ENGINE_PARAMETER_SUFFIX);
