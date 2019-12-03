@@ -775,6 +775,8 @@ case SACHS:
   return "SACHS";
 case MRE_MIATA_NA6:
   return "MRE_MIATA_NA6";
+case PROTEUS:
+  return "PROTEUS";
 case SUBARUEJ20G_DEFAULTS:
   return "SUBARUEJ20G_DEFAULTS";
 case SUBARU_2003_WRX:

@@ -12,7 +12,7 @@ jobs:
       matrix:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
-        build-target: [frankenso, mre-f4, mre-f7, prometheus-405, prometheus-469]
+        build-target: [frankenso, mre-f4, mre-f7, prometheus-405, prometheus-469, proteus]
         build-type: [debug, release]
         
         include:
@@ -36,6 +36,10 @@ jobs:
           - build-target: prometheus-469
             efi-cpu: ARCH_STM32F4
             efi-board: prometheus/f469
+
+          - build-target: proteus
+            efi-cpu: ARCH_STM32F7
+            efi-board: proteus
 
           # Debug vs. release configuration
           - build-type: debug
