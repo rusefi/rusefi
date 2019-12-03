@@ -491,6 +491,11 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 	if (setting == EFI_ADC_NONE) {
 		return;
 	}
+	if (/*type-limited (int)setting < 0 || */(int)setting>=HW_MAX_ADC_INDEX) {
+		firmwareError(CUSTOM_INVALID_ADC, "Invalid ADC setting %s", name);
+		return;
+	}
+
 	if (adcHwChannelEnabled[setting] != ADC_OFF) {
 		getPinNameByAdcChannel(name, setting, errorMsgBuff);
 		firmwareError(CUSTOM_ERR_ADC_USED, "ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
