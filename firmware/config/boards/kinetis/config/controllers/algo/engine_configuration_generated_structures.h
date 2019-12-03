@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 25 01:00:42 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Dec 02 17:48:25 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -99,6 +99,8 @@
 #define autoTuneTpsRocThreshold_offset_hex 978
 #define AUX_DIGITAL_VALVE_COUNT 2
 #define AUX_PID_COUNT 4
+#define auxFastSensor1_adcChannel_offset 680
+#define auxFastSensor1_adcChannel_offset_hex 2a8
 #define auxPid1_dFactor_offset 2620
 #define auxPid1_dFactor_offset_hex a3c
 #define auxPid1_iFactor_offset 2616
@@ -364,14 +366,10 @@
 #define cltTimingExtra_offset_hex 950
 #define clutchDownPin_offset 664
 #define clutchDownPin_offset_hex 298
-#define clutchDownPinInverted_offset 976
-#define clutchDownPinInverted_offset_hex 3d0
 #define clutchDownPinMode_offset 667
 #define clutchDownPinMode_offset_hex 29b
 #define clutchUpPin_offset 969
 #define clutchUpPin_offset_hex 3c9
-#define clutchUpPinInverted_offset 976
-#define clutchUpPinInverted_offset_hex 3d0
 #define clutchUpPinMode_offset 971
 #define clutchUpPinMode_offset_hex 3cb
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
@@ -381,6 +379,7 @@
 #define CMD_ENABLE "enable"
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_ETB_DUTY "set_etb_duty"
+#define CMD_PINS "pins"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
@@ -513,31 +512,8 @@
 #define engineSnifferRpmThreshold_offset_hex 4
 #define engineType_offset 0
 #define engineType_offset_hex 0
-#define etb1_controlPin1_offset 682
-#define etb1_controlPin1_offset_hex 2aa
-#define etb1_controlPinMode_offset 683
-#define etb1_controlPinMode_offset_hex 2ab
-#define etb1_directionPin1_offset 680
-#define etb1_directionPin1_offset_hex 2a8
-#define etb1_directionPin2_offset 681
-#define etb1_directionPin2_offset_hex 2a9
-#define etb1_offset 680
-#define etb1_offset_hex 2a8
-#define etb1_use_two_wires_offset 76
-#define etb1_use_two_wires_offset_hex 4c
-#define etb2_controlPin1_offset 3966
-#define etb2_controlPin1_offset_hex f7e
-#define etb2_controlPinMode_offset 3967
-#define etb2_controlPinMode_offset_hex f7f
-#define etb2_directionPin1_offset 3964
-#define etb2_directionPin1_offset_hex f7c
-#define etb2_directionPin2_offset 3965
-#define etb2_directionPin2_offset_hex f7d
-#define etb2_offset 3964
-#define etb2_offset_hex f7c
-#define etb2_use_two_wires_offset 76
-#define etb2_use_two_wires_offset_hex 4c
 #define ETB_BIAS_CURVE_LENGTH 8
+#define ETB_COUNT 2
 #define etb_dFactor_offset 1744
 #define etb_dFactor_offset_hex 6d0
 #define etb_iFactor_offset 1740
@@ -558,6 +534,8 @@
 #define etb_periodMs_offset_hex 6d6
 #define etb_pFactor_offset 1736
 #define etb_pFactor_offset_hex 6c8
+#define etb_use_two_wires_offset 76
+#define etb_use_two_wires_offset_hex 4c
 #define etbBiasBins_offset 3888
 #define etbBiasBins_offset_hex f30
 #define etbBiasValues_offset 3920
@@ -568,10 +546,28 @@
 #define etbDeadband_offset_hex f78
 #define etbFreq_offset 2514
 #define etbFreq_offset_hex 9d2
-#define etbIdleRange_offset 972
-#define etbIdleRange_offset_hex 3cc
 #define etbIdleThrottleRange_offset 4012
 #define etbIdleThrottleRange_offset_hex fac
+#define etbIo1_controlPin1_offset 982
+#define etbIo1_controlPin1_offset_hex 3d6
+#define etbIo1_controlPinMode_offset 983
+#define etbIo1_controlPinMode_offset_hex 3d7
+#define etbIo1_directionPin1_offset 980
+#define etbIo1_directionPin1_offset_hex 3d4
+#define etbIo1_directionPin2_offset 981
+#define etbIo1_directionPin2_offset_hex 3d5
+#define etbIo1_offset 980
+#define etbIo1_offset_hex 3d4
+#define etbIo2_controlPin1_offset 986
+#define etbIo2_controlPin1_offset_hex 3da
+#define etbIo2_controlPinMode_offset 987
+#define etbIo2_controlPinMode_offset_hex 3db
+#define etbIo2_directionPin1_offset 984
+#define etbIo2_directionPin1_offset_hex 3d8
+#define etbIo2_directionPin2_offset 985
+#define etbIo2_directionPin2_offset_hex 3d9
+#define etbIo2_offset 984
+#define etbIo2_offset_hex 3d8
 #define etbNeutralPosition_offset 1471
 #define etbNeutralPosition_offset_hex 5bf
 #define externalKnockSenseAdc_offset 3103
@@ -1614,7 +1610,7 @@
 #define sdCardSpiDevice_offset_hex a20
 #define secondTriggerChannelEnabled_offset 1476
 #define secondTriggerChannelEnabled_offset_hex 5c4
-#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "INVALID"
+#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1", "INVALID", "INVALID"
 #define sensorChartFrequency_offset 520
 #define sensorChartFrequency_offset_hex 208
 #define sensorChartMode_offset 944
@@ -1804,6 +1800,10 @@
 #define tle8888_csPinMode_offset_hex c22
 #define tle8888spiDevice_offset 4000
 #define tle8888spiDevice_offset_hex fa0
+#define todoClutchDownPinInverted_offset 976
+#define todoClutchDownPinInverted_offset_hex 3d0
+#define todoClutchUpPinInverted_offset 976
+#define todoClutchUpPinInverted_offset_hex 3d0
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TOTAL_CONFIG_SIZE 20000
 #define TOTAL_CONFIG_SIZE_hex 4e20
@@ -1901,8 +1901,12 @@
 #define uartConsoleSerialSpeed_offset_hex 81c
 #define unrealisticRpmThreashold_offset 760
 #define unrealisticRpmThreashold_offset_hex 2f8
+#define unused1059_offset 3964
+#define unused1059_offset_hex f7c
 #define unused1234234_offset 2042
 #define unused1234234_offset_hex 7fa
+#define unused556_offset 681
+#define unused556_offset_hex 2a9
 #define unused_1484_bit_21_offset 1476
 #define unused_1484_bit_21_offset_hex 5c4
 #define unused_1484_bit_22_offset 1476
@@ -1929,16 +1933,20 @@
 #define unused_board_984_31_offset_hex 2e8
 #define unused_former_warmup_target_afr_offset 2096
 #define unused_former_warmup_target_afr_offset_hex 830
+#define unused_offset 972
+#define unused_offset_hex 3cc
 #define unusedAnotherOne_offset 744
 #define unusedAnotherOne_offset_hex 2e8
-#define unusedAtBoardConfigurationEnd_offset 980
-#define unusedAtBoardConfigurationEnd_offset_hex 3d4
+#define unusedAtOldBoardConfigurationEnd_offset 988
+#define unusedAtOldBoardConfigurationEnd_offset_hex 3dc
 #define unusedErrorPin_offset 2040
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1768
 #define unusedFormerWarmupAfrPid_offset_hex 6e8
+#define unusedHereo_wires_offset 76
+#define unusedHereo_wires_offset_hex 4c
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
 #define unusedSpiPadding3_offset 4036
@@ -2656,9 +2664,14 @@ struct board_configuration_s {
 	 */
 	pin_output_mode_e mc33972_csPinMode;
 	/**
+	 * Useful in Research&Development phase
 	 * offset 80
 	 */
-	etb_io etb1;
+	adc_channel_e auxFastSensor1_adcChannel;
+	/**
+	 * offset 81
+	 */
+	uint8_t unused556[3];
 	/**
 	 * offset 84
 	 */
@@ -3050,48 +3063,7 @@ struct board_configuration_s {
 	 * offset 344
 	 */
 	sensor_chart_e sensorChartMode;
-	/**
-	 * offset 348
-	 */
-	maf_sensor_type_e mafSensorType;
-	/**
-	 * todo:not finished
-	 * These input pins allow us to pull toggle buttons state
-	 * offset 352
-	 */
-	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
-	/**
-	 * offset 368
-	 */
-	brain_input_pin_e vehicleSpeedSensorInputPin;
-	/**
-	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
-	 * offset 369
-	 */
-	switch_input_pin_e clutchUpPin;
-	/**
-	 * offset 370
-	 */
-	brain_input_pin_e frequencyReportingMapInputPin;
-	/**
-	 * offset 371
-	 */
-	pin_input_mode_e clutchUpPinMode;
-	/**
-	 * offset 372
-	 */
-	float etbIdleRange = (float)0;
-	/**
-	offset 376 bit 0 */
-	bool clutchUpPinInverted : 1;
-	/**
-	offset 376 bit 1 */
-	bool clutchDownPinInverted : 1;
-	/**
-	 * offset 380
-	 */
-	int unusedAtBoardConfigurationEnd[121];
-	/** total size 864*/
+	/** total size 348*/
 };
 
 typedef struct board_configuration_s board_configuration_s;
@@ -3155,10 +3127,10 @@ struct engine_configuration_s {
 	bool cj125isLsu49 : 1;
 	/**
 	offset 76 bit 12 */
-	bool etb1_use_two_wires : 1;
+	bool etb_use_two_wires : 1;
 	/**
 	offset 76 bit 13 */
-	bool etb2_use_two_wires : 1;
+	bool unusedHereo_wires : 1;
 	/**
 	offset 76 bit 14 */
 	bool showSdCardWarning : 1;
@@ -3548,6 +3520,51 @@ struct engine_configuration_s {
 	 * offset 600
 	 */
 	board_configuration_s bc;
+	/**
+	 * offset 948
+	 */
+	maf_sensor_type_e mafSensorType;
+	/**
+	 * todo:not finished
+	 * These input pins allow us to pull toggle buttons state
+	 * offset 952
+	 */
+	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 968
+	 */
+	brain_input_pin_e vehicleSpeedSensorInputPin;
+	/**
+	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
+	 * offset 969
+	 */
+	switch_input_pin_e clutchUpPin;
+	/**
+	 * offset 970
+	 */
+	brain_input_pin_e frequencyReportingMapInputPin;
+	/**
+	 * offset 971
+	 */
+	pin_input_mode_e clutchUpPinMode;
+	/**
+	 * offset 972
+	 */
+	float unused = (float)0;
+	/**
+	offset 976 bit 0 */
+	bool todoClutchUpPinInverted : 1;
+	/**
+	offset 976 bit 1 */
+	bool todoClutchDownPinInverted : 1;
+	/**
+	 * offset 980
+	 */
+	etb_io etbIo[ETB_COUNT];
+	/**
+	 * offset 988
+	 */
+	int unusedAtOldBoardConfigurationEnd[119];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -4593,7 +4610,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3964
 	 */
-	etb_io etb2;
+	uint8_t unused1059[4];
 	/**
 	 * See useIdleTimingPidControl
 	 * offset 3968
@@ -4961,4 +4978,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Nov 25 01:00:42 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Dec 02 17:48:25 EST 2019

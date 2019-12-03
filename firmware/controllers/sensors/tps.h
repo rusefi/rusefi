@@ -24,10 +24,11 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE);
  * @return Current TPS position, percent of WOT. 0 means idle and 100 means Wide Open Throttle
  */
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+percent_t getTPSWithIndex(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int convertVoltageTo10bitADC(float voltage);
-int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-#define getTPS10bitAdc() (getTPS12bitAdc() / TPS_TS_CONVERSION)
+int getTPS12bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
+#define getTPS10bitAdc() (getTPS12bitAdc(0 PASS_ENGINE_PARAMETER_SUFFIX) / TPS_TS_CONVERSION)
 float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setBosch0280750009(DECLARE_ENGINE_PARAMETER_SIGNATURE);

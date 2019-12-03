@@ -10,7 +10,7 @@
 // Defines different events we want to trace.  These can be an interval (begin -> end), or an
 // instant.  Instants can be global, or specific to one thread.  You probably don't want to use
 // each element in PE more than once, as they should each indicate that a specific thing began,
-// ended, or occured.
+// ended, or occurred.
 enum class PE : uint8_t {
 	// The tag below is consumed by PerfTraceTool.java
 	// enum_start_tag
@@ -58,21 +58,9 @@ enum class PE : uint8_t {
 	// please note that the tool requires a comma at the end of last value
 };
 
-void perfEventBegin(PE event, uint8_t data);
-void perfEventEnd(PE event, uint8_t data);
-void perfEventInstantGlobal(PE event, uint8_t data);
-
-inline void perfEventBegin(PE event) {
-	perfEventBegin(event, 0);
-}
-
-inline void perfEventEnd(PE event) {
-	perfEventEnd(event, 0);
-}
-
-inline void perfEventInstantGlobal(PE event) {
-	perfEventInstantGlobal(event, 0);
-}
+void perfEventBegin(PE event, uint8_t data = 0);
+void perfEventEnd(PE event, uint8_t data = 0);
+void perfEventInstantGlobal(PE event, uint8_t data = 0);
 
 // Enable one buffer's worth of perf tracing, and retrieve the buffer size in bytes
 void perfTraceEnable();
@@ -86,6 +74,7 @@ struct TraceBufferResult
 // Retrieve the trace buffer
 const TraceBufferResult perfTraceGetBuffer();
 
+#if ENABLE_PERF_TRACE
 class ScopePerf
 {
 public:
@@ -93,19 +82,24 @@ public:
 
 	ScopePerf(PE event, uint8_t data) : m_event(event), m_data(data)
 	{
-#if ENABLE_PERF_TRACE
 		perfEventBegin(event, data);
-#endif /* ENABLE_PERF_TRACE */
 	}
 
 	~ScopePerf()
 	{
-#if ENABLE_PERF_TRACE
 		perfEventEnd(m_event, m_data);
-#endif /* ENABLE_PERF_TRACE */
 	}
 
 private:
 	const PE m_event;
 	const uint8_t m_data;
 };
+
+#else /* if ENABLE_PERF_TRACE */
+
+struct ScopePerf {
+	ScopePerf(PE event) { (void)event; }
+	ScopePerf(PE event, uint8_t data) { (void)event; (void)data; }
+};
+
+#endif /* ENABLE_PERF_TRACE */

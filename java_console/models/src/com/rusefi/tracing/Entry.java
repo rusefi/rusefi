@@ -7,7 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rusefi.tracing.EnumNames.TypeNames;
+
 public class Entry {
+    // todo: maybe convert on firmware side so that CPU MHz are not accounted for on the java side?
+    private static final double MAGIC_NT = 168.0;
     private final String name;
     private final Phase phase;
     private double timestampSeconds;
@@ -76,9 +80,18 @@ public class Entry {
                 }
 
 
-                double timestampSeconds = timestampNt / 1000000.0;
-                minValue = Math.min(minValue, timestampNt);
-                Entry e = new Entry("t" + type, Phase.decode(phase), timestampSeconds);
+                double timestampSeconds = timestampNt / MAGIC_NT;
+                minValue = Math.min(minValue, timestampSeconds);
+                String name;
+                if (type == 1) {
+                    name = "ISR: " + thread;
+                }
+                else
+                {
+                    name = TypeNames[type];
+                }
+
+                Entry e = new Entry(name, Phase.decode(phase), timestampSeconds);
                 result.add(e);
             }
 

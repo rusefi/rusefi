@@ -180,10 +180,10 @@ static percent_t currentEtbDuty;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(X) (maxF(minF((X * 0.01), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
 
-void EtbController::init(DcMotor *motor) {
+void EtbController::init(DcMotor *motor, int ownIndex) {
 	this->m_motor = motor;
+	this->ownIndex = ownIndex;
 }
-
 
 int EtbController::getPeriodMs() {
 	return GET_PERIOD_LIMITED(&engineConfiguration->etb);
@@ -227,7 +227,7 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
-	percent_t actualThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	percent_t actualThrottlePosition = getTPSWithIndex(ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engine->etbAutoTune) {
 		autoTune.input = actualThrottlePosition;
@@ -264,6 +264,11 @@ void EtbController::PeriodicTask() {
 #endif /* EFI_TUNER_STUDIO */
 	}
 
+	if (cisnan(targetPosition)) {
+		// this could happen while changing settings
+		warning(CUSTOM_ERR_ETB_TARGET, "target");
+		return;
+	}
 	engine->engineState.etbFeedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
 
 	etbPid.iTermMin = engineConfiguration->etb_iTermMin;
@@ -376,11 +381,11 @@ static void showEthInfo(void) {
 
 
 	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
-			hwPortname(CONFIGB(etb1.controlPin1)),
+			hwPortname(CONFIG(etbIo[0].controlPin1)),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
-	scheduleMsg(&logger, "dir1=%s", hwPortname(CONFIGB(etb1.directionPin1)));
-	scheduleMsg(&logger, "dir2=%s", hwPortname(CONFIGB(etb1.directionPin2)));
+	scheduleMsg(&logger, "dir1=%s", hwPortname(CONFIG(etbIo[0].directionPin1)));
+	scheduleMsg(&logger, "dir2=%s", hwPortname(CONFIG(etbIo[0].directionPin2)));
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		EtbHardware *etb = &etbHardware[i];
@@ -527,16 +532,25 @@ static bool isEtbPinsChanged(etb_io *current, etb_io *active) {
 
 #if EFI_PROD_CODE
 bool isETBRestartNeeded(void) {
-	/**
-	 * We do not want any interruption in HW pin while adjusting other properties
-	 */
-	return isEtbPinsChanged(&engineConfiguration->bc.etb1, &activeConfiguration.bc.etb1);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		/**
+		 * We do not want any interruption in HW pin while adjusting other properties
+		 */
+		bool changed = isEtbPinsChanged(&engineConfiguration->etbIo[i], &activeConfiguration.etbIo[i]);
+		if (changed) {
+			return changed;
+		}
+	}
+	return false;
 }
 
 void stopETBPins(void) {
-	brain_pin_markUnused(activeConfiguration.bc.etb1.controlPin1);
-	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin1);
-	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin2);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etb_io *activeIo = &activeConfiguration.etbIo[i];
+		brain_pin_markUnused(activeIo->controlPin1);
+		brain_pin_markUnused(activeIo->directionPin1);
+		brain_pin_markUnused(activeIo->directionPin2);
+	}
 }
 #endif /* EFI_PROD_CODE */
 
@@ -549,16 +563,19 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
-	// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
-	etbHardware[0].start(
-			CONFIG(etb1_use_two_wires),
-			CONFIGB(etb1.controlPin1),
-			&CONFIGB(etb1.controlPinMode),
-			CONFIGB(etb1.directionPin1),
-			CONFIGB(etb1.directionPin2),
-			&ENGINE(executor),
-			CONFIG(etbFreq)
-			);
+	for (int i = 0 ; i < ETB_COUNT; i++) {
+		etb_io *io = &engineConfiguration->etbIo[i];
+		// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
+		etbHardware[i].start(
+				CONFIG(etb_use_two_wires),
+				io->controlPin1,
+				&io->controlPinMode,
+				io->directionPin1,
+				io->directionPin2,
+				&ENGINE(executor),
+				CONFIG(etbFreq)
+				);
+	}
 }
 
 #if EFI_PROD_CODE && 0
@@ -627,7 +644,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbController[i].init(&etbHardware[i].dcMotor);
+		etbController[i].init(&etbHardware[i].dcMotor, i);
 		etbController[i].etbPid.initPidClass(&engineConfiguration->etb);
 		INJECT_ENGINE_REFERENCE(etbController[i]);
 	}

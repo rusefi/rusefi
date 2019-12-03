@@ -1723,6 +1723,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Debug Trigger Sync", 					debugTriggerSync
 		field = "Debug Timer Callback", 				debugTimerCallback
 		field = "Debug Set Timer", 						debugSetTimer
+		field = "Aux Fast Analog",						auxFastSensor1_adcChannel
 
 	dialog = allPins1_3
 		field = "FSIO ADC #1",							fsioAdc1
@@ -2214,7 +2215,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		commandButton = "Reinit",						cmd_tle8888_init
 
 	dialog = connection, "", 	yAxis
-		field = "STM32 vRef voltage",					adcVcc
+		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort
 		panel = canBus
 		panel = sdCard
@@ -2475,16 +2476,15 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Pause ETB control",					pauseEtbControl
 		field = "Throttle Pedal Up",					throttlePedalUpVoltage
 		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
+		field = "Two-wire mode",						etb_use_two_wires, {throttlePedalPositionAdcChannel != 16}
 		field = "PWM Frequency",						etbFreq, {throttlePedalPositionAdcChannel != 16}
 		field = etbCalibrationOnStart,					etbCalibrationOnStart
 		field = "No1 Direction #1",						etb1_directionPin1, {throttlePedalPositionAdcChannel != 16}
 		field = "No1 Direction #2",						etb1_directionPin2, {throttlePedalPositionAdcChannel != 16}
-		field = "Two-wire mode",						etb1_use_two_wires, {throttlePedalPositionAdcChannel != 16}
-		field = "No1 Control #1",						etb1_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb1_use_two_wires == 0}
+		field = "No1 Control #1",						etb1_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb_use_two_wires == 0}
 		field = "No2 Direction #1",						etb2_directionPin1, {throttlePedalPositionAdcChannel != 16}
 		field = "No2 Direction #2",						etb2_directionPin2, {throttlePedalPositionAdcChannel != 16}
-		field = "Two-wire mode",						etb2_use_two_wires, {throttlePedalPositionAdcChannel != 16}
-		field = "No2 Control #1",						etb2_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb2_use_two_wires == 0}
+		field = "No2 Control #1",						etb2_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb_use_two_wires == 0}
 		panel = etbPidDialog
 
 	dialog = etbDialogRight

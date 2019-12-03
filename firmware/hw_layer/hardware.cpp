@@ -93,7 +93,7 @@ bool rtcWorks = true;
  */
 void lockSpi(spi_device_e device) {
 	UNUSED(device);
-	efiAssertVoid(CUSTOM_ERR_6674, getCurrentRemainingStack() > 128, "lockSpi");
+	efiAssertVoid(CUSTOM_STACK_SPI, getCurrentRemainingStack() > 128, "lockSpi");
 	// todo: different locks for different SPI devices!
 	chMtxLock(&spiMtx);
 }
@@ -333,8 +333,8 @@ void applyNewHardwareSettings(void) {
 	stopHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-	if (isPinOrModeChanged(bc.clutchUpPin, bc.clutchUpPinMode))
-		brain_pin_markUnused(activeConfiguration.bc.clutchUpPin);
+	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode))
+		brain_pin_markUnused(activeConfiguration.clutchUpPin);
 
 	enginePins.unregisterPins();
 

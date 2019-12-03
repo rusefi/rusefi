@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Nov 25 01:00:31 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Dec 02 17:48:14 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -595,9 +595,14 @@ struct board_configuration_s {
 	 */
 	pin_output_mode_e mc33972_csPinMode;
 	/**
+	 * Useful in Research&Development phase
 	 * offset 80
 	 */
-	etb_io etb1;
+	adc_channel_e auxFastSensor1_adcChannel;
+	/**
+	 * offset 81
+	 */
+	uint8_t unused556[3];
 	/**
 	 * offset 84
 	 */
@@ -989,48 +994,7 @@ struct board_configuration_s {
 	 * offset 344
 	 */
 	sensor_chart_e sensorChartMode;
-	/**
-	 * offset 348
-	 */
-	maf_sensor_type_e mafSensorType;
-	/**
-	 * todo:not finished
-	 * These input pins allow us to pull toggle buttons state
-	 * offset 352
-	 */
-	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
-	/**
-	 * offset 368
-	 */
-	brain_input_pin_e vehicleSpeedSensorInputPin;
-	/**
-	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
-	 * offset 369
-	 */
-	switch_input_pin_e clutchUpPin;
-	/**
-	 * offset 370
-	 */
-	brain_input_pin_e frequencyReportingMapInputPin;
-	/**
-	 * offset 371
-	 */
-	pin_input_mode_e clutchUpPinMode;
-	/**
-	 * offset 372
-	 */
-	float etbIdleRange;
-	/**
-	offset 376 bit 0 */
-	bool clutchUpPinInverted : 1;
-	/**
-	offset 376 bit 1 */
-	bool clutchDownPinInverted : 1;
-	/**
-	 * offset 380
-	 */
-	int unusedAtBoardConfigurationEnd[121];
-	/** total size 864*/
+	/** total size 348*/
 };
 
 typedef struct board_configuration_s board_configuration_s;
@@ -1094,10 +1058,10 @@ struct engine_configuration_s {
 	bool cj125isLsu49 : 1;
 	/**
 	offset 76 bit 12 */
-	bool etb1_use_two_wires : 1;
+	bool etb_use_two_wires : 1;
 	/**
 	offset 76 bit 13 */
-	bool etb2_use_two_wires : 1;
+	bool unusedHereo_wires : 1;
 	/**
 	offset 76 bit 14 */
 	bool showSdCardWarning : 1;
@@ -1487,6 +1451,51 @@ struct engine_configuration_s {
 	 * offset 600
 	 */
 	board_configuration_s bc;
+	/**
+	 * offset 948
+	 */
+	maf_sensor_type_e mafSensorType;
+	/**
+	 * todo:not finished
+	 * These input pins allow us to pull toggle buttons state
+	 * offset 952
+	 */
+	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 968
+	 */
+	brain_input_pin_e vehicleSpeedSensorInputPin;
+	/**
+	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
+	 * offset 969
+	 */
+	switch_input_pin_e clutchUpPin;
+	/**
+	 * offset 970
+	 */
+	brain_input_pin_e frequencyReportingMapInputPin;
+	/**
+	 * offset 971
+	 */
+	pin_input_mode_e clutchUpPinMode;
+	/**
+	 * offset 972
+	 */
+	float unused;
+	/**
+	offset 976 bit 0 */
+	bool todoClutchUpPinInverted : 1;
+	/**
+	offset 976 bit 1 */
+	bool todoClutchDownPinInverted : 1;
+	/**
+	 * offset 980
+	 */
+	etb_io etbIo[ETB_COUNT];
+	/**
+	 * offset 988
+	 */
+	int unusedAtOldBoardConfigurationEnd[119];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -2532,7 +2541,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3964
 	 */
-	etb_io etb2;
+	uint8_t unused1059[4];
 	/**
 	 * See useIdleTimingPidControl
 	 * offset 3968
@@ -2900,4 +2909,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Nov 25 01:00:31 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Dec 02 17:48:14 EST 2019

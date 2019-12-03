@@ -87,6 +87,8 @@ struct_no_prefix engine_configuration_s
 #define CLT_TIMING_CURVE_SIZE 8
 #define IDLE_VE_CURVE_SIZE 8
 
+#define ETB_COUNT 2
+
 #define AUX_DIGITAL_VALVE_COUNT 2
 
 #define IAT_CURVE_SIZE 16
@@ -297,8 +299,8 @@ bit isVerboseAuxPid4;
 bit useBiQuadAnalogFiltering;
 bit cj125isUaDivided;
 bit cj125isLsu49;
-bit etb1_use_two_wires;
-bit etb2_use_two_wires;
+bit etb_use_two_wires;
+bit unusedHereo_wires;
 bit showSdCardWarning;
 bit cj125isUrDivided;looks like 3v range should be enough, divider not needed
 bit useTLE8888_hall_mode;
@@ -458,7 +460,7 @@ custom spi_device_e 1 bits,U32,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3"
 	
 float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0,       0,  1000.0,        2
 
-	float adcVcc;;         "volts",    1,    0.0,       0,    4.0,        3
+	float adcVcc;;         "volts",    1,    0.0,       0,    6.0,        3
 	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking
 	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.\nTODO #660
 	
@@ -551,7 +553,9 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 
 custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
 
-	etb_io etb1
+	adc_channel_e auxFastSensor1_adcChannel;Useful in Research&Development phase
+	uint8_t[3] unused556;
+	
 
 	float fuelLevelEmptyTankVoltage;;"V",      1,      0,       0,10,      2
 	float fuelLevelFullTankVoltage;;"V",      1,      0,       0,10,      2
@@ -688,8 +692,8 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 	uart_device_e consoleUartDevice;
 
 
-#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "INVALID"
-custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:2], @@sensor_chart_e_enum@@
+#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1", "INVALID", "INVALID"
+custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:3], @@sensor_chart_e_enum@@
 sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode
 
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
@@ -698,23 +702,28 @@ custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
 custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:2], @@maf_sensor_type_e_enum@@
 
-maf_sensor_type_e mafSensorType;
+! todo: keep moving all these fields at the end of board_configuration_s below 'board_configuration_s bc'
+! end of board_configuration_s
+end_struct	
 
+	
+board_configuration_s bc;
+	maf_sensor_type_e mafSensorType;
+
+	custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioDigitalInputs;todo:not finished\nThese input pins allow us to pull toggle buttons state;
 
 	brain_input_pin_e vehicleSpeedSensorInputPin;
 	switch_input_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
-	float etbIdleRange;;"angle",      1,      0,       -100, 100,      2
-	bit clutchUpPinInverted
-	bit clutchDownPinInverted
-	int[121] unusedAtBoardConfigurationEnd;
-end_struct	
-custom le_formula_t 200 string, ASCII, @OFFSET@, 200
-	
-board_configuration_s bc;
-bit vvtDisplayInverted
+	float unused
+	bit todoClutchUpPinInverted
+	bit todoClutchDownPinInverted
+	etb_io[ETB_COUNT iterate] etbIo
+	int[119] unusedAtOldBoardConfigurationEnd;
+
+	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;+Print details into rusEfi console
 	bit isVerboseETB;+Prints ETB details to rusEFI console
@@ -1049,7 +1058,7 @@ tChargeMode_e tChargeMode;
 	int16_t etb_iTermMin;iTerm min value;"",        1,     0,  -30000,    30000.0,  0
 	int16_t etb_iTermMax;iTerm max value;"",        1,     0,  -30000,    30000.0,  0
 	float etbDeadband;;"",        1,     0,  0,    100.0,  2
-	etb_io etb2
+	uint8_t[4] unused1059;
 
 	pid_s idleTimingPid;See useIdleTimingPidControl
 	int16_t idleTimingPidWorkZone;+When the current RPM is closer than this value to the target, closed-loop idle timing control is enabled.;"RPM",        1,     0,  0,    1000,  0
@@ -1085,6 +1094,7 @@ uint8_t[4] unusuedsw;
 
 	int[565] mainUnusedEnd;
 
+! end of engine_configuration_s
 end_struct
 
 engine_configuration_s engineConfiguration;
@@ -1274,6 +1284,7 @@ end_struct
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 
 
+#define CMD_PINS "pins"
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
 #define CMD_ETB_DUTY "set_etb_duty"

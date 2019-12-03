@@ -24,8 +24,9 @@ float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_
 	case TEST_IAT_CHANNEL:
 		return testIatValue;
 		//return adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(hwChannel));
+	default:
+		return adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(hwChannel));;
 	}
-	return adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(hwChannel));;
 }
 
 float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
