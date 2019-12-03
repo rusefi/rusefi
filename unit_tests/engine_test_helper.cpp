@@ -174,7 +174,7 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 static AngleBasedEvent * getElementAtIndexForUnitText(int index, Engine *engine) {
 	AngleBasedEvent * current;
 
-	LL_FOREACH2(engine->ignitionEventsHead, current, nextToothEvent)
+	LL_FOREACH2(engine->angleBasedEventsHead, current, nextToothEvent)
 	{
 		if (index == 0)
 			return current;
