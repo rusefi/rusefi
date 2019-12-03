@@ -87,9 +87,9 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	// this correction is usually zero (not used)
 	cfg_float_t_1f perCylinderCorrection = CONFIG(timing_offset_cylinder[event->cylinderIndex]);
 	const angle_t sparkAngle = -ENGINE(engineState.timingAdvance) + ignitionPositionWithinEngineCycle + perCylinderCorrection;
-	efiAssertVoid(CUSTOM_ERR_6689, !cisnan(sparkAngle), "findAngle#9");
+	efiAssertVoid(CUSTOM_SPARK_ANGLE_9, !cisnan(sparkAngle), "findAngle#9");
 
-	efiAssertVoid(CUSTOM_ERR_6589, !cisnan(sparkAngle), "sparkAngle#1");
+	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
 	const int index = ENGINE(ignitionPin[event->cylinderIndex]);
 	const int coilIndex = ID2INDEX(getCylinderId(index PASS_ENGINE_PARAMETER_SUFFIX));
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];

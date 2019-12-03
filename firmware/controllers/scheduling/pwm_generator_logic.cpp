@@ -258,7 +258,7 @@ static void timerCallback(PwmConfig *state) {
 		return;
 	}
 	if (state->executor == NULL) {
-		firmwareError(CUSTOM_ERR_6695, "exec on %s", state->name);
+		firmwareError(CUSTOM_NULL_EXECUTOR, "exec on %s", state->name);
 		return;
 	}
 
