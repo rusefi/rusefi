@@ -16,49 +16,43 @@
 EXTERN_ENGINE;
 
 static void setInjectorPins() {
-	boardConfiguration->injectionPins =
-	{
-		GPIOD_7,
-		GPIOG_9,
-		GPIOG_10,
-		GPIOG_11,
-		GPIOG_12,
-		GPIOG_13,
-		GPIOG_14,
-		GPIOB_4,
-		GPIOB_5,
-		GPIOB_6,
-		GPIOB_7,
-		GPIOB_8
-	};
+	boardConfiguration->injectionPins[0] = GPIOD_7;
+	boardConfiguration->injectionPins[1] = GPIOG_9;
+	boardConfiguration->injectionPins[2] = GPIOG_10;
+	boardConfiguration->injectionPins[3] = GPIOG_11;
+	boardConfiguration->injectionPins[4] = GPIOG_12;
+	boardConfiguration->injectionPins[5] = GPIOG_13;
+	boardConfiguration->injectionPins[6] = GPIOG_14;
+	boardConfiguration->injectionPins[7] = GPIOB_4;
+	boardConfiguration->injectionPins[8] = GPIOB_5;
+	boardConfiguration->injectionPins[9] = GPIOB_6;
+	boardConfiguration->injectionPins[10] = GPIOB_7;
+	boardConfiguration->injectionPins[11] = GPIOB_8;
 
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
-	boardConfiguration->ignitionPins = 
-	{
-		GPIOD_4,
-		GPIOD_3,
-		GPIOC_9,
-		GPIOC_8,
-		GPIOC_7,
-		GPIOG_8,
-		GPIOG_7,
-		GPIOG_6,
-		GPIOG_5,
-		GPIOG_4,
-		GPIOG_3,
-		GPIOG_2
-	};
+	boardConfiguration->ignitionPins[0] = GPIOD_4;
+	boardConfiguration->ignitionPins[1] = GPIOD_3;
+	boardConfiguration->ignitionPins[2] = GPIOC_9;
+	boardConfiguration->ignitionPins[3] = GPIOC_8;
+	boardConfiguration->ignitionPins[4] = GPIOC_7;
+	boardConfiguration->ignitionPins[5] = GPIOG_8;
+	boardConfiguration->ignitionPins[6] = GPIOG_7;
+	boardConfiguration->ignitionPins[7] = GPIOG_6;
+	boardConfiguration->ignitionPins[8] = GPIOG_5;
+	boardConfiguration->ignitionPins[9] = GPIOG_4;
+	boardConfiguration->ignitionPins[10] = GPIOG_3;
+	boardConfiguration->ignitionPins[11] = GPIOG_2;
 
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
 static void setLedPins() {
-	engineConfiguration->communicationLedPin = TODO;
-	engineConfiguration->runningLedPin = TODO;
-	boardConfiguration->triggerErrorPin = TODO;
+	engineConfiguration->communicationLedPin = GPIOE_4;
+	engineConfiguration->runningLedPin = GPIOE_5;
+	boardConfiguration->triggerErrorPin = GPIOE_6;
 }
 
 static void setupVbatt() {
@@ -67,7 +61,7 @@ static void setupVbatt() {
 
 	// 47k high side/10k low side = 4.7
 	engineConfiguration->vbattDividerCoeff = (57.0f / 10.0f);
-	engineConfiguration->vbattAdcChannel = TODO;
+	//engineConfiguration->vbattAdcChannel = TODO;
 
 	engineConfiguration->adcVcc = 3.3f;
 }
@@ -79,27 +73,30 @@ static void setupEtb() {
 	// PWM - pwm control (enable high, coast low)
 	// DIS - disables motor (enable low)
 
+	// Throttle #1
 	// PWM pin
-	boardConfiguration->etb1.controlPin1 = GPIOD_12;
+	engineConfiguration->etbIo[0].controlPin1 = GPIOD_12;
 	// DIR pin
-	boardConfiguration->etb1.directionPin1 = GPIOD_8;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOD_10;
+	// Unused
+	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 
-	// set_fsio_output_pin 7 PC8
+	// Throttle #2
+	// PWM pin
+	engineConfiguration->etbIo[0].controlPin1 = GPIOD_13;
+	// DIR pin
+	engineConfiguration->etbIo[0].directionPin1 = GPIOD_9;
+	// Unused
+	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
+
 #if EFI_FSIO
-	// set_rpn_expression 8 "1"
 	// disable ETB by default
-	setFsio(7, GPIOD_9, "1" PASS_CONFIG_PARAMETER_SUFFIX);
-	// enable ETB
-	// set_rpn_expression 8 "0"
-	//setFsio(7, GPIOD_9, "0" PASS_CONFIG_PARAMETER_SUFFIX);
+	setFsio(7, GPIOD_8, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	setFsio(8, GPIOD_11, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 
-	// Unused
-	boardConfiguration->etb1.directionPin2 = GPIO_UNASSIGNED;
-
 	// we only have pwm/dir, no dira/dirb
-	engineConfiguration->etb1_use_two_wires = false;
-
+	engineConfiguration->etb_use_two_wires = false;
 	engineConfiguration->etbFreq = 800;
 }
 
