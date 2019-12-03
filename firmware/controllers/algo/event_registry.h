@@ -120,3 +120,14 @@ public:
 	IgnitionEvent elements[MAX_IGNITION_EVENT_COUNT];
 	bool isReady = false;
 };
+
+class AuxActor {
+public:
+	int phaseIndex;
+	int valveIndex;
+	angle_t extra;
+
+	AngleBasedEvent open;
+	AngleBasedEvent close;
+	DECLARE_ENGINE_PTR;
+};

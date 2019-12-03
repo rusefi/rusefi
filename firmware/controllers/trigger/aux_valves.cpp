@@ -10,54 +10,53 @@
  * https://github.com/rusefi/rusefi/issues/490
  *
  * @date Nov 25, 2017
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "engine_math.h"
 #include "aux_valves.h"
 #include "allsensors.h"
 #include "trigger_central.h"
+#include "spark_logic.h"
 
 EXTERN_ENGINE
 ;
 
-/**
-//void plainPinTurnOn(AuxActor *current) {
-//	NamedOutputPin *output = &enginePins.auxValve[current->valveIndex];
-if (!engine->auxStarted) {
-
-		for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
-			for (int phaseIndex = 0; phaseIndex < 2; phaseIndex++) {
-				AuxActor *current = &actors[phaseIndex][valveIndex];
-
-//				if ()
-
-
-				scheduleOrQueue(&current->open,
-						trgEventIndex,
-						current->extra + engine->engineState.auxValveStart,
-						(schfunc_t)plainPinTurnOn,
-						current
-						PASS_ENGINE_PARAMETER_SUFFIX);
-
-
-			}
-		}
-
-
-		engine->auxStarted = true;
-	}
-
- */
-
-void plainPinTurnOn(NamedOutputPin *output) {
+void plainPinTurnOn(AuxActor *current) {
+	NamedOutputPin *output = &enginePins.auxValve[current->valveIndex];
 	output->setHigh();
-}
+
+#if EFI_UNIT_TEST
+	Engine *engine = current->engine;
+	EXPAND_Engine;
+#endif /* EFI_UNIT_TEST */
+
+	scheduleOrQueue(&current->open,
+			TRIGGER_EVENT_UNDEFINED,
+			current->extra + engine->engineState.auxValveStart,
+			(schfunc_t)plainPinTurnOn,
+			current
+			PASS_ENGINE_PARAMETER_SUFFIX
+			);
+
+	angle_t duration = engine->engineState.auxValveEnd - engine->engineState.auxValveStart;
+
+	fixAngle(duration, "duration", CUSTOM_ERR_6557);
+
+	scheduleOrQueue(&current->close,
+			TRIGGER_EVENT_UNDEFINED,
+			current->extra + engine->engineState.auxValveEnd,
+			(schfunc_t)plainPinTurnOff,
+			output
+			PASS_ENGINE_PARAMETER_SUFFIX
+			);
+	}
 
 void plainPinTurnOff(NamedOutputPin *output) {
 	output->setLow();
 }
 
+/*
 static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(ckpSignalType);
@@ -69,12 +68,13 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 	if (!isValidRpm(rpm)) {
 		return;
 	}
-
+*/
 	/**
 	 * Sometimes previous event has not yet been executed by the time we are scheduling new events.
 	 * We use this array alternation in order to bring events that are scheled and waiting to be executed from
 	 * events which are already being scheduled
 	 */
+/*
 	int engineCycleAlternation = engine->triggerCentral.triggerState.getTotalRevolutionCounter() % CYCLE_ALTERNATION;
 
 	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
@@ -82,6 +82,7 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		NamedOutputPin *output = &enginePins.auxValve[valveIndex];
 
 		for (int phaseIndex = 0; phaseIndex < 2; phaseIndex++) {
+*/
 /* I believe a more correct implementation is the following:
  * here we properly account for trigger angle position in engine cycle coordinates
 			// todo: at the moment this logic is assuming four-stroke 720-degree engine cycle
@@ -91,6 +92,7 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 					- ENGINE(triggerCentral.triggerShape.eventAngles[SCHEDULING_TRIGGER_INDEX])
 					;
 */
+/*
 			angle_t extra = phaseIndex * 360 + valveIndex * 180;
 			angle_t onTime = extra + engine->engineState.auxValveStart;
 			scheduling_s *onEvent = &engine->auxTurnOnEvent[valveIndex][phaseIndex][engineCycleAlternation];
@@ -115,13 +117,49 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		}
 	}
 }
+*/
 
 void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(sharedLogger);
 	if (engineConfiguration->auxValves[0] == GPIO_UNASSIGNED) {
 		return;
 	}
-	addTriggerEventListener(auxValveTriggerCallback, "tach", engine);
+
+#if !EFI_UNIT_TEST
+	// let's give it time to grab TPS value
+	chThdSleepMilliseconds(50);
+#endif /* EFI_UNIT_TESTS */
+
+	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (cisnan(tps)) {
+		firmwareError(CUSTOM_OBD_91, "No TPS for Aux Valves");
+		return;
+	}
+
+	updateAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
+
+		for (int phaseIndex = 0; phaseIndex < 2; phaseIndex++) {
+			AuxActor *actor = &engine->auxValves[valveIndex][phaseIndex];
+			actor->phaseIndex = phaseIndex;
+			actor->valveIndex = valveIndex;
+			actor->extra = phaseIndex * 360 + valveIndex * 180;
+
+			INJECT_ENGINE_REFERENCE(actor);
+
+			scheduleOrQueue(&actor->open,
+					TRIGGER_EVENT_UNDEFINED,
+					actor->extra + engine->engineState.auxValveStart,
+					(schfunc_t)plainPinTurnOn,
+					actor
+					PASS_ENGINE_PARAMETER_SUFFIX
+					);
+		}
+	}
+
+
+//	addTriggerEventListener(auxValveTriggerCallback, "AuxV", engine);
 }
 
 void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -129,24 +167,23 @@ void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
-	float x = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (cisnan(x)) {
+	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (cisnan(tps)) {
 		// error should be already reported by now
 		return;
 	}
-	engine->engineState.auxValveStart = interpolate2d("aux", x,
+	engine->engineState.auxValveStart = interpolate2d("aux", tps,
 			engineConfiguration->fsioCurve1Bins,
 			engineConfiguration->fsioCurve1);
 
-	engine->engineState.auxValveEnd = interpolate2d("aux", x,
+	engine->engineState.auxValveEnd = interpolate2d("aux", tps,
 			engineConfiguration->fsioCurve2Bins,
 			engineConfiguration->fsioCurve2);
 
 	if (engine->engineState.auxValveStart >= engine->engineState.auxValveEnd) {
 		// this is a fatal error to make this really visible
-		firmwareError(CUSTOM_AUX_OUT_OF_ORDER, "out of order at %.2f %.2f %.2f", x,
+		firmwareError(CUSTOM_AUX_OUT_OF_ORDER, "out of order at %.2f %.2f %.2f", tps,
 				engine->engineState.auxValveStart,
 				engine->engineState.auxValveEnd);
 	}
 }
-

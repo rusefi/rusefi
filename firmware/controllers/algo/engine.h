@@ -58,12 +58,8 @@ public:
 	LocalVersionHolder auxParametersVersion;
 	operation_mode_e getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
 
-	scheduling_s auxTurnOnEvent[AUX_DIGITAL_VALVE_COUNT][/* we have two 180 cycles within engine 360 revolution */ 2][CYCLE_ALTERNATION];
-	scheduling_s auxTurnOffEvent[AUX_DIGITAL_VALVE_COUNT][2][CYCLE_ALTERNATION];
-
-
-	int auxSchedulingIndex = 2;
 	bool needTdcCallback = true;
 
 	/**

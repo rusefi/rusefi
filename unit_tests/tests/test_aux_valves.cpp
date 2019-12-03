@@ -11,7 +11,6 @@
 TEST(misc, testAuxValves) {
 	WITH_ENGINE_TEST_HELPER(NISSAN_PRIMERA);
 
-	engine->auxSchedulingIndex = 0;
 	engine->needTdcCallback = false;
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
@@ -20,8 +19,8 @@ TEST(misc, testAuxValves) {
 	eth.fireTriggerEvents2(2 /* count */ , 600 /* ms */);
 	ASSERT_EQ( 100,  GET_RPM()) << "spinning-RPM#1";
 
-	eth.assertScheduling("a0", 0, &engine->auxTurnOnEvent[0][0][0], (void*)&plainPinTurnOn, -600000);
-	eth.assertScheduling("a1", 1, &engine->auxTurnOffEvent[0][0][0], (void*)&plainPinTurnOff, -550000);
-	eth.assertScheduling("a2", 2, &engine->auxTurnOnEvent[1][0][0], (void*)&plainPinTurnOn, -300000);
+	eth.assertTriggerEvent("a0", 0, &engine->auxValves[0][0].open, (void*)&plainPinTurnOn, 7, 86);
+	eth.assertTriggerEvent("a1", 1, &engine->auxValves[0][1].open, (void*)&plainPinTurnOn, 3, 86);
+	eth.assertTriggerEvent("a2", 2, &engine->auxValves[1][0].open, (void*)&plainPinTurnOn, 1, 86);
 
 }
