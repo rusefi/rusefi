@@ -72,11 +72,11 @@
 	board_configuration_s *boardConfiguration = nullptr;
 
 
-#define INJECT_ENGINE_REFERENCE(x)               \
-	x.engine = engine;                           \
-	x.engineConfiguration = engineConfiguration; \
-	x.config = config;                           \
-	x.boardConfiguration = boardConfiguration;
+#define INJECT_ENGINE_REFERENCE(x)                  \
+	(x)->engine = engine;                           \
+	(x)->engineConfiguration = engineConfiguration; \
+	(x)->config = config;                           \
+	(x)->boardConfiguration = boardConfiguration;
 
 #define EXPAND_Engine \
 	    engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr; \

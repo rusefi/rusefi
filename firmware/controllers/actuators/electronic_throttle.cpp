@@ -646,7 +646,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		etbController[i].init(&etbHardware[i].dcMotor, i);
 		etbController[i].etbPid.initPidClass(&engineConfiguration->etb);
-		INJECT_ENGINE_REFERENCE(etbController[i]);
+		INJECT_ENGINE_REFERENCE(&etbController[i]);
 	}
 
 

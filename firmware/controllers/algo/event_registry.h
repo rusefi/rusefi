@@ -28,9 +28,7 @@ public:
 	bool isSimultanious;
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	int ownIndex;
-#if EFI_UNIT_TEST
-	Engine *engine;
-#endif
+	DECLARE_ENGINE_PTR;
 	event_trigger_position_s injectionStart;
 
 	scheduling_s signalTimerUp;
@@ -108,9 +106,7 @@ public:
 	 */
 	int cylinderIndex = 0;
 	char *name = nullptr;
-#if EFI_UNIT_TEST
-	Engine *engine;
-#endif
+	DECLARE_ENGINE_PTR;
 	IgnitionOutputPin *getOutputForLoggins();
 };
 

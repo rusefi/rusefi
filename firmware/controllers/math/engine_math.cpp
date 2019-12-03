@@ -196,9 +196,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	InjectionEvent *ev = &elements[i];
 	ev->ownIndex = i;
-#if EFI_UNIT_TEST
-	ev->engine = engine;
-#endif
+	INJECT_ENGINE_REFERENCE(ev);
 	fixAngle(angle, "addFuel#1", CUSTOM_ERR_6554);
 
 	ev->outputs[0] = output;
