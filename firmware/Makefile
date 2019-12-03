@@ -7,6 +7,8 @@ CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
 
+include rusefi_rules.mk
+
 # Define project name here
 PROJECT = rusefi
 PROJECT_DIR = .
@@ -35,8 +37,11 @@ endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -Wno-error=implicit-fallthrough -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Werror=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
+  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -Wno-error=implicit-fallthrough -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
 endif
+
+
+USE_OPT += $(RUSEFI_OPT)
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)

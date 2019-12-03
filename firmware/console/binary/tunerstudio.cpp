@@ -866,6 +866,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 			auto trace = perfTraceGetBuffer();
 			sr5SendResponse(tsChannel, TS_CRC, trace.Buffer, trace.Size);
 		}
+
 		break;
 #endif /* ENABLE_PERF_TRACE */
 	default:

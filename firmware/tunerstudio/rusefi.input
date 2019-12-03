@@ -1723,6 +1723,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Debug Trigger Sync", 					debugTriggerSync
 		field = "Debug Timer Callback", 				debugTimerCallback
 		field = "Debug Set Timer", 						debugSetTimer
+		field = "Aux Fast Analog",						auxFastSensor1_adcChannel
 
 	dialog = allPins1_3
 		field = "FSIO ADC #1",							fsioAdc1
@@ -2214,7 +2215,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		commandButton = "Reinit",						cmd_tle8888_init
 
 	dialog = connection, "", 	yAxis
-		field = "STM32 vRef voltage",					adcVcc
+		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort
 		panel = canBus
 		panel = sdCard

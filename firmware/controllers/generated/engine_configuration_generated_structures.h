@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Nov 30 17:04:45 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Dec 02 17:48:14 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -595,9 +595,14 @@ struct board_configuration_s {
 	 */
 	pin_output_mode_e mc33972_csPinMode;
 	/**
+	 * Useful in Research&Development phase
 	 * offset 80
 	 */
-	uint8_t unused556[4];
+	adc_channel_e auxFastSensor1_adcChannel;
+	/**
+	 * offset 81
+	 */
+	uint8_t unused556[3];
 	/**
 	 * offset 84
 	 */
@@ -2904,4 +2909,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Nov 30 17:04:45 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Dec 02 17:48:14 EST 2019

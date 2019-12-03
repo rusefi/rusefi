@@ -520,15 +520,22 @@ static void configureInputs(void) {
 
 	addChannel("baro", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
 	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
-	addChannel("TPS2", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
+	if (engineConfiguration->tps2_1AdcChannel != EFI_ADC_0) {
+		// allow EFI_ADC_0 next time we have an incompatible configuration change
+		addChannel("TPS2", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
+	}
 	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
 	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
 	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
-	addChannel("AUX#1", engineConfiguration->auxTempSensor1.adcChannel, ADC_SLOW);
-	addChannel("AUX#2", engineConfiguration->auxTempSensor2.adcChannel, ADC_SLOW);
+	addChannel("AUXT#1", engineConfiguration->auxTempSensor1.adcChannel, ADC_SLOW);
+	addChannel("AUXT#2", engineConfiguration->auxTempSensor2.adcChannel, ADC_SLOW);
+	if (engineConfiguration->bc.auxFastSensor1_adcChannel != EFI_ADC_0) {
+		// allow EFI_ADC_0 next time we have an incompatible configuration change
+		addChannel("AUXF#1", engineConfiguration->bc.auxFastSensor1_adcChannel, ADC_FAST);
+	}
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("OilP", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);

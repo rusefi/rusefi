@@ -97,6 +97,8 @@
 #define autoTuneTpsRocThreshold_offset_hex 978
 #define AUX_DIGITAL_VALVE_COUNT 2
 #define AUX_PID_COUNT 4
+#define auxFastSensor1_adcChannel_offset 680
+#define auxFastSensor1_adcChannel_offset_hex 2a8
 #define auxPid1_dFactor_offset 2620
 #define auxPid1_dFactor_offset_hex a3c
 #define auxPid1_iFactor_offset 2616
@@ -1606,7 +1608,7 @@
 #define sdCardSpiDevice_offset_hex a20
 #define secondTriggerChannelEnabled_offset 1476
 #define secondTriggerChannelEnabled_offset_hex 5c4
-#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "INVALID"
+#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1", "INVALID", "INVALID"
 #define sensorChartFrequency_offset 520
 #define sensorChartFrequency_offset_hex 208
 #define sensorChartMode_offset 944
@@ -1901,8 +1903,8 @@
 #define unused1059_offset_hex f7c
 #define unused1234234_offset 2042
 #define unused1234234_offset_hex 7fa
-#define unused556_offset 680
-#define unused556_offset_hex 2a8
+#define unused556_offset 681
+#define unused556_offset_hex 2a9
 #define unused_1484_bit_21_offset 1476
 #define unused_1484_bit_21_offset_hex 5c4
 #define unused_1484_bit_22_offset 1476

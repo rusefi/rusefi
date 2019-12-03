@@ -453,10 +453,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	if (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap())) {
 #if EFI_UNIT_TEST
 		if (printTriggerDebug) {
-			printf("%s isLessImportant %s now=%lld index=%d\r\n",
+			printf("%s isLessImportant %s now=%d index=%d\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
 					getTrigger_event_e(signal),
-					nowNt,
+					(int)nowNt,
 					currentCycle.current_index);
 		}
 #endif /* EFI_UNIT_TEST */

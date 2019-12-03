@@ -6,6 +6,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.tracing.Entry;
 import com.rusefi.tracing.JsonOutput;
 import com.rusefi.ui.MessagesView;
+import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,7 +68,12 @@ public class BenchTestPane {
                         throw new IllegalStateException("Unexpected packet");
 
                     List<Entry> data = Entry.parseBuffer(packet);
-                    JsonOutput.writeToStream(data, new FileOutputStream("hello_trace.json"));
+
+                    int rpm = RpmModel.getInstance().getValue();
+                    String fileName = FileLog.getDate() + "_rpm_" + rpm + "_rusEfi_trace" + ".json";
+
+
+                    JsonOutput.writeToStream(data, new FileOutputStream(fileName));
                 } catch (IOException | InterruptedException e1) {
                     throw new IllegalStateException(e1);
                 }

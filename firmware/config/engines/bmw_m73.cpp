@@ -80,9 +80,16 @@ static void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->globalTriggerAngleOffset = 90;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	// todo: that's not right, should be 60/2 without VW
 	engineConfiguration->trigger.type = TT_60_2_VW;
 
+	// this large engine seems to crank at around only 150 RPM? And happily idle at 400RPM?
+	engineConfiguration->cranking.rpm = 280;
+
 	engineConfiguration->ignitionMode = IM_TWO_COILS;
+
+	// set cranking_fuel 15
+	engineConfiguration->cranking.baseFuel = 15;
 }
 
 
@@ -101,11 +108,11 @@ void setEngineBMW_M73_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIGB(fuelPumpPin) = GPIO_UNASSIGNED;
 
 
-	boardConfiguration->ignitionPins[ID2INDEX(1)] = GPIOE_14; // Frankenso high side - pin 1G
+	boardConfiguration->ignitionPins[ID2INDEX(1)] = GPIOE_14; // Frankenso high side - pin 1G - GREEN wire
 	boardConfiguration->ignitionPins[ID2INDEX(2)] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[ID2INDEX(3)] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[ID2INDEX(4)] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[ID2INDEX(7)] = GPIOC_7; // Frankenso high side - pin 1H
+	boardConfiguration->ignitionPins[ID2INDEX(7)] = GPIOC_7; // Frankenso high side - pin 1H - ORANGE wire
 
 
 	boardConfiguration->injectionPins[0] = GPIOB_8; // BLU

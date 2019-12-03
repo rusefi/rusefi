@@ -14,6 +14,7 @@ endif
 
 
 PROJECT_DIR = ../firmware
+include $(PROJECT_DIR)/rusefi_rules.mk
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
@@ -26,6 +27,11 @@ ifeq ($(USE_OPT),)
   USE_OPT += -fprofile-arcs -ftest-coverage
   USE_OPT += -Werror=missing-field-initializers
 endif
+
+
+#TODO! this is a nice goal
+#USE_OPT += $(RUSEFI_OPT)
+#USE_OPT += -Wno-error=format= -Wno-error=register -Wno-error=write-strings
 
 ifeq ($(CCACHE_DIR),)
  $(info No CCACHE_DIR)
