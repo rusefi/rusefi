@@ -27,6 +27,7 @@
 #include "accelerometer.h"
 #include "eficonsole.h"
 #include "console_io.h"
+#include "sensor_chart.h"
 
 #include "mpu_util.h"
 //#include "usb_msd.h"
@@ -188,8 +189,6 @@ static int fastMapSampleIndex;
 static int hipSampleIndex;
 static int tpsSampleIndex;
 
-extern int tpsFastAdc;
-
 #if HAL_USE_ADC
 extern AdcDevice fastAdc;
 
@@ -215,6 +214,11 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		 * this callback is executed 10 000 times a second, it needs to be as fast as possible
 		 */
 		efiAssertVoid(CUSTOM_ERR_6676, getCurrentRemainingStack() > 128, "lowstck#9b");
+
+		if (ENGINE(sensorChartMode) == SC_AUX_FAST1) {
+			float voltage = getAdcValue("fAux1", engineConfiguration->bc.auxFastSensor1_adcChannel);
+			scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX), voltage);
+		}
 
 #if EFI_MAP_AVERAGING
 		mapAveragingAdcCallback(fastAdc.samples[fastMapSampleIndex]);
@@ -242,6 +246,7 @@ static void calcFastAdcIndexes(void) {
 	} else {
 		tpsSampleIndex = TPS_IS_SLOW;
 	}
+
 #endif/* HAL_USE_ADC */
 }
 
