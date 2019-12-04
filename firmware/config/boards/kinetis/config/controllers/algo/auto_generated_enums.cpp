@@ -627,6 +627,8 @@ case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
 case PROMETHEUS_DEFAULTS:
   return "PROMETHEUS_DEFAULTS";
+case PROTEUS:
+  return "PROTEUS";
 case ROVER_V8:
   return "ROVER_V8";
 case SACHS:
