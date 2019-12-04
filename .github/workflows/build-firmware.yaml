@@ -12,7 +12,7 @@ jobs:
       matrix:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
-        build-target: [frankenso, mre-f4, mre-f7, prometheus-405, prometheus-469, proteus]
+        build-target: [frankenso, mre-f4, mre-f7, prometheus-405, prometheus-469, proteus, kinetis]
         build-type: [debug, release]
         
         include:
