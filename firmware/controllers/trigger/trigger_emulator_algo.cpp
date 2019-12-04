@@ -13,7 +13,7 @@
  * @date Mar 3, 2014
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
-#include "../core/state_sequence.h"
+#include "state_sequence.h"
 #include "global.h"
 #include "efi_gpio.h"
 

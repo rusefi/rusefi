@@ -8,7 +8,7 @@
 #ifndef PWM_GENERATOR_LOGIC_H_
 #define PWM_GENERATOR_LOGIC_H_
 
-#include "../../core/state_sequence.h"
+#include "state_sequence.h"
 #include "global.h"
 #include "scheduler.h"
 #include "efi_gpio.h"
