@@ -2,10 +2,10 @@
  * @file	joystick.h
  *
  * @date Jan 2, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
-#ifndef CONTROLLERS_JOYSTICK_H_
-#define CONTROLLERS_JOYSTICK_H_
+
+#pragma once
 
 #include "global.h"
 
@@ -21,5 +21,3 @@ void onJoystick(joystick_button_e button);
 void initJoystick(Logging *shared);
 void startJoystickPins();
 void stopJoystickPins();
-
-#endif /* CONTROLLERS_JOYSTICK_H_ */

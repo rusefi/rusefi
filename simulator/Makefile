@@ -158,7 +158,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
 	$(PROJECT_DIR)/development/trigger_emulator.cpp \
 	$(HW_LAYER_EMS_CPP) \
-	$(PROJECT_DIR)/hw_layer/sensors/cj125.cpp \
+	$(HW_SENSORS_SRC) \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
@@ -194,8 +194,7 @@ INCDIR = . \
           $(PROJECT_DIR)/console/fl_binary \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \
-          $(PROJECT_DIR)/controllers \
-          $(HW_LAYER_DRIVERS_INC) \
+         $(HW_LAYER_DRIVERS_INC) \
           $(PROJECT_DIR)/hw_layer \
           $(PROJECT_DIR)/hw_layer/algo \
           $(HW_SENSORS_INC) \

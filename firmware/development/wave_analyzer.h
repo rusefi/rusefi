@@ -4,11 +4,10 @@
  * todo: rename all this 'logic analyzer' is probably much more appropriate
  *
  * @date Jan 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef WAVE_ANALYZER_H_
-#define WAVE_ANALYZER_H_
+#pragma once
 
 #include "global.h"
 
@@ -57,7 +56,5 @@ void initWaveAnalyzer(Logging *sharedLogger);
 void printWave(Logging *logging);
 void showWaveInfo(void);
 
-#endif
-
-#endif /* WAVE_ANALYZER_H_ */
+#endif /* EFI_WAVE_ANALYZER */
 
