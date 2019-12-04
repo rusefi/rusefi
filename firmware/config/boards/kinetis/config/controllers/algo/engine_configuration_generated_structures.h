@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Dec 02 17:48:25 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Dec 04 00:38:11 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1855,6 +1855,14 @@
 #define trigger_unusedCustomNeedSecondTriggerInput_offset_hex 210
 #define trigger_useOnlyFirstChannel_offset 528
 #define trigger_useOnlyFirstChannel_offset_hex 210
+#define triggerCompCenterVolt_offset 4036
+#define triggerCompCenterVolt_offset_hex fc4
+#define triggerCompHystMax_offset 4038
+#define triggerCompHystMax_offset_hex fc6
+#define triggerCompHystMin_offset 4037
+#define triggerCompHystMin_offset_hex fc5
+#define triggerCompSensorSatRpm_offset 4039
+#define triggerCompSensorSatRpm_offset_hex fc7
 #define triggerErrorPin_offset 828
 #define triggerErrorPin_offset_hex 33c
 #define triggerErrorPinMode_offset 829
@@ -1907,8 +1915,6 @@
 #define unused1234234_offset_hex 7fa
 #define unused556_offset 681
 #define unused556_offset_hex 2a9
-#define unused_1484_bit_21_offset 1476
-#define unused_1484_bit_21_offset_hex 5c4
 #define unused_1484_bit_22_offset 1476
 #define unused_1484_bit_22_offset_hex 5c4
 #define unused_1484_bit_23_offset 1476
@@ -1949,8 +1955,6 @@
 #define unusedHereo_wires_offset_hex 4c
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
-#define unusedSpiPadding3_offset 4036
-#define unusedSpiPadding3_offset_hex fc4
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding4_offset_hex a21
 #define unusedSpiPadding5_offset 2713
@@ -1999,6 +2003,8 @@
 #define useFSIO8ForServo1_offset_hex 5b8
 #define useFSIO9ForServo2_offset 1464
 #define useFSIO9ForServo2_offset_hex 5b8
+#define useIacPidMultTable_offset 1476
+#define useIacPidMultTable_offset_hex 5c4
 #define useIacTableForCoasting_offset 744
 #define useIacTableForCoasting_offset_hex 2e8
 #define useIdleTimingPidControl_offset 744
@@ -2052,6 +2058,7 @@
 #define veRpmBins_offset_hex 4860
 #define veTable_offset 17440
 #define veTable_offset_hex 4420
+#define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define vRefAdcChannel_offset 1470
 #define vRefAdcChannel_offset_hex 5be
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
@@ -3778,8 +3785,9 @@ struct engine_configuration_s {
 	offset 1476 bit 20 */
 	bool etbCalibrationOnStart : 1;
 	/**
+	 * This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 	offset 1476 bit 21 */
-	bool unused_1484_bit_21 : 1;
+	bool useIacPidMultTable : 1;
 	/**
 	offset 1476 bit 22 */
 	bool unused_1484_bit_22 : 1;
@@ -4693,9 +4701,25 @@ struct engine_configuration_s {
 	 */
 	int alFIn[3];
 	/**
+	 * Trigger comparator center point voltage
 	 * offset 4036
 	 */
-	uint8_t unusedSpiPadding3[4];
+	uint8_t triggerCompCenterVolt = (uint8_t)0;
+	/**
+	 * Trigger comparator hysteresis voltage (Min)
+	 * offset 4037
+	 */
+	uint8_t triggerCompHystMin = (uint8_t)0;
+	/**
+	 * Trigger comparator hysteresis voltage (Max)
+	 * offset 4038
+	 */
+	uint8_t triggerCompHystMax = (uint8_t)0;
+	/**
+	 * VR-sensor saturation RPM
+	 * offset 4039
+	 */
+	uint8_t triggerCompSensorSatRpm = (uint8_t)0;
 	/**
 	 * offset 4040
 	 */
@@ -4978,4 +5002,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Dec 02 17:48:25 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Dec 04 00:38:11 EST 2019

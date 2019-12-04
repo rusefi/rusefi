@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Dec 02 16:11:57 EST 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Dec 04 00:37:59 EST 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1222,6 +1222,10 @@ public class Fields {
 	public static final int trigger_unusedCustomNeedSecondTriggerInput_offset_hex = 210;
 	public static final int trigger_useOnlyFirstChannel_offset = 528;
 	public static final int trigger_useOnlyFirstChannel_offset_hex = 210;
+	public static final int triggerCompCenterVolt_offset = 4036;
+	public static final int triggerCompHystMax_offset = 4038;
+	public static final int triggerCompHystMin_offset = 4037;
+	public static final int triggerCompSensorSatRpm_offset = 4039;
 	public static final int triggerErrorPin_offset = 828;
 	public static final int triggerErrorPinMode_offset = 829;
 	public static final int triggerInputPins1_offset = 700;
@@ -1245,7 +1249,6 @@ public class Fields {
 	public static final int unused1059_offset = 3964;
 	public static final int unused1234234_offset = 2042;
 	public static final int unused556_offset = 681;
-	public static final int unused_1484_bit_21_offset = 1476;
 	public static final int unused_1484_bit_22_offset = 1476;
 	public static final int unused_1484_bit_23_offset = 1476;
 	public static final int unused_1484_bit_24_offset = 1476;
@@ -1267,7 +1270,6 @@ public class Fields {
 	public static final int unusedFormerWarmupAfrPid_offset = 1768;
 	public static final int unusedHereo_wires_offset = 76;
 	public static final int unusedOldWarmupAfr_offset = 744;
-	public static final int unusedSpiPadding3_offset = 4036;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
 	public static final int unusedSpiPadding7_offset = 4005;
@@ -1292,6 +1294,7 @@ public class Fields {
 	public static final int useFSIO6ForRevLimiter_offset = 1464;
 	public static final int useFSIO8ForServo1_offset = 1464;
 	public static final int useFSIO9ForServo2_offset = 1464;
+	public static final int useIacPidMultTable_offset = 1476;
 	public static final int useIacTableForCoasting_offset = 744;
 	public static final int useIdleTimingPidControl_offset = 744;
 	public static final int useInstantRpmForIdle_offset = 76;
@@ -1810,7 +1813,7 @@ public class Fields {
 	public static final Field USEADVANCECORRECTIONSFORCRANKING = Field.create("USEADVANCECORRECTIONSFORCRANKING", 1476, FieldType.BIT, 18);
 	public static final Field USETPSADVANCETABLE = Field.create("USETPSADVANCETABLE", 1476, FieldType.BIT, 19);
 	public static final Field ETBCALIBRATIONONSTART = Field.create("ETBCALIBRATIONONSTART", 1476, FieldType.BIT, 20);
-	public static final Field UNUSED_1484_BIT_21 = Field.create("UNUSED_1484_BIT_21", 1476, FieldType.BIT, 21);
+	public static final Field USEIACPIDMULTTABLE = Field.create("USEIACPIDMULTTABLE", 1476, FieldType.BIT, 21);
 	public static final Field UNUSED_1484_BIT_22 = Field.create("UNUSED_1484_BIT_22", 1476, FieldType.BIT, 22);
 	public static final Field UNUSED_1484_BIT_23 = Field.create("UNUSED_1484_BIT_23", 1476, FieldType.BIT, 23);
 	public static final Field UNUSED_1484_BIT_24 = Field.create("UNUSED_1484_BIT_24", 1476, FieldType.BIT, 24);
@@ -2109,6 +2112,10 @@ public class Fields {
 	public static final Field IDLERPMPID_ITERMMAX = Field.create("IDLERPMPID_ITERMMAX", 4006, FieldType.INT16);
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 4008, FieldType.INT8);
 	public static final Field ETBIDLETHROTTLERANGE = Field.create("ETBIDLETHROTTLERANGE", 4012, FieldType.FLOAT);
+	public static final Field TRIGGERCOMPCENTERVOLT = Field.create("TRIGGERCOMPCENTERVOLT", 4036, FieldType.INT8);
+	public static final Field TRIGGERCOMPHYSTMIN = Field.create("TRIGGERCOMPHYSTMIN", 4037, FieldType.INT8);
+	public static final Field TRIGGERCOMPHYSTMAX = Field.create("TRIGGERCOMPHYSTMAX", 4038, FieldType.INT8);
+	public static final Field TRIGGERCOMPSENSORSATRPM = Field.create("TRIGGERCOMPSENSORSATRPM", 4039, FieldType.INT8);
 	public static final Field IDLERPMPID2_PFACTOR = Field.create("IDLERPMPID2_PFACTOR", 4040, FieldType.FLOAT);
 	public static final Field IDLERPMPID2_IFACTOR = Field.create("IDLERPMPID2_IFACTOR", 4044, FieldType.FLOAT);
 	public static final Field IDLERPMPID2_DFACTOR = Field.create("IDLERPMPID2_DFACTOR", 4048, FieldType.FLOAT);
@@ -2610,7 +2617,7 @@ public class Fields {
 	USEADVANCECORRECTIONSFORCRANKING,
 	USETPSADVANCETABLE,
 	ETBCALIBRATIONONSTART,
-	UNUSED_1484_BIT_21,
+	USEIACPIDMULTTABLE,
 	UNUSED_1484_BIT_22,
 	UNUSED_1484_BIT_23,
 	UNUSED_1484_BIT_24,
@@ -2904,6 +2911,10 @@ public class Fields {
 	IDLERPMPID_ITERMMAX,
 	MC33972SPIDEVICE,
 	ETBIDLETHROTTLERANGE,
+	TRIGGERCOMPCENTERVOLT,
+	TRIGGERCOMPHYSTMIN,
+	TRIGGERCOMPHYSTMAX,
+	TRIGGERCOMPSENSORSATRPM,
 	IDLERPMPID2_PFACTOR,
 	IDLERPMPID2_IFACTOR,
 	IDLERPMPID2_DFACTOR,
