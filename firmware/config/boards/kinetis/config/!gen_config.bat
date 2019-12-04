@@ -21,9 +21,12 @@ mkdir build_kinetis
 
 java ^
  -DSystemOut.name=gen_config ^
+ -Drusefi.generator.lazyfile.enabled=true ^
  -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration/rusefi_config.txt ^
  -ts_destination tunerstudio ^
+ -with_c_defines false ^
+ -initialize_to_zero false ^
  -ts_output_name rusefi_kinetis.ini ^
  -c_defines config/boards/kinetis/config/controllers/algo/rusefi_generated.h ^
  -c_destination config/boards/kinetis/config/controllers/algo/engine_configuration_generated_structures.h ^
