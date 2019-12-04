@@ -418,7 +418,7 @@ public:
 
 	void PeriodicTask(efitime_t nowNt) override {
 		{
-			//ScopePerf perf(PE::AdcSampleSlow);
+			ScopePerf perf(PE::AdcConversionSlow);
 
 			slowAdc.conversionCount++;
 			msg_t result = adcConvert(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_BUF_DEPTH_SLOW);
@@ -430,20 +430,24 @@ public:
 			}
 		}
 
-		slowAdc.invalidateSamplesCache();
+		{
+			ScopePerf perf(PE::AdcProcessSlow);
 
-		/* Calculates the average values from the ADC samples.*/
-		for (int i = 0; i < slowAdc.size(); i++) {
-			int value = getAvgAdcValue(i, slowAdc.samples, ADC_BUF_DEPTH_SLOW, slowAdc.size());
-			adcsample_t prev = slowAdc.values.adc_data[i];
-			float result = (slowAdcCounter == 0) ? value :
-					CONFIG(slowAdcAlpha) * value + (1 - CONFIG(slowAdcAlpha)) * prev;
+			slowAdc.invalidateSamplesCache();
 
-			slowAdc.values.adc_data[i] = (int)result;
+			/* Calculates the average values from the ADC samples.*/
+			for (int i = 0; i < slowAdc.size(); i++) {
+				int value = getAvgAdcValue(i, slowAdc.samples, ADC_BUF_DEPTH_SLOW, slowAdc.size());
+				adcsample_t prev = slowAdc.values.adc_data[i];
+				float result = (slowAdcCounter == 0) ? value :
+						CONFIG(slowAdcAlpha) * value + (1 - CONFIG(slowAdcAlpha)) * prev;
+
+				slowAdc.values.adc_data[i] = (int)result;
+			}
+			slowAdcCounter++;
+
+			AdcSubscription::UpdateSubscribers();
 		}
-		slowAdcCounter++;
-
-		AdcSubscription::UpdateSubscribers();
 	}
 };
 
