@@ -229,7 +229,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, t
 	if (privateTriggerDefinitionSize == 0) {
 		privateTriggerDefinitionSize = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-			SingleWave *wave = &this->wave.channels[i];
+			SingleChannelStateSequence *wave = &this->wave.channels[i];
 
 			if (wave->pinStates == NULL) {
 				warning(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");

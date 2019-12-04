@@ -15,7 +15,7 @@
 #include "fuel_math.h"
 
 #include "status_loop.h"
-#include "wave_analyzer.h"
+#include "logic_analyzer.h"
 #include "pin_repository.h"
 #include "pwm_generator_logic.h"
 

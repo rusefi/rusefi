@@ -33,7 +33,7 @@
 
 // Build the logic analyzer support.
 // A logic analyzer viewer is included in the java console.
-#define EFI_WAVE_ANALYZER TRUE
+#define EFI_LOGIC_ANALYZER TRUE
 
 // A development feature to test output jitter and consistency
 #define EFI_PWM_TESTER FALSE
