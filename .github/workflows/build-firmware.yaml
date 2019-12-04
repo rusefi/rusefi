@@ -55,7 +55,11 @@ jobs:
           - build-type: release
             extra-params: -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_TRACE=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
             build-debug-level-opt: -O2 -ggdb -g3
-    
+
+        exclude:
+          - build-target: kinetis
+            build-type: debug
+
     steps:
     - uses: actions/checkout@v1
       with:
