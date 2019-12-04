@@ -1,3 +1,11 @@
+include $(PROJECT_DIR)/controllers/algo/algo.mk
+include $(PROJECT_DIR)/controllers/core/core.mk
+include $(PROJECT_DIR)/controllers/math/math.mk
+include $(PROJECT_DIR)/controllers/trigger/trigger.mk
+include $(PROJECT_DIR)/controllers/sensors/sensors.mk
+include $(PROJECT_DIR)/controllers/system/system.mk
+#include $(PROJECT_DIR)/controllers/gauges/gauges.mk
+
 CONTROLLERS_DIR=$(PROJECT_DIR)/controllers
 
 CONTROLLERSSRC =
@@ -5,12 +13,12 @@ CONTROLLERSSRC =
 CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/actuators/electronic_throttle.cpp \
 	$(CONTROLLERS_DIR)/actuators/alternator_controller.cpp \
-	$(CONTROLLERS_DIR)/actuators/malfunction_indicator.cpp \
-	$(CONTROLLERS_DIR)/actuators/tachometer.cpp \
 	$(CONTROLLERS_DIR)/actuators/idle_thread.cpp \
 	$(CONTROLLERS_DIR)/actuators/pwm_tester.cpp \
 	$(CONTROLLERS_DIR)/actuators/algo/aux_pid.cpp \
-	$(CONTROLLERS_DIR)/actuators/lcd_controller.cpp \
+	$(CONTROLLERS_DIR)/gauges/tachometer.cpp \
+	$(CONTROLLERS_DIR)/gauges/malfunction_indicator.cpp \
+	$(CONTROLLERS_DIR)/gauges/lcd_controller.cpp \
 	$(CONTROLLERS_DIR)/scheduling/signal_executor_sleep.cpp \
 	$(CONTROLLERS_DIR)/scheduling/single_timer_executor.cpp \
 	$(CONTROLLERS_DIR)/scheduling/pwm_generator_logic.cpp \
@@ -32,7 +40,10 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/algo \
 	$(CONTROLLERS_DIR)/trigger/decoders \
 	$(CONTROLLERS_DIR)/trigger \
+    $(CONTROLLERS_DIR)/sensors \
+	$(CONTROLLERS_DIR)/sensors/converters \
 	$(CONTROLLERS_DIR)/core \
+	$(CONTROLLERS_DIR)/gauges \
 	$(CONTROLLERS_DIR)/math \
 	$(CONTROLLERS_DIR)/generated \
 	$(CONTROLLERS_DIR)/actuators \
