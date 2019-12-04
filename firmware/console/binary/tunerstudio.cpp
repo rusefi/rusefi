@@ -95,11 +95,11 @@
 
 
 #ifndef EFI_IDLE_CONTROL
- #if EFI_IDLE_INCREMENTAL_PID_CIC
+ #if EFI_IDLE_PID_CIC
   extern PidCic idlePid;
  #else
   extern Pid idlePid;
- #endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
+ #endif /* EFI_IDLE_PID_CIC */
 #endif /* EFI_IDLE_CONTROL */
 
 

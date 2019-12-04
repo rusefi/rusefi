@@ -58,7 +58,7 @@ static bool shouldResetPid = false;
 // See automaticIdleController().
 static bool mightResetPid = false;
 
-#if EFI_IDLE_INCREMENTAL_PID_CIC
+#if EFI_IDLE_PID_CIC
 // Use new PID with CIC integrator
 PidCic idlePid;
 #else
@@ -85,7 +85,7 @@ public:
 };
 
 PidWithOverrides idlePid;
-#endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
+#endif /* EFI_IDLE_PID_CIC */
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
 static SimplePwm idleSolenoid("idle");
