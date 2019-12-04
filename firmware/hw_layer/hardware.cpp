@@ -215,10 +215,12 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		 */
 		efiAssertVoid(CUSTOM_ERR_6676, getCurrentRemainingStack() > 128, "lowstck#9b");
 
+#if EFI_SENSOR_CHART
 		if (ENGINE(sensorChartMode) == SC_AUX_FAST1) {
 			float voltage = getAdcValue("fAux1", engineConfiguration->bc.auxFastSensor1_adcChannel);
 			scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX), voltage);
 		}
+#endif /* EFI_SENSOR_CHART */
 
 #if EFI_MAP_AVERAGING
 		mapAveragingAdcCallback(fastAdc.samples[fastMapSampleIndex]);
@@ -227,7 +229,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		if (CONFIGB(isHip9011Enabled)) {
 			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
 		}
-#endif
+#endif /* EFI_HIP_9011 */
 //		if (tpsSampleIndex != TPS_IS_SLOW) {
 //			tpsFastAdc = fastAdc.samples[tpsSampleIndex];
 //		}
