@@ -175,7 +175,7 @@
 #define EFI_IDLE_CONTROL TRUE
 #endif
 
-#define EFI_IDLE_INCREMENTAL_PID_CIC FALSE
+#define EFI_IDLE_PID_CIC FALSE
 
 /**
  * Control the main power relay based on measured ignition voltage (Vbatt)
@@ -336,6 +336,7 @@
 #define EFI_COMP_PRIMARY_DEVICE (&COMPD3)
 #define EFI_COMP_TRIGGER_CHANNEL 6		// =E7
 //#define EFI_TRIGGER_DEBUG_BLINK TRUE
+//#define EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS TRUE
 
 #define LED_WARNING_BRAIN_PIN GPIOD_13
 
