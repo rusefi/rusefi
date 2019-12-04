@@ -44,7 +44,8 @@ jobs:
           - build-target: kinetis
             efi-cpu: kinetis
             efi-board: kinetis
-            extra-extra-params: -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__USE_CMSI
+            extra-extra-params: -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__USE_CMSI -DFIRMWARE_ID=\"kinetis\" -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
+            extra-options: USE_FATFS=no USE_BOOTLOADER=no
 
           # Debug vs. release configuration
           - build-type: debug
@@ -75,7 +76,7 @@ jobs:
     # Build the firmware!
     - name: Build Firmware
       working-directory: ./firmware/
-      run: make -j4 PROJECT_BOARD=${{matrix.efi-board}} PROJECT_CPU=${{matrix.efi-cpu}} EXTRA_PARAMS="${{matrix.extra-params}} ${{matrix.extra-extra-params}}" DEBUG_LEVEL_OPT='${{matrix.build-debug-level-opt}}'
+      run: make -j4 PROJECT_BOARD=${{matrix.efi-board}} PROJECT_CPU=${{matrix.efi-cpu}} EXTRA_PARAMS="${{matrix.extra-params}} ${{matrix.extra-extra-params}}" DEBUG_LEVEL_OPT='${{matrix.build-debug-level-opt}}' ${{matrix.extra-options}}
       
     # The next two steps upload the bin and elf as build artifacts
     - name: Upload elf
