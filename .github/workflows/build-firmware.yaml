@@ -44,7 +44,8 @@ jobs:
           - build-target: kinetis
             efi-cpu: kinetis
             efi-board: kinetis
-            extra-params: -DDUMMY -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__USE_CMSI
+            extra-extra-params: -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__USE_CMSI -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
+            extra-options: USE_FATFS=no USE_BOOTLOADER=no
 
           # Debug vs. release configuration
           - build-type: debug
@@ -54,7 +55,11 @@ jobs:
           - build-type: release
             extra-params: -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_TRACE=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
             build-debug-level-opt: -O2 -ggdb -g3
-    
+
+        exclude:
+          - build-target: kinetis
+            build-type: debug
+
     steps:
     - uses: actions/checkout@v1
       with:
@@ -75,7 +80,7 @@ jobs:
     # Build the firmware!
     - name: Build Firmware
       working-directory: ./firmware/
-      run: make -j4 PROJECT_BOARD=${{matrix.efi-board}} PROJECT_CPU=${{matrix.efi-cpu}} EXTRA_PARAMS="${{matrix.extra-params}}" DEBUG_LEVEL_OPT='${{matrix.build-debug-level-opt}}'
+      run: make -j4 PROJECT_BOARD=${{matrix.efi-board}} PROJECT_CPU=${{matrix.efi-cpu}} EXTRA_PARAMS="${{matrix.extra-params}} ${{matrix.extra-extra-params}}" DEBUG_LEVEL_OPT='${{matrix.build-debug-level-opt}}' ${{matrix.extra-options}}
       
     # The next two steps upload the bin and elf as build artifacts
     - name: Upload elf
