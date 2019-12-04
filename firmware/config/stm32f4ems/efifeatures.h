@@ -194,7 +194,7 @@
 #define EFI_IDLE_CONTROL TRUE
 #endif
 
-#define EFI_IDLE_INCREMENTAL_PID_CIC FALSE
+#define EFI_IDLE_PID_CIC FALSE
 
 /**
  * Control the main power relay based on measured ignition voltage (Vbatt)

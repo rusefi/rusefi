@@ -23,13 +23,36 @@ EXTERN_ENGINE
 ;
 static Logging *logger;
 
-static int centeredDacValue = 127;
+static volatile int centeredDacValue = 127;
+static volatile int toothCnt = 0;
+static volatile int dacHysteresisMin = 1;	// = 5V * 1/256 (8-bit DAC) = ~20mV
+static volatile int dacHysteresisMax = 15;	// = ~300mV
+static volatile int dacHysteresisDelta = dacHysteresisMin;
+static volatile int hystUpdatePeriodNumEvents = 116; // every ~1 turn of 60-2 wheel
+static volatile efitick_t prevNt = 0;
+// VR-sensor saturation stuff
+static volatile float curVrFreqNt = 0, saturatedVrFreqNt = 0;
 
-static const int dacNoiseDeltaMin = 1;	// = 5V * 1/256 (8-bit DAC) = ~20mV
-static const int dacNoiseDeltaMax = 15;	// = ~300mV
-
-// todo: interpolate between min and max depending on the signal level (adaptive hysteresis)
-static const int dacNoiseDelta = dacNoiseDeltaMax;
+// We want to interpolate between min and max depending on the signal level (adaptive hysteresis).
+// But we don't want to measure the signal amplitude directly, so we estimate it by measuring the signal frequency:
+// for VR sensors, the amplitude is inversely proportional to the tooth's 'time-width'.
+// We find it by dividing the total time by the teeth count, and use the reciprocal value as signal frequency!
+static void setHysteresis(COMPDriver *comp, int sign) {
+	// update the hysteresis threshold, but not for every tooth
+#ifdef EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS
+	if (toothCnt++ > hystUpdatePeriodNumEvents) {
+		efitick_t nowNt = getTimeNowNt();
+		curVrFreqNt = (float)toothCnt / (float)(nowNt - prevNt);
+		dacHysteresisDelta = (int)efiRound(interpolateClamped(0.0f, dacHysteresisMin, saturatedVrFreqNt, dacHysteresisMax, curVrFreqNt), 1.0f);
+		toothCnt = 0;
+		prevNt = nowNt;
+#ifdef TRIGGER_COMP_EXTREME_LOGGING
+		scheduleMsg(logger, "* f=%f d=%d", curVrFreqNt * 1000.0f, dacHysteresisDelta);
+#endif /* TRIGGER_COMP_EXTREME_LOGGING */
+	}
+#endif /* EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS */
+	comp_lld_set_dac_value(comp, centeredDacValue + dacHysteresisDelta * sign);
+}
 
 static void comp_shaft_callback(COMPDriver *comp) {
 	uint32_t status = comp_lld_get_status(comp);
@@ -43,7 +66,7 @@ static void comp_shaft_callback(COMPDriver *comp) {
 			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
 		hwHandleShaftSignal(signal);
 		// shift the threshold down a little bit to avoid false-triggering (threshold hysteresis)
-		comp_lld_set_dac_value(comp, centeredDacValue - dacNoiseDelta);
+		setHysteresis(comp, -1);
 	}
 
 	if (status & COMP_IRQ_FALLING) {
@@ -51,7 +74,7 @@ static void comp_shaft_callback(COMPDriver *comp) {
 			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
 		hwHandleShaftSignal(signal);
 		// shift the threshold up a little bit to avoid false-triggering (threshold hysteresis)
-		comp_lld_set_dac_value(comp, centeredDacValue + dacNoiseDelta);
+		setHysteresis(comp, 1);
 	}
 }
 
@@ -82,13 +105,36 @@ void turnOnTriggerInputPins(Logging *sharedLogger) {
 	applyNewTriggerInputPins();
 }
 
+static int getDacValue(uint8_t voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	constexpr float maxDacValue = 255.0f;	// 8-bit DAC
+	return (int)efiRound(maxDacValue * (float)voltage * VOLTAGE_1_BYTE_PACKING_DIV / CONFIG(adcVcc), 1.0f);
+}
+
 void startTriggerInputPins(void) {
 	//efiAssertVoid(CUSTOM_ERR_, !isCompEnabled, "isCompEnabled");
+	if (isCompEnabled) {
+		scheduleMsg(logger, "startTIPins(): already enabled!");
+		return;
+	}
 
-	constexpr float vSensorRef = 2.5f;	// 2.5V resistor divider; todo: migrate to settings?
-	constexpr float maxDacValue = 255.0f;
-	centeredDacValue = (int)efiRound(maxDacValue / engineConfiguration->adcVcc * vSensorRef, 1.0f);
+	centeredDacValue = getDacValue(CONFIG(triggerCompCenterVolt) PASS_ENGINE_PARAMETER_SUFFIX);	// usually 2.5V resistor divider
 	
+	dacHysteresisMin = getDacValue(CONFIG(triggerCompHystMin) PASS_ENGINE_PARAMETER_SUFFIX);	// usually ~20mV
+	dacHysteresisMax = getDacValue(CONFIG(triggerCompHystMax) PASS_ENGINE_PARAMETER_SUFFIX);	// usually ~300mV
+	dacHysteresisDelta = dacHysteresisMin;
+	
+	// 20 rpm (60_2) = 1000*60/((2*60)*20) = 25 ms for 1 tooth event
+	float satRpm = CONFIG(triggerCompSensorSatRpm) * RPM_1_BYTE_PACKING_MULT;
+	hystUpdatePeriodNumEvents = getTriggerSize();	// = 116 for "60-2" trigger wheel
+	float saturatedToothDurationUs = 60.0f * US_PER_SECOND_F / satRpm / hystUpdatePeriodNumEvents;
+	saturatedVrFreqNt = 1.0f / US2NT(saturatedToothDurationUs);
+	
+	scheduleMsg(logger, "startTIPins(): cDac=%d hystMin=%d hystMax=%d satRpm=%.0f satFreq*1k=%f period=%d", 
+		centeredDacValue, dacHysteresisMin, dacHysteresisMax, satRpm, saturatedVrFreqNt * 1000.0f, hystUpdatePeriodNumEvents);
+#ifdef EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS
+	scheduleMsg(logger, "startTIPins(): ADAPTIVE_HYSTERESIS enabled!");
+#endif /* EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS */
+		
 	int channel = EFI_COMP_TRIGGER_CHANNEL; // todo: use getInputCaptureChannel(hwPin);
 
 	// todo: set pin mode to default (analog/comparator)
@@ -105,8 +151,13 @@ void startTriggerInputPins(void) {
 }
 
 void stopTriggerInputPins(void) {
-	if (!isCompEnabled)
+	if (!isCompEnabled) {
+		scheduleMsg(logger, "stopTIPins(): already disabled!");
 		return;
+	}
+
+	scheduleMsg(logger, "stopTIPins();");
+
 	compDisable(EFI_COMP_PRIMARY_DEVICE);
 	isCompEnabled = false;
 #if 0
