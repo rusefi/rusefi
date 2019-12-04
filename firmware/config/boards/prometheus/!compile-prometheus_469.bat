@@ -8,4 +8,3 @@ set USE_BOOTLOADER=yes
 
 call config/boards/common_make.bat
 
-call config/boards/clean_env_variables.bat

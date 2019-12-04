@@ -12,5 +12,3 @@ set EXTRA_PARAMS=-DDUMMY -DSTM32F767xx ^
 set DEBUG_LEVEL_OPT="-O2"
 
 call config/boards/common_make.bat
-
-call config/boards/clean_env_variables.bat

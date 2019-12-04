@@ -7,4 +7,3 @@ set PROJECT_BOARD=prometheus/f405
 
 call config/boards/common_make.bat
 
-call config/boards/clean_env_variables.bat
