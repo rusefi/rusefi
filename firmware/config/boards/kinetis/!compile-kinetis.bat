@@ -17,7 +17,7 @@ cd ../../..
 
 rm -f build_kinetis/rusefi_kinetis.*
 
-make -r -j4 2> err.log
+make -r -j4
 rem rm -f build/rusefi.dfu
 rem dir build
 rem ..\misc\hex2dfu\HEX2DFU.exe build/rusefi.hex   -out build/rusefi.dfu
