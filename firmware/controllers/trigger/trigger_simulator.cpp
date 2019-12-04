@@ -39,19 +39,19 @@ void TriggerStimulatorHelper::feedSimulatedEvent(TriggerState *state, TriggerSha
 
 	int time = (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
 
-	MultiWave *multiWave = &shape->wave;
+	MultiChannelStateSequence *multiChannelStateSequence = &shape->wave;
 
 #if EFI_UNIT_TEST
 	int prevIndex = getPreviousIndex(stateIndex, shape->getSize());
 
-	pin_state_t primaryWheelState = multiWave->getChannelState(0, prevIndex);
-	pin_state_t newPrimaryWheelState = multiWave->getChannelState(0, stateIndex);
+	pin_state_t primaryWheelState = multiChannelStateSequence->getChannelState(0, prevIndex);
+	pin_state_t newPrimaryWheelState = multiChannelStateSequence->getChannelState(0, stateIndex);
 
-	pin_state_t secondaryWheelState = multiWave->getChannelState(1, prevIndex);
-	pin_state_t newSecondaryWheelState = multiWave->getChannelState(1, stateIndex);
+	pin_state_t secondaryWheelState = multiChannelStateSequence->getChannelState(1, prevIndex);
+	pin_state_t newSecondaryWheelState = multiChannelStateSequence->getChannelState(1, stateIndex);
 
-//	pin_state_t thirdWheelState = multiWave->getChannelState(2, prevIndex);
-//	pin_state_t new3rdWheelState = multiWave->getChannelState(2, stateIndex);
+//	pin_state_t thirdWheelState = multiChannelStateSequence->getChannelState(2, prevIndex);
+//	pin_state_t new3rdWheelState = multiChannelStateSequence->getChannelState(2, stateIndex);
 
 	if (printTriggerDebug) {
 		printf("feedSimulatedEvent: %d>%d primary %d>%d secondary %d>%d\r\n", prevIndex, stateIndex, primaryWheelState, newPrimaryWheelState,
@@ -62,22 +62,22 @@ void TriggerStimulatorHelper::feedSimulatedEvent(TriggerState *state, TriggerSha
 
 	// todo: code duplication with TriggerEmulatorHelper::handleEmulatorCallback?
 
-	if (needEvent(stateIndex, size, multiWave, 0)) {
-		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/0, stateIndex);
+	if (needEvent(stateIndex, size, multiChannelStateSequence, 0)) {
+		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/0, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING;
 		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
 			state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
-	if (needEvent(stateIndex, size, multiWave, 1)) {
-		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/1, stateIndex);
+	if (needEvent(stateIndex, size, multiChannelStateSequence, 1)) {
+		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/1, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
 		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
 			state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
-	if (needEvent(stateIndex, size, multiWave, 2)) {
-		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/2, stateIndex);
+	if (needEvent(stateIndex, size, multiChannelStateSequence, 2)) {
+		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/2, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
 		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
 			state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER_SUFFIX);

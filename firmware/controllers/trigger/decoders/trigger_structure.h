@@ -8,9 +8,9 @@
 #ifndef TRIGGER_STRUCTURE_H_
 #define TRIGGER_STRUCTURE_H_
 
+#include "state_sequence.h"
 #include "globalaccess.h"
 #include "engine_configuration_generated_structures.h"
-#include "efi_wave.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
 
@@ -59,7 +59,7 @@ class trigger_shape_helper {
 public:
 	trigger_shape_helper();
 
-	SingleWave channels[TRIGGER_CHANNEL_COUNT];
+	SingleChannelStateSequence channels[TRIGGER_CHANNEL_COUNT];
 private:
 	pin_state_t pinStates[TRIGGER_CHANNEL_COUNT][PWM_PHASE_MAX_COUNT];
 };
@@ -187,7 +187,7 @@ public:
 	int triggerSignals[PWM_PHASE_MAX_COUNT];
 #endif
 
-	MultiWave wave;
+	MultiChannelStateSequence wave;
 
 	// todo: add a runtime validation which would verify that this field was set properly
 	// todo: maybe even automate this flag calculation?

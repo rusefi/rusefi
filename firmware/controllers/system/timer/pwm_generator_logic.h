@@ -8,8 +8,8 @@
 #ifndef PWM_GENERATOR_LOGIC_H_
 #define PWM_GENERATOR_LOGIC_H_
 
+#include "../../core/state_sequence.h"
 #include "global.h"
-#include "efi_wave.h"
 #include "scheduler.h"
 #include "efi_gpio.h"
 
@@ -54,8 +54,8 @@ typedef enum {
 class PwmConfig {
 public:
 	PwmConfig();
-	PwmConfig(float *switchTimes, SingleWave *waves);
-	void init(float *switchTimes, SingleWave *waves);
+	PwmConfig(float *switchTimes, SingleChannelStateSequence *waves);
+	void init(float *switchTimes, SingleChannelStateSequence *waves);
 	void *arg = nullptr;
 
 	void weComplexInit(const char *msg,
@@ -82,7 +82,7 @@ public:
 
 	// todo: 'outputPins' should be extracted away from here since technically one can want PWM scheduler without actual pin output
 	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
-	MultiWave multiWave;
+	MultiChannelStateSequence multiChannelStateSequence;
 	efitimeus_t togglePwmState();
 	void stop();
 
@@ -120,10 +120,10 @@ public:
 	explicit SimplePwm(const char *name);
 	void setSimplePwmDutyCycle(float dutyCycle);
 	pin_state_t pinStates[2];
-	SingleWave sr[1];
+	SingleChannelStateSequence sr[1];
 	float _switchTimes[2];
 private:
-	SingleWave waveInstance;
+	SingleChannelStateSequence waveInstance;
 };
 
 /**

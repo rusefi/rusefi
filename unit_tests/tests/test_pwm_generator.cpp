@@ -18,7 +18,7 @@ static int expectedTimeOfNextEvent;
 static int pinValue = -1;
 
 static void testApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-	pinValue = state->multiWave.getChannelState(/*channelIndex*/0, stateIndex);
+	pinValue = state->multiChannelStateSequence.getChannelState(/*channelIndex*/0, stateIndex);
 
 	printf("PWM_test: setPinValue=%d @ timeNow=%d\r\n", pinValue, timeNowUs);
 }

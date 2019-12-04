@@ -11,7 +11,7 @@
 #if EFI_PWM_TESTER
 
 #include "pwm_tester.h"
-#include "efi_wave.h"
+#include "state_requence.h"
 #include "pwm_generator_logic.h"
 #include "engine.h"
 #include "pwm_generator.h"
