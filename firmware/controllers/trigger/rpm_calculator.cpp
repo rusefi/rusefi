@@ -269,7 +269,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		int signal = 1000 * ckpSignalType + index;
 		scAddData(crankAngle, signal);
 	}
-#endif
+#endif /* EFI_SENSOR_CHART */
 
 	if (rpmState->isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		// we are here only once trigger is synchronized for the first time
