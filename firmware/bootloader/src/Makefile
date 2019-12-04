@@ -156,34 +156,22 @@ CSRC = $(STARTUPSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
 	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
-	$(ENGINES_SRC) \
 	$(CONSOLESRC) \
 	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
 	$(HW_LAYER_DRIVERS_CORE) \
-	$(CONTROLLERS_ALGO_SRC) \
-	$(CONTROLLERS_CORE_SRC) \
-	$(CONTROLLERS_SENSORS_SRC) \
 	$(FATFSSRC) \
 	$(SYSTEMSRC) \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(CHCPPSRC) \
-	$(TRIGGER_SRC_CPP) \
-	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(DEV_SRC_CPP) \
-	$(CONTROLLERS_ALGO_SRC_CPP) \
-	$(SYSTEMSRC_CPP) \
 	$(BOARDSRC_CPP) \
-	$(ENGINES_SRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
-	$(CONTROLLERS_SENSORS_SRC_CPP) \
-	$(CONTROLLERS_CORE_SRC_CPP) \
-	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(PROJECT_DIR)/console/binary/tunerstudio_io.cpp \
 	$(PROJECT_DIR)/controllers/system/efi_gpio.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine_configuration.cpp \
