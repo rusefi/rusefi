@@ -34,6 +34,7 @@
 #include "rpm_calculator.h"
 #include "pwm_generator.h"
 #include "idle_thread.h"
+#include "engine_math.h"
 
 #include "engine.h"
 #include "periodic_task.h"
@@ -58,7 +59,7 @@ static bool shouldResetPid = false;
 // See automaticIdleController().
 static bool mightResetPid = false;
 
-#if EFI_IDLE_INCREMENTAL_PID_CIC
+#if EFI_IDLE_PID_CIC
 // Use new PID with CIC integrator
 PidCic idlePid;
 #else
@@ -85,13 +86,15 @@ public:
 };
 
 PidWithOverrides idlePid;
-#endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
+#endif /* EFI_IDLE_PID_CIC */
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
 static SimplePwm idleSolenoid("idle");
 
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
+
+static iacPidMultiplier_t iacPidMultMap("iacPidMultiplier");
 
 /**
  * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
@@ -273,17 +276,18 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
 	mightResetPid = true;
 
-#if EFI_IDLE_INCREMENTAL_PID_CIC
+	// Apply PID Multiplier if used
+	if (CONFIG(useIacPidMultTable)) {
+		float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
+		float multCoef = iacPidMultMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, engineLoad);
+		// PID can be completely disabled of multCoef==0, or it just works as usual if multCoef==1
+		newValue = interpolateClamped(0.0f, engine->engineState.idle.baseIdlePosition, 1.0f, newValue, multCoef);
+	}
+	
+	// Apply PID Deactivation Threshold as a smooth taper for TPS transients.
 	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	// Treat the 'newValue' as if it contains not an actual IAC position, but an incremental delta.
-	// So we add this delta to the base IAC position, with a smooth taper for TPS transients.
-	newValue = engine->engineState.idle.baseIdlePosition + interpolateClamped(0.0f, newValue, CONFIGB(idlePidDeactivationTpsThreshold), 0.0f, tpsPos);
-
-	// apply the PID limits
-	newValue = maxF(newValue, CONFIG(idleRpmPid.minValue));
-	newValue = minF(newValue, CONFIG(idleRpmPid.maxValue));
-#endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
+	// if tps==0 then PID just works as usual, or we completely disable it if tps>=threshold
+	newValue = interpolateClamped(0.0f, newValue, CONFIGB(idlePidDeactivationTpsThreshold), engine->engineState.idle.baseIdlePosition, tpsPos);
 
 	// Interpolate to the manual position when RPM is close to the upper RPM limit (if idlePidRpmUpperLimit is set).
 	// If RPM increases and the throttle is closed, then we're in coasting mode, and we should smoothly disable auto-pid.
@@ -451,6 +455,7 @@ IdleController idleControllerInstance;
 
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	idlePid.updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
+	iacPidMultMap.init(CONFIG(iacPidMultTable), CONFIG(iacPidMultLoadBins), CONFIG(iacPidMultRpmBins));
 }
 
 void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

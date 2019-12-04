@@ -120,6 +120,8 @@ struct_no_prefix engine_configuration_s
 #define PEDAL_TO_TPS_SIZE 8
 #define RPM_1_BYTE_PACKING_MULT 50
 
+#define VOLTAGE_1_BYTE_PACKING_DIV 0.02
+
 #define FSIO_TABLE_8 8
 
 #define FSIO_CURVE_8 8
@@ -786,7 +788,7 @@ bit useSeparateAdvanceForCranking;+This activates a separate advance table for c
 bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
 bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
 bit etbCalibrationOnStart
-bit unused_1484_bit_21
+bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit unused_1484_bit_22
 bit unused_1484_bit_23
 bit unused_1484_bit_24
@@ -1085,7 +1087,12 @@ tChargeMode_e tChargeMode;
 uint8_t[4] unusuedvref;
 uint8_t[4] unusuedsw;
 	int[3] alFIn;
-	uint8_t[4] unusedSpiPadding3;
+
+	uint8_t triggerCompCenterVolt;+Trigger comparator center point voltage;"V",        @@VOLTAGE_1_BYTE_PACKING_DIV@@,     0,      0.0,   5.1,   2
+	uint8_t triggerCompHystMin;+Trigger comparator hysteresis voltage (Min);"V",        @@VOLTAGE_1_BYTE_PACKING_DIV@@,     0,      0.0,   5.1,   2
+	uint8_t triggerCompHystMax;+Trigger comparator hysteresis voltage (Max);"V",        @@VOLTAGE_1_BYTE_PACKING_DIV@@,     0,      0.0,   5.1,   2
+	uint8_t triggerCompSensorSatRpm;+VR-sensor saturation RPM;"RPM",        @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0
+
 	pid_s idleRpmPid2
 
 	iac_pid_mult_t iacPidMultTable;
