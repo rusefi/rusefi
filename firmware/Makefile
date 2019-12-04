@@ -155,13 +155,7 @@ endif
 include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/console/console.mk
-include $(PROJECT_DIR)/controllers/algo/algo.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/core/core.mk
-include $(PROJECT_DIR)/controllers/math/math.mk
-include $(PROJECT_DIR)/controllers/sensors/sensors.mk
-include $(PROJECT_DIR)/controllers/system/system.mk
-include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
@@ -308,9 +302,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	$(DEVELOPMENT_DIR) \
 	development/hw_layer \
 	development/test \
-	$(CONTROLLERS_INC) \
-	controllers/sensors \
-	controllers/sensors/converters
+	$(CONTROLLERS_INC)
 
 #
 # Project, sources and paths

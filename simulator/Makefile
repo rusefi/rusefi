@@ -125,12 +125,6 @@ include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/algo/algo.mk
-include $(PROJECT_DIR)/controllers/core/core.mk
-include $(PROJECT_DIR)/controllers/math/math.mk
-include $(PROJECT_DIR)/controllers/sensors/sensors.mk
-include $(PROJECT_DIR)/controllers/trigger/trigger.mk
-include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
@@ -205,10 +199,8 @@ INCDIR = . \
           $(PROJECT_DIR)/hw_layer \
           $(PROJECT_DIR)/hw_layer/algo \
           $(HW_SENSORS_INC) \
-    $(CONTROLLERS_INC) \
  	$(DEVELOPMENT_DIR) \
-    $(PROJECT_DIR)/controllers/sensors \
-    $(PROJECT_DIR)/controllers/sensors/converters \
+    $(CONTROLLERS_INC) \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
           simulator
