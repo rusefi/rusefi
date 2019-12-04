@@ -44,7 +44,7 @@ jobs:
           - build-target: kinetis
             efi-cpu: kinetis
             efi-board: kinetis
-            extra-extra-params: -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__USE_CMSI -DFIRMWARE_ID=\\"kinetis\\" -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
+            extra-extra-params: -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__USE_CMSI -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
             extra-options: USE_FATFS=no USE_BOOTLOADER=no
 
           # Debug vs. release configuration
