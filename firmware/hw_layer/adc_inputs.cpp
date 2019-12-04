@@ -418,9 +418,16 @@ public:
 
 	void PeriodicTask(efitime_t nowNt) override {
 		{
-			ScopePerf perf(PE::AdcCallbackSlow);
+			//ScopePerf perf(PE::AdcSampleSlow);
+
+			slowAdc.conversionCount++;
 			msg_t result = adcConvert(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_BUF_DEPTH_SLOW);
-			// todo: check result
+
+			// If something went wrong - try again later
+			if (result == MSG_RESET || result == MSG_TIMEOUT) {
+				slowAdc.errorsCount++;
+				return;
+			}
 		}
 
 		slowAdc.invalidateSamplesCache();
