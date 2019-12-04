@@ -44,6 +44,7 @@ jobs:
           - build-target: kinetis
             efi-cpu: kinetis
             efi-board: kinetis
+            extra-params: -DDUMMY -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__USE_CMSI
 
           # Debug vs. release configuration
           - build-type: debug
