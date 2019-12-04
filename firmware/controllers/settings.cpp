@@ -979,7 +979,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isMapAveragingEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tunerstudio")) {
 		engineConfiguration->isTunerStudioEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "wave_analyzer")) {
+	} else if (strEqualCaseInsensitive(param, "logic_analyzer")) {
 		engineConfiguration->isWaveAnalyzerEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "manual_spinning")) {
 		engineConfiguration->isManualSpinningMode = isEnabled;
