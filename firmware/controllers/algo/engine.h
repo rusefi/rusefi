@@ -108,9 +108,11 @@ public:
 	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**
-	 * That's the linked list of pending spark firing events
+	 * That's the linked list of pending events scheduled in relation to trigger
+	 * At the moment we iterate over the whole list while looking for events for specific trigger index
+	 * We can make it an array of lists per trigger index, but that would take some RAM and probably not needed yet.
 	 */
-	AngleBasedEvent *ignitionEventsHead = nullptr;
+	AngleBasedEvent *angleBasedEventsHead = nullptr;
 	/**
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
 	 */

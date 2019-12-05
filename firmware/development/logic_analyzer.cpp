@@ -1,5 +1,5 @@
 /**
- * @file	wave_analyzer.cpp
+ * @file	logic_analyzer.cpp
  * @brief	Initialization of Input Capture pins used for rusEfi console sniffer
  *
  * This file is responsible for sniffing of external digital signals and registering
@@ -11,9 +11,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
+#include "logic_analyzer.h"
+
 #include "global.h"
 #include "os_access.h"
-#include "wave_analyzer.h"
 #include "eficonsole.h"
 #include "data_buffer.h"
 #include "pin_repository.h"
@@ -26,7 +27,7 @@
 #include "rpm_calculator.h"
 #include "engine_sniffer.h"
 
-#if EFI_WAVE_ANALYZER
+#if EFI_LOGIC_ANALYZER
 
 EXTERN_ENGINE;
 
@@ -231,4 +232,4 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 
 }
 
-#endif /* EFI_WAVE_ANALYZER */
+#endif /* EFI_LOGIC_ANALYZER */

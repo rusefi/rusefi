@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Dec 02 17:48:14 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Dec 04 00:37:59 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1709,8 +1709,9 @@ struct engine_configuration_s {
 	offset 1476 bit 20 */
 	bool etbCalibrationOnStart : 1;
 	/**
+	 * This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 	offset 1476 bit 21 */
-	bool unused_1484_bit_21 : 1;
+	bool useIacPidMultTable : 1;
 	/**
 	offset 1476 bit 22 */
 	bool unused_1484_bit_22 : 1;
@@ -2624,9 +2625,25 @@ struct engine_configuration_s {
 	 */
 	int alFIn[3];
 	/**
+	 * Trigger comparator center point voltage
 	 * offset 4036
 	 */
-	uint8_t unusedSpiPadding3[4];
+	uint8_t triggerCompCenterVolt;
+	/**
+	 * Trigger comparator hysteresis voltage (Min)
+	 * offset 4037
+	 */
+	uint8_t triggerCompHystMin;
+	/**
+	 * Trigger comparator hysteresis voltage (Max)
+	 * offset 4038
+	 */
+	uint8_t triggerCompHystMax;
+	/**
+	 * VR-sensor saturation RPM
+	 * offset 4039
+	 */
+	uint8_t triggerCompSensorSatRpm;
 	/**
 	 * offset 4040
 	 */
@@ -2909,4 +2926,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Dec 02 17:48:14 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Dec 04 00:37:59 EST 2019

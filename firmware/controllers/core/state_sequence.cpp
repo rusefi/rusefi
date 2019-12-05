@@ -1,59 +1,59 @@
 /**
- * @file	EfiWave.cpp
+ * @file	state_sequence.cpp
  *
  * @date May 18, 2014
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "global.h"
-#include "efi_wave.h"
+#include "state_sequence.h"
 #include "trigger_structure.h"
 
-SingleWave::SingleWave() {
+SingleChannelStateSequence::SingleChannelStateSequence() {
 	init(NULL);
 }
 
-SingleWave::SingleWave(pin_state_t *ps) {
+SingleChannelStateSequence::SingleChannelStateSequence(pin_state_t *ps) {
 	init(ps);
 }
 
-void SingleWave::init(pin_state_t *pinStates) {
+void SingleChannelStateSequence::init(pin_state_t *pinStates) {
 	this->pinStates = pinStates;
 }
 
-pin_state_t SingleWave::getState(int switchIndex) const {
+pin_state_t SingleChannelStateSequence::getState(int switchIndex) const {
 	pin_state_t state = pinStates[switchIndex];
 	efiAssert(OBD_PCM_Processor_Fault, state == 0 || state == 1, "wave state get", TV_FALL);
 	return state;
 }
 
-void SingleWave::setState(int switchIndex, pin_state_t state) {
+void SingleChannelStateSequence::setState(int switchIndex, pin_state_t state) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, state == 0 || state == 1, "wave state set");
 	pinStates[switchIndex] = state;
 }
 
-MultiWave::MultiWave() {
+MultiChannelStateSequence::MultiChannelStateSequence() {
 	reset();
 }
 
-MultiWave::MultiWave(float *switchTimes, SingleWave *waves) : MultiWave() {
+MultiChannelStateSequence::MultiChannelStateSequence(float *switchTimes, SingleChannelStateSequence *waves) : MultiChannelStateSequence() {
 	init(switchTimes, waves);
 }
 
-void MultiWave::init(float *switchTimes, SingleWave *channels) {
+void MultiChannelStateSequence::init(float *switchTimes, SingleChannelStateSequence *channels) {
 	this->switchTimes = switchTimes;
 	this->channels = channels;
 }
 
-void MultiWave::reset(void) {
+void MultiChannelStateSequence::reset(void) {
 	waveCount = 0;
 }
 
-float MultiWave::getSwitchTime(const int index) const {
+float MultiChannelStateSequence::getSwitchTime(const int index) const {
 	return switchTimes[index];
 }
 
-void MultiWave::checkSwitchTimes(const int size) {
+void MultiChannelStateSequence::checkSwitchTimes(const int size) {
 	if (switchTimes[size - 1] != 1) {
 		firmwareError(CUSTOM_ERR_WAVE_1, "last switch time has to be 1 not %.2f", switchTimes[size - 1]);
 		return;
@@ -65,7 +65,7 @@ void MultiWave::checkSwitchTimes(const int size) {
 	}
 }
 
-pin_state_t MultiWave::getChannelState(const int channelIndex, const int phaseIndex) const {
+pin_state_t MultiChannelStateSequence::getChannelState(const int channelIndex, const int phaseIndex) const {
 	if (channelIndex >= waveCount) {
 		// todo: would be nice to get this asserting working
 		//firmwareError(OBD_PCM_Processor_Fault, "channel index %d/%d", channelIndex, waveCount);
@@ -76,7 +76,7 @@ pin_state_t MultiWave::getChannelState(const int channelIndex, const int phaseIn
 /**
  * returns the index at which given value would need to be inserted into sorted array
  */
-int MultiWave::findInsertionAngle(const float angle, const int size) const {
+int MultiChannelStateSequence::findInsertionAngle(const float angle, const int size) const {
 	for (int i = size - 1; i >= 0; i--) {
 		if (angle > switchTimes[i])
 			return i + 1;
@@ -84,7 +84,7 @@ int MultiWave::findInsertionAngle(const float angle, const int size) const {
 	return 0;
 }
 
-int MultiWave::findAngleMatch(const float angle, const int size) const {
+int MultiChannelStateSequence::findAngleMatch(const float angle, const int size) const {
 	for (int i = 0; i < size; i++) {
 		if (isSameF(switchTimes[i], angle))
 			return i;
@@ -92,7 +92,7 @@ int MultiWave::findAngleMatch(const float angle, const int size) const {
 	return EFI_ERROR_CODE;
 }
 
-void MultiWave::setSwitchTime(const int index, const float value) {
+void MultiChannelStateSequence::setSwitchTime(const int index, const float value) {
 	efiAssertVoid(CUSTOM_ERR_PWM_SWITCH_ASSERT, switchTimes != NULL, "switchTimes");
 	switchTimes[index] = value;
 }

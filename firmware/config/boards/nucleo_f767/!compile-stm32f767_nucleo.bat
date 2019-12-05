@@ -19,4 +19,3 @@ set DEBUG_LEVEL_OPT="-O2"
 
 call config/boards/common_make.bat
 
-call config/boards/clean_env_variables.bat

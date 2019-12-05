@@ -125,12 +125,6 @@ include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/algo/algo.mk
-include $(PROJECT_DIR)/controllers/core/core.mk
-include $(PROJECT_DIR)/controllers/math/math.mk
-include $(PROJECT_DIR)/controllers/sensors/sensors.mk
-include $(PROJECT_DIR)/controllers/trigger/trigger.mk
-include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
@@ -164,7 +158,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
 	$(PROJECT_DIR)/development/trigger_emulator.cpp \
 	$(HW_LAYER_EMS_CPP) \
-	$(PROJECT_DIR)/hw_layer/sensors/cj125.cpp \
+	$(HW_SENSORS_SRC) \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
@@ -200,15 +194,12 @@ INCDIR = . \
           $(PROJECT_DIR)/console/fl_binary \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \
-          $(PROJECT_DIR)/controllers \
-          $(HW_LAYER_DRIVERS_INC) \
+         $(HW_LAYER_DRIVERS_INC) \
           $(PROJECT_DIR)/hw_layer \
           $(PROJECT_DIR)/hw_layer/algo \
           $(HW_SENSORS_INC) \
-    $(CONTROLLERS_INC) \
  	$(DEVELOPMENT_DIR) \
-    $(PROJECT_DIR)/controllers/sensors \
-    $(PROJECT_DIR)/controllers/sensors/converters \
+    $(CONTROLLERS_INC) \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
           simulator

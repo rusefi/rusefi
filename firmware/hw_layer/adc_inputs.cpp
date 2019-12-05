@@ -485,6 +485,12 @@ static void configureInputs(void) {
 	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
 	memset(adcHwChannelUsage, 0, sizeof(adcHwChannelUsage));
 
+	/**
+	 * order of analog channels here is totally random and has no meaning
+	 * we also have some weird implementation with internal indices - that all has no meaning, it's just a random implementation
+	 * which does not mean anything.
+	 */
+
 	addChannel("MAP", engineConfiguration->map.sensor.hwChannel, ADC_FAST);
 	if (hasMafSensor()) {
 		addChannel("MAF", engineConfiguration->mafAdcChannel, ADC_FAST);

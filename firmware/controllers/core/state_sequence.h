@@ -1,11 +1,11 @@
 /**
- * @file	efi_wave.h
+ * @file	state_sequence.h
  *
  * @date May 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
-#ifndef EFI_WAVE_H_
-#define EFI_WAVE_H_
+
+#pragma once
 
 #include "global.h"
 
@@ -36,13 +36,14 @@ typedef trigger_value_e pin_state_t;
  * is not implemented using a bit array, it could absolutely be a bit array
  *
  * This sequence does not know anything about signal lengths - only signal state at a given index
+ * This sequence can have consecutive zeros and ones since these sequences work as a group within MultiChannelStateSequence
  *
  * @brief   PWM configuration for the specific output pin
  */
-class SingleWave {
+class SingleChannelStateSequence {
 public:
-	SingleWave();
-	explicit SingleWave(pin_state_t *pinStates);
+	SingleChannelStateSequence();
+	explicit SingleChannelStateSequence(pin_state_t *pinStates);
 	void init(pin_state_t *pinStates);
 	/**
 	 * todo: confirm that we only deal with two states here, no magic '-1'?
@@ -59,11 +60,11 @@ public:
  * This class represents multi-channel logical signals with shared time axis
  *
  */
-class MultiWave {
+class MultiChannelStateSequence {
 public:
-	MultiWave();
-	MultiWave(float *switchTimes, SingleWave *waves);
-	void init(float *switchTimes, SingleWave *waves);
+	MultiChannelStateSequence();
+	MultiChannelStateSequence(float *switchTimes, SingleChannelStateSequence *waves);
+	void init(float *switchTimes, SingleChannelStateSequence *waves);
 	void reset(void);
 	float getSwitchTime(const int phaseIndex) const;
 	void setSwitchTime(const int phaseIndex, const float value);
@@ -77,7 +78,7 @@ public:
 	 * Number of signal channels
 	 */
 	int waveCount;
-	SingleWave *channels = nullptr;
+	SingleChannelStateSequence *channels = nullptr;
 //private:
 	/**
 	 * values in the (0..1] range which refer to points within the period at at which pin state should be changed
@@ -86,4 +87,4 @@ public:
 	float *switchTimes = nullptr;
 };
 
-#endif /* EFI_WAVE_H_ */
+

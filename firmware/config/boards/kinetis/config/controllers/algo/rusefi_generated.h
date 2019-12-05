@@ -1853,6 +1853,14 @@
 #define trigger_unusedCustomNeedSecondTriggerInput_offset_hex 210
 #define trigger_useOnlyFirstChannel_offset 528
 #define trigger_useOnlyFirstChannel_offset_hex 210
+#define triggerCompCenterVolt_offset 4036
+#define triggerCompCenterVolt_offset_hex fc4
+#define triggerCompHystMax_offset 4038
+#define triggerCompHystMax_offset_hex fc6
+#define triggerCompHystMin_offset 4037
+#define triggerCompHystMin_offset_hex fc5
+#define triggerCompSensorSatRpm_offset 4039
+#define triggerCompSensorSatRpm_offset_hex fc7
 #define triggerErrorPin_offset 828
 #define triggerErrorPin_offset_hex 33c
 #define triggerErrorPinMode_offset 829
@@ -1905,8 +1913,6 @@
 #define unused1234234_offset_hex 7fa
 #define unused556_offset 681
 #define unused556_offset_hex 2a9
-#define unused_1484_bit_21_offset 1476
-#define unused_1484_bit_21_offset_hex 5c4
 #define unused_1484_bit_22_offset 1476
 #define unused_1484_bit_22_offset_hex 5c4
 #define unused_1484_bit_23_offset 1476
@@ -1947,8 +1953,6 @@
 #define unusedHereo_wires_offset_hex 4c
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
-#define unusedSpiPadding3_offset 4036
-#define unusedSpiPadding3_offset_hex fc4
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding4_offset_hex a21
 #define unusedSpiPadding5_offset 2713
@@ -1997,6 +2001,8 @@
 #define useFSIO8ForServo1_offset_hex 5b8
 #define useFSIO9ForServo2_offset 1464
 #define useFSIO9ForServo2_offset_hex 5b8
+#define useIacPidMultTable_offset 1476
+#define useIacPidMultTable_offset_hex 5c4
 #define useIacTableForCoasting_offset 744
 #define useIacTableForCoasting_offset_hex 2e8
 #define useIdleTimingPidControl_offset 744
@@ -2050,6 +2056,7 @@
 #define veRpmBins_offset_hex 4860
 #define veTable_offset 17440
 #define veTable_offset_hex 4420
+#define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define vRefAdcChannel_offset 1470
 #define vRefAdcChannel_offset_hex 5be
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"

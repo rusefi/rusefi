@@ -19,6 +19,7 @@ todo: move Connectors wiki page content into git
 * [64 pin](176122-6-connector) Mazda Miata NA NB1, Honda Civic
 * [72 pin](1123038-2-connector) Mazda Miata NB2 
 * [121 pin](368255-2-connector) Audi
+* [134 pin](Breakout_134pin_7-967288-1) BWM
 * [154 pin](284617-1-connector) Audi
 
 # Modules

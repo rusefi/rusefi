@@ -42,8 +42,8 @@
 #include "injector_central.h"
 #include "os_util.h"
 #include "engine_math.h"
-#if EFI_WAVE_ANALYZER
-#include "wave_analyzer.h"
+#if EFI_LOGIC_ANALYZER
+#include "logic_analyzer.h"
 #endif
 #include "allsensors.h"
 #include "electronic_throttle.h"
@@ -704,11 +704,11 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 	initAlgo(sharedLogger);
 
-#if EFI_WAVE_ANALYZER
+#if EFI_LOGIC_ANALYZER
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
 		initWaveAnalyzer(sharedLogger);
 	}
-#endif /* EFI_WAVE_ANALYZER */
+#endif /* EFI_LOGIC_ANALYZER */
 
 #if EFI_CJ125
 	/**

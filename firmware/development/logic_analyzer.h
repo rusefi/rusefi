@@ -1,18 +1,15 @@
 /**
- * @file	wave_analyzer.h
- *
- * todo: rename all this 'logic analyzer' is probably much more appropriate
+ * @file	logic_analyzer.h
  *
  * @date Jan 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef WAVE_ANALYZER_H_
-#define WAVE_ANALYZER_H_
+#pragma once
 
 #include "global.h"
 
-#if EFI_WAVE_ANALYZER
+#if EFI_LOGIC_ANALYZER
 
 #include "digital_input_icu.h"
 #include "engine_sniffer.h"
@@ -57,7 +54,5 @@ void initWaveAnalyzer(Logging *sharedLogger);
 void printWave(Logging *logging);
 void showWaveInfo(void);
 
-#endif
-
-#endif /* WAVE_ANALYZER_H_ */
+#endif /* EFI_LOGIC_ANALYZER */
 

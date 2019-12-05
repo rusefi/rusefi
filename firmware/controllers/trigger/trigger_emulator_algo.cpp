@@ -13,18 +13,18 @@
  * @date Mar 3, 2014
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
+#include "state_sequence.h"
 #include "global.h"
 #include "efi_gpio.h"
-#include "efi_wave.h"
 
 int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;
 }
 
-bool needEvent(const int currentIndex, const int size, MultiWave *multiWave, int channelIndex) {
+bool needEvent(const int currentIndex, const int size, MultiChannelStateSequence *multiChannelStateSequence, int channelIndex) {
 	int prevIndex = getPreviousIndex(currentIndex, size);
-	pin_state_t previousValue = multiWave->getChannelState(channelIndex, /*phaseIndex*/prevIndex);
-	pin_state_t currentValue = multiWave->getChannelState(channelIndex, /*phaseIndex*/currentIndex);
+	pin_state_t previousValue = multiChannelStateSequence->getChannelState(channelIndex, /*phaseIndex*/prevIndex);
+	pin_state_t currentValue = multiChannelStateSequence->getChannelState(channelIndex, /*phaseIndex*/currentIndex);
 	return previousValue != currentValue;
 }
 
@@ -46,20 +46,20 @@ EXTERN_ENGINE
 
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
-	MultiWave *multiWave = &state->multiWave;
+	MultiChannelStateSequence *multiChannelStateSequence = &state->multiChannelStateSequence;
 
-	if (needEvent(stateIndex, state->phaseCount, &state->multiWave, 0)) {
-		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/0, stateIndex);
+	if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, 0)) {
+		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/0, stateIndex);
 		hwHandleShaftSignal(currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING);
 	}
 
-	if (needEvent(stateIndex, state->phaseCount, &state->multiWave, 1)) {
-		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/1, stateIndex);
+	if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, 1)) {
+		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/1, stateIndex);
 		hwHandleShaftSignal(currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
 	}
 
-	if (needEvent(stateIndex, state->phaseCount, &state->multiWave, 2)) {
-		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/2, stateIndex);
+	if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, 2)) {
+		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/2, stateIndex);
 		hwHandleShaftSignal(currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING);
 	}
 
@@ -73,9 +73,9 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 static pin_state_t pinStates1[PWM_PHASE_MAX_COUNT];
 static pin_state_t pinStates2[PWM_PHASE_MAX_COUNT];
 static pin_state_t pinStates3[PWM_PHASE_MAX_COUNT];
-static SingleWave waves[PWM_PHASE_MAX_WAVE_PER_PWM] = { SingleWave(pinStates1), SingleWave(pinStates2),
-		SingleWave(pinStates3) };
-static SingleWave sr[PWM_PHASE_MAX_WAVE_PER_PWM] = { waves[0], waves[1], waves[2] };
+static SingleChannelStateSequence waves[PWM_PHASE_MAX_WAVE_PER_PWM] = { SingleChannelStateSequence(pinStates1), SingleChannelStateSequence(pinStates2),
+		SingleChannelStateSequence(pinStates3) };
+static SingleChannelStateSequence sr[PWM_PHASE_MAX_WAVE_PER_PWM] = { waves[0], waves[1], waves[2] };
 
 static float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
 
