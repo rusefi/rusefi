@@ -102,12 +102,14 @@ static int adcDebugReporting = false;
 EXTERN_ENGINE;
 
 static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth, int numChannels) {
-	adcsample_t result = 0;
+	uint32_t result = 0;
 	for (int i = 0; i < bufDepth; i++) {
 		result += samples[index];
 		index += numChannels;
 	}
-	return result / bufDepth;
+
+	// this truncation is guaranteed to not be lossy - the average can't be larger than adcsample_t
+	return static_cast<adcsample_t>(result / bufDepth);
 }
 
 
@@ -437,12 +439,12 @@ public:
 
 			/* Calculates the average values from the ADC samples.*/
 			for (int i = 0; i < slowAdc.size(); i++) {
-				int value = getAvgAdcValue(i, slowAdc.samples, ADC_BUF_DEPTH_SLOW, slowAdc.size());
+				adcsample_t value = getAvgAdcValue(i, slowAdc.samples, ADC_BUF_DEPTH_SLOW, slowAdc.size());
 				adcsample_t prev = slowAdc.values.adc_data[i];
 				float result = (slowAdcCounter == 0) ? value :
 						CONFIG(slowAdcAlpha) * value + (1 - CONFIG(slowAdcAlpha)) * prev;
 
-				slowAdc.values.adc_data[i] = (int)result;
+				slowAdc.values.adc_data[i] = (adcsample_t)result;
 			}
 			slowAdcCounter++;
 
