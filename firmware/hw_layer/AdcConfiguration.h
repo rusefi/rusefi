@@ -37,7 +37,7 @@ public:
 	// F4 does not care
 	__ALIGNED(32) adcsample_t samples[ADC_MAX_CHANNELS_COUNT * MAX_ADC_GRP_BUF_DEPTH];
 	// Assert multiple of 32 bytes long so we don't stomp on the data after the buffer
-	static_assert(sizeof(samples) % 32 == 0, "ADC sample buffer alignment");
+	static_assert(sizeof(samples) % 32 == 0, "ADC sample buffer size must be a multiple of 32 bytes");
 
 	int getAdcValueByHwChannel(int hwChannel) const;
 
