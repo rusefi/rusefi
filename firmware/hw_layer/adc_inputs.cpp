@@ -416,7 +416,10 @@ int getSlowAdcCounter() {
 
 class SlowAdcController : public PeriodicController<256> {
 public:
-	SlowAdcController() : PeriodicController("ADC", NORMALPRIO + 5, 200) { }
+	SlowAdcController() 
+		: PeriodicController("ADC", NORMALPRIO + 5, 200)
+	{
+	}
 
 	void PeriodicTask(efitime_t nowNt) override {
 		{
@@ -576,6 +579,8 @@ void initAdcInputs() {
 #endif /* ADC_CHANNEL_SENSOR */
 
 	slowAdc.init();
+
+	// Start the slow ADC thread
 	slowAdcController.Start();
 
 	if (CONFIGB(isFastAdcEnabled)) {
