@@ -364,7 +364,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	triggerState.decodeTriggerEvent(nullptr, signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree

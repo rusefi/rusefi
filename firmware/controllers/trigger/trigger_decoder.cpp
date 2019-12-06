@@ -59,7 +59,6 @@ void TriggerState::setShaftSynchronized(bool value) {
 }
 
 void TriggerState::resetTriggerState() {
-	triggerCycleCallback = nullptr;
 	setShaftSynchronized(false);
 	toothed_previous_time = 0;
 
@@ -385,7 +384,8 @@ void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void TriggerState::onShaftSynchronization(efitime_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
+		efitime_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setShaftSynchronized(true);
 	// this call would update duty cycle values
 	nextTriggerEvent()
@@ -416,7 +416,8 @@ void TriggerState::onShaftSynchronization(efitime_t nowNt, trigger_wheel_e trigg
  * @param signal type of event which just happened
  * @param nowNt current time
  */
-void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCallback,
+		trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::DecodeTriggerEvent, static_cast<uint8_t>(signal));
 	
 	bool useOnlyRisingEdgeForTrigger = CONFIG(useOnlyRisingEdgeForTrigger);
@@ -660,7 +661,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				}
 			}
 
-			onShaftSynchronization(nowNt, triggerWheel PASS_ENGINE_PARAMETER_SUFFIX);
+			onShaftSynchronization(triggerCycleCallback, nowNt, triggerWheel PASS_ENGINE_PARAMETER_SUFFIX);
 
 		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()
@@ -747,9 +748,8 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	 *
 	 * todo: add a comment why are we doing '2 * shape->getSize()' here?
 	 */
-	state->triggerCycleCallback = onFindIndexCallback;
 
-	helper.assertSyncPositionAndSetDutyCycle(syncIndex, state, shape PASS_ENGINE_PARAMETER_SUFFIX);
+	helper.assertSyncPositionAndSetDutyCycle(onFindIndexCallback, syncIndex, state, shape PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engine->isInitializingTrigger = false;
 	return syncIndex % shape->getSize();

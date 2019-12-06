@@ -118,28 +118,28 @@ TEST(misc, testSomethingWeird) {
 
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
 	int r = 10;
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized"; // still no synchronization
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
 	ASSERT_EQ(0, sta->getCurrentIndex());
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(1, sta->getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+		sta->decodeTriggerEvent(nullptr, SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 		assertEqualsM("even", i++, sta->getCurrentIndex());
-		sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+		sta->decodeTriggerEvent(nullptr, SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 		assertEqualsM("odd", i++, sta->getCurrentIndex());
 	}
 
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(10, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(11, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(0, sta->getCurrentIndex()); // new revolution
 }
 
