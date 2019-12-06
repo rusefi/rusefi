@@ -2,11 +2,10 @@
  * @file	trigger_structure.h
  *
  * @date Dec 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef TRIGGER_STRUCTURE_H_
-#define TRIGGER_STRUCTURE_H_
+#pragma once
 
 #include "state_sequence.h"
 #include "globalaccess.h"
@@ -289,5 +288,3 @@ void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, opera
 #define TRIGGER_SHAPE(x) ENGINE(triggerCentral.triggerShape.x)
 
 #define getTriggerSize() TRIGGER_SHAPE(privateTriggerDefinitionSize)
-
-#endif /* TRIGGER_STRUCTURE_H_ */

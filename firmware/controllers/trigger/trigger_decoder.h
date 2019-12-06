@@ -2,11 +2,10 @@
  * @file	trigger_decoder.h
  *
  * @date Dec 24, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef TRIGGER_DECODER_H_
-#define TRIGGER_DECODER_H_
+#pragma once
 
 #include "global.h"
 #include "trigger_structure.h"
@@ -126,7 +125,7 @@ private:
 
 
 /**
- * the reason for sub-class is simply to save RAM but not having statisics in the trigger initialization instance
+ * the reason for sub-class is simply to save RAM but not having statistics in the trigger initialization instance
  */
 class TriggerStateWithRunningStatistics : public TriggerState {
 public:
@@ -172,5 +171,3 @@ bool isTriggerDecoderError(void);
 
 void calculateTriggerSynchPoint(TriggerShape *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-
-#endif /* TRIGGER_DECODER_H_ */
