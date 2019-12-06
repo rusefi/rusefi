@@ -58,10 +58,14 @@ public:
 	bool isEvenRevolution() const;
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter() const;
-	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	void decodeTriggerEvent(const TriggerStateCallback triggerCycleCallback,
+			trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 	bool validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	void handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void onShaftSynchronization(efitime_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
+			efitime_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * Resets synchronization flag and alerts rpm_calculator to reset engine spinning flag.
 	 */
@@ -69,7 +73,6 @@ public:
 
 	bool isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	float getTriggerDutyCycle(int index);
-	TriggerStateCallback triggerCycleCallback;
 
 	/**
 	 * TRUE if we know where we are
