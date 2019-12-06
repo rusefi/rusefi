@@ -227,6 +227,19 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
+void Engine::OnTriggerStateDecodingError() {
+	Engine *engine = this;
+	EXPAND_Engine;
+	triggerCentral.triggerState.handleTriggerError(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+void Engine::OnTriggerStateProperState(efitick_t nowNt) {
+	Engine *engine = this;
+	EXPAND_Engine;
+	rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+
 void Engine::setConfig(persistent_config_s *config) {
 	this->config = config;
 	engineConfigurationPtr = &config->engineConfiguration;
