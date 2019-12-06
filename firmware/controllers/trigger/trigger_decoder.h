@@ -14,6 +14,12 @@
 
 class TriggerState;
 
+class TriggerStateListener {
+	public:
+		virtual void OnTriggerStateDecodingError() = 0;
+		virtual void OnTriggerStateProperState(efitick_t nowNt) = 0;
+};
+
 typedef void (*TriggerStateCallback)(TriggerState *);
 
 typedef struct {
@@ -60,6 +66,7 @@ public:
 	efitime_t getTotalEventCounter() const;
 
 	void decodeTriggerEvent(const TriggerStateCallback triggerCycleCallback,
+			TriggerStateListener * triggerStateListener,
 			trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	bool validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;

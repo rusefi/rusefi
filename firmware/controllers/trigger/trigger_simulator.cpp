@@ -63,22 +63,31 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 0)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/0, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING;
-		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
-			state->decodeTriggerEvent(triggerCycleCallback, s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX)) {
+			state->decodeTriggerEvent(triggerCycleCallback,
+					/* override */ nullptr,
+					s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		}
 	}
 
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 1)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/1, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
-		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
-			state->decodeTriggerEvent(triggerCycleCallback, s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX)) {
+			state->decodeTriggerEvent(triggerCycleCallback,
+					/* override */ nullptr,
+					s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		}
 	}
 
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 2)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/2, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
-		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
-			state->decodeTriggerEvent(triggerCycleCallback, s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX)) {
+			state->decodeTriggerEvent(triggerCycleCallback,
+					/* override */ nullptr,
+					s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		}
 	}
 }
 

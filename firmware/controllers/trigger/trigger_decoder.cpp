@@ -343,7 +343,7 @@ bool TriggerState::validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) con
 					|| currentCycle.eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
 
 #if EFI_UNIT_TEST
-			printf("sync point: isDecodingError=%d isInit=%d\r\n", isDecodingError, engine->isInitializingTrigger);
+			printf("sync point: isDecodingError=%d\r\n", isDecodingError);
 			if (isDecodingError) {
 				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[0],  TRIGGER_SHAPE(expectedEventCount[0]));
 				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[1],  TRIGGER_SHAPE(expectedEventCount[1]));
@@ -417,6 +417,7 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
  * @param nowNt current time
  */
 void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCallback,
+		TriggerStateListener * triggerStateListener,
 		trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::DecodeTriggerEvent, static_cast<uint8_t>(signal));
 	
@@ -449,6 +450,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 	toothDurations[0] =
 			currentDurationLong > 10 * US2NT(US_PER_SECOND_LL) ? 10 * US2NT(US_PER_SECOND_LL) : currentDurationLong;
 
+	bool haveListener = triggerStateListener != NULL;
 	bool isPrimary = triggerWheel == T_PRIMARY;
 
 	if (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap())) {
@@ -647,8 +649,10 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 
 				enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 
-				if (isDecodingError && !engine->isInitializingTrigger) {
-					handleTriggerError(PASS_ENGINE_PARAMETER_SIGNATURE);
+				// 'haveListener' means we are running a real engine and now just preparing trigger shape
+				// that's a bit of a hack, a sweet OOP solution would be a real callback or at least 'needDecodingErrorLogic' method?
+				if (isDecodingError && haveListener) {
+					triggerStateListener->OnTriggerStateDecodingError();
 				}
 
 				errorDetection.add(isDecodingError);
@@ -674,7 +678,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 
 		toothed_previous_time = nowNt;
 	}
-	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && !engine->isInitializingTrigger) {
+	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && haveListener) {
 		// let's not show a warning if we are just starting to spin
 		if (GET_RPM_VALUE != 0) {
 			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, getTriggerSize());
@@ -691,8 +695,8 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 	runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// Needed for early instant-RPM detection
-	if (!engine->isInitializingTrigger) {
-		engine->rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	if (haveListener) {
+		triggerStateListener->OnTriggerStateProperState(nowNt);
 	}
 }
 
@@ -724,14 +728,12 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 		return 0;
 	}
 
-	engine->isInitializingTrigger = true;
 
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
 	uint32_t syncIndex = helper.findTriggerSyncPoint(shape, state PASS_ENGINE_PARAMETER_SUFFIX);
 	if (syncIndex == EFI_ERROR_CODE) {
-		engine->isInitializingTrigger = false;
 		return syncIndex;
 	}
 	efiAssert(CUSTOM_ERR_ASSERT, state->getTotalRevolutionCounter() == 1, "findZero_revCounter", EFI_ERROR_CODE);
@@ -751,7 +753,6 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 
 	helper.assertSyncPositionAndSetDutyCycle(onFindIndexCallback, syncIndex, state, shape PASS_ENGINE_PARAMETER_SUFFIX);
 
-	engine->isInitializingTrigger = false;
 	return syncIndex % shape->getSize();
 }
 
