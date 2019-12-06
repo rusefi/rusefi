@@ -12,7 +12,7 @@ jobs:
       matrix:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
-        build-target: [frankenso, mre-f4, mre-f7, prometheus-405, prometheus-469, proteus, kinetis]
+        build-target: [frankenso, frankenso-pal, mre-f4, mre-f7, prometheus-405, prometheus-469, proteus, kinetis]
         build-type: [debug, release]
         
         include:
@@ -20,6 +20,11 @@ jobs:
           - build-target: frankenso
             efi-cpu: ARCH_STM32F4
             efi-board: st_stm32f4
+            
+          - build-target: frankenso-pal
+            efi-cpu: ARCH_STM32F4
+            efi-board: st_stm32f4
+            extra-params: -DHAL_TRIGGER_USE_PAL=TRUE -DHAL_USE_ICU=FALSE
             
           - build-target: mre-f4
             efi-cpu: ARCH_STM32F4
