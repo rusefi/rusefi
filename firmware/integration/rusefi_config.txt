@@ -805,6 +805,9 @@ bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in
 bit etbCalibrationOnStart
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled;
+bit unused_1484_bit_23
+bit unused_1484_bit_24
+bit unused_1484_bit_25
 bit unused_1484_bit_26
 bit unused_1484_bit_27
 bit unused_1484_bit_28
