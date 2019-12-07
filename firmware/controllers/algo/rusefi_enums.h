@@ -841,8 +841,3 @@ typedef enum {
 	 */
 	Force_4bytes_size_idle_state_e = ENUM_32_BITS,
 } idle_state_e;
-typedef enum {
-	OPEN_LOOP = 0,
-	CLOSED_LOOP = 1,
-	Force_4bytes_size_boostType_e = ENUM_32_BITS,
-} boostType_e;
