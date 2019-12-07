@@ -841,3 +841,19 @@ typedef enum {
 	 */
 	Force_4bytes_size_idle_state_e = ENUM_32_BITS,
 } idle_state_e;
+typedef enum {
+	OPEN_LOOP = 0,
+	CLOSED_LOOP = 1,
+	Force_4bytes_size_boostType_e = ENUM_32_BITS,
+} boostType_e;
+typedef enum {
+	ON_OFF_VVT = 0,
+	CLOSED_LOOP_VVT = 1,
+	Force_4bytes_size_vvtType_e = ENUM_32_BITS,
+} vvtType_e;
+typedef enum {
+	VVT_LOAD_TPS = 0,
+	VVT_LOAD_MAP = 1,
+	VVT_LOAD_CLT = 2,
+	Force_4bytes_size_vvtLoadAxis_e = ENUM_32_BITS,
+} vvtLoadAxis_e;
