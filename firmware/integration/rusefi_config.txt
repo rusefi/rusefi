@@ -118,8 +118,14 @@ struct_no_prefix engine_configuration_s
 #define FUEL_LOAD_COUNT 16
 
 #define PEDAL_TO_TPS_SIZE 8
-#define RPM_1_BYTE_PACKING_MULT 50
 
+
+! 
+! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
+! or packing numeric voltage inside an integer byte
+! See usages of '@@RPM_1_BYTE_PACKING_MULT@@' where we apply the TS part of the magic
+! 
+#define RPM_1_BYTE_PACKING_MULT 50
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 
 #define FSIO_TABLE_8 8
