@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Dec 04 00:37:59 EST 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Dec 08 00:20:37 EST 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1187,6 +1187,8 @@ public class Fields {
 	public static final int tps1_1AdcChannel_offset_hex = 200;
 	public static final int tps2_1AdcChannel_offset = 515;
 	public static final int tps2_1AdcChannel_offset_hex = 203;
+	public static final int tps2Max_offset = 1770;
+	public static final int tps2Min_offset = 1768;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final int tpsAccelEnrichmentThreshold_offset = 2048;
 	public static final int tpsAccelEnrichmentThreshold_offset_hex = 800;
@@ -1267,7 +1269,7 @@ public class Fields {
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 988;
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
-	public static final int unusedFormerWarmupAfrPid_offset = 1768;
+	public static final int unusedFormerWarmupAfrPid_offset = 1772;
 	public static final int unusedHereo_wires_offset = 76;
 	public static final int unusedOldWarmupAfr_offset = 744;
 	public static final int unusedSpiPadding4_offset = 2593;
@@ -1876,6 +1878,8 @@ public class Fields {
 	public static final Field FUELRAILPRESSURE = Field.create("FUELRAILPRESSURE", 1756, FieldType.FLOAT);
 	public static final Field ALTERNATOR_DERIVATIVEFILTERLOSS = Field.create("ALTERNATOR_DERIVATIVEFILTERLOSS", 1760, FieldType.FLOAT);
 	public static final Field ALTERNATOR_ANTIWINDUPFREQ = Field.create("ALTERNATOR_ANTIWINDUPFREQ", 1764, FieldType.FLOAT);
+	public static final Field TPS2MIN = Field.create("TPS2MIN", 1768, FieldType.INT16);
+	public static final Field TPS2MAX = Field.create("TPS2MAX", 1770, FieldType.INT16);
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1776, FieldType.FLOAT);
 	public static final Field MAPERRORDETECTIONTOOHIGH = Field.create("MAPERRORDETECTIONTOOHIGH", 1780, FieldType.FLOAT);
 	public static final Field STEP1RPMWINDOW = Field.create("STEP1RPMWINDOW", 1784, FieldType.INT);
@@ -2680,6 +2684,8 @@ public class Fields {
 	FUELRAILPRESSURE,
 	ALTERNATOR_DERIVATIVEFILTERLOSS,
 	ALTERNATOR_ANTIWINDUPFREQ,
+	TPS2MIN,
+	TPS2MAX,
 	MAPERRORDETECTIONTOOLOW,
 	MAPERRORDETECTIONTOOHIGH,
 	STEP1RPMWINDOW,

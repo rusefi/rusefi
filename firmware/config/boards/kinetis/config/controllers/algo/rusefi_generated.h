@@ -1809,6 +1809,10 @@
 #define tps1_1AdcChannel_offset_hex 200
 #define tps2_1AdcChannel_offset 515
 #define tps2_1AdcChannel_offset_hex 203
+#define tps2Max_offset 1770
+#define tps2Max_offset_hex 6ea
+#define tps2Min_offset 1768
+#define tps2Min_offset_hex 6e8
 #define TPS_TPS_ACCEL_TABLE 8
 #define tpsAccelEnrichmentThreshold_offset 2048
 #define tpsAccelEnrichmentThreshold_offset_hex 800
@@ -1947,8 +1951,8 @@
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
 #define unusedFlexFuelSensor_offset_hex c1c
-#define unusedFormerWarmupAfrPid_offset 1768
-#define unusedFormerWarmupAfrPid_offset_hex 6e8
+#define unusedFormerWarmupAfrPid_offset 1772
+#define unusedFormerWarmupAfrPid_offset_hex 6ec
 #define unusedHereo_wires_offset 76
 #define unusedHereo_wires_offset_hex 4c
 #define unusedOldWarmupAfr_offset 744
