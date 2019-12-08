@@ -26,6 +26,10 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/settings.cpp \
 	$(CONTROLLERS_DIR)/core/error_handling.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/map_averaging.cpp \
+	$(CONTROLLERS_DIR)/engine_cycle/rpm_calculator.cpp \
+	$(CONTROLLERS_DIR)/engine_cycle/spark_logic.cpp \
+	$(CONTROLLERS_DIR)/engine_cycle/main_trigger_callback.cpp \
+	$(CONTROLLERS_DIR)/engine_cycle/aux_valves.cpp \
 	$(CONTROLLERS_DIR)/flash_main.cpp \
 	$(CONTROLLERS_DIR)/injector_central.cpp \
 	$(CONTROLLERS_DIR)/obd2.cpp \
