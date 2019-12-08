@@ -729,6 +729,7 @@ board_configuration_s bc;
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
 	etb_io[ETB_COUNT iterate] etbIo
+! our strategy is to get rid of "boardConfiguration" and make everything just "engineConfiguration". Please do not add new fields into legacy "bc" area.
 	int[119] unusedAtOldBoardConfigurationEnd;
 
 	bit vvtDisplayInverted
