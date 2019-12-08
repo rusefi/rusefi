@@ -25,7 +25,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/system/timer/event_queue.cpp \
 	$(CONTROLLERS_DIR)/settings.cpp \
 	$(CONTROLLERS_DIR)/core/error_handling.cpp \
-	$(CONTROLLERS_DIR)/map_averaging.cpp \
+	$(CONTROLLERS_DIR)/engine_cycle/map_averaging.cpp \
 	$(CONTROLLERS_DIR)/flash_main.cpp \
 	$(CONTROLLERS_DIR)/injector_central.cpp \
 	$(CONTROLLERS_DIR)/obd2.cpp \
@@ -38,6 +38,7 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/system \
 	$(CONTROLLERS_DIR)/system/timer \
 	$(CONTROLLERS_DIR)/algo \
+	$(CONTROLLERS_DIR)/engine_cycle \
 	$(CONTROLLERS_DIR)/trigger/decoders \
 	$(CONTROLLERS_DIR)/trigger \
     $(CONTROLLERS_DIR)/sensors \
