@@ -204,8 +204,8 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	ev->isSimultanious = isSimultanious;
 
-	if (TRIGGER_SHAPE(getSize()) < 1) {
-		warning(CUSTOM_ERR_NOT_INITIALIZED_TRIGGER, "uninitialized TriggerShape");
+	if (TRIGGER_WAVEFORM(getSize()) < 1) {
+		warning(CUSTOM_ERR_NOT_INITIALIZED_TRIGGER, "uninitialized TriggerWaveform");
 		return false;
 	}
 
@@ -517,7 +517,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	prepareIgnitionPinIndices(CONFIG(ignitionMode) PASS_ENGINE_PARAMETER_SUFFIX);
 
-	TRIGGER_SHAPE(prepareShape());
+	TRIGGER_WAVEFORM(prepareShape());
 }
 
 #endif /* EFI_ENGINE_CONTROL */

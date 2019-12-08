@@ -571,7 +571,7 @@ static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_SUFF
 
 	scheduleMsg(&logger, "toothed: total=%d/skipped=%d", total, skipped);
 	setToothedWheelConfiguration(&engine->triggerCentral.triggerShape, total, skipped, engineConfiguration->ambiguousOperationMode);
-//	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
+//	initializeTriggerWaveform(&logger, engineConfiguration, engineConfiguration2);
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }

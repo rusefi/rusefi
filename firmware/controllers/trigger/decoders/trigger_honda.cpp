@@ -10,7 +10,7 @@
 
 #define S24 (720.0f / 24 / 2)
 
-static float addAccordPair(TriggerShape *s, float sb, trigger_wheel_e const channelIndex) {
+static float addAccordPair(TriggerWaveform *s, float sb, trigger_wheel_e const channelIndex) {
 	s->addEvent720(sb, channelIndex, TV_RISE);
 	sb += S24;
 	s->addEvent720(sb, channelIndex, TV_FALL);
@@ -20,7 +20,7 @@ static float addAccordPair(TriggerShape *s, float sb, trigger_wheel_e const chan
 }
 
 #define DIP 7.5f
-static float addAccordPair3(TriggerShape *s, float sb) {
+static float addAccordPair3(TriggerWaveform *s, float sb) {
 	sb += DIP;
 	s->addEvent720(sb, T_CHANNEL_3, TV_RISE);
 	sb += DIP;
@@ -33,7 +33,7 @@ static float addAccordPair3(TriggerShape *s, float sb) {
  * Thank you Dip!
  * http://forum.pgmfi.org/viewtopic.php?f=2&t=15570start=210#p139007
  */
-void configureHondaAccordCDDip(TriggerShape *s) {
+void configureHondaAccordCDDip(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->initialState[T_SECONDARY] = TV_RISE;
@@ -102,7 +102,7 @@ void configureHondaAccordCDDip(TriggerShape *s) {
  * '4' is conditional
  * '24' is always secondary channel
  */
-void configureHonda_1_4_24(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
+void configureHonda_1_4_24(TriggerWaveform *s, bool withOneEventSignal, bool withFourEventSignal,
 		trigger_wheel_e const oneEventWave,
 		trigger_wheel_e const fourEventWave,
 		float prefix) {
@@ -166,7 +166,7 @@ void configureHonda_1_4_24(TriggerShape *s, bool withOneEventSignal, bool withFo
 	s->useOnlyPrimaryForSync = true;
 }
 
-void configureHondaCbr600(TriggerShape *s) {
+void configureHondaCbr600(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->useOnlyPrimaryForSync = true;
 	s->isSynchronizationNeeded = true;
@@ -209,7 +209,7 @@ void configureHondaCbr600(TriggerShape *s) {
 	s->addEvent720(720.0f, T_PRIMARY, TV_RISE);
 }
 
-void configureHondaCbr600custom(TriggerShape *s) {
+void configureHondaCbr600custom(TriggerWaveform *s) {
 
 	// w = 15
 	float w = 720 / 2 / 24;
@@ -283,7 +283,7 @@ void configureHondaCbr600custom(TriggerShape *s) {
 
 }
 
-void configureHondaAccordShifted(TriggerShape *s) {
+void configureHondaAccordShifted(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	float sb = S24;
@@ -314,7 +314,7 @@ void configureHondaAccordShifted(TriggerShape *s) {
 	s->isSynchronizationNeeded = false;
 }
 
-void configureOnePlus16(TriggerShape *s, operation_mode_e operationMode) {
+void configureOnePlus16(TriggerWaveform *s, operation_mode_e operationMode) {
 	UNUSED(operationMode);
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 

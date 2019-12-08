@@ -10,6 +10,6 @@
 
 #include "trigger_structure.h"
 
-void configureFiatIAQ_P8(TriggerShape * s);
+void configureFiatIAQ_P8(TriggerWaveform * s);
 
 #endif /* CONTROLLERS_TRIGGER_DECODERS_TRIGGER_MISC_H_ */

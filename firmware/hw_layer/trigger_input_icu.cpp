@@ -51,7 +51,7 @@ static void shaftWidthCallback(bool isPrimary) {
 // todo: start using real event time from HW event, not just software timer?
 	if (hasFirmwareErrorFlag)
 		return;
-	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
+	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
 	}
 	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
@@ -68,7 +68,7 @@ static void shaftPeriodCallback(bool isPrimary) {
 	icuWidthPeriodCounter++;
 	if (hasFirmwareErrorFlag)
 		return;
-	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
+	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
 	}
 

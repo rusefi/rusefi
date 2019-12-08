@@ -10,6 +10,6 @@
 
 #include "trigger_structure.h"
 
-void setVwConfiguration(TriggerShape *s);
+void setVwConfiguration(TriggerWaveform *s);
 
 #endif /* CONTROLLERS_TRIGGER_DECODERS_TRIGGER_VW_H_ */

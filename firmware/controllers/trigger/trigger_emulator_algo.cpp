@@ -2,7 +2,7 @@
  * @file trigger_emulator_algo.cpp
  *
  * This file is about producing real electrical signals which emulate trigger signal based on
- * a known TriggerShape.
+ * a known TriggerWaveform.
  *
  * Historically this implementation was implemented based on PwmConfig which is maybe not the
  * best way to implement it. (todo: why is not the best way?)
@@ -115,14 +115,14 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	scheduleMsg(logger, "Emulating position sensor(s). RPM=%d", rpm);
 }
 
-static void updateTriggerShapeIfNeeded(PwmConfig *state) {
+static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	if (atTriggerVersion < engine->triggerCentral.triggerShape.version) {
 		atTriggerVersion = engine->triggerCentral.triggerShape.version;
 		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
 				engine->getGlobalConfigurationVersion(), currentTimeMillis());
 
 
-		TriggerShape *s = &engine->triggerCentral.triggerShape;
+		TriggerWaveform *s = &engine->triggerCentral.triggerShape;
 		pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = {
 				s->wave.channels[0].pinStates,
 				s->wave.channels[1].pinStates,
@@ -164,7 +164,7 @@ static void resumeStimulator() {
 void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 
-	TriggerShape *s = &engine->triggerCentral.triggerShape;
+	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
 	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency PASS_ENGINE_PARAMETER_SUFFIX);
 	pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = {
 			s->wave.channels[0].pinStates,
@@ -173,7 +173,7 @@ void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUF
 	triggerSignal.weComplexInit("position sensor",
 			&engine->executor,
 			s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
-			pinStates, updateTriggerShapeIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
+			pinStates, updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
 	addConsoleActionI("rpm", setTriggerEmulatorRPM);
 	addConsoleActionI("stop_stimulator_at_index", setEmulatorAtIndex);

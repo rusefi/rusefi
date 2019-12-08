@@ -9,5 +9,5 @@
 
 #include "trigger_structure.h"
 
-void configureMiniCooperTriggerShape(TriggerShape *s);
+void configureMiniCooperTriggerWaveform(TriggerWaveform *s);
 

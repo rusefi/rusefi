@@ -32,7 +32,7 @@ static void shaft_callback(void *arg) {
 		return;
 
 	bool isPrimary = pal_line == primary_line;
-	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
+	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
 	}
 

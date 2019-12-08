@@ -8,8 +8,8 @@
 #include "trigger_vw.h"
 #include "trigger_universal.h"
 
-void setVwConfiguration(TriggerShape *s) {
-	efiAssertVoid(CUSTOM_ERR_6660, s != NULL, "TriggerShape is NULL");
+void setVwConfiguration(TriggerWaveform *s) {
+	efiAssertVoid(CUSTOM_ERR_6660, s != NULL, "TriggerWaveform is NULL");
 
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 

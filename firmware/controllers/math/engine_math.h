@@ -67,4 +67,4 @@ void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 // expectation is that for well-known triggers CONFIG(globalTriggerAngleOffset) would usually be zero
 // while for toothed wheels user would have to provide a value
 #define tdcPosition() \
-		(TRIGGER_SHAPE(tdcPosition) + CONFIG(globalTriggerAngleOffset))
+		(TRIGGER_WAVEFORM(tdcPosition) + CONFIG(globalTriggerAngleOffset))

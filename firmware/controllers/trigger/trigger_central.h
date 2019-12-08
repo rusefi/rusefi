@@ -41,7 +41,7 @@ public:
 	 */
 	efitick_t timeAtVirtualZeroNt = 0;
 
-	TriggerShape triggerShape;
+	TriggerWaveform triggerShape;
 
 	efitick_t previousVvtCamTime = 0;
 	efitick_t previousVvtCamDuration = 0;
