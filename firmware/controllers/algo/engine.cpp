@@ -52,16 +52,16 @@ FsioState::FsioState() {
 #endif
 }
 
-void Engine::eInitializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
 	bool alreadyLocked = lockAnyContext();
 
-	TRIGGER_SHAPE(initializeTriggerShape(logger,
+	TRIGGER_WAVEFORM(initializeTriggerWaveform(logger,
 			engineConfiguration->ambiguousOperationMode,
 			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
 
-	if (TRIGGER_SHAPE(bothFrontsRequired) && engineConfiguration->useOnlyRisingEdgeForTrigger) {
+	if (TRIGGER_WAVEFORM(bothFrontsRequired) && engineConfiguration->useOnlyRisingEdgeForTrigger) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "Inconsistent trigger setup");
 #else
@@ -70,9 +70,9 @@ void Engine::eInitializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SU
 	}
 
 
-	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
+	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		/**
-	 	 * this instance is used only to initialize 'this' TriggerShape instance
+	 	 * this instance is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
 		initState.resetTriggerState();
@@ -82,14 +82,14 @@ void Engine::eInitializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SU
 		if (engine->triggerCentral.triggerShape.getSize() == 0) {
 			firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
 		}
-		engine->engineCycleEventCount = TRIGGER_SHAPE(getLength());
+		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
 
 	if (!alreadyLocked) {
 		unlockAnyContext();
 	}
 
-	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
+	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */

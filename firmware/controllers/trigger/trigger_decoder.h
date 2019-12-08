@@ -30,7 +30,7 @@ typedef struct {
 	/**
 	 * Number of actual events of each channel within current trigger cycle, these
 	 * values are used to detect trigger signal errors.
-	 * see TriggerShape
+	 * see TriggerWaveform
 	 */
 	uint32_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 	/**
@@ -48,7 +48,7 @@ typedef struct {
 } current_cycle_state_s;
 
 /**
- * @see TriggerShape for trigger wheel shape definition
+ * @see TriggerWaveform for trigger wheel shape definition
  */
 class TriggerState : public trigger_state_s {
 public:
@@ -170,7 +170,7 @@ public:
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
-uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
+uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerWaveform * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 class Engine;
 
@@ -179,5 +179,5 @@ void initTriggerDecoderLogger(Logging *sharedLogger);
 
 bool isTriggerDecoderError(void);
 
-void calculateTriggerSynchPoint(TriggerShape *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
+void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 

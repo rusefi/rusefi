@@ -75,7 +75,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engine->eInitializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	initRpmCalculator(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	initMainEventListener(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 }
@@ -214,11 +214,11 @@ void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, e
 }
 
 
-void EngineTestHelper::applyTriggerShape() {
+void EngineTestHelper::applyTriggerWaveform() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine
 
-	ENGINE(eInitializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX));
 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -261,7 +261,7 @@ void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARA
 	engineConfiguration->trigger.type = trigger;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #2";
-	applyTriggerShape();
+	applyTriggerWaveform();
 }
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injectionMode) {

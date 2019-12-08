@@ -236,7 +236,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		angle_t start = interpolate2d("mapa", rpm, c->samplingAngleBins, c->samplingAngle);
 		efiAssertVoid(CUSTOM_ERR_MAP_START_ASSERT, !cisnan(start), "start");
 
-		angle_t offsetAngle = TRIGGER_SHAPE(eventAngles[CONFIG(mapAveragingSchedulingAtIndex)]);
+		angle_t offsetAngle = TRIGGER_WAVEFORM(eventAngles[CONFIG(mapAveragingSchedulingAtIndex)]);
 		efiAssertVoid(CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
 		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {

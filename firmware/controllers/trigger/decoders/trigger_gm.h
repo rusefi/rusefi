@@ -10,7 +10,7 @@
 
 #include "trigger_structure.h"
 
-void configureGmTriggerShape(TriggerShape *s);
-void initGmLS24(TriggerShape *s);
+void configureGmTriggerWaveform(TriggerWaveform *s);
+void initGmLS24(TriggerWaveform *s);
 
 #endif /* TRIGGER_GM_H_ */

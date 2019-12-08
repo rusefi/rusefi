@@ -27,7 +27,7 @@ extern bool printTriggerDebug;
 #endif /* ! EFI_UNIT_TEST */
 
 void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback triggerCycleCallback,
-		TriggerState *state, TriggerShape * shape, int i
+		TriggerState *state, TriggerWaveform * shape, int i
 		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_ERR_6593, shape->getSize() > 0, "size not zero");
 	int stateIndex = i % shape->getSize();
@@ -92,7 +92,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 }
 
 void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const TriggerStateCallback triggerCycleCallback,
-		const uint32_t syncIndex, TriggerState *state, TriggerShape * shape
+		const uint32_t syncIndex, TriggerState *state, TriggerWaveform * shape
 		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	/**
@@ -103,7 +103,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const TriggerSta
 	}
 	int revolutionCounter = state->getTotalRevolutionCounter();
 	if (revolutionCounter != GAP_TRACKING_LENGTH + 1) {
-		warning(CUSTOM_OBD_TRIGGER_SHAPE, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(engineConfiguration->trigger.type), revolutionCounter);
+		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(engineConfiguration->trigger.type), revolutionCounter);
 		shape->setShapeDefinitionError(true);
 		return;
 	}
@@ -117,7 +117,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const TriggerSta
 /**
  * @return trigger synchronization point index, or error code if not found
  */
-uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(TriggerShape * shape,
+uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(TriggerWaveform * shape,
 		 TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
 		feedSimulatedEvent(nullptr, state, shape, i PASS_ENGINE_PARAMETER_SUFFIX);

@@ -8,7 +8,7 @@
 #include "trigger_misc.h"
 
 // TT_FIAT_IAW_P8
-void configureFiatIAQ_P8(TriggerShape * s) {
+void configureFiatIAQ_P8(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 
 	s->isSynchronizationNeeded = true;
