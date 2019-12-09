@@ -93,9 +93,9 @@ static void setupEtb() {
 	// DIS - disables motor (enable low)
 
 	// PWM pin
-	boardConfiguration->etb1.controlPin1 = GPIOC_7;
+	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
 	// DIR pin
-	boardConfiguration->etb1.directionPin1 = GPIOA_8;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
 
 	// set_fsio_output_pin 7 PC8
 #if EFI_FSIO
@@ -113,10 +113,10 @@ static void setupEtb() {
 	// engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
 	// Unused
-	boardConfiguration->etb1.directionPin2 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 
 	// we only have pwm/dir, no dira/dirb
-	engineConfiguration->etb1_use_two_wires = false;
+	engineConfiguration->etb_use_two_wires = false;
 
 	engineConfiguration->etbFreq = 800;
 }

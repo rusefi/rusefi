@@ -34,6 +34,7 @@
 #include "rpm_calculator.h"
 #include "pwm_generator.h"
 #include "idle_thread.h"
+#include "engine_math.h"
 
 #include "engine.h"
 #include "periodic_task.h"
@@ -58,7 +59,7 @@ static bool shouldResetPid = false;
 // See automaticIdleController().
 static bool mightResetPid = false;
 
-#if EFI_IDLE_INCREMENTAL_PID_CIC
+#if EFI_IDLE_PID_CIC
 // Use new PID with CIC integrator
 PidCic idlePid;
 #else
@@ -85,13 +86,15 @@ public:
 };
 
 PidWithOverrides idlePid;
-#endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
+#endif /* EFI_IDLE_PID_CIC */
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
 static SimplePwm idleSolenoid("idle");
 
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
+
+static iacPidMultiplier_t iacPidMultMap("iacPidMultiplier");
 
 /**
  * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
@@ -273,17 +276,18 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
 	mightResetPid = true;
 
-#if EFI_IDLE_INCREMENTAL_PID_CIC
+	// Apply PID Multiplier if used
+	if (CONFIG(useIacPidMultTable)) {
+		float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
+		float multCoef = iacPidMultMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, engineLoad);
+		// PID can be completely disabled of multCoef==0, or it just works as usual if multCoef==1
+		newValue = interpolateClamped(0.0f, engine->engineState.idle.baseIdlePosition, 1.0f, newValue, multCoef);
+	}
+	
+	// Apply PID Deactivation Threshold as a smooth taper for TPS transients.
 	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	// Treat the 'newValue' as if it contains not an actual IAC position, but an incremental delta.
-	// So we add this delta to the base IAC position, with a smooth taper for TPS transients.
-	newValue = engine->engineState.idle.baseIdlePosition + interpolateClamped(0.0f, newValue, CONFIGB(idlePidDeactivationTpsThreshold), 0.0f, tpsPos);
-
-	// apply the PID limits
-	newValue = maxF(newValue, CONFIG(idleRpmPid.minValue));
-	newValue = minF(newValue, CONFIG(idleRpmPid.maxValue));
-#endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
+	// if tps==0 then PID just works as usual, or we completely disable it if tps>=threshold
+	newValue = interpolateClamped(0.0f, newValue, CONFIGB(idlePidDeactivationTpsThreshold), engine->engineState.idle.baseIdlePosition, tpsPos);
 
 	// Interpolate to the manual position when RPM is close to the upper RPM limit (if idlePidRpmUpperLimit is set).
 	// If RPM increases and the throttle is closed, then we're in coasting mode, and we should smoothly disable auto-pid.
@@ -348,8 +352,8 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			}
 			engine->acSwitchState = result;
 		}
-		if (CONFIGB(clutchUpPin) != GPIO_UNASSIGNED) {
-			engine->clutchUpState = efiReadPin(CONFIGB(clutchUpPin));
+		if (CONFIG(clutchUpPin) != GPIO_UNASSIGNED) {
+			engine->clutchUpState = efiReadPin(CONFIG(clutchUpPin));
 		}
 		if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
 			engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
@@ -451,6 +455,7 @@ IdleController idleControllerInstance;
 
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	idlePid.updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
+	iacPidMultMap.init(CONFIG(iacPidMultTable), CONFIG(iacPidMultLoadBins), CONFIG(iacPidMultRpmBins));
 }
 
 void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -516,9 +521,9 @@ void startIdleBench(void) {
 
 static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	efiAssertVoid(CUSTOM_ERR_6645, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(CUSTOM_ERR_6646, state->multiWave.waveCount == 1, "invalid idle waveCount");
+	efiAssertVoid(CUSTOM_ERR_6646, state->multiChannelStateSequence.waveCount == 1, "invalid idle waveCount");
 	OutputPin *output = state->outputPins[0];
-	int value = state->multiWave.getChannelState(/*channelIndex*/0, stateIndex);
+	int value = state->multiChannelStateSequence.getChannelState(/*channelIndex*/0, stateIndex);
 	if (!value /* always allow turning solenoid off */ ||
 			(GET_RPM_VALUE != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
 			) {
@@ -539,6 +544,7 @@ bool isIdleHardwareRestartNeeded() {
 }
 
 void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_PROD_CODE
 	brain_pin_markUnused(activeConfiguration.stepperEnablePin);
 	brain_pin_markUnused(activeConfiguration.bc.idle.stepperStepPin);
 	brain_pin_markUnused(activeConfiguration.bc.idle.solenoidPin);
@@ -546,7 +552,7 @@ void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	brain_pin_markUnused(activeConfiguration.bc.idle.);
 //	brain_pin_markUnused(activeConfiguration.bc.idle.);
 //	brain_pin_markUnused(activeConfiguration.bc.idle.);
-
+#endif /* EFI_PROD_CODE */
 }
 
 void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -577,7 +583,7 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
-	INJECT_ENGINE_REFERENCE(idleControllerInstance);
+	INJECT_ENGINE_REFERENCE(&idleControllerInstance);
 
 	idlePid.initPidClass(&engineConfiguration->idleRpmPid);
 
@@ -641,9 +647,9 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 				getInputMode(CONFIGB(clutchDownPinMode)));
 	}
 
-	if (CONFIGB(clutchUpPin) != GPIO_UNASSIGNED) {
-		efiSetPadMode("clutch up switch", CONFIGB(clutchUpPin),
-				getInputMode(CONFIGB(clutchUpPinMode)));
+	if (CONFIG(clutchUpPin) != GPIO_UNASSIGNED) {
+		efiSetPadMode("clutch up switch", CONFIG(clutchUpPin),
+				getInputMode(CONFIG(clutchUpPinMode)));
 	}
 
 	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {

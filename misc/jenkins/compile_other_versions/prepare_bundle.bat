@@ -1,5 +1,6 @@
 set script_name=build_version.bat
 echo Entering %script_name% with %bundle_name%
+echo "RUSEFI_BUILD_FTP_USER=%RUSEFI_BUILD_FTP_USER%"
 
 if %RUSEFI_BUILD_FTP_USER%.==. (
     echo RUSEFI_BUILD_FTP_USER not set - not packaging
@@ -17,8 +18,6 @@ set folder=temp\%folder%
 
 echo Packaging temp\rusefi_bundle.zip file
 call misc\jenkins\build_working_folder.bat
-
-rem TODO: extract FTP duplication with 407 build
 
 cd temp
 set bundle_file=rusefi_bundle_%bundle_name%.zip

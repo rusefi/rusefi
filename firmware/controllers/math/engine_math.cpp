@@ -196,9 +196,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	InjectionEvent *ev = &elements[i];
 	ev->ownIndex = i;
-#if EFI_UNIT_TEST
-	ev->engine = engine;
-#endif
+	INJECT_ENGINE_REFERENCE(ev);
 	fixAngle(angle, "addFuel#1", CUSTOM_ERR_6554);
 
 	ev->outputs[0] = output;
@@ -206,14 +204,14 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	ev->isSimultanious = isSimultanious;
 
-	if (TRIGGER_SHAPE(getSize()) < 1) {
-		warning(CUSTOM_ERR_NOT_INITIALIZED_TRIGGER, "uninitialized TriggerShape");
+	if (TRIGGER_WAVEFORM(getSize()) < 1) {
+		warning(CUSTOM_ERR_NOT_INITIALIZED_TRIGGER, "uninitialized TriggerWaveform");
 		return false;
 	}
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "findAngle#3", false);
 	assertAngleRange(angle, "findAngle#a33", CUSTOM_ERR_6544);
-	TRIGGER_SHAPE(findTriggerPosition(&ev->injectionStart, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
+	ev->injectionStart.setAngle(angle PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_UNIT_TEST
 	printf("registerInjectionEvent angle=%.2f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.triggerEventIndex, injectorIndex);
 #endif
@@ -519,17 +517,17 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	prepareIgnitionPinIndices(CONFIG(ignitionMode) PASS_ENGINE_PARAMETER_SUFFIX);
 
-	TRIGGER_SHAPE(prepareShape());
+	TRIGGER_WAVEFORM(prepareShape());
 }
 
 #endif /* EFI_ENGINE_CONTROL */
 
 void setFuelRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setTableBin(config->fuelRpmBins, FUEL_RPM_COUNT, from, to);
+	setLinearCurve(config->fuelRpmBins, from, to);
 }
 
 void setFuelLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setTableBin(config->fuelLoadBins, FUEL_LOAD_COUNT, from, to);
+	setLinearCurve(config->fuelLoadBins, from, to);
 }
 
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
@@ -537,7 +535,7 @@ void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
 }
 
 void setTimingLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setTableBin(config->ignitionLoadBins, IGN_LOAD_COUNT, from, to);
+	setLinearCurve(config->ignitionLoadBins, from, to);
 }
 
 /**
@@ -548,11 +546,11 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	if (algo == LM_ALPHA_N) {
 		setTimingLoadBin(20, 120 PASS_CONFIG_PARAMETER_SUFFIX);
 	} else if (algo == LM_SPEED_DENSITY) {
-		setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 3);
+		setLinearCurve(config->ignitionLoadBins, 20, 120, 3);
 		buildTimingMap(35 PASS_CONFIG_PARAMETER_SUFFIX);
 	}
 }
 
 void setFlatInjectorLag(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, value);
+	setArrayValues(engineConfiguration->injector.battLagCorr, value);
 }

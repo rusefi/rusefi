@@ -304,7 +304,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->alternatorControlPin = GPIOE_10;
 	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 
-//	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+//	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
 
 	boardConfiguration->vvtCamSensorUseRise = true;
@@ -411,12 +411,12 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// VNH2SP30 three-wire ETB control
 	// PWM
-	boardConfiguration->etb1.controlPin1 = GPIOE_6;
-	boardConfiguration->etb1.controlPinMode = OM_INVERTED;
+	engineConfiguration->etbIo[0].controlPin1 = GPIOE_6;
+	engineConfiguration->etbIo[0].controlPinMode = OM_INVERTED;
 	//
-	boardConfiguration->etb1.directionPin1 = GPIOE_12;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOE_12;
 	//
-	boardConfiguration->etb1.directionPin2 = GPIOC_7;
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7;
 
 	// set_analog_input_pin tps PC3
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3

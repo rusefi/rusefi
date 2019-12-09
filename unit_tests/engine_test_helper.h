@@ -2,10 +2,10 @@
  * @file	engine_test_helper.h
  *
  * @date Jun 26, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
-#ifndef ENGINE_TEST_HELPER_H_
-#define ENGINE_TEST_HELPER_H_
+
+#pragma once
 
 #include "engine.h"
 #include "trigger_central.h"
@@ -28,7 +28,7 @@ class EngineTestHelper : public EngineTestHelperBase {
 public:
 	EngineTestHelper(engine_type_e engineType);
 	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback);
-	void applyTriggerShape();
+	void applyTriggerWaveform();
 	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void fireRise(float delayMs);
 	void fireFall(float delayMs);
@@ -47,6 +47,10 @@ public:
 	void clearQueue();
 
 	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp);
+	scheduling_s * assertScheduling(const char *msg, int index, scheduling_s *expected, void *callback, efitime_t expectedTimestamp);
+
+	AngleBasedEvent * assertTriggerEvent(const char *msg, int index, AngleBasedEvent *expected, void *callback, int triggerEventIndex, angle_t angleOffsetFromTriggerEvent);
+
 	void assertEvent(const char *msg, int index, void *callback, efitime_t momentX, InjectionEvent *event);
 	void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
 	void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
@@ -62,9 +66,5 @@ public:
 	persistent_config_s persistentConfig;
 };
 
-
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode = IM_BATCH);
-void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e injectionMode,
-		trigger_type_e trigger);
-
-#endif /* ENGINE_TEST_HELPER_H_ */
+void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e injectionMode, trigger_type_e trigger);

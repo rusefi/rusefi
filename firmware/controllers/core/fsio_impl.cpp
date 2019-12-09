@@ -12,13 +12,13 @@
  */
 
 #include "global.h"
+#include "fsio_impl.h"
+#include "allsensors.h"
 
 #if EFI_FSIO
 
 #include "os_access.h"
-#include "fsio_impl.h"
 #include "settings.h"
-#include "allsensors.h"
 #include "rpm_calculator.h"
 #include "efi_gpio.h"
 #include "pwm_generator_logic.h"
@@ -102,6 +102,7 @@ static LEElement * acRelayLogic;
 static LEElement * fuelPumpLogic;
 static LEElement * radiatorFanLogic;
 static LEElement * alternatorLogic;
+static LEElement * starterRelayLogic;
 
 #if EFI_MAIN_RELAY_CONTROL
 static LEElement * mainRelayLogic;
@@ -194,7 +195,7 @@ static void setFsioDigitalInputPin(const char *indexStr, const char *pinName) {
 		scheduleMsg(logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	CONFIGB(fsioDigitalInputs)[index] = pin;
+	CONFIG(fsioDigitalInputs)[index] = pin;
 	scheduleMsg(logger, "FSIO digital input pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
@@ -464,6 +465,9 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		enginePins.mainRelay.setValue(true);
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
+	if (CONFIGB(starterRelayPin) != GPIO_UNASSIGNED)
+		setPinState("starter_relay", &enginePins.starterRelay, starterRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
+
 	/**
 	 * o2 heater is off during cranking
 	 * todo: convert to FSIO?
@@ -582,7 +586,7 @@ static void showFsioInfo(void) {
 		}
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		brain_pin_e inputPin = CONFIGB(fsioDigitalInputs)[i];
+		brain_pin_e inputPin = CONFIG(fsioDigitalInputs)[i];
 		if (inputPin != GPIO_UNASSIGNED) {
 			scheduleMsg(logger, "FSIO digital input #%d: %s", i, hwPortname(inputPin));
 		}
@@ -673,6 +677,8 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIGB(mainRelayPin) != GPIO_UNASSIGNED)
 		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
 #endif /* EFI_MAIN_RELAY_CONTROL */
+	if (CONFIGB(starterRelayPin) != GPIO_UNASSIGNED)
+		starterRelayLogic = sysPool.parseExpression(STARTER_RELAY_LOGIC);
 
 #if EFI_PROD_CODE
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
@@ -691,7 +697,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		brain_pin_e inputPin = CONFIGB(fsioDigitalInputs)[i];
+		brain_pin_e inputPin = CONFIG(fsioDigitalInputs)[i];
 
 		if (inputPin != GPIO_UNASSIGNED) {
 			efiSetPadMode("FSIO input", inputPin, getInputMode(engineConfiguration->fsioInputModes[i]));
@@ -724,5 +730,37 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 }
 
+#else /* !EFI_FSIO */
+
+EXTERN_ENGINE
+;
+extern EnginePins enginePins;
+
+// "Limp-mode" implementation for some RAM-limited configs without FSIO
+void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// see MAIN_RELAY_LOGIC
+	if (CONFIGB(mainRelayPin) != GPIO_UNASSIGNED) {
+		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > 5) || engine->isInShutdownMode());
+	}
+	// see STARTER_RELAY_LOGIC
+	if (CONFIGB(starterRelayPin) != GPIO_UNASSIGNED) {
+		enginePins.starterRelay.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
+	}
+	// see FAN_CONTROL_LOGIC
+	if (CONFIGB(fanPin) != GPIO_UNASSIGNED) {
+		enginePins.fanRelay.setValue((enginePins.fanRelay.getLogicValue() && (getCoolantTemperature() > engineConfiguration->fanOffTemperature)) || 
+			(getCoolantTemperature() > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
+	}
+	// see AC_RELAY_LOGIC
+	if (CONFIGB(acRelayPin) != GPIO_UNASSIGNED) {
+		enginePins.acRelay.setValue(getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE) && engine->rpmCalculator.getRpm() > 850);
+	}
+	// see FUEL_PUMP_LOGIC
+	if (CONFIGB(fuelPumpPin) != GPIO_UNASSIGNED) {
+		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));
+	}
+	
+	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE));
+}
 
 #endif /* EFI_FSIO */

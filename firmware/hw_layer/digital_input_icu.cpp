@@ -28,7 +28,7 @@
 
 #include "fl_stack.h"
 
-#if EFI_ICU_INPUTS
+#if EFI_ICU_INPUTS && HAL_USE_ICU
 
 #include "mpu_util.h"
 #include "eficonsole.h"
@@ -281,8 +281,8 @@ void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw, bool isA
 		}
 		wave_icucfg.channel = getInputCaptureChannel(hw->brainPin);
 		efiIcuStart(msg, driver, &wave_icucfg);
-		efiAssertVoid(CUSTOM_ERR_6672, driver != NULL, "di: driver is NULL");
-		efiAssertVoid(CUSTOM_ERR_6673, driver->state == ICU_READY, "di: driver not ready");
+		efiAssertVoid(CUSTOM_ICU_DRIVER, driver != NULL, "di: driver is NULL");
+		efiAssertVoid(CUSTOM_ICU_DRIVER_STATE, driver->state == ICU_READY, "di: driver not ready");
         icuStartCapture(driver); // this would change state from READY to WAITING
 		icuEnableNotifications(driver);
 	}

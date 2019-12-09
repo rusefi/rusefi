@@ -737,6 +737,15 @@ fileVersion = { 20190701 }
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
+   table = iacPidMultTbl,  iacPidMultMap,  "IAC PID Multiplier Table",   1
+      ;       constant, variable
+      xBins       = iacPidMultRpmBins,  RPMValue
+      yBins       = iacPidMultLoadBins,  engineLoad
+      zBins       = iacPidMultTable
+;      gridHeight  = 2.0
+      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
+      upDownLabel = "(Later)", "(Sooner)"
+
 [GaugeConfigurations]
 
 gaugeCategory = Sensors - Extra 2
@@ -1084,6 +1093,7 @@ menuDialog = main
 		
 		# Digital outputs
 		subMenu = mainRelay,				"Main relay"
+		subMenu = starterRelay,				"Starter relay"
 		subMenu = fuelPump,					"Fuel rail"
 		subMenu = fanSetting,				"Fan"
 		subMenu = tachSettings,				"Tachometer"
@@ -1156,6 +1166,8 @@ menuDialog = main
 		subMenu = idlehw,					"Idle hardware"
 		subMenu = std_separator	
 		subMenu = cltIdleRPMCurve,			"Target RPM", 0, {idleMode == 0}
+		subMenu = iacPidMultTbl,			"IAC PID Multiplier", 0, {idleMode == 0 && useIacPidMultTable == 1}
+		subMenu = std_separator
 		subMenu = idleVeCurve,              "VE", 0, {useSeparateVeForIdle == 1}
 		subMenu = idleAdvanceCurve,			"Ignition advance", 0, {useSeparateAdvanceForIdle == 1}
 		subMenu = std_separator
@@ -1574,6 +1586,12 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Brake pedal switch",					brakePedalPin
 		field = "A/C switch",							acSwitchAdc
 
+	dialog = triggerInputComparator, "Built-in Comparator Settings (Kinetis-only)"
+		field = "Comparator Center Point Voltage", triggerCompCenterVolt
+		field = "Comparator hysteresis voltage (Min)", triggerCompHystMin
+		field = "Comparator hysteresis voltage (Max)", triggerCompHystMax
+		field = "VR-sensor saturation RPM", triggerCompSensorSatRpm
+
 	dialog = triggerInputs,					"Trigger Inputs"
 		field = "!ECU reboot needed to apply these settings"
 		field = "#Cam is primary if you have cam sensor"
@@ -1582,6 +1600,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Cam Sync/VVT input",					camInputs1
+		panel = triggerInputComparator
 		
 	dialog = allPinsSensors, "Sensors"
 		field = "CLT ADC input", 						clt_adcChannel
@@ -1652,6 +1671,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Fan Pin Mode",							fanPinMode
 		field = "Main Relay Pin",  						mainRelayPin
 		field = "Main Relay Mode",			         	mainRelayPinMode
+		field = "Starter Relay Pin",  					starterRelayPin
+		field = "Starter Relay Mode",			        starterRelayPinMode
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
 
@@ -1720,6 +1741,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Debug Trigger Sync", 					debugTriggerSync
 		field = "Debug Timer Callback", 				debugTimerCallback
 		field = "Debug Set Timer", 						debugSetTimer
+		field = "Aux Fast Analog",						auxFastSensor1_adcChannel
 
 	dialog = allPins1_3
 		field = "FSIO ADC #1",							fsioAdc1
@@ -1942,6 +1964,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "RPM dead zone to deactivate IAC pid",	idlePidRpmDeadZone
 		field = "RPM upper limit to deactivate IAC pid",idlePidRpmUpperLimit
 		field = "PID Extra for low RPM",				pidExtraForLowRpm
+		field = "Use IAC PID Multiplier Table",			useIacPidMultTable
 		
 		
 	dialog = idleSettings, "", yAxis
@@ -1995,6 +2018,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Pin",  						mainRelayPin
 		field = "Pin mode",			         	mainRelayPinMode
 
+	dialog = starterRelay, "Starter relay output"
+		field = "Pin",  					starterRelayPin
+		field = "Pin mode",			        starterRelayPinMode
+		
 	dialog = statusLeds, "Status LEDs"
 		field = "Running status LED",					runningLedPin
 		field = "TS communication status LED",					communicationLedPin
@@ -2164,7 +2191,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Board->Connection
 	dialog = tsPort, "TunerStudio Port"
 		field = "tunerStudioSerialSpeed",				tunerStudioSerialSpeed
-		field = "Use PC10/PC11 serial?",				useSerialPort
+		field = "Use UART/TTL serial?",					useSerialPort
+		field = "RX pin",                               binarySerialRxPin, {useSerialPort == 1}
+		field = "TX pin",                               binarySerialTxPin, {useSerialPort == 1}
 		field = "uartConsoleSerialSpeed",				uartConsoleSerialSpeed
 		
 	dialog = canBus, "CAN Bus"
@@ -2207,7 +2236,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		commandButton = "Reinit",						cmd_tle8888_init
 
 	dialog = connection, "", 	yAxis
-		field = "STM32 vRef voltage",					adcVcc
+		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort
 		panel = canBus
 		panel = sdCard
@@ -2468,16 +2497,17 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Pause ETB control",					pauseEtbControl
 		field = "Throttle Pedal Up",					throttlePedalUpVoltage
 		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
+		field = "Two-wire mode",						etb_use_two_wires, {throttlePedalPositionAdcChannel != 16}
 		field = "PWM Frequency",						etbFreq, {throttlePedalPositionAdcChannel != 16}
 		field = etbCalibrationOnStart,					etbCalibrationOnStart
-		field = "No1 Direction #1",						etb1_directionPin1, {throttlePedalPositionAdcChannel != 16}
-		field = "No1 Direction #2",						etb1_directionPin2, {throttlePedalPositionAdcChannel != 16}
-		field = "Two-wire mode",						etb1_use_two_wires, {throttlePedalPositionAdcChannel != 16}
-		field = "No1 Control #1",						etb1_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb1_use_two_wires == 0}
-		field = "No2 Direction #1",						etb2_directionPin1, {throttlePedalPositionAdcChannel != 16}
-		field = "No2 Direction #2",						etb2_directionPin2, {throttlePedalPositionAdcChannel != 16}
-		field = "Two-wire mode",						etb2_use_two_wires, {throttlePedalPositionAdcChannel != 16}
-		field = "No2 Control #1",						etb2_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb2_use_two_wires == 0}
+		field = "No1 Direction #1",						etbIo1_directionPin1, {throttlePedalPositionAdcChannel != 16}
+		field = "No1 Direction #2",						etbIo1_directionPin2, {throttlePedalPositionAdcChannel != 16}
+		field = "No1 Control #1",						etbIo1_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb_use_two_wires == 0}
+		field = "No2 Direction #1",						etbIo2_directionPin1, {throttlePedalPositionAdcChannel != 16}
+		field = "No2 Direction #2",						etbIo2_directionPin2, {throttlePedalPositionAdcChannel != 16}
+		field = "No2 Control #1",						etb2_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb_use_two_wires == 0}
+		field = "TPS#2 min",							tps2Min, {etbIo2_directionPin1 != 0} 
+		field = "TPS#2 max",							tps2Max, {etbIo2_directionPin1 != 0} 
 		panel = etbPidDialog
 
 	dialog = etbDialogRight

@@ -191,7 +191,7 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
 	// starter block
-	setFsio(0, (is469 ? GPIOB_10 : GPIOB_1), STARTER_BLOCK PASS_CONFIG_PARAMETER_SUFFIX);
+	setFsio(0, (is469 ? GPIOB_10 : GPIOB_1), STARTER_RELAY_LOGIC PASS_CONFIG_PARAMETER_SUFFIX);
 
 	
 	// debug pad
@@ -215,7 +215,7 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	boardConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
+	engineConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
 	boardConfiguration->max31855spiDevice = SPI_NONE;

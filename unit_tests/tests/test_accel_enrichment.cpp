@@ -5,13 +5,11 @@
  *
  * @date Apr 29, 2014
  *  	Author: Dmitry Sidin
- *      Author: Andrey Belomutskiy, (c) 2012-2018
+ *      Author: Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "global.h"
-#include "engine_configuration.h"
-#include "accel_enrichment.h"
 #include "engine_test_helper.h"
+#include "accel_enrichment.h"
 #include "tps.h"
 
 TEST(fuel, testTpsAccelEnrichmentMath) {

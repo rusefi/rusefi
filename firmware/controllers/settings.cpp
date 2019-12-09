@@ -115,6 +115,9 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(boardConfiguration->mainRelayPinMode),
 			hwPortname(boardConfiguration->mainRelayPin));
 
+	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(boardConfiguration->starterRelayPinMode),
+			hwPortname(boardConfiguration->starterRelayPin));
+
 	scheduleMsg(&logger, "alternator field: mode %s @ %s",
 			getPin_output_mode_e(boardConfiguration->alternatorControlPinMode),
 			hwPortname(boardConfiguration->alternatorControlPin));
@@ -278,7 +281,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 			boolToString(engineConfiguration->isManualSpinningMode),
 			boolToString(engineConfiguration->isCylinderCleanupEnabled));
 
-	scheduleMsg(&logger, "clutchUp@%s: %s", hwPortname(boardConfiguration->clutchUpPin),
+	scheduleMsg(&logger, "clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin),
 			boolToString(engine->clutchUpState));
 	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(boardConfiguration->clutchDownPin),
 			boolToString(engine->clutchDownState));
@@ -568,7 +571,7 @@ static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_SUFF
 
 	scheduleMsg(&logger, "toothed: total=%d/skipped=%d", total, skipped);
 	setToothedWheelConfiguration(&engine->triggerCentral.triggerShape, total, skipped, engineConfiguration->ambiguousOperationMode);
-//	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
+//	initializeTriggerWaveform(&logger, engineConfiguration, engineConfiguration2);
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
@@ -696,6 +699,10 @@ static void setMainRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &boardConfiguration->mainRelayPin, "main relay");
 }
 
+static void setStarterRelayPin(const char *pinName) {
+	setIndividualPin(pinName, &boardConfiguration->starterRelayPin, "starter relay");
+}
+
 static void setAlternatorPin(const char *pinName) {
 	setIndividualPin(pinName, &boardConfiguration->alternatorControlPin, "alternator");
 }
@@ -811,7 +818,10 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 		scheduleMsg(&logger, "setting IAT to %s/%d", pinName, channel);
 	} else if (strEqual("tps", sensorStr)) {
 		engineConfiguration->tps1_1AdcChannel = channel;
-		scheduleMsg(&logger, "setting TPS to %s/%d", pinName, channel);
+		scheduleMsg(&logger, "setting TPS1 to %s/%d", pinName, channel);
+	} else if (strEqual("tps2", sensorStr)) {
+		engineConfiguration->tps2_1AdcChannel = channel;
+		scheduleMsg(&logger, "setting TPS2 to %s/%d", pinName, channel);
 	}
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -969,7 +979,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isMapAveragingEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tunerstudio")) {
 		engineConfiguration->isTunerStudioEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "wave_analyzer")) {
+	} else if (strEqualCaseInsensitive(param, "logic_analyzer")) {
 		engineConfiguration->isWaveAnalyzerEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "manual_spinning")) {
 		engineConfiguration->isManualSpinningMode = isEnabled;
@@ -1146,11 +1156,11 @@ static void getValue(const char *paramStr) {
 }
 
 static void setFsioCurve1Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve1, FSIO_CURVE_16, value, value, 1);
+	setLinearCurve(engineConfiguration->fsioCurve1, value, value, 1);
 }
 
 static void setFsioCurve2Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve2, FSIO_CURVE_16, value, value, 1);
+	setLinearCurve(engineConfiguration->fsioCurve2, value, value, 1);
 }
 
 typedef struct {
@@ -1242,7 +1252,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"tpsErrorDetectionTooHigh", setTpsErrorDetectionTooHigh},
 		{"fixed_mode_timing", setFixedModeTiming},
 		{"timing_mode", setTimingMode},
-		{"engine_type", setEngineType},
+		{CMD_ENGINE_TYPE, setEngineType},
 		{"rpm_hard_limit", setRpmHardLimit},
 		{"firing_order", setFiringOrder},
 		{"algorithm", setAlgorithmInt},
@@ -1431,6 +1441,7 @@ void initSettings(void) {
 	addConsoleActionS("set_alternator_pin", setAlternatorPin);
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
+	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
 
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);

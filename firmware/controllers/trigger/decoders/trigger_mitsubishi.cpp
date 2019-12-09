@@ -7,7 +7,7 @@
 
 #include "trigger_mitsubishi.h"
 
-void configureFordAspireTriggerShape(TriggerShape * s) {
+void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->isSynchronizationNeeded = false;
 
@@ -31,7 +31,7 @@ void configureFordAspireTriggerShape(TriggerShape * s) {
 /**
  * TT_MITSUBISHI = 11
  */
-void initializeMitsubishi4g18(TriggerShape *s) {
+void initializeMitsubishi4g18(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->useRiseEdge = false;
 

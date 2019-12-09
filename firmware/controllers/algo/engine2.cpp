@@ -145,7 +145,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_ENGINE_CONTROL
 	if (!engine->slowCallBackWasInvoked) {
-		warning(CUSTOM_ERR_6696, "Slow not invoked yet");
+		warning(CUSTOM_SLOW_NOT_INVOKED, "Slow not invoked yet");
 	}
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {

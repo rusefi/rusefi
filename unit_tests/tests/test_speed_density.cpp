@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "global.h"
 #include "engine_test_helper.h"
 #include "speed_density.h"
 
@@ -14,7 +13,7 @@ TEST(big, testSpeedDensity) {
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
-	eth.applyTriggerShape();
+	eth.applyTriggerWaveform();
 
 	eth.fireTriggerEvents(36);
 	ASSERT_EQ( 1500,  GET_RPM()) << "RPM";

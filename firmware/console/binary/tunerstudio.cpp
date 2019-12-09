@@ -76,6 +76,7 @@
 #include "bluetooth.h"
 #include "tunerstudio_io.h"
 #include "tooth_logger.h"
+#include "electronic_throttle.h"
 
 #include <string.h>
 #include "engine_configuration.h"
@@ -94,11 +95,11 @@
 
 
 #ifndef EFI_IDLE_CONTROL
- #if EFI_IDLE_INCREMENTAL_PID_CIC
+ #if EFI_IDLE_PID_CIC
   extern PidCic idlePid;
  #else
   extern Pid idlePid;
- #endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
+ #endif /* EFI_IDLE_PID_CIC */
 #endif /* EFI_IDLE_CONTROL */
 
 
@@ -256,7 +257,7 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
 	}
 }
 
-extern Pid etbPid;
+extern EtbController etbController[ETB_COUNT];
 
 static const void * getStructAddr(int structId) {
 	switch (structId) {
@@ -274,7 +275,7 @@ static const void * getStructAddr(int structId) {
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case LDS_ETB_PID_STATE_INDEX:
-		return static_cast<pid_state_s*>(&etbPid);
+		return static_cast<pid_state_s*>(&etbController[0].etbPid);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #ifndef EFI_IDLE_CONTROL
@@ -487,7 +488,9 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_LOGGER_BUFFER
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
-			|| command == TS_GET_FIRMWARE_VERSION;
+			|| command == TS_GET_FIRMWARE_VERSION
+			|| command == TS_PERF_TRACE_BEGIN
+			|| command == TS_PERF_TRACE_GET_BUFFER;
 }
 
 // this function runs indefinitely
@@ -852,20 +855,20 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 
 		break;
-	case TS_PERF_TRACE_BEGIN:
+#endif /* EFI_TOOTH_LOGGER */
 #if ENABLE_PERF_TRACE
+	case TS_PERF_TRACE_BEGIN:
 		perfTraceEnable();
-#endif /* ENABLE_PERF_TRACE */
+		sendOkResponse(tsChannel, TS_CRC);
 		break;
 	case TS_PERF_TRACE_GET_BUFFER:
 		{
-#if ENABLE_PERF_TRACE
 			auto trace = perfTraceGetBuffer();
 			sr5SendResponse(tsChannel, TS_CRC, trace.Buffer, trace.Size);
-#endif /* ENABLE_PERF_TRACE */
 		}
-#endif /* EFI_TOOTH_LOGGER */
+
 		break;
+#endif /* ENABLE_PERF_TRACE */
 	default:
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;

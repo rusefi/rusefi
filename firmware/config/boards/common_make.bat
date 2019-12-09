@@ -16,3 +16,5 @@ cp build/rusefi.bin deliver/
 
 echo %script_name%: deliver folder
 ls -l deliver
+
+call config/boards/clean_env_variables.bat

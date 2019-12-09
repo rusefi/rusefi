@@ -3,29 +3,26 @@
  * @brief This class knows how to produce synthetic shaft signals based on triggerShape
  *
  * @date Sep 23, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef CONTROLLERS_TRIGGER_TRIGGER_SIMULATOR_H_
-#define CONTROLLERS_TRIGGER_TRIGGER_SIMULATOR_H_
+#pragma once
 
 #include "trigger_decoder.h"
 
 class TriggerStimulatorHelper {
 public:
-	TriggerStimulatorHelper();
 
-	uint32_t findTriggerSyncPoint(TriggerShape * shape,
+	uint32_t findTriggerSyncPoint(TriggerWaveform * shape,
 			TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-	void assertSyncPositionAndSetDutyCycle(const uint32_t index, TriggerState *state, TriggerShape * shape
+	void assertSyncPositionAndSetDutyCycle(const TriggerStateCallback triggerCycleCallback,
+			const uint32_t index, TriggerState *state, TriggerWaveform * shape
 			DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 private:
 	// send next event so that we can see how state reacts
-	void feedSimulatedEvent(TriggerState *state, TriggerShape * shape, int i DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void feedSimulatedEvent(const TriggerStateCallback triggerCycleCallback, TriggerState *state, TriggerWaveform * shape, int i DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 bool isUsefulSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
-
-#endif /* CONTROLLERS_TRIGGER_TRIGGER_SIMULATOR_H_ */

@@ -1,0 +1,101 @@
+name: Firmware CI
+
+on: [push,pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      # Let all builds finish even if one fails early
+      fail-fast: false
+      matrix:
+        # What boards should we build for? In the 'include' section below,
+        # set up what each of these boards needs to build.
+        build-target: [frankenso, frankenso-pal, mre-f4, mre-f7, prometheus-405, prometheus-469, proteus, kinetis]
+        build-type: [debug, release]
+        
+        include:
+          # Board configurations
+          - build-target: frankenso
+            efi-cpu: ARCH_STM32F4
+            efi-board: st_stm32f4
+            
+          - build-target: frankenso-pal
+            efi-cpu: ARCH_STM32F4
+            efi-board: st_stm32f4
+            target-extra-params: -DHAL_TRIGGER_USE_PAL=TRUE -DHAL_USE_ICU=FALSE -DEFI_VEHICLE_SPEED=FALSE -DEFI_LOGIC_ANALYZER=FALSE
+            
+          - build-target: mre-f4
+            efi-cpu: ARCH_STM32F4
+            efi-board: microrusefi
+            
+          - build-target: mre-f7
+            efi-cpu: ARCH_STM32F7
+            efi-board: microrusefi
+
+          - build-target: prometheus-405
+            efi-cpu: ARCH_STM32F4
+            efi-board: prometheus/f405
+
+          - build-target: prometheus-469
+            efi-cpu: ARCH_STM32F4
+            efi-board: prometheus/f469
+
+          - build-target: proteus
+            efi-cpu: ARCH_STM32F7
+            efi-board: proteus
+
+          - build-target: kinetis
+            efi-cpu: kinetis
+            efi-board: kinetis
+            target-extra-params: -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__USE_CMSI -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
+            extra-options: USE_FATFS=no USE_BOOTLOADER=no
+
+          # Debug vs. release configuration
+          - build-type: debug
+            type-extra-params: -DDUMMY
+            build-debug-level-opt: -O0 -ggdb -g3
+
+          - build-type: release
+            type-extra-params: -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_TRACE=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
+            build-debug-level-opt: -O2 -ggdb -g3
+
+        exclude:
+          - build-target: kinetis
+            build-type: debug
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+        submodules: recursive
+  
+    # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
+    - name: Download & Install GCC
+      run: |
+        wget 'https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/RC2.1/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2?revision=6e63531f-8cb1-40b9-bbfc-8a57cdfc01b4&la=en&hash=F761343D43A0587E8AC0925B723C04DBFB848339' -O compiler.tar.bz2
+        tar -xvf compiler.tar.bz2
+        echo "::add-path::`pwd`/gcc-arm-none-eabi-9-2019-q4-major/bin"
+  
+    # Make sure the compiler we just downloaded works - just print out the version
+    - name: Test Compiler
+      run: arm-none-eabi-gcc -v
+  
+    # Build the firmware!
+    - name: Build Firmware
+      working-directory: ./firmware/
+      run: make -j4 PROJECT_BOARD=${{matrix.efi-board}} PROJECT_CPU=${{matrix.efi-cpu}} EXTRA_PARAMS="${{matrix.type-extra-params}} ${{matrix.target-extra-params}}" DEBUG_LEVEL_OPT='${{matrix.build-debug-level-opt}}' ${{matrix.extra-options}}
+      
+    # The next two steps upload the bin and elf as build artifacts
+    - name: Upload elf
+      uses: actions/upload-artifact@v1
+      with:
+        name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-elf
+        path: ./firmware/build/rusefi.elf
+        
+    - name: Upload bin
+      uses: actions/upload-artifact@v1
+      with:
+        name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-bin
+        path: ./firmware/build/rusefi.bin

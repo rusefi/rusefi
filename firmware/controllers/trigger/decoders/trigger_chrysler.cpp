@@ -8,7 +8,7 @@
 #include "trigger_chrysler.h"
 #include "trigger_universal.h"
 
-void initDodgeRam(TriggerShape *s) {
+void initDodgeRam(TriggerWaveform *s) {
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->useRiseEdge = true;
@@ -25,7 +25,7 @@ void initDodgeRam(TriggerShape *s) {
 	s->useOnlyPrimaryForSync = true;
 }
 
-void configureNeon2003TriggerShapeCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 	s->useRiseEdge = true;
 
@@ -99,7 +99,7 @@ void configureNeon2003TriggerShapeCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER
 	s->addEvent720(m * 360, T_PRIMARY, TV_RISE);
 }
 
-void configureNeon2003TriggerShapeCam(TriggerShape *s) {
+void configureNeon2003TriggerWaveformCam(TriggerWaveform *s) {
 // todo: move sync point so that two channel does not have false trigger issues
 	bool useOnlyPrimary = true;
 
@@ -322,7 +322,7 @@ gap=1.43/0.71
 	}
 }
 
-void configureDodgeStratusTriggerShape(TriggerShape *s) {
+void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 	s->isSynchronizationNeeded = true;
 
@@ -388,7 +388,7 @@ void configureDodgeStratusTriggerShape(TriggerShape *s) {
 	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
 }
 
-static void configureNeon1995TriggerShapeCommon(bool withCam, TriggerShape *s) {
+static void configureNeon1995TriggerWaveformCommon(bool withCam, TriggerWaveform *s) {
 	trigger_wheel_e crank = withCam ? T_SECONDARY : T_PRIMARY;
 
 	// voodoo magic - we always need 720 at the end
@@ -448,17 +448,17 @@ static void configureNeon1995TriggerShapeCommon(bool withCam, TriggerShape *s) {
 	}
 }
 
-void configureNeon1995TriggerShapeOnlyCrank(TriggerShape *s) {
+void configureNeon1995TriggerWaveformOnlyCrank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 	s->setTriggerSynchronizationGap(3.79);
 
 	s->tdcPosition = 279;
 
-	configureNeon1995TriggerShapeCommon(false, s);
+	configureNeon1995TriggerWaveformCommon(false, s);
 }
 
 
-void configureNeon1995TriggerShape(TriggerShape *s) {
+void configureNeon1995TriggerWaveform(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->setTriggerSynchronizationGap(0.8227);
@@ -468,12 +468,12 @@ void configureNeon1995TriggerShape(TriggerShape *s) {
 
 	s->initialState[T_PRIMARY] = TV_RISE;
 
-	configureNeon1995TriggerShapeCommon(true, s);
+	configureNeon1995TriggerWaveformCommon(true, s);
 
 	s->useOnlyPrimaryForSync = true;
 }
 
-void initJeep18_2_2_2(TriggerShape *s) {
+void initJeep18_2_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->isSynchronizationNeeded = true;
 	s->setTriggerSynchronizationGap(1);
@@ -543,7 +543,7 @@ void initJeep18_2_2_2(TriggerShape *s) {
 
 }
 
-static void add4cylblock(int off, TriggerShape *s) {
+static void add4cylblock(int off, TriggerWaveform *s) {
 	s->addEvent720(114 + off, T_SECONDARY, TV_RISE);
 	s->addEvent720(114 + off + 2, T_SECONDARY, TV_FALL);
 
@@ -558,7 +558,7 @@ static void add4cylblock(int off, TriggerShape *s) {
 }
 
 // TT_JEEP_4_CYL
-void initJeep_XJ_4cyl_2500(TriggerShape *s) {
+void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->isSynchronizationNeeded = true;
 	s->setTriggerSynchronizationGap(1);

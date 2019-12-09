@@ -143,6 +143,8 @@ static fuel_table_t alphaNfuel = {
  */
 #ifdef EFI_ACTIVE_CONFIGURATION_IN_FLASH
 engine_configuration_s & activeConfiguration = *(engine_configuration_s *)EFI_ACTIVE_CONFIGURATION_IN_FLASH;
+// we cannot use this activeConfiguration until we call rememberCurrentConfiguration()
+bool isActiveConfigurationVoid = true;
 #else
 static engine_configuration_s activeConfigurationLocalStorage;
 engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
@@ -153,6 +155,8 @@ extern engine_configuration_s *engineConfiguration;
 void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
+#else
+	isActiveConfigurationVoid = false;
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 }
 
@@ -208,7 +212,7 @@ void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
 	}
-	setLinearCurve(engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE, dwellMs, dwellMs, 0.01);
+	setLinearCurve(engineConfiguration->sparkDwellValues, dwellMs, dwellMs, 0.01);
 }
 
 void setAfrMap(afr_table_t table, float value) {
@@ -248,9 +252,9 @@ void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 }
 
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setLinearCurve(config->injPhaseLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
-	setLinearCurve(config->veLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
-	setLinearCurve(config->afrLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
+	setLinearCurve(config->injPhaseLoadBins, minValue, maxValue, 1);
+	setLinearCurve(config->veLoadBins, minValue, maxValue, 1);
+	setLinearCurve(config->afrLoadBins, minValue, maxValue, 1);
 }
 
 void setTimingMap(ignition_table_t map, float value) {
@@ -304,6 +308,11 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+/* this breaks unit tests lovely TODO: fix this?
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
+*/
+	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->bc.auxFastSensor1_adcChannel = EFI_ADC_NONE;
 	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
@@ -313,7 +322,7 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->high_fuel_pressure_sensor_2 = EFI_ADC_NONE;
 	
 	boardConfiguration->clutchDownPinMode = PI_PULLUP;
-	boardConfiguration->clutchUpPinMode = PI_PULLUP;
+	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 	engineConfiguration->brakePedalPinMode = PI_PULLUP;
 }
 
@@ -450,11 +459,11 @@ static void setDefaultFuelCutParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(useTLE8888_cranking_hack) = true;
 
-	setLinearCurve(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, /*from*/1, /*to*/1, 1);
-	setLinearCurve(engineConfiguration->crankingTpsBins, CRANKING_CURVE_SIZE, 0, 100, 1);
+	setLinearCurve(engineConfiguration->crankingTpsCoef, /*from*/1, /*to*/1, 1);
+	setLinearCurve(engineConfiguration->crankingTpsBins, 0, 100, 1);
 
-	setLinearCurve(config->cltCrankingCorrBins, CLT_CRANKING_CURVE_SIZE, CLT_CURVE_RANGE_FROM, 100, 1);
-	setLinearCurve(config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE, 1.0, 1.0, 1);
+	setLinearCurve(config->cltCrankingCorrBins, CLT_CURVE_RANGE_FROM, 100, 1);
+	setLinearCurve(config->cltCrankingCorr, 1.0, 1.0, 1);
 
 	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
@@ -510,7 +519,7 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * see also setTargetRpmCurve()
  */
 static void setDefaultIdleSpeedTarget(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_SIZE, CLT_CURVE_RANGE_FROM, 140, 10);
+	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
 
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
@@ -548,8 +557,8 @@ static void setCanFrankensoDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * see also setDefaultIdleSpeedTarget()
  */
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_SIZE, CLT_CURVE_RANGE_FROM, 90, 10);
-	setLinearCurve(engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, rpm, rpm, 10);
+	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 90, 10);
+	setLinearCurve(engineConfiguration->cltIdleRpm, rpm, rpm, 10);
 }
 
 int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -600,7 +609,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setDefaultEtbBiasCurve(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-	CONFIGB(mafSensorType) = Bosch0280218037;
+	CONFIG(mafSensorType) = Bosch0280218037;
 	setBosch0280218037(config);
 
 	setBosch02880155868(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -639,17 +648,17 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.minValue = 10;
 	engineConfiguration->alternatorControl.maxValue = 90;
 
-	setLinearCurve(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, CLT_CURVE_RANGE_FROM, 120, 1);
-	setLinearCurve(engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE, 0, 0, 1);
+	setLinearCurve(engineConfiguration->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);
+	setLinearCurve(engineConfiguration->cltTimingExtra, 0, 0, 1);
 
-	setLinearCurve(engineConfiguration->fsioCurve1Bins, FSIO_CURVE_16, 0, 100, 1);
-	setLinearCurve(engineConfiguration->fsioCurve1, FSIO_CURVE_16, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve1Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve1, 0, 100, 1);
 
-	setLinearCurve(engineConfiguration->fsioCurve2Bins, FSIO_CURVE_16, 0, 100, 1);
-	setLinearCurve(engineConfiguration->fsioCurve2, FSIO_CURVE_16, 30, 170, 1);
+	setLinearCurve(engineConfiguration->fsioCurve2Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve2, 30, 170, 1);
 
-	setLinearCurve(engineConfiguration->fsioCurve3Bins, FSIO_CURVE_8, 0, 100, 1);
-	setLinearCurve(engineConfiguration->fsioCurve4Bins, FSIO_CURVE_8, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve3Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve4Bins, 0, 100, 1);
 
 
 	setDefaultWarmupIdleCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -677,10 +686,10 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	setLinearCurve(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000, 1);
-	setLinearCurve(engineConfiguration->map.samplingAngle, MAP_ANGLE_SIZE, 100, 130, 1);
-	setLinearCurve(engineConfiguration->map.samplingWindowBins, MAP_ANGLE_SIZE, 800, 7000, 1);
-	setLinearCurve(engineConfiguration->map.samplingWindow, MAP_ANGLE_SIZE, 50, 50, 1);
+	setLinearCurve(engineConfiguration->map.samplingAngleBins, 800, 7000, 1);
+	setLinearCurve(engineConfiguration->map.samplingAngle, 100, 130, 1);
+	setLinearCurve(engineConfiguration->map.samplingWindowBins, 800, 7000, 1);
+	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
 	// set_whole_timing_map 3
 	setWholeFuelMap(3 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -696,19 +705,19 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setFuelTablesLoadBin(10, 160 PASS_CONFIG_PARAMETER_SUFFIX);
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setLinearCurve(engineConfiguration->mapAccelTaperBins, FSIO_TABLE_8, 0, 32, 4);
-	setLinearCurve(engineConfiguration->mapAccelTaperMult, FSIO_TABLE_8, 1, 1, 1);
+	setLinearCurve(engineConfiguration->mapAccelTaperBins, 0, 32, 4);
+	setLinearCurve(engineConfiguration->mapAccelTaperMult, 1, 1, 1);
 
-	setLinearCurve(config->tpsTpsAccelFromRpmBins, FSIO_TABLE_8, 0, 100, 10);
-	setLinearCurve(config->tpsTpsAccelToRpmBins, FSIO_TABLE_8, 0, 100, 10);
+	setLinearCurve(config->tpsTpsAccelFromRpmBins, 0, 100, 10);
+	setLinearCurve(config->tpsTpsAccelToRpmBins, 0, 100, 10);
 
-	setLinearCurve(config->fsioTable1LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable1LoadBins, 20, 120, 10);
 	setRpmTableBin(config->fsioTable1RpmBins, FSIO_TABLE_8);
-	setLinearCurve(config->fsioTable2LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable2LoadBins, 20, 120, 10);
 	setRpmTableBin(config->fsioTable2RpmBins, FSIO_TABLE_8);
-	setLinearCurve(config->fsioTable3LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable3LoadBins, 20, 120, 10);
 	setRpmTableBin(config->fsioTable3RpmBins, FSIO_TABLE_8);
-	setLinearCurve(config->fsioTable4LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable4LoadBins, 20, 120, 10);
 	setRpmTableBin(config->fsioTable4RpmBins, FSIO_TABLE_8);
 
 	initEngineNoiseTable(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -1103,7 +1112,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 #endif /* EFI_SUPPORT_FORD_FIESTA */
 #if EFI_SUPPORT_NISSAN_PRIMERA
 	case NISSAN_PRIMERA:
-		setNissanPrimeraEngineConfiguration(engineConfiguration);
+		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif
 	case HONDA_ACCORD_CD:
@@ -1122,6 +1131,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setEtbTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MICRO_RUS_EFI:
+	case PROTEUS:
 		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
 	case TLE8888_BENCH_ENGINE:
@@ -1163,7 +1173,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setMazdaMiataNb1EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_323:
-		setMazda323EngineConfiguration(engineConfiguration);
+		setMazda323EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_626:
 		setMazda626EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1286,7 +1296,7 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 	assertEngineReference();
 
 #if EFI_ENGINE_CONTROL
-	ENGINE(eInitializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(initializeTriggerWaveform(logger PASS_ENGINE_PARAMETER_SUFFIX));
 #endif
 
 #if EFI_FSIO

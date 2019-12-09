@@ -119,8 +119,8 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
 
 	// clutch up
-	boardConfiguration->clutchUpPin = GPIOD_3;
-	boardConfiguration->clutchUpPinMode = PI_PULLUP;
+	engineConfiguration->clutchUpPin = GPIOD_3;
+	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 
 	// fuel pump
 	boardConfiguration->fuelPumpPin = GPIOD_4;

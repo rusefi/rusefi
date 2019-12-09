@@ -9,7 +9,7 @@
 #include "trigger_mazda.h"
 
 TEST(trigger, miataNA) {
-	TriggerShape naShape;
+	TriggerWaveform naShape;
 	initializeMazdaMiataNaShape(&naShape);
 
 

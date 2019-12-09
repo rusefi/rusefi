@@ -11,7 +11,7 @@ angle_t getEngineCycle(operation_mode_e operationMode) {
 	return operationMode == TWO_STROKE ? 360 : FOUR_STROKE_ENGINE_CYCLE;
 }
 
-void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int totalTeethCount, int skippedCount,
+void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerWaveform *s, int totalTeethCount, int skippedCount,
 		float toothWidth, float offset, float engineCycle, float filterLeft, float filterRight) {
 	efiAssertVoid(CUSTOM_ERR_6586, totalTeethCount > 0, "total count");
 	efiAssertVoid(CUSTOM_ERR_6587, skippedCount >= 0, "skipped count");
@@ -28,14 +28,14 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int to
 	s->addEventClamped(offset + engineCycle, wheel, TV_FALL, filterLeft, filterRight);
 }
 
-void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
+void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode) {
 	if (totalTeethCount <= 0) {
-		warning(CUSTOM_OBD_TRIGGER_SHAPE, "totalTeethCount is zero or less: %d", totalTeethCount);
+		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "totalTeethCount is zero or less: %d", totalTeethCount);
 		s->setShapeDefinitionError(true);
 		return;
 	}
-	efiAssertVoid(CUSTOM_ERR_6588, s != NULL, "TriggerShape is NULL");
+	efiAssertVoid(CUSTOM_NULL_SHAPE, s != NULL, "TriggerWaveform is NULL");
 	s->initialize(operationMode, false);
 
 	s->setTriggerSynchronizationGap(skippedCount + 1);
@@ -46,7 +46,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 }
 
 
-void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
+void configureOnePlusOne(TriggerWaveform *s, operation_mode_e operationMode) {
 	UNUSED(operationMode);
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
@@ -60,7 +60,7 @@ void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
 	s->useOnlyPrimaryForSync = true;
 }
 
-void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode) {
+void configureOnePlus60_2(TriggerWaveform *s, operation_mode_e operationMode) {
 	UNUSED(operationMode);
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
@@ -79,7 +79,7 @@ void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode) {
 	s->useOnlyPrimaryForSync = true;
 }
 
-void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode) {
+void configure3_1_cam(TriggerWaveform *s, operation_mode_e operationMode) {
 	UNUSED(operationMode);
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 

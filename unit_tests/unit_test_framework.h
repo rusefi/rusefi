@@ -11,6 +11,7 @@
 #include "engine.h"
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+using ::testing::Return;
 
 // This lets us inspect private state from unit tests
 #define private public

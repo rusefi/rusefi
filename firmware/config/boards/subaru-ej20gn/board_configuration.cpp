@@ -160,7 +160,7 @@ void setBoardConfigurationOverrides(void) {
 
 	// starter block
 	/* Starter signal connected through MC33972 - SG11 */
-	//setFsio(0, (GPIOB_1), STARTER_BLOCK PASS_CONFIG_PARAMETER_SUFFIX);
+	//setFsio(0, (GPIOB_1), STARTER_RELAY_LOGIC PASS_CONFIG_PARAMETER_SUFFIX);
 
 
 	// not used
@@ -177,7 +177,7 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->digitalPotentiometerChipSelect[1] = GPIO_UNASSIGNED;
 	boardConfiguration->digitalPotentiometerChipSelect[2] = GPIO_UNASSIGNED;
 	boardConfiguration->digitalPotentiometerChipSelect[3] = GPIO_UNASSIGNED;
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
+	engineConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
 	boardConfiguration->max31855spiDevice = SPI_NONE;

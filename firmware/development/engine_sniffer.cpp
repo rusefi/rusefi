@@ -5,7 +5,7 @@
  * Here we have our own build-in logic analyzer. The data we aggregate here is sent to the
  * java UI rusEfi Console so that it can be displayed nicely in the Sniffer tab.
  *
- * Both external events (see wave_analyzer.c) and internal (see signal executors) are supported
+ * Both external events (see logic_analyzer.cpp) and internal (see signal executors) are supported
  *
  * @date Jun 23, 2013
  * @author Andrey Belomutskiy, (c) 2012-2019

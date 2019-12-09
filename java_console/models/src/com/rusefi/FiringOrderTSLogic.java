@@ -15,17 +15,21 @@ public class FiringOrderTSLogic {
 
     private static final String FIRING_ORDER_PREFIX = "FO_";
     private static final Map<Integer, String[]> ordinal2order = new HashMap<>();
+    private static int maxOrdinal;
 
     public static void main(String[] args) throws IOException {
-        readFiringOrders();
-
-        for (int i = 2; i <= 12; i++)
-            processId(i);
-
+        invoke("../firmware/controllers/algo/firing_order.h");
     }
 
-    private static void readFiringOrders() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("../firmware/controllers/algo/firing_order.h"));
+    public static void invoke(String fileName) throws IOException {
+        readFiringOrders(fileName);
+
+        for (int i = 2; i <= maxOrdinal; i++)
+            processId(i);
+    }
+
+    private static void readFiringOrders(String fileName) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
 
         String line;
         while ((line = br.readLine()) != null) {
@@ -50,6 +54,7 @@ public class FiringOrderTSLogic {
 
         System.out.println("order " + Arrays.toString(order) + ": " + ordinal);
 
+        maxOrdinal = Math.max(ordinal, maxOrdinal);
         ordinal2order.put(ordinal, order);
     }
 
