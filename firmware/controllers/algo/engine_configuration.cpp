@@ -431,20 +431,41 @@ static void setDefaultWarmupIdleCorrection(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	initTemperatureCurve(WARMUP_CLT_EXTRA_FUEL_CURVE, 1.0);
+	static const float bins[] =
+	{
+		-40,
+		-30,
+		-20,
+		-10,
+		0,
+		10,
+		20,
+		30,
+		40,
+		50,
+		60,
+		70
+	};
 
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -40, 1.50);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -30, 1.50);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -20, 1.42);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -10, 1.36);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 0, 1.28);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 10, 1.19);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 20, 1.12);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 30, 1.10);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 40, 1.06);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 50, 1.06);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 60, 1.03);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 70, 1.01);
+	copyArrayPartial(config->cltFuelCorrBins, bins);
+
+	static const float values[] =
+	{
+		1.50,
+		1.50,
+		1.42,
+		1.36,
+		1.28,
+		1.19,
+		1.12,
+		1.10,
+		1.06,
+		1.06,
+		1.03,
+		1.01
+	};
+
+	copyArrayPartial(config->cltFuelCorr, values);
 }
 
 static void setDefaultFuelCutParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
