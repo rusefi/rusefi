@@ -81,9 +81,7 @@ cyclic_buffer<T, maxSize>::cyclic_buffer(const cyclic_buffer& cb) {
 	currentIndex = cb.currentIndex;
 	count = cb.count;
 	size = cb.size;
-	for (int i = 0; i < size; ++i) {
-		elements[i] = cb.elements[i];
-	}
+	copyArray(elements, cb.elements);
 }
 
 template<typename T, size_t maxSize>
