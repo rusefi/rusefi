@@ -27,6 +27,7 @@
 #include "accelerometer.h"
 #include "eficonsole.h"
 #include "console_io.h"
+#include "sensor_chart.h"
 
 #include "mpu_util.h"
 //#include "usb_msd.h"
@@ -93,7 +94,7 @@ bool rtcWorks = true;
  */
 void lockSpi(spi_device_e device) {
 	UNUSED(device);
-	efiAssertVoid(CUSTOM_ERR_6674, getCurrentRemainingStack() > 128, "lockSpi");
+	efiAssertVoid(CUSTOM_STACK_SPI, getCurrentRemainingStack() > 128, "lockSpi");
 	// todo: different locks for different SPI devices!
 	chMtxLock(&spiMtx);
 }
@@ -188,8 +189,6 @@ static int fastMapSampleIndex;
 static int hipSampleIndex;
 static int tpsSampleIndex;
 
-extern int tpsFastAdc;
-
 #if HAL_USE_ADC
 extern AdcDevice fastAdc;
 
@@ -216,6 +215,13 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		 */
 		efiAssertVoid(CUSTOM_ERR_6676, getCurrentRemainingStack() > 128, "lowstck#9b");
 
+#if EFI_SENSOR_CHART
+		if (ENGINE(sensorChartMode) == SC_AUX_FAST1) {
+			float voltage = getAdcValue("fAux1", engineConfiguration->bc.auxFastSensor1_adcChannel);
+			scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX), voltage);
+		}
+#endif /* EFI_SENSOR_CHART */
+
 #if EFI_MAP_AVERAGING
 		mapAveragingAdcCallback(fastAdc.samples[fastMapSampleIndex]);
 #endif /* EFI_MAP_AVERAGING */
@@ -223,7 +229,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		if (CONFIGB(isHip9011Enabled)) {
 			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
 		}
-#endif
+#endif /* EFI_HIP_9011 */
 //		if (tpsSampleIndex != TPS_IS_SLOW) {
 //			tpsFastAdc = fastAdc.samples[tpsSampleIndex];
 //		}
@@ -242,6 +248,7 @@ static void calcFastAdcIndexes(void) {
 	} else {
 		tpsSampleIndex = TPS_IS_SLOW;
 	}
+
 #endif/* HAL_USE_ADC */
 }
 
@@ -255,12 +262,6 @@ void turnOnHardware(Logging *sharedLogger) {
 #if EFI_SHAFT_POSITION_INPUT
 	turnOnTriggerInputPins(sharedLogger);
 #endif /* EFI_SHAFT_POSITION_INPUT */
-}
-
-static void unregisterPin(brain_pin_e currentPin, brain_pin_e prevPin) {
-	if (currentPin != prevPin) {
-		brain_pin_markUnused(prevPin);
-	}
 }
 
 void stopSpi(spi_device_e device) {
@@ -339,7 +340,8 @@ void applyNewHardwareSettings(void) {
 	stopHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
-	unregisterPin(engineConfiguration->bc.clutchUpPin, activeConfiguration.bc.clutchUpPin);
+	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode))
+		brain_pin_markUnused(activeConfiguration.clutchUpPin);
 
 	enginePins.unregisterPins();
 
@@ -424,7 +426,7 @@ void initHardware(Logging *l) {
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
-	initPrimaryPins();
+	initPrimaryPins(sharedLogger);
 
 	if (hasFirmwareError()) {
 		return;

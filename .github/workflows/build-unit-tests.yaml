@@ -1,6 +1,6 @@
-name: unit test ci
+name: Unit Test CI
 
-on: [push]
+on: [push,pull_request]
 
 jobs:
   build:

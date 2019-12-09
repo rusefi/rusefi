@@ -609,7 +609,7 @@ extern "C"
  * @note    The default is @p FALSE.
  */
 #ifndef CH_DBG_ENABLE_TRACE
-#define CH_DBG_ENABLE_TRACE                 TRUE
+#define CH_DBG_ENABLE_TRACE                 FALSE
 #endif
 
 /**
@@ -822,6 +822,9 @@ void chDbgPanic3(const char *msg, const char * file, int line);
     }                                                                       \
   }                                                                         \
 } while (false)
+
+#define ENABLE_PERF_TRACE FALSE
+#define TRACE_BUFFER_LENGTH 1
 
 #endif  /* CHCONF_H */
 

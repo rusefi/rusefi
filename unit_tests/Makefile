@@ -14,6 +14,7 @@ endif
 
 
 PROJECT_DIR = ../firmware
+include $(PROJECT_DIR)/rusefi_rules.mk
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
@@ -26,6 +27,11 @@ ifeq ($(USE_OPT),)
   USE_OPT += -fprofile-arcs -ftest-coverage
   USE_OPT += -Werror=missing-field-initializers
 endif
+
+
+#TODO! this is a nice goal
+#USE_OPT += $(RUSEFI_OPT)
+#USE_OPT += -Wno-error=format= -Wno-error=register -Wno-error=write-strings
 
 ifeq ($(CCACHE_DIR),)
  $(info No CCACHE_DIR)
@@ -91,12 +97,6 @@ PROJECT = rusefi_test
 # Imported source files and paths
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/algo/algo.mk
-include $(PROJECT_DIR)/controllers/core/core.mk
-include $(PROJECT_DIR)/controllers/math/math.mk
-include $(PROJECT_DIR)/controllers/system/system.mk
-include $(PROJECT_DIR)/controllers/sensors/sensors.mk
-include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
@@ -170,8 +170,6 @@ INCDIR = . \
 	$(PROJECT_DIR)/config/engines \
 	$(CONTROLLERS_INC) \
 	$(PROJECT_DIR)/console \
-	$(PROJECT_DIR)/controllers/sensors \
-	$(PROJECT_DIR)/controllers/sensors/converters \
  	$(DEVELOPMENT_DIR) \
 	$(PROJECT_DIR)/ext_algo \
 	$(PROJECT_DIR)/hw_layer \

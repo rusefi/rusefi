@@ -133,9 +133,9 @@ void setAltPFactor(float p) {
 
 static void applyAlternatorPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	efiAssertVoid(CUSTOM_ERR_6643, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(CUSTOM_IDLE_WAVE_CNT, state->multiWave.waveCount == 1, "invalid idle waveCount");
+	efiAssertVoid(CUSTOM_IDLE_WAVE_CNT, state->multiChannelStateSequence.waveCount == 1, "invalid idle waveCount");
 	OutputPin *output = state->outputPins[0];
-	int value = state->multiWave.getChannelState(/*channelIndex*/0, stateIndex);
+	int value = state->multiChannelStateSequence.getChannelState(/*channelIndex*/0, stateIndex);
 	/**
 	 * 'engine->isAlternatorControlEnabled' would be false is RPM is too low
 	 */

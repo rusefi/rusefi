@@ -2,11 +2,10 @@
  * @file	trigger_decoder.h
  *
  * @date Dec 24, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef TRIGGER_DECODER_H_
-#define TRIGGER_DECODER_H_
+#pragma once
 
 #include "global.h"
 #include "trigger_structure.h"
@@ -14,6 +13,12 @@
 #include "trigger_state_generated.h"
 
 class TriggerState;
+
+class TriggerStateListener {
+	public:
+		virtual void OnTriggerStateDecodingError() = 0;
+		virtual void OnTriggerStateProperState(efitick_t nowNt) = 0;
+};
 
 typedef void (*TriggerStateCallback)(TriggerState *);
 
@@ -25,7 +30,7 @@ typedef struct {
 	/**
 	 * Number of actual events of each channel within current trigger cycle, these
 	 * values are used to detect trigger signal errors.
-	 * see TriggerShape
+	 * see TriggerWaveform
 	 */
 	uint32_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 	/**
@@ -43,7 +48,7 @@ typedef struct {
 } current_cycle_state_s;
 
 /**
- * @see TriggerShape for trigger wheel shape definition
+ * @see TriggerWaveform for trigger wheel shape definition
  */
 class TriggerState : public trigger_state_s {
 public:
@@ -59,10 +64,15 @@ public:
 	bool isEvenRevolution() const;
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter() const;
-	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	void decodeTriggerEvent(const TriggerStateCallback triggerCycleCallback,
+			TriggerStateListener * triggerStateListener,
+			trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 	bool validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	void handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void onShaftSynchronization(efitime_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
+			efitime_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * Resets synchronization flag and alerts rpm_calculator to reset engine spinning flag.
 	 */
@@ -70,7 +80,6 @@ public:
 
 	bool isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	float getTriggerDutyCycle(int index);
-	TriggerStateCallback triggerCycleCallback;
 
 	/**
 	 * TRUE if we know where we are
@@ -126,7 +135,7 @@ private:
 
 
 /**
- * the reason for sub-class is simply to save RAM but not having statisics in the trigger initialization instance
+ * the reason for sub-class is simply to save RAM but not having statistics in the trigger initialization instance
  */
 class TriggerStateWithRunningStatistics : public TriggerState {
 public:
@@ -161,7 +170,7 @@ public:
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
-uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
+uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerWaveform * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 class Engine;
 
@@ -170,7 +179,5 @@ void initTriggerDecoderLogger(Logging *sharedLogger);
 
 bool isTriggerDecoderError(void);
 
-void calculateTriggerSynchPoint(TriggerShape *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
+void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-
-#endif /* TRIGGER_DECODER_H_ */

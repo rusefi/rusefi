@@ -36,6 +36,7 @@ public class Node {
         return true;
     }
 
+    @NotNull
     public Node getChild(String name) {
         Node child = (Node) config.get(name);
         if (child == null) {

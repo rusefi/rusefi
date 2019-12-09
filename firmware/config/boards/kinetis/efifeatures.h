@@ -32,7 +32,6 @@
  * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
  * CH_DBG_ENABLE_CHECKS
  * CH_DBG_ENABLE_ASSERTS
- * CH_DBG_ENABLE_TRACE
  * in chconf.h
  *
  */
@@ -56,8 +55,8 @@
 /**
  * Build-in logic analyzer support. Logic analyzer viewer is one of the java console panes.
  */
-#ifndef EFI_WAVE_ANALYZER
-#define EFI_WAVE_ANALYZER FALSE
+#ifndef EFI_LOGIC_ANALYZER
+#define EFI_LOGIC_ANALYZER FALSE
 #endif
 
 #ifndef EFI_ICU_INPUTS
@@ -176,12 +175,12 @@
 #define EFI_IDLE_CONTROL TRUE
 #endif
 
-#define EFI_IDLE_INCREMENTAL_PID_CIC FALSE
+#define EFI_IDLE_PID_CIC FALSE
 
 /**
  * Control the main power relay based on measured ignition voltage (Vbatt)
  */
-#define EFI_MAIN_RELAY_CONTROL FALSE
+#define EFI_MAIN_RELAY_CONTROL TRUE
 
 #ifndef EFI_PWM
 #define EFI_PWM FALSE
@@ -337,6 +336,7 @@
 #define EFI_COMP_PRIMARY_DEVICE (&COMPD3)
 #define EFI_COMP_TRIGGER_CHANNEL 6		// =E7
 //#define EFI_TRIGGER_DEBUG_BLINK TRUE
+//#define EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS TRUE
 
 #define LED_WARNING_BRAIN_PIN GPIOD_13
 
@@ -407,7 +407,7 @@
 #define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
 #define EFI_PRINT_MESSAGES_TO_TERMINAL TRUE
 
-#define EFI_ACTIVE_CONFIGURATION_IN_FLASH FLASH_ADDR
+#define EFI_ACTIVE_CONFIGURATION_IN_FLASH (FLASH_ADDR + offsetof(persistent_config_container_s, persistentConfiguration.engineConfiguration))
 
 //#define PWM_PHASE_MAX_COUNT 122
 

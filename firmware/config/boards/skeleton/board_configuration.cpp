@@ -64,11 +64,11 @@ static void setupTle8888() {
 //   diagnostic interface on SPI
 static void setupTle9201Etb() {
 	// This chip has PWM/DIR, not dira/dirb
-	engineConfiguration->etb1_use_two_wires = false;
+	engineConfiguration->etb_use_two_wires = false;
 	// PWM and DIR pins
-	boardConfiguration->etb1.controlPin1 = GPIOC_7;
-	boardConfiguration->etb1.directionPin1 = GPIOA_8;
-	boardConfiguration->etb1.directionPin2 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
+	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 	// PWM frequency needs to be configured to match the physical part
 	engineConfiguration->etbFreq = 800;
 }

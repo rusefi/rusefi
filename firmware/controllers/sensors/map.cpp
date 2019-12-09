@@ -225,7 +225,7 @@ static void printMAPInfo(void) {
 
 
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		scheduleMsg(logger, "instant value=%.2fHz @ %s", mapFreq, hwPortname(CONFIGB(frequencyReportingMapInputPin)));
+		scheduleMsg(logger, "instant value=%.2fHz @ %s", mapFreq, hwPortname(CONFIG(frequencyReportingMapInputPin)));
 	} else {
 		scheduleMsg(logger, "map type=%d/%s MAP=%.2fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
 				getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
@@ -268,14 +268,14 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 #if HAL_USE_ICU
-		digital_input_s* digitalMapInput = startDigitalCapture("MAP freq", CONFIGB(frequencyReportingMapInputPin), true);
+		digital_input_s* digitalMapInput = startDigitalCapture("MAP freq", CONFIG(frequencyReportingMapInputPin), true);
 
 		digitalMapInput->setWidthCallback((VoidInt) digitalMapWidthCallback, NULL);
 #else
  #if EFI_PROD_CODE
 	efiExtiEnablePin(
 				"Frequency MAP",
-				CONFIGB(frequencyReportingMapInputPin),
+				CONFIG(frequencyReportingMapInputPin),
 				PAL_EVENT_MODE_RISING_EDGE,
 				(palcallback_t)digitalMapWidthCallback,
 				nullptr

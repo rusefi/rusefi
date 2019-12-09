@@ -7,7 +7,7 @@
 
 #include "trigger_bmw.h"
 
-static inline float addPair(TriggerShape *s, float a, float w) {
+static inline float addPair(TriggerWaveform *s, float a, float w) {
 	s->addEvent720(a, T_SECONDARY, TV_RISE);
 	a += w;
 	s->addEvent720(a, T_SECONDARY, TV_FALL);
@@ -15,7 +15,7 @@ static inline float addPair(TriggerShape *s, float a, float w) {
 	return a;
 }
 
-void configureMiniCooperTriggerShape(TriggerShape *s) {
+void configureMiniCooperTriggerWaveform(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 //	s->initialState[0] = 1;

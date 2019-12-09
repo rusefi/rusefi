@@ -627,6 +627,8 @@ case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
 case PROMETHEUS_DEFAULTS:
   return "PROMETHEUS_DEFAULTS";
+case PROTEUS:
+  return "PROTEUS";
 case ROVER_V8:
   return "ROVER_V8";
 case SACHS:
@@ -861,6 +863,8 @@ case SC_DETAILED_RPM:
   return "SC_DETAILED_RPM";
 case SC_MAP:
   return "SC_MAP";
+case SC_AUX_FAST1:
+	return "SC_AUX_FAST1";
 case SC_OFF:
   return "SC_OFF";
 case SC_RPM_ACCEL:

@@ -9,7 +9,7 @@
 
 #include "trigger_structure.h"
 
-void initializeMitsubishi4g18(TriggerShape *s);
-void configureFordAspireTriggerShape(TriggerShape * s);
+void initializeMitsubishi4g18(TriggerWaveform *s);
+void configureFordAspireTriggerWaveform(TriggerWaveform * s);
 
 #endif /* TRIGGER_MITSUBISHI_H_ */

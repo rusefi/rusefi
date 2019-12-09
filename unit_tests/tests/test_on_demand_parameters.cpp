@@ -47,8 +47,9 @@ TEST(util, checkForMissingParameterHandling) {
 		FAIL() << "Expected 'missing key3' exception";
 	} catch(string message) {
 		// exception about missing value is expected
-		ASSERT_TRUE(message.find("No value for this key") >= 0);
-		ASSERT_TRUE(message.find("key3") >= 0);
+		// type limits this to always be not negative
+		// todo? do we need this? ASSERT_TRUE(message.find("No value for this key") >= 0);
+		// todo? do we need this? ASSERT_TRUE(message.find("key3") >= 0);
 	}
 }
 

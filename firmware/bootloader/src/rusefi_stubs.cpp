@@ -31,8 +31,8 @@ LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT
 
 // this is supposed to be taken from chconf_common.h but it does not work? I am not sure why :(
 // TODO: make this be defined by chconf_common.h?
-#if ! ENABLE_PERF_TRACE
-//void irqEnterHook() {}
-//void irqExitHook() {}
-//void contextSwitchHook() {}
-#endif /* ENABLE_PERF_TRACE */
+//#if ! ENABLE_PERF_TRACE
+void irqEnterHook() {}
+void irqExitHook() {}
+void contextSwitchHook() {}
+//#endif /* ENABLE_PERF_TRACE */

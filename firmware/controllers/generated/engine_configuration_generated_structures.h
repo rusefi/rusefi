@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Nov 19 09:22:58 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Dec 08 00:34:44 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -595,9 +595,14 @@ struct board_configuration_s {
 	 */
 	pin_output_mode_e mc33972_csPinMode;
 	/**
+	 * Useful in Research&Development phase
 	 * offset 80
 	 */
-	etb_io etb1;
+	adc_channel_e auxFastSensor1_adcChannel;
+	/**
+	 * offset 81
+	 */
+	uint8_t unused556[3];
 	/**
 	 * offset 84
 	 */
@@ -858,11 +863,19 @@ struct board_configuration_s {
 	/**
 	 * offset 207
 	 */
-	uint8_t unusedSpiPadding2;
+	brain_pin_e debugMapAveraging;
 	/**
 	 * offset 208
 	 */
-	uint8_t unuseduartPadding1[4];
+	brain_pin_e starterRelayPin;
+	/**
+	 * offset 209
+	 */
+	pin_output_mode_e starterRelayPinMode;
+	/**
+	 * offset 210
+	 */
+	uint8_t unuseduartPadding1[2];
 	/**
 	 * offset 212
 	 */
@@ -981,48 +994,7 @@ struct board_configuration_s {
 	 * offset 344
 	 */
 	sensor_chart_e sensorChartMode;
-	/**
-	 * offset 348
-	 */
-	maf_sensor_type_e mafSensorType;
-	/**
-	 * todo:not finished
-	 * These input pins allow us to pull toggle buttons state
-	 * offset 352
-	 */
-	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
-	/**
-	 * offset 368
-	 */
-	brain_input_pin_e vehicleSpeedSensorInputPin;
-	/**
-	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
-	 * offset 369
-	 */
-	switch_input_pin_e clutchUpPin;
-	/**
-	 * offset 370
-	 */
-	brain_input_pin_e frequencyReportingMapInputPin;
-	/**
-	 * offset 371
-	 */
-	pin_input_mode_e clutchUpPinMode;
-	/**
-	 * offset 372
-	 */
-	float etbIdleRange;
-	/**
-	offset 376 bit 0 */
-	bool clutchUpPinInverted : 1;
-	/**
-	offset 376 bit 1 */
-	bool clutchDownPinInverted : 1;
-	/**
-	 * offset 380
-	 */
-	int unusedAtBoardConfigurationEnd[121];
-	/** total size 864*/
+	/** total size 348*/
 };
 
 typedef struct board_configuration_s board_configuration_s;
@@ -1086,10 +1058,10 @@ struct engine_configuration_s {
 	bool cj125isLsu49 : 1;
 	/**
 	offset 76 bit 12 */
-	bool etb1_use_two_wires : 1;
+	bool etb_use_two_wires : 1;
 	/**
 	offset 76 bit 13 */
-	bool etb2_use_two_wires : 1;
+	bool unusedHereo_wires : 1;
 	/**
 	offset 76 bit 14 */
 	bool showSdCardWarning : 1;
@@ -1145,7 +1117,6 @@ struct engine_configuration_s {
 	bool issue_294_31 : 1;
 	/**
 	 * Closed throttle. todo: extract these two fields into a structure
-	 * todo: we need two sets of TPS parameters - modern ETBs have two sensors
 	 * See also tps1_1AdcChannel
 	 * set tps_min X
 	 * offset 80
@@ -1480,6 +1451,51 @@ struct engine_configuration_s {
 	 */
 	board_configuration_s bc;
 	/**
+	 * offset 948
+	 */
+	maf_sensor_type_e mafSensorType;
+	/**
+	 * todo:not finished
+	 * These input pins allow us to pull toggle buttons state
+	 * offset 952
+	 */
+	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 968
+	 */
+	brain_input_pin_e vehicleSpeedSensorInputPin;
+	/**
+	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
+	 * offset 969
+	 */
+	switch_input_pin_e clutchUpPin;
+	/**
+	 * offset 970
+	 */
+	brain_input_pin_e frequencyReportingMapInputPin;
+	/**
+	 * offset 971
+	 */
+	pin_input_mode_e clutchUpPinMode;
+	/**
+	 * offset 972
+	 */
+	float unused;
+	/**
+	offset 976 bit 0 */
+	bool todoClutchUpPinInverted : 1;
+	/**
+	offset 976 bit 1 */
+	bool todoClutchDownPinInverted : 1;
+	/**
+	 * offset 980
+	 */
+	etb_io etbIo[ETB_COUNT];
+	/**
+	 * offset 988
+	 */
+	int unusedAtOldBoardConfigurationEnd[119];
+	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
 	/**
@@ -1692,8 +1708,9 @@ struct engine_configuration_s {
 	offset 1476 bit 20 */
 	bool etbCalibrationOnStart : 1;
 	/**
+	 * This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 	offset 1476 bit 21 */
-	bool unused_1484_bit_21 : 1;
+	bool useIacPidMultTable : 1;
 	/**
 	offset 1476 bit 22 */
 	bool unused_1484_bit_22 : 1;
@@ -1850,9 +1867,23 @@ struct engine_configuration_s {
 	 */
 	float alternator_antiwindupFreq;
 	/**
+	 * Closed throttle#2. todo: extract these two fields into a structure
+	 * See also tps2_1AdcChannel
+	 * set tps2_min X
 	 * offset 1768
 	 */
-	uint8_t unusedFormerWarmupAfrPid[8];
+	int16_t tps2Min;
+	/**
+	 * Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!
+	 * See also tps1_1AdcChannel
+	 * set tps2_max X
+	 * offset 1770
+	 */
+	int16_t tps2Max;
+	/**
+	 * offset 1772
+	 */
+	uint8_t unusedFormerWarmupAfrPid[4];
 	/**
 	 * kPa value which is too low to be true
 	 * offset 1776
@@ -2524,7 +2555,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3964
 	 */
-	etb_io etb2;
+	uint8_t unused1059[4];
 	/**
 	 * See useIdleTimingPidControl
 	 * offset 3968
@@ -2607,9 +2638,25 @@ struct engine_configuration_s {
 	 */
 	int alFIn[3];
 	/**
+	 * Trigger comparator center point voltage
 	 * offset 4036
 	 */
-	uint8_t unusedSpiPadding3[4];
+	uint8_t triggerCompCenterVolt;
+	/**
+	 * Trigger comparator hysteresis voltage (Min)
+	 * offset 4037
+	 */
+	uint8_t triggerCompHystMin;
+	/**
+	 * Trigger comparator hysteresis voltage (Max)
+	 * offset 4038
+	 */
+	uint8_t triggerCompHystMax;
+	/**
+	 * VR-sensor saturation RPM
+	 * offset 4039
+	 */
+	uint8_t triggerCompSensorSatRpm;
 	/**
 	 * offset 4040
 	 */
@@ -2892,4 +2939,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Nov 19 09:22:58 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Dec 08 00:34:44 EST 2019

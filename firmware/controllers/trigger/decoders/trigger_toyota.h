@@ -10,7 +10,7 @@
 
 #include "trigger_structure.h"
 
-void initialize2jzGE1_12(TriggerShape *s);
-void initialize2jzGE3_34(TriggerShape *s);
+void initialize2jzGE1_12(TriggerWaveform *s);
+void initialize2jzGE3_34(TriggerWaveform *s);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_TOYOTA_H_ */

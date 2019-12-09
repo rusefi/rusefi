@@ -75,7 +75,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engine->eInitializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	initRpmCalculator(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	initMainEventListener(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 }
@@ -128,7 +128,6 @@ void EngineTestHelper::fireTriggerEvents2(int count, float durationMs) {
 void EngineTestHelper::clearQueue() {
 	engine.executor.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	ASSERT_EQ( 0,  engine.executor.size()) << "Failed to clearQueue";
-	engine.ignitionEventsHead = nullptr; // let's drop whatever was scheduled just to start from a clean state
 }
 
 int EngineTestHelper::executeActions() {
@@ -163,29 +162,63 @@ void EngineTestHelper::assertInjectorDownEvent(const char *msg, int eventIndex, 
 
 scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp) {
 	TestExecutor *executor = &engine.executor;
-	EXPECT_TRUE(executor->size() > index) << msg;
+	EXPECT_TRUE(executor->size() > index) << msg << " valid index";
 	scheduling_s *event = executor->getForUnitTest(index);
-	assertEqualsM4(msg, " up/down", (void*)event->callback == (void*) callback, 1);
+	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
 	efitime_t start = getTimeNowUs();
-	assertEqualsM(msg, expectedTimestamp, event->momentX - start);
+	assertEqualsM4(msg, " timestamp", expectedTimestamp, event->momentX - start);
 	return event;
+}
+
+// todo: reduce code duplication with another 'getElementAtIndexForUnitText'
+static AngleBasedEvent * getElementAtIndexForUnitText(int index, Engine *engine) {
+	AngleBasedEvent * current;
+
+	LL_FOREACH2(engine->angleBasedEventsHead, current, nextToothEvent)
+	{
+		if (index == 0)
+			return current;
+		index--;
+	}
+#if EFI_UNIT_TEST
+	firmwareError(OBD_PCM_Processor_Fault, "getForUnitText: null");
+#endif /* EFI_UNIT_TEST */
+	return NULL;
+}
+
+AngleBasedEvent * EngineTestHelper::assertTriggerEvent(const char *msg,
+		int index, AngleBasedEvent *expected,
+		void *callback,
+		int triggerEventIndex, angle_t angleOffsetFromTriggerEvent) {
+	AngleBasedEvent * event = getElementAtIndexForUnitText(index, &engine);
+
+	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
+
+	assertEqualsM4(msg, " trigger", triggerEventIndex, event->position.triggerEventIndex);
+	assertEqualsM4(msg, " angle", angleOffsetFromTriggerEvent, event->position.angleOffsetFromTriggerEvent);
+	return event;
+}
+
+scheduling_s * EngineTestHelper::assertScheduling(const char *msg, int index, scheduling_s *expected, void *callback, efitime_t expectedTimestamp) {
+	scheduling_s * actual = assertEvent5(msg, index, callback, expectedTimestamp);
+	return actual;
 }
 
 void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, efitime_t momentX, InjectionEvent *expectedEvent) {
 	scheduling_s *event = assertEvent5(msg, index, callback, momentX);
 
-	InjectionEvent *actualEvent = (InjectionEvent *)event->param;
+	InjectionEvent *actualEvent = (InjectionEvent *)event->action.getArgument();
 
-	assertEqualsLM(msg, expectedEvent->outputs[0], (long)actualEvent->outputs[0]);
+	assertEqualsLM(msg, (long)expectedEvent->outputs[0], (long)actualEvent->outputs[0]);
 // but this would not work	assertEqualsLM(msg, expectedPair, (long)eventPair);
 }
 
 
-void EngineTestHelper::applyTriggerShape() {
+void EngineTestHelper::applyTriggerWaveform() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine
 
-	ENGINE(eInitializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX));
 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -212,8 +245,8 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	// set cranking mode (it's used by getCurrentInjectionMode())
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 
-	setArrayValues(config->cltFuelCorrBins, CLT_CURVE_SIZE, 1);
-	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, 0);
+	setArrayValues(config->cltFuelCorrBins, 1.0f);
+	setArrayValues(engineConfiguration->injector.battLagCorr, 0.0f);
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -228,7 +261,7 @@ void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARA
 	engineConfiguration->trigger.type = trigger;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #2";
-	applyTriggerShape();
+	applyTriggerWaveform();
 }
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injectionMode) {

@@ -1,13 +1,26 @@
 package com.rusefi;
 
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.tracing.Entry;
+import com.rusefi.tracing.JsonOutput;
 import com.rusefi.ui.MessagesView;
+import com.rusefi.ui.RpmModel;
+import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
 
 import static com.rusefi.CommandControl.TEST;
+import static com.rusefi.binaryprotocol.BinaryProtocolCommands.RESPONSE_OK;
+import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
 public class BenchTestPane {
     private final JPanel content = new JPanel(new GridLayout(2, 5));
@@ -15,6 +28,7 @@ public class BenchTestPane {
     public BenchTestPane() {
         content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
+        content.add(grabPerformanceTrace());
         content.add(createFanTest());
         content.add(createAcRelayTest());
         content.add(createFuelPumpTest());
@@ -36,6 +50,36 @@ public class BenchTestPane {
             }
         }.getContent());
         content.add(new MessagesView().messagesScroll);
+    }
+
+    private Component grabPerformanceTrace() {
+        JButton button = new JButton("Grab PTrace");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BinaryProtocol bp = BinaryProtocolHolder.INSTANCE.get();
+                bp.executeCommand(new byte[]{'r'}, "begin trace", false);
+
+                try {
+                    Thread.sleep(500);
+
+                    byte[] packet = bp.executeCommand(new byte[]{'b'}, "get trace", true);
+                    if (!checkResponseCode(packet, RESPONSE_OK) || ((packet.length - 1) % 8) != 0)
+                        throw new IllegalStateException("Unexpected packet");
+
+                    List<Entry> data = Entry.parseBuffer(packet);
+
+                    int rpm = RpmModel.getInstance().getValue();
+                    String fileName = FileLog.getDate() + "_rpm_" + rpm + "_rusEfi_trace" + ".json";
+
+
+                    JsonOutput.writeToStream(data, new FileOutputStream(fileName));
+                } catch (IOException | InterruptedException e1) {
+                    throw new IllegalStateException(e1);
+                }
+            }
+        });
+        return UiUtils.wrap(button);
     }
 
     private Component createMILTest() {

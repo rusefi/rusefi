@@ -5,8 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "global.h"
-#include "engine_configuration.h"
 #include "fuel_math.h"
 #include "trigger_structure.h"
 #include "allsensors.h"
@@ -116,7 +114,7 @@ TEST(misc, testFuelMap) {
 }
 
 
-static void confgiureFordAspireTriggerShape(TriggerShape * s) {
+static void confgiureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->addEvent720(53.747, T_SECONDARY, TV_RISE);
@@ -165,52 +163,52 @@ TEST(misc, testAngleResolver) {
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
 
-	TriggerShape * ts = &engine->triggerCentral.triggerShape;
-	engine->eInitializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	TriggerWaveform * ts = &engine->triggerCentral.triggerShape;
+	engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	assertEqualsM("index 2", 52.76, ts->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));
 	assertEqualsM("index 5", 412.76, ts->eventAngles[6]);
 	assertEqualsM("time 5", 0.5733, ts->wave.getSwitchTime(5));
 
-	ASSERT_EQ(4, ts->getTriggerShapeSynchPointIndex());
+	ASSERT_EQ(4, ts->getTriggerWaveformSynchPointIndex());
 
 	ASSERT_EQ( 10,  ts->getSize()) << "shape size";
 
 	event_trigger_position_s injectionStart;
 
 	printf("*************************************************** testAngleResolver 0\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -122, engineConfiguration->globalTriggerAngleOffset));
+	TRIGGER_WAVEFORM(findTriggerPosition(&injectionStart, -122, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
 	ASSERT_NEAR(0.24, injectionStart.angleOffsetFromTriggerEvent, EPS5D);
 
 	printf("*************************************************** testAngleResolver 0.1\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -80, engineConfiguration->globalTriggerAngleOffset));
+	TRIGGER_WAVEFORM(findTriggerPosition(&injectionStart, -80, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
 	ASSERT_FLOAT_EQ(42.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 0.2\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -54, engineConfiguration->globalTriggerAngleOffset));
+	TRIGGER_WAVEFORM(findTriggerPosition(&injectionStart, -54, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
 	ASSERT_FLOAT_EQ(68.2400, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -53, engineConfiguration->globalTriggerAngleOffset));
+	TRIGGER_WAVEFORM(findTriggerPosition(&injectionStart, -53, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
 	ASSERT_FLOAT_EQ(69.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 1\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 0, engineConfiguration->globalTriggerAngleOffset));
+	TRIGGER_WAVEFORM(findTriggerPosition(&injectionStart, 0, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
 	ASSERT_FLOAT_EQ(122.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 56, engineConfiguration->globalTriggerAngleOffset));
+	TRIGGER_WAVEFORM(findTriggerPosition(&injectionStart, 56, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
 	ASSERT_FLOAT_EQ(178.24, injectionStart.angleOffsetFromTriggerEvent);
 
-	TriggerShape t;
-	confgiureFordAspireTriggerShape(&t);
+	TriggerWaveform t;
+	confgiureFordAspireTriggerWaveform(&t);
 }
 
 TEST(misc, testPinHelper) {
@@ -233,7 +231,7 @@ TEST(fuel, testTpsBasedVeDefect799) {
 
 	int mapFrom = 100;
 	// set MAP axis range
-	setLinearCurve(config->veLoadBins, FUEL_LOAD_COUNT, mapFrom, mapFrom + FUEL_LOAD_COUNT - 1, 1);
+	setLinearCurve(config->veLoadBins, mapFrom, mapFrom + FUEL_LOAD_COUNT - 1, 1);
 
 	// RPM does not matter - set table values to match load axis
 	for (int load = 0; load < FUEL_LOAD_COUNT;load++) {
@@ -246,7 +244,7 @@ TEST(fuel, testTpsBasedVeDefect799) {
 	ASSERT_EQ(107, veMap.getValue(2000, 107));
 
 	// set TPS axis range which does not overlap MAP range for this test
-	setLinearCurve(CONFIG(ignitionTpsBins), IGN_TPS_COUNT, 0, 15, 1);
+	setLinearCurve(CONFIG(ignitionTpsBins), 0, 15, 1);
 
 
 	engine->mockMapValue = 107;

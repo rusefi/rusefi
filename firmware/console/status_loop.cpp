@@ -30,9 +30,9 @@
 #include "engine_controller.h"
 
 #include "adc_inputs.h"
-#if EFI_WAVE_ANALYZER
-#include "wave_analyzer.h"
-#endif /* EFI_WAVE_ANALYZER */
+#if EFI_LOGIC_ANALYZER
+#include "logic_analyzer.h"
+#endif /* EFI_LOGIC_ANALYZER */
 
 #include "trigger_central.h"
 #include "allsensors.h"
@@ -458,10 +458,10 @@ void printOverallStatus(systime_t nowSeconds) {
 	printOutPin(PROTOCOL_HIP_NAME, CONFIGB(hip9011IntHoldPin));
 	printOutPin(PROTOCOL_TACH_NAME, CONFIGB(tachOutputPin));
 	printOutPin(PROTOCOL_DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
-#if EFI_WAVE_ANALYZER
+#if EFI_LOGIC_ANALYZER
 	printOutPin(PROTOCOL_WA_CHANNEL_1, CONFIGB(logicAnalyzerPins)[0]);
 	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIGB(logicAnalyzerPins)[1]);
-#endif /* EFI_WAVE_ANALYZER */
+#endif /* EFI_LOGIC_ANALYZER */
 
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		printOutPin(enginePins.coils[i].getShortName(), CONFIGB(ignitionPins)[i]);
@@ -524,9 +524,9 @@ void updateDevConsoleState(void) {
 	chThdSleepMilliseconds(200);
 #endif
 
-#if EFI_WAVE_ANALYZER
+#if EFI_LOGIC_ANALYZER
 	printWave(&logger);
-#endif /* EFI_WAVE_ANALYZER */
+#endif /* EFI_LOGIC_ANALYZER */
 
 	scheduleLogging(&logger);
 }
@@ -741,7 +741,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 	// offset 32
-	tsOutputChannels->tpsADC = getTPS12bitAdc(PASS_ENGINE_PARAMETER_SIGNATURE) / TPS_TS_CONVERSION;
+	tsOutputChannels->tpsADC = getTPS12bitAdc(0 PASS_ENGINE_PARAMETER_SUFFIX) / TPS_TS_CONVERSION;
 	// offset 36
 #if EFI_ANALOG_SENSORS
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;

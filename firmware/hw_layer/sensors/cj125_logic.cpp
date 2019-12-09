@@ -7,6 +7,7 @@
 
 #include "cj125_logic.h"
 #include "engine.h"
+#include "error_handling.h"
 
 EXTERN_ENGINE;
 
@@ -47,7 +48,12 @@ void CJ125::StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENG
 	SetIdleHeater(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-void CJ125::cjIdentify(void) {
+/**
+ * @return true in case of positive SPI identification
+ *         false in case of unexpected SPI response
+ */
+bool CJ125::cjIdentify(void) {
+	efiAssert(OBD_PCM_Processor_Fault, spi!= NULL, "No SPI pointer", false);
 	// read Ident register
 	int ident = spi->ReadRegister(IDENT_REG_RD) & CJ125_IDENT_MASK;
 
@@ -62,15 +68,22 @@ void CJ125::cjIdentify(void) {
 	scheduleMsg(logger, "cj125: Check ident=0x%x diag=0x%x init1=0x%x init2=0x%x", ident, diag, init1, init2);
 	if (ident != CJ125_IDENT) {
 		scheduleMsg(logger, "cj125: Error! Wrong ident! Cannot communicate with CJ125!");
+		errorCode = CJ125_ERROR_WRONG_IDENT;
+		state = CJ125_ERROR;
+		return false;
 	}
 	if (init1 != CJ125_INIT1_NORMAL_17 || init2 != CJ125_INIT2_DIAG) {
 		scheduleMsg(logger, "cj125: Error! Cannot set init registers! Cannot communicate with CJ125!");
+		errorCode = CJ125_ERROR_WRONG_INIT;
+		state = CJ125_ERROR;
+		return false;
 	}
 #if 0
 	if (diag != CJ125_DIAG_NORM) {
 		scheduleMsg(logger, "cj125: Diag error!");
 	}
 #endif
+	return true;
 }
 
 void CJ125::cjSetMode(cj125_mode_e m) {

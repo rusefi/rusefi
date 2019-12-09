@@ -4,8 +4,8 @@
  * @date Jan 12, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
-#ifndef CONTROLLERS_ALGO_RUSEFI_TYPES_H_
-#define CONTROLLERS_ALGO_RUSEFI_TYPES_H_
+
+#pragma once
 
 #include <string.h>
 #include <stdbool.h>
@@ -90,7 +90,6 @@ typedef uint8_t iac_pid_mult_t[IAC_PID_MULT_SIZE][IAC_PID_MULT_SIZE];
 typedef float baro_corr_table_t[BARO_CORR_SIZE][BARO_CORR_SIZE];
 
 typedef float fsio_table_8x8_f32t[FSIO_TABLE_8][FSIO_TABLE_8];
-typedef uint8_t fsio_table_8x8_u8t[FSIO_TABLE_8][FSIO_TABLE_8];
 typedef float tps_tps_table_t[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];
 typedef uint8_t fsio_table_8x8_u8t[FSIO_TABLE_8][FSIO_TABLE_8];
 
@@ -131,5 +130,3 @@ typedef void (*VoidCharPtrCharPtrVoidPtr)(const char *, const char *, void*);
 
 typedef void (*VoidCharPtrCharPtrCharPtr)(const char *, const char *, const char *);
 typedef void (*VoidCharPtrCharPtrCharPtrCharPtrCharPtr)(const char *, const char *, const char *, const char *, const char *);
-
-#endif /* CONTROLLERS_ALGO_RUSEFI_TYPES_H_ */

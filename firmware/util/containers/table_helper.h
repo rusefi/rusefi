@@ -158,20 +158,18 @@ typedef Map3D<IGN_RPM_COUNT, IGN_TPS_COUNT, int16_t, float> ign_tps_Map3D_t;
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, float> fuel_Map3D_t;
 typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float, float> baroCorr_Map3D_t;
 typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t> pedal2tps_t;
+typedef Map3D<IAC_PID_MULT_SIZE, IAC_PID_MULT_SIZE, uint8_t, uint8_t> iacPidMultiplier_t;
 
 void setRpmBin(float array[], int size, float idleRpm, float topRpm);
 
-void setTableBin(float array[], int size, float from, float to);
-
-#define setArrayValues(array, size, value) setTableBin(array, size, value, value)
-
 /**
- * @param precision for example '0.1' for one digit fractional part
+ * @param precision for example '0.1' for one digit fractional part. Default to 0.01, two digits.
  */
-template<typename vType>
-void setLinearCurveAny(vType array[], int size, float from, float to, float precision) {
-	for (int i = 0; i < size; i++) {
-		float value = interpolateMsg("setLinearCurve", 0, from, size - 1, to, i);
+template<typename TValue, int TSize>
+void setLinearCurve(TValue (&array)[TSize], float from, float to, float precision = 0.01f) {
+	for (int i = 0; i < TSize; i++) {
+		float value = interpolateMsg("setLinearCurve", 0, from, TSize - 1, to, i);
+
 		/**
 		 * rounded values look nicer, also we want to avoid precision mismatch with Tuner Studio
 		 */
@@ -179,7 +177,13 @@ void setLinearCurveAny(vType array[], int size, float from, float to, float prec
 	}
 }
 
-#define setLinearCurve setLinearCurveAny<float>
+template<typename TValue, int TSize>
+void setArrayValues(TValue (&array)[TSize], TValue value) {
+	for (int i = 0; i < TSize; i++) {
+		array[i] = value;
+	}
+}
+
 void setRpmTableBin(float array[], int size);
 
 #endif /* TABLE_HELPER_H_ */

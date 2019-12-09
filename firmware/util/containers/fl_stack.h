@@ -10,7 +10,6 @@
 #define FL_STACK_H_
 
 #include "global.h"
-#include "error_handling.h"
 
 template<typename T, int MAXSIZE>
 class FLStack {

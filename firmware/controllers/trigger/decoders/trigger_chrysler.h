@@ -13,16 +13,16 @@
 #define CHRYSLER_NGC4_GAP 1
 #define CHRYSLER_NGC6_GAP 1.5
 
-void configureNeon1995TriggerShape(TriggerShape *s);
-void configureNeon1995TriggerShapeOnlyCrank(TriggerShape *s);
+void configureNeon1995TriggerWaveform(TriggerWaveform *s);
+void configureNeon1995TriggerWaveformOnlyCrank(TriggerWaveform *s);
 
-void configureNeon2003TriggerShapeCam(TriggerShape *s);
-void configureNeon2003TriggerShapeCrank(TriggerShape *s);
-void initDodgeRam(TriggerShape *s);
+void configureNeon2003TriggerWaveformCam(TriggerWaveform *s);
+void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s);
+void initDodgeRam(TriggerWaveform *s);
 
-void configureDodgeStratusTriggerShape(TriggerShape *s);
+void configureDodgeStratusTriggerWaveform(TriggerWaveform *s);
 
-void initJeep18_2_2_2(TriggerShape *s);
-void initJeep_XJ_4cyl_2500(TriggerShape *s);
+void initJeep18_2_2_2(TriggerWaveform *s);
+void initJeep_XJ_4cyl_2500(TriggerWaveform *s);
 
 #endif /* TRIGGER_CHRYSLER_H_ */

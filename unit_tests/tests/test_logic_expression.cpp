@@ -7,7 +7,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "global.h"
 #include "fsio_impl.h"
 #include "cli_registry.h"
 #include "engine_test_helper.h"
@@ -229,7 +228,7 @@ TEST(fsio, testLogicExpressions) {
 		engine->fsioState.mockCrankingRpm = 200;
 		testExpression2(0, "rpm", 900, engine);
 		testExpression2(0, "cranking_rpm", 200, engine);
-		testExpression2(0, STARTER_BLOCK, 0, engine);
+		testExpression2(0, STARTER_RELAY_LOGIC, 0, engine);
 		testExpression2(0, "rpm cranking_rpm > ", 1, engine);
 	}
 }

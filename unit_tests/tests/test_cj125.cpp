@@ -1,11 +1,10 @@
 /*
- * test_cj125.cpp
+ * @file test_cj125.cpp
  *
  *  Created on: Jan 3, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "gtest/gtest.h"
 #include "cj125_logic.h"
 #include "engine_test_helper.h"
 
@@ -29,19 +28,38 @@ TEST(testCJ125, testInitialState) {
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 	ASSERT_EQ(engine->sensors.vBatt, 0);
 
-	cj.StartHeaterControl(&applyHeaterPinState PASS_ENGINE_PARAMETER_SUFFIX);
+	cj.StartHeaterControl((pwm_gen_callback*)&applyHeaterPinState PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(cj.heaterDuty, CJ125_HEATER_IDLE_RATE);
 
 	TestSpi mock;
 	cj.spi = &mock;
 
-	EXPECT_CALL(mock, ReadRegister(IDENT_REG_RD)).Times(1);
-	EXPECT_CALL(mock, ReadRegister(INIT_REG1_RD)).Times(1);
-	EXPECT_CALL(mock, ReadRegister(INIT_REG2_RD)).Times(1);
+	EXPECT_CALL(mock, ReadRegister(IDENT_REG_RD)).Times(1).WillOnce(Return(CJ125_IDENT));
+	EXPECT_CALL(mock, ReadRegister(INIT_REG1_RD)).Times(1).WillOnce(Return(CJ125_INIT1_NORMAL_17));
+	EXPECT_CALL(mock, ReadRegister(INIT_REG2_RD)).Times(1).WillOnce(Return(CJ125_INIT2_DIAG));
 	EXPECT_CALL(mock, ReadRegister(DIAG_REG_RD)).Times(1);
 
 	cj.cjIdentify();
-
+	// validate that error state was not set
+	ASSERT_EQ(cj.state, CJ125_INIT);
 }
 
 
+TEST(testCJ125, testFailedIdentify) {
+	CJ125 cj;
+
+	ASSERT_EQ(cj.state, CJ125_INIT);
+
+	TestSpi mock;
+	cj.spi = &mock;
+
+	cj.cjIdentify();
+	ASSERT_EQ(cj.errorCode, CJ125_ERROR_WRONG_IDENT);
+	ASSERT_EQ(cj.state, CJ125_ERROR);
+}
+
+TEST(testCJ125, testMode) {
+
+
+
+}

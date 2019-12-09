@@ -42,6 +42,7 @@ static int calls_to_failed_chip = 0;
 static int testchip_failed_writePad(void *data, brain_pin_e pin, int value)
 {
 	calls_to_failed_chip++;
+	return 0;
 }
 
 static int testchip_failed_init(void *data)
@@ -123,24 +124,24 @@ TEST(gpioext, testGpioExt) {
 	EXPECT_EQ(2, initcalls);
 
 	/* gpio reads */
-	EXPECT_TRUE(gpiochips_readPad(chip1_base + 0) == 0);
-	EXPECT_TRUE(gpiochips_readPad(chip1_base + 1) != 0);
+	EXPECT_TRUE(gpiochips_readPad((brain_pin_e)(chip1_base + 0)) == 0);
+	EXPECT_TRUE(gpiochips_readPad((brain_pin_e)(chip1_base + 1)) != 0);
 
 	/* gpio write */
-	gpiochips_writePad(chip2_base + 0, 0);
-	gpiochips_writePad(chip2_base + 1, 1);
+	gpiochips_writePad((brain_pin_e)(chip2_base + 0), 0);
+	gpiochips_writePad((brain_pin_e)(chip2_base + 1), 1);
 	EXPECT_EQ(0x02, io_state);
 
 	/* try to access failed chip */
-	EXPECT_FALSE(gpiochips_writePad(chip3_base + 0, 0) >= 0);
-	EXPECT_FALSE(gpiochips_writePad(chip3_base + 1, 1) >= 0);
+	EXPECT_FALSE(gpiochips_writePad((brain_pin_e)(chip3_base + 0), 0) >= 0);
+	EXPECT_FALSE(gpiochips_writePad((brain_pin_e)(chip3_base + 1), 1) >= 0);
 	EXPECT_EQ(0, calls_to_failed_chip);
 
 	/* read/write outside range */
-	EXPECT_TRUE(gpiochips_readPad(chip1_base - 1) < 0);
-	EXPECT_TRUE(gpiochips_writePad(chip1_base - 1, 1) < 0);
+	EXPECT_TRUE(gpiochips_readPad((brain_pin_e)(chip1_base - 1)) < 0);
+	EXPECT_TRUE(gpiochips_writePad((brain_pin_e)(chip1_base - 1), 1) < 0);
 
-	EXPECT_TRUE(gpiochips_readPad(chip3_base + 16) < 0);
-	EXPECT_TRUE(gpiochips_writePad(chip3_base + 16, 1) < 0);
+	EXPECT_TRUE(gpiochips_readPad((brain_pin_e)(chip3_base + 16)) < 0);
+	EXPECT_TRUE(gpiochips_writePad((brain_pin_e)(chip3_base + 16), 1) < 0);
 
 }

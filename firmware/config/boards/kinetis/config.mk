@@ -12,4 +12,4 @@ CPU_HWLAYER = ports/kinetis
 
 GENERATED_ENUMS_DIR = $(BOARD_DIR)/config/controllers/algo
 
-EXTRA_PARAMS += -nodefaultlibs -L$(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/libc -lgcc -ltinyc
+EXTRA_PARAMS += -DFIRMWARE_ID=\"kinetis\" -nodefaultlibs -L$(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/libc -lgcc -ltinyc

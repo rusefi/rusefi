@@ -18,6 +18,8 @@ RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
 
 include ../firmware/rusefi.mk
+RULESFILE = ../firmware/rusefi_rules.mk
+
 
 
 # Compiler options here.
@@ -28,13 +30,15 @@ ifeq ($(USE_OPT),)
 # this config producec a smaller binary file
 # 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
 # see https://github.com/rusefi/rusefi/issues/517
-  USE_OPT = -Wall -O2    -Wno-error=implicit-fallthrough       -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Werror=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
+  USE_OPT = -Wall -O2    -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
 
 	ifeq ($(OS),Windows_NT)
 	else
  	 USE_OPT +=  -m32
 	endif
 endif
+
+USE_OPT += $(RUSEFI_OPT)
 
 ifeq ($(CCACHE_DIR),)
  $(info No CCACHE_DIR)
@@ -121,12 +125,6 @@ include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/algo/algo.mk
-include $(PROJECT_DIR)/controllers/core/core.mk
-include $(PROJECT_DIR)/controllers/math/math.mk
-include $(PROJECT_DIR)/controllers/sensors/sensors.mk
-include $(PROJECT_DIR)/controllers/trigger/trigger.mk
-include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
@@ -160,7 +158,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
 	$(PROJECT_DIR)/development/trigger_emulator.cpp \
 	$(HW_LAYER_EMS_CPP) \
-	$(PROJECT_DIR)/hw_layer/sensors/cj125.cpp \
+	$(HW_SENSORS_SRC) \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
@@ -196,15 +194,12 @@ INCDIR = . \
           $(PROJECT_DIR)/console/fl_binary \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \
-          $(PROJECT_DIR)/controllers \
-          $(HW_LAYER_DRIVERS_INC) \
+         $(HW_LAYER_DRIVERS_INC) \
           $(PROJECT_DIR)/hw_layer \
           $(PROJECT_DIR)/hw_layer/algo \
           $(HW_SENSORS_INC) \
-    $(CONTROLLERS_INC) \
  	$(DEVELOPMENT_DIR) \
-    $(PROJECT_DIR)/controllers/sensors \
-    $(PROJECT_DIR)/controllers/sensors/converters \
+    $(CONTROLLERS_INC) \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
           simulator

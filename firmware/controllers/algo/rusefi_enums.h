@@ -103,7 +103,7 @@ typedef enum {
 
 	// used by unit test
 	// see https://github.com/rusefi/rusefi/issues/898
-	// see TriggerShape::bothFrontsRequired
+	// see TriggerWaveform::bothFrontsRequired
 	ISSUE_898 = 27,
 
 	MAZDA_626 = 28,
@@ -186,6 +186,8 @@ typedef enum {
 	TLE8888_BENCH_ENGINE = 59,
 
 	MICRO_RUS_EFI = 60,
+
+	PROTEUS = 61,
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -719,6 +721,7 @@ typedef enum {
 	SC_MAP = 2,
 	SC_RPM_ACCEL = 3,
 	SC_DETAILED_RPM = 4,
+	SC_AUX_FAST1 = 5,
 
 	Internal_ForceMyEnumIntSize_sensor_chart = ENUM_32_BITS,
 } sensor_chart_e;

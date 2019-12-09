@@ -57,8 +57,8 @@
 /**
  * Build-in logic analyzer support. Logic analyzer viewer is one of the java console panes.
  */
-#ifndef EFI_WAVE_ANALYZER
-#define EFI_WAVE_ANALYZER TRUE
+#ifndef EFI_LOGIC_ANALYZER
+#define EFI_LOGIC_ANALYZER TRUE
 #endif
 
 #ifndef EFI_ICU_INPUTS
@@ -194,7 +194,7 @@
 #define EFI_IDLE_CONTROL TRUE
 #endif
 
-#define EFI_IDLE_INCREMENTAL_PID_CIC FALSE
+#define EFI_IDLE_PID_CIC FALSE
 
 /**
  * Control the main power relay based on measured ignition voltage (Vbatt)
