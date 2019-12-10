@@ -19,7 +19,6 @@ class Logging;
 
 class EtbController final : public PeriodicTimerController {
 public:
-	DECLARE_ENGINE_PTR;
 	void init(DcMotor *motor, int ownIndex, pid_s *pidParameters);
 	void reset();
 
