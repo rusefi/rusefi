@@ -444,10 +444,14 @@ static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		40,
 		50,
 		60,
-		70
+		70,
+		80,
+		90,
+		100,
+		110
 	};
 
-	copyArrayPartial(config->cltFuelCorrBins, bins);
+	copyArray(config->cltFuelCorrBins, bins);
 
 	static const float values[] =
 	{
@@ -462,10 +466,14 @@ static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		1.06,
 		1.06,
 		1.03,
-		1.01
+		1.01,
+		1,
+		1,
+		1,
+		1
 	};
 
-	copyArrayPartial(config->cltFuelCorr, values);
+	copyArray(config->cltFuelCorr, values);
 }
 
 static void setDefaultFuelCutParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -486,54 +494,64 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(config->cltCrankingCorrBins, CLT_CURVE_RANGE_FROM, 100, 1);
 	setLinearCurve(config->cltCrankingCorr, 1.0, 1.0, 1);
 
-	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
-	config->crankingFuelBins[0] = -20; // temperature in C
-	config->crankingFuelCoef[1] = 2.2;
-	config->crankingFuelBins[1] = -10;
-	config->crankingFuelCoef[2] = 1.8;
-	config->crankingFuelBins[2] = 5;
-	config->crankingFuelCoef[3] = 1.5;
-	config->crankingFuelBins[3] = 30;
+	// Cranking temperature compensation
+	static const float crankingCoef[] = {
+		2.8,
+		2.2,
+		1.8,
+		1.5,
+		1.0,
+		1.0,
+		1.0,
+		1.0
+	};
+	copyArray(config->crankingFuelCoef, crankingCoef);
 
-	config->crankingFuelCoef[4] = 1.0;
-	config->crankingFuelBins[4] = 35;
-	config->crankingFuelCoef[5] = 1.0;
-	config->crankingFuelBins[5] = 50;
-	config->crankingFuelCoef[6] = 1.0;
-	config->crankingFuelBins[6] = 65;
-	config->crankingFuelCoef[7] = 1.0;
-	config->crankingFuelBins[7] = 90;
+	// Deg C
+	static const float crankingBins[] = {
+		-20,
+		-10,
+		5,
+		30,
+		35,
+		50,
+		65,
+		90
+	};
+	copyArray(config->crankingFuelBins, crankingBins);
 
-	config->crankingCycleCoef[0] = 1.5;
-	config->crankingCycleBins[0] = 4;
+	// Cranking cycle compensation
 
-	config->crankingCycleCoef[1] = 1.35;
-	config->crankingCycleBins[1] = 8;
+	static const float crankingCycleCoef[] = {
+		1.5,
+		1.35,
+		1.05,
+		0.75,
+		0.5,
+		0.5,
+		0.5,
+		0.5
+	};
+	copyArray(config->crankingCycleCoef, crankingCycleCoef);
 
-	config->crankingCycleCoef[2] = 1.05;
-	config->crankingCycleBins[2] = 12;
+	static const float crankingCycleBins[] = {
+		4,
+		8,
+		12,
+		16,
+		74,
+		75,
+		76,
+		77
+	};
+	copyArray(config->crankingCycleBins, crankingCycleBins);
 
-	config->crankingCycleCoef[3] = 0.75;
-	config->crankingCycleBins[3] = 16;
+	// Cranking ignition timing
+	static const float advanceValues[] = { 0, 0, 0, 0 };
+	copyArray(engineConfiguration->crankingAdvance, advanceValues);
 
-	config->crankingCycleCoef[4] = 0.5;
-	config->crankingCycleBins[4] = 74;
-	config->crankingCycleCoef[5] = 0.5;
-	config->crankingCycleBins[5] = 75;
-	config->crankingCycleCoef[6] = 0.5;
-	config->crankingCycleBins[6] = 76;
-	config->crankingCycleCoef[7] = 0.5;
-	config->crankingCycleBins[7] = 77;
-
-	engineConfiguration->crankingAdvance[0] = 0;
-	engineConfiguration->crankingAdvanceBins[0] = 0;
-	engineConfiguration->crankingAdvance[1] = 0;
-	engineConfiguration->crankingAdvanceBins[1] = 200;
-	engineConfiguration->crankingAdvance[2] = 0;
-	engineConfiguration->crankingAdvanceBins[2] = 400;
-	engineConfiguration->crankingAdvance[3] = 0;
-	engineConfiguration->crankingAdvanceBins[3] = 1000;
-
+	static const float advanceBins[] = { 0, 200, 400, 1000 };
+	copyArray(engineConfiguration->crankingAdvanceBins, advanceBins);
 }
 
 /**
@@ -557,7 +575,6 @@ static void setDefaultIdleSpeedTarget(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 90, 900);
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 100, 1000);
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
-
 }
 
 static void setDefaultStepperIdleParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
