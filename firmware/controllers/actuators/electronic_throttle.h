@@ -11,8 +11,10 @@
 #define DEFAULT_ETB_LOOP_FREQUENCY 200
 #define DEFAULT_ETB_PWM_FREQUENCY 300
 
-#include "engine.h"
+#include "globalaccess.h"
 #include "periodic_task.h"
+#include "pid.h"
+#include "engine_configuration_generated_structures.h"
 
 class DcMotor;
 class Logging;
