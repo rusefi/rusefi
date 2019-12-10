@@ -1,5 +1,5 @@
 /**
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 #include "engine.h"
 #include "tps.h"
@@ -78,7 +78,7 @@ float getTpsRateOfChange(void) {
  * Return current TPS position based on configured ADC levels, and adc
  *
  * */
-percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
+percent_t getTpsValue(int index, int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	DISPLAY_STATE(Engine)
 	DISPLAY_TAG(TPS_SECTION);
@@ -109,9 +109,16 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	DISPLAY_TEXT(Current_ADC)
 	DISPLAY(DISPLAY_FIELD(currentTpsAdc))
 	DISPLAY_TEXT(interpolate_between)
-	float result = interpolateMsg("TPS", TPS_TS_CONVERSION * CONFIG(DISPLAY_CONFIG(tpsMax)), 100,
-			DISPLAY_TEXT(and)
-			TPS_TS_CONVERSION * CONFIG(DISPLAY_CONFIG(tpsMin)), 0, adc);
+
+	DISPLAY(DISPLAY_CONFIG(tpsMax))
+	DISPLAY_TEXT(and)
+	DISPLAY(DISPLAY_CONFIG(tpsMin))
+
+	int tpsMax = index == 0 ? CONFIG(tpsMax) : CONFIG(tps2Max);
+	int tpsMin = index == 0 ? CONFIG(tpsMin) : CONFIG(tps2Min);
+
+	float result = interpolateMsg("TPS", TPS_TS_CONVERSION * tpsMax, 100,
+			TPS_TS_CONVERSION * tpsMin, 0, adc);
 	if (result < engineConfiguration->tpsErrorDetectionTooLow) {
 #if EFI_PROD_CODE
 		// too much noise with simulator
@@ -140,6 +147,7 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Return TPS ADC readings.
  * We need ADC value because TunerStudio has a nice TPS configuration wizard, and this wizard
  * wants a TPS value.
+ * @param index [0, ETB_COUNT)
  */
 int getTPS12bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_PROD_CODE
@@ -197,8 +205,9 @@ void grabPedalIsWideOpen() {
 /**
  * @brief Position on physical primary TPS
  */
-static percent_t getPrimatyRawTPS(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	percent_t tpsValue = getTpsValue(getTPS12bitAdc(index PASS_ENGINE_PARAMETER_SUFFIX) PASS_ENGINE_PARAMETER_SUFFIX);
+static percent_t getPrimaryRawTPS(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	int adcValue = getTPS12bitAdc(index PASS_ENGINE_PARAMETER_SUFFIX);
+	percent_t tpsValue = getTpsValue(index, adcValue PASS_ENGINE_PARAMETER_SUFFIX);
 	return tpsValue;
 }
 
@@ -238,7 +247,7 @@ percent_t getTPSWithIndex(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: blah blah
 	// todo: if two TPS do not match - show OBD code via malfunction_central.c
 
-	return getPrimatyRawTPS(index PASS_ENGINE_PARAMETER_SUFFIX);
+	return getPrimaryRawTPS(index PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
