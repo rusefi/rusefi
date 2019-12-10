@@ -15,37 +15,43 @@
 
 EXTERN_ENGINE;
 
-static void setInjectorPins() {
-	boardConfiguration->injectionPins[0] = GPIOD_7;
-	boardConfiguration->injectionPins[1] = GPIOG_9;
-	boardConfiguration->injectionPins[2] = GPIOG_10;
-	boardConfiguration->injectionPins[3] = GPIOG_11;
-	boardConfiguration->injectionPins[4] = GPIOG_12;
-	boardConfiguration->injectionPins[5] = GPIOG_13;
-	boardConfiguration->injectionPins[6] = GPIOG_14;
-	boardConfiguration->injectionPins[7] = GPIOB_4;
-	boardConfiguration->injectionPins[8] = GPIOB_5;
-	boardConfiguration->injectionPins[9] = GPIOB_6;
-	boardConfiguration->injectionPins[10] = GPIOB_7;
-	boardConfiguration->injectionPins[11] = GPIOB_8;
+static const brain_pin_e injPins[] = {
+	GPIOD_7,
+	GPIOG_9,
+	GPIOG_10,
+	GPIOG_11,
+	GPIOG_12,
+	GPIOG_13,
+	GPIOG_14,
+	GPIOB_4,
+	GPIOB_5,
+	GPIOB_6,
+	GPIOB_7,
+	GPIOB_8
+};
 
+static const brain_pin_e ignPins[] = {
+	GPIOD_4,
+	GPIOD_3,
+	GPIOC_9,
+	GPIOC_8,
+	GPIOC_7,
+	GPIOG_8,
+	GPIOG_7,
+	GPIOG_6,
+	GPIOG_5,
+	GPIOG_4,
+	GPIOG_3,
+	GPIOG_2,
+};
+
+static void setInjectorPins() {
+	copyArray(boardConfiguration->injectionPins, injPins);
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
-	boardConfiguration->ignitionPins[0] = GPIOD_4;
-	boardConfiguration->ignitionPins[1] = GPIOD_3;
-	boardConfiguration->ignitionPins[2] = GPIOC_9;
-	boardConfiguration->ignitionPins[3] = GPIOC_8;
-	boardConfiguration->ignitionPins[4] = GPIOC_7;
-	boardConfiguration->ignitionPins[5] = GPIOG_8;
-	boardConfiguration->ignitionPins[6] = GPIOG_7;
-	boardConfiguration->ignitionPins[7] = GPIOG_6;
-	boardConfiguration->ignitionPins[8] = GPIOG_5;
-	boardConfiguration->ignitionPins[9] = GPIOG_4;
-	boardConfiguration->ignitionPins[10] = GPIOG_3;
-	boardConfiguration->ignitionPins[11] = GPIOG_2;
-
+	copyArray(boardConfiguration->ignitionPins, ignPins);
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
