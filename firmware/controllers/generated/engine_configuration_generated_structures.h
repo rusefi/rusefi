@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Dec 11 16:40:57 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Dec 12 00:31:49 CET 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1702,7 +1702,7 @@ struct engine_configuration_s {
 	bool useIacPidMultTable : 1;
 	/**
 	offset 1476 bit 22 */
-	bool unused_1484_bit_22 : 1;
+	bool isBoostControlEnabled : 1;
 	/**
 	offset 1476 bit 23 */
 	bool unused_1484_bit_23 : 1;
@@ -1872,7 +1872,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1772
 	 */
-	uint8_t unusedFormerWarmupAfrPid[4];
+	int boostPwmFrequency;
 	/**
 	 * kPa value which is too low to be true
 	 * offset 1776
@@ -2076,7 +2076,19 @@ struct engine_configuration_s {
 	/**
 	 * offset 2096
 	 */
-	uint32_t unused_former_warmup_target_afr[9];
+	pid_s boostPid;
+	/**
+	 * offset 2116
+	 */
+	output_pin_e boostControlPin;
+	/**
+	 * offset 2117
+	 */
+	pin_output_mode_e boostControlPinMode;
+	/**
+	 * offset 2118
+	 */
+	uint8_t unusedSpiPadding88[14];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -2665,8 +2677,12 @@ struct engine_configuration_s {
 	/**
 	 * offset 4140
 	 */
-	int mainUnusedEnd[565];
-	/** total size 6400*/
+	boostType_e boostType;
+	/**
+	 * offset 4144
+	 */
+	int mainUnusedEnd[544];
+	/** total size 6320*/
 };
 
 typedef struct engine_configuration_s engine_configuration_s;
@@ -2677,6 +2693,18 @@ struct persistent_config_s {
 	 * offset 0
 	 */
 	engine_configuration_s engineConfiguration;
+	/**
+	 * offset 6320
+	 */
+	boost_table_t boostTable;
+	/**
+	 * offset 6384
+	 */
+	uint8_t boostTpsBins[BOOST_TPS_COUNT];
+	/**
+	 * offset 6392
+	 */
+	uint8_t boostRpmBins[BOOST_RPM_COUNT];
 	/**
 	 * offset 6400
 	 */
@@ -2928,4 +2956,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Dec 11 16:40:57 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Dec 12 00:31:49 CET 2019
