@@ -35,27 +35,27 @@ void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.firingOrder = FO_1_8_4_3_6_5_7_2;
 	engineConfiguration->specs.displacement = 5.2;
 
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIOA_5;
+	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->triggerInputPins[1] = GPIOA_5;
 
-	boardConfiguration->injectionPins[0] = GPIOE_2;
-	boardConfiguration->injectionPins[1] = GPIOB_9;
-	boardConfiguration->injectionPins[2] = GPIOD_5;
-	boardConfiguration->injectionPins[3] = GPIOB_8;
+	engineConfiguration->injectionPins[0] = GPIOE_2;
+	engineConfiguration->injectionPins[1] = GPIOB_9;
+	engineConfiguration->injectionPins[2] = GPIOD_5;
+	engineConfiguration->injectionPins[3] = GPIOB_8;
 
-	boardConfiguration->injectionPins[4] = GPIOB_7;
-	boardConfiguration->injectionPins[5] = GPIOE_3;
-	boardConfiguration->injectionPins[6] = GPIOE_4;
-	boardConfiguration->injectionPins[7] = GPIOD_3;
+	engineConfiguration->injectionPins[4] = GPIOB_7;
+	engineConfiguration->injectionPins[5] = GPIOE_3;
+	engineConfiguration->injectionPins[6] = GPIOE_4;
+	engineConfiguration->injectionPins[7] = GPIOD_3;
 
-	boardConfiguration->ignitionPins[0] = GPIOC_9;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = GPIOC_9;
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
-	boardConfiguration->mainRelayPin = GPIOE_5;
-	boardConfiguration->fuelPumpPin = GPIOE_6;
-	boardConfiguration->fanPin = GPIO_UNASSIGNED;
+	engineConfiguration->mainRelayPin = GPIOE_5;
+	engineConfiguration->fuelPumpPin = GPIOE_6;
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	engineConfiguration->engineChartSize = 450;
 
@@ -69,11 +69,11 @@ void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
 
 
-	boardConfiguration->alternatorControlPin = GPIOD_7;
+	engineConfiguration->alternatorControlPin = GPIOD_7;
 	engineConfiguration->alternatorControl.pFactor = 22;
 
-	boardConfiguration->idle.solenoidPin = GPIOC_13;
-	boardConfiguration->idle.solenoidFrequency = 300;
+	engineConfiguration->idle.solenoidPin = GPIOC_13;
+	engineConfiguration->idle.solenoidFrequency = 300;
 
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 //	engineConfiguration->vbattDividerCoeff = ((float) (8.93 + 41.27)) / 8.93 * 2;
@@ -82,5 +82,5 @@ void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDodgeSensor(&engineConfiguration->clt, 2700);
 	setDodgeSensor(&engineConfiguration->iat, 2700);
 
-	boardConfiguration->useStepperIdle = true;
+	engineConfiguration->useStepperIdle = true;
 }

@@ -122,7 +122,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIG
 	memcpy(config->afrLoadBins, mazda_miata_nb2_targetAfrLoadBins, sizeof(mazda_miata_nb2_targetAfrLoadBins));
 	copyTargetAfrTable(target_AFR_hunchback, config->afrTable);
 
-	boardConfiguration->ignitionPins[2] = GPIOC_7;
+	engineConfiguration->ignitionPins[2] = GPIOC_7;
 
 	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
@@ -145,7 +145,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIG
 	engineConfiguration->rpmHardLimit = 7200; // we want to survive the race, but we also want some fun!
 
 	// set idle_position 30
-	boardConfiguration->manIdlePosition = 30;
+	engineConfiguration->manIdlePosition = 30;
 	engineConfiguration->crankingIACposition = 65;
 }
 

@@ -35,8 +35,8 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	boardConfiguration->ignitionPinMode = OM_INVERTED;
-	boardConfiguration->injectionPinMode = OM_OPENDRAIN_INVERTED;
+	engineConfiguration->ignitionPinMode = OM_INVERTED;
+	engineConfiguration->injectionPinMode = OM_OPENDRAIN_INVERTED;
 	engineConfiguration->isCylinderCleanupEnabled = true;
 	engineConfiguration->rpmHardLimit = 8000;
 	engineConfiguration->cranking.baseFuel = 4;
@@ -44,7 +44,7 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	//Analog Inputs
 
-	boardConfiguration->isFastAdcEnabled = true;
+	engineConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
@@ -65,56 +65,56 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
-	boardConfiguration->canDeviceMode = CD_USE_CAN1;
-	boardConfiguration->canTxPin = GPIOB_6;
-	boardConfiguration->canRxPin = GPIOB_12;
+	engineConfiguration->canDeviceMode = CD_USE_CAN1;
+	engineConfiguration->canTxPin = GPIOB_6;
+	engineConfiguration->canRxPin = GPIOB_12;
 
 // Injectors
 
-	boardConfiguration->injectionPins[0] = GPIOE_4; // #1
-	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
-	boardConfiguration->injectionPins[2] = GPIOE_3; // #3
-	boardConfiguration->injectionPins[3] = GPIOE_1; // #4
-	boardConfiguration->injectionPins[4] = GPIOE_6; // #5
-	boardConfiguration->injectionPins[5] = GPIOE_5; // #6
-	boardConfiguration->injectionPins[6] = GPIOB_9; // #7
-	boardConfiguration->injectionPins[7] = GPIOE_0; // #8
+	engineConfiguration->injectionPins[0] = GPIOE_4; // #1
+	engineConfiguration->injectionPins[1] = GPIOE_2; // #2
+	engineConfiguration->injectionPins[2] = GPIOE_3; // #3
+	engineConfiguration->injectionPins[3] = GPIOE_1; // #4
+	engineConfiguration->injectionPins[4] = GPIOE_6; // #5
+	engineConfiguration->injectionPins[5] = GPIOE_5; // #6
+	engineConfiguration->injectionPins[6] = GPIOB_9; // #7
+	engineConfiguration->injectionPins[7] = GPIOE_0; // #8
 
 	//Ignition Outputs
 
-	boardConfiguration->ignitionPins[0] = GPIOD_1; // #1
-	boardConfiguration->ignitionPins[1] = GPIOD_6; // #2
-	boardConfiguration->ignitionPins[2] = GPIOD_3; // #3
-	boardConfiguration->ignitionPins[3] = GPIOD_4; // #4
-	boardConfiguration->ignitionPins[4] = GPIOD_0; // #5
-	boardConfiguration->ignitionPins[5] = GPIOD_2; // #6
-	boardConfiguration->ignitionPins[6] = GPIOA_15; // #7
-	boardConfiguration->ignitionPins[7] = GPIOC_12; // #8
+	engineConfiguration->ignitionPins[0] = GPIOD_1; // #1
+	engineConfiguration->ignitionPins[1] = GPIOD_6; // #2
+	engineConfiguration->ignitionPins[2] = GPIOD_3; // #3
+	engineConfiguration->ignitionPins[3] = GPIOD_4; // #4
+	engineConfiguration->ignitionPins[4] = GPIOD_0; // #5
+	engineConfiguration->ignitionPins[5] = GPIOD_2; // #6
+	engineConfiguration->ignitionPins[6] = GPIOA_15; // #7
+	engineConfiguration->ignitionPins[7] = GPIOC_12; // #8
 
 	//SPI Settings
-	boardConfiguration->is_enabled_spi_1 = true;
-	boardConfiguration->is_enabled_spi_2 = true;
-	boardConfiguration->is_enabled_spi_3 = false;
+	engineConfiguration->is_enabled_spi_1 = true;
+	engineConfiguration->is_enabled_spi_2 = true;
+	engineConfiguration->is_enabled_spi_3 = false;
 	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
-	boardConfiguration->cj125CsPin = GPIOB_11;
+	engineConfiguration->cj125CsPin = GPIOB_11;
 
 	//Digital Inputs/Outputs
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->tle8888spiDevice = SPI_DEVICE_1;
-	boardConfiguration->fuelPumpPin = TLE8888_PIN_22;
-	boardConfiguration->tachOutputPin = TLE8888_PIN_16;
-	boardConfiguration->alternatorControlPin = TLE8888_PIN_17;
+	engineConfiguration->fuelPumpPin = TLE8888_PIN_22;
+	engineConfiguration->tachOutputPin = TLE8888_PIN_16;
+	engineConfiguration->alternatorControlPin = TLE8888_PIN_17;
 	engineConfiguration->auxPidPins[0] = TLE8888_PIN_6; // VVT solenoid control
 #endif /* BOARD_TLE8888_COUNT */
 
-	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
-	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-	boardConfiguration->fanPin = GPIO_UNASSIGNED;
-	boardConfiguration->clutchDownPin = GPIOD_11;
+	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
+	engineConfiguration->clutchDownPin = GPIOD_11;
 	engineConfiguration->brakePedalPin = GPIOE_10;
 	engineConfiguration->camInputs[0] = GPIOA_2;
 #if defined(STM32_HAS_GPIOG) && STM32_HAS_GPIOG
-	boardConfiguration->triggerInputPins[0] = GPIOG_7;
+	engineConfiguration->triggerInputPins[0] = GPIOG_7;
 #endif /* STM32_HAS_GPIOF */
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 	engineConfiguration->vehicleSpeedSensorInputPin = GPIOF_14;
@@ -122,7 +122,7 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 //Alternator Settings
-	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
+	engineConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 	engineConfiguration->targetVBatt = 13.8;
 	engineConfiguration->alternatorControl.offset = 40;
 	engineConfiguration->alternatorControl.pFactor = 14;
@@ -145,7 +145,7 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
 	CONFIG(etbIo[0].directionPin2) = GPIOF_14;
 #endif /* STM32_HAS_GPIOF */
-	boardConfiguration->isHip9011Enabled = false;
+	engineConfiguration->isHip9011Enabled = false;
 
 #if EFI_FSIO
 	setFsio (13, GPIOE_5, "0" PASS_CONFIG_PARAMETER_SUFFIX);
@@ -165,7 +165,7 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->activateAuxPid1 = true;
 	engineConfiguration->auxPidFrequency[0] = 300;
-	boardConfiguration->fsio_setting[0] = 0.0;
+	engineConfiguration->fsio_setting[0] = 0.0;
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.005;
 	engineConfiguration->auxPid[0].dFactor = 0;
@@ -173,7 +173,7 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].minValue = 24;
 	engineConfiguration->auxPid[0].maxValue = 44;
 	engineConfiguration->auxPidFrequency[0] = 300;
-	boardConfiguration->fsio_setting[0] = 0.0;
+	engineConfiguration->fsio_setting[0] = 0.0;
 
 
 	//AC Settings
@@ -181,7 +181,7 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//Configuration 2 : Over CAN with variable Kompressor(CAN: Input=B_sacc,B_skoc Output: B_kov)
 	//Configuration 3 : 2 Wires
 
-	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
+	engineConfiguration->acRelayPin = GPIO_UNASSIGNED;
 	engineConfiguration->acCutoffLowRpm = 400;
 	engineConfiguration->acCutoffHighRpm = 4500;
 	engineConfiguration->acIdleRpmBump = 200;

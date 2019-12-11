@@ -260,7 +260,7 @@ void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLAR
 
 #if EFI_SENSOR_CHART
 		angle_t currentAngle = TRIGGER_WAVEFORM(eventAngles[currentCycle.current_index]);
-		if (CONFIGB(sensorChartMode) == SC_DETAILED_RPM) {
+		if (CONFIG(sensorChartMode) == SC_DETAILED_RPM) {
 			scAddData(currentAngle, instantRpm);
 		} else {
 			scAddData(currentAngle, instantRpm / instantRpmValue[prevIndex]);
@@ -767,8 +767,8 @@ void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SU
 
  void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
-	enginePins.triggerDecoderErrorPin.initPin("trg_err", CONFIGB(triggerErrorPin),
-			&CONFIGB(triggerErrorPinMode));
+	enginePins.triggerDecoderErrorPin.initPin("trg_err", CONFIG(triggerErrorPin),
+			&CONFIG(triggerErrorPinMode));
 #endif /* EFI_GPIO_HARDWARE */
 }
 

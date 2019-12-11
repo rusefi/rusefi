@@ -157,7 +157,7 @@ class PeriodicSlowController : public PeriodicTimerController {
 
 	int getPeriodMs() override {
 		// we need at least protection from zero value while resetting configuration
-		int periodMs = maxI(50, CONFIGB(generalPeriodicThreadPeriodMs));
+		int periodMs = maxI(50, CONFIG(generalPeriodicThreadPeriodMs));
 		return periodMs;
 	}
 };
@@ -389,7 +389,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	}
 
 	if (fastAdc.isHwUsed(hwChannel)) {
-		scheduleMsg(&logger, "fast enabled=%s", boolToString(CONFIGB(isFastAdcEnabled)));
+		scheduleMsg(&logger, "fast enabled=%s", boolToString(CONFIG(isFastAdcEnabled)));
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
@@ -769,7 +769,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	if (CONFIGB(isEngineControlEnabled)) {
+	if (CONFIG(isEngineControlEnabled)) {
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition
 		 */

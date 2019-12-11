@@ -49,7 +49,7 @@ static float lastAfr = stoichAfr;
 
 void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Our averaging is intended for use only with Narrow EGOs.
-	if (CONFIGB(afr_type) == ES_NarrowBand) {
+	if (CONFIG(afr_type) == ES_NarrowBand) {
 		totalEgoCnt = prevEgoCnt = 0;
 		egoAfrBuf.clear();
 		useAveraging = true;
@@ -96,7 +96,7 @@ void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_CJ125 && HAL_USE_SPI
-	if (CONFIGB(isCJ125Enabled)) {
+	if (CONFIG(isCJ125Enabled)) {
 		return cjHasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif /* EFI_CJ125 && HAL_USE_SPI */
@@ -105,7 +105,7 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_CJ125 && HAL_USE_SPI
-	if (CONFIGB(isCJ125Enabled)) {
+	if (CONFIG(isCJ125Enabled)) {
 		return cjGetAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif /* EFI_CJ125 && HAL_USE_SPI */
@@ -113,7 +113,7 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	float volts = getVoltageDivided("ego", sensor->hwChannel PASS_ENGINE_PARAMETER_SUFFIX);
 
-	if (CONFIGB(afr_type) == ES_NarrowBand) {
+	if (CONFIG(afr_type) == ES_NarrowBand) {
 		float afr = interpolate2d("narrow", volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen);
 #ifdef EFI_NARROW_EGO_AVERAGING
 		if (useAveraging)
@@ -173,6 +173,6 @@ static void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 }
 
 void setEgoSensor(ego_sensor_e type DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	CONFIGB(afr_type) = type;
+	CONFIG(afr_type) = type;
 	initEgoSensor(&engineConfiguration->afr, type);
 }

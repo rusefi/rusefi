@@ -201,7 +201,7 @@ void RpmCalculator::setStopSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void RpmCalculator::setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (!CONFIGB(isFasterEngineSpinUpEnabled))
+	if (!CONFIG(isFasterEngineSpinUpEnabled))
 		return;
 	// Only a completely stopped and non-spinning engine can enter the spinning-up state.
 	if (isStopped(PASS_ENGINE_PARAMETER_SIGNATURE) && !isSpinning) {

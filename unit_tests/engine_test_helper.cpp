@@ -41,7 +41,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	Engine *engine = &this->engine;
 	engine->setConfig(config);
 	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
-	board_configuration_s * boardConfiguration = &persistentConfig.engineConfiguration.bc;
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
@@ -95,8 +94,7 @@ void EngineTestHelper::fireRise(float delayMs) {
  * fire single RISE front event
  */
 void EngineTestHelper::firePrimaryTriggerRise() {
-	board_configuration_s * boardConfiguration = &engine.engineConfigurationPtr->bc;
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfigurationPtr, &persistentConfig, boardConfiguration);
+	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfigurationPtr, &persistentConfig);
 }
 
 void EngineTestHelper::fireFall(float delayMs) {
@@ -105,8 +103,7 @@ void EngineTestHelper::fireFall(float delayMs) {
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
-	board_configuration_s * boardConfiguration = &engine.engineConfigurationPtr->bc;
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfigurationPtr, &persistentConfig, boardConfiguration);
+	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfigurationPtr, &persistentConfig);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {

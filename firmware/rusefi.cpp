@@ -244,7 +244,7 @@ void runRusEfi(void) {
 		updateDevConsoleState();
 #endif /* EFI_CLI_SUPPORT */
 
-		chThdSleepMilliseconds(CONFIGB(consoleLoopPeriodMs));
+		chThdSleepMilliseconds(CONFIG(consoleLoopPeriodMs));
 	}
 }
 

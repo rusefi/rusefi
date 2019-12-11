@@ -65,22 +65,22 @@ void runSchedulingPrecisionTestIfNeeded(void) {
 }
 #endif /* EFI_PROD_CODE */
 
-void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
-	boardConfiguration->HD44780_rs = GPIOE_7;
-	boardConfiguration->HD44780_e = GPIOE_9;
-	boardConfiguration->HD44780_db4 = GPIOE_11;
-	boardConfiguration->HD44780_db5 = GPIOE_13;
-	boardConfiguration->HD44780_db6 = GPIOE_15;
-	boardConfiguration->HD44780_db7 = GPIOB_10;
+void setFrankenso_01_LCD(engine_configuration_s *engineConfiguration) {
+	engineConfiguration->HD44780_rs = GPIOE_7;
+	engineConfiguration->HD44780_e = GPIOE_9;
+	engineConfiguration->HD44780_db4 = GPIOE_11;
+	engineConfiguration->HD44780_db5 = GPIOE_13;
+	engineConfiguration->HD44780_db6 = GPIOE_15;
+	engineConfiguration->HD44780_db7 = GPIOB_10;
 }
 
-void disableLCD(board_configuration_s *boardConfiguration) {
-	boardConfiguration->HD44780_rs = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_e = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
+void disableLCD(engine_configuration_s *engineConfiguration) {
+	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
 }
 
 // todo: should this be part of more default configurations?
@@ -88,7 +88,7 @@ void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
-	setFrankenso_01_LCD(boardConfiguration);
+	setFrankenso_01_LCD(engineConfiguration);
 	engineConfiguration->displayMode = DM_HD44780;
 	commonFrankensoAnalogInputs(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
@@ -135,32 +135,32 @@ void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Frankenso low out #11: PB8 injector #3
 	// Frankenso low out #12: PB7 injector #4
 
-	boardConfiguration->fuelPumpPin = GPIOE_4;
-	boardConfiguration->mainRelayPin = GPIOD_7;
-	boardConfiguration->idle.solenoidPin = GPIOC_13;
+	engineConfiguration->fuelPumpPin = GPIOE_4;
+	engineConfiguration->mainRelayPin = GPIOD_7;
+	engineConfiguration->idle.solenoidPin = GPIOC_13;
 
-	boardConfiguration->fanPin = GPIOE_5;
+	engineConfiguration->fanPin = GPIOE_5;
 
-	boardConfiguration->injectionPins[0] = GPIOB_9; // #1
-	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
-	boardConfiguration->injectionPins[2] = GPIOB_8; // #3
+	engineConfiguration->injectionPins[0] = GPIOB_9; // #1
+	engineConfiguration->injectionPins[1] = GPIOE_2; // #2
+	engineConfiguration->injectionPins[2] = GPIOB_8; // #3
 #ifndef EFI_INJECTOR_PIN3
-	boardConfiguration->injectionPins[3] = GPIOB_7; // #4
+	engineConfiguration->injectionPins[3] = GPIOB_7; // #4
 #else /* EFI_INJECTOR_PIN3 */
-	boardConfiguration->injectionPins[3] = EFI_INJECTOR_PIN3; // #4
+	engineConfiguration->injectionPins[3] = EFI_INJECTOR_PIN3; // #4
 #endif /* EFI_INJECTOR_PIN3 */
 
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 #if EFI_PWM_TESTER
-	boardConfiguration->injectionPins[4] = GPIOC_8; // #5
-	boardConfiguration->injectionPins[5] = GPIOD_10; // #6
-	boardConfiguration->injectionPins[6] = GPIOD_9;
-	boardConfiguration->injectionPins[7] = GPIOD_11;
-	boardConfiguration->injectionPins[8] = GPIOD_0;
-	boardConfiguration->injectionPins[9] = GPIOB_11;
-	boardConfiguration->injectionPins[10] = GPIOC_7;
-	boardConfiguration->injectionPins[11] = GPIOE_4;
+	engineConfiguration->injectionPins[4] = GPIOC_8; // #5
+	engineConfiguration->injectionPins[5] = GPIOD_10; // #6
+	engineConfiguration->injectionPins[6] = GPIOD_9;
+	engineConfiguration->injectionPins[7] = GPIOD_11;
+	engineConfiguration->injectionPins[8] = GPIOD_0;
+	engineConfiguration->injectionPins[9] = GPIOB_11;
+	engineConfiguration->injectionPins[10] = GPIOC_7;
+	engineConfiguration->injectionPins[11] = GPIOE_4;
 
 	/**
 	 * We want to initialize all outputs for test
@@ -169,20 +169,20 @@ void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->displayMode = DM_NONE;
 #else /* EFI_PWM_TESTER */
-	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
 
-	boardConfiguration->ignitionPins[0] = GPIOE_14;
-	boardConfiguration->ignitionPins[1] = GPIOC_7;
-	boardConfiguration->ignitionPins[2] = GPIOC_9;
+	engineConfiguration->ignitionPins[0] = GPIOE_14;
+	engineConfiguration->ignitionPins[1] = GPIOC_7;
+	engineConfiguration->ignitionPins[2] = GPIOC_9;
 	// set_ignition_pin 4 PE10
-	boardConfiguration->ignitionPins[3] = GPIOE_10;
+	engineConfiguration->ignitionPins[3] = GPIOE_10;
 #endif /* EFI_PWM_TESTER */
 
 	// todo: 8.2 or 10k?
@@ -198,7 +198,7 @@ void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
 
-	boardConfiguration->triggerSimulatorFrequency = 300;
+	engineConfiguration->triggerSimulatorFrequency = 300;
 	engineConfiguration->cranking.rpm = 100;
 
 	engineConfiguration->specs.cylindersCount = 12;
@@ -207,38 +207,38 @@ void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	boardConfiguration->injectionPins[0] = GPIOB_7; // injector in default pinout
-	boardConfiguration->injectionPins[1] = GPIOB_8; // injector in default pinout
-	boardConfiguration->injectionPins[2] = GPIOB_9; // injector in default pinout
-	boardConfiguration->injectionPins[3] = GPIOC_13;
+	engineConfiguration->injectionPins[0] = GPIOB_7; // injector in default pinout
+	engineConfiguration->injectionPins[1] = GPIOB_8; // injector in default pinout
+	engineConfiguration->injectionPins[2] = GPIOB_9; // injector in default pinout
+	engineConfiguration->injectionPins[3] = GPIOC_13;
 
-	boardConfiguration->injectionPins[4] = GPIOD_3;
-	boardConfiguration->injectionPins[5] = GPIOD_5;
-	boardConfiguration->injectionPins[6] = GPIOD_7;
-	boardConfiguration->injectionPins[7] = GPIOE_2; // injector in default pinout
-	boardConfiguration->injectionPins[8] = GPIOE_3;
-	boardConfiguration->injectionPins[9] = GPIOE_4;
-	boardConfiguration->injectionPins[10] = GPIOE_5;
-	boardConfiguration->injectionPins[11] = GPIOE_6;
+	engineConfiguration->injectionPins[4] = GPIOD_3;
+	engineConfiguration->injectionPins[5] = GPIOD_5;
+	engineConfiguration->injectionPins[6] = GPIOD_7;
+	engineConfiguration->injectionPins[7] = GPIOE_2; // injector in default pinout
+	engineConfiguration->injectionPins[8] = GPIOE_3;
+	engineConfiguration->injectionPins[9] = GPIOE_4;
+	engineConfiguration->injectionPins[10] = GPIOE_5;
+	engineConfiguration->injectionPins[11] = GPIOE_6;
 
-	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
-	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
-	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-	boardConfiguration->fanPin = GPIO_UNASSIGNED;
+	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 
-	boardConfiguration->ignitionPins[0] = GPIOC_9; // coil in default pinout
-	boardConfiguration->ignitionPins[1] = GPIOC_7; // coil in default pinout
-	boardConfiguration->ignitionPins[2] = GPIOE_10; // coil in default pinout
-	boardConfiguration->ignitionPins[3] = GPIOE_8; // Miata VVT tach
+	engineConfiguration->ignitionPins[0] = GPIOC_9; // coil in default pinout
+	engineConfiguration->ignitionPins[1] = GPIOC_7; // coil in default pinout
+	engineConfiguration->ignitionPins[2] = GPIOE_10; // coil in default pinout
+	engineConfiguration->ignitionPins[3] = GPIOE_8; // Miata VVT tach
 
-	boardConfiguration->ignitionPins[4] = GPIOE_14; // coil in default pinout
-	boardConfiguration->ignitionPins[5] = GPIOE_12;
-	boardConfiguration->ignitionPins[6] = GPIOD_8;
-	boardConfiguration->ignitionPins[7] = GPIOD_9;
+	engineConfiguration->ignitionPins[4] = GPIOE_14; // coil in default pinout
+	engineConfiguration->ignitionPins[5] = GPIOE_12;
+	engineConfiguration->ignitionPins[6] = GPIOD_8;
+	engineConfiguration->ignitionPins[7] = GPIOD_9;
 
-	boardConfiguration->ignitionPins[8] = GPIOE_0; // brain board, not discovery
-	boardConfiguration->ignitionPins[9] = GPIOE_1; // brain board, not discovery
+	engineConfiguration->ignitionPins[8] = GPIOE_0; // brain board, not discovery
+	engineConfiguration->ignitionPins[9] = GPIOE_1; // brain board, not discovery
 }
 
 
@@ -260,10 +260,10 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
 
-	boardConfiguration->ignitionPins[0] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 	/**
 	 * remember that some H-bridges require 5v control lines, not just 3v logic outputs we have on stm32
 	 */
@@ -282,11 +282,11 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->debugMode = DBG_ELECTRONIC_THROTTLE_PID;
 
 	// turning off other PWMs to simplify debugging
-	engineConfiguration->bc.triggerSimulatorFrequency = 0;
+	engineConfiguration->triggerSimulatorFrequency = 0;
 	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
-	CONFIGB(idle).stepperStepPin = GPIO_UNASSIGNED;
-	CONFIGB(idle).stepperDirectionPin = GPIO_UNASSIGNED;
-	boardConfiguration->useStepperIdle = true;
+	CONFIG(idle).stepperStepPin = GPIO_UNASSIGNED;
+	CONFIG(idle).stepperDirectionPin = GPIO_UNASSIGNED;
+	engineConfiguration->useStepperIdle = true;
 
 	// no analog dividers - all sensors with 3v supply, naked discovery bench setup
 	engineConfiguration->analogInputDividerCoefficient = 1;
@@ -313,28 +313,28 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->directSelfStimulation = true;
 
 #if defined(STM32_HAS_GPIOG) && STM32_HAS_GPIOG
-	boardConfiguration->ignitionPins[0] = GPIOG_3;
-	boardConfiguration->ignitionPins[1] = GPIOG_4;
-	boardConfiguration->ignitionPins[2] = GPIOG_5;
-	boardConfiguration->ignitionPins[3] = GPIOG_6;
-	boardConfiguration->ignitionPins[4] = GPIOG_7;
-	boardConfiguration->ignitionPins[5] = GPIOG_8;
+	engineConfiguration->ignitionPins[0] = GPIOG_3;
+	engineConfiguration->ignitionPins[1] = GPIOG_4;
+	engineConfiguration->ignitionPins[2] = GPIOG_5;
+	engineConfiguration->ignitionPins[3] = GPIOG_6;
+	engineConfiguration->ignitionPins[4] = GPIOG_7;
+	engineConfiguration->ignitionPins[5] = GPIOG_8;
 #endif /* STM32_HAS_GPIOG */
-	boardConfiguration->ignitionPins[6] = GPIOC_6;
-	boardConfiguration->ignitionPins[7] = GPIOC_7;
+	engineConfiguration->ignitionPins[6] = GPIOC_6;
+	engineConfiguration->ignitionPins[7] = GPIOC_7;
 
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->tle8888spiDevice = SPI_DEVICE_1;
 	engineConfiguration->tle8888_cs = GPIOD_5;
 
 	// PB3 is nicely both SWO and SPI1 SCK so logic analyzer could be used on SWO header
-	boardConfiguration->spi1mosiPin = GPIOB_5;
-	boardConfiguration->spi1misoPin = GPIOB_4;
-	boardConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
-	boardConfiguration->is_enabled_spi_1 = true;
+	engineConfiguration->spi1mosiPin = GPIOB_5;
+	engineConfiguration->spi1misoPin = GPIOB_4;
+	engineConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
+	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->debugMode = DBG_TLE8888;
 
-	boardConfiguration->fuelPumpPin = TLE8888_PIN_20;
+	engineConfiguration->fuelPumpPin = TLE8888_PIN_20;
 #endif /* BOARD_TLE8888_COUNT */
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9; // PB1 // just any non-empty value for now
@@ -353,7 +353,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(etbIo[0].directionPin2) = GPIOF_14;
 #endif /* STM32_HAS_GPIOF */
 	CONFIG(etb_use_two_wires) = true;
-	boardConfiguration->isHip9011Enabled = false;
+	engineConfiguration->isHip9011Enabled = false;
 
 	// ETB #2
 	// DIS PE5
@@ -400,7 +400,7 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
 
-	boardConfiguration->triggerSimulatorFrequency = 60;
+	engineConfiguration->triggerSimulatorFrequency = 60;
 	// set cranking_rpm 500
 	engineConfiguration->cranking.rpm = 100;
 	// set cranking_dwell 200
@@ -447,64 +447,64 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.firingOrder = FO_1_10_9_4_3_6_5_8_7_2;
 
 	// red LED #1
-	boardConfiguration->ignitionPins[1 - 1] = GPIOD_4;
-	boardConfiguration->ignitionPins[10 - 1] = GPIOD_3;
-	boardConfiguration->ignitionPins[9 - 1] = GPIOD_6;
-	boardConfiguration->ignitionPins[4 - 1] = GPIOD_7;
-	boardConfiguration->ignitionPins[3 - 1] = GPIOD_1;
-	boardConfiguration->ignitionPins[6 - 1] = GPIOD_2;
-	boardConfiguration->ignitionPins[1] =  GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[4] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[6] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[7] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[1 - 1] = GPIOD_4;
+	engineConfiguration->ignitionPins[10 - 1] = GPIOD_3;
+	engineConfiguration->ignitionPins[9 - 1] = GPIOD_6;
+	engineConfiguration->ignitionPins[4 - 1] = GPIOD_7;
+	engineConfiguration->ignitionPins[3 - 1] = GPIOD_1;
+	engineConfiguration->ignitionPins[6 - 1] = GPIOD_2;
+	engineConfiguration->ignitionPins[1] =  GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[4] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[6] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[7] = GPIO_UNASSIGNED;
 
 
-	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
-	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-	boardConfiguration->fanPin = GPIO_UNASSIGNED;
+	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	// fuel pump is useful to test power on/off scenario
-//	boardConfiguration->fuelPumpPin = TLE8888_PIN_22;
+//	engineConfiguration->fuelPumpPin = TLE8888_PIN_22;
 
 
 	// LED #1
     // GPIOE_7: "34 - GP Out 2"
-	boardConfiguration->injectionPins[1 - 1] = TLE8888_PIN_22;//GPIOE_7;
+	engineConfiguration->injectionPins[1 - 1] = TLE8888_PIN_22;//GPIOE_7;
 
 	// LED #2
 	// TLE8888_PIN_23: "33 - GP Out 3"
-	boardConfiguration->injectionPins[10 - 1] = TLE8888_PIN_23;
+	engineConfiguration->injectionPins[10 - 1] = TLE8888_PIN_23;
 
 	// LED #3 - INJ#1
-	boardConfiguration->injectionPins[9 - 1] = GPIOE_13;
+	engineConfiguration->injectionPins[9 - 1] = GPIOE_13;
 
 	// LED #4 - INJ#2
-	boardConfiguration->injectionPins[4 - 1] = GPIOE_14;
+	engineConfiguration->injectionPins[4 - 1] = GPIOE_14;
 
 	// LED #5 - INJ#3
-	boardConfiguration->injectionPins[3 - 1] = GPIOE_12;
+	engineConfiguration->injectionPins[3 - 1] = GPIOE_12;
 
 	// LED #6 - INJ#4
-	boardConfiguration->injectionPins[6 - 1] = GPIOE_11;
+	engineConfiguration->injectionPins[6 - 1] = GPIOE_11;
 
 	// LED #7
 	// TLE8888_PIN_24: "43 - GP Out 4"
-	boardConfiguration->injectionPins[5 - 1] = TLE8888_PIN_24;
+	engineConfiguration->injectionPins[5 - 1] = TLE8888_PIN_24;
 
 	// LED #8
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
 	// GPIOE_8: "35 - GP Out 1"
-	boardConfiguration->injectionPins[8 - 1] = GPIOE_8;
+	engineConfiguration->injectionPins[8 - 1] = GPIOE_8;
 
 	// LED #9
 	// TLE8888 high current low side: IN10
 	// GPIOE_9:  "7 - Lowside 1"
-	boardConfiguration->injectionPins[7 - 1] = GPIOE_9;
+	engineConfiguration->injectionPins[7 - 1] = GPIOE_9;
 
 	// LED #10
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
 	// GPIOE_10: "3 - Lowside 2"
-	boardConfiguration->injectionPins[2 - 1] = GPIOE_10;
+	engineConfiguration->injectionPins[2 - 1] = GPIOE_10;
 #endif /* BOARD_TLE8888_COUNT */
 }
 

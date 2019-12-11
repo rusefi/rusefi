@@ -15,35 +15,35 @@ EXTERN_CONFIG;
 
 void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-	disableLCD(boardConfiguration);
+	disableLCD(engineConfiguration);
 
-	boardConfiguration->HD44780_rs = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_e = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
 
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
-	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = GPIOA_5;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
 	engineConfiguration->globalTriggerAngleOffset = 114;
 
-	boardConfiguration->ignitionPins[0] = GPIOE_14;
-	boardConfiguration->ignitionPins[1] = GPIOC_7;
-	boardConfiguration->ignitionPins[2] = GPIOC_9;
-	boardConfiguration->ignitionPins[3] = GPIOE_12;
+	engineConfiguration->ignitionPins[0] = GPIOE_14;
+	engineConfiguration->ignitionPins[1] = GPIOC_7;
+	engineConfiguration->ignitionPins[2] = GPIOC_9;
+	engineConfiguration->ignitionPins[3] = GPIOE_12;
 
-	boardConfiguration->useStepperIdle = true;
-	boardConfiguration->fuelPumpPin = GPIOC_13;
-	boardConfiguration->mainRelayPin = GPIOD_7;
+	engineConfiguration->useStepperIdle = true;
+	engineConfiguration->fuelPumpPin = GPIOC_13;
+	engineConfiguration->mainRelayPin = GPIOD_7;
 
-	boardConfiguration->idle.stepperDirectionPin = GPIOE_15;
-	boardConfiguration->idle.stepperStepPin = GPIOE_13;
+	engineConfiguration->idle.stepperDirectionPin = GPIOE_15;
+	engineConfiguration->idle.stepperStepPin = GPIOE_13;
 	engineConfiguration->stepperEnablePin = GPIOE_11;
 
 
@@ -54,7 +54,7 @@ void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * to test
 	 * set_fsio_setting 1 5000
 	 */
-	engineConfiguration->bc.fsio_setting[0] = 500;
+	engineConfiguration->fsio_setting[0] = 500;
 	// set_rpn_expression 1 "rpm 0 fsio_setting <"
 	setFsioExt(0, GPIOE_3, RPM_BELOW_USER_SETTING_1, 0 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */

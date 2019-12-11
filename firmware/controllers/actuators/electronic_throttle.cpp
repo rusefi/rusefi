@@ -238,7 +238,7 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
-	if (boardConfiguration->pauseEtbControl) {
+	if (engineConfiguration->pauseEtbControl) {
 		m_motor->set(0);
 		return;
 	}
@@ -270,7 +270,7 @@ void EtbController::PeriodicTask() {
 
 	int rpm = GET_RPM();
 	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition);
-	percent_t etbIdleAddition = CONFIGB(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
+	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
 	percent_t targetPosition = engine->engineState.targetFromTable + etbIdleAddition;
 
 	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {

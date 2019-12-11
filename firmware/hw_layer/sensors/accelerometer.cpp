@@ -44,12 +44,12 @@ static const SPIConfig accelerometerCfg = {
 
 void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	engineConfiguration->LIS302DLCsPin = GPIOE_3; // we have a conflict with VVT output on Miata
-// 	CONFIGB(is_enabled_spi_1) = true; // we have a conflict with PA5 input pin
+// 	CONFIG(is_enabled_spi_1) = true; // we have a conflict with PA5 input pin
 
 	// stm32f4discovery defaults
-	CONFIGB(spi1mosiPin) = GPIOA_7;
-	CONFIGB(spi1misoPin) = GPIOA_6;
-	CONFIGB(spi1sckPin) = GPIOA_5;
+	CONFIG(spi1mosiPin) = GPIOA_7;
+	CONFIG(spi1misoPin) = GPIOA_6;
+	CONFIG(spi1sckPin) = GPIOA_5;
 }
 
 
@@ -76,7 +76,7 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->LIS302DLCsPin == GPIO_UNASSIGNED)
 		return; // not used
 
-	if (!CONFIGB(is_enabled_spi_1))
+	if (!CONFIG(is_enabled_spi_1))
 		return; // temporary
 #if HAL_USE_SPI
 	driver = getSpiDevice(engineConfiguration->accelerometerSpiDevice);
@@ -90,8 +90,8 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initSpiCs((SPIConfig *)driver->config, engineConfiguration->LIS302DLCsPin);
 
 //	memsCs.initPin("LIS302 CS", engineConfiguration->LIS302DLCsPin);
-//	memsCfg.ssport = getHwPort("mmc", CONFIGB(sdCardCsPin));
-//	memsCfg.sspad = getHwPin("mmc", CONFIGB(sdCardCsPin));
+//	memsCfg.ssport = getHwPort("mmc", CONFIG(sdCardCsPin));
+//	memsCfg.sspad = getHwPin("mmc", CONFIG(sdCardCsPin));
 
 
 	/* LIS302DL initialization.*/

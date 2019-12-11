@@ -28,7 +28,7 @@
 
 #define EXTERN_CONFIG \
 		extern engine_configuration_s *engineConfiguration; \
-		extern board_configuration_s *boardConfiguration; \
+		extern engine_configuration_s *engineConfiguration; \
 		extern engine_configuration_s & activeConfiguration; \
 		extern persistent_config_container_s persistentState; \
 		extern persistent_config_s *config; \
@@ -64,7 +64,6 @@
  * access in unit tests
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
-#define CONFIGB(x) persistentState.persistentConfiguration.engineConfiguration.bc.x
 #define ENGINE(x) ___engine.x
 
 #define DEFINE_CONFIG_PARAM(x, y)

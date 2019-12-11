@@ -246,8 +246,6 @@
 #define baroSensor_offset_hex 248
 #define baroSensor_type_offset 592
 #define baroSensor_type_offset_hex 250
-#define bc_offset 600
-#define bc_offset_hex 258
 #define binarySerialRxPin_offset 1815
 #define binarySerialRxPin_offset_hex 717
 #define binarySerialTxPin_offset 1814

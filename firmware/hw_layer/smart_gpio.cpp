@@ -156,10 +156,10 @@ void initSmartGpio() {
 		gpiochip_use_gpio_base(TLE6240_OUTPUTS);
 
 #if (BOARD_MC33972_COUNT > 0)
-	if (boardConfiguration->mc33972_cs != GPIO_UNASSIGNED) {
+	if (engineConfiguration->mc33972_cs != GPIO_UNASSIGNED) {
 		// todo: reuse initSpiCs method?
-		mc33972.spi_config.ssport = getHwPort("mc33972 CS", boardConfiguration->mc33972_cs);
-		mc33972.spi_config.sspad = getHwPin("mc33972 CS", boardConfiguration->mc33972_cs);
+		mc33972.spi_config.ssport = getHwPort("mc33972 CS", engineConfiguration->mc33972_cs);
+		mc33972.spi_config.sspad = getHwPin("mc33972 CS", engineConfiguration->mc33972_cs);
 		mc33972.spi_bus = getSpiDevice(engineConfiguration->mc33972spiDevice);
 		// todo: propogate 'basePinOffset' parameter
 		ret = mc33972_add(0, &mc33972);
@@ -209,7 +209,7 @@ void stopSmartCsPins() {
 	brain_pin_markUnused(activeConfiguration.tle6240_cs);
 #endif /* BOARD_TLE6240_COUNT */
 #if (BOARD_MC33972_COUNT > 0)
-	brain_pin_markUnused(activeConfiguration.bc.mc33972_cs);
+	brain_pin_markUnused(activeConfiguration.mc33972_cs);
 #endif /* BOARD_MC33972_COUNT */
 }
 
@@ -225,8 +225,8 @@ void startSmartCsPins() {
 	tle6240Cs.setValue(true);
 #endif /* BOARD_TLE6240_COUNT */
 #if (BOARD_MC33972_COUNT > 0)
-	mc33972Cs.initPin("mc33972 CS", boardConfiguration->mc33972_cs,
-				&boardConfiguration->mc33972_csPinMode);
+	mc33972Cs.initPin("mc33972 CS", engineConfiguration->mc33972_cs,
+				&engineConfiguration->mc33972_csPinMode);
 	mc33972Cs.setValue(true);
 #endif /* BOARD_MC33972_COUNT */
 }

@@ -48,11 +48,11 @@ void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
-	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+	engineConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	float mapRange = 110;
 
@@ -60,7 +60,7 @@ void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFuelTablesLoadBin(20, mapRange PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingLoadBin(20, mapRange PASS_CONFIG_PARAMETER_SUFFIX);
 
-	boardConfiguration->isSdCardEnabled = false;
+	engineConfiguration->isSdCardEnabled = false;
 	engineConfiguration->tpsMin = 740;
 	engineConfiguration->tpsMax = 135;
 }

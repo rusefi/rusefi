@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Dec 08 00:34:54 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Dec 11 16:41:07 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -440,564 +440,6 @@ struct etb_io {
 };
 
 typedef struct etb_io etb_io;
-
-// start of board_configuration_s
-struct board_configuration_s {
-	/**
-	 * offset 0
-	 */
-	idle_hardware_s idle;
-	/**
-	 * value between 0 and 100 used in Manual mode
-	 * offset 8
-	 */
-	float manIdlePosition;
-	/**
-	 * offset 12
-	 */
-	float mapFrequency0Kpa;
-	/**
-	 * offset 16
-	 */
-	float mapFrequency100Kpa;
-	/**
-	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
-	 * See also directSelfStimulation (no wires, bypassing input hardware)
-	 * rpm X
-	 * offset 20
-	 */
-	int triggerSimulatorFrequency;
-	/**
-	 * offset 24
-	 */
-	output_pin_e injectionPins[INJECTION_PIN_COUNT];
-	/**
-	 * offset 36
-	 */
-	output_pin_e ignitionPins[IGNITION_PIN_COUNT];
-	/**
-	 * offset 48
-	 */
-	pin_output_mode_e injectionPinMode;
-	/**
-	 * offset 49
-	 */
-	pin_output_mode_e ignitionPinMode;
-	/**
-	 * offset 50
-	 */
-	brain_pin_e HD44780_rs;
-	/**
-	 * offset 51
-	 */
-	brain_pin_e HD44780_e;
-	/**
-	 * offset 52
-	 */
-	brain_pin_e HD44780_db4;
-	/**
-	 * offset 53
-	 */
-	brain_pin_e HD44780_db5;
-	/**
-	 * offset 54
-	 */
-	brain_pin_e HD44780_db6;
-	/**
-	 * offset 55
-	 */
-	brain_pin_e HD44780_db7;
-	/**
-	 * offset 56
-	 */
-	brain_pin_e gps_rx_pin;
-	/**
-	 * offset 57
-	 */
-	brain_pin_e gps_tx_pin;
-	/**
-	 * offset 58
-	 */
-	output_pin_e fuelPumpPin;
-	/**
-	 * offset 59
-	 */
-	pin_output_mode_e fuelPumpPinMode;
-	/**
-	 * Check engine light, also malfunction indicator light. Always blinks once on boot.
-	 * offset 60
-	 */
-	output_pin_e malfunctionIndicatorPin;
-	/**
-	 * offset 61
-	 */
-	pin_output_mode_e malfunctionIndicatorPinMode;
-	/**
-	 * offset 62
-	 */
-	pin_output_mode_e fanPinMode;
-	/**
-	 * offset 63
-	 */
-	output_pin_e fanPin;
-	/**
-	 * some cars have a switch to indicate that clutch pedal is all the way down
-	 * offset 64
-	 */
-	switch_input_pin_e clutchDownPin;
-	/**
-	 * offset 65
-	 */
-	output_pin_e alternatorControlPin;
-	/**
-	 * offset 66
-	 */
-	pin_output_mode_e alternatorControlPinMode;
-	/**
-	 * offset 67
-	 */
-	pin_input_mode_e clutchDownPinMode;
-	/**
-	 * offset 68
-	 */
-	brain_pin_e digitalPotentiometerChipSelect[DIGIPOT_COUNT];
-	/**
-	 * offset 72
-	 */
-	pin_output_mode_e electronicThrottlePin1Mode;
-	/**
-	 * offset 73
-	 */
-	brain_pin_e wboHeaterPin;
-	/**
-	 * offset 74
-	 */
-	brain_pin_e cj125CsPin;
-	/**
-	 * offset 75
-	 */
-	spi_device_e max31855spiDevice;
-	/**
-	 * offset 76
-	 */
-	brain_pin_e debugTriggerSync;
-	/**
-	 * Digital Potentiometer is used by stock ECU stimulation code
-	 * offset 77
-	 */
-	spi_device_e digitalPotentiometerSpiDevice;
-	/**
-	 * offset 78
-	 */
-	brain_pin_e mc33972_cs;
-	/**
-	 * offset 79
-	 */
-	pin_output_mode_e mc33972_csPinMode;
-	/**
-	 * Useful in Research&Development phase
-	 * offset 80
-	 */
-	adc_channel_e auxFastSensor1_adcChannel;
-	/**
-	 * offset 81
-	 */
-	uint8_t unused556[3];
-	/**
-	 * offset 84
-	 */
-	float fuelLevelEmptyTankVoltage;
-	/**
-	 * offset 88
-	 */
-	float fuelLevelFullTankVoltage;
-	/**
-	 * AFR, WBO, EGO - whatever you like to call it
-	 * offset 92
-	 */
-	ego_sensor_e afr_type;
-	/**
-	 * offset 96
-	 */
-	float fuelClosedLoopAfrLowThreshold;
-	/**
-	 * offset 100
-	 */
-	brain_input_pin_e triggerInputPins[TRIGGER_INPUT_PIN_COUNT];
-	/**
-	 * offset 103
-	 */
-	pin_output_mode_e hip9011CsPinMode;
-	/**
-	 * This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
-	 * offset 104
-	 */
-	output_pin_e tachOutputPin;
-	/**
-	 * offset 105
-	 */
-	pin_output_mode_e tachOutputPinMode;
-	/**
-	 * offset 106
-	 */
-	output_pin_e mainRelayPin;
-	/**
-	 * offset 107
-	 */
-	brain_pin_e sdCardCsPin;
-	/**
-	 * offset 108
-	 */
-	brain_pin_e canTxPin;
-	/**
-	 * offset 109
-	 */
-	brain_pin_e canRxPin;
-	/**
-	 * offset 110
-	 */
-	pin_input_mode_e throttlePedalUpPinMode;
-	/**
-	 * offset 111
-	 */
-	brain_pin_e debugTimerCallback;
-	/**
-	 * offset 112
-	 */
-	int idleThreadPeriodMs;
-	/**
-	 * offset 116
-	 */
-	int consoleLoopPeriodMs;
-	/**
-	 * offset 120
-	 */
-	int lcdThreadPeriodMs;
-	/**
-	 * offset 124
-	 */
-	int generalPeriodicThreadPeriodMs;
-	/**
-	 * offset 128
-	 */
-	uint32_t tunerStudioSerialSpeed;
-	/**
-	 * offset 132
-	 */
-	can_device_mode_e canDeviceMode;
-	/**
-	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
-	 * See also directSelfStimulation which is different.
-	 * offset 136
-	 */
-	brain_pin_e triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
-	/**
-	 * offset 139
-	 */
-	pin_output_mode_e triggerSimulatorPinModes[TRIGGER_SIMULATOR_PIN_COUNT];
-	/**
-	 * Narrow band o2 heater, not used for CJ125. See wboHeaterPin
-	 * offset 142
-	 */
-	output_pin_e o2heaterPin;
-	/**
-	 * offset 143
-	 */
-	pin_output_mode_e o2heaterPinModeTodO;
-	/**
-	offset 144 bit 0 */
-	bool is_enabled_spi_1 : 1;
-	/**
-	offset 144 bit 1 */
-	bool is_enabled_spi_2 : 1;
-	/**
-	offset 144 bit 2 */
-	bool is_enabled_spi_3 : 1;
-	/**
-	offset 144 bit 3 */
-	bool isSdCardEnabled : 1;
-	/**
-	offset 144 bit 4 */
-	bool isFastAdcEnabled : 1;
-	/**
-	offset 144 bit 5 */
-	bool isEngineControlEnabled : 1;
-	/**
-	offset 144 bit 6 */
-	bool isHip9011Enabled : 1;
-	/**
-	offset 144 bit 7 */
-	bool isVerboseAlternator : 1;
-	/**
-	offset 144 bit 8 */
-	bool useSerialPort : 1;
-	/**
-	 * This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
-	offset 144 bit 9 */
-	bool useStepperIdle : 1;
-	/**
-	offset 144 bit 10 */
-	bool enabledStep1Limiter : 1;
-	/**
-	offset 144 bit 11 */
-	bool useTpicAdvancedMode : 1;
-	/**
-	offset 144 bit 12 */
-	bool useLcdScreen : 1;
-	/**
-	offset 144 bit 13 */
-	bool unusedAnotherOne : 1;
-	/**
-	offset 144 bit 14 */
-	bool unusedOldWarmupAfr : 1;
-	/**
-	 *  +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
-	offset 144 bit 15 */
-	bool onOffAlternatorLogic : 1;
-	/**
-	offset 144 bit 16 */
-	bool isCJ125Enabled : 1;
-	/**
-	 * Use rise or fall signal front
-	offset 144 bit 17 */
-	bool vvtCamSensorUseRise : 1;
-	/**
-	 * Useful for individual intakes
-	offset 144 bit 18 */
-	bool measureMapOnlyInOneCylinder : 1;
-	/**
-	offset 144 bit 19 */
-	bool stepperForceParkingEveryRestart : 1;
-	/**
-	 * Smarter cranking logic.
-	 * See also startOfCrankingPrimingPulse
-	offset 144 bit 20 */
-	bool isFasterEngineSpinUpEnabled : 1;
-	/**
-	 * This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-	offset 144 bit 21 */
-	bool coastingFuelCutEnabled : 1;
-	/**
-	 * This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars.
-	offset 144 bit 22 */
-	bool useIacTableForCoasting : 1;
-	/**
-	offset 144 bit 23 */
-	bool useNoiselessTriggerDecoder : 1;
-	/**
-	offset 144 bit 24 */
-	bool useIdleTimingPidControl : 1;
-	/**
-	offset 144 bit 25 */
-	bool useTPSBasedVeTable : 1;
-	/**
-	offset 144 bit 26 */
-	bool is_enabled_spi_4 : 1;
-	/**
-	offset 144 bit 27 */
-	bool pauseEtbControl : 1;
-	/**
-	offset 144 bit 28 */
-	bool alignEngineSnifferAtTDC : 1;
-	/**
-	 * This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
-	offset 144 bit 29 */
-	bool useETBforIdleControl : 1;
-	/**
-	offset 144 bit 30 */
-	bool idleIncrementalPidCic : 1;
-	/**
-	offset 144 bit 31 */
-	bool unused_board_984_31 : 1;
-	/**
-	 * offset 148
-	 */
-	brain_input_pin_e logicAnalyzerPins[LOGIC_ANALYZER_CHANNEL_COUNT];
-	/**
-	 * offset 152
-	 */
-	pin_output_mode_e mainRelayPinMode;
-	/**
-	 * offset 153
-	 */
-	brain_pin_e hip9011CsPin;
-	/**
-	 * offset 154
-	 */
-	brain_pin_e hip9011IntHoldPin;
-	/**
-	 * offset 155
-	 */
-	pin_output_mode_e hip9011IntHoldPinMode;
-	/**
-	 * default or inverted input
-	 * offset 156
-	 */
-	uint8_t logicAnalyzerMode[LOGIC_ANALYZER_CHANNEL_COUNT];
-	/**
-	 * offset 160
-	 */
-	int unrealisticRpmThreashold;
-	/**
-	 * offset 164
-	 */
-	pin_output_mode_e gpioPinModes[FSIO_COMMAND_COUNT];
-	/**
-	 * todo: more comments
-	 * offset 180
-	 */
-	output_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
-	/**
-	 * offset 196
-	 */
-	brain_pin_e max31855_cs[EGT_CHANNEL_COUNT];
-	/**
-	 * SD card logging period, in milliseconds
-	 * offset 204
-	 */
-	int16_t sdCardPeriodMs;
-	/**
-	 * offset 206
-	 */
-	brain_pin_e debugSetTimer;
-	/**
-	 * offset 207
-	 */
-	brain_pin_e debugMapAveraging;
-	/**
-	 * offset 208
-	 */
-	brain_pin_e starterRelayPin;
-	/**
-	 * offset 209
-	 */
-	pin_output_mode_e starterRelayPinMode;
-	/**
-	 * offset 210
-	 */
-	uint8_t unuseduartPadding1[2];
-	/**
-	 * offset 212
-	 */
-	int mapMinBufferLength;
-	/**
-	 * offset 216
-	 */
-	int16_t idlePidDeactivationTpsThreshold;
-	/**
-	 * offset 218
-	 */
-	int16_t stepperParkingExtraSteps;
-	/**
-	 * This magic property is specific to Mazda Miata NB2
-	 * offset 220
-	 */
-	float miataNb2VVTRatioFrom;
-	/**
-	 * This magic property is specific to Mazda Miata NB2
-	 * offset 224
-	 */
-	float miataNb2VVTRatioTo;
-	/**
-	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
-	 * offset 228
-	 */
-	brain_pin_e triggerErrorPin;
-	/**
-	 * offset 229
-	 */
-	pin_output_mode_e triggerErrorPinMode;
-	/**
-	 * offset 230
-	 */
-	output_pin_e acRelayPin;
-	/**
-	 * offset 231
-	 */
-	pin_output_mode_e acRelayPinMode;
-	/**
-	 * offset 232
-	 */
-	fsio_pwm_freq_t fsioFrequency[FSIO_COMMAND_COUNT];
-	/**
-	 * offset 264
-	 */
-	fsio_setting_t fsio_setting[FSIO_COMMAND_COUNT];
-	/**
-	 * offset 328
-	 */
-	brain_pin_e spi1mosiPin;
-	/**
-	 * offset 329
-	 */
-	brain_pin_e spi1misoPin;
-	/**
-	 * offset 330
-	 */
-	brain_pin_e spi1sckPin;
-	/**
-	 * offset 331
-	 */
-	brain_pin_e spi2mosiPin;
-	/**
-	 * offset 332
-	 */
-	brain_pin_e spi2misoPin;
-	/**
-	 * offset 333
-	 */
-	brain_pin_e spi2sckPin;
-	/**
-	 * offset 334
-	 */
-	brain_pin_e spi3mosiPin;
-	/**
-	 * offset 335
-	 */
-	brain_pin_e spi3misoPin;
-	/**
-	 * offset 336
-	 */
-	brain_pin_e spi3sckPin;
-	/**
-	 * Saab Combustion Detection Module knock signal input pin
-	 * also known as Saab Ion Sensing Module
-	 * offset 337
-	 */
-	brain_pin_e cdmInputPin;
-	/**
-	 * offset 338
-	 */
-	brain_pin_e joystickCenterPin;
-	/**
-	 * offset 339
-	 */
-	brain_pin_e joystickAPin;
-	/**
-	 * offset 340
-	 */
-	brain_pin_e joystickBPin;
-	/**
-	 * offset 341
-	 */
-	brain_pin_e joystickCPin;
-	/**
-	 * offset 342
-	 */
-	brain_pin_e joystickDPin;
-	/**
-	 * offset 343
-	 */
-	uart_device_e consoleUartDevice;
-	/**
-	 * rusEfi console Sensor Sniffer mode
-	 * offset 344
-	 */
-	sensor_chart_e sensorChartMode;
-	/** total size 348*/
-};
-
-typedef struct board_configuration_s board_configuration_s;
 
 // start of engine_configuration_s
 struct engine_configuration_s {
@@ -1449,7 +891,554 @@ struct engine_configuration_s {
 	/**
 	 * offset 600
 	 */
-	board_configuration_s bc;
+	idle_hardware_s idle;
+	/**
+	 * value between 0 and 100 used in Manual mode
+	 * offset 608
+	 */
+	float manIdlePosition;
+	/**
+	 * offset 612
+	 */
+	float mapFrequency0Kpa;
+	/**
+	 * offset 616
+	 */
+	float mapFrequency100Kpa;
+	/**
+	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
+	 * See also directSelfStimulation (no wires, bypassing input hardware)
+	 * rpm X
+	 * offset 620
+	 */
+	int triggerSimulatorFrequency;
+	/**
+	 * offset 624
+	 */
+	output_pin_e injectionPins[INJECTION_PIN_COUNT];
+	/**
+	 * offset 636
+	 */
+	output_pin_e ignitionPins[IGNITION_PIN_COUNT];
+	/**
+	 * offset 648
+	 */
+	pin_output_mode_e injectionPinMode;
+	/**
+	 * offset 649
+	 */
+	pin_output_mode_e ignitionPinMode;
+	/**
+	 * offset 650
+	 */
+	brain_pin_e HD44780_rs;
+	/**
+	 * offset 651
+	 */
+	brain_pin_e HD44780_e;
+	/**
+	 * offset 652
+	 */
+	brain_pin_e HD44780_db4;
+	/**
+	 * offset 653
+	 */
+	brain_pin_e HD44780_db5;
+	/**
+	 * offset 654
+	 */
+	brain_pin_e HD44780_db6;
+	/**
+	 * offset 655
+	 */
+	brain_pin_e HD44780_db7;
+	/**
+	 * offset 656
+	 */
+	brain_pin_e gps_rx_pin;
+	/**
+	 * offset 657
+	 */
+	brain_pin_e gps_tx_pin;
+	/**
+	 * offset 658
+	 */
+	output_pin_e fuelPumpPin;
+	/**
+	 * offset 659
+	 */
+	pin_output_mode_e fuelPumpPinMode;
+	/**
+	 * Check engine light, also malfunction indicator light. Always blinks once on boot.
+	 * offset 660
+	 */
+	output_pin_e malfunctionIndicatorPin;
+	/**
+	 * offset 661
+	 */
+	pin_output_mode_e malfunctionIndicatorPinMode;
+	/**
+	 * offset 662
+	 */
+	pin_output_mode_e fanPinMode;
+	/**
+	 * offset 663
+	 */
+	output_pin_e fanPin;
+	/**
+	 * some cars have a switch to indicate that clutch pedal is all the way down
+	 * offset 664
+	 */
+	switch_input_pin_e clutchDownPin;
+	/**
+	 * offset 665
+	 */
+	output_pin_e alternatorControlPin;
+	/**
+	 * offset 666
+	 */
+	pin_output_mode_e alternatorControlPinMode;
+	/**
+	 * offset 667
+	 */
+	pin_input_mode_e clutchDownPinMode;
+	/**
+	 * offset 668
+	 */
+	brain_pin_e digitalPotentiometerChipSelect[DIGIPOT_COUNT];
+	/**
+	 * offset 672
+	 */
+	pin_output_mode_e electronicThrottlePin1Mode;
+	/**
+	 * offset 673
+	 */
+	brain_pin_e wboHeaterPin;
+	/**
+	 * offset 674
+	 */
+	brain_pin_e cj125CsPin;
+	/**
+	 * offset 675
+	 */
+	spi_device_e max31855spiDevice;
+	/**
+	 * offset 676
+	 */
+	brain_pin_e debugTriggerSync;
+	/**
+	 * Digital Potentiometer is used by stock ECU stimulation code
+	 * offset 677
+	 */
+	spi_device_e digitalPotentiometerSpiDevice;
+	/**
+	 * offset 678
+	 */
+	brain_pin_e mc33972_cs;
+	/**
+	 * offset 679
+	 */
+	pin_output_mode_e mc33972_csPinMode;
+	/**
+	 * Useful in Research&Development phase
+	 * offset 680
+	 */
+	adc_channel_e auxFastSensor1_adcChannel;
+	/**
+	 * offset 681
+	 */
+	uint8_t unused556[3];
+	/**
+	 * offset 684
+	 */
+	float fuelLevelEmptyTankVoltage;
+	/**
+	 * offset 688
+	 */
+	float fuelLevelFullTankVoltage;
+	/**
+	 * AFR, WBO, EGO - whatever you like to call it
+	 * offset 692
+	 */
+	ego_sensor_e afr_type;
+	/**
+	 * offset 696
+	 */
+	float fuelClosedLoopAfrLowThreshold;
+	/**
+	 * offset 700
+	 */
+	brain_input_pin_e triggerInputPins[TRIGGER_INPUT_PIN_COUNT];
+	/**
+	 * offset 703
+	 */
+	pin_output_mode_e hip9011CsPinMode;
+	/**
+	 * This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
+	 * offset 704
+	 */
+	output_pin_e tachOutputPin;
+	/**
+	 * offset 705
+	 */
+	pin_output_mode_e tachOutputPinMode;
+	/**
+	 * offset 706
+	 */
+	output_pin_e mainRelayPin;
+	/**
+	 * offset 707
+	 */
+	brain_pin_e sdCardCsPin;
+	/**
+	 * offset 708
+	 */
+	brain_pin_e canTxPin;
+	/**
+	 * offset 709
+	 */
+	brain_pin_e canRxPin;
+	/**
+	 * offset 710
+	 */
+	pin_input_mode_e throttlePedalUpPinMode;
+	/**
+	 * offset 711
+	 */
+	brain_pin_e debugTimerCallback;
+	/**
+	 * offset 712
+	 */
+	int idleThreadPeriodMs;
+	/**
+	 * offset 716
+	 */
+	int consoleLoopPeriodMs;
+	/**
+	 * offset 720
+	 */
+	int lcdThreadPeriodMs;
+	/**
+	 * offset 724
+	 */
+	int generalPeriodicThreadPeriodMs;
+	/**
+	 * offset 728
+	 */
+	uint32_t tunerStudioSerialSpeed;
+	/**
+	 * offset 732
+	 */
+	can_device_mode_e canDeviceMode;
+	/**
+	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
+	 * See also directSelfStimulation which is different.
+	 * offset 736
+	 */
+	brain_pin_e triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
+	/**
+	 * offset 739
+	 */
+	pin_output_mode_e triggerSimulatorPinModes[TRIGGER_SIMULATOR_PIN_COUNT];
+	/**
+	 * Narrow band o2 heater, not used for CJ125. See wboHeaterPin
+	 * offset 742
+	 */
+	output_pin_e o2heaterPin;
+	/**
+	 * offset 743
+	 */
+	pin_output_mode_e o2heaterPinModeTodO;
+	/**
+	offset 744 bit 0 */
+	bool is_enabled_spi_1 : 1;
+	/**
+	offset 744 bit 1 */
+	bool is_enabled_spi_2 : 1;
+	/**
+	offset 744 bit 2 */
+	bool is_enabled_spi_3 : 1;
+	/**
+	offset 744 bit 3 */
+	bool isSdCardEnabled : 1;
+	/**
+	offset 744 bit 4 */
+	bool isFastAdcEnabled : 1;
+	/**
+	offset 744 bit 5 */
+	bool isEngineControlEnabled : 1;
+	/**
+	offset 744 bit 6 */
+	bool isHip9011Enabled : 1;
+	/**
+	offset 744 bit 7 */
+	bool isVerboseAlternator : 1;
+	/**
+	offset 744 bit 8 */
+	bool useSerialPort : 1;
+	/**
+	 * This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
+	offset 744 bit 9 */
+	bool useStepperIdle : 1;
+	/**
+	offset 744 bit 10 */
+	bool enabledStep1Limiter : 1;
+	/**
+	offset 744 bit 11 */
+	bool useTpicAdvancedMode : 1;
+	/**
+	offset 744 bit 12 */
+	bool useLcdScreen : 1;
+	/**
+	offset 744 bit 13 */
+	bool unusedAnotherOne : 1;
+	/**
+	offset 744 bit 14 */
+	bool unusedOldWarmupAfr : 1;
+	/**
+	 *  +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
+	offset 744 bit 15 */
+	bool onOffAlternatorLogic : 1;
+	/**
+	offset 744 bit 16 */
+	bool isCJ125Enabled : 1;
+	/**
+	 * Use rise or fall signal front
+	offset 744 bit 17 */
+	bool vvtCamSensorUseRise : 1;
+	/**
+	 * Useful for individual intakes
+	offset 744 bit 18 */
+	bool measureMapOnlyInOneCylinder : 1;
+	/**
+	offset 744 bit 19 */
+	bool stepperForceParkingEveryRestart : 1;
+	/**
+	 * Smarter cranking logic.
+	 * See also startOfCrankingPrimingPulse
+	offset 744 bit 20 */
+	bool isFasterEngineSpinUpEnabled : 1;
+	/**
+	 * This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
+	offset 744 bit 21 */
+	bool coastingFuelCutEnabled : 1;
+	/**
+	 * This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars.
+	offset 744 bit 22 */
+	bool useIacTableForCoasting : 1;
+	/**
+	offset 744 bit 23 */
+	bool useNoiselessTriggerDecoder : 1;
+	/**
+	offset 744 bit 24 */
+	bool useIdleTimingPidControl : 1;
+	/**
+	offset 744 bit 25 */
+	bool useTPSBasedVeTable : 1;
+	/**
+	offset 744 bit 26 */
+	bool is_enabled_spi_4 : 1;
+	/**
+	offset 744 bit 27 */
+	bool pauseEtbControl : 1;
+	/**
+	offset 744 bit 28 */
+	bool alignEngineSnifferAtTDC : 1;
+	/**
+	 * This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
+	offset 744 bit 29 */
+	bool useETBforIdleControl : 1;
+	/**
+	offset 744 bit 30 */
+	bool idleIncrementalPidCic : 1;
+	/**
+	offset 744 bit 31 */
+	bool unused_board_984_31 : 1;
+	/**
+	 * offset 748
+	 */
+	brain_input_pin_e logicAnalyzerPins[LOGIC_ANALYZER_CHANNEL_COUNT];
+	/**
+	 * offset 752
+	 */
+	pin_output_mode_e mainRelayPinMode;
+	/**
+	 * offset 753
+	 */
+	brain_pin_e hip9011CsPin;
+	/**
+	 * offset 754
+	 */
+	brain_pin_e hip9011IntHoldPin;
+	/**
+	 * offset 755
+	 */
+	pin_output_mode_e hip9011IntHoldPinMode;
+	/**
+	 * default or inverted input
+	 * offset 756
+	 */
+	uint8_t logicAnalyzerMode[LOGIC_ANALYZER_CHANNEL_COUNT];
+	/**
+	 * offset 760
+	 */
+	int unrealisticRpmThreashold;
+	/**
+	 * offset 764
+	 */
+	pin_output_mode_e gpioPinModes[FSIO_COMMAND_COUNT];
+	/**
+	 * todo: more comments
+	 * offset 780
+	 */
+	output_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 796
+	 */
+	brain_pin_e max31855_cs[EGT_CHANNEL_COUNT];
+	/**
+	 * SD card logging period, in milliseconds
+	 * offset 804
+	 */
+	int16_t sdCardPeriodMs;
+	/**
+	 * offset 806
+	 */
+	brain_pin_e debugSetTimer;
+	/**
+	 * offset 807
+	 */
+	brain_pin_e debugMapAveraging;
+	/**
+	 * offset 808
+	 */
+	brain_pin_e starterRelayPin;
+	/**
+	 * offset 809
+	 */
+	pin_output_mode_e starterRelayPinMode;
+	/**
+	 * offset 810
+	 */
+	uint8_t unuseduartPadding1[2];
+	/**
+	 * offset 812
+	 */
+	int mapMinBufferLength;
+	/**
+	 * offset 816
+	 */
+	int16_t idlePidDeactivationTpsThreshold;
+	/**
+	 * offset 818
+	 */
+	int16_t stepperParkingExtraSteps;
+	/**
+	 * This magic property is specific to Mazda Miata NB2
+	 * offset 820
+	 */
+	float miataNb2VVTRatioFrom;
+	/**
+	 * This magic property is specific to Mazda Miata NB2
+	 * offset 824
+	 */
+	float miataNb2VVTRatioTo;
+	/**
+	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
+	 * offset 828
+	 */
+	brain_pin_e triggerErrorPin;
+	/**
+	 * offset 829
+	 */
+	pin_output_mode_e triggerErrorPinMode;
+	/**
+	 * offset 830
+	 */
+	output_pin_e acRelayPin;
+	/**
+	 * offset 831
+	 */
+	pin_output_mode_e acRelayPinMode;
+	/**
+	 * offset 832
+	 */
+	fsio_pwm_freq_t fsioFrequency[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 864
+	 */
+	fsio_setting_t fsio_setting[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 928
+	 */
+	brain_pin_e spi1mosiPin;
+	/**
+	 * offset 929
+	 */
+	brain_pin_e spi1misoPin;
+	/**
+	 * offset 930
+	 */
+	brain_pin_e spi1sckPin;
+	/**
+	 * offset 931
+	 */
+	brain_pin_e spi2mosiPin;
+	/**
+	 * offset 932
+	 */
+	brain_pin_e spi2misoPin;
+	/**
+	 * offset 933
+	 */
+	brain_pin_e spi2sckPin;
+	/**
+	 * offset 934
+	 */
+	brain_pin_e spi3mosiPin;
+	/**
+	 * offset 935
+	 */
+	brain_pin_e spi3misoPin;
+	/**
+	 * offset 936
+	 */
+	brain_pin_e spi3sckPin;
+	/**
+	 * Saab Combustion Detection Module knock signal input pin
+	 * also known as Saab Ion Sensing Module
+	 * offset 937
+	 */
+	brain_pin_e cdmInputPin;
+	/**
+	 * offset 938
+	 */
+	brain_pin_e joystickCenterPin;
+	/**
+	 * offset 939
+	 */
+	brain_pin_e joystickAPin;
+	/**
+	 * offset 940
+	 */
+	brain_pin_e joystickBPin;
+	/**
+	 * offset 941
+	 */
+	brain_pin_e joystickCPin;
+	/**
+	 * offset 942
+	 */
+	brain_pin_e joystickDPin;
+	/**
+	 * offset 943
+	 */
+	uart_device_e consoleUartDevice;
+	/**
+	 * rusEfi console Sensor Sniffer mode
+	 * offset 944
+	 */
+	sensor_chart_e sensorChartMode;
 	/**
 	 * offset 948
 	 */
@@ -2939,4 +2928,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Dec 08 00:34:54 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Dec 11 16:41:07 EST 2019

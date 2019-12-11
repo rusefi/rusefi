@@ -9,9 +9,9 @@
 
 #include "global.h"
 
-#define DECLARE_CONFIG_PARAMETER_SIGNATURE engine_configuration_s *engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
+#define DECLARE_CONFIG_PARAMETER_SIGNATURE engine_configuration_s *engineConfiguration, persistent_config_s *config
 #define DECLARE_CONFIG_PARAMETER_SUFFIX , DECLARE_CONFIG_PARAMETER_SIGNATURE
-#define PASS_CONFIG_PARAMETER_SIGNATURE engineConfiguration, config, boardConfiguration
+#define PASS_CONFIG_PARAMETER_SIGNATURE engineConfiguration, config
 #define PASS_CONFIG_PARAMETER_SUFFIX , PASS_CONFIG_PARAMETER_SIGNATURE
 
 /**
@@ -23,7 +23,4 @@
 #define PASS_ENGINE_PARAMETER_SUFFIX , PASS_ENGINE_PARAMETER_SIGNATURE
 
 #define CONFIG(x) engineConfiguration->x
-// todo: fix this! this does not work because of 'prepareVoidConfiguration(&activeConfiguration);'
-//#define CONFIGB(x) engine->engineConfigurationPtr->bc.x
-#define CONFIGB(x) CONFIG(bc.x)
 #define ENGINE(x) engine->x

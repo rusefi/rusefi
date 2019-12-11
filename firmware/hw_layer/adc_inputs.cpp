@@ -514,9 +514,9 @@ static void configureInputs(void) {
 	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
 	addChannel("AUXT#1", engineConfiguration->auxTempSensor1.adcChannel, ADC_SLOW);
 	addChannel("AUXT#2", engineConfiguration->auxTempSensor2.adcChannel, ADC_SLOW);
-	if (engineConfiguration->bc.auxFastSensor1_adcChannel != EFI_ADC_0) {
+	if (engineConfiguration->auxFastSensor1_adcChannel != EFI_ADC_0) {
 		// allow EFI_ADC_0 next time we have an incompatible configuration change
-		addChannel("AUXF#1", engineConfiguration->bc.auxFastSensor1_adcChannel, ADC_FAST);
+		addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
 	}
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("OilP", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
@@ -526,7 +526,7 @@ static void configureInputs(void) {
 	if (engineConfiguration->high_fuel_pressure_sensor_2 != INCOMPATIBLE_CONFIG_CHANGE)
 		addChannel("HFP2", engineConfiguration->high_fuel_pressure_sensor_2, ADC_SLOW);
 
-	if (CONFIGB(isCJ125Enabled)) {
+	if (CONFIG(isCJ125Enabled)) {
 		addChannel("cj125ur", engineConfiguration->cj125ur, ADC_SLOW);
 		addChannel("cj125ua", engineConfiguration->cj125ua, ADC_SLOW);
 	}
@@ -583,7 +583,7 @@ void initAdcInputs() {
 	// Start the slow ADC thread
 	slowAdcController.Start();
 
-	if (CONFIGB(isFastAdcEnabled)) {
+	if (CONFIG(isFastAdcEnabled)) {
 		fastAdc.init();
 		/*
 		 * Initializes the PWM driver.

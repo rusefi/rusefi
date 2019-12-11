@@ -10,8 +10,8 @@
 #include "engine_configuration.h"
 
 void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setFrankenso_01_LCD(board_configuration_s *boardConfiguration);
-void disableLCD(board_configuration_s *boardConfiguration);
+void setFrankenso_01_LCD(engine_configuration_s *engineConfiguration);
+void disableLCD(engine_configuration_s *engineConfiguration);
 void runSchedulingPrecisionTestIfNeeded(void);
 void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);

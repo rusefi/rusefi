@@ -24,12 +24,12 @@ void setPinConfigurationOverrides(void) {
 }
 
 void setSerialConfigurationOverrides(void) {
-	boardConfiguration->useSerialPort = true;
+	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOD_8;
 	engineConfiguration->binarySerialRxPin = GPIOD_9;
 	engineConfiguration->consoleSerialTxPin = GPIOD_8;
 	engineConfiguration->consoleSerialRxPin = GPIOD_9;
-	boardConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
+	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
 
@@ -56,28 +56,28 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->displayMode = DM_NONE;
-	boardConfiguration->HD44780_rs = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_e = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
+	engineConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
 	for (int i = 0; i < DIGIPOT_COUNT ; i++) {
-		boardConfiguration->digitalPotentiometerChipSelect[i] = GPIO_UNASSIGNED;
+		engineConfiguration->digitalPotentiometerChipSelect[i] = GPIO_UNASSIGNED;
 	}
-	boardConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
-	boardConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
+	engineConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
+	engineConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
 	engineConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
 
-	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
-	boardConfiguration->max31855spiDevice = SPI_NONE;
+	engineConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
+	engineConfiguration->max31855spiDevice = SPI_NONE;
 
 	/////////////////////////////////////////////////////////
-	boardConfiguration->is_enabled_spi_1 = false;
-	boardConfiguration->is_enabled_spi_2 = false;
-	boardConfiguration->is_enabled_spi_3 = false;
+	engineConfiguration->is_enabled_spi_1 = false;
+	engineConfiguration->is_enabled_spi_2 = false;
+	engineConfiguration->is_enabled_spi_3 = false;
 }
 
 void setAdcChannelOverrides(void) {
