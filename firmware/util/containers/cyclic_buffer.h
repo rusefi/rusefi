@@ -26,14 +26,6 @@ class cyclic_buffer
   public:
 	cyclic_buffer();
     explicit cyclic_buffer(int size);
-  //cpctor
-    cyclic_buffer(const cyclic_buffer& cb);
-  //dtor
-    ~cyclic_buffer();
-
-  public:
-  //overloaded =operator
-    cyclic_buffer& operator=(const cyclic_buffer& rhCb);
 
   public:
     void add(T value);
@@ -74,33 +66,6 @@ void cyclic_buffer<T, maxSize>::baseC(int size) {
 	memset((void*)&elements, 0, sizeof(elements));
 	setSize(size);
 }
-
-template<typename T, size_t maxSize>
-cyclic_buffer<T, maxSize>::cyclic_buffer(const cyclic_buffer& cb) {
-	//Deep copy the data
-	currentIndex = cb.currentIndex;
-	count = cb.count;
-	size = cb.size;
-	for (int i = 0; i < size; ++i) {
-		elements[i] = cb.elements[i];
-	}
-}
-
-template<typename T, size_t maxSize>
-cyclic_buffer<T, maxSize>::~cyclic_buffer() {
-	//No dynamic allocation - safe to leave
-}
-
-//template<typename T, size_t maxSize>
-//cyclic_buffer& cyclic_buffer<T, maxSize>::operator=(const cyclic_buffer<T, maxSize>& rhCb) {
-//	//Deep copy
-//	currentIndex = rhCb.currentIndex;
-//	count = rhCb.count;
-//	for (int i = 0; i < size; ++i) {
-//		elements[i] = rhCb.elements[i];
-//	}
-//	return *this;
-//}
 
 template<typename T, size_t maxSize>
 void cyclic_buffer<T, maxSize>::add(T value) {

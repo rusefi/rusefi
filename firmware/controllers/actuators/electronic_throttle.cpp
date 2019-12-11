@@ -180,9 +180,24 @@ static percent_t currentEtbDuty;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(X) (maxF(minF((X * 0.01), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
 
-void EtbController::init(DcMotor *motor, int ownIndex) {
-	this->m_motor = motor;
-	this->ownIndex = ownIndex;
+void EtbController::init(DcMotor *motor, int ownIndex, pid_s *pidParameters) {
+	m_motor = motor;
+	m_myIndex = ownIndex;
+	m_pid.initPidClass(pidParameters);
+}
+
+void EtbController::reset() {
+	m_shouldResetPid = true;
+}
+
+void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
+	if (m_pid.isSame(previousConfiguration)) {
+		m_shouldResetPid = true;
+	}
+}
+
+void EtbController::showStatus(Logging* logger) {
+	m_pid.showPidStatus(logger, "ETB");
 }
 
 int EtbController::getPeriodMs() {
@@ -190,18 +205,19 @@ int EtbController::getPeriodMs() {
 }
 
 void EtbController::PeriodicTask() {
-	// set debug_mode 17
-	if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
 #if EFI_TUNER_STUDIO
-		etbPid.postState(&tsOutputChannels);
-		tsOutputChannels.debugIntField5 = engine->engineState.etbFeedForward;
-#endif /* EFI_TUNER_STUDIO */
-	} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
-#if EFI_TUNER_STUDIO
-		// set debug_mode 29
-		tsOutputChannels.debugFloatField1 = directPwmValue;
-#endif /* EFI_TUNER_STUDIO */
+	// Only debug throttle #0
+	if (m_myIndex == 0) {
+		// set debug_mode 17
+		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
+			m_pid.postState(&tsOutputChannels);
+			tsOutputChannels.debugIntField5 = engine->engineState.etbFeedForward;
+		} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
+			// set debug_mode 29
+			tsOutputChannels.debugFloatField1 = directPwmValue;
+		}
 	}
+#endif /* EFI_TUNER_STUDIO */
 
 	if (!m_motor) {
 		return;
@@ -212,9 +228,9 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
-	if (shouldResetPid) {
-		etbPid.reset();
-		shouldResetPid = false;
+	if (m_shouldResetPid) {
+		m_pid.reset();
+		m_shouldResetPid = false;
 	}
 
 	if (!cisnan(directPwmValue)) {
@@ -227,7 +243,7 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
-	percent_t actualThrottlePosition = getTPSWithIndex(ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
+	percent_t actualThrottlePosition = getTPSWithIndex(m_myIndex PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engine->etbAutoTune) {
 		autoTune.input = actualThrottlePosition;
@@ -271,16 +287,16 @@ void EtbController::PeriodicTask() {
 	}
 	engine->engineState.etbFeedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
 
-	etbPid.iTermMin = engineConfiguration->etb_iTermMin;
-	etbPid.iTermMax = engineConfiguration->etb_iTermMax;
+	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
+	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 	currentEtbDuty = engine->engineState.etbFeedForward +
-			etbPid.getOutput(targetPosition, actualThrottlePosition);
+			m_pid.getOutput(targetPosition, actualThrottlePosition);
 
 	m_motor->set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
 
 	if (engineConfiguration->isVerboseETB) {
-		etbPid.showPidStatus(&logger, "ETB");
+		m_pid.showPidStatus(&logger, "ETB");
 	}
 
 	DISPLAY_STATE(Engine)
@@ -323,15 +339,19 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 /* DISPLAY_ELSE */
 	DISPLAY_TEXT(No_Pedal_Sensor);
 /* DISPLAY_ENDIF */
+
+	// Only report the 0th throttle
+	if (m_myIndex == 0) {
 #if EFI_TUNER_STUDIO
-	// 312
-	tsOutputChannels.etbTarget = targetPosition;
-	// 316
-	tsOutputChannels.etb1DutyCycle = currentEtbDuty;
-	// 320
-	// Error is positive if the throttle needs to open further
-	tsOutputChannels.etb1Error = targetPosition - actualThrottlePosition;
+		// 312
+		tsOutputChannels.etbTarget = targetPosition;
+		// 316
+		tsOutputChannels.etb1DutyCycle = currentEtbDuty;
+		// 320
+		// Error is positive if the throttle needs to open further
+		tsOutputChannels.etb1Error = targetPosition - actualThrottlePosition;
 #endif /* EFI_TUNER_STUDIO */
+	}
 }
 
 static EtbHardware etbHardware[ETB_COUNT];
@@ -390,16 +410,17 @@ static void showEthInfo(void) {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		EtbHardware *etb = &etbHardware[i];
 
-		scheduleMsg(&logger, "%d: dir=%d DC=%f", i, etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
+		scheduleMsg(&logger, "ETB %%d", i);
+		scheduleMsg(&logger, "Motor: dir=%d DC=%f", etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
+		etbController[i].showStatus(&logger);
 	}
 
-	etbController[0].etbPid.showPidStatus(&logger, "ETB");
 #endif /* EFI_PROD_CODE */
 }
 
 static void etbPidReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbController[i].etbPid.reset();
+		etbController[i].reset();
 	}
 }
 
@@ -419,6 +440,7 @@ static void etbReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		etbHardware[i].dcMotor.set(0);
 	}
+
 	etbPidReset();
 
 	mockPedalPosition = MOCK_UNDEFINED;
@@ -555,9 +577,8 @@ void stopETBPins(void) {
 #endif /* EFI_PROD_CODE */
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
-	bool shouldResetPid = !etbController[0].etbPid.isSame(&previousConfiguration->etb);
-	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbController[i].shouldResetPid = shouldResetPid;
+	for (int i = 0; i < ETB_COUNT; i++) {
+		etbController[i].onConfigurationChange(&previousConfiguration->etb);
 	}
 }
 
@@ -644,8 +665,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbController[i].init(&etbHardware[i].dcMotor, i);
-		etbController[i].etbPid.initPidClass(&engineConfiguration->etb);
+		etbController[i].init(&etbHardware[i].dcMotor, i, &engineConfiguration->etb);
 		INJECT_ENGINE_REFERENCE(&etbController[i]);
 	}
 

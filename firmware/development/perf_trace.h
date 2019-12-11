@@ -47,7 +47,7 @@ enum class PE : uint8_t {
 	MapAveragingTriggerCallback,
 	AdcCallbackFastComplete,
 	SingleTimerExecutorScheduleByTimestamp,
-	ScheduleByAngle,
+	GetTimeNowUs,
 	EventQueueExecuteCallback,
 	PwmGeneratorCallback,
 	TunerStudioHandleCrcCommand,

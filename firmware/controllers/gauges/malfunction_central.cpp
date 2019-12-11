@@ -53,8 +53,7 @@ void setError(bool isError, obd_code_e errorCode) {
 
 void getErrorCodes(error_codes_set_s * copy) {
 	copy->count = error_codes_set.count;
-	for (int i = 0; i < copy->count; i++)
-		copy->error_codes[i] = error_codes_set.error_codes[i];
+	copyArray(copy->error_codes, error_codes_set.error_codes);
 }
 
 bool hasErrorCodes(void) {
