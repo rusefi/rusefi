@@ -207,7 +207,7 @@ static Overflow64Counter halTime;
  */
 //todo: macro to save method invocation
 efitimeus_t getTimeNowUs(void) {
-	ScopePerf perf(PE::ScheduleByAngle);
+	ScopePerf perf(PE::GetTimeNowUs);
 	return getTimeNowNt() / (CORE_CLOCK / 1000000);
 }
 
