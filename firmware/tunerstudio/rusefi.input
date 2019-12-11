@@ -297,6 +297,7 @@ fileVersion = { 20190701 }
       etbTarget        = scalar,F32, 312, "%", 1, 0
       etb1DutyCycle    = scalar,F32, 316, "%", 1, 0
       etb1Error        = scalar,F32, 320, "%", 1, 0
+      boostTableLimit = { boostType == 0 ? 100 : 511 } ;The maximum value allowed in the boost table. 100 is used for duty cycle, 511 for kpa
 
 
 ;
@@ -317,7 +318,7 @@ fileVersion = { 20190701 }
 [PcVariables]
     wueAfrTargetOffset = array, S16, [ 16], ":1",   0.1, 0.0, -3.0, 3.0, 1;
     wueAnalRecommend   = array, U08, [ 16], "%",  1.00, 0.0, 100, 255.00, 0
-
+    boostTableLabels = bits,    U08,   [0:1], "Duty Cycle %", "kPa"
 [ConstantsExtensions]
     defaultValue = wueAfrTargetOffset, -1.5 -1.4 -1.15 -0.95 -0.775 -0.65 -0.5625 -0.5 -0.4375 -0.375 -0.3125 -0.25 -0.1875 -0.125 -0.0625 0
 
@@ -745,6 +746,11 @@ fileVersion = { 20190701 }
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(Later)", "(Sooner)"
+
+	table = boostTableTbl,  boostMap,  "",   1
+      xBins       = boostRpmBins,  RPMValue
+      yBins       = boostTpsBins,  TPSValue
+      zBins       = boostTable
 
 [GaugeConfigurations]
 
@@ -1175,7 +1181,9 @@ menuDialog = main
 		subMenu = cltIdleCurve,				"CLT multiplier"
 		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 
-	menu = "&FSIO" 
+	menu = "&Advanced" 
+	    subMenu = boostDialog,          "Boost Control"
+		subMenu = std_separator
 		subMenu = fsioInputsDialog,        	"FSIO inputs"
 		subMenu = auxPidDialog,				"Aux PID"
 		subMenu = fsioOutputsDialog,        "FSIO outputs"
@@ -2531,6 +2539,26 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = etbDialogLeft, West
 		panel = etbDialogRight, East
 
+    dialog = boost_left, ""
+
+        field = "In open loop mode, the values in this table are duty cycle %"
+        field = "In closed loop mode, the values are boost targets in kPa"
+        field = "Enable",                           isBoostControlEnabled
+        field = "Control Mode",                     boostType, { isBoostControlEnabled }
+		field = "Output",							boostControlPin, { isBoostControlEnabled }
+		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
+		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled }
+
+       field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }				
+	   field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }			
+	   field = "D Gain",                            boostPid_dFactor, { isBoostControlEnabled && boostType == 1 }								
+	   field = "Control Period",                    boostPid_periodMs, { isBoostControlEnabled && boostType == 1 }			
+	   field = "Min Duty",                          boostPid_minValue, { isBoostControlEnabled && boostType == 1 }			
+	   field = "Max Duty",                          boostPid_maxValue, { isBoostControlEnabled && boostType == 1 }		
+		
+    dialog = boostDialog, "", border
+        panel = boost_left, West
+        panel = boostTableTbl, Center
 
 	dialog = testSpark, "Spark"
 		commandButton = "Spark #1", cmd_test_spk1
