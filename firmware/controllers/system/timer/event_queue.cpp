@@ -129,6 +129,8 @@ int EventQueue::executeAll(efitime_t now) {
 #endif
 
 	while (true) {
+		// Read the head every time - a previously executed event could
+		// have inserted something new at the head
 		scheduling_s* current = head;
 
 		// Queue is empty - bail
@@ -136,7 +138,7 @@ int EventQueue::executeAll(efitime_t now) {
 			break;
 		}
 
-		// Only execute events that occured in the past
+		// Only execute events that occured in the past.
 		// The list is sorted, so as soon as we see an event
 		// in the future, we're done.
 		if (current->momentX > now) {
@@ -145,7 +147,7 @@ int EventQueue::executeAll(efitime_t now) {
 
 		executionCounter++;
 
-		// step the head forward and unlink this element
+		// step the head forward, unlink this element, clear scheduled flag
 		head = current->nextScheduling_s;
 		current->nextScheduling_s = nullptr;
 		current->isScheduled = false;
@@ -161,7 +163,8 @@ int EventQueue::executeAll(efitime_t now) {
 		}
 
 #if EFI_UNIT_TEST
-		assertListIsSorted();
+	// (tests only) Ensure we didn't break anything
+	assertListIsSorted();
 #endif
 	}
 
