@@ -30,7 +30,7 @@ enum class PE : uint8_t {
 	PeriodicControllerPeriodicTask,
 	PeriodicTimerControllerPeriodicTask,
 	AdcCallbackFast,
-	AdcCallbackSlow,
+	AdcProcessSlow,
 	AdcConversionSlow,
 	AdcConversionFast,
 	AdcSubscriptionUpdateSubscribers,
