@@ -2,11 +2,10 @@
  * @file	trigger_structure.h
  *
  * @date Dec 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef TRIGGER_STRUCTURE_H_
-#define TRIGGER_STRUCTURE_H_
+#pragma once
 
 #include "state_sequence.h"
 #include "globalaccess.h"
@@ -73,10 +72,10 @@ class TriggerState;
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
  * @see TriggerState for trigger decoder state which works based on this trigger shape model
  */
-class TriggerShape {
+class TriggerWaveform {
 public:
-	TriggerShape();
-	void initializeTriggerShape(Logging *logger, operation_mode_e ambiguousOperationMode,
+	TriggerWaveform();
+	void initializeTriggerWaveform(Logging *logger, operation_mode_e ambiguousOperationMode,
 			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
 	void findTriggerPosition(event_trigger_position_s *position,
 			angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset));
@@ -241,7 +240,7 @@ public:
 	uint32_t getLength() const;
 	int getSize() const;
 
-	int getTriggerShapeSynchPointIndex() const;
+	int getTriggerWaveformSynchPointIndex() const;
 	void prepareShape();
 
 	/**
@@ -251,7 +250,7 @@ public:
 	angle_t getAngle(int phaseIndex) const;
 
 	/**
-	 * index of synchronization event within TriggerShape
+	 * index of synchronization event within TriggerWaveform
 	 * See findTriggerZeroEventIndex()
 	 */
 	int triggerShapeSynchPointIndex;
@@ -284,10 +283,8 @@ private:
 	angle_t getCycleDuration() const;
 };
 
-void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, operation_mode_e operationMode);
+void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
 
-#define TRIGGER_SHAPE(x) ENGINE(triggerCentral.triggerShape.x)
+#define TRIGGER_WAVEFORM(x) ENGINE(triggerCentral.triggerShape.x)
 
-#define getTriggerSize() TRIGGER_SHAPE(privateTriggerDefinitionSize)
-
-#endif /* TRIGGER_STRUCTURE_H_ */
+#define getTriggerSize() TRIGGER_WAVEFORM(privateTriggerDefinitionSize)

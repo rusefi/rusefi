@@ -10,7 +10,7 @@
 
 #include "trigger_structure.h"
 
-void initializeNissanSR20VE_4(TriggerShape *s);
-void initializeNissanSR20VE_4_360(TriggerShape *s);
+void initializeNissanSR20VE_4(TriggerWaveform *s);
+void initializeNissanSR20VE_4_360(TriggerWaveform *s);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_NISSAN_H_ */

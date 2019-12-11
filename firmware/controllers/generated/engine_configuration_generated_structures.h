@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Dec 04 00:37:59 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Dec 08 00:34:44 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1117,7 +1117,6 @@ struct engine_configuration_s {
 	bool issue_294_31 : 1;
 	/**
 	 * Closed throttle. todo: extract these two fields into a structure
-	 * todo: we need two sets of TPS parameters - modern ETBs have two sensors
 	 * See also tps1_1AdcChannel
 	 * set tps_min X
 	 * offset 80
@@ -1868,9 +1867,23 @@ struct engine_configuration_s {
 	 */
 	float alternator_antiwindupFreq;
 	/**
+	 * Closed throttle#2. todo: extract these two fields into a structure
+	 * See also tps2_1AdcChannel
+	 * set tps2_min X
 	 * offset 1768
 	 */
-	uint8_t unusedFormerWarmupAfrPid[8];
+	int16_t tps2Min;
+	/**
+	 * Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!
+	 * See also tps1_1AdcChannel
+	 * set tps2_max X
+	 * offset 1770
+	 */
+	int16_t tps2Max;
+	/**
+	 * offset 1772
+	 */
+	uint8_t unusedFormerWarmupAfrPid[4];
 	/**
 	 * kPa value which is too low to be true
 	 * offset 1776
@@ -2926,4 +2939,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Dec 04 00:37:59 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Dec 08 00:34:44 EST 2019

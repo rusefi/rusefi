@@ -49,7 +49,7 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	TriggerShape * shape = &eth.engine.triggerCentral.triggerShape;
+	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
 	return findTriggerZeroEventIndex(&eth.engine.triggerCentral.triggerState, shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
@@ -60,8 +60,8 @@ static void testDodgeNeonDecoder(void) {
 
 	WITH_ENGINE_TEST_HELPER(DODGE_NEON_1995);
 
-	TriggerShape * shape = &eth.engine.triggerCentral.triggerShape;
-	ASSERT_EQ(8, shape->getTriggerShapeSynchPointIndex());
+	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
+	ASSERT_EQ(8, shape->getTriggerWaveformSynchPointIndex());
 
 	TriggerState state;
 
@@ -118,28 +118,28 @@ TEST(misc, testSomethingWeird) {
 
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
 	int r = 10;
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized"; // still no synchronization
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
 	ASSERT_EQ(0, sta->getCurrentIndex());
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(1, sta->getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+		sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 		assertEqualsM("even", i++, sta->getCurrentIndex());
-		sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+		sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 		assertEqualsM("odd", i++, sta->getCurrentIndex());
 	}
 
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(10, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(11, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(0, sta->getCurrentIndex()); // new revolution
 }
 
@@ -151,22 +151,22 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
-	TriggerShape * shape = &engine->triggerCentral.triggerShape;
+	TriggerWaveform * shape = &engine->triggerCentral.triggerShape;
 
-	ASSERT_EQ( 0,  shape->getTriggerShapeSynchPointIndex()) << "triggerShapeSynchPointIndex";
+	ASSERT_EQ( 0,  shape->getTriggerWaveformSynchPointIndex()) << "triggerShapeSynchPointIndex";
 
 	event_trigger_position_s position;
 	ASSERT_EQ( 0,  engineConfiguration->globalTriggerAngleOffset) << "globalTriggerAngleOffset";
-	TRIGGER_SHAPE(findTriggerPosition(&position, 0, engineConfiguration->globalTriggerAngleOffset));
+	TRIGGER_WAVEFORM(findTriggerPosition(&position, 0, engineConfiguration->globalTriggerAngleOffset));
 	assertTriggerPosition(&position, 0, 0);
 
-	TRIGGER_SHAPE(findTriggerPosition(&position, 200, engineConfiguration->globalTriggerAngleOffset));
+	TRIGGER_WAVEFORM(findTriggerPosition(&position, 200, engineConfiguration->globalTriggerAngleOffset));
 	assertTriggerPosition(&position, 3, 20);
 
-	TRIGGER_SHAPE(findTriggerPosition(&position, 360, engineConfiguration->globalTriggerAngleOffset));
+	TRIGGER_WAVEFORM(findTriggerPosition(&position, 360, engineConfiguration->globalTriggerAngleOffset));
 	assertTriggerPosition(&position, 6, 0);
 
-	eth.applyTriggerShape();
+	eth.applyTriggerWaveform();
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	eth.fireTriggerEvents(48);
@@ -203,7 +203,7 @@ TEST(misc, testFordAspire) {
 
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
-	ASSERT_EQ( 4,  TRIGGER_SHAPE(getTriggerShapeSynchPointIndex())) << "getTriggerShapeSynchPointIndex";
+	ASSERT_EQ( 4,  TRIGGER_WAVEFORM(getTriggerWaveformSynchPointIndex())) << "getTriggerWaveformSynchPointIndex";
 
 	ASSERT_EQ(800, config->fuelRpmBins[0]);
 	ASSERT_EQ(7000, config->fuelRpmBins[15]);
@@ -228,11 +228,11 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 
 	WITH_ENGINE_TEST_HELPER(type);
 
-	TriggerShape *t = &ENGINE(triggerCentral.triggerShape);
+	TriggerWaveform *t = &ENGINE(triggerCentral.triggerShape);
 
 	ASSERT_FALSE(t->shapeDefinitionError) << "isError";
 
-	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerShapeSynchPointIndex());
+	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerWaveformSynchPointIndex());
 
 	ASSERT_NEAR(channel1duty, t->expectedDutyCycle[0], 0.0001) << msg << " channel1duty";
 	ASSERT_NEAR(channel2duty, t->expectedDutyCycle[1], 0.0001) << msg << " channel2duty";
@@ -307,7 +307,7 @@ TEST(misc, testRpmCalculator) {
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->globalFuelCorrection = 3;
-	eth.applyTriggerShape();
+	eth.applyTriggerWaveform();
 
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -318,8 +318,8 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ(0, GET_RPM());
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
-	ASSERT_EQ(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
-	ASSERT_EQ(5, TRIGGER_SHAPE(triggerIndexByAngle[241]));
+	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[240]));
+	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[241]));
 
 	eth.fireTriggerEvents(/* count */ 48);
 
@@ -382,8 +382,8 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("3/3", start + 14777, engine->executor.getForUnitTest(2)->momentX);
 	engine->executor.clear();
 
-	ASSERT_EQ(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
-	ASSERT_EQ(5, TRIGGER_SHAPE(triggerIndexByAngle[241]));
+	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[240]));
+	ASSERT_EQ(5, TRIGGER_WAVEFORM(triggerIndexByAngle[241]));
 
 
 	eth.fireFall(5);
@@ -448,7 +448,7 @@ TEST(misc, testTriggerDecoder) {
 
 	persistent_config_s c;
 	Engine e(&c);
-	TriggerShape * s = &e.triggerCentral.triggerShape;
+	TriggerWaveform * s = &e.triggerCentral.triggerShape;
 
 
 	persistent_config_s *config = &c;
@@ -457,7 +457,7 @@ TEST(misc, testTriggerDecoder) {
 	engine_configuration_s *engineConfiguration = &c.engineConfiguration;
 	board_configuration_s *boardConfiguration = &c.engineConfiguration.bc;
 
-	initializeSkippedToothTriggerShapeExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
+	initializeSkippedToothTriggerWaveformExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
 	assertEqualsM("shape size", s->getSize(), 4);
 	ASSERT_EQ(s->wave.switchTimes[0], 0.25);
 	ASSERT_EQ(s->wave.switchTimes[1], 0.5);
@@ -507,7 +507,7 @@ TEST(misc, testTriggerDecoder) {
 		WITH_ENGINE_TEST_HELPER(MITSU_4G93);
 
 
-//		TriggerShape *t = &eth.engine.triggerShape;
+//		TriggerWaveform *t = &eth.engine.triggerShape;
 //		ASSERT_EQ(1, t->eventAngles[1]);
 //		ASSERT_EQ( 0,  t->triggerIndexByAngle[56]) << "index at 0";
 //		ASSERT_EQ( 1,  t->triggerIndexByAngle[57]) << "index at 1";

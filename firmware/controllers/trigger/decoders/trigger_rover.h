@@ -11,6 +11,6 @@
 
 #include "trigger_structure.h"
 
-void initializeRoverK(TriggerShape *s);
+void initializeRoverK(TriggerWaveform *s);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_ROVER_H_ */

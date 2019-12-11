@@ -47,10 +47,14 @@ class RpmCalculator;
 
 #define CYCLE_ALTERNATION 2
 
-class Engine {
+class Engine : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
 	Engine();
+
+	void OnTriggerStateDecodingError() override;
+	void OnTriggerStateProperState(efitick_t nowNt) override;
+
 	void setConfig(persistent_config_s *config);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -140,9 +144,6 @@ public:
 	// timestamp of most recent time RPM hard limit was triggered
 	efitime_t rpmHardLimitTimestamp = 0;
 
-	// todo: should be a field on some other class, not Engine?
-	bool isInitializingTrigger = false;
-
 	/**
 	 * This flag indicated a big enough problem that engine control would be
 	 * prohibited if this flag is set to true.
@@ -193,7 +194,7 @@ public:
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void eInitializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	bool clutchUpState = false;
 	bool clutchDownState = false;

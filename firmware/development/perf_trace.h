@@ -47,12 +47,16 @@ enum class PE : uint8_t {
 	MapAveragingTriggerCallback,
 	AdcCallbackFastComplete,
 	SingleTimerExecutorScheduleByTimestamp,
-	ScheduleByAngle,
+	GetTimeNowUs,
 	EventQueueExecuteCallback,
 	PwmGeneratorCallback,
 	TunerStudioHandleCrcCommand,
 	PwmConfigTogglePwmState,
 	PwmConfigStateChangeCallback,
+	Temporary1,
+	Temporary2,
+	Temporary3,
+	Temporary4,
 	// enum_end_tag
 	// The tag above is consumed by PerfTraceTool.java
 	// please note that the tool requires a comma at the end of last value

@@ -28,7 +28,7 @@
 
 #include "fl_stack.h"
 
-#if EFI_ICU_INPUTS
+#if EFI_ICU_INPUTS && HAL_USE_ICU
 
 #include "mpu_util.h"
 #include "eficonsole.h"

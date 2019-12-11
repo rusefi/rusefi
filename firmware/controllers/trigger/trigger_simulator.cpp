@@ -14,9 +14,6 @@
 
 EXTERN_ENGINE;
 
-TriggerStimulatorHelper::TriggerStimulatorHelper() {
-}
-
 // this is not the only place where we have 'isUpEvent'. todo: reuse
 static const bool isRisingEdge[6] = { false, true, false, true, false, true };
 
@@ -29,7 +26,8 @@ bool isUsefulSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
 extern bool printTriggerDebug;
 #endif /* ! EFI_UNIT_TEST */
 
-void TriggerStimulatorHelper::feedSimulatedEvent(TriggerState *state, TriggerShape * shape, int i
+void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback triggerCycleCallback,
+		TriggerState *state, TriggerWaveform * shape, int i
 		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_ERR_6593, shape->getSize() > 0, "size not zero");
 	int stateIndex = i % shape->getSize();
@@ -65,37 +63,47 @@ void TriggerStimulatorHelper::feedSimulatedEvent(TriggerState *state, TriggerSha
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 0)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/0, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING;
-		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
-			state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX)) {
+			state->decodeTriggerEvent(triggerCycleCallback,
+					/* override */ nullptr,
+					s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		}
 	}
 
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 1)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/1, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
-		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
-			state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX)) {
+			state->decodeTriggerEvent(triggerCycleCallback,
+					/* override */ nullptr,
+					s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		}
 	}
 
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 2)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/2, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
-		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
-			state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX)) {
+			state->decodeTriggerEvent(triggerCycleCallback,
+					/* override */ nullptr,
+					s, time PASS_ENGINE_PARAMETER_SUFFIX);
+		}
 	}
 }
 
-void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const uint32_t syncIndex, TriggerState *state, TriggerShape * shape
+void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const TriggerStateCallback triggerCycleCallback,
+		const uint32_t syncIndex, TriggerState *state, TriggerWaveform * shape
 		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	/**
 	 * let's feed two more cycles to validate shape definition
 	 */
 	for (uint32_t i = syncIndex + 1; i <= syncIndex + GAP_TRACKING_LENGTH * shape->getSize(); i++) {
-		feedSimulatedEvent(state, shape, i PASS_ENGINE_PARAMETER_SUFFIX);
+		feedSimulatedEvent(triggerCycleCallback, state, shape, i PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	int revolutionCounter = state->getTotalRevolutionCounter();
 	if (revolutionCounter != GAP_TRACKING_LENGTH + 1) {
-		warning(CUSTOM_OBD_TRIGGER_SHAPE, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(engineConfiguration->trigger.type), revolutionCounter);
+		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(engineConfiguration->trigger.type), revolutionCounter);
 		shape->setShapeDefinitionError(true);
 		return;
 	}
@@ -109,10 +117,10 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const uint32_t s
 /**
  * @return trigger synchronization point index, or error code if not found
  */
-uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(TriggerShape * shape,
+uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(TriggerWaveform * shape,
 		 TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
-		feedSimulatedEvent(state, shape, i PASS_ENGINE_PARAMETER_SUFFIX);
+		feedSimulatedEvent(nullptr, state, shape, i PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (state->shaft_is_synchronized)
 			return i;

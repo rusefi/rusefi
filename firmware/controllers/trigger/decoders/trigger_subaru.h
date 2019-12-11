@@ -10,7 +10,7 @@
 
 #include "trigger_structure.h"
 
-void initialize36_2_2_2(TriggerShape *s);
-void initializeSubaru7_6(TriggerShape *s);
+void initialize36_2_2_2(TriggerWaveform *s);
+void initializeSubaru7_6(TriggerWaveform *s);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_SUBARU_H_ */

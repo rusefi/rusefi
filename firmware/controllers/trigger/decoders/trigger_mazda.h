@@ -12,12 +12,12 @@
 
 #define MIATA_NA_GAP 1.4930f
 
-void initializeMazdaMiataNaShape(TriggerShape *s);
-void initializeMazdaMiataNb1Shape(TriggerShape *s);
-void initializeMazdaMiataNb2Crank(TriggerShape *s);
-void initializeMazdaMiataVVtTestShape(TriggerShape *s);
-void configureMazdaProtegeSOHC(TriggerShape *s);
-void configureMazdaProtegeLx(TriggerShape *s);
-void initialize_Mazda_Engine_z5_Shape(TriggerShape *s);
+void initializeMazdaMiataNaShape(TriggerWaveform *s);
+void initializeMazdaMiataNb1Shape(TriggerWaveform *s);
+void initializeMazdaMiataNb2Crank(TriggerWaveform *s);
+void initializeMazdaMiataVVtTestShape(TriggerWaveform *s);
+void configureMazdaProtegeSOHC(TriggerWaveform *s);
+void configureMazdaProtegeLx(TriggerWaveform *s);
+void initialize_Mazda_Engine_z5_Shape(TriggerWaveform *s);
 
 #endif /* TRIGGER_MAZDA_H_ */

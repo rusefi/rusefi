@@ -275,7 +275,7 @@ static const void * getStructAddr(int structId) {
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case LDS_ETB_PID_STATE_INDEX:
-		return static_cast<pid_state_s*>(&etbController[0].etbPid);
+		return etbController[0].getPidState();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #ifndef EFI_IDLE_CONTROL

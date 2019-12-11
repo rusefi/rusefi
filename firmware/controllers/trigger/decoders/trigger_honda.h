@@ -10,17 +10,17 @@
 
 #include "trigger_structure.h"
 
-void configureHondaAccordCDDip(TriggerShape *s);
-void configureHondaAccordShifted(TriggerShape *s);
+void configureHondaAccordCDDip(TriggerWaveform *s);
+void configureHondaAccordShifted(TriggerWaveform *s);
 
-void configureHonda_1_4_24(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
+void configureHonda_1_4_24(TriggerWaveform *s, bool withOneEventSignal, bool withFourEventSignal,
 		trigger_wheel_e const oneEventWave,
 		trigger_wheel_e const fourEventWave,
 		float d);
 
-void configureOnePlus16(TriggerShape *s, operation_mode_e operationMode);
+void configureOnePlus16(TriggerWaveform *s, operation_mode_e operationMode);
 
-void configureHondaCbr600(TriggerShape *s);
-void configureHondaCbr600custom(TriggerShape *s);
+void configureHondaCbr600(TriggerWaveform *s);
+void configureHondaCbr600custom(TriggerWaveform *s);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_HONDA_H_ */

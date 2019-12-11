@@ -34,12 +34,12 @@ TEST(sensors, tps) {
 	engineConfiguration->tpsMax = 193;
 	engineConfiguration->tpsMin = 43;
 
-	ASSERT_NEAR(49.3333, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	ASSERT_NEAR(49.3333, getTpsValue(0, 4 * 117 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 
 
 	engineConfiguration->tpsMax = 43;
 	engineConfiguration->tpsMin = 193;
-	assertEqualsM("test#2", 50.6667, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("test#2", 50.6667, getTpsValue(0, 4 * 117 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
 TEST(sensors, testTpsRateOfChange) {

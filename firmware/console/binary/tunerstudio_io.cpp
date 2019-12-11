@@ -102,6 +102,10 @@ void startTsPort(ts_channel_s *tsChannel) {
 			if (CONFIGB(useSerialPort)) {
 
 				print("TunerStudio over USART");
+				/**
+				 * We have hard-coded USB serial console so that it would be clear how to connect to each specific board,
+				 * but for UART serial we allow users to change settings.
+				 */
 				efiSetPadMode("tunerstudio rx", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 				efiSetPadMode("tunerstudio tx", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 

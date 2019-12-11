@@ -57,7 +57,7 @@ static void setHysteresis(COMPDriver *comp, int sign) {
 static void comp_shaft_callback(COMPDriver *comp) {
 	uint32_t status = comp_lld_get_status(comp);
 	int isPrimary = (comp == EFI_COMP_PRIMARY_DEVICE);
-	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
+	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
 	}
 	trigger_event_e signal;

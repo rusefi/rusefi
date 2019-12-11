@@ -207,7 +207,7 @@ static Overflow64Counter halTime;
  */
 //todo: macro to save method invocation
 efitimeus_t getTimeNowUs(void) {
-	ScopePerf perf(PE::ScheduleByAngle);
+	ScopePerf perf(PE::GetTimeNowUs);
 	return getTimeNowNt() / (CORE_CLOCK / 1000000);
 }
 
@@ -819,6 +819,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20191202;
+	return 20191209;
 }
 #endif /* EFI_UNIT_TEST */

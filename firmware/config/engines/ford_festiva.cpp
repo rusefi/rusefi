@@ -87,22 +87,28 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	config->veRpmBins[0] = 800;
-	config->veRpmBins[1] = 1200;
-	config->veRpmBins[2] = 1600;
-	config->veRpmBins[3] = 2000;
-	config->veRpmBins[4] = 2400;
-	config->veRpmBins[5] = 2800;
-	config->veRpmBins[6] = 3200;
-	config->veRpmBins[7] = 3600;
-	config->veRpmBins[8] = 4100;
-	config->veRpmBins[9] = 4500;
-	config->veRpmBins[10] = 4900;
-	config->veRpmBins[11] = 5300;
-	config->veRpmBins[12] = 5700;
-	config->veRpmBins[13] = 6100;
-	config->veRpmBins[14] = 6500;
-	config->veRpmBins[15] = 7000;
+	static const float veRpmBins[] = 
+	{
+		800,
+		1200,
+		1600,
+		2000,
+		2400,
+		2800,
+		3200,
+		3600,
+		4100,
+		4500,
+		4900,
+		5300,
+		5700,
+		6100,
+		6500,
+		7000
+	};
+
+	copyArray(config->veRpmBins, veRpmBins);
+
 
 	copyFuelTable(racingFestivaVeTable, config->veTable);
 
@@ -252,22 +258,28 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFsio(1, GPIOD_7, RPM_ABOVE_USER_SETTING_2 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 
-	config->ignitionRpmBins[0] = 800;
-	config->ignitionRpmBins[1] = 1200;
-	config->ignitionRpmBins[2] = 1600;
-	config->ignitionRpmBins[3] = 2000;
-	config->ignitionRpmBins[4] = 2400;
-	config->ignitionRpmBins[5] = 2800;
-	config->ignitionRpmBins[6] = 3200;
-	config->ignitionRpmBins[7] = 3600;
-	config->ignitionRpmBins[8] = 4100;
-	config->ignitionRpmBins[9] = 4500;
-	config->ignitionRpmBins[10] = 4900;
-	config->ignitionRpmBins[11] = 5300;
-	config->ignitionRpmBins[12] = 5700;
-	config->ignitionRpmBins[13] = 6100;
-	config->ignitionRpmBins[14] = 6500;
-	config->ignitionRpmBins[15] = 7000;
+	static const float ignitionRpmBins[] =
+	{
+		800,
+		1200,
+		1600,
+		2000,
+		2400,
+		2800,
+		3200,
+		3600,
+		4100,
+		4500,
+		4900,
+		5300,
+		5700,
+		6100,
+		6500,
+		7000
+	};
+
+	copyArray(config->ignitionRpmBins, ignitionRpmBins);
+
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTimingTable(racingFestivaIgnitionTable, config->ignitionTable);
 #endif
