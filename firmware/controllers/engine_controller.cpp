@@ -60,7 +60,7 @@
 #include "accelerometer.h"
 #include "counter64.h"
 #include "perf_trace.h"
-
+#include "boost_control.h"
 #if HAL_USE_ADC
 #include "AdcConfiguration.h"
 #endif /* HAL_USE_ADC */
@@ -758,6 +758,9 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
+#if EFI_BOOST_CONTROL
+	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 #if EFI_AUX_PID
 	initAuxPid(sharedLogger);
 #endif
