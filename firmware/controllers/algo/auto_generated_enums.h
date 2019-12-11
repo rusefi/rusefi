@@ -1,7 +1,7 @@
 // was generated automatically by rusEfi tool  from rusefi_hw_enums.h
 // was generated automatically by rusEfi tool  from rusefi_enums.h
 // by enum2string.jar tool
-// on Mon Jun 17 19:49:25 EDT 2019
+// on Thu Dec 12 00:29:26 CET 2019
 // see also gen_config_and_enums.bat
 
 
@@ -15,6 +15,7 @@ const char *getPidAutoTune_Peak(PidAutoTune_Peak value);
 const char *getAdc_channel_e(adc_channel_e value);
 const char *getAdc_channel_mode_e(adc_channel_mode_e value);
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value);
+const char *getBoostType_e(boostType_e value);
 const char *getBrain_pin_e(brain_pin_e value);
 const char *getCan_device_mode_e(can_device_mode_e value);
 const char *getCan_nbc_e(can_nbc_e value);
