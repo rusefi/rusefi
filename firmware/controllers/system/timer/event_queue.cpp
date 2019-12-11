@@ -183,7 +183,6 @@ void EventQueue::assertListIsSorted() const {
 	}
 }
 
-
 void EventQueue::setLateDelay(int value) {
 	lateDelay = value;
 }
