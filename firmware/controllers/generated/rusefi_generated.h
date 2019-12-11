@@ -263,8 +263,40 @@
 #define biQuad_offset 2332
 #define biQuad_offset_hex 91c
 #define BLOCKING_FACTOR 400
+#define BOOST_RPM_COUNT 8
+#define BOOST_TPS_COUNT 8
+#define boostControlPin_offset 2116
+#define boostControlPin_offset_hex 844
+#define boostControlPinMode_offset 2117
+#define boostControlPinMode_offset_hex 845
 #define boostCutPressure_offset 2132
 #define boostCutPressure_offset_hex 854
+#define boostPid_dFactor_offset 2104
+#define boostPid_dFactor_offset_hex 838
+#define boostPid_iFactor_offset 2100
+#define boostPid_iFactor_offset_hex 834
+#define boostPid_maxValue_offset 2114
+#define boostPid_maxValue_offset_hex 842
+#define boostPid_minValue_offset 2112
+#define boostPid_minValue_offset_hex 840
+#define boostPid_offset 2096
+#define boostPid_offset_hex 830
+#define boostPid_offset_offset 2108
+#define boostPid_offset_offset_hex 83c
+#define boostPid_periodMs_offset 2110
+#define boostPid_periodMs_offset_hex 83e
+#define boostPid_pFactor_offset 2096
+#define boostPid_pFactor_offset_hex 830
+#define boostPwmFrequency_offset 1772
+#define boostPwmFrequency_offset_hex 6ec
+#define boostRpmBins_offset 6392
+#define boostRpmBins_offset_hex 18f8
+#define boostTable_offset 6320
+#define boostTable_offset_hex 18b0
+#define boostTpsBins_offset 6384
+#define boostTpsBins_offset_hex 18f0
+#define boostType_offset 4140
+#define boostType_offset_hex 102c
 #define brain_input_pin_e_enum "NONE", "INVALID", "INVALID", "PA1", "PA2", "PA3", "INVALID", "PA5", "PA6", "PA7", "PA8", "PA9", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PA15", "INVALID", "INVALID", "INVALID", "PB3", "PB4", "PB5", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PC6", "PC7", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PE5", "PE6", "INVALID", "INVALID", "PE9", "INVALID", "PE11", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 #define brain_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6","PE7","PE8","PE9","PE10","PE11","PE12","PE13","PE14","PE15", "PF0","PF1","PF2","PF3","PF4","PF5","PF6","PF7","PF8","PF9","PF10","PF11","PF12","PF13","PF14","PF15", "PG0","PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10","PG11","PG12","PG13","PG14","PG15", "PH0","PH1","PH2","PH3","PH4","PH5","PH6","PH7","PH8","PH9","PH10","PH11","PH12","PH13","PH14","PH15","INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 #define brakePedalPin_offset 2608
@@ -447,7 +479,7 @@
 #define cylinderBore_offset_hex 198
 #define cylindersCount_offset 400
 #define cylindersCount_offset_hex 190
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control"
 #define debugMapAveraging_offset 807
 #define debugMapAveraging_offset_hex 327
 #define debugMode_offset 2092
@@ -1282,6 +1314,8 @@
 #define is_enabled_spi_4_offset_hex 2e8
 #define isAlternatorControlEnabled_offset 1464
 #define isAlternatorControlEnabled_offset_hex 5b8
+#define isBoostControlEnabled_offset 1476
+#define isBoostControlEnabled_offset_hex 5c4
 #define isCJ125Enabled_offset 744
 #define isCJ125Enabled_offset_hex 2e8
 #define isCylinderCleanupEnabled_offset 1476
@@ -1385,6 +1419,7 @@
 #define LE_COMMAND_LENGTH 200
 #define LIS302DLCsPin_offset 2043
 #define LIS302DLCsPin_offset_hex 7fb
+#define LOAD_1_BYTE_PACKING_MULT 2
 #define logFormat_offset 496
 #define logFormat_offset_hex 1f0
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
@@ -1412,8 +1447,8 @@
 #define mainRelayPin_offset_hex 2c2
 #define mainRelayPinMode_offset 752
 #define mainRelayPinMode_offset_hex 2f0
-#define mainUnusedEnd_offset 4140
-#define mainUnusedEnd_offset_hex 102c
+#define mainUnusedEnd_offset 4144
+#define mainUnusedEnd_offset_hex 1030
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPin_offset_hex 294
 #define malfunctionIndicatorPinMode_offset 661
@@ -1811,6 +1846,7 @@
 #define tps2Max_offset_hex 6ea
 #define tps2Min_offset 1768
 #define tps2Min_offset_hex 6e8
+#define TPS_1_BYTE_PACKING_MULT 1
 #define TPS_TPS_ACCEL_TABLE 8
 #define tpsAccelEnrichmentThreshold_offset 2048
 #define tpsAccelEnrichmentThreshold_offset_hex 800
@@ -1915,8 +1951,6 @@
 #define unused1234234_offset_hex 7fa
 #define unused556_offset 681
 #define unused556_offset_hex 2a9
-#define unused_1484_bit_22_offset 1476
-#define unused_1484_bit_22_offset_hex 5c4
 #define unused_1484_bit_23_offset 1476
 #define unused_1484_bit_23_offset_hex 5c4
 #define unused_1484_bit_24_offset 1476
@@ -1937,8 +1971,6 @@
 #define unused_1484_bit_31_offset_hex 5c4
 #define unused_board_984_31_offset 744
 #define unused_board_984_31_offset_hex 2e8
-#define unused_former_warmup_target_afr_offset 2096
-#define unused_former_warmup_target_afr_offset_hex 830
 #define unused_offset 972
 #define unused_offset_hex 3cc
 #define unusedAnotherOne_offset 744
@@ -1949,8 +1981,6 @@
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
 #define unusedFlexFuelSensor_offset_hex c1c
-#define unusedFormerWarmupAfrPid_offset 1772
-#define unusedFormerWarmupAfrPid_offset_hex 6ec
 #define unusedHereo_wires_offset 76
 #define unusedHereo_wires_offset_hex 4c
 #define unusedOldWarmupAfr_offset 744
@@ -1961,6 +1991,8 @@
 #define unusedSpiPadding5_offset_hex a99
 #define unusedSpiPadding7_offset 4005
 #define unusedSpiPadding7_offset_hex fa5
+#define unusedSpiPadding88_offset 2118
+#define unusedSpiPadding88_offset_hex 846
 #define unusedSpiPadding8_offset 4009
 #define unusedSpiPadding8_offset_hex fa9
 #define unuseduartPadding1_offset 810

@@ -1,4 +1,4 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Dec 12 00:26:52 CET 2019
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 static LENameOrdinalPair lefanOnTemperature(FSIO_SETTING_FANONTEMPERATURE, "cfg_fanOnTemperature");
@@ -10,6 +10,8 @@ static LENameOrdinalPair leetb_minValue(FSIO_SETTING_ETB_MINVALUE, "cfg_etb_minV
 static LENameOrdinalPair leidleRpmPid_offset(FSIO_SETTING_IDLERPMPID_OFFSET, "cfg_idleRpmPid_offset");
 static LENameOrdinalPair leidleRpmPid_minValue(FSIO_SETTING_IDLERPMPID_MINVALUE, "cfg_idleRpmPid_minValue");
 static LENameOrdinalPair lestartUpFuelPumpDuration(FSIO_SETTING_STARTUPFUELPUMPDURATION, "cfg_startUpFuelPumpDuration");
+static LENameOrdinalPair leboostPid_offset(FSIO_SETTING_BOOSTPID_OFFSET, "cfg_boostPid_offset");
+static LENameOrdinalPair leboostPid_minValue(FSIO_SETTING_BOOSTPID_MINVALUE, "cfg_boostPid_minValue");
 static LENameOrdinalPair lefuelClosedLoopPid_offset(FSIO_SETTING_FUELCLOSEDLOOPPID_OFFSET, "cfg_fuelClosedLoopPid_offset");
 static LENameOrdinalPair lefuelClosedLoopPid_minValue(FSIO_SETTING_FUELCLOSEDLOOPPID_MINVALUE, "cfg_fuelClosedLoopPid_minValue");
 static LENameOrdinalPair leauxPid1_offset(FSIO_SETTING_AUXPID1_OFFSET, "cfg_auxPid1_offset");
