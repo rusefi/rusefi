@@ -117,7 +117,12 @@ struct_no_prefix engine_configuration_s
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 
+#define BOOST_RPM_COUNT 8
+#define BOOST_TPS_COUNT 8
+#define LOAD_1_BYTE_PACKING_MULT 2
+
 #define PEDAL_TO_TPS_SIZE 8
+#define RPM_1_BYTE_PACKING_MULT 50
 
 
 ! 
@@ -127,7 +132,7 @@ struct_no_prefix engine_configuration_s
 ! 
 #define RPM_1_BYTE_PACKING_MULT 50
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
-
+#define TPS_1_BYTE_PACKING_MULT 1
 #define FSIO_TABLE_8 8
 
 #define FSIO_CURVE_8 8
@@ -159,6 +164,7 @@ custom angle_table_t	4*@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@ array,   F32,   @OFF
 custom pedal_to_tps_t	@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@ array,   U08,   @OFFSET@, [@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@],"deg",	   1,     0,     -720,  720,    2
 
 custom iac_pid_mult_t	@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@ array,   U08,   @OFFSET@, [@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@],"%",	   1,     0,     0,  999,    2
+custom boost_table_t	@@BOOST_RPM_COUNT@@x@@BOOST_TPS_COUNT@@ array,   U08,   @OFFSET@, [@@BOOST_RPM_COUNT@@x@@BOOST_TPS_COUNT@@], { bitStringValue( boostTableLabels, boostType ) },        @@LOAD_1_BYTE_PACKING_MULT@@,        0.0,   0,       boostTableLimit,      0
 
 struct pid_s
 	float pFactor;;"",      1,      0,       -10000, 10000,      4
@@ -175,7 +181,7 @@ float baseFuel;+Base duration of the fuel injection during cranking, this is mod
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
@@ -792,7 +798,7 @@ bit useAdvanceCorrectionsForCranking;+This enables the various ignition correcti
 bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
 bit etbCalibrationOnStart
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
-bit unused_1484_bit_22
+bit isBoostControlEnabled;
 bit unused_1484_bit_23
 bit unused_1484_bit_24
 bit unused_1484_bit_25
@@ -857,7 +863,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:7], @@pin_mode_e_enum@@
 	float alternator_antiwindupFreq;;    "x",    1,      0.0,       -1000000,  1000000,        4
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC",      1,     0,    0, 1023,      0
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC",      1,     0,    0, 1023,      0
-	uint8_t[4] unusedFormerWarmupAfrPid;
+int boostPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
@@ -921,7 +927,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float slowAdcAlpha;+ExpAverage alpha coefficient;"coeff",        1,     0,    0, 200,     3
 	debug_mode_e debugMode;+See http://rusefi.com/s/debugmode\n\nset debug_mode X
 
-	uint32_t[9] unused_former_warmup_target_afr;
+	pid_s boostPid;
+	output_pin_e boostControlPin;
+	pin_output_mode_e boostControlPinMode;
+	uint8_t[14] unusedSpiPadding88;
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
@@ -1104,12 +1113,25 @@ uint8_t[4] unusuedsw;
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load",   1,   0.0,        0,  500.0,   2
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultRpmBins;;"RPM",        @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0	
 
-	int[565] mainUnusedEnd;
+
+
+
+custom boostType_e 4 bits,   U32,   @OFFSET@, [0:0], "Open Loop",  "Closed Loop"
+boostType_e boostType;
+
+	
+int[544] mainUnusedEnd;
+
 
 ! end of engine_configuration_s
 end_struct
 
 engine_configuration_s engineConfiguration;
+
+
+boost_table_t boostTable;
+uint8_t[BOOST_TPS_COUNT] boostTpsBins;;"TPS",   @@TPS_1_BYTE_PACKING_MULT@@,   0.0,        0,  100.0,   2
+uint8_t[BOOST_RPM_COUNT] boostRpmBins;;"RPM",   @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0 
 
 pedal_to_tps_t pedalToTpsTable;
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%",           1,     0,      0.0,   120.0,   0
