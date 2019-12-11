@@ -15,20 +15,33 @@
 #include "periodic_task.h"
 
 class DcMotor;
+class Logging;
 
 class EtbController final : public PeriodicTimerController {
 public:
 	DECLARE_ENGINE_PTR;
-	void init(DcMotor *motor, int ownIndex);
+	void init(DcMotor *motor, int ownIndex, pid_s *pidParameters);
+	void reset();
 
+	// PeriodicTimerController implementation
 	int getPeriodMs() override;
 	void PeriodicTask() override;
-	Pid etbPid;
-	bool shouldResetPid = false;
+
+	// Called when the configuration may have changed.  Controller will
+	// reset if necessary.
+	void onConfigurationChange(pid_s* previousConfiguration);
+	
+	// Print this throttle's status.
+	void showStatus(Logging* logger);
+
+	// Used to inspect the internal PID controller's state
+	const pid_state_s* getPidState() const { return &m_pid; };
 
 private:
-	int ownIndex;
-    DcMotor *m_motor;
+	int m_myIndex;
+	DcMotor *m_motor;
+	Pid m_pid;
+	bool m_shouldResetPid = false;
 };
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
