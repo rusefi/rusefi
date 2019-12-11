@@ -277,7 +277,7 @@
 #define STM32_PWM_USE_TIM4                  TRUE
 #define STM32_PWM_USE_TIM5                  FALSE
 // todo: https://github.com/rusefi/rusefi/issues/630 ?
-#define STM32_PWM_USE_TIM8                  TRUE
+#define STM32_PWM_USE_TIM8                  FALSE
 #define STM32_PWM_USE_TIM9                  FALSE
 #define STM32_PWM_TIM1_IRQ_PRIORITY         7
 #define STM32_PWM_TIM2_IRQ_PRIORITY         7
