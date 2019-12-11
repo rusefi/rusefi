@@ -141,7 +141,7 @@ void EnginePins::unregisterPins() {
 	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
 		unregisterOutputIfPinChanged(fsioOutputs[i], fsioOutputPins[i]);
 	}
-
+    unregisterOutputIfPinOrModeChanged(boostPin, boostControlPin, boostControlPinMode);
 	unregisterOutputIfPinOrModeChanged(alternatorPin, alternatorControlPin, alternatorControlPinMode);
 	unregisterOutputIfPinOrModeChanged(mainRelay, mainRelayPin, mainRelayPinMode);
 	unregisterOutputIfPinOrModeChanged(starterRelay, starterRelayPin, starterRelayPinMode);
