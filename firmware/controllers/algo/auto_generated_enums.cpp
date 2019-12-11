@@ -4,7 +4,7 @@
 // was generated automatically by rusEfi tool  from rusefi_hw_enums.h
 // was generated automatically by rusEfi tool  from rusefi_enums.h
 // by enum2string.jar tool
-// on Mon Jun 17 19:49:25 EDT 2019
+// on Thu Dec 12 00:29:26 CET 2019
 // see also gen_config_and_enums.bat
 
 
@@ -77,12 +77,6 @@ case EFI_ADC_ERROR:
   return "EFI_ADC_ERROR";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
-#if EFI_UNIT_TEST
-case TEST_MAF_CHANNEL:
-case TEST_CLT_CHANNEL:
-case TEST_IAT_CHANNEL:
-  return "EFI_TEST";
-#endif /* EFI_UNIT_TEST */
   }
  return NULL;
 }
@@ -123,6 +117,17 @@ case MT_SUBY_DENSO:
   return "MT_SUBY_DENSO";
 case MT_TOYOTA_89420_02010:
   return "MT_TOYOTA_89420_02010";
+  }
+ return NULL;
+}
+const char *getBoostType_e(boostType_e value){
+switch(value) {
+case CLOSED_LOOP:
+  return "CLOSED_LOOP";
+case Force_4bytes_size_boostType_e:
+  return "Force_4bytes_size_boostType_e";
+case OPEN_LOOP:
+  return "OPEN_LOOP";
   }
  return NULL;
 }
@@ -539,8 +544,8 @@ case Force_4_bytes_size_cranking_ignition_mode:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_36:
-  return "DBG_36";
+case DBG_2:
+  return "DBG_2";
 case DBG_37:
   return "DBG_37";
 case DBG_ALTERNATOR_PID:
@@ -557,6 +562,8 @@ case DBG_AUX_VALVES:
   return "DBG_AUX_VALVES";
 case DBG_BENCH_TEST:
   return "DBG_BENCH_TEST";
+case DBG_BOOST:
+  return "DBG_BOOST";
 case DBG_CAN:
   return "DBG_CAN";
 case DBG_CJ125:
@@ -613,8 +620,6 @@ case DBG_VEHICLE_SPEED_SENSOR:
   return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:
   return "DBG_VVT";
-case DBG_2:
-  return "DBG_2";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
   }
@@ -673,22 +678,24 @@ case LM_SPEED_DENSITY:
 }
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
-case ISSUE_898:
-  return "ISSUE_898";
 case AUDI_AAN:
   return "AUDI_AAN";
 case BMW_E34:
   return "BMW_E34";
+case BMW_M73_F:
+  return "BMW_M73_F";
+case BMW_M73_M:
+  return "BMW_M73_M";
 case CAMARO_4:
   return "CAMARO_4";
 case CHEVY_C20_1973:
   return "CHEVY_C20_1973";
 case CITROEN_TU3JP:
   return "CITROEN_TU3JP";
-case DEFAULT_FRANKENSO:
-  return "DEFAULT_FRANKENSO";
 case DAIHATSU:
   return "DAIHATSU";
+case DEFAULT_FRANKENSO:
+  return "DEFAULT_FRANKENSO";
 case DODGE_NEON_1995:
   return "DODGE_NEON_1995";
 case DODGE_NEON_2003_CAM:
@@ -713,12 +720,6 @@ case FRANKENSO_QA_ENGINE:
   return "FRANKENSO_QA_ENGINE";
 case Force_4_bytes_size_engine_type:
   return "Force_4_bytes_size_engine_type";
-case BMW_M73_F:
-  return "BMW_M73_F";
-case BMW_M73_M:
-	return "BMW_M73_M";
-case MRE_BOARD_TEST:
-  return "MRE_BOARD_TEST";
 case GY6_139QMB:
   return "GY6_139QMB";
 case HONDA_600:
@@ -731,6 +732,8 @@ case HONDA_ACCORD_CD_DIP:
   return "HONDA_ACCORD_CD_DIP";
 case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
+case ISSUE_898:
+  return "ISSUE_898";
 case LADA_KALINA:
   return "LADA_KALINA";
 case MAZDA_323:
@@ -761,22 +764,24 @@ case MICRO_RUS_EFI:
   return "MICRO_RUS_EFI";
 case MINIMAL_PINS:
   return "MINIMAL_PINS";
-case MRE_MIATA_NB2:
-  return "MRE_MIATA_NB2";
 case MITSU_4G93:
   return "MITSU_4G93";
+case MRE_BOARD_TEST:
+  return "MRE_BOARD_TEST";
+case MRE_MIATA_NA6:
+  return "MRE_MIATA_NA6";
+case MRE_MIATA_NB2:
+  return "MRE_MIATA_NB2";
 case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
 case PROMETHEUS_DEFAULTS:
   return "PROMETHEUS_DEFAULTS";
+case PROTEUS:
+  return "PROTEUS";
 case ROVER_V8:
   return "ROVER_V8";
 case SACHS:
   return "SACHS";
-case MRE_MIATA_NA6:
-  return "MRE_MIATA_NA6";
-case PROTEUS:
-  return "PROTEUS";
 case SUBARUEJ20G_DEFAULTS:
   return "SUBARUEJ20G_DEFAULTS";
 case SUBARU_2003_WRX:
@@ -855,12 +860,12 @@ case IM_MANUAL:
 }
 const char *getIdle_state_e(idle_state_e value){
 switch(value) {
-case Force_4bytes_size_idle_state_e:
-  return "Force_4bytes_size_idle_state_e";
 case ADJUSTING:
   return "ADJUSTING";
 case BLIP:
   return "BLIP";
+case Force_4bytes_size_idle_state_e:
+  return "Force_4bytes_size_idle_state_e";
 case INIT:
   return "INIT";
 case PID_UPPER:
@@ -1003,12 +1008,12 @@ const char *getSensor_chart_e(sensor_chart_e value){
 switch(value) {
 case Internal_ForceMyEnumIntSize_sensor_chart:
   return "Internal_ForceMyEnumIntSize_sensor_chart";
+case SC_AUX_FAST1:
+  return "SC_AUX_FAST1";
 case SC_DETAILED_RPM:
   return "SC_DETAILED_RPM";
 case SC_MAP:
   return "SC_MAP";
-case SC_AUX_FAST1:
-	return "SC_AUX_FAST1";
 case SC_OFF:
   return "SC_OFF";
 case SC_RPM_ACCEL:
