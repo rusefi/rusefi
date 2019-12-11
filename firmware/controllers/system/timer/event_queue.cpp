@@ -165,10 +165,6 @@ int EventQueue::executeAll(efitime_t now) {
 #endif
 	}
 
-#if EFI_UNIT_TEST
-	assertListIsSorted();
-#endif
-
 	return executionCounter;
 }
 
