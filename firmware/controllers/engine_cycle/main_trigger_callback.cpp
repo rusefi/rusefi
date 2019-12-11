@@ -342,7 +342,7 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (GET_RPM_VALUE < CONFIG(fuelClosedLoopRpmThreshold) ||
 			getCoolantTemperature() < CONFIG(fuelClosedLoopCltThreshold) ||
 			getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(fuelClosedLoopTpsThreshold) ||
-			ENGINE(sensors.currentAfr) < CONFIGB(fuelClosedLoopAfrLowThreshold) ||
+			ENGINE(sensors.currentAfr) < CONFIG(fuelClosedLoopAfrLowThreshold) ||
 			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
 		engine->engineState.running.pidCorrection = 0;
 		fuelPid.reset();
@@ -443,7 +443,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	efiAssertVoid(CUSTOM_STACK_6629, getCurrentRemainingStack() > 128, "lowstck#2");
 
 #if EFI_CDM_INTEGRATION
-	if (trgEventIndex == 0 && CONFIGB(cdmInputPin) != GPIO_UNASSIGNED) {
+	if (trgEventIndex == 0 && CONFIG(cdmInputPin) != GPIO_UNASSIGNED) {
 		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 		engine->knockLogic(cdmKnockValue);
 	}

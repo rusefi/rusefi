@@ -14,13 +14,13 @@
 #include "citroenBerlingoTU3JP.h"
 #include "settings.h"
 
-void setLCD(board_configuration_s *boardConfiguration) {
-	boardConfiguration->HD44780_rs = GPIOE_7;
-	boardConfiguration->HD44780_e = GPIOE_9;
-	boardConfiguration->HD44780_db4 = GPIOE_11;
-	boardConfiguration->HD44780_db5 = GPIOE_13;
-	boardConfiguration->HD44780_db6 = GPIOE_15;
-	boardConfiguration->HD44780_db7 = GPIOB_10;
+void setLCD(engine_configuration_s *engineConfiguration) {
+	engineConfiguration->HD44780_rs = GPIOE_7;
+	engineConfiguration->HD44780_e = GPIOE_9;
+	engineConfiguration->HD44780_db4 = GPIOE_11;
+	engineConfiguration->HD44780_db5 = GPIOE_13;
+	engineConfiguration->HD44780_db6 = GPIOE_15;
+	engineConfiguration->HD44780_db7 = GPIOB_10;
 }
 
 #if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
@@ -117,35 +117,35 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Frankenstein lo-side output #11: PB8	Main relay
 	// Frankenstein lo-side output #12: PB9	Fuel pump
 
-	boardConfiguration->ignitionPins[0] = GPIOC_14;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOC_15;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = GPIOC_14;
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[2] = GPIOC_15;
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->injector.flow = 137; //SIEMENS DEKA VAZ20734
-	boardConfiguration->injectionPins[0] = GPIOE_6;
-	boardConfiguration->injectionPins[1] = GPIOC_13;
-	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[0] = GPIOE_6;
+	engineConfiguration->injectionPins[1] = GPIOC_13;
+	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
-	boardConfiguration->fanPin = GPIOE_0;
-	boardConfiguration->fanPinMode = OM_DEFAULT;
+	engineConfiguration->fanPin = GPIOE_0;
+	engineConfiguration->fanPinMode = OM_DEFAULT;
 	engineConfiguration->fanOffTemperature = 95;
 	engineConfiguration->fanOnTemperature = 99;
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_1;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
+	engineConfiguration->malfunctionIndicatorPin = GPIOE_1;
+	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	boardConfiguration->mainRelayPin = GPIOB_8;
+	engineConfiguration->mainRelayPin = GPIOB_8;
 
-	boardConfiguration->fuelPumpPin = GPIOB_9;
-	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
+	engineConfiguration->fuelPumpPin = GPIOB_9;
+	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	setLCD(boardConfiguration);
+	setLCD(engineConfiguration);
 
 
-//	boardConfiguration->o2heaterPin = GPIOC_13;
-//	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
+//	engineConfiguration->o2heaterPin = GPIOC_13;
+//	engineConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
 
 	/**
 	 * Inputs

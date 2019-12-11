@@ -50,21 +50,21 @@ static void extCallback(ioportmask_t channel) {
 	joyTotal++;
 	joystick_button_e button;
 	// todo: I guess it's time to reduce code duplication and start working with an array
-	if (channel == getHwPin("joy", CONFIGB(joystickCenterPin))) {
+	if (channel == getHwPin("joy", CONFIG(joystickCenterPin))) {
 		joyCenter++;
 		button = JB_CENTER;
-	} else if (channel == getHwPin("joy", CONFIGB(joystickAPin))) {
+	} else if (channel == getHwPin("joy", CONFIG(joystickAPin))) {
 		joyA++;
 		button = JB_BUTTON_A;
 /* not used so far
-	} else if (channel == getHwPin("joy", CONFIGB(joystickBPin))) {
+	} else if (channel == getHwPin("joy", CONFIG(joystickBPin))) {
 		joyB++;
 		button = JB_BUTTON_B;
-	} else if (channel == getHwPin("joy", CONFIGB(joystickCPin))) {
+	} else if (channel == getHwPin("joy", CONFIG(joystickCPin))) {
 		joyC++;
 		button = JB_BUTTON_C;
 */
-	} else if (channel == getHwPin("joy", CONFIGB(joystickDPin))) {
+	} else if (channel == getHwPin("joy", CONFIG(joystickDPin))) {
 		joyD++;
 		button = JB_BUTTON_D;
 	} else {
@@ -80,34 +80,34 @@ static void extCallback(ioportmask_t channel) {
 
 static void joystickInfo(void) {
 	scheduleMsg(sharedLogger, "total %d center=%d@%s", joyTotal, joyCenter,
-			hwPortname(CONFIGB(joystickCenterPin)));
-	scheduleMsg(sharedLogger, "a=%d@%s", joyA, hwPortname(CONFIGB(joystickAPin)));
-	scheduleMsg(sharedLogger, "b=%d@%s", joyB, hwPortname(CONFIGB(joystickBPin)));
-	scheduleMsg(sharedLogger, "c=%d@%s", joyC, hwPortname(CONFIGB(joystickCPin)));
-	scheduleMsg(sharedLogger, "d=%d@%s", joyD, hwPortname(CONFIGB(joystickDPin)));
+			hwPortname(CONFIG(joystickCenterPin)));
+	scheduleMsg(sharedLogger, "a=%d@%s", joyA, hwPortname(CONFIG(joystickAPin)));
+	scheduleMsg(sharedLogger, "b=%d@%s", joyB, hwPortname(CONFIG(joystickBPin)));
+	scheduleMsg(sharedLogger, "c=%d@%s", joyC, hwPortname(CONFIG(joystickCPin)));
+	scheduleMsg(sharedLogger, "d=%d@%s", joyD, hwPortname(CONFIG(joystickDPin)));
 }
 
 static bool isJoystickEnabled() {
-	return CONFIGB(joystickCenterPin) != GPIO_UNASSIGNED ||
-			CONFIGB(joystickAPin) != GPIO_UNASSIGNED ||
-			// not used so far			CONFIGB(joystickBPin) != GPIO_UNASSIGNED ||
-			// not used so far	CONFIGB(joystickCPin) != GPIO_UNASSIGNED ||
-			CONFIGB(joystickDPin) != GPIO_UNASSIGNED;
+	return CONFIG(joystickCenterPin) != GPIO_UNASSIGNED ||
+			CONFIG(joystickAPin) != GPIO_UNASSIGNED ||
+			// not used so far			CONFIG(joystickBPin) != GPIO_UNASSIGNED ||
+			// not used so far	CONFIG(joystickCPin) != GPIO_UNASSIGNED ||
+			CONFIG(joystickDPin) != GPIO_UNASSIGNED;
 }
 
 void stopJoystickPins() {
-	brain_pin_markUnused(activeConfiguration.bc.joystickCenterPin);
-	brain_pin_markUnused(activeConfiguration.bc.joystickAPin);
-	brain_pin_markUnused(activeConfiguration.bc.joystickDPin);
+	brain_pin_markUnused(activeConfiguration.joystickCenterPin);
+	brain_pin_markUnused(activeConfiguration.joystickAPin);
+	brain_pin_markUnused(activeConfiguration.joystickDPin);
 }
 
 void startJoystickPins() {
 	// todo: extract 'configurePalInputPin() method?
-	efiSetPadMode("joy center", CONFIGB(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
-	efiSetPadMode("joy A", CONFIGB(joystickAPin), PAL_MODE_INPUT_PULLUP);
-	// not used so far	efiSetPadMode("joy B", CONFIGB(joystickBPin), PAL_MODE_INPUT_PULLUP);
-	// not used so far	efiSetPadMode("joy C", CONFIGB(joystickCPin), PAL_MODE_INPUT_PULLUP);
-	efiSetPadMode("joy D", CONFIGB(joystickDPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy center", CONFIG(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy A", CONFIG(joystickAPin), PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadMode("joy B", CONFIG(joystickBPin), PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadMode("joy C", CONFIG(joystickCPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy D", CONFIG(joystickDPin), PAL_MODE_INPUT_PULLUP);
 }
 
 void initJoystick(Logging *shared) {
@@ -117,14 +117,14 @@ void initJoystick(Logging *shared) {
 		return;
 	sharedLogger = shared;
 
-	channel = getHwPin("joy", CONFIGB(joystickCenterPin));
-	efiExtiEnablePin("joy", CONFIGB(joystickCenterPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
-	channel = getHwPin("joy", CONFIGB(joystickAPin));
-	efiExtiEnablePin("joy", CONFIGB(joystickAPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
-// not used so far	applyPin(CONFIGB(joystickBPin));
-// not used so far	applyPin(CONFIGB(joystickCPin));
-	channel = getHwPin("joy", CONFIGB(joystickDPin));
-	efiExtiEnablePin("joy", CONFIGB(joystickDPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
+	channel = getHwPin("joy", CONFIG(joystickCenterPin));
+	efiExtiEnablePin("joy", CONFIG(joystickCenterPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
+	channel = getHwPin("joy", CONFIG(joystickAPin));
+	efiExtiEnablePin("joy", CONFIG(joystickAPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
+// not used so far	applyPin(CONFIG(joystickBPin));
+// not used so far	applyPin(CONFIG(joystickCPin));
+	channel = getHwPin("joy", CONFIG(joystickDPin));
+	efiExtiEnablePin("joy", CONFIG(joystickDPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
 
 	startJoystickPins();
 }

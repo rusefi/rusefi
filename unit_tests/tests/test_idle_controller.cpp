@@ -82,7 +82,7 @@ TEST(idle, timingPid) {
 	// configure TPS
 	engineConfiguration->tpsMin = 0;
 	engineConfiguration->tpsMax = 100;
-	engineConfiguration->bc.idlePidDeactivationTpsThreshold = 10;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
 	setMockTpsAdc(0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// disable temperature sensors
@@ -90,12 +90,12 @@ TEST(idle, timingPid) {
 	eth.engine.sensors.iat = NAN;
 
 	// all corrections disabled, should be 0
-	engineConfiguration->bc.useIdleTimingPidControl = false;
+	engineConfiguration->useIdleTimingPidControl = false;
 	angle_t corr = getAdvanceCorrections(idleRpmTarget PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(0, corr) << "getAdvanceCorrections#1";
 	
 	// basic IDLE PID correction test
-	engineConfiguration->bc.useIdleTimingPidControl = true;
+	engineConfiguration->useIdleTimingPidControl = true;
 	int baseTestRpm = idleRpmTarget + engineConfiguration->idleTimingPidWorkZone;
 	corr = getAdvanceCorrections(baseTestRpm PASS_ENGINE_PARAMETER_SUFFIX);
 	// (delta_rpm=-100) * (p-factor=0.1) = -10 degrees
@@ -117,12 +117,12 @@ TEST(idle, timingPid) {
 	ASSERT_FLOAT_EQ(-5.75f, corr) << "getAdvanceCorrections#5";
 
 	// check if PID correction is disabled in running mode (tps > threshold):
-	setMockTpsAdc(engineConfiguration->bc.idlePidDeactivationTpsThreshold + 1 PASS_ENGINE_PARAMETER_SUFFIX);
+	setMockTpsAdc(engineConfiguration->idlePidDeactivationTpsThreshold + 1 PASS_ENGINE_PARAMETER_SUFFIX);
 	corr = getAdvanceCorrections(idleRpmTarget PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(0, corr) << "getAdvanceCorrections#6";
 
 	// check if PID correction is interpolated for transient idle-running TPS positions
-	setMockTpsAdc(engineConfiguration->bc.idlePidDeactivationTpsThreshold / 2 PASS_ENGINE_PARAMETER_SUFFIX);
+	setMockTpsAdc(engineConfiguration->idlePidDeactivationTpsThreshold / 2 PASS_ENGINE_PARAMETER_SUFFIX);
 	corr = getAdvanceCorrections(baseTestRpm PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_FLOAT_EQ(-5.0f, corr) << "getAdvanceCorrections#7";
 

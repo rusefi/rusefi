@@ -46,19 +46,19 @@ static const brain_pin_e ignPins[] = {
 };
 
 static void setInjectorPins() {
-	copyArray(boardConfiguration->injectionPins, injPins);
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
+	copyArray(engineConfiguration->injectionPins, injPins);
+	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
-	copyArray(boardConfiguration->ignitionPins, ignPins);
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+	copyArray(engineConfiguration->ignitionPins, ignPins);
+	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
 static void setLedPins() {
 	engineConfiguration->communicationLedPin = GPIOE_4;
 	engineConfiguration->runningLedPin = GPIOE_5;
-	boardConfiguration->triggerErrorPin = GPIOE_6;
+	engineConfiguration->triggerErrorPin = GPIOE_6;
 }
 
 static void setupVbatt() {
@@ -109,9 +109,9 @@ static void setupEtb() {
 static void setupDefaultSensorInputs() {
 	// trigger inputs
 	// VR channel 1 as default - others not set
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
 	// clt = Analog Temp 1 = PC4
@@ -129,7 +129,7 @@ void setPinConfigurationOverrides(void) {
 }
 
 void setSerialConfigurationOverrides(void) {
-	boardConfiguration->useSerialPort = false;
+	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
 	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;

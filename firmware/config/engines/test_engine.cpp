@@ -38,20 +38,19 @@ void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	setConstantDwell(3 PASS_CONFIG_PARAMETER_SUFFIX); // 50% duty cycle @ 5000 rpm
 
-	board_configuration_s *bc = &engineConfiguration->bc;
-	bc->malfunctionIndicatorPin = GPIO_UNASSIGNED;
+	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
-	boardConfiguration->ignitionPins[0] = GPIOC_7; // #1
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED; // #2
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED; // #3
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // #4
-	boardConfiguration->ignitionPins[4] = GPIO_UNASSIGNED; // #5
-	boardConfiguration->ignitionPins[5] = GPIO_UNASSIGNED; // #6
+	engineConfiguration->ignitionPins[0] = GPIOC_7; // #1
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED; // #2
+	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED; // #3
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // #4
+	engineConfiguration->ignitionPins[4] = GPIO_UNASSIGNED; // #5
+	engineConfiguration->ignitionPins[5] = GPIO_UNASSIGNED; // #6
 
-	boardConfiguration->logicAnalyzerPins[0] = GPIO_UNASSIGNED;
-	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->logicAnalyzerPins[0] = GPIO_UNASSIGNED;
+	engineConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
 }
 
 void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -65,7 +64,7 @@ void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set algorithm 3
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIOA_5;
 
 	// set global_trigger_offset_angle 0

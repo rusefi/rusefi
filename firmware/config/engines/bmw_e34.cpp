@@ -27,8 +27,8 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 //	engineConfiguration->trigger.type = TT_ONE_PLUS_TOOTHED_WHEEL_60_2;
 //	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-//	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-//	boardConfiguration->triggerInputPins[1] = GPIOA_5;
+//	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+//	engineConfiguration->triggerInputPins[1] = GPIOA_5;
 
 //Base engine setting
 	engineConfiguration->specs.cylindersCount = 6;
@@ -39,7 +39,7 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
-	boardConfiguration->tachOutputPin = GPIOC_8;
+	engineConfiguration->tachOutputPin = GPIOC_8;
 
 	// Trigger configuration
 //	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
@@ -58,12 +58,12 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.flow = 750;
 
 	// General settings
-	boardConfiguration->tunerStudioSerialSpeed = 57600;
+	engineConfiguration->tunerStudioSerialSpeed = 57600;
 	engineConfiguration->rpmHardLimit = 7000;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// for best performance at high RPM, we need to turn off 'Engine Sniffer' and 'Sensor Sniffer'
-	boardConfiguration->sensorChartMode = SC_OFF;
+	engineConfiguration->sensorChartMode = SC_OFF;
 	engineConfiguration->isEngineChartEnabled = false;
 
 	engineConfiguration->isCylinderCleanupEnabled = false;
@@ -90,52 +90,52 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
 
 
-	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = GPIOA_5;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
 	setWholeTimingTable(25);
 
-	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
+	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
 //	bc->isFastAdcEnabled = true;
 
-	boardConfiguration->injectionPinMode = OM_INVERTED;
-	boardConfiguration->injectionPins[0] = GPIOB_8; // #1
-	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
-	boardConfiguration->injectionPins[2] = GPIOE_3; // #3
-	boardConfiguration->injectionPins[3] = GPIOE_4; // #4
-	boardConfiguration->injectionPins[4] = GPIOE_5; // #5
-	boardConfiguration->injectionPins[5] = GPIOE_6; // #6
+	engineConfiguration->injectionPinMode = OM_INVERTED;
+	engineConfiguration->injectionPins[0] = GPIOB_8; // #1
+	engineConfiguration->injectionPins[1] = GPIOE_2; // #2
+	engineConfiguration->injectionPins[2] = GPIOE_3; // #3
+	engineConfiguration->injectionPins[3] = GPIOE_4; // #4
+	engineConfiguration->injectionPins[4] = GPIOE_5; // #5
+	engineConfiguration->injectionPins[5] = GPIOE_6; // #6
 
-	boardConfiguration->ignitionPinMode = OM_INVERTED;
+	engineConfiguration->ignitionPinMode = OM_INVERTED;
 
-	boardConfiguration->ignitionPins[0] = GPIOB_5; // #1
-	boardConfiguration->ignitionPins[2] = GPIOB_6; // #3
-	boardConfiguration->ignitionPins[4] = GPIOB_7; // #5
+	engineConfiguration->ignitionPins[0] = GPIOB_5; // #1
+	engineConfiguration->ignitionPins[2] = GPIOB_6; // #3
+	engineConfiguration->ignitionPins[4] = GPIOB_7; // #5
 
-	boardConfiguration->canRxPin = GPIO_UNASSIGNED;
-	boardConfiguration->canTxPin = GPIO_UNASSIGNED;
+	engineConfiguration->canRxPin = GPIO_UNASSIGNED;
+	engineConfiguration->canTxPin = GPIO_UNASSIGNED;
 
-	boardConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
+	engineConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
 
 	// clutch up
 	engineConfiguration->clutchUpPin = GPIOD_3;
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 
 	// fuel pump
-	boardConfiguration->fuelPumpPin = GPIOD_4;
+	engineConfiguration->fuelPumpPin = GPIOD_4;
 
 	// idle
-	boardConfiguration->idle.solenoidPin = GPIOC_14;
-	boardConfiguration->idle.solenoidPinMode = OM_INVERTED;
-	boardConfiguration->idle.solenoidFrequency = 300;
-	boardConfiguration->manIdlePosition = 50; // set_idle_pwm 50
+	engineConfiguration->idle.solenoidPin = GPIOC_14;
+	engineConfiguration->idle.solenoidPinMode = OM_INVERTED;
+	engineConfiguration->idle.solenoidFrequency = 300;
+	engineConfiguration->manIdlePosition = 50; // set_idle_pwm 50
 
 	// disable sd_card
-	boardConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
-	boardConfiguration->is_enabled_spi_2 = false;
-	boardConfiguration->is_enabled_spi_3 = false;
-	boardConfiguration->max31855spiDevice = SPI_NONE;
+	engineConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
+	engineConfiguration->is_enabled_spi_2 = false;
+	engineConfiguration->is_enabled_spi_3 = false;
+	engineConfiguration->max31855spiDevice = SPI_NONE;
 
 	// turbocharger boost control solenoid: TODO output: GPIOE_6
 	// water injection #1 TODO GPIOD_7
@@ -145,7 +145,7 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * emulating the 60-0 trigger takes some resources, let's keep it slow by default
 	 * rpm 200
 	 */
-	boardConfiguration->triggerSimulatorFrequency = 200;
+	engineConfiguration->triggerSimulatorFrequency = 200;
 
 	// Configurating sensors:
 
@@ -163,7 +163,7 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	 */
 //	bc->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
 
-	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
-	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
-	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[0] = GPIOD_1;
+	engineConfiguration->triggerSimulatorPins[1] = GPIOD_2;
+	engineConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 }

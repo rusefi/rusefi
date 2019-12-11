@@ -452,21 +452,21 @@ void printOverallStatus(systime_t nowSeconds) {
 	int seconds = getTimeNowSeconds();
 	printCurrentState(&logger, seconds, getConfigurationName(engineConfiguration->engineType), FIRMWARE_ID);
 #if EFI_PROD_CODE
-	printOutPin(PROTOCOL_CRANK1, CONFIGB(triggerInputPins)[0]);
-	printOutPin(PROTOCOL_CRANK2, CONFIGB(triggerInputPins)[1]);
+	printOutPin(PROTOCOL_CRANK1, CONFIG(triggerInputPins)[0]);
+	printOutPin(PROTOCOL_CRANK2, CONFIG(triggerInputPins)[1]);
 	printOutPin(PROTOCOL_VVT_NAME, engineConfiguration->camInputs[0]);
-	printOutPin(PROTOCOL_HIP_NAME, CONFIGB(hip9011IntHoldPin));
-	printOutPin(PROTOCOL_TACH_NAME, CONFIGB(tachOutputPin));
+	printOutPin(PROTOCOL_HIP_NAME, CONFIG(hip9011IntHoldPin));
+	printOutPin(PROTOCOL_TACH_NAME, CONFIG(tachOutputPin));
 	printOutPin(PROTOCOL_DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
 #if EFI_LOGIC_ANALYZER
-	printOutPin(PROTOCOL_WA_CHANNEL_1, CONFIGB(logicAnalyzerPins)[0]);
-	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIGB(logicAnalyzerPins)[1]);
+	printOutPin(PROTOCOL_WA_CHANNEL_1, CONFIG(logicAnalyzerPins)[0]);
+	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIG(logicAnalyzerPins)[1]);
 #endif /* EFI_LOGIC_ANALYZER */
 
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		printOutPin(enginePins.coils[i].getShortName(), CONFIGB(ignitionPins)[i]);
+		printOutPin(enginePins.coils[i].getShortName(), CONFIG(ignitionPins)[i]);
 
-		printOutPin(enginePins.injectors[i].getShortName(), CONFIGB(injectionPins)[i]);
+		printOutPin(enginePins.injectors[i].getShortName(), CONFIG(injectionPins)[i]);
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
 		printOutPin(enginePins.auxValve[i].getShortName(), engineConfiguration->auxValves[i]);
@@ -586,14 +586,14 @@ static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPi
 static void initStatusLeds(void) {
 	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin);
 	// we initialize this here so that we can blink it on start-up
-	enginePins.checkEnginePin.initPin("MalfunctionIndicator", CONFIGB(malfunctionIndicatorPin), &CONFIGB(malfunctionIndicatorPinMode));
+	enginePins.checkEnginePin.initPin("MalfunctionIndicator", CONFIG(malfunctionIndicatorPin), &CONFIG(malfunctionIndicatorPinMode));
 
 	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin);
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
 
-	enginePins.debugTriggerSync.initPin("debug: sync", CONFIGB(debugTriggerSync));
-	enginePins.debugTimerCallback.initPin("debug: timer callback", CONFIGB(debugTimerCallback));
-	enginePins.debugSetTimer.initPin("debug: set timer", CONFIGB(debugSetTimer));
+	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
+	enginePins.debugTimerCallback.initPin("debug: timer callback", CONFIG(debugTimerCallback));
+	enginePins.debugSetTimer.initPin("debug: set timer", CONFIG(debugSetTimer));
 }
 
 #define BLINKING_PERIOD_MS 33
@@ -680,8 +680,8 @@ public:
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
 		UNUSED(nowNt);
-		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->bc.lcdThreadPeriodMs));
-		if (engineConfiguration->bc.useLcdScreen) {
+		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->lcdThreadPeriodMs));
+		if (engineConfiguration->useLcdScreen) {
 #if EFI_HD44780_LCD
 			updateHD44780lcd();
 #endif

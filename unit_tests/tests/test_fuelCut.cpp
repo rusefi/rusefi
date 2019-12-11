@@ -17,7 +17,7 @@ TEST(fuelCut, coasting) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// configure coastingFuelCut
-	engineConfiguration->bc.coastingFuelCutEnabled = true;
+	engineConfiguration->coastingFuelCutEnabled = true;
 	engineConfiguration->coastingFuelCutRpmLow = 1300;
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
 	engineConfiguration->coastingFuelCutTps = 2;

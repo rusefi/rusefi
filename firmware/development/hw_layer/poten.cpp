@@ -97,19 +97,19 @@ static void setPotValue1(int value) {
 void initPotentiometers(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 #if EFI_POTENTIOMETER
-	if (CONFIGB(digitalPotentiometerSpiDevice) == SPI_NONE) {
+	if (CONFIG(digitalPotentiometerSpiDevice) == SPI_NONE) {
 		scheduleMsg(logger, "digiPot spi disabled");
 		return;
 	}
-	turnOnSpi(CONFIGB(digitalPotentiometerSpiDevice));
+	turnOnSpi(CONFIG(digitalPotentiometerSpiDevice));
 
 	for (int i = 0; i < DIGIPOT_COUNT; i++) {
-		brain_pin_e csPin = CONFIGB(digitalPotentiometerChipSelect)[i];
+		brain_pin_e csPin = CONFIG(digitalPotentiometerChipSelect)[i];
 		if (csPin == GPIO_UNASSIGNED) {
 			continue;
                 }
 
-		SPIDriver *driver = getSpiDevice(CONFIGB(digitalPotentiometerSpiDevice));
+		SPIDriver *driver = getSpiDevice(CONFIG(digitalPotentiometerSpiDevice));
 		if (driver == NULL) {
 			// error already reported
 			return;

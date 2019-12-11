@@ -14,7 +14,7 @@
 EXTERN_CONFIG;
 
 void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankenso_01_LCD(boardConfiguration);
+	setFrankenso_01_LCD(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
@@ -23,16 +23,16 @@ void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->sensorChartFrequency = 2;
 
-	boardConfiguration->useStepperIdle = true;
+	engineConfiguration->useStepperIdle = true;
 
 	// See http://rusefi.com/forum/viewtopic.php?f=4&t=1161
-	boardConfiguration->idle.stepperDirectionPin = GPIOD_1; // top stepper drive pin, white wire recommended
-	boardConfiguration->idle.stepperStepPin = GPIOD_6; // yellow wire recommended
+	engineConfiguration->idle.stepperDirectionPin = GPIOD_1; // top stepper drive pin, white wire recommended
+	engineConfiguration->idle.stepperStepPin = GPIOD_6; // yellow wire recommended
 	engineConfiguration->stepperEnablePin = GPIOB_1; // bottom stepper driver board pin, blue wire recommended
 
-	boardConfiguration->triggerSimulatorPins[0] = GPIO_UNASSIGNED; // we want to avoid PD1 conflict
-	boardConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[0] = GPIO_UNASSIGNED; // we want to avoid PD1 conflict
+	engineConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 }
 
 /*

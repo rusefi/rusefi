@@ -26,7 +26,7 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
 	// with this complex trigger we do not need this by default
-	boardConfiguration->sensorChartMode = SC_OFF;
+	engineConfiguration->sensorChartMode = SC_OFF;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
@@ -103,6 +103,6 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_4;
 
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIOA_5;
 }

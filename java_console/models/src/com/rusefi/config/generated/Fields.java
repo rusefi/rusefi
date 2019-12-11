@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Dec 08 00:20:37 EST 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Dec 11 16:40:57 EST 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -152,8 +152,6 @@ public class Fields {
 	public static final int baroSensor_offset_hex = 248;
 	public static final int baroSensor_type_offset = 592;
 	public static final int baroSensor_type_offset_hex = 250;
-	public static final int bc_offset = 600;
-	public static final int bc_offset_hex = 258;
 	public static final int binarySerialRxPin_offset = 1815;
 	public static final int binarySerialRxPin_offset_hex = 717;
 	public static final int binarySerialTxPin_offset = 1814;

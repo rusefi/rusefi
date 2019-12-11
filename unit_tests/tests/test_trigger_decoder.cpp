@@ -455,7 +455,6 @@ TEST(misc, testTriggerDecoder) {
 	Engine *engine = &e;
 
 	engine_configuration_s *engineConfiguration = &c.engineConfiguration;
-	board_configuration_s *boardConfiguration = &c.engineConfiguration.bc;
 
 	initializeSkippedToothTriggerWaveformExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
 	assertEqualsM("shape size", s->getSize(), 4);
@@ -528,7 +527,7 @@ TEST(misc, testTriggerDecoder) {
 
 
 		eth.persistentConfig.engineConfiguration.useOnlyRisingEdgeForTrigger = false;
-		eth.persistentConfig.engineConfiguration.bc.sensorChartMode = SC_DETAILED_RPM;
+		eth.persistentConfig.engineConfiguration.sensorChartMode = SC_DETAILED_RPM;
 		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 //		assertEqualsM2("rpm#1", 16666.9746, eth.engine.triggerCentral.triggerState.instantRpmValue[0], 0.5);

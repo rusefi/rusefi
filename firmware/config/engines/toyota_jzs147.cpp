@@ -32,22 +32,22 @@ static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	boardConfiguration->ignitionPins[0] = GPIOE_14;
-	boardConfiguration->ignitionPins[1] = GPIOC_7;
-	boardConfiguration->ignitionPins[2] = GPIOC_9;
-	boardConfiguration->ignitionPins[3] = GPIOE_10;
-	boardConfiguration->ignitionPins[4] = GPIOE_8;
-	boardConfiguration->ignitionPins[5] = GPIOE_12;
+	engineConfiguration->ignitionPins[0] = GPIOE_14;
+	engineConfiguration->ignitionPins[1] = GPIOC_7;
+	engineConfiguration->ignitionPins[2] = GPIOC_9;
+	engineConfiguration->ignitionPins[3] = GPIOE_10;
+	engineConfiguration->ignitionPins[4] = GPIOE_8;
+	engineConfiguration->ignitionPins[5] = GPIOE_12;
 
 
-	boardConfiguration->injectionPins[0] = GPIOB_9; // #1
-	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
-	boardConfiguration->injectionPins[2] = GPIOB_8; // #3
-	boardConfiguration->injectionPins[3] = GPIOB_7; // #4
-	boardConfiguration->injectionPins[4] = GPIOE_3; // #5
-	boardConfiguration->injectionPins[5] = GPIOE_4; // #6
+	engineConfiguration->injectionPins[0] = GPIOB_9; // #1
+	engineConfiguration->injectionPins[1] = GPIOE_2; // #2
+	engineConfiguration->injectionPins[2] = GPIOB_8; // #3
+	engineConfiguration->injectionPins[3] = GPIOB_7; // #4
+	engineConfiguration->injectionPins[4] = GPIOE_3; // #5
+	engineConfiguration->injectionPins[5] = GPIOE_4; // #6
 
-	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 
 	// chartsize 450
 	engineConfiguration->engineChartSize = 450;
@@ -87,10 +87,10 @@ void setToyota_jzs147EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->injectionMode = IM_BATCH;
 //	engineConfiguration->twoWireBatchInjection = true;
 
-//	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-//	boardConfiguration->triggerInputPins[1] = GPIOC_6;
+//	engineConfiguration->triggerInputPins[0] = GPIOA_5;
+//	engineConfiguration->triggerInputPins[1] = GPIOC_6;
 
-	boardConfiguration->isSdCardEnabled = false;
+	engineConfiguration->isSdCardEnabled = false;
 
 
 }
@@ -98,13 +98,13 @@ void setToyota_jzs147EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	common2jz(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	boardConfiguration->isSdCardEnabled = true;
+	engineConfiguration->isSdCardEnabled = true;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_2JZ_3_34;
 
-	boardConfiguration->triggerInputPins[0] = GPIOA_5; // crank sensor
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED; // cam sensor will he handled by custom vtti code
+	engineConfiguration->triggerInputPins[0] = GPIOA_5; // crank sensor
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED; // cam sensor will he handled by custom vtti code
 
 	engineConfiguration->camInputs[0] = GPIOC_6;
 	engineConfiguration->vvtMode = VVT_2GZ;

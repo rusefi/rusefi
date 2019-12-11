@@ -286,7 +286,7 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+	
 
 	// Now that GPIO_UNASSIGNED == 0 we do not really need explicit zero assignments since memset above does that
 	// todo: migrate 'EFI_ADC_NONE' to '0' and eliminate the need in this method altogether
@@ -312,7 +312,7 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
 */
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
-	engineConfiguration->bc.auxFastSensor1_adcChannel = EFI_ADC_NONE;
+	engineConfiguration->auxFastSensor1_adcChannel = EFI_ADC_NONE;
 	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
@@ -321,7 +321,7 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->high_fuel_pressure_sensor_1 = EFI_ADC_NONE;
 	engineConfiguration->high_fuel_pressure_sensor_2 = EFI_ADC_NONE;
 	
-	boardConfiguration->clutchDownPinMode = PI_PULLUP;
+	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 	engineConfiguration->brakePedalPinMode = PI_PULLUP;
 }
@@ -353,12 +353,12 @@ void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set UART pads configuration based on the board
 // needed also by bootloader code
-	boardConfiguration->useSerialPort = true;
+	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_10;
 	engineConfiguration->binarySerialRxPin = GPIOC_11;
 	engineConfiguration->consoleSerialTxPin = GPIOC_10;
 	engineConfiguration->consoleSerialRxPin = GPIOC_11;
-	boardConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
+	engineConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = 115200;
 
 #if EFI_PROD_CODE
@@ -370,10 +370,10 @@ void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 // needed also by bootloader code
 // at the moment bootloader does NOT really need SD card, this is a step towards future bootloader SD card usage
 void setDefaultSdCardParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	boardConfiguration->is_enabled_spi_3 = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	boardConfiguration->sdCardCsPin = GPIOD_4;
-	boardConfiguration->isSdCardEnabled = true;
+	engineConfiguration->sdCardCsPin = GPIOD_4;
+	engineConfiguration->isSdCardEnabled = true;
 
 #if EFI_PROD_CODE
 	// call overrided board-specific SD card configuration setup, if needed (for custom boards only)
@@ -477,7 +477,7 @@ static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static void setDefaultFuelCutParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	boardConfiguration->coastingFuelCutEnabled = false;
+	engineConfiguration->coastingFuelCutEnabled = false;
 	engineConfiguration->coastingFuelCutRpmLow = 1300;
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
 	engineConfiguration->coastingFuelCutTps = 2;
@@ -578,17 +578,17 @@ static void setDefaultIdleSpeedTarget(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static void setDefaultStepperIdleParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	boardConfiguration->idle.stepperDirectionPin = GPIOE_10;
-	boardConfiguration->idle.stepperStepPin = GPIOE_12;
+	engineConfiguration->idle.stepperDirectionPin = GPIOE_10;
+	engineConfiguration->idle.stepperStepPin = GPIOE_12;
 	engineConfiguration->stepperEnablePin = GPIOE_14;
 	engineConfiguration->idleStepperReactionTime = 10;
 	engineConfiguration->idleStepperTotalSteps = 150;
 }
 
 static void setCanFrankensoDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	boardConfiguration->canDeviceMode = CD_USE_CAN2;
-	boardConfiguration->canTxPin = GPIOB_6;
-	boardConfiguration->canRxPin = GPIOB_12;
+	engineConfiguration->canDeviceMode = CD_USE_CAN2;
+	engineConfiguration->canTxPin = GPIOB_6;
+	engineConfiguration->canRxPin = GPIOB_12;
 }
 
 /**
@@ -657,14 +657,14 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
-	boardConfiguration->sdCardPeriodMs = 50;
+	engineConfiguration->sdCardPeriodMs = 50;
 
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		config->fsioFormulas[i][0] = 0;
 	}
 
 
-	CONFIGB(mapMinBufferLength) = 1;
+	CONFIG(mapMinBufferLength) = 1;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;
@@ -806,7 +806,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelClosedLoopCltThreshold = 70;
 	engineConfiguration->fuelClosedLoopRpmThreshold = 900;
 	engineConfiguration->fuelClosedLoopTpsThreshold = 80;
-	boardConfiguration->fuelClosedLoopAfrLowThreshold = 10.3;
+	engineConfiguration->fuelClosedLoopAfrLowThreshold = 10.3;
 	engineConfiguration->fuelClosedLoopAfrHighThreshold = 19.8;
 	engineConfiguration->fuelClosedLoopPid.pFactor = -0.1;
 
@@ -821,16 +821,16 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->idleRpmPid.minValue = 0.1;
 	engineConfiguration->idleRpmPid.maxValue = 99;
-	boardConfiguration->idlePidDeactivationTpsThreshold = 2;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 2;
 
-	boardConfiguration->idle.solenoidFrequency = 200;
+	engineConfiguration->idle.solenoidFrequency = 200;
 	// set idle_position 50
-	boardConfiguration->manIdlePosition = 50;
+	engineConfiguration->manIdlePosition = 50;
 	engineConfiguration->crankingIACposition = 50;
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 
-	boardConfiguration->useStepperIdle = false;
+	engineConfiguration->useStepperIdle = false;
 
 	setDefaultStepperIdleParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -850,7 +850,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 	// performance optimization
-	boardConfiguration->sensorChartMode = SC_OFF;
+	engineConfiguration->sensorChartMode = SC_OFF;
 
 	engineConfiguration->storageMode = MS_AUTO;
 
@@ -945,13 +945,13 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->knockDetectionWindowStart = 35;
 	engineConfiguration->knockDetectionWindowEnd = 135;
 
-	boardConfiguration->fuelLevelEmptyTankVoltage = 0;
-	boardConfiguration->fuelLevelFullTankVoltage = 5;
+	engineConfiguration->fuelLevelEmptyTankVoltage = 0;
+	engineConfiguration->fuelLevelFullTankVoltage = 5;
 
 	/**
 	 * this is RPM. 10000 rpm is only 166Hz, 800 rpm is 13Hz
 	 */
-	boardConfiguration->triggerSimulatorFrequency = 1200;
+	engineConfiguration->triggerSimulatorFrequency = 1200;
 
 	engineConfiguration->alternatorPwmFrequency = 300;
 
@@ -964,24 +964,24 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->vehicleSpeedCoef = 1.0f;
 
-	boardConfiguration->logicAnalyzerMode[0] = false;
-	boardConfiguration->logicAnalyzerMode[1] = false;
+	engineConfiguration->logicAnalyzerMode[0] = false;
+	engineConfiguration->logicAnalyzerMode[1] = false;
 
 	engineConfiguration->mapErrorDetectionTooLow = 5;
 	engineConfiguration->mapErrorDetectionTooHigh = 250;
 
-	boardConfiguration->idleThreadPeriodMs = 100;
-	boardConfiguration->consoleLoopPeriodMs = 200;
-	boardConfiguration->lcdThreadPeriodMs = 300;
-	boardConfiguration->generalPeriodicThreadPeriodMs = 50;
-	boardConfiguration->useLcdScreen = true;
+	engineConfiguration->idleThreadPeriodMs = 100;
+	engineConfiguration->consoleLoopPeriodMs = 200;
+	engineConfiguration->lcdThreadPeriodMs = 300;
+	engineConfiguration->generalPeriodicThreadPeriodMs = 50;
+	engineConfiguration->useLcdScreen = true;
 
 	engineConfiguration->hip9011Gain = 1;
 
-	boardConfiguration->isFastAdcEnabled = true;
-	boardConfiguration->isEngineControlEnabled = true;
+	engineConfiguration->isFastAdcEnabled = true;
+	engineConfiguration->isEngineControlEnabled = true;
 
-	boardConfiguration->isVerboseAlternator = false;
+	engineConfiguration->isVerboseAlternator = false;
 
 	engineConfiguration->engineLoadAccelLength = 6;
 	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5; // kPa
@@ -1000,7 +1000,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * <reboot ECU>
 	 * fsioinfo
 	 */
-	boardConfiguration->fsio_setting[0] = 5000;
+	engineConfiguration->fsio_setting[0] = 5000;
 	// simple warning light as default configuration
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
 	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -1023,36 +1023,36 @@ void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
 	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
 
-//	boardConfiguration->gps_rx_pin = GPIOB_7;
-//	boardConfiguration->gps_tx_pin = GPIOB_6;
+//	engineConfiguration->gps_rx_pin = GPIOB_7;
+//	engineConfiguration->gps_tx_pin = GPIOB_6;
 
-	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
-	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
+	engineConfiguration->triggerSimulatorPins[0] = GPIOD_1;
+	engineConfiguration->triggerSimulatorPins[1] = GPIOD_2;
 
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIOA_5;
+	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->triggerInputPins[1] = GPIOA_5;
 
-	//boardConfiguration->logicAnalyzerPins[1] = GPIOE_5; // GPIOE_5 is a popular option (if available)
+	//engineConfiguration->logicAnalyzerPins[1] = GPIOE_5; // GPIOE_5 is a popular option (if available)
 
 
 	// set this to SPI_DEVICE_3 to enable stimulation
-	//boardConfiguration->digitalPotentiometerSpiDevice = SPI_DEVICE_3;
-	boardConfiguration->digitalPotentiometerChipSelect[0] = GPIOD_7;
-	boardConfiguration->digitalPotentiometerChipSelect[1] = GPIO_UNASSIGNED;
-	boardConfiguration->digitalPotentiometerChipSelect[2] = GPIOD_5;
-	boardConfiguration->digitalPotentiometerChipSelect[3] = GPIO_UNASSIGNED;
+	//engineConfiguration->digitalPotentiometerSpiDevice = SPI_DEVICE_3;
+	engineConfiguration->digitalPotentiometerChipSelect[0] = GPIOD_7;
+	engineConfiguration->digitalPotentiometerChipSelect[1] = GPIO_UNASSIGNED;
+	engineConfiguration->digitalPotentiometerChipSelect[2] = GPIOD_5;
+	engineConfiguration->digitalPotentiometerChipSelect[3] = GPIO_UNASSIGNED;
 
-	boardConfiguration->spi1mosiPin = GPIOB_5;
-	boardConfiguration->spi1misoPin = GPIOB_4;
-	boardConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
+	engineConfiguration->spi1mosiPin = GPIOB_5;
+	engineConfiguration->spi1misoPin = GPIOB_4;
+	engineConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
 
-	boardConfiguration->spi2mosiPin = GPIOB_15;
-	boardConfiguration->spi2misoPin = GPIOB_14;
-	boardConfiguration->spi2sckPin = GPIOB_13;
+	engineConfiguration->spi2mosiPin = GPIOB_15;
+	engineConfiguration->spi2misoPin = GPIOB_14;
+	engineConfiguration->spi2sckPin = GPIOB_13;
 
-	boardConfiguration->spi3mosiPin = GPIOB_5;
-	boardConfiguration->spi3misoPin = GPIOB_4;
-	boardConfiguration->spi3sckPin = GPIOB_3;
+	engineConfiguration->spi3mosiPin = GPIOB_5;
+	engineConfiguration->spi3misoPin = GPIOB_4;
+	engineConfiguration->spi3sckPin = GPIOB_3;
 	
 	// set optional subsystem configs
 #if EFI_MEMS
@@ -1068,9 +1068,9 @@ void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultSdCardParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_FILE_LOGGING */
 
-	boardConfiguration->is_enabled_spi_1 = false;
-	boardConfiguration->is_enabled_spi_2 = false;
-	boardConfiguration->is_enabled_spi_3 = true;
+	engineConfiguration->is_enabled_spi_1 = false;
+	engineConfiguration->is_enabled_spi_2 = false;
+	engineConfiguration->is_enabled_spi_3 = true;
 }
 
 void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -1373,12 +1373,12 @@ void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
 }
 
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-	boardConfiguration->joystickCenterPin = GPIOC_8;
-	boardConfiguration->joystickAPin = GPIOD_10;
-	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickCPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickDPin = GPIOD_11;
+	
+	engineConfiguration->joystickCenterPin = GPIOC_8;
+	engineConfiguration->joystickAPin = GPIOD_10;
+	engineConfiguration->joystickBPin = GPIO_UNASSIGNED;
+	engineConfiguration->joystickCPin = GPIO_UNASSIGNED;
+	engineConfiguration->joystickDPin = GPIOD_11;
 }
 
 void copyTargetAfrTable(fuel_table_t const source, afr_table_t destination) {

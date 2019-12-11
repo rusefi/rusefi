@@ -114,7 +114,7 @@ static void testMil(void) {
 #endif /* TEST_MIL_CODE */
 
 bool isMilEnabled() {
-	return CONFIGB(malfunctionIndicatorPin) != GPIO_UNASSIGNED;
+	return CONFIG(malfunctionIndicatorPin) != GPIO_UNASSIGNED;
 }
 
 void initMalfunctionIndicator(void) {

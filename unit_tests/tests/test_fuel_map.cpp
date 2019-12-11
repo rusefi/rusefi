@@ -227,7 +227,7 @@ TEST(fuel, testTpsBasedVeDefect799) {
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
-	CONFIGB(useTPSBasedVeTable) = true;
+	CONFIG(useTPSBasedVeTable) = true;
 
 	int mapFrom = 100;
 	// set MAP axis range

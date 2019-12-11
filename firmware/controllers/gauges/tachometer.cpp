@@ -41,11 +41,11 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 }
 
 void initTachometer(void) {
-	if (CONFIGB(tachOutputPin) == GPIO_UNASSIGNED) {
+	if (CONFIG(tachOutputPin) == GPIO_UNASSIGNED) {
 		return;
 	}
 
-	enginePins.tachOut.initPin("analog tach output", CONFIGB(tachOutputPin), &CONFIGB(tachOutputPinMode));
+	enginePins.tachOut.initPin("analog tach output", CONFIG(tachOutputPin), &CONFIG(tachOutputPinMode));
 
 #if EFI_SHAFT_POSITION_INPUT
 	addTriggerEventListener(tachSignalCallback, "tach", engine);

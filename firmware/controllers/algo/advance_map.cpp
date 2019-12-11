@@ -68,7 +68,7 @@ static const ignition_table_t defaultIatTiming = {
 #endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
 
 bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return  CONFIGB(enabledStep1Limiter) && rpm >= engineConfiguration->step1rpm;
+	return  CONFIG(enabledStep1Limiter) && rpm >= engineConfiguration->step1rpm;
 }
 
 /**
@@ -104,7 +104,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance);
 		// interpolate between idle table and normal (running) table using TPS threshold
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIGB(idlePidDeactivationTpsThreshold), advanceAngle, tps);
+		advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIG(idlePidDeactivationTpsThreshold), advanceAngle, tps);
 	}
 
 	engine->m.advanceLookupTime = getTimeNowLowerNt() - engine->m.beforeAdvance;
@@ -120,11 +120,11 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	// PID Ignition Advance angle correction
 	float pidTimingCorrection = 0.0f;
-	if (CONFIGB(useIdleTimingPidControl)) {
+	if (CONFIG(useIdleTimingPidControl)) {
 		int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 		int rpmDelta = absI(rpm - targetRpm);
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		if (tps >= CONFIGB(idlePidDeactivationTpsThreshold)) {
+		if (tps >= CONFIG(idlePidDeactivationTpsThreshold)) {
 			// we are not in the idle mode anymore, so the 'reset' flag will help us when we return to the idle.
 			shouldResetTimingPid = true;
 		} 
@@ -139,7 +139,7 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			percent_t timingRawCorr = idleTimingPid.getOutput(targetRpm, rpm,
 					/* is this the right dTime? this period is not exactly the period at which this code is invoked*/engineConfiguration->idleTimingPid.periodMs);
 			// tps idle-running falloff
-			pidTimingCorrection = interpolateClamped(0.0f, timingRawCorr, CONFIGB(idlePidDeactivationTpsThreshold), 0.0f, tps);
+			pidTimingCorrection = interpolateClamped(0.0f, timingRawCorr, CONFIG(idlePidDeactivationTpsThreshold), 0.0f, tps);
 			// rpm falloff
 			pidTimingCorrection = interpolateClamped(0.0f, pidTimingCorrection, CONFIG(idlePidFalloffDeltaRpm), 0.0f, rpmDelta - CONFIG(idleTimingPidWorkZone));
 		} else {

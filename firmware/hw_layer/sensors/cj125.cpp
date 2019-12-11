@@ -266,7 +266,7 @@ static void cjCalibrate(void) {
 }
 
 static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!CONFIGB(isCJ125Enabled)) {
+	if (!CONFIG(isCJ125Enabled)) {
 		scheduleMsg(logger, "cj125 is disabled.");
 		return;
 	}
@@ -313,35 +313,35 @@ void CJ125::setError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 //	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
-//	CONFIGB(cj125CsPin) = GPIOA_15;
+//	CONFIG(cj125CsPin) = GPIOA_15;
 //	engineConfiguration->cj125CsPinMode = OM_OPENDRAIN;
 
 void cj125defaultPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->cj125ua = EFI_ADC_13; // PC3
 	engineConfiguration->cj125ur = EFI_ADC_4; // PA4
-	CONFIGB(wboHeaterPin) = GPIOC_13;
+	CONFIG(wboHeaterPin) = GPIOC_13;
 
-	CONFIGB(isCJ125Enabled) = false;
+	CONFIG(isCJ125Enabled) = false;
 
-	CONFIGB(spi2mosiPin) = GPIOB_15;
-	CONFIGB(spi2misoPin) = GPIOB_14;
-	CONFIGB(spi2sckPin) = GPIOB_13;
+	CONFIG(spi2mosiPin) = GPIOB_15;
+	CONFIG(spi2misoPin) = GPIOB_14;
+	CONFIG(spi2sckPin) = GPIOB_13;
 
-	CONFIGB(cj125CsPin) = GPIOB_0;
-	CONFIGB(isCJ125Enabled) = true;
-	CONFIGB(is_enabled_spi_2) = true;
+	CONFIG(cj125CsPin) = GPIOB_0;
+	CONFIG(isCJ125Enabled) = true;
+	CONFIG(is_enabled_spi_2) = true;
 }
 
 static void cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	globalInstance.cj125Cs.initPin("cj125 CS", CONFIGB(cj125CsPin),
+	globalInstance.cj125Cs.initPin("cj125 CS", CONFIG(cj125CsPin),
 			&engineConfiguration->cj125CsPinMode);
 	// Idle CS pin - SPI CS is high when idle
 	globalInstance.cj125Cs.setValue(true);
 
 	cj125spicfg.cr1 += getSpiPrescaler(_150KHz, engineConfiguration->cj125SpiDevice);
 
-	cj125spicfg.ssport = getHwPort("cj125", CONFIGB(cj125CsPin));
-	cj125spicfg.sspad = getHwPin("cj125", CONFIGB(cj125CsPin));
+	cj125spicfg.ssport = getHwPort("cj125", CONFIG(cj125CsPin));
+	cj125spicfg.sspad = getHwPin("cj125", CONFIG(cj125CsPin));
 	driver = getSpiDevice(engineConfiguration->cj125SpiDevice);
 	if (driver == NULL) {
 		// error already reported
@@ -463,7 +463,7 @@ static msg_t cjThread(void)
 
 #if ! EFI_UNIT_TEST
 static bool cjCheckConfig(void) {
-	if (!CONFIGB(isCJ125Enabled)) {
+	if (!CONFIG(isCJ125Enabled)) {
 		scheduleMsg(logger, "cj125 is disabled. Failed!");
 		return false;
 	}
@@ -518,7 +518,7 @@ float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!CONFIGB(isCJ125Enabled))
+	if (!CONFIG(isCJ125Enabled))
 		return false;
 	return globalInstance.isValidState();
 }
@@ -543,7 +543,7 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	globalInstance.spi = &spi;
 	globalInstance.logger = sharedLogger;
 
-	if (!CONFIGB(isCJ125Enabled)) {
+	if (!CONFIG(isCJ125Enabled)) {
 		globalInstance.errorCode = CJ125_ERROR_DISABLED;
 		return;
 	}
@@ -555,7 +555,7 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 
-	if (CONFIGB(wboHeaterPin) == GPIO_UNASSIGNED) {
+	if (CONFIG(wboHeaterPin) == GPIO_UNASSIGNED) {
 		scheduleMsg(logger, "cj125 init error! wboHeaterPin is required.");
 		warning(CUSTOM_CJ125_1, "cj heater");
 		globalInstance.errorCode = CJ125_ERROR_DISABLED;

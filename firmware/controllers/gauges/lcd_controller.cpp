@@ -219,7 +219,7 @@ static void showLine(lcd_line_e line, int screenY) {
 #if EFI_FILE_LOGGING
 		{
 			char sdState;
-			if (CONFIGB(isSdCardEnabled)) {
+			if (CONFIG(isSdCardEnabled)) {
 				sdState = isSdCardAlive() ? 'L' : 'n';
 			} else {
 				sdState = 'D';

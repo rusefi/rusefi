@@ -508,7 +508,6 @@ struct etb_io
 	pin_output_mode_e controlPinMode;
 end_struct
 	
-struct_no_prefix board_configuration_s
 	idle_hardware_s idle;
 
 	float manIdlePosition;value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
@@ -712,10 +711,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 
 ! todo: keep moving all these fields at the end of board_configuration_s below 'board_configuration_s bc'
 ! end of board_configuration_s
-end_struct	
 
-	
-board_configuration_s bc;
 	maf_sensor_type_e mafSensorType;
 
 	custom le_formula_t 200 string, ASCII, @OFFSET@, 200
