@@ -42,6 +42,10 @@
 #define EFI_PIN_MODE_DEFAULT PIN_MODE_INPUT
 #define EFI_DR_DEFAULT PIN_PUPDR_FLOATING
 
+// See https://github.com/rusefi/rusefi/issues/397
+#define DEFAULT_GPIO_SPEED PIN_OSPEED_HIGH
+
+
 /*
  * Ethernet PHY type.
  */
@@ -610,22 +614,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOA_SWDIO) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOA_SWCLK) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOA_ZIO_D20))
-#define VAL_GPIOA_OSPEEDR           (PIN_OSPEED_HIGH(GPIOA_ZIO_D32) |       \
-                                     PIN_OSPEED_HIGH(GPIOA_RMII_REF_CLK) |  \
-                                     PIN_OSPEED_HIGH(GPIOA_RMII_MDIO) |     \
-                                     PIN_OSPEED_HIGH(GPIOA_ARD_A0) |        \
-                                     PIN_OSPEED_HIGH(GPIOA_ZIO_D24) |       \
-                                     PIN_OSPEED_HIGH(GPIOA_ARD_D13) |       \
-                                     PIN_OSPEED_HIGH(GPIOA_ARD_D12) |       \
-                                     PIN_OSPEED_HIGH(GPIOA_ARD_D11) |       \
-                                     PIN_OSPEED_HIGH(GPIOA_USB_SOF) |       \
-                                     PIN_OSPEED_HIGH(GPIOA_USB_VBUS) |      \
-                                     PIN_OSPEED_HIGH(GPIOA_USB_ID) |        \
-                                     PIN_OSPEED_HIGH(GPIOA_USB_DM) |        \
-                                     PIN_OSPEED_HIGH(GPIOA_USB_DP) |        \
-                                     PIN_OSPEED_HIGH(GPIOA_SWDIO) |         \
-                                     PIN_OSPEED_HIGH(GPIOA_SWCLK) |         \
-                                     PIN_OSPEED_HIGH(GPIOA_ZIO_D20))
+#define VAL_GPIOA_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOA_ZIO_D32) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOA_RMII_REF_CLK) |  \
+                                     DEFAULT_GPIO_SPEED(GPIOA_RMII_MDIO) |     \
+                                     DEFAULT_GPIO_SPEED(GPIOA_ARD_A0) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOA_ZIO_D24) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOA_ARD_D13) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOA_ARD_D12) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOA_ARD_D11) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOA_USB_SOF) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOA_USB_VBUS) |      \
+                                     DEFAULT_GPIO_SPEED(GPIOA_USB_ID) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOA_USB_DM) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOA_USB_DP) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOA_SWDIO) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOA_SWCLK) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOA_ZIO_D20))
 #define VAL_GPIOA_PUPDR             (PIN_PUPDR_PULLUP(GPIOA_ZIO_D32) |      \
                                      EFI_DR_DEFAULT(GPIOA_RMII_REF_CLK) |\
                                      PIN_PUPDR_PULLUP(GPIOA_RMII_MDIO) |    \
@@ -727,22 +731,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOB_ZIO_D18) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOB_LED3) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOB_ZIO_D17))
-#define VAL_GPIOB_OSPEEDR           (PIN_OSPEED_HIGH(GPIOB_ZIO_D33) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_ZIO_A6) |        \
-                                     PIN_OSPEED_HIGH(GPIOB_ZIO_D27) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_ZIO_D23) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_ZIO_D25) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_ZIO_D22) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_ZIO_D26) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_LED2) |          \
-                                     PIN_OSPEED_HIGH(GPIOB_ARD_D15) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_ARD_D14) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_ZIO_D36) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_ZIO_D35) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_ZIO_D19) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_ZIO_D18) |       \
-                                     PIN_OSPEED_HIGH(GPIOB_LED3) |          \
-                                     PIN_OSPEED_HIGH(GPIOB_ZIO_D17))
+#define VAL_GPIOB_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOB_ZIO_D33) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ZIO_A6) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ZIO_D27) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ZIO_D23) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ZIO_D25) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ZIO_D22) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ZIO_D26) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_LED2) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ARD_D15) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ARD_D14) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ZIO_D36) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ZIO_D35) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ZIO_D19) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ZIO_D18) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOB_LED3) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOB_ZIO_D17))
 #define VAL_GPIOB_PUPDR             (EFI_DR_DEFAULT(GPIOB_ZIO_D33) |    \
                                      PIN_PUPDR_PULLUP(GPIOB_ZIO_A6) |       \
                                      PIN_PUPDR_PULLUP(GPIOB_ZIO_D27) |      \
@@ -844,20 +848,20 @@
                                      PIN_OTYPE_PUSHPULL(GPIOC_BUTTON) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOC_OSC32_IN) |   \
                                      PIN_OTYPE_PUSHPULL(GPIOC_OSC32_OUT))
-#define VAL_GPIOC_OSPEEDR           (PIN_OSPEED_HIGH(GPIOC_ARD_A1) |        \
-                                     PIN_OSPEED_HIGH(GPIOC_RMII_MDC) |      \
-                                     PIN_OSPEED_HIGH(GPIOC_ZIO_A7) |        \
-                                     PIN_OSPEED_HIGH(GPIOC_ARD_A2) |        \
-                                     PIN_OSPEED_HIGH(GPIOC_RMII_RXD0) |     \
-                                     PIN_OSPEED_HIGH(GPIOC_RMII_RXD1) |     \
-                                     PIN_OSPEED_HIGH(GPIOC_ZIO_D16) |       \
-                                     PIN_OSPEED_HIGH(GPIOC_ZIO_D21) |       \
-                                     PIN_OSPEED_HIGH(GPIOC_ZIO_D43) |       \
-                                     PIN_OSPEED_HIGH(GPIOC_ZIO_D44) |       \
-                                     PIN_OSPEED_HIGH(GPIOC_ZIO_D45) |       \
-                                     PIN_OSPEED_HIGH(GPIOC_ZIO_D46) |       \
-                                     PIN_OSPEED_HIGH(GPIOC_ZIO_D47) |       \
-                                     PIN_OSPEED_HIGH(GPIOC_BUTTON) |        \
+#define VAL_GPIOC_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOC_ARD_A1) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOC_RMII_MDC) |      \
+                                     DEFAULT_GPIO_SPEED(GPIOC_ZIO_A7) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOC_ARD_A2) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOC_RMII_RXD0) |     \
+                                     DEFAULT_GPIO_SPEED(GPIOC_RMII_RXD1) |     \
+                                     DEFAULT_GPIO_SPEED(GPIOC_ZIO_D16) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOC_ZIO_D21) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOC_ZIO_D43) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOC_ZIO_D44) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOC_ZIO_D45) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOC_ZIO_D46) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOC_ZIO_D47) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOC_BUTTON) |        \
                                      PIN_OSPEED_VERYLOW(GPIOC_OSC32_IN) |   \
                                      PIN_OSPEED_VERYLOW(GPIOC_OSC32_OUT))
 #define VAL_GPIOC_PUPDR             (PIN_PUPDR_PULLUP(GPIOC_ARD_A1) |       \
@@ -961,22 +965,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D28) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOD_ARD_D10) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOD_ARD_D9))
-#define VAL_GPIOD_OSPEEDR           (PIN_OSPEED_HIGH(GPIOD_ZIO_D67) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_ZIO_D66) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_ZIO_D48) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_ZIO_D55) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_ZIO_D54) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_ZIO_D53) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_ZIO_D52) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_ZIO_D51) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_USART3_RX) |     \
-                                     PIN_OSPEED_HIGH(GPIOD_USART3_TX) |     \
+#define VAL_GPIOD_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOD_ZIO_D67) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_ZIO_D66) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_ZIO_D48) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_ZIO_D55) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_ZIO_D54) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_ZIO_D53) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_ZIO_D52) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_ZIO_D51) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_USART3_RX) |     \
+                                     DEFAULT_GPIO_SPEED(GPIOD_USART3_TX) |     \
                                      PIN_OSPEED_VERYLOW(GPIOD_PIN10) |      \
-                                     PIN_OSPEED_HIGH(GPIOD_ZIO_D30) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_ZIO_D29) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_ZIO_D28) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_ARD_D10) |       \
-                                     PIN_OSPEED_HIGH(GPIOD_ARD_D9))
+                                     DEFAULT_GPIO_SPEED(GPIOD_ZIO_D30) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_ZIO_D29) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_ZIO_D28) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_ARD_D10) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOD_ARD_D9))
 #define VAL_GPIOD_PUPDR             (PIN_PUPDR_PULLUP(GPIOD_ZIO_D67) |      \
                                      PIN_PUPDR_PULLUP(GPIOD_ZIO_D66) |      \
                                      PIN_PUPDR_PULLUP(GPIOD_ZIO_D48) |      \
@@ -1078,22 +1082,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOE_ARD_D3) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOE_ZIO_D38) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOE_ZIO_D37))
-#define VAL_GPIOE_OSPEEDR           (PIN_OSPEED_HIGH(GPIOE_ZIO_D34) |       \
+#define VAL_GPIOE_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOE_ZIO_D34) |       \
                                      PIN_OSPEED_VERYLOW(GPIOE_PIN1) |       \
-                                     PIN_OSPEED_HIGH(GPIOE_ZIO_D31) |       \
-                                     PIN_OSPEED_HIGH(GPIOE_ZIO_D60) |       \
-                                     PIN_OSPEED_HIGH(GPIOE_ZIO_D57) |       \
-                                     PIN_OSPEED_HIGH(GPIOE_ZIO_D58) |       \
-                                     PIN_OSPEED_HIGH(GPIOE_ZIO_D59) |       \
-                                     PIN_OSPEED_HIGH(GPIOE_ZIO_D41) |       \
-                                     PIN_OSPEED_HIGH(GPIOE_ZIO_D42) |       \
-                                     PIN_OSPEED_HIGH(GPIOE_ARD_D6) |        \
-                                     PIN_OSPEED_HIGH(GPIOE_ZIO_D40) |       \
-                                     PIN_OSPEED_HIGH(GPIOE_ARD_D5) |        \
-                                     PIN_OSPEED_HIGH(GPIOE_ZIO_D39) |       \
-                                     PIN_OSPEED_HIGH(GPIOE_ARD_D3) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ZIO_D31) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ZIO_D60) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ZIO_D57) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ZIO_D58) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ZIO_D59) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ZIO_D41) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ZIO_D42) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ARD_D6) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ZIO_D40) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ARD_D5) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ZIO_D39) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOE_ARD_D3) |        \
                                      PIN_OSPEED_VERYLOW(GPIOE_ZIO_D38) |    \
-                                     PIN_OSPEED_HIGH(GPIOE_ZIO_D37))
+                                     DEFAULT_GPIO_SPEED(GPIOE_ZIO_D37))
 #define VAL_GPIOE_PUPDR             (PIN_PUPDR_PULLUP(GPIOE_ZIO_D34) |      \
                                      PIN_PUPDR_PULLUP(GPIOE_PIN1) |         \
                                      PIN_PUPDR_PULLUP(GPIOE_ZIO_D31) |      \
@@ -1195,17 +1199,17 @@
                                      PIN_OTYPE_PUSHPULL(GPIOF_ARD_D7) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOF_ARD_D4) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOF_ARD_D2))
-#define VAL_GPIOF_OSPEEDR           (PIN_OSPEED_HIGH(GPIOF_ZIO_D68) |       \
-                                     PIN_OSPEED_HIGH(GPIOF_ZIO_D69) |       \
-                                     PIN_OSPEED_HIGH(GPIOF_ZIO_D70) |       \
-                                     PIN_OSPEED_HIGH(GPIOF_ARD_A3) |        \
-                                     PIN_OSPEED_HIGH(GPIOF_ZIO_A8) |        \
-                                     PIN_OSPEED_HIGH(GPIOF_ARD_A4) |        \
+#define VAL_GPIOF_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOF_ZIO_D68) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOF_ZIO_D69) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOF_ZIO_D70) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOF_ARD_A3) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOF_ZIO_A8) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOF_ARD_A4) |        \
                                      PIN_OSPEED_VERYLOW(GPIOF_PIN6) |       \
-                                     PIN_OSPEED_HIGH(GPIOF_ZIO_D62) |       \
-                                     PIN_OSPEED_HIGH(GPIOF_ZIO_D61) |       \
-                                     PIN_OSPEED_HIGH(GPIOF_ZIO_D63) |       \
-                                     PIN_OSPEED_HIGH(GPIOF_ARD_A5) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOF_ZIO_D62) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOF_ZIO_D61) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOF_ZIO_D63) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOF_ARD_A5) |        \
                                      PIN_OSPEED_VERYLOW(GPIOF_PIN11) |      \
                                      PIN_OSPEED_VERYLOW(GPIOF_ARD_D8) |     \
                                      PIN_OSPEED_VERYLOW(GPIOF_ARD_D7) |     \
@@ -1318,15 +1322,15 @@
                                      PIN_OSPEED_VERYLOW(GPIOG_ZIO_D50) |    \
                                      PIN_OSPEED_VERYLOW(GPIOG_PIN4) |       \
                                      PIN_OSPEED_VERYLOW(GPIOG_PIN5) |       \
-                                     PIN_OSPEED_HIGH(GPIOG_USB_GPIO_OUT) |  \
-                                     PIN_OSPEED_HIGH(GPIOG_USB_GPIO_IN) |   \
+                                     DEFAULT_GPIO_SPEED(GPIOG_USB_GPIO_OUT) |  \
+                                     DEFAULT_GPIO_SPEED(GPIOG_USB_GPIO_IN) |   \
                                      PIN_OSPEED_VERYLOW(GPIOG_PIN8) |       \
-                                     PIN_OSPEED_HIGH(GPIOG_ARD_D0) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOG_ARD_D0) |        \
                                      PIN_OSPEED_VERYLOW(GPIOG_PIN10) |      \
-                                     PIN_OSPEED_HIGH(GPIOG_RMII_TX_EN) |    \
+                                     DEFAULT_GPIO_SPEED(GPIOG_RMII_TX_EN) |    \
                                      PIN_OSPEED_VERYLOW(GPIOG_PIN12) |      \
-                                     PIN_OSPEED_HIGH(GPIOG_RMII_TXD0) |     \
-                                     PIN_OSPEED_HIGH(GPIOG_ARD_D1) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOG_RMII_TXD0) |     \
+                                     DEFAULT_GPIO_SPEED(GPIOG_ARD_D1) |        \
                                      PIN_OSPEED_VERYLOW(GPIOG_PIN15))
 #define VAL_GPIOG_PUPDR             (PIN_PUPDR_PULLUP(GPIOG_ZIO_D65) |      \
                                      PIN_PUPDR_PULLUP(GPIOG_ZIO_D64) |      \
@@ -1429,8 +1433,8 @@
                                      PIN_OTYPE_PUSHPULL(GPIOH_PIN13) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOH_PIN14) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOH_PIN15))
-#define VAL_GPIOH_OSPEEDR           (PIN_OSPEED_HIGH(GPIOH_OSC_IN) |        \
-                                     PIN_OSPEED_HIGH(GPIOH_OSC_OUT) |       \
+#define VAL_GPIOH_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOH_OSC_IN) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOH_OSC_OUT) |       \
                                      PIN_OSPEED_VERYLOW(GPIOH_PIN2) |       \
                                      PIN_OSPEED_VERYLOW(GPIOH_PIN3) |       \
                                      PIN_OSPEED_VERYLOW(GPIOH_PIN4) |       \
