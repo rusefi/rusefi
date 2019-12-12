@@ -41,12 +41,13 @@
  *
  */
 
-#define PORT_IDLE_THREAD_STACK_SIZE     1024
+#define PORT_IDLE_THREAD_STACK_SIZE     32
 
-// rusEfi main processing happens on IRQ so PORT_INT_REQUIRED_STACK has to be pretty large.
-// see also a strange comment about PORT_INT_REQUIRED_STACK in global_shared.h
+// PORT_INT_REQUIRED_STACK is the stack space added to every thread's stack so that even if the thread
+// has used all of its stack space, an interrupt can still occur, and the hardware can push the
+// execution context before switching to the main stack to execute the interrupt.
 // see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
-#define PORT_INT_REQUIRED_STACK 	768
+#define PORT_INT_REQUIRED_STACK 	128
 
 #define CHPRINTF_USE_FLOAT          	TRUE
 
@@ -605,7 +606,7 @@
  *          tickless mode.
  */
 #if !defined(CH_DBG_THREADS_PROFILING)
-#define CH_DBG_THREADS_PROFILING            FALSE
+#define CH_DBG_THREADS_PROFILING            TRUE
 #endif
 
 /** @} */
