@@ -40,6 +40,13 @@
 
 
 /*
+ * input-floating is the default pin mode. input-output boards should provision appropriate pull-ups/pull-downs.
+ */
+#define EFI_PIN_MODE_DEFAULT PIN_MODE_INPUT
+#define EFI_DR_DEFAULT PIN_PUPDR_FLOATING
+
+
+/*
  * Board oscillators-related settings.
  * NOTE: LSE not fitted.
  */
@@ -311,22 +318,22 @@
  * PA14 - SWCLK                     (alternate 0).
  * PA15 - PIN15                     (input pullup).
  */
-#define VAL_GPIOA_MODER             (PIN_MODE_INPUT(GPIOA_BUTTON) |         \
-                                     PIN_MODE_INPUT(GPIOA_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOA_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOA_PIN3) |           \
-                                     PIN_MODE_INPUT(GPIOA_LRCK) |       \
-                                     PIN_MODE_INPUT(GPIOA_PIN5) |        \
-                                     PIN_MODE_INPUT(GPIOA_PIN6) |        \
-                                     PIN_MODE_INPUT(GPIOA_PIN7) |        \
-                                     PIN_MODE_INPUT(GPIOA_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOA_VBUS_FS) |        \
+#define VAL_GPIOA_MODER             (EFI_PIN_MODE_DEFAULT(GPIOA_BUTTON) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_PIN3) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_LRCK) |       \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_PIN5) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_PIN6) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_PIN7) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_VBUS_FS) |        \
                                      PIN_MODE_ALTERNATE(GPIOA_PIN10) |  \
                                      PIN_MODE_ALTERNATE(GPIOA_PIN11) |  \
                                      PIN_MODE_ALTERNATE(GPIOA_PIN12) |  \
                                      PIN_MODE_ALTERNATE(GPIOA_SWDIO) |      \
                                      PIN_MODE_ALTERNATE(GPIOA_SWCLK) |      \
-                                     PIN_MODE_INPUT(GPIOA_PIN15))
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_PIN15))
 #define VAL_GPIOA_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOA_BUTTON) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOA_PIN1) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOA_PIN2) |       \
@@ -359,21 +366,21 @@
                                      DEFAULT_GPIO_SPEED(GPIOA_SWDIO) |         \
                                      DEFAULT_GPIO_SPEED(GPIOA_SWCLK) |         \
                                      DEFAULT_GPIO_SPEED(GPIOA_PIN15))
-#define VAL_GPIOA_PUPDR             (PIN_PUPDR_FLOATING(GPIOA_BUTTON) |     \
+#define VAL_GPIOA_PUPDR             (EFI_DR_DEFAULT(GPIOA_BUTTON) |     \
                                      PIN_PUPDR_PULLUP(GPIOA_PIN1) |         \
                                      PIN_PUPDR_PULLUP(GPIOA_PIN2) |         \
                                      PIN_PUPDR_PULLUP(GPIOA_PIN3) |         \
-                                     PIN_PUPDR_FLOATING(GPIOA_LRCK) |       \
-                                     PIN_PUPDR_FLOATING(GPIOA_PIN5) |        \
-                                     PIN_PUPDR_FLOATING(GPIOA_PIN6) |        \
-                                     PIN_PUPDR_FLOATING(GPIOA_PIN7) |        \
+                                     EFI_DR_DEFAULT(GPIOA_LRCK) |       \
+                                     EFI_DR_DEFAULT(GPIOA_PIN5) |        \
+                                     EFI_DR_DEFAULT(GPIOA_PIN6) |        \
+                                     EFI_DR_DEFAULT(GPIOA_PIN7) |        \
                                      PIN_PUPDR_PULLUP(GPIOA_PIN8) |         \
-                                     PIN_PUPDR_FLOATING(GPIOA_VBUS_FS) |    \
-                                     PIN_PUPDR_FLOATING(GPIOA_PIN10) |  \
-                                     PIN_PUPDR_FLOATING(GPIOA_PIN11) |  \
-                                     PIN_PUPDR_FLOATING(GPIOA_PIN12) |  \
-                                     PIN_PUPDR_FLOATING(GPIOA_SWDIO) |      \
-                                     PIN_PUPDR_FLOATING(GPIOA_SWCLK) |      \
+                                     EFI_DR_DEFAULT(GPIOA_VBUS_FS) |    \
+                                     EFI_DR_DEFAULT(GPIOA_PIN10) |  \
+                                     EFI_DR_DEFAULT(GPIOA_PIN11) |  \
+                                     EFI_DR_DEFAULT(GPIOA_PIN12) |  \
+                                     EFI_DR_DEFAULT(GPIOA_SWDIO) |      \
+                                     EFI_DR_DEFAULT(GPIOA_SWCLK) |      \
                                      PIN_PUPDR_PULLUP(GPIOA_PIN15))
 #define VAL_GPIOA_ODR               (PIN_ODR_HIGH(GPIOA_BUTTON) |           \
                                      PIN_ODR_HIGH(GPIOA_PIN1) |             \
@@ -428,22 +435,22 @@
  * PB14 - PIN14                     (input pullup).
  * PB15 - PIN15                     (input pullup).
  */
-#define VAL_GPIOB_MODER             (PIN_MODE_INPUT(GPIOB_PIN0) |           \
-                                     PIN_MODE_INPUT(GPIOB_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOB_PIN2) |           \
+#define VAL_GPIOB_MODER             (EFI_PIN_MODE_DEFAULT(GPIOB_PIN0) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN2) |           \
                                      PIN_MODE_ALTERNATE(GPIOB_SWO) |        \
-                                     PIN_MODE_INPUT(GPIOB_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOB_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN5) |           \
                                      PIN_MODE_ALTERNATE(GPIOB_SCL) |        \
-                                     PIN_MODE_INPUT(GPIOB_PIN7) |           \
-                                     PIN_MODE_INPUT(GPIOB_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOB_PIN9) |          \
-                                     PIN_MODE_INPUT(GPIOB_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOB_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOB_PIN12) |          \
-                                     PIN_MODE_INPUT(GPIOB_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOB_PIN14) |          \
-                                     PIN_MODE_INPUT(GPIOB_PIN15))
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN7) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN9) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN10) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN12) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN13) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN14) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_PIN15))
 #define VAL_GPIOB_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOB_PIN0) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOB_PIN1) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOB_PIN2) |       \
@@ -479,10 +486,10 @@
 #define VAL_GPIOB_PUPDR             (PIN_PUPDR_PULLUP(GPIOB_PIN0) |         \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN1) |         \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN2) |         \
-                                     PIN_PUPDR_FLOATING(GPIOB_SWO) |        \
+                                     EFI_DR_DEFAULT(GPIOB_SWO) |        \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN4) |         \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN5) |         \
-                                     PIN_PUPDR_FLOATING(GPIOB_SCL) |        \
+                                     EFI_DR_DEFAULT(GPIOB_SCL) |        \
                                      PIN_PUPDR_PULLDOWN(GPIOB_PIN7) |         \
                                      PIN_PUPDR_PULLDOWN(GPIOB_PIN8) |         \
                                      PIN_PUPDR_PULLDOWN(GPIOB_PIN9) |        \
@@ -546,21 +553,21 @@
  * PC15 - PIN15                     (input pullup).
  */
 #define VAL_GPIOC_MODER             (PIN_MODE_OUTPUT(GPIOC_OTG_FS_POWER_ON) |\
-                                     PIN_MODE_INPUT(GPIOC_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOC_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOC_PIN3) |        \
-                                     PIN_MODE_INPUT(GPIOC_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOC_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOC_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOC_PIN7) |       \
-                                     PIN_MODE_INPUT(GPIOC_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOC_PIN9) |           \
-                                     PIN_MODE_INPUT(GPIOC_PIN10) |       \
-                                     PIN_MODE_INPUT(GPIOC_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOC_PIN12) |       \
-                                     PIN_MODE_INPUT(GPIOC_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOC_PIN14) |          \
-                                     PIN_MODE_INPUT(GPIOC_PIN15))
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN3) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN7) |       \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN9) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN10) |       \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN12) |       \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN13) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN14) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN15))
 #define VAL_GPIOC_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOC_OTG_FS_POWER_ON) |\
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN1) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN2) |       \
@@ -593,7 +600,7 @@
                                      DEFAULT_GPIO_SPEED(GPIOC_PIN13) |         \
                                      DEFAULT_GPIO_SPEED(GPIOC_PIN14) |         \
                                      DEFAULT_GPIO_SPEED(GPIOC_PIN15))
-#define VAL_GPIOC_PUPDR             (PIN_PUPDR_FLOATING(GPIOC_OTG_FS_POWER_ON) |\
+#define VAL_GPIOC_PUPDR             (EFI_DR_DEFAULT(GPIOC_OTG_FS_POWER_ON) |\
                                      PIN_PUPDR_PULLDOWN(GPIOC_PIN1) |         \
                                      PIN_PUPDR_PULLDOWN(GPIOC_PIN2) |         \
                                      PIN_PUPDR_PULLDOWN(GPIOC_PIN3) |      \
@@ -662,18 +669,18 @@
  * PD14 - LED5                      (output pushpull maximum).
  * PD15 - LED6                      (output pushpull maximum).
  */
-#define VAL_GPIOD_MODER             (PIN_MODE_INPUT(GPIOD_PIN0) |           \
-                                     PIN_MODE_INPUT(GPIOD_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOD_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOD_PIN3) |           \
+#define VAL_GPIOD_MODER             (EFI_PIN_MODE_DEFAULT(GPIOD_PIN0) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOD_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOD_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOD_PIN3) |           \
                                      PIN_MODE_OUTPUT(GPIOD_RESET) |         \
-                                     PIN_MODE_INPUT(GPIOD_OVER_CURRENT) |   \
-                                     PIN_MODE_INPUT(GPIOD_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOD_PIN7) |           \
-                                     PIN_MODE_INPUT(GPIOD_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOD_PIN9) |           \
-                                     PIN_MODE_INPUT(GPIOD_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOD_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOD_OVER_CURRENT) |   \
+                                     EFI_PIN_MODE_DEFAULT(GPIOD_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOD_PIN7) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOD_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOD_PIN9) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOD_PIN10) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOD_PIN11) |          \
                                      PIN_MODE_OUTPUT(GPIOD_LED4) |          \
                                      PIN_MODE_OUTPUT(GPIOD_LED3) |          \
                                      PIN_MODE_OUTPUT(GPIOD_LED5) |          \
@@ -714,18 +721,18 @@
                                      PIN_PUPDR_PULLUP(GPIOD_PIN1) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN2) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN3) |         \
-                                     PIN_PUPDR_FLOATING(GPIOD_RESET) |      \
-                                     PIN_PUPDR_FLOATING(GPIOD_OVER_CURRENT) |\
+                                     EFI_DR_DEFAULT(GPIOD_RESET) |      \
+                                     EFI_DR_DEFAULT(GPIOD_OVER_CURRENT) |\
                                      PIN_PUPDR_PULLUP(GPIOD_PIN6) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN7) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN8) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN9) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN10) |        \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN11) |        \
-                                     PIN_PUPDR_FLOATING(GPIOD_LED4) |       \
-                                     PIN_PUPDR_FLOATING(GPIOD_LED3) |       \
-                                     PIN_PUPDR_FLOATING(GPIOD_LED5) |       \
-                                     PIN_PUPDR_FLOATING(GPIOD_LED6))
+                                     EFI_DR_DEFAULT(GPIOD_LED4) |       \
+                                     EFI_DR_DEFAULT(GPIOD_LED3) |       \
+                                     EFI_DR_DEFAULT(GPIOD_LED5) |       \
+                                     EFI_DR_DEFAULT(GPIOD_LED6))
 #define VAL_GPIOD_ODR               (PIN_ODR_HIGH(GPIOD_PIN0) |             \
                                      PIN_ODR_HIGH(GPIOD_PIN1) |             \
                                      PIN_ODR_HIGH(GPIOD_PIN2) |             \
@@ -779,22 +786,22 @@
  * PE14 - PIN14                     (input floating).
  * PE15 - PIN15                     (input floating).
  */
-#define VAL_GPIOE_MODER             (PIN_MODE_INPUT(GPIOE_PIN0) |           \
-                                     PIN_MODE_INPUT(GPIOE_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOE_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOE_PIN3) |           \
-                                     PIN_MODE_INPUT(GPIOE_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOE_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOE_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOE_PIN7) |           \
-                                     PIN_MODE_INPUT(GPIOE_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOE_PIN9) |           \
-                                     PIN_MODE_INPUT(GPIOE_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOE_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOE_PIN12) |          \
-                                     PIN_MODE_INPUT(GPIOE_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOE_PIN14) |          \
-                                     PIN_MODE_INPUT(GPIOE_PIN15))
+#define VAL_GPIOE_MODER             (EFI_PIN_MODE_DEFAULT(GPIOE_PIN0) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN3) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN7) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN9) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN10) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN12) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN13) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN14) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN15))
 #define VAL_GPIOE_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOE_PIN0) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN1) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN2) |       \
@@ -827,22 +834,22 @@
                                      DEFAULT_GPIO_SPEED(GPIOE_PIN13) |         \
                                      DEFAULT_GPIO_SPEED(GPIOE_PIN14) |         \
                                      DEFAULT_GPIO_SPEED(GPIOE_PIN15))
-#define VAL_GPIOE_PUPDR             (PIN_PUPDR_FLOATING(GPIOE_PIN0) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN1) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN2) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN3) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN4) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN5) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN6) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN7) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN8) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN9) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN10) |      \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN11) |      \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN12) |      \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN13) |      \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN14) |      \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN15))
+#define VAL_GPIOE_PUPDR             (EFI_DR_DEFAULT(GPIOE_PIN0) |       \
+                                     EFI_DR_DEFAULT(GPIOE_PIN1) |       \
+                                     EFI_DR_DEFAULT(GPIOE_PIN2) |       \
+                                     EFI_DR_DEFAULT(GPIOE_PIN3) |       \
+                                     EFI_DR_DEFAULT(GPIOE_PIN4) |       \
+                                     EFI_DR_DEFAULT(GPIOE_PIN5) |       \
+                                     EFI_DR_DEFAULT(GPIOE_PIN6) |       \
+                                     EFI_DR_DEFAULT(GPIOE_PIN7) |       \
+                                     EFI_DR_DEFAULT(GPIOE_PIN8) |       \
+                                     EFI_DR_DEFAULT(GPIOE_PIN9) |       \
+                                     EFI_DR_DEFAULT(GPIOE_PIN10) |      \
+                                     EFI_DR_DEFAULT(GPIOE_PIN11) |      \
+                                     EFI_DR_DEFAULT(GPIOE_PIN12) |      \
+                                     EFI_DR_DEFAULT(GPIOE_PIN13) |      \
+                                     EFI_DR_DEFAULT(GPIOE_PIN14) |      \
+                                     EFI_DR_DEFAULT(GPIOE_PIN15))
 #define VAL_GPIOE_ODR               (PIN_ODR_HIGH(GPIOE_PIN0) |             \
                                      PIN_ODR_HIGH(GPIOE_PIN1) |             \
                                      PIN_ODR_HIGH(GPIOE_PIN2) |             \
@@ -896,22 +903,22 @@
  * PF14 - PIN14                     (input floating).
  * PF15 - PIN15                     (input floating).
  */
-#define VAL_GPIOF_MODER             (PIN_MODE_INPUT(GPIOF_PIN0) |           \
-                                     PIN_MODE_INPUT(GPIOF_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOF_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOF_PIN3) |           \
-                                     PIN_MODE_INPUT(GPIOF_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOF_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOF_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOF_PIN7) |           \
-                                     PIN_MODE_INPUT(GPIOF_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOF_PIN9) |           \
-                                     PIN_MODE_INPUT(GPIOF_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOF_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOF_PIN12) |          \
-                                     PIN_MODE_INPUT(GPIOF_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOF_PIN14) |          \
-                                     PIN_MODE_INPUT(GPIOF_PIN15))
+#define VAL_GPIOF_MODER             (EFI_PIN_MODE_DEFAULT(GPIOF_PIN0) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN3) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN7) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN9) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN10) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN12) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN13) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN14) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN15))
 #define VAL_GPIOF_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOF_PIN0) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOF_PIN1) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOF_PIN2) |       \
@@ -944,22 +951,22 @@
                                      DEFAULT_GPIO_SPEED(GPIOF_PIN13) |         \
                                      DEFAULT_GPIO_SPEED(GPIOF_PIN14) |         \
                                      DEFAULT_GPIO_SPEED(GPIOF_PIN15))
-#define VAL_GPIOF_PUPDR             (PIN_PUPDR_FLOATING(GPIOF_PIN0) |       \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN1) |       \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN2) |       \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN3) |       \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN4) |       \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN5) |       \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN6) |       \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN7) |       \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN8) |       \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN9) |       \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN10) |      \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN11) |      \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN12) |      \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN13) |      \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN14) |      \
-                                     PIN_PUPDR_FLOATING(GPIOF_PIN15))
+#define VAL_GPIOF_PUPDR             (EFI_DR_DEFAULT(GPIOF_PIN0) |       \
+                                     EFI_DR_DEFAULT(GPIOF_PIN1) |       \
+                                     EFI_DR_DEFAULT(GPIOF_PIN2) |       \
+                                     EFI_DR_DEFAULT(GPIOF_PIN3) |       \
+                                     EFI_DR_DEFAULT(GPIOF_PIN4) |       \
+                                     EFI_DR_DEFAULT(GPIOF_PIN5) |       \
+                                     EFI_DR_DEFAULT(GPIOF_PIN6) |       \
+                                     EFI_DR_DEFAULT(GPIOF_PIN7) |       \
+                                     EFI_DR_DEFAULT(GPIOF_PIN8) |       \
+                                     EFI_DR_DEFAULT(GPIOF_PIN9) |       \
+                                     EFI_DR_DEFAULT(GPIOF_PIN10) |      \
+                                     EFI_DR_DEFAULT(GPIOF_PIN11) |      \
+                                     EFI_DR_DEFAULT(GPIOF_PIN12) |      \
+                                     EFI_DR_DEFAULT(GPIOF_PIN13) |      \
+                                     EFI_DR_DEFAULT(GPIOF_PIN14) |      \
+                                     EFI_DR_DEFAULT(GPIOF_PIN15))
 #define VAL_GPIOF_ODR               (PIN_ODR_HIGH(GPIOF_PIN0) |             \
                                      PIN_ODR_HIGH(GPIOF_PIN1) |             \
                                      PIN_ODR_HIGH(GPIOF_PIN2) |             \
@@ -1013,22 +1020,22 @@
  * PG14 - PIN14                     (input floating).
  * PG15 - PIN15                     (input floating).
  */
-#define VAL_GPIOG_MODER             (PIN_MODE_INPUT(GPIOG_PIN0) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN3) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN7) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN9) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOG_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOG_PIN12) |          \
-                                     PIN_MODE_INPUT(GPIOG_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOG_PIN14) |          \
-                                     PIN_MODE_INPUT(GPIOG_PIN15))
+#define VAL_GPIOG_MODER             (EFI_PIN_MODE_DEFAULT(GPIOG_PIN0) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN3) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN7) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN9) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN10) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN12) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN13) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN14) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN15))
 #define VAL_GPIOG_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOG_PIN0) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOG_PIN1) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOG_PIN2) |       \
@@ -1061,22 +1068,22 @@
                                      DEFAULT_GPIO_SPEED(GPIOG_PIN13) |         \
                                      DEFAULT_GPIO_SPEED(GPIOG_PIN14) |         \
                                      DEFAULT_GPIO_SPEED(GPIOG_PIN15))
-#define VAL_GPIOG_PUPDR             (PIN_PUPDR_FLOATING(GPIOG_PIN0) |       \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN1) |       \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN2) |       \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN3) |       \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN4) |       \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN5) |       \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN6) |       \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN7) |       \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN8) |       \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN9) |       \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN10) |      \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN11) |      \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN12) |      \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN13) |      \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN14) |      \
-                                     PIN_PUPDR_FLOATING(GPIOG_PIN15))
+#define VAL_GPIOG_PUPDR             (EFI_DR_DEFAULT(GPIOG_PIN0) |       \
+                                     EFI_DR_DEFAULT(GPIOG_PIN1) |       \
+                                     EFI_DR_DEFAULT(GPIOG_PIN2) |       \
+                                     EFI_DR_DEFAULT(GPIOG_PIN3) |       \
+                                     EFI_DR_DEFAULT(GPIOG_PIN4) |       \
+                                     EFI_DR_DEFAULT(GPIOG_PIN5) |       \
+                                     EFI_DR_DEFAULT(GPIOG_PIN6) |       \
+                                     EFI_DR_DEFAULT(GPIOG_PIN7) |       \
+                                     EFI_DR_DEFAULT(GPIOG_PIN8) |       \
+                                     EFI_DR_DEFAULT(GPIOG_PIN9) |       \
+                                     EFI_DR_DEFAULT(GPIOG_PIN10) |      \
+                                     EFI_DR_DEFAULT(GPIOG_PIN11) |      \
+                                     EFI_DR_DEFAULT(GPIOG_PIN12) |      \
+                                     EFI_DR_DEFAULT(GPIOG_PIN13) |      \
+                                     EFI_DR_DEFAULT(GPIOG_PIN14) |      \
+                                     EFI_DR_DEFAULT(GPIOG_PIN15))
 #define VAL_GPIOG_ODR               (PIN_ODR_HIGH(GPIOG_PIN0) |             \
                                      PIN_ODR_HIGH(GPIOG_PIN1) |             \
                                      PIN_ODR_HIGH(GPIOG_PIN2) |             \
@@ -1130,22 +1137,22 @@
  * PH14 - PIN14                     (input floating).
  * PH15 - PIN15                     (input floating).
  */
-#define VAL_GPIOH_MODER             (PIN_MODE_INPUT(GPIOH_OSC_IN) |         \
-                                     PIN_MODE_INPUT(GPIOH_OSC_OUT) |        \
-                                     PIN_MODE_INPUT(GPIOH_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN3) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN7) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN9) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOH_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOH_PIN12) |          \
-                                     PIN_MODE_INPUT(GPIOH_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOH_PIN14) |          \
-                                     PIN_MODE_INPUT(GPIOH_PIN15))
+#define VAL_GPIOH_MODER             (EFI_PIN_MODE_DEFAULT(GPIOH_OSC_IN) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_OSC_OUT) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN3) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN7) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN9) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN10) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN12) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN13) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN14) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN15))
 #define VAL_GPIOH_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOH_OSC_IN) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOH_OSC_OUT) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOH_PIN2) |       \
@@ -1178,22 +1185,22 @@
                                      DEFAULT_GPIO_SPEED(GPIOH_PIN13) |         \
                                      DEFAULT_GPIO_SPEED(GPIOH_PIN14) |         \
                                      DEFAULT_GPIO_SPEED(GPIOH_PIN15))
-#define VAL_GPIOH_PUPDR             (PIN_PUPDR_FLOATING(GPIOH_OSC_IN) |     \
-                                     PIN_PUPDR_FLOATING(GPIOH_OSC_OUT) |    \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN2) |       \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN3) |       \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN4) |       \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN5) |       \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN6) |       \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN7) |       \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN8) |       \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN9) |       \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN10) |      \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN11) |      \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN12) |      \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN13) |      \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN14) |      \
-                                     PIN_PUPDR_FLOATING(GPIOH_PIN15))
+#define VAL_GPIOH_PUPDR             (EFI_DR_DEFAULT(GPIOH_OSC_IN) |     \
+                                     EFI_DR_DEFAULT(GPIOH_OSC_OUT) |    \
+                                     EFI_DR_DEFAULT(GPIOH_PIN2) |       \
+                                     EFI_DR_DEFAULT(GPIOH_PIN3) |       \
+                                     EFI_DR_DEFAULT(GPIOH_PIN4) |       \
+                                     EFI_DR_DEFAULT(GPIOH_PIN5) |       \
+                                     EFI_DR_DEFAULT(GPIOH_PIN6) |       \
+                                     EFI_DR_DEFAULT(GPIOH_PIN7) |       \
+                                     EFI_DR_DEFAULT(GPIOH_PIN8) |       \
+                                     EFI_DR_DEFAULT(GPIOH_PIN9) |       \
+                                     EFI_DR_DEFAULT(GPIOH_PIN10) |      \
+                                     EFI_DR_DEFAULT(GPIOH_PIN11) |      \
+                                     EFI_DR_DEFAULT(GPIOH_PIN12) |      \
+                                     EFI_DR_DEFAULT(GPIOH_PIN13) |      \
+                                     EFI_DR_DEFAULT(GPIOH_PIN14) |      \
+                                     EFI_DR_DEFAULT(GPIOH_PIN15))
 #define VAL_GPIOH_ODR               (PIN_ODR_HIGH(GPIOH_OSC_IN) |           \
                                      PIN_ODR_HIGH(GPIOH_OSC_OUT) |          \
                                      PIN_ODR_HIGH(GPIOH_PIN2) |             \
@@ -1247,22 +1254,22 @@
  * PI14 - PIN14                     (input floating).
  * PI15 - PIN15                     (input floating).
  */
-#define VAL_GPIOI_MODER             (PIN_MODE_INPUT(GPIOI_PIN0) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN3) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN7) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN9) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOI_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOI_PIN12) |          \
-                                     PIN_MODE_INPUT(GPIOI_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOI_PIN14) |          \
-                                     PIN_MODE_INPUT(GPIOI_PIN15))
+#define VAL_GPIOI_MODER             (EFI_PIN_MODE_DEFAULT(GPIOI_PIN0) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN3) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN7) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN9) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN10) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN12) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN13) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN14) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN15))
 #define VAL_GPIOI_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOI_PIN0) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOI_PIN1) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOI_PIN2) |       \
@@ -1295,22 +1302,22 @@
                                      DEFAULT_GPIO_SPEED(GPIOI_PIN13) |         \
                                      DEFAULT_GPIO_SPEED(GPIOI_PIN14) |         \
                                      DEFAULT_GPIO_SPEED(GPIOI_PIN15))
-#define VAL_GPIOI_PUPDR             (PIN_PUPDR_FLOATING(GPIOI_PIN0) |       \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN1) |       \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN2) |       \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN3) |       \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN4) |       \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN5) |       \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN6) |       \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN7) |       \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN8) |       \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN9) |       \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN10) |      \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN11) |      \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN12) |      \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN13) |      \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN14) |      \
-                                     PIN_PUPDR_FLOATING(GPIOI_PIN15))
+#define VAL_GPIOI_PUPDR             (EFI_DR_DEFAULT(GPIOI_PIN0) |       \
+                                     EFI_DR_DEFAULT(GPIOI_PIN1) |       \
+                                     EFI_DR_DEFAULT(GPIOI_PIN2) |       \
+                                     EFI_DR_DEFAULT(GPIOI_PIN3) |       \
+                                     EFI_DR_DEFAULT(GPIOI_PIN4) |       \
+                                     EFI_DR_DEFAULT(GPIOI_PIN5) |       \
+                                     EFI_DR_DEFAULT(GPIOI_PIN6) |       \
+                                     EFI_DR_DEFAULT(GPIOI_PIN7) |       \
+                                     EFI_DR_DEFAULT(GPIOI_PIN8) |       \
+                                     EFI_DR_DEFAULT(GPIOI_PIN9) |       \
+                                     EFI_DR_DEFAULT(GPIOI_PIN10) |      \
+                                     EFI_DR_DEFAULT(GPIOI_PIN11) |      \
+                                     EFI_DR_DEFAULT(GPIOI_PIN12) |      \
+                                     EFI_DR_DEFAULT(GPIOI_PIN13) |      \
+                                     EFI_DR_DEFAULT(GPIOI_PIN14) |      \
+                                     EFI_DR_DEFAULT(GPIOI_PIN15))
 #define VAL_GPIOI_ODR               (PIN_ODR_HIGH(GPIOI_PIN0) |             \
                                      PIN_ODR_HIGH(GPIOI_PIN1) |             \
                                      PIN_ODR_HIGH(GPIOI_PIN2) |             \
