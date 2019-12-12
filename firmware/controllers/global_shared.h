@@ -14,11 +14,6 @@
  * The following obscurantism is a hack to reduce stack usage, maybe even a questionable performance
  * optimization.
  *
- * rusEfi main processing happens on IRQ so PORT_INT_REQUIRED_STACK has to be pretty large. Problem
- * is that PORT_INT_REQUIRED_STACK is included within each user thread stack, thus this large stack multiplies
- * and this consumes a lot of valueable RAM. While forcing the compiler to inline helps to some degree,
- * it would be even better not to waste stack on passing the parameter.
- *
  * In the firmware we are using 'extern *Engine' - in the firmware Engine is a signleton
  *
  * On the other hand, in order to have a meaningful unit test we are passing Engine * engine as a parameter
