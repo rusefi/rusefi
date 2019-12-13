@@ -47,10 +47,14 @@ class RpmCalculator;
 
 #define CYCLE_ALTERNATION 2
 
+class IEtbController;
+
 class Engine : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
 	Engine();
+
+	IEtbController *etbControllers[ETB_COUNT];
 
 	void OnTriggerStateDecodingError() override;
 	void OnTriggerStateProperState(efitick_t nowNt) override;

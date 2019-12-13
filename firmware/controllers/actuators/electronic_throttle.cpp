@@ -355,7 +355,8 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 }
 
 static EtbHardware etbHardware[ETB_COUNT];
-EtbController etbController[ETB_COUNT];
+// real implementation (we mock for some unit tests)
+EtbController etbControllers[ETB_COUNT];
 
 static void showEthInfo(void) {
 #if EFI_PROD_CODE
@@ -389,7 +390,7 @@ static void showEthInfo(void) {
 
 		scheduleMsg(&logger, "ETB %%d", i);
 		scheduleMsg(&logger, "Motor: dir=%d DC=%f", etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
-		etbController[i].showStatus(&logger);
+		etbControllers[i].showStatus(&logger);
 	}
 
 #endif /* EFI_PROD_CODE */
@@ -397,7 +398,7 @@ static void showEthInfo(void) {
 
 static void etbPidReset(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		etbController[i].reset();
+		engine->etbControllers[i]->reset();
 	}
 }
 
@@ -576,7 +577,7 @@ void stopETBPins(void) {
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
 	for (int i = 0; i < ETB_COUNT; i++) {
-		etbController[i].onConfigurationChange(&previousConfiguration->etb);
+		etbControllers[i].onConfigurationChange(&previousConfiguration->etb);
 	}
 }
 
@@ -655,10 +656,18 @@ void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void unregisterEtbPins() {
-
+	// todo: we probably need an implementation here?!
 }
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	for (int i = 0; i < ETB_COUNT; i++) {
+		engine->etbControllers[i] = &etbControllers[i];
+	}
+	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
 #if EFI_PROD_CODE
 	addConsoleAction("ethinfo", showEthInfo);
 	addConsoleAction("etbreset", etbReset);
@@ -666,8 +675,8 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbController[i].init(&etbHardware[i].dcMotor, i, &engineConfiguration->etb);
-		INJECT_ENGINE_REFERENCE(&etbController[i]);
+		engine->etbControllers[i]->init(&etbHardware[i].dcMotor, i, &engineConfiguration->etb);
+		INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 	}
 
 
@@ -742,9 +751,10 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		etbController[i].Start();
+		engine->etbControllers[i]->Start();
 	}
 }
+
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
