@@ -18,6 +18,8 @@
  * interrupt occurred. The only thing that happens on that thread's stack is that its registers are
  * pushed (by hardware) when an interrupt occurs, just before swapping the stack pointer out for the
  * main stack (currently 0x400=1024 bytes), where the ISR actually runs.
+ * see also __main_stack_size__
+ * see also __process_stack_size__
  * 
  * see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
  *
