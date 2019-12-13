@@ -45,6 +45,12 @@
 #define EFI_PIN_MODE_DEFAULT PIN_MODE_INPUT
 #define EFI_DR_DEFAULT PIN_PUPDR_FLOATING
 
+// older Frankenso does not have pull-downs on hi-side drivers and this affects rusEfi primary test mules
+// https://github.com/rusefi/rusefi/issues/1051
+#define FRANKENSO_0_4_ISSUE_1051_MODE PIN_MODE_OUTPUT
+#define FRANKENSO_0_4_ISSUE_1051_OTYPE PIN_OTYPE_PUSHPULL
+#define FRANKENSO_0_4_ISSUE_1051_PUD PIN_PUPDR_PULLDOWN
+#define FRANKENSO_0_4_ISSUE_1051_ODR PIN_ODR_LOW
 
 /*
  * Board oscillators-related settings.
@@ -544,9 +550,9 @@
                                      EFI_PIN_MODE_DEFAULT(GPIOC_PIN4) |           \
                                      EFI_PIN_MODE_DEFAULT(GPIOC_PIN5) |           \
                                      EFI_PIN_MODE_DEFAULT(GPIOC_PIN6) |           \
-                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN7) |       \
+                                     FRANKENSO_0_4_ISSUE_1051_MODE(GPIOC_PIN7) |       \
                                      EFI_PIN_MODE_DEFAULT(GPIOC_PIN8) |           \
-                                     EFI_PIN_MODE_DEFAULT(GPIOC_PIN9) |           \
+                                     FRANKENSO_0_4_ISSUE_1051_MODE(GPIOC_PIN9) |           \
                                      EFI_PIN_MODE_DEFAULT(GPIOC_PIN10) |       \
                                      EFI_PIN_MODE_DEFAULT(GPIOC_PIN11) |          \
                                      EFI_PIN_MODE_DEFAULT(GPIOC_PIN12) |       \
@@ -560,9 +566,9 @@
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN4) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN5) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN6) |       \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_PIN7) |       \
+                                     FRANKENSO_0_4_ISSUE_1051_OTYPE(GPIOC_PIN7) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN8) |       \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_PIN9) |       \
+                                     FRANKENSO_0_4_ISSUE_1051_OTYPE(GPIOC_PIN9) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN10) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN11) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN10) |       \
@@ -586,21 +592,21 @@
                                      DEFAULT_GPIO_SPEED(GPIOC_PIN14) |         \
                                      DEFAULT_GPIO_SPEED(GPIOC_PIN15))
 #define VAL_GPIOC_PUPDR             (EFI_DR_DEFAULT(GPIOC_OTG_FS_POWER_ON) |\
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN1) |         \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN2) |         \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN3) |      \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN4) |         \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN5) |         \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN6) |         \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN7) |       \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN8) |         \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN9) |         \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN10) |       \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN11) |        \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN12) |       \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN13) |        \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN14) |        \
-                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN15))
+                                     EFI_DR_DEFAULT(GPIOC_PIN1) |         \
+                                     EFI_DR_DEFAULT(GPIOC_PIN2) |         \
+                                     EFI_DR_DEFAULT(GPIOC_PIN3) |      \
+                                     EFI_DR_DEFAULT(GPIOC_PIN4) |         \
+                                     EFI_DR_DEFAULT(GPIOC_PIN5) |         \
+                                     EFI_DR_DEFAULT(GPIOC_PIN6) |         \
+                                     FRANKENSO_0_4_ISSUE_1051_PUD(GPIOC_PIN7) |       \
+                                     EFI_DR_DEFAULT(GPIOC_PIN8) |         \
+                                     FRANKENSO_0_4_ISSUE_1051_PUD(GPIOC_PIN9) |         \
+                                     EFI_DR_DEFAULT(GPIOC_PIN10) |       \
+                                     EFI_DR_DEFAULT(GPIOC_PIN11) |        \
+                                     EFI_DR_DEFAULT(GPIOC_PIN12) |       \
+                                     EFI_DR_DEFAULT(GPIOC_PIN13) |        \
+                                     EFI_DR_DEFAULT(GPIOC_PIN14) |        \
+                                     EFI_DR_DEFAULT(GPIOC_PIN15))
 #define VAL_GPIOC_ODR               (PIN_ODR_HIGH(GPIOC_OTG_FS_POWER_ON) |  \
                                      PIN_ODR_HIGH(GPIOC_PIN1) |             \
                                      PIN_ODR_HIGH(GPIOC_PIN2) |             \
@@ -608,9 +614,9 @@
                                      PIN_ODR_HIGH(GPIOC_PIN4) |             \
                                      PIN_ODR_HIGH(GPIOC_PIN5) |             \
                                      PIN_ODR_HIGH(GPIOC_PIN6) |             \
-                                     PIN_ODR_HIGH(GPIOC_PIN7) |             \
+                                     FRANKENSO_0_4_ISSUE_1051_ODR(GPIOC_PIN7) |             \
                                      PIN_ODR_HIGH(GPIOC_PIN8) |             \
-                                     PIN_ODR_HIGH(GPIOC_PIN9) |             \
+                                     FRANKENSO_0_4_ISSUE_1051_ODR(GPIOC_PIN9) |             \
                                      PIN_ODR_HIGH(GPIOC_PIN10) |             \
                                      PIN_ODR_HIGH(GPIOC_PIN11) |            \
                                      PIN_ODR_HIGH(GPIOC_PIN12) |             \
@@ -662,8 +668,8 @@
                                      EFI_PIN_MODE_DEFAULT(GPIOD_OVER_CURRENT) |   \
                                      EFI_PIN_MODE_DEFAULT(GPIOD_PIN6) |           \
                                      EFI_PIN_MODE_DEFAULT(GPIOD_PIN7) |           \
-                                     EFI_PIN_MODE_DEFAULT(GPIOD_PIN8) |           \
-                                     EFI_PIN_MODE_DEFAULT(GPIOD_PIN9) |           \
+                                     FRANKENSO_0_4_ISSUE_1051_MODE(GPIOD_PIN8) |           \
+                                     FRANKENSO_0_4_ISSUE_1051_MODE(GPIOD_PIN9) |           \
                                      EFI_PIN_MODE_DEFAULT(GPIOD_PIN10) |          \
                                      EFI_PIN_MODE_DEFAULT(GPIOD_PIN11) |          \
                                      PIN_MODE_OUTPUT(GPIOD_LED4) |          \
@@ -678,8 +684,8 @@
                                      PIN_OTYPE_PUSHPULL(GPIOD_OVER_CURRENT) |\
                                      PIN_OTYPE_PUSHPULL(GPIOD_PIN6) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOD_PIN7) |       \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_PIN8) |       \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_PIN9) |       \
+                                     FRANKENSO_0_4_ISSUE_1051_OTYPE(GPIOD_PIN8) |       \
+                                     FRANKENSO_0_4_ISSUE_1051_OTYPE(GPIOD_PIN9) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOD_PIN10) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOD_PIN11) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOD_LED4) |       \
@@ -710,8 +716,8 @@
                                      EFI_DR_DEFAULT(GPIOD_OVER_CURRENT) |\
                                      PIN_PUPDR_PULLUP(GPIOD_PIN6) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN7) |         \
-                                     PIN_PUPDR_PULLUP(GPIOD_PIN8) |         \
-                                     PIN_PUPDR_PULLUP(GPIOD_PIN9) |         \
+                                     FRANKENSO_0_4_ISSUE_1051_PUD(GPIOD_PIN8) |         \
+                                     FRANKENSO_0_4_ISSUE_1051_PUD(GPIOD_PIN9) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN10) |        \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN11) |        \
                                      EFI_DR_DEFAULT(GPIOD_LED4) |       \
@@ -726,8 +732,8 @@
                                      PIN_ODR_HIGH(GPIOD_OVER_CURRENT) |     \
                                      PIN_ODR_HIGH(GPIOD_PIN6) |             \
                                      PIN_ODR_HIGH(GPIOD_PIN7) |             \
-                                     PIN_ODR_HIGH(GPIOD_PIN8) |             \
-                                     PIN_ODR_HIGH(GPIOD_PIN9) |             \
+                                     FRANKENSO_0_4_ISSUE_1051_ODR(GPIOD_PIN8) |             \
+                                     FRANKENSO_0_4_ISSUE_1051_ODR(GPIOD_PIN9) |             \
                                      PIN_ODR_HIGH(GPIOD_PIN10) |            \
                                      PIN_ODR_HIGH(GPIOD_PIN11) |            \
                                      PIN_ODR_LOW(GPIOD_LED4) |              \
@@ -779,13 +785,13 @@
                                      EFI_PIN_MODE_DEFAULT(GPIOE_PIN5) |           \
                                      EFI_PIN_MODE_DEFAULT(GPIOE_PIN6) |           \
                                      EFI_PIN_MODE_DEFAULT(GPIOE_PIN7) |           \
-                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN8) |           \
+                                     FRANKENSO_0_4_ISSUE_1051_MODE(GPIOE_PIN8) |           \
                                      EFI_PIN_MODE_DEFAULT(GPIOE_PIN9) |           \
-                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN10) |          \
+                                     FRANKENSO_0_4_ISSUE_1051_MODE(GPIOE_PIN10) |          \
                                      EFI_PIN_MODE_DEFAULT(GPIOE_PIN11) |          \
-                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN12) |          \
+                                     FRANKENSO_0_4_ISSUE_1051_MODE(GPIOE_PIN12) |          \
                                      EFI_PIN_MODE_DEFAULT(GPIOE_PIN13) |          \
-                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN14) |          \
+                                     FRANKENSO_0_4_ISSUE_1051_MODE(GPIOE_PIN14) |          \
                                      EFI_PIN_MODE_DEFAULT(GPIOE_PIN15))
 #define VAL_GPIOE_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOE_PIN0) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN1) |       \
@@ -795,13 +801,13 @@
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN5) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN6) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN7) |       \
-                                     PIN_OTYPE_PUSHPULL(GPIOE_PIN8) |       \
+                                     FRANKENSO_0_4_ISSUE_1051_OTYPE(GPIOE_PIN8) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN9) |       \
-                                     PIN_OTYPE_PUSHPULL(GPIOE_PIN10) |      \
+                                     FRANKENSO_0_4_ISSUE_1051_OTYPE(GPIOE_PIN10) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN11) |      \
-                                     PIN_OTYPE_PUSHPULL(GPIOE_PIN12) |      \
+                                     FRANKENSO_0_4_ISSUE_1051_OTYPE(GPIOE_PIN12) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN13) |      \
-                                     PIN_OTYPE_PUSHPULL(GPIOE_PIN14) |      \
+                                     FRANKENSO_0_4_ISSUE_1051_OTYPE(GPIOE_PIN14) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN15))
 #define VAL_GPIOE_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOE_PIN0) |          \
                                      DEFAULT_GPIO_SPEED(GPIOE_PIN1) |          \
@@ -827,13 +833,13 @@
                                      EFI_DR_DEFAULT(GPIOE_PIN5) |       \
                                      EFI_DR_DEFAULT(GPIOE_PIN6) |       \
                                      EFI_DR_DEFAULT(GPIOE_PIN7) |       \
-                                     EFI_DR_DEFAULT(GPIOE_PIN8) |       \
+                                     FRANKENSO_0_4_ISSUE_1051_PUD(GPIOE_PIN8) |       \
                                      EFI_DR_DEFAULT(GPIOE_PIN9) |       \
-                                     EFI_DR_DEFAULT(GPIOE_PIN10) |      \
+                                     FRANKENSO_0_4_ISSUE_1051_PUD(GPIOE_PIN10) |      \
                                      EFI_DR_DEFAULT(GPIOE_PIN11) |      \
-                                     EFI_DR_DEFAULT(GPIOE_PIN12) |      \
+                                     FRANKENSO_0_4_ISSUE_1051_PUD(GPIOE_PIN12) |      \
                                      EFI_DR_DEFAULT(GPIOE_PIN13) |      \
-                                     EFI_DR_DEFAULT(GPIOE_PIN14) |      \
+                                     FRANKENSO_0_4_ISSUE_1051_PUD(GPIOE_PIN14) |      \
                                      EFI_DR_DEFAULT(GPIOE_PIN15))
 #define VAL_GPIOE_ODR               (PIN_ODR_HIGH(GPIOE_PIN0) |             \
                                      PIN_ODR_HIGH(GPIOE_PIN1) |             \
@@ -843,13 +849,13 @@
                                      PIN_ODR_HIGH(GPIOE_PIN5) |             \
                                      PIN_ODR_HIGH(GPIOE_PIN6) |             \
                                      PIN_ODR_HIGH(GPIOE_PIN7) |             \
-                                     PIN_ODR_HIGH(GPIOE_PIN8) |             \
+                                     FRANKENSO_0_4_ISSUE_1051_ODR(GPIOE_PIN8) |             \
                                      PIN_ODR_HIGH(GPIOE_PIN9) |             \
-                                     PIN_ODR_HIGH(GPIOE_PIN10) |            \
+                                     FRANKENSO_0_4_ISSUE_1051_ODR(GPIOE_PIN10) |            \
                                      PIN_ODR_HIGH(GPIOE_PIN11) |            \
-                                     PIN_ODR_HIGH(GPIOE_PIN12) |            \
+                                     FRANKENSO_0_4_ISSUE_1051_ODR(GPIOE_PIN12) |            \
                                      PIN_ODR_HIGH(GPIOE_PIN13) |            \
-                                     PIN_ODR_HIGH(GPIOE_PIN14) |            \
+                                     FRANKENSO_0_4_ISSUE_1051_ODR(GPIOE_PIN14) |            \
                                      PIN_ODR_HIGH(GPIOE_PIN15))
 #define VAL_GPIOE_AFRL              (PIN_AFIO_AF(GPIOE_PIN0, 0U) |          \
                                      PIN_AFIO_AF(GPIOE_PIN1, 0U) |          \
