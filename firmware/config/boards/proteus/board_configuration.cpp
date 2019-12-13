@@ -62,8 +62,8 @@ static void setLedPins() {
 }
 
 static void setupVbatt() {
-	// 6.8k high side/10k low side = 1.6667 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.5f / 1.5f;
+	// 5.6k high side/10k low side = 1.56 ratio divider
+	engineConfiguration->analogInputDividerCoefficient = 1.56f;
 
 	// 47k high side/10k low side = 4.7
 	engineConfiguration->vbattDividerCoeff = (57.0f / 10.0f);
