@@ -357,34 +357,11 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 static EtbHardware etbHardware[ETB_COUNT];
 EtbController etbController[ETB_COUNT];
 
-/**
- * At the moment there are TWO ways to use this
- * set_etb_duty X
- * set etb X
- * manual duty cycle control without PID. Percent value from 0 to 100
- */
-void setThrottleDutyCycle(percent_t level) {
-	scheduleMsg(&logger, "setting ETB duty=%f%%", level);
-	if (cisnan(level)) {
-		directPwmValue = NAN;
-		return;
-	}
-
-	float dc = ETB_PERCENT_TO_DUTY(level);
-	directPwmValue = dc;
-	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etbHardware[i].dcMotor.set(dc);
-	}
-	scheduleMsg(&logger, "duty ETB duty=%f", dc);
-}
-
-static bool etbOperational = false;
-
 static void showEthInfo(void) {
 #if EFI_PROD_CODE
 	static char pinNameBuffer[16];
 
-	if (!etbOperational) {
+	if (engine->etbActualCount == 0) {
 		scheduleMsg(&logger, "ETB DISABLED since no PPS");
 	}
 
@@ -407,7 +384,7 @@ static void showEthInfo(void) {
 	scheduleMsg(&logger, "dir1=%s", hwPortname(CONFIG(etbIo[0].directionPin1)));
 	scheduleMsg(&logger, "dir2=%s", hwPortname(CONFIG(etbIo[0].directionPin2)));
 
-	for (int i = 0 ; i < ETB_COUNT; i++) {
+	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		EtbHardware *etb = &etbHardware[i];
 
 		scheduleMsg(&logger, "ETB %%d", i);
@@ -418,18 +395,39 @@ static void showEthInfo(void) {
 #endif /* EFI_PROD_CODE */
 }
 
-static void etbPidReset() {
-	for (int i = 0 ; i < ETB_COUNT; i++) {
+static void etbPidReset(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		etbController[i].reset();
 	}
 }
 
-#if EFI_PROD_CODE
+#if !EFI_UNIT_TEST
+
+/**
+ * At the moment there are TWO ways to use this
+ * set_etb_duty X
+ * set etb X
+ * manual duty cycle control without PID. Percent value from 0 to 100
+ */
+void setThrottleDutyCycle(percent_t level) {
+	scheduleMsg(&logger, "setting ETB duty=%f%%", level);
+	if (cisnan(level)) {
+		directPwmValue = NAN;
+		return;
+	}
+
+	float dc = ETB_PERCENT_TO_DUTY(level);
+	directPwmValue = dc;
+	for (int i = 0 ; i < engine->etbActualCount; i++) {
+		etbHardware[i].dcMotor.set(dc);
+	}
+	scheduleMsg(&logger, "duty ETB duty=%f", dc);
+}
 
 static void setEtbFrequency(int frequency) {
 	engineConfiguration->etbFreq = frequency;
 
-	for (int i = 0 ; i < ETB_COUNT; i++) {
+	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		etbHardware[i].setFrequency(frequency);
 	}
 }
@@ -437,7 +435,7 @@ static void setEtbFrequency(int frequency) {
 static void etbReset() {
 	scheduleMsg(&logger, "etbReset");
 	
-	for (int i = 0 ; i < ETB_COUNT; i++) {
+	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		etbHardware[i].dcMotor.set(0);
 	}
 
@@ -584,6 +582,9 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
+	/**
+	 * safer to start 2nd ETB even if 2nd TPS is not configured by mistake
+	 */
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		etb_io *io = &engineConfiguration->etbIo[i];
 		// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
@@ -676,7 +677,8 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!engine->engineState.hasEtbPedalPositionSensor) {
 		return;
 	}
-	etbOperational = true;
+	engine->etbActualCount = hasTps2(PASS_ENGINE_PARAMETER_SIGNATURE) ? 2 : 1;
+
 #if 0
 	// not alive code
 	autoTune.SetOutputStep(0.1);
@@ -700,7 +702,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE
 	if (engineConfiguration->etbCalibrationOnStart) {
 
-		for (int i = 0 ; i < ETB_COUNT; i++) {
+		for (int i = 0 ; i < engine->etbActualCount; i++) {
 			EtbHardware *etb = &etbHardware[i];
 
 			etb->dcMotor.set(70);
@@ -737,9 +739,9 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 
-	etbPidReset();
+	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	for (int i = 0 ; i < ETB_COUNT; i++) {
+	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		etbController[i].Start();
 	}
 }
