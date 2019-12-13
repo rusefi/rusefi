@@ -13,6 +13,13 @@
 /**
  * The following obscurantism is a hack to reduce stack usage, maybe even a questionable performance
  * optimization.
+ * 
+ * Of note is that interrupts are NOT serviced on the stack of the thread that was running when the
+ * interrupt occurred. The only thing that happens on that thread's stack is that its registers are
+ * pushed (by hardware) when an interrupt occurs, just before swapping the stack pointer out for the
+ * main stack (currently 0x400=1024 bytes), where the ISR actually runs.
+ * 
+ * see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
  *
  * In the firmware we are using 'extern *Engine' - in the firmware Engine is a signleton
  *

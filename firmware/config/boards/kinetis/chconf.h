@@ -46,9 +46,7 @@
 
 #define PORT_IDLE_THREAD_STACK_SIZE     32
 
-// PORT_INT_REQUIRED_STACK is the stack space added to every thread's stack so that even if the thread
-// has used all of its stack space, an interrupt can still occur, and the hardware can push the
-// execution context before switching to the main stack to execute the interrupt.
+// See global_shared.h notes about stack requirements
 // see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
 #define PORT_INT_REQUIRED_STACK 	128
 
