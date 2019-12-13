@@ -35,7 +35,7 @@ public:
 	/**
 	 * This invokes PeriodicTask() immediately and starts the cycle of invocations and sleeps
 	 */
-    void Start() {
+    virtual void Start() {
     	runAndScheduleNext(this);
     }
 };

@@ -257,8 +257,6 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
 	}
 }
 
-extern EtbController etbController[ETB_COUNT];
-
 static const void * getStructAddr(int structId) {
 	switch (structId) {
 	case LDS_CLT_STATE_INDEX:
@@ -275,7 +273,7 @@ static const void * getStructAddr(int structId) {
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case LDS_ETB_PID_STATE_INDEX:
-		return etbController[0].getPidState();
+		return static_cast<EtbController*>(engine->etbControllers[0])->getPidState();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #ifndef EFI_IDLE_CONTROL
