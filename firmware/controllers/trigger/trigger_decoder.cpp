@@ -122,7 +122,7 @@ bool isTriggerDecoderError(void) {
 
 void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
-	efiAssertVoid(CUSTOM_ERR_6642, getCurrentRemainingStack() > 256, "calc s");
+	efiAssertVoid(CUSTOM_ERR_6642, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
 #endif
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
 

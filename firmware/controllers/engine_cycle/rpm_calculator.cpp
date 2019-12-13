@@ -229,7 +229,7 @@ void RpmCalculator::setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFI
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efitick_t nowNt = getTimeNowNt();
-	efiAssertVoid(CUSTOM_ERR_6632, getCurrentRemainingStack() > 256, "lowstckRCL");
+	efiAssertVoid(CUSTOM_ERR_6632, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstckRCL");
 
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 
