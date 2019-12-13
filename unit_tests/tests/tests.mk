@@ -15,6 +15,7 @@ TESTS_SRC_CPP = \
 	tests/test_trigger_decoder.cpp \
 	tests/test_trigger_noiseless.cpp \
 	tests/test_issue_898.cpp \
+	tests/test_etb.cpp \
 	tests/test_ignition_scheduling.cpp \
 	tests/test_fuel_map.cpp \
 	tests/test_fuel_wall_wetting.cpp \
