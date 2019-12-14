@@ -67,13 +67,13 @@ public class CHeaderConsumer implements ConfigurationConsumer {
             content.append("\t" + structure.name + "();" + EOL);
         }
 
-        structure.bitState.reset();
+        BitState bitState = new BitState();
         for (int i = 0; i < structure.cFields.size(); i++) {
             ConfigField cf = structure.cFields.get(i);
-            content.append(getHeaderText(cf, structure.currentOffset, structure.bitState.get()));
+            content.append(getHeaderText(cf, structure.currentOffset, bitState.get()));
             ConfigField next = i == structure.cFields.size() - 1 ? ConfigField.VOID : structure.cFields.get(i + 1);
 
-            structure.bitState.incrementBitIndex(cf, next);
+            bitState.incrementBitIndex(cf, next);
             structure.currentOffset += cf.getSize(next);
         }
 

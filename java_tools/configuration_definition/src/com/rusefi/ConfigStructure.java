@@ -24,7 +24,6 @@ public class ConfigStructure {
 
     public int currentOffset;
     public int totalSize;
-    public BitState bitState = new BitState();
 
     public ConfigStructure(String name, String comment, boolean withPrefix, boolean withConstructor) {
         this.name = name;
@@ -42,9 +41,9 @@ public class ConfigStructure {
     }
 
     public void addAlignmentFill(ReaderState state) {
-        bitState.reset();
+        BitState bitState = new BitState();
         /**
-         * we make alignment decision based on C fields since we expect interation and non-iteration fields
+         * we make alignment decision based on C fields since we expect iteration and non-iteration fields
          * to match in size
          */
         for (int i = 0; i < cFields.size(); i++) {
