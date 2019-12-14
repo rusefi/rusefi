@@ -1652,13 +1652,13 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Idle Stepper Enable",					stepperEnablePin
 		field = "Fuel Pump Pin",						fuelPumpPin
 		field = "Fuel Pump Pin Mode",         	        fuelPumpPinMode
-		field = "ETB#1 Dir #1",							etb1_directionPin1  @@if_ts_show_etb_pins
-		field = "ETB#1 Dir #2",							etb1_directionPin2  @@if_ts_show_etb_pins
-		field = "ETB#1 Control #1",						etb1_controlPin1    @@if_ts_show_etb_pins	
-		field = "etb1_controlPinMode",					etb1_controlPinMode @@if_ts_show_etb_pins
-		field = "ETB#2 Dir #1",							etb2_directionPin1  @@if_ts_show_etb_pins
-		field = "ETB#2 Dir #2",							etb2_directionPin2  @@if_ts_show_etb_pins
-		field = "ETB#2 Control #1",						etb2_controlPin1    @@if_ts_show_etb_pins
+		field = "ETB#1 Dir #1",							etbIo1_directionPin1  @@if_ts_show_etb_pins
+		field = "ETB#1 Dir #2",							etbIo1_directionPin2  @@if_ts_show_etb_pins
+		field = "ETB#1 Control #1",						etbIo1_controlPin1    @@if_ts_show_etb_pins	
+		field = "etb1_controlPinMode",					etbIo1_controlPinMode @@if_ts_show_etb_pins
+		field = "ETB#2 Dir #1",							etbIo2_directionPin1  @@if_ts_show_etb_pins
+		field = "ETB#2 Dir #2",							etbIo2_directionPin2  @@if_ts_show_etb_pins
+		field = "ETB#2 Control #1",						etbIo2_controlPin1    @@if_ts_show_etb_pins
 		field = "SD CS Pin",							sdCardCsPin
 		field = "MIL / Check Engine Pin",				malfunctionIndicatorPin
 		field = "MIL / Check Engine Pin Mode",			malfunctionIndicatorPinMode
@@ -2505,7 +2505,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "No1 Control #1",						etbIo1_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb_use_two_wires == 0}
 		field = "No2 Direction #1",						etbIo2_directionPin1, {throttlePedalPositionAdcChannel != 16}
 		field = "No2 Direction #2",						etbIo2_directionPin2, {throttlePedalPositionAdcChannel != 16}
-		field = "No2 Control #1",						etb2_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb_use_two_wires == 0}
+		field = "No2 Control #1",						etbIo2_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb_use_two_wires == 0}
 		field = "TPS#2 min",							tps2Min, {etbIo2_directionPin1 != 0} 
 		field = "TPS#2 max",							tps2Max, {etbIo2_directionPin1 != 0} 
 		panel = etbPidDialog
