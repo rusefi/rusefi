@@ -440,7 +440,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		 */
 		return;
 	}
-	efiAssertVoid(CUSTOM_STACK_6629, getCurrentRemainingStack() > 128, "lowstck#2");
+	efiAssertVoid(CUSTOM_STACK_6629, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#2a");
 
 #if EFI_CDM_INTEGRATION
 	if (trgEventIndex == 0 && CONFIG(cdmInputPin) != GPIO_UNASSIGNED) {
