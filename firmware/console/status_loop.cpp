@@ -676,7 +676,7 @@ static CommunicationBlinkingTask communicationsBlinkingTask;
 #if EFI_LCD
 class LcdController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
-	LcdController() : PeriodicController("BenchThread") { }
+	LcdController() : PeriodicController("LCD") { }
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
 		UNUSED(nowNt);

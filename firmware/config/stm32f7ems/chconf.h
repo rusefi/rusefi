@@ -45,7 +45,7 @@
 
 // See global_shared.h notes about stack requirements
 // see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
-#define PORT_INT_REQUIRED_STACK 	400
+#define PORT_INT_REQUIRED_STACK 	128
 
 #define CHPRINTF_USE_FLOAT          	TRUE
 
