@@ -3,9 +3,11 @@ package com.rusefi;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rusefi.ConfigField.BOOLEAN_T;
+
 /**
  * Mutable representation of a list of related {@link ConfigField}
- *
+ * <p>
  * (c) Andrey Belomutskiy
  * 1/15/15
  */
@@ -22,14 +24,20 @@ public class ConfigStructure {
     public final List<ConfigField> cFields = new ArrayList<>();
     public final List<ConfigField> tsFields = new ArrayList<>();
 
-    public int currentOffset;
     public int totalSize;
+
+    public final BitState readingBitState = new BitState();
 
     public ConfigStructure(String name, String comment, boolean withPrefix, boolean withConstructor) {
         this.name = name;
         this.comment = comment;
         this.withPrefix = withPrefix;
         this.withConstructor = withConstructor;
+    }
+
+    void addBitField(ConfigField bitField) {
+        addBoth(bitField);
+        this.readingBitState.incrementBitIndex(bitField);
     }
 
     public boolean isWithConstructor() {
@@ -75,5 +83,16 @@ public class ConfigStructure {
 
     public void addTs(ConfigField cf) {
         tsFields.add(cf);
+    }
+
+    public void addBitPadding(ReaderState readerState) {
+        if (readingBitState.get() == 0)
+            return;
+        int sizeAtStartOfPadding = cFields.size();
+        while (readingBitState.get() < 32) {
+            ConfigField bitField = new ConfigField(readerState, "unusedBit_" + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, 0, null, false, false, null, -1);
+            addBitField(bitField);
+        }
+        readingBitState.reset();
     }
 }

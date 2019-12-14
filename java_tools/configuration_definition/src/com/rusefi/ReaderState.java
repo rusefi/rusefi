@@ -48,7 +48,8 @@ public class ReaderState {
         ConfigField bitField = new ConfigField(state, bitName, comment, null, BOOLEAN_T, 0, null, false, false, null, -1);
         if (state.stack.isEmpty())
             throw new IllegalStateException("Parent structure expected");
-        state.stack.peek().addBoth(bitField);
+        ConfigStructure structure = state.stack.peek();
+        structure.addBitField(bitField);
     }
 
     static boolean isEmptyDefinitionLine(String line) {
@@ -112,6 +113,7 @@ public class ReaderState {
             } else if (line.startsWith(STRUCT_NO_PREFIX)) {
                 handleStartStructure(this, line.substring(STRUCT_NO_PREFIX.length()), false);
             } else if (line.startsWith(END_STRUCT)) {
+                addBitPadding();
                 handleEndStruct(this, consumers);
             } else if (line.startsWith(BIT)) {
                 handleBitLine(this, line);
@@ -126,12 +128,18 @@ public class ReaderState {
                  */
                 ConfigDefinition.processDefine(line.substring(DEFINE.length()).trim());
             } else {
+                addBitPadding();
                 processField(this, line);
             }
         }
         for (ConfigurationConsumer consumer : consumers)
             consumer.endFile();
         ensureEmptyAfterProcessing();
+    }
+
+    private void addBitPadding() {
+        ConfigStructure structure = stack.peek();
+        structure.addBitPadding(this);
     }
 
     public void ensureEmptyAfterProcessing() {
