@@ -46,6 +46,8 @@ public class ReaderState {
         }
 
         ConfigField bitField = new ConfigField(state, bitName, comment, null, BOOLEAN_T, 0, null, false, false, null, -1);
+        if (state.stack.isEmpty())
+            throw new IllegalStateException("Parent structure expected");
         state.stack.peek().addBoth(bitField);
     }
 
