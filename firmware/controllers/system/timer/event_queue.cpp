@@ -122,72 +122,52 @@ static uint32_t lastEventCallbackDuration;
 int EventQueue::executeAll(efitime_t now) {
 	ScopePerf perf(PE::EventQueueExecuteAll);
 
-
-	scheduling_s * current, *tmp;
-
-	scheduling_s * executionList = nullptr;
-	scheduling_s * lastInExecutionList = nullptr;
-
-	int listIterationCounter = 0;
 	int executionCounter = 0;
-	// we need safe iteration because we are removing elements inside the loop
-	LL_FOREACH_SAFE2(head, current, tmp, nextScheduling_s)
-	{
-		if (++listIterationCounter > QUEUE_LENGTH_LIMIT) {
-			firmwareError(CUSTOM_LIST_LOOP, "Is this list looped?");
-			return false;
-		}
-		if (current->momentX <= now) {
-			executionCounter++;
-			efiAssert(CUSTOM_ERR_ASSERT, head == current, "removing from head", -1);
-			//LL_DELETE(head, current);
-			head = head->nextScheduling_s;
-			if (executionList == NULL) {
-				lastInExecutionList = executionList = current;
-			} else {
-				lastInExecutionList->nextScheduling_s = current;
-				lastInExecutionList = current;
-			}
-			current->nextScheduling_s = nullptr;
-		} else {
-			/**
-			 * The list is sorted. Once we find one action in the future, all the remaining ones
-			 * are also in the future.
-			 */
-			break;
-		}
-	}
+
 #if EFI_UNIT_TEST
 	assertListIsSorted();
 #endif
 
-	/*
-	 * we need safe iteration here because 'callback' might change change 'current->next'
-	 * while re-inserting it into the queue from within the callback
-	 */
-	LL_FOREACH_SAFE2(executionList, current, tmp, nextScheduling_s) {
-		uint32_t before = getTimeNowLowerNt();
+	while (true) {
+		// Read the head every time - a previously executed event could
+		// have inserted something new at the head
+		scheduling_s* current = head;
+
+		// Queue is empty - bail
+		if (!current) {
+			break;
+		}
+
+		// Only execute events that occured in the past.
+		// The list is sorted, so as soon as we see an event
+		// in the future, we're done.
+		if (current->momentX > now) {
+			break;
+		}
+
+		executionCounter++;
+
+		// step the head forward, unlink this element, clear scheduled flag
+		head = current->nextScheduling_s;
+		current->nextScheduling_s = nullptr;
 		current->isScheduled = false;
-		uint32_t howFarOff = now - current->momentX;
-		maxSchedulingPrecisionLoss = maxI(maxSchedulingPrecisionLoss, howFarOff);
+
 #if EFI_UNIT_TEST
 		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.getArgument());
 #endif
 
+		// Execute the current element
 		{
 			ScopePerf perf2(PE::EventQueueExecuteCallback);
 			current->action.execute();
 		}
 
-		// even with overflow it's safe to subtract here
-		lastEventCallbackDuration = getTimeNowLowerNt() - before;
-		if (lastEventCallbackDuration > maxEventCallbackDuration)
-			maxEventCallbackDuration = lastEventCallbackDuration;
-		if (lastEventCallbackDuration > 2000) {
-			longScheduling = current;
-// what is this line about?			lastEventCallbackDuration++;
-		}
+#if EFI_UNIT_TEST
+	// (tests only) Ensure we didn't break anything
+	assertListIsSorted();
+#endif
 	}
+
 	return executionCounter;
 }
 
@@ -198,7 +178,6 @@ int EventQueue::size(void) const {
 	return result;
 }
 
-#if EFI_UNIT_TEST
 void EventQueue::assertListIsSorted() const {
 	scheduling_s *current = head;
 	while (current != NULL && current->nextScheduling_s != NULL) {
@@ -206,7 +185,6 @@ void EventQueue::assertListIsSorted() const {
 		current = current->nextScheduling_s;
 	}
 }
-#endif
 
 void EventQueue::setLateDelay(int value) {
 	lateDelay = value;
