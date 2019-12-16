@@ -481,11 +481,7 @@ void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGN
 	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4 - W47 top <>W47
 }
 
-/**
- * Pretty much OEM 2003 Miata with ETB
- * set engine_type 13
- */
-void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -527,23 +523,7 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// TLE8888_PIN_23: "33 - GP Out 3"
 	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
 
-	//set idle_offset 0
-	engineConfiguration->idleRpmPid.offset = 0;
-	engineConfiguration->idleRpmPid.pFactor = 0.2;
-	engineConfiguration->idleRpmPid.iFactor = 0.0001;
-	engineConfiguration->idleRpmPid.dFactor = 5;
-	engineConfiguration->idleRpmPid.periodMs = 10;
-
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
-
-	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
-	engineConfiguration->etb.iFactor = 	0;
-	engineConfiguration->etb.dFactor = 0;
-	engineConfiguration->etb.offset = 0;
-
-	// enable ETB
-	// set_rpn_expression 8 "0"
-	setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
@@ -556,14 +536,47 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMax = 870;
 
 	engineConfiguration->idleMode = IM_AUTO;
-	CONFIG(useETBforIdleControl) = true;
-	engineConfiguration->throttlePedalUpVoltage = 1;
-	// WAT? that's an interesting value, how come it's above 5v?
-	engineConfiguration->throttlePedalWOTVoltage = 5.47;
 
 	// set vbatt_divider 11
 	// 0.3#4 has wrong R139 as well?
 	// 56k high side/10k low side multiplied by above analogInputDividerCoefficient = 11
 	engineConfiguration->vbattDividerCoeff = (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
 #endif /* BOARD_TLE8888_COUNT */
+}
+
+
+/**
+ * Pretty much OEM 2003 Miata with ETB
+ * set engine_type 13
+ */
+void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	// enable ETB
+	// set_rpn_expression 8 "0"
+	setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
+
+	//set idle_offset 0
+	engineConfiguration->idleRpmPid.offset = 0;
+	engineConfiguration->idleRpmPid.pFactor = 0.2;
+	engineConfiguration->idleRpmPid.iFactor = 0.0001;
+	engineConfiguration->idleRpmPid.dFactor = 5;
+	engineConfiguration->idleRpmPid.periodMs = 10;
+
+	CONFIG(useETBforIdleControl) = true;
+	engineConfiguration->throttlePedalUpVoltage = 1;
+	// WAT? that's an interesting value, how come it's above 5v?
+	engineConfiguration->throttlePedalWOTVoltage = 5.47;
+
+	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
+	engineConfiguration->etb.iFactor = 	0;
+	engineConfiguration->etb.dFactor = 0;
+	engineConfiguration->etb.offset = 0;
+}
+
+
+
+void setMiataNB2_MRE_MTB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 }

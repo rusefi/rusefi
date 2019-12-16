@@ -68,7 +68,7 @@ typedef enum {
 
 	ROVER_V8 = 10,
 
-	MAZDA_323 = 11,
+	MRE_MIATA_NB2_MTB = 11,
 
 	MRE_MIATA_NA6 = 12,
 
