@@ -554,9 +554,11 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
 
+#if EFI_FSIO
 	// enable ETB
 	// set_rpn_expression 8 "0"
 	setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
+#endif /* EFI_FSIO */
 
 	//set idle_offset 0
 	engineConfiguration->idleRpmPid.offset = 0;
