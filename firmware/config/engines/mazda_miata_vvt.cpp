@@ -409,17 +409,19 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->throttlePedalUpVoltage = 0.65f;
 
 
-	// VNH2SP30 three-wire ETB control
+	// TLE7209 two-wire ETB control
 	// PWM
-	engineConfiguration->etbIo[0].controlPin1 = GPIOE_6;
-	engineConfiguration->etbIo[0].controlPinMode = OM_INVERTED;
+	CONFIG(etb_use_two_wires) = true;
+
+	engineConfiguration->etbIo[0].controlPin1 = GPIO_UNASSIGNED;
+
 	//
-	engineConfiguration->etbIo[0].directionPin1 = GPIOE_12;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOE_12; // orange
 	//
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7;
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // white/blue
 
 	// set_analog_input_pin tps PC3
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3 blue
 
 	engineConfiguration->idleMode = IM_AUTO;
 	CONFIG(useETBforIdleControl) = true;
