@@ -388,7 +388,7 @@ static void showEthInfo(void) {
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		EtbHardware *etb = &etbHardware[i];
 
-		scheduleMsg(&logger, "ETB %%d", i);
+		scheduleMsg(&logger, "ETB %d", i);
 		scheduleMsg(&logger, "Motor: dir=%d DC=%f", etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
 		etbControllers[i].showStatus(&logger);
 	}
