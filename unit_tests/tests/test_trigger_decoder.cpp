@@ -14,7 +14,6 @@
 #include "ford_aspire.h"
 #include "dodge_neon.h"
 #include "ford_1995_inline_6.h"
-#include "mazda_323.h"
 #include "rpm_calculator.h"
 #include "event_queue.h"
 #include "algo.h"
@@ -538,7 +537,6 @@ TEST(misc, testTriggerDecoder) {
 	testTriggerDecoder3("miata 1994", MIATA_1994_DEVIATOR, 11, 0.2985, 0.3890, MIATA_NA_GAP);
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
-	testTriggerDecoder2("MAZDA_323", MAZDA_323, 0, 0.4833, 0);
 	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);
 
 	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CAM, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
