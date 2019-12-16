@@ -1,4 +1,7 @@
 
+rem
+rem ..\misc\encedo_hex2dfu\hex2dfu.exe -i build/rusefi.hex -o build/rusefi.dfu
+
 rem on linux that would be
 rem dfu-util -a 0 -D rusefi_no_asserts.dfu -R
 
