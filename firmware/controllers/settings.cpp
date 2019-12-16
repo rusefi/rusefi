@@ -161,8 +161,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Gy6139";
 	case MAZDA_MIATA_NB1:
 		return "MiataNB1";
-	case MAZDA_323:
-		return "M323";
 	case MRE_MIATA_NA6:
 		return "MRE Miata 1.6";
 	case MRE_MIATA_NB2:

@@ -57,7 +57,6 @@
 #include "mazda_miata_na8.h"
 #include "mazda_miata_nb.h"
 #include "mazda_miata_vvt.h"
-#include "mazda_323.h"
 #include "mazda_626.h"
 
 #include "citroenBerlingoTU3JP.h"
@@ -1115,8 +1114,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case ISSUE_898:
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case MRE_MIATA_NB2_MTB:
+		setMiataNB2_MRE_MTB(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case MRE_MIATA_NB2:
-		setMiataNB2_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
+		setMiataNB2_MRE_ETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case PROMETHEUS_DEFAULTS:
 	case MINIMAL_PINS:
@@ -1209,9 +1211,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case MAZDA_MIATA_NB1:
 		setMazdaMiataNb1EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MAZDA_323:
-		setMazda323EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_626:
 		setMazda626EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
