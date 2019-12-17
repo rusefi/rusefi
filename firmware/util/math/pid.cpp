@@ -124,14 +124,14 @@ void Pid::setErrorAmplification(float coef) {
 }
 
 #if EFI_TUNER_STUDIO
-void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
+void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) const {
 	postState(tsOutputChannels, 1);
 }
 
 /**
  * see https://rusefi.com/wiki/index.php?title=Manual:Debug_fields
  */
-void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) {
+void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) const {
 	tsOutputChannels->debugFloatField1 = output;
 	tsOutputChannels->debugFloatField2 = iTerm;
 	tsOutputChannels->debugFloatField3 = getPrevError();
