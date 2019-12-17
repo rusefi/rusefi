@@ -7,6 +7,9 @@
  */
 
 // burnout or 'Burn Out'
+
+#include "rusefi_enums.h"
+
 typedef enum {
 	BOR_Level_None = OB_BOR_OFF, // 0x0C=12  Supply voltage ranges from 1.62 to 2.10 V
 	BOR_Level_1 = OB_BOR_LEVEL1, // 0x08     Supply voltage ranges from 2.10 to 2.40 V
