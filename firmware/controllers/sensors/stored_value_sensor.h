@@ -34,15 +34,11 @@ public:
 		return {valid, value};
 	}
 
-	void setReportingLocation(float *reportLocation) {
-		m_reportingLocation = reportLocation;
-	}
-
 protected:
 	explicit StoredValueSensor(SensorType type)
 		: Sensor(type)
-	//, m_reportingLocation(reportingLocation)
-	{}
+	{
+	}
 
 	// Invalidate the stored value.
 	void invalidate() {
@@ -54,17 +50,9 @@ protected:
 		// Set value before valid - so we don't briefly have the valid bit set on an invalid value
 		m_value = value;
 		m_isValid = true;
-
-		// Report value
-		float *reportLoc = m_reportingLocation;
-		if (reportLoc) {
-			*reportLoc = value;
-		}
 	}
 
 private:
 	bool m_isValid = false;
 	float m_value = 0.0f;
-
-	float *m_reportingLocation = nullptr;
 };
