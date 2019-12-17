@@ -167,6 +167,3 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 }
-
-void setAdcChannelOverrides(void) {
-}

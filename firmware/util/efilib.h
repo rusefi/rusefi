@@ -87,6 +87,8 @@ float expf_taylor(float x);
 #ifdef __cplusplus
 }
 
+#include <cstddef>
+
 // C++ helpers go here
 namespace efi
 {
