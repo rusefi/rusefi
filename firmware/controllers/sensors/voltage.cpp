@@ -24,5 +24,12 @@ bool hasVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 float getVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getVoltage("vbatt", engineConfiguration->vbattAdcChannel PASS_ENGINE_PARAMETER_SUFFIX) * engineConfiguration->vbattDividerCoeff;
+#ifdef USE_ADC3_VBATT_HACK
+	extern adcsample_t vbattSampleProteus;
+	adcsample_t sample = vbattSampleProteus;
+#else
+	adcsample_t sample = getAdcValue("vbatt", engineConfiguration->vbattAdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
+
+	return adcToVolts(sample) * engineConfiguration->vbattDividerCoeff;
 }

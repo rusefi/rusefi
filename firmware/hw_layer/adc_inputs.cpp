@@ -433,6 +433,11 @@ public:
 				slowAdc.errorsCount++;
 				return;
 			}
+
+#ifdef USE_ADC3_VBATT_HACK
+			void proteusAdcHack();
+			proteusAdcHack();
+#endif
 		}
 
 		{
