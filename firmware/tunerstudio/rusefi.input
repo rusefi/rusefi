@@ -162,7 +162,7 @@ fileVersion = { 20190701 }
    ochGetCommand    = "O%2o%2c"
 
 ; see TS_OUTPUT_SIZE in console source code
-   ochBlockSize     = 356
+   ochBlockSize     = @@TS_OUTPUT_SIZE@@
 
 ;
 ; see TunerStudioOutputChannels struct
