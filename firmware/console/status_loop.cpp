@@ -756,7 +756,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 	// offset 108
 	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
-    tsOutputChannels->massAirFlow = getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->massAirFlow = getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// offset 116
 	// TPS acceleration
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
@@ -793,14 +793,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 	// 268
 	tsOutputChannels->fuelPidCorrection = ENGINE(engineState.running.pidCorrection);
-    // 276
-    tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
-    // 278
-    tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
+	// 276
+	tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
+	// 278
+	tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
 	// 280
 	tsOutputChannels->oilPressure = Sensor::get(SensorType::OilPressure).Value;
-    // 288
-    tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
+	// 288
+	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
