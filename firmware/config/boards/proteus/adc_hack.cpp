@@ -1,3 +1,10 @@
+/**
+ * @file	adc_hack.cpp
+ * @brief	Hacky support for a single channel on adc3
+ *
+ * @date December 17, 2019
+ * @author Matthew Kennedy, (c) 2019
+ */
 
 #include "ch.h"
 #include "hal.h"
