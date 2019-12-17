@@ -137,7 +137,7 @@
 #endif /* STM32_ADC_USE_ADC2 */
 
 #ifndef STM32_ADC_USE_ADC3
-#define STM32_ADC_USE_ADC3                  TRUE
+#define STM32_ADC_USE_ADC3                  FALSE
 #endif /* STM32_ADC_USE_ADC3 */
 
 #define STM32_ADC_ADC1_DMA_STREAM           STM32_DMA_STREAM_ID(2, 4)
