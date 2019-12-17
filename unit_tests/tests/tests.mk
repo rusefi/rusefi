@@ -40,4 +40,5 @@ TESTS_SRC_CPP = \
 	tests/sensor/sensor_reader.cpp \
 	tests/sensor/lin_func.cpp \
 	tests/sensor/resist_func.cpp \
-	tests/sensor/therm_func.cpp
+	tests/sensor/therm_func.cpp \
+	tests/sensor/func_chain.cpp
