@@ -196,111 +196,111 @@ fileVersion = { 20190701 }
 	  ind_isWarnNow    =bits,    U32,      0,  [25:25], "true", "false";
 
 ; RPM, vss
-      RPMValue        = scalar,  U16,      4,    "RPM",    4,   0.00000
-      rpmAcceleration = scalar,  S16,      6,   "dRpm",  100,         0
-      speedToRpmRatio = scalar,  S16,      8,  "value",  100,         0
-      vehicleSpeedKph = scalar,  U16,     10,    "kph",  100,       0.0
+      RPMValue        = scalar,  U16,      4,      "RPM", 0.25,   0.00000
+      rpmAcceleration = scalar,  S16,      6,     "dRpm", 0.01,         0
+      speedToRpmRatio = scalar,  S16,      8,    "value", 0.01,         0
+      vehicleSpeedKph = scalar,  U16,     10,      "kph", 0.01,       0.0
 
 ; temperatures
-     internalMcuTemperature = scalar,S08, 11,  "deg C",    1,         0
+     internalMcuTemperature = scalar,S08, 11,    "deg C",    1,         0
 #if CELSIUS
-      coolant         = scalar,  S16,     12,  "deg C",  100,       0.0
+      coolant         = scalar,  S16,     12,    "deg C", 0.01,       0.0
 #else
-      coolant         = scalar,  S16,     12,  "deg F", {900/5},  17.77777
+      coolant         = scalar,  S16,     12,  "deg F",{9/500},  17.77777
 #endif
 #if CELSIUS
-      intake          = scalar,  S16,     14,  "deg C",  100,       0.0
+      intake          = scalar,  S16,     14,    "deg C", 0.01,       0.0
 #else
-      intake          = scalar,  S16,     14,  "deg F", {900/5},  17.77777
+      intake          = scalar,  S16,     14,  "deg F",{9/500},  17.77777
 #endif
 ; todo: aux1
 ; todo: aux2
       
 
 ; throttle, pedal
-      TPSValue        = scalar,  U16,     20,      "%",  100,         0
-      throttlePedalPosition = scalar,U16, 22,      "%",  100,         0
-      tpsADC          = scalar,  U16,     24,    "ADC",    1,       0.0;
+      TPSValue        = scalar,  U16,     20,        "%", 0.01,         0
+      throttlePedalPosition = scalar,U16, 22,        "%", 0.01,         0
+      tpsADC          = scalar,  U16,     24,      "ADC",    1,       0.0;
 
 ; air flow/mass measurments
-      MAFValue        = scalar,  U16,     26,      "V", 1000,         0
-      massAirFlowValue= scalar,  U16,     28,   "Kg/h",  100,         0
-      MAPValue        = scalar,  U16,     30,    "kPa",   30,       0.0
-      baroPressure    = scalar,  U16,     32,    "kPa",   30,       0.0
-      AFRValue        = scalar,  U16,     34,    "AFR", 1000,       0.0
-      engineLoad      = scalar,  U16,     36,      "%",  100,       0.0 ; Blend of MAP and TPS, depends on algorithm
+      MAFValue        = scalar,  U16,     26,        "V",0.001,         0
+      massAirFlowValue= scalar,  U16,     28,     "Kg/h", 0.01,         0
+      MAPValue        = scalar,  U16,     30,     "kPa",{1/30},       0.0
+      baroPressure    = scalar,  U16,     32,     "kPa",{1/30},       0.0
+      AFRValue        = scalar,  U16,     34,      "AFR",0.001,       0.0
+      engineLoad      = scalar,  U16,     36,        "%", 0.01,       0.0 ; Blend of MAP and TPS, depends on algorithm
 
 ; misc sensors
-      VBatt	          = scalar,	 U16,     38,      "V", 1000,       0.0
-      oilPressure     = scalar,  U16,     40,    "kPa",   30,       0.0
-      vvtPosition     = scalar,  U16,     42,    "deg",   50,         0
+      VBatt           = scalar,	 U16,     38,        "V",0.001,       0.0
+      oilPressure     = scalar,  U16,     40,     "kPa",{1/30},       0.0
+      vvtPosition     = scalar,  U16,     42,      "deg", 0.02,         0
 
       ; 10 bit TPS ADC value (from 0 to 1023 in 5v scale)
       ;tpsADC2         = scalar,  U16,    44,             "ADC",            1,       0.0;
 
 ; fuel math
-      chargeAirMass   = scalar,  U16,     44,      "g", 1000,         0
-      crankingFuelMs  = scalar,  U16,     46,     "ms",  300,       0.0
-      currentTargetAfr= scalar,  U16,     48,  "ratio", 1000,         0
-      baseFuel        = scalar,  U16,     50,     "ms",  300,         0
-      fuelRunning     = scalar,  U16,     52,     "ms",  300,         0
-      actualLastInjection=scalar,U16,     54,     "ms",  300,       0.0
-      injectorDutyCycle=scalar,  U08,     56,      "%",    2,         0
-      veValue         = scalar,  U08,     57,  "ratio",    2,         0
-      injectionOffset = scalar,  S16,     58,    "deg",   50,         0
-      tCharge         = scalar,  U16,     60,  "deg C",  100,       0.0
+      chargeAirMass   = scalar,  U16,     44,        "g",0.001,         0
+      crankingFuelMs  = scalar,  U16,     46,     "ms",{1/300},     0.0
+      currentTargetAfr= scalar,  U16,     48,    "ratio",0.001,         0
+      baseFuel        = scalar,  U16,     50,     "ms",{1/300},       0
+      fuelRunning     = scalar,  U16,     52,     "ms",{1/300},       0
+      actualLastInjection=scalar,U16,     54,     "ms",{1/300},     0.0
+      injectorDutyCycle=scalar,  U08,     56,        "%",  0.5,         0
+      veValue         = scalar,  U08,     57,    "ratio",  0.5,         0
+      injectionOffset = scalar,  S16,     58,      "deg", 0.02,         0
+      tCharge         = scalar,  U16,     60,    "deg C", 0.01,       0.0
 
 ; Corrections
-      injectorLagMs   = scalar,  U16,     62,     "ms",  300,       0.0
-      iatCorrection   = scalar,  U16,     64,      "%",  100,         0
-      cltCorrection   = scalar,  U16,     66,      "%",  100,         0
-      baroCorrection  = scalar,  U16,     68,      "%",  100,         0
-      fuelPidCorrection=scalar,  S16,     70,     "ms",  300,         0
+      injectorLagMs   = scalar,  U16,     62,     "ms",{1/300},       0.0
+      iatCorrection   = scalar,  U16,     64,        "%", 0.01,         0
+      cltCorrection   = scalar,  U16,     66,        "%", 0.01,         0
+      baroCorrection  = scalar,  U16,     68,        "%", 0.01,         0
+      fuelPidCorrection=scalar,  S16,     70,     "ms",{1/300},         0
 
 ; Wall model AE
-      wallFuelAmount  = scalar,  U16,     72,     "ms",  300,         0
-      wallFuelCorrection=scalar, S16,     74,     "ms", 1000,         0
+      wallFuelAmount  = scalar,  U16,     72,     "ms",{1/300},         0
+      wallFuelCorrection=scalar, S16,     74,       "ms",0.001,         0
 
 ; TPS/load AE
-      engineLoadDelta = scalar,  S16,     76,  "value",  100,         0
-      deltaTps        = scalar,  S16,     78,  "ratio",  100,         0
-      engineLoadAccelExtra= scalar,U16,   80,  "value",  300,         0
-      tpsAccelFuel    = scalar,  U16,     82,     "ms",  300,         0
+      engineLoadDelta = scalar,  S16,     76,    "value", 0.01,         0
+      deltaTps        = scalar,  S16,     78,    "ratio", 0.01,         0
+      engineLoadAccelExtra= scalar,U16,   80,  "value",{1/300},         0
+      tpsAccelFuel    = scalar,  U16,     82,     "ms",{1/300},         0
 
 ; Ignition
-      ignitionAdvance = scalar,  U16,     84,    "deg",   50,       0.0
-      sparkDwellValue = scalar,  U16,     86,     "ms",  300,       0.0
-      coilDutyCycle   = scalar,  U16,     88,      "%",  100,         0
+      ignitionAdvance = scalar,  U16,     84,    "deg",   0.02,       0.0
+      sparkDwellValue = scalar,  U16,     86,     "ms",{1/300},       0.0
+      coilDutyCycle   = scalar,  U16,     88,      "%",   0.01,         0
 
 ; Idle & ETB
-      idleAirValvePosition=scalar,S16,    90,      "%",  100,         0
-      etbTarget       = scalar,  S16,     92,      "%",  100,         0
-      etb1DutyCycle   = scalar,  S16,     94,      "%",  100,         0
-      etb1Error       = scalar,  S16,     96,      "%",  100,         0
+      idleAirValvePosition=scalar,S16,    90,      "%",   0.01,         0
+      etbTarget       = scalar,  S16,     92,      "%",   0.01,         0
+      etb1DutyCycle   = scalar,  S16,     94,      "%",   0.01,         0
+      etb1Error       = scalar,  S16,     96,      "%",   0.01,         0
 
 ; Fuel system
-      fuelTankLevel   = scalar,  S16,     98, "amount",  100,         0
-      fuelConsumptionPerHour=scalar,F32, 100,    "kPa",    1,      0.0
+      fuelTankLevel   = scalar,  S16,     98, "amount",   0.01,         0
+      fuelConsumptionPerHour=scalar,F32, 100,    "kPa",      1,      0.0
 
 ; Knock
-      knockCount      = scalar,  U32,    104,"counter",    1,         0
-      knockLevel      = scalar,  F32,    108,  "Volts",    1,         0
+      knockCount      = scalar,  U32,    104,"counter",      1,         0
+      knockLevel      = scalar,  F32,    108,  "Volts",      1,         0
 
 ; Mode, firmware, protocol, run time
-      timeSeconds     = scalar,  U32,    112,    "sec",    1,       0.0
-      engineMode      = scalar,  U32,    116,     "em",    1,       0.0;
-      firmwareVersion = scalar,  U32,    120,"version_f",  1,         0
-      firmwareTsVersion=scalar,  U32,    124,"version_p",  1,         0
+      timeSeconds     = scalar,  U32,    112,    "sec",      1,       0.0
+      engineMode      = scalar,  U32,    116,     "em",      1,       0.0;
+      firmwareVersion = scalar,  U32,    120,"version_f",    1,         0
+      firmwareTsVersion=scalar,  U32,    124,"version_p",    1,         0
 
 ; egt
-      egt1            = scalar,  S16,    128,  "deg C",           1,         0
-      egt2            = scalar,  S16,    130,  "deg C",           1,         0
-      egt3            = scalar,  S16,    132,  "deg C",           1,         0
-      egt4            = scalar,  S16,    134,  "deg C",           1,         0
-      egt5            = scalar,  S16,    136,  "deg C",           1,         0
-      egt6            = scalar,  S16,    138,  "deg C",           1,         0
-      egt7            = scalar,  S16,    140,  "deg C",           1,         0
-      egt8            = scalar,  S16,    142,  "deg C",           1,         0
+      egt1            = scalar,  S16,    128,  "deg C",      1,         0
+      egt2            = scalar,  S16,    130,  "deg C",      1,         0
+      egt3            = scalar,  S16,    132,  "deg C",      1,         0
+      egt4            = scalar,  S16,    134,  "deg C",      1,         0
+      egt5            = scalar,  S16,    136,  "deg C",      1,         0
+      egt6            = scalar,  S16,    138,  "deg C",      1,         0
+      egt7            = scalar,  S16,    140,  "deg C",      1,         0
+      egt8            = scalar,  S16,    142,  "deg C",      1,         0
 
 ; Accel
       accelerationX   = scalar,  S16,    144,      "G",        0.01,         0
