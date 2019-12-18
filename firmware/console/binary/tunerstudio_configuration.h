@@ -156,7 +156,7 @@ typedef struct {
 	// TPS/load AE
 	scaled_percent engineLoadDelta; // 76
 	scaled_percent deltaTps; // 78
-	scaled_ms engineLoadAccelExtra; // 80
+	scaled_percent engineLoadAccelExtra; // 80
 	scaled_ms tpsAccelFuel; // 82
 
 	// Ignition

@@ -264,7 +264,7 @@ fileVersion = { 20190701 }
 ; TPS/load AE
       engineLoadDelta = scalar,  S16,     76,    "value", 0.01,         0
       deltaTps        = scalar,  S16,     78,    "ratio", 0.01,         0
-      engineLoadAccelExtra= scalar,U16,   80,  "value",{1/300},         0
+      engineLoadAccelExtra=scalar,S16,    80,    "value", 0.01,         0
       tpsAccelFuel    = scalar,  U16,     82,     "ms",{1/300},         0
 
 ; Ignition
