@@ -292,47 +292,47 @@ fileVersion = { 20190701 }
       firmwareVersion = scalar,  U32,    120,"version_f",    1,         0
       firmwareTsVersion=scalar,  U32,    124,"version_p",    1,         0
 
-; egt
-      egt1            = scalar,  S16,    128,  "deg C",      1,         0
-      egt2            = scalar,  S16,    130,  "deg C",      1,         0
-      egt3            = scalar,  S16,    132,  "deg C",      1,         0
-      egt4            = scalar,  S16,    134,  "deg C",      1,         0
-      egt5            = scalar,  S16,    136,  "deg C",      1,         0
-      egt6            = scalar,  S16,    138,  "deg C",      1,         0
-      egt7            = scalar,  S16,    140,  "deg C",      1,         0
-      egt8            = scalar,  S16,    142,  "deg C",      1,         0
-
-; Accel
-      accelerationX   = scalar,  S16,    144,      "G",        0.01,         0
-      accelerationY   = scalar,  S16,    148,      "G",        0.01,         0
-
 ; Errors
-      warningCounter  = scalar,  U16,    150,  "count",           1,         0
-      triggerErrorsCounter=scalar,U32,   152,"counter",           1,         0
-      ; totalTriggerErrorCounter 156
-      lastErrorCode   = scalar,  U16,    160,  "error",           1,         0
-      recentErrorCode0= scalar,  U16,    162,  "error",           1,         0
-      recentErrorCode1= scalar,  U16,    164,  "error",           1,         0
-      recentErrorCode2= scalar,  U16,    166,  "error",           1,         0
-      recentErrorCode3= scalar,  U16,    168,  "error",           1,         0
-      recentErrorCode4= scalar,  U16,    170,  "error",           1,         0
-      recentErrorCode5= scalar,  U16,    172,  "error",           1,         0
-      recentErrorCode6= scalar,  U16,    174,  "error",           1,         0
-      recentErrorCode7= scalar,  U16,    176,  "error",           1,         0
+      triggerErrorsCounter=scalar,U32,   128,"counter",           1,         0
+      ; totalTriggerErrorCounter 132
+      warningCounter  = scalar,  U16,    136,  "count",           1,         0
+      lastErrorCode   = scalar,  U16,    138,  "error",           1,         0
+      recentErrorCode0= scalar,  U16,    140,  "error",           1,         0
+      recentErrorCode1= scalar,  U16,    142,  "error",           1,         0
+      recentErrorCode2= scalar,  U16,    144,  "error",           1,         0
+      recentErrorCode3= scalar,  U16,    146,  "error",           1,         0
+      recentErrorCode4= scalar,  U16,    148,  "error",           1,         0
+      recentErrorCode5= scalar,  U16,    150,  "error",           1,         0
+      recentErrorCode6= scalar,  U16,    152,  "error",           1,         0
+      recentErrorCode7= scalar,  U16,    154,  "error",           1,         0
 
 ; Debug
-      debugFloatField1= scalar,  F32,    180,    "val",           1,       0.0
-      debugFloatField2= scalar,  F32,    184,    "val",           1,       0.0
-      debugFloatField3= scalar,  F32,    188,    "val",           1,       0.0
-      debugFloatField4= scalar,  F32,    192,    "val",           1,       0.0
-      debugFloatField5= scalar,  F32,    196,    "val",           1,       0.0
-      debugFloatField6= scalar,  F32,    200,    "val",           1,       0.0
-      debugFloatField7= scalar,  F32,    204,    "val",           1,       0.0
-      debugIntField1  = scalar,  S32,    208,    "val",           1,       0.0
-      debugIntField2  = scalar,  S32,    212,    "val",           1,       0.0
-      debugIntField3  = scalar,  S32,    216,    "val",           1,       0.0
-      debugIntField4  = scalar,  S16,    220,    "val",           1,       0.0
-      debugIntField5  = scalar,  S16,    222,    "val",           1,       0.0
+      debugFloatField1= scalar,  F32,    156,    "val",           1,       0.0
+      debugFloatField2= scalar,  F32,    160,    "val",           1,       0.0
+      debugFloatField3= scalar,  F32,    164,    "val",           1,       0.0
+      debugFloatField4= scalar,  F32,    168,    "val",           1,       0.0
+      debugFloatField5= scalar,  F32,    172,    "val",           1,       0.0
+      debugFloatField6= scalar,  F32,    176,    "val",           1,       0.0
+      debugFloatField7= scalar,  F32,    180,    "val",           1,       0.0
+      debugIntField1  = scalar,  S32,    184,    "val",           1,       0.0
+      debugIntField2  = scalar,  S32,    188,    "val",           1,       0.0
+      debugIntField3  = scalar,  S32,    192,    "val",           1,       0.0
+      debugIntField4  = scalar,  S16,    196,    "val",           1,       0.0
+      debugIntField5  = scalar,  S16,    198,    "val",           1,       0.0
+
+; Accel
+      accelerationX   = scalar,  S16,    200,      "G",        0.01,         0
+      accelerationY   = scalar,  S16,    202,      "G",        0.01,         0
+
+; egt
+      egt1            = scalar,  S16,    204,  "deg C",      1,         0
+      egt2            = scalar,  S16,    206,  "deg C",      1,         0
+      egt3            = scalar,  S16,    208,  "deg C",      1,         0
+      egt4            = scalar,  S16,    210,  "deg C",      1,         0
+      egt5            = scalar,  S16,    212,  "deg C",      1,         0
+      egt6            = scalar,  S16,    214,  "deg C",      1,         0
+      egt7            = scalar,  S16,    216,  "deg C",      1,         0
+      egt8            = scalar,  S16,    218,  "deg C",      1,         0
 
 
 ;

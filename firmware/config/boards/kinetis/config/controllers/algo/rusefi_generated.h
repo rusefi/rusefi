@@ -1888,7 +1888,7 @@
 #define triggerSimulatorPins3_offset 738
 #define triggerSimulatorPins3_offset_hex 2e2
 #define TS_FILE_VERSION 20190701
-#define TS_OUTPUT_SIZE 224
+#define TS_OUTPUT_SIZE 220
 #define ts_show_cj125 true
 #define ts_show_egt true
 #define ts_show_etb true

@@ -184,21 +184,15 @@ typedef struct {
 	uint32_t firmwareVersion; // 120
 	uint32_t tsConfigVersion; // 124
 
-	// EGT
-	egt_values_s egtValues; // 128
-
-	int16_t accelerationX; // 144
-	int16_t accelerationY; // 148
-
 	// Errors
-	int16_t warningCounter; // 150
-	int triggerErrorsCounter; // 152
-	int totalTriggerErrorCounter; // 156
-	int16_t lastErrorCode; // 160
-	int16_t recentErrorCodes[8]; // 162
+	int triggerErrorsCounter; // 128
+	int totalTriggerErrorCounter; // 132
+	int16_t warningCounter; // 136
+	int16_t lastErrorCode; // 138
+	int16_t recentErrorCodes[8]; // 140
 
 	// Debug
-	float debugFloatField1; // 180
+	float debugFloatField1; // 156
 	float debugFloatField2;
 	float debugFloatField3;
 	float debugFloatField4;
@@ -209,7 +203,14 @@ typedef struct {
 	int debugIntField2;
 	int debugIntField3;
 	int16_t debugIntField4;
-	int16_t debugIntField5;
+	int16_t debugIntField5; // 198
+
+	// accelerometer
+	int16_t accelerationX; // 200
+	int16_t accelerationY; // 202
+
+	// EGT
+	egt_values_s egtValues; // 204
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
