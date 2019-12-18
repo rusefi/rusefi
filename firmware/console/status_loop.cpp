@@ -726,7 +726,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 8
 	tsOutputChannels->intakeAirTemperature = intake;
 	// offset 12
-	tsOutputChannels->throttlePositon = tps;
+	tsOutputChannels->throttlePosition = tps;
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 
@@ -1021,7 +1021,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		break;
 	case DBG_TLE8888:
 #if (BOARD_TLE8888_COUNT > 0)
-		tle8888PostState(tsOutputChannels);
+		//tle8888PostState(tsOutputChannels);
 #endif /* BOARD_TLE8888_COUNT */
 		break;
 	default:
