@@ -978,8 +978,6 @@ gaugeCategory = Throttle Body (incl. ETB)
    entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
    entry = currentTargetAfr,@@GAUGE_NAME_TARGET_AFR@@,	float,"%.3f"
 
-   entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f"
-   entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f"
    entry = egt1,	        "EGT1",	float,"%.1f"
    entry = egt2,	        "EGT2",	float,"%.1f"
    entry = egt3,	        "EGT3",	float,"%.1f"
