@@ -15,22 +15,27 @@
 
 #include "tunerstudio_debug_struct.h"
 
-template <typename T, int num = 1, int denom = 1>
+// This class lets us transparently store something at a ratio inside an integer type
+// Just use it like a float - you can read and write to it, like this:
+// scaled_channel<uint8_t, 10> myVar;
+// myVar = 2.4f;	// converts to an int, stores 24
+// float x = myVar; // converts back to float, returns 2.4f
+template <typename T, int mult = 1>
 class scaled_channel {
-private:
-	T m_value;
-
 public:
 	scaled_channel() : m_value(static_cast<T>(0)) { }
 	scaled_channel(float val)
-		: m_value(val * num / denom)
+		: m_value(val * mult)
 	{
 	}
 
 	// Allow reading back out as a float (note: this may be lossy!)
 	operator float() const {
-		return m_value * (float)denom / num;
+		return m_value / (float)mult;
 	}
+
+private:
+	T m_value;
 };
 
 static_assert(sizeof(scaled_channel<uint8_t>) == 1);
