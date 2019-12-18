@@ -13,6 +13,8 @@
 
 #include "rusefi_types.h"
 
+#include "tunerstudio_debug_struct.h"
+
 template <typename T, int num = 1, int denom = 1>
 class scaled_channel {
 private:
@@ -203,6 +205,12 @@ typedef struct {
 	int debugIntField3;
 	int16_t debugIntField4;
 	int16_t debugIntField5;
+
+	// Temporary - will remove soon
+	TsDebugChannels* getDebugChannels() {
+		return reinterpret_cast<TsDebugChannels*>(&debugFloatField1);
+	}
+
 	/* see also [OutputChannels] in rusefi.input */
 } TunerStudioOutputChannels;
 
