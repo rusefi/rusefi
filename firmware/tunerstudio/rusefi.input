@@ -980,14 +980,14 @@ gaugeCategory = Throttle Body (incl. ETB)
 
    entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f"
    entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f"
-   entry = egt1,	        "EGT1",	float,"%.1f"
-   entry = egt2,	        "EGT2",	float,"%.1f"
-   entry = egt3,	        "EGT3",	float,"%.1f"
-   entry = egt4,	        "EGT4",	float,"%.1f"
-   entry = egt5,	        "EGT5",	float,"%.1f"
-   entry = egt6,	        "EGT6",	float,"%.1f"
-   entry = egt7,	        "EGT7",	float,"%.1f"
-   entry = egt8,	        "EGT8",	float,"%.1f"
+   entry = egt1,	        "EGT1",	float,"%.1f", { max31855_cs1 != 0}
+   entry = egt2,	        "EGT2",	float,"%.1f", { max31855_cs2 != 0}
+   entry = egt3,	        "EGT3",	float,"%.1f", { max31855_cs3 != 0}
+   entry = egt4,	        "EGT4",	float,"%.1f", { max31855_cs4 != 0}
+   entry = egt5,	        "EGT5",	float,"%.1f", { max31855_cs5 != 0}
+   entry = egt6,	        "EGT6",	float,"%.1f", { max31855_cs6 != 0}
+   entry = egt7,	        "EGT7",	float,"%.1f", { max31855_cs7 != 0}
+   entry = egt8,	        "EGT8",	float,"%.1f", { max31855_cs8 != 0}
 
    entry = engineLoadAccelExtra, @@GAUGE_NAME_FUEL_EL_EXTRA@@,float,  "%.3f"
    entry = engineLoadDelta, "fuel: load change",float,  "%.3f"
