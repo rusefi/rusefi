@@ -95,9 +95,9 @@ void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	//if (CONFIG(enableAemXSeries)) {
+	if (CONFIG(enableAemXSeries)) {
 		return true;
-	//}
+	}
 
 #if EFI_CJ125 && HAL_USE_SPI
 	if (CONFIG(isCJ125Enabled)) {
@@ -110,9 +110,9 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 extern float aemXSeriesLambda;
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// if (CONFIG(enableAemXSeries)) {
+	if (CONFIG(enableAemXSeries)) {
 		return aemXSeriesLambda * 14.7f;
-	//}
+	}
 
 #if EFI_CJ125 && HAL_USE_SPI
 	if (CONFIG(isCJ125Enabled)) {
