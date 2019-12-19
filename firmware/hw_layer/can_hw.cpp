@@ -241,6 +241,8 @@ static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
 	}
 }
 
+volatile float aemXSeriesLambda = 0;
+
 static void canRead(void) {
 	CANDriver *device = detectCanDevice(CONFIG(canRxPin),
 			CONFIG(canTxPin));
@@ -248,15 +250,23 @@ static void canRead(void) {
 		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
 		return;
 	}
-//	scheduleMsg(&logger, "Waiting for CAN");
-	msg_t result = canReceive(device, CAN_ANY_MAILBOX, &rxBuffer, TIME_MS2I(1000));
+
+	msg_t result = canReceiveTimeout(device, CAN_ANY_MAILBOX, &rxBuffer, TIME_IMMEDIATE);
 	if (result == MSG_TIMEOUT) {
 		return;
 	}
 
 	canReadCounter++;
-	printPacket(&rxBuffer);
-	obdOnCanPacketRx(&rxBuffer);
+
+	// TODO: if/when we support multiple lambda sensors, sensor N
+	// has address 0x0180 + N where N = [0, 15]
+	if (rxBuffer.SID == 0x0180) {
+		// AEM x-series lambda sensor reports in 0.0001 lambda per bit
+		aemXSeriesLambda = 0.0001f * SWAP_UINT16(rxBuffer.data16[0]);
+	} else {
+		printPacket(&rxBuffer);
+		obdOnCanPacketRx(&rxBuffer);
+	}
 }
 
 static void writeStateToCan(void) {
@@ -271,12 +281,7 @@ static msg_t canThread(void *arg) {
 			writeStateToCan();
 
 		if (engineConfiguration->canReadEnabled)
-			canRead(); // todo: since this is a blocking operation, do we need a separate thread for 'write'?
-
-		if (engineConfiguration->canSleepPeriodMs < 10) {
-			warning(CUSTOM_OBD_LOW_CAN_PERIOD, "%d too low CAN", engineConfiguration->canSleepPeriodMs);
-			engineConfiguration->canSleepPeriodMs = 50;
-		}
+			canRead();
 
 		chThdSleepMilliseconds(engineConfiguration->canSleepPeriodMs);
 	}
