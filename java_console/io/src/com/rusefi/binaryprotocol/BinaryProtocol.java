@@ -404,6 +404,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     private static double getValueForChannel(ByteBuffer bb, Sensor sensor) {
+        // TODO: how to handle unsigned types?
+        
         if (sensor.getType() == FieldType.FLOAT) {
             return bb.getFloat();
         } else if (sensor.getType() == FieldType.INT) {
