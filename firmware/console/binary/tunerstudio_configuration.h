@@ -38,11 +38,15 @@ private:
 	T m_value;
 };
 
+// We need to guarantee that scaled values containing some type are the same size
+// as that underlying type.  We rely on the class only having a single member for
+// this trick to work.
 static_assert(sizeof(scaled_channel<uint8_t>) == 1);
 static_assert(sizeof(scaled_channel<uint16_t>) == 2);
 static_assert(sizeof(scaled_channel<uint32_t>) == 4);
 static_assert(sizeof(scaled_channel<float>) == 4);
 
+// Common scaling options - use these if you can!
 using scaled_temperature = scaled_channel<int16_t, 100>;	// +-327 deg C at 0.01 deg resolution
 using scaled_ms = scaled_channel<int16_t, 300>;				// +- 100ms at 0.003ms precision
 using scaled_percent = scaled_channel<int16_t, 100>;		// +-327% at 0.01% resolution
@@ -128,6 +132,7 @@ typedef struct {
 	scaled_afr airFuelRatio; // 34
 	scaled_channel<uint16_t, 100> engineLoad; // 36
 
+	// misc sensors
 	scaled_voltage vBatt; // 38
 	scaled_pressure oilPressure; // 40
 	scaled_angle vvtPosition; // 42
