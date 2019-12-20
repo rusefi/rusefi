@@ -112,7 +112,7 @@ typedef struct {
 	scaled_channel<uint8_t> vehicleSpeedKph; // 10
 	
 	// temperatures
-	scaled_channel<uint8_t> internalMcuTemperature; // offset 11
+	scaled_channel<int8_t> internalMcuTemperature; // offset 11
 	scaled_temperature coolantTemperature;   // offset 12
 	scaled_temperature intakeAirTemperature; // offset 14
 	scaled_temperature auxTemp1;             // offset 16
