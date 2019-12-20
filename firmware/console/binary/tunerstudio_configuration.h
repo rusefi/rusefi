@@ -20,6 +20,11 @@ typedef struct {
 } egt_values_s;
 
 /**
+ * At the moment rusEfi does NOT have any code generation around TS output channels, three locations have to be changed manually
+ * 1) this TunerStudioOutputChannels firmware version of the structure
+ * 2) '[OutputChannels]' block in rusefi.input
+ * 3) com.rusefi.core.Sensor enum in rusEfi console source code
+ *
  * please be aware that 'float' (F32) type requires TunerStudio version 2.6 and later
  */
 typedef struct {
