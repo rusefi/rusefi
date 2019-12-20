@@ -1,12 +1,15 @@
 package com.rusefi.config;
 
 public enum FieldType {
-    INT(4),
-    /**
-     * signed 16 bit type
-     */
-    INT16(2),
+    // Signed
     INT8(1),
+    INT16(2),
+    INT(4),
+
+    // Unsigned
+    UINT8(1),
+    UINT16(2),
+
     BIT(/*bits are stored in 4 byte packs */4),
     FLOAT(4);
 
@@ -25,8 +28,10 @@ public enum FieldType {
             case FLOAT:
                 return FLOAT_TYPE_STRING;
             case INT16:
+            //case UINT16:
                 return SHORT_TYPE_STRING;
             case INT8:
+            //case UINT8:
                 return BYTE_TYPE_STRING;
             case INT:
             default:

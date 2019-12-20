@@ -396,20 +396,22 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             ByteBuffer bb = ByteBuffer.wrap(response, 1 + sensor.getOffset(), 4);
             bb.order(ByteOrder.LITTLE_ENDIAN);
 
-            if (sensor.getType() == FieldType.FLOAT) {
-                double value = bb.getFloat();
-                SensorCentral.getInstance().setValue(value, sensor);
-            } else if (sensor.getType() == FieldType.INT) {
-                int value = bb.getInt();
-                SensorCentral.getInstance().setValue(value, sensor);
-            } else if (sensor.getType() == FieldType.INT16) {
-                short value = (short) (bb.getInt() & 0xFFFF);
-                SensorCentral.getInstance().setValue(value, sensor);
-            } else if (sensor.getType() == null) {
-                // do nothing for old text sensors which I am suprised are still in the code
-            } else
-                throw new UnsupportedOperationException("type " + sensor.getType());
+            double rawValue = getValueForChannel(bb, sensor);
+            double scaledValue = rawValue * sensor.getScale();
+            SensorCentral.getInstance().setValue(scaledValue, sensor);
         }
         return true;
+    }
+
+    private static double getValueForChannel(ByteBuffer bb, Sensor sensor) {
+        if (sensor.getType() == FieldType.FLOAT) {
+            return bb.getFloat();
+        } else if (sensor.getType() == FieldType.INT) {
+            return bb.getInt();
+        } else if (sensor.getType() == FieldType.INT16) {
+            return  (short)(bb.getInt() & 0xFFFF);
+        } else {
+            throw new UnsupportedOperationException("type " + sensor.getType());
+        }
     }
 }
