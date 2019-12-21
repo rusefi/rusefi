@@ -324,7 +324,9 @@ public class Launcher {
         String toolName = args.length == 0 ? null : args[0];
 
         if (TOOL_NAME_FUNCTIONAL_TEST.equals(toolName)) {
-            RealHwTest.main(new String[0]);
+            // passing port argument if it was specified
+            String[] toolArgs = args.length == 1 ? new String[0] : new String[]{args[1]};
+            RealHwTest.main(toolArgs);
             return;
         }
 
