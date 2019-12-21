@@ -68,7 +68,7 @@ struct_no_prefix engine_configuration_s
 #define ETB_BIAS_CURVE_LENGTH 8
 
 ! this is here so that rusEfi console can access it, too
-#define TS_OUTPUT_SIZE 356
+#define TS_OUTPUT_SIZE 220
 
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
