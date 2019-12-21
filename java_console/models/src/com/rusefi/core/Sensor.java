@@ -37,7 +37,7 @@ public enum Sensor {
 
     // air flow/mass measurement
     MAF("MAF", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 26, 0.001, BackgroundColor.MUD, 0, 5, "Volts"),
-    MAP("MAP", SensorCategory.SENSOR_INPUTS, FieldType.UINT16,  28, 1.0 / 30, BackgroundColor.MUD, 20, 300, "kPa"),
+    MAP("MAP", SensorCategory.SENSOR_INPUTS, FieldType.UINT16,  28, 1.0 / MAGIC_30_PACKING_MULT, BackgroundColor.MUD, 20, 300, "kPa"),
 
     AFR("A/F ratio", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, /*offset */ 34, 0.001, BackgroundColor.MUD, 10, 20, "afr"),
 
@@ -46,33 +46,33 @@ public enum Sensor {
 
     // fuel math
     CHARGE_AIR_MASS("airmass", SensorCategory.OPERATIONS, FieldType.UINT16, 44, 0.001, BackgroundColor.MUD, 0, 3, "g/cyl"),
-    crankingFuel(GAUGE_NAME_FUEL_CRANKING, SensorCategory.FUEL, FieldType.UINT16, 46, 1.0 / 300, BackgroundColor.MUD, 0, 30, "ms"),
+    crankingFuel(GAUGE_NAME_FUEL_CRANKING, SensorCategory.FUEL, FieldType.UINT16, 46, 1.0 / MAGIC_300_PACKING_MULT, BackgroundColor.MUD, 0, 30, "ms"),
     TARGET_AFR("A/F target", SensorCategory.OPERATIONS, FieldType.INT16, 48, 0.001, BackgroundColor.MUD, 10, 20, "afr"),
-    baseFuel(Fields.GAUGE_NAME_FUEL_BASE, SensorCategory.FUEL, FieldType.UINT16, 50, 1.0 / 300, BackgroundColor.MUD, 0, 30, "ms"),
-    runningFuel(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.UINT16, 52, 1.0 / 300, BackgroundColor.MUD, 0, 15, "ms"),
-    actualLastInjection(GAUGE_NAME_FUEL_LAST_INJECTION, SensorCategory.FUEL, FieldType.UINT16, /*offset */ 54, 1.0 / 300, BackgroundColor.MUD, 0, 30, "ms"),
+    baseFuel(Fields.GAUGE_NAME_FUEL_BASE, SensorCategory.FUEL, FieldType.UINT16, 50, 1.0 / MAGIC_300_PACKING_MULT, BackgroundColor.MUD, 0, 30, "ms"),
+    runningFuel(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.UINT16, 52, 1.0 / MAGIC_300_PACKING_MULT, BackgroundColor.MUD, 0, 15, "ms"),
+    actualLastInjection(GAUGE_NAME_FUEL_LAST_INJECTION, SensorCategory.FUEL, FieldType.UINT16, /*offset */ 54, 1.0 / MAGIC_300_PACKING_MULT, BackgroundColor.MUD, 0, 30, "ms"),
     injectorDutyCycle(Fields.GAUGE_NAME_FUEL_INJ_DUTY, SensorCategory.FUEL, FieldType.UINT8, 56, 0.5, BackgroundColor.MUD, 0, 100, "%"),
     veValue(GAUGE_NAME_FUEL_VE, SensorCategory.FUEL, FieldType.FLOAT, 57, 0.5, BackgroundColor.MUD, 0, 100, "%"),
     tCharge(GAUGE_NAME_TCHARGE, SensorCategory.FUEL, FieldType.FLOAT, 60, 0.01, BackgroundColor.MUD, 30, 140, "C"),
 
     // Corrections
-    injectorLagMs(GAUGE_NAME_INJECTOR_LAG, SensorCategory.FUEL, FieldType.UINT16, 62, 1.0 / 300, BackgroundColor.MUD, 0, 15, "ms"),
+    injectorLagMs(GAUGE_NAME_INJECTOR_LAG, SensorCategory.FUEL, FieldType.UINT16, 62, 1.0 / MAGIC_300_PACKING_MULT, BackgroundColor.MUD, 0, 15, "ms"),
     iatCorrection(GAUGE_NAME_FUEL_IAT_CORR, SensorCategory.FUEL, FieldType.INT16, 64, 0.01, BackgroundColor.MUD, 0, 5, "ratio"),
     cltCorrection(GAUGE_NAME_FUEL_CLT_CORR, SensorCategory.FUEL, FieldType.INT16, 66, 0.01, BackgroundColor.MUD, 0, 5, "ratio"),
-    fuelPidCorrection("Fuel PID", SensorCategory.FUEL, FieldType.INT16, 70,  1.0 / 300, BackgroundColor.MUD, -2, 2, "ms"),
+    fuelPidCorrection("Fuel PID", SensorCategory.FUEL, FieldType.INT16, 70,  1.0 / MAGIC_300_PACKING_MULT, BackgroundColor.MUD, -2, 2, "ms"),
 
     // Wall model AE
-    wallFuelAmount(GAUGE_NAME_FUEL_WALL_AMOUNT, SensorCategory.FUEL, FieldType.UINT16, 72, 1.0 / 300, BackgroundColor.MUD, 0, 20, "ms"),
+    wallFuelAmount(GAUGE_NAME_FUEL_WALL_AMOUNT, SensorCategory.FUEL, FieldType.UINT16, 72, 1.0 / MAGIC_300_PACKING_MULT, BackgroundColor.MUD, 0, 20, "ms"),
     wallFuelCorrection(GAUGE_NAME_FUEL_WALL_CORRECTION, SensorCategory.FUEL, FieldType.INT16, 74, 0.001, BackgroundColor.MUD, -5, 5, "ms"),
 
     // TPS/load AE
     engineLoadAccelDelta("load accel delta", SensorCategory.FUEL, FieldType.INT16, 76, 0.01, BackgroundColor.MUD, -5, 5, "ratio"),
     deltaTps(Fields.GAUGE_NAME_FUEL_TPS_ROC, SensorCategory.FUEL, FieldType.INT16, 78, 0.01, BackgroundColor.MUD, -100, 100, "%"),
-    tpsAccelFuel(Fields.GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.INT16, 82, 1.0 / 300, BackgroundColor.MUD, 0, 200, "ms"),
+    tpsAccelFuel(Fields.GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.INT16, 82, 1.0 / MAGIC_300_PACKING_MULT, BackgroundColor.MUD, 0, 200, "ms"),
 
     // Ignition
     ignitionAdvance("ignition timing", SensorCategory.OPERATIONS, FieldType.INT16, 84, 0.02, BackgroundColor.MUD, 30, 140, "deg"),
-    DWELL(Fields.GAUGE_COIL_DWELL_TIME, SensorCategory.OPERATIONS, FieldType.UINT16, 86, 1.0 / 300, BackgroundColor.MUD, 1, 10, "ms"),
+    DWELL(Fields.GAUGE_COIL_DWELL_TIME, SensorCategory.OPERATIONS, FieldType.UINT16, 86, 1.0 / MAGIC_300_PACKING_MULT, BackgroundColor.MUD, 1, 10, "ms"),
     coilDutyCycle(Fields.GAUGE_NAME_DWELL_DUTY, SensorCategory.OPERATIONS, FieldType.UINT16, 88, 0.01, BackgroundColor.MUD, 0, 100, "%"),
 
     // Idle & ETB

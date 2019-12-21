@@ -225,14 +225,14 @@ fileVersion = { 20190701 }
 ; air flow/mass measurments
       MAFValue        = scalar,  U16,     26,        "V",0.001,         0
       massAirFlowValue= scalar,  U16,     28,     "Kg/h", 0.01,         0
-      MAPValue        = scalar,  U16,     30,     "kPa",{1/30},       0.0
-      baroPressure    = scalar,  U16,     32,     "kPa",{1/30},       0.0
+      MAPValue        = scalar,  U16,     30,     "kPa",{1/@@MAGIC_30_PACKING_MULT@@},       0.0
+      baroPressure    = scalar,  U16,     32,     "kPa",{1/@@MAGIC_30_PACKING_MULT@@},       0.0
       AFRValue        = scalar,  U16,     34,      "AFR",0.001,       0.0
       engineLoad      = scalar,  U16,     36,        "%", 0.01,       0.0 ; Blend of MAP and TPS, depends on algorithm
 
 ; misc sensors
       VBatt           = scalar,	 U16,     38,        "V",0.001,       0.0
-      oilPressure     = scalar,  U16,     40,     "kPa",{1/30},       0.0
+      oilPressure     = scalar,  U16,     40,     "kPa",{1/@@MAGIC_30_PACKING_MULT@@},       0.0
       vvtPosition     = scalar,  U16,     42,      "deg", 0.02,         0
 
       ; 10 bit TPS ADC value (from 0 to 1023 in 5v scale)
@@ -240,25 +240,25 @@ fileVersion = { 20190701 }
 
 ; fuel math
       chargeAirMass   = scalar,  U16,     44,        "g",0.001,         0
-      crankingFuelMs  = scalar,  U16,     46,     "ms",{1/300},     0.0
+      crankingFuelMs  = scalar,  U16,     46,     "ms",{1/@@MAGIC_300_PACKING_MULT@@},     0.0
       currentTargetAfr= scalar,  U16,     48,    "ratio",0.001,         0
-      baseFuel        = scalar,  U16,     50,     "ms",{1/300},       0
-      fuelRunning     = scalar,  U16,     52,     "ms",{1/300},       0
-      actualLastInjection=scalar,U16,     54,     "ms",{1/300},     0.0
+      baseFuel        = scalar,  U16,     50,     "ms",{1/@@MAGIC_300_PACKING_MULT@@},       0
+      fuelRunning     = scalar,  U16,     52,     "ms",{1/@@MAGIC_300_PACKING_MULT@@},       0
+      actualLastInjection=scalar,U16,     54,     "ms",{1/@@MAGIC_300_PACKING_MULT@@},     0.0
       injectorDutyCycle=scalar,  U08,     56,        "%",  0.5,         0
       veValue         = scalar,  U08,     57,    "ratio",  0.5,         0
       injectionOffset = scalar,  S16,     58,      "deg", 0.02,         0
       tCharge         = scalar,  U16,     60,    "deg C", 0.01,       0.0
 
 ; Corrections
-      injectorLagMs   = scalar,  U16,     62,     "ms",{1/300},       0.0
+      injectorLagMs   = scalar,  U16,     62,     "ms",{1/@@MAGIC_300_PACKING_MULT@@},       0.0
       iatCorrection   = scalar,  U16,     64,        "%", 0.01,         0
       cltCorrection   = scalar,  U16,     66,        "%", 0.01,         0
       baroCorrection  = scalar,  U16,     68,        "%", 0.01,         0
-      fuelPidCorrection=scalar,  S16,     70,     "ms",{1/300},         0
+      fuelPidCorrection=scalar,  S16,     70,     "ms",{1/@@MAGIC_300_PACKING_MULT@@},         0
 
 ; Wall model AE
-      wallFuelAmount  = scalar,  U16,     72,     "ms",{1/300},         0
+      wallFuelAmount  = scalar,  U16,     72,     "ms",{1/@@MAGIC_300_PACKING_MULT@@},         0
       wallFuelCorrection=scalar, S16,     74,       "ms",0.001,         0
 
 ; TPS/load AE

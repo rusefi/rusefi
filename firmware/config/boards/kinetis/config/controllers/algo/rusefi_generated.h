@@ -1408,6 +1408,8 @@
 #define mafDecodingBins_offset_hex 2e20
 #define mafSensorType_offset 948
 #define mafSensorType_offset_hex 3b4
+#define MAGIC_300_PACKING_MULT 300
+#define MAGIC_30_PACKING_MULT 30
 #define mainRelayPin_offset 706
 #define mainRelayPin_offset_hex 2c2
 #define mainRelayPinMode_offset 752
