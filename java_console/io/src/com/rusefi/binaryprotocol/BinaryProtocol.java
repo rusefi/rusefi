@@ -404,16 +404,19 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     private static double getValueForChannel(ByteBuffer bb, Sensor sensor) {
-        // TODO: how to handle unsigned types?
-        
-        if (sensor.getType() == FieldType.FLOAT) {
-            return bb.getFloat();
-        } else if (sensor.getType() == FieldType.INT) {
-            return bb.getInt();
-        } else if (sensor.getType() == FieldType.INT16) {
-            return  (short)(bb.getInt() & 0xFFFF);
-        } else {
-            throw new UnsupportedOperationException("type " + sensor.getType());
+        switch (sensor.getType()) {
+            case FLOAT:
+                return bb.getFloat();
+            case INT:
+                return bb.getInt();
+            case UINT16:
+            case INT16:
+                return  (short)(bb.getInt() & 0xFFFF);
+            case UINT8:
+            case INT8:
+                return (byte)(bb.getInt() & 0xFF);
+            default:
+                throw new UnsupportedOperationException("type " + sensor.getType());
         }
     }
 }
