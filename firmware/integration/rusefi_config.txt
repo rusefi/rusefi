@@ -128,9 +128,6 @@ struct_no_prefix engine_configuration_s
 #define RPM_1_BYTE_PACKING_MULT 50
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 
-#define MAGIC_30_PACKING_MULT 30
-#define MAGIC_300_PACKING_MULT 300
-
 #define FSIO_TABLE_8 8
 
 #define FSIO_CURVE_8 8
