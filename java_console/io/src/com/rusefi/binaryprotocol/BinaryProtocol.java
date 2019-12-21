@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -394,10 +393,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         currentOutputs = response;
 
         for (Sensor sensor : Sensor.values()) {
-            if (sensor.getType() == null) {
-                // for example ETB_CONTROL_QUALITY, weird use-case
-                continue;
-            }
             ByteBuffer bb = ByteBuffer.wrap(response, 1 + sensor.getOffset(), 4);
             bb.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -409,9 +404,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     private static double getValueForChannel(ByteBuffer bb, Sensor sensor) {
-        Objects.requireNonNull(sensor, "sensor");
-        if (sensor.getType() == null)
-            throw new NullPointerException("sensor type " + sensor);
         switch (sensor.getType()) {
             case FLOAT:
                 return bb.getFloat();
