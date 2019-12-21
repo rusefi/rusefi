@@ -17,9 +17,8 @@ public class RealHwTest {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Sleeping " + STARTUP_SLEEP + " seconds to give OS time to connect VCP driver");
         Thread.sleep(STARTUP_SLEEP * SECOND);
-        long start = System.currentTimeMillis();
 
-        boolean isSuccess = runHardwareTest(args, start);
+        boolean isSuccess = runHardwareTest(args);
         if (!isSuccess)
             System.exit(-1);
         FileLog.MAIN.logLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -31,20 +30,28 @@ public class RealHwTest {
     /**
      * @return true if test is a SUCCESS, false if a FAILURE
      */
-    public static boolean runHardwareTest(String[] args, long start) {
+    public static boolean runHardwareTest(String[] args) {
         String port = startRealHardwareTest(args);
         if (port == null) {
             return false;
         } else {
-            try {
-                runRealHardwareTest(port);
-            } catch (Throwable e) {
-                e.printStackTrace();
-                return false;
-            }
-            long time = (System.currentTimeMillis() - start) / 1000;
-            FileLog.MAIN.logLine("Done in " + time + "secs");
+            return runHardwareTest(port);
         }
+    }
+
+    /**
+     * @return true if test is a SUCCESS, false if a FAILURE
+     */
+    public static boolean runHardwareTest(String port) {
+        long start = System.currentTimeMillis();
+        try {
+            runRealHardwareTest(port);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return false;
+        }
+        long time = (System.currentTimeMillis() - start) / 1000;
+        FileLog.MAIN.logLine("Done in " + time + "secs");
         return true;
     }
 
@@ -59,6 +66,7 @@ public class RealHwTest {
         if (args.length == 1 || args.length == 2) {
             port = args[0];
         } else if (args.length == 0) {
+            // todo: reuse 'PortDetector.autoDetectPort' here?
             port = LinkManager.getDefaultPort();
         } else {
             System.out.println("Only one optional argument expected: port number");
