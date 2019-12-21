@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.io.LinkManager;
+import org.jetbrains.annotations.NotNull;
 
 import static com.rusefi.AutoTest.mainTestBody;
 import static com.rusefi.Timeouts.SECOND;
@@ -17,28 +18,37 @@ public class RealHwTest {
         System.out.println("Sleeping " + STARTUP_SLEEP + " seconds to give OS time to connect VCP driver");
         Thread.sleep(STARTUP_SLEEP * SECOND);
         long start = System.currentTimeMillis();
-        String port = startRealHardwareTest(args);
 
-        if (port == null)
-            return;
-        boolean failed = false;
-        try {
-            runRealHardwareTest(port);
-        } catch (Throwable e) {
-            e.printStackTrace();
-            failed = true;
-        }
-        if (failed)
+        boolean isSuccess = runHardwareTest(args, start);
+        if (!isSuccess)
             System.exit(-1);
         FileLog.MAIN.logLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         FileLog.MAIN.logLine("++++++++++++++++++++++++++++++++++++  Real Hardware Test Passed +++++++++++++++");
         FileLog.MAIN.logLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        long time = (System.currentTimeMillis() - start) / 1000;
-        FileLog.MAIN.logLine("Done in " + time + "secs");
         System.exit(0); // this is a safer method eliminating the issue of non-daemon threads
     }
 
-    static String startRealHardwareTest(String[] args) {
+    /**
+     * @return true if test is a SUCCESS, false if a FAILURE
+     */
+    public static boolean runHardwareTest(String[] args, long start) {
+        String port = startRealHardwareTest(args);
+        if (port == null) {
+            return false;
+        } else {
+            try {
+                runRealHardwareTest(port);
+            } catch (Throwable e) {
+                e.printStackTrace();
+                return false;
+            }
+            long time = (System.currentTimeMillis() - start) / 1000;
+            FileLog.MAIN.logLine("Done in " + time + "secs");
+        }
+        return true;
+    }
+
+    static String startRealHardwareTest(@NotNull String[] args) {
         /**
          * with real hardware we have noise on all analog inputs which gives us random sensor data, we cannot really
          * test exact numbers yet
