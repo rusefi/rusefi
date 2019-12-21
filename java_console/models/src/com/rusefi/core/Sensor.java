@@ -73,7 +73,7 @@ public enum Sensor {
     // Ignition
     ignitionAdvance("ignition timing", SensorCategory.OPERATIONS, FieldType.INT16, 84, 0.02, BackgroundColor.MUD, 30, 140, "deg"),
     DWELL(Fields.GAUGE_COIL_DWELL_TIME, SensorCategory.OPERATIONS, FieldType.UINT16, 86, 1.0 / 300, BackgroundColor.MUD, 1, 10, "ms"),
-    coilDutyCycle(Fields.GAUGE_NAME_DWELL_DUTY, SensorCategory.OPERATIONS, FieldType.FLOAT, 88, 0.01, BackgroundColor.MUD, 0, 100, "%"),
+    coilDutyCycle(Fields.GAUGE_NAME_DWELL_DUTY, SensorCategory.OPERATIONS, FieldType.UINT16, 88, 0.01, BackgroundColor.MUD, 0, 100, "%"),
 
     // Idle & ETB
     idlePosition("Idle Position", SensorCategory.OPERATIONS, FieldType.INT16, 90, 0.01, BackgroundColor.MUD, 0, 100, "%"),
