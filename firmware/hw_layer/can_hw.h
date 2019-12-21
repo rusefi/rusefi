@@ -39,7 +39,7 @@
 
 void initCan(void);
 void commonTxInit(int eid);
-void sendCanMessage();
+void sendCanMessage(int size = 8);
 void setCanType(int type);
 void setTxBit(int offset, int index);
 

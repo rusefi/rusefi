@@ -109,7 +109,7 @@ void commonTxInit(int eid) {
 /**
  * send CAN message from txmsg buffer
  */
-static void sendCanMessage2(int size) {
+void sendCanMessage(int size) {
 	CANDriver *device = detectCanDevice(CONFIG(canRxPin),
 			CONFIG(canTxPin));
 	if (device == NULL) {
@@ -117,20 +117,14 @@ static void sendCanMessage2(int size) {
 		return;
 	}
 	txmsg.DLC = size;
-	// 1 second timeout
-	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, TIME_MS2I(1000));
+
+	// 100 ms timeout
+	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, TIME_MS2I(100));
 	if (result == MSG_OK) {
 		canWriteOk++;
 	} else {
 		canWriteNotOk++;
 	}
-}
-
-/**
- * send CAN message from txmsg buffer, using default packet size
- */
-void sendCanMessage() {
-	sendCanMessage2(8);
 }
 
 static void canDashboardBMW(void) {
@@ -373,7 +367,6 @@ void initCan(void) {
 	}
 
 	startCanPins();
-
 }
 
 #endif /* EFI_CAN_SUPPORT */
