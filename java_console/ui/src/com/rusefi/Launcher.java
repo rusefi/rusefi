@@ -60,6 +60,7 @@ public class Launcher {
     private static final String TOOL_NAME_COMPILE_FSIO_FILE = "compile_fsio_file";
     private static final String TOOL_NAME_REBOOT_ECU = "reboot_ecu";
     private static final String TOOL_NAME_FIRING_ORDER = "firing_order";
+    private static final String TOOL_NAME_FUNCTIONAL_TEST = "functional_test";
     private static final String TOOL_NAME_PERF_ENUMS = "ptrace_enums";
     // todo: rename to something more FSIO-specific? would need to update documentation somewhere
     private static final String TOOL_NAME_COMPILE = "compile";
@@ -321,6 +322,11 @@ public class Launcher {
      */
     public static void main(final String[] args) throws Exception {
         String toolName = args.length == 0 ? null : args[0];
+
+        if (TOOL_NAME_FUNCTIONAL_TEST.equals(toolName)) {
+            RealHwTest.main(new String[0]);
+            return;
+        }
 
         if (TOOL_NAME_COMPILE_FSIO_FILE.equalsIgnoreCase(toolName)) {
             int returnCode = invokeCompileFileTool(args);
