@@ -13,8 +13,6 @@
 
 #include "rusefi_types.h"
 
-#define PAGE_COUNT 1
-
 typedef struct {
 	uint16_t values[EGT_CHANNEL_COUNT];
 } egt_values_s;

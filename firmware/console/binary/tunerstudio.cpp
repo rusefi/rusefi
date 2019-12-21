@@ -108,8 +108,6 @@ EXTERN_ENGINE
 
 extern persistent_config_container_s persistentState;
 
-extern short currentPageId;
-
 /**
  * note the use-case where text console port is switched into
  * binary port
@@ -140,9 +138,8 @@ static void printErrorCounters(void) {
 	scheduleMsg(&tsLogger, "TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
 			sizeof(tsOutputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
-	scheduleMsg(&tsLogger, "TunerStudio W=%d / C=%d / P=%d / page=%d", tsState.writeValueCommandCounter,
-			tsState.writeChunkCommandCounter, tsState.pageCommandCounter, currentPageId);
-//	scheduleMsg(&tsLogger, "page size=%d", getTunerStudioPageSize(currentPageId));
+	scheduleMsg(&tsLogger, "TunerStudio W=%d / C=%d / P=%d", tsState.writeValueCommandCounter,
+			tsState.writeChunkCommandCounter, tsState.pageCommandCounter);
 }
 
 void printTsStats(void) {
@@ -200,33 +197,36 @@ void tunerStudioDebug(const char *msg) {
 #endif /* EFI_TUNER_STUDIO_VERBOSE */
 }
 
-char *getWorkingPageAddr(int pageIndex) {
-	switch (pageIndex) {
-	case 0:
+char *getWorkingPageAddr() {
 #ifndef EFI_NO_CONFIG_WORKING_COPY
-		return (char*) &configWorkingCopy.engineConfiguration;
+	return (char*) &configWorkingCopy.engineConfiguration;
 #else
-		return (char*) engineConfiguration;
+	return (char*) engineConfiguration;
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
-	default:
-		return nullptr;
-	}
 }
 
-int getTunerStudioPageSize(int pageIndex) {
-	return pageIndex ? 0 : TOTAL_CONFIG_SIZE;
+int getTunerStudioPageSize() {
+	return TOTAL_CONFIG_SIZE;
 }
 
 static void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	sr5SendResponse(tsChannel, mode, NULL, 0);
 }
 
+static void sendErrorCode(ts_channel_s *tsChannel) {
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
+}
+
 void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
 	tsState.pageCommandCounter++;
 
-	currentPageId = pageId;
-	scheduleMsg(&tsLogger, "PAGE %d", currentPageId);
-	sendOkResponse(tsChannel, mode);
+	scheduleMsg(&tsLogger, "PAGE %d", pageId);
+
+	if (pageId == 0) {
+		sendOkResponse(tsChannel, mode);
+	} else {
+		sendErrorCode(tsChannel);
+	}
 }
 
 /**
@@ -241,8 +241,7 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
  * On the contrary, 'hard parameters' are waiting for the Burn button to be clicked and configuration version
  * would be increased and much more complicated logic would be executed.
  */
-static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int count) {
-	UNUSED(currentPageId);
+static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 	if (offset >= sizeof(engine_configuration_s)) {
 		int maxSize = sizeof(persistent_config_s) - offset;
 		if (count > maxSize) {
@@ -322,38 +321,38 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
 
-	scheduleMsg(&tsLogger, "WRITE CHUNK mode=%d p=%d o=%d s=%d", mode, currentPageId, offset, count);
+	scheduleMsg(&tsLogger, "WRITE CHUNK mode=%d o=%d s=%d", mode, offset, count);
 
-	if (offset > getTunerStudioPageSize(currentPageId)) {
+	if (offset >= getTunerStudioPageSize()) {
 		scheduleMsg(&tsLogger, "ERROR invalid offset %d", offset);
 		tunerStudioError("ERROR: out of range");
 		offset = 0;
 	}
 
-	if (count > getTunerStudioPageSize(currentPageId)) {
+	if (count >= getTunerStudioPageSize()) {
 		tunerStudioError("ERROR: unexpected count");
 		scheduleMsg(&tsLogger, "ERROR unexpected count %d", count);
 		count = 0;
 	}
 
-	uint8_t * addr = (uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
+	uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
 	memcpy(addr, content, count);
-	onlineApplyWorkingCopyBytes(currentPageId, offset, count);
+	onlineApplyWorkingCopyBytes(offset, count);
 
 	sendOkResponse(tsChannel, mode);
 }
 
 void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
 		uint16_t count) {
+	UNUSED(pageId);
+
 	tsState.crc32CheckCommandCounter++;
 
-	count = SWAP_UINT16(count);
+	count = getTunerStudioPageSize();
 
-	count = getTunerStudioPageSize(pageId);
+	scheduleMsg(&tsLogger, "CRC32 request: offset %d size %d", offset, count);
 
-	scheduleMsg(&tsLogger, "CRC32 request: pageId %d offset %d size %d", pageId, offset, count);
-
-	uint32_t crc = SWAP_UINT32(crc32((void * ) getWorkingPageAddr(0), count));
+	uint32_t crc = SWAP_UINT32(crc32((void * ) getWorkingPageAddr(), count));
 
 	scheduleMsg(&tsLogger, "CRC32 response: %x", crc);
 
@@ -368,9 +367,9 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 		uint8_t value) {
 	UNUSED(tsChannel);
 	UNUSED(mode);
-	tsState.writeValueCommandCounter++;
+	UNUSED(page);
 
-	currentPageId = page;
+	tsState.writeValueCommandCounter++;
 
 	tunerStudioDebug("got W (Write)"); // we can get a lot of these
 
@@ -378,10 +377,7 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 //	scheduleMsg(logger, "Page number %d\r\n", pageId); // we can get a lot of these
 #endif
 
-//	int size = sizeof(TunerStudioWriteValueRequest);
-//	scheduleMsg(logger, "Reading %d\r\n", size);
-
-	if (offset > getTunerStudioPageSize(currentPageId)) {
+	if (offset >= getTunerStudioPageSize()) {
 		tunerStudioError("ERROR: out of range2");
 		scheduleMsg(&tsLogger, "ERROR offset %d", offset);
 		offset = 0;
@@ -391,37 +387,31 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	efitimems_t nowMs = currentTimeMillis();
 	if (nowMs - previousWriteReportMs > 5) {
 		previousWriteReportMs = nowMs;
-		scheduleMsg(&tsLogger, "page %d offset %d: value=%d", currentPageId, offset, value);
+		scheduleMsg(&tsLogger, "offset %d: value=%d", offset, value);
 	}
 
-	getWorkingPageAddr(currentPageId)[offset] = value;
+	getWorkingPageAddr()[offset] = value;
 
-	onlineApplyWorkingCopyBytes(currentPageId, offset, 1);
+	onlineApplyWorkingCopyBytes(offset, 1);
 
 //	scheduleMsg(logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
-}
-
-static void sendErrorCode(ts_channel_s *tsChannel) {
-	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
 }
 
 void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
 		uint16_t count) {
 	tsState.readPageCommandsCounter++;
-	currentPageId = pageId;
 
 #if EFI_TUNER_STUDIO_VERBOSE
-	scheduleMsg(&tsLogger, "READ mode=%d page=%d offset=%d size=%d", mode, (int) currentPageId, offset, count);
+	scheduleMsg(&tsLogger, "READ mode=%d offset=%d size=%d", mode, offset, count);
 #endif
 
-	if (currentPageId >= PAGE_COUNT) {
+	if (pageId != 0) {
 		// something is not right here
-		currentPageId = 0;
 		tunerStudioError("ERROR: invalid page number");
 		return;
 	}
 
-	int size = getTunerStudioPageSize(currentPageId);
+	int size = getTunerStudioPageSize();
 
 	if (size < offset + count) {
 		scheduleMsg(&tsLogger, "invalid offset/count %d/%d", offset, count);
@@ -429,7 +419,7 @@ void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, u
 		return;
 	}
 
-	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
+	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr() + offset);
 	sr5SendResponse(tsChannel, mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 //	scheduleMsg(&tsLogger, "Sending %d done", count);
@@ -453,19 +443,13 @@ static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel,
  * 'Burn' command is a command to commit the changes
  */
 void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page) {
+	UNUSED(page);
+	
 	efitimems_t nowMs = currentTimeMillis();
 	tsState.burnCommandCounter++;
 
 	scheduleMsg(&tsLogger, "got B (Burn) %s", mode == TS_PLAIN ? "plain" : "CRC");
 
-	currentPageId = page;
-
-#if EFI_TUNER_STUDIO_VERBOSE
-	// pointless since we only have one page now
-//	scheduleMsg(logger, "Page number %d", currentPageId);
-#endif
-
-// todo: how about some multi-threading?
 #if !defined(EFI_NO_CONFIG_WORKING_COPY)
 	memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
@@ -625,8 +609,6 @@ void syncTunerStudioCopy(void) {
 
 tunerstudio_counters_s tsState;
 TunerStudioOutputChannels tsOutputChannels;
-
-short currentPageId;
 
 void tunerStudioError(const char *msg) {
 	tunerStudioDebug(msg);
@@ -789,7 +771,6 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		handleReadFileContent(tsChannel, data16[0], data16[1], data16[2]);
 		break;
 	case TS_CHUNK_WRITE_COMMAND:
-		currentPageId = data16[0];
 		handleWriteChunkCommand(tsChannel, TS_CRC, data16[1], data16[2], data + sizeof(TunerStudioWriteChunkRequest));
 		break;
 	case TS_SINGLE_WRITE_COMMAND:
