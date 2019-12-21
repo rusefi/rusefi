@@ -1596,6 +1596,7 @@
 #define PROTOCOL_WA_CHANNEL_3 "input3"
 #define PROTOCOL_WA_CHANNEL_4 "input4"
 #define RPM_1_BYTE_PACKING_MULT 50
+#define RPM_2_BYTE_PACKING_MULT 1
 #define rpmHardLimit_offset 416
 #define rpmHardLimit_offset_hex 1a0
 #define runningLedPin_offset 1813
