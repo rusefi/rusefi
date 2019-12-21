@@ -23,12 +23,12 @@
 ! type name;comment
 
 
-#define TS_SIGNATURE "rusEFI v1.07"
+#define TS_SIGNATURE "rusEFI v1.08"
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! so not forget to change fileVersion in rusefi.ini
 ! todo: is this not needed in light of TS_SIGNATURE?
-#define TS_FILE_VERSION 20190701
+#define TS_FILE_VERSION 20191221
 
 
 ! all the sub-structures are going to be nested within the primary structure, that's
