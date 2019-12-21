@@ -14,17 +14,16 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.ui.util.UiUtils.getAllComponents;
 import static com.rusefi.ui.util.UiUtils.setToolTip;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 /**
  * This frame is used on startup to select the port we would be using
@@ -217,6 +216,43 @@ public class StartupFrame {
         frame.pack();
         frame.setVisible(true);
         UiUtils.centerWindow(frame);
+
+        KeyListener hwTestEasterEgg = functionalTestEasterEgg();
+
+        for (Component component : getAllComponents(frame)) {
+            component.addKeyListener(hwTestEasterEgg);
+        }
+    }
+
+    /**
+     * Here we listen to keystrokes while console frame is being displayed and if magic "test" word is typed
+     * we launch a functional test on real hardware, same as Jenkins runs within continues integration
+     */
+    @NotNull
+    private KeyListener functionalTestEasterEgg() {
+        return new KeyAdapter() {
+            private final static String TEST = "test";
+            private String recentKeyStrokes = "";
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                recentKeyStrokes = recentKeyStrokes + e.getKeyChar();
+                if (recentKeyStrokes.toLowerCase().endsWith(TEST) && showTestConfirmation()) {
+                    runFunctionalHardwareTest();
+                }
+            }
+
+            private boolean showTestConfirmation() {
+                return JOptionPane.showConfirmDialog(StartupFrame.this.frame, "Want to run functional test? This would freeze UI for the duration of the test",
+                        "Better do not run while connected to vehicle!!!", YES_NO_OPTION) == JOptionPane.YES_OPTION;
+            }
+
+            private void runFunctionalHardwareTest() {
+                String autoDetectedPort = PortDetector.autoDetectPort(null);
+                boolean isSuccess = RealHwTest.runHardwareTest(autoDetectedPort);
+                JOptionPane.showMessageDialog(null, "Function test passed: " + isSuccess + "\nSee log folder for details.");
+            }
+        };
     }
 
     private Component createShowDeviceManagerButton() {
