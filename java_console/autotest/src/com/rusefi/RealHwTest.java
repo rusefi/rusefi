@@ -3,6 +3,9 @@ package com.rusefi;
 import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import static com.rusefi.AutoTest.mainTestBody;
 import static com.rusefi.Timeouts.SECOND;
 
@@ -47,6 +50,10 @@ public class RealHwTest {
         try {
             runRealHardwareTest(port);
         } catch (Throwable e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            FileLog.MAIN.logLine("Test failed: " + e + " at " + sw);
             e.printStackTrace();
             return false;
         }
