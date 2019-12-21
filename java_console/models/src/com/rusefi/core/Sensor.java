@@ -37,7 +37,7 @@ public enum Sensor {
 
     // air flow/mass measurement
     MAF("MAF", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 26, 0.001, BackgroundColor.MUD, 0, 5, "Volts"),
-    MAP("MAP", SensorCategory.SENSOR_INPUTS, FieldType.UINT16,  28, 1.0 / 30, BackgroundColor.MUD, 20, 300, "kPa"),
+    MAP("MAP", SensorCategory.SENSOR_INPUTS, FieldType.UINT16,  30, 1.0 / 30, BackgroundColor.MUD, 20, 300, "kPa"),
 
     AFR("A/F ratio", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, /*offset */ 34, 0.001, BackgroundColor.MUD, 10, 20, "afr"),
 
