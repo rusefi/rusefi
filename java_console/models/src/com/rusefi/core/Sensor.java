@@ -22,7 +22,7 @@ public enum Sensor {
      */
 
     // RPM, vss
-    RPM("RPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 4,  1 / RPM_2_BYTE_PACKING_MULT, BackgroundColor.RED, 0, 8000, "/min"),
+    RPM("RPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 4,  0.25, BackgroundColor.RED, 0, 8000, "/min"),
     SPEED2RPM("SpeedToRpm", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 0.01, BackgroundColor.MUD, 0, 5, "RPM/kph"),
     VSS("VSS", SensorCategory.OPERATIONS, FieldType.UINT8, 8, 0.01, BackgroundColor.BLUE, 0, 150, "kph"),
 
