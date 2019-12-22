@@ -107,7 +107,7 @@ typedef struct {
 	unsigned int isKnockChipOk : 1; // bit 27
 
 	// RPM, vss
-	scaled_channel<uint16_t, 4> rpm; // 4
+	scaled_channel<uint16_t> rpm;   // 4
 	scaled_percent rpmAcceleration; // 6
 	scaled_percent speedToRpmRatio; // 8
 	scaled_channel<uint8_t> vehicleSpeedKph; // 10

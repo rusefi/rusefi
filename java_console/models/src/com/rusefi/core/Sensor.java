@@ -22,8 +22,8 @@ public enum Sensor {
      */
 
     // RPM, vss
-    RPM("RPM", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 4,  0.25, BackgroundColor.RED, 0, 8000, "/min"),
-    SPEED2RPM("SpeedToRpm", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 0.01, BackgroundColor.MUD, 0, 5, "RPM/kph"),
+    RPM("RPM", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 4, 1, BackgroundColor.RED, 0, 8000, "/min"),
+    SPEED2RPM("SpeedToRpm", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0 / PACK_MULT_PERCENT, BackgroundColor.MUD, 0, 5, "RPM/kph"),
     VSS("VSS", SensorCategory.OPERATIONS, FieldType.UINT8, 8, 1, BackgroundColor.BLUE, 0, 150, "kph"),
 
     // Temperatures
