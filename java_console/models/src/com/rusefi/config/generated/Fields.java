@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Dec 14 16:03:19 EST 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Dec 21 16:59:22 PST 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1022,6 +1022,13 @@ public class Fields {
 	public static final int overrideCrankingIacSetting_offset = 1476;
 	public static final int overrideCrankingIgnition_offset = 516;
 	public static final int overrideCrankingIgnition_offset_hex = 204;
+	public static final int PACK_MULT_AFR = 1000;
+	public static final int PACK_MULT_ANGLE = 50;
+	public static final int PACK_MULT_MS = 300;
+	public static final int PACK_MULT_PERCENT = 100;
+	public static final int PACK_MULT_PRESSURE = 30;
+	public static final int PACK_MULT_TEMPERATURE = 100;
+	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int pauseEtbControl_offset = 744;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final int pedalToTpsPedalBins_offset = 6464;
@@ -1296,9 +1303,9 @@ public class Fields {
 	public static final int triggerSimulatorPins1_offset = 736;
 	public static final int triggerSimulatorPins2_offset = 737;
 	public static final int triggerSimulatorPins3_offset = 738;
-	public static final int TS_FILE_VERSION = 20190701;
-	public static final int TS_OUTPUT_SIZE = 356;
-	public static final String TS_SIGNATURE = "rusEFI v1.07";
+	public static final int TS_FILE_VERSION = 20191221;
+	public static final int TS_OUTPUT_SIZE = 220;
+	public static final String TS_SIGNATURE = "rusEFI v1.08";
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;

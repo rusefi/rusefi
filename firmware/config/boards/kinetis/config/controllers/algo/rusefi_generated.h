@@ -1550,6 +1550,13 @@
 #define overrideCrankingIacSetting_offset_hex 5c4
 #define overrideCrankingIgnition_offset 516
 #define overrideCrankingIgnition_offset_hex 204
+#define PACK_MULT_AFR 1000
+#define PACK_MULT_ANGLE 50
+#define PACK_MULT_MS 300
+#define PACK_MULT_PERCENT 100
+#define PACK_MULT_PRESSURE 30
+#define PACK_MULT_TEMPERATURE 100
+#define PACK_MULT_VOLTAGE 1000
 #define pauseEtbControl_offset 744
 #define pauseEtbControl_offset_hex 2e8
 #define PEDAL_TO_TPS_SIZE 8
@@ -1887,7 +1894,7 @@
 #define triggerSimulatorPins2_offset_hex 2e1
 #define triggerSimulatorPins3_offset 738
 #define triggerSimulatorPins3_offset_hex 2e2
-#define TS_FILE_VERSION 20190701
+#define TS_FILE_VERSION 20191221
 #define TS_OUTPUT_SIZE 220
 #define ts_show_cj125 true
 #define ts_show_egt true
@@ -1898,7 +1905,7 @@
 #define ts_show_hip9011 true
 #define ts_show_joystick true
 #define ts_show_lcd true
-#define TS_SIGNATURE "rusEFI v1.07"
+#define TS_SIGNATURE "rusEFI v1.08"
 #define tunerStudioSerialSpeed_offset 728
 #define tunerStudioSerialSpeed_offset_hex 2d8
 #define twoWireBatchIgnition_offset 1476
