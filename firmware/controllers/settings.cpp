@@ -877,6 +877,7 @@ static void setFuelMap(const char * rpmStr, const char *loadStr, const char *val
 
 	config->fuelTable[loadIndex][rpmIndex] = value;
 	scheduleMsg(&logger, "Setting fuel map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 static void setSpiMode(int index, bool mode) {
@@ -1371,6 +1372,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		setDateTime(valueStr);
 #endif
 	}
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 void initSettings(void) {
