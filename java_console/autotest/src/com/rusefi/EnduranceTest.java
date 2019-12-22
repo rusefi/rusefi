@@ -2,8 +2,7 @@ package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
 
-import static com.rusefi.IoUtil.sendCommand;
-import static com.rusefi.IoUtil.sleep;
+import static com.rusefi.IoUtil.*;
 import static com.rusefi.RealHwTest.startRealHardwareTest;
 
 public class EnduranceTest {
@@ -28,7 +27,7 @@ public class EnduranceTest {
                 AutoTest.currentEngineType = 3;
                 sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 3, AutoTest.COMPLEX_COMMAND_RETRY, 60);
                 sleep(2);
-                sendCommand("enable self_stimulation");
+                sendCommand(getEnableCommand("self_stimulation"));
 //                IoUtil.changeRpm(1200);
                 AutoTest.currentEngineType = 28;
                 sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 28, AutoTest.COMPLEX_COMMAND_RETRY, 60);

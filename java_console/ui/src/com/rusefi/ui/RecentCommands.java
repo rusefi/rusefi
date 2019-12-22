@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.AverageAnglesUtil;
 import com.rusefi.FileLog;
+import com.rusefi.IoUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
@@ -18,8 +19,9 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.config.generated.Fields.CMD_TRIGGERINFO;
-import static com.rusefi.io.CommandQueue.disableCommand;
+import static com.rusefi.IoUtil.getDisableCommand;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 /**
@@ -126,13 +128,15 @@ public class RecentCommands {
         add(CANINFO);
         add(Fields.CMD_WRITECONFIG);
         add("rewriteconfig");
-        add("enable injection");
-        add(disableCommand("injection"));
-        add("enable ignition");
-        add(disableCommand("ignition"));
 
-        add("enable self_stimulation");
-        add("disable self_stimulation");
+        add(getEnableCommand("injection"));
+        add(getDisableCommand("injection"));
+
+        add(getEnableCommand("ignition"));
+        add(getDisableCommand("ignition"));
+
+        add(getEnableCommand("self_stimulation"));
+        add(getDisableCommand("self_stimulation");
 
         add("blipidle 80 2000");
         add("set_idle_position 50");
