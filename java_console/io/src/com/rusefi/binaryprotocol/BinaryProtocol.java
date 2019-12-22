@@ -393,6 +393,11 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         currentOutputs = response;
 
         for (Sensor sensor : Sensor.values()) {
+            if (sensor.getType() == null) {
+                // for example ETB_CONTROL_QUALITY, weird use-case
+                continue;
+            }
+
             ByteBuffer bb = ByteBuffer.wrap(response, 1 + sensor.getOffset(), 4);
             bb.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -410,10 +415,16 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             case INT:
                 return bb.getInt();
             case UINT16:
+                // no cast - we want to discard sign
+                return bb.getInt() & 0xFFFF;
             case INT16:
+                // cast - we want to retain sign
                 return  (short)(bb.getInt() & 0xFFFF);
             case UINT8:
+                // no cast - discard sign
+                return bb.getInt() & 0xFF;
             case INT8:
+                // cast - retain sign
                 return (byte)(bb.getInt() & 0xFF);
             default:
                 throw new UnsupportedOperationException("type " + sensor.getType());
