@@ -105,6 +105,13 @@ public class TestingUtils {
     }
 
     static EngineChart nextChart() {
+        /**
+         * we are pretty inefficient here :( we wait for the next chart with new settings already applied
+         * a potential improvement would be maybe a special test mode which would reset engine sniffer buffer on each
+         * setting change?
+         *
+         * also open question why do we skip TWO full charts. maybe we account for fast or slow callback period?
+         */
         getNextWaveChart();
         getNextWaveChart();
         return EngineChartParser.unpackToMap(getNextWaveChart());
