@@ -96,7 +96,7 @@ public class IoUtil {
 
         if (!isCloseEnough(rpm, actualRpm))
             throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
-        sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER);
+//        sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER);
         FileLog.MAIN.logLine("AUTOTEST RPM change [" + rpm + "] executed in " + (System.currentTimeMillis() - time));
     }
 
