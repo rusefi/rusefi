@@ -242,7 +242,7 @@ public:
 	 * some areas
 	 */
 	bool isTestMode = false;
-
+	void resetEngineSnifferIfInTestMode();
 
 	/**
 	 * pre-calculated offset for given sequence index within engine cycle

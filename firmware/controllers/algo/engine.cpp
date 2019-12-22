@@ -43,6 +43,12 @@ LoggingWithStorage engineLogger("engine");
 EXTERN_ENGINE
 ;
 
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
+extern int waveChartUsedSize;
+extern WaveChart waveChart;
+#endif /* EFI_ENGINE_SNIFFER */
+
 FsioState::FsioState() {
 #if EFI_ENABLE_ENGINE_WARNING
 	isEngineWarning = FALSE;
@@ -50,6 +56,14 @@ FsioState::FsioState() {
 #if EFI_ENABLE_CRITICAL_ENGINE_STOP
 	isCriticalEngineCondition = FALSE;
 #endif
+}
+
+void Engine::resetEngineSnifferIfInTestMode() {
+#if EFI_ENGINE_SNIFFER
+	if (isTestMode) {
+		waveChart.reset();
+	}
+#endif /* EFI_ENGINE_SNIFFER */
 }
 
 void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {

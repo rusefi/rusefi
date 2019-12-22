@@ -114,6 +114,8 @@ public class TestingUtils {
          * also open question why do we skip TWO full charts. maybe we account for fast or slow callback period?
          *
          * WOW, actually we DO have CMD_RESET_ENGINE_SNIFFER already and yet things are STILL pretty slow and unreliable?!
+         * @see Fields#CMD_FUNCTIONAL_TEST_MODE
+         * @see Fields#CMD_RESET_ENGINE_SNIFFER
          */
         getNextWaveChart();
         getNextWaveChart();

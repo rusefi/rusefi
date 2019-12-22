@@ -136,7 +136,7 @@ public class RecentCommands {
         add(getDisableCommand("ignition"));
 
         add(getEnableCommand("self_stimulation"));
-        add(getDisableCommand("self_stimulation");
+        add(getDisableCommand("self_stimulation"));
 
         add("blipidle 80 2000");
         add("set_idle_position 50");
