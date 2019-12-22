@@ -13,11 +13,11 @@ import com.rusefi.io.ConnectionStatus;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 
-import static com.rusefi.IoUtil.sleep;
+import static com.rusefi.IoUtil.*;
+import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.*;
 import static com.rusefi.config.generated.Fields.CMD_PINS;
 import static com.rusefi.config.generated.Fields.MOCK_MAF_COMMAND;
-import static com.rusefi.io.CommandQueue.disableCommand;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
@@ -47,7 +47,7 @@ public class AutoTest {
         bp.burn(Logger.CONSOLE);
 
         sendCommand("fl 1"); // just in case it was disabled
-        sendCommand(disableCommand(Fields.CMD_TRIGGER_HW_INPUT));
+        sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
         testCustomEngine();
         testMazdaMiata2003();
         test2003DodgeNeon();
@@ -140,7 +140,7 @@ public class AutoTest {
         currentEngineType = type;
         sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, 30);
         sleep(10);
-        sendCommand("enable self_stimulation");
+        sendCommand(getEnableCommand("self_stimulation"));
     }
 
     private static void testMazda626() {
@@ -203,7 +203,7 @@ public class AutoTest {
         assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.29233, 0.15, EngineReport.RATIO, x + 540);
         assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.29233, 0.15, 0.2, x);
 
-        sendCommand("enable trigger_only_front");
+        sendCommand(getEnableCommand("trigger_only_front"));
         chart = nextChart();
         assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.29233, 0.1, 0.2, x + 360);
         assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.29233, EngineReport.RATIO, 0.2, x + 180);

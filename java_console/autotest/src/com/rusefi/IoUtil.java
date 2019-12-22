@@ -29,6 +29,14 @@ public class IoUtil {
         sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
     }
 
+    public static String getEnableCommand(String settingName) {
+        return Fields.CMD_ENABLE + " " + settingName;
+    }
+
+    public static String getDisableCommand(String settingName) {
+        return Fields.CMD_DISABLE + " " + settingName;
+    }
+
     static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
@@ -156,5 +164,4 @@ public class IoUtil {
         if (connected.getCount() > 0)
             throw new IllegalStateException("Not connected in time");
     }
-
 }
