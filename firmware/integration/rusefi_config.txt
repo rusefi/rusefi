@@ -23,12 +23,12 @@
 ! type name;comment
 
 
-#define TS_SIGNATURE "rusEFI v1.07"
+#define TS_SIGNATURE "rusEFI v1.08"
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! so not forget to change fileVersion in rusefi.ini
 ! todo: is this not needed in light of TS_SIGNATURE?
-#define TS_FILE_VERSION 20190701
+#define TS_FILE_VERSION 20191221
 
 
 ! all the sub-structures are going to be nested within the primary structure, that's
@@ -68,7 +68,7 @@ struct_no_prefix engine_configuration_s
 #define ETB_BIAS_CURVE_LENGTH 8
 
 ! this is here so that rusEfi console can access it, too
-#define TS_OUTPUT_SIZE 356
+#define TS_OUTPUT_SIZE 220
 
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
@@ -127,6 +127,15 @@ struct_no_prefix engine_configuration_s
 ! 
 #define RPM_1_BYTE_PACKING_MULT 50
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
+
+! These are used currently only for output channels - but could be for config as well
+#define PACK_MULT_PRESSURE 30
+#define PACK_MULT_PERCENT 100
+#define PACK_MULT_TEMPERATURE 100
+#define PACK_MULT_MS 300
+#define PACK_MULT_AFR 1000
+#define PACK_MULT_ANGLE 50
+#define PACK_MULT_VOLTAGE 1000
 
 #define FSIO_TABLE_8 8
 
