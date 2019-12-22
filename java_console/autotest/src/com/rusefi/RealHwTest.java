@@ -11,11 +11,11 @@ import static com.rusefi.Timeouts.SECOND;
 
 /**
  * this test connects to real hardware via serial port
- * (c) Andrey Belomutskiy 2013-2018
+ * (c) Andrey Belomutskiy 2013-2019
  * 2/22/2015
  */
 public class RealHwTest {
-    private static final int STARTUP_SLEEP = 45;
+    private static final int STARTUP_SLEEP = 20;
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Sleeping " + STARTUP_SLEEP + " seconds to give OS time to connect VCP driver");
