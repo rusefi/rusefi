@@ -270,7 +270,7 @@ void initWaveChart(WaveChart *chart) {
 	addConsoleActionI("chartsize", setChartSize);
 	addConsoleActionI("chart", setChartActive);
 #if ! EFI_UNIT_TEST
-	addConsoleAction("reset_engine_chart", resetNow);
+	addConsoleAction(CMD_RESET_ENGINE_SNIFFER, resetNow);
 #endif
 }
 
