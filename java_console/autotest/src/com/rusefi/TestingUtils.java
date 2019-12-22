@@ -118,8 +118,8 @@ public class TestingUtils {
          * @see Fields#CMD_FUNCTIONAL_TEST_MODE
          * @see Fields#CMD_RESET_ENGINE_SNIFFER
          */
-        getNextWaveChart();
-        getNextWaveChart();
+//        getNextWaveChart();
+//        getNextWaveChart();
         EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart());
         FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
         return chart;
