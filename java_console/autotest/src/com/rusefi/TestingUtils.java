@@ -106,6 +106,7 @@ public class TestingUtils {
     }
 
     static EngineChart nextChart() {
+        long start = System.currentTimeMillis();
         /**
          * we are pretty inefficient here :( we wait for the next chart with new settings already applied
          * a potential improvement would be maybe a special test mode which would reset engine sniffer buffer on each
@@ -119,7 +120,9 @@ public class TestingUtils {
          */
         getNextWaveChart();
         getNextWaveChart();
-        return EngineChartParser.unpackToMap(getNextWaveChart());
+        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart());
+        FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
+        return chart;
     }
 
     static EngineChart nextChart1() {
