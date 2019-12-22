@@ -107,10 +107,7 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
 		triggerSignal.setFrequency(rPerSecond);
 	}
-#if EFI_ENGINE_SNIFFER
-	if (engine->isTestMode)
-		waveChart.reset();
-#endif /* EFI_ENGINE_SNIFFER */
+	engine->resetEngineSnifferIfInTestMode();
 
 	scheduleMsg(logger, "Emulating position sensor(s). RPM=%d", rpm);
 }

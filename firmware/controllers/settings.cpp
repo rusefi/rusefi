@@ -318,10 +318,7 @@ static void setTimingMode(int value) {
 void setEngineType(int value) {
 	engineConfiguration->engineType = (engine_type_e) value;
 	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_ENGINE_SNIFFER
-	if (engine->isTestMode)
-		waveChart.reset();
-#endif
+	engine->resetEngineSnifferIfInTestMode();
 
 #if EFI_INTERNAL_FLASH
 	writeToFlashNow();
