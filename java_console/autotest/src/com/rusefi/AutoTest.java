@@ -47,6 +47,7 @@ public class AutoTest {
         bp.burn(Logger.CONSOLE);
 
         sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
+        sendCommand(getEnableCommand(Fields.CMD_FUNCTIONAL_TEST_MODE));
         testCustomEngine();
         testMazdaMiata2003();
         test2003DodgeNeon();
@@ -135,10 +136,12 @@ public class AutoTest {
     }
 
     static void setEngineType(int type) {
-        sendCommand(CMD_PINS);
+        FileLog.MAIN.logLine("AUTOTEST setEngineType " + type);
+//        sendCommand(CMD_PINS);
         currentEngineType = type;
         sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, 30);
-        sleep(10);
+        // TODO: document the reason for this sleep?!
+        sleep(1);
         sendCommand(getEnableCommand("self_stimulation"));
     }
 
