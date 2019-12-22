@@ -84,7 +84,7 @@ class MILController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	MILController()	: PeriodicController("MFIndicator") { }
 private:
-	void PeriodicTask(efitime_t nowNt) override	{
+	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
 
 		if (nowNt - engine->triggerCentral.triggerState.mostRecentSyncTime < US2NT(MS2US(500))) {

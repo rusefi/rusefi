@@ -74,7 +74,7 @@ public:
 	/**
 	 * Should be called on every trigger event when the engine is just starting to spin up.
 	 */
-	void setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setSpinningUp(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * Called if the synchronization is lost due to a trigger timeout.
 	 */
@@ -116,7 +116,7 @@ public:
 	 * NaN while engine is not spinning
 	 */
 	volatile floatus_t oneDegreeUs = NAN;
-	volatile efitime_t lastRpmEventTimeNt = 0;
+	volatile efitick_t lastRpmEventTimeNt = 0;
 private:
 	/**
 	 * Should be called once we've realized engine is not spinning any more.
@@ -156,7 +156,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
  */
 void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #define getRevolutionCounter() ENGINE(rpmCalculator.getRevolutionCounterM())
 

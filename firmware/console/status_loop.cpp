@@ -672,7 +672,7 @@ class LcdController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	LcdController() : PeriodicController("LCD") { }
 private:
-	void PeriodicTask(efitime_t nowNt) override	{
+	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
 		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->lcdThreadPeriodMs));
 		if (engineConfiguration->useLcdScreen) {
