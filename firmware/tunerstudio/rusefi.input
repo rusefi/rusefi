@@ -197,89 +197,89 @@ fileVersion = { 20190701 }
 
 ; RPM, vss
       RPMValue        = scalar,  U16,      4,      "RPM", 0.25,   0.00000
-      rpmAcceleration = scalar,  S16,      6,     "dRpm", 0.01,         0
-      speedToRpmRatio = scalar,  S16,      8,    "value", 0.01,         0
-      vehicleSpeedKph = scalar,  U16,     10,      "kph", 0.01,       0.0
+      rpmAcceleration = scalar,  S16,      6,     "dRpm",{1/@@PACK_MULT_PERCENT@@},         0
+      speedToRpmRatio = scalar,  S16,      8,    "value",{1/@@PACK_MULT_PERCENT@@},         0
+      vehicleSpeedKph = scalar,  U08,     10,      "kph",    1,       0.0
 
 ; temperatures
      internalMcuTemperature = scalar,S08, 11,    "deg C",    1,         0
 #if CELSIUS
-      coolant         = scalar,  S16,     12,    "deg C", 0.01,       0.0
+      coolant         = scalar,  S16,     12,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
 #else
-      coolant         = scalar,  S16,     12,  "deg F",{9/500},  17.77777
+      coolant         = scalar,  S16,     12,  "deg F",{9/(5 * @@PACK_MULT_TEMPERATURE@@)},  17.77777
 #endif
 #if CELSIUS
-      intake          = scalar,  S16,     14,    "deg C", 0.01,       0.0
+      intake          = scalar,  S16,     14,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
 #else
-      intake          = scalar,  S16,     14,  "deg F",{9/500},  17.77777
+      intake          = scalar,  S16,     14,  "deg F",{9/(5 * @@PACK_MULT_TEMPERATURE@@)},  17.77777
 #endif
 ; todo: aux1
 ; todo: aux2
       
 
 ; throttle, pedal
-      TPSValue        = scalar,  U16,     20,        "%", 0.01,         0
-      throttlePedalPosition = scalar,U16, 22,        "%", 0.01,         0
+      TPSValue        = scalar,  U16,     20,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      throttlePedalPosition = scalar,U16, 22,        "%",{1/@@PACK_MULT_PERCENT@@},         0
       tpsADC          = scalar,  U16,     24,      "ADC",    1,       0.0;
 
 ; air flow/mass measurments
-      MAFValue        = scalar,  U16,     26,        "V",0.001,         0
+      MAFValue        = scalar,  U16,     26,        "V",,{1/@@PACK_MULT_VOLTAGE@@},,         0
       massAirFlowValue= scalar,  U16,     28,     "Kg/h", 0.01,         0
-      MAPValue        = scalar,  U16,     30,     "kPa",{1/30},       0.0
-      baroPressure    = scalar,  U16,     32,     "kPa",{1/30},       0.0
-      AFRValue        = scalar,  U16,     34,      "AFR",0.001,       0.0
-      engineLoad      = scalar,  U16,     36,        "%", 0.01,       0.0 ; Blend of MAP and TPS, depends on algorithm
+      MAPValue        = scalar,  U16,     30,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
+      baroPressure    = scalar,  U16,     32,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
+      AFRValue        = scalar,  U16,     34,      "AFR",,{1/@@PACK_MULT_AFR@@},,       0.0
+      engineLoad      = scalar,  U16,     36,        "%",{1/@@PACK_MULT_PERCENT@@},       0.0 ; Blend of MAP and TPS, depends on algorithm
 
 ; misc sensors
-      VBatt           = scalar,	 U16,     38,        "V",0.001,       0.0
-      oilPressure     = scalar,  U16,     40,     "kPa",{1/30},       0.0
-      vvtPosition     = scalar,  U16,     42,      "deg", 0.02,         0
+      VBatt           = scalar,	 U16,     38,        "V",,{1/@@PACK_MULT_VOLTAGE@@},,       0.0
+      oilPressure     = scalar,  U16,     40,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
+      vvtPosition     = scalar,  U16,     42,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
 
       ; 10 bit TPS ADC value (from 0 to 1023 in 5v scale)
       ;tpsADC2         = scalar,  U16,    44,             "ADC",            1,       0.0;
 
 ; fuel math
       chargeAirMass   = scalar,  U16,     44,        "g",0.001,         0
-      crankingFuelMs  = scalar,  U16,     46,     "ms",{1/300},     0.0
-      currentTargetAfr= scalar,  U16,     48,    "ratio",0.001,         0
-      baseFuel        = scalar,  U16,     50,     "ms",{1/300},       0
-      fuelRunning     = scalar,  U16,     52,     "ms",{1/300},       0
-      actualLastInjection=scalar,U16,     54,     "ms",{1/300},     0.0
+      crankingFuelMs  = scalar,  U16,     46,     "ms",{1/@@PACK_MULT_MS@@},     0.0
+      currentTargetAfr= scalar,  U16,     48,    "ratio",,{1/@@PACK_MULT_AFR@@},,         0
+      baseFuel        = scalar,  U16,     50,     "ms",{1/@@PACK_MULT_MS@@},       0
+      fuelRunning     = scalar,  U16,     52,     "ms",{1/@@PACK_MULT_MS@@},       0
+      actualLastInjection=scalar,U16,     54,     "ms",{1/@@PACK_MULT_MS@@},     0.0
       injectorDutyCycle=scalar,  U08,     56,        "%",  0.5,         0
       veValue         = scalar,  U08,     57,    "ratio",  0.5,         0
-      injectionOffset = scalar,  S16,     58,      "deg", 0.02,         0
-      tCharge         = scalar,  U16,     60,    "deg C", 0.01,       0.0
+      injectionOffset = scalar,  S16,     58,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
+      tCharge         = scalar,  U16,     60,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
 
 ; Corrections
-      injectorLagMs   = scalar,  U16,     62,     "ms",{1/300},       0.0
-      iatCorrection   = scalar,  U16,     64,        "%", 0.01,         0
-      cltCorrection   = scalar,  U16,     66,        "%", 0.01,         0
-      baroCorrection  = scalar,  U16,     68,        "%", 0.01,         0
-      fuelPidCorrection=scalar,  S16,     70,     "ms",{1/300},         0
+      injectorLagMs   = scalar,  U16,     62,     "ms",{1/@@PACK_MULT_MS@@},       0.0
+      iatCorrection   = scalar,  U16,     64,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      cltCorrection   = scalar,  U16,     66,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      baroCorrection  = scalar,  U16,     68,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      fuelPidCorrection=scalar,  S16,     70,     "ms",{1/@@PACK_MULT_MS@@},         0
 
 ; Wall model AE
-      wallFuelAmount  = scalar,  U16,     72,     "ms",{1/300},         0
+      wallFuelAmount  = scalar,  U16,     72,     "ms",{1/@@PACK_MULT_MS@@},         0
       wallFuelCorrection=scalar, S16,     74,       "ms",0.001,         0
 
 ; TPS/load AE
-      engineLoadDelta = scalar,  S16,     76,    "value", 0.01,         0
-      deltaTps        = scalar,  S16,     78,    "ratio", 0.01,         0
-      engineLoadAccelExtra=scalar,S16,    80,    "value", 0.01,         0
-      tpsAccelFuel    = scalar,  U16,     82,     "ms",{1/300},         0
+      engineLoadDelta = scalar,  S16,     76,    "value",{1/@@PACK_MULT_PERCENT@@},         0
+      deltaTps        = scalar,  S16,     78,    "ratio",{1/@@PACK_MULT_PERCENT@@},         0
+      engineLoadAccelExtra=scalar,S16,    80,    "value",{1/@@PACK_MULT_PERCENT@@},         0
+      tpsAccelFuel    = scalar,  U16,     82,     "ms",{1/@@PACK_MULT_MS@@},         0
 
 ; Ignition
-      ignitionAdvance = scalar,  U16,     84,    "deg",   0.02,       0.0
-      sparkDwellValue = scalar,  U16,     86,     "ms",{1/300},       0.0
-      coilDutyCycle   = scalar,  U16,     88,      "%",   0.01,         0
+      ignitionAdvance = scalar,  U16,     84,    "deg",{1/@@PACK_MULT_ANGLE@@},       0.0
+      sparkDwellValue = scalar,  U16,     86,     "ms",{1/@@PACK_MULT_MS@@},       0.0
+      coilDutyCycle   = scalar,  U16,     88,      "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 ; Idle & ETB
-      idleAirValvePosition=scalar,S16,    90,      "%",   0.01,         0
-      etbTarget       = scalar,  S16,     92,      "%",   0.01,         0
-      etb1DutyCycle   = scalar,  S16,     94,      "%",   0.01,         0
-      etb1Error       = scalar,  S16,     96,      "%",   0.01,         0
+      idleAirValvePosition=scalar,S16,    90,      "%",{1/@@PACK_MULT_PERCENT@@},         0
+      etbTarget       = scalar,  S16,     92,      "%",{1/@@PACK_MULT_PERCENT@@},         0
+      etb1DutyCycle   = scalar,  S16,     94,      "%",{1/@@PACK_MULT_PERCENT@@},         0
+      etb1Error       = scalar,  S16,     96,      "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 ; Fuel system
-      fuelTankLevel   = scalar,  S16,     98, "amount",   0.01,         0
+      fuelTankLevel   = scalar,  S16,     98, "amount",{1/@@PACK_MULT_PERCENT@@},         0
       fuelConsumptionPerHour=scalar,F32, 100,    "kPa",      1,      0.0
 
 ; Knock

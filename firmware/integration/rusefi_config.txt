@@ -128,6 +128,15 @@ struct_no_prefix engine_configuration_s
 #define RPM_1_BYTE_PACKING_MULT 50
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 
+! These are used currently only for output channels - but could be for config as well
+#define PACK_MULT_PRESSURE 30
+#define PACK_MULT_PERCENT 100
+#define PACK_MULT_TEMPERATURE 100
+#define PACK_MULT_MS 300
+#define PACK_MULT_AFR 1000
+#define PACK_MULT_ANGLE 50
+#define PACK_MULT_VOLTAGE 1000
+
 #define FSIO_TABLE_8 8
 
 #define FSIO_CURVE_8 8

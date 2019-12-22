@@ -12,6 +12,7 @@
 #define TUNERSTUDIO_CONFIGURATION_H_
 
 #include "rusefi_types.h"
+#include "rusefi_generated.h"
 
 #include "tunerstudio_debug_struct.h"
 
@@ -47,13 +48,13 @@ static_assert(sizeof(scaled_channel<uint32_t>) == 4);
 static_assert(sizeof(scaled_channel<float>) == 4);
 
 // Common scaling options - use these if you can!
-using scaled_temperature = scaled_channel<int16_t, 100>;	// +-327 deg C at 0.01 deg resolution
-using scaled_ms = scaled_channel<int16_t, 300>;				// +- 100ms at 0.003ms precision
-using scaled_percent = scaled_channel<int16_t, 100>;		// +-327% at 0.01% resolution
-using scaled_pressure = scaled_channel<uint16_t, 30>;		// 0-2000kPa (~300psi) at 0.03kPa resolution
-using scaled_angle = scaled_channel<int16_t, 50>;			// +-655 degrees at 0.02 degree resolution
-using scaled_voltage = scaled_channel<uint16_t, 1000>;		// 0-65v at 1mV resolution
-using scaled_afr = scaled_channel<uint16_t, 1000>;			// 0-65afr at 0.001 resolution
+using scaled_temperature = scaled_channel<int16_t, PACK_MULT_TEMPERATURE>;	// +-327 deg C at 0.01 deg resolution
+using scaled_ms = scaled_channel<int16_t, PACK_MULT_MS>;				// +- 100ms at 0.003ms precision
+using scaled_percent = scaled_channel<int16_t, PACK_MULT_PERCENT>;		// +-327% at 0.01% resolution
+using scaled_pressure = scaled_channel<uint16_t, PACK_MULT_PRESSURE>;		// 0-2000kPa (~300psi) at 0.03kPa resolution
+using scaled_angle = scaled_channel<int16_t, PACK_MULT_ANGLE>;			// +-655 degrees at 0.02 degree resolution
+using scaled_voltage = scaled_channel<uint16_t, PACK_MULT_VOLTAGE>;		// 0-65v at 1mV resolution
+using scaled_afr = scaled_channel<uint16_t, PACK_MULT_AFR>;			// 0-65afr at 0.001 resolution
 
 #define PAGE_COUNT 1
 
