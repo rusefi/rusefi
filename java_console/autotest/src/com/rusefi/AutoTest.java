@@ -46,7 +46,6 @@ public class AutoTest {
         // let's make sure 'burn' command works since sometimes it does not
         bp.burn(Logger.CONSOLE);
 
-        sendCommand("fl 1"); // just in case it was disabled
         sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
         testCustomEngine();
         testMazdaMiata2003();
