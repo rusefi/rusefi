@@ -43,6 +43,12 @@ LoggingWithStorage engineLogger("engine");
 EXTERN_ENGINE
 ;
 
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
+extern int waveChartUsedSize;
+extern WaveChart waveChart;
+#endif /* EFI_ENGINE_SNIFFER */
+
 FsioState::FsioState() {
 #if EFI_ENABLE_ENGINE_WARNING
 	isEngineWarning = FALSE;
@@ -50,6 +56,16 @@ FsioState::FsioState() {
 #if EFI_ENABLE_CRITICAL_ENGINE_STOP
 	isCriticalEngineCondition = FALSE;
 #endif
+}
+
+void Engine::resetEngineSnifferIfInTestMode() {
+#if EFI_ENGINE_SNIFFER
+	if (isTestMode) {
+		// TODO: what is the exact reasoning for the exact engine sniffer pause time I wonder
+		waveChart.pauseEngineSnifferUntilNt = getTimeNowNt() + MS2NT(300);
+		waveChart.reset();
+	}
+#endif /* EFI_ENGINE_SNIFFER */
 }
 
 void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -130,7 +146,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	if (CONFIG(useTLE8888_cranking_hack) && ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		efitick_t nowNt = getTimeNowNt();
-		if (nowNt - tle8888CrankingResetTime > US2NT(MS2US(300))) {
+		if (nowNt - tle8888CrankingResetTime > MS2NT(300)) {
 			requestTLE8888initialization();
 			// let's reset TLE8888 every 300ms while cranking since that's the best we can do to deal with undervoltage reset
 			// PS: oh yes, it's a horrible design! Please suggest something better!
@@ -341,7 +357,7 @@ bool Engine::isInShutdownMode() const {
 	if (stopEngineRequestTimeNt == 0)	// the shutdown procedure is not started
 		return false;
 	
-	const efitime_t engineStopWaitTimeoutNt = 5LL * 1000000LL;
+	const efitick_t engineStopWaitTimeoutNt = 5LL * 1000000LL;
 	// The engine is still spinning! Give it some time to stop (but wait no more than 5 secs)
 	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(engineStopWaitTimeoutNt))
 		return true;

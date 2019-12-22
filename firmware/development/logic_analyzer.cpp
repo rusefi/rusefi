@@ -43,7 +43,7 @@ extern bool hasFirmwareErrorFlag;
  * Difference between current 1st trigger event and previous 1st trigger event.
  */
 static volatile uint32_t engineCycleDurationUs;
-static volatile efitime_t previousEngineCycleTimeUs = 0;
+static volatile efitimeus_t previousEngineCycleTimeUs = 0;
 
 static int waveReaderCount = 0;
 static WaveReader readers[MAX_ICU_COUNT];
@@ -133,7 +133,7 @@ static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index
 	if (index != 0) {
 		return;
 	}
-	efitick_t nowUs = getTimeNowUs();
+	efitimeus_t nowUs = getTimeNowUs();
 	engineCycleDurationUs = nowUs - previousEngineCycleTimeUs;
 	previousEngineCycleTimeUs = nowUs;
 }

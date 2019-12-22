@@ -72,7 +72,7 @@ public:
 	bool validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	void handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-			efitime_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX);
+			efitick_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * Resets synchronization flag and alerts rpm_calculator to reset engine spinning flag.
 	 */
@@ -85,7 +85,7 @@ public:
 	 * TRUE if we know where we are
 	 */
 	bool shaft_is_synchronized;
-	efitime_t mostRecentSyncTime;
+	efitick_t mostRecentSyncTime;
 
 	efitick_t lastDecodingErrorTime;
 	// the boolean flag is a performance optimization so that complex comparison is avoided if no error
@@ -96,7 +96,7 @@ public:
 	 */
 	uint32_t toothDurations[GAP_TRACKING_LENGTH + 1];
 
-	efitime_t toothed_previous_time;
+	efitick_t toothed_previous_time;
 
 	current_cycle_state_s currentCycle;
 
@@ -112,7 +112,7 @@ public:
 	void setShaftSynchronized(bool value);
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	virtual void runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 	/**
@@ -125,7 +125,7 @@ private:
 
 	trigger_event_e curSignal;
 	trigger_event_e prevSignal;
-	efitime_t totalEventCountBase;
+	int64_t totalEventCountBase;
 	uint32_t totalRevolutionCounter;
 	bool isFirstEvent;
 };
@@ -158,15 +158,15 @@ public:
 	 */
 	float prevInstantRpmValue = 0;
 	void movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	float calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	float calculateInstantRpm(int *prevIndex, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) override;
+	void runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) override;
 #endif
 	/**
 	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
 	 * Needed for early spin-up RPM detection.
 	 */
-	void setLastEventTimeForInstantRpm(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setLastEventTimeForInstantRpm(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);

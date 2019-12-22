@@ -113,7 +113,7 @@ bool WaveChart::isStartedTooLongAgo() const {
 	 * engineChartSize/20 is the longest meaningful chart.
 	 *
 	 */
-	efitime_t chartDurationNt = getTimeNowNt() - startTimeNt;
+	efitick_t chartDurationNt = getTimeNowNt() - startTimeNt;
 	return startTimeNt != 0 && NT2US(chartDurationNt) > engineConfiguration->engineChartSize * 1000000 / 20;
 }
 
@@ -165,6 +165,9 @@ void WaveChart::publish() {
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addEvent3(const char *name, const char * msg) {
+	if (getTimeNowNt() < pauseEngineSnifferUntilNt) {
+		return;
+	}
 #if EFI_TEXT_LOGGING
 	if (!ENGINE(isEngineChartEnabled)) {
 		return;
@@ -270,7 +273,7 @@ void initWaveChart(WaveChart *chart) {
 	addConsoleActionI("chartsize", setChartSize);
 	addConsoleActionI("chart", setChartActive);
 #if ! EFI_UNIT_TEST
-	addConsoleAction("reset_engine_chart", resetNow);
+	addConsoleAction(CMD_RESET_ENGINE_SNIFFER, resetNow);
 #endif
 }
 

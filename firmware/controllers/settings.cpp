@@ -318,10 +318,7 @@ static void setTimingMode(int value) {
 void setEngineType(int value) {
 	engineConfiguration->engineType = (engine_type_e) value;
 	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_ENGINE_SNIFFER
-	if (engine->isTestMode)
-		waveChart.reset();
-#endif
+	engine->resetEngineSnifferIfInTestMode();
 
 #if EFI_INTERNAL_FLASH
 	writeToFlashNow();
@@ -548,6 +545,7 @@ static void setTriggerType(int value) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 	scheduleMsg(&logger, "Do you need to also invoke set operation_mode X?");
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 static void setDebugMode(int value) {
@@ -628,6 +626,7 @@ static void setWholePhaseMapCmd(float value) {
 static void setWholeTimingMapCmd(float value) {
 	scheduleMsg(&logger, "Setting whole timing advance map to %.2f", value);
 	setWholeTimingMap(value);
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 static void setWholeVeCmd(float value) {
@@ -636,6 +635,7 @@ static void setWholeVeCmd(float value) {
 		scheduleMsg(&logger, "WARNING: setting VE map not in SD mode is pointless");
 	}
 	setMap(config->veTable, value);
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 static void setWholeFuelMapCmd(float value) {
@@ -644,6 +644,7 @@ static void setWholeFuelMapCmd(float value) {
 		scheduleMsg(&logger, "WARNING: setting fuel map in SD mode is pointless");
 	}
 	setWholeFuelMap(value PASS_CONFIG_PARAMETER_SUFFIX);
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 #if EFI_PROD_CODE
@@ -876,6 +877,7 @@ static void setFuelMap(const char * rpmStr, const char *loadStr, const char *val
 
 	config->fuelTable[loadIndex][rpmIndex] = value;
 	scheduleMsg(&logger, "Setting fuel map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 static void setSpiMode(int index, bool mode) {
@@ -957,7 +959,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isAlternatorControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "sd")) {
 		engineConfiguration->isSdCardEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "test_mode")) {
+	} else if (strEqualCaseInsensitive(param, CMD_FUNCTIONAL_TEST_MODE)) {
 		engine->isTestMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_read")) {
 		engineConfiguration->canReadEnabled = isEnabled;
@@ -1370,6 +1372,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		setDateTime(valueStr);
 #endif
 	}
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 void initSettings(void) {

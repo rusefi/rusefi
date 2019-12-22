@@ -28,6 +28,8 @@ public:
 	void publish();
 	bool isFull() const;
 	bool isStartedTooLongAgo() const;
+	efitick_t pauseEngineSnifferUntilNt = 0;
+
 private:
 	Logging logging;
 	char timeBuffer[_MAX_FILLER + 2];
@@ -37,7 +39,7 @@ private:
 	 * https://github.com/rusefi/rusefi/issues/780
 	 */
 	bool collectingData = false;
-	efitime_t startTimeNt = 0;
+	efitick_t startTimeNt = 0;
 	volatile int isInitialized = false;
 };
 

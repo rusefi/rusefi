@@ -61,7 +61,7 @@ class AccelController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	AccelController() : PeriodicController("Acc SPI") { }
 private:
-	void PeriodicTask(efitime_t nowNt) override	{
+	void PeriodicTask(efitick_t nowNt) override	{
 		// has to be a thread since we want to use blocking method - blocking method only available in threads, not in interrupt handler
 		// todo: migrate to async SPI API?
 		engine->sensors.accelerometer.x = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTX);

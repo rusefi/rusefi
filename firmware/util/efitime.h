@@ -19,6 +19,9 @@
 
 #define MS2US(MS_TIME) ((MS_TIME) * 1000)
 
+// milliseconds to ticks
+#define MS2NT(msTime) US2NT(MS2US(msTime))
+
 // todo: implement a function to work with times considering counter overflow
 #define overflowDiff(now, time) ((now) - (time))
 
