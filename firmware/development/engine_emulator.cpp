@@ -41,7 +41,6 @@ static void emulate(void) {
 	print("Emulating...\r\n");
 	setDiag(1);
 	chThdSleep(1);
-	setFullLog(1);
 
 	for (int i = 400; i <= 1300; i++) {
 		if (i % 50 != 0)
@@ -52,7 +51,6 @@ static void emulate(void) {
 
 	setTriggerEmulatorRPM(0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	setFullLog(0);
 	setDiag(0);
 	chThdSleep(1);
 	print("Emulation DONE!\r\n");
