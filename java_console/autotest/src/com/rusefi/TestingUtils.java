@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineChart;
@@ -111,6 +112,8 @@ public class TestingUtils {
          * setting change?
          *
          * also open question why do we skip TWO full charts. maybe we account for fast or slow callback period?
+         *
+         * WOW, actually we DO have CMD_RESET_ENGINE_SNIFFER already and yet things are STILL pretty slow and unreliable?!
          */
         getNextWaveChart();
         getNextWaveChart();
@@ -118,7 +121,7 @@ public class TestingUtils {
     }
 
     static String getNextWaveChart() {
-        IoUtil.sendCommand(IoUtil.RESET_ENGINE_CHART);
+        IoUtil.sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER);
         String result = getEngineChart();
         FileLog.MAIN.logLine("current chart: " + result);
         return result;
