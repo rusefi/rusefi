@@ -61,6 +61,8 @@ FsioState::FsioState() {
 void Engine::resetEngineSnifferIfInTestMode() {
 #if EFI_ENGINE_SNIFFER
 	if (isTestMode) {
+		// TODO: what is the exact reasoning for the exact engine sniffer pause time I wonder
+		waveChart.pauseEngineSnifferUntilNt = getTimeNowNt() + MS2NT(300);
 		waveChart.reset();
 	}
 #endif /* EFI_ENGINE_SNIFFER */
@@ -144,7 +146,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	if (CONFIG(useTLE8888_cranking_hack) && ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		efitick_t nowNt = getTimeNowNt();
-		if (nowNt - tle8888CrankingResetTime > US2NT(MS2US(300))) {
+		if (nowNt - tle8888CrankingResetTime > MS2NT(300)) {
 			requestTLE8888initialization();
 			// let's reset TLE8888 every 300ms while cranking since that's the best we can do to deal with undervoltage reset
 			// PS: oh yes, it's a horrible design! Please suggest something better!

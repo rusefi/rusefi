@@ -122,7 +122,12 @@ public class TestingUtils {
         return EngineChartParser.unpackToMap(getNextWaveChart());
     }
 
-    static String getNextWaveChart() {
+    static EngineChart nextChart1() {
+        return EngineChartParser.unpackToMap(getNextWaveChart());
+    }
+
+
+        static String getNextWaveChart() {
         IoUtil.sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER);
         String result = getEngineChart();
         FileLog.MAIN.logLine("current chart: " + result);
