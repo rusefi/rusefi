@@ -28,6 +28,8 @@ public:
 	void publish();
 	bool isFull() const;
 	bool isStartedTooLongAgo() const;
+	efitick_t pauseEngineSnifferUntilNt = 0;
+
 private:
 	Logging logging;
 	char timeBuffer[_MAX_FILLER + 2];

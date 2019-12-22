@@ -165,6 +165,9 @@ void WaveChart::publish() {
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addEvent3(const char *name, const char * msg) {
+	if (getTimeNowNt() < pauseEngineSnifferUntilNt) {
+		return;
+	}
 #if EFI_TEXT_LOGGING
 	if (!ENGINE(isEngineChartEnabled)) {
 		return;

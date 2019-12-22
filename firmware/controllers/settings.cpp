@@ -545,6 +545,7 @@ static void setTriggerType(int value) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 	scheduleMsg(&logger, "Do you need to also invoke set operation_mode X?");
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 static void setDebugMode(int value) {
@@ -625,6 +626,7 @@ static void setWholePhaseMapCmd(float value) {
 static void setWholeTimingMapCmd(float value) {
 	scheduleMsg(&logger, "Setting whole timing advance map to %.2f", value);
 	setWholeTimingMap(value);
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 static void setWholeVeCmd(float value) {
@@ -633,6 +635,7 @@ static void setWholeVeCmd(float value) {
 		scheduleMsg(&logger, "WARNING: setting VE map not in SD mode is pointless");
 	}
 	setMap(config->veTable, value);
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 static void setWholeFuelMapCmd(float value) {
@@ -641,6 +644,7 @@ static void setWholeFuelMapCmd(float value) {
 		scheduleMsg(&logger, "WARNING: setting fuel map in SD mode is pointless");
 	}
 	setWholeFuelMap(value PASS_CONFIG_PARAMETER_SUFFIX);
+	engine->resetEngineSnifferIfInTestMode();
 }
 
 #if EFI_PROD_CODE
