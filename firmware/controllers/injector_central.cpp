@@ -236,7 +236,7 @@ class BenchController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	BenchController() : PeriodicController("BenchThread") { }
 private:
-	void PeriodicTask(efitime_t nowNt) override	{
+	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
 		setPeriod(50 /* ms */);
 

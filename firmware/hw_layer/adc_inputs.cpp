@@ -421,7 +421,7 @@ public:
 	{
 	}
 
-	void PeriodicTask(efitime_t nowNt) override {
+	void PeriodicTask(efitick_t nowNt) override {
 		{
 			ScopePerf perf(PE::AdcConversionSlow);
 

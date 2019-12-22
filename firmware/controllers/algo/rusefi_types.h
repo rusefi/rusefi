@@ -30,7 +30,7 @@ typedef unsigned int time_t;
 typedef time_t efitimesec_t;
 
 /**
- * integer time in milliseconds
+ * integer time in milliseconds (1/1_000 of a second)
  * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 46 days.
  * Please restart your ECU every 46 days? :)
  * See getTimeNowUs()
@@ -51,9 +51,15 @@ typedef int pid_dt;
 typedef int64_t efitime_t;
 
 /**
- * 64 bit time in microseconds, since boot
+ * 64 bit time in microseconds (1/1_000_000 of a second), since boot
  */
 typedef efitime_t efitimeus_t;
+
+/**
+ * 64 bit time in milliseconds (1/1_000 of a second), since boot
+ */
+typedef efitime_t efitimems64_t;
+
 
 /**
  * platform-dependent tick since boot

@@ -355,7 +355,7 @@ bool Engine::isInShutdownMode() const {
 	if (stopEngineRequestTimeNt == 0)	// the shutdown procedure is not started
 		return false;
 	
-	const efitime_t engineStopWaitTimeoutNt = 5LL * 1000000LL;
+	const efitick_t engineStopWaitTimeoutNt = 5LL * 1000000LL;
 	// The engine is still spinning! Give it some time to stop (but wait no more than 5 secs)
 	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(engineStopWaitTimeoutNt))
 		return true;

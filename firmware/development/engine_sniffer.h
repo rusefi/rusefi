@@ -37,7 +37,7 @@ private:
 	 * https://github.com/rusefi/rusefi/issues/780
 	 */
 	bool collectingData = false;
-	efitime_t startTimeNt = 0;
+	efitick_t startTimeNt = 0;
 	volatile int isInitialized = false;
 };
 

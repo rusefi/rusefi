@@ -37,8 +37,6 @@ EXTERN_ENGINE;
 
 extern schfunc_t globalTimerCallback;
 
-//static int timerIsLate = 0;
-//static efitime_t callbackTime = 0;
 /**
  * these fields are global in order to facilitate debugging
  */

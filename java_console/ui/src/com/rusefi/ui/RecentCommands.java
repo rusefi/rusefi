@@ -2,7 +2,6 @@ package com.rusefi.ui;
 
 import com.rusefi.AverageAnglesUtil;
 import com.rusefi.FileLog;
-import com.rusefi.IoUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;

@@ -46,7 +46,7 @@ public:
 	efitick_t previousVvtCamTime = 0;
 	efitick_t previousVvtCamDuration = 0;
 
-	volatile efitime_t previousShaftEventTimeNt;
+	volatile efitick_t previousShaftEventTimeNt;
 private:
 	IntListenerArray<15> triggerListeneres;
 	
@@ -57,7 +57,6 @@ private:
 };
 
 void triggerInfo(void);
-efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void hwHandleShaftSignal(trigger_event_e signal);
 void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX);
 
