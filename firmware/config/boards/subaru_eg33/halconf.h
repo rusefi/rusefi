@@ -28,9 +28,9 @@
 
 //#if TS_UART_DMA_MODE
 #undef HAL_USE_UART
-#define HAL_USE_UART			TRUE
+#define HAL_USE_UART			FALSE
 #undef UART_USE_WAIT
-#define UART_USE_WAIT			TRUE
+#define UART_USE_WAIT			FALSE
 //#else
 //#define HAL_USE_UART			FALSE
 //#endif
