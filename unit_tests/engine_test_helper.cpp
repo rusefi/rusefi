@@ -75,7 +75,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-	initRpmCalculator(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	initMainEventListener(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
