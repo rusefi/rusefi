@@ -672,6 +672,14 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initConfigActions();
 #endif /* EFI_UNIT_TEST */
 
+#if EFI_ENGINE_CONTROL
+	/**
+	 * This has to go after 'initInjectorCentral' in order to
+	 * properly detect un-assigned output pins
+	 */
+	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
+
 
 #if EFI_ENABLE_MOCK_ADC
 	initMockVoltage();
@@ -724,6 +732,11 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	printf("initEngineContoller\n");
 #endif
 	addConsoleAction("analoginfo", printAnalogInfo);
+
+#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
+	initInjectorCentral(sharedLogger);
+#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
+
 	commonInitEngineController(sharedLogger);
 
 #if EFI_PROD_CODE
@@ -743,9 +756,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initCJ125(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_CJ125 */
 
-#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
-	initInjectorCentral(sharedLogger);
-#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
 	// periodic events need to be initialized after fuel&spark pins to avoid a warning
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -755,14 +765,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	}
 
 	engineStateBlinkingTask.Start();
-
-#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
-	/**
-	 * This has to go after 'initInjectorCentral' and 'initInjectorCentral' in order to
-	 * properly detect un-assigned output pins
-	 */
-	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
 #if EFI_PWM_TESTER
 	initPwmTester();
