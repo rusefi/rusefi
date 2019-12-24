@@ -296,9 +296,11 @@ static char rpmBuffer[_MAX_FILLER];
  * digital sniffer.
  */
 static void onTdcCallback(Engine *engine) {
+#if EFI_UNIT_TEST
 	if (!engine->needTdcCallback) {
 		return;
 	}
+#endif /* EFI_UNIT_TEST */
 	EXPAND_Engine;
 	itoa10(rpmBuffer, GET_RPM());
 #if EFI_ENGINE_SNIFFER
