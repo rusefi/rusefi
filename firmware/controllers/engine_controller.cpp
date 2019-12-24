@@ -23,10 +23,6 @@
 
 #include "global.h"
 #include "os_access.h"
-#if EFI_SENSOR_CHART
-#include "sensor_chart.h"
-#endif
-#include "engine_configuration.h"
 #include "trigger_central.h"
 #include "engine_controller.h"
 #include "fsio_core.h"
@@ -36,15 +32,9 @@
 #include "main_trigger_callback.h"
 #include "io_pins.h"
 #include "flash_main.h"
-#if EFI_TUNER_STUDIO
-#include "tunerstudio.h"
-#endif
 #include "injector_central.h"
 #include "os_util.h"
 #include "engine_math.h"
-#if EFI_LOGIC_ANALYZER
-#include "logic_analyzer.h"
-#endif
 #include "allsensors.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
@@ -60,6 +50,18 @@
 #include "accelerometer.h"
 #include "counter64.h"
 #include "perf_trace.h"
+
+#if EFI_SENSOR_CHART
+#include "sensor_chart.h"
+#endif
+
+#if EFI_TUNER_STUDIO
+#include "tunerstudio.h"
+#endif
+
+#if EFI_LOGIC_ANALYZER
+#include "logic_analyzer.h"
+#endif
 
 #if HAL_USE_ADC
 #include "AdcConfiguration.h"
@@ -703,6 +705,16 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	 */
 	initRpmCalculator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_SHAFT_POSITION_INPUT */
+
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
+	if (CONFIG(isEngineControlEnabled)) {
+		/**
+		 * This method initialized the main listener which actually runs injectors & ignition
+		 */
+		initMainEventListener(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+#endif /* EFI_ENGINE_CONTROL */
+
 }
 
 #if !EFI_UNIT_TEST
@@ -735,7 +747,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initInjectorCentral(sharedLogger);
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
-// multiple issues with this	initMapAdjusterThread();
 	// periodic events need to be initialized after fuel&spark pins to avoid a warning
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -772,15 +783,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_MALFUNCTION_INDICATOR */
 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	if (CONFIG(isEngineControlEnabled)) {
-		/**
-		 * This method initialized the main listener which actually runs injectors & ignition
-		 */
-		initMainEventListener(sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
-	}
-#endif /* EFI_ENGINE_CONTROL */
 
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
 		addConsoleAction("knockinfo", getKnockInfo);
