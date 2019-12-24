@@ -15,7 +15,6 @@
 #include "pwm_generator_logic.h"
 #include "trigger_central.h"
 #include "datalogging.h"
-#include "algo.h"
 #include "rpm_calculator.h"
 #include "engine_sniffer.h"
 #include "status_loop.h"

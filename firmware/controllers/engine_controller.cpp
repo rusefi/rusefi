@@ -28,6 +28,7 @@
 #include "fsio_core.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
+#include "advance_map.h"
 #include "rpm_calculator.h"
 #include "main_trigger_callback.h"
 #include "io_pins.h"
@@ -41,7 +42,7 @@
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
 #include "engine.h"
-#include "algo.h"
+#include "speed_density.h"
 #include "local_version_holder.h"
 #include "alternator_controller.h"
 #include "fuel_math.h"
@@ -95,6 +96,12 @@
 #endif /* EFI_CJ125 */
 
 EXTERN_ENGINE;
+
+void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	initFuelMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
 
 static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST

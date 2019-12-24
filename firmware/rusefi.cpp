@@ -119,7 +119,6 @@
 #include "status_loop.h"
 #include "pin_repository.h"
 #include "flash_main.h"
-#include "algo.h"
 #include "custom_engine.h"
 #include "engine_math.h"
 #include "mpu_util.h"

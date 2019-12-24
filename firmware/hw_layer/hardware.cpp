@@ -42,7 +42,6 @@
 #include "neo6m.h"
 #include "lcd_HD44780.h"
 #include "settings.h"
-#include "algo.h"
 #include "joystick.h"
 #include "cdm_ion_sense.h"
 #include "trigger_central.h"

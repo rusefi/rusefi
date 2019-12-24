@@ -11,7 +11,6 @@
 #include "allsensors.h"
 #include "rpm_calculator.h"
 #include "event_queue.h"
-#include "algo.h"
 #include "trigger_central.h"
 #include "main_trigger_callback.h"
 #include "engine.h"
