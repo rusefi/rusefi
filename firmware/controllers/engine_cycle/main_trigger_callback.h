@@ -14,7 +14,6 @@
 #include "event_registry.h"
 
 void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
-void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
