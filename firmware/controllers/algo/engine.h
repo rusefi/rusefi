@@ -68,6 +68,7 @@ public:
 
 	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
 
+	bool needTdcCallback = true;
 	/**
 	 * if 2nd TPS is not configured we do not run 2nd ETB
 	 */
