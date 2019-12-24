@@ -660,6 +660,8 @@ static void getKnockInfo(void) {
 
 // this method is used by real firmware and simulator and unit test
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	initInterpolation(sharedLogger);
+
 #if EFI_SIMULATOR
 	printf("commonInitEngineController\n");
 #endif
@@ -707,8 +709,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #if EFI_PROD_CODE
 	initPwmGenerator();
 #endif
-
-	initAlgo(sharedLogger);
 
 #if EFI_LOGIC_ANALYZER
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
