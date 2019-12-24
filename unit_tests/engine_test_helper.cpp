@@ -14,7 +14,6 @@
 #include "allsensors.h"
 #include "engine_controller.h"
 #include "advance_map.h"
-#include "algo.h"
 
 extern int timeNowUs;
 extern EnginePins enginePins;
