@@ -57,7 +57,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	mostCommonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	commonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	resetConfigurationExt(NULL, boardCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);

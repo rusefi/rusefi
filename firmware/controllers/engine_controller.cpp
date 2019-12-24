@@ -94,8 +94,7 @@
 
 EXTERN_ENGINE;
 
-// this method is used by real firmware and simulator and unit test
-void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
 	initSensors();
 #endif /* EFI_UNIT_TEST */
@@ -297,8 +296,6 @@ static void resetAccel(void) {
 		engine->wallFuel[i].resetWF();
 	}
 }
-
-static int previousSecond;
 
 #if ENABLE_PERF_TRACE
 
@@ -659,13 +656,19 @@ static void getKnockInfo(void) {
 
 	engine->printKnockState();
 }
+#endif /* EFI_UNIT_TEST */
 
-// this method is used by real firmware and simulator but not unit tests
+// this method is used by real firmware and simulator and unit test
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SIMULATOR
 	printf("commonInitEngineController\n");
 #endif
+
+#if !EFI_UNIT_TEST
 	initConfigActions();
+#endif /* EFI_UNIT_TEST */
+
+
 #if EFI_ENABLE_MOCK_ADC
 	initMockVoltage();
 #endif /* EFI_ENABLE_MOCK_ADC */
@@ -674,10 +677,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initSensorChart();
 #endif /* EFI_SENSOR_CHART */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	// todo: this is a mess, remove code duplication with simulator
-	initSettings();
-#endif
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->isTunerStudioEnabled) {
@@ -685,11 +684,18 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	}
 #endif /* EFI_TUNER_STUDIO */
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	initSettings();
+
 	if (hasFirmwareError()) {
 		return;
 	}
+#endif
+
 	mostCommonInitEngineController(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 }
+
+#if !EFI_UNIT_TEST
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SIMULATOR
