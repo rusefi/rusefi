@@ -5,7 +5,7 @@
  * See http://rusefi.com/docs/html/
  *
  * @date Feb 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -612,9 +612,6 @@ void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static void showTriggerHistogram(void) {
 	printAllCallbacksHistogram();
 	showMainHistogram();
-#if EFI_ENGINE_SNIFFER
-	showWaveChartHistogram();
-#endif
 }
 
 static void showMainInfo(Engine *engine) {
