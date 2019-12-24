@@ -18,6 +18,8 @@ int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
 percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+int isIgnitionTimingError(void);
+
 #define TRIGGER_EVENT_UNDEFINED -1
 bool scheduleOrQueue(AngleBasedEvent *event,
 		uint32_t trgEventIndex,
