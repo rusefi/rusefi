@@ -57,9 +57,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	resetConfigurationExt(NULL, boardCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
+
 	commonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-	resetConfigurationExt(NULL, boardCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->engineConfigurationPtr->mafAdcChannel = TEST_MAF_CHANNEL;
 	engine->engineConfigurationPtr->clt.adcChannel = TEST_CLT_CHANNEL;
@@ -75,7 +76,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-	initMainEventListener(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {

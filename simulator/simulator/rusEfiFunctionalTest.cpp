@@ -126,8 +126,6 @@ void rusEfiFunctionalTest(void) {
 	initTriggerCentral(&sharedLogger);
 	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
-	initMainEventListener(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-
 	startStatusThreads();
 
 	runChprintfTest();
