@@ -1,5 +1,5 @@
 /*
- * counter64.h
+ * @file counter64.h
  *
  *  Created on: Mar 31, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
