@@ -19,8 +19,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 int isIgnitionTimingError(void);
 void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-void showMainHistogram(void);
-
 void startSimultaniousInjection(Engine *engine);
 void endSimultaniousInjection(InjectionEvent *event);
 void seTurnPinHigh(InjectionEvent *event);
