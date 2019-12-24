@@ -695,6 +695,14 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 #endif
 
 	mostCommonInitEngineController(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+
+#if EFI_SHAFT_POSITION_INPUT
+	/**
+	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
+	 * other listeners can access current RPM value
+	 */
+	initRpmCalculator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
 #if !EFI_UNIT_TEST
@@ -722,15 +730,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	 */
 	initCJ125(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_CJ125 */
-
-
-#if EFI_SHAFT_POSITION_INPUT
-	/**
-	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
-	 * other listeners can access current RPM value
-	 */
-	initRpmCalculator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
 	initInjectorCentral(sharedLogger);

@@ -123,8 +123,6 @@ void rusEfiFunctionalTest(void) {
 
 	commonInitEngineController(&sharedLogger);
 
-	initRpmCalculator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-
 	initTriggerCentral(&sharedLogger);
 	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
