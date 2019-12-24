@@ -119,7 +119,6 @@ void rusEfiFunctionalTest(void) {
 	// todo: reduce code duplication with initEngineContoller
 
 	resetConfigurationExt(NULL, FORD_ESCORT_GT PASS_ENGINE_PARAMETER_SUFFIX);
-	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	commonInitEngineController(&sharedLogger);
 
