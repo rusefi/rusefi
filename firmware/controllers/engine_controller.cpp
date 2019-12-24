@@ -48,6 +48,8 @@
 #include "fuel_math.h"
 #include "settings.h"
 #include "aux_pid.h"
+#include "spark_logic.h"
+#include "aux_valves.h"
 #include "accelerometer.h"
 #include "counter64.h"
 #include "perf_trace.h"
@@ -723,9 +725,11 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
 	if (CONFIG(isEngineControlEnabled)) {
+		initAuxValves(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 		/**
-		 * This method initialized the main listener which actually runs injectors & ignition
+		 * This method adds trigger listener which actually schedules ignition
 		 */
+		initSparkLogic(sharedLogger);
 		initMainEventListener(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_ENGINE_CONTROL */
