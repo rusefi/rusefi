@@ -40,15 +40,13 @@
 #include "advance_map.h"
 #include "allsensors.h"
 #include "cyclic_buffer.h"
-#include "histogram.h"
 #include "fuel_math.h"
-#include "histogram.h"
 #include "cdm_ion_sense.h"
 #include "engine_controller.h"
 #include "efi_gpio.h"
 #if EFI_PROD_CODE
 #include "os_util.h"
-#endif /* EFI_HISTOGRAMS */
+#endif /* EFI_PROD_CODE */
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "engine.h"
@@ -406,16 +404,6 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	}
 }
 
-#if EFI_HISTOGRAMS
-static histogram_s mainLoopHistogram;
-#endif /* EFI_HISTOGRAMS */
-
-void showMainHistogram(void) {
-#if EFI_HISTOGRAMS
-	printHistogram(logger, &mainLoopHistogram);
-#endif /* EFI_HISTOGRAMS */
-}
-
 #if EFI_PROD_CODE
 /**
  * this field is used as an Expression in IAR debugger
@@ -484,10 +472,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		warning(CUSTOM_SKIPPING_STROKE, "skipping stroke due to rpm=%d", rpm);
 	}
 
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	int beforeCallback = hal_lld_get_counter_value();
-#endif
-
 	if (trgEventIndex == 0) {
 		if (HAVE_CAM_INPUT()) {
 			engine->triggerCentral.validateCamVvtCounters();
@@ -527,11 +511,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
 	onTriggerEventSparkLogic(limitedSpark, trgEventIndex, rpm PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_HISTOGRAMS
-	int diff = hal_lld_get_counter_value() - beforeCallback;
-	if (diff > 0)
-	hsAdd(&mainLoopHistogram, diff);
-#endif /* EFI_HISTOGRAMS */
 
 	if (trgEventIndex == 0) {
 		ENGINE(m.mainTriggerCallbackTime) = getTimeNowLowerNt() - ENGINE(m.beforeMainTrigger);
@@ -609,18 +588,13 @@ void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #include "engine_sniffer.h"
 #endif
 
-static void showTriggerHistogram(void) {
-	printAllCallbacksHistogram();
-	showMainHistogram();
-}
-
 static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE
 	int rpm = GET_RPM();
 	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	scheduleMsg(logger, "rpm %d engine_load %.2f", rpm, el);
 	scheduleMsg(logger, "fuel %.2fms timing %.2f", getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX), engine->engineState.timingAdvance);
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
 void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -631,17 +605,12 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 	initAuxValves(logger PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_PROD_CODE
-	addConsoleAction("performanceinfo", showTriggerHistogram);
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
 	printMsg(logger, "initMainLoop: %d", currentTimeMillis());
 	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE))
 		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
-
-#if EFI_HISTOGRAMS
-	initHistogram(&mainLoopHistogram, "main callback");
-#endif /* EFI_HISTOGRAMS */
 
 	addTriggerEventListener(mainTriggerCallback, "main loop", engine);
 
