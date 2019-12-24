@@ -3,11 +3,10 @@
  * @brief   Shaft position sensor(s) decoder header
  *
  * @date Jan 1, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef RPM_REPORTER_H_
-#define RPM_REPORTER_H_
+#pragma once
 
 #include "globalaccess.h"
 #include "scheduler.h"
@@ -168,4 +167,3 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void scheduleByAngle(scheduling_s *timer, angle_t angle, schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-#endif /* RPM_REPORTER_H_ */
