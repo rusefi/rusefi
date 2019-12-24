@@ -74,7 +74,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
