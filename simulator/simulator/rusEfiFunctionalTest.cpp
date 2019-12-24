@@ -121,7 +121,6 @@ void rusEfiFunctionalTest(void) {
 	resetConfigurationExt(NULL, FORD_ESCORT_GT PASS_ENGINE_PARAMETER_SUFFIX);
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	initAlgo(&sharedLogger);
 	commonInitEngineController(&sharedLogger);
 
 	initRpmCalculator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);

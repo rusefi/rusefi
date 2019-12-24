@@ -34,7 +34,3 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
-
-void initAlgo(Logging *sharedLogger) {
-	initInterpolation(sharedLogger);
-}
