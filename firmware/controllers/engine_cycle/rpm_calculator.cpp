@@ -315,6 +315,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
+		// two instances of scheduling_s are needed to properly handle event overlap
 		int revIndex2 = getRevolutionCounter() % 2;
 		int rpm = GET_RPM();
 		// todo: use tooth event-based scheduling, not just time-based scheduling

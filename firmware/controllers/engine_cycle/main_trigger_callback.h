@@ -4,11 +4,10 @@
  *
  *
  * @date Feb 9, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef MAIN_LOOP_H_
-#define MAIN_LOOP_H_
+#pragma once
 
 #include "engine.h"
 
@@ -27,9 +26,5 @@ void endSimultaniousInjection(InjectionEvent *event);
 void seTurnPinHigh(InjectionEvent *event);
 void seTurnPinLow(InjectionEvent *event);
 
-float getFuel(int rpm, float key);
-
 // reset injection switch counter if the engine started spinning
 void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-#endif /* MAIN_LOOP_H_ */
