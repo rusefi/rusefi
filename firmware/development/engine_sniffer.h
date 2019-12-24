@@ -44,7 +44,6 @@ private:
 };
 
 void initWaveChart(WaveChart *chart);
-void showWaveChartHistogram(void);
 void setChartSize(int newSize);
 
 #endif /* EFI_ENGINE_SNIFFER */

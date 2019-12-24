@@ -34,14 +34,9 @@
 #include "engine_configuration.h"
 #include "eficonsole.h"
 #include "status_loop.h"
+#include "perf_trace.h"
 
 #define CHART_DELIMETER	'!'
-
-#if EFI_HISTOGRAMS
-#include "os_util.h"
-#include "histogram.h"
-static histogram_s engineSnifferHisto;
-#endif /* EFI_HISTOGRAMS */
 
 EXTERN_ENGINE
 ;
@@ -165,6 +160,8 @@ void WaveChart::publish() {
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addEvent3(const char *name, const char * msg) {
+	ScopePerf perf(PE::EngineSniffer);
+
 	if (getTimeNowNt() < pauseEngineSnifferUntilNt) {
 		return;
 	}
@@ -195,9 +192,6 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 		return;
 	}
 
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	int beforeCallback = hal_lld_get_counter_value();
-#endif
 
 	efitick_t nowNt = getTimeNowNt();
 
@@ -238,20 +232,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	if (!alreadyLocked) {
 		unlockOutputBuffer();
 	}
-
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	int64_t diff = hal_lld_get_counter_value() - beforeCallback;
-	if (diff > 0) {
-		hsAdd(&engineSnifferHisto, diff);
-	}
-#endif /* EFI_HISTOGRAMS */
 #endif /* EFI_TEXT_LOGGING */
-}
-
-void showWaveChartHistogram(void) {
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	printHistogram(&logger, &engineSnifferHisto);
-#endif
 }
 
 void initWaveChart(WaveChart *chart) {
