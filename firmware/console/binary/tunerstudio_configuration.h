@@ -196,8 +196,8 @@ typedef struct {
 	uint32_t tsConfigVersion; // 124
 
 	// Errors
-	int triggerErrorsCounter; // 128
-	int totalTriggerErrorCounter; // 132
+	int totalTriggerErrorCounter; // 128
+	int orderingErrorCounter; // 132
 	int16_t warningCounter; // 136
 	int16_t lastErrorCode; // 138
 	int16_t recentErrorCodes[8]; // 140

@@ -92,6 +92,8 @@ public enum Sensor {
     TS_CONFIG_VERSION(".ini version", SensorCategory.OPERATIONS, FieldType.INT, 124, BackgroundColor.BLUE),
 
     // Errors
+    totalTriggerErrorCounter("trigger total error counter", SensorCategory.STATUS, FieldType.INT, 128, BackgroundColor.MUD, 0, 5),
+    orderingErrorCounter("trigger order error counter", SensorCategory.STATUS, FieldType.INT, 132, BackgroundColor.MUD, 0, 5),
     errorCodeCounter("error counter", SensorCategory.STATUS, FieldType.INT, 136, BackgroundColor.MUD, 0, 5),
     lastErrorCode("last error", SensorCategory.STATUS, FieldType.INT, 138, BackgroundColor.MUD, 0, 5),
 
