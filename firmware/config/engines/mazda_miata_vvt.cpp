@@ -426,7 +426,9 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleMode = IM_AUTO;
 	CONFIG(useETBforIdleControl) = true;
 	// set_analog_input_pin pps PA2
+/* a step back - Frankenso does not use ETB
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
+*/
 
 	engineConfiguration->idleRpmPid.offset = 0;
 	engineConfiguration->idleRpmPid.pFactor = 0.2;
@@ -578,8 +580,9 @@ void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.offset = 0;
 }
 
-
-
+/**
+ * set engine_type 11
+ */
 void setMiataNB2_MRE_MTB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
 
