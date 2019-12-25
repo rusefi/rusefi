@@ -562,6 +562,12 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 #if EFI_PROD_CODE || EFI_SIMULATOR
 			if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !silentTriggerError)) {
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
+					float ratioFrom = TRIGGER_WAVEFORM(syncronizationRatioFrom[i]);
+					if (cisnan(ratioFrom)) {
+						// we do not track gap at this depth
+						continue;
+					}
+
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					if (cisnan(gap)) {
 						scheduleMsg(logger, "index=%d NaN gap, you have noise issues?",
@@ -571,7 +577,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							i,
 							gap,
-							TRIGGER_WAVEFORM(syncronizationRatioFrom[i]),
+							ratioFrom,
 							TRIGGER_WAVEFORM(syncronizationRatioTo[i]),
 							boolToString(someSortOfTriggerError));
 					}
