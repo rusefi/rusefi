@@ -103,6 +103,11 @@ static uint32_t getAlternateFunctions(ICUDriver *driver) {
 		return GPIO_AF_TIM4;
 	}
 #endif
+#if STM32_ICU_USE_TIM8
+	if (driver == &ICUD8) {
+		return GPIO_AF_TIM8;
+	}
+#endif
 #if STM32_ICU_USE_TIM9
 	if (driver == &ICUD9) {
 		return GPIO_AF_TIM9;
