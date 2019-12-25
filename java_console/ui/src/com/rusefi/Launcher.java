@@ -49,7 +49,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20191223;
+    public static final int CONSOLE_VERSION = 20191225;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
@@ -421,11 +421,11 @@ public class Launcher {
                             (int) value;
                     JOptionPane.showMessageDialog(Launcher.getFrame(), message);
                     assert wrongVersionListener != null;
-                    SensorCentral.getInstance().removeListener(Sensor.FIRMWARE_VERSION, wrongVersionListener);
+                    SensorCentral.getInstance().removeListener(Sensor.TS_CONFIG_VERSION, wrongVersionListener);
                 }
             }
         };
-        SensorCentral.getInstance().addListener(Sensor.FIRMWARE_VERSION, wrongVersionListener);
+        SensorCentral.getInstance().addListener(Sensor.TS_CONFIG_VERSION, wrongVersionListener);
         JustOneInstance.onStart();
         try {
             boolean isPortDefined = args.length > 0;

@@ -89,6 +89,7 @@ public enum Sensor {
     TIME_SECONDS("uptime", SensorCategory.OPERATIONS, FieldType.INT, 112, BackgroundColor.MUD, 0, 5),
     engineMode("mode", SensorCategory.OPERATIONS, FieldType.INT, 116, BackgroundColor.MUD, 0, 5),
     FIRMWARE_VERSION("FW version", SensorCategory.OPERATIONS, FieldType.INT, 120, BackgroundColor.BLUE),
+    TS_CONFIG_VERSION(".ini version", SensorCategory.OPERATIONS, FieldType.INT, 124, BackgroundColor.BLUE),
 
     // Errors
     errorCodeCounter("error counter", SensorCategory.STATUS, FieldType.INT, 136, BackgroundColor.MUD, 0, 5),

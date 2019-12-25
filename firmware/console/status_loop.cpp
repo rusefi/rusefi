@@ -783,7 +783,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->vvtPosition = engine->triggerCentral.vvtPosition;
 	// 252
 	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
-	// 264
+	// 120
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 	// 268
 	tsOutputChannels->fuelPidCorrection = ENGINE(engineState.running.pidCorrection);
