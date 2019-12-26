@@ -117,6 +117,8 @@ struct_no_prefix engine_configuration_s
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 
+#define BOOST_RPM_COUNT 8
+#define BOOST_LOAD_COUNT 8
 #define PEDAL_TO_TPS_SIZE 8
 
 
@@ -136,7 +138,8 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_VOLTAGE 1000
-
+#define TPS_1_BYTE_PACKING_MULT 2
+#define LOAD_1_BYTE_PACKING_MULT 2
 #define FSIO_TABLE_8 8
 
 #define FSIO_CURVE_8 8
@@ -168,7 +171,7 @@ custom angle_table_t	4*@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@ array,   F32,   @OFF
 custom pedal_to_tps_t	@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@ array,   U08,   @OFFSET@, [@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@],"deg",	   1,     0,     -720,  720,    2
 
 custom iac_pid_mult_t	@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@ array,   U08,   @OFFSET@, [@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@],"%",	   1,     0,     0,  999,    2
-
+custom boost_table_t	@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@],"",    @@LOAD_1_BYTE_PACKING_MULT@@,  0 ,    0,    3000,      0
 struct pid_s
 	float pFactor;;"",      1,      0,       -10000, 10000,      4
 	float iFactor;;"",      1,      0,       -10000, 10000,      4
@@ -184,7 +187,7 @@ float baseFuel;+Base duration of the fuel injection during cranking, this is mod
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
@@ -734,8 +737,19 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
 	etb_io[ETB_COUNT iterate] etbIo
+
+
+    output_pin_e boostControlPin;
+	pin_output_mode_e boostControlPinMode;
+
+    pid_s boostPid;
+	custom boostType_e 4 bits,   U32,   @OFFSET@, [0:0], "Open Loop",  "Closed Loop"
+    boostType_e boostType;
+    int boostPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
+    uint8_t[6] unusedSpace;
+
 ! our strategy is to get rid of "boardConfiguration" and make everything just "engineConfiguration". Please do not add new fields into legacy "bc" area.
-	int[119] unusedAtOldBoardConfigurationEnd;
+	int[110] unusedAtOldBoardConfigurationEnd;
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
@@ -801,7 +815,7 @@ bit useAdvanceCorrectionsForCranking;+This enables the various ignition correcti
 bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
 bit etbCalibrationOnStart
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
-bit unused_1484_bit_22
+bit isBoostControlEnabled;
 bit unused_1484_bit_23
 bit unused_1484_bit_24
 bit unused_1484_bit_25
@@ -1113,12 +1127,19 @@ uint8_t[4] unusuedsw;
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load",   1,   0.0,        0,  500.0,   2
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultRpmBins;;"RPM",        @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0	
 
-	int[565] mainUnusedEnd;
+	int[527] mainUnusedEnd;
 
 ! end of engine_configuration_s
 end_struct
 
 engine_configuration_s engineConfiguration;
+
+boost_table_t boostTableOpenLoop;
+uint8_t[BOOST_LOAD_COUNT] boostMapBins;;"",  @@LOAD_1_BYTE_PACKING_MULT@@,   0,        0,  600.0,   1
+uint8_t[BOOST_RPM_COUNT] boostRpmBins;;"RPM",   @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0 
+
+boost_table_t boostTableClosedLoop;
+uint8_t[BOOST_LOAD_COUNT] boostTpsBins;;"%",   @@TPS_1_BYTE_PACKING_MULT@@,   0.0,        0,  100.0,   2
 
 pedal_to_tps_t pedalToTpsTable;
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%",           1,     0,      0.0,   120.0,   0

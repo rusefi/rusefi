@@ -141,7 +141,7 @@ public:
 	OutputPin debugTriggerSync;
 	OutputPin debugTimerCallback;
 	OutputPin debugSetTimer;
-
+	OutputPin boostPin;
 	OutputPin idleSolenoidPin;
 	OutputPin alternatorPin;
 	/**
