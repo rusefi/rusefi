@@ -181,6 +181,8 @@ typedef enum {
 
 	PROTEUS = 61,
 
+	VW_B6 = 62,
+
 	/**
 	 * this configuration has as few pins configured as possible
 	 */
