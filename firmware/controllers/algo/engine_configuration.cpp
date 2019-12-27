@@ -66,6 +66,7 @@
 #include "test_engine.h"
 #include "sachs.h"
 #include "vw.h"
+#include "vw_b6.h"
 #include "daihatsu.h"
 #include "chevrolet_camaro_4.h"
 #include "suzuki_vitara.h"
