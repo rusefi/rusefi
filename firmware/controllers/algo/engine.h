@@ -47,10 +47,14 @@ class RpmCalculator;
 
 #define CYCLE_ALTERNATION 2
 
+class IEtbController;
+
 class Engine : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
 	Engine();
+
+	IEtbController *etbControllers[ETB_COUNT];
 
 	void OnTriggerStateDecodingError() override;
 	void OnTriggerStateProperState(efitick_t nowNt) override;
@@ -64,7 +68,14 @@ public:
 
 	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
 
+#if EFI_UNIT_TEST
 	bool needTdcCallback = true;
+#endif /* EFI_UNIT_TEST */
+
+	/**
+	 * if 2nd TPS is not configured we do not run 2nd ETB
+	 */
+	int etbActualCount = 0;
 
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
@@ -133,16 +144,11 @@ public:
 	bool isCltBroken = false;
 	bool slowCallBackWasInvoked = false;
 
-
-//	floatms_t callToPitEndTime;
-
 	/**
 	 * remote telemetry: if not zero, time to stop flashing 'CALL FROM PIT STOP' light
+	 * todo: looks like there is a bug here? 64 bit storage an 32 bit time logic? anyway this feature is mostly a dream at this point
 	 */
-	efitime_t callFromPitStopEndTime = 0;
-
-	// timestamp of most recent time RPM hard limit was triggered
-	efitime_t rpmHardLimitTimestamp = 0;
+	efitimems64_t callFromPitStopEndTime = 0;
 
 	/**
 	 * This flag indicated a big enough problem that engine control would be
@@ -235,6 +241,7 @@ public:
 	 */
 	bool isTestMode = false;
 
+	void resetEngineSnifferIfInTestMode();
 
 	/**
 	 * pre-calculated offset for given sequence index within engine cycle

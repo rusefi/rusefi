@@ -77,11 +77,11 @@ static int getSpiAf(SPIDriver *driver) {
 brain_pin_e getMisoPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIGB(spi1misoPin);
+		return CONFIG(spi1misoPin);
 	case SPI_DEVICE_2:
-		return CONFIGB(spi2misoPin);
+		return CONFIG(spi2misoPin);
 	case SPI_DEVICE_3:
-		return CONFIGB(spi3misoPin);
+		return CONFIG(spi3misoPin);
 	default:
 		break;
 	}
@@ -91,11 +91,11 @@ brain_pin_e getMisoPin(spi_device_e device) {
 brain_pin_e getMosiPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIGB(spi1mosiPin);
+		return CONFIG(spi1mosiPin);
 	case SPI_DEVICE_2:
-		return CONFIGB(spi2mosiPin);
+		return CONFIG(spi2mosiPin);
 	case SPI_DEVICE_3:
-		return CONFIGB(spi3mosiPin);
+		return CONFIG(spi3mosiPin);
 	default:
 		break;
 	}
@@ -105,11 +105,11 @@ brain_pin_e getMosiPin(spi_device_e device) {
 brain_pin_e getSckPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIGB(spi1sckPin);
+		return CONFIG(spi1sckPin);
 	case SPI_DEVICE_2:
-		return CONFIGB(spi2sckPin);
+		return CONFIG(spi2sckPin);
 	case SPI_DEVICE_3:
-		return CONFIGB(spi3sckPin);
+		return CONFIG(spi3sckPin);
 	default:
 		break;
 	}

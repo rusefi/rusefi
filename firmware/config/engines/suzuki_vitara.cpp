@@ -19,7 +19,7 @@ void setSuzukiVitara(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
-	boardConfiguration->mainRelayPin = GPIOE_6;
+	engineConfiguration->mainRelayPin = GPIOE_6;
 }
 
 

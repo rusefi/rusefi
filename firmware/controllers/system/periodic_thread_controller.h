@@ -53,7 +53,7 @@ protected:
     /**
      * @brief Called periodically.  Override this method to do work for your controller.
      */
-    virtual void PeriodicTask(efitime_t nowNt) = 0;
+    virtual void PeriodicTask(efitick_t nowNt) = 0;
 
 private:
     void ThreadTask() override final
@@ -63,7 +63,7 @@ private:
         while(true)
         {
             systime_t before = chVTGetSystemTime();
-            efitime_t nowNt = getTimeNowNt();
+            efitick_t nowNt = getTimeNowNt();
 
 			{
 				ScopePerf perf(PE::PeriodicControllerPeriodicTask);

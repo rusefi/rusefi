@@ -148,7 +148,7 @@ float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
  */
 float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		return interpolateMsg("rmap", CONFIGB(mapFrequency0Kpa), 0, CONFIGB(mapFrequency100Kpa), 100, mapFreq);
+		return interpolateMsg("rmap", CONFIG(mapFrequency0Kpa), 0, CONFIG(mapFrequency100Kpa), 100, mapFreq);
 	}
 
 	float voltage = getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel PASS_ENGINE_PARAMETER_SUFFIX);

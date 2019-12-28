@@ -42,7 +42,6 @@
 #include "neo6m.h"
 #include "lcd_HD44780.h"
 #include "settings.h"
-#include "algo.h"
 #include "joystick.h"
 #include "cdm_ion_sense.h"
 #include "trigger_central.h"
@@ -103,15 +102,15 @@ void unlockSpi(void) {
 	chMtxUnlock(&spiMtx);
 }
 
-static void initSpiModules(board_configuration_s *boardConfiguration) {
-	UNUSED(boardConfiguration);
-	if (CONFIGB(is_enabled_spi_1)) {
+static void initSpiModules(engine_configuration_s *engineConfiguration) {
+	UNUSED(engineConfiguration);
+	if (CONFIG(is_enabled_spi_1)) {
 		 turnOnSpi(SPI_DEVICE_1);
 	}
-	if (CONFIGB(is_enabled_spi_2)) {
+	if (CONFIG(is_enabled_spi_2)) {
 		turnOnSpi(SPI_DEVICE_2);
 	}
-	if (CONFIGB(is_enabled_spi_3)) {
+	if (CONFIG(is_enabled_spi_3)) {
 		turnOnSpi(SPI_DEVICE_3);
 	}
 }
@@ -217,7 +216,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 
 #if EFI_SENSOR_CHART
 		if (ENGINE(sensorChartMode) == SC_AUX_FAST1) {
-			float voltage = getAdcValue("fAux1", engineConfiguration->bc.auxFastSensor1_adcChannel);
+			float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
 			scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX), voltage);
 		}
 #endif /* EFI_SENSOR_CHART */
@@ -226,7 +225,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		mapAveragingAdcCallback(fastAdc.samples[fastMapSampleIndex]);
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011
-		if (CONFIGB(isHip9011Enabled)) {
+		if (CONFIG(isHip9011Enabled)) {
 			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
 		}
 #endif /* EFI_HIP_9011 */
@@ -327,13 +326,13 @@ void applyNewHardwareSettings(void) {
 	stopAuxPins();
 #endif /* EFI_AUX_PID */
 
-	if (isConfigurationChanged(bc.is_enabled_spi_1))
+	if (isConfigurationChanged(is_enabled_spi_1))
 		stopSpi(SPI_DEVICE_1);
 
-	if (isConfigurationChanged(bc.is_enabled_spi_2))
+	if (isConfigurationChanged(is_enabled_spi_2))
 		stopSpi(SPI_DEVICE_2);
 
-	if (isConfigurationChanged(bc.is_enabled_spi_3))
+	if (isConfigurationChanged(is_enabled_spi_3))
 		stopSpi(SPI_DEVICE_3);
 
 #if EFI_HD44780_LCD
@@ -403,11 +402,11 @@ void showBor(void) {
 }
 
 void initHardware(Logging *l) {
-	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > 256, "init h");
+	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init h");
 	sharedLogger = l;
 	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+	
 
 	printMsg(sharedLogger, "initHardware()");
 	// todo: enable protection. it's disabled because it takes
@@ -487,7 +486,7 @@ void initHardware(Logging *l) {
 	initRtc();
 
 #if HAL_USE_SPI
-	initSpiModules(boardConfiguration);
+	initSpiModules(engineConfiguration);
 #endif /* HAL_USE_SPI */
 	// initSmartGpio depends on 'initSpiModules'
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -500,7 +499,7 @@ void initHardware(Logging *l) {
 #endif /* EFI_MC33816 */
 
 #if EFI_MAX_31855
-	initMax31855(sharedLogger, CONFIGB(max31855spiDevice), CONFIGB(max31855_cs));
+	initMax31855(sharedLogger, CONFIG(max31855spiDevice), CONFIG(max31855_cs));
 #endif /* EFI_MAX_31855 */
 
 #if EFI_CAN_SUPPORT

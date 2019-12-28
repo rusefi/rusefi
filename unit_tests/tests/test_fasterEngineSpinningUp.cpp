@@ -12,7 +12,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// turn on FasterEngineSpinUp mode
-	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	// set ignition mode
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
@@ -100,7 +100,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// turn on FasterEngineSpinUp mode
-	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	setupSimpleTestEngineWithMaf(&eth, IM_SEQUENTIAL, TT_TOOTHED_WHEEL_60_2);
 	eth.moveTimeForwardMs(startUpDelayMs);

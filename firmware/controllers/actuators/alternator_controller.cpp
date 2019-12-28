@@ -86,7 +86,7 @@ class AlternatorController : public PeriodicTimerController {
 		float vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 		float targetVoltage = engineConfiguration->targetVBatt;
 
-		if (CONFIGB(onOffAlternatorLogic)) {
+		if (CONFIG(onOffAlternatorLogic)) {
 			float h = 0.1;
 			bool newState = (vBatt < targetVoltage - h) || (currentPlainOnOffState && vBatt < targetVoltage);
 			enginePins.alternatorPin.setValue(newState);
@@ -102,7 +102,7 @@ class AlternatorController : public PeriodicTimerController {
 
 
 		currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt);
-		if (CONFIGB(isVerboseAlternator)) {
+		if (CONFIG(isVerboseAlternator)) {
 			scheduleMsg(logger, "alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt,
 					alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
 		}
@@ -116,7 +116,7 @@ static AlternatorController instance;
 
 void showAltInfo(void) {
 	scheduleMsg(logger, "alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
-			hwPortname(CONFIGB(alternatorControlPin)),
+			hwPortname(CONFIG(alternatorControlPin)),
 			engineConfiguration->alternatorControl.periodMs);
 	scheduleMsg(logger, "p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
@@ -160,17 +160,17 @@ void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousCon
 void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	addConsoleAction("altinfo", showAltInfo);
-	if (CONFIGB(alternatorControlPin) == GPIO_UNASSIGNED)
+	if (CONFIG(alternatorControlPin) == GPIO_UNASSIGNED)
 		return;
 
-	if (CONFIGB(onOffAlternatorLogic)) {
-		enginePins.alternatorPin.initPin("on/off alternator", CONFIGB(alternatorControlPin));
+	if (CONFIG(onOffAlternatorLogic)) {
+		enginePins.alternatorPin.initPin("on/off alternator", CONFIG(alternatorControlPin));
 
 	} else {
 		startSimplePwmExt(&alternatorControl,
 				"Alternator control",
 				&engine->executor,
-				CONFIGB(alternatorControlPin),
+				CONFIG(alternatorControlPin),
 				&enginePins.alternatorPin,
 				engineConfiguration->alternatorPwmFrequency, 0.1, (pwm_gen_callback*)applyAlternatorPinState);
 	}

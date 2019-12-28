@@ -134,7 +134,7 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
  * connectivity so no console output here
  */
 persisted_configuration_state_e readConfiguration(Logging * logger) {
-	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 256, "read f", PC_ERROR);
+	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
 	persisted_configuration_state_e result = doReadConfiguration(FLASH_ADDR, logger);
 	if (result != PC_OK) {
 		printMsg(logger, "Reading second configuration copy");

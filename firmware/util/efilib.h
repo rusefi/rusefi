@@ -87,15 +87,40 @@ float expf_taylor(float x);
 #ifdef __cplusplus
 }
 
+#include <cstddef>
+
 // C++ helpers go here
 namespace efi
 {
 template <typename T, size_t N>
-constexpr size_t size(const T(&)[N])
-{
+constexpr size_t size(const T(&)[N]) {
     return N;
 }
 } // namespace efi
+
+/**
+ * Copies an array from src to dest.  The lengths of the arrays must match.
+ */
+template <typename TElement, size_t N>
+constexpr void copyArray(TElement (&dest)[N], const TElement (&src)[N]) {
+	for (size_t i = 0; i < N; i++) {
+		dest[i] = src[i];
+	}
+}
+
+/**
+ * Copies an array from src to the beginning of dst.  If dst is larger
+ * than src, then only the elements copied from src will be touched.
+ * Any remaining elements at the end will be untouched.
+ */
+template <typename TElement, size_t NSrc, size_t NDest>
+constexpr void copyArrayPartial(TElement (&dest)[NDest], const TElement (&src)[NSrc]) {
+	static_assert(NDest >= NSrc, "Source array must be larger than destination.");
+
+	for (size_t i = 0; i < NSrc; i++) {
+		dest[i] = src[i];
+	}
+}
 
 #endif /* __cplusplus */
 

@@ -15,7 +15,6 @@
 #include "engine_configuration.h"
 #include "listener_array.h"
 #include "data_buffer.h"
-#include "histogram.h"
 #include "pwm_generator_logic.h"
 #include "tooth_logger.h"
 
@@ -68,10 +67,6 @@ int TriggerCentral::getHwEventCounter(int index) const {
 
 EXTERN_ENGINE;
 
-#if EFI_HISTOGRAMS
-static histogram_s triggerCallbackHistogram;
-#endif /* EFI_HISTOGRAMS */
-
 static Logging *logger;
 
 void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
@@ -100,7 +95,7 @@ void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX)
 
 	addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
-	if (CONFIGB(vvtCamSensorUseRise) ^ (front != TV_FALL)) {
+	if (CONFIG(vvtCamSensorUseRise) ^ (front != TV_FALL)) {
 		return;
 	}
 
@@ -126,7 +121,7 @@ void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX)
 		if (engineConfiguration->verboseTriggerSynchDetails) {
 			scheduleMsg(logger, "vvt ratio %.2f", ratio);
 		}
-		if (ratio < CONFIGB(miataNb2VVTRatioFrom) || ratio > CONFIGB(miataNb2VVTRatioTo)) {
+		if (ratio < CONFIG(miataNb2VVTRatioFrom) || ratio > CONFIG(miataNb2VVTRatioTo)) {
 			return;
 		}
 		if (engineConfiguration->verboseTriggerSynchDetails) {
@@ -210,7 +205,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
-	if (!CONFIGB(useNoiselessTriggerDecoder)) {
+	if (!CONFIG(useNoiselessTriggerDecoder)) {
 		if (!isUsefulSignal(signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
@@ -333,7 +328,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	nowNt = getTimeNowNt();
 
 	// This code gathers some statistics on signals and compares accumulated periods to filter interference
-	if (CONFIGB(useNoiselessTriggerDecoder)) {
+	if (CONFIG(useNoiselessTriggerDecoder)) {
 		if (!noiseFilter(nowNt, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
@@ -345,9 +340,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 
 	engine->onTriggerSignalEvent(nowNt);
 
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	int beforeCallback = hal_lld_get_counter_value();
-#endif
 	int eventIndex = (int) signal;
 	efiAssertVoid(CUSTOM_ERR_6638, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
@@ -409,20 +401,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		}
 
 	}
-#if EFI_HISTOGRAMS
-	int afterCallback = hal_lld_get_counter_value();
-	int diff = afterCallback - beforeCallback;
-	// this counter is only 32 bits so it overflows every minute, let's ignore the value in case of the overflow for simplicity
-	if (diff > 0) {
-		hsAdd(&triggerCallbackHistogram, diff);
-	}
-#endif /* EFI_HISTOGRAMS */
-}
-
-void printAllCallbacksHistogram(void) {
-#if EFI_HISTOGRAMS
-	printHistogram(logger, &triggerCallbackHistogram);
-#endif
 }
 
 EXTERN_ENGINE
@@ -469,7 +447,7 @@ void printAllTriggers() {
 		Engine *engine = &e;
 		persistent_config_s *config = &pc;
 		engine_configuration_s *engineConfiguration = &pc.engineConfiguration;
-		board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+		
 
 		engineConfiguration->trigger.type = tt;
 		engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
@@ -604,27 +582,27 @@ void triggerInfo(void) {
 
 	}
 
-	scheduleMsg(logger, "primary trigger input: %s", hwPortname(CONFIGB(triggerInputPins)[0]));
+	scheduleMsg(logger, "primary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[0]));
 	scheduleMsg(logger, "primary trigger simulator: %s %s freq=%d",
-			hwPortname(CONFIGB(triggerSimulatorPins)[0]),
-			getPin_output_mode_e(CONFIGB(triggerSimulatorPinModes)[0]),
-			CONFIGB(triggerSimulatorFrequency));
+			hwPortname(CONFIG(triggerSimulatorPins)[0]),
+			getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[0]),
+			CONFIG(triggerSimulatorFrequency));
 
 	if (ts->needSecondTriggerInput) {
-		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(CONFIGB(triggerInputPins)[1]));
+		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[1]));
 #if EFI_EMULATE_POSITION_SENSORS
 		scheduleMsg(logger, "secondary trigger simulator: %s %s phase=%d",
-				hwPortname(CONFIGB(triggerSimulatorPins)[1]),
-				getPin_output_mode_e(CONFIGB(triggerSimulatorPinModes)[1]), triggerSignal.safe.phaseIndex);
+				hwPortname(CONFIG(triggerSimulatorPins)[1]),
+				getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[1]), triggerSignal.safe.phaseIndex);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	}
-//	scheduleMsg(logger, "3rd trigger simulator: %s %s", hwPortname(CONFIGB(triggerSimulatorPins)[2]),
-//			getPin_output_mode_e(CONFIGB(triggerSimulatorPinModes)[2]));
+//	scheduleMsg(logger, "3rd trigger simulator: %s %s", hwPortname(CONFIG(triggerSimulatorPins)[2]),
+//			getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[2]));
 
-	scheduleMsg(logger, "trigger error extra LED: %s %s", hwPortname(CONFIGB(triggerErrorPin)),
-			getPin_output_mode_e(CONFIGB(triggerErrorPinMode)));
-	scheduleMsg(logger, "primary logic input: %s", hwPortname(CONFIGB(logicAnalyzerPins)[0]));
-	scheduleMsg(logger, "secondary logic input: %s", hwPortname(CONFIGB(logicAnalyzerPins)[1]));
+	scheduleMsg(logger, "trigger error extra LED: %s %s", hwPortname(CONFIG(triggerErrorPin)),
+			getPin_output_mode_e(CONFIG(triggerErrorPinMode)));
+	scheduleMsg(logger, "primary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[0]));
+	scheduleMsg(logger, "secondary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[1]));
 
 	scheduleMsg(logger, "zeroTestTime=%d maxSchedulingPrecisionLoss=%d", engine->m.zeroTestTime, maxSchedulingPrecisionLoss);
 
@@ -685,15 +663,15 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		isConfigurationChanged(globalTriggerAngleOffset) ||
 		isConfigurationChanged(trigger.customTotalToothCount) ||
 		isConfigurationChanged(trigger.customSkippedToothCount) ||
-		isConfigurationChanged(bc.triggerInputPins[0]) ||
-		isConfigurationChanged(bc.triggerInputPins[1]) ||
-		isConfigurationChanged(bc.triggerInputPins[2]) ||
+		isConfigurationChanged(triggerInputPins[0]) ||
+		isConfigurationChanged(triggerInputPins[1]) ||
+		isConfigurationChanged(triggerInputPins[2]) ||
 		isConfigurationChanged(vvtMode) ||
-		isConfigurationChanged(bc.vvtCamSensorUseRise) ||
+		isConfigurationChanged(vvtCamSensorUseRise) ||
 		isConfigurationChanged(vvtOffset) ||
 		isConfigurationChanged(vvtDisplayInverted) ||
-		isConfigurationChanged(bc.miataNb2VVTRatioFrom) ||
-		isConfigurationChanged(bc.miataNb2VVTRatioTo) ||
+		isConfigurationChanged(miataNb2VVTRatioFrom) ||
+		isConfigurationChanged(miataNb2VVTRatioTo) ||
 		isConfigurationChanged(nbVvtIndex);
 	if (changed) {
 		assertEngineReference();
@@ -738,9 +716,6 @@ void initTriggerCentral(Logging *sharedLogger) {
 	addConsoleAction("reset_trigger", resetRunningTriggerCounters);
 #endif
 
-#if EFI_HISTOGRAMS
-	initHistogram(&triggerCallbackHistogram, "all callbacks");
-#endif /* EFI_HISTOGRAMS */
 }
 
 #endif

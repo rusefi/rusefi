@@ -16,7 +16,7 @@
 
 // mode >= 0  is always true since that's an unsigned
 #define assertOMode(mode) { \
-	efiAssertVoid(CUSTOM_ERR_6578, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e"); \
+	efiAssertVoid(CUSTOM_INVALID_MODE_SETTING, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e"); \
  }
 
 

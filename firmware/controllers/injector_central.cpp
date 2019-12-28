@@ -154,7 +154,7 @@ static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeS
 		scheduleMsg(logger, "Invalid index: %d", humanIndex);
 		return;
 	}
-	brain_pin_e b = CONFIGB(injectionPins)[humanIndex - 1];
+	brain_pin_e b = CONFIG(injectionPins)[humanIndex - 1];
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.injectors[humanIndex - 1], b);
 }
 
@@ -169,7 +169,7 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 }
 
 static void fanBenchExt(const char *durationMs) {
-	pinbench("0", durationMs, "100", "1", &enginePins.fanRelay, CONFIGB(fanPin));
+	pinbench("0", durationMs, "100", "1", &enginePins.fanRelay, CONFIG(fanPin));
 }
 
 void fanBench(void) {
@@ -180,15 +180,15 @@ void fanBench(void) {
  * we are blinking for 16 seconds so that one can click the button and walk around to see the light blinking
  */
 void milBench(void) {
-	pinbench("0", "500", "500", "16", &enginePins.checkEnginePin, CONFIGB(malfunctionIndicatorPin));
+	pinbench("0", "500", "500", "16", &enginePins.checkEnginePin, CONFIG(malfunctionIndicatorPin));
 }
 
 void fuelPumpBenchExt(const char *durationMs) {
-	pinbench("0", durationMs, "100", "1", &enginePins.fuelPumpRelay, CONFIGB(fuelPumpPin));
+	pinbench("0", durationMs, "100", "1", &enginePins.fuelPumpRelay, CONFIG(fuelPumpPin));
 }
 
 void acRelayBench(void) {
-	pinbench("0", "1000", "100", "1", &enginePins.acRelay, CONFIGB(acRelayPin));
+	pinbench("0", "1000", "100", "1", &enginePins.acRelay, CONFIG(acRelayPin));
 }
 
 void fuelPumpBench(void) {
@@ -206,7 +206,7 @@ static void doRunSpark(int humanIndex, const char *delayStr, const char * onTime
 		scheduleMsg(logger, "Invalid index: %d", humanIndex);
 		return;
 	}
-	brain_pin_e b = CONFIGB(ignitionPins)[humanIndex - 1];
+	brain_pin_e b = CONFIG(ignitionPins)[humanIndex - 1];
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.coils[humanIndex - 1], b);
 }
 
@@ -236,7 +236,7 @@ class BenchController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	BenchController() : PeriodicController("BenchThread") { }
 private:
-	void PeriodicTask(efitime_t nowNt) override	{
+	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
 		setPeriod(50 /* ms */);
 

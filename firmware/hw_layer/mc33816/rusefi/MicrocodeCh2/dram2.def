@@ -1,0 +1,8 @@
+#define Vboost_low 0;
+#define Vboost_high 1;
+#define Isense4_low 2;
+#define Isense4_high 3;
+#define Thold_off 4;
+#define Thold_tot 5;
+#define Ipeak 6;
+#define Ihold 7;

@@ -89,7 +89,7 @@ void setGy6139qmbDefaultEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 	engineConfiguration->analogInputDividerCoefficient = 1;
 	engineConfiguration->fuelAlgorithm = LM_MAP;
 	engineConfiguration->globalTriggerAngleOffset = 45;
-	boardConfiguration->sensorChartMode = SC_MAP;
+	engineConfiguration->sensorChartMode = SC_MAP;
 	engineConfiguration->specs.displacement = 0.072; // 72cc
 	engineConfiguration->specs.cylindersCount = 1;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
@@ -103,8 +103,8 @@ void setGy6139qmbDefaultEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
-	boardConfiguration->injectionPins[0] = GPIOC_9;
-	boardConfiguration->ignitionPins[0] = GPIOC_8;
+	engineConfiguration->injectionPins[0] = GPIOC_9;
+	engineConfiguration->ignitionPins[0] = GPIOC_8;
 
 	// set injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;

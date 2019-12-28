@@ -74,16 +74,16 @@ static void extIonCallback(void *arg) {
 }
 
 void cdmIonInit(void) {
-	if (CONFIGB(cdmInputPin) == GPIO_UNASSIGNED) {
+	if (CONFIG(cdmInputPin) == GPIO_UNASSIGNED) {
 		return;
 	}
-	int pin = (int)CONFIGB(cdmInputPin);
+	int pin = (int)CONFIG(cdmInputPin);
 	if (pin <= 0 || pin > (int)GPIO_UNASSIGNED) {
 		// todo: remove this protection once we migrate to new mandatory configuration
 		return;
 	}
 
-	efiExtiEnablePin("ion", CONFIGB(cdmInputPin), PAL_EVENT_MODE_RISING_EDGE, extIonCallback, NULL);
+	efiExtiEnablePin("ion", CONFIG(cdmInputPin), PAL_EVENT_MODE_RISING_EDGE, extIonCallback, NULL);
 }
 
 #endif /* EFI_CDM_INTEGRATION */

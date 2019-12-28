@@ -100,15 +100,12 @@ extern int icuWidthPeriodCounter;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-// this 'true' value is needed for simulator
-static volatile bool fullLog = true;
 int warningEnabled = true;
-//int warningEnabled = FALSE;
 
 extern bool hasFirmwareErrorFlag;
 extern int maxTriggerReentraint;
 extern uint32_t maxLockedDuration;
-#define FULL_LOGGING_KEY "fl"
+
 
 #if !defined(STATUS_LOGGING_BUFFER_SIZE)
 #define STATUS_LOGGING_BUFFER_SIZE 1800
@@ -406,9 +403,6 @@ void writeLogLine(void) {
 #endif /* EFI_FILE_LOGGING */
 }
 
-#define INITIAL_FULL_LOG TRUE
-//#define INITIAL_FULL_LOG FALSE
-
 volatile int needToReportStatus = FALSE;
 static int prevCkpEventCounter = -1;
 
@@ -452,21 +446,21 @@ void printOverallStatus(systime_t nowSeconds) {
 	int seconds = getTimeNowSeconds();
 	printCurrentState(&logger, seconds, getConfigurationName(engineConfiguration->engineType), FIRMWARE_ID);
 #if EFI_PROD_CODE
-	printOutPin(PROTOCOL_CRANK1, CONFIGB(triggerInputPins)[0]);
-	printOutPin(PROTOCOL_CRANK2, CONFIGB(triggerInputPins)[1]);
+	printOutPin(PROTOCOL_CRANK1, CONFIG(triggerInputPins)[0]);
+	printOutPin(PROTOCOL_CRANK2, CONFIG(triggerInputPins)[1]);
 	printOutPin(PROTOCOL_VVT_NAME, engineConfiguration->camInputs[0]);
-	printOutPin(PROTOCOL_HIP_NAME, CONFIGB(hip9011IntHoldPin));
-	printOutPin(PROTOCOL_TACH_NAME, CONFIGB(tachOutputPin));
+	printOutPin(PROTOCOL_HIP_NAME, CONFIG(hip9011IntHoldPin));
+	printOutPin(PROTOCOL_TACH_NAME, CONFIG(tachOutputPin));
 	printOutPin(PROTOCOL_DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
 #if EFI_LOGIC_ANALYZER
-	printOutPin(PROTOCOL_WA_CHANNEL_1, CONFIGB(logicAnalyzerPins)[0]);
-	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIGB(logicAnalyzerPins)[1]);
+	printOutPin(PROTOCOL_WA_CHANNEL_1, CONFIG(logicAnalyzerPins)[0]);
+	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIG(logicAnalyzerPins)[1]);
 #endif /* EFI_LOGIC_ANALYZER */
 
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		printOutPin(enginePins.coils[i].getShortName(), CONFIGB(ignitionPins)[i]);
+		printOutPin(enginePins.coils[i].getShortName(), CONFIG(ignitionPins)[i]);
 
-		printOutPin(enginePins.injectors[i].getShortName(), CONFIGB(injectionPins)[i]);
+		printOutPin(enginePins.injectors[i].getShortName(), CONFIG(injectionPins)[i]);
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
 		printOutPin(enginePins.auxValve[i].getShortName(), engineConfiguration->auxValves[i]);
@@ -586,14 +580,14 @@ static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPi
 static void initStatusLeds(void) {
 	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin);
 	// we initialize this here so that we can blink it on start-up
-	enginePins.checkEnginePin.initPin("MalfunctionIndicator", CONFIGB(malfunctionIndicatorPin), &CONFIGB(malfunctionIndicatorPinMode));
+	enginePins.checkEnginePin.initPin("MalfunctionIndicator", CONFIG(malfunctionIndicatorPin), &CONFIG(malfunctionIndicatorPinMode));
 
 	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin);
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
 
-	enginePins.debugTriggerSync.initPin("debug: sync", CONFIGB(debugTriggerSync));
-	enginePins.debugTimerCallback.initPin("debug: timer callback", CONFIGB(debugTimerCallback));
-	enginePins.debugSetTimer.initPin("debug: set timer", CONFIGB(debugSetTimer));
+	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
+	enginePins.debugTimerCallback.initPin("debug: timer callback", CONFIG(debugTimerCallback));
+	enginePins.debugSetTimer.initPin("debug: set timer", CONFIG(debugSetTimer));
 }
 
 #define BLINKING_PERIOD_MS 33
@@ -602,7 +596,7 @@ static void initStatusLeds(void) {
 
 static bool isTriggerErrorNow() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < US2NT(MS2US(200));
+	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < MS2NT(200);
 	return justHadError || isTriggerDecoderError();
 #else
 	return false;
@@ -676,12 +670,12 @@ static CommunicationBlinkingTask communicationsBlinkingTask;
 #if EFI_LCD
 class LcdController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
-	LcdController() : PeriodicController("BenchThread") { }
+	LcdController() : PeriodicController("LCD") { }
 private:
-	void PeriodicTask(efitime_t nowNt) override	{
+	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
-		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->bc.lcdThreadPeriodMs));
-		if (engineConfiguration->bc.useLcdScreen) {
+		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->lcdThreadPeriodMs));
+		if (engineConfiguration->useLcdScreen) {
 #if EFI_HD44780_LCD
 			updateHD44780lcd();
 #endif
@@ -726,7 +720,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 8
 	tsOutputChannels->intakeAirTemperature = intake;
 	// offset 12
-	tsOutputChannels->throttlePositon = tps;
+	tsOutputChannels->throttlePosition = tps;
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 
@@ -756,13 +750,15 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 	// offset 108
 	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
-    tsOutputChannels->massAirFlow = getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->massAirFlow = getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// offset 116
 	// TPS acceleration
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
-	// 120
-	tsOutputChannels->triggerErrorsCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
+	// 128
+	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	// 132
+	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;
+	// 68
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
 	// 136
 	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE) ? getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
@@ -789,16 +785,18 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->vvtPosition = engine->triggerCentral.vvtPosition;
 	// 252
 	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
-	// 264
+	// 120
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 	// 268
 	tsOutputChannels->fuelPidCorrection = ENGINE(engineState.running.pidCorrection);
-    // 276
-    tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
-    // 278
-    tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
-    // 288
-    tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
+	// 276
+	tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
+	// 278
+	tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
+	// 280
+	tsOutputChannels->oilPressure = Sensor::get(SensorType::OilPressure).Value;
+	// 288
+	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -814,7 +812,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->knockLevel = engine->knockVolts;
 
 	tsOutputChannels->hasFatalError = hasFirmwareError();
-	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 
 	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -1019,7 +1016,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		break;
 	case DBG_TLE8888:
 #if (BOARD_TLE8888_COUNT > 0)
-		tle8888PostState(tsOutputChannels);
+		tle8888PostState(tsOutputChannels->getDebugChannels());
 #endif /* BOARD_TLE8888_COUNT */
 		break;
 	default:
@@ -1035,8 +1032,6 @@ void prepareTunerStudioOutputs(void) {
 #endif /* EFI_TUNER_STUDIO */
 
 void initStatusLoop(void) {
-	setFullLog(INITIAL_FULL_LOG);
-	addConsoleActionI(FULL_LOGGING_KEY, setFullLog);
 	addConsoleActionI("warn", setWarningEnabled);
 
 #if EFI_ENGINE_CONTROL
@@ -1060,14 +1055,4 @@ void startStatusThreads(void) {
 #if EFI_LCD
 	lcdInstance.Start();
 #endif /* EFI_LCD */
-}
-
-void setFullLog(int value) {
-	print("Setting full logging: %s\r\n", boolToString(value));
-	printMsg(&logger, "%s%d", FULL_LOGGING_KEY, value);
-	fullLog = value;
-}
-
-bool getFullLog(void) {
-	return fullLog;
 }

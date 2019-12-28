@@ -21,8 +21,7 @@ static void addCopyAndSort(SignalFiltering *fs, float value) {
 	fs->values[fs->pointer] = value;
 	fs->pointer = ++fs->pointer == FILTER_SIZE ? 0 : fs->pointer;
 
-	for (int i = 0; i < FILTER_SIZE; i++)
-		fs->sorted[i] = fs->values[i];
+	copyArray(fs->sorted, fs->values);
 
 	for (int i = 0; i < FILTER_SIZE; i++)
 		for (int j = i + 1; j < FILTER_SIZE; j++)

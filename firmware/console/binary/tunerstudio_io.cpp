@@ -99,7 +99,7 @@ void startTsPort(ts_channel_s *tsChannel) {
 			return;
 		#endif /* CONSOLE_USB_DEVICE */
 		#if defined(TS_UART_DEVICE) || defined(TS_SERIAL_DEVICE)
-			if (CONFIGB(useSerialPort)) {
+			if (CONFIG(useSerialPort)) {
 
 				print("TunerStudio over USART");
 				/**
@@ -115,7 +115,7 @@ void startTsPort(ts_channel_s *tsChannel) {
 					iqObjectInit(&tsUartDma.fifoRxQueue, tsUartDma.buffer, sizeof(tsUartDma.buffer), NULL, NULL);
 
 					// start DMA driver
-					tsDmaUartConfig.speed = CONFIGB(tunerStudioSerialSpeed);
+					tsDmaUartConfig.speed = CONFIG(tunerStudioSerialSpeed);
 					uartStart(TS_UART_DEVICE, &tsDmaUartConfig);
 
 					// start continuous DMA transfer using our circular buffer
@@ -124,11 +124,11 @@ void startTsPort(ts_channel_s *tsChannel) {
 				#elif TS_UART_MODE
 					print("Using UART mode");
 					// start DMA driver
-					tsUartConfig.speed = CONFIGB(tunerStudioSerialSpeed);
+					tsUartConfig.speed = CONFIG(tunerStudioSerialSpeed);
 					uartStart(TS_UART_DEVICE, &tsUartConfig);
 				#elif defined(TS_SERIAL_DEVICE)
 					print("Using Serial mode");
-					tsSerialConfig.speed = CONFIGB(tunerStudioSerialSpeed);
+					tsSerialConfig.speed = CONFIG(tunerStudioSerialSpeed);
 
 					sdStart(TS_SERIAL_DEVICE, &tsSerialConfig);
 
@@ -148,7 +148,7 @@ bool stopTsPort(ts_channel_s *tsChannel) {
 			//usb_serial_stop();
 			return false;
 		#endif
-		if (CONFIGB(useSerialPort)) {
+		if (CONFIG(useSerialPort)) {
 			// todo: disable Rx/Tx pads?
 			#if (TS_UART_DMA_MODE || TS_UART_MODE)
 				uartStop(TS_UART_DEVICE);

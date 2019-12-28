@@ -152,7 +152,7 @@ void printTsStats(void) {
 		scheduleMsg(&tsLogger, "TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
 
 		scheduleMsg(&tsLogger, "TS TX on %s @%d", hwPortname(engineConfiguration->binarySerialTxPin),
-				CONFIGB(tunerStudioSerialSpeed));
+				CONFIG(tunerStudioSerialSpeed));
 	}
 #endif /* EFI_PROD_CODE */
 
@@ -164,7 +164,7 @@ void printTsStats(void) {
 //	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
 //	scheduleMsg(logger, "fuelTable %d", fuelMapOffset);
 //
-//	int offset = (int) (&CONFIGB(hip9011Gain)) - (int) engineConfiguration;
+//	int offset = (int) (&CONFIG(hip9011Gain)) - (int) engineConfiguration;
 //	scheduleMsg(&tsLogger, "hip9011Gain %d", offset);
 //
 //	offset = (int) (&engineConfiguration->crankingCycleBins) - (int) engineConfiguration;
@@ -175,7 +175,7 @@ void printTsStats(void) {
 }
 
 static void setTsSpeed(int value) {
-	CONFIGB(tunerStudioSerialSpeed) = value;
+	CONFIG(tunerStudioSerialSpeed) = value;
 	printTsStats();
 }
 
@@ -257,8 +257,6 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
 	}
 }
 
-extern EtbController etbController[ETB_COUNT];
-
 static const void * getStructAddr(int structId) {
 	switch (structId) {
 	case LDS_CLT_STATE_INDEX:
@@ -275,7 +273,7 @@ static const void * getStructAddr(int structId) {
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case LDS_ETB_PID_STATE_INDEX:
-		return static_cast<pid_state_s*>(&etbController[0].etbPid);
+		return static_cast<EtbController*>(engine->etbControllers[0])->getPidState();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #ifndef EFI_IDLE_CONTROL

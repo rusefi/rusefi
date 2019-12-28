@@ -197,14 +197,14 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	//	0.1375
 	//	6.375
 	//	10.625
-	boardConfiguration->miataNb2VVTRatioFrom = 8.50 * 0.75;
-	boardConfiguration->miataNb2VVTRatioTo = 14;
+	engineConfiguration->miataNb2VVTRatioFrom = 8.50 * 0.75;
+	engineConfiguration->miataNb2VVTRatioTo = 14;
 	engineConfiguration->nbVvtIndex = 0;
 
 	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
 
 	// set idle_position 35
-	boardConfiguration->manIdlePosition = 35;
+	engineConfiguration->manIdlePosition = 35;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -292,29 +292,29 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-//	boardConfiguration->triggerInputPins[0] = GPIOA_8; // custom Frankenso wiring in order to use SPI1 for accelerometer
-	boardConfiguration->triggerInputPins[0] = GPIOA_5; // board still not modified
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+//	engineConfiguration->triggerInputPins[0] = GPIOA_8; // custom Frankenso wiring in order to use SPI1 for accelerometer
+	engineConfiguration->triggerInputPins[0] = GPIOA_5; // board still not modified
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIOC_6;
 
-//	boardConfiguration->is_enabled_spi_1 = true;
+//	engineConfiguration->is_enabled_spi_1 = true;
 
 	engineConfiguration->twoWireBatchInjection = true; // this is needed for #492 testing
 
-	boardConfiguration->alternatorControlPin = GPIOE_10;
-	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
+	engineConfiguration->alternatorControlPin = GPIOE_10;
+	engineConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 
 //	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
 
-	boardConfiguration->vvtCamSensorUseRise = true;
+	engineConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->vvtDisplayInverted = true;
 
 	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
 	//	/**
 	//	 * set_fsio_setting 1 0.55
 	//	 */
-	boardConfiguration->fsio_setting[0] = 0.0;
+	engineConfiguration->fsio_setting[0] = 0.0;
 //	setFsioExt(0, GPIOE_3, "0 fsio_setting", 400 PASS_CONFIG_PARAMETER_SUFFIX);
 
 
@@ -341,10 +341,10 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * Miata coil on #4 PE14 - white ECU wire "1&4"
  */
 
-	boardConfiguration->ignitionPins[0] = GPIOE_14;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOC_9;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = GPIOE_14;
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[2] = GPIOC_9;
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	// set tps_min 90
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
@@ -354,11 +354,11 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOD_5;
+	engineConfiguration->malfunctionIndicatorPin = GPIOD_5;
 
 
-//	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
-//	boardConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
+//	engineConfiguration->malfunctionIndicatorPin = GPIOD_9;
+//	engineConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
 
 	// todo: blue jumper wire - what is it?!
 	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
@@ -383,9 +383,9 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * set_fsio_setting 3 65
 	 * set_fsio_setting 4 15
 	 */
-	boardConfiguration->fsio_setting[1] = 6500; // #2 RPM threshold
-	boardConfiguration->fsio_setting[2] = 105; // #3 CLT threshold
-	boardConfiguration->fsio_setting[3] = 12.0; // #4 voltage threshold
+	engineConfiguration->fsio_setting[1] = 6500; // #2 RPM threshold
+	engineConfiguration->fsio_setting[2] = 105; // #3 CLT threshold
+	engineConfiguration->fsio_setting[3] = 12.0; // #4 voltage threshold
 
 //	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -409,22 +409,26 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->throttlePedalUpVoltage = 0.65f;
 
 
-	// VNH2SP30 three-wire ETB control
+	// TLE7209 two-wire ETB control
 	// PWM
-	engineConfiguration->etbIo[0].controlPin1 = GPIOE_6;
-	engineConfiguration->etbIo[0].controlPinMode = OM_INVERTED;
+	CONFIG(etb_use_two_wires) = true;
+
+	engineConfiguration->etbIo[0].controlPin1 = GPIO_UNASSIGNED;
+
 	//
-	engineConfiguration->etbIo[0].directionPin1 = GPIOE_12;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOE_12; // orange
 	//
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7;
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // white/blue
 
 	// set_analog_input_pin tps PC3
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3 blue
 
 	engineConfiguration->idleMode = IM_AUTO;
-	CONFIGB(useETBforIdleControl) = true;
+	CONFIG(useETBforIdleControl) = true;
 	// set_analog_input_pin pps PA2
+/* a step back - Frankenso does not use ETB
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
+*/
 
 	engineConfiguration->idleRpmPid.offset = 0;
 	engineConfiguration->idleRpmPid.pFactor = 0.2;
@@ -432,7 +436,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.dFactor = 5;
 	engineConfiguration->idleRpmPid.periodMs = 10;
 
-	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	//set etb_p 12
 	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
@@ -473,7 +477,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMazdaMiata2003EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	boardConfiguration->ignitionPins[2] = GPIOC_7;
+	engineConfiguration->ignitionPins[2] = GPIOC_7;
 
 	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM. Make sure 500K pull-down on Frankenso
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
@@ -481,11 +485,7 @@ void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGN
 	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4 - W47 top <>W47
 }
 
-/**
- * Pretty much OEM 2003 Miata with ETB
- * set engine_type 13
- */
-void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -499,15 +499,15 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// tps1_1AdcChannel input is inherited from boards/microrusefi/board_configuration.cpp
 	// afr.hwChannel input is inherited from boards/microrusefi/board_configuration.cpp
 
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->camInputs[0] = GPIOA_5;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	engineConfiguration->useTLE8888_hall_mode = true;
 
 	// GPIOD_6: "13 - GP Out 6" - selected to +12v
-	boardConfiguration->alternatorControlPin = GPIOD_6;
+	engineConfiguration->alternatorControlPin = GPIOD_6;
 	// GPIOD_7: "14 - GP Out 5" - selected to +12v
 	engineConfiguration->dizzySparkOutputPin = GPIOD_7; // tachometer
 
@@ -525,25 +525,9 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPidPins[0] = GPIOE_9; // VVT solenoid control
 
 	// TLE8888_PIN_23: "33 - GP Out 3"
-	boardConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
+	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
 
-	//set idle_offset 0
-	engineConfiguration->idleRpmPid.offset = 0;
-	engineConfiguration->idleRpmPid.pFactor = 0.2;
-	engineConfiguration->idleRpmPid.iFactor = 0.0001;
-	engineConfiguration->idleRpmPid.dFactor = 5;
-	engineConfiguration->idleRpmPid.periodMs = 10;
-
-	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
-
-	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
-	engineConfiguration->etb.iFactor = 	0;
-	engineConfiguration->etb.dFactor = 0;
-	engineConfiguration->etb.offset = 0;
-
-	// enable ETB
-	// set_rpn_expression 8 "0"
-	setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
@@ -556,14 +540,50 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMax = 870;
 
 	engineConfiguration->idleMode = IM_AUTO;
-	CONFIGB(useETBforIdleControl) = true;
-	engineConfiguration->throttlePedalUpVoltage = 1;
-	// WAT? that's an interesting value, how come it's above 5v?
-	engineConfiguration->throttlePedalWOTVoltage = 5.47;
 
 	// set vbatt_divider 11
 	// 0.3#4 has wrong R139 as well?
 	// 56k high side/10k low side multiplied by above analogInputDividerCoefficient = 11
 	engineConfiguration->vbattDividerCoeff = (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
 #endif /* BOARD_TLE8888_COUNT */
+}
+
+
+/**
+ * Pretty much OEM 2003 Miata with ETB
+ * set engine_type 13
+ */
+void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+#if EFI_FSIO
+	// enable ETB
+	// set_rpn_expression 8 "0"
+	setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
+#endif /* EFI_FSIO */
+
+	//set idle_offset 0
+	engineConfiguration->idleRpmPid.offset = 0;
+	engineConfiguration->idleRpmPid.pFactor = 0.2;
+	engineConfiguration->idleRpmPid.iFactor = 0.0001;
+	engineConfiguration->idleRpmPid.dFactor = 5;
+	engineConfiguration->idleRpmPid.periodMs = 10;
+
+	CONFIG(useETBforIdleControl) = true;
+	engineConfiguration->throttlePedalUpVoltage = 1;
+	// WAT? that's an interesting value, how come it's above 5v?
+	engineConfiguration->throttlePedalWOTVoltage = 5.47;
+
+	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
+	engineConfiguration->etb.iFactor = 	0;
+	engineConfiguration->etb.dFactor = 0;
+	engineConfiguration->etb.offset = 0;
+}
+
+/**
+ * set engine_type 11
+ */
+void setMiataNB2_MRE_MTB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 }

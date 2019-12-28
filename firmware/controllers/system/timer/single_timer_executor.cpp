@@ -37,8 +37,6 @@ EXTERN_ENGINE;
 
 extern schfunc_t globalTimerCallback;
 
-//static int timerIsLate = 0;
-//static efitime_t callbackTime = 0;
 /**
  * these fields are global in order to facilitate debugging
  */
@@ -49,7 +47,7 @@ uint32_t lastExecutionCount;
 
 static void executorCallback(void *arg) {
 	(void)arg;
-	efiAssertVoid(CUSTOM_ERR_6624, getCurrentRemainingStack() > 256, "lowstck#2y");
+	efiAssertVoid(CUSTOM_ERR_6624, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#2y");
 
 //	callbackTime = getTimeNowNt();
 //	if ((callbackTime > nextEventTimeNt) && (callbackTime - nextEventTimeNt > US2NT(5000))) {

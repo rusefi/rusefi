@@ -29,11 +29,11 @@ static OutputPin emulatorOutputs[3];
 EXTERN_ENGINE;
 
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration) {
-	if (engineConfiguration->bc.triggerSimulatorFrequency ==
-			previousConfiguration->bc.triggerSimulatorFrequency) {
+	if (engineConfiguration->triggerSimulatorFrequency ==
+			previousConfiguration->triggerSimulatorFrequency) {
 		return;
 	}
-	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency);
+	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
 }
 
 void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -48,14 +48,14 @@ void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 #if EFI_PROD_CODE
 	// todo: refactor, make this a loop
-	triggerSignal.outputPins[0]->initPin("trg emulator ch1", CONFIGB(triggerSimulatorPins)[0],
-			&CONFIGB(triggerSimulatorPinModes)[0]);
+	triggerSignal.outputPins[0]->initPin("trg emulator ch1", CONFIG(triggerSimulatorPins)[0],
+			&CONFIG(triggerSimulatorPinModes)[0]);
 
-	triggerSignal.outputPins[1]->initPin("trg emulator ch2", CONFIGB(triggerSimulatorPins)[1],
-			&CONFIGB(triggerSimulatorPinModes)[1]);
+	triggerSignal.outputPins[1]->initPin("trg emulator ch2", CONFIG(triggerSimulatorPins)[1],
+			&CONFIG(triggerSimulatorPinModes)[1]);
 
-	triggerSignal.outputPins[2]->initPin("trg emulator ch3", CONFIGB(triggerSimulatorPins)[2],
-			&CONFIGB(triggerSimulatorPinModes)[2]);
+	triggerSignal.outputPins[2]->initPin("trg emulator ch3", CONFIG(triggerSimulatorPins)[2],
+			&CONFIG(triggerSimulatorPinModes)[2]);
 #endif /* EFI_PROD_CODE */
 
 	initTriggerEmulatorLogic(sharedLogger);

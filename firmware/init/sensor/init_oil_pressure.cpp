@@ -33,11 +33,6 @@ void initOilPressure() {
 	oilpSensorFunc.configure(sensorCfg->v1, val1, sensorCfg->v2, val2, /*minOutput*/ -5, greaterOutput);
 	oilpSensor.setFunction(oilpSensorFunc);
 
-#if EFI_TUNER_STUDIO
-	// Tell it to report to its output channel
-	oilpSensor.setReportingLocation(&tsOutputChannels.oilPressure);
-#endif
-
 	// Subscribe the sensor to the ADC
 	AdcSubscription::SubscribeSensor(oilpSensor, channel);
 

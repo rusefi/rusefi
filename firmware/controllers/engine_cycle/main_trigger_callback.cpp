@@ -5,7 +5,7 @@
  * See http://rusefi.com/docs/html/
  *
  * @date Feb 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -40,21 +40,18 @@
 #include "advance_map.h"
 #include "allsensors.h"
 #include "cyclic_buffer.h"
-#include "histogram.h"
 #include "fuel_math.h"
-#include "histogram.h"
 #include "cdm_ion_sense.h"
 #include "engine_controller.h"
 #include "efi_gpio.h"
 #if EFI_PROD_CODE
 #include "os_util.h"
-#endif /* EFI_HISTOGRAMS */
+#endif /* EFI_PROD_CODE */
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "engine.h"
 #include "perf_trace.h"
 
-#include "aux_valves.h"
 #include "backup_ram.h"
 
 EXTERN_ENGINE
@@ -342,7 +339,7 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (GET_RPM_VALUE < CONFIG(fuelClosedLoopRpmThreshold) ||
 			getCoolantTemperature() < CONFIG(fuelClosedLoopCltThreshold) ||
 			getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(fuelClosedLoopTpsThreshold) ||
-			ENGINE(sensors.currentAfr) < CONFIGB(fuelClosedLoopAfrLowThreshold) ||
+			ENGINE(sensors.currentAfr) < CONFIG(fuelClosedLoopAfrLowThreshold) ||
 			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
 		engine->engineState.running.pidCorrection = 0;
 		fuelPid.reset();
@@ -406,16 +403,6 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	}
 }
 
-#if EFI_HISTOGRAMS
-static histogram_s mainLoopHistogram;
-#endif /* EFI_HISTOGRAMS */
-
-void showMainHistogram(void) {
-#if EFI_HISTOGRAMS
-	printHistogram(logger, &mainLoopHistogram);
-#endif /* EFI_HISTOGRAMS */
-}
-
 #if EFI_PROD_CODE
 /**
  * this field is used as an Expression in IAR debugger
@@ -427,7 +414,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
 	(void) ckpSignalType;
@@ -440,10 +427,10 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		 */
 		return;
 	}
-	efiAssertVoid(CUSTOM_STACK_6629, getCurrentRemainingStack() > 128, "lowstck#2");
+	efiAssertVoid(CUSTOM_STACK_6629, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#2a");
 
 #if EFI_CDM_INTEGRATION
-	if (trgEventIndex == 0 && CONFIGB(cdmInputPin) != GPIO_UNASSIGNED) {
+	if (trgEventIndex == 0 && CONFIG(cdmInputPin) != GPIO_UNASSIGNED) {
 		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 		engine->knockLogic(cdmKnockValue);
 	}
@@ -484,10 +471,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		warning(CUSTOM_SKIPPING_STROKE, "skipping stroke due to rpm=%d", rpm);
 	}
 
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	int beforeCallback = hal_lld_get_counter_value();
-#endif
-
 	if (trgEventIndex == 0) {
 		if (HAVE_CAM_INPUT()) {
 			engine->triggerCentral.validateCamVvtCounters();
@@ -527,11 +510,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
 	onTriggerEventSparkLogic(limitedSpark, trgEventIndex, rpm PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_HISTOGRAMS
-	int diff = hal_lld_get_counter_value() - beforeCallback;
-	if (diff > 0)
-	hsAdd(&mainLoopHistogram, diff);
-#endif /* EFI_HISTOGRAMS */
 
 	if (trgEventIndex == 0) {
 		ENGINE(m.mainTriggerCallbackTime) = getTimeNowLowerNt() - ENGINE(m.beforeMainTrigger);
@@ -609,42 +587,26 @@ void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #include "engine_sniffer.h"
 #endif
 
-static void showTriggerHistogram(void) {
-	printAllCallbacksHistogram();
-	showMainHistogram();
-#if EFI_ENGINE_SNIFFER
-	showWaveChartHistogram();
-#endif
-}
-
 static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE
 	int rpm = GET_RPM();
 	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	scheduleMsg(logger, "rpm %d engine_load %.2f", rpm, el);
 	scheduleMsg(logger, "fuel %.2fms timing %.2f", getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX), engine->engineState.timingAdvance);
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
 void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	efiAssertVoid(CUSTOM_ERR_6631, engine!=NULL, "null engine");
-	initSparkLogic(logger);
-
-	initAuxValves(logger PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_PROD_CODE
-	addConsoleAction("performanceinfo", showTriggerHistogram);
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
 	printMsg(logger, "initMainLoop: %d", currentTimeMillis());
 	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE))
 		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
-
-#if EFI_HISTOGRAMS
-	initHistogram(&mainLoopHistogram, "main callback");
-#endif /* EFI_HISTOGRAMS */
 
 	addTriggerEventListener(mainTriggerCallback, "main loop", engine);
 

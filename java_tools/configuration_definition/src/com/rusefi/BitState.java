@@ -12,6 +12,10 @@ public class BitState {
             bitIndex = 0;
             return;
         }
+        incrementBitIndex(cf);
+    }
+
+    public void incrementBitIndex(ConfigField cf) {
         if (bitIndex == 32)
             throw new IllegalStateException("Too many bits: " + cf.getName());
         bitIndex++;
