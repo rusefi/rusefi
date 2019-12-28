@@ -5,26 +5,17 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "global.h"
 #include "engine_test_helper.h"
 #include "trigger_decoder.h"
 #include "engine_math.h"
 #include "allsensors.h"
-
+#include "engine_controller.h"
 #include "ford_aspire.h"
 #include "dodge_neon.h"
 #include "ford_1995_inline_6.h"
-#include "mazda_323.h"
-#include "rpm_calculator.h"
 #include "event_queue.h"
-#include "algo.h"
 #include "trigger_mazda.h"
 #include "trigger_chrysler.h"
-#include "tps.h"
-
-#include "trigger_central.h"
-#include "main_trigger_callback.h"
-#include "engine.h"
 #include "advance_map.h"
 #include "speed_density.h"
 #include "fuel_math.h"
@@ -455,7 +446,6 @@ TEST(misc, testTriggerDecoder) {
 	Engine *engine = &e;
 
 	engine_configuration_s *engineConfiguration = &c.engineConfiguration;
-	board_configuration_s *boardConfiguration = &c.engineConfiguration.bc;
 
 	initializeSkippedToothTriggerWaveformExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
 	assertEqualsM("shape size", s->getSize(), 4);
@@ -528,7 +518,7 @@ TEST(misc, testTriggerDecoder) {
 
 
 		eth.persistentConfig.engineConfiguration.useOnlyRisingEdgeForTrigger = false;
-		eth.persistentConfig.engineConfiguration.bc.sensorChartMode = SC_DETAILED_RPM;
+		eth.persistentConfig.engineConfiguration.sensorChartMode = SC_DETAILED_RPM;
 		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 //		assertEqualsM2("rpm#1", 16666.9746, eth.engine.triggerCentral.triggerState.instantRpmValue[0], 0.5);
@@ -539,7 +529,6 @@ TEST(misc, testTriggerDecoder) {
 	testTriggerDecoder3("miata 1994", MIATA_1994_DEVIATOR, 11, 0.2985, 0.3890, MIATA_NA_GAP);
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
-	testTriggerDecoder2("MAZDA_323", MAZDA_323, 0, 0.4833, 0);
 	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);
 
 	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CAM, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);

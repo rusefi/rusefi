@@ -30,17 +30,11 @@ public:
 
 	void postRawValue(float inputValue);
 
-	void setRawReportingLocation(float *rawReportingLocation) {
-		m_rawReportingLocation = rawReportingLocation;
-	}
-
 	void setFunction(SensorConverter& func) {
 		m_function = &func;
 	}
 
 private:
-	float *m_rawReportingLocation = nullptr;
-
 	// Conversion function for this sensor
 	SensorConverter* m_function = nullptr;
 };

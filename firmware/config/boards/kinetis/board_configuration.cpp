@@ -26,8 +26,8 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
-	boardConfiguration->isFasterEngineSpinUpEnabled = true;
-	boardConfiguration->useNoiselessTriggerDecoder = true;
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->useNoiselessTriggerDecoder = true;
 
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -72,7 +72,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
-	boardConfiguration->mapMinBufferLength = 4;
+	engineConfiguration->mapMinBufferLength = 4;
 
 	// todo:
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
@@ -90,9 +90,9 @@ void setBoardConfigurationOverrides(void) {
 	
 	engineConfiguration->clt.adcChannel = EFI_ADC_14;
 
-	boardConfiguration->triggerInputPins[0] = GPIOE_7;
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 
 	engineConfiguration->tle6240spiDevice = SPI_DEVICE_1;
 	engineConfiguration->tle6240_cs = GPIOB_0;
@@ -100,14 +100,14 @@ void setBoardConfigurationOverrides(void) {
 	// todo:
 	int i;
 	for (i = 0; i < INJECTION_PIN_COUNT; i++)
-		boardConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	for (i = 0; i < IGNITION_PIN_COUNT; i++)
-		boardConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	
 	engineConfiguration->adcVcc = 5.0f;
 	engineConfiguration->analogInputDividerCoefficient = 1;
 
-	//boardConfiguration->isFastAdcEnabled = false;
+	//engineConfiguration->isFastAdcEnabled = false;
 		
 	// we call it here because setDefaultBoardConfiguration() is not called for DEFAULT_ENGINE_TYPE=MINIMAL_PINS
 	setSerialConfigurationOverrides();
@@ -117,12 +117,12 @@ void setPinConfigurationOverrides(void) {
 }
 
 void setSerialConfigurationOverrides(void) {
-	boardConfiguration->useSerialPort = true;
+	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_7;
 	engineConfiguration->binarySerialRxPin = GPIOC_6;
 	engineConfiguration->consoleSerialTxPin = GPIOA_10;
 	engineConfiguration->consoleSerialRxPin = GPIOA_11;
-	boardConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
+	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
 

@@ -13,11 +13,15 @@
 /**
  * The following obscurantism is a hack to reduce stack usage, maybe even a questionable performance
  * optimization.
- *
- * rusEfi main processing happens on IRQ so PORT_INT_REQUIRED_STACK has to be pretty large. Problem
- * is that PORT_INT_REQUIRED_STACK is included within each user thread stack, thus this large stack multiplies
- * and this consumes a lot of valueable RAM. While forcing the compiler to inline helps to some degree,
- * it would be even better not to waste stack on passing the parameter.
+ * 
+ * Of note is that interrupts are NOT serviced on the stack of the thread that was running when the
+ * interrupt occurred. The only thing that happens on that thread's stack is that its registers are
+ * pushed (by hardware) when an interrupt occurs, just before swapping the stack pointer out for the
+ * main stack (currently 0x400=1024 bytes), where the ISR actually runs.
+ * see also __main_stack_size__
+ * see also __process_stack_size__
+ * 
+ * see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
  *
  * In the firmware we are using 'extern *Engine' - in the firmware Engine is a signleton
  *
@@ -28,7 +32,7 @@
 
 #define EXTERN_CONFIG \
 		extern engine_configuration_s *engineConfiguration; \
-		extern board_configuration_s *boardConfiguration; \
+		extern engine_configuration_s *engineConfiguration; \
 		extern engine_configuration_s & activeConfiguration; \
 		extern persistent_config_container_s persistentState; \
 		extern persistent_config_s *config; \
@@ -64,10 +68,10 @@
  * access in unit tests
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
-#define CONFIGB(x) persistentState.persistentConfiguration.engineConfiguration.bc.x
 #define ENGINE(x) ___engine.x
 
 #define DEFINE_CONFIG_PARAM(x, y)
 #define CONFIG_PARAM(x) CONFIG(x)
 #define PASS_CONFIG_PARAM(x)
 
+#define EXPECTED_REMAINING_STACK 128

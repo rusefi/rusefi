@@ -2,11 +2,10 @@
  * @file	trigger_central.h
  *
  * @date Feb 23, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef TRIGGER_CENTRAL_H_
-#define TRIGGER_CENTRAL_H_
+#pragma once
 
 #include "rusefi_enums.h"
 #include "listener_array.h"
@@ -46,7 +45,7 @@ public:
 	efitick_t previousVvtCamTime = 0;
 	efitick_t previousVvtCamDuration = 0;
 
-	volatile efitime_t previousShaftEventTimeNt;
+	volatile efitick_t previousShaftEventTimeNt;
 private:
 	IntListenerArray<15> triggerListeneres;
 	
@@ -57,12 +56,10 @@ private:
 };
 
 void triggerInfo(void);
-efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void hwHandleShaftSignal(trigger_event_e signal);
 void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void initTriggerCentral(Logging *sharedLogger);
-void printAllCallbacksHistogram(void);
 void printAllTriggers();
 
 void addTriggerEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
@@ -73,4 +70,3 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-#endif /* TRIGGER_CENTRAL_H_ */

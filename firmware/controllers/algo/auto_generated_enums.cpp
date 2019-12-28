@@ -733,8 +733,8 @@ case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
 case LADA_KALINA:
   return "LADA_KALINA";
-case MAZDA_323:
-  return "MAZDA_323";
+case MRE_MIATA_NB2_MTB:
+  return "MRE_MIATA_NB2_MTB";
 case MAZDA_626:
   return "MAZDA_626";
 case MAZDA_MIATA_2003:
@@ -803,6 +803,8 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case VAG_18_TURBO:
   return "VAG_18_TURBO";
+case VW_B6:
+  return "VW_B6";
 case VW_ABA:
   return "VW_ABA";
 case ZIL_130:

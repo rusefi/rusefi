@@ -84,10 +84,10 @@ class MILController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	MILController()	: PeriodicController("MFIndicator") { }
 private:
-	void PeriodicTask(efitime_t nowNt) override	{
+	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
 
-		if (nowNt - engine->triggerCentral.triggerState.mostRecentSyncTime < US2NT(MS2US(500))) {
+		if (nowNt - engine->triggerCentral.triggerState.mostRecentSyncTime < MS2NT(500)) {
 			enginePins.checkEnginePin.setValue(1);
 			chThdSleepMilliseconds(500);
 			enginePins.checkEnginePin.setValue(0);
@@ -114,7 +114,7 @@ static void testMil(void) {
 #endif /* TEST_MIL_CODE */
 
 bool isMilEnabled() {
-	return CONFIGB(malfunctionIndicatorPin) != GPIO_UNASSIGNED;
+	return CONFIG(malfunctionIndicatorPin) != GPIO_UNASSIGNED;
 }
 
 void initMalfunctionIndicator(void) {

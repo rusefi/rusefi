@@ -114,7 +114,7 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyTimingTable(mapBased16IgnitionTable, config->ignitionTable);
 #endif
 
-	boardConfiguration->idle.solenoidFrequency = 160;
+	engineConfiguration->idle.solenoidFrequency = 160;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 }
 
@@ -122,16 +122,16 @@ void miataNAcommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	boardConfiguration->idle.solenoidPin = GPIOB_9; // this W61 <> W61 jumper, pin 3W
+	engineConfiguration->idle.solenoidPin = GPIOB_9; // this W61 <> W61 jumper, pin 3W
 
-	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 }
 
 static void setMiataNA6_settings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	memcpy(config->veRpmBins, ve16RpmBins, sizeof(ve16RpmBins));
 	memcpy(config->veLoadBins, ve16LoadBins, sizeof(ve16LoadBins));
@@ -202,8 +202,8 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	boardConfiguration->isHip9011Enabled = false;
-	boardConfiguration->isSdCardEnabled = false;
+	engineConfiguration->isHip9011Enabled = false;
+	engineConfiguration->isSdCardEnabled = false;
 
 	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -217,7 +217,7 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
 
-	boardConfiguration->isSdCardEnabled = true;
+	engineConfiguration->isSdCardEnabled = true;
 
 //	/**
 //	 * oil pressure line
@@ -238,14 +238,14 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	/*
 //WARNING:	these indeces are off
-	boardConfiguration->fsio_setting[0] = 6400; // RPM threshold
-	boardConfiguration->fsio_setting[1] = 100; // CLT threshold, fsio_setting #2
-	boardConfiguration->fsio_setting[2] = 13.0; // voltage threshold, fsio_setting #3
+	engineConfiguration->fsio_setting[0] = 6400; // RPM threshold
+	engineConfiguration->fsio_setting[1] = 100; // CLT threshold, fsio_setting #2
+	engineConfiguration->fsio_setting[2] = 13.0; // voltage threshold, fsio_setting #3
 
 	//	set_fsio_setting 4 3000
-	boardConfiguration->fsio_setting[3] = 3000; // oil pressure RPM, fsio_setting #4
+	engineConfiguration->fsio_setting[3] = 3000; // oil pressure RPM, fsio_setting #4
 	// set_fsio_setting 5 0.52
-	boardConfiguration->fsio_setting[4] = 0.52; // oil pressure threshold, fsio_setting #5
+	engineConfiguration->fsio_setting[4] = 0.52; // oil pressure threshold, fsio_setting #5
 */
 
 //	 * set_rpn_expression 1 "rpm 3 fsio_setting >"
@@ -259,17 +259,17 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFsio(0, GPIOC_13, COMBINED_WARNING_LIGHT PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 
-	boardConfiguration->injectionPins[0] = GPIOD_3; // #1&3 pin 3U
-	boardConfiguration->injectionPins[1] = GPIOE_2; // #2&4 pin 3V
-	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[0] = GPIOD_3; // #1&3 pin 3U
+	engineConfiguration->injectionPins[1] = GPIOE_2; // #2&4 pin 3V
+	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
 	// white wire from 1E - TOP of W4 to BOTTOM W62
-	boardConfiguration->malfunctionIndicatorPin = GPIOD_5;
+	engineConfiguration->malfunctionIndicatorPin = GPIOD_5;
 
 	// yellow wire from 1V/W22 to bottom of W48
-	boardConfiguration->clutchDownPin = GPIOA_3;
-	boardConfiguration->clutchDownPinMode = PI_PULLUP;
+	engineConfiguration->clutchDownPin = GPIOA_3;
+	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 
 
 	// 110mm red wire from 1N/W14 to bottom of W45
@@ -280,7 +280,7 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 #if ! EFI_UNIT_TEST
 	// W57 PE3 A/C compressor relay out
-	boardConfiguration->acRelayPin = GPIOE_3;
+	engineConfiguration->acRelayPin = GPIOE_3;
 	// W58 PE4 A/C fan relay out
 #endif /* EFI_UNIT_TEST */
 
@@ -311,17 +311,17 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// MAF/VAF: "19 - AN volt 4"
 	engineConfiguration->mafAdcChannel = EFI_ADC_12;
 
-	//boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIOA_5;
+	//engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->triggerInputPins[1] = GPIOA_5;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
-	boardConfiguration->ignitionPins[0] = GPIOD_7;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOD_6;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = GPIOD_7;
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[2] = GPIOD_6;
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
-	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
 	// tps = "20 - AN volt 5"
 	//engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
@@ -332,7 +332,7 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// TLE8888_PIN_24: "43 - GP Out 4"
 	// MIL check engine
 	// NA6 check engine light is just a normal low side driver
-	boardConfiguration->malfunctionIndicatorPin = TLE8888_PIN_24;
+	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_24;
 
 	// IAC: GPIOE_9:  "7 - Lowside 1"
 
@@ -342,8 +342,8 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->vbattDividerCoeff = (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
 
 
-	boardConfiguration->isHip9011Enabled = false;
-	boardConfiguration->isSdCardEnabled = false;
+	engineConfiguration->isHip9011Enabled = false;
+	engineConfiguration->isSdCardEnabled = false;
 
 	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);

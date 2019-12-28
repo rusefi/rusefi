@@ -42,10 +42,10 @@ EXTERN_ENGINE;
 // This shows a SPI connected TLE8888.
 static void setupTle8888() {
 	// Enable the SPI channel and set up the SPI pins
-	boardConfiguration->is_enabled_spi_3 = true;
-	boardConfiguration->spi3mosiPin = GPIOB_5;
-	boardConfiguration->spi3misoPin = GPIOB_4;
-	boardConfiguration->spi3sckPin = GPIOB_3;
+	engineConfiguration->is_enabled_spi_3 = true;
+	engineConfiguration->spi3mosiPin = GPIOB_5;
+	engineConfiguration->spi3misoPin = GPIOB_4;
+	engineConfiguration->spi3sckPin = GPIOB_3;
 
 	// SPI chip select is often independent of the SPI pin limitations
 	engineConfiguration->tle8888_cs = GPIOD_5;
@@ -81,8 +81,8 @@ static void setupDefaultSensorInputs() {
 	// Engine rotation position sensors
 	// Trigger is our primary timing signal, and usually comes from the crank.
 	// trigger inputs up TRIGGER_SUPPORTED_CHANNELS (2)
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	// A secondary Cam signal up to CAM_INPUTS_COUNT (4)
 	engineConfiguration->camInputs[0] = GPIOA_5;
 
@@ -121,7 +121,7 @@ void setPinConfigurationOverrides(void) {
 
 // Future: configure USART3 for LIN bus and UART4 for console
 void setSerialConfigurationOverrides(void) {
-	boardConfiguration->useSerialPort = false;
+	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
 	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
@@ -140,7 +140,7 @@ void setBoardConfigurationOverrides(void) {
 
 	// Set indicator LED pins.
 	// This is often redundant with efifeatures.h or the run-time config
-	boardConfiguration->triggerErrorPin = GPIOE_1;
+	engineConfiguration->triggerErrorPin = GPIOE_1;
 	engineConfiguration->communicationLedPin = GPIOE_2;
 	engineConfiguration->FatalErrorPin = GPIOE_3;
 	engineConfiguration->runningLedPin = GPIOE_4;
@@ -149,25 +149,25 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->errorLedPin = GPIOE_7;
 
 	// Set injector pins and the pin output mode
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
-	boardConfiguration->injectionPins[0] = GPIOE_14;
-	boardConfiguration->injectionPins[1] = GPIOE_13;
-	boardConfiguration->injectionPins[2] = GPIOE_12;
-	boardConfiguration->injectionPins[3] = GPIOE_11;
+	engineConfiguration->injectionPinMode = OM_DEFAULT;
+	engineConfiguration->injectionPins[0] = GPIOE_14;
+	engineConfiguration->injectionPins[1] = GPIOE_13;
+	engineConfiguration->injectionPins[2] = GPIOE_12;
+	engineConfiguration->injectionPins[3] = GPIOE_11;
 	// Disable the remainder only when they may never be assigned
 	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
-		boardConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
 	// Do the same for ignition outputs
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
-	boardConfiguration->ignitionPins[0] = GPIOD_4;
-	boardConfiguration->ignitionPins[1] = GPIOD_3;
-	boardConfiguration->ignitionPins[2] = GPIOD_2;
-	boardConfiguration->ignitionPins[3] = GPIOD_1;
+	engineConfiguration->ignitionPinMode = OM_DEFAULT;
+	engineConfiguration->ignitionPins[0] = GPIOD_4;
+	engineConfiguration->ignitionPins[1] = GPIOD_3;
+	engineConfiguration->ignitionPins[2] = GPIOD_2;
+	engineConfiguration->ignitionPins[3] = GPIOD_1;
 	// Disable remainder
 	for (int i = 4; i < IGNITION_PIN_COUNT; i++) {
-		boardConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 
 	// Board-specific scaling values to convert ADC fraction to Volts.
@@ -199,16 +199,16 @@ void setBoardConfigurationOverrides(void) {
 	// Configure the TLE8888 half bridges (pushpull, lowside, or high-low)
 	// TLE8888_IN11 -> TLE8888_OUT21
 	// GPIOE_8: "35 - GP Out 1"
-	boardConfiguration->fuelPumpPin = GPIOE_8;
+	engineConfiguration->fuelPumpPin = GPIOE_8;
 
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
 	// GPIOE_10: "3 - Lowside 2"
-	boardConfiguration->idle.solenoidPin = GPIOE_10;
+	engineConfiguration->idle.solenoidPin = GPIOE_10;
 
 
 	// TLE8888_PIN_22: "34 - GP Out 2"
-	boardConfiguration->fanPin = TLE8888_PIN_22;
+	engineConfiguration->fanPin = TLE8888_PIN_22;
 
 	// The "required" hardware is done - set some reasonable input defaults
 	setupDefaultSensorInputs();

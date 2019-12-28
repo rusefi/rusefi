@@ -60,8 +60,8 @@ public:
 	float getPrevError(void) const;
 	void setErrorAmplification(float coef);
 #if EFI_TUNER_STUDIO
-	void postState(TunerStudioOutputChannels *tsOutputChannels);
-	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult);
+	void postState(TunerStudioOutputChannels *tsOutputChannels) const;
+	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) const;
 #endif /* EFI_TUNER_STUDIO */
 	void showPidStatus(Logging *logging, const char*msg) const;
 	void sleep();
@@ -122,8 +122,8 @@ public:
 
 public:
 	// todo: move this to pid_s one day
-	float_t antiwindupFreq = 0.0f;			// = 1/ResetTime
-	float_t derivativeFilterLoss = 0.0f;	// = 1/Gain
+	float antiwindupFreq = 0.0f;			// = 1/ResetTime
+	float derivativeFilterLoss = 0.0f;	// = 1/Gain
 
 private:
 	float limitOutput(float v) const;

@@ -18,9 +18,9 @@
  */
 
 #if EFI_UNIT_TEST
-#define DECLARE_GLOBAL_SIGNATURE Engine *engine, engine_configuration_s *___engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
+#define DECLARE_GLOBAL_SIGNATURE Engine *engine, engine_configuration_s *___engineConfiguration, persistent_config_s *config
 #define DECLARE_GLOBAL_SUFFIX , DECLARE_GLOBAL_SIGNATURE
-#define PASS_GLOBAL_SIGNATURE engine, ___engineConfiguration, config, boardConfiguration
+#define PASS_GLOBAL_SIGNATURE engine, ___engineConfiguration, config
 #define PASS_GLOBAL_SUFFIX , PASS_GLOBAL_SIGNATURE
 #define CONFIG_ACCESS_FOR_CONFIG_HEADER_ONLY(x) ___engineConfiguration->x
 #else /* EFI_UNIT_TEST */

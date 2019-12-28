@@ -73,7 +73,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
-	setFrankenso_01_LCD(boardConfiguration);
+	setFrankenso_01_LCD(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
 	setDensoTODO(config);
@@ -87,40 +87,46 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	config->veRpmBins[0] = 800;
-	config->veRpmBins[1] = 1200;
-	config->veRpmBins[2] = 1600;
-	config->veRpmBins[3] = 2000;
-	config->veRpmBins[4] = 2400;
-	config->veRpmBins[5] = 2800;
-	config->veRpmBins[6] = 3200;
-	config->veRpmBins[7] = 3600;
-	config->veRpmBins[8] = 4100;
-	config->veRpmBins[9] = 4500;
-	config->veRpmBins[10] = 4900;
-	config->veRpmBins[11] = 5300;
-	config->veRpmBins[12] = 5700;
-	config->veRpmBins[13] = 6100;
-	config->veRpmBins[14] = 6500;
-	config->veRpmBins[15] = 7000;
+	static const float veRpmBins[] = 
+	{
+		800,
+		1200,
+		1600,
+		2000,
+		2400,
+		2800,
+		3200,
+		3600,
+		4100,
+		4500,
+		4900,
+		5300,
+		5700,
+		6100,
+		6500,
+		7000
+	};
+
+	copyArray(config->veRpmBins, veRpmBins);
+
 
 	copyFuelTable(racingFestivaVeTable, config->veTable);
 
-//	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
-//	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+//	engineConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
+//	engineConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
 	// in case of SOHC distributor we only have one signal
-//	boardConfiguration->triggerInputPins[0] = GPIOA_5; // 2E White CKP
-//	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+//	engineConfiguration->triggerInputPins[0] = GPIOA_5; // 2E White CKP
+//	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
 	// in case of DOHC distributor we have two signals
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
 	// Denso 195500-2180
 	engineConfiguration->injector.flow = 265;
 
-	boardConfiguration->isFastAdcEnabled = true;
+	engineConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	/**
 	 * pin PA4: jumper W47<>W47 - ecu plug 3I
@@ -131,7 +137,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5 // PA2
 
 	// set_idle_position 10
-	boardConfiguration->manIdlePosition = 10;
+	engineConfiguration->manIdlePosition = 10;
 	engineConfiguration->crankingIACposition = 65;
 
 	setWholeIatCorrTimingTable(0 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -158,8 +164,8 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setSingleCoilDwell(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
-	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
-	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
+	engineConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
+	engineConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
 
 	// individual coils
 	// W6  PC9
@@ -167,11 +173,11 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// W12 PE8
 	// W13 PE12
 
-	boardConfiguration->ignitionPins[0] = GPIOC_9;
-	boardConfiguration->ignitionPins[1] = GPIOC_7;
-	boardConfiguration->ignitionPins[2] = GPIOE_8;
-	boardConfiguration->ignitionPins[3] = GPIOE_12;
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+	engineConfiguration->ignitionPins[0] = GPIOC_9;
+	engineConfiguration->ignitionPins[1] = GPIOC_7;
+	engineConfiguration->ignitionPins[2] = GPIOE_8;
+	engineConfiguration->ignitionPins[3] = GPIOE_12;
+	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
@@ -193,18 +199,18 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Frankenso low out #11: PB8
 	// Frankenso low out #12: PB7
 
-	boardConfiguration->injectionPins[0] = GPIOD_3;
-	boardConfiguration->injectionPins[1] = GPIOE_2;
+	engineConfiguration->injectionPins[0] = GPIOD_3;
+	engineConfiguration->injectionPins[1] = GPIOE_2;
 
 
 	// 40% idle is good default
-	boardConfiguration->idle.solenoidFrequency = 300;
-	boardConfiguration->idle.solenoidPin = GPIOB_9;
+	engineConfiguration->idle.solenoidFrequency = 300;
+	engineConfiguration->idle.solenoidPin = GPIOB_9;
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_5;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
+	engineConfiguration->malfunctionIndicatorPin = GPIOE_5;
+	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	boardConfiguration->tunerStudioSerialSpeed = 19200;
+	engineConfiguration->tunerStudioSerialSpeed = 19200;
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
@@ -229,7 +235,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * to test
 	 * set_fsio_setting 1 5000
 	 */
-	boardConfiguration->fsio_setting[0] = 5000;
+	engineConfiguration->fsio_setting[0] = 5000;
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
 	setFsioExt(0, GPIOE_3, RPM_ABOVE_USER_SETTING_1, 150 PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -244,30 +250,36 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * set_rpn_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 * eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 */
-	boardConfiguration->fsio_setting[1] = 6200; // RPM threshold
-	boardConfiguration->fsio_setting[2] = 90; // CLT threshold
-	boardConfiguration->fsio_setting[3] = 13.5; // voltage threshold
+	engineConfiguration->fsio_setting[1] = 6200; // RPM threshold
+	engineConfiguration->fsio_setting[2] = 90; // CLT threshold
+	engineConfiguration->fsio_setting[3] = 13.5; // voltage threshold
 
 //	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio(1, GPIOD_7, RPM_ABOVE_USER_SETTING_2 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 
-	config->ignitionRpmBins[0] = 800;
-	config->ignitionRpmBins[1] = 1200;
-	config->ignitionRpmBins[2] = 1600;
-	config->ignitionRpmBins[3] = 2000;
-	config->ignitionRpmBins[4] = 2400;
-	config->ignitionRpmBins[5] = 2800;
-	config->ignitionRpmBins[6] = 3200;
-	config->ignitionRpmBins[7] = 3600;
-	config->ignitionRpmBins[8] = 4100;
-	config->ignitionRpmBins[9] = 4500;
-	config->ignitionRpmBins[10] = 4900;
-	config->ignitionRpmBins[11] = 5300;
-	config->ignitionRpmBins[12] = 5700;
-	config->ignitionRpmBins[13] = 6100;
-	config->ignitionRpmBins[14] = 6500;
-	config->ignitionRpmBins[15] = 7000;
+	static const float ignitionRpmBins[] =
+	{
+		800,
+		1200,
+		1600,
+		2000,
+		2400,
+		2800,
+		3200,
+		3600,
+		4100,
+		4500,
+		4900,
+		5300,
+		5700,
+		6100,
+		6500,
+		7000
+	};
+
+	copyArray(config->ignitionRpmBins, ignitionRpmBins);
+
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTimingTable(racingFestivaIgnitionTable, config->ignitionTable);
 #endif
@@ -277,7 +289,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5.0;
 	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 1;
 
-	boardConfiguration->isSdCardEnabled = true;
+	engineConfiguration->isSdCardEnabled = true;
 
 //	engineConfiguration->useFSIO16ForTimingAdjustment = true;
 //  we wanted to have a timinig table adjustment switch here

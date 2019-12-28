@@ -95,7 +95,7 @@ extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
 void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	engineConfiguration->bc.triggerSimulatorFrequency = rpm;
+	engineConfiguration->triggerSimulatorFrequency = rpm;
 	/**
 	 * All we need to do here is to change the periodMs
 	 * togglePwmState() would see that the periodMs has changed and act accordingly
@@ -107,10 +107,7 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
 		triggerSignal.setFrequency(rPerSecond);
 	}
-#if EFI_ENGINE_SNIFFER
-	if (engine->isTestMode)
-		waveChart.reset();
-#endif /* EFI_ENGINE_SNIFFER */
+	engine->resetEngineSnifferIfInTestMode();
 
 	scheduleMsg(logger, "Emulating position sensor(s). RPM=%d", rpm);
 }
@@ -165,7 +162,7 @@ void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUF
 	logger = sharedLogger;
 
 	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
-	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency PASS_ENGINE_PARAMETER_SUFFIX);
+	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency PASS_ENGINE_PARAMETER_SUFFIX);
 	pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = {
 			s->wave.channels[0].pinStates,
 			s->wave.channels[1].pinStates,

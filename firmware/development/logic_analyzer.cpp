@@ -43,7 +43,7 @@ extern bool hasFirmwareErrorFlag;
  * Difference between current 1st trigger event and previous 1st trigger event.
  */
 static volatile uint32_t engineCycleDurationUs;
-static volatile efitime_t previousEngineCycleTimeUs = 0;
+static volatile efitimeus_t previousEngineCycleTimeUs = 0;
 
 static int waveReaderCount = 0;
 static WaveReader readers[MAX_ICU_COUNT];
@@ -101,12 +101,12 @@ static void waIcuPeriodCallback(WaveReader *reader) {
 }
 
 static void initWave(const char *name, int index) {
-	brain_pin_e brainPin = CONFIGB(logicAnalyzerPins)[index];
+	brain_pin_e brainPin = CONFIG(logicAnalyzerPins)[index];
 
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
 
-	bool mode = CONFIGB(logicAnalyzerMode)[index];
+	bool mode = CONFIG(logicAnalyzerMode)[index];
 
 	waveReaderCount++;
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
@@ -133,7 +133,7 @@ static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index
 	if (index != 0) {
 		return;
 	}
-	efitick_t nowUs = getTimeNowUs();
+	efitimeus_t nowUs = getTimeNowUs();
 	engineCycleDurationUs = nowUs - previousEngineCycleTimeUs;
 	previousEngineCycleTimeUs = nowUs;
 }

@@ -19,32 +19,32 @@
 EXTERN_ENGINE;
 
 static void setInjectorPins() {
-	boardConfiguration->injectionPins[0] = GPIOE_14;
-	boardConfiguration->injectionPins[1] = GPIOE_13;
-	boardConfiguration->injectionPins[2] = GPIOE_12;
-	boardConfiguration->injectionPins[3] = GPIOE_11;
+	engineConfiguration->injectionPins[0] = GPIOE_14;
+	engineConfiguration->injectionPins[1] = GPIOE_13;
+	engineConfiguration->injectionPins[2] = GPIOE_12;
+	engineConfiguration->injectionPins[3] = GPIOE_11;
 
 	// Disable remainder
 	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
-		boardConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
+	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
 	// todo: I wonder if these are not right in light of the network rename and the +12 VP issue?
-	boardConfiguration->ignitionPins[0] = GPIOD_4;
-	boardConfiguration->ignitionPins[1] = GPIOD_3;
-	boardConfiguration->ignitionPins[2] = GPIOD_2;
-	boardConfiguration->ignitionPins[3] = GPIOD_1;
+	engineConfiguration->ignitionPins[0] = GPIOD_4;
+	engineConfiguration->ignitionPins[1] = GPIOD_3;
+	engineConfiguration->ignitionPins[2] = GPIOD_2;
+	engineConfiguration->ignitionPins[3] = GPIOD_1;
 
 	// disable remainder
 	for (int i = 4; i < IGNITION_PIN_COUNT; i++) {
-		boardConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
 static void setLedPins() {
@@ -55,7 +55,7 @@ static void setLedPins() {
 	engineConfiguration->communicationLedPin = GPIOE_2; // d23 = blue
 #endif /* EFI_COMMUNICATION_PIN */
 	engineConfiguration->runningLedPin = GPIOE_4;		// d22 = green
-	boardConfiguration->triggerErrorPin = GPIOE_1;		// d27 = orange
+	engineConfiguration->triggerErrorPin = GPIOE_1;		// d27 = orange
 }
 
 static void setupVbatt() {
@@ -71,12 +71,12 @@ static void setupVbatt() {
 
 static void setupTle8888() {
 	// Enable spi3
-	boardConfiguration->is_enabled_spi_3 = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 
 	// Wire up spi3
-	boardConfiguration->spi3mosiPin = GPIOB_5;
-	boardConfiguration->spi3misoPin = GPIOB_4;
-	boardConfiguration->spi3sckPin = GPIOB_3;
+	engineConfiguration->spi3mosiPin = GPIOB_5;
+	engineConfiguration->spi3misoPin = GPIOB_4;
+	engineConfiguration->spi3sckPin = GPIOB_3;
 
 	// Chip select
 	engineConfiguration->tle8888_cs = GPIOD_5;
@@ -124,9 +124,9 @@ static void setupEtb() {
 static void setupDefaultSensorInputs() {
 	// trigger inputs
 	// tle8888 VR conditioner
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = GPIOA_5;
 
@@ -157,7 +157,7 @@ void setPinConfigurationOverrides(void) {
 }
 
 void setSerialConfigurationOverrides(void) {
-	boardConfiguration->useSerialPort = false;
+	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
 	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
@@ -185,16 +185,16 @@ void setBoardConfigurationOverrides(void) {
 	// todo: maybe even set EFI_MAIN_RELAY_CONTROL to FALSE for MRE configuration
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  TLE8888_IN11 / TLE8888_OUT21
 	// GPIOE_8: "35 - GP Out 1"
-	boardConfiguration->fuelPumpPin = GPIOE_8;
+	engineConfiguration->fuelPumpPin = GPIOE_8;
 
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
 	// GPIOE_10: "3 - Lowside 2"
-	boardConfiguration->idle.solenoidPin = GPIOE_10;
+	engineConfiguration->idle.solenoidPin = GPIOE_10;
 
 
 	// TLE8888_PIN_22: "34 - GP Out 2"
-	boardConfiguration->fanPin = TLE8888_PIN_22;
+	engineConfiguration->fanPin = TLE8888_PIN_22;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

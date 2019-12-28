@@ -4,10 +4,10 @@
  *
  *
  * @date Sep 26, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
-#ifndef efi_gpio_H_
-#define efi_gpio_H_
+
+#pragma once
 
 #include "global.h"
 #include "io_pins.h"
@@ -191,5 +191,3 @@ const char *portname(ioportid_t GPIOx);
 
 brain_pin_e parseBrainPin(const char *str);
 const char *hwPortname(brain_pin_e brainPin);
-
-#endif /* efi_gpio_H_ */

@@ -20,7 +20,10 @@
 
 EXTERN_ENGINE;
 
-THD_WORKING_AREA(servoThreadStack, UTILITY_THREAD_STACK_SIZE);
+// This thread calls scheduleForLater which eventually could trip the main trigger callback
+// if self stimulation (heh) is enabled, which uses a TON of stack space.
+// So this stack has to be pretty big, unfortunately.
+THD_WORKING_AREA(servoThreadStack, UTILITY_THREAD_STACK_SIZE * 3);
 
 static OutputPin pins[SERVO_COUNT];
 

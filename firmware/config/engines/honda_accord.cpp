@@ -39,7 +39,7 @@ EXTERN_CONFIG;
 
 static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
-	boardConfiguration->isFastAdcEnabled = true;
+	engineConfiguration->isFastAdcEnabled = true;
 
 	// set ignition_mode 0
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
@@ -148,29 +148,29 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	// Frankenso low out #10: PD5 Injector #3
 	// Frankenso low out #11: PB8 injector #1
 	// Frankenso low out #12: PB7 injector #4
-	boardConfiguration->fuelPumpPin = GPIOE_3;
-	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_2;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
-	boardConfiguration->fanPin = GPIOE_4; // blue wire
+	engineConfiguration->fuelPumpPin = GPIOE_3;
+	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
+	engineConfiguration->malfunctionIndicatorPin = GPIOE_2;
+	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
+	engineConfiguration->fanPin = GPIOE_4; // blue wire
 
-	boardConfiguration->idle.solenoidPin = GPIOD_3; // green wire
+	engineConfiguration->idle.solenoidPin = GPIOD_3; // green wire
 
-	boardConfiguration->injectionPins[0] = GPIOB_8;
-	boardConfiguration->injectionPins[1] = GPIOB_9;
-	boardConfiguration->injectionPins[2] = GPIOD_5;
-	boardConfiguration->injectionPins[3] = GPIOB_7;
+	engineConfiguration->injectionPins[0] = GPIOB_8;
+	engineConfiguration->injectionPins[1] = GPIOB_9;
+	engineConfiguration->injectionPins[2] = GPIOD_5;
+	engineConfiguration->injectionPins[3] = GPIOB_7;
 
-	boardConfiguration->ignitionPins[0] = GPIOE_12; // white wire
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = GPIOE_12; // white wire
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 
-	setFrankenso_01_LCD(boardConfiguration);
+	setFrankenso_01_LCD(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
-	boardConfiguration->idle.solenoidFrequency = 500;
+	engineConfiguration->idle.solenoidFrequency = 500;
 }
 
 /*

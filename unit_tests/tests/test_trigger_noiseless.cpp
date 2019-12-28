@@ -11,7 +11,6 @@
 #include "allsensors.h"
 #include "rpm_calculator.h"
 #include "event_queue.h"
-#include "algo.h"
 #include "trigger_central.h"
 #include "main_trigger_callback.h"
 #include "engine.h"
@@ -29,7 +28,7 @@ static void fireEvent(EngineTestHelper *eth, bool isRise) {
 	// but for noise filtering, both edges should be processed, so we fire falling events too
 	if (isRise)
 		eth->firePrimaryTriggerRise();
-	else if (eth->engine.engineConfigurationPtr->bc.useNoiselessTriggerDecoder)
+	else if (eth->engine.engineConfigurationPtr->useNoiselessTriggerDecoder)
 		eth->firePrimaryTriggerFall();
 }
 
@@ -92,7 +91,7 @@ static void resetTrigger(EngineTestHelper &eth) {
 
 static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorToleranceCnt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	printf("*** (bc->useNoiselessTriggerDecoder = %s)\r\n",
-			CONFIGB(useNoiselessTriggerDecoder) ? "true" : "false");
+			CONFIG(useNoiselessTriggerDecoder) ? "true" : "false");
 
 	resetTrigger(eth);
 	
@@ -183,13 +182,13 @@ TEST(big, testNoiselessDecoder) {
 
 #if 0
 	// try normal trigger mode, no noise filtering
-	CONFIGB(useNoiselessTriggerDecoder) = false;
+	CONFIG(useNoiselessTriggerDecoder) = false;
 	// for test validation, it should be 1 trigger error
 	testNoiselessDecoderProcedure(eth, 1 PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 	// now enable our noise filtering algo
-	CONFIGB(useNoiselessTriggerDecoder) = true;
+	CONFIG(useNoiselessTriggerDecoder) = true;
 	// should be 0 errors!
 	testNoiselessDecoderProcedure(eth, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 

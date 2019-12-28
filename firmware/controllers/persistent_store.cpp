@@ -28,7 +28,6 @@
 #include "trigger_central.h"
 #include "engine_controller.h"
 
-
 persistent_config_container_s persistentState CCM_OPTIONAL;
 
 persistent_config_s *config = &persistentState.persistentConfiguration;
@@ -39,6 +38,5 @@ persistent_config_s *config = &persistentState.persistentConfiguration;
  * would be a smaller evil. Whatever is needed should be passed into methods/modules/files as an explicit parameter.
  */
 engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
-board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
 
 #endif /* EFI_UNIT_TEST */

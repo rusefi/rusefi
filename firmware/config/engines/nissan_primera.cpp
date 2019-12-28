@@ -20,9 +20,9 @@ void setNissanPrimeraEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->trigger.type = TT_NISSAN_SR20VE;
 
-	boardConfiguration->ignitionPins[0] = GPIOD_7;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOD_6;
+	engineConfiguration->ignitionPins[0] = GPIOD_7;
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[2] = GPIOD_6;
 
 
 	engineConfiguration->auxValves[0] = GPIOE_14;

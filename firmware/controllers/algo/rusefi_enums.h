@@ -16,14 +16,6 @@
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
 #include <rusefi_hw_enums.h>
 
-#define ENUM_16_BITS 20000
-
-#define DIGIPOT_COUNT 4
-
-#define TRIGGER_SIMULATOR_PIN_COUNT 3
-
-#define LOGIC_ANALYZER_CHANNEL_COUNT 4
-
 // I believe that TunerStudio curve editor has a bug with F32 support
 // because of that bug we cannot have '1.05' for 5% extra multiplier
 /**
@@ -68,7 +60,7 @@ typedef enum {
 
 	ROVER_V8 = 10,
 
-	MAZDA_323 = 11,
+	MRE_MIATA_NB2_MTB = 11,
 
 	MRE_MIATA_NA6 = 12,
 
@@ -188,6 +180,8 @@ typedef enum {
 	MICRO_RUS_EFI = 60,
 
 	PROTEUS = 61,
+
+	VW_B6 = 62,
 
 	/**
 	 * this configuration has as few pins configured as possible

@@ -9,7 +9,7 @@
 
 #include "engine_configuration.h"
 
-void setFrankenstein_01_LCD(board_configuration_s *boardConfiguration);
+void setFrankenstein_01_LCD(engine_configuration_s *engineConfiguration);
 void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* ROVER_V8_H_ */

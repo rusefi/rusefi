@@ -98,36 +98,36 @@ void setEngineBMW_M73_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = GPIOA_5;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIOC_6;
 
-	CONFIGB(idle).solenoidPin = GPIO_UNASSIGNED;
-	CONFIGB(mainRelayPin) = GPIO_UNASSIGNED;
-	CONFIGB(fanPin) = GPIO_UNASSIGNED;
-	CONFIGB(fuelPumpPin) = GPIO_UNASSIGNED;
+	CONFIG(idle).solenoidPin = GPIO_UNASSIGNED;
+	CONFIG(mainRelayPin) = GPIO_UNASSIGNED;
+	CONFIG(fanPin) = GPIO_UNASSIGNED;
+	CONFIG(fuelPumpPin) = GPIO_UNASSIGNED;
 
 
-	boardConfiguration->ignitionPins[ID2INDEX(1)] = GPIOE_14; // Frankenso high side - pin 1G - GREEN wire
-	boardConfiguration->ignitionPins[ID2INDEX(2)] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[ID2INDEX(3)] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[ID2INDEX(4)] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[ID2INDEX(7)] = GPIOC_7; // Frankenso high side - pin 1H - ORANGE wire
+	engineConfiguration->ignitionPins[ID2INDEX(1)] = GPIOE_14; // Frankenso high side - pin 1G - GREEN wire
+	engineConfiguration->ignitionPins[ID2INDEX(2)] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[ID2INDEX(3)] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[ID2INDEX(4)] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[ID2INDEX(7)] = GPIOC_7; // Frankenso high side - pin 1H - ORANGE wire
 
 
-	boardConfiguration->injectionPins[0] = GPIOB_8; // BLU
-	boardConfiguration->injectionPins[1] = GPIOB_7; // BLK
-	boardConfiguration->injectionPins[2] = GPIOB_9; // GRN
-	boardConfiguration->injectionPins[3] = GPIOD_5; // WHT
-	boardConfiguration->injectionPins[4] = GPIOD_3; // RED
-	boardConfiguration->injectionPins[5] = GPIOE_2; // ORG
+	engineConfiguration->injectionPins[0] = GPIOB_8; // BLU
+	engineConfiguration->injectionPins[1] = GPIOB_7; // BLK
+	engineConfiguration->injectionPins[2] = GPIOB_9; // GRN
+	engineConfiguration->injectionPins[3] = GPIOD_5; // WHT
+	engineConfiguration->injectionPins[4] = GPIOD_3; // RED
+	engineConfiguration->injectionPins[5] = GPIOE_2; // ORG
 
-	boardConfiguration->injectionPins[6] = GPIOE_3; // BLU
-	boardConfiguration->injectionPins[7] = GPIOE_4; // BLK
-	boardConfiguration->injectionPins[8] = GPIOE_5; // GRN
-	boardConfiguration->injectionPins[9] = GPIOE_6; // WHT
-	boardConfiguration->injectionPins[10] = GPIOC_13;//RED
-	boardConfiguration->injectionPins[11] = GPIOD_7;// ORG
+	engineConfiguration->injectionPins[6] = GPIOE_3; // BLU
+	engineConfiguration->injectionPins[7] = GPIOE_4; // BLK
+	engineConfiguration->injectionPins[8] = GPIOE_5; // GRN
+	engineConfiguration->injectionPins[9] = GPIOE_6; // WHT
+	engineConfiguration->injectionPins[10] = GPIOC_13;//RED
+	engineConfiguration->injectionPins[11] = GPIOD_7;// ORG
 }
 
 // BMW_M73_M
@@ -155,10 +155,10 @@ GPIOA_6
 	 */
 
 
-	CONFIGB(fsioOutputPins)[7] = GPIO_UNASSIGNED;
-	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
-	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-	boardConfiguration->fanPin = GPIO_UNASSIGNED;
+	CONFIG(fsioOutputPins)[7] = GPIO_UNASSIGNED;
+	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	/**
 	 * Yellow op-amp board
@@ -194,19 +194,19 @@ GPIOA_6
 	engineConfiguration->etbIo[1].directionPin2 = GPIOB_9;
 
 
-	boardConfiguration->injectionPins[0] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[0] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
 
-	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
 
 
 }

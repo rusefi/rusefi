@@ -15,49 +15,55 @@
 
 EXTERN_ENGINE;
 
-static void setInjectorPins() {
-	boardConfiguration->injectionPins[0] = GPIOD_7;
-	boardConfiguration->injectionPins[1] = GPIOG_9;
-	boardConfiguration->injectionPins[2] = GPIOG_10;
-	boardConfiguration->injectionPins[3] = GPIOG_11;
-	boardConfiguration->injectionPins[4] = GPIOG_12;
-	boardConfiguration->injectionPins[5] = GPIOG_13;
-	boardConfiguration->injectionPins[6] = GPIOG_14;
-	boardConfiguration->injectionPins[7] = GPIOB_4;
-	boardConfiguration->injectionPins[8] = GPIOB_5;
-	boardConfiguration->injectionPins[9] = GPIOB_6;
-	boardConfiguration->injectionPins[10] = GPIOB_7;
-	boardConfiguration->injectionPins[11] = GPIOB_8;
+static const brain_pin_e injPins[] = {
+	GPIOD_7,
+	GPIOG_9,
+	GPIOG_10,
+	GPIOG_11,
+	GPIOG_12,
+	GPIOG_13,
+	GPIOG_14,
+	GPIOB_4,
+	GPIOB_5,
+	GPIOB_6,
+	GPIOB_7,
+	GPIOB_8
+};
 
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
+static const brain_pin_e ignPins[] = {
+	GPIOD_4,
+	GPIOD_3,
+	GPIOC_9,
+	GPIOC_8,
+	GPIOC_7,
+	GPIOG_8,
+	GPIOG_7,
+	GPIOG_6,
+	GPIOG_5,
+	GPIOG_4,
+	GPIOG_3,
+	GPIOG_2,
+};
+
+static void setInjectorPins() {
+	copyArray(engineConfiguration->injectionPins, injPins);
+	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
-	boardConfiguration->ignitionPins[0] = GPIOD_4;
-	boardConfiguration->ignitionPins[1] = GPIOD_3;
-	boardConfiguration->ignitionPins[2] = GPIOC_9;
-	boardConfiguration->ignitionPins[3] = GPIOC_8;
-	boardConfiguration->ignitionPins[4] = GPIOC_7;
-	boardConfiguration->ignitionPins[5] = GPIOG_8;
-	boardConfiguration->ignitionPins[6] = GPIOG_7;
-	boardConfiguration->ignitionPins[7] = GPIOG_6;
-	boardConfiguration->ignitionPins[8] = GPIOG_5;
-	boardConfiguration->ignitionPins[9] = GPIOG_4;
-	boardConfiguration->ignitionPins[10] = GPIOG_3;
-	boardConfiguration->ignitionPins[11] = GPIOG_2;
-
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+	copyArray(engineConfiguration->ignitionPins, ignPins);
+	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
 static void setLedPins() {
 	engineConfiguration->communicationLedPin = GPIOE_4;
 	engineConfiguration->runningLedPin = GPIOE_5;
-	boardConfiguration->triggerErrorPin = GPIOE_6;
+	engineConfiguration->triggerErrorPin = GPIOE_6;
 }
 
 static void setupVbatt() {
-	// 6.8k high side/10k low side = 1.6667 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.5f / 1.5f;
+	// 5.6k high side/10k low side = 1.56 ratio divider
+	engineConfiguration->analogInputDividerCoefficient = 1.56f;
 
 	// 47k high side/10k low side = 4.7
 	engineConfiguration->vbattDividerCoeff = (57.0f / 10.0f);
@@ -103,9 +109,9 @@ static void setupEtb() {
 static void setupDefaultSensorInputs() {
 	// trigger inputs
 	// VR channel 1 as default - others not set
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
 	// clt = Analog Temp 1 = PC4
@@ -123,7 +129,7 @@ void setPinConfigurationOverrides(void) {
 }
 
 void setSerialConfigurationOverrides(void) {
-	boardConfiguration->useSerialPort = false;
+	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
 	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
@@ -160,7 +166,4 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
-}
-
-void setAdcChannelOverrides(void) {
 }

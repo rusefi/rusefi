@@ -267,7 +267,6 @@
 
 // todo: switch to continuous ADC conversion for slow ADC?
 // https://github.com/rusefi/rusefi/issues/630
-#define EFI_INTERNAL_SLOW_ADC_PWM	&PWMD8
 // todo: switch to continues ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
 

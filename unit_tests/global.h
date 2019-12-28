@@ -18,8 +18,8 @@ typedef uint32_t iomode_t;
 typedef uint32_t ioportid_t;
 typedef uint32_t ioportmask_t;
 
-//#define chThdGetSelfX() 0
-//#define getRemainingStack(x) (999999)
+// just a stub implementation for unit tests
+#define EXPECTED_REMAINING_STACK 1
 #define getCurrentRemainingStack() (999999)
 
 // this is needed by all DECLARE_ENGINE_PARAMETER_* usages

@@ -67,17 +67,19 @@ public class CHeaderConsumer implements ConfigurationConsumer {
             content.append("\t" + structure.name + "();" + EOL);
         }
 
-        structure.bitState.reset();
+        int currentOffset = 0;
+
+        BitState bitState = new BitState();
         for (int i = 0; i < structure.cFields.size(); i++) {
             ConfigField cf = structure.cFields.get(i);
-            content.append(getHeaderText(cf, structure.currentOffset, structure.bitState.get()));
+            content.append(getHeaderText(cf, currentOffset, bitState.get()));
             ConfigField next = i == structure.cFields.size() - 1 ? ConfigField.VOID : structure.cFields.get(i + 1);
 
-            structure.bitState.incrementBitIndex(cf, next);
-            structure.currentOffset += cf.getSize(next);
+            bitState.incrementBitIndex(cf, next);
+            currentOffset += cf.getSize(next);
         }
 
-        content.append("\t/** total size " + structure.currentOffset + "*/" + EOL);
+        content.append("\t/** total size " + currentOffset + "*/" + EOL);
         content.append("};" + EOL + EOL);
 
         // https://stackoverflow.com/questions/1675351/typedef-struct-vs-struct-definitions

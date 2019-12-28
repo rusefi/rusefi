@@ -182,6 +182,7 @@ public class LinkManager {
             return null;
         }
         String port = ports[ports.length - 1];
+        // todo: reuse 'PortDetector.autoDetectPort' here?
         System.out.println("Using last of " + ports.length + " port(s)");
         System.out.println("All ports: " + Arrays.toString(ports));
         return port;

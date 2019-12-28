@@ -34,12 +34,21 @@
 #endif /* __cplusplus */
 
 /**
- * reference to configuration parameter
+ * reference to configuration parameter.
  */
 #define DISPLAY_CONFIG(x) x
 /**
  * The main annotation of live data - reference to dynamic state variable
  * See also 'TS_GET_STRUCT'
+ * The advantage of Live Data is that there is no need to copy data into tsOutputChannels structure - Live Data is reading exactly
+ * the same data as actual runtime logic. It's also important to have annotations of the View as close to actual implementation as possible
+ * to increase the changes of those being in sync.
+ *
+ * One day Live Data could be replace with a Domain Specific Language
+ * One day all Live Data could be provided to TS without data copy to tsOutputChannels - the idea is to have a virtual tsOutputChannels
+ * where rusEfi would pull data from different memory ranges depending on the requested offset, more or less virtual pages. This could depend
+ * on the TS bugfix described in https://github.com/rusefi/rusefi/issues/794?
+ *
  */
 #define DISPLAY_FIELD(x) x
 /**
@@ -68,20 +77,18 @@
 #define DECLARE_ENGINE_PTR                                 \
 	Engine *engine = nullptr;                              \
 	engine_configuration_s *engineConfiguration = nullptr; \
-	persistent_config_s *config = nullptr;                 \
-	board_configuration_s *boardConfiguration = nullptr;
+	persistent_config_s *config = nullptr;
 
 
 #define INJECT_ENGINE_REFERENCE(x)                  \
 	(x)->engine = engine;                           \
 	(x)->engineConfiguration = engineConfiguration; \
-	(x)->config = config;                           \
-	(x)->boardConfiguration = boardConfiguration;
+	(x)->config = config;
 
 #define EXPAND_Engine \
 	    engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr; \
 		persistent_config_s *config = engine->config; \
-		board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+		
 
 #ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
 // We store a special changeable copy of configuration is RAM, so we can just compare them

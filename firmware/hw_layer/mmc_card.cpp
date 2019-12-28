@@ -127,7 +127,7 @@ static int logFileIndex = 1;
 static char logName[_MAX_FILLER + 20];
 
 static void printMmcPinout(void) {
-	scheduleMsg(&logger, "MMC CS %s", hwPortname(CONFIGB(sdCardCsPin)));
+	scheduleMsg(&logger, "MMC CS %s", hwPortname(CONFIG(sdCardCsPin)));
 	// todo: we need to figure out the right SPI pinout, not just SPI2
 //	scheduleMsg(&logger, "MMC SCK %s:%d", portname(EFI_SPI2_SCK_PORT), EFI_SPI2_SCK_PIN);
 //	scheduleMsg(&logger, "MMC MISO %s:%d", portname(EFI_SPI2_MISO_PORT), EFI_SPI2_MISO_PIN);
@@ -136,7 +136,7 @@ static void printMmcPinout(void) {
 
 static void sdStatistics(void) {
 	printMmcPinout();
-	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(CONFIGB(isSdCardEnabled)),
+	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
 			sdStatus);
 	if (isSdCardAlive()) {
 		scheduleMsg(&logger, "filename=%s size=%d", logName, totalLoggedBytes);
@@ -462,8 +462,8 @@ static THD_FUNCTION(MMCmonThread, arg) {
 			chThdSleepMilliseconds(100);
 		}
 
-		if (boardConfiguration->sdCardPeriodMs > 0) {
-			chThdSleepMilliseconds(boardConfiguration->sdCardPeriodMs);
+		if (engineConfiguration->sdCardPeriodMs > 0) {
+			chThdSleepMilliseconds(engineConfiguration->sdCardPeriodMs);
 		}
 	}
 }
@@ -475,13 +475,13 @@ bool isSdCardAlive(void) {
 void initMmcCard(void) {
 	logName[0] = 0;
 	addConsoleAction("sdinfo", sdStatistics);
-	if (!CONFIGB(isSdCardEnabled)) {
+	if (!CONFIG(isSdCardEnabled)) {
 		return;
 	}
 
 	// todo: reuse initSpiCs method?
-	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", CONFIGB(sdCardCsPin));
-	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin("mmc", CONFIGB(sdCardCsPin));
+	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", CONFIG(sdCardCsPin));
+	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin("mmc", CONFIG(sdCardCsPin));
 	mmccfg.spip = getSpiDevice(engineConfiguration->sdCardSpiDevice);
 
 	/**

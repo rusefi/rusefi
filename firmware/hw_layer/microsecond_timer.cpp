@@ -130,7 +130,7 @@ static void hwTimerCallback(GPTDriver *gptp) {
 
 class MicrosecondTimerWatchdogController : public PeriodicTimerController {
 	void PeriodicTask() override {
-		efitime_t nowNt = getTimeNowNt();
+		efitick_t nowNt = getTimeNowNt();
 		if (nowNt >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
 			strcpy(buff, "no_event");
 			itoa10(&buff[8], lastSetTimerValue);

@@ -14,6 +14,7 @@
 #if EFI_CAN_SUPPORT
 
 #include "engine_configuration.h"
+#include "periodic_thread_controller.h"
 #include "pin_repository.h"
 #include "can_hw.h"
 #include "string.h"
@@ -30,7 +31,6 @@ static int canWriteOk = 0;
 static int canWriteNotOk = 0;
 static bool isCanEnabled = false;
 static LoggingWithStorage logger("CAN driver");
-static THD_WORKING_AREA(canTreadStack, UTILITY_THREAD_STACK_SIZE);
 
 // Values below calculated with http://www.bittiming.can-wiki.info/
 // Pick ST micro bxCAN
@@ -71,8 +71,6 @@ static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
 
-
-static CANRxFrame rxBuffer;
 CANTxFrame txmsg;
 
 static void printPacket(CANRxFrame *rx) {
@@ -111,28 +109,22 @@ void commonTxInit(int eid) {
 /**
  * send CAN message from txmsg buffer
  */
-static void sendCanMessage2(int size) {
-	CANDriver *device = detectCanDevice(CONFIGB(canRxPin),
-			CONFIGB(canTxPin));
+void sendCanMessage(int size) {
+	CANDriver *device = detectCanDevice(CONFIG(canRxPin),
+			CONFIG(canTxPin));
 	if (device == NULL) {
 		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
 		return;
 	}
 	txmsg.DLC = size;
-	// 1 second timeout
-	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, TIME_MS2I(1000));
+
+	// 100 ms timeout
+	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, TIME_MS2I(100));
 	if (result == MSG_OK) {
 		canWriteOk++;
 	} else {
 		canWriteNotOk++;
 	}
-}
-
-/**
- * send CAN message from txmsg buffer, using default packet size
- */
-void sendCanMessage() {
-	sendCanMessage2(8);
 }
 
 static void canDashboardBMW(void) {
@@ -222,68 +214,70 @@ static void canDashboardVAG(void) {
 		sendCanMessage();
 }
 
-static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
-	switch (typeOfNBC) {
-	case CAN_BUS_NBC_BMW:
-		canDashboardBMW();
-		break;
-	case CAN_BUS_NBC_FIAT:
-		canDashboardFiat();
-		break;
-	case CAN_BUS_NBC_VAG:
-		canDashboardVAG();
-		break;
-	case CAN_BUS_MAZDA_RX8:
-		canMazdaRX8();
-		break;
-	default:
-		break;
-	}
-}
-
-static void canRead(void) {
-	CANDriver *device = detectCanDevice(CONFIGB(canRxPin),
-			CONFIGB(canTxPin));
-	if (device == NULL) {
-		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
-		return;
-	}
-//	scheduleMsg(&logger, "Waiting for CAN");
-	msg_t result = canReceive(device, CAN_ANY_MAILBOX, &rxBuffer, TIME_MS2I(1000));
-	if (result == MSG_TIMEOUT) {
-		return;
+class CanWrite final : public PeriodicController<256> {
+public:
+	CanWrite()
+		: PeriodicController("CAN TX", NORMALPRIO, 50)
+	{
 	}
 
-	canReadCounter++;
-	printPacket(&rxBuffer);
-	obdOnCanPacketRx(&rxBuffer);
-}
+	void PeriodicTask(efitime_t nowNt) {
+		switch (engineConfiguration->canNbcType) {
+		case CAN_BUS_NBC_BMW:
+			canDashboardBMW();
+			break;
+		case CAN_BUS_NBC_FIAT:
+			canDashboardFiat();
+			break;
+		case CAN_BUS_NBC_VAG:
+			canDashboardVAG();
+			break;
+		case CAN_BUS_MAZDA_RX8:
+			canMazdaRX8();
+			break;
+		default:
+			break;
+		}
+	}
+};
 
-static void writeStateToCan(void) {
-	canInfoNBCBroadcast(engineConfiguration->canNbcType);
-}
+class CanRead final : public ThreadController<256> {
+public:
+	CanRead()
+		: ThreadController("CAN RX", NORMALPRIO)
+	{
+	}
 
-static msg_t canThread(void *arg) {
-	(void)arg;
-	chRegSetThreadName("CAN");
-	while (true) {
-		if (engineConfiguration->canWriteEnabled)
-			writeStateToCan();
+	void ThreadTask() override {
+		CANDriver* device = detectCanDevice(CONFIG(canRxPin), CONFIG(canTxPin));
 
-		if (engineConfiguration->canReadEnabled)
-			canRead(); // todo: since this is a blocking operation, do we need a separate thread for 'write'?
-
-		if (engineConfiguration->canSleepPeriodMs < 10) {
-			warning(CUSTOM_OBD_LOW_CAN_PERIOD, "%d too low CAN", engineConfiguration->canSleepPeriodMs);
-			engineConfiguration->canSleepPeriodMs = 50;
+		if (!device) {
+			warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
+			return;
 		}
 
-		chThdSleepMilliseconds(engineConfiguration->canSleepPeriodMs);
+		while (true) {
+			// Block until we get a message
+			msg_t result = canReceiveTimeout(device, CAN_ANY_MAILBOX, &m_buffer, TIME_INFINITE);
+
+			if (result != MSG_OK) {
+				continue;
+			}
+
+			// Process the message
+			canReadCounter++;
+			printPacket(&m_buffer);
+			obdOnCanPacketRx(&m_buffer);
+		}
 	}
-#if defined __GNUC__
-	return -1;
-#endif
-}
+
+private:
+	CANRxFrame m_buffer;
+};
+
+static CanRead canRead;
+static CanWrite canWrite;
+
 
 static void canInfo(void) {
 	if (!isCanEnabled) {
@@ -291,8 +285,8 @@ static void canInfo(void) {
 		return;
 	}
 
-	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIGB(canTxPin)));
-	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIGB(canRxPin)));
+	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIG(canTxPin)));
+	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIG(canRxPin)));
 	scheduleMsg(&logger, "type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriodMs);
@@ -314,34 +308,46 @@ void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
 #endif /* EFI_TUNER_STUDIO */
 
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	CONFIGB(canTxPin) = GPIOB_6;
-	CONFIGB(canRxPin) = GPIOB_12;
+	CONFIG(canTxPin) = GPIOB_6;
+	CONFIG(canRxPin) = GPIOB_12;
 	engineConfiguration->canReadEnabled = false;
 }
 
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	brain_pin_markUnused(activeConfiguration.bc.canTxPin);
-	brain_pin_markUnused(activeConfiguration.bc.canRxPin);
+	brain_pin_markUnused(activeConfiguration.canTxPin);
+	brain_pin_markUnused(activeConfiguration.canRxPin);
 }
 
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiSetPadMode("CAN TX", CONFIGB(canTxPin), PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	efiSetPadMode("CAN RX", CONFIGB(canRxPin), PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+	efiSetPadMode("CAN TX", CONFIG(canTxPin), PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	efiSetPadMode("CAN RX", CONFIG(canRxPin), PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
 void initCan(void) {
-	isCanEnabled = (CONFIGB(canTxPin) != GPIO_UNASSIGNED) && (CONFIGB(canRxPin) != GPIO_UNASSIGNED);
-	if (isCanEnabled) {
-		if (!isValidCanTxPin(CONFIGB(canTxPin)))
-			firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIGB(canTxPin)));
-		if (!isValidCanRxPin(CONFIGB(canRxPin)))
-			firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIGB(canRxPin)));
+	addConsoleAction("caninfo", canInfo);
+
+	isCanEnabled = 
+		(CONFIG(canTxPin) != GPIO_UNASSIGNED) && // both pins are set...
+		(CONFIG(canRxPin) != GPIO_UNASSIGNED) &&
+		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
+
+	// nothing to do if we aren't enabled...
+	if (!isCanEnabled) {
+		return;
 	}
 
-	addConsoleAction("caninfo", canInfo);
-	if (!isCanEnabled)
+	// Validate pins
+	if (!isValidCanTxPin(CONFIG(canTxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG(canTxPin)));
 		return;
+	}
 
+	if (!isValidCanRxPin(CONFIG(canRxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG(canRxPin)));
+		return;
+	}
+
+	// Initialize hardware
 #if STM32_CAN_USE_CAN2
 	// CAN1 is required for CAN2
 	canStart(&CAND1, &canConfig500);
@@ -350,10 +356,17 @@ void initCan(void) {
 	canStart(&CAND1, &canConfig500);
 #endif /* STM32_CAN_USE_CAN2 */
 
-	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t)(void*) canThread, NULL);
+	// fire up threads, as necessary
+	if (CONFIG(canWriteEnabled)) {
+		canWrite.setPeriod(CONFIG(canSleepPeriodMs));
+		canWrite.Start();
+	}
+
+	if (CONFIG(canReadEnabled)) {
+		canRead.Start();
+	}
 
 	startCanPins();
-
 }
 
 #endif /* EFI_CAN_SUPPORT */

@@ -211,7 +211,7 @@ static void endAveraging(void *arg) {
 
 static void applyMapMinBufferLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// check range
-	mapMinBufferLength = maxI(minI(CONFIGB(mapMinBufferLength), MAX_MAP_BUFFER_LENGTH), 1);
+	mapMinBufferLength = maxI(minI(CONFIG(mapMinBufferLength), MAX_MAP_BUFFER_LENGTH), 1);
 	// reset index
 	averagedMapBufIdx = 0;
 	// fill with maximum values
@@ -279,14 +279,14 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		return;
 	}
 
-	if (CONFIGB(mapMinBufferLength) != mapMinBufferLength) {
+	if (CONFIG(mapMinBufferLength) != mapMinBufferLength) {
 		applyMapMinBufferLength(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
 	measurementsPerRevolutionCounter = 0;
 
-	int samplingCount = CONFIGB(measureMapOnlyInOneCylinder) ? 1 : engineConfiguration->specs.cylindersCount;
+	int samplingCount = CONFIG(measureMapOnlyInOneCylinder) ? 1 : engineConfiguration->specs.cylindersCount;
 
 	for (int i = 0; i < samplingCount; i++) {
 		angle_t samplingStart = ENGINE(engineState.mapAveragingStart[i]);
@@ -359,7 +359,11 @@ void initMapAveraging(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SHAFT_POSITION_INPUT
 	addTriggerEventListener(&mapAveragingTriggerCallback, "MAP averaging", engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
+
+#if !EFI_UNIT_TEST
 	addConsoleAction("faststat", showMapStats);
+#endif /* EFI_UNIT_TEST */
+
 	applyMapMinBufferLength(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
