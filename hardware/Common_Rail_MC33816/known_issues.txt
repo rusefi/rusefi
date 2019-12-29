@@ -5,3 +5,4 @@
  5) RESOLVED IN R0.2 D9 had wrong footprint blah. Wrong pin numbers to wrong pins. 
  6) RESOLVED IN R0.2 D10 --> D10_2, and D11 --> D11_2 should be the same package, they were 2 different / wrong footprints. 
 
+ 2) RESOLVED IN R0.3 Moved several 0805 components to the back side of the PCB for lower cost assembly. 
