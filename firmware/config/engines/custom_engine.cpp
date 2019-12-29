@@ -11,8 +11,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#pragma once
-
 #include "custom_engine.h"
 #include "allsensors.h"
 #include "engine_math.h"
