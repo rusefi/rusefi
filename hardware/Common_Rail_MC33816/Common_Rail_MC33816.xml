@@ -2,13 +2,13 @@
 <export version="D">
   <design>
     <source>C:/Users/Vista_64_D630/Desktop/rusefi_direct/hardware/Common_Rail_MC33816/Common_Rail_MC33816.sch</source>
-    <date>12/29/2019 7:04:27 AM</date>
+    <date>12/29/2019 4:19:45 PM</date>
     <tool>Eeschema 4.0.7</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>Common Rail MC33816</title>
         <company>rusEFI.com</company>
-        <rev>0.2</rev>
+        <rev>0.3</rev>
         <date>2019-08-12</date>
         <source>Common_Rail_MC33816.sch</source>
         <comment number="1" value=""/>
@@ -37,7 +37,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B331KBANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -73,7 +73,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B102KDCNNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -85,7 +85,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B102KDCNNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -97,7 +97,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F100JT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -109,7 +109,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F100JT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -121,7 +121,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B472KCANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -133,7 +133,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B472KCANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -169,7 +169,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F100JT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -181,7 +181,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B102KDCNNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -193,7 +193,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B472KCANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -205,7 +205,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B472KCANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -241,7 +241,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F100JT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -253,7 +253,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B102KDCNNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -265,7 +265,7 @@
       <fields>
         <field name="MFG,MFG#">Panasonic,ERJ-8CWFR015V</field>
         <field name="VEND1,VEND1#">DIGI,P0.015BVCT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,STE1206M1W0R015F</field>
+        <field name="VEND2,VEND2#">JLCPCB,C201281</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -325,7 +325,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F100JT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -337,7 +337,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,CGA4C2C0G2A471J060AA</field>
         <field name="VEND1,VEND1#">DIGI,445-6953-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805B471K500NT</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1743</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -349,7 +349,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JT5R10</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JT5R10CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F510KT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17724</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -361,7 +361,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B331KBANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -373,7 +373,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JT5R10</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JT5R10CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F510KT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17724</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -385,7 +385,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B331KBANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -397,7 +397,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B331KBANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -505,7 +505,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F100JT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -517,7 +517,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B102KDCNNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -541,7 +541,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F100JT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -553,7 +553,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B102KDCNNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -565,7 +565,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B331KBANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -577,7 +577,7 @@
       <fields>
         <field name="MFG,MFG#">Panasonic,ERJ-8CWFR015V</field>
         <field name="VEND1,VEND1#">DIGI,P0.015BVCT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,STE1206M1W0R015F</field>
+        <field name="VEND2,VEND2#">JLCPCB,C201281</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -589,7 +589,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B472KCANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -613,7 +613,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B472KCANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -637,7 +637,7 @@
       <fields>
         <field name="MFG,MFG#">AVX,08055C104MAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-3351-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CC0805KRX7R9BB104</field>
+        <field name="VEND2,VEND2#">JLCPCB,C49678</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -649,7 +649,7 @@
       <fields>
         <field name="MFG,MFG#">AVX,08055C104MAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-3351-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CC0805KRX7R9BB104</field>
+        <field name="VEND2,VEND2#">JLCPCB,C49678</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -661,7 +661,7 @@
       <fields>
         <field name="MFG,MFG#">Taiyo Yuden,TMK212AB7475KG-T</field>
         <field name="VEND1,VEND1#">DIGI,587-2990-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21A475KAQNNNE</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1779</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -673,7 +673,7 @@
       <fields>
         <field name="MFG,MFG#">AVX,08055C104MAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-3351-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CC0805KRX7R9BB104</field>
+        <field name="VEND2,VEND2#">JLCPCB,C49678</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -685,7 +685,7 @@
       <fields>
         <field name="MFG,MFG#">AVX,08055C104MAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-3351-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CC0805KRX7R9BB104</field>
+        <field name="VEND2,VEND2#">JLCPCB,C49678</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -697,7 +697,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB105</field>
         <field name="VEND1,VEND1#">DIGI,311-1456-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B105KBFNNNE</field>
+        <field name="VEND2,VEND2#">JLCPCB,C28323</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -709,7 +709,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB334</field>
         <field name="VEND1,VEND1#">DIGI,311-3385-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805B334K500NT</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1740</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -721,7 +721,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB334</field>
         <field name="VEND1,VEND1#">DIGI,311-3385-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805B334K500NT</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1740</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -848,7 +848,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B331KBANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -884,7 +884,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B102KDCNNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -896,7 +896,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B102KDCNNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -908,7 +908,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F100JT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -920,7 +920,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F100JT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -932,7 +932,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B472KCANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -944,7 +944,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B472KCANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -980,7 +980,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F100JT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -992,7 +992,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B102KDCNNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1004,7 +1004,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B472KCANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1016,7 +1016,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B472KCANNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1040,7 +1040,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805W8F100JT5E</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1052,7 +1052,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,CL21B102KDCNNNC</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1064,7 +1064,7 @@
       <fields>
         <field name="MFG,MFG#">Panasonic,ERJ-8CWFR015V</field>
         <field name="VEND1,VEND1#">DIGI,P0.015BVCT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,STE1206M1W0R015F</field>
+        <field name="VEND2,VEND2#">JLCPCB,C201281</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1076,7 +1076,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB334</field>
         <field name="VEND1,VEND1#">DIGI,311-3385-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805B334K500NT</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1740</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1102,7 +1102,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB334</field>
         <field name="VEND1,VEND1#">DIGI,311-3385-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805B334K500NT</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1740</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1114,7 +1114,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB334</field>
         <field name="VEND1,VEND1#">DIGI,311-3385-1-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,0805B334K500NT</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1740</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1207,7 +1207,6 @@
       <fields>
         <field name="MFG,MFG#">TE,282834-2</field>
         <field name="VEND1,VEND1#">DIGI,A98333-ND</field>
-        <field name="VEND2,VEND2#">tbd,tbd</field>
       </fields>
       <libsource lib="conn" part="Conn_01x02"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1552,8 +1551,8 @@
     </libpart>
   </libparts>
   <libraries>
-    <library logical="device">
-      <uri>C:\Program Files\KiCad\share\kicad\library\device.lib</uri>
+    <library logical="conn">
+      <uri>C:\Program Files\KiCad\share\kicad\library\conn.lib</uri>
     </library>
     <library logical="mc33816">
       <uri>C:\Users\Vista_64_D630\Desktop\rusefi_direct\hardware\rusefi_lib\mc33816.lib</uri>
@@ -1561,8 +1560,8 @@
     <library logical="Common_Rail_MC33816-cache">
       <uri>C:\Users\Vista_64_D630\Desktop\rusefi_direct\hardware\Common_Rail_MC33816\Common_Rail_MC33816-cache.lib</uri>
     </library>
-    <library logical="conn">
-      <uri>C:\Program Files\KiCad\share\kicad\library\conn.lib</uri>
+    <library logical="device">
+      <uri>C:\Program Files\KiCad\share\kicad\library\device.lib</uri>
     </library>
   </libraries>
   <nets>
