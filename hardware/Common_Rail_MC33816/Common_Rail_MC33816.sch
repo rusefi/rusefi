@@ -37,7 +37,7 @@ encoding utf-8
 Sheet 1 1
 Title "Common Rail MC33816"
 Date "2019-08-12"
-Rev "0.2"
+Rev "0.3"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
