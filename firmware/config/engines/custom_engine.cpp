@@ -8,10 +8,8 @@
  * Frankenso QA 12 cylinder engine
  *
  * @date Jan 18, 2015
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
-#ifndef CONFIG_ENGINES_CUSTOM_ENGINE_CPP_
-#define CONFIG_ENGINES_CUSTOM_ENGINE_CPP_
 
 #include "custom_engine.h"
 #include "allsensors.h"
@@ -298,11 +296,14 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// see also setDefaultEtbBiasCurve
 }
 
+#if EFI_UNIT_TEST
 void setIssue898(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 }
+#endif /* EFI_UNIT_TEST */
 
 // TLE8888_BENCH_ENGINE
+// todo: remove this? this was used to play with "secret" red boards prior to MRE reality
 // set engine_type 59
 void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 8;
@@ -394,6 +395,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 /**
+ * This configuration is used for MRE board Quality Assurance validation
  * set engine_type 30
  */
 void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -507,5 +509,3 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[2 - 1] = GPIOE_10;
 #endif /* BOARD_TLE8888_COUNT */
 }
-
-#endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */

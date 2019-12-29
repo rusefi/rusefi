@@ -1,0 +1,6 @@
+Comment,Designator,Footprint,LCSC Part #
+DNP Schottky diode,"D15,D20",D_SOD-323,
+100UF 50V Polarized capacitor,C2,CP_Elec_8x10.5,
+4.7nF Unpolarized capacitor,"C3,C11",C_0603_1608Metric,C53987
+470nF Unpolarized capacitor,"C4,C5",C_0603_1608Metric,C1623
+10uF Unpolarized capacitor,"C7,C9,C8",C_0603_1608Metric,C19702
