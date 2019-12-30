@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Dec 21 19:54:17 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Dec 30 01:38:03 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2052,7 +2052,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1772
 	 */
-	uint8_t unusedFormerWarmupAfrPid[4];
+	uint8_t unusedFormerWarmupAfrPid[3];
+	/**
+	 * offset 1775
+	 */
+	uint8_t tachPulsePerRev;
 	/**
 	 * kPa value which is too low to be true
 	 * offset 1776
@@ -3108,4 +3112,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Dec 21 19:54:17 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Dec 30 01:38:03 EST 2019
