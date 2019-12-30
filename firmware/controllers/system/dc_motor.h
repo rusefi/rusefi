@@ -1,6 +1,9 @@
 /**
  *  @file dc_motor.h
+ *
+ * ETB user documentation at https://github.com/rusefi/rusefi_documentation/wiki/HOWTO_electronic_throttle_body
  * 
+ *
  *  @date Dec 22, 2018
  *  @author Matthew Kennedy, (c) 2018
  */
@@ -35,13 +38,8 @@ public:
 class SimplePwm;
 
 /**
- * @brief Represents a DC motor controller (H bridge) with one pin for enable (PWM),
- * and two pins for direction control.
- * 
- * The enable pin is used for PWM and disable, and the two direction pins are used
- * to set the polarity of each half of the H bridge.  setting {dir1,dir2} = 10 should,
- * turn the motor one direction (positive duty), and = 01 should turn the other way (negative
- * duty).
+ * @brief Represents a DC motor controller (H-bridge) with some combination of PWM and on/off control pins.
+ *
  */
 class TwoPinDcMotor : public DcMotor
 {
@@ -54,6 +52,11 @@ public:
     	 */
         PwmDirectionPins,
 		/**
+		  * The control/enable pin is used for PWM and disable, and the two direction pins are used
+		  * to set the polarity of each half of the H bridge.  setting {dir1,dir2} = 10 should,
+		  * turn the motor one direction (positive duty), and = 01 should turn the other way (negative
+		  * duty).
+		 *
 		 * For example VNH2SP30 - three control wires:
 		 * PWM on 'enable' PIN, two binary pins for direction
 		 *

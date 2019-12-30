@@ -2,6 +2,9 @@
  * @file	electronic_throttle.cpp
  * @brief	Electronic Throttle driver
  *
+ *
+ * Limited user documentation at https://github.com/rusefi/rusefi_documentation/wiki/HOWTO_electronic_throttle_body
+ *
  * todo: make this more universal if/when we get other hardware options
  *
  * Sep 2019 two-wire TLE9201 official driving around the block! https://www.youtube.com/watch?v=1vCeICQnbzI
