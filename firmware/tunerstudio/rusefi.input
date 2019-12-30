@@ -2226,6 +2226,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Rise at trigger index",				tachPulseTriggerIndex
 		field = "Pulse duration is duty cycle",			tachPulseDurationAsDutyCycle
 		field = "Pulse duration",						tachPulseDuractionMs
+; todo: finish implementation under #907
+		field = "Pulse per Rev",                        tachPulsePerRev
 
 
 ;			Board->Connection
