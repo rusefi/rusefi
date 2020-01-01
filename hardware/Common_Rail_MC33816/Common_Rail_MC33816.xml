@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>C:/Users/Vista_64_D630/Desktop/rusefi_direct/hardware/Common_Rail_MC33816/Common_Rail_MC33816.sch</source>
-    <date>12/29/2019 4:19:45 PM</date>
+    <date>1/1/2020 6:46:48 AM</date>
     <tool>Eeschema 4.0.7</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -97,7 +97,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -109,7 +109,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -169,7 +169,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -241,7 +241,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -325,7 +325,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -349,7 +349,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JT5R10</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JT5R10CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17724</field>
+        <field name="VEND2,VEND2#">JLCPCB,C247080</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -373,7 +373,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JT5R10</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JT5R10CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17724</field>
+        <field name="VEND2,VEND2#">JLCPCB,C247080</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -505,7 +505,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -541,7 +541,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -908,7 +908,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -920,7 +920,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -980,7 +980,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1040,7 +1040,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">JLCPCB,C17415</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
