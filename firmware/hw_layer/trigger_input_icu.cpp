@@ -87,6 +87,11 @@ void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
 	}
 
 	digital_input_s* input = startDigitalCapture("trigger", brainPin, true);
+	if (input == NULL) {
+		/* error already reported */
+		return;
+	}
+
 	if (isTriggerShaft) {
 		void * arg = (void*) (index == 0);
 		input->setWidthCallback((VoidInt)(void*)shaftWidthCallback, arg);
