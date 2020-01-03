@@ -113,6 +113,9 @@ static void initSpiModules(engine_configuration_s *engineConfiguration) {
 	if (CONFIG(is_enabled_spi_3)) {
 		turnOnSpi(SPI_DEVICE_3);
 	}
+	if (CONFIG(is_enabled_spi_4)) {
+		turnOnSpi(SPI_DEVICE_4);
+	}
 }
 
 /**
@@ -334,6 +337,9 @@ void applyNewHardwareSettings(void) {
 
 	if (isConfigurationChanged(is_enabled_spi_3))
 		stopSpi(SPI_DEVICE_3);
+
+	if (isConfigurationChanged(is_enabled_spi_4))
+		stopSpi(SPI_DEVICE_4);
 
 #if EFI_HD44780_LCD
 	stopHD44780_pins();
