@@ -17,6 +17,7 @@
 #include "pin_repository.h"
 #include "drivers/gpio/tle6240.h"
 #include "drivers/gpio/mc33972.h"
+#include "drivers/gpio/mc33810.h"
 #include "drivers/gpio/tle8888.h"
 
 EXTERN_CONFIG;
