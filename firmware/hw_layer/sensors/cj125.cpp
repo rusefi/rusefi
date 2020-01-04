@@ -15,6 +15,10 @@
 
 #include "adc_inputs.h"
 
+#if EFI_PROD_CODE
+#include "mpu_util.h"
+#endif
+
 //#define CJ125_DEBUG
 //#define CJ125_DEBUG_SPI
 
@@ -39,8 +43,12 @@ static SPIConfig cj125spicfg = {
 		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
-		.cr1 = SPI_CR1_MSTR | SPI_CR1_CPHA,
-		.cr2 = 0 };
+		.cr1 =
+			SPI_CR1_MSTR | SPI_CR1_CPHA |
+			SPI_CR1_8BIT_MODE,
+		.cr2 =
+			SPI_CR2_8BIT_MODE
+};
 
 static volatile int lastSlowAdcCounter = 0;
 
