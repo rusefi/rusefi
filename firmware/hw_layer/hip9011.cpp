@@ -47,6 +47,7 @@
 
 #if EFI_PROD_CODE
 #include "pin_repository.h"
+#include "mpu_util.h"
 #endif
 
 #if EFI_HIP_9011
@@ -84,14 +85,20 @@ static Logging *logger;
 // todo: nicer method which would mention SPI speed explicitly?
 
 #if EFI_PROD_CODE
-static SPIConfig hipSpiCfg = { .circular = false,
-		.end_cb = NULL,
-		.ssport = NULL,
-		.sspad = 0,
-		.cr1 = SPI_CR1_MSTR |
-//SPI_CR1_BR_1 // 5MHz
-		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2,
-		.cr2 = 0};
+static SPIConfig hipSpiCfg = {
+	.circular = false,
+	.end_cb = NULL,
+	.ssport = NULL,
+	.sspad = 0,
+	.cr1 =
+		SPI_CR1_MSTR |
+		SPI_CR1_CPHA |
+		//SPI_CR1_BR_1 // 5MHz
+		SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 |
+		SPI_CR1_8BIT_MODE,
+	.cr2 =
+		SPI_CR2_8BIT_MODE
+};
 #endif /* EFI_PROD_CODE */
 
 static void checkResponse(void) {
