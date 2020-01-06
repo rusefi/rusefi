@@ -318,6 +318,13 @@ void turnOnSpi(spi_device_e device) {
 				engineConfiguration->spi3MisoMode);
 #endif /* STM32_SPI_USE_SPI3 */
 	}
+	if (device == SPI_DEVICE_4) {
+#if STM32_SPI_USE_SPI4
+//		scheduleMsg(&logging, "Turning on SPI4 pins");
+		/* there is no cofiguration fields for SPI4 in engineConfiguration, rely on board init code
+		 * it should set proper functions for SPI4 pins */
+#endif /* STM32_SPI_USE_SPI4 */
+	}
 }
 
 void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,

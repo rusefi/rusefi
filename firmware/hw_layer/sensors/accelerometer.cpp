@@ -34,11 +34,13 @@ static SPIDriver *driver;
  * The slave select line is the pin GPIOE_CS_SPI on the port GPIOE.
  */
 static const SPIConfig accelerometerCfg = {
-  NULL,
-  /* HW dependent part.*/
-  GPIOE,
-  GPIOE_PIN3,
-  SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_CPOL | SPI_CR1_CPHA
+	.spi_bus = NULL,
+	/* HW dependent part.*/
+	.ssport = GPIOE,
+	.sspad = GPIOE_PIN3,
+	.cr1 = SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_CPOL | SPI_CR1_CPHA |
+		SPI_CR1_8BIT_MODE,
+	.cr2 = SPI_CR2_8BIT_MODE
 };
 #endif /* EFI_MEMS */
 

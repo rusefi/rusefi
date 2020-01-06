@@ -41,6 +41,9 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 #define ADC_CR2_SWSTART ((uint32_t)0x40000000)
 #endif
 
+#define SPI_CR1_8BIT_MODE 0
+#define SPI_CR2_8BIT_MODE 0
+
 #define SPI_CR1_16BIT_MODE SPI_CR1_DFF
 #define SPI_CR2_16BIT_MODE 0
 
