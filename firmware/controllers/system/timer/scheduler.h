@@ -30,8 +30,7 @@ private:
 /**
  * This structure holds information about an event scheduled in the future: when to execute what callback with what parameters
  */
-class scheduling_s {
-public:
+struct scheduling_s {
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 	virtual_timer_t timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
@@ -50,8 +49,7 @@ public:
 	action_s action;
 };
 
-class ExecutorInterface {
-public:
+struct ExecutorInterface {
 	/**
 	 * see also scheduleByAngle
 	 */
