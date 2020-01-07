@@ -56,7 +56,7 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 		/**
 		 * in case of zero delay, we should invoke the callback
 		 */
-		callback(param);
+		action.execute();
 		return;
 	}
 
