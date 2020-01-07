@@ -205,7 +205,7 @@ char *getWorkingPageAddr() {
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 }
 
-int getTunerStudioPageSize() {
+static constexpr size_t getTunerStudioPageSize() {
 	return TOTAL_CONFIG_SIZE;
 }
 
@@ -301,6 +301,18 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
 	sr5SendResponse(tsChannel, TS_CRC, (const uint8_t *)addr, size);
 }
 
+// Validate whether the specified offset and count would cause an overrun in the tune.
+// Returns true if an overrun would occur.
+static bool validateOffsetCount(size_t offset, size_t count, ts_channel_s *tsChannel) {
+	if (offset + count > getTunerStudioPageSize()) {
+		scheduleMsg(&tsLogger, "ERROR invalid offset %d count %d", offset, count);
+		tunerStudioError("ERROR: out of range");
+		sendErrorCode(tsChannel);
+		return true;
+	}
+
+	return false;
+}
 
 /**
  * read log file content for rusEfi console
@@ -323,16 +335,8 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	scheduleMsg(&tsLogger, "WRITE CHUNK mode=%d o=%d s=%d", mode, offset, count);
 
-	if (offset >= getTunerStudioPageSize()) {
-		scheduleMsg(&tsLogger, "ERROR invalid offset %d", offset);
-		tunerStudioError("ERROR: out of range");
-		offset = 0;
-	}
-
-	if (count >= getTunerStudioPageSize()) {
-		tunerStudioError("ERROR: unexpected count");
-		scheduleMsg(&tsLogger, "ERROR unexpected count %d", count);
-		count = 0;
+	if (validateOffsetCount(offset, count, tsChannel)) {
+		return;
 	}
 
 	uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
@@ -377,10 +381,7 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 //	scheduleMsg(logger, "Page number %d\r\n", pageId); // we can get a lot of these
 #endif
 
-	if (offset >= getTunerStudioPageSize()) {
-		tunerStudioError("ERROR: out of range2");
-		scheduleMsg(&tsLogger, "ERROR offset %d", offset);
-		offset = 0;
+	if (validateOffsetCount(offset, 1, tsChannel)) {
 		return;
 	}
 
@@ -411,11 +412,7 @@ void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, u
 		return;
 	}
 
-	int size = getTunerStudioPageSize();
-
-	if (size < offset + count) {
-		scheduleMsg(&tsLogger, "invalid offset/count %d/%d", offset, count);
-		sendErrorCode(tsChannel);
+	if (validateOffsetCount(offset, count, tsChannel)) {
 		return;
 	}
 
@@ -633,8 +630,8 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
  * @brief 'Output' command sends out a snapshot of current values
  */
 void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
-	if (sizeof(TunerStudioOutputChannels) < offset + count) {
-		scheduleMsg(&tsLogger, "invalid offset/count %d/%d", offset, count);
+	if (offset + count > sizeof(TunerStudioOutputChannels)) {
+		scheduleMsg(&tsLogger, "ERROR invalid offset %d count %d", offset, count);
 		sendErrorCode(tsChannel);
 		return;
 	}
