@@ -56,8 +56,6 @@ using scaled_angle = scaled_channel<int16_t, PACK_MULT_ANGLE>;			// +-655 degree
 using scaled_voltage = scaled_channel<uint16_t, PACK_MULT_VOLTAGE>;		// 0-65v at 1mV resolution
 using scaled_afr = scaled_channel<uint16_t, PACK_MULT_AFR>;			// 0-65afr at 0.001 resolution
 
-#define PAGE_COUNT 1
-
 typedef struct {
 	uint16_t values[EGT_CHANNEL_COUNT];
 } egt_values_s;
