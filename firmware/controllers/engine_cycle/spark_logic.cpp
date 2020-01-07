@@ -321,7 +321,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		engine->executor.scheduleForLater(sUp, chargeDelayUs, { (schfunc_t) &turnSparkPinHigh, iEvent });
+		engine->executor.scheduleForLater(sUp, chargeDelayUs, { &turnSparkPinHigh, iEvent });
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
@@ -332,7 +332,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	assertAngleRange(sparkAngle, "findAngle#a5", CUSTOM_ERR_6549);
 
 
-	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, sparkAngle, { (schfunc_t)fireSparkAndPrepareNextSchedule, iEvent } PASS_ENGINE_PARAMETER_SUFFIX);
+	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, sparkAngle, { fireSparkAndPrepareNextSchedule, iEvent } PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (scheduled) {
 #if SPARK_EXTREME_LOGGING

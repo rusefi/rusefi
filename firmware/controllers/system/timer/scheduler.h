@@ -18,6 +18,11 @@ public:
 	action_s(schfunc_t callback) : action_s(callback, nullptr) { }
 	action_s(schfunc_t callback, void *param) : callback(callback), param(param) { }
 
+	// Allow any function that takes a single pointer parameter, so long as param is also of the same pointer type.
+	// This constructor means you shouldn't ever have to cast to schfunc_t on your own.
+	template <typename TArg>
+	action_s(void (*callback)(TArg*), TArg* param) : callback((schfunc_t)callback), param(param) { }
+
 	void execute();
 	schfunc_t getCallback() const;
 	void * getArgument() const;
