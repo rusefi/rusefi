@@ -19,7 +19,7 @@ EXTERN_ENGINE;
 
 static scheduling_s tachTurnSignalOff;
 
-static void turnTachPinLow(void) {
+static void turnTachPinLow(void *) {
 	enginePins.tachOut.setLow();
 }
 
@@ -37,7 +37,7 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	} else {
 		durationMs = engineConfiguration->tachPulseDuractionMs;
 	}
-	engine->executor.scheduleForLater(&tachTurnSignalOff, (int)MS2US(durationMs), (schfunc_t) &turnTachPinLow);
+	engine->executor.scheduleForLater(&tachTurnSignalOff, (int)MS2US(durationMs), &turnTachPinLow);
 }
 
 void initTachometer(void) {

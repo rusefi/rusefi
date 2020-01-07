@@ -223,7 +223,7 @@ void setHip9011FrankensoPinout(void) {
 	}
 }
 
-static void startIntegration(void) {
+static void startIntegration(void *) {
 	if (instance.state == READY_TO_INTEGRATE) {
 		/**
 		 * SPI communication is only allowed while not integrating, so we postpone the exchange
@@ -234,7 +234,7 @@ static void startIntegration(void) {
 	}
 }
 
-static void endIntegration(void) {
+static void endIntegration(void *) {
 	/**
 	 * isIntegrating could be 'false' if an SPI command was pending thus we did not integrate during this
 	 * engine cycle
@@ -262,12 +262,12 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
 	scheduleByAngle(&startTimer[structIndex], engineConfiguration->knockDetectionWindowStart,
-			(schfunc_t) &startIntegration);
+			&startIntegration);
 #if EFI_PROD_CODE
 	hipLastExecutionCount = lastExecutionCount;
 #endif /* EFI_PROD_CODE */
 	scheduleByAngle(&endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd,
-			(schfunc_t) &endIntegration);
+			&endIntegration);
 	engine->m.hipCbTime = getTimeNowLowerNt() - engine->m.beforeHipCb;
 }
 
