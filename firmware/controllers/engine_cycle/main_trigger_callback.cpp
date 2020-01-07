@@ -186,7 +186,7 @@ void seTurnPinLow(InjectionEvent *event) {
 	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, InjectionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, action_s action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if FUEL_MATH_EXTREME_LOGGING
 	InjectorOutputPin *param = event->outputs[0];
 //	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
@@ -196,7 +196,7 @@ static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, sc
 	printf("seScheduleByTime %s %s %d sch=%d\r\n", direction, param->name, (int)time, (int)scheduling);
 #endif /* FUEL_MATH_EXTREME_LOGGING || EFI_UNIT_TEST */
 
-	engine->executor.scheduleByTimestamp(scheduling, time, callback, event);
+	engine->executor.scheduleByTimestamp(scheduling, time, action);
 }
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
@@ -278,9 +278,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 // todo: sequential need this logic as well, just do not forget to clear flag		event->isScheduled = true;
 		scheduling_s * sDown = &event->endOfInjectionEvent;
 
-		engine->executor.scheduleForLater(sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
+		engine->executor.scheduleForLater(sUp, (int) injectionStartDelayUs, { (schfunc_t) &startSimultaniousInjection, engine });
 		engine->executor.scheduleForLater(sDown, (int) injectionStartDelayUs + durationUs,
-					(schfunc_t) &endSimultaniousInjection, event);
+					{ (schfunc_t) &endSimultaniousInjection, event });
 
 	} else {
 #if EFI_UNIT_TEST
@@ -327,10 +327,10 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
 	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 		} else {
-			sescheduleByTimestamp(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, event PASS_ENGINE_PARAMETER_SUFFIX);
+			sescheduleByTimestamp(sUp, turnOnTime, { (schfunc_t) &seTurnPinHigh, event } PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 		efitimeus_t turnOffTime = nowUs + (int) (injectionStartDelayUs + durationUs);
-		sescheduleByTimestamp(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, event PASS_ENGINE_PARAMETER_SUFFIX);
+		sescheduleByTimestamp(sDown, turnOffTime, { (schfunc_t) &seTurnPinLow, event } PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -561,7 +561,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		if (pulseLength > 0) {
 			startSimultaniousInjection(engine);
 			efitimeus_t turnOffDelayUs = (efitimeus_t)efiRound(MS2US(pulseLength), 1.0f);
-			engine->executor.scheduleForLater(sDown, turnOffDelayUs, (schfunc_t) &endSimultaniousInjectionOnlyTogglePins, engine);
+			engine->executor.scheduleForLater(sDown, turnOffDelayUs, { (schfunc_t) &endSimultaniousInjectionOnlyTogglePins, engine });
 		}
 	}
 #if EFI_PROD_CODE

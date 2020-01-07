@@ -33,7 +33,7 @@
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
-void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
+void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
 	scheduleForLater(scheduling, timeUs - getTimeNowUs(), callback, param);
 }
 
@@ -50,7 +50,7 @@ static void timerCallback(scheduling_s *scheduling) {
 	scheduling->action.execute();
 }
 
-static void doScheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
 	int delaySt = MY_US2ST(delayUs);
 	if (delaySt <= 0) {
 		/**
@@ -61,7 +61,7 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t 
 	}
 
 	bool alreadyLocked = lockAnyContext();
-	scheduling->action.setAction(callback, param);
+	scheduling->action = action;
 	int isArmed = chVTIsArmedI(&scheduling->timer);
 	if (isArmed) {
 		/**
@@ -84,8 +84,8 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t 
 	}
 }
 
-void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	doScheduleForLater(scheduling, delayUs, callback, param);
+void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
+	doScheduleForLater(scheduling, delayUs, action);
 }
 
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */

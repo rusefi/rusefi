@@ -24,5 +24,5 @@ int isIgnitionTimingError(void);
 bool scheduleOrQueue(AngleBasedEvent *event,
 		uint32_t trgEventIndex,
 		angle_t angle,
-		schfunc_t callback,
-		void *param DECLARE_ENGINE_PARAMETER_SUFFIX);
+		action_s action
+		DECLARE_ENGINE_PARAMETER_SUFFIX);

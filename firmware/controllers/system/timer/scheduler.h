@@ -55,6 +55,6 @@ public:
 	/**
 	 * see also scheduleByAngle
 	 */
-	virtual void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) = 0;
-	virtual void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) = 0;
+	virtual void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) = 0;
+	virtual void scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) = 0;
 };
