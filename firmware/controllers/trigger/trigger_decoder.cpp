@@ -172,7 +172,7 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 	}
 }
 
-efitime_t TriggerState::getTotalEventCounter() const {
+int64_t TriggerState::getTotalEventCounter() const {
 	return totalEventCountBase + currentCycle.current_index;
 }
 
@@ -188,7 +188,7 @@ void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PA
 	}
 }
 
-float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndexOut, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndexOut, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
 	timeOfLastEvent[current_index] = nowNt;
 	/**
@@ -236,7 +236,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndexOut, 
 	return instantRpm;
 }
 
-void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (shaft_is_synchronized) {
 		return;
 	}
@@ -250,7 +250,7 @@ void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitime_t 
 	spinningEvents[spinningEventIndex++] = nowNt;
 }
 
-void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerStateWithRunningStatistics::runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (engineConfiguration->debugMode == DBG_INSTANT_RPM) {
 		instantRpm = calculateInstantRpm(NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
@@ -385,7 +385,7 @@ void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-		efitime_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		efitick_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setShaftSynchronized(true);
 	// this call would update duty cycle values
 	nextTriggerEvent()
@@ -418,7 +418,7 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
  */
 void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCallback,
 		TriggerStateListener * triggerStateListener,
-		trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		trigger_event_e const signal, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::DecodeTriggerEvent, static_cast<uint8_t>(signal));
 	
 	bool useOnlyRisingEdgeForTrigger = CONFIG(useOnlyRisingEdgeForTrigger);
@@ -441,7 +441,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 
 	efiAssertVoid(CUSTOM_OBD_93, toothed_previous_time <= nowNt, "toothed_previous_time after nowNt");
 
-	efitime_t currentDurationLong = getCurrentGapDuration(nowNt);
+	efitick_t currentDurationLong = getCurrentGapDuration(nowNt);
 
 	/**
 	 * For performance reasons, we want to work with 32 bit values. If there has been more then
@@ -562,6 +562,12 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 #if EFI_PROD_CODE || EFI_SIMULATOR
 			if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !silentTriggerError)) {
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
+					float ratioFrom = TRIGGER_WAVEFORM(syncronizationRatioFrom[i]);
+					if (cisnan(ratioFrom)) {
+						// we do not track gap at this depth
+						continue;
+					}
+
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					if (cisnan(gap)) {
 						scheduleMsg(logger, "index=%d NaN gap, you have noise issues?",
@@ -571,7 +577,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							i,
 							gap,
-							TRIGGER_WAVEFORM(syncronizationRatioFrom[i]),
+							ratioFrom,
 							TRIGGER_WAVEFORM(syncronizationRatioTo[i]),
 							boolToString(someSortOfTriggerError));
 					}
@@ -760,7 +766,7 @@ void initTriggerDecoderLogger(Logging *sharedLogger) {
 	logger = sharedLogger;
 }
 
-void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerState::runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(nowNt);
 	// empty base implementation
 }

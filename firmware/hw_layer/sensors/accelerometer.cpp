@@ -34,11 +34,13 @@ static SPIDriver *driver;
  * The slave select line is the pin GPIOE_CS_SPI on the port GPIOE.
  */
 static const SPIConfig accelerometerCfg = {
-  NULL,
-  /* HW dependent part.*/
-  GPIOE,
-  GPIOE_PIN3,
-  SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_CPOL | SPI_CR1_CPHA
+	.spi_bus = NULL,
+	/* HW dependent part.*/
+	.ssport = GPIOE,
+	.sspad = GPIOE_PIN3,
+	.cr1 = SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_CPOL | SPI_CR1_CPHA |
+		SPI_CR1_8BIT_MODE,
+	.cr2 = SPI_CR2_8BIT_MODE
 };
 #endif /* EFI_MEMS */
 
@@ -61,7 +63,7 @@ class AccelController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	AccelController() : PeriodicController("Acc SPI") { }
 private:
-	void PeriodicTask(efitime_t nowNt) override	{
+	void PeriodicTask(efitick_t nowNt) override	{
 		// has to be a thread since we want to use blocking method - blocking method only available in threads, not in interrupt handler
 		// todo: migrate to async SPI API?
 		engine->sensors.accelerometer.x = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTX);

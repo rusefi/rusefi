@@ -41,7 +41,8 @@ class SerialAutoChecker implements Runnable {
                 return;
             String message = new String(response, 1, response.length - 1);
             System.out.println("Got " + message + " from " + serialPort);
-            if (message.startsWith(Fields.TS_SIGNATURE)) {
+            String signatureWithoutMinorVersion = Fields.TS_SIGNATURE.substring(0, Fields.TS_SIGNATURE.length() - 2);
+            if (message.startsWith(signatureWithoutMinorVersion)) {
                 result.set(serialPort);
                 portFound.countDown();
             }

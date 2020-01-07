@@ -1,4 +1,4 @@
-update=5/5/2019 5:23:18 PM
+update=12/29/2019 9:57:06 AM
 version=1
 last_client=kicad
 [cvpcb]
@@ -64,7 +64,7 @@ LibName30=mc33816
 [schematic_editor]
 version=1
 PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
-PlotDirectoryName=
+PlotDirectoryName=./
 SubpartIdSeparator=0
 SubpartFirstId=65
 NetFmtName=Pcbnew

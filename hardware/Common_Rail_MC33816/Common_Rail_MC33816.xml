@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/Common_Rail_MC33816/Common_Rail_MC33816.sch</source>
-    <date>8/12/2019 6:38:53 AM</date>
+    <source>C:/Users/Vista_64_D630/Desktop/rusefi_direct/hardware/Common_Rail_MC33816/Common_Rail_MC33816.sch</source>
+    <date>1/1/2020 6:46:48 AM</date>
     <tool>Eeschema 4.0.7</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title>Common Rail MC33816</title>
         <company>rusEFI.com</company>
-        <rev>0.2</rev>
+        <rev>0.3</rev>
         <date>2019-08-12</date>
         <source>Common_Rail_MC33816.sch</source>
         <comment number="1" value=""/>
@@ -37,7 +37,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -73,7 +73,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -85,7 +85,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -97,7 +97,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -109,7 +109,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -121,7 +121,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -133,7 +133,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -169,7 +169,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -181,7 +181,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -193,7 +193,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -205,7 +205,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -241,7 +241,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -253,7 +253,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -265,7 +265,7 @@
       <fields>
         <field name="MFG,MFG#">Panasonic,ERJ-8CWFR015V</field>
         <field name="VEND1,VEND1#">DIGI,P0.015BVCT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C201281</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -325,7 +325,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -337,7 +337,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,CGA4C2C0G2A471J060AA</field>
         <field name="VEND1,VEND1#">DIGI,445-6953-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1743</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -349,7 +349,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JT5R10</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JT5R10CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C247080</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -361,7 +361,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -373,7 +373,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JT5R10</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JT5R10CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C247080</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -385,7 +385,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -397,7 +397,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -505,7 +505,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -517,7 +517,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -541,7 +541,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -553,7 +553,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -565,7 +565,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -577,7 +577,7 @@
       <fields>
         <field name="MFG,MFG#">Panasonic,ERJ-8CWFR015V</field>
         <field name="VEND1,VEND1#">DIGI,P0.015BVCT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C201281</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -589,7 +589,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -613,7 +613,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -637,7 +637,7 @@
       <fields>
         <field name="MFG,MFG#">AVX,08055C104MAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-3351-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C49678</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -649,7 +649,7 @@
       <fields>
         <field name="MFG,MFG#">AVX,08055C104MAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-3351-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C49678</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -661,7 +661,7 @@
       <fields>
         <field name="MFG,MFG#">Taiyo Yuden,TMK212AB7475KG-T</field>
         <field name="VEND1,VEND1#">DIGI,587-2990-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1779</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -673,7 +673,7 @@
       <fields>
         <field name="MFG,MFG#">AVX,08055C104MAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-3351-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C49678</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -685,7 +685,7 @@
       <fields>
         <field name="MFG,MFG#">AVX,08055C104MAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-3351-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C49678</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -697,7 +697,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB105</field>
         <field name="VEND1,VEND1#">DIGI,311-1456-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C28323</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -709,7 +709,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB334</field>
         <field name="VEND1,VEND1#">DIGI,311-3385-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1740</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -721,7 +721,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB334</field>
         <field name="VEND1,VEND1#">DIGI,311-3385-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1740</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -848,7 +848,7 @@
       <fields>
         <field name="MFG,MFG#">Kemet,C0805C331J1GACTU</field>
         <field name="VEND1,VEND1#">DIGI,399-1131-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C51207</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -884,7 +884,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -896,7 +896,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -908,7 +908,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -920,7 +920,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -932,7 +932,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -944,7 +944,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -980,7 +980,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -992,7 +992,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1004,7 +1004,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1016,7 +1016,7 @@
       <fields>
         <field name="MFG,MFG#">TDK,C2012C0G2A472J125AA</field>
         <field name="VEND1,VEND1#">DIGI,445-2324-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C21217</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1040,7 +1040,7 @@
       <fields>
         <field name="MFG,MFG#">Stackpole,RMCF0805JG10R0</field>
         <field name="VEND1,VEND1#">DIGI,RMCF0805JG10R0CT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C17403</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1052,7 +1052,7 @@
       <fields>
         <field name="MFG,MFG#">avx,08051C102KAT2A</field>
         <field name="VEND1,VEND1#">DIGI,478-1352-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C209838</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1064,7 +1064,7 @@
       <fields>
         <field name="MFG,MFG#">Panasonic,ERJ-8CWFR015V</field>
         <field name="VEND1,VEND1#">DIGI,P0.015BVCT-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C201281</field>
       </fields>
       <libsource lib="device" part="R"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1076,7 +1076,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB334</field>
         <field name="VEND1,VEND1#">DIGI,311-3385-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1740</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1102,7 +1102,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB334</field>
         <field name="VEND1,VEND1#">DIGI,311-3385-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1740</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1114,7 +1114,7 @@
       <fields>
         <field name="MFG,MFG#">Yageo,CC0805KKX7R8BB334</field>
         <field name="VEND1,VEND1#">DIGI,311-3385-1-ND</field>
-        <field name="VEND2,VEND2#">,</field>
+        <field name="VEND2,VEND2#">JLCPCB,C1740</field>
       </fields>
       <libsource lib="device" part="C"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1207,7 +1207,6 @@
       <fields>
         <field name="MFG,MFG#">TE,282834-2</field>
         <field name="VEND1,VEND1#">DIGI,A98333-ND</field>
-        <field name="VEND2,VEND2#">tbd,tbd</field>
       </fields>
       <libsource lib="conn" part="Conn_01x02"/>
       <sheetpath names="/" tstamps="/"/>
@@ -1496,6 +1495,7 @@
         <pin num="63" name="S_HS1" type="input"/>
         <pin num="64" name="IRQ" type="input"/>
         <pin num="65" name="PGND" type="input"/>
+        <pin num="~" name="VPWR" type="input"/>
       </pins>
     </libpart>
     <libpart lib="device" part="Q_NMOS_GDS">
@@ -1551,23 +1551,23 @@
     </libpart>
   </libparts>
   <libraries>
-    <library logical="device">
-      <uri>C:\Program Files\KiCad\share\kicad\library\device.lib</uri>
-    </library>
     <library logical="conn">
       <uri>C:\Program Files\KiCad\share\kicad\library\conn.lib</uri>
     </library>
     <library logical="mc33816">
-      <uri>C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\rusefi_lib\mc33816.lib</uri>
+      <uri>C:\Users\Vista_64_D630\Desktop\rusefi_direct\hardware\rusefi_lib\mc33816.lib</uri>
     </library>
     <library logical="Common_Rail_MC33816-cache">
-      <uri>C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\Common_Rail_MC33816\Common_Rail_MC33816-cache.lib</uri>
+      <uri>C:\Users\Vista_64_D630\Desktop\rusefi_direct\hardware\Common_Rail_MC33816\Common_Rail_MC33816-cache.lib</uri>
+    </library>
+    <library logical="device">
+      <uri>C:\Program Files\KiCad\share\kicad\library\device.lib</uri>
     </library>
   </libraries>
   <nets>
     <net code="1" name="/G_L_BOOST">
-      <node ref="R11" pin="2"/>
       <node ref="U4" pin="41"/>
+      <node ref="R11" pin="2"/>
     </net>
     <net code="2" name="Net-(C57-Pad2)">
       <node ref="Q9" pin="1"/>
@@ -1603,19 +1603,19 @@
     </net>
     <net code="9" name="/VCCIO">
       <node ref="C10" pin="1"/>
-      <node ref="U4" pin="17"/>
       <node ref="J4" pin="2"/>
+      <node ref="U4" pin="17"/>
       <node ref="J6" pin="2"/>
       <node ref="J6" pin="1"/>
     </net>
     <net code="10" name="/VCC2P5">
-      <node ref="C8" pin="1"/>
-      <node ref="C9" pin="1"/>
       <node ref="U4" pin="20"/>
+      <node ref="C9" pin="1"/>
+      <node ref="C8" pin="1"/>
     </net>
     <net code="11" name="/BANK2_BAT">
-      <node ref="U4" pin="57"/>
       <node ref="C41" pin="2"/>
+      <node ref="U4" pin="57"/>
       <node ref="Q5" pin="3"/>
       <node ref="C37" pin="2"/>
       <node ref="D11" pin="3"/>
@@ -1629,50 +1629,50 @@
       <node ref="R24" pin="2"/>
     </net>
     <net code="14" name="Net-(C71-Pad2)">
+      <node ref="Q12" pin="1"/>
       <node ref="C71" pin="2"/>
       <node ref="R24" pin="1"/>
-      <node ref="Q12" pin="1"/>
     </net>
     <net code="15" name="/G_LS6">
-      <node ref="U4" pin="50"/>
       <node ref="R23" pin="2"/>
+      <node ref="U4" pin="50"/>
     </net>
     <net code="16" name="Net-(C40-Pad1)">
       <node ref="U4" pin="58"/>
       <node ref="C40" pin="1"/>
     </net>
     <net code="17" name="/INJ_B1_HIGH">
-      <node ref="C36" pin="2"/>
       <node ref="D10" pin="2"/>
       <node ref="C43" pin="1"/>
+      <node ref="C40" pin="2"/>
       <node ref="C44" pin="1"/>
       <node ref="U4" pin="60"/>
       <node ref="Q4" pin="3"/>
       <node ref="J8" pin="1"/>
+      <node ref="C36" pin="2"/>
       <node ref="J9" pin="1"/>
-      <node ref="C40" pin="2"/>
     </net>
     <net code="18" name="Net-(C42-Pad1)">
       <node ref="U4" pin="52"/>
       <node ref="C42" pin="1"/>
     </net>
     <net code="19" name="/INJ_B2_HIGH">
-      <node ref="J11" pin="1"/>
-      <node ref="C46" pin="1"/>
-      <node ref="J10" pin="1"/>
-      <node ref="C42" pin="2"/>
-      <node ref="D11" pin="2"/>
+      <node ref="Q6" pin="3"/>
       <node ref="C45" pin="1"/>
       <node ref="C38" pin="2"/>
+      <node ref="C46" pin="1"/>
+      <node ref="D11" pin="2"/>
+      <node ref="C42" pin="2"/>
+      <node ref="J10" pin="1"/>
       <node ref="U4" pin="54"/>
-      <node ref="Q6" pin="3"/>
+      <node ref="J11" pin="1"/>
     </net>
     <net code="20" name="/INJ4_LOW">
-      <node ref="Q10" pin="2"/>
-      <node ref="C50" pin="1"/>
-      <node ref="U4" pin="35"/>
       <node ref="J11" pin="2"/>
+      <node ref="U4" pin="35"/>
+      <node ref="C50" pin="1"/>
       <node ref="D15" pin="2"/>
+      <node ref="Q10" pin="2"/>
     </net>
     <net code="21" name="/P_B1_SENSE">
       <node ref="TP101" pin="1"/>
@@ -1685,28 +1685,28 @@
       <node ref="C59" pin="1"/>
     </net>
     <net code="22" name="/P_SENSE_PUMP">
-      <node ref="R26" pin="1"/>
-      <node ref="C73" pin="1"/>
-      <node ref="C71" pin="1"/>
       <node ref="Q12" pin="3"/>
       <node ref="U4" pin="30"/>
+      <node ref="C71" pin="1"/>
+      <node ref="C73" pin="1"/>
+      <node ref="R26" pin="1"/>
       <node ref="TP105" pin="1"/>
     </net>
     <net code="23" name="/Vboost">
       <node ref="C27" pin="1"/>
       <node ref="D9" pin="2"/>
-      <node ref="D9" pin="1"/>
       <node ref="C21" pin="1"/>
       <node ref="D14" pin="1"/>
       <node ref="C22" pin="1"/>
       <node ref="Q6" pin="2"/>
+      <node ref="D9" pin="1"/>
       <node ref="C25" pin="1"/>
       <node ref="D15" pin="1"/>
       <node ref="R10" pin="1"/>
       <node ref="D12" pin="1"/>
+      <node ref="D13" pin="1"/>
       <node ref="Q4" pin="2"/>
       <node ref="U4" pin="48"/>
-      <node ref="D13" pin="1"/>
     </net>
     <net code="24" name="Net-(C56-Pad2)">
       <node ref="R18" pin="1"/>
@@ -1718,27 +1718,27 @@
       <node ref="U4" pin="62"/>
     </net>
     <net code="26" name="/INJ1_LOW">
-      <node ref="Q7" pin="2"/>
-      <node ref="C47" pin="1"/>
-      <node ref="D12" pin="2"/>
       <node ref="U4" pin="37"/>
+      <node ref="Q7" pin="2"/>
+      <node ref="D12" pin="2"/>
+      <node ref="C47" pin="1"/>
       <node ref="J8" pin="2"/>
     </net>
     <net code="27" name="/G_L_INJ1">
-      <node ref="R17" pin="2"/>
       <node ref="U4" pin="46"/>
+      <node ref="R17" pin="2"/>
     </net>
     <net code="28" name="Net-(C39-Pad1)">
       <node ref="U4" pin="61"/>
       <node ref="C39" pin="1"/>
     </net>
     <net code="29" name="/DBG">
-      <node ref="U4" pin="18"/>
       <node ref="J7" pin="2"/>
+      <node ref="U4" pin="18"/>
     </net>
     <net code="30" name="/Vbuck">
-      <node ref="D9" pin="3"/>
       <node ref="L2" pin="1"/>
+      <node ref="D9" pin="3"/>
       <node ref="R9" pin="1"/>
       <node ref="Q2" pin="2"/>
     </net>
@@ -1751,12 +1751,12 @@
       <node ref="R18" pin="2"/>
     </net>
     <net code="33" name="Net-(C64-Pad2)">
-      <node ref="C64" pin="2"/>
       <node ref="U4" pin="49"/>
+      <node ref="C64" pin="2"/>
     </net>
     <net code="34" name="Net-(C55-Pad2)">
-      <node ref="C55" pin="2"/>
       <node ref="R17" pin="1"/>
+      <node ref="C55" pin="2"/>
       <node ref="Q7" pin="1"/>
     </net>
     <net code="35" name="Net-(C36-Pad1)">
@@ -1773,13 +1773,13 @@
       <node ref="R10" pin="2"/>
     </net>
     <net code="38" name="/OA_2">
-      <node ref="J4" pin="3"/>
       <node ref="U4" pin="23"/>
+      <node ref="J4" pin="3"/>
     </net>
     <net code="39" name="Net-(C35-Pad1)">
-      <node ref="R13" pin="1"/>
       <node ref="Q3" pin="1"/>
       <node ref="C35" pin="1"/>
+      <node ref="R13" pin="1"/>
     </net>
     <net code="40" name="/OA_1">
       <node ref="J4" pin="1"/>
@@ -1796,34 +1796,34 @@
       <node ref="C38" pin="1"/>
     </net>
     <net code="43" name="Net-(C41-Pad1)">
-      <node ref="C41" pin="1"/>
       <node ref="U4" pin="55"/>
+      <node ref="C41" pin="1"/>
     </net>
     <net code="44" name="/BANK1_BAT">
       <node ref="U4" pin="63"/>
+      <node ref="C35" pin="2"/>
+      <node ref="C39" pin="2"/>
       <node ref="D10" pin="3"/>
       <node ref="Q3" pin="3"/>
-      <node ref="C39" pin="2"/>
-      <node ref="C35" pin="2"/>
     </net>
     <net code="45" name="/PUMP_LOW">
-      <node ref="U4" pin="33"/>
       <node ref="J12" pin="2"/>
       <node ref="Q12" pin="2"/>
-      <node ref="D17" pin="2"/>
       <node ref="C67" pin="1"/>
+      <node ref="D17" pin="2"/>
+      <node ref="U4" pin="33"/>
     </net>
     <net code="46" name="/RESETB">
       <node ref="J3" pin="13"/>
       <node ref="U4" pin="3"/>
     </net>
     <net code="47" name="/START1">
-      <node ref="U4" pin="4"/>
       <node ref="J3" pin="11"/>
+      <node ref="U4" pin="4"/>
     </net>
     <net code="48" name="/START2">
-      <node ref="J3" pin="9"/>
       <node ref="U4" pin="5"/>
+      <node ref="J3" pin="9"/>
     </net>
     <net code="49" name="/START3">
       <node ref="J3" pin="7"/>
@@ -1833,215 +1833,218 @@
       <node ref="U4" pin="43"/>
     </net>
     <net code="51" name="/MOSI">
-      <node ref="J3" pin="6"/>
       <node ref="U4" pin="14"/>
+      <node ref="J3" pin="6"/>
     </net>
     <net code="52" name="Net-(U4-Pad34)">
       <node ref="U4" pin="34"/>
     </net>
     <net code="53" name="/IRQB">
-      <node ref="J4" pin="5"/>
       <node ref="U4" pin="64"/>
+      <node ref="J4" pin="5"/>
     </net>
     <net code="54" name="/MISO">
-      <node ref="J3" pin="4"/>
       <node ref="U4" pin="15"/>
+      <node ref="J3" pin="4"/>
     </net>
     <net code="55" name="/SCLK">
-      <node ref="J3" pin="8"/>
       <node ref="U4" pin="16"/>
+      <node ref="J3" pin="8"/>
     </net>
     <net code="56" name="/START4">
-      <node ref="U4" pin="7"/>
       <node ref="J3" pin="5"/>
+      <node ref="U4" pin="7"/>
     </net>
     <net code="57" name="/START5">
-      <node ref="U4" pin="8"/>
       <node ref="J3" pin="3"/>
+      <node ref="U4" pin="8"/>
     </net>
     <net code="58" name="/START6">
-      <node ref="J3" pin="1"/>
       <node ref="U4" pin="9"/>
+      <node ref="J3" pin="1"/>
     </net>
-    <net code="59" name="/FLAG_0">
+    <net code="59" name="Net-(U4-Pad~)">
+      <node ref="U4" pin="~"/>
+    </net>
+    <net code="60" name="/FLAG_0">
       <node ref="U4" pin="10"/>
       <node ref="J4" pin="7"/>
     </net>
-    <net code="60" name="/FLAG_1">
+    <net code="61" name="/FLAG_1">
       <node ref="U4" pin="11"/>
       <node ref="J4" pin="9"/>
     </net>
-    <net code="61" name="/FLAG_2">
-      <node ref="U4" pin="12"/>
+    <net code="62" name="/FLAG_2">
       <node ref="J4" pin="11"/>
+      <node ref="U4" pin="12"/>
     </net>
-    <net code="62" name="/CSB">
+    <net code="63" name="/CSB">
       <node ref="J3" pin="2"/>
       <node ref="U4" pin="13"/>
     </net>
-    <net code="63" name="/INJ3_LOW">
+    <net code="64" name="/INJ3_LOW">
       <node ref="U4" pin="36"/>
       <node ref="C49" pin="1"/>
       <node ref="D14" pin="2"/>
       <node ref="Q9" pin="2"/>
       <node ref="J10" pin="2"/>
     </net>
-    <net code="64" name="/PUMP_HIGH">
-      <node ref="Q11" pin="3"/>
+    <net code="65" name="/PUMP_HIGH">
       <node ref="U4" pin="51"/>
-      <node ref="C64" pin="1"/>
       <node ref="J12" pin="1"/>
-      <node ref="C63" pin="2"/>
+      <node ref="Q11" pin="3"/>
+      <node ref="C64" pin="1"/>
       <node ref="C65" pin="1"/>
       <node ref="D16" pin="1"/>
+      <node ref="C63" pin="2"/>
     </net>
-    <net code="65" name="/DBG_EXT2">
-      <node ref="J7" pin="1"/>
+    <net code="66" name="/DBG_EXT2">
       <node ref="J3" pin="10"/>
+      <node ref="J7" pin="1"/>
     </net>
-    <net code="66" name="/DBG_EXT1">
+    <net code="67" name="/DBG_EXT1">
       <node ref="J7" pin="3"/>
       <node ref="J4" pin="12"/>
     </net>
-    <net code="67" name="/VCCP">
+    <net code="68" name="/VCCP">
       <node ref="C13" pin="1"/>
-      <node ref="C12" pin="1"/>
       <node ref="J4" pin="4"/>
+      <node ref="C12" pin="1"/>
       <node ref="U4" pin="40"/>
     </net>
-    <net code="68" name="/CLK">
-      <node ref="U4" pin="1"/>
+    <net code="69" name="/CLK">
       <node ref="J5" pin="1"/>
       <node ref="J5" pin="2"/>
+      <node ref="U4" pin="1"/>
       <node ref="Y1" pin="3"/>
     </net>
-    <net code="69" name="/EXT_CLK">
+    <net code="70" name="/EXT_CLK">
       <node ref="J4" pin="8"/>
       <node ref="J5" pin="3"/>
     </net>
-    <net code="70" name="Net-(J3-Pad14)">
+    <net code="71" name="Net-(J3-Pad14)">
       <node ref="J3" pin="14"/>
     </net>
-    <net code="71" name="/INJ2_LOW">
-      <node ref="J9" pin="2"/>
-      <node ref="D13" pin="2"/>
-      <node ref="U4" pin="38"/>
+    <net code="72" name="/INJ2_LOW">
       <node ref="C48" pin="1"/>
+      <node ref="D13" pin="2"/>
       <node ref="Q8" pin="2"/>
+      <node ref="J9" pin="2"/>
+      <node ref="U4" pin="38"/>
     </net>
-    <net code="72" name="/VBAT_EXT">
+    <net code="73" name="/VBAT_EXT">
       <node ref="J4" pin="6"/>
     </net>
-    <net code="73" name="/3.3V">
+    <net code="74" name="/3.3V">
       <node ref="Y1" pin="4"/>
       <node ref="Y1" pin="1"/>
       <node ref="J14" pin="2"/>
     </net>
-    <net code="74" name="/5V">
+    <net code="75" name="/5V">
       <node ref="U4" pin="21"/>
       <node ref="J6" pin="3"/>
       <node ref="J14" pin="3"/>
       <node ref="C11" pin="1"/>
     </net>
-    <net code="75" name="/P_SENSE_BOOST">
-      <node ref="C23" pin="2"/>
-      <node ref="C26" pin="1"/>
+    <net code="76" name="/P_SENSE_BOOST">
+      <node ref="C21" pin="2"/>
       <node ref="C28" pin="1"/>
       <node ref="R12" pin="1"/>
+      <node ref="C23" pin="2"/>
       <node ref="C22" pin="2"/>
       <node ref="C25" pin="2"/>
       <node ref="C27" pin="2"/>
-      <node ref="C21" pin="2"/>
       <node ref="TP23" pin="1"/>
-      <node ref="U4" pin="32"/>
-      <node ref="Q2" pin="3"/>
       <node ref="C24" pin="2"/>
+      <node ref="Q2" pin="3"/>
+      <node ref="C26" pin="1"/>
+      <node ref="U4" pin="32"/>
     </net>
-    <net code="76" name="/P_B2_SENSE">
+    <net code="77" name="/P_B2_SENSE">
       <node ref="C60" pin="1"/>
-      <node ref="Q9" pin="3"/>
-      <node ref="TP103" pin="1"/>
       <node ref="R22" pin="1"/>
       <node ref="C58" pin="1"/>
-      <node ref="Q10" pin="3"/>
       <node ref="U4" pin="28"/>
+      <node ref="Q9" pin="3"/>
+      <node ref="Q10" pin="3"/>
       <node ref="C57" pin="1"/>
+      <node ref="TP103" pin="1"/>
     </net>
-    <net code="77" name="/Vbat">
-      <node ref="Q5" pin="2"/>
-      <node ref="L1" pin="2"/>
-      <node ref="J15" pin="1"/>
-      <node ref="C16" pin="1"/>
-      <node ref="D17" pin="1"/>
-      <node ref="Q3" pin="2"/>
+    <net code="78" name="/Vbat">
       <node ref="U4" pin="39"/>
       <node ref="Q11" pin="2"/>
+      <node ref="Q3" pin="2"/>
+      <node ref="J15" pin="1"/>
+      <node ref="L1" pin="2"/>
       <node ref="C14" pin="1"/>
+      <node ref="D17" pin="1"/>
+      <node ref="Q5" pin="2"/>
+      <node ref="C16" pin="1"/>
     </net>
-    <net code="78" name="GND">
-      <node ref="C47" pin="2"/>
+    <net code="79" name="GND">
+      <node ref="C43" pin="2"/>
+      <node ref="TP24" pin="1"/>
+      <node ref="TP106" pin="1"/>
+      <node ref="C14" pin="2"/>
       <node ref="C59" pin="2"/>
       <node ref="D11" pin="1"/>
+      <node ref="R21" pin="2"/>
+      <node ref="C13" pin="2"/>
+      <node ref="C8" pin="2"/>
+      <node ref="C47" pin="2"/>
+      <node ref="C9" pin="2"/>
+      <node ref="U4" pin="31"/>
+      <node ref="J4" pin="10"/>
+      <node ref="J4" pin="13"/>
+      <node ref="J4" pin="14"/>
       <node ref="J4" pin="15"/>
       <node ref="J4" pin="16"/>
-      <node ref="R21" pin="2"/>
-      <node ref="C12" pin="2"/>
-      <node ref="C13" pin="2"/>
-      <node ref="J4" pin="14"/>
-      <node ref="J4" pin="13"/>
-      <node ref="J20" pin="2"/>
-      <node ref="J4" pin="10"/>
-      <node ref="J14" pin="1"/>
-      <node ref="J3" pin="16"/>
-      <node ref="U4" pin="29"/>
       <node ref="C15" pin="2"/>
-      <node ref="C43" pin="2"/>
-      <node ref="TP106" pin="1"/>
-      <node ref="U4" pin="19"/>
-      <node ref="TP102" pin="1"/>
-      <node ref="TP24" pin="1"/>
-      <node ref="TP104" pin="1"/>
-      <node ref="C9" pin="2"/>
-      <node ref="C11" pin="2"/>
+      <node ref="U4" pin="65"/>
+      <node ref="U4" pin="27"/>
+      <node ref="J3" pin="16"/>
       <node ref="C10" pin="2"/>
-      <node ref="C14" pin="2"/>
-      <node ref="C8" pin="2"/>
-      <node ref="C60" pin="2"/>
+      <node ref="TP102" pin="1"/>
+      <node ref="U4" pin="19"/>
+      <node ref="U4" pin="29"/>
+      <node ref="TP104" pin="1"/>
+      <node ref="U4" pin="24"/>
+      <node ref="C11" pin="2"/>
+      <node ref="C12" pin="2"/>
+      <node ref="U4" pin="25"/>
+      <node ref="R22" pin="2"/>
       <node ref="D16" pin="2"/>
-      <node ref="R26" pin="2"/>
-      <node ref="C73" pin="2"/>
-      <node ref="C65" pin="2"/>
+      <node ref="C60" pin="2"/>
       <node ref="C67" pin="2"/>
+      <node ref="C50" pin="2"/>
+      <node ref="J14" pin="1"/>
       <node ref="C45" pin="2"/>
+      <node ref="C65" pin="2"/>
+      <node ref="C73" pin="2"/>
+      <node ref="R26" pin="2"/>
       <node ref="C28" pin="2"/>
       <node ref="R12" pin="2"/>
-      <node ref="U4" pin="31"/>
-      <node ref="U4" pin="27"/>
-      <node ref="U4" pin="65"/>
-      <node ref="U4" pin="25"/>
-      <node ref="U4" pin="24"/>
-      <node ref="C49" pin="2"/>
-      <node ref="C17" pin="2"/>
-      <node ref="C16" pin="2"/>
-      <node ref="C46" pin="2"/>
-      <node ref="C50" pin="2"/>
       <node ref="C44" pin="2"/>
       <node ref="C48" pin="2"/>
+      <node ref="C49" pin="2"/>
       <node ref="D10" pin="1"/>
-      <node ref="R22" pin="2"/>
+      <node ref="J20" pin="2"/>
       <node ref="Y1" pin="2"/>
+      <node ref="C16" pin="2"/>
+      <node ref="C46" pin="2"/>
+      <node ref="C17" pin="2"/>
     </net>
-    <net code="79" name="/Vpwr">
-      <node ref="C15" pin="1"/>
+    <net code="80" name="/Vpwr">
       <node ref="J20" pin="1"/>
-      <node ref="L2" pin="2"/>
       <node ref="L1" pin="1"/>
       <node ref="C17" pin="1"/>
+      <node ref="C15" pin="1"/>
+      <node ref="L2" pin="2"/>
     </net>
-    <net code="80" name="/USB_PWR">
+    <net code="81" name="/USB_PWR">
       <node ref="J3" pin="12"/>
     </net>
-    <net code="81" name="/DRVEN">
+    <net code="82" name="/DRVEN">
       <node ref="J3" pin="15"/>
       <node ref="U4" pin="2"/>
     </net>

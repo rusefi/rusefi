@@ -17,7 +17,7 @@
 volatile int icuWidthCallbackCounter = 0;
 volatile int icuWidthPeriodCounter = 0;
 
-#if EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)
+#if EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE)
 
 #include "trigger_input.h"
 #include "digital_input_icu.h"
@@ -79,14 +79,23 @@ static void shaftPeriodCallback(bool isPrimary) {
 	hwHandleShaftSignal(signal);
 }
 
-void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
+/*==========================================================================*/
+/* Exported functions.														*/
+/*==========================================================================*/
+
+int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	(void)msg;
 	brain_pin_e brainPin = isTriggerShaft ? CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 	if (brainPin == GPIO_UNASSIGNED) {
-		return;
+		return -1;
 	}
 
 	digital_input_s* input = startDigitalCapture("trigger", brainPin, true);
+	if (input == NULL) {
+		/* error already reported */
+		return -1;
+	}
+
 	if (isTriggerShaft) {
 		void * arg = (void*) (index == 0);
 		input->setWidthCallback((VoidInt)(void*)shaftWidthCallback, arg);
@@ -95,24 +104,20 @@ void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
 		input->setWidthCallback((VoidInt)(void*)vvtWidthCallback, NULL);
 		input->setPeriodCallback((VoidInt)(void*)vvtPeriodCallback, NULL);
 	}
+
+	return 0;
 }
 
-void turnOffTriggerInputPin(brain_pin_e brainPin) {
+void icuTriggerTurnOffInputPin(brain_pin_e brainPin) {
 
 	stopDigitalCapture("trigger", brainPin);
 }
 
-void setPrimaryChannel(brain_pin_e brainPin) {
+void icuTriggerSetPrimaryChannel(brain_pin_e brainPin) {
 	(void)brainPin;
 }
 
-/*==========================================================================*/
-/* Exported functions.														*/
-/*==========================================================================*/
-
-void turnOnTriggerInputPins(Logging *sharedLogger) {
+void icuTriggerTurnOnInputPins(Logging *sharedLogger) {
 	logger = sharedLogger;
-
-	applyNewTriggerInputPins();
 }
-#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)) */
+#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE)) */

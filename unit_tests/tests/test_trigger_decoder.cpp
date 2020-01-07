@@ -5,25 +5,17 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "global.h"
 #include "engine_test_helper.h"
 #include "trigger_decoder.h"
 #include "engine_math.h"
 #include "allsensors.h"
-
+#include "engine_controller.h"
 #include "ford_aspire.h"
 #include "dodge_neon.h"
 #include "ford_1995_inline_6.h"
-#include "rpm_calculator.h"
 #include "event_queue.h"
-#include "algo.h"
 #include "trigger_mazda.h"
 #include "trigger_chrysler.h"
-#include "tps.h"
-
-#include "trigger_central.h"
-#include "main_trigger_callback.h"
-#include "engine.h"
 #include "advance_map.h"
 #include "speed_density.h"
 #include "fuel_math.h"

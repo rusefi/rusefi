@@ -23,43 +23,48 @@
 
 #include "global.h"
 #include "os_access.h"
-#if EFI_SENSOR_CHART
-#include "sensor_chart.h"
-#endif
-#include "engine_configuration.h"
 #include "trigger_central.h"
 #include "engine_controller.h"
 #include "fsio_core.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
+#include "advance_map.h"
 #include "rpm_calculator.h"
 #include "main_trigger_callback.h"
 #include "io_pins.h"
 #include "flash_main.h"
-#if EFI_TUNER_STUDIO
-#include "tunerstudio.h"
-#endif
 #include "injector_central.h"
 #include "os_util.h"
 #include "engine_math.h"
-#if EFI_LOGIC_ANALYZER
-#include "logic_analyzer.h"
-#endif
 #include "allsensors.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
 #include "engine.h"
-#include "algo.h"
+#include "speed_density.h"
 #include "local_version_holder.h"
 #include "alternator_controller.h"
 #include "fuel_math.h"
 #include "settings.h"
 #include "aux_pid.h"
+#include "spark_logic.h"
+#include "aux_valves.h"
 #include "accelerometer.h"
 #include "counter64.h"
 #include "perf_trace.h"
+
+#if EFI_SENSOR_CHART
+#include "sensor_chart.h"
+#endif
+
+#if EFI_TUNER_STUDIO
+#include "tunerstudio.h"
+#endif
+
+#if EFI_LOGIC_ANALYZER
+#include "logic_analyzer.h"
+#endif
 
 #if HAL_USE_ADC
 #include "AdcConfiguration.h"
@@ -94,8 +99,13 @@
 
 EXTERN_ENGINE;
 
-// this method is used by real firmware and simulator and unit test
-void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	initFuelMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
 	initSensors();
 #endif /* EFI_UNIT_TEST */
@@ -297,8 +307,6 @@ static void resetAccel(void) {
 		engine->wallFuel[i].resetWF();
 	}
 }
-
-static int previousSecond;
 
 #if ENABLE_PERF_TRACE
 
@@ -659,13 +667,29 @@ static void getKnockInfo(void) {
 
 	engine->printKnockState();
 }
+#endif /* EFI_UNIT_TEST */
 
-// this method is used by real firmware and simulator but not unit tests
+// this method is used by real firmware and simulator and unit test
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	initInterpolation(sharedLogger);
+
 #if EFI_SIMULATOR
 	printf("commonInitEngineController\n");
 #endif
+
+#if !EFI_UNIT_TEST
 	initConfigActions();
+#endif /* EFI_UNIT_TEST */
+
+#if EFI_ENGINE_CONTROL
+	/**
+	 * This has to go after 'initInjectorCentral' in order to
+	 * properly detect un-assigned output pins
+	 */
+	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
+
+
 #if EFI_ENABLE_MOCK_ADC
 	initMockVoltage();
 #endif /* EFI_ENABLE_MOCK_ADC */
@@ -674,10 +698,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initSensorChart();
 #endif /* EFI_SENSOR_CHART */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	// todo: this is a mess, remove code duplication with simulator
-	initSettings();
-#endif
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->isTunerStudioEnabled) {
@@ -685,24 +705,54 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	}
 #endif /* EFI_TUNER_STUDIO */
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	initSettings();
+
 	if (hasFirmwareError()) {
 		return;
 	}
+#endif
+
 	mostCommonInitEngineController(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+
+#if EFI_SHAFT_POSITION_INPUT
+	/**
+	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
+	 * other listeners can access current RPM value
+	 */
+	initRpmCalculator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_SHAFT_POSITION_INPUT */
+
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
+	if (CONFIG(isEngineControlEnabled)) {
+		initAuxValves(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+		/**
+		 * This method adds trigger listener which actually schedules ignition
+		 */
+		initSparkLogic(sharedLogger);
+		initMainEventListener(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+#endif /* EFI_ENGINE_CONTROL */
+
 }
+
+#if !EFI_UNIT_TEST
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SIMULATOR
 	printf("initEngineContoller\n");
 #endif
 	addConsoleAction("analoginfo", printAnalogInfo);
+
+#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
+	initInjectorCentral(sharedLogger);
+#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
+
 	commonInitEngineController(sharedLogger);
 
 #if EFI_PROD_CODE
 	initPwmGenerator();
 #endif
-
-	initAlgo(sharedLogger);
 
 #if EFI_LOGIC_ANALYZER
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
@@ -718,19 +768,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_CJ125 */
 
 
-#if EFI_SHAFT_POSITION_INPUT
-	/**
-	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
-	 * other listeners can access current RPM value
-	 */
-	initRpmCalculator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
-#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
-	initInjectorCentral(sharedLogger);
-#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
-
-// multiple issues with this	initMapAdjusterThread();
 	// periodic events need to be initialized after fuel&spark pins to avoid a warning
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -739,14 +776,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	}
 
 	engineStateBlinkingTask.Start();
-
-#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
-	/**
-	 * This has to go after 'initInjectorCentral' and 'initInjectorCentral' in order to
-	 * properly detect un-assigned output pins
-	 */
-	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
 #if EFI_PWM_TESTER
 	initPwmTester();
@@ -767,15 +796,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_MALFUNCTION_INDICATOR */
 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	if (CONFIG(isEngineControlEnabled)) {
-		/**
-		 * This method initialized the main listener which actually runs injectors & ignition
-		 */
-		initMainEventListener(sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
-	}
-#endif /* EFI_ENGINE_CONTROL */
 
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
 		addConsoleAction("knockinfo", getKnockInfo);
@@ -819,6 +839,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20191213;
+	return 20191222;
 }
 #endif /* EFI_UNIT_TEST */

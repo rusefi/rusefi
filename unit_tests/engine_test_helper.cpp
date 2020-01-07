@@ -14,7 +14,6 @@
 #include "allsensors.h"
 #include "engine_controller.h"
 #include "advance_map.h"
-#include "algo.h"
 
 extern int timeNowUs;
 extern EnginePins enginePins;
@@ -57,10 +56,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	mostCommonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-
 	resetConfigurationExt(NULL, boardCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
-	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	commonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+
 	engine->engineConfigurationPtr->mafAdcChannel = TEST_MAF_CHANNEL;
 	engine->engineConfigurationPtr->clt.adcChannel = TEST_CLT_CHANNEL;
 	engine->engineConfigurationPtr->iat.adcChannel = TEST_IAT_CHANNEL;
@@ -74,9 +73,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-	initRpmCalculator(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-	initMainEventListener(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {

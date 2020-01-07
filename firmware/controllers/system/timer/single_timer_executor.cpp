@@ -37,8 +37,6 @@ EXTERN_ENGINE;
 
 extern schfunc_t globalTimerCallback;
 
-//static int timerIsLate = 0;
-//static efitime_t callbackTime = 0;
 /**
  * these fields are global in order to facilitate debugging
  */
@@ -68,8 +66,8 @@ SingleTimerExecutor::SingleTimerExecutor() {
 	queue.setLateDelay(US2NT(100));
 }
 
-void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
+void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
+	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, action);
 }
 
 /**
@@ -82,8 +80,7 @@ void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs
  * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
  * @param [in] dwell the number of ticks of output duration.
  */
-void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
-		void *param) {
+void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 	scheduleCounter++;
@@ -92,7 +89,7 @@ void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeu
 		// this would guard the queue and disable interrupts
 		alreadyLocked = lockAnyContext();
 	}
-	bool needToResetTimer = queue.insertTask(scheduling, US2NT(timeUs), callback, param);
+	bool needToResetTimer = queue.insertTask(scheduling, US2NT(timeUs), action);
 	if (!reentrantFlag) {
 		doExecute();
 		if (needToResetTimer) {

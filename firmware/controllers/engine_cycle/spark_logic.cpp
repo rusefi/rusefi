@@ -227,8 +227,8 @@ static bool assertNotInIgnitionList(AngleBasedEvent *head, AngleBasedEvent *elem
 bool scheduleOrQueue(AngleBasedEvent *event,
 		uint32_t trgEventIndex,
 		angle_t angle,
-		schfunc_t callback,
-		void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		action_s action
+		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	event->position.setAngle(angle PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
@@ -253,10 +253,10 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 
 		scheduling_s * sDown = &event->scheduling;
 
-		engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, callback, param);
+		engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, action);
 		return true;
 	} else {
-		event->action.setAction(callback, param);
+		event->action = action;
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
 		 */
@@ -321,7 +321,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		engine->executor.scheduleForLater(sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent);
+		engine->executor.scheduleForLater(sUp, chargeDelayUs, { (schfunc_t) &turnSparkPinHigh, iEvent });
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
@@ -332,7 +332,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	assertAngleRange(sparkAngle, "findAngle#a5", CUSTOM_ERR_6549);
 
 
-	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, sparkAngle, (schfunc_t)fireSparkAndPrepareNextSchedule, iEvent PASS_ENGINE_PARAMETER_SUFFIX);
+	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, sparkAngle, { (schfunc_t)fireSparkAndPrepareNextSchedule, iEvent } PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (scheduled) {
 #if SPARK_EXTREME_LOGGING
@@ -425,7 +425,7 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex D
 
 
 			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->position.angleOffsetFromTriggerEvent;
-			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) current->action.getCallback(), current->action.getArgument());
+			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, current->action);
 		}
 	}
 }

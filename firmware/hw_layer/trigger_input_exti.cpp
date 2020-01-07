@@ -12,10 +12,14 @@
 
 #include "global.h"
 
-#if EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE) && (HAL_USE_COMP == FALSE)
+#if EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE)
 
 #include "trigger_input.h"
 #include "digital_input_exti.h"
+
+#if (PAL_USE_CALLBACKS == FALSE)
+	#error "PAL_USE_CALLBACKS should be enabled to use HAL_TRIGGER_USE_PAL"
+#endif
 
 extern bool hasFirmwareErrorFlag;
 
@@ -64,30 +68,34 @@ static void cam_callback(void *arg) {
 	}
 }
 
-void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
+/*==========================================================================*/
+/* Exported functions.														*/
+/*==========================================================================*/
+
+int extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	brain_pin_e brainPin = isTriggerShaft ? CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 
-	scheduleMsg(logger, "turnOnTriggerInputPin(PAL) %s %s", msg, hwPortname(brainPin));
+	scheduleMsg(logger, "extiTriggerTurnOnInputPin %s %s", msg, hwPortname(brainPin));
 
 	/* TODO:
 	 * * do not set to both edges if we need only one
 	 * * simplify callback in case of one edge */
 	ioline_t pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
 	efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line);
+
+	return 0;
 }
 
-void turnOffTriggerInputPin(brain_pin_e brainPin) {
+void extiTriggerTurnOffInputPin(brain_pin_e brainPin) {
 	efiExtiDisablePin(brainPin);
 }
 
-void setPrimaryChannel(brain_pin_e brainPin) {
+void extiTriggerSetPrimaryChannel(brain_pin_e brainPin) {
 	primary_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
 }
 
-void turnOnTriggerInputPins(Logging *sharedLogger) {
+void extiTriggerTurnOnInputPins(Logging *sharedLogger) {
 	logger = sharedLogger;
-
-	applyNewTriggerInputPins();
 }
 
-#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE) && (HAL_USE_COMP == FALSE)) */
+#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE)) */

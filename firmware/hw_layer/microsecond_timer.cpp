@@ -130,7 +130,7 @@ static void hwTimerCallback(GPTDriver *gptp) {
 
 class MicrosecondTimerWatchdogController : public PeriodicTimerController {
 	void PeriodicTask() override {
-		efitime_t nowNt = getTimeNowNt();
+		efitick_t nowNt = getTimeNowNt();
 		if (nowNt >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
 			strcpy(buff, "no_event");
 			itoa10(&buff[8], lastSetTimerValue);
@@ -167,7 +167,7 @@ static void watchDogBuddyCallback(void *arg) {
 	 * watchdog happy by ensuring that we have scheduler activity even in case of very broken configuration
 	 * without any PWM or input pins
 	 */
-	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(1000), watchDogBuddyCallback, NULL);
+	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(1000), watchDogBuddyCallback);
 }
 
 static volatile bool testSchedulingHappened = false;
@@ -195,7 +195,7 @@ static void validateHardwareTimer() {
 	testSchedulingStart = currentTimeMillis();
 
 	// to save RAM let's use 'watchDogBuddy' here once before we enable watchdog
-	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(TEST_CALLBACK_DELAY), timerValidationCallback, NULL);
+	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(TEST_CALLBACK_DELAY), timerValidationCallback);
 
 	chThdSleepMilliseconds(2 * TEST_CALLBACK_DELAY);
 	if (!testSchedulingHappened) {

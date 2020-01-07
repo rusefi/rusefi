@@ -2,10 +2,10 @@
  * @file	mpu_util.h
  *
  * @date Jul 27, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
-#ifndef MPU_UTIL_H_
-#define MPU_UTIL_H_
+
+#pragma once
 
 #include "stm32f7xx_hal_flash_ex.h"
 #include "stm32_common_mpu_util.h"
@@ -35,6 +35,10 @@
 #define GPIO_AF_TIM5 2
 #endif
 
+#ifndef GPIO_AF_TIM8
+#define GPIO_AF_TIM8 3
+#endif
+
 #ifndef GPIO_AF_TIM9
 #define GPIO_AF_TIM9 3
 #endif
@@ -51,11 +55,14 @@
 #define ADC_CR2_SWSTART ((uint32_t)0x40000000)
 #endif
 
+#define SPI_CR1_8BIT_MODE 0
+#define SPI_CR2_8BIT_MODE (SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0)
+
 #define SPI_CR1_16BIT_MODE 0
 #define SPI_CR2_16BIT_MODE SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
 
-#define SPI_CR1_24BIT_MODE 0
 /* 3 x 8-bit transfer */
+#define SPI_CR1_24BIT_MODE 0
 #define SPI_CR2_24BIT_MODE SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
 
 
@@ -76,7 +83,6 @@ void HardFaultVector(void);
 }
 #endif /* __cplusplus */
 
-#endif /* MPU_UTIL_H_ */
 
 #if HAL_USE_SPI
 void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,

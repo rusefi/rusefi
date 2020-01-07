@@ -112,7 +112,7 @@ static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
 	 * Once 'iteration' gets relatively high, we might lose calculation precision here.
 	 * This is addressed by ITERATION_LIMIT
 	 */
-	efitime_t timeToSwitchNt = (efitime_t) ((iteration + switchTime) * periodNt);
+	efitick_t timeToSwitchNt = (efitick_t) ((iteration + switchTime) * periodNt);
 
 #if DEBUG_PWM
 	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
@@ -262,7 +262,7 @@ static void timerCallback(PwmConfig *state) {
 		return;
 	}
 
-	state->executor->scheduleByTimestamp(&state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
+	state->executor->scheduleByTimestamp(&state->scheduling, switchTimeUs, { (schfunc_t) timerCallback, state });
 	state->dbgNestingLevel--;
 }
 

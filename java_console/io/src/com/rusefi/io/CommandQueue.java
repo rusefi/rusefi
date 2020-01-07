@@ -230,7 +230,4 @@ public class CommandQueue {
         void onCommand(String command);
     }
 
-    public static String disableCommand(String command) {
-        return Fields.CMD_DISABLE + " " + command;
-    }
 }

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
 import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
@@ -97,6 +98,17 @@ public class UiUtils {
         component.invalidate();
         component.validate();
         component.repaint();
+    }
+
+    public static java.util.List<Component> getAllComponents(final Container c) {
+        Component[] comps = c.getComponents();
+        java.util.List<Component> compList = new ArrayList<>();
+        for (Component comp : comps) {
+            compList.add(comp);
+            if (comp instanceof Container)
+                compList.addAll(getAllComponents((Container) comp));
+        }
+        return compList;
     }
 
     /**

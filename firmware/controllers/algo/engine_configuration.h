@@ -23,19 +23,6 @@
 
 #define MOCK_UNDEFINED -1
 
-// WARNING: by default, our small enums are ONE BYTE. this one is made 4-byte with the 'ENUM_32_BITS' hack
-
-/**
- * @brief	Engine configuration.
- * 		Values in this data structure are adjustable and persisted in on-board flash RAM.
- *
- *  The offsets are tracked using
- *  https://docs.google.com/spreadsheet/ccc?key=0AiAmAn6tn3L_dGJXZDZOcVVhaG9SaHZKU1dyMjhEV0E
- *
- *  todo: currently the fields here are simply in the order in which they were implemented
- *  todo: re-arrange this structure one we have a stable code version
- */
-
 float getRpmMultiplier(operation_mode_e mode);
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
 

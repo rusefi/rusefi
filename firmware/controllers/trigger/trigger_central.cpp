@@ -15,7 +15,6 @@
 #include "engine_configuration.h"
 #include "listener_array.h"
 #include "data_buffer.h"
-#include "histogram.h"
 #include "pwm_generator_logic.h"
 #include "tooth_logger.h"
 
@@ -67,10 +66,6 @@ int TriggerCentral::getHwEventCounter(int index) const {
 #if EFI_SHAFT_POSITION_INPUT
 
 EXTERN_ENGINE;
-
-#if EFI_HISTOGRAMS
-static histogram_s triggerCallbackHistogram;
-#endif /* EFI_HISTOGRAMS */
 
 static Logging *logger;
 
@@ -345,9 +340,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 
 	engine->onTriggerSignalEvent(nowNt);
 
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	int beforeCallback = hal_lld_get_counter_value();
-#endif
 	int eventIndex = (int) signal;
 	efiAssertVoid(CUSTOM_ERR_6638, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
@@ -409,20 +401,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		}
 
 	}
-#if EFI_HISTOGRAMS
-	int afterCallback = hal_lld_get_counter_value();
-	int diff = afterCallback - beforeCallback;
-	// this counter is only 32 bits so it overflows every minute, let's ignore the value in case of the overflow for simplicity
-	if (diff > 0) {
-		hsAdd(&triggerCallbackHistogram, diff);
-	}
-#endif /* EFI_HISTOGRAMS */
-}
-
-void printAllCallbacksHistogram(void) {
-#if EFI_HISTOGRAMS
-	printHistogram(logger, &triggerCallbackHistogram);
-#endif
 }
 
 EXTERN_ENGINE
@@ -738,9 +716,6 @@ void initTriggerCentral(Logging *sharedLogger) {
 	addConsoleAction("reset_trigger", resetRunningTriggerCounters);
 #endif
 
-#if EFI_HISTOGRAMS
-	initHistogram(&triggerCallbackHistogram, "all callbacks");
-#endif /* EFI_HISTOGRAMS */
 }
 
 #endif

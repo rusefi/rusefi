@@ -12,8 +12,8 @@
 
 class SleepExecutor : public ExecutorInterface {
 public:
-	void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) override;
-	void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) override;
+	void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) override;
+	void scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) override;
 };
 
 #endif /* SIGNAL_EXECUTOR_SLEEP_H_ */

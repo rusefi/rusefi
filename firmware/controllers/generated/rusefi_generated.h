@@ -375,9 +375,11 @@
 #define CMD_ENABLE "enable"
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_ETB_DUTY "set_etb_duty"
+#define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 #define CMD_PINS "pins"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
+#define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"
@@ -1550,6 +1552,13 @@
 #define overrideCrankingIacSetting_offset_hex 5c4
 #define overrideCrankingIgnition_offset 516
 #define overrideCrankingIgnition_offset_hex 204
+#define PACK_MULT_AFR 1000
+#define PACK_MULT_ANGLE 50
+#define PACK_MULT_MS 300
+#define PACK_MULT_PERCENT 100
+#define PACK_MULT_PRESSURE 30
+#define PACK_MULT_TEMPERATURE 100
+#define PACK_MULT_VOLTAGE 1000
 #define pauseEtbControl_offset 744
 #define pauseEtbControl_offset_hex 2e8
 #define PEDAL_TO_TPS_SIZE 8
@@ -1717,6 +1726,8 @@
 #define tachPulseDuractionMs_offset_hex 6a8
 #define tachPulseDurationAsDutyCycle_offset 1464
 #define tachPulseDurationAsDutyCycle_offset_hex 5b8
+#define tachPulsePerRev_offset 1775
+#define tachPulsePerRev_offset_hex 6ef
 #define tachPulseTriggerIndex_offset 1708
 #define tachPulseTriggerIndex_offset_hex 6ac
 #define targetVBatt_offset 2024
@@ -1945,8 +1956,8 @@
 #define triggerSimulatorPins2_offset_hex 2e1
 #define triggerSimulatorPins3_offset 738
 #define triggerSimulatorPins3_offset_hex 2e2
-#define TS_FILE_VERSION 20190701
-#define TS_OUTPUT_SIZE 356
+#define TS_FILE_VERSION 20191221
+#define TS_OUTPUT_SIZE 220
 #define ts_show_cj125 true
 #define ts_show_egt true
 #define ts_show_etb true
@@ -1956,7 +1967,7 @@
 #define ts_show_hip9011 true
 #define ts_show_joystick true
 #define ts_show_lcd true
-#define TS_SIGNATURE "rusEFI v1.07"
+#define TS_SIGNATURE "rusEFI v1.08"
 #define tunerStudioSerialSpeed_offset 728
 #define tunerStudioSerialSpeed_offset_hex 2d8
 #define twoWireBatchIgnition_offset 1476
