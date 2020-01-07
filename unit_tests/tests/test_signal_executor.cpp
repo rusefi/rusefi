@@ -34,7 +34,7 @@ static void complexCallback(TestPwm *testPwm) {
 	callbackCounter++;
 
 	eq.insertTask(&testPwm->s, complexTestNow + testPwm->period,
-			{ (schfunc_t) complexCallback, testPwm });
+			{ complexCallback, testPwm });
 }
 
 static void testSignalExecutor2(void) {
@@ -47,8 +47,8 @@ static void testSignalExecutor2(void) {
 
 	complexTestNow = 0;
 	callbackCounter = 0;
-	eq.insertTask(&p1.s, 0, { (schfunc_t) complexCallback, &p1 });
-	eq.insertTask(&p2.s, 0, { (schfunc_t) complexCallback, &p2 });
+	eq.insertTask(&p1.s, 0, { complexCallback, &p1 });
+	eq.insertTask(&p2.s, 0, { complexCallback, &p2 });
 	eq.executeAll(complexTestNow);
 	ASSERT_EQ( 2,  callbackCounter) << "callbackCounter #1";
 	ASSERT_EQ(2, eq.size());
