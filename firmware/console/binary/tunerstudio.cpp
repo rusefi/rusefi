@@ -317,7 +317,7 @@ static bool validateOffsetCount(size_t offset, size_t count, ts_channel_s *tsCha
 /**
  * read log file content for rusEfi console
  */
-static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, short offset, short length) {
+static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, uint16_t offset, uint16_t length) {
 //#if EFI_FILE_LOGGING
 //	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
 //#else
@@ -329,7 +329,7 @@ static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, short o
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, short offset, short count,
+void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
 
