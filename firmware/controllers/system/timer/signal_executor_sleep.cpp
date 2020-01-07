@@ -34,7 +34,7 @@
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
 void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
-	scheduleForLater(scheduling, timeUs - getTimeNowUs(), callback, param);
+	scheduleForLater(scheduling, timeUs - getTimeNowUs(), action);
 }
 
 static void timerCallback(scheduling_s *scheduling) {
