@@ -71,8 +71,8 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 	}
 
 #if EFI_SIMULATOR
-	if (callback == (schfunc_t)&seTurnPinLow) {
-		printf("setTime cb=seTurnPinLow p=%d\r\n", (int)param);
+	if (action.getCallback() == (schfunc_t)&seTurnPinLow) {
+		printf("setTime cb=seTurnPinLow p=%d\r\n", (int)action.getParam());
 	} else {
 //		printf("setTime cb=%d p=%d\r\n", (int)callback, (int)param);
 	}
