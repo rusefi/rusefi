@@ -323,7 +323,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 		// todo: use tooth event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
 			scheduleByAngle(&tdcScheduler[revIndex2], tdcPosition(),
-					{ (schfunc_t) onTdcCallback, engine } PASS_ENGINE_PARAMETER_SUFFIX);
+					{ onTdcCallback, engine } PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 }

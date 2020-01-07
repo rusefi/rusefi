@@ -34,7 +34,7 @@ void plainPinTurnOn(AuxActor *current) {
 	scheduleOrQueue(&current->open,
 			TRIGGER_EVENT_UNDEFINED,
 			current->extra + engine->engineState.auxValveStart,
-			{ (schfunc_t)plainPinTurnOn, current }
+			{ plainPinTurnOn, current }
 			PASS_ENGINE_PARAMETER_SUFFIX
 			);
 
@@ -45,7 +45,7 @@ void plainPinTurnOn(AuxActor *current) {
 	scheduleOrQueue(&current->close,
 			TRIGGER_EVENT_UNDEFINED,
 			current->extra + engine->engineState.auxValveEnd,
-			{ (schfunc_t)plainPinTurnOff, output }
+			{ plainPinTurnOff, output }
 			PASS_ENGINE_PARAMETER_SUFFIX
 			);
 	}
@@ -103,12 +103,12 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 			fixAngle(onTime, "onTime", CUSTOM_ERR_6556);
 			scheduleByAngle(onEvent,
 					onTime,
-					(schfunc_t) &plainPinTurnOn, output PASS_ENGINE_PARAMETER_SUFFIX);
+					&plainPinTurnOn, output PASS_ENGINE_PARAMETER_SUFFIX);
 			angle_t offTime = extra + engine->engineState.auxValveEnd;
 			fixAngle(offTime, "offTime", CUSTOM_ERR_6557);
 			scheduleByAngle(offEvent,
 					offTime,
-					(schfunc_t) &plainPinTurnOff, output PASS_ENGINE_PARAMETER_SUFFIX);
+					&plainPinTurnOff, output PASS_ENGINE_PARAMETER_SUFFIX);
 			if (isOverlap) {
 				enginePins.debugTriggerSync.setValue(0);
 			}
@@ -149,7 +149,7 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			scheduleOrQueue(&actor->open,
 					TRIGGER_EVENT_UNDEFINED,
 					actor->extra + engine->engineState.auxValveStart,
-					{ (schfunc_t)plainPinTurnOn, actor }
+					{ plainPinTurnOn, actor }
 					PASS_ENGINE_PARAMETER_SUFFIX
 					);
 		}
