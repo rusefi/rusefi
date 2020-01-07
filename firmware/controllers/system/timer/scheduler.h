@@ -12,7 +12,12 @@ typedef void (*schfunc_t)(void *);
 
 class action_s {
 public:
-	void setAction(schfunc_t callback, void *param);
+	action_s() = default;
+
+	// Allow implicit conversion from schfunc_t to action_s
+	action_s(schfunc_t callback) : action_s(callback, nullptr) { }
+	action_s(schfunc_t callback, void *param) : callback(callback), param(param) { }
+
 	void execute();
 	schfunc_t getCallback() const;
 	void * getArgument() const;
