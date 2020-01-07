@@ -39,11 +39,11 @@ static int test557[] = {5, 5, 10, 10, 20, 20, 50, 50, 100, 100, 200, 200, 500, 5
 
 efitimeus_t testTime;
 
-static void toggleTestAndScheduleNext() {
+static void toggleTestAndScheduleNext(void *) {
 	testPin.toggle();
 	periodIndex = (periodIndex + 1) % TEST_LEN;
 	testTime += test557[periodIndex];
-	engine->executor.scheduleByTimestamp(&scheduling, testTime, (schfunc_t) &toggleTestAndScheduleNext, NULL);
+	engine->executor.scheduleByTimestamp(&scheduling, testTime, &toggleTestAndScheduleNext);
 
 }
 
@@ -58,8 +58,7 @@ void runSchedulingPrecisionTestIfNeeded(void) {
 	testPin.initPin("test", engineConfiguration->test557pin);
 	testPin.setValue(0);
 	testTime = getTimeNowUs();
-	toggleTestAndScheduleNext();
-
+	toggleTestAndScheduleNext(/*unused*/ nullptr);
 }
 #endif /* EFI_PROD_CODE */
 

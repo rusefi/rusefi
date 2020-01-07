@@ -12,7 +12,12 @@ typedef void (*schfunc_t)(void *);
 
 class action_s {
 public:
-	void setAction(schfunc_t callback, void *param);
+	action_s() = default;
+
+	// Allow implicit conversion from schfunc_t to action_s
+	action_s(schfunc_t callback) : action_s(callback, nullptr) { }
+	action_s(schfunc_t callback, void *param) : callback(callback), param(param) { }
+
 	void execute();
 	schfunc_t getCallback() const;
 	void * getArgument() const;
@@ -25,8 +30,7 @@ private:
 /**
  * This structure holds information about an event scheduled in the future: when to execute what callback with what parameters
  */
-class scheduling_s {
-public:
+struct scheduling_s {
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 	virtual_timer_t timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
@@ -45,11 +49,10 @@ public:
 	action_s action;
 };
 
-class ExecutorInterface {
-public:
+struct ExecutorInterface {
 	/**
 	 * see also scheduleByAngle
 	 */
-	virtual void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) = 0;
-	virtual void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) = 0;
+	virtual void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) = 0;
+	virtual void scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) = 0;
 };
