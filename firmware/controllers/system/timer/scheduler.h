@@ -2,7 +2,7 @@
  * @file	scheduler.h
  *
  * @date May 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 #pragma once
 

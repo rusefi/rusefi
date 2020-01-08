@@ -3,7 +3,7 @@
  * @brief This class knows how to produce synthetic shaft signals based on triggerShape
  *
  * @date Sep 23, 2015
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once

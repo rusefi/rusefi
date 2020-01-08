@@ -2,7 +2,7 @@
  * @file rusefi_hw_enums.h
  *
  * @date Jun 2, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef RUSEFI_HW_ENUMS_H_

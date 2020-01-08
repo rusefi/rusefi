@@ -8,7 +8,7 @@
  * 'fsioinfo' command in console shows current state of FSIO - formulas and current value
  *
  * @date Oct 5, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

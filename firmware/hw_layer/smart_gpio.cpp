@@ -2,7 +2,7 @@
  * @file smart_gpio.cpp
  *
  * @date Apr 13, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

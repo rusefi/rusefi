@@ -2,7 +2,7 @@
  * @file test_ignition_scheduling.cpp
  *
  * @date Nov 17, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_test_helper.h"

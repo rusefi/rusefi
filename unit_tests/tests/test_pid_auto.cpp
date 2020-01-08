@@ -2,7 +2,7 @@
  * @file test_pid_auto.cpp
  *
  * @date Sep 14, 2017
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

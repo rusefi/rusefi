@@ -7,7 +7,7 @@
  * All SPI and CS pin in OM_DEFAULT mode
  *
  * @date Mar 25, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * 3.2 Pin Definitions and Functions
  *

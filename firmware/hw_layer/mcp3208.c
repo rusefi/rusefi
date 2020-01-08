@@ -3,7 +3,7 @@
  * @brief   MCP3208 external ADC chip implementation. Not really used right now.
  *
  * @date Aug 12, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

@@ -3,7 +3,7 @@
  * @brief	Low level internal ADC code
  *
  * @date Jan 14, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef ADC_INPUTS_H_

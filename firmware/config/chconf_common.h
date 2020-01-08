@@ -2,7 +2,7 @@
  * @file chconf_common.h
  *
  * @date Apr 20, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef CONFIG_CHCONF_COMMON_H_

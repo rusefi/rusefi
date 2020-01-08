@@ -11,7 +11,7 @@
  * MAZDA_MIATA_2003_NA_RAIL
  *
  * @date Sep 20, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "mazda_miata_vvt.h"

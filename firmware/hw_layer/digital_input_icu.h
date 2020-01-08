@@ -2,7 +2,7 @@
  * @file digital_input_icu.h
  *
  * @date Jun 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once

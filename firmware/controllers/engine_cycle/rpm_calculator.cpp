@@ -10,7 +10,7 @@
  * instant RPM instead of cycle RPM more often.
  *
  * @date Jan 1, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "globalaccess.h"

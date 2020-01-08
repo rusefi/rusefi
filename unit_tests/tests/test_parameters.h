@@ -2,7 +2,7 @@
  * test_parameters.h
  *
  *  Created on: Jan 17, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef TESTS_TEST_PARAMETERS_H_
