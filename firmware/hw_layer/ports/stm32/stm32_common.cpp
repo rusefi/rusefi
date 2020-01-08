@@ -3,7 +3,7 @@
  * @brief	Low level common STM32 code
  *
  * @date Mar 28, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

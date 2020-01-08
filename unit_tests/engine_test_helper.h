@@ -2,7 +2,7 @@
  * @file	engine_test_helper.h
  *
  * @date Jun 26, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once

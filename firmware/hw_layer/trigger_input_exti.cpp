@@ -7,7 +7,7 @@
  * see digital_input_icu.cp
  *
  * @date Dec 30, 2012
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

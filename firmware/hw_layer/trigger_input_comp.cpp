@@ -3,7 +3,7 @@
  * @brief	Position sensor hardware layer, Using hardware comparator
  *
  * @date Apr 13, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  * @author andreika <prometheus.pcb@gmail.com>
  */
  

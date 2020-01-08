@@ -2,7 +2,7 @@
  * @file spark_logic.h
  *
  * @date Sep 15, 2016
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once

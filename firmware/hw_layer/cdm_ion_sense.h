@@ -2,7 +2,7 @@
  * @file cdm_ion_sense.h
  *
  * @date Dec 31, 2018
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef HW_LAYER_CDM_ION_SENSE_H_

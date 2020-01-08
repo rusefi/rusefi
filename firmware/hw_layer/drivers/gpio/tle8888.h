@@ -2,7 +2,7 @@
  * @file tle8888.h
  *
  * Mar 25, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef HW_LAYER_DRIVERS_GPIO_TLE8888_H_

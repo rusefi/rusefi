@@ -8,7 +8,7 @@
  * Frankenso QA 12 cylinder engine
  *
  * @date Jan 18, 2015
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "custom_engine.h"

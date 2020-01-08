@@ -8,7 +8,7 @@
  * this is rusEfi build-in logic analyzer
  *
  * @date Jan 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "logic_analyzer.h"

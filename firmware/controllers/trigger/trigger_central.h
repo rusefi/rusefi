@@ -2,7 +2,7 @@
  * @file	trigger_central.h
  *
  * @date Feb 23, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once

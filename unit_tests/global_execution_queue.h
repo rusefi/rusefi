@@ -2,7 +2,7 @@
  * @file global_execution_queue.h
  *
  *  Created on: Jan 9, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef GLOBAL_EXECUTION_QUEUE_H_
