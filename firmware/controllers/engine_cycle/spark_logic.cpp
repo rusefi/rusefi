@@ -233,17 +233,10 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 	event->position.setAngle(angle PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
-	 * todo: extract a "scheduleForAngle" method with best implementation into a separate utility method
-	 *
-	 * Here's the status as of Nov 2018:
-	 * "scheduleForLater" uses time only and for best precision it's best to use "scheduleForLater" only
-	 * once we hit the last trigger tooth prior to needed event. This case we use as much trigger position angle as possible
+	 * Here's the status as of Jan 2020:
+	 * Once we hit the last trigger tooth prior to needed event, schedule it by time.  We use as much trigger position angle as possible
 	 * and only use less precise RPM-based time calculation for the last portion of the angle, the one between two teeth closest to the
 	 * desired angle moment.
-	 *
-	 * At the moment we only have time-based scheduler. I believe what needs to be added is a trigger-event based scheduler on top of the
-	 * time-based schedule. This case we would be firing events with best possible angle precision.
-	 *
 	 */
 	if (trgEventIndex != TRIGGER_EVENT_UNDEFINED && event->position.triggerEventIndex == trgEventIndex) {
 		/**
@@ -330,7 +323,6 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
-	 * TODO: improve precision
 	 */
 
 	efiAssertVoid(CUSTOM_ERR_6591, !cisnan(sparkAngle), "findAngle#4");
