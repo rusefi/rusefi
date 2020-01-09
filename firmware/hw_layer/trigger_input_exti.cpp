@@ -29,7 +29,11 @@ EXTERN_ENGINE;
 static ioline_t primary_line;
 
 static void shaft_callback(void *arg) {
+	// do the time sensitive things as early as possible!
+	efitick_t stamp = getTimeNowNt();
 	ioline_t pal_line = (ioline_t)arg;
+	bool rise = (palReadLine(pal_line) == PAL_HIGH);
+
 	// todo: support for 3rd trigger input channel
 	// todo: start using real event time from HW event, not just software timer?
 	if (hasFirmwareErrorFlag)
@@ -40,7 +44,6 @@ static void shaft_callback(void *arg) {
 		return;
 	}
 
-	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 	trigger_event_e signal;
 	// todo: add support for 3rd channel
 	if (rise) {
@@ -53,18 +56,20 @@ static void shaft_callback(void *arg) {
 					(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
 	}
 
-	hwHandleShaftSignal(signal);
+	hwHandleShaftSignal(signal, stamp);
 }
 
 static void cam_callback(void *arg) {
+	efitick_t stamp = getTimeNowNt();
+
 	ioline_t pal_line = (ioline_t)arg;
 
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
 	if (rise) {
-		hwHandleVvtCamSignal(TV_RISE);
+		hwHandleVvtCamSignal(TV_RISE, stamp);
 	} else {
-		hwHandleVvtCamSignal(TV_FALL);
+		hwHandleVvtCamSignal(TV_FALL, stamp);
 	}
 }
 

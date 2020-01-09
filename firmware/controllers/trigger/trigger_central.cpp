@@ -84,7 +84,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
-void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
 		tc->vvtEventRiseCounter++;
@@ -107,8 +107,6 @@ void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX)
 	}
 
 	tc->vvtCamCounter++;
-
-	efitick_t nowNt = getTimeNowNt();
 
 	if (engineConfiguration->vvtMode == MIATA_NB2) {
 		uint32_t currentDuration = nowNt - tc->previousVvtCamTime;
@@ -193,7 +191,7 @@ uint32_t triggerMaxDuration = 0;
 static bool isInsideTriggerHandler = false;
 
 
-void hwHandleShaftSignal(trigger_event_e signal) {
+void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	ScopePerf perf(PE::HandleShaftSignal, static_cast<uint8_t>(signal));
 
 #if EFI_TOOTH_LOGGER
@@ -216,7 +214,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
 	efiAssertVoid(CUSTOM_ERR_6636, getCurrentRemainingStack() > 128, "lowstck#8");
-	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.handleShaftSignal(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 	triggerReentraint--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
 	isInsideTriggerHandler = false;
@@ -314,7 +312,7 @@ bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE
 	return false;
 }
 
-void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_CONF_NULL, engine!=NULL, "configuration");
 
 	if (triggerShape.shapeDefinitionError) {
@@ -325,11 +323,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		return;
 	}
 
-	nowNt = getTimeNowNt();
-
 	// This code gathers some statistics on signals and compares accumulated periods to filter interference
 	if (CONFIG(useNoiselessTriggerDecoder)) {
-		if (!noiseFilter(nowNt, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (!noiseFilter(timestamp, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
 		// moved here from hwHandleShaftSignal()
@@ -338,25 +334,25 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		}
 	}
 
-	engine->onTriggerSignalEvent(nowNt);
+	engine->onTriggerSignalEvent(timestamp);
 
 	int eventIndex = (int) signal;
 	efiAssertVoid(CUSTOM_ERR_6638, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
 
-	if (nowNt - previousShaftEventTimeNt > US2NT(US_PER_SECOND_LL)) {
+	if (timestamp - previousShaftEventTimeNt > US2NT(US_PER_SECOND_LL)) {
 		/**
-		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not runnig.
+		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not running.
 		 * That means we have lost synchronization since the engine is not running :)
 		 */
 		triggerState.onSynchronizationLost(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
-	previousShaftEventTimeNt = nowNt;
+	previousShaftEventTimeNt = timestamp;
 
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(nullptr, engine, signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	triggerState.decodeTriggerEvent(nullptr, engine, signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
@@ -376,7 +372,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	}
 	if (triggerIndexForListeners == 0) {
-		timeAtVirtualZeroNt = nowNt;
+		timeAtVirtualZeroNt = timestamp;
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 
