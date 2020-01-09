@@ -226,6 +226,7 @@ static bool assertNotInIgnitionList(AngleBasedEvent *head, AngleBasedEvent *elem
  */
 bool scheduleOrQueue(AngleBasedEvent *event,
 		uint32_t trgEventIndex,
+		efitick_t edgeTimestamp,
 		angle_t angle,
 		action_s action
 		DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -248,12 +249,16 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 		/**
 		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
 		 */
-		float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * event->position.angleOffsetFromTriggerEvent;
-
-
 		scheduling_s * sDown = &event->scheduling;
 
-		engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, action);
+		scheduleByAngle(
+			sDown,
+			edgeTimestamp,
+			event->position.angleOffsetFromTriggerEvent,
+			action
+			PASS_ENGINE_PARAMETER_SUFFIX
+		);
+
 		return true;
 	} else {
 		event->action = action;
@@ -273,7 +278,7 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 }
 
 static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,
-		int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		int rpm, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	angle_t sparkAngle = iEvent->sparkAngle;
 	const floatms_t dwellMs = ENGINE(engineState.sparkDwell);
@@ -332,7 +337,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	assertAngleRange(sparkAngle, "findAngle#a5", CUSTOM_ERR_6549);
 
 
-	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, sparkAngle, { fireSparkAndPrepareNextSchedule, iEvent } PASS_ENGINE_PARAMETER_SUFFIX);
+	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, edgeTimestamp, sparkAngle, { fireSparkAndPrepareNextSchedule, iEvent } PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (scheduled) {
 #if SPARK_EXTREME_LOGGING
@@ -408,7 +413,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 }
 
 
-static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	AngleBasedEvent *current, *tmp;
 
 	LL_FOREACH_SAFE2(ENGINE(angleBasedEventsHead), current, tmp, nextToothEvent)
@@ -423,14 +428,18 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex D
 	scheduleMsg(logger, "time to invoke ind=%d %d %d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-
-			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->position.angleOffsetFromTriggerEvent;
-			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, current->action);
+			scheduleByAngle(
+				sDown,
+				edgeTimestamp,
+				current->position.angleOffsetFromTriggerEvent,
+				current->action
+				PASS_ENGINE_PARAMETER_SUFFIX
+			);
 		}
 	}
 }
 
-void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
+void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp
 		 DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	ScopePerf perf(PE::OnTriggerEventSparkLogic);
@@ -449,7 +458,7 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 	 * Ignition schedule is defined once per revolution
 	 * See initializeIgnitionActions()
 	 */
-	scheduleAllSparkEventsUntilNextTriggerTooth(trgEventIndex PASS_ENGINE_PARAMETER_SUFFIX);
+	scheduleAllSparkEventsUntilNextTriggerTooth(trgEventIndex, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
@@ -458,7 +467,7 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 			IgnitionEvent *event = &ENGINE(ignitionEvents.elements[i]);
 			if (event->dwellPosition.triggerEventIndex != trgEventIndex)
 				continue;
-			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm PASS_ENGINE_PARAMETER_SUFFIX);
+			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 }
