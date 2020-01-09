@@ -85,7 +85,6 @@ void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeu
 }
 
 void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitime_t nt, action_s action) {
-
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 	scheduleCounter++;
