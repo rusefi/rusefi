@@ -37,6 +37,10 @@ void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t ti
 	scheduleForLater(scheduling, timeUs - getTimeNowUs(), action);
 }
 
+void SleepExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitick_t timeNt, action_s action) {
+	scheduleByTimestamp(scheduling, NT2US(timeNt), action);
+}
+
 static void timerCallback(scheduling_s *scheduling) {
 #if EFI_PRINTF_FUEL_DETAILS
 	if (scheduling->action.getCallback() == (schfunc_t)&seTurnPinLow) {
