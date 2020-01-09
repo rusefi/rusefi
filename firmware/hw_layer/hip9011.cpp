@@ -248,7 +248,7 @@ static void endIntegration(void *) {
 /**
  * Shaft Position callback used to start or finish HIP integration
  */
-static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	(void)ckpEventType;
 	// this callback is invoked on interrupt thread
 	if (index != 0)
@@ -261,12 +261,12 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 
 	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
-	scheduleByAngle(&startTimer[structIndex], engineConfiguration->knockDetectionWindowStart,
+	scheduleByAngle(&startTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowStart,
 			&startIntegration);
 #if EFI_PROD_CODE
 	hipLastExecutionCount = lastExecutionCount;
 #endif /* EFI_PROD_CODE */
-	scheduleByAngle(&endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd,
+	scheduleByAngle(&endTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowEnd,
 			&endIntegration);
 	engine->m.hipCbTime = getTimeNowLowerNt() - engine->m.beforeHipCb;
 }

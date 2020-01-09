@@ -13,7 +13,7 @@
 #include "trigger_central_generated.h"
 
 class Engine;
-typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
+typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #define HAVE_CAM_INPUT() engineConfiguration->camInputs[0] != GPIO_UNASSIGNED
 

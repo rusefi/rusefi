@@ -39,3 +39,7 @@ void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t tim
 	}
 	schedulingQueue.insertTask(scheduling, timeUs, action);
 }
+
+void TestExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitick_t timeNt, action_s action) {
+	scheduleByTimestamp(scheduling, NT2US(timeNt), action);
+}
