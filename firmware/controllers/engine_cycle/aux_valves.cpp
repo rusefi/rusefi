@@ -33,6 +33,7 @@ void plainPinTurnOn(AuxActor *current) {
 
 	scheduleOrQueue(&current->open,
 			TRIGGER_EVENT_UNDEFINED,
+			getTimeNowNt(),
 			current->extra + engine->engineState.auxValveStart,
 			{ plainPinTurnOn, current }
 			PASS_ENGINE_PARAMETER_SUFFIX
@@ -44,6 +45,7 @@ void plainPinTurnOn(AuxActor *current) {
 
 	scheduleOrQueue(&current->close,
 			TRIGGER_EVENT_UNDEFINED,
+			getTimeNowNt(),
 			current->extra + engine->engineState.auxValveEnd,
 			{ plainPinTurnOff, output }
 			PASS_ENGINE_PARAMETER_SUFFIX
@@ -148,6 +150,7 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 			scheduleOrQueue(&actor->open,
 					TRIGGER_EVENT_UNDEFINED,
+					getTimeNowNt(),
 					actor->extra + engine->engineState.auxValveStart,
 					{ plainPinTurnOn, actor }
 					PASS_ENGINE_PARAMETER_SUFFIX
