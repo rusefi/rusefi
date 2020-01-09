@@ -319,7 +319,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		engine->executor.scheduleForLater(sUp, chargeDelayUs, { &turnSparkPinHigh, iEvent });
+		engine->executor.scheduleByTimestampNt(sUp, edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, iEvent });
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
