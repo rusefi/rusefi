@@ -36,11 +36,9 @@ static int loadStepperPos() {
 #endif
 }
 
-static msg_t stThread(StepperMotor *motor) {
-	chRegSetThreadName("stepper");
-
+void StepperMotor::ThreadTask() {
 	// try to get saved stepper position (-1 for no data)
-	motor->currentPosition = loadStepperPos();
+	m_currentPosition = loadStepperPos();
 
 #if HAL_USE_ADC
 	// first wait until at least 1 slowADC sampling is complete
@@ -55,9 +53,9 @@ static msg_t stThread(StepperMotor *motor) {
 	bool forceStepperParking = !isRunning && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > STEPPER_PARKING_TPS;
 	if (CONFIG(stepperForceParkingEveryRestart))
 		forceStepperParking = true;
-	scheduleMsg(logger, "Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", motor->currentPosition, (forceStepperParking ? 1 : 0), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE));
+	scheduleMsg(logger, "Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", m_currentPosition, (forceStepperParking ? 1 : 0), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	if (motor->currentPosition < 0 || forceStepperParking) {
+	if (m_currentPosition < 0 || forceStepperParking) {
 		// reset saved value
 		saveStepperPos(-1);
 		
@@ -69,66 +67,60 @@ static msg_t stThread(StepperMotor *motor) {
 		 *
 		 * Add extra steps to compensate step skipping by some old motors.
 		 */
-		int numParkingSteps = (int)efiRound((1.0f + (float)CONFIG(stepperParkingExtraSteps) / PERCENT_MULT) * motor->totalSteps, 1.0f);
+		int numParkingSteps = (int)efiRound((1.0f + (float)CONFIG(stepperParkingExtraSteps) / PERCENT_MULT) * m_totalSteps, 1.0f);
 		for (int i = 0; i < numParkingSteps; i++) {
-			motor->pulse();
+			pulse();
 		}
 
 		// set & save zero stepper position after the parking completion
-		motor->currentPosition = 0;
-		saveStepperPos(motor->currentPosition);
+		m_currentPosition = 0;
+		saveStepperPos(m_currentPosition);
 	} else {
 		// The initial target position should correspond to the saved stepper position.
 		// Idle thread starts later and sets a new target position.
-		motor->setTargetPosition(motor->currentPosition);
+		setTargetPosition(m_currentPosition);
 	}
 
 	while (true) {
-		int targetPosition = motor->getTargetPosition();
-		int currentPosition = motor->currentPosition;
+		int targetPosition = getTargetPosition();
+		int currentPosition = m_currentPosition;
 
 		if (targetPosition == currentPosition) {
-			chThdSleepMilliseconds(motor->reactionTime);
+			chThdSleepMilliseconds(m_reactionTime);
 			continue;
 		}
 		bool isIncrementing = targetPosition > currentPosition;
-		motor->setDirection(isIncrementing);
+		setDirection(isIncrementing);
 		if (isIncrementing) {
-			motor->currentPosition++;
+			m_currentPosition++;
 		} else {
-			motor->currentPosition--;
+			m_currentPosition--;
 		}
-		motor->pulse();
+
+		pulse();
+
 		// save position to backup RTC register
 #if EFI_PROD_CODE
-		saveStepperPos(motor->currentPosition);
+		saveStepperPos(m_currentPosition);
 #endif
 	}
-
-	return 0;
 }
 
-StepperMotor::StepperMotor() {
-	currentPosition = 0;
-	targetPosition = 0;
-
-	reactionTime = 0;
-	totalSteps = 0;
-}
+StepperMotor::StepperMotor() : ThreadController("stepper", NORMALPRIO) {}
 
 int StepperMotor::getTargetPosition() const {
-	return targetPosition;
+	return m_targetPosition;
 }
 
 void StepperMotor::setTargetPosition(int targetPosition) {
-	this->targetPosition = targetPosition;
+	m_targetPosition = targetPosition;
 }
 
 void StepperMotor::setDirection(bool isIncrementing) {
-	if (isIncrementing != this->currentDirection) {
+	if (isIncrementing != m_currentDirection) {
 		// compensate stepper motor inertia
-		chThdSleepMilliseconds(reactionTime);
-		this->currentDirection = isIncrementing;
+		chThdSleepMilliseconds(m_reactionTime);
+		m_currentDirection = isIncrementing;
 	}
 		
 	directionPin.setValue(isIncrementing);
@@ -138,10 +130,10 @@ void StepperMotor::pulse() {
 	enablePin.setValue(false); // enable stepper
 
 	stepPin.setValue(true);
-	chThdSleepMilliseconds(reactionTime);
+	chThdSleepMilliseconds(m_reactionTime);
 
 	stepPin.setValue(false);
-	chThdSleepMilliseconds(reactionTime);
+	chThdSleepMilliseconds(m_reactionTime);
 
 	enablePin.setValue(true); // disable stepper
 }
@@ -149,8 +141,8 @@ void StepperMotor::pulse() {
 void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode,
 		float reactionTime, int totalSteps,
 		brain_pin_e enablePin, pin_output_mode_e enablePinMode, Logging *sharedLogger) {
-	this->reactionTime = maxF(1, reactionTime);
-	this->totalSteps = maxI(3, totalSteps);
+	m_reactionTime = maxF(1, reactionTime);
+	m_totalSteps = maxI(3, totalSteps);
 	
 	logger = sharedLogger;
 
@@ -171,9 +163,9 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin
 	this->enablePin.setValue(true); // disable stepper
 	this->stepPin.setValue(false);
 	this->directionPin.setValue(false);
-	this->currentDirection = false;
+	m_currentDirection = false;
 
-	chThdCreateStatic(stThreadStack, sizeof(stThreadStack), NORMALPRIO, (tfunc_t)(void*) stThread, this);
+	Start();
 }
 
 #endif
