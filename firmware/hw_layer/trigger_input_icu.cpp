@@ -28,14 +28,12 @@ extern bool hasFirmwareErrorFlag;
 
 static Logging *logger;
 
-static void vvtWidthCallback(void *arg) {
-    (void)arg;
-	hwHandleVvtCamSignal(TV_RISE);
+static void vvtWidthCallback(void *) {
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt());
 }
 
-static void vvtPeriodCallback(void *arg) {
-    (void)arg;
-	hwHandleVvtCamSignal(TV_FALL);
+static void vvtPeriodCallback(void *) {
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt());
 }
 
 /**
@@ -43,6 +41,8 @@ static void vvtPeriodCallback(void *arg) {
  * 'width' events happens before the 'period' event
  */
 static void shaftWidthCallback(bool isPrimary) {
+	efitick_t stamp = getTimeNowNt();
+
 	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
@@ -58,10 +58,12 @@ static void shaftWidthCallback(bool isPrimary) {
 	// todo: add support for 3rd channel
 	trigger_event_e signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) : (engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
 
-	hwHandleShaftSignal(signal);
+	hwHandleShaftSignal(signal, stamp);
 }
 
 static void shaftPeriodCallback(bool isPrimary) {
+	efitick_t stamp = getTimeNowNt();
+
 	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
@@ -76,7 +78,7 @@ static void shaftPeriodCallback(bool isPrimary) {
 	//	icucnt_t last_period = icuGetPeriod(icup); so far we are fine with system time
 	trigger_event_e signal =
 			isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) : (engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
-	hwHandleShaftSignal(signal);
+	hwHandleShaftSignal(signal, stamp);
 }
 
 /*==========================================================================*/

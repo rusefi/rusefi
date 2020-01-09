@@ -26,14 +26,14 @@ class TriggerCentral : public trigger_central_s {
 public:
 	TriggerCentral();
 	void addEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
-	void handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void resetAccumSignalData();
 	bool noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void validateCamVvtCounters();
 	TriggerStateWithRunningStatistics triggerState;
-	efitick_t nowNt = 0;
+
 	angle_t vvtPosition = 0;
 	/**
 	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic
@@ -56,8 +56,8 @@ private:
 };
 
 void triggerInfo(void);
-void hwHandleShaftSignal(trigger_event_e signal);
-void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX);
+void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp);
+void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void initTriggerCentral(Logging *sharedLogger);
 void printAllTriggers();
