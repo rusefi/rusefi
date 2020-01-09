@@ -81,6 +81,11 @@ void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs
  * @param [in] dwell the number of ticks of output duration.
  */
 void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
+	scheduleByTimestampNt(scheduling, US2NT(timeUs), action);
+}
+
+void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitime_t nt, action_s) {
+
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 	scheduleCounter++;
@@ -89,7 +94,7 @@ void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeu
 		// this would guard the queue and disable interrupts
 		alreadyLocked = lockAnyContext();
 	}
-	bool needToResetTimer = queue.insertTask(scheduling, US2NT(timeUs), action);
+	bool needToResetTimer = queue.insertTask(scheduling, nt, action);
 	if (!reentrantFlag) {
 		doExecute();
 		if (needToResetTimer) {

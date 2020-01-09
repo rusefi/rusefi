@@ -364,10 +364,10 @@ void scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle
 		action_s action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
 
-	efitimeus_t edgeUs = NT2US(edgeTimestamp);
-	efitimeus_t delayedTime = edgeUs + (int)delayUs;
+	efitime_t delayNt = US2NT(delayUs);
+	efitime_t delayedTime = edgeTimestamp + delayNt;
 
-	ENGINE(executor.scheduleByTimestamp(timer, delayedTime, action));
+	ENGINE(executor.scheduleByTimestampNt(timer, delayedTime, action));
 }
 
 #else
