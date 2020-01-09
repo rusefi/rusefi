@@ -24,7 +24,7 @@ static void turnTachPinLow(void *) {
 }
 
 static void tachSignalCallback(trigger_event_e ckpSignalType,
-		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(ckpSignalType);
 	if (index != (uint32_t)engineConfiguration->tachPulseTriggerIndex) {
 		return;

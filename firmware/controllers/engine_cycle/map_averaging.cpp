@@ -263,7 +263,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
 static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
-		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	ScopePerf perf(PE::MapAveragingTriggerCallback);
 	
