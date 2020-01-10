@@ -217,7 +217,7 @@ bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->throttlePedalPositionAdcChannel != EFI_ADC_NONE;
 }
 
-bool hasTps2(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->tps2_1AdcChannel != EFI_ADC_NONE;
 }
 
