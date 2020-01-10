@@ -509,7 +509,7 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	onTriggerEventSparkLogic(limitedSpark, trgEventIndex, rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	onTriggerEventSparkLogic(limitedSpark, trgEventIndex, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (trgEventIndex == 0) {
 		ENGINE(m.mainTriggerCallbackTime) = getTimeNowLowerNt() - ENGINE(m.beforeMainTrigger);
