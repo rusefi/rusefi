@@ -452,10 +452,6 @@ static void printTemperatureInfo(void) {
 #endif /* EFI_ANALOG_SENSORS */
 }
 
-void setCallFromPitStop(int durationMs) {
-	engine->callFromPitStopEndTime = currentTimeMillis() + durationMs;
-}
-
 static void setCrankingRpm(int value) {
 	engineConfiguration->cranking.rpm = value;
 	doPrintConfiguration();
@@ -1246,7 +1242,6 @@ static void setTpsErrorDetectionTooHigh(int v) {
 }
 
 const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
-		{"call_from_pitstop", setCallFromPitStop},
 		{"cranking_rpm", setCrankingRpm},
 		{"cranking_injection_mode", setCrankingInjectionMode},
 		{"injection_mode", setInjectionMode},

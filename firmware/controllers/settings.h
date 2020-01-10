@@ -15,7 +15,6 @@ void initSettings(void);
 void printSpiState(Logging *logger, const engine_configuration_s *engineConfiguration);
 void printConfiguration(const engine_configuration_s *engineConfiguration);
 void scheduleStopEngine(void);
-void setCallFromPitStop(int durationMs);
 void printTPSInfo(void);
 void setEngineType(int value);
 /**

@@ -56,12 +56,6 @@ typedef int64_t efitime_t;
 typedef efitime_t efitimeus_t;
 
 /**
- * 64 bit time in milliseconds (1/1_000 of a second), since boot
- */
-typedef efitime_t efitimems64_t;
-
-
-/**
  * platform-dependent tick since boot
  * in case of stm32f4 that's a CPU tick
  */

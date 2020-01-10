@@ -309,9 +309,6 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 #if EFI_IDLE_CONTROL
 		startIdleBench();
 #endif
-	} else if (subsystem == 0x20 && index == 0x3456) {
-		// call to pit
-		setCallFromPitStop(30000);
 	} else if (subsystem == 0x30) {
 		setEngineType(index);
 	} else if (subsystem == 0x31) {
