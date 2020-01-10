@@ -90,7 +90,7 @@ void EngineTestHelper::fireRise(float delayMs) {
  * fire single RISE front event
  */
 void EngineTestHelper::firePrimaryTriggerRise() {
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfigurationPtr, &persistentConfig);
+	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, getTimeNowNt(), &engine, engine.engineConfigurationPtr, &persistentConfig);
 }
 
 void EngineTestHelper::fireFall(float delayMs) {
@@ -99,7 +99,7 @@ void EngineTestHelper::fireFall(float delayMs) {
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfigurationPtr, &persistentConfig);
+	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, getTimeNowNt(), &engine, engine.engineConfigurationPtr, &persistentConfig);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {

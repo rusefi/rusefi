@@ -2,7 +2,7 @@
  * @file test_trigger_multi_sync.cpp
  *
  * @date Feb 2, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_test_helper.h"

@@ -3,7 +3,7 @@
  *
  * @date 13 Feb 2014
  * @author rus084
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef GY6_139QMB_H_

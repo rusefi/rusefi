@@ -33,8 +33,12 @@
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
-void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
-	scheduleForLater(scheduling, timeUs - getTimeNowUs(), callback, param);
+void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
+	scheduleForLater(scheduling, timeUs - getTimeNowUs(), action);
+}
+
+void SleepExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitick_t timeNt, action_s action) {
+	scheduleByTimestamp(scheduling, NT2US(timeNt), action);
 }
 
 static void timerCallback(scheduling_s *scheduling) {
@@ -50,18 +54,18 @@ static void timerCallback(scheduling_s *scheduling) {
 	scheduling->action.execute();
 }
 
-static void doScheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
 	int delaySt = MY_US2ST(delayUs);
 	if (delaySt <= 0) {
 		/**
 		 * in case of zero delay, we should invoke the callback
 		 */
-		callback(param);
+		action.execute();
 		return;
 	}
 
 	bool alreadyLocked = lockAnyContext();
-	scheduling->action.setAction(callback, param);
+	scheduling->action = action;
 	int isArmed = chVTIsArmedI(&scheduling->timer);
 	if (isArmed) {
 		/**
@@ -71,8 +75,8 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t 
 	}
 
 #if EFI_SIMULATOR
-	if (callback == (schfunc_t)&seTurnPinLow) {
-		printf("setTime cb=seTurnPinLow p=%d\r\n", (int)param);
+	if (action.getCallback() == (schfunc_t)&seTurnPinLow) {
+		printf("setTime cb=seTurnPinLow p=%d\r\n", (int)action.getArgument());
 	} else {
 //		printf("setTime cb=%d p=%d\r\n", (int)callback, (int)param);
 	}
@@ -84,8 +88,8 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t 
 	}
 }
 
-void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	doScheduleForLater(scheduling, delayUs, callback, param);
+void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
+	doScheduleForLater(scheduling, delayUs, action);
 }
 
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */

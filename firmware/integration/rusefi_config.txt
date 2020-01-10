@@ -866,7 +866,8 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:7], @@pin_mode_e_enum@@
 	float alternator_antiwindupFreq;;    "x",    1,      0.0,       -1000000,  1000000,        4
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC",      1,     0,    0, 1023,      0
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC",      1,     0,    0, 1023,      0
-	uint8_t[4] unusedFormerWarmupAfrPid;
+	uint8_t[3] unusedFormerWarmupAfrPid;
+	uint8_t tachPulsePerRev;;"Pulse",        1,     0,  1.0,    255.0,  0
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2

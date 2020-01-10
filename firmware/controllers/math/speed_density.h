@@ -2,7 +2,7 @@
  * @file	speed_density.h
  *
  * @date May 29, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once

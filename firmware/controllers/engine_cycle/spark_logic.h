@@ -2,7 +2,7 @@
  * @file spark_logic.h
  *
  * @date Sep 15, 2016
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once
@@ -24,5 +24,5 @@ int isIgnitionTimingError(void);
 bool scheduleOrQueue(AngleBasedEvent *event,
 		uint32_t trgEventIndex,
 		angle_t angle,
-		schfunc_t callback,
-		void *param DECLARE_ENGINE_PARAMETER_SUFFIX);
+		action_s action
+		DECLARE_ENGINE_PARAMETER_SUFFIX);

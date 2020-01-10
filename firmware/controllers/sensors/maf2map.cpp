@@ -1,7 +1,7 @@
 /*
  * @file maf2map.cpp
  *
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  * @date Jan 20, 2018
  */
 

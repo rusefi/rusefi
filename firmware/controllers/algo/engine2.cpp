@@ -2,7 +2,7 @@
  * engine2.cpp
  *
  * @date Jan 5, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 // todo: move this code to more proper locations
