@@ -2,7 +2,7 @@
  * @file CJ125_logic.cpp
  *
  * @date Feb 1, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "cj125_logic.h"

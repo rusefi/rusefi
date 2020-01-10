@@ -81,8 +81,12 @@ static void reportPins(void) {
 				scheduleMsg(&logger, "ext %s: %s",
 					pin_name, pin_user ? pin_user : "free");
 			} else {
-				scheduleMsg(&logger, "ext %s.%d: %s",
-					gpiochips_getChipName(brainPin), gpiochips_getPinOffset(brainPin), pin_user ? pin_user : "free");
+				const char *chip_name = gpiochips_getChipName(brainPin);
+				/* if chip exist */
+				if (chip_name != NULL) {
+					scheduleMsg(&logger, "ext %s.%d: %s",
+						chip_name, gpiochips_getPinOffset(brainPin), pin_user ? pin_user : "free");
+				}
 			}
 		}
 	#endif

@@ -2,7 +2,7 @@
  * test_cam_vtt_input.cpp
  *
  *  Created on: Jan 13, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_test_helper.h"
@@ -105,7 +105,7 @@ TEST(sensors, testCamInput) {
 
 	for (int i = 0; i < 600;i++) {
 		eth.fireRise(50);
-		hwHandleVvtCamSignal(TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";

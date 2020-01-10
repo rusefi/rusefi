@@ -2,7 +2,7 @@
  * counter64.cpp
  *
  *  Created on: Mar 31, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "counter64.h"

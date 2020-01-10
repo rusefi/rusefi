@@ -44,11 +44,14 @@ analog_inputs:
   EFI_ADC_4: "28 - AN volt 10"
   EFI_ADC_6: "26 - AN volt 2"
   EFI_ADC_7: "31 - AN volt 3"
+  # PB0
   EFI_ADC_8: "36 - AN volt 8"
+  # PB1
   EFI_ADC_9: "40 - AN volt 9"
   EFI_ADC_10: "27 - AN volt 1"
   EFI_ADC_11: "Battery Sense"
   EFI_ADC_12: "19 - AN volt 4"
+  # PC3
   EFI_ADC_13: "20 - AN volt 5"
   EFI_ADC_14: "32 - AN volt 6"
   EFI_ADC_15: "30 - AN volt 7"

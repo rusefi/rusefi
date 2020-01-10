@@ -7,15 +7,19 @@
  * see digital_input_icu.cp
  *
  * @date Dec 30, 2012
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
 
-#if EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE) && (HAL_USE_COMP == FALSE)
+#if EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE)
 
 #include "trigger_input.h"
 #include "digital_input_exti.h"
+
+#if (PAL_USE_CALLBACKS == FALSE)
+	#error "PAL_USE_CALLBACKS should be enabled to use HAL_TRIGGER_USE_PAL"
+#endif
 
 extern bool hasFirmwareErrorFlag;
 
@@ -25,7 +29,11 @@ EXTERN_ENGINE;
 static ioline_t primary_line;
 
 static void shaft_callback(void *arg) {
+	// do the time sensitive things as early as possible!
+	efitick_t stamp = getTimeNowNt();
 	ioline_t pal_line = (ioline_t)arg;
+	bool rise = (palReadLine(pal_line) == PAL_HIGH);
+
 	// todo: support for 3rd trigger input channel
 	// todo: start using real event time from HW event, not just software timer?
 	if (hasFirmwareErrorFlag)
@@ -36,7 +44,6 @@ static void shaft_callback(void *arg) {
 		return;
 	}
 
-	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 	trigger_event_e signal;
 	// todo: add support for 3rd channel
 	if (rise) {
@@ -49,45 +56,51 @@ static void shaft_callback(void *arg) {
 					(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
 	}
 
-	hwHandleShaftSignal(signal);
+	hwHandleShaftSignal(signal, stamp);
 }
 
 static void cam_callback(void *arg) {
+	efitick_t stamp = getTimeNowNt();
+
 	ioline_t pal_line = (ioline_t)arg;
 
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
 	if (rise) {
-		hwHandleVvtCamSignal(TV_RISE);
+		hwHandleVvtCamSignal(TV_RISE, stamp);
 	} else {
-		hwHandleVvtCamSignal(TV_FALL);
+		hwHandleVvtCamSignal(TV_FALL, stamp);
 	}
 }
 
-void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
+/*==========================================================================*/
+/* Exported functions.														*/
+/*==========================================================================*/
+
+int extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	brain_pin_e brainPin = isTriggerShaft ? CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 
-	scheduleMsg(logger, "turnOnTriggerInputPin(PAL) %s %s", msg, hwPortname(brainPin));
+	scheduleMsg(logger, "extiTriggerTurnOnInputPin %s %s", msg, hwPortname(brainPin));
 
 	/* TODO:
 	 * * do not set to both edges if we need only one
 	 * * simplify callback in case of one edge */
 	ioline_t pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
 	efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line);
+
+	return 0;
 }
 
-void turnOffTriggerInputPin(brain_pin_e brainPin) {
+void extiTriggerTurnOffInputPin(brain_pin_e brainPin) {
 	efiExtiDisablePin(brainPin);
 }
 
-void setPrimaryChannel(brain_pin_e brainPin) {
+void extiTriggerSetPrimaryChannel(brain_pin_e brainPin) {
 	primary_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
 }
 
-void turnOnTriggerInputPins(Logging *sharedLogger) {
+void extiTriggerTurnOnInputPins(Logging *sharedLogger) {
 	logger = sharedLogger;
-
-	applyNewTriggerInputPins();
 }
 
-#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE) && (HAL_USE_COMP == FALSE)) */
+#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE)) */

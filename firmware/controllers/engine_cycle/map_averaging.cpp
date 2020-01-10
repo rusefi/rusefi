@@ -263,7 +263,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
 static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
-		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	ScopePerf perf(PE::MapAveragingTriggerCallback);
 	
@@ -313,10 +313,10 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		// at the moment we schedule based on time prediction based on current RPM and angle
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
-		scheduleByAngle(&startTimer[i][structIndex], samplingStart,
-				startAveraging, NULL PASS_ENGINE_PARAMETER_SUFFIX);
-		scheduleByAngle(&endTimer[i][structIndex], samplingEnd,
-				endAveraging, NULL PASS_ENGINE_PARAMETER_SUFFIX);
+		scheduleByAngle(&startTimer[i][structIndex], edgeTimestamp, samplingStart,
+				startAveraging PASS_ENGINE_PARAMETER_SUFFIX);
+		scheduleByAngle(&endTimer[i][structIndex], edgeTimestamp, samplingEnd,
+				endAveraging PASS_ENGINE_PARAMETER_SUFFIX);
 		engine->m.mapAveragingCbTime = getTimeNowLowerNt()
 				- engine->m.beforeMapAveragingCb;
 	}

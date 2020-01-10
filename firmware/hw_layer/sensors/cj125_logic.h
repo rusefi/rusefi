@@ -2,7 +2,7 @@
  * @file CJ125_logic.h
  *
  * @date Feb 1, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef HW_LAYER_SENSORS_CJ125_LOGIC_H_

@@ -2,7 +2,7 @@
  * digital_input_exti.h
  *
  *  Created on: Dec 18, 2018
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "digital_input.h"

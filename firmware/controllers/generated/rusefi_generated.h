@@ -1726,6 +1726,8 @@
 #define tachPulseDuractionMs_offset_hex 6a8
 #define tachPulseDurationAsDutyCycle_offset 1464
 #define tachPulseDurationAsDutyCycle_offset_hex 5b8
+#define tachPulsePerRev_offset 1775
+#define tachPulsePerRev_offset_hex 6ef
 #define tachPulseTriggerIndex_offset 1708
 #define tachPulseTriggerIndex_offset_hex 6ac
 #define targetVBatt_offset 2024

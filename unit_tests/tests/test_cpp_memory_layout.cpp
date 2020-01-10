@@ -2,7 +2,7 @@
  * test_cpp_memory_layout.cpp
  *
  * Jun 15, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "unit_test_framework.h"

@@ -4,7 +4,7 @@
  * See also FiringOrderTSLogic.java
  *
  * @date Jul 20, 2016
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "rusefi_enums.h"

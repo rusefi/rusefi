@@ -2,7 +2,7 @@
  * test_miata_na6_real_cranking.cpp
  *
  * @date May 11, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_test_helper.h"
@@ -29,7 +29,7 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, int channe
 	EXPAND_Engine;
 	timeNowUs = 1000000 * timestampS;
 	printf("MIATANA: posting time=%d event=%d\r\n", timeNowUs, event);
-	engine->triggerCentral.handleShaftSignal(event, engine, engine->engineConfigurationPtr, &eth->persistentConfig);
+	engine->triggerCentral.handleShaftSignal(event, getTimeNowNt(), engine, engine->engineConfigurationPtr, &eth->persistentConfig);
 }
 
 TEST(miataNA6, realCranking) {

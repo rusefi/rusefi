@@ -3,7 +3,7 @@
  * @brief	Position sensor hardware layer
  *
  * @date Dec 30, 2012
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef CRANK_INPUT_H_
@@ -20,8 +20,5 @@ void turnOnTriggerInputPins(Logging *sharedLogger);
 void applyNewTriggerInputPins(void);
 void startTriggerInputPins(void);
 void stopTriggerInputPins(void);
-void setPrimaryChannel(brain_pin_e brainPin);
-void turnOffTriggerInputPin(brain_pin_e brainPin);
-void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft);
 
 #endif /* CRANK_INPUT_H_ */

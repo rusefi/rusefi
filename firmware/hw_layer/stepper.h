@@ -10,28 +10,33 @@
 #include "global.h"
 #include "efi_gpio.h"
 #include "backup_ram.h"
+#include "thread_controller.h"
 
-class StepperMotor {
+class StepperMotor final : private ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	StepperMotor();
+
 	void initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, int totalSteps,
 			brain_pin_e enablePin, pin_output_mode_e enablePinMode, Logging *sharedLogger);
+
 	void pulse();
 	void setTargetPosition(int targetPosition);
 	int getTargetPosition() const;
 	void setDirection(bool isIncrementing);
 
 	OutputPin directionPin, stepPin, enablePin;
-	int currentPosition;
-	bool currentDirection;
-	float reactionTime;
-	int totalSteps;
+	int m_currentPosition = 0;
+	bool m_currentDirection = false;
+	float m_reactionTime = 0;
+	int m_totalSteps = 0;
+
+protected:
+	void ThreadTask() override;
+
 private:
-	int targetPosition;
+	int m_targetPosition = 0;
 
 	pin_output_mode_e directionPinMode, stepPinMode, enablePinMode;
-
-	THD_WORKING_AREA(stThreadStack, UTILITY_THREAD_STACK_SIZE);
 };
 
 #endif /* STEPPER_H_ */

@@ -2,7 +2,7 @@
  * @file test_on_demand_parameters.cpp
  *
  *  Created on: Jan 16, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "unit_test_framework.h"

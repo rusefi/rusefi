@@ -6,7 +6,7 @@
  * express myself in C/C++. I am open for suggestions :)
  *
  * @date May 21, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -412,11 +412,6 @@ void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->stopEngineRequestTimeNt = getTimeNowNt();
 	// let's close injectors or else if these happen to be open right now
 	enginePins.stopPins();
-}
-
-void action_s::setAction(schfunc_t callback, void *param) {
-	this->callback = callback;
-	this->param = param;
 }
 
 void action_s::execute() {
