@@ -689,7 +689,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!engine->engineState.hasEtbPedalPositionSensor) {
 		return;
 	}
-	engine->etbActualCount = hasTps2(PASS_ENGINE_PARAMETER_SIGNATURE) ? 2 : 1;
+	engine->etbActualCount = hasSecondThrottleBody(PASS_ENGINE_PARAMETER_SIGNATURE) ? 2 : 1;
 
 #if 0
 	// not alive code
