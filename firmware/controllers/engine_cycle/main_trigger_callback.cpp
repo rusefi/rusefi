@@ -98,7 +98,7 @@ void endSimultaniousInjection(InjectionEvent *event) {
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-static inline void tempTurnPinHigh(InjectorOutputPin *output) {
+static inline void turnInjectionPinHigh(InjectorOutputPin *output) {
 	output->overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
@@ -129,7 +129,7 @@ void turnInjectionPinHigh(InjectionEvent *event) {
 		InjectorOutputPin *output = event->outputs[i];
 
 		if (output) {
-			tempTurnPinHigh(output);
+			turnInjectionPinHigh(output);
 		}
 	}
 }
