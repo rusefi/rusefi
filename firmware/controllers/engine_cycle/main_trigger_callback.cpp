@@ -122,7 +122,6 @@ static inline void tempTurnPinHigh(InjectorOutputPin *output) {
 	}
 }
 
-// todo: make these macro? kind of a penny optimization if compiler is not smart to inline
 void seTurnPinHigh(InjectionEvent *event) {
 	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
