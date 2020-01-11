@@ -273,8 +273,6 @@ bool NamedOutputPin::stop() {
 }
 
 void InjectorOutputPin::reset() {
-	overlappingScheduleOffTime = 0;
-	cancelNextTurningInjectorOff = false;
 	overlappingCounter = 0;
 	// todo: this could be refactored by calling some super-reset method
 	currentLogicValue = INITIAL_PIN_STATE;

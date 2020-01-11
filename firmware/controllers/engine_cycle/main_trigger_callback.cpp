@@ -137,21 +137,6 @@ static inline void turnInjectionPinLow(InjectorOutputPin *output) {
 	printf("turnInjectionPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	if (output->cancelNextTurningInjectorOff) {
-		/**
-		 * in case of fuel schedule overlap between engine cycles,
-		 * and if engine cycle is above say 75% for batch mode on 4 cylinders,
-		 * we will get a secondary overlap between the special injection and a normal injection on the same injector.
-		 * In such a case want to combine these two injection into one continues injection.
-		 * Unneeded turn of injector on is handle while scheduling that second injection, but cancellation
-		 * of special injection end has to be taken care of dynamically
-		 *
-		 */
-		output->cancelNextTurningInjectorOff = false;
-#if EFI_SIMULATOR
-		printf("was cancelled %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* EFI_SIMULATOR */
-	} else {
 
 #if FUEL_MATH_EXTREME_LOGGING
 		const char * w = output->currentLogicValue == false ? "err" : "";
@@ -168,7 +153,7 @@ static inline void turnInjectionPinLow(InjectorOutputPin *output) {
 		} else {
 			output->setLow();
 		}
-	}
+
 }
 
 void turnInjectionPinLow(InjectionEvent *event) {
@@ -315,16 +300,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 		event->isScheduled = true;
 		efitimeus_t turnOnTime = nowUs + (int) injectionStartDelayUs;
-		bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
 
-		if (isSecondaryOverlapping) {
-			output->cancelNextTurningInjectorOff = true;
-	#if EFI_UNIT_TEST || EFI_SIMULATOR
-		printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
-	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
-		} else {
-			sescheduleByTimestamp(sUp, turnOnTime, { &turnInjectionPinHigh, event } PASS_ENGINE_PARAMETER_SUFFIX);
-		}
+		sescheduleByTimestamp(sUp, turnOnTime, { &turnInjectionPinHigh, event } PASS_ENGINE_PARAMETER_SUFFIX);
 		efitimeus_t turnOffTime = nowUs + (int) (injectionStartDelayUs + durationUs);
 		sescheduleByTimestamp(sDown, turnOffTime, { &turnInjectionPinLow, event } PASS_ENGINE_PARAMETER_SUFFIX);
 	}
