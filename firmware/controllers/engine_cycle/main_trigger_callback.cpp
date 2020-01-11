@@ -223,6 +223,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 	floatus_t durationUs = MS2US(injectionDuration);
 
+	// How long until the injector should start to fire (SOI)
 	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffsetFromTriggerEvent;
 
 #if EFI_DEFAILED_LOGGING
@@ -266,6 +267,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	efitimeus_t turnOffTime = turnOnTime + (int) durationUs;
 
 	action_s startAction, endAction;
+	// We use different callbacks based on whether we're running sequential mode or not - everything else is the same
 	if (event->isSimultanious) {
 		startAction = { &startSimultaniousInjection, engine };
 		endAction = { &endSimultaniousInjection, event };
