@@ -122,11 +122,11 @@ static inline void tempTurnPinHigh(InjectorOutputPin *output) {
 	}
 }
 
-// todo: make these macro? kind of a penny optimization if compiler is not smart to inline
 void turnInjectionPinHigh(InjectionEvent *event) {
 	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
-		if (output != NULL) {
+
+		if (output) {
 			tempTurnPinHigh(output);
 		}
 	}
@@ -266,6 +266,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			getRevolutionCounter());
 #endif /* EFI_DEFAILED_LOGGING */
 
+	scheduling_s *sUp = &event->signalTimerUp;
+	scheduling_s *sDown = &event->endOfInjectionEvent;
 
 	if (event->isSimultanious) {
 		/**
@@ -274,14 +276,10 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		 * changed into 'scheduleInjection' and unified? todo: think about it.
 		 */
 
-		scheduling_s * sUp = &event->signalTimerUp;
-// todo: sequential need this logic as well, just do not forget to clear flag		event->isScheduled = true;
-		scheduling_s * sDown = &event->endOfInjectionEvent;
-
+		// todo: sequential need this logic as well, just do not forget to clear flag		event->isScheduled = true;
 		engine->executor.scheduleForLater(sUp, (int) injectionStartDelayUs, { &startSimultaniousInjection, engine });
 		engine->executor.scheduleForLater(sDown, (int) injectionStartDelayUs + durationUs,
 					{ &endSimultaniousInjection, event });
-
 	} else {
 #if EFI_UNIT_TEST
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffsetFromTriggerEvent, injectionStartDelayUs, injectionDuration);
@@ -314,8 +312,6 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 			return; // this InjectionEvent is still needed for an extremely long injection scheduled previously
 		}
-		scheduling_s * sUp = &event->signalTimerUp;
-		scheduling_s * sDown = &event->endOfInjectionEvent;
 
 		event->isScheduled = true;
 		efitimeus_t turnOnTime = nowUs + (int) injectionStartDelayUs;
