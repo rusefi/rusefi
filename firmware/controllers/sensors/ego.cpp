@@ -110,9 +110,11 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 extern float aemXSeriesLambda;
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_PROD_CODE
 	if (CONFIG(enableAemXSeries)) {
 		return aemXSeriesLambda * 14.7f;
 	}
+#endif
 
 #if EFI_CJ125 && HAL_USE_SPI
 	if (CONFIG(isCJ125Enabled)) {
