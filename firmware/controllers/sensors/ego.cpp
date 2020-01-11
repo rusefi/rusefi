@@ -110,7 +110,7 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 extern float aemXSeriesLambda;
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE
+#if EFI_CAN_SUPPORT
 	if (CONFIG(enableAemXSeries)) {
 		return aemXSeriesLambda * 14.7f;
 	}
