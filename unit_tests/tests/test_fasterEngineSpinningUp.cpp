@@ -93,8 +93,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	// check real events for sequential injection
 	// Note: See addFuelEvents() fix inside setRpmValue()!
-	eth.assertEvent5("inj start#3", 0, (void*)seTurnPinHigh, -31875);
-	eth.assertEvent5("inj end#3", 1, (void*)seTurnPinLow, -30000);
+	eth.assertEvent5("inj start#3", 0, (void*)turnInjectionPinHigh, -31875);
+	eth.assertEvent5("inj end#3", 1, (void*)turnInjectionPinLow, -30000);
 }
 
 static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {
