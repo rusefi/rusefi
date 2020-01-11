@@ -4,12 +4,14 @@
  * set, then later retrieved by a consumer.
  *
  * @date September 12, 2019
- * @author Matthew Kennedy, (c) 2019
+ * @author Matthew Kennedy, (c) 2019-2020
  */
 
 #pragma once
 
 #include "sensor.h"
+
+#include "efitime.h"
 
 /**
  * @brief Base class for sensors that compute a value on one thread, and want
@@ -31,12 +33,23 @@ public:
 		bool valid = m_isValid;
 		float value = m_value;
 
-		return {valid, value};
+		if (!valid) {
+			return {false, value};
+		}
+
+		if (getTimeNowNt() - m_timeoutPeriod > m_lastUpdate) {
+			return {false, value};
+		}
+
+		return {true, value};
 	}
 
 protected:
-	explicit StoredValueSensor(SensorType type)
+	explicit StoredValueSensor(SensorType type);
+
+	explicit StoredValueSensor(SensorType type, efitick_t timeoutNt)
 		: Sensor(type)
+		, m_timeoutPeriod(timeoutNt)
 	{
 	}
 
@@ -50,9 +63,13 @@ protected:
 		// Set value before valid - so we don't briefly have the valid bit set on an invalid value
 		m_value = value;
 		m_isValid = true;
+		m_lastUpdate = getTimeNowNt();
 	}
 
 private:
 	bool m_isValid = false;
 	float m_value = 0.0f;
+
+	const efitick_t m_timeoutPeriod;
+	efitick_t m_lastUpdate = 0;
 };
