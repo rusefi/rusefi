@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Dec 11 16:41:07 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Jan 11 01:01:37 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -348,6 +348,93 @@ struct trigger_config_s {
 	offset 4 bit 2 */
 	bool useOnlyFirstChannel : 1;
 	/**
+	offset 4 bit 3 */
+	bool unusedBit_4_3 : 1;
+	/**
+	offset 4 bit 4 */
+	bool unusedBit_4_4 : 1;
+	/**
+	offset 4 bit 5 */
+	bool unusedBit_4_5 : 1;
+	/**
+	offset 4 bit 6 */
+	bool unusedBit_4_6 : 1;
+	/**
+	offset 4 bit 7 */
+	bool unusedBit_4_7 : 1;
+	/**
+	offset 4 bit 8 */
+	bool unusedBit_4_8 : 1;
+	/**
+	offset 4 bit 9 */
+	bool unusedBit_4_9 : 1;
+	/**
+	offset 4 bit 10 */
+	bool unusedBit_4_10 : 1;
+	/**
+	offset 4 bit 11 */
+	bool unusedBit_4_11 : 1;
+	/**
+	offset 4 bit 12 */
+	bool unusedBit_4_12 : 1;
+	/**
+	offset 4 bit 13 */
+	bool unusedBit_4_13 : 1;
+	/**
+	offset 4 bit 14 */
+	bool unusedBit_4_14 : 1;
+	/**
+	offset 4 bit 15 */
+	bool unusedBit_4_15 : 1;
+	/**
+	offset 4 bit 16 */
+	bool unusedBit_4_16 : 1;
+	/**
+	offset 4 bit 17 */
+	bool unusedBit_4_17 : 1;
+	/**
+	offset 4 bit 18 */
+	bool unusedBit_4_18 : 1;
+	/**
+	offset 4 bit 19 */
+	bool unusedBit_4_19 : 1;
+	/**
+	offset 4 bit 20 */
+	bool unusedBit_4_20 : 1;
+	/**
+	offset 4 bit 21 */
+	bool unusedBit_4_21 : 1;
+	/**
+	offset 4 bit 22 */
+	bool unusedBit_4_22 : 1;
+	/**
+	offset 4 bit 23 */
+	bool unusedBit_4_23 : 1;
+	/**
+	offset 4 bit 24 */
+	bool unusedBit_4_24 : 1;
+	/**
+	offset 4 bit 25 */
+	bool unusedBit_4_25 : 1;
+	/**
+	offset 4 bit 26 */
+	bool unusedBit_4_26 : 1;
+	/**
+	offset 4 bit 27 */
+	bool unusedBit_4_27 : 1;
+	/**
+	offset 4 bit 28 */
+	bool unusedBit_4_28 : 1;
+	/**
+	offset 4 bit 29 */
+	bool unusedBit_4_29 : 1;
+	/**
+	offset 4 bit 30 */
+	bool unusedBit_4_30 : 1;
+	/**
+	offset 4 bit 31 */
+	bool unusedBit_4_31 : 1;
+	/**
 	 * offset 8
 	 */
 	int customTotalToothCount;
@@ -557,6 +644,9 @@ struct engine_configuration_s {
 	/**
 	offset 76 bit 30 */
 	bool issue_294_31 : 1;
+	/**
+	offset 76 bit 31 */
+	bool unusedBit_34_31 : 1;
 	/**
 	 * Closed throttle. todo: extract these two fields into a structure
 	 * See also tps1_1AdcChannel
@@ -790,7 +880,7 @@ struct engine_configuration_s {
 	 */
 	int HD44780height;
 	/**
-	 * First TPS, single channel so far. See also pedalPositionAdcChannel
+	 * First throttle body, first sensor. See also pedalPositionAdcChannel
 	 * offset 512
 	 */
 	adc_channel_e tps1_1AdcChannel;
@@ -865,7 +955,7 @@ struct engine_configuration_s {
 	afr_sensor_s afr;
 	/**
 	 * Electronic throttle pedal position input
-	 * Single channel so far
+	 * First channel
 	 * See also tps1_1AdcChannel
 	 * offset 580
 	 */
@@ -1045,9 +1135,22 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e auxFastSensor1_adcChannel;
 	/**
+	 * First throttle body, second sensor.
 	 * offset 681
 	 */
-	uint8_t unused556[3];
+	adc_channel_e tps1_2AdcChannel;
+	/**
+	 * Second throttle body, second sensor.
+	 * offset 682
+	 */
+	adc_channel_e tps2_2AdcChannel;
+	/**
+	 * Electronic throttle pedal position input
+	 * Second channel
+	 * See also tps1_1AdcChannel
+	 * offset 683
+	 */
+	adc_channel_e throttlePedalPositionSecondAdcChannel;
 	/**
 	 * offset 684
 	 */
@@ -1477,6 +1580,96 @@ struct engine_configuration_s {
 	offset 976 bit 1 */
 	bool todoClutchDownPinInverted : 1;
 	/**
+	offset 976 bit 2 */
+	bool unusedBit_249_2 : 1;
+	/**
+	offset 976 bit 3 */
+	bool unusedBit_249_3 : 1;
+	/**
+	offset 976 bit 4 */
+	bool unusedBit_249_4 : 1;
+	/**
+	offset 976 bit 5 */
+	bool unusedBit_249_5 : 1;
+	/**
+	offset 976 bit 6 */
+	bool unusedBit_249_6 : 1;
+	/**
+	offset 976 bit 7 */
+	bool unusedBit_249_7 : 1;
+	/**
+	offset 976 bit 8 */
+	bool unusedBit_249_8 : 1;
+	/**
+	offset 976 bit 9 */
+	bool unusedBit_249_9 : 1;
+	/**
+	offset 976 bit 10 */
+	bool unusedBit_249_10 : 1;
+	/**
+	offset 976 bit 11 */
+	bool unusedBit_249_11 : 1;
+	/**
+	offset 976 bit 12 */
+	bool unusedBit_249_12 : 1;
+	/**
+	offset 976 bit 13 */
+	bool unusedBit_249_13 : 1;
+	/**
+	offset 976 bit 14 */
+	bool unusedBit_249_14 : 1;
+	/**
+	offset 976 bit 15 */
+	bool unusedBit_249_15 : 1;
+	/**
+	offset 976 bit 16 */
+	bool unusedBit_249_16 : 1;
+	/**
+	offset 976 bit 17 */
+	bool unusedBit_249_17 : 1;
+	/**
+	offset 976 bit 18 */
+	bool unusedBit_249_18 : 1;
+	/**
+	offset 976 bit 19 */
+	bool unusedBit_249_19 : 1;
+	/**
+	offset 976 bit 20 */
+	bool unusedBit_249_20 : 1;
+	/**
+	offset 976 bit 21 */
+	bool unusedBit_249_21 : 1;
+	/**
+	offset 976 bit 22 */
+	bool unusedBit_249_22 : 1;
+	/**
+	offset 976 bit 23 */
+	bool unusedBit_249_23 : 1;
+	/**
+	offset 976 bit 24 */
+	bool unusedBit_249_24 : 1;
+	/**
+	offset 976 bit 25 */
+	bool unusedBit_249_25 : 1;
+	/**
+	offset 976 bit 26 */
+	bool unusedBit_249_26 : 1;
+	/**
+	offset 976 bit 27 */
+	bool unusedBit_249_27 : 1;
+	/**
+	offset 976 bit 28 */
+	bool unusedBit_249_28 : 1;
+	/**
+	offset 976 bit 29 */
+	bool unusedBit_249_29 : 1;
+	/**
+	offset 976 bit 30 */
+	bool unusedBit_249_30 : 1;
+	/**
+	offset 976 bit 31 */
+	bool unusedBit_249_31 : 1;
+	/**
 	 * offset 980
 	 */
 	etb_io etbIo[ETB_COUNT];
@@ -1872,7 +2065,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1772
 	 */
-	uint8_t unusedFormerWarmupAfrPid[4];
+	uint8_t unusedFormerWarmupAfrPid[3];
+	/**
+	 * offset 1775
+	 */
+	uint8_t tachPulsePerRev;
 	/**
 	 * kPa value which is too low to be true
 	 * offset 1776
@@ -2928,4 +3125,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Dec 11 16:41:07 EST 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Jan 11 01:01:37 EST 2020

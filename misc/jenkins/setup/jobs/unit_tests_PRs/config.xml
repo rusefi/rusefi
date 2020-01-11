@@ -51,7 +51,7 @@
       <onlyTriggerPhrase>false</onlyTriggerPhrase>
       <useGitHubHooks>true</useGitHubHooks>
       <permitAll>false</permitAll>
-      <whitelist></whitelist>
+      <whitelist> abelom mck1117</whitelist>
       <autoCloseFailedPullRequests>false</autoCloseFailedPullRequests>
       <displayBuildErrorsOnDownstreamBuilds>false</displayBuildErrorsOnDownstreamBuilds>
       <whiteListTargetBranches>
@@ -64,7 +64,7 @@
           <branch></branch>
         </org.jenkinsci.plugins.ghprb.GhprbBranch>
       </blackListTargetBranches>
-      <gitHubAuthId>1eb72bcb-1048-47ce-aa14-19784ed5215f</gitHubAuthId>
+      <gitHubAuthId>*************************</gitHubAuthId>
       <triggerPhrase></triggerPhrase>
       <skipBuildPhrase>.*\[skip\W+ci\].*</skipBuildPhrase>
       <blackListCommitAuthor></blackListCommitAuthor>

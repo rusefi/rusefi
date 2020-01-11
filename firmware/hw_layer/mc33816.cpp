@@ -8,7 +8,7 @@
  * https://www.nxp.com/docs/en/application-note/AN5203.pdf
  *
  * @date May 3, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

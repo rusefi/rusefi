@@ -5,12 +5,12 @@
  * todo: rename this file
  *
  * @date Sep 8, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once
 
-#include "engine.h"
+#include "global.h"
 
 void fanBench(void);
 void fuelPumpBench(void);

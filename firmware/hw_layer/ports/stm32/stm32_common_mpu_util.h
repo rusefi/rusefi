@@ -3,7 +3,7 @@
  * @brief	Low level common STM32 header
  *
  * @date Aug 3, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 // burnout or 'Burn Out'

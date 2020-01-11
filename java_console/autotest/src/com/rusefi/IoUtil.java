@@ -20,8 +20,6 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  */
 public class IoUtil {
 
-    public static final String RESET_ENGINE_CHART = "reset_engine_chart";
-
     /**
      * Send a command and wait for the confirmation
      *
@@ -31,6 +29,17 @@ public class IoUtil {
         sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
     }
 
+    public static String getEnableCommand(String settingName) {
+        return Fields.CMD_ENABLE + " " + settingName;
+    }
+
+    public static String getDisableCommand(String settingName) {
+        return Fields.CMD_DISABLE + " " + settingName;
+    }
+
+    /**
+     * blocking method which would for confirmation from rusEfi
+     */
     static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
@@ -62,6 +71,7 @@ public class IoUtil {
     }
 
     static void changeRpm(final int rpm) {
+        FileLog.MAIN.logLine("AUTOTEST rpm EN " + rpm);
         sendCommand("rpm " + rpm);
         long time = System.currentTimeMillis();
 
@@ -80,25 +90,20 @@ public class IoUtil {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
-        FileLog.MAIN.logLine("RPM change [" + rpm + "] executed in " + (System.currentTimeMillis() - time));
         SensorCentral.getInstance().removeListener(Sensor.RPM, listener);
 
         double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
 
         if (!isCloseEnough(rpm, actualRpm))
             throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
-        sendCommand(RESET_ENGINE_CHART);
+//        sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER);
+        FileLog.MAIN.logLine("AUTOTEST RPM change [" + rpm + "] executed in " + (System.currentTimeMillis() - time));
     }
 
     static void waitForFirstResponse() throws InterruptedException {
         FileLog.MAIN.logLine("Let's give it some time to start...");
         final CountDownLatch startup = new CountDownLatch(1);
-        SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
-                startup.countDown();
-            }
-        };
+        SensorCentral.SensorListener listener = value -> startup.countDown();
         long waitStart = System.currentTimeMillis();
         SensorCentral.getInstance().addListener(Sensor.RPM, listener);
         startup.await(5, TimeUnit.SECONDS);
@@ -158,5 +163,4 @@ public class IoUtil {
         if (connected.getCount() > 0)
             throw new IllegalStateException("Not connected in time");
     }
-
 }

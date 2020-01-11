@@ -15,7 +15,6 @@
 #include "pwm_generator_logic.h"
 #include "trigger_central.h"
 #include "datalogging.h"
-#include "algo.h"
 #include "rpm_calculator.h"
 #include "engine_sniffer.h"
 #include "status_loop.h"
@@ -119,17 +118,11 @@ void rusEfiFunctionalTest(void) {
 	// todo: reduce code duplication with initEngineContoller
 
 	resetConfigurationExt(NULL, FORD_ESCORT_GT PASS_ENGINE_PARAMETER_SUFFIX);
-	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	initAlgo(&sharedLogger);
 	commonInitEngineController(&sharedLogger);
-
-	initRpmCalculator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
 	initTriggerCentral(&sharedLogger);
 	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-
-	initMainEventListener(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
 	startStatusThreads();
 

@@ -3,7 +3,7 @@
  * @brief	Utility method related to the engine configuration data structure.
  *
  * @date Nov 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -66,6 +66,7 @@
 #include "test_engine.h"
 #include "sachs.h"
 #include "vw.h"
+#include "vw_b6.h"
 #include "daihatsu.h"
 #include "chevrolet_camaro_4.h"
 #include "suzuki_vitara.h"
@@ -1111,18 +1112,24 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MRE_MIATA_NA6:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+#if EFI_UNIT_TEST
 	case ISSUE_898:
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+#endif
 	case MRE_MIATA_NB2_MTB:
 		setMiataNB2_MRE_MTB(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NB2:
 		setMiataNB2_MRE_ETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case MICRO_RUS_EFI:
+// todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
+	case PROTEUS:
 	case PROMETHEUS_DEFAULTS:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
+		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
 	case MRE_BOARD_TEST:
 		mreBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1169,10 +1176,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case ETB_BENCH_ENGINE:
 		setEtbTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MICRO_RUS_EFI:
-	case PROTEUS:
-		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
 	case TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

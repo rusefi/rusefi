@@ -2,7 +2,7 @@
  * @file	engine.h
  *
  * @date May 21, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once
@@ -68,7 +68,10 @@ public:
 
 	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
 
+#if EFI_UNIT_TEST
 	bool needTdcCallback = true;
+#endif /* EFI_UNIT_TEST */
+
 	/**
 	 * if 2nd TPS is not configured we do not run 2nd ETB
 	 */
@@ -141,16 +144,11 @@ public:
 	bool isCltBroken = false;
 	bool slowCallBackWasInvoked = false;
 
-
-//	floatms_t callToPitEndTime;
-
 	/**
 	 * remote telemetry: if not zero, time to stop flashing 'CALL FROM PIT STOP' light
+	 * todo: looks like there is a bug here? 64 bit storage an 32 bit time logic? anyway this feature is mostly a dream at this point
 	 */
-	efitime_t callFromPitStopEndTime = 0;
-
-	// timestamp of most recent time RPM hard limit was triggered
-	efitime_t rpmHardLimitTimestamp = 0;
+	efitimems64_t callFromPitStopEndTime = 0;
 
 	/**
 	 * This flag indicated a big enough problem that engine control would be
@@ -243,6 +241,7 @@ public:
 	 */
 	bool isTestMode = false;
 
+	void resetEngineSnifferIfInTestMode();
 
 	/**
 	 * pre-calculated offset for given sequence index within engine cycle

@@ -14,7 +14,6 @@
 #include "allsensors.h"
 #include "engine_controller.h"
 #include "advance_map.h"
-#include "algo.h"
 
 extern int timeNowUs;
 extern EnginePins enginePins;
@@ -57,10 +56,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	mostCommonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-
 	resetConfigurationExt(NULL, boardCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
-	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	commonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+
 	engine->engineConfigurationPtr->mafAdcChannel = TEST_MAF_CHANNEL;
 	engine->engineConfigurationPtr->clt.adcChannel = TEST_CLT_CHANNEL;
 	engine->engineConfigurationPtr->iat.adcChannel = TEST_IAT_CHANNEL;
@@ -74,9 +73,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engine->initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-	initRpmCalculator(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-	initMainEventListener(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
@@ -94,7 +90,7 @@ void EngineTestHelper::fireRise(float delayMs) {
  * fire single RISE front event
  */
 void EngineTestHelper::firePrimaryTriggerRise() {
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfigurationPtr, &persistentConfig);
+	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, getTimeNowNt(), &engine, engine.engineConfigurationPtr, &persistentConfig);
 }
 
 void EngineTestHelper::fireFall(float delayMs) {
@@ -103,7 +99,7 @@ void EngineTestHelper::fireFall(float delayMs) {
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfigurationPtr, &persistentConfig);
+	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, getTimeNowNt(), &engine, engine.engineConfigurationPtr, &persistentConfig);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {
@@ -149,12 +145,12 @@ void EngineTestHelper::fireTriggerEvents(int count) {
 
 void EngineTestHelper::assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
 	InjectionEvent *event = &engine.injectionEvents.elements[injectorIndex];
-	assertEvent(msg, eventIndex, (void*)seTurnPinHigh, momentX, event);
+	assertEvent(msg, eventIndex, (void*)turnInjectionPinHigh, momentX, event);
 }
 
 void EngineTestHelper::assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
 	InjectionEvent *event = &engine.injectionEvents.elements[injectorIndex];
-	assertEvent(msg, eventIndex, (void*)seTurnPinLow, momentX, event);
+	assertEvent(msg, eventIndex, (void*)turnInjectionPinLow, momentX, event);
 }
 
 scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp) {

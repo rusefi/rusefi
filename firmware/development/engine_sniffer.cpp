@@ -8,7 +8,7 @@
  * Both external events (see logic_analyzer.cpp) and internal (see signal executors) are supported
  *
  * @date Jun 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -34,14 +34,9 @@
 #include "engine_configuration.h"
 #include "eficonsole.h"
 #include "status_loop.h"
+#include "perf_trace.h"
 
 #define CHART_DELIMETER	'!'
-
-#if EFI_HISTOGRAMS
-#include "os_util.h"
-#include "histogram.h"
-static histogram_s engineSnifferHisto;
-#endif /* EFI_HISTOGRAMS */
 
 EXTERN_ENGINE
 ;
@@ -113,7 +108,7 @@ bool WaveChart::isStartedTooLongAgo() const {
 	 * engineChartSize/20 is the longest meaningful chart.
 	 *
 	 */
-	efitime_t chartDurationNt = getTimeNowNt() - startTimeNt;
+	efitick_t chartDurationNt = getTimeNowNt() - startTimeNt;
 	return startTimeNt != 0 && NT2US(chartDurationNt) > engineConfiguration->engineChartSize * 1000000 / 20;
 }
 
@@ -165,6 +160,11 @@ void WaveChart::publish() {
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addEvent3(const char *name, const char * msg) {
+	ScopePerf perf(PE::EngineSniffer);
+
+	if (getTimeNowNt() < pauseEngineSnifferUntilNt) {
+		return;
+	}
 #if EFI_TEXT_LOGGING
 	if (!ENGINE(isEngineChartEnabled)) {
 		return;
@@ -192,9 +192,6 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 		return;
 	}
 
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	int beforeCallback = hal_lld_get_counter_value();
-#endif
 
 	efitick_t nowNt = getTimeNowNt();
 
@@ -235,20 +232,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	if (!alreadyLocked) {
 		unlockOutputBuffer();
 	}
-
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	int64_t diff = hal_lld_get_counter_value() - beforeCallback;
-	if (diff > 0) {
-		hsAdd(&engineSnifferHisto, diff);
-	}
-#endif /* EFI_HISTOGRAMS */
 #endif /* EFI_TEXT_LOGGING */
-}
-
-void showWaveChartHistogram(void) {
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	printHistogram(&logger, &engineSnifferHisto);
-#endif
 }
 
 void initWaveChart(WaveChart *chart) {
@@ -270,7 +254,7 @@ void initWaveChart(WaveChart *chart) {
 	addConsoleActionI("chartsize", setChartSize);
 	addConsoleActionI("chart", setChartActive);
 #if ! EFI_UNIT_TEST
-	addConsoleAction("reset_engine_chart", resetNow);
+	addConsoleAction(CMD_RESET_ENGINE_SNIFFER, resetNow);
 #endif
 }
 

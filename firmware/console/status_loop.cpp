@@ -100,15 +100,12 @@ extern int icuWidthPeriodCounter;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-// this 'true' value is needed for simulator
-static volatile bool fullLog = true;
 int warningEnabled = true;
-//int warningEnabled = FALSE;
 
 extern bool hasFirmwareErrorFlag;
 extern int maxTriggerReentraint;
 extern uint32_t maxLockedDuration;
-#define FULL_LOGGING_KEY "fl"
+
 
 #if !defined(STATUS_LOGGING_BUFFER_SIZE)
 #define STATUS_LOGGING_BUFFER_SIZE 1800
@@ -406,9 +403,6 @@ void writeLogLine(void) {
 #endif /* EFI_FILE_LOGGING */
 }
 
-#define INITIAL_FULL_LOG TRUE
-//#define INITIAL_FULL_LOG FALSE
-
 volatile int needToReportStatus = FALSE;
 static int prevCkpEventCounter = -1;
 
@@ -602,7 +596,7 @@ static void initStatusLeds(void) {
 
 static bool isTriggerErrorNow() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < US2NT(MS2US(200));
+	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < MS2NT(200);
 	return justHadError || isTriggerDecoderError();
 #else
 	return false;
@@ -678,7 +672,7 @@ class LcdController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	LcdController() : PeriodicController("LCD") { }
 private:
-	void PeriodicTask(efitime_t nowNt) override	{
+	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
 		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->lcdThreadPeriodMs));
 		if (engineConfiguration->useLcdScreen) {
@@ -726,7 +720,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 8
 	tsOutputChannels->intakeAirTemperature = intake;
 	// offset 12
-	tsOutputChannels->throttlePositon = tps;
+	tsOutputChannels->throttlePosition = tps;
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 
@@ -760,9 +754,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 116
 	// TPS acceleration
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
-	// 120
-	tsOutputChannels->triggerErrorsCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
+	// 128
+	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	// 132
+	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;
+	// 68
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
 	// 136
 	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE) ? getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
@@ -789,7 +785,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->vvtPosition = engine->triggerCentral.vvtPosition;
 	// 252
 	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
-	// 264
+	// 120
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 	// 268
 	tsOutputChannels->fuelPidCorrection = ENGINE(engineState.running.pidCorrection);
@@ -816,7 +812,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->knockLevel = engine->knockVolts;
 
 	tsOutputChannels->hasFatalError = hasFirmwareError();
-	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 
 	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -1021,7 +1016,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		break;
 	case DBG_TLE8888:
 #if (BOARD_TLE8888_COUNT > 0)
-		tle8888PostState(tsOutputChannels);
+		tle8888PostState(tsOutputChannels->getDebugChannels());
 #endif /* BOARD_TLE8888_COUNT */
 		break;
 	default:
@@ -1037,8 +1032,6 @@ void prepareTunerStudioOutputs(void) {
 #endif /* EFI_TUNER_STUDIO */
 
 void initStatusLoop(void) {
-	setFullLog(INITIAL_FULL_LOG);
-	addConsoleActionI(FULL_LOGGING_KEY, setFullLog);
 	addConsoleActionI("warn", setWarningEnabled);
 
 #if EFI_ENGINE_CONTROL
@@ -1062,14 +1055,4 @@ void startStatusThreads(void) {
 #if EFI_LCD
 	lcdInstance.Start();
 #endif /* EFI_LCD */
-}
-
-void setFullLog(int value) {
-	print("Setting full logging: %s\r\n", boolToString(value));
-	printMsg(&logger, "%s%d", FULL_LOGGING_KEY, value);
-	fullLog = value;
-}
-
-bool getFullLog(void) {
-	return fullLog;
 }

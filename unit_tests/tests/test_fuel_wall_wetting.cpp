@@ -4,7 +4,7 @@
  * See also test_accel_enrichment.cpp
  *
  * @date Oct 16, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_test_helper.h"

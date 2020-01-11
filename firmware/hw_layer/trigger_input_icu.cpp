@@ -9,7 +9,7 @@
  * see digital_input_icu.cpp
  *
  * @date Dec 30, 2012
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -17,7 +17,7 @@
 volatile int icuWidthCallbackCounter = 0;
 volatile int icuWidthPeriodCounter = 0;
 
-#if EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)
+#if EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE)
 
 #include "trigger_input.h"
 #include "digital_input_icu.h"
@@ -28,14 +28,12 @@ extern bool hasFirmwareErrorFlag;
 
 static Logging *logger;
 
-static void vvtWidthCallback(void *arg) {
-    (void)arg;
-	hwHandleVvtCamSignal(TV_RISE);
+static void vvtWidthCallback(void *) {
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt());
 }
 
-static void vvtPeriodCallback(void *arg) {
-    (void)arg;
-	hwHandleVvtCamSignal(TV_FALL);
+static void vvtPeriodCallback(void *) {
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt());
 }
 
 /**
@@ -43,6 +41,8 @@ static void vvtPeriodCallback(void *arg) {
  * 'width' events happens before the 'period' event
  */
 static void shaftWidthCallback(bool isPrimary) {
+	efitick_t stamp = getTimeNowNt();
+
 	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
@@ -58,10 +58,12 @@ static void shaftWidthCallback(bool isPrimary) {
 	// todo: add support for 3rd channel
 	trigger_event_e signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) : (engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
 
-	hwHandleShaftSignal(signal);
+	hwHandleShaftSignal(signal, stamp);
 }
 
 static void shaftPeriodCallback(bool isPrimary) {
+	efitick_t stamp = getTimeNowNt();
+
 	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
@@ -76,17 +78,26 @@ static void shaftPeriodCallback(bool isPrimary) {
 	//	icucnt_t last_period = icuGetPeriod(icup); so far we are fine with system time
 	trigger_event_e signal =
 			isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) : (engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
-	hwHandleShaftSignal(signal);
+	hwHandleShaftSignal(signal, stamp);
 }
 
-void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
+/*==========================================================================*/
+/* Exported functions.														*/
+/*==========================================================================*/
+
+int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	(void)msg;
 	brain_pin_e brainPin = isTriggerShaft ? CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 	if (brainPin == GPIO_UNASSIGNED) {
-		return;
+		return -1;
 	}
 
 	digital_input_s* input = startDigitalCapture("trigger", brainPin, true);
+	if (input == NULL) {
+		/* error already reported */
+		return -1;
+	}
+
 	if (isTriggerShaft) {
 		void * arg = (void*) (index == 0);
 		input->setWidthCallback((VoidInt)(void*)shaftWidthCallback, arg);
@@ -95,24 +106,20 @@ void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
 		input->setWidthCallback((VoidInt)(void*)vvtWidthCallback, NULL);
 		input->setPeriodCallback((VoidInt)(void*)vvtPeriodCallback, NULL);
 	}
+
+	return 0;
 }
 
-void turnOffTriggerInputPin(brain_pin_e brainPin) {
+void icuTriggerTurnOffInputPin(brain_pin_e brainPin) {
 
 	stopDigitalCapture("trigger", brainPin);
 }
 
-void setPrimaryChannel(brain_pin_e brainPin) {
+void icuTriggerSetPrimaryChannel(brain_pin_e brainPin) {
 	(void)brainPin;
 }
 
-/*==========================================================================*/
-/* Exported functions.														*/
-/*==========================================================================*/
-
-void turnOnTriggerInputPins(Logging *sharedLogger) {
+void icuTriggerTurnOnInputPins(Logging *sharedLogger) {
 	logger = sharedLogger;
-
-	applyNewTriggerInputPins();
 }
-#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)) */
+#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE)) */

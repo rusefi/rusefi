@@ -2,7 +2,7 @@
  * @file spark_logic.cpp
  *
  * @date Sep 15, 2016
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "spark_logic.h"
@@ -124,7 +124,8 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
-		if (output != NULL) {
+
+		if (output) {
 			fireSparkBySettingPinLow(event, output);
 		}
 	}
@@ -149,7 +150,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	}
 #endif
 
-}
+	}
 #endif /* EFI_UNIT_TEST */
 #if EFI_UNIT_TEST
 	Engine *engine = event->engine;
@@ -226,37 +227,35 @@ static bool assertNotInIgnitionList(AngleBasedEvent *head, AngleBasedEvent *elem
  */
 bool scheduleOrQueue(AngleBasedEvent *event,
 		uint32_t trgEventIndex,
+		efitick_t edgeTimestamp,
 		angle_t angle,
-		schfunc_t callback,
-		void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		action_s action
+		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	event->position.setAngle(angle PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
-	 * todo: extract a "scheduleForAngle" method with best implementation into a separate utility method
-	 *
-	 * Here's the status as of Nov 2018:
-	 * "scheduleForLater" uses time only and for best precision it's best to use "scheduleForLater" only
-	 * once we hit the last trigger tooth prior to needed event. This case we use as much trigger position angle as possible
+	 * Here's the status as of Jan 2020:
+	 * Once we hit the last trigger tooth prior to needed event, schedule it by time.  We use as much trigger position angle as possible
 	 * and only use less precise RPM-based time calculation for the last portion of the angle, the one between two teeth closest to the
 	 * desired angle moment.
-	 *
-	 * At the moment we only have time-based scheduler. I believe what needs to be added is a trigger-event based scheduler on top of the
-	 * time-based schedule. This case we would be firing events with best possible angle precision.
-	 *
 	 */
 	if (trgEventIndex != TRIGGER_EVENT_UNDEFINED && event->position.triggerEventIndex == trgEventIndex) {
 		/**
 		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
 		 */
-		float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * event->position.angleOffsetFromTriggerEvent;
-
-
 		scheduling_s * sDown = &event->scheduling;
 
-		engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, callback, param);
+		scheduleByAngle(
+			sDown,
+			edgeTimestamp,
+			event->position.angleOffsetFromTriggerEvent,
+			action
+			PASS_ENGINE_PARAMETER_SUFFIX
+		);
+
 		return true;
 	} else {
-		event->action.setAction(callback, param);
+		event->action = action;
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
 		 */
@@ -273,7 +272,7 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 }
 
 static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,
-		int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		int rpm, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	angle_t sparkAngle = iEvent->sparkAngle;
 	const floatms_t dwellMs = ENGINE(engineState.sparkDwell);
@@ -321,18 +320,17 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		engine->executor.scheduleForLater(sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent);
+		engine->executor.scheduleByTimestampNt(sUp, edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, iEvent });
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
-	 * TODO: improve precision
 	 */
 
 	efiAssertVoid(CUSTOM_ERR_6591, !cisnan(sparkAngle), "findAngle#4");
 	assertAngleRange(sparkAngle, "findAngle#a5", CUSTOM_ERR_6549);
 
 
-	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, sparkAngle, (schfunc_t)fireSparkAndPrepareNextSchedule, iEvent PASS_ENGINE_PARAMETER_SUFFIX);
+	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, edgeTimestamp, sparkAngle, { fireSparkAndPrepareNextSchedule, iEvent } PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (scheduled) {
 #if SPARK_EXTREME_LOGGING
@@ -408,7 +406,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 }
 
 
-static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	AngleBasedEvent *current, *tmp;
 
 	LL_FOREACH_SAFE2(ENGINE(angleBasedEventsHead), current, tmp, nextToothEvent)
@@ -423,14 +421,18 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex D
 	scheduleMsg(logger, "time to invoke ind=%d %d %d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-
-			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->position.angleOffsetFromTriggerEvent;
-			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) current->action.getCallback(), current->action.getArgument());
+			scheduleByAngle(
+				sDown,
+				edgeTimestamp,
+				current->position.angleOffsetFromTriggerEvent,
+				current->action
+				PASS_ENGINE_PARAMETER_SUFFIX
+			);
 		}
 	}
 }
 
-void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
+void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp
 		 DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	ScopePerf perf(PE::OnTriggerEventSparkLogic);
@@ -449,7 +451,7 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 	 * Ignition schedule is defined once per revolution
 	 * See initializeIgnitionActions()
 	 */
-	scheduleAllSparkEventsUntilNextTriggerTooth(trgEventIndex PASS_ENGINE_PARAMETER_SUFFIX);
+	scheduleAllSparkEventsUntilNextTriggerTooth(trgEventIndex, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
@@ -458,7 +460,7 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 			IgnitionEvent *event = &ENGINE(ignitionEvents.elements[i]);
 			if (event->dwellPosition.triggerEventIndex != trgEventIndex)
 				continue;
-			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm PASS_ENGINE_PARAMETER_SUFFIX);
+			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 }

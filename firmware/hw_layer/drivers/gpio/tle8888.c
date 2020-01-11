@@ -7,7 +7,7 @@
  * All SPI and CS pin in OM_DEFAULT mode
  *
  * @date Mar 25, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * 3.2 Pin Definitions and Functions
  *
@@ -145,14 +145,14 @@ static const char* tle8888_pin_names[TLE8888_OUTPUTS] = {
 };
 
 #if EFI_TUNER_STUDIO
-void tle8888PostState(TunerStudioOutputChannels *tsOutputChannels) {
-	tsOutputChannels->debugIntField1 = tle8888SpiCounter;
-	tsOutputChannels->debugIntField2 = spiTxb;
-	tsOutputChannels->debugIntField3 = spiRxb;
-	tsOutputChannels->debugIntField4 = initResponsesAccumulator;
-	tsOutputChannels->debugIntField5 = reinitializationCounter;
-	tsOutputChannels->debugFloatField1 = initResponse0;
-	tsOutputChannels->debugFloatField2 = initResponse1;
+void tle8888PostState(TsDebugChannels *debugChannels) {
+	debugChannels->debugIntField1 = tle8888SpiCounter;
+	debugChannels->debugIntField2 = spiTxb;
+	debugChannels->debugIntField3 = spiRxb;
+	debugChannels->debugIntField4 = initResponsesAccumulator;
+	debugChannels->debugIntField5 = reinitializationCounter;
+	debugChannels->debugFloatField1 = initResponse0;
+	debugChannels->debugFloatField2 = initResponse1;
 }
 #endif /* EFI_TUNER_STUDIO */
 

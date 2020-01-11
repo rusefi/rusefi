@@ -2,7 +2,7 @@
  * @file tle8888.h
  *
  * Mar 25, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef HW_LAYER_DRIVERS_GPIO_TLE8888_H_
@@ -54,8 +54,8 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg);
 void requestTLE8888initialization(void);
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_configuration.h"
-void tle8888PostState(TunerStudioOutputChannels *tsOutputChannels);
+#include "tunerstudio_debug_struct.h"
+void tle8888PostState(TsDebugChannels *tsDebugChannels);
 #endif /* EFI_TUNER_STUDIO */
 
 #ifdef __cplusplus

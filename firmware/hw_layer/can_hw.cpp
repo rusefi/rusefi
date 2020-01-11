@@ -14,6 +14,7 @@
 #if EFI_CAN_SUPPORT
 
 #include "engine_configuration.h"
+#include "periodic_thread_controller.h"
 #include "pin_repository.h"
 #include "can_hw.h"
 #include "string.h"
@@ -30,7 +31,6 @@ static int canWriteOk = 0;
 static int canWriteNotOk = 0;
 static bool isCanEnabled = false;
 static LoggingWithStorage logger("CAN driver");
-static THD_WORKING_AREA(canTreadStack, UTILITY_THREAD_STACK_SIZE);
 
 // Values below calculated with http://www.bittiming.can-wiki.info/
 // Pick ST micro bxCAN
@@ -71,8 +71,6 @@ static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
 
-
-static CANRxFrame rxBuffer;
 CANTxFrame txmsg;
 
 static void printPacket(CANRxFrame *rx) {
@@ -111,7 +109,7 @@ void commonTxInit(int eid) {
 /**
  * send CAN message from txmsg buffer
  */
-static void sendCanMessage2(int size) {
+void sendCanMessage(int size) {
 	CANDriver *device = detectCanDevice(CONFIG(canRxPin),
 			CONFIG(canTxPin));
 	if (device == NULL) {
@@ -119,20 +117,14 @@ static void sendCanMessage2(int size) {
 		return;
 	}
 	txmsg.DLC = size;
-	// 1 second timeout
-	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, TIME_MS2I(1000));
+
+	// 100 ms timeout
+	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, TIME_MS2I(100));
 	if (result == MSG_OK) {
 		canWriteOk++;
 	} else {
 		canWriteNotOk++;
 	}
-}
-
-/**
- * send CAN message from txmsg buffer, using default packet size
- */
-void sendCanMessage() {
-	sendCanMessage2(8);
 }
 
 static void canDashboardBMW(void) {
@@ -222,73 +214,81 @@ static void canDashboardVAG(void) {
 		sendCanMessage();
 }
 
-static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
-	switch (typeOfNBC) {
-	case CAN_BUS_NBC_BMW:
-		canDashboardBMW();
-		break;
-	case CAN_BUS_NBC_FIAT:
-		canDashboardFiat();
-		break;
-	case CAN_BUS_NBC_VAG:
-		canDashboardVAG();
-		break;
-	case CAN_BUS_MAZDA_RX8:
-		canMazdaRX8();
-		break;
-	default:
-		break;
+class CanWrite final : public PeriodicController<256> {
+public:
+	CanWrite()
+		: PeriodicController("CAN TX", NORMALPRIO, 50)
+	{
 	}
-}
+
+	void PeriodicTask(efitime_t nowNt) {
+		switch (engineConfiguration->canNbcType) {
+		case CAN_BUS_NBC_BMW:
+			canDashboardBMW();
+			break;
+		case CAN_BUS_NBC_FIAT:
+			canDashboardFiat();
+			break;
+		case CAN_BUS_NBC_VAG:
+			canDashboardVAG();
+			break;
+		case CAN_BUS_MAZDA_RX8:
+			canMazdaRX8();
+			break;
+		default:
+			break;
+		}
+	}
+};
 
 volatile float aemXSeriesLambda = 0;
 
-static void canRead(void) {
-	CANDriver *device = detectCanDevice(CONFIG(canRxPin),
-			CONFIG(canTxPin));
-	if (device == NULL) {
-		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
-		return;
+class CanRead final : public ThreadController<256> {
+public:
+	CanRead()
+		: ThreadController("CAN RX", NORMALPRIO)
+	{
 	}
 
-	msg_t result = canReceiveTimeout(device, CAN_ANY_MAILBOX, &rxBuffer, TIME_IMMEDIATE);
-	if (result == MSG_TIMEOUT) {
-		return;
+	void ThreadTask() override {
+		CANDriver* device = detectCanDevice(CONFIG(canRxPin), CONFIG(canTxPin));
+
+		if (!device) {
+			warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
+			return;
+		}
+
+		while (true) {
+			// Block until we get a message
+			msg_t result = canReceiveTimeout(device, CAN_ANY_MAILBOX, &m_buffer, TIME_INFINITE);
+
+			if (result != MSG_OK) {
+				continue;
+			}
+
+			// Process the message
+			canReadCounter++;
+
+			// TODO: if/when we support multiple lambda sensors, sensor N
+			// has address 0x0180 + N where N = [0, 15]
+			if (m_buffer.SID == 0x0180) {
+				// AEM x-series lambda sensor reports in 0.0001 lambda per bit
+				uint16_t lambdaInt = SWAP_UINT16(m_buffer.data16[0]);
+				aemXSeriesLambda = 0.0001f * lambdaInt;
+			} else {
+				printPacket(&m_buffer);
+				obdOnCanPacketRx(&m_buffer);
+			}
+		}
 	}
 
-	canReadCounter++;
+private:
+	CANRxFrame m_buffer;
+};
 
-	// TODO: if/when we support multiple lambda sensors, sensor N
-	// has address 0x0180 + N where N = [0, 15]
-	if (rxBuffer.SID == 0x0180) {
-		// AEM x-series lambda sensor reports in 0.0001 lambda per bit
-		aemXSeriesLambda = 0.0001f * SWAP_UINT16(rxBuffer.data16[0]);
-	} else {
-		printPacket(&rxBuffer);
-		obdOnCanPacketRx(&rxBuffer);
-	}
-}
+static CanRead canRead;
+static CanWrite canWrite;
 
-static void writeStateToCan(void) {
-	canInfoNBCBroadcast(engineConfiguration->canNbcType);
-}
-
-static msg_t canThread(void *arg) {
-	(void)arg;
-	chRegSetThreadName("CAN");
-	while (true) {
-		if (engineConfiguration->canWriteEnabled)
-			writeStateToCan();
-
-		if (engineConfiguration->canReadEnabled)
-			canRead();
-
-		chThdSleepMilliseconds(engineConfiguration->canSleepPeriodMs);
-	}
-#if defined __GNUC__
-	return -1;
-#endif
-}
 
 static void canInfo(void) {
 	if (!isCanEnabled) {
@@ -335,18 +335,30 @@ void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void initCan(void) {
-	isCanEnabled = (CONFIG(canTxPin) != GPIO_UNASSIGNED) && (CONFIG(canRxPin) != GPIO_UNASSIGNED);
-	if (isCanEnabled) {
-		if (!isValidCanTxPin(CONFIG(canTxPin)))
-			firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG(canTxPin)));
-		if (!isValidCanRxPin(CONFIG(canRxPin)))
-			firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG(canRxPin)));
+	addConsoleAction("caninfo", canInfo);
+
+	isCanEnabled = 
+		(CONFIG(canTxPin) != GPIO_UNASSIGNED) && // both pins are set...
+		(CONFIG(canRxPin) != GPIO_UNASSIGNED) &&
+		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
+
+	// nothing to do if we aren't enabled...
+	if (!isCanEnabled) {
+		return;
 	}
 
-	addConsoleAction("caninfo", canInfo);
-	if (!isCanEnabled)
+	// Validate pins
+	if (!isValidCanTxPin(CONFIG(canTxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG(canTxPin)));
 		return;
+	}
 
+	if (!isValidCanRxPin(CONFIG(canRxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG(canRxPin)));
+		return;
+	}
+
+	// Initialize hardware
 #if STM32_CAN_USE_CAN2
 	// CAN1 is required for CAN2
 	canStart(&CAND1, &canConfig500);
@@ -355,10 +367,17 @@ void initCan(void) {
 	canStart(&CAND1, &canConfig500);
 #endif /* STM32_CAN_USE_CAN2 */
 
-	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t)(void*) canThread, NULL);
+	// fire up threads, as necessary
+	if (CONFIG(canWriteEnabled)) {
+		canWrite.setPeriod(CONFIG(canSleepPeriodMs));
+		canWrite.Start();
+	}
+
+	if (CONFIG(canReadEnabled)) {
+		canRead.Start();
+	}
 
 	startCanPins();
-
 }
 
 #endif /* EFI_CAN_SUPPORT */

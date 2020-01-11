@@ -4,7 +4,7 @@
  *
  *
  * @date Sep 26, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once
@@ -97,10 +97,8 @@ class InjectorOutputPin : public NamedOutputPin {
 public:
 	InjectorOutputPin();
 	void reset();
-	efitimeus_t overlappingScheduleOffTime;
-	// todo: implement this via address manipulation to reduce memory usage
+	// todo: re-implement this injectorIndex via address manipulation to reduce memory usage?
 	int8_t injectorIndex;
-	bool cancelNextTurningInjectorOff;
 	int8_t overlappingCounter;
 };
 

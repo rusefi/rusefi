@@ -8,7 +8,7 @@
  * this is rusEfi build-in logic analyzer
  *
  * @date Jan 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "logic_analyzer.h"
@@ -43,7 +43,7 @@ extern bool hasFirmwareErrorFlag;
  * Difference between current 1st trigger event and previous 1st trigger event.
  */
 static volatile uint32_t engineCycleDurationUs;
-static volatile efitime_t previousEngineCycleTimeUs = 0;
+static volatile efitimeus_t previousEngineCycleTimeUs = 0;
 
 static int waveReaderCount = 0;
 static WaveReader readers[MAX_ICU_COUNT];
@@ -128,12 +128,13 @@ WaveReader::WaveReader() {
 	hw = nullptr;
 }
 
-static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	(void)ckpSignalType;
 	if (index != 0) {
 		return;
 	}
-	efitick_t nowUs = getTimeNowUs();
+
+	efitimeus_t nowUs = NT2US(edgeTimestamp);
 	engineCycleDurationUs = nowUs - previousEngineCycleTimeUs;
 	previousEngineCycleTimeUs = nowUs;
 }

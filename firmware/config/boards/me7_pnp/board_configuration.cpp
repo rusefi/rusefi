@@ -3,7 +3,7 @@
  *
  * @brief In this file we can override engine_configuration.cpp.
  *
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 #include "global.h"
 #include "engine.h"

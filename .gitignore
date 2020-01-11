@@ -3,6 +3,7 @@
 build/
 build_kinetis/
 out/
+logs/
 blbuild/
 Debug_EMS/
 Release_EMS/

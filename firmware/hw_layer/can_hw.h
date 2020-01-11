@@ -2,7 +2,7 @@
  * @file	can_hw.h
  *
  * @date Dec 11, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once
@@ -39,7 +39,7 @@
 
 void initCan(void);
 void commonTxInit(int eid);
-void sendCanMessage();
+void sendCanMessage(int size = 8);
 void setCanType(int type);
 void setTxBit(int offset, int index);
 

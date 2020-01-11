@@ -103,6 +103,11 @@ static uint32_t getAlternateFunctions(ICUDriver *driver) {
 		return GPIO_AF_TIM4;
 	}
 #endif
+#if STM32_ICU_USE_TIM8
+	if (driver == &ICUD8) {
+		return GPIO_AF_TIM8;
+	}
+#endif
 #if STM32_ICU_USE_TIM9
 	if (driver == &ICUD9) {
 		return GPIO_AF_TIM9;
@@ -151,6 +156,8 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
  */
 //Nullable
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
+	UNUSED(msg);
+
 	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
 		return NULL;
 	}
@@ -194,7 +201,6 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 		return &ICUD9;
 	}
 #endif
-	firmwareError(CUSTOM_ERR_NOT_INPUT_PIN, "%s: Not input pin %s", msg, hwPortname(hwPin));
 	return (ICUDriver *) NULL;
 }
 

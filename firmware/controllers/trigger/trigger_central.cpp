@@ -3,7 +3,7 @@
  * Here we have a bunch of higher-level methods which are not directly related to actual signal decoding
  *
  * @date Feb 23, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -15,7 +15,6 @@
 #include "engine_configuration.h"
 #include "listener_array.h"
 #include "data_buffer.h"
-#include "histogram.h"
 #include "pwm_generator_logic.h"
 #include "tooth_logger.h"
 
@@ -68,10 +67,6 @@ int TriggerCentral::getHwEventCounter(int index) const {
 
 EXTERN_ENGINE;
 
-#if EFI_HISTOGRAMS
-static histogram_s triggerCallbackHistogram;
-#endif /* EFI_HISTOGRAMS */
-
 static Logging *logger;
 
 void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
@@ -89,7 +84,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
-void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
 		tc->vvtEventRiseCounter++;
@@ -112,8 +107,6 @@ void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX)
 	}
 
 	tc->vvtCamCounter++;
-
-	efitick_t nowNt = getTimeNowNt();
 
 	if (engineConfiguration->vvtMode == MIATA_NB2) {
 		uint32_t currentDuration = nowNt - tc->previousVvtCamTime;
@@ -198,7 +191,7 @@ uint32_t triggerMaxDuration = 0;
 static bool isInsideTriggerHandler = false;
 
 
-void hwHandleShaftSignal(trigger_event_e signal) {
+void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	ScopePerf perf(PE::HandleShaftSignal, static_cast<uint8_t>(signal));
 
 #if EFI_TOOTH_LOGGER
@@ -221,7 +214,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
 	efiAssertVoid(CUSTOM_ERR_6636, getCurrentRemainingStack() > 128, "lowstck#8");
-	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.handleShaftSignal(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 	triggerReentraint--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
 	isInsideTriggerHandler = false;
@@ -319,7 +312,7 @@ bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE
 	return false;
 }
 
-void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_CONF_NULL, engine!=NULL, "configuration");
 
 	if (triggerShape.shapeDefinitionError) {
@@ -330,11 +323,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		return;
 	}
 
-	nowNt = getTimeNowNt();
-
 	// This code gathers some statistics on signals and compares accumulated periods to filter interference
 	if (CONFIG(useNoiselessTriggerDecoder)) {
-		if (!noiseFilter(nowNt, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (!noiseFilter(timestamp, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
 		// moved here from hwHandleShaftSignal()
@@ -343,28 +334,25 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		}
 	}
 
-	engine->onTriggerSignalEvent(nowNt);
+	engine->onTriggerSignalEvent(timestamp);
 
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	int beforeCallback = hal_lld_get_counter_value();
-#endif
 	int eventIndex = (int) signal;
 	efiAssertVoid(CUSTOM_ERR_6638, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
 
-	if (nowNt - previousShaftEventTimeNt > US2NT(US_PER_SECOND_LL)) {
+	if (timestamp - previousShaftEventTimeNt > US2NT(US_PER_SECOND_LL)) {
 		/**
-		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not runnig.
+		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not running.
 		 * That means we have lost synchronization since the engine is not running :)
 		 */
 		triggerState.onSynchronizationLost(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
-	previousShaftEventTimeNt = nowNt;
+	previousShaftEventTimeNt = timestamp;
 
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(nullptr, engine, signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	triggerState.decodeTriggerEvent(nullptr, engine, signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
@@ -384,7 +372,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	}
 	if (triggerIndexForListeners == 0) {
-		timeAtVirtualZeroNt = nowNt;
+		timeAtVirtualZeroNt = timestamp;
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -405,24 +393,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		 */
 		for (int i = 0; i < triggerListeneres.currentListenersCount; i++) {
 			ShaftPositionListener listener = (ShaftPositionListener) (void*) triggerListeneres.callbacks[i];
-			(listener)(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
+			(listener)(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 
 	}
-#if EFI_HISTOGRAMS
-	int afterCallback = hal_lld_get_counter_value();
-	int diff = afterCallback - beforeCallback;
-	// this counter is only 32 bits so it overflows every minute, let's ignore the value in case of the overflow for simplicity
-	if (diff > 0) {
-		hsAdd(&triggerCallbackHistogram, diff);
-	}
-#endif /* EFI_HISTOGRAMS */
-}
-
-void printAllCallbacksHistogram(void) {
-#if EFI_HISTOGRAMS
-	printHistogram(logger, &triggerCallbackHistogram);
-#endif
 }
 
 EXTERN_ENGINE
@@ -738,9 +712,6 @@ void initTriggerCentral(Logging *sharedLogger) {
 	addConsoleAction("reset_trigger", resetRunningTriggerCounters);
 #endif
 
-#if EFI_HISTOGRAMS
-	initHistogram(&triggerCallbackHistogram, "all callbacks");
-#endif /* EFI_HISTOGRAMS */
 }
 
 #endif

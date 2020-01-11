@@ -5,7 +5,7 @@
  * See http://rusefi.com/docs/html/
  *
  * @date Feb 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -40,21 +40,18 @@
 #include "advance_map.h"
 #include "allsensors.h"
 #include "cyclic_buffer.h"
-#include "histogram.h"
 #include "fuel_math.h"
-#include "histogram.h"
 #include "cdm_ion_sense.h"
 #include "engine_controller.h"
 #include "efi_gpio.h"
 #if EFI_PROD_CODE
 #include "os_util.h"
-#endif /* EFI_HISTOGRAMS */
+#endif /* EFI_PROD_CODE */
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "engine.h"
 #include "perf_trace.h"
 
-#include "aux_valves.h"
 #include "backup_ram.h"
 
 EXTERN_ENGINE
@@ -99,11 +96,11 @@ void endSimultaniousInjection(InjectionEvent *event) {
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-static inline void tempTurnPinHigh(InjectorOutputPin *output) {
+static inline void turnInjectionPinHigh(InjectorOutputPin *output) {
 	output->overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("seTurnPinHigh %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
+	printf("turnInjectionPinHigh %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	if (output->overlappingCounter > 1) {
@@ -125,36 +122,21 @@ static inline void tempTurnPinHigh(InjectorOutputPin *output) {
 	}
 }
 
-// todo: make these macro? kind of a penny optimization if compiler is not smart to inline
-void seTurnPinHigh(InjectionEvent *event) {
+void turnInjectionPinHigh(InjectionEvent *event) {
 	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
-		if (output != NULL) {
-			tempTurnPinHigh(output);
+
+		if (output) {
+			turnInjectionPinHigh(output);
 		}
 	}
 }
 
-static inline void tempTurnPinLow(InjectorOutputPin *output) {
+static inline void turnInjectionPinLow(InjectorOutputPin *output) {
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("seTurnPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
+	printf("turnInjectionPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	if (output->cancelNextTurningInjectorOff) {
-		/**
-		 * in case of fuel schedule overlap between engine cycles,
-		 * and if engine cycle is above say 75% for batch mode on 4 cylinders,
-		 * we will get a secondary overlap between the special injection and a normal injection on the same injector.
-		 * In such a case want to combine these two injection into one continues injection.
-		 * Unneeded turn of injector on is handle while scheduling that second injection, but cancellation
-		 * of special injection end has to be taken care of dynamically
-		 *
-		 */
-		output->cancelNextTurningInjectorOff = false;
-#if EFI_SIMULATOR
-		printf("was cancelled %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* EFI_SIMULATOR */
-	} else {
 
 #if FUEL_MATH_EXTREME_LOGGING
 		const char * w = output->currentLogicValue == false ? "err" : "";
@@ -171,15 +153,15 @@ static inline void tempTurnPinLow(InjectorOutputPin *output) {
 		} else {
 			output->setLow();
 		}
-	}
+
 }
 
-void seTurnPinLow(InjectionEvent *event) {
+void turnInjectionPinLow(InjectionEvent *event) {
 	event->isScheduled = false;
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
 		if (output != NULL) {
-			tempTurnPinLow(output);
+			turnInjectionPinLow(output);
 		}
 	}
 #if EFI_UNIT_TEST
@@ -189,17 +171,17 @@ void seTurnPinLow(InjectionEvent *event) {
 	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, InjectionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, action_s action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if FUEL_MATH_EXTREME_LOGGING
 	InjectorOutputPin *param = event->outputs[0];
 //	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
 //	scheduleMsg(&sharedLogger, "schX %s", param->name);
 
-	const char *direction = callback == (schfunc_t) &seTurnPinHigh ? "up" : "down";
+	const char *direction = callback == &turnInjectionPinHigh ? "up" : "down";
 	printf("seScheduleByTime %s %s %d sch=%d\r\n", direction, param->name, (int)time, (int)scheduling);
 #endif /* FUEL_MATH_EXTREME_LOGGING || EFI_UNIT_TEST */
 
-	engine->executor.scheduleByTimestamp(scheduling, time, callback, event);
+	engine->executor.scheduleByTimestamp(scheduling, time, action);
 }
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
@@ -269,6 +251,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			getRevolutionCounter());
 #endif /* EFI_DEFAILED_LOGGING */
 
+	scheduling_s *sUp = &event->signalTimerUp;
+	scheduling_s *sDown = &event->endOfInjectionEvent;
 
 	if (event->isSimultanious) {
 		/**
@@ -277,14 +261,10 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		 * changed into 'scheduleInjection' and unified? todo: think about it.
 		 */
 
-		scheduling_s * sUp = &event->signalTimerUp;
-// todo: sequential need this logic as well, just do not forget to clear flag		event->isScheduled = true;
-		scheduling_s * sDown = &event->endOfInjectionEvent;
-
-		engine->executor.scheduleForLater(sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
+		// todo: sequential need this logic as well, just do not forget to clear flag		event->isScheduled = true;
+		engine->executor.scheduleForLater(sUp, (int) injectionStartDelayUs, { &startSimultaniousInjection, engine });
 		engine->executor.scheduleForLater(sDown, (int) injectionStartDelayUs + durationUs,
-					(schfunc_t) &endSimultaniousInjection, event);
-
+					{ &endSimultaniousInjection, event });
 	} else {
 #if EFI_UNIT_TEST
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffsetFromTriggerEvent, injectionStartDelayUs, injectionDuration);
@@ -317,23 +297,13 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 			return; // this InjectionEvent is still needed for an extremely long injection scheduled previously
 		}
-		scheduling_s * sUp = &event->signalTimerUp;
-		scheduling_s * sDown = &event->endOfInjectionEvent;
 
 		event->isScheduled = true;
 		efitimeus_t turnOnTime = nowUs + (int) injectionStartDelayUs;
-		bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
 
-		if (isSecondaryOverlapping) {
-			output->cancelNextTurningInjectorOff = true;
-	#if EFI_UNIT_TEST || EFI_SIMULATOR
-		printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
-	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
-		} else {
-			sescheduleByTimestamp(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, event PASS_ENGINE_PARAMETER_SUFFIX);
-		}
+		sescheduleByTimestamp(sUp, turnOnTime, { &turnInjectionPinHigh, event } PASS_ENGINE_PARAMETER_SUFFIX);
 		efitimeus_t turnOffTime = nowUs + (int) (injectionStartDelayUs + durationUs);
-		sescheduleByTimestamp(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, event PASS_ENGINE_PARAMETER_SUFFIX);
+		sescheduleByTimestamp(sDown, turnOffTime, { &turnInjectionPinLow, event } PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -406,16 +376,6 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	}
 }
 
-#if EFI_HISTOGRAMS
-static histogram_s mainLoopHistogram;
-#endif /* EFI_HISTOGRAMS */
-
-void showMainHistogram(void) {
-#if EFI_HISTOGRAMS
-	printHistogram(logger, &mainLoopHistogram);
-#endif /* EFI_HISTOGRAMS */
-}
-
 #if EFI_PROD_CODE
 /**
  * this field is used as an Expression in IAR debugger
@@ -427,7 +387,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
 	(void) ckpSignalType;
@@ -484,10 +444,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		warning(CUSTOM_SKIPPING_STROKE, "skipping stroke due to rpm=%d", rpm);
 	}
 
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
-	int beforeCallback = hal_lld_get_counter_value();
-#endif
-
 	if (trgEventIndex == 0) {
 		if (HAVE_CAM_INPUT()) {
 			engine->triggerCentral.validateCamVvtCounters();
@@ -526,12 +482,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	onTriggerEventSparkLogic(limitedSpark, trgEventIndex, rpm PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_HISTOGRAMS
-	int diff = hal_lld_get_counter_value() - beforeCallback;
-	if (diff > 0)
-	hsAdd(&mainLoopHistogram, diff);
-#endif /* EFI_HISTOGRAMS */
+	onTriggerEventSparkLogic(limitedSpark, trgEventIndex, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (trgEventIndex == 0) {
 		ENGINE(m.mainTriggerCallbackTime) = getTimeNowLowerNt() - ENGINE(m.beforeMainTrigger);
@@ -583,7 +534,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		if (pulseLength > 0) {
 			startSimultaniousInjection(engine);
 			efitimeus_t turnOffDelayUs = (efitimeus_t)efiRound(MS2US(pulseLength), 1.0f);
-			engine->executor.scheduleForLater(sDown, turnOffDelayUs, (schfunc_t) &endSimultaniousInjectionOnlyTogglePins, engine);
+			engine->executor.scheduleForLater(sDown, turnOffDelayUs, { &endSimultaniousInjectionOnlyTogglePins, engine });
 		}
 	}
 #if EFI_PROD_CODE
@@ -609,42 +560,26 @@ void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #include "engine_sniffer.h"
 #endif
 
-static void showTriggerHistogram(void) {
-	printAllCallbacksHistogram();
-	showMainHistogram();
-#if EFI_ENGINE_SNIFFER
-	showWaveChartHistogram();
-#endif
-}
-
 static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE
 	int rpm = GET_RPM();
 	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	scheduleMsg(logger, "rpm %d engine_load %.2f", rpm, el);
 	scheduleMsg(logger, "fuel %.2fms timing %.2f", getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX), engine->engineState.timingAdvance);
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
 void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	efiAssertVoid(CUSTOM_ERR_6631, engine!=NULL, "null engine");
-	initSparkLogic(logger);
-
-	initAuxValves(logger PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_PROD_CODE
-	addConsoleAction("performanceinfo", showTriggerHistogram);
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
 	printMsg(logger, "initMainLoop: %d", currentTimeMillis());
 	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE))
 		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
-
-#if EFI_HISTOGRAMS
-	initHistogram(&mainLoopHistogram, "main callback");
-#endif /* EFI_HISTOGRAMS */
 
 	addTriggerEventListener(mainTriggerCallback, "main loop", engine);
 

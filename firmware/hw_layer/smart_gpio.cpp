@@ -2,7 +2,7 @@
  * @file smart_gpio.cpp
  *
  * @date Apr 13, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -17,6 +17,7 @@
 #include "pin_repository.h"
 #include "drivers/gpio/tle6240.h"
 #include "drivers/gpio/mc33972.h"
+#include "drivers/gpio/mc33810.h"
 #include "drivers/gpio/tle8888.h"
 
 EXTERN_CONFIG;
@@ -85,6 +86,7 @@ struct mc33972_config mc33972 = {
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 =
+			SPI_CR1_24BIT_MODE |
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
 			/* SPI_CR1_LSBFIRST | */

@@ -2,7 +2,7 @@
  * @file	test_engine_math.c
  *
  * @date Nov 14, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_math.h"

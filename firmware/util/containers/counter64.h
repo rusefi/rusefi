@@ -1,8 +1,8 @@
 /*
- * counter64.h
+ * @file counter64.h
  *
  *  Created on: Mar 31, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef UTIL_CONTAINERS_COUNTER64_H_

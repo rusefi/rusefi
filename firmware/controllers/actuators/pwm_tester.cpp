@@ -73,7 +73,7 @@ static void testCallback(void *arg) {
 	/**
 	 * this would re-schedule another callback in 2ms from now
 	 */
-	engine->executor.scheduleForLater("test", &ioTest, MS2US(2), testCallback, NULL);
+	engine->executor.scheduleForLater("test", &ioTest, MS2US(2), testCallback);
 }
 
 void initPwmTester(void) {
@@ -97,7 +97,7 @@ void initPwmTester(void) {
 	/**
 	 * this would schedule a callback in 2ms from now
 	 */
-	engine->executor.scheduleForLater("test", &ioTest, MS2US(2), testCallback, NULL);
+	engine->executor.scheduleForLater("test", &ioTest, MS2US(2), testCallback);
 }
 
 #endif

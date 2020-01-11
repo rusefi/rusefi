@@ -49,7 +49,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20191201;
+    public static final int CONSOLE_VERSION = 20191225;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
@@ -60,6 +60,7 @@ public class Launcher {
     private static final String TOOL_NAME_COMPILE_FSIO_FILE = "compile_fsio_file";
     private static final String TOOL_NAME_REBOOT_ECU = "reboot_ecu";
     private static final String TOOL_NAME_FIRING_ORDER = "firing_order";
+    private static final String TOOL_NAME_FUNCTIONAL_TEST = "functional_test";
     private static final String TOOL_NAME_PERF_ENUMS = "ptrace_enums";
     // todo: rename to something more FSIO-specific? would need to update documentation somewhere
     private static final String TOOL_NAME_COMPILE = "compile";
@@ -322,6 +323,13 @@ public class Launcher {
     public static void main(final String[] args) throws Exception {
         String toolName = args.length == 0 ? null : args[0];
 
+        if (TOOL_NAME_FUNCTIONAL_TEST.equals(toolName)) {
+            // passing port argument if it was specified
+            String[] toolArgs = args.length == 1 ? new String[0] : new String[]{args[1]};
+            RealHwTest.main(toolArgs);
+            return;
+        }
+
         if (TOOL_NAME_COMPILE_FSIO_FILE.equalsIgnoreCase(toolName)) {
             int returnCode = invokeCompileFileTool(args);
             System.exit(returnCode);
@@ -413,11 +421,11 @@ public class Launcher {
                             (int) value;
                     JOptionPane.showMessageDialog(Launcher.getFrame(), message);
                     assert wrongVersionListener != null;
-                    SensorCentral.getInstance().removeListener(Sensor.FIRMWARE_VERSION, wrongVersionListener);
+                    SensorCentral.getInstance().removeListener(Sensor.TS_CONFIG_VERSION, wrongVersionListener);
                 }
             }
         };
-        SensorCentral.getInstance().addListener(Sensor.FIRMWARE_VERSION, wrongVersionListener);
+        SensorCentral.getInstance().addListener(Sensor.TS_CONFIG_VERSION, wrongVersionListener);
         JustOneInstance.onStart();
         try {
             boolean isPortDefined = args.length > 0;

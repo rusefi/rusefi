@@ -244,7 +244,7 @@
 #define STM32_ICU_USE_TIM3                  TRUE
 #define STM32_ICU_USE_TIM4                  FALSE
 #define STM32_ICU_USE_TIM5                  FALSE
-#define STM32_ICU_USE_TIM8                  FALSE
+#define STM32_ICU_USE_TIM8                  TRUE
 #define STM32_ICU_USE_TIM9                  TRUE
 #define STM32_ICU_TIM1_IRQ_PRIORITY         ICU_PRIORITY
 #define STM32_ICU_TIM2_IRQ_PRIORITY         ICU_PRIORITY
