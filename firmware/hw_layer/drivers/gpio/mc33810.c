@@ -318,7 +318,7 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int mc33810_writePad(void *data, brain_pin_e pin, int value)
+int mc33810_writePad(void *data, unsigned int pin, int value)
 {
 	struct mc33810_priv *chip;
 
@@ -349,7 +349,7 @@ int mc33810_writePad(void *data, brain_pin_e pin, int value)
 	return 0;
 }
 
-int mc33810_getDiag(void *data, brain_pin_e pin)
+int mc33810_getDiag(void *data, unsigned int pin)
 {
 	int diag;
 

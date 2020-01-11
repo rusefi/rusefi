@@ -389,7 +389,7 @@ void requestTLE8888initialization(void) {
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int tle8888_writePad(void *data, brain_pin_e pin, int value) {
+int tle8888_writePad(void *data, unsigned int pin, int value) {
 
 	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
 		return -1;

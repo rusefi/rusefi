@@ -26,10 +26,11 @@ extern "C"
 #endif /* __cplusplus */
 
 struct gpiochip_ops {
-	int (*setPadMode)(void *data, brain_pin_e pin, int mode);
-	int (*writePad)(void *data, brain_pin_e pin, int value);
-	int (*readPad)(void *data, brain_pin_e pin);
-	int (*getDiag)(void *data, brain_pin_e pin);
+	/* pin argument is pin number within gpio chip, not a global number */
+	int (*setPadMode)(void *data, unsigned int pin, int mode);
+	int (*writePad)(void *data, unsigned int pin, int value);
+	int (*readPad)(void *data, unsigned int pin);
+	int (*getDiag)(void *data, unsigned int pin);
 	int (*init)(void *data);
 	int (*deinit)(void *data);
 };
