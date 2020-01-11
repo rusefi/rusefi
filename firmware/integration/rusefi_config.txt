@@ -440,7 +440,7 @@ log_format_e logFormat;
 	int HD44780width;;"index",      1,      0,       0, 300,      0
 	int HD44780height;;"index",      1,      0,       0, 300,      0
 
-	adc_channel_e tps1_1AdcChannel;First TPS, single channel so far. See also pedalPositionAdcChannel
+	adc_channel_e tps1_1AdcChannel;First throttle body, first sensor. See also pedalPositionAdcChannel
 adc_channel_e vbattAdcChannel;+This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB. 
 adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined. 
 	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far
@@ -492,7 +492,7 @@ end_struct
 	
 afr_sensor_s afr
 
-adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nSingle channel so far\nSee also tps1_1AdcChannel
+adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nFirst channel\nSee also tps1_1AdcChannel
 	brain_pin_e tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
 
@@ -570,7 +570,10 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:7], "Off", "Slow", "Fast", "INVALID" 
 
 	adc_channel_e auxFastSensor1_adcChannel;Useful in Research&Development phase
-	uint8_t[3] unused556;
+	adc_channel_e tps1_2AdcChannel;First throttle body, second sensor.
+	adc_channel_e tps2_2AdcChannel;Second throttle body, second sensor.
+	adc_channel_e throttlePedalPositionSecondAdcChannel;Electronic throttle pedal position input\nSecond channel\nSee also tps1_1AdcChannel
+
 	
 
 	float fuelLevelEmptyTankVoltage;;"V",      1,      0,       0,10,      2
