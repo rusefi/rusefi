@@ -43,8 +43,8 @@ void SleepExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitick_t ti
 
 static void timerCallback(scheduling_s *scheduling) {
 #if EFI_PRINTF_FUEL_DETAILS
-	if (scheduling->action.getCallback() == (schfunc_t)&seTurnPinLow) {
-		printf("executing cb=seTurnPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->action.getArgument(), (int)scheduling,
+	if (scheduling->action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
+		printf("executing cb=turnInjectionPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->action.getArgument(), (int)scheduling,
 				(int)getTimeNowUs());
 	} else {
 //		printf("exec cb=%d p=%d\r\n", (int)scheduling->callback, (int)scheduling->param);
@@ -75,8 +75,8 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 	}
 
 #if EFI_SIMULATOR
-	if (action.getCallback() == (schfunc_t)&seTurnPinLow) {
-		printf("setTime cb=seTurnPinLow p=%d\r\n", (int)action.getArgument());
+	if (action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
+		printf("setTime cb=turnInjectionPinLow p=%d\r\n", (int)action.getArgument());
 	} else {
 //		printf("setTime cb=%d p=%d\r\n", (int)callback, (int)param);
 	}

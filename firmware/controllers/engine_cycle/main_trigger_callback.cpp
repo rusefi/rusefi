@@ -100,7 +100,7 @@ static inline void tempTurnPinHigh(InjectorOutputPin *output) {
 	output->overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("seTurnPinHigh %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
+	printf("turnInjectionPinHigh %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	if (output->overlappingCounter > 1) {
@@ -123,7 +123,7 @@ static inline void tempTurnPinHigh(InjectorOutputPin *output) {
 }
 
 // todo: make these macro? kind of a penny optimization if compiler is not smart to inline
-void seTurnPinHigh(InjectionEvent *event) {
+void turnInjectionPinHigh(InjectionEvent *event) {
 	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
 		if (output != NULL) {
@@ -134,7 +134,7 @@ void seTurnPinHigh(InjectionEvent *event) {
 
 static inline void turnInjectionPinLow(InjectorOutputPin *output) {
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("seTurnPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
+	printf("turnInjectionPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	if (output->cancelNextTurningInjectorOff) {
@@ -171,7 +171,7 @@ static inline void turnInjectionPinLow(InjectorOutputPin *output) {
 	}
 }
 
-void seTurnPinLow(InjectionEvent *event) {
+void turnInjectionPinLow(InjectionEvent *event) {
 	event->isScheduled = false;
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
@@ -192,7 +192,7 @@ static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, ac
 //	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
 //	scheduleMsg(&sharedLogger, "schX %s", param->name);
 
-	const char *direction = callback == &seTurnPinHigh ? "up" : "down";
+	const char *direction = callback == &turnInjectionPinHigh ? "up" : "down";
 	printf("seScheduleByTime %s %s %d sch=%d\r\n", direction, param->name, (int)time, (int)scheduling);
 #endif /* FUEL_MATH_EXTREME_LOGGING || EFI_UNIT_TEST */
 
@@ -327,10 +327,10 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
 	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 		} else {
-			sescheduleByTimestamp(sUp, turnOnTime, { &seTurnPinHigh, event } PASS_ENGINE_PARAMETER_SUFFIX);
+			sescheduleByTimestamp(sUp, turnOnTime, { &turnInjectionPinHigh, event } PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 		efitimeus_t turnOffTime = nowUs + (int) (injectionStartDelayUs + durationUs);
-		sescheduleByTimestamp(sDown, turnOffTime, { &seTurnPinLow, event } PASS_ENGINE_PARAMETER_SUFFIX);
+		sescheduleByTimestamp(sDown, turnOffTime, { &turnInjectionPinLow, event } PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
