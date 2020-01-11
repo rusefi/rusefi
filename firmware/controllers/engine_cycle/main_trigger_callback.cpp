@@ -263,7 +263,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	// todo: remove me in favor of injecting edge time!
 	efitimeus_t nowUs = getTimeNowUs();
 	efitimeus_t turnOnTime = nowUs + (int) injectionStartDelayUs;
-	efitimeus_t turnOffTime = nowUs + (int) (injectionStartDelayUs + durationUs);
+	efitimeus_t turnOffTime = turnOnTime + (int) durationUs;
 
 	action_s startAction, endAction;
 	if (event->isSimultanious) {
