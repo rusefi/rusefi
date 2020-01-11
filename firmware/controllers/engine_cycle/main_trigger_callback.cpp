@@ -132,7 +132,7 @@ void seTurnPinHigh(InjectionEvent *event) {
 	}
 }
 
-static inline void tempTurnPinLow(InjectorOutputPin *output) {
+static inline void turnInjectionPinLow(InjectorOutputPin *output) {
 #if FUEL_MATH_EXTREME_LOGGING
 	printf("seTurnPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
@@ -176,7 +176,7 @@ void seTurnPinLow(InjectionEvent *event) {
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
 		if (output != NULL) {
-			tempTurnPinLow(output);
+			turnInjectionPinLow(output);
 		}
 	}
 #if EFI_UNIT_TEST
