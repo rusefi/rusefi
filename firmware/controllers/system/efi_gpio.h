@@ -98,7 +98,7 @@ public:
 	InjectorOutputPin();
 	void reset();
 	efitimeus_t overlappingScheduleOffTime;
-	// todo: implement this via address manipulation to reduce memory usage
+	// todo: re-implement this injectorIndex via address manipulation to reduce memory usage?
 	int8_t injectorIndex;
 	bool cancelNextTurningInjectorOff;
 	int8_t overlappingCounter;
