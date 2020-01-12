@@ -82,6 +82,11 @@ public:
 	static SensorResult get(SensorType type);
 
 	/*
+	 * Get a raw (unconverted) value from the sensor, if available.
+	 */
+	static float getRaw(SensorType type);
+
+	/*
 	 * Mock a value for a particular sensor.
 	 */
 	static void setMockValue(SensorType type, float value);
@@ -113,6 +118,13 @@ private:
 	// it is unwise to synchronously read the sensor or do anything otherwise costly here.  At the most,
 	// this should be field lookup and simple math.
 	virtual SensorResult get() const = 0;
+
+	/*
+	 * Get an unconverted value from the sensor, if available.
+	 */
+	virtual float getRaw() const {
+		return 0;
+	}
 
 	SensorType m_type;
 

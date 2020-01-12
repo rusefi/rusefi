@@ -25,16 +25,22 @@
  */
 class FunctionalSensor final : public StoredValueSensor {
 public:
-	explicit FunctionalSensor(SensorType type)
-		: StoredValueSensor(type) { }
+	explicit FunctionalSensor(SensorType type, efitick_t timeoutPeriod)
+		: StoredValueSensor(type, timeoutPeriod) { }
 
-	void postRawValue(float inputValue);
+	void postRawValue(float inputValue, efitick_t timestamp);
 
 	void setFunction(SensorConverter& func) {
 		m_function = &func;
 	}
 
+	float getRaw() const override final {
+		return m_rawValue;
+	}
+
 private:
 	// Conversion function for this sensor
 	SensorConverter* m_function = nullptr;
+
+	float m_rawValue = 0;
 };

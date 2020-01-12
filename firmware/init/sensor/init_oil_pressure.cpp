@@ -11,7 +11,7 @@
 EXTERN_ENGINE;
 
 LinearFunc oilpSensorFunc;
-FunctionalSensor oilpSensor(SensorType::OilPressure);
+FunctionalSensor oilpSensor(SensorType::OilPressure, /* timeout = */ MS2NT(50));
 
 void initOilPressure() {
 	// Only register if we have a sensor
