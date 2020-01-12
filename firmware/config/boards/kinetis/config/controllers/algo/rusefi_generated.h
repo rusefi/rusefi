@@ -488,6 +488,8 @@
 #define EGT_CHANNEL_COUNT 8
 #define electronicThrottlePin1Mode_offset 672
 #define electronicThrottlePin1Mode_offset_hex 2a0
+#define enableAemXSeries_offset 744
+#define enableAemXSeries_offset_hex 2e8
 #define enabledStep1Limiter_offset 744
 #define enabledStep1Limiter_offset_hex 2e8
 #define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge"
@@ -2008,8 +2010,6 @@
 #define unused_1484_bit_30_offset_hex 5c4
 #define unused_1484_bit_31_offset 1476
 #define unused_1484_bit_31_offset_hex 5c4
-#define unused_board_984_31_offset 744
-#define unused_board_984_31_offset_hex 2e8
 #define unused_former_warmup_target_afr_offset 2096
 #define unused_former_warmup_target_afr_offset_hex 830
 #define unused_offset 972
