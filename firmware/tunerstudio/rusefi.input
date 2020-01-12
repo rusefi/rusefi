@@ -1951,8 +1951,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Heater pin",						o2heaterPin
 
 	dialog = egoSettings, "", yAxis
-		panel = egoSettings_IO
-		panel = egoSettings_sensor,	{afr_hwChannel != 16}
+		panel = egoSettings_IO, {enableAemXSeries == 0}
+		panel = egoSettings_sensor,	{afr_hwChannel != 16 && enableAemXSeries == 0}
+		field = "Enable AEM X-Series CANbus",			enableAemXSeries, { canReadEnabled }
 
 ;			Engine->EGT inputs
 	dialog = egtInputs, "EGT inputs"
