@@ -10,7 +10,7 @@
 #include "trigger_toyota.h"
 
 void initialize2jzGE1_12(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	float crankD = 360 / 12 / 2; // 15
 
@@ -46,7 +46,7 @@ void initialize2jzGE1_12(TriggerWaveform *s) {
 void initialize2jzGE3_34(TriggerWaveform *s) {
 	setToothedWheelConfiguration(s, 36, 2, FOUR_STROKE_CRANK_SENSOR);
 
-//	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+//	s->initialize(FOUR_STROKE_CAM_SENSOR);
 //
 //	float camD = 720 / 6; // 120
 //

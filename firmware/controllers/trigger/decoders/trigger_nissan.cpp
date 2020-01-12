@@ -14,7 +14,7 @@
  * 8,2,2,2 Nissan pattern
  */
 static void initializeNissanSR20VE_4_optional_360(TriggerWaveform *s, bool with2nd) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, with2nd);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->isSynchronizationNeeded = true;
 	s->gapBothDirections = true;
 	s->useOnlyPrimaryForSync = true;

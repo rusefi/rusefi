@@ -10,7 +10,7 @@
 
 void initDodgeRam(TriggerWaveform *s) {
 
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->useRiseEdge = true;
 
 	s->isSynchronizationNeeded = false;
@@ -26,7 +26,7 @@ void initDodgeRam(TriggerWaveform *s) {
 }
 
 void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 	s->useRiseEdge = true;
 
 	s->setTriggerSynchronizationGap(3);
@@ -103,7 +103,7 @@ void configureNeon2003TriggerWaveformCam(TriggerWaveform *s) {
 // todo: move sync point so that two channel does not have false trigger issues
 	bool useOnlyPrimary = true;
 
-	s->initialize(FOUR_STROKE_CAM_SENSOR, !useOnlyPrimary);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->useRiseEdge = true;
 
 	s->tdcPosition = 496;
@@ -323,7 +323,7 @@ gap=1.43/0.71
 }
 
 void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->isSynchronizationNeeded = true;
 
 	s->tdcPosition = 150;
@@ -449,7 +449,7 @@ static void configureNeon1995TriggerWaveformCommon(bool withCam, TriggerWaveform
 }
 
 void configureNeon1995TriggerWaveformOnlyCrank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 	s->setTriggerSynchronizationGap(3.79);
 
 	s->tdcPosition = 279;
@@ -459,7 +459,7 @@ void configureNeon1995TriggerWaveformOnlyCrank(TriggerWaveform *s) {
 
 
 void configureNeon1995TriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	s->setTriggerSynchronizationGap(0.8227);
 
@@ -474,7 +474,7 @@ void configureNeon1995TriggerWaveform(TriggerWaveform *s) {
 }
 
 void initJeep18_2_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->isSynchronizationNeeded = true;
 	s->setTriggerSynchronizationGap(1);
 	s->useOnlyPrimaryForSync = true;
@@ -559,7 +559,7 @@ static void add4cylblock(int off, TriggerWaveform *s) {
 
 // TT_JEEP_4_CYL
 void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->isSynchronizationNeeded = true;
 	s->setTriggerSynchronizationGap(1);
 	s->useOnlyPrimaryForSync = true;

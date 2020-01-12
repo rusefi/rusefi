@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Jan 11 01:01:37 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Jan 12 05:13:50 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -339,10 +339,10 @@ struct trigger_config_s {
 	trigger_type_e type;
 	/**
 	offset 4 bit 0 */
-	bool unusedCustomIsSynchronizationNeeded : 1;
+	bool unusedTriggerBit0 : 1;
 	/**
 	offset 4 bit 1 */
-	bool unusedCustomNeedSecondTriggerInput : 1;
+	bool unusedTriggerBit1 : 1;
 	/**
 	 * This option could be used if your second trigger channel is broken
 	offset 4 bit 2 */
@@ -1356,7 +1356,7 @@ struct engine_configuration_s {
 	bool idleIncrementalPidCic : 1;
 	/**
 	offset 744 bit 31 */
-	bool unused_board_984_31 : 1;
+	bool enableAemXSeries : 1;
 	/**
 	 * offset 748
 	 */
@@ -1825,7 +1825,7 @@ struct engine_configuration_s {
 	bool secondTriggerChannelEnabled : 1;
 	/**
 	offset 1476 bit 4 */
-	bool needSecondTriggerInputDeprecated : 1;
+	bool unusedBit4_1476 : 1;
 	/**
 	offset 1476 bit 5 */
 	bool isMapAveragingEnabled : 1;
@@ -3125,4 +3125,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Jan 11 01:01:37 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Jan 12 05:13:50 EST 2020

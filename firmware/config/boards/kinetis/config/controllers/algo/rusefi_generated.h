@@ -488,6 +488,8 @@
 #define EGT_CHANNEL_COUNT 8
 #define electronicThrottlePin1Mode_offset 672
 #define electronicThrottlePin1Mode_offset_hex 2a0
+#define enableAemXSeries_offset 744
+#define enableAemXSeries_offset_hex 2e8
 #define enabledStep1Limiter_offset 744
 #define enabledStep1Limiter_offset_hex 2e8
 #define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge"
@@ -1523,8 +1525,6 @@
 #define narrowToWideOxygenBins_offset_hex 8d8
 #define nbVvtIndex_offset 2416
 #define nbVvtIndex_offset_hex 970
-#define needSecondTriggerInputDeprecated_offset 1476
-#define needSecondTriggerInputDeprecated_offset_hex 5c4
 #define noAccelAfterHardLimitPeriodSecs_offset 1536
 #define noAccelAfterHardLimitPeriodSecs_offset_hex 600
 #define o2heaterPin_offset 742
@@ -1924,10 +1924,10 @@
 #define trigger_unusedBit_4_8_offset_hex 210
 #define trigger_unusedBit_4_9_offset 528
 #define trigger_unusedBit_4_9_offset_hex 210
-#define trigger_unusedCustomIsSynchronizationNeeded_offset 528
-#define trigger_unusedCustomIsSynchronizationNeeded_offset_hex 210
-#define trigger_unusedCustomNeedSecondTriggerInput_offset 528
-#define trigger_unusedCustomNeedSecondTriggerInput_offset_hex 210
+#define trigger_unusedTriggerBit0_offset 528
+#define trigger_unusedTriggerBit0_offset_hex 210
+#define trigger_unusedTriggerBit1_offset 528
+#define trigger_unusedTriggerBit1_offset_hex 210
 #define trigger_useOnlyFirstChannel_offset 528
 #define trigger_useOnlyFirstChannel_offset_hex 210
 #define triggerCompCenterVolt_offset 4036
@@ -2008,8 +2008,6 @@
 #define unused_1484_bit_30_offset_hex 5c4
 #define unused_1484_bit_31_offset 1476
 #define unused_1484_bit_31_offset_hex 5c4
-#define unused_board_984_31_offset 744
-#define unused_board_984_31_offset_hex 2e8
 #define unused_former_warmup_target_afr_offset 2096
 #define unused_former_warmup_target_afr_offset_hex 830
 #define unused_offset 972
@@ -2018,6 +2016,8 @@
 #define unusedAnotherOne_offset_hex 2e8
 #define unusedAtOldBoardConfigurationEnd_offset 988
 #define unusedAtOldBoardConfigurationEnd_offset_hex 3dc
+#define unusedBit4_1476_offset 1476
+#define unusedBit4_1476_offset_hex 5c4
 #define unusedBit_249_10_offset 976
 #define unusedBit_249_10_offset_hex 3d0
 #define unusedBit_249_11_offset 976

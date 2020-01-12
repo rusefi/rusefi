@@ -11,7 +11,7 @@
  * This trigger is also used by Nissan and Mazda
  */
 void initialize36_2_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	float wide = 30 * 2;
 	float narrow = 10 * 2;
@@ -47,7 +47,7 @@ void initialize36_2_2_2(TriggerWaveform *s) {
 }
 
 void initializeSubaru7_6(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	float magic = 333;
 

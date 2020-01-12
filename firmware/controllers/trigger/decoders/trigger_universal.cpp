@@ -36,7 +36,7 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 		return;
 	}
 	efiAssertVoid(CUSTOM_NULL_SHAPE, s != NULL, "TriggerWaveform is NULL");
-	s->initialize(operationMode, false);
+	s->initialize(operationMode);
 
 	s->setTriggerSynchronizationGap(skippedCount + 1);
 	s->isSynchronizationNeeded = (totalTeethCount > 2) && (skippedCount != 0);
@@ -48,7 +48,7 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 
 void configureOnePlusOne(TriggerWaveform *s, operation_mode_e operationMode) {
 	UNUSED(operationMode);
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	s->addEvent720(180, T_PRIMARY, TV_RISE);
 	s->addEvent720(360, T_PRIMARY, TV_FALL);
@@ -62,7 +62,7 @@ void configureOnePlusOne(TriggerWaveform *s, operation_mode_e operationMode) {
 
 void configureOnePlus60_2(TriggerWaveform *s, operation_mode_e operationMode) {
 	UNUSED(operationMode);
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	int totalTeethCount = 60;
 	int skippedCount = 2;
@@ -81,7 +81,7 @@ void configureOnePlus60_2(TriggerWaveform *s, operation_mode_e operationMode) {
 
 void configure3_1_cam(TriggerWaveform *s, operation_mode_e operationMode) {
 	UNUSED(operationMode);
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 
 	const float crankW = 360 / 3 / 2;

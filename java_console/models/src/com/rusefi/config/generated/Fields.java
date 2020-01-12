@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jan 11 01:01:28 EST 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:13:41 EST 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -319,6 +319,7 @@ public class Fields {
 	public static final int egoValueShift_offset = 2216;
 	public static final int EGT_CHANNEL_COUNT = 8;
 	public static final int electronicThrottlePin1Mode_offset = 672;
+	public static final int enableAemXSeries_offset = 744;
 	public static final int enabledStep1Limiter_offset = 744;
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
 	public static final int engineChartSize_offset = 1480;
@@ -1008,7 +1009,6 @@ public class Fields {
 	public static final int narrowToWideOxygenBins_offset = 2264;
 	public static final int nbVvtIndex_offset = 2416;
 	public static final int nbVvtIndex_offset_hex = 970;
-	public static final int needSecondTriggerInputDeprecated_offset = 1476;
 	public static final int noAccelAfterHardLimitPeriodSecs_offset = 1536;
 	public static final int noAccelAfterHardLimitPeriodSecs_offset_hex = 600;
 	public static final int o2heaterPin_offset = 742;
@@ -1287,10 +1287,10 @@ public class Fields {
 	public static final int trigger_unusedBit_4_8_offset_hex = 210;
 	public static final int trigger_unusedBit_4_9_offset = 528;
 	public static final int trigger_unusedBit_4_9_offset_hex = 210;
-	public static final int trigger_unusedCustomIsSynchronizationNeeded_offset = 528;
-	public static final int trigger_unusedCustomIsSynchronizationNeeded_offset_hex = 210;
-	public static final int trigger_unusedCustomNeedSecondTriggerInput_offset = 528;
-	public static final int trigger_unusedCustomNeedSecondTriggerInput_offset_hex = 210;
+	public static final int trigger_unusedTriggerBit0_offset = 528;
+	public static final int trigger_unusedTriggerBit0_offset_hex = 210;
+	public static final int trigger_unusedTriggerBit1_offset = 528;
+	public static final int trigger_unusedTriggerBit1_offset_hex = 210;
 	public static final int trigger_useOnlyFirstChannel_offset = 528;
 	public static final int trigger_useOnlyFirstChannel_offset_hex = 210;
 	public static final int triggerCompCenterVolt_offset = 4036;
@@ -1329,12 +1329,12 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1476;
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
-	public static final int unused_board_984_31_offset = 744;
 	public static final int unused_former_warmup_target_afr_offset = 2096;
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
 	public static final int unused_offset = 972;
 	public static final int unusedAnotherOne_offset = 744;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 988;
+	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_249_10_offset = 976;
 	public static final int unusedBit_249_11_offset = 976;
 	public static final int unusedBit_249_12_offset = 976;
@@ -1547,8 +1547,8 @@ public class Fields {
 	public static final Field SENSORCHARTFREQUENCY = Field.create("SENSORCHARTFREQUENCY", 520, FieldType.INT);
 	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "trg44", "trg45", "INVALID"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 524, FieldType.INT, trigger_type_e);
-	public static final Field TRIGGER_UNUSEDCUSTOMISSYNCHRONIZATIONNEEDED = Field.create("TRIGGER_UNUSEDCUSTOMISSYNCHRONIZATIONNEEDED", 528, FieldType.BIT, 0);
-	public static final Field TRIGGER_UNUSEDCUSTOMNEEDSECONDTRIGGERINPUT = Field.create("TRIGGER_UNUSEDCUSTOMNEEDSECONDTRIGGERINPUT", 528, FieldType.BIT, 1);
+	public static final Field TRIGGER_UNUSEDTRIGGERBIT0 = Field.create("TRIGGER_UNUSEDTRIGGERBIT0", 528, FieldType.BIT, 0);
+	public static final Field TRIGGER_UNUSEDTRIGGERBIT1 = Field.create("TRIGGER_UNUSEDTRIGGERBIT1", 528, FieldType.BIT, 1);
 	public static final Field TRIGGER_USEONLYFIRSTCHANNEL = Field.create("TRIGGER_USEONLYFIRSTCHANNEL", 528, FieldType.BIT, 2);
 	public static final Field TRIGGER_UNUSEDBIT_4_3 = Field.create("TRIGGER_UNUSEDBIT_4_3", 528, FieldType.BIT, 3);
 	public static final Field TRIGGER_UNUSEDBIT_4_4 = Field.create("TRIGGER_UNUSEDBIT_4_4", 528, FieldType.BIT, 4);
@@ -1742,7 +1742,7 @@ public class Fields {
 	public static final Field ALIGNENGINESNIFFERATTDC = Field.create("ALIGNENGINESNIFFERATTDC", 744, FieldType.BIT, 28);
 	public static final Field USEETBFORIDLECONTROL = Field.create("USEETBFORIDLECONTROL", 744, FieldType.BIT, 29);
 	public static final Field IDLEINCREMENTALPIDCIC = Field.create("IDLEINCREMENTALPIDCIC", 744, FieldType.BIT, 30);
-	public static final Field UNUSED_BOARD_984_31 = Field.create("UNUSED_BOARD_984_31", 744, FieldType.BIT, 31);
+	public static final Field ENABLEAEMXSERIES = Field.create("ENABLEAEMXSERIES", 744, FieldType.BIT, 31);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 748, FieldType.INT8, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 749, FieldType.INT8, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS3 = Field.create("LOGICANALYZERPINS3", 750, FieldType.INT8, brain_input_pin_e);
@@ -1960,7 +1960,7 @@ public class Fields {
 	public static final Field ISIGNITIONENABLED = Field.create("ISIGNITIONENABLED", 1476, FieldType.BIT, 1);
 	public static final Field ISCYLINDERCLEANUPENABLED = Field.create("ISCYLINDERCLEANUPENABLED", 1476, FieldType.BIT, 2);
 	public static final Field SECONDTRIGGERCHANNELENABLED = Field.create("SECONDTRIGGERCHANNELENABLED", 1476, FieldType.BIT, 3);
-	public static final Field NEEDSECONDTRIGGERINPUTDEPRECATED = Field.create("NEEDSECONDTRIGGERINPUTDEPRECATED", 1476, FieldType.BIT, 4);
+	public static final Field UNUSEDBIT4_1476 = Field.create("UNUSEDBIT4_1476", 1476, FieldType.BIT, 4);
 	public static final Field ISMAPAVERAGINGENABLED = Field.create("ISMAPAVERAGINGENABLED", 1476, FieldType.BIT, 5);
 	public static final Field OVERRIDECRANKINGIACSETTING = Field.create("OVERRIDECRANKINGIACSETTING", 1476, FieldType.BIT, 6);
 	public static final Field USESEPARATEADVANCEFORIDLE = Field.create("USESEPARATEADVANCEFORIDLE", 1476, FieldType.BIT, 7);
@@ -2426,8 +2426,8 @@ public class Fields {
 	OVERRIDECRANKINGIGNITION,
 	SENSORCHARTFREQUENCY,
 	TRIGGER_TYPE,
-	TRIGGER_UNUSEDCUSTOMISSYNCHRONIZATIONNEEDED,
-	TRIGGER_UNUSEDCUSTOMNEEDSECONDTRIGGERINPUT,
+	TRIGGER_UNUSEDTRIGGERBIT0,
+	TRIGGER_UNUSEDTRIGGERBIT1,
 	TRIGGER_USEONLYFIRSTCHANNEL,
 	TRIGGER_UNUSEDBIT_4_3,
 	TRIGGER_UNUSEDBIT_4_4,
@@ -2614,7 +2614,7 @@ public class Fields {
 	ALIGNENGINESNIFFERATTDC,
 	USEETBFORIDLECONTROL,
 	IDLEINCREMENTALPIDCIC,
-	UNUSED_BOARD_984_31,
+	ENABLEAEMXSERIES,
 	LOGICANALYZERPINS1,
 	LOGICANALYZERPINS2,
 	LOGICANALYZERPINS3,
@@ -2830,7 +2830,7 @@ public class Fields {
 	ISIGNITIONENABLED,
 	ISCYLINDERCLEANUPENABLED,
 	SECONDTRIGGERCHANNELENABLED,
-	NEEDSECONDTRIGGERINPUTDEPRECATED,
+	UNUSEDBIT4_1476,
 	ISMAPAVERAGINGENABLED,
 	OVERRIDECRANKINGIACSETTING,
 	USESEPARATEADVANCEFORIDLE,

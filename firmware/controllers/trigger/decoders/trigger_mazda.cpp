@@ -21,7 +21,7 @@
 #include "trigger_mazda.h"
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->setTriggerSynchronizationGap2(1.4930 * 0.6f, 1.4930 * 1.3f);
 	s->useRiseEdge = false;
 
@@ -57,7 +57,7 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
  * See https://rusefi.com/forum/viewtopic.php?f=5&t=1447
  */
 void initialize_Mazda_Engine_z5_Shape(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	/**
 	 * My Signal is:      60,      60,      102,     60
 	 *               120,     120,     120,      78,
@@ -88,7 +88,7 @@ void initialize_Mazda_Engine_z5_Shape(TriggerWaveform *s) {
 
 // TT_MIATA_VVT
 void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, false);
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 
 	float o = 160;
 
@@ -102,7 +102,7 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 }
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float offset) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->setTriggerSynchronizationGap3(0, 0.065, 0.17f);
 	s->useRiseEdge = false;
 	s->bothFrontsRequired = true;
@@ -152,10 +152,7 @@ void initializeMazdaMiataVVtTestShape(TriggerWaveform *s) {
 }
 
 void configureMazdaProtegeSOHC(TriggerWaveform *s) {
-
-	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
-
-	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 //	s->initialState[0] = 1;
 
 //	float w = 720 / 4 * 0.215;
@@ -182,8 +179,7 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 }
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {
-	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->useOnlyPrimaryForSync = true;
 
 	/**
