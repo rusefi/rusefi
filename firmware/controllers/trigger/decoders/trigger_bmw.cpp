@@ -16,7 +16,7 @@ static inline float addPair(TriggerWaveform *s, float a, float w) {
 }
 
 void configureMiniCooperTriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 //	s->initialState[0] = 1;
 

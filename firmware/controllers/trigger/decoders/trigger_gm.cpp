@@ -8,7 +8,7 @@
 #include "trigger_gm.h"
 
 void configureGmTriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
 	// all angles are x2 here - so, 5 degree width is 10
 	float w = 10;
@@ -60,7 +60,7 @@ static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s,
  * based on data in https://rusefi.com/forum/viewtopic.php?f=3&t=936&p=30303#p30285
  */
 void initGmLS24(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
 	/* 
 	 * Okay, here's how this magic works:

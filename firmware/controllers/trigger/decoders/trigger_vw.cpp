@@ -11,7 +11,7 @@
 void setVwConfiguration(TriggerWaveform *s) {
 	efiAssertVoid(CUSTOM_ERR_6660, s != NULL, "TriggerWaveform is NULL");
 
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
 	s->isSynchronizationNeeded = true;
 
