@@ -12,7 +12,7 @@
  * https://en.wikipedia.org/wiki/Rover_K-series_engine
  */
 void initializeRoverK(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
 	float tooth = 20;
 

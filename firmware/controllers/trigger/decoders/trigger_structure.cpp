@@ -59,16 +59,16 @@ trigger_shape_helper::trigger_shape_helper() {
 
 TriggerWaveform::TriggerWaveform() :
 		wave(switchTimesBuffer, NULL) {
-	initialize(OM_NONE, false);
+	initialize(OM_NONE);
 	wave.channels = h.channels;
 
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 }
 
-void TriggerWaveform::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
+void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	isSynchronizationNeeded = true; // that's default value
 	bothFrontsRequired = false;
-	this->needSecondTriggerInput = needSecondTriggerInput;
+	needSecondTriggerInput = false;
 	memset(expectedDutyCycle, 0, sizeof(expectedDutyCycle));
 	memset(eventAngles, 0, sizeof(eventAngles));
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
@@ -189,7 +189,9 @@ void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIn
 void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
-	efiAssertVoid(CUSTOM_ERR_6598, channelIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
+	if (channelIndex == T_SECONDARY) {
+		needSecondTriggerInput = true;
+	}
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {

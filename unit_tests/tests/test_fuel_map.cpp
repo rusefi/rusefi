@@ -115,7 +115,7 @@ TEST(misc, testFuelMap) {
 
 
 static void confgiureFordAspireTriggerWaveform(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	s->addEvent720(53.747, T_SECONDARY, TV_RISE);
 	s->addEvent720(121.90, T_SECONDARY, TV_FALL);
