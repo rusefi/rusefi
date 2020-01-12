@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 03:44:59 EST 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:11:17 EST 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1288,10 +1288,10 @@ public class Fields {
 	public static final int trigger_unusedBit_4_8_offset_hex = 210;
 	public static final int trigger_unusedBit_4_9_offset = 528;
 	public static final int trigger_unusedBit_4_9_offset_hex = 210;
-	public static final int trigger_unusedCustomIsSynchronizationNeeded_offset = 528;
-	public static final int trigger_unusedCustomIsSynchronizationNeeded_offset_hex = 210;
-	public static final int trigger_unusedCustomNeedSecondTriggerInput_offset = 528;
-	public static final int trigger_unusedCustomNeedSecondTriggerInput_offset_hex = 210;
+	public static final int trigger_unusedTriggerBit0_offset = 528;
+	public static final int trigger_unusedTriggerBit0_offset_hex = 210;
+	public static final int trigger_unusedTriggerBit1_offset = 528;
+	public static final int trigger_unusedTriggerBit1_offset_hex = 210;
 	public static final int trigger_useOnlyFirstChannel_offset = 528;
 	public static final int trigger_useOnlyFirstChannel_offset_hex = 210;
 	public static final int triggerCompCenterVolt_offset = 4036;
@@ -1547,8 +1547,8 @@ public class Fields {
 	public static final Field SENSORCHARTFREQUENCY = Field.create("SENSORCHARTFREQUENCY", 520, FieldType.INT);
 	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "trg44", "trg45", "INVALID"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 524, FieldType.INT, trigger_type_e);
-	public static final Field TRIGGER_UNUSEDCUSTOMISSYNCHRONIZATIONNEEDED = Field.create("TRIGGER_UNUSEDCUSTOMISSYNCHRONIZATIONNEEDED", 528, FieldType.BIT, 0);
-	public static final Field TRIGGER_UNUSEDCUSTOMNEEDSECONDTRIGGERINPUT = Field.create("TRIGGER_UNUSEDCUSTOMNEEDSECONDTRIGGERINPUT", 528, FieldType.BIT, 1);
+	public static final Field TRIGGER_UNUSEDTRIGGERBIT0 = Field.create("TRIGGER_UNUSEDTRIGGERBIT0", 528, FieldType.BIT, 0);
+	public static final Field TRIGGER_UNUSEDTRIGGERBIT1 = Field.create("TRIGGER_UNUSEDTRIGGERBIT1", 528, FieldType.BIT, 1);
 	public static final Field TRIGGER_USEONLYFIRSTCHANNEL = Field.create("TRIGGER_USEONLYFIRSTCHANNEL", 528, FieldType.BIT, 2);
 	public static final Field TRIGGER_UNUSEDBIT_4_3 = Field.create("TRIGGER_UNUSEDBIT_4_3", 528, FieldType.BIT, 3);
 	public static final Field TRIGGER_UNUSEDBIT_4_4 = Field.create("TRIGGER_UNUSEDBIT_4_4", 528, FieldType.BIT, 4);
@@ -2426,8 +2426,8 @@ public class Fields {
 	OVERRIDECRANKINGIGNITION,
 	SENSORCHARTFREQUENCY,
 	TRIGGER_TYPE,
-	TRIGGER_UNUSEDCUSTOMISSYNCHRONIZATIONNEEDED,
-	TRIGGER_UNUSEDCUSTOMNEEDSECONDTRIGGERINPUT,
+	TRIGGER_UNUSEDTRIGGERBIT0,
+	TRIGGER_UNUSEDTRIGGERBIT1,
 	TRIGGER_USEONLYFIRSTCHANNEL,
 	TRIGGER_UNUSEDBIT_4_3,
 	TRIGGER_UNUSEDBIT_4_4,

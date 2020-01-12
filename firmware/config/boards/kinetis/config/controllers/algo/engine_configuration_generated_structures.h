@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Jan 10 22:43:32 PST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Jan 12 05:11:26 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -339,10 +339,10 @@ struct trigger_config_s {
 	trigger_type_e type;
 	/**
 	offset 4 bit 0 */
-	bool unusedCustomIsSynchronizationNeeded : 1;
+	bool unusedTriggerBit0 : 1;
 	/**
 	offset 4 bit 1 */
-	bool unusedCustomNeedSecondTriggerInput : 1;
+	bool unusedTriggerBit1 : 1;
 	/**
 	 * This option could be used if your second trigger channel is broken
 	offset 4 bit 2 */
@@ -3125,4 +3125,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Jan 10 22:43:32 PST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Jan 12 05:11:26 EST 2020

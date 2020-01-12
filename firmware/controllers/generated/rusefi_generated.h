@@ -1926,10 +1926,10 @@
 #define trigger_unusedBit_4_8_offset_hex 210
 #define trigger_unusedBit_4_9_offset 528
 #define trigger_unusedBit_4_9_offset_hex 210
-#define trigger_unusedCustomIsSynchronizationNeeded_offset 528
-#define trigger_unusedCustomIsSynchronizationNeeded_offset_hex 210
-#define trigger_unusedCustomNeedSecondTriggerInput_offset 528
-#define trigger_unusedCustomNeedSecondTriggerInput_offset_hex 210
+#define trigger_unusedTriggerBit0_offset 528
+#define trigger_unusedTriggerBit0_offset_hex 210
+#define trigger_unusedTriggerBit1_offset 528
+#define trigger_unusedTriggerBit1_offset_hex 210
 #define trigger_useOnlyFirstChannel_offset 528
 #define trigger_useOnlyFirstChannel_offset_hex 210
 #define triggerCompCenterVolt_offset 4036
