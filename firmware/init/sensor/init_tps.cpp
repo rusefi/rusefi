@@ -15,10 +15,10 @@ LinearFunc tpsFunc1p;
 LinearFunc tpsFunc2p;
 //LinearFunc tpsFunc2s;
 
-FunctionalSensor tpsSens1p(SensorType::Tps1Primary);
-//FunctionalSensor tpsSens1s(SensorType::Tps1Secondary);
-FunctionalSensor tpsSens2p(SensorType::Tps2Primary);
-//FunctionalSensor tpsSens2s(SensorType::Tps2Secondary);
+FunctionalSensor tpsSens1p(SensorType::Tps1Primary, MS2NT(10));
+//FunctionalSensor tpsSens1s(SensorType::Tps1Secondary, MS2NT(10));
+FunctionalSensor tpsSens2p(SensorType::Tps2Primary, MS2NT(10));
+//FunctionalSensor tpsSens2s(SensorType::Tps2Secondary, MS2NT(10));
 
 void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open) {
 	// Only register if we have a sensor
