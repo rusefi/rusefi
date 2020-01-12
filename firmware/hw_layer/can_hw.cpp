@@ -241,6 +241,8 @@ public:
 	}
 };
 
+volatile float aemXSeriesLambda = 0;
+
 class CanRead final : public ThreadController<256> {
 public:
 	CanRead()
@@ -266,8 +268,17 @@ public:
 
 			// Process the message
 			canReadCounter++;
-			printPacket(&m_buffer);
-			obdOnCanPacketRx(&m_buffer);
+
+			// TODO: if/when we support multiple lambda sensors, sensor N
+			// has address 0x0180 + N where N = [0, 15]
+			if (m_buffer.SID == 0x0180) {
+				// AEM x-series lambda sensor reports in 0.0001 lambda per bit
+				uint16_t lambdaInt = SWAP_UINT16(m_buffer.data16[0]);
+				aemXSeriesLambda = 0.0001f * lambdaInt;
+			} else {
+				printPacket(&m_buffer);
+				obdOnCanPacketRx(&m_buffer);
+			}
 		}
 	}
 

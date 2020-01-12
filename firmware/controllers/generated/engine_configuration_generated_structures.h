@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jan 11 01:01:28 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jan 10 22:43:28 PST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1356,7 +1356,7 @@ struct engine_configuration_s {
 	bool idleIncrementalPidCic : 1;
 	/**
 	offset 744 bit 31 */
-	bool unused_board_984_31 : 1;
+	bool enableAemXSeries : 1;
 	/**
 	 * offset 748
 	 */
@@ -3125,4 +3125,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jan 11 01:01:28 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jan 10 22:43:28 PST 2020
