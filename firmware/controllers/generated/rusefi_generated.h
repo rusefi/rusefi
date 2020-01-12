@@ -1525,8 +1525,6 @@
 #define narrowToWideOxygenBins_offset_hex 8d8
 #define nbVvtIndex_offset 2416
 #define nbVvtIndex_offset_hex 970
-#define needSecondTriggerInputDeprecated_offset 1476
-#define needSecondTriggerInputDeprecated_offset_hex 5c4
 #define noAccelAfterHardLimitPeriodSecs_offset 1536
 #define noAccelAfterHardLimitPeriodSecs_offset_hex 600
 #define o2heaterPin_offset 742
@@ -2018,6 +2016,8 @@
 #define unusedAnotherOne_offset_hex 2e8
 #define unusedAtOldBoardConfigurationEnd_offset 988
 #define unusedAtOldBoardConfigurationEnd_offset_hex 3dc
+#define unusedBit4_1476_offset 1476
+#define unusedBit4_1476_offset_hex 5c4
 #define unusedBit_249_10_offset 976
 #define unusedBit_249_10_offset_hex 3d0
 #define unusedBit_249_11_offset 976

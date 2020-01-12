@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:11:17 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:13:41 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1825,7 +1825,7 @@ struct engine_configuration_s {
 	bool secondTriggerChannelEnabled : 1;
 	/**
 	offset 1476 bit 4 */
-	bool needSecondTriggerInputDeprecated : 1;
+	bool unusedBit4_1476 : 1;
 	/**
 	offset 1476 bit 5 */
 	bool isMapAveragingEnabled : 1;
@@ -3125,4 +3125,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:11:17 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:13:41 EST 2020

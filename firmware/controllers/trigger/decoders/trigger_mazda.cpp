@@ -152,9 +152,6 @@ void initializeMazdaMiataVVtTestShape(TriggerWaveform *s) {
 }
 
 void configureMazdaProtegeSOHC(TriggerWaveform *s) {
-
-	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
-
 	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 //	s->initialState[0] = 1;
 
@@ -182,7 +179,6 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 }
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {
-	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->useOnlyPrimaryForSync = true;
 
