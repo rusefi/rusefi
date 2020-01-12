@@ -30,7 +30,7 @@ struct gpiochip_ops {
 	int (*setPadMode)(void *data, unsigned int pin, int mode);
 	int (*writePad)(void *data, unsigned int pin, int value);
 	int (*readPad)(void *data, unsigned int pin);
-	int (*getDiag)(void *data, unsigned int pin);
+	brain_pin_diag_e (*getDiag)(void *data, unsigned int pin);
 	int (*init)(void *data);
 	int (*deinit)(void *data);
 };
@@ -53,6 +53,7 @@ int gpiochips_init(void);
 int gpiochips_setPadMode(brain_pin_e pin, int mode);
 int gpiochips_writePad(brain_pin_e pin, int value);
 int gpiochips_readPad(brain_pin_e pin);
+brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin);
 
 /* return total number of external gpios */
 int gpiochips_get_total_pins(void);

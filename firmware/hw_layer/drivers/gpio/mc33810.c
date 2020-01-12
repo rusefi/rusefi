@@ -52,6 +52,9 @@ typedef enum {
 #define CMD_PWM(pwm)				(0xa000 | ((pwm) & 0x0fff))
 #define CMD_CLK_CALIB				(0xe000)
 
+/* get command code from TX value */
+#define TX_GET_CMD(v)				(((v) >> 12) & 0x000f)
+
 /* enum? */
 #define REG_ALL_STAT				(0x0)
 #define REG_OUT10_FAULT				(0x1)
@@ -94,6 +97,18 @@ struct mc33810_priv {
 	uint8_t					o_state;
 	/* direct driven output mask */
 	uint8_t					o_direct_mask;
+
+	/* ALL STATUS RESPONSE value and flags */
+	bool					all_status_requested;
+	bool					all_status_updated;
+	uint16_t				all_status_value;
+
+	/* OUTx fault registers */
+	uint16_t				out_fault[2];
+	/* GPGD mode fault register */
+	uint16_t				gpgd_fault;
+	/* IGN mode fault register */
+	uint16_t				ign_fault;
 
 	mc33810_drv_state		drv_state;
 };
@@ -144,6 +159,17 @@ static int mc33810_spi_rw(struct mc33810_priv *chip, uint16_t tx, uint16_t *rx)
 	if (rx)
 		*rx = rxb;
 
+	/* if reply on previous command is ALL STATUS RESPONSE */
+	if (chip->all_status_requested) {
+		chip->all_status_value = rxb;
+		chip->all_status_updated = true;
+	}
+
+	/* if next reply will be ALL STATUS RESPONSE */
+	chip->all_status_requested =
+		(((TX_GET_CMD(tx) >= 0x1) && (TX_GET_CMD(tx) <= 0xa)) ||
+		 (tx == CMD_READ_REG(REG_ALL_STAT)));
+
 	/* no errors for now */
 	return 0;
 }
@@ -153,13 +179,77 @@ static int mc33810_spi_rw(struct mc33810_priv *chip, uint16_t tx, uint16_t *rx)
  * @details Sends ORed data to register, also receive diagnostic.
  */
 
-static int mc33810_update_output(struct mc33810_priv *chip)
+static int mc33810_update_output_and_diag(struct mc33810_priv *chip)
 {
 	int ret = 0;
 
 	/* TODO: lock? */
 
-	chip->o_state_cached = chip->o_state;
+	/* we need to get updates status */
+	chip->all_status_updated = false;
+
+	/* if any pin is driven over SPI */
+	if (chip->o_direct_mask != 0xff) {
+		uint16_t out_data;
+
+		out_data = chip->o_state & (~chip->o_direct_mask);
+		ret = mc33810_spi_rw(chip, CMD_DRIVER_EN(out_data), NULL);
+		if (ret)
+			return ret;
+		chip->o_state_cached = chip->o_state;
+	}
+
+	/* this comlicated logic to save few spi transfers in case we will receive status as reply on other command */
+	if (!chip->all_status_requested) {
+		ret = mc33810_spi_rw(chip, CMD_READ_REG(REG_ALL_STAT), NULL);
+		if (ret)
+			return ret;
+	}
+	/* get reply */
+	if (!chip->all_status_updated) {
+		ret = mc33810_spi_rw(chip, CMD_READ_REG(REG_ALL_STAT), NULL);
+		if (ret)
+			return ret;
+	}
+	/* now we have updated ALL STATUS register in chip data */
+
+	/* check OUT (injectors) first */
+	if (chip->all_status_value & 0x000f) {
+		/* request diagnostic of OUT0 and OUT1 */
+		ret = mc33810_spi_rw(chip, CMD_READ_REG(REG_OUT10_FAULT), NULL);
+		if (ret)
+			return ret;
+		/* get diagnostic for OUT0 and OUT1 and request diagnostic for OUT2 and OUT3 */
+		ret = mc33810_spi_rw(chip, CMD_READ_REG(REG_OUT32_FAULT), &chip->out_fault[0]);
+		if (ret)
+			return ret;
+		/* get diagnostic for OUT2 and OUT2 and requset ALL STATUS */
+		ret = mc33810_spi_rw(chip, CMD_READ_REG(REG_ALL_STAT), &chip->out_fault[1]);
+		if (ret)
+			return ret;
+	}
+	/* check GPGD - mode not supported yet */
+	if (chip->all_status_value & 0x00f0) {
+		/* request diagnostic of GPGD */
+		ret = mc33810_spi_rw(chip, CMD_READ_REG(REG_GPGD_FAULT), NULL);
+		if (ret)
+			return ret;
+		/* get diagnostic for GPGD and requset ALL STATUS */
+		ret = mc33810_spi_rw(chip, CMD_READ_REG(REG_ALL_STAT), &chip->gpgd_fault);
+		if (ret)
+			return ret;
+	}
+	/* check IGN  */
+	if (chip->all_status_value & 0x0f00) {
+		/* request diagnostic of IGN */
+		ret = mc33810_spi_rw(chip, CMD_READ_REG(REG_IGN_FAULT), NULL);
+		if (ret)
+			return ret;
+		/* get diagnostic for IGN and requset ALL STATUS */
+		ret = mc33810_spi_rw(chip, CMD_READ_REG(REG_ALL_STAT), &chip->ign_fault);
+		if (ret)
+			return ret;
+	}
 
 	/* TODO: unlock? */
 
@@ -300,7 +390,7 @@ static THD_FUNCTION(mc33810_driver_thread, p)
 				continue;
 
 			/* TODO: implemet indirect driven gpios */
-			ret = mc33810_update_output(chip);
+			ret = mc33810_update_output_and_diag(chip);
 			if (ret) {
 				/* set state to MC33810_FAILED? */
 			}
@@ -349,16 +439,45 @@ int mc33810_writePad(void *data, unsigned int pin, int value)
 	return 0;
 }
 
-int mc33810_getDiag(void *data, unsigned int pin)
+brain_pin_diag_e mc33810_getDiag(void *data, unsigned int pin)
 {
-	int diag;
+	int val;
+	struct mc33810_priv *chip;
+	brain_pin_diag_e diag = PIN_OK;
 
 	if ((pin >= MC33810_DIRECT_OUTPUTS) || (data == NULL))
-		return -1;
+		return PIN_INVALID;
 
-	/* TODO: implement */
-	diag = 0;
+	chip = (struct mc33810_priv *)data;
 
+	if (pin < 4) {
+		/* OUT drivers */
+		val = chip->out_fault[pin < 2 ? 0 : 1] >> (4 * (pin & 0x01));
+
+		/* ON open fault */
+		if (val & BIT(0))
+			diag |= PIN_OPEN;
+		/* OFF open fault */
+		if (val & BIT(1))
+			diag |= PIN_OPEN;
+		if (val & BIT(2))
+			diag |= PIN_SHORT_TO_BAT;
+		if (val & BIT(3))
+			diag |= PIN_DRIVER_OVERTEMP;
+	} else {
+		/* INJ drivers, GPGD mode is not supported */
+		val = chip->ign_fault >> (3 * (pin - 4));
+
+		/* open load */
+		if (val & BIT(0))
+			diag |= PIN_OPEN;
+		/* max Dwell fault - too long coil charge time */
+		if (val & BIT(1))
+			diag |= PIN_OVERLOAD;
+		/* MAXI fault - too high coil current */
+		if (val & BIT(2))
+			diag |= PIN_OVERLOAD;
+	}
 	/* convert to some common enum? */
 	return diag;
 }
@@ -437,13 +556,20 @@ int mc33810_add(unsigned int index, const struct mc33810_config *cfg)
 			chip->o_direct_mask |= (1 << i);
 	}
 
-	chip->drv_state = MC33810_WAIT_INIT;
+	/* GPGD mode is not supported yet, ignition mode does not support spi on/off commands
+	 * so ignition signals should be directly driven */
+	if ((chip->o_direct_mask & 0xf0) != 0xf0)
+		return -1;
 
 	/* register, return gpio chip base */
 	ret = gpiochip_register(DRIVER_NAME, &mc33810_ops, MC33810_OUTPUTS, chip);
+	if (ret < 0)
+		return ret;
 
 	/* set default pin names, board init code can rewrite */
 	gpiochips_setPinNames(ret, mc33810_pin_names);
+
+	chip->drv_state = MC33810_WAIT_INIT;
 
 	return ret;
 }
