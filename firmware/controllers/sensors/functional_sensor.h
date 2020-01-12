@@ -25,8 +25,8 @@
  */
 class FunctionalSensor final : public StoredValueSensor {
 public:
-	explicit FunctionalSensor(SensorType type)
-		: StoredValueSensor(type) { }
+	explicit FunctionalSensor(SensorType type, efitick_t timeoutPeriod)
+		: StoredValueSensor(type, timeoutPeriod) { }
 
 	void postRawValue(float inputValue, efitick_t timestamp);
 
@@ -34,7 +34,7 @@ public:
 		m_function = &func;
 	}
 
-	virtual getRaw() const final {
+	float getRaw() const override final {
 		return m_rawValue;
 	}
 
