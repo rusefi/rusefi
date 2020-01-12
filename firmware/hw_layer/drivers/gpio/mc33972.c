@@ -273,19 +273,19 @@ int mc33972_readPad(void *data, unsigned int pin) {
 	return !!(chip->i_state & FLAG_PIN(pin));
 }
 
-int mc33972_getDiag(void *data, unsigned int pin) {
-	int diag;
+brain_pin_diag_e mc33972_getDiag(void *data, unsigned int pin) {
+	brain_pin_diag_e diag = PIN_OK;
 	struct mc33972_priv *chip;
 
 	if ((pin >= MC33972_INPUTS) || (data == NULL))
-		return -1;
+		return PIN_INVALID;
 
 	chip = (struct mc33972_priv *)data;
 
-	/* one diag for all pins */
-	diag = !!(chip->i_state & FLAG_THERM);
+	/* one diag bit for all pins */
+	if (chip->i_state & FLAG_THERM)
+		diag = PIN_DRIVER_OVERTEMP;
 
-	/* convert to some common enum? */
 	return diag;
 }
 
