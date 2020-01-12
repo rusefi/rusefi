@@ -25,6 +25,7 @@
 struct mc33810_config {
 	SPIDriver	*spi_bus;
 	SPIConfig	spi_config;
+	/* First 4 is injector drivers, then 4 ignition pre-drivers */
 	struct {
 		ioportid_t		port;
 		uint_fast8_t	pad;
