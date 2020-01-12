@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:11:17 EST 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:13:41 EST 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1009,7 +1009,6 @@ public class Fields {
 	public static final int narrowToWideOxygenBins_offset = 2264;
 	public static final int nbVvtIndex_offset = 2416;
 	public static final int nbVvtIndex_offset_hex = 970;
-	public static final int needSecondTriggerInputDeprecated_offset = 1476;
 	public static final int noAccelAfterHardLimitPeriodSecs_offset = 1536;
 	public static final int noAccelAfterHardLimitPeriodSecs_offset_hex = 600;
 	public static final int o2heaterPin_offset = 742;
@@ -1335,6 +1334,7 @@ public class Fields {
 	public static final int unused_offset = 972;
 	public static final int unusedAnotherOne_offset = 744;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 988;
+	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_249_10_offset = 976;
 	public static final int unusedBit_249_11_offset = 976;
 	public static final int unusedBit_249_12_offset = 976;
@@ -1960,7 +1960,7 @@ public class Fields {
 	public static final Field ISIGNITIONENABLED = Field.create("ISIGNITIONENABLED", 1476, FieldType.BIT, 1);
 	public static final Field ISCYLINDERCLEANUPENABLED = Field.create("ISCYLINDERCLEANUPENABLED", 1476, FieldType.BIT, 2);
 	public static final Field SECONDTRIGGERCHANNELENABLED = Field.create("SECONDTRIGGERCHANNELENABLED", 1476, FieldType.BIT, 3);
-	public static final Field NEEDSECONDTRIGGERINPUTDEPRECATED = Field.create("NEEDSECONDTRIGGERINPUTDEPRECATED", 1476, FieldType.BIT, 4);
+	public static final Field UNUSEDBIT4_1476 = Field.create("UNUSEDBIT4_1476", 1476, FieldType.BIT, 4);
 	public static final Field ISMAPAVERAGINGENABLED = Field.create("ISMAPAVERAGINGENABLED", 1476, FieldType.BIT, 5);
 	public static final Field OVERRIDECRANKINGIACSETTING = Field.create("OVERRIDECRANKINGIACSETTING", 1476, FieldType.BIT, 6);
 	public static final Field USESEPARATEADVANCEFORIDLE = Field.create("USESEPARATEADVANCEFORIDLE", 1476, FieldType.BIT, 7);
@@ -2830,7 +2830,7 @@ public class Fields {
 	ISIGNITIONENABLED,
 	ISCYLINDERCLEANUPENABLED,
 	SECONDTRIGGERCHANNELENABLED,
-	NEEDSECONDTRIGGERINPUTDEPRECATED,
+	UNUSEDBIT4_1476,
 	ISMAPAVERAGINGENABLED,
 	OVERRIDECRANKINGIACSETTING,
 	USESEPARATEADVANCEFORIDLE,
