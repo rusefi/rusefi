@@ -34,7 +34,13 @@ public:
 		m_function = &func;
 	}
 
+	virtual getRaw() const final {
+		return m_rawValue;
+	}
+
 private:
 	// Conversion function for this sensor
 	SensorConverter* m_function = nullptr;
+
+	float m_rawValue = 0;
 };

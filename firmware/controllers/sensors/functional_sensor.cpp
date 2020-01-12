@@ -7,6 +7,8 @@ void FunctionalSensor::postRawValue(float inputValue, efitick_t timestamp) {
 		return;
 	}
 
+	m_rawValue = inputValue;
+
 	auto r = m_function->convert(inputValue);
 
 	// This has to happen so that we set the valid bit after

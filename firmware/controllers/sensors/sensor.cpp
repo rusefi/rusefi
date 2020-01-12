@@ -79,6 +79,23 @@ bool Sensor::Register() {
 	return {false, 0};
 }
 
+/*static*/ float Sensor::getRaw(SensorType type) {
+	const auto entry = getEntryForType(type);
+
+	// Check if this is a valid sensor entry
+	if (!entry) {
+		return 0;
+	}
+
+	const auto s = entry->sensor;
+	if (s) {
+		return s->getRaw();
+	}
+
+	// We've exhausted all valid ways to return something - sensor not found.
+	return 0;
+}
+
 /*static*/ void Sensor::setMockValue(SensorType type, float value) {
 	auto entry = getEntryForType(type);
 
