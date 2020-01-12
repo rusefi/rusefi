@@ -1,6 +1,6 @@
 #include "functional_sensor.h"
 
-void FunctionalSensor::postRawValue(float inputValue) {
+void FunctionalSensor::postRawValue(float inputValue, efitick_t timestamp) {
 	// If no function is set, this sensor isn't valid.
 	if (!m_function) {
 		invalidate();
@@ -13,7 +13,7 @@ void FunctionalSensor::postRawValue(float inputValue) {
 	// the value is stored, to prevent the data race of reading
 	// an old invalid value
 	if (r.Valid) {
-		setValidValue(r.Value);
+		setValidValue(r.Value, timestamp);
 	} else {
 		invalidate();
 	}

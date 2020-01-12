@@ -28,7 +28,7 @@ public:
 	explicit FunctionalSensor(SensorType type)
 		: StoredValueSensor(type) { }
 
-	void postRawValue(float inputValue);
+	void postRawValue(float inputValue, efitick_t timestamp);
 
 	void setFunction(SensorConverter& func) {
 		m_function = &func;
