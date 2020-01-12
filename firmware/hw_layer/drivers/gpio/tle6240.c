@@ -409,19 +409,28 @@ int tle6240_writePad(void *data, unsigned int pin, int value)
 	return 0;
 }
 
-int tle6240_getDiag(void *data, unsigned int pin)
+brain_pin_diag_e tle6240_getDiag(void *data, unsigned int pin)
 {
-	int diag;
+	int val;
+	brain_pin_diag_e diag;
 	struct tle6240_priv *chip;
 
-	if ((pin >= TLE6240_DIRECT_OUTPUTS) || (data == NULL))
-		return -1;
+	if ((pin >= TLE6240_OUTPUTS) || (data == NULL))
+		return PIN_INVALID;
 
 	chip = (struct tle6240_priv *)data;
 
-	diag = (chip->diag[(pin > 7) ? 1 : 0] >> ((pin % 8) * 2)) & 0x03;
+	val = (chip->diag[(pin > 7) ? 1 : 0] >> ((pin % 8) * 2)) & 0x03;
+	if (val == 0x3)
+		diag = PIN_OK;
+	else if (val == 0x2)
+		/* Overload, shorted load or overtemperature */
+		diag = PIN_OVERLOAD | PIN_DRIVER_OVERTEMP;
+	else if (val == 0x1)
+		diag = PIN_OPEN;
+	else if (val == 0x0)
+		diag = PIN_SHORT_TO_GND;
 
-	/* convert to some common enum? */
 	return diag;
 }
 

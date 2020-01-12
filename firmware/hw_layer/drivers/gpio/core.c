@@ -283,6 +283,27 @@ int gpiochips_readPad(brain_pin_e pin)
 }
 
 /**
+ * @brief Get diagnostic for given gpio
+ * @details actual output value depent on gpiochip capabilities
+ * returns -1 in case of pin not belong to any gpio chip
+ * returns PIN_OK in case of chip does not support getting diagnostic
+ * else return brain_pin_diag_e from gpiochip driver;
+ */
+
+brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin)
+{
+	struct gpiochip *chip = gpiochip_find(pin);
+
+	if (!chip)
+		return PIN_INVALID;
+
+	if (chip->ops->getDiag)
+		return chip->ops->getDiag(chip->priv, pin - chip->base);
+
+	return PIN_OK;
+}
+
+/**
  * @brief Get total pin count allocated for external gpio chips.
  * @details Will also include unused pins for chips that was registered
  * but later fails to init.

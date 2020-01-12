@@ -68,24 +68,41 @@ static void reportPins(void) {
 
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		for (unsigned int i = getNumBrainPins() ; i < getNumBrainPins() + BOARD_EXT_PINREPOPINS /* gpiochips_get_total_pins()*/ ; i++) {
+			static char pin_error[64];
 			const char *pin_name;
 			const char *pin_user;
+			brain_pin_diag_e pin_diag;
 			brain_pin_e brainPin = index_to_brainPin(i);
 
 			pin_name = gpiochips_getPinName(brainPin);
 			pin_user = getBrainUsedPin(i);
+			pin_diag = gpiochips_getDiag(brainPin);
+
+			/* use autogeneraged helpers here? */
+			if (pin_diag == PIN_OK) {
+				snprintf(pin_error, sizeof(pin_error), "Ok");
+			} else if (pin_diag != PIN_INVALID) {
+				snprintf(pin_error, sizeof(pin_error), "%s%s%s%s%s",
+					pin_diag & PIN_OPEN ? "open_load " : "",
+					pin_diag & PIN_SHORT_TO_GND ? "short_to_gnd " : "",
+					pin_diag & PIN_SHORT_TO_BAT ? "short_to_bat " : "",
+					pin_diag & PIN_OVERLOAD ? "overload " : "",
+					pin_diag & PIN_DRIVER_OVERTEMP ? "overtemp": "");
+			} else {
+				snprintf(pin_error, sizeof(pin_error), "INVALID");
+			}
 
 			/* here show all pins, unused too */
 			if (pin_name != NULL) {
 				// this probably uses a lot of output buffer!
-				scheduleMsg(&logger, "ext %s: %s",
-					pin_name, pin_user ? pin_user : "free");
+				scheduleMsg(&logger, "ext %s: %s diagnostic: %s",
+					pin_name, pin_user ? pin_user : "free", pin_error);
 			} else {
 				const char *chip_name = gpiochips_getChipName(brainPin);
 				/* if chip exist */
 				if (chip_name != NULL) {
-					scheduleMsg(&logger, "ext %s.%d: %s",
-						chip_name, gpiochips_getPinOffset(brainPin), pin_user ? pin_user : "free");
+					scheduleMsg(&logger, "ext %s.%d: %s diagnostic: %s",
+						chip_name, gpiochips_getPinOffset(brainPin), pin_user ? pin_user : "free", pin_error);
 				}
 			}
 		}
