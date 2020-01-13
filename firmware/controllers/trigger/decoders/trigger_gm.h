@@ -5,12 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef TRIGGER_GM_H_
-#define TRIGGER_GM_H_
+#pragma once
 
 #include "trigger_structure.h"
 
 void configureGmTriggerWaveform(TriggerWaveform *s);
 void initGmLS24(TriggerWaveform *s);
-
-#endif /* TRIGGER_GM_H_ */

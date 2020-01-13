@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef CONTROLLERS_TRIGGER_TRIGGER_HONDA_H_
-#define CONTROLLERS_TRIGGER_TRIGGER_HONDA_H_
+#pragma once
 
 #include "trigger_structure.h"
 
@@ -23,4 +22,4 @@ void configureOnePlus16(TriggerWaveform *s, operation_mode_e operationMode);
 void configureHondaCbr600(TriggerWaveform *s);
 void configureHondaCbr600custom(TriggerWaveform *s);
 
-#endif /* CONTROLLERS_TRIGGER_TRIGGER_HONDA_H_ */
+

@@ -5,11 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#ifndef CONTROLLERS_TRIGGER_DECODERS_TRIGGER_VW_H_
-#define CONTROLLERS_TRIGGER_DECODERS_TRIGGER_VW_H_
+#pragma once
 
 #include "trigger_structure.h"
 
 void setVwConfiguration(TriggerWaveform *s);
-
-#endif /* CONTROLLERS_TRIGGER_DECODERS_TRIGGER_VW_H_ */
