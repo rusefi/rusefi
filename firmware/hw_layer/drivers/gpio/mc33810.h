@@ -4,7 +4,7 @@
  * Automotive Engine Control IC
  *
  * @date Dec 29, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * @date Jan 03, 2020
  * @author Andrey Gusakov <dron0gus@gmail.com>, (c) 2020

@@ -2,7 +2,7 @@
  * @file cj125.h
  *
  * @date: Jul 17, 2016
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef HW_LAYER_SENSORS_CJ125_H_

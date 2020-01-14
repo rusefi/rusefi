@@ -2,7 +2,7 @@
  * @file trigger_vw.cpp
  *
  * @date Aug 25, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_vw.h"

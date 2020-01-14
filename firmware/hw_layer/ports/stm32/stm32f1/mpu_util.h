@@ -2,7 +2,7 @@
  * @file	mpu_util.h
  *
  * @date Jan 8, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef CONFIG_STM32F1EGT_MPU_UTIL_H_

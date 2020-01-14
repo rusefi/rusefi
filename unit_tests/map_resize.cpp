@@ -2,7 +2,7 @@
  * @file	map_resize.c
  *
  * @date Jan 12, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_configuration.h"

@@ -2,7 +2,7 @@
  * @file unit_test_framework.h
  *
  * @date Mar 4, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef UNIT_TEST_FRAMEWORK_H_

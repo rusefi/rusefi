@@ -1,7 +1,7 @@
 /*
  * @file suzuki_vitara.cpp
  *
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  * @date Oct 17, 2015
  */
 

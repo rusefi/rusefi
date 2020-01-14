@@ -4,7 +4,7 @@
  * set engine_type 31
  *
  * @date Apr 22, 2015
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
