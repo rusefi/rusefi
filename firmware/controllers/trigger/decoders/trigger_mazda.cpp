@@ -176,6 +176,7 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 	s->addEvent720(a, T_PRIMARY, TV_FALL);
 
 	s->isSynchronizationNeeded = false;
+	s->shapeWithoutTdc = true;
 }
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {

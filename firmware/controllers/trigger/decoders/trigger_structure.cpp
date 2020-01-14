@@ -2,7 +2,7 @@
  * @file	trigger_structure.cpp
  *
  * @date Jan 20, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -69,6 +69,7 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	isSynchronizationNeeded = true; // that's default value
 	bothFrontsRequired = false;
 	needSecondTriggerInput = false;
+	shapeWithoutTdc = false;
 	memset(expectedDutyCycle, 0, sizeof(expectedDutyCycle));
 	memset(eventAngles, 0, sizeof(eventAngles));
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
@@ -175,6 +176,13 @@ extern bool printTriggerDebug;
 
 void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
 	UNUSED(useOnlyRisingEdgeForTrigger);
+
+	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? expectedEventCount[0] == 1 : expectedEventCount[0] == 2;
+	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
+	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
+		firmwareError(ERROR_TRIGGER_DRAMA, "trigger constraint violation");
+	}
+
 // todo: move the following logic from below here
 	//	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
 //		expectedEventCount[channelIndex]++;
@@ -526,10 +534,12 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_HONDA_4_24_1:
 		configureHonda_1_4_24(this, true, true, T_CHANNEL_3, T_PRIMARY, 0);
+		shapeWithoutTdc = true;
 		break;
 
 	case TT_HONDA_4_24:
 		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0);
+		shapeWithoutTdc = true;
 		break;
 
 	case TT_HONDA_1_24:
