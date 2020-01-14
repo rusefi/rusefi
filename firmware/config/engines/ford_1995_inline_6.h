@@ -5,11 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef FORD_1995_INLINE_6_H_
-#define FORD_1995_INLINE_6_H_
+#pragma once
 
 #include "engine_configuration.h"
 
 void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-
-#endif /* FORD_1995_INLINE_6_H_ */
