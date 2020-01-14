@@ -10,7 +10,7 @@
 #include "engine.h"
 
 // todo: EFI_STEPPER macro
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if 1 || EFI_PROD_CODE || EFI_SIMULATOR
 #include "stepper.h"
 #include "pin_repository.h"
 #include "tps.h"
@@ -69,7 +69,7 @@ void StepperMotor::ThreadTask() {
 		 */
 		int numParkingSteps = (int)efiRound((1.0f + (float)CONFIG(stepperParkingExtraSteps) / PERCENT_MULT) * m_totalSteps, 1.0f);
 		for (int i = 0; i < numParkingSteps; i++) {
-			pulse();
+			m_hw->step(false);
 		}
 
 		// set & save zero stepper position after the parking completion
@@ -86,18 +86,18 @@ void StepperMotor::ThreadTask() {
 		int currentPosition = m_currentPosition;
 
 		if (targetPosition == currentPosition) {
-			chThdSleepMilliseconds(m_reactionTime);
+			m_hw->pause();
 			continue;
 		}
 		bool isIncrementing = targetPosition > currentPosition;
-		setDirection(isIncrementing);
+
 		if (isIncrementing) {
 			m_currentPosition++;
 		} else {
 			m_currentPosition--;
 		}
 
-		pulse();
+		m_hw->step(isIncrementing);
 
 		// save position to backup RTC register
 #if EFI_PROD_CODE
@@ -116,39 +116,57 @@ void StepperMotor::setTargetPosition(int targetPosition) {
 	m_targetPosition = targetPosition;
 }
 
-void StepperMotor::setDirection(bool isIncrementing) {
+void StepDirectionStepper::setDirection(bool isIncrementing) {
 	if (isIncrementing != m_currentDirection) {
 		// compensate stepper motor inertia
-		chThdSleepMilliseconds(m_reactionTime);
+		pause();
 		m_currentDirection = isIncrementing;
 	}
 		
 	directionPin.setValue(isIncrementing);
 }
 
-void StepperMotor::pulse() {
+void StepDirectionStepper::pulse() {
 	enablePin.setValue(false); // enable stepper
 
 	stepPin.setValue(true);
-	chThdSleepMilliseconds(m_reactionTime);
+	pause();
 
 	stepPin.setValue(false);
-	chThdSleepMilliseconds(m_reactionTime);
+	pause();
 
 	enablePin.setValue(true); // disable stepper
 }
 
-void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode,
-		float reactionTime, int totalSteps,
-		brain_pin_e enablePin, pin_output_mode_e enablePinMode, Logging *sharedLogger) {
-	m_reactionTime = maxF(1, reactionTime);
+void StepperHw::pause() const {
+	chThdSleepMilliseconds(m_reactionTime);
+}
+
+void StepperHw::setReactionTime(float ms) {
+	m_reactionTime = maxF(1, ms);
+}
+
+void StepDirectionStepper::step(bool positive) {
+	setDirection(positive);
+	pulse();
+}
+
+void StepperMotor::initialize(StepperHw& hardware, int totalSteps, Logging *sharedLogger) {
 	m_totalSteps = maxI(3, totalSteps);
-	
+
+	m_hw = &hardware;
+
 	logger = sharedLogger;
 
+	Start();
+}
+
+void StepDirectionStepper::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, brain_pin_e enablePin, pin_output_mode_e enablePinMode) {
 	if (stepPin == GPIO_UNASSIGNED || directionPin == GPIO_UNASSIGNED) {
 		return;
 	}
+
+	setReactionTime(reactionTime);
 
 	this->directionPinMode = directionPinMode;
 	this->directionPin.initPin("stepper dir", directionPin, &this->directionPinMode);
@@ -164,8 +182,6 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin
 	this->stepPin.setValue(false);
 	this->directionPin.setValue(false);
 	m_currentDirection = false;
-
-	Start();
 }
 
 #endif

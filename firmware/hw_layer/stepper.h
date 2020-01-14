@@ -12,31 +12,53 @@
 #include "backup_ram.h"
 #include "thread_controller.h"
 
+class StepperHw {
+public:
+	virtual void step(bool positive) = 0;
+	void pause() const;
+
+protected:
+	void setReactionTime(float ms);
+
+private:
+	float m_reactionTime = 5.0f;
+};
+
+class StepDirectionStepper final : public StepperHw {
+public:
+	void initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, brain_pin_e enablePin, pin_output_mode_e enablePinMode);
+
+	void step(bool positive) override;
+
+private:
+	void pulse();
+	void setDirection(bool isIncrementing);
+
+	bool m_currentDirection = false;
+
+	OutputPin directionPin, stepPin, enablePin;
+	pin_output_mode_e directionPinMode, stepPinMode, enablePinMode;
+};
+
 class StepperMotor final : private ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	StepperMotor();
 
-	void initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, int totalSteps,
-			brain_pin_e enablePin, pin_output_mode_e enablePinMode, Logging *sharedLogger);
+	void initialize(StepperHw& hardware, int totalSteps, Logging *sharedLogger);
 
-	void pulse();
 	void setTargetPosition(int targetPosition);
 	int getTargetPosition() const;
-	void setDirection(bool isIncrementing);
 
-	OutputPin directionPin, stepPin, enablePin;
 	int m_currentPosition = 0;
-	bool m_currentDirection = false;
-	float m_reactionTime = 0;
 	int m_totalSteps = 0;
 
 protected:
 	void ThreadTask() override;
 
 private:
-	int m_targetPosition = 0;
+	StepperHw* m_hw = nullptr;
 
-	pin_output_mode_e directionPinMode, stepPinMode, enablePinMode;
+	int m_targetPosition = 0;
 };
 
 #endif /* STEPPER_H_ */

@@ -43,6 +43,7 @@
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
 #include "pin_repository.h"
+static StepDirectionStepper iacStepperHw;
 static StepperMotor iacMotor;
 #endif /* EFI_UNIT_TEST */
 
@@ -557,13 +558,17 @@ void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(useStepperIdle)) {
-		iacMotor.initialize(CONFIG(idle).stepperStepPin,
-				CONFIG(idle).stepperDirectionPin,
-				engineConfiguration->stepperDirectionPinMode,
-				engineConfiguration->idleStepperReactionTime,
-				engineConfiguration->idleStepperTotalSteps,
-				engineConfiguration->stepperEnablePin, engineConfiguration->stepperEnablePinMode,
-				logger);
+		iacStepperHw.initialize(
+			CONFIG(idle).stepperStepPin,
+			CONFIG(idle).stepperDirectionPin,
+			CONFIG(stepperDirectionPinMode),
+			CONFIG(idleStepperReactionTime),
+			CONFIG(stepperEnablePin),
+			CONFIG(stepperEnablePinMode)
+		);
+
+		iacMotor.initialize(iacStepperHw, CONFIG(idleStepperTotalSteps), logger);
+
 		// This greatly improves PID accuracy for steppers with a small number of steps
 		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;
 	} else if (!engineConfiguration->useETBforIdleControl) {
