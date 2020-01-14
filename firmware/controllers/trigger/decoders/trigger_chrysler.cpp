@@ -558,9 +558,7 @@ static void add4cylblock(int off, TriggerWaveform *s) {
 // TT_JEEP_4_CYL
 void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->isSynchronizationNeeded = true;
-	s->setTriggerSynchronizationGap(1);
-	s->useOnlyPrimaryForSync = true;
+	s->isSynchronizationNeeded = false;
 	s->tdcPosition = 720 - 236;
 
 	float offset = 124;
