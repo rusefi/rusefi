@@ -9,7 +9,7 @@
  * http://rusefi.com/wiki/index.php?title=Vehicle:Dodge_Neon_2003
  *
  * @date Dec 16, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

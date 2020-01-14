@@ -4,7 +4,7 @@
  * Header file shared between firmware, simulator and unit_tests
  *
  * @date Sep 16, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef CONTROLLERS_CORE_COMMON_HEADERS_H_

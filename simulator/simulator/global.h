@@ -4,7 +4,7 @@
  * Global header file for win32 or posix simulator
  *
  * @date May 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef GLOBAL_H_

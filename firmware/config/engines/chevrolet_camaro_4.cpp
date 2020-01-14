@@ -5,7 +5,7 @@
  * set engine_type 35
  *
  * @date Oct 16, 2015
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "chevrolet_camaro_4.h"

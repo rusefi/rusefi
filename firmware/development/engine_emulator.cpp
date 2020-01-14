@@ -5,7 +5,7 @@
  * there is a chance that 90% of the code here is dead
  *
  * @date Mar 15, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

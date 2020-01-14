@@ -7,7 +7,7 @@
  *
  *
  * @date May 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * enable verbose_idle
  * disable verbose_idle

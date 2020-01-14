@@ -2,7 +2,7 @@
  * test_startOfCrankingPrimingPulse.cpp
  *
  *  Created on: Mar 4, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_test_helper.h"

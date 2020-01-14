@@ -1,7 +1,7 @@
 /**
  * @file map.h
  *
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 #ifndef MAP_H_
 #define MAP_H_

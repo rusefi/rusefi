@@ -6,7 +6,7 @@
  * Board pin out for Frankenstein
  *
  * @date Apr 15, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_math.h"

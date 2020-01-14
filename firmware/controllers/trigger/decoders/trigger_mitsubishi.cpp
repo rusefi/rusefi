@@ -2,7 +2,7 @@
  * @file	trigger_mitsubishi.cpp
  *
  * @date Aug 5, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_mitsubishi.h"
