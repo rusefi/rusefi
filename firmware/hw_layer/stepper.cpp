@@ -10,7 +10,7 @@
 #include "engine.h"
 
 // todo: EFI_STEPPER macro
-#if 1 || EFI_PROD_CODE || EFI_SIMULATOR
+#if EFI_PROD_CODE || EFI_SIMULATOR
 #include "stepper.h"
 #include "pin_repository.h"
 #include "tps.h"
