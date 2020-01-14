@@ -475,9 +475,7 @@ void configureNeon1995TriggerWaveform(TriggerWaveform *s) {
 
 void initJeep18_2_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->isSynchronizationNeeded = true;
-	s->setTriggerSynchronizationGap(1);
-	s->useOnlyPrimaryForSync = true;
+	s->isSynchronizationNeeded = false;
 	s->tdcPosition = 581;
 
 	float off = 212;
