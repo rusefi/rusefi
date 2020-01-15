@@ -122,7 +122,7 @@ void StepDirectionStepper::setDirection(bool isIncrementing) {
 		pause();
 		m_currentDirection = isIncrementing;
 	}
-		
+
 	directionPin.setValue(isIncrementing);
 }
 
