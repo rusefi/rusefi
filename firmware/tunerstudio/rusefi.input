@@ -267,7 +267,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       tpsAccelFuel    = scalar,  U16,     82,     "ms",{1/@@PACK_MULT_MS@@},         0
 
 ; Ignition
-      ignitionAdvance = scalar,  U16,     84,    "deg",{1/@@PACK_MULT_ANGLE@@},       0.0
+      ignitionAdvance = scalar,  S16,     84,    "deg",{1/@@PACK_MULT_ANGLE@@},       0.0
       sparkDwellValue = scalar,  U16,     86,     "ms",{1/@@PACK_MULT_MS@@},       0.0
       coilDutyCycle   = scalar,  U16,     88,      "%",{1/@@PACK_MULT_PERCENT@@},         0
 
