@@ -151,10 +151,10 @@ void StepDirectionStepper::step(bool positive) {
 	pulse();
 }
 
-void StepperMotor::initialize(StepperHw& hardware, int totalSteps, Logging *sharedLogger) {
+void StepperMotor::initialize(StepperHw *hardware, int totalSteps, Logging *sharedLogger) {
 	m_totalSteps = maxI(3, totalSteps);
 
-	m_hw = &hardware;
+	m_hw = hardware;
 
 	logger = sharedLogger;
 
