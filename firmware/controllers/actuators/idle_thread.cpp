@@ -556,8 +556,6 @@ void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 }
 
-extern 
-
 void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(useStepperIdle)) {
 		StepperHw* hw;
