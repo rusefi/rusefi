@@ -5,7 +5,7 @@
  * these macro are also used in simulator so maybe not really merging with adc_inputs.h until simulator get's it's own implementation?
  *
  * @date Mar 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef ADC_MATH_H_

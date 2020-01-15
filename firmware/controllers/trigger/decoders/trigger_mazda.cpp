@@ -2,7 +2,7 @@
  * @file	trigger_mazda.cpp
  *
  * @date Feb 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -176,6 +176,7 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 	s->addEvent720(a, T_PRIMARY, TV_FALL);
 
 	s->isSynchronizationNeeded = false;
+	s->shapeWithoutTdc = true;
 }
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {

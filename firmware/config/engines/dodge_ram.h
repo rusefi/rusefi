@@ -2,7 +2,7 @@
  * @file dodge_ram.h
  *
  * @date Apr 22, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef CONFIG_ENGINES_DODGE_RAM_H_

@@ -6,7 +6,7 @@
  * is the consumen of this logging buffer.
  *
  * @date Mar 8, 2015
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

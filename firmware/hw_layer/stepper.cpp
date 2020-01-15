@@ -4,7 +4,7 @@
  * http://rusefi.com/wiki/index.php?title=Hardware:Stepper_motor
  *
  * @date Dec 24, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine.h"
@@ -37,6 +37,11 @@ static int loadStepperPos() {
 }
 
 void StepperMotor::ThreadTask() {
+	// Require hardware to be set
+	if (!m_hw) {
+		return;
+	}
+
 	// try to get saved stepper position (-1 for no data)
 	m_currentPosition = loadStepperPos();
 
@@ -122,7 +127,7 @@ void StepDirectionStepper::setDirection(bool isIncrementing) {
 		pause();
 		m_currentDirection = isIncrementing;
 	}
-		
+
 	directionPin.setValue(isIncrementing);
 }
 

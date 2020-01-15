@@ -4,7 +4,7 @@
  * This class is a copy-paste of alternator_controller.cpp TODO: do something about it? extract more common logic?
  *
  * @date Jun 26, 2016
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "aux_pid.h"

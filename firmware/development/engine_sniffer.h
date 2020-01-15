@@ -3,7 +3,7 @@
  * @brief	rusEfi console wave sniffer
  *
  * @date Jun 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef WAVE_CHART_H_

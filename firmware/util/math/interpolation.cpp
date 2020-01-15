@@ -6,7 +6,7 @@
  *
  *
  * @date Oct 17, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  * @author Dmitry Sidin, (c) 2015
  */
 

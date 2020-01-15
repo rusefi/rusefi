@@ -2,7 +2,7 @@
  * @file trigger_universal.cpp
  *
  * @date Jan 3, 2017
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_universal.h"
@@ -39,7 +39,9 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 	s->initialize(operationMode);
 
 	s->setTriggerSynchronizationGap(skippedCount + 1);
+	s->shapeWithoutTdc = (totalTeethCount > 2) && (skippedCount == 0);
 	s->isSynchronizationNeeded = (totalTeethCount > 2) && (skippedCount != 0);
+
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, skippedCount, 0.5, 0, getEngineCycle(operationMode),
 	NO_LEFT_FILTER, NO_RIGHT_FILTER);
