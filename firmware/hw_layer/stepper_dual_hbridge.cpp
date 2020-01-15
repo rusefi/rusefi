@@ -17,18 +17,6 @@ static const int8_t phaseB[] =
     -1
 };
 
-class DualHBridgeStepper final : public StepperHw {
-    void initialize(DcMotor* motorPhaseA, DcMotor* motorPhaseB, float reactionTime);
-
-    void step(bool positive) override;
-
-private:
-    DcMotor* m_motorPhaseA;
-    DcMotor* m_motorPhaseB;
-
-    uint8_t m_phase = 0;
-};
-
 void DualHBridgeStepper::initialize(DcMotor* motorPhaseA, DcMotor* motorPhaseB, float reactionTime)
 {
     setReactionTime(reactionTime);
