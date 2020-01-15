@@ -3,7 +3,7 @@
  *
  * @date Dec 27, 2015
  * @author PhilTheGeek
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_rover.h"

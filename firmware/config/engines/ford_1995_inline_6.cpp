@@ -8,7 +8,7 @@
  * set engine_type 7
  *
  * @date Feb 12, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

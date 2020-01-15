@@ -2,7 +2,7 @@
  * @file	state_sequence.cpp
  *
  * @date May 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

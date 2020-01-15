@@ -2,7 +2,7 @@
  * @file pwm_generator.h
  *
  * @date May 28, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef PWM_GENERATOR_H_

@@ -3,7 +3,7 @@
  * @brief	his file is about general input/output utility methods, not much EFI-specifics
  *
  * @date Jan 24, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef IO_PINS_H_

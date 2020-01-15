@@ -2,7 +2,7 @@
  * @file vehicle_speed.h
  *
  *@date Dec 26, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef HW_LAYER_VEHICLE_SPEED_H_

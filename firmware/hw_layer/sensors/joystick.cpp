@@ -10,7 +10,7 @@
  * See also comments in digital_input_icu.cpp
  *
  * @date Jan 2, 2015
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine.h"

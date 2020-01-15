@@ -9,7 +9,7 @@
  * this header is not allowed to actually include higher-level engine related headers
  *
  * @date May 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef GLOBAL_H_

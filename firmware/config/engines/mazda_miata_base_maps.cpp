@@ -2,7 +2,7 @@
  * mazda_miata_base_maps.cpp
  *
  *  Created on: Dec 31, 2018
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_configuration.h"

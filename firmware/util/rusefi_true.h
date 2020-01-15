@@ -2,7 +2,7 @@
  * rusefi_true.h
  *
  * @date Dec 8, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef CONTROLLERS_ALGO_RUSEFI_TRUE_H_

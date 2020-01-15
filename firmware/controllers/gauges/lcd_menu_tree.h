@@ -2,7 +2,7 @@
  * @file	lcd_menu_tree.h
  *
  * @date Jan 6, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once

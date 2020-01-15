@@ -87,6 +87,11 @@ public:
 	 */
 	bool isSynchronizationNeeded;
 	/**
+	 * special case for triggers which do not provide exact TDC location
+	 * For example pick-up in distributor with mechanical ignition firing order control.
+	 */
+	bool shapeWithoutTdc = false;
+	/**
 	 * this flag tells us if we should ignore events on second input channel
 	 * that's the way to ignore noise from the disconnected wire
 	 */

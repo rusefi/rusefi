@@ -2,7 +2,7 @@
  * global_execution_queue.cpp
  *
  * @date Dec 8, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global_execution_queue.h"
