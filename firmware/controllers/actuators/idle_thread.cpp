@@ -556,18 +556,35 @@ void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 }
 
+extern 
+
 void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(useStepperIdle)) {
-		iacStepperHw.initialize(
-			CONFIG(idle).stepperStepPin,
-			CONFIG(idle).stepperDirectionPin,
-			CONFIG(stepperDirectionPinMode),
-			CONFIG(idleStepperReactionTime),
-			CONFIG(stepperEnablePin),
-			CONFIG(stepperEnablePinMode)
-		);
+		StepperHw* hw;
 
-		iacMotor.initialize(iacStepperHw, CONFIG(idleStepperTotalSteps), logger);
+		bool useHbridges = true;
+
+		if (useHbridges) {
+			iacHbridgeHw.initialize(
+
+				CONFIG(idleStepperReactionTime)
+			);
+
+			hw = &iacHbridgeHw;
+		} else {
+			iacStepperHw.initialize(
+				CONFIG(idle).stepperStepPin,
+				CONFIG(idle).stepperDirectionPin,
+				CONFIG(stepperDirectionPinMode),
+				CONFIG(idleStepperReactionTime),
+				CONFIG(stepperEnablePin),
+				CONFIG(stepperEnablePinMode)
+			);
+
+			hw = &iacStepperHw;
+		}
+
+		iacMotor.initialize(hw, CONFIG(idleStepperTotalSteps), logger);
 
 		// This greatly improves PID accuracy for steppers with a small number of steps
 		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;
