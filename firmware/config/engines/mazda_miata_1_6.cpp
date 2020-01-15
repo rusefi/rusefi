@@ -9,7 +9,7 @@
  * set engine_type 41
  *
  * @date Apr 16, 2016
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "custom_engine.h"

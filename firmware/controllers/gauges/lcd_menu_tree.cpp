@@ -2,7 +2,7 @@
  * @file	lcd_menu_tree.cpp
  *
  * @date Jan 6, 2015
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "stddef.h"

@@ -2,7 +2,7 @@
  * @file	trigger_gm.cpp
  *
  * @date Mar 28, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_gm.h"

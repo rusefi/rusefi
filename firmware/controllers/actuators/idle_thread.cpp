@@ -7,7 +7,7 @@
  *
  *
  * @date May 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * enable verbose_idle
  * disable verbose_idle
@@ -567,7 +567,7 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			CONFIG(stepperEnablePinMode)
 		);
 
-		iacMotor.initialize(iacStepperHw, CONFIG(idleStepperTotalSteps), logger);
+		iacMotor.initialize(&iacStepperHw, CONFIG(idleStepperTotalSteps), logger);
 
 		// This greatly improves PID accuracy for steppers with a small number of steps
 		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;

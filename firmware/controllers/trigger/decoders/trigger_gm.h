@@ -2,7 +2,7 @@
  * @file	trigger_gm.h
  *
  * @date Mar 28, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once

@@ -7,7 +7,7 @@
  * This is more consistent way to maintain these config 'branches' and add new features.
  *
  * @date Aug 29, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
  
 #include "../stm32f4ems/efifeatures.h"

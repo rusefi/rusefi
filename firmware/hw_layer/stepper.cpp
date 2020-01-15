@@ -4,7 +4,7 @@
  * http://rusefi.com/wiki/index.php?title=Hardware:Stepper_motor
  *
  * @date Dec 24, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine.h"
@@ -127,7 +127,7 @@ void StepDirectionStepper::setDirection(bool isIncrementing) {
 		pause();
 		m_currentDirection = isIncrementing;
 	}
-		
+
 	directionPin.setValue(isIncrementing);
 }
 

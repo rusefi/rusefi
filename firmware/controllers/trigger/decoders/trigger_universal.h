@@ -3,7 +3,7 @@
  *
  *
  * @date Jan 3, 2017
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef CONTROLLERS_TRIGGER_DECODERS_TRIGGER_UNIVERSAL_H_

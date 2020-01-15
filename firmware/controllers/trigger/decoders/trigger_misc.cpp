@@ -2,7 +2,7 @@
  * trigger_misc.cpp
  *
  *  Created on: Oct 30, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_misc.h"

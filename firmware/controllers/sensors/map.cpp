@@ -3,7 +3,7 @@
  *
  * See also map_averaging.cpp
  *
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 #include "global.h"
 #include "engine_configuration.h"
