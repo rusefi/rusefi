@@ -82,9 +82,9 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 	if (deltaTimeUs < 2)
 		deltaTimeUs = 2; // for some reason '1' does not really work
 	efiAssertVoid(CUSTOM_ERR_6681, deltaTimeUs > 0, "not positive deltaTimeUs");
-	if (deltaTimeUs >= 10 * US_PER_SECOND) {
+	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE) {
 		// we are trying to set callback for too far into the future. This does not look right at all
-		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too long: %d", deltaTimeUs);
+		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too far: %d", deltaTimeUs);
 		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
 	}
