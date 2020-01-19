@@ -98,7 +98,7 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 /**
  * returns absolute timestamp of state change
  */
-static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
+static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	efiAssert(CUSTOM_ERR_ASSERT, state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
 	int iteration = state->safe.iteration;
 	// we handle PM_ZERO and PM_FULL separately
@@ -117,7 +117,7 @@ static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
 #if DEBUG_PWM
 	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
 #endif /* DEBUG_PWM */
-	return NT2US(state->safe.startNt + timeToSwitchNt);
+	return state->safe.startNt + timeToSwitchNt;
 }
 
 void PwmConfig::setFrequency(float frequency) {
@@ -163,7 +163,7 @@ void PwmConfig::handleCycleStart() {
 /**
  * @return Next time for signal toggle
  */
-efitimeus_t PwmConfig::togglePwmState() {
+efitick_t PwmConfig::togglePwmState() {
 	ScopePerf perf(PE::PwmConfigTogglePwmState);
 
 	if (isStopRequested) {
@@ -180,7 +180,7 @@ efitimeus_t PwmConfig::togglePwmState() {
 		 * NaN period means PWM is paused, we also set the pin low
 		 */
 		stateChangeCallback(0, arg);
-		return getTimeNowUs() + MS2US(NAN_FREQUENCY_SLEEP_PERIOD_MS);
+		return getTimeNowNt() + MS2NT(NAN_FREQUENCY_SLEEP_PERIOD_MS);
 	}
 	if (mode != PM_NORMAL) {
 		// in case of ZERO or FULL we are always at starting index
@@ -209,7 +209,7 @@ efitimeus_t PwmConfig::togglePwmState() {
 		stateChangeCallback(cbStateIndex, arg);
 	}
 
-	efitimeus_t nextSwitchTimeUs = getNextSwitchTimeUs(this);
+	efitick_t nextSwitchTimeNt = getNextSwitchTimeNt(this);
 #if DEBUG_PWM
 	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
 #endif /* DEBUG_PWM */
@@ -234,11 +234,11 @@ efitimeus_t PwmConfig::togglePwmState() {
 		safe.iteration++;
 	}
 #if EFI_UNIT_TEST
-	printf("PWM: nextSwitchTimeUs=%d phaseIndex=%d iteration=%d\r\n", nextSwitchTimeUs,
+	printf("PWM: nextSwitchTimeNt=%d phaseIndex=%d iteration=%d\r\n", nextSwitchTimeNt,
 			safe.phaseIndex,
 			safe.iteration);
 #endif /* EFI_UNIT_TEST */
-	return nextSwitchTimeUs;
+	return nextSwitchTimeNt;
 }
 
 /**
@@ -252,8 +252,8 @@ static void timerCallback(PwmConfig *state) {
 	state->dbgNestingLevel++;
 	efiAssertVoid(CUSTOM_ERR_6581, state->dbgNestingLevel < 25, "PWM nesting issue");
 
-	efitimeus_t switchTimeUs = state->togglePwmState();
-	if (switchTimeUs == 0) {
+	efitick_t switchTimeNt = state->togglePwmState();
+	if (switchTimeNt == 0) {
 		// we are here when PWM gets stopped
 		return;
 	}
@@ -262,7 +262,7 @@ static void timerCallback(PwmConfig *state) {
 		return;
 	}
 
-	state->executor->scheduleByTimestamp(&state->scheduling, switchTimeUs, { timerCallback, state });
+	state->executor->scheduleByTimestampNt(&state->scheduling, switchTimeNt, { timerCallback, state });
 	state->dbgNestingLevel--;
 }
 

@@ -83,7 +83,7 @@ public:
 	// todo: 'outputPins' should be extracted away from here since technically one can want PWM scheduler without actual pin output
 	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
 	MultiChannelStateSequence multiChannelStateSequence;
-	efitimeus_t togglePwmState();
+	efitick_t togglePwmState();
 	void stop();
 
 	int dbgNestingLevel;
