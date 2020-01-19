@@ -448,7 +448,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 	 * 10 seconds since previous trigger event we do not really care.
 	 */
 	toothDurations[0] =
-			currentDurationLong > 10 * US2NT(US_PER_SECOND_LL) ? 10 * US2NT(US_PER_SECOND_LL) : currentDurationLong;
+			currentDurationLong > 10 * NT_PER_SECOND ? 10 * NT_PER_SECOND : currentDurationLong;
 
 	bool haveListener = triggerStateListener != NULL;
 	bool isPrimary = triggerWheel == T_PRIMARY;
@@ -693,7 +693,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 		}
 	}
 	if (someSortOfTriggerError) {
-		if (getTimeNowNt() - lastDecodingErrorTime > US2NT(US_PER_SECOND_LL)) {
+		if (getTimeNowNt() - lastDecodingErrorTime > NT_PER_SECOND) {
 			someSortOfTriggerError = false;
 		}
 	}

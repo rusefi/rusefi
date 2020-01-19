@@ -213,7 +213,7 @@ Engine::Engine(persistent_config_s *config) {
  */
 bool Engine::needToStopEngine(efitick_t nowNt) const {
 	return stopEngineRequestTimeNt != 0 &&
-			nowNt - stopEngineRequestTimeNt	< 3 * US2NT(US_PER_SECOND_LL);
+			nowNt - stopEngineRequestTimeNt	< 3 * NT_PER_SECOND;
 }
 
 int Engine::getGlobalConfigurationVersion(void) const {
