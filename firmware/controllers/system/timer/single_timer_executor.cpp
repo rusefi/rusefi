@@ -88,9 +88,10 @@ void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitim
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 #if EFI_ENABLE_ASSERTS
-	int deltaTimeUs = nt - getTimeNowNt();
+	auto now = getTimeNowNt();
+	auto deltaTimeUs = nt - now;
 
-	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE) {
+	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_NT) {
 		// we are trying to set callback for too far into the future. This does not look right at all
 		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d", deltaTimeUs);
 		return;
