@@ -44,6 +44,7 @@
 #include "stepper.h"
 #include "pin_repository.h"
 static StepDirectionStepper iacStepperHw;
+static DualHBridgeStepper iacHbridgeHw;
 static StepperMotor iacMotor;
 #endif /* EFI_UNIT_TEST */
 
@@ -564,7 +565,8 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 		if (useHbridges) {
 			iacHbridgeHw.initialize(
-
+				nullptr,
+				nullptr,
 				CONFIG(idleStepperReactionTime)
 			);
 
