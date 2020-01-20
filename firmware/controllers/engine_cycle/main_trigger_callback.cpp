@@ -174,7 +174,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 }
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
-		int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	/**
 	 * todo: this is a bit tricky with batched injection. is it? Does the same
@@ -261,10 +261,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 	event->isScheduled = true;
 
-	// todo: remove me in favor of injecting edge time!
-	efitimeus_t nowUs = getTimeNowUs();
-	efitimeus_t turnOnTime = nowUs + (int) injectionStartDelayUs;
-	efitimeus_t turnOffTime = turnOnTime + (int) durationUs;
+	efitick_t turnOnTime = nowNt + US2NT((int)injectionStartDelayUs);
+	efitick_t turnOffTime = turnOnTime + US2NT((int)durationUs);
 
 	action_s startAction, endAction;
 	// We use different callbacks based on whether we're running sequential mode or not - everything else is the same
@@ -280,8 +278,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 #if EFI_UNIT_TEST
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffsetFromTriggerEvent, injectionStartDelayUs, injectionDuration);
 #endif
-	engine->executor.scheduleByTimestamp(&event->signalTimerUp, turnOnTime, startAction);
-	engine->executor.scheduleByTimestamp(&event->endOfInjectionEvent, turnOffTime, endAction);
+	engine->executor.scheduleByTimestampNt(&event->signalTimerUp, turnOnTime, startAction);
+	engine->executor.scheduleByTimestampNt(&event->endOfInjectionEvent, turnOffTime, endAction);
 }
 
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -308,7 +306,7 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 
-static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::HandleFuel);
 	
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
@@ -349,7 +347,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 		if (eventIndex != trgEventIndex) {
 			continue;
 		}
-		handleFuelInjectionEvent(injEventIndex, event, rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		handleFuelInjectionEvent(injEventIndex, event, rpm, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -455,7 +453,7 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
-	handleFuel(limitedFuel, trgEventIndex, rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	handleFuel(limitedFuel, trgEventIndex, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
