@@ -95,7 +95,7 @@ void FuelConsumptionState::update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFI
 	}
 
 	deltaNt = nowNt - accumulatedMinutePrevNt;
-	if (deltaNt >= US2NT(US_PER_SECOND_LL * 60)) {
+	if (deltaNt >= NT_PER_SECOND * 60) {
 		perMinuteConsumption = getFuelRate(perMinuteAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
 		perMinuteAccumulator = 0;
 		accumulatedMinutePrevNt = nowNt;
