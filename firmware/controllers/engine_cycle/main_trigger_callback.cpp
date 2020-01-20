@@ -262,9 +262,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	event->isScheduled = true;
 
 	// todo: remove me in favor of injecting edge time!
-	efitimeus_t nowUs = getTimeNowUs();
-	efitimeus_t turnOnTime = nowUs + (int) injectionStartDelayUs;
-	efitimeus_t turnOffTime = turnOnTime + (int) durationUs;
+	efitick_t nowNt = getTimeNowNt();
+	efitick_t turnOnTime = nowNt + US2NT((int)injectionStartDelayUs);
+	efitick_t turnOffTime = turnOnTime + US2NT((int)durationUs);
 
 	action_s startAction, endAction;
 	// We use different callbacks based on whether we're running sequential mode or not - everything else is the same
@@ -280,8 +280,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 #if EFI_UNIT_TEST
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffsetFromTriggerEvent, injectionStartDelayUs, injectionDuration);
 #endif
-	engine->executor.scheduleByTimestamp(&event->signalTimerUp, turnOnTime, startAction);
-	engine->executor.scheduleByTimestamp(&event->endOfInjectionEvent, turnOffTime, endAction);
+	engine->executor.scheduleByTimestampNt(&event->signalTimerUp, turnOnTime, startAction);
+	engine->executor.scheduleByTimestampNt(&event->endOfInjectionEvent, turnOffTime, endAction);
 }
 
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
