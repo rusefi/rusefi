@@ -67,23 +67,24 @@ extern bool hasFirmwareErrorFlag;
  * sets the alarm to the specified number of microseconds from now.
  * This function should be invoked under kernel lock which would disable interrupts.
  */
-void setHardwareUsTimer(int32_t timeUs) {
+void setHardwareUsTimer(int32_t deltaTimeUs) {
 	enginePins.debugSetTimer.setValue(1);
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwStarted, "HW.started");
 	setHwTimerCounter++;
 	/**
-	 * #259 BUG error: not positive timeUs
+	 * #259 BUG error: not positive deltaTimeUs
 	 * Once in a while we night get an interrupt where we do not expect it
 	 */
-	if (timeUs <= 0) {
+	if (deltaTimeUs <= 0) {
 		timerFreezeCounter++;
 		warning(CUSTOM_OBD_LOCAL_FREEZE, "local freeze cnt=%d", timerFreezeCounter);
 	}
-	if (timeUs < 2)
-		timeUs = 2; // for some reason '1' does not really work
-	efiAssertVoid(CUSTOM_ERR_6681, timeUs > 0, "not positive timeUs");
-	if (timeUs >= 10 * US_PER_SECOND) {
-		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too long: %d", timeUs);
+	if (deltaTimeUs < 2)
+		deltaTimeUs = 2; // for some reason '1' does not really work
+	efiAssertVoid(CUSTOM_ERR_6681, deltaTimeUs > 0, "not positive deltaTimeUs");
+	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_US) {
+		// we are trying to set callback for too far into the future. This does not look right at all
+		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too far: %d", deltaTimeUs);
 		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
 	}
@@ -100,10 +101,10 @@ void setHardwareUsTimer(int32_t timeUs) {
 		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
 	}
-	gptStartOneShotI(&GPTDEVICE, timeUs);
+	gptStartOneShotI(&GPTDEVICE, deltaTimeUs);
 
 	lastSetTimerTimeNt = getTimeNowNt();
-	lastSetTimerValue = timeUs;
+	lastSetTimerValue = deltaTimeUs;
 	isTimerPending = TRUE;
 	timerRestartCounter++;
 	enginePins.debugSetTimer.setValue(0);

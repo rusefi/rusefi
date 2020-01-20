@@ -9,6 +9,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include "efitime.h"
 #include "rusefi_enums.h"
 
 // Enable the tooth logger - this clears the buffer starts logging
@@ -18,7 +19,7 @@ void EnableToothLogger();
 void DisableToothLogger();
 
 // A new tooth has arrived! Log to the buffer if enabled.
-void LogTriggerTooth(trigger_event_e tooth);
+void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp);
 
 struct ToothLoggerBuffer
 {
