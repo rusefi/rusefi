@@ -33,7 +33,7 @@ void SetNextEntry(uint16_t entry) {
 	}
 }
 
-void LogTriggerTooth(trigger_event_e tooth) {
+void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
 	// bail if we aren't enabled
 	if (!ToothLoggerEnabled) {
 		return;
@@ -46,7 +46,7 @@ void LogTriggerTooth(trigger_event_e tooth) {
 		return;
 	}
 
-	uint32_t nowUs = NT2US(getTimeNowNt());
+	uint32_t nowUs = NT2US(timestamp);
 	// 10us per LSB - this gives plenty of accuracy, yet fits 655.35 ms in to a uint16
 	uint16_t delta = static_cast<uint16_t>((nowUs - lastEdgeTimestamp) / 10);
 	lastEdgeTimestamp = nowUs;
@@ -59,7 +59,7 @@ void EnableToothLogger() {
 	memset(buffer, 0, sizeof(buffer));
 
 	// Reset the last edge to now - this prevents the first edge logged from being bogus
-	lastEdgeTimestamp = NT2US(getTimeNowNt());
+	lastEdgeTimestamp = getTimeNowUs();
 
 	// Reset write index
 	NextIdx = 0;
