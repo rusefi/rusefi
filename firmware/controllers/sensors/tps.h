@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef TPS_H_
-#define TPS_H_
+#pragma once
 
 #include "global.h"
 #include "engine_configuration.h"
@@ -55,4 +54,4 @@ typedef struct {
 //void saveTpsState(efitimeus_t now, float curValue);
 float getTpsRateOfChange(void);
 
-#endif
+

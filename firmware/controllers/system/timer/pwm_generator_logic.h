@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef PWM_GENERATOR_LOGIC_H_
-#define PWM_GENERATOR_LOGIC_H_
+#pragma once
 
 #include "state_sequence.h"
 #include "global.h"
@@ -150,4 +149,3 @@ void startSimplePwmExt(SimplePwm *state,
 void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTimes,
 		int waveCount, pin_state_t *const *pinStates);
 
-#endif /* PWM_GENERATOR_LOGIC_H_ */

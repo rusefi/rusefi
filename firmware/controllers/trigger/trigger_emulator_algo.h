@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef TRIGGER_EMULATOR_ALGO_H_
-#define TRIGGER_EMULATOR_ALGO_H_
+#pragma once
 
 #include "engine.h"
 #include "pwm_generator_logic.h"
@@ -22,4 +21,3 @@ void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUF
 int getPreviousIndex(const int currentIndex, const int size);
 bool needEvent(const int currentIndex, const int size, MultiChannelStateSequence *multiChannelStateSequence, int channelIndex);
 
-#endif /* TRIGGER_EMULATOR_ALGO_H_ */

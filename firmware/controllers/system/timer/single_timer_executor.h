@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef SINGLETIMEREXECUTOR_H_
-#define SINGLETIMEREXECUTOR_H_
+#pragma once
 
 #include "scheduler.h"
 #include "event_queue.h"
@@ -31,4 +30,3 @@ private:
 void initSingleTimerExecutorHardware(void);
 void executorStatistics();
 
-#endif /* SINGLETIMEREXECUTOR_H_ */

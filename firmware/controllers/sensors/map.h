@@ -3,8 +3,8 @@
  *
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef MAP_H_
-#define MAP_H_
+
+#pragma once
 
 #include "engine_configuration.h"
 
@@ -34,4 +34,3 @@ float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX);
 #define INHG2KPA(inhg) ((inhg) * 3.386375)
 #define KPA2INHG(kpa) ((kpa) / 3.386375)
 
-#endif
