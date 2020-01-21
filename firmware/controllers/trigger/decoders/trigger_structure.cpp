@@ -241,7 +241,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 			SingleChannelStateSequence *wave = &this->wave.channels[i];
 
-			if (wave->pinStates == NULL) {
+			if (wave->pinStates == nullptr) {
 				warning(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");
 				setShapeDefinitionError(true);
 				return;

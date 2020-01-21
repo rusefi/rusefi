@@ -161,7 +161,7 @@ static float getSignalPeriodMs(int index) {
 }
 
 static void reportWave(Logging *logging, int index) {
-	if (readers[index].hw == NULL) {
+	if (readers[index].hw == nullptr) {
 		return;
 	}
 	if (readers[index].hw->started) {

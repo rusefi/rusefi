@@ -294,7 +294,7 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
 	tsState.readPageCommandsCounter++;
 
 	const void *addr = getStructAddr(structId);
-	if (addr == NULL) {
+	if (addr == nullptr) {
 		// todo: add warning code - unexpected structId
 		return;
 	}
