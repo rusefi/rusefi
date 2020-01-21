@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef SIGNAL_EXECUTOR_SLEEP_H_
-#define SIGNAL_EXECUTOR_SLEEP_H_
+#pragma once
 
 #include "scheduler.h"
 
@@ -16,5 +15,3 @@ public:
 	void scheduleByTimestampNt(scheduling_s *scheduling, efitick_t timeNt, action_s action) override;
 	void scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) override;
 };
-
-#endif /* SIGNAL_EXECUTOR_SLEEP_H_ */

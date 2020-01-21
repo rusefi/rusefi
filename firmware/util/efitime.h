@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef EFITIME_H_
-#define EFITIME_H_
+#pragma once
 
 #include "efifeatures.h"
 #include "rusefi_types.h"
@@ -72,5 +71,3 @@ efitimesec_t getTimeNowSeconds(void);
 #else
  #define getTimeNowLowerNt() 0
 #endif
-
-#endif /* EFITIME_H_ */

@@ -8,8 +8,7 @@
 #include "scheduler.h"
 #include "utlist.h"
 
-#ifndef EVENT_SCHEDULER_H_
-#define EVENT_SCHEDULER_H_
+#pragma once
 
 /**
  * this is a large value which is expected to be larger than any real time
@@ -71,4 +70,3 @@ private:
 	efitime_t lateDelay;
 };
 
-#endif /* EVENT_SCHEDULER_H_ */
