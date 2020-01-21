@@ -257,7 +257,7 @@ static void timerCallback(PwmConfig *state) {
 		// we are here when PWM gets stopped
 		return;
 	}
-	if (state->executor == NULL) {
+	if (state->executor == nullptr) {
 		firmwareError(CUSTOM_NULL_EXECUTOR, "exec on %s", state->name);
 		return;
 	}
