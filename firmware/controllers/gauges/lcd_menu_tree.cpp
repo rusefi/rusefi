@@ -35,7 +35,7 @@ void MenuTree::back(void) {
 }
 
 void MenuTree::nextItem(void) {
-	if (current->next == NULL) {
+	if (!current->next) {
 		current = topVisible = current->topOfTheList;
 		return;
 	}
@@ -79,7 +79,7 @@ void MenuItem::baseConstructor(MenuItem * parent, lcd_line_e lcdLine, const char
 
 	// root element has NULL parent
 	if (parent != NULL) {
-		if (parent->firstChild == NULL) {
+		if (!parent->firstChild) {
 			topOfTheList = this;
 			parent->firstChild = this;
 		}
