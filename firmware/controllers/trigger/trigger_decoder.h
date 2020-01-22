@@ -120,6 +120,9 @@ public:
 	 * for virtual double trigger see timeAtVirtualZeroNt
 	 */
 	efitick_t startOfCycleNt;
+
+	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 private:
 	void resetCurrentCycleState();
 
@@ -170,7 +173,6 @@ public:
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
-uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerWaveform * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 class Engine;
 
