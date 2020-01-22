@@ -255,6 +255,10 @@ void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 	rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
+void Engine::OnTriggerSyncronization(bool wasSynchronized) {
+
+}
+
 
 void Engine::setConfig(persistent_config_s *config) {
 	this->config = config;

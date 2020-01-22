@@ -638,9 +638,14 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 
 		if (isSynchronizationPoint) {
 
+			if (triggerStateListener) {
+				triggerStateListener->OnTriggerSyncronization(wasSynchronized);
+			}
+
 			// We only care about trigger shape once we have synchronized trigger. Anything could happen
 			// during first revolution and it's fine
 			if (wasSynchronized) {
+
 
 				/**
 			 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
@@ -649,9 +654,9 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 
 				enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 
-				// 'haveListener' means we are running a real engine and now just preparing trigger shape
+				// 'triggerStateListener is not null' means we are running a real engine and now just preparing trigger shape
 				// that's a bit of a hack, a sweet OOP solution would be a real callback or at least 'needDecodingErrorLogic' method?
-				if (isDecodingError && haveListener) {
+				if (isDecodingError && triggerStateListener) {
 					triggerStateListener->OnTriggerStateDecodingError();
 				}
 
@@ -678,7 +683,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 
 		toothed_previous_time = nowNt;
 	}
-	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && haveListener) {
+	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && triggerStateListener) {
 		// let's not show a warning if we are just starting to spin
 		if (GET_RPM_VALUE != 0) {
 			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, getTriggerSize());
@@ -695,7 +700,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 	runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// Needed for early instant-RPM detection
-	if (haveListener) {
+	if (triggerStateListener) {
 		triggerStateListener->OnTriggerStateProperState(nowNt);
 	}
 }
