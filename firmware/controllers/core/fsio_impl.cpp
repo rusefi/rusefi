@@ -386,7 +386,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 	}
 #endif /* EFI_PROD_CODE */
 
-	if (element == NULL) {
+	if (!element) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
 	} else {
 		int value = (int)calc.getValue2(pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);

@@ -342,8 +342,9 @@ int mc33972_add(unsigned int index, const struct mc33972_config *cfg)
 
 	/* check for valid cs.
 	 * DOTO: remove this check? CS can be driven by SPI */
-	if (cfg->spi_config.ssport == NULL)
+	if (!cfg->spi_config.ssport) {
 		return -1;
+	}
 
 	chip = &chips[index];
 
