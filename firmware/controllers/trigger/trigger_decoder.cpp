@@ -100,24 +100,18 @@ TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() :
 EXTERN_ENGINE
 ;
 
-// todo: this should become a field on some class
-// no reason to make this a field on TriggerState since we have two instances of that one
-// and only one needs this data structure. we probably need a virtual method of .addError() and
-// only TriggerStateWithRunningStatistics would have the field?
-static cyclic_buffer<int> errorDetection;
-
 #if ! EFI_PROD_CODE
 bool printTriggerDebug = false;
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
-static Logging * logger = NULL;
+static Logging * logger = nullptr;
 
 /**
  * @return TRUE is something is wrong with trigger decoding
  */
-bool isTriggerDecoderError(void) {
-	return errorDetection.sum(6) > 4;
+bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return engine->triggerErrorDetection.sum(6) > 4;
 }
 
 void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -661,9 +655,9 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 					triggerStateListener->OnTriggerStateDecodingError();
 				}
 
-				errorDetection.add(isDecodingError);
+				engine->triggerErrorDetection.add(isDecodingError);
 
-				if (isTriggerDecoderError()) {
+				if (isTriggerDecoderError(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 					warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
 							TRIGGER_WAVEFORM(expectedEventCount[0]), TRIGGER_WAVEFORM(expectedEventCount[1]),
 							TRIGGER_WAVEFORM(expectedEventCount[2]), currentCycle.eventCount[0], currentCycle.eventCount[1],
@@ -725,7 +719,7 @@ uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
 #if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 128, "findPos", -1);
 #endif
-	errorDetection.clear();
+	engine->triggerErrorDetection.clear();
 
 
 	resetTriggerState();

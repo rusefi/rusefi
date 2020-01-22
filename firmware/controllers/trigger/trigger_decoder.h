@@ -179,7 +179,7 @@ class Engine;
 void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initTriggerDecoderLogger(Logging *sharedLogger);
 
-bool isTriggerDecoderError(void);
+bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 

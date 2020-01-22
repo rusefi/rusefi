@@ -56,6 +56,8 @@ public:
 
 	IEtbController *etbControllers[ETB_COUNT];
 
+	cyclic_buffer<int> triggerErrorDetection;
+
 	void OnTriggerStateDecodingError() override;
 	void OnTriggerStateProperState(efitick_t nowNt) override;
 
