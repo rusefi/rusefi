@@ -60,6 +60,7 @@ public:
 
 	void OnTriggerStateDecodingError() override;
 	void OnTriggerStateProperState(efitick_t nowNt) override;
+	void OnTriggerSyncronization(bool wasSynchronized) override;
 
 	void setConfig(persistent_config_s *config);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);

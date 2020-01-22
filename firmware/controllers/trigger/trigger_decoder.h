@@ -18,6 +18,7 @@ class TriggerStateListener {
 	public:
 		virtual void OnTriggerStateDecodingError() = 0;
 		virtual void OnTriggerStateProperState(efitick_t nowNt) = 0;
+		virtual void OnTriggerSyncronization(bool wasSynchronized) = 0;
 };
 
 typedef void (*TriggerStateCallback)(TriggerState *);
