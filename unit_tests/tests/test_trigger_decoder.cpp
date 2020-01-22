@@ -41,7 +41,7 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
-	return findTriggerZeroEventIndex(&eth.engine.triggerCentral.triggerState, shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER_SUFFIX);
+	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 static void testDodgeNeonDecoder(void) {

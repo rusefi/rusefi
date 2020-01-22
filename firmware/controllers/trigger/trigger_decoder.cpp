@@ -126,7 +126,7 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 #endif
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
 
-	shape->triggerShapeSynchPointIndex = findTriggerZeroEventIndex(state, shape, triggerConfig PASS_ENGINE_PARAMETER_SUFFIX);
+	shape->triggerShapeSynchPointIndex = state->findTriggerZeroEventIndex(shape, triggerConfig PASS_ENGINE_PARAMETER_SUFFIX);
 
 	int length = shape->getLength();
 	engine->engineCycleEventCount = length;
@@ -719,16 +719,16 @@ static void onFindIndexCallback(TriggerState *state) {
  *
  * This function finds the index of synchronization event within TriggerWaveform
  */
-uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerWaveform * shape,
+uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
 		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(triggerConfig);
 #if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 128, "findPos", -1);
 #endif
 	errorDetection.clear();
-	efiAssert(CUSTOM_ERR_ASSERT, state != NULL, "NULL state", -1);
 
-	state->resetTriggerState();
+
+	resetTriggerState();
 
 	if (shape->shapeDefinitionError) {
 		return 0;
@@ -738,11 +738,11 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerWaveform * shape,
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
-	uint32_t syncIndex = helper.findTriggerSyncPoint(shape, state PASS_ENGINE_PARAMETER_SUFFIX);
+	uint32_t syncIndex = helper.findTriggerSyncPoint(shape, this PASS_ENGINE_PARAMETER_SUFFIX);
 	if (syncIndex == EFI_ERROR_CODE) {
 		return syncIndex;
 	}
-	efiAssert(CUSTOM_ERR_ASSERT, state->getTotalRevolutionCounter() == 1, "findZero_revCounter", EFI_ERROR_CODE);
+	efiAssert(CUSTOM_ERR_ASSERT, getTotalRevolutionCounter() == 1, "findZero_revCounter", EFI_ERROR_CODE);
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
@@ -757,7 +757,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerWaveform * shape,
 	 * todo: add a comment why are we doing '2 * shape->getSize()' here?
 	 */
 
-	helper.assertSyncPositionAndSetDutyCycle(onFindIndexCallback, syncIndex, state, shape PASS_ENGINE_PARAMETER_SUFFIX);
+	helper.assertSyncPositionAndSetDutyCycle(onFindIndexCallback, syncIndex, this, shape PASS_ENGINE_PARAMETER_SUFFIX);
 
 	return syncIndex % shape->getSize();
 }
