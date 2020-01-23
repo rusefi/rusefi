@@ -444,7 +444,6 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 	toothDurations[0] =
 			currentDurationLong > 10 * NT_PER_SECOND ? 10 * NT_PER_SECOND : currentDurationLong;
 
-	bool haveListener = triggerStateListener != NULL;
 	bool isPrimary = triggerWheel == T_PRIMARY;
 
 	if (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap())) {
@@ -642,33 +641,6 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 				triggerStateListener->OnTriggerSyncronization(wasSynchronized);
 			}
 
-			// We only care about trigger shape once we have synchronized trigger. Anything could happen
-			// during first revolution and it's fine
-			if (wasSynchronized) {
-
-
-				/**
-			 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
-			 	 */
-				bool isDecodingError = validateEventCounters(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-				enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
-
-				// 'triggerStateListener is not null' means we are running a real engine and now just preparing trigger shape
-				// that's a bit of a hack, a sweet OOP solution would be a real callback or at least 'needDecodingErrorLogic' method?
-				if (isDecodingError && triggerStateListener) {
-					triggerStateListener->OnTriggerStateDecodingError();
-				}
-
-				engine->triggerErrorDetection.add(isDecodingError);
-
-				if (isTriggerDecoderError(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-					warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
-							TRIGGER_WAVEFORM(expectedEventCount[0]), TRIGGER_WAVEFORM(expectedEventCount[1]),
-							TRIGGER_WAVEFORM(expectedEventCount[2]), currentCycle.eventCount[0], currentCycle.eventCount[1],
-							currentCycle.eventCount[2]);
-				}
-			}
 
 			onShaftSynchronization(triggerCycleCallback, nowNt, triggerWheel PASS_ENGINE_PARAMETER_SUFFIX);
 

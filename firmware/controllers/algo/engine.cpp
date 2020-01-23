@@ -256,6 +256,36 @@ void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 }
 
 void Engine::OnTriggerSyncronization(bool wasSynchronized) {
+	// We only care about trigger shape once we have synchronized trigger. Anything could happen
+	// during first revolution and it's fine
+	if (wasSynchronized) {
+		Engine *engine = this;
+		EXPAND_Engine;
+
+		/**
+	 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
+	 	 */
+		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+		enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
+
+		// 'triggerStateListener is not null' means we are running a real engine and now just preparing trigger shape
+		// that's a bit of a hack, a sweet OOP solution would be a real callback or at least 'needDecodingErrorLogic' method?
+		if (isDecodingError) {
+			OnTriggerStateDecodingError();
+		}
+
+		engine->triggerErrorDetection.add(isDecodingError);
+
+		if (isTriggerDecoderError(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+			warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
+					TRIGGER_WAVEFORM(expectedEventCount[0]), TRIGGER_WAVEFORM(expectedEventCount[1]),
+					TRIGGER_WAVEFORM(expectedEventCount[2]),
+					triggerCentral.triggerState.currentCycle.eventCount[0],
+					triggerCentral.triggerState.currentCycle.eventCount[1],
+					triggerCentral.triggerState.currentCycle.eventCount[2]);
+		}
+	}
 
 }
 
