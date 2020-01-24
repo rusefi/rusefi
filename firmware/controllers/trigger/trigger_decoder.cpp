@@ -263,8 +263,8 @@ void TriggerStateWithRunningStatistics::runtimeStatistics(efitick_t nowNt DECLAR
 	}
 }
 
-bool TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
-	return currentCycle.current_index < getTriggerSize();
+bool TriggerState::isValidIndex(TriggerWaveform *triggerShape) const {
+	return currentCycle.current_index < triggerShape->getSize();
 }
 
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
@@ -379,11 +379,8 @@ void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-		efitick_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setShaftSynchronized(true);
-	// this call would update duty cycle values
-	nextTriggerEvent()
-	;
+		efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape) {
+
 
 	if (triggerCycleCallback != NULL) {
 		triggerCycleCallback(this);
@@ -392,7 +389,7 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
 	startOfCycleNt = nowNt;
 	resetCurrentCycleState();
 	incrementTotalEventCounter();
-	totalEventCountBase += getTriggerSize();
+	totalEventCountBase += triggerShape->getSize();
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
@@ -607,10 +604,10 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 				printf("sync=%d index=%d size=%d\r\n",
 					shaft_is_synchronized,
 					currentCycle.current_index,
-					getTriggerSize());
+					triggerShape->getSize());
 			}
 #endif /* EFI_UNIT_TEST */
-			unsigned int endOfCycleIndex = getTriggerSize() - (CONFIG(useOnlyRisingEdgeForTrigger) ? 2 : 1);
+			unsigned int endOfCycleIndex = triggerShape->getSize() - (CONFIG(useOnlyRisingEdgeForTrigger) ? 2 : 1);
 
 
 			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex);
@@ -620,7 +617,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 				printf("isSynchronizationPoint=%d index=%d size=%d\r\n",
 						isSynchronizationPoint,
 						currentCycle.current_index,
-						getTriggerSize());
+						triggerShape->getSize());
 			}
 #endif /* EFI_UNIT_TEST */
 
@@ -641,8 +638,12 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 				triggerStateListener->OnTriggerSyncronization(wasSynchronized);
 			}
 
+			setShaftSynchronized(true);
+			// this call would update duty cycle values
+			nextTriggerEvent()
+			;
 
-			onShaftSynchronization(triggerCycleCallback, nowNt, triggerWheel PASS_ENGINE_PARAMETER_SUFFIX);
+			onShaftSynchronization(triggerCycleCallback, nowNt, triggerWheel, triggerShape);
 
 		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()
@@ -655,10 +656,10 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 
 		toothed_previous_time = nowNt;
 	}
-	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && triggerStateListener) {
+	if (!isValidIndex(triggerShape) && triggerStateListener) {
 		// let's not show a warning if we are just starting to spin
 		if (GET_RPM_VALUE != 0) {
-			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, getTriggerSize());
+			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, triggerShape->getSize());
 			lastDecodingErrorTime = getTimeNowNt();
 			someSortOfTriggerError = true;
 		}
