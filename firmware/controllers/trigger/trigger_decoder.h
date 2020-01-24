@@ -73,13 +73,13 @@ public:
 	bool validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	void handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-			efitick_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX);
+			efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape);
 	/**
 	 * Resets synchronization flag and alerts rpm_calculator to reset engine spinning flag.
 	 */
 	void onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-	bool isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool isValidIndex(TriggerWaveform *triggerShape) const;
 	float getTriggerDutyCycle(int index);
 
 	/**

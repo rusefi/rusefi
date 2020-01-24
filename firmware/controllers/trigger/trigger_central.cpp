@@ -381,7 +381,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		return;
 	}
 
-	if (triggerState.isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (triggerState.isValidIndex(&ENGINE(triggerCentral.triggerShape))) {
 		ScopePerf perf(PE::ShaftPositionListeners);
 
 #if TRIGGER_EXTREME_LOGGING
