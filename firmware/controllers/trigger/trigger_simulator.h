@@ -25,4 +25,4 @@ private:
 	void feedSimulatedEvent(const TriggerStateCallback triggerCycleCallback, TriggerState *state, TriggerWaveform * shape, int i DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
-bool isUsefulSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
+bool isUsefulSignal(trigger_event_e signal DECLARE_CONFIG_PARAMETER_SUFFIX);

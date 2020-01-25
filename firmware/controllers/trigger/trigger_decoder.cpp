@@ -670,7 +670,6 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 		}
 	}
 
-	runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// Needed for early instant-RPM detection
 	if (triggerStateListener) {
