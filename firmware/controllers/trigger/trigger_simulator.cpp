@@ -18,7 +18,7 @@ EXTERN_ENGINE;
 static const bool isRisingEdge[6] = { false, true, false, true, false, true };
 
 // todo: should this method be invoked somewhere deeper? at the moment we have too many usages too high
-bool isUsefulSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool isUsefulSignal(trigger_event_e signal DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	return !engineConfiguration->useOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal];
 }
 
@@ -63,7 +63,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 0)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/0, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING;
-		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (isUsefulSignal(s PASS_CONFIG_PARAMETER_SUFFIX)) {
 			state->decodeTriggerEvent(triggerCycleCallback,
 					/* override */ nullptr,
 					s, time PASS_ENGINE_PARAMETER_SUFFIX);
@@ -73,7 +73,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 1)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/1, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
-		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (isUsefulSignal(s PASS_CONFIG_PARAMETER_SUFFIX)) {
 			state->decodeTriggerEvent(triggerCycleCallback,
 					/* override */ nullptr,
 					s, time PASS_ENGINE_PARAMETER_SUFFIX);
@@ -83,7 +83,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 	if (needEvent(stateIndex, size, multiChannelStateSequence, 2)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/2, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
-		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (isUsefulSignal(s PASS_CONFIG_PARAMETER_SUFFIX)) {
 			state->decodeTriggerEvent(triggerCycleCallback,
 					/* override */ nullptr,
 					s, time PASS_ENGINE_PARAMETER_SUFFIX);
