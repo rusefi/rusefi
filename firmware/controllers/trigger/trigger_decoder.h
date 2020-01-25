@@ -112,10 +112,6 @@ public:
 	void resetTriggerState();
 	void setShaftSynchronized(bool value);
 
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	virtual void runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
-#endif
-
 	/**
 	 * this is start of real trigger cycle
 	 * for virtual double trigger see timeAtVirtualZeroNt
@@ -164,7 +160,7 @@ public:
 	void movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	float calculateInstantRpm(int *prevIndex, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	void runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) override;
+	void runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 	/**
 	 * Update timeOfLastEvent[] on every trigger event - even without synchronization

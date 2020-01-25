@@ -737,11 +737,6 @@ void initTriggerDecoderLogger(Logging *sharedLogger) {
 	logger = sharedLogger;
 }
 
-void TriggerState::runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	UNUSED(nowNt);
-	// empty base implementation
-}
-
  void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
 	enginePins.triggerDecoderErrorPin.initPin("trg_err", CONFIG(triggerErrorPin),
