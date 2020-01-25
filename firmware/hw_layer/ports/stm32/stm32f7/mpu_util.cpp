@@ -80,6 +80,8 @@ void baseMCUInit(void) {
         DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
+
+	SCB_DisableDCache();
 }
 
 void _unhandled_exception(void) {

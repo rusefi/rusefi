@@ -29,8 +29,12 @@ EXTERN_ENGINE;
 #include "pin_repository.h"
 
 static Logging *logger;
-static unsigned char tx_buff[2];
-static unsigned char rx_buff[1];
+/**
+ * We need to make sure we do not get F7 SPI DMA caching issues
+ * We also have "SCB_DisableDCache();" which is about the same since we need DMA SPI addressed not only for cj125
+ */
+static unsigned char tx_buff[2] CCM_OPTIONAL;
+static unsigned char rx_buff[1] CCM_OPTIONAL;
 
 static CJ125 globalInstance;
 
