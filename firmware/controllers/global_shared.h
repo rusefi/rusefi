@@ -32,7 +32,6 @@
 
 #define EXTERN_CONFIG \
 		extern engine_configuration_s *engineConfiguration; \
-		extern engine_configuration_s *engineConfiguration; \
 		extern engine_configuration_s & activeConfiguration; \
 		extern persistent_config_container_s persistentState; \
 		extern persistent_config_s *config; \
