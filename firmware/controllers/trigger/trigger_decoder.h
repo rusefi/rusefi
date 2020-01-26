@@ -19,6 +19,7 @@ class TriggerStateListener {
 		virtual void OnTriggerStateDecodingError() = 0;
 		virtual void OnTriggerStateProperState(efitick_t nowNt) = 0;
 		virtual void OnTriggerSyncronization(bool wasSynchronized) = 0;
+		virtual void OnTriggerInvalidIndex(int currentIndex) = 0;
 };
 
 typedef void (*TriggerStateCallback)(TriggerState *);
@@ -66,9 +67,9 @@ public:
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter() const;
 
-	void decodeTriggerEvent(const TriggerStateCallback triggerCycleCallback,
+	void decodeTriggerEvent(TriggerWaveform *triggerShape, const TriggerStateCallback triggerCycleCallback,
 			TriggerStateListener * triggerStateListener,
-			trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
+			trigger_event_e const signal, efitime_t nowUs DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 	bool validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	void handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
