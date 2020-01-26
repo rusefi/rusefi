@@ -297,10 +297,10 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 	PRINT_INC_INDEX; \
 }
 
-#define considerEventForGap() (!TRIGGER_WAVEFORM(useOnlyPrimaryForSync) || isPrimary)
+#define considerEventForGap() (!triggerShape->useOnlyPrimaryForSync || isPrimary)
 
-#define needToSkipFall(type) ((!TRIGGER_WAVEFORM(gapBothDirections)) && (( TRIGGER_WAVEFORM(useRiseEdge)) && (type != TV_RISE)))
-#define needToSkipRise(type) ((!TRIGGER_WAVEFORM(gapBothDirections)) && ((!TRIGGER_WAVEFORM(useRiseEdge)) && (type != TV_FALL)))
+#define needToSkipFall(type) ((!triggerShape->gapBothDirections) && (( triggerShape->useRiseEdge) && (type != TV_RISE)))
+#define needToSkipRise(type) ((!triggerShape->gapBothDirections) && ((!triggerShape->useRiseEdge) && (type != TV_FALL)))
 
 int TriggerState::getCurrentIndex() const {
 	return currentCycle.current_index;
@@ -407,14 +407,13 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
  * @param signal type of event which just happened
  * @param nowNt current time
  */
-void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCallback,
+void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const TriggerStateCallback triggerCycleCallback,
 		TriggerStateListener * triggerStateListener,
-		trigger_event_e const signal, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		trigger_event_e const signal, efitick_t nowNt DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::DecodeTriggerEvent, static_cast<uint8_t>(signal));
 	
 	bool useOnlyRisingEdgeForTrigger = CONFIG(useOnlyRisingEdgeForTrigger);
-	// todo: use 'triggerShape' instead of TRIGGER_WAVEFORM in order to decouple this method from engine #635
-	TriggerWaveform *triggerShape = &ENGINE(triggerCentral.triggerShape);
+
 
 	efiAssertVoid(CUSTOM_ERR_6640, signal <= SHAFT_3RD_RISING, "unexpected signal");
 
@@ -526,7 +525,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 
 			bool isSync = true;
 			for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
-				bool isGapCondition = cisnan(triggerShape->syncronizationRatioFrom[i]) || (toothDurations[i] > toothDurations[i + 1] * TRIGGER_WAVEFORM(syncronizationRatioFrom[i])
+				bool isGapCondition = cisnan(triggerShape->syncronizationRatioFrom[i]) || (toothDurations[i] > toothDurations[i + 1] * triggerShape->syncronizationRatioFrom[i]
 					&& toothDurations[i] < toothDurations[i + 1] * triggerShape->syncronizationRatioTo[i]);
 
 				isSync &= isGapCondition;
@@ -552,7 +551,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 #if EFI_PROD_CODE || EFI_SIMULATOR
 			if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !silentTriggerError)) {
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
-					float ratioFrom = TRIGGER_WAVEFORM(syncronizationRatioFrom[i]);
+					float ratioFrom = triggerShape->syncronizationRatioFrom[i];
 					if (cisnan(ratioFrom)) {
 						// we do not track gap at this depth
 						continue;
@@ -568,7 +567,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 							i,
 							gap,
 							ratioFrom,
-							TRIGGER_WAVEFORM(syncronizationRatioTo[i]),
+							triggerShape->syncronizationRatioTo[i],
 							boolToString(someSortOfTriggerError));
 					}
 				}
@@ -581,8 +580,8 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 					print("index=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
 							i,
 							gap,
-							TRIGGER_WAVEFORM(syncronizationRatioFrom[i]),
-							TRIGGER_WAVEFORM(syncronizationRatioTo[i]),
+							triggerShape->syncronizationRatioFrom[i],
+							triggerShape->syncronizationRatioTo[i],
 							boolToString(someSortOfTriggerError));
 				}
 			}
@@ -657,12 +656,7 @@ void TriggerState::decodeTriggerEvent(const TriggerStateCallback triggerCycleCal
 		toothed_previous_time = nowNt;
 	}
 	if (!isValidIndex(triggerShape) && triggerStateListener) {
-		// let's not show a warning if we are just starting to spin
-		if (GET_RPM_VALUE != 0) {
-			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, triggerShape->getSize());
-			lastDecodingErrorTime = getTimeNowNt();
-			someSortOfTriggerError = true;
-		}
+		triggerStateListener->OnTriggerInvalidIndex(currentCycle.current_index);
 	}
 	if (someSortOfTriggerError) {
 		if (getTimeNowNt() - lastDecodingErrorTime > NT_PER_SECOND) {
