@@ -78,8 +78,10 @@ typedef unsigned int time_t;
  */
 #if defined(STM32F7XX)
 #define CCM_RAM ".ram3"
+#define NO_CACHE CCM_OPTIONAL
 #else /* defined(STM32F4XX) */
 #define CCM_RAM ".ram4"
+#define NO_CACHE
 #endif /* defined(STM32F4XX) */
 
 #if EFI_USE_CCM
