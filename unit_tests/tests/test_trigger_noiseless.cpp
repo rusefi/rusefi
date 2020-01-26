@@ -21,7 +21,6 @@
 #include "trigger_universal.h"
 
 extern bool printTriggerDebug;
-extern float actualSynchGap;
 
 static void fireEvent(EngineTestHelper *eth, bool isRise) {
 	// mostly we fire only rise events (useOnlyRisingEdgeForTrigger=true).
