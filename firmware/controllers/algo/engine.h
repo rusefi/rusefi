@@ -58,7 +58,7 @@ public:
 
 	cyclic_buffer<int> triggerErrorDetection;
 
-	void OnTriggerStateDecodingError() override;
+	void OnTriggerStateDecodingError();
 	void OnTriggerStateProperState(efitick_t nowNt) override;
 	void OnTriggerSyncronization(bool wasSynchronized) override;
 	void OnTriggerInvalidIndex(int currentIndex) override;

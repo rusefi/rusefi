@@ -246,7 +246,38 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void Engine::OnTriggerStateDecodingError() {
 	Engine *engine = this;
 	EXPAND_Engine;
-	triggerCentral.triggerState.handleTriggerError(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.debugIntField1 = triggerCentral.triggerState.currentCycle.eventCount[0];
+		tsOutputChannels.debugIntField2 = triggerCentral.triggerState.currentCycle.eventCount[1];
+		tsOutputChannels.debugIntField3 = triggerCentral.triggerState.currentCycle.eventCount[2];
+#endif /* EFI_TUNER_STUDIO */
+	}
+
+	warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d/%d expected %d/%d/%d",
+			triggerCentral.triggerState.currentCycle.eventCount[0],
+			triggerCentral.triggerState.currentCycle.eventCount[1],
+			triggerCentral.triggerState.currentCycle.eventCount[2],
+			TRIGGER_WAVEFORM(expectedEventCount[0]),
+			TRIGGER_WAVEFORM(expectedEventCount[1]),
+			TRIGGER_WAVEFORM(expectedEventCount[2]));
+	triggerCentral.triggerState.lastDecodingErrorTime = getTimeNowNt();
+	triggerCentral.triggerState.someSortOfTriggerError = true;
+
+	triggerCentral.triggerState.totalTriggerErrorCounter++;
+	if (CONFIG(verboseTriggerSynchDetails) || (triggerCentral.triggerState.someSortOfTriggerError && !CONFIG(silentTriggerError))) {
+#if EFI_PROD_CODE
+		scheduleMsg(&engineLogger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
+				triggerCentral.triggerState.currentCycle.current_index,
+				TRIGGER_WAVEFORM(expectedEventCount[0]),
+				TRIGGER_WAVEFORM(expectedEventCount[1]),
+				TRIGGER_WAVEFORM(expectedEventCount[2]),
+				triggerCentral.triggerState.currentCycle.eventCount[0],
+				triggerCentral.triggerState.currentCycle.eventCount[1],
+				triggerCentral.triggerState.currentCycle.eventCount[2]);
+#endif /* EFI_PROD_CODE */
+	}
+
 }
 
 void Engine::OnTriggerStateProperState(efitick_t nowNt) {

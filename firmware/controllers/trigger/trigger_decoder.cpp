@@ -348,36 +348,6 @@ bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 	return isDecodingError;
 }
 
-void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
-#if EFI_TUNER_STUDIO
-		tsOutputChannels.debugIntField1 = currentCycle.eventCount[0];
-		tsOutputChannels.debugIntField2 = currentCycle.eventCount[1];
-		tsOutputChannels.debugIntField3 = currentCycle.eventCount[2];
-#endif /* EFI_TUNER_STUDIO */
-	}
-
-	warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d/%d expected %d/%d/%d",
-			currentCycle.eventCount[0],
-			currentCycle.eventCount[1],
-			currentCycle.eventCount[2],
-			TRIGGER_WAVEFORM(expectedEventCount[0]),
-			TRIGGER_WAVEFORM(expectedEventCount[1]),
-			TRIGGER_WAVEFORM(expectedEventCount[2]));
-	lastDecodingErrorTime = getTimeNowNt();
-	someSortOfTriggerError = true;
-
-	totalTriggerErrorCounter++;
-	if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !CONFIG(silentTriggerError))) {
-#if EFI_PROD_CODE
-		scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
-				currentCycle.current_index, TRIGGER_WAVEFORM(expectedEventCount[0]),
-				TRIGGER_WAVEFORM(expectedEventCount[1]), TRIGGER_WAVEFORM(expectedEventCount[2]),
-				currentCycle.eventCount[0], currentCycle.eventCount[1], currentCycle.eventCount[2]);
-#endif /* EFI_PROD_CODE */
-	}
-}
-
 void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
 		efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape) {
 

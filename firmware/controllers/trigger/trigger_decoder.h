@@ -16,7 +16,6 @@ class TriggerState;
 
 class TriggerStateListener {
 	public:
-		virtual void OnTriggerStateDecodingError() = 0;
 		virtual void OnTriggerStateProperState(efitick_t nowNt) = 0;
 		virtual void OnTriggerSyncronization(bool wasSynchronized) = 0;
 		virtual void OnTriggerInvalidIndex(int currentIndex) = 0;
@@ -72,7 +71,6 @@ public:
 			trigger_event_e const signal, efitime_t nowUs DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 	bool validateEventCounters(TriggerWaveform *triggerShape) const;
-	void handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
 			efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape);
 	/**
