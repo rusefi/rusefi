@@ -28,7 +28,7 @@ extern bool printTriggerDebug;
 
 void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback triggerCycleCallback,
 		TriggerState *state, TriggerWaveform * shape, int i
-		DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_ERR_6593, shape->getSize() > 0, "size not zero");
 	int stateIndex = i % shape->getSize();
 	int size = shape->getSize();
@@ -64,7 +64,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/0, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING;
 		if (isUsefulSignal(s PASS_CONFIG_PARAMETER_SUFFIX)) {
-			state->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape),
+			state->decodeTriggerEvent(shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
 					s, time PASS_CONFIG_PARAMETER_SUFFIX);
@@ -75,7 +75,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/1, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
 		if (isUsefulSignal(s PASS_CONFIG_PARAMETER_SUFFIX)) {
-			state->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape),
+			state->decodeTriggerEvent(shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
 					s, time PASS_CONFIG_PARAMETER_SUFFIX);
@@ -86,7 +86,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/2, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
 		if (isUsefulSignal(s PASS_CONFIG_PARAMETER_SUFFIX)) {
-			state->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape),
+			state->decodeTriggerEvent(shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
 					s, time PASS_CONFIG_PARAMETER_SUFFIX);
@@ -96,13 +96,13 @@ void TriggerStimulatorHelper::feedSimulatedEvent(const TriggerStateCallback trig
 
 void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const TriggerStateCallback triggerCycleCallback,
 		const uint32_t syncIndex, TriggerState *state, TriggerWaveform * shape
-		DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		DECLARE_CONFIG_PARAMETER_SUFFIX) {
 
 	/**
 	 * let's feed two more cycles to validate shape definition
 	 */
 	for (uint32_t i = syncIndex + 1; i <= syncIndex + GAP_TRACKING_LENGTH * shape->getSize(); i++) {
-		feedSimulatedEvent(triggerCycleCallback, state, shape, i PASS_ENGINE_PARAMETER_SUFFIX);
+		feedSimulatedEvent(triggerCycleCallback, state, shape, i PASS_CONFIG_PARAMETER_SUFFIX);
 	}
 	int revolutionCounter = state->getTotalRevolutionCounter();
 	if (revolutionCounter != GAP_TRACKING_LENGTH + 1) {
@@ -123,7 +123,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const TriggerSta
 uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(TriggerWaveform * shape,
 		 TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
-		feedSimulatedEvent(nullptr, state, shape, i PASS_ENGINE_PARAMETER_SUFFIX);
+		feedSimulatedEvent(nullptr, state, shape, i PASS_CONFIG_PARAMETER_SUFFIX);
 
 		if (state->shaft_is_synchronized)
 			return i;
