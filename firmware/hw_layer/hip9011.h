@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HIP9011_H_
-#define HIP9011_H_
+#pragma once
 
 
 // 0b01110001
@@ -28,4 +27,4 @@ void setPrescalerAndSDO(int value);
 void setKnockThresh(float value);
 void setMaxKnockSubDeg(int value);
 
-#endif /* HIP9011_H_ */
+

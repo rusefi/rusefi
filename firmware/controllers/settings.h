@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef SETTINGS_H_
-#define SETTINGS_H_
+#pragma once
 
 #include "engine.h"
 
@@ -23,4 +22,3 @@ void setEngineType(int value);
  */
 const char* getConfigurationName(engine_type_e engineType);
 
-#endif /* SETTINGS_H_ */
