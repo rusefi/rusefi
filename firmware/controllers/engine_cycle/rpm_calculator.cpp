@@ -122,7 +122,7 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUF
 	/**
 	 * Also check if there were no trigger events
 	 */
-	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.previousShaftEventTimeNt >= NT_PER_SECOND;
+	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.triggerState.previousShaftEventTimeNt >= NT_PER_SECOND;
 	if (noRpmEventsForTooLong || noTriggerEventsForTooLong) {
 		return false;
 	}

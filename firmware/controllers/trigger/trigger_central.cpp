@@ -45,8 +45,6 @@ trigger_central_s::trigger_central_s() : hwEventCounters() {
 }
 
 TriggerCentral::TriggerCentral() : trigger_central_s() {
-	// we need this initial to have not_running at first invocation
-	previousShaftEventTimeNt = (efitimems_t) -10 * NT_PER_SECOND;
 
 	clearCallbacks(&triggerListeneres);
 	triggerState.resetTriggerState();
@@ -340,14 +338,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	efiAssertVoid(CUSTOM_ERR_6638, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
 
-	if (timestamp - previousShaftEventTimeNt > NT_PER_SECOND) {
-		/**
-		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not running.
-		 * That means we have lost synchronization since the engine is not running :)
-		 */
-		triggerState.onSynchronizationLost(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
-	previousShaftEventTimeNt = timestamp;
 
 	/**
 	 * This invocation changes the state of triggerState

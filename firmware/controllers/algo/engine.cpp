@@ -289,6 +289,14 @@ void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 	rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
+void Engine::OnTriggerSynchronizationLost() {
+	Engine *engine = this;
+	EXPAND_Engine;
+
+	// Needed for early instant-RPM detection
+	engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 void Engine::OnTriggerInvalidIndex(int currentIndex) {
 	Engine *engine = this;
 	EXPAND_Engine;
