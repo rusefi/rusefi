@@ -45,7 +45,6 @@ public:
 	efitick_t previousVvtCamTime = 0;
 	efitick_t previousVvtCamDuration = 0;
 
-	volatile efitick_t previousShaftEventTimeNt;
 private:
 	IntListenerArray<15> triggerListeneres;
 	

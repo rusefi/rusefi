@@ -67,6 +67,8 @@ void TriggerState::resetTriggerState() {
 	totalRevolutionCounter = 0;
 	totalTriggerErrorCounter = 0;
 	orderingErrorCounter = 0;
+	// we need this initial to have not_running at first invocation
+	previousShaftEventTimeNt = (efitimems_t) -10 * NT_PER_SECOND;
 	lastDecodingErrorTime = US2NT(-10000000LL);
 	someSortOfTriggerError = false;
 
@@ -203,7 +205,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndexOut, 
 	// todo: prevIndex should be pre-calculated
 	int prevIndex = TRIGGER_WAVEFORM(triggerIndexByAngle[(int)previousAngle]);
 
-	if (prevIndexOut != NULL) {
+	if (prevIndexOut) {
 		*prevIndexOut = prevIndex;
 	}
 
@@ -330,12 +332,6 @@ bool TriggerState::isEvenRevolution() const {
 	return totalRevolutionCounter & 1;
 }
 
-void TriggerState::onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setShaftSynchronized(false);
-	// Needed for early instant-RPM detection
-	engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
-}
-
 bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 	bool isDecodingError = false;
 	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
@@ -359,7 +355,7 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
 		efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape) {
 
 
-	if (triggerCycleCallback != NULL) {
+	if (triggerCycleCallback) {
 		triggerCycleCallback(this);
 	}
 
@@ -389,6 +385,19 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 		trigger_event_e const signal, efitick_t nowNt DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::DecodeTriggerEvent, static_cast<uint8_t>(signal));
 	
+	if (nowNt - previousShaftEventTimeNt > NT_PER_SECOND) {
+		/**
+		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not running.
+		 * That means we have lost synchronization since the engine is not running :)
+		 */
+		setShaftSynchronized(false);
+		if (triggerStateListener) {
+			triggerStateListener->OnTriggerSynchronizationLost();
+		}
+	}
+	previousShaftEventTimeNt = nowNt;
+
+
 	bool useOnlyRisingEdgeForTrigger = CONFIG(useOnlyRisingEdgeForTrigger);
 
 

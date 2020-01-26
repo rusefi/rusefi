@@ -19,6 +19,7 @@ class TriggerStateListener {
 		virtual void OnTriggerStateProperState(efitick_t nowNt) = 0;
 		virtual void OnTriggerSyncronization(bool wasSynchronized) = 0;
 		virtual void OnTriggerInvalidIndex(int currentIndex) = 0;
+		virtual void OnTriggerSynchronizationLost() = 0;
 };
 
 typedef void (*TriggerStateCallback)(TriggerState *);
@@ -73,10 +74,7 @@ public:
 	bool validateEventCounters(TriggerWaveform *triggerShape) const;
 	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
 			efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape);
-	/**
-	 * Resets synchronization flag and alerts rpm_calculator to reset engine spinning flag.
-	 */
-	void onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 
 	bool isValidIndex(TriggerWaveform *triggerShape) const;
 	float getTriggerDutyCycle(int index);
@@ -86,6 +84,7 @@ public:
 	 */
 	bool shaft_is_synchronized;
 	efitick_t mostRecentSyncTime;
+	volatile efitick_t previousShaftEventTimeNt;
 
 	void setTriggerErrorState();
 
