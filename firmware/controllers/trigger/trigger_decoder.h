@@ -71,7 +71,7 @@ public:
 			TriggerStateListener * triggerStateListener,
 			trigger_event_e const signal, efitime_t nowUs DECLARE_CONFIG_PARAMETER_SUFFIX);
 
-	bool validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool validateEventCounters(TriggerWaveform *triggerShape) const;
 	void handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
 			efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape);

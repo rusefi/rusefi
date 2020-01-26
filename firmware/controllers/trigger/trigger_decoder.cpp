@@ -331,17 +331,17 @@ void TriggerState::onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-bool TriggerState::validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
-	bool isDecodingError = currentCycle.eventCount[0] != TRIGGER_WAVEFORM(expectedEventCount[0])
-					|| currentCycle.eventCount[1] != TRIGGER_WAVEFORM(expectedEventCount[1])
-					|| currentCycle.eventCount[2] != TRIGGER_WAVEFORM(expectedEventCount[2]);
+bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
+	bool isDecodingError = currentCycle.eventCount[0] != triggerShape->expectedEventCount[0]
+					|| currentCycle.eventCount[1] != triggerShape->expectedEventCount[1]
+					|| currentCycle.eventCount[2] != triggerShape->expectedEventCount[2];
 
 #if EFI_UNIT_TEST
 			printf("sync point: isDecodingError=%d\r\n", isDecodingError);
 			if (isDecodingError) {
-				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[0],  TRIGGER_WAVEFORM(expectedEventCount[0]));
-				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[1],  TRIGGER_WAVEFORM(expectedEventCount[1]));
-				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[2],  TRIGGER_WAVEFORM(expectedEventCount[2]));
+				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[0],  triggerShape->expectedEventCount[0]);
+				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[1],  triggerShape->expectedEventCount[1]);
+				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[2],  triggerShape->expectedEventCount[2]);
 			}
 #endif /* EFI_UNIT_TEST */
 
