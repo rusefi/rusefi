@@ -14,7 +14,7 @@ class TriggerStimulatorHelper {
 public:
 
 	uint32_t findTriggerSyncPoint(TriggerWaveform * shape,
-			TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
+			TriggerState *state DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 	void assertSyncPositionAndSetDutyCycle(const TriggerStateCallback triggerCycleCallback,
 			const uint32_t index, TriggerState *state, TriggerWaveform * shape

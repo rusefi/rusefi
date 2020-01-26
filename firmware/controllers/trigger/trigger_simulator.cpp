@@ -121,14 +121,15 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const TriggerSta
  * @return trigger synchronization point index, or error code if not found
  */
 uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(TriggerWaveform * shape,
-		 TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		 TriggerState *state DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
 		feedSimulatedEvent(nullptr, state, shape, i PASS_CONFIG_PARAMETER_SUFFIX);
 
-		if (state->shaft_is_synchronized)
+		if (state->shaft_is_synchronized) {
 			return i;
+		}
 	}
-	engine->triggerCentral.triggerShape.setShapeDefinitionError(true);
+	shape->setShapeDefinitionError(true);
 	warning(CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
 	return EFI_ERROR_CODE;
 }

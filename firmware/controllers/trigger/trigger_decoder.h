@@ -118,7 +118,8 @@ public:
 	 */
 	efitick_t startOfCycleNt;
 
-	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
+	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape, trigger_config_s const*triggerConfig
+			DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 private:
 	void resetCurrentCycleState();
