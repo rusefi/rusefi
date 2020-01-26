@@ -337,16 +337,18 @@ void TriggerState::onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
-	bool isDecodingError = currentCycle.eventCount[0] != triggerShape->expectedEventCount[0]
-					|| currentCycle.eventCount[1] != triggerShape->expectedEventCount[1]
-					|| currentCycle.eventCount[2] != triggerShape->expectedEventCount[2];
+	bool isDecodingError = false;
+	for (int i = 0;i < GAP_TRACKING_LENGTH;i++) {
+		isDecodingError |= currentCycle.eventCount[i] != triggerShape->expectedEventCount[i];
+	}
+
 
 #if EFI_UNIT_TEST
 			printf("sync point: isDecodingError=%d\r\n", isDecodingError);
 			if (isDecodingError) {
-				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[0],  triggerShape->expectedEventCount[0]);
-				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[1],  triggerShape->expectedEventCount[1]);
-				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[2],  triggerShape->expectedEventCount[2]);
+				for (int i = 0;i < GAP_TRACKING_LENGTH;i++) {
+					printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[i],  triggerShape->expectedEventCount[i]);
+				}
 			}
 #endif /* EFI_UNIT_TEST */
 
