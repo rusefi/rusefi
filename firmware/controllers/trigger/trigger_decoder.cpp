@@ -708,7 +708,7 @@ uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
 	 * todo: add a comment why are we doing '2 * shape->getSize()' here?
 	 */
 
-	helper.assertSyncPositionAndSetDutyCycle(onFindIndexCallback, syncIndex, this, shape PASS_ENGINE_PARAMETER_SUFFIX);
+	helper.assertSyncPositionAndSetDutyCycle(onFindIndexCallback, syncIndex, this, shape PASS_CONFIG_PARAMETER_SUFFIX);
 
 	return syncIndex % shape->getSize();
 }
