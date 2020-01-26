@@ -82,6 +82,11 @@ void TriggerState::resetTriggerState() {
 	isFirstEvent = true;
 }
 
+void TriggerState::setTriggerErrorState() {
+	lastDecodingErrorTime = getTimeNowNt();
+	someSortOfTriggerError = true;
+}
+
 void TriggerState::resetCurrentCycleState() {
 	memset(currentCycle.eventCount, 0, sizeof(currentCycle.eventCount));
 	memset(currentCycle.timeOfPreviousEventNt, 0, sizeof(currentCycle.timeOfPreviousEventNt));

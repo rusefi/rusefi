@@ -87,6 +87,8 @@ public:
 	bool shaft_is_synchronized;
 	efitick_t mostRecentSyncTime;
 
+	void setTriggerErrorState();
+
 	efitick_t lastDecodingErrorTime;
 	// the boolean flag is a performance optimization so that complex comparison is avoided if no error
 	bool someSortOfTriggerError;

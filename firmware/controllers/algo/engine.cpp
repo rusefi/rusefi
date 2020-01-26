@@ -261,8 +261,8 @@ void Engine::OnTriggerStateDecodingError() {
 			TRIGGER_WAVEFORM(expectedEventCount[0]),
 			TRIGGER_WAVEFORM(expectedEventCount[1]),
 			TRIGGER_WAVEFORM(expectedEventCount[2]));
-	triggerCentral.triggerState.lastDecodingErrorTime = getTimeNowNt();
-	triggerCentral.triggerState.someSortOfTriggerError = true;
+	triggerCentral.triggerState.setTriggerErrorState();
+
 
 	triggerCentral.triggerState.totalTriggerErrorCounter++;
 	if (CONFIG(verboseTriggerSynchDetails) || (triggerCentral.triggerState.someSortOfTriggerError && !CONFIG(silentTriggerError))) {
@@ -295,8 +295,7 @@ void Engine::OnTriggerInvalidIndex(int currentIndex) {
 	// let's not show a warning if we are just starting to spin
 	if (GET_RPM_VALUE != 0) {
 		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
-		triggerCentral.triggerState.lastDecodingErrorTime = getTimeNowNt();
-		triggerCentral.triggerState.someSortOfTriggerError = true;
+		triggerCentral.triggerState.setTriggerErrorState();
 	}
 }
 
