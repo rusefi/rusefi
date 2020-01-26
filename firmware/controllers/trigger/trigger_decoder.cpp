@@ -338,7 +338,7 @@ void TriggerState::onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 	bool isDecodingError = false;
-	for (int i = 0;i < GAP_TRACKING_LENGTH;i++) {
+	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
 		isDecodingError |= currentCycle.eventCount[i] != triggerShape->expectedEventCount[i];
 	}
 
@@ -346,7 +346,7 @@ bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 #if EFI_UNIT_TEST
 			printf("sync point: isDecodingError=%d\r\n", isDecodingError);
 			if (isDecodingError) {
-				for (int i = 0;i < GAP_TRACKING_LENGTH;i++) {
+				for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
 					printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[i],  triggerShape->expectedEventCount[i]);
 				}
 			}
