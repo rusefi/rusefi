@@ -279,7 +279,7 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 		/**
 	 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 	 	 */
-		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(PASS_ENGINE_PARAMETER_SIGNATURE);
+		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(&triggerCentral.triggerShape);
 
 		enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 
