@@ -127,7 +127,8 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 #endif
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
 
-	shape->triggerShapeSynchPointIndex = state->findTriggerZeroEventIndex(shape, triggerConfig PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerErrorDetection.clear();
+	shape->triggerShapeSynchPointIndex = state->findTriggerZeroEventIndex(shape, triggerConfig PASS_CONFIG_PARAMETER_SUFFIX);
 
 	int length = shape->getLength();
 	engine->engineCycleEventCount = length;
@@ -671,12 +672,11 @@ static void onFindIndexCallback(TriggerState *state) {
  * This function finds the index of synchronization event within TriggerWaveform
  */
 uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
-		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		trigger_config_s const*triggerConfig DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	UNUSED(triggerConfig);
 #if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 128, "findPos", -1);
 #endif
-	engine->triggerErrorDetection.clear();
 
 
 	resetTriggerState();
@@ -689,7 +689,7 @@ uint32_t TriggerState::findTriggerZeroEventIndex(TriggerWaveform * shape,
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
-	uint32_t syncIndex = helper.findTriggerSyncPoint(shape, this PASS_ENGINE_PARAMETER_SUFFIX);
+	uint32_t syncIndex = helper.findTriggerSyncPoint(shape, this PASS_CONFIG_PARAMETER_SUFFIX);
 	if (syncIndex == EFI_ERROR_CODE) {
 		return syncIndex;
 	}
