@@ -16,9 +16,10 @@ class TriggerState;
 
 class TriggerStateListener {
 	public:
-		virtual void OnTriggerStateDecodingError() = 0;
 		virtual void OnTriggerStateProperState(efitick_t nowNt) = 0;
 		virtual void OnTriggerSyncronization(bool wasSynchronized) = 0;
+		virtual void OnTriggerInvalidIndex(int currentIndex) = 0;
+		virtual void OnTriggerSynchronizationLost() = 0;
 };
 
 typedef void (*TriggerStateCallback)(TriggerState *);
@@ -66,18 +67,14 @@ public:
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter() const;
 
-	void decodeTriggerEvent(const TriggerStateCallback triggerCycleCallback,
+	void decodeTriggerEvent(TriggerWaveform *triggerShape, const TriggerStateCallback triggerCycleCallback,
 			TriggerStateListener * triggerStateListener,
-			trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
+			trigger_event_e const signal, efitime_t nowUs DECLARE_CONFIG_PARAMETER_SUFFIX);
 
-	bool validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
-	void handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool validateEventCounters(TriggerWaveform *triggerShape) const;
 	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
 			efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape);
-	/**
-	 * Resets synchronization flag and alerts rpm_calculator to reset engine spinning flag.
-	 */
-	void onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 
 	bool isValidIndex(TriggerWaveform *triggerShape) const;
 	float getTriggerDutyCycle(int index);
@@ -87,6 +84,9 @@ public:
 	 */
 	bool shaft_is_synchronized;
 	efitick_t mostRecentSyncTime;
+	volatile efitick_t previousShaftEventTimeNt;
+
+	void setTriggerErrorState();
 
 	efitick_t lastDecodingErrorTime;
 	// the boolean flag is a performance optimization so that complex comparison is avoided if no error
@@ -118,7 +118,8 @@ public:
 	 */
 	efitick_t startOfCycleNt;
 
-	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
+	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape, trigger_config_s const*triggerConfig
+			DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 private:
 	void resetCurrentCycleState();

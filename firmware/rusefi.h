@@ -5,10 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef RUSEFI_H_
-#define RUSEFI_H_
+#pragma once
 
 void runRusEfi(void);
 void rebootNow(void);
 
-#endif /* RUSEFI_H_ */

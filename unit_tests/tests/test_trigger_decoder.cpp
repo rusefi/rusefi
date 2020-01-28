@@ -41,7 +41,8 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
-	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER_SUFFIX);
+	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, &engineConfiguration->trigger
+			PASS_CONFIG_PARAMETER_SUFFIX);
 }
 
 static void testDodgeNeonDecoder(void) {
@@ -109,28 +110,28 @@ TEST(misc, testSomethingWeird) {
 
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
 	int r = 10;
-	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r PASS_CONFIG_PARAMETER_SUFFIX);
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized"; // still no synchronization
-	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, ++r PASS_CONFIG_PARAMETER_SUFFIX);
 	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
 	ASSERT_EQ(0, sta->getCurrentIndex());
-	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
 	ASSERT_EQ(1, sta->getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
 		assertEqualsM("even", i++, sta->getCurrentIndex());
-		sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+		sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
 		assertEqualsM("odd", i++, sta->getCurrentIndex());
 	}
 
-	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
 	ASSERT_EQ(10, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_FALLING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
 	ASSERT_EQ(11, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	sta->decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape), nullptr, /* override */ nullptr,SHAFT_PRIMARY_RISING, r++ PASS_CONFIG_PARAMETER_SUFFIX);
 	ASSERT_EQ(0, sta->getCurrentIndex()); // new revolution
 }
 

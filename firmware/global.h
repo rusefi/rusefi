@@ -12,8 +12,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef GLOBAL_H_
-#define GLOBAL_H_
+#pragma once
 
 // todo: remove this from here and rely on os_access.h. unfortunately hal.h includes ch.h :(
 #include <hal.h>
@@ -121,6 +120,4 @@ void unlockAnyContext(void);
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* GLOBAL_H_ */
 
