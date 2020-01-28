@@ -48,10 +48,10 @@ TriggerCentral::TriggerCentral() : trigger_central_s() {
 
 	clearCallbacks(&triggerListeneres);
 	triggerState.resetTriggerState();
-	resetAccumSignalData();
+	noiseFilter.resetAccumSignalData();
 }
 
-void TriggerCentral::resetAccumSignalData() {
+void TriggerNoiseFilter::resetAccumSignalData() {
 	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
 	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));
 	memset(accumSignalPrevPeriods, 0, sizeof(accumSignalPrevPeriods));
@@ -255,7 +255,9 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
  * And then compare between the current period and previous, with some tolerance (allowing for the wheel speed change).
  * @return true if the signal is passed through.
  */
-bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
+		TriggerState * triggerState,
+		trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: find a better place for these defs
 	static const trigger_event_e opposite[6] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING, 
 			SHAFT_3RD_RISING, SHAFT_3RD_FALLING };
@@ -281,8 +283,8 @@ bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE
 	efitick_t allowedPeriod = accumSignalPrevPeriods[os];
 
 	// but first check if we're expecting a gap
-	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState.shaft_is_synchronized && 
-			(triggerState.currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(expectedEventCount[ti]);
+	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->shaft_is_synchronized &&
+			(triggerState->currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(expectedEventCount[ti]);
 	
 	if (isGapExpected) {
 		// usually we need to extend the period for gaps, based on the trigger info
@@ -323,7 +325,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 	// This code gathers some statistics on signals and compares accumulated periods to filter interference
 	if (CONFIG(useNoiselessTriggerDecoder)) {
-		if (!noiseFilter(timestamp, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
 		// moved here from hwHandleShaftSignal()
@@ -335,7 +337,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	engine->onTriggerSignalEvent(timestamp);
 
 	int eventIndex = (int) signal;
-	efiAssertVoid(CUSTOM_ERR_6638, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
+	efiAssertVoid(CUSTOM_TRIGGER_EVENT_TYPE, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
 
 
@@ -665,7 +667,7 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	#if EFI_ENGINE_CONTROL
 		ENGINE(initializeTriggerWaveform(logger PASS_ENGINE_PARAMETER_SUFFIX));
-		engine->triggerCentral.resetAccumSignalData();
+		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING

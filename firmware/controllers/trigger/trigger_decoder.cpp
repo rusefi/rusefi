@@ -123,7 +123,7 @@ bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
-	efiAssertVoid(CUSTOM_ERR_6642, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
+	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
 #endif
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
 
@@ -140,7 +140,7 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 	}
 
 	float firstAngle = shape->getAngle(shape->triggerShapeSynchPointIndex);
-	assertAngleRange(shape->triggerShapeSynchPointIndex, "firstAngle", CUSTOM_ERR_6551);
+	assertAngleRange(shape->triggerShapeSynchPointIndex, "firstAngle", CUSTOM_TRIGGER_SYNC_ANGLE);
 
 	int riseOnlyIndex = 0;
 
@@ -152,13 +152,13 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 			shape->eventAngles[1] = 0;
 			shape->riseOnlyIndexes[0] = 0;
 		} else {
-			assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_ERR_6552);
+			assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_TRIGGER_SYNC_ANGLE2);
 			unsigned int triggerDefinitionCoordinate = (shape->triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
-			efiAssertVoid(CUSTOM_ERR_6595, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
+			efiAssertVoid(CUSTOM_TRIGGER_CYCLE, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
 			int triggerDefinitionIndex = triggerDefinitionCoordinate >= shape->privateTriggerDefinitionSize ? triggerDefinitionCoordinate - shape->privateTriggerDefinitionSize : triggerDefinitionCoordinate;
 			float angle = shape->getAngle(triggerDefinitionCoordinate) - firstAngle;
-			efiAssertVoid(CUSTOM_ERR_6596, !cisnan(angle), "trgSyncNaN");
-			fixAngle(angle, "trgSync", CUSTOM_ERR_6559);
+			efiAssertVoid(CUSTOM_TRIGGER_CYCLE, !cisnan(angle), "trgSyncNaN");
+			fixAngle(angle, "trgSync", CUSTOM_TRIGGER_SYNC_ANGLE_RANGE);
 			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
 				if (shape->isRiseEvent[triggerDefinitionIndex]) {
 					riseOnlyIndex += 2;
@@ -402,7 +402,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 	bool useOnlyRisingEdgeForTrigger = CONFIG(useOnlyRisingEdgeForTrigger);
 
 
-	efiAssertVoid(CUSTOM_ERR_6640, signal <= SHAFT_3RD_RISING, "unexpected signal");
+	efiAssertVoid(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_3RD_RISING, "unexpected signal");
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
 	trigger_value_e type = eventType[signal];
