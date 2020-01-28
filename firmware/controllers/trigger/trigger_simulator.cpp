@@ -15,7 +15,7 @@
 EXTERN_ENGINE;
 
 // this is not the only place where we have 'isUpEvent'. todo: reuse
-static const bool isRisingEdge[6] = { false, true, false, true, false, true };
+static const bool isRisingEdge[HW_EVENT_TYPES] = { false, true, false, true, false, true };
 
 // todo: should this method be invoked somewhere deeper? at the moment we have too many usages too high
 bool isUsefulSignal(trigger_event_e signal DECLARE_CONFIG_PARAMETER_SUFFIX) {
