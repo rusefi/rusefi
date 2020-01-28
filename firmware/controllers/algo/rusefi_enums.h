@@ -336,6 +336,7 @@ typedef enum {
 	TV_RISE = 1
 } trigger_value_e;
 
+// see also PWM_PHASE_MAX_WAVE_PER_PWM
 // todo: better names?
 typedef enum {
 	T_PRIMARY = 0,
@@ -345,6 +346,7 @@ typedef enum {
 	T_NONE = 15
 } trigger_wheel_e;
 
+// see also 'HW_EVENT_TYPES'
 typedef enum {
 	SHAFT_PRIMARY_FALLING = 0,
 	SHAFT_PRIMARY_RISING = 1,
