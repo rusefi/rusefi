@@ -2,7 +2,7 @@
  * dfu_init.h
  *
  * @date Aug 3, 2019
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef HW_LAYER_PORTS_STM32_STM32F7_DFU_INIT_H_

@@ -2,14 +2,13 @@
  * @file event_queue.h
  *
  * @date Apr 17, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "scheduler.h"
 #include "utlist.h"
 
-#ifndef EVENT_SCHEDULER_H_
-#define EVENT_SCHEDULER_H_
+#pragma once
 
 /**
  * this is a large value which is expected to be larger than any real time
@@ -71,4 +70,3 @@ private:
 	efitime_t lateDelay;
 };
 
-#endif /* EVENT_SCHEDULER_H_ */

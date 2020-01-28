@@ -17,6 +17,18 @@ typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, ef
 
 #define HAVE_CAM_INPUT() engineConfiguration->camInputs[0] != GPIO_UNASSIGNED
 
+class TriggerNoiseFilter {
+public:
+	void resetAccumSignalData();
+	bool noiseFilter(efitick_t nowNt,
+			TriggerState * triggerState,
+			trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	efitick_t lastSignalTimes[HW_EVENT_TYPES];
+	efitick_t accumSignalPeriods[HW_EVENT_TYPES];
+	efitick_t accumSignalPrevPeriods[HW_EVENT_TYPES];
+};
+
 /**
  * Maybe merge TriggerCentral and TriggerState classes into one class?
  * Probably not: we have an instance of TriggerState which is used for trigger initialization,
@@ -29,10 +41,10 @@ public:
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 	int getHwEventCounter(int index) const;
 	void resetCounters();
-	void resetAccumSignalData();
-	bool noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void validateCamVvtCounters();
 	TriggerStateWithRunningStatistics triggerState;
+
+	TriggerNoiseFilter noiseFilter;
 
 	angle_t vvtPosition = 0;
 	/**
@@ -45,14 +57,9 @@ public:
 	efitick_t previousVvtCamTime = 0;
 	efitick_t previousVvtCamDuration = 0;
 
-	volatile efitick_t previousShaftEventTimeNt;
 private:
 	IntListenerArray<15> triggerListeneres;
-	
-	// Used by 'useNoiselessTriggerDecoder', see handleShaftSignal()
-	efitick_t lastSignalTimes[HW_EVENT_TYPES];
-	efitick_t accumSignalPeriods[HW_EVENT_TYPES];
-	efitick_t accumSignalPrevPeriods[HW_EVENT_TYPES];
+
 };
 
 void triggerInfo(void);

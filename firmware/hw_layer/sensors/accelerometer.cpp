@@ -13,7 +13,7 @@
  *
  *
  * @date May 19, 2016
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "accelerometer.h"

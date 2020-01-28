@@ -21,7 +21,7 @@
  * See trigger_input.cpp
  *
  * @date Jun 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "digital_input_icu.h"

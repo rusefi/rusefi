@@ -17,7 +17,7 @@
  * 10KHz equals one measurement every 3.6 degrees at 6000 RPM
  *
  * @date Jan 14, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

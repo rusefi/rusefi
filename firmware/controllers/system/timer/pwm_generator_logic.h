@@ -2,11 +2,10 @@
  * @file    pwm_generator_logic.h
  *
  * @date Mar 2, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef PWM_GENERATOR_LOGIC_H_
-#define PWM_GENERATOR_LOGIC_H_
+#pragma once
 
 #include "state_sequence.h"
 #include "global.h"
@@ -83,7 +82,7 @@ public:
 	// todo: 'outputPins' should be extracted away from here since technically one can want PWM scheduler without actual pin output
 	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
 	MultiChannelStateSequence multiChannelStateSequence;
-	efitimeus_t togglePwmState();
+	efitick_t togglePwmState();
 	void stop();
 
 	int dbgNestingLevel;
@@ -150,4 +149,3 @@ void startSimplePwmExt(SimplePwm *state,
 void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTimes,
 		int waveCount, pin_state_t *const *pinStates);
 
-#endif /* PWM_GENERATOR_LOGIC_H_ */

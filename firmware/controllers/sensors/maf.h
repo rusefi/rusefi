@@ -6,11 +6,10 @@
  *
  *
  * @date Nov 15, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef MAF_H_
-#define MAF_H_
+#pragma once
 
 #include "global.h"
 
@@ -24,4 +23,3 @@ void setBosch0280218004(persistent_config_s *engineConfiguration);
 void setDensoTODO(persistent_config_s *engineConfiguration);
 void setMazdaMiataNAMaf(persistent_config_s *e);
 
-#endif

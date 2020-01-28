@@ -2,7 +2,7 @@
  * @file	event_registry.h
  *
  * @date Nov 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once

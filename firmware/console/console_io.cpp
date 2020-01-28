@@ -2,7 +2,7 @@
  * @file	console_io.cpp
  *
  * @date Dec 29, 2012
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * This file is part of rusEfi - see http://rusefi.com
  *

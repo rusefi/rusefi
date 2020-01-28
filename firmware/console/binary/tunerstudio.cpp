@@ -28,7 +28,7 @@
  *
  *
  * @date Oct 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -294,7 +294,7 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
 	tsState.readPageCommandsCounter++;
 
 	const void *addr = getStructAddr(structId);
-	if (addr == NULL) {
+	if (addr == nullptr) {
 		// todo: add warning code - unexpected structId
 		return;
 	}

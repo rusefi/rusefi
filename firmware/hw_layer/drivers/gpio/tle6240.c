@@ -14,7 +14,7 @@
  * DS page 12: "Input High Voltage 2.0 V min"
  *
  * @date Dec 29, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * @date Mar 06, 2019
  * @author Andrey Gusakov, (c) 2019

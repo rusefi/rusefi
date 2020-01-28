@@ -7,11 +7,10 @@
  *
  *
  * @date Nov 15, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef SENSORS_H_
-#define SENSORS_H_
+#pragma once
 
 #include "tps.h"
 #include "map.h"
@@ -26,4 +25,3 @@ void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 bool hasAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-#endif /*SENSORS_H_*/

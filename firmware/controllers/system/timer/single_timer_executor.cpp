@@ -17,7 +17,7 @@
  * http://sourceforge.net/p/rusefi/tickets/24/
  *
  * @date: Apr 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -86,6 +86,16 @@ void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeu
 
 void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitime_t nt, action_s action) {
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
+
+#if EFI_ENABLE_ASSERTS
+	int deltaTimeUs = NT2US(nt - getTimeNowNt());
+
+	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_US) {
+		// we are trying to set callback for too far into the future. This does not look right at all
+		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d", deltaTimeUs);
+		return;
+	}
+#endif
 
 	scheduleCounter++;
 	bool alreadyLocked = true;

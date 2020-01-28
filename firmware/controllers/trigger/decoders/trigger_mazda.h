@@ -2,11 +2,10 @@
  * @file	trigger_mazda.h
  *
  * @date Feb 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef TRIGGER_MAZDA_H_
-#define TRIGGER_MAZDA_H_
+#pragma once
 
 #include "trigger_structure.h"
 
@@ -20,4 +19,3 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s);
 void configureMazdaProtegeLx(TriggerWaveform *s);
 void initialize_Mazda_Engine_z5_Shape(TriggerWaveform *s);
 
-#endif /* TRIGGER_MAZDA_H_ */

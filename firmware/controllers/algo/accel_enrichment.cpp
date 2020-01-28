@@ -17,7 +17,7 @@
  * http://rusefi.com/wiki/index.php?title=Manual:Software:Fuel_Control
  * @date Apr 21, 2014
  * @author Dmitry Sidin
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  * @author Matthew Kennedy
  */
 
@@ -328,8 +328,9 @@ AccelEnrichment::AccelEnrichment() {
 #if ! EFI_UNIT_TEST
 
 static void accelInfo() {
-	if (logger == NULL)
+	if (!logger) {
 		return;
+	}
 //	scheduleMsg(logger, "EL accel length=%d", mapInstance.cb.getSize());
 	scheduleMsg(logger, "EL accel th=%.2f/mult=%.2f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
 	scheduleMsg(logger, "EL decel th=%.2f/mult=%.2f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);

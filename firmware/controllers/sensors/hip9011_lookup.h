@@ -2,10 +2,10 @@
  * @file	hip9011_lookup.h
  *
  * @date Jan 4, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef CONTROLLERS_SENSORS_HIP9011_LOOKUP_H_
-#define CONTROLLERS_SENSORS_HIP9011_LOOKUP_H_
+
+#pragma once
 
 #include "engine.h"
 
@@ -29,4 +29,3 @@ int getHip9011BandIndex(float frequency);
 extern float rpmLookup[INT_LOOKUP_SIZE];
 void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-#endif /* CONTROLLERS_SENSORS_HIP9011_LOOKUP_H_ */

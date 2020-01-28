@@ -2,7 +2,7 @@
  * @file	mpu_util.cpp
  *
  * @date Jul 27, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -80,6 +80,9 @@ void baseMCUInit(void) {
         DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
+
+// open question if we need this or not
+	//	SCB_DisableDCache();
 }
 
 void _unhandled_exception(void) {

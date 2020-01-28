@@ -2,7 +2,7 @@
  * @file    test_interpolation_3d.cpp
  *
  *  Created on: Oct 17, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "test_interpolation_3d.h"

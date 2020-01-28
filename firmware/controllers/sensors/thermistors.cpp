@@ -2,7 +2,7 @@
  * @file thermistors.cpp
  *
  * @date Feb 17, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 /**
@@ -259,7 +259,7 @@ void set10K_4050K(ThermistorConf *thermistorConf, float pullup) {
 
 #if EFI_PROD_CODE
 static void testCltByR(float resistance) {
-	if (logger == NULL) {
+	if (logger == nullptr) {
 		firmwareError(CUSTOM_ERR_THERM, "thermstr not initialized");
 		return;
 	}

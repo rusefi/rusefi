@@ -2,7 +2,7 @@
  * @file	trigger_chrysler.cpp
  *
  * @date Mar 24, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_chrysler.h"
@@ -475,9 +475,7 @@ void configureNeon1995TriggerWaveform(TriggerWaveform *s) {
 
 void initJeep18_2_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->isSynchronizationNeeded = true;
-	s->setTriggerSynchronizationGap(1);
-	s->useOnlyPrimaryForSync = true;
+	s->isSynchronizationNeeded = false;
 	s->tdcPosition = 581;
 
 	float off = 212;
@@ -560,9 +558,7 @@ static void add4cylblock(int off, TriggerWaveform *s) {
 // TT_JEEP_4_CYL
 void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->isSynchronizationNeeded = true;
-	s->setTriggerSynchronizationGap(1);
-	s->useOnlyPrimaryForSync = true;
+	s->isSynchronizationNeeded = false;
 	s->tdcPosition = 720 - 236;
 
 	float offset = 124;

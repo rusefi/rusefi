@@ -4,11 +4,10 @@
  * By the way, there are 86400000 milliseconds in a day
  *
  * @date Apr 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef EFITIME_H_
-#define EFITIME_H_
+#pragma once
 
 #include "efifeatures.h"
 #include "rusefi_types.h"
@@ -16,6 +15,7 @@
 #define US_PER_SECOND 1000000
 #define US_PER_SECOND_F 1000000.0
 #define US_PER_SECOND_LL 1000000LL
+#define NT_PER_SECOND (US2NT(US_PER_SECOND_LL))
 
 #define MS2US(MS_TIME) ((MS_TIME) * 1000)
 
@@ -71,5 +71,3 @@ efitimesec_t getTimeNowSeconds(void);
 #else
  #define getTimeNowLowerNt() 0
 #endif
-
-#endif /* EFITIME_H_ */

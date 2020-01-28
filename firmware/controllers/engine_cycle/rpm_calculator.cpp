@@ -96,7 +96,7 @@ RpmCalculator::RpmCalculator() {
 	// which we cannot provide inside this parameter-less constructor. need a solution for this minor mess
 
 	// we need this initial to have not_running at first invocation
-	lastRpmEventTimeNt = (efitick_t) -10 * US2NT(US_PER_SECOND_LL);
+	lastRpmEventTimeNt = (efitick_t) -10 * NT_PER_SECOND;
 }
 
 /**
@@ -118,11 +118,11 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUF
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	bool noRpmEventsForTooLong = nowNt - lastRpmEventTimeNt >= US2NT(NO_RPM_EVENTS_TIMEOUT_SECS * US_PER_SECOND_LL); // Anything below 60 rpm is not running
+	bool noRpmEventsForTooLong = nowNt - lastRpmEventTimeNt >= NT_PER_SECOND * NO_RPM_EVENTS_TIMEOUT_SECS; // Anything below 60 rpm is not running
 	/**
 	 * Also check if there were no trigger events
 	 */
-	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.previousShaftEventTimeNt >= US2NT(US_PER_SECOND_LL);
+	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.triggerState.previousShaftEventTimeNt >= NT_PER_SECOND;
 	if (noRpmEventsForTooLong || noTriggerEventsForTooLong) {
 		return false;
 	}
@@ -250,7 +250,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 				rpmState->setRpmValue(NOISY_RPM PASS_ENGINE_PARAMETER_SUFFIX);
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
-				float rpm = 60.0 * US2NT(US_PER_SECOND_LL) * mult / diffNt;
+				float rpm = 60.0 * NT_PER_SECOND * mult / diffNt;
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm PASS_ENGINE_PARAMETER_SUFFIX);
 			}
 		}

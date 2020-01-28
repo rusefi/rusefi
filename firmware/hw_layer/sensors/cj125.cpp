@@ -2,7 +2,7 @@
  * @file CJ125.cpp
  *
  * @date: Jun 24, 2016
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  */
 
@@ -29,8 +29,12 @@ EXTERN_ENGINE;
 #include "pin_repository.h"
 
 static Logging *logger;
-static unsigned char tx_buff[2];
-static unsigned char rx_buff[1];
+/**
+ * We need to make sure we do not get F7 SPI DMA caching issues
+ * We also have "SCB_DisableDCache();" which is about the same since we need DMA SPI addressed not only for cj125
+ */
+static unsigned char tx_buff[2] CCM_OPTIONAL;
+static unsigned char rx_buff[1] CCM_OPTIONAL;
 
 static CJ125 globalInstance;
 
@@ -415,12 +419,12 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		case CJ125_PREHEAT:
 			// use constant-speed startup heat-up
 			if (nowNt - instance->prevNt >= CJ125_HEATER_PREHEAT_PERIOD) {
-				float periodSecs = (float)(nowNt - instance->prevNt) / US2NT(US_PER_SECOND_LL);
+				float periodSecs = (float)(nowNt - instance->prevNt) / NT_PER_SECOND;
 				// maintain speed at ~0.4V/sec
 				float preheatDuty = instance->heaterDuty + periodSecs * CJ125_HEATER_PREHEAT_RATE;
 				instance->SetHeater(preheatDuty PASS_ENGINE_PARAMETER_SUFFIX);
 				// If we are heating too long, and there's still no result, then something is wrong...
-				if (nowNt - instance->startHeatingNt > US2NT(US_PER_SECOND_LL) * CJ125_PREHEAT_TIMEOUT) {
+				if (nowNt - instance->startHeatingNt > NT_PER_SECOND * CJ125_PREHEAT_TIMEOUT) {
 					instance->setError(CJ125_ERROR_HEATER_MALFUNCTION PASS_ENGINE_PARAMETER_SUFFIX);
 				}
 				cjPrintData();

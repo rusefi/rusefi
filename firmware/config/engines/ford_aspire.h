@@ -3,7 +3,7 @@
  * @brief	1996 Ford Aspire default engine configuration
  *
  * @date Aug 30, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * http://rusefi.com/forum/viewtopic.php?t=375
  *
