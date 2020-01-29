@@ -20,7 +20,7 @@ FunctionalSensor tpsSens1p(SensorType::Tps1Primary, MS2NT(10));
 FunctionalSensor tpsSens2p(SensorType::Tps2Primary, MS2NT(10));
 //FunctionalSensor tpsSens2s(SensorType::Tps2Secondary, MS2NT(10));
 
-void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open) {
+static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open) {
 	// Only register if we have a sensor
 	if (channel == EFI_ADC_NONE) {
 		return;
