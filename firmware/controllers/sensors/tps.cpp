@@ -25,7 +25,7 @@ percent_t mockPedalPosition = MOCK_UNDEFINED;
  * this allows unit tests to simulate TPS position
  */
 void setMockTpsAdc(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	engine->mockTpsAdcValue = TPS_TS_CONVERSION * tpsPosition;
+	engine->mockTpsAdcValue = tpsPosition;
 }
 
 void setMockTpsValue(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX) {
