@@ -121,8 +121,8 @@ static void printError(const char *str, FRESULT f_error) {
 	scheduleMsg(&logger, "FATfs Error \"%s\" %d", str, f_error);
 }
 
-static FIL FDLogFile;
-static FIL FDCurrFile;
+static FIL FDLogFile NO_CACHE;
+static FIL FDCurrFile NO_CACHE;
 static int logFileIndex = 1;
 static char logName[_MAX_FILLER + 20];
 
