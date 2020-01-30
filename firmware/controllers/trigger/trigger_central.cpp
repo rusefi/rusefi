@@ -357,7 +357,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		// That's easy - trigger cycle matches engine cycle
 		triggerIndexForListeners = triggerState.getCurrentIndex();
 	} else {
-		int crankDivider = operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : 4;
+		// todo: should this logic reuse getCycleDuration?
+		bool isCrankDriven = operationMode == FOUR_STROKE_CRANK_SENSOR || operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR;
+		int crankDivider = isCrankDriven ? 2 : 4;
 
 		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 
