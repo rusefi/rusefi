@@ -41,8 +41,8 @@ event_inputs:
   GPIOE_13: "Digital 4"
   GPIOE_14: "Digital 5"
   GPIOE_15: "Digital 6"
-  GPIOE_7:  "Digital 7"
-  GPIOE_8:  "Digital 8"
+  GPIOE_7:  "VR 1"
+  GPIOE_8:  "VR 2"
 
 switch_inputs:
   GPIOC_6:  "Digital 1"
@@ -51,8 +51,6 @@ switch_inputs:
   GPIOE_13: "Digital 4"
   GPIOE_14: "Digital 5"
   GPIOE_15: "Digital 6"
-  GPIOE_7:  "Digital 7"
-  GPIOE_8:  "Digital 8"
 
 analog_inputs:
   EFI_ADC_0: "Analog Volt 5"
