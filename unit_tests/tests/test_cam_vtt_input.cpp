@@ -110,3 +110,21 @@ TEST(sensors, testCamInput) {
 
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
 }
+
+TEST(sensors, testNB2CamInput) {
+	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
+
+	// this crank trigger would be easier to test, crank shape is less important for this test
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	ASSERT_EQ( 0,  GET_RPM()) << "testNB2CamInput RPM";
+	for (int i = 0; i < 5;i++) {
+		eth.fireRise(50);
+	}
+	ASSERT_EQ(1200,  GET_RPM()) << "testNB2CamInput RPM";
+
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.moveTimeForwardUs(MS2US(20));
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+}
