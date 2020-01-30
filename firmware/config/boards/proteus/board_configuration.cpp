@@ -113,7 +113,7 @@ static void setupCanPins() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs
-	// VR channel 1 as default - others not set
+	// Digital channel 1 as default - others not set
 	engineConfiguration->triggerInputPins[0] = GPIOC_6;
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
