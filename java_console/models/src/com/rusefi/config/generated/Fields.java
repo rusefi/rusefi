@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:13:41 EST 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jan 31 14:18:54 EST 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -166,8 +166,28 @@ public class Fields {
 	public static final int biQuad_b2_offset = 2348;
 	public static final int biQuad_offset = 2332;
 	public static final int BLOCKING_FACTOR = 400;
+	public static final int BOOST_LOAD_COUNT = 8;
+	public static final int BOOST_RPM_COUNT = 8;
+	public static final int boostControlPin_offset = 988;
+	public static final int boostControlPinMode_offset = 989;
 	public static final int boostCutPressure_offset = 2132;
 	public static final int boostCutPressure_offset_hex = 854;
+	public static final int boostMapBins_offset = 6312;
+	public static final int boostPid_dFactor_offset = 1000;
+	public static final int boostPid_iFactor_offset = 996;
+	public static final int boostPid_maxValue_offset = 1010;
+	public static final int boostPid_minValue_offset = 1008;
+	public static final int boostPid_offset = 992;
+	public static final int boostPid_offset_offset = 1004;
+	public static final int boostPid_periodMs_offset = 1006;
+	public static final int boostPid_pFactor_offset = 992;
+	public static final int boostPwmFrequency_offset = 1016;
+	public static final int boostRpmBins_offset = 6320;
+	public static final int boostTableClosedLoop_offset = 6328;
+	public static final int boostTableOpenLoop_offset = 6248;
+	public static final int boostTableOpenLoop_offset_hex = 1868;
+	public static final int boostTpsBins_offset = 6392;
+	public static final int boostType_offset = 1012;
 	public static final int brakePedalPin_offset = 2608;
 	public static final int brakePedalPinMode_offset = 2611;
 	public static final int byFirmwareVersion_offset = 500;
@@ -860,6 +880,7 @@ public class Fields {
 	public static final int is_enabled_spi_3_offset = 744;
 	public static final int is_enabled_spi_4_offset = 744;
 	public static final int isAlternatorControlEnabled_offset = 1464;
+	public static final int isBoostControlEnabled_offset = 1476;
 	public static final int isCJ125Enabled_offset = 744;
 	public static final int isCylinderCleanupEnabled_offset = 1476;
 	public static final int isEngineChartEnabled_offset = 1464;
@@ -919,6 +940,7 @@ public class Fields {
 	public static final int LDS_TRIGGER_STATE_STATE_INDEX = 11;
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int LIS302DLCsPin_offset = 2043;
+	public static final int LOAD_1_BYTE_PACKING_MULT = 2;
 	public static final int logFormat_offset = 496;
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
 	public static final int logicAnalyzerMode_offset = 756;
@@ -1200,6 +1222,7 @@ public class Fields {
 	public static final int tps2_2AdcChannel_offset = 682;
 	public static final int tps2Max_offset = 1770;
 	public static final int tps2Min_offset = 1768;
+	public static final int TPS_1_BYTE_PACKING_MULT = 2;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final int tpsAccelEnrichmentThreshold_offset = 2048;
 	public static final int tpsAccelEnrichmentThreshold_offset_hex = 800;
@@ -1319,7 +1342,6 @@ public class Fields {
 	public static final int unrealisticRpmThreashold_offset = 760;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1234234_offset = 2042;
-	public static final int unused_1484_bit_22_offset = 1476;
 	public static final int unused_1484_bit_23_offset = 1476;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
@@ -1333,7 +1355,7 @@ public class Fields {
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
 	public static final int unused_offset = 972;
 	public static final int unusedAnotherOne_offset = 744;
-	public static final int unusedAtOldBoardConfigurationEnd_offset = 988;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 1020;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_249_10_offset = 976;
 	public static final int unusedBit_249_11_offset = 976;
@@ -1371,6 +1393,7 @@ public class Fields {
 	public static final int unusedFormerWarmupAfrPid_offset = 1772;
 	public static final int unusedHereo_wires_offset = 76;
 	public static final int unusedOldWarmupAfr_offset = 744;
+	public static final int unusedSpace_offset = 990;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
 	public static final int unusedSpiPadding7_offset = 4005;
@@ -1919,6 +1942,17 @@ public class Fields {
 	public static final Field ETBIO2_DIRECTIONPIN2 = Field.create("ETBIO2_DIRECTIONPIN2", 985, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO2_CONTROLPIN1 = Field.create("ETBIO2_CONTROLPIN1", 986, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO2_CONTROLPINMODE = Field.create("ETBIO2_CONTROLPINMODE", 987, FieldType.INT8, pin_output_mode_e);
+	public static final Field BOOSTCONTROLPIN = Field.create("BOOSTCONTROLPIN", 988, FieldType.INT8, output_pin_e);
+	public static final Field BOOSTCONTROLPINMODE = Field.create("BOOSTCONTROLPINMODE", 989, FieldType.INT8, pin_output_mode_e);
+	public static final Field BOOSTPID_PFACTOR = Field.create("BOOSTPID_PFACTOR", 992, FieldType.FLOAT);
+	public static final Field BOOSTPID_IFACTOR = Field.create("BOOSTPID_IFACTOR", 996, FieldType.FLOAT);
+	public static final Field BOOSTPID_DFACTOR = Field.create("BOOSTPID_DFACTOR", 1000, FieldType.FLOAT);
+	public static final Field BOOSTPID_OFFSET = Field.create("BOOSTPID_OFFSET", 1004, FieldType.INT16);
+	public static final Field BOOSTPID_PERIODMS = Field.create("BOOSTPID_PERIODMS", 1006, FieldType.INT16);
+	public static final Field BOOSTPID_MINVALUE = Field.create("BOOSTPID_MINVALUE", 1008, FieldType.INT16);
+	public static final Field BOOSTPID_MAXVALUE = Field.create("BOOSTPID_MAXVALUE", 1010, FieldType.INT16);
+	public static final Field BOOSTTYPE = Field.create("BOOSTTYPE", 1012, FieldType.INT);
+	public static final Field BOOSTPWMFREQUENCY = Field.create("BOOSTPWMFREQUENCY", 1016, FieldType.INT);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -1978,7 +2012,7 @@ public class Fields {
 	public static final Field USETPSADVANCETABLE = Field.create("USETPSADVANCETABLE", 1476, FieldType.BIT, 19);
 	public static final Field ETBCALIBRATIONONSTART = Field.create("ETBCALIBRATIONONSTART", 1476, FieldType.BIT, 20);
 	public static final Field USEIACPIDMULTTABLE = Field.create("USEIACPIDMULTTABLE", 1476, FieldType.BIT, 21);
-	public static final Field UNUSED_1484_BIT_22 = Field.create("UNUSED_1484_BIT_22", 1476, FieldType.BIT, 22);
+	public static final Field ISBOOSTCONTROLENABLED = Field.create("ISBOOSTCONTROLENABLED", 1476, FieldType.BIT, 22);
 	public static final Field UNUSED_1484_BIT_23 = Field.create("UNUSED_1484_BIT_23", 1476, FieldType.BIT, 23);
 	public static final Field UNUSED_1484_BIT_24 = Field.create("UNUSED_1484_BIT_24", 1476, FieldType.BIT, 24);
 	public static final Field UNUSED_1484_BIT_25 = Field.create("UNUSED_1484_BIT_25", 1476, FieldType.BIT, 25);
@@ -2087,7 +2121,7 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2080, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 2084, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2088, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"};
+	public static final String[] debug_mode_e = {"Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2092, FieldType.INT, debug_mode_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
 	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2200, FieldType.INT8, adc_channel_e);
@@ -2291,6 +2325,8 @@ public class Fields {
 	public static final Field IDLERPMPID2_MINVALUE = Field.create("IDLERPMPID2_MINVALUE", 4056, FieldType.INT16);
 	public static final Field IDLERPMPID2_MAXVALUE = Field.create("IDLERPMPID2_MAXVALUE", 4058, FieldType.INT16);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4060, FieldType.INT);
+	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT);
+	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT);
 	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 6400, FieldType.INT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
@@ -2789,6 +2825,17 @@ public class Fields {
 	ETBIO2_DIRECTIONPIN2,
 	ETBIO2_CONTROLPIN1,
 	ETBIO2_CONTROLPINMODE,
+	BOOSTCONTROLPIN,
+	BOOSTCONTROLPINMODE,
+	BOOSTPID_PFACTOR,
+	BOOSTPID_IFACTOR,
+	BOOSTPID_DFACTOR,
+	BOOSTPID_OFFSET,
+	BOOSTPID_PERIODMS,
+	BOOSTPID_MINVALUE,
+	BOOSTPID_MAXVALUE,
+	BOOSTTYPE,
+	BOOSTPWMFREQUENCY,
 	VVTDISPLAYINVERTED,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
@@ -2848,7 +2895,7 @@ public class Fields {
 	USETPSADVANCETABLE,
 	ETBCALIBRATIONONSTART,
 	USEIACPIDMULTTABLE,
-	UNUSED_1484_BIT_22,
+	ISBOOSTCONTROLENABLED,
 	UNUSED_1484_BIT_23,
 	UNUSED_1484_BIT_24,
 	UNUSED_1484_BIT_25,
@@ -3156,6 +3203,8 @@ public class Fields {
 	IDLERPMPID2_MINVALUE,
 	IDLERPMPID2_MAXVALUE,
 	IACPIDMULTTABLE,
+	BOOSTTABLEOPENLOOP,
+	BOOSTTABLECLOSEDLOOP,
 	PEDALTOTPSTABLE,
 	FSIOFORMULAS1,
 	FSIOFORMULAS2,
