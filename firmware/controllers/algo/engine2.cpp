@@ -41,7 +41,7 @@ WarningCodeState::WarningCodeState() {
 void WarningCodeState::clear() {
 	warningCounter = 0;
 	lastErrorCode = 0;
-	timeOfPreviousWarning = -10;
+	timeOfPreviousWarning = DEEP_IN_THE_PAST_SECONDS;
 	recentWarnings.clear();
 }
 

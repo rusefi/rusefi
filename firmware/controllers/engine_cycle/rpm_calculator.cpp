@@ -96,7 +96,7 @@ RpmCalculator::RpmCalculator() {
 	// which we cannot provide inside this parameter-less constructor. need a solution for this minor mess
 
 	// we need this initial to have not_running at first invocation
-	lastRpmEventTimeNt = (efitick_t) -10 * NT_PER_SECOND;
+	lastRpmEventTimeNt = (efitick_t) DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
 }
 
 /**
