@@ -72,6 +72,10 @@ void TriggerCentral::addEventListener(ShaftPositionListener listener, const char
 	triggerListeneres.registerCallback((VoidInt)(void*)listener, engine);
 }
 
+angle_t TriggerCentral::getVVTPosition() {
+	return vvtPosition;
+}
+
 /**
  * @brief Adds a trigger event listener
  *

@@ -46,6 +46,8 @@ public:
 
 	TriggerNoiseFilter noiseFilter;
 
+	angle_t getVVTPosition();
+
 	angle_t vvtPosition = 0;
 	/**
 	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic
