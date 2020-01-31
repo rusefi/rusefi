@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef UNIT_TEST_FRAMEWORK_H_
-#define UNIT_TEST_FRAMEWORK_H_
+#pragma once
 
 #include "engine.h"
 #include "gtest/gtest.h"
@@ -32,4 +31,3 @@ void assertEqualsM(const char *msg, float expected, float actual);
 void assertEqualsLM(const char *msg, long expected, long actual);
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual);
 
-#endif /* UNIT_TEST_FRAMEWORK_H_ */
