@@ -539,8 +539,8 @@ case Force_4_bytes_size_cranking_ignition_mode:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_36:
-  return "DBG_36";
+case DBG_BOOST:
+  return "DBG_BOOST";
 case DBG_37:
   return "DBG_37";
 case DBG_ALTERNATOR_PID:

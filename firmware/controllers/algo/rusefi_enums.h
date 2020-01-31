@@ -654,7 +654,7 @@ typedef enum {
 	DBG_DWELL_METRIC = 33,
 	DBG_AUX_TEMPERATURE = 34,
 	DBG_ETB_LOGIC = 35,
-	DBG_36 = 36,
+	DBG_BOOST = 36,
 	DBG_37 = 37,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
@@ -837,3 +837,8 @@ typedef enum {
 	 */
 	Force_4bytes_size_idle_state_e = ENUM_32_BITS,
 } idle_state_e;
+typedef enum {
+	OPEN_LOOP = 0,
+	CLOSED_LOOP = 1,
+	Force_4bytes_size_boostType_e = ENUM_32_BITS,
+} boostType_e;
