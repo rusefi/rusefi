@@ -124,7 +124,17 @@ TEST(sensors, testNB2CamInput) {
 	}
 	ASSERT_EQ(1200,  GET_RPM()) << "testNB2CamInput RPM";
 
+	// this would be ignored since we only consude one kind the other kind of fronts here
 	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 	eth.moveTimeForwardUs(MS2US(20));
+	// this would be be first VVT signal - gap duration would be calculated against 'DEEP_IN_THE_PAST_SECONDS' initial value
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+
+	eth.moveTimeForwardUs(MS2US(20));
+	// this second important front would give us first real VVT gap duration
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+
+	eth.moveTimeForwardUs(MS2US(130));
+	// this third important front would give us first comparison between two real gaps
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 }
