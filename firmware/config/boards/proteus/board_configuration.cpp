@@ -65,8 +65,8 @@ static void setupVbatt() {
 	// 5.6k high side/10k low side = 1.56 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 1.56f;
 
-	// 47k high side/10k low side = 4.7
-	engineConfiguration->vbattDividerCoeff = (57.0f / 10.0f);
+	// 82k high side/10k low side = 9.2
+	engineConfiguration->vbattDividerCoeff = (92.0f / 10.0f);
 	//engineConfiguration->vbattAdcChannel = TODO;
 
 	engineConfiguration->adcVcc = 3.3f;
@@ -106,9 +106,14 @@ static void setupEtb() {
 	engineConfiguration->etbFreq = 800;
 }
 
+static void setupCanPins() {
+	engineConfiguration->canTxPin = GPIOD_1;
+	engineConfiguration->canRxPin = GPIOD_0;
+}
+
 static void setupDefaultSensorInputs() {
 	// trigger inputs
-	// VR channel 1 as default - others not set
+	// Digital channel 1 as default - others not set
 	engineConfiguration->triggerInputPins[0] = GPIOC_6;
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
@@ -150,6 +155,7 @@ void setBoardConfigurationOverrides(void) {
 	setLedPins();
 	setupVbatt();
 	setupEtb();
+	setupCanPins();
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

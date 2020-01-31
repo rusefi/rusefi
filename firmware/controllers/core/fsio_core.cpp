@@ -10,7 +10,7 @@
  *
  *
  * @date Oct 3, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -103,7 +103,7 @@ void LECalculator::reset(LEElement *element) {
 }
 
 void LECalculator::add(LEElement *element) {
-	if (first == NULL) {
+	if (first == nullptr) {
 		first = element;
 	} else {
 		LEElement *last = first;
@@ -411,7 +411,7 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 	while (true) {
 		line = getNextToken(line, parsingBuffer, sizeof(parsingBuffer));
 
-		if (line == NULL) {
+		if (line == nullptr) {
 			/**
 			 * No more tokens in this line
 			 */
@@ -419,7 +419,7 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 		}
 
 		LEElement *n = next();
-		if (n == NULL) {
+		if (n == nullptr) {
 			return first;
 		}
 
@@ -432,12 +432,12 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 				 * Cannot recognize token
 				 */
 				warning(CUSTOM_ERR_PARSING_ERROR, "unrecognized [%s]", parsingBuffer);
-				return NULL;
+				return nullptr;
 			}
 			n->init(action);
 		}
 
-		if (first == NULL) {
+		if (first == nullptr) {
 			first = n;
 			last = n;
 		} else {

@@ -2,7 +2,7 @@
  * @file	trigger_structure.h
  *
  * @date Dec 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once
@@ -86,6 +86,11 @@ public:
 	 * one primary channel tooth each raising (or falling depending on configuration) front would synchronize
 	 */
 	bool isSynchronizationNeeded;
+	/**
+	 * special case for triggers which do not provide exact TDC location
+	 * For example pick-up in distributor with mechanical ignition firing order control.
+	 */
+	bool shapeWithoutTdc = false;
 	/**
 	 * this flag tells us if we should ignore events on second input channel
 	 * that's the way to ignore noise from the disconnected wire
@@ -227,7 +232,7 @@ public:
 	void addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
 	operation_mode_e getOperationMode() const;
 
-	void initialize(operation_mode_e operationMode, bool needSecondTriggerInput);
+	void initialize(operation_mode_e operationMode);
 	void setTriggerSynchronizationGap(float syncRatio);
 	void setTriggerSynchronizationGap3(int index, float syncRatioFrom, float syncRatioTo);
 	void setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);

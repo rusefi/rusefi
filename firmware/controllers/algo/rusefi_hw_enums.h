@@ -2,7 +2,7 @@
  * @file rusefi_hw_enums.h
  *
  * @date Jun 2, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef RUSEFI_HW_ENUMS_H_
@@ -218,6 +218,20 @@ typedef enum __attribute__ ((__packed__)) {
 
 /* Plase keep updating this define */
 #define BRAIN_PIN_LAST_ONCHIP	GPIOH_15
+
+/* diagnostic for brain pins
+ * can be combination of few bits
+ * defined as bit mask */
+typedef enum __attribute__ ((__packed__))
+{
+	PIN_OK = 0,
+	PIN_OPEN = 0x01,
+	PIN_SHORT_TO_GND = 0x02,
+	PIN_SHORT_TO_BAT = 0x04,
+	PIN_OVERLOAD =	0x08,
+	PIN_DRIVER_OVERTEMP = 0x10,
+	PIN_INVALID = 0x80
+} brain_pin_diag_e;
 
 /**
  * Frankenso analog #1 PC2 ADC12

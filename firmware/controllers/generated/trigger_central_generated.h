@@ -4,7 +4,7 @@
 #ifndef CONTROLLERS_GENERATED_TRIGGER_CENTRAL_GENERATED_H
 #define CONTROLLERS_GENERATED_TRIGGER_CENTRAL_GENERATED_H
 #include "rusefi_types.h"
-#define HW_EVENT_TYPES 6
+#define HW_EVENT_TYPES (2 * PWM_PHASE_MAX_WAVE_PER_PWM)
 // start of trigger_central_s
 struct trigger_central_s {
 	trigger_central_s();

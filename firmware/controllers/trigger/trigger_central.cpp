@@ -3,7 +3,7 @@
  * Here we have a bunch of higher-level methods which are not directly related to actual signal decoding
  *
  * @date Feb 23, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -45,15 +45,13 @@ trigger_central_s::trigger_central_s() : hwEventCounters() {
 }
 
 TriggerCentral::TriggerCentral() : trigger_central_s() {
-	// we need this initial to have not_running at first invocation
-	previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
 
 	clearCallbacks(&triggerListeneres);
 	triggerState.resetTriggerState();
-	resetAccumSignalData();
+	noiseFilter.resetAccumSignalData();
 }
 
-void TriggerCentral::resetAccumSignalData() {
+void TriggerNoiseFilter::resetAccumSignalData() {
 	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
 	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));
 	memset(accumSignalPrevPeriods, 0, sizeof(accumSignalPrevPeriods));
@@ -74,6 +72,10 @@ void TriggerCentral::addEventListener(ShaftPositionListener listener, const char
 	triggerListeneres.registerCallback((VoidInt)(void*)listener, engine);
 }
 
+angle_t TriggerCentral::getVVTPosition() {
+	return vvtPosition;
+}
+
 /**
  * @brief Adds a trigger event listener
  *
@@ -84,7 +86,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
-void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
 		tc->vvtEventRiseCounter++;
@@ -107,8 +109,6 @@ void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX)
 	}
 
 	tc->vvtCamCounter++;
-
-	efitick_t nowNt = getTimeNowNt();
 
 	if (engineConfiguration->vvtMode == MIATA_NB2) {
 		uint32_t currentDuration = nowNt - tc->previousVvtCamTime;
@@ -193,20 +193,20 @@ uint32_t triggerMaxDuration = 0;
 static bool isInsideTriggerHandler = false;
 
 
-void hwHandleShaftSignal(trigger_event_e signal) {
+void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	ScopePerf perf(PE::HandleShaftSignal, static_cast<uint8_t>(signal));
 
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
-	LogTriggerTooth(signal);
+	LogTriggerTooth(signal, timestamp);
 #endif /* EFI_TOOTH_LOGGER */
 
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIG(useNoiselessTriggerDecoder)) {
-		if (!isUsefulSignal(signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (!isUsefulSignal(signal PASS_CONFIG_PARAMETER_SUFFIX)) {
 			return;
 		}
 	}
@@ -216,7 +216,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
 	efiAssertVoid(CUSTOM_ERR_6636, getCurrentRemainingStack() > 128, "lowstck#8");
-	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.handleShaftSignal(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 	triggerReentraint--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
 	isInsideTriggerHandler = false;
@@ -259,7 +259,9 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
  * And then compare between the current period and previous, with some tolerance (allowing for the wheel speed change).
  * @return true if the signal is passed through.
  */
-bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
+		TriggerState * triggerState,
+		trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: find a better place for these defs
 	static const trigger_event_e opposite[6] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING, 
 			SHAFT_3RD_RISING, SHAFT_3RD_FALLING };
@@ -285,8 +287,8 @@ bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE
 	efitick_t allowedPeriod = accumSignalPrevPeriods[os];
 
 	// but first check if we're expecting a gap
-	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState.shaft_is_synchronized && 
-			(triggerState.currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(expectedEventCount[ti]);
+	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->shaft_is_synchronized &&
+			(triggerState->currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(expectedEventCount[ti]);
 	
 	if (isGapExpected) {
 		// usually we need to extend the period for gaps, based on the trigger info
@@ -314,7 +316,7 @@ bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE
 	return false;
 }
 
-void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_CONF_NULL, engine!=NULL, "configuration");
 
 	if (triggerShape.shapeDefinitionError) {
@@ -325,38 +327,29 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		return;
 	}
 
-	nowNt = getTimeNowNt();
-
 	// This code gathers some statistics on signals and compares accumulated periods to filter interference
 	if (CONFIG(useNoiselessTriggerDecoder)) {
-		if (!noiseFilter(nowNt, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
 		// moved here from hwHandleShaftSignal()
-		if (!isUsefulSignal(signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (!isUsefulSignal(signal PASS_CONFIG_PARAMETER_SUFFIX)) {
 			return;
 		}
 	}
 
-	engine->onTriggerSignalEvent(nowNt);
+	engine->onTriggerSignalEvent(timestamp);
 
 	int eventIndex = (int) signal;
-	efiAssertVoid(CUSTOM_ERR_6638, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
+	efiAssertVoid(CUSTOM_TRIGGER_EVENT_TYPE, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
 
-	if (nowNt - previousShaftEventTimeNt > US2NT(US_PER_SECOND_LL)) {
-		/**
-		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not runnig.
-		 * That means we have lost synchronization since the engine is not running :)
-		 */
-		triggerState.onSynchronizationLost(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
-	previousShaftEventTimeNt = nowNt;
 
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(nullptr, engine, signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	triggerState.decodeTriggerEvent(&triggerShape,
+			nullptr, engine, signal, timestamp PASS_CONFIG_PARAMETER_SUFFIX);
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
@@ -364,19 +357,20 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	 */
 	int triggerIndexForListeners;
 	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (operationMode == FOUR_STROKE_CAM_SENSOR ||
-			operationMode == TWO_STROKE) {
+	if (operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == TWO_STROKE) {
 		// That's easy - trigger cycle matches engine cycle
 		triggerIndexForListeners = triggerState.getCurrentIndex();
 	} else {
-		int crankDivider = operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : 4;
+		// todo: should this logic reuse getCycleDuration?
+		bool isCrankDriven = operationMode == FOUR_STROKE_CRANK_SENSOR || operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR;
+		int crankDivider = isCrankDriven ? 2 : 4;
 
 		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 
 		triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	}
 	if (triggerIndexForListeners == 0) {
-		timeAtVirtualZeroNt = nowNt;
+		timeAtVirtualZeroNt = timestamp;
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -385,7 +379,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		return;
 	}
 
-	if (triggerState.isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (triggerState.isValidIndex(&ENGINE(triggerCentral.triggerShape))) {
 		ScopePerf perf(PE::ShaftPositionListeners);
 
 #if TRIGGER_EXTREME_LOGGING
@@ -397,7 +391,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		 */
 		for (int i = 0; i < triggerListeneres.currentListenersCount; i++) {
 			ShaftPositionListener listener = (ShaftPositionListener) (void*) triggerListeneres.callbacks[i];
-			(listener)(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
+			(listener)(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 
 	}
@@ -678,7 +672,7 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	#if EFI_ENGINE_CONTROL
 		ENGINE(initializeTriggerWaveform(logger PASS_ENGINE_PARAMETER_SUFFIX));
-		engine->triggerCentral.resetAccumSignalData();
+		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING

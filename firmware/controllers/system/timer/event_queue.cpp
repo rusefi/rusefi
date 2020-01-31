@@ -8,7 +8,7 @@
  * this data structure is NOT thread safe
  *
  * @date Apr 17, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -36,13 +36,13 @@ bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 /**
  * @return true if inserted into the head of the list
  */
-bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
+bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s action) {
 	ScopePerf perf(PE::EventQueueInsertTask);
 
 #if EFI_UNIT_TEST
 	assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
-	efiAssert(CUSTOM_ERR_ASSERT, callback != NULL, "NULL callback", false);
+	efiAssert(CUSTOM_ERR_ASSERT, action.getCallback() != NULL, "NULL callback", false);
 
 // please note that simulator does not use this code at all - simulator uses signal_executor_sleep
 
@@ -57,7 +57,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 	}
 
 	scheduling->momentX = timeX;
-	scheduling->action.setAction(callback, param);
+	scheduling->action = action;
 	scheduling->isScheduled = true;
 
 	if (head == NULL || timeX < head->momentX) {

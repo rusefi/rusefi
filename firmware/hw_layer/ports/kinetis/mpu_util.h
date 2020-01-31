@@ -2,7 +2,7 @@
  * @file	mpu_util.h
  *
  * @date Jul 27, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
@@ -40,6 +40,9 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 #ifndef ADC_CR2_SWSTART
 #define ADC_CR2_SWSTART ((uint32_t)0x40000000)
 #endif
+
+#define SPI_CR1_8BIT_MODE 0
+#define SPI_CR2_8BIT_MODE 0
 
 #define SPI_CR1_16BIT_MODE SPI_CR1_DFF
 #define SPI_CR2_16BIT_MODE 0

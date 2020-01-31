@@ -2,7 +2,7 @@
  * @file test_fuelCut.cpp
  *
  * @date Mar 22, 2018
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_math.h"

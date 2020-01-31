@@ -2,7 +2,7 @@
  * @file	mpu_util.cpp
  *
  * @date Jul 27, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -77,7 +77,7 @@ EXTERNC int getRemainingStack(thread_t *otp) {
 
 void baseMCUInit(void) {
 	// looks like this holds a random value on start? Let's set a nice clean zero
-        DWT->CYCCNT = 0;
+	DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
 }
@@ -312,6 +312,13 @@ void turnOnSpi(spi_device_e device) {
 				engineConfiguration->spi3MosiMode,
 				engineConfiguration->spi3MisoMode);
 #endif /* STM32_SPI_USE_SPI3 */
+	}
+	if (device == SPI_DEVICE_4) {
+#if STM32_SPI_USE_SPI4
+//		scheduleMsg(&logging, "Turning on SPI4 pins");
+		/* there is no cofiguration fields for SPI4 in engineConfiguration, rely on board init code
+		 * it should set proper functions for SPI4 pins */
+#endif /* STM32_SPI_USE_SPI4 */
 	}
 }
 

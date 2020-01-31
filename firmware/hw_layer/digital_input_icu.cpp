@@ -21,7 +21,7 @@
  * See trigger_input.cpp
  *
  * @date Jun 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "digital_input_icu.h"
@@ -156,6 +156,8 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
  */
 //Nullable
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
+	UNUSED(msg);
+
 	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
 		return NULL;
 	}
@@ -199,7 +201,6 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 		return &ICUD9;
 	}
 #endif
-	firmwareError(CUSTOM_ERR_NOT_INPUT_PIN, "%s: Not input pin %s", msg, hwPortname(hwPin));
 	return (ICUDriver *) NULL;
 }
 

@@ -5,7 +5,7 @@
  * In this file the configuration of TunerStudio is defined
  *
  * @date Oct 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef TUNERSTUDIO_CONFIGURATION_H_
@@ -55,8 +55,6 @@ using scaled_pressure = scaled_channel<uint16_t, PACK_MULT_PRESSURE>;		// 0-2000
 using scaled_angle = scaled_channel<int16_t, PACK_MULT_ANGLE>;			// +-655 degrees at 0.02 degree resolution
 using scaled_voltage = scaled_channel<uint16_t, PACK_MULT_VOLTAGE>;		// 0-65v at 1mV resolution
 using scaled_afr = scaled_channel<uint16_t, PACK_MULT_AFR>;			// 0-65afr at 0.001 resolution
-
-#define PAGE_COUNT 1
 
 typedef struct {
 	uint16_t values[EGT_CHANNEL_COUNT];

@@ -17,7 +17,7 @@
  * http://sourceforge.net/p/rusefi/tickets/24/
  *
  * @date: Apr 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -66,8 +66,8 @@ SingleTimerExecutor::SingleTimerExecutor() {
 	queue.setLateDelay(US2NT(100));
 }
 
-void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
+void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
+	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, action);
 }
 
 /**
@@ -80,9 +80,22 @@ void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs
  * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
  * @param [in] dwell the number of ticks of output duration.
  */
-void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
-		void *param) {
+void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
+	scheduleByTimestampNt(scheduling, US2NT(timeUs), action);
+}
+
+void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitime_t nt, action_s action) {
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
+
+#if EFI_ENABLE_ASSERTS
+	int deltaTimeUs = NT2US(nt - getTimeNowNt());
+
+	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_US) {
+		// we are trying to set callback for too far into the future. This does not look right at all
+		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d", deltaTimeUs);
+		return;
+	}
+#endif
 
 	scheduleCounter++;
 	bool alreadyLocked = true;
@@ -90,7 +103,7 @@ void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeu
 		// this would guard the queue and disable interrupts
 		alreadyLocked = lockAnyContext();
 	}
-	bool needToResetTimer = queue.insertTask(scheduling, US2NT(timeUs), callback, param);
+	bool needToResetTimer = queue.insertTask(scheduling, nt, action);
 	if (!reentrantFlag) {
 		doExecute();
 		if (needToResetTimer) {

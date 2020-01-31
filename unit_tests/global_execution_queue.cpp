@@ -2,7 +2,7 @@
  * global_execution_queue.cpp
  *
  * @date Dec 8, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global_execution_queue.h"
@@ -10,11 +10,11 @@
 bool_t debugSignalExecutor = false;
 extern bool verboseMode;
 
-void TestExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+void TestExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
 	if (debugSignalExecutor) {
 		printf("scheduleTask %d\r\n", delayUs);
 	}
-	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
+	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, action);
 }
 
 int TestExecutor::executeAll(efitime_t now) {
@@ -33,9 +33,13 @@ scheduling_s* TestExecutor::getForUnitTest(int index) {
 	return schedulingQueue.getElementAtIndexForUnitText(index);
 }
 
-void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
+void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
 	if (debugSignalExecutor) {
 		printf("scheduleByTime %d\r\n", timeUs);
 	}
-	schedulingQueue.insertTask(scheduling, timeUs, callback, param);
+	schedulingQueue.insertTask(scheduling, timeUs, action);
+}
+
+void TestExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitick_t timeNt, action_s action) {
+	scheduleByTimestamp(scheduling, NT2US(timeNt), action);
 }

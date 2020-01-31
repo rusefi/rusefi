@@ -3,7 +3,7 @@
  *
  * @date Dec 28, 2013
  * @author Kot_dnz
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * default pinouts in case of SPI2 connected to MMC: PB13 - SCK, PB14 - MISO, PB15 - MOSI, PD4 - CS, 3.3v
  * default pinouts in case of SPI3 connected to MMC: PB3  - SCK, PB4  - MISO, PB5  - MOSI, PD4 - CS, 3.3v
@@ -121,8 +121,8 @@ static void printError(const char *str, FRESULT f_error) {
 	scheduleMsg(&logger, "FATfs Error \"%s\" %d", str, f_error);
 }
 
-static FIL FDLogFile;
-static FIL FDCurrFile;
+static FIL FDLogFile NO_CACHE;
+static FIL FDCurrFile NO_CACHE;
 static int logFileIndex = 1;
 static char logName[_MAX_FILLER + 20];
 

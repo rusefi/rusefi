@@ -3,7 +3,7 @@
  * @brief	EFI-related GPIO code
  *
  * @date Sep 26, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -274,8 +274,6 @@ bool NamedOutputPin::stop() {
 }
 
 void InjectorOutputPin::reset() {
-	overlappingScheduleOffTime = 0;
-	cancelNextTurningInjectorOff = false;
 	overlappingCounter = 0;
 	// todo: this could be refactored by calling some super-reset method
 	currentLogicValue = INITIAL_PIN_STATE;

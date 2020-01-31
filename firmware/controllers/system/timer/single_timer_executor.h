@@ -2,11 +2,10 @@
  * @file single_timer_executor.h
  *
  * @date: Apr 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef SINGLETIMEREXECUTOR_H_
-#define SINGLETIMEREXECUTOR_H_
+#pragma once
 
 #include "scheduler.h"
 #include "event_queue.h"
@@ -14,8 +13,9 @@
 class SingleTimerExecutor : public ExecutorInterface {
 public:
 	SingleTimerExecutor();
-	void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) override;
-	void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) override;
+	void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) override;
+	void scheduleByTimestampNt(scheduling_s *scheduling, efitime_t timeNt, action_s action) override;
+	void scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) override;
 	void onTimerCallback();
 	int timerCallbackCounter;
 	int scheduleCounter;
@@ -30,4 +30,3 @@ private:
 void initSingleTimerExecutorHardware(void);
 void executorStatistics();
 
-#endif /* SINGLETIMEREXECUTOR_H_ */

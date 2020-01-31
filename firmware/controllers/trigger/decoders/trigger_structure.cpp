@@ -2,7 +2,7 @@
  * @file	trigger_structure.cpp
  *
  * @date Jan 20, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -59,16 +59,17 @@ trigger_shape_helper::trigger_shape_helper() {
 
 TriggerWaveform::TriggerWaveform() :
 		wave(switchTimesBuffer, NULL) {
-	initialize(OM_NONE, false);
+	initialize(OM_NONE);
 	wave.channels = h.channels;
 
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 }
 
-void TriggerWaveform::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
+void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	isSynchronizationNeeded = true; // that's default value
 	bothFrontsRequired = false;
-	this->needSecondTriggerInput = needSecondTriggerInput;
+	needSecondTriggerInput = false;
+	shapeWithoutTdc = false;
 	memset(expectedDutyCycle, 0, sizeof(expectedDutyCycle));
 	memset(eventAngles, 0, sizeof(eventAngles));
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
@@ -175,6 +176,13 @@ extern bool printTriggerDebug;
 
 void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
 	UNUSED(useOnlyRisingEdgeForTrigger);
+
+	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? expectedEventCount[0] == 1 : expectedEventCount[0] == 2;
+	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
+	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
+		firmwareError(ERROR_TRIGGER_DRAMA, "trigger constraint violation");
+	}
+
 // todo: move the following logic from below here
 	//	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
 //		expectedEventCount[channelIndex]++;
@@ -189,7 +197,9 @@ void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIn
 void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
-	efiAssertVoid(CUSTOM_ERR_6598, channelIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
+	if (channelIndex == T_SECONDARY) {
+		needSecondTriggerInput = true;
+	}
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
@@ -231,7 +241,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 			SingleChannelStateSequence *wave = &this->wave.channels[i];
 
-			if (wave->pinStates == NULL) {
+			if (wave->pinStates == nullptr) {
 				warning(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");
 				setShapeDefinitionError(true);
 				return;
@@ -524,10 +534,12 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_HONDA_4_24_1:
 		configureHonda_1_4_24(this, true, true, T_CHANNEL_3, T_PRIMARY, 0);
+		shapeWithoutTdc = true;
 		break;
 
 	case TT_HONDA_4_24:
 		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0);
+		shapeWithoutTdc = true;
 		break;
 
 	case TT_HONDA_1_24:

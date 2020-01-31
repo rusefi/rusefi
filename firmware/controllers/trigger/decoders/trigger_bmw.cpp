@@ -2,7 +2,7 @@
  * @file	trigger_bmw.cpp
  *
  * @date May 11, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_bmw.h"
@@ -16,7 +16,7 @@ static inline float addPair(TriggerWaveform *s, float a, float w) {
 }
 
 void configureMiniCooperTriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 //	s->initialState[0] = 1;
 

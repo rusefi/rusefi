@@ -9,7 +9,7 @@
  * orange PWM signal
  *
  * @date Jan 3, 2015
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine.h"
@@ -61,7 +61,7 @@ static msg_t seThread(void *arg) {
 
 		float durationMs = 0 + position * 0.02f;
 
-		engine->executor.scheduleForLater(&servoTurnSignalOff, (int)MS2US(durationMs), (schfunc_t) &servoTachPinLow, pin);
+		engine->executor.scheduleForLater(&servoTurnSignalOff, (int)MS2US(durationMs), { &servoTachPinLow, pin });
 
 
 		chThdSleepMilliseconds(19);

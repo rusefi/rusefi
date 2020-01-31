@@ -6,7 +6,7 @@
  * express myself in C/C++. I am open for suggestions :)
  *
  * @date May 21, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -213,7 +213,7 @@ Engine::Engine(persistent_config_s *config) {
  */
 bool Engine::needToStopEngine(efitick_t nowNt) const {
 	return stopEngineRequestTimeNt != 0 &&
-			nowNt - stopEngineRequestTimeNt	< 3 * US2NT(US_PER_SECOND_LL);
+			nowNt - stopEngineRequestTimeNt	< 3 * NT_PER_SECOND;
 }
 
 int Engine::getGlobalConfigurationVersion(void) const {
@@ -246,13 +246,99 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void Engine::OnTriggerStateDecodingError() {
 	Engine *engine = this;
 	EXPAND_Engine;
-	triggerCentral.triggerState.handleTriggerError(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.debugIntField1 = triggerCentral.triggerState.currentCycle.eventCount[0];
+		tsOutputChannels.debugIntField2 = triggerCentral.triggerState.currentCycle.eventCount[1];
+		tsOutputChannels.debugIntField3 = triggerCentral.triggerState.currentCycle.eventCount[2];
+#endif /* EFI_TUNER_STUDIO */
+	}
+
+	warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d/%d expected %d/%d/%d",
+			triggerCentral.triggerState.currentCycle.eventCount[0],
+			triggerCentral.triggerState.currentCycle.eventCount[1],
+			triggerCentral.triggerState.currentCycle.eventCount[2],
+			TRIGGER_WAVEFORM(expectedEventCount[0]),
+			TRIGGER_WAVEFORM(expectedEventCount[1]),
+			TRIGGER_WAVEFORM(expectedEventCount[2]));
+	triggerCentral.triggerState.setTriggerErrorState();
+
+
+	triggerCentral.triggerState.totalTriggerErrorCounter++;
+	if (CONFIG(verboseTriggerSynchDetails) || (triggerCentral.triggerState.someSortOfTriggerError && !CONFIG(silentTriggerError))) {
+#if EFI_PROD_CODE
+		scheduleMsg(&engineLogger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
+				triggerCentral.triggerState.currentCycle.current_index,
+				TRIGGER_WAVEFORM(expectedEventCount[0]),
+				TRIGGER_WAVEFORM(expectedEventCount[1]),
+				TRIGGER_WAVEFORM(expectedEventCount[2]),
+				triggerCentral.triggerState.currentCycle.eventCount[0],
+				triggerCentral.triggerState.currentCycle.eventCount[1],
+				triggerCentral.triggerState.currentCycle.eventCount[2]);
+#endif /* EFI_PROD_CODE */
+	}
+
 }
 
 void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 	Engine *engine = this;
 	EXPAND_Engine;
+
+	triggerCentral.triggerState.runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+
 	rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+void Engine::OnTriggerSynchronizationLost() {
+	Engine *engine = this;
+	EXPAND_Engine;
+
+	// Needed for early instant-RPM detection
+	engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+void Engine::OnTriggerInvalidIndex(int currentIndex) {
+	Engine *engine = this;
+	EXPAND_Engine;
+	// let's not show a warning if we are just starting to spin
+	if (GET_RPM_VALUE != 0) {
+		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
+		triggerCentral.triggerState.setTriggerErrorState();
+	}
+}
+
+void Engine::OnTriggerSyncronization(bool wasSynchronized) {
+	// We only care about trigger shape once we have synchronized trigger. Anything could happen
+	// during first revolution and it's fine
+	if (wasSynchronized) {
+		Engine *engine = this;
+		EXPAND_Engine;
+
+		/**
+	 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
+	 	 */
+		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(&triggerCentral.triggerShape);
+
+		enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
+
+		// 'triggerStateListener is not null' means we are running a real engine and now just preparing trigger shape
+		// that's a bit of a hack, a sweet OOP solution would be a real callback or at least 'needDecodingErrorLogic' method?
+		if (isDecodingError) {
+			OnTriggerStateDecodingError();
+		}
+
+		engine->triggerErrorDetection.add(isDecodingError);
+
+		if (isTriggerDecoderError(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+			warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
+					TRIGGER_WAVEFORM(expectedEventCount[0]), TRIGGER_WAVEFORM(expectedEventCount[1]),
+					TRIGGER_WAVEFORM(expectedEventCount[2]),
+					triggerCentral.triggerState.currentCycle.eventCount[0],
+					triggerCentral.triggerState.currentCycle.eventCount[1],
+					triggerCentral.triggerState.currentCycle.eventCount[2]);
+		}
+	}
+
 }
 
 
@@ -412,11 +498,6 @@ void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->stopEngineRequestTimeNt = getTimeNowNt();
 	// let's close injectors or else if these happen to be open right now
 	enginePins.stopPins();
-}
-
-void action_s::setAction(schfunc_t callback, void *param) {
-	this->callback = callback;
-	this->param = param;
 }
 
 void action_s::execute() {

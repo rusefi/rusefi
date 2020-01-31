@@ -28,7 +28,7 @@
  * max SPI frequency: 5MHz max
  *
  * @date Nov 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  * @Spilly
  */
 
@@ -47,6 +47,7 @@
 
 #if EFI_PROD_CODE
 #include "pin_repository.h"
+#include "mpu_util.h"
 #endif
 
 #if EFI_HIP_9011
@@ -84,14 +85,20 @@ static Logging *logger;
 // todo: nicer method which would mention SPI speed explicitly?
 
 #if EFI_PROD_CODE
-static SPIConfig hipSpiCfg = { .circular = false,
-		.end_cb = NULL,
-		.ssport = NULL,
-		.sspad = 0,
-		.cr1 = SPI_CR1_MSTR |
-//SPI_CR1_BR_1 // 5MHz
-		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2,
-		.cr2 = 0};
+static SPIConfig hipSpiCfg = {
+	.circular = false,
+	.end_cb = NULL,
+	.ssport = NULL,
+	.sspad = 0,
+	.cr1 =
+		SPI_CR1_MSTR |
+		SPI_CR1_CPHA |
+		//SPI_CR1_BR_1 // 5MHz
+		SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 |
+		SPI_CR1_8BIT_MODE,
+	.cr2 =
+		SPI_CR2_8BIT_MODE
+};
 #endif /* EFI_PROD_CODE */
 
 static void checkResponse(void) {
@@ -216,7 +223,7 @@ void setHip9011FrankensoPinout(void) {
 	}
 }
 
-static void startIntegration(void) {
+static void startIntegration(void *) {
 	if (instance.state == READY_TO_INTEGRATE) {
 		/**
 		 * SPI communication is only allowed while not integrating, so we postpone the exchange
@@ -227,7 +234,7 @@ static void startIntegration(void) {
 	}
 }
 
-static void endIntegration(void) {
+static void endIntegration(void *) {
 	/**
 	 * isIntegrating could be 'false' if an SPI command was pending thus we did not integrate during this
 	 * engine cycle
@@ -241,7 +248,7 @@ static void endIntegration(void) {
 /**
  * Shaft Position callback used to start or finish HIP integration
  */
-static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	(void)ckpEventType;
 	// this callback is invoked on interrupt thread
 	if (index != 0)
@@ -254,14 +261,13 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 
 	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
-	scheduleByAngle(&startTimer[structIndex], engineConfiguration->knockDetectionWindowStart,
-			(schfunc_t) &startIntegration, NULL);
+	scheduleByAngle(&startTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowStart,
+			&startIntegration);
 #if EFI_PROD_CODE
 	hipLastExecutionCount = lastExecutionCount;
 #endif /* EFI_PROD_CODE */
-	scheduleByAngle(&endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd,
-			(schfunc_t) &endIntegration,
-			NULL);
+	scheduleByAngle(&endTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowEnd,
+			&endIntegration);
 	engine->m.hipCbTime = getTimeNowLowerNt() - engine->m.beforeHipCb;
 }
 

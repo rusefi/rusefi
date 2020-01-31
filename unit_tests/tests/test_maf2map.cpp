@@ -2,7 +2,7 @@
  * @file test_maf2map.cpp
  *
  * @date Jan 13, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_test_helper.h"

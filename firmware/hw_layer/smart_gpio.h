@@ -2,7 +2,7 @@
  * @file smart_gpio.h
  *
  * @date Apr 13, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef HW_LAYER_SMART_GPIO_H_

@@ -2,7 +2,7 @@
  * @file	tunerstudio.h
  *
  * @date Aug 26, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef TUNERSTUDIO_H_
@@ -50,8 +50,7 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
  */
 void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
 
-char *getWorkingPageAddr(int pageIndex);
-int getTunerStudioPageSize(int pageIndex);
+char *getWorkingPageAddr();
 void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset, uint8_t value);
 void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, short offset, short count, void *content);
 void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId);

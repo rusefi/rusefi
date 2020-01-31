@@ -3,7 +3,7 @@
  * @brief   Shaft position sensor(s) decoder header
  *
  * @date Jan 1, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once
@@ -165,5 +165,5 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */
 
-void scheduleByAngle(scheduling_s *timer, angle_t angle, schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX);
+void scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle, action_s action DECLARE_ENGINE_PARAMETER_SUFFIX);
 

@@ -11,7 +11,7 @@
  * todo: one emulator should be enough! another one should be eliminated
  *
  * @date Mar 3, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 #include "state_sequence.h"
 #include "global.h"
@@ -45,22 +45,24 @@ EXTERN_ENGINE
 ;
 
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
+	efitick_t stamp = getTimeNowNt();
+	
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
 	MultiChannelStateSequence *multiChannelStateSequence = &state->multiChannelStateSequence;
 
 	if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, 0)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/0, stateIndex);
-		hwHandleShaftSignal(currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING);
+		hwHandleShaftSignal(currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, stamp);
 	}
 
 	if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, 1)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/1, stateIndex);
-		hwHandleShaftSignal(currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
+		hwHandleShaftSignal(currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING, stamp);
 	}
 
 	if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, 2)) {
 		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/2, stateIndex);
-		hwHandleShaftSignal(currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING);
+		hwHandleShaftSignal(currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING, stamp);
 	}
 
 	//	print("hello %d\r\n", chTimeNow());

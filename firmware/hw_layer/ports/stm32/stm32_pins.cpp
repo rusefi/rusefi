@@ -3,7 +3,7 @@
  * @brief	STM32-compatible GPIO code
  *
  * @date Jun 02, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"

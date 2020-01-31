@@ -4,7 +4,7 @@
  * https://rusefi.com/forum/viewtopic.php?f=3&t=1194&start=150#p27784
  *
  * @date Sep 19, 2015
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_nissan.h"
@@ -14,7 +14,7 @@
  * 8,2,2,2 Nissan pattern
  */
 static void initializeNissanSR20VE_4_optional_360(TriggerWaveform *s, bool with2nd) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, with2nd);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->isSynchronizationNeeded = true;
 	s->gapBothDirections = true;
 	s->useOnlyPrimaryForSync = true;

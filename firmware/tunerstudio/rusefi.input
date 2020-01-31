@@ -267,7 +267,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       tpsAccelFuel    = scalar,  U16,     82,     "ms",{1/@@PACK_MULT_MS@@},         0
 
 ; Ignition
-      ignitionAdvance = scalar,  U16,     84,    "deg",{1/@@PACK_MULT_ANGLE@@},       0.0
+      ignitionAdvance = scalar,  S16,     84,    "deg",{1/@@PACK_MULT_ANGLE@@},       0.0
       sparkDwellValue = scalar,  U16,     86,     "ms",{1/@@PACK_MULT_MS@@},       0.0
       coilDutyCycle   = scalar,  U16,     88,      "%",{1/@@PACK_MULT_PERCENT@@},         0
 
@@ -1620,12 +1620,15 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = tpsSensor, "TPS"
 		field = "!See Tools>Calibrate TPS"
 		field = "Throttle1 position sensor",			tps1_1AdcChannel
+		field = "Throttle1 2nd position sensor",		tps1_2AdcChannel
 		field = "Throttle2 position sensor",			tps2_1AdcChannel
+		field = "Throttle2 2nd position sensor",		tps2_2AdcChannel
 		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
 		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
 
 	dialog = pedalSensor, "Accelerator pedal"
 		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
+		field = "Accelerator position 2nd sensor",		throttlePedalPositionSecondAdcChannel
 		field = "Up voltage",					throttlePedalUpVoltage
 		field = "Down (WOT) voltage",				throttlePedalWOTVoltage
 
@@ -1962,8 +1965,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Heater pin",						o2heaterPin
 
 	dialog = egoSettings, "", yAxis
-		panel = egoSettings_IO
-		panel = egoSettings_sensor,	{afr_hwChannel != 16}
+		panel = egoSettings_IO, {enableAemXSeries == 0}
+		panel = egoSettings_sensor,	{afr_hwChannel != 16 && enableAemXSeries == 0}
+		field = "Enable AEM X-Series CANbus",			enableAemXSeries, { canReadEnabled }
 
 ;			Engine->EGT inputs
 	dialog = egtInputs, "EGT inputs"
@@ -2240,6 +2244,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Rise at trigger index",				tachPulseTriggerIndex
 		field = "Pulse duration is duty cycle",			tachPulseDurationAsDutyCycle
 		field = "Pulse duration",						tachPulseDuractionMs
+; todo: finish implementation under #907
+		field = "Pulse per Rev",                        tachPulsePerRev
 
 
 ;			Board->Connection

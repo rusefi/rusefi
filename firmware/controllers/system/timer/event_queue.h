@@ -2,14 +2,13 @@
  * @file event_queue.h
  *
  * @date Apr 17, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "scheduler.h"
 #include "utlist.h"
 
-#ifndef EVENT_SCHEDULER_H_
-#define EVENT_SCHEDULER_H_
+#pragma once
 
 /**
  * this is a large value which is expected to be larger than any real time
@@ -51,7 +50,7 @@ public:
 	/**
 	 * O(size) - linear search in sorted linked list
 	 */
-	bool insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param);
+	bool insertTask(scheduling_s *scheduling, efitime_t timeX, action_s action);
 
 	int executeAll(efitime_t now);
 
@@ -71,4 +70,3 @@ private:
 	efitime_t lateDelay;
 };
 
-#endif /* EVENT_SCHEDULER_H_ */

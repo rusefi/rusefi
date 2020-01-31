@@ -2,7 +2,7 @@
  * @file CJ125.cpp
  *
  * @date: Jun 24, 2016
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  */
 
@@ -15,6 +15,10 @@
 
 #include "adc_inputs.h"
 
+#if EFI_PROD_CODE
+#include "mpu_util.h"
+#endif
+
 //#define CJ125_DEBUG
 //#define CJ125_DEBUG_SPI
 
@@ -25,8 +29,9 @@ EXTERN_ENGINE;
 #include "pin_repository.h"
 
 static Logging *logger;
-static unsigned char tx_buff[2];
-static unsigned char rx_buff[1];
+
+static uint8_t tx_buff[2] NO_CACHE;
+static uint8_t rx_buff[1] NO_CACHE;
 
 static CJ125 globalInstance;
 
@@ -39,8 +44,12 @@ static SPIConfig cj125spicfg = {
 		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
-		.cr1 = SPI_CR1_MSTR | SPI_CR1_CPHA,
-		.cr2 = 0 };
+		.cr1 =
+			SPI_CR1_MSTR | SPI_CR1_CPHA |
+			SPI_CR1_8BIT_MODE,
+		.cr2 =
+			SPI_CR2_8BIT_MODE
+};
 
 static volatile int lastSlowAdcCounter = 0;
 
@@ -71,15 +80,11 @@ static constexpr float lambdaLsu49[] = {
 };
 
 
-static int cjReadRegister(unsigned char regAddr) {
+static uint8_t cjReadRegister(uint8_t regAddr) {
 #if ! EFI_UNIT_TEST
 	spiSelect(driver);
 	tx_buff[0] = regAddr;
 	spiSend(driver, 1, tx_buff);
-	// safety?
-	chThdSleepMilliseconds(10);
-	
-	rx_buff[0] = 0;
 	spiReceive(driver, 1, rx_buff);
 	spiUnselect(driver);
 
@@ -92,7 +97,7 @@ static int cjReadRegister(unsigned char regAddr) {
 #endif /* EFI_UNIT_TEST */
 }
 
-static void cjWriteRegister(unsigned char regAddr, unsigned char regValue) {
+static void cjWriteRegister(uint8_t regAddr, uint8_t regValue) {
 	tx_buff[0] = regAddr;
 	tx_buff[1] = regValue;
 #ifdef CJ125_DEBUG_SPI
@@ -407,12 +412,12 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		case CJ125_PREHEAT:
 			// use constant-speed startup heat-up
 			if (nowNt - instance->prevNt >= CJ125_HEATER_PREHEAT_PERIOD) {
-				float periodSecs = (float)(nowNt - instance->prevNt) / US2NT(US_PER_SECOND_LL);
+				float periodSecs = (float)(nowNt - instance->prevNt) / NT_PER_SECOND;
 				// maintain speed at ~0.4V/sec
 				float preheatDuty = instance->heaterDuty + periodSecs * CJ125_HEATER_PREHEAT_RATE;
 				instance->SetHeater(preheatDuty PASS_ENGINE_PARAMETER_SUFFIX);
 				// If we are heating too long, and there's still no result, then something is wrong...
-				if (nowNt - instance->startHeatingNt > US2NT(US_PER_SECOND_LL) * CJ125_PREHEAT_TIMEOUT) {
+				if (nowNt - instance->startHeatingNt > NT_PER_SECOND * CJ125_PREHEAT_TIMEOUT) {
 					instance->setError(CJ125_ERROR_HEATER_MALFUNCTION PASS_ENGINE_PARAMETER_SUFFIX);
 				}
 				cjPrintData();

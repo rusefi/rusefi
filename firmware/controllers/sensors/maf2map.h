@@ -1,12 +1,11 @@
 /*
  * @file maf2map.h
  *
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  * @date Jan 20, 2018
  */
 
-#ifndef CONTROLLERS_SENSORS_MAF2MAP_H_
-#define CONTROLLERS_SENSORS_MAF2MAP_H_
+#pragma once
 
 #include "table_helper.h"
 
@@ -16,5 +15,3 @@ typedef Map3D<ASIZE, ASIZE, float, float> maf2map_Map3D_t;
 
 void initMaf2Map();
 float estimateMapByRpmAndMaf(int rpm, float maf);
-
-#endif /* CONTROLLERS_SENSORS_MAF2MAP_H_ */

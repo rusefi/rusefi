@@ -2,7 +2,7 @@
  * @file	test_fuel_map.cpp
  *
  * @date Nov 6, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "fuel_math.h"
@@ -115,7 +115,7 @@ TEST(misc, testFuelMap) {
 
 
 static void confgiureFordAspireTriggerWaveform(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	s->addEvent720(53.747, T_SECONDARY, TV_RISE);
 	s->addEvent720(121.90, T_SECONDARY, TV_FALL);

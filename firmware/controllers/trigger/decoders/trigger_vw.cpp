@@ -2,7 +2,7 @@
  * @file trigger_vw.cpp
  *
  * @date Aug 25, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_vw.h"
@@ -11,7 +11,7 @@
 void setVwConfiguration(TriggerWaveform *s) {
 	efiAssertVoid(CUSTOM_ERR_6660, s != NULL, "TriggerWaveform is NULL");
 
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
 	s->isSynchronizationNeeded = true;
 

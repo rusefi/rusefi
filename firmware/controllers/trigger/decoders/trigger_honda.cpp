@@ -2,7 +2,7 @@
  * @file	trigger_honda.cpp
  *
  * @date May 27, 2016
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_honda.h"
@@ -34,7 +34,7 @@ static float addAccordPair3(TriggerWaveform *s, float sb) {
  * http://forum.pgmfi.org/viewtopic.php?f=2&t=15570start=210#p139007
  */
 void configureHondaAccordCDDip(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	s->initialState[T_SECONDARY] = TV_RISE;
 	float sb = 0;
@@ -106,7 +106,7 @@ void configureHonda_1_4_24(TriggerWaveform *s, bool withOneEventSignal, bool wit
 		trigger_wheel_e const oneEventWave,
 		trigger_wheel_e const fourEventWave,
 		float prefix) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 
 	float sb = 5.0f + prefix;
@@ -167,7 +167,7 @@ void configureHonda_1_4_24(TriggerWaveform *s, bool withOneEventSignal, bool wit
 }
 
 void configureHondaCbr600(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->useOnlyPrimaryForSync = true;
 	s->isSynchronizationNeeded = true;
 
@@ -213,8 +213,8 @@ void configureHondaCbr600custom(TriggerWaveform *s) {
 
 	// w = 15
 	float w = 720 / 2 / 24;
-//	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+//	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	s->useOnlyPrimaryForSync = true;
 	s->isSynchronizationNeeded = true;
@@ -284,7 +284,7 @@ void configureHondaCbr600custom(TriggerWaveform *s) {
 }
 
 void configureHondaAccordShifted(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	float sb = S24;
 
@@ -316,7 +316,7 @@ void configureHondaAccordShifted(TriggerWaveform *s) {
 
 void configureOnePlus16(TriggerWaveform *s, operation_mode_e operationMode) {
 	UNUSED(operationMode);
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	int totalTeethCount = 16;
 	int skippedCount = 0;

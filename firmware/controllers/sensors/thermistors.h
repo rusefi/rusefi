@@ -2,11 +2,10 @@
  * @file thermistors.h
  *
  * @date Feb 17, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef THERMISTORS_H_
-#define THERMISTORS_H_
+#pragma once
 
 #include "global.h"
 
@@ -56,4 +55,3 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf, float pullup);
 void setDodgeSensor(ThermistorConf *thermistorConf, float pullup);
 void set10K_4050K(ThermistorConf *thermistorConf, float pullup);
 
-#endif /* THERMISTORS_H_ */

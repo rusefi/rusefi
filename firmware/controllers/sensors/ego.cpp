@@ -1,5 +1,5 @@
 /**
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * EGO Exhaust Gas Oxygen, also known as AFR Air/Fuel Ratio :)
  *
@@ -95,6 +95,10 @@ void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (CONFIG(enableAemXSeries)) {
+		return true;
+	}
+
 #if EFI_CJ125 && HAL_USE_SPI
 	if (CONFIG(isCJ125Enabled)) {
 		return cjHasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -103,7 +107,15 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->afr.hwChannel != EFI_ADC_NONE;
 }
 
+extern float aemXSeriesLambda;
+
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_CAN_SUPPORT
+	if (CONFIG(enableAemXSeries)) {
+		return aemXSeriesLambda * 14.7f;
+	}
+#endif
+
 #if EFI_CJ125 && HAL_USE_SPI
 	if (CONFIG(isCJ125Enabled)) {
 		return cjGetAfr(PASS_ENGINE_PARAMETER_SIGNATURE);

@@ -1,7 +1,7 @@
 /**
  * @date Dec 20, 2013
  *
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  * @author Kot_dnz
  *
  * This file is part of rusEfi - see http://rusefi.com
@@ -284,8 +284,9 @@ int nmea_valid_checksum(const char *message) {
 	char p;
 	int sum = 0;
 	char *starPtr = strrchr(message, '*');
-	if (starPtr == NULL)
+	if (!starPtr) {
 		return NMEA_CHECKSUM_ERR;
+	}
 	char *int_message = starPtr + 1;
 	long checksum = hex2int(int_message, 2);
 

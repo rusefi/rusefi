@@ -1,3 +1,7 @@
+Dec, 28 2019 status:
+* playing with some GDI while waiting for proteus 0.2 and microRusEfi 0.4.6
+* [DONE] top priority is https://github.com/rusefi/rusefi/issues/1011 Fix and expand commit gate check
+
 Nov, 19 2019 status:
 * top priority is https://github.com/rusefi/rusefi/issues/1011 Fix and expand commit gate check
 * [DONE] https://github.com/rusefi/rusefi/issues/796 Missing dwell altogether in some corner cases still should be addressed

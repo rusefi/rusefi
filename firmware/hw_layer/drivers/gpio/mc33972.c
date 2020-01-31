@@ -261,7 +261,7 @@ static THD_FUNCTION(mc33972_driver_thread, p)
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int mc33972_readPad(void *data, brain_pin_e pin) {
+int mc33972_readPad(void *data, unsigned int pin) {
 	struct mc33972_priv *chip;
 
 	if ((pin >= MC33972_INPUTS) || (data == NULL))
@@ -273,19 +273,19 @@ int mc33972_readPad(void *data, brain_pin_e pin) {
 	return !!(chip->i_state & FLAG_PIN(pin));
 }
 
-int mc33972_getDiag(void *data, brain_pin_e pin) {
-	int diag;
+brain_pin_diag_e mc33972_getDiag(void *data, unsigned int pin) {
+	brain_pin_diag_e diag = PIN_OK;
 	struct mc33972_priv *chip;
 
 	if ((pin >= MC33972_INPUTS) || (data == NULL))
-		return -1;
+		return PIN_INVALID;
 
 	chip = (struct mc33972_priv *)data;
 
-	/* one diag for all pins */
-	diag = !!(chip->i_state & FLAG_THERM);
+	/* one diag bit for all pins */
+	if (chip->i_state & FLAG_THERM)
+		diag = PIN_DRIVER_OVERTEMP;
 
-	/* convert to some common enum? */
 	return diag;
 }
 
@@ -342,8 +342,9 @@ int mc33972_add(unsigned int index, const struct mc33972_config *cfg)
 
 	/* check for valid cs.
 	 * DOTO: remove this check? CS can be driven by SPI */
-	if (cfg->spi_config.ssport == NULL)
+	if (!cfg->spi_config.ssport) {
 		return -1;
+	}
 
 	chip = &chips[index];
 

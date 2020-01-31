@@ -7,7 +7,7 @@
  * todo: these is a bit of duplication with dizzySparkOutputPin
  *
  * @date Aug 18, 2015
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "tachometer.h"
@@ -19,12 +19,12 @@ EXTERN_ENGINE;
 
 static scheduling_s tachTurnSignalOff;
 
-static void turnTachPinLow(void) {
+static void turnTachPinLow(void *) {
 	enginePins.tachOut.setLow();
 }
 
 static void tachSignalCallback(trigger_event_e ckpSignalType,
-		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(ckpSignalType);
 	if (index != (uint32_t)engineConfiguration->tachPulseTriggerIndex) {
 		return;
@@ -37,7 +37,7 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	} else {
 		durationMs = engineConfiguration->tachPulseDuractionMs;
 	}
-	engine->executor.scheduleForLater(&tachTurnSignalOff, (int)MS2US(durationMs), (schfunc_t) &turnTachPinLow, NULL);
+	engine->executor.scheduleForLater(&tachTurnSignalOff, (int)MS2US(durationMs), &turnTachPinLow);
 }
 
 void initTachometer(void) {

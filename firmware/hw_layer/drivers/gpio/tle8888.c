@@ -7,7 +7,7 @@
  * All SPI and CS pin in OM_DEFAULT mode
  *
  * @date Mar 25, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * 3.2 Pin Definitions and Functions
  *
@@ -389,7 +389,7 @@ void requestTLE8888initialization(void) {
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int tle8888_writePad(void *data, brain_pin_e pin, int value) {
+int tle8888_writePad(void *data, unsigned int pin, int value) {
 
 	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
 		return -1;

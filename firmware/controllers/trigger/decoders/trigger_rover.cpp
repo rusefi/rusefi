@@ -3,7 +3,7 @@
  *
  * @date Dec 27, 2015
  * @author PhilTheGeek
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_rover.h"
@@ -12,7 +12,7 @@
  * https://en.wikipedia.org/wiki/Rover_K-series_engine
  */
 void initializeRoverK(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
 	float tooth = 20;
 

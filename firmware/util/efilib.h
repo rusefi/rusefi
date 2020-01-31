@@ -2,7 +2,7 @@
  * @file	efilib.h
  *
  * @date Feb 21, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #ifndef EFILIB_H_
@@ -14,9 +14,9 @@
 
 // http://en.wikipedia.org/wiki/Endianness
 
-#define SWAP_UINT16(x) ((x) << 8) | ((x) >> 8)
+#define SWAP_UINT16(x) (((x) << 8) | ((x) >> 8))
 
-#define SWAP_UINT32(x) (((x) >> 24) & 0xff) | (((x) << 8) & 0xff0000) | (((x) >> 8) & 0xff00) | (((x) << 24) & 0xff000000)
+#define SWAP_UINT32(x) ((((x) >> 24) & 0xff) | (((x) << 8) & 0xff0000) | (((x) >> 8) & 0xff00) | (((x) << 24) & 0xff000000))
 
 // human-readable IDs start from 1 while computer-readbale indexes start from 0
 #define ID2INDEX(id) ((id) - 1)

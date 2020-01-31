@@ -3,7 +3,7 @@
  * @brief This file is about configuring engine via the human-readable protocol
  *
  * @date Dec 30, 2012
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -82,8 +82,11 @@ void printFloatArray(const char *prefix, float array[], int size) {
 }
 
 void printSpiState(Logging *logger, const engine_configuration_s *engineConfiguration) {
-	scheduleMsg(logger, "spi 1=%s/2=%s/3=%s", boolToString(engineConfiguration->is_enabled_spi_1),
-			boolToString(engineConfiguration->is_enabled_spi_2), boolToString(engineConfiguration->is_enabled_spi_3));
+	scheduleMsg(logger, "spi 1=%s/2=%s/3=%s/4=%s",
+		boolToString(engineConfiguration->is_enabled_spi_1),
+		boolToString(engineConfiguration->is_enabled_spi_2),
+		boolToString(engineConfiguration->is_enabled_spi_3),
+		boolToString(engineConfiguration->is_enabled_spi_4));
 }
 
 extern engine_configuration_s *engineConfiguration;

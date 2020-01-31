@@ -2,13 +2,13 @@
  * @file	trigger_mitsubishi.cpp
  *
  * @date Aug 5, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "trigger_mitsubishi.h"
 
 void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->isSynchronizationNeeded = false;
 
 	float x = 121.90;
@@ -32,7 +32,7 @@ void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
  * TT_MITSUBISHI = 11
  */
 void initializeMitsubishi4g18(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->useRiseEdge = false;
 
 	s->setTriggerSynchronizationGap(1.6666);

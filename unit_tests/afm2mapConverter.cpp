@@ -2,7 +2,7 @@
  * @file afm2mapConverter.cpp
  *
  * Helper code for https://github.com/rusefi/rusefi/issues/538 conversion RPM,MAP>MAF to RPM,MAF>MAP
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  * @date Jan 20, 2018
  */
 

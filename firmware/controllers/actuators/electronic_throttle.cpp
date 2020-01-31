@@ -2,6 +2,9 @@
  * @file	electronic_throttle.cpp
  * @brief	Electronic Throttle driver
  *
+ *
+ * Limited user documentation at https://github.com/rusefi/rusefi_documentation/wiki/HOWTO_electronic_throttle_body
+ *
  * todo: make this more universal if/when we get other hardware options
  *
  * Sep 2019 two-wire TLE9201 official driving around the block! https://www.youtube.com/watch?v=1vCeICQnbzI
@@ -49,7 +52,7 @@
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
  *
  * @date Dec 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -686,7 +689,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!engine->engineState.hasEtbPedalPositionSensor) {
 		return;
 	}
-	engine->etbActualCount = hasTps2(PASS_ENGINE_PARAMETER_SIGNATURE) ? 2 : 1;
+	engine->etbActualCount = hasSecondThrottleBody(PASS_ENGINE_PARAMETER_SIGNATURE) ? 2 : 1;
 
 #if 0
 	// not alive code

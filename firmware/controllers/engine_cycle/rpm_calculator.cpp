@@ -10,7 +10,7 @@
  * instant RPM instead of cycle RPM more often.
  *
  * @date Jan 1, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "globalaccess.h"
@@ -96,7 +96,7 @@ RpmCalculator::RpmCalculator() {
 	// which we cannot provide inside this parameter-less constructor. need a solution for this minor mess
 
 	// we need this initial to have not_running at first invocation
-	lastRpmEventTimeNt = (efitick_t) -10 * US2NT(US_PER_SECOND_LL);
+	lastRpmEventTimeNt = (efitick_t) DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
 }
 
 /**
@@ -118,11 +118,11 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUF
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	bool noRpmEventsForTooLong = nowNt - lastRpmEventTimeNt >= US2NT(NO_RPM_EVENTS_TIMEOUT_SECS * US_PER_SECOND_LL); // Anything below 60 rpm is not running
+	bool noRpmEventsForTooLong = nowNt - lastRpmEventTimeNt >= NT_PER_SECOND * NO_RPM_EVENTS_TIMEOUT_SECS; // Anything below 60 rpm is not running
 	/**
 	 * Also check if there were no trigger events
 	 */
-	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.previousShaftEventTimeNt >= US2NT(US_PER_SECOND_LL);
+	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.triggerState.previousShaftEventTimeNt >= NT_PER_SECOND;
 	if (noRpmEventsForTooLong || noTriggerEventsForTooLong) {
 		return false;
 	}
@@ -227,8 +227,7 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFI
  * This callback is invoked on interrupt thread.
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
-		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efitick_t nowNt = getTimeNowNt();
+		uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_ERR_6632, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstckRCL");
 
 	RpmCalculator *rpmState = &engine->rpmCalculator;
@@ -251,7 +250,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 				rpmState->setRpmValue(NOISY_RPM PASS_ENGINE_PARAMETER_SUFFIX);
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
-				float rpm = 60.0 * US2NT(US_PER_SECOND_LL) * mult / diffNt;
+				float rpm = 60.0 * NT_PER_SECOND * mult / diffNt;
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm PASS_ENGINE_PARAMETER_SUFFIX);
 			}
 		}
@@ -313,7 +312,7 @@ static void onTdcCallback(Engine *engine) {
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
 static void tdcMarkCallback(trigger_event_e ckpSignalType,
-		uint32_t index0 DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		uint32_t index0, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
@@ -322,8 +321,8 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 		int rpm = GET_RPM();
 		// todo: use tooth event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
-			scheduleByAngle(&tdcScheduler[revIndex2], tdcPosition(),
-					(schfunc_t) onTdcCallback, engine PASS_ENGINE_PARAMETER_SUFFIX);
+			scheduleByAngle(&tdcScheduler[revIndex2], edgeTimestamp, tdcPosition(),
+					{ onTdcCallback, engine } PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 }
@@ -361,10 +360,14 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * The callback would be executed once after the duration of time which
  * it takes the crankshaft to rotate to the specified angle.
  */
-void scheduleByAngle(scheduling_s *timer, angle_t angle,
-		schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle,
+		action_s action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
-	ENGINE(executor.scheduleForLater(timer, (int) delayUs, callback, param));
+
+	efitime_t delayNt = US2NT(delayUs);
+	efitime_t delayedTime = edgeTimestamp + delayNt;
+
+	ENGINE(executor.scheduleByTimestampNt(timer, delayedTime, action));
 }
 
 #else

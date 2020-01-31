@@ -153,8 +153,9 @@ int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, v
 	}
 
 	/* no free chips left */
-	if (chip == NULL)
+	if (!chip) {
 		return -1;
+	}
 
 	/* register chip */
 	chip->name = name;
@@ -280,6 +281,27 @@ int gpiochips_readPad(brain_pin_e pin)
 		return chip->ops->readPad(chip->priv, pin - chip->base);
 
 	return -1;
+}
+
+/**
+ * @brief Get diagnostic for given gpio
+ * @details actual output value depent on gpiochip capabilities
+ * returns -1 in case of pin not belong to any gpio chip
+ * returns PIN_OK in case of chip does not support getting diagnostic
+ * else return brain_pin_diag_e from gpiochip driver;
+ */
+
+brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin)
+{
+	struct gpiochip *chip = gpiochip_find(pin);
+
+	if (!chip)
+		return PIN_INVALID;
+
+	if (chip->ops->getDiag)
+		return chip->ops->getDiag(chip->priv, pin - chip->base);
+
+	return PIN_OK;
 }
 
 /**

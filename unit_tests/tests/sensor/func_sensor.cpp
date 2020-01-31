@@ -1,4 +1,5 @@
 #include "functional_sensor.h"
+#include "global.h"
 
 #include <gtest/gtest.h>
 
@@ -14,7 +15,7 @@ struct DoublerFunc final : public SensorConverter {
 class SensorConverted : public ::testing::Test {
 protected:
 	SensorConverted()
-		: dut(SensorType::Clt) {}
+		: dut(SensorType::Clt, MS2NT(50)) {}
 
 	void SetUp() override {
 		dut.setFunction(func);
@@ -38,7 +39,7 @@ TEST_F(SensorConverted, TestValid) {
 		EXPECT_FALSE(s.Valid);
 	}
 
-	dut.postRawValue(25);
+	dut.postRawValue(25, 0);
 
 	// Should be valid, with a value of 25*2 = 50
 	{
@@ -57,7 +58,7 @@ TEST_F(SensorConverted, TestInvalid) {
 		EXPECT_FALSE(s.Valid);
 	}
 
-	dut.postRawValue(-25);
+	dut.postRawValue(-25, 0);
 
 	// Should be invalid, with a value of -25*2 = 0
 	{

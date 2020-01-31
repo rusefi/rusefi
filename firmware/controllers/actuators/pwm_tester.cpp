@@ -3,7 +3,7 @@
  * This is a tool to measure rusEfi PWM generation quality
  *
  * @date Apr 29, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -73,7 +73,7 @@ static void testCallback(void *arg) {
 	/**
 	 * this would re-schedule another callback in 2ms from now
 	 */
-	engine->executor.scheduleForLater("test", &ioTest, MS2US(2), testCallback, NULL);
+	engine->executor.scheduleForLater("test", &ioTest, MS2US(2), testCallback);
 }
 
 void initPwmTester(void) {
@@ -97,7 +97,7 @@ void initPwmTester(void) {
 	/**
 	 * this would schedule a callback in 2ms from now
 	 */
-	engine->executor.scheduleForLater("test", &ioTest, MS2US(2), testCallback, NULL);
+	engine->executor.scheduleForLater("test", &ioTest, MS2US(2), testCallback);
 }
 
 #endif

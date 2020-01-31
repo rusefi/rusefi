@@ -4,7 +4,7 @@
  *
  *
  * @date Feb 9, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once
@@ -19,8 +19,8 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void startSimultaniousInjection(Engine *engine);
 void endSimultaniousInjection(InjectionEvent *event);
-void seTurnPinHigh(InjectionEvent *event);
-void seTurnPinLow(InjectionEvent *event);
+void turnInjectionPinHigh(InjectionEvent *event);
+void turnInjectionPinLow(InjectionEvent *event);
 
 // reset injection switch counter if the engine started spinning
 void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE);

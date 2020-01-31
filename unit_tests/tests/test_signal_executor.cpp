@@ -2,7 +2,7 @@
  * @file	test_signal_executor.cpp
  *
  * @date Nov 28, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -34,7 +34,7 @@ static void complexCallback(TestPwm *testPwm) {
 	callbackCounter++;
 
 	eq.insertTask(&testPwm->s, complexTestNow + testPwm->period,
-			(schfunc_t) complexCallback, testPwm);
+			{ complexCallback, testPwm });
 }
 
 static void testSignalExecutor2(void) {
@@ -47,8 +47,8 @@ static void testSignalExecutor2(void) {
 
 	complexTestNow = 0;
 	callbackCounter = 0;
-	eq.insertTask(&p1.s, 0, (schfunc_t) complexCallback, &p1);
-	eq.insertTask(&p2.s, 0, (schfunc_t) complexCallback, &p2);
+	eq.insertTask(&p1.s, 0, { complexCallback, &p1 });
+	eq.insertTask(&p2.s, 0, { complexCallback, &p2 });
 	eq.executeAll(complexTestNow);
 	ASSERT_EQ( 2,  callbackCounter) << "callbackCounter #1";
 	ASSERT_EQ(2, eq.size());
@@ -83,9 +83,9 @@ static void testSignalExecutor3(void) {
 	scheduling_s s2;
 	scheduling_s s3;
 
-	eq.insertTask(&s1, 10, orderCallback, (void*)1);
-	eq.insertTask(&s2, 11, orderCallback, (void*)2);
-	eq.insertTask(&s3, 12, orderCallback, (void*)3);
+	eq.insertTask(&s1, 10, { orderCallback, (void*)1 });
+	eq.insertTask(&s2, 11, { orderCallback, (void*)2 });
+	eq.insertTask(&s3, 12, { orderCallback, (void*)3 });
 
 	eq.executeAll(100);
 }
@@ -101,10 +101,10 @@ TEST(misc, testSignalExecutor) {
 	scheduling_s s3;
 	scheduling_s s4;
 
-	eq.insertTask(&s1, 10, callback, NULL);
-	eq.insertTask(&s4, 10, callback, NULL);
-	eq.insertTask(&s3, 12, callback, NULL);
-	eq.insertTask(&s2, 11, callback, NULL);
+	eq.insertTask(&s1, 10, callback);
+	eq.insertTask(&s4, 10, callback);
+	eq.insertTask(&s3, 12, callback);
+	eq.insertTask(&s2, 11, callback);
 
 	ASSERT_EQ(4, eq.size());
 	ASSERT_EQ(10, eq.getHead()->momentX);
@@ -121,9 +121,9 @@ TEST(misc, testSignalExecutor) {
 	eq.executeAll(100);
 	ASSERT_EQ(0, eq.size());
 
-	eq.insertTask(&s1, 12, callback, NULL);
-	eq.insertTask(&s2, 11, callback, NULL);
-	eq.insertTask(&s3, 10, callback, NULL);
+	eq.insertTask(&s1, 12, callback);
+	eq.insertTask(&s2, 11, callback);
+	eq.insertTask(&s3, 10, callback);
 	callbackCounter = 0;
 	eq.executeAll(10);
 	ASSERT_EQ( 1,  callbackCounter) << "callbackCounter/1#2";
@@ -134,7 +134,7 @@ TEST(misc, testSignalExecutor) {
 	ASSERT_EQ(0, eq.size());
 
 	callbackCounter = 0;
-	eq.insertTask(&s1, 10, callback, NULL);
+	eq.insertTask(&s1, 10, callback);
 	ASSERT_EQ(10, eq.getNextEventTime(0));
 
 	eq.executeAll(1);
@@ -145,8 +145,8 @@ TEST(misc, testSignalExecutor) {
 
 	ASSERT_EQ(EMPTY_QUEUE, eq.getNextEventTime(0));
 
-	eq.insertTask(&s1, 10, callback, NULL);
-	eq.insertTask(&s2, 13, callback, NULL);
+	eq.insertTask(&s1, 10, callback);
+	eq.insertTask(&s2, 13, callback);
 	ASSERT_EQ(10, eq.getNextEventTime(0));
 
 	eq.executeAll(1);
@@ -156,8 +156,8 @@ TEST(misc, testSignalExecutor) {
 	ASSERT_EQ(0, eq.size());
 	callbackCounter = 0;
 	// both events are scheduled for the same time
-	eq.insertTask(&s1, 10, callback, NULL);
-	eq.insertTask(&s2, 10, callback, NULL);
+	eq.insertTask(&s1, 10, callback);
+	eq.insertTask(&s2, 10, callback);
 
 	eq.executeAll(11);
 

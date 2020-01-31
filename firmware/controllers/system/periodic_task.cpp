@@ -2,7 +2,7 @@
  * @file periodic_task.cpp
  *
  * @date: Jul 8, 2019
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "periodic_task.h"

@@ -5,7 +5,7 @@
  * @note this file should probably not include any other files
  *
  * @date Jan 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once
@@ -181,6 +181,8 @@ typedef enum {
 
 	PROTEUS = 61,
 
+	VW_B6 = 62,
+
 	/**
 	 * this configuration has as few pins configured as possible
 	 */
@@ -334,6 +336,7 @@ typedef enum {
 	TV_RISE = 1
 } trigger_value_e;
 
+// see also PWM_PHASE_MAX_WAVE_PER_PWM
 // todo: better names?
 typedef enum {
 	T_PRIMARY = 0,
@@ -343,6 +346,7 @@ typedef enum {
 	T_NONE = 15
 } trigger_wheel_e;
 
+// see also 'HW_EVENT_TYPES'
 typedef enum {
 	SHAFT_PRIMARY_FALLING = 0,
 	SHAFT_PRIMARY_RISING = 1,

@@ -2,7 +2,7 @@
  * @file	tunerstudio_io.cpp
  *
  * @date Mar 8, 2015
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
@@ -176,7 +176,7 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 	int transferred = size;
 	uartSendTimeout(TS_UART_DEVICE, (size_t *)&transferred, buffer, BINARY_IO_TIMEOUT);
 #else
-	if (tsChannel->channel == NULL)
+	if (tsChannel->channel == nullptr)
 		return;
 
 //	int transferred = chnWriteTimeout(tsChannel->channel, buffer, size, BINARY_IO_TIMEOUT);
@@ -214,7 +214,7 @@ int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int 
 	uartReceiveTimeout(TS_UART_DEVICE, &received, buffer, timeout);
 	return (int)received;
 #else /* TS_UART_DMA_MODE */
-	if (tsChannel->channel == NULL)
+	if (tsChannel->channel == nullptr)
 		return 0;
 	return chnReadTimeout(tsChannel->channel, (uint8_t * )buffer, size, timeout);
 #endif /* TS_UART_DMA_MODE */

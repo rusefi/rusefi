@@ -2,7 +2,7 @@
  * @file	engine.h
  *
  * @date May 21, 2014
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #pragma once
@@ -56,8 +56,13 @@ public:
 
 	IEtbController *etbControllers[ETB_COUNT];
 
-	void OnTriggerStateDecodingError() override;
+	cyclic_buffer<int> triggerErrorDetection;
+
+	void OnTriggerStateDecodingError();
 	void OnTriggerStateProperState(efitick_t nowNt) override;
+	void OnTriggerSyncronization(bool wasSynchronized) override;
+	void OnTriggerInvalidIndex(int currentIndex) override;
+	void OnTriggerSynchronizationLost() override;
 
 	void setConfig(persistent_config_s *config);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
