@@ -22,6 +22,12 @@
 // milliseconds to ticks
 #define MS2NT(msTime) US2NT(MS2US(msTime))
 
+/**
+ * We use this 'deep in past, before ECU has ever started' value as a way to unify
+ * handling of first ever event and an event which has happened after a large pause in engine activity
+ */
+#define DEEP_IN_THE_PAST_SECONDS -10
+
 // todo: implement a function to work with times considering counter overflow
 #define overflowDiff(now, time) ((now) - (time))
 
