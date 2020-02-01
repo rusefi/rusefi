@@ -744,14 +744,19 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 
     output_pin_e boostControlPin;
 	pin_output_mode_e boostControlPinMode;
+
     uint8_t[2] unusedSpace;
+
 
     pid_s boostPid;
 	custom boostType_e 4 bits,   U32,   @OFFSET@, [0:0], "Open Loop",  "Closed Loop"
     boostType_e boostType;
     int boostPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
 
+
 	int[111] unusedAtOldBoardConfigurationEnd;
+
+
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.

@@ -49,7 +49,7 @@
 #include "engine_configuration.h"
 #include "aux_pid.h"
 #include "perf_trace.h"
-
+#include "boost_control.h"
 #if EFI_MC33816
 #include "mc33816.h"
 #endif /* EFI_MC33816 */
@@ -345,6 +345,9 @@ void applyNewHardwareSettings(void) {
 	stopHD44780_pins();
 #endif /* #if EFI_HD44780_LCD */
 
+#if EFI_BOOST_CONTROL
+	stopBoostPin();
+#endif
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode))
 		brain_pin_markUnused(activeConfiguration.clutchUpPin);
 
@@ -390,6 +393,9 @@ void applyNewHardwareSettings(void) {
 	startVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
 
+#if EFI_BOOST_CONTROL
+	startBoostPin();
+#endif
 #if EFI_AUX_PID
 	startAuxPins();
 #endif /* EFI_AUX_PID */
