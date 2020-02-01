@@ -2513,33 +2513,33 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 ;Boost Open Loop
 
-    dialog = boost_left, ""
-        field = "Enable",                           isBoostControlEnabled
-        field = "Control Mode",                     boostType, { isBoostControlEnabled }
+        dialog = boost_left, ""
+                field = "Enable",                           isBoostControlEnabled
+                field = "Control Mode",                     boostType, { isBoostControlEnabled }
 		field = "Output",							boostControlPin, { isBoostControlEnabled }
 		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
 		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled } 
 		
-    dialog = boostDialog, "", border
-        panel = boost_left, West
-        panel = boostTableTbl, Center
+         dialog = boostDialog, "", border
+                panel = boost_left, West
+                panel = boostTableTbl, Center
 
 ;Boost Closed Loop
 
-    dialog = boostPidleft, ""
-       field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }				
-	   field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }			
-	   field = "D Gain",                            boostPid_dFactor, { isBoostControlEnabled && boostType == 1 }						
-	   field = "Control Period",                    boostPid_periodMs, { isBoostControlEnabled && boostType == 1 }			
-	   field = "Min Duty",                          boostPid_minValue, { isBoostControlEnabled && boostType == 1 }			
-	   field = "Max Duty",                          boostPid_maxValue, { isBoostControlEnabled && boostType == 1 }	
+         dialog = boostPidleft, ""
+                field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }				
+	        field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }			
+	        field = "D Gain",                            boostPid_dFactor, { isBoostControlEnabled && boostType == 1 }						
+	        field = "Control Period",                    boostPid_periodMs, { isBoostControlEnabled && boostType == 1 }			
+	        field = "Min Duty",                          boostPid_minValue, { isBoostControlEnabled && boostType == 1 }			
+	        field = "Max Duty",                          boostPid_maxValue, { isBoostControlEnabled && boostType == 1 }	
 
-    dialog = boostTableDialog, "", card
-       panel = boostTable2Tbl
+         dialog = boostTableDialog, "", card
+                panel = boostTable2Tbl
 
 	dialog = boostPidDialog, "", border
-        panel = boostPidleft, West
-        panel = boostTableDialog, Center	
+                panel = boostPidleft, West
+                panel = boostTableDialog, Center	
 				
 	help = veTableDialogHelp, "Volumetric Efficiency"
         text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"
