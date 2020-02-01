@@ -183,6 +183,8 @@ typedef enum {
 
 	VW_B6 = 62,
 
+	BMW_M73_PROTEUS = 63,
+
 	/**
 	 * this configuration has as few pins configured as possible
 	 */
@@ -837,6 +839,7 @@ typedef enum {
 	 */
 	Force_4bytes_size_idle_state_e = ENUM_32_BITS,
 } idle_state_e;
+
 typedef enum {
 	OPEN_LOOP = 0,
 	CLOSED_LOOP = 1,
