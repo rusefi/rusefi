@@ -360,7 +360,7 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * The callback would be executed once after the duration of time which
  * it takes the crankshaft to rotate to the specified angle.
  */
-void scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle,
+efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle,
 		action_s action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
 
@@ -368,6 +368,8 @@ void scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle
 	efitime_t delayedTime = edgeTimestamp + delayNt;
 
 	ENGINE(executor.scheduleByTimestampNt(timer, delayedTime, action));
+
+	return delayedTime;
 }
 
 #else
