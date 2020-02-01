@@ -137,7 +137,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_INTAKE_VVT:
 	case LE_METHOD_EXHAUST_VVT:
-		return engine->triggerCentral.vvtPosition;
+		return engine->triggerCentral.getVVTPosition();
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return getTimeNowSeconds();
 

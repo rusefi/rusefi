@@ -426,7 +426,7 @@ void printTPSInfo(void) {
 
 
 #endif /* EFI_PROD_CODE */
-	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", getTPS10bitAdc(), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
+	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", (int)getTPS10bitAdc(0), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
 			getTpsRateOfChange());
 }
 

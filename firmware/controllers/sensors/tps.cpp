@@ -11,6 +11,9 @@
 
 EXTERN_ENGINE;
 
+// Scaled to 1000 counts = 5.0 volts
+#define TPS_TS_CONVERSION 200
+
 /**
  * set mock_pedal_position X
  * See also directPwmValue
@@ -22,7 +25,7 @@ percent_t mockPedalPosition = MOCK_UNDEFINED;
  * this allows unit tests to simulate TPS position
  */
 void setMockTpsAdc(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	engine->mockTpsAdcValue = TPS_TS_CONVERSION * tpsPosition;
+	engine->mockTpsAdcValue = tpsPosition;
 }
 
 void setMockTpsValue(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -78,7 +81,7 @@ float getTpsRateOfChange(void) {
  * Return current TPS position based on configured ADC levels, and adc
  *
  * */
-percent_t getTpsValue(int index, int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
+percent_t getTpsValue(int index, float adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	DISPLAY_STATE(Engine)
 	DISPLAY_TAG(TPS_SECTION);
@@ -117,8 +120,7 @@ percent_t getTpsValue(int index, int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int tpsMax = index == 0 ? CONFIG(tpsMax) : CONFIG(tps2Max);
 	int tpsMin = index == 0 ? CONFIG(tpsMin) : CONFIG(tps2Min);
 
-	float result = interpolateMsg("TPS", TPS_TS_CONVERSION * tpsMax, 100,
-			TPS_TS_CONVERSION * tpsMin, 0, adc);
+	float result = interpolateMsg("TPS", tpsMax, 100, tpsMin, 0, adc);
 	if (result < engineConfiguration->tpsErrorDetectionTooLow) {
 #if EFI_PROD_CODE
 		// too much noise with simulator
@@ -149,7 +151,7 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * wants a TPS value.
  * @param index [0, ETB_COUNT)
  */
-int getTPS12bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getTPS10bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_PROD_CODE
 	if (engine->mockTpsAdcValue != MOCK_UNDEFINED) {
 		return engine->mockTpsAdcValue;
@@ -160,9 +162,9 @@ int getTPS12bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 
 	if (index == 0) {
-		return getAdcValue("tps10", engineConfiguration->tps1_1AdcChannel);
+		return convertVoltageTo10bitADC(getVoltageDivided("tps10", engineConfiguration->tps1_1AdcChannel));
 	} else {
-		return getAdcValue("tps20", engineConfiguration->tps2_1AdcChannel);
+		return convertVoltageTo10bitADC(getVoltageDivided("tps20", engineConfiguration->tps2_1AdcChannel));
 	}
 	//	return tpsFastAdc / 4;
 #else
@@ -173,7 +175,7 @@ int getTPS12bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void grabTPSIsClosed() {
 #if EFI_PROD_CODE
 	printTPSInfo();
-	engineConfiguration->tpsMin = getTPS10bitAdc();
+	engineConfiguration->tpsMin = getTPS10bitAdc(0);
 	printTPSInfo();
 #endif /* EFI_PROD_CODE */
 }
@@ -181,7 +183,7 @@ void grabTPSIsClosed() {
 void grabTPSIsWideOpen() {
 #if EFI_PROD_CODE
 	printTPSInfo();
-	engineConfiguration->tpsMax = getTPS10bitAdc();
+	engineConfiguration->tpsMax = getTPS10bitAdc(0);
 	printTPSInfo();
 #endif /* EFI_PROD_CODE */
 }
@@ -206,7 +208,7 @@ void grabPedalIsWideOpen() {
  * @brief Position on physical primary TPS
  */
 static percent_t getPrimaryRawTPS(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	int adcValue = getTPS12bitAdc(index PASS_ENGINE_PARAMETER_SUFFIX);
+	float adcValue = getTPS10bitAdc(index PASS_ENGINE_PARAMETER_SUFFIX);
 	percent_t tpsValue = getTpsValue(index, adcValue PASS_ENGINE_PARAMETER_SUFFIX);
 	return tpsValue;
 }
@@ -268,5 +270,5 @@ void setBosch0280750009(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 int convertVoltageTo10bitADC(float voltage) {
 	// divided by 2 because of voltage divider, then converted into 10bit ADC value (TunerStudio format)
-	return (int) (voltage / 2 * 1024 / 3.3);
+	return (int) (voltage * TPS_TS_CONVERSION);
 }

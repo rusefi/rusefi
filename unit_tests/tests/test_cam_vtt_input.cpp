@@ -110,3 +110,38 @@ TEST(sensors, testCamInput) {
 
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
 }
+
+TEST(sensors, testNB2CamInput) {
+	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
+
+	// this crank trigger would be easier to test, crank shape is less important for this test
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	ASSERT_EQ( 0,  GET_RPM()) << "testNB2CamInput RPM";
+	for (int i = 0; i < 5;i++) {
+		eth.fireRise(50);
+	}
+	ASSERT_EQ(1200,  GET_RPM()) << "testNB2CamInput RPM";
+
+	// this would be ignored since we only consude one kind the other kind of fronts here
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.moveTimeForwardUs(MS2US(20));
+	// this would be be first VVT signal - gap duration would be calculated against 'DEEP_IN_THE_PAST_SECONDS' initial value
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+
+	eth.moveTimeForwardUs(MS2US(20));
+	// this second important front would give us first real VVT gap duration
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+
+	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition());
+	ASSERT_EQ(5, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+
+	eth.moveTimeForwardUs(MS2US(130));
+	// this third important front would give us first comparison between two real gaps
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+
+	ASSERT_NEAR(-46, engine->triggerCentral.getVVTPosition(), EPS3D);
+	// actually position based on VVT!
+	ASSERT_EQ(8, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+}

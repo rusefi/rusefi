@@ -84,7 +84,7 @@ public:
 			}
 
 
-			float value = engine->triggerCentral.vvtPosition;
+			float value = engine->triggerCentral.getVVTPosition();
 			float targetValue = table->getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 			percent_t pwm = auxPid.getOutput(targetValue, value);

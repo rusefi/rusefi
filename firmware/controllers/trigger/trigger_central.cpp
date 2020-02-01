@@ -72,6 +72,10 @@ void TriggerCentral::addEventListener(ShaftPositionListener listener, const char
 	triggerListeneres.registerCallback((VoidInt)(void*)listener, engine);
 }
 
+angle_t TriggerCentral::getVVTPosition() {
+	return vvtPosition;
+}
+
 /**
  * @brief Adds a trigger event listener
  *
@@ -344,7 +348,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(&ENGINE(triggerCentral.triggerShape),
+	triggerState.decodeTriggerEvent(&triggerShape,
 			nullptr, engine, signal, timestamp PASS_CONFIG_PARAMETER_SUFFIX);
 
 	/**
@@ -353,12 +357,13 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	 */
 	int triggerIndexForListeners;
 	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (operationMode == FOUR_STROKE_CAM_SENSOR ||
-			operationMode == TWO_STROKE) {
+	if (operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == TWO_STROKE) {
 		// That's easy - trigger cycle matches engine cycle
 		triggerIndexForListeners = triggerState.getCurrentIndex();
 	} else {
-		int crankDivider = operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : 4;
+		// todo: should this logic reuse getCycleDuration?
+		bool isCrankDriven = operationMode == FOUR_STROKE_CRANK_SENSOR || operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR;
+		int crankDivider = isCrankDriven ? 2 : 4;
 
 		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 

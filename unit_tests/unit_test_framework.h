@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef UNIT_TEST_FRAMEWORK_H_
-#define UNIT_TEST_FRAMEWORK_H_
+#pragma once
 
 #include "engine.h"
 #include "gtest/gtest.h"
@@ -16,6 +15,9 @@ using ::testing::Return;
 // This lets us inspect private state from unit tests
 #define private public
 
+/**
+ * These are usually used with ASSETR_NEAR(val1, val2, abs_error)
+ */
 #define EPS0D 1
 #define EPS1D 0.1
 #define EPS2D 0.01
@@ -29,4 +31,3 @@ void assertEqualsM(const char *msg, float expected, float actual);
 void assertEqualsLM(const char *msg, long expected, long actual);
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual);
 
-#endif /* UNIT_TEST_FRAMEWORK_H_ */

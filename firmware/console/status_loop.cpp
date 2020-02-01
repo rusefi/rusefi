@@ -308,7 +308,7 @@ static void printSensors(Logging *log) {
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			reportSensorF(log, GAUGE_NAME_FUEL_VE, "%", engine->engineState.currentBaroCorrectedVE * PERCENT_MULT, 2);
 		}
-		reportSensorF(log, GAUGE_NAME_VVT, "deg", engine->triggerCentral.vvtPosition, 1);
+		reportSensorF(log, GAUGE_NAME_VVT, "deg", engine->triggerCentral.getVVTPosition(), 1);
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	reportSensorF(log, GAUGE_NAME_ENGINE_LOAD, "x", engineLoad, 2);
@@ -735,7 +735,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 	// offset 32
-	tsOutputChannels->tpsADC = getTPS12bitAdc(0 PASS_ENGINE_PARAMETER_SUFFIX) / TPS_TS_CONVERSION;
+	tsOutputChannels->tpsADC = getTPS10bitAdc(0 PASS_ENGINE_PARAMETER_SUFFIX);
 	// offset 36
 #if EFI_ANALOG_SENSORS
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
@@ -782,7 +782,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	efitimesec_t timeSeconds = getTimeNowSeconds();
 	tsOutputChannels->timeSeconds = timeSeconds;
 	// 248
-	tsOutputChannels->vvtPosition = engine->triggerCentral.vvtPosition;
+	tsOutputChannels->vvtPosition = engine->triggerCentral.getVVTPosition();
 	// 252
 	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// 120

@@ -46,6 +46,8 @@ public:
 
 	TriggerNoiseFilter noiseFilter;
 
+	angle_t getVVTPosition();
+
 	angle_t vvtPosition = 0;
 	/**
 	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic
@@ -54,7 +56,7 @@ public:
 
 	TriggerWaveform triggerShape;
 
-	efitick_t previousVvtCamTime = 0;
+	efitick_t previousVvtCamTime = DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
 	efitick_t previousVvtCamDuration = 0;
 
 private:
