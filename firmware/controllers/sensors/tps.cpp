@@ -11,9 +11,6 @@
 
 EXTERN_ENGINE;
 
-// Scaled to 1000 counts = 5.0 volts
-#define TPS_TS_CONVERSION 200
-
 /**
  * set mock_pedal_position X
  * See also directPwmValue

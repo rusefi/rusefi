@@ -15,9 +15,9 @@ LinearFunc tpsFunc1p;
 LinearFunc tpsFunc2p;
 //LinearFunc tpsFunc2s;
 
-FunctionalSensor tpsSens1p(SensorType::Tps1Primary, MS2NT(10));
+FunctionalSensor tpsSens1p(SensorType::Tps1, MS2NT(10));
 //FunctionalSensor tpsSens1s(SensorType::Tps1Secondary, MS2NT(10));
-FunctionalSensor tpsSens2p(SensorType::Tps2Primary, MS2NT(10));
+FunctionalSensor tpsSens2p(SensorType::Tps2, MS2NT(10));
 //FunctionalSensor tpsSens2s(SensorType::Tps2Secondary, MS2NT(10));
 
 static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open) {
@@ -27,8 +27,8 @@ static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 	}
 
 	func.configure(
-		closed / 200.0f, 0,
-		open / 200.0f, 100, 
+		closed / TPS_TS_CONVERSION, 0,
+		open / TPS_TS_CONVERSION, 100, 
 		CONFIG(tpsErrorDetectionTooLow),
 		CONFIG(tpsErrorDetectionTooHigh)
 	);
