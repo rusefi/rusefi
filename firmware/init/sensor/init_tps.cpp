@@ -4,9 +4,7 @@
 #include "global.h"
 #include "functional_sensor.h"
 #include "linear_func.h"
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_configuration.h"
-#endif
+#include "tps.h"
 
 EXTERN_ENGINE;
 
