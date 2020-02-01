@@ -1,10 +1,14 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jan 31 14:07:20 EST 2020
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 	case FSIO_SETTING_FANONTEMPERATURE:
 		return engineConfiguration->fanOnTemperature;
 	case FSIO_SETTING_FANOFFTEMPERATURE:
 		return engineConfiguration->fanOffTemperature;
+	case FSIO_SETTING_BOOSTPID_OFFSET:
+		return engineConfiguration->boostPid.offset;
+	case FSIO_SETTING_BOOSTPID_MINVALUE:
+		return engineConfiguration->boostPid.minValue;
 	case FSIO_SETTING_ALTERNATORCONTROL_OFFSET:
 		return engineConfiguration->alternatorControl.offset;
 	case FSIO_SETTING_ALTERNATORCONTROL_MINVALUE:

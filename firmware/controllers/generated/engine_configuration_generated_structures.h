@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:13:41 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jan 31 14:18:54 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1676,7 +1676,31 @@ struct engine_configuration_s {
 	/**
 	 * offset 988
 	 */
-	int unusedAtOldBoardConfigurationEnd[119];
+	output_pin_e boostControlPin;
+	/**
+	 * offset 989
+	 */
+	pin_output_mode_e boostControlPinMode;
+	/**
+	 * offset 990
+	 */
+	uint8_t unusedSpace[2];
+	/**
+	 * offset 992
+	 */
+	pid_s boostPid;
+	/**
+	 * offset 1012
+	 */
+	boostType_e boostType;
+	/**
+	 * offset 1016
+	 */
+	int boostPwmFrequency;
+	/**
+	 * offset 1020
+	 */
+	int unusedAtOldBoardConfigurationEnd[111];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -1895,7 +1919,7 @@ struct engine_configuration_s {
 	bool useIacPidMultTable : 1;
 	/**
 	offset 1476 bit 22 */
-	bool unused_1484_bit_22 : 1;
+	bool isBoostControlEnabled : 1;
 	/**
 	offset 1476 bit 23 */
 	bool unused_1484_bit_23 : 1;
@@ -2862,8 +2886,8 @@ struct engine_configuration_s {
 	/**
 	 * offset 4140
 	 */
-	int mainUnusedEnd[565];
-	/** total size 6400*/
+	int mainUnusedEnd[527];
+	/** total size 6248*/
 };
 
 typedef struct engine_configuration_s engine_configuration_s;
@@ -2874,6 +2898,26 @@ struct persistent_config_s {
 	 * offset 0
 	 */
 	engine_configuration_s engineConfiguration;
+	/**
+	 * offset 6248
+	 */
+	boost_table_t boostTableOpenLoop;
+	/**
+	 * offset 6312
+	 */
+	uint8_t boostMapBins[BOOST_LOAD_COUNT];
+	/**
+	 * offset 6320
+	 */
+	uint8_t boostRpmBins[BOOST_RPM_COUNT];
+	/**
+	 * offset 6328
+	 */
+	boost_table_t boostTableClosedLoop;
+	/**
+	 * offset 6392
+	 */
+	uint8_t boostTpsBins[BOOST_LOAD_COUNT];
 	/**
 	 * offset 6400
 	 */
@@ -3125,4 +3169,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:13:41 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jan 31 14:18:54 EST 2020
