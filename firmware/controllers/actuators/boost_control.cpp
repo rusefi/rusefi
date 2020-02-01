@@ -100,7 +100,6 @@ class BoostControl: public PeriodicTimerController {
 	   	#if EFI_TUNER_STUDIO
 	   	tsOutputChannels.debugFloatField1 = openLoopDuty;
 	   	tsOutputChannels.debugFloatField7 = closedLoopDuty;
-	   	tsOutputChannels.boostDuty = duty;
 	   	#endif /* EFI_TUNER_STUDIO */
 	   				}
 	boostPwmControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(duty));
