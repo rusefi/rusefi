@@ -56,6 +56,8 @@
  * set engine_type 40
  * Manhattan
  * set engine_type 24
+ * Proteus
+ * set engine_type 63
  *
  * https://raw.githubusercontent.com/wiki/rusefi/rusefi_documentation/oem_docs/VAG/Bosch_0280750009_pinout.jpg
  *
@@ -211,3 +213,6 @@ GPIOA_6
 
 }
 
+void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+}

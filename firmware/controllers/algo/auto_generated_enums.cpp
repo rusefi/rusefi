@@ -717,6 +717,8 @@ case BMW_M73_F:
   return "BMW_M73_F";
 case BMW_M73_M:
 	return "BMW_M73_M";
+case BMW_M73_PROTEUS:
+  return "BMW_M73_P";
 case MRE_BOARD_TEST:
   return "MRE_BOARD_TEST";
 case GY6_139QMB:

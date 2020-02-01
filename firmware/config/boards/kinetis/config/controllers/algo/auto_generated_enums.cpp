@@ -607,6 +607,8 @@ case MIATA_1994_DEVIATOR:
   return "MIATA_1994_DEVIATOR";
 case BMW_M73_M:
   return "BMW_M73_M";
+case BMW_M73_PROTEUS:
+  return "BMW_M73_P";
 case MIATA_1996:
   return "MIATA_1996";
 case MIATA_NA6_MAP:
