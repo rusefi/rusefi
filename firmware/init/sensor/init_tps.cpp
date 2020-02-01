@@ -36,7 +36,7 @@ static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 	AdcSubscription::SubscribeSensor(sensor, channel);
 
 	if (!sensor.Register()) {
-		// todo: handle
+		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate TPS registration for TPS sensor");
 	}
 }
 
