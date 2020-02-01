@@ -735,7 +735,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 	// offset 32
-	tsOutputChannels->tpsADC = getTPS12bitAdc(0 PASS_ENGINE_PARAMETER_SUFFIX) / TPS_TS_CONVERSION;
+	tsOutputChannels->tpsADC = getTPS10bitAdc(0 PASS_ENGINE_PARAMETER_SUFFIX);
 	// offset 36
 #if EFI_ANALOG_SENSORS
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
