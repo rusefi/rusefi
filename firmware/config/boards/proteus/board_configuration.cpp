@@ -89,11 +89,11 @@ static void setupEtb() {
 
 	// Throttle #2
 	// PWM pin
-	engineConfiguration->etbIo[0].controlPin1 = GPIOD_13;
+	engineConfiguration->etbIo[1].controlPin1 = GPIOD_13;
 	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = GPIOD_9;
+	engineConfiguration->etbIo[1].directionPin1 = GPIOD_9;
 	// Unused
-	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
 
 #if EFI_FSIO
 	// disable ETB by default
