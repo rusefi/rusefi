@@ -223,17 +223,6 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 	floatus_t durationUs = MS2US(injectionDuration);
 
-	// How long until the injector should start to fire (SOI)
-	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffsetFromTriggerEvent;
-
-#if EFI_DEFAILED_LOGGING
-	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%.2fms %d", event->outputs[0]->name,
-			injEventIndex,
-			injectionDuration,
-			getRevolutionCounter());
-	scheduleMsg(logger, "handleFuel pin=%s delay=%.2f %d", event->outputs[0]->name, injectionStartDelayUs,
-			getRevolutionCounter());
-#endif /* EFI_DEFAILED_LOGGING */
 
 	// we are ignoring low RPM in order not to handle "engine was stopped to engine now running" transition
 	if (rpm > 2 * engineConfiguration->cranking.rpm) {
@@ -261,9 +250,6 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 	event->isScheduled = true;
 
-	efitick_t turnOnTime = nowNt + US2NT((int)injectionStartDelayUs);
-	efitick_t turnOffTime = turnOnTime + US2NT((int)durationUs);
-
 	action_s startAction, endAction;
 	// We use different callbacks based on whether we're running sequential mode or not - everything else is the same
 	if (event->isSimultanious) {
@@ -275,11 +261,21 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		endAction = { &turnInjectionPinLow, event };
 	}
 
-#if EFI_UNIT_TEST
-		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffsetFromTriggerEvent, injectionStartDelayUs, injectionDuration);
-#endif
-	engine->executor.scheduleByTimestampNt(&event->signalTimerUp, turnOnTime, startAction);
+	efitick_t startTime = scheduleByAngle(&event->signalTimerUp, nowNt, event->injectionStart.angleOffsetFromTriggerEvent, startAction PASS_ENGINE_PARAMETER_SUFFIX);
+	efitick_t turnOffTime = startTime + US2NT((int)durationUs);
 	engine->executor.scheduleByTimestampNt(&event->endOfInjectionEvent, turnOffTime, endAction);
+
+#if EFI_UNIT_TEST
+		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffsetFromTriggerEvent, NT2US(startTime - nowNt), injectionDuration);
+#endif
+#if EFI_DEFAILED_LOGGING
+	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%.2fms %d", event->outputs[0]->name,
+			injEventIndex,
+			injectionDuration,
+			getRevolutionCounter());
+	scheduleMsg(logger, "handleFuel pin=%s delay=%.2f %d", event->outputs[0]->name, NT2US(startTime - nowNt),
+			getRevolutionCounter());
+#endif /* EFI_DEFAILED_LOGGING */
 }
 
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
