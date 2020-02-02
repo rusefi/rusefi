@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Feb 02 12:17:13 EST 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Feb 02 13:12:23 EST 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -57,8 +57,7 @@ public class Fields {
 	public static final int alternatorPwmFrequency_offset = 2256;
 	public static final int ambiguousOperationMode_offset = 488;
 	public static final int analogInputDividerCoefficient_offset = 460;
-	public static final int antiLagActivatePin_offset = 1028;
-	public static final int antiLagActivatePin_offset_hex = 404;
+	public static final int antiLagActivatePin_offset = 990;
 	public static final int antiLagActivationMode_offset = 1024;
 	public static final int antiLagActivationMode_offset_hex = 400;
 	public static final int antiLagEnabled_offset = 76;
@@ -111,7 +110,7 @@ public class Fields {
 	public static final int auxPidPins3_offset = 2222;
 	public static final int auxPidPins4_offset = 2223;
 	public static final int auxTempSensor1_adcChannel_offset = 2472;
-	public static final int auxTempSensor1_alignmentFill_offset = 2473;
+	public static final int auxTempSensor1_alignmentFill_at_29_offset = 2473;
 	public static final int auxTempSensor1_bias_resistor_offset = 2468;
 	public static final int auxTempSensor1_config_offset = 2444;
 	public static final int auxTempSensor1_offset = 2444;
@@ -125,7 +124,7 @@ public class Fields {
 	public static final int auxTempSensor1_tempC_3_offset = 2452;
 	public static final int auxTempSensor1_tempC_3_offset_hex = 994;
 	public static final int auxTempSensor2_adcChannel_offset = 2504;
-	public static final int auxTempSensor2_alignmentFill_offset = 2505;
+	public static final int auxTempSensor2_alignmentFill_at_29_offset = 2505;
 	public static final int auxTempSensor2_bias_resistor_offset = 2500;
 	public static final int auxTempSensor2_config_offset = 2476;
 	public static final int auxTempSensor2_offset = 2476;
@@ -219,8 +218,8 @@ public class Fields {
 	public static final int cj125ur_offset = 2610;
 	public static final int clt_adcChannel_offset = 280;
 	public static final int clt_adcChannel_offset_hex = 118;
-	public static final int clt_alignmentFill_offset = 281;
-	public static final int clt_alignmentFill_offset_hex = 119;
+	public static final int clt_alignmentFill_at_29_offset = 281;
+	public static final int clt_alignmentFill_at_29_offset_hex = 119;
 	public static final int clt_bias_resistor_offset = 276;
 	public static final int clt_bias_resistor_offset_hex = 114;
 	public static final int clt_config_offset = 252;
@@ -289,7 +288,7 @@ public class Fields {
 	public static final int consoleSerialTxPin_offset = 1818;
 	public static final int consoleUartDevice_offset = 943;
 	public static final int CRANKING_ADVANCE_CURVE_SIZE = 4;
-	public static final int cranking_alignmentFill_offset = 94;
+	public static final int cranking_alignmentFill_at_6_offset = 94;
 	public static final int cranking_baseFuel_offset = 88;
 	public static final int cranking_baseFuel_offset_hex = 58;
 	public static final int CRANKING_CLT_IDLE_CURVE_SIZE = 8;
@@ -689,7 +688,8 @@ public class Fields {
 	public static final int gps_rx_pin_offset_hex = 290;
 	public static final int gps_tx_pin_offset = 657;
 	public static final int gps_tx_pin_offset_hex = 291;
-	public static final int hardCutRpmRange_offset = 1050;
+	public static final int hardCutRpmRange_offset = 1048;
+	public static final int hardCutRpmRange_offset_hex = 418;
 	public static final int hasFrequencyReportingMapSensor_offset = 1464;
 	public static final int HD44780_db4_offset = 652;
 	public static final int HD44780_db5_offset = 653;
@@ -721,8 +721,8 @@ public class Fields {
 	public static final int iacPidMultTable_offset = 4060;
 	public static final int iat_adcChannel_offset = 312;
 	public static final int iat_adcChannel_offset_hex = 138;
-	public static final int iat_alignmentFill_offset = 313;
-	public static final int iat_alignmentFill_offset_hex = 139;
+	public static final int iat_alignmentFill_at_29_offset = 313;
+	public static final int iat_alignmentFill_at_29_offset_hex = 139;
 	public static final int iat_bias_resistor_offset = 308;
 	public static final int iat_bias_resistor_offset_hex = 134;
 	public static final int iat_config_offset = 284;
@@ -928,24 +928,24 @@ public class Fields {
 	public static final int knockNoise_offset = 1820;
 	public static final int knockNoiseRpmBins_offset = 1852;
 	public static final int knockVThreshold_offset = 1512;
-	public static final int launchActivatePin_offset = 1029;
-	public static final int launchActivatePin_offset_hex = 405;
+	public static final int launchActivatePin_offset = 991;
 	public static final int launchActivationMode_offset = 1020;
-	public static final int launchBoostDuty_offset = 1046;
-	public static final int launchBoostDuty_offset_hex = 416;
+	public static final int launchBoostDuty_offset = 1044;
+	public static final int launchBoostDuty_offset_hex = 414;
 	public static final int launchControlEnabled_offset = 76;
-	public static final int launchFuelAdded_offset = 1042;
-	public static final int launchFuelAdded_offset_hex = 412;
+	public static final int launchFuelAdded_offset = 1040;
+	public static final int launchFuelAdded_offset_hex = 410;
 	public static final int launchFuelCutEnable_offset = 1464;
 	public static final int launchRpm_offset = 316;
-	public static final int launchRpmTreshold_offset = 1034;
+	public static final int launchRpmTreshold_offset = 1032;
+	public static final int launchRpmTreshold_offset_hex = 408;
 	public static final int launchSmoothRetard_offset = 1476;
 	public static final int launchSparkCutEnable_offset = 1464;
-	public static final int launchSpeedTreshold_offset = 1030;
-	public static final int launchSpeedTreshold_offset_hex = 406;
+	public static final int launchSpeedTreshold_offset = 1028;
+	public static final int launchSpeedTreshold_offset_hex = 404;
 	public static final int launchTimingRetard_offset = 320;
 	public static final int launchTimingRetard_offset_hex = 140;
-	public static final int launchTimingRpmRange_offset = 1038;
+	public static final int launchTimingRpmRange_offset = 1036;
 	public static final int lcdThreadPeriodMs_offset = 720;
 	public static final int LDS_ALTERNATOR_PID_STATE_INDEX = 9;
 	public static final int LDS_CJ125_PID_STATE_INDEX = 10;
@@ -1370,8 +1370,7 @@ public class Fields {
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
 	public static final int unused_offset = 972;
 	public static final int unusedAnotherOne_offset = 744;
-	public static final int unusedAtOldBoardConfigurationEnd_offset = 1056;
-	public static final int unusedAtOldBoardConfigurationEnd_offset_hex = 420;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 1052;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_249_10_offset = 976;
 	public static final int unusedBit_249_11_offset = 976;
@@ -1408,10 +1407,8 @@ public class Fields {
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1772;
 	public static final int unusedHereo_wires_offset = 76;
-	public static final int unusedMoreSpace_offset = 1054;
 	public static final int unusedOldWarmupAfr_offset = 744;
 	public static final int unusedSomething_offset = 1784;
-	public static final int unusedSpace_offset = 990;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
 	public static final int unusedSpiPadding7_offset = 4005;
@@ -1962,6 +1959,8 @@ public class Fields {
 	public static final Field ETBIO2_CONTROLPINMODE = Field.create("ETBIO2_CONTROLPINMODE", 987, FieldType.INT8, pin_output_mode_e);
 	public static final Field BOOSTCONTROLPIN = Field.create("BOOSTCONTROLPIN", 988, FieldType.INT8, output_pin_e);
 	public static final Field BOOSTCONTROLPINMODE = Field.create("BOOSTCONTROLPINMODE", 989, FieldType.INT8, pin_output_mode_e);
+	public static final Field ANTILAGACTIVATEPIN = Field.create("ANTILAGACTIVATEPIN", 990, FieldType.INT8, switch_input_pin_e);
+	public static final Field LAUNCHACTIVATEPIN = Field.create("LAUNCHACTIVATEPIN", 991, FieldType.INT8, switch_input_pin_e);
 	public static final Field BOOSTPID_PFACTOR = Field.create("BOOSTPID_PFACTOR", 992, FieldType.FLOAT);
 	public static final Field BOOSTPID_IFACTOR = Field.create("BOOSTPID_IFACTOR", 996, FieldType.FLOAT);
 	public static final Field BOOSTPID_DFACTOR = Field.create("BOOSTPID_DFACTOR", 1000, FieldType.FLOAT);
@@ -1975,14 +1974,12 @@ public class Fields {
 	public static final Field LAUNCHACTIVATIONMODE = Field.create("LAUNCHACTIVATIONMODE", 1020, FieldType.INT, launchActivationMode_e);
 	public static final String[] antiLagActivationMode_e = {"Always Active", "Switch Input"};
 	public static final Field ANTILAGACTIVATIONMODE = Field.create("ANTILAGACTIVATIONMODE", 1024, FieldType.INT, antiLagActivationMode_e);
-	public static final Field ANTILAGACTIVATEPIN = Field.create("ANTILAGACTIVATEPIN", 1028, FieldType.INT8, switch_input_pin_e);
-	public static final Field LAUNCHACTIVATEPIN = Field.create("LAUNCHACTIVATEPIN", 1029, FieldType.INT8, switch_input_pin_e);
-	public static final Field LAUNCHSPEEDTRESHOLD = Field.create("LAUNCHSPEEDTRESHOLD", 1030, FieldType.INT);
-	public static final Field LAUNCHRPMTRESHOLD = Field.create("LAUNCHRPMTRESHOLD", 1034, FieldType.INT);
-	public static final Field LAUNCHTIMINGRPMRANGE = Field.create("LAUNCHTIMINGRPMRANGE", 1038, FieldType.INT);
-	public static final Field LAUNCHFUELADDED = Field.create("LAUNCHFUELADDED", 1042, FieldType.INT);
-	public static final Field LAUNCHBOOSTDUTY = Field.create("LAUNCHBOOSTDUTY", 1046, FieldType.INT);
-	public static final Field HARDCUTRPMRANGE = Field.create("HARDCUTRPMRANGE", 1050, FieldType.INT);
+	public static final Field LAUNCHSPEEDTRESHOLD = Field.create("LAUNCHSPEEDTRESHOLD", 1028, FieldType.INT);
+	public static final Field LAUNCHRPMTRESHOLD = Field.create("LAUNCHRPMTRESHOLD", 1032, FieldType.INT);
+	public static final Field LAUNCHTIMINGRPMRANGE = Field.create("LAUNCHTIMINGRPMRANGE", 1036, FieldType.INT);
+	public static final Field LAUNCHFUELADDED = Field.create("LAUNCHFUELADDED", 1040, FieldType.INT);
+	public static final Field LAUNCHBOOSTDUTY = Field.create("LAUNCHBOOSTDUTY", 1044, FieldType.INT);
+	public static final Field HARDCUTRPMRANGE = Field.create("HARDCUTRPMRANGE", 1048, FieldType.INT);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -2856,6 +2853,8 @@ public class Fields {
 	ETBIO2_CONTROLPINMODE,
 	BOOSTCONTROLPIN,
 	BOOSTCONTROLPINMODE,
+	ANTILAGACTIVATEPIN,
+	LAUNCHACTIVATEPIN,
 	BOOSTPID_PFACTOR,
 	BOOSTPID_IFACTOR,
 	BOOSTPID_DFACTOR,
@@ -2867,8 +2866,6 @@ public class Fields {
 	BOOSTPWMFREQUENCY,
 	LAUNCHACTIVATIONMODE,
 	ANTILAGACTIVATIONMODE,
-	ANTILAGACTIVATEPIN,
-	LAUNCHACTIVATEPIN,
 	LAUNCHSPEEDTRESHOLD,
 	LAUNCHRPMTRESHOLD,
 	LAUNCHTIMINGRPMRANGE,

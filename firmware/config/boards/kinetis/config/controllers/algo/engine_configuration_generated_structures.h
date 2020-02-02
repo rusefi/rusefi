@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Feb 02 12:17:28 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Feb 02 13:12:38 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -60,7 +60,7 @@ struct cranking_parameters_s {
 	 * need 4 byte alignment
 	 * offset 6
 	 */
-	uint8_t alignmentFill[2];
+	uint8_t alignmentFill_at_6[2];
 	/** total size 8*/
 };
 
@@ -84,7 +84,7 @@ struct spi_pins {
 	 * need 4 byte alignment
 	 * offset 3
 	 */
-	uint8_t alignmentFill;
+	uint8_t alignmentFill_at_3;
 	/** total size 4*/
 };
 
@@ -246,7 +246,7 @@ struct ThermistorConf {
 	 * need 4 byte alignment
 	 * offset 29
 	 */
-	uint8_t alignmentFill[3];
+	uint8_t alignmentFill_at_29[3];
 	/** total size 32*/
 };
 
@@ -1684,7 +1684,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 990
 	 */
-	uint8_t unusedSpace[2];
+	switch_input_pin_e antiLagActivatePin;
+	/**
+	 * offset 991
+	 */
+	switch_input_pin_e launchActivatePin;
 	/**
 	 * offset 992
 	 */
@@ -1706,51 +1710,39 @@ struct engine_configuration_s {
 	 */
 	antiLagActivationMode_e antiLagActivationMode;
 	/**
-	 * offset 1028
-	 */
-	switch_input_pin_e antiLagActivatePin;
-	/**
-	 * offset 1029
-	 */
-	switch_input_pin_e launchActivatePin;
-	/**
 	 * Disabled above this speed
-	 * offset 1030
+	 * offset 1028
 	 */
 	int launchSpeedTreshold;
 	/**
 	 * Disabled below this rpm
-	 * offset 1034
+	 * offset 1032
 	 */
 	int launchRpmTreshold;
 	/**
 	 * Range from Launch Rpm for Timing Retard to activate
-	 * offset 1038
+	 * offset 1036
 	 */
 	int launchTimingRpmRange;
 	/**
 	 * Extra Fuel Added
-	 * offset 1042
+	 * offset 1040
 	 */
 	int launchFuelAdded;
 	/**
 	 * Duty Cycle for the Boost Solenoid
-	 * offset 1046
+	 * offset 1044
 	 */
 	int launchBoostDuty;
 	/**
 	 * RPM Range for Hard Cut
-	 * offset 1050
+	 * offset 1048
 	 */
 	int hardCutRpmRange;
 	/**
-	 * offset 1054
+	 * offset 1052
 	 */
-	uint8_t unusedMoreSpace[2];
-	/**
-	 * offset 1056
-	 */
-	int unusedAtOldBoardConfigurationEnd[102];
+	int unusedAtOldBoardConfigurationEnd[103];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -3220,4 +3212,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Feb 02 12:17:28 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Feb 02 13:12:38 EST 2020
