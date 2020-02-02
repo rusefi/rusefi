@@ -327,9 +327,9 @@ bit useTLE8888_hall_mode;
 bit useTLE8888_cranking_hack;
 bit useInstantRpmForIdle;
 bit absoluteFuelPressure;+If your fuel regulator does not have vacuum line
-bit issue_294_21;
-bit issue_294_22;
-bit issue_294_23;
+bit launchControlEnabled;
+bit rollingLaunchEnabled;
+bit antiLagEnabled;
 bit issue_294_24;
 bit issue_294_25;
 bit issue_294_26;
@@ -358,8 +358,8 @@ MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
 ThermistorConf iat;
 	
-	int step1rpm;A secondary Rev limit engaged by the driver to help launch the vehicle faster;"rpm",    1,      0,       0, 20000.0,        2
-	int step1timing;;"deg",    1,      0,       -180, 180,        2
+	int launchRpm;A secondary Rev limit engaged by the driver to help launch the vehicle faster;"rpm",    1,      0,       0, 20000.0,        2
+	int launchTimingRetard;;"deg",    1,      0,       -180, 180,        2
 	int hip9011PrescalerAndSDO;+value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0.0, 0.0, 32, 0
 	float knockBandCustom;+We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override;"kHz", 1, 0.0, 0.0, 10.0, 2
 
@@ -751,7 +751,26 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
     boostType_e boostType;
     int boostPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
 
-	int[111] unusedAtOldBoardConfigurationEnd;
+	#define launchActivationMode_e_enum "Switch Input", "Clutch Input", "Always Active(Disabled By Speed)","INVALID"
+    custom launchActivationMode_e  4 bits, S32, @OFFSET@, [0:7], @@launchActivationMode_e_enum@@
+    launchActivationMode_e launchActivationMode;
+
+    #define antiLagActivationMode_e_enum "Always Active", "Switch Input"
+    custom antiLagActivationMode_e  4 bits, S32, @OFFSET@, [0:0], @@antiLagActivationMode_e_enum@@
+    antiLagActivationMode_e antiLagActivationMode;
+
+    switch_input_pin_e antiLagActivatePin;
+    switch_input_pin_e launchActivatePin;
+
+    int launchSpeedTreshold;+Disabled above this speed;"Kph",        1,     0,  0,    300.0,  0
+    int launchRpmTreshold;+Disabled below this rpm;"RPM",        1,     0,  0,    8000.0,  0
+    int launchTimingRpmRange;+Range from Launch Rpm for Timing Retard to activate;"RPM",        1,     0,  0,    8000.0,  0
+    int launchFuelAdded;+Extra Fuel Added;"%",        1,     0,  0,    100.0,  0
+    int launchBoostDuty;+Duty Cycle for the Boost Solenoid;"%",        1,     0,  0,    100.0,  0
+	int hardCutRpmRange;+RPM Range for Hard Cut;"rpm",    1,      0,       0, 3000.0,        2
+ uint8_t[2] unusedMoreSpace;
+
+	int[102] unusedAtOldBoardConfigurationEnd;
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
@@ -772,8 +791,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	
 bit cutFuelOnHardLimit
 bit cutSparkOnHardLimit
-bit step1fuelCutEnable
-bit step1SparkCutEnable
+bit launchFuelCutEnable
+bit launchSparkCutEnable;+This is the Cut Mode normally used
 bit hasFrequencyReportingMapSensor;
 	bit useFSIO8ForServo1
 	bit useFSIO9ForServo2
@@ -818,7 +837,7 @@ bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in
 bit etbCalibrationOnStart
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled;
-bit unused_1484_bit_23
+bit launchSmoothRetard;+Interpolates the Ignition Retard from 0 to 100% within the RPM Range
 bit unused_1484_bit_24
 bit unused_1484_bit_25
 bit unused_1484_bit_26
@@ -888,7 +907,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
-	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
+	uint8_t[4] unusedSomething;
 	pid_s idleRpmPid;See cltIdleRpmBins
 	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
