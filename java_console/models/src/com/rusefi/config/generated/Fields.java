@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jan 31 14:18:54 EST 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Feb 02 12:17:13 EST 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -57,6 +57,11 @@ public class Fields {
 	public static final int alternatorPwmFrequency_offset = 2256;
 	public static final int ambiguousOperationMode_offset = 488;
 	public static final int analogInputDividerCoefficient_offset = 460;
+	public static final int antiLagActivatePin_offset = 1028;
+	public static final int antiLagActivatePin_offset_hex = 404;
+	public static final int antiLagActivationMode_offset = 1024;
+	public static final int antiLagActivationMode_offset_hex = 400;
+	public static final int antiLagEnabled_offset = 76;
 	public static final int autoTuneCltThreshold_offset = 2420;
 	public static final int autoTuneCltThreshold_offset_hex = 974;
 	public static final int autoTuneTpsQuietPeriod_offset = 2428;
@@ -684,6 +689,7 @@ public class Fields {
 	public static final int gps_rx_pin_offset_hex = 290;
 	public static final int gps_tx_pin_offset = 657;
 	public static final int gps_tx_pin_offset_hex = 291;
+	public static final int hardCutRpmRange_offset = 1050;
 	public static final int hasFrequencyReportingMapSensor_offset = 1464;
 	public static final int HD44780_db4_offset = 652;
 	public static final int HD44780_db5_offset = 653;
@@ -893,9 +899,6 @@ public class Fields {
 	public static final int isManualSpinningMode_offset = 1476;
 	public static final int isMapAveragingEnabled_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
-	public static final int issue_294_21_offset = 76;
-	public static final int issue_294_22_offset = 76;
-	public static final int issue_294_23_offset = 76;
 	public static final int issue_294_24_offset = 76;
 	public static final int issue_294_25_offset = 76;
 	public static final int issue_294_26_offset = 76;
@@ -925,6 +928,24 @@ public class Fields {
 	public static final int knockNoise_offset = 1820;
 	public static final int knockNoiseRpmBins_offset = 1852;
 	public static final int knockVThreshold_offset = 1512;
+	public static final int launchActivatePin_offset = 1029;
+	public static final int launchActivatePin_offset_hex = 405;
+	public static final int launchActivationMode_offset = 1020;
+	public static final int launchBoostDuty_offset = 1046;
+	public static final int launchBoostDuty_offset_hex = 416;
+	public static final int launchControlEnabled_offset = 76;
+	public static final int launchFuelAdded_offset = 1042;
+	public static final int launchFuelAdded_offset_hex = 412;
+	public static final int launchFuelCutEnable_offset = 1464;
+	public static final int launchRpm_offset = 316;
+	public static final int launchRpmTreshold_offset = 1034;
+	public static final int launchSmoothRetard_offset = 1476;
+	public static final int launchSparkCutEnable_offset = 1464;
+	public static final int launchSpeedTreshold_offset = 1030;
+	public static final int launchSpeedTreshold_offset_hex = 406;
+	public static final int launchTimingRetard_offset = 320;
+	public static final int launchTimingRetard_offset_hex = 140;
+	public static final int launchTimingRpmRange_offset = 1038;
 	public static final int lcdThreadPeriodMs_offset = 720;
 	public static final int LDS_ALTERNATOR_PID_STATE_INDEX = 9;
 	public static final int LDS_CJ125_PID_STATE_INDEX = 10;
@@ -1091,6 +1112,7 @@ public class Fields {
 	public static final String PROTOCOL_WA_CHANNEL_2 = "input2";
 	public static final String PROTOCOL_WA_CHANNEL_3 = "input3";
 	public static final String PROTOCOL_WA_CHANNEL_4 = "input4";
+	public static final int rollingLaunchEnabled_offset = 76;
 	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1813;
@@ -1145,12 +1167,6 @@ public class Fields {
 	public static final int startOfCrankingPrimingPulse_offset = 2032;
 	public static final int startUpFuelPumpDuration_offset = 1892;
 	public static final int startUpFuelPumpDuration_offset_hex = 764;
-	public static final int step1fuelCutEnable_offset = 1464;
-	public static final int step1rpm_offset = 316;
-	public static final int step1RpmWindow_offset = 1784;
-	public static final int step1SparkCutEnable_offset = 1464;
-	public static final int step1timing_offset = 320;
-	public static final int step1timing_offset_hex = 140;
 	public static final int stepperDirectionPinMode_offset = 3102;
 	public static final int stepperEnablePin_offset = 3104;
 	public static final int stepperEnablePinMode_offset = 2605;
@@ -1342,7 +1358,6 @@ public class Fields {
 	public static final int unrealisticRpmThreashold_offset = 760;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1234234_offset = 2042;
-	public static final int unused_1484_bit_23_offset = 1476;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
 	public static final int unused_1484_bit_26_offset = 1476;
@@ -1355,7 +1370,8 @@ public class Fields {
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
 	public static final int unused_offset = 972;
 	public static final int unusedAnotherOne_offset = 744;
-	public static final int unusedAtOldBoardConfigurationEnd_offset = 1020;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 1056;
+	public static final int unusedAtOldBoardConfigurationEnd_offset_hex = 420;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_249_10_offset = 976;
 	public static final int unusedBit_249_11_offset = 976;
@@ -1392,7 +1408,9 @@ public class Fields {
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1772;
 	public static final int unusedHereo_wires_offset = 76;
+	public static final int unusedMoreSpace_offset = 1054;
 	public static final int unusedOldWarmupAfr_offset = 744;
+	public static final int unusedSomething_offset = 1784;
 	public static final int unusedSpace_offset = 990;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
@@ -1486,9 +1504,9 @@ public class Fields {
 	public static final Field USETLE8888_CRANKING_HACK = Field.create("USETLE8888_CRANKING_HACK", 76, FieldType.BIT, 17);
 	public static final Field USEINSTANTRPMFORIDLE = Field.create("USEINSTANTRPMFORIDLE", 76, FieldType.BIT, 18);
 	public static final Field ABSOLUTEFUELPRESSURE = Field.create("ABSOLUTEFUELPRESSURE", 76, FieldType.BIT, 19);
-	public static final Field ISSUE_294_21 = Field.create("ISSUE_294_21", 76, FieldType.BIT, 20);
-	public static final Field ISSUE_294_22 = Field.create("ISSUE_294_22", 76, FieldType.BIT, 21);
-	public static final Field ISSUE_294_23 = Field.create("ISSUE_294_23", 76, FieldType.BIT, 22);
+	public static final Field LAUNCHCONTROLENABLED = Field.create("LAUNCHCONTROLENABLED", 76, FieldType.BIT, 20);
+	public static final Field ROLLINGLAUNCHENABLED = Field.create("ROLLINGLAUNCHENABLED", 76, FieldType.BIT, 21);
+	public static final Field ANTILAGENABLED = Field.create("ANTILAGENABLED", 76, FieldType.BIT, 22);
 	public static final Field ISSUE_294_24 = Field.create("ISSUE_294_24", 76, FieldType.BIT, 23);
 	public static final Field ISSUE_294_25 = Field.create("ISSUE_294_25", 76, FieldType.BIT, 24);
 	public static final Field ISSUE_294_26 = Field.create("ISSUE_294_26", 76, FieldType.BIT, 25);
@@ -1528,8 +1546,8 @@ public class Fields {
 	public static final Field IAT_RESISTANCE_3 = Field.create("IAT_RESISTANCE_3", 304, FieldType.FLOAT);
 	public static final Field IAT_BIAS_RESISTOR = Field.create("IAT_BIAS_RESISTOR", 308, FieldType.FLOAT);
 	public static final Field IAT_ADCCHANNEL = Field.create("IAT_ADCCHANNEL", 312, FieldType.INT8, adc_channel_e);
-	public static final Field STEP1RPM = Field.create("STEP1RPM", 316, FieldType.INT);
-	public static final Field STEP1TIMING = Field.create("STEP1TIMING", 320, FieldType.INT);
+	public static final Field LAUNCHRPM = Field.create("LAUNCHRPM", 316, FieldType.INT);
+	public static final Field LAUNCHTIMINGRETARD = Field.create("LAUNCHTIMINGRETARD", 320, FieldType.INT);
 	public static final Field HIP9011PRESCALERANDSDO = Field.create("HIP9011PRESCALERANDSDO", 324, FieldType.INT);
 	public static final Field KNOCKBANDCUSTOM = Field.create("KNOCKBANDCUSTOM", 328, FieldType.FLOAT);
 	public static final Field DISPLACEMENT = Field.create("DISPLACEMENT", 396, FieldType.FLOAT);
@@ -1953,6 +1971,18 @@ public class Fields {
 	public static final Field BOOSTPID_MAXVALUE = Field.create("BOOSTPID_MAXVALUE", 1010, FieldType.INT16);
 	public static final Field BOOSTTYPE = Field.create("BOOSTTYPE", 1012, FieldType.INT);
 	public static final Field BOOSTPWMFREQUENCY = Field.create("BOOSTPWMFREQUENCY", 1016, FieldType.INT);
+	public static final String[] launchActivationMode_e = {"Switch Input", "Clutch Input", "Always Active(Disabled By Speed)","INVALID"};
+	public static final Field LAUNCHACTIVATIONMODE = Field.create("LAUNCHACTIVATIONMODE", 1020, FieldType.INT, launchActivationMode_e);
+	public static final String[] antiLagActivationMode_e = {"Always Active", "Switch Input"};
+	public static final Field ANTILAGACTIVATIONMODE = Field.create("ANTILAGACTIVATIONMODE", 1024, FieldType.INT, antiLagActivationMode_e);
+	public static final Field ANTILAGACTIVATEPIN = Field.create("ANTILAGACTIVATEPIN", 1028, FieldType.INT8, switch_input_pin_e);
+	public static final Field LAUNCHACTIVATEPIN = Field.create("LAUNCHACTIVATEPIN", 1029, FieldType.INT8, switch_input_pin_e);
+	public static final Field LAUNCHSPEEDTRESHOLD = Field.create("LAUNCHSPEEDTRESHOLD", 1030, FieldType.INT);
+	public static final Field LAUNCHRPMTRESHOLD = Field.create("LAUNCHRPMTRESHOLD", 1034, FieldType.INT);
+	public static final Field LAUNCHTIMINGRPMRANGE = Field.create("LAUNCHTIMINGRPMRANGE", 1038, FieldType.INT);
+	public static final Field LAUNCHFUELADDED = Field.create("LAUNCHFUELADDED", 1042, FieldType.INT);
+	public static final Field LAUNCHBOOSTDUTY = Field.create("LAUNCHBOOSTDUTY", 1046, FieldType.INT);
+	public static final Field HARDCUTRPMRANGE = Field.create("HARDCUTRPMRANGE", 1050, FieldType.INT);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -1971,8 +2001,8 @@ public class Fields {
 	public static final Field INVERTSECONDARYTRIGGERSIGNAL = Field.create("INVERTSECONDARYTRIGGERSIGNAL", 1464, FieldType.BIT, 15);
 	public static final Field CUTFUELONHARDLIMIT = Field.create("CUTFUELONHARDLIMIT", 1464, FieldType.BIT, 16);
 	public static final Field CUTSPARKONHARDLIMIT = Field.create("CUTSPARKONHARDLIMIT", 1464, FieldType.BIT, 17);
-	public static final Field STEP1FUELCUTENABLE = Field.create("STEP1FUELCUTENABLE", 1464, FieldType.BIT, 18);
-	public static final Field STEP1SPARKCUTENABLE = Field.create("STEP1SPARKCUTENABLE", 1464, FieldType.BIT, 19);
+	public static final Field LAUNCHFUELCUTENABLE = Field.create("LAUNCHFUELCUTENABLE", 1464, FieldType.BIT, 18);
+	public static final Field LAUNCHSPARKCUTENABLE = Field.create("LAUNCHSPARKCUTENABLE", 1464, FieldType.BIT, 19);
 	public static final Field HASFREQUENCYREPORTINGMAPSENSOR = Field.create("HASFREQUENCYREPORTINGMAPSENSOR", 1464, FieldType.BIT, 20);
 	public static final Field USEFSIO8FORSERVO1 = Field.create("USEFSIO8FORSERVO1", 1464, FieldType.BIT, 21);
 	public static final Field USEFSIO9FORSERVO2 = Field.create("USEFSIO9FORSERVO2", 1464, FieldType.BIT, 22);
@@ -2013,7 +2043,7 @@ public class Fields {
 	public static final Field ETBCALIBRATIONONSTART = Field.create("ETBCALIBRATIONONSTART", 1476, FieldType.BIT, 20);
 	public static final Field USEIACPIDMULTTABLE = Field.create("USEIACPIDMULTTABLE", 1476, FieldType.BIT, 21);
 	public static final Field ISBOOSTCONTROLENABLED = Field.create("ISBOOSTCONTROLENABLED", 1476, FieldType.BIT, 22);
-	public static final Field UNUSED_1484_BIT_23 = Field.create("UNUSED_1484_BIT_23", 1476, FieldType.BIT, 23);
+	public static final Field LAUNCHSMOOTHRETARD = Field.create("LAUNCHSMOOTHRETARD", 1476, FieldType.BIT, 23);
 	public static final Field UNUSED_1484_BIT_24 = Field.create("UNUSED_1484_BIT_24", 1476, FieldType.BIT, 24);
 	public static final Field UNUSED_1484_BIT_25 = Field.create("UNUSED_1484_BIT_25", 1476, FieldType.BIT, 25);
 	public static final Field UNUSED_1484_BIT_26 = Field.create("UNUSED_1484_BIT_26", 1476, FieldType.BIT, 26);
@@ -2079,7 +2109,6 @@ public class Fields {
 	public static final Field TACHPULSEPERREV = Field.create("TACHPULSEPERREV", 1775, FieldType.INT8);
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1776, FieldType.FLOAT);
 	public static final Field MAPERRORDETECTIONTOOHIGH = Field.create("MAPERRORDETECTIONTOOHIGH", 1780, FieldType.FLOAT);
-	public static final Field STEP1RPMWINDOW = Field.create("STEP1RPMWINDOW", 1784, FieldType.INT);
 	public static final Field IDLERPMPID_PFACTOR = Field.create("IDLERPMPID_PFACTOR", 1788, FieldType.FLOAT);
 	public static final Field IDLERPMPID_IFACTOR = Field.create("IDLERPMPID_IFACTOR", 1792, FieldType.FLOAT);
 	public static final Field IDLERPMPID_DFACTOR = Field.create("IDLERPMPID_DFACTOR", 1796, FieldType.FLOAT);
@@ -2381,9 +2410,9 @@ public class Fields {
 	USETLE8888_CRANKING_HACK,
 	USEINSTANTRPMFORIDLE,
 	ABSOLUTEFUELPRESSURE,
-	ISSUE_294_21,
-	ISSUE_294_22,
-	ISSUE_294_23,
+	LAUNCHCONTROLENABLED,
+	ROLLINGLAUNCHENABLED,
+	ANTILAGENABLED,
 	ISSUE_294_24,
 	ISSUE_294_25,
 	ISSUE_294_26,
@@ -2422,8 +2451,8 @@ public class Fields {
 	IAT_RESISTANCE_3,
 	IAT_BIAS_RESISTOR,
 	IAT_ADCCHANNEL,
-	STEP1RPM,
-	STEP1TIMING,
+	LAUNCHRPM,
+	LAUNCHTIMINGRETARD,
 	HIP9011PRESCALERANDSDO,
 	KNOCKBANDCUSTOM,
 	DISPLACEMENT,
@@ -2836,6 +2865,16 @@ public class Fields {
 	BOOSTPID_MAXVALUE,
 	BOOSTTYPE,
 	BOOSTPWMFREQUENCY,
+	LAUNCHACTIVATIONMODE,
+	ANTILAGACTIVATIONMODE,
+	ANTILAGACTIVATEPIN,
+	LAUNCHACTIVATEPIN,
+	LAUNCHSPEEDTRESHOLD,
+	LAUNCHRPMTRESHOLD,
+	LAUNCHTIMINGRPMRANGE,
+	LAUNCHFUELADDED,
+	LAUNCHBOOSTDUTY,
+	HARDCUTRPMRANGE,
 	VVTDISPLAYINVERTED,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
@@ -2854,8 +2893,8 @@ public class Fields {
 	INVERTSECONDARYTRIGGERSIGNAL,
 	CUTFUELONHARDLIMIT,
 	CUTSPARKONHARDLIMIT,
-	STEP1FUELCUTENABLE,
-	STEP1SPARKCUTENABLE,
+	LAUNCHFUELCUTENABLE,
+	LAUNCHSPARKCUTENABLE,
 	HASFREQUENCYREPORTINGMAPSENSOR,
 	USEFSIO8FORSERVO1,
 	USEFSIO9FORSERVO2,
@@ -2896,7 +2935,7 @@ public class Fields {
 	ETBCALIBRATIONONSTART,
 	USEIACPIDMULTTABLE,
 	ISBOOSTCONTROLENABLED,
-	UNUSED_1484_BIT_23,
+	LAUNCHSMOOTHRETARD,
 	UNUSED_1484_BIT_24,
 	UNUSED_1484_BIT_25,
 	UNUSED_1484_BIT_26,
@@ -2962,7 +3001,6 @@ public class Fields {
 	TACHPULSEPERREV,
 	MAPERRORDETECTIONTOOLOW,
 	MAPERRORDETECTIONTOOHIGH,
-	STEP1RPMWINDOW,
 	IDLERPMPID_PFACTOR,
 	IDLERPMPID_IFACTOR,
 	IDLERPMPID_DFACTOR,
