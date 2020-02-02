@@ -117,15 +117,22 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
-	// clt = Analog Temp 1 = PC4
-	engineConfiguration->clt.adcChannel = EFI_ADC_14;
+	// CLT = Analog Temp 3 = PB0
+	engineConfiguration->clt.adcChannel = EFI_ADC_8;
 	engineConfiguration->clt.config.bias_resistor = 2700;
 
-	// iat = Analog Temp 2 = PC5
+	// IAT = Analog Temp 2 = PC5
 	engineConfiguration->iat.adcChannel = EFI_ADC_15;
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
-	// TODO: more sensors
+	// TPS = Analog volt 2 = PC1
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_11;
+
+	// MAP = Analog volt 1 = PC0
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+
+	// No battery voltage setting - see adc_hack.cpp
+	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 }
 
 void setPinConfigurationOverrides(void) {
