@@ -778,12 +778,12 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->warningPeriod = 0;
 #endif /* EFI_PROD_CODE */
 
-	engineConfiguration->step1rpm = 3000;
- 	engineConfiguration->step1timing = 10;
-	engineConfiguration->step1RpmWindow = 500;
-	engineConfiguration->step1fuelCutEnable = false;
-	engineConfiguration->step1SparkCutEnable = false;
-	engineConfiguration->step1RpmWindow = 500;
+	engineConfiguration->launchRpm = 3000;
+ 	engineConfiguration->launchTimingRetard = 10;
+	engineConfiguration->launchTimingRpmRange = 500;
+	engineConfiguration->launchSparkCutEnable = false;
+	engineConfiguration->launchFuelCutEnable = false;
+	engineConfiguration->hardCutRpmRange = 500;
 
 	engineConfiguration->slowAdcAlpha = 0.33333;
 	engineConfiguration->engineSnifferRpmThreshold = 2500;
