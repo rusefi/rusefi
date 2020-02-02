@@ -667,6 +667,17 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       xBins       = tpsTpsAccelFromRpmBins,  TPSValue
       yBins       = tpsTpsAccelToRpmBins,  TPSValue
       zBins       = tpsTpsAccelTable
+
+       table = boostTableTbl,  boostMapOpen,  "",   1
+      xBins       = boostRpmBins,  RPMValue
+      yBins       = boostMapBins,  MAPValue
+      zBins       = boostTableOpenLoop
+
+	table = boostTable2Tbl,  boostMapClosed,  "",   1
+      xBins       = boostRpmBins,  RPMValue
+      yBins       = boostTpsBins,  TPSValue
+      zBins       = boostTableClosedLoop
+
     
       
    table = fsioTable1Tbl,  fsioTable1Map,  "FSIO Table #1",   1
@@ -1214,7 +1225,10 @@ menuDialog = main
 		subMenu = cltIdleCurve,				"CLT multiplier"
 		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 
-	menu = "&FSIO" 
+	menu = "&Advanced" 
+        subMenu = boostDialog,          "Boost Control"
+		subMenu = boostPidDialog,        "Closed Loop Boost",    { boostType == 1 }
+        subMenu = std_separator	
 		subMenu = fsioInputsDialog,        	"FSIO inputs"
 		subMenu = auxPidDialog,				"Aux PID"
 		subMenu = fsioOutputsDialog,        "FSIO outputs"
@@ -2496,6 +2510,36 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "ADC #2",								fsioAdc2
 		field = "ADC #3",								fsioAdc3
 		field = "ADC #4",								fsioAdc4
+
+;Boost Open Loop
+
+        dialog = boost_left, ""
+                field = "Enable",                           isBoostControlEnabled
+                field = "Control Mode",                     boostType, { isBoostControlEnabled }
+		field = "Output",							boostControlPin, { isBoostControlEnabled }
+		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
+		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled } 
+		
+         dialog = boostDialog, "", border
+                panel = boost_left, West
+                panel = boostTableTbl, Center
+
+;Boost Closed Loop
+
+         dialog = boostPidleft, ""
+                field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }				
+	        field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }			
+	        field = "D Gain",                            boostPid_dFactor, { isBoostControlEnabled && boostType == 1 }						
+	        field = "Control Period",                    boostPid_periodMs, { isBoostControlEnabled && boostType == 1 }			
+	        field = "Min Duty",                          boostPid_minValue, { isBoostControlEnabled && boostType == 1 }			
+	        field = "Max Duty",                          boostPid_maxValue, { isBoostControlEnabled && boostType == 1 }	
+
+         dialog = boostTableDialog, "", card
+                panel = boostTable2Tbl
+
+	dialog = boostPidDialog, "", border
+                panel = boostPidleft, West
+                panel = boostTableDialog, Center	
 				
 	help = veTableDialogHelp, "Volumetric Efficiency"
         text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"
