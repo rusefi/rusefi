@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Jan 31 14:19:03 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Feb 02 12:17:28 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -613,13 +613,13 @@ struct engine_configuration_s {
 	bool absoluteFuelPressure : 1;
 	/**
 	offset 76 bit 20 */
-	bool issue_294_21 : 1;
+	bool launchControlEnabled : 1;
 	/**
 	offset 76 bit 21 */
-	bool issue_294_22 : 1;
+	bool rollingLaunchEnabled : 1;
 	/**
 	offset 76 bit 22 */
-	bool issue_294_23 : 1;
+	bool antiLagEnabled : 1;
 	/**
 	offset 76 bit 23 */
 	bool issue_294_24 : 1;
@@ -710,11 +710,11 @@ struct engine_configuration_s {
 	 * A secondary Rev limit engaged by the driver to help launch the vehicle faster
 	 * offset 316
 	 */
-	int step1rpm;
+	int launchRpm;
 	/**
 	 * offset 320
 	 */
-	int step1timing;
+	int launchTimingRetard;
 	/**
 	 * value '6' for 8MHz hw osc
 	 * read hip9011 datasheet for details
@@ -1700,7 +1700,57 @@ struct engine_configuration_s {
 	/**
 	 * offset 1020
 	 */
-	int unusedAtOldBoardConfigurationEnd[111];
+	launchActivationMode_e launchActivationMode;
+	/**
+	 * offset 1024
+	 */
+	antiLagActivationMode_e antiLagActivationMode;
+	/**
+	 * offset 1028
+	 */
+	switch_input_pin_e antiLagActivatePin;
+	/**
+	 * offset 1029
+	 */
+	switch_input_pin_e launchActivatePin;
+	/**
+	 * Disabled above this speed
+	 * offset 1030
+	 */
+	int launchSpeedTreshold;
+	/**
+	 * Disabled below this rpm
+	 * offset 1034
+	 */
+	int launchRpmTreshold;
+	/**
+	 * Range from Launch Rpm for Timing Retard to activate
+	 * offset 1038
+	 */
+	int launchTimingRpmRange;
+	/**
+	 * Extra Fuel Added
+	 * offset 1042
+	 */
+	int launchFuelAdded;
+	/**
+	 * Duty Cycle for the Boost Solenoid
+	 * offset 1046
+	 */
+	int launchBoostDuty;
+	/**
+	 * RPM Range for Hard Cut
+	 * offset 1050
+	 */
+	int hardCutRpmRange;
+	/**
+	 * offset 1054
+	 */
+	uint8_t unusedMoreSpace[2];
+	/**
+	 * offset 1056
+	 */
+	int unusedAtOldBoardConfigurationEnd[102];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -1767,10 +1817,11 @@ struct engine_configuration_s {
 	bool cutSparkOnHardLimit : 1;
 	/**
 	offset 1464 bit 18 */
-	bool step1fuelCutEnable : 1;
+	bool launchFuelCutEnable : 1;
 	/**
+	 * This is the Cut Mode normally used
 	offset 1464 bit 19 */
-	bool step1SparkCutEnable : 1;
+	bool launchSparkCutEnable : 1;
 	/**
 	offset 1464 bit 20 */
 	bool hasFrequencyReportingMapSensor : 1;
@@ -1921,8 +1972,9 @@ struct engine_configuration_s {
 	offset 1476 bit 22 */
 	bool isBoostControlEnabled : 1;
 	/**
+	 * Interpolates the Ignition Retard from 0 to 100% within the RPM Range
 	offset 1476 bit 23 */
-	bool unused_1484_bit_23 : 1;
+	bool launchSmoothRetard : 1;
 	/**
 	offset 1476 bit 24 */
 	bool unused_1484_bit_24 : 1;
@@ -2105,10 +2157,9 @@ struct engine_configuration_s {
 	 */
 	float mapErrorDetectionTooHigh;
 	/**
-	 * RPMs prior to step1rpm point where ignition advance is retarded
 	 * offset 1784
 	 */
-	int step1RpmWindow;
+	uint8_t unusedSomething[4];
 	/**
 	 * See cltIdleRpmBins
 	 * offset 1788
@@ -3169,4 +3220,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Jan 31 14:19:03 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Feb 02 12:17:28 EST 2020
