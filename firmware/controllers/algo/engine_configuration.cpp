@@ -76,7 +76,7 @@
 #include "lada_kalina.h"
 #include "zil130.h"
 #include "honda_600.h"
-
+#include "boost_control.h"
 #if EFI_IDLE_CONTROL
 #include "idle_thread.h"
 #endif /* EFI_IDLE_CONTROL */
@@ -183,6 +183,10 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ALTERNATOR_CONTROL
 	onConfigurationChangeAlternatorCallback(&activeConfiguration);
 #endif /* EFI_ALTERNATOR_CONTROL */
+
+#if EFI_BOOST_CONTROL
+	onConfigurationChangeBoostCallback(&activeConfiguration);
+#endif
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
@@ -646,6 +650,9 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setDefaultEtbParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setDefaultEtbBiasCurve(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+#if EFI_BOOST_CONTROL
+    setDefaultBoostParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
+#endif
 
 	CONFIG(mafSensorType) = Bosch0280218037;
 	setBosch0280218037(config);
