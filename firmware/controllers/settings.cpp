@@ -1341,8 +1341,11 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		setConstantDwell(valueF PASS_CONFIG_PARAMETER_SUFFIX);
 	} else if (strEqualCaseInsensitive(paramStr, "engineSnifferRpmThreshold")) {
 		engineConfiguration->engineSnifferRpmThreshold = valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {
-		engineConfiguration->step1rpm = valueI;
+// migrate to new laucnh fields?
+		//	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {
+//		engineConfiguration->step1rpm = valueI;
+		//	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {
+		//		engineConfiguration->step1timing = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
 		engineConfiguration->tpsMax = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
@@ -1357,8 +1360,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtMode = (vvt_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
 		engineConfiguration->nbVvtIndex = valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {
-		engineConfiguration->step1timing = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
 		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
