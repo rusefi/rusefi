@@ -95,6 +95,19 @@ public class ReaderState {
         }
     }
 
+    private void handleEndStruct(List<ConfigurationConsumer> consumers) throws IOException {
+        if (stack.isEmpty())
+            throw new IllegalStateException("Unexpected end_struct");
+        ConfigStructure structure = stack.pop();
+        SystemOut.println("Ending structure " + structure.getName());
+        structure.addAlignmentFill(this);
+
+        structures.put(structure.getName(), structure);
+
+        for (ConfigurationConsumer consumer : consumers)
+            consumer.handleEndStruct(structure);
+    }
+
     public void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {
         for (ConfigurationConsumer consumer : consumers)
             consumer.startFile();
@@ -114,7 +127,7 @@ public class ReaderState {
                 handleStartStructure(this, line.substring(STRUCT_NO_PREFIX.length()), false);
             } else if (line.startsWith(END_STRUCT)) {
                 addBitPadding();
-                handleEndStruct(this, consumers);
+                this.handleEndStruct(consumers);
             } else if (line.startsWith(BIT)) {
                 handleBitLine(this, line);
 
@@ -128,6 +141,8 @@ public class ReaderState {
                  */
                 ConfigDefinition.processDefine(line.substring(DEFINE.length()).trim());
             } else {
+                if (stack.isEmpty())
+                    throw new IllegalStateException("Expected to be within structure");
                 addBitPadding();
                 processField(this, line);
             }
@@ -172,19 +187,6 @@ public class ReaderState {
         SystemOut.println("Starting structure " + structure.getName());
     }
 
-    private static void handleEndStruct(ReaderState state, List<ConfigurationConsumer> consumers) throws IOException {
-        if (state.stack.isEmpty())
-            throw new IllegalStateException("Unexpected end_struct");
-        ConfigStructure structure = state.stack.pop();
-        SystemOut.println("Ending structure " + structure.getName());
-        structure.addAlignmentFill(state);
-
-        state.structures.put(structure.getName(), structure);
-
-        for (ConfigurationConsumer consumer : consumers)
-            consumer.handleEndStruct(structure);
-    }
-
     private static void processField(ReaderState state, String line) {
 
         ConfigField cf = ConfigField.parse(state, line);
@@ -194,6 +196,15 @@ public class ReaderState {
         if (state.stack.isEmpty())
             throw new IllegalStateException(cf.getName() + ": Not enclosed in a struct");
         ConfigStructure structure = state.stack.peek();
+
+        Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
+        if (getPrimitiveSize != null && getPrimitiveSize % 4 == 0) {
+            SystemOut.println("Need to align before " + cf.getName());
+            structure.addAlignmentFill(state);
+        } else {
+            // adding a structure instance - had to be aligned
+ // todo?           structure.addAlignmentFill(state);
+        }
 
         if (cf.isIterate()) {
             structure.addC(cf);

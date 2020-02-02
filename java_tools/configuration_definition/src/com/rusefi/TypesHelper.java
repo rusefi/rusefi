@@ -24,6 +24,13 @@ public class TypesHelper {
             return state.structures.get(type).totalSize;
         if (state != null && state.tsCustomSize.containsKey(type))
             return state.tsCustomSize.get(type);
+        Integer primitiveSize = getPrimitiveSize(type);
+        if (primitiveSize != null)
+            return primitiveSize;
+        throw new IllegalArgumentException("Unknown type " + type);
+    }
+
+    public static Integer getPrimitiveSize(String type) {
         if (isPrimitive1byte(type))
             return 1;
         if (isPrimitive2byte(type)) {
@@ -32,7 +39,7 @@ public class TypesHelper {
         if (isPrimitive4byte(type)) {
             return 4;
         }
-        throw new IllegalArgumentException("Unknown type " + type);
+        return null;
     }
 
     public static boolean isPrimitive(String type) {

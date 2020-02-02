@@ -2,6 +2,7 @@ package com.rusefi.test;
 
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
+import com.rusefi.TypesHelper;
 import com.rusefi.VariableRegistry;
 import com.rusefi.output.FsioSettingsConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
@@ -9,7 +10,6 @@ import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 
@@ -31,6 +31,24 @@ public class ConfigFieldParserTest {
             assertEquals(cf.getSize(null), 8);
             assertFalse("isIterate", cf.isIterate());
         }
+    }
+
+    @Test
+    public void alignFourByteTypes() throws IOException {
+        // we expect padding before each 4 byte field
+        String test = "struct pid_s\n" +
+                "\tint16_t periodMs1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "\tint periodSec;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "\tint16_t periodMs2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "\tint periodSec2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        JavaFieldsConsumer javaFieldsConsumer = createTestJavaConsumer(state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+
+        assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
     }
 
     @Test
@@ -57,19 +75,9 @@ public class ConfigFieldParserTest {
                     "end_struct\n" +
                     "" +
                     "";
-            Reader inputString = new StringReader(test);
-            BufferedReader reader = new BufferedReader(inputString);
+            BufferedReader reader = new BufferedReader(new StringReader(test));
 
-            JavaFieldsConsumer javaFieldsConsumer = new JavaFieldsConsumer(state) {
-                @Override
-                public void startFile() {
-                }
-
-                @Override
-                public void endFile() {
-                }
-            };
-
+            JavaFieldsConsumer javaFieldsConsumer = createTestJavaConsumer(state);
 
             FsioSettingsConsumer fsioSettingsConsumer = new FsioSettingsConsumer(state) {
                 @Override
@@ -152,6 +160,18 @@ public class ConfigFieldParserTest {
                     "\tcase FSIO_SETTING_ETB2_MINVALUE:\n" +
                     "\t\treturn \"cfg_etb2_minValue\";\n", fsioSettingsConsumer.getStrings());
         }
+    }
+
+    private JavaFieldsConsumer createTestJavaConsumer(ReaderState state) {
+        return new JavaFieldsConsumer(state) {
+            @Override
+            public void startFile() {
+            }
+
+            @Override
+            public void endFile() {
+            }
+        };
     }
 
     @Test
