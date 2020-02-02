@@ -1304,7 +1304,6 @@ menuDialog = main
 
 		# EXPERIMENTAL FEATURES
 		subMenu = parkingLot,				"Experimental/Broken"
-		subMenu = smLaunchControl,			"Launch control"
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
@@ -1313,6 +1312,13 @@ menuDialog = main
 		subMenu = etbDialog,				"Electronic throttle body (beta version)" @@if_ts_show_etb
 		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
 		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
+		subMenu = std_separator		
+        subMenu = smLaunchControl,			"Launch Control"
+		subMenu = std_separator	
+		subMenu = smRollingLaunch,			"Rolling Launch"
+		subMenu = std_separator	
+		subMenu = antiLag,        			"Antilag Setup"
+		subMenu = std_separator	
 
 
 [ControllerCommands]
@@ -1636,9 +1642,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
 		field = "Fuel level", 						fuelLevelSensor
 		field = "Clutch down switch",					clutchDownPin
-		field = "Clutch down inverted",					clutchDownPinInverted
+		field = "Clutch down inverted",					clutchDownPinMode
 		field = "Clutch up switch",						clutchUpPin
-		field = "Clutch up inverted",					clutchUpPinInverted
+		field = "Clutch up inverted",					clutchUpPinMode
 		field = "Throttle Up switch",					throttlePedalUpPin
 		field = "Brake pedal switch",					brakePedalPin
 		field = "A/C switch",							acSwitchAdc
@@ -2527,7 +2533,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;Boost Closed Loop
 
          dialog = boostPidleft, ""
-         	field = "!Boost Control is experimental/Alpha Version"
                 field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }				
 	        field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }			
 	        field = "D Gain",                            boostPid_dFactor, { isBoostControlEnabled && boostType == 1 }						
@@ -2606,7 +2611,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Neutral Position",						etbNeutralPosition
 		field = "Debug mode",							debugMode
 		field = "use ETB for idle",						useETBforIdleControl
-		field = "ETB idle maximum angle",				etbIdleRange
+		field = "ETB idle maximum angle",				etbIdleThrottleRange
 		field = "Press buttons to calibrate sensors"
 		field = "You would have to remove air filter to move throttle manually"
 	    commandButton = "TPS#1 closed position", cmd_calibrate_tps_1_closed
@@ -2704,14 +2709,39 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 				;			Racing Features->Launch Control
 	dialog = smLaunchControl, "Launch Control Settings NOT WORKING"
-		field = "RPM Step1 Limit",         	    		step1rpm
-		field = "Launch RPM Window"                     step1RpmWindow
-		field = "Step1 Ignition Advance",				step1timing
-		field = "Use Spark Cut",						step1SparkCutEnable
-		field = "Use Fuel Cut",							step1fuelCutEnable
-		field = "clutchDownPin",						clutchDownPin
-		field = "clutchUpPin",							clutchUpPin
-		field = "brakePedalPin",						brakePedalPin
+        field = "Enable Launch Control",               	launchControlEnabled
+		field = "Activation Mode",                      launchActivationMode
+	    field = "Switch Input",                     	launchActivatePin,  {launchActivationMode == 0 && launchControlEnabled == 1}
+		field = "Clutch Input", 						clutchDownPin,      {launchActivationMode == 1 && launchControlEnabled == 1}
+		field = ""
+		field = "Rpm Treshold",                         launchRpmTreshold,  {launchControlEnabled == 1}
+		field = "Speed Treshold",                       launchSpeedTreshold,  {launchControlEnabled == 1}
+        field = ""
+		field = "Launch RPM",            	    		launchRpm,  {launchControlEnabled == 1}
+		field = "Extra Fuel",           				launchFuelAdded,  {launchControlEnabled == 1}
+        field = "Boost Solenoid Duty",	                launchBoostDuty,  {launchControlEnabled == 1}
+		field = "Ignition Retard",      				launchTimingRetard,  {launchControlEnabled == 1}
+		field = "Ignition Retard RPM Range",            launchTimingRpmRange,  {launchControlEnabled == 1}
+		field = "Smooth Retard Mode",                   launchSmoothRetard,  {launchControlEnabled == 1}
+		field = "Hard Cut Mode"
+		field = "Ignition Cut",    						launchSparkCutEnable,  {launchControlEnabled == 1}
+		field = "Fuel Cut",	    						launchFuelCutEnable,  {launchControlEnabled == 1}
+		field = "Hard Cut RPM Range",                   hardCutRpmRange,  {launchControlEnabled == 1}
+		
+
+
+
+					;			Racing Features->Rolling Launch
+	dialog = smRollingLaunch, "Rolling Launch Settings NOT WORKING"
+       field = "Enable Rolling Launch",                rollingLaunchEnabled
+
+					;			Racing Features->Rolling Launch
+	dialog = antiLag, "AntiLag Settings NOT WORKING"
+        field = "Enable AntiLag",               antiLagEnabled
+	    field = "Activation Mode",          	antiLagActivationMode,  {antiLagEnabled == 1}
+        field = "Switch Input",                 antiLagActivatePin,  {antiLagActivationMode == 1 && antiLagEnabled == 1}
+
+
 	    
 	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
 		field = "Enable Coasting Fuel Cutoff",			coastingFuelCutEnabled

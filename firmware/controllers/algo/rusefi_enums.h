@@ -845,3 +845,16 @@ typedef enum {
 	CLOSED_LOOP = 1,
 	Force_4bytes_size_boostType_e = ENUM_32_BITS,
 } boostType_e;
+
+typedef enum {
+	SWITCH_INPUT_LAUNCH = 0,
+	CLUTCH_INPUT_LAUNCH = 1,
+	ALWAYS_ACTIVE_LAUNCH = 2,
+	Force_4bytes_size_launchActivationMode_e = ENUM_32_BITS,
+} launchActivationMode_e;
+
+typedef enum {
+	SWITCH_INPUT_ANTILAG = 0,
+	ALWAYS_ON_ANTILAG = 1,
+	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
+} antiLagActivationMode_e;
