@@ -96,13 +96,22 @@ typedef enum {
 #define FWDStat1            0x38
 
 /* Status registers */
-#define CMD_OPSTAT0			CMD_R(0x34)
-#define CMD_OPSTAT1			CMD_R(0x35)
+#define CMD_OPSTAT(n)		CMD_R(0x34 + ((n) & 0x01))
 #define CMD_WWDSTAT			CMD_R(WWDStat)
 #define CMD_FWDSTAT0  		CMD_R(FWDStat0)
 #define CMD_FWDSTAT1        CMD_R(FWDStat1)
 #define CMD_TECSTAT			CMD_R(0x39)
 #define CMD_WdDiag			CMD_R(0x2e)
+
+/* Diagnostic */
+#define CMD_DIAG(n)			CMD_R(0x20 + ((n) & 0x01))
+#define CMD_VRSDIAG(n)		CMD_R(0x22 + ((n) & 0x01))
+#define CMD_COMDIAG			CMD_R(0x24)
+#define CMD_OUTDIAG(n)		CMD_R(0x25 + ((n) & 0x07))
+#define CMD_PPOVDIAG		CMD_R(0x2a)
+#define CMD_BRIDIAG(n)		CMD_R(0x2b + ((n) & 0x01))
+#define CMD_IGNDIAG			CMD_R(0x2d)
+#define CMD_WDDIAG			CMD_R(0x2e)
 
 
 #define CMD_OUTCONFIG(n, d)	CMD_WR(0x40 + (n), d)
@@ -133,6 +142,7 @@ const uint8_t watchDogResponses[16][4] = {
 {0x4E, 0xBE, 0x41, 0xB1},
 {0x01, 0xF1, 0x0E, 0xFE}
 };
+
 /*==========================================================================*/
 /* Driver exported variables.												*/
 /*==========================================================================*/
@@ -202,8 +212,15 @@ struct tle8888_priv {
 
 	tle8888_drv_state			drv_state;
 
+	/* diagnostic registers */
+	uint8_t						OutDiag[5];
+	uint8_t						BriDiag[2];
+	uint8_t						IgnDiag;
 	/* status registers */
-	uint16_t					OpStat[2];
+	uint8_t						OpStat[2];
+
+	/* last diagnostick was read */
+	systime_t					ts_diag;
 };
 
 static struct tle8888_priv chips[BOARD_TLE8888_COUNT];
@@ -324,10 +341,10 @@ static int tle8888_update_output(struct tle8888_priv *chip)
 }
 
 /**
- * @brief read TLE8888 OpStat1 registers data.
- * @details Sends read command, then send same command and read reply
+ * @brief read TLE8888 OpStat1 and diagnostic registers data.
+ * @details Chained read of several registers
  */
-static int tle8888_update_status(struct tle8888_priv *chip)
+static int tle8888_update_status_and_diag(struct tle8888_priv *chip)
 {
 	int ret = 0;
 	uint16_t rx = 0;
@@ -338,19 +355,62 @@ static int tle8888_update_status(struct tle8888_priv *chip)
 	/* the address and content of the selected register is transmitted with the
 	 * next SPI transmission (for not existing addresses or wrong access mode
 	 * the data is always '0' */
+	/* this is quite expensive to call tle8888_spi_rw on each register read
+	 * TODO: implement tle8888_spi_rw_array ? */
 
-	ret = tle8888_spi_rw(chip, CMD_OPSTAT1, NULL);
-
-	if (ret)
+	/* request OutDiad0, ignore received */
+	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(0), NULL)))
 		return ret;
 
-	ret = tle8888_spi_rw(chip, CMD_OPSTAT1, &rx);
-
-	if (ret)
+	/* request OutDiad1, receive OutDiag0 */
+	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(1), &rx)))
 		return ret;
+	chip->OutDiag[0] = getDataFromResponse(rx);
 
-	// available in debugFloatField3
-	chip->OpStat[1] = rx;
+	/* request OutDiad2, receive OutDiag1 */
+	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(2), &rx)))
+		return ret;
+	chip->OutDiag[1] = getDataFromResponse(rx);
+
+	/* request OutDiad3, receive OutDiag2 */
+	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(3), &rx)))
+		return ret;
+	chip->OutDiag[2] = getDataFromResponse(rx);
+
+	/* request OutDiad4, receive OutDiag3 */
+	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(4), &rx)))
+		return ret;
+	chip->OutDiag[3] = getDataFromResponse(rx);
+
+	/* request BriDiag0, receive OutDiag4 */
+	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(0), &rx)))
+		return ret;
+	chip->OutDiag[4] = getDataFromResponse(rx);
+
+	/* request BriDiag1, receive BriDiag0 */
+	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(1), &rx)))
+		return ret;
+	chip->BriDiag[0] = getDataFromResponse(rx);
+
+	/* request IgnDiag, receive BriDiag1 */
+	if ((ret = tle8888_spi_rw(chip, CMD_IGNDIAG, &rx)))
+		return ret;
+	chip->BriDiag[1] = getDataFromResponse(rx);
+
+	/* request OpStat0, receive IgnDiag */
+	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(0), &rx)))
+		return ret;
+	chip->IgnDiag = getDataFromResponse(rx);
+
+	/* request OpStat1, receive OpStat0 */
+	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(1), &rx)))
+		return ret;
+	chip->OpStat[0] = getDataFromResponse(rx);
+
+	/* request OpStat1, receive OpStat1 */
+	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(1), &rx)))
+		return ret;
+	chip->OpStat[1] = getDataFromResponse(rx);
 
 	/* TODO: unlock? */
 
@@ -603,9 +663,15 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 				/* set state to TLE8888_FAILED? */
 			}
 
-			ret = tle8888_update_status(chip);
-			if (ret) {
-				/* set state to TLE8888_FAILED or force reinit? */
+			if (chVTTimeElapsedSinceX(chip->ts_diag) >= TIME_MS2I(TLE8888_POLL_INTERVAL_MS)) {
+				/* this is expensive call, will do a lot of spi transfers...
+				 * make it conditional? */
+				ret = tle8888_update_status_and_diag(chip);
+				if (ret) {
+					/* set state to TLE8888_FAILED or force reinit? */
+				}
+
+				chip->ts_diag = chVTGetSystemTimeX();
 			}
 
 			/* if bit OE is cleared - reset happened */
@@ -651,6 +717,74 @@ static int tle8888_writePad(void *data, unsigned int pin, int value) {
 		return tle8888_wake_driver(chip);
 	}
 	return 0;
+}
+
+static brain_pin_diag_e tle8888_2b_to_diag_no_temp(unsigned int bits)
+{
+	if (bits == 0x01)
+		return PIN_SHORT_TO_BAT;
+	if (bits == 0x02)
+		return PIN_OPEN;
+	if (bits == 0x03)
+		return PIN_SHORT_TO_GND;
+	return PIN_OK;
+}
+
+static brain_pin_diag_e tle8888_2b_to_diag_with_temp(unsigned int bits)
+{
+	brain_pin_diag_e diag = tle8888_2b_to_diag_no_temp(bits);
+
+	if (diag == PIN_SHORT_TO_BAT)
+		diag |= PIN_DRIVER_OVERTEMP;
+
+	return diag;
+}
+
+static brain_pin_diag_e tle8888_getDiag(void *data, unsigned int pin)
+{
+	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
+		return PIN_INVALID;
+
+	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+
+	if (pin < 4)
+		return tle8888_2b_to_diag_with_temp((chip->OutDiag[0] >> ((pin - 0) * 2)) & 0x03);
+	if (pin < 8) {
+		if (pin == 7)
+			return tle8888_2b_to_diag_no_temp((chip->OutDiag[1] >> ((pin - 4) * 2)) & 0x03);
+		else
+			return tle8888_2b_to_diag_with_temp((chip->OutDiag[1] >> ((pin - 4) * 2)) & 0x03);
+	}
+	if (pin < 12)
+		return tle8888_2b_to_diag_with_temp((chip->OutDiag[2] >> ((pin - 8) * 2)) & 0x03);
+	if (pin < 16) {
+		if (pin == 12)
+			return tle8888_2b_to_diag_no_temp((chip->OutDiag[3] >> ((pin - 12) * 2)) & 0x03);
+		else
+			return tle8888_2b_to_diag_with_temp((chip->OutDiag[3] >> ((pin - 12) * 2)) & 0x03);
+	}
+	if (pin < 20)
+		return tle8888_2b_to_diag_with_temp((chip->OutDiag[4] >> ((pin - 16) * 2)) & 0x03);
+	if (pin < 24) {
+		/* half bridges */
+		brain_pin_diag_e diag;
+
+		diag = tle8888_2b_to_diag_no_temp((chip->BriDiag[0] >> ((pin - 20) * 2)) & 0x03);
+		if (((pin == 22) || (pin == 23)) &&
+			(chip->BriDiag[1] & BIT(5)))
+			diag |= PIN_DRIVER_OVERTEMP;
+		if (((pin == 20) || (pin == 21)) &&
+			(chip->BriDiag[1] & BIT(4)))
+			diag |= PIN_DRIVER_OVERTEMP;
+		if (chip->BriDiag[1] & BIT(pin - 20))
+			diag |= PIN_OVERLOAD; /* overcurrent */
+
+		return diag;
+	}
+	if (pin < 28)
+		return tle8888_2b_to_diag_with_temp((chip->IgnDiag >> ((pin - 24) * 2)) & 0x03);
+
+	return PIN_OK;
 }
 
 /**
@@ -774,7 +908,7 @@ static int tle8888_deinit(void *data)
 struct gpiochip_ops tle8888_ops = {
 	.writePad	= tle8888_writePad,
 	.readPad	= NULL,	/* chip outputs only */
-	//.getDiag	= tle8888_getDiag,
+	.getDiag	= tle8888_getDiag,
 	.init		= tle8888_init,
 	.deinit 	= tle8888_deinit,
 };
