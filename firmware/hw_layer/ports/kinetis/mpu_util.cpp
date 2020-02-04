@@ -241,5 +241,21 @@ size_t flashSectorSize(flashsector_t sector) {
 	return 0;
 }
 
+
+/**
+ * Flex Non Volatile Memory is faster than flash
+ * It also has smaller pages so it takes less time to erase
+ *
+ * There is no remote access to FlexNVM meaning that we cannot erase settings externally
+ */
+
+uintptr_t getFlashAddrFirstCopy() {
+	return 0x10000000;
+}
+
+uintptr_t getFlashAddrSecondCopy() {
+	return 0x10008000;
+}
+
 #endif /* EFI_PROD_CODE */
 

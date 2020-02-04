@@ -106,16 +106,6 @@
 #define EFI_INTERNAL_FLASH TRUE
 
 /**
- * Flex Non Volatile Memory is faster than flash
- * It also has smaller pages so it takes less time to erase
- *
- * There is no remote access to FlexNVM meaning that we cannot erase settings externally
- */
-
-#define FLASH_ADDR 0x10000000	// FlexNVM
-#define FLASH_ADDR_SECOND_COPY 0x10008000
-
-/**
  * Usually you need shaft position input, but maybe you do not need it?
  */
 #ifndef EFI_SHAFT_POSITION_INPUT
