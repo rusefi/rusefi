@@ -323,7 +323,7 @@ bit useBiQuadAnalogFiltering;
 bit cj125isUaDivided;
 bit cj125isLsu49;
 bit etb_use_two_wires;
-bit unusedHereo_wires;
+bit isDoubleSolenoidIdle;
 bit showSdCardWarning;
 bit cj125isUrDivided;looks like 3v range should be enough, divider not needed
 bit useTLE8888_hall_mode;
@@ -674,7 +674,8 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:7], "Off", "UART1", "UART2", "UA
 	brain_pin_e debugMapAveraging;
 	brain_pin_e starterRelayPin;
 	pin_output_mode_e starterRelayPinMode;
-	uint8_t[2] unuseduartPadding1;
+	brain_pin_e secondSolenoidPin;Some Subaru and some Mazda use double-solenoid idle air valve
+	uint8_t[1] unuseduartPadding1;
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
