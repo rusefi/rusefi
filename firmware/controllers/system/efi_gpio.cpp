@@ -135,6 +135,7 @@ void EnginePins::unregisterPins() {
 	unregisterOutputIfPinOrModeChanged(dizzyOutput, dizzySparkOutputPin, dizzySparkOutputPinMode);
 	unregisterOutputIfPinOrModeChanged(tachOut, tachOutputPin, tachOutputPinMode);
 	unregisterOutputIfPinOrModeChanged(idleSolenoidPin, idle.solenoidPin, idle.solenoidPinMode);
+	unregisterOutputIfPinOrModeChanged(secondIdleSolenoidPin, secondSolenoidPin, idle.solenoidPinMode);
 	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
 	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
 
