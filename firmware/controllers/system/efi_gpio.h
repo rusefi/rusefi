@@ -141,6 +141,7 @@ public:
 	OutputPin debugSetTimer;
 	OutputPin boostPin;
 	OutputPin idleSolenoidPin;
+	OutputPin secondIdleSolenoidPin;
 	OutputPin alternatorPin;
 	/**
 	 * this one is usually on the gauge cluster, not on the ECU

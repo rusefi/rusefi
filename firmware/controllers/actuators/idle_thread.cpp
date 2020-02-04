@@ -575,6 +575,8 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		/**
 		 * Start PWM for idleValvePin
 		 */
+		// todo: even for double-solenoid mode we can probably use same single SimplePWM
+		// todo: open question why do we pass 'OutputPin' into 'startSimplePwmExt' if we have custom applyIdleSolenoidPinState listener anyway?
 		startSimplePwmExt(&idleSolenoid, "Idle Valve",
 				&engine->executor,
 				CONFIG(idle).solenoidPin, &enginePins.idleSolenoidPin,
