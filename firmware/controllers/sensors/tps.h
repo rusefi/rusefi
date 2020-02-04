@@ -12,6 +12,9 @@
 #include "global.h"
 #include "engine_configuration.h"
 
+// Scaled to 1000 counts = 5.0 volts
+#define TPS_TS_CONVERSION 200
+
 bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 /**

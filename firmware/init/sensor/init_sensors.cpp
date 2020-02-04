@@ -6,11 +6,15 @@
 #include "init.h"
 #include "sensor.h"
 
+void initTps();
 void initOilPressure();
 
 void initSensorCli();
 
 void initSensors() {
+	// TPS
+	initTps();
+
 	// aux sensors
 	initOilPressure();
 

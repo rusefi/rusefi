@@ -28,6 +28,10 @@ enum class SensorType : unsigned char {
 	// This is the second sensor
 	Tps1Secondary,
 
+	Tps2,
+	Tps2Primary,
+	Tps2Secondary,
+
 	// Leave me at the end!
 	PlaceholderLast
 };
