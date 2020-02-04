@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Feb 02 13:12:38 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Feb 04 00:55:30 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -590,7 +590,7 @@ struct engine_configuration_s {
 	bool etb_use_two_wires : 1;
 	/**
 	offset 76 bit 13 */
-	bool unusedHereo_wires : 1;
+	bool isDoubleSolenoidIdle : 1;
 	/**
 	offset 76 bit 14 */
 	bool showSdCardWarning : 1;
@@ -1421,9 +1421,14 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e starterRelayPinMode;
 	/**
+	 * Some Subaru and some Mazda use double-solenoid idle air valve
 	 * offset 810
 	 */
-	uint8_t unuseduartPadding1[2];
+	brain_pin_e secondSolenoidPin;
+	/**
+	 * offset 811
+	 */
+	uint8_t unuseduartPadding1;
 	/**
 	 * offset 812
 	 */
@@ -1581,94 +1586,94 @@ struct engine_configuration_s {
 	bool todoClutchDownPinInverted : 1;
 	/**
 	offset 976 bit 2 */
-	bool unusedBit_249_2 : 1;
+	bool unusedBit_250_2 : 1;
 	/**
 	offset 976 bit 3 */
-	bool unusedBit_249_3 : 1;
+	bool unusedBit_250_3 : 1;
 	/**
 	offset 976 bit 4 */
-	bool unusedBit_249_4 : 1;
+	bool unusedBit_250_4 : 1;
 	/**
 	offset 976 bit 5 */
-	bool unusedBit_249_5 : 1;
+	bool unusedBit_250_5 : 1;
 	/**
 	offset 976 bit 6 */
-	bool unusedBit_249_6 : 1;
+	bool unusedBit_250_6 : 1;
 	/**
 	offset 976 bit 7 */
-	bool unusedBit_249_7 : 1;
+	bool unusedBit_250_7 : 1;
 	/**
 	offset 976 bit 8 */
-	bool unusedBit_249_8 : 1;
+	bool unusedBit_250_8 : 1;
 	/**
 	offset 976 bit 9 */
-	bool unusedBit_249_9 : 1;
+	bool unusedBit_250_9 : 1;
 	/**
 	offset 976 bit 10 */
-	bool unusedBit_249_10 : 1;
+	bool unusedBit_250_10 : 1;
 	/**
 	offset 976 bit 11 */
-	bool unusedBit_249_11 : 1;
+	bool unusedBit_250_11 : 1;
 	/**
 	offset 976 bit 12 */
-	bool unusedBit_249_12 : 1;
+	bool unusedBit_250_12 : 1;
 	/**
 	offset 976 bit 13 */
-	bool unusedBit_249_13 : 1;
+	bool unusedBit_250_13 : 1;
 	/**
 	offset 976 bit 14 */
-	bool unusedBit_249_14 : 1;
+	bool unusedBit_250_14 : 1;
 	/**
 	offset 976 bit 15 */
-	bool unusedBit_249_15 : 1;
+	bool unusedBit_250_15 : 1;
 	/**
 	offset 976 bit 16 */
-	bool unusedBit_249_16 : 1;
+	bool unusedBit_250_16 : 1;
 	/**
 	offset 976 bit 17 */
-	bool unusedBit_249_17 : 1;
+	bool unusedBit_250_17 : 1;
 	/**
 	offset 976 bit 18 */
-	bool unusedBit_249_18 : 1;
+	bool unusedBit_250_18 : 1;
 	/**
 	offset 976 bit 19 */
-	bool unusedBit_249_19 : 1;
+	bool unusedBit_250_19 : 1;
 	/**
 	offset 976 bit 20 */
-	bool unusedBit_249_20 : 1;
+	bool unusedBit_250_20 : 1;
 	/**
 	offset 976 bit 21 */
-	bool unusedBit_249_21 : 1;
+	bool unusedBit_250_21 : 1;
 	/**
 	offset 976 bit 22 */
-	bool unusedBit_249_22 : 1;
+	bool unusedBit_250_22 : 1;
 	/**
 	offset 976 bit 23 */
-	bool unusedBit_249_23 : 1;
+	bool unusedBit_250_23 : 1;
 	/**
 	offset 976 bit 24 */
-	bool unusedBit_249_24 : 1;
+	bool unusedBit_250_24 : 1;
 	/**
 	offset 976 bit 25 */
-	bool unusedBit_249_25 : 1;
+	bool unusedBit_250_25 : 1;
 	/**
 	offset 976 bit 26 */
-	bool unusedBit_249_26 : 1;
+	bool unusedBit_250_26 : 1;
 	/**
 	offset 976 bit 27 */
-	bool unusedBit_249_27 : 1;
+	bool unusedBit_250_27 : 1;
 	/**
 	offset 976 bit 28 */
-	bool unusedBit_249_28 : 1;
+	bool unusedBit_250_28 : 1;
 	/**
 	offset 976 bit 29 */
-	bool unusedBit_249_29 : 1;
+	bool unusedBit_250_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_249_30 : 1;
+	bool unusedBit_250_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_249_31 : 1;
+	bool unusedBit_250_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -3212,4 +3217,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Feb 02 13:12:38 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Feb 04 00:55:30 EST 2020

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Feb 02 13:12:23 EST 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Feb 04 00:55:12 EST 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -889,6 +889,7 @@ public class Fields {
 	public static final int isBoostControlEnabled_offset = 1476;
 	public static final int isCJ125Enabled_offset = 744;
 	public static final int isCylinderCleanupEnabled_offset = 1476;
+	public static final int isDoubleSolenoidIdle_offset = 76;
 	public static final int isEngineChartEnabled_offset = 1464;
 	public static final int isEngineControlEnabled_offset = 744;
 	public static final int isFastAdcEnabled_offset = 744;
@@ -1121,6 +1122,7 @@ public class Fields {
 	public static final int sdCardPeriodMs_offset = 804;
 	public static final int sdCardPeriodMs_offset_hex = 324;
 	public static final int sdCardSpiDevice_offset = 2592;
+	public static final int secondSolenoidPin_offset = 810;
 	public static final int secondTriggerChannelEnabled_offset = 1476;
 	public static final int sensorChartFrequency_offset = 520;
 	public static final int sensorChartFrequency_offset_hex = 208;
@@ -1372,48 +1374,47 @@ public class Fields {
 	public static final int unusedAnotherOne_offset = 744;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1052;
 	public static final int unusedBit4_1476_offset = 1476;
-	public static final int unusedBit_249_10_offset = 976;
-	public static final int unusedBit_249_11_offset = 976;
-	public static final int unusedBit_249_12_offset = 976;
-	public static final int unusedBit_249_13_offset = 976;
-	public static final int unusedBit_249_14_offset = 976;
-	public static final int unusedBit_249_15_offset = 976;
-	public static final int unusedBit_249_16_offset = 976;
-	public static final int unusedBit_249_17_offset = 976;
-	public static final int unusedBit_249_18_offset = 976;
-	public static final int unusedBit_249_19_offset = 976;
-	public static final int unusedBit_249_20_offset = 976;
-	public static final int unusedBit_249_21_offset = 976;
-	public static final int unusedBit_249_22_offset = 976;
-	public static final int unusedBit_249_23_offset = 976;
-	public static final int unusedBit_249_24_offset = 976;
-	public static final int unusedBit_249_25_offset = 976;
-	public static final int unusedBit_249_26_offset = 976;
-	public static final int unusedBit_249_27_offset = 976;
-	public static final int unusedBit_249_28_offset = 976;
-	public static final int unusedBit_249_29_offset = 976;
-	public static final int unusedBit_249_2_offset = 976;
-	public static final int unusedBit_249_30_offset = 976;
-	public static final int unusedBit_249_31_offset = 976;
-	public static final int unusedBit_249_3_offset = 976;
-	public static final int unusedBit_249_4_offset = 976;
-	public static final int unusedBit_249_5_offset = 976;
-	public static final int unusedBit_249_6_offset = 976;
-	public static final int unusedBit_249_7_offset = 976;
-	public static final int unusedBit_249_8_offset = 976;
-	public static final int unusedBit_249_9_offset = 976;
+	public static final int unusedBit_250_10_offset = 976;
+	public static final int unusedBit_250_11_offset = 976;
+	public static final int unusedBit_250_12_offset = 976;
+	public static final int unusedBit_250_13_offset = 976;
+	public static final int unusedBit_250_14_offset = 976;
+	public static final int unusedBit_250_15_offset = 976;
+	public static final int unusedBit_250_16_offset = 976;
+	public static final int unusedBit_250_17_offset = 976;
+	public static final int unusedBit_250_18_offset = 976;
+	public static final int unusedBit_250_19_offset = 976;
+	public static final int unusedBit_250_20_offset = 976;
+	public static final int unusedBit_250_21_offset = 976;
+	public static final int unusedBit_250_22_offset = 976;
+	public static final int unusedBit_250_23_offset = 976;
+	public static final int unusedBit_250_24_offset = 976;
+	public static final int unusedBit_250_25_offset = 976;
+	public static final int unusedBit_250_26_offset = 976;
+	public static final int unusedBit_250_27_offset = 976;
+	public static final int unusedBit_250_28_offset = 976;
+	public static final int unusedBit_250_29_offset = 976;
+	public static final int unusedBit_250_2_offset = 976;
+	public static final int unusedBit_250_30_offset = 976;
+	public static final int unusedBit_250_31_offset = 976;
+	public static final int unusedBit_250_3_offset = 976;
+	public static final int unusedBit_250_4_offset = 976;
+	public static final int unusedBit_250_5_offset = 976;
+	public static final int unusedBit_250_6_offset = 976;
+	public static final int unusedBit_250_7_offset = 976;
+	public static final int unusedBit_250_8_offset = 976;
+	public static final int unusedBit_250_9_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1772;
-	public static final int unusedHereo_wires_offset = 76;
 	public static final int unusedOldWarmupAfr_offset = 744;
 	public static final int unusedSomething_offset = 1784;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
 	public static final int unusedSpiPadding7_offset = 4005;
 	public static final int unusedSpiPadding8_offset = 4009;
-	public static final int unuseduartPadding1_offset = 810;
+	public static final int unuseduartPadding1_offset = 811;
 	public static final int unusuedsw_offset = 4020;
 	public static final int unusuedvref_offset = 4016;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
@@ -1494,7 +1495,7 @@ public class Fields {
 	public static final Field CJ125ISUADIVIDED = Field.create("CJ125ISUADIVIDED", 76, FieldType.BIT, 10);
 	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 76, FieldType.BIT, 11);
 	public static final Field ETB_USE_TWO_WIRES = Field.create("ETB_USE_TWO_WIRES", 76, FieldType.BIT, 12);
-	public static final Field UNUSEDHEREO_WIRES = Field.create("UNUSEDHEREO_WIRES", 76, FieldType.BIT, 13);
+	public static final Field ISDOUBLESOLENOIDIDLE = Field.create("ISDOUBLESOLENOIDIDLE", 76, FieldType.BIT, 13);
 	public static final Field SHOWSDCARDWARNING = Field.create("SHOWSDCARDWARNING", 76, FieldType.BIT, 14);
 	public static final Field CJ125ISURDIVIDED = Field.create("CJ125ISURDIVIDED", 76, FieldType.BIT, 15);
 	public static final Field USETLE8888_HALL_MODE = Field.create("USETLE8888_HALL_MODE", 76, FieldType.BIT, 16);
@@ -1835,6 +1836,8 @@ public class Fields {
 	public static final Field DEBUGMAPAVERAGING = Field.create("DEBUGMAPAVERAGING", 807, FieldType.INT8, brain_pin_e);
 	public static final Field STARTERRELAYPIN = Field.create("STARTERRELAYPIN", 808, FieldType.INT8, brain_pin_e);
 	public static final Field STARTERRELAYPINMODE = Field.create("STARTERRELAYPINMODE", 809, FieldType.INT8, pin_output_mode_e);
+	public static final Field SECONDSOLENOIDPIN = Field.create("SECONDSOLENOIDPIN", 810, FieldType.INT8, brain_pin_e);
+	public static final Field UNUSEDUARTPADDING1 = Field.create("UNUSEDUARTPADDING1", 811, FieldType.INT8);
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
@@ -1919,36 +1922,36 @@ public class Fields {
 	public static final Field UNUSED = Field.create("UNUSED", 972, FieldType.FLOAT);
 	public static final Field TODOCLUTCHUPPININVERTED = Field.create("TODOCLUTCHUPPININVERTED", 976, FieldType.BIT, 0);
 	public static final Field TODOCLUTCHDOWNPININVERTED = Field.create("TODOCLUTCHDOWNPININVERTED", 976, FieldType.BIT, 1);
-	public static final Field UNUSEDBIT_249_2 = Field.create("UNUSEDBIT_249_2", 976, FieldType.BIT, 2);
-	public static final Field UNUSEDBIT_249_3 = Field.create("UNUSEDBIT_249_3", 976, FieldType.BIT, 3);
-	public static final Field UNUSEDBIT_249_4 = Field.create("UNUSEDBIT_249_4", 976, FieldType.BIT, 4);
-	public static final Field UNUSEDBIT_249_5 = Field.create("UNUSEDBIT_249_5", 976, FieldType.BIT, 5);
-	public static final Field UNUSEDBIT_249_6 = Field.create("UNUSEDBIT_249_6", 976, FieldType.BIT, 6);
-	public static final Field UNUSEDBIT_249_7 = Field.create("UNUSEDBIT_249_7", 976, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_249_8 = Field.create("UNUSEDBIT_249_8", 976, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_249_9 = Field.create("UNUSEDBIT_249_9", 976, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_249_10 = Field.create("UNUSEDBIT_249_10", 976, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_249_11 = Field.create("UNUSEDBIT_249_11", 976, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_249_12 = Field.create("UNUSEDBIT_249_12", 976, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_249_13 = Field.create("UNUSEDBIT_249_13", 976, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_249_14 = Field.create("UNUSEDBIT_249_14", 976, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_249_15 = Field.create("UNUSEDBIT_249_15", 976, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_249_16 = Field.create("UNUSEDBIT_249_16", 976, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_249_17 = Field.create("UNUSEDBIT_249_17", 976, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_249_18 = Field.create("UNUSEDBIT_249_18", 976, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_249_19 = Field.create("UNUSEDBIT_249_19", 976, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_249_20 = Field.create("UNUSEDBIT_249_20", 976, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_249_21 = Field.create("UNUSEDBIT_249_21", 976, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_249_22 = Field.create("UNUSEDBIT_249_22", 976, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_249_23 = Field.create("UNUSEDBIT_249_23", 976, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_249_24 = Field.create("UNUSEDBIT_249_24", 976, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_249_25 = Field.create("UNUSEDBIT_249_25", 976, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_249_26 = Field.create("UNUSEDBIT_249_26", 976, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_249_27 = Field.create("UNUSEDBIT_249_27", 976, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_249_28 = Field.create("UNUSEDBIT_249_28", 976, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_249_29 = Field.create("UNUSEDBIT_249_29", 976, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_249_30 = Field.create("UNUSEDBIT_249_30", 976, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_249_31 = Field.create("UNUSEDBIT_249_31", 976, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_250_2 = Field.create("UNUSEDBIT_250_2", 976, FieldType.BIT, 2);
+	public static final Field UNUSEDBIT_250_3 = Field.create("UNUSEDBIT_250_3", 976, FieldType.BIT, 3);
+	public static final Field UNUSEDBIT_250_4 = Field.create("UNUSEDBIT_250_4", 976, FieldType.BIT, 4);
+	public static final Field UNUSEDBIT_250_5 = Field.create("UNUSEDBIT_250_5", 976, FieldType.BIT, 5);
+	public static final Field UNUSEDBIT_250_6 = Field.create("UNUSEDBIT_250_6", 976, FieldType.BIT, 6);
+	public static final Field UNUSEDBIT_250_7 = Field.create("UNUSEDBIT_250_7", 976, FieldType.BIT, 7);
+	public static final Field UNUSEDBIT_250_8 = Field.create("UNUSEDBIT_250_8", 976, FieldType.BIT, 8);
+	public static final Field UNUSEDBIT_250_9 = Field.create("UNUSEDBIT_250_9", 976, FieldType.BIT, 9);
+	public static final Field UNUSEDBIT_250_10 = Field.create("UNUSEDBIT_250_10", 976, FieldType.BIT, 10);
+	public static final Field UNUSEDBIT_250_11 = Field.create("UNUSEDBIT_250_11", 976, FieldType.BIT, 11);
+	public static final Field UNUSEDBIT_250_12 = Field.create("UNUSEDBIT_250_12", 976, FieldType.BIT, 12);
+	public static final Field UNUSEDBIT_250_13 = Field.create("UNUSEDBIT_250_13", 976, FieldType.BIT, 13);
+	public static final Field UNUSEDBIT_250_14 = Field.create("UNUSEDBIT_250_14", 976, FieldType.BIT, 14);
+	public static final Field UNUSEDBIT_250_15 = Field.create("UNUSEDBIT_250_15", 976, FieldType.BIT, 15);
+	public static final Field UNUSEDBIT_250_16 = Field.create("UNUSEDBIT_250_16", 976, FieldType.BIT, 16);
+	public static final Field UNUSEDBIT_250_17 = Field.create("UNUSEDBIT_250_17", 976, FieldType.BIT, 17);
+	public static final Field UNUSEDBIT_250_18 = Field.create("UNUSEDBIT_250_18", 976, FieldType.BIT, 18);
+	public static final Field UNUSEDBIT_250_19 = Field.create("UNUSEDBIT_250_19", 976, FieldType.BIT, 19);
+	public static final Field UNUSEDBIT_250_20 = Field.create("UNUSEDBIT_250_20", 976, FieldType.BIT, 20);
+	public static final Field UNUSEDBIT_250_21 = Field.create("UNUSEDBIT_250_21", 976, FieldType.BIT, 21);
+	public static final Field UNUSEDBIT_250_22 = Field.create("UNUSEDBIT_250_22", 976, FieldType.BIT, 22);
+	public static final Field UNUSEDBIT_250_23 = Field.create("UNUSEDBIT_250_23", 976, FieldType.BIT, 23);
+	public static final Field UNUSEDBIT_250_24 = Field.create("UNUSEDBIT_250_24", 976, FieldType.BIT, 24);
+	public static final Field UNUSEDBIT_250_25 = Field.create("UNUSEDBIT_250_25", 976, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_250_26 = Field.create("UNUSEDBIT_250_26", 976, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_250_27 = Field.create("UNUSEDBIT_250_27", 976, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_250_28 = Field.create("UNUSEDBIT_250_28", 976, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_250_29 = Field.create("UNUSEDBIT_250_29", 976, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_250_30 = Field.create("UNUSEDBIT_250_30", 976, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_250_31 = Field.create("UNUSEDBIT_250_31", 976, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN1 = Field.create("ETBIO1_CONTROLPIN1", 982, FieldType.INT8, brain_pin_e);
@@ -2400,7 +2403,7 @@ public class Fields {
 	CJ125ISUADIVIDED,
 	CJ125ISLSU49,
 	ETB_USE_TWO_WIRES,
-	UNUSEDHEREO_WIRES,
+	ISDOUBLESOLENOIDIDLE,
 	SHOWSDCARDWARNING,
 	CJ125ISURDIVIDED,
 	USETLE8888_HALL_MODE,
@@ -2731,6 +2734,8 @@ public class Fields {
 	DEBUGMAPAVERAGING,
 	STARTERRELAYPIN,
 	STARTERRELAYPINMODE,
+	SECONDSOLENOIDPIN,
+	UNUSEDUARTPADDING1,
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,
@@ -2813,36 +2818,36 @@ public class Fields {
 	UNUSED,
 	TODOCLUTCHUPPININVERTED,
 	TODOCLUTCHDOWNPININVERTED,
-	UNUSEDBIT_249_2,
-	UNUSEDBIT_249_3,
-	UNUSEDBIT_249_4,
-	UNUSEDBIT_249_5,
-	UNUSEDBIT_249_6,
-	UNUSEDBIT_249_7,
-	UNUSEDBIT_249_8,
-	UNUSEDBIT_249_9,
-	UNUSEDBIT_249_10,
-	UNUSEDBIT_249_11,
-	UNUSEDBIT_249_12,
-	UNUSEDBIT_249_13,
-	UNUSEDBIT_249_14,
-	UNUSEDBIT_249_15,
-	UNUSEDBIT_249_16,
-	UNUSEDBIT_249_17,
-	UNUSEDBIT_249_18,
-	UNUSEDBIT_249_19,
-	UNUSEDBIT_249_20,
-	UNUSEDBIT_249_21,
-	UNUSEDBIT_249_22,
-	UNUSEDBIT_249_23,
-	UNUSEDBIT_249_24,
-	UNUSEDBIT_249_25,
-	UNUSEDBIT_249_26,
-	UNUSEDBIT_249_27,
-	UNUSEDBIT_249_28,
-	UNUSEDBIT_249_29,
-	UNUSEDBIT_249_30,
-	UNUSEDBIT_249_31,
+	UNUSEDBIT_250_2,
+	UNUSEDBIT_250_3,
+	UNUSEDBIT_250_4,
+	UNUSEDBIT_250_5,
+	UNUSEDBIT_250_6,
+	UNUSEDBIT_250_7,
+	UNUSEDBIT_250_8,
+	UNUSEDBIT_250_9,
+	UNUSEDBIT_250_10,
+	UNUSEDBIT_250_11,
+	UNUSEDBIT_250_12,
+	UNUSEDBIT_250_13,
+	UNUSEDBIT_250_14,
+	UNUSEDBIT_250_15,
+	UNUSEDBIT_250_16,
+	UNUSEDBIT_250_17,
+	UNUSEDBIT_250_18,
+	UNUSEDBIT_250_19,
+	UNUSEDBIT_250_20,
+	UNUSEDBIT_250_21,
+	UNUSEDBIT_250_22,
+	UNUSEDBIT_250_23,
+	UNUSEDBIT_250_24,
+	UNUSEDBIT_250_25,
+	UNUSEDBIT_250_26,
+	UNUSEDBIT_250_27,
+	UNUSEDBIT_250_28,
+	UNUSEDBIT_250_29,
+	UNUSEDBIT_250_30,
+	UNUSEDBIT_250_31,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN1,

@@ -1709,6 +1709,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Dizzy out Pin",         	    	    dizzySparkOutputPin
 		field = "O2 heater pin",						o2heaterPin
 		field = "Idle Solenoid Pin",					idle_solenoidPin
+		field = "Second Idle Solenoid Pin",				secondSolenoidPin
 		field = "Idle Stepper Dir",						idle_stepperDirectionPin
 		field = "Idle Stepper Dir Mode",				stepperDirectionPinMode
 		field = "Idle Stepper Step",					idle_stepperStepPin
@@ -1991,6 +1992,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = idleSolenoid, "Solenoid"
 		field = "Idle Solenoid Pin Mode",   	  	    idle_solenoidPinMode, !useStepperIdle
 		field = "Idle Solenoid Pin",					idle_solenoidPin, !useStepperIdle
+		field = "Second Idle Solenoid Pin",				secondSolenoidPin, { !useStepperIdle && isDoubleSolenoidIdle }
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 	
 	dialog = idleStepper, "Stepper"
@@ -2010,6 +2012,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = idlehw, "", yAxis
 	field = "!ECU reboot needed to apply these settings"
 		field = "Use Stepper",				useStepperIdle
+		field = "Double Solenoid Mode",		isDoubleSolenoidIdle
 		panel = idleHwType
 		
 	dialog = idlePidSettings, "PID IAC Control"	
