@@ -217,8 +217,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       
 
 ; throttle, pedal
-      TPSValue        = scalar,  U16,     20,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      throttlePedalPosition = scalar,U16, 22,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      TPSValue        = scalar,  S16,     20,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      throttlePedalPosition = scalar,S16, 22,        "%",{1/@@PACK_MULT_PERCENT@@},         0
       tpsADC          = scalar,  U16,     24,      "ADC",    1,       0.0;
 
 ; air flow/mass measurments
@@ -251,9 +251,9 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 ; Corrections
       injectorLagMs   = scalar,  U16,     62,     "ms",{1/@@PACK_MULT_MS@@},       0.0
-      iatCorrection   = scalar,  U16,     64,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      cltCorrection   = scalar,  U16,     66,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      baroCorrection  = scalar,  U16,     68,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      iatCorrection   = scalar,  S16,     64,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      cltCorrection   = scalar,  S16,     66,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      baroCorrection  = scalar,  S16,     68,        "%",{1/@@PACK_MULT_PERCENT@@},         0
       fuelPidCorrection=scalar,  S16,     70,     "ms",{1/@@PACK_MULT_MS@@},         0
 
 ; Wall model AE
@@ -269,7 +269,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 ; Ignition
       ignitionAdvance = scalar,  S16,     84,    "deg",{1/@@PACK_MULT_ANGLE@@},       0.0
       sparkDwellValue = scalar,  U16,     86,     "ms",{1/@@PACK_MULT_MS@@},       0.0
-      coilDutyCycle   = scalar,  U16,     88,      "%",{1/@@PACK_MULT_PERCENT@@},         0
+      coilDutyCycle   = scalar,  S16,     88,      "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 ; Idle & ETB
       idleAirValvePosition=scalar,S16,    90,      "%",{1/@@PACK_MULT_PERCENT@@},         0
