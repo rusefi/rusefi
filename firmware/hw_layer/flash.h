@@ -7,13 +7,6 @@
 
 #include "global.h"
 
-/**
- * @brief Number of sectors in the flash memory.
- */
-#if !defined(FLASH_SECTOR_COUNT)
-#define FLASH_SECTOR_COUNT 12
-#endif
-
 /* Error codes */
 
 /** @brief Flash operation successful */
@@ -72,6 +65,9 @@ typedef uint8_t flashsector_t;
  * @return @p sector size in bytes.
  */
 size_t flashSectorSize(flashsector_t sector);
+
+uintptr_t getFlashAddrFirstCopy(void);
+uintptr_t getFlashAddrSecondCopy(void);
 
 /**
  * @brief Get the beginning address of @p sector.
