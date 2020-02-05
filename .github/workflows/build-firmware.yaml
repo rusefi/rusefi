@@ -98,7 +98,7 @@ jobs:
     # Build the firmware!
     - name: Build Firmware
       working-directory: ./firmware/
-      run: make -j4 PROJECT_BOARD=${{matrix.efi-board}} PROJECT_CPU=${{matrix.efi-cpu}} EXTRA_PARAMS="${{matrix.type-extra-params}} ${{matrix.target-extra-params}}" DEBUG_LEVEL_OPT='${{matrix.build-debug-level-opt}}' ${{matrix.extra-options}}
+      run: make -j8 PROJECT_BOARD=${{matrix.efi-board}} PROJECT_CPU=${{matrix.efi-cpu}} EXTRA_PARAMS="${{matrix.type-extra-params}} ${{matrix.target-extra-params}}" DEBUG_LEVEL_OPT='${{matrix.build-debug-level-opt}}' ${{matrix.extra-options}}
       
     # The next two steps upload the bin and elf as build artifacts
     - name: Upload elf
