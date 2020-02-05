@@ -61,7 +61,20 @@ jobs:
             type-extra-params: -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_TRACE=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
             build-debug-level-opt: -O2 -ggdb -g3
 
+          # We don't need debug builds for every board...
         exclude:
+          - build-target: frankenso-pal
+            build-type: debug
+          - build-target: mre-f4
+            build-type: debug
+          - build-target: mre-f7
+            build-type: debug
+          - build-target: prometheus-405
+            build-type: debug
+          - build-target: prometheus-469
+            build-type: debug
+          - build-target: proteus
+            build-type: debug
           - build-target: kinetis
             build-type: debug
 
