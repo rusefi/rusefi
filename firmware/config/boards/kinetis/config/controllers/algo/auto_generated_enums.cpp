@@ -1007,6 +1007,8 @@ case TT_MAZDA_MIATA_VVT_TEST:
   return "TT_MAZDA_MIATA_VVT_TEST";
 case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
+case TT_MIATA_NB2_VVT_CAM:
+  return "TT_MIATA_NB2_VVT_CAM";
 case TT_MAZDA_Z5:
   return "TT_MAZDA_Z5";
 case TT_MIATA_VVT:
