@@ -79,8 +79,7 @@ TEST(sensors, testCamInput) {
 	// setting some weird engine
 	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
 
-	// and now changing to ONE trigger on CRANK with CAM/VVT
-
+	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
@@ -99,16 +98,21 @@ TEST(sensors, testCamInput) {
 		eth.fireRise(50);
 	}
 
+	// asserting that lack of camshaft signal would be detecting
 	ASSERT_EQ(1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #2";
 	ASSERT_EQ(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, unitTestWarningCodeState.recentWarnings.get(0)) << "@0";
 	unitTestWarningCodeState.recentWarnings.clear();
 
 	for (int i = 0; i < 600;i++) {
-		eth.fireRise(50);
+		eth.moveTimeForwardUs(MS2US(10));
 		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+		eth.moveTimeForwardUs(MS2US(40));
+		eth.firePrimaryTriggerRise();
 	}
 
+	// asserting that error code has cleared
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
+	ASSERT_NEAR(181, engine->triggerCentral.getVVTPosition(), EPS3D);
 }
 
 TEST(sensors, testNB2CamInput) {
