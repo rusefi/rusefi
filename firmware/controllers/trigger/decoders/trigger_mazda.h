@@ -19,3 +19,4 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s);
 void configureMazdaProtegeLx(TriggerWaveform *s);
 void initialize_Mazda_Engine_z5_Shape(TriggerWaveform *s);
 
+void initializeMazdaMiataVVtCamShape(TriggerWaveform *s);
