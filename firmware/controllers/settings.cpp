@@ -16,7 +16,6 @@
 #include "thermistors.h"
 #include "adc_inputs.h"
 #include "interpolation.h"
-#include "tps.h"
 #include "map.h"
 #include "trigger_decoder.h"
 #include "console_io.h"
@@ -27,6 +26,7 @@
 #include "allsensors.h"
 #include "alternator_controller.h"
 #include "trigger_emulator.h"
+#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "vehicle_speed.h"
@@ -416,7 +416,7 @@ void printTPSInfo(void) {
 	static char pinNameBuffer[16];
 
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
-			getTPSVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
+			Sensor::getRaw(SensorType::Tps1), getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
 
 	if (hasPedalPositionSensor()) {
 		scheduleMsg(&logger, "pedal up %f / down %f",
