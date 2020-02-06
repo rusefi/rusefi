@@ -54,6 +54,10 @@
 struct SensorResult {
 	const bool Valid;
 	const float Value;
+
+	constexpr explicit operator bool() const {
+		return Valid;
+	}
 };
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type

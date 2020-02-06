@@ -209,8 +209,10 @@ static void printSensors(Logging *log) {
 	if (hasCltSensor()) {
 		reportSensorF(log, "CLT", "C", getCoolantTemperature(), 2); // log column #4
 	}
-	if (hasTpsSensor()) {
-		reportSensorF(log, "TPS", "%", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #5
+
+	SensorResult tps = Sensor::get(SensorType::Tps1);
+	if (tps) {
+		reportSensorF(log, "TPS", "%", tps.Value, 2); // log column #5
 	}
 
 	if (hasIatSensor()) {
@@ -704,7 +706,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
 
-	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	float coolant = getCoolantTemperature();
 	float intake = getIntakeAirTemperature();
 
@@ -719,8 +720,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->coolantTemperature = coolant;
 	// offset 8
 	tsOutputChannels->intakeAirTemperature = intake;
-	// offset 12
-	tsOutputChannels->throttlePosition = tps;
+
+	SensorResult tps = Sensor::get(SensorType::Tps1);
+	tsOutputChannels->throttlePosition = tps.Value;
+	tsOutputChannels->isTpsError = !tps.Valid;
+
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 
