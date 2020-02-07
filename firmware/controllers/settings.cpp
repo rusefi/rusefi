@@ -16,7 +16,6 @@
 #include "thermistors.h"
 #include "adc_inputs.h"
 #include "interpolation.h"
-#include "tps.h"
 #include "map.h"
 #include "trigger_decoder.h"
 #include "console_io.h"
@@ -27,6 +26,7 @@
 #include "allsensors.h"
 #include "alternator_controller.h"
 #include "trigger_emulator.h"
+#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "vehicle_speed.h"
@@ -408,15 +408,17 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 }
 
 void printTPSInfo(void) {
-#if EFI_PROD_CODE && HAL_USE_ADC
-	if (!hasTpsSensor()) {
+	auto tps = Sensor::get(SensorType::Tps1);
+	auto raw = Sensor::getRaw(SensorType::Tps1);
+
+	if (!tps.Valid) {
 		scheduleMsg(&logger, "NO TPS SENSOR");
 		return;
 	}
 	static char pinNameBuffer[16];
 
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
-			getTPSVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
+			raw, getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
 
 	if (hasPedalPositionSensor()) {
 		scheduleMsg(&logger, "pedal up %f / down %f",
@@ -424,10 +426,7 @@ void printTPSInfo(void) {
 				engineConfiguration->throttlePedalWOTVoltage);
 	}
 
-
-#endif /* EFI_PROD_CODE */
-	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", (int)getTPS10bitAdc(0), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
-			getTpsRateOfChange());
+	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", convertVoltageTo10bitADC(raw), tps.Value, getTpsRateOfChange());
 }
 
 static void printTemperatureInfo(void) {
