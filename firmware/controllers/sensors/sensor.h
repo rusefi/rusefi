@@ -55,6 +55,7 @@ struct SensorResult {
 	const bool Valid;
 	const float Value;
 
+	// Implicit conversion operator to bool, so you can do things like if (myResult) { ... }
 	constexpr explicit operator bool() const {
 		return Valid;
 	}
