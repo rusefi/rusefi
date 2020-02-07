@@ -136,13 +136,6 @@ percent_t getTpsValue(int index, float adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 /*
- * Return voltage on TPS AND channel
- * */
-static float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getVoltageDivided("tps", engineConfiguration->tps1_1AdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-/*
  * Return TPS ADC readings.
  * We need ADC value because TunerStudio has a nice TPS configuration wizard, and this wizard
  * wants a TPS value.
