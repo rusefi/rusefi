@@ -6,23 +6,31 @@
 #include "init.h"
 #include "sensor.h"
 
+static void initSensorCli();
+
+// Sensor init/config
 void initTps();
 void initOilPressure();
 
-void initSensorCli();
-
 void initSensors() {
-	// TPS
 	initTps();
-
-	// aux sensors
 	initOilPressure();
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli();
 }
 
-void initSensorCli() {
+// Sensor reconfiguration
+void reconfigureTps();
+void reconfigureOilPressure();
+
+void reconfigureSensors() {
+	reconfigureTps();
+	reconfigureOilPressure();
+}
+
+// Mocking/testing helpers
+static void initSensorCli() {
 	addConsoleActionIF("set_sensor_mock", Sensor::setMockValue);
 	addConsoleAction("reset_sensor_mocks", Sensor::resetAllMocks);
 }

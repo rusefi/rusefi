@@ -13,6 +13,19 @@ EXTERN_ENGINE;
 LinearFunc oilpSensorFunc;
 FunctionalSensor oilpSensor(SensorType::OilPressure, /* timeout = */ MS2NT(50));
 
+void configureOilPressure(LinearFunc func, const oil_pressure_config_s& cfg)
+{
+	float val1 = cfg.value1;
+	float val2 = cfg.value2;
+
+	// Limit to max given pressure - val1 or val2 could be larger
+	// (sensor may be backwards, high voltage = low pressure)
+	float greaterOutput = val1 > val2 ? val1 : val2;
+
+	// Allow slightly negative output (-5kpa) so as to not fail the sensor when engine is off
+	oilpSensorFunc.configure(cfg.v1, val1, cfg.v2, val2, /*minOutput*/ -5, greaterOutput);
+}
+
 void initOilPressure() {
 	// Only register if we have a sensor
 	auto channel = engineConfiguration->oilPressure.hwChannel;
@@ -20,17 +33,7 @@ void initOilPressure() {
 		return;
 	}
 
-	oil_pressure_config_s *sensorCfg = &CONFIG(oilPressure);
-
-	float val1 = sensorCfg->value1;
-	float val2 = sensorCfg->value2;
-
-	// Limit to max given pressure - val1 or val2 could be larger
-	// (sensor may be backwards, high voltage = low pressure)
-	float greaterOutput = val1 > val2 ? val1 : val2;
-
-	// Allow slightly negative output (-5kpa) so as to not fail the sensor when engine is off
-	oilpSensorFunc.configure(sensorCfg->v1, val1, sensorCfg->v2, val2, /*minOutput*/ -5, greaterOutput);
+	configureOilPressure(oilpSensorFunc, CONFIG(oilPressure));
 	oilpSensor.setFunction(oilpSensorFunc);
 
 	// Subscribe the sensor to the ADC
@@ -39,4 +42,8 @@ void initOilPressure() {
 	if (!oilpSensor.Register()) {
 		warning(OBD_Oil_Pressure_Sensor_Malfunction, "Duplicate oilp sensor registration, ignoring");
 	}
+}
+
+void reconfigureOilPressure() {
+	configureOilPressure(oilpSensorFunc, CONFIG(oilPressure));
 }

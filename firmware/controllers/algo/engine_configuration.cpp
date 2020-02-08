@@ -94,6 +94,7 @@
 #endif
 
 #if EFI_PROD_CODE
+#include "init.h"
 #include "hardware.h"
 #include "board.h"
 #endif /* EFI_PROD_CODE */
@@ -179,6 +180,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 #if EFI_PROD_CODE
 	applyNewHardwareSettings();
+	reconfigureSensors();
 #endif /* EFI_PROD_CODE */
 	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);
 #if EFI_ALTERNATOR_CONTROL
