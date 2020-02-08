@@ -133,6 +133,7 @@ include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 
 include $(CONFIG)/boards/$(PROJECT_BOARD)/board.mk
+include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/util/util.mk
 
 include $(PROJECT_DIR)/controllers/controllers.mk
@@ -250,6 +251,7 @@ INCDIR = .. $(CHIBIOS)/os/license \
 	$(PROJECT_DIR)/development/test \
 	$(CONTROLLERS_INC) \
 	$(PROJECT_DIR)/controllers/sensors \
+	$(PROJECT_DIR)/init \
 	config
 
 BUILDDIR=blbuild
