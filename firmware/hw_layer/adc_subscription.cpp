@@ -46,10 +46,8 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 	s_nextEntry++;
 }
 
-void AdcSubscription::UpdateSubscribers() {
+void AdcSubscription::UpdateSubscribers(efitick_t nowNt) {
 	ScopePerf perf(PE::AdcSubscriptionUpdateSubscribers);
-
-	auto timestamp = getTimeNowNt();
 
 	for (size_t i = 0; i < s_nextEntry; i++) {
 		auto &entry = s_entries[i];
@@ -57,7 +55,7 @@ void AdcSubscription::UpdateSubscribers() {
 		float mcuVolts = getVoltage("sensor", entry.Channel);
 		float sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
 
-		entry.Sensor->postRawValue(sensorVolts, timestamp);
+		entry.Sensor->postRawValue(sensorVolts, nowNt);
 	}
 }
 
