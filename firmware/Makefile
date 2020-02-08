@@ -37,21 +37,19 @@ endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -Wno-error=implicit-fallthrough -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
+  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16
 endif
-
 
 USE_OPT += $(RUSEFI_OPT)
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
-  USE_COPT = -fgnu89-inline -std=gnu99 -Werror-implicit-function-declaration
+  USE_COPT = -fgnu89-inline -std=gnu99 -Wno-error=implicit-fallthrough
 endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  # constexpr float expf_taylor_impl probably needs just c++14 but why not go with 17?
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits
+  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
 endif
 
 # Enable this if you want the linker to remove unused code and data
