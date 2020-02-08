@@ -136,19 +136,12 @@ percent_t getTpsValue(int index, float adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 /*
- * Return voltage on TPS AND channel
- * */
-float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getVoltageDivided("tps", engineConfiguration->tps1_1AdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-/*
  * Return TPS ADC readings.
  * We need ADC value because TunerStudio has a nice TPS configuration wizard, and this wizard
  * wants a TPS value.
  * @param index [0, ETB_COUNT)
  */
-float getTPS10bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static float getTPS10bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_PROD_CODE
 	if (engine->mockTpsAdcValue != MOCK_UNDEFINED) {
 		return engine->mockTpsAdcValue;
@@ -234,7 +227,7 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return maxF(0, minF(100, result));
 }
 
-bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->tps1_1AdcChannel != EFI_ADC_NONE;
 }
 
@@ -255,14 +248,6 @@ percent_t getTPSWithIndex(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return getTPSWithIndex(0 PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setBosch0280750009(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// see http://rusefi.com/wiki/index.php?title=Vehicle:VW_Passat_2002_1.8
-	engineConfiguration->tpsMin = 159;
-	engineConfiguration->tpsMax = 957;
-
-	// todo: add 2nd TPS sensor calibration
 }
 
 int convertVoltageTo10bitADC(float voltage) {
