@@ -12,7 +12,7 @@ static void initSensorCli();
 void initTps();
 void initOilPressure();
 
-void initSensors() {
+void initSensors0() {
 	initTps();
 	initOilPressure();
 
