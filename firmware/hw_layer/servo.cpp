@@ -27,18 +27,6 @@ THD_WORKING_AREA(servoThreadStack, UTILITY_THREAD_STACK_SIZE * 3);
 
 static OutputPin pins[SERVO_COUNT];
 
-static int countServos() {
-	int result = 0;
-
-	for (int i = 0; i < SERVO_COUNT; i++) {
-		if (engineConfiguration->servoOutputPins[i] != GPIO_UNASSIGNED) {
-			result++;
-		}
-	}
-	return result;
-
-}
-
 static scheduling_s servoTurnSignalOff;
 
 // todo: extract common 'pin off' callback?
