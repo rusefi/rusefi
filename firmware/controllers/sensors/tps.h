@@ -24,13 +24,9 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE);
  */
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 percent_t getTPSWithIndex(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
-bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int convertVoltageTo10bitADC(float voltage);
-float getTPS10bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 percent_t getTpsValue(int index, float adc DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setBosch0280750009(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setMockTpsAdc(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockTpsValue(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockThrottlePedalPosition(percent_t value DECLARE_ENGINE_PARAMETER_SUFFIX);
