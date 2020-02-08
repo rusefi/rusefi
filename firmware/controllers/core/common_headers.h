@@ -88,6 +88,8 @@
 #define EXPAND_Engine \
 	    engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr; \
 		persistent_config_s *config = engine->config; \
+		(void)engineConfiguration; \
+		(void)config; \
 		
 
 #ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
