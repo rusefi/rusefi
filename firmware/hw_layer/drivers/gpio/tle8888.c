@@ -113,14 +113,14 @@ typedef enum {
 #define CMD_IGNDIAG			CMD_R(0x2d)
 #define CMD_WDDIAG			CMD_R(0x2e)
 
-
 #define CMD_OUTCONFIG(n, d)	CMD_WR(0x40 + (n), d)
+#define CMD_BRICONFIG(n, d)	CMD_WR(0x46 + ((n) & 0x01), d)
 //#define CMD_VRSCONFIG0(d)	CMD_WR(0x49, d)
 #define CMD_VRSCONFIG1(d)	CMD_WR(0x4a, d)
-#define CMD_INCONFIG(n, d)	CMD_WR(0x53 + (n & 0x03), d)
-#define CMD_DDCONFIG(n, d)	CMD_WR(0x57 + (n & 0x03), d)
-#define CMD_OECONFIG(n, d)	CMD_WR(0x5b + (n & 0x03), d)
-#define CMD_CONT(n, d)		CMD_WR(0x7b + (n & 0x03), d)
+#define CMD_INCONFIG(n, d)	CMD_WR(0x53 + ((n) & 0x03), d)
+#define CMD_DDCONFIG(n, d)	CMD_WR(0x57 + ((n) & 0x03), d)
+#define CMD_OECONFIG(n, d)	CMD_WR(0x5b + ((n) & 0x03), d)
+#define CMD_CONT(n, d)		CMD_WR(0x7b + ((n) & 0x03), d)
 
 const uint8_t watchDogResponses[16][4] = {
 /* Reverse order:
@@ -209,6 +209,10 @@ struct tle8888_priv {
 	uint32_t					o_direct_mask;
 	/* output enabled mask */
 	uint32_t					o_oe_mask;
+	/* push-pull enabled mask (for OUT21..OUT24 only) */
+	/* this is overhead to store 4 bits in uint32_t
+	 * but I don't want any magic shift math */
+	uint32_t					o_pp_mask;
 
 	tle8888_drv_state			drv_state;
 
@@ -317,12 +321,39 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 
 static int tle8888_update_output(struct tle8888_priv *chip)
 {
+	int i;
 	int ret = 0;
+	uint8_t briconfig0 = 0;
 
 	/* TODO: lock? */
 
+	uint32_t out_data = chip->o_state;
+
+	/* calculate briconfig0 */
+	uint32_t out_low = out_data & chip->o_pp_mask;
+	for (i = 20; i < 24; i++) {
+		if (out_low & BIT(i)) {
+			/* low-side switch mode */
+		} else {
+			/* else enable high-side switch mode */
+			briconfig0 |= BIT((i - 20) * 2);
+		}
+	}
+	/* TODO: set freewheeling bits in briconfig0? */
+
+	/* output for push-pull pins is allways enabled
+	 * (at least until we start supporting hi-Z state) */
+	out_data |= chip->o_pp_mask;
+	/* TODO: apply hi-Z mask when support will be added */
+
 	/* set value only for non-direct driven pins */
-	uint32_t out_data = chip->o_state & (~chip->o_direct_mask);
+	/* look like here is some conflict in case of
+	 * direct-driven PP output */
+	out_data &= (~chip->o_direct_mask);
+
+	/* bridge config */
+	ret = tle8888_spi_rw(chip, CMD_BRICONFIG(0, briconfig0), NULL);
+
 	for (int i = 0; i < 4; i++) {
 		uint8_t od;
 
@@ -512,6 +543,9 @@ int startupConfiguration(struct tle8888_priv *chip) {
 
 	chip->o_direct_mask = 0;
 	chip->o_oe_mask		= 0;
+	/* HACK HERE if you want to enable PP for OUT21..OUT24
+	 * without approprirate call to setPinMode */
+	chip->o_pp_mask		= 0; /* = BIT(20) | BIT(21) | BIT(22) | BIT(23); */
 	/* enable direct drive of OUTPUT4..1
 	 * ...still need INJEN signal */
 	chip->o_direct_mask	|= 0x0000000f;
@@ -664,8 +698,7 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 			}
 
 			if (chVTTimeElapsedSinceX(chip->ts_diag) >= TIME_MS2I(TLE8888_POLL_INTERVAL_MS)) {
-				/* this is expensive call, will do a lot of spi transfers...
-				 * make it conditional? */
+				/* this is expensive call, will do a lot of spi transfers... */
 				ret = tle8888_update_status_and_diag(chip);
 				if (ret) {
 					/* set state to TLE8888_FAILED or force reinit? */
@@ -695,6 +728,32 @@ void requestTLE8888initialization(void) {
 /*==========================================================================*/
 /* Driver exported functions.												*/
 /*==========================================================================*/
+
+static int tle8888_setPadMode(void *data, unsigned int pin, iomode_t mode) {
+
+	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
+		return -1;
+
+	/* do not enalbe PP mode yet */
+#if 0
+	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+
+	/* only OUT21..OUT24 support mode change: PP vs OD */
+	if ((pin < 20) || (pin > 23))
+		return 0;
+
+	/* this is absolutly confusing... we pass STM32 specific
+	 * values to tle8888 driver... But this is how gpios
+	 * currently implemented */
+	if ((mode & PAL_STM32_OTYPE_MASK) == PAL_STM32_OTYPE_OPENDRAIN) {
+		chip->o_pp_mask &= ~BIT(pin);
+	} else {
+		chip->o_pp_mask |=  BIT(pin);
+	}
+#endif
+
+	return 0;
+}
 
 static int tle8888_writePad(void *data, unsigned int pin, int value) {
 
@@ -823,10 +882,10 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 
 	startupConfiguration(chip);
 
-
 	if (CONFIG(verboseTLE8888)) {
 		tle8888_dump_regs();
 	}
+
 	return 0;
 }
 
@@ -906,6 +965,7 @@ static int tle8888_deinit(void *data)
 }
 
 struct gpiochip_ops tle8888_ops = {
+	.setPadMode	= tle8888_setPadMode,
 	.writePad	= tle8888_writePad,
 	.readPad	= NULL,	/* chip outputs only */
 	.getDiag	= tle8888_getDiag,
