@@ -106,9 +106,11 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+void initSensors0();
+
 static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
-	initSensors();
+	initSensors0();
 #endif /* EFI_UNIT_TEST */
 
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
