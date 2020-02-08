@@ -5,7 +5,7 @@
 #pragma once
 
 // Call this once at startup to initialize, configure, and subscribe sensors
-void initSensors0();
+void initSensors();
 
 // Call this whenever the configuration may have changed, so any sensors
 // can be reconfigured with the new settings.
