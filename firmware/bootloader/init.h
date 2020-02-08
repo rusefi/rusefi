@@ -1,2 +1,2 @@
 
-void reconfigureSensors();
+#define reconfigureSensors() {}
