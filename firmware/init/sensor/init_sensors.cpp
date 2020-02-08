@@ -9,7 +9,10 @@
 void initTps();
 void initOilPressure();
 
-void initSensorCli();
+void reconfigureTps();
+void reconfigureOilPressure();
+
+static void initSensorCli();
 
 void initSensors() {
 	// TPS
@@ -22,7 +25,12 @@ void initSensors() {
 	initSensorCli();
 }
 
-void initSensorCli() {
+static void initSensorCli() {
 	addConsoleActionIF("set_sensor_mock", Sensor::setMockValue);
 	addConsoleAction("reset_sensor_mocks", Sensor::resetAllMocks);
+}
+
+void reconfigureSensors() {
+	reconfigureTps();
+	reconfigureOilPressure();
 }
