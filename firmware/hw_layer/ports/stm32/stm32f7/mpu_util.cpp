@@ -417,21 +417,50 @@ CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 
 #endif /* EFI_CAN_SUPPORT */
 
-size_t flashSectorSize(flashsector_t sector) {
+static bool isDualBank() {
+	// dual bank mode enabled if the bit is cleared
+	return (FLASH->OPTCR & FLASH_OPTCR_nDBANK) == 0;
+}
+
+static size_t sectorSizeInBank(flashsector_t sector)
+{
 	// sectors 0..11 are the 1st memory bank (1Mb), and 12..23 are the 2nd (the same structure).
-	if (sector <= 3 || (sector >= 12 && sector <= 15))
+	if (sector <= 3) {
 		return 32 * 1024;
-	else if (sector == 4 || sector == 16)
+	} else if (sector == 4) {
 		return 128 * 1024;
-	else if ((sector >= 5 && sector <= 11) || (sector >= 17 && sector <= 23))
+	} else {
 		return 256 * 1024;
-	return 0;
+	}
+}
+
+size_t flashSectorSize(flashsector_t sector) {
+	if (isDualBank()) {
+		// second bank has the same layout as the first, duplicated
+		if (sector >= 12) {
+			sector = sector - 12;
+		}
+
+		return sectorSizeInBank(sector) / 2;
+	} else {
+		return sectorSizeInBank(sector);
+	}
 }
 
 uintptr_t getFlashAddrFirstCopy() {
+	// both banks in the same location
+	// single bank: sector 8 (256KB)
+	// dual bank: sector 12/13 (16KB each)
 	return 0x08100000;
 }
 
 uintptr_t getFlashAddrSecondCopy() {
-	return 0x08140000;
+	if (isDualBank()) {
+		// first copy + 32KB
+		// sector 14/15 (16KB each)
+		return 0x08108000;
+	} else {
+		// sector 9 (256KB)
+		return 0x08140000;
+	}
 }
