@@ -905,6 +905,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isFastAdcEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
 		engine->hwTriggerInputEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "useTLE8888_cranking_hack")) {
+		CONFIG(useTLE8888_cranking_hack) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {
