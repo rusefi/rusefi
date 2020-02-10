@@ -81,7 +81,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       with:
-        fetch-depth: 1
         submodules: recursive
   
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
