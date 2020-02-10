@@ -23,10 +23,11 @@
 #define Window_watchdog_close_window_time_ms 100.8
 
 // unchangeable value for TLE8888QK
-#define Window_watchdog_open_window_time_ms 12.8
+// unused for now
+//#define Window_watchdog_open_window_time_ms 12.8
 
 /* DOTO: add irq support */
-#define TLE8888_POLL_INTERVAL_MS	100
+#define TLE8888_POLL_INTERVAL_MS	7
 
 /* note that spi transfer should be LSB first */
 struct tle8888_config {

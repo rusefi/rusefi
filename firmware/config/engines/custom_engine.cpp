@@ -396,10 +396,13 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * This configuration is used for MRE board Quality Assurance validation
  * set engine_type 30
+ * MRE_BOARD_TEST
  */
 void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
+
+	engineConfiguration->debugMode = DBG_TLE8888;
 
 	engineConfiguration->triggerSimulatorFrequency = 60;
 	// set cranking_rpm 500

@@ -108,6 +108,19 @@ typedef enum {
 SEMAPHORE_DECL(tle8888_wake, 10 /* or BOARD_TLE8888_COUNT ? */);
 static THD_WORKING_AREA(tle8888_thread_1_wa, 256);
 
+// todo: much of state is currently global while technically it should be per-chip. but we
+// are lazy and in reality it's usually one chip per board
+
+
+/**
+ * For the timing check the microcontroller has to send periodically the window watchdog service command
+ * WWDServiceCmd. The window watchdog is triggered correctly if the command is received inside the open
+ * window of the window watchdog sequence.
+ */
+static efitick_t lastWindowWatchdogTimeNt = 0;
+
+//static_assert(TLE8888_POLL_INTERVAL_MS < Window_watchdog_open_window_time_ms)
+
 static bool needInitialSpi = true;
 int resetCounter = 0;
 float vBattForTle8888 = 14;
@@ -371,6 +384,15 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 				tle8888SpiStartupExchange(chip);
 			}
 		}
+
+		efitick_t nowNt = getTimeNowNt();
+		if (nowNt - lastWindowWatchdogTimeNt > MS2NT(Window_watchdog_close_window_time_ms)) {
+			// todo: super-lazy implementation!
+			struct tle8888_priv *chip = &chips[0];
+			tle8888_spi_rw(chip, CMD_WWDServiceCmd, NULL);
+			lastWindowWatchdogTimeNt = nowNt;
+		}
+
 
 		for (int i = 0; i < BOARD_TLE8888_COUNT; i++) {
 			struct tle8888_priv *chip = &chips[i];
