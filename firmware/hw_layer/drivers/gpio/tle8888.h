@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HW_LAYER_DRIVERS_GPIO_TLE8888_H_
-#define HW_LAYER_DRIVERS_GPIO_TLE8888_H_
+#pragma once
 
 #include "global.h"
 
@@ -62,4 +61,3 @@ void tle8888PostState(TsDebugChannels *tsDebugChannels);
 }
 #endif /* __cplusplus */
 
-#endif /* HW_LAYER_DRIVERS_GPIO_TLE8888_H_ */

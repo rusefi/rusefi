@@ -8,8 +8,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef OBD_ERROR_CODES_H_
-#define OBD_ERROR_CODES_H_
+#pragma once
 
 // this header should not depend on anything - actually chconf.h usually depends on this header
 
@@ -2118,5 +2117,3 @@ typedef enum {
 }
 #endif /* __cplusplus */
 
-
-#endif /* OBD_ERROR_CODES_H_ */

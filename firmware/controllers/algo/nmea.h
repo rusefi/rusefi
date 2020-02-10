@@ -3,8 +3,8 @@
  * https://github.com/wdalmut/libgps/tree/develop/src
  *
  */
-#ifndef _NMEA_H_
-#define _NMEA_H_
+
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -54,4 +54,3 @@ void gps_location(loc_t *, char *);
 }
 #endif /* __cplusplus */
 
-#endif

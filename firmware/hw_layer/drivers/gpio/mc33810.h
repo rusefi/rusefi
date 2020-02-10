@@ -10,8 +10,7 @@
  * @author Andrey Gusakov <dron0gus@gmail.com>, (c) 2020
  */
 
-#ifndef HW_LAYER_MC33810_H_
-#define HW_LAYER_MC33810_H_
+#pragma once
 
 #include "efifeatures.h"
 #include <hal.h>
@@ -47,4 +46,3 @@ int mc33810_add(unsigned int index, const struct mc33810_config *cfg);
 }
 #endif /* __cplusplus */
 
-#endif /* HW_LAYER_MC33810_H_ */
