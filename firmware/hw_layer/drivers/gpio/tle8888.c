@@ -88,7 +88,10 @@ typedef enum {
 #define CMD_OPSTAT0			CMD_R(0x34)
 #define CMD_OPSTAT1			CMD_R(0x35)
 
-#define CMD_FWDStat1        CMD_R(0x35)
+#define FWDStat1            0x38
+#define CMD_FWDStat1        CMD_R(FWDStat1)
+
+#define FWDRespCmd          0x16
 
 //#define CMD_VRSCONFIG0(d)	CMD_WR(0x49, d)
 #define CMD_VRSCONFIG1(d)	CMD_WR(0x4a, d)
@@ -96,6 +99,25 @@ typedef enum {
 #define CMD_DDCONFIG(n, d)	CMD_WR(0x57 + (n & 0x03), d)
 #define CMD_OECONFIG(n, d)	CMD_WR(0x5b + (n & 0x03), d)
 #define CMD_CONT(n, d)		CMD_WR(0x7b + (n & 0x03), d)
+
+const uint8_t watchDogResponses[16][4] = {
+{0xFF, 0x0F, 0xF0, 0x00},
+{0xB0, 0x40, 0xBF, 0x4F},
+{0xE9, 0x19, 0xE6, 0x16},
+{0xA6, 0x56, 0xA9, 0x59},
+{0x75, 0x85, 0x7A, 0x8A},
+{0x3A, 0xCA, 0x35, 0xC5},
+{0x63, 0x93, 0x6C, 0x9C},
+{0x2C, 0xDC, 0x23, 0xD3},
+{0xD2, 0x22, 0xDD, 0x2D},
+{0x9D, 0x6D, 0x92, 0x62},
+{0xC4, 0x34, 0xCB, 0x3B},
+{0x8B, 0x7B, 0x84, 0x74},
+{0x58, 0xA8, 0x57, 0xA7},
+{0x17, 0xE7, 0x18, 0xE8},
+{0x4E, 0xBE, 0x41, 0xB1},
+{0x01, 0xF1, 0x0E, 0xFE}
+};
 /*==========================================================================*/
 /* Driver exported variables.												*/
 /*==========================================================================*/
@@ -364,6 +386,15 @@ static int tle8888_wake_driver(struct tle8888_priv *chip)
 /* Driver thread.															*/
 /*==========================================================================*/
 
+static void handleFWDStat1(struct tle8888_priv *chip, int registerNum, int data) {
+	if (registerNum != FWDStat1)
+		return;
+	uint8_t FWDQUEST = data & 0xF;
+	uint8_t FWDRESPC = (data >> 4) & 3;
+	uint8_t response = watchDogResponses[FWDQUEST][FWDRESPC];
+	tle8888_spi_rw(chip, CMD_WR(FWDRespCmd, response), NULL);
+}
+
 void watchdogLogic(struct tle8888_priv *chip) {
 	efitick_t nowNt = getTimeNowNt();
 	if (nowNt - lastWindowWatchdogTimeNt > MS2NT(Window_watchdog_close_window_time_ms)) {
@@ -378,6 +409,7 @@ void watchdogLogic(struct tle8888_priv *chip) {
 		 * the data is always '0' */
 		tle8888_spi_rw(chip, CMD_FWDStat1, &maybeFirstResponse);
 		tle8888_spi_rw(chip, CMD_FWDStat1, &functionWDrx);
+		handleFWDStat1(chip, (functionWDrx & 0xff) >> 1, (functionWDrx >> 8) & 0xff);
 		lastFunctionWatchdogTimeNt = nowNt;
 	}
 
