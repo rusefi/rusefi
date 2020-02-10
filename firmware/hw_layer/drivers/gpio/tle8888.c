@@ -73,6 +73,8 @@ typedef enum {
 #define CMD_WR(a, d)		(CMD_WRITE | CMD_REG_ADDR(a) | CMD_REG_DATA(d))
 #define CMD_R(a)			(CMD_READ | CMD_REG_ADDR(a))
 
+#define CMD_WWDServiceCmd   CMD_WR(0x15, 0x00)
+
 #define CMD_SR				CMD_WR(0x1a, 0x03)
 // 0x238 = 568
 #define CMD_OE_SET			CMD_WR(0x1c, 0x02)
@@ -85,6 +87,8 @@ typedef enum {
 /* Status registers */
 #define CMD_OPSTAT0			CMD_R(0x34)
 #define CMD_OPSTAT1			CMD_R(0x35)
+
+#define CMD_FWDStat1        CMD_R(0x35)
 
 //#define CMD_VRSCONFIG0(d)	CMD_WR(0x49, d)
 #define CMD_VRSCONFIG1(d)	CMD_WR(0x4a, d)
@@ -105,6 +109,7 @@ SEMAPHORE_DECL(tle8888_wake, 10 /* or BOARD_TLE8888_COUNT ? */);
 static THD_WORKING_AREA(tle8888_thread_1_wa, 256);
 
 static bool needInitialSpi = true;
+int resetCounter = 0;
 float vBattForTle8888 = 14;
 
 // set debug_mode 31
@@ -156,6 +161,9 @@ void tle8888PostState(TsDebugChannels *debugChannels) {
 	debugChannels->debugIntField5 = tle8888reinitializationCounter;
 	debugChannels->debugFloatField1 = initResponse0;
 	debugChannels->debugFloatField2 = initResponse1;
+
+	debugChannels->debugFloatField3 = chips[0].OpStat[1];
+	debugChannels->debugFloatField4 = resetCounter;
 }
 #endif /* EFI_TUNER_STUDIO */
 
@@ -169,6 +177,9 @@ static SPIDriver *get_bus(struct tle8888_priv *chip)
 	return chip->cfg->spi_bus;
 }
 
+/**
+ * @return always return 0 for now
+ */
 static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 {
 	SPIDriver *spi = get_bus(chip);
@@ -260,6 +271,7 @@ static int tle8888_update_status(struct tle8888_priv *chip)
 	if (ret)
 		return ret;
 
+	// available in debugFloatField3
 	chip->OpStat[1] = rx;
 
 	/* TODO: unlock? */
@@ -380,6 +392,7 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 			/* if bit OE is cleared - reset happened */
 			if (!(chip->OpStat[1] & (1 << 6))) {
 				needInitialSpi = true;
+				resetCounter++;
 			}
 		}
 	}
