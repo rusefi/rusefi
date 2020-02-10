@@ -19,6 +19,9 @@
  * 4 INJ channels - OUT1..4 - IN5..8 */
 #define TLE8888_DIRECT_OUTPUTS		(4 + 4 + TLE8888_DIRECT_MISC)
 
+// Looks like reset value is 113.6ms? 1.6ms * 0x47
+#define Functional_Watchdog_PERIOD_MS 90
+
 // we can change this value on TLE8888QK but we probably do not have a reason to change
 #define Window_watchdog_close_window_time_ms 100.8
 
