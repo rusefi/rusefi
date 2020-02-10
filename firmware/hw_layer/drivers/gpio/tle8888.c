@@ -104,11 +104,14 @@ typedef enum {
 SEMAPHORE_DECL(tle8888_wake, 10 /* or BOARD_TLE8888_COUNT ? */);
 static THD_WORKING_AREA(tle8888_thread_1_wa, 256);
 
+static bool needInitialSpi = true;
+float vBattForTle8888 = 14;
+
 // set debug_mode 31
 static int tle8888SpiCounter = 0;
-static int reinitializationCounter = 0;
+int tle8888reinitializationCounter = 0;
 // that's a strange variable for troubleshooting
-static int initResponsesAccumulator = 0;
+int tle8888initResponsesAccumulator = 0;
 static int initResponse0 = 0;
 static int initResponse1 = 0;
 static uint16_t spiRxb = 0, spiTxb = 0;
@@ -119,7 +122,7 @@ struct tle8888_priv {
 	const struct tle8888_config	*cfg;
 	/* cached output state - state last send to chip */
 	uint32_t					o_state_cached;
-	/* state to be sended to chip */
+	/* state to be sent to chip */
 	uint32_t					o_state;
 	/* direct driven output mask */
 	uint32_t					o_direct_mask;
@@ -149,8 +152,8 @@ void tle8888PostState(TsDebugChannels *debugChannels) {
 	debugChannels->debugIntField1 = tle8888SpiCounter;
 	debugChannels->debugIntField2 = spiTxb;
 	debugChannels->debugIntField3 = spiRxb;
-	debugChannels->debugIntField4 = initResponsesAccumulator;
-	debugChannels->debugIntField5 = reinitializationCounter;
+	debugChannels->debugIntField4 = tle8888initResponsesAccumulator;
+	debugChannels->debugIntField5 = tle8888reinitializationCounter;
 	debugChannels->debugFloatField1 = initResponse0;
 	debugChannels->debugFloatField2 = initResponse1;
 }
@@ -322,12 +325,8 @@ static int tle8888_wake_driver(struct tle8888_priv *chip)
 /* Driver thread.															*/
 /*==========================================================================*/
 
-int tle8888SpiStartupExchange(void * data);
+int tle8888SpiStartupExchange(struct tle8888_priv *chip);
 
-static bool needInitialSpi = true;
-
-float vBattForTle8888 = 14;
-static void *poorPointerNeedToDoBetter = NULL;
 
 static THD_FUNCTION(tle8888_driver_thread, p) {
 	(void)p;
@@ -347,13 +346,15 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 
 		if (needInitialSpi) {
 			needInitialSpi = false;
-			tle8888SpiStartupExchange(poorPointerNeedToDoBetter);
+
+			for (int i = 0; i < BOARD_TLE8888_COUNT; i++) {
+				struct tle8888_priv *chip = &chips[i];
+				tle8888SpiStartupExchange(chip);
+			}
 		}
 
 		for (int i = 0; i < BOARD_TLE8888_COUNT; i++) {
-			struct tle8888_priv *chip;
-
-			chip = &chips[i];
+			struct tle8888_priv *chip = &chips[i];
 			if ((chip->cfg == NULL) ||
 				(chip->drv_state == TLE8888_DISABLED) ||
 				(chip->drv_state == TLE8888_FAILED))
@@ -415,11 +416,11 @@ int tle8888_writePad(void *data, unsigned int pin, int value) {
 /**
  * @return 0 for valid configuration, -1 for invalid configuration
  */
-int tle8888SpiStartupExchange(void * data) {
-	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 	const struct tle8888_config	*cfg = chip->cfg;
 
-	reinitializationCounter++;
+	tle8888reinitializationCounter++;
+	tle8888initResponsesAccumulator = 0;
 
 	/**
 	 * We need around 50ms to get reliable TLE8888 start if MCU is powered externally but +12 goes gown and then goes up
@@ -432,10 +433,10 @@ int tle8888SpiStartupExchange(void * data) {
 	tle8888_spi_rw(chip, CMD_SR, &response);
 	if (response == 253) {
 		// I've seen this response on red board
-		initResponsesAccumulator += 4;
+		tle8888initResponsesAccumulator += 4;
 	} else if (response == 2408) {
 		// and I've seen this response on red board
-		initResponsesAccumulator += 100;
+		tle8888initResponsesAccumulator += 100;
 	}
 	initResponse0 = response;
 
@@ -449,7 +450,7 @@ int tle8888SpiStartupExchange(void * data) {
 	// second 0x13D=317 => 0x35=53
 	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
 	if (response == 53) {
-		initResponsesAccumulator += 8;
+		tle8888initResponsesAccumulator += 8;
 	}
 	initResponse1 = response;
 
@@ -525,7 +526,6 @@ int tle8888SpiStartupExchange(void * data) {
 }
 
 static int tle8888_chip_init(void * data) {
-	poorPointerNeedToDoBetter = data;
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 	const struct tle8888_config	*cfg = chip->cfg;
 
