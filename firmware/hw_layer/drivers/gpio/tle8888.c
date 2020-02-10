@@ -121,13 +121,14 @@ static efitick_t lastWindowWatchdogTimeNt = 0;
 
 static efitick_t lastFunctionWatchdogTimeNt = 0;
 
+static uint16_t maybeFirstResponse = 0;
 static uint16_t functionWDrx = 0;
 
 //static_assert(TLE8888_POLL_INTERVAL_MS < Window_watchdog_open_window_time_ms)
 
 static bool needInitialSpi = true;
 int resetCounter = 0;
-float vBattForTle8888 = 14;
+float vBattForTle8888 = 0;
 
 // set debug_mode 31
 static int tle8888SpiCounter = 0;
@@ -363,6 +364,25 @@ static int tle8888_wake_driver(struct tle8888_priv *chip)
 /* Driver thread.															*/
 /*==========================================================================*/
 
+void watchdogLogic(struct tle8888_priv *chip) {
+	efitick_t nowNt = getTimeNowNt();
+	if (nowNt - lastWindowWatchdogTimeNt > MS2NT(Window_watchdog_close_window_time_ms)) {
+		tle8888_spi_rw(chip, CMD_WWDServiceCmd, &maybeFirstResponse);
+		lastWindowWatchdogTimeNt = nowNt;
+	}
+
+	if (nowNt - lastFunctionWatchdogTimeNt > MS2NT(Functional_Watchdog_PERIOD_MS)) {
+		// todo: extract helper method?
+		/* the address and content of the selected register is transmitted with the
+		 * next SPI transmission (for not existing addresses or wrong access mode
+		 * the data is always '0' */
+		tle8888_spi_rw(chip, CMD_FWDStat1, &maybeFirstResponse);
+		tle8888_spi_rw(chip, CMD_FWDStat1, &functionWDrx);
+		lastFunctionWatchdogTimeNt = nowNt;
+	}
+
+}
+
 int tle8888SpiStartupExchange(struct tle8888_priv *chip);
 
 
@@ -380,6 +400,7 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 		if (vBattForTle8888 < 7) {
 			// we assume TLE8888 is down and we should not bother with SPI communication
 			needInitialSpi = true;
+			continue; // we should not bother communicating with TLE8888 until we have +12
 		}
 
 		if (needInitialSpi) {
@@ -391,27 +412,8 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 			}
 		}
 
-		efitick_t nowNt = getTimeNowNt();
-		if (nowNt - lastWindowWatchdogTimeNt > MS2NT(Window_watchdog_close_window_time_ms)) {
-			// todo: super-lazy implementation!
-			struct tle8888_priv *chip = &chips[0];
-			tle8888_spi_rw(chip, CMD_WWDServiceCmd, NULL);
-			lastWindowWatchdogTimeNt = nowNt;
-		}
-
-		if (nowNt - lastFunctionWatchdogTimeNt > MS2NT(Functional_Watchdog_PERIOD_MS)) {
-			// todo: super-lazy implementation!
-
-			struct tle8888_priv *chip = &chips[0];
-			// todo: extract helper method?
-			/* the address and content of the selected register is transmitted with the
-			 * next SPI transmission (for not existing addresses or wrong access mode
-			 * the data is always '0' */
-			tle8888_spi_rw(chip, CMD_FWDStat1, NULL);
-			tle8888_spi_rw(chip, CMD_FWDStat1, &functionWDrx);
-			lastFunctionWatchdogTimeNt = nowNt;
-		}
-
+		// todo: super-lazy implementation with only first chip!
+		watchdogLogic(&chips[0]);
 
 		for (int i = 0; i < BOARD_TLE8888_COUNT; i++) {
 			struct tle8888_priv *chip = &chips[i];
@@ -488,6 +490,9 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 	 * again
 	 */
 	chThdSleepMilliseconds(50);
+
+	watchdogLogic(chip);
+
 	/* Software reset */
 	// first packet: 0x335=821 > 0xFD=253
 	uint16_t response = 0;
