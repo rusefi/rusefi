@@ -52,6 +52,24 @@ PinRepository::PinRepository() {
 
 static PinRepository instance;
 
+/* DEBUG */
+extern "C" {
+	extern void tle8888_read_reg(uint16_t reg, uint16_t *val);
+}
+static void tle8888_dump_regs(void)
+{
+	int i;
+	uint16_t tmp;
+
+	tle8888_read_reg(0, NULL);
+
+	for (i = 0; i < 0x7e + 1; i++) {
+		tle8888_read_reg(i, &tmp);
+
+		scheduleMsg(&logger, "%02x: %02x", tmp & 0x7f ,(tmp >> 8) & 0xff);
+	}
+}
+
 static void reportPins(void) {
 	for (unsigned int i = 0; i < getNumBrainPins(); i++) {
 		const char *pin_user = getBrainUsedPin(i);
@@ -161,6 +179,7 @@ void initPinRepository(void) {
 	initialized = true;
 
 	addConsoleAction(CMD_PINS, reportPins);
+	addConsoleAction("tle8888", tle8888_dump_regs);
 }
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
