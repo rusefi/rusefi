@@ -75,6 +75,8 @@ typedef enum {
 
 /* Window watchdog open WWDOWT window time = 12.8 mS - fixed value for TLE8888QK */
 #define CMD_WWDServiceCmd   CMD_WR(0x15, 0x03)
+#define FWDRespCmd(d)       CMD_WR(0x16, d)
+#define FWDRespSyncCmd(d)   CMD_WR(0x17, d)
 
 #define CMD_SR				CMD_WR(0x1a, 0x03)
 // 0x238 = 568
@@ -92,8 +94,6 @@ typedef enum {
 
 #define FWDStat1            0x38
 #define CMD_FWDStat1        CMD_R(FWDStat1)
-
-#define FWDRespCmd          0x16
 
 //#define CMD_VRSCONFIG0(d)	CMD_WR(0x49, d)
 #define CMD_VRSCONFIG1(d)	CMD_WR(0x4a, d)
@@ -399,7 +399,12 @@ static void handleFWDStat1(struct tle8888_priv *chip, int registerNum, int data)
 	uint8_t FWDRESPC = (data >> 4) & 3;
 	/* Table lines are filled in reverse order (like in DS) */
 	uint8_t response = watchDogResponses[FWDQUEST][3 - FWDRESPC];
-	tle8888_spi_rw(chip, CMD_WR(FWDRespCmd, response), NULL);
+	if (FWDRESPC) {
+		tle8888_spi_rw(chip, FWDRespCmd(response), NULL);
+	} else {
+		/* to restart heartbeat timer, sync command should be used for response 0 */
+		tle8888_spi_rw(chip, FWDRespSyncCmd(response), NULL);
+	}
 	tle8888_spi_rw(chip, CMD_WdDiag, NULL);
 	tle8888_spi_rw(chip, CMD_WdDiag, &wdDiagResponse);
 }
