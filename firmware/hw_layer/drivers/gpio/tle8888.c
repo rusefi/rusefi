@@ -391,7 +391,7 @@ static int tle8888_wake_driver(struct tle8888_priv *chip)
 		 * chSemSignalI above requires rescheduling
 		 * interrupt handlers have implicit rescheduling
 		 */
-		chSchResceduleS();
+		chSchRescheduleS();
 	}
     /* Leaving the critical zone.*/
     chSysRestoreStatusX(sts);
