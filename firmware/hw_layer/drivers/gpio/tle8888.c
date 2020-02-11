@@ -685,6 +685,14 @@ err_gpios:
 	return ret;
 }
 
+/* DEBUG */
+void tle8888_read_reg(uint16_t reg, uint16_t *val)
+{
+	struct tle8888_priv *chip = &chips[0];
+
+	tle8888_spi_rw(chip, CMD_R(reg), val);
+}
+
 int tle8888_init(void * data)
 {
 	int ret;
