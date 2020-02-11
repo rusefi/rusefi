@@ -87,6 +87,7 @@ typedef enum {
 /* Status registers */
 #define CMD_OPSTAT0			CMD_R(0x34)
 #define CMD_OPSTAT1			CMD_R(0x35)
+#define CMD_WdDiag			CMD_R(0x2e)
 
 #define FWDStat1            0x38
 #define CMD_FWDStat1        CMD_R(FWDStat1)
@@ -145,6 +146,7 @@ static efitick_t lastFunctionWatchdogTimeNt = 0;
 
 static uint16_t maybeFirstResponse = 0;
 static uint16_t functionWDrx = 0;
+static uint16_t wdDiagResponse = 0;
 
 //static_assert(TLE8888_POLL_INTERVAL_MS < Window_watchdog_open_window_time_ms)
 
@@ -205,6 +207,7 @@ void tle8888PostState(TsDebugChannels *debugChannels) {
 	debugChannels->debugFloatField3 = chips[0].OpStat[1];
 	debugChannels->debugFloatField4 = resetCounter;
 	debugChannels->debugFloatField5 = functionWDrx;
+	debugChannels->debugFloatField6 = wdDiagResponse;
 }
 #endif /* EFI_TUNER_STUDIO */
 
@@ -393,6 +396,8 @@ static void handleFWDStat1(struct tle8888_priv *chip, int registerNum, int data)
 	uint8_t FWDRESPC = (data >> 4) & 3;
 	uint8_t response = watchDogResponses[FWDQUEST][FWDRESPC];
 	tle8888_spi_rw(chip, CMD_WR(FWDRespCmd, response), NULL);
+	tle8888_spi_rw(chip, CMD_WdDiag, NULL);
+	tle8888_spi_rw(chip, CMD_WdDiag, &wdDiagResponse);
 }
 
 void watchdogLogic(struct tle8888_priv *chip) {
