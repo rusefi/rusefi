@@ -207,9 +207,9 @@ static const char* tle8888_pin_names[TLE8888_OUTPUTS] = {
 #if EFI_TUNER_STUDIO
 void tle8888PostState(TsDebugChannels *debugChannels) {
 
-	debugChannels->debugIntField1 = WindowWatchdogErrorCounterValue;
-	debugChannels->debugIntField2 = FunctionalWatchdogPassCounterValue;
-	debugChannels->debugIntField3 = TotalErrorCounterValue;
+	debugChannels->debugIntField1 = (WindowWatchdogErrorCounterValue >> 8) & 0x3f;
+	debugChannels->debugIntField2 = (FunctionalWatchdogPassCounterValue >> 8) & 0x3f;
+	debugChannels->debugIntField3 = (TotalErrorCounterValue >> 8) & 0x3f;
 	//debugChannels->debugIntField1 = tle8888SpiCounter;
 	//debugChannels->debugIntField2 = spiTxb;
 	//debugChannels->debugIntField3 = spiRxb;
@@ -683,6 +683,14 @@ err_gpios:
 			gpio_pin_markUnused(cfg->direct_io[i].port, cfg->direct_io[i].pad);
 
 	return ret;
+}
+
+/* DEBUG */
+void tle8888_read_reg(uint16_t reg, uint16_t *val)
+{
+	struct tle8888_priv *chip = &chips[0];
+
+	tle8888_spi_rw(chip, CMD_R(reg), val);
 }
 
 int tle8888_init(void * data)
