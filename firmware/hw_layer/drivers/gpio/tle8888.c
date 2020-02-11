@@ -73,7 +73,8 @@ typedef enum {
 #define CMD_WR(a, d)		(CMD_WRITE | CMD_REG_ADDR(a) | CMD_REG_DATA(d))
 #define CMD_R(a)			(CMD_READ | CMD_REG_ADDR(a))
 
-#define CMD_WWDServiceCmd   CMD_WR(0x15, 0x00)
+/* Window watchdog open WWDOWT window time = 12.8 mS - fixed value for TLE8888QK */
+#define CMD_WWDServiceCmd   CMD_WR(0x15, 0x03)
 
 #define CMD_SR				CMD_WR(0x1a, 0x03)
 // 0x238 = 568
@@ -102,6 +103,8 @@ typedef enum {
 #define CMD_CONT(n, d)		CMD_WR(0x7b + (n & 0x03), d)
 
 const uint8_t watchDogResponses[16][4] = {
+/* Reverse order:
+ * RESP3,RESP2,RESP1,REST0 */
 {0xFF, 0x0F, 0xF0, 0x00},
 {0xB0, 0x40, 0xBF, 0x4F},
 {0xE9, 0x19, 0xE6, 0x16},
@@ -394,7 +397,8 @@ static void handleFWDStat1(struct tle8888_priv *chip, int registerNum, int data)
 		return;
 	uint8_t FWDQUEST = data & 0xF;
 	uint8_t FWDRESPC = (data >> 4) & 3;
-	uint8_t response = watchDogResponses[FWDQUEST][FWDRESPC];
+	/* Table lines are filled in reverse order (like in DS) */
+	uint8_t response = watchDogResponses[FWDQUEST][3 - FWDRESPC];
 	tle8888_spi_rw(chip, CMD_WR(FWDRespCmd, response), NULL);
 	tle8888_spi_rw(chip, CMD_WdDiag, NULL);
 	tle8888_spi_rw(chip, CMD_WdDiag, &wdDiagResponse);
