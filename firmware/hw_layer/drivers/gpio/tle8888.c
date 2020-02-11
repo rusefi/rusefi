@@ -90,6 +90,9 @@ typedef enum {
 /* Status registers */
 #define CMD_OPSTAT0			CMD_R(0x34)
 #define CMD_OPSTAT1			CMD_R(0x35)
+#define CMD_WWDSTAT			CMD_R(0x36)
+#define CMD_FWDSTAT(n)		CMD_R(0x37 + ((n) & 0x01))
+#define CMD_TECSTAT			CMD_R(0x39)
 #define CMD_WdDiag			CMD_R(0x2e)
 
 #define FWDStat1            0x38
@@ -147,6 +150,10 @@ static efitick_t lastWindowWatchdogTimeNt = 0;
 
 static efitick_t lastFunctionWatchdogTimeNt = 0;
 
+static uint16_t WindowWatchdogErrorCounterValue;
+static uint16_t FunctionalWatchdogPassCounterValue;
+static uint16_t TotalErrorCounterValue;
+
 static uint16_t maybeFirstResponse = 0;
 static uint16_t functionWDrx = 0;
 static uint16_t wdDiagResponse = 0;
@@ -199,9 +206,13 @@ static const char* tle8888_pin_names[TLE8888_OUTPUTS] = {
 
 #if EFI_TUNER_STUDIO
 void tle8888PostState(TsDebugChannels *debugChannels) {
-	debugChannels->debugIntField1 = tle8888SpiCounter;
-	debugChannels->debugIntField2 = spiTxb;
-	debugChannels->debugIntField3 = spiRxb;
+
+	debugChannels->debugIntField1 = WindowWatchdogErrorCounterValue;
+	debugChannels->debugIntField2 = FunctionalWatchdogPassCounterValue;
+	debugChannels->debugIntField3 = TotalErrorCounterValue;
+	//debugChannels->debugIntField1 = tle8888SpiCounter;
+	//debugChannels->debugIntField2 = spiTxb;
+	//debugChannels->debugIntField3 = spiRxb;
 	debugChannels->debugIntField4 = tle8888initResponsesAccumulator;
 	debugChannels->debugIntField5 = tle8888reinitializationCounter;
 	debugChannels->debugFloatField1 = initResponse0;
@@ -428,6 +439,10 @@ void watchdogLogic(struct tle8888_priv *chip) {
 		lastFunctionWatchdogTimeNt = nowNt;
 	}
 
+	tle8888_spi_rw(chip, CMD_WWDSTAT, NULL);
+	tle8888_spi_rw(chip, CMD_FWDSTAT(0), &WindowWatchdogErrorCounterValue);
+	tle8888_spi_rw(chip, CMD_TECSTAT, &FunctionalWatchdogPassCounterValue);
+	tle8888_spi_rw(chip, CMD_TECSTAT, &TotalErrorCounterValue);
 }
 
 int tle8888SpiStartupExchange(struct tle8888_priv *chip);
