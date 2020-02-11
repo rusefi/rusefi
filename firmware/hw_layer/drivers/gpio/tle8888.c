@@ -413,7 +413,8 @@ void watchdogLogic(struct tle8888_priv *chip) {
 		 * next SPI transmission (for not existing addresses or wrong access mode
 		 * the data is always '0' */
 		tle8888_spi_rw(chip, CMD_FWDStat1, &maybeFirstResponse);
-		tle8888_spi_rw(chip, CMD_FWDStat1, &functionWDrx);
+		// here we get response of the 'FWDStat1' above
+		tle8888_spi_rw(chip, CMD_WdDiag, &functionWDrx);
 		handleFWDStat1(chip, (functionWDrx & 0xff) >> 1, (functionWDrx >> 8) & 0xff);
 		lastFunctionWatchdogTimeNt = nowNt;
 	}
