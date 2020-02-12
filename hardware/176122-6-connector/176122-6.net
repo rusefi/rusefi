@@ -1,552 +1,646 @@
-# EESchema Netlist Version 1.1 created  9/1/2013 6:14:02 AM
-(
- ( /52231348 SIL-1  P39 CONN_1 {Lib=CONN_1}
-  (    1 GND )
- )
- ( /52231347 SIL-1  P38 CONN_1 {Lib=CONN_1}
-  (    1 GND )
- )
- ( /52231346 SIL-1  P40 CONN_1 {Lib=CONN_1}
-  (    1 GND )
- )
- ( /52231345 SIL-1  P41 CONN_1 {Lib=CONN_1}
-  (    1 GND )
- )
- ( /52230E1C SIL-3  P13 CONN_3 {Lib=CONN_3}
-  (    1 N-000056 )
-  (    2 N-000055 )
-  (    3 N-000054 )
- )
- ( /52230E1B SIL-3  P14 CONN_3 {Lib=CONN_3}
-  (    1 N-000053 )
-  (    2 N-000052 )
-  (    3 N-000051 )
- )
- ( /52230E1A SIL-1  P20 CONN_1 {Lib=CONN_1}
-  (    1 N-000050 )
- )
- ( /52230E19 SIL-1  P19 CONN_1 {Lib=CONN_1}
-  (    1 N-000057 )
- )
- ( /52230E18 SIL-1  P17 CONN_1 {Lib=CONN_1}
-  (    1 N-000065 )
- )
- ( /52230E17 SIL-1  P18 CONN_1 {Lib=CONN_1}
-  (    1 N-000064 )
- )
- ( /52230E16 SIL-1  P16 CONN_1 {Lib=CONN_1}
-  (    1 N-000063 )
- )
- ( /52230E15 SIL-1  P15 CONN_1 {Lib=CONN_1}
-  (    1 N-000062 )
- )
- ( /52230E14 SIL-1  P22 CONN_1 {Lib=CONN_1}
-  (    1 N-000061 )
- )
- ( /52230E13 SIL-1  P21 CONN_1 {Lib=CONN_1}
-  (    1 N-000060 )
- )
- ( /52230E12 SIL-1  P23 CONN_1 {Lib=CONN_1}
-  (    1 N-000059 )
- )
- ( /52230E11 SIL-1  P24 CONN_1 {Lib=CONN_1}
-  (    1 N-000058 )
- )
- ( /52230E03 SIL-1  P12 CONN_1 {Lib=CONN_1}
-  (    1 N-000058 )
- )
- ( /52230E02 SIL-1  P11 CONN_1 {Lib=CONN_1}
-  (    1 N-000059 )
- )
- ( /52230E01 SIL-1  P9 CONN_1 {Lib=CONN_1}
-  (    1 N-000060 )
- )
- ( /52230E00 SIL-1  P10 CONN_1 {Lib=CONN_1}
-  (    1 N-000061 )
- )
- ( /52230DFB SIL-1  P3 CONN_1 {Lib=CONN_1}
-  (    1 N-000062 )
- )
- ( /52230DFA SIL-1  P4 CONN_1 {Lib=CONN_1}
-  (    1 N-000063 )
- )
- ( /52230DF8 SIL-1  P6 CONN_1 {Lib=CONN_1}
-  (    1 N-000064 )
- )
- ( /52230DF7 SIL-1  P5 CONN_1 {Lib=CONN_1}
-  (    1 N-000065 )
- )
- ( /52230D10 SIL-1  P7 CONN_1 {Lib=CONN_1}
-  (    1 N-000057 )
- )
- ( /52230D09 SIL-1  P8 CONN_1 {Lib=CONN_1}
-  (    1 N-000050 )
- )
- ( /52230CF7 SIL-3  P2 CONN_3 {Lib=CONN_3}
-  (    1 N-000053 )
-  (    2 N-000052 )
-  (    3 N-000051 )
- )
- ( /52230CDE SIL-3  P1 CONN_3 {Lib=CONN_3}
-  (    1 N-000056 )
-  (    2 N-000055 )
-  (    3 N-000054 )
- )
- ( /52230BEA SIL-8  P32 CONN_8 {Lib=CONN_8}
-  (    1 N-000029 )
-  (    2 N-000028 )
-  (    3 N-000027 )
-  (    4 N-000026 )
-  (    5 N-000025 )
-  (    6 N-000013 )
-  (    7 N-000023 )
-  (    8 N-000022 )
- )
- ( /52230BE9 SIL-8  P33 CONN_8 {Lib=CONN_8}
-  (    1 N-000021 )
-  (    2 N-000020 )
-  (    3 N-000019 )
-  (    4 N-000018 )
-  (    5 N-000017 )
-  (    6 N-000016 )
-  (    7 N-000015 )
-  (    8 N-000014 )
- )
- ( /52230BE8 SIL-8  P35 CONN_8 {Lib=CONN_8}
-  (    1 N-000024 )
-  (    2 N-000048 )
-  (    3 N-000047 )
-  (    4 N-000046 )
-  (    5 N-000045 )
-  (    6 N-000044 )
-  (    7 N-000043 )
-  (    8 N-000042 )
- )
- ( /52230BE7 SIL-8  P34 CONN_8 {Lib=CONN_8}
-  (    1 N-000041 )
-  (    2 N-000040 )
-  (    3 N-000030 )
-  (    4 N-000039 )
-  (    5 N-000038 )
-  (    6 N-000037 )
-  (    7 N-000036 )
-  (    8 N-000035 )
- )
- ( /52230BE6 SIL-8  P36 CONN_8 {Lib=CONN_8}
-  (    1 N-000034 )
-  (    2 N-000033 )
-  (    3 N-000032 )
-  (    4 N-000031 )
-  (    5 N-000012 )
-  (    6 N-000011 )
-  (    7 N-000010 )
-  (    8 N-000009 )
- )
- ( /52230BE5 SIL-8  P37 CONN_8 {Lib=CONN_8}
-  (    1 N-000008 )
-  (    2 N-000007 )
-  (    3 N-000006 )
-  (    4 N-000005 )
-  (    5 N-000004 )
-  (    6 N-000003 )
-  (    7 N-000001 )
-  (    8 N-000002 )
- )
- ( /52230AB7 176122-6  P25 0176122-06 {Lib=0176122-06}
-  (    1 N-000056 )
-  (    2 N-000055 )
-  (    3 N-000054 )
-  (    4 N-000053 )
-  (    5 N-000052 )
-  (    6 N-000051 )
-  (    7 N-000062 )
-  (    8 N-000063 )
-  (    9 N-000065 )
-  (   10 N-000064 )
-  (   11 N-000057 )
-  (   12 N-000050 )
-  (   13 N-000060 )
-  (   14 N-000061 )
-  (   15 N-000059 )
-  (   16 N-000058 )
-  (   17 N-000029 )
-  (   18 N-000028 )
-  (   19 N-000027 )
-  (   20 N-000026 )
-  (   21 N-000025 )
-  (   22 N-000013 )
-  (   23 N-000023 )
-  (   24 N-000022 )
-  (   25 N-000021 )
-  (   26 N-000020 )
-  (   27 N-000019 )
-  (   28 N-000018 )
-  (   29 N-000017 )
-  (   30 N-000016 )
-  (   31 N-000015 )
-  (   32 N-000014 )
-  (   33 N-000041 )
-  (   34 N-000040 )
-  (   35 N-000030 )
-  (   36 N-000039 )
-  (   37 N-000038 )
-  (   38 N-000037 )
-  (   39 N-000036 )
-  (   40 N-000035 )
-  (   41 N-000024 )
-  (   42 N-000048 )
-  (   43 N-000047 )
-  (   44 N-000046 )
-  (   45 N-000045 )
-  (   46 N-000044 )
-  (   47 N-000043 )
-  (   48 N-000042 )
-  (   49 N-000034 )
-  (   50 N-000033 )
-  (   51 N-000032 )
-  (   52 N-000031 )
-  (   53 N-000012 )
-  (   54 N-000011 )
-  (   55 N-000010 )
-  (   56 N-000009 )
-  (   57 N-000008 )
-  (   58 N-000007 )
-  (   59 N-000006 )
-  (   60 N-000005 )
-  (   61 N-000004 )
-  (   62 N-000003 )
-  (   63 N-000001 )
-  (   64 N-000002 )
- )
- ( /522309BF SIL-8  P31 CONN_8 {Lib=CONN_8}
-  (    1 N-000008 )
-  (    2 N-000007 )
-  (    3 N-000006 )
-  (    4 N-000005 )
-  (    5 N-000004 )
-  (    6 N-000003 )
-  (    7 N-000001 )
-  (    8 N-000002 )
- )
- ( /522309BE SIL-8  P30 CONN_8 {Lib=CONN_8}
-  (    1 N-000034 )
-  (    2 N-000033 )
-  (    3 N-000032 )
-  (    4 N-000031 )
-  (    5 N-000012 )
-  (    6 N-000011 )
-  (    7 N-000010 )
-  (    8 N-000009 )
- )
- ( /522309B9 SIL-8  P28 CONN_8 {Lib=CONN_8}
-  (    1 N-000041 )
-  (    2 N-000040 )
-  (    3 N-000030 )
-  (    4 N-000039 )
-  (    5 N-000038 )
-  (    6 N-000037 )
-  (    7 N-000036 )
-  (    8 N-000035 )
- )
- ( /522309B8 SIL-8  P29 CONN_8 {Lib=CONN_8}
-  (    1 N-000024 )
-  (    2 N-000048 )
-  (    3 N-000047 )
-  (    4 N-000046 )
-  (    5 N-000045 )
-  (    6 N-000044 )
-  (    7 N-000043 )
-  (    8 N-000042 )
- )
- ( /522309A0 SIL-8  P27 CONN_8 {Lib=CONN_8}
-  (    1 N-000021 )
-  (    2 N-000020 )
-  (    3 N-000019 )
-  (    4 N-000018 )
-  (    5 N-000017 )
-  (    6 N-000016 )
-  (    7 N-000015 )
-  (    8 N-000014 )
- )
- ( /52230991 SIL-8  P26 CONN_8 {Lib=CONN_8}
-  (    1 N-000029 )
-  (    2 N-000028 )
-  (    3 N-000027 )
-  (    4 N-000026 )
-  (    5 N-000025 )
-  (    6 N-000013 )
-  (    7 N-000023 )
-  (    8 N-000022 )
- )
-)
-*
-{ Allowed footprints by component:
-$component P25
- 176122-6
-$endlist
-$endfootprintlist
-}
-{ Pin List by Nets
-Net 1 "" ""
- P25 63
- P31 7
- P37 7
-Net 2 "" ""
- P25 64
- P37 8
- P31 8
-Net 3 "" ""
- P25 62
- P37 6
- P31 6
-Net 4 "" ""
- P25 61
- P31 5
- P37 5
-Net 5 "" ""
- P31 4
- P25 60
- P37 4
-Net 6 "" ""
- P25 59
- P37 3
- P31 3
-Net 7 "" ""
- P25 58
- P37 2
- P31 2
-Net 8 "" ""
- P25 57
- P37 1
- P31 1
-Net 9 "" ""
- P25 56
- P30 8
- P36 8
-Net 10 "" ""
- P36 7
- P30 7
- P25 55
-Net 11 "" ""
- P25 54
- P30 6
- P36 6
-Net 12 "" ""
- P30 5
- P25 53
- P36 5
-Net 13 "" ""
- P26 6
- P32 6
- P25 22
-Net 14 "" ""
- P25 32
- P33 8
- P27 8
-Net 15 "" ""
- P27 7
- P33 7
- P25 31
-Net 16 "" ""
- P27 6
- P25 30
- P33 6
-Net 17 "" ""
- P25 29
- P27 5
- P33 5
-Net 18 "" ""
- P33 4
- P25 28
- P27 4
-Net 19 "" ""
- P33 3
- P27 3
- P25 27
-Net 20 "" ""
- P27 2
- P33 2
- P25 26
-Net 21 "" ""
- P27 1
- P25 25
- P33 1
-Net 22 "" ""
- P25 24
- P26 8
- P32 8
-Net 23 "" ""
- P32 7
- P25 23
- P26 7
-Net 24 "" ""
- P35 1
- P25 41
- P29 1
-Net 25 "" ""
- P32 5
- P25 21
- P26 5
-Net 26 "" ""
- P25 20
- P32 4
- P26 4
-Net 27 "" ""
- P32 3
- P25 19
- P26 3
-Net 28 "" ""
- P32 2
- P25 18
- P26 2
-Net 29 "" ""
- P25 17
- P26 1
- P32 1
-Net 30 "" ""
- P34 3
- P28 3
- P25 35
-Net 31 "" ""
- P36 4
- P30 4
- P25 52
-Net 32 "" ""
- P36 3
- P30 3
- P25 51
-Net 33 "" ""
- P36 2
- P25 50
- P30 2
-Net 34 "" ""
- P30 1
- P25 49
- P36 1
-Net 35 "" ""
- P25 40
- P34 8
- P28 8
-Net 36 "" ""
- P34 7
- P25 39
- P28 7
-Net 37 "" ""
- P28 6
- P25 38
- P34 6
-Net 38 "" ""
- P25 37
- P28 5
- P34 5
-Net 39 "" ""
- P28 4
- P34 4
- P25 36
-Net 40 "" ""
- P28 2
- P25 34
- P34 2
-Net 41 "" ""
- P25 33
- P28 1
- P34 1
-Net 42 "" ""
- P29 8
- P25 48
- P35 8
-Net 43 "" ""
- P25 47
- P35 7
- P29 7
-Net 44 "" ""
- P35 6
- P25 46
- P29 6
-Net 45 "" ""
- P29 5
- P25 45
- P35 5
-Net 46 "" ""
- P25 44
- P35 4
- P29 4
-Net 47 "" ""
- P29 3
- P25 43
- P35 3
-Net 48 "" ""
- P25 42
- P35 2
- P29 2
-Net 49 "GND" "GND"
- P41 1
- P40 1
- P39 1
- P38 1
-Net 50 "" ""
- P25 12
- P8 1
- P20 1
-Net 51 "" ""
- P14 3
- P25 6
- P2 3
-Net 52 "" ""
- P14 2
- P2 2
- P25 5
-Net 53 "" ""
- P2 1
- P14 1
- P25 4
-Net 54 "" ""
- P25 3
- P13 3
- P1 3
-Net 55 "" ""
- P13 2
- P1 2
- P25 2
-Net 56 "" ""
- P25 1
- P1 1
- P13 1
-Net 57 "" ""
- P7 1
- P25 11
- P19 1
-Net 58 "" ""
- P24 1
- P12 1
- P25 16
-Net 59 "" ""
- P25 15
- P23 1
- P11 1
-Net 60 "" ""
- P21 1
- P25 13
- P9 1
-Net 61 "" ""
- P25 14
- P22 1
- P10 1
-Net 62 "" ""
- P3 1
- P15 1
- P25 7
-Net 63 "" ""
- P4 1
- P25 8
- P16 1
-Net 64 "" ""
- P18 1
- P6 1
- P25 10
-Net 65 "" ""
- P5 1
- P17 1
- P25 9
-}
-#End
+(export (version D)
+  (design
+    (source C:\Users\Owner\Desktop\daecu_repo\Hardware\trunk\rusefi.com\176122-6-connector\176122-6.sch)
+    (date "2/11/2020 12:10:27 PM")
+    (tool "Eeschema (5.1.5)-3")
+    (sheet (number 1) (name /) (tstamps /)
+      (title_block
+        (title "ECU adapter")
+        (company "rusEFI by DAECU")
+        (rev R0.2)
+        (date 2017-02-05)
+        (source 176122-6.sch)
+        (comment (number 1) (value ""))
+        (comment (number 2) (value ""))
+        (comment (number 3) (value ""))
+        (comment (number 4) (value "")))))
+  (components
+    (comp (ref P39)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52231348))
+    (comp (ref P38)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52231347))
+    (comp (ref P40)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52231346))
+    (comp (ref P41)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52231345))
+    (comp (ref P13)
+      (value CONN_3)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x03) (description "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E1C))
+    (comp (ref P14)
+      (value CONN_3)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x03) (description "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E1B))
+    (comp (ref P20)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E1A))
+    (comp (ref P19)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E19))
+    (comp (ref P17)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E18))
+    (comp (ref P18)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E17))
+    (comp (ref P16)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E16))
+    (comp (ref P15)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E15))
+    (comp (ref P22)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E14))
+    (comp (ref P21)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E13))
+    (comp (ref P23)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E12))
+    (comp (ref P24)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E11))
+    (comp (ref P12)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E03))
+    (comp (ref P11)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E02))
+    (comp (ref P9)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E01))
+    (comp (ref P10)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230E00))
+    (comp (ref P3)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230DFB))
+    (comp (ref P4)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230DFA))
+    (comp (ref P6)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230DF8))
+    (comp (ref P5)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230DF7))
+    (comp (ref P7)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230D10))
+    (comp (ref P8)
+      (value CONN_1)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x01) (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230D09))
+    (comp (ref P2)
+      (value CONN_3)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x03) (description "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230CF7))
+    (comp (ref P1)
+      (value CONN_3)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x03) (description "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230CDE))
+    (comp (ref P32)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230BEA))
+    (comp (ref P33)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230BE9))
+    (comp (ref P35)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230BE8))
+    (comp (ref P34)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230BE7))
+    (comp (ref P36)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230BE6))
+    (comp (ref P37)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230BE5))
+    (comp (ref P25)
+      (value 0176122-06)
+      (footprint 0176122-06:176122-6)
+      (datasheet DOCUMENTATION)
+      (libsource (lib 0176122-06) (part 0176122-06) (description ""))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230AB7))
+    (comp (ref P31)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 522309BF))
+    (comp (ref P30)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 522309BE))
+    (comp (ref P28)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 522309B9))
+    (comp (ref P29)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 522309B8))
+    (comp (ref P27)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 522309A0))
+    (comp (ref P26)
+      (value CONN_8)
+      (footprint Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical)
+      (libsource (lib Connector_Generic) (part Conn_01x08) (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 52230991)))
+  (libparts
+    (libpart (lib 0176122-06) (part 0176122-06)
+      (footprints
+        (fp 176122-6))
+      (fields
+        (field (name Reference) P)
+        (field (name Value) 0176122-06)
+        (field (name Footprint) MODULE)
+        (field (name Datasheet) DOCUMENTATION))
+      (pins
+        (pin (num 1) (name 1) (type passive))
+        (pin (num 2) (name 2) (type passive))
+        (pin (num 3) (name 3) (type passive))
+        (pin (num 4) (name 4) (type passive))
+        (pin (num 5) (name 5) (type passive))
+        (pin (num 6) (name 6) (type passive))
+        (pin (num 7) (name 7) (type passive))
+        (pin (num 8) (name 8) (type passive))
+        (pin (num 9) (name 9) (type passive))
+        (pin (num 10) (name 10) (type passive))
+        (pin (num 11) (name 11) (type passive))
+        (pin (num 12) (name 12) (type passive))
+        (pin (num 13) (name 13) (type passive))
+        (pin (num 14) (name 14) (type passive))
+        (pin (num 15) (name 15) (type passive))
+        (pin (num 16) (name 16) (type passive))
+        (pin (num 17) (name 17) (type passive))
+        (pin (num 18) (name 18) (type passive))
+        (pin (num 19) (name 19) (type passive))
+        (pin (num 20) (name 20) (type passive))
+        (pin (num 21) (name 21) (type passive))
+        (pin (num 22) (name 22) (type passive))
+        (pin (num 23) (name 23) (type passive))
+        (pin (num 24) (name 24) (type passive))
+        (pin (num 25) (name 25) (type passive))
+        (pin (num 26) (name 26) (type passive))
+        (pin (num 27) (name 27) (type passive))
+        (pin (num 28) (name 28) (type passive))
+        (pin (num 29) (name 29) (type passive))
+        (pin (num 30) (name 30) (type passive))
+        (pin (num 31) (name 31) (type passive))
+        (pin (num 32) (name 32) (type passive))
+        (pin (num 33) (name 33) (type passive))
+        (pin (num 34) (name 34) (type passive))
+        (pin (num 35) (name 35) (type passive))
+        (pin (num 36) (name 36) (type passive))
+        (pin (num 37) (name 37) (type passive))
+        (pin (num 38) (name 38) (type passive))
+        (pin (num 39) (name 39) (type passive))
+        (pin (num 40) (name 40) (type passive))
+        (pin (num 41) (name 41) (type passive))
+        (pin (num 42) (name 42) (type passive))
+        (pin (num 43) (name 43) (type passive))
+        (pin (num 44) (name 44) (type passive))
+        (pin (num 45) (name 45) (type passive))
+        (pin (num 46) (name 46) (type passive))
+        (pin (num 47) (name 47) (type passive))
+        (pin (num 48) (name 48) (type passive))
+        (pin (num 49) (name 49) (type passive))
+        (pin (num 50) (name 50) (type passive))
+        (pin (num 51) (name 51) (type passive))
+        (pin (num 52) (name 52) (type passive))
+        (pin (num 53) (name 53) (type passive))
+        (pin (num 54) (name 54) (type passive))
+        (pin (num 55) (name 55) (type passive))
+        (pin (num 56) (name 56) (type passive))
+        (pin (num 57) (name 57) (type passive))
+        (pin (num 58) (name 58) (type passive))
+        (pin (num 59) (name 59) (type passive))
+        (pin (num 60) (name 60) (type passive))
+        (pin (num 61) (name 61) (type passive))
+        (pin (num 62) (name 62) (type passive))
+        (pin (num 63) (name 63) (type passive))
+        (pin (num 64) (name 64) (type passive))))
+    (libpart (lib Connector_Generic) (part Conn_01x01)
+      (description "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)")
+      (docs ~)
+      (footprints
+        (fp Connector*:*_1x??_*))
+      (fields
+        (field (name Reference) J)
+        (field (name Value) Conn_01x01))
+      (pins
+        (pin (num 1) (name Pin_1) (type passive))))
+    (libpart (lib Connector_Generic) (part Conn_01x03)
+      (description "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)")
+      (docs ~)
+      (footprints
+        (fp Connector*:*_1x??_*))
+      (fields
+        (field (name Reference) J)
+        (field (name Value) Conn_01x03))
+      (pins
+        (pin (num 1) (name Pin_1) (type passive))
+        (pin (num 2) (name Pin_2) (type passive))
+        (pin (num 3) (name Pin_3) (type passive))))
+    (libpart (lib Connector_Generic) (part Conn_01x08)
+      (description "Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)")
+      (docs ~)
+      (footprints
+        (fp Connector*:*_1x??_*))
+      (fields
+        (field (name Reference) J)
+        (field (name Value) Conn_01x08))
+      (pins
+        (pin (num 1) (name Pin_1) (type passive))
+        (pin (num 2) (name Pin_2) (type passive))
+        (pin (num 3) (name Pin_3) (type passive))
+        (pin (num 4) (name Pin_4) (type passive))
+        (pin (num 5) (name Pin_5) (type passive))
+        (pin (num 6) (name Pin_6) (type passive))
+        (pin (num 7) (name Pin_7) (type passive))
+        (pin (num 8) (name Pin_8) (type passive)))))
+  (libraries
+    (library (logical 0176122-06)
+      (uri C:\Users\Owner\Desktop\daecu_repo\Hardware\trunk\rusefi.com\176122-6-connector/symbols/0176122-06.lib))
+    (library (logical Connector_Generic)
+      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library/Connector_Generic.lib")))
+  (nets
+    (net (code 1) (name "Net-(P25-Pad38)")
+      (node (ref P25) (pin 38))
+      (node (ref P28) (pin 6))
+      (node (ref P34) (pin 6)))
+    (net (code 2) (name "Net-(P25-Pad60)")
+      (node (ref P31) (pin 4))
+      (node (ref P25) (pin 60))
+      (node (ref P37) (pin 4)))
+    (net (code 3) (name "Net-(P25-Pad58)")
+      (node (ref P25) (pin 58))
+      (node (ref P31) (pin 2))
+      (node (ref P37) (pin 2)))
+    (net (code 4) (name "Net-(P25-Pad56)")
+      (node (ref P36) (pin 8))
+      (node (ref P30) (pin 8))
+      (node (ref P25) (pin 56)))
+    (net (code 5) (name "Net-(P25-Pad54)")
+      (node (ref P36) (pin 6))
+      (node (ref P30) (pin 6))
+      (node (ref P25) (pin 54)))
+    (net (code 6) (name "Net-(P25-Pad52)")
+      (node (ref P25) (pin 52))
+      (node (ref P36) (pin 4))
+      (node (ref P30) (pin 4)))
+    (net (code 7) (name "Net-(P25-Pad50)")
+      (node (ref P25) (pin 50))
+      (node (ref P36) (pin 2))
+      (node (ref P30) (pin 2)))
+    (net (code 8) (name "Net-(P25-Pad48)")
+      (node (ref P25) (pin 48))
+      (node (ref P29) (pin 8))
+      (node (ref P35) (pin 8)))
+    (net (code 9) (name "Net-(P25-Pad46)")
+      (node (ref P35) (pin 6))
+      (node (ref P25) (pin 46))
+      (node (ref P29) (pin 6)))
+    (net (code 10) (name "Net-(P25-Pad44)")
+      (node (ref P25) (pin 44))
+      (node (ref P35) (pin 4))
+      (node (ref P29) (pin 4)))
+    (net (code 11) (name "Net-(P25-Pad42)")
+      (node (ref P35) (pin 2))
+      (node (ref P25) (pin 42))
+      (node (ref P29) (pin 2)))
+    (net (code 12) (name "Net-(P25-Pad40)")
+      (node (ref P25) (pin 40))
+      (node (ref P34) (pin 8))
+      (node (ref P28) (pin 8)))
+    (net (code 13) (name "Net-(P25-Pad62)")
+      (node (ref P37) (pin 6))
+      (node (ref P25) (pin 62))
+      (node (ref P31) (pin 6)))
+    (net (code 14) (name "Net-(P25-Pad36)")
+      (node (ref P34) (pin 4))
+      (node (ref P28) (pin 4))
+      (node (ref P25) (pin 36)))
+    (net (code 15) (name "Net-(P25-Pad34)")
+      (node (ref P25) (pin 34))
+      (node (ref P34) (pin 2))
+      (node (ref P28) (pin 2)))
+    (net (code 16) (name "Net-(P25-Pad32)")
+      (node (ref P25) (pin 32))
+      (node (ref P27) (pin 8))
+      (node (ref P33) (pin 8)))
+    (net (code 17) (name "Net-(P25-Pad30)")
+      (node (ref P25) (pin 30))
+      (node (ref P27) (pin 6))
+      (node (ref P33) (pin 6)))
+    (net (code 18) (name "Net-(P25-Pad28)")
+      (node (ref P27) (pin 4))
+      (node (ref P25) (pin 28))
+      (node (ref P33) (pin 4)))
+    (net (code 19) (name "Net-(P25-Pad26)")
+      (node (ref P27) (pin 2))
+      (node (ref P33) (pin 2))
+      (node (ref P25) (pin 26)))
+    (net (code 20) (name "Net-(P25-Pad24)")
+      (node (ref P25) (pin 24))
+      (node (ref P32) (pin 8))
+      (node (ref P26) (pin 8)))
+    (net (code 21) (name "Net-(P25-Pad22)")
+      (node (ref P25) (pin 22))
+      (node (ref P26) (pin 6))
+      (node (ref P32) (pin 6)))
+    (net (code 22) (name "Net-(P25-Pad20)")
+      (node (ref P26) (pin 4))
+      (node (ref P25) (pin 20))
+      (node (ref P32) (pin 4)))
+    (net (code 23) (name "Net-(P25-Pad18)")
+      (node (ref P32) (pin 2))
+      (node (ref P25) (pin 18))
+      (node (ref P26) (pin 2)))
+    (net (code 24) (name "Net-(P11-Pad1)")
+      (node (ref P25) (pin 15))
+      (node (ref P23) (pin 1))
+      (node (ref P11) (pin 1)))
+    (net (code 25) (name "Net-(P25-Pad59)")
+      (node (ref P37) (pin 3))
+      (node (ref P25) (pin 59))
+      (node (ref P31) (pin 3)))
+    (net (code 26) (name "Net-(P25-Pad57)")
+      (node (ref P37) (pin 1))
+      (node (ref P31) (pin 1))
+      (node (ref P25) (pin 57)))
+    (net (code 27) (name GND)
+      (node (ref P41) (pin 1))
+      (node (ref P38) (pin 1)))
+    (net (code 28) (name "Net-(P12-Pad1)")
+      (node (ref P12) (pin 1))
+      (node (ref P24) (pin 1))
+      (node (ref P25) (pin 16)))
+    (net (code 29) (name "Net-(P10-Pad1)")
+      (node (ref P22) (pin 1))
+      (node (ref P10) (pin 1))
+      (node (ref P25) (pin 14)))
+    (net (code 30) (name "Net-(P21-Pad1)")
+      (node (ref P9) (pin 1))
+      (node (ref P25) (pin 13))
+      (node (ref P21) (pin 1)))
+    (net (code 31) (name "Net-(P25-Pad17)")
+      (node (ref P25) (pin 17))
+      (node (ref P32) (pin 1))
+      (node (ref P26) (pin 1)))
+    (net (code 32) (name "Net-(P19-Pad1)")
+      (node (ref P19) (pin 1))
+      (node (ref P25) (pin 11))
+      (node (ref P7) (pin 1)))
+    (net (code 33) (name "Net-(P17-Pad1)")
+      (node (ref P17) (pin 1))
+      (node (ref P5) (pin 1))
+      (node (ref P25) (pin 9)))
+    (net (code 34) (name "Net-(P15-Pad1)")
+      (node (ref P15) (pin 1))
+      (node (ref P3) (pin 1))
+      (node (ref P25) (pin 7)))
+    (net (code 35) (name "Net-(P16-Pad1)")
+      (node (ref P4) (pin 1))
+      (node (ref P16) (pin 1))
+      (node (ref P25) (pin 8)))
+    (net (code 36) (name "Net-(P18-Pad1)")
+      (node (ref P18) (pin 1))
+      (node (ref P25) (pin 10))
+      (node (ref P6) (pin 1)))
+    (net (code 37) (name "Net-(P20-Pad1)")
+      (node (ref P25) (pin 12))
+      (node (ref P8) (pin 1))
+      (node (ref P20) (pin 1)))
+    (net (code 38) (name "Net-(P14-Pad3)")
+      (node (ref P2) (pin 3))
+      (node (ref P14) (pin 3))
+      (node (ref P25) (pin 6)))
+    (net (code 39) (name "Net-(P14-Pad1)")
+      (node (ref P14) (pin 1))
+      (node (ref P2) (pin 1))
+      (node (ref P25) (pin 4)))
+    (net (code 40) (name "Net-(P1-Pad2)")
+      (node (ref P25) (pin 2))
+      (node (ref P13) (pin 2))
+      (node (ref P1) (pin 2)))
+    (net (code 41) (name "Net-(P25-Pad64)")
+      (node (ref P37) (pin 8))
+      (node (ref P31) (pin 8))
+      (node (ref P25) (pin 64)))
+    (net (code 42) (name "Net-(P25-Pad63)")
+      (node (ref P31) (pin 7))
+      (node (ref P25) (pin 63))
+      (node (ref P37) (pin 7)))
+    (net (code 43) (name "Net-(P1-Pad1)")
+      (node (ref P1) (pin 1))
+      (node (ref P25) (pin 1))
+      (node (ref P13) (pin 1)))
+    (net (code 44) (name "Net-(P1-Pad3)")
+      (node (ref P13) (pin 3))
+      (node (ref P1) (pin 3))
+      (node (ref P25) (pin 3)))
+    (net (code 45) (name "Net-(P14-Pad2)")
+      (node (ref P2) (pin 2))
+      (node (ref P25) (pin 5))
+      (node (ref P14) (pin 2)))
+    (net (code 46) (name "Net-(P25-Pad23)")
+      (node (ref P26) (pin 7))
+      (node (ref P25) (pin 23))
+      (node (ref P32) (pin 7)))
+    (net (code 47) (name "Net-(P25-Pad21)")
+      (node (ref P32) (pin 5))
+      (node (ref P25) (pin 21))
+      (node (ref P26) (pin 5)))
+    (net (code 48) (name "Net-(P25-Pad19)")
+      (node (ref P25) (pin 19))
+      (node (ref P32) (pin 3))
+      (node (ref P26) (pin 3)))
+    (net (code 49) (name "Net-(P25-Pad61)")
+      (node (ref P31) (pin 5))
+      (node (ref P25) (pin 61))
+      (node (ref P37) (pin 5)))
+    (net (code 50) (name "Net-(P25-Pad31)")
+      (node (ref P25) (pin 31))
+      (node (ref P33) (pin 7))
+      (node (ref P27) (pin 7)))
+    (net (code 51) (name "Net-(P25-Pad29)")
+      (node (ref P25) (pin 29))
+      (node (ref P33) (pin 5))
+      (node (ref P27) (pin 5)))
+    (net (code 52) (name "Net-(P25-Pad27)")
+      (node (ref P33) (pin 3))
+      (node (ref P27) (pin 3))
+      (node (ref P25) (pin 27)))
+    (net (code 53) (name "Net-(P25-Pad25)")
+      (node (ref P25) (pin 25))
+      (node (ref P27) (pin 1))
+      (node (ref P33) (pin 1)))
+    (net (code 54) (name "Net-(P25-Pad47)")
+      (node (ref P25) (pin 47))
+      (node (ref P35) (pin 7))
+      (node (ref P29) (pin 7)))
+    (net (code 55) (name "Net-(P25-Pad39)")
+      (node (ref P34) (pin 7))
+      (node (ref P28) (pin 7))
+      (node (ref P25) (pin 39)))
+    (net (code 56) (name "Net-(P25-Pad33)")
+      (node (ref P28) (pin 1))
+      (node (ref P25) (pin 33))
+      (node (ref P34) (pin 1)))
+    (net (code 57) (name "Net-(P25-Pad35)")
+      (node (ref P25) (pin 35))
+      (node (ref P28) (pin 3))
+      (node (ref P34) (pin 3)))
+    (net (code 58) (name "Net-(P25-Pad37)")
+      (node (ref P25) (pin 37))
+      (node (ref P34) (pin 5))
+      (node (ref P28) (pin 5)))
+    (net (code 59) (name "Net-(P25-Pad41)")
+      (node (ref P35) (pin 1))
+      (node (ref P25) (pin 41))
+      (node (ref P29) (pin 1)))
+    (net (code 60) (name "Net-(P25-Pad43)")
+      (node (ref P35) (pin 3))
+      (node (ref P25) (pin 43))
+      (node (ref P29) (pin 3)))
+    (net (code 61) (name "Net-(P25-Pad45)")
+      (node (ref P25) (pin 45))
+      (node (ref P29) (pin 5))
+      (node (ref P35) (pin 5)))
+    (net (code 62) (name "Net-(P25-Pad49)")
+      (node (ref P30) (pin 1))
+      (node (ref P25) (pin 49))
+      (node (ref P36) (pin 1)))
+    (net (code 63) (name "Net-(P25-Pad51)")
+      (node (ref P36) (pin 3))
+      (node (ref P25) (pin 51))
+      (node (ref P30) (pin 3)))
+    (net (code 64) (name "Net-(P25-Pad53)")
+      (node (ref P36) (pin 5))
+      (node (ref P30) (pin 5))
+      (node (ref P25) (pin 53)))
+    (net (code 65) (name "Net-(P25-Pad55)")
+      (node (ref P25) (pin 55))
+      (node (ref P30) (pin 7))
+      (node (ref P36) (pin 7)))
+    (net (code 66) (name "Net-(P40-Pad1)")
+      (node (ref P40) (pin 1)))
+    (net (code 67) (name "Net-(P39-Pad1)")
+      (node (ref P39) (pin 1)))))
