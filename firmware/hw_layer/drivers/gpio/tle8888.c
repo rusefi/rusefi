@@ -650,6 +650,7 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 		tle8888_spi_rw(chip, CMD_VRSCONFIG1(MODE_MANUAL << 2), NULL);
 	}
 
+	tle8888_dump_regs();
 	return 0;
 }
 

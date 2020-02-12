@@ -56,7 +56,7 @@ static PinRepository instance;
 extern "C" {
 	extern void tle8888_read_reg(uint16_t reg, uint16_t *val);
 }
-static void tle8888_dump_regs(void)
+void tle8888_dump_regs(void)
 {
 	// since responses are always in the NEXT transmission we will have this one first
 	tle8888_read_reg(0, NULL);
