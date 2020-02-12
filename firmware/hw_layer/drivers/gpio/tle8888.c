@@ -87,16 +87,19 @@ typedef enum {
 */
 #define CMD_UNLOCK			CMD_WR(0x1e, 0x01)
 
+#define WWDStat             0x36
+#define FWDStat0            0x37
+#define FWDStat1            0x38
+
 /* Status registers */
 #define CMD_OPSTAT0			CMD_R(0x34)
 #define CMD_OPSTAT1			CMD_R(0x35)
-#define CMD_WWDSTAT			CMD_R(0x36)
-#define CMD_FWDSTAT(n)		CMD_R(0x37 + ((n) & 0x01))
+#define CMD_WWDSTAT			CMD_R(WWDStat)
+#define CMD_FWDSTAT0  		CMD_R(FWDStat0)
+#define CMD_FWDSTAT1        CMD_R(FWDStat1)
 #define CMD_TECSTAT			CMD_R(0x39)
 #define CMD_WdDiag			CMD_R(0x2e)
 
-#define FWDStat1            0x38
-#define CMD_FWDStat1        CMD_R(FWDStat1)
 
 #define CMD_OUTCONFIG(n, d)	CMD_WR(0x40 + (n), d)
 //#define CMD_VRSCONFIG0(d)	CMD_WR(0x49, d)
@@ -162,6 +165,8 @@ static uint16_t wdDiagResponse = 0;
 //static_assert(TLE8888_POLL_INTERVAL_MS < Window_watchdog_open_window_time_ms)
 
 static bool needInitialSpi = true;
+static bool isWatchdogHappy = false;
+static bool wasWatchdogHappy = false;
 int resetCounter = 0;
 float vBattForTle8888 = 0;
 
@@ -205,12 +210,16 @@ static const char* tle8888_pin_names[TLE8888_OUTPUTS] = {
 	"TLE8888.IGN1",		"TLE8888.IGN2",		"TLE8888.IGN3",		"TLE8888.IGN4"
 };
 
+#define getWindowWatchdog() ((WindowWatchdogErrorCounterValue >> 8) & 0x3f)
+#define getFunctionalWatchdog() ((FunctionalWatchdogPassCounterValue >> 8) & 0x3f)
+#define getTotalErrorCounter() ((TotalErrorCounterValue >> 8) & 0x3f)
+
 #if EFI_TUNER_STUDIO
 void tle8888PostState(TsDebugChannels *debugChannels) {
 
-	debugChannels->debugIntField1 = (WindowWatchdogErrorCounterValue >> 8) & 0x3f;
-	debugChannels->debugIntField2 = (FunctionalWatchdogPassCounterValue >> 8) & 0x3f;
-	debugChannels->debugIntField3 = (TotalErrorCounterValue >> 8) & 0x3f;
+	debugChannels->debugIntField1 = getWindowWatchdog();
+	debugChannels->debugIntField2 = getFunctionalWatchdog();
+	debugChannels->debugIntField3 = getTotalErrorCounter();
 	//debugChannels->debugIntField1 = tle8888SpiCounter;
 	//debugChannels->debugIntField2 = spiTxb;
 	//debugChannels->debugIntField3 = spiRxb;
@@ -433,17 +442,33 @@ void watchdogLogic(struct tle8888_priv *chip) {
 		/* the address and content of the selected register is transmitted with the
 		 * next SPI transmission (for not existing addresses or wrong access mode
 		 * the data is always '0' */
-		tle8888_spi_rw(chip, CMD_FWDStat1, &maybeFirstResponse);
+		tle8888_spi_rw(chip, CMD_FWDSTAT1, &maybeFirstResponse);
 		// here we get response of the 'FWDStat1' above
 		tle8888_spi_rw(chip, CMD_WdDiag, &functionWDrx);
-		handleFWDStat1(chip, (functionWDrx & 0xff) >> 1, (functionWDrx >> 8) & 0xff);
+		handleFWDStat1(chip, getRegisterFromResponse(functionWDrx), (functionWDrx >> 8) & 0xff);
 		lastFunctionWatchdogTimeNt = nowNt;
 	}
 
 	tle8888_spi_rw(chip, CMD_WWDSTAT, NULL);
-	tle8888_spi_rw(chip, CMD_FWDSTAT(0), &WindowWatchdogErrorCounterValue);
+	tle8888_spi_rw(chip, CMD_FWDSTAT0, &WindowWatchdogErrorCounterValue);
 	tle8888_spi_rw(chip, CMD_TECSTAT, &FunctionalWatchdogPassCounterValue);
 	tle8888_spi_rw(chip, CMD_TECSTAT, &TotalErrorCounterValue);
+
+
+	// sanity checking that we are looking at the right responses
+	if (getRegisterFromResponse(WindowWatchdogErrorCounterValue) == WWDStat &&
+			getRegisterFromResponse(FunctionalWatchdogPassCounterValue) == FWDStat0
+			) {
+
+		wasWatchdogHappy = isWatchdogHappy;
+		// reset state for error counters has us start in Safe Mode
+		isWatchdogHappy = getWindowWatchdog() == 0 && getFunctionalWatchdog() == 0;
+
+
+	}
+
+
+
 }
 
 int tle8888SpiStartupExchange(struct tle8888_priv *chip);
