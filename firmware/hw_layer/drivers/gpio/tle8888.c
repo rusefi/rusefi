@@ -98,6 +98,7 @@ typedef enum {
 #define FWDStat1            0x38
 #define CMD_FWDStat1        CMD_R(FWDStat1)
 
+#define CMD_OUTCONFIG(n, d)	CMD_WR(0x40 + (n), d)
 //#define CMD_VRSCONFIG0(d)	CMD_WR(0x49, d)
 #define CMD_VRSCONFIG1(d)	CMD_WR(0x4a, d)
 #define CMD_INCONFIG(n, d)	CMD_WR(0x53 + (n & 0x03), d)
@@ -637,6 +638,11 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 		dd = (chip->o_direct_mask >> (8 * i)) & 0xff;
 		tle8888_spi_rw(chip, CMD_OECONFIG(i, oe), NULL);
 		tle8888_spi_rw(chip, CMD_DDCONFIG(i, dd), NULL);
+	}
+
+	/* Debug: disable diagnostic */
+	for (int i = 0; i <= 5; i++) {
+		tle8888_spi_rw(chip, CMD_OUTCONFIG(i, 0), NULL);
 	}
 
 	/* enable outputs */
