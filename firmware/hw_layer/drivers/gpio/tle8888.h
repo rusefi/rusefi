@@ -25,7 +25,7 @@
 // we can change this value on TLE8888QK but we probably do not have a reason to change
 #define Window_watchdog_close_window_time_ms 100.8
 
-#define getRegisterFromResponse(x) (x >> 1) & 0x7f
+#define getRegisterFromResponse(x) (((x) >> 1) & 0x7f)
 
 // unchangeable value for TLE8888QK
 // unused for now
