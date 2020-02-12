@@ -62,11 +62,11 @@ static void tle8888_dump_regs(void)
 	tle8888_read_reg(0, NULL);
 
 	scheduleMsg(&logger, "register: data");
-	for (for request = 0; request < 0x7e + 1; request++) {
+	for (int request = 0; request < 0x7e + 1; request++) {
 		uint16_t tmp;
 		tle8888_read_reg(request, &tmp);
-		uint8_t response = (tmp >> 1) & 0x7f
-		uint8_t data = (tmp >> 8) & 0xff);
+		uint8_t response = (tmp >> 1) & 0x7f;
+		uint8_t data = (tmp >> 8) & 0xff;
 
 		scheduleMsg(&logger, "%02x: %02x", response, data);
 	}
