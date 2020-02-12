@@ -16,6 +16,7 @@
 #include "eficonsole.h"
 #include "memstreams.h"
 #include "drivers/gpio/gpio_ext.h"
+#include "tle8888.h"
 
 #ifndef BOARD_EXT_PINREPOPINS
 	#define BOARD_EXT_PINREPOPINS 0
@@ -182,6 +183,7 @@ void initPinRepository(void) {
 
 	addConsoleAction(CMD_PINS, reportPins);
 	addConsoleAction("tle8888", tle8888_dump_regs);
+	addConsoleAction("tle8888init", requestTLE8888initialization);
 }
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
