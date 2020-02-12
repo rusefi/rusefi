@@ -611,7 +611,7 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 		/* in config counted from 1 */
 		mask = (1 << (out - 1));
 
-		/* check if output already ocupied */
+		/* check if output already occupied */
 		if (chip->o_direct_mask & mask) {
 			/* incorrect config? */
 			return -1;
