@@ -595,10 +595,10 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 
 	/* map and enable outputs for direct driven channels */
 	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
-		int out;
-		uint32_t mask;
 
-		out = cfg->direct_io[i].output;
+
+
+		int out = cfg->direct_io[i].output;
 
 		/* not used? */
 		if (out == 0)
@@ -609,7 +609,7 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 			return -1;
 
 		/* in config counted from 1 */
-		mask = (1 << (out - 1));
+		uint32_t mask = (1 << (out - 1));
 
 		/* check if output already occupied */
 		if (chip->o_direct_mask & mask) {
