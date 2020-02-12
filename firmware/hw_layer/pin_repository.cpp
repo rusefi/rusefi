@@ -58,15 +58,17 @@ extern "C" {
 }
 static void tle8888_dump_regs(void)
 {
-	int i;
-	uint16_t tmp;
-
+	// since responses are always in the NEXT transmission we will have this one first
 	tle8888_read_reg(0, NULL);
 
-	for (i = 0; i < 0x7e + 1; i++) {
-		tle8888_read_reg(i, &tmp);
+	scheduleMsg(&logger, "register: data");
+	for (for request = 0; request < 0x7e + 1; request++) {
+		uint16_t tmp;
+		tle8888_read_reg(request, &tmp);
+		uint8_t response = (tmp >> 1) & 0x7f
+		uint8_t data = (tmp >> 8) & 0xff);
 
-		scheduleMsg(&logger, "%02x: %02x", tmp & 0x7f ,(tmp >> 8) & 0xff);
+		scheduleMsg(&logger, "%02x: %02x", response, data);
 	}
 }
 
