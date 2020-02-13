@@ -562,11 +562,6 @@ static int startupConfiguration(struct tle8888_priv *chip) {
 		tle8888_spi_rw(chip, CMD_DDCONFIG(i, dd), NULL);
 	}
 
-	/* Debug: disable diagnostic */
-	for (int i = 0; i <= 5; i++) {
-		tle8888_spi_rw(chip, CMD_OUTCONFIG(i, 0), NULL);
-	}
-
 	/* enable outputs */
 	tle8888_spi_rw(chip, CMD_OE_SET, NULL);
 
