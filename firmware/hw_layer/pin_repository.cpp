@@ -32,6 +32,25 @@ static int brainPin_to_index(brain_pin_e brainPin)
 
 	index = brainPin - GPIOA_0;
 
+	if ((unsigned)index < getNumBrainPins())
+		return index;
+
+	/* gpiochips magic: skip gates for absent chips */
+#ifdef TLE8888_PIN_1
+	if ((brainPin >= TLE8888_PIN_1) && (BOARD_TLE8888_COUNT == 0))
+		index -= (TLE8888_PIN_28 -TLE8888_PIN_1 + 1);
+#endif
+
+#ifdef MC33972_PIN_1
+	if ((brainPin >= MC33972_PIN_1) && (BOARD_MC33972_COUNT == 0))
+		index -= (MC33972_PIN_22 - MC33972_PIN_1 + 1);
+#endif
+
+#ifdef TLE6240_PIN_1
+	if ((brainPin >= TLE6240_PIN_1) && (BOARD_TLE6240_COUNT == 0))
+		index -= (TLE6240_PIN_16 - TLE6240_PIN_1 + 1);
+#endif
+
 	/* if index outside array boundary */
 	if ((unsigned)index >= getNumBrainPins() + BOARD_EXT_PINREPOPINS)
 		return -1;
@@ -39,9 +58,31 @@ static int brainPin_to_index(brain_pin_e brainPin)
 	return index;
 }
 
-static brain_pin_e index_to_brainPin(int i)
+static brain_pin_e index_to_brainPin(unsigned int i)
 {
-	return (brain_pin_e)((int)GPIOA_0 + i);
+	brain_pin_e brainPin = (brain_pin_e)((int)GPIOA_0 + i);
+
+	/* on-chip pins */
+	if (i < getNumBrainPins())
+		return brainPin;
+
+	/* gpiochips magic: skip absent chips */
+#ifdef TLE6240_PIN_1
+	if (BOARD_TLE6240_COUNT == 0)
+		brainPin += (TLE6240_PIN_16 - TLE6240_PIN_1 + 1);
+#endif
+
+#ifdef MC33972_PIN_1
+	if (BOARD_MC33972_COUNT == 0)
+		brainPin += (MC33972_PIN_22 - MC33972_PIN_1 + 1);
+#endif
+
+#ifdef TLE8888_PIN_1
+	if (BOARD_TLE8888_COUNT == 0)
+		brainPin += (TLE8888_PIN_28 -TLE8888_PIN_1 + 1);
+#endif
+
+	return brainPin;
 }
 
 PinRepository::PinRepository() {
