@@ -49,6 +49,7 @@ PinRepository::PinRepository() {
 
 static PinRepository instance;
 
+#if (BOARD_TLE8888_COUNT > 0)
 /* DEBUG */
 extern "C" {
 	extern void tle8888_read_reg(uint16_t reg, uint16_t *val);
@@ -68,6 +69,7 @@ void tle8888_dump_regs(void)
 		scheduleMsg(&logger, "%02x: %02x", response, data);
 	}
 }
+#endif
 
 static void reportPins(void) {
 	for (unsigned int i = 0; i < getNumBrainPins(); i++) {
