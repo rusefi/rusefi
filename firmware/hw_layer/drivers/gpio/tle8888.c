@@ -430,6 +430,89 @@ static void handleFWDStat1(struct tle8888_priv *chip, int registerNum, int data)
 	tle8888_spi_rw(chip, CMD_WdDiag, &wdDiagResponse);
 }
 
+int startupConfiguration(struct tle8888_priv *chip) {
+	const struct tle8888_config	*cfg = chip->cfg;
+	uint16_t response = 0;
+	/* Set LOCK bit to 0 */
+	// second 0x13D=317 => 0x35=53
+	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
+	if (response == 53) {
+		tle8888initResponsesAccumulator += 8;
+	}
+	initResponse1 = response;
+
+	chip->o_direct_mask = 0;
+	chip->o_oe_mask		= 0;
+	/* enable direct drive of OUTPUT4..1
+	 * ...still need INJEN signal */
+	chip->o_direct_mask	|= 0x0000000f;
+	chip->o_oe_mask		|= 0x0000000f;
+	/* enable direct drive of IGN4..1
+	 * ...still need IGNEN signal */
+	chip->o_direct_mask |= 0x0f000000;
+	chip->o_oe_mask		|= 0x0f000000;
+
+	/* map and enable outputs for direct driven channels */
+	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
+		int out = cfg->direct_io[i].output;
+
+		/* not used? */
+		if (out == 0)
+			continue;
+
+		/* OUT1..4 driven direct only through dedicated pins */
+		if (out < 5)
+			return -1;
+
+		/* in config counted from 1 */
+		uint32_t mask = (1 << (out - 1));
+
+		/* check if output already occupied */
+		if (chip->o_direct_mask & mask) {
+			/* incorrect config? */
+			return -1;
+		}
+
+		/* enable direct drive and output enable */
+		chip->o_direct_mask	|= mask;
+		chip->o_oe_mask		|= mask;
+
+		/* set INCONFIG - aux input mapping */
+		tle8888_spi_rw(chip, CMD_INCONFIG(i, out - 5), NULL);
+	}
+
+	/* enable all ouputs
+	 * TODO: add API to enable/disable? */
+	chip->o_oe_mask		|= 0x0ffffff0;
+
+	/* set OE and DD registers */
+	for (int i = 0; i < 4; i++) {
+		uint8_t oe, dd;
+
+		oe = (chip->o_oe_mask >> (8 * i)) & 0xff;
+		dd = (chip->o_direct_mask >> (8 * i)) & 0xff;
+		tle8888_spi_rw(chip, CMD_OECONFIG(i, oe), NULL);
+		tle8888_spi_rw(chip, CMD_DDCONFIG(i, dd), NULL);
+	}
+
+	/* Debug: disable diagnostic */
+	for (int i = 0; i <= 5; i++) {
+		tle8888_spi_rw(chip, CMD_OUTCONFIG(i, 0), NULL);
+	}
+
+	/* enable outputs */
+	tle8888_spi_rw(chip, CMD_OE_SET, NULL);
+
+	if (cfg->hallMode) {
+		/**
+		 * By default "auto detection mode for VR sensor signals" is used
+		 * We know that for short Hall signals like Miata NB2 crank sensor this does not work well above certain RPM.
+		 */
+		tle8888_spi_rw(chip, CMD_VRSCONFIG1(MODE_MANUAL << 2), NULL);
+	}
+	return 0;
+}
+
 void watchdogLogic(struct tle8888_priv *chip) {
 	efitick_t nowNt = getTimeNowNt();
 	if (nowNt - lastWindowWatchdogTimeNt > MS2NT(Window_watchdog_close_window_time_ms)) {
@@ -462,17 +545,14 @@ void watchdogLogic(struct tle8888_priv *chip) {
 
 		wasWatchdogHappy = isWatchdogHappy;
 		// reset state for error counters has us start in Safe Mode
-		isWatchdogHappy = getWindowWatchdog() == 0 && getFunctionalWatchdog() == 0;
-
-
+		isWatchdogHappy = (getWindowWatchdog() == 0 && getFunctionalWatchdog() == 0);
+		if (!wasWatchdogHappy && isWatchdogHappy) {
+			startupConfiguration(chip);
+		}
 	}
-
-
-
 }
 
 int tle8888SpiStartupExchange(struct tle8888_priv *chip);
-
 
 static THD_FUNCTION(tle8888_driver_thread, p) {
 	(void)p;
@@ -492,7 +572,7 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 		}
 
 		if (needInitialSpi) {
-			needInitialSpi = false;
+			wasWatchdogHappy = isWatchdogHappy = needInitialSpi = false;
 
 			for (int i = 0; i < BOARD_TLE8888_COUNT; i++) {
 				struct tle8888_priv *chip = &chips[i];
@@ -568,8 +648,6 @@ int tle8888_writePad(void *data, unsigned int pin, int value) {
  * @return 0 for valid configuration, -1 for invalid configuration
  */
 int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
-	const struct tle8888_config	*cfg = chip->cfg;
-
 	tle8888reinitializationCounter++;
 	tle8888initResponsesAccumulator = 0;
 
@@ -600,86 +678,8 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 	 */
 	chThdSleepMilliseconds(3);
 
-	/* Set LOCK bit to 0 */
-	// second 0x13D=317 => 0x35=53
-	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
-	if (response == 53) {
-		tle8888initResponsesAccumulator += 8;
-	}
-	initResponse1 = response;
+	startupConfiguration(chip);
 
-	chip->o_direct_mask = 0;
-	chip->o_oe_mask		= 0;
-	/* enable direct drive of OUTPUT4..1
-	 * ...still need INJEN signal */
-	chip->o_direct_mask	|= 0x0000000f;
-	chip->o_oe_mask		|= 0x0000000f;
-	/* enable direct drive of IGN4..1
-	 * ...still need IGNEN signal */
-	chip->o_direct_mask |= 0x0f000000;
-	chip->o_oe_mask		|= 0x0f000000;
-
-	/* map and enable outputs for direct driven channels */
-	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
-
-
-
-		int out = cfg->direct_io[i].output;
-
-		/* not used? */
-		if (out == 0)
-			continue;
-
-		/* OUT1..4 driven direct only through dedicated pins */
-		if (out < 5)
-			return -1;
-
-		/* in config counted from 1 */
-		uint32_t mask = (1 << (out - 1));
-
-		/* check if output already occupied */
-		if (chip->o_direct_mask & mask) {
-			/* incorrect config? */
-			return -1;
-		}
-
-		/* enable direct drive and output enable */
-		chip->o_direct_mask	|= mask;
-		chip->o_oe_mask		|= mask;
-
-		/* set INCONFIG - aux input mapping */
-		tle8888_spi_rw(chip, CMD_INCONFIG(i, out - 5), NULL);
-	}
-
-	/* enable all ouputs
-	 * TODO: add API to enable/disable? */
-	chip->o_oe_mask		|= 0x0ffffff0;
-
-	/* set OE and DD registers */
-	for (int i = 0; i < 4; i++) {
-		uint8_t oe, dd;
-
-		oe = (chip->o_oe_mask >> (8 * i)) & 0xff;
-		dd = (chip->o_direct_mask >> (8 * i)) & 0xff;
-		tle8888_spi_rw(chip, CMD_OECONFIG(i, oe), NULL);
-		tle8888_spi_rw(chip, CMD_DDCONFIG(i, dd), NULL);
-	}
-
-	/* Debug: disable diagnostic */
-	for (int i = 0; i <= 5; i++) {
-		tle8888_spi_rw(chip, CMD_OUTCONFIG(i, 0), NULL);
-	}
-
-	/* enable outputs */
-	tle8888_spi_rw(chip, CMD_OE_SET, NULL);
-
-	if (cfg->hallMode) {
-		/**
-		 * By default "auto detection mode for VR sensor signals" is used
-		 * We know that for short Hall signals like Miata NB2 crank sensor this does not work well above certain RPM.
-		 */
-		tle8888_spi_rw(chip, CMD_VRSCONFIG1(MODE_MANUAL << 2), NULL);
-	}
 
 	tle8888_dump_regs();
 	return 0;
