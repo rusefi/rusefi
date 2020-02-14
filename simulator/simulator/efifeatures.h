@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef EFIFEATURES_H_
-#define EFIFEATURES_H_
+#pragma once
 
 #include "rusefi_true.h"
 
@@ -147,6 +146,3 @@
 
 #define EFI_BOARD_TEST FALSE
 #define EFI_JOYSTICK FALSE
-
-
-#endif /* EFIFEATURES_H_ */

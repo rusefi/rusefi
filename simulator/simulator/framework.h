@@ -4,8 +4,8 @@
  * @date Sep 25, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
-#ifndef FRAMEWORK_H_
-#define FRAMEWORK_H_
+
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -18,4 +18,3 @@ void initTestStream(BaseChannel *ts);
 }
 #endif /* __cplusplus */
 
-#endif /* FRAMEWORK_H_ */
