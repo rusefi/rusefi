@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef OS_ACCESS_H_
-#define OS_ACCESS_H_
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -24,4 +23,3 @@ extern "C"
 
 #define HAS_OS_ACCESS
 
-#endif /* OS_ACCESS_H_ */

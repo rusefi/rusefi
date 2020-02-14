@@ -5,9 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef ADC_INPUTS_H_
-#define ADC_INPUTS_H_
+#pragma once
 
 #include "adc_math.h"
 
-#endif /* ADC_INPUTS_H_ */

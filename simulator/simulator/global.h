@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef GLOBAL_H_
-#define GLOBAL_H_
+#pragma once
 
 #include <hal.h>
 
@@ -77,7 +76,4 @@ void applyNewConfiguration(void);
 #endif /* __cplusplus */
 
 #define hal_lld_get_counter_value() 0
-
-#endif /* GLOBAL_H_ */
-
 
