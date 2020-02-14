@@ -24,22 +24,36 @@ TEST(engine, testSymmetricalCrank) {
 
 	ASSERT_EQ(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	float x = 0.02;
+	float mult = 0.02;
 
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
 
-	for (int i = 0; i < 8 ; i++) {
-		postFourEvents(&eth, x);
+	postFourEvents(&eth, mult);
+	ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
+
+	eth.fireFall(mult * 384);
+	eth.fireRise(mult * 16);
+	eth.fireFall(mult * 304);
+	ASSERT_FALSE(engine->triggerCentral.triggerState.shaft_is_synchronized);
+	eth.fireRise(mult * 16);
+	ASSERT_TRUE(engine->triggerCentral.triggerState.shaft_is_synchronized);
+
+	ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
+
+
+
+	for (int i = 0; i < 6 ; i++) {
+		postFourEvents(&eth, mult);
 		ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
 	}
 
-	x = 0.1;
-	postFourEvents(&eth, x);
+	mult = 0.1;
+	postFourEvents(&eth, mult);
 	ASSERT_EQ( 1041,  GET_RPM()) << "RPM#11";
 
-	postFourEvents(&eth, x);
+	postFourEvents(&eth, mult);
 	ASSERT_EQ( 1041,  GET_RPM()) << "RPM#11";
 
-	postFourEvents(&eth, x);
+	postFourEvents(&eth, mult);
 	ASSERT_EQ( 1041,  GET_RPM()) << "RPM#11";
 }
