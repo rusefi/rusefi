@@ -7,61 +7,36 @@
 
 #include "engine_test_helper.h"
 
+static void postFourEvents(EngineTestHelper *eth, float mult) {
+	eth->fireFall(mult * 384);
+	eth->fireRise(mult * 16);
+	eth->fireFall(mult * 304);
+	eth->fireRise(mult * 16);
+}
+
 TEST(engine, testSymmetricalCrank) {
 
 	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
+
+	// this test is not about isFasterEngineSpinUpEnabled so let's disable it to simplify things
+	CONFIG(isFasterEngineSpinUpEnabled) = false;
 
 	float x = 0.02;
 
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
 
-	eth.fireFall(x * 384);
-	eth.fireRise(x * 16);
-	eth.fireFall(x * 304);
-	eth.fireRise(x * 16);
-	ASSERT_EQ( 0,  GET_RPM()) << "RPM#1";
+	for (int i = 0; i < 8 ; i++) {
+		postFourEvents(&eth, x);
+		ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
+	}
 
-	eth.fireFall(x * 384);
-	eth.fireRise(x * 16);
-	eth.fireFall(x * 304);
-	eth.fireRise(x * 16);
-	ASSERT_EQ( 0,  GET_RPM()) << "RPM#2";
+	x = 0.1;
+	postFourEvents(&eth, x);
+	ASSERT_EQ( 1041,  GET_RPM()) << "RPM#11";
 
-	eth.fireFall(x * 384);
-	eth.fireRise(x * 16);
-	ASSERT_EQ( 549,  GET_RPM()) << "RPM#2.5";
-	eth.fireFall(x * 304);
-	eth.fireRise(x * 16);
-	ASSERT_EQ( 549,  GET_RPM()) << "RPM#3";
+	postFourEvents(&eth, x);
+	ASSERT_EQ( 1041,  GET_RPM()) << "RPM#11";
 
-	eth.fireFall(x * 384);
-	eth.fireRise(x * 16);
-	eth.fireFall(x * 304);
-	eth.fireRise(x * 16);
-	ASSERT_EQ( 549,  GET_RPM()) << "RPM#4";
-
-	eth.fireFall(x * 384);
-	eth.fireRise(x * 16);
-	eth.fireFall(x * 304);
-	eth.fireRise(x * 16);
-	ASSERT_EQ( 549,  GET_RPM()) << "RPM#5";
-
-	eth.fireFall(x * 384);
-	eth.fireRise(x * 16);
-	eth.fireFall(x * 304);
-	eth.fireRise(x * 16);
-	ASSERT_EQ( 549,  GET_RPM()) << "RPM#6";
-
-	eth.fireFall(x * 384);
-	eth.fireRise(x * 16);
-	eth.fireFall(x * 304);
-	eth.fireRise(x * 16);
-	ASSERT_EQ( 374,  GET_RPM()) << "RPM#7";
-
-	eth.fireFall(x * 384);
-	eth.fireRise(x * 16);
-	eth.fireFall(x * 304);
-	eth.fireRise(x * 16);
-	ASSERT_EQ( 374,  GET_RPM()) << "RPM#8";
-
+	postFourEvents(&eth, x);
+	ASSERT_EQ( 1041,  GET_RPM()) << "RPM#11";
 }
