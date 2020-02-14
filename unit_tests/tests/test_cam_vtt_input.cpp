@@ -123,12 +123,24 @@ TEST(sensors, testNB2CamInput) {
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testNB2CamInput RPM";
-	for (int i = 0; i < 5;i++) {
-		eth.fireRise(50);
+	for (int i = 0; i < 7;i++) {
+		eth.fireRise(25);
+		ASSERT_EQ( 0,  GET_RPM()) << "testNB2CamInput RPM";
 	}
+	eth.fireRise(25);
+	// first time we have RPM
 	ASSERT_EQ(1200,  GET_RPM()) << "testNB2CamInput RPM";
 
-	// this would be ignored since we only consude one kind the other kind of fronts here
+	int totalRevolutionCountBeforeVvtSync = 10;
+	// need to be out of VVT sync to see VVT sync in action
+	eth.fireRise(25);
+	eth.fireRise(25);
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+	ASSERT_TRUE((totalRevolutionCountBeforeVvtSync % SYMMETRICAL_CRANK_SENSOR_DIVIDER) != 0);
+
+	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few anlges
+
+	// this would be ignored since we only consume the other kind of fronts here
 	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 	eth.moveTimeForwardUs(MS2US(20));
 	// this would be be first VVT signal - gap duration would be calculated against 'DEEP_IN_THE_PAST_SECONDS' initial value
@@ -139,13 +151,13 @@ TEST(sensors, testNB2CamInput) {
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition());
-	ASSERT_EQ(5, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
 	eth.moveTimeForwardUs(MS2US(130));
 	// this third important front would give us first comparison between two real gaps
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 
-	ASSERT_NEAR(-46, engine->triggerCentral.getVVTPosition(), EPS3D);
+	ASSERT_NEAR(-67.6, engine->triggerCentral.getVVTPosition(), EPS3D);
 	// actually position based on VVT!
-	ASSERT_EQ(8, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 2, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 }
