@@ -2,7 +2,6 @@ package com.rusefi.test;
 
 import com.rusefi.ReaderState;
 import com.rusefi.TsFileContent;
-import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
 import com.rusefi.util.Output;
 import org.junit.Test;
@@ -10,13 +9,16 @@ import org.junit.Test;
 import java.io.*;
 import java.util.Arrays;
 
+import static org.junit.Assert.assertTrue;
+
 public class BitParsingTest {
     @Test
     public void testBitParser() throws IOException {
         ReaderState state = new ReaderState();
 
-        String inputString = "struct pid_s\nbit activateAuxPid1;\n" +
-                "bit fieldName;\n" +
+        String inputString = "struct pid_s\n" +
+                ReaderState.BIT + " fieldName\n" +
+                ReaderState.BIT + " fieldName2,si,nada;comment\n" +
                 "end_struct\n";
         BufferedReader reader = new BufferedReader(new StringReader(inputString));
 
@@ -32,6 +34,8 @@ public class BitParsingTest {
 
         System.out.printf("start[" + sw.toString() + "]end");
 
+        assertTrue(sw.toString().contains("\"false\", \"true\""));
+        assertTrue(sw.toString().contains("\"nada\", \"si\""));
     }
 
     private Output createOutput(StringWriter sw) {

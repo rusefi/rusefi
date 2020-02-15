@@ -49,7 +49,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             tsHeader.write("= bits,    U32,   ");
             tsHeader.write("\t" + tsPosition + ", [");
             tsHeader.write(bitIndex + ":" + bitIndex);
-            tsHeader.write("], \"false\", \"true\"");
+            tsHeader.write("], \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
             tsHeader.write(EOL);
 
             tsPosition += configField.getSize(next);
