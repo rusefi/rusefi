@@ -45,7 +45,7 @@ public class ConfigFieldParserTest {
         ReaderState state = new ReaderState();
         BufferedReader reader = new BufferedReader(new StringReader(test));
 
-        JavaFieldsConsumer javaFieldsConsumer = createTestJavaConsumer(state);
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
 
         assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
@@ -77,7 +77,7 @@ public class ConfigFieldParserTest {
                     "";
             BufferedReader reader = new BufferedReader(new StringReader(test));
 
-            JavaFieldsConsumer javaFieldsConsumer = createTestJavaConsumer(state);
+            JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
             FsioSettingsConsumer fsioSettingsConsumer = new FsioSettingsConsumer(state) {
                 @Override
@@ -160,18 +160,6 @@ public class ConfigFieldParserTest {
                     "\tcase FSIO_SETTING_ETB2_MINVALUE:\n" +
                     "\t\treturn \"cfg_etb2_minValue\";\n", fsioSettingsConsumer.getStrings());
         }
-    }
-
-    private JavaFieldsConsumer createTestJavaConsumer(ReaderState state) {
-        return new JavaFieldsConsumer(state) {
-            @Override
-            public void startFile() {
-            }
-
-            @Override
-            public void endFile() {
-            }
-        };
     }
 
     @Test
