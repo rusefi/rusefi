@@ -52,7 +52,12 @@ DISPLAY_TEXT(eol);
 DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTemperature,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// these magic constants are in Celsius
-	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
+	float baseCrankingFuel = 0;
+	if (engineConfiguration->useFixedMsForCranking) {
+		baseCrankingFuel = engineConfiguration->cranking.baseFuel;
+			} else {
+	    baseCrankingFuel = engine->engineState.baseFuel;
+			}
 	/**
 	 * Cranking fuel changes over time
 	 */
