@@ -340,7 +340,7 @@ bit issue_294_27;
 bit issue_294_28;
 bit issue_294_29;
 bit issue_294_30;
-bit issue_294_31;
+bit issue_294_31,si_example,nada_example;
 
 
 int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\nSee also tps1_1AdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
