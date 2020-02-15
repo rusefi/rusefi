@@ -12,6 +12,8 @@
 #include "trigger_decoder.h"
 #include "trigger_central_generated.h"
 
+
+
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
@@ -79,3 +81,4 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+#define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4
