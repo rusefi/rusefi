@@ -2336,8 +2336,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	
 	dialog = limits, "Limits"
-		field = "RPM hard limit",         	    		rpmHardLimit
-		field = "Boost cut pressure",					boostCutPressure
+		field = "RPM hard limit",         	    		    rpmHardLimit
+		field = "Boost cut pressure",				    boostCutPressure
 	
 ;			Engine->Base Engine Settings
 	dialog = engineChars, "Base Engine Settings"
@@ -2348,15 +2348,15 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = debugging
 
 	dialog = crankingFuel, "Fuel"
-		field = "Injection mode",						crankingInjectionMode
+		field = "Injection mode",				     crankingInjectionMode
 		field = "!Value '1' is currently recommended"
-		field = "Fuel Source For Cranking",             cranking_baseFuel, {useFixedMsForCranking == 1}
-		field = "Base fuel pulse width", 				cranking_baseFuel
+		field = "Fuel Source For Cranking",                          cranking_baseFuel, {useFixedMsForCranking == 1}
+		field = "Base fuel pulse width", 			     cranking_baseFuel
 		
 	dialog = crankingIAC, "IAC"
-		field = "Cranking IAC position",					crankingIACposition
-		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
-		field = "Override IAC multiplier for cranking",	overrideCrankingIacSetting
+		field = "Cranking IAC position",			     crankingIACposition
+		field = "After cranking IAC taper duration",	             afterCrankingIACtaperDuration
+		field = "Override IAC multiplier for cranking",	             overrideCrankingIacSetting
 		
 	dialog = crankingIgnition, "Ignition"
 		field = "Advance", 								crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
