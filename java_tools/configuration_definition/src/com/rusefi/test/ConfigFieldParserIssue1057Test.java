@@ -15,15 +15,7 @@ public class ConfigFieldParserIssue1057Test {
     @Test
     public void testBitsPadding() throws IOException {
         ReaderState state = new ReaderState();
-        JavaFieldsConsumer javaFieldsConsumer = new JavaFieldsConsumer(state) {
-            @Override
-            public void startFile() {
-            }
-
-            @Override
-            public void endFile() {
-            }
-        };
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
         String inputString = "struct pid_s\nbit activateAuxPid1;\n" +
                 "int fieldName;\n" +
