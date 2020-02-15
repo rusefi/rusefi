@@ -56,7 +56,7 @@ DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTem
 	if (engineConfiguration->useFixedMsForCranking) {
 	        baseCrankingFuel = engineConfiguration->cranking.baseFuel;
 	} else {
-	        baseCrankingFuel = engine->engineState.baseFuel;
+	        baseCrankingFuel = engine->engineState.running;
 	}
 	/**
 	 * Cranking fuel changes over time
