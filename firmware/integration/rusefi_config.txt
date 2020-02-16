@@ -333,7 +333,7 @@ bit absoluteFuelPressure;+If your fuel regulator does not have vacuum line
 bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
-bit useFixedMsForCranking,Fixed,Fuel Map;
+bit useRunningMathForCranking,Fixed,Fuel Map;
 bit issue_294_25;
 bit issue_294_26;
 bit issue_294_27;

@@ -2174,8 +2174,6 @@
 #define useETBforIdleControl_offset_hex 2e8
 #define useFixedBaroCorrFromMap_offset 1476
 #define useFixedBaroCorrFromMap_offset_hex 5c4
-#define useFixedMsForCranking_offset 76
-#define useFixedMsForCranking_offset_hex 4c
 #define useFSIO10ForServo3_offset 1464
 #define useFSIO10ForServo3_offset_hex 5b8
 #define useFSIO11ForServo4_offset 1464
@@ -2218,6 +2216,8 @@
 #define useNoiselessTriggerDecoder_offset_hex 2e8
 #define useOnlyRisingEdgeForTrigger_offset 1476
 #define useOnlyRisingEdgeForTrigger_offset_hex 5c4
+#define useRunningMathForCranking_offset 76
+#define useRunningMathForCranking_offset_hex 4c
 #define useSeparateAdvanceForCranking_offset 1476
 #define useSeparateAdvanceForCranking_offset_hex 5c4
 #define useSeparateAdvanceForIdle_offset 1476

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Feb 15 19:16:46 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Feb 16 16:11:34 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -622,7 +622,7 @@ struct engine_configuration_s {
 	bool antiLagEnabled : 1;
 	/**
 	offset 76 bit 23 */
-	bool useFixedMsForCranking : 1;
+	bool useRunningMathForCranking : 1;
 	/**
 	offset 76 bit 24 */
 	bool issue_294_25 : 1;
@@ -3217,4 +3217,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Feb 15 19:16:46 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Feb 16 16:11:34 EST 2020
