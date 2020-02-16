@@ -2350,8 +2350,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = crankingFuel, "Fuel"
 		field = "Injection mode",						crankingInjectionMode
 		field = "!Value '1' is currently recommended"
-		field = "Fuel Source For Cranking",                          cranking_baseFuel, {useFixedMsForCranking == 1}
-		field = "Base fuel pulse width", 				cranking_baseFuel
+		field = "Fuel Source For Cranking",             useRunningMathForCranking
+		field = "Base fuel pulse width", 				cranking_baseFuel, {useRunningMathForCranking == 0}
 		
 	dialog = crankingIAC, "IAC"
 		field = "Cranking IAC position",					crankingIACposition
