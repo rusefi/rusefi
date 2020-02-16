@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Feb 04 00:55:12 EST 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Feb 15 19:16:46 EST 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -900,7 +900,6 @@ public class Fields {
 	public static final int isManualSpinningMode_offset = 1476;
 	public static final int isMapAveragingEnabled_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
-	public static final int issue_294_24_offset = 76;
 	public static final int issue_294_25_offset = 76;
 	public static final int issue_294_26_offset = 76;
 	public static final int issue_294_27_offset = 76;
@@ -1422,6 +1421,7 @@ public class Fields {
 	public static final int useConstantDwellDuringCranking_offset = 1464;
 	public static final int useETBforIdleControl_offset = 744;
 	public static final int useFixedBaroCorrFromMap_offset = 1476;
+	public static final int useFixedMsForCranking_offset = 76;
 	public static final int useFSIO10ForServo3_offset = 1464;
 	public static final int useFSIO11ForServo4_offset = 1464;
 	public static final int useFSIO12ForIdleOffset_offset = 1464;
@@ -1505,7 +1505,7 @@ public class Fields {
 	public static final Field LAUNCHCONTROLENABLED = Field.create("LAUNCHCONTROLENABLED", 76, FieldType.BIT, 20);
 	public static final Field ROLLINGLAUNCHENABLED = Field.create("ROLLINGLAUNCHENABLED", 76, FieldType.BIT, 21);
 	public static final Field ANTILAGENABLED = Field.create("ANTILAGENABLED", 76, FieldType.BIT, 22);
-	public static final Field ISSUE_294_24 = Field.create("ISSUE_294_24", 76, FieldType.BIT, 23);
+	public static final Field USEFIXEDMSFORCRANKING = Field.create("USEFIXEDMSFORCRANKING", 76, FieldType.BIT, 23);
 	public static final Field ISSUE_294_25 = Field.create("ISSUE_294_25", 76, FieldType.BIT, 24);
 	public static final Field ISSUE_294_26 = Field.create("ISSUE_294_26", 76, FieldType.BIT, 25);
 	public static final Field ISSUE_294_27 = Field.create("ISSUE_294_27", 76, FieldType.BIT, 26);
@@ -2413,7 +2413,7 @@ public class Fields {
 	LAUNCHCONTROLENABLED,
 	ROLLINGLAUNCHENABLED,
 	ANTILAGENABLED,
-	ISSUE_294_24,
+	USEFIXEDMSFORCRANKING,
 	ISSUE_294_25,
 	ISSUE_294_26,
 	ISSUE_294_27,

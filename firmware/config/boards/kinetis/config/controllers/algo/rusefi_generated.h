@@ -1359,8 +1359,6 @@
 #define isMapAveragingEnabled_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
-#define issue_294_24_offset 76
-#define issue_294_24_offset_hex 4c
 #define issue_294_25_offset 76
 #define issue_294_25_offset_hex 4c
 #define issue_294_26_offset 76
@@ -2176,6 +2174,8 @@
 #define useETBforIdleControl_offset_hex 2e8
 #define useFixedBaroCorrFromMap_offset 1476
 #define useFixedBaroCorrFromMap_offset_hex 5c4
+#define useFixedMsForCranking_offset 76
+#define useFixedMsForCranking_offset_hex 4c
 #define useFSIO10ForServo3_offset 1464
 #define useFSIO10ForServo3_offset_hex 5b8
 #define useFSIO11ForServo4_offset 1464
