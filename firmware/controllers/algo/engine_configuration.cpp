@@ -494,7 +494,7 @@ static void setDefaultFuelCutParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(useTLE8888_cranking_hack) = true;
-
+	engineConfiguration->useFixedMsForCranking = true;
 	setLinearCurve(engineConfiguration->crankingTpsCoef, /*from*/1, /*to*/1, 1);
 	setLinearCurve(engineConfiguration->crankingTpsBins, 0, 100, 1);
 
