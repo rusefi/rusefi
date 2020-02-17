@@ -1,11 +1,12 @@
 extraction:
   cpp:
-    before_index:
-    - "wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2"
-    - "tar xf gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2 -C $HOME"
+    after_prepare:
+    - "export GCC=gcc-arm-none-eabi-9-2019-q4-major"
+    - "wget https://github.com/rusefi/build_support/raw/master/${GCC}-x86_64-linux.tar.xz -O compiler.tar.xz"
+    - "tar xf compiler.tar.xz -C ${LGTM_WORKSPACE}"
+    - "mv ${LGTM_WORKSPACE}/${GCC} ${LGTM_WORKSPACE}/gcc-arm"
     index:
       build_command:
-      - "export PATH=$HOME/gcc-arm-none-eabi-9-2019-q4-major/bin:$PATH"
+      - "export PATH=${LGTM_WORKSPACE}/gcc-arm/bin:${PATH}"
       - "cd firmware"
       - "make -j $(nproc) PROJECT_BOARD=microrusefi PROJECT_CPU=ARCH_STM32F4"
-
