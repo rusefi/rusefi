@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef MAX31855_H_
-#define MAX31855_H_
+#pragma once
 
 #include "global.h"
 #include "engine_configuration.h"
@@ -17,4 +16,3 @@ void initMax31855(Logging *sharedLogger, spi_device_e device, egt_cs_array_t max
 
 uint16_t getEgtValue(int egtChannel);
 
-#endif /* MAX31855_H_ */

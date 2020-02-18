@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef PWM_GENERATOR_H_
-#define PWM_GENERATOR_H_
+#pragma once
 
 #include "global.h"
 #include "pwm_generator_logic.h"
@@ -23,4 +22,3 @@ void initPwmGenerator(void);
  */
 void applyPinState(int stateIndex, PwmConfig* state) /* pwm_gen_callback */;
 
-#endif /* PWM_GENERATOR_H_ */
