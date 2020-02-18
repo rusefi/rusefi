@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HARDWARE_H_
-#define HARDWARE_H_
+#pragma once
 
 #include "global.h"
 
@@ -56,4 +55,3 @@ void setBor(int borValue);
 
 #endif /* __cplusplus */
 
-#endif /* HARDWARE_H_ */

@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef RTC_HELPER_H_
-#define RTC_HELPER_H_
+#pragma once
 
 void printDateTime(void);
 void setDateTime(const char *strDate);
@@ -16,5 +15,3 @@ void date_set_tm(struct tm *);
 void date_get_tm(struct tm *);
 void dateToString(char *buffer);
 bool dateToStringShort(char *lcd_str);
-
-#endif /* RTC_HELPER_H_ */

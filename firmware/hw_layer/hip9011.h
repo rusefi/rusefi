@@ -8,7 +8,6 @@
 
 #pragma once
 
-
 // 0b01110001
 #define SET_ADVANCED_MODE 0x71
 

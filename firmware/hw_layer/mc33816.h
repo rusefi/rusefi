@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HW_LAYER_MC33816_H_
-#define HW_LAYER_MC33816_H_
+#pragma once
 
 const int MAX_SPI_MODE_A_TRANSFER_SIZE = 31;  //max size for register config transfer
 
@@ -25,4 +24,3 @@ enum {
 
 void initMc33816(void);
 
-#endif /* HW_LAYER_MC33816_H_ */
