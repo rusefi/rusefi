@@ -1110,8 +1110,10 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	 */
 	switch (engineType) {
 	case DEFAULT_FRANKENSO:
-	case FRANKENSO_QA_ENGINE:
 		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case FRANKENSO_QA_ENGINE:
+		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_M73_F:
 		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
