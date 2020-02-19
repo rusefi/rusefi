@@ -1180,15 +1180,15 @@ le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
 	le_formula_t timingAdditive;
 
 float[CLT_CURVE_SIZE] cltFuelCorrBins;;"C",        1,     0,   -100.0,    250.0,  0
-float[CLT_CURVE_SIZE] cltFuelCorr;;"%",      100,     -1,      0.0,    500,   1
+float[CLT_CURVE_SIZE] cltFuelCorr;;"%",      100,     -1,      -100,    100,   1
 
 float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C",        1,     0,   -100.0,    250.0,   0
-float[IAT_CURVE_SIZE] iatFuelCorr;;"%",      100,     -1,      0.0,    400,   1
+float[IAT_CURVE_SIZE] iatFuelCorr;;"%",      100,     -1,      -100,    100,   1
 
-	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"%",      100,     -1,      0.1,    400,   0
+	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"%",      100,     -1,      -400,    400,   0
 	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"C",        1,     0,    -80.0,    170.0,  0
 
-	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"%",      100,     -1,      0.0,    400,   0
+	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"%",      100,     -1,      -400,    400,   0
 	float[CRANKING_CURVE_SIZE] crankingCycleBins;;"counter",        1,     0,    -80.0,    170.0,  0
 
 float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position multiplier for simple manual idle controller;"C",        1,     0,   -100.0,    250.0,  2
