@@ -456,8 +456,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       yBins       = mafDecoding
       gauge       = MAFGauge
 
-   curve = iatFuelCorrCurve, "Intake air temperature fuel Multiplier"
-      columnLabel = "Coolant", "Multiplier"
+   curve = iatFuelCorrCurve, "Intake air temperature fuel Correction"
+      columnLabel = "Coolant", "% Trim"
 #if CELSIUS
       xAxis       =  -40, 120, 10
 #else
@@ -466,7 +466,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       yAxis       =  0,  2, 11
       xBins       = iatFuelCorrBins, intake
       yBins       = iatFuelCorr
-      gauge       = IATGauge
+      showTextValues = true
+      suppressGraph = true
 	
 	curve = cltTimingCorrCurve, "Warmup timing correction"
       columnLabel = "Coolant", "Extra"
@@ -480,8 +481,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       yBins       = cltTimingExtra
       gauge       = CLTGauge
 
-	curve = cltFuelCorrCurve, "Warmup Enrichment     % Trim"
-      columnLabel = "Coolant", "%"
+	curve = cltFuelCorrCurve, "Warmup Enrichment"
+      columnLabel = "Coolant", "% Trim"
 	  #if CELSIUS
       xAxis       =  -40, 100, 10
 #else
@@ -490,7 +491,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       yAxis       =  0,  3, 10
       xBins       = cltFuelCorrBins, coolant
       yBins       = cltFuelCorr
-	   showTextValues = true
+	  showTextValues = true
       suppressGraph = true
 
 	curve = crankingCltCurve, "Cranking Enrichment    % Of Normal Fueling"
@@ -521,7 +522,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       yAxis       =  0,  3, 10
       xBins       = crankingTpsBins, TPSValue
       yBins       = crankingTpsCoef
-	   suppressGraph = true
+	  suppressGraph = true
       showTextValues = true
 
 	curve = crankingDurationCurve, "First Crank Enrichment     % Of Normal Fueling"
