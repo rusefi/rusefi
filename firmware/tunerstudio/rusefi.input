@@ -480,9 +480,9 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       yBins       = cltTimingExtra
       gauge       = CLTGauge
 
-	curve = cltFuelCorrCurve, "Warmup fuel manual Multiplier"
-      columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
+	curve = cltFuelCorrCurve, "Warmup Enrichment     % Trim"
+      columnLabel = "Coolant", "%"
+	  #if CELSIUS
       xAxis       =  -40, 100, 10
 #else
       xAxis       =  -40, 210, 10
@@ -490,10 +490,11 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       yAxis       =  0,  3, 10
       xBins       = cltFuelCorrBins, coolant
       yBins       = cltFuelCorr
-      gauge       = CLTGauge
+	   showTextValues = true
+      suppressGraph = true
 
-	curve = crankingCltCurve, "Cranking Coolant Temperature Multiplier"
-      columnLabel = "Coolant", "Multiplier"
+	curve = crankingCltCurve, "Cranking Enrichment    % Of Normal Fueling"
+      columnLabel = "Coolant", "%"
 #if CELSIUS
       xAxis       =  -40, 100, 10
 #else
@@ -502,7 +503,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       yAxis       =  0,  3, 10
       xBins       = crankingFuelBins, coolant
       yBins       = crankingFuelCoef
-      gauge       = CLTGauge
+	   showTextValues = true
+       suppressGraph = true
 
 	curve = etbTpsBiasCurve, "Electronic TB Bias Curve"
       columnLabel = "TPS", "duty bias"
@@ -512,20 +514,24 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       yBins       = etbBiasValues
       gauge       = TPSGauge
 
-	curve = crankingTpsCurve, "Cranking TPS Multiplier"
-      columnLabel = "TPS", "Multiplier"
+
+	curve = crankingTpsCurve, "Cranking TPS Correction"
+      columnLabel = "TPS", "%"
       xAxis       =  0, 100, 10
       yAxis       =  0,  3, 10
       xBins       = crankingTpsBins, TPSValue
       yBins       = crankingTpsCoef
-      gauge       = TPSGauge
+	   suppressGraph = true
+      showTextValues = true
 
-	curve = crankingDurationCurve, "Cranking Duration Multiplier"
-      columnLabel = "Engine Cycle", "Multiplier"
+	curve = crankingDurationCurve, "First Crank Enrichment     % Of Normal Fueling"
+      columnLabel = "Engine Cycle", "%"
       xAxis       =  0, 1000, 10
       yAxis       =  0,  3, 10
       xBins       = crankingCycleBins
       yBins       = crankingCycleCoef
+	   showTextValues = true
+      suppressGraph = true
 
 
 	curve = cltIdleCurve, "Warmup Idle multiplier"
