@@ -213,6 +213,14 @@ GPIOA_6
 
 }
 
+/**
+ * set engine_type 63
+ */
 void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	// 12 injectors defined in boards/proteus/board_configuration.cpp
+
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_6;
+
 }
