@@ -177,4 +177,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
+
+	CONFIG(fanPin) = GPIOE_1;
+	CONFIG(fuelPumpPin) = GPIOE_2;
 }
