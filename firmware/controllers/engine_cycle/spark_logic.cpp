@@ -139,14 +139,19 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	float ratio = NT2US(actualDwellDurationNt) / 1000.0 / event->sparkDwell;
 
 	// todo: smarted solution for index to field mapping
-	if (event->cylinderIndex == 0) {
+	switch (event->cylinderIndex) {
+	case 0:
 		tsOutputChannels.debugFloatField1 = ratio;
-	} else if (event->cylinderIndex == 1) {
+		break;
+	case 1:
 		tsOutputChannels.debugFloatField2 = ratio;
-	} else if (event->cylinderIndex == 2) {
+		break;
+	case 2:
 		tsOutputChannels.debugFloatField3 = ratio;
-	} else if (event->cylinderIndex == 3) {
+		break;
+	case 3:
 		tsOutputChannels.debugFloatField4 = ratio;
+		break;
 	}
 #endif
 
@@ -299,13 +304,6 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	iEvent->sparkId = engine->globalSparkIdCounter++;
 
 	/**
-	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
-	 * when an event is scheduled within the next revolution.
-	 */
-	scheduling_s * sUp = &iEvent->dwellStartTimer;
-
-
-	/**
 	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
 	 */
 	if (!limitedSpark) {
@@ -320,7 +318,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		engine->executor.scheduleByTimestampNt(sUp, edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, iEvent });
+		engine->executor.scheduleByTimestampNt(&iEvent->dwellStartTimer, edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, iEvent });
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
