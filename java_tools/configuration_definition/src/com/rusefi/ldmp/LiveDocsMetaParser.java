@@ -24,6 +24,7 @@ public class LiveDocsMetaParser {
     private static final String DISPLAY_IF = "DISPLAY_IF";
     private static final String DISPLAY_ELSE = "DISPLAY_ELSE";
     private static final String DISPLAY_ENDIF = "DISPLAY_ENDIF";
+    private static final char QUOTE_SYMBOL = '"';
     private static StringBuilder prefix = new StringBuilder();
 
     private static String readLineByLine(String filePath) throws IOException {
@@ -87,6 +88,14 @@ public class LiveDocsMetaParser {
             } else if (DISPLAY_TEXT.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
                     String config = s.next();
+                    if (config.startsWith(String.valueOf(QUOTE_SYMBOL))) {
+                        config = config.substring(1);
+                        while (!config.endsWith(String.valueOf(QUOTE_SYMBOL))) {
+                            String next = s.next();
+                            config += ' ' + next;
+                        }
+                        config = config.substring(0, config.length() - 1);
+                    }
                     SystemOut.println("Display test " + config);
                     result.add(new TextRequest(config));
                 }
