@@ -587,10 +587,6 @@ static void setGlobalFuelCorrection(float value) {
 	engineConfiguration->globalFuelCorrection = value;
 }
 
-static void setCltBias(float value) {
-	engineConfiguration->clt.config.bias_resistor = value;
-}
-
 static void setFanSetting(float onTempC, float offTempC) {
 	if (onTempC <= offTempC) {
 		scheduleMsg(&logger, "ON temp [%.2f] should be above OFF temp [%.2f]", onTempC, offTempC);
@@ -598,14 +594,6 @@ static void setFanSetting(float onTempC, float offTempC) {
 	}
 	engineConfiguration->fanOnTemperature = onTempC;
 	engineConfiguration->fanOffTemperature = offTempC;
-}
-
-static void setIatBias(float value) {
-	engineConfiguration->iat.config.bias_resistor = value;
-}
-
-static void setVBattDivider(float value) {
-	engineConfiguration->vbattDividerCoeff = value;
 }
 
 static void setWholeTimingMap(float value) {
@@ -1095,6 +1083,9 @@ const plain_get_float_s getF_plain[] = {
 		{"injection_offset", &engineConfiguration->extraInjectionOffset},
 		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
 		{"global_fuel_correction", &engineConfiguration->globalFuelCorrection},
+		{"vbatt_divider", &engineConfiguration->vbattDividerCoeff},
+		{"clt_bias", &engineConfiguration->clt.config.bias_resistor},
+		{"iat_bias", &engineConfiguration->iat.config.bias_resistor},
 		{"cranking_fuel", &engineConfiguration->cranking.baseFuel},
 		{"cranking_timing_angle", &engineConfiguration->crankingTimingAngle},
 		{"cranking_charge_angle", &engineConfiguration->crankingChargeAngle},
@@ -1199,9 +1190,6 @@ const command_f_s commandsF[] = {
 		{"cranking_iac", setCrankingIACExtra},
 		{"cranking_timing_angle", setCrankingTimingAngle},
 		{"cranking_charge_angle", setCrankingChargeAngle},
-		{"vbatt_divider", setVBattDivider},
-		{"clt_bias", setCltBias},
-		{"iat_bias", setIatBias},
 		{"tps_accel_threshold", setTpsAccelThr},
 		{"tps_decel_threshold", setTpsDecelThr},
 		{"tps_decel_multiplier", setTpsDecelMult},
