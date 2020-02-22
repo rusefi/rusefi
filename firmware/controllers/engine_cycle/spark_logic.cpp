@@ -164,7 +164,28 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		// we are here if engine has just stopped
 		return;
 	}
- 	prepareCylinderIgnitionSchedule(dwellAngleDuration, sparkDwell, event PASS_ENGINE_PARAMETER_SUFFIX);
+
+	// If there are more sparks to fire, schedule them
+	if (event->sparksRemaining > 0)
+	{
+		event->sparksRemaining--;
+
+		auto nowNt = getTimeNowNt();
+
+		// todo: tune configured spark duration
+		auto nextDwellStart = nowNt + MS2NT(600);
+		// todo: independently configure dwell for extra sparks
+		auto nextFiring = nextDwellStart + US2NT(1000);
+
+		// We can schedule both of these right away, since we're going for "asap" not "particular angle"
+		engine->executor.scheduleByTimestampNt(&event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
+		engine->executor.scheduleByTimestampNt(&event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
+	}
+	else
+	{
+		// If all events have been scheduled, prepare for next time.
+		prepareCylinderIgnitionSchedule(dwellAngleDuration, sparkDwell, event PASS_ENGINE_PARAMETER_SUFFIX);
+	}
 }
 
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -329,6 +350,10 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	efiAssertVoid(CUSTOM_ERR_6591, !cisnan(sparkAngle), "findAngle#4");
 	assertAngleRange(sparkAngle, "findAngle#a5", CUSTOM_ERR_6549);
 
+	// todo: read setting, threshold on RPM or something
+	bool enableMultiSpark = true;
+
+	iEvent->sparksRemaining = enableMultiSpark ? 4 : 0;
 
 	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, edgeTimestamp, sparkAngle, { fireSparkAndPrepareNextSchedule, iEvent } PASS_ENGINE_PARAMETER_SUFFIX);
 
