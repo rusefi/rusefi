@@ -178,7 +178,10 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
+	// output 13
 	CONFIG(mainRelayPin) = GPIOB_9;
+	// output 15
 	CONFIG(fanPin) = GPIOE_1;
+	// output 16
 	CONFIG(fuelPumpPin) = GPIOE_2;
 }
