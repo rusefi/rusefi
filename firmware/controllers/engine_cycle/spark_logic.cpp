@@ -342,18 +342,20 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * the coil.
 		 */
 		engine->executor.scheduleByTimestampNt(sUp, edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, iEvent });
+
+		// todo: read setting, spark count vs RPM or something
+		iEvent->sparksRemaining = 4;
+	} else {
+		// don't fire multispark if spark is cut completely!
+		iEvent->sparksRemaining = 0;
 	}
+
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
 	 */
 
 	efiAssertVoid(CUSTOM_ERR_6591, !cisnan(sparkAngle), "findAngle#4");
 	assertAngleRange(sparkAngle, "findAngle#a5", CUSTOM_ERR_6549);
-
-	// todo: read setting, threshold on RPM or something
-	bool enableMultiSpark = true;
-
-	iEvent->sparksRemaining = enableMultiSpark ? 4 : 0;
 
 	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, edgeTimestamp, sparkAngle, { fireSparkAndPrepareNextSchedule, iEvent } PASS_ENGINE_PARAMETER_SUFFIX);
 
