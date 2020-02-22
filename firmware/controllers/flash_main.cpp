@@ -36,29 +36,18 @@ extern persistent_config_container_s persistentState;
 extern engine_configuration_s *engineConfiguration;
 
 /**
- * this address needs to be above 'flash' region available for firmware
- * todo: an ideal solution would be to define this address in the .ld / .icf mapping file
- */
-
-#define PERSISTENT_SIZE sizeof(persistent_config_container_s)
-
-/**
  * https://sourceforge.net/p/rusefi/tickets/335/
  *
  * In order to preserve at least one copy of the tune in case of electrical issues address of second configuration copy
  * should be in a different sector of flash since complete flash sectors are erased on write.
  */
 
-crc_t flashStateCrc(persistent_config_container_s *state) {
-	return calc_crc((const crc_t*) &state->persistentConfiguration, sizeof(persistent_config_s));
-}
-
-void setNeedToWriteConfiguration(void) {
+void setNeedToWriteConfiguration() {
 	scheduleMsg(logger, "Scheduling configuration write");
 	needToWriteConfiguration = true;
 }
 
-bool getNeedToWriteConfiguration(void) {
+bool getNeedToWriteConfiguration() {
 	return needToWriteConfiguration;
 }
 
@@ -72,22 +61,29 @@ void writeToFlashIfPending() {
 	writeToFlashNow();
 }
 
-void writeToFlashNow(void) {
+// Erase and write a copy of the configuration at the specified address
+template <typename TStorage>
+int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
+{
+	flashErase(storageAddress, sizeof(TStorage));
+	return flashWrite(storageAddress, reinterpret_cast<const char*>(&data), sizeof(TStorage));
+}
+
+void writeToFlashNow() {
 	scheduleMsg(logger, " !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITION ON !!!!!!!!!!!!!!!!!!!!");
-	persistentState.size = PERSISTENT_SIZE;
+
+	// Set up the container
+	persistentState.size = sizeof(persistentState);
 	persistentState.version = FLASH_DATA_VERSION;
-	scheduleMsg(logger, "flash compatible with %d", persistentState.version);
-	crc_t crcResult = flashStateCrc(&persistentState);
-	persistentState.value = crcResult;
-	scheduleMsg(logger, "Reseting flash: size=%d", PERSISTENT_SIZE);
-	flashErase(getFlashAddrFirstCopy(), PERSISTENT_SIZE);
-	scheduleMsg(logger, "Flashing with CRC=%d", crcResult);
-	efitimems_t nowMs = currentTimeMillis();
-	int result = flashWrite(getFlashAddrFirstCopy(), (const char *) &persistentState, PERSISTENT_SIZE);
-	flashErase(getFlashAddrSecondCopy(), PERSISTENT_SIZE);
-	flashWrite(getFlashAddrSecondCopy(), (const char *) &persistentState, PERSISTENT_SIZE);
-	scheduleMsg(logger, "Flash programmed in %dms", currentTimeMillis() - nowMs);
-	bool isSuccess = result == FLASH_RETURN_SUCCESS;
+	persistentState.value = calc_crc(persistentState);
+
+	// Flash two copies
+	int result1 = eraseAndFlashCopy(getFlashAddrFirstCopy(), persistentState);
+	int result2 = eraseAndFlashCopy(getFlashAddrSecondCopy(), persistentState);
+
+	// handle success/failure
+	bool isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
+
 	if (isSuccess) {
 		scheduleMsg(logger, FLASH_SUCCESS_MSG);
 	} else {
@@ -98,12 +94,12 @@ void writeToFlashNow(void) {
 }
 
 static bool isValidCrc(persistent_config_container_s *state) {
-	crc_t result = flashStateCrc(state);
+	crc_t result = calc_crc(state);
 	int isValidCrc_b = result == state->value;
 	return isValidCrc_b;
 }
 
-static void doResetConfiguration(void) {
+static void doResetConfiguration() {
 	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
@@ -111,11 +107,11 @@ persisted_configuration_state_e flashState;
 
 static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, Logging * logger) {
 	printMsg(logger, "readFromFlash %x", address);
-	flashRead(address, (char *) &persistentState, PERSISTENT_SIZE);
+	flashRead(address, (char *) &persistentState, sizeof(persistentState));
 
 	if (!isValidCrc(&persistentState)) {
 		return CRC_FAILED;
-	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != PERSISTENT_SIZE) {
+	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != sizeof(persistentState)) {
 		return INCOMPATIBLE_VERSION;
 	} else {
 		return PC_OK;
@@ -151,7 +147,7 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 	return result;
 }
 
-void readFromFlash(void) {
+void readFromFlash() {
 	persisted_configuration_state_e result = readConfiguration(logger);
 
 	if (result == CRC_FAILED) {
@@ -163,7 +159,7 @@ void readFromFlash(void) {
 	}
 }
 
-static void rewriteConfig(void) {
+static void rewriteConfig() {
 	doResetConfiguration();
 	writeToFlashNow();
 }
