@@ -42,12 +42,12 @@ extern engine_configuration_s *engineConfiguration;
  * should be in a different sector of flash since complete flash sectors are erased on write.
  */
 
-void setNeedToWriteConfiguration() {
+void setNeedToWriteConfiguration(void) {
 	scheduleMsg(logger, "Scheduling configuration write");
 	needToWriteConfiguration = true;
 }
 
-bool getNeedToWriteConfiguration() {
+bool getNeedToWriteConfiguration(void) {
 	return needToWriteConfiguration;
 }
 
@@ -69,7 +69,7 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
 	return flashWrite(storageAddress, reinterpret_cast<const char*>(&data), sizeof(TStorage));
 }
 
-void writeToFlashNow() {
+void writeToFlashNow(void) {
 	scheduleMsg(logger, " !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITION ON !!!!!!!!!!!!!!!!!!!!");
 
 	// Set up the container
@@ -99,7 +99,7 @@ static bool isValidCrc(persistent_config_container_s *state) {
 	return isValidCrc_b;
 }
 
-static void doResetConfiguration() {
+static void doResetConfiguration(void) {
 	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
@@ -147,7 +147,7 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 	return result;
 }
 
-void readFromFlash() {
+void readFromFlash(void) {
 	persisted_configuration_state_e result = readConfiguration(logger);
 
 	if (result == CRC_FAILED) {
@@ -159,7 +159,7 @@ void readFromFlash() {
 	}
 }
 
-static void rewriteConfig() {
+static void rewriteConfig(void) {
 	doResetConfiguration();
 	writeToFlashNow();
 }
