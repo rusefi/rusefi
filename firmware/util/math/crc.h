@@ -21,17 +21,7 @@ uint32_t crc32(const void *buf, uint32_t size);
 uint32_t crc32inc(const void *buf, uint32_t crc, uint32_t size);
 
 #ifdef __cplusplus
-} // extern "C"
-
-// C++ helper - doesn't require manually passing size
-template <class T>
-crc_t calc_crc(const T& object)
-{
-    static_assert(!std::is_pointer_v<T>, "Did you really mean to take the CRC of a pointer?");
-
-    return crc32(reinterpret_cast<const void*>(&object), sizeof(T));
 }
-
 #endif /* __cplusplus */
 
 #endif /* CRC_H_ */
