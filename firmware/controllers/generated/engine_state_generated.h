@@ -243,6 +243,10 @@ struct engine_state2_s {
 	 * offset 160
 	 */
 	angle_t cltTimingCorrection = (angle_t)0;
+
+	efitick_t multisparkDelayTime = 0;
+	efitick_t multisparkDwellTime = 0;
+	uint8_t multisparkCount = 0;
 	/** total size 164*/
 };
 

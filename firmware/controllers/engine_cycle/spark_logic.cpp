@@ -343,8 +343,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 */
 		engine->executor.scheduleByTimestampNt(sUp, edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, iEvent });
 
-		// todo: read setting, spark count vs RPM or something
-		iEvent->sparksRemaining = 4;
+		iEvent->sparksRemaining = ENGINE(engineState.multisparkCount);
 	} else {
 		// don't fire multispark if spark is cut completely!
 		iEvent->sparksRemaining = 0;

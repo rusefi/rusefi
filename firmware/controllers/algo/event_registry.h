@@ -89,7 +89,7 @@ public:
 
 	// How many additional sparks should we fire after the first one?
 	// For single sparks, this should be zero.
-	size_t sparksRemaining = 0;
+	uint8_t sparksRemaining = 0;
 
 	/**
 	 * Desired timing advance

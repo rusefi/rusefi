@@ -197,6 +197,29 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 
+	// Compute multispark configuration
+	int maxSparkCount = 10;
+	int maxMultisparkRpm = 2000;
+	angle_t fireSparksForAngle = 25;
+
+	if (rpm <= maxMultisparkRpm && maxSparkCount > 0) {
+		floatus_t multiDelay = 1000;
+		floatus_t multiDwell = 2000;
+
+		multisparkDelayTime = US2NT(multiDelay);
+		multisparkDwellTime = US2NT(multiDwell);
+
+		floatus_t additionalSparksUs = ENGINE(rpmCalculator.oneDegreeUs) * fireSparksForAngle;
+		floatus_t oneSparkTime = multiDelay + multiDwell;
+
+		float sparksFitInTime = additionalSparksUs / oneSparkTime;
+		int floored = sparksFitInTime;
+
+		multisparkCount = minI(floored, maxSparkCount);
+	} else {
+		multisparkCount = 0;
+	}
+
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 		updateTChargeK(rpm, tps PASS_ENGINE_PARAMETER_SUFFIX);
