@@ -93,10 +93,8 @@ void writeToFlashNow(void) {
 	resetMaxValues();
 }
 
-static bool isValidCrc(persistent_config_container_s *state) {
-	crc_t result = calc_crc(state);
-	int isValidCrc_b = result == state->value;
-	return isValidCrc_b;
+static bool isValidCrc(persistent_config_container_s& state) {
+	return calc_crc(state) == state.value;
 }
 
 static void doResetConfiguration(void) {
@@ -109,7 +107,7 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
 	printMsg(logger, "readFromFlash %x", address);
 	flashRead(address, (char *) &persistentState, sizeof(persistentState));
 
-	if (!isValidCrc(&persistentState)) {
+	if (!isValidCrc(persistentState)) {
 		return CRC_FAILED;
 	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != sizeof(persistentState)) {
 		return INCOMPATIBLE_VERSION;
