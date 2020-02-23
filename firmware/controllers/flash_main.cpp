@@ -75,7 +75,7 @@ void writeToFlashNow(void) {
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
 	persistentState.version = FLASH_DATA_VERSION;
-	persistentState.value = calc_crc(persistentState);
+	persistentState.value = calc_crc(persistentState.persistentConfiguration);
 
 	// Flash two copies
 	int result1 = eraseAndFlashCopy(getFlashAddrFirstCopy(), persistentState);
@@ -94,7 +94,7 @@ void writeToFlashNow(void) {
 }
 
 static bool isValidCrc(persistent_config_container_s& state) {
-	return calc_crc(state) == state.value;
+	return calc_crc(state.persistentConfiguration) == state.value;
 }
 
 static void doResetConfiguration(void) {
