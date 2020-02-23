@@ -42,6 +42,10 @@ extern engine_configuration_s *engineConfiguration;
  * should be in a different sector of flash since complete flash sectors are erased on write.
  */
 
+crc_t flashStateCrc(persistent_config_container_s *state) {
+	return calc_crc((const crc_t*) &state->persistentConfiguration, sizeof(persistent_config_s));
+}
+
 void setNeedToWriteConfiguration(void) {
 	scheduleMsg(logger, "Scheduling configuration write");
 	needToWriteConfiguration = true;
@@ -75,7 +79,7 @@ void writeToFlashNow(void) {
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
 	persistentState.version = FLASH_DATA_VERSION;
-	persistentState.value = calc_crc(persistentState.persistentConfiguration);
+	persistentState.value = flashStateCrc(&persistentState);
 
 	// Flash two copies
 	int result1 = eraseAndFlashCopy(getFlashAddrFirstCopy(), persistentState);
@@ -93,8 +97,10 @@ void writeToFlashNow(void) {
 	resetMaxValues();
 }
 
-static bool isValidCrc(persistent_config_container_s& state) {
-	return calc_crc(state.persistentConfiguration) == state.value;
+static bool isValidCrc(persistent_config_container_s *state) {
+	crc_t result = flashStateCrc(state);
+	int isValidCrc_b = result == state->value;
+	return isValidCrc_b;
 }
 
 static void doResetConfiguration(void) {
@@ -107,7 +113,7 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
 	printMsg(logger, "readFromFlash %x", address);
 	flashRead(address, (char *) &persistentState, sizeof(persistentState));
 
-	if (!isValidCrc(persistentState)) {
+	if (!isValidCrc(&persistentState)) {
 		return CRC_FAILED;
 	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != sizeof(persistentState)) {
 		return INCOMPATIBLE_VERSION;
