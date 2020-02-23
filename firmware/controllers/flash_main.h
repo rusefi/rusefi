@@ -21,7 +21,7 @@ typedef enum {
 } persisted_configuration_state_e;
 
 persisted_configuration_state_e readConfiguration(Logging * logger);
-void readFromFlash();
+void readFromFlash(void);
 void initFlash(Logging *sharedLogger);
 
 /**
@@ -30,10 +30,10 @@ void initFlash(Logging *sharedLogger);
  * about 1-2 seconds, we cannot afford to do that while the engine is
  * running so we postpone the write until the engine is stopped.
  */
-void writeToFlashNow();
-void setNeedToWriteConfiguration();
+void writeToFlashNow(void);
+void setNeedToWriteConfiguration(void);
 /**
  * @return true if an flash write is pending
  */
-bool getNeedToWriteConfiguration();
-void writeToFlashIfPending();
+bool getNeedToWriteConfiguration(void);
+void writeToFlashIfPending(void);
