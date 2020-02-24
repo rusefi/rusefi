@@ -18,8 +18,6 @@
 #include "advance_map.h"
 #include "engine_configuration.h"
 
-#if EFI_SUPPORT_FORD_ASPIRE
-
 #if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
 
 /**
@@ -161,5 +159,3 @@ void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->engineSnifferRpmThreshold = 13000;
 	engineConfiguration->sensorSnifferRpmThreshold = 13000;
 }
-
-#endif /* EFI_SUPPORT_FORD_ASPIRE */

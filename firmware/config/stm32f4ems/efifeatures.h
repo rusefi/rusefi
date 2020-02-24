@@ -244,14 +244,9 @@
 #endif
 
 /**
- * While we embed multiple PnP configurations into the same firmware binary, these marcoses give us control
- * over which configurations go into the binary
+ * Should PnP engine configurations be included in the binary?
  */
-#define EFI_SUPPORT_DODGE_NEON TRUE
-#define EFI_SUPPORT_FORD_ASPIRE TRUE
-#define EFI_SUPPORT_FORD_FIESTA TRUE
-#define EFI_SUPPORT_NISSAN_PRIMERA TRUE
-#define EFI_SUPPORT_1995_FORD_INLINE_6 TRUE
+#define EFI_INCLUDE_ENGINE_PRESETS TRUE
 
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE
