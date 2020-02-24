@@ -231,7 +231,7 @@ GPIOA_6
  *
  *
  * small#5 :          : VR1 pos
- * small#8 :          : ETB1-
+ * small#8 : blue     : ETB1-
  * small#13: blue     : VR1 neg
  * small#15: orange   : ETB1+
  * small#18: red      : ignition power / ECU power source
