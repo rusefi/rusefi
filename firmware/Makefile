@@ -22,8 +22,11 @@ include rusefi.mk
 # for 'release' options see 'clean_compile_two_versions.bat' file
 
 ifeq ($(DEBUG_LEVEL_OPT),)
-  # this value would be used by default. For 'release' configuration override with '-O2' or something along these lines
-  DEBUG_LEVEL_OPT = -O0 -ggdb -g3 
+  # Default to a release build - but leave in debug info.  It doesn't change the hex/bin output.
+  DEBUG_LEVEL_OPT = -O2 -ggdb -g3
+  # Comment the above and uncomment the line below if you want to debug the firmware (it's difficult-to-impossible
+  # to debug firmware with optimization enabled).
+  # DEBUG_LEVEL_OPT = -O0 -ggdb -g3
 endif
 
 
