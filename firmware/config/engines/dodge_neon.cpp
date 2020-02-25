@@ -14,8 +14,6 @@
 
 #include "global.h"
 
-#if EFI_SUPPORT_DODGE_NEON
-
 #include "dodge_neon.h"
 #include "engine_configuration.h"
 #include "thermistors.h"
@@ -502,6 +500,3 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// end of setDodgeNeonNGCEngineConfiguration
 }
-
-#endif /* EFI_SUPPORT_DODGE_NEON */
-

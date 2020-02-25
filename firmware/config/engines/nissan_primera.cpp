@@ -10,7 +10,6 @@
 
 #include "global.h"
 
-#if EFI_SUPPORT_NISSAN_PRIMERA
 #include "nissan_primera.h"
 
 EXTERN_CONFIG;
@@ -32,5 +31,3 @@ void setNissanPrimeraEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setNissanPrimeraEngineConfiguration_360(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_NISSAN_SR20VE_360;
 }
-
-#endif /* EFI_SUPPORT_NISSAN_PRIMERA */
