@@ -515,11 +515,32 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* BOARD_TLE8888_COUNT */
 }
 
+/**
+ * set engine_type 103
+ */
 void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
+	// grey
+	// default spi3mosiPin PB5
+	// white
+	// default spi3misoPin PB4
+	// violet
+	// default spi3sckPin  PB3
+
+
+	// blue
 	CONFIG(mc33816_cs) = GPIOD_7;
+	// green
 	CONFIG(mc33816_rstb) = GPIOD_5;
+	// yellow
 	CONFIG(mc33816_driven) = GPIOD_6;
+
+	// enable_spi 3
+	CONFIG(is_enabled_spi_3) = true;
+	// Wire up spi3
+	engineConfiguration->spi3mosiPin = GPIOB_5;
+	engineConfiguration->spi3misoPin = GPIOB_4;
+	engineConfiguration->spi3sckPin = GPIOB_3;
 
 	CONFIG(isSdCardEnabled) = false;
 
