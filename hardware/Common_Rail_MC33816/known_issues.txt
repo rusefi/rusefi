@@ -6,6 +6,6 @@
  6) RESOLVED IN R0.2 D10 --> D10_2, and D11 --> D11_2 should be the same package, they were 2 different / wrong footprints. 
  7) RESOLVED IN R0.3 Moved several 0805 components to the back side of the PCB for lower cost assembly.
  8)                  J15 needs silk and larger hole. J20 needs silk and should use same larger terminal as J8-J9-J10
- 9)
+ 9)                  J15 & J20 silk ^^^ should be on both top and bottom sides of the board
 10)
 11)
