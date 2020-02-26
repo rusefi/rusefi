@@ -78,7 +78,7 @@ static void setupVbatt() {
 
 static void setupTle8888() {
 	// Enable spi3
-	engineConfiguration->is_enabled_spi_3 = true;
+	CONFIG(is_enabled_spi_3) = true;
 
 	// Wire up spi3
 	engineConfiguration->spi3mosiPin = GPIOB_5;

@@ -265,6 +265,10 @@ static void download_register(int r_target) {
 
 void initMc33816(Logging *sharedLogger) {
 	logger = sharedLogger;
+
+	//
+	// see setTest33816EngineConfiguration
+	//
 	// default spi3mosiPin PB5
 	// default spi3misoPin PB4
 	// default spi3sckPin  PB3
