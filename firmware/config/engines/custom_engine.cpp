@@ -514,3 +514,14 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[2 - 1] = GPIOE_10;
 #endif /* BOARD_TLE8888_COUNT */
 }
+
+void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
+	CONFIG(mc33816_cs) = GPIOD_7;
+	CONFIG(mc33816_rstb) = GPIOD_5;
+	CONFIG(mc33816_driven) = GPIOD_6;
+
+	CONFIG(isSdCardEnabled) = false;
+
+	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
+}

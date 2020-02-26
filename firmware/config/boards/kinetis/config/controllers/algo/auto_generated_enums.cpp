@@ -661,6 +661,8 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case VAG_18_TURBO:
   return "VAG_18_TURBO";
+case TEST_33816:
+  return "TEST_33816";
 case VW_B6:
   return "VW_B6";
 case VW_ABA:

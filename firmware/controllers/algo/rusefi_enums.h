@@ -193,6 +193,8 @@ typedef enum {
 	SUBARUEJ20G_DEFAULTS = 101,
 	VAG_18_TURBO = 102,
 
+	TEST_33816 = 103,
+
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
 

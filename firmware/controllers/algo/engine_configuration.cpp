@@ -1301,6 +1301,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case TOYOTA_JZS147:
 		setToyota_jzs147EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case TEST_33816:
+		setTest33816EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 #endif // EFI_INCLUDE_ENGINE_PRESETS
 	default:
 		warning(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
