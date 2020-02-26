@@ -194,6 +194,12 @@ static void flashWriteData(flashaddr_t address, const flashdata_t data) {
 	/* Write the data */
 	*(flashdata_t*) address = data;
 
+	// Cortex-M7 (STM32F7/H7) can execute out order - need to force a full flush
+	// so that we actually wait for the operation to complete!
+#if CORTEX_MODEL == 7
+	__DSB();
+#endif
+
 	/* Wait for completion */
 	flashWaitWhileBusy();
 
