@@ -54,13 +54,13 @@
 #include "mc33816.h"
 #endif /* EFI_MC33816 */
 
-#if EFI_SPEED_DENSITY
+#if EFI_MAP_AVERAGING
 #include "map_averaging.h"
-#endif /* EFI_SPEED_DENSITY */
+#endif
 
 #if EFI_INTERNAL_FLASH
 #include "flash_main.h"
-#endif /* EFI_INTERNAL_FLASH */
+#endif
 
 EXTERN_ENGINE
 ;
@@ -217,7 +217,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		 */
 		efiAssertVoid(CUSTOM_ERR_6676, getCurrentRemainingStack() > 128, "lowstck#9b");
 
-#if EFI_SENSOR_CHART
+#if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
 		if (ENGINE(sensorChartMode) == SC_AUX_FAST1) {
 			float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
 			scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX), voltage);
@@ -500,8 +500,11 @@ void initHardware(Logging *l) {
 #if HAL_USE_SPI
 	initSpiModules(engineConfiguration);
 #endif /* HAL_USE_SPI */
+
+#if BOARD_EXT_GPIOCHIPS > 0
 	// initSmartGpio depends on 'initSpiModules'
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
