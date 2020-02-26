@@ -227,10 +227,12 @@ static void printMAPInfo(void) {
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 		scheduleMsg(logger, "instant value=%.2fHz @ %s", mapFreq, hwPortname(CONFIG(frequencyReportingMapInputPin)));
 	} else {
+#if EFI_MAP_AVERAGING
 		scheduleMsg(logger, "map type=%d/%s MAP=%.2fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
 				getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
 				getMap(),
 				mapMinBufferLength);
+#endif // EFI_MAP_AVERAGING
 
 		adc_channel_e mapAdc = engineConfiguration->map.sensor.hwChannel;
 		static char pinNameBuffer[16];

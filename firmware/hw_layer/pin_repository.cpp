@@ -182,8 +182,11 @@ void initPinRepository(void) {
 	initialized = true;
 
 	addConsoleAction(CMD_PINS, reportPins);
+
+#if (BOARD_TLE8888_COUNT > 0)
 	addConsoleAction("tle8888", tle8888_dump_regs);
 	addConsoleAction("tle8888init", requestTLE8888initialization);
+#endif
 }
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
