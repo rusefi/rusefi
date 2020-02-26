@@ -117,8 +117,6 @@
  */
 #define EFI_ENGINE_CONTROL TRUE
 
-#define EFI_SPEED_DENSITY TRUE
-
 /**
  * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
  * stock ECU
