@@ -246,7 +246,9 @@
 /**
  * Should PnP engine configurations be included in the binary?
  */
+#ifndef EFI_INCLUDE_ENGINE_PRESETS
 #define EFI_INCLUDE_ENGINE_PRESETS TRUE
+#endif
 
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE
