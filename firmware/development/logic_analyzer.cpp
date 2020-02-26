@@ -79,7 +79,11 @@ void WaveReader::onFallEvent() {
 	efitick_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;
 
+#if EFI_SHAFT_POSITION_INPUT
 	int revolutionCounter = getRevolutionCounter();
+#else
+	int revolutionCounter = 0;
+#endif
 
 	totalOnTimeAccumulatorUs += width;
 	if (currentRevolutionCounter != revolutionCounter) {
@@ -227,7 +231,9 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 	initWave(PROTOCOL_WA_CHANNEL_3, 2);
 	initWave(PROTOCOL_WA_CHANNEL_4, 3);
 
+#if EFI_SHAFT_POSITION_INPUT
 	addTriggerEventListener(waTriggerEventListener, "wave analyzer", engine);
+#endif
 
 	addConsoleAction("waveinfo", showWaveInfo);
 

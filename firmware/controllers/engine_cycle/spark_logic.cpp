@@ -13,6 +13,8 @@
 #include "event_queue.h"
 #include "perf_trace.h"
 
+#if EFI_ENGINE_CONTROL
+
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_configuration.h"
 #endif /* EFI_TUNER_STUDIO */
@@ -495,3 +497,5 @@ percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE) == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }
+
+#endif // EFI_ENGINE_CONTROL
