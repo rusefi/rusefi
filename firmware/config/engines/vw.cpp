@@ -60,7 +60,7 @@ void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFuelTablesLoadBin(20, mapRange PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingLoadBin(20, mapRange PASS_CONFIG_PARAMETER_SUFFIX);
 
-	engineConfiguration->isSdCardEnabled = false;
+	CONFIG(isSdCardEnabled) = false;
 	engineConfiguration->tpsMin = 740;
 	engineConfiguration->tpsMax = 135;
 }

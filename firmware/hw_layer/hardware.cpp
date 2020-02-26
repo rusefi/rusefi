@@ -507,7 +507,7 @@ void initHardware(Logging *l) {
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_MC33816
-	initMc33816();
+	initMc33816(sharedLogger);
 #endif /* EFI_MC33816 */
 
 #if EFI_MAX_31855

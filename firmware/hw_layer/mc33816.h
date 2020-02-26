@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "global.h"
+
 const int MAX_SPI_MODE_A_TRANSFER_SIZE = 31;  //max size for register config transfer
 
 enum {
@@ -22,5 +24,5 @@ enum {
 	REG_DIAG
 };
 
-void initMc33816(void);
+void initMc33816(Logging *logger);
 

@@ -78,7 +78,7 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->is_enabled_spi_1 = false;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->sdCardCsPin = GPIOA_2;
-	engineConfiguration->isSdCardEnabled = false;
+	CONFIG(isSdCardEnabled) = false;
 }
 
 /**
