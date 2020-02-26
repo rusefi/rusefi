@@ -247,7 +247,7 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::GetInjectionDuration);
 
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT
 	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 	injection_mode_e mode = isCranking ?
 			engineConfiguration->crankingInjectionMode :
