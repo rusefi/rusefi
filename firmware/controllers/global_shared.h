@@ -30,12 +30,10 @@
 
 #include "global.h"
 
-#define EXTERN_CONFIG \
+#define EXTERN_ENGINE_CONFIGURATION \
 		extern engine_configuration_s *engineConfiguration; \
-		extern engine_configuration_s activeConfiguration; \
 		extern persistent_config_container_s persistentState; \
-		extern persistent_config_s *config; \
-
+		extern persistent_config_s *config;
 
 /**
  * this macro allows the compiled to figure out the complete static address, that's a performance
@@ -47,8 +45,18 @@
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 
-
 #ifdef __cplusplus
+
+/**
+ * & is reference in C++ (not C)
+ * Ref is a pointer that:
+ *   you access with dot instead of arrow
+ *   Cannot be null
+ * This is about EFI_ACTIVE_CONFIGURATION_IN_FLASH
+ */
+#define EXTERN_CONFIG \
+		EXTERN_ENGINE_CONFIGURATION \
+		extern engine_configuration_s & activeConfiguration; \
 
 #define EXTERN_ENGINE \
 		extern Engine ___engine; \
