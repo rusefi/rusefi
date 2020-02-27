@@ -133,6 +133,7 @@ void setEngineBMW_M73_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 // BMW_M73_M
+// set engine_type 24
 void setEngineBMW_M73_Manhattan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -175,7 +176,7 @@ GPIOA_6
 	// For example TLE7209 - two control wires:
 	// PWM on both wires - one to open, another to close
 	// ETB motor NEG pin # - white wire - OUT 1
-
+	// green input wire
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_6;
 	// set_analog_input_pin tps PA3
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // PA3
@@ -254,6 +255,11 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 12 injectors defined in boards/proteus/board_configuration.cpp
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_6;
+
+	// set vbatt_divider 8.16
+	// engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * 16.8f / 10.0f;
+	// todo: figure out exact values from TLE8888 breakout board used by Manhattan
+	engineConfiguration->vbattDividerCoeff = 7.6;
 
 	// TPS#2 = Analog volt
 //	engineConfiguration->tps2_1AdcChannel = EFI_ADC_;
