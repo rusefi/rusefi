@@ -2072,8 +2072,6 @@
 #define unused_former_warmup_target_afr_offset_hex 830
 #define unused_offset 972
 #define unused_offset_hex 3cc
-#define unusedAnotherOne_offset 744
-#define unusedAnotherOne_offset_hex 2e8
 #define unusedAtOldBoardConfigurationEnd_offset 1052
 #define unusedAtOldBoardConfigurationEnd_offset_hex 41c
 #define unusedBit4_1476_offset 1476
@@ -2249,6 +2247,8 @@
 #define vehicleSpeedSensorInputPin_offset_hex 3c8
 #define veLoadBins_offset 18464
 #define veLoadBins_offset_hex 4820
+#define verboseTLE8888_offset 744
+#define verboseTLE8888_offset_hex 2e8
 #define verboseTriggerSynchDetails_offset 1476
 #define verboseTriggerSynchDetails_offset_hex 5c4
 #define veRpmBins_offset 18528

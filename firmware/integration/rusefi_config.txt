@@ -631,7 +631,7 @@ bit is_enabled_spi_2
 	bit enabledStep1Limiter;
 	bit useTpicAdvancedMode;
 	bit useLcdScreen;
-	bit unusedAnotherOne;
+	bit verboseTLE8888;
 	bit unusedOldWarmupAfr;
 	bit onOffAlternatorLogic; +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	bit isCJ125Enabled

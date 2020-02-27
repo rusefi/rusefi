@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Feb 16 16:11:47 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Thu Feb 27 01:01:33 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1294,7 +1294,7 @@ struct engine_configuration_s {
 	bool useLcdScreen : 1;
 	/**
 	offset 744 bit 13 */
-	bool unusedAnotherOne : 1;
+	bool verboseTLE8888 : 1;
 	/**
 	offset 744 bit 14 */
 	bool unusedOldWarmupAfr : 1;
@@ -3217,4 +3217,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Feb 16 16:11:47 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Thu Feb 27 01:01:33 EST 2020
