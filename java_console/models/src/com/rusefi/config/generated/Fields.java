@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Feb 16 16:11:34 EST 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Feb 27 01:01:20 EST 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1370,7 +1370,6 @@ public class Fields {
 	public static final int unused_former_warmup_target_afr_offset = 2096;
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
 	public static final int unused_offset = 972;
-	public static final int unusedAnotherOne_offset = 744;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1052;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_250_10_offset = 976;
@@ -1461,6 +1460,7 @@ public class Fields {
 	public static final int vehicleSpeedSensorInputPin_offset = 968;
 	public static final int veLoadBins_offset = 18464;
 	public static final int veLoadBins_offset_hex = 4820;
+	public static final int verboseTLE8888_offset = 744;
 	public static final int verboseTriggerSynchDetails_offset = 1476;
 	public static final int veRpmBins_offset = 18528;
 	public static final int veRpmBins_offset_hex = 4860;
@@ -1763,7 +1763,7 @@ public class Fields {
 	public static final Field ENABLEDSTEP1LIMITER = Field.create("ENABLEDSTEP1LIMITER", 744, FieldType.BIT, 10);
 	public static final Field USETPICADVANCEDMODE = Field.create("USETPICADVANCEDMODE", 744, FieldType.BIT, 11);
 	public static final Field USELCDSCREEN = Field.create("USELCDSCREEN", 744, FieldType.BIT, 12);
-	public static final Field UNUSEDANOTHERONE = Field.create("UNUSEDANOTHERONE", 744, FieldType.BIT, 13);
+	public static final Field VERBOSETLE8888 = Field.create("VERBOSETLE8888", 744, FieldType.BIT, 13);
 	public static final Field UNUSEDOLDWARMUPAFR = Field.create("UNUSEDOLDWARMUPAFR", 744, FieldType.BIT, 14);
 	public static final Field ONOFFALTERNATORLOGIC = Field.create("ONOFFALTERNATORLOGIC", 744, FieldType.BIT, 15);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 744, FieldType.BIT, 16);
@@ -2661,7 +2661,7 @@ public class Fields {
 	ENABLEDSTEP1LIMITER,
 	USETPICADVANCEDMODE,
 	USELCDSCREEN,
-	UNUSEDANOTHERONE,
+	VERBOSETLE8888,
 	UNUSEDOLDWARMUPAFR,
 	ONOFFALTERNATORLOGIC,
 	ISCJ125ENABLED,
