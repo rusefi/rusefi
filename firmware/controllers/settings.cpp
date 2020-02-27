@@ -404,8 +404,7 @@ void printTPSInfo(void) {
 	auto raw = Sensor::getRaw(SensorType::Tps1);
 
 	if (!tps.Valid) {
-		scheduleMsg(&logger, "NO TPS SENSOR");
-		return;
+		scheduleMsg(&logger, "TPS not valid");
 	}
 	static char pinNameBuffer[16];
 
