@@ -724,10 +724,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 8
 	tsOutputChannels->intakeAirTemperature = intake;
 
-	SensorResult tps = Sensor::get(SensorType::Tps1);
-	tsOutputChannels->throttlePosition = tps.Value;
-	tsOutputChannels->isTpsError = !tps.Valid;
+	SensorResult tps1 = Sensor::get(SensorType::Tps1);
+	tsOutputChannels->throttlePosition = tps1.Value;
+	tsOutputChannels->isTpsError = !tps1.Valid;
 	tsOutputChannels->tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1));
+
+	SensorResult tps2 = Sensor::get(SensorType::Tps2);
+	tsOutputChannels->throttle2Position = tps2.Value;
+
 
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
