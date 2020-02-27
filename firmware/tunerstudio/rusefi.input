@@ -332,6 +332,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       egt6            = scalar,  S16,    214,  "deg C",      1,         0
       egt7            = scalar,  S16,    216,  "deg C",      1,         0
       egt8            = scalar,  S16,    218,  "deg C",      1,         0
+;
+      TPS2Value       = scalar,  S16,    220,        "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 
 ;
