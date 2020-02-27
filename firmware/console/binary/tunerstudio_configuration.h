@@ -178,6 +178,9 @@ typedef struct {
 
 	// EGT
 	egt_values_s egtValues; // 204
+	scaled_percent throttle2Position;    // 220
+
+	uint8_t unusedAtTheEnd[18]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
