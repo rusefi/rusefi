@@ -887,6 +887,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engine->hwTriggerInputEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "useTLE8888_cranking_hack")) {
 		CONFIG(useTLE8888_cranking_hack) = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
+		CONFIG(verboseTLE8888) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {
