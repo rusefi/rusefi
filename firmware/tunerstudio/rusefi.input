@@ -76,7 +76,7 @@ enable2ndByteCanID = false
    
  ; delayAfterPortOpen = 500  
    
-   blockingFactor = 400 ; max chunk size
+   blockingFactor = 256 ; max chunk size
 ;end communication settings
 
    ;  name      			= bits,   type, offset,  bits
