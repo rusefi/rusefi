@@ -8,4 +8,8 @@
  8)                  J15 needs silk and larger hole. J20 needs silk and should use same larger terminal as J8-J9-J10
  9)                  J15 & J20 silk ^^^ should be on both top and bottom sides of the board
 10)                  power LED. back side is pretty much free pre-assembled, front side is manual assembly. maybe one LED on each side?
-11)
+11)                  J5&J6 why do we need as jumpers? Shall we connect those permanently since looks like those shall be connected?
+12)                  move more small stuff to same (back) side
+13)
+14)
+15)
