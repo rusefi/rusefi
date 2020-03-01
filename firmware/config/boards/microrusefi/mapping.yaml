@@ -1,3 +1,8 @@
+#
+# microRusEfi board
+# https://github.com/rusefi/rusefi_documentation/wiki/Hardware_microRusEfi_wiring
+#
+
 outputs:
   # TLE8888 injector channels
   GPIOE_14: "37 - Injector 1"
