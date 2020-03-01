@@ -529,9 +529,10 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	// todo: alternator warn
-	// TLE8888_PIN_24: "43 - GP Out 4"
+	// ?
+
 	// todo: AC fan
-	// TLE8888_PIN_22: "34 - GP Out 2"
+	// TLE8888_PIN_24: "43 - GP Out 4"
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
