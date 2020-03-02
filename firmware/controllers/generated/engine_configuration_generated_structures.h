@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Feb 27 01:01:20 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Mar 01 22:30:46 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -818,7 +818,7 @@ struct engine_configuration_s {
 	 */
 	angle_t globalTriggerAngleOffset;
 	/**
-	 * Coefficient of input voltage dividers on your PCB
+	 * Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.
 	 * offset 460
 	 */
 	float analogInputDividerCoefficient;
@@ -3217,4 +3217,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Feb 27 01:01:20 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Mar 01 22:30:46 EST 2020
