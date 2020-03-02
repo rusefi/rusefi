@@ -419,7 +419,7 @@ angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the fi
 
 
 
-float analogInputDividerCoefficient;+Coefficient of input voltage dividers on your PCB;"coef",    1,      0,    0.01,  10.0,   2
+float analogInputDividerCoefficient;+Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.;"coef",    1,      0,    0.01,  10.0,   2
 float vbattDividerCoeff;+This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.;"coef",    1,      0,    0.01,  99.0,        2
 
 float fsio_visible fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"*C",    1,      0,       0,  1000.0,        0
