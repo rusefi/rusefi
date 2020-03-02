@@ -1,7 +1,7 @@
 // was generated automatically by rusEfi tool  from rusefi_hw_enums.h
 // was generated automatically by rusEfi tool  from rusefi_enums.h
 // by enum2string.jar tool
-// on Sat Jul 27 16:38:51 EEST 2019
+// on Mon Mar 02 17:11:46 CET 2020
 // see also gen_config_and_enums.bat
 
 
