@@ -189,8 +189,8 @@ float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 	switch (type) {
-	case MT_CUSTOM:
-		return &customMap;
+	        case MT_CUSTOM:
+		        return &customMap;
 	        case MT_MPX4100:
 		        return &mpx4100;
 			case MT_MPX4115:
