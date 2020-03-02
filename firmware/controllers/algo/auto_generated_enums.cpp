@@ -4,7 +4,7 @@
 // was generated automatically by rusEfi tool  from rusefi_hw_enums.h
 // was generated automatically by rusEfi tool  from rusefi_enums.h
 // by enum2string.jar tool
-// on Mon Jun 17 19:49:25 EDT 2019
+// on Mon Mar 02 17:01:18 CET 2020
 // see also gen_config_and_enums.bat
 
 
@@ -103,26 +103,44 @@ const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value){
 switch(value) {
 case Force_4_bytes_size_cranking_map_type:
   return "Force_4_bytes_size_cranking_map_type";
+case MT_Bosch_3_Bar_TMAP:
+  return "MT_Bosch_3_Bar_TMAP";
 case MT_CUSTOM:
   return "MT_CUSTOM";
 case MT_DENSO183:
   return "MT_DENSO183";
 case MT_DODGE_NEON_2003:
   return "MT_DODGE_NEON_2003";
+case MT_Denso_079800:
+  return "MT_Denso_079800";
+case MT_GM_1_BAR:
+  return "MT_GM_1_BAR";
+case MT_GM_2_BAR:
+  return "MT_GM_2_BAR";
 case MT_GM_3_BAR:
   return "MT_GM_3_BAR";
 case MT_HONDA3BAR:
   return "MT_HONDA3BAR";
 case MT_MPX4100:
   return "MT_MPX4100";
+case MT_MPX4115:
+  return "MT_MPX4115";
 case MT_MPX4250:
   return "MT_MPX4250";
 case MT_MPX4250A:
   return "MT_MPX4250A";
+case MT_MPX5700:
+  return "MT_MPX5700";
+case MT_MPX6400:
+  return "MT_MPX6400";
+case MT_MPXH6300:
+  return "MT_MPXH6300";
 case MT_SUBY_DENSO:
   return "MT_SUBY_DENSO";
 case MT_TOYOTA_89420_02010:
   return "MT_TOYOTA_89420_02010";
+case MT_Vag_250kPa:
+  return "MT_Vag_250kPa";
   }
  return NULL;
 }
