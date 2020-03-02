@@ -15,7 +15,7 @@ the software are extremely limited.
 1m) In order to get more developers to contribute to rusEfi firmware and content, rusEfi Strategy 2017 and
 Strategy 2018 was to provide kits and assembled units of highly flexible but large and not very cheap [Frankenso](https://rusefi.com/wiki/index.php?title=Hardware:For_Sale) board.
 
-1s) rusEfi Strategy 2019 is to provide the community with smaller and cheaper boards. Maybe [microRusEfi](https://github.com/960/hw_microRusEfi) maybe 
+1s) rusEfi Strategy 2019 (Update: and 2020) is to provide the community with smaller and cheaper boards. Maybe [microRusEfi](https://github.com/960/hw_microRusEfi) maybe 
 [Deucalion](https://rusefi.com/forum/viewtopic.php?f=4&t=1516).
 
 1z) it is NOT rusEfi Strategy 2019 to market rusEfi to a wide retail audience. The lack of documentation and the steep
