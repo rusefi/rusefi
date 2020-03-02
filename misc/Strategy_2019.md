@@ -1,3 +1,5 @@
+[Update: this is still rusEfi strategy even for 2020]
+
 1a) As of June 2019, rusEfi has a _LOT_ of potential but probably is pretty far from being easily usable and pretty far from being
 easy to use.   
 
