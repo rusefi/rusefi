@@ -42,39 +42,43 @@ static float storedInitialBaroPressure = NAN;
  *
  * @returns kPa value
  */
+
+static FastInterpolation mpx4100(0.3, 20, 5, 105);
+
+static FastInterpolation mpx4115(0, 10, 5, 118);
+
+static FastInterpolation mpx4250(0, 10, 5, 260);
+
+static FastInterpolation mpx4250A(0.25, 20, 5, 250);
+
+static FastInterpolation mpx5700(0, -31, 5, 746);
+
+static FastInterpolation mpx6300(0, 1, 5, 315);
+
+static FastInterpolation mpx6400(0, 3, 5, 416);
+
+static FastInterpolation gm1bar(0, 10, 5, 105);
+
+static FastInterpolation gm2bar(0, 9, 5, 208);
+
+static FastInterpolation gm3bar(0, 3.6, 5, 315);
+
+static FastInterpolation bosch3barTmap(0, 6, 5, 323);
+
+static FastInterpolation vag250kpa(0, 26, 5, 250);
+
+static FastInterpolation denso_079800(0, 0, 5, 173);
+
 static FastInterpolation denso183(0, -6.64, 5, 182.78);
 
-/**
- * MAP sensor output voltage of 3.0v = a gauge reading of 0 in. Hg
- * MAP sensor output voltage of 0.5v = a gauge reading of 27 in. Hg
- */
-static FastInterpolation honda3bar(0.5, 91.422, 3.0, 0);
+static FastInterpolation honda3bar(0.5, 91.42, 3.0, 0);
 
-static FastInterpolation subyDenso(0, 0, 5, 200);
-
-static FastInterpolation gm3bar(0.631, 40, 4.914, 304);
-
-static FastInterpolation mpx4250(0, 8, 5, 260);
-
-static FastInterpolation mpx4250A(0.25, 20, 4.875, 250);
-
-static FastInterpolation mpx4100(0.3, 20, 4.9, 105);
-
-/**
- * http://easyautodiagnostics.com/chrysler/2.0L-2.4L/map-sensor-diagnostic-test-1
- * or maybe
- * https://books.google.com/books?id=3q85p56_PxIC page 132
- * https://books.google.com/books?id=3q85p56_PxIC&q=chrysler+map#v=snippet&q=chrysler%20map&f=false
- */
-//static FastInterpolation dodgeNeon2003(0.5 /* volts */, 0 /* kPa */, 4.5 /* volts */ , 100 /* kPa */);
 static FastInterpolation dodgeNeon2003(0.4 /* volts */, 15.34 /* kPa */, 4.5 /* volts */ , 100 /* kPa */);
 
 static FastInterpolation densoToyota(3.7 - 2 /* volts */, 33.322271 /* kPa */, 3.7 /* volts */ , 100 /* kPa */);
 
-/**
- * We hold a reference to current decoder to reduce code branching
- * to lookup decoder each time we need to decode
- */
+static FastInterpolation subyDenso(0, 0.00, 5, 200);
+
 static FastInterpolation *mapDecoder;
 
 static FastInterpolation *getDecoder(air_pressure_sensor_type_e type);
@@ -85,15 +89,24 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 		// todo: migrate to 'FastInterpolation customMap'
 		return interpolateMsg("map", engineConfiguration->mapLowValueVoltage, mapConfig->lowValue,
 				engineConfiguration->mapHighValueVoltage, mapConfig->highValue, voltage);
-	case MT_DENSO183:
-	case MT_MPX4250:
-	case MT_MPX4250A:
-	case MT_HONDA3BAR:
-	case MT_DODGE_NEON_2003:
-	case MT_SUBY_DENSO:
-	case MT_GM_3_BAR:
-	case MT_TOYOTA_89420_02010:
-	case MT_MPX4100:
+	case               MT_MPX4100:
+	case			   MT_MPX4115:
+	case			   MT_MPX4250:
+	case			   MT_MPX4250A:
+	case			   MT_MPX5700:
+	case			   MT_MPXH6300:
+	case			   MT_MPX6400:
+	case			   MT_GM_1_BAR:
+	case			   MT_GM_2_BAR:
+	case			   MT_GM_3_BAR:
+	case			   MT_Bosch_3_Bar_TMAP:
+	case			   MT_Vag_250kPa:
+	case			   MT_Denso_079800:
+	case			   MT_DENSO183:
+	case			   MT_HONDA3BAR:
+	case			   MT_DODGE_NEON_2003:
+	case			   MT_TOYOTA_89420_02010:
+	case			   MT_SUBY_DENSO:
 		return getDecoder(mapConfig->type)->getValue(voltage);
 	default:
 		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: p %d", mapConfig->type);
@@ -107,8 +120,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
  */
 float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(mapKPa) || mapKPa < CONFIG(mapErrorDetectionTooLow) || mapKPa > CONFIG(mapErrorDetectionTooHigh)) {
-		warning(OBD_Manifold_Absolute_Pressure_Circuit_Malfunction, "unexpected MAP value: %.2f", mapKPa);
-		return 0;
+
 	}
 	return mapKPa;
 }
@@ -179,22 +191,42 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 	switch (type) {
 	case MT_CUSTOM:
 		return &customMap;
-	case MT_DENSO183:
-		return &denso183;
-	case MT_MPX4250:
-		return &mpx4250;
-	case MT_MPX4250A:
-		return &mpx4250A;
-	case MT_HONDA3BAR:
-		return &honda3bar;
-	case MT_DODGE_NEON_2003:
-		return &dodgeNeon2003;
-	case MT_SUBY_DENSO:
-		return &subyDenso;
-	case MT_GM_3_BAR:
-		return &gm3bar;
-	case MT_TOYOTA_89420_02010:
-		return &densoToyota;
+	        case MT_MPX4100:
+		        return &mpx4100;
+			case MT_MPX4115:
+				 return &mpx4115;
+			case MT_MPX4250:
+				return &mpx4250;
+			case MT_MPX4250A:
+				return &mpx4250A;
+			case MT_MPX5700:
+				 return &mpx5700;
+			case MT_MPXH6300:
+				 return &mpx6300;
+			case MT_MPX6400:
+				 return &mpx6400;
+			case MT_GM_1_BAR:
+				return &gm1bar;
+			case MT_GM_2_BAR:
+				return &gm2bar;
+			case MT_GM_3_BAR:
+				return &gm3bar;
+			case MT_Bosch_3_Bar_TMAP:
+				return &bosch3barTmap;
+			case MT_Vag_250kPa:
+				return &vag250kpa;
+			case MT_Denso_079800:
+				return &denso_079800;
+			case MT_DENSO183:
+				return &denso183;
+			case MT_HONDA3BAR:
+				return &honda3bar;
+			case MT_DODGE_NEON_2003:
+				return &dodgeNeon2003;
+			case MT_TOYOTA_89420_02010:
+				return &densoToyota;
+			case MT_SUBY_DENSO:
+				return &subyDenso;
 	default:
 		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: d %d", type);
 		return &customMap;

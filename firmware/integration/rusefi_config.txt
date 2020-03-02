@@ -236,7 +236,7 @@ struct spi_pins
 end_struct
 
 
-custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:7]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "INVALID"
+custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:7]  "Custom Values", "MPX 4100", "MPX 4115", "MPX 4250", "MPX 4250A", "MPX 5700", "MPX H6300", "MPX 6400", "Gm 1 Bar", "Gm 2 Bar", "Gm 3 Bar", "Bosch 3 Bar TMAP", "Vag 250kPa", "Denso 079800", "DENSO 183", "Honda 3Bar", "Dodge Neon", "Toyota 89420 02010", "Subaru Denso", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 !
 ! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
 ! 

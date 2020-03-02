@@ -1920,12 +1920,14 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 ;			Sensors->MAP sensor
 	dialog = mapSensorAnalog, "MAP sensor", yAxis		
-		field = "MAP ADC input", 						map_sensor_hwChannel
-		field = "MAP type",								map_sensor_type
-		field = "MAP value low point",  		        map_sensor_lowValue
-		field = "MAP voltage low point", 	 		    mapLowValueVoltage
-		field = "MAP value high point",               	map_sensor_highValue
-		field = "MAP voltage high value",               mapHighValueVoltage
+		field = "MAP Sensor Input", 				map_sensor_hwChannel
+		field = "MAP Type",					    	map_sensor_type
+		field = "Linearization Points"
+		field = "MAP Kpa Low",  		            map_sensor_lowValue, {map_sensor_type == 0}
+		field = "MAP Voltage Low", 	 		        mapLowValueVoltage, {map_sensor_type == 0}
+		field = ""
+		field = "MAP Kpa High",                  	map_sensor_highValue, {map_sensor_type == 0}
+		field = "MAP Voltage High",                 mapHighValueVoltage, {map_sensor_type == 0}
 		
 	dialog = mapSensorFreq, "MAP frequency sensor", yAxis
 		field = "MAP Freq",								frequencyReportingMapInputPin
@@ -1934,8 +1936,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = mapCommon, "MAP common settings"
 		field = "frequency-based MAP",					hasFrequencyReportingMapSensor
-		field = "Low value threshold",					mapErrorDetectionTooLow
-		field = "High value threshold",					mapErrorDetectionTooHigh
+		field = ""
+		field = "Low Error Threshold",					mapErrorDetectionTooLow
+		field = "High Error Threshold",					mapErrorDetectionTooHigh
 		field = ""
 		field = "Measure Map Only In One Cylinder",		measureMapOnlyInOneCylinder
 		field = "Minimum MAP samples",					mapMinBufferLength

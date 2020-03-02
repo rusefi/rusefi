@@ -670,42 +670,25 @@ typedef enum {
 } debug_mode_e;
 
 typedef enum {
-	MT_CUSTOM = 0,
-	MT_DENSO183 = 1,
-	/**
-	 * 20 to 250 kPa (2.9 to 36.3 psi) 0.2 to 4.9 V OUTPUT
-	 */
-	MT_MPX4250 = 2,
-	MT_HONDA3BAR = 3,
-	MT_DODGE_NEON_2003 = 4,
-	/**
-	 * 22012AA090
-	 */
-	MT_SUBY_DENSO = 5,
-	/**
-	 * 16040749
-	 */
-	MT_GM_3_BAR = 6,
-
-	/**
-	 * 20 to 105 kPa (2.9 to 15.2 psi) 0.3 to 4.9 V Output
-	 */
-	MT_MPX4100 = 7,
-
-	/**
-	 * http://rusefi.com/forum/viewtopic.php?f=3&t=906&p=18976#p18976
-	 * Toyota 89420-02010
-	 */
-	MT_TOYOTA_89420_02010 = 8,
-
-	/**
-	 * 20 to 250 kPa (2.9 to 36.3 psi) 0.25 to 4.875 OUTPUT
-	 * More precise calibration data for new NXP sensor revisions MPX4250A and MPXA4250A.
-	 * For an old Freescale MPX4250D use "MT_MPX4250".
-	 * See https://www.nxp.com/docs/en/data-sheet/MPX4250A.pdf
-	 */
-	MT_MPX4250A = 9, 
-	
+			   MT_CUSTOM = 0,
+			   MT_MPX4100 = 1,
+			   MT_MPX4115 = 2,
+			   MT_MPX4250 = 3,
+			   MT_MPX4250A = 4,
+			   MT_MPX5700 = 5,
+			   MT_MPXH6300 = 6,
+			   MT_MPX6400 = 7,
+			   MT_GM_1_BAR = 8,
+			   MT_GM_2_BAR = 9,
+			   MT_GM_3_BAR = 10,
+			   MT_Bosch_3_Bar_TMAP = 11,
+			   MT_Vag_250kPa = 12,
+			   MT_Denso_079800 = 13,
+			   MT_DENSO183 = 14,
+			   MT_HONDA3BAR = 15,
+			   MT_DODGE_NEON_2003 = 16,
+			   MT_TOYOTA_89420_02010 = 17,
+			   MT_SUBY_DENSO = 18,
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
 
