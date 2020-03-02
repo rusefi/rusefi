@@ -47,9 +47,9 @@ static FastInterpolation mpx4100(0.3, 20, 5, 105);
 
 static FastInterpolation mpx4115(0, 10, 5, 118);
 
-static FastInterpolation mpx4250(0, 10, 5, 260);
+static FastInterpolation mpx4250(0, 8, 5, 260);
 
-static FastInterpolation mpx4250A(0.25, 20, 5, 250);
+static FastInterpolation mpx4250A(0.25, 20, 4.875, 250);
 
 static FastInterpolation mpx5700(0, -31, 5, 746);
 
