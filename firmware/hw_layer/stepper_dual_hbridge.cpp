@@ -1,7 +1,7 @@
-#if EFI_PROD_CODE || EFI_SIMULATOR
-
 #include "stepper.h"
 #include "dc_motor.h"
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
 
 static const int8_t phaseA[] = 
 {
