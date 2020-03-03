@@ -45,7 +45,7 @@ public:
 	void start(bool useTwoWires, 
 			brain_pin_e pinEnable,
 			// since we have pointer magic here we cannot simply have value parameter
-			pin_output_mode_e *pinEnableMode,
+			const pin_output_mode_e *pinEnableMode,
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2,
 			ExecutorInterface* executor,
@@ -88,14 +88,12 @@ public:
 
 static EtbHardware etbHardware[ETB_COUNT];
 
-
 void showDcMotorInfo(Logging* logger) {
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		EtbHardware *etb = &etbHardware[i];
 
 		scheduleMsg(logger, "ETB %d", i);
 		scheduleMsg(logger, "Motor: dir=%d DC=%f", etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
-		etbControllers[i].showStatus(&logger);
 	}
 }
 
