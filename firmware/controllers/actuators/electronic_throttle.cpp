@@ -350,7 +350,7 @@ void setThrottleDutyCycle(percent_t level) {
 	float dc = ETB_PERCENT_TO_DUTY(level);
 	directPwmValue = dc;
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		//etbHardware[i].dcMotor.set(dc);
+		setDcMotorDuty(i, dc);
 	}
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
 }
@@ -359,7 +359,7 @@ static void setEtbFrequency(int frequency) {
 	engineConfiguration->etbFreq = frequency;
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		//etbHardware[i].setFrequency(frequency);
+		setDcMotorFrequency(i, frequency);
 	}
 }
 
@@ -367,7 +367,7 @@ static void etbReset() {
 	scheduleMsg(&logger, "etbReset");
 	
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		//etbHardware[i].dcMotor.set(0);
+		setDcMotorDuty(i, 0);
 	}
 
 	etbPidReset();

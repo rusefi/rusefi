@@ -109,6 +109,14 @@ DcMotor* initDcMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX)
 	return &hw.dcMotor;
 }
 
+void setDcMotorFrequency(size_t index, int hz) {
+	etbHardware[index].setFrequency(hz);
+}
+
+void setDcMotorDuty(size_t index, float duty) {
+	etbHardware[index].dcMotor.set(duty);
+}
+
 #if EFI_PROD_CODE
 void showDcMotorInfo(Logging* logger) {
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
