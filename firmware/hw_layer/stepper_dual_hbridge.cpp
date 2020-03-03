@@ -1,3 +1,5 @@
+#if EFI_PROD_CODE || EFI_SIMULATOR
+
 #include "stepper.h"
 #include "dc_motor.h"
 
@@ -44,3 +46,5 @@ void DualHBridgeStepper::step(bool positive) {
 
     pause();
 }
+
+#endif
