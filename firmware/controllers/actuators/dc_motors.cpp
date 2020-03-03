@@ -59,7 +59,6 @@ public:
 		// Clamp to >100hz
 		int clampedFrequency = maxI(100, frequency);
 
-
 // no need to complicate event queue with ETB PWM in unit tests
 #if ! EFI_UNIT_TEST
 		startSimplePwm(&m_pwmEnable, "ETB Enable",
@@ -88,15 +87,6 @@ public:
 
 static EtbHardware etbHardware[ETB_COUNT];
 
-void showDcMotorInfo(Logging* logger) {
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		EtbHardware *etb = &etbHardware[i];
-
-		scheduleMsg(logger, "ETB %d", i);
-		scheduleMsg(logger, "Motor: dir=%d DC=%f", etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
-	}
-}
-
 DcMotor* initDcMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX)
 {
 	const auto& io = engineConfiguration->etbIo[index];
@@ -115,3 +105,14 @@ DcMotor* initDcMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX)
 
 	return &hw.dcMotor;
 }
+
+#if EFI_PROD_CODE
+void showDcMotorInfo(Logging* logger) {
+	for (int i = 0 ; i < engine->etbActualCount; i++) {
+		EtbHardware *etb = &etbHardware[i];
+
+		scheduleMsg(logger, "ETB %d", i);
+		scheduleMsg(logger, "Motor: dir=%d DC=%f", etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
+	}
+}
+#endif
