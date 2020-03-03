@@ -650,6 +650,7 @@ bit is_enabled_spi_2
 	bit useETBforIdleControl;+This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
 	bit idleIncrementalPidCic
 	bit enableAemXSeries
+! 'enableAemXSeries' is the 32nd bit here, you would need another bit region if more bits are desired
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;
@@ -741,6 +742,35 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	float unused
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
+	bit useHbridges
+	bit unusedBit_251_3
+	bit unusedBit_251_4
+	bit unusedBit_251_5
+	bit unusedBit_251_6
+	bit unusedBit_251_7
+	bit unusedBit_251_8
+	bit unusedBit_251_9
+	bit unusedBit_251_10
+	bit unusedBit_251_11
+	bit unusedBit_251_12
+	bit unusedBit_251_13
+	bit unusedBit_251_14
+	bit unusedBit_251_15
+	bit unusedBit_251_16
+	bit unusedBit_251_17
+	bit unusedBit_251_18
+	bit unusedBit_251_19
+	bit unusedBit_251_20
+	bit unusedBit_251_21
+	bit unusedBit_251_22
+	bit unusedBit_251_23
+	bit unusedBit_251_24
+	bit unusedBit_251_25
+	bit unusedBit_251_26
+	bit unusedBit_251_27
+	bit unusedBit_251_28
+	bit unusedBit_251_29
+	
 	etb_io[ETB_COUNT iterate] etbIo
 
 
