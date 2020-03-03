@@ -33,7 +33,6 @@
 //#include "usb_msd.h"
 
 #include "AdcConfiguration.h"
-#include "electronic_throttle.h"
 #include "idle_thread.h"
 #include "mcp3208.h"
 #include "hip9011.h"
@@ -310,13 +309,6 @@ void applyNewHardwareSettings(void) {
 	}
 #endif
 
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	bool etbRestartNeeded = isETBRestartNeeded();
-	if (etbRestartNeeded) {
-		stopETBPins();
-	}
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-
 #if (BOARD_TLE6240_COUNT > 0)
 	stopSmartCsPins();
 #endif /* (BOARD_MC33972_COUNT > 0) */
@@ -382,12 +374,6 @@ void applyNewHardwareSettings(void) {
 		 initIdleHardware();
 	}
 #endif
-
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	if (etbRestartNeeded) {
-		startETBPins(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #if EFI_VEHICLE_SPEED
 	startVSSPins();

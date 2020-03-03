@@ -474,37 +474,6 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.maxValue = 200;
 }
 
-static bool isEtbPinsChanged(etb_io *current, etb_io *active) {
-	return 	current->controlPin1 != active->controlPin1 ||
-			current->controlPinMode != active->controlPinMode ||
-			current->directionPin1 != active->directionPin1 ||
-			current->directionPin2 != active->directionPin2;
-}
-
-#if EFI_PROD_CODE
-bool isETBRestartNeeded(void) {
-	for (int i = 0 ; i < ETB_COUNT; i++) {
-		/**
-		 * We do not want any interruption in HW pin while adjusting other properties
-		 */
-		bool changed = isEtbPinsChanged(&engineConfiguration->etbIo[i], &activeConfiguration.etbIo[i]);
-		if (changed) {
-			return changed;
-		}
-	}
-	return false;
-}
-
-void stopETBPins(void) {
-	for (int i = 0 ; i < ETB_COUNT; i++) {
-		etb_io *activeIo = &activeConfiguration.etbIo[i];
-		brain_pin_markUnused(activeIo->controlPin1);
-		brain_pin_markUnused(activeIo->directionPin1);
-		brain_pin_markUnused(activeIo->directionPin2);
-	}
-}
-#endif /* EFI_PROD_CODE */
-
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
 	for (int i = 0; i < ETB_COUNT; i++) {
 		etbControllers[i].onConfigurationChange(&previousConfiguration->etb);
