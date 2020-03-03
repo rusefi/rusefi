@@ -606,7 +606,6 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			// todo: grab with proper index
 			grabTPSIsClosed();
 		}
-
 	}
 
 	// manual duty cycle control without PID. Percent value from 0 to 100
