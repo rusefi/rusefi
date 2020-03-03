@@ -222,6 +222,8 @@ public:
 	}
 
 	void PeriodicTask(efitime_t nowNt) {
+		UNUSED(nowNt);
+
 		switch (engineConfiguration->canNbcType) {
 		case CAN_BUS_NBC_BMW:
 			canDashboardBMW();

@@ -108,12 +108,10 @@ efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
 	return EMPTY_QUEUE;
 }
 
-static scheduling_s * longScheduling;
 /**
  * See also maxPrecisionCallbackDuration for total hw callback time
  */
 uint32_t maxEventCallbackDuration = 0;
-static uint32_t lastEventCallbackDuration;
 
 /**
  * Invoke all pending actions prior to specified timestamp
