@@ -561,9 +561,7 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(useStepperIdle)) {
 		StepperHw* hw;
 
-		bool useHbridges = true;
-
-		if (useHbridges) {
+		if (CONFIG(useHbridges)) {
 			iacHbridgeHw.initialize(
 				nullptr,
 				nullptr,
