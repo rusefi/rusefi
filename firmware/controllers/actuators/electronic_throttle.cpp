@@ -597,16 +597,14 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->etbCalibrationOnStart) {
 
 		for (int i = 0 ; i < engine->etbActualCount; i++) {
-			/*EtbHardware *etb = &etbHardware[i];
-
-			etb->dcMotor.set(70);
+			setDcMotorDuty(i, 70);
 			chThdSleep(600);
 			// todo: grab with proper index
 			grabTPSIsWideOpen();
-			etb->dcMotor.set(-70);
+			setDcMotorDuty(i, -70);
 			chThdSleep(600);
 			// todo: grab with proper index
-			grabTPSIsClosed();*/
+			grabTPSIsClosed();
 		}
 
 	}
