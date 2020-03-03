@@ -1,7 +1,7 @@
 
 #include "efifeatures.h"
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if !EFI_UNIT_TEST
 
 #include "stepper.h"
 #include "dc_motor.h"
