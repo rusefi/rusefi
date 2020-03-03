@@ -42,6 +42,7 @@
 
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
+#include "dc_motors.h"
 #include "pin_repository.h"
 static StepDirectionStepper iacStepperHw;
 static DualHBridgeStepper iacHbridgeHw;
@@ -562,11 +563,16 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		StepperHw* hw;
 
 		if (CONFIG(useHbridges)) {
-			iacHbridgeHw.initialize(
-				nullptr,
-				nullptr,
-				CONFIG(idleStepperReactionTime)
-			);
+			auto motorA = initDcMotor(0 PASS_ENGINE_PARAMETER_SUFFIX);
+			auto motorB = initDcMotor(1 PASS_ENGINE_PARAMETER_SUFFIX);
+
+			if (motorA && motorB) {
+				iacHbridgeHw.initialize(
+					motorA,
+					motorB,
+					CONFIG(idleStepperReactionTime)
+				);
+			}
 
 			hw = &iacHbridgeHw;
 		} else {

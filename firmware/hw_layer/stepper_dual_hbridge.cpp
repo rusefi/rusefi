@@ -26,6 +26,11 @@ void DualHBridgeStepper::initialize(DcMotor* motorPhaseA, DcMotor* motorPhaseB, 
 }
 
 void DualHBridgeStepper::step(bool positive) {
+	// Check that we've been initialized
+	if (!m_motorPhaseA || !m_motorPhaseB) {
+		return;
+	}
+
     // step phase, wrapping
     if (positive) {
         m_phase = (m_phase + 1) & 0x03;
