@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * 1/15/15
  */
 public class ConfigField {
-    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, 1, null, false, false, null, -1);
+    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, 1, null, false, false, null, -1, null, null);
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\s([\\w\\d]+))?\\])?";
     private static final String namePattern = "[[\\w\\d\\s_]]+";
@@ -38,7 +38,12 @@ public class ConfigField {
     private boolean fsioVisible;
     private final String individualName;
     private final int indexWithinArray;
+    private final String trueName;
+    private final String falseName;
 
+    /**
+     * todo: one day someone should convert this into a builder
+     */
     public ConfigField(ReaderState state,
                        String name,
                        String comment,
@@ -47,10 +52,14 @@ public class ConfigField {
                        int arraySize,
                        String tsInfo,
                        boolean isIterate,
-                       boolean fsioVisible, String individualName, int indexWithinArray) {
+                       boolean fsioVisible,
+                       String individualName,
+                       int indexWithinArray, String trueName, String falseName) {
         this.fsioVisible = fsioVisible;
         this.individualName = individualName;
         this.indexWithinArray = indexWithinArray;
+        this.trueName = trueName == null ? "true" : trueName;
+        this.falseName = falseName == null ? "false" : falseName;
         Objects.requireNonNull(name, comment + " " + type);
         assertNoWhitespaces(name);
         this.name = name;
@@ -67,6 +76,14 @@ public class ConfigField {
         this.arraySize = arraySize;
         this.tsInfo = VariableRegistry.INSTANCE.applyVariables(tsInfo);
         this.isIterate = isIterate;
+    }
+
+    public String getTrueName() {
+        return trueName;
+    }
+
+    public String getFalseName() {
+        return falseName;
     }
 
     public String getCFieldName() {
@@ -127,7 +144,7 @@ public class ConfigField {
 
 
         ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySize,
-                tsInfo, isIterate, isFsioVisible, null, -1);
+                tsInfo, isIterate, isFsioVisible, null, -1, null, null);
         SystemOut.println("type " + type);
         SystemOut.println("name " + name);
         SystemOut.println("comment " + comment);

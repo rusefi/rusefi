@@ -11,6 +11,7 @@
         <mkdir dir="build/classes"/>
         <javac
                 source="${javac.source}"
+                debug="true"
                 target="${javac.target}"
                 destdir="build/classes"
                 classpath="lib/junit.jar:lib/annotations.jar:lib/snakeyaml.jar">

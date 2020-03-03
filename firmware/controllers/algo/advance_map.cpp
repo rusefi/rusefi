@@ -28,6 +28,8 @@
 #include "idle_thread.h"
 #include "allsensors.h"
 
+#if EFI_ENGINE_CONTROL
+
 EXTERN_ENGINE
 ;
 
@@ -67,9 +69,11 @@ static const ignition_table_t defaultIatTiming = {
 
 #endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
 
-bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return  CONFIG(enabledStep1Limiter) && rpm >= engineConfiguration->step1rpm;
-}
+//Todo: There are some more conditions that needs to be true, and RPM range must be added to launchrpm?
+
+//bool isLaunchCondition(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+//	return  CONFIG(launchControlEnabled) && rpm >= engineConfiguration->launchRpm;
+//}
 
 /**
  * @return ignition timing angle advance before TDC
@@ -86,10 +90,11 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
 	engine->m.beforeZeroTest = getTimeNowLowerNt();
 	engine->m.zeroTestTime = getTimeNowLowerNt() - engine->m.beforeZeroTest;
+//See comment at line 70
 
-	if (isStep1Condition(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
-		return engineConfiguration->step1timing;
-	}
+//	if (isLaunchCondition(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
+//		return engineConfiguration->launchTimingRetard;
+//	}
 	
 	float advanceAngle;
 	if (CONFIG(useTPSAdvanceTable)) {
@@ -325,3 +330,4 @@ void buildTimingMap(float advanceMax DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	}
 }
 
+#endif // EFI_ENGINE_CONTROL

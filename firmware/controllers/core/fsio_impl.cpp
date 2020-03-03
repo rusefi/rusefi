@@ -135,9 +135,11 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_MAP:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+#if EFI_SHAFT_POSITION_INPUT
 	case LE_METHOD_INTAKE_VVT:
 	case LE_METHOD_EXHAUST_VVT:
-		return engine->triggerCentral.vvtPosition;
+		return engine->triggerCentral.getVVTPosition();
+#endif
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return getTimeNowSeconds();
 
@@ -386,7 +388,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 	}
 #endif /* EFI_PROD_CODE */
 
-	if (element == NULL) {
+	if (!element) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
 	} else {
 		int value = (int)calc.getValue2(pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);

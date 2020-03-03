@@ -2457,3 +2457,11 @@ event 4 0 360.00
 event 5 1 480.00
 event 6 0 558.00
 event 7 1 660.00
+TRIGGERTYPE 43 6 TT_MIATA_NB2_VVT_CAM 0.00
+# duty 0.13 0.00
+event 0 1 0.00
+event 1 0 281.00
+event 2 1 317.00
+event 3 0 340.00
+event 4 1 360.00
+event 5 0 685.00

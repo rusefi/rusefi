@@ -19,7 +19,7 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  * 12/19/18
  */
 public class ReaderState {
-    private static final String BIT = "bit";
+    public static final String BIT = "bit";
     protected static final String DEFINE = "#define";
     private static final String CUSTOM = "custom";
     private static final String END_STRUCT = "end_struct";
@@ -44,8 +44,12 @@ public class ReaderState {
             bitName = line.substring(0, index);
             comment = line.substring(index + 1);
         }
+        String bitNameParts[] = bitName.split(",");
 
-        ConfigField bitField = new ConfigField(state, bitName, comment, null, BOOLEAN_T, 0, null, false, false, null, -1);
+        String trueName = bitNameParts.length > 1 ? bitNameParts[1] : null;
+        String falseName = bitNameParts.length > 2 ? bitNameParts[2] : null;
+
+        ConfigField bitField = new ConfigField(state, bitNameParts[0], comment, null, BOOLEAN_T, 0, null, false, false, null, -1, trueName, falseName);
         if (state.stack.isEmpty())
             throw new IllegalStateException("Parent structure expected");
         ConfigStructure structure = state.stack.peek();
@@ -95,6 +99,19 @@ public class ReaderState {
         }
     }
 
+    private void handleEndStruct(List<ConfigurationConsumer> consumers) throws IOException {
+        if (stack.isEmpty())
+            throw new IllegalStateException("Unexpected end_struct");
+        ConfigStructure structure = stack.pop();
+        SystemOut.println("Ending structure " + structure.getName());
+        structure.addAlignmentFill(this);
+
+        structures.put(structure.getName(), structure);
+
+        for (ConfigurationConsumer consumer : consumers)
+            consumer.handleEndStruct(structure);
+    }
+
     public void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {
         for (ConfigurationConsumer consumer : consumers)
             consumer.startFile();
@@ -114,7 +131,7 @@ public class ReaderState {
                 handleStartStructure(this, line.substring(STRUCT_NO_PREFIX.length()), false);
             } else if (line.startsWith(END_STRUCT)) {
                 addBitPadding();
-                handleEndStruct(this, consumers);
+                this.handleEndStruct(consumers);
             } else if (line.startsWith(BIT)) {
                 handleBitLine(this, line);
 
@@ -128,6 +145,8 @@ public class ReaderState {
                  */
                 ConfigDefinition.processDefine(line.substring(DEFINE.length()).trim());
             } else {
+                if (stack.isEmpty())
+                    throw new IllegalStateException("Expected to be within structure");
                 addBitPadding();
                 processField(this, line);
             }
@@ -172,19 +191,6 @@ public class ReaderState {
         SystemOut.println("Starting structure " + structure.getName());
     }
 
-    private static void handleEndStruct(ReaderState state, List<ConfigurationConsumer> consumers) throws IOException {
-        if (state.stack.isEmpty())
-            throw new IllegalStateException("Unexpected end_struct");
-        ConfigStructure structure = state.stack.pop();
-        SystemOut.println("Ending structure " + structure.getName());
-        structure.addAlignmentFill(state);
-
-        state.structures.put(structure.getName(), structure);
-
-        for (ConfigurationConsumer consumer : consumers)
-            consumer.handleEndStruct(structure);
-    }
-
     private static void processField(ReaderState state, String line) {
 
         ConfigField cf = ConfigField.parse(state, line);
@@ -195,11 +201,20 @@ public class ReaderState {
             throw new IllegalStateException(cf.getName() + ": Not enclosed in a struct");
         ConfigStructure structure = state.stack.peek();
 
+        Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
+        if (getPrimitiveSize != null && getPrimitiveSize % 4 == 0) {
+            SystemOut.println("Need to align before " + cf.getName());
+            structure.addAlignmentFill(state);
+        } else {
+            // adding a structure instance - had to be aligned
+ // todo?           structure.addAlignmentFill(state);
+        }
+
         if (cf.isIterate()) {
             structure.addC(cf);
             for (int i = 1; i <= cf.getArraySize(); i++) {
                 ConfigField element = new ConfigField(state, cf.getName() + i, cf.getComment(), null,
-                        cf.getType(), 1, cf.getTsInfo(), false, false, cf.getName(), i);
+                        cf.getType(), 1, cf.getTsInfo(), false, false, cf.getName(), i, null, null);
                 structure.addTs(element);
             }
         } else {

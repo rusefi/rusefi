@@ -45,15 +45,13 @@ trigger_central_s::trigger_central_s() : hwEventCounters() {
 }
 
 TriggerCentral::TriggerCentral() : trigger_central_s() {
-	// we need this initial to have not_running at first invocation
-	previousShaftEventTimeNt = (efitimems_t) -10 * NT_PER_SECOND;
 
 	clearCallbacks(&triggerListeneres);
 	triggerState.resetTriggerState();
-	resetAccumSignalData();
+	noiseFilter.resetAccumSignalData();
 }
 
-void TriggerCentral::resetAccumSignalData() {
+void TriggerNoiseFilter::resetAccumSignalData() {
 	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
 	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));
 	memset(accumSignalPrevPeriods, 0, sizeof(accumSignalPrevPeriods));
@@ -72,6 +70,10 @@ static Logging *logger;
 void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
 	print("registerCkpListener: %s\r\n", name);
 	triggerListeneres.registerCallback((VoidInt)(void*)listener, engine);
+}
+
+angle_t TriggerCentral::getVVTPosition() {
+	return vvtPosition;
 }
 
 /**
@@ -204,7 +206,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIG(useNoiselessTriggerDecoder)) {
-		if (!isUsefulSignal(signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (!isUsefulSignal(signal PASS_CONFIG_PARAMETER_SUFFIX)) {
 			return;
 		}
 	}
@@ -257,7 +259,9 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
  * And then compare between the current period and previous, with some tolerance (allowing for the wheel speed change).
  * @return true if the signal is passed through.
  */
-bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
+		TriggerState * triggerState,
+		trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: find a better place for these defs
 	static const trigger_event_e opposite[6] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING, 
 			SHAFT_3RD_RISING, SHAFT_3RD_FALLING };
@@ -283,8 +287,8 @@ bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE
 	efitick_t allowedPeriod = accumSignalPrevPeriods[os];
 
 	// but first check if we're expecting a gap
-	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState.shaft_is_synchronized && 
-			(triggerState.currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(expectedEventCount[ti]);
+	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->shaft_is_synchronized &&
+			(triggerState->currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(expectedEventCount[ti]);
 	
 	if (isGapExpected) {
 		// usually we need to extend the period for gaps, based on the trigger info
@@ -325,11 +329,11 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 	// This code gathers some statistics on signals and compares accumulated periods to filter interference
 	if (CONFIG(useNoiselessTriggerDecoder)) {
-		if (!noiseFilter(timestamp, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
 		// moved here from hwHandleShaftSignal()
-		if (!isUsefulSignal(signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+		if (!isUsefulSignal(signal PASS_CONFIG_PARAMETER_SUFFIX)) {
 			return;
 		}
 	}
@@ -337,22 +341,15 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	engine->onTriggerSignalEvent(timestamp);
 
 	int eventIndex = (int) signal;
-	efiAssertVoid(CUSTOM_ERR_6638, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
+	efiAssertVoid(CUSTOM_TRIGGER_EVENT_TYPE, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
 
-	if (timestamp - previousShaftEventTimeNt > NT_PER_SECOND) {
-		/**
-		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not running.
-		 * That means we have lost synchronization since the engine is not running :)
-		 */
-		triggerState.onSynchronizationLost(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
-	previousShaftEventTimeNt = timestamp;
 
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(nullptr, engine, signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	triggerState.decodeTriggerEvent(&triggerShape,
+			nullptr, engine, signal, timestamp PASS_CONFIG_PARAMETER_SUFFIX);
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
@@ -360,12 +357,11 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	 */
 	int triggerIndexForListeners;
 	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (operationMode == FOUR_STROKE_CAM_SENSOR ||
-			operationMode == TWO_STROKE) {
+	if (operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == TWO_STROKE) {
 		// That's easy - trigger cycle matches engine cycle
 		triggerIndexForListeners = triggerState.getCurrentIndex();
 	} else {
-		int crankDivider = operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : 4;
+		int crankDivider = operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : SYMMETRICAL_CRANK_SENSOR_DIVIDER;
 
 		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 
@@ -381,7 +377,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		return;
 	}
 
-	if (triggerState.isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (triggerState.isValidIndex(&ENGINE(triggerCentral.triggerShape))) {
 		ScopePerf perf(PE::ShaftPositionListeners);
 
 #if TRIGGER_EXTREME_LOGGING
@@ -674,7 +670,7 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	#if EFI_ENGINE_CONTROL
 		ENGINE(initializeTriggerWaveform(logger PASS_ENGINE_PARAMETER_SUFFIX));
-		engine->triggerCentral.resetAccumSignalData();
+		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING

@@ -54,6 +54,7 @@ public class ConfigStructure {
          * we make alignment decision based on C fields since we expect iteration and non-iteration fields
          * to match in size
          */
+        totalSize = 0;
         for (int i = 0; i < cFields.size(); i++) {
             ConfigField cf = cFields.get(i);
             ConfigField next = i == cFields.size() - 1 ? ConfigField.VOID : cFields.get(i + 1);
@@ -64,9 +65,9 @@ public class ConfigStructure {
         int fillSize = totalSize % 4 == 0 ? 0 : 4 - (totalSize % 4);
 
         if (fillSize != 0) {
-            ConfigField fill = new ConfigField(state, "alignmentFill", "need 4 byte alignment",
+            ConfigField fill = new ConfigField(state, "alignmentFill_at_" + totalSize, "need 4 byte alignment",
                     "" + fillSize,
-                    TypesHelper.UINT8_T, fillSize, null, false, false, null, -1);
+                    TypesHelper.UINT8_T, fillSize, null, false, false, null, -1, null, null);
             addBoth(fill);
         }
         totalSize += fillSize;
@@ -90,7 +91,7 @@ public class ConfigStructure {
             return;
         int sizeAtStartOfPadding = cFields.size();
         while (readingBitState.get() < 32) {
-            ConfigField bitField = new ConfigField(readerState, "unusedBit_" + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, 0, null, false, false, null, -1);
+            ConfigField bitField = new ConfigField(readerState, "unusedBit_" + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, 0, null, false, false, null, -1, null, null);
             addBitField(bitField);
         }
         readingBitState.reset();

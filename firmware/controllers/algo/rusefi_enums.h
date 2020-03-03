@@ -183,6 +183,8 @@ typedef enum {
 
 	VW_B6 = 62,
 
+	BMW_M73_PROTEUS = 63,
+
 	/**
 	 * this configuration has as few pins configured as possible
 	 */
@@ -190,6 +192,8 @@ typedef enum {
 	PROMETHEUS_DEFAULTS = 100,
 	SUBARUEJ20G_DEFAULTS = 101,
 	VAG_18_TURBO = 102,
+
+	TEST_33816 = 103,
 
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
@@ -312,13 +316,18 @@ typedef enum {
 
 	TT_MAZDA_Z5 = 42,
 
+	/**
+	 * This shape for camshaft ONLY
+	 */
+	TT_MIATA_NB2_VVT_CAM = 43,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 43, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 44, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -336,6 +345,7 @@ typedef enum {
 	TV_RISE = 1
 } trigger_value_e;
 
+// see also PWM_PHASE_MAX_WAVE_PER_PWM
 // todo: better names?
 typedef enum {
 	T_PRIMARY = 0,
@@ -345,6 +355,7 @@ typedef enum {
 	T_NONE = 15
 } trigger_wheel_e;
 
+// see also 'HW_EVENT_TYPES'
 typedef enum {
 	SHAFT_PRIMARY_FALLING = 0,
 	SHAFT_PRIMARY_RISING = 1,
@@ -652,7 +663,7 @@ typedef enum {
 	DBG_DWELL_METRIC = 33,
 	DBG_AUX_TEMPERATURE = 34,
 	DBG_ETB_LOGIC = 35,
-	DBG_36 = 36,
+	DBG_BOOST = 36,
 	DBG_37 = 37,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
@@ -835,3 +846,22 @@ typedef enum {
 	 */
 	Force_4bytes_size_idle_state_e = ENUM_32_BITS,
 } idle_state_e;
+
+typedef enum {
+	OPEN_LOOP = 0,
+	CLOSED_LOOP = 1,
+	Force_4bytes_size_boostType_e = ENUM_32_BITS,
+} boostType_e;
+
+typedef enum {
+	SWITCH_INPUT_LAUNCH = 0,
+	CLUTCH_INPUT_LAUNCH = 1,
+	ALWAYS_ACTIVE_LAUNCH = 2,
+	Force_4bytes_size_launchActivationMode_e = ENUM_32_BITS,
+} launchActivationMode_e;
+
+typedef enum {
+	SWITCH_INPUT_ANTILAG = 0,
+	ALWAYS_ON_ANTILAG = 1,
+	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
+} antiLagActivationMode_e;

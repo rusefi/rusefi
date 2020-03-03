@@ -40,10 +40,6 @@ extern engine_configuration_s *engineConfiguration;
  * todo: an ideal solution would be to define this address in the .ld / .icf mapping file
  */
 
-#ifndef FLASH_ADDR
-#define FLASH_ADDR 0x080E0000
-#endif
-
 #define PERSISTENT_SIZE sizeof(persistent_config_container_s)
 
 /**
@@ -52,9 +48,6 @@ extern engine_configuration_s *engineConfiguration;
  * In order to preserve at least one copy of the tune in case of electrical issues address of second configuration copy
  * should be in a different sector of flash since complete flash sectors are erased on write.
  */
-#ifndef FLASH_ADDR_SECOND_COPY
-#define FLASH_ADDR_SECOND_COPY 0x080C0000
-#endif
 
 crc_t flashStateCrc(persistent_config_container_s *state) {
 	return calc_crc((const crc_t*) &state->persistentConfiguration, sizeof(persistent_config_s));
@@ -87,12 +80,12 @@ void writeToFlashNow(void) {
 	crc_t crcResult = flashStateCrc(&persistentState);
 	persistentState.value = crcResult;
 	scheduleMsg(logger, "Reseting flash: size=%d", PERSISTENT_SIZE);
-	flashErase(FLASH_ADDR, PERSISTENT_SIZE);
+	flashErase(getFlashAddrFirstCopy(), PERSISTENT_SIZE);
 	scheduleMsg(logger, "Flashing with CRC=%d", crcResult);
 	efitimems_t nowMs = currentTimeMillis();
-	int result = flashWrite(FLASH_ADDR, (const char *) &persistentState, PERSISTENT_SIZE);
-	flashErase(FLASH_ADDR_SECOND_COPY, PERSISTENT_SIZE);
-	flashWrite(FLASH_ADDR_SECOND_COPY, (const char *) &persistentState, PERSISTENT_SIZE);
+	int result = flashWrite(getFlashAddrFirstCopy(), (const char *) &persistentState, PERSISTENT_SIZE);
+	flashErase(getFlashAddrSecondCopy(), PERSISTENT_SIZE);
+	flashWrite(getFlashAddrSecondCopy(), (const char *) &persistentState, PERSISTENT_SIZE);
 	scheduleMsg(logger, "Flash programmed in %dms", currentTimeMillis() - nowMs);
 	bool isSuccess = result == FLASH_RETURN_SUCCESS;
 	if (isSuccess) {
@@ -101,7 +94,10 @@ void writeToFlashNow(void) {
 		scheduleMsg(logger, "Flashing failed");
 	}
 	assertEngineReference();
+
+#if EFI_SHAFT_POSITION_INPUT
 	resetMaxValues();
+#endif
 }
 
 static bool isValidCrc(persistent_config_container_s *state) {
@@ -135,10 +131,10 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
  */
 persisted_configuration_state_e readConfiguration(Logging * logger) {
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
-	persisted_configuration_state_e result = doReadConfiguration(FLASH_ADDR, logger);
+	persisted_configuration_state_e result = doReadConfiguration(getFlashAddrFirstCopy(), logger);
 	if (result != PC_OK) {
 		printMsg(logger, "Reading second configuration copy");
-		result = doReadConfiguration(FLASH_ADDR_SECOND_COPY, logger);
+		result = doReadConfiguration(getFlashAddrSecondCopy(), logger);
 	}
 
 	if (result == CRC_FAILED) {

@@ -11,8 +11,6 @@
 
 #include "global.h"
 
-#if EFI_SUPPORT_FORD_FIESTA
-
 #include "ford_fiesta.h"
 #include "engine_math.h"
 
@@ -30,5 +28,3 @@ void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	engineConfiguration->mafAdcChannel = EFI_ADC_14;
 //	engineConfiguration->mafAdcChannel = EFI_ADC_NONE; this would kill functional tests
 }
-
-#endif /* EFI_SUPPORT_FORD_FIESTA */

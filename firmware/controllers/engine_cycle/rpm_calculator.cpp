@@ -96,7 +96,7 @@ RpmCalculator::RpmCalculator() {
 	// which we cannot provide inside this parameter-less constructor. need a solution for this minor mess
 
 	// we need this initial to have not_running at first invocation
-	lastRpmEventTimeNt = (efitick_t) -10 * NT_PER_SECOND;
+	lastRpmEventTimeNt = (efitick_t) DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
 }
 
 /**
@@ -122,7 +122,7 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUF
 	/**
 	 * Also check if there were no trigger events
 	 */
-	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.previousShaftEventTimeNt >= NT_PER_SECOND;
+	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.triggerState.previousShaftEventTimeNt >= NT_PER_SECOND;
 	if (noRpmEventsForTooLong || noTriggerEventsForTooLong) {
 		return false;
 	}
@@ -360,7 +360,7 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * The callback would be executed once after the duration of time which
  * it takes the crankshaft to rotate to the specified angle.
  */
-void scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle,
+efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle,
 		action_s action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
 
@@ -368,6 +368,8 @@ void scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle
 	efitime_t delayedTime = edgeTimestamp + delayNt;
 
 	ENGINE(executor.scheduleByTimestampNt(timer, delayedTime, action));
+
+	return delayedTime;
 }
 
 #else

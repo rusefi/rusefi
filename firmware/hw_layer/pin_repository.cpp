@@ -16,6 +16,7 @@
 #include "eficonsole.h"
 #include "memstreams.h"
 #include "drivers/gpio/gpio_ext.h"
+#include "tle8888.h"
 
 #ifndef BOARD_EXT_PINREPOPINS
 	#define BOARD_EXT_PINREPOPINS 0
@@ -51,6 +52,26 @@ PinRepository::PinRepository() {
 }
 
 static PinRepository instance;
+
+/* DEBUG */
+extern "C" {
+	extern void tle8888_read_reg(uint16_t reg, uint16_t *val);
+}
+void tle8888_dump_regs(void)
+{
+	// since responses are always in the NEXT transmission we will have this one first
+	tle8888_read_reg(0, NULL);
+
+	scheduleMsg(&logger, "register: data");
+	for (int request = 0; request < 0x7e + 1; request++) {
+		uint16_t tmp;
+		tle8888_read_reg(request, &tmp);
+		uint8_t response = getRegisterFromResponse(tmp);
+		uint8_t data = (tmp >> 8) & 0xff;
+
+		scheduleMsg(&logger, "%02x: %02x", response, data);
+	}
+}
 
 static void reportPins(void) {
 	for (unsigned int i = 0; i < getNumBrainPins(); i++) {
@@ -161,6 +182,11 @@ void initPinRepository(void) {
 	initialized = true;
 
 	addConsoleAction(CMD_PINS, reportPins);
+
+#if (BOARD_TLE8888_COUNT > 0)
+	addConsoleAction("tle8888", tle8888_dump_regs);
+	addConsoleAction("tle8888init", requestTLE8888initialization);
+#endif
 }
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)

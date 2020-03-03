@@ -12,8 +12,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef GLOBAL_H_
-#define GLOBAL_H_
+#pragma once
 
 // todo: remove this from here and rely on os_access.h. unfortunately hal.h includes ch.h :(
 #include <hal.h>
@@ -78,8 +77,10 @@ typedef unsigned int time_t;
  */
 #if defined(STM32F7XX)
 #define CCM_RAM ".ram3"
+#define NO_CACHE CCM_OPTIONAL
 #else /* defined(STM32F4XX) */
 #define CCM_RAM ".ram4"
+#define NO_CACHE
 #endif /* defined(STM32F4XX) */
 
 #if EFI_USE_CCM
@@ -119,6 +120,4 @@ void unlockAnyContext(void);
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* GLOBAL_H_ */
 

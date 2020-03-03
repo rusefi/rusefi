@@ -4,8 +4,8 @@
  * @date May 3, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef ADCCONFIGURATION_H_
-#define ADCCONFIGURATION_H_
+
+#pragma once
 
 #if HAL_USE_ADC
 
@@ -54,4 +54,3 @@ private:
 
 #endif /* HAL_USE_ADC */
 
-#endif /* ADCCONFIGURATION_H_ */

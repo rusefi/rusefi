@@ -2,6 +2,8 @@
  * @file	electronic_throttle.cpp
  * @brief	Electronic Throttle driver
  *
+ * @see test test_etb.cpp
+ *
  *
  * Limited user documentation at https://github.com/rusefi/rusefi_documentation/wiki/HOWTO_electronic_throttle_body
  *

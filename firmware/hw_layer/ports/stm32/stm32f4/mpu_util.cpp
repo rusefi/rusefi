@@ -439,5 +439,13 @@ size_t flashSectorSize(flashsector_t sector) {
 	return 0;
 }
 
+uintptr_t getFlashAddrFirstCopy() {
+	return 0x080E0000;
+}
+
+uintptr_t getFlashAddrSecondCopy() {
+	return 0x080C0000;
+}
+
 #endif /* EFI_PROD_CODE */
 

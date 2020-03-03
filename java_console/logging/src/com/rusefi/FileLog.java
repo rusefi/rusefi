@@ -3,6 +3,7 @@ package com.rusefi;
 import com.opensr5.Logger;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -126,14 +127,18 @@ public enum FileLog {
 
     public void log(Throwable exception) {
         if (fileLog == null)
-            throw new NullPointerException("fileLog");
+            throw new NullPointerException("fileLog while " + exception);
         OutputStreamWriter os = new OutputStreamWriter(fileLog);
         exception.printStackTrace(new PrintWriter(os));
     }
 
     public void logException(String msg, Throwable e) {
         logLine(msg + e);
-        log(e);
         e.printStackTrace();
+        if (fileLog == null) {
+            JOptionPane.showConfirmDialog(null, msg + " " + e, "no log and Exception Occurred", JOptionPane.DEFAULT_OPTION);
+            return;
+        }
+        log(e);
     }
 }

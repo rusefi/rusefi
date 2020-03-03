@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef IO_PINS_H_
-#define IO_PINS_H_
+#pragma once
 
 #include "global.h"
 
@@ -63,4 +62,3 @@ EXTERNC void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *conf
 #endif /* HAL_USE_ICU */
 #endif /* EFI_GPIO_HARDWARE */
 
-#endif /* IO_PINS_H_ */

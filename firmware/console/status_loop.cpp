@@ -209,8 +209,10 @@ static void printSensors(Logging *log) {
 	if (hasCltSensor()) {
 		reportSensorF(log, "CLT", "C", getCoolantTemperature(), 2); // log column #4
 	}
-	if (hasTpsSensor()) {
-		reportSensorF(log, "TPS", "%", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #5
+
+	SensorResult tps = Sensor::get(SensorType::Tps1);
+	if (tps) {
+		reportSensorF(log, "TPS", "%", tps.Value, 2); // log column #5
 	}
 
 	if (hasIatSensor()) {
@@ -308,7 +310,10 @@ static void printSensors(Logging *log) {
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			reportSensorF(log, GAUGE_NAME_FUEL_VE, "%", engine->engineState.currentBaroCorrectedVE * PERCENT_MULT, 2);
 		}
-		reportSensorF(log, GAUGE_NAME_VVT, "deg", engine->triggerCentral.vvtPosition, 1);
+
+#if EFI_SHAFT_POSITION_INPUT
+		reportSensorF(log, GAUGE_NAME_VVT, "deg", engine->triggerCentral.getVVTPosition(), 1);
+#endif
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	reportSensorF(log, GAUGE_NAME_ENGINE_LOAD, "x", engineLoad, 2);
@@ -704,7 +709,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
 
-	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	float coolant = getCoolantTemperature();
 	float intake = getIntakeAirTemperature();
 
@@ -719,8 +723,16 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->coolantTemperature = coolant;
 	// offset 8
 	tsOutputChannels->intakeAirTemperature = intake;
-	// offset 12
-	tsOutputChannels->throttlePosition = tps;
+
+	SensorResult tps1 = Sensor::get(SensorType::Tps1);
+	tsOutputChannels->throttlePosition = tps1.Value;
+	tsOutputChannels->isTpsError = !tps1.Valid;
+	tsOutputChannels->tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1));
+
+	SensorResult tps2 = Sensor::get(SensorType::Tps2);
+	tsOutputChannels->throttle2Position = tps2.Value;
+
+
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 
@@ -734,8 +746,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		// offset 28
 		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
-	// offset 32
-	tsOutputChannels->tpsADC = getTPS12bitAdc(0 PASS_ENGINE_PARAMETER_SUFFIX) / TPS_TS_CONVERSION;
+
 	// offset 36
 #if EFI_ANALOG_SENSORS
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
@@ -763,7 +774,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 136
 	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE) ? getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 	// 140
+#if EFI_ENGINE_CONTROL
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 	// 148
 	tsOutputChannels->fuelTankLevel = engine->sensors.fuelTankLevel;
 	// 160
@@ -781,8 +794,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 224
 	efitimesec_t timeSeconds = getTimeNowSeconds();
 	tsOutputChannels->timeSeconds = timeSeconds;
+
+#if EFI_SHAFT_POSITION_INPUT
 	// 248
-	tsOutputChannels->vvtPosition = engine->triggerCentral.vvtPosition;
+	tsOutputChannels->vvtPosition = engine->triggerCentral.getVVTPosition();
+#endif
+
 	// 252
 	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// 120
@@ -812,9 +829,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->knockLevel = engine->knockVolts;
 
 	tsOutputChannels->hasFatalError = hasFirmwareError();
-
-	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
 #if EFI_HIP_9011
@@ -890,6 +904,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->brakePedalState = engine->brakePedalState;
 	tsOutputChannels->acSwitchState = engine->acSwitchState;
 
+#if EFI_ENGINE_CONTROL
 	// tCharge depends on the previous state, so we should use the stored value.
 	tsOutputChannels->tCharge = ENGINE(engineState.sd.tCharge);
 	float timing = engine->engineState.timingAdvance;
@@ -899,6 +914,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->crankingFuelMs = engine->isCylinderCleanupMode ? 0 : getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
 	tsOutputChannels->chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
 
+	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_ENGINE_CONTROL
 
 	switch (engineConfiguration->debugMode)	{
 	case DBG_AUX_TEMPERATURE:
@@ -992,7 +1009,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_CAN_SUPPORT */
 	case DBG_ANALOG_INPUTS:
 		tsOutputChannels->debugFloatField1 = (engineConfiguration->vbattAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("vbatt", engineConfiguration->vbattAdcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
-		tsOutputChannels->debugFloatField2 = (engineConfiguration->tps1_1AdcChannel != EFI_ADC_NONE) ? getVoltageDivided("tps", engineConfiguration->tps1_1AdcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
+		tsOutputChannels->debugFloatField2 = Sensor::getRaw(SensorType::Tps1);
 		tsOutputChannels->debugFloatField3 = (engineConfiguration->mafAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("maf", engineConfiguration->mafAdcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
 		tsOutputChannels->debugFloatField4 = (engineConfiguration->map.sensor.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
 		tsOutputChannels->debugFloatField5 = (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) ? getVoltageDivided("clt", engineConfiguration->clt.adcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;

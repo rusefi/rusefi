@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef RUSEFI_HW_ENUMS_H_
-#define RUSEFI_HW_ENUMS_H_
+#pragma once
 
 // todo: migrate/unify with pin_output_mode_e? rename? something is messy here
 // this enum is currently only used for SPI pins
@@ -282,4 +281,3 @@ typedef enum __attribute__ ((__packed__)) {
 
 #define INCOMPATIBLE_CONFIG_CHANGE EFI_ADC_0
 
-#endif /* RUSEFI_HW_ENUMS_H_ */

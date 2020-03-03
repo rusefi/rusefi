@@ -61,6 +61,10 @@ TEST(etb, singleEtbInitialization) {
 	ASSERT_EQ(0, mocks[1].startCount) << "2nd start";
 
 
+	// todo: set mock pedal position
+	// todo: set mock ETB throttle position
+	// todo: invoke EtbController#PeriodicTask a few times and assert that duty cycle changes
+
 }
 
 

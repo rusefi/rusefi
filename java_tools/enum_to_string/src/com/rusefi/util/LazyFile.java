@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 /**
  * This file would override file content only of content has changed, disregarding the magic tag line.
  */
-public class LazyFile {
+public class LazyFile implements Output {
     public static final String LAZY_FILE_TAG = "was generated automatically by rusEfi tool ";
     private static final String PROPERTY_NAME = "rusefi.generator.lazyfile.enabled";
     private static boolean ENABLED = Boolean.getBoolean(PROPERTY_NAME);
@@ -26,12 +26,14 @@ public class LazyFile {
         this.filename = filename;
     }
 
+    @Override
     public void write(String line) {
         content.append(line);
         if (!line.contains(LAZY_FILE_TAG))
             contentWithoutTag.append(line);
     }
 
+    @Override
     public void close() throws IOException {
         String fileContent = unifySpaces(readCurrentContent(filename));
         String newContent = unifySpaces(contentWithoutTag.toString().trim());

@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef EGO_H_
-#define EGO_H_
+#pragma once
 
 #include "global.h"
 #include "engine_configuration.h"
@@ -17,5 +16,3 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setEgoSensor(ego_sensor_e type DECLARE_CONFIG_PARAMETER_SUFFIX);
 void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-#endif

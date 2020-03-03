@@ -7,14 +7,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef TPS_H_
-#define TPS_H_
+#pragma once
 
 #include "global.h"
 #include "engine_configuration.h"
 
-// we have 12 bit precision and TS uses 10 bit precision
-#define TPS_TS_CONVERSION 4
+// Scaled to 1000 counts = 5.0 volts
+#define TPS_TS_CONVERSION 200
 
 bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -25,14 +24,9 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE);
  */
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 percent_t getTPSWithIndex(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
-bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int convertVoltageTo10bitADC(float voltage);
-int getTPS12bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-#define getTPS10bitAdc() (getTPS12bitAdc(0 PASS_ENGINE_PARAMETER_SUFFIX) / TPS_TS_CONVERSION)
-float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-percent_t getTpsValue(int index, int adc DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setBosch0280750009(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+percent_t getTpsValue(int index, float adc DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockTpsAdc(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockTpsValue(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockThrottlePedalPosition(percent_t value DECLARE_ENGINE_PARAMETER_SUFFIX);
@@ -55,4 +49,4 @@ typedef struct {
 //void saveTpsState(efitimeus_t now, float curValue);
 float getTpsRateOfChange(void);
 
-#endif
+

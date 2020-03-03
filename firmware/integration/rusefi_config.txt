@@ -68,7 +68,7 @@ struct_no_prefix engine_configuration_s
 #define ETB_BIAS_CURVE_LENGTH 8
 
 ! this is here so that rusEfi console can access it, too
-#define TS_OUTPUT_SIZE 220
+#define TS_OUTPUT_SIZE 240
 
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
@@ -117,6 +117,8 @@ struct_no_prefix engine_configuration_s
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 
+#define BOOST_RPM_COUNT 8
+#define BOOST_LOAD_COUNT 8
 #define PEDAL_TO_TPS_SIZE 8
 
 
@@ -136,7 +138,8 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_VOLTAGE 1000
-
+#define TPS_1_BYTE_PACKING_MULT 2
+#define LOAD_1_BYTE_PACKING_MULT 2
 #define FSIO_TABLE_8 8
 
 #define FSIO_CURVE_8 8
@@ -168,7 +171,7 @@ custom angle_table_t	4*@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@ array,   F32,   @OFF
 custom pedal_to_tps_t	@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@ array,   U08,   @OFFSET@, [@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@],"deg",	   1,     0,     -720,  720,    2
 
 custom iac_pid_mult_t	@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@ array,   U08,   @OFFSET@, [@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@],"%",	   1,     0,     0,  999,    2
-
+custom boost_table_t	@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@],"",    @@LOAD_1_BYTE_PACKING_MULT@@,  0 ,    0,    3000,      0
 struct pid_s
 	float pFactor;;"",      1,      0,       -10000, 10000,      4
 	float iFactor;;"",      1,      0,       -10000, 10000,      4
@@ -179,12 +182,15 @@ struct pid_s
 	int16_t maxValue;Output max value;"",        1,     0,  -30000,    30000.0,  0
 end_struct
 
+#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
+custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:7], @@ego_sensor_e_enum@@
+
 struct cranking_parameters_s
 float baseFuel;+Base duration of the fuel injection during cranking, this is modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.;"ms",       1,     0,    0, 200,     1
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
@@ -317,24 +323,24 @@ bit useBiQuadAnalogFiltering;
 bit cj125isUaDivided;
 bit cj125isLsu49;
 bit etb_use_two_wires;
-bit unusedHereo_wires;
+bit isDoubleSolenoidIdle;
 bit showSdCardWarning;
 bit cj125isUrDivided;looks like 3v range should be enough, divider not needed
 bit useTLE8888_hall_mode;
 bit useTLE8888_cranking_hack;
 bit useInstantRpmForIdle;
 bit absoluteFuelPressure;+If your fuel regulator does not have vacuum line
-bit issue_294_21;
-bit issue_294_22;
-bit issue_294_23;
-bit issue_294_24;
+bit launchControlEnabled;
+bit rollingLaunchEnabled;
+bit antiLagEnabled;
+bit useRunningMathForCranking,Fuel Map,Fixed;
 bit issue_294_25;
 bit issue_294_26;
 bit issue_294_27;
 bit issue_294_28;
 bit issue_294_29;
 bit issue_294_30;
-bit issue_294_31;
+bit issue_294_31,si_example,nada_example;
 
 
 int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\nSee also tps1_1AdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
@@ -355,8 +361,8 @@ MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
 ThermistorConf iat;
 	
-	int step1rpm;A secondary Rev limit engaged by the driver to help launch the vehicle faster;"rpm",    1,      0,       0, 20000.0,        2
-	int step1timing;;"deg",    1,      0,       -180, 180,        2
+	int launchRpm;A secondary Rev limit engaged by the driver to help launch the vehicle faster;"rpm",    1,      0,       0, 20000.0,        2
+	int launchTimingRetard;;"deg",    1,      0,       -180, 180,        2
 	int hip9011PrescalerAndSDO;+value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0.0, 0.0, 32, 0
 	float knockBandCustom;+We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override;"kHz", 1, 0.0, 0.0, 10.0, 2
 
@@ -413,7 +419,7 @@ angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the fi
 
 
 
-float analogInputDividerCoefficient;+Coefficient of input voltage dividers on your PCB;"coef",    1,      0,    0.01,  10.0,   2
+float analogInputDividerCoefficient;+Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.;"coef",    1,      0,    0.01,  10.0,   2
 float vbattDividerCoeff;+This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.;"coef",    1,      0,    0.01,  99.0,        2
 
 float fsio_visible fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"*C",    1,      0,       0,  1000.0,        0
@@ -625,7 +631,7 @@ bit is_enabled_spi_2
 	bit enabledStep1Limiter;
 	bit useTpicAdvancedMode;
 	bit useLcdScreen;
-	bit unusedAnotherOne;
+	bit verboseTLE8888;
 	bit unusedOldWarmupAfr;
 	bit onOffAlternatorLogic; +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	bit isCJ125Enabled
@@ -644,6 +650,7 @@ bit is_enabled_spi_2
 	bit useETBforIdleControl;+This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
 	bit idleIncrementalPidCic
 	bit enableAemXSeries
+! 'enableAemXSeries' is the 32nd bit here, you would need another bit region if more bits are desired
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;
@@ -668,7 +675,8 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:7], "Off", "UART1", "UART2", "UA
 	brain_pin_e debugMapAveraging;
 	brain_pin_e starterRelayPin;
 	pin_output_mode_e starterRelayPinMode;
-	uint8_t[2] unuseduartPadding1;
+	brain_pin_e secondSolenoidPin;Some Subaru and some Mazda use double-solenoid idle air valve
+	uint8_t[1] unuseduartPadding1;
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
@@ -715,8 +723,6 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:7], @@sensor_chart_e_enum@@
 sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode
 
-#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
-custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:7], @@ego_sensor_e_enum@@
 
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
 custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@@
@@ -736,9 +742,64 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	float unused
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
+	bit useHbridges
+	bit unusedBit_251_3
+	bit unusedBit_251_4
+	bit unusedBit_251_5
+	bit unusedBit_251_6
+	bit unusedBit_251_7
+	bit unusedBit_251_8
+	bit unusedBit_251_9
+	bit unusedBit_251_10
+	bit unusedBit_251_11
+	bit unusedBit_251_12
+	bit unusedBit_251_13
+	bit unusedBit_251_14
+	bit unusedBit_251_15
+	bit unusedBit_251_16
+	bit unusedBit_251_17
+	bit unusedBit_251_18
+	bit unusedBit_251_19
+	bit unusedBit_251_20
+	bit unusedBit_251_21
+	bit unusedBit_251_22
+	bit unusedBit_251_23
+	bit unusedBit_251_24
+	bit unusedBit_251_25
+	bit unusedBit_251_26
+	bit unusedBit_251_27
+	bit unusedBit_251_28
+	bit unusedBit_251_29
+	
 	etb_io[ETB_COUNT iterate] etbIo
-! our strategy is to get rid of "boardConfiguration" and make everything just "engineConfiguration". Please do not add new fields into legacy "bc" area.
-	int[119] unusedAtOldBoardConfigurationEnd;
+
+
+    output_pin_e boostControlPin;
+	pin_output_mode_e boostControlPinMode;
+    switch_input_pin_e antiLagActivatePin;
+    switch_input_pin_e launchActivatePin;
+
+    pid_s boostPid;
+	custom boostType_e 4 bits,   U32,   @OFFSET@, [0:0], "Open Loop",  "Closed Loop"
+    boostType_e boostType;
+    int boostPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
+
+	#define launchActivationMode_e_enum "Switch Input", "Clutch Input", "Always Active(Disabled By Speed)","INVALID"
+    custom launchActivationMode_e  4 bits, S32, @OFFSET@, [0:7], @@launchActivationMode_e_enum@@
+    launchActivationMode_e launchActivationMode;
+
+    #define antiLagActivationMode_e_enum "Always Active", "Switch Input"
+    custom antiLagActivationMode_e  4 bits, S32, @OFFSET@, [0:0], @@antiLagActivationMode_e_enum@@
+    antiLagActivationMode_e antiLagActivationMode;
+
+    int launchSpeedTreshold;+Disabled above this speed;"Kph",        1,     0,  0,    300.0,  0
+    int launchRpmTreshold;+Disabled below this rpm;"RPM",        1,     0,  0,    8000.0,  0
+    int launchTimingRpmRange;+Range from Launch Rpm for Timing Retard to activate;"RPM",        1,     0,  0,    8000.0,  0
+    int launchFuelAdded;+Extra Fuel Added;"%",        1,     0,  0,    100.0,  0
+    int launchBoostDuty;+Duty Cycle for the Boost Solenoid;"%",        1,     0,  0,    100.0,  0
+	int hardCutRpmRange;+RPM Range for Hard Cut;"rpm",    1,      0,       0, 3000.0,        2
+
+	int[103] unusedAtOldBoardConfigurationEnd;
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
@@ -759,8 +820,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	
 bit cutFuelOnHardLimit
 bit cutSparkOnHardLimit
-bit step1fuelCutEnable
-bit step1SparkCutEnable
+bit launchFuelCutEnable
+bit launchSparkCutEnable;+This is the Cut Mode normally used
 bit hasFrequencyReportingMapSensor;
 	bit useFSIO8ForServo1
 	bit useFSIO9ForServo2
@@ -804,8 +865,8 @@ bit useAdvanceCorrectionsForCranking;+This enables the various ignition correcti
 bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
 bit etbCalibrationOnStart
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
-bit unused_1484_bit_22
-bit unused_1484_bit_23
+bit isBoostControlEnabled;
+bit launchSmoothRetard;+Interpolates the Ignition Retard from 0 to 100% within the RPM Range
 bit unused_1484_bit_24
 bit unused_1484_bit_25
 bit unused_1484_bit_26
@@ -875,7 +936,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
-	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
+	uint8_t[4] unusedSomething;
 	pid_s idleRpmPid;See cltIdleRpmBins
 	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
@@ -1117,12 +1178,19 @@ uint8_t[4] unusuedsw;
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load",   1,   0.0,        0,  500.0,   2
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultRpmBins;;"RPM",        @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0	
 
-	int[565] mainUnusedEnd;
+	int[527] mainUnusedEnd;
 
 ! end of engine_configuration_s
 end_struct
 
 engine_configuration_s engineConfiguration;
+
+boost_table_t boostTableOpenLoop;
+uint8_t[BOOST_LOAD_COUNT] boostMapBins;;"",  @@LOAD_1_BYTE_PACKING_MULT@@,   0,        0,  600.0,   1
+uint8_t[BOOST_RPM_COUNT] boostRpmBins;;"RPM",   @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0 
+
+boost_table_t boostTableClosedLoop;
+uint8_t[BOOST_LOAD_COUNT] boostTpsBins;;"%",   @@TPS_1_BYTE_PACKING_MULT@@,   0.0,        0,  100.0,   2
 
 pedal_to_tps_t pedalToTpsTable;
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%",           1,     0,      0.0,   120.0,   0
@@ -1372,4 +1440,4 @@ end_struct
 #define ts_show_joystick true
 #define ts_show_egt true
 #define ts_show_gps true
-
+#define ts_show_analog_divider true

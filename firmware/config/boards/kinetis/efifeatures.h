@@ -106,16 +106,6 @@
 #define EFI_INTERNAL_FLASH TRUE
 
 /**
- * Flex Non Volatile Memory is faster than flash
- * It also has smaller pages so it takes less time to erase
- *
- * There is no remote access to FlexNVM meaning that we cannot erase settings externally
- */
-
-#define FLASH_ADDR 0x10000000	// FlexNVM
-#define FLASH_ADDR_SECOND_COPY 0x10008000
-
-/**
  * Usually you need shaft position input, but maybe you do not need it?
  */
 #ifndef EFI_SHAFT_POSITION_INPUT
@@ -126,8 +116,6 @@
  * Maybe we are just sniffing what's going on?
  */
 #define EFI_ENGINE_CONTROL TRUE
-
-#define EFI_SPEED_DENSITY TRUE
 
 /**
  * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
@@ -218,14 +206,9 @@
 #endif
 
 /**
- * While we embed multiple PnP configurations into the same firmware binary, these marcoses give us control
- * over which configurations go into the binary
+ * Should PnP engine configurations be included in the binary?
  */
-#define EFI_SUPPORT_DODGE_NEON FALSE
-#define EFI_SUPPORT_FORD_ASPIRE FALSE
-#define EFI_SUPPORT_FORD_FIESTA FALSE
-#define EFI_SUPPORT_NISSAN_PRIMERA FALSE
-#define EFI_SUPPORT_1995_FORD_INLINE_6 FALSE
+#define EFI_INCLUDE_ENGINE_PRESETS FALSE
 
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER FALSE
@@ -406,7 +389,7 @@
 #define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
 #define EFI_PRINT_MESSAGES_TO_TERMINAL TRUE
 
-#define EFI_ACTIVE_CONFIGURATION_IN_FLASH (FLASH_ADDR + offsetof(persistent_config_container_s, persistentConfiguration.engineConfiguration))
+#define EFI_ACTIVE_CONFIGURATION_IN_FLASH
 
 //#define PWM_PHASE_MAX_COUNT 122
 

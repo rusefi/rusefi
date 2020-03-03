@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HW_LAYER_DRIVERS_GPIO_TLE8888_H_
-#define HW_LAYER_DRIVERS_GPIO_TLE8888_H_
+#pragma once
 
 #include "global.h"
 
@@ -20,8 +19,20 @@
  * 4 INJ channels - OUT1..4 - IN5..8 */
 #define TLE8888_DIRECT_OUTPUTS		(4 + 4 + TLE8888_DIRECT_MISC)
 
+// Looks like reset value is 113.6ms? 1.6ms * 0x47
+#define Functional_Watchdog_PERIOD_MS 20
+
+// we can change this value on TLE8888QK but we probably do not have a reason to change
+#define Window_watchdog_close_window_time_ms 100.8
+
+#define getRegisterFromResponse(x) (((x) >> 1) & 0x7f)
+
+// unchangeable value for TLE8888QK
+// unused for now
+//#define Window_watchdog_open_window_time_ms 12.8
+
 /* DOTO: add irq support */
-#define TLE8888_POLL_INTERVAL_MS	100
+#define TLE8888_POLL_INTERVAL_MS	7
 
 /* note that spi transfer should be LSB first */
 struct tle8888_config {
@@ -62,4 +73,3 @@ void tle8888PostState(TsDebugChannels *tsDebugChannels);
 }
 #endif /* __cplusplus */
 
-#endif /* HW_LAYER_DRIVERS_GPIO_TLE8888_H_ */

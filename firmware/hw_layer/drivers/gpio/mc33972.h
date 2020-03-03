@@ -7,8 +7,7 @@
  * @author Andrey Gusakov <dron0gus@gmail.com>, (c) 2019
  */
 
-#ifndef HW_LAYER_MC33972_H_
-#define HW_LAYER_MC33972_H_
+#pragma once
 
 #include <hal.h>
 #include "efifeatures.h"
@@ -34,4 +33,3 @@ int mc33972_add(unsigned int index, const struct mc33972_config *cfg);
 }
 #endif /* __cplusplus */
 
-#endif /* HW_LAYER_MC33972_H_ */

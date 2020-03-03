@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/trigger_central.txt Tue Sep 03 19:14:15 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/trigger_central.txt Sat Feb 22 15:19:25 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_TRIGGER_CENTRAL_GENERATED_H
@@ -31,4 +31,4 @@ typedef struct trigger_central_s trigger_central_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/trigger_central.txt Tue Sep 03 19:14:15 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/trigger_central.txt Sat Feb 22 15:19:25 EST 2020

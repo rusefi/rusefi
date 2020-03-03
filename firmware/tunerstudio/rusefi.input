@@ -76,7 +76,7 @@ enable2ndByteCanID = false
    
  ; delayAfterPortOpen = 500  
    
-   blockingFactor = 400 ; max chunk size
+   blockingFactor = 256 ; max chunk size
 ;end communication settings
 
    ;  name      			= bits,   type, offset,  bits
@@ -217,8 +217,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       
 
 ; throttle, pedal
-      TPSValue        = scalar,  U16,     20,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      throttlePedalPosition = scalar,U16, 22,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      TPSValue        = scalar,  S16,     20,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      throttlePedalPosition = scalar,S16, 22,        "%",{1/@@PACK_MULT_PERCENT@@},         0
       tpsADC          = scalar,  U16,     24,      "ADC",    1,       0.0;
 
 ; air flow/mass measurments
@@ -251,9 +251,9 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 ; Corrections
       injectorLagMs   = scalar,  U16,     62,     "ms",{1/@@PACK_MULT_MS@@},       0.0
-      iatCorrection   = scalar,  U16,     64,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      cltCorrection   = scalar,  U16,     66,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      baroCorrection  = scalar,  U16,     68,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      iatCorrection   = scalar,  S16,     64,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      cltCorrection   = scalar,  S16,     66,        "%",{1/@@PACK_MULT_PERCENT@@},         0
+      baroCorrection  = scalar,  S16,     68,        "%",{1/@@PACK_MULT_PERCENT@@},         0
       fuelPidCorrection=scalar,  S16,     70,     "ms",{1/@@PACK_MULT_MS@@},         0
 
 ; Wall model AE
@@ -269,7 +269,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 ; Ignition
       ignitionAdvance = scalar,  S16,     84,    "deg",{1/@@PACK_MULT_ANGLE@@},       0.0
       sparkDwellValue = scalar,  U16,     86,     "ms",{1/@@PACK_MULT_MS@@},       0.0
-      coilDutyCycle   = scalar,  U16,     88,      "%",{1/@@PACK_MULT_PERCENT@@},         0
+      coilDutyCycle   = scalar,  S16,     88,      "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 ; Idle & ETB
       idleAirValvePosition=scalar,S16,    90,      "%",{1/@@PACK_MULT_PERCENT@@},         0
@@ -332,6 +332,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       egt6            = scalar,  S16,    214,  "deg C",      1,         0
       egt7            = scalar,  S16,    216,  "deg C",      1,         0
       egt8            = scalar,  S16,    218,  "deg C",      1,         0
+;
+      TPS2Value       = scalar,  S16,    220,        "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 
 ;
@@ -667,6 +669,17 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       xBins       = tpsTpsAccelFromRpmBins,  TPSValue
       yBins       = tpsTpsAccelToRpmBins,  TPSValue
       zBins       = tpsTpsAccelTable
+
+       table = boostTableTbl,  boostMapOpen,  "",   1
+      xBins       = boostRpmBins,  RPMValue
+      yBins       = boostMapBins,  MAPValue
+      zBins       = boostTableOpenLoop
+
+	table = boostTable2Tbl,  boostMapClosed,  "",   1
+      xBins       = boostRpmBins,  RPMValue
+      yBins       = boostTpsBins,  TPSValue
+      zBins       = boostTableClosedLoop
+
     
       
    table = fsioTable1Tbl,  fsioTable1Map,  "FSIO Table #1",   1
@@ -1214,7 +1227,10 @@ menuDialog = main
 		subMenu = cltIdleCurve,				"CLT multiplier"
 		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 
-	menu = "&FSIO" 
+	menu = "&Advanced" 
+        subMenu = boostDialog,          "Boost Control"
+		subMenu = boostPidDialog,        "Closed Loop Boost",    { boostType == 1 }
+        subMenu = std_separator	
 		subMenu = fsioInputsDialog,        	"FSIO inputs"
 		subMenu = auxPidDialog,				"Aux PID"
 		subMenu = fsioOutputsDialog,        "FSIO outputs"
@@ -1290,7 +1306,6 @@ menuDialog = main
 
 		# EXPERIMENTAL FEATURES
 		subMenu = parkingLot,				"Experimental/Broken"
-		subMenu = smLaunchControl,			"Launch control"
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
@@ -1299,6 +1314,13 @@ menuDialog = main
 		subMenu = etbDialog,				"Electronic throttle body (beta version)" @@if_ts_show_etb
 		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
 		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
+		subMenu = std_separator		
+        subMenu = smLaunchControl,			"Launch Control"
+		subMenu = std_separator	
+		subMenu = smRollingLaunch,			"Rolling Launch"
+		subMenu = std_separator	
+		subMenu = antiLag,        			"Antilag Setup"
+		subMenu = std_separator	
 
 
 [ControllerCommands]
@@ -1622,9 +1644,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
 		field = "Fuel level", 						fuelLevelSensor
 		field = "Clutch down switch",					clutchDownPin
-		field = "Clutch down inverted",					clutchDownPinInverted
+		field = "Clutch down inverted",					clutchDownPinMode
 		field = "Clutch up switch",						clutchUpPin
-		field = "Clutch up inverted",					clutchUpPinInverted
+		field = "Clutch up inverted",					clutchUpPinMode
 		field = "Throttle Up switch",					throttlePedalUpPin
 		field = "Brake pedal switch",					brakePedalPin
 		field = "A/C switch",							acSwitchAdc
@@ -1689,6 +1711,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Dizzy out Pin",         	    	    dizzySparkOutputPin
 		field = "O2 heater pin",						o2heaterPin
 		field = "Idle Solenoid Pin",					idle_solenoidPin
+		field = "Second Idle Solenoid Pin",				secondSolenoidPin
 		field = "Idle Stepper Dir",						idle_stepperDirectionPin
 		field = "Idle Stepper Dir Mode",				stepperDirectionPinMode
 		field = "Idle Stepper Step",					idle_stepperStepPin
@@ -1971,9 +1994,11 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = idleSolenoid, "Solenoid"
 		field = "Idle Solenoid Pin Mode",   	  	    idle_solenoidPinMode, !useStepperIdle
 		field = "Idle Solenoid Pin",					idle_solenoidPin, !useStepperIdle
+		field = "Second Idle Solenoid Pin",				secondSolenoidPin, { !useStepperIdle && isDoubleSolenoidIdle }
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 	
 	dialog = idleStepper, "Stepper"
+		field = "useHbridges",							useHbridges
 		field = "Idle Stepper Step Pin",				idle_stepperStepPin, useStepperIdle
 		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin, useStepperIdle
 		field = "Idle Stepper Enable Pin",				stepperEnablePin, useStepperIdle
@@ -1990,6 +2015,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = idlehw, "", yAxis
 	field = "!ECU reboot needed to apply these settings"
 		field = "Use Stepper",				useStepperIdle
+		field = "Double Solenoid Mode",		isDoubleSolenoidIdle
 		panel = idleHwType
 		
 	dialog = idlePidSettings, "PID IAC Control"	
@@ -2214,7 +2240,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = analogInputSettings, "Analog Input Settings"
 		field = "!ECU reboot needed to apply these settings"
 		field = "Use fixed baro corr from MAP", 		useFixedBaroCorrFromMap
-		field = "Analog divider",						analogInputDividerCoefficient
+		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
 		field = "Use BiQuad averaging",					useBiQuadAnalogFiltering		
 		field = "Smoothing factor",						slowAdcAlpha, {useBiQuadAnalogFiltering == 0}
 		field = "Bi_Q a0",								biQuad_a0, {useBiQuadAnalogFiltering == 1}
@@ -2327,7 +2353,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = crankingFuel, "Fuel"
 		field = "Injection mode",						crankingInjectionMode
 		field = "!Value '1' is currently recommended"
-		field = "Base fuel pulse width", 				cranking_baseFuel
+		field = "Fuel Source For Cranking",             useRunningMathForCranking
+		field = "Base fuel pulse width", 				cranking_baseFuel, {useRunningMathForCranking == 0}
 		
 	dialog = crankingIAC, "IAC"
 		field = "Cranking IAC position",					crankingIACposition
@@ -2496,6 +2523,36 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "ADC #2",								fsioAdc2
 		field = "ADC #3",								fsioAdc3
 		field = "ADC #4",								fsioAdc4
+
+;Boost Open Loop
+
+        dialog = boost_left, ""
+                field = "Enable",                           isBoostControlEnabled
+                field = "Control Mode",                     boostType, { isBoostControlEnabled }
+		field = "Output",							boostControlPin, { isBoostControlEnabled }
+		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
+		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled } 
+		
+         dialog = boostDialog, "", border
+                panel = boost_left, West
+                panel = boostTableTbl, Center
+
+;Boost Closed Loop
+
+         dialog = boostPidleft, ""
+                field = "P Gain", 	                        boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }				
+	        field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }			
+	        field = "D Gain",                            boostPid_dFactor, { isBoostControlEnabled && boostType == 1 }						
+	        field = "Control Period",                    boostPid_periodMs, { isBoostControlEnabled && boostType == 1 }			
+	        field = "Min Duty",                          boostPid_minValue, { isBoostControlEnabled && boostType == 1 }			
+	        field = "Max Duty",                          boostPid_maxValue, { isBoostControlEnabled && boostType == 1 }	
+
+         dialog = boostTableDialog, "", card
+                panel = boostTable2Tbl
+
+	dialog = boostPidDialog, "", border
+                panel = boostPidleft, West
+                panel = boostTableDialog, Center	
 				
 	help = veTableDialogHelp, "Volumetric Efficiency"
         text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"
@@ -2561,7 +2618,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Neutral Position",						etbNeutralPosition
 		field = "Debug mode",							debugMode
 		field = "use ETB for idle",						useETBforIdleControl
-		field = "ETB idle maximum angle",				etbIdleRange
+		field = "ETB idle maximum angle",				etbIdleThrottleRange
 		field = "Press buttons to calibrate sensors"
 		field = "You would have to remove air filter to move throttle manually"
 	    commandButton = "TPS#1 closed position", cmd_calibrate_tps_1_closed
@@ -2659,14 +2716,39 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 				;			Racing Features->Launch Control
 	dialog = smLaunchControl, "Launch Control Settings NOT WORKING"
-		field = "RPM Step1 Limit",         	    		step1rpm
-		field = "Launch RPM Window"                     step1RpmWindow
-		field = "Step1 Ignition Advance",				step1timing
-		field = "Use Spark Cut",						step1SparkCutEnable
-		field = "Use Fuel Cut",							step1fuelCutEnable
-		field = "clutchDownPin",						clutchDownPin
-		field = "clutchUpPin",							clutchUpPin
-		field = "brakePedalPin",						brakePedalPin
+        field = "Enable Launch Control",               	launchControlEnabled
+		field = "Activation Mode",                      launchActivationMode
+	    field = "Switch Input",                     	launchActivatePin,  {launchActivationMode == 0 && launchControlEnabled == 1}
+		field = "Clutch Input", 						clutchDownPin,      {launchActivationMode == 1 && launchControlEnabled == 1}
+		field = ""
+		field = "Rpm Treshold",                         launchRpmTreshold,  {launchControlEnabled == 1}
+		field = "Speed Treshold",                       launchSpeedTreshold,  {launchControlEnabled == 1}
+        field = ""
+		field = "Launch RPM",            	    		launchRpm,  {launchControlEnabled == 1}
+		field = "Extra Fuel",           				launchFuelAdded,  {launchControlEnabled == 1}
+        field = "Boost Solenoid Duty",	                launchBoostDuty,  {launchControlEnabled == 1}
+		field = "Ignition Retard",      				launchTimingRetard,  {launchControlEnabled == 1}
+		field = "Ignition Retard RPM Range",            launchTimingRpmRange,  {launchControlEnabled == 1}
+		field = "Smooth Retard Mode",                   launchSmoothRetard,  {launchControlEnabled == 1}
+		field = "Hard Cut Mode"
+		field = "Ignition Cut",    						launchSparkCutEnable,  {launchControlEnabled == 1}
+		field = "Fuel Cut",	    						launchFuelCutEnable,  {launchControlEnabled == 1}
+		field = "Hard Cut RPM Range",                   hardCutRpmRange,  {launchControlEnabled == 1}
+		
+
+
+
+					;			Racing Features->Rolling Launch
+	dialog = smRollingLaunch, "Rolling Launch Settings NOT WORKING"
+       field = "Enable Rolling Launch",                rollingLaunchEnabled
+
+					;			Racing Features->Rolling Launch
+	dialog = antiLag, "AntiLag Settings NOT WORKING"
+        field = "Enable AntiLag",               antiLagEnabled
+	    field = "Activation Mode",          	antiLagActivationMode,  {antiLagEnabled == 1}
+        field = "Switch Input",                 antiLagActivatePin,  {antiLagActivationMode == 1 && antiLagEnabled == 1}
+
+
 	    
 	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
 		field = "Enable Coasting Fuel Cutoff",			coastingFuelCutEnabled

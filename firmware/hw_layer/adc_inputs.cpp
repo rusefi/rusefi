@@ -456,7 +456,7 @@ public:
 			}
 			slowAdcCounter++;
 
-			AdcSubscription::UpdateSubscribers();
+			AdcSubscription::UpdateSubscribers(nowNt);
 		}
 	}
 };

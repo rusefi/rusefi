@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef EFIFEATURES_H_
-#define EFIFEATURES_H_
+#pragma once
 
 #include "rusefi_true.h"
 
@@ -63,11 +62,10 @@
 #define EFI_MAP_AVERAGING TRUE
 #define EFI_ALTERNATOR_CONTROL TRUE
 
-#define EFI_SUPPORT_DODGE_NEON TRUE
-#define EFI_SUPPORT_FORD_ASPIRE TRUE
-#define EFI_SUPPORT_FORD_FIESTA TRUE
-#define EFI_SUPPORT_NISSAN_PRIMERA TRUE
-#define EFI_SUPPORT_1995_FORD_INLINE_6 TRUE
+/**
+ * Should PnP engine configurations be included in the binary?
+ */
+#define EFI_INCLUDE_ENGINE_PRESETS TRUE
 
 #define EFI_ENGINE_AUDI_AAN FALSE
 #define EFI_ENGINE_SNOW_BLOWER FALSE
@@ -147,6 +145,3 @@
 
 #define EFI_BOARD_TEST FALSE
 #define EFI_JOYSTICK FALSE
-
-
-#endif /* EFIFEATURES_H_ */

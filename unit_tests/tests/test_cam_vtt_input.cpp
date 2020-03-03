@@ -79,8 +79,7 @@ TEST(sensors, testCamInput) {
 	// setting some weird engine
 	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
 
-	// and now changing to ONE trigger on CRANK with CAM/VVT
-
+	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
@@ -99,14 +98,66 @@ TEST(sensors, testCamInput) {
 		eth.fireRise(50);
 	}
 
+	// asserting that lack of camshaft signal would be detecting
 	ASSERT_EQ(1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #2";
 	ASSERT_EQ(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, unitTestWarningCodeState.recentWarnings.get(0)) << "@0";
 	unitTestWarningCodeState.recentWarnings.clear();
 
 	for (int i = 0; i < 600;i++) {
-		eth.fireRise(50);
+		eth.moveTimeForwardUs(MS2US(10));
 		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+		eth.moveTimeForwardUs(MS2US(40));
+		eth.firePrimaryTriggerRise();
 	}
 
+	// asserting that error code has cleared
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
+	ASSERT_NEAR(181, engine->triggerCentral.getVVTPosition(), EPS3D);
+}
+
+TEST(sensors, testNB2CamInput) {
+	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
+
+	// this crank trigger would be easier to test, crank shape is less important for this test
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	ASSERT_EQ( 0,  GET_RPM()) << "testNB2CamInput RPM";
+	for (int i = 0; i < 7;i++) {
+		eth.fireRise(25);
+		ASSERT_EQ( 0,  GET_RPM()) << "testNB2CamInput RPM";
+	}
+	eth.fireRise(25);
+	// first time we have RPM
+	ASSERT_EQ(1200,  GET_RPM()) << "testNB2CamInput RPM";
+
+	int totalRevolutionCountBeforeVvtSync = 10;
+	// need to be out of VVT sync to see VVT sync in action
+	eth.fireRise(25);
+	eth.fireRise(25);
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+	ASSERT_TRUE((totalRevolutionCountBeforeVvtSync % SYMMETRICAL_CRANK_SENSOR_DIVIDER) != 0);
+
+	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few anlges
+
+	// this would be ignored since we only consume the other kind of fronts here
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.moveTimeForwardUs(MS2US(20));
+	// this would be be first VVT signal - gap duration would be calculated against 'DEEP_IN_THE_PAST_SECONDS' initial value
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+
+	eth.moveTimeForwardUs(MS2US(20));
+	// this second important front would give us first real VVT gap duration
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+
+	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition());
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+
+	eth.moveTimeForwardUs(MS2US(130));
+	// this third important front would give us first comparison between two real gaps
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+
+	ASSERT_NEAR(-67.6, engine->triggerCentral.getVVTPosition(), EPS3D);
+	// actually position based on VVT!
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 2, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 }

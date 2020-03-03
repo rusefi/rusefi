@@ -5,8 +5,7 @@
  * @date Dec 19, 2017
  */
 
-#ifndef BACKUP_RAM_H_
-#define BACKUP_RAM_H_
+#pragma once
 
 #include "global.h"
 #include "efi_gpio.h"
@@ -43,4 +42,3 @@ uint32_t backupRamLoad(backup_ram_e idx);
 // use backup-power RTC registers (non-volatile memory) to store the data
 void backupRamSave(backup_ram_e idx, uint32_t value);
 
-#endif /* BACKUP_RAM_H_ */

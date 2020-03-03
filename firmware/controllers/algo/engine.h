@@ -56,8 +56,15 @@ public:
 
 	IEtbController *etbControllers[ETB_COUNT];
 
-	void OnTriggerStateDecodingError() override;
+	cyclic_buffer<int> triggerErrorDetection;
+
+#if EFI_SHAFT_POSITION_INPUT
+	void OnTriggerStateDecodingError();
 	void OnTriggerStateProperState(efitick_t nowNt) override;
+	void OnTriggerSyncronization(bool wasSynchronized) override;
+	void OnTriggerInvalidIndex(int currentIndex) override;
+	void OnTriggerSynchronizationLost() override;
+#endif
 
 	void setConfig(persistent_config_s *config);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);

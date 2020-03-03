@@ -539,8 +539,8 @@ case Force_4_bytes_size_cranking_ignition_mode:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_36:
-  return "DBG_36";
+case DBG_BOOST:
+  return "DBG_BOOST";
 case DBG_37:
   return "DBG_37";
 case DBG_ALTERNATOR_PID:
@@ -717,6 +717,8 @@ case BMW_M73_F:
   return "BMW_M73_F";
 case BMW_M73_M:
 	return "BMW_M73_M";
+case BMW_M73_PROTEUS:
+  return "BMW_M73_P";
 case MRE_BOARD_TEST:
   return "MRE_BOARD_TEST";
 case GY6_139QMB:
@@ -803,6 +805,8 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case VAG_18_TURBO:
   return "VAG_18_TURBO";
+case TEST_33816:
+  return "TEST_33816";
 case VW_B6:
   return "VW_B6";
 case VW_ABA:
@@ -1149,6 +1153,8 @@ case TT_MAZDA_MIATA_VVT_TEST:
   return "TT_MAZDA_MIATA_VVT_TEST";
 case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
+case TT_MIATA_NB2_VVT_CAM:
+  return "TT_MIATA_NB2_VVT_CAM";
 case TT_MAZDA_Z5:
   return "TT_MAZDA_Z5";
 case TT_MIATA_VVT:

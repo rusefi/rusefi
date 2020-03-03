@@ -21,7 +21,6 @@
 #include "trigger_universal.h"
 
 extern bool printTriggerDebug;
-extern float actualSynchGap;
 
 static void fireEvent(EngineTestHelper *eth, bool isRise) {
 	// mostly we fire only rise events (useOnlyRisingEdgeForTrigger=true).
@@ -84,7 +83,7 @@ static void fireNoisyCycle60_2(EngineTestHelper *eth, int numCycles, int duratio
 
 static void resetTrigger(EngineTestHelper &eth) {
 	eth.applyTriggerWaveform();
-	eth.engine.triggerCentral.resetAccumSignalData();
+	eth.engine.triggerCentral.noiseFilter.resetAccumSignalData();
 	// reset error counter
 	eth.engine.triggerCentral.triggerState.totalTriggerErrorCounter = 0;
 }

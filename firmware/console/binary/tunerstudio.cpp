@@ -294,7 +294,7 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
 	tsState.readPageCommandsCounter++;
 
 	const void *addr = getStructAddr(structId);
-	if (addr == NULL) {
+	if (addr == nullptr) {
 		// todo: add warning code - unexpected structId
 		return;
 	}
@@ -801,8 +801,8 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 				tsOutputChannels.debugIntField3 = index;
 			}
 
-#if EFI_PROD_CODE
-			executeTSCommand(subsystem, index);
+#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
+		executeTSCommand(subsystem, index);
 #endif /* EFI_PROD_CODE */
 			sendOkResponse(tsChannel, TS_CRC);
 		}

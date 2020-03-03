@@ -162,8 +162,6 @@
 
 #define EFI_ENGINE_CONTROL TRUE
 
-#define EFI_SPEED_DENSITY TRUE
-
 #define EFI_ANALOG_SENSORS TRUE
 
 
@@ -221,14 +219,10 @@
 
 #define EFI_USB_SERIAL TRUE
 
-// For now we can still embed all car configurations into the firmware binary.
-// These give us control over which configurations go in.
-
-#define EFI_SUPPORT_DODGE_NEON TRUE
-#define EFI_SUPPORT_FORD_ASPIRE TRUE
-#define EFI_SUPPORT_FORD_FIESTA TRUE
-#define EFI_SUPPORT_NISSAN_PRIMERA TRUE
-#define EFI_SUPPORT_1995_FORD_INLINE_6 TRUE
+/**
+ * Should PnP engine configurations be included in the binary?
+ */
+#define EFI_INCLUDE_ENGINE_PRESETS TRUE
 
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER TRUE

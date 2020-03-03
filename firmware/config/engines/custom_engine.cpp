@@ -190,6 +190,9 @@ void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* EFI_CAN_SUPPORT */
 }
 
+/**
+ * set engine_type 49
+ */
 void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -396,10 +399,13 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * This configuration is used for MRE board Quality Assurance validation
  * set engine_type 30
+ * MRE_BOARD_TEST
  */
 void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
+
+	engineConfiguration->debugMode = DBG_TLE8888;
 
 	engineConfiguration->triggerSimulatorFrequency = 60;
 	// set cranking_rpm 500
@@ -507,4 +513,36 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// GPIOE_10: "3 - Lowside 2"
 	engineConfiguration->injectionPins[2 - 1] = GPIOE_10;
 #endif /* BOARD_TLE8888_COUNT */
+}
+
+/**
+ * set engine_type 103
+ */
+void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
+	// grey
+	// default spi3mosiPin PB5
+	// white
+	// default spi3misoPin PB4
+	// violet
+	// default spi3sckPin  PB3
+
+
+	// blue
+	CONFIG(mc33816_cs) = GPIOD_7;
+	// green
+	CONFIG(mc33816_rstb) = GPIOD_5;
+	// yellow
+	CONFIG(mc33816_driven) = GPIOD_6;
+
+	// enable_spi 3
+	CONFIG(is_enabled_spi_3) = true;
+	// Wire up spi3
+	engineConfiguration->spi3mosiPin = GPIOB_5;
+	engineConfiguration->spi3misoPin = GPIOB_4;
+	engineConfiguration->spi3sckPin = GPIOB_3;
+
+	CONFIG(isSdCardEnabled) = false;
+
+	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
 }

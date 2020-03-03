@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:13:41 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 02 19:45:47 EST 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -60,7 +60,7 @@ struct cranking_parameters_s {
 	 * need 4 byte alignment
 	 * offset 6
 	 */
-	uint8_t alignmentFill[2];
+	uint8_t alignmentFill_at_6[2];
 	/** total size 8*/
 };
 
@@ -84,7 +84,7 @@ struct spi_pins {
 	 * need 4 byte alignment
 	 * offset 3
 	 */
-	uint8_t alignmentFill;
+	uint8_t alignmentFill_at_3;
 	/** total size 4*/
 };
 
@@ -246,7 +246,7 @@ struct ThermistorConf {
 	 * need 4 byte alignment
 	 * offset 29
 	 */
-	uint8_t alignmentFill[3];
+	uint8_t alignmentFill_at_29[3];
 	/** total size 32*/
 };
 
@@ -590,7 +590,7 @@ struct engine_configuration_s {
 	bool etb_use_two_wires : 1;
 	/**
 	offset 76 bit 13 */
-	bool unusedHereo_wires : 1;
+	bool isDoubleSolenoidIdle : 1;
 	/**
 	offset 76 bit 14 */
 	bool showSdCardWarning : 1;
@@ -613,16 +613,16 @@ struct engine_configuration_s {
 	bool absoluteFuelPressure : 1;
 	/**
 	offset 76 bit 20 */
-	bool issue_294_21 : 1;
+	bool launchControlEnabled : 1;
 	/**
 	offset 76 bit 21 */
-	bool issue_294_22 : 1;
+	bool rollingLaunchEnabled : 1;
 	/**
 	offset 76 bit 22 */
-	bool issue_294_23 : 1;
+	bool antiLagEnabled : 1;
 	/**
 	offset 76 bit 23 */
-	bool issue_294_24 : 1;
+	bool useRunningMathForCranking : 1;
 	/**
 	offset 76 bit 24 */
 	bool issue_294_25 : 1;
@@ -710,11 +710,11 @@ struct engine_configuration_s {
 	 * A secondary Rev limit engaged by the driver to help launch the vehicle faster
 	 * offset 316
 	 */
-	int step1rpm;
+	int launchRpm;
 	/**
 	 * offset 320
 	 */
-	int step1timing;
+	int launchTimingRetard;
 	/**
 	 * value '6' for 8MHz hw osc
 	 * read hip9011 datasheet for details
@@ -818,7 +818,7 @@ struct engine_configuration_s {
 	 */
 	angle_t globalTriggerAngleOffset;
 	/**
-	 * Coefficient of input voltage dividers on your PCB
+	 * Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.
 	 * offset 460
 	 */
 	float analogInputDividerCoefficient;
@@ -1294,7 +1294,7 @@ struct engine_configuration_s {
 	bool useLcdScreen : 1;
 	/**
 	offset 744 bit 13 */
-	bool unusedAnotherOne : 1;
+	bool verboseTLE8888 : 1;
 	/**
 	offset 744 bit 14 */
 	bool unusedOldWarmupAfr : 1;
@@ -1421,9 +1421,14 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e starterRelayPinMode;
 	/**
+	 * Some Subaru and some Mazda use double-solenoid idle air valve
 	 * offset 810
 	 */
-	uint8_t unuseduartPadding1[2];
+	brain_pin_e secondSolenoidPin;
+	/**
+	 * offset 811
+	 */
+	uint8_t unuseduartPadding1;
 	/**
 	 * offset 812
 	 */
@@ -1581,94 +1586,94 @@ struct engine_configuration_s {
 	bool todoClutchDownPinInverted : 1;
 	/**
 	offset 976 bit 2 */
-	bool unusedBit_249_2 : 1;
+	bool useHbridges : 1;
 	/**
 	offset 976 bit 3 */
-	bool unusedBit_249_3 : 1;
+	bool unusedBit_251_3 : 1;
 	/**
 	offset 976 bit 4 */
-	bool unusedBit_249_4 : 1;
+	bool unusedBit_251_4 : 1;
 	/**
 	offset 976 bit 5 */
-	bool unusedBit_249_5 : 1;
+	bool unusedBit_251_5 : 1;
 	/**
 	offset 976 bit 6 */
-	bool unusedBit_249_6 : 1;
+	bool unusedBit_251_6 : 1;
 	/**
 	offset 976 bit 7 */
-	bool unusedBit_249_7 : 1;
+	bool unusedBit_251_7 : 1;
 	/**
 	offset 976 bit 8 */
-	bool unusedBit_249_8 : 1;
+	bool unusedBit_251_8 : 1;
 	/**
 	offset 976 bit 9 */
-	bool unusedBit_249_9 : 1;
+	bool unusedBit_251_9 : 1;
 	/**
 	offset 976 bit 10 */
-	bool unusedBit_249_10 : 1;
+	bool unusedBit_251_10 : 1;
 	/**
 	offset 976 bit 11 */
-	bool unusedBit_249_11 : 1;
+	bool unusedBit_251_11 : 1;
 	/**
 	offset 976 bit 12 */
-	bool unusedBit_249_12 : 1;
+	bool unusedBit_251_12 : 1;
 	/**
 	offset 976 bit 13 */
-	bool unusedBit_249_13 : 1;
+	bool unusedBit_251_13 : 1;
 	/**
 	offset 976 bit 14 */
-	bool unusedBit_249_14 : 1;
+	bool unusedBit_251_14 : 1;
 	/**
 	offset 976 bit 15 */
-	bool unusedBit_249_15 : 1;
+	bool unusedBit_251_15 : 1;
 	/**
 	offset 976 bit 16 */
-	bool unusedBit_249_16 : 1;
+	bool unusedBit_251_16 : 1;
 	/**
 	offset 976 bit 17 */
-	bool unusedBit_249_17 : 1;
+	bool unusedBit_251_17 : 1;
 	/**
 	offset 976 bit 18 */
-	bool unusedBit_249_18 : 1;
+	bool unusedBit_251_18 : 1;
 	/**
 	offset 976 bit 19 */
-	bool unusedBit_249_19 : 1;
+	bool unusedBit_251_19 : 1;
 	/**
 	offset 976 bit 20 */
-	bool unusedBit_249_20 : 1;
+	bool unusedBit_251_20 : 1;
 	/**
 	offset 976 bit 21 */
-	bool unusedBit_249_21 : 1;
+	bool unusedBit_251_21 : 1;
 	/**
 	offset 976 bit 22 */
-	bool unusedBit_249_22 : 1;
+	bool unusedBit_251_22 : 1;
 	/**
 	offset 976 bit 23 */
-	bool unusedBit_249_23 : 1;
+	bool unusedBit_251_23 : 1;
 	/**
 	offset 976 bit 24 */
-	bool unusedBit_249_24 : 1;
+	bool unusedBit_251_24 : 1;
 	/**
 	offset 976 bit 25 */
-	bool unusedBit_249_25 : 1;
+	bool unusedBit_251_25 : 1;
 	/**
 	offset 976 bit 26 */
-	bool unusedBit_249_26 : 1;
+	bool unusedBit_251_26 : 1;
 	/**
 	offset 976 bit 27 */
-	bool unusedBit_249_27 : 1;
+	bool unusedBit_251_27 : 1;
 	/**
 	offset 976 bit 28 */
-	bool unusedBit_249_28 : 1;
+	bool unusedBit_251_28 : 1;
 	/**
 	offset 976 bit 29 */
-	bool unusedBit_249_29 : 1;
+	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_249_30 : 1;
+	bool unusedBit_278_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_249_31 : 1;
+	bool unusedBit_278_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -1676,7 +1681,73 @@ struct engine_configuration_s {
 	/**
 	 * offset 988
 	 */
-	int unusedAtOldBoardConfigurationEnd[119];
+	output_pin_e boostControlPin;
+	/**
+	 * offset 989
+	 */
+	pin_output_mode_e boostControlPinMode;
+	/**
+	 * offset 990
+	 */
+	switch_input_pin_e antiLagActivatePin;
+	/**
+	 * offset 991
+	 */
+	switch_input_pin_e launchActivatePin;
+	/**
+	 * offset 992
+	 */
+	pid_s boostPid;
+	/**
+	 * offset 1012
+	 */
+	boostType_e boostType;
+	/**
+	 * offset 1016
+	 */
+	int boostPwmFrequency;
+	/**
+	 * offset 1020
+	 */
+	launchActivationMode_e launchActivationMode;
+	/**
+	 * offset 1024
+	 */
+	antiLagActivationMode_e antiLagActivationMode;
+	/**
+	 * Disabled above this speed
+	 * offset 1028
+	 */
+	int launchSpeedTreshold;
+	/**
+	 * Disabled below this rpm
+	 * offset 1032
+	 */
+	int launchRpmTreshold;
+	/**
+	 * Range from Launch Rpm for Timing Retard to activate
+	 * offset 1036
+	 */
+	int launchTimingRpmRange;
+	/**
+	 * Extra Fuel Added
+	 * offset 1040
+	 */
+	int launchFuelAdded;
+	/**
+	 * Duty Cycle for the Boost Solenoid
+	 * offset 1044
+	 */
+	int launchBoostDuty;
+	/**
+	 * RPM Range for Hard Cut
+	 * offset 1048
+	 */
+	int hardCutRpmRange;
+	/**
+	 * offset 1052
+	 */
+	int unusedAtOldBoardConfigurationEnd[103];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -1743,10 +1814,11 @@ struct engine_configuration_s {
 	bool cutSparkOnHardLimit : 1;
 	/**
 	offset 1464 bit 18 */
-	bool step1fuelCutEnable : 1;
+	bool launchFuelCutEnable : 1;
 	/**
+	 * This is the Cut Mode normally used
 	offset 1464 bit 19 */
-	bool step1SparkCutEnable : 1;
+	bool launchSparkCutEnable : 1;
 	/**
 	offset 1464 bit 20 */
 	bool hasFrequencyReportingMapSensor : 1;
@@ -1895,10 +1967,11 @@ struct engine_configuration_s {
 	bool useIacPidMultTable : 1;
 	/**
 	offset 1476 bit 22 */
-	bool unused_1484_bit_22 : 1;
+	bool isBoostControlEnabled : 1;
 	/**
+	 * Interpolates the Ignition Retard from 0 to 100% within the RPM Range
 	offset 1476 bit 23 */
-	bool unused_1484_bit_23 : 1;
+	bool launchSmoothRetard : 1;
 	/**
 	offset 1476 bit 24 */
 	bool unused_1484_bit_24 : 1;
@@ -2081,10 +2154,9 @@ struct engine_configuration_s {
 	 */
 	float mapErrorDetectionTooHigh;
 	/**
-	 * RPMs prior to step1rpm point where ignition advance is retarded
 	 * offset 1784
 	 */
-	int step1RpmWindow;
+	uint8_t unusedSomething[4];
 	/**
 	 * See cltIdleRpmBins
 	 * offset 1788
@@ -2862,8 +2934,8 @@ struct engine_configuration_s {
 	/**
 	 * offset 4140
 	 */
-	int mainUnusedEnd[565];
-	/** total size 6400*/
+	int mainUnusedEnd[527];
+	/** total size 6248*/
 };
 
 typedef struct engine_configuration_s engine_configuration_s;
@@ -2874,6 +2946,26 @@ struct persistent_config_s {
 	 * offset 0
 	 */
 	engine_configuration_s engineConfiguration;
+	/**
+	 * offset 6248
+	 */
+	boost_table_t boostTableOpenLoop;
+	/**
+	 * offset 6312
+	 */
+	uint8_t boostMapBins[BOOST_LOAD_COUNT];
+	/**
+	 * offset 6320
+	 */
+	uint8_t boostRpmBins[BOOST_RPM_COUNT];
+	/**
+	 * offset 6328
+	 */
+	boost_table_t boostTableClosedLoop;
+	/**
+	 * offset 6392
+	 */
+	uint8_t boostTpsBins[BOOST_LOAD_COUNT];
 	/**
 	 * offset 6400
 	 */
@@ -3125,4 +3217,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jan 12 05:13:41 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 02 19:45:47 EST 2020

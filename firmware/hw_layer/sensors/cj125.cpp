@@ -29,8 +29,9 @@ EXTERN_ENGINE;
 #include "pin_repository.h"
 
 static Logging *logger;
-static unsigned char tx_buff[2];
-static unsigned char rx_buff[1];
+
+static uint8_t tx_buff[2] NO_CACHE;
+static uint8_t rx_buff[1] NO_CACHE;
 
 static CJ125 globalInstance;
 
@@ -79,15 +80,11 @@ static constexpr float lambdaLsu49[] = {
 };
 
 
-static int cjReadRegister(unsigned char regAddr) {
+static uint8_t cjReadRegister(uint8_t regAddr) {
 #if ! EFI_UNIT_TEST
 	spiSelect(driver);
 	tx_buff[0] = regAddr;
 	spiSend(driver, 1, tx_buff);
-	// safety?
-	chThdSleepMilliseconds(10);
-	
-	rx_buff[0] = 0;
 	spiReceive(driver, 1, rx_buff);
 	spiUnselect(driver);
 
@@ -100,7 +97,7 @@ static int cjReadRegister(unsigned char regAddr) {
 #endif /* EFI_UNIT_TEST */
 }
 
-static void cjWriteRegister(unsigned char regAddr, unsigned char regValue) {
+static void cjWriteRegister(uint8_t regAddr, uint8_t regValue) {
 	tx_buff[0] = regAddr;
 	tx_buff[1] = regValue;
 #ifdef CJ125_DEBUG_SPI

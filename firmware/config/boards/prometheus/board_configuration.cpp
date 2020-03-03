@@ -89,22 +89,22 @@ void setPinConfigurationOverrides(void) {
 	}
 #else
 	palSetPadMode(GPIOA, 10, PAL_MODE_OUTPUT_PUSHPULL);
-	palWritePad(GPIOA, 10, true);
+	palWritePad(GPIOA, 10, 1);
 	palSetPadMode(GPIOA, 9, PAL_MODE_OUTPUT_PUSHPULL);
-	palWritePad(GPIOA, 9, true);
+	palWritePad(GPIOA, 9, 1);
 	palSetPadMode(GPIOA, 8, PAL_MODE_OUTPUT_PUSHPULL);
-	palWritePad(GPIOA, 8, true);
+	palWritePad(GPIOA, 8, 1);
 	palSetPadMode(GPIOA, 11, PAL_MODE_OUTPUT_PUSHPULL);
-	palWritePad(GPIOA, 11, true);
+	palWritePad(GPIOA, 11, 1);
 
 	palSetPadMode(GPIOD, 9, PAL_MODE_OUTPUT_PUSHPULL);
-	palWritePad(GPIOD, 9, false);
+	palWritePad(GPIOD, 9, 0);
 	palSetPadMode(GPIOD, 15, PAL_MODE_OUTPUT_PUSHPULL);
-	palWritePad(GPIOD, 15, false);
+	palWritePad(GPIOD, 15, 0);
 	palSetPadMode(GPIOD, 10, PAL_MODE_OUTPUT_PUSHPULL);
-	palWritePad(GPIOD, 10, false);
+	palWritePad(GPIOD, 10, 0);
 	palSetPadMode(GPIOD, 14, PAL_MODE_OUTPUT_PUSHPULL);
-	palWritePad(GPIOD, 14, false);
+	palWritePad(GPIOD, 14, 0);
 #endif
 }
 
@@ -224,7 +224,7 @@ void setBoardConfigurationOverrides(void) {
 	
 	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->is_enabled_spi_2 = false;
-	engineConfiguration->is_enabled_spi_3 = true;
+	CONFIG(is_enabled_spi_3) = true;
 	
 	engineConfiguration->spi1mosiPin = GPIOB_5;
 	engineConfiguration->spi1MosiMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL

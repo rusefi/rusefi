@@ -13,6 +13,8 @@
 #include "event_queue.h"
 #include "perf_trace.h"
 
+#if EFI_ENGINE_CONTROL
+
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_configuration.h"
 #endif /* EFI_TUNER_STUDIO */
@@ -139,14 +141,19 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	float ratio = NT2US(actualDwellDurationNt) / 1000.0 / event->sparkDwell;
 
 	// todo: smarted solution for index to field mapping
-	if (event->cylinderIndex == 0) {
+	switch (event->cylinderIndex) {
+	case 0:
 		tsOutputChannels.debugFloatField1 = ratio;
-	} else if (event->cylinderIndex == 1) {
+		break;
+	case 1:
 		tsOutputChannels.debugFloatField2 = ratio;
-	} else if (event->cylinderIndex == 2) {
+		break;
+	case 2:
 		tsOutputChannels.debugFloatField3 = ratio;
-	} else if (event->cylinderIndex == 3) {
+		break;
+	case 3:
 		tsOutputChannels.debugFloatField4 = ratio;
+		break;
 	}
 #endif
 
@@ -271,10 +278,10 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 	}
 }
 
-static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,
+static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *event,
 		int rpm, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
-	angle_t sparkAngle = iEvent->sparkAngle;
+	angle_t sparkAngle = event->sparkAngle;
 	const floatms_t dwellMs = ENGINE(engineState.sparkDwell);
 	if (cisnan(dwellMs) || dwellMs <= 0) {
 		warning(CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
@@ -285,7 +292,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		return;
 	}
 
-	floatus_t chargeDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * iEvent->dwellPosition.angleOffsetFromTriggerEvent;
+	floatus_t chargeDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->dwellPosition.angleOffsetFromTriggerEvent;
 	int isIgnitionError = chargeDelayUs < 0;
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
@@ -296,22 +303,15 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		return;
 	}
 
-	iEvent->sparkId = engine->globalSparkIdCounter++;
-
-	/**
-	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
-	 * when an event is scheduled within the next revolution.
-	 */
-	scheduling_s * sUp = &iEvent->dwellStartTimer;
-
+	event->sparkId = engine->globalSparkIdCounter++;
 
 	/**
 	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
 	 */
 	if (!limitedSpark) {
 #if SPARK_EXTREME_LOGGING
-		scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)chargeDelayUs,
-				iEvent->sparkId);
+		scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)chargeDelayUs,
+				event->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 
@@ -320,7 +320,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		engine->executor.scheduleByTimestampNt(sUp, edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, iEvent });
+		engine->executor.scheduleByTimestampNt(&event->dwellStartTimer, edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, event });
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
@@ -330,15 +330,15 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	assertAngleRange(sparkAngle, "findAngle#a5", CUSTOM_ERR_6549);
 
 
-	bool scheduled = scheduleOrQueue(&iEvent->sparkEvent, trgEventIndex, edgeTimestamp, sparkAngle, { fireSparkAndPrepareNextSchedule, iEvent } PASS_ENGINE_PARAMETER_SUFFIX);
+	bool scheduled = scheduleOrQueue(&event->sparkEvent, trgEventIndex, edgeTimestamp, sparkAngle, { fireSparkAndPrepareNextSchedule, event } PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (scheduled) {
 #if SPARK_EXTREME_LOGGING
-		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkId);
+		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d later id=%d", trgEventIndex, getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), event->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
 #if SPARK_EXTREME_LOGGING
-		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s now=%d for id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkEvent.position.triggerEventIndex);
+		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s now=%d for id=%d", trgEventIndex, getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), event->sparkEvent.position.triggerEventIndex);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	}
 
@@ -346,9 +346,9 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {
-		printf("spark dwell@ %d/%d spark@ %d/%d id=%d\r\n", iEvent->dwellPosition.triggerEventIndex, (int)iEvent->dwellPosition.angleOffsetFromTriggerEvent,
-			iEvent->sparkEvent.position.triggerEventIndex, (int)iEvent->sparkEvent.position.angleOffsetFromTriggerEvent,
-			iEvent->sparkId);
+		printf("spark dwell@ %d/%d spark@ %d/%d id=%d\r\n", event->dwellPosition.triggerEventIndex, (int)event->dwellPosition.angleOffsetFromTriggerEvent,
+			event->sparkEvent.position.triggerEventIndex, (int)event->sparkEvent.position.angleOffsetFromTriggerEvent,
+			event->sparkId);
 	}
 #endif
 }
@@ -497,3 +497,5 @@ percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE) == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }
+
+#endif // EFI_ENGINE_CONTROL

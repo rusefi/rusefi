@@ -153,8 +153,9 @@ int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, v
 	}
 
 	/* no free chips left */
-	if (chip == NULL)
+	if (!chip) {
 		return -1;
+	}
 
 	/* register chip */
 	chip->name = name;

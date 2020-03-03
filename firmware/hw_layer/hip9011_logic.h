@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HW_LAYER_HIP9011_LOGIC_H_
-#define HW_LAYER_HIP9011_LOGIC_H_
+#pragma once
 
 #include "efifeatures.h"
 #include "rusefi_enums.h"
@@ -115,4 +114,3 @@ int getHip9011GainIndex(DEFINE_HIP_PARAMS);
 
 #define _8MHZ_PRESCALER 6
 
-#endif /* HW_LAYER_HIP9011_LOGIC_H_ */

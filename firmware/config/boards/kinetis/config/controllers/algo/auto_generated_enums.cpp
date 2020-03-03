@@ -397,8 +397,8 @@ const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
 case DBG_2:
   return "DBG_2";
-case DBG_36:
-  return "DBG_36";
+case DBG_BOOST:
+  return "DBG_BOOST";
 case DBG_37:
   return "DBG_37";
 case DBG_ALTERNATOR_PID:
@@ -607,6 +607,8 @@ case MIATA_1994_DEVIATOR:
   return "MIATA_1994_DEVIATOR";
 case BMW_M73_M:
   return "BMW_M73_M";
+case BMW_M73_PROTEUS:
+  return "BMW_M73_P";
 case MIATA_1996:
   return "MIATA_1996";
 case MIATA_NA6_MAP:
@@ -659,6 +661,8 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case VAG_18_TURBO:
   return "VAG_18_TURBO";
+case TEST_33816:
+  return "TEST_33816";
 case VW_B6:
   return "VW_B6";
 case VW_ABA:
@@ -1005,6 +1009,8 @@ case TT_MAZDA_MIATA_VVT_TEST:
   return "TT_MAZDA_MIATA_VVT_TEST";
 case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
+case TT_MIATA_NB2_VVT_CAM:
+  return "TT_MIATA_NB2_VVT_CAM";
 case TT_MAZDA_Z5:
   return "TT_MAZDA_Z5";
 case TT_MIATA_VVT:

@@ -14,10 +14,13 @@
 
 class TriggerState;
 
-class TriggerStateListener {
-	public:
-		virtual void OnTriggerStateDecodingError() = 0;
-		virtual void OnTriggerStateProperState(efitick_t nowNt) = 0;
+struct TriggerStateListener {
+#if EFI_SHAFT_POSITION_INPUT
+	virtual void OnTriggerStateProperState(efitick_t nowNt) = 0;
+	virtual void OnTriggerSyncronization(bool wasSynchronized) = 0;
+	virtual void OnTriggerInvalidIndex(int currentIndex) = 0;
+	virtual void OnTriggerSynchronizationLost() = 0;
+#endif
 };
 
 typedef void (*TriggerStateCallback)(TriggerState *);
@@ -65,20 +68,16 @@ public:
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter() const;
 
-	void decodeTriggerEvent(const TriggerStateCallback triggerCycleCallback,
+	void decodeTriggerEvent(TriggerWaveform *triggerShape, const TriggerStateCallback triggerCycleCallback,
 			TriggerStateListener * triggerStateListener,
-			trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
+			trigger_event_e const signal, efitime_t nowUs DECLARE_CONFIG_PARAMETER_SUFFIX);
 
-	bool validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
-	void handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool validateEventCounters(TriggerWaveform *triggerShape) const;
 	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-			efitick_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX);
-	/**
-	 * Resets synchronization flag and alerts rpm_calculator to reset engine spinning flag.
-	 */
-	void onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+			efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape);
 
-	bool isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+
+	bool isValidIndex(TriggerWaveform *triggerShape) const;
 	float getTriggerDutyCycle(int index);
 
 	/**
@@ -86,6 +85,9 @@ public:
 	 */
 	bool shaft_is_synchronized;
 	efitick_t mostRecentSyncTime;
+	volatile efitick_t previousShaftEventTimeNt;
+
+	void setTriggerErrorState();
 
 	efitick_t lastDecodingErrorTime;
 	// the boolean flag is a performance optimization so that complex comparison is avoided if no error
@@ -111,15 +113,15 @@ public:
 	void resetTriggerState();
 	void setShaftSynchronized(bool value);
 
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	virtual void runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
-#endif
-
 	/**
 	 * this is start of real trigger cycle
 	 * for virtual double trigger see timeAtVirtualZeroNt
 	 */
 	efitick_t startOfCycleNt;
+
+	uint32_t findTriggerZeroEventIndex(TriggerWaveform * shape, trigger_config_s const*triggerConfig
+			DECLARE_CONFIG_PARAMETER_SUFFIX);
+
 private:
 	void resetCurrentCycleState();
 
@@ -160,7 +162,7 @@ public:
 	void movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	float calculateInstantRpm(int *prevIndex, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	void runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) override;
+	void runtimeStatistics(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 	/**
 	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
@@ -170,14 +172,13 @@ public:
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
-uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerWaveform * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 class Engine;
 
 void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initTriggerDecoderLogger(Logging *sharedLogger);
 
-bool isTriggerDecoderError(void);
+bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 

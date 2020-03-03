@@ -65,8 +65,8 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 		return getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_SPEED_DENSITY:
-		// SD engine load is used for timing lookup but not for fuel calculation
-		[[fallthrough]]
+		// SD engine load is used for timing lookup but not for fuel calculation,
+		// so fall thru to the MAP case.
 	case LM_MAP:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_ALPHA_N:
@@ -520,8 +520,6 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	TRIGGER_WAVEFORM(prepareShape());
 }
 
-#endif /* EFI_ENGINE_CONTROL */
-
 void setFuelRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(config->fuelRpmBins, from, to);
 }
@@ -554,3 +552,5 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_CONFIG_PARAMETER_SUFFIX) {
 void setFlatInjectorLag(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setArrayValues(engineConfiguration->injector.battLagCorr, value);
 }
+
+#endif /* EFI_ENGINE_CONTROL */

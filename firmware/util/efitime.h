@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef EFITIME_H_
-#define EFITIME_H_
+#pragma once
 
 #include "efifeatures.h"
 #include "rusefi_types.h"
@@ -22,6 +21,12 @@
 
 // milliseconds to ticks
 #define MS2NT(msTime) US2NT(MS2US(msTime))
+
+/**
+ * We use this 'deep in past, before ECU has ever started' value as a way to unify
+ * handling of first ever event and an event which has happened after a large pause in engine activity
+ */
+#define DEEP_IN_THE_PAST_SECONDS -10
 
 // todo: implement a function to work with times considering counter overflow
 #define overflowDiff(now, time) ((now) - (time))
@@ -72,5 +77,3 @@ efitimesec_t getTimeNowSeconds(void);
 #else
  #define getTimeNowLowerNt() 0
 #endif
-
-#endif /* EFITIME_H_ */

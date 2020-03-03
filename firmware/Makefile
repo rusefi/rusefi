@@ -22,8 +22,11 @@ include rusefi.mk
 # for 'release' options see 'clean_compile_two_versions.bat' file
 
 ifeq ($(DEBUG_LEVEL_OPT),)
-  # this value would be used by default. For 'release' configuration override with '-O2' or something along these lines
-  DEBUG_LEVEL_OPT = -O0 -ggdb -g3 
+  # Default to a release build - but leave in debug info.  It doesn't change the hex/bin output.
+  DEBUG_LEVEL_OPT = -O2 -ggdb -g3
+  # Comment the above and uncomment the line below if you want to debug the firmware (it's difficult-to-impossible
+  # to debug firmware with optimization enabled).
+  # DEBUG_LEVEL_OPT = -O0 -ggdb -g3
 endif
 
 
@@ -37,21 +40,19 @@ endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -Wno-error=implicit-fallthrough -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
+  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16
 endif
-
 
 USE_OPT += $(RUSEFI_OPT)
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
-  USE_COPT = -fgnu89-inline -std=gnu99 -Werror-implicit-function-declaration
+  USE_COPT = -fgnu89-inline -std=gnu99 -Wno-error=implicit-fallthrough
 endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  # constexpr float expf_taylor_impl probably needs just c++14 but why not go with 17?
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits
+  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
 endif
 
 # Enable this if you want the linker to remove unused code and data

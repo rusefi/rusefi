@@ -16,7 +16,6 @@
 #include "thermistors.h"
 #include "adc_inputs.h"
 #include "interpolation.h"
-#include "tps.h"
 #include "map.h"
 #include "trigger_decoder.h"
 #include "console_io.h"
@@ -27,6 +26,7 @@
 #include "allsensors.h"
 #include "alternator_controller.h"
 #include "trigger_emulator.h"
+#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "vehicle_speed.h"
@@ -134,22 +134,14 @@ const char* getConfigurationName(engine_type_e engineType) {
 	switch (engineType) {
 	case DEFAULT_FRANKENSO:
 		return "DEFAULT_FRANKENSO";
-#if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
 		return "Neon95";
-#endif /* EFI_SUPPORT_DODGE_NEON */
-#if EFI_SUPPORT_FORD_ASPIRE
 	case FORD_ASPIRE_1996:
 		return "Aspire";
-#endif /* EFI_SUPPORT_FORD_ASPIRE */
-#if EFI_SUPPORT_FORD_FIESTA
 	case FORD_FIESTA:
 		return "Fiesta";
-#endif /* EFI_SUPPORT_FORD_FIESTA */
-#if EFI_SUPPORT_NISSAN_PRIMERA
 	case NISSAN_PRIMERA:
 		return "Primera";
-#endif /* EFI_SUPPORT_NISSAN_PRIMERA */
 	case HONDA_ACCORD_CD:
 		return "Accord3";
 	case HONDA_ACCORD_CD_TWO_WIRES:
@@ -408,15 +400,16 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 }
 
 void printTPSInfo(void) {
-#if EFI_PROD_CODE && HAL_USE_ADC
-	if (!hasTpsSensor()) {
-		scheduleMsg(&logger, "NO TPS SENSOR");
-		return;
+	auto tps = Sensor::get(SensorType::Tps1);
+	auto raw = Sensor::getRaw(SensorType::Tps1);
+
+	if (!tps.Valid) {
+		scheduleMsg(&logger, "TPS not valid");
 	}
 	static char pinNameBuffer[16];
 
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
-			getTPSVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
+			raw, getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
 
 	if (hasPedalPositionSensor()) {
 		scheduleMsg(&logger, "pedal up %f / down %f",
@@ -424,10 +417,7 @@ void printTPSInfo(void) {
 				engineConfiguration->throttlePedalWOTVoltage);
 	}
 
-
-#endif /* EFI_PROD_CODE */
-	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", getTPS10bitAdc(), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
-			getTpsRateOfChange());
+	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", convertVoltageTo10bitADC(raw), tps.Value, getTpsRateOfChange());
 }
 
 static void printTemperatureInfo(void) {
@@ -588,10 +578,6 @@ static void setGlobalFuelCorrection(float value) {
 	engineConfiguration->globalFuelCorrection = value;
 }
 
-static void setCltBias(float value) {
-	engineConfiguration->clt.config.bias_resistor = value;
-}
-
 static void setFanSetting(float onTempC, float offTempC) {
 	if (onTempC <= offTempC) {
 		scheduleMsg(&logger, "ON temp [%.2f] should be above OFF temp [%.2f]", onTempC, offTempC);
@@ -599,14 +585,6 @@ static void setFanSetting(float onTempC, float offTempC) {
 	}
 	engineConfiguration->fanOnTemperature = onTempC;
 	engineConfiguration->fanOffTemperature = offTempC;
-}
-
-static void setIatBias(float value) {
-	engineConfiguration->iat.config.bias_resistor = value;
-}
-
-static void setVBattDivider(float value) {
-	engineConfiguration->vbattDividerCoeff = value;
 }
 
 static void setWholeTimingMap(float value) {
@@ -906,6 +884,10 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isFastAdcEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
 		engine->hwTriggerInputEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "useTLE8888_cranking_hack")) {
+		CONFIG(useTLE8888_cranking_hack) = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
+		CONFIG(verboseTLE8888) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {
@@ -1062,7 +1044,6 @@ const plain_get_integer_s getI_plain[] = {
 		{"warning_period", (int*)&engineConfiguration->warningPeriod},
 		{"hard_limit", &engineConfiguration->rpmHardLimit},
 //		{"firing_order", setFiringOrder},
-//		{"algorithm", setAlgorithmInt},
 //		{"injection_pin_mode", setInjectionPinMode},
 //		{"ignition_pin_mode", setIgnitionPinMode},
 //		{"idle_pin_mode", setIdlePinMode},
@@ -1094,6 +1075,9 @@ const plain_get_float_s getF_plain[] = {
 		{"injection_offset", &engineConfiguration->extraInjectionOffset},
 		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
 		{"global_fuel_correction", &engineConfiguration->globalFuelCorrection},
+		{"vbatt_divider", &engineConfiguration->vbattDividerCoeff},
+		{"clt_bias", &engineConfiguration->clt.config.bias_resistor},
+		{"iat_bias", &engineConfiguration->iat.config.bias_resistor},
 		{"cranking_fuel", &engineConfiguration->cranking.baseFuel},
 		{"cranking_timing_angle", &engineConfiguration->crankingTimingAngle},
 		{"cranking_charge_angle", &engineConfiguration->crankingChargeAngle},
@@ -1177,7 +1161,8 @@ typedef struct {
 } command_f_s;
 
 const command_f_s commandsF[] = {
-#if EFI_ENGINE_CONTROL && EFI_ENABLE_MOCK_ADC
+#if EFI_ENGINE_CONTROL
+#if EFI_ENABLE_MOCK_ADC
 		{MOCK_IAT_COMMAND, setMockIatVoltage},
 		{MOCK_PPS_POSITION_COMMAND, setMockThrottlePedalPosition},
 		{MOCK_PPS_VOLTAGE_COMMAND, setMockThrottlePedalSensorVoltage},
@@ -1187,9 +1172,7 @@ const command_f_s commandsF[] = {
 		{MOCK_MAP_COMMAND, setMockMapVoltage},
 		{"mock_vbatt_voltage", setMockVBattVoltage},
 		{MOCK_CLT_COMMAND, setMockCltVoltage},
-#endif /* EFI_ENGINE_CONTROL && EFI_ENABLE_MOCK_ADC */
-		{"fsio_curve_1_value", setFsioCurve1Value},
-		{"fsio_curve_2_value", setFsioCurve2Value},
+#endif // EFI_ENABLE_MOCK_ADC
 		{"ignition_offset", setIgnitionOffset},
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
@@ -1198,9 +1181,6 @@ const command_f_s commandsF[] = {
 		{"cranking_iac", setCrankingIACExtra},
 		{"cranking_timing_angle", setCrankingTimingAngle},
 		{"cranking_charge_angle", setCrankingChargeAngle},
-		{"vbatt_divider", setVBattDivider},
-		{"clt_bias", setCltBias},
-		{"iat_bias", setIatBias},
 		{"tps_accel_threshold", setTpsAccelThr},
 		{"tps_decel_threshold", setTpsDecelThr},
 		{"tps_decel_multiplier", setTpsDecelMult},
@@ -1210,6 +1190,9 @@ const command_f_s commandsF[] = {
 		{"engine_decel_threshold", setDecelThr},
 		{"engine_decel_multiplier", setDecelMult},
 		{"flat_injector_lag", setFlatInjectorLag},
+#endif // EFI_ENGINE_CONTROL
+		{"fsio_curve_1_value", setFsioCurve1Value},
+		{"fsio_curve_2_value", setFsioCurve2Value},
 #if EFI_PROD_CODE
 #if EFI_VEHICLE_SPEED
 		{"mock_vehicle_speed", setMockVehicleSpeed},
@@ -1247,6 +1230,7 @@ static void setTpsErrorDetectionTooHigh(int v) {
 
 const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"call_from_pitstop", setCallFromPitStop},
+#if EFI_ENGINE_CONTROL
 		{"cranking_rpm", setCrankingRpm},
 		{"cranking_injection_mode", setCrankingInjectionMode},
 		{"injection_mode", setInjectionMode},
@@ -1270,6 +1254,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 		{"tps_accel_len", setTpsAccelLen},
 		{"engine_load_accel_len", setEngineLoadAccelLen},
+#endif // EFI_ENGINE_CONTROL
 #if EFI_PROD_CODE
 		{"bor", setBor},
 #if EFI_CAN_SUPPORT
@@ -1341,8 +1326,11 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		setConstantDwell(valueF PASS_CONFIG_PARAMETER_SUFFIX);
 	} else if (strEqualCaseInsensitive(paramStr, "engineSnifferRpmThreshold")) {
 		engineConfiguration->engineSnifferRpmThreshold = valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {
-		engineConfiguration->step1rpm = valueI;
+// migrate to new laucnh fields?
+		//	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {
+//		engineConfiguration->step1rpm = valueI;
+		//	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {
+		//		engineConfiguration->step1timing = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
 		engineConfiguration->tpsMax = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
@@ -1357,8 +1345,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtMode = (vvt_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
 		engineConfiguration->nbVvtIndex = valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {
-		engineConfiguration->step1timing = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
 		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
@@ -1417,10 +1403,6 @@ void initSettings(void) {
 	addConsoleActionS(CMD_DISABLE, disable);
 
 	addConsoleActionII("set_toothed_wheel", setToothedWheel);
-
-
-	// flat curve - constant injector lag regardless of voltage
-	addConsoleActionF("set_flat_injector_lag", setFlatInjectorLag);
 
 	addConsoleActionFF("set_injector_lag", setInjectorLag);
 

@@ -12,10 +12,24 @@
 #include "trigger_decoder.h"
 #include "trigger_central_generated.h"
 
+
+
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #define HAVE_CAM_INPUT() engineConfiguration->camInputs[0] != GPIO_UNASSIGNED
+
+class TriggerNoiseFilter {
+public:
+	void resetAccumSignalData();
+	bool noiseFilter(efitick_t nowNt,
+			TriggerState * triggerState,
+			trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	efitick_t lastSignalTimes[HW_EVENT_TYPES];
+	efitick_t accumSignalPeriods[HW_EVENT_TYPES];
+	efitick_t accumSignalPrevPeriods[HW_EVENT_TYPES];
+};
 
 /**
  * Maybe merge TriggerCentral and TriggerState classes into one class?
@@ -29,10 +43,12 @@ public:
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 	int getHwEventCounter(int index) const;
 	void resetCounters();
-	void resetAccumSignalData();
-	bool noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void validateCamVvtCounters();
 	TriggerStateWithRunningStatistics triggerState;
+
+	TriggerNoiseFilter noiseFilter;
+
+	angle_t getVVTPosition();
 
 	angle_t vvtPosition = 0;
 	/**
@@ -42,17 +58,12 @@ public:
 
 	TriggerWaveform triggerShape;
 
-	efitick_t previousVvtCamTime = 0;
+	efitick_t previousVvtCamTime = DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
 	efitick_t previousVvtCamDuration = 0;
 
-	volatile efitick_t previousShaftEventTimeNt;
 private:
 	IntListenerArray<15> triggerListeneres;
-	
-	// Used by 'useNoiselessTriggerDecoder', see handleShaftSignal()
-	efitick_t lastSignalTimes[HW_EVENT_TYPES];
-	efitick_t accumSignalPeriods[HW_EVENT_TYPES];
-	efitick_t accumSignalPrevPeriods[HW_EVENT_TYPES];
+
 };
 
 void triggerInfo(void);
@@ -70,3 +81,4 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+#define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4

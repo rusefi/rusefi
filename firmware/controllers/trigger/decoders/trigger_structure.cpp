@@ -241,7 +241,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 			SingleChannelStateSequence *wave = &this->wave.channels[i];
 
-			if (wave->pinStates == NULL) {
+			if (wave->pinStates == nullptr) {
 				warning(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");
 				setShapeDefinitionError(true);
 				return;
@@ -457,6 +457,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_MAZDA_Z5:
 		initialize_Mazda_Engine_z5_Shape(this);
+		break;
+
+	case TT_MIATA_NB2_VVT_CAM:
+		initializeMazdaMiataVVtCamShape(this);
 		break;
 
 	case TT_MIATA_VVT:

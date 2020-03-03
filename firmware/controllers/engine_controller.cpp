@@ -53,6 +53,7 @@
 #include "accelerometer.h"
 #include "counter64.h"
 #include "perf_trace.h"
+#include "boost_control.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -100,9 +101,11 @@
 EXTERN_ENGINE;
 
 void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_ENGINE_CONTROL
 	initFuelMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif // EFI_ENGINE_CONTROL
 }
 
 static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -193,7 +196,11 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 
 	void PeriodicTask() override {
 		counter++;
+#if EFI_SHAFT_POSITION_INPUT
 		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+#else
+		bool is_running = false;
+#endif
 
 		if (is_running) {
 			// blink in running mode
@@ -787,6 +794,9 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
+#if EFI_BOOST_CONTROL
+	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 #if EFI_AUX_PID
 	initAuxPid(sharedLogger);
 #endif
@@ -818,10 +828,10 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 14000
+#define RAM_UNUSED_SIZE 14500
 #endif
 #ifndef CCM_UNUSED_SIZE
-#define CCM_UNUSED_SIZE 4600
+#define CCM_UNUSED_SIZE 4100
 #endif
 static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
@@ -839,6 +849,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 201200119;
+	return 201200225;
 }
 #endif /* EFI_UNIT_TEST */

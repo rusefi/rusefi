@@ -95,7 +95,9 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	s->tdcPosition = 60 + 655;
 
 	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
+	// 384
 	s->addEvent720(o + 4 * 56.0f, T_PRIMARY, TV_FALL);
+	// 400
 	s->addEvent720(o + 4 * 60.0f, T_PRIMARY, TV_RISE);
 	s->addEvent720(o + 4 * 136.0f, T_PRIMARY, TV_FALL);
 	s->addEvent720(o + 4 * 140.0f, T_PRIMARY, TV_RISE);
@@ -204,4 +206,20 @@ void configureMazdaProtegeLx(TriggerWaveform *s) {
 
 	s->tdcPosition = 137.119154;
 	s->isSynchronizationNeeded = false;
+}
+
+void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	s->setTriggerSynchronizationGap2(8.50 * 0.75, 14.0);
+
+
+	s->addEvent720(325, T_PRIMARY, TV_FALL);
+	s->addEvent720(360, T_PRIMARY, TV_RISE);
+
+	s->addEvent720(641, T_PRIMARY, TV_FALL);
+	s->addEvent720(677, T_PRIMARY, TV_RISE);
+
+	s->addEvent720(700, T_PRIMARY, TV_FALL);
+	s->addEvent720(720, T_PRIMARY, TV_RISE);
 }

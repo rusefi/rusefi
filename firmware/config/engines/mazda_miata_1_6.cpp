@@ -203,7 +203,7 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->isHip9011Enabled = false;
-	engineConfiguration->isSdCardEnabled = false;
+	CONFIG(isSdCardEnabled) = false;
 
 	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
 
