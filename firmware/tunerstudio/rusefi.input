@@ -1998,6 +1998,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 	
 	dialog = idleStepper, "Stepper"
+		field = "useHbridges",							useHbridges
 		field = "Idle Stepper Step Pin",				idle_stepperStepPin, useStepperIdle
 		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin, useStepperIdle
 		field = "Idle Stepper Enable Pin",				stepperEnablePin, useStepperIdle
