@@ -128,7 +128,7 @@ void EtbController::reset() {
 }
 
 void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
-	if (m_pid.isSame(previousConfiguration)) {
+	if (m_motor && m_pid.isSame(previousConfiguration)) {
 		m_shouldResetPid = true;
 	}
 }
@@ -555,7 +555,10 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engine->engineState.hasEtbPedalPositionSensor = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (!engine->engineState.hasEtbPedalPositionSensor) {
+#if EFI_PROD_CODE
+		// TODO: Once switched to new sensor model for pedal, we don't need this to be test-guarded.
 		return;
+#endif
 	}
 	engine->etbActualCount = hasSecondThrottleBody(PASS_ENGINE_PARAMETER_SIGNATURE) ? 2 : 1;
 
