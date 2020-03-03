@@ -1,15 +1,15 @@
+/**
+ * @file dc_motors.cpp
+ *
+ * @date March 3, 2020
+ * @author Matthew Kennedy (c) 2020
+ */
 
-#include "global.h"
-
-#include "electronic_throttle.h"
-#include "tps.h"
+#include "engine.h"
 #include "io_pins.h"
 #include "engine_configuration.h"
-#include "pwm_generator_logic.h"
-#include "pid.h"
 #include "engine_controller.h"
 #include "periodic_task.h"
-#include "pin_repository.h"
 
 #include "dc_motors.h"
 #include "dc_motor.h"
@@ -62,25 +62,28 @@ public:
 // no need to complicate event queue with ETB PWM in unit tests
 #if ! EFI_UNIT_TEST
 		startSimplePwm(&m_pwmEnable, "ETB Enable",
-				executor,
-				&m_pinEnable,
-				clampedFrequency,
-				0,
-				(pwm_gen_callback*)applyPinState);
+			executor,
+			&m_pinEnable,
+			clampedFrequency,
+			0,
+			(pwm_gen_callback*)applyPinState
+		);
 
 		startSimplePwm(&m_pwmDir1, "ETB Dir 1",
-				executor,
-				&m_pinDir1,
-				clampedFrequency,
-				0,
-				(pwm_gen_callback*)applyPinState);
+			executor,
+			&m_pinDir1,
+			clampedFrequency,
+			0,
+			(pwm_gen_callback*)applyPinState
+		);
 
 		startSimplePwm(&m_pwmDir2, "ETB Dir 2",
-				executor,
-				&m_pinDir2,
-				clampedFrequency,
-				0,
-				(pwm_gen_callback*)applyPinState);
+			executor,
+			&m_pinDir2,
+			clampedFrequency,
+			0,
+			(pwm_gen_callback*)applyPinState
+		);
 #endif /* EFI_UNIT_TEST */
 	}
 };
@@ -94,14 +97,14 @@ DcMotor* initDcMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX)
 
 	// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
 	hw.start(
-			CONFIG(etb_use_two_wires),
-			io.controlPin1,
-			&io.controlPinMode,
-			io.directionPin1,
-			io.directionPin2,
-			&ENGINE(executor),
-			CONFIG(etbFreq)
-			);
+		CONFIG(etb_use_two_wires),
+		io.controlPin1,
+		&io.controlPinMode,
+		io.directionPin1,
+		io.directionPin2,
+		&ENGINE(executor),
+		CONFIG(etbFreq)
+	);
 
 	return &hw.dcMotor;
 }
