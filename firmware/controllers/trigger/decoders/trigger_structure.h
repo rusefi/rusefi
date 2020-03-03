@@ -45,7 +45,7 @@
  */
 class event_trigger_position_s {
 public:
-	uint32_t triggerEventIndex = 0;
+	size_t triggerEventIndex = 0;
 
 	angle_t angleOffsetFromTriggerEvent = 0;
 
@@ -242,8 +242,8 @@ public:
 	/**
 	 * this one is per CRANKshaft revolution
 	 */
-	uint32_t getLength() const;
-	int getSize() const;
+	size_t getLength() const;
+	size_t getSize() const;
 
 	int getTriggerWaveformSynchPointIndex() const;
 	void prepareShape();
