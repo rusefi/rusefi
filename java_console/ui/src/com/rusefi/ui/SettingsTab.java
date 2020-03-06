@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.rusefi.ui.config.IniFileModel.RUSEFI_INI_PREFIX;
+import static com.rusefi.ui.config.IniFileModel.RUSEFI_INI_SUFFIX;
+
 /**
  * @see EnumConfigField
  */
@@ -36,7 +39,7 @@ public class SettingsTab {
         final Map<String, DialogModel> dialogs = IniFileModel.getInstance().getDialogs();
         if (dialogs.isEmpty()) {
             content.removeAll();
-            content.add(new JLabel("Meta data not found: " + IniFileModel.RUSEFI_INI));
+            content.add(new JLabel("Meta data not found: " + RUSEFI_INI_PREFIX + "*" + RUSEFI_INI_SUFFIX));
             UiUtils.trueLayout(content);
             return;
         }
