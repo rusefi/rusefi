@@ -5,11 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CITROENBERLINGOTU3JP_H_
-#define CITROENBERLINGOTU3JP_H_
-
+#pragma once
 #include "engine_configuration.h"
 
 void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-#endif /* CITROENBERLINGOTU3JP_H_ */

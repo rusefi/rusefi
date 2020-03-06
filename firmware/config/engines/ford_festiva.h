@@ -5,11 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CONFIG_ENGINES_FORD_FESTIVA_H_
-#define CONFIG_ENGINES_FORD_FESTIVA_H_
-
+#pragma once
 #include "engine_configuration.h"
 
 void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-
-#endif /* CONFIG_ENGINES_FORD_FESTIVA_H_ */

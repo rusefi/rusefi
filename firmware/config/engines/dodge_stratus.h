@@ -5,11 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CONFIG_ENGINES_DODGE_STRATUS_H_
-#define CONFIG_ENGINES_DODGE_STRATUS_H_
-
+#pragma once
 #include "engine_configuration.h"
 
 void setDodgeStratus(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-
-#endif /* CONFIG_ENGINES_DODGE_STRATUS_H_ */

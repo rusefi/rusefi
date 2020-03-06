@@ -6,11 +6,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef GY6_139QMB_H_
-#define GY6_139QMB_H_
-
+#pragma once
 #include "engine_configuration.h"
 
 void setGy6139qmbDefaultEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-#endif /* GY6_139QMB_H_ */
