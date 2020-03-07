@@ -101,16 +101,16 @@ static void reportPins(void) {
 
 			/* use autogeneraged helpers here? */
 			if (pin_diag == PIN_OK) {
-				snprintf(pin_error, sizeof(pin_error), "Ok");
+				chsnprintf(pin_error, sizeof(pin_error), "Ok");
 			} else if (pin_diag != PIN_INVALID) {
-				snprintf(pin_error, sizeof(pin_error), "%s%s%s%s%s",
+				chsnprintf(pin_error, sizeof(pin_error), "%s%s%s%s%s",
 					pin_diag & PIN_OPEN ? "open_load " : "",
 					pin_diag & PIN_SHORT_TO_GND ? "short_to_gnd " : "",
 					pin_diag & PIN_SHORT_TO_BAT ? "short_to_bat " : "",
 					pin_diag & PIN_OVERLOAD ? "overload " : "",
 					pin_diag & PIN_DRIVER_OVERTEMP ? "overtemp": "");
 			} else {
-				snprintf(pin_error, sizeof(pin_error), "INVALID");
+				chsnprintf(pin_error, sizeof(pin_error), "INVALID");
 			}
 
 			/* here show all pins, unused too */
