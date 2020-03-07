@@ -54,7 +54,8 @@ static void setIgnitionPins() {
 }
 
 static void setLedPins() {
-	engineConfiguration->communicationLedPin = GPIOE_4;
+	CONFIG(warningLedPin) = GPIOE_3;
+	CONFIG(communicationLedPin) = GPIOE_4;
 	engineConfiguration->runningLedPin = GPIOE_5;
 	engineConfiguration->triggerErrorPin = GPIOE_6;
 }
