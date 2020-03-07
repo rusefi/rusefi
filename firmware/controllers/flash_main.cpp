@@ -94,7 +94,10 @@ void writeToFlashNow(void) {
 		scheduleMsg(logger, "Flashing failed");
 	}
 	assertEngineReference();
+
+#if EFI_SHAFT_POSITION_INPUT
 	resetMaxValues();
+#endif
 }
 
 static bool isValidCrc(persistent_config_container_s *state) {

@@ -101,9 +101,11 @@
 EXTERN_ENGINE;
 
 void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_ENGINE_CONTROL
 	initFuelMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif // EFI_ENGINE_CONTROL
 }
 
 static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -194,7 +196,11 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 
 	void PeriodicTask() override {
 		counter++;
+#if EFI_SHAFT_POSITION_INPUT
 		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+#else
+		bool is_running = false;
+#endif
 
 		if (is_running) {
 			// blink in running mode
@@ -843,6 +849,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 201200216;
+	return 201200305;
 }
 #endif /* EFI_UNIT_TEST */

@@ -68,7 +68,7 @@ struct_no_prefix engine_configuration_s
 #define ETB_BIAS_CURVE_LENGTH 8
 
 ! this is here so that rusEfi console can access it, too
-#define TS_OUTPUT_SIZE 220
+#define TS_OUTPUT_SIZE 240
 
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
@@ -419,7 +419,7 @@ angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the fi
 
 
 
-float analogInputDividerCoefficient;+Coefficient of input voltage dividers on your PCB;"coef",    1,      0,    0.01,  10.0,   2
+float analogInputDividerCoefficient;+Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.;"coef",    1,      0,    0.01,  10.0,   2
 float vbattDividerCoeff;+This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.;"coef",    1,      0,    0.01,  99.0,        2
 
 float fsio_visible fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"*C",    1,      0,       0,  1000.0,        0
@@ -631,7 +631,7 @@ bit is_enabled_spi_2
 	bit enabledStep1Limiter;
 	bit useTpicAdvancedMode;
 	bit useLcdScreen;
-	bit unusedAnotherOne;
+	bit verboseTLE8888;
 	bit unusedOldWarmupAfr;
 	bit onOffAlternatorLogic; +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	bit isCJ125Enabled
@@ -650,6 +650,7 @@ bit is_enabled_spi_2
 	bit useETBforIdleControl;+This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
 	bit idleIncrementalPidCic
 	bit enableAemXSeries
+! 'enableAemXSeries' is the 32nd bit here, you would need another bit region if more bits are desired
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;
@@ -741,6 +742,35 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	float unused
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
+	bit useHbridges
+	bit unusedBit_251_3
+	bit unusedBit_251_4
+	bit unusedBit_251_5
+	bit unusedBit_251_6
+	bit unusedBit_251_7
+	bit unusedBit_251_8
+	bit unusedBit_251_9
+	bit unusedBit_251_10
+	bit unusedBit_251_11
+	bit unusedBit_251_12
+	bit unusedBit_251_13
+	bit unusedBit_251_14
+	bit unusedBit_251_15
+	bit unusedBit_251_16
+	bit unusedBit_251_17
+	bit unusedBit_251_18
+	bit unusedBit_251_19
+	bit unusedBit_251_20
+	bit unusedBit_251_21
+	bit unusedBit_251_22
+	bit unusedBit_251_23
+	bit unusedBit_251_24
+	bit unusedBit_251_25
+	bit unusedBit_251_26
+	bit unusedBit_251_27
+	bit unusedBit_251_28
+	bit unusedBit_251_29
+	
 	etb_io[ETB_COUNT iterate] etbIo
 
 
@@ -1410,4 +1440,4 @@ end_struct
 #define ts_show_joystick true
 #define ts_show_egt true
 #define ts_show_gps true
-
+#define ts_show_analog_divider true

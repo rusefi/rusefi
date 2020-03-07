@@ -16,8 +16,6 @@
 #include "engine_math.h"
 #include "allsensors.h"
 
-#if EFI_SUPPORT_1995_FORD_INLINE_6
-
 EXTERN_CONFIG;
 
 /**
@@ -101,5 +99,3 @@ void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->logicAnalyzerPins[0] = GPIOC_6;
 	engineConfiguration->logicAnalyzerPins[1] = GPIOE_5;
 }
-
-#endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */

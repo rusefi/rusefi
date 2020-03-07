@@ -8,9 +8,7 @@
 
 #pragma once
 
-#include "globalaccess.h"
-#include "crc.h"
-#include "engine_configuration_generated_structures.h"
+#include "persistent_configuration.h"
 
 #ifndef DEFAULT_ENGINE_TYPE
 #define DEFAULT_ENGINE_TYPE DEFAULT_FRANKENSO
@@ -25,13 +23,6 @@
 
 float getRpmMultiplier(operation_mode_e mode);
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
-
-typedef struct {
-	int version;
-	int size;
-	persistent_config_s persistentConfiguration;
-	crc_t value;
-} persistent_config_container_s;
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);

@@ -5,9 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HONDA_ACCORD_H_
-#define HONDA_ACCORD_H_
-
+#pragma once
 #include "engine_configuration.h"
 
 void setHondaAccordConfigurationTwoWires(DECLARE_CONFIG_PARAMETER_SIGNATURE);
@@ -18,4 +16,3 @@ void setHondaAccordConfiguration1_24_shifted(DECLARE_CONFIG_PARAMETER_SIGNATURE)
 void setHondaCivic4_0_both(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setHondaCivic4_0_rise(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-#endif /* HONDA_ACCORD_H_ */

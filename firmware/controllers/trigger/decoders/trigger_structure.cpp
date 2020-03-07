@@ -102,7 +102,7 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 #endif
 }
 
-int TriggerWaveform::getSize() const {
+size_t TriggerWaveform::getSize() const {
 	return privateTriggerDefinitionSize;
 }
 
@@ -129,7 +129,7 @@ angle_t TriggerWaveform::getCycleDuration() const {
  * Trigger event count equals engine cycle event count if we have a cam sensor.
  * Two trigger cycles make one engine cycle in case of a four stroke engine If we only have a cranksensor.
  */
-uint32_t TriggerWaveform::getLength() const {
+size_t TriggerWaveform::getLength() const {
 	/**
 	 * 4 for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
 	 * 2 for FOUR_STROKE_CRANK_SENSOR

@@ -45,6 +45,15 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 			PASS_CONFIG_PARAMETER_SUFFIX);
 }
 
+TEST(misc, testSkipped2_0) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	// for this test we need a trigger with isSynchronizationNeeded=true
+	engineConfiguration->trigger.customTotalToothCount = 2;
+	engineConfiguration->trigger.customSkippedToothCount = 0;
+	eth.setTriggerType(TT_TOOTHED_WHEEL PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ( 0,  GET_RPM()) << "testNoStartUpWarnings RPM";
+}
+
 static void testDodgeNeonDecoder(void) {
 	printf("*************************************************** testDodgeNeonDecoder95\r\n");
 

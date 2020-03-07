@@ -23,7 +23,7 @@ void configureOilPressure(LinearFunc func, const oil_pressure_config_s& cfg)
 	float greaterOutput = val1 > val2 ? val1 : val2;
 
 	// Allow slightly negative output (-5kpa) so as to not fail the sensor when engine is off
-	oilpSensorFunc.configure(cfg.v1, val1, cfg.v2, val2, /*minOutput*/ -5, greaterOutput);
+	func.configure(cfg.v1, val1, cfg.v2, val2, /*minOutput*/ -5, greaterOutput);
 }
 
 void initOilPressure() {

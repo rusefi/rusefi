@@ -37,6 +37,27 @@ public class LiveDocsMetaParserTest {
         assertEquals(3, r.first().size());
     }
 
+
+    @Test
+    public void parseTextWithSpecialCharacters() {
+        MetaInfo r = LiveDocsMetaParser.parse(
+                "DISPLAY_TEXT(\"Analog: !MCU_reads\");"
+        );
+        assertEquals(1, r.first().size());
+        TextRequest request = (TextRequest) r.first().get(0);
+        assertEquals("Analog: !MCU_reads", request.getValue());
+    }
+
+    @Test
+    public void parseTextWithSpecialCharactersAndSpaces() {
+        MetaInfo r = LiveDocsMetaParser.parse(
+                "DISPLAY_TEXT(\"Analog: !MCU_reads\");"
+        );
+        assertEquals(1, r.first().size());
+        TextRequest request = (TextRequest) r.first().get(0);
+        assertEquals("Analog: !MCU_reads", request.getValue());
+    }
+
     @Test
     public void parseDisplayConfig() {
         MetaInfo r = LiveDocsMetaParser.parse("\t\t// DISPLAY_TEXT(interpolate(\")\n" +

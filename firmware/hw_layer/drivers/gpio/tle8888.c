@@ -35,10 +35,13 @@
 
 #if (BOARD_TLE8888_COUNT > 0)
 
+#include "persistent_configuration.h"
 #include "hardware.h"
 #include "gpio/gpio_ext.h"
 #include "pin_repository.h"
 #include "os_util.h"
+
+EXTERN_ENGINE_CONFIGURATION;
 
 /*
  * TODO list:
@@ -167,12 +170,16 @@ static uint16_t wdDiagResponse = 0;
 static bool needInitialSpi = true;
 static bool isWatchdogHappy = false;
 static bool wasWatchdogHappy = false;
-int resetCounter = 0;
+
+static int selfResetCounter = 0;
+static int lowVoltageResetCounter = 0;
+static int requestedResetCounter = 0;
+int tle8888reinitializationCounter = 0;
+
 float vBattForTle8888 = 0;
 
 // set debug_mode 31
 static int tle8888SpiCounter = 0;
-int tle8888reinitializationCounter = 0;
 // that's a strange variable for troubleshooting
 int tle8888initResponsesAccumulator = 0;
 static int initResponse0 = 0;
@@ -215,6 +222,7 @@ static const char* tle8888_pin_names[TLE8888_OUTPUTS] = {
 #define getTotalErrorCounter() ((TotalErrorCounterValue >> 8) & 0x3f)
 
 #if EFI_TUNER_STUDIO
+// set debug_mode 31
 void tle8888PostState(TsDebugChannels *debugChannels) {
 
 	debugChannels->debugIntField1 = getWindowWatchdog();
@@ -229,7 +237,7 @@ void tle8888PostState(TsDebugChannels *debugChannels) {
 	debugChannels->debugFloatField2 = initResponse1;
 
 	debugChannels->debugFloatField3 = chips[0].OpStat[1];
-	debugChannels->debugFloatField4 = resetCounter;
+	debugChannels->debugFloatField4 = selfResetCounter * 1000000 + requestedResetCounter * 10000 + lowVoltageResetCounter;
 	debugChannels->debugFloatField5 = functionWDrx;
 	debugChannels->debugFloatField6 = wdDiagResponse;
 }
@@ -567,7 +575,10 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 
 		if (vBattForTle8888 < 7) {
 			// we assume TLE8888 is down and we should not bother with SPI communication
-			needInitialSpi = true;
+			if (!needInitialSpi) {
+				needInitialSpi = true;
+				lowVoltageResetCounter++;
+			}
 			continue; // we should not bother communicating with TLE8888 until we have +12
 		}
 
@@ -603,7 +614,7 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 			/* if bit OE is cleared - reset happened */
 			if (!(chip->OpStat[1] & (1 << 6))) {
 				needInitialSpi = true;
-				resetCounter++;
+				selfResetCounter++;
 			}
 		}
 	}
@@ -611,6 +622,7 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 
 void requestTLE8888initialization(void) {
 	needInitialSpi = true;
+	requestedResetCounter++;
 }
 
 /*==========================================================================*/
@@ -681,7 +693,9 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 	startupConfiguration(chip);
 
 
-	tle8888_dump_regs();
+	if (CONFIG(verboseTLE8888)) {
+		tle8888_dump_regs();
+	}
 	return 0;
 }
 
