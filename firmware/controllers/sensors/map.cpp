@@ -270,7 +270,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 #if HAL_USE_ICU
-		digital_input_s* digitalMapInput = startDigitalCapture("MAP freq", CONFIG(frequencyReportingMapInputPin), true);
+		digital_input_s* digitalMapInput = startDigitalCapture("MAP freq", CONFIG(frequencyReportingMapInputPin));
 
 		digitalMapInput->setWidthCallback((VoidInt) digitalMapWidthCallback, NULL);
 #else

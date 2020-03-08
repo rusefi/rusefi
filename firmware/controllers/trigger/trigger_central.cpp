@@ -509,8 +509,8 @@ void resetMaxValues() {
 }
 
 #if HAL_USE_ICU == TRUE
-extern int icuWidthCallbackCounter;
-extern int icuWidthPeriodCounter;
+extern int icuRisingCallbackCounter;
+extern int icuFallingCallbackCounter;
 #endif /* HAL_USE_ICU */
 
 void triggerInfo(void) {
@@ -524,7 +524,7 @@ void triggerInfo(void) {
 #else
 
 #if HAL_USE_ICU == TRUE
-	scheduleMsg(logger, "trigger ICU hw: %d %d %d", icuWidthCallbackCounter, icuWidthPeriodCounter, engine->hwTriggerInputEnabled);
+	scheduleMsg(logger, "trigger ICU hw: %d %d %d", icuRisingCallbackCounter, icuFallingCallbackCounter, engine->hwTriggerInputEnabled);
 #endif /* HAL_USE_ICU */
 
 #endif /* HAL_TRIGGER_USE_PAL */
