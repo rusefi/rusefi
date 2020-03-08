@@ -11,14 +11,10 @@
 
 #if HAL_USE_ICU
 
-digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin, bool isActiveHigh);
+digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin);
 
 void turnOnCapturePin(const char *msg, brain_pin_e brainPin);
 void turnOffCapturePin(brain_pin_e brainPin);
-
-// deprecated API
-digital_input_s *addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
-void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw, bool isActiveHigh);
 
 void stopDigitalCapture(const char *msg, brain_pin_e brainPin);
 
