@@ -14,8 +14,8 @@
 
 #include "global.h"
 
-volatile int icuWidthCallbackCounter = 0;
-volatile int icuWidthPeriodCounter = 0;
+int icuRisingCallbackCounter = 0;
+int icuFallingCallbackCounter = 0;
 
 #if EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE)
 
@@ -28,27 +28,25 @@ extern bool hasFirmwareErrorFlag;
 
 static Logging *logger;
 
-static void vvtWidthCallback(void *) {
+static void vvtRisingCallback(void *) {
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt());
 }
 
-static void vvtPeriodCallback(void *) {
+static void vvtFallingCallback(void *) {
 	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt());
 }
 
 /**
  * that's hardware timer input capture IRQ entry point
- * 'width' events happens before the 'period' event
  */
-static void shaftWidthCallback(bool isPrimary) {
+static void shaftRisingCallback(bool isPrimary) {
 	efitick_t stamp = getTimeNowNt();
 
 	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
-	icuWidthCallbackCounter++;
+	icuRisingCallbackCounter++;
 // todo: support for 3rd trigger input channel
-// todo: start using real event time from HW event, not just software timer?
 	if (hasFirmwareErrorFlag)
 		return;
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
@@ -61,13 +59,15 @@ static void shaftWidthCallback(bool isPrimary) {
 	hwHandleShaftSignal(signal, stamp);
 }
 
-static void shaftPeriodCallback(bool isPrimary) {
+static void shaftFallingCallback(bool isPrimary) {
 	efitick_t stamp = getTimeNowNt();
 
 	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
-	icuWidthPeriodCounter++;
+
+	icuFallingCallbackCounter++;
+
 	if (hasFirmwareErrorFlag)
 		return;
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
@@ -75,7 +75,6 @@ static void shaftPeriodCallback(bool isPrimary) {
 	}
 
 	// todo: add support for 3rd channel
-	//	icucnt_t last_period = icuGetPeriod(icup); so far we are fine with system time
 	trigger_event_e signal =
 			isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) : (engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
 	hwHandleShaftSignal(signal, stamp);
@@ -92,7 +91,7 @@ int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 		return -1;
 	}
 
-	digital_input_s* input = startDigitalCapture("trigger", brainPin, true);
+	digital_input_s* input = startDigitalCapture("trigger", brainPin);
 	if (input == NULL) {
 		/* error already reported */
 		return -1;
@@ -100,11 +99,11 @@ int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 
 	if (isTriggerShaft) {
 		void * arg = (void*) (index == 0);
-		input->setWidthCallback((VoidInt)(void*)shaftWidthCallback, arg);
-		input->setPeriodCallback((VoidInt)(void*)shaftPeriodCallback, arg);
+		input->setWidthCallback((VoidInt)(void*)shaftRisingCallback, arg);
+		input->setPeriodCallback((VoidInt)(void*)shaftFallingCallback, arg);
 	} else {
-		input->setWidthCallback((VoidInt)(void*)vvtWidthCallback, NULL);
-		input->setPeriodCallback((VoidInt)(void*)vvtPeriodCallback, NULL);
+		input->setWidthCallback((VoidInt)(void*)vvtRisingCallback, NULL);
+		input->setPeriodCallback((VoidInt)(void*)vvtFallingCallback, NULL);
 	}
 
 	return 0;

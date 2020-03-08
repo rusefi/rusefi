@@ -75,8 +75,8 @@ extern bool main_loop_started;
 #include "vehicle_speed.h"
 #include "single_timer_executor.h"
 #include "periodic_task.h"
-extern int icuWidthCallbackCounter;
-extern int icuWidthPeriodCounter;
+extern int icuRisingCallbackCounter;
+extern int icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125
@@ -954,7 +954,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_PROD_CODE && HAL_USE_ICU == TRUE
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.vvtEventRiseCounter;
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.vvtEventFallCounter;
-		tsOutputChannels->debugFloatField5 = icuWidthCallbackCounter + icuWidthPeriodCounter;
+		tsOutputChannels->debugFloatField5 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
 
 		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);

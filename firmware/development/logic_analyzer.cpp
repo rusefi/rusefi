@@ -110,14 +110,12 @@ static void initWave(const char *name, int index) {
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
 
-	bool mode = CONFIG(logicAnalyzerMode)[index];
-
 	waveReaderCount++;
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
 	WaveReader *reader = &readers[index];
 	reader->name = name;
 
-	reader->hw = startDigitalCapture("wave input", brainPin, mode);
+	reader->hw = startDigitalCapture("wave input", brainPin);
 
 	if (reader->hw != NULL) {
 		reader->hw->setWidthCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);

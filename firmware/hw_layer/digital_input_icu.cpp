@@ -217,26 +217,6 @@ void turnOffCapturePin(brain_pin_e brainPin) {
 }
 
 /**
- * takes next digital_input_s from the registeredIcus pool
- */
-digital_input_s * addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
-	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
-	if (driver == NULL) {
-		warning(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "w_not input pin");
-		return NULL;
-	}
-
-	digital_input_s *hw = registeredIcus.add();
-	hw->widthListeners.clear();
-	hw->periodListeners.clear();
-	hw->started = false;
-	hw->brainPin = brainPin;
-	hw->driver = driver;
-	turnOnCapturePin(msg, brainPin);
-	return hw;
-}
-
-/**
  * turns pin off and returns digital_input_s back into registeredIcus pool
  */
 void stopDigitalCapture(const char *msg, brain_pin_e brainPin) {
@@ -264,22 +244,16 @@ void stopDigitalCapture(const char *msg, brain_pin_e brainPin) {
 	}
 }
 
-void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw, bool isActiveHigh) {
+static void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw) {
 	if (hw == NULL) {
 		// we can get NULL driver if user somehow has invalid pin in his configuration
 		warning(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "s_not input pin");
 		return;
 	}
 
-	hw->isActiveHigh = isActiveHigh;
-	if (hw->isActiveHigh) {
-		wave_icucfg.mode = ICU_INPUT_ACTIVE_HIGH;
-	} else {
-		wave_icucfg.mode = ICU_INPUT_ACTIVE_LOW;
-	}
 	ICUDriver *driver = hw->driver;
 
-	if (driver != NULL) {
+	if (driver) {
 		if (hw->started) {
 			icuDisableNotificationsI(driver);
 			icuStopCapture(driver);
@@ -295,10 +269,23 @@ void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw, bool isA
 	hw->started = true;
 }
 
-digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin, bool isActiveHigh) {
-	digital_input_s* input = addWaveAnalyzerDriver(msg, brainPin);
-	startInputDriver(msg, input, isActiveHigh);
-	return input;
+digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin) {
+	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
+	if (!driver) {
+		warning(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "w_not input pin");
+		return nullptr;
+	}
+
+	digital_input_s *hw = registeredIcus.add();
+	hw->widthListeners.clear();
+	hw->periodListeners.clear();
+	hw->started = false;
+	hw->brainPin = brainPin;
+	hw->driver = driver;
+	turnOnCapturePin(msg, brainPin);
+
+	startInputDriver(msg, hw);
+	return hw;
 }
 
 #endif /* EFI_ICU_INPUTS */
