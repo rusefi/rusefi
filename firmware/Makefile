@@ -35,12 +35,15 @@ endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -Wno-error=implicit-fallthrough -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Werror=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
+  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Werror=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
+  # GCC9
+  USE_OPT += -Wno-error=odr
 endif
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
   USE_COPT = -fgnu89-inline -std=gnu99
+  USE_COPT += -Wno-error=implicit-fallthrough
 endif
 
 # C++ specific options here (added to USE_OPT).
