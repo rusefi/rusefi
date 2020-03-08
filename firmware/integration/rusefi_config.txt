@@ -658,7 +658,7 @@ bit is_enabled_spi_2
 	brain_pin_e hip9011IntHoldPin;
 pin_output_mode_e hip9011IntHoldPinMode;
 
-	uint8_t[LOGIC_ANALYZER_CHANNEL_COUNT] logicAnalyzerMode;default or inverted input
+	uint8_t[4] unusedHereWeHave
 
 	int unrealisticRpmThreashold;
 

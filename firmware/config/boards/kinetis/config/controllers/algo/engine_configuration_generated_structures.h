@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 02 19:46:02 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Mar 08 09:00:22 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1378,10 +1378,9 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e hip9011IntHoldPinMode;
 	/**
-	 * default or inverted input
 	 * offset 756
 	 */
-	uint8_t logicAnalyzerMode[LOGIC_ANALYZER_CHANNEL_COUNT];
+	uint8_t unusedHereWeHave[4];
 	/**
 	 * offset 760
 	 */
@@ -3217,4 +3216,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 02 19:46:02 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Mar 08 09:00:22 EDT 2020

@@ -1461,8 +1461,6 @@
 #define logFormat_offset 496
 #define logFormat_offset_hex 1f0
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
-#define logicAnalyzerMode_offset 756
-#define logicAnalyzerMode_offset_hex 2f4
 #define logicAnalyzerPins1_offset 748
 #define logicAnalyzerPins1_offset_hex 2ec
 #define logicAnalyzerPins2_offset 749
@@ -2143,6 +2141,8 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1772
 #define unusedFormerWarmupAfrPid_offset_hex 6ec
+#define unusedHereWeHave_offset 756
+#define unusedHereWeHave_offset_hex 2f4
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
 #define unusedSomething_offset 1784

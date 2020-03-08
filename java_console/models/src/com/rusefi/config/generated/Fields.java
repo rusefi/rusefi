@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 02 19:45:47 EST 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Mar 08 09:00:07 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -964,7 +964,6 @@ public class Fields {
 	public static final int LOAD_1_BYTE_PACKING_MULT = 2;
 	public static final int logFormat_offset = 496;
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
-	public static final int logicAnalyzerMode_offset = 756;
 	public static final int logicAnalyzerPins1_offset = 748;
 	public static final int logicAnalyzerPins2_offset = 749;
 	public static final int logicAnalyzerPins3_offset = 750;
@@ -1405,6 +1404,7 @@ public class Fields {
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1772;
+	public static final int unusedHereWeHave_offset = 756;
 	public static final int unusedOldWarmupAfr_offset = 744;
 	public static final int unusedSomething_offset = 1784;
 	public static final int unusedSpiPadding4_offset = 2593;
