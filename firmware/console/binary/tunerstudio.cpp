@@ -305,7 +305,7 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
 // Returns true if an overrun would occur.
 static bool validateOffsetCount(size_t offset, size_t count, ts_channel_s *tsChannel) {
 	if (offset + count > getTunerStudioPageSize()) {
-		scheduleMsg(&tsLogger, "ERROR invalid offset %d count %d", offset, count);
+		scheduleMsg(&tsLogger, "TS: ERROR invalid offset %d count %d", offset, count);
 		tunerStudioError("ERROR: out of range");
 		sendErrorCode(tsChannel);
 		return true;
@@ -631,7 +631,7 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
  */
 void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	if (offset + count > sizeof(TunerStudioOutputChannels)) {
-		scheduleMsg(&tsLogger, "ERROR invalid offset %d count %d", offset, count);
+		scheduleMsg(&tsLogger, "TS: ERROR invalid offset %d count %d", offset, count);
 		sendErrorCode(tsChannel);
 		return;
 	}
