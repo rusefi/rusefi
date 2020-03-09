@@ -86,6 +86,10 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
+#define miataNb2VVTRatioFrom (8.50 * 0.75)
+#define miataNb2VVTRatioTo (14)
+
+
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
@@ -121,7 +125,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		if (engineConfiguration->verboseTriggerSynchDetails) {
 			scheduleMsg(logger, "vvt ratio %.2f", ratio);
 		}
-		if (ratio < CONFIG(miataNb2VVTRatioFrom) || ratio > CONFIG(miataNb2VVTRatioTo)) {
+		if (ratio < miataNb2VVTRatioFrom || ratio > miataNb2VVTRatioTo) {
 			return;
 		}
 		if (engineConfiguration->verboseTriggerSynchDetails) {
@@ -662,8 +666,6 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		isConfigurationChanged(vvtCamSensorUseRise) ||
 		isConfigurationChanged(vvtOffset) ||
 		isConfigurationChanged(vvtDisplayInverted) ||
-		isConfigurationChanged(miataNb2VVTRatioFrom) ||
-		isConfigurationChanged(miataNb2VVTRatioTo) ||
 		isConfigurationChanged(nbVvtIndex);
 	if (changed) {
 		assertEngineReference();
