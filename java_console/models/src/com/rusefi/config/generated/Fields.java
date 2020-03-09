@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 09 19:13:39 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 09 19:26:17 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1834,7 +1834,7 @@ public class Fields {
 	public static final Field SDCARDPERIODMS = Field.create("SDCARDPERIODMS", 804, FieldType.INT16);
 	public static final Field DEBUGSETTIMER = Field.create("DEBUGSETTIMER", 806, FieldType.INT8, brain_pin_e);
 	public static final Field DEBUGMAPAVERAGING = Field.create("DEBUGMAPAVERAGING", 807, FieldType.INT8, brain_pin_e);
-	public static final Field STARTERRELAYPIN = Field.create("STARTERRELAYPIN", 808, FieldType.INT8, brain_pin_e);
+	public static final Field STARTERRELAYPIN = Field.create("STARTERRELAYPIN", 808, FieldType.INT8, output_pin_e);
 	public static final Field STARTERRELAYPINMODE = Field.create("STARTERRELAYPINMODE", 809, FieldType.INT8, pin_output_mode_e);
 	public static final Field SECONDSOLENOIDPIN = Field.create("SECONDSOLENOIDPIN", 810, FieldType.INT8, brain_pin_e);
 	public static final Field UNUSEDUARTPADDING1 = Field.create("UNUSEDUARTPADDING1", 811, FieldType.INT8);
@@ -2167,7 +2167,7 @@ public class Fields {
 	public static final Field AUXPIDPINS4 = Field.create("AUXPIDPINS4", 2223, FieldType.INT8, output_pin_e);
 	public static final Field CJ125SPIDEVICE = Field.create("CJ125SPIDEVICE", 2224, FieldType.INT8);
 	public static final Field CJ125CSPINMODE = Field.create("CJ125CSPINMODE", 2225, FieldType.INT8, pin_output_mode_e);
-	public static final Field DIZZYSPARKOUTPUTPIN = Field.create("DIZZYSPARKOUTPUTPIN", 2226, FieldType.INT8, brain_pin_e);
+	public static final Field DIZZYSPARKOUTPUTPIN = Field.create("DIZZYSPARKOUTPUTPIN", 2226, FieldType.INT8, output_pin_e);
 	public static final Field DIZZYSPARKOUTPUTPINMODE = Field.create("DIZZYSPARKOUTPUTPINMODE", 2227, FieldType.INT8, pin_output_mode_e);
 	public static final Field CRANKINGIACPOSITION = Field.create("CRANKINGIACPOSITION", 2228, FieldType.INT);
 	public static final Field TCHARGEMINRPMMINTPS = Field.create("TCHARGEMINRPMMINTPS", 2232, FieldType.FLOAT);
