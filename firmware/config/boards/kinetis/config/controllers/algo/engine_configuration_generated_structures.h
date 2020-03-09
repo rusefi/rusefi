@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 09 19:14:16 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 09 19:27:30 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1414,7 +1414,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 808
 	 */
-	brain_pin_e starterRelayPin;
+	output_pin_e starterRelayPin;
 	/**
 	 * offset 809
 	 */
@@ -2399,7 +2399,7 @@ struct engine_configuration_s {
 	 * This implementation makes a pulse every time one of the coils is charged, using coil dwell for pulse width. See also tachOutputPin
 	 * offset 2226
 	 */
-	brain_pin_e dizzySparkOutputPin;
+	output_pin_e dizzySparkOutputPin;
 	/**
 	 * offset 2227
 	 */
@@ -3216,4 +3216,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 09 19:14:16 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 09 19:27:30 EDT 2020
