@@ -1547,8 +1547,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
 	    field = "VVT position display offset",			vvtOffset
 	    field = "VVT display inverted",					vvtDisplayInverted
-	    field = "Miata NB2 from (temporary)",			miataNb2VVTRatioFrom
-	    field = "Miata NB2 to (temporary)",				miataNb2VVTRatioTo
 	    field = "nbVvtIndex",							nbVvtIndex
 	    field = "print verbose sync details to console",verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Mar 08 09:00:22 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 09 16:42:29 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1444,12 +1444,12 @@ struct engine_configuration_s {
 	 * This magic property is specific to Mazda Miata NB2
 	 * offset 820
 	 */
-	float miataNb2VVTRatioFrom;
+	float unusedmiataNb2VVTRatioFrom;
 	/**
 	 * This magic property is specific to Mazda Miata NB2
 	 * offset 824
 	 */
-	float miataNb2VVTRatioTo;
+	float unusedmiataNb2VVTRatioTo;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 828
@@ -3216,4 +3216,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sun Mar 08 09:00:22 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 09 16:42:29 EDT 2020

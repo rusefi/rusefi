@@ -193,12 +193,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
-	//	0.0825
-	//	0.1375
-	//	6.375
-	//	10.625
-	engineConfiguration->miataNb2VVTRatioFrom = 8.50 * 0.75;
-	engineConfiguration->miataNb2VVTRatioTo = 14;
 	engineConfiguration->nbVvtIndex = 0;
 
 	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control

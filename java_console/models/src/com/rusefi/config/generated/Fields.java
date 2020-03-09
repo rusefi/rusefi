@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Mar 08 09:00:07 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 09 16:42:12 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1034,10 +1034,6 @@ public class Fields {
 	public static final int mc33972_csPinMode_offset = 679;
 	public static final int mc33972spiDevice_offset = 4008;
 	public static final int measureMapOnlyInOneCylinder_offset = 744;
-	public static final int miataNb2VVTRatioFrom_offset = 820;
-	public static final int miataNb2VVTRatioFrom_offset_hex = 334;
-	public static final int miataNb2VVTRatioTo_offset = 824;
-	public static final int miataNb2VVTRatioTo_offset_hex = 338;
 	public static final String MOCK_AFR_COMMAND = "mock_afr_voltage";
 	public static final String MOCK_CLT_COMMAND = "mock_clt_voltage";
 	public static final String MOCK_IAT_COMMAND = "mock_iat_voltage";
@@ -1405,6 +1401,10 @@ public class Fields {
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1772;
 	public static final int unusedHereWeHave_offset = 756;
+	public static final int unusedmiataNb2VVTRatioFrom_offset = 820;
+	public static final int unusedmiataNb2VVTRatioFrom_offset_hex = 334;
+	public static final int unusedmiataNb2VVTRatioTo_offset = 824;
+	public static final int unusedmiataNb2VVTRatioTo_offset_hex = 338;
 	public static final int unusedOldWarmupAfr_offset = 744;
 	public static final int unusedSomething_offset = 1784;
 	public static final int unusedSpiPadding4_offset = 2593;
@@ -1841,8 +1841,8 @@ public class Fields {
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
-	public static final Field MIATANB2VVTRATIOFROM = Field.create("MIATANB2VVTRATIOFROM", 820, FieldType.FLOAT);
-	public static final Field MIATANB2VVTRATIOTO = Field.create("MIATANB2VVTRATIOTO", 824, FieldType.FLOAT);
+	public static final Field UNUSEDMIATANB2VVTRATIOFROM = Field.create("UNUSEDMIATANB2VVTRATIOFROM", 820, FieldType.FLOAT);
+	public static final Field UNUSEDMIATANB2VVTRATIOTO = Field.create("UNUSEDMIATANB2VVTRATIOTO", 824, FieldType.FLOAT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 828, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERERRORPINMODE = Field.create("TRIGGERERRORPINMODE", 829, FieldType.INT8, pin_output_mode_e);
 	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 830, FieldType.INT8, output_pin_e);
@@ -2739,8 +2739,8 @@ public class Fields {
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,
-	MIATANB2VVTRATIOFROM,
-	MIATANB2VVTRATIOTO,
+	UNUSEDMIATANB2VVTRATIOFROM,
+	UNUSEDMIATANB2VVTRATIOTO,
 	TRIGGERERRORPIN,
 	TRIGGERERRORPINMODE,
 	ACRELAYPIN,

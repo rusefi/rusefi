@@ -1573,10 +1573,6 @@
 #define mc33972spiDevice_offset_hex fa8
 #define measureMapOnlyInOneCylinder_offset 744
 #define measureMapOnlyInOneCylinder_offset_hex 2e8
-#define miataNb2VVTRatioFrom_offset 820
-#define miataNb2VVTRatioFrom_offset_hex 334
-#define miataNb2VVTRatioTo_offset 824
-#define miataNb2VVTRatioTo_offset_hex 338
 #define MOCK_AFR_COMMAND "mock_afr_voltage"
 #define MOCK_CLT_COMMAND "mock_clt_voltage"
 #define MOCK_IAT_COMMAND "mock_iat_voltage"
@@ -2143,6 +2139,10 @@
 #define unusedFormerWarmupAfrPid_offset_hex 6ec
 #define unusedHereWeHave_offset 756
 #define unusedHereWeHave_offset_hex 2f4
+#define unusedmiataNb2VVTRatioFrom_offset 820
+#define unusedmiataNb2VVTRatioFrom_offset_hex 334
+#define unusedmiataNb2VVTRatioTo_offset 824
+#define unusedmiataNb2VVTRatioTo_offset_hex 338
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
 #define unusedSomething_offset 1784
