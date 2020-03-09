@@ -1206,6 +1206,7 @@ menuDialog = main
 
 		subMenu = dwellSettings,			"Dwell", 0, {isIgnitionEnabled == 1}
 		subMenu = ignitionCylExtra,			"Ignition cylinder trim", 0, {isIgnitionEnabled == 1}
+		subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
 
 		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 0}
@@ -1604,7 +1605,23 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Extra cyl #10",                       timing_offset_cylinder10, {cylindersCount > 9}
 		field = "Extra cyl #11",                       timing_offset_cylinder11, {cylindersCount > 10} 
 		field = "Extra cyl #12",                       timing_offset_cylinder12, {cylindersCount > 11}
-	
+
+	dialog = multisparkDwellParams, "Multispark Dwell"
+		field = multisparkSparkDuration,		"Spark Duration"
+		field = multisparkDwell,				"Dwell"
+
+	dialog = multisparkMain
+		field = "Max RPM",								multisparkMaxRpm, {multisparkEnable}
+		field = "Fire sparks for this angle duration"	multisparkMaxSparkingAngle, {multisparkEnable}
+		field = "Maximum extra spark count"				multisparkMaxExtraSparkCount, {multisparkEnable}
+
+	dialog = multisparkSettings, "Multispark"
+		field = "#WARNING! These settings have the potential to overheat ignition components"
+		field = "#and cause other nasty misbehavior.  Use with care, at your own risk!"
+		field = "Enable",								multisparkEnable
+		panel = multisparkMain
+		panel = multisparkDwellParams
+
 	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection,	Center
 		

@@ -739,11 +739,13 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	switch_input_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
-	float unused
+	uint16_t multisparkMaxRpm;;"", 1, 0, 0, 3000, 0
+	uint8_t multisparkMaxSparkingAngle;;"", 1, 0, 0, 60, 0
+	uint8_t multisparkMaxExtraSparkCount;;"", 1, 0, 0, 5, 0
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
 	bit useHbridges
-	bit unusedBit_251_3
+	bit multisparkEnable
 	bit unusedBit_251_4
 	bit unusedBit_251_5
 	bit unusedBit_251_6
@@ -936,7 +938,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
-	uint8_t[4] unusedSomething;
+	uint16_t multisparkSparkDuration;; "ms", 1000, 0, 0, 3, 2
+	uint16_t multisparkDwell;; "ms', 1000, 0, 0, 3, 2
 	pid_s idleRpmPid;See cltIdleRpmBins
 	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
