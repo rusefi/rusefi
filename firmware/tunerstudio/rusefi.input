@@ -1606,19 +1606,19 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Extra cyl #11",                       timing_offset_cylinder11, {cylindersCount > 10} 
 		field = "Extra cyl #12",                       timing_offset_cylinder12, {cylindersCount > 11}
 
-	dialog = multisparkDwellParams, "Multispark Dwell"
-		field = multisparkSparkDuration,		"Spark Duration"
-		field = multisparkDwell,				"Dwell"
+	dialog = multisparkDwellParams, "Delay & Dwell"
+		field = "Spark Duration",						multisparkSparkDuration, {multisparkEnable}
+		field = "Dwell",								multisparkDwell, {multisparkEnable}
 
-	dialog = multisparkMain
-		field = "Max RPM",								multisparkMaxRpm, {multisparkEnable}
+	dialog = multisparkMain, "Configuration"
+		field = "Maximum engine speed",					multisparkMaxRpm, {multisparkEnable}
 		field = "Fire sparks for this angle duration"	multisparkMaxSparkingAngle, {multisparkEnable}
 		field = "Maximum extra spark count"				multisparkMaxExtraSparkCount, {multisparkEnable}
 
 	dialog = multisparkSettings, "Multispark"
 		field = "#WARNING! These settings have the potential to overheat ignition components"
 		field = "#and cause other nasty misbehavior.  Use with care, at your own risk!"
-		field = "Enable",								multisparkEnable
+		field = "Enable Multiple Sparks",				multisparkEnable
 		panel = multisparkMain
 		panel = multisparkDwellParams
 
