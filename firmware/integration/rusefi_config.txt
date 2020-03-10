@@ -23,12 +23,19 @@
 ! type name;comment
 
 
-#define TS_SIGNATURE "rusEFI v1.08"
+#define TS_SIGNATURE "rusEFI v1.2020.3"
+
+!
+! this is here so that rusEfi console can access it, too
+! [IMPORTANT] every time TS_OUTPUT_SIZE is changed make sure to increment TS_SIGNATURE above
+!
+#define TS_OUTPUT_SIZE 240
+
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! so not forget to change fileVersion in rusefi.ini
 ! todo: is this not needed in light of TS_SIGNATURE?
-#define TS_FILE_VERSION 20191221
+#define TS_FILE_VERSION 20200310
 
 
 ! all the sub-structures are going to be nested within the primary structure, that's
@@ -66,9 +73,6 @@ struct_no_prefix engine_configuration_s
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 
 #define ETB_BIAS_CURVE_LENGTH 8
-
-! this is here so that rusEfi console can access it, too
-#define TS_OUTPUT_SIZE 240
 
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
