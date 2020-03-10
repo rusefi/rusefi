@@ -42,8 +42,10 @@
 
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
+#include "dc_motors.h"
 #include "pin_repository.h"
 static StepDirectionStepper iacStepperHw;
+static DualHBridgeStepper iacHbridgeHw;
 static StepperMotor iacMotor;
 #endif /* EFI_UNIT_TEST */
 
@@ -558,16 +560,35 @@ void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(useStepperIdle)) {
-		iacStepperHw.initialize(
-			CONFIG(idle).stepperStepPin,
-			CONFIG(idle).stepperDirectionPin,
-			CONFIG(stepperDirectionPinMode),
-			CONFIG(idleStepperReactionTime),
-			CONFIG(stepperEnablePin),
-			CONFIG(stepperEnablePinMode)
-		);
+		StepperHw* hw;
 
-		iacMotor.initialize(&iacStepperHw, CONFIG(idleStepperTotalSteps), logger);
+		if (CONFIG(useHbridges)) {
+			auto motorA = initDcMotor(0 PASS_ENGINE_PARAMETER_SUFFIX);
+			auto motorB = initDcMotor(1 PASS_ENGINE_PARAMETER_SUFFIX);
+
+			if (motorA && motorB) {
+				iacHbridgeHw.initialize(
+					motorA,
+					motorB,
+					CONFIG(idleStepperReactionTime)
+				);
+			}
+
+			hw = &iacHbridgeHw;
+		} else {
+			iacStepperHw.initialize(
+				CONFIG(idle).stepperStepPin,
+				CONFIG(idle).stepperDirectionPin,
+				CONFIG(stepperDirectionPinMode),
+				CONFIG(idleStepperReactionTime),
+				CONFIG(stepperEnablePin),
+				CONFIG(stepperEnablePinMode)
+			);
+
+			hw = &iacStepperHw;
+		}
+
+		iacMotor.initialize(hw, CONFIG(idleStepperTotalSteps), logger);
 
 		// This greatly improves PID accuracy for steppers with a small number of steps
 		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;

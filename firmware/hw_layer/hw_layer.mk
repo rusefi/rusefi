@@ -32,6 +32,7 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/hip9011_logic.cpp \
 	$(PROJECT_DIR)/hw_layer/vehicle_speed.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \
+	$(PROJECT_DIR)/hw_layer/stepper_dual_hbridge.cpp \
 	$(PROJECT_DIR)/hw_layer/servo.cpp \
 	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
 	$(PROJECT_DIR)/hw_layer/rtc_helper.cpp \
