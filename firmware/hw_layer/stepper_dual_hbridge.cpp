@@ -9,16 +9,16 @@
 static const int8_t phaseA[] = 
 {
     1,
-    0,
+    1,
     -1,
-    0
+    -1
 };
 
 static const int8_t phaseB[] = 
 {
-    0,
+    -1,
     1,
-    0,
+    1,
     -1
 };
 
