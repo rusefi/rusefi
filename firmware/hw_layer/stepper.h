@@ -40,6 +40,21 @@ private:
 	pin_output_mode_e directionPinMode, stepPinMode, enablePinMode;
 };
 
+class DcMotor;
+
+class DualHBridgeStepper final : public StepperHw {
+public:
+    void initialize(DcMotor* motorPhaseA, DcMotor* motorPhaseB, float reactionTime);
+
+    void step(bool positive) override;
+
+private:
+    DcMotor* m_motorPhaseA;
+    DcMotor* m_motorPhaseB;
+
+    uint8_t m_phase = 0;
+};
+
 class StepperMotor final : private ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	StepperMotor();
