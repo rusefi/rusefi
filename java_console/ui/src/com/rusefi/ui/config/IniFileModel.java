@@ -14,9 +14,8 @@ import static com.rusefi.Launcher.INI_FILE_PATH;
  * 12/23/2015.
  */
 public class IniFileModel {
-    public static final String RUSEFI_INI = "rusefi.ini";
-    // todo: https://sourceforge.net/p/rusefi/tickets/243/
-    private static final String FILENAME = INI_FILE_PATH + File.separator + RUSEFI_INI;
+    public static final String RUSEFI_INI_PREFIX = "rusefi";
+    public static final String RUSEFI_INI_SUFFIX = ".ini";
 
     private final static IniFileModel INSTANCE = new IniFileModel();
     private String dialogId;
@@ -35,9 +34,12 @@ public class IniFileModel {
     }
 
     private void readIniFile() {
-        File input = new File(FILENAME);
-        if (!input.exists()) {
-            System.out.println("No such file: " + FILENAME);
+        String fileName = findMetaInfoFile();
+        File input = null;
+        if (fileName != null)
+            input = new File(fileName);
+        if (fileName == null || !input.exists()) {
+            System.out.println("No such file: " + RUSEFI_INI_PREFIX + "*" + RUSEFI_INI_SUFFIX);
             return;
         }
 
@@ -49,6 +51,17 @@ public class IniFileModel {
         }
 
         finishDialog();
+    }
+
+    private String findMetaInfoFile() {
+        File dir = new File(INI_FILE_PATH);
+        if (!dir.isDirectory())
+            return null;
+        for (String file : dir.list()) {
+            if (file.startsWith(RUSEFI_INI_PREFIX) && file.endsWith(RUSEFI_INI_SUFFIX))
+                return INI_FILE_PATH + File.separator + file;
+        }
+        return null;
     }
 
     private void finishDialog() {

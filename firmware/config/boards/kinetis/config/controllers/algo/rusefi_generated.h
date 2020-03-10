@@ -1461,8 +1461,6 @@
 #define logFormat_offset 496
 #define logFormat_offset_hex 1f0
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
-#define logicAnalyzerMode_offset 756
-#define logicAnalyzerMode_offset_hex 2f4
 #define logicAnalyzerPins1_offset 748
 #define logicAnalyzerPins1_offset_hex 2ec
 #define logicAnalyzerPins2_offset 749
@@ -1575,10 +1573,6 @@
 #define mc33972spiDevice_offset_hex fa8
 #define measureMapOnlyInOneCylinder_offset 744
 #define measureMapOnlyInOneCylinder_offset_hex 2e8
-#define miataNb2VVTRatioFrom_offset 820
-#define miataNb2VVTRatioFrom_offset_hex 334
-#define miataNb2VVTRatioTo_offset 824
-#define miataNb2VVTRatioTo_offset_hex 338
 #define MOCK_AFR_COMMAND "mock_afr_voltage"
 #define MOCK_CLT_COMMAND "mock_clt_voltage"
 #define MOCK_IAT_COMMAND "mock_iat_voltage"
@@ -2143,6 +2137,12 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1772
 #define unusedFormerWarmupAfrPid_offset_hex 6ec
+#define unusedHereWeHave_offset 756
+#define unusedHereWeHave_offset_hex 2f4
+#define unusedmiataNb2VVTRatioFrom_offset 820
+#define unusedmiataNb2VVTRatioFrom_offset_hex 334
+#define unusedmiataNb2VVTRatioTo_offset 824
+#define unusedmiataNb2VVTRatioTo_offset_hex 338
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
 #define unusedSomething_offset 1784

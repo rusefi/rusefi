@@ -6,9 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef DODGE_NEON_H_
-#define DODGE_NEON_H_
-
+#pragma once
 #include "engine_configuration.h"
 
 void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
@@ -20,4 +18,3 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
  */
 void setDodgeNeonNGCEngineConfigurationCrankBased(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-#endif /* DODGE_NEON_H_ */

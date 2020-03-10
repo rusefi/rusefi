@@ -5,11 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CONFIG_ENGINES_CHEVROLET_CAMARO_4_H_
-#define CONFIG_ENGINES_CHEVROLET_CAMARO_4_H_
-
+#pragma once
 #include "engine_configuration.h"
 
 void setCamaro4(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-#endif /* CONFIG_ENGINES_CHEVROLET_CAMARO_4_H_ */

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 02 19:46:02 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 09 19:27:30 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -487,7 +487,7 @@ struct idle_hardware_s {
 	/**
 	 * offset 4
 	 */
-	brain_pin_e solenoidPin;
+	output_pin_e solenoidPin;
 	/**
 	 * offset 5
 	 */
@@ -1378,10 +1378,9 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e hip9011IntHoldPinMode;
 	/**
-	 * default or inverted input
 	 * offset 756
 	 */
-	uint8_t logicAnalyzerMode[LOGIC_ANALYZER_CHANNEL_COUNT];
+	uint8_t unusedHereWeHave[4];
 	/**
 	 * offset 760
 	 */
@@ -1415,7 +1414,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 808
 	 */
-	brain_pin_e starterRelayPin;
+	output_pin_e starterRelayPin;
 	/**
 	 * offset 809
 	 */
@@ -1445,12 +1444,12 @@ struct engine_configuration_s {
 	 * This magic property is specific to Mazda Miata NB2
 	 * offset 820
 	 */
-	float miataNb2VVTRatioFrom;
+	float unusedmiataNb2VVTRatioFrom;
 	/**
 	 * This magic property is specific to Mazda Miata NB2
 	 * offset 824
 	 */
-	float miataNb2VVTRatioTo;
+	float unusedmiataNb2VVTRatioTo;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 828
@@ -2400,7 +2399,7 @@ struct engine_configuration_s {
 	 * This implementation makes a pulse every time one of the coils is charged, using coil dwell for pulse width. See also tachOutputPin
 	 * offset 2226
 	 */
-	brain_pin_e dizzySparkOutputPin;
+	output_pin_e dizzySparkOutputPin;
 	/**
 	 * offset 2227
 	 */
@@ -3217,4 +3216,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 02 19:46:02 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Mon Mar 09 19:27:30 EDT 2020

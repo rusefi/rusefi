@@ -217,6 +217,8 @@ GPIOA_6
 /**
  * set engine_type 63
  *
+ * https://github.com/mck1117/proteus/blob/master/readme_pinout.md
+ *
  * black#3 : orange   : injector #1
  * black#4 : blue     : injector #3
  * black#5 : white    : injector #5
@@ -244,6 +246,7 @@ GPIOA_6
  *
  *
  * white#9 : orange   : +5v
+ * white#17: green    : PPS
  * white#18: red
  * white#23: black    : Sensor Ground
  * white#24: red      : TPS#1
@@ -254,7 +257,7 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// 12 injectors defined in boards/proteus/board_configuration.cpp
 
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_6;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_4;
 
 	// set vbatt_divider 8.16
 	// engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * 16.8f / 10.0f;
