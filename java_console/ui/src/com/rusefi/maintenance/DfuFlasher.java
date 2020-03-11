@@ -10,6 +10,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.ui.StatusWindow;
+import com.rusefi.ui.util.URLLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * @see FirmwareFlasher
@@ -79,6 +82,17 @@ public class DfuFlasher {
             wnd.appendMsg("SUCCESS!");
         } else {
             wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
+            if (stdout.length() == 0 && errorResponse.length() == 0) {
+                // looks like DFU util is not installed properly?
+                // ugly temporary solution
+                // see https://github.com/rusefi/rusefi/issues/1170
+                // see https://github.com/rusefi/rusefi/issues/1182
+                try {
+                    URLLabel.open(new URL("https://github.com/rusefi/rusefi_external_utils/raw/master/DFU_mode/DfuSe_Demo_V3.0.6_Setup.exe"));
+                } catch (MalformedURLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
             wnd.appendMsg("ERROR: does not look like DFU has worked!");
         }
         wnd.appendMsg("Please power cycle device to exit DFU mode");
