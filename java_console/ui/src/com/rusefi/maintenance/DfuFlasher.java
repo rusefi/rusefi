@@ -71,9 +71,16 @@ public class DfuFlasher {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
-        ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
+        StringBuffer stdout = new StringBuffer();
+        String errorResponse = ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
                 FirmwareFlasher.BINARY_LOCATION + File.separator + DFU_COMMAND,
-                DFU_BINARY, wnd);
+                DFU_BINARY, wnd, stdout);
+        if (stdout.toString().contains("Verify successful")) {
+            wnd.appendMsg("SUCCESS!");
+        } else {
+            wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
+            wnd.appendMsg("ERROR: does not look like DFU has worked!");
+        }
         wnd.appendMsg("Please power cycle device to exit DFU mode");
     }
 
