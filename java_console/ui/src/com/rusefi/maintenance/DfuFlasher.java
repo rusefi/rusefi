@@ -29,6 +29,7 @@ public class DfuFlasher {
     // TODO: integration with DFU command line tool
     static final String DFU_COMMAND = DFU_BINARY + " -c -d --v --fn " + Launcher.INPUT_FILES_PATH + File.separator +
             "rusefi.dfu";
+    private static final String DFU_SETUP_EXE = "https://github.com/rusefi/rusefi_external_utils/raw/master/DFU_mode/DfuSe_Demo_V3.0.6_Setup.exe";
 
     private final JButton button = new JButton("Auto Program via DFU");
     private final JButton manualButton = new JButton("Manual Program via DFU");
@@ -81,17 +82,19 @@ public class DfuFlasher {
         if (stdout.toString().contains("Verify successful")) {
             wnd.appendMsg("SUCCESS!");
         } else {
-            wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
             if (stdout.length() == 0 && errorResponse.length() == 0) {
                 // looks like DFU util is not installed properly?
                 // ugly temporary solution
                 // see https://github.com/rusefi/rusefi/issues/1170
                 // see https://github.com/rusefi/rusefi/issues/1182
                 try {
-                    URLLabel.open(new URI("https://github.com/rusefi/rusefi_external_utils/raw/master/DFU_mode/DfuSe_Demo_V3.0.6_Setup.exe"));
+                    URLLabel.open(new URI(DFU_SETUP_EXE));
+                    wnd.appendMsg("Please install DfuSe_Demo_V3.0.6_Setup.exe, power cycle your device and try again.");
                 } catch (URISyntaxException e) {
                     throw new IllegalStateException(e);
                 }
+            } else {
+                wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
             }
             wnd.appendMsg("ERROR: does not look like DFU has worked!");
         }
