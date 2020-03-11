@@ -18,8 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * @see FirmwareFlasher
@@ -88,8 +88,8 @@ public class DfuFlasher {
                 // see https://github.com/rusefi/rusefi/issues/1170
                 // see https://github.com/rusefi/rusefi/issues/1182
                 try {
-                    URLLabel.open(new URL("https://github.com/rusefi/rusefi_external_utils/raw/master/DFU_mode/DfuSe_Demo_V3.0.6_Setup.exe"));
-                } catch (MalformedURLException e) {
+                    URLLabel.open(new URI("https://github.com/rusefi/rusefi_external_utils/raw/master/DFU_mode/DfuSe_Demo_V3.0.6_Setup.exe"));
+                } catch (URISyntaxException e) {
                     throw new IllegalStateException(e);
                 }
             }
