@@ -64,7 +64,7 @@ public class DfuFlasher {
 
     public static void runDfuProgramming() {
         StatusWindow wnd = new StatusWindow();
-        wnd.showFrame("DFU status");
+        wnd.showFrame("DFU status " + Launcher.CONSOLE_VERSION);
         ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
     }
 
