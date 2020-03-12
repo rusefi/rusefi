@@ -195,6 +195,8 @@ typedef enum {
 
 	TEST_33816 = 103,
 
+	BMW_M73_MRE = 104,
+
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
 
