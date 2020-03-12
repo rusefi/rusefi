@@ -1,7 +1,6 @@
 /*
  * @file bmw_m73.cpp
  *
- *
  * https://github.com/rusefi/rusefi_documentation/wiki/BMW_e38_750
  *
  * https://rusefi.com/wiki/index.php?title=Hardware:OEM_connectors#134_pin
