@@ -9,25 +9,12 @@
 #ifndef MPU_UTIL_H_
 #define MPU_UTIL_H_
 
-// we are lucky - all CAN pins use the same AF
-#define EFI_CAN_RX_AF 9
-#define EFI_CAN_TX_AF 9
-
-// burnout or 'Burn Out'
 typedef enum {
 	BOR_Level_None = 0,
 	BOR_Level_1 = 1,
 	BOR_Level_2 = 2,
 	BOR_Level_3 = 3
 } BOR_Level_t;
-
-typedef enum {
-	BOR_Result_Ok = 0x00,
-	BOR_Result_Error
-} BOR_Result_t;
-
-BOR_Level_t BOR_Get(void);
-BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 
 #ifndef ADC_TwoSamplingDelay_5Cycles
 #define ADC_TwoSamplingDelay_5Cycles ((uint32_t)0x00000000)

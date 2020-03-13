@@ -27,6 +27,15 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 void turnOnSpi(spi_device_e device);
 #endif // HAL_USE_SPI
 
+// Brownout Reset
+typedef enum {
+	BOR_Result_Ok = 0x00,
+	BOR_Result_Error
+} BOR_Result_t;
+
+BOR_Level_t BOR_Get(void);
+BOR_Result_t BOR_Set(BOR_Level_t BORValue);
+
 #ifdef __cplusplus
 extern "C"
 {

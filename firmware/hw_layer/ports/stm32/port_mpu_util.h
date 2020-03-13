@@ -17,14 +17,6 @@ typedef enum {
 	BOR_Level_3 = OB_BOR_LEVEL3  // 0x00     Supply voltage ranges from 2.70 to 3.60 V
 } BOR_Level_t;
 
-typedef enum {
-	BOR_Result_Ok = 0x00,
-	BOR_Result_Error
-} BOR_Result_t;
-
-BOR_Level_t BOR_Get(void);
-BOR_Result_t BOR_Set(BOR_Level_t BORValue);
-
 // we are lucky - all CAN pins use the same AF
 #define EFI_CAN_RX_AF 9
 #define EFI_CAN_TX_AF 9
