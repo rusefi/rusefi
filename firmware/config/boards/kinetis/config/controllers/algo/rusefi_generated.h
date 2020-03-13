@@ -2020,7 +2020,7 @@
 #define triggerSimulatorPins2_offset_hex 2e1
 #define triggerSimulatorPins3_offset 738
 #define triggerSimulatorPins3_offset_hex 2e2
-#define TS_FILE_VERSION 20191221
+#define TS_FILE_VERSION 20200310
 #define TS_OUTPUT_SIZE 240
 #define ts_show_analog_divider true
 #define ts_show_cj125 true
@@ -2032,7 +2032,7 @@
 #define ts_show_hip9011 true
 #define ts_show_joystick true
 #define ts_show_lcd true
-#define TS_SIGNATURE "rusEFI v1.08"
+#define TS_SIGNATURE "rusEFI v1.2020.3"
 #define tunerStudioSerialSpeed_offset 728
 #define tunerStudioSerialSpeed_offset_hex 2d8
 #define twoWireBatchIgnition_offset 1476

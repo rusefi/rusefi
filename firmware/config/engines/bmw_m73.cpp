@@ -1,7 +1,6 @@
 /*
  * @file bmw_m73.cpp
  *
- *
  * https://github.com/rusefi/rusefi_documentation/wiki/BMW_e38_750
  *
  * https://rusefi.com/wiki/index.php?title=Hardware:OEM_connectors#134_pin
@@ -65,12 +64,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_template.h"
+#include "bmw_m73.h"
 #include "custom_engine.h"
 
 EXTERN_CONFIG;
 
-static void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 
@@ -186,15 +185,18 @@ GPIOA_6
 	// PWM pin
 	engineConfiguration->etbIo[0].controlPin1 = GPIO_UNASSIGNED;
 	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = GPIOC_9;
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_8;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOC_8;
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_9;
 	CONFIG(etb_use_two_wires) = true;
 
 	// PWM pin
 	engineConfiguration->etbIo[1].controlPin1 = GPIO_UNASSIGNED;
 	// DIR pin
-	engineConfiguration->etbIo[1].directionPin1 = GPIOB_8;
-	engineConfiguration->etbIo[1].directionPin2 = GPIOB_9;
+	engineConfiguration->etbIo[1].directionPin1 = GPIOB_9;
+	engineConfiguration->etbIo[1].directionPin2 = GPIOB_8;
+
+	CONFIG(tps2Min) = CONFIG(tpsMin);
+	CONFIG(tps2Max) = CONFIG(tpsMax);
 
 
 	engineConfiguration->injectionPins[0] = GPIO_UNASSIGNED;

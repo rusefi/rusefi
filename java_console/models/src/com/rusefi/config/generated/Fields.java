@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 09 19:26:17 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Mar 10 18:46:05 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1344,9 +1344,9 @@ public class Fields {
 	public static final int triggerSimulatorPins1_offset = 736;
 	public static final int triggerSimulatorPins2_offset = 737;
 	public static final int triggerSimulatorPins3_offset = 738;
-	public static final int TS_FILE_VERSION = 20191221;
+	public static final int TS_FILE_VERSION = 20200310;
 	public static final int TS_OUTPUT_SIZE = 240;
-	public static final String TS_SIGNATURE = "rusEFI v1.08";
+	public static final String TS_SIGNATURE = "rusEFI v1.2020.3";
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;

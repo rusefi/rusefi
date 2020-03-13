@@ -49,7 +49,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20200308;
+    public static final int CONSOLE_VERSION = 20200311;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
@@ -415,6 +415,7 @@ public class Launcher {
         wrongVersionListener = new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
+                // todo: we need to migrate to TS_SIGNATURE validation!!!
                 if (value != Fields.TS_FILE_VERSION) {
                     String message = "This copy of rusEfi console is not compatible with this version of firmware\r\n" +
                             "Console compatible with " + Fields.TS_FILE_VERSION + " while firmware compatible with " +

@@ -10,6 +10,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.ui.StatusWindow;
+import com.rusefi.ui.util.URLLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * @see FirmwareFlasher
@@ -26,6 +29,7 @@ public class DfuFlasher {
     // TODO: integration with DFU command line tool
     static final String DFU_COMMAND = DFU_BINARY + " -c -d --v --fn " + Launcher.INPUT_FILES_PATH + File.separator +
             "rusefi.dfu";
+    private static final String DFU_SETUP_EXE = "https://github.com/rusefi/rusefi_external_utils/raw/master/DFU_mode/DfuSe_Demo_V3.0.6_Setup.exe";
 
     private final JButton button = new JButton("Auto Program via DFU");
     private final JButton manualButton = new JButton("Manual Program via DFU");
@@ -60,7 +64,7 @@ public class DfuFlasher {
 
     public static void runDfuProgramming() {
         StatusWindow wnd = new StatusWindow();
-        wnd.showFrame("DFU status");
+        wnd.showFrame("DFU status " + Launcher.CONSOLE_VERSION);
         ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
     }
 
@@ -71,9 +75,29 @@ public class DfuFlasher {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
-        ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
+        StringBuffer stdout = new StringBuffer();
+        String errorResponse = ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
                 FirmwareFlasher.BINARY_LOCATION + File.separator + DFU_COMMAND,
-                DFU_BINARY, wnd);
+                DFU_BINARY, wnd, stdout);
+        if (stdout.toString().contains("Verify successful")) {
+            wnd.appendMsg("SUCCESS!");
+        } else {
+            if (stdout.length() == 0 && errorResponse.length() == 0) {
+                // looks like DFU util is not installed properly?
+                // ugly temporary solution
+                // see https://github.com/rusefi/rusefi/issues/1170
+                // see https://github.com/rusefi/rusefi/issues/1182
+                try {
+                    URLLabel.open(new URI(DFU_SETUP_EXE));
+                    wnd.appendMsg("Please install DfuSe_Demo_V3.0.6_Setup.exe, power cycle your device and try again.");
+                } catch (URISyntaxException e) {
+                    throw new IllegalStateException(e);
+                }
+            } else {
+                wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
+            }
+            wnd.appendMsg("ERROR: does not look like DFU has worked!");
+        }
         wnd.appendMsg("Please power cycle device to exit DFU mode");
     }
 

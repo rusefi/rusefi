@@ -1145,6 +1145,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case BMW_M73_M:
 		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case BMW_M73_MRE:
+		setEngineBMW_M73_microRusEfi(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case BMW_M73_PROTEUS:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
