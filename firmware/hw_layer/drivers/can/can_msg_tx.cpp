@@ -1,3 +1,11 @@
+/**
+ * @file	can_msg_tx.cpp
+ *
+ * CAN message transmission
+ * 
+ * @date Mar 13, 2020
+ * @author Matthew Kennedy, (c) 2012-2020
+ */
 
 #include "efifeatures.h"
 #include "global.h"
