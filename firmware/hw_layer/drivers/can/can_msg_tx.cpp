@@ -1,8 +1,5 @@
 
 #include "efifeatures.h"
-
-#if EFI_CAN_SUPPORT
-
 #include "can_msg_tx.h"
 
 #include "global.h"
@@ -11,13 +8,15 @@
 #include "engine_configuration.h"
 #include "mpu_util.h"
 
+#if EFI_CAN_SUPPORT
+
 EXTERN_ENGINE;
 
 CanTxMessage::CanTxMessage(uint32_t eid) {
 	m_frame.IDE = CAN_IDE_STD;
 	m_frame.EID = eid;
 	m_frame.RTR = CAN_RTR_DATA;
-	m_frame.DLC = 8;sss
+	m_frame.DLC = 8;
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
 }
 
