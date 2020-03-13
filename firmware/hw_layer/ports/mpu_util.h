@@ -1,6 +1,5 @@
 #pragma once
 
-#include "hal.h"
 #include "rusefi_enums.h"
 
 #include "port_mpu_util.h"
@@ -10,11 +9,14 @@ void baseMCUInit(void);
 void jump_to_bootloader();
 
 // CAN bus
+#if HAL_USE_CAN
 bool isValidCanTxPin(brain_pin_e pin);
 bool isValidCanRxPin(brain_pin_e pin);
 CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
+#endif // HAL_USE_CAN
 
 // SPI
+#if HAL_USE_SPI
 void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		brain_pin_e mosi,
 		int sckMode,
@@ -23,14 +25,14 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 void turnOnSpi(spi_device_e device);
-
+#endif // HAL_USE_SPI
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-// these need to be declared C style for the linker magic to work
+// these need to be declared with C linkage - they're called from C and asm files
 void DebugMonitorVector(void);
 void UsageFaultVector(void);
 void BusFaultVector(void);
