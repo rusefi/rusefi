@@ -6,8 +6,7 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
-#ifndef MPU_UTIL_H_
-#define MPU_UTIL_H_
+#pragma once
 
 typedef enum {
 	BOR_Level_None = 0,
@@ -37,5 +36,3 @@ typedef enum {
 // TODO
 #define SPI_CR1_24BIT_MODE 0
 #define SPI_CR2_24BIT_MODE 0
-
-#endif /* MPU_UTIL_H_ */
