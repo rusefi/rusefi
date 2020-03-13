@@ -12,12 +12,13 @@
 
 #if EFI_CAN_SUPPORT
 #include "can_msg_tx.h"
-#include "engine.h"
 
-#include "engine_configuration.h"
-#include "mpu_util.h"
 
-EXTERN_ENGINE;
+/*static*/ CANDriver* CanTxMessage::s_device = nullptr;
+
+/*static*/ void CanTxMessage::setDevice(CANDriver* device) {
+	s_device = device;
+}
 
 CanTxMessage::CanTxMessage(uint32_t eid) {
 	m_frame.IDE = CAN_IDE_STD;
@@ -28,8 +29,7 @@ CanTxMessage::CanTxMessage(uint32_t eid) {
 }
 
 CanTxMessage::~CanTxMessage() {
-	CANDriver *device = detectCanDevice(CONFIG(canRxPin),
-			CONFIG(canTxPin));
+	auto device = s_device;
 
 	if (!device) {
 		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");

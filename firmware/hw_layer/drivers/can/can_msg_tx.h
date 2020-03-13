@@ -36,6 +36,11 @@ public:
 	~CanTxMessage();
 
 	/**
+	 * Configures the device for all messages to transmit from.
+	 */
+	static void setDevice(CANDriver* device);
+
+	/**
 	 * @brief Read & write the raw underlying 8-byte buffer.
 	 */
 	uint8_t& operator[](size_t);
@@ -52,6 +57,9 @@ public:
 
 protected:
 	CANTxFrame m_frame;
+
+private:
+	static CANDriver* s_device;
 };
 
 /**
