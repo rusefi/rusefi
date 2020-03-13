@@ -51,42 +51,4 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 #define SPI_CR1_24BIT_MODE 0
 #define SPI_CR2_24BIT_MODE 0
 
-void baseMCUInit(void);
-void turnOnSpi(spi_device_e device);
-void jump_to_bootloader();
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-// these need to be declared C style for the linker magic to work
-
-void DebugMonitorVector(void);
-void UsageFaultVector(void);
-void BusFaultVector(void);
-void HardFaultVector(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-#if HAL_USE_SPI
-void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
-		brain_pin_e mosi,
-		int sckMode,
-		int mosiMode,
-		int misoMode);
-/**
- * @see getSpiDevice
- */
-void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
-#endif /* HAL_USE_SPI */
-
-bool isValidCanTxPin(brain_pin_e pin);
-bool isValidCanRxPin(brain_pin_e pin);
-#if HAL_USE_CAN
-CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
-#endif /* HAL_USE_CAN */
-
 #endif /* MPU_UTIL_H_ */
