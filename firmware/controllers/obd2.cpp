@@ -30,7 +30,7 @@
 #include "os_access.h"
 #include "engine.h"
 #include "obd2.h"
-#include "can_hw.h"
+#include "can_msg_tx.h"
 #include "vehicle_speed.h"
 #include "map.h"
 #include "maf.h"
@@ -38,8 +38,6 @@
 #include "engine_math.h"
 #include "fuel_math.h"
 #include "thermistors.h"
-
-extern CANTxFrame txmsg;
 
 EXTERN_ENGINE
 ;
@@ -70,19 +68,17 @@ static const int16_t supportedPids4160[] = {
 };
 
 static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue) {
-	commonTxInit(OBD_TEST_RESPONSE);
+	CanTxMessage resp(OBD_TEST_RESPONSE);
 
 	// write number of bytes
-	txmsg.data8[0] = (uint8_t)(2 + numBytes);
+	resp[0] = (uint8_t)(2 + numBytes);
 	// write 2 bytes of header
-	txmsg.data8[1] = (uint8_t)(0x40 + mode);
-	txmsg.data8[2] = (uint8_t)PID;
+	resp[1] = (uint8_t)(0x40 + mode);
+	resp[2] = (uint8_t)PID;
 	// write N data bytes
 	for (int i = 8 * (numBytes - 1), j = 3; i >= 0; i -= 8, j++) {
-		txmsg.data8[j] = (uint8_t)((iValue >> i) & 0xff);
+		resp[j] = (uint8_t)((iValue >> i) & 0xff);
 	}
-	
-	sendCanMessage();
 }
 
 static void obdSendValue(int mode, int PID, int numBytes, float value) {
@@ -185,13 +181,15 @@ static void handleGetDataRequest(CANRxFrame *rx) {
 }
 
 static void handleDtcRequest(int numCodes, int *dtcCode) {
-	int numBytes = numCodes * 2;
-	// write CAN-TP Single Frame header?
-	txmsg.data8[0] = (uint8_t)((0 << 4) | numBytes);
-	for (int i = 0, j = 1; i < numCodes; i++) {
-		txmsg.data8[j++] = (uint8_t)((dtcCode[i] >> 8) & 0xff);
-		txmsg.data8[j++] = (uint8_t)(dtcCode[i] & 0xff);
-	}
+	// TODO: this appears to be unfinished?
+	
+	// int numBytes = numCodes * 2;
+	// // write CAN-TP Single Frame header?
+	// txmsg.data8[0] = (uint8_t)((0 << 4) | numBytes);
+	// for (int i = 0, j = 1; i < numCodes; i++) {
+	// 	txmsg.data8[j++] = (uint8_t)((dtcCode[i] >> 8) & 0xff);
+	// 	txmsg.data8[j++] = (uint8_t)(dtcCode[i] & 0xff);
+	// }
 }
 
 #if HAL_USE_CAN
