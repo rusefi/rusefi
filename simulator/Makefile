@@ -197,6 +197,7 @@ INCDIR = . \
          $(HW_LAYER_DRIVERS_INC) \
           $(PROJECT_DIR)/hw_layer \
           $(PROJECT_DIR)/hw_layer/algo \
+          $(PROJECT_DIR)/hw_layer/drivers/can \
           $(HW_SENSORS_INC) \
  	$(DEVELOPMENT_DIR) \
     $(CONTROLLERS_INC) \
