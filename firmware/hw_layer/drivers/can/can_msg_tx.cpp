@@ -1,14 +1,13 @@
 
 #include "efifeatures.h"
-#include "can_msg_tx.h"
-
 #include "global.h"
+
+#if EFI_CAN_SUPPORT
+#include "can_msg_tx.h"
 #include "engine.h"
 
 #include "engine_configuration.h"
 #include "mpu_util.h"
-
-#if EFI_CAN_SUPPORT
 
 EXTERN_ENGINE;
 
