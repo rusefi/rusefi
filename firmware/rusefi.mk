@@ -31,12 +31,6 @@ CPU_HWLAYER = ports/stm32/stm32f4
 endif
 
 
-ifeq ($(PROJECT_CPU),ARCH_STM32F1)
-CPU_STARTUP = startup_stm32f1xx.mk
-CPU_PLATFORM = STM32F1xx/platform.mk
-CPU_HWLAYER = ports/stm32/stm32f1
-endif
-
 ifeq ($(CPU_STARTUP_DIR),)
 CPU_STARTUP_DIR = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
 endif
