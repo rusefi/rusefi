@@ -197,25 +197,26 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 
-	// Compute multispark configuration
-	int maxSparkCount = 10;
-	int maxMultisparkRpm = 2000;
-	angle_t fireSparksForAngle = 25;
-
-	if (rpm <= maxMultisparkRpm && maxSparkCount > 0) {
-		floatus_t multiDelay = 1000;
-		floatus_t multiDwell = 2000;
+	// Compute multispark (if enabled)
+	if (CONFIG(multisparkEnable)
+		&& rpm <= CONFIG(multisparkMaxRpm)
+		&& CONFIG(multisparkMaxExtraSparkCount) > 0) {
+		floatus_t multiDelay = CONFIG(multisparkSparkDuration);
+		floatus_t multiDwell = CONFIG(multisparkDwell);
 
 		multisparkDelayTime = US2NT(multiDelay);
 		multisparkDwellTime = US2NT(multiDwell);
 
-		floatus_t additionalSparksUs = ENGINE(rpmCalculator.oneDegreeUs) * fireSparksForAngle;
+		floatus_t additionalSparksUs = ENGINE(rpmCalculator.oneDegreeUs) * CONFIG(multisparkMaxSparkingAngle);
 		floatus_t oneSparkTime = multiDelay + multiDwell;
 
 		float sparksFitInTime = additionalSparksUs / oneSparkTime;
+
+		// Take the floor (convert to int) - we want to undershoot, not overshoot
 		int floored = sparksFitInTime;
 
-		multisparkCount = minI(floored, maxSparkCount);
+		// Allow no more than the maximum number of extra sparks
+		multisparkCount = minI(floored, CONFIG(multisparkMaxExtraSparkCount));
 	} else {
 		multisparkCount = 0;
 	}
