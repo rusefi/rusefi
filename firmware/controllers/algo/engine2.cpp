@@ -197,29 +197,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 
-	// Compute multispark (if enabled)
-	if (CONFIG(multisparkEnable)
-		&& rpm <= CONFIG(multisparkMaxRpm)
-		&& CONFIG(multisparkMaxExtraSparkCount) > 0) {
-		floatus_t multiDelay = CONFIG(multisparkSparkDuration);
-		floatus_t multiDwell = CONFIG(multisparkDwell);
-
-		multisparkDelayTime = US2NT(multiDelay);
-		multisparkDwellTime = US2NT(multiDwell);
-
-		floatus_t additionalSparksUs = ENGINE(rpmCalculator.oneDegreeUs) * CONFIG(multisparkMaxSparkingAngle);
-		floatus_t oneSparkTime = multiDelay + multiDwell;
-
-		float sparksFitInTime = additionalSparksUs / oneSparkTime;
-
-		// Take the floor (convert to int) - we want to undershoot, not overshoot
-		int floored = sparksFitInTime;
-
-		// Allow no more than the maximum number of extra sparks
-		multisparkCount = minI(floored, CONFIG(multisparkMaxExtraSparkCount));
-	} else {
-		multisparkCount = 0;
-	}
+	multisparkCount = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);

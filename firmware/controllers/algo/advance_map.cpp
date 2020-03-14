@@ -228,6 +228,32 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif
 }
 
+size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// Compute multispark (if enabled)
+	if (CONFIG(multisparkEnable)
+		&& rpm <= CONFIG(multisparkMaxRpm)
+		&& CONFIG(multisparkMaxExtraSparkCount) > 0) {
+		floatus_t multiDelay = CONFIG(multisparkSparkDuration);
+		floatus_t multiDwell = CONFIG(multisparkDwell);
+
+		ENGINE(engineState.multisparkDelayTime) = US2NT(multiDelay);
+		ENGINE(engineState.multisparkDwellTime) = US2NT(multiDwell);
+
+		floatus_t additionalSparksUs = ENGINE(rpmCalculator.oneDegreeUs) * CONFIG(multisparkMaxSparkingAngle);
+		floatus_t oneSparkTime = multiDelay + multiDwell;
+
+		float sparksFitInTime = additionalSparksUs / oneSparkTime;
+
+		// Take the floor (convert to int) - we want to undershoot, not overshoot
+		int floored = sparksFitInTime;
+
+		// Allow no more than the maximum number of extra sparks
+		return minI(floored, CONFIG(multisparkMaxExtraSparkCount));
+	} else {
+		return 0;
+	}
+}
+
 void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
