@@ -1,7 +1,6 @@
 /*
  * @file bmw_m73.cpp
  *
- *
  * https://github.com/rusefi/rusefi_documentation/wiki/BMW_e38_750
  *
  * https://rusefi.com/wiki/index.php?title=Hardware:OEM_connectors#134_pin
@@ -65,12 +64,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_template.h"
+#include "bmw_m73.h"
 #include "custom_engine.h"
 
 EXTERN_CONFIG;
 
-static void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 
@@ -133,6 +132,7 @@ void setEngineBMW_M73_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 // BMW_M73_M
+// set engine_type 24
 void setEngineBMW_M73_Manhattan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -175,7 +175,7 @@ GPIOA_6
 	// For example TLE7209 - two control wires:
 	// PWM on both wires - one to open, another to close
 	// ETB motor NEG pin # - white wire - OUT 1
-
+	// green input wire
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_6;
 	// set_analog_input_pin tps PA3
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // PA3
@@ -185,15 +185,18 @@ GPIOA_6
 	// PWM pin
 	engineConfiguration->etbIo[0].controlPin1 = GPIO_UNASSIGNED;
 	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = GPIOC_9;
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_8;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOC_8;
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_9;
 	CONFIG(etb_use_two_wires) = true;
 
 	// PWM pin
 	engineConfiguration->etbIo[1].controlPin1 = GPIO_UNASSIGNED;
 	// DIR pin
-	engineConfiguration->etbIo[1].directionPin1 = GPIOB_8;
-	engineConfiguration->etbIo[1].directionPin2 = GPIOB_9;
+	engineConfiguration->etbIo[1].directionPin1 = GPIOB_9;
+	engineConfiguration->etbIo[1].directionPin2 = GPIOB_8;
+
+	CONFIG(tps2Min) = CONFIG(tpsMin);
+	CONFIG(tps2Max) = CONFIG(tpsMax);
 
 
 	engineConfiguration->injectionPins[0] = GPIO_UNASSIGNED;
@@ -213,6 +216,58 @@ GPIOA_6
 
 }
 
+/**
+ * set engine_type 63
+ *
+ * https://github.com/mck1117/proteus/blob/master/readme_pinout.md
+ *
+ * black#3 : orange   : injector #1
+ * black#4 : blue     : injector #3
+ * black#5 : white    : injector #5
+ * black#6 : green    : injector #6
+ * black#7 : orange   : injector #7
+ * black#8 : blue     : injector #9
+ * black#9 : white    : injector #11
+ * black#15: blue     : injector #2
+ * black#16: white    : injector #4
+ * black#19: green    : injector #8
+ * black#20:          : injector #10
+ * black#21:          : injector #12
+ *
+ *
+ * small#5 :          : VR1 pos
+ * small#8 : blue     : ETB1-
+ * small#13: blue     : VR1 neg
+ * small#15: orange   : ETB1+
+ * small#18: red      : ignition power / ECU power source
+ * small#19: black    : GND
+ * small#21: blue     : ETB2-
+ * small#22: orange   : ETB2+
+ * small#23: red      : ETB/high-side power from main relay
+ *
+ *
+ *
+ * white#9 : orange   : +5v
+ * white#17: green    : PPS
+ * white#18: red
+ * white#23: black    : Sensor Ground
+ * white#24: red      : TPS#1
+ *
+ */
 void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	// 12 injectors defined in boards/proteus/board_configuration.cpp
+
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_4;
+
+	// set vbatt_divider 8.16
+	// engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * 16.8f / 10.0f;
+	// todo: figure out exact values from TLE8888 breakout board used by Manhattan
+	engineConfiguration->vbattDividerCoeff = 7.6;
+
+	// TPS#2 = Analog volt
+//	engineConfiguration->tps2_1AdcChannel = EFI_ADC_;
+
+
 }

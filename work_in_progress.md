@@ -1,3 +1,8 @@
+Mar, 02 2020 status:
+* playing with some GDI software, but now waiting for repaired MC33816 to come from Seattle
+* Matt and DronoGus are working on different parts of getting stepper control using two universal H-bridged, that would give us stepper idle control on microRusEfi.
+* A _lot_ of hardware to play with - v12 on Manhattan, v12 on Proteus, setting up microRusEfi fabrication. 
+
 Dec, 28 2019 status:
 * playing with some GDI while waiting for proteus 0.2 and microRusEfi 0.4.6
 * [DONE] top priority is https://github.com/rusefi/rusefi/issues/1011 Fix and expand commit gate check

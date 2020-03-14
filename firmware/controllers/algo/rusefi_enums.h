@@ -193,6 +193,10 @@ typedef enum {
 	SUBARUEJ20G_DEFAULTS = 101,
 	VAG_18_TURBO = 102,
 
+	TEST_33816 = 103,
+
+	BMW_M73_MRE = 104,
+
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
 
@@ -522,6 +526,9 @@ typedef enum {
 	IM_SEQUENTIAL = 1,
 	/**
 	 * each cylinder has it's own injector but these injectors work in pairs. Injectors could be wired in pairs or separately.
+	 * Each pair is fired once per engine cycle
+	 * todo: we might want to implement one additional mode where each pair of injectors is floating twice per engine cycle.
+	 * todo: this could reduce phase offset from injection to stroke but would not work great for large injectors
 	 */
 	IM_BATCH = 2,
 	/**

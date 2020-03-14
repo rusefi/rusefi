@@ -38,7 +38,7 @@ public class StartupFrame {
     // todo: figure out a better way to work with absolute path
     private static final String APPICON = "appicon.png";
     private static final String LOGO = "logo.gif";
-    public static final String LINK_TEXT = "rusEfi (c) 2012-2019";
+    public static final String LINK_TEXT = "rusEfi (c) 2012-2020";
     private static final String URI = "http://rusefi.com/?java_console";
     // private static final int RUSEFI_ORANGE = 0xff7d03;
 

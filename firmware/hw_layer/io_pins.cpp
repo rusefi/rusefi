@@ -11,6 +11,7 @@
 #include "io_pins.h"
 
 #if EFI_PROD_CODE
+#include "os_access.h"
 #include "efi_gpio.h"
 #include "drivers/gpio/gpio_ext.h"
 
@@ -102,10 +103,11 @@ iomode_t getInputMode(pin_input_mode_e mode) {
 }
 
 #if HAL_USE_ICU
+static char icuError[30];
+
 void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 	if (icup->state != ICU_STOP && icup->state != ICU_READY) {
-		static char icuError[30];
-		sprintf(icuError, "ICU already used %s", msg);
+		chsnprintf(icuError, sizeof(icuError), "ICU already used %s", msg);
 		firmwareError(CUSTOM_ERR_6679, icuError);
 		return;
 	}

@@ -193,12 +193,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
-	//	0.0825
-	//	0.1375
-	//	6.375
-	//	10.625
-	engineConfiguration->miataNb2VVTRatioFrom = 8.50 * 0.75;
-	engineConfiguration->miataNb2VVTRatioTo = 14;
 	engineConfiguration->nbVvtIndex = 0;
 
 	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
@@ -526,6 +520,13 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// TLE8888_PIN_23: "33 - GP Out 3"
 	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
+
+
+	// todo: alternator warn
+	// ?
+
+	// todo: AC fan
+	// TLE8888_PIN_24: "43 - GP Out 4"
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 

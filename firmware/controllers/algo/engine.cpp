@@ -243,6 +243,7 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
+#if EFI_SHAFT_POSITION_INPUT
 void Engine::OnTriggerStateDecodingError() {
 	Engine *engine = this;
 	EXPAND_Engine;
@@ -340,7 +341,7 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 	}
 
 }
-
+#endif
 
 void Engine::setConfig(persistent_config_s *config) {
 	this->config = config;
@@ -487,11 +488,13 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+#if EFI_ENGINE_CONTROL
 	engine->m.beforeFuelCalc = getTimeNowLowerNt();
 	int rpm = GET_RPM();
 
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->m.fuelCalcTime = getTimeNowLowerNt() - engine->m.beforeFuelCalc;
+#endif
 }
 
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

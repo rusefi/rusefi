@@ -117,8 +117,6 @@
  */
 #define EFI_ENGINE_CONTROL TRUE
 
-#define EFI_SPEED_DENSITY TRUE
-
 /**
  * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
  * stock ECU
@@ -208,14 +206,9 @@
 #endif
 
 /**
- * While we embed multiple PnP configurations into the same firmware binary, these marcoses give us control
- * over which configurations go into the binary
+ * Should PnP engine configurations be included in the binary?
  */
-#define EFI_SUPPORT_DODGE_NEON FALSE
-#define EFI_SUPPORT_FORD_ASPIRE FALSE
-#define EFI_SUPPORT_FORD_FIESTA FALSE
-#define EFI_SUPPORT_NISSAN_PRIMERA FALSE
-#define EFI_SUPPORT_1995_FORD_INLINE_6 FALSE
+#define EFI_INCLUDE_ENGINE_PRESETS FALSE
 
 #ifndef EFI_ENGINE_SNIFFER
 #define EFI_ENGINE_SNIFFER FALSE

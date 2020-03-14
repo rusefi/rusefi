@@ -39,7 +39,7 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 	s->initialize(operationMode);
 
 	s->setTriggerSynchronizationGap(skippedCount + 1);
-	s->shapeWithoutTdc = (totalTeethCount > 2) && (skippedCount == 0);
+	s->shapeWithoutTdc = (totalTeethCount > 1) && (skippedCount == 0);
 	s->isSynchronizationNeeded = (totalTeethCount > 2) && (skippedCount != 0);
 
 

@@ -78,7 +78,7 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->is_enabled_spi_1 = false;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->sdCardCsPin = GPIOA_2;
-	engineConfiguration->isSdCardEnabled = false;
+	CONFIG(isSdCardEnabled) = false;
 }
 
 /**
@@ -241,10 +241,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
 	engineConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
-	engineConfiguration->logicAnalyzerMode[0] = OM_DEFAULT;
-	engineConfiguration->logicAnalyzerMode[1] = OM_DEFAULT;
-	engineConfiguration->logicAnalyzerMode[2] = OM_DEFAULT;
-	engineConfiguration->logicAnalyzerMode[3] = OM_DEFAULT;
 	//!!!!!!!!!!!!!!!!!!!
 	//engineConfiguration->silentTriggerError = true;
 

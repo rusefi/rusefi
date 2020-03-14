@@ -135,9 +135,11 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_MAP:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+#if EFI_SHAFT_POSITION_INPUT
 	case LE_METHOD_INTAKE_VVT:
 	case LE_METHOD_EXHAUST_VVT:
 		return engine->triggerCentral.getVVTPosition();
+#endif
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return getTimeNowSeconds();
 

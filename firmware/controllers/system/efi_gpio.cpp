@@ -421,7 +421,10 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
 
-	assertOMode(*outputMode);
+	if (*outputMode > OM_OPENDRAIN_INVERTED) {
+		firmwareError(CUSTOM_INVALID_MODE_SETTING, "%s invalid pin_output_mode_e", msg);
+		return;
+	}
 	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
 		PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
 

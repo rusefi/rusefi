@@ -54,7 +54,8 @@ static void setIgnitionPins() {
 }
 
 static void setLedPins() {
-	engineConfiguration->communicationLedPin = GPIOE_4;
+	CONFIG(warningLedPin) = GPIOE_3;
+	CONFIG(communicationLedPin) = GPIOE_4;
 	engineConfiguration->runningLedPin = GPIOE_5;
 	engineConfiguration->triggerErrorPin = GPIOE_6;
 }
@@ -177,4 +178,11 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
+
+	// output 13
+	CONFIG(mainRelayPin) = GPIOB_9;
+	// output 15
+	CONFIG(fanPin) = GPIOE_1;
+	// output 16
+	CONFIG(fuelPumpPin) = GPIOE_2;
 }

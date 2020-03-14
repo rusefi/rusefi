@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Feb 16 16:11:34 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 09 19:26:17 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -487,7 +487,7 @@ struct idle_hardware_s {
 	/**
 	 * offset 4
 	 */
-	brain_pin_e solenoidPin;
+	output_pin_e solenoidPin;
 	/**
 	 * offset 5
 	 */
@@ -818,7 +818,7 @@ struct engine_configuration_s {
 	 */
 	angle_t globalTriggerAngleOffset;
 	/**
-	 * Coefficient of input voltage dividers on your PCB
+	 * Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.
 	 * offset 460
 	 */
 	float analogInputDividerCoefficient;
@@ -1294,7 +1294,7 @@ struct engine_configuration_s {
 	bool useLcdScreen : 1;
 	/**
 	offset 744 bit 13 */
-	bool unusedAnotherOne : 1;
+	bool verboseTLE8888 : 1;
 	/**
 	offset 744 bit 14 */
 	bool unusedOldWarmupAfr : 1;
@@ -1378,10 +1378,9 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e hip9011IntHoldPinMode;
 	/**
-	 * default or inverted input
 	 * offset 756
 	 */
-	uint8_t logicAnalyzerMode[LOGIC_ANALYZER_CHANNEL_COUNT];
+	uint8_t unusedHereWeHave[4];
 	/**
 	 * offset 760
 	 */
@@ -1415,7 +1414,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 808
 	 */
-	brain_pin_e starterRelayPin;
+	output_pin_e starterRelayPin;
 	/**
 	 * offset 809
 	 */
@@ -1445,12 +1444,12 @@ struct engine_configuration_s {
 	 * This magic property is specific to Mazda Miata NB2
 	 * offset 820
 	 */
-	float miataNb2VVTRatioFrom;
+	float unusedmiataNb2VVTRatioFrom;
 	/**
 	 * This magic property is specific to Mazda Miata NB2
 	 * offset 824
 	 */
-	float miataNb2VVTRatioTo;
+	float unusedmiataNb2VVTRatioTo;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 828
@@ -1586,94 +1585,94 @@ struct engine_configuration_s {
 	bool todoClutchDownPinInverted : 1;
 	/**
 	offset 976 bit 2 */
-	bool unusedBit_250_2 : 1;
+	bool useHbridges : 1;
 	/**
 	offset 976 bit 3 */
-	bool unusedBit_250_3 : 1;
+	bool unusedBit_251_3 : 1;
 	/**
 	offset 976 bit 4 */
-	bool unusedBit_250_4 : 1;
+	bool unusedBit_251_4 : 1;
 	/**
 	offset 976 bit 5 */
-	bool unusedBit_250_5 : 1;
+	bool unusedBit_251_5 : 1;
 	/**
 	offset 976 bit 6 */
-	bool unusedBit_250_6 : 1;
+	bool unusedBit_251_6 : 1;
 	/**
 	offset 976 bit 7 */
-	bool unusedBit_250_7 : 1;
+	bool unusedBit_251_7 : 1;
 	/**
 	offset 976 bit 8 */
-	bool unusedBit_250_8 : 1;
+	bool unusedBit_251_8 : 1;
 	/**
 	offset 976 bit 9 */
-	bool unusedBit_250_9 : 1;
+	bool unusedBit_251_9 : 1;
 	/**
 	offset 976 bit 10 */
-	bool unusedBit_250_10 : 1;
+	bool unusedBit_251_10 : 1;
 	/**
 	offset 976 bit 11 */
-	bool unusedBit_250_11 : 1;
+	bool unusedBit_251_11 : 1;
 	/**
 	offset 976 bit 12 */
-	bool unusedBit_250_12 : 1;
+	bool unusedBit_251_12 : 1;
 	/**
 	offset 976 bit 13 */
-	bool unusedBit_250_13 : 1;
+	bool unusedBit_251_13 : 1;
 	/**
 	offset 976 bit 14 */
-	bool unusedBit_250_14 : 1;
+	bool unusedBit_251_14 : 1;
 	/**
 	offset 976 bit 15 */
-	bool unusedBit_250_15 : 1;
+	bool unusedBit_251_15 : 1;
 	/**
 	offset 976 bit 16 */
-	bool unusedBit_250_16 : 1;
+	bool unusedBit_251_16 : 1;
 	/**
 	offset 976 bit 17 */
-	bool unusedBit_250_17 : 1;
+	bool unusedBit_251_17 : 1;
 	/**
 	offset 976 bit 18 */
-	bool unusedBit_250_18 : 1;
+	bool unusedBit_251_18 : 1;
 	/**
 	offset 976 bit 19 */
-	bool unusedBit_250_19 : 1;
+	bool unusedBit_251_19 : 1;
 	/**
 	offset 976 bit 20 */
-	bool unusedBit_250_20 : 1;
+	bool unusedBit_251_20 : 1;
 	/**
 	offset 976 bit 21 */
-	bool unusedBit_250_21 : 1;
+	bool unusedBit_251_21 : 1;
 	/**
 	offset 976 bit 22 */
-	bool unusedBit_250_22 : 1;
+	bool unusedBit_251_22 : 1;
 	/**
 	offset 976 bit 23 */
-	bool unusedBit_250_23 : 1;
+	bool unusedBit_251_23 : 1;
 	/**
 	offset 976 bit 24 */
-	bool unusedBit_250_24 : 1;
+	bool unusedBit_251_24 : 1;
 	/**
 	offset 976 bit 25 */
-	bool unusedBit_250_25 : 1;
+	bool unusedBit_251_25 : 1;
 	/**
 	offset 976 bit 26 */
-	bool unusedBit_250_26 : 1;
+	bool unusedBit_251_26 : 1;
 	/**
 	offset 976 bit 27 */
-	bool unusedBit_250_27 : 1;
+	bool unusedBit_251_27 : 1;
 	/**
 	offset 976 bit 28 */
-	bool unusedBit_250_28 : 1;
+	bool unusedBit_251_28 : 1;
 	/**
 	offset 976 bit 29 */
-	bool unusedBit_250_29 : 1;
+	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_250_30 : 1;
+	bool unusedBit_278_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_250_31 : 1;
+	bool unusedBit_278_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2400,7 +2399,7 @@ struct engine_configuration_s {
 	 * This implementation makes a pulse every time one of the coils is charged, using coil dwell for pulse width. See also tachOutputPin
 	 * offset 2226
 	 */
-	brain_pin_e dizzySparkOutputPin;
+	output_pin_e dizzySparkOutputPin;
 	/**
 	 * offset 2227
 	 */
@@ -3217,4 +3216,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Feb 16 16:11:34 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 09 19:26:17 EDT 2020

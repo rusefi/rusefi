@@ -42,7 +42,7 @@ EXTERN_ENGINE;
 // This shows a SPI connected TLE8888.
 static void setupTle8888() {
 	// Enable the SPI channel and set up the SPI pins
-	engineConfiguration->is_enabled_spi_3 = true;
+	CONFIG(is_enabled_spi_3) = true;
 	engineConfiguration->spi3mosiPin = GPIOB_5;
 	engineConfiguration->spi3misoPin = GPIOB_4;
 	engineConfiguration->spi3sckPin = GPIOB_3;

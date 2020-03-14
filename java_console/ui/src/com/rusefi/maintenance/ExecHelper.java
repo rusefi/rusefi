@@ -43,16 +43,24 @@ public class ExecHelper {
     }
 
     @NotNull
-    public static StringBuffer executeCommand(String workingDirPath, String command, String binaryRelativeName, StatusConsumer wnd) {
+    public static String executeCommand(String workingDirPath, String command, String binaryRelativeName, StatusConsumer wnd) {
+        return executeCommand(workingDirPath, command, binaryRelativeName, wnd, new StringBuffer());
+    }
+
+        /**
+         * @param output out parameter with stdout content
+         * @return stderr of invoked command
+         */
+    @NotNull
+    public static String executeCommand(String workingDirPath, String command, String binaryRelativeName, StatusConsumer wnd, StringBuffer output) {
         StringBuffer error = new StringBuffer();
         String binaryFullName = workingDirPath + File.separator + binaryRelativeName;
         if (!new File(binaryFullName).exists()) {
             wnd.appendMsg(binaryFullName + " not found :(");
-            return error;
+            return error.toString();
         }
 
         wnd.appendMsg("Executing " + command);
-        StringBuffer output = new StringBuffer();
         try {
             File workingDir = new File(workingDirPath);
             Process p = Runtime.getRuntime().exec(command, null, workingDir);
@@ -65,7 +73,7 @@ public class ExecHelper {
             wnd.appendMsg("WaitError: " + e);
         }
         wnd.appendMsg("Done!");
-        return error;
+        return error.toString();
     }
 
     protected static void submitAction(Runnable runnable, String threadName) {
