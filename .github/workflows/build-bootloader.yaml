@@ -24,5 +24,5 @@ jobs:
   
     # Build the bootloader!
     - name: Build Bootloader
-      working-directory: ./firmware/bootloader
+      working-directory: ./firmware/bootloader/
       run: make -j4 -f src/Makefile EXTRA_PARAMS="-DEFI_BOOTLOADER -DSTM32F405xx -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_CHECKS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DBOARD_TLE8888_COUNT=0 -DBOARD_TLE6240_COUNT=0 -DBOARD_MC33972_COUNT=0"
