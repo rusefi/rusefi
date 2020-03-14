@@ -424,6 +424,7 @@ struct engine_state2_s {
 	 */
 	angle_t cltTimingCorrection = (angle_t)0;
 
+	// TODO: generate me
 	efitick_t multisparkDelayTime = 0;
 	efitick_t multisparkDwellTime = 0;
 	uint8_t multisparkCount = 0;
