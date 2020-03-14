@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 09 19:26:17 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Mar 14 09:14:04 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1576,7 +1576,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 972
 	 */
-	float unused;
+	uint16_t multisparkMaxRpm;
+	/**
+	 * offset 974
+	 */
+	uint8_t multisparkMaxSparkingAngle;
+	/**
+	 * offset 975
+	 */
+	uint8_t multisparkMaxExtraSparkCount;
 	/**
 	offset 976 bit 0 */
 	bool todoClutchUpPinInverted : 1;
@@ -1588,7 +1596,7 @@ struct engine_configuration_s {
 	bool useHbridges : 1;
 	/**
 	offset 976 bit 3 */
-	bool unusedBit_251_3 : 1;
+	bool multisparkEnable : 1;
 	/**
 	offset 976 bit 4 */
 	bool unusedBit_251_4 : 1;
@@ -1669,10 +1677,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_278_30 : 1;
+	bool unusedBit_280_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_278_31 : 1;
+	bool unusedBit_280_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2155,7 +2163,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1784
 	 */
-	uint8_t unusedSomething[4];
+	uint16_t multisparkSparkDuration;
+	/**
+	 * offset 1786
+	 */
+	uint16_t multisparkDwell;
 	/**
 	 * See cltIdleRpmBins
 	 * offset 1788
@@ -3216,4 +3228,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 09 19:26:17 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Mar 14 09:14:04 EDT 2020
