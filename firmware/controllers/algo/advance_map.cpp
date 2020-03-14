@@ -236,8 +236,8 @@ size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		floatus_t multiDelay = CONFIG(multisparkSparkDuration);
 		floatus_t multiDwell = CONFIG(multisparkDwell);
 
-		ENGINE(engineState.multisparkDelayTime) = US2NT(multiDelay);
-		ENGINE(engineState.multisparkDwellTime) = US2NT(multiDwell);
+		ENGINE(engineState.multispark.delay) = US2NT(multiDelay);
+		ENGINE(engineState.multispark.dwell) = US2NT(multiDwell);
 
 		floatus_t additionalSparksUs = ENGINE(rpmCalculator.oneDegreeUs) * CONFIG(multisparkMaxSparkingAngle);
 		floatus_t oneSparkTime = multiDelay + multiDwell;
