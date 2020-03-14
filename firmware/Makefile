@@ -291,11 +291,11 @@ INCDIR = $(CHIBIOS)/os/license \
 	$(PROJECT_DIR)/console/fl_binary \
 	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/mass_storage \
-	hw_layer/serial_over_usb \
-	hw_layer/algo \
-	hw_layer/lcd \
+	$(PROJECT_DIR)/hw_layer/serial_over_usb \
+	$(PROJECT_DIR)/hw_layer/algo \
+	$(PROJECT_DIR)/hw_layer/lcd \
+	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(HW_SENSORS_INC) \
-	hw_layer/mass_storage \
 	$(HW_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	$(UTIL_INC) \
