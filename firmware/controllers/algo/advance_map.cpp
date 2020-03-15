@@ -160,9 +160,10 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
 		tsOutputChannels.debugFloatField3 = engine->fsioState.fsioTimingAdjustment;
 		tsOutputChannels.debugFloatField4 = pidTimingCorrection;
+		tsOutputChannels.debugIntField1 = engine->engineState.multispark.count;
 #endif /* EFI_TUNER_STUDIO */
 	}
-	
+
 	return iatCorrection
 		+ engine->fsioState.fsioTimingAdjustment
 		+ engine->engineState.cltTimingCorrection
@@ -239,9 +240,12 @@ size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		ENGINE(engineState.multispark.delay) = US2NT(multiDelay);
 		ENGINE(engineState.multispark.dwell) = US2NT(multiDwell);
 
+		// How long is there for sparks? The user configured an angle, convert to time.
 		floatus_t additionalSparksUs = ENGINE(rpmCalculator.oneDegreeUs) * CONFIG(multisparkMaxSparkingAngle);
+		// How long does one spark take?
 		floatus_t oneSparkTime = multiDelay + multiDwell;
 
+		// How many sparks can we fit in the alloted time?
 		float sparksFitInTime = additionalSparksUs / oneSparkTime;
 
 		// Take the floor (convert to int) - we want to undershoot, not overshoot
