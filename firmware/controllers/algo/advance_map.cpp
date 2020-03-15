@@ -240,8 +240,10 @@ size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		ENGINE(engineState.multispark.delay) = US2NT(multiDelay);
 		ENGINE(engineState.multispark.dwell) = US2NT(multiDwell);
 
+		floatus_t usPerDegree = 60e6 / rpm;
+
 		// How long is there for sparks? The user configured an angle, convert to time.
-		floatus_t additionalSparksUs = ENGINE(rpmCalculator.oneDegreeUs) * CONFIG(multisparkMaxSparkingAngle);
+		floatus_t additionalSparksUs = usPerDegree * CONFIG(multisparkMaxSparkingAngle);
 		// How long does one spark take?
 		floatus_t oneSparkTime = multiDelay + multiDwell;
 
