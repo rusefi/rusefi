@@ -331,12 +331,12 @@ bit isVerboseAuxPid3;
 bit activateAuxPid4;
 bit isVerboseAuxPid4;
 bit useBiQuadAnalogFiltering;
-bit cj125isUaDivided;
+bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider?
 bit cj125isLsu49;
 bit etb_use_two_wires;
 bit isDoubleSolenoidIdle;
 bit showSdCardWarning;
-bit cj125isUrDivided;looks like 3v range should be enough, divider not needed
+bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
 bit useTLE8888_hall_mode;
 bit useTLE8888_cranking_hack;
 bit useInstantRpmForIdle;

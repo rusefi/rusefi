@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Mar 14 09:14:27 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 17 10:18:26 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -580,6 +580,7 @@ struct engine_configuration_s {
 	offset 76 bit 9 */
 	bool useBiQuadAnalogFiltering : 1;
 	/**
+	 * Is your UA CJ125 output wired to MCU via resistor divider?
 	offset 76 bit 10 */
 	bool cj125isUaDivided : 1;
 	/**
@@ -595,7 +596,8 @@ struct engine_configuration_s {
 	offset 76 bit 14 */
 	bool showSdCardWarning : 1;
 	/**
-	 * looks like 3v range should be enough, divider not needed
+	 * Is your UR CJ125 output wired to MCU via resistor divider?
+	 * Looks like 3v range should be enough, divider generally not needed.
 	offset 76 bit 15 */
 	bool cj125isUrDivided : 1;
 	/**
@@ -3228,4 +3230,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Mar 14 09:14:27 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 17 10:18:26 EDT 2020
