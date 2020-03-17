@@ -1313,7 +1313,7 @@ menuDialog = main
 		
 		subMenu = lcdScreen,				"LCD" @@if_ts_show_lcd
 		subMenu = joystickPanel,			"Joystick" @@if_ts_show_joystick
-		subMenu = spiFunction,				"SPI"
+		subMenu = spiFunction,				"SPI"@@if_ts_show_spi
 		subMenu = monitoringSettings,		"rusEfi console"
 		subMenu = std_separator
 		
