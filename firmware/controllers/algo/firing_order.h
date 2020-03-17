@@ -49,6 +49,9 @@ typedef enum {
 	FO_1_7_4_10_2_8_6_12_3_9_5_11 = 16, // lamborghini, typical rusEfi use-case
 	FO_1_12_5_8_3_10_6_7_2_11_4_9 = 18, // VAG W12
 
+	// 16 cylinder
+	// todo: 1-14-9-4-7-12-15-6-13-8-3-16-11-2-5-10
+
 	// max used = 19
 
 	Force_4b_firing_order = ENUM_32_BITS,
