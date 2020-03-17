@@ -1455,3 +1455,4 @@ end_struct
 #define ts_show_egt true
 #define ts_show_gps true
 #define ts_show_analog_divider true
+#define ts_show_spi true
