@@ -1071,7 +1071,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	uint8_t[3] unusedSpiPadding4;
 
 	pin_mode_e spi1SckMode;
-	pin_mode_e spi1MosiMode;
+	pin_mode_e spi1MosiMode;+Modes count be used for 3v<>5v integration using pull-ups/pull-downs etc.
 	pin_mode_e spi1MisoMode;
 
 	pin_mode_e spi2SckMode;

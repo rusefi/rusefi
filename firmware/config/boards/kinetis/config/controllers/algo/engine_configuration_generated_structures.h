@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 17 10:18:26 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 17 13:38:12 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2564,6 +2564,7 @@ struct engine_configuration_s {
 	 */
 	pin_mode_e spi1SckMode;
 	/**
+	 * Modes count be used for 3v<>5v integration using pull-ups/pull-downs etc.
 	 * offset 2597
 	 */
 	pin_mode_e spi1MosiMode;
@@ -3230,4 +3231,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 17 10:18:26 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 17 13:38:12 EDT 2020
