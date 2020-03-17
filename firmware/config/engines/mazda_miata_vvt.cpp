@@ -1,6 +1,8 @@
 /*
  * @file	mazda_miata_vvt.cpp
  *
+ * Miata NB2, also known as MX-5 Mk2.5
+ *
  * MAZDA_MIATA_2003
  * set engine_type 47
  *
