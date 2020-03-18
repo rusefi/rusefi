@@ -23,7 +23,12 @@ set f7_console_setting=firmware\config\boards\nucleo_f767\rusefi_console_propert
 
 rem                     folter_name configuration_name [optional .ini file name]
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat proteus     proteus rusefi_proteus.ini
+call misc\jenkins\compile_other_versions\compile_and_upload.bat proteus     proteus-f4 rusefi_proteus.ini
+IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
+IF NOT ERRORLEVEL 0 EXIT /B 1
+pwd
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat proteus     proteus-f7 rusefi_proteus.ini
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd
