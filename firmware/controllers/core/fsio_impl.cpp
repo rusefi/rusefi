@@ -745,8 +745,8 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > 5) || engine->isInShutdownMode());
 	}
 	// see STARTER_RELAY_LOGIC
-	if (CONFIG(starterRelayPin) != GPIO_UNASSIGNED) {
-		enginePins.starterRelay.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
+	if (CONFIG(starterRelayDisablePin) != GPIO_UNASSIGNED) {
+		enginePins.starterRelayDisable.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
 	}
 	// see FAN_CONTROL_LOGIC
 	if (CONFIG(fanPin) != GPIO_UNASSIGNED) {
