@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 17 13:38:12 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Mar 18 15:54:39 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1416,11 +1416,12 @@ struct engine_configuration_s {
 	/**
 	 * offset 808
 	 */
-	output_pin_e starterRelayPin;
+	output_pin_e starterRelayDisablePin;
 	/**
+	 * On some vehicles we can disable starter once engine is already running
 	 * offset 809
 	 */
-	pin_output_mode_e starterRelayPinMode;
+	pin_output_mode_e starterRelayDisableMode;
 	/**
 	 * Some Subaru and some Mazda use double-solenoid idle air valve
 	 * offset 810
@@ -1429,7 +1430,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 811
 	 */
-	uint8_t unuseduartPadding1;
+	switch_input_pin_e startStopButton;
 	/**
 	 * offset 812
 	 */
@@ -2147,7 +2148,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1772
 	 */
-	uint8_t unusedFormerWarmupAfrPid[3];
+	output_pin_e starterControlPin;
+	/**
+	 * offset 1773
+	 */
+	uint8_t unusedFormerWarmupAfrPid[2];
 	/**
 	 * offset 1775
 	 */
@@ -3231,4 +3236,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 17 13:38:12 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Mar 18 15:54:39 EDT 2020

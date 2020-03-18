@@ -1162,7 +1162,7 @@ menuDialog = main
 		
 		# Digital outputs
 		subMenu = mainRelay,				"Main relay"
-		subMenu = starterRelay,				"Starter relay"
+		subMenu = starterRelay,				"Starter Disable relay"
 		subMenu = fuelPump,					"Fuel rail"
 		subMenu = fanSetting,				"Fan"
 		subMenu = tachSettings,				"Tachometer"
