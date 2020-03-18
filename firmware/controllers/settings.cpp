@@ -118,8 +118,8 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->mainRelayPinMode),
 			hwPortname(engineConfiguration->mainRelayPin));
 
-	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->starterRelayPinMode),
-			hwPortname(engineConfiguration->starterRelayPin));
+	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->starterRelayDisableMode),
+			hwPortname(engineConfiguration->starterRelayDisablePin));
 
 	scheduleMsg(&logger, "alternator field: mode %s @ %s",
 			getPin_output_mode_e(engineConfiguration->alternatorControlPinMode),
@@ -680,7 +680,7 @@ static void setMainRelayPin(const char *pinName) {
 }
 
 static void setStarterRelayPin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->starterRelayPin, "starter relay");
+	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
 }
 
 static void setAlternatorPin(const char *pinName) {
