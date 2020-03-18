@@ -324,7 +324,7 @@ void AdcDevice::invalidateSamplesCache() {
 	// As a result, we have to manually invalidate the D-cache any time we (the CPU)
 	// would like to read something that somebody else wrote (ADC via DMA, in this case)
 	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(samples));
-#endif
+#endif /* STM32F7XX */
 }
 
 void AdcDevice::init(void) {

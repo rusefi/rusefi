@@ -153,6 +153,8 @@ ifeq ($(USE_FATFS),yes)
 include $(PROJECT_DIR)/ext/fatfs.mk
 endif
 
+BOARDS_DIR = $(PROJECT_DIR)/config/boards
+
 include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/console/console.mk
