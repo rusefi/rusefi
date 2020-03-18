@@ -6,6 +6,7 @@
  * https://rusefi.com/wiki/index.php?title=Hardware:OEM_connectors#134_pin
  * https://github.com/rusefi/rusefi_documentation/wiki/HOWTO_electronic_throttle_body
  * Ignition module https://rusefi.com/forum/viewtopic.php?f=4&t=286
+ * https://github.com/rusefi/rusefi_documentation/wiki/Hardware_microRusEfi_wiring
  *
  * 1/2 plugs black
  * 2/2 plugs grey
@@ -20,6 +21,7 @@
  * ECU pin 8:  IN  RED/BLU RED +12v from ECU relay
  *
  * Plug #2 24 pin
+ * ECU pin 23: OUT BRN/BLK BLK ECU relay control, low-side
  *
  *
  *
@@ -35,6 +37,9 @@
  * ECU pin 41: OUT BRN/WHT BLU injector #1
  * ECU pin 46: IN  BLK     BLU VR negative crankshaft sensor
  *
+ * Plug #4 40 pin
+ * ECU pin 6:  IN          ORG start signal from ignition key. Custom wiring: pulled-up thermistor wire on MRE
+ * ECU pin 40: OUT YEL/BRN GRN starter enable
  *
  *
  * Plug #5 9 pin
@@ -75,6 +80,9 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(debugMode) = DBG_ELECTRONIC_THROTTLE_PID;
 	engineConfiguration->etb.pFactor = 2.00;
 	engineConfiguration->etb.iFactor = 0.35;
+
+	// AN Temp 4, orange wire
+	CONFIG(startStopButton) = GPIOA_3;
 
 
 	//set tps_min 891
