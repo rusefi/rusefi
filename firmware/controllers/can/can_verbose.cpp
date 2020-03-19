@@ -9,6 +9,7 @@
 #include "sensor.h"
 #include "allsensors.h"
 #include "fuel_math.h"
+#include "spark_logic.h"
 
 EXTERN_ENGINE;
 
@@ -16,7 +17,9 @@ struct Speeds {
     uint16_t rpm;
     scaled_angle timing;
     scaled_channel<uint8_t, 2> injDuty;
-    uint8_t pad[3];
+    scaled_channel<uint8_t, 2> coilDuty;
+    scaled_channel<uint8_t> vssKph;
+    uint8_t pad[1];
 };
 
 static void populateFrame(Speeds& msg) {
@@ -27,6 +30,9 @@ static void populateFrame(Speeds& msg) {
     msg.timing = timing > 360 ? timing - 720 : timing;
 
     msg.injDuty = getInjectorDutyCycle(rpm);
+    msg.coilDuty = getCoilDutyCycle(rpm);
+
+    msg.vssKph = getVehicleSpeed();
 }
 
 struct PedalAndTps {
@@ -43,30 +49,38 @@ static void populateFrame(PedalAndTps& msg)
     msg.tps2 = Sensor::get(SensorType::Tps2).value_or(-1);
 }
 
-struct Temperatures {
-    scaled_temperature clt;
-    scaled_temperature iat;
-    scaled_temperature aux1;
-    scaled_temperature aux2;
+struct Sensors1 {
+    scaled_pressure map;
+    scaled_channel<uint8_t> clt;
+    scaled_channel<uint8_t> iat;
+    scaled_channel<uint8_t> aux1;
+    scaled_channel<uint8_t> aux2;
+    scaled_channel<uint8_t> mcuTemp;
+    scaled_channel<uint8_t, 2> fuelLevel;
 };
 
-static void populateFrame(Temperatures& msg) {
-    msg.clt = getCoolantTemperature();
-    msg.iat = getIntakeAirTemperature();
+static void populateFrame(Sensors1& msg) {
+    msg.map = getMap();
 
-    // todo: does aux even work?
-    msg.aux1 = 0;
-    msg.aux2 = 0;
+    msg.clt = getCoolantTemperature() + 40;
+    msg.iat = getIntakeAirTemperature() + 40;
+
+    // todo: does aux temp even work?
+    msg.aux1 = 0 + 40;
+    msg.aux2 = 0 + 40;
+
+    msg.mcuTemp = getMCUInternalTemperature();
+    msg.fuelLevel = engine->sensors.fuelTankLevel;
 }
 
-struct Sensors {
+struct Sensors2 {
     scaled_afr afr;
     scaled_pressure oilPressure;
     scaled_angle vvtPos;
     scaled_voltage vbatt;
 };
 
-static void populateFrame(Sensors& msg) {
+static void populateFrame(Sensors2& msg) {
     msg.afr = getAfr();
     msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
     msg.vvtPos = engine->triggerCentral.getVVTPosition();
@@ -74,15 +88,13 @@ static void populateFrame(Sensors& msg) {
 }
 
 struct EngineLoad {
-    scaled_pressure map;
     scaled_channel<uint16_t, 1000> cylAirmass;
     scaled_channel<uint16_t, 100> estAirflow;
 
-    uint8_t pad[2];
+    uint8_t pad[4];
 };
 
 static void populateFrame(EngineLoad& msg) {
-    msg.map = getMap();
     msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
     msg.estAirflow = engine->engineState.airFlow;
 }
@@ -105,8 +117,8 @@ void sendCanVerbose() {
 
     transmitStruct<Speeds>      (base + 0);
     transmitStruct<PedalAndTps> (base + 1);
-    transmitStruct<Temperatures>(base + 2);
-    transmitStruct<Sensors>     (base + 3);
+    transmitStruct<Sensors1>    (base + 2);
+    transmitStruct<Sensors2>    (base + 3);
     transmitStruct<EngineLoad>  (base + 4);
     transmitStruct<Fueling>     (base + 5);
 }
