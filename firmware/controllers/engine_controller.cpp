@@ -91,8 +91,8 @@
 #include "pwm_generator.h"
 #include "lcd_controller.h"
 #include "pin_repository.h"
-#include "tachometer.h"
 #endif /* EFI_PROD_CODE */
+#include "tachometer.h"
 
 #if EFI_CJ125
 #include "cj125.h"
@@ -741,6 +741,10 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
+#if EFI_UNIT_TEST
+	initTachometer(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_UNIT_TEST */
+
 }
 
 #if !EFI_UNIT_TEST
@@ -820,7 +824,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_HD44780_LCD */
 
 #if EFI_PROD_CODE
-	initTachometer();
+	initTachometer(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE */
 }
 
