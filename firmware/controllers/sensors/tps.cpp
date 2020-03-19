@@ -214,14 +214,15 @@ bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (mockPedalPosition != MOCK_UNDEFINED) {
+		return mockPedalPosition;
+	}
+
 	// Don't choke without a pedal set
 	if (CONFIG(throttlePedalPositionAdcChannel) == EFI_ADC_NONE) {
 		return 0;
 	}
 
-	if (mockPedalPosition != MOCK_UNDEFINED) {
-		return mockPedalPosition;
-	}
 	DISPLAY_TAG(PEDAL_SECTION);
 	DISPLAY_TEXT(Analog_MCU_reads);
 
