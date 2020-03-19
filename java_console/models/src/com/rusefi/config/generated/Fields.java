@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Mar 18 15:54:25 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Mar 19 09:14:14 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -345,6 +345,7 @@ public class Fields {
 	public static final int electronicThrottlePin1Mode_offset = 672;
 	public static final int enableAemXSeries_offset = 744;
 	public static final int enabledStep1Limiter_offset = 744;
+	public static final int enableVerboseCanTx_offset = 744;
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
 	public static final int engineChartSize_offset = 1480;
 	public static final int engineConfiguration_offset = 0;
@@ -1406,12 +1407,10 @@ public class Fields {
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1773;
-	public static final int unusedHereWeHave_offset = 756;
 	public static final int unusedmiataNb2VVTRatioFrom_offset = 820;
 	public static final int unusedmiataNb2VVTRatioFrom_offset_hex = 334;
 	public static final int unusedmiataNb2VVTRatioTo_offset = 824;
 	public static final int unusedmiataNb2VVTRatioTo_offset_hex = 338;
-	public static final int unusedOldWarmupAfr_offset = 744;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
 	public static final int unusedSpiPadding7_offset = 4005;
@@ -1464,6 +1463,7 @@ public class Fields {
 	public static final int vehicleSpeedSensorInputPin_offset = 968;
 	public static final int veLoadBins_offset = 18464;
 	public static final int veLoadBins_offset_hex = 4820;
+	public static final int verboseCanBaseAddress_offset = 756;
 	public static final int verboseTLE8888_offset = 744;
 	public static final int verboseTriggerSynchDetails_offset = 1476;
 	public static final int veRpmBins_offset = 18528;
@@ -1768,7 +1768,7 @@ public class Fields {
 	public static final Field USETPICADVANCEDMODE = Field.create("USETPICADVANCEDMODE", 744, FieldType.BIT, 11);
 	public static final Field USELCDSCREEN = Field.create("USELCDSCREEN", 744, FieldType.BIT, 12);
 	public static final Field VERBOSETLE8888 = Field.create("VERBOSETLE8888", 744, FieldType.BIT, 13);
-	public static final Field UNUSEDOLDWARMUPAFR = Field.create("UNUSEDOLDWARMUPAFR", 744, FieldType.BIT, 14);
+	public static final Field ENABLEVERBOSECANTX = Field.create("ENABLEVERBOSECANTX", 744, FieldType.BIT, 14);
 	public static final Field ONOFFALTERNATORLOGIC = Field.create("ONOFFALTERNATORLOGIC", 744, FieldType.BIT, 15);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 744, FieldType.BIT, 16);
 	public static final Field VVTCAMSENSORUSERISE = Field.create("VVTCAMSENSORUSERISE", 744, FieldType.BIT, 17);
@@ -1794,6 +1794,7 @@ public class Fields {
 	public static final Field HIP9011CSPIN = Field.create("HIP9011CSPIN", 753, FieldType.INT8, brain_pin_e);
 	public static final Field HIP9011INTHOLDPIN = Field.create("HIP9011INTHOLDPIN", 754, FieldType.INT8, brain_pin_e);
 	public static final Field HIP9011INTHOLDPINMODE = Field.create("HIP9011INTHOLDPINMODE", 755, FieldType.INT8, pin_output_mode_e);
+	public static final Field VERBOSECANBASEADDRESS = Field.create("VERBOSECANBASEADDRESS", 756, FieldType.INT);
 	public static final Field UNREALISTICRPMTHREASHOLD = Field.create("UNREALISTICRPMTHREASHOLD", 760, FieldType.INT);
 	public static final Field GPIOPINMODES1 = Field.create("GPIOPINMODES1", 764, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES2 = Field.create("GPIOPINMODES2", 765, FieldType.INT8, pin_output_mode_e);
@@ -2671,7 +2672,7 @@ public class Fields {
 	USETPICADVANCEDMODE,
 	USELCDSCREEN,
 	VERBOSETLE8888,
-	UNUSEDOLDWARMUPAFR,
+	ENABLEVERBOSECANTX,
 	ONOFFALTERNATORLOGIC,
 	ISCJ125ENABLED,
 	VVTCAMSENSORUSERISE,
@@ -2697,6 +2698,7 @@ public class Fields {
 	HIP9011CSPIN,
 	HIP9011INTHOLDPIN,
 	HIP9011INTHOLDPINMODE,
+	VERBOSECANBASEADDRESS,
 	UNREALISTICRPMTHREASHOLD,
 	GPIOPINMODES1,
 	GPIOPINMODES2,
