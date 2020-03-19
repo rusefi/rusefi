@@ -1,3 +1,12 @@
+/**
+ * @file	can_rx.cpp
+ *
+ * CAN reception handling.  This file handles multiplexing incoming CAN frames as appropriate
+ * to the subsystems that consume them.
+ *
+ * @date Mar 19, 2020
+ * @author Matthew Kennedy, (c) 2020
+ */
 
 #include "global.h"
 #if EFI_CAN_SUPPORT
