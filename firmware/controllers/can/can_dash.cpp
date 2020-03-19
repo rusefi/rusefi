@@ -1,4 +1,11 @@
-// todo: header
+/**
+ * @file	can_dash.cpp
+ *
+ * This file handles transmission of ECU data to various OE dashboards.
+ *
+ * @date Mar 19, 2020
+ * @author Matthew Kennedy, (c) 2020
+ */
 
 #include "globalaccess.h"
 #if EFI_CAN_SUPPORT

@@ -1,5 +1,11 @@
-// todo: header
-
+/**
+ * @file	can_tx.cpp
+ *
+ * CAN transmission handling.  This file handles the dispatch of various outgoing regularly scheduled CAN message types.
+ *
+ * @date Mar 19, 2020
+ * @author Matthew Kennedy, (c) 2020
+ */
 
 #include "globalaccess.h"
 #if EFI_CAN_SUPPORT
