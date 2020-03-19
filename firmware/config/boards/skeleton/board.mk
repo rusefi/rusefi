@@ -1,7 +1,5 @@
 # Combine the related files for a specific platform and MCU.
 
-BOARDS_DIR = $(PROJECT_DIR)/config/boards
-
 # Target ECU board design
 BOARDSRC_CPP = $(BOARDS_DIR)/skeleton/board_configuration.cpp
 

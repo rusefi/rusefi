@@ -53,6 +53,9 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
+void setSdCardConfigurationOverrides(void) {
+}
+
 static void setLedPins() {
 	CONFIG(warningLedPin) = GPIOE_3;
 	CONFIG(communicationLedPin) = GPIOE_4;

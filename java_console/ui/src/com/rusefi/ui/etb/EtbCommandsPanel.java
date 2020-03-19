@@ -5,11 +5,13 @@ import com.rusefi.core.Sensor;
 import com.rusefi.ldmp.generated.ElectronicThrottleMeta;
 import com.rusefi.ui.config.BitConfigField;
 import com.rusefi.ui.config.ConfigField;
+import com.rusefi.ui.config.EnumConfigField;
 import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.DetachedSensor;
+import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -24,12 +26,6 @@ public class EtbCommandsPanel {
 
     public EtbCommandsPanel() {
         content.add(new DirectDrivePanel().getContent());
-
-        JPanel spotsPane = new JPanel(new VerticalFlowLayout());
-        spotsPane.setBorder(BorderFactory.createTitledBorder("Magic Spots"));
-        MagicSpotsFinder magicSpotsFinder = new MagicSpotsFinder();
-        spotsPane.add(UiUtils.wrap(magicSpotsFinder.getButton()));
-        spotsPane.add(magicSpotsFinder.getPoints());
 
         JPanel testParameters = new JPanel(new VerticalFlowLayout());
         testParameters.setBorder(BorderFactory.createTitledBorder("Try PID settings"));
@@ -53,16 +49,33 @@ public class EtbCommandsPanel {
         content.setBorder(BorderFactory.createTitledBorder("Commands"));
 
         content.add(testParameters);
-        content.add(spotsPane);
-        content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
-        content.add(UiUtils.wrap(new EtbReturnToNeutral().getContent()));
 
         content.add(AnyCommand.createArea(new Node(), CMD_ETB_DUTY + " " + "10", false, false).getContent());
 
+        JPanel mockPpsPanel = new JPanel(new VerticalFlowLayout());
+        mockPpsPanel.setBorder(BorderFactory.createTitledBorder("Mock PPS"));
+        mockPpsPanel.add(DetachedSensor.createMockVoltageSlider(Sensor.PPS));
 
-        content.add(DetachedSensor.createMockVoltageSlider(Sensor.PPS));
+
+        content.add(mockPpsPanel);
 
         content.add(LiveDocPanel.createPanel("ETB", ElectronicThrottleMeta.CONTENT));
+
+        content.add(new EnumConfigField(Fields.DEBUGMODE, "Debug Mode").getContent());
+
+        content.add(createMagicSpotsPanel());
+        content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
+        content.add(UiUtils.wrap(new EtbReturnToNeutral().getContent()));
+    }
+
+    @NotNull
+    private JPanel createMagicSpotsPanel() {
+        JPanel spotsPane = new JPanel(new VerticalFlowLayout());
+        spotsPane.setBorder(BorderFactory.createTitledBorder("Magic Spots"));
+        MagicSpotsFinder magicSpotsFinder = new MagicSpotsFinder();
+        spotsPane.add(UiUtils.wrap(magicSpotsFinder.getButton()));
+        spotsPane.add(magicSpotsFinder.getPoints());
+        return spotsPane;
     }
 
     public JComponent getContent() {

@@ -331,12 +331,12 @@ bit isVerboseAuxPid3;
 bit activateAuxPid4;
 bit isVerboseAuxPid4;
 bit useBiQuadAnalogFiltering;
-bit cj125isUaDivided;
+bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider?
 bit cj125isLsu49;
 bit etb_use_two_wires;
 bit isDoubleSolenoidIdle;
 bit showSdCardWarning;
-bit cj125isUrDivided;looks like 3v range should be enough, divider not needed
+bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
 bit useTLE8888_hall_mode;
 bit useTLE8888_cranking_hack;
 bit useInstantRpmForIdle;
@@ -684,10 +684,10 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:7], "Off", "UART1", "UART2", "UA
 	int16_t sdCardPeriodMs;+SD card logging period, in milliseconds;"ms",        1,     0,  0,    30000,  0
 	brain_pin_e debugSetTimer
 	brain_pin_e debugMapAveraging;
-	output_pin_e starterRelayPin;
-	pin_output_mode_e starterRelayPinMode;
+	output_pin_e starterRelayDisablePin;
+	pin_output_mode_e starterRelayDisableMode;On some vehicles we can disable starter once engine is already running
 	brain_pin_e secondSolenoidPin;Some Subaru and some Mazda use double-solenoid idle air valve
-	uint8_t[1] unuseduartPadding1;
+	switch_input_pin_e startStopButton;
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
@@ -750,11 +750,13 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	switch_input_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
-	float unused
+	uint16_t multisparkMaxRpm;;"rpm", 1, 0, 0, 3000, 0
+	uint8_t multisparkMaxSparkingAngle;;"deg", 1, 0, 0, 60, 0
+	uint8_t multisparkMaxExtraSparkCount;;"count", 1, 0, 0, 5, 0
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
 	bit useHbridges
-	bit unusedBit_251_3
+	bit multisparkEnable
 	bit unusedBit_251_4
 	bit unusedBit_251_5
 	bit unusedBit_251_6
@@ -941,13 +943,15 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:7], @@pin_mode_e_enum@@
 	float alternator_antiwindupFreq;;    "x",    1,      0.0,       -1000000,  1000000,        4
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC",      1,     0,    0, 1023,      0
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC",      1,     0,    0, 1023,      0
-	uint8_t[3] unusedFormerWarmupAfrPid;
+	output_pin_e starterControlPin; 
+	uint8_t[2] unusedFormerWarmupAfrPid;
 	uint8_t tachPulsePerRev;;"Pulse",        1,     0,  1.0,    255.0,  0
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
-	uint8_t[4] unusedSomething;
+	uint16_t multisparkSparkDuration;; "ms", 0.001, 0, 0, 3, 2
+	uint16_t multisparkDwell;; "ms", 0.001, 0, 0, 3, 2
 	pid_s idleRpmPid;See cltIdleRpmBins
 	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
@@ -1068,7 +1072,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	uint8_t[3] unusedSpiPadding4;
 
 	pin_mode_e spi1SckMode;
-	pin_mode_e spi1MosiMode;
+	pin_mode_e spi1MosiMode;+Modes count be used for 3v<>5v integration using pull-ups/pull-downs etc.
 	pin_mode_e spi1MisoMode;
 
 	pin_mode_e spi2SckMode;
@@ -1452,3 +1456,4 @@ end_struct
 #define ts_show_egt true
 #define ts_show_gps true
 #define ts_show_analog_divider true
+#define ts_show_spi true

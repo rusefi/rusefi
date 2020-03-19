@@ -42,7 +42,9 @@ adcsample_t vbattSampleProteus = 0;
 void proteusAdcHack()
 {
 	adcConvert(&ADCD3, &adcConvGroup, samples, 8);
+#if defined(STM32F7XX)
 	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(samples));
+#endif /* STM32F7XX */
 
 	uint32_t sum = 0;
 

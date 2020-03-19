@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 09 19:26:17 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Mar 18 15:54:25 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -580,6 +580,7 @@ struct engine_configuration_s {
 	offset 76 bit 9 */
 	bool useBiQuadAnalogFiltering : 1;
 	/**
+	 * Is your UA CJ125 output wired to MCU via resistor divider?
 	offset 76 bit 10 */
 	bool cj125isUaDivided : 1;
 	/**
@@ -595,7 +596,8 @@ struct engine_configuration_s {
 	offset 76 bit 14 */
 	bool showSdCardWarning : 1;
 	/**
-	 * looks like 3v range should be enough, divider not needed
+	 * Is your UR CJ125 output wired to MCU via resistor divider?
+	 * Looks like 3v range should be enough, divider generally not needed.
 	offset 76 bit 15 */
 	bool cj125isUrDivided : 1;
 	/**
@@ -1414,11 +1416,12 @@ struct engine_configuration_s {
 	/**
 	 * offset 808
 	 */
-	output_pin_e starterRelayPin;
+	output_pin_e starterRelayDisablePin;
 	/**
+	 * On some vehicles we can disable starter once engine is already running
 	 * offset 809
 	 */
-	pin_output_mode_e starterRelayPinMode;
+	pin_output_mode_e starterRelayDisableMode;
 	/**
 	 * Some Subaru and some Mazda use double-solenoid idle air valve
 	 * offset 810
@@ -1427,7 +1430,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 811
 	 */
-	uint8_t unuseduartPadding1;
+	switch_input_pin_e startStopButton;
 	/**
 	 * offset 812
 	 */
@@ -1576,7 +1579,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 972
 	 */
-	float unused;
+	uint16_t multisparkMaxRpm;
+	/**
+	 * offset 974
+	 */
+	uint8_t multisparkMaxSparkingAngle;
+	/**
+	 * offset 975
+	 */
+	uint8_t multisparkMaxExtraSparkCount;
 	/**
 	offset 976 bit 0 */
 	bool todoClutchUpPinInverted : 1;
@@ -1588,7 +1599,7 @@ struct engine_configuration_s {
 	bool useHbridges : 1;
 	/**
 	offset 976 bit 3 */
-	bool unusedBit_251_3 : 1;
+	bool multisparkEnable : 1;
 	/**
 	offset 976 bit 4 */
 	bool unusedBit_251_4 : 1;
@@ -1669,10 +1680,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_278_30 : 1;
+	bool unusedBit_280_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_278_31 : 1;
+	bool unusedBit_280_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2137,7 +2148,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1772
 	 */
-	uint8_t unusedFormerWarmupAfrPid[3];
+	output_pin_e starterControlPin;
+	/**
+	 * offset 1773
+	 */
+	uint8_t unusedFormerWarmupAfrPid[2];
 	/**
 	 * offset 1775
 	 */
@@ -2155,7 +2170,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1784
 	 */
-	uint8_t unusedSomething[4];
+	uint16_t multisparkSparkDuration;
+	/**
+	 * offset 1786
+	 */
+	uint16_t multisparkDwell;
 	/**
 	 * See cltIdleRpmBins
 	 * offset 1788
@@ -2550,6 +2569,7 @@ struct engine_configuration_s {
 	 */
 	pin_mode_e spi1SckMode;
 	/**
+	 * Modes count be used for 3v<>5v integration using pull-ups/pull-downs etc.
 	 * offset 2597
 	 */
 	pin_mode_e spi1MosiMode;
@@ -3216,4 +3236,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 09 19:26:17 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Mar 18 15:54:25 EDT 2020

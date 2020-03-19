@@ -1162,7 +1162,7 @@ menuDialog = main
 		
 		# Digital outputs
 		subMenu = mainRelay,				"Main relay"
-		subMenu = starterRelay,				"Starter relay"
+		subMenu = starterRelay,				"Starter Disable relay"
 		subMenu = fuelPump,					"Fuel rail"
 		subMenu = fanSetting,				"Fan"
 		subMenu = tachSettings,				"Tachometer"
@@ -1206,6 +1206,8 @@ menuDialog = main
 
 		subMenu = dwellSettings,			"Dwell", 0, {isIgnitionEnabled == 1}
 		subMenu = ignitionCylExtra,			"Ignition cylinder trim", 0, {isIgnitionEnabled == 1}
+		; todo: once proven, uncomment and remove from the "broken" menu
+		; subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
 
 		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 0}
@@ -1311,7 +1313,7 @@ menuDialog = main
 		
 		subMenu = lcdScreen,				"LCD" @@if_ts_show_lcd
 		subMenu = joystickPanel,			"Joystick" @@if_ts_show_joystick
-		subMenu = spiFunction,				"SPI"
+		subMenu = spiFunction,				"SPI"@@if_ts_show_spi
 		subMenu = monitoringSettings,		"rusEfi console"
 		subMenu = std_separator
 		
@@ -1323,6 +1325,7 @@ menuDialog = main
 
 		# EXPERIMENTAL FEATURES
 		subMenu = parkingLot,				"Experimental/Broken"
+		subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
@@ -1602,7 +1605,23 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Extra cyl #10",                       timing_offset_cylinder10, {cylindersCount > 9}
 		field = "Extra cyl #11",                       timing_offset_cylinder11, {cylindersCount > 10} 
 		field = "Extra cyl #12",                       timing_offset_cylinder12, {cylindersCount > 11}
-	
+
+	dialog = multisparkDwellParams, "Delay & Dwell"
+		field = "Spark Duration",						multisparkSparkDuration, {multisparkEnable}
+		field = "Dwell",								multisparkDwell, {multisparkEnable}
+
+	dialog = multisparkMain, "Configuration"
+		field = "Maximum engine speed",					multisparkMaxRpm, {multisparkEnable}
+		field = "Fire sparks for this angle duration"	multisparkMaxSparkingAngle, {multisparkEnable}
+		field = "Maximum extra spark count"				multisparkMaxExtraSparkCount, {multisparkEnable}
+
+	dialog = multisparkSettings, "Multispark"
+		field = "#WARNING! These settings have the potential to overheat ignition components"
+		field = "#and cause other nasty misbehavior.  Use with care, at your own risk!"
+		field = "Enable Multiple Sparks",				multisparkEnable
+		panel = multisparkMain
+		panel = multisparkDwellParams
+
 	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection,	Center
 		
