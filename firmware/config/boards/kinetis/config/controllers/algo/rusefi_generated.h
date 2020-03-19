@@ -535,6 +535,8 @@
 #define enableAemXSeries_offset_hex 2e8
 #define enabledStep1Limiter_offset 744
 #define enabledStep1Limiter_offset_hex 2e8
+#define enableVerboseCanTx_offset 744
+#define enableVerboseCanTx_offset_hex 2e8
 #define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define engineChartSize_offset 1480
@@ -2150,14 +2152,10 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1773
 #define unusedFormerWarmupAfrPid_offset_hex 6ed
-#define unusedHereWeHave_offset 756
-#define unusedHereWeHave_offset_hex 2f4
 #define unusedmiataNb2VVTRatioFrom_offset 820
 #define unusedmiataNb2VVTRatioFrom_offset_hex 334
 #define unusedmiataNb2VVTRatioTo_offset 824
 #define unusedmiataNb2VVTRatioTo_offset_hex 338
-#define unusedOldWarmupAfr_offset 744
-#define unusedOldWarmupAfr_offset_hex 2e8
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding4_offset_hex a21
 #define unusedSpiPadding5_offset 2713
@@ -2257,6 +2255,8 @@
 #define vehicleSpeedSensorInputPin_offset_hex 3c8
 #define veLoadBins_offset 18464
 #define veLoadBins_offset_hex 4820
+#define verboseCanBaseAddress_offset 756
+#define verboseCanBaseAddress_offset_hex 2f4
 #define verboseTLE8888_offset 744
 #define verboseTLE8888_offset_hex 2e8
 #define verboseTriggerSynchDetails_offset 1476
