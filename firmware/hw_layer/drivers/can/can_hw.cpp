@@ -13,13 +13,13 @@
 
 #if EFI_CAN_SUPPORT
 
+#include "can.h"
 #include "engine_configuration.h"
 #include "periodic_thread_controller.h"
 #include "pin_repository.h"
 #include "can_hw.h"
 #include "can_msg_tx.h"
 #include "string.h"
-#include "obd2.h"
 #include "mpu_util.h"
 #include "allsensors.h"
 #include "vehicle_speed.h"
@@ -73,22 +73,6 @@ CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
 
 CANTxFrame txmsg;
-
-static void printPacket(CANRxFrame *rx) {
-//	scheduleMsg(&logger, "CAN FMI %x", rx->FMI);
-//	scheduleMsg(&logger, "TIME %x", rx->TIME);
-	scheduleMsg(&logger, "Got CAN message: SID %x/%x %x %x %x %x %x %x %x %x", rx->SID, rx->DLC, rx->data8[0], rx->data8[1],
-			rx->data8[2], rx->data8[3], rx->data8[4], rx->data8[5], rx->data8[6], rx->data8[7]);
-
-	if (rx->SID == CAN_BMW_E46_CLUSTER_STATUS) {
-		int odometerKm = 10 * (rx->data8[1] << 8) + rx->data8[0];
-		int odometerMi = (int) (odometerKm * 0.621371);
-		scheduleMsg(&logger, "GOT odometerKm %d", odometerKm);
-		scheduleMsg(&logger, "GOT odometerMi %d", odometerMi);
-		int timeValue = (rx->data8[4] << 8) + rx->data8[3];
-		scheduleMsg(&logger, "GOT time %d", timeValue);
-	}
-}
 
 static void setShortValue(CANTxFrame *txmsg, int value, int offset) {
 	txmsg->data8[offset] = value;
@@ -244,8 +228,6 @@ public:
 	}
 };
 
-volatile float aemXSeriesLambda = 0;
-
 class CanRead final : public ThreadController<256> {
 public:
 	CanRead()
@@ -272,16 +254,7 @@ public:
 			// Process the message
 			canReadCounter++;
 
-			// TODO: if/when we support multiple lambda sensors, sensor N
-			// has address 0x0180 + N where N = [0, 15]
-			if (m_buffer.SID == 0x0180) {
-				// AEM x-series lambda sensor reports in 0.0001 lambda per bit
-				uint16_t lambdaInt = SWAP_UINT16(m_buffer.data16[0]);
-				aemXSeriesLambda = 0.0001f * lambdaInt;
-			} else {
-				printPacket(&m_buffer);
-				obdOnCanPacketRx(&m_buffer);
-			}
+			processCanRxMessage(m_buffer, &logger);
 		}
 	}
 
