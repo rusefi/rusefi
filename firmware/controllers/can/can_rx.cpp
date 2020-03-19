@@ -1,7 +1,9 @@
 
+#include "global.h"
+#if EFI_CAN_SUPPORT
+
 #include "can.h"
 #include "obd2.h"
-#include "global.h"
 #include "engine.h"
 
 EXTERN_ENGINE;
@@ -28,3 +30,5 @@ void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
 		obdOnCanPacketRx(frame);
 	}
 }
+
+#endif // EFI_CAN_SUPPORT
