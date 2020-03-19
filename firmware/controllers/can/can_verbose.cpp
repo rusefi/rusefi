@@ -10,6 +10,7 @@
 #include "allsensors.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
+#include "vehicle_speed.h"
 
 EXTERN_ENGINE;
 
