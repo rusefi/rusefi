@@ -667,6 +667,9 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
+	// Don't enable, but set default address
+	engineConfiguration->verboseCanBaseAddress = 0x200;
+
 	engineConfiguration->sdCardPeriodMs = 50;
 
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
