@@ -14,7 +14,7 @@
 class Logging;
 void processCanRxMessage(const CANRxFrame& msg, Logging* logger);
 
-class CanWrite final : public PeriodicController<256> {
+class CanWrite final : public PeriodicController<512> {
 public:
 	CanWrite();
 	void PeriodicTask(efitime_t nowNt) override;
