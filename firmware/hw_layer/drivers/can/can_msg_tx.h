@@ -83,4 +83,15 @@ public:
 	TData* operator->() {
 		return reinterpret_cast<TData*>(&m_frame.data8);
 	}
+
+	TData& get() {
+		return *reinterpret_cast<TData*>(&m_frame.data8);
+	}
 };
+
+template <typename TData>
+void transmitStruct(uint32_t eid)
+{
+	CanTxTyped<TData> frame(eid);
+	populateFrame(frame.get());
+}

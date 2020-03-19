@@ -26,6 +26,11 @@ CanWrite::CanWrite()
 void CanWrite::PeriodicTask(efitime_t nowNt) {
 	UNUSED(nowNt);
 
+	if (CONFIG(enableVerboseCanTx)) {
+		void sendCanVerbose();
+		sendCanVerbose();
+	}
+
 	// Transmit dash data, if enabled
 	switch (CONFIG(canNbcType)) {
 	case CAN_BUS_NBC_BMW:

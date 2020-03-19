@@ -35,6 +35,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/flash_main.cpp \
 	$(CONTROLLERS_DIR)/injector_central.cpp \
 	$(CONTROLLERS_DIR)/can/obd2.cpp \
+	$(CONTROLLERS_DIR)/can/can_verbose.cpp \
 	$(CONTROLLERS_DIR)/can/can_rx.cpp \
 	$(CONTROLLERS_DIR)/can/can_tx.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash.cpp \
