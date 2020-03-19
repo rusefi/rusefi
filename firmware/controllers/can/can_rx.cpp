@@ -1,11 +1,17 @@
 
 #include "can.h"
 #include "obd2.h"
+#include "global.h"
+#include "engine.h"
 
+EXTERN_ENGINE;
 
 static void printPacket(const CANRxFrame& rx, Logging* logger) {
-	scheduleMsg(logger, "Got CAN message: SID %x/%x %x %x %x %x %x %x %x %x", rx.SID, rx.DLC, rx.data8[0], rx.data8[1],
-			rx.data8[2], rx.data8[3], rx.data8[4], rx.data8[5], rx.data8[6], rx.data8[7]);
+	// only print info if we're in can debug mode
+	if (CONFIG(debugMode) == DBG_CAN) {
+		scheduleMsg(logger, "Got CAN message: SID %x/%x %x %x %x %x %x %x %x %x", rx.SID, rx.DLC, rx.data8[0], rx.data8[1],
+				rx.data8[2], rx.data8[3], rx.data8[4], rx.data8[5], rx.data8[6], rx.data8[7]);
+	}
 }
 
 volatile float aemXSeriesLambda = 0;
