@@ -17,6 +17,7 @@
 #include "periodic_thread_controller.h"
 #include "pin_repository.h"
 #include "can_hw.h"
+#include "can_msg_tx.h"
 #include "string.h"
 #include "obd2.h"
 #include "mpu_util.h"
@@ -368,6 +369,12 @@ void initCan(void) {
 #else
 	canStart(&CAND1, &canConfig500);
 #endif /* STM32_CAN_USE_CAN2 */
+
+	// Plumb CAN device to tx system
+	CanTxMessage::setDevice(detectCanDevice(
+		CONFIG(canRxPin),
+		CONFIG(canTxPin)
+	));
 
 	// fire up threads, as necessary
 	if (CONFIG(canWriteEnabled)) {
