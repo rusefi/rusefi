@@ -107,8 +107,8 @@ static void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *support
 	obdSendPacket(1, PID, 4, value);
 }
 
-static void handleGetDataRequest(CANRxFrame *rx) {
-	int pid = rx->data8[2];
+static void handleGetDataRequest(const CANRxFrame& rx) {
+	int pid = rx.data8[2];
 	switch (pid) {
 	case PID_SUPPORTED_PIDS_REQUEST_01_20:
 		scheduleMsg(&logger, "Got lookup request 01-20");
@@ -193,17 +193,17 @@ static void handleDtcRequest(int numCodes, int *dtcCode) {
 }
 
 #if HAL_USE_CAN
-void obdOnCanPacketRx(CANRxFrame *rx) {
-	if (rx->SID != OBD_TEST_REQUEST) {
+void obdOnCanPacketRx(const CANRxFrame& rx) {
+	if (rx.SID != OBD_TEST_REQUEST) {
 		return;
 	}
-	if (rx->data8[0] == 2 && rx->data8[1] == OBD_CURRENT_DATA) {
+	if (rx.data8[0] == 2 && rx.data8[1] == OBD_CURRENT_DATA) {
 		handleGetDataRequest(rx);
-	} else if (rx->data8[0] == 1 && rx->data8[1] == OBD_STORED_DIAGNOSTIC_TROUBLE_CODES) {
+	} else if (rx.data8[0] == 1 && rx.data8[1] == OBD_STORED_DIAGNOSTIC_TROUBLE_CODES) {
 		scheduleMsg(&logger, "Got stored DTC request");
 		// todo: implement stored/pending difference?
 		handleDtcRequest(1, &engine->engineState.warnings.lastErrorCode);
-	} else if (rx->data8[0] == 1 && rx->data8[1] == OBD_PENDING_DIAGNOSTIC_TROUBLE_CODES) {
+	} else if (rx.data8[0] == 1 && rx.data8[1] == OBD_PENDING_DIAGNOSTIC_TROUBLE_CODES) {
 		scheduleMsg(&logger, "Got pending DTC request");
 		// todo: implement stored/pending difference?
 		handleDtcRequest(1, &engine->engineState.warnings.lastErrorCode);
