@@ -225,6 +225,11 @@ public:
 	void PeriodicTask(efitime_t nowNt) {
 		UNUSED(nowNt);
 
+		if (CONFIG(enableVerboseCanTx)) {
+			void sendCanVerbose();
+			sendCanVerbose();
+		}
+
 		switch (engineConfiguration->canNbcType) {
 		case CAN_BUS_NBC_BMW:
 			canDashboardBMW();
