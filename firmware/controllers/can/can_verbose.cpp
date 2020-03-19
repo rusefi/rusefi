@@ -14,6 +14,34 @@
 
 EXTERN_ENGINE;
 
+struct Status {
+    uint16_t warningCounter;
+    uint16_t lastErrorCode;
+
+    uint8_t revLimit : 1;
+    uint8_t mainRelay : 1;
+    uint8_t fuelPump : 1;
+    uint8_t checkEngine : 1;
+    uint8_t o2Heater : 1;
+
+    uint8_t pad6 : 1;
+    uint8_t pad7 : 1;
+    uint8_t pad8 : 1;
+
+    uint8_t pad[3];
+};
+
+static void populateFrame(Status& msg) {
+    msg.warningCounter = engine->engineState.warnings.warningCounter;
+    msg.lastErrorCode = engine->engineState.warnings.lastErrorCode;
+
+    msg.revLimit = GET_RPM() > CONFIG(rpmHardLimit);
+    msg.mainRelay = enginePins.mainRelay.getLogicValue();
+    msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
+    msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
+    msg.o2Heater = enginePins.o2heater.getLogicValue();
+}
+
 struct Speeds {
     uint16_t rpm;
     scaled_angle timing;
@@ -107,11 +135,12 @@ static void populateFrame(Fueling& msg) {
 void sendCanVerbose() {
     auto base = CONFIG(verboseCanBaseAddress);
 
-    transmitStruct<Speeds>      (base + 0);
-    transmitStruct<PedalAndTps> (base + 1);
-    transmitStruct<Sensors1>    (base + 2);
-    transmitStruct<Sensors2>    (base + 3);
-    transmitStruct<Fueling>     (base + 4);
+    transmitStruct<Status>      (base + 0);
+    transmitStruct<Speeds>      (base + 1);
+    transmitStruct<PedalAndTps> (base + 2);
+    transmitStruct<Sensors1>    (base + 3);
+    transmitStruct<Sensors2>    (base + 4);
+    transmitStruct<Fueling>     (base + 5);
 }
 
 #endif // EFI_CAN_SUPPORT
