@@ -88,26 +88,17 @@ static void populateFrame(Sensors2& msg) {
     msg.vbatt = getVBatt();
 }
 
-struct EngineLoad {
+struct Fueling {
     scaled_channel<uint16_t, 1000> cylAirmass;
     scaled_channel<uint16_t, 100> estAirflow;
-
-    uint8_t pad[4];
-};
-
-static void populateFrame(EngineLoad& msg) {
-    msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
-    msg.estAirflow = engine->engineState.airFlow;
-}
-
-struct Fueling {
     scaled_ms fuel_pulse;
     scaled_percent stft;
-    uint8_t pad[4];
 };
 
 static void populateFrame(Fueling& msg) {
-    msg.fuel_pulse = ENGINE(actualLastInjection);
+    msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
+    msg.estAirflow = engine->engineState.airFlow;
+    msg.fuel_pulse = engine->actualLastInjection;
 
     // todo
     msg.stft = 0;
@@ -120,8 +111,7 @@ void sendCanVerbose() {
     transmitStruct<PedalAndTps> (base + 1);
     transmitStruct<Sensors1>    (base + 2);
     transmitStruct<Sensors2>    (base + 3);
-    transmitStruct<EngineLoad>  (base + 4);
-    transmitStruct<Fueling>     (base + 5);
+    transmitStruct<Fueling>     (base + 4);
 }
 
 #endif // EFI_CAN_SUPPORT
