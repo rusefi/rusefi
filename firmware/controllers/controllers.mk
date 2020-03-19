@@ -37,9 +37,11 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/can/obd2.cpp \
 	$(CONTROLLERS_DIR)/can/can_verbose.cpp \
 	$(CONTROLLERS_DIR)/can/can_rx.cpp \
+	$(CONTROLLERS_DIR)/can/can_tx.cpp \
+	$(CONTROLLERS_DIR)/can/can_dash.cpp \
  	$(CONTROLLERS_DIR)/engine_controller.cpp \
 	$(CONTROLLERS_DIR)/persistent_store.cpp \
-	
+
 
 CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR) \
