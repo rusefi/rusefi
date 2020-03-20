@@ -39,11 +39,13 @@
  *
  * Plug #4 40 pin
  * ECU pin 6:  IN          ORG start signal from ignition key. Custom wiring: pulled-up thermistor wire on MRE
+ * ECU pin 26: IN  GRN/BLK RED +12v hot in start & run
  * ECU pin 40: OUT YEL/BRN GRN starter enable
  *
  *
  * Plug #5 9 pin
- * ECU pic 3:  OUT BLK     ORG coil signal
+ * ECU pin 3:  OUT BLK     ORG coil signal
+ * ECU pin 5:  GND BRN         ground
  *
  * BMW_M73_MRE
  * set engine_type 104
@@ -83,6 +85,9 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// AN Temp 4, orange wire
 	CONFIG(startStopButton) = GPIOA_3;
+
+	// "43 - GP Out 4"
+	CONFIG(starterControlPin) = TLE8888_PIN_24;
 
 
 	//set tps_min 891

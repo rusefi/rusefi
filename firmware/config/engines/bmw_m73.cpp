@@ -44,15 +44,15 @@
  * Plug #4 40 pin
  * ECU pin 6:  IN              start signal from ignition key
  * ECU pin 17: OUT BLK         engine speed output for gauge cluster
- * ECU pin 26: IN  GRN/BLK RED +12 hot in start & run
+ * ECU pin 26: IN  GRN/BLK RED +12v hot in start & run
  * ECU pin 40: OUT YEL/BRN BRN starter enable
  *
  *
  * Plug #5 9 pin
- * ECU pic 3:  OUT BLK         coil signal, low-side
- * ECU pic 5:  GND BRN         ground
- * ECU pic 6:  OUT BLK         coil signal, low-side
- * ECU pic 9:  OUT BLK     RED coil signal, low-side
+ * ECU pin 3:  OUT BLK         coil signal, low-side
+ * ECU pin 5:  GND BRN         ground
+ * ECU pin 6:  OUT BLK         coil signal, low-side
+ * ECU pin 9:  OUT BLK     RED coil signal, low-side
  *
  * Frankenso
  * set engine_type 40
