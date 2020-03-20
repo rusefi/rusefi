@@ -506,11 +506,12 @@ static void configureInputs(void) {
 	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
 	addChannel("baro", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
-	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
-	if (engineConfiguration->tps2_1AdcChannel != EFI_ADC_0) {
-		// allow EFI_ADC_0 next time we have an incompatible configuration change
-		addChannel("TPS2", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
-	}
+
+	addChannel("TPS1_1", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
+	addChannel("TPS1_2", engineConfiguration->tps1_2AdcChannel, ADC_SLOW);
+	addChannel("TPS2_1", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
+	addChannel("TPS2_2", engineConfiguration->tps2_2AdcChannel, ADC_SLOW);
+
 	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
 	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
