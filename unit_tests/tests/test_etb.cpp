@@ -68,10 +68,12 @@ TEST(etb, singleEtbInitialization) {
 	// todo: invoke EtbController#PeriodicTask a few times and assert that duty cycle changes
 }
 
-TEST(idle, testTargetTpsIsFloatBug945) {
+TEST(etb, testTargetTpsIsFloatBug945) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_0;
 
 	setMockThrottlePedalSensorVoltage(3 PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->etbControllers[0]->PeriodicTask();
