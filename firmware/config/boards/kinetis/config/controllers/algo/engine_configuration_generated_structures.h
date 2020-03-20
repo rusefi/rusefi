@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Thu Mar 19 09:14:30 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Mar 20 00:24:38 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1428,6 +1428,7 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e secondSolenoidPin;
 	/**
+	 * See also starterControlPin
 	 * offset 811
 	 */
 	switch_input_pin_e startStopButton;
@@ -2146,6 +2147,7 @@ struct engine_configuration_s {
 	 */
 	int16_t tps2Max;
 	/**
+	 * See also startStopButton
 	 * offset 1772
 	 */
 	output_pin_e starterControlPin;
@@ -3236,4 +3238,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Thu Mar 19 09:14:30 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Mar 20 00:24:38 EDT 2020
