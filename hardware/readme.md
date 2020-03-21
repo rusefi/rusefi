@@ -14,6 +14,7 @@ todo: move Connectors wiki page content into git
 
 * [35 pin](MX7-C-35PL-C11-connector) Mazda TCU
 * [38 pin](NGC_38_connector) Chrysler NGC connector
+* [48 pin](breakout_48_pin_174917) Mazda Miata NA6 NOT FINISHED
 * [52 pin](172319-1_52pin-connector) Mitsubishi Galant VR4
 * [55 pin](963063-15_55_pin_connector) BMW Lada
 * [64 pin](176122-6-connector) Mazda Miata NA NB1, Honda Civic
@@ -23,9 +24,9 @@ todo: move Connectors wiki page content into git
 * [154 pin](284617-1-connector) Audi
 
 # Modules
-* [Brain board 48pin](mini48-stm32)
-* [Brain board 100pin](brain_board)
-* [Brain board 176pin](brain_board_176-pin)
+* [stm32 Brain board 48pin](mini48-stm32)
+* [stm32 Brain board 100pin](brain_board)
+* [stm32 Brain board 176pin](brain_board_176-pin)
 * [CAN module](can_board) CAN using SN65HVD230
 * [VR module](VR_Board) Variable Reluctance conditioner board VR MAX9926
 * [Wideband module](CJ125_board) CJ125 Bosch Wideband board
