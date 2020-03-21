@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Mar 19 09:14:14 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Mar 20 19:54:54 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1169,7 +1169,8 @@ public class Fields {
 	public static final int starterRelayDisablePin_offset = 808;
 	public static final int starterRelayDisablePin_offset_hex = 328;
 	public static final int startOfCrankingPrimingPulse_offset = 2032;
-	public static final int startStopButton_offset = 811;
+	public static final int startStopButtonMode_offset = 1773;
+	public static final int startStopButtonPin_offset = 811;
 	public static final int startUpFuelPumpDuration_offset = 1892;
 	public static final int startUpFuelPumpDuration_offset_hex = 764;
 	public static final int stepperDirectionPinMode_offset = 3102;
@@ -1406,7 +1407,7 @@ public class Fields {
 	public static final int unusedBit_34_31_offset = 76;
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
-	public static final int unusedFormerWarmupAfrPid_offset = 1773;
+	public static final int unusedFormerWarmupAfrPid_offset = 1774;
 	public static final int unusedmiataNb2VVTRatioFrom_offset = 820;
 	public static final int unusedmiataNb2VVTRatioFrom_offset_hex = 334;
 	public static final int unusedmiataNb2VVTRatioTo_offset = 824;
@@ -1842,7 +1843,7 @@ public class Fields {
 	public static final Field STARTERRELAYDISABLEPIN = Field.create("STARTERRELAYDISABLEPIN", 808, FieldType.INT8, output_pin_e);
 	public static final Field STARTERRELAYDISABLEMODE = Field.create("STARTERRELAYDISABLEMODE", 809, FieldType.INT8, pin_output_mode_e);
 	public static final Field SECONDSOLENOIDPIN = Field.create("SECONDSOLENOIDPIN", 810, FieldType.INT8, brain_pin_e);
-	public static final Field STARTSTOPBUTTON = Field.create("STARTSTOPBUTTON", 811, FieldType.INT8, switch_input_pin_e);
+	public static final Field STARTSTOPBUTTONPIN = Field.create("STARTSTOPBUTTONPIN", 811, FieldType.INT8, switch_input_pin_e);
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
@@ -2114,6 +2115,8 @@ public class Fields {
 	public static final Field TPS2MIN = Field.create("TPS2MIN", 1768, FieldType.INT16);
 	public static final Field TPS2MAX = Field.create("TPS2MAX", 1770, FieldType.INT16);
 	public static final Field STARTERCONTROLPIN = Field.create("STARTERCONTROLPIN", 1772, FieldType.INT8, output_pin_e);
+	public static final Field STARTSTOPBUTTONMODE = Field.create("STARTSTOPBUTTONMODE", 1773, FieldType.INT8);
+	public static final Field UNUSEDFORMERWARMUPAFRPID = Field.create("UNUSEDFORMERWARMUPAFRPID", 1774, FieldType.INT8);
 	public static final Field TACHPULSEPERREV = Field.create("TACHPULSEPERREV", 1775, FieldType.INT8);
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1776, FieldType.FLOAT);
 	public static final Field MAPERRORDETECTIONTOOHIGH = Field.create("MAPERRORDETECTIONTOOHIGH", 1780, FieldType.FLOAT);
@@ -2746,7 +2749,7 @@ public class Fields {
 	STARTERRELAYDISABLEPIN,
 	STARTERRELAYDISABLEMODE,
 	SECONDSOLENOIDPIN,
-	STARTSTOPBUTTON,
+	STARTSTOPBUTTONPIN,
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,
@@ -3014,6 +3017,8 @@ public class Fields {
 	TPS2MIN,
 	TPS2MAX,
 	STARTERCONTROLPIN,
+	STARTSTOPBUTTONMODE,
+	UNUSEDFORMERWARMUPAFRPID,
 	TACHPULSEPERREV,
 	MAPERRORDETECTIONTOOLOW,
 	MAPERRORDETECTIONTOOHIGH,

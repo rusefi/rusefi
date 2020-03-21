@@ -1776,8 +1776,10 @@
 #define starterRelayDisablePin_offset_hex 328
 #define startOfCrankingPrimingPulse_offset 2032
 #define startOfCrankingPrimingPulse_offset_hex 7f0
-#define startStopButton_offset 811
-#define startStopButton_offset_hex 32b
+#define startStopButtonMode_offset 1773
+#define startStopButtonMode_offset_hex 6ed
+#define startStopButtonPin_offset 811
+#define startStopButtonPin_offset_hex 32b
 #define startUpFuelPumpDuration_offset 1892
 #define startUpFuelPumpDuration_offset_hex 764
 #define stepperDirectionPinMode_offset 3102
@@ -2150,8 +2152,8 @@
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
 #define unusedFlexFuelSensor_offset_hex c1c
-#define unusedFormerWarmupAfrPid_offset 1773
-#define unusedFormerWarmupAfrPid_offset_hex 6ed
+#define unusedFormerWarmupAfrPid_offset 1774
+#define unusedFormerWarmupAfrPid_offset_hex 6ee
 #define unusedmiataNb2VVTRatioFrom_offset 820
 #define unusedmiataNb2VVTRatioFrom_offset_hex 334
 #define unusedmiataNb2VVTRatioTo_offset 824

@@ -2272,6 +2272,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
+		field = "Start/Stop Button Pin",				startStopButtonPin
+		field = "Start/Stop Button Mode",				startStopButtonMode
 
 
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
@@ -2492,8 +2494,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "output #16", 							fsioOutputPins16
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
-		field = ""
-		field = ""
+		field = "Start/Stop Button",					startStopButtonPin
+		field = ""			
 		
 	dialog = fsioFrequency, "Frequency"
 		field = "freq #1", 								fsioFrequency1

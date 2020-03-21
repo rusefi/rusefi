@@ -492,6 +492,12 @@ void initHardware(Logging *l) {
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
+	if (CONFIG(startStopButtonPin) != GPIO_UNASSIGNED) {
+		efiSetPadMode("start/stop", CONFIG(startStopButtonPin),
+				getInputMode(CONFIG(startStopButtonMode)));
+	}
+
+
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
