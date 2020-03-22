@@ -1164,8 +1164,6 @@ const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
 #if EFI_ENABLE_MOCK_ADC
 		{MOCK_IAT_COMMAND, setMockIatVoltage},
-		{MOCK_PPS_POSITION_COMMAND, setMockThrottlePedalPosition},
-		{MOCK_PPS_VOLTAGE_COMMAND, setMockThrottlePedalSensorVoltage},
 		{MOCK_TPS_COMMAND, setMockThrottlePositionSensorVoltage},
 		{MOCK_MAF_COMMAND, setMockMafVoltage},
 		{MOCK_AFR_COMMAND, setMockAfrVoltage},
