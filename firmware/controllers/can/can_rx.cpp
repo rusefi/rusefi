@@ -35,9 +35,11 @@ void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
 		// AEM x-series lambda sensor reports in 0.0001 lambda per bit
 		uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
 		aemXSeriesLambda = 0.0001f * lambdaInt;
+#if EFI_CANBUS_PEDAL
 	} else if (frame.EID == 0x202) {
 		int16_t pedalScaled = *reinterpret_cast<uint16_t*>(&frame.data8[0]);
 		canPedal = pedalScaled * 0.01f;
+#endif
 	} else {
 		printPacket(frame, logger);
 		obdOnCanPacketRx(frame);

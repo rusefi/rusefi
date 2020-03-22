@@ -216,9 +216,10 @@ bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 extern float canPedal;
 
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (false /*CONFIG(enableCanPedal)*/) {
+#if EFI_CANBUS_PEDAL
 		return canPedal;
-	}
+#endif
+
 
 	if (mockPedalPosition != MOCK_UNDEFINED) {
 		return mockPedalPosition;
