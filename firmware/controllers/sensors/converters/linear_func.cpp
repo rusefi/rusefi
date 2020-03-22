@@ -11,7 +11,7 @@ void LinearFunc::configure(float in1, float out1, float in2, float out2, float m
 }
 
 SensorResult LinearFunc::convert(float inputValue) const {
-	float result = m_a * inputValue + m_b;
+	float result = m_a * (inputValue / m_divideInput) + m_b;
 
 	// Bounds check
 	bool isValid = result <= m_maxOutput && result >= m_minOutput;
