@@ -3,6 +3,7 @@
 #include "error_handling.h"
 #include "global.h"
 #include "functional_sensor.h"
+#include "proxy_sensor.h"
 #include "linear_func.h"
 #include "tps.h"
 
@@ -20,6 +21,9 @@ FunctionalSensor tpsSens2p(SensorType::Tps2, MS2NT(10));
 
 LinearFunc pedalFunc;
 FunctionalSensor pedalSensor(SensorType::AcceleratorPedal, MS2NT(10));
+
+// This sensor indicates the driver's throttle intent - Pedal if we have one, TPS if not.
+ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 
 static void configureTps(LinearFunc& func, float closed, float open) {
 	func.configure(
@@ -51,6 +55,13 @@ void initTps() {
 	initTpsFunc(tpsFunc1p, tpsSens1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax));
 	initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max));
 	initTpsFunc(pedalFunc, pedalSensor, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage));
+
+	// Route the pedal or TPS to driverIntent as appropriate
+	if (CONFIG(throttlePedalPositionAdcChannel) != EFI_ADC_NONE) {
+		driverIntent.setProxiedSensor(SensorType::AcceleratorPedal);
+	} else {
+		driverIntent.setProxiedSensor(SensorType::Tps1);
+	}
 }
 
 void reconfigureTps() {

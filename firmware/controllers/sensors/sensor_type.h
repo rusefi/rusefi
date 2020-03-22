@@ -37,6 +37,9 @@ enum class SensorType : unsigned char {
 	AcceleratorPedalPrimary,
 	AcceleratorPedalSecondary,
 
+	// This maps to the pedal if we have one, and Tps1 if not.
+	DriverThrottleIntent,
+
 	// Leave me at the end!
 	PlaceholderLast
 };
