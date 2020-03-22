@@ -14,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L rusEFI_Older:PWR_FLAG #FLG078
+L power:PWR_FLAG #FLG078
 U 1 1 52CAD8E7
 P 3375 3000
 F 0 "#FLG078" H 3375 3095 30  0001 C CNN
