@@ -15,24 +15,27 @@
 
 
 EXTERN_ENGINE;
+#define TEST_BENCH
+#ifdef TEST_BENCH
+static uint8_t loop = 0;
+#define setDbgHigh   enginePins.dizzyOutput.setValue(true)
+#define setDbgLow    enginePins.dizzyOutput.setValue(false)
+#endif
 
-
-// [4 pulse/rev] * [2 edges per pulse] * [2 revs per cycle] = 16
-#define MAX_EVENTS	16
-static scheduling_s events[MAX_EVENTS];
 
 struct tach_ctx {
 	OutputPin *Pin;
 	bool State;
+	int action;
 };
 
+static scheduling_s schHigh;
+static scheduling_s schLow;
 static tach_ctx ctx_high;
 static tach_ctx ctx_low;
-
-static void setTach(void *param) {
-	auto ctx = reinterpret_cast<tach_ctx *>(param);
-	ctx->Pin->setValue(ctx->State);
-}
+static angle_t angleHigh;
+static angle_t angleLow;
+static int maxActions;
 
 static int multiplierFromEngineType(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	switch (engineConfiguration->ambiguousOperationMode) {
@@ -52,20 +55,46 @@ static int multiplierFromEngineType(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+static void setTach(void *param) {
+	auto ctx = reinterpret_cast<tach_ctx *>(param);
+	uint32_t timeStamp = getTimeNowUs();
+	ctx->Pin->setValue(ctx->State);
+	ctx->action++;
+	if (ctx->action < maxActions){
+		if(ctx->State == true)
+		{
+			scheduleByAngle(&schHigh, timeStamp, angleHigh, {&setTach, &ctx} PASS_ENGINE_PARAMETER_SUFFIX);	
+		}else{
+			scheduleByAngle(&schLow, timeStamp, angleLow, {&setTach, &ctx} PASS_ENGINE_PARAMETER_SUFFIX);
+		}
+	}
+}
+
 static void tachSignalCallback(trigger_event_e ckpSignalType,
 		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	// only process at index 0 - we schedule the full cycle all at once
+	// only process at index configured to avoid too much cpu time for index 0?
 	if (index != (uint32_t)engineConfiguration->tachPulseTriggerIndex) {
 		return;
 	}
+
+#ifdef TEST_BENCH
+	if (loop == 0)
+	{
+		setDbgHigh;
+		loop++;
+	}
+	else
+	{
+		setDbgLow;
+		loop = 0;
+	}
+#endif	
 
 #if EFI_UNIT_TEST
 	printf("tachSignalCallback(%d %d)\n", ckpSignalType, index);
 #else
 	UNUSED(ckpSignalType);
 #endif
-
-	// TODO: warning if periods is set too high
 
 	// How many tach pulse periods do we have?
 	int periods = engineConfiguration->tachPulsePerRev;
@@ -94,43 +123,30 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	duty = maxF(0.1f, minF(duty, 0.9f));
 
 	// Use duty to compute the angle widths of high/low periods
-	angle_t angleHigh = period * duty;
-	angle_t angleLow = period - angleHigh;
-
-	angle_t angle = 0;
+	angleHigh = period * duty;
+	angleLow = period - angleHigh;
 
 	// cam trigger vs. crank trigger vs. 2 stroke trigger shapes fire this callback either once
 	// per rev, or once every other rev.  Adjust appropriately.
-	periods *= multiplierFromEngineType(PASS_ENGINE_PARAMETER_SIGNATURE);
+	maxActions = periods * multiplierFromEngineType(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (periods >= MAX_EVENTS){
-		warning(CUSTOM_DUTY_INVALID,"Check Tachometer Pulse per Rev!");
-		return;
-	}
-
-	for (int i = 0; i < periods; i++) {
-		// Rising edge
-		scheduleByAngle(&events[2 * i], edgeTimestamp, angle, {&setTach, &ctx_high} PASS_ENGINE_PARAMETER_SUFFIX);
-		angle += angleHigh;
-
-		// Followed by falling edge
-		scheduleByAngle(&events[2 * i + 1], edgeTimestamp, angle, {&setTach, &ctx_low} PASS_ENGINE_PARAMETER_SUFFIX);
-		angle += angleLow;
-	}
+	//schedule the first two events
+	ctx_high.action = 0;
+	scheduleByAngle(&schHigh, edgeTimestamp, 0.0, {&setTach, &ctx_high} PASS_ENGINE_PARAMETER_SUFFIX);
+	ctx_low.action = 0;
+	scheduleByAngle(&schLow, edgeTimestamp, angleLow, {&setTach, &ctx_low} PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-//#if !EFI_UNIT_TEST
-#if EFI_UNIT_TEST
-	printf("initTachometer\n");
-#endif
+
 	if (CONFIG(tachOutputPin) == GPIO_UNASSIGNED) {
 		return;
 	}
 
 	enginePins.tachOut.initPin("analog tach output", CONFIG(tachOutputPin), &CONFIG(tachOutputPinMode));
-
-
+#ifdef TEST_BENCH
+    enginePins.dizzyOutput.initPin("dizzy tach",  GPIOE_8,&engineConfiguration->dizzySparkOutputPinMode);
+#endif
 	ctx_high.Pin = &enginePins.tachOut;
 	ctx_high.State = true;
 
@@ -138,6 +154,9 @@ void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ctx_low.State = false;
 
 #if EFI_SHAFT_POSITION_INPUT
+	#if EFI_UNIT_TEST
+		printf("registerCkpListener: tach\n");
+	#endif
 	addTriggerEventListener(tachSignalCallback, "tach", engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
