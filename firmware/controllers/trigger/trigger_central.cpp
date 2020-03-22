@@ -194,9 +194,6 @@ int maxTriggerReentraint = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
-static bool isInsideTriggerHandler = false;
-
-
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	ScopePerf perf(PE::HandleShaftSignal, static_cast<uint8_t>(signal));
 
@@ -215,15 +212,15 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 		}
 	}
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
-	isInsideTriggerHandler = true;
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
+
 	efiAssertVoid(CUSTOM_ERR_6636, getCurrentRemainingStack() > 128, "lowstck#8");
 	engine->triggerCentral.handleShaftSignal(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+
 	triggerReentraint--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
-	isInsideTriggerHandler = false;
 	if (triggerDuration > triggerMaxDuration)
 		triggerMaxDuration = triggerDuration;
 }

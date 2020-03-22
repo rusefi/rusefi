@@ -3,6 +3,9 @@
  *
  */
 
+#include "global.h"
+
+#if EFI_MC33816
 
 // Data to be loaded into the Code RAM 1 memory space
 const unsigned short MC33816_code_RAM1[62] =
@@ -85,3 +88,5 @@ const unsigned short MC33816_diag_config[44] =
     0x001E, 0x0000, 0x0000, 0x001E, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
     0x0000, 0x0000, 0x0000, 0x0001
 };
+
+#endif // EFI_MC33816
