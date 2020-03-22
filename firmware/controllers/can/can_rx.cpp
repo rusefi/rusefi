@@ -26,6 +26,7 @@ static void printPacket(const CANRxFrame& rx, Logging* logger) {
 }
 
 volatile float aemXSeriesLambda = 0;
+volatile float canPedal = 0;
 
 void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
 	// TODO: if/when we support multiple lambda sensors, sensor N
@@ -34,6 +35,9 @@ void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
 		// AEM x-series lambda sensor reports in 0.0001 lambda per bit
 		uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
 		aemXSeriesLambda = 0.0001f * lambdaInt;
+	} else if (frame.EID == 0x202) {
+		int16_t pedalScaled = *reinterpret_cast<const uint16_t*>(&frame.data8[0]);
+		canPedal = pedalScaled * 0.01f;
 	} else {
 		printPacket(frame, logger);
 		obdOnCanPacketRx(frame);
