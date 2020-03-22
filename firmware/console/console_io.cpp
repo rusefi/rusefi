@@ -39,9 +39,6 @@ extern SerialUSBDriver SDU1;
 // 10 seconds
 #define CONSOLE_WRITE_TIMEOUT 10000
 
-int lastWriteSize;
-int lastWriteActual;
-
 static bool isSerialConsoleStarted = false;
 
 static event_listener_t consoleEventListener;
@@ -253,11 +250,8 @@ void consolePutChar(int x) {
 }
 
 void consoleOutputBuffer(const uint8_t *buf, int size) {
-	lastWriteSize = size;
 #if !EFI_UART_ECHO_TEST_MODE
-	lastWriteActual = chnWriteTimeout(getConsoleChannel(), buf, size, CONSOLE_WRITE_TIMEOUT);
-//	if (r != size)
-//		firmwareError(OBD_PCM_Processor_Fault, "Partial console write");
+	chnWriteTimeout(getConsoleChannel(), buf, size, CONSOLE_WRITE_TIMEOUT);
 #endif /* EFI_UART_ECHO_TEST_MODE */
 }
 

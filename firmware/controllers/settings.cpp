@@ -58,7 +58,6 @@ extern WaveChart waveChart;
 static char LOGGING_BUFFER[SETTINGS_LOGGING_BUFFER_SIZE];
 static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
-extern int maxNesting;
 EXTERN_ENGINE
 ;
 
@@ -278,8 +277,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 			boolToString(engine->clutchUpState));
 	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
 			boolToString(engine->clutchDownState));
-
-	scheduleMsg(&logger, "nesting=%d", maxNesting);
 
 	scheduleMsg(&logger, "digitalPotentiometerSpiDevice %d", engineConfiguration->digitalPotentiometerSpiDevice);
 

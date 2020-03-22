@@ -141,8 +141,6 @@ void printPendingMessages(void) {
 
 int isSerialOverTcpReady;
 
-int maxNesting = 0;
-
 bool isCommandLineConsoleReady(void) {
 	return isSerialOverTcpReady;
 }
