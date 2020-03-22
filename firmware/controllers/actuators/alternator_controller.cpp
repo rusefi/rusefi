@@ -36,8 +36,7 @@ EXTERN_ENGINE
 static Logging *logger;
 
 static SimplePwm alternatorControl("alt");
-static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
-static PidIndustrial alternatorPid(altPidS);
+static PidIndustrial alternatorPid(&persistentState.persistentConfiguration.engineConfiguration.alternatorControl);
 
 static percent_t currentAltDuty;
 

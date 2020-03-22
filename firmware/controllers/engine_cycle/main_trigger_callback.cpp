@@ -64,8 +64,7 @@ static InjectionEvent primeInjEvent;
 
 static Logging *logger;
 #if ! EFI_UNIT_TEST
-static pid_s *fuelPidS = &persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid;
-static Pid fuelPid(fuelPidS);
+static Pid fuelPid(&persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid);
 #endif
 
 // todo: figure out if this even helps?

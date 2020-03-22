@@ -57,8 +57,7 @@ public:
 
 	void init(int index) {
 		this->index = index;
-		pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[index];
-		auxPid.initPidClass(auxPidS);
+		auxPid.initPidClass(&persistentState.persistentConfiguration.engineConfiguration.auxPid[index]);
 		table = getFSIOTable(index);
 	}
 
