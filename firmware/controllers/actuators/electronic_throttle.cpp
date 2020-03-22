@@ -76,6 +76,7 @@
 
 #include "electronic_throttle.h"
 #include "tps.h"
+#include "sensor.h"
 #include "io_pins.h"
 #include "engine_configuration.h"
 #include "pwm_generator_logic.h"
@@ -107,8 +108,6 @@ EXTERN_ENGINE;
 static bool startupPositionError = false;
 
 #define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
-
-extern percent_t mockPedalPosition;
 
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
@@ -180,6 +179,14 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
+	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
+
+	if (!pedalPosition.Valid) {
+		m_motor->set(0);
+		return;
+	}
+
+
 	percent_t actualThrottlePosition = getTPSWithIndex(m_myIndex PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engine->etbAutoTune) {
@@ -203,10 +210,8 @@ void EtbController::PeriodicTask() {
 	}
 
 
-	percent_t pedalPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	int rpm = GET_RPM();
-	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition);
+	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition.Value);
 	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
 	percent_t targetPosition = engine->engineState.targetFromTable + etbIdleAddition;
 
@@ -305,12 +310,6 @@ static void showEthInfo(void) {
 	scheduleMsg(&logger, "etbAutoTune=%d",
 			engine->etbAutoTune);
 
-	scheduleMsg(&logger, "throttlePedal=%.2f %.2f/%.2f @%s",
-			getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE),
-			engineConfiguration->throttlePedalUpVoltage,
-			engineConfiguration->throttlePedalWOTVoltage,
-			getPinNameByAdcChannel("tPedal", engineConfiguration->throttlePedalPositionAdcChannel, pinNameBuffer));
-
 	scheduleMsg(&logger, "TPS=%.2f", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 
@@ -371,8 +370,6 @@ static void etbReset() {
 	}
 
 	etbPidReset();
-
-	mockPedalPosition = MOCK_UNDEFINED;
 }
 #endif /* EFI_PROD_CODE */
 
