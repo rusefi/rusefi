@@ -73,7 +73,7 @@ struct PedalAndTps {
 
 static void populateFrame(PedalAndTps& msg)
 {
-    msg.pedal = getPedalPosition();
+    msg.pedal = Sensor::get(SensorType::AcceleratorPedal).value_or(-1);
     msg.tps1 = Sensor::get(SensorType::Tps1).value_or(-1);
     msg.tps2 = Sensor::get(SensorType::Tps2).value_or(-1);
 }
