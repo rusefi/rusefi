@@ -39,6 +39,7 @@
 #include "engine.h"
 #include "periodic_task.h"
 #include "allsensors.h"
+#include "sensor.h"
 
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
@@ -218,15 +219,14 @@ static bool isOutOfAutomaticIdleCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return !engine->engineState.idle.throttlePedalUpState;
 	}
 
-	percent_t inputPosition;
+	auto pos = Sensor::get(SensorType::DriverThrottleIntent);
 
-	if (hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		inputPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
-	} else {
-		inputPosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Disable auto idle in case of TPS/Pedal failure
+	if (!pos.Valid) {
+		return true;
 	}
 
-	return inputPosition > CONFIG(idlePidDeactivationTpsThreshold);
+	return pos.Value > CONFIG(idlePidDeactivationTpsThreshold);
 }
 
 /**
