@@ -24,6 +24,9 @@ todo: move Connectors wiki page content into git
 * [134 pin](Breakout_134pin_7-967288-1) BWM
 * [154 pin](284617-1-connector) Audi
 
+![img](breakout_boards.jpg)
+
+
 # Modules
 * [stm32 Brain board 48pin](mini48-stm32)
 * [stm32 Brain board 100pin](brain_board)
