@@ -219,14 +219,14 @@ static bool isOutOfAutomaticIdleCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return !engine->engineState.idle.throttlePedalUpState;
 	}
 
-	auto pos = Sensor::get(SensorType::DriverThrottleIntent);
+	const auto [valid, pos] = Sensor::get(SensorType::DriverThrottleIntent);
 
 	// Disable auto idle in case of TPS/Pedal failure
-	if (!pos.Valid) {
+	if (!valid) {
 		return true;
 	}
 
-	return pos.Value > CONFIG(idlePidDeactivationTpsThreshold);
+	return pos > CONFIG(idlePidDeactivationTpsThreshold);
 }
 
 /**
