@@ -1,63 +1,5 @@
-EESchema Schematic File Version 2
-LIBS:KICAD_Older_Version
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:176122-6
-LIBS:art-electro-conn
-LIBS:art-electro-conn_2
-LIBS:art-electro-ic
-LIBS:art-electro-max
-LIBS:art-electro-power
-LIBS:LMV324IDR
-LIBS:logo
-LIBS:logo_flipped
-LIBS:MAX9926-9927
-LIBS:max9939
-LIBS:max31855
-LIBS:stm32
-LIBS:tc4427
-LIBS:lm2596
-LIBS:mos_p_numbered-pins
-LIBS:rn-41
-LIBS:skqucaa010_joystick
-LIBS:itead_hc-0X_bluetooth
-LIBS:joystick_SKRHAAE010
-LIBS:STM32F407IGT6
-LIBS:slc_oem
-LIBS:mos_n_numbered-pins
-LIBS:crystal(mc306)
-LIBS:pololu_a4988
-LIBS:Pololu_DRV8880
-LIBS:fuse_BOM_only_no_pins
-LIBS:frankenso-cache
-EELAYER 25 0
+EESchema Schematic File Version 4
+EELAYER 30 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
@@ -72,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L TEST JPO2
+L rusEFI_Older:TEST JPO2
 U 1 1 539C7A79
 P 1000 9200
 F 0 "JPO2" V 1000 9200 40  0000 C CNN
@@ -87,7 +29,7 @@ $EndComp
 Text Notes 575  9050 0    60   ~ 0
 These two jumpers \nare here to accomodate \nstm32f4discovery
 $Comp
-L TEST JPO3
+L rusEFI_Older:TEST JPO3
 U 1 1 539C7A95
 P 1000 9350
 F 0 "JPO3" V 1000 9350 40  0000 C CNN
@@ -108,7 +50,7 @@ GND
 Text Label 800  9350 2    60   ~ 0
 GND
 $Comp
-L TEST TEST2
+L rusEFI_Older:TEST TEST2
 U 1 1 539DA1B1
 P 1100 10400
 F 0 "TEST2" V 1100 10400 40  0000 C CNN
@@ -123,7 +65,7 @@ $EndComp
 Text Notes 550  10225 0    60   ~ 0
 That's alternative signal \nOUTPUT - these traces \nshould be routable to PC6 \nand PA5 via jumpers. \nAleternative to W212 and \nW212 routung of op-amps \nch 11 and ch 12
 $Comp
-L CONN_12X2 P7
+L rusEFI_Older:CONN_12X2 P7
 U 1 1 5445D37F
 P 1250 3100
 F 0 "P7" H 1250 3750 60  0000 C CNN
@@ -157,7 +99,7 @@ NoConn ~ 850  3050
 NoConn ~ 850  2950
 NoConn ~ 850  2750
 $Comp
-L CONN_12X2 P8
+L rusEFI_Older:CONN_12X2 P8
 U 1 1 5445E017
 P 2450 3100
 F 0 "P8" H 2450 3750 60  0000 C CNN
@@ -194,7 +136,7 @@ NoConn ~ 2050 2650
 NoConn ~ 2050 2750
 NoConn ~ 2050 2550
 $Comp
-L CONN_12X2 P14
+L rusEFI_Older:CONN_12X2 P14
 U 1 1 5445E2AE
 P 3500 3100
 F 0 "P14" H 3500 3750 60  0000 C CNN
@@ -274,7 +216,7 @@ PROTO AREA
 Wire Notes Line
 	4050 8700 475  8700
 $Comp
-L TEST JPO6
+L rusEFI_Older:TEST JPO6
 U 1 1 5446F00B
 P 2325 9200
 F 0 "JPO6" V 2325 9200 40  0000 C CNN
@@ -287,7 +229,7 @@ F 5 "DNP,dnp" V 2325 9200 60  0001 C CNN "VEND1,VEND1#"
 	-1   0    0    1   
 $EndComp
 $Comp
-L TEST JPO7
+L rusEFI_Older:TEST JPO7
 U 1 1 5446F013
 P 2325 9350
 F 0 "JPO7" V 2325 9350 40  0000 C CNN
@@ -300,7 +242,7 @@ F 5 "DNP,dnp" V 2325 9350 60  0001 C CNN "VEND1,VEND1#"
 	-1   0    0    1   
 $EndComp
 $Comp
-L TEST JPO8
+L rusEFI_Older:TEST JPO8
 U 1 1 5446F01B
 P 3650 9200
 F 0 "JPO8" V 3650 9200 40  0000 C CNN
@@ -315,7 +257,7 @@ $EndComp
 Text Label 2525 9350 0    60   ~ 0
 GND
 $Comp
-L TEST JPO9
+L rusEFI_Older:TEST JPO9
 U 1 1 5446F519
 P 3650 9350
 F 0 "JPO9" V 3650 9350 40  0000 C CNN
@@ -366,7 +308,7 @@ CRANK
 Text HLabel 1300 10400 2    60   Input ~ 0
 CAM
 $Comp
-L CONN_12X2 P28
+L rusEFI_Older:CONN_12X2 P28
 U 1 1 553A3905
 P 4450 3100
 F 0 "P28" H 4450 3750 60  0000 C CNN
@@ -380,7 +322,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_5X2 P29
+L rusEFI_Older:CONN_5X2 P29
 U 1 1 553A3914
 P 1250 6000
 F 0 "P29" H 1250 6300 60  0000 C CNN
@@ -394,7 +336,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_6X2 P27
+L rusEFI_Older:CONN_6X2 P27
 U 1 1 553A3923
 P 1250 5250
 F 0 "P27" H 1250 5600 60  0000 C CNN
@@ -408,7 +350,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_13X2 P50
+L rusEFI_Older:CONN_13X2 P50
 U 1 1 553A3932
 P 1250 1650
 F 0 "P50" H 1250 2350 60  0000 C CNN
@@ -422,7 +364,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_4X2 P31
+L rusEFI_Older:CONN_4X2 P31
 U 1 1 553A3941
 P 1250 6700
 F 0 "P31" H 1250 6950 50  0000 C CNN
@@ -436,7 +378,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_8X2 P33
+L rusEFI_Older:CONN_8X2 P33
 U 1 1 553A3950
 P 4450 4300
 F 0 "P33" H 4450 4750 60  0000 C CNN
@@ -450,7 +392,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_2X2 P49
+L rusEFI_Older:CONN_2X2 P49
 U 1 1 553A395F
 P 1250 7350
 F 0 "P49" H 1250 7500 50  0000 C CNN
@@ -464,7 +406,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_12X2 P35
+L rusEFI_Older:CONN_12X2 P35
 U 1 1 553A8F5F
 P 5400 3100
 F 0 "P35" H 5400 3750 60  0000 C CNN
@@ -478,7 +420,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_12X2 P36
+L rusEFI_Older:CONN_12X2 P36
 U 1 1 553A8F65
 P 6300 3100
 F 0 "P36" H 6300 3750 60  0000 C CNN
@@ -492,7 +434,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_12X2 P42
+L rusEFI_Older:CONN_12X2 P42
 U 1 1 553A8F6B
 P 7250 3100
 F 0 "P42" H 7250 3750 60  0000 C CNN
@@ -506,7 +448,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_12X2 P43
+L rusEFI_Older:CONN_12X2 P43
 U 1 1 553A8F71
 P 8200 3100
 F 0 "P43" H 8200 3750 60  0000 C CNN
@@ -520,7 +462,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_8X2 P39
+L rusEFI_Older:CONN_8X2 P39
 U 1 1 553A8F77
 P 5400 4300
 F 0 "P39" H 5400 4750 60  0000 C CNN
@@ -534,7 +476,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_8X2 P40
+L rusEFI_Older:CONN_8X2 P40
 U 1 1 553A8F7D
 P 6300 4300
 F 0 "P40" H 6300 4750 60  0000 C CNN
@@ -548,21 +490,21 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X08 P58
+L Connector_Generic:Conn_01x08 P58
 U 1 1 553A8F83
-P 11025 4825
-F 0 "P58" H 11025 5275 60  0000 C CNN
-F 1 "CONN_8X1" V 11025 4825 50  0001 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x08_Pitch2.54mm" V 3805 3950 60  0001 C CNN
-F 3 "" H 7325 3975 60  0001 C CNN
-F 4 "DNP,DNP" V 3805 3950 60  0001 C CNN "MFG,MFG#"
-F 5 "DNP,DNP" V 3805 3950 60  0001 C CNN "VEND1,VEND1#"
-F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
-	1    11025 4825
+P 11025 4775
+F 0 "P58" H 11025 5225 60  0000 C CNN
+F 1 "CONN_8X1" V 11025 4775 50  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x08_Pitch2.54mm" V 3805 3900 60  0001 C CNN
+F 3 "" H 7325 3925 60  0001 C CNN
+F 4 "DNP,DNP" V 3805 3900 60  0001 C CNN "MFG,MFG#"
+F 5 "DNP,DNP" V 3805 3900 60  0001 C CNN "VEND1,VEND1#"
+F 6 "," H 7325 3925 60  0001 C CNN "VEND2,VEND2#"
+	1    11025 4775
 	-1   0    0    -1  
 $EndComp
 $Comp
-L CONN_8X2 P46
+L rusEFI_Older:CONN_8X2 P46
 U 1 1 553A8F89
 P 8200 4300
 F 0 "P46" H 8200 4750 60  0000 C CNN
@@ -576,7 +518,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_5X2 P34
+L rusEFI_Older:CONN_5X2 P34
 U 1 1 553A8F8F
 P 2450 6000
 F 0 "P34" H 2450 6300 60  0000 C CNN
@@ -590,7 +532,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_5X2 P37
+L rusEFI_Older:CONN_5X2 P37
 U 1 1 553A8F95
 P 3500 6000
 F 0 "P37" H 3500 6300 60  0000 C CNN
@@ -604,7 +546,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_5X2 P38
+L rusEFI_Older:CONN_5X2 P38
 U 1 1 553A8F9B
 P 4450 6000
 F 0 "P38" H 4450 6300 60  0000 C CNN
@@ -618,7 +560,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_5X2 P41
+L rusEFI_Older:CONN_5X2 P41
 U 1 1 553A8FA1
 P 5400 6000
 F 0 "P41" H 5400 6300 60  0000 C CNN
@@ -632,7 +574,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_5X2 P45
+L rusEFI_Older:CONN_5X2 P45
 U 1 1 553A8FA7
 P 6300 6000
 F 0 "P45" H 6300 6300 60  0000 C CNN
@@ -646,7 +588,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_5X2 P47
+L rusEFI_Older:CONN_5X2 P47
 U 1 1 553A8FAD
 P 7450 6000
 F 0 "P47" H 7450 6300 60  0000 C CNN
@@ -660,7 +602,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_4X2 P32
+L rusEFI_Older:CONN_4X2 P32
 U 1 1 553A8FB3
 P 2450 6700
 F 0 "P32" H 2450 6950 50  0000 C CNN
@@ -674,7 +616,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_4X2 P48
+L rusEFI_Older:CONN_4X2 P48
 U 1 1 553A8FB9
 P 3500 6700
 F 0 "P48" H 3500 6950 50  0000 C CNN
@@ -1016,7 +958,7 @@ Text Label 7850 6200 0    60   ~ 0
 Text Label 7050 6200 2    60   ~ 0
 GND
 $Comp
-L CONN_5X2 P54
+L rusEFI_Older:CONN_5X2 P54
 U 1 1 56CA8F18
 P 8450 6000
 F 0 "P54" H 8450 6300 60  0000 C CNN
@@ -1040,7 +982,7 @@ NoConn ~ 8050 6000
 NoConn ~ 8050 5900
 NoConn ~ 8050 5800
 $Comp
-L CONN_4X2 P53
+L rusEFI_Older:CONN_4X2 P53
 U 1 1 56CA9222
 P 4425 6700
 F 0 "P53" H 4425 6950 50  0000 C CNN
@@ -1062,7 +1004,7 @@ NoConn ~ 4825 6650
 NoConn ~ 4825 6750
 NoConn ~ 4825 6850
 $Comp
-L POLOLU_DRV8880 U6
+L rusEFI_Polo:POLOLU_DRV8880 U6
 U 1 1 58A6B293
 P 11825 4825
 F 0 "U6" H 11575 5275 60  0000 C CNN
@@ -1076,21 +1018,21 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X08 P57
+L Connector_Generic:Conn_01x08 P57
 U 1 1 58A6BC56
-P 12625 4825
-F 0 "P57" H 12625 5275 60  0000 C CNN
-F 1 "CONN_8X1" V 12625 4825 50  0001 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x08_Pitch2.54mm" V 3805 3950 60  0001 C CNN
-F 3 "" H 7325 3975 60  0001 C CNN
-F 4 "DNP,DNP" V 3805 3950 60  0001 C CNN "MFG,MFG#"
-F 5 "DNP,DNP" V 3805 3950 60  0001 C CNN "VEND1,VEND1#"
-F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
-	1    12625 4825
+P 12625 4775
+F 0 "P57" H 12625 5225 60  0000 C CNN
+F 1 "CONN_8X1" V 12625 4775 50  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x08_Pitch2.54mm" V 3805 3900 60  0001 C CNN
+F 3 "" H 7325 3925 60  0001 C CNN
+F 4 "DNP,DNP" V 3805 3900 60  0001 C CNN "MFG,MFG#"
+F 5 "DNP,DNP" V 3805 3900 60  0001 C CNN "VEND1,VEND1#"
+F 6 "," H 7325 3925 60  0001 C CNN "VEND2,VEND2#"
+	1    12625 4775
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X01 P55
+L Connector_Generic:Conn_01x01 P55
 U 1 1 58A6C051
 P 11825 3925
 F 0 "P55" V 11925 3925 60  0000 C CNN
@@ -1104,7 +1046,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	0    1    -1   0   
 $EndComp
 $Comp
-L CONN_01X01 P56
+L Connector_Generic:Conn_01x01 P56
 U 1 1 58A6C356
 P 11825 5725
 F 0 "P56" V 11950 5725 60  0000 C CNN
@@ -1118,7 +1060,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	0    -1   1    0   
 $EndComp
 $Comp
-L CONN_8X2 P44
+L rusEFI_Older:CONN_8X2 P44
 U 1 1 58A6DCF3
 P 7250 4300
 F 0 "P44" H 7250 4750 60  0000 C CNN
@@ -1150,7 +1092,7 @@ NoConn ~ 6850 4650
 Text Label 12425 4475 1    60   ~ 0
 12V-SWITCH
 $Comp
-L GND #PWR0188
+L rusEFI_Older:GND #PWR0188
 U 1 1 58A6F0E6
 P 12425 4575
 F 0 "#PWR0188" H 12425 4575 30  0001 C CNN
@@ -1161,7 +1103,7 @@ F 3 "" H 12425 4575 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR0189
+L rusEFI_Older:GND #PWR0189
 U 1 1 58A6F179
 P 12425 5175
 F 0 "#PWR0189" H 12425 5175 30  0001 C CNN
@@ -1177,4 +1119,6 @@ Text Notes 4300 10400 0    60   ~ 0
 See below links about barriers in GND planes. The current loops in the layout do not appear to need barriers. \n\nhttp://rusefi.com/wiki/index.php?title=Manual:Hardware:PCB_design_rules\nhttp://www.maximintegrated.com/en/app-notes/index.mvp/id/5450
 Text GLabel 2525 9200 2    60   Input ~ 0
 12V-SNUB
+Connection ~ 12425 4575
+Connection ~ 12425 5175
 $EndSCHEMATC

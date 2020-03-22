@@ -1,63 +1,5 @@
-EESchema Schematic File Version 2
-LIBS:KICAD_Older_Version
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:176122-6
-LIBS:art-electro-conn
-LIBS:art-electro-conn_2
-LIBS:art-electro-ic
-LIBS:art-electro-max
-LIBS:art-electro-power
-LIBS:LMV324IDR
-LIBS:logo
-LIBS:logo_flipped
-LIBS:MAX9926-9927
-LIBS:max9939
-LIBS:max31855
-LIBS:stm32
-LIBS:tc4427
-LIBS:lm2596
-LIBS:mos_p_numbered-pins
-LIBS:rn-41
-LIBS:skqucaa010_joystick
-LIBS:itead_hc-0X_bluetooth
-LIBS:joystick_SKRHAAE010
-LIBS:STM32F407IGT6
-LIBS:slc_oem
-LIBS:mos_n_numbered-pins
-LIBS:crystal(mc306)
-LIBS:pololu_a4988
-LIBS:Pololu_DRV8880
-LIBS:fuse_BOM_only_no_pins
-LIBS:frankenso-cache
-EELAYER 25 0
+EESchema Schematic File Version 4
+EELAYER 30 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
@@ -71,9 +13,8 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Connection ~ -4675 3450
 $Comp
-L CONN_1 P1002
+L rusEFI_Older:CONN_1 P1002
 U 1 1 58F64B72
 P 7750 6700
 F 0 "P1002" H 7830 6700 40  0000 L CNN
@@ -86,7 +27,7 @@ F 5 "DNP,DNP" V 1130 2600 60  0001 C CNN "VEND1,VEND1#"
 	-1   0    0    1   
 $EndComp
 $Comp
-L CP1 C1001
+L rusEFI_Older:CP1 C1001
 U 1 1 58F64B73
 P 6800 6600
 F 0 "C1001" V 6650 6350 50  0000 L CNN
@@ -99,7 +40,7 @@ F 5 "DIGI,565-2479-1-ND" H 6800 6600 60  0001 C CNN "VEND1,VEND1#"
 	-1   0    0    -1  
 $EndComp
 $Comp
-L R R1002
+L rusEFI_Older:R R1002
 U 1 1 58F64B74
 P 8650 6600
 F 0 "R1002" V 8730 6600 50  0000 C CNN
@@ -112,7 +53,7 @@ F 5 "DIGI,P1.0KDACT-ND" V 1130 2600 60  0001 C CNN "VEND1,VEND1#"
 	0    1    1    0   
 $EndComp
 $Comp
-L LED D1005
+L rusEFI_Older:LED D1005
 U 1 1 58F64B75
 P 8600 6750
 F 0 "D1005" H 8600 6600 50  0000 C CNN
@@ -125,7 +66,7 @@ F 5 "DIGI,160-1423-1-ND" H 8600 6750 60  0001 C CNN "VEND1,VEND1#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L LM2596 U1001
+L rusEFI_Older:LM2596 U1001
 U 1 1 58F64B76
 P 7450 6550
 F 0 "U1001" H 7600 6850 60  0000 C CNN
@@ -145,7 +86,7 @@ FB
 Text Label 8200 6450 0    60   ~ 0
 OUT
 $Comp
-L GND #PWR0115
+L rusEFI_Older:GND #PWR0115
 U 1 1 58F64B77
 P 7450 6900
 F 0 "#PWR0115" H 7450 6900 30  0001 C CNN
@@ -156,7 +97,7 @@ F 3 "" H 7450 6900 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L MOS_Pro Q1001
+L rusEFI_Older:MOS_Pro Q1001
 U 1 1 58F64B78
 P 5350 6500
 F 0 "Q1001" H 5350 6650 60  0000 R CNN
@@ -169,7 +110,7 @@ F 5 "DIGI,SI2323DS-T1-E3CT-ND" H 5350 6500 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R R1001
+L rusEFI_Older:R R1001
 U 1 1 58F64B79
 P 5900 6700
 F 0 "R1001" V 5980 6700 50  0000 C CNN
@@ -182,7 +123,7 @@ F 5 "DIGI,P39KDACT-ND" V 1530 2600 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L D_Zener_Small D1001
+L Device:D_Zener_Small D1001
 U 1 1 58F64B7A
 P 5650 6500
 F 0 "D1001" H 5650 6600 40  0000 C CNN
@@ -196,20 +137,7 @@ F 6 "sky-macau.com,5633100308" H 5650 6500 60  0001 C CNN "VEND2,VEND2#"
 	0    -1   1    0   
 $EndComp
 $Comp
-L FUSE-Part F1001
-U 1 1 58F64B7B
-P 3850 6150
-F 0 "F1001" H 3950 6200 40  0000 C CNN
-F 1 "2A" H 3750 6100 40  0000 C CNN
-F 2 "rusEFI_LIB:Blank" H 3850 6150 60  0001 C CNN
-F 3 "~" H 3850 6150 60  0000 C CNN
-F 4 "Littelfuse ,0297002.WXNV" H 3850 6150 60  0001 C CNN "MFG,MFG#"
-F 5 "DIGI,F986-ND" H 3850 6150 60  0001 C CNN "VEND1,VEND1#"
-	1    3850 6150
-	1    0    0    -1  
-$EndComp
-$Comp
-L D_Schottky D1006
+L Device:D_Schottky D1006
 U 1 1 58F64B7C
 P 8100 6650
 F 0 "D1006" H 8100 6750 40  0000 C CNN
@@ -225,7 +153,7 @@ $EndComp
 Text Label 4100 6400 0    60   ~ 0
 Vf
 $Comp
-L CP1 C1002
+L rusEFI_Older:CP1 C1002
 U 1 1 58F64B7D
 P 9050 6650
 F 0 "C1002" V 8900 6550 50  0000 L CNN
@@ -241,7 +169,7 @@ $EndComp
 Text HLabel 9650 6450 1    60   Input ~ 0
 5V-REG
 $Comp
-L CP1 C1003
+L rusEFI_Older:CP1 C1003
 U 1 1 58F64B7E
 P 9650 6650
 F 0 "C1003" V 9500 6550 50  0000 L CNN
@@ -255,7 +183,7 @@ F 6 "sky-macau.com,8702041755" H 9650 6650 60  0001 C CNN "VEND2,VEND2#"
 	-1   0    0    -1  
 $EndComp
 $Comp
-L CONN_1 P901
+L rusEFI_Older:CONN_1 P901
 U 1 1 58F64B7F
 P 3450 6250
 F 0 "P901" H 3530 6250 40  0000 L CNN
@@ -268,7 +196,7 @@ F 5 "DNP,dnp" H 3450 6250 60  0001 C CNN "VEND1,VEND1#"
 	-1   0    0    1   
 $EndComp
 $Comp
-L CONN_1 P902
+L rusEFI_Older:CONN_1 P902
 U 1 1 58F64B80
 P 5650 6250
 F 0 "P902" H 5730 6250 40  0000 L CNN
@@ -281,7 +209,7 @@ F 5 "DNP,dnp" H 5650 6250 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L Q_NMOS_GDS Q1002
+L Device:Q_NMOS_GDS Q1002
 U 1 1 58F64B81
 P 4800 6500
 F 0 "Q1002" H 4800 6350 60  0000 R CNN
@@ -294,7 +222,7 @@ F 5 "digikey,DN2625K4-GCT-ND" H 4800 6500 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L D_Zener_Small D1002
+L Device:D_Zener_Small D1002
 U 1 1 58F64B82
 P 4600 6750
 F 0 "D1002" H 4600 6850 40  0000 C CNN
@@ -308,7 +236,7 @@ F 6 " " H 4600 6750 60  0001 C CNN "VEND2,VEND2#"
 	0    -1   1    0   
 $EndComp
 $Comp
-L R R1003
+L rusEFI_Older:R R1003
 U 1 1 58F64B83
 P 4350 6600
 F 0 "R1003" V 4430 6600 50  0000 C CNN
@@ -331,12 +259,12 @@ Connection ~ 8800 6850
 Wire Wire Line
 	8400 6750 8400 6600
 Wire Wire Line
-	8900 6300 8900 6600
+	8900 6300 8900 6450
 Wire Wire Line
 	8900 6450 9050 6450
 Connection ~ 9050 6450
 Wire Wire Line
-	5550 6400 6200 6400
+	5550 6400 5650 6400
 Wire Wire Line
 	6800 6400 7000 6400
 Connection ~ 6800 6400
@@ -354,9 +282,9 @@ Connection ~ 9650 6850
 Wire Wire Line
 	10000 6450 9650 6450
 Wire Wire Line
-	7900 6450 7900 6700
+	7900 6450 7900 6550
 Wire Wire Line
-	7900 6450 8300 6450
+	7900 6450 8100 6450
 Connection ~ 7900 6550
 Connection ~ 9650 6450
 Wire Wire Line
@@ -378,7 +306,7 @@ Connection ~ 5650 6400
 Connection ~ 8100 6450
 Connection ~ 8100 6850
 Wire Wire Line
-	3500 6850 10000 6850
+	3500 6850 4600 6850
 Wire Wire Line
 	3600 6400 3600 6250
 Wire Wire Line
@@ -395,7 +323,7 @@ Wire Wire Line
 Wire Wire Line
 	4700 6600 4700 6700
 $Comp
-L D_Zener_Small D1003
+L Device:D_Zener_Small D1003
 U 1 1 58F64B84
 P 6200 6500
 F 0 "D1003" H 6200 6600 40  0000 C CNN
@@ -422,9 +350,9 @@ Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. I
 Text Notes 9750 6375 0    60   ~ 0
 5V  5mVp-p 1A\nSuggested \nexternal wires \n18awg min
 Text Notes 3400 6000 0    60   ~ 0
-200V surge, 18V to 7V typical. \nSuggested mininium 16awg \nUpstream 1A fuse littel fuse 0287001
+200V surge, 18V to 7V typical. \nSuggested mininium 16awg \nUpstream 1A fuse litteL rusEFI_Older:FUse 0287001
 $Comp
-L INDUCTOR L1003
+L rusEFI_Older:INDUCTOR L1003
 U 1 1 58F64B85
 P 6500 6400
 F 0 "L1003" V 6450 6400 40  0000 C CNN
@@ -438,7 +366,7 @@ F 6 "na,na" V 6500 6400 60  0001 C CNN "VEND2,VEND2#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L INDUCTOR L1001
+L rusEFI_Older:INDUCTOR L1001
 U 1 1 58F64B86
 P 8600 6450
 F 0 "L1001" V 8550 6450 40  0000 C CNN
@@ -452,7 +380,7 @@ F 6 "sky-macau.com,9900528212" V 8600 6450 60  0001 C CNN "VEND2,VEND2#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L INDUCTOR L1002
+L rusEFI_Older:INDUCTOR L1002
 U 1 1 58F64B87
 P 9350 6450
 F 0 "L1002" V 9300 6450 40  0000 C CNN
@@ -468,7 +396,7 @@ $EndComp
 Wire Bus Line
 	4710 6470 4890 6470
 $Comp
-L SCHDPAK D1004
+L rusEFI_Older:SCHDPAK D1004
 U 1 1 58F64B8B
 P 8300 6650
 F 0 "D1004" H 8300 6750 40  0000 C CNN
@@ -504,7 +432,7 @@ GND
 Text HLabel 3500 6400 0    60   Input ~ 0
 Vin
 $Comp
-L CONN_1 FB901
+L rusEFI_Older:CONN_1 FB901
 U 1 1 590520C8
 P 3750 6400
 F 0 "FB901" H 3650 6475 40  0000 L CNN
@@ -517,7 +445,7 @@ F 5 "DNP,dnp" H 3750 6400 60  0001 C CNN "VEND1,VEND1#"
 	1    0    0    1   
 $EndComp
 $Comp
-L CONN_1 FB902
+L rusEFI_Older:CONN_1 FB902
 U 1 1 59052183
 P 3950 6400
 F 0 "FB902" H 4025 6475 40  0000 R CNN
@@ -535,4 +463,49 @@ Wire Notes Line
 	3600 6250 3600 6150
 Text Notes 9725 7200 0    60   ~ 0
 3A possible with \nmore expensive \ncomponents. 
+Wire Wire Line
+	9050 6850 9650 6850
+Wire Wire Line
+	7450 6850 8100 6850
+Wire Wire Line
+	6800 6850 7000 6850
+Wire Wire Line
+	8800 6850 9050 6850
+Wire Wire Line
+	7000 6850 7450 6850
+Wire Wire Line
+	8900 6450 8900 6600
+Wire Wire Line
+	9650 6850 10000 6850
+Wire Wire Line
+	7900 6550 7900 6700
+Wire Wire Line
+	6200 6850 6800 6850
+Wire Wire Line
+	6150 6850 6200 6850
+Wire Wire Line
+	5650 6400 6200 6400
+Wire Wire Line
+	8100 6450 8300 6450
+Wire Wire Line
+	8100 6850 8250 6850
+Wire Wire Line
+	4600 6850 6150 6850
+Wire Wire Line
+	8250 6850 8350 6850
+Wire Wire Line
+	8350 6850 8800 6850
+$Comp
+L rusEFI_Older:FUSE F1001
+U 1 1 58F64B7B
+P 3850 6150
+F 0 "F1001" H 3950 6200 40  0000 C CNN
+F 1 "2A" H 3750 6100 40  0000 C CNN
+F 2 "rusEFI_LIB:Blank" H 3850 6150 60  0001 C CNN
+F 3 "~" H 3850 6150 60  0000 C CNN
+F 4 "Littelfuse ,0297002.WXNV" H 3850 6150 60  0001 C CNN "MFG,MFG#"
+F 5 "DIGI,F986-ND" H 3850 6150 60  0001 C CNN "VEND1,VEND1#"
+	1    3850 6150
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
