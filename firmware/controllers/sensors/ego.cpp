@@ -43,9 +43,10 @@ static const float maxAfrDeviation = 5.0f;	// 9.7..19.7
 static const int minAvgSize = (EGO_AVG_BUF_SIZE / 2);	// ~0.6 sec for 20ms period of 'fast' callback, and it matches a lag time of most narrow EGOs
 static const int maxAvgSize = (EGO_AVG_BUF_SIZE - 1);	// the whole buffer
 
+#ifdef EFI_NARROW_EGO_AVERAGING
 // we store the last measured AFR value to predict the current averaging window size
 static float lastAfr = stoichAfr;
-
+#endif
 
 void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Our averaging is intended for use only with Narrow EGOs.

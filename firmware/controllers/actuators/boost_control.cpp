@@ -37,8 +37,7 @@ static Logging *logger;
 static boostOpenLoop_Map3D_t boostMapOpen("boostmapopen", 1);
 static boostOpenLoop_Map3D_t boostMapClosed("boostmapclosed", 1);
 static SimplePwm boostPwmControl("boost");
-static pid_s *boostPidS = &persistentState.persistentConfiguration.engineConfiguration.boostPid;
-static Pid boostControlPid(boostPidS);
+static Pid boostControlPid(&persistentState.persistentConfiguration.engineConfiguration.boostPid);
 
 static bool shouldResetPid = false;
 

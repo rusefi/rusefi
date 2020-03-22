@@ -9,8 +9,6 @@
  * The whole idea of bootloader is to make it as small as possible. And reasonably independent.
 */
 
-int maxNesting = 0;
-
 void chDbgPanic3(const char */*msg*/, const char * /*file*/, int /*line*/) {
 }
 
