@@ -32,6 +32,11 @@ enum class SensorType : unsigned char {
 	Tps2Primary,
 	Tps2Secondary,
 
+	// Redundant and combined sensors for acc pedal
+	AcceleratorPedal,
+	AcceleratorPedalPrimary,
+	AcceleratorPedalSecondary,
+
 	// Leave me at the end!
 	PlaceholderLast
 };

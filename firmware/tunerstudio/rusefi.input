@@ -193,6 +193,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       ind_isTriggerError = bits, U32,      0,  [23:23], "true", "false";
       ind_hasFatalError=bits,    U32,      0,  [24:24], "true", "false";
 	  ind_isWarnNow    =bits,    U32,      0,  [25:25], "true", "false";
+	  ind_pedal_error  =bits,    U32,      0,  [26:26], "true", "false";
 
 ; RPM, vss
       RPMValue        = scalar,  U16,      4,      "RPM",    1,   0.00000
@@ -1005,6 +1006,7 @@ gaugeCategory = Throttle Body (incl. ETB)
     indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
     indicator = { ind_iat_error}, "iat",   "iat error",   white, black, red,   black
     indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
+	indicator = { ind_pedal_error}, "map",   "map error",   white, black, red,   black
 
     indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
     indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
