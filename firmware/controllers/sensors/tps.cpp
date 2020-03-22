@@ -213,7 +213,13 @@ bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->tps2_1AdcChannel != EFI_ADC_NONE;
 }
 
+extern float canPedal;
+
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (CONFIG(enableCanPedal)) {
+		return canPedal;
+	}
+
 	if (mockPedalPosition != MOCK_UNDEFINED) {
 		return mockPedalPosition;
 	}
