@@ -541,8 +541,14 @@ const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
 case DBG_BOOST:
   return "DBG_BOOST";
-case DBG_37:
-  return "DBG_37";
+case DBG_START_STOP:
+  return "DBG_START_STOP";
+case DBG_38:
+  return "DBG_38";
+case DBG_39:
+  return "DBG_39";
+case DBG_40:
+  return "DBG_40";
 case DBG_ALTERNATOR_PID:
   return "DBG_ALTERNATOR_PID";
 case DBG_ANALOG_INPUTS:
