@@ -41,7 +41,6 @@
 #include "map_averaging.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
-#include "engine.h"
 #include "speed_density.h"
 #include "local_version_holder.h"
 #include "alternator_controller.h"
@@ -57,15 +56,15 @@
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
-#endif
+#endif /* EFI_SENSOR_CHART */
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
-#endif
+#endif /* EFI_TUNER_STUDIO */
 
 #if EFI_LOGIC_ANALYZER
 #include "logic_analyzer.h"
-#endif
+#endif /* EFI_LOGIC_ANALYZER */
 
 #if HAL_USE_ADC
 #include "AdcConfiguration.h"
@@ -99,6 +98,22 @@
 #endif /* EFI_CJ125 */
 
 EXTERN_ENGINE;
+
+#if !EFI_UNIT_TEST
+
+extern bool hasFirmwareErrorFlag;
+extern EnginePins enginePins;
+
+static LoggingWithStorage logger("Engine Controller");
+
+/**
+ * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
+ */
+Engine ___engine CCM_OPTIONAL;
+Engine * engine = &___engine;
+
+#endif /* EFI_UNIT_TEST */
+
 
 void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
@@ -137,19 +152,19 @@ static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_
 
 }
 
-EXTERN_ENGINE;
-
 #if EFI_ENABLE_MOCK_ADC
-void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
+
+static void initMockVoltage(void) {
+#if EFI_SIMULATOR
+	setMockCltVoltage(2);
+	setMockIatVoltage(2);
+#endif /* EFI_SIMULATOR */
 }
-#endif
+
+#endif /* EFI_ENABLE_MOCK_ADC */
+
 
 #if !EFI_UNIT_TEST
-
-extern bool hasFirmwareErrorFlag;
-extern EnginePins enginePins;
-
 
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -178,17 +193,6 @@ class PeriodicSlowController : public PeriodicTimerController {
 static PeriodicFastController fastController;
 static PeriodicSlowController slowController;
 
-static LoggingWithStorage logger("Engine Controller");
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-
-/**
- * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
- */
-Engine ___engine CCM_OPTIONAL;
-Engine * engine = &___engine;
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
-
 class EngineStateBlinkingTask : public PeriodicTimerController {
 	int getPeriodMs() override {
 		return 50;
@@ -200,7 +204,7 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 #else
 		bool is_running = false;
-#endif
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 		if (is_running) {
 			// blink in running mode
@@ -215,78 +219,6 @@ private:
 };
 
 static EngineStateBlinkingTask engineStateBlinkingTask;
-
-#if EFI_PROD_CODE
-static Overflow64Counter halTime;
-
-/**
- * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU
- */
-//todo: macro to save method invocation
-efitimeus_t getTimeNowUs(void) {
-	ScopePerf perf(PE::GetTimeNowUs);
-	return getTimeNowNt() / (CORE_CLOCK / 1000000);
-}
-
-//todo: macro to save method invocation
-efitick_t getTimeNowNt(void) {
-#if EFI_PROD_CODE
-    /* Entering a reentrant critical zone.*/
-    syssts_t sts = chSysGetStatusAndLockX();
-	efitime_t localH = halTime.state.highBits;
-	uint32_t localLow = halTime.state.lowBits;
-
-	uint32_t value = getTimeNowLowerNt();
-
-	if (value < localLow) {
-		// new value less than previous value means there was an overflow in that 32 bit counter
-		localH += 0x100000000LL;
-	}
-
-	efitime_t result = localH + value;
-
-    /* Leaving the critical zone.*/
-    chSysRestoreStatusX(sts);
-	return result;
-#else /* EFI_PROD_CODE */
-// todo: why is this implementation not used?
-	/**
-	 * this method is lock-free and thread-safe, that's because the 'update' method
-	 * is atomic with a critical zone requirement.
-	 *
-	 * http://stackoverflow.com/questions/5162673/how-to-read-two-32bit-counters-as-a-64bit-integer-without-race-condition
-	 */
-	efitime_t localH;
-	efitime_t localH2;
-	uint32_t localLow;
-	int counter = 0;
-	do {
-		localH = halTime.state.highBits;
-		localLow = halTime.state.lowBits;
-		localH2 = halTime.state.highBits;
-#if EFI_PROD_CODE
-		if (counter++ == 10000)
-			chDbgPanic("lock-free frozen");
-#endif /* EFI_PROD_CODE */
-	} while (localH != localH2);
-	/**
-	 * We need to take current counter after making a local 64 bit snapshot
-	 */
-	uint32_t value = getTimeNowLowerNt();
-
-	if (value < localLow) {
-		// new value less than previous value means there was an overflow in that 32 bit counter
-		localH += 0x100000000LL;
-	}
-
-	return localH + value;
-#endif /* EFI_PROD_CODE */
-
-}
-
-#endif /* EFI_PROD_CODE */
-
-#if ! EFI_UNIT_TEST
 
 /**
  * number of SysClock ticks in one ms
@@ -303,7 +235,6 @@ efitimems_t currentTimeMillis(void) {
 efitimesec_t getTimeNowSeconds(void) {
 	return currentTimeMillis() / 1000;
 }
-#endif /* EFI_UNIT_TEST */
 
 static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.resetAE();
@@ -315,34 +246,11 @@ static void resetAccel(void) {
 	}
 }
 
-#if ENABLE_PERF_TRACE
-
-void irqEnterHook(void) {
-	perfEventBegin(PE::ISR);
-}
-
-void irqExitHook(void) {
-	perfEventEnd(PE::ISR);
-}
-
-void contextSwitchHook() {
-	perfEventInstantGlobal(PE::ContextSwitch);
-}
-
-#endif /* ENABLE_PERF_TRACE */
-
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
-	/**
-	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
-	 */
-    /* Entering a reentrant critical zone.*/
-    syssts_t sts = chSysGetStatusAndLockX();
-	updateAndSet(&halTime.state, getTimeNowLowerNt());
-    /* Leaving the critical zone.*/
-    chSysRestoreStatusX(sts);
+	touchTimeCounter();
 #endif /* EFI_PROD_CODE */
 
 	/**
@@ -367,7 +275,7 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
+#endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -385,7 +293,7 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 	}
 #else
 	strcpy(buffer, "NONE");
-#endif
+#endif /* HAL_USE_ADC */
 	return (char*) buffer;
 }
 
@@ -393,7 +301,7 @@ static char pinNameBuffer[16];
 
 #if HAL_USE_ADC
 extern AdcDevice fastAdc;
-#endif
+#endif /* HAL_USE_ADC */
 
 static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage,
 		float dividerCoeff) {
@@ -410,13 +318,13 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	float voltage = adcVoltage * dividerCoeff;
 	scheduleMsg(&logger, "%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdcMode(hwChannel),
 			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
-#endif
+#endif /* HAL_USE_ADC */
 }
 
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 #if HAL_USE_ADC
 	printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel PASS_ENGINE_PARAMETER_SUFFIX), engineConfiguration->analogInputDividerCoefficient);
-#endif
+#endif /* HAL_USE_ADC */
 }
 
 static void printAnalogInfo(void) {
@@ -601,57 +509,6 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	getFloat(offset);
 	onConfigurationChanged();
 }
-#endif /* EFI_UNIT_TEST */
-
-#if EFI_ENABLE_MOCK_ADC
-
-void setMockCltVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->clt.adcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockIatVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->iat.adcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->mafAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->afr.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockThrottlePedalSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->throttlePedalPositionAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockThrottlePositionSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->tps1_1AdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-static void initMockVoltage(void) {
-#if EFI_SIMULATOR
-	setMockCltVoltage(2);
-#endif /* EFI_SIMULATOR */
-
-#if EFI_SIMULATOR
-	setMockIatVoltage(2);
-#endif /* EFI_SIMULATOR */
-
-}
-
-#endif /* EFI_ENABLE_MOCK_ADC */
-
-
-#if !EFI_UNIT_TEST
 
 static void initConfigActions(void) {
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
@@ -849,6 +706,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 201200320;
+	return 201200322;
 }
 #endif /* EFI_UNIT_TEST */
