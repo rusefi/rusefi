@@ -246,12 +246,28 @@ static void resetAccel(void) {
 	}
 }
 
+static void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (CONFIG(startStopButtonPin) != GPIO_UNASSIGNED) {
+#if EFI_PROD_CODE
+		bool startStopState = efiReadPin(CONFIG(startStopButtonPin));
+
+		if (startStopState && !engine->startStopState) {
+			// we are here on transition from 0 to 1
+			engine->startStopStateToggleCounter++;
+		}
+		engine->startStopState = startStopState;
+#endif /* EFI_PROD_CODE */
+	}
+}
+
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	touchTimeCounter();
 #endif /* EFI_PROD_CODE */
+
+	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
 	 * Update engine RPM state if needed (check timeouts).
