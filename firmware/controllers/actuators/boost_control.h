@@ -9,10 +9,6 @@
 #include "engine.h"
 #include "periodic_task.h"
 
-
-
-
-
 void startBoostPin(void);
 void stopBoostPin(void);
 void initBoostCtrl(Logging *sharedLogger);
@@ -22,6 +18,3 @@ void setBoostDFactor(float d);
 void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void showBoostInfo(void);
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration);
-
-
-

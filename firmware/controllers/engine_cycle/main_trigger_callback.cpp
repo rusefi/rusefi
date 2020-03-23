@@ -23,9 +23,6 @@
 
 #include "global.h"
 #include "os_access.h"
-#if EFI_PROD_CODE
-#include <nvic.h>
-#endif
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 

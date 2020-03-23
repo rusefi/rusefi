@@ -5,9 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "os_access.h"
 #include "engine.h"
+#include "os_access.h"
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
 //todo: move into simulator global
