@@ -711,7 +711,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// header
-	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
+	tsOutputChannels->tsConfigVersion = getRusEfiVersion();
 
 	// offset 0
 	tsOutputChannels->rpm = rpm;

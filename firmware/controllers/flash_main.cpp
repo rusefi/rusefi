@@ -78,7 +78,7 @@ void writeToFlashNow(void) {
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
-	persistentState.version = FLASH_DATA_VERSION;
+	persistentState.version = getRusEfiVersion();
 	persistentState.value = flashStateCrc(&persistentState);
 
 	// Flash two copies
@@ -118,7 +118,7 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
 
 	if (!isValidCrc(&persistentState)) {
 		return CRC_FAILED;
-	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != sizeof(persistentState)) {
+	} else if (persistentState.version != getRusEfiVersion() || persistentState.size != sizeof(persistentState)) {
 		return INCOMPATIBLE_VERSION;
 	} else {
 		return PC_OK;
@@ -141,6 +141,7 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
 		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
 	} else if (result == INCOMPATIBLE_VERSION) {
+		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash config version mismatch, reverting to defaults");
 		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		/**

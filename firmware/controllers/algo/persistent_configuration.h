@@ -12,8 +12,8 @@
 #include "engine_configuration_generated_structures.h"
 
 typedef struct {
-	int version;
-	int size;
+	uint32_t version;
+	size_t size;
 	persistent_config_s persistentConfiguration;
 	crc_t value;
 } persistent_config_container_s;

@@ -42,7 +42,7 @@ void initErrorHandlingDataStructures(void);
 char *getWarning(void);
 
 // todo: better place for this shared declaration?
-int getRusEfiVersion(void);
+uint32_t getRusEfiVersion(void);
 
 /**
  * @deprecated Global panic is inconvenient because it's hard to deliver the error message while whole instance
