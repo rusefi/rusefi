@@ -53,6 +53,7 @@
 #include "counter64.h"
 #include "perf_trace.h"
 #include "boost_control.h"
+#include "launch_control.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -665,14 +666,19 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 #if EFI_ALTERNATOR_CONTROL
 	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
+#endif /* EFI_ALTERNATOR_CONTROL */
 
 #if EFI_BOOST_CONTROL
 	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_BOOST_CONTROL */
+
+#if EFI_LAUNCH_CONTROL
+	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
+
 #if EFI_AUX_PID
 	initAuxPid(sharedLogger);
-#endif
+#endif /* EFI_AUX_PID */
 
 #if EFI_MALFUNCTION_INDICATOR
 	initMalfunctionIndicator();
