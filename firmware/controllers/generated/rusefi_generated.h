@@ -1686,6 +1686,7 @@
 #define rpmHardLimit_offset_hex 1a0
 #define runningLedPin_offset 1813
 #define runningLedPin_offset_hex 715
+#define RUSEFI_FLASH_VERSION 20200323
 #define sdCardCsPin_offset 707
 #define sdCardCsPin_offset_hex 2c3
 #define sdCardPeriodMs_offset 804
@@ -2040,7 +2041,6 @@
 #define triggerSimulatorPins2_offset_hex 2e1
 #define triggerSimulatorPins3_offset 738
 #define triggerSimulatorPins3_offset_hex 2e2
-#define TS_FILE_VERSION 20200310
 #define TS_OUTPUT_SIZE 240
 #define ts_show_analog_divider true
 #define ts_show_cj125 true
