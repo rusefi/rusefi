@@ -1354,7 +1354,7 @@ public class Fields {
 	public static final int triggerSimulatorPins1_offset = 736;
 	public static final int triggerSimulatorPins2_offset = 737;
 	public static final int triggerSimulatorPins3_offset = 738;
-	public static final int TS_FILE_VERSION = 20200310;
+	public static final int RUSEFI_FLASH_VERSION = 20200323;
 	public static final int TS_OUTPUT_SIZE = 240;
 	public static final String TS_SIGNATURE = "rusEFI v1.2020.3";
 	public static final int tunerStudioSerialSpeed_offset = 728;

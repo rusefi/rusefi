@@ -22,21 +22,17 @@
 ! each field is declared as
 ! type name;comment
 
-
-#define TS_SIGNATURE "rusEFI v1.2020.3"
+! WHEN SHOULD I UPDATE THE BELOW VERSIONS?
+! - Update TS_SIGNATURE whenever either the flash format or TS output format changes (format: Year.Month.Sequential)
+! - Update RUSEFI_FLASH_VERSION whenever the flash format is changed in a way that isn't backward compatible in a safe way (format: YearMonthDay)
+#define TS_SIGNATURE "rusEFI v2020.3.0"
+#define RUSEFI_FLASH_VERSION 20200323
 
 !
 ! this is here so that rusEfi console can access it, too
 ! [IMPORTANT] every time TS_OUTPUT_SIZE is changed make sure to increment TS_SIGNATURE above
 !
 #define TS_OUTPUT_SIZE 240
-
-!
-! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
-! so not forget to change fileVersion in rusefi.ini
-! todo: is this not needed in light of TS_SIGNATURE?
-#define TS_FILE_VERSION 20200310
-
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
