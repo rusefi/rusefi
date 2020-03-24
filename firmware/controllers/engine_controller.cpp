@@ -678,8 +678,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initPwmTester();
 #endif /* EFI_PWM_TESTER */
 
-	initMalfunctionCentral();
-
 #if EFI_ALTERNATOR_CONTROL
 	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_ALTERNATOR_CONTROL */
