@@ -670,7 +670,7 @@ typedef enum {
 	DBG_ETB_LOGIC = 35,
 	DBG_BOOST = 36,
 	DBG_START_STOP = 37,
-	DBG_38 = 38,
+	DBG_LAUNCH = 38,
 	DBG_39 = 39,
 	DBG_40 = 40,
 
