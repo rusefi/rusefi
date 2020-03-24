@@ -39,8 +39,10 @@
 #include "tps.h"
 
 #if EFI_PROD_CODE
+#include "cj125.h"
 #include "rusefi.h"
 #include "mpu_util.h"
+#include "malfunction_central.h"
 #endif /* EFI_PROD_CODE */
 
 #if (BOARD_TLE8888_COUNT > 0)
@@ -293,7 +295,9 @@ static void handleCommandX14(uint16_t index) {
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
-	if (subsystem == 0x12) {
+    if (subsystem == 0x11) {
+        clearWarnings();
+	} else if (subsystem == 0x12) {
 		doRunSpark(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x13) {
 		doRunFuel(index, "300", "4", "400", "3");
@@ -309,6 +313,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 #if EFI_IDLE_CONTROL
 		startIdleBench();
 #endif
+	} else if (subsystem == 0x18) {
+		cjCalibrate();
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit
 		setCallFromPitStop(30000);
