@@ -37,12 +37,12 @@
 #include "idle_thread.h"
 #include "periodic_thread_controller.h"
 #include "tps.h"
+#include "cj125.h"
+#include "malfunction_central.h"
 
 #if EFI_PROD_CODE
-#include "cj125.h"
 #include "rusefi.h"
 #include "mpu_util.h"
-#include "malfunction_central.h"
 #endif /* EFI_PROD_CODE */
 
 #if (BOARD_TLE8888_COUNT > 0)
@@ -312,9 +312,11 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		// cmd_test_idle_valve
 #if EFI_IDLE_CONTROL
 		startIdleBench();
-#endif
+#endif /* EFI_IDLE_CONTROL */
 	} else if (subsystem == 0x18) {
+#if EFI_CJ125
 		cjCalibrate();
+#endif /* EFI_CJ125 */
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit
 		setCallFromPitStop(30000);
