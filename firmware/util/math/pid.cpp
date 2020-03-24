@@ -30,8 +30,8 @@ void Pid::initPidClass(pid_s *parameters) {
 }
 
 bool Pid::isSame(const pid_s *parameters) const {
-	if (this->parameters == NULL) {
-		// this could happen on first execution during initialization
+	if (!this->parameters) {
+		// this 'null' could happen on first execution during initialization
 		return false;
 	}
 	efiAssert(OBD_PCM_Processor_Fault, parameters != NULL, "PID::isSame NULL", false);
