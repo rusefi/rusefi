@@ -171,7 +171,9 @@ void startBoostPin(void) {
 }
 
 void stopBoostPin(void) {
+#if !EFI_UNIT_TEST
 	brain_pin_markUnused(activeConfiguration.boostControlPin);
+#endif /* EFI_UNIT_TEST */
 }
 
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration) {

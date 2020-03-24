@@ -520,17 +520,19 @@ static void configureInputs(void) {
 	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
 	addChannel("AUXT#1", engineConfiguration->auxTempSensor1.adcChannel, ADC_SLOW);
 	addChannel("AUXT#2", engineConfiguration->auxTempSensor2.adcChannel, ADC_SLOW);
-	if (engineConfiguration->auxFastSensor1_adcChannel != EFI_ADC_0) {
+	if (engineConfiguration->auxFastSensor1_adcChannel != INCOMPATIBLE_CONFIG_CHANGE) {
 		// allow EFI_ADC_0 next time we have an incompatible configuration change
 		addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
 	}
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("OilP", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
-	if (engineConfiguration->high_fuel_pressure_sensor_1 != INCOMPATIBLE_CONFIG_CHANGE)
+	if (engineConfiguration->high_fuel_pressure_sensor_1 != INCOMPATIBLE_CONFIG_CHANGE) {
 		addChannel("HFP1", engineConfiguration->high_fuel_pressure_sensor_1, ADC_SLOW);
-	if (engineConfiguration->high_fuel_pressure_sensor_2 != INCOMPATIBLE_CONFIG_CHANGE)
+	}
+	if (engineConfiguration->high_fuel_pressure_sensor_2 != INCOMPATIBLE_CONFIG_CHANGE) {
 		addChannel("HFP2", engineConfiguration->high_fuel_pressure_sensor_2, ADC_SLOW);
+	}
 
 	if (CONFIG(isCJ125Enabled)) {
 		addChannel("cj125ur", engineConfiguration->cj125ur, ADC_SLOW);
