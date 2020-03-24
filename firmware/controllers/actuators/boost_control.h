@@ -11,7 +11,7 @@
 
 void startBoostPin(void);
 void stopBoostPin(void);
-void initBoostCtrl(Logging *sharedLogger);
+void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setBoostPFactor(float p);
 void setBoostIFactor(float i);
 void setBoostDFactor(float d);

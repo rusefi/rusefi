@@ -185,13 +185,15 @@ void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIG(boostControlPin) == GPIO_UNASSIGNED){
 		return;
 	}
+#endif
 
-	boostControlPid.initPidClass(&persistentState.persistentConfiguration.engineConfiguration.boostPid);
+	boostControlPid.initPidClass(&engineConfiguration->boostPid);
 
 	logger = sharedLogger;
 	boostMapOpen.init(config->boostTableOpenLoop, config->boostMapBins, config->boostRpmBins);
 	boostMapClosed.init(config->boostTableClosedLoop, config->boostTpsBins, config->boostRpmBins);
 	boostControlPid.reset();
+#if !EFI_UNIT_TEST
 	startBoostPin();
 	BoostController.Start();
 #endif
