@@ -712,7 +712,7 @@ static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
 /**
  * See also VCS_VERSION
  */
-int getRusEfiVersion(void) {
+uint32_t getRusEfiVersion() {
 	if (UNUSED_RAM_SIZE[0] != 0)
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
@@ -722,6 +722,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 201200322;
+	return RUSEFI_FLASH_VERSION;
 }
 #endif /* EFI_UNIT_TEST */
