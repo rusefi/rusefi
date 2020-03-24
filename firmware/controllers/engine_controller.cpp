@@ -380,8 +380,16 @@ static void printAnalogInfo(void) {
 
 	printAnalogChannelInfo("OilP", engineConfiguration->oilPressure.hwChannel);
 
+	printAnalogChannelInfo("CJ UR", engineConfiguration->cj125ur);
+	printAnalogChannelInfo("CJ UA", engineConfiguration->cj125ua);
+
 	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
 	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
+
+	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
+		printAnalogChannelInfo("FSIO", engineConfiguration->fsioAdc[i]);
+	}
+
 	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVoltage("vbatt", engineConfiguration->vbattAdcChannel PASS_ENGINE_PARAMETER_SUFFIX),
 			engineConfiguration->vbattDividerCoeff);
 }
