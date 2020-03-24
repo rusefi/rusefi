@@ -17,7 +17,7 @@
 class DcMotor;
 class Logging;
 
-class IEtbController : public PeriodicTimerController{
+class IEtbController : public PeriodicTimerController {
 public:
 	DECLARE_ENGINE_PTR;
 	virtual void init(DcMotor *motor, int ownIndex, pid_s *pidParameters) = 0;
