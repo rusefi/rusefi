@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HW_LAYER_SENSORS_CJ125_H_
-#define HW_LAYER_SENSORS_CJ125_H_
+#pragma once
 
 #include "cj125_logic.h"
 
@@ -105,8 +104,7 @@ void cjPostState(TunerStudioOutputChannels *tsOutputChannels);
 
 void initCJ125(Logging *shared DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+void cjCalibrate(void);
 float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void cj125defaultPinout();
-
-#endif /* HW_LAYER_SENSORS_CJ125_H_ */
