@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Mar 20 19:54:54 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 23 22:05:45 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -339,10 +339,10 @@ struct trigger_config_s {
 	trigger_type_e type;
 	/**
 	offset 4 bit 0 */
-	bool unusedTriggerBit0 : 1;
+	bool todoRemoveMeOneDay0 : 1;
 	/**
 	offset 4 bit 1 */
-	bool unusedTriggerBit1 : 1;
+	bool todoRemoveMeOneDay1 : 1;
 	/**
 	 * This option could be used if your second trigger channel is broken
 	offset 4 bit 2 */
@@ -1445,15 +1445,17 @@ struct engine_configuration_s {
 	 */
 	int16_t stepperParkingExtraSteps;
 	/**
-	 * This magic property is specific to Mazda Miata NB2
 	 * offset 820
 	 */
-	float unusedmiataNb2VVTRatioFrom;
+	float antilagTimeout;
 	/**
-	 * This magic property is specific to Mazda Miata NB2
 	 * offset 824
 	 */
-	float unusedmiataNb2VVTRatioTo;
+	uint16_t antiLagRpmTreshold;
+	/**
+	 * offset 826
+	 */
+	uint16_t anotherUnused;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 828
@@ -1603,13 +1605,13 @@ struct engine_configuration_s {
 	bool multisparkEnable : 1;
 	/**
 	offset 976 bit 4 */
-	bool unusedBit_251_4 : 1;
+	bool enableLaunchRetard : 1;
 	/**
 	offset 976 bit 5 */
-	bool unusedBit_251_5 : 1;
+	bool enableLaunchBoost : 1;
 	/**
 	offset 976 bit 6 */
-	bool unusedBit_251_6 : 1;
+	bool launchDisableBySpeed : 1;
 	/**
 	offset 976 bit 7 */
 	bool unusedBit_251_7 : 1;
@@ -1681,10 +1683,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_280_30 : 1;
+	bool unusedBit_281_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_280_31 : 1;
+	bool unusedBit_281_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -1758,7 +1760,19 @@ struct engine_configuration_s {
 	/**
 	 * offset 1052
 	 */
-	int unusedAtOldBoardConfigurationEnd[103];
+	int launchAdvanceRpmRange;
+	/**
+	 * offset 1056
+	 */
+	int launchTpsTreshold;
+	/**
+	 * offset 1060
+	 */
+	float launchActivateDelay;
+	/**
+	 * offset 1064
+	 */
+	int unusedAtOldBoardConfigurationEnd[100];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -3242,4 +3256,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Mar 20 19:54:54 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 23 22:05:45 EDT 2020

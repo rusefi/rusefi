@@ -2497,7 +2497,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
 		field = "Start/Stop Button",					startStopButtonPin
-		field = ""			
+		field = "External Knock",						externalKnockSenseAdc
 		
 	dialog = fsioFrequency, "Frequency"
 		field = "freq #1", 								fsioFrequency1

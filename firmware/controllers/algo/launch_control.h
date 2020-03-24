@@ -10,3 +10,4 @@
 #include "engine.h"
 
 void initLaunchControl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
