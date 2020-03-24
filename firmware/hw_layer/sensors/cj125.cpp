@@ -202,16 +202,17 @@ static void cjUpdateAnalogValues() {
 #if EFI_PROD_CODE
 	// todo: some solution for testing
 	waitForSlowAdc(lastSlowAdcCounter);
-#endif
+#endif /* EFI_PROD_CODE */
+
 	globalInstance.vUr = getUr();
 	globalInstance.vUa = getUa();
 #if EFI_PROD_CODE
 	// todo: some solution for testing
     lastSlowAdcCounter = getSlowAdcCounter();
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
-static void cjCalibrate(void) {
+void cjCalibrate(void) {
 	globalInstance.cjIdentify();
 
 	scheduleMsg(logger, "cj125: Starting calibration...");
@@ -227,7 +228,7 @@ static void cjCalibrate(void) {
 	// todo: some testing solution
 	// wait for the start of the calibration
 	chThdSleepMilliseconds(CJ125_CALIBRATION_DELAY);
-#endif
+#endif /* EFI_PROD_CODE */
 	globalInstance.vUaCal = 0.0f;
 	globalInstance.vUrCal = 0.0f;
 	// wait for some more ADC samples
