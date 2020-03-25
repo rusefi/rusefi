@@ -15,10 +15,3 @@
 #include "efi_gpio.h"
 
 void initPwmGenerator(void);
-
-/**
- * default implementation of pwm_gen_callback which simply toggles the pins
- *
- */
-void applyPinState(int stateIndex, PwmConfig* state) /* pwm_gen_callback */;
-
