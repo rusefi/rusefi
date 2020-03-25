@@ -1686,6 +1686,7 @@
 #define rpmHardLimit_offset_hex 1a0
 #define runningLedPin_offset 1813
 #define runningLedPin_offset_hex 715
+#define RUSEFI_FIRMWARE_VERSION 20200323
 #define RUSEFI_FLASH_VERSION 20200323
 #define sdCardCsPin_offset 707
 #define sdCardCsPin_offset_hex 2c3
@@ -2053,7 +2054,7 @@
 #define ts_show_joystick true
 #define ts_show_lcd true
 #define ts_show_spi true
-#define TS_SIGNATURE "rusEFI v1.2020.3"
+#define TS_SIGNATURE "rusEFI v2020.3.0"
 #define tunerStudioSerialSpeed_offset 728
 #define tunerStudioSerialSpeed_offset_hex 2d8
 #define twoWireBatchIgnition_offset 1476

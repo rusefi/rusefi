@@ -416,9 +416,9 @@ public class Launcher {
             @Override
             public void onSensorUpdate(double value) {
                 // todo: we need to migrate to TS_SIGNATURE validation!!!
-                if (value != Fields.RUSEFI_FLASH_VERSION) {
+                if (value != Fields.RUSEFI_FIRMWARE_VERSION) {
                     String message = "This copy of rusEfi console is not compatible with this version of firmware\r\n" +
-                            "Console compatible with " + Fields.RUSEFI_FLASH_VERSION + " while firmware compatible with " +
+                            "Console compatible with " + Fields.RUSEFI_FIRMWARE_VERSION + " while firmware compatible with " +
                             (int) value;
                     JOptionPane.showMessageDialog(Launcher.getFrame(), message);
                     assert wrongVersionListener != null;
