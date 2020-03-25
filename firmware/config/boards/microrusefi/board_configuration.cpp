@@ -70,7 +70,7 @@ static void setupVbatt() {
 
 	// set vbatt_divider 8.16
 	// R139=39k high side/R141=10k low side multiplied by above analogInputDividerCoefficient = 8.166666f
-	engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f);
+	engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
 
 	engineConfiguration->adcVcc = 3.29f;
