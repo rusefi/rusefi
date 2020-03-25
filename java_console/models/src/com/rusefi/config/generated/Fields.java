@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Mar 24 22:51:16 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Mar 25 00:28:20 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -57,15 +57,12 @@ public class Fields {
 	public static final int alternatorPwmFrequency_offset = 2256;
 	public static final int ambiguousOperationMode_offset = 488;
 	public static final int analogInputDividerCoefficient_offset = 460;
-	public static final int anotherUnused_offset = 826;
 	public static final int antiLagActivatePin_offset = 990;
 	public static final int antiLagActivationMode_offset = 1024;
 	public static final int antiLagActivationMode_offset_hex = 400;
 	public static final int antiLagEnabled_offset = 76;
 	public static final int antiLagRpmTreshold_offset = 824;
 	public static final int antiLagRpmTreshold_offset_hex = 338;
-	public static final int antilagTimeout_offset = 820;
-	public static final int antilagTimeout_offset_hex = 334;
 	public static final int autoTuneCltThreshold_offset = 2420;
 	public static final int autoTuneCltThreshold_offset_hex = 974;
 	public static final int autoTuneTpsQuietPeriod_offset = 2428;
@@ -1176,6 +1173,7 @@ public class Fields {
 	public static final int spi3mosiPin_offset = 934;
 	public static final int spi3SckMode_offset = 2602;
 	public static final int spi3sckPin_offset = 936;
+	public static final int startCrankingDuration_offset = 826;
 	public static final int starterControlPin_offset = 1772;
 	public static final int starterRelayDisableMode_offset = 809;
 	public static final int starterRelayDisableMode_offset_hex = 329;
@@ -1374,7 +1372,6 @@ public class Fields {
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
-	public static final int unrealisticRpmThreashold_offset = 760;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1234234_offset = 2042;
 	public static final int unused_1484_bit_24_offset = 1476;
@@ -1387,6 +1384,8 @@ public class Fields {
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_former_warmup_target_afr_offset = 2096;
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
+	public static final int unusedAntilagTimeout_offset = 820;
+	public static final int unusedAntilagTimeout_offset_hex = 334;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1064;
 	public static final int unusedAtOldBoardConfigurationEnd_offset_hex = 428;
 	public static final int unusedBit4_1476_offset = 1476;
@@ -1419,6 +1418,7 @@ public class Fields {
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1774;
+	public static final int unusedOneMoreHere_offset = 760;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
 	public static final int unusedSpiPadding7_offset = 4005;
@@ -1803,7 +1803,7 @@ public class Fields {
 	public static final Field HIP9011INTHOLDPIN = Field.create("HIP9011INTHOLDPIN", 754, FieldType.INT8, brain_pin_e);
 	public static final Field HIP9011INTHOLDPINMODE = Field.create("HIP9011INTHOLDPINMODE", 755, FieldType.INT8, pin_output_mode_e);
 	public static final Field VERBOSECANBASEADDRESS = Field.create("VERBOSECANBASEADDRESS", 756, FieldType.INT);
-	public static final Field UNREALISTICRPMTHREASHOLD = Field.create("UNREALISTICRPMTHREASHOLD", 760, FieldType.INT);
+	public static final Field UNUSEDONEMOREHERE = Field.create("UNUSEDONEMOREHERE", 760, FieldType.INT);
 	public static final Field GPIOPINMODES1 = Field.create("GPIOPINMODES1", 764, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES2 = Field.create("GPIOPINMODES2", 765, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES3 = Field.create("GPIOPINMODES3", 766, FieldType.INT8, pin_output_mode_e);
@@ -1854,9 +1854,9 @@ public class Fields {
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
-	public static final Field ANTILAGTIMEOUT = Field.create("ANTILAGTIMEOUT", 820, FieldType.FLOAT);
+	public static final Field UNUSEDANTILAGTIMEOUT = Field.create("UNUSEDANTILAGTIMEOUT", 820, FieldType.FLOAT);
 	public static final Field ANTILAGRPMTRESHOLD = Field.create("ANTILAGRPMTRESHOLD", 824, FieldType.INT16);
-	public static final Field ANOTHERUNUSED = Field.create("ANOTHERUNUSED", 826, FieldType.INT16);
+	public static final Field STARTCRANKINGDURATION = Field.create("STARTCRANKINGDURATION", 826, FieldType.INT16);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 828, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERERRORPINMODE = Field.create("TRIGGERERRORPINMODE", 829, FieldType.INT8, pin_output_mode_e);
 	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 830, FieldType.INT8, output_pin_e);
@@ -2713,7 +2713,7 @@ public class Fields {
 	HIP9011INTHOLDPIN,
 	HIP9011INTHOLDPINMODE,
 	VERBOSECANBASEADDRESS,
-	UNREALISTICRPMTHREASHOLD,
+	UNUSEDONEMOREHERE,
 	GPIOPINMODES1,
 	GPIOPINMODES2,
 	GPIOPINMODES3,
@@ -2764,9 +2764,9 @@ public class Fields {
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,
-	ANTILAGTIMEOUT,
+	UNUSEDANTILAGTIMEOUT,
 	ANTILAGRPMTRESHOLD,
-	ANOTHERUNUSED,
+	STARTCRANKINGDURATION,
 	TRIGGERERRORPIN,
 	TRIGGERERRORPINMODE,
 	ACRELAYPIN,

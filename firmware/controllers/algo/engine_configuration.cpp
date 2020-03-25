@@ -678,8 +678,9 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		config->fsioFormulas[i][0] = 0;
 	}
 
-
 	CONFIG(mapMinBufferLength) = 1;
+
+	CONFIG(startCrankingDuration) = 7;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;
