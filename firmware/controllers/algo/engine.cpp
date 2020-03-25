@@ -488,11 +488,9 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENGINE_CONTROL
-	engine->m.beforeFuelCalc = getTimeNowLowerNt();
 	int rpm = GET_RPM();
 
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->m.fuelCalcTime = getTimeNowLowerNt() - engine->m.beforeFuelCalc;
 #endif
 }
 
