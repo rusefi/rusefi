@@ -84,8 +84,6 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	}
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
-	engine->m.beforeZeroTest = getTimeNowLowerNt();
-	engine->m.zeroTestTime = getTimeNowLowerNt() - engine->m.beforeZeroTest;
 
 	float advanceAngle;
 	if (CONFIG(useTPSAdvanceTable)) {

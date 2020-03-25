@@ -322,8 +322,6 @@ public:
 	 */
 	bool isInShutdownMode() const;
 
-	monitoring_timestamps_s m;
-
 	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void printKnockState(void);
 
