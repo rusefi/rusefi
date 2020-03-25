@@ -722,6 +722,6 @@ uint32_t getRusEfiVersion() {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return RUSEFI_FLASH_VERSION;
+	return RUSEFI_FIRMWARE_VERSION;
 }
 #endif /* EFI_UNIT_TEST */

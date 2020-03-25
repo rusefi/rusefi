@@ -78,7 +78,7 @@ void writeToFlashNow(void) {
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
-	persistentState.version = getRusEfiVersion();
+	persistentState.version = RUSEFI_FLASH_VERSION;
 	persistentState.value = flashStateCrc(&persistentState);
 
 	// Flash two copies
@@ -118,7 +118,7 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
 
 	if (!isValidCrc(&persistentState)) {
 		return CRC_FAILED;
-	} else if (persistentState.version != getRusEfiVersion() || persistentState.size != sizeof(persistentState)) {
+	} else if (persistentState.version != RUSEFI_FLASH_VERSION || persistentState.size != sizeof(persistentState)) {
 		return INCOMPATIBLE_VERSION;
 	} else {
 		return PC_OK;

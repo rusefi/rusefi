@@ -156,7 +156,7 @@ enable2ndByteCanID = false
 
 [OutputChannels]
 
-fileVersion = { @@TS_FILE_VERSION@@ }
+fileVersion = { @@RUSEFI_FIRMWARE_VERSION@@ }
 
    ochGetCommand    = "O%2o%2c"
 
