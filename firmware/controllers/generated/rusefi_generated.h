@@ -89,8 +89,6 @@
 #define ambiguousOperationMode_offset_hex 1e8
 #define analogInputDividerCoefficient_offset 460
 #define analogInputDividerCoefficient_offset_hex 1cc
-#define anotherUnused_offset 826
-#define anotherUnused_offset_hex 33a
 #define antiLagActivatePin_offset 990
 #define antiLagActivatePin_offset_hex 3de
 #define antiLagActivationMode_e_enum "Always Active", "Switch Input"
@@ -100,8 +98,6 @@
 #define antiLagEnabled_offset_hex 4c
 #define antiLagRpmTreshold_offset 824
 #define antiLagRpmTreshold_offset_hex 338
-#define antilagTimeout_offset 820
-#define antilagTimeout_offset_hex 334
 #define autoTuneCltThreshold_offset 2420
 #define autoTuneCltThreshold_offset_hex 974
 #define autoTuneTpsQuietPeriod_offset 2428
@@ -1786,6 +1782,8 @@
 #define spi3SckMode_offset_hex a2a
 #define spi3sckPin_offset 936
 #define spi3sckPin_offset_hex 3a8
+#define startCrankingDuration_offset 826
+#define startCrankingDuration_offset_hex 33a
 #define starterControlPin_offset 1772
 #define starterControlPin_offset_hex 6ec
 #define starterRelayDisableMode_offset 809
@@ -2080,8 +2078,6 @@
 #define twoWireBatchInjection_offset_hex 5c4
 #define uartConsoleSerialSpeed_offset 2076
 #define uartConsoleSerialSpeed_offset_hex 81c
-#define unrealisticRpmThreashold_offset 760
-#define unrealisticRpmThreashold_offset_hex 2f8
 #define unused1059_offset 3964
 #define unused1059_offset_hex f7c
 #define unused1234234_offset 2042
@@ -2104,6 +2100,8 @@
 #define unused_1484_bit_31_offset_hex 5c4
 #define unused_former_warmup_target_afr_offset 2096
 #define unused_former_warmup_target_afr_offset_hex 830
+#define unusedAntilagTimeout_offset 820
+#define unusedAntilagTimeout_offset_hex 334
 #define unusedAtOldBoardConfigurationEnd_offset 1064
 #define unusedAtOldBoardConfigurationEnd_offset_hex 428
 #define unusedBit4_1476_offset 1476
@@ -2166,6 +2164,8 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1774
 #define unusedFormerWarmupAfrPid_offset_hex 6ee
+#define unusedOneMoreHere_offset 760
+#define unusedOneMoreHere_offset_hex 2f8
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding4_offset_hex a21
 #define unusedSpiPadding5_offset 2713

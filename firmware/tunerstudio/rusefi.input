@@ -1772,11 +1772,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Aux Pin #4",							auxPidPins4
 		field = "test557pin",							test557pin
 		field = "Fan Pin",								fanPin
-		field = "Fan Pin Mode",							fanPinMode
 		field = "Main Relay Pin",  						mainRelayPin
-		field = "Main Relay Mode",			         	mainRelayPinMode
-		field = "Starter Relay Pin",  					starterRelayPin
-		field = "Starter Relay Mode",			        starterRelayPinMode
+		field = "Starter Relay Pin",  					starterRelayDisablePin
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
 
@@ -2141,8 +2138,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Pin mode",			         	mainRelayPinMode
 
 	dialog = starterRelay, "Starter relay output"
-		field = "Pin",  					starterRelayPin
-		field = "Pin mode",			        starterRelayPinMode
+		field = "Pin",  					starterRelayDisablePin
+		field = "Pin mode",			        starterRelayDisableMode
 		
 	dialog = statusLeds, "Status LEDs"
 		field = "Running status LED",					runningLedPin
@@ -2274,13 +2271,18 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
-		field = "Start/Stop Button Pin",				startStopButtonPin
-		field = "Start/Stop Button Mode",				startStopButtonMode
 
+	dialog = startStopDialog, "Start/Stop Button"
+		field = "Start/Stop Button Pin",		startStopButtonPin
+		field = "Start/Stop Button Mode",				startStopButtonMode
+		field = "Starter Control",						starterControlPin, {startStopButtonPin != 0}
+		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
 
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
 		panel = batteryDialog
 		panel = alternator
+		panel = startStopDialog
+		
 
 	dialog = speedSensorLeft
 		field = "Input pin",					vehicleSpeedSensorInputPin

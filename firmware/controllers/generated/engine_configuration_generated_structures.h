@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 23 22:05:45 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Mar 25 00:28:20 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1386,7 +1386,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 760
 	 */
-	int unrealisticRpmThreashold;
+	int unusedOneMoreHere;
 	/**
 	 * offset 764
 	 */
@@ -1447,15 +1447,16 @@ struct engine_configuration_s {
 	/**
 	 * offset 820
 	 */
-	float antilagTimeout;
+	float unusedAntilagTimeout;
 	/**
 	 * offset 824
 	 */
-	uint16_t antiLagRpmTreshold;
+	int16_t antiLagRpmTreshold;
 	/**
+	 * Maximum time to crank starter
 	 * offset 826
 	 */
-	uint16_t anotherUnused;
+	int16_t startCrankingDuration;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 828
@@ -2161,7 +2162,7 @@ struct engine_configuration_s {
 	 */
 	int16_t tps2Max;
 	/**
-	 * See also startStopButton
+	 * See also startStopButtonPin
 	 * offset 1772
 	 */
 	output_pin_e starterControlPin;
@@ -3256,4 +3257,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 23 22:05:45 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Mar 25 00:28:20 EDT 2020
