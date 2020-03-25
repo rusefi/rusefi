@@ -79,6 +79,16 @@ public:
 	bool needTdcCallback = true;
 #endif /* EFI_UNIT_TEST */
 
+
+#if EFI_LAUNCH_CONTROL
+	bool launchActivatePinState = false;
+	bool isLaunchCondition = false;
+	bool applyLaunchExtraFuel = false;
+	bool setLaunchBoostDuty = false;
+	bool applyLaunchControlRetard = false;
+	bool rpmHardCut = false;
+#endif /* EFI_LAUNCH_CONTROL */
+
 	/**
 	 * if 2nd TPS is not configured we do not run 2nd ETB
 	 */

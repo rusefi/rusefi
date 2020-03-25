@@ -53,6 +53,7 @@
 #include "counter64.h"
 #include "perf_trace.h"
 #include "boost_control.h"
+#include "launch_control.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -149,6 +150,14 @@ static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_
 		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_MAP_AVERAGING */
+
+#if EFI_BOOST_CONTROL
+	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_BOOST_CONTROL */
+
+#if EFI_LAUNCH_CONTROL
+	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 
 }
 
@@ -379,8 +388,16 @@ static void printAnalogInfo(void) {
 
 	printAnalogChannelInfo("OilP", engineConfiguration->oilPressure.hwChannel);
 
+	printAnalogChannelInfo("CJ UR", engineConfiguration->cj125ur);
+	printAnalogChannelInfo("CJ UA", engineConfiguration->cj125ua);
+
 	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
 	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
+
+	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
+		printAnalogChannelInfo("FSIO", engineConfiguration->fsioAdc[i]);
+	}
+
 	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVoltage("vbatt", engineConfiguration->vbattAdcChannel PASS_ENGINE_PARAMETER_SUFFIX),
 			engineConfiguration->vbattDividerCoeff);
 }
@@ -661,18 +678,13 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initPwmTester();
 #endif /* EFI_PWM_TESTER */
 
-	initMalfunctionCentral();
-
 #if EFI_ALTERNATOR_CONTROL
 	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
+#endif /* EFI_ALTERNATOR_CONTROL */
 
-#if EFI_BOOST_CONTROL
-	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
 #if EFI_AUX_PID
 	initAuxPid(sharedLogger);
-#endif
+#endif /* EFI_AUX_PID */
 
 #if EFI_MALFUNCTION_INDICATOR
 	initMalfunctionIndicator();

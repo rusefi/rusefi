@@ -543,8 +543,8 @@ case DBG_BOOST:
   return "DBG_BOOST";
 case DBG_START_STOP:
   return "DBG_START_STOP";
-case DBG_38:
-  return "DBG_38";
+case DBG_LAUNCH:
+  return "DBG_LAUNCH";
 case DBG_39:
   return "DBG_39";
 case DBG_40:

@@ -23,7 +23,7 @@
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
-#endif
+#endif /* HAS_OS_ACCESS */
 
 EXTERN_ENGINE
 ;

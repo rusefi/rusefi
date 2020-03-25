@@ -89,6 +89,8 @@
 #define ambiguousOperationMode_offset_hex 1e8
 #define analogInputDividerCoefficient_offset 460
 #define analogInputDividerCoefficient_offset_hex 1cc
+#define anotherUnused_offset 826
+#define anotherUnused_offset_hex 33a
 #define antiLagActivatePin_offset 990
 #define antiLagActivatePin_offset_hex 3de
 #define antiLagActivationMode_e_enum "Always Active", "Switch Input"
@@ -96,6 +98,10 @@
 #define antiLagActivationMode_offset_hex 400
 #define antiLagEnabled_offset 76
 #define antiLagEnabled_offset_hex 4c
+#define antiLagRpmTreshold_offset 824
+#define antiLagRpmTreshold_offset_hex 338
+#define antilagTimeout_offset 820
+#define antilagTimeout_offset_hex 334
 #define autoTuneCltThreshold_offset 2420
 #define autoTuneCltThreshold_offset_hex 974
 #define autoTuneTpsQuietPeriod_offset 2428
@@ -535,6 +541,10 @@
 #define enableAemXSeries_offset_hex 2e8
 #define enabledStep1Limiter_offset 744
 #define enabledStep1Limiter_offset_hex 2e8
+#define enableLaunchBoost_offset 976
+#define enableLaunchBoost_offset_hex 3d0
+#define enableLaunchRetard_offset 976
+#define enableLaunchRetard_offset_hex 3d0
 #define enableVerboseCanTx_offset 744
 #define enableVerboseCanTx_offset_hex 2e8
 #define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge"
@@ -1415,15 +1425,21 @@
 #define knockNoiseRpmBins_offset_hex 73c
 #define knockVThreshold_offset 1512
 #define knockVThreshold_offset_hex 5e8
+#define launchActivateDelay_offset 1060
+#define launchActivateDelay_offset_hex 424
 #define launchActivatePin_offset 991
 #define launchActivatePin_offset_hex 3df
 #define launchActivationMode_e_enum "Switch Input", "Clutch Input", "Always Active(Disabled By Speed)","INVALID"
 #define launchActivationMode_offset 1020
 #define launchActivationMode_offset_hex 3fc
+#define launchAdvanceRpmRange_offset 1052
+#define launchAdvanceRpmRange_offset_hex 41c
 #define launchBoostDuty_offset 1044
 #define launchBoostDuty_offset_hex 414
 #define launchControlEnabled_offset 76
 #define launchControlEnabled_offset_hex 4c
+#define launchDisableBySpeed_offset 976
+#define launchDisableBySpeed_offset_hex 3d0
 #define launchFuelAdded_offset 1040
 #define launchFuelAdded_offset_hex 410
 #define launchFuelCutEnable_offset 1464
@@ -1442,6 +1458,8 @@
 #define launchTimingRetard_offset_hex 140
 #define launchTimingRpmRange_offset 1036
 #define launchTimingRpmRange_offset_hex 40c
+#define launchTpsTreshold_offset 1056
+#define launchTpsTreshold_offset_hex 420
 #define lcdThreadPeriodMs_offset 720
 #define lcdThreadPeriodMs_offset_hex 2d0
 #define LDS_ALTERNATOR_PID_STATE_INDEX 9
@@ -1943,6 +1961,10 @@
 #define trigger_offset 524
 #define trigger_offset_hex 20c
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
+#define trigger_todoRemoveMeOneDay0_offset 528
+#define trigger_todoRemoveMeOneDay0_offset_hex 210
+#define trigger_todoRemoveMeOneDay1_offset 528
+#define trigger_todoRemoveMeOneDay1_offset_hex 210
 #define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "trg44", "trg45", "INVALID"
 #define trigger_type_offset 524
 #define trigger_type_offset_hex 20c
@@ -2004,10 +2026,6 @@
 #define trigger_unusedBit_4_8_offset_hex 210
 #define trigger_unusedBit_4_9_offset 528
 #define trigger_unusedBit_4_9_offset_hex 210
-#define trigger_unusedTriggerBit0_offset 528
-#define trigger_unusedTriggerBit0_offset_hex 210
-#define trigger_unusedTriggerBit1_offset 528
-#define trigger_unusedTriggerBit1_offset_hex 210
 #define trigger_useOnlyFirstChannel_offset 528
 #define trigger_useOnlyFirstChannel_offset_hex 210
 #define triggerCompCenterVolt_offset 4036
@@ -2087,8 +2105,8 @@
 #define unused_1484_bit_31_offset_hex 5c4
 #define unused_former_warmup_target_afr_offset 2096
 #define unused_former_warmup_target_afr_offset_hex 830
-#define unusedAtOldBoardConfigurationEnd_offset 1052
-#define unusedAtOldBoardConfigurationEnd_offset_hex 41c
+#define unusedAtOldBoardConfigurationEnd_offset 1064
+#define unusedAtOldBoardConfigurationEnd_offset_hex 428
 #define unusedBit4_1476_offset 1476
 #define unusedBit4_1476_offset_hex 5c4
 #define unusedBit_251_10_offset 976
@@ -2131,22 +2149,16 @@
 #define unusedBit_251_28_offset_hex 3d0
 #define unusedBit_251_29_offset 976
 #define unusedBit_251_29_offset_hex 3d0
-#define unusedBit_251_4_offset 976
-#define unusedBit_251_4_offset_hex 3d0
-#define unusedBit_251_5_offset 976
-#define unusedBit_251_5_offset_hex 3d0
-#define unusedBit_251_6_offset 976
-#define unusedBit_251_6_offset_hex 3d0
 #define unusedBit_251_7_offset 976
 #define unusedBit_251_7_offset_hex 3d0
 #define unusedBit_251_8_offset 976
 #define unusedBit_251_8_offset_hex 3d0
 #define unusedBit_251_9_offset 976
 #define unusedBit_251_9_offset_hex 3d0
-#define unusedBit_280_30_offset 976
-#define unusedBit_280_30_offset_hex 3d0
-#define unusedBit_280_31_offset 976
-#define unusedBit_280_31_offset_hex 3d0
+#define unusedBit_281_30_offset 976
+#define unusedBit_281_30_offset_hex 3d0
+#define unusedBit_281_31_offset 976
+#define unusedBit_281_31_offset_hex 3d0
 #define unusedBit_34_31_offset 76
 #define unusedBit_34_31_offset_hex 4c
 #define unusedErrorPin_offset 2040
@@ -2155,10 +2167,6 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1774
 #define unusedFormerWarmupAfrPid_offset_hex 6ee
-#define unusedmiataNb2VVTRatioFrom_offset 820
-#define unusedmiataNb2VVTRatioFrom_offset_hex 334
-#define unusedmiataNb2VVTRatioTo_offset 824
-#define unusedmiataNb2VVTRatioTo_offset_hex 338
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding4_offset_hex a21
 #define unusedSpiPadding5_offset 2713

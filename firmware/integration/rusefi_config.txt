@@ -472,8 +472,8 @@ custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:7], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
 
-	bit unusedTriggerBit0;
-	bit unusedTriggerBit1;
+	bit todoRemoveMeOneDay0;
+	bit todoRemoveMeOneDay1;
 	bit useOnlyFirstChannel;+This option could be used if your second trigger channel is broken
 
 	int customTotalToothCount;;"number",    1,      0.0,       0,  500.0,        0
@@ -690,8 +690,11 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:7], "Off", "UART1", "UART2", "UA
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
 	int16_t stepperParkingExtraSteps;;"%",        1,     0,  0,    3000.0,  0
-	float unusedmiataNb2VVTRatioFrom;This magic property is specific to Mazda Miata NB2;"value",      1,      0,       0, 1000,      5
-	float unusedmiataNb2VVTRatioTo;This magic property is specific to Mazda Miata NB2;"value",      1,      0,       0, 1000,      5
+	float antilagTimeout
+	uint16_t antiLagRpmTreshold
+	uint16_t anotherUnused
+	
+	
 
 	brain_pin_e triggerErrorPin;+This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	pin_output_mode_e triggerErrorPinMode;
@@ -755,9 +758,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit todoClutchDownPinInverted
 	bit useHbridges
 	bit multisparkEnable
-	bit unusedBit_251_4
-	bit unusedBit_251_5
-	bit unusedBit_251_6
+	bit enableLaunchRetard
+	bit enableLaunchBoost
+	bit launchDisableBySpeed
 	bit unusedBit_251_7
 	bit unusedBit_251_8
 	bit unusedBit_251_9
@@ -809,8 +812,11 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
     int launchFuelAdded;+Extra Fuel Added;"%",        1,     0,  0,    100.0,  0
     int launchBoostDuty;+Duty Cycle for the Boost Solenoid;"%",        1,     0,  0,    100.0,  0
 	int hardCutRpmRange;+RPM Range for Hard Cut;"rpm",    1,      0,       0, 3000.0,        2
+	int launchAdvanceRpmRange;
+	int launchTpsTreshold;
+	float launchActivateDelay;
 
-	int[103] unusedAtOldBoardConfigurationEnd;
+	int[100] unusedAtOldBoardConfigurationEnd;
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
