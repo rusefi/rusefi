@@ -65,24 +65,21 @@ public:
 			executor,
 			&m_pinEnable,
 			clampedFrequency,
-			0,
-			(pwm_gen_callback*)applyPinState
+			0
 		);
 
 		startSimplePwm(&m_pwmDir1, "ETB Dir 1",
 			executor,
 			&m_pinDir1,
 			clampedFrequency,
-			0,
-			(pwm_gen_callback*)applyPinState
+			0
 		);
 
 		startSimplePwm(&m_pwmDir2, "ETB Dir 2",
 			executor,
 			&m_pinDir2,
 			clampedFrequency,
-			0,
-			(pwm_gen_callback*)applyPinState
+			0
 		);
 #endif /* EFI_UNIT_TEST */
 	}
