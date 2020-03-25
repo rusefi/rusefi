@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 23 22:05:45 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Mar 24 22:51:16 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2174,7 +2174,7 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2080, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 2084, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2088, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control", "Start/Stop", "Mode38", "Mode39", "Mode40"};
+	public static final String[] debug_mode_e = {"Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "Mode39", "Mode40"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2092, FieldType.INT, debug_mode_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
 	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2200, FieldType.INT8, adc_channel_e);
