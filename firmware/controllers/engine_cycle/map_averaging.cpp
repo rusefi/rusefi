@@ -273,7 +273,6 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 	if (index != (uint32_t)CONFIG(mapAveragingSchedulingAtIndex))
 		return;
 
-	engine->m.beforeMapAveragingCb = getTimeNowLowerNt();
 	int rpm = GET_RPM_VALUE;
 	if (!isValidRpm(rpm)) {
 		return;
@@ -317,8 +316,6 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 				startAveraging PASS_ENGINE_PARAMETER_SUFFIX);
 		scheduleByAngle(&endTimer[i][structIndex], edgeTimestamp, samplingEnd,
 				endAveraging PASS_ENGINE_PARAMETER_SUFFIX);
-		engine->m.mapAveragingCbTime = getTimeNowLowerNt()
-				- engine->m.beforeMapAveragingCb;
 	}
 #endif
 }
