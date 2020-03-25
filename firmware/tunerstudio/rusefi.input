@@ -1700,7 +1700,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "ETB#2 Dir #1",							etbIo2_directionPin1  @@if_ts_show_etb_pins
 		field = "ETB#2 Dir #2",							etbIo2_directionPin2  @@if_ts_show_etb_pins
 		field = "ETB#2 Control #1",						etbIo2_controlPin1    @@if_ts_show_etb_pins
-		field = "SD CS Pin",							sdCardCsPin
+		field = "SD CS Pin",							sdCardCsPin @@if_ts_show_sd_card
 		field = "MIL / Check Engine Pin",				malfunctionIndicatorPin
 		field = "Aux Pin #1",							auxPidPins1
 		field = "Aux Pin #2",							auxPidPins2
@@ -1787,17 +1787,17 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "FSIO ADC #4",							fsioAdc4
 		field = "GPS RX", 								gps_rx_pin @@if_ts_show_gps
 		field = "GPS TX", 								gps_tx_pin @@if_ts_show_gps
-		field = "CAN RX pin",							canRxPin
-		field = "CAN TX pin",							canTxPin
-		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
-		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1}
-		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1}
-		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1}
-		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1}
-		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1}
-		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
-		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
-		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
+		field = "CAN RX pin",							canRxPin @@if_ts_show_can_pins
+		field = "CAN TX pin",							canTxPin @@if_ts_show_can_pins
+		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
+		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
+		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
+		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1} @@if_ts_show_spi
+		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1} @@if_ts_show_spi
+		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1} @@if_ts_show_spi
+		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
 		field = "hip9011CsPin",							hip9011CsPin
 		field = "LIS302DLCsPin",						LIS302DLCsPin
 		field = "MIL / Check Engine",					malfunctionIndicatorPin
