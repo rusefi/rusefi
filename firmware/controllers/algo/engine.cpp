@@ -225,8 +225,6 @@ void Engine::reset() {
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
-
-	memset(&m, 0, sizeof(m));
 }
 
 

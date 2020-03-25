@@ -42,6 +42,7 @@
 #include "hip9011_lookup.h"
 #include "hip9011.h"
 #include "adc_inputs.h"
+#include "perf_trace.h"
 
 #include "engine_controller.h"
 
