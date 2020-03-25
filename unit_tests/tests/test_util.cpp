@@ -496,7 +496,7 @@ TEST(misc, testMenuTree) {
 	ASSERT_TRUE(tree.current == &miTopLevel1);
 }
 
-int getRusEfiVersion(void) {
+uint32_t getRusEfiVersion(void) {
 	return 776655;
 }
 
