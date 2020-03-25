@@ -135,11 +135,7 @@ enable2ndByteCanID = false
        ; filter =  Name,        "DisplayName", outputChannel, operator, defaultVal, userAdjustable
         filter = minRPMFilter, "Minimum RPM", RPMValue,           <       , 500,      , true
 
-#if CELSIUS
          filter = minCltFilter, "Minimum CLT", coolant,       <       , 60,       , true
-#else
-         filter = minCltFilter, "Minimum CLT", coolant,       <       , 160,      , true
-#endif
 
          filter = deltaTps, "dTPS", deltaTps       >       , 50,      , true
 
@@ -203,16 +199,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 ; temperatures
      internalMcuTemperature = scalar,S08, 11,    "deg C",    1,         0
-#if CELSIUS
       coolant         = scalar,  S16,     12,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-#else
-      coolant         = scalar,  S16,     12,  "deg F",{9/(5 * @@PACK_MULT_TEMPERATURE@@)},  17.77777
-#endif
-#if CELSIUS
       intake          = scalar,  S16,     14,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-#else
-      intake          = scalar,  S16,     14,  "deg F",{9/(5 * @@PACK_MULT_TEMPERATURE@@)},  17.77777
-#endif
 ; todo: aux1
 ; todo: aux2
       
@@ -476,11 +464,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
    curve = iatFuelCorrCurve, "Intake air temperature fuel Multiplier"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       =  -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  2, 11
       xBins       = iatFuelCorrBins, intake
       yBins       = iatFuelCorr
@@ -488,11 +472,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 	
 	curve = cltTimingCorrCurve, "Warmup timing correction"
       columnLabel = "Coolant", "Extra"
-#if CELSIUS
       xAxis       =  -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  50, 10
       xBins       = cltTimingBins, coolant
       yBins       = cltTimingExtra
@@ -500,11 +480,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = cltFuelCorrCurve, "Warmup fuel manual Multiplier"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       =  -40, 100, 10
-#else
-      xAxis       =  -40, 210, 10
-#endif
       yAxis       =  0,  3, 10
       xBins       = cltFuelCorrBins, coolant
       yBins       = cltFuelCorr
@@ -512,11 +488,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = crankingCltCurve, "Cranking Coolant Temperature Multiplier"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       =  -40, 100, 10
-#else
-      xAxis       =  -40, 210, 10
-#endif
       yAxis       =  0,  3, 10
       xBins       = crankingFuelBins, coolant
       yBins       = crankingFuelCoef
@@ -548,11 +520,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = cltIdleCurve, "Warmup Idle multiplier"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       = -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  3, 10
       xBins       = cltIdleCorrBins, coolant
       yBins       = cltIdleCorr
@@ -560,11 +528,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = iacCoastingCurve, "Coasting IAC Position for Auto-Idle"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       = -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  100, 10
       xBins       = iacCoastingBins, coolant
       yBins       = iacCoasting
@@ -572,11 +536,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = cltCrankingCurve, "Cranking Idle Air multiplier"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       = -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  3, 10
       xBins       = cltCrankingCorrBins, coolant
       yBins       = cltCrankingCorr
@@ -584,11 +544,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = cltIdleRPMCurve, "Idle Target RPM"
       columnLabel = "Coolant", "RPM"
-#if CELSIUS
       xAxis       = -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0, 8000, 10
       xBins       = cltIdleRpmBins, coolant
       yBins       = cltIdleRpm, RPMValue
@@ -620,11 +576,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
     curve = wueAfrTargetOffsetCurve, "AFR Target Temperature Adjustment"
       columnLabel = "Coolant", "AFR Offset"
-#if CELSIUS
       xAxis       = -40, 200, 9
-#else
-      xAxis       = -40, 400, 9
-#endif
       yAxis       =   -3,  1, 5
       xBins       = cltFuelCorrBins, coolant
       yBins       = wueAfrTargetOffset
@@ -632,11 +584,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
     curve = wueAnalyzer_warmup_curve, "Warmup Enrichment"
       columnLabel = "Coolant", "Current WUE", "Coolant", "Corrected"
-#if CELSIUS
       xAxis       = -40, 200, 9
-#else
-      xAxis       = -40, 400, 9
-#endif
       yAxis       =   90,  500, 6
       xBins       = cltFuelCorrBins, coolant
       yBins       = cltFuelCorr
@@ -864,16 +812,8 @@ gaugeCategory = Debug
 
 gaugeCategory = Sensors - Basic
    RPMGauge        = RPMValue,           "RPM - engine speed",       "RPM",       0,   15000,     200,    500,    6000,  6000,   0,   0
-#if CELSIUS
    CLTGauge          = coolant,       "Coolant temp",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
-#else
-   CLTGauge          = coolant,       "Coolant temp",        "deg F",      -40,    285,       5,     35,     205,   230,   1,   1
-#endif
-#if CELSIUS
    IATGauge          = intake,     "Intake air temp",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
-#else
-   IATGauge          = intake,     "Intake air temp",        "deg F",      -40,    285,       5,     35,     205,   230,  1,   1
-#endif
    afr1Gauge         = AFRValue, "Air fuel ratio",          "",       10,   19.4,      12,     13,      15,    16,   2,   2
    MAFGauge			 = MAFValue,          "Mass air flow",         "v",        0,      5,       0,      1,       3,     4,   1,   1
    VBattGauge        = VBatt,      "Battery voltage",         "V",        8,     21,       9,     10,      17,    19,   1,   1
@@ -906,11 +846,7 @@ gaugeCategory = Acceleration Enrichment
 
 gaugeCategory = Fueling
    ;Name               Var            Title                 Units        Lo      Hi      LoD    LoW       HiW   HiD    vd  ld
-#if CELSIUS
    tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
-#else
-   tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "deg F",      -40,    285,       5,     35,     205,   230,  1,   1
-#endif
    baroCorrectionGauge  = baroCorrection,@@GAUGE_NAME_FUEL_BARO_CORR@@,           "ratio",        0.5,    1.5,      0.6,     0.7,     1.3,   1.4,   1,   1
    crankingFuelGauge = crankingFuelMs,   @@GAUGE_NAME_FUEL_CRANKING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    iatCorrectionGauge = iatCorrection, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
