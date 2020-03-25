@@ -148,7 +148,7 @@ void EnginePins::unregisterPins() {
 	unregisterOutputIfPinOrModeChanged(mainRelay, mainRelayPin, mainRelayPinMode);
 	unregisterOutputIfPinOrModeChanged(starterRelayDisable, starterRelayDisablePin, starterRelayDisableMode);
 
-	unregisterOutputIfPinChanged(starterControl, starterControlPin, starterRelayDisableMode);
+	unregisterOutputIfPinChanged(starterControl, starterControlPin);
 
 #endif /* EFI_PROD_CODE */
 }

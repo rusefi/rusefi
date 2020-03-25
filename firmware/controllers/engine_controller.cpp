@@ -255,6 +255,17 @@ static void resetAccel(void) {
 	}
 }
 
+void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	engine->startStopStateToggleCounter++;
+
+	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		engine->startStopStateLastPushTime = getTimeNowNt();
+	} else if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		// todo: request engine stop here
+	}
+
+}
+
 static void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(startStopButtonPin) != GPIO_UNASSIGNED) {
 #if EFI_PROD_CODE
@@ -262,10 +273,23 @@ static void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 		if (startStopState && !engine->startStopState) {
 			// we are here on transition from 0 to 1
-			engine->startStopStateToggleCounter++;
+			onStartStopButtonToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
 		}
 		engine->startStopState = startStopState;
 #endif /* EFI_PROD_CODE */
+	}
+
+	// todo: should this be simply FSIO?
+	if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		// turn starter off once engine is running
+		enginePins.starterControl.setValue(0);
+		engine->startStopStateLastPushTime = 0;
+	}
+
+	if (engine->startStopStateLastPushTime != 0 &&
+			getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * CONFIG(startCrankingDuration)) {
+		enginePins.starterControl.setValue(0);
+		engine->startStopStateLastPushTime = 0;
 	}
 }
 

@@ -18,6 +18,8 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void touchTimeCounter();
 
+void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_ENABLE_MOCK_ADC
 void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
