@@ -58,6 +58,8 @@ enum class PE : uint8_t {
 	Temporary3,
 	Temporary4,
 	EngineSniffer,
+	PrepareIgnitionSchedule,
+	Hip9011IntHoldCallback,
 	// enum_end_tag
 	// The tag above is consumed by PerfTraceTool.java
 	// please note that the tool requires a comma at the end of last value
