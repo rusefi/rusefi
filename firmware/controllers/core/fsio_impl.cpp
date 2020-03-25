@@ -693,7 +693,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			} else {
 				startSimplePwmExt(&fsioPwm[i], "FSIOpwm",
 						&engine->executor,
-						brainPin, &enginePins.fsioOutputs[i], frequency, 0.5f, (pwm_gen_callback*)applyPinState);
+						brainPin, &enginePins.fsioOutputs[i], frequency, 0.5f);
 			}
 		}
 	}
