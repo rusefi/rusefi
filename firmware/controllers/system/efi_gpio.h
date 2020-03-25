@@ -122,7 +122,12 @@ public:
 	void stopInjectionPins();
 	void stopIgnitionPins();
 	OutputPin mainRelay;
+
+	// this one cranks engine
+	OutputPin starterControl;
+	// this one prevents driver from cranknig engine
 	OutputPin starterRelayDisable;
+
 	OutputPin fanRelay;
 	// see acRelayPin
 	OutputPin acRelay;
