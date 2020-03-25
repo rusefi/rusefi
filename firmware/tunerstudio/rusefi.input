@@ -2331,8 +2331,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Enable rusEfi CAN data",				enableVerboseCanTx
 		field = "rusEfi CAN data base address",			verboseCanBaseAddress
 		field = "Can Sleep Period",						canSleepPeriodMs
-		field = "RX pin",								canRxPin
-		field = "TX pin",								canTxPin
+		field = "RX pin",								canRxPin @@if_ts_show_can_pins
+		field = "TX pin",								canTxPin @@if_ts_show_can_pins
 	
 	dialog = sdCard, "SD Card Logger"
 		field = "SdCard", 								isSdCardEnabled
@@ -2367,9 +2367,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = connection, "", 	yAxis
 		field = "ADC vRef voltage",						adcVcc
-		panel = tsPort
+		panel = tsPort							@@if_ts_show_tunerstudio_port
 		panel = canBus
-		panel = sdCard
+		panel = sdCard							@@if_ts_show_sd_card
 		panel = gpsReceiver                       @@if_ts_show_gps
 		panel = tle8888
 
