@@ -126,6 +126,12 @@ private:
 };
 
 /**
+ * default implementation of pwm_gen_callback which simply toggles the pins
+ *
+ */
+void applyPinState(int stateIndex, PwmConfig* state) /* pwm_gen_callback */;
+
+/**
  * Start a one-channel software PWM driver.
  *
  * This method should be called after scheduling layer is started by initSignalExecutor()
@@ -133,7 +139,7 @@ private:
 void startSimplePwm(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		OutputPin *output,
-		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback);
+		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback = (pwm_gen_callback*)applyPinState);
 
 /**
  * initialize GPIO pin and start a one-channel software PWM driver.
@@ -144,7 +150,7 @@ void startSimplePwmExt(SimplePwm *state,
 		const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output,
-		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback);
+		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback = (pwm_gen_callback*)applyPinState);
 
 void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTimes,
 		int waveCount, pin_state_t *const *pinStates);

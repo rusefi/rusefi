@@ -373,4 +373,3 @@ void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 		output->setValue(value);
 	}
 }
-

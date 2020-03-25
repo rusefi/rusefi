@@ -160,8 +160,7 @@ static void turnBoostPidOn() {
 		CONFIG(boostControlPin),
 		&enginePins.boostPin,
 		engineConfiguration->boostPwmFrequency,
-		0.5f,
-		(pwm_gen_callback*) applyPinState
+		0.5f
 	);
 #endif /* EFI_UNIT_TEST */
 }
