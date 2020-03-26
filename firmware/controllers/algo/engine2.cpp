@@ -174,17 +174,30 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
 	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
-	// post-cranking fuel enrichment.
-	// for compatibility reasons, apply only if the factor is greater than zero (0.01 margin used)
-	if (engineConfiguration->postCrankingFactor > 0.01f) {
-		// convert to microsecs and then to seconds
+
+	    float afterStartEnrich;
+		float afterstartHoldTime;
+		float afterstartDecayTime;
+		float afterstartDecayFuel;
+		float runTime = running.timeSinceCrankingInSecs;
+		float correction;
+
+		afterStartEnrich = interpolate2d("aseEnrich", getCoolantTemperature(), config->afterstartEnrichBins, config->afterstartEnrich);
+		afterstartHoldTime = interpolate2d("aseHold", getCoolantTemperature(), config->afterstartHoldTimeBins, config->afterstartHoldTime);
+		afterstartDecayTime = interpolate2d("aseDecay", getCoolantTemperature(), config->afterstartDecayTimeBins, config->afterstartDecayTime);
+		afterstartDecayFuel = interpolateClamped(afterstartHoldTime, afterStartEnrich, (afterstartDecayTime + afterstartHoldTime), 1.0f , runTime);
 		running.timeSinceCrankingInSecs = NT2US(timeSinceCranking) / 1000000.0f;
-		// use interpolation for correction taper
-		running.postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor,
-			engineConfiguration->postCrankingDurationSec, 1.0f, running.timeSinceCrankingInSecs);
-	} else {
-		running.postCrankingFuelCorrection = 1.0f;
-	}
+
+
+		if (runTime < afterstartHoldTime) {
+			correction = afterStartEnrich;
+		} else {
+			correction = afterstartDecayFuel;
+		}
+		if (runTime > (afterstartHoldTime + afterstartDecayTime)) {
+			correction = 1.0f;
+		}
+		running.postCrankingFuelCorrection = correction;
 
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
