@@ -557,39 +557,39 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	copyArray(config->crankingCycleBins, crankingCycleBins);
 
 	static const float afterstartEnrich[] = {
-				1.5,
-				1.35,
-				1.05,
-				0.75,
-				0.5,
-				0.5,
-				0.5,
-				0.5
-		};
+		1.8,
+		1.6,
+		1.4,
+		1.1,
+		1.088,
+		1.075,
+		1.63,
+		1.05
+	};
 		copyArray(config->afterstartEnrich, afterstartEnrich);
 
 		static const float afterstartHold[] = {
-						6.0,
-						5.0,
-						5.0,
-						4.0,
-						4.0,
-						4.0,
-						2.0,
-						3.0
-		};
+		6.0,
+		5.0,
+		5.0,
+		4.0,
+		4.0,
+		4.0,
+		2.0,
+		3.0
+	};
 		copyArray(config->afterstartHoldTime, afterstartHold);
 
 		static const float afterstartDecay[] = {
-							15.0,
-							15.0,
-							15.0,
-							15.0,
-							15.0,
-							15.0,
-							11.0,
-							10.0
-		};
+		15.0,
+		15.0,
+		15.0,
+		15.0,
+		15.0,
+		15.0,
+		11.0,
+		10.0
+	};
 	copyArray(config->afterstartDecayTime, afterstartDecay);
 
 
