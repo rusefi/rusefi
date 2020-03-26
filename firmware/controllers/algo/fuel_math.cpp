@@ -348,12 +348,12 @@ float getAfterStartEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float afterstartDecayFuel = interpolateClamped(afterstartHoldTime, afterStartEnrich, (afterstartDecayTime + afterstartHoldTime), 1.0f , runTime);
 	runTime = NT2US(engine->engineState.timeSinceCranking) / 1000000.0f;
 	if (runTime < afterstartHoldTime) {
-				correction = afterStartEnrich;
+		correction = afterStartEnrich;
 	} else {
 		correction = afterstartDecayFuel;
 	}
-		if (runTime > (afterstartHoldTime + afterstartDecayTime)) {
-			correction = 1.0f;
+	if (runTime > (afterstartHoldTime + afterstartDecayTime)) {
+		correction = 1.0f;
    }
 return correction;
 }
