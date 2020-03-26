@@ -28,8 +28,6 @@ EXTERN_ENGINE;
 
 static LoggingWithStorage logger("io_pins");
 
-extern EnginePins enginePins;
-
 bool efiReadPin(brain_pin_e pin) {
 	if (brain_pin_is_onchip(pin))
 		return palReadPad(getHwPort("readPin", pin), getHwPin("readPin", pin));

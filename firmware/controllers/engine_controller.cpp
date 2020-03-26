@@ -103,7 +103,6 @@ EXTERN_ENGINE;
 #if !EFI_UNIT_TEST
 
 extern bool hasFirmwareErrorFlag;
-extern EnginePins enginePins;
 
 static LoggingWithStorage logger("Engine Controller");
 

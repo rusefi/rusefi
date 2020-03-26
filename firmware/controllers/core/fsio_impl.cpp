@@ -72,8 +72,6 @@ static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
 
 #define LE_EVAL_POOL_SIZE 32
 
-extern EnginePins enginePins;
-
 static LECalculator evalCalc;
 static LEElement evalPoolElements[LE_EVAL_POOL_SIZE];
 static LEElementPool evalPool(evalPoolElements, LE_EVAL_POOL_SIZE);
@@ -736,7 +734,6 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 EXTERN_ENGINE
 ;
-extern EnginePins enginePins;
 
 // "Limp-mode" implementation for some RAM-limited configs without FSIO
 void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
