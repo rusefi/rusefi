@@ -163,9 +163,10 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
 		tsOutputChannels.debugFloatField3 = engine->fsioState.fsioTimingAdjustment;
 		tsOutputChannels.debugFloatField4 = pidTimingCorrection;
+		tsOutputChannels.debugIntField1 = engine->engineState.multispark.count;
 #endif /* EFI_TUNER_STUDIO */
 	}
-	
+
 	return iatCorrection
 		+ engine->fsioState.fsioTimingAdjustment
 		+ engine->engineState.cltTimingCorrection
@@ -229,6 +230,43 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #else
 	return 0;
 #endif
+}
+
+size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// Compute multispark (if enabled)
+	if (CONFIG(multisparkEnable)
+		&& rpm <= CONFIG(multisparkMaxRpm)
+		&& CONFIG(multisparkMaxExtraSparkCount) > 0) {
+		// For zero RPM, disable multispark.  We don't yet know the engine speed, so multispark may not be safe.
+		if (rpm == 0) {
+			return 0;
+		}
+
+		floatus_t multiDelay = CONFIG(multisparkSparkDuration);
+		floatus_t multiDwell = CONFIG(multisparkDwell);
+
+		ENGINE(engineState.multispark.delay) = US2NT(multiDelay);
+		ENGINE(engineState.multispark.dwell) = US2NT(multiDwell);
+
+		constexpr float usPerDegreeAt1Rpm = 60e6 / 360;
+		floatus_t usPerDegree = usPerDegreeAt1Rpm / rpm;
+
+		// How long is there for sparks? The user configured an angle, convert to time.
+		floatus_t additionalSparksUs = usPerDegree * CONFIG(multisparkMaxSparkingAngle);
+		// How long does one spark take?
+		floatus_t oneSparkTime = multiDelay + multiDwell;
+
+		// How many sparks can we fit in the alloted time?
+		float sparksFitInTime = additionalSparksUs / oneSparkTime;
+
+		// Take the floor (convert to uint8_t) - we want to undershoot, not overshoot
+		uint32_t floored = sparksFitInTime;
+
+		// Allow no more than the maximum number of extra sparks
+		return minI(floored, CONFIG(multisparkMaxExtraSparkCount));
+	} else {
+		return 0;
+	}
 }
 
 void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

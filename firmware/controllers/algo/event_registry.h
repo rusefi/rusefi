@@ -86,6 +86,11 @@ public:
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
 	scheduling_s dwellStartTimer;
 	AngleBasedEvent sparkEvent;
+
+	// How many additional sparks should we fire after the first one?
+	// For single sparks, this should be zero.
+	uint8_t sparksRemaining = 0;
+
 	/**
 	 * Desired timing advance
 	 */

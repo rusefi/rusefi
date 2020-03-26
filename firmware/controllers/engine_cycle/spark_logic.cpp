@@ -171,7 +171,26 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		// we are here if engine has just stopped
 		return;
 	}
- 	prepareCylinderIgnitionSchedule(dwellAngleDuration, sparkDwell, event PASS_ENGINE_PARAMETER_SUFFIX);
+
+	// If there are more sparks to fire, schedule them
+	if (event->sparksRemaining > 0)
+	{
+		event->sparksRemaining--;
+
+		efitick_t nowNt = getTimeNowNt();
+
+		efitick_t nextDwellStart = nowNt + engine->engineState.multispark.delay;
+		efitick_t nextFiring = nextDwellStart + engine->engineState.multispark.dwell;
+
+		// We can schedule both of these right away, since we're going for "asap" not "particular angle"
+		engine->executor.scheduleByTimestampNt(&event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
+		engine->executor.scheduleByTimestampNt(&event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
+	}
+	else
+	{
+		// If all events have been scheduled, prepare for next time.
+		prepareCylinderIgnitionSchedule(dwellAngleDuration, sparkDwell, event PASS_ENGINE_PARAMETER_SUFFIX);
+	}
 }
 
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -321,14 +340,19 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * the coil.
 		 */
 		engine->executor.scheduleByTimestampNt(&event->dwellStartTimer, edgeTimestamp + US2NT(chargeDelayUs), { &turnSparkPinHigh, event });
+
+		event->sparksRemaining = ENGINE(engineState.multispark.count);
+	} else {
+		// don't fire multispark if spark is cut completely!
+		event->sparksRemaining = 0;
 	}
+
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
 	 */
 
 	efiAssertVoid(CUSTOM_ERR_6591, !cisnan(sparkAngle), "findAngle#4");
 	assertAngleRange(sparkAngle, "findAngle#a5", CUSTOM_ERR_6549);
-
 
 	bool scheduled = scheduleOrQueue(&event->sparkEvent, trgEventIndex, edgeTimestamp, sparkAngle, { fireSparkAndPrepareNextSchedule, event } PASS_ENGINE_PARAMETER_SUFFIX);
 

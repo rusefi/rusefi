@@ -248,6 +248,13 @@ struct running_fuel_s {
 
 typedef struct running_fuel_s running_fuel_s;
 
+struct multispark_state_s
+{
+	efitick_t delay;
+	efitick_t dwell;
+	uint8_t count;
+};
+
 // start of engine_state2_s
 struct engine_state2_s {
 	/**
@@ -423,6 +430,9 @@ struct engine_state2_s {
 	 * offset 160
 	 */
 	angle_t cltTimingCorrection = (angle_t)0;
+
+	// TODO: generate me
+	multispark_state_s multispark;
 	/** total size 164*/
 };
 
