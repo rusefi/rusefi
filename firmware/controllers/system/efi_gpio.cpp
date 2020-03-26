@@ -153,6 +153,12 @@ void EnginePins::unregisterPins() {
 #endif /* EFI_PROD_CODE */
 }
 
+void EnginePins::startPins() {
+	startInjectionPins();
+	startIgnitionPins();
+	startAuxValves();
+}
+
 void EnginePins::reset() {
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		injectors[i].reset();

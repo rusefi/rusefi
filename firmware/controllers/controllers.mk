@@ -33,7 +33,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/engine_cycle/main_trigger_callback.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/aux_valves.cpp \
 	$(CONTROLLERS_DIR)/flash_main.cpp \
-	$(CONTROLLERS_DIR)/injector_central.cpp \
+	$(CONTROLLERS_DIR)/bench_test.cpp \
 	$(CONTROLLERS_DIR)/can/obd2.cpp \
 	$(CONTROLLERS_DIR)/can/can_verbose.cpp \
 	$(CONTROLLERS_DIR)/can/can_rx.cpp \

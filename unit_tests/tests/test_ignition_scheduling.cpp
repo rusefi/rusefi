@@ -8,8 +8,6 @@
 #include "engine_test_helper.h"
 #include "spark_logic.h"
 
-extern EnginePins enginePins;
-
 TEST(ignition, twoCoils) {
 	WITH_ENGINE_TEST_HELPER(BMW_M73_F);
 

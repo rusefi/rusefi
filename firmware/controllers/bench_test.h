@@ -1,6 +1,6 @@
 /**
- * @file    injector_central.h
- * @brief	Utility methods related to fuel injection.
+ * @file    bench_test.h
+ * @brief	Utility methods related to bench testing.
  *
  * todo: rename this file
  *
@@ -16,7 +16,7 @@ void fanBench(void);
 void fuelPumpBench(void);
 void acRelayBench(void);
 void milBench(void);
-void initInjectorCentral(Logging *sharedLogger);
+void initBenchTest(Logging *sharedLogger);
 bool isRunningBenchTest(void);
 
 void executeTSCommand(uint16_t subsystem, uint16_t index);

@@ -72,8 +72,6 @@ static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
 
 #define LE_EVAL_POOL_SIZE 32
 
-extern EnginePins enginePins;
-
 static LECalculator evalCalc;
 static LEElement evalPoolElements[LE_EVAL_POOL_SIZE];
 static LEElementPool evalPool(evalPoolElements, LE_EVAL_POOL_SIZE);
@@ -165,7 +163,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #include "pin_repository.h"
 #include "pwm_generator.h"
 // todo: that's about bench test mode, wrong header for sure!
-#include "injector_central.h"
+#include "bench_test.h"
 
 static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
 // todo: reduce code duplication between all "set pin methods"
@@ -736,7 +734,6 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 EXTERN_ENGINE
 ;
-extern EnginePins enginePins;
 
 // "Limp-mode" implementation for some RAM-limited configs without FSIO
 void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
