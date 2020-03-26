@@ -1,1 +1,0 @@
-#define ts_show_trigger_comparator true
