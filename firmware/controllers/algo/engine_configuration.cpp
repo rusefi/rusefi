@@ -502,6 +502,9 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setLinearCurve(config->cltCrankingCorrBins, CLT_CURVE_RANGE_FROM, 100, 1);
 	setLinearCurve(config->cltCrankingCorr, 1.0, 1.0, 1);
+	setLinearCurve(config->afterstartEnrichBins, AFTERSTART_ENRICH_CURVE_SIZE, 100, 1);
+	setLinearCurve(config->afterstartHoldTimeBins, AFTERSTART_HOLD_CURVE_SIZE, -40, 40);
+	setLinearCurve(config->afterstartDecayTimeBins, AFTERSTART_DECAY_CURVE_SIZE, -40, 40);
 
 	// Cranking temperature compensation
 	static const float crankingCoef[] = {
@@ -554,6 +557,45 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		77
 	};
 	copyArray(config->crankingCycleBins, crankingCycleBins);
+
+	static const float afterstartEnrich[] = {
+				1.5,
+				1.35,
+				1.05,
+				0.75,
+				0.5,
+				0.5,
+				0.5,
+				0.5
+		};
+		copyArray(config->afterstartEnrich, afterstartEnrich);
+
+		static const float afterstartHold[] = {
+						6.0,
+						5.0,
+						5.0,
+						4.0,
+						4.0,
+						4.0,
+						2.0,
+						3.0
+		};
+		copyArray(config->afterstartHoldTime, afterstartHold);
+
+		static const float afterstartDecay[] = {
+							15.0,
+							15.0,
+							15.0,
+							15.0,
+							15.0,
+							15.0,
+							11.0,
+							10.0
+		};
+		copyArray(config->afterstartDecayTime, afterstartDecay);
+
+
+	}
 
 	// Cranking ignition timing
 	static const float advanceValues[] = { 0, 0, 0, 0 };
