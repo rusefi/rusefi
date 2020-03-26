@@ -26,7 +26,7 @@
 #include "perf_trace.h"
 
 #if EFI_PROD_CODE
-#include "injector_central.h"
+#include "bench_test.h"
 #else
 #define isRunningBenchTest() true
 #endif /* EFI_PROD_CODE */

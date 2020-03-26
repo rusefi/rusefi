@@ -35,7 +35,7 @@
 #include "lcd_menu_tree.h"
 #include "memstreams.h"
 #include "settings.h"
-#include "injector_central.h"
+#include "bench_test.h"
 #include "engine_controller.h"
 #include "mmc_card.h"
 #include "idle_thread.h"

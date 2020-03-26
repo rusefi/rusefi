@@ -165,7 +165,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #include "pin_repository.h"
 #include "pwm_generator.h"
 // todo: that's about bench test mode, wrong header for sure!
-#include "injector_central.h"
+#include "bench_test.h"
 
 static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
 // todo: reduce code duplication between all "set pin methods"

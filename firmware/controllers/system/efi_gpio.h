@@ -113,6 +113,7 @@ public:
 class EnginePins {
 public:
 	EnginePins();
+	void startPins();
 	void reset();
 	bool stopPins();
 	void unregisterPins();

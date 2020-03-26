@@ -33,7 +33,7 @@
 #include "main_trigger_callback.h"
 #include "io_pins.h"
 #include "flash_main.h"
-#include "injector_central.h"
+#include "bench_test.h"
 #include "os_util.h"
 #include "engine_math.h"
 #include "allsensors.h"
@@ -604,7 +604,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_ENGINE_CONTROL
 	/**
-	 * This has to go after 'initInjectorCentral' in order to
+	 * This has to go after 'enginePins.startPins()' in order to
 	 * properly detect un-assigned output pins
 	 */
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -666,7 +666,9 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
-	initInjectorCentral(sharedLogger);
+	enginePins.startPins();
+
+	initBenchTest(sharedLogger);
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
 	commonInitEngineController(sharedLogger);
