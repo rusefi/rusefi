@@ -174,6 +174,9 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
 	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
+	running.postCrankingFuelCorrection = getAfterStartEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineNoiseHipLevel = interpolate2d("knock", rpm, engineConfiguration->knockNoiseRpmBins,
