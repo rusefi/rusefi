@@ -605,7 +605,6 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
   curve = afterstartDecayCurve, "AfterStart Decay Time"
       columnLabel = "Coolant Temp", "Seconds"
-#if CELSIUS
       xAxis       =  -40, 120, 10
       yAxis       =  0,  50, 11
       xBins       = afterstartDecayTimeBins, coolant
