@@ -620,6 +620,17 @@ int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return targetRpm + engine->fsioState.fsioIdleTargetRPMAdjustment;
 }
 
+void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// 1ms spark + 2ms dwell
+	engineConfiguration->multisparkSparkDuration = 1000;
+	engineConfiguration->multisparkDwell = 2000;
+
+	// Conservative defaults - probably won't blow up coils
+	engineConfiguration->multisparkMaxRpm = 1500;
+	engineConfiguration->multisparkMaxExtraSparkCount = 2;
+	engineConfiguration->multisparkMaxSparkingAngle = 30;
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
@@ -860,6 +871,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->timingMode = TM_DYNAMIC;
 	engineConfiguration->fixedModeTiming = 50;
+
+	setDefaultMultisparkParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if !EFI_UNIT_TEST
 	engineConfiguration->analogInputDividerCoefficient = 2;
