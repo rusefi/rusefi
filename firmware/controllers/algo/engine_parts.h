@@ -155,3 +155,10 @@ public:
 private:
 	void setPumpsCounter(int newValue);
 };
+
+struct multispark_state
+{
+	efitick_t delay;
+	efitick_t dwell;
+	uint8_t count;
+};
