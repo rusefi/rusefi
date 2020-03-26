@@ -259,18 +259,6 @@
 #define binarySerialRxPin_offset_hex 717
 #define binarySerialTxPin_offset 1814
 #define binarySerialTxPin_offset_hex 716
-#define biQuad_a0_offset 2332
-#define biQuad_a0_offset_hex 91c
-#define biQuad_a1_offset 2336
-#define biQuad_a1_offset_hex 920
-#define biQuad_a2_offset 2340
-#define biQuad_a2_offset_hex 924
-#define biQuad_b1_offset 2344
-#define biQuad_b1_offset_hex 928
-#define biQuad_b2_offset 2348
-#define biQuad_b2_offset_hex 92c
-#define biQuad_offset 2332
-#define biQuad_offset_hex 91c
 #define BLOCKING_FACTOR 400
 #define BOOST_LOAD_COUNT 8
 #define BOOST_RPM_COUNT 8
@@ -2059,6 +2047,7 @@
 #define TS_FILE_VERSION 20200310
 #define TS_OUTPUT_SIZE 240
 #define ts_show_analog_divider true
+#define ts_show_can_pins true
 #define ts_show_cj125 true
 #define ts_show_egt true
 #define ts_show_etb true
@@ -2068,7 +2057,10 @@
 #define ts_show_hip9011 true
 #define ts_show_joystick true
 #define ts_show_lcd true
+#define ts_show_sd_card true
 #define ts_show_spi true
+#define ts_show_trigger_comparator false
+#define ts_show_tunerstudio_port true
 #define TS_SIGNATURE "rusEFI v1.2020.3"
 #define tunerStudioSerialSpeed_offset 728
 #define tunerStudioSerialSpeed_offset_hex 2d8
@@ -2082,6 +2074,8 @@
 #define unused1059_offset_hex f7c
 #define unused1234234_offset 2042
 #define unused1234234_offset_hex 7fa
+#define unused76b9_offset 76
+#define unused76b9_offset_hex 4c
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_24_offset_hex 5c4
 #define unused_1484_bit_25_offset 1476
@@ -2164,6 +2158,8 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1774
 #define unusedFormerWarmupAfrPid_offset_hex 6ee
+#define unusedOldBiquad_offset 2332
+#define unusedOldBiquad_offset_hex 91c
 #define unusedOneMoreHere_offset 760
 #define unusedOneMoreHere_offset_hex 2f8
 #define unusedSpiPadding4_offset 2593
@@ -2180,8 +2176,6 @@
 #define unusuedvref_offset_hex fb0
 #define useAdvanceCorrectionsForCranking_offset 1476
 #define useAdvanceCorrectionsForCranking_offset_hex 5c4
-#define useBiQuadAnalogFiltering_offset 76
-#define useBiQuadAnalogFiltering_offset_hex 4c
 #define useConstantDwellDuringCranking_offset 1464
 #define useConstantDwellDuringCranking_offset_hex 5b8
 #define useETBforIdleControl_offset 744
