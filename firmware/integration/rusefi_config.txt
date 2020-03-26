@@ -24,6 +24,8 @@
 
 ! WHEN SHOULD I UPDATE THE BELOW VERSIONS?
 ! - Update TS_SIGNATURE whenever either the flash format or TS output format changes (format: Year.Month.Sequential)
+! - Update RUSEFI_FIRMWARE_VERSION periodically as the firmware is updated.  Its value doesn't necessarily indicate dangerous
+!       incompatibility, but could indicate missing features.
 ! - Update RUSEFI_FLASH_VERSION whenever the flash format is changed in a way that isn't backward compatible in a safe way (format: YearMonthDay)
 #define TS_SIGNATURE "rusEFI v2020.3.0"
 #define RUSEFI_FIRMWARE_VERSION 20200323
