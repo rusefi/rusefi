@@ -80,7 +80,7 @@
 
 #include <string.h>
 #include "engine_configuration.h"
-#include "injector_central.h"
+#include "bench_test.h"
 #include "svnversion.h"
 #include "loggingcentral.h"
 #include "status_loop.h"

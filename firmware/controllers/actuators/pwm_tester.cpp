@@ -21,7 +21,6 @@ static LoggingWithStorage logger;
 static SimplePwm pwmTest[5];
 
 extern OutputPin warningLedPin;
-extern EnginePins enginePins;
 
 EXTERN_ENGINE;
 
