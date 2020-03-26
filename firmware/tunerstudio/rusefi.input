@@ -595,11 +595,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       lineLabel   = "Recommended WUE"
 	curve = afterstartHoldTimeCurve, "AfterStart Hold Time"
       columnLabel = "Coolant Temp", "Seconds"
-#if CELSIUS
       xAxis       =  -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  50, 11
       xBins       = afterstartHoldTimeBins, coolant
       yBins       = afterstartHoldTime
@@ -611,9 +607,6 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       columnLabel = "Coolant Temp", "Seconds"
 #if CELSIUS
       xAxis       =  -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  50, 11
       xBins       = afterstartDecayTimeBins, coolant
       yBins       = afterstartDecayTime
@@ -622,11 +615,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
   curve = afterstartEnrichCurve, "AfterStart Enrichment     Addition To Normal Fueling In %"
       columnLabel = "Coolant Temp", "%"
-#if CELSIUS
       xAxis       =  -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  2, 11
       xBins       = afterstartEnrichBins, coolant
       yBins       = afterstartEnrich
