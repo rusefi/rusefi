@@ -1639,7 +1639,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Cam Sync/VVT input",					camInputs1
-		panel = triggerInputComparator
+		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
 ;
 ; allXXX sections allows a quick overview of used I/O in order to address conflicts mostly, not really to
@@ -1700,7 +1700,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "ETB#2 Dir #1",							etbIo2_directionPin1  @@if_ts_show_etb_pins
 		field = "ETB#2 Dir #2",							etbIo2_directionPin2  @@if_ts_show_etb_pins
 		field = "ETB#2 Control #1",						etbIo2_controlPin1    @@if_ts_show_etb_pins
-		field = "SD CS Pin",							sdCardCsPin
+		field = "SD CS Pin",							sdCardCsPin @@if_ts_show_sd_card
 		field = "MIL / Check Engine Pin",				malfunctionIndicatorPin
 		field = "Aux Pin #1",							auxPidPins1
 		field = "Aux Pin #2",							auxPidPins2
@@ -1787,25 +1787,25 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "FSIO ADC #4",							fsioAdc4
 		field = "GPS RX", 								gps_rx_pin @@if_ts_show_gps
 		field = "GPS TX", 								gps_tx_pin @@if_ts_show_gps
-		field = "CAN RX pin",							canRxPin
-		field = "CAN TX pin",							canTxPin
-		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
-		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1}
-		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1}
-		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1}
-		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1}
-		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1}
-		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
-		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
-		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
+		field = "CAN RX pin",							canRxPin @@if_ts_show_can_pins
+		field = "CAN TX pin",							canTxPin @@if_ts_show_can_pins
+		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
+		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
+		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
+		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1} @@if_ts_show_spi
+		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1} @@if_ts_show_spi
+		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1} @@if_ts_show_spi
+		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
+		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1} @@if_ts_show_spi
 		field = "hip9011CsPin",							hip9011CsPin
 		field = "LIS302DLCsPin",						LIS302DLCsPin
 		field = "MIL / Check Engine",					malfunctionIndicatorPin
 		field = "Saab CDM knock",						cdmInputPin
 		field = "comm status light",					communicationLedPin
 		field = "running status light",					runningLedPin
-		field = "TLE8888 Chip Select",                  tle8888_cs
-		field = "TLE 8888 spi",                         tle8888spiDevice
+		field = "TLE8888 Chip Select",                  tle8888_cs @@if_ts_show_spi
+		field = "TLE 8888 spi",                         tle8888spiDevice @@if_ts_show_spi
 		field = "servo#1",								servoOutputPins1
 		field = "servo#2",								servoOutputPins2
 		field = "servo#3",								servoOutputPins3
@@ -2267,8 +2267,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Enable rusEfi CAN data",				enableVerboseCanTx
 		field = "rusEfi CAN data base address",			verboseCanBaseAddress
 		field = "Can Sleep Period",						canSleepPeriodMs
-		field = "RX pin",								canRxPin
-		field = "TX pin",								canTxPin
+		field = "RX pin",								canRxPin @@if_ts_show_can_pins
+		field = "TX pin",								canTxPin @@if_ts_show_can_pins
 	
 	dialog = sdCard, "SD Card Logger"
 		field = "SdCard", 								isSdCardEnabled
@@ -2295,17 +2295,17 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "D7 pin", 								HD44780_db7
 		
 	dialog = tle8888, "TLE8888", yAxis
-		field = "TLE8888 Chip Select", 					tle8888_cs
-		field = "TLE8888 SPI", 							tle8888spiDevice
+		field = "TLE8888 Chip Select", 					tle8888_cs @@if_ts_show_spi
+		field = "TLE8888 SPI", 							tle8888spiDevice @@if_ts_show_spi
 		field = "useTLE8888_hall_mode",					useTLE8888_hall_mode
 		field = "useTLE8888 cranking reset hack",		useTLE8888_cranking_hack
 		commandButton = "Reinit",						cmd_tle8888_init
 
 	dialog = connection, "", 	yAxis
 		field = "ADC vRef voltage",						adcVcc
-		panel = tsPort
+		panel = tsPort							@@if_ts_show_tunerstudio_port
 		panel = canBus
-		panel = sdCard
+		panel = sdCard							@@if_ts_show_sd_card
 		panel = gpsReceiver                       @@if_ts_show_gps
 		panel = tle8888
 
