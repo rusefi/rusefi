@@ -1101,7 +1101,7 @@ menuDialog = main
 		# Digital outputs
 		subMenu = mainRelay,				"Main relay"
 		subMenu = starterRelay,				"Starter Disable relay"
-		subMenu = fuelPump,					"Fuel rail"
+		subMenu = fuelPump,					"Fuel pump & rail"
 		subMenu = fanSetting,				"Fan"
 		subMenu = tachSettings,				"Tachometer"
 		subMenu = malfunction,				"Check engine light"
@@ -2060,12 +2060,19 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "On temperature",					fanOnTemperature
 		field = "Off temperature",					fanOffTemperature
 
-	dialog = fuelPump, "Fuel Rail"
+	dialog = fuelPumpConfig, "Fuel Pump"
 		field = "Pin",						fuelPumpPin
 		field = "Pin mode",         	        fuelPumpPinMode
 		field = "Prime duration",				startUpFuelPumpDuration
+
+	dialog = fuelRailConfig, "Fuel Rail"
 		field = "Absolute Fuel Pressure",			absoluteFuelPressure
 		field = "Fuel Rail pressure",			fuelRailPressure, {absoluteFuelPressure == 1}
+
+	dialog = fuelPump, ""
+		panel = fuelPumpConfig
+		panel = fuelRailConfig
+
 
 ;			Controller->Actuator Outputs
 	dialog = mainRelay, "Main relay output"
@@ -2232,13 +2239,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "!ECU reboot needed to apply these settings"
 		field = "Use fixed baro corr from MAP", 		useFixedBaroCorrFromMap
 		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
-		field = "Use BiQuad averaging",					useBiQuadAnalogFiltering		
-		field = "Smoothing factor",						slowAdcAlpha, {useBiQuadAnalogFiltering == 0}
-		field = "Bi_Q a0",								biQuad_a0, {useBiQuadAnalogFiltering == 1}
-		field = "Bi_Q a1",								biQuad_a1, {useBiQuadAnalogFiltering == 1}
-		field = "Bi_Q a2",								biQuad_a2, {useBiQuadAnalogFiltering == 1}
-		field = "Bi_Q b1",								biQuad_b1, {useBiQuadAnalogFiltering == 1}
-		field = "Bi_Q b2",								biQuad_b2, {useBiQuadAnalogFiltering == 1}
+		field = "Smoothing factor",						slowAdcAlpha
 
 	dialog = tachSettings, "Tachometer output"
 		field = "!See also dizzySparkOutputPin"

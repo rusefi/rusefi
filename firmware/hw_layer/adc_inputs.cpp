@@ -42,8 +42,6 @@
 #define ADC_BUF_DEPTH_SLOW      8
 #define ADC_BUF_DEPTH_FAST      4
 
-//static Biquad biq[ADC_MAX_CHANNELS_COUNT];
-
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 static const char * adcHwChannelUsage[HW_MAX_ADC_INDEX];
 
