@@ -338,6 +338,24 @@ float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 1; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d("iatc", iat, config->iatFuelCorrBins, config->iatFuelCorr);
 }
+float getAfterStartEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	float runTime = engine->engineState.running.timeSinceCrankingInSecs;
+
+	float afterStartEnrich = interpolate2d("aseEnrich", getCoolantTemperature(), config->afterstartCoolantBins, config->afterstartEnrich);
+	float afterstartHoldTime = interpolate2d("aseHold", getCoolantTemperature(), config->afterstartCoolantBins, config->afterstartHoldTime);
+	float afterstartDecayTime = interpolate2d("aseDecay", getCoolantTemperature(), config->afterstartCoolantBins, config->afterstartDecayTime);
+	uint8_t afterstartDecayFuel = interpolateClamped(afterstartHoldTime, afterStartEnrich, (afterstartDecayTime + afterstartHoldTime), 1.0f , runTime);
+	runTime = NT2US(engine->engineState.timeSinceCranking) / 1000000.0f;
+	if (runTime < afterstartHoldTime) {
+		engine->engineState.running.postCrankingFuelCorrection = afterStartEnrich;
+	} else {
+		engine->engineState.running.postCrankingFuelCorrection = afterstartDecayFuel;
+	}
+	if (runTime > (afterstartHoldTime + afterstartDecayTime)) {
+		engine->engineState.running.postCrankingFuelCorrection = 1.0f;
+	}
+return 0;
+}
 
 /**
  * @brief	Called from EngineState::periodicFastCallback to update the state.

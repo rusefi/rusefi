@@ -174,31 +174,6 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
 	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
-
-	    float afterStartEnrich;
-		float afterstartHoldTime;
-		float afterstartDecayTime;
-		float afterstartDecayFuel;
-		float runTime = running.timeSinceCrankingInSecs;
-		float correction;
-
-		afterStartEnrich = interpolate2d("aseEnrich", getCoolantTemperature(), config->afterstartEnrichBins, config->afterstartEnrich);
-		afterstartHoldTime = interpolate2d("aseHold", getCoolantTemperature(), config->afterstartHoldTimeBins, config->afterstartHoldTime);
-		afterstartDecayTime = interpolate2d("aseDecay", getCoolantTemperature(), config->afterstartDecayTimeBins, config->afterstartDecayTime);
-		afterstartDecayFuel = interpolateClamped(afterstartHoldTime, afterStartEnrich, (afterstartDecayTime + afterstartHoldTime), 1.0f , runTime);
-		running.timeSinceCrankingInSecs = NT2US(timeSinceCranking) / 1000000.0f;
-
-
-		if (runTime < afterstartHoldTime) {
-			correction = afterStartEnrich;
-		} else {
-			correction = afterstartDecayFuel;
-		}
-		if (runTime > (afterstartHoldTime + afterstartDecayTime)) {
-			correction = 1.0f;
-		}
-		running.postCrankingFuelCorrection = correction;
-
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineNoiseHipLevel = interpolate2d("knock", rpm, engineConfiguration->knockNoiseRpmBins,
