@@ -1202,10 +1202,10 @@ end_struct
 engine_configuration_s engineConfiguration;
 
 
-float[AFTERSTART_HOLD_CURVE_SIZE] afterstartCoolantBins;;"C",           1,     0, -100.0,  250.0,   0
-float[AFTERSTART_HOLD_CURVE_SIZE] afterstartHoldTime;;"Seconds",        1,     0,      0,    100,   1
-float[AFTERSTART_ENRICH_CURVE_SIZE] afterstartEnrich;;"%",              1,     0,      0,    600,   1
-float[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds",      1,     0,      0,    100,   1
+uint8_t[AFTERSTART_HOLD_CURVE_SIZE] afterstartCoolantBins;;"C",           1,     0, -100.0,  250.0,   0
+uint8_t[AFTERSTART_HOLD_CURVE_SIZE] afterstartHoldTime;;"Seconds",        1,     0,      0,    100,   1
+uint8_t[AFTERSTART_ENRICH_CURVE_SIZE] afterstartEnrich;;"%",              1,     0,      0,    600,   1
+uint8_t[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds",      1,     0,      0,    100,   1
 
 
 boost_table_t boostTableOpenLoop;
