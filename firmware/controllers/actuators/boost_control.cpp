@@ -37,8 +37,7 @@ static Logging *logger;
 static boostOpenLoop_Map3D_t boostMapOpen("boostmapopen", 1);
 static boostOpenLoop_Map3D_t boostMapClosed("boostmapclosed", 1);
 static SimplePwm boostPwmControl("boost");
-static pid_s *boostPidS = &persistentState.persistentConfiguration.engineConfiguration.boostPid;
-static Pid boostControlPid(boostPidS);
+static Pid boostControlPid;
 
 static bool shouldResetPid = false;
 
@@ -51,6 +50,8 @@ static void pidReset(void) {
 }
 
 class BoostControl: public PeriodicTimerController {
+	DECLARE_ENGINE_PTR;
+
 	int getPeriodMs() override {
 		return GET_PERIOD_LIMITED(&engineConfiguration->boostPid);
 	}
@@ -101,10 +102,10 @@ class BoostControl: public PeriodicTimerController {
 
 static BoostControl BoostController;
 
+#if !EFI_UNIT_TEST
 void setBoostPFactor(float value) {
 	engineConfiguration->boostPid.pFactor = value;
 	boostControlPid.reset();
-
 }
 
 void setBoostIFactor(float value) {
@@ -116,6 +117,7 @@ void setBoostDFactor(float value) {
 	engineConfiguration->boostPid.dFactor = value;
 	boostControlPid.reset();
 }
+#endif /* EFI_UNIT_TEST */
 
 void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->isBoostControlEnabled = true;
@@ -146,6 +148,7 @@ void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 static void turnBoostPidOn() {
+#if !EFI_UNIT_TEST
 	if (CONFIG(boostControlPin) == GPIO_UNASSIGNED){
 		return;
 	}
@@ -157,9 +160,9 @@ static void turnBoostPidOn() {
 		CONFIG(boostControlPin),
 		&enginePins.boostPin,
 		engineConfiguration->boostPwmFrequency,
-		0.5f,
-		(pwm_gen_callback*) applyPinState
+		0.5f
 	);
+#endif /* EFI_UNIT_TEST */
 }
 
 void startBoostPin(void) {
@@ -167,7 +170,9 @@ void startBoostPin(void) {
 }
 
 void stopBoostPin(void) {
+#if !EFI_UNIT_TEST
 	brain_pin_markUnused(activeConfiguration.boostControlPin);
+#endif /* EFI_UNIT_TEST */
 }
 
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration) {
@@ -175,16 +180,22 @@ void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfigur
 }
 
 void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if !EFI_UNIT_TEST
 	if (CONFIG(boostControlPin) == GPIO_UNASSIGNED){
 		return;
 	}
+#endif
+
+	boostControlPid.initPidClass(&engineConfiguration->boostPid);
 
 	logger = sharedLogger;
 	boostMapOpen.init(config->boostTableOpenLoop, config->boostMapBins, config->boostRpmBins);
 	boostMapClosed.init(config->boostTableClosedLoop, config->boostTpsBins, config->boostRpmBins);
 	boostControlPid.reset();
+#if !EFI_UNIT_TEST
 	startBoostPin();
 	BoostController.Start();
+#endif
 }
 
 #endif

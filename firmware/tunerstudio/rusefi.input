@@ -135,11 +135,7 @@ enable2ndByteCanID = false
        ; filter =  Name,        "DisplayName", outputChannel, operator, defaultVal, userAdjustable
         filter = minRPMFilter, "Minimum RPM", RPMValue,           <       , 500,      , true
 
-#if CELSIUS
          filter = minCltFilter, "Minimum CLT", coolant,       <       , 60,       , true
-#else
-         filter = minCltFilter, "Minimum CLT", coolant,       <       , 160,      , true
-#endif
 
          filter = deltaTps, "dTPS", deltaTps       >       , 50,      , true
 
@@ -193,6 +189,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       ind_isTriggerError = bits, U32,      0,  [23:23], "true", "false";
       ind_hasFatalError=bits,    U32,      0,  [24:24], "true", "false";
 	  ind_isWarnNow    =bits,    U32,      0,  [25:25], "true", "false";
+	  ind_pedal_error  =bits,    U32,      0,  [26:26], "true", "false";
 
 ; RPM, vss
       RPMValue        = scalar,  U16,      4,      "RPM",    1,   0.00000
@@ -202,16 +199,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 ; temperatures
      internalMcuTemperature = scalar,S08, 11,    "deg C",    1,         0
-#if CELSIUS
       coolant         = scalar,  S16,     12,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-#else
-      coolant         = scalar,  S16,     12,  "deg F",{9/(5 * @@PACK_MULT_TEMPERATURE@@)},  17.77777
-#endif
-#if CELSIUS
       intake          = scalar,  S16,     14,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-#else
-      intake          = scalar,  S16,     14,  "deg F",{9/(5 * @@PACK_MULT_TEMPERATURE@@)},  17.77777
-#endif
 ; todo: aux1
 ; todo: aux2
       
@@ -475,11 +464,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
    curve = iatFuelCorrCurve, "Intake air temperature fuel Multiplier"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       =  -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  2, 11
       xBins       = iatFuelCorrBins, intake
       yBins       = iatFuelCorr
@@ -487,11 +472,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 	
 	curve = cltTimingCorrCurve, "Warmup timing correction"
       columnLabel = "Coolant", "Extra"
-#if CELSIUS
       xAxis       =  -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  50, 10
       xBins       = cltTimingBins, coolant
       yBins       = cltTimingExtra
@@ -499,11 +480,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = cltFuelCorrCurve, "Warmup fuel manual Multiplier"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       =  -40, 100, 10
-#else
-      xAxis       =  -40, 210, 10
-#endif
       yAxis       =  0,  3, 10
       xBins       = cltFuelCorrBins, coolant
       yBins       = cltFuelCorr
@@ -511,11 +488,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = crankingCltCurve, "Cranking Coolant Temperature Multiplier"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       =  -40, 100, 10
-#else
-      xAxis       =  -40, 210, 10
-#endif
       yAxis       =  0,  3, 10
       xBins       = crankingFuelBins, coolant
       yBins       = crankingFuelCoef
@@ -547,11 +520,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = cltIdleCurve, "Warmup Idle multiplier"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       = -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  3, 10
       xBins       = cltIdleCorrBins, coolant
       yBins       = cltIdleCorr
@@ -559,11 +528,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = iacCoastingCurve, "Coasting IAC Position for Auto-Idle"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       = -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  100, 10
       xBins       = iacCoastingBins, coolant
       yBins       = iacCoasting
@@ -571,11 +536,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = cltCrankingCurve, "Cranking Idle Air multiplier"
       columnLabel = "Coolant", "Multiplier"
-#if CELSIUS
       xAxis       = -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0,  3, 10
       xBins       = cltCrankingCorrBins, coolant
       yBins       = cltCrankingCorr
@@ -583,11 +544,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = cltIdleRPMCurve, "Idle Target RPM"
       columnLabel = "Coolant", "RPM"
-#if CELSIUS
       xAxis       = -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
       yAxis       =  0, 8000, 10
       xBins       = cltIdleRpmBins, coolant
       yBins       = cltIdleRpm, RPMValue
@@ -619,11 +576,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
     curve = wueAfrTargetOffsetCurve, "AFR Target Temperature Adjustment"
       columnLabel = "Coolant", "AFR Offset"
-#if CELSIUS
       xAxis       = -40, 200, 9
-#else
-      xAxis       = -40, 400, 9
-#endif
       yAxis       =   -3,  1, 5
       xBins       = cltFuelCorrBins, coolant
       yBins       = wueAfrTargetOffset
@@ -631,11 +584,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
     curve = wueAnalyzer_warmup_curve, "Warmup Enrichment"
       columnLabel = "Coolant", "Current WUE", "Coolant", "Corrected"
-#if CELSIUS
       xAxis       = -40, 200, 9
-#else
-      xAxis       = -40, 400, 9
-#endif
       yAxis       =   90,  500, 6
       xBins       = cltFuelCorrBins, coolant
       yBins       = cltFuelCorr
@@ -863,16 +812,8 @@ gaugeCategory = Debug
 
 gaugeCategory = Sensors - Basic
    RPMGauge        = RPMValue,           "RPM - engine speed",       "RPM",       0,   15000,     200,    500,    6000,  6000,   0,   0
-#if CELSIUS
    CLTGauge          = coolant,       "Coolant temp",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
-#else
-   CLTGauge          = coolant,       "Coolant temp",        "deg F",      -40,    285,       5,     35,     205,   230,   1,   1
-#endif
-#if CELSIUS
    IATGauge          = intake,     "Intake air temp",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
-#else
-   IATGauge          = intake,     "Intake air temp",        "deg F",      -40,    285,       5,     35,     205,   230,  1,   1
-#endif
    afr1Gauge         = AFRValue, "Air fuel ratio",          "",       10,   19.4,      12,     13,      15,    16,   2,   2
    MAFGauge			 = MAFValue,          "Mass air flow",         "v",        0,      5,       0,      1,       3,     4,   1,   1
    VBattGauge        = VBatt,      "Battery voltage",         "V",        8,     21,       9,     10,      17,    19,   1,   1
@@ -905,11 +846,7 @@ gaugeCategory = Acceleration Enrichment
 
 gaugeCategory = Fueling
    ;Name               Var            Title                 Units        Lo      Hi      LoD    LoW       HiW   HiD    vd  ld
-#if CELSIUS
    tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
-#else
-   tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "deg F",      -40,    285,       5,     35,     205,   230,  1,   1
-#endif
    baroCorrectionGauge  = baroCorrection,@@GAUGE_NAME_FUEL_BARO_CORR@@,           "ratio",        0.5,    1.5,      0.6,     0.7,     1.3,   1.4,   1,   1
    crankingFuelGauge = crankingFuelMs,   @@GAUGE_NAME_FUEL_CRANKING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    iatCorrectionGauge = iatCorrection, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
@@ -1005,6 +942,7 @@ gaugeCategory = Throttle Body (incl. ETB)
     indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
     indicator = { ind_iat_error}, "iat",   "iat error",   white, black, red,   black
     indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
+	indicator = { ind_pedal_error}, "map",   "map error",   white, black, red,   black
 
     indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
     indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
@@ -1162,7 +1100,7 @@ menuDialog = main
 		
 		# Digital outputs
 		subMenu = mainRelay,				"Main relay"
-		subMenu = starterRelay,				"Starter relay"
+		subMenu = starterRelay,				"Starter Disable relay"
 		subMenu = fuelPump,					"Fuel rail"
 		subMenu = fanSetting,				"Fan"
 		subMenu = tachSettings,				"Tachometer"
@@ -1313,7 +1251,7 @@ menuDialog = main
 		
 		subMenu = lcdScreen,				"LCD" @@if_ts_show_lcd
 		subMenu = joystickPanel,			"Joystick" @@if_ts_show_joystick
-		subMenu = spiFunction,				"SPI"
+		subMenu = spiFunction,				"SPI"@@if_ts_show_spi
 		subMenu = monitoringSettings,		"rusEfi console"
 		subMenu = std_separator
 		
@@ -1702,7 +1640,11 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Cam Sync/VVT input",					camInputs1
 		panel = triggerInputComparator
-		
+
+;
+; allXXX sections allows a quick overview of used I/O in order to address conflicts mostly, not really to
+; configure the features.
+;
 	dialog = allPinsSensors, "Sensors"
 		field = "Throttle pedal Position Channel", 		throttlePedalPositionAdcChannel
 		field = "Primary input channel", 				triggerInputPins1
@@ -1749,32 +1691,25 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Idle Solenoid Pin",					idle_solenoidPin
 		field = "Second Idle Solenoid Pin",				secondSolenoidPin
 		field = "Idle Stepper Dir",						idle_stepperDirectionPin
-		field = "Idle Stepper Dir Mode",				stepperDirectionPinMode
 		field = "Idle Stepper Step",					idle_stepperStepPin
 		field = "Idle Stepper Enable",					stepperEnablePin
 		field = "Fuel Pump Pin",						fuelPumpPin
-		field = "Fuel Pump Pin Mode",         	        fuelPumpPinMode
 		field = "ETB#1 Dir #1",							etbIo1_directionPin1  @@if_ts_show_etb_pins
 		field = "ETB#1 Dir #2",							etbIo1_directionPin2  @@if_ts_show_etb_pins
 		field = "ETB#1 Control #1",						etbIo1_controlPin1    @@if_ts_show_etb_pins	
-		field = "etb1_controlPinMode",					etbIo1_controlPinMode @@if_ts_show_etb_pins
 		field = "ETB#2 Dir #1",							etbIo2_directionPin1  @@if_ts_show_etb_pins
 		field = "ETB#2 Dir #2",							etbIo2_directionPin2  @@if_ts_show_etb_pins
 		field = "ETB#2 Control #1",						etbIo2_controlPin1    @@if_ts_show_etb_pins
 		field = "SD CS Pin",							sdCardCsPin
 		field = "MIL / Check Engine Pin",				malfunctionIndicatorPin
-		field = "MIL / Check Engine Pin Mode",			malfunctionIndicatorPinMode
 		field = "Aux Pin #1",							auxPidPins1
 		field = "Aux Pin #2",							auxPidPins2
 		field = "Aux Pin #3",							auxPidPins3
 		field = "Aux Pin #4",							auxPidPins4
 		field = "test557pin",							test557pin
 		field = "Fan Pin",								fanPin
-		field = "Fan Pin Mode",							fanPinMode
 		field = "Main Relay Pin",  						mainRelayPin
-		field = "Main Relay Mode",			         	mainRelayPinMode
-		field = "Starter Relay Pin",  					starterRelayPin
-		field = "Starter Relay Mode",			        starterRelayPinMode
+		field = "Starter Relay Pin",  					starterRelayDisablePin
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
 
@@ -1870,7 +1805,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "comm status light",					communicationLedPin
 		field = "running status light",					runningLedPin
 		field = "TLE8888 Chip Select",                  tle8888_cs
-		field = "TLE8888 CS Mode",                      tle8888_csPinMode
 		field = "TLE 8888 spi",                         tle8888spiDevice
 		field = "servo#1",								servoOutputPins1
 		field = "servo#2",								servoOutputPins2
@@ -2139,8 +2073,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Pin mode",			         	mainRelayPinMode
 
 	dialog = starterRelay, "Starter relay output"
-		field = "Pin",  					starterRelayPin
-		field = "Pin mode",			        starterRelayPinMode
+		field = "Pin",  					starterRelayDisablePin
+		field = "Pin mode",			        starterRelayDisableMode
 		
 	dialog = statusLeds, "Status LEDs"
 		field = "Running status LED",					runningLedPin
@@ -2273,10 +2207,17 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
 
+	dialog = startStopDialog, "Start/Stop Button"
+		field = "Start/Stop Button Pin",		startStopButtonPin
+		field = "Start/Stop Button Mode",				startStopButtonMode
+		field = "Starter Control",						starterControlPin, {startStopButtonPin != 0}
+		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
 
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
 		panel = batteryDialog
 		panel = alternator
+		panel = startStopDialog
+		
 
 	dialog = speedSensorLeft
 		field = "Input pin",					vehicleSpeedSensorInputPin
@@ -2322,6 +2263,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Can Read Enabled",						canReadEnabled
 		field = "Can Write Enabled",					canWriteEnabled
 		field = "Can Nbc Type",							canNbcType
+		field = "Enable rusEfi CAN data",				enableVerboseCanTx
+		field = "rusEfi CAN data base address",			verboseCanBaseAddress
 		field = "Can Sleep Period",						canSleepPeriodMs
 		field = "RX pin",								canRxPin
 		field = "TX pin",								canTxPin
@@ -2490,8 +2433,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "output #16", 							fsioOutputPins16
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
-		field = ""
-		field = ""
+		field = "Start/Stop Button",					startStopButtonPin
+		field = "External Knock",						externalKnockSenseAdc
 		
 	dialog = fsioFrequency, "Frequency"
 		field = "freq #1", 								fsioFrequency1

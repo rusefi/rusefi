@@ -117,7 +117,8 @@ percent_t getTpsValue(int index, float adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int tpsMax = index == 0 ? CONFIG(tpsMax) : CONFIG(tps2Max);
 	int tpsMin = index == 0 ? CONFIG(tpsMin) : CONFIG(tps2Min);
 
-	float result = interpolateMsg("TPS", tpsMax, 100, tpsMin, 0, adc);
+	const char *msg = index == 0 ? "TPS1" : "TPS2";
+	float result = interpolateMsg(msg, tpsMax, 100, tpsMin, 0, adc);
 	if (result < engineConfiguration->tpsErrorDetectionTooLow) {
 #if EFI_PROD_CODE
 		// too much noise with simulator
@@ -213,10 +214,23 @@ bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->tps2_1AdcChannel != EFI_ADC_NONE;
 }
 
+extern float canPedal;
+
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_CANBUS_PEDAL
+		return canPedal;
+#endif
+
+
 	if (mockPedalPosition != MOCK_UNDEFINED) {
 		return mockPedalPosition;
 	}
+
+	// Don't choke without a pedal set
+	if (CONFIG(throttlePedalPositionAdcChannel) == EFI_ADC_NONE) {
+		return 0;
+	}
+
 	DISPLAY_TAG(PEDAL_SECTION);
 	DISPLAY_TEXT(Analog_MCU_reads);
 

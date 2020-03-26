@@ -9,7 +9,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "engine.h"
 #include "allsensors.h"
 #include "efi_gpio.h"
@@ -226,8 +225,6 @@ void Engine::reset() {
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
-
-	memset(&m, 0, sizeof(m));
 }
 
 
@@ -489,11 +486,9 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENGINE_CONTROL
-	engine->m.beforeFuelCalc = getTimeNowLowerNt();
 	int rpm = GET_RPM();
 
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->m.fuelCalcTime = getTimeNowLowerNt() - engine->m.beforeFuelCalc;
 #endif
 }
 

@@ -194,9 +194,6 @@ int maxTriggerReentraint = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
-static bool isInsideTriggerHandler = false;
-
-
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	ScopePerf perf(PE::HandleShaftSignal, static_cast<uint8_t>(signal));
 
@@ -215,15 +212,15 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 		}
 	}
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
-	isInsideTriggerHandler = true;
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
+
 	efiAssertVoid(CUSTOM_ERR_6636, getCurrentRemainingStack() > 128, "lowstck#8");
 	engine->triggerCentral.handleShaftSignal(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+
 	triggerReentraint--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
-	isInsideTriggerHandler = false;
 	if (triggerDuration > triggerMaxDuration)
 		triggerMaxDuration = triggerDuration;
 }
@@ -600,22 +597,7 @@ void triggerInfo(void) {
 	scheduleMsg(logger, "primary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[0]));
 	scheduleMsg(logger, "secondary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[1]));
 
-	scheduleMsg(logger, "zeroTestTime=%d maxSchedulingPrecisionLoss=%d", engine->m.zeroTestTime, maxSchedulingPrecisionLoss);
-
-	scheduleMsg(logger, "advanceLookupTime=%d now=%d fuelCalcTime=%d",
-			engine->m.advanceLookupTime, *cyccnt,
-			engine->m.fuelCalcTime);
-
-	scheduleMsg(logger,
-			"ignitionSchTime=%d injectonSchTime=%d",
-			engine->m.ignitionSchTime,
-			engine->m.injectonSchTime);
-
-	scheduleMsg(logger, "mapTime=%d/hipTime=%d/rpmTime=%d/mainTriggerCallbackTime=%d",
-			engine->m.mapAveragingCbTime,
-			engine->m.hipCbTime,
-			engine->m.rpmCbTime,
-			engine->m.mainTriggerCallbackTime);
+	scheduleMsg(logger, "maxSchedulingPrecisionLoss=%d", maxSchedulingPrecisionLoss);
 
 #if EFI_CLOCK_LOCKS
 	scheduleMsg(logger, "maxLockedDuration=%d / maxTriggerReentraint=%d", maxLockedDuration, maxTriggerReentraint);

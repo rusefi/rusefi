@@ -23,7 +23,7 @@
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
-#endif
+#endif /* HAS_OS_ACCESS */
 
 EXTERN_ENGINE
 ;
@@ -57,8 +57,7 @@ public:
 
 	void init(int index) {
 		this->index = index;
-		pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[index];
-		auxPid.initPidClass(auxPidS);
+		auxPid.initPidClass(&persistentState.persistentConfiguration.engineConfiguration.auxPid[index]);
 		table = getFSIOTable(index);
 	}
 
@@ -124,7 +123,7 @@ static void turnAuxPidOn(int index) {
 			&engine->executor,
 			engineConfiguration->auxPidPins[index],
 			&instances[index].auxOutputPin,
-			engineConfiguration->auxPidFrequency[index], 0.1, (pwm_gen_callback*)applyPinState);
+			engineConfiguration->auxPidFrequency[index], 0.1);
 }
 
 void startAuxPins(void) {

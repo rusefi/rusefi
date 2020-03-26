@@ -59,8 +59,9 @@ typedef struct {
 	unsigned int isTriggerError : 1; // bit 23
 	unsigned int hasFatalError : 1; // bit 24
 	unsigned int isWarnNow : 1; // bit 25
-	unsigned int unused80b8 : 1; // bit 26
+	unsigned int isPedalError : 1; // bit 26
 	unsigned int isKnockChipOk : 1; // bit 27
+	unsigned int launchTriggered : 1; // bit 28
 
 	// RPM, vss
 	scaled_channel<uint16_t> rpm;   // 4

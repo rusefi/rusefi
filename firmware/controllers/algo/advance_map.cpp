@@ -27,6 +27,7 @@
 #include "tps.h"
 #include "idle_thread.h"
 #include "allsensors.h"
+#include "launch_control.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -69,33 +70,21 @@ static const ignition_table_t defaultIatTiming = {
 
 #endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
 
-//Todo: There are some more conditions that needs to be true, and RPM range must be added to launchrpm?
-
-//bool isLaunchCondition(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-//	return  CONFIG(launchControlEnabled) && rpm >= engineConfiguration->launchRpm;
-//}
-
 /**
  * @return ignition timing angle advance before TDC
  */
 static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (CONFIG(timingMode) == TM_FIXED)
+	if (CONFIG(timingMode) == TM_FIXED) {
 		return engineConfiguration->fixedTiming;
+	}
 
-	engine->m.beforeAdvance = getTimeNowLowerNt();
 	if (cisnan(engineLoad)) {
 		warning(CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
 		return NAN;
 	}
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
-	engine->m.beforeZeroTest = getTimeNowLowerNt();
-	engine->m.zeroTestTime = getTimeNowLowerNt() - engine->m.beforeZeroTest;
-//See comment at line 70
 
-//	if (isLaunchCondition(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
-//		return engineConfiguration->launchTimingRetard;
-//	}
-	
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
+
 	float advanceAngle;
 	if (CONFIG(useTPSAdvanceTable)) {
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -103,7 +92,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	} else {
 		advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 	}
-	
+
 	// get advance from the separate table for Idle
 	if (CONFIG(useSeparateAdvanceForIdle)) {
 		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance);
@@ -112,7 +101,21 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIG(idlePidDeactivationTpsThreshold), advanceAngle, tps);
 	}
 
-	engine->m.advanceLookupTime = getTimeNowLowerNt() - engine->m.beforeAdvance;
+	
+#if EFI_LAUNCH_CONTROL
+	if (engine->isLaunchCondition && CONFIG(enableLaunchRetard)) {
+        if (CONFIG(launchSmoothRetard)) {
+       	    float launchAngle = CONFIG(launchTimingRetard);
+	        int launchAdvanceRpmRange = CONFIG(launchTimingRpmRange);
+	        int launchRpm = CONFIG(launchRpm);
+			 // interpolate timing from rpm at launch triggered to full retard at launch launchRpm + launchTimingRpmRange
+			return interpolateClamped(launchRpm, advanceAngle, (launchRpm + launchAdvanceRpmRange), launchAngle, rpm);
+		} else {
+			return engineConfiguration->launchTimingRetard;
+        }
+	}
+#endif /* EFI_LAUNCH_CONTROL */
+
 	return advanceAngle;
 }
 

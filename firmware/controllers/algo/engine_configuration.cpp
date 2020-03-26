@@ -318,7 +318,9 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 /* this breaks unit tests lovely TODO: fix this?
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
 */
+	engineConfiguration->tps1_2AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->tps2_2AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxFastSensor1_adcChannel = EFI_ADC_NONE;
 	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
@@ -667,14 +669,18 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
+	// Don't enable, but set default address
+	engineConfiguration->verboseCanBaseAddress = 0x200;
+
 	engineConfiguration->sdCardPeriodMs = 50;
 
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		config->fsioFormulas[i][0] = 0;
 	}
 
-
 	CONFIG(mapMinBufferLength) = 1;
+
+	CONFIG(startCrankingDuration) = 7;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;

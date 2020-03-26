@@ -402,8 +402,8 @@ void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-
-	engine->m.beforeIgnitionSch = getTimeNowLowerNt();
+	ScopePerf perf(PE::PrepareIgnitionSchedule);
+	
 	/**
 	 * TODO: warning. there is a bit of a hack here, todo: improve.
 	 * currently output signals/times dwellStartTimer from the previous revolutions could be
@@ -428,7 +428,6 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
 
 	initializeIgnitionActions(PASS_ENGINE_PARAMETER_SIGNATURE);
-	engine->m.ignitionSchTime = getTimeNowLowerNt() - engine->m.beforeIgnitionSch;
 }
 
 

@@ -58,7 +58,6 @@ extern WaveChart waveChart;
 static char LOGGING_BUFFER[SETTINGS_LOGGING_BUFFER_SIZE];
 static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
-extern int maxNesting;
 EXTERN_ENGINE
 ;
 
@@ -118,8 +117,8 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->mainRelayPinMode),
 			hwPortname(engineConfiguration->mainRelayPin));
 
-	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->starterRelayPinMode),
-			hwPortname(engineConfiguration->starterRelayPin));
+	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->starterRelayDisableMode),
+			hwPortname(engineConfiguration->starterRelayDisablePin));
 
 	scheduleMsg(&logger, "alternator field: mode %s @ %s",
 			getPin_output_mode_e(engineConfiguration->alternatorControlPinMode),
@@ -278,8 +277,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 			boolToString(engine->clutchUpState));
 	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
 			boolToString(engine->clutchDownState));
-
-	scheduleMsg(&logger, "nesting=%d", maxNesting);
 
 	scheduleMsg(&logger, "digitalPotentiometerSpiDevice %d", engineConfiguration->digitalPotentiometerSpiDevice);
 
@@ -680,7 +677,7 @@ static void setMainRelayPin(const char *pinName) {
 }
 
 static void setStarterRelayPin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->starterRelayPin, "starter relay");
+	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
 }
 
 static void setAlternatorPin(const char *pinName) {

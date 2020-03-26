@@ -79,6 +79,16 @@ public:
 	bool needTdcCallback = true;
 #endif /* EFI_UNIT_TEST */
 
+
+#if EFI_LAUNCH_CONTROL
+	bool launchActivatePinState = false;
+	bool isLaunchCondition = false;
+	bool applyLaunchExtraFuel = false;
+	bool setLaunchBoostDuty = false;
+	bool applyLaunchControlRetard = false;
+	bool rpmHardCut = false;
+#endif /* EFI_LAUNCH_CONTROL */
+
 	/**
 	 * if 2nd TPS is not configured we do not run 2nd ETB
 	 */
@@ -175,6 +185,11 @@ public:
 	 * this is about 'stopengine' command
 	 */
 	efitick_t stopEngineRequestTimeNt = 0;
+
+
+	bool startStopState = false;
+	efitick_t startStopStateLastPushTime = 0;
+	int startStopStateToggleCounter = 0;
 
 	/**
 	 * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
@@ -306,8 +321,6 @@ public:
 	   Returns true if some operations are in progress on background.
 	 */
 	bool isInShutdownMode() const;
-
-	monitoring_timestamps_s m;
 
 	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void printKnockState(void);

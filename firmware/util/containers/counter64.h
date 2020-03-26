@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef UTIL_CONTAINERS_COUNTER64_H_
-#define UTIL_CONTAINERS_COUNTER64_H_
+#pragma once
 
 #include "global.h"
 
@@ -30,5 +29,3 @@ class Overflow64Counter
 
 	State64 state;
 };
-
-#endif /* UTIL_CONTAINERS_COUNTER64_H_ */

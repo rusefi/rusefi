@@ -323,24 +323,20 @@ static void printSensors(Logging *log) {
 	reportSensorF(log, GAUGE_NAME_TIMING_ADVANCE, "deg", engine->engineState.timingAdvance, 2);
 
 
-	if (hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		// 136
-		reportSensorF(log, GAUGE_NAME_THROTTLE_PEDAL, "%", getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
-	}
+	reportSensorF(log, GAUGE_NAME_THROTTLE_PEDAL, "%", Sensor::get(SensorType::AcceleratorPedal).value_or(0), 2);
 
+	floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	reportSensorF(log, GAUGE_NAME_FUEL_BASE, "ms", fuelBase, 2);
+	reportSensorF(log, GAUGE_NAME_FUEL_LAST_INJECTION, "ms", ENGINE(actualLastInjection), 2);
+	reportSensorF(log, GAUGE_NAME_INJECTOR_LAG, "ms", engine->engineState.running.injectorLag, 2);
+	reportSensorF(log, GAUGE_NAME_FUEL_RUNNING, "ms", ENGINE(engineState.running.fuel), 2);
+	// 268
+	reportSensorF(log, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.running.pidCorrection), 2);
 
-		floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-		reportSensorF(log, GAUGE_NAME_FUEL_BASE, "ms", fuelBase, 2);
-		reportSensorF(log, GAUGE_NAME_FUEL_LAST_INJECTION, "ms", ENGINE(actualLastInjection), 2);
-		reportSensorF(log, GAUGE_NAME_INJECTOR_LAG, "ms", engine->engineState.running.injectorLag, 2);
-		reportSensorF(log, GAUGE_NAME_FUEL_RUNNING, "ms", ENGINE(engineState.running.fuel), 2);
-		// 268
-		reportSensorF(log, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.running.pidCorrection), 2);
+	reportSensorF(log, GAUGE_NAME_FUEL_WALL_AMOUNT, "v", ENGINE(wallFuel[0]).getWallFuel(), 2);
+	reportSensorF(log, GAUGE_NAME_FUEL_WALL_CORRECTION, "v", ENGINE(wallFuel[0]).wallFuelCorrection, 2);
 
-		reportSensorF(log, GAUGE_NAME_FUEL_WALL_AMOUNT, "v", ENGINE(wallFuel[0]).getWallFuel(), 2);
-		reportSensorF(log, GAUGE_NAME_FUEL_WALL_CORRECTION, "v", ENGINE(wallFuel[0]).wallFuelCorrection, 2);
-
-		reportSensorI(log, GAUGE_NAME_VERSION, "#", getRusEfiVersion());
+	reportSensorI(log, GAUGE_NAME_VERSION, "#", getRusEfiVersion());
 
 #if EFI_VEHICLE_SPEED
 	if (hasVehicleSpeedSensor()) {
@@ -732,6 +728,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	tsOutputChannels->throttle2Position = tps2.Value;
 
+	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
+	tsOutputChannels->pedalPosition = pedal.Value;
+	tsOutputChannels->isPedalError = !pedal.Valid;
 
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
@@ -771,8 +770,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;
 	// 68
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
-	// 136
-	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE) ? getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 	// 140
 #if EFI_ENGINE_CONTROL
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
@@ -835,6 +832,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isKnockChipOk = (instance.invalidHip9011ResponsesCount == 0);
 #endif /* EFI_HIP_9011 */
 
+#if EFI_LAUNCH_CONTROL
+	tsOutputChannels->launchTriggered = engine->isLaunchCondition;
+#endif
 
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 	// engine load acceleration
@@ -918,6 +918,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif // EFI_ENGINE_CONTROL
 
 	switch (engineConfiguration->debugMode)	{
+	case DBG_START_STOP:
+		tsOutputChannels->debugIntField1 = engine->startStopStateToggleCounter;
+		break;
 	case DBG_AUX_TEMPERATURE:
 		// // 68
 		tsOutputChannels->debugFloatField1 = engine->sensors.auxTemp1;

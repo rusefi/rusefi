@@ -37,6 +37,8 @@
 #include "idle_thread.h"
 #include "periodic_thread_controller.h"
 #include "tps.h"
+#include "cj125.h"
+#include "malfunction_central.h"
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
@@ -293,7 +295,9 @@ static void handleCommandX14(uint16_t index) {
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
-	if (subsystem == 0x12) {
+    if (subsystem == 0x11) {
+        clearWarnings();
+	} else if (subsystem == 0x12) {
 		doRunSpark(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x13) {
 		doRunFuel(index, "300", "4", "400", "3");
@@ -308,7 +312,11 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		// cmd_test_idle_valve
 #if EFI_IDLE_CONTROL
 		startIdleBench();
-#endif
+#endif /* EFI_IDLE_CONTROL */
+	} else if (subsystem == 0x18) {
+#if EFI_CJ125
+		cjCalibrate();
+#endif /* EFI_CJ125 */
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit
 		setCallFromPitStop(30000);

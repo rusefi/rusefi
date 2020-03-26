@@ -324,7 +324,7 @@ void AdcDevice::invalidateSamplesCache() {
 	// As a result, we have to manually invalidate the D-cache any time we (the CPU)
 	// would like to read something that somebody else wrote (ADC via DMA, in this case)
 	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(samples));
-#endif
+#endif /* STM32F7XX */
 }
 
 void AdcDevice::init(void) {
@@ -506,11 +506,12 @@ static void configureInputs(void) {
 	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
 	addChannel("baro", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
-	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
-	if (engineConfiguration->tps2_1AdcChannel != EFI_ADC_0) {
-		// allow EFI_ADC_0 next time we have an incompatible configuration change
-		addChannel("TPS2", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
-	}
+
+	addChannel("TPS1_1", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
+	addChannel("TPS1_2", engineConfiguration->tps1_2AdcChannel, ADC_SLOW);
+	addChannel("TPS2_1", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
+	addChannel("TPS2_2", engineConfiguration->tps2_2AdcChannel, ADC_SLOW);
+
 	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
 	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
@@ -519,17 +520,19 @@ static void configureInputs(void) {
 	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
 	addChannel("AUXT#1", engineConfiguration->auxTempSensor1.adcChannel, ADC_SLOW);
 	addChannel("AUXT#2", engineConfiguration->auxTempSensor2.adcChannel, ADC_SLOW);
-	if (engineConfiguration->auxFastSensor1_adcChannel != EFI_ADC_0) {
+	if (engineConfiguration->auxFastSensor1_adcChannel != INCOMPATIBLE_CONFIG_CHANGE) {
 		// allow EFI_ADC_0 next time we have an incompatible configuration change
 		addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
 	}
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("OilP", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
-	if (engineConfiguration->high_fuel_pressure_sensor_1 != INCOMPATIBLE_CONFIG_CHANGE)
+	if (engineConfiguration->high_fuel_pressure_sensor_1 != INCOMPATIBLE_CONFIG_CHANGE) {
 		addChannel("HFP1", engineConfiguration->high_fuel_pressure_sensor_1, ADC_SLOW);
-	if (engineConfiguration->high_fuel_pressure_sensor_2 != INCOMPATIBLE_CONFIG_CHANGE)
+	}
+	if (engineConfiguration->high_fuel_pressure_sensor_2 != INCOMPATIBLE_CONFIG_CHANGE) {
 		addChannel("HFP2", engineConfiguration->high_fuel_pressure_sensor_2, ADC_SLOW);
+	}
 
 	if (CONFIG(isCJ125Enabled)) {
 		addChannel("cj125ur", engineConfiguration->cj125ur, ADC_SLOW);

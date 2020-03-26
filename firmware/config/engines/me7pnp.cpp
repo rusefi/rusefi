@@ -7,7 +7,6 @@
 
 #include "me7pnp.h"
 
-#include "global.h"
 #include "engine.h"
 #include "engine_math.h"
 #include "allsensors.h"

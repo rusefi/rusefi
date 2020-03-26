@@ -42,6 +42,7 @@
 #include "hip9011_lookup.h"
 #include "hip9011.h"
 #include "adc_inputs.h"
+#include "perf_trace.h"
 
 #include "engine_controller.h"
 
@@ -253,7 +254,8 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitic
 	// this callback is invoked on interrupt thread
 	if (index != 0)
 		return;
-	engine->m.beforeHipCb = getTimeNowLowerNt();
+
+	ScopePerf perf(PE::Hip9011IntHoldCallback);
 
 	int rpm = GET_RPM_VALUE;
 	if (!isValidRpm(rpm))
@@ -268,7 +270,6 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitic
 #endif /* EFI_PROD_CODE */
 	scheduleByAngle(&endTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowEnd,
 			&endIntegration);
-	engine->m.hipCbTime = getTimeNowLowerNt() - engine->m.beforeHipCb;
 }
 
 void setMaxKnockSubDeg(int value) {
