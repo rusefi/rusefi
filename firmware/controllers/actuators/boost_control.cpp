@@ -96,6 +96,12 @@ class BoostControl: public PeriodicTimerController {
 #endif /* EFI_TUNER_STUDIO */
 		}
 
+#if EFI_LAUNCH_CONTROL
+	if (engine->setLaunchBoostDuty) {
+		duty = engineConfiguration->launchBoostDuty;
+	}
+#endif /* EFI_LAUNCH_CONTROL */
+
 		boostPwmControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(duty));
 	}
 };
