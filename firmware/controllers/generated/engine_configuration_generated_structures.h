@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Mar 25 00:28:20 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Mar 25 17:51:52 PDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -278,33 +278,6 @@ struct injector_s {
 
 typedef struct injector_s injector_s;
 
-// start of bi_quard_s
-struct bi_quard_s {
-	/**
-	 * offset 0
-	 */
-	float a0;
-	/**
-	 * offset 4
-	 */
-	float a1;
-	/**
-	 * offset 8
-	 */
-	float a2;
-	/**
-	 * offset 12
-	 */
-	float b1;
-	/**
-	 * offset 16
-	 */
-	float b2;
-	/** total size 20*/
-};
-
-typedef struct bi_quard_s bi_quard_s;
-
 // start of specs_s
 struct specs_s {
 	/**
@@ -578,7 +551,7 @@ struct engine_configuration_s {
 	bool isVerboseAuxPid4 : 1;
 	/**
 	offset 76 bit 9 */
-	bool useBiQuadAnalogFiltering : 1;
+	bool unused76b9 : 1;
 	/**
 	 * Is your UA CJ125 output wired to MCU via resistor divider?
 	offset 76 bit 10 */
@@ -2494,7 +2467,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2332
 	 */
-	bi_quard_s biQuad;
+	uint8_t unusedOldBiquad[20];
 	/**
 	 * CLT-based timing correction
 	 * offset 2352
@@ -3257,4 +3230,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Mar 25 00:28:20 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Mar 25 17:51:52 PDT 2020
