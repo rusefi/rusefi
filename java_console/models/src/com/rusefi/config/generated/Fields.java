@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Mar 25 00:28:20 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Mar 26 11:42:18 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -162,15 +162,6 @@ public class Fields {
 	public static final int binarySerialRxPin_offset_hex = 717;
 	public static final int binarySerialTxPin_offset = 1814;
 	public static final int binarySerialTxPin_offset_hex = 716;
-	public static final int biQuad_a0_offset = 2332;
-	public static final int biQuad_a1_offset = 2336;
-	public static final int biQuad_a1_offset_hex = 920;
-	public static final int biQuad_a2_offset = 2340;
-	public static final int biQuad_a2_offset_hex = 924;
-	public static final int biQuad_b1_offset = 2344;
-	public static final int biQuad_b1_offset_hex = 928;
-	public static final int biQuad_b2_offset = 2348;
-	public static final int biQuad_offset = 2332;
 	public static final int BLOCKING_FACTOR = 400;
 	public static final int BOOST_LOAD_COUNT = 8;
 	public static final int BOOST_RPM_COUNT = 8;
@@ -1374,6 +1365,7 @@ public class Fields {
 	public static final int uartConsoleSerialSpeed_offset = 2076;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1234234_offset = 2042;
+	public static final int unused76b9_offset = 76;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
 	public static final int unused_1484_bit_26_offset = 1476;
@@ -1418,6 +1410,7 @@ public class Fields {
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1774;
+	public static final int unusedOldBiquad_offset = 2332;
 	public static final int unusedOneMoreHere_offset = 760;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
@@ -1426,7 +1419,6 @@ public class Fields {
 	public static final int unusuedsw_offset = 4020;
 	public static final int unusuedvref_offset = 4016;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
-	public static final int useBiQuadAnalogFiltering_offset = 76;
 	public static final int useConstantDwellDuringCranking_offset = 1464;
 	public static final int useETBforIdleControl_offset = 744;
 	public static final int useFixedBaroCorrFromMap_offset = 1476;
@@ -1503,7 +1495,7 @@ public class Fields {
 	public static final Field ISVERBOSEAUXPID3 = Field.create("ISVERBOSEAUXPID3", 76, FieldType.BIT, 6);
 	public static final Field ACTIVATEAUXPID4 = Field.create("ACTIVATEAUXPID4", 76, FieldType.BIT, 7);
 	public static final Field ISVERBOSEAUXPID4 = Field.create("ISVERBOSEAUXPID4", 76, FieldType.BIT, 8);
-	public static final Field USEBIQUADANALOGFILTERING = Field.create("USEBIQUADANALOGFILTERING", 76, FieldType.BIT, 9);
+	public static final Field UNUSED76B9 = Field.create("UNUSED76B9", 76, FieldType.BIT, 9);
 	public static final Field CJ125ISUADIVIDED = Field.create("CJ125ISUADIVIDED", 76, FieldType.BIT, 10);
 	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 76, FieldType.BIT, 11);
 	public static final Field ETB_USE_TWO_WIRES = Field.create("ETB_USE_TWO_WIRES", 76, FieldType.BIT, 12);
@@ -2207,11 +2199,6 @@ public class Fields {
 	public static final Field STORAGEMODE = Field.create("STORAGEMODE", 2260, FieldType.INT, mass_storage_e);
 	public static final String[] vvt_mode_e = {"First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"};
 	public static final Field VVTMODE = Field.create("VVTMODE", 2328, FieldType.INT, vvt_mode_e);
-	public static final Field BIQUAD_A0 = Field.create("BIQUAD_A0", 2332, FieldType.FLOAT);
-	public static final Field BIQUAD_A1 = Field.create("BIQUAD_A1", 2336, FieldType.FLOAT);
-	public static final Field BIQUAD_A2 = Field.create("BIQUAD_A2", 2340, FieldType.FLOAT);
-	public static final Field BIQUAD_B1 = Field.create("BIQUAD_B1", 2344, FieldType.FLOAT);
-	public static final Field BIQUAD_B2 = Field.create("BIQUAD_B2", 2348, FieldType.FLOAT);
 	public static final Field NBVVTINDEX = Field.create("NBVVTINDEX", 2416, FieldType.INT);
 	public static final Field AUTOTUNECLTTHRESHOLD = Field.create("AUTOTUNECLTTHRESHOLD", 2420, FieldType.FLOAT);
 	public static final Field AUTOTUNETPSROCTHRESHOLD = Field.create("AUTOTUNETPSROCTHRESHOLD", 2424, FieldType.FLOAT);
@@ -2423,7 +2410,7 @@ public class Fields {
 	ISVERBOSEAUXPID3,
 	ACTIVATEAUXPID4,
 	ISVERBOSEAUXPID4,
-	USEBIQUADANALOGFILTERING,
+	UNUSED76B9,
 	CJ125ISUADIVIDED,
 	CJ125ISLSU49,
 	ETB_USE_TWO_WIRES,
@@ -3110,11 +3097,6 @@ public class Fields {
 	ALTERNATORPWMFREQUENCY,
 	STORAGEMODE,
 	VVTMODE,
-	BIQUAD_A0,
-	BIQUAD_A1,
-	BIQUAD_A2,
-	BIQUAD_B1,
-	BIQUAD_B2,
 	NBVVTINDEX,
 	AUTOTUNECLTTHRESHOLD,
 	AUTOTUNETPSROCTHRESHOLD,
