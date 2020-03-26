@@ -197,6 +197,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 
+	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 		updateTChargeK(rpm, tps PASS_ENGINE_PARAMETER_SUFFIX);

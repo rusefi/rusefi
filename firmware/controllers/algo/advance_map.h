@@ -16,3 +16,4 @@ float getTopAdvanceForBore(chamber_style_e style, int octane, double compression
 float getInitialAdvance(int rpm, float map, float advanceMax);
 void buildTimingMap(float advanceMax DECLARE_CONFIG_PARAMETER_SUFFIX);
 angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
