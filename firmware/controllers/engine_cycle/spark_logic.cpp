@@ -177,12 +177,10 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	{
 		event->sparksRemaining--;
 
-		auto nowNt = getTimeNowNt();
+		efitick_t nowNt = getTimeNowNt();
 
-		// todo: tune configured spark duration
-		auto nextDwellStart = nowNt + US2NT(1000);
-		// todo: independently configure dwell for extra sparks
-		auto nextFiring = nextDwellStart + US2NT(2000);
+		efitick_t nextDwellStart = nowNt + engine->engineState.multispark.delay;
+		efitick_t nextFiring = nextDwellStart + engine->engineState.multispark.dwell;
 
 		// We can schedule both of these right away, since we're going for "asap" not "particular angle"
 		engine->executor.scheduleByTimestampNt(&event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
