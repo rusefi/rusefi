@@ -1,6 +1,6 @@
 /**
- * @file    injector_central.cpp
- * @brief	Utility methods related to fuel injection.
+ * @file    bench_test.cpp
+ * @brief	Utility methods related to bench testing.
  *
  *
  * @date Sep 8, 2013
@@ -27,7 +27,7 @@
 #if !EFI_UNIT_TEST
 
 #include "flash_main.h"
-#include "injector_central.h"
+#include "bench_test.h"
 #include "io_pins.h"
 #include "main_trigger_callback.h"
 #include "engine_configuration.h"
@@ -57,42 +57,8 @@ EXTERN_ENGINE
 static Logging * logger;
 static bool isRunningBench = false;
 
-// todo: move into Engine object?
-// todo: looks like these flags are not currently used? dead functionality? unfinished functionality?
-static int is_injector_enabled[INJECTION_PIN_COUNT];
-
 bool isRunningBenchTest(void) {
 	return isRunningBench;
-}
-
-static void assertCylinderId(int cylinderId, const char *msg) {
-	int isValid = cylinderId >= 1 && cylinderId <= engineConfiguration->specs.cylindersCount;
-	if (!isValid) {
-		// we are here only in case of a fatal issue - at this point it is fine to make some blocking i-o
-		//scheduleSimpleMsg(&logger, "cid=", cylinderId);
-		print("ERROR [%s] cid=%d\r\n", msg, cylinderId);
-		efiAssertVoid(CUSTOM_ERR_6647, false, "Cylinder ID");
-	}
-}
-
-/**
- * @param cylinderId - from 1 to NUMBER_OF_CYLINDERS
- */
-static int isInjectorEnabled(int cylinderId) {
-	assertCylinderId(cylinderId, "isInjectorEnabled");
-	return is_injector_enabled[cylinderId - 1];
-}
-
-static void printInjectorsStatus(void) {
-	for (int id = 1; id <= engineConfiguration->specs.cylindersCount; id++) {
-		scheduleMsg(logger, "injector_%d: %d", id, isInjectorEnabled(id));
-	}
-}
-
-static void setInjectorEnabled(int id, int value) {
-	efiAssertVoid(CUSTOM_ERR_6648, id >= 0 && id < engineConfiguration->specs.cylindersCount, "injector id");
-	is_injector_enabled[id] = value;
-	printInjectorsStatus();
 }
 
 static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, float onTimeMs, float offTimeMs,
@@ -337,19 +303,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	}
 }
 
-void initInjectorCentral(Logging *sharedLogger) {
+void initBenchTest(Logging *sharedLogger) {
 	logger = sharedLogger;
-
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
-		is_injector_enabled[i] = true;
-	}
-
-	enginePins.startInjectionPins();
-	enginePins.startIgnitionPins();
-	enginePins.startAuxValves();
-
-	printInjectorsStatus();
-	addConsoleActionII("injector", setInjectorEnabled);
 
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
 	addConsoleAction("acrelaybench", acRelayBench);
