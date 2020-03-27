@@ -574,6 +574,33 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       yBins       = crankingAdvance
       gauge       = RPMGauge
 
+curve = afterstartHoldTimeCurve, "AfterStart Hold Time"
+      columnLabel    = "Coolant Temp", "Seconds"
+      xAxis          =  -40, 120, 10
+      yAxis          =  0,  50, 11
+      xBins          = afterstartCoolantBins, coolant
+      yBins          = afterstartHoldTime
+      suppressGraph  = true
+      showTextValues = true
+
+  curve = afterstartDecayCurve, "AfterStart Decay Time"
+      columnLabel    = "Coolant Temp", "Seconds"
+      xAxis          =  -40, 120, 10
+      yAxis          =  0,  50, 11
+      xBins          = afterstartCoolantBins, coolant
+      yBins          = afterstartDecayTime
+	  suppressGraph  = true
+      showTextValues = true
+
+  curve = afterstartEnrichCurve, "AfterStart Enrichment     Addition To Normal Fueling In %"
+      columnLabel    = "Coolant Temp", "%"
+      xAxis          =  -40, 120, 10
+      yAxis          =  0,  2, 11
+      xBins          = afterstartCoolantBins, coolant
+      yBins          = afterstartEnrich
+	  suppressGraph  = true
+      showTextValues = true
+
     curve = wueAfrTargetOffsetCurve, "AFR Target Temperature Adjustment"
       columnLabel = "Coolant", "AFR Offset"
       xAxis       = -40, 200, 9
@@ -1125,18 +1152,25 @@ menuDialog = main
 		subMenu = injPhaseTableTbl,         "Injection phase", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
-		# Corrections
-		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1}
-		subMenu = iatFuelCorrCurve,			"IAT multiplier", 0, {isInjectionEnabled == 1}
-		subMenu = baroCorrTbl,				"Baro multiplier", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-		subMenu = tChargeSettings,			"tCharge settings", 0, {isInjectionEnabled == 1}
+		# Warmup enrichment
+		groupMenu = "Warmup Enrichment"
+		groupChildMenu = cltFuelCorrCurve,				"CLT multiplier", 0, {isInjectionEnabled == 1}
+		groupChildMenu = iatFuelCorrCurve,				"IAT multiplier", 0, {isInjectionEnabled == 1}
+		groupChildMenu = baroCorrTbl,					"Baro multiplier", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = std_separator
-
+		# Afterstart enrichment
+    	groupMenu = "AfterStart Enrichment"
+		groupChildMenu = afterstartEnrichCurve,			"AfterStart Enrichment", 0, {isInjectionEnabled == 1}
+    	groupChildMenu = afterstartHoldTimeCurve,		"AfterStart Hold Time", 0, {isInjectionEnabled == 1}
+    	groupChildMenu = afterstartDecayCurve,			"AfterStart Decay Time", 0, {isInjectionEnabled == 1}
+		subMenu = std_separator	
 		# Accel enrichment
-		subMenu = AccelEnrich,				"Accel/decel enrichment/enleanment", 0, {isInjectionEnabled == 1}
-		subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration extra fuel", 0, {isInjectionEnabled == 1}
-		subMenu = mapAccelTaper,			"Engine load AE taper", 0, {isInjectionEnabled == 1}
-
+		groupMenu = "Accel Enrichment"
+		groupChildMenu = AccelEnrich,					"Accel/decel enrichment/enleanment", 0, {isInjectionEnabled == 1}
+		groupChildMenu = tpsTpsAccelTbl, 				"TPS/TPS acceleration extra fuel", 0, {isInjectionEnabled == 1}
+		groupChildMenu = mapAccelTaper,					"Engine load AE taper", 0, {isInjectionEnabled == 1}
+    	subMenu = std_separator
+		subMenu = tChargeSettings,						"tCharge settings", 0, {isInjectionEnabled == 1}
 
 	menu = "Ignition"
 		subMenu = ignitionSettings,			"Ignition settings"
