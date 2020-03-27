@@ -592,7 +592,7 @@ curve = afterstartHoldTimeCurve, "AfterStart Hold Time"
 	  suppressGraph  = true
       showTextValues = true
 
-  curve = afterstartEnrichCurve, "AfterStart Enrichment     Addition To Normal Fueling In %"
+  curve = afterstartEnrichCurve, "AfterStart Enrichment"
       columnLabel    = "Coolant Temp", "%"
       xAxis          =  -40, 120, 10
       yAxis          =  0,  2, 11
