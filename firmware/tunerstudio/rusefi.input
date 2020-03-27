@@ -593,33 +593,6 @@ fileVersion = { @@TS_FILE_VERSION@@ }
           
       lineLabel   = "Warmup Correction"
       lineLabel   = "Recommended WUE"
-	curve = afterstartHoldTimeCurve, "AfterStart Hold Time"
-      columnLabel = "Coolant Temp", "Seconds"
-      xAxis       =  -40, 120, 10
-      yAxis       =  0,  50, 11
-      xBins       = afterstartCoolantBins, coolant
-      yBins       = afterstartHoldTime
-	  suppressGraph = true
-      showTextValues = true
-
-
-  curve = afterstartDecayCurve, "AfterStart Decay Time"
-      columnLabel = "Coolant Temp", "Seconds"
-      xAxis       =  -40, 120, 10
-      yAxis       =  0,  50, 11
-      xBins       = afterstartCoolantBins, coolant
-      yBins       = afterstartDecayTime
-	  suppressGraph = true
-      showTextValues = true
-
-  curve = afterstartEnrichCurve, "AfterStart Enrichment     Addition To Normal Fueling In %"
-      columnLabel = "Coolant Temp", "%"
-      xAxis       =  -40, 120, 10
-      yAxis       =  0,  2, 11
-      xBins       = afterstartCoolantBins, coolant
-      yBins       = afterstartEnrich
-	  suppressGraph = true
-      showTextValues = true
 
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
@@ -1158,10 +1131,6 @@ menuDialog = main
 		subMenu = baroCorrTbl,				"Baro multiplier", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = tChargeSettings,			"tCharge settings", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
-	    groupMenu = "AfterStart Enrichment"
-		groupChildMenu = afterstartEnrichCurve,			"AfterStart Enrichment", 0, {isInjectionEnabled == 1}
-        groupChildMenu = afterstartHoldTimeCurve,		"AfterStart Hold Time", 0, {isInjectionEnabled == 1}
-        groupChildMenu = afterstartDecayCurve,			"AfterStart Decay Time", 0, {isInjectionEnabled == 1}
 
 		# Accel enrichment
 		subMenu = AccelEnrich,				"Accel/decel enrichment/enleanment", 0, {isInjectionEnabled == 1}
