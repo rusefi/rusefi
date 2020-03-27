@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Mar 25 17:51:56 PDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Mar 27 12:13:02 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2947,8 +2947,8 @@ struct engine_configuration_s {
 	/**
 	 * offset 4140
 	 */
-	int mainUnusedEnd[527];
-	/** total size 6248*/
+	int mainUnusedEnd[495];
+	/** total size 6120*/
 };
 
 typedef struct engine_configuration_s engine_configuration_s;
@@ -2959,6 +2959,22 @@ struct persistent_config_s {
 	 * offset 0
 	 */
 	engine_configuration_s engineConfiguration;
+	/**
+	 * offset 6120
+	 */
+	float afterstartCoolantBins[AFTERSTART_HOLD_CURVE_SIZE];
+	/**
+	 * offset 6152
+	 */
+	float afterstartHoldTime[AFTERSTART_HOLD_CURVE_SIZE];
+	/**
+	 * offset 6184
+	 */
+	float afterstartEnrich[AFTERSTART_ENRICH_CURVE_SIZE];
+	/**
+	 * offset 6216
+	 */
+	float afterstartDecayTime[AFTERSTART_DECAY_CURVE_SIZE];
 	/**
 	 * offset 6248
 	 */
@@ -3230,4 +3246,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Mar 25 17:51:56 PDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Mar 27 12:13:02 EDT 2020
