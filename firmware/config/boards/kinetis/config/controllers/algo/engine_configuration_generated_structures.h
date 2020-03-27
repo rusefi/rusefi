@@ -2947,8 +2947,8 @@ struct engine_configuration_s {
 	/**
 	 * offset 4140
 	 */
-	int mainUnusedEnd[495];
-	/** total size 6120*/
+	int mainUnusedEnd[527];
+	/** total size 6248*/
 };
 
 typedef struct engine_configuration_s engine_configuration_s;
@@ -2959,22 +2959,6 @@ struct persistent_config_s {
 	 * offset 0
 	 */
 	engine_configuration_s engineConfiguration;
-	/**
-	 * offset 6120
-	 */
-	float afterstartCoolantBins[AFTERSTART_HOLD_CURVE_SIZE];
-	/**
-	 * offset 6152
-	 */
-	float afterstartHoldTime[AFTERSTART_HOLD_CURVE_SIZE];
-	/**
-	 * offset 6184
-	 */
-	float afterstartEnrich[AFTERSTART_ENRICH_CURVE_SIZE];
-	/**
-	 * offset 6216
-	 */
-	float afterstartDecayTime[AFTERSTART_DECAY_CURVE_SIZE];
 	/**
 	 * offset 6248
 	 */

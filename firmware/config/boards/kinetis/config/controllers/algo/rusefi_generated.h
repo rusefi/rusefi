@@ -53,17 +53,6 @@
 #define afrTable_offset_hex 48a0
 #define afterCrankingIACtaperDuration_offset 2036
 #define afterCrankingIACtaperDuration_offset_hex 7f4
-#define AFTERSTART_DECAY_CURVE_SIZE 8
-#define AFTERSTART_ENRICH_CURVE_SIZE 8
-#define AFTERSTART_HOLD_CURVE_SIZE 8
-#define afterstartCoolantBins_offset 6120
-#define afterstartCoolantBins_offset_hex 17e8
-#define afterstartDecayTime_offset 6216
-#define afterstartDecayTime_offset_hex 1848
-#define afterstartEnrich_offset 6184
-#define afterstartEnrich_offset_hex 1828
-#define afterstartHoldTime_offset 6152
-#define afterstartHoldTime_offset_hex 1808
 #define alFIn_offset 4024
 #define alFIn_offset_hex fb8
 #define alignEngineSnifferAtTDC_offset 744
