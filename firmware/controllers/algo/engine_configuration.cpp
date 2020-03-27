@@ -502,7 +502,7 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setLinearCurve(config->cltCrankingCorrBins, CLT_CURVE_RANGE_FROM, 100, 1);
 	setLinearCurve(config->cltCrankingCorr, 1.0, 1.0, 1);
-	setLinearCurve(config->afterstartCoolantBins, AFTERSTART_DECAY_CURVE_SIZE, -40, 40);
+	setLinearCurve(config->afterstartCoolantBins, AFTERSTART_DECAY_CURVE_SIZE, -40, 40, 1);
 
 	// Cranking temperature compensation
 	static const float crankingCoef[] = {
