@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Mar 26 11:42:18 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Mar 27 12:12:49 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -38,6 +38,16 @@ public class Fields {
 	public static final int afrRpmBins_offset = 18912;
 	public static final int afrTable_offset = 18592;
 	public static final int afterCrankingIACtaperDuration_offset = 2036;
+	public static final int AFTERSTART_DECAY_CURVE_SIZE = 8;
+	public static final int AFTERSTART_ENRICH_CURVE_SIZE = 8;
+	public static final int AFTERSTART_HOLD_CURVE_SIZE = 8;
+	public static final int afterstartCoolantBins_offset = 6120;
+	public static final int afterstartDecayTime_offset = 6216;
+	public static final int afterstartDecayTime_offset_hex = 1848;
+	public static final int afterstartEnrich_offset = 6184;
+	public static final int afterstartEnrich_offset_hex = 1828;
+	public static final int afterstartHoldTime_offset = 6152;
+	public static final int afterstartHoldTime_offset_hex = 1808;
 	public static final int alFIn_offset = 4024;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
 	public static final int alternator_antiwindupFreq_offset = 1764;
