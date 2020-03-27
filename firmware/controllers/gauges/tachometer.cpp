@@ -17,23 +17,12 @@
 EXTERN_ENGINE;
 
 
-static SimplePwm tachControl("tach");
-static bool isTachEnabled;
-
-static void applyTachoPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-	efiAssertVoid(CUSTOM_ERR_6643, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(CUSTOM_ERR_PWM_CALLBACK_ASSERT, state->multiChannelStateSequence.waveCount == 1, "invalid idle waveCount");
-	OutputPin *output = state->outputPins[0];
-	int value = state->multiChannelStateSequence.getChannelState(/*channelIndex*/0, stateIndex);
-
-	if (!value || isTachEnabled)
-		output->setValue(value);
-}        
+static SimplePwm tachControl("tach");      
 
 static void tachSignalCallback(trigger_event_e ckpSignalType,
 		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// only process at index configured to avoid too much cpu time for index 0?
-	if (index != (uint32_t)engineConfiguration->tachPulseTriggerIndex) {
+	if (index != (uint32_t)CONFIG(tachPulseTriggerIndex)) {
 		return;
 	}
 
@@ -45,7 +34,7 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 #endif
 
 	// How many tach pulse periods do we have?
-	int periods = engineConfiguration->tachPulsePerRev;
+	int periods = CONFIG(tachPulsePerRev);
 
 	if(periods == 0){
 		warning(CUSTOM_ERR_6709,"Check Tachometer Pulse per Rev!");
@@ -58,25 +47,21 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	float periodTimeMs = cycleTimeMs / periods;
 	float tachFreq = 1000.0 / periodTimeMs;
 	
-	if (engineConfiguration->tachPulseDurationAsDutyCycle) {
+	if (CONFIG(tachPulseDurationAsDutyCycle)) {
 		// Simple case - duty explicitly set
-		duty = engineConfiguration->tachPulseDuractionMs;
+		duty = CONFIG(tachPulseDuractionMs);
 	} else {
 		// Constant high-time mode - compute the correct duty cycle
-		duty = engineConfiguration->tachPulseDuractionMs / periodTimeMs;
+		duty = CONFIG(tachPulseDuractionMs) / periodTimeMs;
 	}
 
-	// limit to 10..90% duty
-	duty = maxF(0.1f, minF(duty, 0.9f));
-
-	tachControl.setSimplePwmDutyCycle(duty);
-	if (tachFreq >= 1.0){
-		tachControl.setFrequency(tachFreq);
-		isTachEnabled = true;
-	}else{
-		isTachEnabled = false;
+	// In case Freq is under 1Hz, we stop pwm to avoid warnings!
+	if (tachFreq < 1.0) {
+		tachFreq = NAN;
 	}
 	
+	tachControl.setSimplePwmDutyCycle(duty);	
+	tachControl.setFrequency(tachFreq);
 
 }
 
@@ -86,22 +71,16 @@ void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
-	isTachEnabled = false;
-#ifdef EFI_UNIT_TEST
-	printf("initTachometer\n");
-#endif
-
-#if EFI_SHAFT_POSITION_INPUT
-	addTriggerEventListener(tachSignalCallback, "tach", engine);
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
 startSimplePwmExt(&tachControl,
 				"analog tach output",
 				&engine->executor,
 				CONFIG(tachOutputPin),
 				&enginePins.tachOut,
-				1.0, 0.1, (pwm_gen_callback*)applyTachoPinState);
+				NAN, 0.1, (pwm_gen_callback*)applyPinState);
 
+#if EFI_SHAFT_POSITION_INPUT
+	addTriggerEventListener(tachSignalCallback, "tach", engine);
+#endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
 
