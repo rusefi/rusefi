@@ -557,14 +557,14 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	copyArray(config->crankingCycleBins, crankingCycleBins);
 
 	static const float afterstartEnrich[] = {
-		1.8,
-		1.6,
-		1.4,
-		1.1,
-		1.088,
-		1.075,
-		1.63,
-		1.05
+		1.0,
+		1.0,
+		1.0,
+		1.0,
+		1.0,
+		1.0,
+		1.0,
+		1.0
 	};
 		copyArray(config->afterstartEnrich, afterstartEnrich);
 
