@@ -735,8 +735,6 @@ sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
 custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@@
 
-! todo: keep moving all these fields at the end of board_configuration_s below 'board_configuration_s bc'
-! end of board_configuration_s
 
 	maf_sensor_type_e mafSensorType;
 
