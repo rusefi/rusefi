@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef ERROR_HANDLING_H_
-#define ERROR_HANDLING_H_
+#pragma once
 
 #include "global.h"
 #include "obd_error_codes.h"
@@ -59,5 +58,3 @@ int getRusEfiVersion(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-#endif /* ERROR_HANDLING_H_ */
