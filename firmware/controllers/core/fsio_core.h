@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef LOGIC_EXPRESSION_H_
-#define LOGIC_EXPRESSION_H_
+#pragma once
 
 #include "rusefi_enums.h"
 #include "fl_stack.h"
@@ -135,5 +134,3 @@ const char *getNextToken(const char *line, char *buffer, const int bufferSize);
 bool isNumeric(const char* line);
 le_action_e parseAction(const char * line);
 bool float2bool(float v);
-
-#endif /* LOGIC_EXPRESSION_H_ */
