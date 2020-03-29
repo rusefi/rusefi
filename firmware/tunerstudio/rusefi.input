@@ -940,7 +940,9 @@ gaugeCategory = Throttle Body (incl. ETB)
     indicator = { ind_injection_enabled}, "no injection",   "injection",   red, black, green,   black
     indicator = { ind_isTriggerError}, "ok",      "trg err",       green,  black,  red, black
     
-	; this is an extra so that reading the config error works in TS - you don't even have to show it by default
+	; this is required so that the "config error" feature works in TS 
+	; don't change this line - TS is looking for an indicator with particular text/styling
+	; you don't even have to show it by default
 	indicator = { ind_hasFatalError }, "Config Error", "Config Error", white, black, red,   black
 
 	; minor info	
