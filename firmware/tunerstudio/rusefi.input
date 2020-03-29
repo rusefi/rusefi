@@ -66,6 +66,7 @@ enable2ndByteCanID = false
 	; we have current pageSize or (pageSize + 8) here?
 	;
    crc32CheckCommand   = "k\x00\x00\x00\x00\x36\xB8"
+   retrieveConfigError = "e"
 
 ;communication settings
    pageActivationDelay = 500 ; Milliseconds delay after burn command. See https://sourceforge.net/p/rusefi/tickets/77/
@@ -939,6 +940,8 @@ gaugeCategory = Throttle Body (incl. ETB)
     indicator = { ind_injection_enabled}, "no injection",   "injection",   red, black, green,   black
     indicator = { ind_isTriggerError}, "ok",      "trg err",       green,  black,  red, black
     
+	; this is an extra so that reading the config error works in TS - you don't even have to show it by default
+	indicator = { ind_hasFatalError }, "Config Error", "Config Error", white, black, red,   black
 
 	; minor info	
     indicator = { ind_fan}, "no fan",   "fan",   white, black, green,   black

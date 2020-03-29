@@ -469,7 +469,8 @@ static bool isKnownCommand(char command) {
 			|| command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
 			|| command == TS_PERF_TRACE_BEGIN
-			|| command == TS_PERF_TRACE_GET_BUFFER;
+			|| command == TS_PERF_TRACE_GET_BUFFER
+			|| command == TS_GET_CONFIG_ERROR;
 }
 
 // this function runs indefinitely
@@ -845,6 +846,9 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 		break;
 #endif /* ENABLE_PERF_TRACE */
+	case TS_GET_CONFIG_ERROR:
+		sr5SendResponse(tsChannel, TS_CRC, reinterpret_cast<const uint8_t*>(getFirmwareError()), strlen(getFirmwareError()));
+		break;
 	default:
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;
