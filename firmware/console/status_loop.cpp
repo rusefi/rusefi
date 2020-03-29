@@ -494,7 +494,7 @@ void updateDevConsoleState(void) {
 #if EFI_PROD_CODE
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
-		scheduleMsg(&logger, "FATAL error: %s", getFirmwareError());
+		scheduleMsg(&logger, "%s error: %s", CRITICAL_PREFIX, getFirmwareError());
 		warningEnabled = false;
 		scheduleLogging(&logger);
 		return;
@@ -613,8 +613,8 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 	}
 
 	void setAllLeds(int value) {
-		// make sure we do not turn the fatal LED off if already have
-		// fatal error by now
+		// make sure we do not turn the critical LED off if already have
+		// critical error by now
 		for (uint32_t i = 0; !hasFirmwareError() && i < sizeof(leds) / sizeof(leds[0]); i++) {
 			leds[i]->setValue(value);
 		}
@@ -633,9 +633,9 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			enginePins.warningLedPin.setValue(0);
 		} else {
 			if (hasFirmwareError()) {
-				// special behavior in case of fatal error - not equal on/off time
+				// special behavior in case of critical error - not equal on/off time
 				// this special behaviour helps to notice that something is not right, also
-				// differentiates software firmware error from fatal interrupt error with CPU halt.
+				// differentiates software firmware error from critical interrupt error with CPU halt.
 				offTimeMs = 50;
 				onTimeMs = 450;
 			} else {
@@ -825,7 +825,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->knockCount = engine->knockCount;
 	tsOutputChannels->knockLevel = engine->knockVolts;
 
-	tsOutputChannels->hasFatalError = hasFirmwareError();
+	tsOutputChannels->hasCriticalError = hasFirmwareError();
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
 #if EFI_HIP_9011
