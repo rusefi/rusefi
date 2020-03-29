@@ -202,7 +202,7 @@ void EnginePins::startIgnitionPins(void) {
 		}
 	}
 	if (isPinOrModeChanged(dizzySparkOutputPin, dizzySparkOutputPinMode)) {
-		enginePins.dizzyOutput.initPin("dizzy tach", engineConfiguration->dizzySparkOutputPin,
+		enginePins.dizzyOutput.initPin("Distributor", engineConfiguration->dizzySparkOutputPin,
 				&engineConfiguration->dizzySparkOutputPinMode);
 
 	}
@@ -376,18 +376,18 @@ void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	memset(&outputs, 0, sizeof(outputs));
 
 #if HAL_USE_SPI
-	enginePins.sdCsPin.initPin("spi CS5", CONFIG(sdCardCsPin));
+	enginePins.sdCsPin.initPin("SD CS", CONFIG(sdCardCsPin));
 #endif /* HAL_USE_SPI */
 
 	// todo: should we move this code closer to the fuel pump logic?
-	enginePins.fuelPumpRelay.initPin("fuel pump relay", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
+	enginePins.fuelPumpRelay.initPin("Fuel pump", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
 
-	enginePins.mainRelay.initPin("main relay", CONFIG(mainRelayPin), &CONFIG(mainRelayPinMode));
-	enginePins.starterRelayDisable.initPin("starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisableMode));
-	enginePins.starterControl.initPin("starter control", CONFIG(starterControlPin));
+	enginePins.mainRelay.initPin("Main relay", CONFIG(mainRelayPin), &CONFIG(mainRelayPinMode));
+	enginePins.starterRelayDisable.initPin("Starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisableMode));
+	enginePins.starterControl.initPin("Starter control", CONFIG(starterControlPin));
 
-	enginePins.fanRelay.initPin("fan relay", CONFIG(fanPin), &CONFIG(fanPinMode));
-	enginePins.o2heater.initPin("o2 heater", CONFIG(o2heaterPin));
+	enginePins.fanRelay.initPin("Fan", CONFIG(fanPin), &CONFIG(fanPinMode));
+	enginePins.o2heater.initPin("O2 heater", CONFIG(o2heaterPin));
 	enginePins.acRelay.initPin("A/C relay", CONFIG(acRelayPin), &CONFIG(acRelayPinMode));
 
 	// digit 1
