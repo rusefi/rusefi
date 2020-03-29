@@ -12,11 +12,14 @@
 
 #include "global.h"
 
+void initBenchTest(Logging *sharedLogger);
+
+bool isRunningBenchTest(void);
+
 void fanBench(void);
 void fuelPumpBench(void);
 void acRelayBench(void);
 void milBench(void);
-void initBenchTest(Logging *sharedLogger);
-bool isRunningBenchTest(void);
+void starterRelayBench(void);
 
 void executeTSCommand(uint16_t subsystem, uint16_t index);
