@@ -23,7 +23,7 @@ extern "C"
  */
 bool warning(obd_code_e code, const char *fmt, ...);
 
-typedef uint8_t fatal_msg_t[200];
+typedef uint8_t critical_msg_t[ERROR_BUFFER_SIZE];
 /**
  * Something really bad had happened - firmware cannot function, we cannot run the engine
  *
@@ -38,7 +38,7 @@ char *getFirmwareError(void);
 
 void initErrorHandlingDataStructures(void);
 // todo: rename to getWarningMessage?
-char *getWarning(void);
+char *getWarningMessage(void);
 
 // todo: better place for this shared declaration?
 int getRusEfiVersion(void);

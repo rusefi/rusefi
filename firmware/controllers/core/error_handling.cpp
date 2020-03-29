@@ -31,7 +31,7 @@ EXTERN_ENGINE;
 extern int warningEnabled;
 extern bool main_loop_started;
 
-static fatal_msg_t criticalErrorMessageBuffer;
+static critical_msg_t criticalErrorMessageBuffer;
 bool hasFirmwareErrorFlag = false;
 
 const char *dbg_panic_file;
@@ -53,7 +53,7 @@ extern ioportmask_t errorLedPin;
 /**
  * low-level function is used here to reduce stack usage
  */
-#define ON_FATAL_ERROR() \
+#define ON_CRITICAL_ERROR() \
 		palWritePad(errorLedPort, errorLedPin, 1); \
 		turnAllPinsOff(); \
 		enginePins.communicationLedPin.setValue(1);
@@ -62,7 +62,7 @@ extern ioportmask_t errorLedPin;
 #if EFI_SIMULATOR || EFI_PROD_CODE
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
-	if (hasFatalError())
+	if (hasOsPanicError())
 		return;
 	dbg_panic_file = file;
 	dbg_panic_line = line;
@@ -71,7 +71,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #endif /* CH_DBG_SYSTEM_STATE_CHECK */
 
 #if EFI_PROD_CODE
-	ON_FATAL_ERROR();
+	ON_CRITICAL_ERROR();
 #else
 	printf("chDbgPanic3 %s %s%d", msg, file, line);
 	exit(-1);
@@ -82,7 +82,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #endif /* EFI_HD44780_LCD */
 
 	if (!main_loop_started) {
-		print("fatal %s %s:%d\r\n", msg, file, line);
+		print("%s %s %s:%d\r\n", CRITICAL_PREFIX, msg, file, line);
 //		chThdSleepSeconds(1);
 		chSysHalt("Main loop did not start");
 	}
@@ -161,7 +161,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	return false;
 }
 
-char *getWarning(void) {
+char *getWarningMessage(void) {
 	return warningBuffer;
 }
 
@@ -224,7 +224,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	printWarning(fmt, ap);
 	va_end(ap);
 #endif
-	ON_FATAL_ERROR()
+	ON_CRITICAL_ERROR()
 	;
 	hasFirmwareErrorFlag = true;
 	if (indexOf(fmt, '%') == -1) {
