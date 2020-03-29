@@ -579,7 +579,7 @@ static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPi
 static void initStatusLeds(void) {
 	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin);
 	// we initialize this here so that we can blink it on start-up
-	enginePins.checkEnginePin.initPin("MalfunctionIndicator", CONFIG(malfunctionIndicatorPin), &CONFIG(malfunctionIndicatorPinMode));
+	enginePins.checkEnginePin.initPin("Check engine light", CONFIG(malfunctionIndicatorPin), &CONFIG(malfunctionIndicatorPinMode));
 
 	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin);
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
