@@ -472,7 +472,7 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 
 	if (adcHwChannelEnabled[setting] != ADC_OFF) {
 		getPinNameByAdcChannel(name, setting, errorMsgBuff);
-		firmwareError(CUSTOM_ERR_ADC_USED, "ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
+		firmwareError(CUSTOM_ERR_ADC_USED, "Analog input error: input \"%s\" selected for %s but was already used by %s", errorMsgBuff, name, adcHwChannelUsage[setting]);
 	}
 
 	adcHwChannelUsage[setting] = name;
