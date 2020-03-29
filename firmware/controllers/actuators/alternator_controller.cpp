@@ -162,8 +162,7 @@ void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 
 	if (CONFIG(onOffAlternatorLogic)) {
-		enginePins.alternatorPin.initPin("on/off alternator", CONFIG(alternatorControlPin));
-
+		enginePins.alternatorPin.initPin("Alternator control", CONFIG(alternatorControlPin));
 	} else {
 		startSimplePwmExt(&alternatorControl,
 				"Alternator control",
