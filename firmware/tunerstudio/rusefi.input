@@ -2539,6 +2539,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = fsioSetting,	East
 		
 	dialog = fsioFormulas, "FSIO Formulas"
+		field = "https://rusefi.com/s/fsio"
 		field = "!FSIO uses Reverse Polish Notation. Please read http://rusefi.com/s/fsio"
 		field = "#fsioinfo command in rusEfi console could be useful while troubleshooting those"
 		field = "#1",									fsioFormulas1
