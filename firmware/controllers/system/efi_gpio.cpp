@@ -34,15 +34,15 @@ static Logging* logger;
 
 pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 
-static const char *sparkNames[] = { "coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8",
-		"coil9", "coil10", "coil11", "coil12"};
+static const char *sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
+		"Coil 9", "Coil 10", "Coil 11", "Coil 12"};
 
 // these short names are part of engine sniffer protocol
 static const char *sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", "c4", "c5", "c6", "c7", "c8",
 		"c9", "cA", "cB", "cD"};
 
-static const char *injectorNames[] = { "injector1", "injector2", "injector3", "injector4", "injector5", "injector6",
-		"injector7", "injector8", "injector9", "injector10", "injector11", "injector12"};
+static const char *injectorNames[] = { "Injector 1", "Injector 2", "Injector 3", "Injector 4", "Injector 5", "Injector 6",
+		"Injector 7", "Injector 8", "Injector 9", "Injector 10", "Injector 11", "Injector 12"};
 
 static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
@@ -60,7 +60,7 @@ EnginePins::EnginePins() {
 	}
 
 	static_assert(efi::size(injectorNames) >= INJECTION_PIN_COUNT, "Too many injection pins"); 
-		for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
 		enginePins.injectors[i].shortName = injectorShortNames[i];
