@@ -58,8 +58,7 @@ extern WaveChart waveChart;
 static char LOGGING_BUFFER[SETTINGS_LOGGING_BUFFER_SIZE];
 static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 /*
  static void printIntArray(int array[], int size) {

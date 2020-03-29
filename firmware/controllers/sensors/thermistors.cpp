@@ -24,8 +24,7 @@
 #define LIMPING_MODE_CLT_TEMPERATURE 70.0f
 #define NO_CLT_SENSOR_TEMPERATURE 72.0f
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static Logging *logger = nullptr;
 

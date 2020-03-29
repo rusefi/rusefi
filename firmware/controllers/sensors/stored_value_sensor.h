@@ -29,7 +29,7 @@
  */
 class StoredValueSensor : public Sensor {
 public:
-	SensorResult get() const final {
+	SensorResult get() const final override {
 		bool valid = m_isValid;
 		float value = m_value;
 

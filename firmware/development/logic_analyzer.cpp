@@ -37,7 +37,6 @@ EXTERN_ENGINE;
 #if EFI_ENGINE_SNIFFER
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
-extern bool hasFirmwareErrorFlag;
 
 /**
  * Difference between current 1st trigger event and previous 1st trigger event.

@@ -19,8 +19,7 @@
 #include "trigger_central.h"
 #include "spark_logic.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 void plainPinTurnOn(AuxActor *current) {
 	NamedOutputPin *output = &enginePins.auxValve[current->valveIndex];

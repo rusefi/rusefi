@@ -51,9 +51,7 @@
 
 #include "backup_ram.h"
 
-EXTERN_ENGINE
-;
-extern bool hasFirmwareErrorFlag;
+EXTERN_ENGINE;
 
 static const char *prevOutputName = nullptr;
 

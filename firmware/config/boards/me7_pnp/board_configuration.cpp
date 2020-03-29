@@ -13,8 +13,7 @@
 #include "engine_configuration.h"
 #include "smart_gpio.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }

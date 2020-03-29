@@ -30,8 +30,7 @@
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static Logging *logger;
 

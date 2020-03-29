@@ -22,8 +22,6 @@
 #include "poten.h"
 #include "trigger_emulator.h"
 
-extern bool hasFirmwareErrorFlag;
-
 static THD_WORKING_AREA(eeThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 #define DIAG_PIN GPIOD_0

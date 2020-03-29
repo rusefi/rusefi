@@ -22,8 +22,7 @@
 #include "mpu_util.h"
 #include "engine.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static int canReadCounter = 0;
 static int canWriteOk = 0;

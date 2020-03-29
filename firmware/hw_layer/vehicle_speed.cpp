@@ -13,8 +13,7 @@
 #include "digital_input_icu.h"
 #include "pin_repository.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static Logging *logger;
 
