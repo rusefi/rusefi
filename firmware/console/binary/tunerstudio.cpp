@@ -89,7 +89,7 @@
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
-#endif
+#endif /* EFI_SIMULATOR */
 
 #if EFI_TUNER_STUDIO
 

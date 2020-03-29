@@ -485,6 +485,8 @@
 #define crankingTpsBins_offset_hex 688
 #define crankingTpsCoef_offset 1640
 #define crankingTpsCoef_offset_hex 668
+#define critical_error_message_offset 6040
+#define critical_error_message_offset_hex 1798
 #define cutFuelOnHardLimit_offset 1464
 #define cutFuelOnHardLimit_offset_hex 5b8
 #define cutSparkOnHardLimit_offset 1464
@@ -562,6 +564,7 @@
 #define engineSnifferRpmThreshold_offset_hex 4
 #define engineType_offset 0
 #define engineType_offset_hex 0
+#define ERROR_BUFFER_SIZE 80
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744

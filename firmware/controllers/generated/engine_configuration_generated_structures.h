@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Mar 27 12:12:49 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Mar 28 19:52:31 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2947,8 +2947,8 @@ struct engine_configuration_s {
 	/**
 	 * offset 4140
 	 */
-	int mainUnusedEnd[495];
-	/** total size 6120*/
+	int mainUnusedEnd[475];
+	/** total size 6040*/
 };
 
 typedef struct engine_configuration_s engine_configuration_s;
@@ -2959,6 +2959,10 @@ struct persistent_config_s {
 	 * offset 0
 	 */
 	engine_configuration_s engineConfiguration;
+	/**
+	 * offset 6040
+	 */
+	critical_error_message_t critical_error_message;
 	/**
 	 * offset 6120
 	 */
@@ -3246,4 +3250,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Mar 27 12:12:49 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Mar 28 19:52:31 EDT 2020

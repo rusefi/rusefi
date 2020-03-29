@@ -15,8 +15,7 @@ static MemoryStream warningStream;
 static MemoryStream firmwareErrorMessageStream;
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
-#define WARNING_BUFFER_SIZE 80
-static char warningBuffer[WARNING_BUFFER_SIZE];
+static char warningBuffer[ERROR_BUFFER_SIZE];
 static volatile bool isWarningStreamInitialized = false;
 
 #if EFI_HD44780_LCD
@@ -32,15 +31,18 @@ EXTERN_ENGINE;
 extern int warningEnabled;
 extern bool main_loop_started;
 
-// todo: rename to fatalErrorMessage?
-static fatal_msg_t errorMessageBuffer;
+static fatal_msg_t criticalErrorMessageBuffer;
 bool hasFirmwareErrorFlag = false;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
 
+#if EFI_TUNER_STUDIO && !defined(EFI_NO_CONFIG_WORKING_COPY)
+extern persistent_config_s configWorkingCopy;
+#endif
+
 char *getFirmwareError(void) {
-	return (char*) errorMessageBuffer;
+	return (char*) criticalErrorMessageBuffer;
 }
 
 #if EFI_PROD_CODE
@@ -205,8 +207,8 @@ void onUnlockHook(void) {
  */
 void initErrorHandlingDataStructures(void) {
 #if EFI_SIMULATOR || EFI_PROD_CODE
-	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
-	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
+	msObjectInit(&warningStream, (uint8_t *) warningBuffer, ERROR_BUFFER_SIZE, 0);
+	msObjectInit(&firmwareErrorMessageStream, criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer), 0);
 #endif
 	isWarningStreamInitialized = true;
 }
@@ -230,8 +232,8 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 		 * in case of simple error message let's reduce stack usage
 		 * because chvprintf might be causing an error
 		 */
-		strncpy((char*) errorMessageBuffer, fmt, sizeof(errorMessageBuffer) - 1);
-		errorMessageBuffer[sizeof(errorMessageBuffer) - 1] = 0; // just to be sure
+		strncpy((char*) criticalErrorMessageBuffer, fmt, sizeof(criticalErrorMessageBuffer) - 1);
+		criticalErrorMessageBuffer[sizeof(criticalErrorMessageBuffer) - 1] = 0; // just to be sure
 	} else {
 		// todo: look into chsnprintf once on Chibios 3
 		firmwareErrorMessageStream.eos = 0; // reset
@@ -242,6 +244,15 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 		// todo: reuse warning buffer helper method
 		firmwareErrorMessageStream.buffer[firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
 	}
+
+#if EFI_TUNER_STUDIO
+ #if defined(EFI_NO_CONFIG_WORKING_COPY)
+  memcpy(persistentState.persistentConfiguration.critical_error_message, criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer));
+ #else /* defined(EFI_NO_CONFIG_WORKING_COPY) */
+  memcpy(configWorkingCopy.critical_error_message, criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer));
+ #endif /* defined(EFI_NO_CONFIG_WORKING_COPY) */
+#endif /* EFI_TUNER_STUDIO */
+
 #else
 	printf("firmwareError [%s]\r\n", fmt);
 

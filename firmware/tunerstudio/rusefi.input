@@ -275,7 +275,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       knockLevel      = scalar,  F32,    108,  "Volts",      1,         0
 
 ; Mode, firmware, protocol, run time
-      timeSeconds     = scalar,  U32,    112,    "sec",      1,       0.0
+; TS requires 'seconds' name since it has special internal meaning
+      seconds         = scalar,  U32,    112,    "sec",      1,       0.0
       engineMode      = scalar,  U32,    116,     "em",      1,       0.0;
       firmwareVersion = scalar,  U32,    120,"version_f",    1,         0
       firmwareTsVersion=scalar,  U32,    124,"version_p",    1,         0
@@ -364,7 +365,20 @@ fileVersion = { @@TS_FILE_VERSION@@ }
     debugFieldI4List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle df4",            "",                          "",           "",            "",           "",          "",                  "",      "",         "",         "",            "",           "",             "ETB di4",               "",                "",           "di4",          "di4",           "22di4",          "",        "23:di4",      "",              "",          "",         "",       "",     "",     "Init Count",     "",    "",    "",      "",      "",                "" 
     debugFieldI5List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle df5",            "",                          "",           "",            "",           "",          "",                  "",      "",         "",         "",            "di5",        "di5",          "ETB di5",               "di5",             "di5",        "di5",          "di5",           "22di5",          "di5",     "di5",        "di5",            "di5",       "di5",      "di5",    "di5",  "di5",  "di5",            "di5", "di5", "di5",   "di5",   "di5",             "di5"
 [ConstantsExtensions]
+     ; defaultValue is used to provide TunerStudio with a value to use in the case of
+     ; the constant not yet being initialized. This is primarily important if the
+     ; constant is used as a variable in the ini.
+     ; defaultValue = constantName, value;
     defaultValue = wueAfrTargetOffset, -1.5 -1.4 -1.15 -0.95 -0.775 -0.65 -0.5625 -0.5 -0.4375 -0.375 -0.3125 -0.25 -0.1875 -0.125 -0.0625 0
+
+
+     requiresPowerCycle = warningLedPin
+     requiresPowerCycle = runningLedPin
+     requiresPowerCycle = binarySerialTxPin
+     requiresPowerCycle = binarySerialRxPin
+     
+     readOnly = critical_error_message
+
 
 [CurveEditor]
 ;	xAxis       =  leftValue, rightValue, step
@@ -792,7 +806,7 @@ gaugeCategory = ECU Status
    recentErrorCode6Gauge = recentErrorCode6, "Error#7", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    recentErrorCode7Gauge = recentErrorCode7, "Error#8", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    firmwareVersionGauge  = firmwareVersion , "ECU Software Version", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   timeSecondsGauge     =   timeSeconds, "Uptime", "sec",     0,   100,     0,    0,    100,  100,   0,   0
+   timeSecondsGauge     =   seconds, "Uptime", "sec",     0,   100,     0,    0,    100,  100,   0,   0
 
 
 gaugeCategory = Debug  
@@ -917,7 +931,7 @@ gaugeCategory = Throttle Body (incl. ETB)
 
 ;         =   expression,            off-label,            on-label,            off-bg, off-fg, on-bg, on-fg
 	; important status
-    indicator = { ind_hasFatalError }, "",   "FATAL ERROR",   green, black, red,   black
+    indicator = { ind_hasFatalError }, "",   "CRITICAL ERROR",   green, black, red,   black
     indicator = { firmwareTsVersion == fileVersion }, "WRONG VERSION",   "version",   red, black, green,   black
     indicator = { ind_isWarnNow }, "",   "warn",   green, black, red,   black
     indicator = { ind_check_engine }, "ok",      "Check engine",       green,  black,  red, black
@@ -1677,7 +1691,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = mc33816_driven,							mc33816_driven
 		field = mc33816spiDevice,						mc33816spiDevice
 		field = "Warning Led",							warningLedPin
-		; field = "Fatal Error Led",						fatalErrorPin
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
 		field = "mc33972_cs",							mc33972_cs
@@ -2087,7 +2100,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Running status LED",					runningLedPin
 		field = "TS communication status LED",					communicationLedPin
 	    field = "Trigger error LED",					triggerErrorPin
-		; field = "Fatal Error Led",						fatalErrorPin
 
 ;			Engine->MIL Settings
 	dialog = malfunction,	"Check Engine Settings"
@@ -2330,6 +2342,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = debugging, "Debug"
 		field = "!https://rusefi.com/s/debugmode"
 		field = "Debug mode",							debugMode
+		field = "Critical Error",						critical_error_message
 
 	
 	dialog = limits, "Limits"

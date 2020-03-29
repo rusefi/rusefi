@@ -33,7 +33,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...);
 
 #define hasFirmwareError() hasFirmwareErrorFlag
 
-// todo: rename to getFatalErrorMessage
+// todo: rename to getCriticalErrorMessage
 char *getFirmwareError(void);
 
 void initErrorHandlingDataStructures(void);
