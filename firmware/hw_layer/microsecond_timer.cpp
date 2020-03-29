@@ -29,7 +29,7 @@ EXTERN_ENGINE;
 // conversions between wall clock and hardware frequencies are done right
 // delay in milliseconds
 #define TEST_CALLBACK_DELAY 30
-// if hardware timer is 20% off we throw a fatal error and call it a day
+// if hardware timer is 20% off we throw a critical error and call it a day
 // maybe this threshold should be 5%? 10%?
 #define TIMER_PRECISION_THRESHOLD 0.2
 
