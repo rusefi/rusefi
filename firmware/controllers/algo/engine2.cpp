@@ -28,8 +28,7 @@
 extern fuel_Map3D_t veMap;
 extern afr_Map3D_t afrMap;
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 // this does not look exactly right
 extern LoggingWithStorage engineLogger;

@@ -31,8 +31,7 @@
 
 #if EFI_ENGINE_CONTROL
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static ign_Map3D_t advanceMap("advance");
 // This coeff in ctor parameter is sufficient for int16<->float conversion!

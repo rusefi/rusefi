@@ -61,8 +61,6 @@ static int timerFreezeCounter = 0;
 static volatile int setHwTimerCounter = 0;
 static volatile bool hwStarted = false;
 
-extern bool hasFirmwareErrorFlag;
-
 /**
  * sets the alarm to the specified number of microseconds from now.
  * This function should be invoked under kernel lock which would disable interrupts.

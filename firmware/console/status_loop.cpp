@@ -102,7 +102,6 @@ extern WaveChart waveChart;
 
 int warningEnabled = true;
 
-extern bool hasFirmwareErrorFlag;
 extern int maxTriggerReentraint;
 extern uint32_t maxLockedDuration;
 
@@ -172,8 +171,7 @@ static void reportSensorI(Logging *log, const char *caption, const char *units, 
 #endif /* EFI_FILE_LOGGING */
 }
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static char buf[6];
 

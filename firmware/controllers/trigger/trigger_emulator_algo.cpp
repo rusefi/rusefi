@@ -41,8 +41,7 @@ bool needEvent(const int currentIndex, const int size, MultiChannelStateSequence
 TriggerEmulatorHelper::TriggerEmulatorHelper() {
 }
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
 	efitick_t stamp = getTimeNowNt();

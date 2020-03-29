@@ -106,8 +106,7 @@ static LEElement * starterRelayDisableLogic;
 static LEElement * mainRelayLogic;
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static Logging *logger;
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -731,9 +730,6 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 #else /* !EFI_FSIO */
-
-EXTERN_ENGINE
-;
 
 // "Limp-mode" implementation for some RAM-limited configs without FSIO
 void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

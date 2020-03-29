@@ -51,8 +51,7 @@
 
 
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static Logging * logger;
 static bool isRunningBench = false;

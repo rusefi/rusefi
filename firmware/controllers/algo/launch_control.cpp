@@ -30,8 +30,7 @@ static Logging *logger;
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static bool getActivateSwitchCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	switch (engineConfiguration->launchActivationMode) {

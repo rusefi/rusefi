@@ -42,9 +42,7 @@
 #include "fuel_math.h"
 
 
-EXTERN_ENGINE
-;
-extern bool hasFirmwareErrorFlag;
+EXTERN_ENGINE;
 
 static MenuItem ROOT(NULL, NULL);
 

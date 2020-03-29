@@ -31,6 +31,8 @@ typedef uint8_t critical_msg_t[ERROR_BUFFER_SIZE];
  */
 void firmwareError(obd_code_e code, const char *fmt, ...);
 
+extern bool hasFirmwareErrorFlag;
+
 #define hasFirmwareError() hasFirmwareErrorFlag
 
 // todo: rename to getCriticalErrorMessage
