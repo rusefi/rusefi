@@ -137,12 +137,9 @@ bool main_loop_started = false;
 
 static char panicMessage[200];
 
-extern bool hasFirmwareErrorFlag;
-
 static virtual_timer_t resetTimer;
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 // todo: move this into a hw-specific file
 void rebootNow(void) {

@@ -34,8 +34,7 @@ static thread_reference_t btThreadRef = nullptr; // used by thread suspend/resum
 static LoggingWithStorage btLogger("bluetooth");
 
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 
 // Main communication code

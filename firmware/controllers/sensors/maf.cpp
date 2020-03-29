@@ -3,8 +3,7 @@
 #include "adc_inputs.h"
 #include "maf.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 /**
  * @return MAF sensor voltage

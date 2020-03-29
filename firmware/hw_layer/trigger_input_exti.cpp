@@ -21,8 +21,6 @@
 	#error "PAL_USE_CALLBACKS should be enabled to use HAL_TRIGGER_USE_PAL"
 #endif
 
-extern bool hasFirmwareErrorFlag;
-
 static Logging *logger;
 
 EXTERN_ENGINE;

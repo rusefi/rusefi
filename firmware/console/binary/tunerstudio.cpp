@@ -103,8 +103,7 @@
 #endif /* EFI_IDLE_CONTROL */
 
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 extern persistent_config_container_s persistentState;
 
