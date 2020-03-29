@@ -377,6 +377,16 @@ fileVersion = { @@TS_FILE_VERSION@@ }
      requiresPowerCycle = runningLedPin
      requiresPowerCycle = binarySerialTxPin
      requiresPowerCycle = binarySerialRxPin
+     
+     requiresPowerCycle = idle_solenoidFrequency
+     requiresPowerCycle = boostPwmFrequency
+     requiresPowerCycle = alternatorPwmFrequency
+     requiresPowerCycle = auxPidFrequency1
+     requiresPowerCycle = auxPidFrequency2
+     requiresPowerCycle = auxPidFrequency3
+     requiresPowerCycle = auxPidFrequency4
+     requiresPowerCycle = etbFreq
+     
      requiresPowerCycle = fsioOutputPins1
      requiresPowerCycle = fsioOutputPins2
      requiresPowerCycle = fsioOutputPins3
