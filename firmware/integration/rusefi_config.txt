@@ -327,7 +327,7 @@ bit isVerboseAuxPid4;
 bit unused76b9;
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider?
 bit cj125isLsu49;
-bit etb_use_two_wires;
+bit etb_use_two_wires;+TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 bit isDoubleSolenoidIdle;
 bit showSdCardWarning;
 bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
