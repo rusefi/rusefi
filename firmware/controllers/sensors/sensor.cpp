@@ -166,14 +166,14 @@ bool Sensor::Register() {
 		const char* name = s_sensorNames[i];
 
 		if (entry.useMock) {
-			scheduleMsg(logger, "Sensor %s mocked with value %f", name, entry.mockValue);
+			scheduleMsg(logger, "Sensor \"%s\" mocked with value %.2f", name, entry.mockValue);
 		} else {
 			const auto sensor = entry.sensor;
 
 			if (sensor) {
 				sensor->showInfo(logger, name);
 			} else {
-				scheduleMsg(logger, "Sensor %s is not configured.", name);
+				scheduleMsg(logger, "Sensor \"%s\" is not configured.", name);
 			}
 		}
 	}
