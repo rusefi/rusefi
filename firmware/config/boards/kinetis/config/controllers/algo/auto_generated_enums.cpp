@@ -617,6 +617,8 @@ case BMW_M73_PROTEUS:
   return "BMW_M73_P";
 case BMW_M73_MRE:
   return "BMW_M73_MRE";
+case BMW_M73_MRE_SLAVE:
+  return "BMW_M73_MRE_SLAVE";
 case MIATA_1996:
   return "MIATA_1996";
 case MIATA_NA6_MAP:
