@@ -123,7 +123,7 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
-	initSensors();
+	initNewSensors(sharedLogger);
 #endif /* EFI_UNIT_TEST */
 
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
