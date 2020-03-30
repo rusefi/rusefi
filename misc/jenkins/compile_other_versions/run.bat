@@ -38,6 +38,11 @@ IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd
 
+call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4-slave rusefi_microrusefi.ini
+IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
+IF NOT ERRORLEVEL 0 EXIT /B 1
+pwd
+
 call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4-test rusefi_microrusefi.ini
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
