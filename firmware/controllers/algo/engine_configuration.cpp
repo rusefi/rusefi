@@ -681,7 +681,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 	// Don't enable, but set default address
-	engineConfiguration->verboseCanBaseAddress = 0x200;
+	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
 
 	engineConfiguration->sdCardPeriodMs = 50;
 
