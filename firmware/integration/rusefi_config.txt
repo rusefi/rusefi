@@ -456,7 +456,7 @@ log_format_e logFormat;
 	adc_channel_e tps1_1AdcChannel;First throttle body, first sensor. See also pedalPositionAdcChannel
 adc_channel_e vbattAdcChannel;+This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB. 
 adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined. 
-	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far
+	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far\nset_analog_input_pin tps2 X
 
 	int overrideCrankingIgnition;
 	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
@@ -505,7 +505,7 @@ end_struct
 	
 afr_sensor_s afr
 
-adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nFirst channel\nSee also tps1_1AdcChannel
+adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nFirst channel\nSee also tps1_1AdcChannel\nset_analog_input_pin pps X
 	brain_pin_e tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
 

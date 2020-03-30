@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Mar 29 10:28:43 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 30 00:46:17 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -872,6 +872,7 @@ struct engine_configuration_s {
 	adc_channel_e fuelLevelSensor;
 	/**
 	 * Second throttle body position sensor, single channel so far
+	 * set_analog_input_pin tps2 X
 	 * offset 515
 	 */
 	adc_channel_e tps2_1AdcChannel;
@@ -933,6 +934,7 @@ struct engine_configuration_s {
 	 * Electronic throttle pedal position input
 	 * First channel
 	 * See also tps1_1AdcChannel
+	 * set_analog_input_pin pps X
 	 * offset 580
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
@@ -3251,4 +3253,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Mar 29 10:28:43 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Mar 30 00:46:17 EDT 2020
