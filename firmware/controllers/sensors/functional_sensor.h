@@ -38,6 +38,8 @@ public:
 		return m_rawValue;
 	}
 
+	void showInfo(Logging* logger, const char* sensorName) override;
+
 private:
 	// Conversion function for this sensor
 	SensorConverter* m_function = nullptr;

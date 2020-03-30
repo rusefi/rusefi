@@ -68,6 +68,7 @@ struct SensorResult {
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type
 struct SensorRegistryEntry;
+class Logging;
 
 class Sensor {
 public:
@@ -77,6 +78,12 @@ public:
 	// The return value should not be ignored: no error handling/reporting is
 	// done internally!
 	[[nodiscard]] bool Register();
+
+	// Print information about this sensor
+	virtual void showInfo(Logging* logger, const char* sensorName) = 0;
+
+	// Print information about all sensors
+	static void showAllSensorInfo(Logging* logger);
 
 	// Remove all sensors from the sensor registry - tread carefully if you use this outside of a unit test
 	static void resetRegistry();
@@ -120,6 +127,8 @@ protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
 		: m_type(type) {}
+
+	static const char* getSensorName(SensorType type);
 
 private:
 	// Retrieve the current reading from the sensor.
