@@ -1,4 +1,6 @@
 #include "sensor.h"
+#include "efilib.h"
+#include "loggingcentral.h"
 
 // This struct represents one sensor in the registry.
 // It stores whether the sensor should use a mock value,
@@ -11,6 +13,30 @@ struct SensorRegistryEntry {
 };
 
 static SensorRegistryEntry s_sensorRegistry[static_cast<size_t>(SensorType::PlaceholderLast)] = {};
+
+static const char* s_sensorNames[] = {
+	"Invalid",
+	"CLT",
+	"IAT",
+
+	"Oil Pressure",
+
+	"TPS 1",
+	"TPS 1 Primary",
+	"TPS 1 Secondary",
+
+	"TPS 2",
+	"TPS 2 Primary",
+	"TPS 2 Secondary",
+
+	"Acc Pedal",
+	"Acc Pedal Primary",
+	"Acc Pedal Secondary",
+
+	"Driver Acc Intent"
+};
+
+static_assert(efi::size(s_sensorNames) == efi::size(s_sensorNames));
 
 bool Sensor::Register() {
 	// Get a ref to where we should be
@@ -28,10 +54,8 @@ bool Sensor::Register() {
 }
 
 /*static*/ void Sensor::resetRegistry() {
-	constexpr size_t len = sizeof(s_sensorRegistry) / sizeof(s_sensorRegistry[0]);
-
 	// Clear all entries
-	for (size_t i = 0; i < len; i++) {
+	for (size_t i = 0; i < efi::size(s_sensorRegistry); i++) {
 		auto &entry = s_sensorRegistry[i];
 
 		entry.sensor = nullptr;
@@ -123,12 +147,34 @@ bool Sensor::Register() {
 }
 
 /*static*/ void Sensor::resetAllMocks() {
-	constexpr size_t len = sizeof(s_sensorRegistry) / sizeof(s_sensorRegistry[0]);
-
 	// Reset all mocks
-	for (size_t i = 0; i < len; i++) {
+	for (size_t i = 0; i < efi::size(s_sensorRegistry); i++) {
 		auto &entry = s_sensorRegistry[i];
 
 		entry.useMock = false;
+	}
+}
+
+/*static*/ const char* Sensor::getSensorName(SensorType type) {
+	return s_sensorNames[static_cast<size_t>(type)];
+}
+
+// Print information about all sensors
+/*static*/ void Sensor::showAllSensorInfo(Logging* logger) {
+	for (size_t i = 1; i < efi::size(s_sensorRegistry); i++) {
+		auto& entry = s_sensorRegistry[i];
+		const char* name = s_sensorNames[i];
+
+		if (entry.useMock) {
+			scheduleMsg(logger, "Sensor \"%s\" mocked with value %.2f", name, entry.mockValue);
+		} else {
+			const auto sensor = entry.sensor;
+
+			if (sensor) {
+				sensor->showInfo(logger, name);
+			} else {
+				scheduleMsg(logger, "Sensor \"%s\" is not configured.", name);
+			}
+		}
 	}
 }

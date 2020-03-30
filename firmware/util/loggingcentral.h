@@ -7,6 +7,8 @@
 #ifndef UTIL_LOGGINGCENTRAL_H_
 #define UTIL_LOGGINGCENTRAL_H_
 
+class Logging;
+
 void initLoggingCentral(void);
 char * swapOutputBuffers(int *actualOutputBufferSize);
 void scheduleMsg(Logging *logging, const char *fmt, ...);
