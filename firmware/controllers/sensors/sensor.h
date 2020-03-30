@@ -80,7 +80,7 @@ public:
 	[[nodiscard]] bool Register();
 
 	// Print information about this sensor
-	virtual void showInfo(Logging* logger, const char* sensorName) = 0;
+	virtual void showInfo(Logging* logger, const char* sensorName) const = 0;
 
 	// Print information about all sensors
 	static void showAllSensorInfo(Logging* logger);

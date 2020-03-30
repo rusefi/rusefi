@@ -21,7 +21,7 @@ public:
 		m_proxiedSensor = proxiedSensor;
 	}
 
-	void showInfo(Logging* logger, const char* sensorName) override;
+	void showInfo(Logging* logger, const char* sensorName) const override;
 
 private:
 	SensorResult get() const {
