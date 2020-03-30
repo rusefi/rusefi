@@ -21,3 +21,9 @@ SensorResult LinearFunc::convert(float inputValue) const {
 
 	return {isValid, result};
 }
+
+void LinearFunc::showInfo(Logging* logger, float testRawValue) const {
+	scheduleMsg(logger, "    Linear function slope: %f offset: %f min: %f max: %f", m_a, m_b, m_minOutput, m_maxOutput);
+	const auto [valid, value] = convert(testRawValue);
+	scheduleMsg(logger, "        raw value %f converts to {%d, %f}", testRawValue, valid, value);
+}
