@@ -368,9 +368,11 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 }
 
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
+	if (hwChannel != EFI_ADC_NONE) {
 #if HAL_USE_ADC
-	printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel PASS_ENGINE_PARAMETER_SUFFIX), engineConfiguration->analogInputDividerCoefficient);
+		printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel PASS_ENGINE_PARAMETER_SUFFIX), engineConfiguration->analogInputDividerCoefficient);
 #endif /* HAL_USE_ADC */
+	}
 }
 
 static void printAnalogInfo(void) {
@@ -379,36 +381,20 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
 	printAnalogChannelInfo("TPS", engineConfiguration->tps1_1AdcChannel);
-	if (engineConfiguration->tps2_1AdcChannel != EFI_ADC_NONE) {
-		printAnalogChannelInfo("TPS2", engineConfiguration->tps2_1AdcChannel);
-	}
+	printAnalogChannelInfo("TPS2", engineConfiguration->tps2_1AdcChannel);
 	printAnalogChannelInfo("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
-	if (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) {
-		printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
-	}
-	if (engineConfiguration->iat.adcChannel != EFI_ADC_NONE) {
-		printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
-	}
-	if (hasMafSensor()) {
-		printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
-	}
+	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
+	printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
+	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		adc_channel_e ch = engineConfiguration->fsioAdc[i];
-		if (ch != EFI_ADC_NONE) {
-			printAnalogChannelInfo("fsio", ch);
-		}
+		printAnalogChannelInfo("fsio", ch);
 	}
 
 	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
-	}
-	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
-	}
-	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
-		printAnalogChannelInfo("extKno", engineConfiguration->externalKnockSenseAdc);
-	}
+	printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
+	printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
+	printAnalogChannelInfo("extKno", engineConfiguration->externalKnockSenseAdc);
 
 	printAnalogChannelInfo("OilP", engineConfiguration->oilPressure.hwChannel);
 
