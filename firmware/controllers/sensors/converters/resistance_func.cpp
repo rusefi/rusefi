@@ -3,6 +3,7 @@
  */
 
 #include "resistance_func.h"
+#include "loggingcentral.h"
 
 void ResistanceFunc::configure(float supplyVoltage, float pullupResistor) {
 	m_pullupResistor = pullupResistor;
@@ -24,4 +25,9 @@ SensorResult ResistanceFunc::convert(float raw) const {
 	float resistance = m_pullupResistor / (m_supplyVoltage / raw - 1);
 
 	return {true, resistance};
+}
+
+void ResistanceFunc::showInfo(Logging* logger, float testInputValue) const {
+	const auto [valid, value] = convert(testInputValue);
+	scheduleMsg(logger, "%.2f volts -> %.1f ohms, with supply voltage %.2f and pullup %.1f.", m_supplyVoltage, m_pullupResistor, testInputValue, value);
 }
