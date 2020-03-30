@@ -18,4 +18,6 @@ struct MockSensor final : public StoredValueSensor
 	{
 		StoredValueSensor::invalidate();
 	}
+
+	void showInfo(Logging* logger, const char* name) const override {}
 };

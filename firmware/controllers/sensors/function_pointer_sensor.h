@@ -29,6 +29,8 @@ public:
 		return {valid, result};
 	}
 
+	void showInfo(Logging* logger, const char* sensorName) const override {}
+
 private:
 	float (*m_func)();
 };
