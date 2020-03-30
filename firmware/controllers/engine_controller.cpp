@@ -379,6 +379,9 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
 	printAnalogChannelInfo("TPS", engineConfiguration->tps1_1AdcChannel);
+	if (engineConfiguration->tps2_1AdcChannel != EFI_ADC_NONE) {
+		printAnalogChannelInfo("TPS2", engineConfiguration->tps2_1AdcChannel);
+	}
 	printAnalogChannelInfo("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
 	if (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) {
 		printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
@@ -757,6 +760,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200328;
+	return 20200330;
 }
 #endif /* EFI_UNIT_TEST */

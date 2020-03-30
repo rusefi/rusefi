@@ -395,25 +395,32 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 	scheduleMsg(&logger, "==============================");
 }
 
-void printTPSInfo(void) {
-	auto tps = Sensor::get(SensorType::Tps1);
-	auto raw = Sensor::getRaw(SensorType::Tps1);
+static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int16_t max, adc_channel_e channel) {
+	auto tps = Sensor::get(sensor);
+	auto raw = Sensor::getRaw(sensor);
 
 	if (!tps.Valid) {
 		scheduleMsg(&logger, "TPS not valid");
 	}
 	static char pinNameBuffer[16];
 
-	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
-			raw, getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
+	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", min, max,
+			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer));
 
+
+	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", convertVoltageTo10bitADC(raw), tps.Value, getTpsRateOfChange());
+}
+
+
+void printTPSInfo(void) {
 	if (hasPedalPositionSensor()) {
 		scheduleMsg(&logger, "pedal up %f / down %f",
 				engineConfiguration->throttlePedalUpVoltage,
 				engineConfiguration->throttlePedalWOTVoltage);
 	}
 
-	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", convertVoltageTo10bitADC(raw), tps.Value, getTpsRateOfChange());
+	printTpsSenser("TPS", SensorType::Tps1, engineConfiguration->tpsMin, engineConfiguration->tpsMax, engineConfiguration->tps1_1AdcChannel);
+	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);
 }
 
 static void printTemperatureInfo(void) {
