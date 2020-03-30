@@ -17,7 +17,21 @@
 EXTERN_ENGINE;
 
 
-static SimplePwm tachControl("tach");      
+static SimplePwm tachControl("tach"); 
+static float tachFreq;  
+static float duty;   
+
+#if EFI_UNIT_TEST
+float getTachFreq(void)
+{
+	return tachFreq;
+}
+
+float getTachDuty(void)
+{
+	return tachFreq;
+}
+#endif
 
 static void tachSignalCallback(trigger_event_e ckpSignalType,
 		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -28,6 +42,8 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 
 #if EFI_UNIT_TEST
 	printf("tachSignalCallback(%d %d)\n", ckpSignalType, index);
+	printf("Current RPM: %d\n",GET_RPM());
+	UNUSED(edgeTimestamp);
 #else
 	UNUSED(ckpSignalType);
 	UNUSED(edgeTimestamp);
@@ -42,10 +58,9 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	}
 
 	// What is the angle per tach output period?
-	float duty;
 	float cycleTimeMs = 60000.0 / GET_RPM();
 	float periodTimeMs = cycleTimeMs / periods;
-	float tachFreq = 1000.0 / periodTimeMs;
+	tachFreq = 1000.0 / periodTimeMs;
 	
 	if (CONFIG(tachPulseDurationAsDutyCycle)) {
 		// Simple case - duty explicitly set
@@ -71,7 +86,7 @@ void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
-startSimplePwmExt(&tachControl,
+	startSimplePwmExt(&tachControl,
 				"analog tach output",
 				&engine->executor,
 				CONFIG(tachOutputPin),
