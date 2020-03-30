@@ -123,7 +123,7 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
-	initSensors();
+	initNewSensors(sharedLogger);
 #endif /* EFI_UNIT_TEST */
 
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
@@ -368,11 +368,9 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 }
 
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
-	if (hwChannel != EFI_ADC_NONE) {
 #if HAL_USE_ADC
-		printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel PASS_ENGINE_PARAMETER_SUFFIX), engineConfiguration->analogInputDividerCoefficient);
+	printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel PASS_ENGINE_PARAMETER_SUFFIX), engineConfiguration->analogInputDividerCoefficient);
 #endif /* HAL_USE_ADC */
-	}
 }
 
 static void printAnalogInfo(void) {
