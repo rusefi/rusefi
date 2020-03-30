@@ -326,6 +326,7 @@
 #define camInputs3_offset_hex 22e
 #define camInputs4_offset 559
 #define camInputs4_offset_hex 22f
+#define CAN_DEFAULT_BASE 0x200
 #define can_device_mode_e_enum "v0", "v1"
 #define canDeviceMode_offset 732
 #define canDeviceMode_offset_hex 2dc

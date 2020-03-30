@@ -124,6 +124,8 @@ struct_no_prefix engine_configuration_s
 #define BOOST_LOAD_COUNT 8
 #define PEDAL_TO_TPS_SIZE 8
 
+#define CAN_DEFAULT_BASE 0x200
+
 
 ! 
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte

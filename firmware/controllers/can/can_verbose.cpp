@@ -7,6 +7,7 @@
 #include "scaled_channel.h"
 #include "can_msg_tx.h"
 #include "sensor.h"
+#include "can.h"
 #include "allsensors.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
@@ -137,8 +138,8 @@ void sendCanVerbose() {
 
     transmitStruct<Status>      (base + 0);
     transmitStruct<Speeds>      (base + 1);
-    transmitStruct<PedalAndTps> (base + 2);
-    transmitStruct<Sensors1>    (base + 3);
+    transmitStruct<PedalAndTps> (base + CAN_PEDAL_TPS_OFFSET);
+    transmitStruct<Sensors1>    (base + CAN_SENSOR_1_OFFSET);
     transmitStruct<Sensors2>    (base + 4);
     transmitStruct<Fueling>     (base + 5);
 }
