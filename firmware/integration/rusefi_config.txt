@@ -204,9 +204,6 @@ custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@debug_mode_e_enum@@
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
 custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@vvt_mode_e_enum@@
 
-#define can_device_mode_e_enum "v0", "v1"
-custom can_device_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@can_device_mode_e_enum@@
-
 #define mass_storage_e_enum "Auto", "Always", "Never"
 custom mass_storage_e 4 bits, U32, @OFFSET@, [0:7], @@mass_storage_e_enum@@
 

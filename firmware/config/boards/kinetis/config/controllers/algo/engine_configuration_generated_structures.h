@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 31 16:40:49 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 31 16:45:24 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1172,10 +1172,12 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e sdCardCsPin;
 	/**
+	 * set_can_tx_pin X
 	 * offset 708
 	 */
 	brain_pin_e canTxPin;
 	/**
+	 * set_can_rx_pin X
 	 * offset 709
 	 */
 	brain_pin_e canRxPin;
@@ -3256,4 +3258,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 31 16:40:49 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Tue Mar 31 16:45:24 EDT 2020
