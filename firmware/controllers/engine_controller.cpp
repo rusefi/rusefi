@@ -257,10 +257,15 @@ void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		engine->startStopStateLastPushTime = getTimeNowNt();
-	} else if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		// todo: request engine stop here
-	}
 
+		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
+		if (!wasStarterEngaged) {
+			scheduleMsg(&logger, "Let's crank this engine!");
+		}
+	} else if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		scheduleMsg(&logger, "Let's stop this engine!");
+		scheduleStopEngine();
+	}
 }
 
 static void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -276,16 +281,27 @@ static void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 	}
 
+	if (engine->startStopStateLastPushTime == 0) {
+		// nothing is going on with startStop button
+		return;
+	}
+
+
 	// todo: should this be simply FSIO?
 	if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		// turn starter off once engine is running
-		enginePins.starterControl.setValue(0);
+		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
+		if (wasStarterEngaged) {
+			scheduleMsg(&logger, "Engine runs we can disengage the starter");
+		}
 		engine->startStopStateLastPushTime = 0;
 	}
 
-	if (engine->startStopStateLastPushTime != 0 &&
-			getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * CONFIG(startCrankingDuration)) {
-		enginePins.starterControl.setValue(0);
+	if (getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * CONFIG(startCrankingDuration)) {
+		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
+		if (wasStarterEngaged) {
+			scheduleMsg(&logger, "Cranking timeout");
+		}
 		engine->startStopStateLastPushTime = 0;
 	}
 }
@@ -744,6 +760,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200330;
+	return 20200331;
 }
 #endif /* EFI_UNIT_TEST */

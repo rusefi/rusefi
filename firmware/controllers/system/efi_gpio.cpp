@@ -320,8 +320,14 @@ bool OutputPin::isInitialized() {
 
 void OutputPin::toggle() {
 	setValue(!getLogicValue());
-
 }
+
+bool OutputPin::getAndSet(int logicValue) {
+	bool oldValue = currentLogicValue;
+	setValue(logicValue);
+	return oldValue;
+}
+
 void OutputPin::setValue(int logicValue) {
 	ScopePerf perf(PE::OutputPinSetValue);
 
