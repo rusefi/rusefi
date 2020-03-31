@@ -1,3 +1,10 @@
+/**
+ * @file	can_verbose.cpp
+ *
+ * TODO: change 'verbose' into 'broadcast'?
+ *
+ * @author Matthew Kennedy, (c) 2020
+ */
 
 #include "globalaccess.h"
 #if EFI_CAN_SUPPORT

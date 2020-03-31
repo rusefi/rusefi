@@ -93,6 +93,13 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* BOARD_TLE8888_COUNT */
 
 
+#if EFI_CANBUS_SLAVE
+	engineConfiguration->canReadEnabled = true;
+#else /* EFI_CANBUS_SLAVE */
+	engineConfiguration->canWriteEnabled = true;
+#endif /* EFI_CANBUS_SLAVE */
+
+
 	//set tps_min 891
 	CONFIG(tpsMin) = 891;
 	//set tps_max 177
