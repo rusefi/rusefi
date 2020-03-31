@@ -109,6 +109,8 @@
 #define antiLagEnabled_offset_hex 4c
 #define antiLagRpmTreshold_offset 824
 #define antiLagRpmTreshold_offset_hex 338
+#define anUnused4Bytes_offset 732
+#define anUnused4Bytes_offset_hex 2dc
 #define autoTuneCltThreshold_offset 2420
 #define autoTuneCltThreshold_offset_hex 974
 #define autoTuneTpsQuietPeriod_offset 2428
@@ -328,8 +330,6 @@
 #define camInputs4_offset_hex 22f
 #define CAN_DEFAULT_BASE 0x200
 #define can_device_mode_e_enum "v0", "v1"
-#define canDeviceMode_offset 732
-#define canDeviceMode_offset_hex 2dc
 #define canNbcType_offset 480
 #define canNbcType_offset_hex 1e0
 #define canReadEnabled_offset 1464

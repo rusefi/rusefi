@@ -148,6 +148,10 @@ static void canInfo(void) {
 		return;
 	}
 
+#if EFI_CANBUS_SLAVE
+	scheduleMsg(&logger, "CAN SLAVE MODE");
+#endif
+
 	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIG(canTxPin)));
 	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIG(canRxPin)));
 	scheduleMsg(&logger, "type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
