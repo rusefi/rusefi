@@ -50,5 +50,5 @@ public:
 	}
 
 private:
-	const uint8_t m_offset = 2;
+	const uint8_t m_offset;
 };
