@@ -45,8 +45,8 @@ void registerCanSensor(CanSensorBase& sensor) {
 	s_head = &sensor;
 }
 
-void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
-	serviceCanSubscribers(frame, 0);
+void processCanRxMessage(const CANRxFrame& frame, Logging* logger, efitick_t nowNt) {
+	serviceCanSubscribers(frame, nowNt);
 
 	// TODO: if/when we support multiple lambda sensors, sensor N
 	// has address 0x0180 + N where N = [0, 15]
