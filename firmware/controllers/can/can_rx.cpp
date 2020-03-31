@@ -14,6 +14,7 @@
 #include "can.h"
 #include "obd2.h"
 #include "engine.h"
+#include "can_sensor.h"
 
 EXTERN_ENGINE;
 
@@ -29,7 +30,24 @@ volatile float aemXSeriesLambda = 0;
 volatile float canPedal = 0;
 volatile float canMap = 0;
 
+static CanSensorBase* s_head = nullptr;
+
+void serviceCanSubscribers(const CANRxFrame& frame, efitick_t nowNt) {
+	CanSensorBase* current = s_head;
+
+	while (current) {
+		current = current->processFrame(frame, nowNt);
+	}
+}
+
+void registerCanSensor(CanSensorBase& sensor) {
+	sensor.setNext(s_head);
+	s_head = &sensor;
+}
+
 void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
+	serviceCanSubscribers(frame, 0);
+
 	// TODO: if/when we support multiple lambda sensors, sensor N
 	// has address 0x0180 + N where N = [0, 15]
 	if (frame.SID == 0x0180) {
