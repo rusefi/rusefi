@@ -11,8 +11,13 @@ static void initSensorCli(Logging* logger);
 // Sensor init/config
 void initTps();
 void initOilPressure();
+void initCanSensors();
 
 void initNewSensors(Logging* logger) {
+#if EFI_CAN_SUPPORT
+	initCanSensors();
+#endif
+
 	initTps();
 	initOilPressure();
 
