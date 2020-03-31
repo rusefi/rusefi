@@ -1,5 +1,6 @@
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
+#include "can_sensor.h"
 #include "efilib.h"
 #include "loggingcentral.h"
 
@@ -15,4 +16,9 @@ void FunctionalSensor::showInfo(Logging* logger, const char* sensorName) const {
 	if (auto func = m_function) {
 		func->showInfo(logger, m_rawValue);
 	}
+}
+
+void CanSensorBase::showInfo(Logging* logger, const char* sensorName) const {
+	const auto [valid, value] = get();
+	scheduleMsg(logger, "CAN Sensor \"%s\": valid: %d value: %.2f", sensorName, valid, value);
 }
