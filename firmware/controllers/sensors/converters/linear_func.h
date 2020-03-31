@@ -10,6 +10,8 @@ public:
 
 	SensorResult convert(float inputValue) const override;
 
+	void showInfo(Logging* logger, float testRawValue) const override;
+
 private:
 	// Linear equation parameters for equation of form
 	// y = ax + b
