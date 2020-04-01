@@ -15,7 +15,10 @@
 #define CAN_SENSOR_1_OFFSET 3
 
 class Logging;
-void processCanRxMessage(const CANRxFrame& msg, Logging* logger);
+class CanSensorBase;
+
+void processCanRxMessage(const CANRxFrame& msg, Logging* logger, efitick_t nowNt);
+void registerCanSensor(CanSensorBase& sensor);
 
 class CanWrite final : public PeriodicController<512> {
 public:

@@ -2,6 +2,7 @@
  * @file init_sensorss.cpp
  */
 
+#include "global.h"
 #include "cli_registry.h"
 #include "init.h"
 #include "sensor.h"
@@ -11,8 +12,13 @@ static void initSensorCli(Logging* logger);
 // Sensor init/config
 void initTps();
 void initOilPressure();
+void initCanSensors();
 
 void initNewSensors(Logging* logger) {
+#if EFI_CAN_SUPPORT
+	initCanSensors();
+#endif
+
 	initTps();
 	initOilPressure();
 

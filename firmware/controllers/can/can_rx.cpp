@@ -14,6 +14,7 @@
 #include "can.h"
 #include "obd2.h"
 #include "engine.h"
+#include "can_sensor.h"
 
 EXTERN_ENGINE;
 
@@ -28,10 +29,27 @@ static void printPacket(const CANRxFrame& rx, Logging* logger) {
 volatile float aemXSeriesLambda = 0;
 volatile float canMap = 0;
 
-void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
+static CanSensorBase* s_head = nullptr;
+
+void serviceCanSubscribers(const CANRxFrame& frame, efitick_t nowNt) {
+	CanSensorBase* current = s_head;
+
+	while (current) {
+		current = current->processFrame(frame, nowNt);
+	}
+}
+
+void registerCanSensor(CanSensorBase& sensor) {
+	sensor.setNext(s_head);
+	s_head = &sensor;
+}
+
+void processCanRxMessage(const CANRxFrame& frame, Logging* logger, efitick_t nowNt) {
 	if (CONFIG(debugMode) == DBG_CAN) {
 		printPacket(frame, logger);
 	}
+
+	serviceCanSubscribers(frame, nowNt);
 
 	// TODO: if/when we support multiple lambda sensors, sensor N
 	// has address 0x0180 + N where N = [0, 15]
