@@ -15,4 +15,5 @@ doxygen/
 workspace.xml
 java_console_binary
 .vscode
-*.json
+*.cmp
+*.net
