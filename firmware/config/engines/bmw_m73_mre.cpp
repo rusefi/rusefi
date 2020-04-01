@@ -49,6 +49,8 @@
  *
  * BMW_M73_MRE
  * set engine_type 104
+ * BMW_M73_MRE_SLAVE
+ * set engine_type 105
  *
  */
 
@@ -95,8 +97,11 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 #if EFI_CANBUS_SLAVE
 	engineConfiguration->canReadEnabled = true;
+	engineConfiguration->canWriteEnabled = false;
 #else /* EFI_CANBUS_SLAVE */
+	engineConfiguration->canReadEnabled = false;
 	engineConfiguration->canWriteEnabled = true;
+	CONFIG(enableVerboseCanTx) = true;
 #endif /* EFI_CANBUS_SLAVE */
 
 
