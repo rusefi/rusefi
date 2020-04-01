@@ -9,8 +9,7 @@
 
 #include "../../stm32f7ems/efifeatures.h"
 
-#ifndef EFIFEATURES_SUBARUEJ20G_H_
-#define EFIFEATURES_SUBARUEJ20G_H_
+#pragma once
 
 /* debug console */
 #undef EFI_USE_UART_FOR_CONSOLE
@@ -113,4 +112,3 @@
 
 #define EFI_NARROW_EGO_AVERAGING		TRUE
 
-#endif /* EFIFEATURES_SUBARUEJ20G_H_ */

@@ -8,10 +8,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef MALFUNCTION_INDICATOR_H_
-#define MALFUNCTION_INDICATOR_H_
+#pragma once
 
-#include "global.h"
 #include "engine.h"
 
 #if EFI_MALFUNCTION_INDICATOR
@@ -21,4 +19,3 @@ void initMalfunctionIndicator(void);
 
 #endif /* EFI_MALFUNCTION_INDICATOR */
 
-#endif /* MALFUNCTION_INDICATOR_H_ */

@@ -4,9 +4,8 @@
  * @date Mar 8, 2015
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_
-#define CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_
 
+#pragma once
 #include "global.h"
 
 #if EFI_PROD_CODE
@@ -109,4 +108,3 @@ int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size);
 int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int timeout);
 bool sr5IsReady(ts_channel_s *tsChannel);
 
-#endif /* CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_ */

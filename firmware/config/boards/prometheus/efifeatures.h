@@ -9,8 +9,7 @@
 
 #include "../../stm32f4ems/efifeatures.h"
 
-#ifndef EFIFEATURES_PROMETHEUS_H_
-#define EFIFEATURES_PROMETHEUS_H_
+#pragma once
 
 #undef EFI_RTC
 #define EFI_RTC FALSE
@@ -115,4 +114,3 @@
 
 #define EFI_NARROW_EGO_AVERAGING TRUE
 
-#endif /* EFIFEATURES_PROMETHEUS_H_ */

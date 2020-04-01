@@ -54,6 +54,7 @@
 #include "perf_trace.h"
 #include "boost_control.h"
 #include "launch_control.h"
+#include "tachometer.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -655,10 +656,8 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
-#if EFI_UNIT_TEST
-	initTachometer(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_UNIT_TEST */
 
+	initTachometer(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 #if !EFI_UNIT_TEST
@@ -734,9 +733,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initLcdController();
 #endif /* EFI_HD44780_LCD */
 
-#if EFI_PROD_CODE
-	initTachometer(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_PROD_CODE */
 }
 
 // these two variables are here only to let us know how much RAM is available, also these

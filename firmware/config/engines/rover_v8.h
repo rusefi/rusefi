@@ -4,12 +4,9 @@
  * @date Jun 27, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef ROVER_V8_H_
-#define ROVER_V8_H_
 
+#pragma once
 #include "engine_configuration.h"
 
 void setFrankenstein_01_LCD(engine_configuration_s *engineConfiguration);
 void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-
-#endif /* ROVER_V8_H_ */

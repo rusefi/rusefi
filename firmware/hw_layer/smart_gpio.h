@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HW_LAYER_SMART_GPIO_H_
-#define HW_LAYER_SMART_GPIO_H_
+#pragma once
 
 /* TLE6240 pins go right after on chips */
 #define TLE6240_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + (n)))
@@ -17,4 +16,3 @@ void initSmartGpio(void);
 void startSmartCsPins();
 void stopSmartCsPins();
 
-#endif /* HW_LAYER_SMART_GPIO_H_ */

@@ -5,9 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef TUNERSTUDIO_H_
-#define TUNERSTUDIO_H_
-
+#pragma once
 #include "global.h"
 #include "tunerstudio_io.h"
 
@@ -106,5 +104,3 @@ typedef pre_packed struct
 			} TunerStudioWriteValueRequest;
 
 #endif /* EFI_TUNER_STUDIO */
-
-#endif /* TUNERSTUDIO_H_ */
