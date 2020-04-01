@@ -2,6 +2,7 @@
  * @file init_sensorss.cpp
  */
 
+#include "global.h"
 #include "cli_registry.h"
 #include "init.h"
 #include "sensor.h"
