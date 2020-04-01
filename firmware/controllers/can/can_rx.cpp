@@ -30,6 +30,10 @@ volatile float canPedal = 0;
 volatile float canMap = 0;
 
 void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
+	if (CONFIG(debugMode) == DBG_CAN) {
+		printPacket(frame, logger);
+	}
+
 	// TODO: if/when we support multiple lambda sensors, sensor N
 	// has address 0x0180 + N where N = [0, 15]
 	if (frame.SID == 0x0180) {
@@ -37,15 +41,12 @@ void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
 		uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
 		aemXSeriesLambda = 0.0001f * lambdaInt;
 	} else if (frame.EID == CONFIG(verboseCanBaseAddress) + CAN_PEDAL_TPS_OFFSET) {
-		obdOnCanPacketRx(frame);
-		int16_t pedalScaled = *reinterpret_cast<const uint16_t*>(&frame.data8[0]);
+		int16_t pedalScaled = *reinterpret_cast<const int16_t*>(&frame.data8[0]);
 		canPedal = pedalScaled / (1.0 * PACK_MULT_PERCENT);
 	} else if (frame.EID == CONFIG(verboseCanBaseAddress) + CAN_SENSOR_1_OFFSET) {
-		obdOnCanPacketRx(frame);
-		int16_t mapScaled = *reinterpret_cast<const uint16_t*>(&frame.data8[0]);
+		int16_t mapScaled = *reinterpret_cast<const int16_t*>(&frame.data8[0]);
 		canMap = mapScaled / (1.0 * PACK_MULT_PRESSURE);
 	} else {
-		printPacket(frame, logger);
 		obdOnCanPacketRx(frame);
 	}
 }
