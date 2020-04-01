@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef LCD_HD44780_H_
-#define LCD_HD44780_H_
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -28,4 +27,3 @@ void lcdShowPanicMessage(char *message);
 }
 #endif /* __cplusplus */
 
-#endif /* LCD_HD44780_H_ */

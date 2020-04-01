@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HW_LAYER_SENSORS_CJ125_LOGIC_H_
-#define HW_LAYER_SENSORS_CJ125_LOGIC_H_
+#pragma once
 
 #include "engine_configuration.h"
 #include "pwm_generator_logic.h"
@@ -149,4 +148,3 @@ public:
 #define CJ125_PID_LSU49_P               (8.0f)
 #define CJ125_PID_LSU49_I               (0.003f)
 
-#endif /* HW_LAYER_SENSORS_CJ125_LOGIC_H_ */

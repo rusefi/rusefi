@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef WAVE_CHART_H_
-#define WAVE_CHART_H_
+#pragma once
 
 #include "global.h"
 
@@ -48,4 +47,3 @@ void setChartSize(int newSize);
 
 #endif /* EFI_ENGINE_SNIFFER */
 
-#endif /* WAVE_CHART_H_ */

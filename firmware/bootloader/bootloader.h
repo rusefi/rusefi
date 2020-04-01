@@ -1,5 +1,4 @@
-#ifndef BOOTLOADER_H_
-#define BOOTLOADER_H_
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,5 +12,3 @@ int initBootloader(void);
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* BOOTLOADER_H_ */

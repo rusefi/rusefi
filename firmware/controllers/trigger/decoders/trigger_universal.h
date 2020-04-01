@@ -6,9 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CONTROLLERS_TRIGGER_DECODERS_TRIGGER_UNIVERSAL_H_
-#define CONTROLLERS_TRIGGER_DECODERS_TRIGGER_UNIVERSAL_H_
-
+#pragma once
 #include "trigger_structure.h"
 
 #define NO_LEFT_FILTER -1
@@ -27,4 +25,3 @@ void configureOnePlus60_2(TriggerWaveform *s, operation_mode_e operationMode);
 void configure3_1_cam(TriggerWaveform *s, operation_mode_e operationMode);
 
 void configureOnePlusOne(TriggerWaveform *s, operation_mode_e operationMode);
-#endif /* CONTROLLERS_TRIGGER_DECODERS_TRIGGER_UNIVERSAL_H_ */
