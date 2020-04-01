@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HW_LAYER_CDM_ION_SENSE_H_
-#define HW_LAYER_CDM_ION_SENSE_H_
+#pragma once
 
 #include "global.h"
 
@@ -38,4 +37,3 @@ void ionPostState(TunerStudioOutputChannels *tsOutputChannels);
 void cdmIonInit(void);
 int getCurrentCdmValue(int currentRevolution);
 
-#endif /* HW_LAYER_CDM_ION_SENSE_H_ */

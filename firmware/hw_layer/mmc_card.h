@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef MMC_CARD_H_
-#define MMC_CARD_H_
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -25,4 +24,3 @@ void readLogFileContent(char *buffer, short fileId, short offset, short length);
 }
 #endif /* __cplusplus */
 
-#endif /* MMC_CARD_H_ */

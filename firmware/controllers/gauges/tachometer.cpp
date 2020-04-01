@@ -40,7 +40,7 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	engine->executor.scheduleForLater(&tachTurnSignalOff, (int)MS2US(durationMs), &turnTachPinLow);
 }
 
-void initTachometer(void) {
+void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(tachOutputPin) == GPIO_UNASSIGNED) {
 		return;
 	}
