@@ -13,7 +13,6 @@
 #include "tachometer.h"
 #include "trigger_central.h"
 
-#if !EFI_UNIT_TEST
 
 EXTERN_ENGINE;
 
@@ -52,4 +51,4 @@ void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
-#endif /* EFI_UNIT_TEST */
+
