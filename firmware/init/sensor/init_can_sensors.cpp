@@ -7,9 +7,12 @@ CanSensor<int16_t, PACK_MULT_PERCENT> canPedalSensor(
 	SensorType::AcceleratorPedal, MS2NT(100)
 );
 
-void registerCanSensor(CanSensorBase& sensor);
-
 void initCanSensors() {
+#if EFI_CANBUS_SLAVE
 	registerCanSensor(canPedalSensor);
-	(void)canPedalSensor.Register();
+
+	if (!canPedalSensor.Register()) {
+		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for pedal sensor");
+	}
+#endif // EFI_CANBUS_SLAVE
 }
