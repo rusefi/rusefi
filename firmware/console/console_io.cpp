@@ -18,7 +18,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
 #include "engine.h"
 #include "console_io.h"
 #include "os_util.h"

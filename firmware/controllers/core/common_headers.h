@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CONTROLLERS_CORE_COMMON_HEADERS_H_
-#define CONTROLLERS_CORE_COMMON_HEADERS_H_
+#pragma once
 
 #ifdef __cplusplus
 #define EXTERNC extern "C"
@@ -104,5 +103,3 @@ extern bool isActiveConfigurationVoid;
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 #define isPinOrModeChanged(pin, mode) (isConfigurationChanged(pin) || isConfigurationChanged(mode))
-
-#endif /* CONTROLLERS_CORE_COMMON_HEADERS_H_ */

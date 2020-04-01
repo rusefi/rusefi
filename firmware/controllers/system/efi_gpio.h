@@ -45,6 +45,7 @@ public:
 
 	bool isInitialized();
 
+	bool getAndSet(int logicValue);
 	void setValue(int logicValue);
 	void toggle();
 	bool getLogicValue() const;
@@ -113,6 +114,7 @@ public:
 class EnginePins {
 public:
 	EnginePins();
+	void startPins();
 	void reset();
 	bool stopPins();
 	void unregisterPins();
@@ -122,7 +124,12 @@ public:
 	void stopInjectionPins();
 	void stopIgnitionPins();
 	OutputPin mainRelay;
+
+	// this one cranks engine
+	OutputPin starterControl;
+	// this one prevents driver from cranknig engine
 	OutputPin starterRelayDisable;
+
 	OutputPin fanRelay;
 	// see acRelayPin
 	OutputPin acRelay;

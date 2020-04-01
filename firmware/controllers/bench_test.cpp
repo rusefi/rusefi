@@ -1,6 +1,6 @@
 /**
- * @file    injector_central.cpp
- * @brief	Utility methods related to fuel injection.
+ * @file    bench_test.cpp
+ * @brief	Utility methods related to bench testing.
  *
  *
  * @date Sep 8, 2013
@@ -27,7 +27,7 @@
 #if !EFI_UNIT_TEST
 
 #include "flash_main.h"
-#include "injector_central.h"
+#include "bench_test.h"
 #include "io_pins.h"
 #include "main_trigger_callback.h"
 #include "engine_configuration.h"
@@ -37,6 +37,8 @@
 #include "idle_thread.h"
 #include "periodic_thread_controller.h"
 #include "tps.h"
+#include "cj125.h"
+#include "malfunction_central.h"
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
@@ -49,48 +51,13 @@
 
 
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static Logging * logger;
 static bool isRunningBench = false;
 
-// todo: move into Engine object?
-// todo: looks like these flags are not currently used? dead functionality? unfinished functionality?
-static int is_injector_enabled[INJECTION_PIN_COUNT];
-
 bool isRunningBenchTest(void) {
 	return isRunningBench;
-}
-
-static void assertCylinderId(int cylinderId, const char *msg) {
-	int isValid = cylinderId >= 1 && cylinderId <= engineConfiguration->specs.cylindersCount;
-	if (!isValid) {
-		// we are here only in case of a fatal issue - at this point it is fine to make some blocking i-o
-		//scheduleSimpleMsg(&logger, "cid=", cylinderId);
-		print("ERROR [%s] cid=%d\r\n", msg, cylinderId);
-		efiAssertVoid(CUSTOM_ERR_6647, false, "Cylinder ID");
-	}
-}
-
-/**
- * @param cylinderId - from 1 to NUMBER_OF_CYLINDERS
- */
-static int isInjectorEnabled(int cylinderId) {
-	assertCylinderId(cylinderId, "isInjectorEnabled");
-	return is_injector_enabled[cylinderId - 1];
-}
-
-static void printInjectorsStatus(void) {
-	for (int id = 1; id <= engineConfiguration->specs.cylindersCount; id++) {
-		scheduleMsg(logger, "injector_%d: %d", id, isInjectorEnabled(id));
-	}
-}
-
-static void setInjectorEnabled(int id, int value) {
-	efiAssertVoid(CUSTOM_ERR_6648, id >= 0 && id < engineConfiguration->specs.cylindersCount, "injector id");
-	is_injector_enabled[id] = value;
-	printInjectorsStatus();
 }
 
 static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, float onTimeMs, float offTimeMs,
@@ -181,6 +148,10 @@ void fanBench(void) {
  */
 void milBench(void) {
 	pinbench("0", "500", "500", "16", &enginePins.checkEnginePin, CONFIG(malfunctionIndicatorPin));
+}
+
+void starterRelayBench(void) {
+	pinbench("0", "6000", "100", "1", &enginePins.starterControl, CONFIG(starterControlPin));
 }
 
 void fuelPumpBenchExt(const char *durationMs) {
@@ -278,11 +249,14 @@ static void handleCommandX14(uint16_t index) {
 	case 9:
 		acRelayBench();
 		return;
-	case 10:
+	case 0xA:
 		// cmd_write_config
 #if EFI_PROD_CODE
 		writeToFlashNow();
 #endif /* EFI_PROD_CODE */
+		return;
+	case 0xB:
+		starterRelayBench();
 		return;
 
 	}
@@ -293,7 +267,9 @@ static void handleCommandX14(uint16_t index) {
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
-	if (subsystem == 0x12) {
+    if (subsystem == 0x11) {
+        clearWarnings();
+	} else if (subsystem == 0x12) {
 		doRunSpark(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x13) {
 		doRunFuel(index, "300", "4", "400", "3");
@@ -308,10 +284,15 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		// cmd_test_idle_valve
 #if EFI_IDLE_CONTROL
 		startIdleBench();
-#endif
+#endif /* EFI_IDLE_CONTROL */
+	} else if (subsystem == 0x18) {
+#if EFI_CJ125
+		cjCalibrate();
+#endif /* EFI_CJ125 */
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit
 		setCallFromPitStop(30000);
+	} else if (subsystem == 0x21) {
 	} else if (subsystem == 0x30) {
 		setEngineType(index);
 	} else if (subsystem == 0x31) {
@@ -329,19 +310,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	}
 }
 
-void initInjectorCentral(Logging *sharedLogger) {
+void initBenchTest(Logging *sharedLogger) {
 	logger = sharedLogger;
-
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
-		is_injector_enabled[i] = true;
-	}
-
-	enginePins.startInjectionPins();
-	enginePins.startIgnitionPins();
-	enginePins.startAuxValves();
-
-	printInjectorsStatus();
-	addConsoleActionII("injector", setInjectorEnabled);
 
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
 	addConsoleAction("acrelaybench", acRelayBench);
@@ -350,6 +320,7 @@ void initInjectorCentral(Logging *sharedLogger) {
 	addConsoleActionS("fanbench2", fanBenchExt);
 	addConsoleAction("dizzybench", dizzyBench); // this is useful for tach output testing
 
+	addConsoleAction("starterbench", starterRelayBench);
 	addConsoleAction("milbench", milBench);
 	addConsoleActionSSS("fuelbench", fuelbench);
 	addConsoleActionSSS("sparkbench", sparkbench);

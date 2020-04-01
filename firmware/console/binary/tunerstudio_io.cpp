@@ -5,11 +5,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "engine.h"
 #include "os_access.h"
 #include "tunerstudio_io.h"
 #include "console_io.h"
-#include "engine.h"
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif

@@ -24,6 +24,10 @@ protected:
 		// Base case is the identity function
 		return {true, input};
 	}
+
+	void showInfo(Logging* logger, float testInputValue) const {
+		// base case does nothing
+	}
 };
 
 template <typename TFirst, typename... TRest>
@@ -58,6 +62,17 @@ public:
 		return TBase::template get<TGet>();
 	}
 
+	void showInfo(Logging* logger, float testInputValue) const {
+		// Print info about this level
+		m_f.showInfo(logger, testInputValue);
+
+		// If valid, recurse down
+		auto res = m_f.convert(testInputValue);
+		if (res.Valid) {
+			TBase::showInfo(logger, res.Value);
+		}
+	}
+
 private:
 	TFirst m_f;
 };
@@ -75,6 +90,10 @@ public:
 	template <typename TGet>
 	TGet &get() {
 		return m_fs.template get<TGet>();
+	}
+
+	void showInfo(Logging* logger, float testInputValue) const override {
+		m_fs.showInfo(logger, testInputValue);
 	}
 
 private:

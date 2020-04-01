@@ -35,16 +35,14 @@
 #include "lcd_menu_tree.h"
 #include "memstreams.h"
 #include "settings.h"
-#include "injector_central.h"
+#include "bench_test.h"
 #include "engine_controller.h"
 #include "mmc_card.h"
 #include "idle_thread.h"
 #include "fuel_math.h"
 
 
-EXTERN_ENGINE
-;
-extern bool hasFirmwareErrorFlag;
+EXTERN_ENGINE;
 
 static MenuItem ROOT(NULL, NULL);
 
@@ -297,7 +295,7 @@ void updateHD44780lcd(void) {
 	}
 
 
-	const char * message = hasFirmwareErrorFlag ? getFirmwareError() : getWarning();
+	const char * message = hasFirmwareErrorFlag ? getFirmwareError() : getWarningMessage();
 	memcpy(buffer, message, engineConfiguration->HD44780width);
 	buffer[engineConfiguration->HD44780width] = 0;
 	lcd_HD44780_set_position(engineConfiguration->HD44780height - 1, 0);
@@ -334,7 +332,7 @@ void updateHD44780lcd(void) {
 //
 //	lcd_HD44780_set_position(1, 0);
 //	memset(buffer, ' ', LCD_WIDTH);
-//	memcpy(buffer, getWarning(), LCD_WIDTH);
+//	memcpy(buffer, getWarningMessage(), LCD_WIDTH);
 //	buffer[LCD_WIDTH] = 0;
 //	lcd_HD44780_print_string(buffer);
 //

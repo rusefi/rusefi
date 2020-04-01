@@ -106,7 +106,8 @@ percent_t getTpsValue(int index, float adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int tpsMax = index == 0 ? CONFIG(tpsMax) : CONFIG(tps2Max);
 	int tpsMin = index == 0 ? CONFIG(tpsMin) : CONFIG(tps2Min);
 
-	float result = interpolateMsg("TPS", tpsMax, 100, tpsMin, 0, adc);
+	const char *msg = index == 0 ? "TPS1" : "TPS2";
+	float result = interpolateMsg(msg, tpsMax, 100, tpsMin, 0, adc);
 	if (result < engineConfiguration->tpsErrorDetectionTooLow) {
 #if EFI_PROD_CODE
 		// too much noise with simulator

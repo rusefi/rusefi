@@ -53,6 +53,17 @@
 #define afrTable_offset_hex 48a0
 #define afterCrankingIACtaperDuration_offset 2036
 #define afterCrankingIACtaperDuration_offset_hex 7f4
+#define AFTERSTART_DECAY_CURVE_SIZE 8
+#define AFTERSTART_ENRICH_CURVE_SIZE 8
+#define AFTERSTART_HOLD_CURVE_SIZE 8
+#define afterstartCoolantBins_offset 6120
+#define afterstartCoolantBins_offset_hex 17e8
+#define afterstartDecayTime_offset 6216
+#define afterstartDecayTime_offset_hex 1848
+#define afterstartEnrich_offset 6184
+#define afterstartEnrich_offset_hex 1828
+#define afterstartHoldTime_offset 6152
+#define afterstartHoldTime_offset_hex 1808
 #define alFIn_offset 4024
 #define alFIn_offset_hex fb8
 #define alignEngineSnifferAtTDC_offset 744
@@ -96,6 +107,10 @@
 #define antiLagActivationMode_offset_hex 400
 #define antiLagEnabled_offset 76
 #define antiLagEnabled_offset_hex 4c
+#define antiLagRpmTreshold_offset 824
+#define antiLagRpmTreshold_offset_hex 338
+#define anUnused4Bytes_offset 732
+#define anUnused4Bytes_offset_hex 2dc
 #define autoTuneCltThreshold_offset 2420
 #define autoTuneCltThreshold_offset_hex 974
 #define autoTuneTpsQuietPeriod_offset 2428
@@ -257,18 +272,6 @@
 #define binarySerialRxPin_offset_hex 717
 #define binarySerialTxPin_offset 1814
 #define binarySerialTxPin_offset_hex 716
-#define biQuad_a0_offset 2332
-#define biQuad_a0_offset_hex 91c
-#define biQuad_a1_offset 2336
-#define biQuad_a1_offset_hex 920
-#define biQuad_a2_offset 2340
-#define biQuad_a2_offset_hex 924
-#define biQuad_b1_offset 2344
-#define biQuad_b1_offset_hex 928
-#define biQuad_b2_offset 2348
-#define biQuad_b2_offset_hex 92c
-#define biQuad_offset 2332
-#define biQuad_offset_hex 91c
 #define BLOCKING_FACTOR 400
 #define BOOST_LOAD_COUNT 8
 #define BOOST_RPM_COUNT 8
@@ -325,9 +328,7 @@
 #define camInputs3_offset_hex 22e
 #define camInputs4_offset 559
 #define camInputs4_offset_hex 22f
-#define can_device_mode_e_enum "v0", "v1"
-#define canDeviceMode_offset 732
-#define canDeviceMode_offset_hex 2dc
+#define CAN_DEFAULT_BASE 0x200
 #define canNbcType_offset 480
 #define canNbcType_offset_hex 1e0
 #define canReadEnabled_offset 1464
@@ -484,6 +485,9 @@
 #define crankingTpsBins_offset_hex 688
 #define crankingTpsCoef_offset 1640
 #define crankingTpsCoef_offset_hex 668
+#define critical_error_message_offset 6000
+#define critical_error_message_offset_hex 1770
+#define CRITICAL_PREFIX "CRITICAL"
 #define cutFuelOnHardLimit_offset 1464
 #define cutFuelOnHardLimit_offset_hex 5b8
 #define cutSparkOnHardLimit_offset 1464
@@ -492,7 +496,7 @@
 #define cylinderBore_offset_hex 198
 #define cylindersCount_offset 400
 #define cylindersCount_offset_hex 190
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "Mode39", "Mode40"
 #define debugMapAveraging_offset 807
 #define debugMapAveraging_offset_hex 327
 #define debugMode_offset 2092
@@ -535,6 +539,10 @@
 #define enableAemXSeries_offset_hex 2e8
 #define enabledStep1Limiter_offset 744
 #define enabledStep1Limiter_offset_hex 2e8
+#define enableLaunchBoost_offset 976
+#define enableLaunchBoost_offset_hex 3d0
+#define enableLaunchRetard_offset 976
+#define enableLaunchRetard_offset_hex 3d0
 #define enableVerboseCanTx_offset 744
 #define enableVerboseCanTx_offset_hex 2e8
 #define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge"
@@ -557,6 +565,7 @@
 #define engineSnifferRpmThreshold_offset_hex 4
 #define engineType_offset 0
 #define engineType_offset_hex 0
+#define ERROR_BUFFER_SIZE 120
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
@@ -1415,15 +1424,21 @@
 #define knockNoiseRpmBins_offset_hex 73c
 #define knockVThreshold_offset 1512
 #define knockVThreshold_offset_hex 5e8
+#define launchActivateDelay_offset 1060
+#define launchActivateDelay_offset_hex 424
 #define launchActivatePin_offset 991
 #define launchActivatePin_offset_hex 3df
 #define launchActivationMode_e_enum "Switch Input", "Clutch Input", "Always Active(Disabled By Speed)","INVALID"
 #define launchActivationMode_offset 1020
 #define launchActivationMode_offset_hex 3fc
+#define launchAdvanceRpmRange_offset 1052
+#define launchAdvanceRpmRange_offset_hex 41c
 #define launchBoostDuty_offset 1044
 #define launchBoostDuty_offset_hex 414
 #define launchControlEnabled_offset 76
 #define launchControlEnabled_offset_hex 4c
+#define launchDisableBySpeed_offset 976
+#define launchDisableBySpeed_offset_hex 3d0
 #define launchFuelAdded_offset 1040
 #define launchFuelAdded_offset_hex 410
 #define launchFuelCutEnable_offset 1464
@@ -1442,6 +1457,8 @@
 #define launchTimingRetard_offset_hex 140
 #define launchTimingRpmRange_offset 1036
 #define launchTimingRpmRange_offset_hex 40c
+#define launchTpsTreshold_offset 1056
+#define launchTpsTreshold_offset_hex 420
 #define lcdThreadPeriodMs_offset 720
 #define lcdThreadPeriodMs_offset_hex 2d0
 #define LDS_ALTERNATOR_PID_STATE_INDEX 9
@@ -1768,6 +1785,8 @@
 #define spi3SckMode_offset_hex a2a
 #define spi3sckPin_offset 936
 #define spi3sckPin_offset_hex 3a8
+#define startCrankingDuration_offset 826
+#define startCrankingDuration_offset_hex 33a
 #define starterControlPin_offset 1772
 #define starterControlPin_offset_hex 6ec
 #define starterRelayDisableMode_offset 809
@@ -1941,6 +1960,10 @@
 #define trigger_offset 524
 #define trigger_offset_hex 20c
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
+#define trigger_todoRemoveMeOneDay0_offset 528
+#define trigger_todoRemoveMeOneDay0_offset_hex 210
+#define trigger_todoRemoveMeOneDay1_offset 528
+#define trigger_todoRemoveMeOneDay1_offset_hex 210
 #define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "trg44", "trg45", "INVALID"
 #define trigger_type_offset 524
 #define trigger_type_offset_hex 20c
@@ -2002,10 +2025,6 @@
 #define trigger_unusedBit_4_8_offset_hex 210
 #define trigger_unusedBit_4_9_offset 528
 #define trigger_unusedBit_4_9_offset_hex 210
-#define trigger_unusedTriggerBit0_offset 528
-#define trigger_unusedTriggerBit0_offset_hex 210
-#define trigger_unusedTriggerBit1_offset 528
-#define trigger_unusedTriggerBit1_offset_hex 210
 #define trigger_useOnlyFirstChannel_offset 528
 #define trigger_useOnlyFirstChannel_offset_hex 210
 #define triggerCompCenterVolt_offset 4036
@@ -2043,6 +2062,7 @@
 #define TS_FILE_VERSION 20200310
 #define TS_OUTPUT_SIZE 240
 #define ts_show_analog_divider true
+#define ts_show_can_pins true
 #define ts_show_cj125 true
 #define ts_show_egt true
 #define ts_show_etb true
@@ -2052,7 +2072,10 @@
 #define ts_show_hip9011 true
 #define ts_show_joystick true
 #define ts_show_lcd true
+#define ts_show_sd_card true
 #define ts_show_spi true
+#define ts_show_trigger_comparator true
+#define ts_show_tunerstudio_port true
 #define TS_SIGNATURE "rusEFI v1.2020.3"
 #define tunerStudioSerialSpeed_offset 728
 #define tunerStudioSerialSpeed_offset_hex 2d8
@@ -2062,12 +2085,12 @@
 #define twoWireBatchInjection_offset_hex 5c4
 #define uartConsoleSerialSpeed_offset 2076
 #define uartConsoleSerialSpeed_offset_hex 81c
-#define unrealisticRpmThreashold_offset 760
-#define unrealisticRpmThreashold_offset_hex 2f8
 #define unused1059_offset 3964
 #define unused1059_offset_hex f7c
 #define unused1234234_offset 2042
 #define unused1234234_offset_hex 7fa
+#define unused76b9_offset 76
+#define unused76b9_offset_hex 4c
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_24_offset_hex 5c4
 #define unused_1484_bit_25_offset 1476
@@ -2086,8 +2109,10 @@
 #define unused_1484_bit_31_offset_hex 5c4
 #define unused_former_warmup_target_afr_offset 2096
 #define unused_former_warmup_target_afr_offset_hex 830
-#define unusedAtOldBoardConfigurationEnd_offset 1052
-#define unusedAtOldBoardConfigurationEnd_offset_hex 41c
+#define unusedAntilagTimeout_offset 820
+#define unusedAntilagTimeout_offset_hex 334
+#define unusedAtOldBoardConfigurationEnd_offset 1064
+#define unusedAtOldBoardConfigurationEnd_offset_hex 428
 #define unusedBit4_1476_offset 1476
 #define unusedBit4_1476_offset_hex 5c4
 #define unusedBit_251_10_offset 976
@@ -2130,22 +2155,16 @@
 #define unusedBit_251_28_offset_hex 3d0
 #define unusedBit_251_29_offset 976
 #define unusedBit_251_29_offset_hex 3d0
-#define unusedBit_251_4_offset 976
-#define unusedBit_251_4_offset_hex 3d0
-#define unusedBit_251_5_offset 976
-#define unusedBit_251_5_offset_hex 3d0
-#define unusedBit_251_6_offset 976
-#define unusedBit_251_6_offset_hex 3d0
 #define unusedBit_251_7_offset 976
 #define unusedBit_251_7_offset_hex 3d0
 #define unusedBit_251_8_offset 976
 #define unusedBit_251_8_offset_hex 3d0
 #define unusedBit_251_9_offset 976
 #define unusedBit_251_9_offset_hex 3d0
-#define unusedBit_280_30_offset 976
-#define unusedBit_280_30_offset_hex 3d0
-#define unusedBit_280_31_offset 976
-#define unusedBit_280_31_offset_hex 3d0
+#define unusedBit_281_30_offset 976
+#define unusedBit_281_30_offset_hex 3d0
+#define unusedBit_281_31_offset 976
+#define unusedBit_281_31_offset_hex 3d0
 #define unusedBit_34_31_offset 76
 #define unusedBit_34_31_offset_hex 4c
 #define unusedErrorPin_offset 2040
@@ -2154,10 +2173,10 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1774
 #define unusedFormerWarmupAfrPid_offset_hex 6ee
-#define unusedmiataNb2VVTRatioFrom_offset 820
-#define unusedmiataNb2VVTRatioFrom_offset_hex 334
-#define unusedmiataNb2VVTRatioTo_offset 824
-#define unusedmiataNb2VVTRatioTo_offset_hex 338
+#define unusedOldBiquad_offset 2332
+#define unusedOldBiquad_offset_hex 91c
+#define unusedOneMoreHere_offset 760
+#define unusedOneMoreHere_offset_hex 2f8
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding4_offset_hex a21
 #define unusedSpiPadding5_offset 2713
@@ -2172,8 +2191,6 @@
 #define unusuedvref_offset_hex fb0
 #define useAdvanceCorrectionsForCranking_offset 1476
 #define useAdvanceCorrectionsForCranking_offset_hex 5c4
-#define useBiQuadAnalogFiltering_offset 76
-#define useBiQuadAnalogFiltering_offset_hex 4c
 #define useConstantDwellDuringCranking_offset 1464
 #define useConstantDwellDuringCranking_offset_hex 5b8
 #define useETBforIdleControl_offset 744

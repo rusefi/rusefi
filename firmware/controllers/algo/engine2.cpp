@@ -28,8 +28,7 @@
 extern fuel_Map3D_t veMap;
 extern afr_Map3D_t afrMap;
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 // this does not look exactly right
 extern LoggingWithStorage engineLogger;
@@ -196,6 +195,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	injectionOffset = getInjectionOffset(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+
+	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);

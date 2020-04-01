@@ -23,10 +23,9 @@
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
-#endif
+#endif /* HAS_OS_ACCESS */
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 extern fsio8_Map3D_f32t fsioTable1;
 
@@ -123,7 +122,7 @@ static void turnAuxPidOn(int index) {
 			&engine->executor,
 			engineConfiguration->auxPidPins[index],
 			&instances[index].auxOutputPin,
-			engineConfiguration->auxPidFrequency[index], 0.1, (pwm_gen_callback*)applyPinState);
+			engineConfiguration->auxPidFrequency[index], 0.1);
 }
 
 void startAuxPins(void) {

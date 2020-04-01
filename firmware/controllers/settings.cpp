@@ -58,8 +58,7 @@ extern WaveChart waveChart;
 static char LOGGING_BUFFER[SETTINGS_LOGGING_BUFFER_SIZE];
 static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 /*
  static void printIntArray(int array[], int size) {
@@ -396,25 +395,32 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 	scheduleMsg(&logger, "==============================");
 }
 
-void printTPSInfo(void) {
-	auto tps = Sensor::get(SensorType::Tps1);
-	auto raw = Sensor::getRaw(SensorType::Tps1);
+static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int16_t max, adc_channel_e channel) {
+	auto tps = Sensor::get(sensor);
+	auto raw = Sensor::getRaw(sensor);
 
 	if (!tps.Valid) {
 		scheduleMsg(&logger, "TPS not valid");
 	}
 	static char pinNameBuffer[16];
 
-	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
-			raw, getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
+	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", min, max,
+			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer));
 
+
+	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", convertVoltageTo10bitADC(raw), tps.Value, getTpsRateOfChange());
+}
+
+
+void printTPSInfo(void) {
 	if (hasPedalPositionSensor()) {
 		scheduleMsg(&logger, "pedal up %f / down %f",
 				engineConfiguration->throttlePedalUpVoltage,
 				engineConfiguration->throttlePedalWOTVoltage);
 	}
 
-	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", convertVoltageTo10bitADC(raw), tps.Value, getTpsRateOfChange());
+	printTpsSenser("TPS", SensorType::Tps1, engineConfiguration->tpsMin, engineConfiguration->tpsMax, engineConfiguration->tps1_1AdcChannel);
+	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);
 }
 
 static void printTemperatureInfo(void) {
@@ -680,6 +686,14 @@ static void setStarterRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
 }
 
+static void setCanRxPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->canRxPin, "CAN RX");
+}
+
+static void setCanTxPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->canTxPin, "CAN TX");
+}
+
 static void setAlternatorPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->alternatorControlPin, "alternator");
 }
@@ -885,6 +899,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		CONFIG(useTLE8888_cranking_hack) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		CONFIG(verboseTLE8888) = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
+		CONFIG(enableVerboseCanTx) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {
@@ -1423,6 +1439,9 @@ void initSettings(void) {
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
+
+	addConsoleActionS("set_can_rx_pin", setCanRxPin);
+	addConsoleActionS("set_can_tx_pin", setCanTxPin);
 
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);

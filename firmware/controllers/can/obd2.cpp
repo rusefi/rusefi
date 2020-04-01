@@ -39,8 +39,7 @@
 #include "fuel_math.h"
 #include "thermistors.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static LoggingWithStorage logger("obd2");
 

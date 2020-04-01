@@ -252,7 +252,7 @@ GPIOA_6
  *
  * white#9 : orange   : +5v
  * white#17: green    : PPS
- * white#18: red
+ * white#18: red      : TPS#2
  * white#23: black    : Sensor Ground
  * white#24: red      : TPS#1
  *
@@ -261,7 +261,7 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// 12 injectors defined in boards/proteus/board_configuration.cpp
-
+	// set_analog_input_pin pps pa4
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_4;
 
 	// set vbatt_divider 8.16
@@ -270,7 +270,8 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vbattDividerCoeff = 7.6;
 
 	// TPS#2 = Analog volt
-//	engineConfiguration->tps2_1AdcChannel = EFI_ADC_;
+	// set_analog_input_pin tps2 pa6
+	engineConfiguration->tps2_1AdcChannel = EFI_ADC_6;
 
 
 }

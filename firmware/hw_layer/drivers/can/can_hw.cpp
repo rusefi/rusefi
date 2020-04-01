@@ -22,8 +22,7 @@
 #include "mpu_util.h"
 #include "engine.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static int canReadCounter = 0;
 static int canWriteOk = 0;
@@ -148,6 +147,10 @@ static void canInfo(void) {
 		scheduleMsg(&logger, "CAN is not enabled, please enable & restart");
 		return;
 	}
+
+#if EFI_CANBUS_SLAVE
+	scheduleMsg(&logger, "CAN SLAVE MODE");
+#endif
 
 	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIG(canTxPin)));
 	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIG(canRxPin)));

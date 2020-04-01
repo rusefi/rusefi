@@ -23,9 +23,6 @@
 
 #include "global.h"
 #include "os_access.h"
-#if EFI_PROD_CODE
-#include <nvic.h>
-#endif
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
@@ -54,9 +51,7 @@
 
 #include "backup_ram.h"
 
-EXTERN_ENGINE
-;
-extern bool hasFirmwareErrorFlag;
+EXTERN_ENGINE;
 
 static const char *prevOutputName = nullptr;
 
@@ -362,7 +357,6 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 
 	(void) ckpSignalType;
 
-	ENGINE(m.beforeMainTrigger) = getTimeNowLowerNt();
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
@@ -453,10 +447,6 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
 	onTriggerEventSparkLogic(limitedSpark, trgEventIndex, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
-
-	if (trgEventIndex == 0) {
-		ENGINE(m.mainTriggerCallbackTime) = getTimeNowLowerNt() - ENGINE(m.beforeMainTrigger);
-	}
 }
 
 // Check if the engine is not stopped or cylinder cleanup is activated

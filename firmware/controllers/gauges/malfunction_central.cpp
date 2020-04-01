@@ -24,7 +24,7 @@ static int find_position(obd_code_e e_code)							// Search if code is present
 	return -1;														// -1 if code not found
 }
 
-void initMalfunctionCentral(void) {
+void clearWarnings(void) {
 	error_codes_set.count = 0;
 }
 
@@ -40,15 +40,16 @@ void removeError(obd_code_e errorCode) {
 	if (pos >= 0) {
 		for (int t = pos; t < error_codes_set.count; t++) 					// shift all right elements to one pos left
 			error_codes_set.error_codes[t] = error_codes_set.error_codes[t + 1];
-	error_codes_set.error_codes[--error_codes_set.count] = (obd_code_e)0;				// place 0
+	    error_codes_set.error_codes[--error_codes_set.count] = (obd_code_e)0;				// place 0
 	}
 }
 
 void setError(bool isError, obd_code_e errorCode) {
-	if (isError)
+	if (isError) {
 		addError(errorCode);
-	else
+	} else {
 		removeError(errorCode);
+	}
 }
 
 void getErrorCodes(error_codes_set_s * copy) {

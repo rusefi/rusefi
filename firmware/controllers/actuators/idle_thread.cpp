@@ -53,8 +53,7 @@ static StepperMotor iacMotor;
 
 static Logging *logger;
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static bool shouldResetPid = false;
 // The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.

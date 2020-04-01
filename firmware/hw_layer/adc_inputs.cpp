@@ -42,8 +42,6 @@
 #define ADC_BUF_DEPTH_SLOW      8
 #define ADC_BUF_DEPTH_FAST      4
 
-//static Biquad biq[ADC_MAX_CHANNELS_COUNT];
-
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 static const char * adcHwChannelUsage[HW_MAX_ADC_INDEX];
 
@@ -474,7 +472,7 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 
 	if (adcHwChannelEnabled[setting] != ADC_OFF) {
 		getPinNameByAdcChannel(name, setting, errorMsgBuff);
-		firmwareError(CUSTOM_ERR_ADC_USED, "ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
+		firmwareError(CUSTOM_ERR_ADC_USED, "Analog input error: input \"%s\" selected for %s but was already used by %s", errorMsgBuff, name, adcHwChannelUsage[setting]);
 	}
 
 	adcHwChannelUsage[setting] = name;
@@ -500,41 +498,42 @@ static void configureInputs(void) {
 	 */
 
 	addChannel("MAP", engineConfiguration->map.sensor.hwChannel, ADC_FAST);
-	if (hasMafSensor()) {
-		addChannel("MAF", engineConfiguration->mafAdcChannel, ADC_FAST);
-	}
-	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
+	addChannel("MAF", engineConfiguration->mafAdcChannel, ADC_FAST);
 
-	addChannel("baro", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
+	addChannel("HIP9011", engineConfiguration->hipOutputChannel, ADC_FAST);
 
-	addChannel("TPS1_1", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
-	addChannel("TPS1_2", engineConfiguration->tps1_2AdcChannel, ADC_SLOW);
-	addChannel("TPS2_1", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
-	addChannel("TPS2_2", engineConfiguration->tps2_2AdcChannel, ADC_SLOW);
+	addChannel("Baro Press", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
 
-	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
-	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
+	addChannel("TPS 1 Primary", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
+	addChannel("TPS 1 Secondary", engineConfiguration->tps1_2AdcChannel, ADC_SLOW);
+	addChannel("TPS 2 Primary", engineConfiguration->tps2_1AdcChannel, ADC_SLOW);
+	addChannel("TPS 2 Secondary", engineConfiguration->tps2_2AdcChannel, ADC_SLOW);
+
+	addChannel("Fuel Level", engineConfiguration->fuelLevelSensor, ADC_SLOW);
+	addChannel("Acc Pedal", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
 	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
-	addChannel("AUXT#1", engineConfiguration->auxTempSensor1.adcChannel, ADC_SLOW);
-	addChannel("AUXT#2", engineConfiguration->auxTempSensor2.adcChannel, ADC_SLOW);
-	if (engineConfiguration->auxFastSensor1_adcChannel != EFI_ADC_0) {
+	addChannel("AUX Temp 1", engineConfiguration->auxTempSensor1.adcChannel, ADC_SLOW);
+	addChannel("AUX Temp 2", engineConfiguration->auxTempSensor2.adcChannel, ADC_SLOW);
+	if (engineConfiguration->auxFastSensor1_adcChannel != INCOMPATIBLE_CONFIG_CHANGE) {
 		// allow EFI_ADC_0 next time we have an incompatible configuration change
 		addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
 	}
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
-	addChannel("OilP", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
+	addChannel("Oil Pressure", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
-	if (engineConfiguration->high_fuel_pressure_sensor_1 != INCOMPATIBLE_CONFIG_CHANGE)
+	if (engineConfiguration->high_fuel_pressure_sensor_1 != INCOMPATIBLE_CONFIG_CHANGE) {
 		addChannel("HFP1", engineConfiguration->high_fuel_pressure_sensor_1, ADC_SLOW);
-	if (engineConfiguration->high_fuel_pressure_sensor_2 != INCOMPATIBLE_CONFIG_CHANGE)
+	}
+	if (engineConfiguration->high_fuel_pressure_sensor_2 != INCOMPATIBLE_CONFIG_CHANGE) {
 		addChannel("HFP2", engineConfiguration->high_fuel_pressure_sensor_2, ADC_SLOW);
+	}
 
 	if (CONFIG(isCJ125Enabled)) {
-		addChannel("cj125ur", engineConfiguration->cj125ur, ADC_SLOW);
-		addChannel("cj125ua", engineConfiguration->cj125ua, ADC_SLOW);
+		addChannel("CJ125 UR", engineConfiguration->cj125ur, ADC_SLOW);
+		addChannel("CJ125 UA", engineConfiguration->cj125ua, ADC_SLOW);
 	}
 
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {

@@ -15,6 +15,8 @@
 #include "fsio_impl.h"
 #include "allsensors.h"
 
+EXTERN_ENGINE;
+
 #if EFI_FSIO
 
 #include "os_access.h"
@@ -72,8 +74,6 @@ static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
 
 #define LE_EVAL_POOL_SIZE 32
 
-extern EnginePins enginePins;
-
 static LECalculator evalCalc;
 static LEElement evalPoolElements[LE_EVAL_POOL_SIZE];
 static LEElementPool evalPool(evalPoolElements, LE_EVAL_POOL_SIZE);
@@ -107,9 +107,6 @@ static LEElement * starterRelayDisableLogic;
 #if EFI_MAIN_RELAY_CONTROL
 static LEElement * mainRelayLogic;
 #endif /* EFI_MAIN_RELAY_CONTROL */
-
-EXTERN_ENGINE
-;
 
 static Logging *logger;
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -165,7 +162,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #include "pin_repository.h"
 #include "pwm_generator.h"
 // todo: that's about bench test mode, wrong header for sure!
-#include "injector_central.h"
+#include "bench_test.h"
 
 static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
 // todo: reduce code duplication between all "set pin methods"
@@ -693,7 +690,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			} else {
 				startSimplePwmExt(&fsioPwm[i], "FSIOpwm",
 						&engine->executor,
-						brainPin, &enginePins.fsioOutputs[i], frequency, 0.5f, (pwm_gen_callback*)applyPinState);
+						brainPin, &enginePins.fsioOutputs[i], frequency, 0.5f);
 			}
 		}
 	}
@@ -733,10 +730,6 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 #else /* !EFI_FSIO */
-
-EXTERN_ENGINE
-;
-extern EnginePins enginePins;
 
 // "Limp-mode" implementation for some RAM-limited configs without FSIO
 void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

@@ -1,6 +1,7 @@
 package com.rusefi.io;
 
 import com.rusefi.Timeouts;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineTimeListener;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
@@ -17,8 +18,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * todo: eliminate logic duplication with {@link ConnectionWatchdog}
  */
 public class ConnectionStatus {
-    // todo: react to any message as connected? how to know if message from controller, not internal message?
-    public static final String FATAL_MESSAGE_PREFIX = "FATAL";
     @NotNull
     private Value value = Value.NOT_CONNECTED;
 
@@ -71,7 +70,7 @@ public class ConnectionStatus {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (message.startsWith(FATAL_MESSAGE_PREFIX))
+                if (message.startsWith(Fields.CRITICAL_PREFIX))
                     markConnected();
             }
         });
