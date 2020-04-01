@@ -776,10 +776,11 @@ typedef enum {
  * Net Body Computer types
  */
 typedef enum {
-	CAN_BUS_NBC_BMW = 0,
+	CAN_BUS_NBC_NONE = 0,
 	CAN_BUS_NBC_FIAT = 1,
 	CAN_BUS_NBC_VAG = 2,
 	CAN_BUS_MAZDA_RX8 = 3,
+	CAN_BUS_NBC_BMW = 4,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
