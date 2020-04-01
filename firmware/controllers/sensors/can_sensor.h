@@ -45,7 +45,14 @@ public:
 	}
 
 	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override {
-		float value = *reinterpret_cast<const scaled_channel<TStorage, TScale>*>(&frame.data8[m_offset]);
+		// Compute the location of our data within the frame
+		const uint8_t* dataLocation = &frame.data8[m_offset];
+
+		// Reinterpret as a scaled_channel - it already has the logic for decoding a scaled integer to a float
+		const auto scaler = reinterpret_cast<const scaled_channel<TStorage, TScale>*>(dataLocation);
+
+		// Actually do the conversion
+		float value = *scaler;
 		setValidValue(value, nowNt);
 	}
 
