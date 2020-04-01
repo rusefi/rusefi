@@ -33,21 +33,12 @@ TEST(tachometer, testPulsePerRev) {
 	ASSERT_EQ(1500,  GET_RPM()) << "RPM";
 	ASSERT_EQ(15,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #1";
     ASSERT_EQ(engine->triggerCentral.triggerState.shaft_is_synchronized, true);
-
-    // Clean the slate
-	eth.clearQueue();
-
-	eth.moveTimeForwardMs(5 /*ms*/);
-
-    // This will ensure that we did calcualte fresh values for tach freq and duty
-    eth.firePrimaryTriggerRise();
-    ASSERT_EQ(1500, eth.engine.rpmCalculator.rpmValue) << "RPM";
-    ASSERT_EQ(6.25,getTachFreq());
+    ASSERT_EQ(100,getTachFreq());
     ASSERT_EQ(0.5,getTachDuty());
 std::cerr << "Tach Freq: " << getTachFreq() << "\n" << std::endl;
 std::cerr << "Tach Duty: " << getTachDuty() << "\n" << std::endl;
  
  
     // Clean the slate
-	eth.clearQueue();
+	//eth.clearQueue();
 }

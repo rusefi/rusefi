@@ -29,7 +29,7 @@ float getTachFreq(void)
 
 float getTachDuty(void)
 {
-	return tachFreq;
+	return duty;
 }
 #endif
 
