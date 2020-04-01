@@ -30,6 +30,10 @@ volatile float canPedal = 0;
 volatile float canMap = 0;
 
 void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
+	if (CONFIG(debugMode) == DBG_CAN) {
+		printPacket(frame, logger);
+	}
+
 	// TODO: if/when we support multiple lambda sensors, sensor N
 	// has address 0x0180 + N where N = [0, 15]
 	if (frame.SID == 0x0180) {
@@ -43,7 +47,6 @@ void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
 		int16_t mapScaled = *reinterpret_cast<const uint16_t*>(&frame.data8[0]);
 		canMap = mapScaled / (1.0 * PACK_MULT_PRESSURE);
 	} else {
-		printPacket(frame, logger);
 		obdOnCanPacketRx(frame);
 	}
 }
