@@ -95,6 +95,7 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* BOARD_TLE8888_COUNT */
 
 
+	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
 #if EFI_CANBUS_SLAVE
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = false;

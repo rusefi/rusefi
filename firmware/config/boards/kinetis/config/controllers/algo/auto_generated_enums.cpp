@@ -344,6 +344,8 @@ case TLE6240_PIN_9:
 
 const char *getCan_nbc_e(can_nbc_e value){
 switch(value) {
+case CAN_BUS_NBC_NONE:
+  return "CAN_BUS_NBC_NONE";
 case CAN_BUS_MAZDA_RX8:
   return "CAN_BUS_MAZDA_RX8";
 case CAN_BUS_NBC_BMW:
