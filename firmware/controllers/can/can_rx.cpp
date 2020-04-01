@@ -45,7 +45,7 @@ void registerCanSensor(CanSensorBase& sensor) {
 	s_head = &sensor;
 }
 
-void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
+void processCanRxMessage(const CANRxFrame& frame, Logging* logger, efitick_t nowNt) {
 	if (CONFIG(debugMode) == DBG_CAN) {
 		printPacket(frame, logger);
 	}
