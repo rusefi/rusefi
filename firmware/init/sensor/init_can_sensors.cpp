@@ -1,4 +1,13 @@
+/**
+ * @file	init_can_sensors.cpp
+ *
+ * @date March 31, 2020
+ * @author Matthew Kennedy, (c) 2020
+ */
 
+#include "global.h"
+
+#if EFI_CAN_SUPPORT
 #include "can_sensor.h"
 #include "can.h"
 
@@ -16,3 +25,4 @@ void initCanSensors() {
 	}
 #endif // EFI_CANBUS_SLAVE
 }
+#endif // EFI_CAN_SUPPORT

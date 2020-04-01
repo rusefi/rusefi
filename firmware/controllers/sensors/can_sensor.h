@@ -1,3 +1,9 @@
+/**
+ * @file	can_sensor.h
+ *
+ * @date March 31, 2020
+ * @author Matthew Kennedy, (c) 2020
+ */
 
 #pragma once
 
