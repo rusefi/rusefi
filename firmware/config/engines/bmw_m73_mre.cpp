@@ -49,6 +49,8 @@
  *
  * BMW_M73_MRE
  * set engine_type 104
+ * BMW_M73_MRE_SLAVE
+ * set engine_type 105
  *
  */
 
@@ -91,6 +93,17 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// "43 - GP Out 4"
 	CONFIG(starterControlPin) = TLE8888_PIN_24;
 #endif /* BOARD_TLE8888_COUNT */
+
+
+	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
+#if EFI_CANBUS_SLAVE
+	engineConfiguration->canReadEnabled = true;
+	engineConfiguration->canWriteEnabled = false;
+#else /* EFI_CANBUS_SLAVE */
+	engineConfiguration->canReadEnabled = false;
+	engineConfiguration->canWriteEnabled = true;
+	CONFIG(enableVerboseCanTx) = true;
+#endif /* EFI_CANBUS_SLAVE */
 
 
 	//set tps_min 891

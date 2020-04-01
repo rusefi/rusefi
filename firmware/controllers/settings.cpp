@@ -686,6 +686,14 @@ static void setStarterRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
 }
 
+static void setCanRxPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->canRxPin, "CAN RX");
+}
+
+static void setCanTxPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->canTxPin, "CAN TX");
+}
+
 static void setAlternatorPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->alternatorControlPin, "alternator");
 }
@@ -891,6 +899,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		CONFIG(useTLE8888_cranking_hack) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		CONFIG(verboseTLE8888) = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
+		CONFIG(enableVerboseCanTx) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {
@@ -1431,6 +1441,9 @@ void initSettings(void) {
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
+
+	addConsoleActionS("set_can_rx_pin", setCanRxPin);
+	addConsoleActionS("set_can_tx_pin", setCanTxPin);
 
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);

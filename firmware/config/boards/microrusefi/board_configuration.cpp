@@ -18,6 +18,12 @@
 
 EXTERN_ENGINE;
 
+
+static void setupCanPins() {
+	engineConfiguration->canTxPin = GPIOB_6;
+	engineConfiguration->canRxPin = GPIOB_12;
+}
+
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = GPIOE_14;
 	engineConfiguration->injectionPins[1] = GPIOE_13;
@@ -186,6 +192,7 @@ void setBoardConfigurationOverrides(void) {
 	setupVbatt();
 	setupTle8888();
 	setupEtb();
+	setupCanPins();
 
 	// MRE has a special main relay control low side pin
 	// rusEfi firmware is totally not involved with main relay control on microRusEfi board

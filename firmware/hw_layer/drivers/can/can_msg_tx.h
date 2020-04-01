@@ -93,5 +93,7 @@ template <typename TData>
 void transmitStruct(uint32_t eid)
 {
 	CanTxTyped<TData> frame(eid);
+	// Destruction of an instance of CanTxMessage will transmit the message over the wire.
+	// see CanTxMessage::~CanTxMessage()
 	populateFrame(frame.get());
 }

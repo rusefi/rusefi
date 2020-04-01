@@ -341,21 +341,11 @@ case TLE6240_PIN_9:
   }
  return NULL;
 }
-const char *getCan_device_mode_e(can_device_mode_e value){
-switch(value) {
-case CD_OFF:
-  return "CD_OFF";
-case CD_USE_CAN1:
-  return "CD_USE_CAN1";
-case CD_USE_CAN2:
-  return "CD_USE_CAN2";
-case Internal_ForceMyEnumIntSize_can_device_mode:
-  return "Internal_ForceMyEnumIntSize_can_device_mode";
-  }
- return NULL;
-}
+
 const char *getCan_nbc_e(can_nbc_e value){
 switch(value) {
+case CAN_BUS_NBC_NONE:
+  return "CAN_BUS_NBC_NONE";
 case CAN_BUS_MAZDA_RX8:
   return "CAN_BUS_MAZDA_RX8";
 case CAN_BUS_NBC_BMW:

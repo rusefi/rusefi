@@ -719,14 +719,6 @@ typedef enum {
 } air_pressure_sensor_type_e;
 
 typedef enum {
-	CD_OFF = 0,
-	CD_USE_CAN1 = 1,
-	CD_USE_CAN2 = 2,
-
-	Internal_ForceMyEnumIntSize_can_device_mode = ENUM_32_BITS,
-} can_device_mode_e;
-
-typedef enum {
 	SC_OFF = 0,
 	/**
 	 * You would use this value if you want to see a detailed graph of your trigger events
@@ -784,10 +776,11 @@ typedef enum {
  * Net Body Computer types
  */
 typedef enum {
-	CAN_BUS_NBC_BMW = 0,
+	CAN_BUS_NBC_NONE = 0,
 	CAN_BUS_NBC_FIAT = 1,
 	CAN_BUS_NBC_VAG = 2,
 	CAN_BUS_MAZDA_RX8 = 3,
+	CAN_BUS_NBC_BMW = 4,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;

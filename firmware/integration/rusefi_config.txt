@@ -204,9 +204,6 @@ custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@debug_mode_e_enum@@
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
 custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@vvt_mode_e_enum@@
 
-#define can_device_mode_e_enum "v0", "v1"
-custom can_device_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@can_device_mode_e_enum@@
-
 #define mass_storage_e_enum "Auto", "Always", "Never"
 custom mass_storage_e 4 bits, U32, @OFFSET@, [0:7], @@mass_storage_e_enum@@
 
@@ -435,7 +432,7 @@ float fsio_visible fanOffTemperature;+Cooling fan turn-off temperature threshold
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
 
-custom can_nbc_e 4 bits, U32, @OFFSET@, [0:7], "BMW", "FIAT", "VAG" , "MAZDA RX8"
+custom can_nbc_e 4 bits, U32, @OFFSET@, [0:7], "None", "FIAT", "VAG" , "MAZDA RX8", "BMW"
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
@@ -602,8 +599,8 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:7], "Off", "Slow", "Fas
 
 	output_pin_e mainRelayPin;
 	brain_pin_e sdCardCsPin;
-	brain_pin_e canTxPin;
-	brain_pin_e canRxPin;
+	brain_pin_e canTxPin;set_can_tx_pin X
+	brain_pin_e canRxPin;set_can_rx_pin X
 
 pin_input_mode_e throttlePedalUpPinMode;
 	brain_pin_e debugTimerCallback
@@ -616,7 +613,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	uint32_t tunerStudioSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
 
-	can_device_mode_e canDeviceMode;
+	int anUnused4Bytes;
 	
 	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.\nSee also directSelfStimulation which is different.
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
@@ -639,7 +636,7 @@ bit is_enabled_spi_2
 	bit useTpicAdvancedMode;
 	bit useLcdScreen;
 	bit verboseTLE8888;
-	bit enableVerboseCanTx;
+	bit enableVerboseCanTx;enable can_broadcast/disable can_broadcast
 	bit onOffAlternatorLogic; +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	bit isCJ125Enabled
 	bit vvtCamSensorUseRise;+Use rise or fall signal front
@@ -826,8 +823,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit silentTriggerError;+Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor
-	bit canReadEnabled
-	bit canWriteEnabled
+	bit canReadEnabled;enable can_read/disable can_read
+	bit canWriteEnabled;enable can_write/disable can_write
 	bit useLinearIatSensor
 	bit useFSIO16ForTimingAdjustment;+See fsioTimingAdjustment
 	bit tachPulseDurationAsDutyCycle

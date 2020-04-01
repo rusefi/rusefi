@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Mar 28 21:08:37 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Mar 31 16:40:27 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -73,6 +73,7 @@ public class Fields {
 	public static final int antiLagEnabled_offset = 76;
 	public static final int antiLagRpmTreshold_offset = 824;
 	public static final int antiLagRpmTreshold_offset_hex = 338;
+	public static final int anUnused4Bytes_offset = 732;
 	public static final int autoTuneCltThreshold_offset = 2420;
 	public static final int autoTuneCltThreshold_offset_hex = 974;
 	public static final int autoTuneTpsQuietPeriod_offset = 2428;
@@ -203,7 +204,6 @@ public class Fields {
 	public static final int camInputs2_offset = 557;
 	public static final int camInputs3_offset = 558;
 	public static final int camInputs4_offset = 559;
-	public static final int canDeviceMode_offset = 732;
 	public static final int canNbcType_offset = 480;
 	public static final int canReadEnabled_offset = 1464;
 	public static final int canRxPin_offset = 709;
@@ -1758,8 +1758,7 @@ public class Fields {
 	public static final Field LCDTHREADPERIODMS = Field.create("LCDTHREADPERIODMS", 720, FieldType.INT);
 	public static final Field GENERALPERIODICTHREADPERIODMS = Field.create("GENERALPERIODICTHREADPERIODMS", 724, FieldType.INT);
 	public static final Field TUNERSTUDIOSERIALSPEED = Field.create("TUNERSTUDIOSERIALSPEED", 728, FieldType.INT);
-	public static final String[] can_device_mode_e = {"v0", "v1"};
-	public static final Field CANDEVICEMODE = Field.create("CANDEVICEMODE", 732, FieldType.INT, can_device_mode_e);
+	public static final Field ANUNUSED4BYTES = Field.create("ANUNUSED4BYTES", 732, FieldType.INT);
 	public static final Field TRIGGERSIMULATORPINS1 = Field.create("TRIGGERSIMULATORPINS1", 736, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERSIMULATORPINS2 = Field.create("TRIGGERSIMULATORPINS2", 737, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERSIMULATORPINS3 = Field.create("TRIGGERSIMULATORPINS3", 738, FieldType.INT8, brain_pin_e);
@@ -2665,7 +2664,7 @@ public class Fields {
 	LCDTHREADPERIODMS,
 	GENERALPERIODICTHREADPERIODMS,
 	TUNERSTUDIOSERIALSPEED,
-	CANDEVICEMODE,
+	ANUNUSED4BYTES,
 	TRIGGERSIMULATORPINS1,
 	TRIGGERSIMULATORPINS2,
 	TRIGGERSIMULATORPINS3,

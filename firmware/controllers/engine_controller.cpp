@@ -260,7 +260,7 @@ void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
 		if (!wasStarterEngaged) {
-			scheduleMsg(&logger, "Let's crank this engine!");
+			scheduleMsg(&logger, "Let's crank this engine for up to %dseconds!", CONFIG(startCrankingDuration));
 		}
 	} else if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		scheduleMsg(&logger, "Let's stop this engine!");
@@ -300,7 +300,7 @@ static void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * CONFIG(startCrankingDuration)) {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
 		if (wasStarterEngaged) {
-			scheduleMsg(&logger, "Cranking timeout");
+			scheduleMsg(&logger, "Cranking timeout %dseconds", CONFIG(startCrankingDuration));
 		}
 		engine->startStopStateLastPushTime = 0;
 	}

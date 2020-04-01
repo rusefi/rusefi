@@ -595,7 +595,6 @@ static void setDefaultStepperIdleParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) 
 }
 
 static void setCanFrankensoDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->canDeviceMode = CD_USE_CAN2;
 	engineConfiguration->canTxPin = GPIOB_6;
 	engineConfiguration->canRxPin = GPIOB_12;
 }
