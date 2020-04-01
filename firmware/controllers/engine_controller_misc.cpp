@@ -48,6 +48,10 @@ void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->afr.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
+void setMockThrottlePositionSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	setMockVoltage(engineConfiguration->tps1_1AdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
 void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
