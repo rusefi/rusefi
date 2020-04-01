@@ -1,6 +1,6 @@
+#include "global.h"
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
-#include "can_sensor.h"
 #include "efilib.h"
 #include "loggingcentral.h"
 
@@ -18,7 +18,11 @@ void FunctionalSensor::showInfo(Logging* logger, const char* sensorName) const {
 	}
 }
 
+#if EFI_CAN_SUPPORT
+#include "can_sensor.h"
+
 void CanSensorBase::showInfo(Logging* logger, const char* sensorName) const {
 	const auto [valid, value] = get();
 	scheduleMsg(logger, "CAN Sensor \"%s\": valid: %d value: %.2f", sensorName, valid, value);
 }
+#endif // EFI_CAN_SUPPORT
