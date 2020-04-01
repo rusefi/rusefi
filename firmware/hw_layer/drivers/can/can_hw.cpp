@@ -130,7 +130,7 @@ public:
 			// Process the message
 			canReadCounter++;
 
-			processCanRxMessage(m_buffer, &logger);
+			processCanRxMessage(m_buffer, &logger, getTimeNowNt());
 		}
 	}
 
