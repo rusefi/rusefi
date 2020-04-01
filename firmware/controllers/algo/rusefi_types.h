@@ -81,6 +81,8 @@ typedef float percent_t;
 
 typedef void (*Void)(void);
 
+typedef char critical_error_message_t[ERROR_BUFFER_SIZE];
+
 typedef char le_formula_t[LE_COMMAND_LENGTH];
 
 typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];

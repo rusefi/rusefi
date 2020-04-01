@@ -21,7 +21,6 @@ static LoggingWithStorage logger;
 static SimplePwm pwmTest[5];
 
 extern OutputPin warningLedPin;
-extern EnginePins enginePins;
 
 EXTERN_ENGINE;
 
@@ -31,18 +30,18 @@ static void startPwmTest(int freq) {
 	engine->isRunningPwmTest = true;
 
 	// PD13 pin is initialized elsewhere already
-	startSimplePwm(&pwmTest[0], "tester", &warningLedPin, 10, 0.5f, applyPinState);
+	startSimplePwm(&pwmTest[0], "tester", &warningLedPin, 10, 0.5f);
 	/**
 	 * See custom_engine.cpp for pinout
 	 */
 	// currently this is PB9 by default - see CONFIG(injectionPins)
-	startSimplePwm(&pwmTest[1], "tester", &enginePins.injectors[0], freq / 1.3333333333, 0.5f, applyPinState);
+	startSimplePwm(&pwmTest[1], "tester", &enginePins.injectors[0], freq / 1.3333333333, 0.5f);
 	// currently this is PE2 by default
-	startSimplePwm(&pwmTest[2], "tester", &enginePins.injectors[1], freq / 1000, 0.5f, applyPinState);
+	startSimplePwm(&pwmTest[2], "tester", &enginePins.injectors[1], freq / 1000, 0.5f);
 	// currently this is PB8 by default
-	startSimplePwm(&pwmTest[3], "tester", &enginePins.injectors[2], freq, 0.5, applyPinState);
+	startSimplePwm(&pwmTest[3], "tester", &enginePins.injectors[2], freq, 0.5);
 	// currently this is PB7 by default
-	startSimplePwm(&pwmTest[4], "tester", &enginePins.injectors[3], freq / 33.33333333333, 0.5, applyPinState);
+	startSimplePwm(&pwmTest[4], "tester", &enginePins.injectors[3], freq / 33.33333333333, 0.5);
 
 }
 

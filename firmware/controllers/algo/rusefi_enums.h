@@ -196,6 +196,7 @@ typedef enum {
 	TEST_33816 = 103,
 
 	BMW_M73_MRE = 104,
+	BMW_M73_MRE_SLAVE = 105,
 
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
@@ -669,7 +670,10 @@ typedef enum {
 	DBG_AUX_TEMPERATURE = 34,
 	DBG_ETB_LOGIC = 35,
 	DBG_BOOST = 36,
-	DBG_37 = 37,
+	DBG_START_STOP = 37,
+	DBG_LAUNCH = 38,
+	DBG_39 = 39,
+	DBG_40 = 40,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
@@ -713,14 +717,6 @@ typedef enum {
 	
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
-
-typedef enum {
-	CD_OFF = 0,
-	CD_USE_CAN1 = 1,
-	CD_USE_CAN2 = 2,
-
-	Internal_ForceMyEnumIntSize_can_device_mode = ENUM_32_BITS,
-} can_device_mode_e;
 
 typedef enum {
 	SC_OFF = 0,
@@ -780,10 +776,11 @@ typedef enum {
  * Net Body Computer types
  */
 typedef enum {
-	CAN_BUS_NBC_BMW = 0,
+	CAN_BUS_NBC_NONE = 0,
 	CAN_BUS_NBC_FIAT = 1,
 	CAN_BUS_NBC_VAG = 2,
 	CAN_BUS_MAZDA_RX8 = 3,
+	CAN_BUS_NBC_BMW = 4,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;

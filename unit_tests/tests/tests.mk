@@ -35,6 +35,7 @@ TESTS_SRC_CPP = \
 	tests/test_accel_enrichment.cpp \
 	tests/test_tacho.cpp \
 	tests/test_gpiochip.cpp \
+	tests/test_multispark.cpp \
 	tests/sensor/basic_sensor.cpp \
 	tests/sensor/func_sensor.cpp \
 	tests/sensor/function_pointer_sensor.cpp \

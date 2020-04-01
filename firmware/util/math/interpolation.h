@@ -102,7 +102,7 @@ int findIndexMsgExt(const char *msg, const kType array[], int size, kType value)
  * @brief	Two-dimensional table lookup with linear interpolation
  */
 template<typename vType, typename kType>
-float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kType yBin[], int yBinSize, vType* map[]) {
+float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kType yBin[], int yBinSize, const vType* const map[]) {
 	if (cisnan(x)) {
 		warning(CUSTOM_INTEPOLATE_ERROR_3, "%.2f: x is NaN in interpolate3d", x);
 		return NAN;

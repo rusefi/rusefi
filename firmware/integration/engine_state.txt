@@ -105,6 +105,6 @@ percent_t etbFeedForward;
 	floatms_t sparkDwell;ignition dwell duration in ms\nSee also dwellAngle
 	angle_t dwellAngle;ignition dwell duration as crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell
 	angle_t cltTimingCorrection
-	
+
 ! engine_state2_s
 end_struct

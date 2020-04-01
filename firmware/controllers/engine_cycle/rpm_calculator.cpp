@@ -81,10 +81,7 @@ int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 
 #if EFI_SHAFT_POSITION_INPUT
 
-EXTERN_ENGINE
-;
-
-extern bool hasFirmwareErrorFlag;
+EXTERN_ENGINE;
 
 static Logging * logger;
 
@@ -233,8 +230,6 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 
 	if (index == 0) {
-		ENGINE(m.beforeRpmCb) = getTimeNowLowerNt();
-
 		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (hadRpmRecently) {
@@ -256,7 +251,6 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		}
 		rpmState->onNewEngineCycle();
 		rpmState->lastRpmEventTimeNt = nowNt;
-		ENGINE(m.rpmCbTime) = getTimeNowLowerNt() - ENGINE(m.beforeRpmCb);
 	}
 
 

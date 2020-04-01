@@ -105,35 +105,6 @@ public:
 	cyclic_buffer<int, 8> recentWarnings;
 };
 
-typedef struct {
-	uint32_t beforeMainTrigger;
-	uint32_t mainTriggerCallbackTime;
-
-	uint32_t beforeIgnitionSch;
-	uint32_t ignitionSchTime;
-
-	uint32_t beforeInjectonSch;
-	uint32_t injectonSchTime;
-
-	uint32_t beforeZeroTest;
-	uint32_t zeroTestTime;
-
-	uint32_t beforeAdvance;
-	uint32_t advanceLookupTime;
-
-	uint32_t beforeFuelCalc;
-	uint32_t fuelCalcTime;
-
-	uint32_t beforeMapAveragingCb;
-	uint32_t mapAveragingCbTime;
-
-	uint32_t beforeHipCb;
-	uint32_t hipCbTime;
-
-	uint32_t beforeRpmCb;
-	uint32_t rpmCbTime;
-} monitoring_timestamps_s;
-
 class FsioState {
 public:
 	FsioState();
@@ -183,4 +154,11 @@ public:
 	int pumpsCounter;
 private:
 	void setPumpsCounter(int newValue);
+};
+
+struct multispark_state
+{
+	efitick_t delay;
+	efitick_t dwell;
+	uint8_t count;
 };

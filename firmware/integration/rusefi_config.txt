@@ -58,7 +58,6 @@ struct persistent_config_s
 
 struct_no_prefix engine_configuration_s
 
-! todo there is still a spot where this 200 is hard-coded
 #define LE_COMMAND_LENGTH 200
 
 ! see 'blockingFactor' in rusefi.ini
@@ -125,6 +124,8 @@ struct_no_prefix engine_configuration_s
 #define BOOST_LOAD_COUNT 8
 #define PEDAL_TO_TPS_SIZE 8
 
+#define CAN_DEFAULT_BASE 0x200
+
 
 ! 
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
@@ -155,6 +156,9 @@ struct_no_prefix engine_configuration_s
 #define BARO_CORR_SIZE 4
 
 #define MAF_DECODING_COUNT 256
+#define AFTERSTART_HOLD_CURVE_SIZE 8
+#define AFTERSTART_DECAY_CURVE_SIZE 8
+#define AFTERSTART_ENRICH_CURVE_SIZE 8
 
 custom fuel_table_t	4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"ms",      1,     0,      0.0,   500.0,   2
 custom ve_table_t 4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array,   F32,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"%", 1, 0, 0, 999.0, 2
@@ -194,14 +198,11 @@ float baseFuel;+Base duration of the fuel injection during cranking, this is mod
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "Mode39", "Mode40"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
 custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@vvt_mode_e_enum@@
-
-#define can_device_mode_e_enum "v0", "v1"
-custom can_device_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@can_device_mode_e_enum@@
 
 #define mass_storage_e_enum "Auto", "Always", "Never"
 custom mass_storage_e 4 bits, U32, @OFFSET@, [0:7], @@mass_storage_e_enum@@
@@ -309,14 +310,6 @@ float[VBAT_INJECTOR_CURVE_SIZE] battLagCorr;ms delay between injector open and c
 
 end_struct
 
-struct bi_quard_s
-	float a0;;"v",  1,     0,      -1000,   1000,   9
-	float a1;;"v",  1,     0,      -1000,   1000,   9
-	float a2;;"v",  1,     0,      -1000,   1000,   9
-	float b1;;"v",  1,     0,      -1000,   1000,   9
-	float b2;;"v",  1,     0,      -1000,   1000,   9
-
-end_struct
 
 injector_s injector
 
@@ -330,10 +323,10 @@ bit activateAuxPid3;
 bit isVerboseAuxPid3;
 bit activateAuxPid4;
 bit isVerboseAuxPid4;
-bit useBiQuadAnalogFiltering;
+bit unused76b9;
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider?
 bit cj125isLsu49;
-bit etb_use_two_wires;
+bit etb_use_two_wires;+TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 bit isDoubleSolenoidIdle;
 bit showSdCardWarning;
 bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
@@ -439,7 +432,7 @@ float fsio_visible fanOffTemperature;+Cooling fan turn-off temperature threshold
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
 
-custom can_nbc_e 4 bits, U32, @OFFSET@, [0:7], "BMW", "FIAT", "VAG" , "MAZDA RX8"
+custom can_nbc_e 4 bits, U32, @OFFSET@, [0:7], "None", "FIAT", "VAG" , "MAZDA RX8", "BMW"
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
@@ -460,7 +453,7 @@ log_format_e logFormat;
 	adc_channel_e tps1_1AdcChannel;First throttle body, first sensor. See also pedalPositionAdcChannel
 adc_channel_e vbattAdcChannel;+This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB. 
 adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined. 
-	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far
+	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far\nset_analog_input_pin tps2 X
 
 	int overrideCrankingIgnition;
 	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
@@ -475,8 +468,8 @@ custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:7], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
 
-	bit unusedTriggerBit0;
-	bit unusedTriggerBit1;
+	bit todoRemoveMeOneDay0;
+	bit todoRemoveMeOneDay1;
 	bit useOnlyFirstChannel;+This option could be used if your second trigger channel is broken
 
 	int customTotalToothCount;;"number",    1,      0.0,       0,  500.0,        0
@@ -495,7 +488,7 @@ custom spi_device_e 1 bits,U32,   @OFFSET@, [0:7], "Off", "SPI1", "SPI2", "SPI3"
 float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0,       0,  1000.0,        2
 
 	float adcVcc;;         "volts",    1,    0.0,       0,    6.0,        3
-	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking
+	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking;"Deg",      1,      0,       0, 100,      0
 	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.\nTODO #660
 	
 struct afr_sensor_s
@@ -509,7 +502,7 @@ end_struct
 	
 afr_sensor_s afr
 
-adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nFirst channel\nSee also tps1_1AdcChannel
+adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nFirst channel\nSee also tps1_1AdcChannel\nset_analog_input_pin pps X
 	brain_pin_e tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
 
@@ -606,8 +599,8 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:7], "Off", "Slow", "Fas
 
 	output_pin_e mainRelayPin;
 	brain_pin_e sdCardCsPin;
-	brain_pin_e canTxPin;
-	brain_pin_e canRxPin;
+	brain_pin_e canTxPin;set_can_tx_pin X
+	brain_pin_e canRxPin;set_can_rx_pin X
 
 pin_input_mode_e throttlePedalUpPinMode;
 	brain_pin_e debugTimerCallback
@@ -620,7 +613,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	uint32_t tunerStudioSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
 
-	can_device_mode_e canDeviceMode;
+	int anUnused4Bytes;
 	
 	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.\nSee also directSelfStimulation which is different.
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
@@ -643,7 +636,7 @@ bit is_enabled_spi_2
 	bit useTpicAdvancedMode;
 	bit useLcdScreen;
 	bit verboseTLE8888;
-	bit unusedOldWarmupAfr;
+	bit enableVerboseCanTx;enable can_broadcast/disable can_broadcast
 	bit onOffAlternatorLogic; +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	bit isCJ125Enabled
 	bit vvtCamSensorUseRise;+Use rise or fall signal front
@@ -669,9 +662,10 @@ bit is_enabled_spi_2
 	brain_pin_e hip9011IntHoldPin;
 pin_output_mode_e hip9011IntHoldPinMode;
 
-	uint8_t[4] unusedHereWeHave
+	! 536870911 = 2^29-1, the maximum valid extended ID
+	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
-	int unrealisticRpmThreashold;
+	int unusedOneMoreHere
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
@@ -687,13 +681,14 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:7], "Off", "UART1", "UART2", "UA
 	output_pin_e starterRelayDisablePin;
 	pin_output_mode_e starterRelayDisableMode;On some vehicles we can disable starter once engine is already running
 	brain_pin_e secondSolenoidPin;Some Subaru and some Mazda use double-solenoid idle air valve
-	switch_input_pin_e startStopButton;
+	switch_input_pin_e startStopButtonPin;See also starterControlPin
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
 	int16_t stepperParkingExtraSteps;;"%",        1,     0,  0,    3000.0,  0
-	float unusedmiataNb2VVTRatioFrom;This magic property is specific to Mazda Miata NB2;"value",      1,      0,       0, 1000,      5
-	float unusedmiataNb2VVTRatioTo;This magic property is specific to Mazda Miata NB2;"value",      1,      0,       0, 1000,      5
+	float unusedAntilagTimeout;
+	int16_t antiLagRpmTreshold;
+	int16_t startCrankingDuration;Maximum time to crank starter;"Seconds",      1,      0,       0, 30,      0
 
 	brain_pin_e triggerErrorPin;+This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	pin_output_mode_e triggerErrorPinMode;
@@ -738,12 +733,15 @@ sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
 custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@@
 
-! todo: keep moving all these fields at the end of board_configuration_s below 'board_configuration_s bc'
-! end of board_configuration_s
 
 	maf_sensor_type_e mafSensorType;
 
-	custom le_formula_t 200 string, ASCII, @OFFSET@, 200
+#define CRITICAL_PREFIX "CRITICAL"
+! same length used for critical and soft error messages
+#define ERROR_BUFFER_SIZE 120
+
+	custom critical_error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@
+	custom le_formula_t @@LE_COMMAND_LENGTH@@ string, ASCII, @OFFSET@, @@LE_COMMAND_LENGTH@@
 	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioDigitalInputs;todo:not finished\nThese input pins allow us to pull toggle buttons state;
 
 	brain_input_pin_e vehicleSpeedSensorInputPin;
@@ -757,9 +755,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit todoClutchDownPinInverted
 	bit useHbridges
 	bit multisparkEnable
-	bit unusedBit_251_4
-	bit unusedBit_251_5
-	bit unusedBit_251_6
+	bit enableLaunchRetard
+	bit enableLaunchBoost
+	bit launchDisableBySpeed
 	bit unusedBit_251_7
 	bit unusedBit_251_8
 	bit unusedBit_251_9
@@ -811,8 +809,11 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
     int launchFuelAdded;+Extra Fuel Added;"%",        1,     0,  0,    100.0,  0
     int launchBoostDuty;+Duty Cycle for the Boost Solenoid;"%",        1,     0,  0,    100.0,  0
 	int hardCutRpmRange;+RPM Range for Hard Cut;"rpm",    1,      0,       0, 3000.0,        2
+	int launchAdvanceRpmRange;
+	int launchTpsTreshold;
+	float launchActivateDelay;
 
-	int[103] unusedAtOldBoardConfigurationEnd;
+	int[100] unusedAtOldBoardConfigurationEnd;
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
@@ -822,8 +823,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit silentTriggerError;+Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor
-	bit canReadEnabled
-	bit canWriteEnabled
+	bit canReadEnabled;enable can_read/disable can_read
+	bit canWriteEnabled;enable can_write/disable can_write
 	bit useLinearIatSensor
 	bit useFSIO16ForTimingAdjustment;+See fsioTimingAdjustment
 	bit tachPulseDurationAsDutyCycle
@@ -943,8 +944,9 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:7], @@pin_mode_e_enum@@
 	float alternator_antiwindupFreq;;    "x",    1,      0.0,       -1000000,  1000000,        4
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC",      1,     0,    0, 1023,      0
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC",      1,     0,    0, 1023,      0
-	output_pin_e starterControlPin; 
-	uint8_t[2] unusedFormerWarmupAfrPid;
+	output_pin_e starterControlPin;See also startStopButtonPin
+	pin_input_mode_e startStopButtonMode;
+	uint8_t[1] unusedFormerWarmupAfrPid;
 	uint8_t tachPulsePerRev;;"Pulse",        1,     0,  1.0,    255.0,  0
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
@@ -1043,7 +1045,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V",        1,     0,   -10.0,    10.0,  3
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio",      1,     0,      -40.0,    40.0,   2
 	vvt_mode_e vvtMode;set vvt_mode X
-	bi_quard_s biQuad;
+	uint8_t[20] unusedOldBiquad
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C",        1,     0,   -100.0,    250.0,  1
 	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree",      1,     0,      -400.0,    400.0,   0
 	int nbVvtIndex;;"index",        1,     0,  0,    4.0,  0
@@ -1193,12 +1195,20 @@ uint8_t[4] unusuedsw;
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load",   1,   0.0,        0,  500.0,   2
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultRpmBins;;"RPM",        @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0	
 
-	int[527] mainUnusedEnd;
+	int[465] mainUnusedEnd;
 
 ! end of engine_configuration_s
 end_struct
 
 engine_configuration_s engineConfiguration;
+
+critical_error_message_t critical_error_message;
+
+float[AFTERSTART_HOLD_CURVE_SIZE] afterstartCoolantBins;;"C",           1,     0, -100.0,  250.0,   0
+float[AFTERSTART_HOLD_CURVE_SIZE] afterstartHoldTime;;"Seconds",        1,     0,      0,    100,   1
+float[AFTERSTART_ENRICH_CURVE_SIZE] afterstartEnrich;;"%",              1,     0,      0,    600,   1
+float[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds",      1,     0,      0,    100,   1
+
 
 boost_table_t boostTableOpenLoop;
 uint8_t[BOOST_LOAD_COUNT] boostMapBins;;"",  @@LOAD_1_BYTE_PACKING_MULT@@,   0,        0,  600.0,   1
@@ -1457,3 +1467,7 @@ end_struct
 #define ts_show_gps true
 #define ts_show_analog_divider true
 #define ts_show_spi true
+#define ts_show_sd_card true
+#define ts_show_can_pins true
+#define ts_show_tunerstudio_port true
+#define ts_show_trigger_comparator false

@@ -28,7 +28,7 @@
 
 #define EFI_UNIT_TEST FALSE
 
-#define hasFatalError() (FALSE)
+#define hasOsPanicError() (FALSE)
 
 #define US_TO_NT_MULTIPLIER 100
 

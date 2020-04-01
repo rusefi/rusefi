@@ -16,7 +16,6 @@ import com.rusefi.waves.EngineReport;
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.*;
-import static com.rusefi.config.generated.Fields.CMD_PINS;
 import static com.rusefi.config.generated.Fields.MOCK_MAF_COMMAND;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
@@ -31,14 +30,14 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
 public class AutoTest {
     public static final int COMPLEX_COMMAND_RETRY = 10000;
     static int currentEngineType;
-    private static String fatalError;
+    private static String criticalError;
 
     static void mainTestBody() throws Exception {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (message.startsWith(ConnectionStatus.FATAL_MESSAGE_PREFIX))
-                    fatalError = message;
+                if (message.startsWith(Fields.CRITICAL_PREFIX))
+                    criticalError = message;
             }
         });
 
@@ -445,7 +444,7 @@ public class AutoTest {
     }
 
     private static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {
-        assertNull("Fatal not expected", fatalError);
+        assertNull("Fatal not expected", criticalError);
         IoUtil.sendCommand(command, retryTimeoutMs, totalTimeoutSeconds);
     }
 

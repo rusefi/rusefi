@@ -7,8 +7,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  *
  */
-#ifndef ALTERNATORCONTROLLER_H_
-#define ALTERNATORCONTROLLER_H_
+
+#pragma once
 
 #include "engine.h"
 void initAlternatorCtrl(Logging *sharedLogger);
@@ -19,5 +19,3 @@ void showAltInfo(void);
 void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration);
-
-#endif /* ALTERNATORCONTROLLER_H_ */

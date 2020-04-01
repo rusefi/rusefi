@@ -30,8 +30,7 @@
 #include "advance_map.h"
 #include "config_engine_specs.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 #if EFI_UNIT_TEST
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */

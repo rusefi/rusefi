@@ -87,7 +87,7 @@ void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	startSimplePwmExt(&tachControl,
-				"analog tach output",
+				"Tachometer",
 				&engine->executor,
 				CONFIG(tachOutputPin),
 				&enginePins.tachOut,

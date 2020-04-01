@@ -17,7 +17,7 @@
 
 class ValueProvider3D {
 public:
-	virtual float getValue(float xRpm, float y) = 0;
+	virtual float getValue(float xRpm, float y) const = 0;
 };
 
 
@@ -30,7 +30,7 @@ public:
 	explicit Map3D(const char*name);
 	Map3D(const char*name, float multiplier);
 	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const kType loadBins[LOAD_BIN_SIZE], const kType rpmBins[RPM_BIN_SIZE]);
-	float getValue(float xRpm, float y);
+	float getValue(float xRpm, float y) const;
 	void setAll(vType value);
 	vType *pointers[LOAD_BIN_SIZE];
 private:
@@ -97,7 +97,7 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::init(vType table[RPM_BIN_
 }
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
-float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::getValue(float xRpm, float y) {
+float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::getValue(float xRpm, float y) const {
 	efiAssert(CUSTOM_ERR_ASSERT, initialized, "map not initialized", NAN);
 	if (cisnan(y)) {
 		warning(CUSTOM_PARAM_RANGE, "%s: y is NaN", name);

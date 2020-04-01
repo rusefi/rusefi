@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "global.h"
+#include "engine.h"
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer);
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -16,6 +16,9 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void touchTimeCounter();
+
+void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENABLE_MOCK_ADC
 void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
