@@ -37,9 +37,11 @@ void processCanRxMessage(const CANRxFrame& frame, Logging* logger) {
 		uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
 		aemXSeriesLambda = 0.0001f * lambdaInt;
 	} else if (frame.EID == CONFIG(verboseCanBaseAddress) + CAN_PEDAL_TPS_OFFSET) {
+		obdOnCanPacketRx(frame);
 		int16_t pedalScaled = *reinterpret_cast<const uint16_t*>(&frame.data8[0]);
 		canPedal = pedalScaled / (1.0 * PACK_MULT_PERCENT);
 	} else if (frame.EID == CONFIG(verboseCanBaseAddress) + CAN_SENSOR_1_OFFSET) {
+		obdOnCanPacketRx(frame);
 		int16_t mapScaled = *reinterpret_cast<const uint16_t*>(&frame.data8[0]);
 		canMap = mapScaled / (1.0 * PACK_MULT_PRESSURE);
 	} else {
