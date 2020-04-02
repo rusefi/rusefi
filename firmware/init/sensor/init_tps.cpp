@@ -3,6 +3,7 @@
 #include "error_handling.h"
 #include "global.h"
 #include "functional_sensor.h"
+#include "redundant_sensor.h"
 #include "proxy_sensor.h"
 #include "linear_func.h"
 #include "tps.h"
@@ -10,14 +11,17 @@
 EXTERN_ENGINE;
 
 LinearFunc tpsFunc1p(TPS_TS_CONVERSION);
-//LinearFunc tpsFunc1s(TPS_TS_CONVERSION);
+LinearFunc tpsFunc1s(TPS_TS_CONVERSION);
 LinearFunc tpsFunc2p(TPS_TS_CONVERSION);
-//LinearFunc tpsFunc2s(TPS_TS_CONVERSION);
+LinearFunc tpsFunc2s(TPS_TS_CONVERSION);
 
-FunctionalSensor tpsSens1p(SensorType::Tps1, MS2NT(10));
-//FunctionalSensor tpsSens1s(SensorType::Tps1Secondary, MS2NT(10));
-FunctionalSensor tpsSens2p(SensorType::Tps2, MS2NT(10));
-//FunctionalSensor tpsSens2s(SensorType::Tps2Secondary, MS2NT(10));
+FunctionalSensor tpsSens1p(SensorType::Tps1Primary, MS2NT(10));
+FunctionalSensor tpsSens1s(SensorType::Tps1Secondary, MS2NT(10));
+FunctionalSensor tpsSens2p(SensorType::Tps2Primary, MS2NT(10));
+FunctionalSensor tpsSens2s(SensorType::Tps2Secondary, MS2NT(10));
+
+RedundantSensor tps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
+RedundantSensor tps2(SensorType::Tps2, SensorType::Tps2Primary, SensorType::Tps2Secondary);
 
 LinearFunc pedalFunc;
 FunctionalSensor pedalSensor(SensorType::AcceleratorPedal, MS2NT(10));
@@ -34,10 +38,10 @@ static void configureTps(LinearFunc& func, float closed, float open) {
 	);
 }
 
-static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open) {
+static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open) {
 	// Only register if we have a sensor
 	if (channel == EFI_ADC_NONE) {
-		return;
+		return false;
 	}
 
 	configureTps(func, closed, open);
@@ -48,12 +52,27 @@ static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 
 	if (!sensor.Register()) {
 		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate TPS registration for TPS sensor");
+		return false;
+	}
+
+	return true;
+}
+
+void initTpsFuncAndRedund(RedundantSensor& redund, LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open) {
+	bool hasSecond = initTpsFunc(func, sensor, channel, closed, open);
+
+	redund.configure(5.0f, !hasSecond);
+
+	if (!redund.Register()) {
+		//todo: error
 	}
 }
 
 void initTps() {
 	initTpsFunc(tpsFunc1p, tpsSens1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax));
+	initTpsFuncAndRedund(tps1, tpsFunc12, tpsSens12, CONFIG(tps1_2AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax));
 	initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max));
+	initTpsFuncAndRedund(tps2, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max));
 	initTpsFunc(pedalFunc, pedalSensor, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage));
 
 	// Route the pedal or TPS to driverIntent as appropriate
