@@ -535,14 +535,7 @@ void unregisterEtbPins() {
 	// todo: we probably need an implementation here?!
 }
 
-void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	for (int i = 0; i < ETB_COUNT; i++) {
-		engine->etbControllers[i] = &etbControllers[i];
-	}
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
-}
-
-void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
 #if EFI_PROD_CODE
 	addConsoleAction("ethinfo", showEthInfo);
@@ -632,6 +625,17 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		engine->etbControllers[i]->Start();
 	}
+}
+
+void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (hasFirmwareError()) {
+			return;
+	}
+
+	for (int i = 0; i < ETB_COUNT; i++) {
+		engine->etbControllers[i] = &etbControllers[i];
+	}
+	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 
