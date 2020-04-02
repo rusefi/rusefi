@@ -74,6 +74,7 @@ TEST(etb, testTargetTpsIsFloatBug945) {
 
 	// Must have a sensor configured before init
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
+	Sensor::setMockValue(SensorType::Tps1, 0);
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 
