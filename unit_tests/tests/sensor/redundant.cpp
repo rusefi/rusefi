@@ -144,7 +144,7 @@ protected:
 
 	void SetUp() override
 	{
-		Sensor::ResetRegistry();
+		Sensor::resetRegistry();
 
 		// Other tests verify registry function - don't re-test it here
 		ASSERT_TRUE(dut.Register());
@@ -156,7 +156,7 @@ protected:
 
 	void TearDown() override
 	{
-		Sensor::ResetRegistry();
+		Sensor::resetRegistry();
 	}
 };
 
