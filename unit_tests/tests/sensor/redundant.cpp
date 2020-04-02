@@ -22,9 +22,9 @@ protected:
 		Sensor::resetRegistry();
 
 		// Other tests verify registry function - don't re-test it here
-		dut.Register();
-		m1.Register();
-		m2.Register();
+		ASSERT_TRUE(dut.Register());
+		ASSERT_TRUE(m1.Register());
+		ASSERT_TRUE(m2.Register());
 	}
 
 	void TearDown() override
