@@ -655,7 +655,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
-
 	initTachometer(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
