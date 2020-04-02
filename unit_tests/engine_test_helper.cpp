@@ -16,7 +16,6 @@
 #include "advance_map.h"
 
 extern int timeNowUs;
-extern EnginePins enginePins;
 extern WarningCodeState unitTestWarningCodeState;
 extern float testMafValue;
 extern float testCltValue;

@@ -93,8 +93,7 @@ static int averagedMapBufIdx = 0;
 // this is 'minimal averaged' MAP within avegaging window
 static float currentPressure = NO_VALUE_YET;
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 /**
  * here we have averaging start and averaging end points for each cylinder
@@ -273,7 +272,6 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 	if (index != (uint32_t)CONFIG(mapAveragingSchedulingAtIndex))
 		return;
 
-	engine->m.beforeMapAveragingCb = getTimeNowLowerNt();
 	int rpm = GET_RPM_VALUE;
 	if (!isValidRpm(rpm)) {
 		return;
@@ -317,8 +315,6 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 				startAveraging PASS_ENGINE_PARAMETER_SUFFIX);
 		scheduleByAngle(&endTimer[i][structIndex], edgeTimestamp, samplingEnd,
 				endAveraging PASS_ENGINE_PARAMETER_SUFFIX);
-		engine->m.mapAveragingCbTime = getTimeNowLowerNt()
-				- engine->m.beforeMapAveragingCb;
 	}
 #endif
 }

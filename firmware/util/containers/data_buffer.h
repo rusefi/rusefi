@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef DATA_BUFFER_H_
-#define DATA_BUFFER_H_
+#pragma once
 
 #define DB_MAX_SIZE 1024
 
@@ -23,5 +22,3 @@ void dbAdd(data_buffer_s *db, int value);
 void dbCopy(data_buffer_s *source, data_buffer_s *target);
 void dbPrint(data_buffer_s *db, char *message, int withDiff);
 void dbPrintTable(data_buffer_s *table[], char *caption[], int columns);
-
-#endif /* DATA_BUFFER_H_ */

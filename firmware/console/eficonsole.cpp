@@ -29,7 +29,7 @@
 
 static LoggingWithStorage logger("console");
 
-static void myfatal(void) {
+static void testCritical(void) {
 	chDbgCheck(0);
 }
 
@@ -183,7 +183,7 @@ void initializeConsole(Logging *sharedLogger) {
 	addConsoleAction("reset", scheduleReset);
 #endif
 
-	addConsoleAction("fatal", myfatal);
+	addConsoleAction("critical", testCritical);
 	addConsoleAction("error", myerror);
 	addConsoleAction("threadsinfo", cmd_threads);
 }

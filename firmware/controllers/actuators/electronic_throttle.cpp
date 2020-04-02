@@ -76,6 +76,7 @@
 
 #include "electronic_throttle.h"
 #include "tps.h"
+#include "sensor.h"
 #include "io_pins.h"
 #include "engine_configuration.h"
 #include "pwm_generator_logic.h"
@@ -107,8 +108,6 @@ EXTERN_ENGINE;
 static bool startupPositionError = false;
 
 #define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
-
-extern percent_t mockPedalPosition;
 
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
@@ -180,6 +179,14 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
+	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
+
+	if (!pedalPosition.Valid) {
+		m_motor->set(0);
+		return;
+	}
+
+
 	percent_t actualThrottlePosition = getTPSWithIndex(m_myIndex PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engine->etbAutoTune) {
@@ -203,10 +210,8 @@ void EtbController::PeriodicTask() {
 	}
 
 
-	percent_t pedalPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	int rpm = GET_RPM();
-	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition);
+	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition.Value);
 	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
 	percent_t targetPosition = engine->engineState.targetFromTable + etbIdleAddition;
 
@@ -237,7 +242,6 @@ void EtbController::PeriodicTask() {
 	}
 
 	DISPLAY_STATE(Engine)
-DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 	DISPLAY_TEXT(Electronic_Throttle);
 	DISPLAY_SENSOR(TPS)
 	DISPLAY_TEXT(eol);
@@ -305,12 +309,6 @@ static void showEthInfo(void) {
 	scheduleMsg(&logger, "etbAutoTune=%d",
 			engine->etbAutoTune);
 
-	scheduleMsg(&logger, "throttlePedal=%.2f %.2f/%.2f @%s",
-			getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE),
-			engineConfiguration->throttlePedalUpVoltage,
-			engineConfiguration->throttlePedalWOTVoltage,
-			getPinNameByAdcChannel("tPedal", engineConfiguration->throttlePedalPositionAdcChannel, pinNameBuffer));
-
 	scheduleMsg(&logger, "TPS=%.2f", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 
@@ -371,8 +369,6 @@ static void etbReset() {
 	}
 
 	etbPidReset();
-
-	mockPedalPosition = MOCK_UNDEFINED;
 }
 #endif /* EFI_PROD_CODE */
 
@@ -538,13 +534,6 @@ void unregisterEtbPins() {
 	// todo: we probably need an implementation here?!
 }
 
-void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	for (int i = 0; i < ETB_COUNT; i++) {
-		engine->etbControllers[i] = &etbControllers[i];
-	}
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
-}
-
 void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
 #if EFI_PROD_CODE
@@ -553,13 +542,11 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
-	engine->engineState.hasEtbPedalPositionSensor = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (!engine->engineState.hasEtbPedalPositionSensor) {
-#if EFI_PROD_CODE
-		// TODO: Once switched to new sensor model for pedal, we don't need this to be test-guarded.
+	// If you don't have a pedal, we have no business here.
+	if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
 		return;
-#endif
 	}
+
 	engine->etbActualCount = hasSecondThrottleBody(PASS_ENGINE_PARAMETER_SIGNATURE) ? 2 : 1;
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
@@ -584,7 +571,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	percent_t startupThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (absF(startupThrottlePosition - engineConfiguration->etbNeutralPosition) > STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD) {
 		/**
-		 * Unexpected electronic throttle start-up position is worth a fatal error
+		 * Unexpected electronic throttle start-up position is worth a critical error
 		 */
 		firmwareError(OBD_Throttle_Actuator_Control_Range_Performance_Bank_1, "startup ETB position %.2f not %d",
 				startupThrottlePosition,
@@ -629,7 +616,6 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("set_etbat_offset", setAutoOffset);
 #endif /* EFI_PROD_CODE */
 
-
 	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
@@ -637,6 +623,16 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (hasFirmwareError()) {
+		return;
+	}
+
+	for (int i = 0; i < ETB_COUNT; i++) {
+		engine->etbControllers[i] = &etbControllers[i];
+	}
+
+	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-

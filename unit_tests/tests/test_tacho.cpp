@@ -38,7 +38,4 @@ TEST(tachometer, testPulsePerRev) {
 std::cerr << "Tach Freq: " << getTachFreq() << "\n" << std::endl;
 std::cerr << "Tach Duty: " << getTachDuty() << "\n" << std::endl;
  
- 
-    // Clean the slate
-	//eth.clearQueue();
 }

@@ -1,5 +1,4 @@
-#ifndef DFU_H_
-#define DFU_H_
+#pragma once
 
 #include "tunerstudio_io.h"
 
@@ -51,5 +50,3 @@ void dfuJumpToApp(uint32_t addr);
 
 ts_channel_s *getTsChannel();
 
-
-#endif /* DFU_H_ */

@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CONFIG_ENGINES_MAZDA_MIATA_1_6_H_
-#define CONFIG_ENGINES_MAZDA_MIATA_1_6_H_
+#pragma once
 
 #include "engine_configuration.h"
 
@@ -16,4 +15,3 @@ void miataNAcommon(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-#endif /* CONFIG_ENGINES_MAZDA_MIATA_1_6_H_ */

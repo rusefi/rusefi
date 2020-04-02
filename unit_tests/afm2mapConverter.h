@@ -5,9 +5,6 @@
  * @date Jan 20, 2018
  */
 
-#ifndef AFM2MAPCONVERTER_H_
-#define AFM2MAPCONVERTER_H_
+#pragma once
 
 void printConvertedTable();
-
-#endif /* AFM2MAPCONVERTER_H_ */

@@ -24,8 +24,6 @@ int icuFallingCallbackCounter = 0;
 
 EXTERN_ENGINE;
 
-extern bool hasFirmwareErrorFlag;
-
 static Logging *logger;
 
 static void vvtRisingCallback(void *) {

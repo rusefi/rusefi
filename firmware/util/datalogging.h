@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef DATALOGGING_H_
-#define DATALOGGING_H_
+#pragma once
 
 #include <stdarg.h>
 #include <stdint.h>
@@ -99,5 +98,3 @@ void scheduleLogging(Logging *logging);
 #endif /* __cplusplus */
 
 void printWithLength(char *line);
-
-#endif /* DATALOGGING_H_ */

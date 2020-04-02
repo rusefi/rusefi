@@ -293,7 +293,6 @@ static void assertREqualsM(const char *msg, void *expected, void *actual) {
 }
 
 extern bool_t debugSignalExecutor;
-extern EnginePins enginePins;
 
 TEST(misc, testRpmCalculator) {
 	printf("*************************************************** testRpmCalculator\r\n");

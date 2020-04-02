@@ -7,8 +7,7 @@
  * @author Andrey Gusakov, (c) 2019
  */
 
-#ifndef GPIO_EXT_H_
-#define GPIO_EXT_H_
+#pragma once
 
 #if EFI_PROD_CODE
 #include "board.h"
@@ -61,5 +60,3 @@ int gpiochips_get_total_pins(void);
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* GPIO_EXT_H_ */

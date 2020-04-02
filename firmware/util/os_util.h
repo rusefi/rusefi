@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef RFIUTIL_H_
-#define RFIUTIL_H_
+#pragma once
 
 #include "global.h"
 
@@ -42,6 +41,3 @@ void printHistogram(Logging *logging, histogram_s *histogram);
 #endif /* __cplusplus */
 
 #endif /* EFI_UNIT_TEST */
-
-#endif /* RFIUTIL_H_ */
-

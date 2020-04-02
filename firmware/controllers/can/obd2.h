@@ -37,6 +37,6 @@
 #define PID_FUEL_RATE 0x5E
 
 #if HAL_USE_CAN
-void obdOnCanPacketRx(CANRxFrame *rx);
+void obdOnCanPacketRx(const CANRxFrame& rx);
 #endif /* HAL_USE_CAN */
 

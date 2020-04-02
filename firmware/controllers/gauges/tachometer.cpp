@@ -16,19 +16,16 @@
 
 EXTERN_ENGINE;
 
-
 static SimplePwm tachControl("tach"); 
 static float tachFreq;  
 static float duty;   
 
 #if EFI_UNIT_TEST
-float getTachFreq(void)
-{
+float getTachFreq(void) {
 	return tachFreq;
 }
 
-float getTachDuty(void)
-{
+float getTachDuty(void) {
 	return duty;
 }
 #endif
@@ -81,13 +78,12 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 }
 
 void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-
 	if (CONFIG(tachOutputPin) == GPIO_UNASSIGNED) {
 		return;
 	}
 
 	startSimplePwmExt(&tachControl,
-				"analog tach output",
+				"Tachometer",
 				&engine->executor,
 				CONFIG(tachOutputPin),
 				&enginePins.tachOut,
@@ -97,6 +93,3 @@ void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addTriggerEventListener(tachSignalCallback, "tach", engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
-
-
-

@@ -18,7 +18,7 @@
 #include "hardware.h"
 #include "rtc_helper.h"
 #include "os_util.h"
-#include "injector_central.h"
+#include "bench_test.h"
 #include "vehicle_speed.h"
 #include "yaw_rate_sensor.h"
 #include "pin_repository.h"
@@ -61,23 +61,9 @@
 #include "flash_main.h"
 #endif
 
-EXTERN_ENGINE
-;
-extern bool hasFirmwareErrorFlag;
+EXTERN_ENGINE;
 
 static mutex_t spiMtx;
-
-/**
- * this depends on patch to chdebug.c
-+extern int maxNesting;
-   ch.dbg.isr_cnt++;
-+  if (ch.dbg.isr_cnt > maxNesting)
-+          maxNesting = ch.dbg.isr_cnt;
-   port_unlock_from_isr();
- *
- */
-// todo: rename this to 'rusefiMaxISRNesting' one day
-int maxNesting = 0;
 
 #if HAL_USE_SPI
 extern bool isSpiInitialized[5];
@@ -267,8 +253,9 @@ void turnOnHardware(Logging *sharedLogger) {
 
 void stopSpi(spi_device_e device) {
 #if HAL_USE_SPI
-	if (!isSpiInitialized[device])
+	if (!isSpiInitialized[device]) {
 		return; // not turned on
+	}
 	isSpiInitialized[device] = false;
 	brain_pin_markUnused(getSckPin(device));
 	brain_pin_markUnused(getMisoPin(device));
@@ -321,17 +308,21 @@ void applyNewHardwareSettings(void) {
 	stopAuxPins();
 #endif /* EFI_AUX_PID */
 
-	if (isConfigurationChanged(is_enabled_spi_1))
+	if (isConfigurationChanged(is_enabled_spi_1)) {
 		stopSpi(SPI_DEVICE_1);
+	}
 
-	if (isConfigurationChanged(is_enabled_spi_2))
+	if (isConfigurationChanged(is_enabled_spi_2)) {
 		stopSpi(SPI_DEVICE_2);
+	}
 
-	if (isConfigurationChanged(is_enabled_spi_3))
+	if (isConfigurationChanged(is_enabled_spi_3)) {
 		stopSpi(SPI_DEVICE_3);
+	}
 
-	if (isConfigurationChanged(is_enabled_spi_4))
+	if (isConfigurationChanged(is_enabled_spi_4)) {
 		stopSpi(SPI_DEVICE_4);
+	}
 
 #if EFI_HD44780_LCD
 	stopHD44780_pins();
@@ -340,8 +331,13 @@ void applyNewHardwareSettings(void) {
 #if EFI_BOOST_CONTROL
 	stopBoostPin();
 #endif
-	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode))
+	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
 		brain_pin_markUnused(activeConfiguration.clutchUpPin);
+	}
+
+	if (isPinOrModeChanged(startStopButtonPin, startStopButtonMode)) {
+		brain_pin_markUnused(activeConfiguration.startStopButtonPin);
+	}
 
 	enginePins.unregisterPins();
 
@@ -491,6 +487,12 @@ void initHardware(Logging *l) {
 	// initSmartGpio depends on 'initSpiModules'
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
+
+	if (CONFIG(startStopButtonPin) != GPIO_UNASSIGNED) {
+		efiSetPadMode("start/stop", CONFIG(startStopButtonPin),
+				getInputMode(CONFIG(startStopButtonMode)));
+	}
+
 
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);

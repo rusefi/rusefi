@@ -79,3 +79,29 @@ TEST_F(SensorBasic, SensorInitialized) {
 	EXPECT_TRUE(result2.Valid);
 	EXPECT_FLOAT_EQ(result2.Value, 75);
 }
+
+TEST_F(SensorBasic, HasSensor) {
+	MockSensor dut(SensorType::Clt);
+
+	// Check that we don't have the sensor
+	ASSERT_FALSE(Sensor::hasSensor(SensorType::Clt));
+
+	// Register it
+	ASSERT_TRUE(dut.Register());
+
+	// Now we should!
+	ASSERT_TRUE(Sensor::hasSensor(SensorType::Clt));
+}
+
+TEST_F(SensorBasic, HasSensorMock) {
+	MockSensor dut(SensorType::Clt);
+
+	// Check that we don't have the sensor
+	ASSERT_FALSE(Sensor::hasSensor(SensorType::Clt));
+
+	// Mock the sensor - this should count as having it
+	Sensor::setMockValue(SensorType::Clt, 25);
+
+	// Now we should!
+	ASSERT_TRUE(Sensor::hasSensor(SensorType::Clt));
+}

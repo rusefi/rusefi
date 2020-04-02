@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef GLOBAL_EXECUTION_QUEUE_H_
-#define GLOBAL_EXECUTION_QUEUE_H_
+#pragma once
 
 #include "scheduler.h"
 #include "event_queue.h"
@@ -23,5 +22,3 @@ public:
 private:
 	EventQueue schedulingQueue;
 };
-
-#endif /* GLOBAL_EXECUTION_QUEUE_H_ */

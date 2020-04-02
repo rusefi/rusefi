@@ -4,11 +4,9 @@
  * @date Jan 26, 2015
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef CONFIG_ENGINES_SACHS_H_
-#define CONFIG_ENGINES_SACHS_H_
 
+#pragma once
 #include "engine_configuration.h"
 
 void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-#endif /* CONFIG_ENGINES_SACHS_H_ */

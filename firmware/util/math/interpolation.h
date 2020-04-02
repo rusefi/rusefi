@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef INTERPOLATION_3D_H_
-#define INTERPOLATION_3D_H_
+#pragma once
 
 #include <math.h>
 #include "datalogging.h"
@@ -102,7 +101,7 @@ int findIndexMsgExt(const char *msg, const kType array[], int size, kType value)
  * @brief	Two-dimensional table lookup with linear interpolation
  */
 template<typename vType, typename kType>
-float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kType yBin[], int yBinSize, vType* map[]) {
+float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kType yBin[], int yBinSize, const vType* const map[]) {
 	if (cisnan(x)) {
 		warning(CUSTOM_INTEPOLATE_ERROR_3, "%.2f: x is NaN in interpolate3d", x);
 		return NAN;
@@ -243,5 +242,3 @@ public:
 private:
 	float a, b;
 };
-
-#endif /* INTERPOLATION_3D_H_ */

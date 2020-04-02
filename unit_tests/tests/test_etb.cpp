@@ -9,7 +9,7 @@
 #include "electronic_throttle.h"
 #include "dc_motor.h"
 #include "engine_controller.h"
-#include "tps.h"
+#include "sensor.h"
 
 class MockEtb : public IEtbController {
 public:
@@ -50,7 +50,8 @@ TEST(etb, singleEtbInitialization) {
 		engine->etbControllers[i] = &mocks[i];
 	}
 
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9;
+	// Must have a sensor configured before init
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -68,21 +69,23 @@ TEST(etb, singleEtbInitialization) {
 	// todo: invoke EtbController#PeriodicTask a few times and assert that duty cycle changes
 }
 
-TEST(idle, testTargetTpsIsFloatBug945) {
+TEST(etb, testTargetTpsIsFloatBug945) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// Must have a sensor configured before init
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setMockThrottlePedalSensorVoltage(3 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
 	engine->etbControllers[0]->PeriodicTask();
 	ASSERT_NEAR(50, engine->engineState.targetFromTable, EPS4D);
 
-	setMockThrottlePedalSensorVoltage(3.05 PASS_ENGINE_PARAMETER_SUFFIX);
-	ASSERT_NEAR(50.8302, getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE), EPS4D);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.8302f);
 	engine->etbControllers[0]->PeriodicTask();
 	ASSERT_NEAR(50.8302, engine->engineState.targetFromTable, EPS4D);
 
-	setMockThrottlePedalSensorVoltage(3.1 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 51.6605f);
 	engine->etbControllers[0]->PeriodicTask();
 	ASSERT_NEAR(51.6605, engine->engineState.targetFromTable, EPS4D);
 }

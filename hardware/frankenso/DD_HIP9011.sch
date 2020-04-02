@@ -1,63 +1,5 @@
-EESchema Schematic File Version 2
-LIBS:KICAD_Older_Version
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:176122-6
-LIBS:art-electro-conn
-LIBS:art-electro-conn_2
-LIBS:art-electro-ic
-LIBS:art-electro-max
-LIBS:art-electro-power
-LIBS:LMV324IDR
-LIBS:logo
-LIBS:logo_flipped
-LIBS:MAX9926-9927
-LIBS:max9939
-LIBS:max31855
-LIBS:stm32
-LIBS:tc4427
-LIBS:lm2596
-LIBS:mos_p_numbered-pins
-LIBS:rn-41
-LIBS:skqucaa010_joystick
-LIBS:itead_hc-0X_bluetooth
-LIBS:joystick_SKRHAAE010
-LIBS:STM32F407IGT6
-LIBS:slc_oem
-LIBS:mos_n_numbered-pins
-LIBS:crystal(mc306)
-LIBS:pololu_a4988
-LIBS:Pololu_DRV8880
-LIBS:fuse_BOM_only_no_pins
-LIBS:frankenso-cache
-EELAYER 25 0
+EESchema Schematic File Version 4
+EELAYER 30 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
@@ -72,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L HIP9011 U161
+L rusEFI_Older:HIP9011 U161
 U 1 1 52928107
 P 5250 4450
 F 0 "U161" H 5100 5000 60  0000 C CNN
@@ -85,7 +27,7 @@ F 5 "DIGI,296-34575-5-ND" H 5250 4450 60  0001 C CNN "VEND1,VEND1#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C165
+L rusEFI_Older:C C165
 U 1 1 52928976
 P 4050 4250
 F 0 "C165" H 4050 4350 40  0000 L CNN
@@ -98,7 +40,7 @@ F 5 "DIGI,478-1395-1-ND" H 4050 4250 60  0001 C CNN "VEND1,VEND1#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C166
+L rusEFI_Older:C C166
 U 1 1 52928F04
 P 5950 5200
 F 0 "C166" H 5950 5300 40  0000 L CNN
@@ -111,7 +53,7 @@ F 5 "DIGI,712-1383-1-ND" V 1630 2600 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L C C168
+L rusEFI_Older:C C168
 U 1 1 529299B0
 P 4300 3750
 F 0 "C168" H 4300 3850 40  0000 L CNN
@@ -218,7 +160,7 @@ Wire Wire Line
 Text Label 4350 4350 0    60   ~ 0
 INTOUT
 $Comp
-L R R170
+L rusEFI_Older:R R170
 U 1 1 52A255C1
 P 7350 3600
 F 0 "R170" V 7430 3600 40  0000 C CNN
@@ -257,7 +199,7 @@ GND
 Text Label 8400 3200 0    60   ~ 0
 INTOUT
 $Comp
-L CONN_2 P165
+L rusEFI_Older:CONN_2 P165
 U 1 1 52AEADCD
 P 8000 5450
 F 0 "P165" V 7950 5450 40  0000 C CNN
@@ -274,7 +216,7 @@ INT/HLD
 Text Label 8350 5550 0    60   ~ 0
 TEST
 $Comp
-L CONN_2 P166
+L rusEFI_Older:CONN_2 P166
 U 1 1 52AEAE96
 P 8000 5850
 F 0 "P166" V 7950 5850 40  0000 C CNN
@@ -291,7 +233,7 @@ OUT
 Text Label 8350 5950 0    60   ~ 0
 GND
 $Comp
-L CRYSTAL X161
+L rusEFI_Older:CRYSTAL X161
 U 1 1 538954BF
 P 5500 6000
 F 0 "X161" H 5500 6150 60  0000 C CNN
@@ -330,7 +272,7 @@ INT/HLD
 Text HLabel 8400 3700 0    60   Input ~ 0
 OUT
 $Comp
-L R R162
+L rusEFI_Older:R R162
 U 1 1 53C4F9B0
 P 2300 3400
 F 0 "R162" V 2380 3400 40  0000 C CNN
@@ -343,7 +285,7 @@ F 5 "DNP,DNP" V 1130 2600 60  0001 C CNN "VEND1,VEND1#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R166
+L rusEFI_Older:R R166
 U 1 1 53C4F9D6
 P 4650 5500
 F 0 "R166" V 4730 5500 40  0000 C CNN
@@ -356,7 +298,7 @@ F 5 "DIGI,541-2.00MCCT-ND" V 1130 2600 60  0001 C CNN "VEND1,VEND1#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R164
+L rusEFI_Older:R R164
 U 1 1 53C502A3
 P 3300 3150
 F 0 "R164" V 3380 3150 40  0000 C CNN
@@ -369,7 +311,7 @@ F 5 "DIGI,P39KDACT-ND" V 1130 2600 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R R175
+L rusEFI_Older:R R175
 U 1 1 53C502AB
 P 8400 3450
 F 0 "R175" V 8480 3450 40  0000 C CNN
@@ -383,7 +325,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R176
+L rusEFI_Older:R R176
 U 1 1 53C502B3
 P 8400 3950
 F 0 "R176" V 8480 3950 40  0000 C CNN
@@ -397,7 +339,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C163
+L rusEFI_Older:C C163
 U 1 1 54722D2E
 P 2750 3150
 F 0 "C163" H 2750 3250 40  0000 L CNN
@@ -410,7 +352,7 @@ F 5 "DIGI,490-1632-1-ND" H 2750 3150 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R R171
+L rusEFI_Older:R R171
 U 1 1 54C463B1
 P 7500 3600
 F 0 "R171" V 7580 3600 40  0000 C CNN
@@ -428,7 +370,7 @@ CS
 Connection ~ 7500 3350
 Connection ~ 7350 3350
 $Comp
-L C C501
+L rusEFI_Older:C C501
 U 1 1 54C8139E
 P 3800 4250
 F 0 "C501" H 3800 4350 40  0000 L CNN
@@ -442,7 +384,7 @@ F 5 "DIGI,445-7882-6-ND" V -520 1050 60  0001 C CNN "VEND1,VEND1#"
 $EndComp
 Connection ~ 3800 4450
 $Comp
-L R R177
+L rusEFI_Older:R R177
 U 1 1 55188A70
 P 5500 5450
 F 0 "R177" V 5580 5450 40  0000 C CNN
@@ -459,7 +401,7 @@ Wire Wire Line
 	4150 4850 4150 4750
 Connection ~ 4150 4750
 $Comp
-L C C167
+L rusEFI_Older:C C167
 U 1 1 55225D31
 P 5950 6300
 F 0 "C167" H 5950 6400 40  0000 L CNN
@@ -472,7 +414,7 @@ F 5 "DIGI,712-1383-1-ND" V 1630 3700 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L C C169
+L rusEFI_Older:C C169
 U 1 1 552266E1
 P 4350 4850
 F 0 "C169" H 4350 4950 40  0000 L CNN
@@ -488,7 +430,7 @@ $EndComp
 Text Notes 1950 7400 0    60   ~ 0
 http://www.crystek.com/documents/appnotes/Pierce-GateIntroduction.pdf\nPCB per predictions with SaturnPCB has less then 3.5pF traces, \nTPIC pins assumed 5pF\nESR = 80ohms max\nRf = 2meg could be between 1meg and 10meg.\nCload should be 18pF per XTAL datasheet\nCload = ([Cin+C1][C2+Cout])/(Cin+C1+C2_Cout)+PCBstray\nCload = ([5+24][24+5])/(5+24+24+5)+3.5= 18.0pF\nC1=C2=C166=C167 = 24pF\nRs = 1/(2piFC2) = 1/(2*pi*8MHz*24pF) = 829ohms, 820ohms is close enough = R177
 $Comp
-L R R161
+L rusEFI_Older:R R161
 U 1 1 5581A409
 P 2300 2650
 F 0 "R161" V 2380 2650 40  0000 C CNN
@@ -501,7 +443,7 @@ F 5 "DNP,DNP" V 1130 1850 60  0001 C CNN "VEND1,VEND1#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R163
+L rusEFI_Older:R R163
 U 1 1 5581B37B
 P 3250 2400
 F 0 "R163" V 3330 2400 40  0000 C CNN
@@ -514,7 +456,7 @@ F 5 "DIGI,P39KDACT-ND" V 1080 1850 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L C C162
+L rusEFI_Older:C C162
 U 1 1 5581B8E1
 P 2700 2400
 F 0 "C162" H 2700 2500 40  0000 L CNN
@@ -527,7 +469,7 @@ F 5 "DIGI,490-1632-1-ND" H 2700 2400 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R R172
+L rusEFI_Older:R R172
 U 1 1 55A307C6
 P 7650 3600
 F 0 "R172" V 7730 3600 40  0000 C CNN
@@ -541,7 +483,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R173
+L rusEFI_Older:R R173
 U 1 1 55A307CE
 P 7800 3600
 F 0 "R173" V 7880 3600 40  0000 C CNN
@@ -555,7 +497,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R174
+L rusEFI_Older:R R174
 U 1 1 55A307D6
 P 7950 3600
 F 0 "R174" V 8030 3600 40  0000 C CNN
@@ -569,7 +511,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R167
+L rusEFI_Older:R R167
 U 1 1 55A31B1D
 P 6200 4250
 F 0 "R167" V 6270 4250 40  0000 C CNN
@@ -582,7 +524,7 @@ F 5 "DIGI,P39KDACT-ND" V 4030 3700 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R R168
+L rusEFI_Older:R R168
 U 1 1 55A31B41
 P 6200 4350
 F 0 "R168" V 6275 4350 40  0000 C CNN

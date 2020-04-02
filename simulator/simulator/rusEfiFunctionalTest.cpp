@@ -22,7 +22,7 @@
 #include "main_trigger_callback.h"
 #include "allsensors.h"
 #include "sensor_chart.h"
-#include "injector_central.h"
+#include "bench_test.h"
 #include "engine.h"
 #include "tunerstudio.h"
 #include "trigger_emulator.h"
@@ -140,8 +140,6 @@ void printPendingMessages(void) {
 }
 
 int isSerialOverTcpReady;
-
-int maxNesting = 0;
 
 bool isCommandLineConsoleReady(void) {
 	return isSerialOverTcpReady;

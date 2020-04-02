@@ -423,6 +423,7 @@ struct engine_state2_s {
 	 * offset 160
 	 */
 	angle_t cltTimingCorrection = (angle_t)0;
+
 	/** total size 164*/
 };
 

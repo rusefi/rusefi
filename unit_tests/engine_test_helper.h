@@ -13,6 +13,8 @@
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
 
+extern EnginePins enginePins;
+
 class EngineTestHelperBase
 {
 public:

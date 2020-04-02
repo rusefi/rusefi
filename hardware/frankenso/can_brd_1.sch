@@ -1,63 +1,5 @@
-EESchema Schematic File Version 2
-LIBS:KICAD_Older_Version
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:176122-6
-LIBS:art-electro-conn
-LIBS:art-electro-conn_2
-LIBS:art-electro-ic
-LIBS:art-electro-max
-LIBS:art-electro-power
-LIBS:LMV324IDR
-LIBS:logo
-LIBS:logo_flipped
-LIBS:MAX9926-9927
-LIBS:max9939
-LIBS:max31855
-LIBS:stm32
-LIBS:tc4427
-LIBS:lm2596
-LIBS:mos_p_numbered-pins
-LIBS:rn-41
-LIBS:skqucaa010_joystick
-LIBS:itead_hc-0X_bluetooth
-LIBS:joystick_SKRHAAE010
-LIBS:STM32F407IGT6
-LIBS:slc_oem
-LIBS:mos_n_numbered-pins
-LIBS:crystal(mc306)
-LIBS:pololu_a4988
-LIBS:Pololu_DRV8880
-LIBS:fuse_BOM_only_no_pins
-LIBS:frankenso-cache
-EELAYER 25 0
+EESchema Schematic File Version 4
+EELAYER 30 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
@@ -72,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L PWR_FLAG #FLG078
+L power:PWR_FLAG #FLG078
 U 1 1 52CAD8E7
 P 3375 3000
 F 0 "#FLG078" H 3375 3095 30  0001 C CNN
@@ -83,7 +25,7 @@ F 3 "" H 3375 3000 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C472
+L rusEFI_Older:C C472
 U 1 1 52CAD8F6
 P 3550 3250
 F 0 "C472" H 3600 3350 50  0000 L CNN
@@ -96,7 +38,7 @@ F 5 "DIGI,445-7882-6-ND" V 1130 2600 60  0001 C CNN "VEND1,VEND1#"
 	-1   0    0    -1  
 $EndComp
 $Comp
-L C C471
+L rusEFI_Older:C C471
 U 1 1 52CAD8F7
 P 3550 2700
 F 0 "C471" H 3600 2800 50  0000 L CNN
@@ -109,7 +51,7 @@ F 5 "DIGI,478-1395-1-ND" V 1130 2600 60  0001 C CNN "VEND1,VEND1#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR079
+L rusEFI_Older:GND #PWR079
 U 1 1 52CAD8F8
 P 3550 3450
 F 0 "#PWR079" H 3550 3450 30  0001 C CNN
@@ -120,7 +62,7 @@ F 3 "" H 3550 3450 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR080
+L rusEFI_Older:GND #PWR080
 U 1 1 52CAD8F9
 P 3550 2500
 F 0 "#PWR080" H 3550 2500 30  0001 C CNN
@@ -131,7 +73,7 @@ F 3 "" H 3550 2500 60  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR081
+L rusEFI_Older:GND #PWR081
 U 1 1 52CADB40
 P 4950 2500
 F 0 "#PWR081" H 4950 2500 30  0001 C CNN
@@ -143,7 +85,7 @@ F 3 "" H 4950 2500 60  0001 C CNN
 $EndComp
 NoConn ~ 4900 1200
 $Comp
-L R R472
+L rusEFI_Older:R R472
 U 1 1 52CADB46
 P 4000 1850
 F 0 "R472" V 4080 1850 50  0000 C CNN
@@ -157,7 +99,7 @@ F 6 "," H 7325 3975 60  0001 C CNN "VEND2,VEND2#"
 	0    1    -1   0   
 $EndComp
 $Comp
-L GND #PWR082
+L rusEFI_Older:GND #PWR082
 U 1 1 52CADB51
 P 3750 1850
 F 0 "#PWR082" H 3750 1850 30  0001 C CNN
@@ -168,7 +110,7 @@ F 3 "" H 3750 1850 60  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR083
+L rusEFI_Older:GND #PWR083
 U 1 1 52CADB3B
 P 2200 1650
 F 0 "#PWR083" H 2200 1650 30  0001 C CNN
@@ -216,7 +158,7 @@ Text Label 5050 1100 0    60   ~ 0
 Wire Wire Line
 	5050 1200 5050 1100
 $Comp
-L SN65HVD230 U471
+L rusEFI_Older:SN65HVD230 U471
 U 1 1 52CD2CA4
 P 4800 1850
 F 0 "U471" H 4400 2400 60  0000 C CNN
@@ -229,7 +171,7 @@ F 5 "DIGI,296-13123-5-ND" H 4800 1850 60  0001 C CNN "VEND1,VEND1#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R473
+L rusEFI_Older:R R473
 U 1 1 52CD2DE2
 P 5975 2625
 F 0 "R473" V 6055 2625 50  0000 C CNN
@@ -242,7 +184,7 @@ F 5 "DIGI,P120DACT-ND" V 1130 2600 60  0001 C CNN "VEND1,VEND1#"
 	0    1    -1   0   
 $EndComp
 $Comp
-L JUMPER JP471
+L rusEFI_Older:JUMPER JP471
 U 1 1 52CD2DEF
 P 6650 2625
 F 0 "JP471" H 6650 2775 60  0000 C CNN
@@ -285,7 +227,7 @@ CAN_TX
 Text Label 3250 3000 2    60   ~ 0
 3.3V
 $Comp
-L CONN_4 P401
+L rusEFI_Older:CONN_4 P401
 U 1 1 54959C46
 P 6700 3150
 F 0 "P401" V 6650 3150 50  0000 C CNN
@@ -303,7 +245,7 @@ CANL
 Text Label 6350 3100 2    60   ~ 0
 CANH
 $Comp
-L GND #PWR084
+L rusEFI_Older:GND #PWR084
 U 1 1 54959C55
 P 6350 3300
 F 0 "#PWR084" H 6350 3300 30  0001 C CNN

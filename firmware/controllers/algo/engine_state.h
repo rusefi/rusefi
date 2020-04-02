@@ -90,5 +90,5 @@ public:
 	MockAdcState mockAdcState;
 #endif /* EFI_ENABLE_MOCK_ADC */
 
+	multispark_state multispark;
 };
-

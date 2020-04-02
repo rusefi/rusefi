@@ -33,7 +33,7 @@
 #include "main_trigger_callback.h"
 #include "io_pins.h"
 #include "flash_main.h"
-#include "injector_central.h"
+#include "bench_test.h"
 #include "os_util.h"
 #include "engine_math.h"
 #include "allsensors.h"
@@ -41,7 +41,6 @@
 #include "map_averaging.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
-#include "engine.h"
 #include "speed_density.h"
 #include "local_version_holder.h"
 #include "alternator_controller.h"
@@ -54,18 +53,20 @@
 #include "counter64.h"
 #include "perf_trace.h"
 #include "boost_control.h"
+#include "launch_control.h"
+#include "tachometer.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
-#endif
+#endif /* EFI_SENSOR_CHART */
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
-#endif
+#endif /* EFI_TUNER_STUDIO */
 
 #if EFI_LOGIC_ANALYZER
 #include "logic_analyzer.h"
-#endif
+#endif /* EFI_LOGIC_ANALYZER */
 
 #if HAL_USE_ADC
 #include "AdcConfiguration.h"
@@ -100,6 +101,19 @@
 
 EXTERN_ENGINE;
 
+#if !EFI_UNIT_TEST
+
+static LoggingWithStorage logger("Engine Controller");
+
+/**
+ * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
+ */
+Engine ___engine CCM_OPTIONAL;
+Engine * engine = &___engine;
+
+#endif /* EFI_UNIT_TEST */
+
+
 void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	initFuelMap(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -110,7 +124,7 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
-	initSensors();
+	initNewSensors(sharedLogger);
 #endif /* EFI_UNIT_TEST */
 
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
@@ -135,21 +149,29 @@ static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_
 	}
 #endif /* EFI_MAP_AVERAGING */
 
-}
+#if EFI_BOOST_CONTROL
+	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_BOOST_CONTROL */
 
-EXTERN_ENGINE;
-
-#if EFI_ENABLE_MOCK_ADC
-void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
+#if EFI_LAUNCH_CONTROL
+	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
+}
+
+#if EFI_ENABLE_MOCK_ADC
+
+static void initMockVoltage(void) {
+#if EFI_SIMULATOR
+	setMockCltVoltage(2);
+	setMockIatVoltage(2);
+#endif /* EFI_SIMULATOR */
+}
+
+#endif /* EFI_ENABLE_MOCK_ADC */
+
+
 #if !EFI_UNIT_TEST
-
-extern bool hasFirmwareErrorFlag;
-extern EnginePins enginePins;
-
 
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -178,17 +200,6 @@ class PeriodicSlowController : public PeriodicTimerController {
 static PeriodicFastController fastController;
 static PeriodicSlowController slowController;
 
-static LoggingWithStorage logger("Engine Controller");
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-
-/**
- * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
- */
-Engine ___engine CCM_OPTIONAL;
-Engine * engine = &___engine;
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
-
 class EngineStateBlinkingTask : public PeriodicTimerController {
 	int getPeriodMs() override {
 		return 50;
@@ -200,7 +211,7 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 #else
 		bool is_running = false;
-#endif
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 		if (is_running) {
 			// blink in running mode
@@ -215,78 +226,6 @@ private:
 };
 
 static EngineStateBlinkingTask engineStateBlinkingTask;
-
-#if EFI_PROD_CODE
-static Overflow64Counter halTime;
-
-/**
- * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU
- */
-//todo: macro to save method invocation
-efitimeus_t getTimeNowUs(void) {
-	ScopePerf perf(PE::GetTimeNowUs);
-	return getTimeNowNt() / (CORE_CLOCK / 1000000);
-}
-
-//todo: macro to save method invocation
-efitick_t getTimeNowNt(void) {
-#if EFI_PROD_CODE
-    /* Entering a reentrant critical zone.*/
-    syssts_t sts = chSysGetStatusAndLockX();
-	efitime_t localH = halTime.state.highBits;
-	uint32_t localLow = halTime.state.lowBits;
-
-	uint32_t value = getTimeNowLowerNt();
-
-	if (value < localLow) {
-		// new value less than previous value means there was an overflow in that 32 bit counter
-		localH += 0x100000000LL;
-	}
-
-	efitime_t result = localH + value;
-
-    /* Leaving the critical zone.*/
-    chSysRestoreStatusX(sts);
-	return result;
-#else /* EFI_PROD_CODE */
-// todo: why is this implementation not used?
-	/**
-	 * this method is lock-free and thread-safe, that's because the 'update' method
-	 * is atomic with a critical zone requirement.
-	 *
-	 * http://stackoverflow.com/questions/5162673/how-to-read-two-32bit-counters-as-a-64bit-integer-without-race-condition
-	 */
-	efitime_t localH;
-	efitime_t localH2;
-	uint32_t localLow;
-	int counter = 0;
-	do {
-		localH = halTime.state.highBits;
-		localLow = halTime.state.lowBits;
-		localH2 = halTime.state.highBits;
-#if EFI_PROD_CODE
-		if (counter++ == 10000)
-			chDbgPanic("lock-free frozen");
-#endif /* EFI_PROD_CODE */
-	} while (localH != localH2);
-	/**
-	 * We need to take current counter after making a local 64 bit snapshot
-	 */
-	uint32_t value = getTimeNowLowerNt();
-
-	if (value < localLow) {
-		// new value less than previous value means there was an overflow in that 32 bit counter
-		localH += 0x100000000LL;
-	}
-
-	return localH + value;
-#endif /* EFI_PROD_CODE */
-
-}
-
-#endif /* EFI_PROD_CODE */
-
-#if ! EFI_UNIT_TEST
 
 /**
  * number of SysClock ticks in one ms
@@ -303,7 +242,6 @@ efitimems_t currentTimeMillis(void) {
 efitimesec_t getTimeNowSeconds(void) {
 	return currentTimeMillis() / 1000;
 }
-#endif /* EFI_UNIT_TEST */
 
 static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.resetAE();
@@ -315,35 +253,15 @@ static void resetAccel(void) {
 	}
 }
 
-#if ENABLE_PERF_TRACE
-
-void irqEnterHook(void) {
-	perfEventBegin(PE::ISR);
-}
-
-void irqExitHook(void) {
-	perfEventEnd(PE::ISR);
-}
-
-void contextSwitchHook() {
-	perfEventInstantGlobal(PE::ContextSwitch);
-}
-
-#endif /* ENABLE_PERF_TRACE */
-
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
-	/**
-	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
-	 */
-    /* Entering a reentrant critical zone.*/
-    syssts_t sts = chSysGetStatusAndLockX();
-	updateAndSet(&halTime.state, getTimeNowLowerNt());
-    /* Leaving the critical zone.*/
-    chSysRestoreStatusX(sts);
+	touchTimeCounter();
+
+	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE */
+
 
 	/**
 	 * Update engine RPM state if needed (check timeouts).
@@ -367,7 +285,7 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
+#endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -385,7 +303,7 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 	}
 #else
 	strcpy(buffer, "NONE");
-#endif
+#endif /* HAL_USE_ADC */
 	return (char*) buffer;
 }
 
@@ -393,7 +311,7 @@ static char pinNameBuffer[16];
 
 #if HAL_USE_ADC
 extern AdcDevice fastAdc;
-#endif
+#endif /* HAL_USE_ADC */
 
 static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage,
 		float dividerCoeff) {
@@ -410,13 +328,13 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	float voltage = adcVoltage * dividerCoeff;
 	scheduleMsg(&logger, "%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdcMode(hwChannel),
 			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
-#endif
+#endif /* HAL_USE_ADC */
 }
 
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 #if HAL_USE_ADC
 	printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel PASS_ENGINE_PARAMETER_SUFFIX), engineConfiguration->analogInputDividerCoefficient);
-#endif
+#endif /* HAL_USE_ADC */
 }
 
 static void printAnalogInfo(void) {
@@ -425,38 +343,33 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
 	printAnalogChannelInfo("TPS", engineConfiguration->tps1_1AdcChannel);
+	printAnalogChannelInfo("TPS2", engineConfiguration->tps2_1AdcChannel);
 	printAnalogChannelInfo("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
-	if (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) {
-		printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
-	}
-	if (engineConfiguration->iat.adcChannel != EFI_ADC_NONE) {
-		printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
-	}
-	if (hasMafSensor()) {
-		printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
-	}
+	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
+	printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
+	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		adc_channel_e ch = engineConfiguration->fsioAdc[i];
-		if (ch != EFI_ADC_NONE) {
-			printAnalogChannelInfo("fsio", ch);
-		}
+		printAnalogChannelInfo("fsio", ch);
 	}
 
 	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
-	}
-	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
-	}
-	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
-		printAnalogChannelInfo("extKno", engineConfiguration->externalKnockSenseAdc);
-	}
+	printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
+	printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
+	printAnalogChannelInfo("extKno", engineConfiguration->externalKnockSenseAdc);
 
 	printAnalogChannelInfo("OilP", engineConfiguration->oilPressure.hwChannel);
 
+	printAnalogChannelInfo("CJ UR", engineConfiguration->cj125ur);
+	printAnalogChannelInfo("CJ UA", engineConfiguration->cj125ua);
+
 	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
 	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
+
+	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
+		printAnalogChannelInfo("FSIO", engineConfiguration->fsioAdc[i]);
+	}
+
 	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVoltage("vbatt", engineConfiguration->vbattAdcChannel PASS_ENGINE_PARAMETER_SUFFIX),
 			engineConfiguration->vbattDividerCoeff);
 }
@@ -601,57 +514,6 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	getFloat(offset);
 	onConfigurationChanged();
 }
-#endif /* EFI_UNIT_TEST */
-
-#if EFI_ENABLE_MOCK_ADC
-
-void setMockCltVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->clt.adcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockIatVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->iat.adcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->mafAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->afr.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockThrottlePedalSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->throttlePedalPositionAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockThrottlePositionSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->tps1_1AdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-static void initMockVoltage(void) {
-#if EFI_SIMULATOR
-	setMockCltVoltage(2);
-#endif /* EFI_SIMULATOR */
-
-#if EFI_SIMULATOR
-	setMockIatVoltage(2);
-#endif /* EFI_SIMULATOR */
-
-}
-
-#endif /* EFI_ENABLE_MOCK_ADC */
-
-
-#if !EFI_UNIT_TEST
 
 static void initConfigActions(void) {
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
@@ -690,7 +552,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_ENGINE_CONTROL
 	/**
-	 * This has to go after 'initInjectorCentral' in order to
+	 * This has to go after 'enginePins.startPins()' in order to
 	 * properly detect un-assigned output pins
 	 */
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -741,10 +603,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
-#if EFI_UNIT_TEST
 	initTachometer(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_UNIT_TEST */
-
 }
 
 #if !EFI_UNIT_TEST
@@ -756,7 +615,9 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
-	initInjectorCentral(sharedLogger);
+	enginePins.startPins();
+
+	initBenchTest(sharedLogger);
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
 	commonInitEngineController(sharedLogger);
@@ -792,18 +653,13 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initPwmTester();
 #endif /* EFI_PWM_TESTER */
 
-	initMalfunctionCentral();
-
 #if EFI_ALTERNATOR_CONTROL
 	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
+#endif /* EFI_ALTERNATOR_CONTROL */
 
-#if EFI_BOOST_CONTROL
-	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
 #if EFI_AUX_PID
 	initAuxPid(sharedLogger);
-#endif
+#endif /* EFI_AUX_PID */
 
 #if EFI_MALFUNCTION_INDICATOR
 	initMalfunctionIndicator();
@@ -823,16 +679,13 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initLcdController();
 #endif /* EFI_HD44780_LCD */
 
-#if EFI_PROD_CODE
-	initTachometer(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_PROD_CODE */
 }
 
 // these two variables are here only to let us know how much RAM is available, also these
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 14400
+#define RAM_UNUSED_SIZE 14200
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 4100
@@ -853,6 +706,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 201200317;
+	return 20200402;
 }
 #endif /* EFI_UNIT_TEST */
