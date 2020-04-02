@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef NEO6M_H_
-#define NEO6M_H_
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -21,5 +20,3 @@ float getCurrentSpeed(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-#endif /* NEO6M_H_ */

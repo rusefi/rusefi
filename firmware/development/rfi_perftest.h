@@ -5,11 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef RFI_PERFTEST_H_
-#define RFI_PERFTEST_H_
+#pragma once
 
 #include "global.h"
 
 void initTimePerfActions(Logging *sharedLogger);
-
-#endif /* RFI_PERFTEST_H_ */

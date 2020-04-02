@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef INTERPOLATION_3D_H_
-#define INTERPOLATION_3D_H_
+#pragma once
 
 #include <math.h>
 #include "datalogging.h"
@@ -243,5 +242,3 @@ public:
 private:
 	float a, b;
 };
-
-#endif /* INTERPOLATION_3D_H_ */
