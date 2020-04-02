@@ -51,7 +51,6 @@ private:
 };
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
