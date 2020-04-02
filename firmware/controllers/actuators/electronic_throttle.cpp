@@ -535,7 +535,7 @@ void unregisterEtbPins() {
 	// todo: we probably need an implementation here?!
 }
 
-static void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
 #if EFI_PROD_CODE
 	addConsoleAction("ethinfo", showEthInfo);
