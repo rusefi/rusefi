@@ -93,7 +93,6 @@
 #include "lcd_controller.h"
 #include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
-#include "tachometer.h"
 
 #if EFI_CJ125
 #include "cj125.h"
