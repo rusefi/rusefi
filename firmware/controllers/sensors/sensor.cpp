@@ -120,6 +120,16 @@ bool Sensor::Register() {
 	return 0;
 }
 
+/*static*/ bool Sensor::hasSensor(SensorType type) {
+	const auto entry = getEntryForType(type);
+
+	if (!entry) {
+		return false;
+	}
+
+	return entry->useMock || entry->sensor;
+}
+
 /*static*/ void Sensor::setMockValue(SensorType type, float value) {
 	auto entry = getEntryForType(type);
 

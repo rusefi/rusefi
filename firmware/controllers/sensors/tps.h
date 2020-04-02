@@ -15,7 +15,6 @@
 // Scaled to 1000 counts = 5.0 volts
 #define TPS_TS_CONVERSION 200
 
-bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 /**
  * Throttle Position Sensor
  * In case of dual TPS this function would return logical TPS position

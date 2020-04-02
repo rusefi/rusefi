@@ -50,7 +50,8 @@ TEST(etb, singleEtbInitialization) {
 		engine->etbControllers[i] = &mocks[i];
 	}
 
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9;
+	// Must have a sensor configured before init
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -71,9 +72,10 @@ TEST(etb, singleEtbInitialization) {
 TEST(etb, testTargetTpsIsFloatBug945) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Must have a sensor configured before init
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
 
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_0;
+	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
 	engine->etbControllers[0]->PeriodicTask();
