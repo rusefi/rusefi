@@ -123,6 +123,12 @@ public:
 	 */
 	static void resetAllMocks();
 
+	/*
+	 * Get a friendly name for the sensor.
+	 * For example, CLT, IAT, Throttle Position 2, etc.
+	 */
+	const char* getSensorName() { return getSensorName(m_type); }
+
 protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
