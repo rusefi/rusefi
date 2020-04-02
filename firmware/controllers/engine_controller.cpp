@@ -257,9 +257,10 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	touchTimeCounter();
-#endif /* EFI_PROD_CODE */
 
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_PROD_CODE */
+
 
 	/**
 	 * Update engine RPM state if needed (check timeouts).
