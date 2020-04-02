@@ -195,10 +195,6 @@ static percent_t getPrimaryRawTPS(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #define NO_TPS_MAGIC_VALUE 66.611
 
-bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->throttlePedalPositionAdcChannel != EFI_ADC_NONE;
-}
-
 bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->tps2_1AdcChannel != EFI_ADC_NONE;
 }
