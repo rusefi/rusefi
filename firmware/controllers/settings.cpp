@@ -413,11 +413,9 @@ static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int1
 
 
 void printTPSInfo(void) {
-	if (hasPedalPositionSensor()) {
-		scheduleMsg(&logger, "pedal up %f / down %f",
-				engineConfiguration->throttlePedalUpVoltage,
-				engineConfiguration->throttlePedalWOTVoltage);
-	}
+	scheduleMsg(&logger, "pedal up %f / down %f",
+			engineConfiguration->throttlePedalUpVoltage,
+			engineConfiguration->throttlePedalWOTVoltage);
 
 	printTpsSenser("TPS", SensorType::Tps1, engineConfiguration->tpsMin, engineConfiguration->tpsMax, engineConfiguration->tps1_1AdcChannel);
 	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);
