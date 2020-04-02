@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef EFILIB_H_
-#define EFILIB_H_
+#pragma once
 
 #include <stdint.h>
 
@@ -123,5 +122,3 @@ constexpr void copyArrayPartial(TElement (&dest)[NDest], const TElement (&src)[N
 // "g++ -O0" or other C++/C compilers
 #define cisnan(f) (*(((int*) (&f))) == 0x7FC00000)
 #endif /* __cplusplus && __OPTIMIZE__ */
-
-#endif /* EFILIB_H_ */

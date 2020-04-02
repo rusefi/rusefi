@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef RFICONSOLE_LOGIC_H_
-#define RFICONSOLE_LOGIC_H_
+#pragma once
 
 #include "datalogging.h"
 #include "rusefi_types.h"
@@ -85,5 +84,3 @@ void addConsoleActionSSSSS(const char *token, VoidCharPtrCharPtrCharPtrCharPtrCh
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-#endif /* RFICONSOLE_H_ */

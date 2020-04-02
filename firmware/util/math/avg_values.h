@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef AVG_VALUES_H_
-#define AVG_VALUES_H_
+#pragma once
 
 #define AVG_TAB_SIZE 48
 
@@ -26,5 +25,3 @@ void avgAddValue(AvgTable *table, int rpm, float key, float value);
 float avgGetValueByIndexes(AvgTable *table, int i, int j);
 float avgGetValue(AvgTable *table, int rpm, float key);
 int avgGetValuesCount(AvgTable *table, int rpm, float key);
-
-#endif /* AVG_VALUES_H_ */

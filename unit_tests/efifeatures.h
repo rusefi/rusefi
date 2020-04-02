@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef EFIFEATURES_H_
-#define EFIFEATURES_H_
+#pragma once
 
 #include "rusefi_true.h"
 
@@ -70,5 +69,3 @@
 #define EFI_JOYSTICK FALSE
 
 #define EFI_MAP_AVERAGING TRUE
-
-#endif /* EFIFEATURES_H_ */

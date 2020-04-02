@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef LOCALVERSIONHOLDER_H_
-#define LOCALVERSIONHOLDER_H_
+#pragma once
 
 #include "stdbool.h"
 
@@ -31,5 +30,3 @@ private:
 	int localVersion = -1;
 
 };
-
-#endif /* LOCALVERSIONHOLDER_H_ */

@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CRANK_INPUT_H_
-#define CRANK_INPUT_H_
+#pragma once
 
 #include "engine.h"
 #include "pin_repository.h"
@@ -20,5 +19,3 @@ void turnOnTriggerInputPins(Logging *sharedLogger);
 void applyNewTriggerInputPins(void);
 void startTriggerInputPins(void);
 void stopTriggerInputPins(void);
-
-#endif /* CRANK_INPUT_H_ */

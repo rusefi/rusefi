@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef FL_STACK_H_
-#define FL_STACK_H_
+#pragma once
 
 #include "global.h"
 
@@ -122,5 +121,3 @@ Type * ArrayList<Type, Dimention>::add(void) {
 	efiAssert(CUSTOM_ERR_ASSERT, size < Dimention, "add() too many elements", (Type *)NULL);
 	return &elements[size++];
 }
-
-#endif /* FL_STACK_H_ */

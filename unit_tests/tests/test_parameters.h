@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef TESTS_TEST_PARAMETERS_H_
-#define TESTS_TEST_PARAMETERS_H_
+#pragma once
 
 #include <unordered_map>
 using namespace std;
@@ -18,4 +17,3 @@ public:
 	float get(string key) const;
 };
 
-#endif /* TESTS_TEST_PARAMETERS_H_ */

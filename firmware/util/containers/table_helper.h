@@ -4,8 +4,8 @@
  * @date Jul 6, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef TABLE_HELPER_H_
-#define TABLE_HELPER_H_
+
+#pragma once
 
 #include <math.h>
 #include "error_handling.h"
@@ -187,5 +187,3 @@ void setArrayValues(TValue (&array)[TSize], TValue value) {
 }
 
 void setRpmTableBin(float array[], int size);
-
-#endif /* TABLE_HELPER_H_ */

@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef LISTENER_ARRAY_H_
-#define LISTENER_ARRAY_H_
+#pragma once
 
 #include <stddef.h>
 #include "rusefi_types.h"
@@ -121,5 +120,3 @@ void clearCallbacks(IntListenerArray<MAX_INT_LISTENER_COUNT> *array) {
 	array->currentListenersCount = 0;
 }
 
-
-#endif /* LISTENER_ARRAY_H_ */
