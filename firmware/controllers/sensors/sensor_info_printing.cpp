@@ -1,6 +1,7 @@
 #include "global.h"
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
+#include "redundant_sensor.h"
 #include "efilib.h"
 #include "loggingcentral.h"
 
@@ -26,3 +27,7 @@ void CanSensorBase::showInfo(Logging* logger, const char* sensorName) const {
 	scheduleMsg(logger, "CAN Sensor \"%s\": valid: %d value: %.2f", sensorName, valid, value);
 }
 #endif // EFI_CAN_SUPPORT
+
+void RedundantSensor::showInfo(Logging* logger, const char* sensorName) const {
+	scheduleMsg(logger, "Redundant sensor \"%s\" combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
+}
