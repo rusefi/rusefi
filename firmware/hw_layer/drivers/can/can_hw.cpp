@@ -69,41 +69,6 @@ static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
 
-CANTxFrame txmsg;
-
-void setTxBit(int offset, int index) {
-	txmsg.data8[offset] = txmsg.data8[offset] | (1 << index);
-}
-
-void commonTxInit(int eid) {
-	memset(&txmsg, 0, sizeof(txmsg));
-	txmsg.IDE = CAN_IDE_STD;
-	txmsg.EID = eid;
-	txmsg.RTR = CAN_RTR_DATA;
-	txmsg.DLC = 8;
-}
-
-/**
- * send CAN message from txmsg buffer
- */
-void sendCanMessage(int size) {
-	CANDriver *device = detectCanDevice(CONFIG(canRxPin),
-			CONFIG(canTxPin));
-	if (device == NULL) {
-		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
-		return;
-	}
-	txmsg.DLC = size;
-
-	// 100 ms timeout
-	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, TIME_MS2I(100));
-	if (result == MSG_OK) {
-		canWriteOk++;
-	} else {
-		canWriteNotOk++;
-	}
-}
-
 class CanRead final : public ThreadController<256> {
 public:
 	CanRead()
