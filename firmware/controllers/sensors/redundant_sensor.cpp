@@ -2,9 +2,16 @@
 
 #include "efilib.h"
 
-RedundantSensor::RedundantSensor(SensorType outputType, SensorType first, SensorType second, float maximumDifference, bool ignoreSecondSensor)
-	: Sensor(outputType), m_first(first), m_second(second), m_maxDifference(maximumDifference), m_ignoreSecond(ignoreSecondSensor)
+RedundantSensor::RedundantSensor(SensorType outputType, SensorType first, SensorType second)
+	: Sensor(outputType)
+	, m_first(first)
+	, m_second(second)
 {
+}
+
+void RedundantSensor::configure(float maxDifference, bool ignoreSecondSensor) {
+	m_maxDifference = maxDifference;
+	m_ignoreSecond = ignoreSecondSensor;
 }
 
 SensorResult RedundantSensor::get() const {

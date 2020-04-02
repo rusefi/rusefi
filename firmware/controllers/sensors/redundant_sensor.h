@@ -8,11 +8,14 @@ public:
 	RedundantSensor(
 		SensorType outputType,
 		SensorType firstSensor,
-		SensorType secondSensor,
-		float maximumDifference,
-		bool ignoreSecondSensor);
+		SensorType secondSensor
+	);
+
+	void configure(float maxDifference, bool ignoreSecondSensor);
 
 	SensorResult get() const override;
+
+	void showInfo(Logging* logger, const char* sensorName) const override;
 
 private:
 	// The two sensors we interpret to form one redundant sensor
@@ -20,8 +23,8 @@ private:
 	const SensorType m_second;
 
 	// How far apart do we allow the sensors to be before reporting an issue?
-	const float m_maxDifference;
+	float m_maxDifference = 0;
 
 	// Should we ignore the second sensor? (disable redundancy)
-    const bool m_ignoreSecond;
+	bool m_ignoreSecond = false;
 };
