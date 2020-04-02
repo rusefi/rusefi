@@ -7,9 +7,7 @@
 
 #pragma once
 
-#if !EFI_UNIT_TEST
 #include "engine.h"
-#endif
 
 void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
