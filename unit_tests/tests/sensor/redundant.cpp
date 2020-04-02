@@ -11,7 +11,7 @@ protected:
 	MockSensor m1, m2;
 
 	SensorRedundant()
-		: dut(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary, 5.0f, false)
+		: dut(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary)
 		, m1(SensorType::Tps1Primary)
 		, m2(SensorType::Tps1Secondary)
 	{
@@ -25,6 +25,8 @@ protected:
 		ASSERT_TRUE(dut.Register());
 		ASSERT_TRUE(m1.Register());
 		ASSERT_TRUE(m2.Register());
+
+		dut.configure(5.0f, false);
 	}
 
 	void TearDown() override
@@ -134,7 +136,7 @@ protected:
 	MockSensor m1, m2;
 
 	SensorRedundantIgnoreSecond()
-		: dut(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary, 5.0f, true)
+		: dut(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary)
 		, m1(SensorType::Tps1Primary)
 		, m2(SensorType::Tps1Secondary)
 	{
@@ -145,9 +147,11 @@ protected:
 		Sensor::ResetRegistry();
 
 		// Other tests verify registry function - don't re-test it here
-		dut.Register();
-		m1.Register();
-		m2.Register();
+		ASSERT_TRUE(dut.Register());
+		ASSERT_TRUE(m1.Register());
+		ASSERT_TRUE(m2.Register());
+
+		dut.configure(5.0f, true);
 	}
 
 	void TearDown() override
