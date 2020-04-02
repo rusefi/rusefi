@@ -109,6 +109,13 @@ static bool startupPositionError = false;
 
 #define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
 
+static SensorType indexToTpsSensor(size_t index) {
+	switch(index) {
+		case 0:  return SensorType::Tps1;
+		default: return SensorType::Tps2;
+	}
+}
+
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
 
@@ -186,16 +193,20 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
+	SensorResult actualThrottlePosition = Sensor::get(indexToTpsSensor(m_myIndex));
 
-	percent_t actualThrottlePosition = getTPSWithIndex(m_myIndex PASS_ENGINE_PARAMETER_SUFFIX);
+	if (!actualThrottlePosition.Valid) {
+		m_motor->set(0);
+		return;
+	}
 
 	if (engine->etbAutoTune) {
-		autoTune.input = actualThrottlePosition;
+		autoTune.input = actualThrottlePosition.Value;
 		bool result = autoTune.Runtime(&logger);
 
 		tuneWorkingPid.updateFactors(autoTune.output, 0, 0);
 
-		float value = tuneWorkingPid.getOutput(50, actualThrottlePosition);
+		float value = tuneWorkingPid.getOutput(50, actualThrottlePosition.Value);
 		scheduleMsg(&logger, "AT input=%f output=%f PID=%f", autoTune.input,
 				autoTune.output,
 				value);
@@ -233,7 +244,7 @@ void EtbController::PeriodicTask() {
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 	currentEtbDuty = engine->engineState.etbFeedForward +
-			m_pid.getOutput(targetPosition, actualThrottlePosition);
+			m_pid.getOutput(targetPosition, actualThrottlePosition.Value);
 
 	m_motor->set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
 
@@ -291,7 +302,7 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 		tsOutputChannels.etb1DutyCycle = currentEtbDuty;
 		// 320
 		// Error is positive if the throttle needs to open further
-		tsOutputChannels.etb1Error = targetPosition - actualThrottlePosition;
+		tsOutputChannels.etb1Error = targetPosition - actualThrottlePosition.Value;
 #endif /* EFI_TUNER_STUDIO */
 	}
 }
@@ -301,8 +312,6 @@ EtbController etbControllers[ETB_COUNT];
 
 static void showEthInfo(void) {
 #if EFI_PROD_CODE
-	static char pinNameBuffer[16];
-
 	if (engine->etbActualCount == 0) {
 		scheduleMsg(&logger, "ETB DISABLED since no PPS");
 	}
