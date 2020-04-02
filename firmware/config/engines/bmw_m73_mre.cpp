@@ -72,10 +72,6 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->injectionMode = IM_BATCH;
 
-	// set_analog_input_pin pps PA7
-	// EFI_ADC_7: "31 - AN volt 3" - PA7
-	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_7;
-
 	// enable ETB
 	// set_rpn_expression 8 "0"
 	setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
@@ -100,6 +96,10 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = false;
 #else /* EFI_CANBUS_SLAVE */
+	// set_analog_input_pin pps PA7
+	// EFI_ADC_7: "31 - AN volt 3" - PA7
+	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_7;
+
 	engineConfiguration->canReadEnabled = false;
 	engineConfiguration->canWriteEnabled = true;
 	CONFIG(enableVerboseCanTx) = true;
