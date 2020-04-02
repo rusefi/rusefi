@@ -246,7 +246,6 @@ void EtbController::PeriodicTask() {
 	}
 
 	DISPLAY_STATE(Engine)
-DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 	DISPLAY_TEXT(Electronic_Throttle);
 	DISPLAY_SENSOR(TPS)
 	DISPLAY_TEXT(eol);
@@ -545,13 +544,11 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
-	engine->engineState.hasEtbPedalPositionSensor = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (!engine->engineState.hasEtbPedalPositionSensor) {
-#if EFI_PROD_CODE
-		// TODO: Once switched to new sensor model for pedal, we don't need this to be test-guarded.
+	// If you don't have a pedal, we have no business here.
+	if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
 		return;
-#endif
 	}
+
 	engine->etbActualCount = hasSecondThrottleBody(PASS_ENGINE_PARAMETER_SIGNATURE) ? 2 : 1;
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
@@ -621,7 +618,6 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("set_etbat_offset", setAutoOffset);
 #endif /* EFI_PROD_CODE */
 
-
 	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
@@ -631,15 +627,14 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (hasFirmwareError()) {
-			return;
+		return;
 	}
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &etbControllers[i];
 	}
+
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-

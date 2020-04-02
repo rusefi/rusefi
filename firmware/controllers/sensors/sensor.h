@@ -104,6 +104,11 @@ public:
 	static float getRaw(SensorType type);
 
 	/*
+	 * Query whether there is a sensor of a particular type currently registered.
+	 */
+	static bool hasSensor(SensorType type);
+
+	/*
 	 * Mock a value for a particular sensor.
 	 */
 	static void setMockValue(SensorType type, float value);
@@ -122,6 +127,12 @@ public:
 	 * Reset mocking for all sensors.
 	 */
 	static void resetAllMocks();
+
+	/*
+	 * Get a friendly name for the sensor.
+	 * For example, CLT, IAT, Throttle Position 2, etc.
+	 */
+	const char* getSensorName() { return getSensorName(m_type); }
 
 protected:
 	// Protected constructor - only subclasses call this
