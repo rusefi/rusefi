@@ -16,7 +16,6 @@
 #define TPS_TS_CONVERSION 200
 
 bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 /**
  * Throttle Position Sensor
  * In case of dual TPS this function would return logical TPS position
@@ -29,7 +28,6 @@ bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 percent_t getTpsValue(int index, float adc DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockTpsAdc(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockTpsValue(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setMockThrottlePedalPosition(percent_t value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void grabTPSIsClosed();
 void grabTPSIsWideOpen();
 void grabPedalIsUp();

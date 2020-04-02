@@ -62,6 +62,10 @@ void initTps() {
 	} else {
 		driverIntent.setProxiedSensor(SensorType::Tps1);
 	}
+
+	if (!driverIntent.Register()) {
+		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate TPS registration for TPS sensor");
+	}
 }
 
 void reconfigureTps() {

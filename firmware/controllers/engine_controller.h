@@ -28,7 +28,6 @@ void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 // throttle body sensor
 void setMockThrottlePositionSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setMockThrottlePedalSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockIatVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
