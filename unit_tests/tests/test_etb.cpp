@@ -9,7 +9,7 @@
 #include "electronic_throttle.h"
 #include "dc_motor.h"
 #include "engine_controller.h"
-#include "tps.h"
+#include "sensor.h"
 
 class MockEtb : public IEtbController {
 public:
@@ -75,16 +75,15 @@ TEST(etb, testTargetTpsIsFloatBug945) {
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_0;
 
-	setMockThrottlePedalSensorVoltage(3 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
 	engine->etbControllers[0]->PeriodicTask();
 	ASSERT_NEAR(50, engine->engineState.targetFromTable, EPS4D);
 
-	setMockThrottlePedalSensorVoltage(3.05 PASS_ENGINE_PARAMETER_SUFFIX);
-	ASSERT_NEAR(50.8302, getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE), EPS4D);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.8302f);
 	engine->etbControllers[0]->PeriodicTask();
 	ASSERT_NEAR(50.8302, engine->engineState.targetFromTable, EPS4D);
 
-	setMockThrottlePedalSensorVoltage(3.1 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 51.6605f);
 	engine->etbControllers[0]->PeriodicTask();
 	ASSERT_NEAR(51.6605, engine->engineState.targetFromTable, EPS4D);
 }
