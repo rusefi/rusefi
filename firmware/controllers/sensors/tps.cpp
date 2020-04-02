@@ -11,12 +11,6 @@
 
 EXTERN_ENGINE;
 
-/**
- * set mock_pedal_position X
- * See also directPwmValue
- */
-percent_t mockPedalPosition = MOCK_UNDEFINED;
-
 #if !EFI_PROD_CODE
 /**
  * this allows unit tests to simulate TPS position
@@ -29,11 +23,6 @@ void setMockTpsValue(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engine->mockTpsValue = tpsPosition;
 }
 #endif /* EFI_PROD_CODE */
-
-// see also setMockThrottlePedalSensorVoltage
-void setMockThrottlePedalPosition(percent_t value DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	mockPedalPosition = value;
-}
 
 /**
  * We are using one instance for read and another for modification, this is how we get lock-free thread-safety
@@ -212,33 +201,6 @@ bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->tps2_1AdcChannel != EFI_ADC_NONE;
-}
-
-extern float canPedal;
-
-percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_CANBUS_SLAVE
-		return canPedal;
-#endif
-
-
-	if (mockPedalPosition != MOCK_UNDEFINED) {
-		return mockPedalPosition;
-	}
-
-	// Don't choke without a pedal set
-	if (CONFIG(throttlePedalPositionAdcChannel) == EFI_ADC_NONE) {
-		return 0;
-	}
-
-	DISPLAY_TAG(PEDAL_SECTION);
-	DISPLAY_TEXT(Analog_MCU_reads);
-
-	float voltage = getVoltageDivided("pPS", CONFIG(DISPLAY_CONFIG(throttlePedalPositionAdcChannel)) PASS_ENGINE_PARAMETER_SUFFIX);
-	percent_t result = interpolateMsg("pedal", engineConfiguration->throttlePedalUpVoltage, 0, engineConfiguration->throttlePedalWOTVoltage, 100, voltage);
-
-	// this would put the value into the 0-100 range
-	return maxF(0, minF(100, result));
 }
 
 static bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

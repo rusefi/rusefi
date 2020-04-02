@@ -13,9 +13,9 @@
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "stepper.h"
 #include "pin_repository.h"
-#include "tps.h"
 #include "engine_controller.h"
 #include "adc_inputs.h"
+#include "sensor.h"
 
 EXTERN_ENGINE;
 
@@ -55,10 +55,11 @@ void StepperMotor::ThreadTask() {
 	bool isRunning = false;
 #endif /* EFI_SHAFT_POSITION_INPUT */
 	// now check if stepper motor re-initialization is requested - if the throttle pedal is pressed at startup
-	bool forceStepperParking = !isRunning && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > STEPPER_PARKING_TPS;
+	auto tpsPos = Sensor::get(SensorType::DriverThrottleIntent).value_or(0);
+	bool forceStepperParking = !isRunning && tpsPos > STEPPER_PARKING_TPS;
 	if (CONFIG(stepperForceParkingEveryRestart))
 		forceStepperParking = true;
-	scheduleMsg(logger, "Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", m_currentPosition, (forceStepperParking ? 1 : 0), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE));
+	scheduleMsg(logger, "Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", m_currentPosition, (forceStepperParking ? 1 : 0), tpsPos);
 
 	if (m_currentPosition < 0 || forceStepperParking) {
 		// reset saved value
