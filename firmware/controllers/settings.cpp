@@ -411,13 +411,10 @@ static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int1
 	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", convertVoltageTo10bitADC(raw), tps.Value, getTpsRateOfChange());
 }
 
-
 void printTPSInfo(void) {
-	if (hasPedalPositionSensor()) {
-		scheduleMsg(&logger, "pedal up %f / down %f",
-				engineConfiguration->throttlePedalUpVoltage,
-				engineConfiguration->throttlePedalWOTVoltage);
-	}
+	scheduleMsg(&logger, "pedal up %f / down %f",
+			engineConfiguration->throttlePedalUpVoltage,
+			engineConfiguration->throttlePedalWOTVoltage);
 
 	printTpsSenser("TPS", SensorType::Tps1, engineConfiguration->tpsMin, engineConfiguration->tpsMax, engineConfiguration->tps1_1AdcChannel);
 	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);

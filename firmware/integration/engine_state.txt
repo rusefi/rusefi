@@ -55,7 +55,6 @@ float tpsVoltageBoard
 float baroCorrection;
 
 bit isCrankingState
-bit hasEtbPedalPositionSensor;
 bit isAutomaticIdle
 
 struct cranking_fuel_s
