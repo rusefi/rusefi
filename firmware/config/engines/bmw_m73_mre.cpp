@@ -65,6 +65,7 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	CONFIG(isFasterEngineSpinUpEnabled) = true;
 
+	engineConfiguration->globalTriggerAngleOffset = 90;
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 5.4 / 2;
 	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
@@ -106,6 +107,8 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(enableVerboseCanTx) = true;
 #endif /* EFI_CANBUS_SLAVE */
 
+	// set cranking_fuel 15
+	engineConfiguration->cranking.baseFuel = 15;
 
 	//set tps_min 891
 	CONFIG(tpsMin) = 891;
