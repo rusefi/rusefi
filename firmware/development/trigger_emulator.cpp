@@ -37,8 +37,6 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 }
 
 void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-
-
 #if EFI_EMULATE_POSITION_SENSORS
 	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));
 
@@ -48,13 +46,13 @@ void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 #if EFI_PROD_CODE
 	// todo: refactor, make this a loop
-	triggerSignal.outputPins[0]->initPin("trg emulator ch1", CONFIG(triggerSimulatorPins)[0],
+	triggerSignal.outputPins[0]->initPin("Trigger emulator 1", CONFIG(triggerSimulatorPins)[0],
 			&CONFIG(triggerSimulatorPinModes)[0]);
 
-	triggerSignal.outputPins[1]->initPin("trg emulator ch2", CONFIG(triggerSimulatorPins)[1],
+	triggerSignal.outputPins[1]->initPin("Trigger emulator 2", CONFIG(triggerSimulatorPins)[1],
 			&CONFIG(triggerSimulatorPinModes)[1]);
 
-	triggerSignal.outputPins[2]->initPin("trg emulator ch3", CONFIG(triggerSimulatorPins)[2],
+	triggerSignal.outputPins[2]->initPin("Trigger emulator 3", CONFIG(triggerSimulatorPins)[2],
 			&CONFIG(triggerSimulatorPinModes)[2]);
 #endif /* EFI_PROD_CODE */
 
