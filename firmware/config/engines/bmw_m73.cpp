@@ -30,8 +30,8 @@
  * ECU pin 6:  GND             ECU
  * ECU pin 15: OUT         BLK injector #2
  * ECU pin 20: IN          WHT hall effect camshaft sensor signal
- * ECU pin 21: GND BRN     BLK CLT sensor
- * ECU pin 22: IN  RED/BRN GRN CLT sensor
+ * ECU pin 21: GND BRN     BLK CLT sensor (only on first ECU)
+ * ECU pin 22: IN  RED/BRN GRN CLT sensor (only on first ECU)
  * ECU pin 27: OUT         ORG injector #6
  * ECU pin 28: OUT         RED injector #5
  * ECU pin 32: IN          ORG VR positive crankshaft sensor - only 2x 5k per channel, R111 not installed, W1002 not installed
@@ -39,7 +39,7 @@
  * ECU pin 41: OUT BRN/WHT BLU injector #1
  * ECU pin 45: GND             crankshaft shield
  * ECU pin 46: IN  BLK     BLU VR negative crankshaft sensor
- *
+ * ECU pin 47: IN              IAT sensor (only on second ECU)
  *
  * Plug #4 40 pin
  * ECU pin 6:  IN              start signal from ignition key
