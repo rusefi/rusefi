@@ -79,6 +79,7 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.displacement = 5.4;
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
+	CONFIG(isFasterEngineSpinUpEnabled) = true;
 
 	engineConfiguration->vvtMode = VVT_FIRST_HALF;
 
