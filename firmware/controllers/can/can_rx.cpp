@@ -60,6 +60,10 @@ void processCanRxMessage(const CANRxFrame& frame, Logging* logger, efitick_t now
 	} else if (frame.EID == CONFIG(verboseCanBaseAddress) + CAN_SENSOR_1_OFFSET) {
 		int16_t mapScaled = *reinterpret_cast<const int16_t*>(&frame.data8[0]);
 		canMap = mapScaled / (1.0 * PACK_MULT_PRESSURE);
+		uint8_t cltShifted = *reinterpret_cast<const uint8_t*>(&frame.data8[2]);
+#if EFI_CANBUS_SLAVE
+		engine->sensors.clt = cltShifted - PACK_ADD_TEMPERATURE;
+#endif /* EFI_CANBUS_SLAVE */
 	} else {
 		obdOnCanPacketRx(frame);
 	}
