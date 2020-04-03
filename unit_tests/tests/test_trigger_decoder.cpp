@@ -256,31 +256,31 @@ TEST(misc, testStartupFuelPumping) {
 	engineConfiguration->tpsMax = 10;
 
 	setMockTpsAdc(6 PASS_ENGINE_PARAMETER_SUFFIX);
-	sf.update();
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#1";
 
 	setMockTpsAdc(3 PASS_ENGINE_PARAMETER_SUFFIX);
-	sf.update();
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pumpsCounter#2";
 
-	sf.update();
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#3";
 
 	engine->rpmCalculator.mockRpm = 10;
-	sf.update();
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 0,  sf.pumpsCounter) << "pc#4";
 
 	setMockTpsAdc(7 PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->rpmCalculator.mockRpm = 0;
-	sf.update();
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#5";
 
 	setMockTpsAdc(3 PASS_ENGINE_PARAMETER_SUFFIX);
-	sf.update();
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#6";
 
 	setMockTpsAdc(7 PASS_ENGINE_PARAMETER_SUFFIX);
-	sf.update();
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 2,  sf.pumpsCounter) << "pc#7";
 }
 

@@ -269,7 +269,7 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 	}
 }
 
-void StartupFuelPumping::update() {
+void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (GET_RPM() == 0) {
 		bool isTpsAbove50 = Sensor::get(SensorType::DriverThrottleIntent).value_or(0) >= 50;
 

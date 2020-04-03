@@ -149,7 +149,7 @@ public:
 class StartupFuelPumping {
 public:
 	StartupFuelPumping();
-	void update();
+	void update(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	bool isTpsAbove50;
 	int pumpsCounter;
 private:
