@@ -97,7 +97,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	if (CONFIG(useSeparateAdvanceForIdle)) {
 		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance);
 
-		auto [valid, tps] = Sensor::get(SensorType::Tps1);
+		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
 		if (valid) {
 			// interpolate between idle table and normal (running) table using TPS threshold
 			advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIG(idlePidDeactivationTpsThreshold), advanceAngle, tps);
