@@ -40,6 +40,7 @@
 #include "mmc_card.h"
 #include "idle_thread.h"
 #include "fuel_math.h"
+#include "sensor.h"
 
 
 EXTERN_ENGINE;
@@ -190,7 +191,7 @@ static void showLine(lcd_line_e line, int screenY) {
 	case LL_TPS:
 		getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, buffer);
 
-		lcdPrintf("Throttle %s %.2f%%", buffer, getTPS());
+		lcdPrintf("Throttle %s %.2f%%", buffer, Sensor::get(SensorType::Tps1).value_or(0));
 		return;
 	case LL_FUEL_CLT_CORRECTION:
 		lcdPrintf("CLT corr %.2f", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
