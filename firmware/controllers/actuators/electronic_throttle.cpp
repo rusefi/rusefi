@@ -214,7 +214,7 @@ void EtbController::PeriodicTask() {
 	}
 
 
-	int rpm = GET_RPM();
+	float rpm = GET_RPM();
 	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition.Value);
 	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
 	percent_t targetPosition = engine->engineState.targetFromTable + etbIdleAddition;
