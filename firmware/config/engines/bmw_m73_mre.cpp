@@ -108,6 +108,9 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* EFI_CANBUS_SLAVE */
 
 
+	// do I have VR wires flipped?
+	engineConfiguration->trigger.type = TT_60_2_VW;
+
 	// this large engine seems to crank at around only 150 RPM? And happily idle at 400RPM?
 	engineConfiguration->cranking.rpm = 280;
 

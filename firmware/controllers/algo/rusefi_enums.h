@@ -247,6 +247,9 @@ typedef enum {
 	TT_ONE = 18,
 
 	TT_DODGE_RAM = 19,
+	/**
+	 * It looks like this is the VR shape if you have your wires flipped
+	 */
 	TT_60_2_VW = 20,
 
 	TT_HONDA_1_24 = 21,
