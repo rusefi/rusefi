@@ -12,7 +12,6 @@
 #include "engine_configuration.h"
 #include "adc_inputs.h"
 #include "engine_math.h"
-#include "tps.h"
 
 EXTERN_ENGINE;
 
