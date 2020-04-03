@@ -81,8 +81,6 @@ TEST(idle, timingPid) {
 	eth.engine.engineState.cltTimingCorrection = 0;
 
 	// configure TPS
-	engineConfiguration->tpsMin = 0;
-	engineConfiguration->tpsMax = 100;
 	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
 	Sensor::setMockValue(SensorType::Tps1, 0);
 
