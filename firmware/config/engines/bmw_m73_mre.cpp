@@ -63,6 +63,7 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 
+	CONFIG(isFasterEngineSpinUpEnabled) = true;
 
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 5.4 / 2;
