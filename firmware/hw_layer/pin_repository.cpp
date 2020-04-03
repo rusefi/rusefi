@@ -231,7 +231,7 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 		 * connected, so the warning is never displayed on the console and that's quite a problem!
 		 */
 //		warning(OBD_PCM_Processor_Fault, "brain pin %d req by %s used by %s", brainPin, msg, getBrainUsedPin(index));
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by %s but is used by %s", hwPortname(brainPin), msg, getBrainUsedPin(index));
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by \"%s\" but is used by \"%s\"", hwPortname(brainPin), msg, getBrainUsedPin(index));
 		return true;
 	}
 

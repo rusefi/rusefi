@@ -89,7 +89,7 @@ int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 		return -1;
 	}
 
-	digital_input_s* input = startDigitalCapture("trigger", brainPin);
+	digital_input_s* input = startDigitalCapture(msg, brainPin);
 	if (input == NULL) {
 		/* error already reported */
 		return -1;
@@ -108,7 +108,6 @@ int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 }
 
 void icuTriggerTurnOffInputPin(brain_pin_e brainPin) {
-
 	stopDigitalCapture("trigger", brainPin);
 }
 
