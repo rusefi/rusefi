@@ -739,10 +739,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	}
 	// offset 24
 	tsOutputChannels->engineLoad = engineLoad;
-	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		// offset 28
-		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
+
+	// offset 28
+	tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// offset 36
 #if EFI_ANALOG_SENSORS
