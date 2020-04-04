@@ -199,7 +199,7 @@ static bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->tps1_1AdcChannel != EFI_ADC_NONE;
 }
 
-percent_t getTPS( DECLARE_ENGINE_PARAMETER_SUFFIX) {
+percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_PROD_CODE
 	if (!cisnan(engine->mockTpsValue)) {
 		return engine->mockTpsValue;
