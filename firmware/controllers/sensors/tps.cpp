@@ -211,5 +211,5 @@ percent_t getTPS( DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: blah blah
 	// todo: if two TPS do not match - show OBD code via malfunction_central.c
 
-	return getPrimaryRawTPS(index PASS_ENGINE_PARAMETER_SUFFIX);
+	return getPrimaryRawTPS(0 PASS_ENGINE_PARAMETER_SUFFIX);
 }
