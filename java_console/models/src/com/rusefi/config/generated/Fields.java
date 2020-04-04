@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Apr 03 16:05:17 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Apr 04 09:06:52 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -392,15 +392,15 @@ public class Fields {
 	public static final int etbFreq_offset = 2514;
 	public static final int etbIdleThrottleRange_offset = 4012;
 	public static final int etbIo1_controlPin1_offset = 982;
-	public static final int etbIo1_controlPinMode_offset = 983;
 	public static final int etbIo1_directionPin1_offset = 980;
 	public static final int etbIo1_directionPin2_offset = 981;
 	public static final int etbIo1_offset = 980;
+	public static final int etbIo1_pad_offset = 983;
 	public static final int etbIo2_controlPin1_offset = 986;
-	public static final int etbIo2_controlPinMode_offset = 987;
 	public static final int etbIo2_directionPin1_offset = 984;
 	public static final int etbIo2_directionPin2_offset = 985;
 	public static final int etbIo2_offset = 984;
+	public static final int etbIo2_pad_offset = 987;
 	public static final int etbNeutralPosition_offset = 1471;
 	public static final int externalKnockSenseAdc_offset = 3103;
 	public static final int extraInjectionOffset_offset = 432;
@@ -1977,11 +1977,11 @@ public class Fields {
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN1 = Field.create("ETBIO1_CONTROLPIN1", 982, FieldType.INT8, brain_pin_e);
-	public static final Field ETBIO1_CONTROLPINMODE = Field.create("ETBIO1_CONTROLPINMODE", 983, FieldType.INT8, pin_output_mode_e);
+	public static final Field ETBIO1_PAD = Field.create("ETBIO1_PAD", 983, FieldType.INT8);
 	public static final Field ETBIO2_DIRECTIONPIN1 = Field.create("ETBIO2_DIRECTIONPIN1", 984, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO2_DIRECTIONPIN2 = Field.create("ETBIO2_DIRECTIONPIN2", 985, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO2_CONTROLPIN1 = Field.create("ETBIO2_CONTROLPIN1", 986, FieldType.INT8, brain_pin_e);
-	public static final Field ETBIO2_CONTROLPINMODE = Field.create("ETBIO2_CONTROLPINMODE", 987, FieldType.INT8, pin_output_mode_e);
+	public static final Field ETBIO2_PAD = Field.create("ETBIO2_PAD", 987, FieldType.INT8);
 	public static final Field BOOSTCONTROLPIN = Field.create("BOOSTCONTROLPIN", 988, FieldType.INT8, output_pin_e);
 	public static final Field BOOSTCONTROLPINMODE = Field.create("BOOSTCONTROLPINMODE", 989, FieldType.INT8, pin_output_mode_e);
 	public static final Field ANTILAGACTIVATEPIN = Field.create("ANTILAGACTIVATEPIN", 990, FieldType.INT8, switch_input_pin_e);
@@ -2881,11 +2881,11 @@ public class Fields {
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN1,
-	ETBIO1_CONTROLPINMODE,
+	ETBIO1_PAD,
 	ETBIO2_DIRECTIONPIN1,
 	ETBIO2_DIRECTIONPIN2,
 	ETBIO2_CONTROLPIN1,
-	ETBIO2_CONTROLPINMODE,
+	ETBIO2_PAD,
 	BOOSTCONTROLPIN,
 	BOOSTCONTROLPINMODE,
 	ANTILAGACTIVATEPIN,
