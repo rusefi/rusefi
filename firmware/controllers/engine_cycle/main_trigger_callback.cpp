@@ -48,6 +48,7 @@
 #include "event_queue.h"
 #include "engine.h"
 #include "perf_trace.h"
+#include "sensor.h"
 
 #include "backup_ram.h"
 
