@@ -11,45 +11,6 @@
 
 EXTERN_ENGINE;
 
-/**
- * We are using one instance for read and another for modification, this is how we get lock-free thread-safety
- *
- */
-static tps_roc_s states[2];
-
-// todo if TPS_FAST_ADC
-//int tpsFastAdc = 0;
-
-static volatile int tpsRocIndex = 0;
-
-/**
- * this method is lock-free thread-safe if invoked only from one thread
- */
-void saveTpsState(efitimeus_t now, float curValue) {
-	int tpsNextIndex = (tpsRocIndex + 1) % 2;
-	tps_roc_s *cur = &states[tpsRocIndex];
-	tps_roc_s *next = &states[tpsNextIndex];
-
-	next->prevTime = cur->curTime;
-	next->prevValue = cur->curValue;
-	next->curTime = now;
-	next->curValue = curValue;
-
-	//int diffSysticks = overflowDiff(now, cur->curTime);
-	float diffSeconds = 0;// TODO: do we need this? diffSysticks * 1.0 / CH_FREQUENCY;
-	next->rateOfChange = (curValue - cur->curValue) / diffSeconds;
-
-	// here we update volatile index
-	tpsRocIndex = tpsNextIndex;
-}
-
-/**
- * this read-only method is lock-free thread-safe
- */
-float getTpsRateOfChange(void) {
-	return states[tpsRocIndex].rateOfChange;
-}
-
 /*
  * Return current TPS position based on configured ADC levels, and adc
  *

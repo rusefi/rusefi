@@ -30,17 +30,3 @@ void grabTPSIsClosed();
 void grabTPSIsWideOpen();
 void grabPedalIsUp();
 void grabPedalIsWideOpen();
-
-typedef struct {
-	efitimeus_t prevTime;
-	// value 0-100%
-	float prevValue;
-	efitimeus_t curTime;
-	// value 0-100%
-	float curValue;
-	// % per second
-	float rateOfChange;
-} tps_roc_s;
-
-//void saveTpsState(efitimeus_t now, float curValue);
-float getTpsRateOfChange(void);
