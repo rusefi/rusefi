@@ -67,7 +67,7 @@ float getTpsRateOfChange(void) {
  * Return current TPS position based on configured ADC levels, and adc
  *
  * */
-percent_t getTpsValue(int index, float adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static percent_t getTpsValue(int index, float adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	DISPLAY_STATE(Engine)
 	DISPLAY_TAG(TPS_SECTION);
@@ -195,15 +195,11 @@ static percent_t getPrimaryRawTPS(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #define NO_TPS_MAGIC_VALUE 66.611
 
-bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->tps2_1AdcChannel != EFI_ADC_NONE;
-}
-
 static bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->tps1_1AdcChannel != EFI_ADC_NONE;
 }
 
-percent_t getTPSWithIndex(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+percent_t getTPS( DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_PROD_CODE
 	if (!cisnan(engine->mockTpsValue)) {
 		return engine->mockTpsValue;
@@ -216,13 +212,4 @@ percent_t getTPSWithIndex(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: if two TPS do not match - show OBD code via malfunction_central.c
 
 	return getPrimaryRawTPS(index PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getTPSWithIndex(0 PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-int convertVoltageTo10bitADC(float voltage) {
-	// divided by 2 because of voltage divider, then converted into 10bit ADC value (TunerStudio format)
-	return (int) (voltage * TPS_TS_CONVERSION);
 }
