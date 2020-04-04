@@ -45,14 +45,13 @@ public:
 	void start(bool useTwoWires, 
 			brain_pin_e pinEnable,
 			// since we have pointer magic here we cannot simply have value parameter
-			const pin_output_mode_e *pinEnableMode,
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2,
 			ExecutorInterface* executor,
 			int frequency) {
 		dcMotor.setType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
 
-		m_pinEnable.initPin("ETB Enable", pinEnable, pinEnableMode);
+		m_pinEnable.initPin("ETB Enable", pinEnable);
 		m_pinDir1.initPin("ETB Dir 1", pinDir1);
 		m_pinDir2.initPin("ETB Dir 2", pinDir2);
 
@@ -92,11 +91,9 @@ DcMotor* initDcMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX)
 	const auto& io = engineConfiguration->etbIo[index];
 	auto& hw = etbHardware[index];
 
-	// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
 	hw.start(
 		CONFIG(etb_use_two_wires),
 		io.controlPin1,
-		&io.controlPinMode,
 		io.directionPin1,
 		io.directionPin2,
 		&ENGINE(executor),
