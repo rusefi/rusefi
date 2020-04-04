@@ -1646,6 +1646,7 @@
 #define overrideCrankingIacSetting_offset_hex 5c4
 #define overrideCrankingIgnition_offset 516
 #define overrideCrankingIgnition_offset_hex 204
+#define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_MS 300
