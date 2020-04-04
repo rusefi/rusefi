@@ -47,7 +47,7 @@ static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 	AdcSubscription::SubscribeSensor(sensor, channel);
 
 	if (!sensor.Register()) {
-		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate TPS registration for TPS sensor");
+		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for sensor \"%s\"", sensor.getSensorName());
 	}
 }
 
@@ -61,6 +61,10 @@ void initTps() {
 		driverIntent.setProxiedSensor(SensorType::AcceleratorPedal);
 	} else {
 		driverIntent.setProxiedSensor(SensorType::Tps1);
+	}
+
+	if (!driverIntent.Register()) {
+		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for driver acc intent sensor");
 	}
 }
 

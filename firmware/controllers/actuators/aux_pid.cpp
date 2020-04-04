@@ -25,8 +25,7 @@
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 extern fsio8_Map3D_f32t fsioTable1;
 

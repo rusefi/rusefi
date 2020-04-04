@@ -51,8 +51,7 @@
 
 
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static Logging * logger;
 static bool isRunningBench = false;
@@ -151,6 +150,10 @@ void milBench(void) {
 	pinbench("0", "500", "500", "16", &enginePins.checkEnginePin, CONFIG(malfunctionIndicatorPin));
 }
 
+void starterRelayBench(void) {
+	pinbench("0", "6000", "100", "1", &enginePins.starterControl, CONFIG(starterControlPin));
+}
+
 void fuelPumpBenchExt(const char *durationMs) {
 	pinbench("0", durationMs, "100", "1", &enginePins.fuelPumpRelay, CONFIG(fuelPumpPin));
 }
@@ -246,11 +249,14 @@ static void handleCommandX14(uint16_t index) {
 	case 9:
 		acRelayBench();
 		return;
-	case 10:
+	case 0xA:
 		// cmd_write_config
 #if EFI_PROD_CODE
 		writeToFlashNow();
 #endif /* EFI_PROD_CODE */
+		return;
+	case 0xB:
+		starterRelayBench();
 		return;
 
 	}
@@ -286,6 +292,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit
 		setCallFromPitStop(30000);
+	} else if (subsystem == 0x21) {
 	} else if (subsystem == 0x30) {
 		setEngineType(index);
 	} else if (subsystem == 0x31) {
@@ -313,6 +320,7 @@ void initBenchTest(Logging *sharedLogger) {
 	addConsoleActionS("fanbench2", fanBenchExt);
 	addConsoleAction("dizzybench", dizzyBench); // this is useful for tach output testing
 
+	addConsoleAction("starterbench", starterRelayBench);
 	addConsoleAction("milbench", milBench);
 	addConsoleActionSSS("fuelbench", fuelbench);
 	addConsoleActionSSS("sparkbench", sparkbench);

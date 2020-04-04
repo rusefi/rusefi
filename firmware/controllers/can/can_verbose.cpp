@@ -1,3 +1,10 @@
+/**
+ * @file	can_verbose.cpp
+ *
+ * TODO: change 'verbose' into 'broadcast'?
+ *
+ * @author Matthew Kennedy, (c) 2020
+ */
 
 #include "globalaccess.h"
 #if EFI_CAN_SUPPORT
@@ -7,6 +14,7 @@
 #include "scaled_channel.h"
 #include "can_msg_tx.h"
 #include "sensor.h"
+#include "can.h"
 #include "allsensors.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
@@ -73,7 +81,7 @@ struct PedalAndTps {
 
 static void populateFrame(PedalAndTps& msg)
 {
-    msg.pedal = getPedalPosition();
+    msg.pedal = Sensor::get(SensorType::AcceleratorPedal).value_or(-1);
     msg.tps1 = Sensor::get(SensorType::Tps1).value_or(-1);
     msg.tps2 = Sensor::get(SensorType::Tps2).value_or(-1);
 }
@@ -91,12 +99,12 @@ struct Sensors1 {
 static void populateFrame(Sensors1& msg) {
     msg.map = getMap();
 
-    msg.clt = getCoolantTemperature() + 40;
-    msg.iat = getIntakeAirTemperature() + 40;
+    msg.clt = getCoolantTemperature() + PACK_ADD_TEMPERATURE;
+    msg.iat = getIntakeAirTemperature() + PACK_ADD_TEMPERATURE;
 
     // todo: does aux temp even work?
-    msg.aux1 = 0 + 40;
-    msg.aux2 = 0 + 40;
+    msg.aux1 = 0 + PACK_ADD_TEMPERATURE;
+    msg.aux2 = 0 + PACK_ADD_TEMPERATURE;
 
     msg.mcuTemp = getMCUInternalTemperature();
     msg.fuelLevel = engine->sensors.fuelTankLevel;
@@ -137,8 +145,8 @@ void sendCanVerbose() {
 
     transmitStruct<Status>      (base + 0);
     transmitStruct<Speeds>      (base + 1);
-    transmitStruct<PedalAndTps> (base + 2);
-    transmitStruct<Sensors1>    (base + 3);
+    transmitStruct<PedalAndTps> (base + CAN_PEDAL_TPS_OFFSET);
+    transmitStruct<Sensors1>    (base + CAN_SENSOR_1_OFFSET);
     transmitStruct<Sensors2>    (base + 4);
     transmitStruct<Fueling>     (base + 5);
 }

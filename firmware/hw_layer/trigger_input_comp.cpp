@@ -16,11 +16,8 @@
 #include "trigger_input.h"
 #include "digital_input_icu.h"
 
+EXTERN_ENGINE;
 
-extern bool hasFirmwareErrorFlag;
-
-EXTERN_ENGINE
-;
 static Logging *logger;
 
 static volatile int centeredDacValue = 127;

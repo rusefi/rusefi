@@ -54,6 +54,7 @@
 #include "perf_trace.h"
 #include "boost_control.h"
 #include "launch_control.h"
+#include "tachometer.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -91,7 +92,6 @@
 #include "pwm_generator.h"
 #include "lcd_controller.h"
 #include "pin_repository.h"
-#include "tachometer.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125
@@ -101,8 +101,6 @@
 EXTERN_ENGINE;
 
 #if !EFI_UNIT_TEST
-
-extern bool hasFirmwareErrorFlag;
 
 static LoggingWithStorage logger("Engine Controller");
 
@@ -125,7 +123,7 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
-	initSensors();
+	initNewSensors(sharedLogger);
 #endif /* EFI_UNIT_TEST */
 
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
@@ -254,52 +252,15 @@ static void resetAccel(void) {
 	}
 }
 
-void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	engine->startStopStateToggleCounter++;
-
-	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		engine->startStopStateLastPushTime = getTimeNowNt();
-	} else if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		// todo: request engine stop here
-	}
-
-}
-
-static void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (CONFIG(startStopButtonPin) != GPIO_UNASSIGNED) {
-#if EFI_PROD_CODE
-		bool startStopState = efiReadPin(CONFIG(startStopButtonPin));
-
-		if (startStopState && !engine->startStopState) {
-			// we are here on transition from 0 to 1
-			onStartStopButtonToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
-		}
-		engine->startStopState = startStopState;
-#endif /* EFI_PROD_CODE */
-	}
-
-	// todo: should this be simply FSIO?
-	if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		// turn starter off once engine is running
-		enginePins.starterControl.setValue(0);
-		engine->startStopStateLastPushTime = 0;
-	}
-
-	if (engine->startStopStateLastPushTime != 0 &&
-			getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * CONFIG(startCrankingDuration)) {
-		enginePins.starterControl.setValue(0);
-		engine->startStopStateLastPushTime = 0;
-	}
-}
-
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	touchTimeCounter();
-#endif /* EFI_PROD_CODE */
 
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_PROD_CODE */
+
 
 	/**
 	 * Update engine RPM state if needed (check timeouts).
@@ -381,33 +342,20 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
 	printAnalogChannelInfo("TPS", engineConfiguration->tps1_1AdcChannel);
+	printAnalogChannelInfo("TPS2", engineConfiguration->tps2_1AdcChannel);
 	printAnalogChannelInfo("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
-	if (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) {
-		printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
-	}
-	if (engineConfiguration->iat.adcChannel != EFI_ADC_NONE) {
-		printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
-	}
-	if (hasMafSensor()) {
-		printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
-	}
+	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
+	printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
+	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		adc_channel_e ch = engineConfiguration->fsioAdc[i];
-		if (ch != EFI_ADC_NONE) {
-			printAnalogChannelInfo("fsio", ch);
-		}
+		printAnalogChannelInfo("fsio", ch);
 	}
 
 	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
-	}
-	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
-	}
-	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
-		printAnalogChannelInfo("extKno", engineConfiguration->externalKnockSenseAdc);
-	}
+	printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
+	printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
+	printAnalogChannelInfo("extKno", engineConfiguration->externalKnockSenseAdc);
 
 	printAnalogChannelInfo("OilP", engineConfiguration->oilPressure.hwChannel);
 
@@ -654,6 +602,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
+	initTachometer(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 #if !EFI_UNIT_TEST
@@ -729,9 +678,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initLcdController();
 #endif /* EFI_HD44780_LCD */
 
-#if EFI_PROD_CODE
-	initTachometer();
-#endif /* EFI_PROD_CODE */
 }
 
 // these two variables are here only to let us know how much RAM is available, also these
@@ -759,6 +705,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 201200326;
+	return 20200403;
 }
 #endif /* EFI_UNIT_TEST */

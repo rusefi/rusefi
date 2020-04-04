@@ -1,89 +1,176 @@
 <html>
 
   <head>
-    <style type="text/css">
-      a:link {
-        color: #34495e;
-      }
+    <title>rusEfi Modern Engine Control Unit Management System</title>
+    <link rel="stylesheet" type="text/css" href="rusefi.css">
 
-      a:visited {
-        color: #34495e;
-      }
+<style>
+.top_spacer {
+   font-size: 150%;
+}
 
-      a:hover {
-        color: black;
-      }
+.header {
+   position: fixed;
+   left: 0;
+   top: 0;
+   width: 100%;
+   text-align: center;
+}
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   text-align: center;
+}
+</style>
 
-      a:visited:hover {
-        color: black;
-      }
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43478022-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-      table {
-        border-collapse: collapse;
-        font-size: 150%;
-      }
+  gtag('config', 'UA-43478022-1');
+</script>
 
-      table td,
-      table th {
-        border: 1px solid black;
-        padding: 0.5em;
-      }
 
-      table tr:first-child th {
-        border-top: 0;
-        font-weight: normal;
-      }
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-      table tr:last-child td {
-        border-bottom: 0;
-      }
-
-      table tr td:first-child,
-      table tr th:first-child {
-        border-left: 0;
-      }
-
-      table tr td:last-child,
-      table tr th:last-child {
-        border-right: 0;
-      }
-
-    </style>
+<style>
+.carousel {
+  width:70%;
+  height:70%;
+}
+</style>
   </head>
 
   <body>
 
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;padding:10px 5px;border-style:none;border-width:0px;overflow:hidden;word-break:normal;border-color:black;}
+.tg th{font-family:Arial, sans-serif;font-weight:normal;padding:10px 5px;border-style:none;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg .tg-cly1{text-align:left;vertical-align:middle}
+</style>
+
+
+<div class="header">
+<table class="tg" width="100%">
+  <tr>
+    <th class="tg-cly1"><a href="https://github.com/rusefi/rusefi">Github</a></th>
+    <th class="tg-cly1"><a href="https://rusefi.com/forum">Forum</a></th>
+    <th class="tg-cly1"><a href="https://github.com/rusefi/rusefi_documentation/wiki/Hardware">Hardware</a></th>
+    <th class="tg-cly1"><a href="https://rusefi.com/wiki">Wiki</a></th>
+    <th class="tg-cly1"><a href="https://github.com/rusefi/rusefi_documentation/wiki/Overview">Overview</a></th>
+    <th class="tg-cly1"><a href="https://github.com/rusefi/rusefi_documentation/wiki/Download">DOWNLOAD</a></th>
+    <th class="tg-cly1"><a href="/shop" style="color:fe6700;">Shop</a></th>
+  </tr>
+</table>
+</div>
+
+<div class="top_spacer">
+<br/>
+<br/>
+</div>
+
+
     <center>
-      <img src="https://rusefi.com/style/logo.gif" />
-  <h1>  rusEfi is a GPL open source engine control unit.</h1>
   <br/>
   <br/>
-  <br/>
-  <br/>
+
+
+
+<div class="container" width="50%">
+  <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="2000">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#myCarousel" data-slide-to="1"></li>
+      <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+
+      <div class="item active">
+        <img src="https://rusefi.com/style/logo_640.png" alt="microRusEfi" style="width:100%;">
+        <div class="carousel-caption">
+
+          <p style="color:black">
+rusEfi is a GPL open source engine control unit.</p>
+        </div>
+      </div>
+
+      <div class="item">
+<a href="/microrusefi">
+        <img src="images/c_microrusefi.jpg" alt="microRusEfi" style="width:100%;">
+</a>
+        <div class="carousel-caption">
+
+<a href="/microrusefi" style="color:fe6700;">
+<h1>$75 you assemble a kit</h1>
+<h1>$220 ready to drive ECU</h1>
+          <h3>microRusEfi</h3>
+          <p>Fully assembled modern small ECU</p>
+</a>
+        </div>
+      </div>
+
+      <div class="item">
+<br/><br/><br/>
+Modern 32 bit chips are a game changer for Do-It-Yourself Engine Management - ECU should be easy to deal with, show <i>what</i> is going on and <i>why</i>
+
+<br/><br/>
+<br/>168MHz+
+<br/>
+<br/>192KB+
+
+      </div>
+    
+      <div class="item">
+        <img src="images/c_assembled.jpg" alt="microRusEfi" style="width:100%;">
+        <div class="carousel-caption">
+
+          <p style="color:fe6700">
+Let machines assemble compact & reliable <a style="color:fe6700" href="https://github.com/rusefi/rusefi_documentation/wiki/Hardware">Hardware</a> so that
+              we can focus on advanced open source engine control!
+        </div>
+      </div>
   
-    <table>
-      <tr>
-        <td><a href="https://github.com/rusefi/rusefi_documentation/wiki/Overview">Overview</a></td>
-        <td><a href="https://github.com/rusefi/rusefi_documentation/wiki/Download">DOWNLOAD</a></td>
-      </tr>
-      <tr>
-        <td><a href="https://rusefi.com/forum">Forum</a></td>
-        <td><a href="https://github.com/rusefi/rusefi_documentation/wiki/Hardware">Hardware</a></td>
-      </tr>
-      <tr>
-        <td><a href="https://github.com/rusefi/rusefi">Github</a></td>
-        <td><a href="https://rusefi.com/wiki">Wiki</a></td>
-      </tr>
-      <tr>
-        <td><a href="https://www.facebook.com/rusEfiECU/">Facebook</a></td>
-        <td><a href="https://www.youtube.com/user/rusefi">Youtube</a></td>
-      </tr>
-      <tr>
-        <td><a href="https://www.patreon.com/rusefi">Patreon</a></td>
-        <td><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=arro239%40gmail%2ecom&lc=US&item_name=rusEfi&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">Donate</a></td>
-      </tr>
-    </table>
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+</div>  
+
       </center>
+
+<div class="footer">
+
+<table class="tg" width="100%">
+  <tr>
+    <th class="tg-cly1"><a href="/shop" style="color:fe6700;">Shop</a></th>
+    <th class="tg-cly1"><a href="https://www.facebook.com/rusEfiECU/">Facebook</a></th>
+    <th class="tg-cly1"><a href="https://www.patreon.com/rusefi">Patreon</a></th>
+    <th class="tg-cly1"><a href="https://www.youtube.com/user/rusefi">Youtube</a></th>
+    <th class="tg-cly1"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=arro239%40gmail%2ecom&lc=US&item_name=rusEfi&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">Donate</a></th>
+  </tr>
+</table>
+</div>
+
   </body>
 
 </html>

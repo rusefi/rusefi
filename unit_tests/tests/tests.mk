@@ -33,6 +33,7 @@ TESTS_SRC_CPP = \
 	tests/test_pid_auto.cpp \
 	tests/test_pid.cpp \
 	tests/test_accel_enrichment.cpp \
+	tests/test_tacho.cpp \
 	tests/test_gpiochip.cpp \
 	tests/test_multispark.cpp \
 	tests/sensor/basic_sensor.cpp \
@@ -43,4 +44,5 @@ TESTS_SRC_CPP = \
 	tests/sensor/lin_func.cpp \
 	tests/sensor/resist_func.cpp \
 	tests/sensor/therm_func.cpp \
-	tests/sensor/func_chain.cpp
+	tests/sensor/func_chain.cpp \
+	tests/sensor/redundant.cpp

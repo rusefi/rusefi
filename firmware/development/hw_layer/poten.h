@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef POTEN_H_
-#define POTEN_H_
+#pragma once
 
 #include "global.h"
 
@@ -26,4 +25,3 @@ void setPotResistance(Mcp42010Driver *driver, int channel, int resistance);
 
 #endif
 
-#endif /* POTEN_H_ */

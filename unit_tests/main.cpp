@@ -9,7 +9,6 @@
 #include <stdlib.h>
 
 #include "global.h"
-#include "test_interpolation_3d.h"
 #include "test_find_index.h"
 
 #include "engine_configuration.h"

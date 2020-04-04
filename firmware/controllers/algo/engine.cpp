@@ -39,8 +39,7 @@ static TriggerState initState CCM_OPTIONAL;
 
 LoggingWithStorage engineLogger("engine");
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"

@@ -39,6 +39,7 @@
 #include "engine.h"
 #include "periodic_task.h"
 #include "allsensors.h"
+#include "sensor.h"
 
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
@@ -52,8 +53,7 @@ static StepperMotor iacMotor;
 
 static Logging *logger;
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static bool shouldResetPid = false;
 // The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.
@@ -218,21 +218,20 @@ static bool isOutOfAutomaticIdleCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return !engine->engineState.idle.throttlePedalUpState;
 	}
 
-	percent_t inputPosition;
+	const auto [valid, pos] = Sensor::get(SensorType::DriverThrottleIntent);
 
-	if (hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		inputPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
-	} else {
-		inputPosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// Disable auto idle in case of TPS/Pedal failure
+	if (!valid) {
+		return true;
 	}
 
-	return inputPosition > CONFIG(idlePidDeactivationTpsThreshold);
+	return pos > CONFIG(idlePidDeactivationTpsThreshold);
 }
 
 /**
  * @return idle valve position percentage for automatic closed loop mode
  */
-static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (isOutOfAutomaticIdleCondition(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
@@ -288,7 +287,6 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	
 	// Apply PID Deactivation Threshold as a smooth taper for TPS transients.
-	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// if tps==0 then PID just works as usual, or we completely disable it if tps>=threshold
 	newValue = interpolateClamped(0.0f, newValue, CONFIG(idlePidDeactivationTpsThreshold), engine->engineState.idle.baseIdlePosition, tpsPos);
 
@@ -327,7 +325,9 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		idlePid.iTermMin = engineConfiguration->idlerpmpid_iTermMin;
 		idlePid.iTermMax = engineConfiguration->idlerpmpid_iTermMax;
 
-		engine->engineState.isAutomaticIdle = engineConfiguration->idleMode == IM_AUTO;
+		SensorResult tps = Sensor::get(SensorType::DriverThrottleIntent);
+
+		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
 		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
 			// todo: print each bit using 'getIdle_state_e' method
@@ -403,19 +403,21 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			lastCrankingCyclesCounter = engine->rpmCalculator.getRevolutionCounterSinceStart();
 			engine->engineState.idle.baseIdlePosition = iacPosition;
 		} else {
-			if (engineConfiguration->idleMode == IM_MANUAL) {
+			if (!tps.Valid || engineConfiguration->idleMode == IM_MANUAL) {
 				// let's re-apply CLT correction
 				iacPosition = manualIdleController(cltCorrection PASS_ENGINE_PARAMETER_SUFFIX);
 			} else {
-				iacPosition = automaticIdleController(PASS_ENGINE_PARAMETER_SIGNATURE);
+				iacPosition = automaticIdleController(tps.Value PASS_ENGINE_PARAMETER_SUFFIX);
 			}
 			
 			// store 'base' iacPosition without adjustments
 			engine->engineState.idle.baseIdlePosition = iacPosition;
-			
-			percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 			float additionalAir = (float)engineConfiguration->iacByTpsTaper;
-			iacPosition += interpolateClamped(0.0f, 0.0f, CONFIG(idlePidDeactivationTpsThreshold), additionalAir, tpsPos);
+
+			if (tps.Valid) {
+				iacPosition += interpolateClamped(0.0f, 0.0f, CONFIG(idlePidDeactivationTpsThreshold), additionalAir, tps.Value);
+			}
 
 			// taper transition from cranking to running (uint32_t to float conversion is safe here)
 			if (engineConfiguration->afterCrankingIACtaperDuration > 0)

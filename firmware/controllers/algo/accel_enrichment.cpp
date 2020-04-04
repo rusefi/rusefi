@@ -32,8 +32,7 @@
 #include "tunerstudio_configuration.h"
 #endif /* EFI_TUNER_STUDIO */
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 tps_tps_Map3D_t tpsTpsMap("tpsTps");
 

@@ -102,7 +102,6 @@ extern WaveChart waveChart;
 
 int warningEnabled = true;
 
-extern bool hasFirmwareErrorFlag;
 extern int maxTriggerReentraint;
 extern uint32_t maxLockedDuration;
 
@@ -172,8 +171,7 @@ static void reportSensorI(Logging *log, const char *caption, const char *units, 
 #endif /* EFI_FILE_LOGGING */
 }
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static char buf[6];
 
@@ -494,7 +492,7 @@ void updateDevConsoleState(void) {
 #if EFI_PROD_CODE
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
-		scheduleMsg(&logger, "FATAL error: %s", getFirmwareError());
+		scheduleMsg(&logger, "%s error: %s", CRITICAL_PREFIX, getFirmwareError());
 		warningEnabled = false;
 		scheduleLogging(&logger);
 		return;
@@ -581,7 +579,7 @@ static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPi
 static void initStatusLeds(void) {
 	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin);
 	// we initialize this here so that we can blink it on start-up
-	enginePins.checkEnginePin.initPin("MalfunctionIndicator", CONFIG(malfunctionIndicatorPin), &CONFIG(malfunctionIndicatorPinMode));
+	enginePins.checkEnginePin.initPin("Check engine light", CONFIG(malfunctionIndicatorPin), &CONFIG(malfunctionIndicatorPinMode));
 
 	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin);
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
@@ -613,8 +611,8 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 	}
 
 	void setAllLeds(int value) {
-		// make sure we do not turn the fatal LED off if already have
-		// fatal error by now
+		// make sure we do not turn the critical LED off if already have
+		// critical error by now
 		for (uint32_t i = 0; !hasFirmwareError() && i < sizeof(leds) / sizeof(leds[0]); i++) {
 			leds[i]->setValue(value);
 		}
@@ -633,9 +631,9 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			enginePins.warningLedPin.setValue(0);
 		} else {
 			if (hasFirmwareError()) {
-				// special behavior in case of fatal error - not equal on/off time
+				// special behavior in case of critical error - not equal on/off time
 				// this special behaviour helps to notice that something is not right, also
-				// differentiates software firmware error from fatal interrupt error with CPU halt.
+				// differentiates software firmware error from critical interrupt error with CPU halt.
 				offTimeMs = 50;
 				onTimeMs = 450;
 			} else {
@@ -741,10 +739,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	}
 	// offset 24
 	tsOutputChannels->engineLoad = engineLoad;
-	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		// offset 28
-		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
+
+	// offset 28
+	tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// offset 36
 #if EFI_ANALOG_SENSORS
@@ -825,7 +822,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->knockCount = engine->knockCount;
 	tsOutputChannels->knockLevel = engine->knockVolts;
 
-	tsOutputChannels->hasFatalError = hasFirmwareError();
+	tsOutputChannels->hasCriticalError = hasFirmwareError();
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
 #if EFI_HIP_9011

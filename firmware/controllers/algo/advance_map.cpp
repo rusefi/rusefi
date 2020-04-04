@@ -24,15 +24,14 @@
 #include "advance_map.h"
 #include "interpolation.h"
 #include "engine_math.h"
-#include "tps.h"
+#include "sensor.h"
 #include "idle_thread.h"
 #include "allsensors.h"
 #include "launch_control.h"
 
 #if EFI_ENGINE_CONTROL
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static ign_Map3D_t advanceMap("advance");
 // This coeff in ctor parameter is sufficient for int16<->float conversion!
@@ -87,8 +86,9 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 
 	float advanceAngle;
 	if (CONFIG(useTPSAdvanceTable)) {
-		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		advanceAngle = advanceTpsMap.getValue((float) rpm, tps);
+		// TODO: what do we do about multi-TPS?
+		float tps = Sensor::get(SensorType::Tps1).value_or(0);
+		advanceAngle = advanceTpsMap.getValue(rpm, tps);
 	} else {
 		advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 	}
@@ -96,9 +96,12 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	// get advance from the separate table for Idle
 	if (CONFIG(useSeparateAdvanceForIdle)) {
 		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance);
-		// interpolate between idle table and normal (running) table using TPS threshold
-		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIG(idlePidDeactivationTpsThreshold), advanceAngle, tps);
+
+		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
+		if (valid) {
+			// interpolate between idle table and normal (running) table using TPS threshold
+			advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIG(idlePidDeactivationTpsThreshold), advanceAngle, tps);
+		}
 	}
 
 	
@@ -131,8 +134,11 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIG(useIdleTimingPidControl)) {
 		int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 		int rpmDelta = absI(rpm - targetRpm);
-		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		if (tps >= CONFIG(idlePidDeactivationTpsThreshold)) {
+
+		auto [valid, tps] = Sensor::get(SensorType::Tps1);
+
+		// If TPS is invalid, or we aren't in the region, so reset state and don't apply PID
+		if (!valid || tps >= CONFIG(idlePidDeactivationTpsThreshold)) {
 			// we are not in the idle mode anymore, so the 'reset' flag will help us when we return to the idle.
 			shouldResetTimingPid = true;
 		} 
@@ -198,31 +204,35 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(engineLoad)) {
 		return 0; // any error should already be reported
 	}
+
 	angle_t angle;
-	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+
+	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (isCranking) {
 		angle = getCrankingAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 		assertAngleRange(angle, "crAngle", CUSTOM_ERR_6680);
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN", 0);
-		if (CONFIG(useAdvanceCorrectionsForCranking)) {
-			angle_t correction = getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-			if (!cisnan(correction)) { // correction could be NaN during settings update
-				angle += correction;
-			}
-		}
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN2", 0);
 	} else {
 		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+
 		if (cisnan(angle)) {
 			warning(CUSTOM_ERR_6610, "NaN angle from table");
 			return 0;
 		}
+	}
+
+	// Allow correction only if set to dynamic
+	// AND we're either not cranking OR allowed to correct in cranking
+	bool allowCorrections = CONFIG(timingMode) == TM_DYNAMIC
+		&& (!isCranking || CONFIG(useAdvanceCorrectionsForCranking));
+
+	if (allowCorrections) {
 		angle_t correction = getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		if (!cisnan(correction)) { // correction could be NaN during settings update
 			angle += correction;
 		}
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "AngleN3", 0);
 	}
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN4", 0);
+
 	angle -= engineConfiguration->ignitionOffset;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN5", 0);
 	fixAngle(angle, "getAdvance", CUSTOM_ERR_ADCANCE_CALC_ANGLE);

@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef SIGNAL_FILTERING_H_
-#define SIGNAL_FILTERING_H_
+#pragma once
 
 #define FILTER_SIZE 5
 
@@ -21,5 +20,3 @@ void sfInit(SignalFiltering *fs, float K, float initialValue);
 void sfAddValue(SignalFiltering *fs, float value);
 void sfAddValue2(SignalFiltering *fs, float value);
 float sfGetValue(SignalFiltering *fs);
-
-#endif /* SIGNAL_FILTERING_H_ */

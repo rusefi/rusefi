@@ -109,6 +109,8 @@
 #define antiLagEnabled_offset_hex 4c
 #define antiLagRpmTreshold_offset 824
 #define antiLagRpmTreshold_offset_hex 338
+#define anUnused4Bytes_offset 732
+#define anUnused4Bytes_offset_hex 2dc
 #define autoTuneCltThreshold_offset 2420
 #define autoTuneCltThreshold_offset_hex 974
 #define autoTuneTpsQuietPeriod_offset 2428
@@ -326,9 +328,7 @@
 #define camInputs3_offset_hex 22e
 #define camInputs4_offset 559
 #define camInputs4_offset_hex 22f
-#define can_device_mode_e_enum "v0", "v1"
-#define canDeviceMode_offset 732
-#define canDeviceMode_offset_hex 2dc
+#define CAN_DEFAULT_BASE 0x200
 #define canNbcType_offset 480
 #define canNbcType_offset_hex 1e0
 #define canReadEnabled_offset 1464
@@ -485,6 +485,9 @@
 #define crankingTpsBins_offset_hex 688
 #define crankingTpsCoef_offset 1640
 #define crankingTpsCoef_offset_hex 668
+#define critical_error_message_offset 6000
+#define critical_error_message_offset_hex 1770
+#define CRITICAL_PREFIX "CRITICAL"
 #define cutFuelOnHardLimit_offset 1464
 #define cutFuelOnHardLimit_offset_hex 5b8
 #define cutSparkOnHardLimit_offset 1464
@@ -562,6 +565,7 @@
 #define engineSnifferRpmThreshold_offset_hex 4
 #define engineType_offset 0
 #define engineType_offset_hex 0
+#define ERROR_BUFFER_SIZE 120
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
@@ -1642,6 +1646,7 @@
 #define overrideCrankingIacSetting_offset_hex 5c4
 #define overrideCrankingIgnition_offset 516
 #define overrideCrankingIgnition_offset_hex 204
+#define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_MS 300

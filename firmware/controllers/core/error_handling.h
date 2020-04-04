@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef ERROR_HANDLING_H_
-#define ERROR_HANDLING_H_
+#pragma once
 
 #include "global.h"
 #include "obd_error_codes.h"
@@ -24,7 +23,7 @@ extern "C"
  */
 bool warning(obd_code_e code, const char *fmt, ...);
 
-typedef uint8_t fatal_msg_t[200];
+typedef uint8_t critical_msg_t[ERROR_BUFFER_SIZE];
 /**
  * Something really bad had happened - firmware cannot function, we cannot run the engine
  *
@@ -32,14 +31,16 @@ typedef uint8_t fatal_msg_t[200];
  */
 void firmwareError(obd_code_e code, const char *fmt, ...);
 
+extern bool hasFirmwareErrorFlag;
+
 #define hasFirmwareError() hasFirmwareErrorFlag
 
-// todo: rename to getFatalErrorMessage
+// todo: rename to getCriticalErrorMessage
 char *getFirmwareError(void);
 
 void initErrorHandlingDataStructures(void);
 // todo: rename to getWarningMessage?
-char *getWarning(void);
+char *getWarningMessage(void);
 
 // todo: better place for this shared declaration?
 int getRusEfiVersion(void);
@@ -59,5 +60,3 @@ int getRusEfiVersion(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-#endif /* ERROR_HANDLING_H_ */

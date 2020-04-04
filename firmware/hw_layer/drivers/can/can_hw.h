@@ -13,10 +13,7 @@
 #endif /* EFI_TUNER_STUDIO */
 
 void initCan(void);
-void commonTxInit(int eid);
-void sendCanMessage(int size = 8);
 void setCanType(int type);
-void setTxBit(int offset, int index);
 
 #if EFI_CAN_SUPPORT
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);

@@ -132,9 +132,7 @@ void Hip9011Hardware::sendCommand(unsigned char command) {
 	spiStartExchangeI(driver, 1, tx_buff, rx_buff);
 }
 
-EXTERN_ENGINE
-;
-
+EXTERN_ENGINE;
 
 static char hipPinNameBuffer[16];
 

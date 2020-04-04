@@ -52,6 +52,28 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void useCustomType() throws IOException {
+        ReaderState state = new ReaderState();
+        String test = "struct pid_s\n" +
+                "#define ERROR_BUFFER_SIZE 120\n" +
+                "\tcustom critical_error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@\n" +
+                "\tcritical_error_message_t var;\n" +
+                "\tint16_t periodMs;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n" +
+                "";
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+
+        assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, FieldType.INT);\n" +
+                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16);\n",
+                javaFieldsConsumer.getJavaFieldsWriter());
+
+    }
+
+
+    @Test
     public void testFsioVisible() throws IOException {
         {
             ReaderState state = new ReaderState();

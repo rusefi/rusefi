@@ -40,11 +40,10 @@
 #include "mmc_card.h"
 #include "idle_thread.h"
 #include "fuel_math.h"
+#include "sensor.h"
 
 
-EXTERN_ENGINE
-;
-extern bool hasFirmwareErrorFlag;
+EXTERN_ENGINE;
 
 static MenuItem ROOT(NULL, NULL);
 
@@ -192,7 +191,7 @@ static void showLine(lcd_line_e line, int screenY) {
 	case LL_TPS:
 		getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, buffer);
 
-		lcdPrintf("Throttle %s %.2f%%", buffer, getTPS());
+		lcdPrintf("Throttle %s %.2f%%", buffer, Sensor::get(SensorType::Tps1).value_or(0));
 		return;
 	case LL_FUEL_CLT_CORRECTION:
 		lcdPrintf("CLT corr %.2f", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -297,7 +296,7 @@ void updateHD44780lcd(void) {
 	}
 
 
-	const char * message = hasFirmwareErrorFlag ? getFirmwareError() : getWarning();
+	const char * message = hasFirmwareErrorFlag ? getFirmwareError() : getWarningMessage();
 	memcpy(buffer, message, engineConfiguration->HD44780width);
 	buffer[engineConfiguration->HD44780width] = 0;
 	lcd_HD44780_set_position(engineConfiguration->HD44780height - 1, 0);
@@ -334,7 +333,7 @@ void updateHD44780lcd(void) {
 //
 //	lcd_HD44780_set_position(1, 0);
 //	memset(buffer, ' ', LCD_WIDTH);
-//	memcpy(buffer, getWarning(), LCD_WIDTH);
+//	memcpy(buffer, getWarningMessage(), LCD_WIDTH);
 //	buffer[LCD_WIDTH] = 0;
 //	lcd_HD44780_print_string(buffer);
 //

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Mar 27 12:12:49 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Apr 03 16:05:17 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -73,6 +73,7 @@ public class Fields {
 	public static final int antiLagEnabled_offset = 76;
 	public static final int antiLagRpmTreshold_offset = 824;
 	public static final int antiLagRpmTreshold_offset_hex = 338;
+	public static final int anUnused4Bytes_offset = 732;
 	public static final int autoTuneCltThreshold_offset = 2420;
 	public static final int autoTuneCltThreshold_offset_hex = 974;
 	public static final int autoTuneTpsQuietPeriod_offset = 2428;
@@ -203,7 +204,6 @@ public class Fields {
 	public static final int camInputs2_offset = 557;
 	public static final int camInputs3_offset = 558;
 	public static final int camInputs4_offset = 559;
-	public static final int canDeviceMode_offset = 732;
 	public static final int canNbcType_offset = 480;
 	public static final int canReadEnabled_offset = 1464;
 	public static final int canRxPin_offset = 709;
@@ -318,6 +318,9 @@ public class Fields {
 	public static final int crankingTpsBins_offset_hex = 688;
 	public static final int crankingTpsCoef_offset = 1640;
 	public static final int crankingTpsCoef_offset_hex = 668;
+	public static final int critical_error_message_offset = 6000;
+	public static final int critical_error_message_offset_hex = 1770;
+	public static final String CRITICAL_PREFIX = "CRITICAL";
 	public static final int cutFuelOnHardLimit_offset = 1464;
 	public static final int cutSparkOnHardLimit_offset = 1464;
 	public static final int cylinderBore_offset = 408;
@@ -368,6 +371,7 @@ public class Fields {
 	public static final int engineSnifferRpmThreshold_offset_hex = 4;
 	public static final int engineType_offset = 0;
 	public static final int engineType_offset_hex = 0;
+	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int etb_dFactor_offset = 1744;
@@ -1080,6 +1084,7 @@ public class Fields {
 	public static final int overrideCrankingIacSetting_offset = 1476;
 	public static final int overrideCrankingIgnition_offset = 516;
 	public static final int overrideCrankingIgnition_offset_hex = 204;
+	public static final int PACK_ADD_TEMPERATURE = 40;
 	public static final int PACK_MULT_AFR = 1000;
 	public static final int PACK_MULT_ANGLE = 50;
 	public static final int PACK_MULT_MS = 300;
@@ -1754,8 +1759,7 @@ public class Fields {
 	public static final Field LCDTHREADPERIODMS = Field.create("LCDTHREADPERIODMS", 720, FieldType.INT);
 	public static final Field GENERALPERIODICTHREADPERIODMS = Field.create("GENERALPERIODICTHREADPERIODMS", 724, FieldType.INT);
 	public static final Field TUNERSTUDIOSERIALSPEED = Field.create("TUNERSTUDIOSERIALSPEED", 728, FieldType.INT);
-	public static final String[] can_device_mode_e = {"v0", "v1"};
-	public static final Field CANDEVICEMODE = Field.create("CANDEVICEMODE", 732, FieldType.INT, can_device_mode_e);
+	public static final Field ANUNUSED4BYTES = Field.create("ANUNUSED4BYTES", 732, FieldType.INT);
 	public static final Field TRIGGERSIMULATORPINS1 = Field.create("TRIGGERSIMULATORPINS1", 736, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERSIMULATORPINS2 = Field.create("TRIGGERSIMULATORPINS2", 737, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERSIMULATORPINS3 = Field.create("TRIGGERSIMULATORPINS3", 738, FieldType.INT8, brain_pin_e);
@@ -2375,6 +2379,7 @@ public class Fields {
 	public static final Field IDLERPMPID2_MINVALUE = Field.create("IDLERPMPID2_MINVALUE", 4056, FieldType.INT16);
 	public static final Field IDLERPMPID2_MAXVALUE = Field.create("IDLERPMPID2_MAXVALUE", 4058, FieldType.INT16);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4060, FieldType.INT);
+	public static final Field CRITICAL_ERROR_MESSAGE = Field.create("CRITICAL_ERROR_MESSAGE", 6000, FieldType.INT);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT);
 	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 6400, FieldType.INT);
@@ -2660,7 +2665,7 @@ public class Fields {
 	LCDTHREADPERIODMS,
 	GENERALPERIODICTHREADPERIODMS,
 	TUNERSTUDIOSERIALSPEED,
-	CANDEVICEMODE,
+	ANUNUSED4BYTES,
 	TRIGGERSIMULATORPINS1,
 	TRIGGERSIMULATORPINS2,
 	TRIGGERSIMULATORPINS3,
@@ -3271,6 +3276,7 @@ public class Fields {
 	IDLERPMPID2_MINVALUE,
 	IDLERPMPID2_MAXVALUE,
 	IACPIDMULTTABLE,
+	CRITICAL_ERROR_MESSAGE,
 	BOOSTTABLEOPENLOOP,
 	BOOSTTABLECLOSEDLOOP,
 	PEDALTOTPSTABLE,

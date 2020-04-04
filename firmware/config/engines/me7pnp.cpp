@@ -14,8 +14,7 @@
 #include "engine_configuration.h"
 #include "smart_gpio.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
@@ -64,7 +63,7 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canDeviceMode = CD_USE_CAN1;
+
 	engineConfiguration->canTxPin = GPIOB_6;
 	engineConfiguration->canRxPin = GPIOB_12;
 

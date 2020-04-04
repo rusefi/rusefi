@@ -4,9 +4,8 @@
  * @date Mar 8, 2015
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_
-#define CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_
 
+#pragma once
 #include "global.h"
 
 #if EFI_PROD_CODE
@@ -68,6 +67,7 @@ typedef struct {
 #define TS_PAGE_COMMAND 'P' // 0x50
 #define TS_COMMAND_F 'F' // 0x46
 #define TS_GET_FIRMWARE_VERSION 'V' // versionInfo
+#define TS_GET_CONFIG_ERROR 'e' // returns getFirmwareError()
 
 // High speed logger commands
 #define TS_SET_LOGGER_MODE   'l'
@@ -108,4 +108,3 @@ int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size);
 int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int timeout);
 bool sr5IsReady(ts_channel_s *tsChannel);
 
-#endif /* CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_ */

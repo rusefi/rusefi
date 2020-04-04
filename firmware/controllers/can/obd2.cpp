@@ -34,13 +34,12 @@
 #include "vehicle_speed.h"
 #include "map.h"
 #include "maf.h"
-#include "tps.h"
+#include "sensor.h"
 #include "engine_math.h"
 #include "fuel_math.h"
 #include "thermistors.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static LoggingWithStorage logger("obd2");
 
@@ -168,7 +167,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		break;
 	case PID_THROTTLE:
 		scheduleMsg(&logger, "Got throttle request");
-		obdSendValue(1, pid, 1, getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) * 2.55f);	// (A*100/255)
+		obdSendValue(1, pid, 1, Sensor::get(SensorType::Tps1).value_or(0) * 2.55f);	// (A*100/255)
 		break;
 	case PID_FUEL_RATE:
 		scheduleMsg(&logger, "Got fuel rate request");

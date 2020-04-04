@@ -5,9 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef TEST_FIND_INDEX_H_
-#define TEST_FIND_INDEX_H_
+#pragma once
 
 void testFindIndex(void);
-
-#endif /* TEST_FIND_INDEX_H_ */

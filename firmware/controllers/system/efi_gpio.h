@@ -45,6 +45,7 @@ public:
 
 	bool isInitialized();
 
+	bool getAndSet(int logicValue);
 	void setValue(int logicValue);
 	void toggle();
 	bool getLogicValue() const;

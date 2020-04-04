@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Mar 27 12:12:49 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Mar 31 16:45:03 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -560,6 +560,7 @@ struct engine_configuration_s {
 	offset 76 bit 11 */
 	bool cj125isLsu49 : 1;
 	/**
+	 * TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 	offset 76 bit 12 */
 	bool etb_use_two_wires : 1;
 	/**
@@ -871,6 +872,7 @@ struct engine_configuration_s {
 	adc_channel_e fuelLevelSensor;
 	/**
 	 * Second throttle body position sensor, single channel so far
+	 * set_analog_input_pin tps2 X
 	 * offset 515
 	 */
 	adc_channel_e tps2_1AdcChannel;
@@ -932,6 +934,7 @@ struct engine_configuration_s {
 	 * Electronic throttle pedal position input
 	 * First channel
 	 * See also tps1_1AdcChannel
+	 * set_analog_input_pin pps X
 	 * offset 580
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
@@ -1169,10 +1172,12 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e sdCardCsPin;
 	/**
+	 * set_can_tx_pin X
 	 * offset 708
 	 */
 	brain_pin_e canTxPin;
 	/**
+	 * set_can_rx_pin X
 	 * offset 709
 	 */
 	brain_pin_e canRxPin;
@@ -1207,7 +1212,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 732
 	 */
-	can_device_mode_e canDeviceMode;
+	int anUnused4Bytes;
 	/**
 	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
 	 * See also directSelfStimulation which is different.
@@ -1271,6 +1276,7 @@ struct engine_configuration_s {
 	offset 744 bit 13 */
 	bool verboseTLE8888 : 1;
 	/**
+	 * enable can_broadcast/disable can_broadcast
 	offset 744 bit 14 */
 	bool enableVerboseCanTx : 1;
 	/**
@@ -1778,9 +1784,11 @@ struct engine_configuration_s {
 	offset 1464 bit 7 */
 	bool useLinearCltSensor : 1;
 	/**
+	 * enable can_read/disable can_read
 	offset 1464 bit 8 */
 	bool canReadEnabled : 1;
 	/**
+	 * enable can_write/disable can_write
 	offset 1464 bit 9 */
 	bool canWriteEnabled : 1;
 	/**
@@ -2947,8 +2955,8 @@ struct engine_configuration_s {
 	/**
 	 * offset 4140
 	 */
-	int mainUnusedEnd[495];
-	/** total size 6120*/
+	int mainUnusedEnd[465];
+	/** total size 6000*/
 };
 
 typedef struct engine_configuration_s engine_configuration_s;
@@ -2959,6 +2967,10 @@ struct persistent_config_s {
 	 * offset 0
 	 */
 	engine_configuration_s engineConfiguration;
+	/**
+	 * offset 6000
+	 */
+	critical_error_message_t critical_error_message;
 	/**
 	 * offset 6120
 	 */
@@ -3246,4 +3258,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Mar 27 12:12:49 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Mar 31 16:45:03 EDT 2020

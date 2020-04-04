@@ -633,7 +633,6 @@ static void setDefaultStepperIdleParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) 
 }
 
 static void setCanFrankensoDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->canDeviceMode = CD_USE_CAN2;
 	engineConfiguration->canTxPin = GPIOB_6;
 	engineConfiguration->canRxPin = GPIOB_12;
 }
@@ -719,7 +718,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 	// Don't enable, but set default address
-	engineConfiguration->verboseCanBaseAddress = 0x200;
+	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
 
 	engineConfiguration->sdCardPeriodMs = 50;
 
@@ -1203,6 +1202,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_M73_MRE:
+	case BMW_M73_MRE_SLAVE:
 		setEngineBMW_M73_microRusEfi(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_M73_PROTEUS:

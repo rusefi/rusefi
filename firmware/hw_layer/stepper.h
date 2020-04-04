@@ -4,8 +4,8 @@
  * @date Dec 24, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef STEPPER_H_
-#define STEPPER_H_
+
+#pragma once
 
 #include "global.h"
 #include "efi_gpio.h"
@@ -76,4 +76,3 @@ private:
 	int m_targetPosition = 0;
 };
 
-#endif /* STEPPER_H_ */

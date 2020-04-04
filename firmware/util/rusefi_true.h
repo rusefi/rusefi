@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CONTROLLERS_ALGO_RUSEFI_TRUE_H_
-#define CONTROLLERS_ALGO_RUSEFI_TRUE_H_
+#pragma once
 
 // we still have a minor mess with headers, this header should better be included as high as possible
 
@@ -17,5 +16,3 @@
 #ifndef TRUE
 #define TRUE (!(FALSE))
 #endif /* TRUE */
-
-#endif /* CONTROLLERS_ALGO_RUSEFI_TRUE_H_ */

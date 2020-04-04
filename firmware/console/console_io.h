@@ -4,9 +4,8 @@
  * @date Dec 29, 2012
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef CONSOLE_IO_H_
-#define CONSOLE_IO_H_
 
+#pragma once
 #ifdef __cplusplus
 extern "C"
 {
@@ -42,4 +41,3 @@ bool isCommandLineConsoleReady(void);
 #define isCommandLineConsoleReady() true
 #endif
 
-#endif /* CONSOLE_IO_H_ */

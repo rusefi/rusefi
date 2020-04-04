@@ -20,8 +20,7 @@
 #include "pin_repository.h"
 #include "digital_input_exti.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static int joyTotal = 0;
 static int joyCenter;

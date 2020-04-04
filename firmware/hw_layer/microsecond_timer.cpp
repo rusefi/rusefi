@@ -29,7 +29,7 @@ EXTERN_ENGINE;
 // conversions between wall clock and hardware frequencies are done right
 // delay in milliseconds
 #define TEST_CALLBACK_DELAY 30
-// if hardware timer is 20% off we throw a fatal error and call it a day
+// if hardware timer is 20% off we throw a critical error and call it a day
 // maybe this threshold should be 5%? 10%?
 #define TIMER_PRECISION_THRESHOLD 0.2
 
@@ -60,8 +60,6 @@ static char buff[32];
 static int timerFreezeCounter = 0;
 static volatile int setHwTimerCounter = 0;
 static volatile bool hwStarted = false;
-
-extern bool hasFirmwareErrorFlag;
 
 /**
  * sets the alarm to the specified number of microseconds from now.

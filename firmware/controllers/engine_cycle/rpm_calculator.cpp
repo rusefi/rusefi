@@ -81,10 +81,7 @@ int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 
 #if EFI_SHAFT_POSITION_INPUT
 
-EXTERN_ENGINE
-;
-
-extern bool hasFirmwareErrorFlag;
+EXTERN_ENGINE;
 
 static Logging * logger;
 

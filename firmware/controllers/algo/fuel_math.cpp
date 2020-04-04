@@ -31,8 +31,7 @@
 #include "speed_density.h"
 #include "perf_trace.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 fuel_Map3D_t fuelMap("fuel");
 static fuel_Map3D_t fuelPhaseMap("fl ph");

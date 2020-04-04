@@ -28,8 +28,7 @@
 extern fuel_Map3D_t veMap;
 extern afr_Map3D_t afrMap;
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 // this does not look exactly right
 extern LoggingWithStorage engineLogger;
@@ -119,7 +118,9 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 	engine->sensors.iat = getIntakeAirTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
+#if !EFI_CANBUS_SLAVE
 	engine->sensors.clt = getCoolantTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_CANBUS_SLAVE */
 
 	// todo: reduce code duplication with 'getCoolantTemperature'
 	if (engineConfiguration->auxTempSensor1.adcChannel != EFI_ADC_NONE) {

@@ -5,9 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef BLUETOOTH_H_
-#define BLUETOOTH_H_
-
+#pragma once
 #include "global.h"
 #include "tunerstudio_io.h"
 
@@ -44,4 +42,3 @@ void bluetoothCancel(void);
  */
 void bluetoothSoftwareDisconnectNotify();
 
-#endif /* BLUETOOTH_H_ */

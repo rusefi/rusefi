@@ -18,7 +18,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void touchTimeCounter();
 
-void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENABLE_MOCK_ADC
 void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
@@ -28,7 +28,6 @@ void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 // throttle body sensor
 void setMockThrottlePositionSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setMockThrottlePedalSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockIatVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);

@@ -15,6 +15,8 @@
 #include "fsio_impl.h"
 #include "allsensors.h"
 
+EXTERN_ENGINE;
+
 #if EFI_FSIO
 
 #include "os_access.h"
@@ -105,9 +107,6 @@ static LEElement * starterRelayDisableLogic;
 #if EFI_MAIN_RELAY_CONTROL
 static LEElement * mainRelayLogic;
 #endif /* EFI_MAIN_RELAY_CONTROL */
-
-EXTERN_ENGINE
-;
 
 static Logging *logger;
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -731,9 +730,6 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 #else /* !EFI_FSIO */
-
-EXTERN_ENGINE
-;
 
 // "Limp-mode" implementation for some RAM-limited configs without FSIO
 void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

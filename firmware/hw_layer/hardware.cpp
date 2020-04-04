@@ -61,9 +61,7 @@
 #include "flash_main.h"
 #endif
 
-EXTERN_ENGINE
-;
-extern bool hasFirmwareErrorFlag;
+EXTERN_ENGINE;
 
 static mutex_t spiMtx;
 
