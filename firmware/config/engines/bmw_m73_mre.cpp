@@ -30,12 +30,16 @@
  * ECU pin 2:  OUT         ORG injector #4
  * ECU pin 6:  GND             ECU
  * ECU pin 15: OUT         ORG injector #2
+ * ECU pin 21: GND BRN     BLK CLT sensor (only on first ECU)
+ * ECU pin 22: IN  RED/BRN BLU CLT sensor (only on first ECU)
  * ECU pin 27: OUT         GRN injector #6
  * ECU pin 28: OUT         BLU injector #5
  * ECU pin 32: IN          WHT VR positive crankshaft sensor
+ * ECU pin 34: IN          IAT sensor (only on second ECU)
  * ECU pin 40: OUT BRN/BLK GRN injector #3
  * ECU pin 41: OUT BRN/WHT BLU injector #1
  * ECU pin 46: IN  BLK     BLU VR negative crankshaft sensor
+ * ECU pin 47: GND BRN     IAT sensor (only on second ECU)
  *
  * Plug #4 40 pin
  * ECU pin 6:  IN          ORG start signal from ignition key. Custom wiring: pulled-up thermistor wire on MRE
@@ -63,7 +67,9 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 
+	CONFIG(isFasterEngineSpinUpEnabled) = true;
 
+	engineConfiguration->globalTriggerAngleOffset = 90;
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 5.4 / 2;
 	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
@@ -105,6 +111,20 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(enableVerboseCanTx) = true;
 #endif /* EFI_CANBUS_SLAVE */
 
+
+	// do I have VR wires flipped?
+	engineConfiguration->trigger.type = TT_60_2_VW;
+
+	// this large engine seems to crank at around only 150 RPM? And happily idle at 400RPM?
+	engineConfiguration->cranking.rpm = 280;
+
+	CONFIG(crankingTimingAngle) = 15;
+
+	// I am too lazy to add MAP sensor
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+
+	// set cranking_fuel 15
+	engineConfiguration->cranking.baseFuel = 15;
 
 	//set tps_min 891
 	CONFIG(tpsMin) = 891;

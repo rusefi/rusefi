@@ -24,7 +24,7 @@
 #include "advance_map.h"
 #include "interpolation.h"
 #include "engine_math.h"
-#include "tps.h"
+#include "sensor.h"
 #include "idle_thread.h"
 #include "allsensors.h"
 #include "launch_control.h"
@@ -86,8 +86,9 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 
 	float advanceAngle;
 	if (CONFIG(useTPSAdvanceTable)) {
-		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		advanceAngle = advanceTpsMap.getValue((float) rpm, tps);
+		// TODO: what do we do about multi-TPS?
+		float tps = Sensor::get(SensorType::Tps1).value_or(0);
+		advanceAngle = advanceTpsMap.getValue(rpm, tps);
 	} else {
 		advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 	}
@@ -95,9 +96,12 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	// get advance from the separate table for Idle
 	if (CONFIG(useSeparateAdvanceForIdle)) {
 		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance);
-		// interpolate between idle table and normal (running) table using TPS threshold
-		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIG(idlePidDeactivationTpsThreshold), advanceAngle, tps);
+
+		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
+		if (valid) {
+			// interpolate between idle table and normal (running) table using TPS threshold
+			advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIG(idlePidDeactivationTpsThreshold), advanceAngle, tps);
+		}
 	}
 
 	
@@ -130,8 +134,11 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIG(useIdleTimingPidControl)) {
 		int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 		int rpmDelta = absI(rpm - targetRpm);
-		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		if (tps >= CONFIG(idlePidDeactivationTpsThreshold)) {
+
+		auto [valid, tps] = Sensor::get(SensorType::Tps1);
+
+		// If TPS is invalid, or we aren't in the region, so reset state and don't apply PID
+		if (!valid || tps >= CONFIG(idlePidDeactivationTpsThreshold)) {
 			// we are not in the idle mode anymore, so the 'reset' flag will help us when we return to the idle.
 			shouldResetTimingPid = true;
 		} 

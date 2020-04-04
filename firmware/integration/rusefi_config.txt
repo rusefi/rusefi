@@ -139,6 +139,7 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_PRESSURE 30
 #define PACK_MULT_PERCENT 100
 #define PACK_MULT_TEMPERATURE 100
+#define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_MS 300
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_ANGLE 50
@@ -524,7 +525,7 @@ struct etb_io
 	brain_pin_e directionPin1;
 	brain_pin_e directionPin2;
 	brain_pin_e controlPin1;
-	pin_output_mode_e controlPinMode;
+	uint8_t pad;
 end_struct
 	
 	idle_hardware_s idle;

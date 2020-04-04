@@ -14,6 +14,7 @@
 #include "allsensors.h"
 #include "engine_controller.h"
 #include "advance_map.h"
+#include "sensor.h"
 
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
@@ -28,6 +29,7 @@ EngineTestHelperBase::EngineTestHelperBase() {
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback) {
+	Sensor::resetRegistry();
 	unitTestWarningCodeState.clear();
 
 	testMafValue = 0;

@@ -41,8 +41,6 @@ fsio8_Map3D_u8t fsioTable2("fsio#2");
 fsio8_Map3D_u8t fsioTable3("fsio#3");
 fsio8_Map3D_u8t fsioTable4("fsio#4");
 
-extern pin_output_mode_e DEFAULT_OUTPUT;
-
 /**
  * Here we define all rusEfi-specific methods
  */
@@ -686,7 +684,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		if (brainPin != GPIO_UNASSIGNED) {
 			int frequency = CONFIG(fsioFrequency)[i];
 			if (frequency == 0) {
-				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), CONFIG(fsioOutputPins)[i], &DEFAULT_OUTPUT);
+				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), CONFIG(fsioOutputPins)[i]);
 			} else {
 				startSimplePwmExt(&fsioPwm[i], "FSIOpwm",
 						&engine->executor,

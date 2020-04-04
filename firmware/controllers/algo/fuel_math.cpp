@@ -30,6 +30,7 @@
 #include "rpm_calculator.h"
 #include "speed_density.h"
 #include "perf_trace.h"
+#include "sensor.h"
 
 EXTERN_ENGINE;
 
@@ -74,10 +75,10 @@ DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTem
 	DISPLAY_SENSOR(CLT);
 	DISPLAY_TEXT(eol);
 
-	percent_t tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
 	DISPLAY_TEXT(TPS_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = cisnan(tps) ? 1 : interpolate2d("crankTps", tps, engineConfiguration->crankingTpsBins,
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = tps.Valid ? 1 : interpolate2d("crankTps", tps.Value, engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef);
 	DISPLAY_SENSOR(TPS);
 	DISPLAY_TEXT(eol);
