@@ -32,7 +32,7 @@ extern WaveChart waveChart;
 EnginePins enginePins;
 static Logging* logger;
 
-pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
+static const pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 
 static const char *sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
 		"Coil 9", "Coil 10", "Coil 11", "Coil 12"};
