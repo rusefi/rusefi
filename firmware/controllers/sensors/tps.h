@@ -26,8 +26,6 @@ constexpr inline int convertVoltageTo10bitADC(float voltage) {
 	return (int) (voltage * TPS_TS_CONVERSION);
 }
 
-void setMockTpsAdc(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setMockTpsValue(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX);
 void grabTPSIsClosed();
 void grabTPSIsWideOpen();
 void grabPedalIsUp();

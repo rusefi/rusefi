@@ -11,19 +11,6 @@
 
 EXTERN_ENGINE;
 
-#if !EFI_PROD_CODE
-/**
- * this allows unit tests to simulate TPS position
- */
-void setMockTpsAdc(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	engine->mockTpsAdcValue = tpsPosition;
-}
-
-void setMockTpsValue(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	engine->mockTpsValue = tpsPosition;
-}
-#endif /* EFI_PROD_CODE */
-
 /**
  * We are using one instance for read and another for modification, this is how we get lock-free thread-safety
  *
@@ -132,11 +119,6 @@ static percent_t getTpsValue(int index, float adc DECLARE_ENGINE_PARAMETER_SUFFI
  * @param index [0, ETB_COUNT)
  */
 static float getTPS10bitAdc(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if !EFI_PROD_CODE
-	if (engine->mockTpsAdcValue != MOCK_UNDEFINED) {
-		return engine->mockTpsAdcValue;
-	}
-#endif
 	if (engineConfiguration->tps1_1AdcChannel == EFI_ADC_NONE)
 		return -1;
 #if EFI_PROD_CODE
@@ -200,11 +182,6 @@ static bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if !EFI_PROD_CODE
-	if (!cisnan(engine->mockTpsValue)) {
-		return engine->mockTpsValue;
-	}
-#endif /* EFI_PROD_CODE */
 	if (!hasTpsSensor(PASS_ENGINE_PARAMETER_SIGNATURE))
 		return NO_TPS_MAGIC_VALUE;
 	// todo: if (config->isDualTps)
