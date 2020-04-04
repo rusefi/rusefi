@@ -338,25 +338,40 @@ float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return interpolate2d("iatc", iat, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 float getAfterStartEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	float runTime = engine->engineState.running.timeSinceCrankingInSecs;
-	float correction;
+			float afterStartEnrich;
+			float afterstartHoldTime;
+			float afterstartDecayTime;
+			float correction = 1.0f;
+			float runTime = engine->engineState.running.timeSinceCrankingInSecs;
 
-	float afterStartEnrich = interpolate2d("aseEnrich", getCoolantTemperature(), config->afterstartCoolantBins, config->afterstartEnrich);
-	float afterstartHoldTime = interpolate2d("aseHold", getCoolantTemperature(), config->afterstartCoolantBins, config->afterstartHoldTime);
-	float afterstartDecayTime = interpolate2d("aseDecay", getCoolantTemperature(), config->afterstartCoolantBins, config->afterstartDecayTime);
-	float afterstartDecayFuel = interpolateClamped(afterstartHoldTime, afterStartEnrich, (afterstartDecayTime + afterstartHoldTime), 1.0f , runTime);
-	runTime = NT2US(engine->engineState.timeSinceCranking) / 1000000.0f;
-	if (runTime < afterstartHoldTime) {
-		correction = afterStartEnrich;
-	} else {
-		correction = afterstartDecayFuel;
-	}
-	if (runTime > (afterstartHoldTime + afterstartDecayTime)) {
-		correction = 1.0f;
-   }
+
+			afterStartEnrich = interpolate2d("aseEnrich", getCoolantTemperature(), config->afterstartCoolantBins, config->afterstartEnrich);
+			afterstartHoldTime = interpolate2d("aseHold", getCoolantTemperature(), config->afterstartCoolantBins, config->afterstartHoldTime);
+			afterstartDecayTime = interpolate2d("aseDecay", getCoolantTemperature(), config->afterstartCoolantBins, config->afterstartDecayTime);
+			engine->engineState.running.timeSinceCrankingInSecs = NT2US(engine->engineState.timeSinceCranking) / 1000000.0f;
+
+
+
+			if (ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+				if (runTime < afterstartHoldTime) {
+				correction = afterStartEnrich;
+				 if (afterStartEnrich < 1)
+					 correction = 1.0f;
+			    }
+				if (runTime > afterstartHoldTime)  {
+				correction = interpolateClamped(afterstartHoldTime, afterStartEnrich, (afterstartDecayTime + afterstartHoldTime), 1.0f , runTime);
+				if (correction < 1)
+					correction = 1.0f;
+				}
+				if (runTime > (afterstartHoldTime + afterstartDecayTime)) {
+				correction = 1.0f;
+				}
+				} else {
+				correction = 1.0f;
+			}
+
 return correction;
 }
-
 /**
  * @brief	Called from EngineState::periodicFastCallback to update the state.
  * @note The returned value is float, not boolean - to implement taper (smoothed correction).
