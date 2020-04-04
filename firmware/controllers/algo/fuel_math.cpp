@@ -30,7 +30,7 @@
 #include "rpm_calculator.h"
 #include "speed_density.h"
 #include "perf_trace.h"
-#include "sensors.h"
+#include "sensor.h"
 
 EXTERN_ENGINE;
 
