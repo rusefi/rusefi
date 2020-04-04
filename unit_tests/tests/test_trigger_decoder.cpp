@@ -255,11 +255,11 @@ TEST(misc, testStartupFuelPumping) {
 	engineConfiguration->tpsMin = 0;
 	engineConfiguration->tpsMax = 10;
 
-	Sensor::setMockValue(60);
+	Sensor::setMockValue(SensorType::Tps1, 60);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#1";
 
-	Sensor::setMockValue(30);
+	Sensor::setMockValue(SensorType::Tps1, 30);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pumpsCounter#2";
 
@@ -270,16 +270,16 @@ TEST(misc, testStartupFuelPumping) {
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 0,  sf.pumpsCounter) << "pc#4";
 
-	Sensor::setMockValue(70);
+	Sensor::setMockValue(SensorType::Tps1, 70);
 	engine->rpmCalculator.mockRpm = 0;
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#5";
 
-	Sensor::setMockValue(30);
+	Sensor::setMockValue(SensorType::Tps1, 30);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#6";
 
-	Sensor::setMockValue(70);
+	Sensor::setMockValue(SensorType::Tps1, 70);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 2,  sf.pumpsCounter) << "pc#7";
 }
