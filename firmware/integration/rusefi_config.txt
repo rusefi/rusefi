@@ -525,7 +525,7 @@ struct etb_io
 	brain_pin_e directionPin1;
 	brain_pin_e directionPin2;
 	brain_pin_e controlPin1;
-	pin_output_mode_e controlPinMode;
+	uint8_t pad;
 end_struct
 	
 	idle_hardware_s idle;
