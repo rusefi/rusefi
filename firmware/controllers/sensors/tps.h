@@ -46,5 +46,3 @@ typedef struct {
 
 //void saveTpsState(efitimeus_t now, float curValue);
 float getTpsRateOfChange(void);
-
-
