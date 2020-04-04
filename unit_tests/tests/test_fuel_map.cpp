@@ -13,6 +13,7 @@
 #include "engine_test_helper.h"
 #include "efi_gpio.h"
 #include "advance_map.h"
+#include "sensor.h"
 
 extern float testMafValue;
 
@@ -246,9 +247,8 @@ TEST(fuel, testTpsBasedVeDefect799) {
 	// set TPS axis range which does not overlap MAP range for this test
 	setLinearCurve(CONFIG(ignitionTpsBins), 0, 15, 1);
 
-
 	engine->mockMapValue = 107;
-	setMockTpsValue(7 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::Tps1, 7);
 
 	engine->engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// value in the middle of the map as expected
