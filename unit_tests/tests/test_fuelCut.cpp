@@ -8,7 +8,7 @@
 #include "engine_math.h"
 #include "engine_test_helper.h"
 #include "event_queue.h"
-#include "tps.h"
+#include "sensor.h"
 #include "fsio_impl.h"
 
 TEST(fuelCut, coasting) {
@@ -25,9 +25,6 @@ TEST(fuelCut, coasting) {
 	engineConfiguration->coastingFuelCutMap = 100;
 	// set cranking threshold
 	engineConfiguration->cranking.rpm = 999;
-	// configure TPS
-	engineConfiguration->tpsMin = 0;
-	engineConfiguration->tpsMax = 10;
 
 	// basic engine setup
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
