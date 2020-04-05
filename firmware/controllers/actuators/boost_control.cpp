@@ -13,7 +13,7 @@
 #endif /* EFI_TUNER_STUDIO */
 #include "engine.h"
 #include "boost_control.h"
-#include "tps.h"
+#include "sensor.h"
 #include "map.h"
 #include "io_pins.h"
 #include "engine_configuration.h"
@@ -79,10 +79,13 @@ class BoostControl: public PeriodicTimerController {
 		percent_t duty = openLoopDuty;
 
 		if (engineConfiguration->boostType == CLOSED_LOOP) {
-			float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-			float targetBoost = boostMapClosed.getValue(rpm / RPM_1_BYTE_PACKING_MULT, tps / TPS_1_BYTE_PACKING_MULT) * LOAD_1_BYTE_PACKING_MULT;
-			closedLoopDuty = openLoopDuty + boostControlPid.getOutput(targetBoost, mapValue);
-			duty += closedLoopDuty;
+			auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
+
+			if (valid) {
+				float targetBoost = boostMapClosed.getValue(rpm / RPM_1_BYTE_PACKING_MULT, tps / TPS_1_BYTE_PACKING_MULT) * LOAD_1_BYTE_PACKING_MULT;
+				closedLoopDuty = openLoopDuty + boostControlPid.getOutput(targetBoost, mapValue);
+				duty += closedLoopDuty;
+			}
 		}
 
 		boostControlPid.iTermMin = -50;
