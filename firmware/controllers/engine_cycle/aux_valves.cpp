@@ -125,13 +125,8 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 
-#if !EFI_UNIT_TEST
-	// let's give it time to grab TPS value
-	chThdSleepMilliseconds(50);
-#endif /* EFI_UNIT_TESTS */
-
 	if (!Sensor::hasSensor(SensorType::DriverThrottleIntent)) {
-		firmwareError(CUSTOM_OBD_91, "No TPS for Aux Valves");
+		warning(CUSTOM_OBD_91, "No TPS for Aux Valves");
 		return;
 	}
 
