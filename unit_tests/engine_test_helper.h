@@ -28,8 +28,10 @@ public:
  */
 class EngineTestHelper : public EngineTestHelperBase {
 public:
-	EngineTestHelper(engine_type_e engineType);
+	explicit EngineTestHelper(engine_type_e engineType);
 	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback);
+	~EngineTestHelper();
+
 	void applyTriggerWaveform();
 	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void fireRise(float delayMs);
