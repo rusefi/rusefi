@@ -195,8 +195,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
-	engineConfiguration->nbVvtIndex = 0;
-
 	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
 
 	// set idle_position 35

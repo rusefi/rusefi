@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Apr 04 09:06:52 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Apr 05 11:21:05 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1067,8 +1067,6 @@ public class Fields {
 	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int narrowToWideOxygen_offset = 2296;
 	public static final int narrowToWideOxygenBins_offset = 2264;
-	public static final int nbVvtIndex_offset = 2416;
-	public static final int nbVvtIndex_offset_hex = 970;
 	public static final int noAccelAfterHardLimitPeriodSecs_offset = 1536;
 	public static final int noAccelAfterHardLimitPeriodSecs_offset_hex = 600;
 	public static final int o2heaterPin_offset = 742;
@@ -1427,6 +1425,8 @@ public class Fields {
 	public static final int unusedFormerWarmupAfrPid_offset = 1774;
 	public static final int unusedOldBiquad_offset = 2332;
 	public static final int unusedOneMoreHere_offset = 760;
+	public static final int unusedSomethingWasHere_offset = 2416;
+	public static final int unusedSomethingWasHere_offset_hex = 970;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
 	public static final int unusedSpiPadding7_offset = 4005;
@@ -2213,7 +2213,7 @@ public class Fields {
 	public static final Field STORAGEMODE = Field.create("STORAGEMODE", 2260, FieldType.INT, mass_storage_e);
 	public static final String[] vvt_mode_e = {"First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"};
 	public static final Field VVTMODE = Field.create("VVTMODE", 2328, FieldType.INT, vvt_mode_e);
-	public static final Field NBVVTINDEX = Field.create("NBVVTINDEX", 2416, FieldType.INT);
+	public static final Field UNUSEDSOMETHINGWASHERE = Field.create("UNUSEDSOMETHINGWASHERE", 2416, FieldType.INT);
 	public static final Field AUTOTUNECLTTHRESHOLD = Field.create("AUTOTUNECLTTHRESHOLD", 2420, FieldType.FLOAT);
 	public static final Field AUTOTUNETPSROCTHRESHOLD = Field.create("AUTOTUNETPSROCTHRESHOLD", 2424, FieldType.FLOAT);
 	public static final Field AUTOTUNETPSQUIETPERIOD = Field.create("AUTOTUNETPSQUIETPERIOD", 2428, FieldType.FLOAT);
@@ -3112,7 +3112,7 @@ public class Fields {
 	ALTERNATORPWMFREQUENCY,
 	STORAGEMODE,
 	VVTMODE,
-	NBVVTINDEX,
+	UNUSEDSOMETHINGWASHERE,
 	AUTOTUNECLTTHRESHOLD,
 	AUTOTUNETPSROCTHRESHOLD,
 	AUTOTUNETPSQUIETPERIOD,

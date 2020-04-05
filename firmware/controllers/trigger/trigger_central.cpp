@@ -88,7 +88,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 
 #define miataNb2VVTRatioFrom (8.50 * 0.75)
 #define miataNb2VVTRatioTo (14)
-
+#define miataNbIndex (0)
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	TriggerCentral *tc = &engine->triggerCentral;
@@ -180,7 +180,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
-		while (tc->triggerState.getTotalRevolutionCounter() % 4 != engineConfiguration->nbVvtIndex) {
+		while (tc->triggerState.getTotalRevolutionCounter() % 4 != miataNbIndex) {
 			tc->triggerState.incrementTotalEventCounter();
 		}
 	}
@@ -646,8 +646,7 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		isConfigurationChanged(vvtMode) ||
 		isConfigurationChanged(vvtCamSensorUseRise) ||
 		isConfigurationChanged(vvtOffset) ||
-		isConfigurationChanged(vvtDisplayInverted) ||
-		isConfigurationChanged(nbVvtIndex);
+		isConfigurationChanged(vvtDisplayInverted);
 	if (changed) {
 		assertEngineReference();
 
