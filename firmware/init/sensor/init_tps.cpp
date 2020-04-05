@@ -25,22 +25,21 @@ FunctionalSensor pedalSensor(SensorType::AcceleratorPedal, MS2NT(10));
 // This sensor indicates the driver's throttle intent - Pedal if we have one, TPS if not.
 ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 
-static void configureTps(LinearFunc& func, float closed, float open) {
+static void configureTps(LinearFunc& func, float closed, float open, float min, float max) {
 	func.configure(
 		closed, 0,
 		open, 100, 
-		CONFIG(tpsErrorDetectionTooLow),
-		CONFIG(tpsErrorDetectionTooHigh)
+		min, max
 	);
 }
 
-static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open) {
+static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
 	// Only register if we have a sensor
 	if (channel == EFI_ADC_NONE) {
 		return;
 	}
 
-	configureTps(func, closed, open);
+	configureTps(func, closed, open, min, max);
 
 	sensor.setFunction(func);
 
@@ -51,10 +50,13 @@ static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 	}
 }
 
-void initTps() {
-	initTpsFunc(tpsFunc1p, tpsSens1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax));
-	initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max));
-	initTpsFunc(pedalFunc, pedalSensor, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage));
+void initTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	float min = CONFIG(tpsErrorDetectionTooLow);
+	float max = CONFIG(tpsErrorDetectionTooHigh);
+
+	initTpsFunc(tpsFunc1p, tpsSens1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax), min, max);
+	initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max), min, max);
+	initTpsFunc(pedalFunc, pedalSensor, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
 
 	// Route the pedal or TPS to driverIntent as appropriate
 	if (CONFIG(throttlePedalPositionAdcChannel) != EFI_ADC_NONE) {
@@ -68,8 +70,11 @@ void initTps() {
 	}
 }
 
-void reconfigureTps() {
-	configureTps(tpsFunc1p, CONFIG(tpsMin), CONFIG(tpsMax));
-	configureTps(tpsFunc2p, CONFIG(tps2Min), CONFIG(tps2Max));
-	configureTps(pedalFunc, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage));
+void reconfigureTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	float min = CONFIG(tpsErrorDetectionTooLow);
+	float max = CONFIG(tpsErrorDetectionTooHigh);
+
+	configureTps(tpsFunc1p, CONFIG(tpsMin), CONFIG(tpsMax), min, max);
+	configureTps(tpsFunc2p, CONFIG(tps2Min), CONFIG(tps2Max), min, max);
+	configureTps(pedalFunc, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
 }
