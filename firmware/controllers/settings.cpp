@@ -1132,10 +1132,6 @@ static void getValue(const char *paramStr) {
 		scheduleMsg(&logger, "tps_min=%d", engineConfiguration->tpsMin);
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
 		scheduleMsg(&logger, "tps_max=%d", engineConfiguration->tpsMax);
-	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
-		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
-	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
-		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		scheduleMsg(&logger, "global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
@@ -1350,8 +1346,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtOffset = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
 		engineConfiguration->vvtMode = (vvt_mode_e)valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
-		engineConfiguration->nbVvtIndex = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
 		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {

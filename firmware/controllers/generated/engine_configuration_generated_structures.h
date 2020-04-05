@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Apr 04 09:06:52 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Apr 05 11:21:05 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2488,7 +2488,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2416
 	 */
-	int nbVvtIndex;
+	int unusedSomethingWasHere;
 	/**
 	 * offset 2420
 	 */
@@ -3258,4 +3258,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Apr 04 09:06:52 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Apr 05 11:21:05 EDT 2020

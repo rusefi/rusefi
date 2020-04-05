@@ -1617,8 +1617,6 @@
 #define narrowToWideOxygen_offset_hex 8f8
 #define narrowToWideOxygenBins_offset 2264
 #define narrowToWideOxygenBins_offset_hex 8d8
-#define nbVvtIndex_offset 2416
-#define nbVvtIndex_offset_hex 970
 #define noAccelAfterHardLimitPeriodSecs_offset 1536
 #define noAccelAfterHardLimitPeriodSecs_offset_hex 600
 #define o2heaterPin_offset 742
@@ -2178,6 +2176,8 @@
 #define unusedOldBiquad_offset_hex 91c
 #define unusedOneMoreHere_offset 760
 #define unusedOneMoreHere_offset_hex 2f8
+#define unusedSomethingWasHere_offset 2416
+#define unusedSomethingWasHere_offset_hex 970
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding4_offset_hex a21
 #define unusedSpiPadding5_offset 2713
