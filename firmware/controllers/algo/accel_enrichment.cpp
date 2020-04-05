@@ -285,8 +285,7 @@ void AccelEnrichment::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUF
 }
 
 void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// we update values in handleFuel() directly
-	//onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+	// we update values in handleFuel() directly by calling onNewValue()
 
 	onUpdateInvocationCounter++;
 

@@ -311,7 +311,7 @@ static void showEthInfo(void) {
 	scheduleMsg(&logger, "etbAutoTune=%d",
 			engine->etbAutoTune);
 
-	scheduleMsg(&logger, "TPS=%.2f", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE));
+	scheduleMsg(&logger, "TPS=%.2f", Sensor::get(SensorType::Tps1).value_or(0));
 
 
 	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
@@ -549,7 +549,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
-	engine->etbActualCount = hasSecondThrottleBody(PASS_ENGINE_PARAMETER_SIGNATURE) ? 2 : 1;
+	engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
 		auto motor = initDcMotor(i PASS_ENGINE_PARAMETER_SUFFIX);

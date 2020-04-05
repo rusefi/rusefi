@@ -408,7 +408,7 @@ static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int1
 			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer));
 
 
-	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", convertVoltageTo10bitADC(raw), tps.Value, getTpsRateOfChange());
+	scheduleMsg(&logger, "current 10bit=%d value=%.2f", convertVoltageTo10bitADC(raw), tps.Value);
 }
 
 void printTPSInfo(void) {
@@ -1174,7 +1174,6 @@ const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
 #if EFI_ENABLE_MOCK_ADC
 		{MOCK_IAT_COMMAND, setMockIatVoltage},
-		{MOCK_TPS_COMMAND, setMockThrottlePositionSensorVoltage},
 		{MOCK_MAF_COMMAND, setMockMafVoltage},
 		{MOCK_AFR_COMMAND, setMockAfrVoltage},
 		{MOCK_MAP_COMMAND, setMockMapVoltage},
