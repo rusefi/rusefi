@@ -2,37 +2,27 @@
  * @file init_sensorss.cpp
  */
 
-#include "global.h"
-#include "cli_registry.h"
 #include "init.h"
+#include "cli_registry.h"
 #include "sensor.h"
 
 static void initSensorCli(Logging* logger);
 
-// Sensor init/config
-void initTps();
-void initOilPressure();
-void initCanSensors();
-
-void initNewSensors(Logging* logger) {
+void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_CAN_SUPPORT
 	initCanSensors();
 #endif
 
-	initTps();
-	initOilPressure();
+	initTps(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initOilPressure(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli(logger);
 }
 
-// Sensor reconfiguration
-void reconfigureTps();
-void reconfigureOilPressure();
-
-void reconfigureSensors() {
-	reconfigureTps();
-	reconfigureOilPressure();
+void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	reconfigureTps(PASS_ENGINE_PARAMETER_SIGNATURE);
+	reconfigureOilPressure(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static Logging* s_logger;
