@@ -350,7 +350,11 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 
 	// coasting fuel cut-off correction
 	if (CONFIG(coastingFuelCutEnabled)) {
-		percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		auto [valid, tpsPos] = Sensor::get(SensorType::Tps1);
+		if (!valid) {
+			return 1.0f;
+		}
+
 		float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	
 		// gather events

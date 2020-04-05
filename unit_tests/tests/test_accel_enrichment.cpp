@@ -10,7 +10,7 @@
 
 #include "engine_test_helper.h"
 #include "accel_enrichment.h"
-#include "tps.h"
+#include "sensor.h"
 
 TEST(fuel, testTpsAccelEnrichmentMath) {
 	printf("====================================================================================== testAccelEnrichment\r\n");
@@ -47,14 +47,14 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 
-	setMockTpsValue(7 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::Tps1, 7);
 
 	eth.fireTriggerEvents2(/* count */ 5, 25 /* ms */);
 	ASSERT_EQ( 1200,  GET_RPM()) << "RPM";
 	int expectedInvocationCounter = 1;
 	ASSERT_EQ(expectedInvocationCounter, ENGINE(tpsAccelEnrichment).onUpdateInvocationCounter);
 
-	setMockTpsValue(70 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::Tps1, 70);
 	eth.fireTriggerEvents2(/* count */ 1, 25 /* ms */);
 
 	float expectedAEValue = 29.2;
