@@ -123,6 +123,8 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
+	// This is tested independently - don't configure sensors for tests.
+	// This lets us selectively mock them for each test.
 	initNewSensors(sharedLogger);
 #endif /* EFI_UNIT_TEST */
 

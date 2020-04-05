@@ -79,6 +79,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
 }
 
+EngineTestHelper::~EngineTestHelper() {
+	Sensor::resetRegistry();
+}
+
 /**
  * mock a change of time and fire single RISE front event
  */
