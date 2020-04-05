@@ -85,6 +85,7 @@ TEST(SensorInit, DriverIntentNoPedal) {
 	Sensor::setMockValue(SensorType::Tps1, 25);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 75);
 
+	// Should get the TPS
 	EXPECT_EQ(Sensor::get(SensorType::DriverThrottleIntent).Value, 25);
 }
 
@@ -104,5 +105,6 @@ TEST(SensorInit, DriverIntentWith) {
 	Sensor::setMockValue(SensorType::Tps1, 25);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 75);
 
+	// Should get the pedal
 	EXPECT_EQ(Sensor::get(SensorType::DriverThrottleIntent).Value, 75);
 }
