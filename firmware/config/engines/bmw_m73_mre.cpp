@@ -50,6 +50,8 @@
  * Plug #5 9 pin
  * ECU pin 3:  OUT BLK     ORG coil signal
  * ECU pin 5:  GND BRN         ground
+ * ECU pin 6:  OUT BLK     ORG coil signal
+ * ECU pin 9:  OUT BLK     ORG coil signal
  *
  * BMW_M73_MRE
  * set engine_type 104
