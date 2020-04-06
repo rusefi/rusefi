@@ -1017,6 +1017,10 @@ gaugeCategory = Throttle Body (incl. ETB)
     indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
    
 
+[KeyActions]
+	showPanel = spi,  spiFunction
+	showPanel = con,  connection 
+
 [Datalog]
    ;       Channel          Label          Type    Format
    entry = time,            "Time",        float,  "%.3f"
