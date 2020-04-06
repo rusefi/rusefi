@@ -17,6 +17,7 @@
 #include "periodic_task.h"
 #include "pin_repository.h"
 #include "allsensors.h"
+#include "sensor.h"
 #include "engine_math.h"
 #include "efi_gpio.h"
 #include "advance_map.h"
@@ -67,7 +68,7 @@ class LaunchControl: public PeriodicTimerController {
 
 		int rpm = GET_RPM_VALUE;
 		int speed = getVehicleSpeed();
-		int tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 		int tpstreshold = engineConfiguration->launchTpsTreshold;
 		float timeDelay = engineConfiguration->launchActivateDelay;
 		int cutRpmRange = engineConfiguration->hardCutRpmRange;
@@ -77,7 +78,7 @@ class LaunchControl: public PeriodicTimerController {
 		bool activateSwitchCondition = getActivateSwitchCondition(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		bool rpmCondition = (launchRpm < rpm);
-		bool tpsCondition = (tpstreshold < tps);
+		bool tpsCondition = tps.Valid && (tpstreshold < tps.Value);
 
 		bool speedCondition = (CONFIG(launchSpeedTreshold) > speed) || !engineConfiguration->launchDisableBySpeed;
 

@@ -15,13 +15,6 @@
 // Scaled to 1000 counts = 5.0 volts
 #define TPS_TS_CONVERSION 200
 
-/**
- * Throttle Position Sensor
- * In case of dual TPS this function would return logical TPS position
- * @return Current TPS position, percent of WOT. 0 means idle and 100 means Wide Open Throttle
- */
-percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
 constexpr inline int convertVoltageTo10bitADC(float voltage) {
 	return (int) (voltage * TPS_TS_CONVERSION);
 }
