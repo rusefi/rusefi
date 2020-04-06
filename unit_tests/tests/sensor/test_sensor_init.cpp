@@ -147,11 +147,9 @@ TEST(SensorInit, Clt) {
 	ASSERT_NE(nullptr, s);
 
 	// Test in range
-
-	// TODO: fixme
-	EXPECT_POINT_VALID(s, 1.0f, 0.0f);	// minimum
-	EXPECT_POINT_VALID(s, 2.5f, 500.0f);	// mid
-	EXPECT_POINT_VALID(s, 4.0f, 1000.0f) // maximium
+	EXPECT_POINT_VALID(s, 4.616f, 0.0f);	// minimum - 0C
+	EXPECT_POINT_VALID(s, 3.683f, 30.0f);	// mid - 30C
+	EXPECT_POINT_VALID(s, 1.029f, 100.0f)	// maximium - 100C
 
 	// Test out of range
 	EXPECT_POINT_INVALID(s, 0.0f);
