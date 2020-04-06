@@ -108,3 +108,28 @@ TEST(SensorInit, DriverIntentWith) {
 	// Should get the pedal
 	EXPECT_EQ(Sensor::get(SensorType::DriverThrottleIntent).Value, 75);
 }
+
+TEST(SensorInit, OilPressure) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	CONFIG(oilPressure.hwChannel) = EFI_ADC_0;
+	CONFIG(oilPressure.v1) = 1;
+	CONFIG(oilPressure.v2) = 4;
+	CONFIG(oilPressure.value1) = 0;
+	CONFIG(oilPressure.value2) = 1000;
+
+	initOilPressure(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// Ensure the sensors were registered
+	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::OilPressure));
+	ASSERT_NE(nullptr, s);
+
+	// Test in range
+	EXPECT_POINT_VALID(s, 1.0f, 0.0f);	// minimum
+	EXPECT_POINT_VALID(s, 2.5f, 500.0f);	// mid
+	EXPECT_POINT_VALID(s, 4.0f, 1000.0f) // maximium
+
+	// Test out of range
+	EXPECT_POINT_INVALID(s, 0.0f);
+	EXPECT_POINT_INVALID(s, 5.0f);
+}
