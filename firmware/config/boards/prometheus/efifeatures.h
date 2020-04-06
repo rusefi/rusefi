@@ -67,9 +67,6 @@
 #define BOARD_TLE8888_COUNT 	0
 #endif
 
-// todo: move this outside of efifeatures.h
-#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
-
 
 #undef EFI_CONSOLE_TX_PORT
 #define EFI_CONSOLE_TX_PORT GPIOA

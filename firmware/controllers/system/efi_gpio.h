@@ -12,6 +12,7 @@
 #include "global.h"
 #include "io_pins.h"
 #include "engine_configuration.h"
+#include "smart_gpio.h"
 
 void initPrimaryPins(Logging *sharedLogger);
 void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
