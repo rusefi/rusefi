@@ -92,7 +92,8 @@ PidWithOverrides idlePid;
 #endif /* EFI_IDLE_PID_CIC */
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
-static SimplePwm idleSolenoid("idle");
+static SimplePwm idleSolenoidOpen("idle open");
+static SimplePwm idleSolenoidClose("idle close");
 
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
@@ -125,10 +126,15 @@ static void showIdleInfo(void) {
 		scheduleMsg(logger, "enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
 				engineConfiguration->stepperEnablePinMode);
 	} else {
-		scheduleMsg(logger, "idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,
-				hwPortname(CONFIG(idle).solenoidPin));
+		if (!CONFIG(isDoubleSolenoidIdle)) {
+			scheduleMsg(logger, "idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,
+					hwPortname(CONFIG(idle).solenoidPin));
+		} else {
+			scheduleMsg(logger, "idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,
+					hwPortname(CONFIG(idle).solenoidPin));
+			scheduleMsg(logger, " and %s", hwPortname(CONFIG(secondSolenoidPin)));
+		}
 	}
-
 
 	if (engineConfiguration->idleMode == IM_AUTO) {
 		idlePid.showPidStatus(logger, "idle");
@@ -141,18 +147,32 @@ void setIdleMode(idle_mode_e value) {
 }
 
 static void applyIACposition(percent_t position) {
+	/**
+	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
+	 * todo: unify?
+	 */
+	float duty = PERCENT_TO_DUTY(position);
+
 	if (CONFIG(useETBforIdleControl)) {
-		engine->engineState.idle.etbIdleAddition = position / 100 * CONFIG(etbIdleThrottleRange);
+		engine->engineState.idle.etbIdleAddition = duty * CONFIG(etbIdleThrottleRange);
 #if ! EFI_UNIT_TEST
 	} if (CONFIG(useStepperIdle)) {
-		iacMotor.setTargetPosition(position / 100 * engineConfiguration->idleStepperTotalSteps);
+		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
 #endif /* EFI_UNIT_TEST */
 	} else {
-		/**
-		 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
-		 * todo: unify?
-		 */
-		idleSolenoid.setSimplePwmDutyCycle(PERCENT_TO_DUTY(position));
+		if (!CONFIG(isDoubleSolenoidIdle)) {
+			idleSolenoidOpen.setSimplePwmDutyCycle(duty);
+		} else {
+			/* use 0.01..0.99 range */
+			float idle_range = 0.98; /* move to config? */
+			float idle_open, idle_close;
+
+			idle_open = 0.01 + idle_range * duty;
+			idle_close = 0.01 + idle_range * (1.0 - duty);
+
+			idleSolenoidOpen.setSimplePwmDutyCycle(idle_open);
+			idleSolenoidClose.setSimplePwmDutyCycle(idle_close);
+		}
 	}
 }
 
@@ -477,7 +497,8 @@ void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
 	shouldResetPid = !idlePid.isSame(&previousConfiguration->idleRpmPid);
-	idleSolenoid.setFrequency(CONFIG(idle).solenoidFrequency);
+	idleSolenoidOpen.setFrequency(CONFIG(idle).solenoidFrequency);
+	idleSolenoidClose.setFrequency(CONFIG(idle).solenoidFrequency);
 }
 
 void setTargetIdleRpm(int value) {
@@ -544,7 +565,8 @@ bool isIdleHardwareRestartNeeded() {
 			isConfigurationChanged(useStepperIdle) ||
 //			isConfigurationChanged() ||
 			isConfigurationChanged(useETBforIdleControl) ||
-			isConfigurationChanged(idle.solenoidPin);
+			isConfigurationChanged(idle.solenoidPin) ||
+			isConfigurationChanged(secondSolenoidPin);
 
 }
 
@@ -553,6 +575,7 @@ void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	brain_pin_markUnused(activeConfiguration.stepperEnablePin);
 	brain_pin_markUnused(activeConfiguration.idle.stepperStepPin);
 	brain_pin_markUnused(activeConfiguration.idle.solenoidPin);
+	brain_pin_markUnused(activeConfiguration.secondSolenoidPin);
 //	brain_pin_markUnused(activeConfiguration.idle.);
 //	brain_pin_markUnused(activeConfiguration.idle.);
 //	brain_pin_markUnused(activeConfiguration.idle.);
@@ -600,11 +623,25 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		 */
 		// todo: even for double-solenoid mode we can probably use same single SimplePWM
 		// todo: open question why do we pass 'OutputPin' into 'startSimplePwmExt' if we have custom applyIdleSolenoidPinState listener anyway?
-		startSimplePwmExt(&idleSolenoid, "Idle Valve",
-				&engine->executor,
-				CONFIG(idle).solenoidPin, &enginePins.idleSolenoidPin,
-				CONFIG(idle).solenoidFrequency, CONFIG(manIdlePosition) / 100,
-				(pwm_gen_callback*)applyIdleSolenoidPinState);
+		if (!CONFIG(isDoubleSolenoidIdle)) {
+			startSimplePwmExt(&idleSolenoidOpen, "Idle Valve",
+					&engine->executor,
+					CONFIG(idle).solenoidPin, &enginePins.idleSolenoidPin,
+					CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)),
+					(pwm_gen_callback*)applyIdleSolenoidPinState);
+		} else {
+			startSimplePwmExt(&idleSolenoidOpen, "Idle Valve Open",
+					&engine->executor,
+					CONFIG(idle).solenoidPin, &enginePins.idleSolenoidPin,
+					CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)),
+					(pwm_gen_callback*)applyIdleSolenoidPinState);
+
+			startSimplePwmExt(&idleSolenoidClose, "Idle Valve Close",
+					&engine->executor,
+					CONFIG(secondSolenoidPin), &enginePins.secondIdleSolenoidPin,
+					CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)),
+					(pwm_gen_callback*)applyIdleSolenoidPinState);
+		}
 		idlePositionSensitivityThreshold = 0.0f;
 	}
 }
