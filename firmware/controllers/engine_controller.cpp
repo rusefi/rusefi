@@ -707,6 +707,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200405;
+	return 20200406;
 }
 #endif /* EFI_UNIT_TEST */
