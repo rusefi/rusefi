@@ -1,3 +1,10 @@
+/**
+ * @file    deadband.h
+ *
+ * @date April 6, 2020
+ * @author Matthew Kennedy, (c) 2020
+ */
+
 #pragma once
 
 #include "efilib.h"
