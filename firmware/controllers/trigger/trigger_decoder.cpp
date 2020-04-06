@@ -335,7 +335,7 @@ bool TriggerState::isEvenRevolution() const {
 bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 	bool isDecodingError = false;
 	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-		isDecodingError |= currentCycle.eventCount[i] != triggerShape->expectedEventCount[i];
+		isDecodingError |= (currentCycle.eventCount[i] != triggerShape->expectedEventCount[i]);
 	}
 
 
