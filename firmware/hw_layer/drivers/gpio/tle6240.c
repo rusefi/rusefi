@@ -314,17 +314,18 @@ static int tle6240_wake_driver(struct tle6240_priv *chip)
 {
 	(void)chip;
 
-	if (isIsrContext()) {
-		// this is for normal runtime
-		int wasLocked = lockAnyContext();
-		chSemSignalI(&tle6240_wake);
-		if (!wasLocked) {
-			unlockAnyContext();
-		}
-	} else {
-		// this is for start-up to not hang up
-		chSemSignal(&tle6240_wake);
+	/* Entering a reentrant critical zone.*/
+	syssts_t sts = chSysGetStatusAndLockX();
+	chSemSignalI(&tle6240_wake);
+	if (!port_is_isr_context()) {
+		/**
+		 * chSemSignalI above requires rescheduling
+		 * interrupt handlers have implicit rescheduling
+		 */
+		chSchRescheduleS();
 	}
+	/* Leaving the critical zone.*/
+	chSysRestoreStatusX(sts);
 
 	return 0;
 }
