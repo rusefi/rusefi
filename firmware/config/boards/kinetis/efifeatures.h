@@ -347,9 +347,6 @@
 #define BOARD_MC33972_COUNT 0
 #define BOARD_TLE8888_COUNT 0
 
-// todo: move this outside of efifeatures.h
-#define BOARD_EXT_PINREPOPINS 24
-
 #define TLE6240_SS_PORT GPIOB
 #define TLE6240_SS_PAD  0U
 #define TLE6240_RESET_PORT NULL
