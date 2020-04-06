@@ -12,7 +12,6 @@
 #include "allsensors.h"
 #include "fsio_impl.h"
 #include "engine_configuration.h"
-#include "smart_gpio.h"
 
 EXTERN_ENGINE;
 
