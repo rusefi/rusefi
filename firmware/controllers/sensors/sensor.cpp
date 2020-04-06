@@ -33,10 +33,13 @@ static const char* s_sensorNames[] = {
 	"Acc Pedal Primary",
 	"Acc Pedal Secondary",
 
-	"Driver Acc Intent"
+	"Driver Acc Intent",
+
+	"Aux Temp 1",
+	"Aux Temp 2",
 };
 
-static_assert(efi::size(s_sensorNames) == efi::size(s_sensorNames));
+static_assert(efi::size(s_sensorNames) == efi::size(s_sensorRegistry));
 
 bool Sensor::Register() {
 	// Get a ref to where we should be
