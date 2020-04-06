@@ -14,8 +14,7 @@ EXTERN_ENGINE;
 LinearFunc oilpSensorFunc;
 FunctionalSensor oilpSensor(SensorType::OilPressure, /* timeout = */ MS2NT(50));
 
-void configureOilPressure(LinearFunc func, const oil_pressure_config_s& cfg)
-{
+void configureOilPressure(LinearFunc& func, const oil_pressure_config_s& cfg) {
 	float val1 = cfg.value1;
 	float val2 = cfg.value2;
 
