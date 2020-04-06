@@ -16,7 +16,7 @@
 #include "eficonsole.h"
 #include "memstreams.h"
 #include "drivers/gpio/gpio_ext.h"
-#include "tle8888.h"
+#include "smart_gpio.h"
 
 #ifndef BOARD_EXT_PINREPOPINS
 	#define BOARD_EXT_PINREPOPINS 0
