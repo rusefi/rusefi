@@ -8,6 +8,7 @@
 
 #include "global.h"
 #include "gpio/gpio_ext.h"
+#include "smart_gpio.h"
 
 #define STRING2(x) #x
 #define STRING(x) STRING2(x)
