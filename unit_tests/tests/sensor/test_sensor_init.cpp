@@ -15,7 +15,7 @@ static void postToFuncSensor(Sensor* s, float value) {
 		postToFuncSensor(s, raw); \
 		auto res = s->get(); \
 		EXPECT_TRUE(res.Valid); \
-		EXPECT_NEAR(res.Value, expect, EPS4D); \
+		EXPECT_NEAR(res.Value, expect, EPS2D); \
 	}
 
 #define EXPECT_POINT_INVALID(s, raw) \
