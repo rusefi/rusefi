@@ -16,6 +16,7 @@
 #include "engine_math.h"
 #include "aux_valves.h"
 #include "allsensors.h"
+#include "sensor.h"
 #include "trigger_central.h"
 #include "spark_logic.h"
 
@@ -124,14 +125,8 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 
-#if !EFI_UNIT_TEST
-	// let's give it time to grab TPS value
-	chThdSleepMilliseconds(50);
-#endif /* EFI_UNIT_TESTS */
-
-	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (cisnan(tps)) {
-		firmwareError(CUSTOM_OBD_91, "No TPS for Aux Valves");
+	if (!Sensor::hasSensor(SensorType::DriverThrottleIntent)) {
+		warning(CUSTOM_OBD_91, "No TPS for Aux Valves");
 		return;
 	}
 
@@ -166,11 +161,12 @@ void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
-	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (cisnan(tps)) {
+	auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
+	if (!valid) {
 		// error should be already reported by now
 		return;
 	}
+
 	engine->engineState.auxValveStart = interpolate2d("aux", tps,
 			engineConfiguration->fsioCurve1Bins,
 			engineConfiguration->fsioCurve1);
