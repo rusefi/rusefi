@@ -718,6 +718,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 8
 	tsOutputChannels->intakeAirTemperature = intake;
 
+	SensorResult auxTemp1 = Sensor::get(SensorType::AuxTemp1);
+	tsOutputChannels->auxTemp1 = auxTemp1.Value;
+
+	SensorResult auxTemp2 = Sensor::get(SensorType::AuxTemp2);
+	tsOutputChannels->auxTemp2 = auxTemp2.Value;
+
 	SensorResult tps1 = Sensor::get(SensorType::Tps1);
 	tsOutputChannels->throttlePosition = tps1.Value;
 	tsOutputChannels->isTpsError = !tps1.Valid;

@@ -60,8 +60,6 @@ public:
 	float mockClt = NAN;
 #endif
 	float clt = NAN;
-	float auxTemp1 = NAN;
-	float auxTemp2 = NAN;
 
 	Accelerometer accelerometer;
 
