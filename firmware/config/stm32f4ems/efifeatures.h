@@ -146,10 +146,6 @@
 #define BOARD_TLE8888_COUNT 	1
 #endif
 
-
-// todo: move this outside of efifeatures.h
-#define BOARD_EXT_PINREPOPINS 24
-
 #define EFI_ANALOG_SENSORS TRUE
 
 #ifndef EFI_MAX_31855

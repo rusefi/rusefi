@@ -18,10 +18,6 @@
 #include "drivers/gpio/gpio_ext.h"
 #include "smart_gpio.h"
 
-#ifndef BOARD_EXT_PINREPOPINS
-	#define BOARD_EXT_PINREPOPINS 0
-#endif
-
 static bool initialized = false;
 
 static LoggingWithStorage logger("pin repos");
