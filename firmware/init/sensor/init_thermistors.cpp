@@ -60,6 +60,8 @@ static void configureTempSensor(FunctionalSensor &sensor,
 
 	configTherm(sensor, p, config, isLinear);
 
+	AdcSubscription::SubscribeSensor(sensor, channel);
+
 	// Register & subscribe
 	if (!sensor.Register()) {
 		// uhh?
