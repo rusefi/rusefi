@@ -533,7 +533,7 @@ void watchdogLogic(struct tle8888_priv *chip) {
 		tle8888_spi_rw(chip, CMD_FWDSTAT1, &maybeFirstResponse);
 		// here we get response of the 'FWDStat1' above
 		tle8888_spi_rw(chip, CMD_WdDiag, &functionWDrx);
-		handleFWDStat1(chip, getRegisterFromResponse(functionWDrx), (functionWDrx >> 8) & 0xff);
+		handleFWDStat1(chip, getRegisterFromResponse(functionWDrx), getDataFromResponse(functionWDrx));
 		lastFunctionWatchdogTimeNt = nowNt;
 	}
 
