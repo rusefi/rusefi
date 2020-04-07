@@ -204,8 +204,8 @@ static void printSensors(Logging *log) {
 #endif
 	// why do we still send data into console in text mode?
 
-	if (hasCltSensor()) {
-		reportSensorF(log, "CLT", "C", getCoolantTemperature(), 2); // log column #4
+	if (Sensor::hasSensor(SensorType::Clt)) {
+		reportSensorF(log, "CLT", "C", Sensor::get(SensorType::Clt).value_or(0), 2); // log column #4
 	}
 
 	SensorResult tps = Sensor::get(SensorType::Tps1);
@@ -703,9 +703,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
 
-	float coolant = getCoolantTemperature();
-	float intake = getIntakeAirTemperature();
-
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// header
@@ -713,10 +710,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	// offset 0
 	tsOutputChannels->rpm = rpm;
-	// offset 4
-	tsOutputChannels->coolantTemperature = coolant;
-	// offset 8
-	tsOutputChannels->intakeAirTemperature = intake;
+
+	SensorResult clt = Sensor::get(SensorType::Clt);
+	tsOutputChannels->coolantTemperature = clt.Value;
+	tsOutputChannels->isCltError = !clt.Valid;
+
+	SensorResult iat = Sensor::get(SensorType::Iat);
+	tsOutputChannels->coolantTemperature = iat.Value;
+	tsOutputChannels->isIatError = !iat.Valid;
 
 	SensorResult auxTemp1 = Sensor::get(SensorType::AuxTemp1);
 	tsOutputChannels->auxTemp1 = auxTemp1.Value;
@@ -888,9 +889,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 #endif /* EFI_VEHICLE_SPEED */
 #endif /* EFI_PROD_CODE */
-
-	tsOutputChannels->isCltError = !hasCltSensor();
-	tsOutputChannels->isIatError = !hasIatSensor();
 
 	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
 
