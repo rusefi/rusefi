@@ -204,18 +204,7 @@ static void printSensors(Logging *log) {
 #endif
 	// why do we still send data into console in text mode?
 
-	if (Sensor::hasSensor(SensorType::Clt)) {
-		reportSensorF(log, "CLT", "C", Sensor::get(SensorType::Clt).value_or(0), 2); // log column #4
-	}
-
-	SensorResult tps = Sensor::get(SensorType::Tps1);
-	if (tps) {
-		reportSensorF(log, "TPS", "%", tps.Value, 2); // log column #5
-	}
-
-	if (hasIatSensor()) {
-		reportSensorF(log, "IAT", "C", getIntakeAirTemperature(), 2); // log column #7
-	}
+	Sensor::showAllSensorInfo(log);
 
 	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		reportSensorF(log, GAUGE_NAME_VBAT, "V", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #6
