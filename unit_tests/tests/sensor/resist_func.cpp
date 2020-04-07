@@ -28,15 +28,15 @@ TEST(resistance, OutOfRange)
         EXPECT_FALSE(r.Valid);
     }
 
-    // Something near 0.95 * 5v should be valid
+    // Something near 0.98 * 5v should be valid
     {
-        auto r = f.convert(0.94f * 5);
+        auto r = f.convert(0.97f * 5);
         EXPECT_TRUE(r.Valid);
     }
 
-    // Something just above 0.95 * 5v should be invalid
+    // Something just above 0.98 * 5v should be invalid
     {
-        auto r = f.convert(0.96f * 5);
+        auto r = f.convert(0.99f * 5);
         EXPECT_FALSE(r.Valid);
     }
 }

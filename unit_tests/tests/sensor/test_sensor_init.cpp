@@ -15,7 +15,7 @@ static void postToFuncSensor(Sensor* s, float value) {
 		postToFuncSensor(s, raw); \
 		auto res = s->get(); \
 		EXPECT_TRUE(res.Valid); \
-		EXPECT_NEAR(res.Value, expect, EPS4D); \
+		EXPECT_NEAR(res.Value, expect, EPS2D); \
 	}
 
 #define EXPECT_POINT_INVALID(s, raw) \
@@ -90,7 +90,7 @@ TEST(SensorInit, DriverIntentNoPedal) {
 }
 
 
-TEST(SensorInit, DriverIntentWith) {
+TEST(SensorInit, DriverIntentWithPedal) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// We have a pedal, so we should get it
@@ -128,6 +128,28 @@ TEST(SensorInit, OilPressure) {
 	EXPECT_POINT_VALID(s, 1.0f, 0.0f);	// minimum
 	EXPECT_POINT_VALID(s, 2.5f, 500.0f);	// mid
 	EXPECT_POINT_VALID(s, 4.0f, 1000.0f) // maximium
+
+	// Test out of range
+	EXPECT_POINT_INVALID(s, 0.0f);
+	EXPECT_POINT_INVALID(s, 5.0f);
+}
+
+TEST(SensorInit, Clt) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// 2003 neon sensor
+	CONFIG(clt.config) = {0, 30, 100, 32500, 7550, 700, 2700};
+
+	initNewThermistors(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// Ensure the sensors were registered
+	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::Clt));
+	ASSERT_NE(nullptr, s);
+
+	// Test in range
+	EXPECT_POINT_VALID(s, 4.61648f, 0.0f);	// minimum - 0C
+	EXPECT_POINT_VALID(s, 3.6829f, 30.0f);	// mid - 30C
+	EXPECT_POINT_VALID(s, 1.0294f, 100.0f)	// maximium - 100C
 
 	// Test out of range
 	EXPECT_POINT_INVALID(s, 0.0f);

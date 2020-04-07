@@ -16,6 +16,8 @@ public:
 
 	void configure(thermistor_conf_s &cfg);
 
+	void showInfo(Logging* logger, float testRawValue) const override;
+
 private:
 	// Steinhart-Hart coefficients
 	float m_a;
