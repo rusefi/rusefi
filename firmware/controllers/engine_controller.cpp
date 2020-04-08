@@ -272,12 +272,21 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
-	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (CONFIG(directSelfStimulation) || engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		/**
+		 * rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
+		 * postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
+		 *
+		 * todo: allow writing if 2nd bank of flash is used
+		 */
 #if EFI_INTERNAL_FLASH
 		writeToFlashIfPending();
 #endif /* EFI_INTERNAL_FLASH */
 		resetAccel();
-	} else {
+	}
+
+
+	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		updatePrimeInjectionPulseState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
@@ -707,6 +716,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200406;
+	return 20200408;
 }
 #endif /* EFI_UNIT_TEST */
