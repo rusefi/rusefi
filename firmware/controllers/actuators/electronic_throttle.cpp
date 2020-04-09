@@ -160,7 +160,7 @@ void EtbController::PeriodicTask() {
 	}
 
 	if (startupPositionError) {
-		m_motor->set(0);
+		m_motor->disable();
 		return;
 	}
 
@@ -175,21 +175,21 @@ void EtbController::PeriodicTask() {
 	}
 
 	if (engineConfiguration->pauseEtbControl) {
-		m_motor->set(0);
+		m_motor->disable();
 		return;
 	}
 
 	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
 
 	if (!pedalPosition.Valid) {
-		m_motor->set(0);
+		m_motor->disable();
 		return;
 	}
 
 	SensorResult actualThrottlePosition = Sensor::get(indexToTpsSensor(m_myIndex));
 
 	if (!actualThrottlePosition.Valid) {
-		m_motor->set(0);
+		m_motor->disable();
 		return;
 	}
 
@@ -239,6 +239,7 @@ void EtbController::PeriodicTask() {
 	currentEtbDuty = engine->engineState.etbFeedForward +
 			m_pid.getOutput(targetPosition, actualThrottlePosition.Value);
 
+	m_motor->enable();
 	m_motor->set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
 
 	if (engineConfiguration->isVerboseETB) {
