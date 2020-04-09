@@ -489,6 +489,7 @@ static void cjRestart(void) {
 	globalInstance.state = CJ125_INIT;
 	globalInstance.errorCode = CJ125_NO_ERROR;
 	cjInfo();
+	cjStart(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 #endif /* EFI_UNIT_TEST */
 
