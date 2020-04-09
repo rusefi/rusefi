@@ -29,6 +29,9 @@ void TwoPinDcMotor::disable() {
 	if (m_disable) {
 		m_disable->setValue(true);
 	}
+
+	// Also set the duty to zero
+	set(0);
 }
 
 bool TwoPinDcMotor::isOpenDirection() const {
