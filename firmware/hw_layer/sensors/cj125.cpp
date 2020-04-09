@@ -1,6 +1,10 @@
 /*
  * @file CJ125.cpp
  *
+ * https://github.com/rusefi/rusefi/tree/master/hardware/CJ125_board
+ *
+ * https://github.com/rusefi/hw_modular/tree/master/cj125_Module
+ *
  * @date: Jun 24, 2016
  * @author Andrey Belomutskiy, (c) 2012-2020
  *
@@ -11,18 +15,16 @@
 #include "pwm_generator.h"
 #include "rpm_calculator.h"
 
+EXTERN_ENGINE;
+
 #if EFI_CJ125 && HAL_USE_SPI
 
 #include "adc_inputs.h"
 
-#if EFI_PROD_CODE
 #include "mpu_util.h"
-#endif
 
 //#define CJ125_DEBUG
 //#define CJ125_DEBUG_SPI
-
-EXTERN_ENGINE;
 
 #include "hardware.h"
 #include "backup_ram.h"
@@ -154,10 +156,22 @@ static uint32_t get16bitFromVoltage(float v) {
 	return (uint32_t)(v * CJ125_VOLTAGE_TO_16BIT_FACTOR);
 }
 
+static void cjPrintState() {
+	scheduleMsg(logger, "cj125: state=%d diag=0x%x (vUa=%.3f vUr=%.3f) (vUaCal=%.3f vUrCal=%.3f)",
+			globalInstance.state, globalInstance.diag,
+			globalInstance.vUa, globalInstance.vUr,
+			globalInstance.vUaCal, globalInstance.vUrCal);
+}
+
+static void cjInfo() {
+	cjPrintState();
+	printSpiConfig(logger, "cj125", CONFIG(cj125SpiDevice));
+}
+
 static void cjPrintData(void) {
-#ifdef CJ125_DEBUG
-	scheduleMsg(logger, "cj125: state=%d diag=0x%x (vUa=%.3f vUr=%.3f) (vUaCal=%.3f vUrCal=%.3f)", state, globalInstance.diag, vUa, vUr, globalInstance.vUaCal, globalInstance.vUrCal);
-#endif
+	if (engineConfiguration->isCJ125Verbose) {
+		cjPrintState();
+	}
 }
 
 static void cjPrintErrorCode(cj125_error_e errCode) {
@@ -320,35 +334,13 @@ void CJ125::setError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	cjWriteRegister(INIT_REG2_WR, CJ125_INIT2_RESET);
 }
 
-//	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
-//	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
-//	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
-//	CONFIG(cj125CsPin) = GPIOA_15;
-//	engineConfiguration->cj125CsPinMode = OM_OPENDRAIN;
-
-void cj125defaultPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	engineConfiguration->cj125ua = EFI_ADC_13; // PC3
-	engineConfiguration->cj125ur = EFI_ADC_4; // PA4
-	CONFIG(wboHeaterPin) = GPIOC_13;
-
-	CONFIG(isCJ125Enabled) = false;
-
-	CONFIG(spi2mosiPin) = GPIOB_15;
-	CONFIG(spi2misoPin) = GPIOB_14;
-	CONFIG(spi2sckPin) = GPIOB_13;
-
-	CONFIG(cj125CsPin) = GPIOB_0;
-	CONFIG(isCJ125Enabled) = true;
-	CONFIG(is_enabled_spi_2) = true;
-}
-
 static void cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	globalInstance.cj125Cs.initPin("cj125 CS", CONFIG(cj125CsPin),
 			&engineConfiguration->cj125CsPinMode);
 	// Idle CS pin - SPI CS is high when idle
 	globalInstance.cj125Cs.setValue(true);
 
-	cj125spicfg.cr1 += getSpiPrescaler(_150KHz, engineConfiguration->cj125SpiDevice);
+	cj125spicfg.cr1 += getSpiPrescaler(_150KHz, CONFIG(cj125SpiDevice));
 
 	cj125spicfg.ssport = getHwPort("cj125", CONFIG(cj125CsPin));
 	cj125spicfg.sspad = getHwPin("cj125", CONFIG(cj125CsPin));
@@ -357,7 +349,7 @@ static void cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// error already reported
 		return;
 	}
-	scheduleMsg(logger, "cj125: Starting SPI driver");
+	scheduleMsg(logger, "cj125: Starting SPI driver %s", getSpi_device_e(engineConfiguration->cj125SpiDevice));
 	spiStart(driver, &cj125spicfg);
 }
 
@@ -491,10 +483,12 @@ static void cjStartCalibration(void) {
 	globalInstance.state = CJ125_CALIBRATION;
 }
 
-static void cjStartTest(void) {
+static void cjRestart(void) {
 	if (!cjCheckConfig())
 		return;
 	globalInstance.state = CJ125_INIT;
+	globalInstance.errorCode = CJ125_NO_ERROR;
+	cjInfo();
 }
 #endif /* EFI_UNIT_TEST */
 
@@ -527,7 +521,7 @@ float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return globalInstance.lambda * CJ125_STOICH_RATIO;
 }
 
-bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool cjHasAfrSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	if (!CONFIG(isCJ125Enabled))
 		return false;
 	return globalInstance.isValidState();
@@ -588,10 +582,34 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleActionI("cj125_set_init2", cjSetInit2);
 #endif /* CJ125_DEBUG */
 
-	addConsoleAction("cj125", cjStartTest);
+	addConsoleAction("cj125_info", cjInfo);
+	addConsoleAction("cj125_restart", cjRestart);
 	addConsoleAction("cj125_calibrate", cjStartCalibration);
 
 	chThdCreateStatic(cj125ThreadStack, sizeof(cj125ThreadStack), LOWPRIO, (tfunc_t)(void*) cjThread, NULL);
 }
 
 #endif /* EFI_CJ125 && HAL_USE_SPI */
+
+#if EFI_CJ125
+//	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
+//	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
+//	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
+//	CONFIG(cj125CsPin) = GPIOA_15;
+//	engineConfiguration->cj125CsPinMode = OM_OPENDRAIN;
+
+void cj125defaultPinout(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->cj125ua = EFI_ADC_13; // PC3
+	engineConfiguration->cj125ur = EFI_ADC_4; // PA4
+	CONFIG(wboHeaterPin) = GPIOC_13;
+
+	CONFIG(spi2mosiPin) = GPIOB_15;
+	CONFIG(spi2misoPin) = GPIOB_14;
+	CONFIG(spi2sckPin) = GPIOB_13;
+
+	CONFIG(cj125CsPin) = GPIOB_0;
+	CONFIG(isCJ125Enabled) = true;
+	CONFIG(is_enabled_spi_2) = true;
+	CONFIG(cj125SpiDevice) = SPI_DEVICE_2;
+}
+#endif /* EFI_CJ125 */
