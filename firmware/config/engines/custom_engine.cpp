@@ -349,11 +349,11 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// SF  PF11
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 #if EFI_FSIO
-	setFsio(12, GPIOF_12, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio(14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
 	CONFIG(etbIo[0].directionPin2) = GPIOF_14;
+	CONFIG(etbIo[0].disablePin) = GPIOF_12;
 #endif /* STM32_HAS_GPIOF */
 	CONFIG(etb_use_two_wires) = true;
 	engineConfiguration->isHip9011Enabled = false;
@@ -365,11 +365,11 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// IN2 PE4
 	// SF  PE3
 #if EFI_FSIO
-	setFsio(13, GPIOE_5, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio(15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	CONFIG(etbIo[0].directionPin1) = GPIOE_2;
 	CONFIG(etbIo[0].directionPin2) = GPIOE_4;
+	CONFIG(etbIo[0].disablePin) = GPIOE_5;
 
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // PA3
