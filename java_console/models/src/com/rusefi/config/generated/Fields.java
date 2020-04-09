@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Apr 08 21:41:20 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Apr 08 21:53:29 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -898,6 +898,7 @@ public class Fields {
 	public static final int isAlternatorControlEnabled_offset = 1464;
 	public static final int isBoostControlEnabled_offset = 1476;
 	public static final int isCJ125Enabled_offset = 744;
+	public static final int isCJ125Verbose_offset = 76;
 	public static final int isCylinderCleanupEnabled_offset = 1476;
 	public static final int isDoubleSolenoidIdle_offset = 76;
 	public static final int isEngineChartEnabled_offset = 1464;
@@ -1377,7 +1378,6 @@ public class Fields {
 	public static final int uartConsoleSerialSpeed_offset = 2076;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1234234_offset = 2042;
-	public static final int unused76b9_offset = 76;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
 	public static final int unused_1484_bit_26_offset = 1476;
@@ -1509,7 +1509,7 @@ public class Fields {
 	public static final Field ISVERBOSEAUXPID3 = Field.create("ISVERBOSEAUXPID3", 76, FieldType.BIT, 6);
 	public static final Field ACTIVATEAUXPID4 = Field.create("ACTIVATEAUXPID4", 76, FieldType.BIT, 7);
 	public static final Field ISVERBOSEAUXPID4 = Field.create("ISVERBOSEAUXPID4", 76, FieldType.BIT, 8);
-	public static final Field UNUSED76B9 = Field.create("UNUSED76B9", 76, FieldType.BIT, 9);
+	public static final Field ISCJ125VERBOSE = Field.create("ISCJ125VERBOSE", 76, FieldType.BIT, 9);
 	public static final Field CJ125ISUADIVIDED = Field.create("CJ125ISUADIVIDED", 76, FieldType.BIT, 10);
 	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 76, FieldType.BIT, 11);
 	public static final Field ETB_USE_TWO_WIRES = Field.create("ETB_USE_TWO_WIRES", 76, FieldType.BIT, 12);
@@ -2424,7 +2424,7 @@ public class Fields {
 	ISVERBOSEAUXPID3,
 	ACTIVATEAUXPID4,
 	ISVERBOSEAUXPID4,
-	UNUSED76B9,
+	ISCJ125VERBOSE,
 	CJ125ISUADIVIDED,
 	CJ125ISLSU49,
 	ETB_USE_TWO_WIRES,
