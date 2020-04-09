@@ -213,15 +213,19 @@ static void cjUpdateAnalogValues() {
 }
 
 void cjCalibrate(void) {
-	globalInstance.cjIdentify();
+	globalInstance.calibrate();
+}
+
+void CJ125::calibrate(void) {
+	cjIdentify();
 
 	scheduleMsg(logger, "cj125: Starting calibration...");
-	globalInstance.cjSetMode(CJ125_MODE_CALIBRATION);
+	cjSetMode(CJ125_MODE_CALIBRATION);
 	int init1 = cjReadRegister(INIT_REG1_RD);
 	// check if our command has been accepted
 	if (init1 != CJ125_INIT1_CALBRT) {
 		scheduleMsg(logger, "cj125: Calibration error (init1=0x%02x)! Failed!", init1);
-		globalInstance.cjSetMode(CJ125_MODE_NORMAL_17);
+		cjSetMode(CJ125_MODE_NORMAL_17);
 		return;
 	}
 #if EFI_PROD_CODE
@@ -229,8 +233,8 @@ void cjCalibrate(void) {
 	// wait for the start of the calibration
 	chThdSleepMilliseconds(CJ125_CALIBRATION_DELAY);
 #endif /* EFI_PROD_CODE */
-	globalInstance.vUaCal = 0.0f;
-	globalInstance.vUrCal = 0.0f;
+	vUaCal = 0.0f;
+	vUrCal = 0.0f;
 	// wait for some more ADC samples
 	for (int i = 0; i < CJ125_CALIBRATE_NUM_SAMPLES; i++) {
 		cjUpdateAnalogValues();
@@ -242,33 +246,33 @@ void cjCalibrate(void) {
 		}
 #endif /* EFI_TUNER_STUDIO */
 
-		globalInstance.vUaCal += globalInstance.vUa;
-		globalInstance.vUrCal += globalInstance.vUr;
+		vUaCal += vUa;
+		vUrCal += vUr;
 	}
 	// find average
-	globalInstance.vUaCal /= (float)CJ125_CALIBRATE_NUM_SAMPLES;
-	globalInstance.vUrCal /= (float)CJ125_CALIBRATE_NUM_SAMPLES;
+	vUaCal /= (float)CJ125_CALIBRATE_NUM_SAMPLES;
+	vUrCal /= (float)CJ125_CALIBRATE_NUM_SAMPLES;
 	// restore normal mode
-	globalInstance.cjSetMode(CJ125_MODE_NORMAL_17);
+	cjSetMode(CJ125_MODE_NORMAL_17);
 #if EFI_PROD_CODE
 	// todo: testing solution
 	chThdSleepMilliseconds(CJ125_CALIBRATION_DELAY);
 #endif
 	// check if everything is ok
-	globalInstance.diag = cjReadRegister(DIAG_REG_RD);
+	diag = cjReadRegister(DIAG_REG_RD);
 	cjUpdateAnalogValues();
 	cjPrintData();
 
 	// store new calibration data
-	uint32_t storedLambda = get16bitFromVoltage(globalInstance.vUaCal);
-	uint32_t storedHeater = get16bitFromVoltage(globalInstance.vUrCal);
+	uint32_t storedLambda = get16bitFromVoltage(vUaCal);
+	uint32_t storedHeater = get16bitFromVoltage(vUrCal);
 	scheduleMsg(logger, "cj125: Done! Saving calibration data (%d %d).", storedLambda, storedHeater);
 #if EFI_PROD_CODE
 	backupRamSave(BACKUP_CJ125_CALIBRATION_LAMBDA, storedLambda);
 	backupRamSave(BACKUP_CJ125_CALIBRATION_HEATER, storedHeater);
 #endif /* EFI_PROD_CODE */
 
-	globalInstance.state = CJ125_IDLE;
+	state = CJ125_IDLE;
 }
 
 static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -289,7 +293,7 @@ static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 	// if no calibration, try to calibrate now and store new values
 	if (storedLambda == 0 || storedHeater == 0) {
-		cjCalibrate();
+		globalInstance.calibrate();
 	} else {
 		scheduleMsg(logger, "cj125: Loading stored calibration data (%d %d)", storedLambda, storedHeater);
 		globalInstance.vUaCal = getVoltageFrom16bit(storedLambda);
@@ -373,7 +377,7 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		}
 
 		if (instance->state == CJ125_CALIBRATION) {
-			cjCalibrate();
+			globalInstance.calibrate();
 			// Start normal operation
 			instance->state = CJ125_INIT;
 			globalInstance.cjSetMode(CJ125_MODE_NORMAL_17);
