@@ -568,8 +568,8 @@ switch_input_pin_e clutchDownPin;some cars have a switch to indicate that clutch
 
 	brain_pin_e[DIGIPOT_COUNT iterate] digitalPotentiometerChipSelect;
 	pin_output_mode_e electronicThrottlePin1Mode;
-	brain_pin_e wboHeaterPin;
-	brain_pin_e cj125CsPin;
+	brain_pin_e wboHeaterPin;set_cj125_heater_pin XXX
+	brain_pin_e cj125CsPin;set_cj125_cs_pin XXX
 	spi_device_e max31855spiDevice;
 	brain_pin_e debugTriggerSync;
 	

@@ -679,6 +679,14 @@ static void setMainRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->mainRelayPin, "main relay");
 }
 
+static void setCj125CsPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
+}
+
+static void setCj125HeaterPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->wboHeaterPin, "cj125 heater");
+}
+
 static void setStarterRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
 }
@@ -904,6 +912,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->useConstantDwellDuringCranking = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125")) {
 		engineConfiguration->isCJ125Enabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "cj125verbose")) {
+		engineConfiguration->isCJ125Verbose = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_sniffer")) {
 		engineConfiguration->isEngineChartEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
@@ -1429,6 +1439,8 @@ void initSettings(void) {
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
+	addConsoleActionS("set_cj125_cs_pin", setCj125CsPin);
+	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
 
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
