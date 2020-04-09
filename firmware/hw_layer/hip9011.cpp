@@ -173,9 +173,7 @@ static void showHipInfo(void) {
 			getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, pinNameBuffer),
 			hipValueMax,
 			CONFIG(useTpicAdvancedMode));
-	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(engineConfiguration->hip9011SpiDevice)));
-	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(engineConfiguration->hip9011SpiDevice)));
-	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(engineConfiguration->hip9011SpiDevice)));
+	printSpiConfig(logger, "hip9011", CONFIG(hip9011SpiDevice));
 #endif /* EFI_PROD_CODE */
 
 	scheduleMsg(logger, "start %.2f end %.2f", engineConfiguration->knockDetectionWindowStart,

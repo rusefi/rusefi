@@ -17,6 +17,7 @@
 #include "memstreams.h"
 #include "drivers/gpio/gpio_ext.h"
 #include "smart_gpio.h"
+#include "hardware.h"
 
 static bool initialized = false;
 
@@ -173,6 +174,12 @@ static void reportPins(void) {
 
 static MemoryStream portNameStream;
 static char portNameBuffer[20];
+
+void printSpiConfig(Logging *logging, const char *msg, spi_device_e device) {
+	scheduleMsg(logging, "%s %s mosi=%s", msg, getSpi_device_e(device), hwPortname(getMosiPin(device)));
+	scheduleMsg(logging, "%s %s miso=%s", msg, getSpi_device_e(device), hwPortname(getMisoPin(device)));
+	scheduleMsg(logging, "%s %s sck=%s",  msg, getSpi_device_e(device), hwPortname(getSckPin(device)));
+}
 
 const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
