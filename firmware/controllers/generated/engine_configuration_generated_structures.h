@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Apr 08 21:53:29 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Apr 08 22:31:00 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1080,10 +1080,12 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e electronicThrottlePin1Mode;
 	/**
+	 * set_cj125_heater_pin XXX
 	 * offset 673
 	 */
 	brain_pin_e wboHeaterPin;
 	/**
+	 * set_cj125_cs_pin XXX
 	 * offset 674
 	 */
 	brain_pin_e cj125CsPin;
@@ -3260,4 +3262,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Apr 08 21:53:29 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Apr 08 22:31:00 EDT 2020
