@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Apr 08 21:41:35 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Apr 08 21:53:44 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -550,8 +550,9 @@ struct engine_configuration_s {
 	offset 76 bit 8 */
 	bool isVerboseAuxPid4 : 1;
 	/**
+	 * enable cj125verbose/disable cj125verbose
 	offset 76 bit 9 */
-	bool unused76b9 : 1;
+	bool isCJ125Verbose : 1;
 	/**
 	 * Is your UA CJ125 output wired to MCU via resistor divider?
 	offset 76 bit 10 */
@@ -3259,4 +3260,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Apr 08 21:41:35 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Apr 08 21:53:44 EDT 2020

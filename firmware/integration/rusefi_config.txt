@@ -324,7 +324,7 @@ bit activateAuxPid3;
 bit isVerboseAuxPid3;
 bit activateAuxPid4;
 bit isVerboseAuxPid4;
-bit unused76b9;
+bit isCJ125Verbose;enable cj125verbose/disable cj125verbose
 bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider?
 bit cj125isLsu49;
 bit etb_use_two_wires;+TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.

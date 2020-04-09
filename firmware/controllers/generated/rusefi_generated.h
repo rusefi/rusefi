@@ -1346,6 +1346,8 @@
 #define isBoostControlEnabled_offset_hex 5c4
 #define isCJ125Enabled_offset 744
 #define isCJ125Enabled_offset_hex 2e8
+#define isCJ125Verbose_offset 76
+#define isCJ125Verbose_offset_hex 4c
 #define isCylinderCleanupEnabled_offset 1476
 #define isCylinderCleanupEnabled_offset_hex 5c4
 #define isDoubleSolenoidIdle_offset 76
@@ -2087,8 +2089,6 @@
 #define unused1059_offset_hex f7c
 #define unused1234234_offset 2042
 #define unused1234234_offset_hex 7fa
-#define unused76b9_offset 76
-#define unused76b9_offset_hex 4c
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_24_offset_hex 5c4
 #define unused_1484_bit_25_offset 1476
