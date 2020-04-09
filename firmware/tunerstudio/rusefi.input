@@ -1354,6 +1354,10 @@ menuDialog = main
 		subMenu = std_separator	
 
 
+      menu = "Help"
+         subMenu = helpGeneral,     "rusEfi Info"
+
+
 [ControllerCommands]
 ; commandName    = command1, command2, commandn...
 ; command in standard ini format, a command name can be assigned to 1 to n commands that will be executed in order.
@@ -2833,6 +2837,12 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 
 		field = "Target temperature", 			postCrankingTargetClt
+
+
+       help = helpGeneral, "rusEfi General Help"
+        webHelp = "http://www.rusefi.com/"
+        text = "<img src='https://rusefi.com/style/logo_100.gif'>"
+
 
 [Tools]
  ;addTool = toolName, PanelName
