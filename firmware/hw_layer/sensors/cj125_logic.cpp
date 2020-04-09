@@ -11,6 +11,8 @@
 
 EXTERN_ENGINE;
 
+#define LOW_VOLTAGE "Low Voltage"
+
 CJ125::CJ125() : wboHeaterControl("wbo"),
 		heaterPid(&heaterPidConfig) {
 }
@@ -48,6 +50,20 @@ void CJ125::StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENG
 	SetIdleHeater(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+static void printDiagCode(Logging * logging, const char *msg, int code, const char *code1message) {
+	switch(code & 0x3) {
+	case 0:
+		scheduleMsg(logging, "%s Short to GND", msg);
+		return;
+	case 1:
+		scheduleMsg(logging, "%s %s", msg, code1message);
+		return;
+	case 2:
+		scheduleMsg(logging, "%s Short to Vbatt", msg);
+		return;
+	}
+}
+
 /**
  * @return true in case of positive SPI identification
  *         false in case of unexpected SPI response
@@ -78,11 +94,14 @@ bool CJ125::cjIdentify(void) {
 		state = CJ125_ERROR;
 		return false;
 	}
-#if 0
-	if (diag != CJ125_DIAG_NORM) {
-		scheduleMsg(logger, "cj125: Diag error!");
+	if (diag == CJ125_DIAG_NORM) {
+		scheduleMsg(logger, "cj125: Looks great!");
+	} else {
+		printDiagCode(logger, "VM", diag, LOW_VOLTAGE);
+		printDiagCode(logger, "UN", diag >> 2, LOW_VOLTAGE);
+		printDiagCode(logger, "UN", diag >> 4, LOW_VOLTAGE);
+		printDiagCode(logger, "HR", diag >> 6, "open load");
 	}
-#endif
 	return true;
 }
 
