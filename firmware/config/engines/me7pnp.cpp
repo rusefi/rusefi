@@ -12,10 +12,14 @@
 #include "allsensors.h"
 #include "fsio_impl.h"
 #include "engine_configuration.h"
+#include "cj125.h"
 
 EXTERN_ENGINE;
 
-void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+/**
+ * set engine_type 102
+ */
+void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	//Base Engine Settings
 
@@ -53,8 +57,6 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_4;
 	engineConfiguration->vbattDividerCoeff = ((float) (10.0 + 33)) / 10 * 2;
-	engineConfiguration->cj125ur = EFI_ADC_11;
-	engineConfiguration->cj125ua = EFI_ADC_12;
 	engineConfiguration->mafAdcChannel = EFI_ADC_8;
 
 	//CAN Settings
@@ -90,9 +92,10 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	//SPI Settings
 	engineConfiguration->is_enabled_spi_1 = true;
-	engineConfiguration->is_enabled_spi_2 = true;
 	engineConfiguration->is_enabled_spi_3 = false;
-	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
+
+	cj125defaultPinout(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->cj125ur = EFI_ADC_11;
 	engineConfiguration->cj125CsPin = GPIOB_11;
 
 	//Digital Inputs/Outputs
@@ -111,10 +114,10 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->brakePedalPin = GPIOE_10;
 	engineConfiguration->camInputs[0] = GPIOA_2;
 #if defined(STM32_HAS_GPIOG) && STM32_HAS_GPIOG
-	engineConfiguration->triggerInputPins[0] = GPIOG_7;
+//	engineConfiguration->triggerInputPins[0] = GPIOG_7;
 #endif /* STM32_HAS_GPIOF */
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
-	engineConfiguration->vehicleSpeedSensorInputPin = GPIOF_14;
+//	engineConfiguration->vehicleSpeedSensorInputPin = GPIOF_14;
 #endif /* STM32_HAS_GPIOF */
 
 

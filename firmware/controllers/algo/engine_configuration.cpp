@@ -66,6 +66,7 @@
 #include "test_engine.h"
 #include "sachs.h"
 #include "vw.h"
+#include "me7pnp.h"
 #include "vw_b6.h"
 #include "daihatsu.h"
 #include "chevrolet_camaro_4.h"
@@ -1320,6 +1321,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case TOYOTA_JZS147:
 		setToyota_jzs147EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case VAG_18_TURBO:
+		vag_18_Turbo(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_33816:
 		setTest33816EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
