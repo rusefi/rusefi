@@ -99,7 +99,7 @@ bool CJ125::cjIdentify(void) {
 	} else {
 		printDiagCode(logger, "VM", diag, LOW_VOLTAGE);
 		printDiagCode(logger, "UN", diag >> 2, LOW_VOLTAGE);
-		printDiagCode(logger, "UN", diag >> 4, LOW_VOLTAGE);
+		printDiagCode(logger, "IA", diag >> 4, LOW_VOLTAGE);
 		printDiagCode(logger, "HR", diag >> 6, "open load");
 	}
 	return true;
