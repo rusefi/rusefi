@@ -196,5 +196,6 @@ const char *portname(ioportid_t GPIOx);
 
 #endif /* EFI_GPIO_HARDWARE */
 
+void printSpiConfig(Logging *logging, const char *msg, spi_device_e device);
 brain_pin_e parseBrainPin(const char *str);
 const char *hwPortname(brain_pin_e brainPin);
