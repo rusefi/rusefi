@@ -32,10 +32,14 @@ public:
      */
     virtual float get() const = 0;
 
+	virtual void disable() = 0;
+	virtual void enable() = 0;
+
     virtual bool isOpenDirection() const = 0;
 };
 
 class SimplePwm;
+class OutputPin;
 
 /**
  * @brief Represents a DC motor controller (H-bridge) with some combination of PWM and on/off control pins.
@@ -70,6 +74,7 @@ private:
     SimplePwm* const m_enable;
     SimplePwm* const m_dir1;
     SimplePwm* const m_dir2;
+	OutputPin* const m_disable;
     float m_value = 0;
 
     ControlType m_type;
@@ -79,11 +84,14 @@ public:
      * @param dir1 Enable 1 or direction 1 pin.  Gets set high to rotate forward.
      * @param dir2 Enable 2 or direction 2 pin.  Gets set high to rotate backward.
      */
-    TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2);
+    TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2, OutputPin* disable);
 
     virtual bool set(float duty) override;
     float get() const override;
     bool isOpenDirection() const override;
+
+	void enable();
+	void disable();
 
     void setType(ControlType type) { m_type = type; }
 };
