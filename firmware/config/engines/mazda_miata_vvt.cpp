@@ -271,7 +271,9 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set_whole_ve_map 80
 	setMazdaMiataNbInjectorLag(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
+//	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
+	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
+
 	//set idle_offset 30
 	engineConfiguration->idleRpmPid.offset = 30;
 	engineConfiguration->idleRpmPid.pFactor = 0.07;
