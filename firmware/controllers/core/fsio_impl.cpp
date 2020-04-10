@@ -46,6 +46,7 @@ fsio8_Map3D_u8t fsioTable4("fsio#4");
  */
 static LENameOrdinalPair leRpm(LE_METHOD_RPM, "rpm");
 static LENameOrdinalPair leTps(LE_METHOD_TPS, "tps");
+static LENameOrdinalPair leTps(LE_METHOD_PPS, "pps");
 static LENameOrdinalPair leMaf(LE_METHOD_MAF, "maf");
 static LENameOrdinalPair leMap(LE_METHOD_MAP, "map");
 static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
