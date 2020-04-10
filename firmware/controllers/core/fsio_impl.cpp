@@ -149,7 +149,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 #include "fsio_getters.def"
 	default:
-		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO unexpected %d", action);
+		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO ERROR no data for action=%d", action);
 		return NAN;
 	}
 }
