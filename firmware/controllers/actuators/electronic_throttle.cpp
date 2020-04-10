@@ -89,10 +89,6 @@
 #define ETB_MAX_COUNT 2
 #endif /* ETB_MAX_COUNT */
 
-static pid_s tuneWorkingPidSettings;
-static Pid tuneWorkingPid(&tuneWorkingPidSettings);
-static PID_AutoTune autoTune;
-
 static LoggingWithStorage logger("ETB");
 static pedal2tps_t pedal2tpsMap("Pedal2Tps", 1);
 
@@ -540,15 +536,6 @@ static void setAutoStep(float value) {
 	autoTune.SetOutputStep(value);
 }
 
-static void setAutoPeriod(int period) {
-	tuneWorkingPidSettings.periodMs = period;
-	autoTune.reset();
-}
-
-static void setAutoOffset(int offset) {
-	tuneWorkingPidSettings.offset = offset;
-	autoTune.reset();
-}
 #endif /* EFI_PROD_CODE */
 
 void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -643,23 +630,6 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// manual duty cycle control without PID. Percent value from 0 to 100
 	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
-#endif /* EFI_PROD_CODE */
-
-#if EFI_PROD_CODE && 0
-	tuneWorkingPidSettings.pFactor = 1;
-	tuneWorkingPidSettings.iFactor = 0;
-	tuneWorkingPidSettings.dFactor = 0;
-//	tuneWorkingPidSettings.offset = 10; // todo: not hard-coded value
-	//todo tuneWorkingPidSettings.periodMs = 10;
-	tuneWorkingPidSettings.minValue = 0;
-	tuneWorkingPidSettings.maxValue = 100;
-	tuneWorkingPidSettings.periodMs = 100;
-
-	// this is useful once you do "enable etb_auto"
-	addConsoleActionF("set_etbat_output", setTempOutput);
-	addConsoleActionF("set_etbat_step", setAutoStep);
-	addConsoleActionI("set_etbat_period", setAutoPeriod);
-	addConsoleActionI("set_etbat_offset", setAutoOffset);
 #endif /* EFI_PROD_CODE */
 
 	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
