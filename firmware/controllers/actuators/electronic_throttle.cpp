@@ -241,6 +241,7 @@ void EtbController::PeriodicTask() {
 			// https://warwick.ac.uk/fac/cross_fac/iatl/reinvention/archive/volume5issue2/hornsey
 
 			// Publish to TS state
+#if EFI_TUNER_STUDIO
 			if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
 				// a - amplitude of output (TPS %)
 				tsOutputChannels.debugFloatField1 = a;
@@ -265,6 +266,7 @@ void EtbController::PeriodicTask() {
 				// Kd
 				tsOutputChannels.debugFloatField7 = 0.08f * ku * tu;
 			}
+#endif
 		}
 
 		m_lastIsPositive = isPositive;
