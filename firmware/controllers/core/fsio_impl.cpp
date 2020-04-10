@@ -569,8 +569,11 @@ static void showFsioInfo(void) {
 			 * in case of FSIO user interface indexes are starting with 0, the argument for that
 			 * is the fact that the target audience is more software developers
 			 */
-			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%.2f", (i + 1), exp,
-					hwPortname(CONFIG(fsioOutputPins)[i]), CONFIG(fsioFrequency)[i],
+			int freq = CONFIG(fsioFrequency)[i];
+			const char *modeMessage = freq == 0 ? " (on/off mode)" : "";
+			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz%s value=%.2f", (i + 1), exp,
+					hwPortname(CONFIG(fsioOutputPins)[i]),
+					freq, modeMessage,
 					engine->fsioState.fsioLastValue[i]);
 //			scheduleMsg(logger, "user-defined #%d value=%.2f", i, engine->engineConfigurationPtr2->fsioLastValue[i]);
 			showFsio(NULL, state.fsioLogics[i]);
