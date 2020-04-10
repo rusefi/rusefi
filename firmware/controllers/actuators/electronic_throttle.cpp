@@ -246,18 +246,22 @@ void EtbController::PeriodicTask() {
 
 			// Publish to TS state
 			if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
-				// a - amplitude of output
+				// a - amplitude of output (TPS %)
 				tsOutputChannels.debugFloatField1 = a;
 				float b = 2 * autotuneAmplitude;
-				// b - amplitude of input
+				// b - amplitude of input (Duty cycle %)
 				tsOutputChannels.debugFloatField2 = b;
-				// Tu - oscillation period
+				// Tu - oscillation period (seconds)
 				float tu = NT2US((float)cycleTime) / 1e6;
 				tsOutputChannels.debugFloatField3 = tu;
 
+				// Ultimate gain per A-H relay tuning rule
 				// Ku
 				float ku = 4 * b / (3.14159f * a);
 				tsOutputChannels.debugFloatField4 = ku;
+
+				// The multipliers below are somewhere near the "no overshoot" 
+				// and "some overshoot" flavors of the Ziegler-Nichols method
 				// Kp
 				tsOutputChannels.debugFloatField5 = 0.35f * ku;
 				// Ki
