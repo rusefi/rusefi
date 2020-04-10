@@ -154,7 +154,7 @@ public class AnyCommand {
     }
 
     public static String unquote(String quoted) {
-        quoted = quoted.trim().replace('“', '"').replace('”', '"');
+        quoted = quoted.trim().replace('\u201C', '"').replace('\u201D', '"');
         if (quoted.charAt(0) == '"')
             return quoted.substring(1, quoted.length() - 1);
         return quoted; // ignoring invalid input
