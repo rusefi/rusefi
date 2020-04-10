@@ -7,8 +7,8 @@
  *
  *
  * enable trigger_details
- * DBG_TRIGGER_SYNC = 16
- * set debug_mode 16
+ * DBG_TRIGGER_COUNTERS = 5
+ * set debug_mode 5
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -502,10 +502,10 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 
 			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
 
-			if (CONFIG(debugMode) == DBG_TRIGGER_SYNC) {
+			if (CONFIG(debugMode) == DBG_TRIGGER_COUNTERS) {
 #if EFI_TUNER_STUDIO
-				tsOutputChannels.debugFloatField1 = currentGap;
-				tsOutputChannels.debugFloatField2 = currentCycle.current_index;
+				tsOutputChannels.debugFloatField6 = currentGap;
+				tsOutputChannels.debugIntField3 = currentCycle.current_index;
 #endif /* EFI_TUNER_STUDIO */
 			}
 

@@ -244,13 +244,6 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void Engine::OnTriggerStateDecodingError() {
 	Engine *engine = this;
 	EXPAND_Engine;
-	if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
-#if EFI_TUNER_STUDIO
-		tsOutputChannels.debugIntField1 = triggerCentral.triggerState.currentCycle.eventCount[0];
-		tsOutputChannels.debugIntField2 = triggerCentral.triggerState.currentCycle.eventCount[1];
-		tsOutputChannels.debugIntField3 = triggerCentral.triggerState.currentCycle.eventCount[2];
-#endif /* EFI_TUNER_STUDIO */
-	}
 
 	warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d/%d expected %d/%d/%d",
 			triggerCentral.triggerState.currentCycle.eventCount[0],
