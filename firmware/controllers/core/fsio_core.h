@@ -55,6 +55,7 @@ typedef enum {
 	LE_METHOD_IN_SHUTDOWN = 122,
 	LE_METHOD_FSIO_DIGITAL_INPUT = 123,
 	LE_METHOD_FSIO_SETTING = 124,
+	LE_METHOD_PPS = 125,
 
 #include "fsio_enums_generated.def"
 
