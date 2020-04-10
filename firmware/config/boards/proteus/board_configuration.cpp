@@ -87,7 +87,7 @@ static void setupEtb() {
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = GPIOD_10;
 	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = GPIOD_8;
+	engineConfiguration->etbIo[0].disablePin = GPIOD_11;
 	// Unused
 	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 
@@ -97,7 +97,7 @@ static void setupEtb() {
 	// DIR pin
 	engineConfiguration->etbIo[1].directionPin1 = GPIOD_9;
 	// Disable pin
-	engineConfiguration->etbIo[1].disablePin = GPIOD_11;
+	engineConfiguration->etbIo[1].disablePin = GPIOD_8;
 	// Unused
 	engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
 
