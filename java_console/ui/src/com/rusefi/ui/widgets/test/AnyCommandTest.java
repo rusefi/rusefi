@@ -25,4 +25,13 @@ public class AnyCommandTest {
         // todo: parameter order needs to be in postfix form
         assertEquals("set_rpn_expression 1 \"rpm fsio_setting 0 >\"", AnyCommand.prepareCommand("set_fsio_expression 1 \"rpm > fsio_setting 0\""));
     }
+
+    @Test
+    public void testSetFSIOexpressionWithFunnyQuotes() {
+        assertEquals("tps > 10", AnyCommand.unquote("\"tps > 10\""));
+        assertEquals("tps > 10", AnyCommand.unquote("“tps > 10”"));
+
+
+        assertEquals("set_rpn_expression 1 \"tps 10 >\"", AnyCommand.prepareCommand("Set_fsio_expression 1 “tps > 10”"));
+    }
 }

@@ -24,6 +24,7 @@ private:
 	OutputPin m_pinEnable;
 	OutputPin m_pinDir1;
 	OutputPin m_pinDir2;
+	OutputPin m_disablePin;
 
 	SimplePwm m_pwmEnable;
 	SimplePwm m_pwmDir1;
@@ -32,7 +33,7 @@ private:
 	SimplePwm etbPwmUp;
 
 public:
-	EtbHardware() : etbPwmUp("etbUp"), dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2) {}
+	EtbHardware() : etbPwmUp("etbUp"), dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2, &m_disablePin) {}
 
 	TwoPinDcMotor dcMotor;
 	
@@ -47,9 +48,13 @@ public:
 			// since we have pointer magic here we cannot simply have value parameter
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2,
+			brain_pin_e pinDisable,
 			ExecutorInterface* executor,
 			int frequency) {
 		dcMotor.setType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
+
+		// Configure the disable pin first - ensure things are in a safe state
+		m_disablePin.initPin("ETB Disable", pinDisable);
 
 		m_pinEnable.initPin("ETB Enable", pinEnable);
 		m_pinDir1.initPin("ETB Dir 1", pinDir1);
@@ -96,6 +101,7 @@ DcMotor* initDcMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX)
 		io.controlPin1,
 		io.directionPin1,
 		io.directionPin2,
+		io.disablePin,
 		&ENGINE(executor),
 		CONFIG(etbFreq)
 	);

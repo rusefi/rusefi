@@ -156,7 +156,7 @@ void EtbController::PeriodicTask() {
 	}
 
 	if (startupPositionError) {
-		m_motor->set(0);
+		m_motor->disable();
 		return;
 	}
 
@@ -171,21 +171,21 @@ void EtbController::PeriodicTask() {
 	}
 
 	if (engineConfiguration->pauseEtbControl) {
-		m_motor->set(0);
+		m_motor->disable();
 		return;
 	}
 
 	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
 
 	if (!pedalPosition.Valid) {
-		m_motor->set(0);
+		m_motor->disable();
 		return;
 	}
 
 	SensorResult actualThrottlePosition = Sensor::get(indexToTpsSensor(m_myIndex));
 
 	if (!actualThrottlePosition.Valid) {
-		m_motor->set(0);
+		m_motor->disable();
 		return;
 	}
 
@@ -286,6 +286,7 @@ void EtbController::PeriodicTask() {
 
 	currentEtbDuty = engine->engineState.etbFeedForward + closedLoop;
 
+	m_motor->enable();
 	m_motor->set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
 
 	if (engineConfiguration->isVerboseETB) {
@@ -460,34 +461,19 @@ void setEtbOffset(int value) {
 
 #endif /* EFI_UNIT_TEST */
 
-void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->etbBiasBins[0] = 0;
-	engineConfiguration->etbBiasBins[1] = 1;
-	engineConfiguration->etbBiasBins[2] = 5;
-	/**
-	 * This specific throttle has default position of about 7% open
-	 */
-	engineConfiguration->etbBiasBins[3] = 7;
-	engineConfiguration->etbBiasBins[4] = 14;
-	engineConfiguration->etbBiasBins[5] = 65;
-	engineConfiguration->etbBiasBins[6] = 66;
-	engineConfiguration->etbBiasBins[7] = 100;
+/**
+ * This specific throttle has default position of about 7% open
+ */
+static const float boschBiasBins[] = {
+	0, 1, 5, 7, 14, 65, 66, 100
+};
+static const float boschBiasValues[] = {
+	-15, -15, -10, 0, 19, 20, 26, 28
+};
 
-	/**
-	 * Some negative bias for below-default position
-	 */
-	engineConfiguration->etbBiasValues[0] = -15;
-	engineConfiguration->etbBiasValues[1] = -15;
-	engineConfiguration->etbBiasValues[2] = -10;
-	/**
-	 * Zero bias for index which corresponds to default throttle position, when no current is applied
-	 * This specific throttle has default position of about 7% open
-	 */
-	engineConfiguration->etbBiasValues[3] = 0;
-	engineConfiguration->etbBiasValues[4] = 19;
-	engineConfiguration->etbBiasValues[5] = 20;
-	engineConfiguration->etbBiasValues[6] = 26;
-	engineConfiguration->etbBiasValues[7] = 28;
+void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	copyArray(CONFIG(etbBiasBins), boschBiasBins);
+	copyArray(CONFIG(etbBiasValues), boschBiasValues);
 }
 
 void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -506,17 +492,17 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->throttlePedalUpVoltage = 0; // that's voltage, not ADC like with TPS
 	engineConfiguration->throttlePedalWOTVoltage = 6; // that's voltage, not ADC like with TPS
 
-	engineConfiguration->etb.pFactor = 1;
-	engineConfiguration->etb.iFactor = 0.05;
-	engineConfiguration->etb.dFactor = 0.0;
-	engineConfiguration->etb.periodMs = (1000 / DEFAULT_ETB_LOOP_FREQUENCY);
-	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
+	engineConfiguration->etb = {
+		1,		// Kp
+		10,		// Ki
+		0.05,	// Kd
+		0,		// offset
+		(1000 / DEFAULT_ETB_LOOP_FREQUENCY),
+		-100, 100 // min/max
+	};
+
 	engineConfiguration->etb_iTermMin = -300;
 	engineConfiguration->etb_iTermMax = 300;
-
-	// values are above 100% since we have feedforward part of the total summation
-	engineConfiguration->etb.minValue = -200;
-	engineConfiguration->etb.maxValue = 200;
 }
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
@@ -540,34 +526,16 @@ static void setAutoStep(float value) {
 
 #endif /* EFI_PROD_CODE */
 
-void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->etbBiasBins[0] = 0;
-	engineConfiguration->etbBiasBins[1] = 1;
-	engineConfiguration->etbBiasBins[2] = 2;
-	/**
-	 * This specific throttle has default position of about 4% open
-	 */
-	engineConfiguration->etbBiasBins[3] = 4;
-	engineConfiguration->etbBiasBins[4] = 7;
-	engineConfiguration->etbBiasBins[5] = 98;
-	engineConfiguration->etbBiasBins[6] = 99;
-	engineConfiguration->etbBiasBins[7] = 100;
+static const float defaultBiasBins[] = {
+	0, 1, 2, 4, 7, 98, 99, 100
+};
+static const float defaultBiasValues[] = {
+	-20, -18, -17, 0, 20, 21, 22, 25
+};
 
-	/**
-	 * Some negative bias for below-default position
-	 */
-	engineConfiguration->etbBiasValues[0] = -20;
-	engineConfiguration->etbBiasValues[1] = -18;
-	engineConfiguration->etbBiasValues[2] = -17;
-	/**
-	 * Zero bias for index which corresponds to default throttle position, when no current is applied
-	 * This specific throttle has default position of about 4% open
-	 */
-	engineConfiguration->etbBiasValues[3] = 0;
-	engineConfiguration->etbBiasValues[4] = 20;
-	engineConfiguration->etbBiasValues[5] = 21;
-	engineConfiguration->etbBiasValues[6] = 22;
-	engineConfiguration->etbBiasValues[7] = 25;
+void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	copyArray(CONFIG(etbBiasBins), defaultBiasBins);
+	copyArray(CONFIG(etbBiasValues), defaultBiasValues);
 }
 
 void unregisterEtbPins() {

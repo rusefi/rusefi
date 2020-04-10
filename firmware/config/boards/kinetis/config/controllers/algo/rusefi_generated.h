@@ -496,7 +496,7 @@
 #define cylinderBore_offset_hex 198
 #define cylindersCount_offset 400
 #define cylindersCount_offset_hex 190
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "Mode39", "Mode40"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "Mode39", "Mode40"
 #define debugMapAveraging_offset 807
 #define debugMapAveraging_offset_hex 327
 #define debugMode_offset 2092
@@ -608,20 +608,20 @@
 #define etbIo1_directionPin1_offset_hex 3d4
 #define etbIo1_directionPin2_offset 981
 #define etbIo1_directionPin2_offset_hex 3d5
+#define etbIo1_disablePin_offset 983
+#define etbIo1_disablePin_offset_hex 3d7
 #define etbIo1_offset 980
 #define etbIo1_offset_hex 3d4
-#define etbIo1_pad_offset 983
-#define etbIo1_pad_offset_hex 3d7
 #define etbIo2_controlPin1_offset 986
 #define etbIo2_controlPin1_offset_hex 3da
 #define etbIo2_directionPin1_offset 984
 #define etbIo2_directionPin1_offset_hex 3d8
 #define etbIo2_directionPin2_offset 985
 #define etbIo2_directionPin2_offset_hex 3d9
+#define etbIo2_disablePin_offset 987
+#define etbIo2_disablePin_offset_hex 3db
 #define etbIo2_offset 984
 #define etbIo2_offset_hex 3d8
-#define etbIo2_pad_offset 987
-#define etbIo2_pad_offset_hex 3db
 #define etbNeutralPosition_offset 1471
 #define etbNeutralPosition_offset_hex 5bf
 #define externalKnockSenseAdc_offset 3103

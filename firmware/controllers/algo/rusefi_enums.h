@@ -638,7 +638,7 @@ typedef enum {
 	DBG_SD_CARD = 13,
 	DBG_SR5_PROTOCOL = 14,
 	DBG_KNOCK = 15,
-	DBG_TRIGGER_SYNC = 16,
+	DBG_16 = 16,
 	/**
 	 * See also DBG_ELECTRONIC_THROTTLE_EXTRA
 	 */

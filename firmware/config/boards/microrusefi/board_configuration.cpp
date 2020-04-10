@@ -109,24 +109,14 @@ static void setupEtb() {
 	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
-
-	// set_fsio_output_pin 7 PC8
-#if EFI_FSIO
-	// set_rpn_expression 8 "1"
-	// disable ETB by default
-	setFsio(7, GPIOC_8, "1" PASS_CONFIG_PARAMETER_SUFFIX);
-	// enable ETB
-	// set_rpn_expression 8 "0"
-	//setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
-
+	// Disable pin
+	engineConfiguration->etbIo[0].disablePin = GPIOC_8;
+	// Unused
+	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
 	// engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
-
-	// Unused
-	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
