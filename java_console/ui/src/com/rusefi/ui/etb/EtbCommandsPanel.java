@@ -59,7 +59,8 @@ public class EtbCommandsPanel {
 
         content.add(mockPpsPanel);
 
-        content.add(LiveDocPanel.createPanel("ETB", ElectronicThrottleMeta.CONTENT));
+        // todo: restore this functionality
+        // content.add(LiveDocPanel.createPanel("ETB", ElectronicThrottleMeta.CONTENT));
 
         content.add(new EnumConfigField(Fields.DEBUGMODE, "Debug Mode").getContent());
 
