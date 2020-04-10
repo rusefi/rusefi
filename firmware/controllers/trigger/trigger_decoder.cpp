@@ -498,7 +498,6 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 		DISPLAY(DISPLAY_FIELD(vvtCamCounter));
 
 		if (triggerShape->isSynchronizationNeeded) {
-			// this is getting a little out of hand, any ideas?
 
 			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
 
