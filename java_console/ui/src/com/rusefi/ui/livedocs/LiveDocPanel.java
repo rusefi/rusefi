@@ -223,7 +223,8 @@ public class LiveDocPanel {
 
         liveDocs.add(createPanel("Idle", IdleThreadMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(createPanel("ETB", ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
+        // todo: restore this functionality
+        // liveDocs.add(createPanel("ETB", ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }
