@@ -495,7 +495,7 @@ struct etb_io {
 	/**
 	 * offset 3
 	 */
-	uint8_t pad;
+	brain_pin_e disablePin;
 	/** total size 4*/
 };
 

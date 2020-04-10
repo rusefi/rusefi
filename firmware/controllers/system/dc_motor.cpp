@@ -7,13 +7,31 @@
  */
 
 #include "dc_motor.h"
+#include "efi_gpio.h"
 #include "pwm_generator_logic.h"
 
-TwoPinDcMotor::TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2)
+TwoPinDcMotor::TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2, OutputPin* disablePin)
     : m_enable(enable)
     , m_dir1(dir1)
     , m_dir2(dir2)
+	, m_disable(disablePin)
 {
+	disable();
+}
+
+void TwoPinDcMotor::enable() {
+	if (m_disable) {
+		m_disable->setValue(false);
+	}
+}
+
+void TwoPinDcMotor::disable() {
+	if (m_disable) {
+		m_disable->setValue(true);
+	}
+
+	// Also set the duty to zero
+	set(0);
 }
 
 bool TwoPinDcMotor::isOpenDirection() const {
