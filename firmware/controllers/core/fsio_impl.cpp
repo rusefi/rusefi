@@ -24,6 +24,7 @@ EXTERN_ENGINE;
 #include "rpm_calculator.h"
 #include "efi_gpio.h"
 #include "pwm_generator_logic.h"
+#include "sensor.h"
 
 /**
  * in case of zero frequency pin is operating as simple on/off. '1' for ON and '0' for OFF
@@ -147,6 +148,8 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engine->isInShutdownMode();
 	case LE_METHOD_VBATT:
 		return getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
+	case LE_METHOD_TPS:
+		return Sensor::get(SensorType::DriverThrottleIntent).value_or(0);
 #include "fsio_getters.def"
 	default:
 		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO unexpected %d", action);
