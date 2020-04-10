@@ -219,7 +219,7 @@ void EtbController::PeriodicTask() {
 		float autotuneAmplitude = 15;
 
 		// Bang-bang control the output to induce oscillation
-		closedLoop = autotuneAmplitude * isPositive ? -1 : 1;
+		closedLoop = autotuneAmplitude * (isPositive ? -1 : 1);
 
 		// End of cycle - record & reset
 		if (!isPositive && m_lastIsPositive) {
