@@ -193,27 +193,6 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
-	if (engine->etbAutoTune) {
-		autoTune.input = actualThrottlePosition.Value;
-		bool result = autoTune.Runtime(&logger);
-
-		tuneWorkingPid.updateFactors(autoTune.output, 0, 0);
-
-		float value = tuneWorkingPid.getOutput(50, actualThrottlePosition.Value);
-		scheduleMsg(&logger, "AT input=%f output=%f PID=%f", autoTune.input,
-				autoTune.output,
-				value);
-		scheduleMsg(&logger, "AT PID=%f", value);
-		m_motor->set(ETB_PERCENT_TO_DUTY(value));
-
-		if (result) {
-			scheduleMsg(&logger, "GREAT NEWS! %f/%f/%f", autoTune.GetKp(), autoTune.GetKi(), autoTune.GetKd());
-		}
-
-		return;
-	}
-
-
 	float rpm = GET_RPM();
 	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition.Value);
 	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
@@ -236,8 +215,74 @@ void EtbController::PeriodicTask() {
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
-	currentEtbDuty = engine->engineState.etbFeedForward +
-			m_pid.getOutput(targetPosition, actualThrottlePosition.Value);
+	float closedLoop;
+
+	if (engine->etbAutoTune) {
+		bool isPositive = actualThrottlePosition.Value > targetPosition;
+
+		float autotuneAmplitude = 15;
+
+		// Bang-bang control the output to induce oscillation
+		closedLoop = autotuneAmplitude * isPositive ? -1 : 1;
+
+		// End of cycle - record & reset
+		if (!isPositive && m_lastIsPositive) {
+			efitick_t now = getTimeNowNt();
+
+			// Determine period
+			efitick_t cycleTime = now - m_cycleStartTime;
+			m_cycleStartTime = now;
+
+			// Determine amplitude
+			float a = m_maxCycleTps - m_minCycleTps;
+
+			// Reset bounds
+			m_minCycleTps = 100;
+			m_maxCycleTps = 0;
+
+
+			// Math is for Åström–Hägglund (relay) auto tuning
+			// https://warwick.ac.uk/fac/cross_fac/iatl/reinvention/archive/volume5issue2/hornsey
+
+			// Publish to TS state
+			if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
+				// a - amplitude of output
+				tsOutputChannels.debugFloatField1 = a;
+				float b = 2 * autotuneAmplitude;
+				// b - amplitude of input
+				tsOutputChannels.debugFloatField2 = b;
+				// Tu - oscillation period
+				float tu = NT2US((float)cycleTime) / 1e6;
+				tsOutputChannels.debugFloatField3 = tu;
+
+				// Ku
+				float ku = 4 * b / (3.14159f * a);
+				tsOutputChannels.debugFloatField4 = ku;
+				// Kp
+				tsOutputChannels.debugFloatField5 = 0.35f * ku;
+				// Ki
+				tsOutputChannels.debugFloatField6 = 0.25f * ku / tu;
+				// Kd
+				tsOutputChannels.debugFloatField7 = 0.08f * ku * tu;
+			}
+		}
+
+		m_lastIsPositive = isPositive;
+
+		// Find the min/max of each cycle
+		if (actualThrottlePosition.Value < m_minCycleTps) {
+			m_minCycleTps = actualThrottlePosition.Value;
+		}
+
+		if (actualThrottlePosition.Value > m_maxCycleTps) {
+			m_maxCycleTps = actualThrottlePosition.Value;
+		}
+	} else {
+		// Normal case - use PID to compute closed loop part
+		closedLoop = m_pid.getOutput(targetPosition, actualThrottlePosition.Value);
+	}
+
+	currentEtbDuty = engine->engineState.etbFeedForward + closedLoop;
 
 	m_motor->set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
 
@@ -563,11 +608,6 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
-
-#if 0
-	// not alive code
-	autoTune.SetOutputStep(0.1);
-#endif
 
 #if 0 && ! EFI_UNIT_TEST
 	percent_t startupThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
