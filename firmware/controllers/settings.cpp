@@ -687,6 +687,10 @@ static void setCj125HeaterPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->wboHeaterPin, "cj125 heater");
 }
 
+static void setTriggerSyncPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->debugTriggerSync, "trigger sync");
+}
+
 static void setStarterRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
 }
@@ -1441,6 +1445,7 @@ void initSettings(void) {
 	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
 	addConsoleActionS("set_cj125_cs_pin", setCj125CsPin);
 	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
+	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
 
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
