@@ -42,6 +42,11 @@ WaveChart waveChart;
 
 trigger_central_s::trigger_central_s() : hwEventCounters() {
 
+	static_assert(TRIGGER_TYPE_60_2 == TT_TOOTHED_WHEEL_60_2, "One we will have one source of this magic constant");
+	static_assert(TRIGGER_TYPE_36_1 == TT_TOOTHED_WHEEL_36_1, "One we will have one source of this magic constant");
+
+
+
 }
 
 TriggerCentral::TriggerCentral() : trigger_central_s() {

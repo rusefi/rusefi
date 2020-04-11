@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Apr 10 17:27:25 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Apr 11 01:15:22 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1292,6 +1292,8 @@ public class Fields {
 	public static final int trigger_todoRemoveMeOneDay0_offset_hex = 210;
 	public static final int trigger_todoRemoveMeOneDay1_offset = 528;
 	public static final int trigger_todoRemoveMeOneDay1_offset_hex = 210;
+	public static final int TRIGGER_TYPE_36_1 = 9;
+	public static final int TRIGGER_TYPE_60_2 = 8;
 	public static final int trigger_type_offset = 524;
 	public static final int trigger_unusedBit_4_10_offset = 528;
 	public static final int trigger_unusedBit_4_10_offset_hex = 210;
