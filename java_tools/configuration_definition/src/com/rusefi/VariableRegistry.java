@@ -101,7 +101,7 @@ public class VariableRegistry extends TreeMap<String, String> {
         SystemOut.println("Writing to " + fileName);
         LazyFile cHeader = new LazyFile(fileName);
 
-        cHeader.write("//\n// " + ConfigDefinition.GENERATED_AUTOMATICALLY_TAG + ConfigDefinition.definitionInputFile + "\n//\n\n");
+        cHeader.write("//\n// " + ConfigDefinition.getGeneratedAutomaticallyTag() + ConfigDefinition.definitionInputFile + "\n//\n\n");
         cHeader.write(getDefinesSection());
         cHeader.close();
     }
