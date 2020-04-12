@@ -454,26 +454,40 @@ struct stm32_hardware_pwm : public hardware_pwm {
 	PWMDriver* const Driver;
 	const uint8_t Channel;
 	const uint8_t AlternateFunc;
-	const PWMConfig* const Config;
 
-	stm32_hardware_pwm(brain_pin_e pin, PWMDriver* drv, uint8_t channel, uint8_t altFunc, const PWMConfig* config)
+	stm32_hardware_pwm(brain_pin_e pin, PWMDriver* drv, uint8_t channel, uint8_t altFunc)
 		: BrainPin(pin)
 		, Driver(drv)
 		, Channel(channel)
 		, AlternateFunc(altFunc)
-		, Config(config)
 	{
 	}
 
-	pwmcnt_t getHighTime(float duty) const {
-		auto period = Config->period;
+	static constexpr uint32_t c_pwmPeriodCounts = 1000;
 
-		return period * duty;
+	pwmcnt_t getHighTime(float duty) const {
+		return c_pwmPeriodCounts * duty;
 	}
 
 	void start(const char* msg, float frequency, float duty) {
+		uint32_t pwmClock = c_pwmPeriodCounts * frequency;
+
+		const PWMConfig pwmcfg = {
+			pwmClock,
+			1000,		// 1000 count period - 0.1% accuracy
+			nullptr,
+			{
+				{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
+				{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
+				{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
+				{PWM_OUTPUT_ACTIVE_HIGH, nullptr}
+			},
+			0,
+			0
+		};
+
 		// Start the timer running
-		pwmStart(Driver, Config);
+		pwmStart(Driver, &pwmcfg);
 
 		// Set initial duty cycle
 		setDuty(duty);
@@ -487,36 +501,22 @@ struct stm32_hardware_pwm : public hardware_pwm {
 	}
 };
 
-static const PWMConfig pwmcfg = {
-	1000000,         /* 1MHz PWM clock frequency.   */
-	1000,            /* Initial period 1ms = 1khz */
-	nullptr,
-	{
-		{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
-		{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
-		{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
-		{PWM_OUTPUT_ACTIVE_HIGH, nullptr}
-	},
-	0,
-	0
-};
-
 stm32_hardware_pwm pwmChannels[] = {
-	stm32_hardware_pwm(GPIOB_6, &PWMD4, 0, 2, &pwmcfg),
-	stm32_hardware_pwm(GPIOB_7, &PWMD4, 1, 2, &pwmcfg),
-	stm32_hardware_pwm(GPIOB_8, &PWMD4, 2, 2, &pwmcfg),
-	stm32_hardware_pwm(GPIOB_9, &PWMD4, 3, 2, &pwmcfg),
+	stm32_hardware_pwm(GPIOB_6, &PWMD4, 0, 2),
+	stm32_hardware_pwm(GPIOB_7, &PWMD4, 1, 2),
+	stm32_hardware_pwm(GPIOB_8, &PWMD4, 2, 2),
+	stm32_hardware_pwm(GPIOB_9, &PWMD4, 3, 2),
 
-	stm32_hardware_pwm(GPIOC_6, &PWMD8, 0, 3, &pwmcfg),
-	stm32_hardware_pwm(GPIOC_7, &PWMD8, 1, 3, &pwmcfg),
-	stm32_hardware_pwm(GPIOC_8, &PWMD8, 2, 3, &pwmcfg),
-	stm32_hardware_pwm(GPIOC_9, &PWMD8, 3, 3, &pwmcfg),
+	stm32_hardware_pwm(GPIOC_6, &PWMD8, 0, 3),
+	stm32_hardware_pwm(GPIOC_7, &PWMD8, 1, 3),
+	stm32_hardware_pwm(GPIOC_8, &PWMD8, 2, 3),
+	stm32_hardware_pwm(GPIOC_9, &PWMD8, 3, 3),
 
-	stm32_hardware_pwm(GPIOD_12, &PWMD4, 0, 2, &pwmcfg),
-	stm32_hardware_pwm(GPIOD_13, &PWMD4, 1, 2, &pwmcfg),
-	stm32_hardware_pwm(GPIOD_14, &PWMD4, 2, 2, &pwmcfg),
-	stm32_hardware_pwm(GPIOD_15, &PWMD4, 3, 2, &pwmcfg),
-};
+	stm32_hardware_pwm(GPIOD_12, &PWMD4, 0, 2),
+	stm32_hardware_pwm(GPIOD_13, &PWMD4, 1, 2),
+	stm32_hardware_pwm(GPIOD_14, &PWMD4, 2, 2),
+	stm32_hardware_pwm(GPIOD_15, &PWMD4, 3, 2),
+
 };
 
 /*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty)
