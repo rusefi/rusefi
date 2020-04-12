@@ -29,9 +29,9 @@ public class AnyCommandTest {
     @Test
     public void testSetFSIOexpressionWithFunnyQuotes() {
         assertEquals("tps > 10", AnyCommand.unquote("\"tps > 10\""));
-        assertEquals("tps > 10", AnyCommand.unquote("“tps > 10”"));
+        assertEquals("tps > 10", AnyCommand.unquote("\u201Ctps > 10\u201D"));
 
 
-        assertEquals("set_rpn_expression 1 \"tps 10 >\"", AnyCommand.prepareCommand("Set_fsio_expression 1 “tps > 10”"));
+        assertEquals("set_rpn_expression 1 \"tps 10 >\"", AnyCommand.prepareCommand("Set_fsio_expression 1 \u201Ctps > 10\u201D"));
     }
 }

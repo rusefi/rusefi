@@ -73,6 +73,9 @@ struct_no_prefix engine_configuration_s
 
 #define ETB_BIAS_CURVE_LENGTH 8
 
+#define TRIGGER_TYPE_60_2 8
+#define TRIGGER_TYPE_36_1 9
+
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
 

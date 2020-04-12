@@ -19,9 +19,8 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * 2/4/15
  */
 public class FirmwareFlasher {
-    // Even on Windows openOCD insists on "/" for path separator
-    public static final String IMAGE_FILE = INPUT_FILES_PATH + File.separator + "rusefi.bin";
-    public static final String IMAGE_NO_ASSERTS_FILE = INPUT_FILES_PATH + File.separator + "rusefi_no_asserts.bin";
+    public static final String IMAGE_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
+    public static final String IMAGE_NO_ASSERTS_FILE = INPUT_FILES_PATH + "/" + "rusefi_no_asserts.bin";
     /**
      * SWD ST-LINK/V2 mode
      */

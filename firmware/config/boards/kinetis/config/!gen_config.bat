@@ -25,6 +25,7 @@ java ^
  -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration/rusefi_config.txt ^
  -ts_destination tunerstudio ^
+ -tool kineris_gen_config.bat ^
  -with_c_defines false ^
  -initialize_to_zero false ^
  -ts_output_name rusefi_kinetis.ini ^

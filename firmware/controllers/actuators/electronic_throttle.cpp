@@ -249,6 +249,7 @@ void EtbController::PeriodicTask() {
 #if EFI_TUNER_STUDIO
 			if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
 				// a - amplitude of output (TPS %)
+
 				tsOutputChannels.debugFloatField1 = m_a;
 				float b = 2 * autotuneAmplitude;
 				// b - amplitude of input (Duty cycle %)

@@ -46,7 +46,8 @@ static SPIDriver *driver;
 
 
 static void showStats() {
-	scheduleMsg(logger, "MC %d", mcChipId);
+	// x9D is product code or something, and 43 is the revision?
+	scheduleMsg(logger, "MC %x %s", mcChipId, (mcChipId  >> 8) == 0x9D ? "hooray!" : "not hooray :(");
 }
 
 // Mostly unused
