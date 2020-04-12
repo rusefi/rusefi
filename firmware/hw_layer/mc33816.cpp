@@ -268,20 +268,9 @@ void initMc33816(Logging *sharedLogger) {
 	logger = sharedLogger;
 
 	//
-	// see setTest33816EngineConfiguration
+	// see setTest33816EngineConfiguration for default configuration
 	//
-	// default spi3mosiPin PB5
-	// default spi3misoPin PB4
-	// default spi3sckPin  PB3
-	// ideally disable isSdCardEnabled since it's on SPI3
 
-	// uncomment this to hard-code something
-/* fixing continues integration - hiding these values
-	CONFIG(mc33816_cs) = GPIOD_7;
-	CONFIG(mc33816_rstb) = GPIOD_5;
-	CONFIG(mc33816_driven) = GPIOD_6;
-*/
-	// and more to add...
 	if (CONFIG(mc33816_cs) == GPIO_UNASSIGNED)
 		return;
 
