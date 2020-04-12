@@ -447,5 +447,75 @@ uintptr_t getFlashAddrSecondCopy() {
 	return 0x080C0000;
 }
 
+
+
+struct stm32_hardware_pwm : public hardware_pwm {
+	const brain_pin_e BrainPin;
+	PWMDriver* const Driver;
+	const uint8_t Channel;
+	const uint8_t AlternateFunc;
+	const PWMConfig* const Config;
+
+	stm32_hardware_pwm(brain_pin_e pin, PWMDriver* drv, uint8_t channel, uint8_t altFunc, const PWMConfig* config)
+		: BrainPin(pin)
+		, Driver(drv)
+		, Channel(channel)
+		, AlternateFunc(altFunc)
+		, Config(config)
+	{
+	}
+
+	pwmcnt_t getHighTime(float duty) const {
+		auto period = Config->period;
+
+		return period * duty;
+	}
+
+	void start(const char* msg, float frequency, float duty) {
+		pwmStart(Driver, Config);
+		setDuty(duty);
+
+		efiSetPadMode(msg, BrainPin, PAL_MODE_ALTERNATE(AlternateFunc));
+	}
+
+	void setDuty(float duty) override {
+		pwmEnableChannel(Driver, Channel, getHighTime(duty));
+	}
+};
+
+static const PWMConfig pwmcfg = {
+	1000000,         /* 1MHz PWM clock frequency.   */
+	1000,            /* Initial period 1ms = 1khz */
+	nullptr,
+	{
+		{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
+		{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
+		{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
+		{PWM_OUTPUT_ACTIVE_HIGH, nullptr}
+	},
+	0,
+	0
+};
+
+stm32_hardware_pwm pwmChannels[] = {
+	stm32_hardware_pwm(GPIOC_7, &PWMD8, 2, 3, &pwmcfg),
+	stm32_hardware_pwm(GPIOD_12, &PWMD4, 1, 3, &pwmcfg),
+	stm32_hardware_pwm(GPIOD_13, &PWMD4, 2, 3, &pwmcfg),
+};
+
+/*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty)
+{
+	for (size_t i = 0; i < efi::size(pwmChannels); i++) {
+		auto& channel = pwmChannels[i];
+		if (channel.BrainPin == pin) {
+			channel.start(msg, frequencyHz, duty);
+
+			return &channel;
+		}
+	}
+
+	return nullptr;
+}
+
 #endif /* EFI_PROD_CODE */
 

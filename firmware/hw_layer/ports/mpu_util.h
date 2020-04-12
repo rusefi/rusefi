@@ -27,6 +27,12 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 void turnOnSpi(spi_device_e device);
 #endif // HAL_USE_SPI
 
+// Hardware PWM
+struct hardware_pwm {
+	static hardware_pwm* tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty);
+	virtual void setDuty(float duty) = 0;
+};
+
 // Brownout Reset
 typedef enum {
 	BOR_Result_Ok = 0x00,

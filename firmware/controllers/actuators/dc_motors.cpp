@@ -56,31 +56,30 @@ public:
 		// Configure the disable pin first - ensure things are in a safe state
 		m_disablePin.initPin("ETB Disable", pinDisable);
 
-		m_pinEnable.initPin("ETB Enable", pinEnable);
-		m_pinDir1.initPin("ETB Dir 1", pinDir1);
-		m_pinDir2.initPin("ETB Dir 2", pinDir2);
-
 		// Clamp to >100hz
 		int clampedFrequency = maxI(100, frequency);
 
 // no need to complicate event queue with ETB PWM in unit tests
 #if ! EFI_UNIT_TEST
-		startSimplePwm(&m_pwmEnable, "ETB Enable",
+		startSimplePwmHard(&m_pwmEnable, "ETB Enable",
 			executor,
+			pinEnable,
 			&m_pinEnable,
 			clampedFrequency,
 			0
 		);
 
-		startSimplePwm(&m_pwmDir1, "ETB Dir 1",
+		startSimplePwmHard(&m_pwmDir1, "ETB Dir 1",
 			executor,
+			pinDir1,
 			&m_pinDir1,
 			clampedFrequency,
 			0
 		);
 
-		startSimplePwm(&m_pwmDir2, "ETB Dir 2",
+		startSimplePwmHard(&m_pwmDir2, "ETB Dir 2",
 			executor,
+			pinDir2,
 			&m_pinDir2,
 			clampedFrequency,
 			0

@@ -13,6 +13,7 @@
 #include "pwm_generator_logic.h"
 #include "pwm_generator.h"
 #include "perf_trace.h"
+#include "mpu_util.h"
 
 /**
  * We need to limit the number of iterations in order to avoid precision loss while calculating
@@ -76,6 +77,11 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		warning(CUSTOM_DUTY_TOO_HIGH, "spwd:dutyCycle %.2f", dutyCycle);
 		dutyCycle = 1;
 	}
+
+	if (hardPwm) {
+		hardPwm->setDuty(dutyCycle);
+	}
+
 	if (dutyCycle == 0.0f && stateChangeCallback != NULL) {
 		/**
 		 * set the pin low just to be super sure
@@ -357,6 +363,19 @@ void startSimplePwmExt(SimplePwm *state, const char *msg,
 	output->initPin(msg, brainPin);
 
 	startSimplePwm(state, msg, executor, output, frequency, dutyCycle, stateChangeCallback);
+}
+
+void startSimplePwmHard(SimplePwm *state, const char *msg,
+		ExecutorInterface *executor,
+		brain_pin_e brainPin, OutputPin *output, float frequency,
+		float dutyCycle) {
+	auto hardPwm = hardware_pwm::tryInitPin(msg, brainPin, frequency, dutyCycle);
+
+	if (hardPwm) {
+		state->hardPwm = hardPwm;
+	} else {
+		startSimplePwmExt(state, msg, executor, brainPin, output, frequency, dutyCycle);
+	}
 }
 
 /**
