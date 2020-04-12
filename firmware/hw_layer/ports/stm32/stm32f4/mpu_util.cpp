@@ -472,14 +472,18 @@ struct stm32_hardware_pwm : public hardware_pwm {
 	}
 
 	void start(const char* msg, float frequency, float duty) {
+		// Start the timer running
 		pwmStart(Driver, Config);
+
+		// Set initial duty cycle
 		setDuty(duty);
 
+		// Finally connect the timer to physical pin
 		efiSetPadMode(msg, BrainPin, PAL_MODE_ALTERNATE(AlternateFunc));
 	}
 
 	void setDuty(float duty) override {
-		pwmEnableChannel(Driver, Channel, getHighTime(duty));
+		pwm_lld_enable_channel(Driver, Channel, getHighTime(duty));
 	}
 };
 
@@ -498,9 +502,9 @@ static const PWMConfig pwmcfg = {
 };
 
 stm32_hardware_pwm pwmChannels[] = {
-	stm32_hardware_pwm(GPIOC_7, &PWMD8, 2, 3, &pwmcfg),
-	stm32_hardware_pwm(GPIOD_12, &PWMD4, 1, 3, &pwmcfg),
-	stm32_hardware_pwm(GPIOD_13, &PWMD4, 2, 3, &pwmcfg),
+	stm32_hardware_pwm(GPIOC_7, &PWMD8, 1, 3, &pwmcfg),
+	stm32_hardware_pwm(GPIOD_12, &PWMD4, 0, 3, &pwmcfg),
+	stm32_hardware_pwm(GPIOD_13, &PWMD4, 1, 3, &pwmcfg),
 };
 
 /*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty)
