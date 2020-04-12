@@ -535,8 +535,8 @@ case DBG_START_STOP:
   return "DBG_START_STOP";
 case DBG_LAUNCH:
   return "DBG_LAUNCH";
-case DBG_39:
-  return "DBG_39";
+case DBG_ETB_AUTOTUNE:
+  return "DBG_ETB_AUTOTUNE";
 case DBG_40:
   return "DBG_40";
 case DBG_ALTERNATOR_PID:

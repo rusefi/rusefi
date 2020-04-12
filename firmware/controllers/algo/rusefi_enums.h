@@ -675,7 +675,7 @@ typedef enum {
 	DBG_BOOST = 36,
 	DBG_START_STOP = 37,
 	DBG_LAUNCH = 38,
-	DBG_39 = 39,
+	DBG_ETB_AUTOTUNE = 39,
 	DBG_40 = 40,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,

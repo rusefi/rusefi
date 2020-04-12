@@ -89,10 +89,6 @@
 #define ETB_MAX_COUNT 2
 #endif /* ETB_MAX_COUNT */
 
-static pid_s tuneWorkingPidSettings;
-static Pid tuneWorkingPid(&tuneWorkingPidSettings);
-static PID_AutoTune autoTune;
-
 static LoggingWithStorage logger("ETB");
 static pedal2tps_t pedal2tpsMap("Pedal2Tps", 1);
 
@@ -193,27 +189,6 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
-	if (engine->etbAutoTune) {
-		autoTune.input = actualThrottlePosition.Value;
-		bool result = autoTune.Runtime(&logger);
-
-		tuneWorkingPid.updateFactors(autoTune.output, 0, 0);
-
-		float value = tuneWorkingPid.getOutput(50, actualThrottlePosition.Value);
-		scheduleMsg(&logger, "AT input=%f output=%f PID=%f", autoTune.input,
-				autoTune.output,
-				value);
-		scheduleMsg(&logger, "AT PID=%f", value);
-		m_motor->set(ETB_PERCENT_TO_DUTY(value));
-
-		if (result) {
-			scheduleMsg(&logger, "GREAT NEWS! %f/%f/%f", autoTune.GetKp(), autoTune.GetKi(), autoTune.GetKd());
-		}
-
-		return;
-	}
-
-
 	float rpm = GET_RPM();
 	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition.Value);
 	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
@@ -236,8 +211,80 @@ void EtbController::PeriodicTask() {
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
-	currentEtbDuty = engine->engineState.etbFeedForward +
-			m_pid.getOutput(targetPosition, actualThrottlePosition.Value);
+	float closedLoop;
+
+	// Only allow autotune with stopped engine
+	if (rpm == 0 && engine->etbAutoTune) {
+		bool isPositive = actualThrottlePosition.Value > targetPosition;
+
+		float autotuneAmplitude = 15;
+
+		// Bang-bang control the output to induce oscillation
+		closedLoop = autotuneAmplitude * (isPositive ? -1 : 1);
+
+		// End of cycle - record & reset
+		if (!isPositive && m_lastIsPositive) {
+			efitick_t now = getTimeNowNt();
+
+			// Determine period
+			efitick_t cycleTime = now - m_cycleStartTime;
+			m_cycleStartTime = now;
+
+			// Determine amplitude
+			float a = m_maxCycleTps - m_minCycleTps;
+
+			// Reset bounds
+			m_minCycleTps = 100;
+			m_maxCycleTps = 0;
+
+			// Math is for Åström–Hägglund (relay) auto tuning
+			// https://warwick.ac.uk/fac/cross_fac/iatl/reinvention/archive/volume5issue2/hornsey
+
+			// Publish to TS state
+#if EFI_TUNER_STUDIO
+			if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
+				// a - amplitude of output (TPS %)
+				tsOutputChannels.debugFloatField1 = a;
+				float b = 2 * autotuneAmplitude;
+				// b - amplitude of input (Duty cycle %)
+				tsOutputChannels.debugFloatField2 = b;
+				// Tu - oscillation period (seconds)
+				float tu = NT2US((float)cycleTime) / 1e6;
+				tsOutputChannels.debugFloatField3 = tu;
+
+				// Ultimate gain per A-H relay tuning rule
+				// Ku
+				float ku = 4 * b / (3.14159f * a);
+				tsOutputChannels.debugFloatField4 = ku;
+
+				// The multipliers below are somewhere near the "no overshoot" 
+				// and "some overshoot" flavors of the Ziegler-Nichols method
+				// Kp
+				tsOutputChannels.debugFloatField5 = 0.35f * ku;
+				// Ki
+				tsOutputChannels.debugFloatField6 = 0.25f * ku / tu;
+				// Kd
+				tsOutputChannels.debugFloatField7 = 0.08f * ku * tu;
+			}
+#endif
+		}
+
+		m_lastIsPositive = isPositive;
+
+		// Find the min/max of each cycle
+		if (actualThrottlePosition.Value < m_minCycleTps) {
+			m_minCycleTps = actualThrottlePosition.Value;
+		}
+
+		if (actualThrottlePosition.Value > m_maxCycleTps) {
+			m_maxCycleTps = actualThrottlePosition.Value;
+		}
+	} else {
+		// Normal case - use PID to compute closed loop part
+		closedLoop = m_pid.getOutput(targetPosition, actualThrottlePosition.Value);
+	}
+
+	currentEtbDuty = engine->engineState.etbFeedForward + closedLoop;
 
 	m_motor->enable();
 	m_motor->set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
@@ -477,15 +524,6 @@ static void setAutoStep(float value) {
 	autoTune.SetOutputStep(value);
 }
 
-static void setAutoPeriod(int period) {
-	tuneWorkingPidSettings.periodMs = period;
-	autoTune.reset();
-}
-
-static void setAutoOffset(int offset) {
-	tuneWorkingPidSettings.offset = offset;
-	autoTune.reset();
-}
 #endif /* EFI_PROD_CODE */
 
 static const float defaultBiasBins[] = {
@@ -532,11 +570,6 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
-#if 0
-	// not alive code
-	autoTune.SetOutputStep(0.1);
-#endif
-
 #if 0 && ! EFI_UNIT_TEST
 	percent_t startupThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (absF(startupThrottlePosition - engineConfiguration->etbNeutralPosition) > STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD) {
@@ -567,23 +600,6 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// manual duty cycle control without PID. Percent value from 0 to 100
 	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
-#endif /* EFI_PROD_CODE */
-
-#if EFI_PROD_CODE && 0
-	tuneWorkingPidSettings.pFactor = 1;
-	tuneWorkingPidSettings.iFactor = 0;
-	tuneWorkingPidSettings.dFactor = 0;
-//	tuneWorkingPidSettings.offset = 10; // todo: not hard-coded value
-	//todo tuneWorkingPidSettings.periodMs = 10;
-	tuneWorkingPidSettings.minValue = 0;
-	tuneWorkingPidSettings.maxValue = 100;
-	tuneWorkingPidSettings.periodMs = 100;
-
-	// this is useful once you do "enable etb_auto"
-	addConsoleActionF("set_etbat_output", setTempOutput);
-	addConsoleActionF("set_etbat_step", setAutoStep);
-	addConsoleActionI("set_etbat_period", setAutoPeriod);
-	addConsoleActionI("set_etbat_offset", setAutoOffset);
 #endif /* EFI_PROD_CODE */
 
 	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
