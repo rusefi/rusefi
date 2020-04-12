@@ -516,7 +516,6 @@ stm32_hardware_pwm pwmChannels[] = {
 	stm32_hardware_pwm(GPIOD_13, &PWMD4, 1, 2),
 	stm32_hardware_pwm(GPIOD_14, &PWMD4, 2, 2),
 	stm32_hardware_pwm(GPIOD_15, &PWMD4, 3, 2),
-
 };
 
 /*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty)
