@@ -14,7 +14,7 @@
 #include "pwm_generator.h"
 #include "perf_trace.h"
 
-#if !EFI_UNIT_TEST
+#if EFI_PROD_CODE
 #include "mpu_util.h"
 #endif
 
@@ -81,7 +81,7 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		dutyCycle = 1;
 	}
 
-#if !EFI_UNIT_TEST
+#if EFI_PROD_CODE
 	if (hardPwm) {
 		hardPwm->setDuty(dutyCycle);
 	}
@@ -374,7 +374,7 @@ void startSimplePwmHard(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
 		float dutyCycle) {
-#if !EFI_UNIT_TEST
+#if EFI_PROD_CODE
 	auto hardPwm = hardware_pwm::tryInitPin(msg, brainPin, frequency, dutyCycle);
 
 	if (hardPwm) {
@@ -382,7 +382,7 @@ void startSimplePwmHard(SimplePwm *state, const char *msg,
 	} else {
 #endif
 		startSimplePwmExt(state, msg, executor, brainPin, output, frequency, dutyCycle);
-#if !EFI_UNIT_TEST
+#if EFI_PROD_CODE
 	}
 #endif
 }
