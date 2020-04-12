@@ -352,7 +352,7 @@ bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 }
 
 void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-		efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape) {
+		efitick_t nowNt, TriggerWaveform *triggerShape) {
 
 
 	if (triggerCycleCallback) {
@@ -627,7 +627,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 			nextTriggerEvent()
 			;
 
-			onShaftSynchronization(triggerCycleCallback, nowNt, triggerWheel, triggerShape);
+			onShaftSynchronization(triggerCycleCallback, nowNt, triggerShape);
 
 		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()

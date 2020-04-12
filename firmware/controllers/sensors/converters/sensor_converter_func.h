@@ -11,5 +11,9 @@ struct SensorConverter {
 	SensorConverter() = default;
 
 	virtual SensorResult convert(float raw) const = 0;
-	virtual void showInfo(Logging* logger, float testRawValue) const {}
+	virtual void showInfo(Logging* logger, float testRawValue) const {
+		// Unused base - nothing to print
+		(void)logger;
+		(void)testRawValue;
+	}
 };
