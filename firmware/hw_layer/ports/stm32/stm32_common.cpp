@@ -139,7 +139,7 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 
 #if EFI_PROD_CODE
 
-#if PAL_USE_PWM
+#if HAL_USE_PWM
 struct stm32_hardware_pwm : public hardware_pwm {
 	const brain_pin_e BrainPin;
 	PWMDriver* const Driver;
