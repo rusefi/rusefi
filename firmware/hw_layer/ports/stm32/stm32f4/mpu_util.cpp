@@ -502,9 +502,14 @@ static const PWMConfig pwmcfg = {
 };
 
 stm32_hardware_pwm pwmChannels[] = {
+	stm32_hardware_pwm(GPIOC_6, &PWMD8, 0, 3, &pwmcfg),
 	stm32_hardware_pwm(GPIOC_7, &PWMD8, 1, 3, &pwmcfg),
-	stm32_hardware_pwm(GPIOD_12, &PWMD4, 0, 3, &pwmcfg),
-	stm32_hardware_pwm(GPIOD_13, &PWMD4, 1, 3, &pwmcfg),
+	stm32_hardware_pwm(GPIOC_8, &PWMD8, 2, 3, &pwmcfg),
+	stm32_hardware_pwm(GPIOC_9, &PWMD8, 3, 3, &pwmcfg),
+	stm32_hardware_pwm(GPIOD_12, &PWMD4, 0, 2, &pwmcfg),
+	stm32_hardware_pwm(GPIOD_13, &PWMD4, 1, 2, &pwmcfg),
+	stm32_hardware_pwm(GPIOD_14, &PWMD4, 2, 2, &pwmcfg),
+	stm32_hardware_pwm(GPIOD_15, &PWMD4, 3, 2, &pwmcfg),
 };
 
 /*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty)
