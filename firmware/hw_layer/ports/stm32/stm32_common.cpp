@@ -139,6 +139,7 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 
 #if EFI_PROD_CODE
 
+#if PAL_USE_PWM
 struct stm32_hardware_pwm : public hardware_pwm {
 	const brain_pin_e BrainPin;
 	PWMDriver* const Driver;
@@ -237,6 +238,7 @@ stm32_hardware_pwm pwmChannels[] = {
 
 	return nullptr;
 }
+#endif
 
 void jump_to_bootloader() {
 	// leave DFU breadcrumb which assmebly startup code would check, see [rusefi][DFU] section in assembly code
