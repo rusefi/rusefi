@@ -158,10 +158,24 @@ struct stm32_hardware_pwm : public hardware_pwm {
 		return m_period * duty;
 	}
 
+	// 2MHz, 16-bit timer gets us a usable frequency range of 31hz to 10khz
 	static constexpr c_timerFrequency = 2000000;
 
 	void start(const char* msg, float frequency, float duty) {
 		m_period = c_timerFrequency / frequency;
+
+		// These timers are only 16 bit - don't risk overflow
+		if (m_period > 0xFFF0) {
+			firmwareError(CUSTOM_OBD_LOW_FREQUENCY, "PWM Frequency too low %f hz on pin \"%s\"", frequency, msg);
+			return;
+		}
+
+		// If we have too few usable bits, we run out of resolution, so don't allow that either.
+		// 200 counts = 0.5% resolution
+		if (m_period < 200) {
+			firmwareError(CUSTOM_OBD_HIGH_FREQUENCY, "PWM Frequency too high % hz on pin \"%s\"", frequency, msg);
+			return;
+		}
 
 		const PWMConfig pwmcfg = {
 			c_timerFrequency,
