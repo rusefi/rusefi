@@ -258,9 +258,10 @@ static void handleCommandX14(uint16_t index) {
 	case 0xB:
 		starterRelayBench();
 		return;
-
+	case 0xC:
+		engine->etbAutoTune = true;
+		return;
 	}
-
 }
 
 // todo: this is probably a wrong place for this method now
