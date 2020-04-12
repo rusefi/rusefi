@@ -145,23 +145,29 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * @return total duration of fuel injection per engine cycle, in milliseconds
  */
 float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (rpm == 0)
+	// If the engine is stopped, MAF is meaningless
+	if (rpm == 0) {
 		return 0;
-	// duration of engine cycle, in hours
-	float engineCycleDurationHr = 1.0 / 60 / rpm;
+	}
 
-	float airMassKg = airSpeed * engineCycleDurationHr;
+	// kg/hr -> g/s
+	float gramPerSecond = airSpeed * 1000 / 3600;
 
-	/**
-	 * todo: pre-calculate gramm/second injector flow to save one multiplication
-	 * open question if that's needed since that's just a multiplication
-	 */
-	float injectorFlowRate = cc_minute_to_gramm_second(engineConfiguration->injector.flow);
+	// 1/min -> 1/s
+	float revsPerSecond = rpm / 60.0f;
 
-	float afr = afrMap.getValue(rpm, airSpeed);
-	float fuelMassGramm = airMassKg / afr * 1000;
+	float airPerRevolution = gramPerSecond / revsPerSecond;
 
-	return 1000 * fuelMassGramm / injectorFlowRate;
+	// Now we have to divide among cylinders - on a 4 stroke, half of the cylinders happen every rev
+	// This math is floating point to work properly on engines with odd cyl count
+	float halfCylCount = CONFIG(specs.cylindersCount) / 2.0f;
+
+	float cylinderAirmass = airPerRevolution / halfCylCount;
+	float fuelMassGram = cylinderAirmass / afrMap.getValue(rpm, airSpeed);
+	float pulseWidthSeconds = fuelMassGram / cc_minute_to_gramm_second(engineConfiguration->injector.flow);
+
+	// Convert to ms
+	return 1000 * pulseWidthSeconds;
 }
 
 /**
