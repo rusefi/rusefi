@@ -409,7 +409,7 @@ static void triggerShapeInfo(void) {
 	scheduleMsg(logger, "useRise=%s", boolToString(TRIGGER_WAVEFORM(useRiseEdge)));
 	scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
 
-	for (int i = 0; i < s->getSize(); i++) {
+	for (size_t i = 0; i < s->getSize(); i++) {
 		scheduleMsg(logger, "event %d %.2f", i, s->eventAngles[i]);
 	}
 #endif

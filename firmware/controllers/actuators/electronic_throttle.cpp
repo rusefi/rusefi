@@ -217,7 +217,7 @@ void EtbController::PeriodicTask() {
 	if (rpm == 0 && engine->etbAutoTune) {
 		bool isPositive = actualThrottlePosition.Value > targetPosition;
 
-		float autotuneAmplitude = 15;
+		float autotuneAmplitude = 20;
 
 		// Bang-bang control the output to induce oscillation
 		closedLoop = autotuneAmplitude * (isPositive ? -1 : 1);
@@ -227,11 +227,16 @@ void EtbController::PeriodicTask() {
 			efitick_t now = getTimeNowNt();
 
 			// Determine period
-			efitick_t cycleTime = now - m_cycleStartTime;
+			float tu = NT2US((float)(now - m_cycleStartTime)) / 1e6;
 			m_cycleStartTime = now;
 
 			// Determine amplitude
 			float a = m_maxCycleTps - m_minCycleTps;
+
+			// Filter - it's pretty noisy since the ultimate period is not very many loop periods
+			constexpr float alpha = 0.05;
+			m_a  = alpha * a  + (1 - alpha) * m_a;
+			m_tu = alpha * tu + (1 - alpha) * m_tu;
 
 			// Reset bounds
 			m_minCycleTps = 100;
@@ -244,17 +249,17 @@ void EtbController::PeriodicTask() {
 #if EFI_TUNER_STUDIO
 			if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
 				// a - amplitude of output (TPS %)
-				tsOutputChannels.debugFloatField1 = a;
+
+				tsOutputChannels.debugFloatField1 = m_a;
 				float b = 2 * autotuneAmplitude;
 				// b - amplitude of input (Duty cycle %)
 				tsOutputChannels.debugFloatField2 = b;
 				// Tu - oscillation period (seconds)
-				float tu = NT2US((float)cycleTime) / 1e6;
-				tsOutputChannels.debugFloatField3 = tu;
+				tsOutputChannels.debugFloatField3 = m_tu;
 
 				// Ultimate gain per A-H relay tuning rule
 				// Ku
-				float ku = 4 * b / (3.14159f * a);
+				float ku = 4 * b / (3.14159f * m_a);
 				tsOutputChannels.debugFloatField4 = ku;
 
 				// The multipliers below are somewhere near the "no overshoot" 
@@ -262,9 +267,9 @@ void EtbController::PeriodicTask() {
 				// Kp
 				tsOutputChannels.debugFloatField5 = 0.35f * ku;
 				// Ki
-				tsOutputChannels.debugFloatField6 = 0.25f * ku / tu;
+				tsOutputChannels.debugFloatField6 = 0.25f * ku / m_tu;
 				// Kd
-				tsOutputChannels.debugFloatField7 = 0.08f * ku * tu;
+				tsOutputChannels.debugFloatField7 = 0.08f * ku * m_tu;
 			}
 #endif
 		}
