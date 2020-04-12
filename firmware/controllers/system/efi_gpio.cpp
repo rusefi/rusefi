@@ -299,11 +299,6 @@ void IgnitionOutputPin::reset() {
 
 OutputPin::OutputPin() {
 	modePtr = &DEFAULT_OUTPUT;
-#if EFI_GPIO_HARDWARE
-	port = NULL;
-	pin = 0;
-#endif /* EFI_GPIO_HARDWARE */
-	currentLogicValue = INITIAL_PIN_STATE;
 }
 
 bool OutputPin::isInitialized() {

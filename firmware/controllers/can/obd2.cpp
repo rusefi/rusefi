@@ -181,7 +181,9 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 
 static void handleDtcRequest(int numCodes, int *dtcCode) {
 	// TODO: this appears to be unfinished?
-	
+	UNUSED(numCodes);
+	UNUSED(dtcCode);
+
 	// int numBytes = numCodes * 2;
 	// // write CAN-TP Single Frame header?
 	// txmsg.data8[0] = (uint8_t)((0 << 4) | numBytes);
