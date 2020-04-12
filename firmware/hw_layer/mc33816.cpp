@@ -268,14 +268,20 @@ void initMc33816(Logging *sharedLogger) {
 	logger = sharedLogger;
 
 	//
-	// see setTest33816EngineConfiguration for default configuration
-	//
+	// see setTest33816EngineConfiguration  for default configuration
 
 	if (CONFIG(mc33816_cs) == GPIO_UNASSIGNED)
+		return;
+	if (CONFIG(mc33816_rstb) == GPIO_UNASSIGNED)
+		return;
+	if (CONFIG(mc33816_driven) == GPIO_UNASSIGNED)
 		return;
 
 	// Initialize the chip via ResetB
 	resetB.initPin("mc33 RESTB", engineConfiguration->mc33816_rstb);
+	// High Voltage via DRIVEN
+	driven.initPin("mc33 DRIVEN", engineConfiguration->mc33816_driven);
+	driven.setValue(0); // ensure driven is off
 
 	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
 
@@ -317,7 +323,7 @@ void initMc33816(Logging *sharedLogger) {
     download_register(REG_IO);      // download IO register configurations
     download_register(REG_DIAG);    // download diag register configuration
     enable_flash();
-    //driven.setValue(1); // driven = HV
+    driven.setValue(1); // driven = HV
 }
 
 void update_scv(unsigned short current)
