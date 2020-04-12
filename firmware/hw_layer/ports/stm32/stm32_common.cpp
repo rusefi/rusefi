@@ -159,7 +159,7 @@ struct stm32_hardware_pwm : public hardware_pwm {
 	}
 
 	// 2MHz, 16-bit timer gets us a usable frequency range of 31hz to 10khz
-	static constexpr c_timerFrequency = 2000000;
+	static constexpr uint32_t c_timerFrequency = 2000000;
 
 	void start(const char* msg, float frequency, float duty) {
 		m_period = c_timerFrequency / frequency;
