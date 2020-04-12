@@ -213,7 +213,8 @@ void EtbController::PeriodicTask() {
 
 	float closedLoop;
 
-	if (engine->etbAutoTune) {
+	// Only allow autotune with stopped engine
+	if (rpm == 0 && engine->etbAutoTune) {
 		bool isPositive = actualThrottlePosition.Value > targetPosition;
 
 		float autotuneAmplitude = 15;
@@ -235,7 +236,6 @@ void EtbController::PeriodicTask() {
 			// Reset bounds
 			m_minCycleTps = 100;
 			m_maxCycleTps = 0;
-
 
 			// Math is for Åström–Hägglund (relay) auto tuning
 			// https://warwick.ac.uk/fac/cross_fac/iatl/reinvention/archive/volume5issue2/hornsey
