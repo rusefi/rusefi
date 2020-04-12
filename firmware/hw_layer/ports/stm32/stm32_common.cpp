@@ -8,6 +8,7 @@
 
 #include "global.h"
 #include "efi_gpio.h"
+#include "mpu_util.h"
 
 #ifndef EFI_PIN_ADC9
 #define EFI_PIN_ADC9 GPIOB_1
@@ -136,6 +137,91 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 
 #endif /* HAL_USE_ADC */
 
+
+struct stm32_hardware_pwm : public hardware_pwm {
+	const brain_pin_e BrainPin;
+	PWMDriver* const Driver;
+	const uint8_t Channel;
+	const uint8_t AlternateFunc;
+
+	stm32_hardware_pwm(brain_pin_e pin, PWMDriver* drv, uint8_t channel, uint8_t altFunc)
+		: BrainPin(pin)
+		, Driver(drv)
+		, Channel(channel)
+		, AlternateFunc(altFunc)
+	{
+	}
+
+	uint32_t m_period;
+
+	pwmcnt_t getHighTime(float duty) const {
+		return m_period * duty;
+	}
+
+	static constexpr c_timerFrequency = 2000000;
+
+	void start(const char* msg, float frequency, float duty) {
+		m_period = c_timerFrequency / frequency;
+
+		const PWMConfig pwmcfg = {
+			c_timerFrequency,
+			m_period,
+			nullptr,
+			{
+				{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
+				{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
+				{PWM_OUTPUT_ACTIVE_HIGH, nullptr},
+				{PWM_OUTPUT_ACTIVE_HIGH, nullptr}
+			},
+			0,
+			0
+		};
+
+		// Start the timer running
+		pwmStart(Driver, &pwmcfg);
+
+		// Set initial duty cycle
+		setDuty(duty);
+
+		// Finally connect the timer to physical pin
+		efiSetPadMode(msg, BrainPin, PAL_MODE_ALTERNATE(AlternateFunc));
+	}
+
+	void setDuty(float duty) override {
+		pwm_lld_enable_channel(Driver, Channel, getHighTime(duty));
+	}
+};
+
+stm32_hardware_pwm pwmChannels[] = {
+	stm32_hardware_pwm(GPIOB_6, &PWMD4, 0, 2),
+	stm32_hardware_pwm(GPIOB_7, &PWMD4, 1, 2),
+	stm32_hardware_pwm(GPIOB_8, &PWMD4, 2, 2),
+	stm32_hardware_pwm(GPIOB_9, &PWMD4, 3, 2),
+
+	stm32_hardware_pwm(GPIOC_6, &PWMD8, 0, 3),
+	stm32_hardware_pwm(GPIOC_7, &PWMD8, 1, 3),
+	stm32_hardware_pwm(GPIOC_8, &PWMD8, 2, 3),
+	stm32_hardware_pwm(GPIOC_9, &PWMD8, 3, 3),
+
+	stm32_hardware_pwm(GPIOD_12, &PWMD4, 0, 2),
+	stm32_hardware_pwm(GPIOD_13, &PWMD4, 1, 2),
+	stm32_hardware_pwm(GPIOD_14, &PWMD4, 2, 2),
+	stm32_hardware_pwm(GPIOD_15, &PWMD4, 3, 2),
+};
+
+/*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty)
+{
+	for (size_t i = 0; i < efi::size(pwmChannels); i++) {
+		auto& channel = pwmChannels[i];
+		if (channel.BrainPin == pin) {
+			channel.start(msg, frequencyHz, duty);
+
+			return &channel;
+		}
+	}
+
+	return nullptr;
+}
 
 #if EFI_PROD_CODE
 void jump_to_bootloader() {
