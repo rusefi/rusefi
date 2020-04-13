@@ -31,7 +31,7 @@
 #include "speed_density.h"
 #include "perf_trace.h"
 #include "sensor.h"
-#include "config_engine_specs.h"
+
 
 EXTERN_ENGINE;
 
@@ -152,7 +152,7 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	//Calculation of 100% VE air mass in Kg/h
-	float StandardAirCharge = rpm * get_specs_displacement * 0.000038787;  //- Constant comes from 0.0012929 * 60 / 2 /1000 to convert direct from 2*cc/min to Kg/h
+	float StandardAirCharge = rpm * CONFIG(specs.displacement) * 0.000038787;  //- Constant comes from 0.0012929 * 60 / 2 /1000 to convert direct from 2*cc/min to Kg/h
 
 	// kg/hr -> g/s
 	float gramPerSecond = airSpeed * 1000 / 3600;
