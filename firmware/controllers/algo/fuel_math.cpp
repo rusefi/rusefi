@@ -32,12 +32,11 @@
 #include "perf_trace.h"
 #include "sensor.h"
 
-
 EXTERN_ENGINE;
 
 fuel_Map3D_t fuelMap("fuel");
 static fuel_Map3D_t fuelPhaseMap("fl ph");
-extern fuel_Map3D_t ve2Map;
+extern fuel_Map3D_t veMap;
 extern afr_Map3D_t afrMap;
 extern baroCorr_Map3D_t baroCorrMap;
 
