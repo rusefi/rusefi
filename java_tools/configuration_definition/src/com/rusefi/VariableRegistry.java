@@ -57,6 +57,13 @@ public class VariableRegistry  {
             return;
         }
         value = applyVariables(value);
+        int multPosition = value.indexOf(MULT_TOKEN);
+        if (multPosition != -1) {
+            Integer first = Integer.valueOf(value.substring(0, multPosition));
+            Integer second = Integer.valueOf(value.substring(multPosition + 1));
+            value = String.valueOf(first * second);
+        }
+
         SystemOut.println("Registering " + var + " as " + value);
         data.put(var, value);
 

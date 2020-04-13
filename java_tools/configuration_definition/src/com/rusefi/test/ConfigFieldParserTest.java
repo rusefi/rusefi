@@ -68,7 +68,7 @@ public class ConfigFieldParserTest {
 
         assertEquals("#define ERROR_BUFFER_COUNT 120\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
-                "#define RESULT 120*120\n", VariableRegistry.INSTANCE.getDefinesSection());
+                "#define RESULT 14400\n", VariableRegistry.INSTANCE.getDefinesSection());
     }
 
     @Test
