@@ -979,7 +979,7 @@ int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structu
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC",      1,     0,    0, 1023,      0
 	output_pin_e starterControlPin;See also startStopButtonPin
 	pin_input_mode_e startStopButtonMode;
-	uint8_t[1] unusedFormerWarmupAfrPid;
+	brain_pin_e mc33816_flag0;
 	uint8_t tachPulsePerRev;;"Pulse",        1,     0,  1.0,    255.0,  0
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	

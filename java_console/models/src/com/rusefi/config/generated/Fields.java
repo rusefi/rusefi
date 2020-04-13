@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Apr 13 09:22:02 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Apr 13 18:54:18 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1048,6 +1048,7 @@ public class Fields {
 	public static final int maxKnockSubDeg_offset_hex = 228;
 	public static final int mc33816_cs_offset = 3107;
 	public static final int mc33816_driven_offset = 2607;
+	public static final int mc33816_flag0_offset = 1774;
 	public static final int mc33816_rstb_offset = 2606;
 	public static final int mc33816spiDevice_offset = 4001;
 	public static final int mc33972_cs_offset = 678;
@@ -1466,7 +1467,6 @@ public class Fields {
 	public static final int unusedBit_34_31_offset = 76;
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
-	public static final int unusedFormerWarmupAfrPid_offset = 1774;
 	public static final int unusedOldBiquad_offset = 2332;
 	public static final int unusedOneMoreHere_offset = 760;
 	public static final int unusedSomethingWasHere_offset = 2416;
@@ -2197,7 +2197,7 @@ public class Fields {
 	public static final Field TPS2MAX = Field.create("TPS2MAX", 1770, FieldType.INT16);
 	public static final Field STARTERCONTROLPIN = Field.create("STARTERCONTROLPIN", 1772, FieldType.INT8, output_pin_e);
 	public static final Field STARTSTOPBUTTONMODE = Field.create("STARTSTOPBUTTONMODE", 1773, FieldType.INT8);
-	public static final Field UNUSEDFORMERWARMUPAFRPID = Field.create("UNUSEDFORMERWARMUPAFRPID", 1774, FieldType.INT8);
+	public static final Field MC33816_FLAG0 = Field.create("MC33816_FLAG0", 1774, FieldType.INT8, brain_pin_e);
 	public static final Field TACHPULSEPERREV = Field.create("TACHPULSEPERREV", 1775, FieldType.INT8);
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1776, FieldType.FLOAT);
 	public static final Field MAPERRORDETECTIONTOOHIGH = Field.create("MAPERRORDETECTIONTOOHIGH", 1780, FieldType.FLOAT);
@@ -3119,7 +3119,7 @@ public class Fields {
 	TPS2MAX,
 	STARTERCONTROLPIN,
 	STARTSTOPBUTTONMODE,
-	UNUSEDFORMERWARMUPAFRPID,
+	MC33816_FLAG0,
 	TACHPULSEPERREV,
 	MAPERRORDETECTIONTOOLOW,
 	MAPERRORDETECTIONTOOHIGH,

@@ -28,6 +28,9 @@ static OutputPin chipSelect;
 static OutputPin resetB;
 static OutputPin driven;
 
+static bool flag0before = false;
+static bool flag0after = false;
+
 static unsigned short mcChipId;
 static Logging* logger;
 
@@ -48,6 +51,12 @@ static SPIDriver *driver;
 static void showStats() {
 	// x9D is product code or something, and 43 is the revision?
 	scheduleMsg(logger, "MC %x %s", mcChipId, (mcChipId  >> 8) == 0x9D ? "hooray!" : "not hooray :(");
+
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+    	scheduleMsg(logger, "flag0 before %d after %d", flag0before, flag0after);
+    } else {
+    	scheduleMsg(logger, "No flag0");
+    }
 }
 
 // Mostly unused
@@ -310,6 +319,12 @@ void initMc33816(Logging *sharedLogger) {
 	chThdSleepMilliseconds(10);
 	resetB.setValue(1);
 	chThdSleepMilliseconds(10);
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+   		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
+
+   		flag0before = efiReadPin(CONFIG(startStopButtonPin));
+    }
+
 
 	setup_spi();
 	mcChipId = readId();
@@ -317,7 +332,14 @@ void initMc33816(Logging *sharedLogger) {
     download_RAM(CODE_RAM1);        // transfers code RAM1
     download_RAM(CODE_RAM2);        // transfers code RAM2
     download_RAM(DATA_RAM);         // transfers data RAM
+    /**
+     * current configuration of REG_MAIN would toggle flag0 from LOW to HIGH
+     */
     download_register(REG_MAIN);    // download main register configurations
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+   		flag0after = efiReadPin(CONFIG(startStopButtonPin));
+    }
+
     download_register(REG_CH1);     // download channel 1 register configurations
     download_register(REG_CH2);     // download channel 2 register configurations
     download_register(REG_IO);      // download IO register configurations
