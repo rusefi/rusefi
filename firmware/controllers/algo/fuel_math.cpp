@@ -150,12 +150,14 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 0;
 	}
 
+	//Calculation of 100% VE air mass in Kg/h
+	float StandardAirCharge = rpm * get_specs_displacement * 0.000038787;  //- Constant comes from 0.0012929 * 60 / 2 /1000 to convert direct from 2*cc/min to Kg/h
+
 	// kg/hr -> g/s
 	float gramPerSecond = airSpeed * 1000 / 3600;
 
 	// 1/min -> 1/s
 	float revsPerSecond = rpm / 60.0f;
-
 	float airPerRevolution = gramPerSecond / revsPerSecond;
 
 	// Now we have to divide among cylinders - on a 4 stroke, half of the cylinders happen every rev
@@ -163,7 +165,13 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float halfCylCount = CONFIG(specs.cylindersCount) / 2.0f;
 
 	float cylinderAirmass = airPerRevolution / halfCylCount;
-	float fuelMassGram = cylinderAirmass / afrMap.getValue(rpm, airSpeed);
+	
+	//Create % load for fuel table using relative naturally aspiratedcylinder filling
+	float airChargeLoad = 100 * cylinderAirmass/StandardAirCharge;
+	
+	//Correct air mass by VE table 
+	float corrCylAirmass = cylinderAirmass * ve2Map.getValue(rpm, airChargeLoad);
+	float fuelMassGram = corrCylAirmass / afrMap.getValue(rpm, airSpeed);
 	float pulseWidthSeconds = fuelMassGram / cc_minute_to_gramm_second(engineConfiguration->injector.flow);
 
 	// Convert to ms
