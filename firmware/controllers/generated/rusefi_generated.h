@@ -1585,6 +1585,8 @@
 #define mc33816_cs_offset_hex c23
 #define mc33816_driven_offset 2607
 #define mc33816_driven_offset_hex a2f
+#define mc33816_flag0_offset 1774
+#define mc33816_flag0_offset_hex 6ee
 #define mc33816_rstb_offset 2606
 #define mc33816_rstb_offset_hex a2e
 #define mc33816spiDevice_offset 4001
@@ -2225,8 +2227,6 @@
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
 #define unusedFlexFuelSensor_offset_hex c1c
-#define unusedFormerWarmupAfrPid_offset 1774
-#define unusedFormerWarmupAfrPid_offset_hex 6ee
 #define unusedOldBiquad_offset 2332
 #define unusedOldBiquad_offset_hex 91c
 #define unusedOneMoreHere_offset 760

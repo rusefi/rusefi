@@ -535,6 +535,8 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// yellow
 	CONFIG(mc33816_driven) = GPIOD_6;
 
+	CONFIG(mc33816_flag0) = GPIOD_3;
+
 	// enable_spi 3
 	CONFIG(is_enabled_spi_3) = true;
 	// Wire up spi3
