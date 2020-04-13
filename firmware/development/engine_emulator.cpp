@@ -22,77 +22,7 @@
 #include "poten.h"
 #include "trigger_emulator.h"
 
-static THD_WORKING_AREA(eeThreadStack, UTILITY_THREAD_STACK_SIZE);
-
-#define DIAG_PIN GPIOD_0
-
-void setDiag(int value) {
-	print("Setting diag: %d\r\n", value);
-// todo: convert to new api	palWritePad(DIAG_PORT, DIAG_PIN, value);
-}
-
-#define PERIOD 3000
-
 EXTERN_ENGINE;
-
-static void emulate(void) {
-	print("Emulating...\r\n");
-	setDiag(1);
-	chThdSleep(1);
-
-	for (int i = 400; i <= 1300; i++) {
-		if (i % 50 != 0)
-			continue;
-		setTriggerEmulatorRPM(i PASS_ENGINE_PARAMETER_SUFFIX);
-		chThdSleepMilliseconds(PERIOD);
-	}
-
-	setTriggerEmulatorRPM(0 PASS_ENGINE_PARAMETER_SUFFIX);
-
-	setDiag(0);
-	chThdSleep(1);
-	print("Emulation DONE!\r\n");
-}
-
-static int flag = FALSE;
-
-static msg_t eeThread(void *arg) {
-	(void)arg;
-	chRegSetThreadName("Engine");
-
-	while (TRUE) {
-		while (!flag)
-			chThdSleepMilliseconds(200);
-		flag = FALSE;
-		emulate();
-	}
-#if defined __GNUC__
-	return (msg_t)NULL;
-#endif
-}
-
-void startEmulator(void) {
-	flag = TRUE;
-}
-
-//static void printAdvance(int rpm, int maf100) {
-//	float advance = getAdvance(rpm, maf100 / 100.0);
-//	print("advance for %d rpm %d maf100: %.2f\r\n", rpm, maf100, advance);
-//}
-
-#if defined(EFI_ENGINE_STIMULATOR)
-static void initECUstimulator(Engine *engine) {
-	efiSetPadMode("TEN", DIAG_PIN, PAL_MODE_OUTPUT_PUSHPULL);
-
-	addConsoleActionI("diag", setDiag);
-	addConsoleAction("emu", startEmulator);
-//	addConsoleActionII("ad", printAdvance);
-
-	setDiag(1);
-
-	chThdCreateStatic(eeThreadStack, sizeof(eeThreadStack), NORMALPRIO, (tfunc_t)(void*) eeThread, engine);
-}
-#endif /* EFI_ENGINE_STIMULATOR */
 
 void initEngineEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (hasFirmwareError())
@@ -102,6 +32,5 @@ void initEngineEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initPotentiometers(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_POTENTIOMETER && HAL_USE_SPI*/
 
-	//initECUstimulator();
 	initTriggerEmulator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 }

@@ -408,7 +408,7 @@ static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int1
 			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer));
 
 
-	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", convertVoltageTo10bitADC(raw), tps.Value, getTpsRateOfChange());
+	scheduleMsg(&logger, "current 10bit=%d value=%.2f", convertVoltageTo10bitADC(raw), tps.Value);
 }
 
 void printTPSInfo(void) {
@@ -679,6 +679,18 @@ static void setMainRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->mainRelayPin, "main relay");
 }
 
+static void setCj125CsPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
+}
+
+static void setCj125HeaterPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->wboHeaterPin, "cj125 heater");
+}
+
+static void setTriggerSyncPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->debugTriggerSync, "trigger sync");
+}
+
 static void setStarterRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
 }
@@ -904,6 +916,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->useConstantDwellDuringCranking = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125")) {
 		engineConfiguration->isCJ125Enabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "cj125verbose")) {
+		engineConfiguration->isCJ125Verbose = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_sniffer")) {
 		engineConfiguration->isEngineChartEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
@@ -1132,10 +1146,6 @@ static void getValue(const char *paramStr) {
 		scheduleMsg(&logger, "tps_min=%d", engineConfiguration->tpsMin);
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
 		scheduleMsg(&logger, "tps_max=%d", engineConfiguration->tpsMax);
-	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
-		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
-	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
-		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		scheduleMsg(&logger, "global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
@@ -1174,7 +1184,6 @@ const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
 #if EFI_ENABLE_MOCK_ADC
 		{MOCK_IAT_COMMAND, setMockIatVoltage},
-		{MOCK_TPS_COMMAND, setMockThrottlePositionSensorVoltage},
 		{MOCK_MAF_COMMAND, setMockMafVoltage},
 		{MOCK_AFR_COMMAND, setMockAfrVoltage},
 		{MOCK_MAP_COMMAND, setMockMapVoltage},
@@ -1351,8 +1360,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtOffset = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
 		engineConfiguration->vvtMode = (vvt_mode_e)valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
-		engineConfiguration->nbVvtIndex = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
 		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
@@ -1436,6 +1443,9 @@ void initSettings(void) {
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
+	addConsoleActionS("set_cj125_cs_pin", setCj125CsPin);
+	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
+	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
 
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);

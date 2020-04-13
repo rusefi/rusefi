@@ -638,7 +638,7 @@ typedef enum {
 	DBG_SD_CARD = 13,
 	DBG_SR5_PROTOCOL = 14,
 	DBG_KNOCK = 15,
-	DBG_TRIGGER_SYNC = 16,
+	DBG_16 = 16,
 	/**
 	 * See also DBG_ELECTRONIC_THROTTLE_EXTRA
 	 */
@@ -670,12 +670,12 @@ typedef enum {
 	 */
 	DBG_ANALOG_INPUTS2 = 32,
 	DBG_DWELL_METRIC = 33,
-	DBG_AUX_TEMPERATURE = 34,
+	DBG_34 = 34,
 	DBG_ETB_LOGIC = 35,
 	DBG_BOOST = 36,
 	DBG_START_STOP = 37,
 	DBG_LAUNCH = 38,
-	DBG_39 = 39,
+	DBG_ETB_AUTOTUNE = 39,
 	DBG_40 = 40,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,

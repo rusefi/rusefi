@@ -223,7 +223,8 @@ public class LiveDocPanel {
 
         liveDocs.add(createPanel("Idle", IdleThreadMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(createPanel("ETB", ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
+        // todo: restore this functionality
+        // liveDocs.add(createPanel("ETB", ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }
@@ -237,7 +238,11 @@ public class LiveDocPanel {
         liveDocs.add(createPanel("Intake Air Sensor", ThermistorsMeta.CONTENT, "IAT", Fields.LDS_IAT_STATE_INDEX
         ), CONSTRAINTS);
 
+/*
+        One day we shall have this back
         liveDocs.add(createPanel("Throttle Position Sensor", TpsMeta.TPS_SECTION), CONSTRAINTS);
+
+ */
 
         liveDocs.add(createPanel("Trigger", TriggerDecoderMeta.CONTENT), CONSTRAINTS);
 

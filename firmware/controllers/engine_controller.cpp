@@ -123,6 +123,8 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
+	// This is tested independently - don't configure sensors for tests.
+	// This lets us selectively mock them for each test.
 	initNewSensors(sharedLogger);
 #endif /* EFI_UNIT_TEST */
 
@@ -270,12 +272,21 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
-	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (CONFIG(directSelfStimulation) || engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		/**
+		 * rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
+		 * postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
+		 *
+		 * todo: allow writing if 2nd bank of flash is used
+		 */
 #if EFI_INTERNAL_FLASH
 		writeToFlashIfPending();
 #endif /* EFI_INTERNAL_FLASH */
 		resetAccel();
-	} else {
+	}
+
+
+	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		updatePrimeInjectionPulseState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
@@ -684,7 +695,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 14200
+#define RAM_UNUSED_SIZE 13800
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 4100
@@ -705,6 +716,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200403;
+	return 20200412;
 }
 #endif /* EFI_UNIT_TEST */

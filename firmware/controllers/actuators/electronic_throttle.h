@@ -48,6 +48,14 @@ private:
 	DcMotor *m_motor;
 	Pid m_pid;
 	bool m_shouldResetPid = false;
+
+	// Autotune helpers
+	bool m_lastIsPositive = false;
+	efitick_t m_cycleStartTime = 0;
+	float m_minCycleTps = 0;
+	float m_maxCycleTps = 0;
+	float m_a = 0;
+	float m_tu = 0;
 };
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);

@@ -34,9 +34,6 @@
 #undef BOARD_TLE8888_COUNT
 #define BOARD_TLE8888_COUNT			0
 
-#undef BOARD_EXT_GPIOCHIPS
-#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
-
 /*
  * Board oscillators-related settings.
  * NOTE: LSE not fitted.

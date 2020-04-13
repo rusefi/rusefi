@@ -146,12 +146,6 @@
 #define BOARD_TLE8888_COUNT 	1
 #endif
 
-// todo: move this outside of efifeatures.h
-#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
-
-// todo: move this outside of efifeatures.h
-#define BOARD_EXT_PINREPOPINS 24
-
 #define EFI_ANALOG_SENSORS TRUE
 
 #ifndef EFI_MAX_31855

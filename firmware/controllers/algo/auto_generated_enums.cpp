@@ -535,8 +535,8 @@ case DBG_START_STOP:
   return "DBG_START_STOP";
 case DBG_LAUNCH:
   return "DBG_LAUNCH";
-case DBG_39:
-  return "DBG_39";
+case DBG_ETB_AUTOTUNE:
+  return "DBG_ETB_AUTOTUNE";
 case DBG_40:
   return "DBG_40";
 case DBG_ALTERNATOR_PID:
@@ -547,8 +547,8 @@ case DBG_ANALOG_INPUTS2:
   return "DBG_ANALOG_INPUTS2";
 case DBG_AUX_PID_1:
   return "DBG_AUX_PID_1";
-case DBG_AUX_TEMPERATURE:
-  return "DBG_AUX_TEMPERATURE";
+case DBG_34:
+  return "DBG_34";
 case DBG_AUX_VALVES:
   return "DBG_AUX_VALVES";
 case DBG_BENCH_TEST:
@@ -603,8 +603,8 @@ case DBG_TPS_ACCEL:
   return "DBG_TPS_ACCEL";
 case DBG_TRIGGER_COUNTERS:
   return "DBG_TRIGGER_COUNTERS";
-case DBG_TRIGGER_SYNC:
-  return "DBG_TRIGGER_SYNC";
+case DBG_16:
+  return "DBG_16";
 case DBG_VEHICLE_SPEED_SENSOR:
   return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:

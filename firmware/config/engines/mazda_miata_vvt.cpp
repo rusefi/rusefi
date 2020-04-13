@@ -195,8 +195,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
-	engineConfiguration->nbVvtIndex = 0;
-
 	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
 
 	// set idle_position 35
@@ -273,7 +271,11 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set_whole_ve_map 80
 	setMazdaMiataNbInjectorLag(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
+	CONFIG(debugTriggerSync) = GPIOD_3;
+
+//	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
+	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
+
 	//set idle_offset 30
 	engineConfiguration->idleRpmPid.offset = 30;
 	engineConfiguration->idleRpmPid.pFactor = 0.07;

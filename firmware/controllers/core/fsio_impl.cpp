@@ -24,6 +24,7 @@ EXTERN_ENGINE;
 #include "rpm_calculator.h"
 #include "efi_gpio.h"
 #include "pwm_generator_logic.h"
+#include "sensor.h"
 
 /**
  * in case of zero frequency pin is operating as simple on/off. '1' for ON and '0' for OFF
@@ -46,6 +47,7 @@ fsio8_Map3D_u8t fsioTable4("fsio#4");
  */
 static LENameOrdinalPair leRpm(LE_METHOD_RPM, "rpm");
 static LENameOrdinalPair leTps(LE_METHOD_TPS, "tps");
+static LENameOrdinalPair lePps(LE_METHOD_PPS, "pps");
 static LENameOrdinalPair leMaf(LE_METHOD_MAF, "maf");
 static LENameOrdinalPair leMap(LE_METHOD_MAP, "map");
 static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
@@ -147,9 +149,11 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engine->isInShutdownMode();
 	case LE_METHOD_VBATT:
 		return getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
+	case LE_METHOD_TPS:
+		return Sensor::get(SensorType::DriverThrottleIntent).value_or(0);
 #include "fsio_getters.def"
 	default:
-		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO unexpected %d", action);
+		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO ERROR no data for action=%d", action);
 		return NAN;
 	}
 }
@@ -569,8 +573,11 @@ static void showFsioInfo(void) {
 			 * in case of FSIO user interface indexes are starting with 0, the argument for that
 			 * is the fact that the target audience is more software developers
 			 */
-			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%.2f", (i + 1), exp,
-					hwPortname(CONFIG(fsioOutputPins)[i]), CONFIG(fsioFrequency)[i],
+			int freq = CONFIG(fsioFrequency)[i];
+			const char *modeMessage = freq == 0 ? " (on/off mode)" : "";
+			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz%s value=%.2f", (i + 1), exp,
+					hwPortname(CONFIG(fsioOutputPins)[i]),
+					freq, modeMessage,
 					engine->fsioState.fsioLastValue[i]);
 //			scheduleMsg(logger, "user-defined #%d value=%.2f", i, engine->engineConfigurationPtr2->fsioLastValue[i]);
 			showFsio(NULL, state.fsioLogics[i]);

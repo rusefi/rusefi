@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Apr 04 09:06:52 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 12 23:47:17 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -285,6 +285,9 @@ public class Fields {
 	public static final int coastingFuelCutTps_offset = 3152;
 	public static final int communicationLedPin_offset = 1812;
 	public static final int communicationLedPin_offset_hex = 714;
+	public static final int COMPOSITE_DATA_LENGTH = 2000;
+	public static final int COMPOSITE_PACKET_COUNT = 1000;
+	public static final int COMPOSITE_PACKET_SIZE = 2;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int consoleLoopPeriodMs_offset = 716;
 	public static final int consoleSerialRxPin_offset = 1819;
@@ -394,13 +397,13 @@ public class Fields {
 	public static final int etbIo1_controlPin1_offset = 982;
 	public static final int etbIo1_directionPin1_offset = 980;
 	public static final int etbIo1_directionPin2_offset = 981;
+	public static final int etbIo1_disablePin_offset = 983;
 	public static final int etbIo1_offset = 980;
-	public static final int etbIo1_pad_offset = 983;
 	public static final int etbIo2_controlPin1_offset = 986;
 	public static final int etbIo2_directionPin1_offset = 984;
 	public static final int etbIo2_directionPin2_offset = 985;
+	public static final int etbIo2_disablePin_offset = 987;
 	public static final int etbIo2_offset = 984;
-	public static final int etbIo2_pad_offset = 987;
 	public static final int etbNeutralPosition_offset = 1471;
 	public static final int externalKnockSenseAdc_offset = 3103;
 	public static final int extraInjectionOffset_offset = 432;
@@ -898,6 +901,7 @@ public class Fields {
 	public static final int isAlternatorControlEnabled_offset = 1464;
 	public static final int isBoostControlEnabled_offset = 1476;
 	public static final int isCJ125Enabled_offset = 744;
+	public static final int isCJ125Verbose_offset = 76;
 	public static final int isCylinderCleanupEnabled_offset = 1476;
 	public static final int isDoubleSolenoidIdle_offset = 76;
 	public static final int isEngineChartEnabled_offset = 1464;
@@ -1057,7 +1061,6 @@ public class Fields {
 	public static final String MOCK_MAP_COMMAND = "mock_map_voltage";
 	public static final String MOCK_PPS_POSITION_COMMAND = "mock_pps_position";
 	public static final String MOCK_PPS_VOLTAGE_COMMAND = "mock_pps_voltage";
-	public static final String MOCK_TPS_COMMAND = "mock_tps_voltage";
 	public static final int multisparkDwell_offset = 1786;
 	public static final int multisparkEnable_offset = 976;
 	public static final int multisparkMaxExtraSparkCount_offset = 975;
@@ -1067,8 +1070,6 @@ public class Fields {
 	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int narrowToWideOxygen_offset = 2296;
 	public static final int narrowToWideOxygenBins_offset = 2264;
-	public static final int nbVvtIndex_offset = 2416;
-	public static final int nbVvtIndex_offset_hex = 970;
 	public static final int noAccelAfterHardLimitPeriodSecs_offset = 1536;
 	public static final int noAccelAfterHardLimitPeriodSecs_offset_hex = 600;
 	public static final int o2heaterPin_offset = 742;
@@ -1294,6 +1295,8 @@ public class Fields {
 	public static final int trigger_todoRemoveMeOneDay0_offset_hex = 210;
 	public static final int trigger_todoRemoveMeOneDay1_offset = 528;
 	public static final int trigger_todoRemoveMeOneDay1_offset_hex = 210;
+	public static final int TRIGGER_TYPE_36_1 = 9;
+	public static final int TRIGGER_TYPE_60_2 = 8;
 	public static final int trigger_type_offset = 524;
 	public static final int trigger_unusedBit_4_10_offset = 528;
 	public static final int trigger_unusedBit_4_10_offset_hex = 210;
@@ -1380,7 +1383,6 @@ public class Fields {
 	public static final int uartConsoleSerialSpeed_offset = 2076;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1234234_offset = 2042;
-	public static final int unused76b9_offset = 76;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
 	public static final int unused_1484_bit_26_offset = 1476;
@@ -1427,6 +1429,8 @@ public class Fields {
 	public static final int unusedFormerWarmupAfrPid_offset = 1774;
 	public static final int unusedOldBiquad_offset = 2332;
 	public static final int unusedOneMoreHere_offset = 760;
+	public static final int unusedSomethingWasHere_offset = 2416;
+	public static final int unusedSomethingWasHere_offset_hex = 970;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
 	public static final int unusedSpiPadding7_offset = 4005;
@@ -1510,7 +1514,7 @@ public class Fields {
 	public static final Field ISVERBOSEAUXPID3 = Field.create("ISVERBOSEAUXPID3", 76, FieldType.BIT, 6);
 	public static final Field ACTIVATEAUXPID4 = Field.create("ACTIVATEAUXPID4", 76, FieldType.BIT, 7);
 	public static final Field ISVERBOSEAUXPID4 = Field.create("ISVERBOSEAUXPID4", 76, FieldType.BIT, 8);
-	public static final Field UNUSED76B9 = Field.create("UNUSED76B9", 76, FieldType.BIT, 9);
+	public static final Field ISCJ125VERBOSE = Field.create("ISCJ125VERBOSE", 76, FieldType.BIT, 9);
 	public static final Field CJ125ISUADIVIDED = Field.create("CJ125ISUADIVIDED", 76, FieldType.BIT, 10);
 	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 76, FieldType.BIT, 11);
 	public static final Field ETB_USE_TWO_WIRES = Field.create("ETB_USE_TWO_WIRES", 76, FieldType.BIT, 12);
@@ -1977,11 +1981,11 @@ public class Fields {
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN1 = Field.create("ETBIO1_CONTROLPIN1", 982, FieldType.INT8, brain_pin_e);
-	public static final Field ETBIO1_PAD = Field.create("ETBIO1_PAD", 983, FieldType.INT8);
+	public static final Field ETBIO1_DISABLEPIN = Field.create("ETBIO1_DISABLEPIN", 983, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO2_DIRECTIONPIN1 = Field.create("ETBIO2_DIRECTIONPIN1", 984, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO2_DIRECTIONPIN2 = Field.create("ETBIO2_DIRECTIONPIN2", 985, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO2_CONTROLPIN1 = Field.create("ETBIO2_CONTROLPIN1", 986, FieldType.INT8, brain_pin_e);
-	public static final Field ETBIO2_PAD = Field.create("ETBIO2_PAD", 987, FieldType.INT8);
+	public static final Field ETBIO2_DISABLEPIN = Field.create("ETBIO2_DISABLEPIN", 987, FieldType.INT8, brain_pin_e);
 	public static final Field BOOSTCONTROLPIN = Field.create("BOOSTCONTROLPIN", 988, FieldType.INT8, output_pin_e);
 	public static final Field BOOSTCONTROLPINMODE = Field.create("BOOSTCONTROLPINMODE", 989, FieldType.INT8, pin_output_mode_e);
 	public static final Field ANTILAGACTIVATEPIN = Field.create("ANTILAGACTIVATEPIN", 990, FieldType.INT8, switch_input_pin_e);
@@ -2180,7 +2184,7 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2080, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 2084, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2088, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "Mode39", "Mode40"};
+	public static final String[] debug_mode_e = {"Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "Mode40"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2092, FieldType.INT, debug_mode_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
 	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2200, FieldType.INT8, adc_channel_e);
@@ -2213,7 +2217,7 @@ public class Fields {
 	public static final Field STORAGEMODE = Field.create("STORAGEMODE", 2260, FieldType.INT, mass_storage_e);
 	public static final String[] vvt_mode_e = {"First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"};
 	public static final Field VVTMODE = Field.create("VVTMODE", 2328, FieldType.INT, vvt_mode_e);
-	public static final Field NBVVTINDEX = Field.create("NBVVTINDEX", 2416, FieldType.INT);
+	public static final Field UNUSEDSOMETHINGWASHERE = Field.create("UNUSEDSOMETHINGWASHERE", 2416, FieldType.INT);
 	public static final Field AUTOTUNECLTTHRESHOLD = Field.create("AUTOTUNECLTTHRESHOLD", 2420, FieldType.FLOAT);
 	public static final Field AUTOTUNETPSROCTHRESHOLD = Field.create("AUTOTUNETPSROCTHRESHOLD", 2424, FieldType.FLOAT);
 	public static final Field AUTOTUNETPSQUIETPERIOD = Field.create("AUTOTUNETPSQUIETPERIOD", 2428, FieldType.FLOAT);
@@ -2425,7 +2429,7 @@ public class Fields {
 	ISVERBOSEAUXPID3,
 	ACTIVATEAUXPID4,
 	ISVERBOSEAUXPID4,
-	UNUSED76B9,
+	ISCJ125VERBOSE,
 	CJ125ISUADIVIDED,
 	CJ125ISLSU49,
 	ETB_USE_TWO_WIRES,
@@ -2881,11 +2885,11 @@ public class Fields {
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN1,
-	ETBIO1_PAD,
+	ETBIO1_DISABLEPIN,
 	ETBIO2_DIRECTIONPIN1,
 	ETBIO2_DIRECTIONPIN2,
 	ETBIO2_CONTROLPIN1,
-	ETBIO2_PAD,
+	ETBIO2_DISABLEPIN,
 	BOOSTCONTROLPIN,
 	BOOSTCONTROLPINMODE,
 	ANTILAGACTIVATEPIN,
@@ -3112,7 +3116,7 @@ public class Fields {
 	ALTERNATORPWMFREQUENCY,
 	STORAGEMODE,
 	VVTMODE,
-	NBVVTINDEX,
+	UNUSEDSOMETHINGWASHERE,
 	AUTOTUNECLTTHRESHOLD,
 	AUTOTUNETPSROCTHRESHOLD,
 	AUTOTUNETPSQUIETPERIOD,

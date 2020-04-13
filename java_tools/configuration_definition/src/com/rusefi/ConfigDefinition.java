@@ -20,9 +20,9 @@ import java.util.List;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
     public static final String EOL = "\n";
-    public static final String GENERATED_AUTOMATICALLY_TAG = LazyFile.LAZY_FILE_TAG + "ConfigDefinition.jar based on ";
     public static String MESSAGE;
 
+    public static String TOOL = "(unknown script)";
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     public static final String KEY_DEFINITION = "-definition";
     private static final String KEY_ROM_INPUT = "-romraider";
@@ -41,6 +41,10 @@ public class ConfigDefinition {
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     public static boolean needZeroInit = true;
     public static String definitionInputFile = null;
+
+    public static String getGeneratedAutomaticallyTag() {
+        return LazyFile.LAZY_FILE_TAG + "ConfigDefinition.jar based on " + TOOL + " ";
+    }
 
     public static void main(String[] args) throws IOException {
         try {
@@ -81,7 +85,9 @@ public class ConfigDefinition {
 
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
-            if (key.equals(KEY_DEFINITION)) {
+            if (key.equals("-tool")) {
+                ConfigDefinition.TOOL = args[i + 1];
+            } else if (key.equals(KEY_DEFINITION)) {
                 definitionInputFile = args[i + 1];
             } else if (key.equals(KEY_TS_DESTINATION)) {
                 tsPath = args[i + 1];
@@ -116,7 +122,7 @@ public class ConfigDefinition {
             }
         }
 
-        MESSAGE = GENERATED_AUTOMATICALLY_TAG + definitionInputFile + " " + new Date();
+        MESSAGE = getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
         SystemOut.println("Reading from " + definitionInputFile);
 
@@ -214,7 +220,7 @@ public class ConfigDefinition {
         SystemOut.println("Reading from " + inputFileName);
         SystemOut.println("Writing to " + outputFileName);
 
-        VariableRegistry.INSTANCE.put("generator_message", ConfigDefinition.GENERATED_AUTOMATICALLY_TAG + new Date());
+        VariableRegistry.INSTANCE.put("generator_message", ConfigDefinition.getGeneratedAutomaticallyTag() + new Date());
 
         File inputFile = new File(inputFileName);
 

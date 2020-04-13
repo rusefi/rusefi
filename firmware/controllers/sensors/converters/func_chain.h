@@ -27,6 +27,8 @@ protected:
 
 	void showInfo(Logging* logger, float testInputValue) const {
 		// base case does nothing
+		(void)logger;
+		(void)testInputValue;
 	}
 };
 

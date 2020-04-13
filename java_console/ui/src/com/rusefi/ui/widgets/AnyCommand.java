@@ -119,7 +119,7 @@ public class AnyCommand {
         try {
             if (rawCommand.startsWith("eval ")) {
                 return prepareEvalCommand(rawCommand);
-            } else if (rawCommand.startsWith("set_fsio_expression ")) {
+            } else if (rawCommand.toLowerCase().startsWith("set_fsio_expression ")) {
                 return prepareSetFsioCommand(rawCommand);
             } else {
                 return rawCommand;
@@ -154,7 +154,7 @@ public class AnyCommand {
     }
 
     public static String unquote(String quoted) {
-        quoted = quoted.trim();
+        quoted = quoted.trim().replace('\u201C', '"').replace('\u201D', '"');
         if (quoted.charAt(0) == '"')
             return quoted.substring(1, quoted.length() - 1);
         return quoted; // ignoring invalid input

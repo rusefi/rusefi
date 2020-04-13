@@ -12,6 +12,7 @@
 #include "global.h"
 #include "io_pins.h"
 #include "engine_configuration.h"
+#include "smart_gpio.h"
 
 void initPrimaryPins(Logging *sharedLogger);
 void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -52,15 +53,15 @@ public:
 
 
 #if EFI_GPIO_HARDWARE
-	ioportid_t port;
-	uint8_t pin;
+	ioportid_t port = 0;
+	uint8_t pin = 0;
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		/* used for external pins */
 		brain_pin_e brainPin;
 		bool ext;
 	#endif
 #endif /* EFI_GPIO_HARDWARE */
-	int8_t currentLogicValue;
+	int8_t currentLogicValue = INITIAL_PIN_STATE;
 	/**
 	 * we track current pin status so that we do not touch the actual hardware if we want to write new pin bit
 	 * which is same as current pin value. This maybe helps in case of status leds, but maybe it's a total over-engineering
@@ -195,5 +196,6 @@ const char *portname(ioportid_t GPIOx);
 
 #endif /* EFI_GPIO_HARDWARE */
 
+void printSpiConfig(Logging *logging, const char *msg, spi_device_e device);
 brain_pin_e parseBrainPin(const char *str);
 const char *hwPortname(brain_pin_e brainPin);

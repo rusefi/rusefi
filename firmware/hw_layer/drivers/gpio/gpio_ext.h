@@ -11,7 +11,7 @@
 
 #if EFI_PROD_CODE
 #include "board.h"
-#endif
+#endif /* EFI_PROD_CODE */
 
 #include "rusefi_enums.h"
 

@@ -42,6 +42,11 @@ WaveChart waveChart;
 
 trigger_central_s::trigger_central_s() : hwEventCounters() {
 
+	static_assert(TRIGGER_TYPE_60_2 == TT_TOOTHED_WHEEL_60_2, "One we will have one source of this magic constant");
+	static_assert(TRIGGER_TYPE_36_1 == TT_TOOTHED_WHEEL_36_1, "One we will have one source of this magic constant");
+
+
+
 }
 
 TriggerCentral::TriggerCentral() : trigger_central_s() {
@@ -88,7 +93,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 
 #define miataNb2VVTRatioFrom (8.50 * 0.75)
 #define miataNb2VVTRatioTo (14)
-
+#define miataNbIndex (0)
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	TriggerCentral *tc = &engine->triggerCentral;
@@ -180,7 +185,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
-		while (tc->triggerState.getTotalRevolutionCounter() % 4 != engineConfiguration->nbVvtIndex) {
+		while (tc->triggerState.getTotalRevolutionCounter() % 4 != miataNbIndex) {
 			tc->triggerState.incrementTotalEventCounter();
 		}
 	}
@@ -404,7 +409,7 @@ static void triggerShapeInfo(void) {
 	scheduleMsg(logger, "useRise=%s", boolToString(TRIGGER_WAVEFORM(useRiseEdge)));
 	scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
 
-	for (int i = 0; i < s->getSize(); i++) {
+	for (size_t i = 0; i < s->getSize(); i++) {
 		scheduleMsg(logger, "event %d %.2f", i, s->eventAngles[i]);
 	}
 #endif
@@ -646,8 +651,7 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		isConfigurationChanged(vvtMode) ||
 		isConfigurationChanged(vvtCamSensorUseRise) ||
 		isConfigurationChanged(vvtOffset) ||
-		isConfigurationChanged(vvtDisplayInverted) ||
-		isConfigurationChanged(nbVvtIndex);
+		isConfigurationChanged(vvtDisplayInverted);
 	if (changed) {
 		assertEngineReference();
 

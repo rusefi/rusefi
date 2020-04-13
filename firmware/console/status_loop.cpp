@@ -718,6 +718,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 8
 	tsOutputChannels->intakeAirTemperature = intake;
 
+	SensorResult auxTemp1 = Sensor::get(SensorType::AuxTemp1);
+	tsOutputChannels->auxTemp1 = auxTemp1.Value;
+
+	SensorResult auxTemp2 = Sensor::get(SensorType::AuxTemp2);
+	tsOutputChannels->auxTemp2 = auxTemp2.Value;
+
 	SensorResult tps1 = Sensor::get(SensorType::Tps1);
 	tsOutputChannels->throttlePosition = tps1.Value;
 	tsOutputChannels->isTpsError = !tps1.Valid;
@@ -919,11 +925,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_START_STOP:
 		tsOutputChannels->debugIntField1 = engine->startStopStateToggleCounter;
 		break;
-	case DBG_AUX_TEMPERATURE:
-		// // 68
-		tsOutputChannels->debugFloatField1 = engine->sensors.auxTemp1;
-		tsOutputChannels->debugFloatField2 = engine->sensors.auxTemp2;
-		break;
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = timeSeconds;
 		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
@@ -951,16 +952,21 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_TRIGGER_COUNTERS:
 		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
-		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
+// no one uses shaft so far		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
 #if EFI_PROD_CODE && HAL_USE_ICU == TRUE
+		tsOutputChannels->debugIntField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.vvtEventRiseCounter;
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.vvtEventFallCounter;
-		tsOutputChannels->debugFloatField5 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
 
 		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
 		tsOutputChannels->debugFloatField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);
-		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
+
+		tsOutputChannels->debugIntField4 = engine->triggerCentral.triggerState.currentCycle.eventCount[0];
+		tsOutputChannels->debugIntField5 = engine->triggerCentral.triggerState.currentCycle.eventCount[1];
+
+		// debugFloatField6 used
+		// no one uses shaft so far		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
 		break;
 	case DBG_FSIO_ADC:
 		// todo: implement a proper loop

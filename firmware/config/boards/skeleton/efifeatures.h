@@ -86,11 +86,6 @@
 #define BOARD_MC33972_COUNT	0
 #define BOARD_TLE8888_COUNT 	0
 
-// Future: move these outside of efifeatures.h
-#define BOARD_EXT_GPIOCHIPS  (BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
-#define BOARD_EXT_PINREPOPINS 24
-
-
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
  * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE

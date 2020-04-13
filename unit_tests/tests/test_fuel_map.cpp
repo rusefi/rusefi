@@ -27,7 +27,7 @@ TEST(misc, testMafFuelMath) {
 	setAfrMap(config->afrTable, 13);
 
 	float fuelMs = getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("fuelMs", 26.7099, fuelMs);
+	assertEqualsM("fuelMs", 13.3550, fuelMs);
 }
 
 TEST(misc, testFuelMap) {

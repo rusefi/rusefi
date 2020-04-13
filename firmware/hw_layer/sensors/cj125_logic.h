@@ -54,8 +54,8 @@ public:
 class CJ125 {
 public:
 	CJ125();
-	Cj125SpiStream *spi = NULL;
-	Logging *logger = NULL;
+	Cj125SpiStream *spi = nullptr;
+	Logging *logger = nullptr;
 
 	SimplePwm wboHeaterControl;
 
@@ -77,11 +77,15 @@ public:
 	volatile float lambda = 1.0f;
 
 	// Current values
+	// lambda
 	volatile float vUa = 0.0f;
+	// heater
 	volatile float vUr = 0.0f;
 
 	// Calibration values
+	// lambda
 	volatile float vUaCal = 0.0f;
+	// header
 	volatile float vUrCal = 0.0f;
 
 	OutputPin wboHeaterPin;
@@ -98,6 +102,7 @@ public:
 	void SetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENGINE_PARAMETER_SUFFIX);
 	bool cjIdentify(void);
+	void calibrate();
 	void cjSetMode(cj125_mode_e m);
 	bool isValidState() const;
 	void cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE);

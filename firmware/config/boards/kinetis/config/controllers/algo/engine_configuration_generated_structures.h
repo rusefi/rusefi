@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Apr 04 09:07:06 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Apr 08 22:31:15 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -495,7 +495,7 @@ struct etb_io {
 	/**
 	 * offset 3
 	 */
-	uint8_t pad;
+	brain_pin_e disablePin;
 	/** total size 4*/
 };
 
@@ -550,8 +550,9 @@ struct engine_configuration_s {
 	offset 76 bit 8 */
 	bool isVerboseAuxPid4 : 1;
 	/**
+	 * enable cj125verbose/disable cj125verbose
 	offset 76 bit 9 */
-	bool unused76b9 : 1;
+	bool isCJ125Verbose : 1;
 	/**
 	 * Is your UA CJ125 output wired to MCU via resistor divider?
 	offset 76 bit 10 */
@@ -1079,10 +1080,12 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e electronicThrottlePin1Mode;
 	/**
+	 * set_cj125_heater_pin XXX
 	 * offset 673
 	 */
 	brain_pin_e wboHeaterPin;
 	/**
+	 * set_cj125_cs_pin XXX
 	 * offset 674
 	 */
 	brain_pin_e cj125CsPin;
@@ -1284,6 +1287,7 @@ struct engine_configuration_s {
 	offset 744 bit 15 */
 	bool onOffAlternatorLogic : 1;
 	/**
+	 * enable cj125/disable cj125
 	offset 744 bit 16 */
 	bool isCJ125Enabled : 1;
 	/**
@@ -2488,7 +2492,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2416
 	 */
-	int nbVvtIndex;
+	int unusedSomethingWasHere;
 	/**
 	 * offset 2420
 	 */
@@ -3258,4 +3262,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Sat Apr 04 09:07:06 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Wed Apr 08 22:31:15 EDT 2020

@@ -16,11 +16,8 @@
 #include "eficonsole.h"
 #include "memstreams.h"
 #include "drivers/gpio/gpio_ext.h"
-#include "tle8888.h"
-
-#ifndef BOARD_EXT_PINREPOPINS
-	#define BOARD_EXT_PINREPOPINS 0
-#endif
+#include "smart_gpio.h"
+#include "hardware.h"
 
 static bool initialized = false;
 
@@ -36,6 +33,25 @@ static int brainPin_to_index(brain_pin_e brainPin)
 
 	index = brainPin - GPIOA_0;
 
+	if ((unsigned)index < getNumBrainPins())
+		return index;
+
+	/* gpiochips magic: skip gates for absent chips */
+#ifdef TLE8888_PIN_1
+	if ((brainPin >= TLE8888_PIN_1) && (BOARD_TLE8888_COUNT == 0))
+		index -= (TLE8888_PIN_28 -TLE8888_PIN_1 + 1);
+#endif
+
+#ifdef MC33972_PIN_1
+	if ((brainPin >= MC33972_PIN_1) && (BOARD_MC33972_COUNT == 0))
+		index -= (MC33972_PIN_22 - MC33972_PIN_1 + 1);
+#endif
+
+#ifdef TLE6240_PIN_1
+	if ((brainPin >= TLE6240_PIN_1) && (BOARD_TLE6240_COUNT == 0))
+		index -= (TLE6240_PIN_16 - TLE6240_PIN_1 + 1);
+#endif
+
 	/* if index outside array boundary */
 	if ((unsigned)index >= getNumBrainPins() + BOARD_EXT_PINREPOPINS)
 		return -1;
@@ -43,9 +59,31 @@ static int brainPin_to_index(brain_pin_e brainPin)
 	return index;
 }
 
-static brain_pin_e index_to_brainPin(int i)
+static brain_pin_e index_to_brainPin(unsigned int i)
 {
-	return (brain_pin_e)((int)GPIOA_0 + i);
+	brain_pin_e brainPin = (brain_pin_e)((int)GPIOA_0 + i);
+
+	/* on-chip pins */
+	if (i < getNumBrainPins())
+		return brainPin;
+
+	/* gpiochips magic: skip absent chips */
+#ifdef TLE6240_PIN_1
+	if (BOARD_TLE6240_COUNT == 0)
+		brainPin += (TLE6240_PIN_16 - TLE6240_PIN_1 + 1);
+#endif
+
+#ifdef MC33972_PIN_1
+	if (BOARD_MC33972_COUNT == 0)
+		brainPin += (MC33972_PIN_22 - MC33972_PIN_1 + 1);
+#endif
+
+#ifdef TLE8888_PIN_1
+	if (BOARD_TLE8888_COUNT == 0)
+		brainPin += (TLE8888_PIN_28 -TLE8888_PIN_1 + 1);
+#endif
+
+	return brainPin;
 }
 
 PinRepository::PinRepository() {
@@ -53,6 +91,7 @@ PinRepository::PinRepository() {
 
 static PinRepository instance;
 
+#if (BOARD_TLE8888_COUNT > 0)
 /* DEBUG */
 extern "C" {
 	extern void tle8888_read_reg(uint16_t reg, uint16_t *val);
@@ -72,6 +111,7 @@ void tle8888_dump_regs(void)
 		scheduleMsg(&logger, "%02x: %02x", response, data);
 	}
 }
+#endif
 
 static void reportPins(void) {
 	for (unsigned int i = 0; i < getNumBrainPins(); i++) {
@@ -134,6 +174,12 @@ static void reportPins(void) {
 
 static MemoryStream portNameStream;
 static char portNameBuffer[20];
+
+void printSpiConfig(Logging *logging, const char *msg, spi_device_e device) {
+	scheduleMsg(logging, "%s %s mosi=%s", msg, getSpi_device_e(device), hwPortname(getMosiPin(device)));
+	scheduleMsg(logging, "%s %s miso=%s", msg, getSpi_device_e(device), hwPortname(getMisoPin(device)));
+	scheduleMsg(logging, "%s %s sck=%s",  msg, getSpi_device_e(device), hwPortname(getSckPin(device)));
+}
 
 const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {

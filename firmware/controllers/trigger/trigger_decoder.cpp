@@ -7,8 +7,8 @@
  *
  *
  * enable trigger_details
- * DBG_TRIGGER_SYNC = 16
- * set debug_mode 16
+ * DBG_TRIGGER_COUNTERS = 5
+ * set debug_mode 5
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -335,7 +335,7 @@ bool TriggerState::isEvenRevolution() const {
 bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 	bool isDecodingError = false;
 	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-		isDecodingError |= currentCycle.eventCount[i] != triggerShape->expectedEventCount[i];
+		isDecodingError |= (currentCycle.eventCount[i] != triggerShape->expectedEventCount[i]);
 	}
 
 
@@ -352,7 +352,7 @@ bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 }
 
 void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-		efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape) {
+		efitick_t nowNt, TriggerWaveform *triggerShape) {
 
 
 	if (triggerCycleCallback) {
@@ -498,14 +498,13 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 		DISPLAY(DISPLAY_FIELD(vvtCamCounter));
 
 		if (triggerShape->isSynchronizationNeeded) {
-			// this is getting a little out of hand, any ideas?
 
 			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
 
-			if (CONFIG(debugMode) == DBG_TRIGGER_SYNC) {
+			if (CONFIG(debugMode) == DBG_TRIGGER_COUNTERS) {
 #if EFI_TUNER_STUDIO
-				tsOutputChannels.debugFloatField1 = currentGap;
-				tsOutputChannels.debugFloatField2 = currentCycle.current_index;
+				tsOutputChannels.debugFloatField6 = currentGap;
+				tsOutputChannels.debugIntField3 = currentCycle.current_index;
 #endif /* EFI_TUNER_STUDIO */
 			}
 
@@ -628,7 +627,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 			nextTriggerEvent()
 			;
 
-			onShaftSynchronization(triggerCycleCallback, nowNt, triggerWheel, triggerShape);
+			onShaftSynchronization(triggerCycleCallback, nowNt, triggerShape);
 
 		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()

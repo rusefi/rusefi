@@ -16,8 +16,8 @@ SensorResult ResistanceFunc::convert(float raw) const {
 		return {false, 0.0f};
 	}
 
-	// If the voltage is very high (95% VCC), the sensor is open circuit.
-	if (raw > (m_supplyVoltage * 0.95f)) {
+	// If the voltage is very high (98% VCC), the sensor is open circuit.
+	if (raw > (m_supplyVoltage * 0.98f)) {
 		return {false, 1e6};
 	}
 
@@ -28,6 +28,6 @@ SensorResult ResistanceFunc::convert(float raw) const {
 }
 
 void ResistanceFunc::showInfo(Logging* logger, float testInputValue) const {
-	const auto [valid, value] = convert(testInputValue);
-	scheduleMsg(logger, "    %.2f volts -> %.1f ohms, with supply voltage %.2f and pullup %.1f.", testInputValue, value, m_supplyVoltage, m_pullupResistor);
+	const auto result = convert(testInputValue);
+	scheduleMsg(logger, "    %.2f volts -> %.1f ohms with supply voltage %.2f and pullup %.1f.", testInputValue, result.Value, m_supplyVoltage, m_pullupResistor);
 }

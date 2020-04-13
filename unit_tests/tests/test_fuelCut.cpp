@@ -8,7 +8,7 @@
 #include "engine_math.h"
 #include "engine_test_helper.h"
 #include "event_queue.h"
-#include "tps.h"
+#include "sensor.h"
 #include "fsio_impl.h"
 
 TEST(fuelCut, coasting) {
@@ -25,9 +25,6 @@ TEST(fuelCut, coasting) {
 	engineConfiguration->coastingFuelCutMap = 100;
 	// set cranking threshold
 	engineConfiguration->cranking.rpm = 999;
-	// configure TPS
-	engineConfiguration->tpsMin = 0;
-	engineConfiguration->tpsMax = 10;
 
 	// basic engine setup
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
@@ -35,7 +32,7 @@ TEST(fuelCut, coasting) {
 	// mock CLT - just above threshold ('hot engine')
 	float hotClt = engine->sensors.clt = engineConfiguration->coastingFuelCutClt + 1;
 	// mock TPS - throttle is opened
-	setMockTpsAdc(6 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::Tps1, 60);
 	// set 'running' RPM - just above RpmHigh threshold
 	engine->rpmCalculator.mockRpm = engineConfiguration->coastingFuelCutRpmHigh + 1;
 	// 'advance' time (amount doesn't matter)
@@ -53,7 +50,7 @@ TEST(fuelCut, coasting) {
 	assertEqualsM("inj dur#1 norm", normalInjDuration, ENGINE(injectionDuration));
 
 	// 'releasing' the throttle
-	setMockTpsAdc(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::Tps1, 0);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Fuel cut-off is enabled now

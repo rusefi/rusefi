@@ -17,6 +17,8 @@
 
 #define SWAP_UINT32(x) ((((x) >> 24) & 0xff) | (((x) << 8) & 0xff0000) | (((x) >> 8) & 0xff00) | (((x) << 24) & 0xff000000))
 
+#define BIT(n) (UINT32_C(1) << (n))
+
 // human-readable IDs start from 1 while computer-readbale indexes start from 0
 #define ID2INDEX(id) ((id) - 1)
 

@@ -29,7 +29,6 @@ EngineTestHelperBase::EngineTestHelperBase() {
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback) {
-	Sensor::resetRegistry();
 	unitTestWarningCodeState.clear();
 
 	testMafValue = 0;
@@ -77,6 +76,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
+}
+
+EngineTestHelper::~EngineTestHelper() {
+	Sensor::resetRegistry();
 }
 
 /**
