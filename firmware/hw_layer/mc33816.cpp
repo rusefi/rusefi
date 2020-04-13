@@ -54,6 +54,9 @@ static void showStats() {
 
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
     	scheduleMsg(logger, "flag0 before %d after %d", flag0before, flag0after);
+
+    	scheduleMsg(logger, "flag0 right now %d", efiReadPin(CONFIG(mc33816_flag0)));
+
     } else {
     	scheduleMsg(logger, "No flag0");
     }
