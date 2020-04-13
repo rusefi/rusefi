@@ -17,13 +17,11 @@
 
 EXTERN_ENGINE;
 
-#if EFI_CJ125
+#if EFI_CJ125 && HAL_USE_SPI
 
 #include "adc_inputs.h"
 
-#if HAL_USE_SPI
 #include "mpu_util.h"
-#endif /* HAL_USE_SPI */
 
 //#define CJ125_DEBUG
 //#define CJ125_DEBUG_SPI
@@ -41,8 +39,6 @@ static CJ125 globalInstance;
 
 static THD_WORKING_AREA(cj125ThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-#if HAL_USE_SPI
-
 static SPIDriver *driver;
 
 static SPIConfig cj125spicfg = {
@@ -56,8 +52,6 @@ static SPIConfig cj125spicfg = {
 		.cr2 =
 			SPI_CR2_8BIT_MODE
 };
-
-#endif /* HAL_USE_SPI */
 
 static volatile int lastSlowAdcCounter = 0;
 
@@ -171,9 +165,7 @@ static void cjPrintState() {
 
 static void cjInfo() {
 	cjPrintState();
-#if HAL_USE_SPI
 	printSpiConfig(logger, "cj125", CONFIG(cj125SpiDevice));
-#endif /* HAL_USE_SPI */
 }
 
 static void cjPrintData(void) {
@@ -342,8 +334,7 @@ void CJ125::setError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	cjWriteRegister(INIT_REG2_WR, CJ125_INIT2_RESET);
 }
 
-static bool cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if HAL_USE_SPI
+static void cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	globalInstance.cj125Cs.initPin("cj125 CS", CONFIG(cj125CsPin),
 			&engineConfiguration->cj125CsPinMode);
 	// Idle CS pin - SPI CS is high when idle
@@ -356,12 +347,10 @@ static bool cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	driver = getSpiDevice(engineConfiguration->cj125SpiDevice);
 	if (driver == NULL) {
 		// error already reported
-		return false;
+		return;
 	}
 	scheduleMsg(logger, "cj125: Starting SPI driver %s", getSpi_device_e(engineConfiguration->cj125SpiDevice));
 	spiStart(driver, &cj125spicfg);
-#endif /* HAL_USE_SPI */
-	return true;
 }
 
 /**
@@ -579,8 +568,11 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	globalInstance.cjInitPid(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (!cjStartSpi(PASS_ENGINE_PARAMETER_SIGNATURE))
+	cjStartSpi(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (driver == NULL) {
+		// error already reported
 		return;
+	}
 	scheduleMsg(logger, "cj125: Starting heater control");
 	globalInstance.StartHeaterControl((pwm_gen_callback*)applyPinState PASS_ENGINE_PARAMETER_SUFFIX);
 	cjStart(PASS_ENGINE_PARAMETER_SIGNATURE);
