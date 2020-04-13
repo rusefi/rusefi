@@ -17,11 +17,13 @@
 
 EXTERN_ENGINE;
 
-#if EFI_CJ125 && HAL_USE_SPI
+#if EFI_CJ125
 
 #include "adc_inputs.h"
 
+#if HAL_USE_SPI
 #include "mpu_util.h"
+#endif /* HAL_USE_SPI */
 
 //#define CJ125_DEBUG
 //#define CJ125_DEBUG_SPI
@@ -37,7 +39,11 @@ static uint8_t rx_buff[1] NO_CACHE;
 
 static CJ125 globalInstance;
 
+#if ! EFI_UNIT_TEST
 static THD_WORKING_AREA(cj125ThreadStack, UTILITY_THREAD_STACK_SIZE);
+#endif /* EFI_UNIT_TEST */
+
+#if HAL_USE_SPI
 
 static SPIDriver *driver;
 
@@ -52,6 +58,8 @@ static SPIConfig cj125spicfg = {
 		.cr2 =
 			SPI_CR2_8BIT_MODE
 };
+
+#endif /* HAL_USE_SPI */
 
 static volatile int lastSlowAdcCounter = 0;
 
@@ -106,9 +114,11 @@ static void cjWriteRegister(uint8_t regAddr, uint8_t regValue) {
 	scheduleMsg(logger, "cjWriteRegister: addr=%d value=%d", regAddr, regValue);
 #endif /* CJ125_DEBUG_SPI */
 	// todo: extract 'sendSync' method?
+#if HAL_USE_SPI
 	spiSelect(driver);
 	spiSend(driver, 2, tx_buff);
 	spiUnselect(driver);
+#endif /* HAL_USE_SPI */
 }
 
 static float getUr() {
@@ -165,13 +175,17 @@ static void cjPrintState() {
 
 static void cjInfo() {
 	cjPrintState();
+#if HAL_USE_SPI
 	printSpiConfig(logger, "cj125", CONFIG(cj125SpiDevice));
+#endif /* HAL_USE_SPI */
 }
 
-static void cjPrintData(void) {
+static void cjPrintData() {
+#if ! EFI_UNIT_TEST
 	if (engineConfiguration->isCJ125Verbose) {
 		cjPrintState();
 	}
+#endif /* EFI_UNIT_TEST */
 }
 
 static void cjPrintErrorCode(cj125_error_e errCode) {
@@ -334,7 +348,8 @@ void CJ125::setError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	cjWriteRegister(INIT_REG2_WR, CJ125_INIT2_RESET);
 }
 
-static void cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static bool cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if HAL_USE_SPI
 	globalInstance.cj125Cs.initPin("cj125 CS", CONFIG(cj125CsPin),
 			&engineConfiguration->cj125CsPinMode);
 	// Idle CS pin - SPI CS is high when idle
@@ -347,10 +362,12 @@ static void cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	driver = getSpiDevice(engineConfiguration->cj125SpiDevice);
 	if (driver == NULL) {
 		// error already reported
-		return;
+		return false;
 	}
 	scheduleMsg(logger, "cj125: Starting SPI driver %s", getSpi_device_e(engineConfiguration->cj125SpiDevice));
 	spiStart(driver, &cj125spicfg);
+#endif /* HAL_USE_SPI */
+	return true;
 }
 
 /**
@@ -448,6 +465,8 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return false;
 }
 
+#if ! EFI_UNIT_TEST
+
 static msg_t cjThread(void)
 {
 	chRegSetThreadName("cj125");
@@ -463,7 +482,6 @@ static msg_t cjThread(void)
 	return -1;
 }
 
-#if ! EFI_UNIT_TEST
 static bool cjCheckConfig(void) {
 	if (!CONFIG(isCJ125Enabled)) {
 		scheduleMsg(logger, "cj125 is disabled. Failed!");
@@ -568,11 +586,8 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	globalInstance.cjInitPid(PASS_ENGINE_PARAMETER_SIGNATURE);
-	cjStartSpi(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (driver == NULL) {
-		// error already reported
+	if (!cjStartSpi(PASS_ENGINE_PARAMETER_SIGNATURE))
 		return;
-	}
 	scheduleMsg(logger, "cj125: Starting heater control");
 	globalInstance.StartHeaterControl((pwm_gen_callback*)applyPinState PASS_ENGINE_PARAMETER_SUFFIX);
 	cjStart(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -583,11 +598,13 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleActionI("cj125_set_init2", cjSetInit2);
 #endif /* CJ125_DEBUG */
 
+#if ! EFI_UNIT_TEST
 	addConsoleAction("cj125_info", cjInfo);
 	addConsoleAction("cj125_restart", cjRestart);
 	addConsoleAction("cj125_calibrate", cjStartCalibration);
 
 	chThdCreateStatic(cj125ThreadStack, sizeof(cj125ThreadStack), LOWPRIO, (tfunc_t)(void*) cjThread, NULL);
+#endif /* ! EFI_UNIT_TEST */
 }
 
 #endif /* EFI_CJ125 && HAL_USE_SPI */
