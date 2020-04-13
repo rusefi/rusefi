@@ -64,6 +64,9 @@
 		EXTERN_CONFIG \
 		extern EnginePins enginePins \
 
+// See also DECLARE_ENGINE_PTR
+// See also INJECT_ENGINE_REFERENCE
+
 
 // Use this macro to declare a function which only takes magic references
 #define DECLARE_ENGINE_PARAMETER_SIGNATURE void

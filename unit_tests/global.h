@@ -38,6 +38,7 @@ extern "C"
 #endif /* __cplusplus */
 
 #define CH_FREQUENCY 1000
+#define NO_CACHE
 
 typedef int bool_t;
 typedef uint32_t systime_t;

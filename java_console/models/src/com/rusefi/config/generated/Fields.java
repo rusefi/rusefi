@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 12 23:47:17 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Apr 13 09:22:02 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1197,6 +1197,46 @@ public class Fields {
 	public static final int stepperForceParkingEveryRestart_offset = 744;
 	public static final int stepperParkingExtraSteps_offset = 818;
 	public static final int stepperParkingExtraSteps_offset_hex = 332;
+	public static final int STFT_CELL_COUNT = 4;
+	public static final int stft_cellCfgs1_maxAdd_offset = 1072;
+	public static final int stft_cellCfgs1_maxAdd_offset_hex = 430;
+	public static final int stft_cellCfgs1_maxRemove_offset = 1073;
+	public static final int stft_cellCfgs1_maxRemove_offset_hex = 431;
+	public static final int stft_cellCfgs1_offset = 1072;
+	public static final int stft_cellCfgs1_offset_hex = 430;
+	public static final int stft_cellCfgs1_timeConstant_offset = 1074;
+	public static final int stft_cellCfgs1_timeConstant_offset_hex = 432;
+	public static final int stft_cellCfgs2_maxAdd_offset = 1076;
+	public static final int stft_cellCfgs2_maxAdd_offset_hex = 434;
+	public static final int stft_cellCfgs2_maxRemove_offset = 1077;
+	public static final int stft_cellCfgs2_maxRemove_offset_hex = 435;
+	public static final int stft_cellCfgs2_offset = 1076;
+	public static final int stft_cellCfgs2_offset_hex = 434;
+	public static final int stft_cellCfgs2_timeConstant_offset = 1078;
+	public static final int stft_cellCfgs2_timeConstant_offset_hex = 436;
+	public static final int stft_cellCfgs3_maxAdd_offset = 1080;
+	public static final int stft_cellCfgs3_maxAdd_offset_hex = 438;
+	public static final int stft_cellCfgs3_maxRemove_offset = 1081;
+	public static final int stft_cellCfgs3_maxRemove_offset_hex = 439;
+	public static final int stft_cellCfgs3_offset = 1080;
+	public static final int stft_cellCfgs3_offset_hex = 438;
+	public static final int stft_cellCfgs3_timeConstant_offset = 1082;
+	public static final int stft_cellCfgs4_maxAdd_offset = 1084;
+	public static final int stft_cellCfgs4_maxRemove_offset = 1085;
+	public static final int stft_cellCfgs4_offset = 1084;
+	public static final int stft_cellCfgs4_timeConstant_offset = 1086;
+	public static final int stft_deadband_offset = 1067;
+	public static final int stft_maxAfr_offset = 1070;
+	public static final int stft_maxIdleRegionRpm_offset = 1064;
+	public static final int stft_maxIdleRegionRpm_offset_hex = 428;
+	public static final int stft_maxOverrunLoad_offset = 1065;
+	public static final int stft_maxOverrunLoad_offset_hex = 429;
+	public static final int stft_minAfr_offset = 1069;
+	public static final int stft_minClt_offset = 1068;
+	public static final int stft_minPowerLoad_offset = 1066;
+	public static final int stft_offset = 1064;
+	public static final int stft_offset_hex = 428;
+	public static final int stft_startupDelay_offset = 1071;
 	public static final int storageMode_offset = 2260;
 	public static final int tachOutputPin_offset = 704;
 	public static final int tachOutputPinMode_offset = 705;
@@ -1395,8 +1435,8 @@ public class Fields {
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
 	public static final int unusedAntilagTimeout_offset = 820;
 	public static final int unusedAntilagTimeout_offset_hex = 334;
-	public static final int unusedAtOldBoardConfigurationEnd_offset = 1064;
-	public static final int unusedAtOldBoardConfigurationEnd_offset_hex = 428;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 1088;
+	public static final int unusedAtOldBoardConfigurationEnd_offset_hex = 440;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_10_offset = 976;
 	public static final int unusedBit_251_11_offset = 976;
@@ -2012,6 +2052,26 @@ public class Fields {
 	public static final Field LAUNCHADVANCERPMRANGE = Field.create("LAUNCHADVANCERPMRANGE", 1052, FieldType.INT);
 	public static final Field LAUNCHTPSTRESHOLD = Field.create("LAUNCHTPSTRESHOLD", 1056, FieldType.INT);
 	public static final Field LAUNCHACTIVATEDELAY = Field.create("LAUNCHACTIVATEDELAY", 1060, FieldType.FLOAT);
+	public static final Field STFT_MAXIDLEREGIONRPM = Field.create("STFT_MAXIDLEREGIONRPM", 1064, FieldType.INT8);
+	public static final Field STFT_MAXOVERRUNLOAD = Field.create("STFT_MAXOVERRUNLOAD", 1065, FieldType.INT8);
+	public static final Field STFT_MINPOWERLOAD = Field.create("STFT_MINPOWERLOAD", 1066, FieldType.INT8);
+	public static final Field STFT_DEADBAND = Field.create("STFT_DEADBAND", 1067, FieldType.INT8);
+	public static final Field STFT_MINCLT = Field.create("STFT_MINCLT", 1068, FieldType.INT8);
+	public static final Field STFT_MINAFR = Field.create("STFT_MINAFR", 1069, FieldType.INT8);
+	public static final Field STFT_MAXAFR = Field.create("STFT_MAXAFR", 1070, FieldType.INT8);
+	public static final Field STFT_STARTUPDELAY = Field.create("STFT_STARTUPDELAY", 1071, FieldType.INT8);
+	public static final Field STFT_CELLCFGS1_MAXADD = Field.create("STFT_CELLCFGS1_MAXADD", 1072, FieldType.INT8);
+	public static final Field STFT_CELLCFGS1_MAXREMOVE = Field.create("STFT_CELLCFGS1_MAXREMOVE", 1073, FieldType.INT8);
+	public static final Field STFT_CELLCFGS1_TIMECONSTANT = Field.create("STFT_CELLCFGS1_TIMECONSTANT", 1074, FieldType.INT16);
+	public static final Field STFT_CELLCFGS2_MAXADD = Field.create("STFT_CELLCFGS2_MAXADD", 1076, FieldType.INT8);
+	public static final Field STFT_CELLCFGS2_MAXREMOVE = Field.create("STFT_CELLCFGS2_MAXREMOVE", 1077, FieldType.INT8);
+	public static final Field STFT_CELLCFGS2_TIMECONSTANT = Field.create("STFT_CELLCFGS2_TIMECONSTANT", 1078, FieldType.INT16);
+	public static final Field STFT_CELLCFGS3_MAXADD = Field.create("STFT_CELLCFGS3_MAXADD", 1080, FieldType.INT8);
+	public static final Field STFT_CELLCFGS3_MAXREMOVE = Field.create("STFT_CELLCFGS3_MAXREMOVE", 1081, FieldType.INT8);
+	public static final Field STFT_CELLCFGS3_TIMECONSTANT = Field.create("STFT_CELLCFGS3_TIMECONSTANT", 1082, FieldType.INT16);
+	public static final Field STFT_CELLCFGS4_MAXADD = Field.create("STFT_CELLCFGS4_MAXADD", 1084, FieldType.INT8);
+	public static final Field STFT_CELLCFGS4_MAXREMOVE = Field.create("STFT_CELLCFGS4_MAXREMOVE", 1085, FieldType.INT8);
+	public static final Field STFT_CELLCFGS4_TIMECONSTANT = Field.create("STFT_CELLCFGS4_TIMECONSTANT", 1086, FieldType.INT16);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -2914,6 +2974,26 @@ public class Fields {
 	LAUNCHADVANCERPMRANGE,
 	LAUNCHTPSTRESHOLD,
 	LAUNCHACTIVATEDELAY,
+	STFT_MAXIDLEREGIONRPM,
+	STFT_MAXOVERRUNLOAD,
+	STFT_MINPOWERLOAD,
+	STFT_DEADBAND,
+	STFT_MINCLT,
+	STFT_MINAFR,
+	STFT_MAXAFR,
+	STFT_STARTUPDELAY,
+	STFT_CELLCFGS1_MAXADD,
+	STFT_CELLCFGS1_MAXREMOVE,
+	STFT_CELLCFGS1_TIMECONSTANT,
+	STFT_CELLCFGS2_MAXADD,
+	STFT_CELLCFGS2_MAXREMOVE,
+	STFT_CELLCFGS2_TIMECONSTANT,
+	STFT_CELLCFGS3_MAXADD,
+	STFT_CELLCFGS3_MAXREMOVE,
+	STFT_CELLCFGS3_TIMECONSTANT,
+	STFT_CELLCFGS4_MAXADD,
+	STFT_CELLCFGS4_MAXREMOVE,
+	STFT_CELLCFGS4_TIMECONSTANT,
 	VVTDISPLAYINVERTED,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
