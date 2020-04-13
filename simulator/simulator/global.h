@@ -47,6 +47,7 @@
 #define DL_OUTPUT_BUFFER 9000
 
 #define CCM_OPTIONAL
+#define NO_CACHE
 
 #define EFI_CUSTOM_PANIC_METHOD 1
 
