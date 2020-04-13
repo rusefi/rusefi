@@ -1191,14 +1191,14 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Targets & closed loop
-		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1 && (fuelAlgorithm == LM_SPEED_DENSITY || fuelAlgorithm == LM_REAL_MAF)}
 		subMenu = fuelClosedLoopDialog, 	"Closed loop correction", 0, {isInjectionEnabled == 1}
 		subMenu = coastingFuelCutControl, 	"Deceleration fuel cutoff (DFCO)", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Fuel table/VE
-		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY}
-		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY && fuelAlgorithm != LM_REAL_MAF}
+		subMenu = veTableDialog,			"VE", 1, {isInjectionEnabled == 1 && (fuelAlgorithm == LM_SPEED_DENSITY || fuelAlgorithm == LM_REAL_MAF)}
 		subMenu = injPhaseTableTbl,         "Injection phase", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
