@@ -150,8 +150,8 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 0;
 	}
 
-	//Calculation of 100% VE air mass in Kg/h
-	float StandardAirCharge = rpm * CONFIG(specs.displacement) * 0.000038787;  //- Constant comes from 0.0012929 * 60 / 2 /1000 to convert direct from 2*cc/min to Kg/h
+	//Calculation of 100% VE air mass in g/rev
+	float StandardAirCharge = CONFIG(specs.displacement) / CONFIG(specs.cylindersCount) * 1.2929; //1 cylinder filling at 1.2929g/L
 
 	// kg/hr -> g/s
 	float gramPerSecond = airSpeed * 1000 / 3600;
