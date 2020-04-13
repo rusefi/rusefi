@@ -109,21 +109,28 @@ enable2ndByteCanID = false
 
 [LoggerDefinition]
   ; valid logger types: composite, tooth, trigger, csv
-  loggerDef = compositeLogger, "Primary Trigger Logger", tooth
+  loggerDef = compositeLogger, "Trigger Logger", composite
         startCommand = "l\x01"
         stopCommand  = "l\x02"
         dataReadCommand = "L"
         dataReadTimeout = 10000 ; time in ms
         dataReadyCondition = { toothLogReady }
+        continuousRead = true
         ; each packet is @@COMPOSITE_PACKET_SIZE@@ and we have @@COMPOSITE_PACKET_COUNT@@ of those
         dataLength = @@COMPOSITE_DATA_LENGTH@@
 
-       ; recordDef = headerLen, footerLen, recordLen
-       recordDef =   0,   0,   @@COMPOSITE_PACKET_SIZE@@
+		; recordDef = headerLen, footerLen, recordLen
+		recordDef =   0,   0,   @@COMPOSITE_PACKET_SIZE@@
 
-       ; uint16 that stores 1/100 second
-       recordField = toothTime, "tooth", 0, 16, 0.01, "ms"
+		; these names are hard-coded inside TS
+		recordField = priLevel,          "PriLevel",     0,          1,          1.0,    "Flag"
+        recordField = secLevel,          "SecLevel",     1,          1,          1.0,    "Flag"
+        recordField = trigger,           "Trigger",      2,          1,          1.0,    "Flag"
+        recordField = sync,              "Sync",         3,          1,          1.0,    "Flag"
+		recordField = time,              "Time",         8,         32,         0.01,    "ms"
 
+        ; it seems that TS also needs to know the diff.size of a tooth
+        calcField = toothTime,           "ToothTime",    "ms",       { time - pastValue(time, 1) }
 
 [VeAnalyze]
 

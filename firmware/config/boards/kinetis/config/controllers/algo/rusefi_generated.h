@@ -441,9 +441,9 @@
 #define coastingFuelCutTps_offset_hex c50
 #define communicationLedPin_offset 1812
 #define communicationLedPin_offset_hex 714
-#define COMPOSITE_DATA_LENGTH 2000
-#define COMPOSITE_PACKET_COUNT 1000
-#define COMPOSITE_PACKET_SIZE 2
+#define COMPOSITE_DATA_LENGTH 2500
+#define COMPOSITE_PACKET_COUNT 500
+#define COMPOSITE_PACKET_SIZE 5
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define consoleLoopPeriodMs_offset 716
 #define consoleLoopPeriodMs_offset_hex 2cc
