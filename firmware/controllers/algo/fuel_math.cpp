@@ -171,7 +171,7 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float airChargeLoad = 100 * cylinderAirmass/StandardAirCharge;
 	
 	//Correct air mass by VE table 
-	float corrCylAirmass = cylinderAirmass * ve2Map.getValue(rpm, airChargeLoad);
+	float corrCylAirmass = cylinderAirmass * veMap.getValue(rpm, airChargeLoad);
 	float fuelMassGram = corrCylAirmass / afrMap.getValue(rpm, airSpeed);
 	float pulseWidthSeconds = fuelMassGram / cc_minute_to_gramm_second(engineConfiguration->injector.flow);
 
