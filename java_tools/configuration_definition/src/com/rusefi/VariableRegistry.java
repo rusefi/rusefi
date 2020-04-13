@@ -55,6 +55,7 @@ public class VariableRegistry extends TreeMap<String, String> {
             SystemOut.println("Not redefining " + var);
             return;
         }
+        value = applyVariables(value);
         SystemOut.println("Registering " + var + " as " + value);
         put(var, value);
 
