@@ -4,6 +4,13 @@
  *
  * @brief Configuration defaults for the microRusefi board
  *
+ * MICRO_RUS_EFI
+ * set engine_type 60
+ *
+ * MRE_BOARD_TEST
+ * set engine_type 30
+ *
+ *
  * See https://github.com/rusefi/rusefi_documentation/wiki/Hardware_microRusEfi_wiring
  *
  * @author Matthew Kennedy, (c) 2019
