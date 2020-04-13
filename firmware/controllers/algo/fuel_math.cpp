@@ -31,6 +31,7 @@
 #include "speed_density.h"
 #include "perf_trace.h"
 #include "sensor.h"
+#include "config_engine_specs.h"
 
 EXTERN_ENGINE;
 
