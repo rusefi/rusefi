@@ -9,11 +9,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.rusefi.ConfigDefinition.EOL;
+import static com.rusefi.ReaderState.MULT_TOKEN;
 
 /**
  * 3/30/2015
  */
-public class VariableRegistry extends TreeMap<String, String> {
+public class VariableRegistry  {
+    private TreeMap<String, String> data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final VariableRegistry INSTANCE = new VariableRegistry();
 
     private final Pattern VAR = Pattern.compile("(@@(.*?)@@)");
@@ -24,7 +26,6 @@ public class VariableRegistry extends TreeMap<String, String> {
     private final Map<String, String> javaDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     private VariableRegistry() {
-        super(String.CASE_INSENSITIVE_ORDER);
     }
 
     /**
@@ -42,22 +43,22 @@ public class VariableRegistry extends TreeMap<String, String> {
 
             //     key =
 
-            if (!containsKey(key))
+            if (!data.containsKey(key))
                 throw new IllegalStateException("No such variable: " + key);
-            String s = get(key);
+            String s = data.get(key);
             line = m.replaceFirst(s);
         }
         return line;
     }
 
     public void register(String var, String value) {
-        if (containsKey(var)) {
+        if (data.containsKey(var)) {
             SystemOut.println("Not redefining " + var);
             return;
         }
         value = applyVariables(value);
         SystemOut.println("Registering " + var + " as " + value);
-        put(var, value);
+        data.put(var, value);
 
         cAllDefinitions.put(var, "#define " + var + " " + value + EOL);
         tryToRegisterAsInteger(var, value);
@@ -119,5 +120,19 @@ public class VariableRegistry extends TreeMap<String, String> {
         for (String value : javaDefinitions.values())
             result.append(value);
         return result.toString();
+    }
+
+    public void clear() {
+        data.clear();
+        cAllDefinitions.clear();
+        javaDefinitions.clear();
+    }
+
+    public void put(String key, String value) {
+        data.put(key, value);
+    }
+
+    public String get(Object key) {
+        return data.get(key);
     }
 }
