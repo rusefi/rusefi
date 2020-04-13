@@ -322,7 +322,7 @@ void initMc33816(Logging *sharedLogger) {
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
    		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
 
-   		flag0before = efiReadPin(CONFIG(startStopButtonPin));
+   		flag0before = efiReadPin(CONFIG(mc33816_flag0));
     }
 
 
@@ -337,7 +337,7 @@ void initMc33816(Logging *sharedLogger) {
      */
     download_register(REG_MAIN);    // download main register configurations
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
-   		flag0after = efiReadPin(CONFIG(startStopButtonPin));
+   		flag0after = efiReadPin(CONFIG(mc33816_flag0));
     }
 
     download_register(REG_CH1);     // download channel 1 register configurations
