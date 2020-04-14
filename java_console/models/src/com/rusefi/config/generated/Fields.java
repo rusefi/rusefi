@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Apr 13 18:54:18 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Apr 13 20:23:02 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -285,9 +285,9 @@ public class Fields {
 	public static final int coastingFuelCutTps_offset = 3152;
 	public static final int communicationLedPin_offset = 1812;
 	public static final int communicationLedPin_offset_hex = 714;
-	public static final int COMPOSITE_DATA_LENGTH = 2000;
-	public static final int COMPOSITE_PACKET_COUNT = 1000;
-	public static final int COMPOSITE_PACKET_SIZE = 2;
+	public static final int COMPOSITE_DATA_LENGTH = 2500;
+	public static final int COMPOSITE_PACKET_COUNT = 500;
+	public static final int COMPOSITE_PACKET_SIZE = 5;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int consoleLoopPeriodMs_offset = 716;
 	public static final int consoleSerialRxPin_offset = 1819;
@@ -1293,6 +1293,9 @@ public class Fields {
 	public static final int tle8888spiDevice_offset = 4000;
 	public static final int todoClutchDownPinInverted_offset = 976;
 	public static final int todoClutchUpPinInverted_offset = 976;
+	public static final int TOOTH_DATA_LENGTH = 2000;
+	public static final int TOOTH_PACKET_COUNT = 1000;
+	public static final int TOOTH_PACKET_SIZE = 2;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
 	public static final int TOTAL_CONFIG_SIZE = 20000;
 	public static final int tps1_1AdcChannel_offset = 512;
