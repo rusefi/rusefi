@@ -355,6 +355,7 @@ void initMc33816(Logging *sharedLogger) {
    		flag0before = efiReadPin(CONFIG(mc33816_flag0));
     }
 
+	chThdSleepMilliseconds(10);
 
 	setup_spi();
 	mcChipId = readId();
@@ -365,12 +366,24 @@ void initMc33816(Logging *sharedLogger) {
 	}
 
     download_RAM(CODE_RAM1);        // transfers code RAM1
+
+	chThdSleepMilliseconds(10);
+
     download_RAM(CODE_RAM2);        // transfers code RAM2
+
+	chThdSleepMilliseconds(10);
+
     download_RAM(DATA_RAM);         // transfers data RAM
+
+	chThdSleepMilliseconds(10);
+
     /**
      * current configuration of REG_MAIN would toggle flag0 from LOW to HIGH
      */
     download_register(REG_MAIN);    // download main register configurations
+
+	chThdSleepMilliseconds(10);
+
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
    		flag0after = efiReadPin(CONFIG(mc33816_flag0));
    		if (flag0before || !flag0after) {
@@ -383,8 +396,14 @@ void initMc33816(Logging *sharedLogger) {
     download_register(REG_CH2);     // download channel 2 register configurations
     download_register(REG_IO);      // download IO register configurations
     download_register(REG_DIAG);    // download diag register configuration
+
+	chThdSleepMilliseconds(10);
+
     // Finished downloading, let's run the code
     enable_flash();
+
+	chThdSleepMilliseconds(10);
+
     if (!check_flash()) {
     	firmwareError(OBD_PCM_Processor_Fault, "MC33 flash validation failed");
     	return;
