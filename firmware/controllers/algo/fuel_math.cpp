@@ -151,9 +151,6 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 0;
 	}
 
-	//Calculation of 100% VE air mass in g/rev
-	float StandardAirCharge = CONFIG(specs.displacement) / CONFIG(specs.cylindersCount) * 1.2929; //1 cylinder filling at 1.2929g/L
-
 	// kg/hr -> g/s
 	float gramPerSecond = airSpeed * 1000 / 3600;
 
@@ -167,6 +164,8 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	float cylinderAirmass = airPerRevolution / halfCylCount;
 	
+	//Calculation of 100% VE air mass in g/rev - 1 cylinder filling at 1.2929g/L
+	float StandardAirCharge = CONFIG(specs.displacement) / CONFIG(specs.cylindersCount) * 1.2929; 
 	//Create % load for fuel table using relative naturally aspiratedcylinder filling
 	float airChargeLoad = 100 * cylinderAirmass/StandardAirCharge;
 	
