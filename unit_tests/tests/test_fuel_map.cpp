@@ -20,6 +20,8 @@ extern float testMafValue;
 TEST(misc, testMafFuelMath) {
 	printf("====================================================================================== testMafFuelMath\r\n");
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	extern fuel_Map3D_t veMap;
+	veMap.setAll(75);
 
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
@@ -27,7 +29,7 @@ TEST(misc, testMafFuelMath) {
 	setAfrMap(config->afrTable, 13);
 
 	float fuelMs = getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("fuelMs", 13.3550, fuelMs);
+	assertEqualsM("fuelMs", 0.75 * 13.3550, fuelMs);
 }
 
 TEST(misc, testFuelMap) {
