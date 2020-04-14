@@ -374,7 +374,7 @@ void initMc33816(Logging *sharedLogger) {
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
    		flag0after = efiReadPin(CONFIG(mc33816_flag0));
    		if (flag0before || !flag0after) {
-   			firmwareError(OBD_PCM_Processor_Fault, "MC33 no buena");
+   			firmwareError(OBD_PCM_Processor_Fault, "MC33 flag0 transition no buena");
    			return;
    		}
     }
@@ -385,9 +385,8 @@ void initMc33816(Logging *sharedLogger) {
     download_register(REG_DIAG);    // download diag register configuration
     // Finished downloading, let's run the code
     enable_flash();
-    if(!check_flash())
-    {
-    	firmwareError(OBD_PCM_Processor_Fault, "MC33 no flash");
+    if (!check_flash()) {
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 flash validation failed");
     	return;
     }
 
