@@ -206,7 +206,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// Log to the Tunerstudio tooth logger
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
-	LogTriggerTooth(signal, timestamp);
+	LogTriggerTooth(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_TOOTH_LOGGER */
 
 	// for effective noise filtering, we need both signal edges, 

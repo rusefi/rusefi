@@ -11,6 +11,8 @@
 
 #if EFI_TOOTH_LOGGER
 
+EXTERN_ENGINE;
+
 #include <cstddef>
 #include "efitime.h"
 #include "efilib.h"
@@ -48,11 +50,12 @@ static bool trigger2 = false;
 	//NextIdx++;
 
 
-static void SetNextCompositeEntry(uint32_t nowUs, bool trigger1, bool trigger2) {
+static void SetNextCompositeEntry(uint32_t nowUs, bool trigger1, bool trigger2, bool isSync) {
 	// TS uses big endian, grumble
 	buffer[NextIdx].timestamp = SWAP_UINT32(nowUs);
 	buffer[NextIdx].priLevel = trigger1;
 	buffer[NextIdx].secLevel = trigger2;
+	buffer[NextIdx].sync = isSync;
 	// todo:
 	//buffer[NextIdx].sync = isSynced;
 	//buffer[NextIdx].trigger = wtfIsTriggerIdk;
@@ -67,7 +70,7 @@ static void SetNextCompositeEntry(uint32_t nowUs, bool trigger1, bool trigger2) 
 	}
 }
 
-void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
+void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// bail if we aren't enabled
 	if (!ToothLoggerEnabled) {
 		return;
@@ -107,7 +110,8 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
 	}
 
 	uint32_t nowUs = NT2US(timestamp);
-	SetNextCompositeEntry(nowUs, trigger1, trigger2);
+	bool isSync = engine->triggerCentral.triggerState.shaft_is_synchronized;
+	SetNextCompositeEntry(nowUs, trigger1, trigger2, isSync);
 }
 
 void EnableToothLogger() {
