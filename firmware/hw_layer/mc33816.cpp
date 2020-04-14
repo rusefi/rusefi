@@ -341,6 +341,9 @@ void initMc33816(Logging *sharedLogger) {
     download_register(REG_MAIN);    // download main register configurations
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
    		flag0after = efiReadPin(CONFIG(mc33816_flag0));
+   		if (flag0before || !flag0after) {
+   			firmwareError(OBD_PCM_Processor_Fault, "MC33 no buena");
+   		}
     }
 
     download_register(REG_CH1);     // download channel 1 register configurations
