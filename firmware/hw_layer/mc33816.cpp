@@ -354,8 +354,10 @@ void initMc33816(Logging *sharedLogger) {
 	mcRestart();
 }
 
-
 static void mcRestart() {
+	flag0before = false;
+	flag0after = false;
+
 	scheduleMsg(logger, "MC Restart");
 	showStats();
 
@@ -370,8 +372,6 @@ static void mcRestart() {
 	resetB.setValue(1);
 	chThdSleepMilliseconds(10);
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
-   		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
-
    		flag0before = efiReadPin(CONFIG(mc33816_flag0));
     }
 
