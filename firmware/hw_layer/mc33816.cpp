@@ -111,6 +111,30 @@ static void setup_spi() {
 	spiUnselect(driver);
 }
 
+static bool check_flash() {
+	spiSelect(driver);
+
+	// ch1
+	// read (MSB=1) at location, and 1 word
+    spi_writew((0x8000 | 0x100 << 5) + 1);
+    if (!(recv_16bit_spi() & (1<<5))) {
+    	spiUnselect(driver);
+    	return false;
+    }
+
+    // ch2
+	// read (MSB=1) at location, and 1 word
+    spi_writew((0x8000 | 0x120 << 5) + 1);
+
+    if (!(recv_16bit_spi() & (1<<5))) {
+    	spiUnselect(driver);
+    	return false;
+    }
+
+    spiUnselect(driver);
+	return true;
+}
+
 static void enable_flash() {
 	spiSelect(driver);
     spi_writew(0x2001); //ch1
@@ -343,6 +367,7 @@ void initMc33816(Logging *sharedLogger) {
    		flag0after = efiReadPin(CONFIG(mc33816_flag0));
    		if (flag0before || !flag0after) {
    			firmwareError(OBD_PCM_Processor_Fault, "MC33 no buena");
+   			return;
    		}
     }
 
@@ -350,7 +375,14 @@ void initMc33816(Logging *sharedLogger) {
     download_register(REG_CH2);     // download channel 2 register configurations
     download_register(REG_IO);      // download IO register configurations
     download_register(REG_DIAG);    // download diag register configuration
+    // Finished downloading, let's run the code
     enable_flash();
+    if(!check_flash())
+    {
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 no flash");
+    	return;
+    }
+
     driven.setValue(1); // driven = HV
 }
 
