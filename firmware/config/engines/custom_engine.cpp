@@ -528,10 +528,12 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// default spi3sckPin  PB3
 
 
+	CONFIG(triggerSimulatorPins[0]) = GPIO_UNASSIGNED;
+
 	// blue
 	CONFIG(mc33816_cs) = GPIOD_7;
 	// green
-	CONFIG(mc33816_rstb) = GPIOD_5;
+	CONFIG(mc33816_rstb) = GPIOD_4;
 	// yellow
 	CONFIG(mc33816_driven) = GPIOD_6;
 
