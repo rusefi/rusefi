@@ -21,17 +21,26 @@ int icuFallingCallbackCounter = 0;
 
 #include "trigger_input.h"
 #include "digital_input_icu.h"
+#include "tooth_logger.h"
 
 EXTERN_ENGINE;
 
 static Logging *logger;
 
 static void vvtRisingCallback(void *) {
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt());
+	efitick_t now = getTimeNowNt();
+#if EFI_TOOTH_LOGGER
+	LogTriggerTooth(SHAFT_SECONDARY_RISING, now);
+#endif /* EFI_TOOTH_LOGGER */
+	hwHandleVvtCamSignal(TV_RISE, now);
 }
 
 static void vvtFallingCallback(void *) {
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt());
+	efitick_t now = getTimeNowNt();
+#if EFI_TOOTH_LOGGER
+	LogTriggerTooth(SHAFT_SECONDARY_FALLING, now);
+#endif /* EFI_TOOTH_LOGGER */
+	hwHandleVvtCamSignal(TV_FALL, now);
 }
 
 /**
