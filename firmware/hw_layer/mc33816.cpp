@@ -65,6 +65,9 @@ static void showStats() {
     }
 }
 
+static void mcRestart();
+
+
 // Mostly unused
 unsigned short recv_16bit_spi() {
 	unsigned short ret;
@@ -316,13 +319,16 @@ void initMc33816(Logging *sharedLogger) {
 	if (CONFIG(mc33816_driven) == GPIO_UNASSIGNED)
 		return;
 
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+   		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
+    }
+	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
+
 	// Initialize the chip via ResetB
 	resetB.initPin("mc33 RESTB", engineConfiguration->mc33816_rstb);
 	// High Voltage via DRIVEN
 	driven.initPin("mc33 DRIVEN", engineConfiguration->mc33816_driven);
-	driven.setValue(0); // ensure driven is off
 
-	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
 
 	spiCfg.ssport = getHwPort("hip", CONFIG(mc33816_cs));
 	spiCfg.sspad = getHwPin("hip", CONFIG(mc33816_cs));
@@ -336,10 +342,24 @@ void initMc33816(Logging *sharedLogger) {
 		return;
 	}
 
+
+
 	spiStart(driver, &spiCfg);
 
+
 	addConsoleAction("mc33_stats", showStats);
+	addConsoleAction("mc33_restart", mcRestart);
 	//addConsoleActionI("mc33_send", sendWord);
+
+	mcRestart();
+}
+
+
+static void mcRestart() {
+	scheduleMsg(logger, "MC Restart");
+	showStats();
+
+	driven.setValue(0); // ensure driven is off
 
 	// Does starting turn this high to begin with??
 	spiUnselect(driver);
