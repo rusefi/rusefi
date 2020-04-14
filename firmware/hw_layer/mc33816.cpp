@@ -47,10 +47,13 @@ static SPIConfig spiCfg = { .circular = false,
 
 static SPIDriver *driver;
 
+static bool validateChipId() {
+	return (mcChipId  >> 8) == 0x9D;
+}
 
 static void showStats() {
 	// x9D is product code or something, and 43 is the revision?
-	scheduleMsg(logger, "MC %x %s", mcChipId, (mcChipId  >> 8) == 0x9D ? "hooray!" : "not hooray :(");
+	scheduleMsg(logger, "MC %x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
 
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
     	scheduleMsg(logger, "flag0 before %d after %d", flag0before, flag0after);
@@ -58,7 +61,7 @@ static void showStats() {
     	scheduleMsg(logger, "flag0 right now %d", efiReadPin(CONFIG(mc33816_flag0)));
 
     } else {
-    	scheduleMsg(logger, "No flag0");
+    	scheduleMsg(logger, "No flag0 pin selected");
     }
 }
 
@@ -355,6 +358,11 @@ void initMc33816(Logging *sharedLogger) {
 
 	setup_spi();
 	mcChipId = readId();
+
+	if (!validateChipId()) {
+		firmwareError(OBD_PCM_Processor_Fault, "No comm with MC33");
+		return;
+	}
 
     download_RAM(CODE_RAM1);        // transfers code RAM1
     download_RAM(CODE_RAM2);        // transfers code RAM2
