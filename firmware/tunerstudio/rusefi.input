@@ -40,6 +40,9 @@ enable2ndByteCanID = false
 ;    settingOption = DEFAULT, "Speed Density" ; DEFAULT will be over looked and this will fall into the #else block of the statement.
 
 
+[MegaTune]
+ ; https://rusefi.com/forum/viewtopic.php?p=36201#p36201
+ 	signature    = @@TS_SIGNATURE@@ 
 
 [TunerStudio]
    queryCommand   = "S"
