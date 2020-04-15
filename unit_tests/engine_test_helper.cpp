@@ -65,9 +65,11 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	engine->engineConfigurationPtr->iat.adcChannel = TEST_IAT_CHANNEL;
 	// magic voltage to get nice CLT
 	testCltValue = 1.492964;
+	Sensor::setMockValue(SensorType::Clt, 70);
 	//todosetMockCltVoltage(1.492964 PASS_ENGINE_PARAMETER_SUFFIX);
 	// magic voltage to get nice IAT
 	testIatValue = 4.03646;
+	Sensor::setMockValue(SensorType::Iat, 30);
 
 	// this is needed to have valid CLT and IAT.
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
