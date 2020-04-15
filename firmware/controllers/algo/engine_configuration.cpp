@@ -609,14 +609,11 @@ void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
 }
 
 int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	float clt = getCoolantTemperature();
-	int targetRpm;
-	if (!hasCltSensor()) {
-		// error is already reported, let's take first value from the table should be good enough error handing solution
-		targetRpm = CONFIG(cltIdleRpm)[0];
-	} else {
-		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
-	}
+	// error is already reported, let's take the value at 0C since that should be a nice high idle
+	float clt = Sensor::get(SensorType::Clt).value_or(0);
+
+	int targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
+
 	return targetRpm + engine->fsioState.fsioIdleTargetRPMAdjustment;
 }
 
