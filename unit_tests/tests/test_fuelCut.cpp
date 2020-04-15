@@ -12,8 +12,6 @@
 #include "fsio_impl.h"
 
 TEST(fuelCut, coasting) {
-	printf("*************************************************** testCoastingFuelCut\r\n");
-
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// configure coastingFuelCut

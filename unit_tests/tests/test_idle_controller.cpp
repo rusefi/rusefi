@@ -51,8 +51,6 @@ TEST(idle, fsioPidParameters) {
 
 // see also util.pid test
 TEST(idle, timingPid) {
-	print("******************************************* testTimingPidController\r\n");
-
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// set PID settings
@@ -70,9 +68,9 @@ TEST(idle, timingPid) {
 	engineConfiguration->idleTimingPidWorkZone = 100;
 	engineConfiguration->idlePidFalloffDeltaRpm = 30;
 
-	// setup target rpm curve (we need only 1 value when CLT sensor is disabled)
+	// setup target rpm curve
 	const int idleRpmTarget = 700;
-	engineConfiguration->cltIdleRpm[0] = idleRpmTarget;
+	setArrayValues<float>(engineConfiguration->cltIdleRpm, idleRpmTarget);
 	
 	// setup other settings
 	engineConfiguration->idleTimingPid = pidS;
