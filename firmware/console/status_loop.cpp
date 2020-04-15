@@ -705,7 +705,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isCltError = !clt.Valid;
 
 	SensorResult iat = Sensor::get(SensorType::Iat);
-	tsOutputChannels->coolantTemperature = iat.Value;
+	tsOutputChannels->intakeAirTemperature = iat.Value;
 	tsOutputChannels->isIatError = !iat.Valid;
 
 	SensorResult auxTemp1 = Sensor::get(SensorType::AuxTemp1);
