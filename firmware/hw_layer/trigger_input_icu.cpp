@@ -30,7 +30,10 @@ static Logging *logger;
 static void vvtRisingCallback(void *) {
 	efitick_t now = getTimeNowNt();
 #if EFI_TOOTH_LOGGER
-	LogTriggerTooth(SHAFT_SECONDARY_RISING, now);
+	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
+		// real physical fronts go into engine sniffer
+		LogTriggerTooth(SHAFT_SECONDARY_RISING, now);
+	}
 #endif /* EFI_TOOTH_LOGGER */
 	hwHandleVvtCamSignal(TV_RISE, now);
 }
@@ -38,7 +41,9 @@ static void vvtRisingCallback(void *) {
 static void vvtFallingCallback(void *) {
 	efitick_t now = getTimeNowNt();
 #if EFI_TOOTH_LOGGER
-	LogTriggerTooth(SHAFT_SECONDARY_FALLING, now);
+	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
+		LogTriggerTooth(SHAFT_SECONDARY_FALLING, now);
+	}
 #endif /* EFI_TOOTH_LOGGER */
 	hwHandleVvtCamSignal(TV_FALL, now);
 }
