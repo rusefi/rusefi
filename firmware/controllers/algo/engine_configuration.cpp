@@ -29,6 +29,7 @@
 #include "engine_math.h"
 #include "speed_density.h"
 #include "advance_map.h"
+#include "sensor.h"
 
 #include "hip9011_lookup.h"
 #if EFI_MEMS
