@@ -532,6 +532,12 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(triggerSimulatorPins[1]) = GPIO_UNASSIGNED;
 	CONFIG(triggerSimulatorPins[2]) = GPIO_UNASSIGNED;
 
+	engineConfiguration->injectionPins[0] = GPIOB_9; // #1
+	engineConfiguration->injectionPins[1] = GPIOE_2; // #2
+	engineConfiguration->injectionPins[2] = GPIOB_8; // #3
+	engineConfiguration->injectionPins[3] = GPIOB_7; // #4
+
+
 	// blue
 	CONFIG(mc33816_cs) = GPIOD_7;
 	// green
