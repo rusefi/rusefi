@@ -525,6 +525,8 @@
 #define directSelfStimulation_offset_hex 4c
 #define displacement_offset 396
 #define displacement_offset_hex 18c
+#define displayLogicLevelsInEngineSniffer_offset 76
+#define displayLogicLevelsInEngineSniffer_offset_hex 4c
 #define displayMode_offset 492
 #define displayMode_offset_hex 1ec
 #define dizzySparkOutputPin_offset 2226
@@ -1375,8 +1377,6 @@
 #define isMapAveragingEnabled_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
-#define issue_294_25_offset 76
-#define issue_294_25_offset_hex 4c
 #define issue_294_26_offset 76
 #define issue_294_26_offset_hex 4c
 #define issue_294_27_offset 76
