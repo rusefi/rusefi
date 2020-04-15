@@ -116,14 +116,14 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		if (CONFIG(vvtCamSensorUseRise)) {
 			// todo: unify TS composite logger code with console Engine Sniffer
 			// todo: better API to reduce copy/paste?
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_UP);
 			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_DOWN);
 		} else {
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_DOWN);
 			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_UP);
