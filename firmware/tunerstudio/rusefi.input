@@ -1578,6 +1578,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "!Reminder that 4-stroke cycle is 720 degrees"
 	    field = "!For well-known trigger types use '0' trigger angle offset"
 	    field = "Trigger Angle Offset",         		globalTriggerAngleOffset
+	    field = "Display only interesting",				displayLogicLevelsInEngineSniffer
 		field = "#Custom Trigger"
 		field = "total Tooth Count",					trigger_customTotalToothCount, {trigger_type == 0}
 		field = "skipped Tooth Count",					trigger_customSkippedToothCount, {trigger_type == 0}

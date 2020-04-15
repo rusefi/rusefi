@@ -373,7 +373,7 @@ bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
 bit useRunningMathForCranking,Fuel Map,Fixed;
-bit issue_294_25;
+bit displayLogicLevelsInEngineSniffer;
 bit issue_294_26;
 bit issue_294_27;
 bit issue_294_28;
