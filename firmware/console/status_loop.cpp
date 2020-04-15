@@ -353,9 +353,6 @@ static void printSensors(Logging *log) {
 		reportSensorF(log, GAUGE_NAME_DWELL_DUTY, "%", getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 2);
 
 
-
-//	debugFloat(&logger, "tch", getTCharge1(tps), 2);
-
 	for (int i = 0;i<FSIO_ANALOG_INPUT_COUNT;i++) {
 		if (engineConfiguration->fsioAdc[i] != EFI_ADC_NONE) {
 			strcpy(buf, "adcX");
