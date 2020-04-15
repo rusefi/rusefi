@@ -28,6 +28,9 @@ static OutputPin chipSelect;
 static OutputPin resetB;
 static OutputPin driven;
 
+static bool flag0before = false;
+static bool flag0after = false;
+
 static unsigned short mcChipId;
 static Logging* logger;
 
@@ -44,11 +47,26 @@ static SPIConfig spiCfg = { .circular = false,
 
 static SPIDriver *driver;
 
+static bool validateChipId() {
+	return (mcChipId  >> 8) == 0x9D;
+}
 
 static void showStats() {
 	// x9D is product code or something, and 43 is the revision?
-	scheduleMsg(logger, "MC %x %s", mcChipId, (mcChipId  >> 8) == 0x9D ? "hooray!" : "not hooray :(");
+	scheduleMsg(logger, "MC %x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
+
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+    	scheduleMsg(logger, "flag0 before %d after %d", flag0before, flag0after);
+
+    	scheduleMsg(logger, "flag0 right now %d", efiReadPin(CONFIG(mc33816_flag0)));
+
+    } else {
+    	scheduleMsg(logger, "No flag0 pin selected");
+    }
 }
+
+static void mcRestart();
+
 
 // Mostly unused
 unsigned short recv_16bit_spi() {
@@ -97,6 +115,30 @@ static void setup_spi() {
     //spi_writew(0x001F);
 	spi_writew(0x009F); // + fast slew rate on miso
 	spiUnselect(driver);
+}
+
+static bool check_flash() {
+	spiSelect(driver);
+
+	// ch1
+	// read (MSB=1) at location, and 1 word
+    spi_writew((0x8000 | 0x100 << 5) + 1);
+    if (!(recv_16bit_spi() & (1<<5))) {
+    	spiUnselect(driver);
+    	return false;
+    }
+
+    // ch2
+	// read (MSB=1) at location, and 1 word
+    spi_writew((0x8000 | 0x120 << 5) + 1);
+
+    if (!(recv_16bit_spi() & (1<<5))) {
+    	spiUnselect(driver);
+    	return false;
+    }
+
+    spiUnselect(driver);
+	return true;
 }
 
 static void enable_flash() {
@@ -268,16 +310,25 @@ void initMc33816(Logging *sharedLogger) {
 	logger = sharedLogger;
 
 	//
-	// see setTest33816EngineConfiguration for default configuration
-	//
+	// see setTest33816EngineConfiguration  for default configuration
 
 	if (CONFIG(mc33816_cs) == GPIO_UNASSIGNED)
 		return;
+	if (CONFIG(mc33816_rstb) == GPIO_UNASSIGNED)
+		return;
+	if (CONFIG(mc33816_driven) == GPIO_UNASSIGNED)
+		return;
+
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+   		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
+    }
+	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
 
 	// Initialize the chip via ResetB
 	resetB.initPin("mc33 RESTB", engineConfiguration->mc33816_rstb);
+	// High Voltage via DRIVEN
+	driven.initPin("mc33 DRIVEN", engineConfiguration->mc33816_driven);
 
-	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
 
 	spiCfg.ssport = getHwPort("hip", CONFIG(mc33816_cs));
 	spiCfg.sspad = getHwPin("hip", CONFIG(mc33816_cs));
@@ -291,10 +342,26 @@ void initMc33816(Logging *sharedLogger) {
 		return;
 	}
 
+
+
 	spiStart(driver, &spiCfg);
 
+
 	addConsoleAction("mc33_stats", showStats);
+	addConsoleAction("mc33_restart", mcRestart);
 	//addConsoleActionI("mc33_send", sendWord);
+
+	mcRestart();
+}
+
+static void mcRestart() {
+	flag0before = false;
+	flag0after = false;
+
+	scheduleMsg(logger, "MC Restart");
+	showStats();
+
+	driven.setValue(0); // ensure driven is off
 
 	// Does starting turn this high to begin with??
 	spiUnselect(driver);
@@ -304,20 +371,46 @@ void initMc33816(Logging *sharedLogger) {
 	chThdSleepMilliseconds(10);
 	resetB.setValue(1);
 	chThdSleepMilliseconds(10);
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+   		flag0before = efiReadPin(CONFIG(mc33816_flag0));
+    }
+
 
 	setup_spi();
 	mcChipId = readId();
 
+	if (!validateChipId()) {
+		firmwareError(OBD_PCM_Processor_Fault, "No comm with MC33");
+		return;
+	}
+
     download_RAM(CODE_RAM1);        // transfers code RAM1
     download_RAM(CODE_RAM2);        // transfers code RAM2
     download_RAM(DATA_RAM);         // transfers data RAM
+    /**
+     * current configuration of REG_MAIN would toggle flag0 from LOW to HIGH
+     */
     download_register(REG_MAIN);    // download main register configurations
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+   		flag0after = efiReadPin(CONFIG(mc33816_flag0));
+   		if (flag0before || !flag0after) {
+   			firmwareError(OBD_PCM_Processor_Fault, "MC33 flag0 transition no buena");
+   			return;
+   		}
+    }
+
     download_register(REG_CH1);     // download channel 1 register configurations
     download_register(REG_CH2);     // download channel 2 register configurations
     download_register(REG_IO);      // download IO register configurations
     download_register(REG_DIAG);    // download diag register configuration
+    // Finished downloading, let's run the code
     enable_flash();
-    //driven.setValue(1); // driven = HV
+    if (!check_flash()) {
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 flash validation failed");
+    	return;
+    }
+
+    driven.setValue(1); // driven = HV
 }
 
 void update_scv(unsigned short current)

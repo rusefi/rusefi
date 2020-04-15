@@ -43,6 +43,11 @@ EXTERN_ENGINE;
 #define CAN_VAG_CLT 0x288
 #define CAN_VAG_CLT_V2 0x420
 #define CAN_VAG_IMMO 0x3D0
+//w202 DASH
+#define W202_STAT_1	0x308
+#define W202_STAT_2 0x608
+#define W202_ALIVE	0x210
+#define W202_STAT_3 0x310
 
 void canDashboardBMW(void) {
 	//BMW Dashboard
@@ -143,4 +148,53 @@ void canDashboardVAG(void) {
 	}
 }
 
+void canDashboardW202(void) {
+	
+	{
+		CanTxMessage msg(W202_STAT_1);
+		msg[0] = 0x08; // Unknown
+		msg.setShortValue(GET_RPM(), 1); //RPM
+		msg[3] = 0x00; // 0x01 - tank blink, 0x02 - EPC
+		msg[4] = 0x00; // Unknown
+		msg[5] = 0x00; // Unknown
+		msg[6] = 0x00; // Unknown - oil info
+		msg[7] = 0x00; // Unknown - oil info
+	}
+
+	{
+		CanTxMessage msg(W202_STAT_2); //dlc 7
+		msg[0] = (int)(getCoolantTemperature()+40); // CLT - 0x80 ~ 80C
+		msg[1] = 0x3D; // TBD
+		msg[2] = 0x63; // Const
+		msg[3] = 0x41; // Const
+		msg[4] = 0x00; // Unknown
+		msg[5] = 0x05; // Const
+		msg[6] = 0x50; // TBD
+		msg[7] = 0x00; // Unknown
+	}
+
+	{
+		CanTxMessage msg(W202_ALIVE);
+		msg[0] = 0x0A; // Const
+		msg[1] = 0x18; // Const
+		msg[2] = 0x00; // Const
+		msg[3] = 0x00; // Const
+		msg[4] = 0xC0; // Const
+		msg[5] = 0x00; // Const
+		msg[6] = 0x00; // Const
+		msg[7] = 0x00; // Const
+	}	
+
+	{
+		CanTxMessage msg(W202_STAT_3);
+		msg[0] = 0x00; // Const
+		msg[1] = 0x00; // Const
+		msg[2] = 0x6D; // TBD
+		msg[3] = 0x7B; // Const
+		msg[4] = 0x21; // TBD
+		msg[5] = 0x07; // Const
+		msg[6] = 0x33; // Const
+		msg[7] = 0x05; // Const
+	}
+}
 #endif // EFI_CAN_SUPPORT

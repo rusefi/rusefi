@@ -109,19 +109,38 @@ enable2ndByteCanID = false
 
 [LoggerDefinition]
   ; valid logger types: composite, tooth, trigger, csv
-  loggerDef = compositeLogger, "Primary Trigger Logger", tooth
+;  loggerDef = compositeLogger, "Primary Trigger Logger", tooth
+  loggerDef = compositeLogger, "Trigger Logger", composite
         startCommand = "l\x01"
         stopCommand  = "l\x02"
         dataReadCommand = "L"
         dataReadTimeout = 10000 ; time in ms
         dataReadyCondition = { toothLogReady }
+        continuousRead = true
+        ; each packet is @@COMPOSITE_PACKET_SIZE@@ and we have @@COMPOSITE_PACKET_COUNT@@ of those
+        dataLength = @@COMPOSITE_DATA_LENGTH@@
 
+;tooth
        ; recordDef = headerLen, footerLen, recordLen
-       recordDef =   0,   0,   2; in bytes, the recordLen is for each record, currently limited to 4 bytes
+;       recordDef =   0,   0,   @@COMPOSITE_PACKET_SIZE@@
 
        ; uint16 that stores 1/100 second
-       recordField = toothTime, "tooth", 0, 16, 0.01, "ms"
+;       recordField = toothTime, "tooth", 0, 16, 0.01, "ms"
 
+
+
+		; recordDef = headerLen, footerLen, recordLen
+		recordDef =   0,   0,   @@COMPOSITE_PACKET_SIZE@@
+
+		; these names are hard-coded inside TS
+		recordField = priLevel,          "PriLevel",     0,          1,          1.0,    "Flag"
+        recordField = secLevel,          "SecLevel",     1,          1,          1.0,    "Flag"
+        recordField = trigger,           "Trigger",      2,          1,          1.0,    "Flag"
+        recordField = sync,              "Sync",         3,          1,          1.0,    "Flag"
+		recordField = time,              "Time",         8,         32,         0.01,    "ms"
+
+        ; it seems that TS also needs to know the diff.size of a tooth
+        calcField = toothTime,           "ToothTime",    "ms",       { time - pastValue(time, 1) }
 
 [VeAnalyze]
 
@@ -1189,14 +1208,14 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Targets & closed loop
-		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1 && (fuelAlgorithm == LM_SPEED_DENSITY || fuelAlgorithm == LM_REAL_MAF)}
 		subMenu = fuelClosedLoopDialog, 	"Closed loop correction", 0, {isInjectionEnabled == 1}
 		subMenu = coastingFuelCutControl, 	"Deceleration fuel cutoff (DFCO)", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Fuel table/VE
-		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY}
-		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY && fuelAlgorithm != LM_REAL_MAF}
+		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1 && (fuelAlgorithm == LM_SPEED_DENSITY || fuelAlgorithm == LM_REAL_MAF)}
 		subMenu = injPhaseTableTbl,         "Injection phase", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
@@ -1752,6 +1771,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = allPins1_1
 		field = mc33816_cs,								mc33816_cs
 		field = mc33816_rstb,							mc33816_rstb
+		field = mc33816_flag0,							mc33816_flag0
+		field = "trigger stimulator pin #1", 			triggerSimulatorPins1
+		field = "trigger stimulator pin #2", 			triggerSimulatorPins2
+		field = "trigger stimulator pin #2", 			triggerSimulatorPins3
 		field = high_fuel_pressure_sensor_1,			high_fuel_pressure_sensor_1
 		field = high_fuel_pressure_sensor_2,			high_fuel_pressure_sensor_2
 		field = mc33816_driven,							mc33816_driven

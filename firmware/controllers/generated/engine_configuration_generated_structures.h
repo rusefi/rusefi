@@ -1,9 +1,79 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Apr 08 22:31:00 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Apr 13 18:54:18 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #include "rusefi_types.h"
+// start of stft_cell_cfg_s
+struct stft_cell_cfg_s {
+	/**
+	 * offset 0
+	 */
+	int8_t maxAdd;
+	/**
+	 * offset 1
+	 */
+	int8_t maxRemove;
+	/**
+	 * offset 2
+	 */
+	uint16_t timeConstant;
+	/** total size 4*/
+};
+
+typedef struct stft_cell_cfg_s stft_cell_cfg_s;
+
+// start of stft_s
+struct stft_s {
+	/**
+	 * Below this RPM, the idle region is active
+	 * offset 0
+	 */
+	uint8_t maxIdleRegionRpm;
+	/**
+	 * Below this engine load, the overrun region is active
+	 * offset 1
+	 */
+	uint8_t maxOverrunLoad;
+	/**
+	 * Above this engine load, the power region is active
+	 * offset 2
+	 */
+	uint8_t minPowerLoad;
+	/**
+	 * When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.
+	 * offset 3
+	 */
+	uint8_t deadband;
+	/**
+	 * Below this temperature, correction is disabled.
+	 * offset 4
+	 */
+	int8_t minClt;
+	/**
+	 * Below this AFR, correction is paused
+	 * offset 5
+	 */
+	uint8_t minAfr;
+	/**
+	 * Above this AFR, correction is paused
+	 * offset 6
+	 */
+	uint8_t maxAfr;
+	/**
+	 * Delay after starting the engine before beginning closed loop correction.
+	 * offset 7
+	 */
+	uint8_t startupDelay;
+	/**
+	 * offset 8
+	 */
+	stft_cell_cfg_s cellCfgs[STFT_CELL_COUNT];
+	/** total size 24*/
+};
+
+typedef struct stft_s stft_s;
+
 // start of pid_s
 struct pid_s {
 	/**
@@ -1756,7 +1826,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1064
 	 */
-	int unusedAtOldBoardConfigurationEnd[100];
+	stft_s stft;
+	/**
+	 * offset 1088
+	 */
+	int unusedAtOldBoardConfigurationEnd[94];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -2158,7 +2232,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1774
 	 */
-	uint8_t unusedFormerWarmupAfrPid;
+	brain_pin_e mc33816_flag0;
 	/**
 	 * offset 1775
 	 */
@@ -3262,4 +3336,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Apr 08 22:31:00 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Apr 13 18:54:18 EDT 2020
