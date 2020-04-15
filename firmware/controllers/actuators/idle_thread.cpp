@@ -318,8 +318,9 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 	int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);
 	if (CONFIG(idlePidRpmUpperLimit) > 0) {
 		engine->engineState.idle.idleState = PID_UPPER;
-		if (CONFIG(useIacTableForCoasting) && hasCltSensor()) {
-			percent_t iacPosForCoasting = interpolate2d("iacCoasting", getCoolantTemperature(), CONFIG(iacCoastingBins), CONFIG(iacCoasting));
+		const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
+		if (CONFIG(useIacTableForCoasting) && cltValid) {
+			percent_t iacPosForCoasting = interpolate2d("iacCoasting", clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
 		} else {
 			// Well, just leave it as is, without PID regulation...
@@ -390,7 +391,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
-		float clt = getCoolantTemperature();
+		const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 #if EFI_SHAFT_POSITION_INPUT
 		bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 #else
@@ -398,7 +399,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 #endif /* EFI_SHAFT_POSITION_INPUT */
 		// cltCorrection is used only for cranking or running in manual mode
 		float cltCorrection;
-		if (!hasCltSensor())
+		if (!cltValid)
 			cltCorrection = 1.0f;
 		// Use separate CLT correction table for cranking
 		else if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {
