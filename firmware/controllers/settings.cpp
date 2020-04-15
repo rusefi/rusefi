@@ -422,16 +422,7 @@ void printTPSInfo(void) {
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS
-	printThermistor("CLT", &engineConfiguration->clt, &engine->engineState.cltCurve,
-			engineConfiguration->useLinearCltSensor);
-	if (!isValidCoolantTemperature(getCoolantTemperature())) {
-		scheduleMsg(&logger, "CLT sensing error");
-	}
-	printThermistor("IAT", &engineConfiguration->iat, &engine->engineState.iatCurve,
-			engineConfiguration->useLinearIatSensor);
-	if (!isValidIntakeAirTemperature(getIntakeAirTemperature())) {
-		scheduleMsg(&logger, "IAT sensing error");
-	}
+	Sensor::showAllSensorInfo(&logger);
 
 	scheduleMsg(&logger, "fan=%s @ %s", boolToString(enginePins.fanRelay.getLogicValue()),
 			hwPortname(engineConfiguration->fanPin));

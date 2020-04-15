@@ -204,18 +204,7 @@ static void printSensors(Logging *log) {
 #endif
 	// why do we still send data into console in text mode?
 
-	if (hasCltSensor()) {
-		reportSensorF(log, "CLT", "C", getCoolantTemperature(), 2); // log column #4
-	}
-
-	SensorResult tps = Sensor::get(SensorType::Tps1);
-	if (tps) {
-		reportSensorF(log, "TPS", "%", tps.Value, 2); // log column #5
-	}
-
-	if (hasIatSensor()) {
-		reportSensorF(log, "IAT", "C", getIntakeAirTemperature(), 2); // log column #7
-	}
+	Sensor::showAllSensorInfo(log);
 
 	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		reportSensorF(log, GAUGE_NAME_VBAT, "V", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #6
@@ -703,9 +692,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
 
-	float coolant = getCoolantTemperature();
-	float intake = getIntakeAirTemperature();
-
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// header
@@ -713,10 +699,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	// offset 0
 	tsOutputChannels->rpm = rpm;
-	// offset 4
-	tsOutputChannels->coolantTemperature = coolant;
-	// offset 8
-	tsOutputChannels->intakeAirTemperature = intake;
+
+	SensorResult clt = Sensor::get(SensorType::Clt);
+	tsOutputChannels->coolantTemperature = clt.Value;
+	tsOutputChannels->isCltError = !clt.Valid;
+
+	SensorResult iat = Sensor::get(SensorType::Iat);
+	tsOutputChannels->intakeAirTemperature = iat.Value;
+	tsOutputChannels->isIatError = !iat.Valid;
 
 	SensorResult auxTemp1 = Sensor::get(SensorType::AuxTemp1);
 	tsOutputChannels->auxTemp1 = auxTemp1.Value;
@@ -888,9 +878,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 #endif /* EFI_VEHICLE_SPEED */
 #endif /* EFI_PROD_CODE */
-
-	tsOutputChannels->isCltError = !hasCltSensor();
-	tsOutputChannels->isIatError = !hasIatSensor();
 
 	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
 
