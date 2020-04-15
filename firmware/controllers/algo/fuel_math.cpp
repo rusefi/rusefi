@@ -364,8 +364,13 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 
 	// coasting fuel cut-off correction
 	if (CONFIG(coastingFuelCutEnabled)) {
-		auto [valid, tpsPos] = Sensor::get(SensorType::Tps1);
-		if (!valid) {
+		auto [tpsValid, tpsPos] = Sensor::get(SensorType::Tps1);
+		if (!tpsValid) {
+			return 1.0f;
+		}
+
+		const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
+		if (!cltValid) {
 			return 1.0f;
 		}
 
@@ -375,7 +380,7 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 		bool mapDeactivate = (map >= CONFIG(coastingFuelCutMap));
 		bool tpsDeactivate = (tpsPos >= CONFIG(coastingFuelCutTps));
 		// If no CLT sensor (or broken), don't allow DFCO
-		bool cltDeactivate = hasCltSensor() ? (getCoolantTemperature() < (float)CONFIG(coastingFuelCutClt)) : true;
+		bool cltDeactivate = clt < (float)CONFIG(coastingFuelCutClt);
 		bool rpmDeactivate = (rpm < CONFIG(coastingFuelCutRpmLow));
 		bool rpmActivate = (rpm > CONFIG(coastingFuelCutRpmHigh));
 		
