@@ -29,7 +29,6 @@ TEST(fuelCut, coasting) {
 
 	// mock CLT - just above threshold ('hot engine')
 	float hotClt = engineConfiguration->coastingFuelCutClt + 1;
-	engine->sensors.clt = hotClt;
 	Sensor::setMockValue(SensorType::Clt, hotClt);
 	// mock TPS - throttle is opened
 	Sensor::setMockValue(SensorType::Tps1, 60);
@@ -57,7 +56,6 @@ TEST(fuelCut, coasting) {
 	assertEqualsM("inj dur#2 cut", 0.0f, ENGINE(injectionDuration));
 
 	// Now drop the CLT below threshold
-	engine->sensors.clt = engineConfiguration->coastingFuelCutClt - 1;
 	Sensor::setMockValue(SensorType::Clt, engineConfiguration->coastingFuelCutClt - 1);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
