@@ -29,7 +29,7 @@ public:
  */
 class EngineTestHelper : public EngineTestHelperBase {
 public:
-	explicit EngineTestHelper(engine_type_e engineType);
+	EngineTestHelper(engine_type_e engineType, const std::unordered_map<SensorType, float>& sensorValues);
 	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback);
 	~EngineTestHelper();
 
