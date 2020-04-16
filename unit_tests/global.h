@@ -87,8 +87,13 @@ void print(const char *fmt, ...);
 	    Engine *engine = &eth.engine; \
 		EXPAND_Engine
 
-#define WITH_ENGINE_TEST_HELPER(x) EngineTestHelper eth(x); \
-		EXPAND_EngineTestHelper;
+#define WITH_ENGINE_TEST_HELPER_SENS(x, sensorvals) \
+	EngineTestHelper eth(x, sensorvals); \
+	EXPAND_EngineTestHelper;
+
+#define WITH_ENGINE_TEST_HELPER(x) \
+	EngineTestHelper eth(x, std::unordered_map<SensorType, float>{}); \
+	EXPAND_EngineTestHelper;
 
 #define CONFIG_PARAM(x) (x)
 
