@@ -64,6 +64,7 @@ static void showStats() {
     } else {
     	scheduleMsg(logger, "No flag0 pin selected");
     }
+    scheduleMsg(logger, "MC voltage %d", CONFIG(mc33_hvolt));
 }
 
 static void mcRestart();
@@ -449,6 +450,7 @@ static void mcRestart() {
     	firmwareError(OBD_PCM_Processor_Fault, "MC33 no flash");
     	return;
     }
+    setBoostVoltage(CONFIG(mc33_hvolt));
 
     driven.setValue(1); // driven = HV
 }
