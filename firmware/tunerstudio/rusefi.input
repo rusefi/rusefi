@@ -1284,6 +1284,7 @@ menuDialog = main
 	menu = "&Advanced" 
         subMenu = boostDialog,          "Boost Control"
 		subMenu = boostPidDialog,        "Closed Loop Boost",    { boostType == 1 }
+		subMenu = mc33Dialog,			"GDI Dreams"
         subMenu = std_separator	
 		subMenu = fsioInputsDialog,        	"FSIO inputs"
 		subMenu = auxPidDialog,				"Aux PID"
@@ -1718,7 +1719,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Down (WOT) voltage",				throttlePedalWOTVoltage
 
 
-    dialog = mc33, "MC33" 
+    dialog = mc33Dialog, "GDI Dreams" 
     	field = mc33816_cs,								mc33816_cs
 		field = mc33816_rstb,							mc33816_rstb
 		field = mc33816_flag0,							mc33816_flag0
@@ -1736,7 +1737,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Throttle Up switch",					throttlePedalUpPin
 		field = "Brake pedal switch",					brakePedalPin
 		field = "A/C switch",							acSwitchAdc
-		field = "MC33816",								mc33
 
 	dialog = triggerInputComparator, "Built-in Comparator Settings (Kinetis-only)"
 		field = "Comparator Center Point Voltage", triggerCompCenterVolt
