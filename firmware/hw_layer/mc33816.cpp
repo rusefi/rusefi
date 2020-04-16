@@ -149,7 +149,16 @@ void mcUpdateDram(MC33816Mem addr, unsigned short data) {
 
 void setBoostVoltage(float volts)
 {
-	// Specifically for Discovery's ~4.5v 5v rail
+	// Sanity checks, Datasheet says not too high, nor too low
+	if(volts > 65.0f) {
+		firmwareError(OBD_PCM_Processor_Fault, "DI Boost voltage setpoint too high: %.1f", volts);
+		return;
+	}
+	if(volts < 10.0f) {
+		firmwareError(OBD_PCM_Processor_Fault, "DI Boost voltage setpoint too low: %.1f", volts);
+		return;
+	}
+	// There's a 1/32 divider on the input, then the DAC's output is 9.77mV per LSB.  (1 / 32) / 0.00977 = 3.199 counts per volt.
 	unsigned short data = volts * 3.2;
 	mcUpdateDram(MC33816Mem::Vboost_high, data+1);
 	mcUpdateDram(MC33816Mem::Vboost_low, data-1);
@@ -350,17 +359,21 @@ void initMc33816(Logging *sharedLogger) {
 
 	//
 	// see setTest33816EngineConfiguration  for default configuration
-
+	// Pins
 	if (CONFIG(mc33816_cs) == GPIO_UNASSIGNED)
 		return;
 	if (CONFIG(mc33816_rstb) == GPIO_UNASSIGNED)
 		return;
 	if (CONFIG(mc33816_driven) == GPIO_UNASSIGNED)
 		return;
+	if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
+	}
+	// Configuration Values
+	if (CONFIG(mc33_hvolt) == GPIO_UNASSIGNED)
+		return;
 
-    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
-   		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
-    }
+
 	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
 
 	// Initialize the chip via ResetB
@@ -381,10 +394,7 @@ void initMc33816(Logging *sharedLogger) {
 		return;
 	}
 
-
-
 	spiStart(driver, &spiCfg);
-
 
 	addConsoleAction("mc33_stats", showStats);
 	addConsoleAction("mc33_restart", mcRestart);
@@ -451,7 +461,6 @@ static void mcRestart() {
     	return;
     }
     setBoostVoltage(CONFIG(mc33_hvolt));
-
     driven.setValue(1); // driven = HV
 }
 
