@@ -16,6 +16,7 @@
 #if EFI_MC33816
 
 #include "mc33816.h"
+#include "mc33816_memory_map.h"
 #include "engine_configuration.h"
 #include "efi_gpio.h"
 #include "hardware.h"
@@ -63,12 +64,13 @@ static void showStats() {
     } else {
     	scheduleMsg(logger, "No flag0 pin selected");
     }
+    scheduleMsg(logger, "MC voltage %d", CONFIG(mc33_hvolt));
 }
 
 static void mcRestart();
 
 
-// Mostly unused
+// Receive 16bits
 unsigned short recv_16bit_spi() {
 	unsigned short ret;
 	//spiSelect(driver);
@@ -93,14 +95,6 @@ static void spi_writew(unsigned short param) {
 	//spiUnselect(driver);
 }
 
-static unsigned short readId() {
-	spiSelect(driver);
-	spi_writew(0xBAA1);
-	unsigned short ID =  recv_16bit_spi();
-	spiUnselect(driver);
-	return ID;
-}
-
 static void setup_spi() {
 	spiSelect(driver);
 	// Select Channel command
@@ -115,6 +109,51 @@ static void setup_spi() {
     //spi_writew(0x001F);
 	spi_writew(0x009F); // + fast slew rate on miso
 	spiUnselect(driver);
+}
+
+static unsigned short readId() {
+	spiSelect(driver);
+	spi_writew(0xBAA1);
+	unsigned short ID =  recv_16bit_spi();
+	spiUnselect(driver);
+	return ID;
+}
+
+// Read a single word in Data RAM
+unsigned short mcReadDram(MC33816Mem addr) {
+	unsigned short readValue;
+	spiSelect(driver);
+	// Select Channel command, Common Page
+    spi_writew(0x7FE1);
+    spi_writew(0x0004);
+    // read (MSB=1) at data ram x9 (SCV_I_Hold), and 1 word
+    spi_writew((0x8000 | addr << 5) + 1);
+    readValue = recv_16bit_spi();
+
+    spiUnselect(driver);
+    return readValue;
+}
+
+// Update a single word in Data RAM
+void mcUpdateDram(MC33816Mem addr, unsigned short data) {
+	spiSelect(driver);
+	// Select Channel command, Common Page
+    spi_writew(0x7FE1);
+    spi_writew(0x0004);
+    // write (MSB=0) at data ram x9 (SCV_I_Hold), and 1 word
+    spi_writew((addr << 5) + 1);
+    spi_writew(data);
+
+    spiUnselect(driver);
+}
+
+void setBoostVoltage(float volts)
+{
+	// Specifically for Discovery's ~4.5v 5v rail
+	unsigned short data = volts * 3.2;
+	mcUpdateDram(MC33816Mem::Vboost_high, data+1);
+	mcUpdateDram(MC33816Mem::Vboost_low, data-1);
+	// Remember to strobe driven!!
 }
 
 static bool check_flash() {
@@ -411,27 +450,9 @@ static void mcRestart() {
     	firmwareError(OBD_PCM_Processor_Fault, "MC33 no flash");
     	return;
     }
+    setBoostVoltage(CONFIG(mc33_hvolt));
 
     driven.setValue(1); // driven = HV
-}
-
-void update_scv(unsigned short current)
-{
-	// Update a single word in Data RAM
-	spiSelect(driver);
-	// Select Channel command
-    spi_writew(0x7FE1);
-    // Common Page
-    spi_writew(0x0004);
-	// write (MSB=0) at data ram x9 (SCV_I_Hold), and 1 word
-    spi_writew((9 << 5) + 1);
-    spi_writew(current);
-    spiUnselect(driver);
-
-	// Strobe it to reload the value
-    //GPIO_ClearPinsOutput(GPIOE, 1<<PIN21_IDX); // SCV
-    //GPIO_SetPinsOutput(GPIOE, 1<<PIN21_IDX); // SCV
-
 }
 
 #endif /* EFI_MC33816 */
