@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed Apr 15 18:17:28 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed Apr 15 21:13:57 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1439,7 +1439,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 760
 	 */
-	int unusedOneMoreHere;
+	uint8_t mc33_hvolt;
+	/**
+	 * offset 761
+	 */
+	uint8_t unusedHere[3];
 	/**
 	 * offset 764
 	 */
@@ -1737,10 +1741,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_281_30 : 1;
+	bool unusedBit_282_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_281_31 : 1;
+	bool unusedBit_282_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -3336,4 +3340,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed Apr 15 18:17:28 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed Apr 15 21:13:57 EDT 2020

@@ -556,5 +556,7 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	CONFIG(isSdCardEnabled) = false;
 
+	CONFIG(mc33_hvolt) = 63;
+
 	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
 }

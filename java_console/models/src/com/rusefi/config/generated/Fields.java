@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed Apr 15 18:17:04 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed Apr 15 21:13:41 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1054,6 +1054,7 @@ public class Fields {
 	public static final int mc33972_cs_offset = 678;
 	public static final int mc33972_csPinMode_offset = 679;
 	public static final int mc33972spiDevice_offset = 4008;
+	public static final int mc33_hvolt_offset = 760;
 	public static final int measureMapOnlyInOneCylinder_offset = 744;
 	public static final String MOCK_AFR_COMMAND = "mock_afr_voltage";
 	public static final String MOCK_CLT_COMMAND = "mock_clt_voltage";
@@ -1465,13 +1466,13 @@ public class Fields {
 	public static final int unusedBit_251_7_offset = 976;
 	public static final int unusedBit_251_8_offset = 976;
 	public static final int unusedBit_251_9_offset = 976;
-	public static final int unusedBit_281_30_offset = 976;
-	public static final int unusedBit_281_31_offset = 976;
+	public static final int unusedBit_282_30_offset = 976;
+	public static final int unusedBit_282_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
+	public static final int unusedHere_offset = 761;
 	public static final int unusedOldBiquad_offset = 2332;
-	public static final int unusedOneMoreHere_offset = 760;
 	public static final int unusedSomethingWasHere_offset = 2416;
 	public static final int unusedSomethingWasHere_offset_hex = 970;
 	public static final int unusedSpiPadding4_offset = 2593;
@@ -1856,7 +1857,7 @@ public class Fields {
 	public static final Field HIP9011INTHOLDPIN = Field.create("HIP9011INTHOLDPIN", 754, FieldType.INT8, brain_pin_e);
 	public static final Field HIP9011INTHOLDPINMODE = Field.create("HIP9011INTHOLDPINMODE", 755, FieldType.INT8, pin_output_mode_e);
 	public static final Field VERBOSECANBASEADDRESS = Field.create("VERBOSECANBASEADDRESS", 756, FieldType.INT);
-	public static final Field UNUSEDONEMOREHERE = Field.create("UNUSEDONEMOREHERE", 760, FieldType.INT);
+	public static final Field MC33_HVOLT = Field.create("MC33_HVOLT", 760, FieldType.INT8);
 	public static final Field GPIOPINMODES1 = Field.create("GPIOPINMODES1", 764, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES2 = Field.create("GPIOPINMODES2", 765, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES3 = Field.create("GPIOPINMODES3", 766, FieldType.INT8, pin_output_mode_e);
@@ -2019,8 +2020,8 @@ public class Fields {
 	public static final Field UNUSEDBIT_251_27 = Field.create("UNUSEDBIT_251_27", 976, FieldType.BIT, 27);
 	public static final Field UNUSEDBIT_251_28 = Field.create("UNUSEDBIT_251_28", 976, FieldType.BIT, 28);
 	public static final Field UNUSEDBIT_251_29 = Field.create("UNUSEDBIT_251_29", 976, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_281_30 = Field.create("UNUSEDBIT_281_30", 976, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_281_31 = Field.create("UNUSEDBIT_281_31", 976, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_282_30 = Field.create("UNUSEDBIT_282_30", 976, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_282_31 = Field.create("UNUSEDBIT_282_31", 976, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN1 = Field.create("ETBIO1_CONTROLPIN1", 982, FieldType.INT8, brain_pin_e);
@@ -2782,7 +2783,7 @@ public class Fields {
 	HIP9011INTHOLDPIN,
 	HIP9011INTHOLDPINMODE,
 	VERBOSECANBASEADDRESS,
-	UNUSEDONEMOREHERE,
+	MC33_HVOLT,
 	GPIOPINMODES1,
 	GPIOPINMODES2,
 	GPIOPINMODES3,
@@ -2943,8 +2944,8 @@ public class Fields {
 	UNUSEDBIT_251_27,
 	UNUSEDBIT_251_28,
 	UNUSEDBIT_251_29,
-	UNUSEDBIT_281_30,
-	UNUSEDBIT_281_31,
+	UNUSEDBIT_282_30,
+	UNUSEDBIT_282_31,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN1,

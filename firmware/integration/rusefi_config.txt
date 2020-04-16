@@ -700,7 +700,8 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
-	int unusedOneMoreHere
+	uint8_t mc33_hvolt;;"v",        1,     0,  0,    100,  0
+	uint8_t[3] unusedHere;
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;

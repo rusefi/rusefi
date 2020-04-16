@@ -1717,6 +1717,15 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Up voltage",					throttlePedalUpVoltage
 		field = "Down (WOT) voltage",				throttlePedalWOTVoltage
 
+
+    dialog = mc33, "MC33" 
+    	field = mc33816_cs,								mc33816_cs
+		field = mc33816_rstb,							mc33816_rstb
+		field = mc33816_flag0,							mc33816_flag0
+		field = "mc33972 SPI",							mc33972spiDevice
+		field = mc33_hvolt,								mc33_hvolt 
+    
+
 ;			Sensor Inputs
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
 		field = "Fuel level", 						fuelLevelSensor
@@ -1727,6 +1736,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Throttle Up switch",					throttlePedalUpPin
 		field = "Brake pedal switch",					brakePedalPin
 		field = "A/C switch",							acSwitchAdc
+		field = "MC33816",								mc33
 
 	dialog = triggerInputComparator, "Built-in Comparator Settings (Kinetis-only)"
 		field = "Comparator Center Point Voltage", triggerCompCenterVolt
@@ -1787,7 +1797,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
 		field = "mc33972_cs",							mc33972_cs
-		field = "mc33972 SPI",							mc33972spiDevice
 		panel = allPinsSensors
 
 	dialog = allPins1_2
