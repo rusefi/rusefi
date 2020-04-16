@@ -528,10 +528,20 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// default spi3sckPin  PB3
 
 
+	CONFIG(triggerSimulatorPins[0]) = GPIO_UNASSIGNED;
+	CONFIG(triggerSimulatorPins[1]) = GPIO_UNASSIGNED;
+	CONFIG(triggerSimulatorPins[2]) = GPIO_UNASSIGNED;
+
+	engineConfiguration->injectionPins[0] = GPIOB_9; // #1
+	engineConfiguration->injectionPins[1] = GPIOE_2; // #2
+	engineConfiguration->injectionPins[2] = GPIOB_8; // #3
+	engineConfiguration->injectionPins[3] = GPIOB_7; // #4
+
+
 	// blue
 	CONFIG(mc33816_cs) = GPIOD_7;
 	// green
-	CONFIG(mc33816_rstb) = GPIOD_5;
+	CONFIG(mc33816_rstb) = GPIOD_4;
 	// yellow
 	CONFIG(mc33816_driven) = GPIOD_6;
 
@@ -545,6 +555,8 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->spi3sckPin = GPIOB_3;
 
 	CONFIG(isSdCardEnabled) = false;
+
+	CONFIG(mc33_hvolt) = 63;
 
 	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
 }

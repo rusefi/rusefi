@@ -31,8 +31,6 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 
 
 TEST(engine, testStartOfCrankingPrimingPulse) {
-	printf("*************************************************** testStartOfCrankingPrimingPulse\r\n");
-
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	engineConfiguration->startOfCrankingPrimingPulse = 4;
@@ -43,8 +41,8 @@ TEST(engine, testStartOfCrankingPrimingPulse) {
 	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT#1";
 
 	// we need below freezing temperature to get prime fuel
-	// todo: less cruel CLT value assignment which would survive 'updateSlowSensors'
 	engine->sensors.clt = -10;
+	Sensor::setMockValue(SensorType::Clt, -10);
 
 	// prod code invokes this on ECU start, here we have to mimic this behavior
 	startPrimeInjectionPulse(PASS_ENGINE_PARAMETER_SIGNATURE);

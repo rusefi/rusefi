@@ -19,7 +19,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_FAN:
 		return engine->fsioState.mockFan;
 	case LE_METHOD_COOLANT:
-		return getCoolantTemperature();
+		return Sensor::get(SensorType::Clt).value_or(0);
 	case LE_METHOD_RPM:
 		return engine->fsioState.mockRpm;
 	case LE_METHOD_CRANKING_RPM:
@@ -101,13 +101,13 @@ static void testExpression2(float selfValue, const char *line, float expected, E
 	ASSERT_EQ(expected, c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX)) << line;
 }
 
-static void testExpression2(float selfValue, const char *line, float expected) {
-	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+static void testExpression2(float selfValue, const char *line, float expected, const std::unordered_map<SensorType, float>& sensorVals = {}) {
+	WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
 	testExpression2(selfValue, line, expected, engine);
 }
 
-static void testExpression(const char *line, float expectedValue) {
-	testExpression2(0, line, expectedValue);
+static void testExpression(const char *line, float expectedValue, const std::unordered_map<SensorType, float>& sensorVals = {}) {
+	testExpression2(0, line, expectedValue, sensorVals);
 }
 
 TEST(fsio, testIfFunction) {
@@ -115,8 +115,6 @@ TEST(fsio, testIfFunction) {
 }
 
 TEST(fsio, testLogicExpressions) {
-	printf("*************************************************** testLogicExpressions\r\n");
-
 	testParsing();
 	{
 
@@ -181,36 +179,32 @@ TEST(fsio, testLogicExpressions) {
 	 * fan = fan NOT coolant 90 AND more fan coolant 85 more AND OR
 	 */
 
-	{
-		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
-		engine->sensors.mockClt = 100;
-		engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-		testExpression2(0, "coolant 1 +", 101, engine);
-	}
-	testExpression("fan", 0);
-	testExpression("fan not", 1);
-	testExpression("coolant 90 >", 1);
-	testExpression("fan not coolant 90 > and", 1);
+	std::unordered_map<SensorType, float> sensorVals = {{SensorType::Clt, 100}};
+	testExpression("coolant 1 +", 101, sensorVals);
+
+	testExpression("fan", 0, sensorVals);
+	testExpression("fan not", 1, sensorVals);
+	testExpression("coolant 90 >", 1, sensorVals);
+	testExpression("fan not coolant 90 > and", 1, sensorVals);
 
 	testExpression("100 200 1 if", 200);
 	testExpression("10 99 max", 99);
 
 	testExpression2(123, "10 self max", 123);
 
-	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
-	{
-		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
-		LEElement thepool[TEST_POOL_SIZE];
-		LEElementPool pool(thepool, TEST_POOL_SIZE);
-		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
-		ASSERT_TRUE(element != NULL) << "Not NULL expected";
-		LECalculator c;
-		ASSERT_EQ( 1,  c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
+	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1, sensorVals);
 
-		ASSERT_EQ(12, c.currentCalculationLogPosition);
-		ASSERT_EQ(102, c.calcLogAction[0]);
-		ASSERT_EQ(0, c.calcLogValue[0]);
-	}
+	WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
+	LEElement thepool[TEST_POOL_SIZE];
+	LEElementPool pool(thepool, TEST_POOL_SIZE);
+	LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
+	ASSERT_TRUE(element != NULL) << "Not NULL expected";
+	LECalculator c;
+	ASSERT_EQ( 1,  c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
+
+	ASSERT_EQ(12, c.currentCalculationLogPosition);
+	ASSERT_EQ(102, c.calcLogAction[0]);
+	ASSERT_EQ(0, c.calcLogValue[0]);
 
 	testExpression("cfg_fanOffTemperature", 0);
 	testExpression("coolant cfg_fanOffTemperature >", 1);
@@ -222,13 +216,10 @@ TEST(fsio, testLogicExpressions) {
 
 	testExpression(FAN_CONTROL_LOGIC, 1);
 
-	{
-		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
-		engine->fsioState.mockRpm = 900;
-		engine->fsioState.mockCrankingRpm = 200;
-		testExpression2(0, "rpm", 900, engine);
-		testExpression2(0, "cranking_rpm", 200, engine);
-		testExpression2(0, STARTER_RELAY_LOGIC, 0, engine);
-		testExpression2(0, "rpm cranking_rpm > ", 1, engine);
-	}
+	engine->fsioState.mockRpm = 900;
+	engine->fsioState.mockCrankingRpm = 200;
+	testExpression2(0, "rpm", 900, engine);
+	testExpression2(0, "cranking_rpm", 200, engine);
+	testExpression2(0, STARTER_RELAY_LOGIC, 0, engine);
+	testExpression2(0, "rpm cranking_rpm > ", 1, engine);
 }

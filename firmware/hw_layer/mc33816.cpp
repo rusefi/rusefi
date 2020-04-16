@@ -47,10 +47,13 @@ static SPIConfig spiCfg = { .circular = false,
 
 static SPIDriver *driver;
 
+static bool validateChipId() {
+	return (mcChipId  >> 8) == 0x9D;
+}
 
 static void showStats() {
 	// x9D is product code or something, and 43 is the revision?
-	scheduleMsg(logger, "MC %x %s", mcChipId, (mcChipId  >> 8) == 0x9D ? "hooray!" : "not hooray :(");
+	scheduleMsg(logger, "MC %x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
 
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
     	scheduleMsg(logger, "flag0 before %d after %d", flag0before, flag0after);
@@ -58,9 +61,12 @@ static void showStats() {
     	scheduleMsg(logger, "flag0 right now %d", efiReadPin(CONFIG(mc33816_flag0)));
 
     } else {
-    	scheduleMsg(logger, "No flag0");
+    	scheduleMsg(logger, "No flag0 pin selected");
     }
 }
+
+static void mcRestart();
+
 
 // Mostly unused
 unsigned short recv_16bit_spi() {
@@ -313,13 +319,16 @@ void initMc33816(Logging *sharedLogger) {
 	if (CONFIG(mc33816_driven) == GPIO_UNASSIGNED)
 		return;
 
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+   		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
+    }
+	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
+
 	// Initialize the chip via ResetB
 	resetB.initPin("mc33 RESTB", engineConfiguration->mc33816_rstb);
 	// High Voltage via DRIVEN
 	driven.initPin("mc33 DRIVEN", engineConfiguration->mc33816_driven);
-	driven.setValue(0); // ensure driven is off
 
-	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
 
 	spiCfg.ssport = getHwPort("hip", CONFIG(mc33816_cs));
 	spiCfg.sspad = getHwPin("hip", CONFIG(mc33816_cs));
@@ -333,10 +342,26 @@ void initMc33816(Logging *sharedLogger) {
 		return;
 	}
 
+
+
 	spiStart(driver, &spiCfg);
 
+
 	addConsoleAction("mc33_stats", showStats);
+	addConsoleAction("mc33_restart", mcRestart);
 	//addConsoleActionI("mc33_send", sendWord);
+
+	mcRestart();
+}
+
+static void mcRestart() {
+	flag0before = false;
+	flag0after = false;
+
+	scheduleMsg(logger, "MC Restart");
+	showStats();
+
+	driven.setValue(0); // ensure driven is off
 
 	// Does starting turn this high to begin with??
 	spiUnselect(driver);
@@ -347,14 +372,17 @@ void initMc33816(Logging *sharedLogger) {
 	resetB.setValue(1);
 	chThdSleepMilliseconds(10);
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
-   		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
-
    		flag0before = efiReadPin(CONFIG(mc33816_flag0));
     }
 
 
 	setup_spi();
 	mcChipId = readId();
+
+	if (!validateChipId()) {
+		firmwareError(OBD_PCM_Processor_Fault, "No comm with MC33");
+		return;
+	}
 
     download_RAM(CODE_RAM1);        // transfers code RAM1
     download_RAM(CODE_RAM2);        // transfers code RAM2
@@ -366,7 +394,8 @@ void initMc33816(Logging *sharedLogger) {
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
    		flag0after = efiReadPin(CONFIG(mc33816_flag0));
    		if (flag0before || !flag0after) {
-   			firmwareError(OBD_PCM_Processor_Fault, "MC33 no buena");
+   			firmwareError(OBD_PCM_Processor_Fault, "MC33 flag0 transition no buena");
+
    			return;
    		}
     }

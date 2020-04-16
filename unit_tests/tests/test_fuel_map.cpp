@@ -20,6 +20,8 @@ extern float testMafValue;
 TEST(misc, testMafFuelMath) {
 	printf("====================================================================================== testMafFuelMath\r\n");
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	extern fuel_Map3D_t veMap;
+	veMap.setAll(75);
 
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
@@ -27,7 +29,7 @@ TEST(misc, testMafFuelMath) {
 	setAfrMap(config->afrTable, 13);
 
 	float fuelMs = getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("fuelMs", 13.3550, fuelMs);
+	assertEqualsM("fuelMs", 0.75 * 13.3550, fuelMs);
 }
 
 TEST(misc, testFuelMap) {
@@ -63,6 +65,9 @@ TEST(misc, testFuelMap) {
 
 	eth.engine.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	Sensor::setMockValue(SensorType::Clt, 36.605f);
+	Sensor::setMockValue(SensorType::Iat, 30.0f);
+
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel 1\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -84,10 +89,8 @@ TEST(misc, testFuelMap) {
 
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	ASSERT_FALSE(cisnan(getIntakeAirTemperature()));
 	float iatCorrection = getIatFuelCorrection(-KELV PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 2,  iatCorrection) << "IAT";
-	ASSERT_FALSE(cisnan(getCoolantTemperature()));
 	float cltCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  cltCorrection) << "CLT";
 	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
