@@ -24,7 +24,7 @@
 #include "trigger_simulator.h"
 
 #include "rpm_calculator.h"
-
+#include "tooth_logger.h"
 #include "perf_trace.h"
 
 #if EFI_PROD_CODE
@@ -103,11 +103,31 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		tc->vvtEventFallCounter++;
 	}
 
+	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
+		addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
+	}
 
-	addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
 	if (CONFIG(vvtCamSensorUseRise) ^ (front != TV_FALL)) {
 		return;
+	}
+
+	if (CONFIG(displayLogicLevelsInEngineSniffer)) {
+		if (CONFIG(vvtCamSensorUseRise)) {
+			// todo: unify TS composite logger code with console Engine Sniffer
+			// todo: better API to reduce copy/paste?
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+
+			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_UP);
+			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_DOWN);
+		} else {
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+
+			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_DOWN);
+			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_UP);
+		}
 	}
 
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;

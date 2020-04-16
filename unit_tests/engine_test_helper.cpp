@@ -76,7 +76,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 }
 
-EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
+EngineTestHelper::EngineTestHelper(engine_type_e engineType, const std::unordered_map<SensorType, float>& sensorValues) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
+	for (const auto [s, v] : sensorValues) {
+		Sensor::setMockValue(s, v);
+	}
 }
 
 EngineTestHelper::~EngineTestHelper() {
