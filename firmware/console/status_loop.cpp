@@ -723,6 +723,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->pedalPosition = pedal.Value;
 	tsOutputChannels->isPedalError = !pedal.Valid;
 
+	// Set raw sensors
+	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1);
+	tsOutputChannels->rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedal);
+	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
+	tsOutputChannels->rawIat = Sensor::getRaw(SensorType::Iat);
+	tsOutputChannels->rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
+
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 
