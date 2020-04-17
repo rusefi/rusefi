@@ -76,8 +76,12 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_TYPE_60_2 8
 #define TRIGGER_TYPE_36_1 9
 
-#define COMPOSITE_PACKET_COUNT 1000
-#define COMPOSITE_PACKET_SIZE 2
+#define TOOTH_PACKET_COUNT 1000
+#define TOOTH_PACKET_SIZE 2
+#define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@*@@TOOTH_PACKET_COUNT@@
+
+#define COMPOSITE_PACKET_COUNT 500
+#define COMPOSITE_PACKET_SIZE 5
 #define COMPOSITE_DATA_LENGTH @@COMPOSITE_PACKET_SIZE@@*@@COMPOSITE_PACKET_COUNT@@
 
 #define MAP_ANGLE_SIZE 8
@@ -369,7 +373,7 @@ bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
 bit useRunningMathForCranking,Fuel Map,Fixed;
-bit issue_294_25;
+bit displayLogicLevelsInEngineSniffer;
 bit issue_294_26;
 bit issue_294_27;
 bit issue_294_28;
@@ -696,7 +700,8 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
-	int unusedOneMoreHere
+	uint8_t mc33_hvolt;;"v",        1,     0,  0,    100,  0
+	uint8_t[3] unusedHere;
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
@@ -979,7 +984,7 @@ int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structu
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC",      1,     0,    0, 1023,      0
 	output_pin_e starterControlPin;See also startStopButtonPin
 	pin_input_mode_e startStopButtonMode;
-	uint8_t[1] unusedFormerWarmupAfrPid;
+	brain_pin_e mc33816_flag0;
 	uint8_t tachPulsePerRev;;"Pulse",        1,     0,  1.0,    255.0,  0
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	

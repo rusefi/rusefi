@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Apr 13 09:22:02 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed Apr 15 21:13:41 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -285,9 +285,9 @@ public class Fields {
 	public static final int coastingFuelCutTps_offset = 3152;
 	public static final int communicationLedPin_offset = 1812;
 	public static final int communicationLedPin_offset_hex = 714;
-	public static final int COMPOSITE_DATA_LENGTH = 2000;
-	public static final int COMPOSITE_PACKET_COUNT = 1000;
-	public static final int COMPOSITE_PACKET_SIZE = 2;
+	public static final int COMPOSITE_DATA_LENGTH = 2500;
+	public static final int COMPOSITE_PACKET_COUNT = 500;
+	public static final int COMPOSITE_PACKET_SIZE = 5;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int consoleLoopPeriodMs_offset = 716;
 	public static final int consoleSerialRxPin_offset = 1819;
@@ -345,6 +345,7 @@ public class Fields {
 	public static final int digitalPotentiometerSpiDevice_offset = 677;
 	public static final int directSelfStimulation_offset = 76;
 	public static final int displacement_offset = 396;
+	public static final int displayLogicLevelsInEngineSniffer_offset = 76;
 	public static final int displayMode_offset = 492;
 	public static final int dizzySparkOutputPin_offset = 2226;
 	public static final int dizzySparkOutputPinMode_offset = 2227;
@@ -914,7 +915,6 @@ public class Fields {
 	public static final int isManualSpinningMode_offset = 1476;
 	public static final int isMapAveragingEnabled_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
-	public static final int issue_294_25_offset = 76;
 	public static final int issue_294_26_offset = 76;
 	public static final int issue_294_27_offset = 76;
 	public static final int issue_294_28_offset = 76;
@@ -1048,11 +1048,13 @@ public class Fields {
 	public static final int maxKnockSubDeg_offset_hex = 228;
 	public static final int mc33816_cs_offset = 3107;
 	public static final int mc33816_driven_offset = 2607;
+	public static final int mc33816_flag0_offset = 1774;
 	public static final int mc33816_rstb_offset = 2606;
 	public static final int mc33816spiDevice_offset = 4001;
 	public static final int mc33972_cs_offset = 678;
 	public static final int mc33972_csPinMode_offset = 679;
 	public static final int mc33972spiDevice_offset = 4008;
+	public static final int mc33_hvolt_offset = 760;
 	public static final int measureMapOnlyInOneCylinder_offset = 744;
 	public static final String MOCK_AFR_COMMAND = "mock_afr_voltage";
 	public static final String MOCK_CLT_COMMAND = "mock_clt_voltage";
@@ -1292,6 +1294,9 @@ public class Fields {
 	public static final int tle8888spiDevice_offset = 4000;
 	public static final int todoClutchDownPinInverted_offset = 976;
 	public static final int todoClutchUpPinInverted_offset = 976;
+	public static final int TOOTH_DATA_LENGTH = 2000;
+	public static final int TOOTH_PACKET_COUNT = 1000;
+	public static final int TOOTH_PACKET_SIZE = 2;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
 	public static final int TOTAL_CONFIG_SIZE = 20000;
 	public static final int tps1_1AdcChannel_offset = 512;
@@ -1461,14 +1466,13 @@ public class Fields {
 	public static final int unusedBit_251_7_offset = 976;
 	public static final int unusedBit_251_8_offset = 976;
 	public static final int unusedBit_251_9_offset = 976;
-	public static final int unusedBit_281_30_offset = 976;
-	public static final int unusedBit_281_31_offset = 976;
+	public static final int unusedBit_282_30_offset = 976;
+	public static final int unusedBit_282_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
-	public static final int unusedFormerWarmupAfrPid_offset = 1774;
+	public static final int unusedHere_offset = 761;
 	public static final int unusedOldBiquad_offset = 2332;
-	public static final int unusedOneMoreHere_offset = 760;
 	public static final int unusedSomethingWasHere_offset = 2416;
 	public static final int unusedSomethingWasHere_offset_hex = 970;
 	public static final int unusedSpiPadding4_offset = 2593;
@@ -1569,7 +1573,7 @@ public class Fields {
 	public static final Field ROLLINGLAUNCHENABLED = Field.create("ROLLINGLAUNCHENABLED", 76, FieldType.BIT, 21);
 	public static final Field ANTILAGENABLED = Field.create("ANTILAGENABLED", 76, FieldType.BIT, 22);
 	public static final Field USERUNNINGMATHFORCRANKING = Field.create("USERUNNINGMATHFORCRANKING", 76, FieldType.BIT, 23);
-	public static final Field ISSUE_294_25 = Field.create("ISSUE_294_25", 76, FieldType.BIT, 24);
+	public static final Field DISPLAYLOGICLEVELSINENGINESNIFFER = Field.create("DISPLAYLOGICLEVELSINENGINESNIFFER", 76, FieldType.BIT, 24);
 	public static final Field ISSUE_294_26 = Field.create("ISSUE_294_26", 76, FieldType.BIT, 25);
 	public static final Field ISSUE_294_27 = Field.create("ISSUE_294_27", 76, FieldType.BIT, 26);
 	public static final Field ISSUE_294_28 = Field.create("ISSUE_294_28", 76, FieldType.BIT, 27);
@@ -1853,7 +1857,7 @@ public class Fields {
 	public static final Field HIP9011INTHOLDPIN = Field.create("HIP9011INTHOLDPIN", 754, FieldType.INT8, brain_pin_e);
 	public static final Field HIP9011INTHOLDPINMODE = Field.create("HIP9011INTHOLDPINMODE", 755, FieldType.INT8, pin_output_mode_e);
 	public static final Field VERBOSECANBASEADDRESS = Field.create("VERBOSECANBASEADDRESS", 756, FieldType.INT);
-	public static final Field UNUSEDONEMOREHERE = Field.create("UNUSEDONEMOREHERE", 760, FieldType.INT);
+	public static final Field MC33_HVOLT = Field.create("MC33_HVOLT", 760, FieldType.INT8);
 	public static final Field GPIOPINMODES1 = Field.create("GPIOPINMODES1", 764, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES2 = Field.create("GPIOPINMODES2", 765, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES3 = Field.create("GPIOPINMODES3", 766, FieldType.INT8, pin_output_mode_e);
@@ -2016,8 +2020,8 @@ public class Fields {
 	public static final Field UNUSEDBIT_251_27 = Field.create("UNUSEDBIT_251_27", 976, FieldType.BIT, 27);
 	public static final Field UNUSEDBIT_251_28 = Field.create("UNUSEDBIT_251_28", 976, FieldType.BIT, 28);
 	public static final Field UNUSEDBIT_251_29 = Field.create("UNUSEDBIT_251_29", 976, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_281_30 = Field.create("UNUSEDBIT_281_30", 976, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_281_31 = Field.create("UNUSEDBIT_281_31", 976, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_282_30 = Field.create("UNUSEDBIT_282_30", 976, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_282_31 = Field.create("UNUSEDBIT_282_31", 976, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN1 = Field.create("ETBIO1_CONTROLPIN1", 982, FieldType.INT8, brain_pin_e);
@@ -2197,7 +2201,7 @@ public class Fields {
 	public static final Field TPS2MAX = Field.create("TPS2MAX", 1770, FieldType.INT16);
 	public static final Field STARTERCONTROLPIN = Field.create("STARTERCONTROLPIN", 1772, FieldType.INT8, output_pin_e);
 	public static final Field STARTSTOPBUTTONMODE = Field.create("STARTSTOPBUTTONMODE", 1773, FieldType.INT8);
-	public static final Field UNUSEDFORMERWARMUPAFRPID = Field.create("UNUSEDFORMERWARMUPAFRPID", 1774, FieldType.INT8);
+	public static final Field MC33816_FLAG0 = Field.create("MC33816_FLAG0", 1774, FieldType.INT8, brain_pin_e);
 	public static final Field TACHPULSEPERREV = Field.create("TACHPULSEPERREV", 1775, FieldType.INT8);
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1776, FieldType.FLOAT);
 	public static final Field MAPERRORDETECTIONTOOHIGH = Field.create("MAPERRORDETECTIONTOOHIGH", 1780, FieldType.FLOAT);
@@ -2504,7 +2508,7 @@ public class Fields {
 	ROLLINGLAUNCHENABLED,
 	ANTILAGENABLED,
 	USERUNNINGMATHFORCRANKING,
-	ISSUE_294_25,
+	DISPLAYLOGICLEVELSINENGINESNIFFER,
 	ISSUE_294_26,
 	ISSUE_294_27,
 	ISSUE_294_28,
@@ -2779,7 +2783,7 @@ public class Fields {
 	HIP9011INTHOLDPIN,
 	HIP9011INTHOLDPINMODE,
 	VERBOSECANBASEADDRESS,
-	UNUSEDONEMOREHERE,
+	MC33_HVOLT,
 	GPIOPINMODES1,
 	GPIOPINMODES2,
 	GPIOPINMODES3,
@@ -2940,8 +2944,8 @@ public class Fields {
 	UNUSEDBIT_251_27,
 	UNUSEDBIT_251_28,
 	UNUSEDBIT_251_29,
-	UNUSEDBIT_281_30,
-	UNUSEDBIT_281_31,
+	UNUSEDBIT_282_30,
+	UNUSEDBIT_282_31,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN1,
@@ -3119,7 +3123,7 @@ public class Fields {
 	TPS2MAX,
 	STARTERCONTROLPIN,
 	STARTSTOPBUTTONMODE,
-	UNUSEDFORMERWARMUPAFRPID,
+	MC33816_FLAG0,
 	TACHPULSEPERREV,
 	MAPERRORDETECTIONTOOLOW,
 	MAPERRORDETECTIONTOOHIGH,

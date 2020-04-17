@@ -121,9 +121,9 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_AC_TOGGLE:
 		return getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_COOLANT:
-		return getCoolantTemperature();
+		return Sensor::get(SensorType::Clt).value_or(0);
 	case LE_METHOD_IS_COOLANT_BROKEN:
-		return engine->isCltBroken;
+		return !Sensor::get(SensorType::Clt).Valid;
 	case LE_METHOD_INTAKE_AIR:
 		return getIntakeAirTemperature();
 	case LE_METHOD_RPM:

@@ -23,11 +23,11 @@ extern LoggingWithStorage sharedLogger;
 	s_device = device;
 }
 
-CanTxMessage::CanTxMessage(uint32_t eid) {
+CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc) {
 	m_frame.IDE = CAN_IDE_STD;
 	m_frame.EID = eid;
 	m_frame.RTR = CAN_RTR_DATA;
-	m_frame.DLC = 8;
+	m_frame.DLC = dlc;
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
 }
 

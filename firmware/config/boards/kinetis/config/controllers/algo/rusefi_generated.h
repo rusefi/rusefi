@@ -441,9 +441,9 @@
 #define coastingFuelCutTps_offset_hex c50
 #define communicationLedPin_offset 1812
 #define communicationLedPin_offset_hex 714
-#define COMPOSITE_DATA_LENGTH 2000
-#define COMPOSITE_PACKET_COUNT 1000
-#define COMPOSITE_PACKET_SIZE 2
+#define COMPOSITE_DATA_LENGTH 2500
+#define COMPOSITE_PACKET_COUNT 500
+#define COMPOSITE_PACKET_SIZE 5
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define consoleLoopPeriodMs_offset 716
 #define consoleLoopPeriodMs_offset_hex 2cc
@@ -525,6 +525,8 @@
 #define directSelfStimulation_offset_hex 4c
 #define displacement_offset 396
 #define displacement_offset_hex 18c
+#define displayLogicLevelsInEngineSniffer_offset 76
+#define displayLogicLevelsInEngineSniffer_offset_hex 4c
 #define displayMode_offset 492
 #define displayMode_offset_hex 1ec
 #define dizzySparkOutputPin_offset 2226
@@ -1375,8 +1377,6 @@
 #define isMapAveragingEnabled_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
-#define issue_294_25_offset 76
-#define issue_294_25_offset_hex 4c
 #define issue_294_26_offset 76
 #define issue_294_26_offset_hex 4c
 #define issue_294_27_offset 76
@@ -1585,6 +1585,8 @@
 #define mc33816_cs_offset_hex c23
 #define mc33816_driven_offset 2607
 #define mc33816_driven_offset_hex a2f
+#define mc33816_flag0_offset 1774
+#define mc33816_flag0_offset_hex 6ee
 #define mc33816_rstb_offset 2606
 #define mc33816_rstb_offset_hex a2e
 #define mc33816spiDevice_offset 4001
@@ -1595,6 +1597,8 @@
 #define mc33972_csPinMode_offset_hex 2a7
 #define mc33972spiDevice_offset 4008
 #define mc33972spiDevice_offset_hex fa8
+#define mc33_hvolt_offset 760
+#define mc33_hvolt_offset_hex 2f8
 #define measureMapOnlyInOneCylinder_offset 744
 #define measureMapOnlyInOneCylinder_offset_hex 2e8
 #define MOCK_AFR_COMMAND "mock_afr_voltage"
@@ -1963,6 +1967,9 @@
 #define todoClutchDownPinInverted_offset_hex 3d0
 #define todoClutchUpPinInverted_offset 976
 #define todoClutchUpPinInverted_offset_hex 3d0
+#define TOOTH_DATA_LENGTH 2000
+#define TOOTH_PACKET_COUNT 1000
+#define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TOTAL_CONFIG_SIZE 20000
 #define TOTAL_CONFIG_SIZE_hex 4e20
@@ -2215,22 +2222,20 @@
 #define unusedBit_251_8_offset_hex 3d0
 #define unusedBit_251_9_offset 976
 #define unusedBit_251_9_offset_hex 3d0
-#define unusedBit_281_30_offset 976
-#define unusedBit_281_30_offset_hex 3d0
-#define unusedBit_281_31_offset 976
-#define unusedBit_281_31_offset_hex 3d0
+#define unusedBit_282_30_offset 976
+#define unusedBit_282_30_offset_hex 3d0
+#define unusedBit_282_31_offset 976
+#define unusedBit_282_31_offset_hex 3d0
 #define unusedBit_34_31_offset 76
 #define unusedBit_34_31_offset_hex 4c
 #define unusedErrorPin_offset 2040
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
 #define unusedFlexFuelSensor_offset_hex c1c
-#define unusedFormerWarmupAfrPid_offset 1774
-#define unusedFormerWarmupAfrPid_offset_hex 6ee
+#define unusedHere_offset 761
+#define unusedHere_offset_hex 2f9
 #define unusedOldBiquad_offset 2332
 #define unusedOldBiquad_offset_hex 91c
-#define unusedOneMoreHere_offset 760
-#define unusedOneMoreHere_offset_hex 2f8
 #define unusedSomethingWasHere_offset 2416
 #define unusedSomethingWasHere_offset_hex 970
 #define unusedSpiPadding4_offset 2593
