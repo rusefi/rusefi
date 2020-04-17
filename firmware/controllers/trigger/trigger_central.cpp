@@ -229,7 +229,14 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// Log to the Tunerstudio tooth logger
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
-	LogTriggerTooth(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+
+	bool logLogicState = CONFIG(displayLogicLevelsInEngineSniffer && engineConfiguration->useOnlyRisingEdgeForTrigger);
+
+	if (!logLogicState) {
+		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder
+		LogTriggerTooth(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+
 #endif /* EFI_TOOTH_LOGGER */
 
 	// for effective noise filtering, we need both signal edges, 
@@ -239,6 +246,16 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 			return;
 		}
 	}
+
+	if (logLogicState) {
+		LogTriggerTooth(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		if (signal == SHAFT_PRIMARY_RISING) {
+			LogTriggerTooth(SHAFT_PRIMARY_FALLING, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		} else {
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		}
+	}
+
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
