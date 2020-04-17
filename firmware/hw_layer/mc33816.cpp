@@ -369,10 +369,6 @@ void initMc33816(Logging *sharedLogger) {
 	if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
 		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
 	}
-	// Configuration Values
-	if (CONFIG(mc33_hvolt) == GPIO_UNASSIGNED)
-		return;
-
 
 	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
 
