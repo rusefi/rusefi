@@ -209,7 +209,7 @@ struct stm32_hardware_pwm : public hardware_pwm {
 };
 
 stm32_hardware_pwm pwmChannels[] = {
-#if STM32_USE_PWM_TIM1
+#if STM32_PWM_USE_TIM1
 	stm32_hardware_pwm(GPIOA_8,  &PWMD1, 0, 1),
 	stm32_hardware_pwm(GPIOA_9,  &PWMD1, 1, 1),
 	stm32_hardware_pwm(GPIOA_10, &PWMD1, 2, 1),
@@ -220,17 +220,17 @@ stm32_hardware_pwm pwmChannels[] = {
 	stm32_hardware_pwm(GPIOE_13, &PWMD1, 2, 1),
 	stm32_hardware_pwm(GPIOE_14, &PWMD1, 3, 1),
 #endif
-#if STM32_USE_PWM_TIM2
+#if STM32_PWM_USE_TIM2
 	stm32_hardware_pwm(GPIOA_15, &PWMD2, 0, 1),
 	stm32_hardware_pwm(GPIOB_3,  &PWMD2, 1, 1),
 	stm32_hardware_pwm(GPIOB_10, &PWMD2, 2, 1),
 	stm32_hardware_pwm(GPIOB_11, &PWMD2, 3, 1),
 #endif
-#if STM32_USE_PWM_TIM3
+#if STM32_PWM_USE_TIM3
 	stm32_hardware_pwm(GPIOB_4, &PWMD3, 0, 2),
 	stm32_hardware_pwm(GPIOB_5, &PWMD3, 1, 2),
 #endif
-#if STM32_USE_PWM_TIM4
+#if STM32_PWM_USE_TIM4
 	stm32_hardware_pwm(GPIOB_6, &PWMD4, 0, 2),
 	stm32_hardware_pwm(GPIOB_7, &PWMD4, 1, 2),
 	stm32_hardware_pwm(GPIOB_8, &PWMD4, 2, 2),
@@ -242,7 +242,7 @@ stm32_hardware_pwm pwmChannels[] = {
 	stm32_hardware_pwm(GPIOD_15, &PWMD4, 3, 2),
 #endif
 
-#if STM32_USE_PWM_TIM8
+#if STM32_PWM_USE_TIM8
 	stm32_hardware_pwm(GPIOC_6, &PWMD8, 0, 3),
 	stm32_hardware_pwm(GPIOC_7, &PWMD8, 1, 3),
 	stm32_hardware_pwm(GPIOC_8, &PWMD8, 2, 3),
