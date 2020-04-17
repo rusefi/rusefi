@@ -30,7 +30,6 @@
 /*
  * Board identifier.
  */
-#define BOARD_ST_STM32F4_DISCOVERY
 #define BOARD_NAME                  "STM32F407 for RusEFI"
 
 #define EFI_USB_AF 10U
