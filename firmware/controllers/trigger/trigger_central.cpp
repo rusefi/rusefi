@@ -247,6 +247,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 		}
 	}
 
+#if EFI_TOOTH_LOGGER
 	if (logLogicState) {
 		LogTriggerTooth(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		if (signal == SHAFT_PRIMARY_RISING) {
@@ -255,6 +256,7 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 			LogTriggerTooth(SHAFT_SECONDARY_FALLING, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
+#endif /* EFI_TOOTH_LOGGER */
 
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
 	if (triggerReentraint > maxTriggerReentraint)
