@@ -190,9 +190,15 @@ void EtbController::PeriodicTask() {
 	}
 
 	float rpm = GET_RPM();
-	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition.Value);
-	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
-	percent_t targetPosition = engine->engineState.targetFromTable + etbIdleAddition;
+	float targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition.Value);
+	engine->engineState.targetFromTable = targetFromTable;
+	percent_t etbIdlePosition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
+
+	// Interpolate so that the idle adder just "compresses" the throttle's range upward.
+	// [0, 100] -> [idle, 100]
+	// 0% target from table -> idle position as target
+	// 100% target from table -> 100% target position
+	percent_t targetPosition = interpolateClamped(0, etbIdlePosition, 100, 100, targetFromTable);
 
 	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 #if EFI_TUNER_STUDIO
