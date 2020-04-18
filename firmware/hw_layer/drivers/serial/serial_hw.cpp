@@ -55,8 +55,6 @@ void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	uartCfg.speed = engineConfiguration->auxSerialSpeed;
 
 	sdStart(&SD6, &uartCfg);
-	serial.Start();
-
 	scheduleMsg(&logger, "AUX Serial started");
 }
 
@@ -103,7 +101,7 @@ void initAuxSerial(void)
 	}
 
 	startAuxSerialPins();
-
+	serial.Start();
 }
 
 #endif // EFI_AUX_SERIAL
