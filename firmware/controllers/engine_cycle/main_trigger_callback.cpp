@@ -491,7 +491,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
 		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, CONFIG(startOfCrankingPrimingPulse),
-			CONFIG(primeInjFalloffTemperature), 0.0f, getCoolantTemperature());
+			CONFIG(primeInjFalloffTemperature), 0.0f, Sensor::get(SensorType::Clt).value_or(70));
 		if (pulseLength > 0) {
 			startSimultaniousInjection(engine);
 			efitimeus_t turnOffDelayUs = (efitimeus_t)efiRound(MS2US(pulseLength), 1.0f);
