@@ -169,7 +169,7 @@ void canDashboardW202(void) {
 
 	{
 		CanTxMessage msg(W202_STAT_2); //dlc 7
-		msg[0] = (int)(getCoolantTemperature()+40); // CLT - 0x80 ~ 80C
+		msg[0] = (int)(Sensor::get(SensorType::Clt).value_or(0) + 40); // CLT - 0x80 ~ 80C
 		msg[1] = 0x3D; // TBD
 		msg[2] = 0x63; // Const
 		msg[3] = 0x41; // Const
