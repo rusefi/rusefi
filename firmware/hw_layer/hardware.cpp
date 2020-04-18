@@ -28,6 +28,7 @@
 #include "eficonsole.h"
 #include "console_io.h"
 #include "sensor_chart.h"
+#include "serial_hw.h"
 
 #include "mpu_util.h"
 //#include "usb_msd.h"
@@ -285,6 +286,10 @@ void applyNewHardwareSettings(void) {
 	stopCanPins();
 #endif /* EFI_CAN_SUPPORT */
 
+#if EFI_AUX_SERIAL
+	stopAuxSerialPins();
+#endif /* EFI_AUX_SERIAL */
+
 #if EFI_HIP_9011
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
@@ -359,6 +364,10 @@ void applyNewHardwareSettings(void) {
 #if EFI_CAN_SUPPORT
 	startCanPins();
 #endif /* EFI_CAN_SUPPORT */
+
+#if EFI_AUX_SERIAL
+	startAuxSerialPins();
+#endif /* EFI_AUX_SERIAL */
 
 #if EFI_HIP_9011
 	startHip9001_pins();
@@ -555,6 +564,9 @@ void initHardware(Logging *l) {
 	addConsoleActionII("i2c", sendI2Cbyte);
 #endif
 
+#if EFI_AUX_SERIAL
+	initAuxSerial();
+#endif /* EFI_AUX_SERIAL */
 
 //	USBMassStorageDriver UMSD1;
 
