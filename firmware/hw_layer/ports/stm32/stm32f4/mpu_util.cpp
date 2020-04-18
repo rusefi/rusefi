@@ -428,26 +428,6 @@ CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 
 #endif /* EFI_CAN_SUPPORT */
 
-#if EFI_AUX_SERIAL
-
-static bool isValidUART6TxPin(brain_pin_e pin) {
-	return pin == GPIOC_6 || pin == GPIOG_14;
-}
-
-static bool isValidUART6RxPin(brain_pin_e pin) {
-	return pin == GPIOC_7 || pin == GPIOG_9;
-}
-
-bool isValidSerialTxPin(brain_pin_e pin) {
-   return isValidUART6TxPin(pin);
-}
-
-bool isValidSerialRxPin(brain_pin_e pin) {
-   return isValidUART6RxPin(pin);
-}
-
-#endif /*EFI_AUX_SERIAL*/
-
 size_t flashSectorSize(flashsector_t sector) {
 	// sectors 0..11 are the 1st memory bank (1Mb), and 12..23 are the 2nd (the same structure).
 	if (sector <= 3 || (sector >= 12 && sector <= 15))
