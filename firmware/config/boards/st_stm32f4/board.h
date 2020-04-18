@@ -44,7 +44,7 @@
  * Default to input mode, with internal pulldown resistor enabled.
  */
 #define EFI_PIN_MODE_DEFAULT PIN_MODE_INPUT
-#define EFI_DR_DEFAULT PIN_PUPDR_PULLDOWN
+#define EFI_DR_DEFAULT PIN_PUPDR_PULLUP
 
 // See https://github.com/rusefi/rusefi/issues/397
 #define DEFAULT_GPIO_SPEED PIN_OSPEED_HIGH
@@ -84,9 +84,6 @@
 #define GPIOA_SWCLK                 14
 
 #define GPIOB_SWO                   3
-
-#define GPIOH_OSC_IN                0
-#define GPIOH_OSC_OUT               1
 
 /*
  * I/O ports initial setup, this configuration is established soon after reset
