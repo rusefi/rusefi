@@ -1677,8 +1677,6 @@
 #define postCrankingDurationSec_offset_hex 988
 #define postCrankingFactor_offset 2436
 #define postCrankingFactor_offset_hex 984
-#define postCrankingTargetClt_offset 2432
-#define postCrankingTargetClt_offset_hex 980
 #define primeInjFalloffTemperature_offset 1486
 #define primeInjFalloffTemperature_offset_hex 5ce
 #define primingSquirtDurationMs_offset 96
@@ -2152,6 +2150,8 @@
 #define unused1059_offset_hex f7c
 #define unused1234234_offset 2042
 #define unused1234234_offset_hex 7fa
+#define unused2432_offset 2432
+#define unused2432_offset_hex 980
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_24_offset_hex 5c4
 #define unused_1484_bit_25_offset 1476
