@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed Apr 15 21:13:41 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat Apr 18 11:21:53 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1108,8 +1108,6 @@ public class Fields {
 	public static final int postCrankingDurationSec_offset_hex = 988;
 	public static final int postCrankingFactor_offset = 2436;
 	public static final int postCrankingFactor_offset_hex = 984;
-	public static final int postCrankingTargetClt_offset = 2432;
-	public static final int postCrankingTargetClt_offset_hex = 980;
 	public static final int primeInjFalloffTemperature_offset = 1486;
 	public static final int primingSquirtDurationMs_offset = 96;
 	public static final int primingSquirtDurationMs_offset_hex = 60;
@@ -1428,6 +1426,8 @@ public class Fields {
 	public static final int uartConsoleSerialSpeed_offset = 2076;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1234234_offset = 2042;
+	public static final int unused2432_offset = 2432;
+	public static final int unused2432_offset_hex = 980;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
 	public static final int unused_1484_bit_26_offset = 1476;
@@ -2285,7 +2285,7 @@ public class Fields {
 	public static final Field AUTOTUNECLTTHRESHOLD = Field.create("AUTOTUNECLTTHRESHOLD", 2420, FieldType.FLOAT);
 	public static final Field AUTOTUNETPSROCTHRESHOLD = Field.create("AUTOTUNETPSROCTHRESHOLD", 2424, FieldType.FLOAT);
 	public static final Field AUTOTUNETPSQUIETPERIOD = Field.create("AUTOTUNETPSQUIETPERIOD", 2428, FieldType.FLOAT);
-	public static final Field POSTCRANKINGTARGETCLT = Field.create("POSTCRANKINGTARGETCLT", 2432, FieldType.FLOAT);
+	public static final Field UNUSED2432 = Field.create("UNUSED2432", 2432, FieldType.FLOAT);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 2436, FieldType.FLOAT);
 	public static final Field POSTCRANKINGDURATIONSEC = Field.create("POSTCRANKINGDURATIONSEC", 2440, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR1_TEMPC_1 = Field.create("AUXTEMPSENSOR1_TEMPC_1", 2444, FieldType.FLOAT);
@@ -3204,7 +3204,7 @@ public class Fields {
 	AUTOTUNECLTTHRESHOLD,
 	AUTOTUNETPSROCTHRESHOLD,
 	AUTOTUNETPSQUIETPERIOD,
-	POSTCRANKINGTARGETCLT,
+	UNUSED2432,
 	POSTCRANKINGFACTOR,
 	POSTCRANKINGDURATIONSEC,
 	AUXTEMPSENSOR1_TEMPC_1,

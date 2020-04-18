@@ -171,7 +171,7 @@ static void showLine(lcd_line_e line, int screenY) {
 #endif
 		return;
 	case LL_CLT_TEMPERATURE:
-		lcdPrintf("Coolant %.2f", getCoolantTemperature());
+		lcdPrintf("Coolant %.2f", Sensor::get(SensorType::Clt).value_or(0));
 		return;
 	case LL_IAT_TEMPERATURE:
 		lcdPrintf("Intake Air %.2f", getIntakeAirTemperature());
