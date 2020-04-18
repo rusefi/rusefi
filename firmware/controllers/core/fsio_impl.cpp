@@ -748,8 +748,9 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	// see FAN_CONTROL_LOGIC
 	if (CONFIG(fanPin) != GPIO_UNASSIGNED) {
-		enginePins.fanRelay.setValue((enginePins.fanRelay.getLogicValue() && (getCoolantTemperature() > engineConfiguration->fanOffTemperature)) || 
-			(getCoolantTemperature() > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
+		auto clt = Sensor::get(SensorType::Clt);
+		enginePins.fanRelay.setValue(!clt.Valid || (enginePins.fanRelay.getLogicValue() && (clt.Value > engineConfiguration->fanOffTemperature)) || 
+			(clt.Value > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
 	}
 	// see AC_RELAY_LOGIC
 	if (CONFIG(acRelayPin) != GPIO_UNASSIGNED) {
