@@ -136,7 +136,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		break;
 	case PID_COOLANT_TEMP:
 		scheduleMsg(&logger, "Got CLT request");
-		obdSendValue(1, pid, 1, getCoolantTemperature() + 40.0f);
+		obdSendValue(1, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + 40.0f);
 		break;
 	case PID_INTAKE_MAP:
 		scheduleMsg(&logger, "Got MAP request");
