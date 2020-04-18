@@ -32,22 +32,7 @@ float getKelvinTemperature(float resistance, ThermistorMath *tm);
 float getResistance(ThermistorConf *cfg, float voltage);
 temperature_t getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useLinear DECLARE_ENGINE_PARAMETER_SUFFIX);
 temperature_t getCoolantTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool isValidCoolantTemperature(temperature_t temperature);
 temperature_t getIntakeAirTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-/**
- * This macro points to readily-available pre-calculated value
- * for actual slow calculation see 'getCoolantTemperatureM'
- */
-#define getCoolantTemperature() engine->sensors.clt
-#define getIntakeAirTemperature() engine->sensors.iat
-
-bool isValidIntakeAirTemperature(temperature_t temperature);
-bool hasIatSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool hasCltSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-#define hasIatSensor() hasIatSensorM(PASS_ENGINE_PARAMETER_SIGNATURE)
-#define hasCltSensor() hasCltSensorM(PASS_ENGINE_PARAMETER_SIGNATURE)
 
 void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 

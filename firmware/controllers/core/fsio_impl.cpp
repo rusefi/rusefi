@@ -14,6 +14,7 @@
 #include "global.h"
 #include "fsio_impl.h"
 #include "allsensors.h"
+#include "sensor.h"
 
 EXTERN_ENGINE;
 
@@ -24,7 +25,6 @@ EXTERN_ENGINE;
 #include "rpm_calculator.h"
 #include "efi_gpio.h"
 #include "pwm_generator_logic.h"
-#include "sensor.h"
 
 /**
  * in case of zero frequency pin is operating as simple on/off. '1' for ON and '0' for OFF
@@ -748,8 +748,9 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	// see FAN_CONTROL_LOGIC
 	if (CONFIG(fanPin) != GPIO_UNASSIGNED) {
-		enginePins.fanRelay.setValue((enginePins.fanRelay.getLogicValue() && (getCoolantTemperature() > engineConfiguration->fanOffTemperature)) || 
-			(getCoolantTemperature() > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
+		auto clt = Sensor::get(SensorType::Clt);
+		enginePins.fanRelay.setValue(!clt.Valid || (enginePins.fanRelay.getLogicValue() && (clt.Value > engineConfiguration->fanOffTemperature)) || 
+			(clt.Value > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
 	}
 	// see AC_RELAY_LOGIC
 	if (CONFIG(acRelayPin) != GPIO_UNASSIGNED) {

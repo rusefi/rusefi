@@ -124,11 +124,15 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 
 angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float iatCorrection;
-	if (!hasIatSensor()) {
+
+	const auto [iatValid, iat] = Sensor::get(SensorType::Iat);
+
+	if (!iatValid) {
 		iatCorrection = 0;
 	} else {
-		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, getIntakeAirTemperature());
+		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, iat);
 	}
+
 	// PID Ignition Advance angle correction
 	float pidTimingCorrection = 0.0f;
 	if (CONFIG(useIdleTimingPidControl)) {
