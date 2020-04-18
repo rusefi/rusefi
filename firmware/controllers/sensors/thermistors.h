@@ -34,12 +34,6 @@ temperature_t getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useL
 temperature_t getCoolantTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 temperature_t getIntakeAirTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-/**
- * This macro points to readily-available pre-calculated value
- * for actual slow calculation see 'getCoolantTemperatureM'
- */
-#define getCoolantTemperature() engine->sensors.clt
-
 void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setCommonNTCSensor(ThermistorConf *thermistorConf, float pullup);
