@@ -2025,7 +2025,7 @@
 #define trigger_todoRemoveMeOneDay1_offset_hex 210
 #define TRIGGER_TYPE_36_1 9
 #define TRIGGER_TYPE_60_2 8
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "trg44", "trg45", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "trg45", "INVALID"
 #define trigger_type_offset 524
 #define trigger_type_offset_hex 20c
 #define trigger_unusedBit_4_10_offset 528
