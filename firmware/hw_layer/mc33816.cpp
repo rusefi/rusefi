@@ -16,6 +16,7 @@
 #if EFI_MC33816
 
 #include "mc33816.h"
+#include "mc33816_memory_map.h"
 #include "engine_configuration.h"
 #include "efi_gpio.h"
 #include "hardware.h"
@@ -27,6 +28,9 @@ EXTERN_CONFIG;
 static OutputPin chipSelect;
 static OutputPin resetB;
 static OutputPin driven;
+
+static bool flag0before = false;
+static bool flag0after = false;
 
 static unsigned short mcChipId;
 static Logging* logger;
@@ -44,13 +48,29 @@ static SPIConfig spiCfg = { .circular = false,
 
 static SPIDriver *driver;
 
+static bool validateChipId() {
+	return (mcChipId  >> 8) == 0x9D;
+}
 
 static void showStats() {
 	// x9D is product code or something, and 43 is the revision?
-	scheduleMsg(logger, "MC %x %s", mcChipId, (mcChipId  >> 8) == 0x9D ? "hooray!" : "not hooray :(");
+	scheduleMsg(logger, "MC %x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
+
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+    	scheduleMsg(logger, "flag0 before %d after %d", flag0before, flag0after);
+
+    	scheduleMsg(logger, "flag0 right now %d", efiReadPin(CONFIG(mc33816_flag0)));
+
+    } else {
+    	scheduleMsg(logger, "No flag0 pin selected");
+    }
+    scheduleMsg(logger, "MC voltage %d", CONFIG(mc33_hvolt));
 }
 
-// Mostly unused
+static void mcRestart();
+
+
+// Receive 16bits
 unsigned short recv_16bit_spi() {
 	unsigned short ret;
 	//spiSelect(driver);
@@ -75,14 +95,6 @@ static void spi_writew(unsigned short param) {
 	//spiUnselect(driver);
 }
 
-static unsigned short readId() {
-	spiSelect(driver);
-	spi_writew(0xBAA1);
-	unsigned short ID =  recv_16bit_spi();
-	spiUnselect(driver);
-	return ID;
-}
-
 static void setup_spi() {
 	spiSelect(driver);
 	// Select Channel command
@@ -97,6 +109,84 @@ static void setup_spi() {
     //spi_writew(0x001F);
 	spi_writew(0x009F); // + fast slew rate on miso
 	spiUnselect(driver);
+}
+
+static unsigned short readId() {
+	spiSelect(driver);
+	spi_writew(0xBAA1);
+	unsigned short ID =  recv_16bit_spi();
+	spiUnselect(driver);
+	return ID;
+}
+
+// Read a single word in Data RAM
+unsigned short mcReadDram(MC33816Mem addr) {
+	unsigned short readValue;
+	spiSelect(driver);
+	// Select Channel command, Common Page
+    spi_writew(0x7FE1);
+    spi_writew(0x0004);
+    // read (MSB=1) at data ram x9 (SCV_I_Hold), and 1 word
+    spi_writew((0x8000 | addr << 5) + 1);
+    readValue = recv_16bit_spi();
+
+    spiUnselect(driver);
+    return readValue;
+}
+
+// Update a single word in Data RAM
+void mcUpdateDram(MC33816Mem addr, unsigned short data) {
+	spiSelect(driver);
+	// Select Channel command, Common Page
+    spi_writew(0x7FE1);
+    spi_writew(0x0004);
+    // write (MSB=0) at data ram x9 (SCV_I_Hold), and 1 word
+    spi_writew((addr << 5) + 1);
+    spi_writew(data);
+
+    spiUnselect(driver);
+}
+
+void setBoostVoltage(float volts)
+{
+	// Sanity checks, Datasheet says not too high, nor too low
+	if(volts > 65.0f) {
+		firmwareError(OBD_PCM_Processor_Fault, "DI Boost voltage setpoint too high: %.1f", volts);
+		return;
+	}
+	if(volts < 10.0f) {
+		firmwareError(OBD_PCM_Processor_Fault, "DI Boost voltage setpoint too low: %.1f", volts);
+		return;
+	}
+	// There's a 1/32 divider on the input, then the DAC's output is 9.77mV per LSB.  (1 / 32) / 0.00977 = 3.199 counts per volt.
+	unsigned short data = volts * 3.2;
+	mcUpdateDram(MC33816Mem::Vboost_high, data+1);
+	mcUpdateDram(MC33816Mem::Vboost_low, data-1);
+	// Remember to strobe driven!!
+}
+
+static bool check_flash() {
+	spiSelect(driver);
+
+	// ch1
+	// read (MSB=1) at location, and 1 word
+    spi_writew((0x8000 | 0x100 << 5) + 1);
+    if (!(recv_16bit_spi() & (1<<5))) {
+    	spiUnselect(driver);
+    	return false;
+    }
+
+    // ch2
+	// read (MSB=1) at location, and 1 word
+    spi_writew((0x8000 | 0x120 << 5) + 1);
+
+    if (!(recv_16bit_spi() & (1<<5))) {
+    	spiUnselect(driver);
+    	return false;
+    }
+
+    spiUnselect(driver);
+	return true;
 }
 
 static void enable_flash() {
@@ -268,27 +358,25 @@ void initMc33816(Logging *sharedLogger) {
 	logger = sharedLogger;
 
 	//
-	// see setTest33816EngineConfiguration
-	//
-	// default spi3mosiPin PB5
-	// default spi3misoPin PB4
-	// default spi3sckPin  PB3
-	// ideally disable isSdCardEnabled since it's on SPI3
-
-	// uncomment this to hard-code something
-/* fixing continues integration - hiding these values
-	CONFIG(mc33816_cs) = GPIOD_7;
-	CONFIG(mc33816_rstb) = GPIOD_5;
-	CONFIG(mc33816_driven) = GPIOD_6;
-*/
-	// and more to add...
+	// see setTest33816EngineConfiguration  for default configuration
+	// Pins
 	if (CONFIG(mc33816_cs) == GPIO_UNASSIGNED)
 		return;
+	if (CONFIG(mc33816_rstb) == GPIO_UNASSIGNED)
+		return;
+	if (CONFIG(mc33816_driven) == GPIO_UNASSIGNED)
+		return;
+	if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
+	}
+
+	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
 
 	// Initialize the chip via ResetB
 	resetB.initPin("mc33 RESTB", engineConfiguration->mc33816_rstb);
+	// High Voltage via DRIVEN
+	driven.initPin("mc33 DRIVEN", engineConfiguration->mc33816_driven);
 
-	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
 
 	spiCfg.ssport = getHwPort("hip", CONFIG(mc33816_cs));
 	spiCfg.sspad = getHwPin("hip", CONFIG(mc33816_cs));
@@ -305,7 +393,20 @@ void initMc33816(Logging *sharedLogger) {
 	spiStart(driver, &spiCfg);
 
 	addConsoleAction("mc33_stats", showStats);
+	addConsoleAction("mc33_restart", mcRestart);
 	//addConsoleActionI("mc33_send", sendWord);
+
+	mcRestart();
+}
+
+static void mcRestart() {
+	flag0before = false;
+	flag0after = false;
+
+	scheduleMsg(logger, "MC Restart");
+	showStats();
+
+	driven.setValue(0); // ensure driven is off
 
 	// Does starting turn this high to begin with??
 	spiUnselect(driver);
@@ -315,39 +416,48 @@ void initMc33816(Logging *sharedLogger) {
 	chThdSleepMilliseconds(10);
 	resetB.setValue(1);
 	chThdSleepMilliseconds(10);
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+   		flag0before = efiReadPin(CONFIG(mc33816_flag0));
+    }
+
 
 	setup_spi();
 	mcChipId = readId();
 
+	if (!validateChipId()) {
+		firmwareError(OBD_PCM_Processor_Fault, "No comm with MC33");
+		return;
+	}
+
     download_RAM(CODE_RAM1);        // transfers code RAM1
     download_RAM(CODE_RAM2);        // transfers code RAM2
     download_RAM(DATA_RAM);         // transfers data RAM
+    /**
+     * current configuration of REG_MAIN would toggle flag0 from LOW to HIGH
+     */
     download_register(REG_MAIN);    // download main register configurations
+    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+   		flag0after = efiReadPin(CONFIG(mc33816_flag0));
+   		if (flag0before || !flag0after) {
+   			firmwareError(OBD_PCM_Processor_Fault, "MC33 flag0 transition no buena");
+
+   			return;
+   		}
+    }
+
     download_register(REG_CH1);     // download channel 1 register configurations
     download_register(REG_CH2);     // download channel 2 register configurations
     download_register(REG_IO);      // download IO register configurations
     download_register(REG_DIAG);    // download diag register configuration
+    // Finished downloading, let's run the code
     enable_flash();
-    //driven.setValue(1); // driven = HV
-}
-
-void update_scv(unsigned short current)
-{
-	// Update a single word in Data RAM
-	spiSelect(driver);
-	// Select Channel command
-    spi_writew(0x7FE1);
-    // Common Page
-    spi_writew(0x0004);
-	// write (MSB=0) at data ram x9 (SCV_I_Hold), and 1 word
-    spi_writew((9 << 5) + 1);
-    spi_writew(current);
-    spiUnselect(driver);
-
-	// Strobe it to reload the value
-    //GPIO_ClearPinsOutput(GPIOE, 1<<PIN21_IDX); // SCV
-    //GPIO_SetPinsOutput(GPIOE, 1<<PIN21_IDX); // SCV
-
+    if(!check_flash())
+    {
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 no flash");
+    	return;
+    }
+    setBoostVoltage(CONFIG(mc33_hvolt));
+    driven.setValue(1); // driven = HV
 }
 
 #endif /* EFI_MC33816 */

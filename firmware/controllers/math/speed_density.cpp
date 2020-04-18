@@ -16,6 +16,7 @@
 #include "maf2map.h"
 #include "config_engine_specs.h"
 #include "perf_trace.h"
+#include "sensor.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -35,10 +36,13 @@ baroCorr_Map3D_t baroCorrMap("baro");
 #define tpMax 100
 //  http://rusefi.com/math/t_charge.html
 /***panel:Charge Temperature*/
-temperature_t getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (cisnan(coolantTemp) || cisnan(airTemp)) {
-		warning(CUSTOM_ERR_NAN_TCHARGE, "t-getTCharge NaN");
-		return coolantTemp;
+temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	const auto [cltValid, coolantTemp] = Sensor::get(SensorType::Clt);
+	const auto [iatValid, airTemp] = Sensor::get(SensorType::Iat);
+	
+	if (!cltValid || !iatValid) {
+		warning(CUSTOM_ERR_NAN_TCHARGE, "getTCharge invalid iat/clt");
+		return airTemp;
 	}
 
 	DISPLAY_STATE(Engine)

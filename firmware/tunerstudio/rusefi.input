@@ -40,6 +40,9 @@ enable2ndByteCanID = false
 ;    settingOption = DEFAULT, "Speed Density" ; DEFAULT will be over looked and this will fall into the #else block of the statement.
 
 
+[MegaTune]
+ ; https://rusefi.com/forum/viewtopic.php?p=36201#p36201
+ 	signature    = @@TS_SIGNATURE@@ 
 
 [TunerStudio]
    queryCommand   = "S"
@@ -109,19 +112,38 @@ enable2ndByteCanID = false
 
 [LoggerDefinition]
   ; valid logger types: composite, tooth, trigger, csv
-  loggerDef = compositeLogger, "Primary Trigger Logger", tooth
+;  loggerDef = compositeLogger, "Primary Trigger Logger", tooth
+  loggerDef = compositeLogger, "Trigger Logger", composite
         startCommand = "l\x01"
         stopCommand  = "l\x02"
         dataReadCommand = "L"
         dataReadTimeout = 10000 ; time in ms
         dataReadyCondition = { toothLogReady }
+        continuousRead = true
+        ; each packet is @@COMPOSITE_PACKET_SIZE@@ and we have @@COMPOSITE_PACKET_COUNT@@ of those
+        dataLength = @@COMPOSITE_DATA_LENGTH@@
 
+;tooth
        ; recordDef = headerLen, footerLen, recordLen
-       recordDef =   0,   0,   2; in bytes, the recordLen is for each record, currently limited to 4 bytes
+;       recordDef =   0,   0,   @@COMPOSITE_PACKET_SIZE@@
 
        ; uint16 that stores 1/100 second
-       recordField = toothTime, "tooth", 0, 16, 0.01, "ms"
+;       recordField = toothTime, "tooth", 0, 16, 0.01, "ms"
 
+
+
+		; recordDef = headerLen, footerLen, recordLen
+		recordDef =   0,   0,   @@COMPOSITE_PACKET_SIZE@@
+
+		; these names are hard-coded inside TS
+		recordField = priLevel,          "PriLevel",     0,          1,          1.0,    "Flag"
+        recordField = secLevel,          "SecLevel",     1,          1,          1.0,    "Flag"
+        recordField = trigger,           "Trigger",      2,          1,          1.0,    "Flag"
+        recordField = sync,              "Sync",         3,          1,          1.0,    "Flag"
+		recordField = time,              "Time",         8,         32,         0.01,    "ms"
+
+        ; it seems that TS also needs to know the diff.size of a tooth
+        calcField = toothTime,           "ToothTime",    "ms",       { time - pastValue(time, 1) }
 
 [VeAnalyze]
 
@@ -326,6 +348,11 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 ;
       TPS2Value       = scalar,  S16,    220,        "%",{1/@@PACK_MULT_PERCENT@@},         0
 
+      rawTps1Primary  = scalar,	 U16,    222, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+      rawPpsPrimary   = scalar,	 U16,    224, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+      rawClt          = scalar,	 U16,    226, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+      rawIat          = scalar,	 U16,    228, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+      rawOilPressure  = scalar,	 U16,    230, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -365,8 +392,9 @@ fileVersion = { @@TS_FILE_VERSION@@ }
     debugFieldI2List = bits,   U08,   [0:7], "Offset",             "",                   "",          "",                         "Idle di2",            "Channel 2 Fall Counter",    "",           "",            "",           "",          "",                  "",      "",         "",         "",            "",           "",             "ETB di2",               "",                "",           "di2",          "di2",           "22di2",          "",        "23:di2",     "",               "",          "",         "",       "",     "",     "Latest Transmit","",    "",    "",      "",      "",                      "S unused"      "",           ""
     debugFieldI3List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle di3",            "Cycle Index",               "",           "",            "",           "",          "",                  "",      "",         "",         "",            "",           "",             "ETB di3",               "",                "",           "di3",          "di3",           "22di3",          "",        "23:di3",     "",               "",          "",         "",       "",     "",     "Latest Received","",    "",    "",      "",      "",                      "S unused"      "",           ""
     debugFieldI4List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle di4",            "Cycle Cnt 1",               "",           "",            "",           "",          "",                  "",      "",         "",         "",            "",           "",             "ETB di4",               "",                "",           "di4",          "di4",           "22di4",          "",        "23:di4",      "",              "",          "",         "",       "",     "",     "Init Count",     "",    "",    "",      "",      "",                      "S unused"      "",           ""
-    debugFieldI5List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle di5",            "Cycle Cnt 2",               "",           "",            "",           "",          "",                  "",      "",         "",         "",            "di5",        "di5",          "ETB di5",               "di5",             "di5",        "di5",          "di5",           "22di5",          "di5",     "di5",        "di5",            "di5",       "di5",      "di5",    "di5",  "di5",  "di5",            "di5", "di5", "di5",   "di5",   "di5",                   "S di5"        
-"",           ""[ConstantsExtensions]
+    debugFieldI5List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle di5",            "Cycle Cnt 2",               "",           "",            "",           "",          "",                  "",      "",         "",         "",            "di5",        "di5",          "ETB di5",               "di5",             "di5",        "di5",          "di5",           "22di5",          "di5",     "di5",        "di5",            "di5",       "di5",      "di5",    "di5",  "di5",  "di5",            "di5", "di5", "di5",   "di5",   "di5",                   "S di5"         "",           ""
+
+[ConstantsExtensions]
      ; defaultValue is used to provide TunerStudio with a value to use in the case of
      ; the constant not yet being initialized. This is primarily important if the
      ; constant is used as a variable in the ini.
@@ -936,6 +964,12 @@ gaugeCategory = Throttle Body (incl. ETB)
    etbErrorGauge      = etb1Error,     @@GAUGE_NAME_ETB_ERROR@@,  "%",    -20,  20,    -10,   -5,    5,    10,  2, 0
    etbDutyCycleGauge  = etb1DutyCycle, @@GAUGE_NAME_ETB_DUTY@@,                 "%",    -100, 100,   -75,   -50,   50,   75,  0, 0
 
+gaugeCategory = Sensors - Raw
+   rawTps1PrimaryGauge  = rawTps1Primary, "Raw TPS 1 Primary", "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawPpsPrimaryGauge   = rawPpsPrimary , "Raw Pedal Primary", "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawCltGauge          = rawClt        , "Raw CLT",           "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawIatGauge          = rawIat        , "Raw IAT",           "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawOilPressureGauge  = rawOilPressure, "Raw Oil Pressure",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
 
 [WueAnalyze]
     
@@ -1188,14 +1222,14 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Targets & closed loop
-		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1 && (fuelAlgorithm == LM_SPEED_DENSITY || fuelAlgorithm == LM_REAL_MAF)}
 		subMenu = fuelClosedLoopDialog, 	"Closed loop correction", 0, {isInjectionEnabled == 1}
 		subMenu = coastingFuelCutControl, 	"Deceleration fuel cutoff (DFCO)", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Fuel table/VE
-		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY}
-		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY && fuelAlgorithm != LM_REAL_MAF}
+		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1 && (fuelAlgorithm == LM_SPEED_DENSITY || fuelAlgorithm == LM_REAL_MAF)}
 		subMenu = injPhaseTableTbl,         "Injection phase", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
@@ -1261,6 +1295,7 @@ menuDialog = main
 	menu = "&Advanced" 
         subMenu = boostDialog,          "Boost Control"
 		subMenu = boostPidDialog,        "Closed Loop Boost",    { boostType == 1 }
+		subMenu = mc33Dialog,			"GDI Dreams"
         subMenu = std_separator	
 		subMenu = fsioInputsDialog,        	"FSIO inputs"
 		subMenu = auxPidDialog,				"Aux PID"
@@ -1420,6 +1455,7 @@ cmd_tle8888_init     		 = "w\x00\x14\x00\x08"
 cmd_test_ac_relay     		 = "w\x00\x14\x00\x09"
 cmd_write_config     		 = "w\x00\x14\x00\x0A"
 cmd_test_starter_relay     	 = "w\x00\x14\x00\x0B"
+cmd_etb_autotune             = "w\x00\x14\x00\x0C"
 
 cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
@@ -1557,6 +1593,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "!Reminder that 4-stroke cycle is 720 degrees"
 	    field = "!For well-known trigger types use '0' trigger angle offset"
 	    field = "Trigger Angle Offset",         		globalTriggerAngleOffset
+	    field = "Display only interesting",				displayLogicLevelsInEngineSniffer
 		field = "#Custom Trigger"
 		field = "total Tooth Count",					trigger_customTotalToothCount, {trigger_type == 0}
 		field = "skipped Tooth Count",					trigger_customSkippedToothCount, {trigger_type == 0}
@@ -1692,6 +1729,15 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Up voltage",					throttlePedalUpVoltage
 		field = "Down (WOT) voltage",				throttlePedalWOTVoltage
 
+
+    dialog = mc33Dialog, "GDI Dreams" 
+    	field = mc33816_cs,								mc33816_cs
+		field = mc33816_rstb,							mc33816_rstb
+		field = mc33816_flag0,							mc33816_flag0
+		field = "mc33972 SPI",							mc33972spiDevice
+		field = mc33_hvolt,								mc33_hvolt 
+    
+
 ;			Sensor Inputs
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
 		field = "Fuel level", 						fuelLevelSensor
@@ -1750,6 +1796,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = allPins1_1
 		field = mc33816_cs,								mc33816_cs
 		field = mc33816_rstb,							mc33816_rstb
+		field = mc33816_flag0,							mc33816_flag0
+		field = "trigger stimulator pin #1", 			triggerSimulatorPins1
+		field = "trigger stimulator pin #2", 			triggerSimulatorPins2
+		field = "trigger stimulator pin #2", 			triggerSimulatorPins3
 		field = high_fuel_pressure_sensor_1,			high_fuel_pressure_sensor_1
 		field = high_fuel_pressure_sensor_2,			high_fuel_pressure_sensor_2
 		field = mc33816_driven,							mc33816_driven
@@ -1758,7 +1808,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
 		field = "mc33972_cs",							mc33972_cs
-		field = "mc33972 SPI",							mc33972spiDevice
 		panel = allPinsSensors
 
 	dialog = allPins1_2
@@ -2704,6 +2753,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    commandButton = "TPS#2 wide open position", cmd_calibrate_tps_2_wot
 	    commandButton = "Pedal Up", cmd_calibrate_pedal_up
 	    commandButton = "Pedal Down", cmd_calibrate_pedal_down
+		commandButton = "ETB PID Autotune", cmd_etb_autotune
 
 	dialog = etbDialog, "Electronic Throttle Body (beta)", border
 		topicHelp = "etbHelp"

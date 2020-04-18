@@ -26,6 +26,7 @@ ifeq ($(USE_OPT),)
   USE_OPT = -c -Wall -O0 -ggdb -g3
   USE_OPT += -fprofile-arcs -ftest-coverage
   USE_OPT += -Werror=missing-field-initializers
+  USE_OPT += -Wno-unused-parameter -Wno-unused-function
 endif
 
 

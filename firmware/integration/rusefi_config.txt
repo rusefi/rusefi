@@ -76,6 +76,14 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_TYPE_60_2 8
 #define TRIGGER_TYPE_36_1 9
 
+#define TOOTH_PACKET_COUNT 1000
+#define TOOTH_PACKET_SIZE 2
+#define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@*@@TOOTH_PACKET_COUNT@@
+
+#define COMPOSITE_PACKET_COUNT 500
+#define COMPOSITE_PACKET_SIZE 5
+#define COMPOSITE_DATA_LENGTH @@COMPOSITE_PACKET_SIZE@@*@@COMPOSITE_PACKET_COUNT@@
+
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
 
@@ -126,6 +134,8 @@ struct_no_prefix engine_configuration_s
 #define BOOST_RPM_COUNT 8
 #define BOOST_LOAD_COUNT 8
 #define PEDAL_TO_TPS_SIZE 8
+
+#define STFT_CELL_COUNT 4
 
 #define CAN_DEFAULT_BASE 0x200
 
@@ -184,6 +194,27 @@ custom pedal_to_tps_t	@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@ array,   U08, 
 
 custom iac_pid_mult_t	@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@ array,   U08,   @OFFSET@, [@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@],"%",	   1,     0,     0,  999,    2
 custom boost_table_t	@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@],"",    @@LOAD_1_BYTE_PACKING_MULT@@,  0 ,    0,    3000,      0
+
+struct stft_cell_cfg_s
+	int8_t maxAdd;;    "%",        1, 0,  0, 25, 0
+	int8_t maxRemove;; "%",        1, 0, -25, 0, 0
+	uint16_t timeConstant;;   "sec", 0.1, 0, 0.1,  100, 2
+end_struct
+
+struct stft_s
+	uint8_t maxIdleRegionRpm;+Below this RPM, the idle region is active;"RPM",   @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0
+	uint8_t maxOverrunLoad;+Below this engine load, the overrun region is active;  "load",  1,    0,      0.0,   250,   0
+	uint8_t minPowerLoad;+Above this engine load, the power region is active;    "load",  1,    0,      0.0,   250,   0
+	uint8_t deadband;+When close to correct AFR, pause correction.  This can improve stability by not changing the adjustment if the error is extremely small, but is not required.;  "%",  0.1,     0,    0,      3,  1
+
+	int8_t minClt;+Below this temperature, correction is disabled.;"C",         1,     0,  -20,    100,  0
+	uint8_t minAfr;+Below this AFR, correction is paused;"afr",    0.1,     0,   10,     20,  1
+	uint8_t maxAfr;+Above this AFR, correction is paused;"afr",    0.1,     0,   10,     20,  1
+	uint8_t startupDelay;+Delay after starting the engine before beginning closed loop correction.;"seconds", 1, 0, 0, 250, 0
+
+	stft_cell_cfg_s[STFT_CELL_COUNT iterate] cellCfgs;
+end_struct
+
 struct pid_s
 	float pFactor;;"",      1,      0,       -10000, 10000,      4
 	float iFactor;;"",      1,      0,       -10000, 10000,      4
@@ -342,7 +373,7 @@ bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
 bit useRunningMathForCranking,Fuel Map,Fixed;
-bit issue_294_25;
+bit displayLogicLevelsInEngineSniffer;
 bit issue_294_26;
 bit issue_294_27;
 bit issue_294_28;
@@ -669,7 +700,8 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
-	int unusedOneMoreHere
+	uint8_t mc33_hvolt;;"v",        1,     0,  0,    100,  0
+	uint8_t[3] unusedHere;
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
@@ -817,7 +849,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	int launchTpsTreshold;
 	float launchActivateDelay;
 
-	int[100] unusedAtOldBoardConfigurationEnd;
+	stft_s stft
+
+	int[94] unusedAtOldBoardConfigurationEnd;
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
@@ -950,7 +984,7 @@ int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structu
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC",      1,     0,    0, 1023,      0
 	output_pin_e starterControlPin;See also startStopButtonPin
 	pin_input_mode_e startStopButtonMode;
-	uint8_t[1] unusedFormerWarmupAfrPid;
+	brain_pin_e mc33816_flag0;
 	uint8_t tachPulsePerRev;;"Pulse",        1,     0,  1.0,    255.0,  0
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	

@@ -12,6 +12,7 @@
 #include "rpm_calculator.h"
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
+#include "sensor.h"
 
 extern EnginePins enginePins;
 
@@ -28,7 +29,7 @@ public:
  */
 class EngineTestHelper : public EngineTestHelperBase {
 public:
-	explicit EngineTestHelper(engine_type_e engineType);
+	EngineTestHelper(engine_type_e engineType, const std::unordered_map<SensorType, float>& sensorValues);
 	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback);
 	~EngineTestHelper();
 

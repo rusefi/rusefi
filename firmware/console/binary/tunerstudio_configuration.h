@@ -181,7 +181,13 @@ typedef struct {
 	egt_values_s egtValues; // 204
 	scaled_percent throttle2Position;    // 220
 
-	uint8_t unusedAtTheEnd[18]; // we have some unused bytes to allow compatible TS changes
+	scaled_voltage rawTps1Primary;		// 222
+	scaled_voltage rawPpsPrimary;		// 224
+	scaled_voltage rawClt;				// 226
+	scaled_voltage rawIat;				// 228
+	scaled_voltage rawOilPressure;		// 230
+
+	uint8_t unusedAtTheEnd[8]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

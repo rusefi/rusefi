@@ -209,6 +209,9 @@ typedef enum {
 	TT_TOOTHED_WHEEL = 0,
 	TT_FORD_ASPIRE = 1,
 	TT_DODGE_NEON_1995 = 2,
+	/**
+	 * https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger#Mazda_Miata_NA
+	 */
 	TT_MAZDA_MIATA_NA = 3,
 	/**
 	 * NB1 means non-VVT NB, 99 and 00 1.8 engine
@@ -784,6 +787,7 @@ typedef enum {
 	CAN_BUS_NBC_VAG = 2,
 	CAN_BUS_MAZDA_RX8 = 3,
 	CAN_BUS_NBC_BMW = 4,
+	CAN_BUS_W202_C180 = 5,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;

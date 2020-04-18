@@ -354,6 +354,8 @@ case CAN_BUS_NBC_FIAT:
   return "CAN_BUS_NBC_FIAT";
 case CAN_BUS_NBC_VAG:
   return "CAN_BUS_NBC_VAG";
+case CAN_BUS_W202_C180:
+  return "CAN_BUS_W202_C180";
 case Internal_ForceMyEnumIntSize_can_nbc:
   return "Internal_ForceMyEnumIntSize_can_nbc";
   }
