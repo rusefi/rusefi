@@ -14,6 +14,7 @@
 #include "can_dash.h"
 #include "can_msg_tx.h"
 
+#include "sensor.h"
 #include "allsensors.h"
 #include "vehicle_speed.h"
 
@@ -63,7 +64,7 @@ void canDashboardBMW(void) {
 
 	{
 		CanTxMessage msg(CAN_BMW_E46_DME2);
-		msg.setShortValue((int) ((getCoolantTemperature() + 48.373) / 0.75), 1);
+		msg.setShortValue((int) ((Sensor::get(SensorType::Clt).value_or(0) + 48.373) / 0.75), 1);
 	}
 }
 
@@ -98,7 +99,8 @@ void canMazdaRX8(void) {
 
 	{
 		CanTxMessage msg(CAN_MAZDA_RX_STATUS_2);
-		msg[0] = (uint8_t)(getCoolantTemperature() + 69); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
+		auto clt = Sensor::get(SensorType::Clt);
+		msg[0] = (uint8_t)(clt.value_or(0) + 69); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
 		msg[1] = ((int16_t)(engine->engineState.vssEventCounter*(engineConfiguration->vehicleSpeedCoef*0.277*2.58))) & 0xff;
 		msg[2] = 0x00; // unknown
 		msg[3] = 0x00; //unknown
@@ -108,8 +110,10 @@ void canMazdaRX8(void) {
 		if ((GET_RPM()>0) && (engine->sensors.vBatt<13)) {
 			msg.setBit(6, 6); // battery light
 		}
-		if (getCoolantTemperature() > 105) {
-			msg.setBit(6, 1); // coolant light, 101 - red zone, light means its get too hot
+		if (!clt.Valid || clt.Value > 105) {
+			// coolant light, 101 - red zone, light means its get too hot
+			// Also turn on the light in case of sensor failure
+			msg.setBit(6, 1);
 		}
 		//oil pressure warning lamp bit is 7
 		msg[7] = 0x00; //unused
@@ -120,7 +124,7 @@ void canDashboardFiat(void) {
 	{
 		//Fiat Dashboard
 		CanTxMessage msg(CAN_FIAT_MOTOR_INFO);
-		msg.setShortValue((int) (getCoolantTemperature() - 40), 3); //Coolant Temp
+		msg.setShortValue((int) (Sensor::get(SensorType::Clt).value_or(0) - 40), 3); //Coolant Temp
 		msg.setShortValue(GET_RPM() / 32, 6); //RPM
 	}
 }
@@ -132,14 +136,16 @@ void canDashboardVAG(void) {
 		msg.setShortValue(GET_RPM() * 4, 2); //RPM
 	}
 
+	float clt = Sensor::get(SensorType::Clt).value_or(0);
+
 	{
 		CanTxMessage msg(CAN_VAG_CLT);
-		msg.setShortValue((int) ((getCoolantTemperature() + 48.373) / 0.75), 1); //Coolant Temp
+		msg.setShortValue((int) ((clt + 48.373) / 0.75), 1); //Coolant Temp
 	}
 
 	{
 		CanTxMessage msg(CAN_VAG_CLT_V2);
-		msg.setShortValue((int) ((getCoolantTemperature() + 48.373) / 0.75), 4); //Coolant Temp
+		msg.setShortValue((int) ((clt + 48.373) / 0.75), 4); //Coolant Temp
 	}
 
 	{
@@ -163,7 +169,7 @@ void canDashboardW202(void) {
 
 	{
 		CanTxMessage msg(W202_STAT_2); //dlc 7
-		msg[0] = (int)(getCoolantTemperature()+40); // CLT - 0x80 ~ 80C
+		msg[0] = (int)(Sensor::get(SensorType::Clt).value_or(0) + 40); // CLT - 0x80 ~ 80C
 		msg[1] = 0x3D; // TBD
 		msg[2] = 0x63; // Const
 		msg[3] = 0x41; // Const
