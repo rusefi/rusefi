@@ -178,6 +178,10 @@
 #define EFI_CAN_SUPPORT TRUE
 #endif
 
+#ifndef EFI_AUX_SERIAL
+#define EFI_AUX_SERIAL TRUE
+#endif
+
 #ifndef EFI_HD44780_LCD
 #define EFI_HD44780_LCD TRUE
 #endif
