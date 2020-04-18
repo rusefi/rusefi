@@ -336,29 +336,20 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @brief Engine warm-up fuel correction.
  */
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	const auto [valid, clt] = Sensor::get(SensorType::Clt);
-	
-	if (!valid)
+	if (!hasCltSensor())
 		return 1; // this error should be already reported somewhere else, let's just handle it
-
-	return interpolate2d("cltf", clt, config->cltFuelCorrBins, config->cltFuelCorr);
+	return interpolate2d("cltf", getCoolantTemperature(), config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	const auto [valid, clt] = Sensor::get(SensorType::Clt);
-
-	if (!valid)
+	if (!hasCltSensor())
 		return 0; // this error should be already reported somewhere else, let's just handle it
-
-	return interpolate2d("timc", clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
+	return interpolate2d("timc", getCoolantTemperature(), engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
 }
 
-float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	const auto [valid, iat] = Sensor::get(SensorType::Iat);
-
-	if (!valid)
+float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (cisnan(iat))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-
 	return interpolate2d("iatc", iat, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 
