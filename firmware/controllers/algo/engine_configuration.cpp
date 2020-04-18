@@ -697,7 +697,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
 
-	engineConfiguration->postCrankingTargetClt = 25;
 	engineConfiguration->postCrankingDurationSec = 2;
 
 	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
