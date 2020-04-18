@@ -153,6 +153,8 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
+	Sensor::setMockValue(SensorType::Iat, 49.579071f);
+
 	TriggerWaveform * shape = &engine->triggerCentral.triggerShape;
 
 	ASSERT_EQ( 0,  shape->getTriggerWaveformSynchPointIndex()) << "triggerShapeSynchPointIndex";
