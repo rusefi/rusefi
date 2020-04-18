@@ -89,7 +89,7 @@ TEST(misc, testFuelMap) {
 
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	float iatCorrection = getIatFuelCorrection(-KELV PASS_ENGINE_PARAMETER_SUFFIX);
+	float iatCorrection = getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 2,  iatCorrection) << "IAT";
 	float cltCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  cltCorrection) << "CLT";
