@@ -1156,6 +1156,7 @@ case TT_MAZDA_MIATA_VVT_TEST:
 case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
 case TT_MIATA_NB2_VVT_CAM:
+case TT_RENIX_44_2_2:
   return "TT_MIATA_NB2_VVT_CAM";
 case TT_MAZDA_Z5:
   return "TT_MAZDA_Z5";

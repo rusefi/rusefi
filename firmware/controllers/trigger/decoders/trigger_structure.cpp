@@ -460,6 +460,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		break;
 
 	case TT_MIATA_NB2_VVT_CAM:
+	case TT_RENIX_44_2_2:
 		initializeMazdaMiataVVtCamShape(this);
 		break;
 
