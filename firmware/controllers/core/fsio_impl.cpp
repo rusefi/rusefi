@@ -125,7 +125,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_IS_COOLANT_BROKEN:
 		return !Sensor::get(SensorType::Clt).Valid;
 	case LE_METHOD_INTAKE_AIR:
-		return getIntakeAirTemperature();
+		return Sensor::get(SensorType::Iat).value_or(0);
 	case LE_METHOD_RPM:
 		return engine->rpmCalculator.getRpm();
 	case LE_METHOD_MAF:

@@ -159,7 +159,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		}
 	case PID_INTAKE_TEMP:
 		scheduleMsg(&logger, "Got IAT request");
-		obdSendValue(1, pid, 1, getIntakeAirTemperature() + 40.0f);
+		obdSendValue(1, pid, 1, Sensor::get(SensorType::Iat).value_or(0) + 40.0f);
 		break;
 	case PID_INTAKE_MAF:
 		scheduleMsg(&logger, "Got MAF request");
