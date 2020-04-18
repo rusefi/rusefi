@@ -14,6 +14,7 @@
 #include "global.h"
 #include "fsio_impl.h"
 #include "allsensors.h"
+#include "sensor.h"
 
 EXTERN_ENGINE;
 
@@ -24,7 +25,6 @@ EXTERN_ENGINE;
 #include "rpm_calculator.h"
 #include "efi_gpio.h"
 #include "pwm_generator_logic.h"
-#include "sensor.h"
 
 /**
  * in case of zero frequency pin is operating as simple on/off. '1' for ON and '0' for OFF
