@@ -2,10 +2,10 @@ package com.rusefi.test;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.fathzer.soft.javaluator.Operator;
+import com.rusefi.InfixConverter;
 import org.junit.Test;
 
 import java.text.ParseException;
-import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -22,13 +22,13 @@ public class ReversePolishNotationParserTest {
 
         assertParseB("1 3 max", "max(1, 3)");
         try {
-            assertParse("3 1 max", "max(1 3)");
+            assertHumanToRPN("max(1 3)", "3 1 max");
             fail("Error expected");
         } catch (Throwable ignored) {
             // expected
         }
 
-        assertParse("log 3", "log 3 "); // todo: better handling?
+        assertHumanToRPN("log 3 ", "log 3"); // todo: better handling?
         assertParseB("0 fsio_setting", "fsio_setting(0)");
 
         assertParseB("rpm 2 fsio_setting >", "rpm > fsio_setting(2)");
@@ -42,76 +42,33 @@ public class ReversePolishNotationParserTest {
 
         assertParseB("1 2 + 3 4 5 + / +", "1 + 2 + 3 / (4 +5 )");
 
-        assertParse("rpm 0 >", "rpm > false");
-        assertParse("rpm 0 >", "(rpm > false)");
+        assertHumanToRPN("rpm > false", "rpm 0 >");
+        assertHumanToRPN("(rpm > false)", "rpm 0 >");
         assertParseB("rpm user0 > clt user2 > or", "(rpm > user0) or (clt > user2)");
         assertParseB("1 2 | 3 |", "1 | 2 | 3");
         assertParseB("rpm user0 > clt user2 > or vbatt user1 > or", "(rpm > user0) or (clt > user2) or (vbatt > user1)");
     }
 
     private void assertParseB(String rpn, String expression) {
-        assertParse(rpn, expression);
-        String infix = getInfix(rpn);
-        System.out.println(infix);
+        assertHumanToRPN(expression, rpn);
 
-        assertEquals("infix recovery", getReplace(expression).toLowerCase(), getReplace(infix).toLowerCase());
+        // humans line infix notation for some reason
+        String humanInfixForm = InfixConverter.getHumanInfixForm(rpn);
+        System.out.println(humanInfixForm);
+
+        assertEquals("infix recovery", getReplace(expression).toLowerCase(), getReplace(humanInfixForm).toLowerCase());
     }
 
     private String getReplace(String h) {
         return h.replaceAll("[\\(\\)]", "").replace(" ", "");
     }
 
-    private void assertParse(String rpn, String expression) {
+    private void assertHumanToRPN(String inputExpression, String expectedRPN) {
         DoubleEvaluator evaluator = new DoubleEvaluator();
-        evaluator.evaluate(expression.toLowerCase());
+        evaluator.evaluate(inputExpression.toLowerCase());
 
-        assertEquals(rpn, evaluator.getPosftfixExpression());
+        assertEquals(expectedRPN, evaluator.getPosftfixExpression());
     }
-
-    private String getInfix(String rpn) {
-        String tokens[] = rpn.split(" ");
-        Stack<String> stack = new Stack<>();
-
-        for (String token : tokens) {
-            if (DoubleEvaluator.getFunction(token) != null) {
-                int pCount = DoubleEvaluator.getFunction(token).getMaximumArgumentCount();
-
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < pCount; i++) {
-                    if (i != 0)
-                        sb.insert(0, ", ");
-                    if (stack.isEmpty())
-                        throw new IllegalStateException("While getting " + pCount + "parameters for " + token);
-                    sb.insert(0, stack.pop());
-                }
-
-                stack.push(token + "(" + sb + ")");
-
-
-            } else if (Operator._1_OPERATORS.contains(token)) {
-                String a = stack.pop();
-
-                stack.push("(" + token + " " + a + ")");
-
-            } else if (takesTwoParameters(token)) {
-                if (stack.size() < 2)
-                    throw new IllegalStateException("Not enough " + token);
-                String a = stack.pop();
-                String b = stack.pop();
-                stack.push("(" + b + " " + token + " " + a + ")");
-            } else {
-                stack.push(token);
-            }
-        }
-        if (stack.size() != 1)
-            throw new IllegalStateException("Unexpected stack content: " + stack);
-        return stack.pop();
-    }
-
-    private boolean takesTwoParameters(String token) {
-        return Operator._2_OPERATORS.contains(token);
-    }
-
 
     @Test
     public void testUnaryMinus() {
