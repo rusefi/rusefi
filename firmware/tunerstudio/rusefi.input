@@ -40,6 +40,9 @@ enable2ndByteCanID = false
 ;    settingOption = DEFAULT, "Speed Density" ; DEFAULT will be over looked and this will fall into the #else block of the statement.
 
 
+[MegaTune]
+ ; https://rusefi.com/forum/viewtopic.php?p=36201#p36201
+ 	signature    = @@TS_SIGNATURE@@ 
 
 [TunerStudio]
    queryCommand   = "S"
@@ -345,6 +348,11 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 ;
       TPS2Value       = scalar,  S16,    220,        "%",{1/@@PACK_MULT_PERCENT@@},         0
 
+      rawTps1Primary  = scalar,	 U16,    222, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+      rawPpsPrimary   = scalar,	 U16,    224, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+      rawClt          = scalar,	 U16,    226, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+      rawIat          = scalar,	 U16,    228, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+      rawOilPressure  = scalar,	 U16,    230, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -956,6 +964,12 @@ gaugeCategory = Throttle Body (incl. ETB)
    etbErrorGauge      = etb1Error,     @@GAUGE_NAME_ETB_ERROR@@,  "%",    -20,  20,    -10,   -5,    5,    10,  2, 0
    etbDutyCycleGauge  = etb1DutyCycle, @@GAUGE_NAME_ETB_DUTY@@,                 "%",    -100, 100,   -75,   -50,   50,   75,  0, 0
 
+gaugeCategory = Sensors - Raw
+   rawTps1PrimaryGauge  = rawTps1Primary, "Raw TPS 1 Primary", "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawPpsPrimaryGauge   = rawPpsPrimary , "Raw Pedal Primary", "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawCltGauge          = rawClt        , "Raw CLT",           "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawIatGauge          = rawIat        , "Raw IAT",           "volts", 0, 5, 0, 0, 5, 5, 3, 0
+   rawOilPressureGauge  = rawOilPressure, "Raw Oil Pressure",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
 
 [WueAnalyze]
     
@@ -1208,14 +1222,14 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Targets & closed loop
-		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1 && (fuelAlgorithm == LM_SPEED_DENSITY || fuelAlgorithm == LM_REAL_MAF)}
 		subMenu = fuelClosedLoopDialog, 	"Closed loop correction", 0, {isInjectionEnabled == 1}
 		subMenu = coastingFuelCutControl, 	"Deceleration fuel cutoff (DFCO)", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Fuel table/VE
-		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY}
-		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY && fuelAlgorithm != LM_REAL_MAF}
+		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1 && (fuelAlgorithm == LM_SPEED_DENSITY || fuelAlgorithm == LM_REAL_MAF)}
 		subMenu = injPhaseTableTbl,         "Injection phase", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
@@ -1281,6 +1295,7 @@ menuDialog = main
 	menu = "&Advanced" 
         subMenu = boostDialog,          "Boost Control"
 		subMenu = boostPidDialog,        "Closed Loop Boost",    { boostType == 1 }
+		subMenu = mc33Dialog,			"GDI Dreams"
         subMenu = std_separator	
 		subMenu = fsioInputsDialog,        	"FSIO inputs"
 		subMenu = auxPidDialog,				"Aux PID"
@@ -1440,6 +1455,7 @@ cmd_tle8888_init     		 = "w\x00\x14\x00\x08"
 cmd_test_ac_relay     		 = "w\x00\x14\x00\x09"
 cmd_write_config     		 = "w\x00\x14\x00\x0A"
 cmd_test_starter_relay     	 = "w\x00\x14\x00\x0B"
+cmd_etb_autotune             = "w\x00\x14\x00\x0C"
 
 cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
@@ -1577,6 +1593,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "!Reminder that 4-stroke cycle is 720 degrees"
 	    field = "!For well-known trigger types use '0' trigger angle offset"
 	    field = "Trigger Angle Offset",         		globalTriggerAngleOffset
+	    field = "Display only interesting",				displayLogicLevelsInEngineSniffer
 		field = "#Custom Trigger"
 		field = "total Tooth Count",					trigger_customTotalToothCount, {trigger_type == 0}
 		field = "skipped Tooth Count",					trigger_customSkippedToothCount, {trigger_type == 0}
@@ -1712,6 +1729,15 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Up voltage",					throttlePedalUpVoltage
 		field = "Down (WOT) voltage",				throttlePedalWOTVoltage
 
+
+    dialog = mc33Dialog, "GDI Dreams" 
+    	field = mc33816_cs,								mc33816_cs
+		field = mc33816_rstb,							mc33816_rstb
+		field = mc33816_flag0,							mc33816_flag0
+		field = "mc33972 SPI",							mc33972spiDevice
+		field = mc33_hvolt,								mc33_hvolt 
+    
+
 ;			Sensor Inputs
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
 		field = "Fuel level", 						fuelLevelSensor
@@ -1771,6 +1797,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = mc33816_cs,								mc33816_cs
 		field = mc33816_rstb,							mc33816_rstb
 		field = mc33816_flag0,							mc33816_flag0
+		field = "trigger stimulator pin #1", 			triggerSimulatorPins1
+		field = "trigger stimulator pin #2", 			triggerSimulatorPins2
+		field = "trigger stimulator pin #2", 			triggerSimulatorPins3
 		field = high_fuel_pressure_sensor_1,			high_fuel_pressure_sensor_1
 		field = high_fuel_pressure_sensor_2,			high_fuel_pressure_sensor_2
 		field = mc33816_driven,							mc33816_driven
@@ -1779,7 +1808,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
 		field = "mc33972_cs",							mc33972_cs
-		field = "mc33972 SPI",							mc33972spiDevice
 		panel = allPinsSensors
 
 	dialog = allPins1_2
@@ -1916,6 +1944,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "servo#3",								servoOutputPins3
 		field = "servo#4",								servoOutputPins4
 		field = "servo#5",								servoOutputPins5
+		field = "AUX Serial TX", 						auxSerialTxPin
+		field = "AUX Serial RX", 						auxSerialRxPin
 
 
 	dialog = allPins1_1_and_2, "", xAxis
@@ -2049,9 +2079,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Heater pin",						o2heaterPin
 
 	dialog = egoSettings, "", yAxis
-		panel = egoSettings_IO, {enableAemXSeries == 0}
-		panel = egoSettings_sensor,	{afr_hwChannel != 16 && enableAemXSeries == 0}
+		panel = egoSettings_IO
+		panel = egoSettings_sensor,	{afr_hwChannel != 16 && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
 		field = "Enable AEM X-Series CANbus",			enableAemXSeries, { canReadEnabled }
+		field = "Enable Innovate LC-2 Serial",			enableInnovateLC2, { auxSerialRxPin && auxSerialTxPin }
 
 ;			Engine->EGT inputs
 	dialog = egtInputs, "EGT inputs"
@@ -2375,6 +2406,11 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Can Sleep Period",						canSleepPeriodMs
 		field = "RX pin",								canRxPin @@if_ts_show_can_pins
 		field = "TX pin",								canTxPin @@if_ts_show_can_pins
+
+	dialog = auxSerial, "AUX Serial"
+		field = "RX pin",								auxSerialRxPin @@if_ts_show_auxserial_pins
+		field = "TX pin",								auxSerialTxPin @@if_ts_show_auxserial_pins
+		field = "Serial Baud Rate",						auxSerialSpeed @@if_ts_show_auxserial_pins
 	
 	dialog = sdCard, "SD Card Logger"
 		field = "SdCard", 								isSdCardEnabled
@@ -2411,6 +2447,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort							@@if_ts_show_tunerstudio_port
 		panel = canBus
+		panel = auxSerial
 		panel = sdCard							@@if_ts_show_sd_card
 		panel = gpsReceiver                       @@if_ts_show_gps
 		panel = tle8888
@@ -2725,6 +2762,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    commandButton = "TPS#2 wide open position", cmd_calibrate_tps_2_wot
 	    commandButton = "Pedal Up", cmd_calibrate_pedal_up
 	    commandButton = "Pedal Down", cmd_calibrate_pedal_down
+		commandButton = "ETB PID Autotune", cmd_etb_autotune
 
 	dialog = etbDialog, "Electronic Throttle Body (beta)", border
 		topicHelp = "etbHelp"

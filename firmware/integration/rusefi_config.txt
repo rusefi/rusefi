@@ -373,7 +373,7 @@ bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
 bit useRunningMathForCranking,Fuel Map,Fixed;
-bit issue_294_25;
+bit displayLogicLevelsInEngineSniffer;
 bit issue_294_26;
 bit issue_294_27;
 bit issue_294_28;
@@ -700,7 +700,8 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
-	int unusedOneMoreHere
+	uint8_t mc33_hvolt;;"v",        1,     0,  0,    100,  0
+	uint8_t[3] unusedHere;
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
@@ -793,7 +794,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit enableLaunchRetard
 	bit enableLaunchBoost
 	bit launchDisableBySpeed
-	bit unusedBit_251_7
+	bit enableInnovateLC2
 	bit unusedBit_251_8
 	bit unusedBit_251_9
 	bit unusedBit_251_10
@@ -1024,9 +1025,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	
 	int16_t iacByTpsTaper;+Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value;"percent",        1,     0,  0,    500,  0
 
-	brain_pin_e unusedErrorPin;
+	brain_pin_e auxSerialTxPin;set_aux_tx_pin X;	
 	brain_pin_e warningLedPin;
-	brain_pin_e unused1234234;
+	brain_pin_e auxSerialRxPin;set_aux_rx_pin X;
 	brain_pin_e LIS302DLCsPin;
 
 
@@ -1049,7 +1050,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float slowAdcAlpha;+ExpAverage alpha coefficient;"coeff",        1,     0,    0, 200,     3
 	debug_mode_e debugMode;+See http://rusefi.com/s/debugmode\n\nset debug_mode X
 
-	uint32_t[9] unused_former_warmup_target_afr;
+	uint32_t auxSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
+
+	uint32_t[8] unused_former_warmup_target_afr;
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
@@ -1507,3 +1510,4 @@ end_struct
 #define ts_show_can_pins true
 #define ts_show_tunerstudio_port true
 #define ts_show_trigger_comparator false
+#define ts_show_auxserial_pins true
