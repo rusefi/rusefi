@@ -10,4 +10,7 @@
 #include "trigger_structure.h"
 
 // TT_RENIX_44_2_2
-void initializeRenix44_4_4(TriggerWaveform *s);
+void initializeRenix44_2_2(TriggerWaveform *s);
+
+// TT_RENIX_66_2_2_2
+void initializeRenix66_2_2(TriggerWaveform *s);
