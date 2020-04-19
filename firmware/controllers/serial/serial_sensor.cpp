@@ -13,6 +13,7 @@
 #include "engine.h"
 
 #define NUM_INNOVATE_O2_SENSORS 1
+#define AFR_MULTIPLIER	147
 
 EXTERN_ENGINE;
 
@@ -133,7 +134,8 @@ void ParseInnovateSerialMsg()
 		else if (innovate_o2_sensor[i].function_code <= 0)
 			innovate_o2_sensor[i].function_code = 0;
 
-		innovate_o2_sensor[i].AFR_multiplier = ((ser_buffer[2 + i * 4] << 7 | ser_buffer[3 + i * 4]) & 0xFF);
+		// innovate_o2_sensor[i].AFR_multiplier = ((ser_buffer[2 + i * 4] << 7 | ser_buffer[3 + i * 4]) & 0xFF);
+		innovate_o2_sensor[i].AFR_multiplier = AFR_MULTIPLIER;
 
 		switch (innovate_o2_sensor[i].function_code)
 		{
