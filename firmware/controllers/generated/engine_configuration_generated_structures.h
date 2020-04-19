@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 19 15:46:36 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 19 18:31:50 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1672,10 +1672,10 @@ struct engine_configuration_s {
 	bool launchDisableBySpeed : 1;
 	/**
 	offset 976 bit 7 */
-	bool enableInnovateLC2 : 1;
+	bool enableCanVss : 1;
 	/**
 	offset 976 bit 8 */
-	bool unusedBit_251_8 : 1;
+	bool enableInnovateLC2 : 1;
 	/**
 	offset 976 bit 9 */
 	bool unusedBit_251_9 : 1;
@@ -3041,9 +3041,14 @@ struct engine_configuration_s {
 	 */
 	uint8_t iacPidMultRpmBins[IAC_PID_MULT_SIZE];
 	/**
+	 * set can_vss X
 	 * offset 4140
 	 */
-	int mainUnusedEnd[465];
+	can_vss_nbc_e canVssNbcType;
+	/**
+	 * offset 4144
+	 */
+	int mainUnusedEnd[464];
 	/** total size 6000*/
 };
 
@@ -3346,4 +3351,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 19 15:46:36 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 19 18:31:50 EDT 2020
