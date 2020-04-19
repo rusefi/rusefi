@@ -1135,6 +1135,8 @@ static void getValue(const char *paramStr) {
 #endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		scheduleMsg(&logger, "tps_min=%d", engineConfiguration->tpsMin);
+	} else if (strEqualCaseInsensitive(paramStr, "trigger_only_front")) {
+		scheduleMsg(&logger, "trigger_only_front=%d", engineConfiguration->useOnlyRisingEdgeForTrigger);
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
 		scheduleMsg(&logger, "tps_max=%d", engineConfiguration->tpsMax);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
