@@ -2891,8 +2891,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Ignition Math Logic @",				ignMathCalculateAtIndex
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 
-		field = "Target temperature", 			postCrankingTargetClt
-
 
        help = helpGeneral, "rusEfi General Help"
         webHelp = "http://www.rusefi.com/"
