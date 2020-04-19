@@ -548,6 +548,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		setToothedWheelConfiguration(this, 36, 1, ambiguousOperationMode);
 		break;
 
+	case TT_HONDA_K_12_1:
+		configureHondaK_12_1(this);
+		break;
+
 	case TT_HONDA_4_24_1:
 		configureHonda_1_4_24(this, true, true, T_CHANNEL_3, T_PRIMARY, 0);
 		shapeWithoutTdc = true;

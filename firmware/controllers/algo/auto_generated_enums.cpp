@@ -1157,6 +1157,8 @@ case TT_MAZDA_MIATA_VVT_TEST:
   return "TT_MAZDA_MIATA_VVT_TEST";
 case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
+case TT_HONDA_K_12_1:
+  return "TT_HONDA_K_12_1";
 case TT_RENIX_66_2_2_2:
   return "TT_RENIX_66_2_2_2";
 case TT_RENIX_44_2_2:

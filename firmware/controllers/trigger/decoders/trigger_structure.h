@@ -260,6 +260,8 @@ public:
 	 */
 	angle_t getAngle(int phaseIndex) const;
 
+	angle_t getCycleDuration() const;
+
 	/**
 	 * index of synchronization event within TriggerWaveform
 	 * See findTriggerZeroEventIndex()
@@ -289,9 +291,6 @@ private:
 	 * this is part of performance optimization
 	 */
 	operation_mode_e operationMode;
-
-
-	angle_t getCycleDuration() const;
 };
 
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
