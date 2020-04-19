@@ -45,9 +45,17 @@ sensor_data_t innovate_o2_sensor[NUM_INNOVATE_O2_SENSORS-1];
 
 void SerialSendTest()
 {
-	char data[] = "Hello world!\n\r";
-	sdWrite(&SD6, (uint8_t *)data, strlen(data));
+	char data[5]; // = "Hello world!\n\r";
+	data[0] = 178;
+	data[1] = 130;
+	data[2] = 91;
+	data[3] = 19;
+	data[4] = 0;
+	data[5] = 2;
+	sdWrite(&SD6, (uint8_t *)data, 6);
 }
+
+uint16_t tmsglen;
 
 void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 sensor by it's first word (header)
 {
@@ -67,19 +75,24 @@ void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 senso
 				innovate_serial_id_state = HEADER_FOUND;
 				innovate_start_byte = 1;
 			}
+			else
+			{
+				innovate_start_byte = 0;
+				innovate_msg_len = 1;
+			}
 			break;
 
 		case HEADER_FOUND:
 			// now we should have both header bytes in array, and we can read the total packet length
 			// we could check if both header bytes mask OK: (skip for now)
 			//	if ((((ser_buffer[0] << 8) | ser_buffer[1]) & 41600) == 41600) //1010001010000000 mask
-			innovate_msg_len = (((ser_buffer[0] << 8) | ser_buffer[1]) & 383) + 1; //0000000101111111 mask
+			tmsglen = (((ser_buffer[0] << 8) | ser_buffer[1]) & 383) + 1; //0000000101111111 mask
 			// this is the length in words including header (2 bytes)
-			innovate_msg_len *= 2; // this is lenght in bytes (incl header)
+			tmsglen *= 2; // this is length in bytes (incl header)
 			//advance state machine and read rest of package
 			innovate_serial_id_state = IDENTIFIED;
 			innovate_start_byte = 2;
-			innovate_msg_len -= 2;
+			innovate_msg_len = tmsglen - 2;
 			break;
 
 		case IDENTIFIED:
@@ -88,6 +101,7 @@ void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 senso
 			// HAL_GPIO_TogglePin(GPIOC, SERIAL_Pin);
 			ParseInnovateSerialMsg();
 			innovate_start_byte = 0; // now we can read entire packet
+			innovate_msg_len = tmsglen;
 			break;
 
 		default:
@@ -125,12 +139,12 @@ void ParseInnovateSerialMsg()
 		{
 		case 0: //Lambda valid and aux data valid, normal operation
 			innovate_o2_sensor[i].lambda = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
-			innovate_o2_sensor[i].AFR = ((innovate_o2_sensor[i].lambda + 500) * innovate_o2_sensor[i].AFR_multiplier) / 10000;
+			innovate_o2_sensor[i].AFR = ((innovate_o2_sensor[i].lambda + 500) * innovate_o2_sensor[i].AFR_multiplier) * 0.0001;
 			InnovateLC2AFR = innovate_o2_sensor[i].AFR;
 			break;
 		case 1: //Lambda value contains o2 level in 1/10%
 			innovate_o2_sensor[i].lambda = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
-			innovate_o2_sensor[i].AFR = ((innovate_o2_sensor[i].lambda + 500) * innovate_o2_sensor[i].AFR_multiplier) / 1000;
+			innovate_o2_sensor[i].AFR = ((innovate_o2_sensor[i].lambda + 500) * innovate_o2_sensor[i].AFR_multiplier) * 0.001;
 			InnovateLC2AFR = innovate_o2_sensor[i].AFR;
 			break;
 			// this is invalid o2 data, so we can ignore it:

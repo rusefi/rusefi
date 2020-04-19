@@ -47,7 +47,7 @@ void SerialRead::ThreadTask()
 		}
 
 		// This should be a blocking read (TIME_INFINITE), but it isn't
-		if ((sdReadTimeout(&SD6, (uint8_t *)&ser_buffer[sb], len, TIME_INFINITE)) > 0)
+		if ((sdReadTimeout(&SD6, &ser_buffer[sb], len, TIME_INFINITE)) > 0)
 			ParseSerialData();
 	}
 }
