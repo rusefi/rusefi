@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 19 15:46:36 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 19 18:31:50 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -213,6 +213,7 @@ public class Fields {
 	public static final int canRxPin_offset = 709;
 	public static final int canSleepPeriodMs_offset = 484;
 	public static final int canTxPin_offset = 708;
+	public static final int canVssNbcType_offset = 4140;
 	public static final int canWriteEnabled_offset = 1464;
 	public static final int cdmInputPin_offset = 937;
 	public static final int cj125CsPin_offset = 674;
@@ -358,6 +359,7 @@ public class Fields {
 	public static final int EGT_CHANNEL_COUNT = 8;
 	public static final int electronicThrottlePin1Mode_offset = 672;
 	public static final int enableAemXSeries_offset = 744;
+	public static final int enableCanVss_offset = 976;
 	public static final int enabledStep1Limiter_offset = 744;
 	public static final int enableInnovateLC2_offset = 976;
 	public static final int enableLaunchBoost_offset = 976;
@@ -1004,7 +1006,8 @@ public class Fields {
 	public static final int mafSensorType_offset = 948;
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
-	public static final int mainUnusedEnd_offset = 4140;
+	public static final int mainUnusedEnd_offset = 4144;
+	public static final int mainUnusedEnd_offset_hex = 1030;
 	public static final int malfunctionIndicatorPin_offset = 660;
 	public static final int malfunctionIndicatorPin_offset_hex = 294;
 	public static final int malfunctionIndicatorPinMode_offset = 661;
@@ -1471,7 +1474,6 @@ public class Fields {
 	public static final int unusedBit_251_27_offset = 976;
 	public static final int unusedBit_251_28_offset = 976;
 	public static final int unusedBit_251_29_offset = 976;
-	public static final int unusedBit_251_8_offset = 976;
 	public static final int unusedBit_251_9_offset = 976;
 	public static final int unusedBit_282_30_offset = 976;
 	public static final int unusedBit_282_31_offset = 976;
@@ -2003,8 +2005,8 @@ public class Fields {
 	public static final Field ENABLELAUNCHRETARD = Field.create("ENABLELAUNCHRETARD", 976, FieldType.BIT, 4);
 	public static final Field ENABLELAUNCHBOOST = Field.create("ENABLELAUNCHBOOST", 976, FieldType.BIT, 5);
 	public static final Field LAUNCHDISABLEBYSPEED = Field.create("LAUNCHDISABLEBYSPEED", 976, FieldType.BIT, 6);
-	public static final Field ENABLEINNOVATELC2 = Field.create("ENABLEINNOVATELC2", 976, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_251_8 = Field.create("UNUSEDBIT_251_8", 976, FieldType.BIT, 8);
+	public static final Field ENABLECANVSS = Field.create("ENABLECANVSS", 976, FieldType.BIT, 7);
+	public static final Field ENABLEINNOVATELC2 = Field.create("ENABLEINNOVATELC2", 976, FieldType.BIT, 8);
 	public static final Field UNUSEDBIT_251_9 = Field.create("UNUSEDBIT_251_9", 976, FieldType.BIT, 9);
 	public static final Field UNUSEDBIT_251_10 = Field.create("UNUSEDBIT_251_10", 976, FieldType.BIT, 10);
 	public static final Field UNUSEDBIT_251_11 = Field.create("UNUSEDBIT_251_11", 976, FieldType.BIT, 11);
@@ -2454,6 +2456,7 @@ public class Fields {
 	public static final Field IDLERPMPID2_MINVALUE = Field.create("IDLERPMPID2_MINVALUE", 4056, FieldType.INT16);
 	public static final Field IDLERPMPID2_MAXVALUE = Field.create("IDLERPMPID2_MAXVALUE", 4058, FieldType.INT16);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4060, FieldType.INT);
+	public static final Field CANVSSNBCTYPE = Field.create("CANVSSNBCTYPE", 4140, FieldType.INT);
 	public static final Field CRITICAL_ERROR_MESSAGE = Field.create("CRITICAL_ERROR_MESSAGE", 6000, FieldType.INT);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT);
@@ -2928,8 +2931,8 @@ public class Fields {
 	ENABLELAUNCHRETARD,
 	ENABLELAUNCHBOOST,
 	LAUNCHDISABLEBYSPEED,
+	ENABLECANVSS,
 	ENABLEINNOVATELC2,
-	UNUSEDBIT_251_8,
 	UNUSEDBIT_251_9,
 	UNUSEDBIT_251_10,
 	UNUSEDBIT_251_11,
@@ -3372,6 +3375,7 @@ public class Fields {
 	IDLERPMPID2_MINVALUE,
 	IDLERPMPID2_MAXVALUE,
 	IACPIDMULTTABLE,
+	CANVSSNBCTYPE,
 	CRITICAL_ERROR_MESSAGE,
 	BOOSTTABLEOPENLOOP,
 	BOOSTTABLECLOSEDLOOP,
