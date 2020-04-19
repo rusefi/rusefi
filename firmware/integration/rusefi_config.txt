@@ -164,6 +164,11 @@ struct_no_prefix engine_configuration_s
 #define FSIO_CURVE_8 8
 #define FSIO_CURVE_16 16
 
+#define FSIO_METHOD_FSIO_SETTING "fsio_setting"
+#define FSIO_METHOD_FSIO_TABLE "fsio_table"
+#define FSIO_METHOD_FSIO_ANALOG_INPUT "fsio_analog_input"
+#define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
+
 #define TPS_TPS_ACCEL_TABLE 8
 #define MAP_ACCEL_TAPER 8
 
@@ -190,7 +195,7 @@ custom ignition_table_t	4*@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@ array,   F32,   @
 custom ignition_tps_table_t	2*@@IGN_RPM_COUNT@@x@@IGN_TPS_COUNT@@ array,   S16,   @OFFSET@, [@@IGN_RPM_COUNT@@x@@IGN_TPS_COUNT@@],"deg",	   0.01,     0,     -20, 90,    2
 
 custom angle_table_t	4*@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@ array,   F32,   @OFFSET@, [@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@],"deg",	   1,     0,     -720,  720,    2
-custom pedal_to_tps_t	@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@ array,   U08,   @OFFSET@, [@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@],"deg",	   1,     0,     -720,  720,    2
+custom pedal_to_tps_t	@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@ array,   U08,   @OFFSET@, [@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@],"%",	   1,     0,     0,  100,    0
 
 custom iac_pid_mult_t	@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@ array,   U08,   @OFFSET@, [@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@],"%",	   1,     0,     0,  999,    2
 custom boost_table_t	@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@ array,   U08,   @OFFSET@, [@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@],"",    @@LOAD_1_BYTE_PACKING_MULT@@,  0 ,    0,    3000,      0
@@ -498,7 +503,7 @@ struct trigger_config_s @brief Trigger wheel(s) configuration
 
 custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "trg44", "trg45", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "trg48", "INVALID"
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:7], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
@@ -795,7 +800,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit enableLaunchBoost
 	bit launchDisableBySpeed
 	bit enableCanVss
-	bit unusedBit_251_8
+	bit enableInnovateLC2
 	bit unusedBit_251_9
 	bit unusedBit_251_10
 	bit unusedBit_251_11
@@ -1025,9 +1030,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	
 	int16_t iacByTpsTaper;+Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value;"percent",        1,     0,  0,    500,  0
 
-	brain_pin_e unusedErrorPin;
+	brain_pin_e auxSerialTxPin;set_aux_tx_pin X;	
 	brain_pin_e warningLedPin;
-	brain_pin_e unused1234234;
+	brain_pin_e auxSerialRxPin;set_aux_rx_pin X;
 	brain_pin_e LIS302DLCsPin;
 
 
@@ -1050,7 +1055,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float slowAdcAlpha;+ExpAverage alpha coefficient;"coeff",        1,     0,    0, 200,     3
 	debug_mode_e debugMode;+See http://rusefi.com/s/debugmode\n\nset debug_mode X
 
-	uint32_t[9] unused_former_warmup_target_afr;
+	uint32_t auxSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
+
+	uint32_t[8] unused_former_warmup_target_afr;
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
@@ -1090,7 +1097,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float autoTuneCltThreshold;
 	float autoTuneTpsRocThreshold;
 	float autoTuneTpsQuietPeriod;
-	float postCrankingTargetClt;;"C",        1,     0,  0,    100,  0
+	float unused2432;
 	float postCrankingFactor;Fuel multiplier taper, see also postCrankingDurationSec;"mult",        1,     0,  0,    100,  4
 	float postCrankingDurationSec;See also postCrankingFactor;"seconds",        1,     0,  0,    100,  2
 	ThermistorConf auxTempSensor1;todo: finish implementation #332
@@ -1511,3 +1518,4 @@ end_struct
 #define ts_show_can_pins true
 #define ts_show_tunerstudio_port true
 #define ts_show_trigger_comparator false
+#define ts_show_auxserial_pins true

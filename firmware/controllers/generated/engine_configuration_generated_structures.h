@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed Apr 15 21:13:41 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 19 15:46:36 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1672,7 +1672,7 @@ struct engine_configuration_s {
 	bool launchDisableBySpeed : 1;
 	/**
 	offset 976 bit 7 */
-	bool unusedBit_251_7 : 1;
+	bool enableInnovateLC2 : 1;
 	/**
 	offset 976 bit 8 */
 	bool unusedBit_251_8 : 1;
@@ -2369,17 +2369,19 @@ struct engine_configuration_s {
 	 */
 	int16_t iacByTpsTaper;
 	/**
+	 * set_aux_tx_pin X
 	 * offset 2040
 	 */
-	brain_pin_e unusedErrorPin;
+	brain_pin_e auxSerialTxPin;
 	/**
 	 * offset 2041
 	 */
 	brain_pin_e warningLedPin;
 	/**
+	 * set_aux_rx_pin X
 	 * offset 2042
 	 */
-	brain_pin_e unused1234234;
+	brain_pin_e auxSerialRxPin;
 	/**
 	 * offset 2043
 	 */
@@ -2447,7 +2449,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2096
 	 */
-	uint32_t unused_former_warmup_target_afr[9];
+	uint32_t auxSerialSpeed;
+	/**
+	 * offset 2100
+	 */
+	uint32_t unused_former_warmup_target_afr[8];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -2586,7 +2592,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2432
 	 */
-	float postCrankingTargetClt;
+	float unused2432;
 	/**
 	 * Fuel multiplier taper, see also postCrankingDurationSec
 	 * offset 2436
@@ -3340,4 +3346,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed Apr 15 21:13:41 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 19 15:46:36 EDT 2020

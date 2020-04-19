@@ -330,13 +330,22 @@ typedef enum {
 	 */
 	TT_MIATA_NB2_VVT_CAM = 43,
 
+	TT_RENIX_44_2_2 = 44,
+
+	/**
+	 * Same as TT_RENIX_44_2_2 but repeated three times, not two.
+	 */
+	TT_RENIX_66_2_2_2 = 45,
+
+	TT_HONDA_K_12_1 = 46,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 44, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 47, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -491,8 +500,14 @@ typedef enum {
 
 	/**
 	 * 720 degree engine cycle but trigger is defined using a 180 cycle which is when repeated three more times
+	 * In other words, same pattern is repeatet on the crank wheel twice.
 	 */
 	FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR = 4,
+
+	/**
+	 * Same pattern repeated three times on crank wheel. Crazy, I know!
+	 */
+	FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5,
 
 	Force_4_bytes_size_operation_mode_e = ENUM_32_BITS,
 } operation_mode_e;

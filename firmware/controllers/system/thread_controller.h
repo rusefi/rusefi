@@ -55,7 +55,7 @@ public:
     /**
      * @brief Start the thread.
      */
-    virtual void Start()
+    void Start()
     {
         m_thread = chThdCreateStatic(m_threadstack, sizeof(m_threadstack), m_prio, StaticThreadTaskAdapter, this);
         m_thread->name = GetName();

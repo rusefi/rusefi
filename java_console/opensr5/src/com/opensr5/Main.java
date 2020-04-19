@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("OpenSR5 - load/program tune via serial port utility");
-        System.out.println("  (c) Andrey Belomutskiy 2012-2019");
+        System.out.println("  Andrey Belomutskiy, (c) 2012-2020\n");
         System.out.println("  https://github.com/rusefi/opensr5_flash");
         System.out.flush();
 

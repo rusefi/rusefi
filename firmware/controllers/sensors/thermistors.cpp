@@ -55,21 +55,6 @@ float ThermistorMath::getKelvinTemperatureByResistance(float resistance) const {
 	return 1 / (s_h_a + s_h_b * logR + s_h_c * logR * logR * logR);
 }
 
-/*
-float convertCelsiustoF(temperature_t tempC) {
-	return tempC * 9 / 5 + 32;
-}
-
-temperature_t convertFtoCelsius(float tempF) {
-	return (tempF - 32) / 9 * 5;
-}
-
-float convertKelvinToFahrenheit(float kelvin) {
-	float tempC = convertKelvinToCelcius(kelvin);
-	return convertCelsiustoF(tempC);
-}
-*/
-
 float getResistance(ThermistorConf *config, float voltage) {
 	efiAssert(CUSTOM_ERR_ASSERT, config != NULL, "thermistor config is null", NAN);
 	thermistor_conf_s *tc = &config->config;
@@ -113,22 +98,14 @@ temperature_t getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useL
 	return convertKelvinToCelcius(kelvinTemperature);
 }
 
-bool isValidCoolantTemperature(temperature_t temperature) {
+static bool isValidCoolantTemperature(temperature_t temperature) {
 	// I hope magic constants are appropriate here
 	return !cisnan(temperature) && temperature > -50 && temperature < 250;
 }
 
-bool isValidIntakeAirTemperature(temperature_t temperature) {
+static bool isValidIntakeAirTemperature(temperature_t temperature) {
 	// I hope magic constants are appropriate here
 	return !cisnan(temperature) && temperature > -50 && temperature < 100;
-}
-
-bool hasCltSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	bool haveSensorChannel = engineConfiguration->clt.adcChannel != EFI_ADC_NONE;
-	if (!haveSensorChannel) {
-		return false;
-	}
-	return !cisnan(engine->sensors.clt);
 }
 
 /**
@@ -207,14 +184,6 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 	scheduleMsg(logger, "s_h_c=%.5f/s_h_b=%.5f/s_h_a=%.5f", curve->s_h_c, curve->s_h_b,
 			curve->s_h_a);
 #endif
-}
-
-bool hasIatSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	bool haveSensorChannel = engineConfiguration->iat.adcChannel != EFI_ADC_NONE;
-	if (!haveSensorChannel) {
-		return false;
-	}
-	return !cisnan(engine->sensors.iat);
 }
 
 /**

@@ -653,6 +653,10 @@
 #define FSIO_COMMAND_COUNT 16
 #define FSIO_CURVE_16 16
 #define FSIO_CURVE_8 8
+#define FSIO_METHOD_FSIO_ANALOG_INPUT "fsio_analog_input"
+#define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
+#define FSIO_METHOD_FSIO_SETTING "fsio_setting"
+#define FSIO_METHOD_FSIO_TABLE "fsio_table"
 #define fsio_setting10_offset 900
 #define fsio_setting10_offset_hex 384
 #define fsio_setting11_offset 904
@@ -1677,8 +1681,6 @@
 #define postCrankingDurationSec_offset_hex 988
 #define postCrankingFactor_offset 2436
 #define postCrankingFactor_offset_hex 984
-#define postCrankingTargetClt_offset 2432
-#define postCrankingTargetClt_offset_hex 980
 #define primeInjFalloffTemperature_offset 1486
 #define primeInjFalloffTemperature_offset_hex 5ce
 #define primingSquirtDurationMs_offset 96
@@ -2027,7 +2029,7 @@
 #define trigger_todoRemoveMeOneDay1_offset_hex 210
 #define TRIGGER_TYPE_36_1 9
 #define TRIGGER_TYPE_60_2 8
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "trg44", "trg45", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "trg48", "INVALID"
 #define trigger_type_offset 524
 #define trigger_type_offset_hex 20c
 #define trigger_unusedBit_4_10_offset 528
@@ -2152,6 +2154,8 @@
 #define unused1059_offset_hex f7c
 #define unused1234234_offset 2042
 #define unused1234234_offset_hex 7fa
+#define unused2432_offset 2432
+#define unused2432_offset_hex 980
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_24_offset_hex 5c4
 #define unused_1484_bit_25_offset 1476
