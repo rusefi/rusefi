@@ -1,5 +1,5 @@
 /**
- * @file	serial.cpp
+ * @file	serial_tx.cpp
  *
  * This file handles auxilery serial communication.
  *
@@ -23,7 +23,8 @@ SerialWrite::SerialWrite()
 {
 }
 
-void SerialWrite::PeriodicTask(efitime_t nowNt) {
+void SerialWrite::PeriodicTask(efitime_t nowNt)
+{
 	UNUSED(nowNt);
 
 	SerialSendTest();

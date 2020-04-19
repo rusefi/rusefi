@@ -9,3 +9,6 @@
 #pragma once
 
 void SerialSendTest();
+void IdentifyInnovateSerialMsg();
+void ParseInnovateSerialMsg();
+void ParseSerialData();
