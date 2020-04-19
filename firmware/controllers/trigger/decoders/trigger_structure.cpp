@@ -32,6 +32,7 @@
 #include "trigger_subaru.h"
 #include "trigger_structure.h"
 #include "trigger_toyota.h"
+#include "trigger_renix.h"
 #include "trigger_rover.h"
 #include "trigger_honda.h"
 #include "trigger_vw.h"
@@ -464,8 +465,11 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		break;
 
 	case TT_MIATA_NB2_VVT_CAM:
-	case TT_RENIX_44_2_2:
 		initializeMazdaMiataVVtCamShape(this);
+		break;
+
+	case TT_RENIX_44_2_2:
+		initializeRenix44_4_4(this);
 		break;
 
 	case TT_MIATA_VVT:
