@@ -2362,15 +2362,22 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = alternator
 		panel = startStopDialog
 		
-
-	dialog = speedSensorLeft
+	dialog = speedSensorAnalog
 		field = "Input pin",					vehicleSpeedSensorInputPin
 		field = "revolution to speed mult",				vehicleSpeedCoef
+
+	dialog = speedSensorCan
+		field = "Vss Car Type",						canVssNbcType, { enableCanVss }
+
+	dialog = speedSensorLeft, "Speed sensor config", yAxis
+		panel = speedSensorCan, { enableCanVss }
+	    panel = speedSensorAnalog, { enableCanVss == 0 }
+		field = "Enable CANbus VSS values",			enableCanVss, { canReadEnabled }
 
 	dialog = speedSensor, "Speed sensor", xAxis
 		panel = speedSensorLeft
 		gauge = VSSGauge
-
+		
 ;			Engine->Other inputs	
 	dialog = analogInputSettings, "Analog Input Settings"
 		field = "!ECU reboot needed to apply these settings"
