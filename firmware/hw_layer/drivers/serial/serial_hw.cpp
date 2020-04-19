@@ -21,15 +21,15 @@
 
 EXTERN_ENGINE;
 
-// static int canReadCounter = 0;
-// static int canWriteOk = 0;
-// static int canWriteNotOk = 0;
 static bool isSerialEnabled = false;
+static bool isSerialTXEnabled = false;
+static bool isSerialRXEnabled = false;
 static LoggingWithStorage logger("SERIAL driver");
 
 
 static SerialConfig uartCfg;
-static SerialWrite serial;
+static SerialRead serialRead;
+static SerialWrite serialWrite;
 
 
 static void auxInfo(void)
@@ -46,8 +46,6 @@ static void auxInfo(void)
 
 void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 {
-	// SerialConfig uartCfg;
-
 	CONFIG(auxSerialTxPin) = engineConfiguration->auxSerialTxPin;
 	CONFIG(auxSerialRxPin) = engineConfiguration->auxSerialRxPin;
 	CONFIG(auxSerialSpeed) = engineConfiguration->auxSerialSpeed;
@@ -67,8 +65,10 @@ void stopAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 void startAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 {
 
-	efiSetPadMode("AuxSerial TX", CONFIG(auxSerialTxPin), PAL_MODE_ALTERNATE(8));
-	efiSetPadMode("AuxSerial RX", CONFIG(auxSerialRxPin), PAL_MODE_ALTERNATE(8));
+	if (CONFIG(auxSerialTxPin))
+		efiSetPadMode("AuxSerial TX", CONFIG(auxSerialTxPin), PAL_MODE_ALTERNATE(8));
+	if (CONFIG(auxSerialRxPin))
+		efiSetPadMode("AuxSerial RX", CONFIG(auxSerialRxPin), PAL_MODE_ALTERNATE(8));
 
 	enableAuxSerial();
 }
@@ -78,30 +78,38 @@ void initAuxSerial(void)
 	addConsoleAction("auxinfo", auxInfo);
 
 	isSerialEnabled =
-		(CONFIG(auxSerialTxPin) != GPIO_UNASSIGNED) && // both pins are set...
-		(CONFIG(auxSerialRxPin) != GPIO_UNASSIGNED);
+		(CONFIG(auxSerialTxPin)) || // we need at least one pin set
+		(CONFIG(auxSerialRxPin));
 
-	// nothing to do if we aren't enabled...
+	isSerialRXEnabled = CONFIG(auxSerialRxPin);
+	isSerialTXEnabled = CONFIG(auxSerialTxPin);
+
+	// exit if no pin is configured
 	if (!isSerialEnabled)
 	{
 		return;
 	}
 
 	// Validate pins 
-	if (!isValidSerialTxPin(CONFIG(auxSerialTxPin)))
+	if (isSerialTXEnabled && !isValidSerialTxPin(CONFIG(auxSerialTxPin)))
 	{
 		// firmwareError(CUSTOM_OBD_70, "invalid Serial TX %s", hwPortname(CONFIG(canTxPin)));
 		return;
 	}
 
-	if (!isValidSerialRxPin(CONFIG(auxSerialRxPin)))
+	if (isSerialRXEnabled && !isValidSerialRxPin(CONFIG(auxSerialRxPin)))
 	{
 		// firmwareError(CUSTOM_OBD_70, "invalid Serial RX %s", hwPortname(CONFIG(canRxPin)));
 		return;
 	}
 
 	startAuxSerialPins();
-	serial.Start();
+
+	//now start the threads:
+	if (isSerialTXEnabled)
+		serialWrite.Start(); //start serialwrite thread
+	if (isSerialRXEnabled)
+		serialRead.Start(); //start serialwrite thread
 }
 
 #endif // EFI_AUX_SERIAL
