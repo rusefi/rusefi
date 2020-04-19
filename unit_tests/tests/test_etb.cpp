@@ -90,3 +90,23 @@ TEST(etb, testTargetTpsIsFloatBug945) {
 	engine->etbControllers[0]->PeriodicTask();
 	ASSERT_NEAR(51.6605, engine->engineState.targetFromTable, EPS4D);
 }
+
+TEST(etb, etbTpsSensor) {
+	// Throw some distinct values on the TPS sensors so we can identify that we're getting the correct one
+	Sensor::setMockValue(SensorType::Tps1, 25.0f);
+	Sensor::setMockValue(SensorType::Tps2, 75.0f);
+
+	// Test first throttle
+	{
+		EtbController etb;
+		etb.init(nullptr, 0, nullptr);
+		EXPECT_EQ(etb.observePlant().Value, 25.0f);
+	}
+
+	// Test second throttle
+	{
+		EtbController etb;
+		etb.init(nullptr, 1, nullptr);
+		EXPECT_EQ(etb.observePlant().Value, 75.0f);
+	}
+}
