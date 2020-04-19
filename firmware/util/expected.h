@@ -41,6 +41,21 @@ struct expected {
 	constexpr float value_or(TValue valueIfInvalid) const {
 		return Valid ? Value : valueIfInvalid;
 	}
+
+	bool operator ==(const expected<TValue>& other) const {
+		// If validity mismatch, not equal
+		if (Valid != other.Valid) {
+			return false;
+		}
+		
+		// If both are invalid, they are equal
+		if (!Valid && !other.Valid) {
+			return true;
+		}
+
+		// Both are guaranteed valid - simply compare values
+		return Value == other.Value;
+	}
 };
 
 constexpr unexpected_t unexpected{};
