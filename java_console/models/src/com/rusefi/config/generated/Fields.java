@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat Apr 18 16:38:06 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat Apr 18 20:42:28 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -423,6 +423,10 @@ public class Fields {
 	public static final int FSIO_COMMAND_COUNT = 16;
 	public static final int FSIO_CURVE_16 = 16;
 	public static final int FSIO_CURVE_8 = 8;
+	public static final String FSIO_METHOD_FSIO_ANALOG_INPUT = "fsio_analog_input";
+	public static final String FSIO_METHOD_FSIO_DIGITAL_INPUT = "fsio_digital_input";
+	public static final String FSIO_METHOD_FSIO_SETTING = "fsio_setting";
+	public static final String FSIO_METHOD_FSIO_TABLE = "fsio_table";
 	public static final int fsio_setting10_offset = 900;
 	public static final int fsio_setting10_offset_hex = 384;
 	public static final int fsio_setting11_offset = 904;

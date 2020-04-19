@@ -1,11 +1,20 @@
 package com.rusefi;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
+import com.fathzer.soft.javaluator.Function;
 import com.fathzer.soft.javaluator.Operator;
 
 import java.util.Stack;
 
 public class InfixConverter {
+    public static String getHumanInfixFormOrError(String rpn) {
+        try {
+            return getHumanInfixForm(rpn);
+        } catch (Throwable e) {
+            return "Failing to parse. Maybe invalid function was used? Valid functions include " + getReadableListOfFunctions();
+        }
+    }
+
     public static String getHumanInfixForm(String rpn) {
         String tokens[] = rpn.split(" ");
         Stack<String> stack = new Stack<>();
@@ -48,5 +57,17 @@ public class InfixConverter {
 
     private static boolean takesTwoParameters(String token) {
         return Operator._2_OPERATORS.contains(token);
+    }
+
+    public static String getReadableListOfFunctions() {
+        StringBuilder result = new StringBuilder();
+        DoubleEvaluator evaluator = new DoubleEvaluator();
+        for (Function function : evaluator.getFunctions()) {
+            if (result.length() > 0) {
+                result.append(", ");
+            }
+            result.append(function.getName());
+        }
+        return result.toString();
     }
 }
