@@ -1,3 +1,5 @@
 .dep*
 build/
 gcov_working_area
+triggers
+
