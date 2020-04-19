@@ -10,10 +10,7 @@
 
 #include "trigger_renix.h"
 
-// TT_RENIX_44_2_2
-void initializeRenix44_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
-
+static void commonRenix(TriggerWaveform *s) {
 	// 44-2-2 is symmetrical so we only need to define one half
 	int count = 22;
 	float tooth = s->getCycleDuration() / count; // hint: tooth = 8.181818 degrees
@@ -29,5 +26,16 @@ void initializeRenix44_2_2(TriggerWaveform *s) {
 
 	// float math error accumulates at this point so we have to spell out 180
 	s->addEventAngle(s->getCycleDuration(), T_PRIMARY, TV_FALL);
+}
 
+// TT_RENIX_44_2_2
+void initializeRenix44_2_2(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
+	commonRenix(s);
+}
+
+// TT_RENIX_66_2_2_2
+void initializeRenix66_2_2(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
+	commonRenix(s);
 }
