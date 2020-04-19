@@ -11,7 +11,7 @@
 #include "trigger_renix.h"
 
 // TT_RENIX_44_2_2
-void initializeRenix44_4_4(TriggerWaveform *s) {
+void initializeRenix44_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 
 	// 44-2-2 is symmetrical so we only need to define one half
