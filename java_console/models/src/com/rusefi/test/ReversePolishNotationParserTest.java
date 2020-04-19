@@ -3,12 +3,12 @@ package com.rusefi.test;
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.fathzer.soft.javaluator.Operator;
 import com.rusefi.InfixConverter;
+import com.rusefi.config.generated.Fields;
 import org.junit.Test;
 
 import java.text.ParseException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * @see DoubleEvaluator
@@ -68,6 +68,20 @@ public class ReversePolishNotationParserTest {
         evaluator.evaluate(inputExpression.toLowerCase());
 
         assertEquals(expectedRPN, evaluator.getPosftfixExpression());
+    }
+
+    @Test
+    public void testRpnToHuman() {
+        assertEquals("if((fsio_analog_input(0) > 20), 0, 10)", InfixConverter.getHumanInfixForm("0 fsio_analog_input 20 > 0 10 if"));
+
+        assertTrue(InfixConverter.getHumanInfixFormOrError("0 fsoi_input 20 > 0 10 if").contains(Fields.FSIO_METHOD_FSIO_TABLE));
+    }
+
+    @Test
+    public void testListOfFunctions() {
+        String readableListOfFunctions = InfixConverter.getReadableListOfFunctions();
+        assertTrue(readableListOfFunctions.contains(Fields.FSIO_METHOD_FSIO_DIGITAL_INPUT));
+        assertTrue(readableListOfFunctions.contains(Fields.FSIO_METHOD_FSIO_TABLE));
     }
 
     @Test

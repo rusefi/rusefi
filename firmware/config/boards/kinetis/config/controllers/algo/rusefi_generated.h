@@ -653,6 +653,10 @@
 #define FSIO_COMMAND_COUNT 16
 #define FSIO_CURVE_16 16
 #define FSIO_CURVE_8 8
+#define FSIO_METHOD_FSIO_ANALOG_INPUT "fsio_analog_input"
+#define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
+#define FSIO_METHOD_FSIO_SETTING "fsio_setting"
+#define FSIO_METHOD_FSIO_TABLE "fsio_table"
 #define fsio_setting10_offset 900
 #define fsio_setting10_offset_hex 384
 #define fsio_setting11_offset 904
