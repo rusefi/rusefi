@@ -87,7 +87,7 @@ bool Sensor::Register() {
 
 	// Check if this is a valid sensor entry
 	if (!entry) {
-		return {false, 0.0f};
+		return unexpected;
 	}
 
 	// Next check for mock

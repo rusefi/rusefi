@@ -15,12 +15,15 @@
 
 #pragma once
 
+struct unexpected_t {};
+
 template <class TValue>
 struct expected {
 	const bool Valid;
 	const TValue Value;
 
-	constexpr expected(bool valid, TValue value) : Valid(valid), Value(value) {}
+	// Implicit constructor to construct in the invalid state
+	constexpr expected(const unexpected_t&) : Valid(false), Value{} {}
 
 	// Implicit constructor to convert from TValue (for valid values, so an expected<T> behaves like a T)
 	constexpr expected(TValue validValue)
@@ -40,4 +43,4 @@ struct expected {
 	}
 };
 
-constexpr expected<float> unexpected = {false, 0.0f};
+constexpr unexpected_t unexpected{};
