@@ -471,6 +471,9 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		break;
 
 	case TT_RENIX_66_2_2_2:
+		initializeRenix66_2_2(this);
+		break;
+
 	case TT_RENIX_44_2_2:
 		initializeRenix44_2_2(this);
 		break;

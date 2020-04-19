@@ -17,7 +17,7 @@
  * Looks like 252 is explained by 60 tooth * 2 (number of fronts) * 2 (number of crank rotations within engine cycle)
  */
 #ifndef PWM_PHASE_MAX_COUNT
-#define PWM_PHASE_MAX_COUNT 252
+#define PWM_PHASE_MAX_COUNT 280
 #endif /* PWM_PHASE_MAX_COUNT */
 #define PWM_PHASE_MAX_WAVE_PER_PWM 3
 
