@@ -12,6 +12,8 @@
 #define DEFAULT_ETB_PWM_FREQUENCY 300
 
 #include "engine.h"
+#include "closed_loop_controller.h"
+#include "expected.h"
 #include "periodic_task.h"
 
 class DcMotor;
@@ -24,7 +26,7 @@ public:
 	virtual void reset() = 0;
 };
 
-class EtbController final : public IEtbController {
+class EtbController final : public IEtbController, protected ClosedLoopController<percent_t, percent_t> {
 public:
 	void init(DcMotor *motor, int ownIndex, pid_s *pidParameters) override;
 
@@ -39,6 +41,15 @@ public:
 	
 	// Print this throttle's status.
 	void showStatus(Logging* logger);
+
+	// Helpers for individual parts of throttle control
+	expected<percent_t> observePlant() const override;
+	expected<percent_t> getSetpoint() const override;
+
+	expected<percent_t> getOpenLoop(percent_t target) const override;
+	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t target) override;
+
+	void setOutput(expected<percent_t> outputValue) override;
 
 	// Used to inspect the internal PID controller's state
 	const pid_state_s* getPidState() const { return &m_pid; };
