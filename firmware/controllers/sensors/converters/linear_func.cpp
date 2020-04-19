@@ -19,7 +19,11 @@ SensorResult LinearFunc::convert(float inputValue) const {
 	// Bounds check
 	bool isValid = result <= m_maxOutput && result >= m_minOutput;
 
-	return {isValid, result};
+	if (!isValid) {
+		return unexpected;
+	}
+
+	return result;
 }
 
 void LinearFunc::showInfo(Logging* logger, float testRawValue) const {
