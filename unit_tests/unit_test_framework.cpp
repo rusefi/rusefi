@@ -2,7 +2,7 @@
  * @file unit_test_framework.cpp
  *
  *  Created on: Mar 4, 2018
- *      Author: Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include <stdlib.h>
