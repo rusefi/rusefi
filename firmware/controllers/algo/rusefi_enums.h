@@ -598,7 +598,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 typedef enum {
 	VVS_OOPS = 2,
-	Force_4_bytes_size_mass_storage = ENUM_32_BITS,
+	Force_4_bytes_size_can_vss_nbc_e = ENUM_32_BITS,
 } can_vss_nbc_e;
 
 typedef enum {
