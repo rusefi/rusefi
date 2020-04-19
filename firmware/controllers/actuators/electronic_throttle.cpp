@@ -151,7 +151,6 @@ expected<percent_t> EtbController::getSetpoint() const {
 	}
 
 	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
-
 	if (!pedalPosition.Valid) {
 		return unexpected;
 	}

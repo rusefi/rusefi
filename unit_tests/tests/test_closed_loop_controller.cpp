@@ -5,6 +5,7 @@
 
 using ::testing::StrictMock;
 using ::testing::Return;
+using ::testing::Eq;
 
 class TestController : public ClosedLoopController<float, float> {
 public:
@@ -23,7 +24,7 @@ TEST(ClosedLoopController, TestSetpoint) {
 		.WillOnce(Return(unexpected));
 
 	// And output should be called with unexpected
-	EXPECT_CALL(controller, setOutput(unexpected));
+	EXPECT_CALL(controller, setOutput(Eq(unexpected)));
 
 	controller.update();
 }
@@ -40,7 +41,7 @@ TEST(ClosedLoopController, TestSetpointSuccessPlantFail) {
 		.WillOnce(Return(unexpected));
 
 	// And output should be called with unexpected
-	EXPECT_CALL(controller, setOutput(unexpected));
+	EXPECT_CALL(controller, setOutput(Eq(unexpected)));
 
 	controller.update();
 }
@@ -62,7 +63,7 @@ TEST(ClosedLoopController, TestPlantSuccessOpenLoopFail) {
 		.WillOnce(Return(unexpected));
 
 	// And output should be called with unexpected
-	EXPECT_CALL(controller, setOutput(unexpected));
+	EXPECT_CALL(controller, setOutput(Eq(unexpected)));
 
 	controller.update();
 }
@@ -90,7 +91,7 @@ TEST(ClosedLoopController, TestPlantOpenLoopSuccessClosedLoopFail) {
 		.WillOnce(Return(unexpected));
 
 	// And output should be called with unexpected
-	EXPECT_CALL(controller, setOutput(unexpected));
+	EXPECT_CALL(controller, setOutput(Eq(unexpected)));
 
 	controller.update();
 }
