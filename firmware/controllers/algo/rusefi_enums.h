@@ -605,7 +605,7 @@ typedef enum {
 	MS_AUTO = 0,
 	MS_ALWAYS = 1,
 	MS_NEVER = 2,
-	Force_4_bytes_size_mass_storage_e = ENUM_32_BITS,
+	Force_4_bytes_size_mass_storage = ENUM_32_BITS,
 } mass_storage_e;
 
 typedef enum {
