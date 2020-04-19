@@ -34,9 +34,9 @@ typedef enum
 typedef struct
 {
 	int function_code;
-	double AFR;
-	double AFR_multiplier;
-	double lambda;
+	float AFR;
+	float AFR_multiplier;
+	float lambda;
 	int warmup;
 	sensor_error_code_t error_code;
 } sensor_data_t;
@@ -112,7 +112,7 @@ void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 senso
 
 void ParseInnovateSerialMsg()
 {
-
+	float raw_afr;
 	//get error code and afr
 
 	// 000 Lambda valid and Aux data valid, normal operation.
@@ -138,22 +138,22 @@ void ParseInnovateSerialMsg()
 		switch (innovate_o2_sensor[i].function_code)
 		{
 		case 0: //Lambda valid and aux data valid, normal operation
-			innovate_o2_sensor[i].lambda = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
-			innovate_o2_sensor[i].AFR = ((innovate_o2_sensor[i].lambda + 500) * innovate_o2_sensor[i].AFR_multiplier) * 0.0001;
-			InnovateLC2AFR = innovate_o2_sensor[i].AFR;
-			break;
 		case 1: //Lambda value contains o2 level in 1/10%
 			innovate_o2_sensor[i].lambda = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
-			innovate_o2_sensor[i].AFR = ((innovate_o2_sensor[i].lambda + 500) * innovate_o2_sensor[i].AFR_multiplier) * 0.001;
+			raw_afr = ((innovate_o2_sensor[i].lambda + 500) * innovate_o2_sensor[i].AFR_multiplier);
+			if (innovate_o2_sensor[i].function_code)
+				innovate_o2_sensor[i].AFR = raw_afr * 0.001;
+			else
+				innovate_o2_sensor[i].AFR = raw_afr * 0.0001;
 			InnovateLC2AFR = innovate_o2_sensor[i].AFR;
 			break;
-			// this is invalid o2 data, so we can ignore it:
-			//  case 2: // Free air Calib in progress, Lambda data not valid
-			//    innovate_o2_sensor.AFR = 7.7;
-			//    break;
-			//  case 3: // Need Free air Calibration Request, Lambda data not valid
-			//    innovate_o2_sensor.AFR = 7.8;
-			//    break;
+		// this is invalid o2 data, so we can ignore it:
+		//  case 2: // Free air Calib in progress, Lambda data not valid
+		//    innovate_o2_sensor.AFR = 7.7;
+		//    break;
+		//  case 3: // Need Free air Calibration Request, Lambda data not valid
+		//    innovate_o2_sensor.AFR = 7.8;
+		//    break;
 		case 4: // Warming up, Lambda value is temp in 1/10% of operating temp
 			innovate_o2_sensor[i].warmup = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
 			//catch potential overflow:
