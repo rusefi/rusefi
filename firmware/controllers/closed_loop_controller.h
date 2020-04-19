@@ -4,7 +4,7 @@
 
 template <typename TInput, typename TOutput>
 class ClosedLoopController {
-protected:
+public:
 	void update() {
 		expected<TOutput> outputValue = getOutput();
 		setOutput(outputValue);
