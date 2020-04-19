@@ -92,7 +92,7 @@ bool Sensor::Register() {
 
 	// Next check for mock
 	if (entry->useMock) {
-		return {true, entry->mockValue};
+		return entry->mockValue;
 	}
 
 	// Get the sensor out of the entry
@@ -103,7 +103,7 @@ bool Sensor::Register() {
 	}
 
 	// We've exhausted all valid ways to return something - sensor not found.
-	return {false, 0};
+	return unexpected;
 }
 
 /*static*/ float Sensor::getRaw(SensorType type) {

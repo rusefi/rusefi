@@ -22,7 +22,7 @@ class FuncChain<> {
 protected:
 	SensorResult convert(float input) const {
 		// Base case is the identity function
-		return {true, input};
+		return input;
 	}
 
 	void showInfo(Logging* logger, float testInputValue) const {
@@ -48,7 +48,7 @@ public:
 		if (currentStep.Valid) {
 			return TBase::convert(currentStep.Value);
 		} else {
-			return {false, 0};
+			return unexpected;
 		}
 	}
 
