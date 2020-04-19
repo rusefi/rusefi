@@ -116,6 +116,8 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
  */
 angle_t TriggerWaveform::getCycleDuration() const {
 	switch (operationMode) {
+	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		return 120;
 	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
 		return 180;
 	case FOUR_STROKE_CRANK_SENSOR:
@@ -468,8 +470,9 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		initializeMazdaMiataVVtCamShape(this);
 		break;
 
+	case TT_RENIX_66_2_2_2:
 	case TT_RENIX_44_2_2:
-		initializeRenix44_4_4(this);
+		initializeRenix44_2_2(this);
 		break;
 
 	case TT_MIATA_VVT:

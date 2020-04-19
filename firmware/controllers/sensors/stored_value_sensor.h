@@ -34,11 +34,11 @@ public:
 		float value = m_value;
 
 		if (!valid) {
-			return {false, value};
+			return unexpected;
 		}
 
 		if (getTimeNowNt() - m_timeoutPeriod > m_lastUpdate) {
-			return {false, value};
+			return unexpected;
 		}
 
 		return value;
