@@ -1944,6 +1944,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "servo#3",								servoOutputPins3
 		field = "servo#4",								servoOutputPins4
 		field = "servo#5",								servoOutputPins5
+		field = "AUX Serial TX", 						auxSerialTxPin
+		field = "AUX Serial RX", 						auxSerialRxPin
 
 
 	dialog = allPins1_1_and_2, "", xAxis
@@ -2077,9 +2079,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Heater pin",						o2heaterPin
 
 	dialog = egoSettings, "", yAxis
-		panel = egoSettings_IO, {enableAemXSeries == 0}
-		panel = egoSettings_sensor,	{afr_hwChannel != 16 && enableAemXSeries == 0}
+		panel = egoSettings_IO
+		panel = egoSettings_sensor,	{afr_hwChannel != 16 && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
 		field = "Enable AEM X-Series CANbus",			enableAemXSeries, { canReadEnabled }
+		field = "Enable Innovate LC-2 Serial",			enableInnovateLC2, { auxSerialRxPin && auxSerialTxPin }
 
 ;			Engine->EGT inputs
 	dialog = egtInputs, "EGT inputs"
@@ -2403,6 +2406,11 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Can Sleep Period",						canSleepPeriodMs
 		field = "RX pin",								canRxPin @@if_ts_show_can_pins
 		field = "TX pin",								canTxPin @@if_ts_show_can_pins
+
+	dialog = auxSerial, "AUX Serial"
+		field = "RX pin",								auxSerialRxPin @@if_ts_show_auxserial_pins
+		field = "TX pin",								auxSerialTxPin @@if_ts_show_auxserial_pins
+		field = "Serial Baud Rate",						auxSerialSpeed @@if_ts_show_auxserial_pins
 	
 	dialog = sdCard, "SD Card Logger"
 		field = "SdCard", 								isSdCardEnabled
@@ -2439,6 +2447,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort							@@if_ts_show_tunerstudio_port
 		panel = canBus
+		panel = auxSerial
 		panel = sdCard							@@if_ts_show_sd_card
 		panel = gpsReceiver                       @@if_ts_show_gps
 		panel = tle8888
