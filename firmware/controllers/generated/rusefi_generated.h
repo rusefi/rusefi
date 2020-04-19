@@ -345,6 +345,8 @@
 #define canSleepPeriodMs_offset_hex 1e4
 #define canTxPin_offset 708
 #define canTxPin_offset_hex 2c4
+#define canVssNbcType_offset 4140
+#define canVssNbcType_offset_hex 102c
 #define canWriteEnabled_offset 1464
 #define canWriteEnabled_offset_hex 5b8
 #define cdmInputPin_offset 937
@@ -548,6 +550,8 @@
 #define electronicThrottlePin1Mode_offset_hex 2a0
 #define enableAemXSeries_offset 744
 #define enableAemXSeries_offset_hex 2e8
+#define enableCanVss_offset 976
+#define enableCanVss_offset_hex 3d0
 #define enabledStep1Limiter_offset 744
 #define enabledStep1Limiter_offset_hex 2e8
 #define enableInnovateLC2_offset 976
@@ -1519,8 +1523,8 @@
 #define mainRelayPin_offset_hex 2c2
 #define mainRelayPinMode_offset 752
 #define mainRelayPinMode_offset_hex 2f0
-#define mainUnusedEnd_offset 4140
-#define mainUnusedEnd_offset_hex 102c
+#define mainUnusedEnd_offset 4144
+#define mainUnusedEnd_offset_hex 1030
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPin_offset_hex 294
 #define malfunctionIndicatorPinMode_offset 661
@@ -2227,8 +2231,6 @@
 #define unusedBit_251_28_offset_hex 3d0
 #define unusedBit_251_29_offset 976
 #define unusedBit_251_29_offset_hex 3d0
-#define unusedBit_251_8_offset 976
-#define unusedBit_251_8_offset_hex 3d0
 #define unusedBit_251_9_offset 976
 #define unusedBit_251_9_offset_hex 3d0
 #define unusedBit_282_30_offset 976
