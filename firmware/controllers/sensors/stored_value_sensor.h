@@ -41,7 +41,7 @@ public:
 			return {false, value};
 		}
 
-		return {true, value};
+		return value;
 	}
 
 protected:
