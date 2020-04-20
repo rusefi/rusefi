@@ -50,12 +50,15 @@ static bool trigger2 = false;
 	//NextIdx++;
 
 
-static void SetNextCompositeEntry(uint32_t nowUs, bool trigger1, bool trigger2, bool isSync) {
+static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigger2,
+		bool isTDC DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	uint32_t nowUs = NT2US(timestamp);
 	// TS uses big endian, grumble
 	buffer[NextIdx].timestamp = SWAP_UINT32(nowUs);
 	buffer[NextIdx].priLevel = trigger1;
 	buffer[NextIdx].secLevel = trigger2;
-	buffer[NextIdx].sync = isSync;
+	buffer[NextIdx].trigger = isTDC;
+	buffer[NextIdx].sync = engine->triggerCentral.triggerState.shaft_is_synchronized;
 	// todo:
 	//buffer[NextIdx].sync = isSynced;
 	//buffer[NextIdx].trigger = wtfIsTriggerIdk;
@@ -109,9 +112,15 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_P
 		break;
 	}
 
-	uint32_t nowUs = NT2US(timestamp);
-	bool isSync = engine->triggerCentral.triggerState.shaft_is_synchronized;
-	SetNextCompositeEntry(nowUs, trigger1, trigger2, isSync);
+	SetNextCompositeEntry(timestamp, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// bail if we aren't enabled
+	if (!ToothLoggerEnabled) {
+		return;
+	}
+	SetNextCompositeEntry(timestamp, trigger1, trigger2, true PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EnableToothLogger() {

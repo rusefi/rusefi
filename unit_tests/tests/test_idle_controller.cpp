@@ -82,10 +82,6 @@ TEST(idle, timingPid) {
 	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
 	Sensor::setMockValue(SensorType::Tps1, 0);
 
-	// disable temperature sensors
-	eth.engine.sensors.clt = NAN;
-	eth.engine.sensors.iat = NAN;
-
 	// all corrections disabled, should be 0
 	engineConfiguration->useIdleTimingPidControl = false;
 	angle_t corr = getAdvanceCorrections(idleRpmTarget PASS_ENGINE_PARAMETER_SUFFIX);

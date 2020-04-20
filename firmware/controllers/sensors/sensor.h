@@ -48,23 +48,11 @@
 #pragma once
 
 #include "sensor_type.h"
+#include "expected.h"
 
 #include <cstddef>
 
-struct SensorResult {
-	const bool Valid;
-	const float Value;
-
-	// Implicit conversion operator to bool, so you can do things like if (myResult) { ... }
-	constexpr explicit operator bool() const {
-		return Valid;
-	}
-
-	// Easy default value handling
-	constexpr float value_or(float valueIfInvalid) const {
-		return Valid ? Value : valueIfInvalid;
-	}
-};
+using SensorResult = expected<float>;
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type
 struct SensorRegistryEntry;
@@ -156,7 +144,7 @@ private:
 		return 0;
 	}
 
-	SensorType m_type;
+	const SensorType m_type;
 
 	// Get this sensor's index in the list
 	constexpr size_t getIndex() {

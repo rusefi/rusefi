@@ -457,7 +457,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
      requiresPowerCycle = fsioAdc3
      requiresPowerCycle = fsioAdc4
      
-     readOnly = critical_error_message
+     readOnly = warning_message
 
 
 [CurveEditor]
@@ -1944,6 +1944,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "servo#3",								servoOutputPins3
 		field = "servo#4",								servoOutputPins4
 		field = "servo#5",								servoOutputPins5
+		field = "AUX Serial TX", 						auxSerialTxPin
+		field = "AUX Serial RX", 						auxSerialRxPin
 
 
 	dialog = allPins1_1_and_2, "", xAxis
@@ -2077,9 +2079,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Heater pin",						o2heaterPin
 
 	dialog = egoSettings, "", yAxis
-		panel = egoSettings_IO, {enableAemXSeries == 0}
-		panel = egoSettings_sensor,	{afr_hwChannel != 16 && enableAemXSeries == 0}
+		panel = egoSettings_IO
+		panel = egoSettings_sensor,	{afr_hwChannel != 16 && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
 		field = "Enable AEM X-Series CANbus",			enableAemXSeries, { canReadEnabled }
+		field = "Enable Innovate LC-2 Serial",			enableInnovateLC2, { auxSerialRxPin && auxSerialTxPin }
 
 ;			Engine->EGT inputs
 	dialog = egtInputs, "EGT inputs"
@@ -2359,15 +2362,22 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = alternator
 		panel = startStopDialog
 		
-
-	dialog = speedSensorLeft
+	dialog = speedSensorAnalog
 		field = "Input pin",					vehicleSpeedSensorInputPin
 		field = "revolution to speed mult",				vehicleSpeedCoef
+
+	dialog = speedSensorCan
+		field = "Vss Car Type",						canVssNbcType, { enableCanVss }
+
+	dialog = speedSensorLeft, "Speed sensor config", yAxis
+		panel = speedSensorCan, { enableCanVss }
+	    panel = speedSensorAnalog, { enableCanVss == 0 }
+		field = "Enable CANbus VSS values",			enableCanVss, { canReadEnabled }
 
 	dialog = speedSensor, "Speed sensor", xAxis
 		panel = speedSensorLeft
 		gauge = VSSGauge
-
+		
 ;			Engine->Other inputs	
 	dialog = analogInputSettings, "Analog Input Settings"
 		field = "!ECU reboot needed to apply these settings"
@@ -2403,6 +2413,11 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Can Sleep Period",						canSleepPeriodMs
 		field = "RX pin",								canRxPin @@if_ts_show_can_pins
 		field = "TX pin",								canTxPin @@if_ts_show_can_pins
+
+	dialog = auxSerial, "AUX Serial"
+		field = "RX pin",								auxSerialRxPin @@if_ts_show_auxserial_pins
+		field = "TX pin",								auxSerialTxPin @@if_ts_show_auxserial_pins
+		field = "Serial Baud Rate",						auxSerialSpeed @@if_ts_show_auxserial_pins
 	
 	dialog = sdCard, "SD Card Logger"
 		field = "SdCard", 								isSdCardEnabled
@@ -2439,6 +2454,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort							@@if_ts_show_tunerstudio_port
 		panel = canBus
+		panel = auxSerial
 		panel = sdCard							@@if_ts_show_sd_card
 		panel = gpsReceiver                       @@if_ts_show_gps
 		panel = tle8888
@@ -2464,7 +2480,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = debugging, "Debug"
 		field = "!https://rusefi.com/s/debugmode"
 		field = "Debug mode",							debugMode
-		field = "Critical Error",						critical_error_message
+		field = "Warning Text",						warning_message
 
 	
 	dialog = limits, "Limits"
@@ -2890,8 +2906,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Global fuel correction", 				globalFuelCorrection
 		field = "Ignition Math Logic @",				ignMathCalculateAtIndex
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
-
-		field = "Target temperature", 			postCrankingTargetClt
 
 
        help = helpGeneral, "rusEfi General Help"

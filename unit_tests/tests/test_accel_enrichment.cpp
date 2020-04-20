@@ -5,7 +5,7 @@
  *
  * @date Apr 29, 2014
  *  	Author: Dmitry Sidin
- *      Author: Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_test_helper.h"
