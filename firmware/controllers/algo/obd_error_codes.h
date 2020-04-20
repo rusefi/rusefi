@@ -1727,7 +1727,7 @@ typedef enum {
 	CUSTOM_OBD_6040 = 6040,
 	CUSTOM_OBD_KNOCK_PROCESSOR = 6041,
 	CUSTOM_OBD_LOCAL_FREEZE = 6042,
-	CUSTOM_OBD_MMC_ERROR = 6043,
+	CUSTOM_6043 = 6043,
 	CUSTOM_LOGGING_BUFFER_OVERFLOW = 6044,
 	/**
 	 * This is not engine miss detection - this is only internal scheduler state validation
@@ -2091,6 +2091,11 @@ typedef enum {
 	CUSTOM_ERR_6729 = 6729,
 
 
+	// 8000-8050 logging errors
+	CUSTOM_OBD_MMC_ERROR = 8000,
+
+	// 8000-8050 logging errors
+
 	CUSTOM_ERR_TRIGGER_SYNC = 9000,
 	CUSTOM_OBD_TRIGGER_WAVEFORM = 9001,
 	/**
@@ -2107,6 +2112,8 @@ typedef enum {
 	 * Commanded fuel exceeds your fuel injector flow
 	 */
 	CUSTOM_TOO_LONG_FUEL_INJECTION = 9013,
+
+
 
 
 	// this is needed for proper enum size, this matters for malfunction_central
