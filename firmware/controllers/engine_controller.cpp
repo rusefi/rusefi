@@ -695,10 +695,10 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 12900
+#define RAM_UNUSED_SIZE 12800
 #endif
 #ifndef CCM_UNUSED_SIZE
-#define CCM_UNUSED_SIZE 3000
+#define CCM_UNUSED_SIZE 2900
 #endif
 static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
