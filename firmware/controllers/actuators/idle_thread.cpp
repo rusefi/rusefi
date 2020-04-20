@@ -154,6 +154,13 @@ static void applyIACposition(percent_t position) {
 	float duty = PERCENT_TO_DUTY(position);
 
 	if (CONFIG(useETBforIdleControl)) {
+
+		if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
+			firmwareError(CUSTOM_NO_ETB_FOR_IDLE, "No ETB to use for idle");
+			return;
+		}
+
+
 		engine->engineState.idle.etbIdleAddition = duty * CONFIG(etbIdleThrottleRange);
 #if ! EFI_UNIT_TEST
 	} if (CONFIG(useStepperIdle)) {

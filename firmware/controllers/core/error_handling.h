@@ -26,6 +26,8 @@ bool warning(obd_code_e code, const char *fmt, ...);
 typedef uint8_t critical_msg_t[ERROR_BUFFER_SIZE];
 /**
  * Something really bad had happened - firmware cannot function, we cannot run the engine
+ * We definitely use this critical error approach in case of invalid configuration. If user sets a self-contradicting
+ * configuration we have to just put a hard stop on this.
  *
  * see also warning()
  */
