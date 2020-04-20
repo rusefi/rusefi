@@ -21,3 +21,14 @@ TEST(EfiLibTest, ExpTaylor)
         EXPECT_NEAR(expf_taylor(x), expf(x), 0.01f);
     }
 }
+
+TEST(EfiLibTest, clampf) {
+	// off scale low
+	EXPECT_EQ(clampF(10, 5, 20), 10);
+
+	// in range (unclamped)
+	EXPECT_EQ(clampF(10, 15, 20), 15);
+
+	// off scale high
+	EXPECT_EQ(clampF(10, 25, 20), 20);
+}
