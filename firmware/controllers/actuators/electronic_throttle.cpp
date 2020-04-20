@@ -168,7 +168,8 @@ expected<percent_t> EtbController::getSetpoint() const {
 	float sanitizedPedal = clampF(0, pedalPosition.Value, 100);
 	
 	float rpm = GET_RPM();
-	engine->engineState.targetFromTable = m_pedalMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
+	float targetFromTable = m_pedalMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
+	engine->engineState.targetFromTable = targetFromTable;
 
 	percent_t etbIdlePosition = clampF(
 									0,
@@ -177,15 +178,19 @@ expected<percent_t> EtbController::getSetpoint() const {
 								);
 	percent_t etbIdleAddition = 0.01f * CONFIG(etbIdleThrottleRange) * etbIdlePosition;
 
-	float target = engine->engineState.targetFromTable + etbIdleAddition;
+	// Interpolate so that the idle adder just "compresses" the throttle's range upward.
+	// [0, 100] -> [idle, 100]
+	// 0% target from table -> idle position as target
+	// 100% target from table -> 100% target position
+	percent_t targetPosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
 
 #if EFI_TUNER_STUDIO
 	if (m_myIndex == 0) {
-		tsOutputChannels.etbTarget = target;
+		tsOutputChannels.etbTarget = targetPosition;
 	}
 #endif
 
-	return target;
+	return targetPosition;
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
