@@ -200,13 +200,6 @@ void setIdleValvePosition(int positionPercent) {
 
 #endif /* EFI_UNIT_TEST */
 
-/**
- * clamps value into the [0, 100] range
- */
-percent_t clampPercentValue(percent_t value) {
-	return maxF(minF(value, 100), 0);
-}
-
 static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	percent_t correctedPosition = cltCorrection * CONFIG(manIdlePosition);
