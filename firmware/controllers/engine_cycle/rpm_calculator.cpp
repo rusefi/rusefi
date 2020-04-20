@@ -22,6 +22,7 @@
 #include "engine_configuration.h"
 #include "engine_math.h"
 #include "perf_trace.h"
+#include "tooth_logger.h"
 
 #if EFI_PROD_CODE
 #include "os_util.h"
@@ -300,6 +301,9 @@ static void onTdcCallback(Engine *engine) {
 	waveChart.startDataCollection();
 #endif
 	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
+#if EFI_TOOTH_LOGGER
+	LogTriggerTopDeadCenter(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_TOOTH_LOGGER */
 }
 
 /**

@@ -333,4 +333,22 @@ void configureOnePlus16(TriggerWaveform *s, operation_mode_e operationMode) {
 	s->useOnlyPrimaryForSync = true;
 }
 
+// TT_HONDA_K_12_1
+void configureHondaK_12_1(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+
+	s->setTriggerSynchronizationGap(3);
+
+	int count = 12;
+	float tooth = s->getCycleDuration() / count; // hint: tooth = 30
+	float width = 4; // for VR we only handle rises so width does not matter much
+
+	s->addEventAngle(20 - width, T_PRIMARY, TV_RISE);
+	s->addEventAngle(20, T_PRIMARY, TV_FALL);
+
+	for (int i = 1; i <= count; i++) {
+		s->addEventAngle(tooth * i - width, T_PRIMARY, TV_RISE);
+		s->addEventAngle(tooth * i,         T_PRIMARY, TV_FALL);
+	}
+}
 

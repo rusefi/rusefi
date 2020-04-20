@@ -32,6 +32,7 @@
 #include "trigger_subaru.h"
 #include "trigger_structure.h"
 #include "trigger_toyota.h"
+#include "trigger_renix.h"
 #include "trigger_rover.h"
 #include "trigger_honda.h"
 #include "trigger_vw.h"
@@ -115,6 +116,8 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
  */
 angle_t TriggerWaveform::getCycleDuration() const {
 	switch (operationMode) {
+	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		return 120;
 	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
 		return 180;
 	case FOUR_STROKE_CRANK_SENSOR:
@@ -190,8 +193,12 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 
 }
 
-void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
-	addEvent(angle / 720, channelIndex, stateParam);
+void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+	addEvent(angle / 720, channelIndex, state);
+}
+
+void TriggerWaveform::addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+	addEvent(angle / getCycleDuration(), channelIndex, state);
 }
 
 void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
@@ -463,6 +470,14 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		initializeMazdaMiataVVtCamShape(this);
 		break;
 
+	case TT_RENIX_66_2_2_2:
+		initializeRenix66_2_2(this);
+		break;
+
+	case TT_RENIX_44_2_2:
+		initializeRenix44_2_2(this);
+		break;
+
 	case TT_MIATA_VVT:
 		initializeMazdaMiataNb2Crank(this);
 		break;
@@ -534,6 +549,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_TOOTHED_WHEEL_36_1:
 		setToothedWheelConfiguration(this, 36, 1, ambiguousOperationMode);
+		break;
+
+	case TT_HONDA_K_12_1:
+		configureHondaK_12_1(this);
 		break;
 
 	case TT_HONDA_4_24_1:

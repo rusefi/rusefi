@@ -107,6 +107,14 @@ static void printWarning(const char *fmt, va_list ap) {
 
 	printToStream(&warningStream, fmt, ap);
 
+#if EFI_TUNER_STUDIO
+ #if defined(EFI_NO_CONFIG_WORKING_COPY)
+  memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
+ #else /* defined(EFI_NO_CONFIG_WORKING_COPY) */
+  memcpy(configWorkingCopy.warning_message, warningBuffer, sizeof(warningBuffer));
+ #endif /* defined(EFI_NO_CONFIG_WORKING_COPY) */
+#endif /* EFI_TUNER_STUDIO */
+
 	logger.append(warningBuffer);
 	append(&logger, DELIMETER);
 	scheduleLogging(&logger);
@@ -244,14 +252,6 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 		// todo: reuse warning buffer helper method
 		firmwareErrorMessageStream.buffer[firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
 	}
-
-#if EFI_TUNER_STUDIO
- #if defined(EFI_NO_CONFIG_WORKING_COPY)
-  memcpy(persistentState.persistentConfiguration.critical_error_message, criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer));
- #else /* defined(EFI_NO_CONFIG_WORKING_COPY) */
-  memcpy(configWorkingCopy.critical_error_message, criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer));
- #endif /* defined(EFI_NO_CONFIG_WORKING_COPY) */
-#endif /* EFI_TUNER_STUDIO */
 
 #else
 	printf("firmwareError [%s]\r\n", fmt);

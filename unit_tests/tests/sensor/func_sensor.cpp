@@ -5,10 +5,11 @@
 
 struct DoublerFunc final : public SensorConverter {
 	SensorResult convert(float input) const {
-		bool valid = input > 0;
-		float value = input * 2;
+		if (input <= 0) {
+			return unexpected;
+		}
 
-		return {valid, value};
+		return input * 2;
 	}
 };
 

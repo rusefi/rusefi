@@ -22,4 +22,6 @@ void configureOnePlus16(TriggerWaveform *s, operation_mode_e operationMode);
 void configureHondaCbr600(TriggerWaveform *s);
 void configureHondaCbr600custom(TriggerWaveform *s);
 
+void configureHondaK_12_1(TriggerWaveform *s);
+
 

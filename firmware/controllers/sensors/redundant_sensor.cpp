@@ -26,17 +26,16 @@ SensorResult RedundantSensor::get() const {
 
 	// If either result is invalid, return invalid.
 	if (!result1.Valid || !result2.Valid) {
-		return { false, 0 };
+		return unexpected;
 	}
 
 	// If both are valid, check that they're near one another
 	float delta = absF(result1.Value - result2.Value);
 	if (delta > m_maxDifference) {
-		return { false, 0 };
+		return unexpected;
 	}
 
 	// Both sensors are valid, and their readings are close. All is well.
 	// Return the average
-	float avg = (result1.Value + result2.Value) / 2;
-	return { true, avg };
+	return (result1.Value + result2.Value) / 2;
 }

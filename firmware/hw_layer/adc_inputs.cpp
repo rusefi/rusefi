@@ -43,7 +43,6 @@
 #define ADC_BUF_DEPTH_FAST      4
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
-static const char * adcHwChannelUsage[HW_MAX_ADC_INDEX];
 
 EXTERN_ENGINE;
 
@@ -278,13 +277,6 @@ PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
 0, 0 };
 #endif /* HAL_USE_PWM */
 
-static void initAdcPin(brain_pin_e pin, const char *msg) {
-	UNUSED(msg);
-	// todo: migrate to scheduleMsg if we want this back print("adc %s\r\n", msg);
-
-	efiSetPadMode("adc input", pin, PAL_MODE_INPUT_ANALOG);
-}
-
 const char * getAdcMode(adc_channel_e hwChannel) {
 	if (slowAdc.isHwUsed(hwChannel)) {
 		return "slow";
@@ -293,12 +285,6 @@ const char * getAdcMode(adc_channel_e hwChannel) {
 		return "fast";
 	}
 	return "INACTIVE - need restart";
-}
-
-static void initAdcHwChannel(adc_channel_e hwChannel) {
-	brain_pin_e pin = getAdcChannelBrainPin("adc", hwChannel);
-
-	initAdcPin(pin, "hw");
 }
 
 int AdcDevice::size() const {
@@ -354,10 +340,11 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	// todo: support for more then 12 channels? not sure how needed it would be
 }
 
-void AdcDevice::enableChannelAndPin(adc_channel_e hwChannel) {
+void AdcDevice::enableChannelAndPin(const char *msg, adc_channel_e hwChannel) {
 	enableChannel(hwChannel);
 
-	initAdcHwChannel(hwChannel);
+	brain_pin_e pin = getAdcChannelBrainPin(msg, hwChannel);
+	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
 }
 
 static void printAdcValue(int channel) {
@@ -470,13 +457,10 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 		return;
 	}
 
-	if (adcHwChannelEnabled[setting] != ADC_OFF) {
-		getPinNameByAdcChannel(name, setting, errorMsgBuff);
-		firmwareError(CUSTOM_ERR_ADC_USED, "Analog input error: input \"%s\" selected for %s but was already used by %s", errorMsgBuff, name, adcHwChannelUsage[setting]);
-	}
-
-	adcHwChannelUsage[setting] = name;
 	adcHwChannelEnabled[setting] = mode;
+
+	AdcDevice& dev = (mode == ADC_SLOW) ? slowAdc : fastAdc;
+	dev.enableChannelAndPin(name, setting);
 }
 
 void removeChannel(const char *name, adc_channel_e setting) {
@@ -489,7 +473,6 @@ void removeChannel(const char *name, adc_channel_e setting) {
 
 static void configureInputs(void) {
 	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
-	memset(adcHwChannelUsage, 0, sizeof(adcHwChannelUsage));
 
 	/**
 	 * order of analog channels here is totally random and has no meaning
@@ -564,19 +547,6 @@ void initAdcInputs() {
 	adcStart(&ADC_SLOW_DEVICE, NULL);
 	adcStart(&ADC_FAST_DEVICE, NULL);
 	adcSTM32EnableTSVREFE(); // Internal temperature sensor
-
-	for (int adc = 0; adc < HW_MAX_ADC_INDEX; adc++) {
-		adc_channel_mode_e mode = adcHwChannelEnabled[adc];
-
-		/**
-		 * in board test mode all currently enabled ADC channels are running in slow mode
-		 */
-		if (mode == ADC_SLOW) {
-			slowAdc.enableChannelAndPin((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
-		} else if (mode == ADC_FAST) {
-			fastAdc.enableChannelAndPin((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
-		}
-	}
 
 #if defined(ADC_CHANNEL_SENSOR)
 	// Internal temperature sensor, Available on ADC1 only

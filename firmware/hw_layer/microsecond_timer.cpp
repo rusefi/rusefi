@@ -79,7 +79,7 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 	}
 	if (deltaTimeUs < 2)
 		deltaTimeUs = 2; // for some reason '1' does not really work
-	efiAssertVoid(CUSTOM_ERR_6681, deltaTimeUs > 0, "not positive deltaTimeUs");
+	efiAssertVoid(CUSTOM_DELTA_NOT_POSITIVE, deltaTimeUs > 0, "not positive deltaTimeUs");
 	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_US) {
 		// we are trying to set callback for too far into the future. This does not look right at all
 		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too far: %d", deltaTimeUs);
