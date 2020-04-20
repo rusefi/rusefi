@@ -192,6 +192,20 @@ TEST(etb, setOutputValid) {
 	etb.setOutput(25.0f);
 }
 
+TEST(etb, setOutputValid2) {
+	StrictMock<MockMotor> motor;
+
+	EtbController etb;
+	etb.init(&motor, 0, nullptr);
+
+	// Should be enabled and value set
+	EXPECT_CALL(motor, enable());
+	EXPECT_CALL(motor, set(-0.25f))
+		.WillOnce(Return(false));
+
+	etb.setOutput(-25.0f);
+}
+
 TEST(etb, setOutputOutOfRangeHigh) {
 	StrictMock<MockMotor> motor;
 
