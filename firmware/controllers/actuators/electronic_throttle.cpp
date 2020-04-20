@@ -155,8 +155,10 @@ expected<percent_t> EtbController::getSetpoint() const {
 		return unexpected;
 	}
 
+	float sanitizedPedal = clampF(0, pedalPosition.Value, 100);
+	
 	float rpm = GET_RPM();
-	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition.Value);
+	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
 	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
 
 	float target = engine->engineState.targetFromTable + etbIdleAddition;
