@@ -161,7 +161,7 @@ static void applyIACposition(percent_t position) {
 			return;
 		}
 
-		setEtbIdlePosition(duty);
+		setEtbIdlePosition(position);
 #if ! EFI_UNIT_TEST
 	} if (CONFIG(useStepperIdle)) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
