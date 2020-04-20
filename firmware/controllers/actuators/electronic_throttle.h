@@ -22,13 +22,13 @@ class Logging;
 class IEtbController : public PeriodicTimerController, public ClosedLoopController<percent_t, percent_t> {
 public:
 	DECLARE_ENGINE_PTR;
-	virtual void init(DcMotor *motor, int ownIndex, pid_s *pidParameters) = 0;
+	virtual void init(DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
 	virtual void reset() = 0;
 };
 
 class EtbController final : public IEtbController {
 public:
-	void init(DcMotor *motor, int ownIndex, pid_s *pidParameters) override;
+	void init(DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
 
 	// PeriodicTimerController implementation
 	int getPeriodMs() override;
@@ -55,10 +55,13 @@ public:
 	const pid_state_s* getPidState() const { return &m_pid; };
 
 private:
-	int m_myIndex;
-	DcMotor *m_motor;
+	int m_myIndex = 0;
+	DcMotor *m_motor = nullptr;
 	Pid m_pid;
 	bool m_shouldResetPid = false;
+
+	// Pedal -> target map
+	const ValueProvider3D* m_pedalMap = nullptr;
 
 	// Autotune helpers
 	bool m_lastIsPositive = false;
