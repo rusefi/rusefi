@@ -496,8 +496,6 @@
 #define crankingTpsBins_offset_hex 688
 #define crankingTpsCoef_offset 1640
 #define crankingTpsCoef_offset_hex 668
-#define critical_error_message_offset 6000
-#define critical_error_message_offset_hex 1770
 #define CRITICAL_PREFIX "CRITICAL"
 #define cutFuelOnHardLimit_offset 1464
 #define cutFuelOnHardLimit_offset_hex 5b8
@@ -2366,6 +2364,8 @@
 #define vvtMode_offset_hex 918
 #define vvtOffset_offset 2052
 #define vvtOffset_offset_hex 804
+#define warning_message_offset 6000
+#define warning_message_offset_hex 1770
 #define warningLedPin_offset 2041
 #define warningLedPin_offset_hex 7f9
 #define warningPeriod_offset 1498

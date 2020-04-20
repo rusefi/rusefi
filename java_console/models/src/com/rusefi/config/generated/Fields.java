@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 19 18:31:50 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 19 21:15:09 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -326,8 +326,6 @@ public class Fields {
 	public static final int crankingTpsBins_offset_hex = 688;
 	public static final int crankingTpsCoef_offset = 1640;
 	public static final int crankingTpsCoef_offset_hex = 668;
-	public static final int critical_error_message_offset = 6000;
-	public static final int critical_error_message_offset_hex = 1770;
 	public static final String CRITICAL_PREFIX = "CRITICAL";
 	public static final int cutFuelOnHardLimit_offset = 1464;
 	public static final int cutSparkOnHardLimit_offset = 1464;
@@ -1548,6 +1546,8 @@ public class Fields {
 	public static final int vvtMode_offset_hex = 918;
 	public static final int vvtOffset_offset = 2052;
 	public static final int vvtOffset_offset_hex = 804;
+	public static final int warning_message_offset = 6000;
+	public static final int warning_message_offset_hex = 1770;
 	public static final int warningLedPin_offset = 2041;
 	public static final int warningPeriod_offset = 1498;
 	public static final int wboHeaterPin_offset = 673;
@@ -2457,7 +2457,7 @@ public class Fields {
 	public static final Field IDLERPMPID2_MAXVALUE = Field.create("IDLERPMPID2_MAXVALUE", 4058, FieldType.INT16);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4060, FieldType.INT);
 	public static final Field CANVSSNBCTYPE = Field.create("CANVSSNBCTYPE", 4140, FieldType.INT);
-	public static final Field CRITICAL_ERROR_MESSAGE = Field.create("CRITICAL_ERROR_MESSAGE", 6000, FieldType.INT);
+	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 6000, FieldType.INT);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT);
 	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 6400, FieldType.INT);
@@ -3376,7 +3376,7 @@ public class Fields {
 	IDLERPMPID2_MAXVALUE,
 	IACPIDMULTTABLE,
 	CANVSSNBCTYPE,
-	CRITICAL_ERROR_MESSAGE,
+	WARNING_MESSAGE,
 	BOOSTTABLEOPENLOOP,
 	BOOSTTABLECLOSEDLOOP,
 	PEDALTOTPSTABLE,

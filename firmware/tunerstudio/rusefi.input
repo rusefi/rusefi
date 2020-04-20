@@ -457,7 +457,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
      requiresPowerCycle = fsioAdc3
      requiresPowerCycle = fsioAdc4
      
-     readOnly = critical_error_message
+     readOnly = warning_message
 
 
 [CurveEditor]
@@ -2480,7 +2480,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = debugging, "Debug"
 		field = "!https://rusefi.com/s/debugmode"
 		field = "Debug mode",							debugMode
-		field = "Critical Error",						critical_error_message
+		field = "Warning Text",						warning_message
 
 	
 	dialog = limits, "Limits"
