@@ -301,9 +301,9 @@ static void onTdcCallback(Engine *engine) {
 	waveChart.startDataCollection();
 #endif
 	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
-#if ! EFI_UNIT_TEST
+#if EFI_TOOTH_LOGGER
 	LogTriggerTopDeadCenter(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_UNIT_TEST */
+#endif /* EFI_TOOTH_LOGGER */
 }
 
 /**
