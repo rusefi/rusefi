@@ -25,10 +25,14 @@ TEST(EfiLibTest, ExpTaylor)
 TEST(EfiLibTest, clampf) {
 	// off scale low
 	EXPECT_EQ(clampF(10, 5, 20), 10);
+	EXPECT_EQ(clampF(-10, -50, 10), -10);
 
 	// in range (unclamped)
 	EXPECT_EQ(clampF(10, 15, 20), 15);
+	EXPECT_EQ(clampF(-10, -5, 10), -5);
 
 	// off scale high
 	EXPECT_EQ(clampF(10, 25, 20), 20);
+	EXPECT_EQ(clampF(-10, 50, 10), 10);
+
 }
