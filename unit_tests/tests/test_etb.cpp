@@ -137,6 +137,13 @@ TEST(etb, testSetpointOnlyPedal) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 105);
 	EXPECT_EQ(100, etb.getSetpoint().value_or(-1));
 
+	// Check that ETB idle does NOT work - it's disabled
+	etb.setIdlePosition(50);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
+	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 20);
+	EXPECT_EQ(20, etb.getSetpoint().value_or(-1));
+
 	// Test invalid pedal position - should give unexpected
 	Sensor::resetMockValue(SensorType::AcceleratorPedal);
 	EXPECT_EQ(etb.getSetpoint(), unexpected);
