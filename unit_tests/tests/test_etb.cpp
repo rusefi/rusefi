@@ -33,7 +33,7 @@ public:
 	MOCK_METHOD(void, setOutput, (expected<percent_t> outputValue), (override));
 };
 
-class MockMotor : DcMotor {
+class MockMotor : public DcMotor {
 public:
 	MOCK_METHOD(bool, set, (float duty), (override));
 	MOCK_METHOD(float, get, (), (const, override));
