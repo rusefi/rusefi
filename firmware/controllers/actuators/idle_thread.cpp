@@ -40,6 +40,7 @@
 #include "periodic_task.h"
 #include "allsensors.h"
 #include "sensor.h"
+#include "electronic_throttle.h"
 
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
@@ -160,8 +161,7 @@ static void applyIACposition(percent_t position) {
 			return;
 		}
 
-
-		engine->engineState.idle.etbIdleAddition = duty * CONFIG(etbIdleThrottleRange);
+		setEtbIdlePosition(duty);
 #if ! EFI_UNIT_TEST
 	} if (CONFIG(useStepperIdle)) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);

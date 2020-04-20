@@ -106,7 +106,6 @@ static SensorType indexToTpsSensor(size_t index) {
 }
 
 static percent_t directPwmValue = NAN;
-static percent_t currentEtbDuty;
 
 #define ETB_DUTY_LIMIT 0.9
 // this macro clamps both positive and negative percentages from about -100% to 100%
@@ -141,6 +140,10 @@ expected<percent_t> EtbController::observePlant() const {
 	return Sensor::get(indexToTpsSensor(m_myIndex));
 }
 
+void EtbController::setIdlePosition(percent_t pos) {
+	m_idlePosition = pos;
+}
+
 expected<percent_t> EtbController::getSetpoint() const {
 	// A few extra preconditions if throttle control is invalid
 	if (startupPositionError) {
@@ -164,8 +167,14 @@ expected<percent_t> EtbController::getSetpoint() const {
 	float sanitizedPedal = clampF(0, pedalPosition.Value, 100);
 	
 	float rpm = GET_RPM();
-	engine->engineState.targetFromTable = m_pedalMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
-	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
+	engine->engineState.targetFromTable = m_pedalMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
+
+	percent_t etbIdlePosition = clampF(
+									0,
+									CONFIG(useETBforIdleControl) ? m_idlePosition : 0,
+									100
+								);
+	percent_t etbIdleAddition = 0.01f * CONFIG(etbIdleThrottleRange) * etbIdlePosition;
 
 	float target = engine->engineState.targetFromTable + etbIdleAddition;
 
@@ -642,6 +651,16 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	for (int i = 0; i < ETB_COUNT; i++) {
+		auto etb = engine->etbControllers[i];
+
+		if (etb) {
+			etb->setIdlePosition(pos);
+		}
+	}
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
