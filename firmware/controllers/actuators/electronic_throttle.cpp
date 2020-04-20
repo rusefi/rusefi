@@ -141,6 +141,10 @@ expected<percent_t> EtbController::observePlant() const {
 	return Sensor::get(indexToTpsSensor(m_myIndex));
 }
 
+void EtbController::setIdlePosition(percent_t pos) {
+	m_idlePosition = pos;
+}
+
 expected<percent_t> EtbController::getSetpoint() const {
 	// A few extra preconditions if throttle control is invalid
 	if (startupPositionError) {
@@ -164,16 +168,21 @@ expected<percent_t> EtbController::getSetpoint() const {
 	float sanitizedPedal = clampF(0, pedalPosition.Value, 100);
 	
 	float rpm = GET_RPM();
-
-	float targetFromTable = m_pedalMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition.Value);
+	float targetFromTable = m_pedalMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
 	engine->engineState.targetFromTable = targetFromTable;
-	percent_t etbIdlePosition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
+
+	percent_t etbIdlePosition = clampF(
+									0,
+									CONFIG(useETBforIdleControl) ? m_idlePosition : 0,
+									100
+								);
+	percent_t etbIdleAddition = 0.01f * CONFIG(etbIdleThrottleRange) * etbIdlePosition;
 
 	// Interpolate so that the idle adder just "compresses" the throttle's range upward.
 	// [0, 100] -> [idle, 100]
 	// 0% target from table -> idle position as target
 	// 100% target from table -> 100% target position
-	percent_t targetPosition = interpolateClamped(0, etbIdlePosition, 100, 100, targetFromTable);
+	percent_t targetPosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
 
 #if EFI_TUNER_STUDIO
 	if (m_myIndex == 0) {
@@ -648,6 +657,16 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	for (int i = 0; i < ETB_COUNT; i++) {
+		auto etb = engine->etbControllers[i];
+
+		if (etb) {
+			etb->setIdlePosition(pos);
+		}
+	}
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */

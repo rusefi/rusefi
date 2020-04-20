@@ -11,42 +11,11 @@
 #include "engine_controller.h"
 #include "sensor.h"
 
+#include "mocks.h"
+
 using ::testing::_;
 using ::testing::Ne;
 using ::testing::StrictMock;
-
-class MockEtb : public IEtbController {
-public:
-	// PeriodicTimerController mocks
-	MOCK_METHOD(void, PeriodicTask, (), (override));
-	MOCK_METHOD(int, getPeriodMs, (), (override));
-
-	// IEtbController mocks
-	MOCK_METHOD(void, reset, (), ());
-	MOCK_METHOD(void, Start, (), (override));
-	MOCK_METHOD(void, init, (DcMotor* motor, int ownIndex, pid_s* pidParameters, const ValueProvider3D* pedalMap), (override));
-
-	// ClosedLoopController mocks
-	MOCK_METHOD(expected<percent_t>, getSetpoint, (), (const, override));
-	MOCK_METHOD(expected<percent_t>, observePlant, (), (const, override));
-	MOCK_METHOD(expected<percent_t>, getOpenLoop, (percent_t setpoint), (const, override));
-	MOCK_METHOD(expected<percent_t>, getClosedLoop, (percent_t setpoint, percent_t observation), (override));
-	MOCK_METHOD(void, setOutput, (expected<percent_t> outputValue), (override));
-};
-
-class MockMotor : public DcMotor {
-public:
-	MOCK_METHOD(bool, set, (float duty), (override));
-	MOCK_METHOD(float, get, (), (const, override));
-	MOCK_METHOD(void, enable, (), (override));
-	MOCK_METHOD(void, disable, (), (override));
-	MOCK_METHOD(bool, isOpenDirection, (), (const, override));
-};
-
-class MockVp3d : public ValueProvider3D {
-public:
-	MOCK_METHOD(float, getValue, (float xRpm, float y), (const, override));
-};
 
 TEST(etb, initializationNoPedal) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
@@ -113,15 +82,25 @@ TEST(etb, initializationDualThrottle) {
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+TEST(etb, idlePlumbing) {
+	StrictMock<MockEtb> mocks[ETB_COUNT];
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	for (int i = 0; i < ETB_COUNT; i++) {
+		engine->etbControllers[i] = &mocks[i];
+
+		EXPECT_CALL(mocks[i], setIdlePosition(33.0f));
+	}
+
+	setEtbIdlePosition(33.0f PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
 TEST(etb, testSetpointOnlyPedal) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// Don't use ETB for idle, we aren't testing that yet - just pedal table for now
 	engineConfiguration->useETBforIdleControl = false;
-
-	// Must have a sensor configured before init
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
-	Sensor::setMockValue(SensorType::Tps1, 0);
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
@@ -158,9 +137,65 @@ TEST(etb, testSetpointOnlyPedal) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 105);
 	EXPECT_EQ(100, etb.getSetpoint().value_or(-1));
 
+	// Check that ETB idle does NOT work - it's disabled
+	etb.setIdlePosition(50);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
+	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 20);
+	EXPECT_EQ(20, etb.getSetpoint().value_or(-1));
+
 	// Test invalid pedal position - should give unexpected
 	Sensor::resetMockValue(SensorType::AcceleratorPedal);
 	EXPECT_EQ(etb.getSetpoint(), unexpected);
+}
+
+TEST(etb, setpointIdle) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// Use ETB for idle, but don't give it any range (yet)
+	engineConfiguration->useETBforIdleControl = true;
+	engineConfiguration->etbIdleThrottleRange = 0;
+
+	EtbController etb;
+	INJECT_ENGINE_REFERENCE(&etb);
+
+	// Mock pedal map that's just passthru pedal -> target
+	StrictMock<MockVp3d> pedalMap;
+	EXPECT_CALL(pedalMap, getValue(_, _))
+		.WillRepeatedly([](float xRpm, float y) {
+			return y;
+		});
+	etb.init(nullptr, 0, nullptr, &pedalMap);
+
+	// No idle range, should just pass pedal
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
+	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
+	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
+
+	// Idle should now have 10% range
+	engineConfiguration->etbIdleThrottleRange = 10;
+
+	// 50% idle position should increase setpoint by 5%
+	etb.setIdlePosition(50);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
+	EXPECT_FLOAT_EQ(5, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
+	EXPECT_FLOAT_EQ(55, etb.getSetpoint().value_or(-1));
+
+	// 100% setpoint should increase by 10%
+	etb.setIdlePosition(100);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
+	EXPECT_FLOAT_EQ(10, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
+	EXPECT_FLOAT_EQ(60, etb.getSetpoint().value_or(-1));
+
+	// 125% setpoint should clamp to 10% increase
+	etb.setIdlePosition(125);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
+	EXPECT_FLOAT_EQ(10, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
+	EXPECT_FLOAT_EQ(60, etb.getSetpoint().value_or(-1));
 }
 
 TEST(etb, etbTpsSensor) {

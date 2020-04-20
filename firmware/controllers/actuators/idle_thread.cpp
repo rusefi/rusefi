@@ -40,6 +40,7 @@
 #include "periodic_task.h"
 #include "allsensors.h"
 #include "sensor.h"
+#include "electronic_throttle.h"
 
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
@@ -154,14 +155,14 @@ static void applyIACposition(percent_t position) {
 	float duty = PERCENT_TO_DUTY(position);
 
 	if (CONFIG(useETBforIdleControl)) {
-
 		if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
 			firmwareError(CUSTOM_NO_ETB_FOR_IDLE, "No ETB to use for idle");
 			return;
 		}
 
-
-		engine->engineState.idle.etbIdleAddition = duty * CONFIG(etbIdleThrottleRange);
+#if EFI_ELECTRONIC_THROTTLE_BODY
+		setEtbIdlePosition(position);
+#endif
 #if ! EFI_UNIT_TEST
 	} if (CONFIG(useStepperIdle)) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
@@ -199,13 +200,6 @@ void setIdleValvePosition(int positionPercent) {
 }
 
 #endif /* EFI_UNIT_TEST */
-
-/**
- * clamps value into the [0, 100] range
- */
-percent_t clampPercentValue(percent_t value) {
-	return maxF(minF(value, 100), 0);
-}
 
 static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
