@@ -110,7 +110,7 @@ static percent_t currentEtbDuty;
 
 #define ETB_DUTY_LIMIT 0.9
 // this macro clamps both positive and negative percentages from about -100% to 100%
-#define ETB_PERCENT_TO_DUTY(x) (0.01f * clampF(-ETB_DUTY_LIMIT, (x), ETB_DUTY_LIMIT))
+#define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
 
 void EtbController::init(DcMotor *motor, int ownIndex, pid_s *pidParameters) {
 	m_motor = motor;
