@@ -213,6 +213,7 @@ TEST(etb, setOutputValid2) {
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
+
 	etb.init(&motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
