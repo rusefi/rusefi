@@ -12,6 +12,7 @@
 #include "sensor.h"
 
 using ::testing::_;
+using ::testing::Ne;
 using ::testing::StrictMock;
 
 class MockEtb : public IEtbController {
@@ -23,7 +24,7 @@ public:
 	// IEtbController mocks
 	MOCK_METHOD(void, reset, (), ());
 	MOCK_METHOD(void, Start, (), (override));
-	MOCK_METHOD(void, init, (DcMotor* motor, int ownIndex, pid_s* pidParameters));
+	MOCK_METHOD(void, init, (DcMotor* motor, int ownIndex, pid_s* pidParameters, const ValueProvider3D* pedalMap), (override));
 
 	// ClosedLoopController mocks
 	MOCK_METHOD(expected<percent_t>, getSetpoint, (), (const, override));
@@ -40,6 +41,11 @@ public:
 	MOCK_METHOD(void, enable, (), (override));
 	MOCK_METHOD(void, disable, (), (override));
 	MOCK_METHOD(bool, isOpenDirection, (), (const, override));
+};
+
+class MockVp3d : public ValueProvider3D {
+public:
+	MOCK_METHOD(float, getValue, (float xRpm, float y), (const, override));
 };
 
 TEST(etb, initializationNoPedal) {
@@ -70,7 +76,7 @@ TEST(etb, initializationSingleThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
 
 	// Expect mock0 to be init with index 0, and PID params
-	EXPECT_CALL(mocks[0], init(_, 0, &engineConfiguration->etb));
+	EXPECT_CALL(mocks[0], init(_, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
 	EXPECT_CALL(mocks[0], Start);
 
@@ -95,12 +101,12 @@ TEST(etb, initializationDualThrottle) {
 	Sensor::setMockValue(SensorType::Tps2, 25.0f);
 
 	// Expect mock0 to be init with index 0, and PID params
-	EXPECT_CALL(mocks[0], init(_, 0, &engineConfiguration->etb));
+	EXPECT_CALL(mocks[0], init(_, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
 	EXPECT_CALL(mocks[0], Start);
 
 	// Expect mock1 to be init with index 2, and PID params
-	EXPECT_CALL(mocks[1], init(_, 1, &engineConfiguration->etb));
+	EXPECT_CALL(mocks[1], init(_, 1, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[1], reset);
 	EXPECT_CALL(mocks[1], Start);
 
@@ -118,8 +124,19 @@ TEST(etb, testSetpointOnlyPedal) {
 	Sensor::setMockValue(SensorType::Tps1, 0);
 
 	EtbController etb;
-	engine->etbControllers[0] = &etb;
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	INJECT_ENGINE_REFERENCE(&etb);
+
+	// Mock pedal map that's just passthru pedal -> target
+	StrictMock<MockVp3d> pedalMap;
+	EXPECT_CALL(pedalMap, getValue(_, _))
+		.WillRepeatedly([](float xRpm, float y) {
+			return y;
+		});
+
+	// Uninitialized ETB must return unexpected (and not deference a null pointer)
+	EXPECT_EQ(etb.getSetpoint(), unexpected);
+
+	etb.init(nullptr, 0, nullptr, &pedalMap);
 
 	// Check endpoints and midpoint
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
@@ -154,14 +171,14 @@ TEST(etb, etbTpsSensor) {
 	// Test first throttle
 	{
 		EtbController etb;
-		etb.init(nullptr, 0, nullptr);
+		etb.init(nullptr, 0, nullptr, nullptr);
 		EXPECT_EQ(etb.observePlant().Value, 25.0f);
 	}
 
 	// Test second throttle
 	{
 		EtbController etb;
-		etb.init(nullptr, 1, nullptr);
+		etb.init(nullptr, 1, nullptr, nullptr);
 		EXPECT_EQ(etb.observePlant().Value, 75.0f);
 	}
 }
@@ -170,7 +187,7 @@ TEST(etb, setOutputInvalid) {
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
-	etb.init(&motor, 0, nullptr);
+	etb.init(&motor, 0, nullptr, nullptr);
 
 	// Should be disabled in case of unexpected
 	EXPECT_CALL(motor, disable());
@@ -182,7 +199,7 @@ TEST(etb, setOutputValid) {
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
-	etb.init(&motor, 0, nullptr);
+	etb.init(&motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -196,7 +213,8 @@ TEST(etb, setOutputValid2) {
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
-	etb.init(&motor, 0, nullptr);
+
+	etb.init(&motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -210,7 +228,7 @@ TEST(etb, setOutputOutOfRangeHigh) {
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
-	etb.init(&motor, 0, nullptr);
+	etb.init(&motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -224,7 +242,7 @@ TEST(etb, setOutputOutOfRangeLow) {
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
-	etb.init(&motor, 0, nullptr);
+	etb.init(&motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
