@@ -109,6 +109,8 @@ static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
 
 #define ETB_DUTY_LIMIT 0.9
+// this macro clamps both positive and negative percentages from about -100% to 100%
+#define ETB_PERCENT_TO_DUTY(x) (0.01f * clampF(-ETB_DUTY_LIMIT, (x), ETB_DUTY_LIMIT))
 
 void EtbController::init(DcMotor *motor, int ownIndex, pid_s *pidParameters) {
 	m_motor = motor;
@@ -277,10 +279,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 
 	if (outputValue) {
 		m_motor->enable();
-
-		float duty = clampF(-ETB_DUTY_LIMIT, outputValue.Value, ETB_DUTY_LIMIT);
-		// Convert percent -> [-1, 1]
-		m_motor->set(0.01f * duty);
+		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
 		m_motor->disable();
 	}
