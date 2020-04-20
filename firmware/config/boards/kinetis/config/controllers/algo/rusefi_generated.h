@@ -201,6 +201,12 @@
 #define auxPidPins3_offset_hex 8ae
 #define auxPidPins4_offset 2223
 #define auxPidPins4_offset_hex 8af
+#define auxSerialRxPin_offset 2042
+#define auxSerialRxPin_offset_hex 7fa
+#define auxSerialSpeed_offset 2096
+#define auxSerialSpeed_offset_hex 830
+#define auxSerialTxPin_offset 2040
+#define auxSerialTxPin_offset_hex 7f8
 #define auxTempSensor1_adcChannel_offset 2472
 #define auxTempSensor1_adcChannel_offset_hex 9a8
 #define auxTempSensor1_alignmentFill_at_29_offset 2473
@@ -339,6 +345,8 @@
 #define canSleepPeriodMs_offset_hex 1e4
 #define canTxPin_offset 708
 #define canTxPin_offset_hex 2c4
+#define canVssNbcType_offset 4140
+#define canVssNbcType_offset_hex 102c
 #define canWriteEnabled_offset 1464
 #define canWriteEnabled_offset_hex 5b8
 #define cdmInputPin_offset 937
@@ -542,8 +550,12 @@
 #define electronicThrottlePin1Mode_offset_hex 2a0
 #define enableAemXSeries_offset 744
 #define enableAemXSeries_offset_hex 2e8
+#define enableCanVss_offset 976
+#define enableCanVss_offset_hex 3d0
 #define enabledStep1Limiter_offset 744
 #define enabledStep1Limiter_offset_hex 2e8
+#define enableInnovateLC2_offset 976
+#define enableInnovateLC2_offset_hex 3d0
 #define enableLaunchBoost_offset 976
 #define enableLaunchBoost_offset_hex 3d0
 #define enableLaunchRetard_offset 976
@@ -1511,8 +1523,8 @@
 #define mainRelayPin_offset_hex 2c2
 #define mainRelayPinMode_offset 752
 #define mainRelayPinMode_offset_hex 2f0
-#define mainUnusedEnd_offset 4140
-#define mainUnusedEnd_offset_hex 102c
+#define mainUnusedEnd_offset 4144
+#define mainUnusedEnd_offset_hex 1030
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPin_offset_hex 294
 #define malfunctionIndicatorPinMode_offset 661
@@ -2127,6 +2139,7 @@
 #define TS_FILE_VERSION 20200310
 #define TS_OUTPUT_SIZE 240
 #define ts_show_analog_divider true
+#define ts_show_auxserial_pins true
 #define ts_show_can_pins true
 #define ts_show_cj125 true
 #define ts_show_egt true
@@ -2152,8 +2165,6 @@
 #define uartConsoleSerialSpeed_offset_hex 81c
 #define unused1059_offset 3964
 #define unused1059_offset_hex f7c
-#define unused1234234_offset 2042
-#define unused1234234_offset_hex 7fa
 #define unused2432_offset 2432
 #define unused2432_offset_hex 980
 #define unused_1484_bit_24_offset 1476
@@ -2172,8 +2183,8 @@
 #define unused_1484_bit_30_offset_hex 5c4
 #define unused_1484_bit_31_offset 1476
 #define unused_1484_bit_31_offset_hex 5c4
-#define unused_former_warmup_target_afr_offset 2096
-#define unused_former_warmup_target_afr_offset_hex 830
+#define unused_former_warmup_target_afr_offset 2100
+#define unused_former_warmup_target_afr_offset_hex 834
 #define unusedAntilagTimeout_offset 820
 #define unusedAntilagTimeout_offset_hex 334
 #define unusedAtOldBoardConfigurationEnd_offset 1088
@@ -2220,10 +2231,6 @@
 #define unusedBit_251_28_offset_hex 3d0
 #define unusedBit_251_29_offset 976
 #define unusedBit_251_29_offset_hex 3d0
-#define unusedBit_251_7_offset 976
-#define unusedBit_251_7_offset_hex 3d0
-#define unusedBit_251_8_offset 976
-#define unusedBit_251_8_offset_hex 3d0
 #define unusedBit_251_9_offset 976
 #define unusedBit_251_9_offset_hex 3d0
 #define unusedBit_282_30_offset 976
@@ -2232,8 +2239,6 @@
 #define unusedBit_282_31_offset_hex 3d0
 #define unusedBit_34_31_offset 76
 #define unusedBit_34_31_offset_hex 4c
-#define unusedErrorPin_offset 2040
-#define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedHere_offset 761

@@ -597,6 +597,11 @@ typedef enum __attribute__ ((__packed__)) {
 } spi_device_e;
 
 typedef enum {
+	VVS_OOPS = 2,
+	Force_4_bytes_size_can_vss_nbc_e = ENUM_32_BITS,
+} can_vss_nbc_e;
+
+typedef enum {
 	MS_AUTO = 0,
 	MS_ALWAYS = 1,
 	MS_NEVER = 2,

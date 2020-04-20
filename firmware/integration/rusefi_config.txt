@@ -799,8 +799,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit enableLaunchRetard
 	bit enableLaunchBoost
 	bit launchDisableBySpeed
+	bit enableCanVss
 	bit enableInnovateLC2
-	bit unusedBit_251_8
 	bit unusedBit_251_9
 	bit unusedBit_251_10
 	bit unusedBit_251_11
@@ -1240,7 +1240,10 @@ uint8_t[4] unusuedsw;
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load",   1,   0.0,        0,  500.0,   2
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultRpmBins;;"RPM",        @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0	
 
-	int[465] mainUnusedEnd;
+ 	custom can_vss_nbc_e 4 bits, U32, @OFFSET@, [0:7], "BMW_e46", "W202"
+	can_vss_nbc_e canVssNbcType;set can_vss X
+	
+	int[464] mainUnusedEnd;
 
 ! end of engine_configuration_s
 end_struct
