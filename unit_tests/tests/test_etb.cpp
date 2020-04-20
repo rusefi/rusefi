@@ -33,6 +33,14 @@ public:
 	MOCK_METHOD(void, setOutput, (expected<percent_t> outputValue), (override));
 };
 
+class MockMotor : public DcMotor {
+public:
+	MOCK_METHOD(bool, set, (float duty), (override));
+	MOCK_METHOD(float, get, (), (const, override));
+	MOCK_METHOD(void, enable, (), (override));
+	MOCK_METHOD(void, disable, (), (override));
+	MOCK_METHOD(bool, isOpenDirection, (), (const, override));
+};
 
 TEST(etb, initializationNoPedal) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
@@ -127,6 +135,12 @@ TEST(etb, testSetpointOnlyPedal) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 51.6605f);
 	EXPECT_NEAR(51.6605, etb.getSetpoint().value_or(-1), EPS4D);
 
+	// Valid but out of range - should clamp to [0, 100]
+	Sensor::setMockValue(SensorType::AcceleratorPedal, -5);
+	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 105);
+	EXPECT_EQ(100, etb.getSetpoint().value_or(-1));
+
 	// Test invalid pedal position - should give unexpected
 	Sensor::resetMockValue(SensorType::AcceleratorPedal);
 	EXPECT_EQ(etb.getSetpoint(), unexpected);
@@ -150,4 +164,72 @@ TEST(etb, etbTpsSensor) {
 		etb.init(nullptr, 1, nullptr);
 		EXPECT_EQ(etb.observePlant().Value, 75.0f);
 	}
+}
+
+TEST(etb, setOutputInvalid) {
+	StrictMock<MockMotor> motor;
+
+	EtbController etb;
+	etb.init(&motor, 0, nullptr);
+
+	// Should be disabled in case of unexpected
+	EXPECT_CALL(motor, disable());
+
+	etb.setOutput(unexpected);
+}
+
+TEST(etb, setOutputValid) {
+	StrictMock<MockMotor> motor;
+
+	EtbController etb;
+	etb.init(&motor, 0, nullptr);
+
+	// Should be enabled and value set
+	EXPECT_CALL(motor, enable());
+	EXPECT_CALL(motor, set(0.25f))
+		.WillOnce(Return(false));
+
+	etb.setOutput(25.0f);
+}
+
+TEST(etb, setOutputValid2) {
+	StrictMock<MockMotor> motor;
+
+	EtbController etb;
+	etb.init(&motor, 0, nullptr);
+
+	// Should be enabled and value set
+	EXPECT_CALL(motor, enable());
+	EXPECT_CALL(motor, set(-0.25f))
+		.WillOnce(Return(false));
+
+	etb.setOutput(-25.0f);
+}
+
+TEST(etb, setOutputOutOfRangeHigh) {
+	StrictMock<MockMotor> motor;
+
+	EtbController etb;
+	etb.init(&motor, 0, nullptr);
+
+	// Should be enabled and value set
+	EXPECT_CALL(motor, enable());
+	EXPECT_CALL(motor, set(0.90f));
+
+	// Off scale - should get clamped to 90%
+	etb.setOutput(110);
+}
+
+TEST(etb, setOutputOutOfRangeLow) {
+	StrictMock<MockMotor> motor;
+
+	EtbController etb;
+	etb.init(&motor, 0, nullptr);
+
+	// Should be enabled and value set
+	EXPECT_CALL(motor, enable());
+	EXPECT_CALL(motor, set(-0.90f));
+
+	// Off scale - should get clamped to -90%
+	etb.setOutput(-110);
 }

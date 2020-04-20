@@ -110,7 +110,7 @@ static percent_t currentEtbDuty;
 
 #define ETB_DUTY_LIMIT 0.9
 // this macro clamps both positive and negative percentages from about -100% to 100%
-#define ETB_PERCENT_TO_DUTY(X) (maxF(minF((X * 0.01), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
+#define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
 
 void EtbController::init(DcMotor *motor, int ownIndex, pid_s *pidParameters) {
 	m_motor = motor;
@@ -155,8 +155,10 @@ expected<percent_t> EtbController::getSetpoint() const {
 		return unexpected;
 	}
 
+	float sanitizedPedal = clampF(0, pedalPosition.Value, 100);
+	
 	float rpm = GET_RPM();
-	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition.Value);
+	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
 	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
 
 	float target = engine->engineState.targetFromTable + etbIdleAddition;
