@@ -112,10 +112,11 @@ static percent_t currentEtbDuty;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
 
-void EtbController::init(DcMotor *motor, int ownIndex, pid_s *pidParameters) {
+void EtbController::init(DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) {
 	m_motor = motor;
 	m_myIndex = ownIndex;
 	m_pid.initPidClass(pidParameters);
+	m_pedalMap = pedalMap;
 }
 
 void EtbController::reset() {
@@ -150,6 +151,11 @@ expected<percent_t> EtbController::getSetpoint() const {
 		return unexpected;
 	}
 
+	// If the pedal map hasn't been set, we can't provide a setpoint.
+	if (!m_pedalMap) {
+		return unexpected;
+	}
+
 	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
 	if (!pedalPosition.Valid) {
 		return unexpected;
@@ -158,7 +164,7 @@ expected<percent_t> EtbController::getSetpoint() const {
 	float sanitizedPedal = clampF(0, pedalPosition.Value, 100);
 	
 	float rpm = GET_RPM();
-	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
+	engine->engineState.targetFromTable = m_pedalMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
 	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
 
 	float target = engine->engineState.targetFromTable + etbIdleAddition;
@@ -572,6 +578,8 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
+	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
+
 	engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
@@ -580,12 +588,10 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// If this motor is actually set up, init the etb
 		if (motor)
 		{
-			engine->etbControllers[i]->init(motor, i, &engineConfiguration->etb);
+			engine->etbControllers[i]->init(motor, i, &engineConfiguration->etb, &pedal2tpsMap);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 		}
 	}
-
-	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
 #if 0 && ! EFI_UNIT_TEST
 	percent_t startupThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
