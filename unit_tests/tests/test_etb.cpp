@@ -38,6 +38,7 @@ public:
 	MOCK_METHOD(bool, set, (float duty), (override));
 	MOCK_METHOD(float, get, (), (const, override));
 	MOCK_METHOD(void, enable, (), (override));
+	MOCK_METHOD(void, disable, (), (override));
 	MOCK_METHOD(bool, isOpenDirection, (), (const, override));
 };
 
@@ -137,7 +138,6 @@ TEST(etb, testSetpointOnlyPedal) {
 	// Valid but out of range - should clamp to [0, 100]
 	Sensor::setMockValue(SensorType::AcceleratorPedal, -5);
 	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
-
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 105);
 	EXPECT_EQ(100, etb.getSetpoint().value_or(-1));
 
