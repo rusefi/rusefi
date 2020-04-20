@@ -19,14 +19,14 @@
 class DcMotor;
 class Logging;
 
-class IEtbController : public PeriodicTimerController {
+class IEtbController : public PeriodicTimerController, public ClosedLoopController<percent_t, percent_t> {
 public:
 	DECLARE_ENGINE_PTR;
 	virtual void init(DcMotor *motor, int ownIndex, pid_s *pidParameters) = 0;
 	virtual void reset() = 0;
 };
 
-class EtbController final : public IEtbController, protected ClosedLoopController<percent_t, percent_t> {
+class EtbController final : public IEtbController {
 public:
 	void init(DcMotor *motor, int ownIndex, pid_s *pidParameters) override;
 
