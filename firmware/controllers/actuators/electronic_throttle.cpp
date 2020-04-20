@@ -106,6 +106,7 @@ static SensorType indexToTpsSensor(size_t index) {
 }
 
 static percent_t directPwmValue = NAN;
+static percent_t currentEtbDuty;
 
 #define ETB_DUTY_LIMIT 0.9
 // this macro clamps both positive and negative percentages from about -100% to 100%
