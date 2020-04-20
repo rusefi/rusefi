@@ -200,13 +200,16 @@ void setIdleValvePosition(int positionPercent) {
 
 #endif /* EFI_UNIT_TEST */
 
+/**
+ * clamps value into the [0, 100] range
+ */
+percent_t clampPercentValue(percent_t value) {
+	return maxF(minF(value, 100), 0);
+}
+
 static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	percent_t correctedPosition = cltCorrection * CONFIG(manIdlePosition);
-
-	// let's put the value into the right range
-	correctedPosition = maxF(correctedPosition, 0.01);
-	correctedPosition = minF(correctedPosition, 99.9);
 
 	return correctedPosition;
 }
@@ -425,7 +428,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 			engine->engineState.idle.idleState = BLIP;
 		} else if (!isRunning) {
 			// during cranking it's always manual mode, PID would make no sense during cranking
-			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
+			iacPosition = clampPercentValue(cltCorrection * engineConfiguration->crankingIACposition);
 			// save cranking position & cycles counter for taper transition
 			lastCrankingIacPosition = iacPosition;
 			lastCrankingCyclesCounter = engine->rpmCalculator.getRevolutionCounterSinceStart();
@@ -438,6 +441,8 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 				iacPosition = automaticIdleController(tps.Value PASS_ENGINE_PARAMETER_SUFFIX);
 			}
 			
+			iacPosition = clampPercentValue(iacPosition);
+
 			// store 'base' iacPosition without adjustments
 			engine->engineState.idle.baseIdlePosition = iacPosition;
 
