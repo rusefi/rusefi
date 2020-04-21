@@ -320,6 +320,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 		// todo: use tooth event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
 			angle_t tdcPosition = tdcPosition();
+			// we need a positive angle offset here
 			fixAngle(tdcPosition, "tdcPosition", CUSTOM_ERR_6553);
 			scheduleByAngle(&tdcScheduler[revIndex2], edgeTimestamp, tdcPosition,
 					{ onTdcCallback, engine } PASS_ENGINE_PARAMETER_SUFFIX);
