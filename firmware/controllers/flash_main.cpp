@@ -66,8 +66,64 @@ void writeToFlashIfPending() {
 template <typename TStorage>
 int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
 {
+#if (HAL_USE_FLASH == TRUE)
+	flash_error_t ferr;
+	const flash_descriptor_t *fdesc;
+	flash_offset_t offset;
+	flash_sector_t sector;
+
+	/* Base Flash should be argument */
+	BaseFlash *bf = getBaseFlash(&EFLD1);
+
+	fdesc = flashGetDescriptor(bf);
+
+	offset = (flash_offset_t)storageAddress;
+	if (fdesc->address) {
+		offset -= (flash_offset_t)fdesc->address;
+	}
+
+	if (fdesc->sectors) {
+		/* device with non-uniform sectors size */
+		for (sector = 0; sector < fdesc->sectors_count; sector++) {
+			if (flashGetSectorOffset(bf, sector) == offset)
+				break;
+		}
+		if (sector == fdesc->sectors_count)
+			return FLASH_RETURN_NO_PERMISSION;
+	} else if (fdesc->sectors_size) {
+		/* device with uniform sector size */
+		sector = offset / fdesc->sectors_size;
+		/* check if aligned */
+		if ((sector * fdesc->sectors_size) != offset)
+			return FLASH_RETURN_NO_PERMISSION;
+	} else {
+		return FLASH_RETURN_BAD_FLASH;
+	}
+
+	if (flashGetSectorSize(bf, sector) < sizeof(data)) {
+		return FLASH_RETURN_BAD_FLASH;
+	}
+
+	ferr = flashStartEraseSector(bf, sector);
+	if (ferr != FLASH_NO_ERROR) {
+		return FLASH_RETURN_BAD_FLASH;
+	}
+
+	ferr = flashWaitErase(bf);
+	if (ferr != FLASH_NO_ERROR) {
+		return FLASH_RETURN_BAD_FLASH;
+	}
+
+	ferr = flashProgram(bf, offset, sizeof(data),  reinterpret_cast<const uint8_t*>(&data));
+	if (ferr != FLASH_NO_ERROR) {
+		return FLASH_RETURN_BAD_FLASH;
+	}
+
+	return FLASH_RETURN_SUCCESS;
+#else
 	intFlashErase(storageAddress, sizeof(TStorage));
 	return intFlashWrite(storageAddress, reinterpret_cast<const char*>(&data), sizeof(TStorage));
+#endif
 }
 
 void writeToFlashNow(void) {
@@ -111,7 +167,20 @@ persisted_configuration_state_e flashState;
 
 static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, Logging * logger) {
 	printMsg(logger, "readFromFlash %x", address);
+#if (HAL_USE_FLASH == TRUE)
+	/* Base Flash should be argument */
+	BaseFlash *bf = getBaseFlash(&EFLD1);
+	const flash_descriptor_t *fdesc = flashGetDescriptor(bf);
+	flash_offset_t offset = (flash_offset_t)address;
+
+	if (fdesc->address) {
+		offset -= (flash_offset_t)fdesc->address;
+	}
+
+	(void)flashRead(bf, offset, sizeof(persistentState), (uint8_t *)&persistentState);
+#else
 	intFlashRead(address, (char *) &persistentState, sizeof(persistentState));
+#endif
 
 	if (!isValidCrc(&persistentState)) {
 		return CRC_FAILED;

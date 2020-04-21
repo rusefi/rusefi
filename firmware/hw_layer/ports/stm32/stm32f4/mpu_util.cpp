@@ -85,6 +85,12 @@ void baseMCUInit(void) {
      * BOR (Brown Out Reset) is a way to reset microcontroller if target voltage is below voltage we set. When this happens, MCU is in reset state until voltage comes above selected voltage.
      */
 	BOR_Set(BOR_Level_1); // one step above default value
+
+#if (HAL_USE_FLASH == TRUE)
+#if (HAL_USE_EFL == TRUE)
+	eflStart(&EFLD1, NULL);
+#endif
+#endif
 }
 
 void _unhandled_exception(void) {
