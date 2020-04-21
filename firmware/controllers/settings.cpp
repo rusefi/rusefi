@@ -32,7 +32,6 @@
 #include "vehicle_speed.h"
 #include "rtc_helper.h"
 #include "can_hw.h"
-#include "can_vss.h"
 #include "rusefi.h"
 #include "pin_repository.h"
 #include "hardware.h"
