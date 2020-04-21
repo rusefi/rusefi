@@ -11,7 +11,6 @@
 #if EFI_CAN_SUPPORT
 #include "engine_configuration.h"
 #include "engine.h"
-#include "can.h"
 #include "vehicle_speed.h"
 
 EXTERN_ENGINE;
@@ -44,6 +43,8 @@ void processBMW_e46(const CANRxFrame& frame) {
 }
 
 void processW202(const CANRxFrame& frame) {
+
+    (void)frame;
 }
 
 /* End of specific processing functions */

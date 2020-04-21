@@ -92,11 +92,6 @@ void initVehicleSpeed(Logging *l) {
 #else  /* EFI_VEHICLE_SPEED */
 
 float getVehicleSpeed(void) {
-#if EFI_CAN_SUPPORT
-	if ( CONFIG(enableCanVss) == true ) {
-		return getVehicleCanSpeed();
-	}
-#endif		
 	
 	// no VSS support
 	return 0;	

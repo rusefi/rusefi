@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "can.h"
 
 float getVehicleCanSpeed(void);
 void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt);
