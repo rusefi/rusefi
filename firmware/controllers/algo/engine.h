@@ -54,7 +54,7 @@ public:
 	explicit Engine(persistent_config_s *config);
 	Engine();
 
-	IEtbController *etbControllers[ETB_COUNT];
+	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 
 	cyclic_buffer<int> triggerErrorDetection;
 
