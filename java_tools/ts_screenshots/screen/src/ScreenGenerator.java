@@ -11,8 +11,8 @@ import java.util.ArrayList;
 public class ScreenGenerator {
     public static final String TS_DIALOG = "com.efiAnalytics.ui.dg";
     public static final String PNG = "png";
+    private static final int MENU_CLICK_DELAY = 200;
     private static ArrayList<AbstractButton> topLevelButtons = new ArrayList<>();
-
 
     private static final String DESTINATION = "images" + File.separator;
 
@@ -94,7 +94,7 @@ public class ScreenGenerator {
             ImageIO.write(
                     getScreenShot(frame),
                     "png",
-                    new File(DESTINATION + topLevel.getText() + ".png"));
+                    new File(DESTINATION + cleanName(topLevel.getText()) + ".png"));
 
             printAllDialogs("dialogs after clicking ", JDialog.getWindows());
             java.util.List<JMenuItem> menuItems = new ArrayList<>();
@@ -117,23 +117,26 @@ public class ScreenGenerator {
                         try {
 
                             m.doClick();
-                            Thread.sleep(500);
+                            Thread.sleep(MENU_CLICK_DELAY);
 
                             JDialog d = findDialog();
+                            if (d == null) {
+                                // this happens for example for disabled menu items
+                                return;
+                            }
 
-                            Robot robot = new Robot();
-                            Rectangle captureRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-                            BufferedImage screenFullImage = robot.createScreenCapture(captureRect);
-                            ImageIO.write(screenFullImage, PNG, new File(DESTINATION + "full_" + d.getTitle() + ".png"));
+//                            Robot robot = new Robot();
+//                            Rectangle captureRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+//                            BufferedImage screenFullImage = robot.createScreenCapture(captureRect);
+//                            ImageIO.write(screenFullImage, PNG, new File(DESTINATION + "full_" + d.getTitle() + ".png"));
 
                             ImageIO.write(
                                     getScreenShot(d),
                                     PNG,
-                                    new File(DESTINATION + d.getTitle() + ".png"));
-                            Thread.sleep(100);
+                                    new File(DESTINATION + cleanName(d.getTitle()) + ".png"));
                             d.setVisible(false);
                             d.dispose();
-                        } catch (IOException | InterruptedException | AWTException e) {
+                        } catch (Exception e) {
                             throw new IllegalStateException(e);
                         }
                     }
@@ -147,13 +150,23 @@ public class ScreenGenerator {
         }
     }
 
+    private static String cleanName(String title) {
+        title = title.replace(' ', '_');
+        title = title.replace(")", "");
+        title = title.replace("(", "");
+        title = title.replace('/', '_');
+        title = title.replace('\\', '_');
+        title = title.replace("  ", " ");
+        return title;
+    }
+
     private static JDialog findDialog() {
         for (Window d : Dialog.getWindows()) {
             if (d.getClass().getName().equals(TS_DIALOG) && d.isVisible()) {
                 return (JDialog) d;
             }
         }
-        throw new IllegalStateException("Not found");
+        return null;
     }
 
     private static void printAllDialogs(String message, Window[] windows) {
