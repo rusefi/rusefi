@@ -9,5 +9,5 @@
 
 float getVehicleCanSpeed(void);
 void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt);
-void initCanVssSupport(Logging *l);
+void initCanVssSupport(Logging *logger_ptr);
 void setCanVss(int type);

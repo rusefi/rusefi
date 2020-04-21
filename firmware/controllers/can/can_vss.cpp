@@ -55,7 +55,7 @@ void canVssInfo(void) {
 }
 
 void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
-    if (( CONFIG(enableCanVss) == false ) || (isInit == false )) {
+    if ((CONFIG(enableCanVss)) || (!isInit)) {
         return;
     }
 
@@ -65,7 +65,7 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
     }
 
     frameTime = nowNt;
-    switch ( CONFIG(canVssNbcType) ){
+    switch (CONFIG(canVssNbcType)){
         case BMW_e46:
             processBMW_e46(frame);
             break;
@@ -83,17 +83,17 @@ float getVehicleCanSpeed(void) {
 
     efitick_t nowNt = getTimeNowNt();
 
-    if ( (nowNt - frameTime ) > NT_PER_SECOND ) {
+    if ((nowNt - frameTime ) > NT_PER_SECOND) {
         return 0; /* can timeout? */
     } else {
         return vssSpeed;
     }
 }
 
-void initCanVssSupport(Logging *l) {
+void initCanVssSupport(Logging *logger_ptr) {
 
-    if( CONFIG(enableCanVss) == true ) {
-        logger = l;
+    if (CONFIG(enableCanVss)) {
+        logger = logger_ptr;
         isInit = true;
         filterCanID = look_up_can_id(CONFIG(canVssNbcType));
     }

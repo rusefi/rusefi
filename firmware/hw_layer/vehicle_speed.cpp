@@ -38,7 +38,7 @@ float getVehicleSpeed(void) {
 	if ( CONFIG(enableCanVss) == true ) {
 		return getVehicleCanSpeed();
 	}
-#endif		
+#endif	/* EFI_CAN_SUPPORT */	
 	if (!hasVehicleSpeedSensor())
 		return 0;
 	efitick_t nowNt = getTimeNowNt();
