@@ -15,6 +15,7 @@
 #include "obd2.h"
 #include "engine.h"
 #include "can_sensor.h"
+#include "can_vss.h"
 
 EXTERN_ENGINE;
 
@@ -50,6 +51,9 @@ void processCanRxMessage(const CANRxFrame& frame, Logging* logger, efitick_t now
 	}
 
 	serviceCanSubscribers(frame, nowNt);
+
+	//Vss is configurable, should we handle it here:
+	processCanRxVss(frame, nowNt);
 
 	// TODO: if/when we support multiple lambda sensors, sensor N
 	// has address 0x0180 + N where N = [0, 15]
