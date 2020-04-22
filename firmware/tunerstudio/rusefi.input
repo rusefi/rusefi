@@ -2798,7 +2798,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		commandButton = "Injector #8", cmd_test_inj8
 		
 	dialog = testMisc, "Misc"
-		commandButton = "Come To Pit", cmd_call_from_pit
+;		commandButton = "Come To Pit", cmd_call_from_pit
 		commandButton = "Fuel Pump", cmd_test_fuel_pump
 		commandButton = "Radiator Fan", cmd_test_radiator_fan
 		commandButton = "Check Engine", cmd_test_check_engine_light
