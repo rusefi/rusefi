@@ -33,7 +33,7 @@ public:
 	expected<float> getSetpoint() const override;
 
 	expected<percent_t> getOpenLoop(float target) const override;
-	expected<percent_t> getClosedLoop(float setpoint, float target) override;
+	expected<percent_t> getClosedLoop(float target, float manifoldPressure) override;
 
 	void setOutput(expected<percent_t> outputValue) override;
 
