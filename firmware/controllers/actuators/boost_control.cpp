@@ -124,7 +124,7 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 	}
 
 	// If the engine isn't running, don't correct.
-	if (ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (GET_RPM() == 0) {
 		m_pid.reset();
 		return 0;
 	}
@@ -142,11 +142,11 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 }
 
 void BoostController::setOutput(expected<float> output) {
-	if (output) {
-		boostPwmControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(output.Value));
-	} else {
-		// TODO: hook up safe duty cycle
-		//boostPwmControl.setSimplePwmDutyCycle(CONFIG(boostControlSafeDutyCycle));
+	// TODO: hook up safe duty cycle
+	float duty = PERCENT_TO_DUTY(output.value_or(/*CONFIG(boostControlSafeDutyCycle)*/ 0));
+	
+	if (m_pwm) {
+		m_pwm->setSimplePwmDutyCycle(duty);
 	}
 }
 
