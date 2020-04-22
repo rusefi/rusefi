@@ -68,7 +68,7 @@ TEST(BoostControl, OpenLoop) {
 
 	// Should pass MAP value thru
 	engine->mockMapValue = 47.0f;
-	EXPECT_FLOAT_EQ(bc.getOpenLoop(0), 47.0f);
+	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), 47.0f);
 }
 
 TEST(BoostControl, ClosedLoopZeroRpm) {
@@ -99,4 +99,8 @@ TEST(BoostControl, ClosedLoopZeroRpm) {
 	EXPECT_FLOAT_EQ(50, bc.getClosedLoop(150, 100).value_or(-1000));
 	// Actual is above target -> negative output
 	EXPECT_FLOAT_EQ(-25.0f, bc.getClosedLoop(150, 175).value_or(-1000));
+
+	// Disabling closed loop should return 0
+	CONFIG(boostType) = OPEN_LOOP;
+	EXPECT_FLOAT_EQ(0, bc.getClosedLoop(150, 175).value_or(-1000));
 }
