@@ -40,6 +40,7 @@
 #include "periodic_task.h"
 #include "allsensors.h"
 #include "sensor.h"
+#include "electronic_throttle.h"
 
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
@@ -154,7 +155,14 @@ static void applyIACposition(percent_t position) {
 	float duty = PERCENT_TO_DUTY(position);
 
 	if (CONFIG(useETBforIdleControl)) {
-		engine->engineState.idle.etbIdleAddition = duty * CONFIG(etbIdleThrottleRange);
+		if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
+			firmwareError(CUSTOM_NO_ETB_FOR_IDLE, "No ETB to use for idle");
+			return;
+		}
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+		setEtbIdlePosition(position);
+#endif
 #if ! EFI_UNIT_TEST
 	} if (CONFIG(useStepperIdle)) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
@@ -196,10 +204,6 @@ void setIdleValvePosition(int positionPercent) {
 static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	percent_t correctedPosition = cltCorrection * CONFIG(manIdlePosition);
-
-	// let's put the value into the right range
-	correctedPosition = maxF(correctedPosition, 0.01);
-	correctedPosition = minF(correctedPosition, 99.9);
 
 	return correctedPosition;
 }
@@ -418,7 +422,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 			engine->engineState.idle.idleState = BLIP;
 		} else if (!isRunning) {
 			// during cranking it's always manual mode, PID would make no sense during cranking
-			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
+			iacPosition = clampPercentValue(cltCorrection * engineConfiguration->crankingIACposition);
 			// save cranking position & cycles counter for taper transition
 			lastCrankingIacPosition = iacPosition;
 			lastCrankingCyclesCounter = engine->rpmCalculator.getRevolutionCounterSinceStart();
@@ -431,6 +435,8 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 				iacPosition = automaticIdleController(tps.Value PASS_ENGINE_PARAMETER_SUFFIX);
 			}
 			
+			iacPosition = clampPercentValue(iacPosition);
+
 			// store 'base' iacPosition without adjustments
 			engine->engineState.idle.baseIdlePosition = iacPosition;
 

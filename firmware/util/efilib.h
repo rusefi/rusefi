@@ -61,6 +61,12 @@ float maxF(float i1, float i2);
 float minF(float i1, float i2);
 char* itoa10(char *p, int num);
 bool isSameF(float v1, float v2);
+float clampF(float min, float clamp, float max);
+
+/**
+ * clamps value into the [0, 100] range
+ */
+#define clampPercentValue(x) (clampF(0, x, 100))
 
 bool strEqualCaseInsensitive(const char *str1, const char *str2);
 bool strEqual(const char *str1, const char *str2);

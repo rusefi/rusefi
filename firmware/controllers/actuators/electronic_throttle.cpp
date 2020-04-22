@@ -110,12 +110,13 @@ static percent_t currentEtbDuty;
 
 #define ETB_DUTY_LIMIT 0.9
 // this macro clamps both positive and negative percentages from about -100% to 100%
-#define ETB_PERCENT_TO_DUTY(X) (maxF(minF((X * 0.01), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
+#define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
 
-void EtbController::init(DcMotor *motor, int ownIndex, pid_s *pidParameters) {
+void EtbController::init(DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) {
 	m_motor = motor;
 	m_myIndex = ownIndex;
 	m_pid.initPidClass(pidParameters);
+	m_pedalMap = pedalMap;
 }
 
 void EtbController::reset() {
@@ -140,6 +141,10 @@ expected<percent_t> EtbController::observePlant() const {
 	return Sensor::get(indexToTpsSensor(m_myIndex));
 }
 
+void EtbController::setIdlePosition(percent_t pos) {
+	m_idlePosition = pos;
+}
+
 expected<percent_t> EtbController::getSetpoint() const {
 	// A few extra preconditions if throttle control is invalid
 	if (startupPositionError) {
@@ -150,24 +155,42 @@ expected<percent_t> EtbController::getSetpoint() const {
 		return unexpected;
 	}
 
+	// If the pedal map hasn't been set, we can't provide a setpoint.
+	if (!m_pedalMap) {
+		return unexpected;
+	}
+
 	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
 	if (!pedalPosition.Valid) {
 		return unexpected;
 	}
 
+	float sanitizedPedal = clampF(0, pedalPosition.Value, 100);
+	
 	float rpm = GET_RPM();
-	engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition.Value);
-	percent_t etbIdleAddition = CONFIG(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
+	float targetFromTable = m_pedalMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
+	engine->engineState.targetFromTable = targetFromTable;
 
-	float target = engine->engineState.targetFromTable + etbIdleAddition;
+	percent_t etbIdlePosition = clampF(
+									0,
+									CONFIG(useETBforIdleControl) ? m_idlePosition : 0,
+									100
+								);
+	percent_t etbIdleAddition = 0.01f * CONFIG(etbIdleThrottleRange) * etbIdlePosition;
+
+	// Interpolate so that the idle adder just "compresses" the throttle's range upward.
+	// [0, 100] -> [idle, 100]
+	// 0% target from table -> idle position as target
+	// 100% target from table -> 100% target position
+	percent_t targetPosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
 
 #if EFI_TUNER_STUDIO
 	if (m_myIndex == 0) {
-		tsOutputChannels.etbTarget = target;
+		tsOutputChannels.etbTarget = targetPosition;
 	}
 #endif
 
-	return target;
+	return targetPosition;
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
@@ -570,6 +593,8 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
+	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
+
 	engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
@@ -578,12 +603,10 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// If this motor is actually set up, init the etb
 		if (motor)
 		{
-			engine->etbControllers[i]->init(motor, i, &engineConfiguration->etb);
+			engine->etbControllers[i]->init(motor, i, &engineConfiguration->etb, &pedal2tpsMap);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 		}
 	}
-
-	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
 #if 0 && ! EFI_UNIT_TEST
 	percent_t startupThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -634,6 +657,16 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	for (int i = 0; i < ETB_COUNT; i++) {
+		auto etb = engine->etbControllers[i];
+
+		if (etb) {
+			etb->setIdlePosition(pos);
+		}
+	}
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
