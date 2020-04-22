@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 19 21:16:42 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed Apr 22 14:29:10 PDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -3048,8 +3048,8 @@ struct engine_configuration_s {
 	/**
 	 * offset 4144
 	 */
-	int mainUnusedEnd[464];
-	/** total size 6000*/
+	int mainUnusedEnd[494];
+	/** total size 6120*/
 };
 
 typedef struct engine_configuration_s engine_configuration_s;
@@ -3060,10 +3060,6 @@ struct persistent_config_s {
 	 * offset 0
 	 */
 	engine_configuration_s engineConfiguration;
-	/**
-	 * offset 6000
-	 */
-	error_message_t warning_message;
 	/**
 	 * offset 6120
 	 */
@@ -3351,4 +3347,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 19 21:16:42 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed Apr 22 14:29:10 PDT 2020
