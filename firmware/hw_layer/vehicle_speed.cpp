@@ -35,7 +35,7 @@ float getVehicleSpeed(void) {
 	if (mockVehicleSpeed != DEFAULT_MOCK_SPEED)
 		return mockVehicleSpeed;
 #if EFI_CAN_SUPPORT
-	if ( CONFIG(enableCanVss) == true ) {
+	if (CONFIG(enableCanVss)) {
 		return getVehicleCanSpeed();
 	}
 #endif	/* EFI_CAN_SUPPORT */	
