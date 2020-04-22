@@ -12,7 +12,7 @@ TEST(BoostControl, Setpoint) {
 
 	// Just pass TPS input to output
 	EXPECT_CALL(targetMap, getValue(_, _))
-		.WillRepeatedly([](float xRpm, float y) { return y; });
+		.WillRepeatedly([](float xRpm, float tps) { return tps; });
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
@@ -52,8 +52,9 @@ TEST(BoostControl, ObservePlant) {
 TEST(BoostControl, OpenLoop) {
 	MockVp3d openMap;
 
-	EXPECT_CALL(openMap, getValue(_, _))
-		.WillRepeatedly(Return(125.0f));
+	// Just pass MAP input to output
+	EXPECT_CALL(targetMap, getValue(_, _))
+		.WillRepeatedly([](float xRpm, float map) { return map; });
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
@@ -64,4 +65,8 @@ TEST(BoostControl, OpenLoop) {
 	EXPECT_EQ(bc.getOpenLoop(0), unexpected);
 
 	bc.init(nullptr, &openMap, nullptr, nullptr);
+
+	// Should pass MAP value thru
+	engine->mockMapValue = 47.0f;
+	EXPECT_FLOAT_EQ(bc.getOpenLoop(0), 47.0f);
 }
