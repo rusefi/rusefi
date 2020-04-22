@@ -456,9 +456,6 @@ fileVersion = { @@TS_FILE_VERSION@@ }
      requiresPowerCycle = fsioAdc2
      requiresPowerCycle = fsioAdc3
      requiresPowerCycle = fsioAdc4
-     
-     readOnly = warning_message
-
 
 [CurveEditor]
 ;	xAxis       =  leftValue, rightValue, step
@@ -2480,7 +2477,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = debugging, "Debug"
 		field = "!https://rusefi.com/s/debugmode"
 		field = "Debug mode",							debugMode
-		field = "Warning Text",						warning_message
 
 	
 	dialog = limits, "Limits"

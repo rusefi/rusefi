@@ -107,14 +107,6 @@ static void printWarning(const char *fmt, va_list ap) {
 
 	printToStream(&warningStream, fmt, ap);
 
-#if EFI_TUNER_STUDIO
- #if defined(EFI_NO_CONFIG_WORKING_COPY)
-  memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
- #else /* defined(EFI_NO_CONFIG_WORKING_COPY) */
-  memcpy(configWorkingCopy.warning_message, warningBuffer, sizeof(warningBuffer));
- #endif /* defined(EFI_NO_CONFIG_WORKING_COPY) */
-#endif /* EFI_TUNER_STUDIO */
-
 	logger.append(warningBuffer);
 	append(&logger, DELIMETER);
 	scheduleLogging(&logger);

@@ -1243,14 +1243,12 @@ uint8_t[4] unusuedsw;
  	custom can_vss_nbc_e 4 bits, U32, @OFFSET@, [0:7], "BMW_e46", "W202"
 	can_vss_nbc_e canVssNbcType;set can_vss X
 	
-	int[464] mainUnusedEnd;
+	int[494] mainUnusedEnd;
 
 ! end of engine_configuration_s
 end_struct
 
 engine_configuration_s engineConfiguration;
-
-error_message_t warning_message;
 
 float[AFTERSTART_HOLD_CURVE_SIZE] afterstartCoolantBins;;"C",           1,     0, -100.0,  250.0,   0
 float[AFTERSTART_HOLD_CURVE_SIZE] afterstartHoldTime;;"Seconds",        1,     0,      0,    100,   1
