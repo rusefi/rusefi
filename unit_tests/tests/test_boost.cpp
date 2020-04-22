@@ -5,7 +5,7 @@
 #include "mocks.h"
 
 using ::testing::_;
-using ::testing::NiceMock;
+using ::testing::StrictMock;
 
 TEST(BoostControl, Setpoint) {
 	MockVp3d targetMap;
@@ -71,7 +71,7 @@ TEST(BoostControl, OpenLoop) {
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), 47.0f);
 }
 
-TEST(BoostControl, ClosedLoopZeroRpm) {
+TEST(BoostControl, ClosedLoop) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	BoostController bc;
@@ -103,4 +103,19 @@ TEST(BoostControl, ClosedLoopZeroRpm) {
 	// Disabling closed loop should return 0
 	CONFIG(boostType) = OPEN_LOOP;
 	EXPECT_FLOAT_EQ(0, bc.getClosedLoop(150, 175).value_or(-1000));
+}
+
+TEST(BoostControl, SetOutput) {
+	StrictMock<MockPwm> pwm;
+	BoostController bc;
+
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.25f));
+
+	// Don't crash if not init'd (don't deref null ptr m_pwm)
+	EXPECT_NO_THROW(bc.setOutput(25.0f));
+
+	// Init with mock PWM device
+	bc.init(&pwm, nullptr, nullptr, nullptr);
+
+	bc.setOutput(25.0f);
 }
