@@ -1434,6 +1434,7 @@ void copyTimingTable(ignition_table_t const source, ignition_table_t destination
 }
 
 static const ConfigOverrides defaultConfigOverrides{};
+// This symbol is weak so that a board_configuration.cpp file can override it
 __attribute__((weak)) const ConfigOverrides& getConfigOverrides() {
 	return defaultConfigOverrides;
 }
