@@ -730,7 +730,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
        table = boostTableTbl,  boostMapOpen,  "",   1
       xBins       = boostRpmBins,  RPMValue
-      yBins       = boostMapBins,  MAPValue
+      yBins       = boostTpsBins,  TPSValue
       zBins       = boostTableOpenLoop
 
 	table = boostTable2Tbl,  boostMapClosed,  "",   1

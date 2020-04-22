@@ -90,9 +90,9 @@ expected<percent_t> BoostController::getOpenLoop(float target) const {
 	UNUSED(target);
 
 	float rpm = GET_RPM();
-	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
-	if (cisnan(map)) {
+	if (!tps) {
 		return unexpected;
 	}
 
@@ -100,7 +100,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) const {
 		return unexpected;
 	}
 
-	percent_t openLoop = m_openLoopMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, map / LOAD_1_BYTE_PACKING_MULT) * LOAD_1_BYTE_PACKING_MULT;
+	percent_t openLoop = m_openLoopMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, tps.Value / TPS_1_BYTE_PACKING_MULT) * LOAD_1_BYTE_PACKING_MULT;
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_BOOST) {
@@ -172,16 +172,11 @@ void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->boostControlPinMode = OM_DEFAULT;
 
 	setLinearCurve(config->boostRpmBins, 0, 8000 / RPM_1_BYTE_PACKING_MULT, 1);
-	setLinearCurve(config->boostMapBins, 0, 300 / LOAD_1_BYTE_PACKING_MULT, 1);
-	for (int loadIndex = 0;loadIndex<BOOST_LOAD_COUNT;loadIndex++) {
-		for (int rpmIndex = 0;rpmIndex<BOOST_RPM_COUNT;rpmIndex++) {
-			config->boostTableOpenLoop[loadIndex][rpmIndex] = config->boostMapBins[loadIndex];
-		}
-	}
-
 	setLinearCurve(config->boostTpsBins, 0, 100 / TPS_1_BYTE_PACKING_MULT, 1);
-	for (int loadIndex = 0;loadIndex<BOOST_LOAD_COUNT;loadIndex++) {
-		for (int rpmIndex = 0;rpmIndex<BOOST_RPM_COUNT;rpmIndex++) {
+
+	for (int loadIndex = 0; loadIndex < BOOST_LOAD_COUNT; loadIndex++) {
+		for (int rpmIndex = 0; rpmIndex < BOOST_RPM_COUNT; rpmIndex++) {
+			config->boostTableOpenLoop[loadIndex][rpmIndex] = config->boostTpsBins[loadIndex];
 			config->boostTableClosedLoop[loadIndex][rpmIndex] = config->boostTpsBins[loadIndex];
 		}
 	}
@@ -222,11 +217,13 @@ void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 #endif
 
-
 	logger = sharedLogger;
-	boostMapOpen.init(config->boostTableOpenLoop, config->boostMapBins, config->boostRpmBins);
+
+	// Set up open & closed loop tables
+	boostMapOpen.init(config->boostTableOpenLoop, config->boostTpsBins, config->boostRpmBins);
 	boostMapClosed.init(config->boostTableClosedLoop, config->boostTpsBins, config->boostRpmBins);
 
+	// Set up boost controller instance
 	boostController.init(&boostPwmControl, &boostMapOpen, &boostMapClosed, &engineConfiguration->boostPid);
 
 #if !EFI_UNIT_TEST

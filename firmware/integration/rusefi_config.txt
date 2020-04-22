@@ -1259,7 +1259,7 @@ float[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds",      1,     0
 
 
 boost_table_t boostTableOpenLoop;
-uint8_t[BOOST_LOAD_COUNT] boostMapBins;;"",  @@LOAD_1_BYTE_PACKING_MULT@@,   0,        0,  600.0,   1
+uint8_t[8] unused6312;
 uint8_t[BOOST_RPM_COUNT] boostRpmBins;;"RPM",   @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0 
 
 boost_table_t boostTableClosedLoop;
