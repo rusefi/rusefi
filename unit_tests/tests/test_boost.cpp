@@ -53,7 +53,7 @@ TEST(BoostControl, OpenLoop) {
 	MockVp3d openMap;
 
 	// Just pass MAP input to output
-	EXPECT_CALL(targetMap, getValue(_, _))
+	EXPECT_CALL(openMap, getValue(_, _))
 		.WillRepeatedly([](float xRpm, float map) { return map; });
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
