@@ -1269,10 +1269,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"bor", setBor},
 #if EFI_CAN_SUPPORT
 		{"can_mode", setCanType},
-/*
- * TODO: uncomment onse we actually have setCanVss
 		{"can_vss", setCanVss},
-*/
 #endif /* EFI_CAN_SUPPORT */
 #if EFI_IDLE_CONTROL
 		{"idle_position", setIdleValvePosition},

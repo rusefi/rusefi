@@ -12,6 +12,7 @@
 #include "engine.h"
 #include "digital_input_icu.h"
 #include "pin_repository.h"
+#include "can_vss.h"
 
 EXTERN_ENGINE;
 
@@ -33,6 +34,11 @@ void setMockVehicleSpeed(float speedKPH) {
 float getVehicleSpeed(void) {
 	if (mockVehicleSpeed != DEFAULT_MOCK_SPEED)
 		return mockVehicleSpeed;
+#if EFI_CAN_SUPPORT
+	if ( CONFIG(enableCanVss) == true ) {
+		return getVehicleCanSpeed();
+	}
+#endif	/* EFI_CAN_SUPPORT */	
 	if (!hasVehicleSpeedSensor())
 		return 0;
 	efitick_t nowNt = getTimeNowNt();
@@ -86,7 +92,8 @@ void initVehicleSpeed(Logging *l) {
 #else  /* EFI_VEHICLE_SPEED */
 
 float getVehicleSpeed(void) {
+	
 	// no VSS support
-	return 0;
+	return 0;	
 }
 #endif /* EFI_VEHICLE_SPEED */

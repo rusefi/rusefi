@@ -14,6 +14,7 @@
 
 void initCan(void);
 void setCanType(int type);
+void setCanVss(int type);
 
 #if EFI_CAN_SUPPORT
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
