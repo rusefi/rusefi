@@ -70,3 +70,33 @@ TEST(BoostControl, OpenLoop) {
 	engine->mockMapValue = 47.0f;
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0), 47.0f);
 }
+
+TEST(BoostControl, ClosedLoopZeroRpm) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	BoostController bc;
+	INJECT_ENGINE_REFERENCE(&bc);
+
+	pid_s pidCfg = {
+		1, 0, 0,	 // P controller, easier to test
+		0,	// no offset
+		5,	// 5ms period
+		-100, 100 // min/max output
+	};
+
+	bc.init(nullptr, nullptr, nullptr, &pidCfg);
+
+	// Enable closed loop
+	CONFIG(boostType) = CLOSED_LOOP;
+
+	// At 0 RPM, closed loop is disabled
+	ENGINE(rpmCalculator.mockRpm) = 0;
+	EXPECT_EQ(0, bc.getClosedLoop(150, 100).value_or(-1000));
+
+	// With RPM, we should get an output
+	ENGINE(rpmCalculator.mockRpm) = 1000;
+	// Actual is below target -> positive output
+	EXPECT_FLOAT_EQ(50, bc.getClosedLoop(150, 100).value_or(-1000));
+	// Actual is above target -> negative output
+	EXPECT_FLOAT_EQ(-25.0f, bc.getClosedLoop(150, 175).value_or(-1000));
+}
