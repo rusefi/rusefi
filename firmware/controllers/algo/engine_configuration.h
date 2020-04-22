@@ -78,6 +78,11 @@ const ConfigOverrides& getConfigOverrides();
 // If the overide value is default initialized
 // Use the value from config if not overriden
 // Otherwise use the override
+// the == decltype(CONFIG(__x__)){} part means
+// - take the type of the corresponding config field
+// - default construct (ie, 0) an object of the corresponding type
+// - check if the override value matches that (GPIO_UNASSIGNED, SPI_NONE, etc)
+// If it matches, that field hasn't been overridden, so read from the config.
 #define CONFIG_OVERRIDE(__x__) (			\
 	(( getConfigOverrides().__x__ ) == decltype(CONFIG(__x__)){}) \
 	? (CONFIG( __x__ )) : ( getConfigOverrides().__x__ ))
