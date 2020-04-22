@@ -1086,6 +1086,7 @@ typedef enum {
 	//P2155 Fuel Injector Group D Supply Voltage Circ/Open
 	//P2156 Fuel Injector Group D Supply Voltage Circ Low
 	//P2157 Fuel Injector Group D Supply Voltage Circ High
+	OBD_Vehicle_Speed_SensorB = 2158,
 	//P2158 Vehicle Speed SensorB
 	//P2159 Vehicle Speed SensorB Range/Perf
 	//P2160 Vehicle Speed SensorB Circ Low

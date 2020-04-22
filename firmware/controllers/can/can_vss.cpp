@@ -21,12 +21,26 @@ static bool isInit = false;
 static uint16_t filterCanID = 0;
 static efitick_t frameTime;
 static float vssSpeed = 0;
-/* keep 16 bit address since till now we do not have 28bit address request */
-uint32_t canIDs[] = { 0x01F0 /* BMW e46 ABS Message        */,
-                      0x0200 /* W202 C180 ABS signal       */
-                    };
 
-#define look_up_can_id(X)   canIDs[X]
+
+uint16_t look_up_can_id(can_vss_nbc_e type) {
+    
+    uint16_t retCanID;
+    switch (type) {
+        case BMW_e46:
+            retCanID = 0x01F0; /* BMW e46 ABS Message */
+            break;
+        case W202:
+            retCanID = 0x0200; /* W202 C180 ABS signal */
+            break;
+        default:
+            firmwareError(OBD_Vehicle_Speed_SensorB, "Wrong Can DBC selected: %d", type);
+            retCanID = 0xffff;
+            break;
+    }
+    return retCanID;
+}
+
 
 /* Module specitifc processing functions */
 /* source: http://z4evconversion.blogspot.com/2016/07/completely-forgot-but-it-does-live-on.html */
@@ -45,17 +59,24 @@ void processBMW_e46(const CANRxFrame& frame) {
 
 void processW202(const CANRxFrame& frame) {
 
-    (void)frame;
+    uint16_t tmp;
+    
+    tmp = (frame.data8[2] << 8);
+    tmp |= frame.data8[3];
+    vssSpeed = ((float)tmp) * 0.0277;
 }
 
 /* End of specific processing functions */
 
 void canVssInfo(void) {
-    scheduleMsg(logger, "vss using can option selected %x", CONFIG(canVssNbcType) );
+    scheduleMsg(logger, "vss using can option selected %x", CONFIG(canVssNbcType));
+    scheduleMsg(logger, "vss filter for %x canID", filterCanID);
+    scheduleMsg(logger, "Vss module is %d", isInit);
+    scheduleMsg(logger, "CONFIG_enableCanVss is %d", CONFIG(enableCanVss));
 }
 
 void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
-    if ((CONFIG(enableCanVss)) || (!isInit)) {
+    if ((!CONFIG(enableCanVss)) || (!isInit)) {
         return;
     }
 
@@ -92,10 +113,17 @@ float getVehicleCanSpeed(void) {
 
 void initCanVssSupport(Logging *logger_ptr) {
 
+    addConsoleAction("canvssinfo", canVssInfo);
+    logger = logger_ptr;
+
     if (CONFIG(enableCanVss)) {
-        logger = logger_ptr;
+
         isInit = true;
         filterCanID = look_up_can_id(CONFIG(canVssNbcType));
+
+        if (filterCanID == 0xffff) {
+            isInit = false;
+        }
     }
     
 }
