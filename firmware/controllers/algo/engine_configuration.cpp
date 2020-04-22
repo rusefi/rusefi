@@ -1433,3 +1433,7 @@ void copyTimingTable(ignition_table_t const source, ignition_table_t destination
 	}
 }
 
+static const ConfigOverrides defaultConfigOverrides{};
+__attribute__((weak)) const ConfigOverrides& getConfigOverrides() {
+	return defaultConfigOverrides;
+}
