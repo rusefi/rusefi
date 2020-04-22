@@ -60,7 +60,7 @@ int BoostController::getPeriodMs() {
 }
 
 expected<float> BoostController::observePlant() const {
-	float map = getMap();
+	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (cisnan(map)) {
 		return unexpected;
@@ -90,7 +90,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) const {
 	UNUSED(target);
 
 	float rpm = GET_RPM();
-	float map = getMap();
+	float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (cisnan(map)) {
 		return unexpected;
@@ -124,7 +124,7 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 	}
 
 	// If the engine isn't running, don't correct.
-	if (ENGINE(rpmCalculator).isRunning()) {
+	if (ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		m_pid.reset();
 		return 0;
 	}
@@ -153,12 +153,6 @@ void BoostController::setOutput(expected<float> output) {
 void BoostController::PeriodicTask() {
 	m_pid.iTermMin = -50;
 	m_pid.iTermMax = 50;
-
-#if EFI_LAUNCH_CONTROL
-	if (engine->setLaunchBoostDuty) {
-		duty = engineConfiguration->launchBoostDuty;
-	}
-#endif /* EFI_LAUNCH_CONTROL */
 
 	update();
 }

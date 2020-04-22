@@ -1,4 +1,5 @@
 #include "boost_control.h"
+#include "engine_controller.h"
 #include "engine_test_helper.h"
 
 #include "mocks.h"
@@ -15,7 +16,7 @@ TEST(BoostControl, Setpoint) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(bc);
+	INJECT_ENGINE_REFERENCE(&bc);
 
 	// Should return unexpected without a pedal map cfg'd
 	EXPECT_EQ(bc.getSetpoint(), unexpected);
@@ -30,7 +31,7 @@ TEST(BoostControl, ObservePlant) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(bc);
+	INJECT_ENGINE_REFERENCE(&bc);
 
 	// Check that invalid MAP returns unexpected
 	EXPECT_EQ(bc.observePlant(), unexpected);
@@ -42,7 +43,7 @@ TEST(BoostControl, ObservePlant) {
 	engineConfiguration->mapHighValueVoltage = 5;
 
 	// Set the MAP, check that we get it back
-	setMockMapVoltage(2.5f, PASS_ENGINE_PARAMETER_SUFFIX);
+	setMockMapVoltage(2.5f PASS_ENGINE_PARAMETER_SUFFIX);
 	EXPECT_FLOAT_EQ(bc.observePlant().value_or(0), 150.0f);
 }
 
@@ -55,10 +56,10 @@ TEST(BoostControl, OpenLoop) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(bc);
+	INJECT_ENGINE_REFERENCE(&bc);
 
 	// Without table set, should return unexpected
 	EXPECT_EQ(bc.getOpenLoop(0), unexpected);
 
-	bc.init(nullptr, openMap, nullptr, nullptr);
+	bc.init(nullptr, &openMap, nullptr, nullptr);
 }

@@ -15,6 +15,8 @@ class SimplePwm;
 
 class BoostController : public ClosedLoopController<float, percent_t>, public PeriodicTimerController {
 public:
+	DECLARE_ENGINE_PTR;
+
 	void init(SimplePwm* pmw, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams);
 
 	// PeriodicTimerController implementation
