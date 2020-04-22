@@ -18,9 +18,7 @@
 #include "io_pins.h"
 #include "engine_configuration.h"
 #include "pwm_generator_logic.h"
-#include "pid.h"
 #include "engine_controller.h"
-#include "periodic_task.h"
 #include "pin_repository.h"
 #include "pwm_generator.h"
 #include "pid_auto_tune.h"
@@ -37,67 +35,124 @@ static Logging *logger;
 static boostOpenLoop_Map3D_t boostMapOpen("boostmapopen", 1);
 static boostOpenLoop_Map3D_t boostMapClosed("boostmapclosed", 1);
 static SimplePwm boostPwmControl("boost");
-static Pid boostControlPid;
 
-static bool shouldResetPid = false;
+void BoostController::init(SimplePwm* pwm, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams) {
+	m_pwm = pwm;
+	m_openLoopMap = openLoopMap;
+	m_closedLoopTargetMap = closedLoopTargetMap;
 
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
-static void pidReset(void) {
-	boostControlPid.reset();
+	m_pid.initPidClass(pidParams);
 }
 
-class BoostControl: public PeriodicTimerController {
-	DECLARE_ENGINE_PTR;
 
-	int getPeriodMs() override {
-		return GET_PERIOD_LIMITED(&engineConfiguration->boostPid);
+void BoostController::reset() {
+	m_shouldResetPid = true;
+}
+
+void BoostController::onConfigurationChange(pid_s* previousConfiguration) {
+	if (!m_pid.isSame(previousConfiguration)) {
+		m_shouldResetPid = true;
+	}
+}
+
+int BoostController::getPeriodMs() {
+	return GET_PERIOD_LIMITED(&engineConfiguration->boostPid);
+}
+
+expected<float> BoostController::observePlant() const {
+	float map = getMap();
+
+	if (cisnan(map)) {
+		return unexpected;
 	}
 
-	void PeriodicTask() override {
-		if (shouldResetPid) {
-			pidReset();
-			shouldResetPid = false;
-		}
+	return map;
+}
 
-		float rpm = GET_RPM_VALUE;
-		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+expected<float> BoostController::getSetpoint() const {
+	float rpm = GET_RPM();
 
-		if (!engineConfiguration->isBoostControlEnabled)
-			return;
+	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
-		bool engineRunning = rpm > engineConfiguration->cranking.rpm;
-		if (!engineRunning) {
-			boostControlPid.reset();
-			return;
-		}
+	if (!tps) {
+		return unexpected;
+	}
 
-		percent_t openLoopDuty = boostMapOpen.getValue(rpm / RPM_1_BYTE_PACKING_MULT, mapValue / LOAD_1_BYTE_PACKING_MULT) * LOAD_1_BYTE_PACKING_MULT;
-		percent_t closedLoopDuty = 0;
-		percent_t duty = openLoopDuty;
+	if (!m_closedLoopTargetMap) {
+		return unexpected;
+	}
 
-		if (engineConfiguration->boostType == CLOSED_LOOP) {
-			auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
+	return m_closedLoopTargetMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, tps.Value / TPS_1_BYTE_PACKING_MULT) * LOAD_1_BYTE_PACKING_MULT;
+}
 
-			if (valid) {
-				float targetBoost = boostMapClosed.getValue(rpm / RPM_1_BYTE_PACKING_MULT, tps / TPS_1_BYTE_PACKING_MULT) * LOAD_1_BYTE_PACKING_MULT;
-				closedLoopDuty = openLoopDuty + boostControlPid.getOutput(targetBoost, mapValue);
-				duty += closedLoopDuty;
-			}
-		}
+expected<percent_t> BoostController::getOpenLoop(float target) const {
+	// Boost control open loop doesn't care about target - only MAP/RPM
+	UNUSED(target);
 
-		boostControlPid.iTermMin = -50;
-		boostControlPid.iTermMax = 50;
+	float rpm = GET_RPM();
+	float map = getMap();
 
-		if (engineConfiguration->debugMode == DBG_BOOST) {
+	if (cisnan(map)) {
+		return unexpected;
+	}
+
+	if (!m_openLoopMap) {
+		return unexpected;
+	}
+
+	percent_t openLoop = m_openLoopMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, map / LOAD_1_BYTE_PACKING_MULT) * LOAD_1_BYTE_PACKING_MULT;
+
 #if EFI_TUNER_STUDIO
-			boostControlPid.postState(&tsOutputChannels);
-			tsOutputChannels.debugFloatField1 = openLoopDuty;
-			tsOutputChannels.debugFloatField7 = closedLoopDuty;
+	if (engineConfiguration->debugMode == DBG_BOOST) {
+		tsOutputChannels.debugFloatField1 = openLoop;
+	}
+#endif
+
+	return openLoop;
+}
+
+expected<percent_t> BoostController::getClosedLoop(float target, float manifoldPressure) {
+	// If we're in open loop only mode, make no closed loop correction.
+	if (engineConfiguration->boostType != CLOSED_LOOP) {
+		return 0;
+	}
+
+	// Reset PID if requested
+	if (m_shouldResetPid) {
+		m_pid.reset();
+		m_shouldResetPid = false;
+	}
+
+	// If the engine isn't running, don't correct.
+	if (ENGINE(rpmCalculator).isRunning()) {
+		m_pid.reset();
+		return 0;
+	}
+
+	float closedLoop = m_pid.getOutput(target, manifoldPressure);
+
+#if EFI_TUNER_STUDIO
+	if (engineConfiguration->debugMode == DBG_BOOST) {
+		m_pid.postState(&tsOutputChannels);
+		tsOutputChannels.debugFloatField2 = closedLoop;
+	}
 #endif /* EFI_TUNER_STUDIO */
-		}
+
+	return closedLoop;
+}
+
+void BoostController::setOutput(expected<float> output) {
+	if (output) {
+		boostPwmControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(output.Value));
+	} else {
+		// TODO: hook up safe duty cycle
+		//boostPwmControl.setSimplePwmDutyCycle(CONFIG(boostControlSafeDutyCycle));
+	}
+}
+
+void BoostController::PeriodicTask() {
+	m_pid.iTermMin = -50;
+	m_pid.iTermMax = 50;
 
 #if EFI_LAUNCH_CONTROL
 	if (engine->setLaunchBoostDuty) {
@@ -105,28 +160,10 @@ class BoostControl: public PeriodicTimerController {
 	}
 #endif /* EFI_LAUNCH_CONTROL */
 
-		boostPwmControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(duty));
-	}
-};
-
-static BoostControl BoostController;
-
-#if !EFI_UNIT_TEST
-void setBoostPFactor(float value) {
-	engineConfiguration->boostPid.pFactor = value;
-	boostControlPid.reset();
+	update();
 }
 
-void setBoostIFactor(float value) {
-	engineConfiguration->boostPid.iFactor = value;
-	boostControlPid.reset();
-}
-
-void setBoostDFactor(float value) {
-	engineConfiguration->boostPid.dFactor = value;
-	boostControlPid.reset();
-}
-#endif /* EFI_UNIT_TEST */
+BoostController boostController;
 
 void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->isBoostControlEnabled = true;
@@ -156,7 +193,7 @@ void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 }
 
-static void turnBoostPidOn() {
+void startBoostPin() {
 #if !EFI_UNIT_TEST
 	if (CONFIG(boostControlPin) == GPIO_UNASSIGNED){
 		return;
@@ -174,18 +211,14 @@ static void turnBoostPidOn() {
 #endif /* EFI_UNIT_TEST */
 }
 
-void startBoostPin(void) {
-	turnBoostPidOn();
-}
-
-void stopBoostPin(void) {
+void stopBoostPin() {
 #if !EFI_UNIT_TEST
 	brain_pin_markUnused(activeConfiguration.boostControlPin);
 #endif /* EFI_UNIT_TEST */
 }
 
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !boostControlPid.isSame(&previousConfiguration->boostPid);
+	boostController.onConfigurationChange(&previousConfiguration->boostPid);
 }
 
 void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -195,15 +228,16 @@ void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 #endif
 
-	boostControlPid.initPidClass(&engineConfiguration->boostPid);
 
 	logger = sharedLogger;
 	boostMapOpen.init(config->boostTableOpenLoop, config->boostMapBins, config->boostRpmBins);
 	boostMapClosed.init(config->boostTableClosedLoop, config->boostTpsBins, config->boostRpmBins);
-	boostControlPid.reset();
+
+	boostController.init(&boostPwmControl, &boostMapOpen, &boostMapClosed, &engineConfiguration->boostPid);
+
 #if !EFI_UNIT_TEST
 	startBoostPin();
-	BoostController.Start();
+	boostController.Start();
 #endif
 }
 
