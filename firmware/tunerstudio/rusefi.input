@@ -2481,6 +2481,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "!https://rusefi.com/s/debugmode"
 		field = "Debug mode",							debugMode
 		field = "Warning Text",						warning_message
+		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
 
 	
 	dialog = limits, "Limits"
