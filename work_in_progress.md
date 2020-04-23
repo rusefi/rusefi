@@ -2,6 +2,7 @@ Apr, 20 2020 status:
 * Nick and Chris are focusing on GDI progress
 * Matt is focusing on ETB https://github.com/rusefi/rusefi/issues/1240 https://github.com/rusefi/rusefi/issues/1336
 * x number of Andreys are focusing on data gathering usability https://github.com/rusefi/rusefi/issues/1337  
+* andreika is currently focusing on Hellen, SD-card/binary logging, TS plugin and online connectivity
 
 Mar, 02 2020 status:
 * playing with some GDI software, but now waiting for repaired MC33816 to come from Seattle
