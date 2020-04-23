@@ -54,7 +54,7 @@ TEST(BoostControl, OpenLoop) {
 
 	// Just pass MAP input to output
 	EXPECT_CALL(openMap, getValue(_, _))
-		.WillRepeatedly([](float xRpm, float map) { return map; });
+		.WillRepeatedly([](float xRpm, float tps) { return tps; });
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
@@ -66,8 +66,8 @@ TEST(BoostControl, OpenLoop) {
 
 	bc.init(nullptr, &openMap, nullptr, nullptr);
 
-	// Should pass MAP value thru
-	engine->mockMapValue = 47.0f;
+	// Should pass TPS value thru
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 47.0f);
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), 47.0f);
 }
 
