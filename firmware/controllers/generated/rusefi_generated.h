@@ -1756,6 +1756,8 @@
 #define servoOutputPins7_offset_hex c4a
 #define servoOutputPins8_offset 3147
 #define servoOutputPins8_offset_hex c4b
+#define showHumanReadableWarning_offset 976
+#define showHumanReadableWarning_offset_hex 3d0
 #define showSdCardWarning_offset 76
 #define showSdCardWarning_offset_hex 4c
 #define silentTriggerError_offset 1464
@@ -2229,8 +2231,6 @@
 #define unusedBit_251_28_offset_hex 3d0
 #define unusedBit_251_29_offset 976
 #define unusedBit_251_29_offset_hex 3d0
-#define unusedBit_251_9_offset 976
-#define unusedBit_251_9_offset_hex 3d0
 #define unusedBit_282_30_offset 976
 #define unusedBit_282_30_offset_hex 3d0
 #define unusedBit_282_31_offset 976

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 19 21:16:42 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed Apr 22 18:25:40 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1678,7 +1678,7 @@ struct engine_configuration_s {
 	bool enableInnovateLC2 : 1;
 	/**
 	offset 976 bit 9 */
-	bool unusedBit_251_9 : 1;
+	bool showHumanReadableWarning : 1;
 	/**
 	offset 976 bit 10 */
 	bool unusedBit_251_10 : 1;
@@ -3351,4 +3351,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 19 21:16:42 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed Apr 22 18:25:40 EDT 2020
