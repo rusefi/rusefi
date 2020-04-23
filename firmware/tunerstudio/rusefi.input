@@ -590,8 +590,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 
 	curve = etbTpsBiasCurve, "Electronic TB Bias Curve"
       columnLabel = "TPS", "duty bias"
-      xAxis       =  0, 100, 10
-      yAxis       =  0,  100, 10
+      xAxis       =  0, 50, 11
+      yAxis       =  -40, 40, 9
       xBins       = etbBiasBins, TPSValue
       yBins       = etbBiasValues
       gauge       = TPSGauge
