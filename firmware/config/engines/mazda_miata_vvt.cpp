@@ -501,7 +501,11 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->camInputs[0] = GPIOA_5;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
-	engineConfiguration->useTLE8888_hall_mode = true;
+	/**
+	 * By default "auto detection mode for VR sensor signals" is used
+	 * We know that for short & strange Hall (?) signals like Miata NB2 crank sensor this does not work well above certain RPM.
+	 */
+	engineConfiguration->tle8888mode = TL_MANUAL;
 
 	// GPIOD_6: "13 - GP Out 6" - selected to +12v
 	engineConfiguration->alternatorControlPin = GPIOD_6;

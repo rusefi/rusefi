@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed Apr 22 19:50:25 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu Apr 23 15:56:48 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -647,7 +647,7 @@ struct engine_configuration_s {
 	bool cj125isUrDivided : 1;
 	/**
 	offset 76 bit 16 */
-	bool useTLE8888_hall_mode : 1;
+	bool issue_294_unused : 1;
 	/**
 	offset 76 bit 17 */
 	bool useTLE8888_cranking_hack : 1;
@@ -2576,7 +2576,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2416
 	 */
-	int unusedSomethingWasHere;
+	tle8888_mode_e tle8888mode;
+	/**
+	 * offset 2417
+	 */
+	uint8_t unusedSomethingWasHere[3];
 	/**
 	 * offset 2420
 	 */
@@ -3351,4 +3355,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed Apr 22 19:50:25 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu Apr 23 15:56:48 EDT 2020

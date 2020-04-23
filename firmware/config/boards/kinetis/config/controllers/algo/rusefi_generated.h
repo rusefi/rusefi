@@ -1403,6 +1403,8 @@
 #define issue_294_30_offset_hex 4c
 #define issue_294_31_offset 76
 #define issue_294_31_offset_hex 4c
+#define issue_294_unused_offset 76
+#define issue_294_unused_offset_hex 4c
 #define isTunerStudioEnabled_offset 1476
 #define isTunerStudioEnabled_offset_hex 5c4
 #define isVerboseAlternator_offset 744
@@ -1975,6 +1977,8 @@
 #define tle8888_cs_offset_hex c21
 #define tle8888_csPinMode_offset 3106
 #define tle8888_csPinMode_offset_hex c22
+#define tle8888mode_offset 2416
+#define tle8888mode_offset_hex 970
 #define tle8888spiDevice_offset 4000
 #define tle8888spiDevice_offset_hex fa0
 #define todoClutchDownPinInverted_offset 976
@@ -2243,8 +2247,8 @@
 #define unusedHere_offset_hex 2f9
 #define unusedOldBiquad_offset 2332
 #define unusedOldBiquad_offset_hex 91c
-#define unusedSomethingWasHere_offset 2416
-#define unusedSomethingWasHere_offset_hex 970
+#define unusedSomethingWasHere_offset 2417
+#define unusedSomethingWasHere_offset_hex 971
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding4_offset_hex a21
 #define unusedSpiPadding5_offset 2713
@@ -2323,8 +2327,6 @@
 #define useStepperIdle_offset_hex 2e8
 #define useTLE8888_cranking_hack_offset 76
 #define useTLE8888_cranking_hack_offset_hex 4c
-#define useTLE8888_hall_mode_offset 76
-#define useTLE8888_hall_mode_offset_hex 4c
 #define useTpicAdvancedMode_offset 744
 #define useTpicAdvancedMode_offset_hex 2e8
 #define useTPSAdvanceTable_offset 1476
