@@ -2733,6 +2733,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "iFactor",								etb_iFactor, {throttlePedalPositionAdcChannel != 16}
 		field = "dFactor",								etb_dFactor, {throttlePedalPositionAdcChannel != 16}
 		field = "control period",						etb_periodMs, {throttlePedalPositionAdcChannel != 16}
+		field = "pid min",								etb_minValue, {throttlePedalPositionAdcChannel != 16}
+		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
+		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}
+		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
 
 	dialog = etbIdleDialog, "ETB Idle"
 		field = "use ETB for idle",						useETBforIdleControl
