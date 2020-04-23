@@ -76,7 +76,7 @@ public class AutoTest {
         setEngineType(32);
         // TODO: we shall get this RPM higher!
         // first let's get to expected RPM
-        int rpm = 1200;
+        int rpm = 2000;
         changeRpm(rpm);
         assertRpmDoesNotJump(rpm);
     }
@@ -85,7 +85,7 @@ public class AutoTest {
         setEngineType(40);
         // TODO: we shall get this RPM higher!
         // first let's get to expected RPM
-        int rpm = 4000;
+        int rpm = 2100;
         changeRpm(rpm);
         assertRpmDoesNotJump(rpm);
     }
