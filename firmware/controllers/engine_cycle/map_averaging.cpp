@@ -308,7 +308,6 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 			return;
 		}
 
-
 		fixAngle(samplingEnd, "samplingEnd", CUSTOM_ERR_6563);
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
