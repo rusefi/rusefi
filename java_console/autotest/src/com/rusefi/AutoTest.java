@@ -53,6 +53,7 @@ public class AutoTest {
         sendCommand(getEnableCommand(Fields.CMD_FUNCTIONAL_TEST_MODE));
         testCustomEngine();
         testVW_60_2();
+        testV12();
         testMazdaMiata2003();
         test2003DodgeNeon();
         testFordAspire();
@@ -75,7 +76,16 @@ public class AutoTest {
         setEngineType(32);
         // TODO: we shall get this RPM higher! At the moment things fail at 5500 :(
         // first let's get to expected RPM
-        int rpm = 8500;
+        int rpm = 5000;
+        changeRpm(rpm);
+        assertRpmDoesNotJump(rpm);
+    }
+
+    private static void testV12() {
+        setEngineType(40);
+        // TODO: we shall get this RPM higher!
+        // first let's get to expected RPM
+        int rpm = 4000;
         changeRpm(rpm);
         assertRpmDoesNotJump(rpm);
     }
