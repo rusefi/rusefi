@@ -253,12 +253,9 @@
 // 168000000/64/16/16 = ~10.25kHz
 
 // todo: warning! these numbers are "tricky"! need to investigate further!
-//168000000/128/65535 = ~20Hz
-#define PWM_FREQ_SLOW 20507   /* PWM clock frequency. */
-#define PWM_PERIOD_SLOW 65535  /* PWM period (in PWM ticks).    */
 //168000000/128/131 = ~10kHz
-#define PWM_FREQ_FAST 20507/*164062*/  /* PWM clock frequency. */
-#define PWM_PERIOD_FAST 131   /* PWM period (in PWM ticks).    */
+#define GPT_FREQ_FAST 20507/*164062*/  /* PWM clock frequency. */
+#define GPT_PERIOD_FAST 131   /* PWM period (in PWM ticks).    */
 
 #define EFI_SPI1_AF 3
 
