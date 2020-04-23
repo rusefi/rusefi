@@ -11,7 +11,8 @@ import java.util.ArrayList;
 public class ScreenGenerator {
     public static final String TS_DIALOG = "com.efiAnalytics.ui.dg";
     public static final String PNG = "png";
-    private static final int MENU_CLICK_DELAY = 200;
+    private static final int MENU_CLICK_DELAY = 300;
+    private static final int TOP_MENU_CLICK_DELAY = 1000;
     private static ArrayList<AbstractButton> topLevelButtons = new ArrayList<>();
 
     private static final String DESTINATION = "images" + File.separator;
@@ -89,7 +90,7 @@ public class ScreenGenerator {
 
         for (AbstractButton topLevel : topLevelButtons) {
             SwingUtilities.invokeAndWait(topLevel::doClick);
-            Thread.sleep(500);
+            Thread.sleep(TOP_MENU_CLICK_DELAY);
 
             ImageIO.write(
                     getScreenShot(frame),
