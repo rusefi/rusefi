@@ -74,9 +74,9 @@ public class AutoTest {
 
     private static void testVW_60_2() {
         setEngineType(32);
-        // TODO: we shall get this RPM higher! At the moment things fail at 5500 :(
+        // TODO: we shall get this RPM higher!
         // first let's get to expected RPM
-        int rpm = 5000;
+        int rpm = 4000;
         changeRpm(rpm);
         assertRpmDoesNotJump(rpm);
     }
