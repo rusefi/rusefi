@@ -284,8 +284,6 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for slow ADC?
-// https://github.com/rusefi/rusefi/issues/630
 // todo: switch to continues ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
