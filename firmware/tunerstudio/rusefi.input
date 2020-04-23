@@ -2752,6 +2752,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != 16 || useStepperIdle && useHbridges  }
 
 	dialog = etbAutotune, "PID Autotune"
+		field = "!Set debug mode below to 'ETB Autotune' to show results"
 		field = "Debug mode",							debugMode
 		commandButton = "ETB PID Autotune", cmd_etb_autotune
 
