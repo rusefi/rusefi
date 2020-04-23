@@ -199,6 +199,79 @@ expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
 	return ff;
 }
 
+expected<percent_t> EtbController::getClosedLoopAutotune(percent_t actualThrottlePosition) {
+	// Estimate gain at 60% position - this should be well away from the spring and in the linear region
+	bool isPositive = actualThrottlePosition > 60.0f;
+
+	float autotuneAmplitude = 20;
+
+	// End of cycle - record & reset
+	if (!isPositive && m_lastIsPositive) {
+		efitick_t now = getTimeNowNt();
+
+		// Determine period
+		float tu = NT2US((float)(now - m_cycleStartTime)) / 1e6;
+		m_cycleStartTime = now;
+
+		// Determine amplitude
+		float a = m_maxCycleTps - m_minCycleTps;
+
+		// Filter - it's pretty noisy since the ultimate period is not very many loop periods
+		constexpr float alpha = 0.05;
+		m_a  = alpha * a  + (1 - alpha) * m_a;
+		m_tu = alpha * tu + (1 - alpha) * m_tu;
+
+		// Reset bounds
+		m_minCycleTps = 100;
+		m_maxCycleTps = 0;
+
+		// Math is for Åström–Hägglund (relay) auto tuning
+		// https://warwick.ac.uk/fac/cross_fac/iatl/reinvention/archive/volume5issue2/hornsey
+
+		// Publish to TS state
+#if EFI_TUNER_STUDIO
+		if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
+			// a - amplitude of output (TPS %)
+
+			tsOutputChannels.debugFloatField1 = m_a;
+			float b = 2 * autotuneAmplitude;
+			// b - amplitude of input (Duty cycle %)
+			tsOutputChannels.debugFloatField2 = b;
+			// Tu - oscillation period (seconds)
+			tsOutputChannels.debugFloatField3 = m_tu;
+
+			// Ultimate gain per A-H relay tuning rule
+			// Ku
+			float ku = 4 * b / (3.14159f * m_a);
+			tsOutputChannels.debugFloatField4 = ku;
+
+			// The multipliers below are somewhere near the "no overshoot" 
+			// and "some overshoot" flavors of the Ziegler-Nichols method
+			// Kp
+			tsOutputChannels.debugFloatField5 = 0.35f * ku;
+			// Ki
+			tsOutputChannels.debugFloatField6 = 0.25f * ku / m_tu;
+			// Kd
+			tsOutputChannels.debugFloatField7 = 0.08f * ku * m_tu;
+		}
+#endif
+	}
+
+	m_lastIsPositive = isPositive;
+
+	// Find the min/max of each cycle
+	if (actualThrottlePosition < m_minCycleTps) {
+		m_minCycleTps = actualThrottlePosition;
+	}
+
+	if (actualThrottlePosition > m_maxCycleTps) {
+		m_maxCycleTps = actualThrottlePosition;
+	}
+
+	// Bang-bang control the output to induce oscillation
+	return autotuneAmplitude * (isPositive ? -1 : 1);
+}
+
 expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t actualThrottlePosition) {
 	if (m_shouldResetPid) {
 		m_pid.reset();
@@ -215,75 +288,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t act
 
 	// Only allow autotune with stopped engine
 	if (GET_RPM() == 0 && engine->etbAutoTune) {
-		bool isPositive = actualThrottlePosition > target;
-
-		float autotuneAmplitude = 20;
-
-		// End of cycle - record & reset
-		if (!isPositive && m_lastIsPositive) {
-			efitick_t now = getTimeNowNt();
-
-			// Determine period
-			float tu = NT2US((float)(now - m_cycleStartTime)) / 1e6;
-			m_cycleStartTime = now;
-
-			// Determine amplitude
-			float a = m_maxCycleTps - m_minCycleTps;
-
-			// Filter - it's pretty noisy since the ultimate period is not very many loop periods
-			constexpr float alpha = 0.05;
-			m_a  = alpha * a  + (1 - alpha) * m_a;
-			m_tu = alpha * tu + (1 - alpha) * m_tu;
-
-			// Reset bounds
-			m_minCycleTps = 100;
-			m_maxCycleTps = 0;
-
-			// Math is for Åström–Hägglund (relay) auto tuning
-			// https://warwick.ac.uk/fac/cross_fac/iatl/reinvention/archive/volume5issue2/hornsey
-
-			// Publish to TS state
-#if EFI_TUNER_STUDIO
-			if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
-				// a - amplitude of output (TPS %)
-
-				tsOutputChannels.debugFloatField1 = m_a;
-				float b = 2 * autotuneAmplitude;
-				// b - amplitude of input (Duty cycle %)
-				tsOutputChannels.debugFloatField2 = b;
-				// Tu - oscillation period (seconds)
-				tsOutputChannels.debugFloatField3 = m_tu;
-
-				// Ultimate gain per A-H relay tuning rule
-				// Ku
-				float ku = 4 * b / (3.14159f * m_a);
-				tsOutputChannels.debugFloatField4 = ku;
-
-				// The multipliers below are somewhere near the "no overshoot" 
-				// and "some overshoot" flavors of the Ziegler-Nichols method
-				// Kp
-				tsOutputChannels.debugFloatField5 = 0.35f * ku;
-				// Ki
-				tsOutputChannels.debugFloatField6 = 0.25f * ku / m_tu;
-				// Kd
-				tsOutputChannels.debugFloatField7 = 0.08f * ku * m_tu;
-			}
-#endif
-		}
-
-		m_lastIsPositive = isPositive;
-
-		// Find the min/max of each cycle
-		if (actualThrottlePosition < m_minCycleTps) {
-			m_minCycleTps = actualThrottlePosition;
-		}
-
-		if (actualThrottlePosition > m_maxCycleTps) {
-			m_maxCycleTps = actualThrottlePosition;
-		}
-
-		// Bang-bang control the output to induce oscillation
-		return autotuneAmplitude * (isPositive ? -1 : 1);
+		return getClosedLoopAutotune(actualThrottlePosition);
 	} else {
 		// Normal case - use PID to compute closed loop part
 		return m_pid.getOutput(target, actualThrottlePosition);
@@ -378,8 +383,6 @@ void EtbController::PeriodicTask() {
 	DISPLAY(DISPLAY_CONFIG(ETB_OFFSET));
 	DISPLAY(DISPLAY_CONFIG(ETB_PERIODMS));
 	DISPLAY_TEXT(eol);
-	DISPLAY(DISPLAY_CONFIG(ETB_MINVALUE));
-	DISPLAY(DISPLAY_CONFIG(ETB_MAXVALUE));
 /* DISPLAY_ELSE */
 	DISPLAY_TEXT(No_Pedal_Sensor);
 /* DISPLAY_ENDIF */
