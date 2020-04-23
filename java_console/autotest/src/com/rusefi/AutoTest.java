@@ -74,23 +74,23 @@ public class AutoTest {
 
     private static void testVW_60_2() {
         setEngineType(32);
+        changeRpm(900);
         // TODO: we shall get this RPM higher!
         // first let's get to expected RPM
-        int rpm = 2000;
-        changeRpm(rpm);
-        assertRpmDoesNotJump(rpm);
+        assertRpmDoesNotJump(2000);
     }
 
     private static void testV12() {
         setEngineType(40);
+        changeRpm(700);
         // TODO: we shall get this RPM higher!
         // first let's get to expected RPM
-        int rpm = 2100;
-        changeRpm(rpm);
-        assertRpmDoesNotJump(rpm);
+        assertRpmDoesNotJump(1700);
     }
 
     private static void assertRpmDoesNotJump(int rpm) {
+        changeRpm(rpm);
+        sleep(4);
         AtomicReference failure = new AtomicReference();
         SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
             @Override
