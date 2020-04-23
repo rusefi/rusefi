@@ -1723,12 +1723,19 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
 		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
 
-	dialog = pedalSensor, "Accelerator pedal"
+	dialog = pedalSensorLeft, "Accelerator pedal"
 		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
+		field = "Up voltage",							throttlePedalUpVoltage
+		field = "Down (WOT) voltage",					throttlePedalWOTVoltage
 		field = "Accelerator position 2nd sensor",		throttlePedalPositionSecondAdcChannel
-		field = "Up voltage",					throttlePedalUpVoltage
-		field = "Down (WOT) voltage",				throttlePedalWOTVoltage
 
+	dialog = pedalGauges
+		gauge = pedalPositionGauge
+		gauge = rawPpsPrimaryGauge
+
+	dialog = pedalSensor, "Accelerator pedal", border
+		panel = pedalSensorLeft, West
+		panel = pedalGauges, East
 
     dialog = mc33Dialog, "GDI Dreams" 
     	field = mc33816_cs,								mc33816_cs
