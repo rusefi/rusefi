@@ -189,7 +189,7 @@ public class ScreenGenerator {
                     try {
                         slice = dialogScreenShot.getSubimage(0, fromY, dialogScreenShot.getWidth(), toY - fromY);
                     } catch (RasterFormatException e) {
-                        System.out.printf("Dialog does not fit screen? " + sectionNameWithSpecifalCharacters);
+                        System.out.println("Dialog does not fit screen? " + sectionNameWithSpecifalCharacters);
                         continue;
                     }
 
