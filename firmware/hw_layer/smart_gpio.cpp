@@ -131,7 +131,7 @@ struct tle8888_config tle8888_cfg = {
 		[3] = {.port = NULL,	.pad = 0,	.output = 12},
 */
 	},
-	.mode = TL_DEFAULT,
+	.mode = TL_AUTO,
 };
 #endif
 
