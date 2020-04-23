@@ -107,8 +107,9 @@ static scheduling_s endTimer[INJECTION_PIN_COUNT][2];
  */
 static bool isAveraging = false;
 
-static void startAveraging(void *arg) {
-	(void) arg;
+static void endAveraging(void *arg);
+
+static void startAveraging(scheduling_s *endAveragingScheduling) {
 	efiAssertVoid(CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
 
 	bool wasLocked = lockAnyContext();
@@ -121,6 +122,9 @@ static void startAveraging(void *arg) {
 	}
 
 	mapAveragingPin.setHigh();
+
+	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), ENGINE(engineState.mapAveragingDuration),
+		endAveraging PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 #if HAL_USE_ADC
@@ -312,9 +316,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
 		scheduleByAngle(&startTimer[i][structIndex], edgeTimestamp, samplingStart,
-				startAveraging PASS_ENGINE_PARAMETER_SUFFIX);
-		scheduleByAngle(&endTimer[i][structIndex], edgeTimestamp, samplingEnd,
-				endAveraging PASS_ENGINE_PARAMETER_SUFFIX);
+				{ startAveraging, &endTimer[i][structIndex] } PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif
 }
@@ -346,11 +348,6 @@ float getMap(void) {
 
 void initMapAveraging(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
-
-//	startTimer[0].name = "map start0";
-//	startTimer[1].name = "map start1";
-//	endTimer[0].name = "map end0";
-//	endTimer[1].name = "map end1";
 
 #if EFI_SHAFT_POSITION_INPUT
 	addTriggerEventListener(&mapAveragingTriggerCallback, "MAP averaging", engine);
