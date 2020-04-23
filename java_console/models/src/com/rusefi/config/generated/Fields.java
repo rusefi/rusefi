@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed Apr 22 18:25:23 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu Apr 23 15:56:48 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -930,6 +930,7 @@ public class Fields {
 	public static final int issue_294_29_offset = 76;
 	public static final int issue_294_30_offset = 76;
 	public static final int issue_294_31_offset = 76;
+	public static final int issue_294_unused_offset = 76;
 	public static final int isTunerStudioEnabled_offset = 1476;
 	public static final int isVerboseAlternator_offset = 744;
 	public static final int isVerboseAuxPid1_offset = 76;
@@ -1300,6 +1301,8 @@ public class Fields {
 	public static final int tle6240spiDevice_offset = 4004;
 	public static final int tle8888_cs_offset = 3105;
 	public static final int tle8888_csPinMode_offset = 3106;
+	public static final int tle8888mode_offset = 2416;
+	public static final int tle8888mode_offset_hex = 970;
 	public static final int tle8888spiDevice_offset = 4000;
 	public static final int todoClutchDownPinInverted_offset = 976;
 	public static final int todoClutchUpPinInverted_offset = 976;
@@ -1479,8 +1482,8 @@ public class Fields {
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedHere_offset = 761;
 	public static final int unusedOldBiquad_offset = 2332;
-	public static final int unusedSomethingWasHere_offset = 2416;
-	public static final int unusedSomethingWasHere_offset_hex = 970;
+	public static final int unusedSomethingWasHere_offset = 2417;
+	public static final int unusedSomethingWasHere_offset_hex = 971;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
 	public static final int unusedSpiPadding7_offset = 4005;
@@ -1520,7 +1523,6 @@ public class Fields {
 	public static final int useSerialPort_offset = 744;
 	public static final int useStepperIdle_offset = 744;
 	public static final int useTLE8888_cranking_hack_offset = 76;
-	public static final int useTLE8888_hall_mode_offset = 76;
 	public static final int useTpicAdvancedMode_offset = 744;
 	public static final int useTPSAdvanceTable_offset = 1476;
 	public static final int useTPSBasedVeTable_offset = 744;
@@ -1573,7 +1575,7 @@ public class Fields {
 	public static final Field ISDOUBLESOLENOIDIDLE = Field.create("ISDOUBLESOLENOIDIDLE", 76, FieldType.BIT, 13);
 	public static final Field SHOWSDCARDWARNING = Field.create("SHOWSDCARDWARNING", 76, FieldType.BIT, 14);
 	public static final Field CJ125ISURDIVIDED = Field.create("CJ125ISURDIVIDED", 76, FieldType.BIT, 15);
-	public static final Field USETLE8888_HALL_MODE = Field.create("USETLE8888_HALL_MODE", 76, FieldType.BIT, 16);
+	public static final Field ISSUE_294_UNUSED = Field.create("ISSUE_294_UNUSED", 76, FieldType.BIT, 16);
 	public static final Field USETLE8888_CRANKING_HACK = Field.create("USETLE8888_CRANKING_HACK", 76, FieldType.BIT, 17);
 	public static final Field USEINSTANTRPMFORIDLE = Field.create("USEINSTANTRPMFORIDLE", 76, FieldType.BIT, 18);
 	public static final Field ABSOLUTEFUELPRESSURE = Field.create("ABSOLUTEFUELPRESSURE", 76, FieldType.BIT, 19);
@@ -2290,7 +2292,7 @@ public class Fields {
 	public static final Field STORAGEMODE = Field.create("STORAGEMODE", 2260, FieldType.INT, mass_storage_e);
 	public static final String[] vvt_mode_e = {"First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"};
 	public static final Field VVTMODE = Field.create("VVTMODE", 2328, FieldType.INT, vvt_mode_e);
-	public static final Field UNUSEDSOMETHINGWASHERE = Field.create("UNUSEDSOMETHINGWASHERE", 2416, FieldType.INT);
+	public static final Field TLE8888MODE = Field.create("TLE8888MODE", 2416, FieldType.INT8);
 	public static final Field AUTOTUNECLTTHRESHOLD = Field.create("AUTOTUNECLTTHRESHOLD", 2420, FieldType.FLOAT);
 	public static final Field AUTOTUNETPSROCTHRESHOLD = Field.create("AUTOTUNETPSROCTHRESHOLD", 2424, FieldType.FLOAT);
 	public static final Field AUTOTUNETPSQUIETPERIOD = Field.create("AUTOTUNETPSQUIETPERIOD", 2428, FieldType.FLOAT);
@@ -2510,7 +2512,7 @@ public class Fields {
 	ISDOUBLESOLENOIDIDLE,
 	SHOWSDCARDWARNING,
 	CJ125ISURDIVIDED,
-	USETLE8888_HALL_MODE,
+	ISSUE_294_UNUSED,
 	USETLE8888_CRANKING_HACK,
 	USEINSTANTRPMFORIDLE,
 	ABSOLUTEFUELPRESSURE,
@@ -3211,7 +3213,7 @@ public class Fields {
 	ALTERNATORPWMFREQUENCY,
 	STORAGEMODE,
 	VVTMODE,
-	UNUSEDSOMETHINGWASHERE,
+	TLE8888MODE,
 	AUTOTUNECLTTHRESHOLD,
 	AUTOTUNETPSROCTHRESHOLD,
 	AUTOTUNETPSQUIETPERIOD,
