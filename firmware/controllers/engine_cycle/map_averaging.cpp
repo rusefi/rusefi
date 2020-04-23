@@ -123,8 +123,10 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 
 	mapAveragingPin.setHigh();
 
+#if ! EFI_UNIT_TEST
 	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), ENGINE(engineState.mapAveragingDuration),
 		endAveraging PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 }
 
 #if HAL_USE_ADC
