@@ -431,10 +431,10 @@ typedef enum {
 } display_mode_e;
 
 typedef enum  __attribute__ ((__packed__)){
-	TL_DEFAULT = 0,
-	TL_1 = 1,
-	TL_HALL = 2,
-	TL_MANUAL = 3,
+	TL_AUTO = 0,
+	TL_SEMI_AUTO = 1,
+	TL_MANUAL = 2,
+	TL_HALL = 3,
 
 } tle8888_mode_e;
 
