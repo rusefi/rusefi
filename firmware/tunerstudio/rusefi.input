@@ -1365,6 +1365,8 @@ menuDialog = main
 		subMenu = std_separator
 		
 		subMenu = connection,            	"Connection"
+		subMenu = tle8888,					"TLE8888"
+		
 		subMenu = allPins1,					"Full pinout 1/2" @@if_ts_show_full_pinout
 		subMenu = allPins2,					"Full pinout 2/2" @@if_ts_show_full_pinout
 		subMenu = std_separator
@@ -2464,7 +2466,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = auxSerial
 		panel = sdCard							@@if_ts_show_sd_card
 		panel = gpsReceiver                       @@if_ts_show_gps
-		panel = tle8888
 
 	dialog = joystickPanel, "Joystick"
 		field = "joustick center button",				joystickCenterPin
