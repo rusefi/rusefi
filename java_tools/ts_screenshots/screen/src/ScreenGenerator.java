@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ScreenGenerator {
     public static final String TS_DIALOG = "com.efiAnalytics.ui.dg";
@@ -89,66 +90,64 @@ public class ScreenGenerator {
 
 
         for (AbstractButton topLevel : topLevelButtons) {
-            SwingUtilities.invokeAndWait(topLevel::doClick);
-            Thread.sleep(TOP_MENU_CLICK_DELAY);
+            handleTopLevelButton(frame, topLevel);
+        }
+    }
 
-            ImageIO.write(
-                    getScreenShot(frame),
-                    "png",
-                    new File(DESTINATION + cleanName(topLevel.getText()) + ".png"));
+    private static void handleTopLevelButton(Frame frame, AbstractButton topLevel) throws InterruptedException, InvocationTargetException, IOException {
+        SwingUtilities.invokeAndWait(topLevel::doClick);
+        Thread.sleep(TOP_MENU_CLICK_DELAY);
 
-            printAllDialogs("dialogs after clicking ", JDialog.getWindows());
-            java.util.List<JMenuItem> menuItems = new ArrayList<>();
-            visitComponent(frame, null, "just clicked ", (parent, component) -> {
-                if (component instanceof JMenuItem && component.getClass().getName().endsWith("aH.gc")) {
-                    JMenuItem menuItem = (JMenuItem) component;
-                    System.out.println("Menu item " + menuItem.getText());
-                    menuItems.add(menuItem);
-                }
-            });
+        ImageIO.write(
+                getScreenShot(frame),
+                "png",
+                new File(DESTINATION + cleanName(topLevel.getText()) + ".png"));
 
+        List<JMenuItem> menuItems = findMenuItems(frame);
 
-            for (JMenuItem m : menuItems) {
+        for (JMenuItem menuItem : menuItems) {
 
-                //d.getLocation()
+            SwingUtilities.invokeAndWait(() -> {
+                try {
 
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
+                    menuItem.doClick();
+                    Thread.sleep(MENU_CLICK_DELAY);
 
-                            m.doClick();
-                            Thread.sleep(MENU_CLICK_DELAY);
-
-                            JDialog d = findDialog();
-                            if (d == null) {
-                                // this happens for example for disabled menu items
-                                return;
-                            }
+                    JDialog dialog = findDynamicDialog();
+                    if (dialog == null) {
+                        // this happens for example for disabled menu items
+                        return;
+                    }
 
 //                            Robot robot = new Robot();
 //                            Rectangle captureRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 //                            BufferedImage screenFullImage = robot.createScreenCapture(captureRect);
 //                            ImageIO.write(screenFullImage, PNG, new File(DESTINATION + "full_" + d.getTitle() + ".png"));
 
-                            ImageIO.write(
-                                    getScreenShot(d),
-                                    PNG,
-                                    new File(DESTINATION + cleanName(d.getTitle()) + ".png"));
-                            d.setVisible(false);
-                            d.dispose();
-                        } catch (Exception e) {
-                            throw new IllegalStateException(e);
-                        }
-                    }
-                });
-
-            }
-
-            printAllDialogs("total frames now = ", JFrame.getFrames());
-
-            Thread.sleep(1000);
+                    ImageIO.write(
+                            getScreenShot(dialog),
+                            PNG,
+                            new File(DESTINATION + cleanName(dialog.getTitle()) + ".png"));
+                    dialog.setVisible(false);
+                    dialog.dispose();
+                } catch (Exception e) {
+                    throw new IllegalStateException(e);
+                }
+            });
         }
+        Thread.sleep(1000);
+    }
+
+    private static List<JMenuItem> findMenuItems(Frame frame) {
+        List<JMenuItem> menuItems = new ArrayList<>();
+        visitComponent(frame, null, "Just clicked ", (parent, component) -> {
+            if (component instanceof JMenuItem && component.getClass().getName().endsWith("aH.gc")) {
+                JMenuItem menuItem = (JMenuItem) component;
+                System.out.println("Menu item " + menuItem.getText());
+                menuItems.add(menuItem);
+            }
+        });
+        return menuItems;
     }
 
     private static String cleanName(String title) {
@@ -161,7 +160,7 @@ public class ScreenGenerator {
         return title;
     }
 
-    private static JDialog findDialog() {
+    private static JDialog findDynamicDialog() {
         for (Window d : Dialog.getWindows()) {
             if (d.getClass().getName().equals(TS_DIALOG) && d.isVisible()) {
                 return (JDialog) d;
