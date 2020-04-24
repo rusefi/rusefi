@@ -605,7 +605,7 @@ void triggerInfo(void) {
 			boolToString(ts->isSynchronizationNeeded),
 			boolToString(isTriggerDecoderError()), engine->triggerCentral.triggerState.totalTriggerErrorCounter,
 			engine->triggerCentral.triggerState.orderingErrorCounter, engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
-			boolToString(engineConfiguration->directSelfStimulation));
+			boolToString(engine->directSelfStimulation));
 
 	if (TRIGGER_WAVEFORM(isSynchronizationNeeded)) {
 		scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
