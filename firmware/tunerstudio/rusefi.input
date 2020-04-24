@@ -1003,11 +1003,10 @@ gaugeCategory = Sensors - Raw
    ;    1  2  3  4
    ;    5  6  7  8
 
-   ; currently a minimum of 6 gauges must be on the dash, this appears to be an old not needed limitation. next release 1 will work.
    gauge1 = RPMGauge
    gauge2 = CLTGauge
    gauge3 = TPSGauge
-   gauge4 = MAFGauge
+   gauge4 = MAPGauge
    gauge5 = afr1Gauge
    gauge6 = VBattGauge
    gauge7 = dwellGauge
@@ -1017,13 +1016,13 @@ gaugeCategory = Sensors - Raw
 
 ;         =   expression,            off-label,            on-label,            off-bg, off-fg, on-bg, on-fg
 	; important status
-    indicator = { ind_hasFatalError }, "",   "CRITICAL ERROR",   green, black, red,   black
-    indicator = { firmwareTsVersion == fileVersion }, "WRONG VERSION",   "version",   red, black, green,   black
-    indicator = { ind_isWarnNow }, "",   "warn",   green, black, red,   black
-    indicator = { ind_check_engine }, "ok",      "Check engine",       green,  black,  red, black
-    indicator = { isIgnitionEnabledIndicator}, "no ignition",   "ignition",   red, black, green,   black
-    indicator = { ind_injection_enabled}, "no injection",   "injection",   red, black, green,   black
-    indicator = { ind_isTriggerError}, "ok",      "trg err",       green,  black,  red, black
+    indicator = { ind_hasFatalError }, "",   "CRITICAL ERROR",   white, black, red,   black
+    indicator = { firmwareTsVersion == fileVersion }, "WRONG VERSION",   "version ok",   red, black, white,   black
+    indicator = { ind_isWarnNow }, "",   "WARNING",   white, black, yellow,   black
+    indicator = { ind_check_engine }, "",      "Check Engine",       white,  black,  red, black
+    indicator = { isIgnitionEnabledIndicator}, "no ignition",   "ignition",   yellow, black, white,   black
+    indicator = { ind_injection_enabled}, "no injection",   "injection",   yellow, black, white,   black
+    indicator = { ind_isTriggerError}, "trigger ok",      "trigger err",       white,  black,  red, black
     
 	; this is required so that the "config error" feature works in TS 
 	; don't change this line - TS is looking for an indicator with particular text/styling
@@ -1031,22 +1030,22 @@ gaugeCategory = Sensors - Raw
 	indicator = { ind_hasFatalError }, "Config Error", "Config Error", white, black, red,   black
 
 	; minor info	
-    indicator = { ind_fan}, "no fan",   "fan",   white, black, green,   black
-    indicator = { isCylinderCleanupActivated}, "no cyl cleanup",   "cyl cleanup",   white, black, green,   black    
+    indicator = { ind_fan}, "fan off",   "fan on",   white, black, green,   black
+    indicator = { isCylinderCleanupActivated}, "no cyl cleanup",   "cyl cleanup",   white, black, yellow,   black    
     indicator = { needBurn }, "config ok",  "unsaved changes",   white, black, yellow,   black
     indicator = { hasSdCard}, "no SD",   "with SD",   white, black, green,   black
-    indicator = { ind_fuel_pump}, "no pump",   "pump",   white, black, green,   black
+    indicator = { ind_fuel_pump}, "pump off",   "pump on",   white, black, green,   black
     indicator = { clutchUpState }, "clutch",   "cltch Up",   white, black, red,   black
     indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
-    indicator = { acSwitchIndicator }, "AC on",   "AC off",   yellow, black, white,   black
+    indicator = { acSwitchIndicator }, "AC off",   "AC on",   white, black, blue,   white
     
     ; error codes
     indicator = { ind_tps_error}, "tps",   "tps error",   white, black, red,   black
     indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
     indicator = { ind_iat_error}, "iat",   "iat error",   white, black, red,   black
     indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
-	indicator = { ind_pedal_error}, "map",   "map error",   white, black, red,   black
+	indicator = { ind_pedal_error}, "pedal",   "pedal error",   white, black, red,   black
 
     indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
     indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
