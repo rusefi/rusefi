@@ -260,6 +260,8 @@ public:
 	 */
 	bool isTestMode = false;
 
+	bool directSelfStimulation = false;
+
 	void resetEngineSnifferIfInTestMode();
 
 	/**

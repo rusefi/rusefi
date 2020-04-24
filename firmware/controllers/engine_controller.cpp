@@ -272,7 +272,7 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
-	if (CONFIG(directSelfStimulation) || engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (ENGINE(directSelfStimulation) || engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		/**
 		 * rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
 		 * postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.

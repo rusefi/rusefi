@@ -972,7 +972,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "ignition")) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "self_stimulation")) {
-		engineConfiguration->directSelfStimulation = isEnabled;
+		engine->directSelfStimulation = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {

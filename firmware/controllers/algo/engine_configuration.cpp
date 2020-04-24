@@ -921,7 +921,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->mapHighValueVoltage = 5;
 
 	engineConfiguration->logFormat = LF_NATIVE;
-	engineConfiguration->directSelfStimulation = false;
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
@@ -1114,9 +1113,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	setBoardConfigurationOverrides();
 #endif
 
-#if EFI_SIMULATOR
-	engineConfiguration->directSelfStimulation = true;
-#endif /* */
 	engineConfiguration->engineType = engineType;
 
 	/**

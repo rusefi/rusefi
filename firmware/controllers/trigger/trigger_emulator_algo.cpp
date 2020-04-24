@@ -139,15 +139,18 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 	if (!isEmulating) {
 		return;
 	}
-#if EFI_PROD_CODE
-	applyPinState(stateIndex, state);
-#endif /* EFI_PROD_CODE */
+
 	if (engineConfiguration->directSelfStimulation) {
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
 		helper.handleEmulatorCallback(state, stateIndex);
 	}
+
+#if EFI_PROD_CODE
+	applyPinState(stateIndex, state);
+#endif /* EFI_PROD_CODE */
+
 }
 
 static void setEmulatorAtIndex(int index) {
