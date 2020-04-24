@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Thu Apr 23 15:57:04 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Thu Apr 23 23:49:40 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -590,11 +590,8 @@ struct engine_configuration_s {
 	 */
 	injector_s injector;
 	/**
-	 * Should trigger emulator push data right into trigger handling logic, eliminating the need for physical jumper wires?
-	 * See also triggerSimulatorPins
-	 * PS: Funny name, right? :)
 	offset 76 bit 0 */
-	bool directSelfStimulation : 1;
+	bool unused76b0 : 1;
 	/**
 	offset 76 bit 1 */
 	bool activateAuxPid1 : 1;
@@ -3355,4 +3352,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Thu Apr 23 15:57:04 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Thu Apr 23 23:49:40 EDT 2020

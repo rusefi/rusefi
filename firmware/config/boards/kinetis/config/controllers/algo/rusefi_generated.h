@@ -527,8 +527,6 @@
 #define digitalPotentiometerChipSelect4_offset_hex 29f
 #define digitalPotentiometerSpiDevice_offset 677
 #define digitalPotentiometerSpiDevice_offset_hex 2a5
-#define directSelfStimulation_offset 76
-#define directSelfStimulation_offset_hex 4c
 #define displacement_offset 396
 #define displacement_offset_hex 18c
 #define displayLogicLevelsInEngineSniffer_offset 76
@@ -2171,6 +2169,8 @@
 #define unused1059_offset_hex f7c
 #define unused2432_offset 2432
 #define unused2432_offset_hex 980
+#define unused76b0_offset 76
+#define unused76b0_offset_hex 4c
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_24_offset_hex 5c4
 #define unused_1484_bit_25_offset 1476
