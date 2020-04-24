@@ -145,8 +145,6 @@ public:
 	OutputPin runningLedPin; // green LED on brain board by default
 
 	OutputPin debugTriggerSync;
-	OutputPin debugTimerCallback;
-	OutputPin debugSetTimer;
 	OutputPin boostPin;
 	OutputPin idleSolenoidPin;
 	OutputPin secondIdleSolenoidPin;
