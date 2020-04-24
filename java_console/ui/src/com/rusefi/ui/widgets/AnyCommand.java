@@ -149,15 +149,17 @@ public class AnyCommand {
 
     private static void handleStimulationSelfCheck(String rawCommand) {
         String[] parts = rawCommand.split(" ", 4);
-        if (parts.length != 3)
+        if (parts.length != 4) {
+            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Invalid command length " + parts);
             return; // let's ignore invalid command
+        }
         int rpm = Integer.parseInt(parts[1]);
         int settleTime = Integer.parseInt(parts[2]);
         int durationTime = Integer.parseInt(parts[3]);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                MessagesCentral.getInstance().postMessage(AnyCommand.class, "Will test with RPM" + rpm + ", settle time" + settleTime + "s and duration" + durationTime + "s");
+                MessagesCentral.getInstance().postMessage(AnyCommand.class, "Will test with RPM " + rpm + ", settle time" + settleTime + "s and duration" + durationTime + "s");
                 Function<String, Object> callback = new Function<String, Object>() {
                     @Override
                     public Object apply(String status) {
