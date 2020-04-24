@@ -1003,11 +1003,10 @@ gaugeCategory = Sensors - Raw
    ;    1  2  3  4
    ;    5  6  7  8
 
-   ; currently a minimum of 6 gauges must be on the dash, this appears to be an old not needed limitation. next release 1 will work.
    gauge1 = RPMGauge
    gauge2 = CLTGauge
    gauge3 = TPSGauge
-   gauge4 = MAFGauge
+   gauge4 = MAPGauge
    gauge5 = afr1Gauge
    gauge6 = VBattGauge
    gauge7 = dwellGauge
