@@ -140,7 +140,7 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 		return;
 	}
 
-	if (engineConfiguration->directSelfStimulation) {
+	if (engine->directSelfStimulation) {
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
