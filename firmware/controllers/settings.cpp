@@ -25,7 +25,7 @@
 #include "idle_thread.h"
 #include "allsensors.h"
 #include "alternator_controller.h"
-#include "trigger_emulator.h"
+#include "trigger_emulator_algo.h"
 #include "sensor.h"
 
 #if EFI_PROD_CODE
