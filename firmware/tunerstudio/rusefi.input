@@ -1046,7 +1046,7 @@ gaugeCategory = Sensors - Raw
     indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
     indicator = { ind_iat_error}, "iat",   "iat error",   white, black, red,   black
     indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
-	indicator = { ind_pedal_error}, "map",   "map error",   white, black, red,   black
+	indicator = { ind_pedal_error}, "pedal",   "pedal error",   white, black, red,   black
 
     indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
     indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
