@@ -35,6 +35,7 @@ bool needEvent(const int currentIndex, const int size, MultiChannelStateSequence
 #include "engine_configuration.h"
 #include "trigger_central.h"
 #include "trigger_simulator.h"
+#include "settings.h"
 
 #include "pwm_generator.h"
 
@@ -43,28 +44,27 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 
 EXTERN_ENGINE;
 
+static OutputPin emulatorOutputs[3];
+
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
 	efitick_t stamp = getTimeNowNt();
 	
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
 	MultiChannelStateSequence *multiChannelStateSequence = &state->multiChannelStateSequence;
 
-	if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, 0)) {
-		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/0, stateIndex);
-		hwHandleShaftSignal(currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, stamp);
-	}
+	for (size_t i = 0; i < efi::size(emulatorOutputs); i++)
+	{
+		if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, i)) {
+			pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/i, stateIndex);
+			
+			constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
+			constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_FALLING, SHAFT_3RD_FALLING };
 
-	if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, 1)) {
-		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/1, stateIndex);
-		hwHandleShaftSignal(currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING, stamp);
-	}
+			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
 
-	if (needEvent(stateIndex, state->phaseCount, &state->multiChannelStateSequence, 2)) {
-		pin_state_t currentValue = multiChannelStateSequence->getChannelState(/*phaseIndex*/2, stateIndex);
-		hwHandleShaftSignal(currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING, stamp);
+			hwHandleShaftSignal(event, stamp);
+		}
 	}
-
-	//	print("hello %d\r\n", chTimeNow());
 }
 
 /*
@@ -131,6 +131,7 @@ static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 }
 
 static TriggerEmulatorHelper helper;
+static bool hasStimPins = false;
 
 static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	if (stopEmulationAtIndex == stateIndex) {
@@ -148,7 +149,9 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 	}
 
 #if EFI_PROD_CODE
-	applyPinState(stateIndex, state);
+	if (hasStimPins) {
+		applyPinState(stateIndex, state);
+	}
 #endif /* EFI_PROD_CODE */
 
 }
@@ -180,4 +183,36 @@ void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUF
 	addConsoleActionI("stop_stimulator_at_index", setEmulatorAtIndex);
 	addConsoleAction("resume_stimulator", resumeStimulator);
 }
+
+void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration) {
+	if (engineConfiguration->triggerSimulatorFrequency ==
+			previousConfiguration->triggerSimulatorFrequency) {
+		return;
+	}
+	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
+}
+
+void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));
+
+	for (size_t i = 0; i < efi::size(emulatorOutputs); i++)
+	{
+		triggerSignal.outputPins[i] = &emulatorOutputs[i];
+
+		brain_pin_e pin = CONFIG(triggerSimulatorPins)[i];
+
+		// Only bother trying to set output pins if they're configured
+		if (pin != GPIO_UNASSIGNED) {
+			hasStimPins = true;
+		}
+
+#if EFI_PROD_CODE
+		triggerSignal.outputPins[i]->initPin("Trigger emulator", pin,
+					&CONFIG(triggerSimulatorPinModes)[i]);
+#endif
+	}
+
+	initTriggerEmulatorLogic(sharedLogger);
+}
+
 #endif /* EFI_EMULATE_POSITION_SENSORS */
