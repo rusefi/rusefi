@@ -721,7 +721,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	tsOutputChannels->pedalPosition = pedal.Value;
-	tsOutputChannels->isPedalError = !pedal.Valid;
+	// Only report fail if you have one (many people don't)
+	tsOutputChannels->isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedal);
 
 	// Set raw sensors
 	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1);
