@@ -257,7 +257,7 @@
  * Do we need file logging (like SD card) logic?
  */
 #ifndef EFI_FILE_LOGGING
-#define EFI_FILE_LOGGING TRUE
+#define EFI_FILE_LOGGING FALSE
 #endif
 
 #ifndef EFI_USB_SERIAL
@@ -274,7 +274,7 @@
 #endif
 
 #ifndef EFI_ENGINE_SNIFFER
-#define EFI_ENGINE_SNIFFER TRUE
+#define EFI_ENGINE_SNIFFER FALSE
 #endif
 
 #define EFI_HISTOGRAMS FALSE
