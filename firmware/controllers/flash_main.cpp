@@ -151,8 +151,12 @@ void writeToFlashNow(void) {
 	persistentState.value = flashStateCrc(&persistentState);
 
 	// Flash two copies
+	efitick_t nowNt = getTimeNowNt();
 	int result1 = eraseAndFlashCopy(getFlashAddrFirstCopy(), persistentState);
+	scheduleMsg(logger, " Copy 1 writen within %d uS", NT2US(getTimeNowNt() - nowNt));
+	nowNt = getTimeNowNt();
 	int result2 = eraseAndFlashCopy(getFlashAddrSecondCopy(), persistentState);
+	scheduleMsg(logger, " Copy 2 writen within %d uS", NT2US(getTimeNowNt() - nowNt));
 
 	// handle success/failure
 	bool isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
@@ -183,6 +187,7 @@ persisted_configuration_state_e flashState;
 
 static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, Logging * logger) {
 	printMsg(logger, "readFromFlash %x", address);
+	efitick_t nowNt = getTimeNowNt();
 #if (HAL_USE_FLASH == TRUE)
 	/* Base Flash should be argument */
 	BaseFlash *bf = getBaseFlash(&FLASH_DEVICE);
@@ -197,6 +202,7 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
 #else
 	intFlashRead(address, (char *) &persistentState, sizeof(persistentState));
 #endif
+	scheduleMsg(logger, " Read setting from flash takes %d uS", NT2US(getTimeNowNt() - nowNt));
 
 	if (!isValidCrc(&persistentState)) {
 		return CRC_FAILED;

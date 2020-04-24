@@ -90,7 +90,7 @@ static const SPIConfig W25SpiCfg = {
 	.sspad = EFI_FLASH_SPI_CS_PIN,
 	.cr1 =
 		SPI_CR1_8BIT_MODE |
-		((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
+		((0 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |
 		0,
 	.cr2 =
 		SPI_CR2_8BIT_MODE |
