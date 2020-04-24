@@ -1458,6 +1458,7 @@ cmd_test_ac_relay     		 = "w\x00\x14\x00\x09"
 cmd_write_config     		 = "w\x00\x14\x00\x0A"
 cmd_test_starter_relay     	 = "w\x00\x14\x00\x0B"
 cmd_etb_autotune             = "w\x00\x14\x00\x0C"
+cmd_enable_self_stim         = "w\x00\x14\x00\x0D"
 
 cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
@@ -2832,7 +2833,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Board->ECU stimulator
 	dialog = ecuStimulator, "ECU stimulator"
 		field = "Trigger Simulator",   					triggerSimulatorFrequency
-		field = "self-stimulation",						directSelfStimulation
+		commandButton = "Enable Internal Trigger Simulation", cmd_enable_self_stim
 		field = ""
 		field = "digipot spi", 							digitalPotentiometerSpiDevice
 		field = "digipot CS #0", 						digitalPotentiometerChipSelect1

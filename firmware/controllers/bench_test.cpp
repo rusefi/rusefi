@@ -261,6 +261,9 @@ static void handleCommandX14(uint16_t index) {
 	case 0xC:
 		engine->etbAutoTune = true;
 		return;
+	case 0xD:
+		engine->directSelfStimulation = true;
+		return;
 	}
 }
 
