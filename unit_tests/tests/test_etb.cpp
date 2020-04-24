@@ -290,3 +290,27 @@ TEST(etb, setOutputOutOfRangeLow) {
 	// Off scale - should get clamped to -90%
 	etb.setOutput(-110);
 }
+
+TEST(etb, closedLoopPid) {
+	pid_s pid = {};
+	pid.pFactor = 5;
+	pid.maxValue = 75;
+	pid.minValue = -60;
+	
+	EtbController etb;
+	etb.init(nullptr, 0, &pid, nullptr);
+
+	// Disable autotune for now
+	Engine e;
+	e.etbAutoTune = false;
+	etb.engine = &e;
+
+	// Setpoint greater than actual, should be positive output
+	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 40).value_or(-1), 50);
+	// Likewise but negative
+	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 52).value_or(-1), -10);
+
+	// Test PID limiting
+	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 70).value_or(-1), -60);
+	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 30).value_or(-1), 75);
+}
