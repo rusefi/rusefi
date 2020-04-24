@@ -147,6 +147,10 @@ public class AnyCommand {
         }
     }
 
+    /**
+     * stim_check 3000 5 30
+     * would set RPM to 3000, give it 5 seconds to settle, and test for 30 seconds
+     */
     private static void handleStimulationSelfCheck(String rawCommand) {
         String[] parts = rawCommand.split(" ", 4);
         if (parts.length != 4) {
