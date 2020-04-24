@@ -102,7 +102,7 @@
 #endif /* EFI_PROD_CODE */
 
 #if EFI_EMULATE_POSITION_SENSORS
-#include "trigger_emulator.h"
+#include "trigger_emulator_algo.h"
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
 #if EFI_TUNER_STUDIO

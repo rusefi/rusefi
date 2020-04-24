@@ -8,7 +8,15 @@
 #pragma once
 
 #include "engine.h"
-#include "pwm_generator_logic.h"
+
+class Logging;
+class PwmConfig;
+class MultiChannelStateSequence;
+
+void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setTriggerEmulatorRPM(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration);
+
 
 class TriggerEmulatorHelper {
 public:
