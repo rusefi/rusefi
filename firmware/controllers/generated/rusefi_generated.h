@@ -510,10 +510,6 @@
 #define debugMapAveraging_offset_hex 327
 #define debugMode_offset 2092
 #define debugMode_offset_hex 82c
-#define debugSetTimer_offset 806
-#define debugSetTimer_offset_hex 326
-#define debugTimerCallback_offset 711
-#define debugTimerCallback_offset_hex 2c7
 #define debugTriggerSync_offset 676
 #define debugTriggerSync_offset_hex 2a4
 #define DIGIPOT_COUNT 4
@@ -2169,8 +2165,12 @@
 #define unused1059_offset_hex f7c
 #define unused2432_offset 2432
 #define unused2432_offset_hex 980
+#define unused711_offset 711
+#define unused711_offset_hex 2c7
 #define unused76b0_offset 76
 #define unused76b0_offset_hex 4c
+#define unused806_offset 806
+#define unused806_offset_hex 326
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_24_offset_hex 5c4
 #define unused_1484_bit_25_offset 1476

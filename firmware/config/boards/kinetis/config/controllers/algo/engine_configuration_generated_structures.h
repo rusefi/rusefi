@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Thu Apr 23 23:49:40 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri Apr 24 23:25:53 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1258,7 +1258,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 711
 	 */
-	brain_pin_e debugTimerCallback;
+	uint8_t unused711;
 	/**
 	 * offset 712
 	 */
@@ -1462,7 +1462,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 806
 	 */
-	brain_pin_e debugSetTimer;
+	uint8_t unused806;
 	/**
 	 * offset 807
 	 */
@@ -3352,4 +3352,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Thu Apr 23 23:49:40 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri Apr 24 23:25:53 EDT 2020
