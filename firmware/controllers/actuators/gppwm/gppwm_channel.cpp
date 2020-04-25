@@ -15,7 +15,7 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 	case GPPWM_Tps:
 		return Sensor::get(SensorType::Tps1);
 	case GPPWM_Map: {
-		float map = getMap();
+		float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		if (cisnan(map)) {
 			return unexpected;
