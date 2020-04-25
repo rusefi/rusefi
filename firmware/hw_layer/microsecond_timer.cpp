@@ -46,12 +46,10 @@ uint32_t maxPrecisionCallbackDuration = 0;
 
 static volatile efitick_t lastSetTimerTimeNt;
 static int lastSetTimerValue;
-static volatile bool isTimerPending = FALSE;
+static volatile bool isTimerPending = false;
 
 static volatile int timerCallbackCounter = 0;
 static volatile int timerRestartCounter = 0;
-
-schfunc_t globalTimerCallback;
 
 static const char * msg;
 
@@ -103,23 +101,21 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 
 	lastSetTimerTimeNt = getTimeNowNt();
 	lastSetTimerValue = deltaTimeUs;
-	isTimerPending = TRUE;
+	isTimerPending = true;
 	timerRestartCounter++;
 	enginePins.debugSetTimer.setValue(0);
 }
+
+void globalTimerCallback();
 
 static void hwTimerCallback(GPTDriver *gptp) {
 	(void)gptp;
 	enginePins.debugTimerCallback.setValue(1);
 	timerCallbackCounter++;
-	if (globalTimerCallback == NULL) {
-		firmwareError(CUSTOM_ERR_NULL_TIMER_CALLBACK, "NULL globalTimerCallback");
-		return;
-	}
 	isTimerPending = false;
 
 	uint32_t before = getTimeNowLowerNt();
-	globalTimerCallback(NULL);
+	globalTimerCallback();
 	uint32_t precisionCallbackDuration = getTimeNowLowerNt() - before;
 	if (precisionCallbackDuration > maxPrecisionCallbackDuration) {
 		maxPrecisionCallbackDuration = precisionCallbackDuration;
@@ -203,7 +199,6 @@ static void validateHardwareTimer() {
 }
 
 void initMicrosecondTimer(void) {
-
 	gptStart(&GPTDEVICE, &gpt5cfg);
 	efiAssertVoid(CUSTOM_ERR_TIMER_STATE, GPTDEVICE.state == GPT_READY, "hw state");
 	hwStarted = true;
