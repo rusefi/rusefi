@@ -49,7 +49,7 @@ void GppwmChannel::setOutput(float result) {
 		result = m_state ? 100 : 0;
 	}
 
-	m_pwm->setSimplePwmDutyCycle(clampF(0, result / 100.0f, 100));
+	m_pwm->setSimplePwmDutyCycle(clampF(0, result / 100.0f, 1));
 }
 
 void GppwmChannel::init(bool usePwm, SimplePwm* pwm, const ValueProvider3D* table, const gppwm_channel* config) {
