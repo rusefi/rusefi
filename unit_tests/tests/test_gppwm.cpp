@@ -67,5 +67,3 @@ TEST(GpPwm, OutputOnOff) {
 	ch.setOutput(39.0f);
 	ch.setOutput(41.0f);
 }
-
-TEST(GpPwm, )

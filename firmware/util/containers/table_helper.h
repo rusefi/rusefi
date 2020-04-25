@@ -30,7 +30,7 @@ public:
 	explicit Map3D(const char*name);
 	Map3D(const char*name, float multiplier);
 	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const kType loadBins[LOAD_BIN_SIZE], const kType rpmBins[RPM_BIN_SIZE]);
-	float getValue(float xRpm, float y) const;
+	float getValue(float xRpm, float y) const override;
 	void setAll(vType value);
 	vType *pointers[LOAD_BIN_SIZE];
 private:
@@ -161,6 +161,7 @@ typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t> pedal2tps_
 typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t> boostOpenLoop_Map3D_t;
 typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t> boostClosedLoop_Map3D_t;
 typedef Map3D<IAC_PID_MULT_SIZE, IAC_PID_MULT_SIZE, uint8_t, uint8_t> iacPidMultiplier_t;
+typedef Map3D<GPPWM_RPM_COUNT, GPPWM_LOAD_COUNT, uint8_t, uint8_t> gppwm_Map3D_t;
 
 void setRpmBin(float array[], int size, float idleRpm, float topRpm);
 
