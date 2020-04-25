@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu Apr 23 23:48:34 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri Apr 24 23:22:49 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -336,9 +336,6 @@ public class Fields {
 	public static final int debugMapAveraging_offset = 807;
 	public static final int debugMapAveraging_offset_hex = 327;
 	public static final int debugMode_offset = 2092;
-	public static final int debugSetTimer_offset = 806;
-	public static final int debugSetTimer_offset_hex = 326;
-	public static final int debugTimerCallback_offset = 711;
 	public static final int debugTriggerSync_offset = 676;
 	public static final int DIGIPOT_COUNT = 4;
 	public static final int digitalPotentiometerChipSelect1_offset = 668;
@@ -1440,7 +1437,10 @@ public class Fields {
 	public static final int unused1059_offset = 3964;
 	public static final int unused2432_offset = 2432;
 	public static final int unused2432_offset_hex = 980;
+	public static final int unused711_offset = 711;
 	public static final int unused76b0_offset = 76;
+	public static final int unused806_offset = 806;
+	public static final int unused806_offset_hex = 326;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
 	public static final int unused_1484_bit_26_offset = 1476;
@@ -1811,7 +1811,7 @@ public class Fields {
 	public static final Field CANTXPIN = Field.create("CANTXPIN", 708, FieldType.INT8, brain_pin_e);
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 709, FieldType.INT8, brain_pin_e);
 	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 710, FieldType.INT8);
-	public static final Field DEBUGTIMERCALLBACK = Field.create("DEBUGTIMERCALLBACK", 711, FieldType.INT8, brain_pin_e);
+	public static final Field UNUSED711 = Field.create("UNUSED711", 711, FieldType.INT8);
 	public static final Field IDLETHREADPERIODMS = Field.create("IDLETHREADPERIODMS", 712, FieldType.INT);
 	public static final Field CONSOLELOOPPERIODMS = Field.create("CONSOLELOOPPERIODMS", 716, FieldType.INT);
 	public static final Field LCDTHREADPERIODMS = Field.create("LCDTHREADPERIODMS", 720, FieldType.INT);
@@ -1909,7 +1909,7 @@ public class Fields {
 	public static final Field MAX31855_CS7 = Field.create("MAX31855_CS7", 802, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS8 = Field.create("MAX31855_CS8", 803, FieldType.INT8, brain_pin_e);
 	public static final Field SDCARDPERIODMS = Field.create("SDCARDPERIODMS", 804, FieldType.INT16);
-	public static final Field DEBUGSETTIMER = Field.create("DEBUGSETTIMER", 806, FieldType.INT8, brain_pin_e);
+	public static final Field UNUSED806 = Field.create("UNUSED806", 806, FieldType.INT8);
 	public static final Field DEBUGMAPAVERAGING = Field.create("DEBUGMAPAVERAGING", 807, FieldType.INT8, brain_pin_e);
 	public static final Field STARTERRELAYDISABLEPIN = Field.create("STARTERRELAYDISABLEPIN", 808, FieldType.INT8, output_pin_e);
 	public static final Field STARTERRELAYDISABLEMODE = Field.create("STARTERRELAYDISABLEMODE", 809, FieldType.INT8, pin_output_mode_e);
@@ -2739,7 +2739,7 @@ public class Fields {
 	CANTXPIN,
 	CANRXPIN,
 	THROTTLEPEDALUPPINMODE,
-	DEBUGTIMERCALLBACK,
+	UNUSED711,
 	IDLETHREADPERIODMS,
 	CONSOLELOOPPERIODMS,
 	LCDTHREADPERIODMS,
@@ -2837,7 +2837,7 @@ public class Fields {
 	MAX31855_CS7,
 	MAX31855_CS8,
 	SDCARDPERIODMS,
-	DEBUGSETTIMER,
+	UNUSED806,
 	DEBUGMAPAVERAGING,
 	STARTERRELAYDISABLEPIN,
 	STARTERRELAYDISABLEMODE,
