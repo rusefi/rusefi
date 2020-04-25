@@ -1918,8 +1918,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "LCD D6 pin", 							HD44780_db6
 		field = "LCD D7 pin", 							HD44780_db7
 		field = "Debug Trigger Sync", 					debugTriggerSync
-		field = "Debug Timer Callback", 				debugTimerCallback
-		field = "Debug Set Timer", 						debugSetTimer
 		field = "Aux Fast Analog",						auxFastSensor1_adcChannel
 
 	dialog = allPins1_3

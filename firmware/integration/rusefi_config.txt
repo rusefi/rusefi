@@ -643,7 +643,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:7], "Off", "Slow", "Fas
 	brain_pin_e canRxPin;set_can_rx_pin X
 
 pin_input_mode_e throttlePedalUpPinMode;
-	brain_pin_e debugTimerCallback
+	uint8_t unused711;
 
 	int idleThreadPeriodMs;
 	int consoleLoopPeriodMs;
@@ -717,7 +717,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 
 custom uart_device_e 1 bits,U32,   @OFFSET@, [0:7], "Off", "UART1", "UART2", "UART3" 
 	int16_t sdCardPeriodMs;+SD card logging period, in milliseconds;"ms",        1,     0,  0,    30000,  0
-	brain_pin_e debugSetTimer
+	uint8_t unused806
 	brain_pin_e debugMapAveraging;
 	output_pin_e starterRelayDisablePin;
 	pin_output_mode_e starterRelayDisableMode;On some vehicles we can disable starter once engine is already running
