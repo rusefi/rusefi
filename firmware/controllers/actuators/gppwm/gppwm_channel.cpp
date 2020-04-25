@@ -6,16 +6,23 @@
 #include "table_helper.h"
 #include "expected.h"
 #include "sensor.h"
+#include "map.h"
 
 EXTERN_ENGINE;
 
-static expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (channel) {
 	case GPPWM_Tps:
 		return Sensor::get(SensorType::DriverThrottleIntent);
-	case GPPWM_Map:
-		// TODO
-		return 0;
+	case GPPWM_Map: {
+		float map = getMap();
+
+		if (cisnan(map)) {
+			return unexpected;
+		}
+
+		return map;
+	}
 	case GPPWM_Clt:
 		return Sensor::get(SensorType::Clt);
 	case GPPWM_Iat:
