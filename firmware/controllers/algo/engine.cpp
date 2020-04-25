@@ -141,7 +141,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
 
-	updateGppwm(PASS_ENGINE_PARAMETER_SIGNATURE);
+	updateGppwm();
 
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 
