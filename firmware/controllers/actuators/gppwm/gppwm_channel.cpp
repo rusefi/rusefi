@@ -33,6 +33,11 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 }
 
 void GppwmChannel::setOutput(float result) {
+	// Not init yet, nothing to do.
+	if (!m_pwm || !m_config) {
+		return;
+	}
+	
 	if (!m_usePwm) {
 		// Apply hysteresis with provided values
 		if (m_state && result < m_config->offBelowDuty) {
