@@ -2,6 +2,7 @@
 #include "engine_test_helper.h"
 #include "gppwm_channel.h"
 #include "gppwm.h"
+#include "sensor.h"
 
 #include "mocks.h"
 
@@ -66,4 +67,33 @@ TEST(GpPwm, OutputOnOff) {
 	ch.setOutput(41.0f);
 	ch.setOutput(39.0f);
 	ch.setOutput(41.0f);
+}
+
+TEST(GpPwm, GetOutput) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	GppwmChannel ch;
+	INJECT_ENGINE_REFERENCE(&ch);
+
+	gppwm_channel cfg;
+	cfg.loadAxis = GPPWM_Tps;
+	cfg.dutyIfError = 21.0f;
+
+	MockVp3d table;
+
+	engine->rpmCalculator.mockRpm = 1200;
+	EXPECT_CALL(table, getValue(1200, 35.0f))
+		.WillRepeatedly([](float x, float tps) {
+			return tps;
+		});
+
+	ch.init(false, nullptr, &table, &cfg);
+
+	Sensor::resetAllMocks();
+
+	// Should return dutyIfError
+	EXPECT_FLOAT_EQ(21.0f, ch.getOutput());
+
+	// Set TPS, should return tps value
+	Sensor::setMockValue(SensorType::Tps1, 35.0f);
+	EXPECT_FLOAT_EQ(35.0f, ch.getOutput());	
 }
