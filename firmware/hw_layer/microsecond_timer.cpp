@@ -64,7 +64,6 @@ static volatile bool hwStarted = false;
  * This function should be invoked under kernel lock which would disable interrupts.
  */
 void setHardwareUsTimer(int32_t deltaTimeUs) {
-	enginePins.debugSetTimer.setValue(1);
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwStarted, "HW.started");
 	setHwTimerCounter++;
 	/**
@@ -81,7 +80,6 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_US) {
 		// we are trying to set callback for too far into the future. This does not look right at all
 		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too far: %d", deltaTimeUs);
-		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
 	}
 
@@ -90,11 +88,9 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 	}
 	if (GPTDEVICE.state != GPT_READY) {
 		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d/%d", GPTDEVICE.state, setHwTimerCounter);
-		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
 	}
 	if (hasFirmwareError()) {
-		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
 	}
 	gptStartOneShotI(&GPTDEVICE, deltaTimeUs);
@@ -103,14 +99,12 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 	lastSetTimerValue = deltaTimeUs;
 	isTimerPending = true;
 	timerRestartCounter++;
-	enginePins.debugSetTimer.setValue(0);
 }
 
 void globalTimerCallback();
 
 static void hwTimerCallback(GPTDriver *gptp) {
 	(void)gptp;
-	enginePins.debugTimerCallback.setValue(1);
 	timerCallbackCounter++;
 	isTimerPending = false;
 
@@ -120,7 +114,6 @@ static void hwTimerCallback(GPTDriver *gptp) {
 	if (precisionCallbackDuration > maxPrecisionCallbackDuration) {
 		maxPrecisionCallbackDuration = precisionCallbackDuration;
 	}
-	enginePins.debugTimerCallback.setValue(0);
 }
 
 class MicrosecondTimerWatchdogController : public PeriodicTimerController {
