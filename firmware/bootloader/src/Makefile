@@ -12,8 +12,14 @@ ifeq ($(DEBUG_LEVEL_OPT),)
   DDEFS += -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
 endif
 
+ifeq ($(CONFDIR),)
+  CONFDIR = $(PROJECT_DIR)/config/stm32f4ems
+endif
+
 # disable some modules to shrink bootloader binary
 DDEFS += -DHAL_USE_ADC=FALSE -DHAL_USE_CAN=FALSE -DHAL_USE_EXT=FALSE -DHAL_USE_GPT=FALSE -DHAL_USE_I2C=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE -DHAL_USE_I2C=FALSE 
+#disable ChibiOS flsah driver and prevent header from include
+DDEFS += -DHAL_USE_FLASH=FASLE
 
 # disable USB (The bootloader has currently UART support only)
 DDEFS += -DEFI_USB_SERIAL=FALSE -DHAL_USE_SERIAL_USB=FALSE -DHAL_USE_USB=FALSE -DHAL_USE_USB_MSD=FALSE
@@ -71,7 +77,7 @@ endif
 # If enabled, this option makes the build process faster by not compiling
 # modules not used in the current configuration.
 ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = no
+  USE_SMART_BUILD = yes
 endif
 
 #
