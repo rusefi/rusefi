@@ -127,6 +127,20 @@ MAKEFLAGS += ${NUMJOBS}
 # Project, sources and paths
 #
 
+BOARDS_DIR = $(PROJECT_DIR)/config/boards
+
+include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
+
+# If enabled, this option makes the build process faster by not compiling
+# modules not used in the current configuration.
+# without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
+ifeq ($(USE_SMART_BUILD),)
+  USE_SMART_BUILD = yes
+endif
+ifeq ($(CONFDIR),)
+  CONFDIR = $(PROJECT_DIR)/config/stm32f4ems
+endif
+
 # Startup files.
 include $(CPU_STARTUP_DIR)
 # HAL-OSAL files (optional).
@@ -147,9 +161,6 @@ ifeq ($(USE_FATFS),yes)
 include $(PROJECT_DIR)/ext/fatfs.mk
 endif
 
-BOARDS_DIR = $(PROJECT_DIR)/config/boards
-
-include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
@@ -164,16 +175,6 @@ include $(PROJECT_DIR)/util/util.mk
 ifeq ($(BOOTLOADERINC),)
   # include default bootloader code
   BOOTLOADERINC= $(PROJECT_DIR)/bootloader/
-endif
-
-# If enabled, this option makes the build process faster by not compiling
-# modules not used in the current configuration.
-# without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
-ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
-endif
-ifeq ($(CONFDIR),)
-  CONFDIR = config/stm32f4ems
 endif
 
 ifeq ($(USE_BOOTLOADER),yes)
