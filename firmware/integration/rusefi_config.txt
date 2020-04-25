@@ -293,8 +293,8 @@ struct spi_pins
 end_struct
 
 
-#define gppwm_channel_e_enum "None", "TPS", "MAP", "CLT", "IAT"
-custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:7], @@gppwm_channel_e_enum@@
+#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT"
+custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:1], @@gppwm_channel_e_enum@@
 
 struct gppwm_channel
 	brain_pin_e pin;+Select a pin to use for PWM or on-off output.;
