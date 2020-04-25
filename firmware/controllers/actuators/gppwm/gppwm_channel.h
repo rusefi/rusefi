@@ -21,8 +21,8 @@ private:
 	bool m_state = false;
 
 	// Configuration fields
-	const gppwm_channel* m_config;
+	const gppwm_channel* m_config = nullptr;
 	bool m_usePwm = false;
-	SimplePwm* m_pwm;
-	const ValueProvider3D* m_table;
+	SimplePwm* m_pwm = nullptr;
+	const ValueProvider3D* m_table = nullptr;
 };
