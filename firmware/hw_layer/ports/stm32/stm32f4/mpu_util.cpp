@@ -14,7 +14,6 @@
 #include "engine.h"
 #include "pin_repository.h"
 #include "stm32f4xx_hal_flash.h"
-#include "m25q.h"
 #include "os_util.h"
 
 EXTERN_ENGINE;
@@ -78,40 +77,6 @@ EXTERNC int getRemainingStack(thread_t *otp) {
 
 #endif /* GNU / IAR */
 
-
-#if (EFI_FLASH_SPI == TRUE)
-/*
- * Maximum speed SPI configuration (??MHz, CPHA=0, CPOL=0, MSb first).
- */
-static const SPIConfig W25SpiCfg = {
-	.circular = false,
-	.end_cb = NULL,
-	.ssport = EFI_FLASH_SPI_CS_GPIO,
-	.sspad = EFI_FLASH_SPI_CS_PIN,
-	.cr1 =
-		SPI_CR1_8BIT_MODE |
-		((0 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |
-		0,
-	.cr2 =
-		SPI_CR2_8BIT_MODE |
-		0,
-};
-
-/*
- * Flash driver configuration.
- */
-static const M25QConfig W25FlashConfig = {
-	.busp = &EFI_FLASH_SDPID,
-	.buscfg = &W25SpiCfg
-};
-
-/*
- * Flash driver object.
- */
-M25QDriver W25Flash;
-
-#endif
-
 void baseMCUInit(void) {
 	// looks like this holds a random value on start? Let's set a nice clean zero
         DWT->CYCCNT = 0;
@@ -122,37 +87,8 @@ void baseMCUInit(void) {
 	BOR_Set(BOR_Level_1); // one step above default value
 
 #if (HAL_USE_FLASH == TRUE)
-#if (HAL_USE_EFL == TRUE)
-	eflStart(&EFLD1, NULL);
-#endif /* HAL_USE_EFL */
-
-#if (EFI_FLASH_SPI == TRUE)
-	/* init SPI pins */
-	palSetPad(EFI_FLASH_SPI_CS_GPIO, EFI_FLASH_SPI_CS_PIN);
-	palSetPadMode(EFI_FLASH_SPI_CS_GPIO, EFI_FLASH_SPI_CS_PIN,
-		PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);
-	palSetPadMode(getBrainPort(EFI_FLASH_SPI_SCK), getBrainPinIndex(EFI_FLASH_SPI_SCK),
-		PAL_MODE_ALTERNATE(EFI_FLASH_SPI_AF) | PAL_STM32_OSPEED_HIGHEST);
-	palSetPadMode(getBrainPort(EFI_FLASH_SPI_MISO), getBrainPinIndex(EFI_FLASH_SPI_MISO),
-		PAL_MODE_ALTERNATE(EFI_FLASH_SPI_AF) | PAL_STM32_OSPEED_HIGHEST);
-	palSetPadMode(getBrainPort(EFI_FLASH_SPI_MOSI), getBrainPinIndex(EFI_FLASH_SPI_MOSI),
-		PAL_MODE_ALTERNATE(EFI_FLASH_SPI_AF) | PAL_STM32_OSPEED_HIGHEST);
-	/* Deactivate WP */
-	palSetPad(getBrainPort(EFI_FLASH_WP), getBrainPinIndex(EFI_FLASH_WP));
-	palSetPadMode(getBrainPort(EFI_FLASH_WP), getBrainPinIndex(EFI_FLASH_WP),
-		PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);
-	/* Deactivate HOLD */
-	palSetPad(getBrainPort(EFI_FLASH_HOLD), getBrainPinIndex(EFI_FLASH_HOLD));
-	palSetPadMode(getBrainPort(EFI_FLASH_HOLD), getBrainPinIndex(EFI_FLASH_HOLD),
-		PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);
-
-	/*
-	 * Initializing and starting flash driver.
-	 */
-	m25qObjectInit(&W25Flash);
-	m25qStart(&W25Flash, &W25FlashConfig);
-#endif /* EFI_FLASH_SPI */
-#endif /* HAL_USE_FLASH */
+	initFlash();
+#endif
 }
 
 void _unhandled_exception(void) {

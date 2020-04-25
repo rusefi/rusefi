@@ -19,7 +19,9 @@ endif
 # disable some modules to shrink bootloader binary
 DDEFS += -DHAL_USE_ADC=FALSE -DHAL_USE_CAN=FALSE -DHAL_USE_EXT=FALSE -DHAL_USE_GPT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE
 #disable ChibiOS flsah driver and prevent header from include
-DDEFS += -DHAL_USE_FLASH=FALSE
+DDEFS += -DHAL_USE_FLASH=FALSE -DHAL_USE_EFL=FALSE -DEFI_FLASH_SPI=FALSE
+#use old-style flash driver
+DDEFS += -DEFI_INTERNAL_FLASH=TRUE
 
 DDEFS += -DPRIMARY_UART_DMA_MODE=FALSE
 

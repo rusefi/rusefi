@@ -34,7 +34,7 @@
  * @brief   Enables the FLASH subsystem.
  */
 #if !defined(HAL_USE_FLASH) || defined(__DOXYGEN__)
-#define HAL_USE_FLASH               FALSE
+#define HAL_USE_FLASH               TRUE
 #endif
 
 /**
@@ -63,6 +63,13 @@
  */
 #if !defined(HAL_USE_DAC) || defined(__DOXYGEN__)
 #define HAL_USE_DAC                 FALSE
+#endif
+
+/**
+ * @brief   Enables the EFlash subsystem.
+ */
+#if !defined(HAL_USE_EFL) || defined(__DOXYGEN__)
+#define HAL_USE_EFL                 FALSE
 #endif
 
 /**

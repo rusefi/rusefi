@@ -80,6 +80,10 @@ void baseMCUInit(void) {
 	DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
+
+#if (HAL_USE_FLASH == TRUE)
+	initFlash();
+#endif
 }
 
 void _unhandled_exception(void) {
@@ -429,9 +433,19 @@ size_t flashSectorSize(flashsector_t sector) {
 }
 
 uintptr_t getFlashAddrFirstCopy() {
+#if (EFI_FLASH_SPI == TRUE)
+	/* Each copy ocupy 128K to ensure erase will not affect other data
+	 * if dirver do not suppoort small pages. See M25Q_USE_SUB_SECTORS */
+	return (EFI_FLASH_SIZE - (2 * 128 * 1024));
+#else
 	return 0x08100000;
+#endif
 }
 
 uintptr_t getFlashAddrSecondCopy() {
+#if (EFI_FLASH_SPI == TRUE)
+	return (EFI_FLASH_SIZE - (1 * 128 * 1024));
+#else
 	return 0x08140000;
+#endif
 }

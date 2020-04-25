@@ -20,7 +20,7 @@ typedef enum {
 
 persisted_configuration_state_e readConfiguration(Logging * logger);
 void readFromFlash(void);
-void initFlash(Logging *sharedLogger);
+void initFlashCommands(Logging *sharedLogger);
 
 /**
  * Because of hardware-related issues, stm32f4 chip is totally

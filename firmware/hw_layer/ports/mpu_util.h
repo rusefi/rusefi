@@ -45,6 +45,10 @@ typedef enum {
 BOR_Level_t BOR_Get(void);
 BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 
+#if (HAL_USE_FLASH == TRUE)
+void initFlash(void);
+#endif
+
 #ifdef __cplusplus
 extern "C"
 {

@@ -271,7 +271,7 @@ static void writeConfigCommand() {
 	writeToFlashNow();
 }
 
-void initFlash(Logging *sharedLogger) {
+void initFlashCommands(Logging *sharedLogger) {
 	logger = sharedLogger;
 
 	addConsoleAction("readconfig", readFromFlash);
