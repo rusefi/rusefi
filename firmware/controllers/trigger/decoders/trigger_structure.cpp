@@ -551,6 +551,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		setToothedWheelConfiguration(this, 36, 1, ambiguousOperationMode);
 		break;
 
+	case TT_BOSCH_QUICK_START:
 	case TT_HONDA_K_12_1:
 		configureHondaK_12_1(this);
 		break;

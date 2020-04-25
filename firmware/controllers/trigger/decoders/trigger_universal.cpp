@@ -117,3 +117,7 @@ void configure3_1_cam(TriggerWaveform *s, operation_mode_e operationMode) {
 
 	s->isSynchronizationNeeded = false;
 }
+
+void configureQuickStartSenderWheel(TriggerWaveform *s) {
+
+}
