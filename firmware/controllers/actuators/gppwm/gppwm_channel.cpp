@@ -13,7 +13,7 @@ EXTERN_ENGINE;
 expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (channel) {
 	case GPPWM_Tps:
-		return Sensor::get(SensorType::DriverThrottleIntent);
+		return Sensor::get(SensorType::Tps1);
 	case GPPWM_Map: {
 		float map = getMap();
 
