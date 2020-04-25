@@ -1,4 +1,4 @@
-HW_LAYER_EMS += $(PROJECT_DIR)/hw_layer/ports/stm32/flash.c \
+HW_LAYER_EMS += $(PROJECT_DIR)/hw_layer/ports/stm32/flash_int.c \
 				$(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/stm32f4xx_hal_flash.c \
 				$(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/stm32f4xx_hal_flash_ex.c
 
