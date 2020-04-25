@@ -47,7 +47,7 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void updateGppwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void updateGppwm() {
 	for (size_t i = 0; i < efi::size(channels); i++) {
 		channels[i].update();
 	}
