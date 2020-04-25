@@ -1,5 +1,5 @@
 /**
- * @file flash.h
+ * @file flash_int.h
  *
  */
 
@@ -70,28 +70,6 @@ uintptr_t getFlashAddrFirstCopy(void);
 uintptr_t getFlashAddrSecondCopy(void);
 
 /**
- * @brief Get the beginning address of @p sector.
- * @param sector Sector to retrieve the beginning address of.
- * @return First address (inclusive) of @p sector.
- */
-flashaddr_t flashSectorBegin(flashsector_t sector);
-
-/**
- * @brief Get the end address of @p sector.
- * @param sector Sector to retrieve the end address of.
- * @return End address (exclusive) of @p sector (i.e. beginning address of the next sector).
- */
-flashaddr_t flashSectorEnd(flashsector_t sector);
-
-/**
- * @brief Get the sector containing @p address.
- * @warning @p address must be in the flash addresses range.
- * @param address Address to be searched for.
- * @return Sector containing @p address.
- */
-flashsector_t flashSectorAt(flashaddr_t address);
-
-/**
  * @brief Erase the flash @p sector.
  * @details The sector is checked for errors after erase.
  * @note The sector is deleted regardless of its current state.
@@ -101,7 +79,7 @@ flashsector_t flashSectorAt(flashaddr_t address);
  * @return FLASH_RETURN_BAD_FLASH       Flash cell error.
  * @return FLASH_RETURN_NO_PERMISSION   Access denied.
  */
-int flashSectorErase(flashsector_t sector);
+int intFlashSectorErase(flashsector_t sector);
 
 /**
  * @brief Erase the sectors containing the span of @p size bytes starting at @p address.
@@ -117,7 +95,7 @@ int flashSectorErase(flashsector_t sector);
  * @return FLASH_RETURN_BAD_FLASH       Flash cell error.
  * @return FLASH_RETURN_NO_PERMISSION   Access denied.
  */
-int flashErase(flashaddr_t address, size_t size);
+int intFlashErase(flashaddr_t address, size_t size);
 
 /**
  * @brief Check if the @p size bytes of flash memory starting at @p address are erased.
@@ -127,7 +105,7 @@ int flashErase(flashaddr_t address, size_t size);
  * @return TRUE Memory is already erased.
  * @return FALSE Memory is not erased.
  */
-bool flashIsErased(flashaddr_t address, size_t size);
+bool intFlashIsErased(flashaddr_t address, size_t size);
 
 /**
  * @brief Check if the data in @p buffer are identical to the one in flash memory.
@@ -137,7 +115,7 @@ bool flashIsErased(flashaddr_t address, size_t size);
  * @return TRUE if the flash memory and the buffer contain identical data.
  * @return FALSE if the flash memory and the buffer don't contain identical data.
  */
-bool flashCompare(flashaddr_t address, const char* buffer, size_t size);
+bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size);
 
 /**
  * @brief Copy data from the flash memory to a @p buffer.
@@ -147,7 +125,7 @@ bool flashCompare(flashaddr_t address, const char* buffer, size_t size);
  * @param size Size of the data to be copied in bytes.
  * @return FLASH_RETURN_SUCCESS if successfully copied.
  */
-int flashRead(flashaddr_t address, char* buffer, size_t size);
+int intFlashRead(flashaddr_t address, char* buffer, size_t size);
 
 /**
  * @brief Copy data from a @p buffer to the flash memory.
@@ -159,7 +137,7 @@ int flashRead(flashaddr_t address, char* buffer, size_t size);
  * @return FLASH_RETURN_SUCCESS         No error.
  * @return FLASH_RETURN_NO_PERMISSION   Access denied.
  */
-int flashWrite(flashaddr_t address, const char* buffer, size_t size);
+int intFlashWrite(flashaddr_t address, const char* buffer, size_t size);
 
 #ifdef __cplusplus
 }
