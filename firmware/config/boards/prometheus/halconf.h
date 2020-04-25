@@ -33,4 +33,10 @@
 #undef HAL_USE_USB_MSD
 #define HAL_USE_USB_MSD FALSE
 
+#undef HAL_USE_FLASH
+#define HAL_USE_FLASH FALSE
+
+#undef HAL_USE_EFL
+#define HAL_USE_EFL FALSE
+
 #endif /* _HALCONF_PROMETHEUS_H_ */
