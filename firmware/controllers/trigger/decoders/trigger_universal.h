@@ -22,6 +22,8 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 
 void configureOnePlus60_2(TriggerWaveform *s, operation_mode_e operationMode);
 
+// TT_3_1_CAM
 void configure3_1_cam(TriggerWaveform *s, operation_mode_e operationMode);
 
 void configureOnePlusOne(TriggerWaveform *s, operation_mode_e operationMode);
+void configureQuickStartSenderWheel(TriggerWaveform *s);
