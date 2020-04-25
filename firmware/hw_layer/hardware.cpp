@@ -59,7 +59,7 @@
 #include "map_averaging.h"
 #endif
 
-#if EFI_INTERNAL_FLASH
+#if EFI_CONFIGURATION_STORAGE
 #include "flash_main.h"
 #endif
 
@@ -462,7 +462,7 @@ void initHardware(Logging *l) {
 		return;
 	}
 
-#if EFI_INTERNAL_FLASH
+#if EFI_CONFIGURATION_STORAGE
 
 #ifdef CONFIG_RESET_SWITCH_PORT
 // this pin is not configurable at runtime so that we have a reliable way to reset configuration
@@ -492,7 +492,7 @@ void initHardware(Logging *l) {
 #else
 	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* EFI_CONFIGURATION_STORAGE */
 
 	// it's important to initialize this pretty early in the game before any scheduling usages
 	initSingleTimerExecutorHardware();

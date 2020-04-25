@@ -183,13 +183,13 @@ void runRusEfi(void) {
 	 */
 	initPinRepository();
 
-#if EFI_INTERNAL_FLASH
+#if EFI_CONFIGURATION_STORAGE
 	/**
 	 * First thing is reading configuration from flash memory.
 	 * In order to have complete flexibility configuration has to go before anything else.
 	 */
 	readConfiguration(&sharedLogger);
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* EFI_CONFIGURATION_STORAGE */
 
 #if HW_CHECK_MODE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps

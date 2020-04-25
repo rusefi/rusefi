@@ -249,9 +249,9 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		 *
 		 * todo: allow writing if 2nd bank of flash is used
 		 */
-#if EFI_INTERNAL_FLASH
+#if EFI_CONFIGURATION_STORAGE
 		writeToFlashIfPending();
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* EFI_CONFIGURATION_STORAGE */
 		resetAccel();
 	}
 

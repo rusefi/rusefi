@@ -41,9 +41,9 @@
 #include "electronic_throttle.h"
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-#if EFI_INTERNAL_FLASH
+#if EFI_CONFIGURATION_STORAGE
 #include "flash_main.h"
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* EFI_CONFIGURATION_STORAGE */
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -257,10 +257,10 @@ void setEngineType(int value) {
 	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->resetEngineSnifferIfInTestMode();
 
-#if EFI_INTERNAL_FLASH
+#if EFI_CONFIGURATION_STORAGE
 	writeToFlashNow();
 //	scheduleReset();
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_CONFIGURATION_STORAGE */
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }

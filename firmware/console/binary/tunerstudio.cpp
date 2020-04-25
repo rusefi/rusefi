@@ -407,7 +407,7 @@ static void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e 
 void requestBurn(void) {
 	onBurnRequest(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-#if EFI_INTERNAL_FLASH
+#if EFI_CONFIGURATION_STORAGE
 	setNeedToWriteConfiguration();
 #endif
 }

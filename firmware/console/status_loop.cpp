@@ -392,10 +392,10 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 				consoleByteArrived = false;
 				offTimeMs = 100;
 				onTimeMs = 33;
-#if EFI_INTERNAL_FLASH
+#if EFI_CONFIGURATION_STORAGE
 			} else if (getNeedToWriteConfiguration()) {
 				offTimeMs = onTimeMs = 500;
-#endif // EFI_INTERNAL_FLASH
+#endif // EFI_CONFIGURATION_STORAGE
 			} else {
 				onTimeMs =
 #if EFI_USB_SERIAL
@@ -669,9 +669,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_PROD_CODE
 	tsOutputChannels->isTriggerError = isTriggerErrorNow();
 
-#if EFI_INTERNAL_FLASH
+#if EFI_CONFIGURATION_STORAGE
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* EFI_CONFIGURATION_STORAGE */
 
 #if EFI_FILE_LOGGING
 	tsOutputChannels->hasSdCard = isSdCardAlive();

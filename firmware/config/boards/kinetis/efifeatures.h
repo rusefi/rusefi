@@ -105,6 +105,8 @@
 
 #define EFI_INTERNAL_FLASH TRUE
 
+#define EFI_CONFIGURATION_STORAGE	(EFI_INTERNAL_FLASH)
+
 /**
  * Usually you need shaft position input, but maybe you do not need it?
  */

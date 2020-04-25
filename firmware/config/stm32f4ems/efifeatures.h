@@ -128,9 +128,15 @@
 
 #define TRIGGER_EXTREME_LOGGING FALSE
 
+#ifndef EFI_FLASH_SPI
+#define EFI_FLASH_SPI TRUE
+#endif
+
 #ifndef EFI_INTERNAL_FLASH
 #define EFI_INTERNAL_FLASH TRUE
 #endif
+
+#define EFI_CONFIGURATION_STORAGE	(EFI_FLASH_SPI || EFI_INTERNAL_FLASH)
 
 /**
  * Usually you need shaft position input, but maybe you do not need it?

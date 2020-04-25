@@ -8,7 +8,7 @@
  */
 
 #include "global.h"
-#if EFI_INTERNAL_FLASH
+#if EFI_CONFIGURATION_STORAGE
 #include "os_access.h"
 #include "flash_main.h"
 #include "eficonsole.h"
@@ -289,4 +289,4 @@ void initFlashCommands(Logging *sharedLogger) {
 	addConsoleAction("rewriteconfig", rewriteConfig);
 }
 
-#endif /* EFI_INTERNAL_FLASH */
+#endif /* EFI_CONFIGURATION_STORAGE */
