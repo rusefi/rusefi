@@ -80,18 +80,6 @@ ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = no
 endif
 
-# If enabled, this option makes the build process faster by not compiling
-# modules not used in the current configuration.
-# without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
-ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
-endif
-
-# for this to work it has to be defined before hal.mk
-ifeq ($(CONFDIR),)
-  CONFDIR = config/stm32f4ems
-endif
-
 ifeq ($(USE_BOOTLOADER),)
   USE_BOOTLOADER = no
 endif
@@ -135,14 +123,23 @@ MAKEFLAGS += ${NUMJOBS}
 # Architecture or project specific options
 ##############################################################################
 
-BOARDS_DIR = $(PROJECT_DIR)/config/boards
-# we want this above hal.mk since we often define CONFDIR inside board.mk
-include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
-
-
 ##############################################################################
 # Project, sources and paths
 #
+
+BOARDS_DIR = $(PROJECT_DIR)/config/boards
+
+include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
+
+# If enabled, this option makes the build process faster by not compiling
+# modules not used in the current configuration.
+# without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
+ifeq ($(USE_SMART_BUILD),)
+  USE_SMART_BUILD = yes
+endif
+ifeq ($(CONFDIR),)
+  CONFDIR = $(PROJECT_DIR)/config/stm32f4ems
+endif
 
 # Startup files.
 include $(CPU_STARTUP_DIR)
@@ -180,7 +177,6 @@ ifeq ($(BOOTLOADERINC),)
   BOOTLOADERINC= $(PROJECT_DIR)/bootloader/
 endif
 
-
 ifeq ($(USE_BOOTLOADER),yes)
 include $(PROJECT_DIR)/bootloader/bootloader.mk
 endif
@@ -197,7 +193,9 @@ CSRC = $(STARTUPSRC) \
 	$(PORTSRC) \
 	$(OSALSRC) \
 	$(HALSRC) \
+	$(HALSRC_CONTRIB) \
 	$(PLATFORMSRC) \
+	$(PLATFORMSRC_CONTRIB) \
 	$(BOARDSRC) \
 	$(BOOTLOADERSRC) \
 	$(CHIBIOS)/os/ex/ST/lis302dl.c \
@@ -283,6 +281,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	$(HALINC) \
 	$(HALINC_CONTRIB) \
 	$(PLATFORMINC) \
+	$(PLATFORMINC_CONTRIB) \
 	$(BOARDINC) \
 	$(BOOTLOADERINC) \
 	$(CHCPPINC) \

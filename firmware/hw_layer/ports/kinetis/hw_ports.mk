@@ -2,7 +2,7 @@ ifeq ($(KINETIS_CONTRIB),)
   KINETIS_CONTRIB = $(CHIBIOS_CONTRIB)
 endif
 
-HW_LAYER_EMS += 	$(PROJECT_DIR)/hw_layer/ports/kinetis/flash.c \
+HW_LAYER_EMS += 	$(PROJECT_DIR)/hw_layer/ports/kinetis/flash_int.c \
 					$(KINETIS_CONTRIB)/os/hal/ports/KINETIS/KE1xF/fsl/fsl_ftfx_flexnvm.c \
 					$(KINETIS_CONTRIB)/os/hal/ports/KINETIS/KE1xF/fsl/fsl_ftfx_controller.c
 
