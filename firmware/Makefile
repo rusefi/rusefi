@@ -80,12 +80,6 @@ ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = no
 endif
 
-# If enabled, this option makes the build process faster by not compiling
-# modules not used in the current configuration.
-ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = no
-endif
-
 ifeq ($(USE_BOOTLOADER),)
   USE_BOOTLOADER = no
 endif
@@ -172,6 +166,15 @@ ifeq ($(BOOTLOADERINC),)
   BOOTLOADERINC= $(PROJECT_DIR)/bootloader/
 endif
 
+# If enabled, this option makes the build process faster by not compiling
+# modules not used in the current configuration.
+# without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
+ifeq ($(USE_SMART_BUILD),)
+  USE_SMART_BUILD = yes
+endif
+ifeq ($(CONFDIR),)
+  CONFDIR = config/stm32f4ems
+endif
 
 ifeq ($(USE_BOOTLOADER),yes)
 include $(PROJECT_DIR)/bootloader/bootloader.mk
