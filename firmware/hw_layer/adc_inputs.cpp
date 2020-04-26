@@ -69,16 +69,16 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
-#if !defined(PWM_FREQ_FAST) || !defined(PWM_PERIOD_FAST)
+#if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
 /**
  * 8000 RPM is 133Hz
  * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
  */
 // todo: migrate to continues ADC mode? probably not - we cannot afford the callback in
 // todo: continues mode. todo: look into our options
-#define PWM_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
-#define PWM_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
-#endif /* PWM_FREQ_FAST PWM_PERIOD_FAST */
+#define GPT_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
+#define GPT_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
+#endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
 
 // is there a reason to have this configurable at runtime?
 #ifndef ADC_SLOW_DEVICE
@@ -198,13 +198,9 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 
 AdcDevice fastAdc(&adcgrpcfg_fast);
 
-#if HAL_USE_PWM
-
-static void pwmpcb_fast(PWMDriver *pwmp) {
-	efiAssertVoid(CUSTOM_ERR_6659, getCurrentRemainingStack()> 32, "lwStAdcFast");
+#if HAL_USE_GPT
+static void fast_adc_callback(GPTDriver*) {
 #if EFI_INTERNAL_ADC
-	(void) pwmp;
-
 	/*
 	 * Starts an asynchronous ADC conversion operation, the conversion
 	 * will be executed in parallel to the current PWM cycle and will
@@ -228,7 +224,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 	fastAdc.conversionCount++;
 #endif /* EFI_INTERNAL_ADC */
 }
-#endif /* HAL_USE_PWM */
+#endif /* HAL_USE_GPT */
 
 float getMCUInternalTemperature(void) {
 #if defined(ADC_CHANNEL_SENSOR)
@@ -269,13 +265,13 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	return slowAdc.getAdcValueByHwChannel(hwChannel);
 }
 
-#if HAL_USE_PWM
-static PWMConfig pwmcfg_fast = { PWM_FREQ_FAST, PWM_PERIOD_FAST, pwmpcb_fast, { {
-PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL }, {
-PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
-/* HW dependent part.*/
-0, 0 };
-#endif /* HAL_USE_PWM */
+#if HAL_USE_GPT
+static GPTConfig fast_adc_config = {
+	GPT_FREQ_FAST,
+	fast_adc_callback,
+	0, 0
+};
+#endif /* HAL_USE_GPT */
 
 const char * getAdcMode(adc_channel_e hwChannel) {
 	if (slowAdc.isHwUsed(hwChannel)) {
@@ -563,10 +559,10 @@ void initAdcInputs() {
 		/*
 		 * Initializes the PWM driver.
 		 */
-#if HAL_USE_PWM
-		pwmStart(EFI_INTERNAL_FAST_ADC_PWM, &pwmcfg_fast);
-		pwmEnablePeriodicNotification(EFI_INTERNAL_FAST_ADC_PWM);
-#endif /* HAL_USE_PWM */
+#if HAL_USE_GPT
+		gptStart(EFI_INTERNAL_FAST_ADC_GPT, &fast_adc_config);
+		gptStartContinuous(EFI_INTERNAL_FAST_ADC_GPT, GPT_PERIOD_FAST);
+#endif /* HAL_USE_GPT */
 	}
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);

@@ -1,4 +1,4 @@
-package com.opensr5.io;
+package com.opensr5.ini;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -25,7 +25,7 @@
 #include "idle_thread.h"
 #include "allsensors.h"
 #include "alternator_controller.h"
-#include "trigger_emulator.h"
+#include "trigger_emulator_algo.h"
 #include "sensor.h"
 
 #if EFI_PROD_CODE
@@ -972,7 +972,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "ignition")) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "self_stimulation")) {
-		engineConfiguration->directSelfStimulation = isEnabled;
+		engine->directSelfStimulation = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {
@@ -1269,10 +1269,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"bor", setBor},
 #if EFI_CAN_SUPPORT
 		{"can_mode", setCanType},
-/*
- * TODO: uncomment onse we actually have setCanVss
 		{"can_vss", setCanVss},
-*/
 #endif /* EFI_CAN_SUPPORT */
 #if EFI_IDLE_CONTROL
 		{"idle_position", setIdleValvePosition},

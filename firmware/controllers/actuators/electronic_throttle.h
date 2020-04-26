@@ -50,6 +50,7 @@ public:
 
 	expected<percent_t> getOpenLoop(percent_t target) const override;
 	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t target) override;
+	expected<percent_t> getClosedLoopAutotune(percent_t actualThrottlePosition);
 
 	void setOutput(expected<percent_t> outputValue) override;
 

@@ -1,13 +1,9 @@
-package com.rusefi.ui.config;
+package com.opensr5.ini;
 
-import com.opensr5.io.IniFileReader;
-import com.opensr5.io.RawIniFile;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
-
-import static com.rusefi.Launcher.INI_FILE_PATH;
 
 /**
  * (c) Andrey Belomutskiy
@@ -17,7 +13,7 @@ public class IniFileModel {
     public static final String RUSEFI_INI_PREFIX = "rusefi";
     public static final String RUSEFI_INI_SUFFIX = ".ini";
 
-    private final static IniFileModel INSTANCE = new IniFileModel();
+    private static IniFileModel INSTANCE;
     private String dialogId;
     private String dialogUiName;
     private Map<String, DialogModel> dialogs = new TreeMap<>();
@@ -26,15 +22,11 @@ public class IniFileModel {
     private List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
 
     public static void main(String[] args) {
-        System.out.println(IniFileModel.INSTANCE.dialogs);
+        System.out.println(IniFileModel.getInstance("..").dialogs);
     }
 
-    private IniFileModel() {
-        readIniFile();
-    }
-
-    private void readIniFile() {
-        String fileName = findMetaInfoFile();
+    public void readIniFile(String iniFilePath) {
+        String fileName = findMetaInfoFile(iniFilePath);
         File input = null;
         if (fileName != null)
             input = new File(fileName);
@@ -53,13 +45,13 @@ public class IniFileModel {
         finishDialog();
     }
 
-    private String findMetaInfoFile() {
-        File dir = new File(INI_FILE_PATH);
+    private String findMetaInfoFile(String iniFilePath) {
+        File dir = new File(iniFilePath);
         if (!dir.isDirectory())
             return null;
         for (String file : dir.list()) {
             if (file.startsWith(RUSEFI_INI_PREFIX) && file.endsWith(RUSEFI_INI_SUFFIX))
-                return INI_FILE_PATH + File.separator + file;
+                return iniFilePath + File.separator + file;
         }
         return null;
     }
@@ -143,8 +135,11 @@ public class IniFileModel {
         DIALOG
     }
 
-
-    public static IniFileModel getInstance() {
+    public static synchronized IniFileModel getInstance(String iniFilePath) {
+        if (INSTANCE == null) {
+            INSTANCE = new IniFileModel();
+            INSTANCE.readIniFile(iniFilePath);
+        }
         return INSTANCE;
     }
 

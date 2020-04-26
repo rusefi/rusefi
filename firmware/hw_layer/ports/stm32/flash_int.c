@@ -3,7 +3,7 @@
  * http://www.chibios.com/forum/viewtopic.php?f=8&t=820
  * https://github.com/tegesoft/flash-stm32f407
  *
- * @file    flash_main.c
+ * @file    flash_int.c
  * @brief	Lower-level code related to internal flash memory
  */
 
@@ -12,10 +12,10 @@
 
 #if EFI_INTERNAL_FLASH
 
-#include "flash.h"
+#include "flash_int.h"
 #include <string.h>
 
-flashaddr_t flashSectorBegin(flashsector_t sector) {
+flashaddr_t intFlashSectorBegin(flashsector_t sector) {
 	flashaddr_t address = FLASH_BASE;
 	while (sector > 0) {
 		--sector;
@@ -24,13 +24,13 @@ flashaddr_t flashSectorBegin(flashsector_t sector) {
 	return address;
 }
 
-flashaddr_t flashSectorEnd(flashsector_t sector) {
-	return flashSectorBegin(sector + 1);
+flashaddr_t intFlashSectorEnd(flashsector_t sector) {
+	return intFlashSectorBegin(sector + 1);
 }
 
-flashsector_t flashSectorAt(flashaddr_t address) {
+flashsector_t intFlashSectorAt(flashaddr_t address) {
 	flashsector_t sector = 0;
-	while (address >= flashSectorEnd(sector))
+	while (address >= intFlashSectorEnd(sector))
 		++sector;
 	return sector;
 }
@@ -38,14 +38,14 @@ flashsector_t flashSectorAt(flashaddr_t address) {
 /**
  * @brief Wait for the flash operation to finish.
  */
-#define flashWaitWhileBusy() { while (FLASH->SR & FLASH_SR_BSY) {} }
+#define intFlashWaitWhileBusy() { while (FLASH->SR & FLASH_SR_BSY) {} }
 
 /**
  * @brief Unlock the flash memory for write access.
  * @return HAL_SUCCESS  Unlock was successful.
  * @return HAL_FAILED    Unlock failed.
  */
-static bool flashUnlock(void) {
+static bool intFlashUnlock(void) {
 	/* Check if unlock is really needed */
 	if (!(FLASH->CR & FLASH_CR_LOCK))
 		return HAL_SUCCESS;
@@ -63,15 +63,15 @@ static bool flashUnlock(void) {
 /**
  * @brief Lock the flash memory for write access.
  */
-#define flashLock() { FLASH->CR |= FLASH_CR_LOCK; }
+#define intFlashLock() { FLASH->CR |= FLASH_CR_LOCK; }
 
-int flashSectorErase(flashsector_t sector) {
+int intFlashSectorErase(flashsector_t sector) {
 	/* Unlock flash for write access */
-	if (flashUnlock() == HAL_FAILED)
+	if (intFlashUnlock() == HAL_FAILED)
 		return FLASH_RETURN_NO_PERMISSION;
 
 	/* Wait for any busy flags. */
-	flashWaitWhileBusy();
+	intFlashWaitWhileBusy();
 
 	/* Setup parallelism before any program/erase */
 	FLASH->CR &= ~FLASH_CR_PSIZE_MASK;
@@ -108,30 +108,30 @@ int flashSectorErase(flashsector_t sector) {
 	FLASH->CR |= FLASH_CR_STRT;
 
 	/* Wait until it's finished. */
-	flashWaitWhileBusy();
+	intFlashWaitWhileBusy();
 
 	/* Sector erase flag does not clear automatically. */
 	FLASH->CR &= ~FLASH_CR_SER;
 
 	/* Lock flash again */
-	flashLock()
+	intFlashLock()
 	;
 
 	/* Check deleted sector for errors */
-	if (flashIsErased(flashSectorBegin(sector), flashSectorSize(sector)) == FALSE)
+	if (intFlashIsErased(intFlashSectorBegin(sector), flashSectorSize(sector)) == FALSE)
 		return FLASH_RETURN_BAD_FLASH; /* Sector is not empty despite the erase cycle! */
 
 	/* Successfully deleted sector */
 	return FLASH_RETURN_SUCCESS;
 }
 
-int flashErase(flashaddr_t address, size_t size) {
+int intFlashErase(flashaddr_t address, size_t size) {
 	while (size > 0) {
-		flashsector_t sector = flashSectorAt(address);
-		int err = flashSectorErase(sector);
+		flashsector_t sector = intFlashSectorAt(address);
+		int err = intFlashSectorErase(sector);
 		if (err != FLASH_RETURN_SUCCESS)
 			return err;
-		address = flashSectorEnd(sector);
+		address = intFlashSectorEnd(sector);
 		size_t sector_size = flashSectorSize(sector);
 		if (sector_size >= size)
 			break;
@@ -141,7 +141,7 @@ int flashErase(flashaddr_t address, size_t size) {
 	return FLASH_RETURN_SUCCESS;
 }
 
-bool flashIsErased(flashaddr_t address, size_t size) {
+bool intFlashIsErased(flashaddr_t address, size_t size) {
 	/* Check for default set bits in the flash memory
 	 * For efficiency, compare flashdata_t values as much as possible,
 	 * then, fallback to byte per byte comparison. */
@@ -161,7 +161,7 @@ bool flashIsErased(flashaddr_t address, size_t size) {
 	return TRUE;
 }
 
-bool flashCompare(flashaddr_t address, const char* buffer, size_t size) {
+bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size) {
 	/* For efficiency, compare flashdata_t values as much as possible,
 	 * then, fallback to byte per byte comparison. */
 	while (size >= sizeof(flashdata_t)) {
@@ -182,12 +182,12 @@ bool flashCompare(flashaddr_t address, const char* buffer, size_t size) {
 	return TRUE;
 }
 
-int flashRead(flashaddr_t address, char* buffer, size_t size) {
+int intFlashRead(flashaddr_t address, char* buffer, size_t size) {
 	memcpy(buffer, (char*) address, size);
 	return FLASH_RETURN_SUCCESS;
 }
 
-static void flashWriteData(flashaddr_t address, const flashdata_t data) {
+static void intFlashWriteData(flashaddr_t address, const flashdata_t data) {
 	/* Enter flash programming mode */
 	FLASH->CR |= FLASH_CR_PG;
 
@@ -201,19 +201,19 @@ static void flashWriteData(flashaddr_t address, const flashdata_t data) {
 #endif
 
 	/* Wait for completion */
-	flashWaitWhileBusy();
+	intFlashWaitWhileBusy();
 
 	/* Exit flash programming mode */
 	FLASH->CR &= ~FLASH_CR_PG;
 }
 
-int flashWrite(flashaddr_t address, const char* buffer, size_t size) {
+int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	/* Unlock flash for write access */
-	if (flashUnlock() == HAL_FAILED)
+	if (intFlashUnlock() == HAL_FAILED)
 		return FLASH_RETURN_NO_PERMISSION;
 
 	/* Wait for any busy flags */
-	flashWaitWhileBusy();
+	intFlashWaitWhileBusy();
 
 	/* Setup parallelism before any program/erase */
 	FLASH->CR &= ~FLASH_CR_PSIZE_MASK;
@@ -241,7 +241,7 @@ int flashWrite(flashaddr_t address, const char* buffer, size_t size) {
 		memcpy((char*) &tmp + alignOffset, buffer, chunkSize);
 
 		/* Write the new data in flash */
-		flashWriteData(alignedFlashAddress, tmp);
+		intFlashWriteData(alignedFlashAddress, tmp);
 
 		/* Advance */
 		address += chunkSize;
@@ -254,7 +254,7 @@ int flashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	 * copied requires special treatment. */
 	while (size >= sizeof(flashdata_t)) {
 //		print("flash write size=%d\r\n", size);
-		flashWriteData(address, *(const flashdata_t*) buffer);
+		intFlashWriteData(address, *(const flashdata_t*) buffer);
 		address += sizeof(flashdata_t);
 		buffer += sizeof(flashdata_t);
 		size -= sizeof(flashdata_t);
@@ -267,11 +267,11 @@ int flashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	if (size > 0) {
 		flashdata_t tmp = *(volatile flashdata_t*) address;
 		memcpy(&tmp, buffer, size);
-		flashWriteData(address, tmp);
+		intFlashWriteData(address, tmp);
 	}
 
 	/* Lock flash again */
-	flashLock()
+	intFlashLock()
 	;
 
 	return FLASH_RETURN_SUCCESS;

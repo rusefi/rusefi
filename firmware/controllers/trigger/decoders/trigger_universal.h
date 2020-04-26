@@ -20,8 +20,11 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerWaveform *s,
 
 void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);;
 
-void configureOnePlus60_2(TriggerWaveform *s, operation_mode_e operationMode);
+void configureOnePlus60_2(TriggerWaveform *s);
 
-void configure3_1_cam(TriggerWaveform *s, operation_mode_e operationMode);
+// TT_3_1_CAM
+void configure3_1_cam(TriggerWaveform *s);
 
-void configureOnePlusOne(TriggerWaveform *s, operation_mode_e operationMode);
+void configureOnePlusOne(TriggerWaveform *s);
+// TT_BOSCH_QUICK_START
+void configureQuickStartSenderWheel(TriggerWaveform *s);

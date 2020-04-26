@@ -102,7 +102,7 @@
 #endif /* EFI_PROD_CODE */
 
 #if EFI_EMULATE_POSITION_SENSORS
-#include "trigger_emulator.h"
+#include "trigger_emulator_algo.h"
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
 #if EFI_TUNER_STUDIO
@@ -145,7 +145,7 @@ static fuel_table_t alphaNfuel = {
  * todo: place this field next to 'engineConfiguration'?
  */
 #ifdef EFI_ACTIVE_CONFIGURATION_IN_FLASH
-#include "flash.h"
+#include "flash_int.h"
 engine_configuration_s & activeConfiguration = reinterpret_cast<persistent_config_container_s*>(getFlashAddrFirstCopy())->persistentConfiguration.engineConfiguration;
 // we cannot use this activeConfiguration until we call rememberCurrentConfiguration()
 bool isActiveConfigurationVoid = true;
@@ -921,7 +921,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->mapHighValueVoltage = 5;
 
 	engineConfiguration->logFormat = LF_NATIVE;
-	engineConfiguration->directSelfStimulation = false;
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
@@ -1114,9 +1113,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	setBoardConfigurationOverrides();
 #endif
 
-#if EFI_SIMULATOR
-	engineConfiguration->directSelfStimulation = true;
-#endif /* */
 	engineConfiguration->engineType = engineType;
 
 	/**
