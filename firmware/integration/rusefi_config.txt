@@ -23,13 +23,13 @@
 ! type name;comment
 
 
-#define TS_SIGNATURE "rusEFI v1.2020.3"
+#define TS_SIGNATURE "rusEFI v1.2020.4"
 
 !
 ! this is here so that rusEfi console can access it, too
 ! [IMPORTANT] every time TS_OUTPUT_SIZE is changed make sure to increment TS_SIGNATURE above
 !
-#define TS_OUTPUT_SIZE 240
+#define TS_OUTPUT_SIZE 244
 
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
