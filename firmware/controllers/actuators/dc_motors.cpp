@@ -15,7 +15,7 @@
 #include "dc_motor.h"
 
 #include "efi_gpio.h"
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 
 EXTERN_ENGINE;
 

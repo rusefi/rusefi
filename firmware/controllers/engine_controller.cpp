@@ -85,12 +85,10 @@
 #endif /* EFI_UNIT_TEST */
 
 #include "adc_inputs.h"
+#include "pwm_generator_logic.h"
 
 #if EFI_PROD_CODE
-#include "pwm_generator.h"
-
 #include "pwm_tester.h"
-#include "pwm_generator.h"
 #include "lcd_controller.h"
 #include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
@@ -634,10 +632,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
 	commonInitEngineController(sharedLogger);
-
-#if EFI_PROD_CODE
-	initPwmGenerator();
-#endif
 
 #if EFI_LOGIC_ANALYZER
 	if (engineConfiguration->isWaveAnalyzerEnabled) {

@@ -32,7 +32,7 @@
 #if EFI_IDLE_CONTROL
 #include "engine_configuration.h"
 #include "rpm_calculator.h"
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 #include "idle_thread.h"
 #include "engine_math.h"
 
