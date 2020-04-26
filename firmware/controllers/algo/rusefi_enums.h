@@ -906,3 +906,15 @@ typedef enum {
 	ALWAYS_ON_ANTILAG = 1,
 	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
 } antiLagActivationMode_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	GPPWM_Tps = 0,
+	GPPWM_Map = 1,
+	GPPWM_Clt = 2,
+	GPPWM_Iat = 3,
+} gppwm_channel_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	GPPWM_GreaterThan = 0,
+	GPPWM_LessThan = 1,
+} gppwm_compare_mode_e;
