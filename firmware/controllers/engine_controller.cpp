@@ -77,17 +77,17 @@
 #include "bootloader/bootloader.h"
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 #include "periodic_task.h"
-#endif
+
 
 #if ! EFI_UNIT_TEST
 #include "init.h"
 #endif /* EFI_UNIT_TEST */
 
+#include "adc_inputs.h"
+
 #if EFI_PROD_CODE
 #include "pwm_generator.h"
-#include "adc_inputs.h"
 
 #include "pwm_tester.h"
 #include "pwm_generator.h"
