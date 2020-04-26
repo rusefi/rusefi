@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri Apr 24 23:22:49 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat Apr 25 18:03:45 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -159,6 +159,61 @@ struct spi_pins {
 };
 
 typedef struct spi_pins spi_pins;
+
+// start of gppwm_channel
+struct gppwm_channel {
+	/**
+	 * Select a pin to use for PWM or on-off output.
+	 * offset 0
+	 */
+	brain_pin_e pin;
+	/**
+	 * If an error (with a sensor, etc) is detected, this value is used instead of reading from the table.
+	 * This should be a safe value for whatever hardware is connected to prevent damage.
+	 * offset 1
+	 */
+	uint8_t dutyIfError;
+	/**
+	 * Select a frequency to run PWM at.
+	 * Set this to 0hz to enable on-off mode.
+	 * offset 2
+	 */
+	uint16_t pwmFrequency;
+	/**
+	 * In on-off mode, turn the output on when the table value is above this duty.
+	 * offset 4
+	 */
+	uint8_t onAboveDuty;
+	/**
+	 * In on-off mode, turn the output off when the table value is below this duty.
+	 * offset 5
+	 */
+	uint8_t offBelowDuty;
+	/**
+	 * Selects the load axis to use for the table.
+	 * offset 6
+	 */
+	gppwm_channel_e loadAxis;
+	/**
+	 * offset 7
+	 */
+	uint8_t pad;
+	/**
+	 * offset 8
+	 */
+	uint8_t loadBins[GPPWM_LOAD_COUNT];
+	/**
+	 * offset 16
+	 */
+	uint8_t rpmBins[GPPWM_RPM_COUNT];
+	/**
+	 * offset 24
+	 */
+	gppwm_table_t table;
+	/** total size 88*/
+};
+
+typedef struct gppwm_channel gppwm_channel;
 
 // start of air_pressure_sensor_config_s
 struct air_pressure_sensor_config_s {
@@ -3049,7 +3104,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 4144
 	 */
-	int mainUnusedEnd[464];
+	gppwm_channel gppwm[4];
+	/**
+	 * offset 4496
+	 */
+	int mainUnusedEnd[376];
 	/** total size 6000*/
 };
 
@@ -3352,4 +3411,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri Apr 24 23:22:49 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat Apr 25 18:03:45 EDT 2020
