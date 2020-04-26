@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat Apr 25 18:06:47 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 26 14:18:05 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -166,7 +166,7 @@ struct gppwm_channel {
 	 * Select a pin to use for PWM or on-off output.
 	 * offset 0
 	 */
-	brain_pin_e pin;
+	output_pin_e pin;
 	/**
 	 * If an error (with a sensor, etc) is detected, this value is used instead of reading from the table.
 	 * This should be a safe value for whatever hardware is connected to prevent damage.
@@ -3411,4 +3411,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat Apr 25 18:06:47 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 26 14:18:05 EDT 2020

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat Apr 25 18:03:45 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 26 14:16:11 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1496,8 +1496,8 @@ public class Fields {
 	public static final int triggerSimulatorPins2_offset = 737;
 	public static final int triggerSimulatorPins3_offset = 738;
 	public static final int TS_FILE_VERSION = 20200310;
-	public static final int TS_OUTPUT_SIZE = 240;
-	public static final String TS_SIGNATURE = "rusEFI v1.2020.3";
+	public static final int TS_OUTPUT_SIZE = 244;
+	public static final String TS_SIGNATURE = "rusEFI v1.2020.4";
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;
@@ -2527,7 +2527,7 @@ public class Fields {
 	public static final Field IDLERPMPID2_MAXVALUE = Field.create("IDLERPMPID2_MAXVALUE", 4058, FieldType.INT16);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4060, FieldType.INT);
 	public static final Field CANVSSNBCTYPE = Field.create("CANVSSNBCTYPE", 4140, FieldType.INT);
-	public static final Field GPPWM1_PIN = Field.create("GPPWM1_PIN", 4144, FieldType.INT8, brain_pin_e);
+	public static final Field GPPWM1_PIN = Field.create("GPPWM1_PIN", 4144, FieldType.INT8, output_pin_e);
 	public static final Field GPPWM1_DUTYIFERROR = Field.create("GPPWM1_DUTYIFERROR", 4145, FieldType.INT8);
 	public static final Field GPPWM1_PWMFREQUENCY = Field.create("GPPWM1_PWMFREQUENCY", 4146, FieldType.INT16);
 	public static final Field GPPWM1_ONABOVEDUTY = Field.create("GPPWM1_ONABOVEDUTY", 4148, FieldType.INT8);
@@ -2536,7 +2536,7 @@ public class Fields {
 	public static final Field GPPWM1_LOADAXIS = Field.create("GPPWM1_LOADAXIS", 4150, FieldType.INT8, gppwm_channel_e);
 	public static final Field GPPWM1_PAD = Field.create("GPPWM1_PAD", 4151, FieldType.INT8);
 	public static final Field GPPWM1_TABLE = Field.create("GPPWM1_TABLE", 4168, FieldType.INT);
-	public static final Field GPPWM2_PIN = Field.create("GPPWM2_PIN", 4232, FieldType.INT8, brain_pin_e);
+	public static final Field GPPWM2_PIN = Field.create("GPPWM2_PIN", 4232, FieldType.INT8, output_pin_e);
 	public static final Field GPPWM2_DUTYIFERROR = Field.create("GPPWM2_DUTYIFERROR", 4233, FieldType.INT8);
 	public static final Field GPPWM2_PWMFREQUENCY = Field.create("GPPWM2_PWMFREQUENCY", 4234, FieldType.INT16);
 	public static final Field GPPWM2_ONABOVEDUTY = Field.create("GPPWM2_ONABOVEDUTY", 4236, FieldType.INT8);
@@ -2544,7 +2544,7 @@ public class Fields {
 	public static final Field GPPWM2_LOADAXIS = Field.create("GPPWM2_LOADAXIS", 4238, FieldType.INT8, gppwm_channel_e);
 	public static final Field GPPWM2_PAD = Field.create("GPPWM2_PAD", 4239, FieldType.INT8);
 	public static final Field GPPWM2_TABLE = Field.create("GPPWM2_TABLE", 4256, FieldType.INT);
-	public static final Field GPPWM3_PIN = Field.create("GPPWM3_PIN", 4320, FieldType.INT8, brain_pin_e);
+	public static final Field GPPWM3_PIN = Field.create("GPPWM3_PIN", 4320, FieldType.INT8, output_pin_e);
 	public static final Field GPPWM3_DUTYIFERROR = Field.create("GPPWM3_DUTYIFERROR", 4321, FieldType.INT8);
 	public static final Field GPPWM3_PWMFREQUENCY = Field.create("GPPWM3_PWMFREQUENCY", 4322, FieldType.INT16);
 	public static final Field GPPWM3_ONABOVEDUTY = Field.create("GPPWM3_ONABOVEDUTY", 4324, FieldType.INT8);
@@ -2552,7 +2552,7 @@ public class Fields {
 	public static final Field GPPWM3_LOADAXIS = Field.create("GPPWM3_LOADAXIS", 4326, FieldType.INT8, gppwm_channel_e);
 	public static final Field GPPWM3_PAD = Field.create("GPPWM3_PAD", 4327, FieldType.INT8);
 	public static final Field GPPWM3_TABLE = Field.create("GPPWM3_TABLE", 4344, FieldType.INT);
-	public static final Field GPPWM4_PIN = Field.create("GPPWM4_PIN", 4408, FieldType.INT8, brain_pin_e);
+	public static final Field GPPWM4_PIN = Field.create("GPPWM4_PIN", 4408, FieldType.INT8, output_pin_e);
 	public static final Field GPPWM4_DUTYIFERROR = Field.create("GPPWM4_DUTYIFERROR", 4409, FieldType.INT8);
 	public static final Field GPPWM4_PWMFREQUENCY = Field.create("GPPWM4_PWMFREQUENCY", 4410, FieldType.INT16);
 	public static final Field GPPWM4_ONABOVEDUTY = Field.create("GPPWM4_ONABOVEDUTY", 4412, FieldType.INT8);
