@@ -120,6 +120,47 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_ENGINE_CONTROL
 }
 
+static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if !EFI_UNIT_TEST
+	// This is tested independently - don't configure sensors for tests.
+	// This lets us selectively mock them for each test.
+	initNewSensors(sharedLogger);
+#endif /* EFI_UNIT_TEST */
+
+	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+
+	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+
+#if EFI_FSIO
+	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_FSIO */
+
+	initGpPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+#if EFI_IDLE_CONTROL
+	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_IDLE_CONTROL */
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
+#if EFI_MAP_AVERAGING
+	if (engineConfiguration->isMapAveragingEnabled) {
+		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+#endif /* EFI_MAP_AVERAGING */
+
+#if EFI_BOOST_CONTROL
+	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_BOOST_CONTROL */
+
+#if EFI_LAUNCH_CONTROL
+	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_LAUNCH_CONTROL */
+
+}
+
 #if EFI_ENABLE_MOCK_ADC
 
 static void initMockVoltage(void) {
@@ -615,9 +656,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 #if !EFI_UNIT_TEST
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_SIMULATOR
-	printf("initEngineContoller\n");
-#endif
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
