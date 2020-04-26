@@ -1,4 +1,4 @@
-package com.opensr5.io;
+package com.opensr5.ini;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
