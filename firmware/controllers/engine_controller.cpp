@@ -55,6 +55,7 @@
 #include "boost_control.h"
 #include "launch_control.h"
 #include "tachometer.h"
+#include "gppwm.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -135,6 +136,8 @@ static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_
 #if EFI_FSIO
 	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
+
+	initGpPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_IDLE_CONTROL
 	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
