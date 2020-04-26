@@ -398,7 +398,10 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// see setDefaultIdleParameters
 
 	engineConfiguration->adcVcc = 3.3f;
-	engineConfiguration->vbattDividerCoeff = 9.70f;
+	engineConfiguration->vbattDividerCoeff = 8.80f;
+
+	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	// by the way NB2 MAF internal diameter is about 2.5 inches / 63mm
 	// 1K pull-down to read current from this MAF
@@ -462,8 +465,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	config->crankingFuelCoef[7] = 10;
 	config->crankingFuelBins[7] = 90;
 
-//	engineConfiguration->crankingIACposition = 65;
-
+	engineConfiguration->crankingIACposition = 90;
 }
 
 /**
