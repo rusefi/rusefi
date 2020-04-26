@@ -157,7 +157,7 @@ static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_
 
 #if EFI_LAUNCH_CONTROL
 	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
+#endif /* EFI_LAUNCH_CONTROL */
 
 }
 
@@ -620,9 +620,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 #if !EFI_UNIT_TEST
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_SIMULATOR
-	printf("initEngineContoller\n");
-#endif
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
