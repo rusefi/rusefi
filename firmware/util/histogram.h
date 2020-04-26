@@ -13,8 +13,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HISTOGRAM_H_
-#define HISTOGRAM_H_
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -41,6 +40,3 @@ int hsReport(histogram_s *h, int* report);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-
-#endif /* HISTOGRAM_H_ */

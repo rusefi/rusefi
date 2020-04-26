@@ -32,6 +32,17 @@ enum class SensorType : unsigned char {
 	Tps2Primary,
 	Tps2Secondary,
 
+	// Redundant and combined sensors for acc pedal
+	AcceleratorPedal,
+	AcceleratorPedalPrimary,
+	AcceleratorPedalSecondary,
+
+	// This maps to the pedal if we have one, and Tps1 if not.
+	DriverThrottleIntent,
+
+	AuxTemp1,
+	AuxTemp2,
+
 	// Leave me at the end!
 	PlaceholderLast
 };

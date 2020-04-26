@@ -5,9 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "os_access.h"
 #include "engine.h"
+#include "os_access.h"
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
 //todo: move into simulator global
@@ -16,8 +15,7 @@ static MemoryStream warningStream;
 static MemoryStream firmwareErrorMessageStream;
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
-#define WARNING_BUFFER_SIZE 80
-static char warningBuffer[WARNING_BUFFER_SIZE];
+static char warningBuffer[ERROR_BUFFER_SIZE];
 static volatile bool isWarningStreamInitialized = false;
 
 #if EFI_HD44780_LCD
@@ -33,15 +31,18 @@ EXTERN_ENGINE;
 extern int warningEnabled;
 extern bool main_loop_started;
 
-// todo: rename to fatalErrorMessage?
-static fatal_msg_t errorMessageBuffer;
+static critical_msg_t criticalErrorMessageBuffer;
 bool hasFirmwareErrorFlag = false;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
 
+#if EFI_TUNER_STUDIO && !defined(EFI_NO_CONFIG_WORKING_COPY)
+extern persistent_config_s configWorkingCopy;
+#endif
+
 char *getFirmwareError(void) {
-	return (char*) errorMessageBuffer;
+	return (char*) criticalErrorMessageBuffer;
 }
 
 #if EFI_PROD_CODE
@@ -52,7 +53,7 @@ extern ioportmask_t errorLedPin;
 /**
  * low-level function is used here to reduce stack usage
  */
-#define ON_FATAL_ERROR() \
+#define ON_CRITICAL_ERROR() \
 		palWritePad(errorLedPort, errorLedPin, 1); \
 		turnAllPinsOff(); \
 		enginePins.communicationLedPin.setValue(1);
@@ -61,7 +62,7 @@ extern ioportmask_t errorLedPin;
 #if EFI_SIMULATOR || EFI_PROD_CODE
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
-	if (hasFatalError())
+	if (hasOsPanicError())
 		return;
 	dbg_panic_file = file;
 	dbg_panic_line = line;
@@ -70,7 +71,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #endif /* CH_DBG_SYSTEM_STATE_CHECK */
 
 #if EFI_PROD_CODE
-	ON_FATAL_ERROR();
+	ON_CRITICAL_ERROR();
 #else
 	printf("chDbgPanic3 %s %s%d", msg, file, line);
 	exit(-1);
@@ -81,7 +82,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #endif /* EFI_HD44780_LCD */
 
 	if (!main_loop_started) {
-		print("fatal %s %s:%d\r\n", msg, file, line);
+		print("%s %s %s:%d\r\n", CRITICAL_PREFIX, msg, file, line);
 //		chThdSleepSeconds(1);
 		chSysHalt("Main loop did not start");
 	}
@@ -105,6 +106,16 @@ static void printWarning(const char *fmt, va_list ap) {
 	logger.append(WARNING_PREFIX);
 
 	printToStream(&warningStream, fmt, ap);
+
+	if (CONFIG(showHumanReadableWarning)) {
+#if EFI_TUNER_STUDIO
+ #if defined(EFI_NO_CONFIG_WORKING_COPY)
+  memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
+ #else /* defined(EFI_NO_CONFIG_WORKING_COPY) */
+  memcpy(configWorkingCopy.warning_message, warningBuffer, sizeof(warningBuffer));
+ #endif /* defined(EFI_NO_CONFIG_WORKING_COPY) */
+#endif /* EFI_TUNER_STUDIO */
+	}
 
 	logger.append(warningBuffer);
 	append(&logger, DELIMETER);
@@ -160,7 +171,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	return false;
 }
 
-char *getWarning(void) {
+char *getWarningMessage(void) {
 	return warningBuffer;
 }
 
@@ -206,8 +217,8 @@ void onUnlockHook(void) {
  */
 void initErrorHandlingDataStructures(void) {
 #if EFI_SIMULATOR || EFI_PROD_CODE
-	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
-	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
+	msObjectInit(&warningStream, (uint8_t *) warningBuffer, ERROR_BUFFER_SIZE, 0);
+	msObjectInit(&firmwareErrorMessageStream, criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer), 0);
 #endif
 	isWarningStreamInitialized = true;
 }
@@ -223,7 +234,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	printWarning(fmt, ap);
 	va_end(ap);
 #endif
-	ON_FATAL_ERROR()
+	ON_CRITICAL_ERROR()
 	;
 	hasFirmwareErrorFlag = true;
 	if (indexOf(fmt, '%') == -1) {
@@ -231,8 +242,8 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 		 * in case of simple error message let's reduce stack usage
 		 * because chvprintf might be causing an error
 		 */
-		strncpy((char*) errorMessageBuffer, fmt, sizeof(errorMessageBuffer) - 1);
-		errorMessageBuffer[sizeof(errorMessageBuffer) - 1] = 0; // just to be sure
+		strncpy((char*) criticalErrorMessageBuffer, fmt, sizeof(criticalErrorMessageBuffer) - 1);
+		criticalErrorMessageBuffer[sizeof(criticalErrorMessageBuffer) - 1] = 0; // just to be sure
 	} else {
 		// todo: look into chsnprintf once on Chibios 3
 		firmwareErrorMessageStream.eos = 0; // reset
@@ -243,6 +254,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 		// todo: reuse warning buffer helper method
 		firmwareErrorMessageStream.buffer[firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
 	}
+
 #else
 	printf("firmwareError [%s]\r\n", fmt);
 

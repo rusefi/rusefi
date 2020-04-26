@@ -4,11 +4,10 @@
  * @date Aug 5, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef MITSUBISHI_H_
-#define MITSUBISHI_H_
+
+#pragma once
 
 #include "engine_configuration.h"
 
 void setMitsubishiConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-#endif /* MITSUBISHI_H_ */

@@ -7,7 +7,3 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef OS_ACCESS_H_
-#define OS_ACCESS_H_
-
-#endif /* OS_ACCESS_H_ */

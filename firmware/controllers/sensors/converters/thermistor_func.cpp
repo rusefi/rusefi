@@ -6,13 +6,14 @@
 
 #include "thermistors.h"
 
+#include "loggingcentral.h"
 #include <math.h>
 
 SensorResult ThermistorFunc::convert(float ohms) const {
 	// This resistance should have already been validated - only
 	// thing we can check is that it's non-negative
 	if (ohms <= 0) {
-		return {false, 0};
+		return unexpected;
 	}
 
 	float lnR = logf(ohms);
@@ -25,7 +26,7 @@ SensorResult ThermistorFunc::convert(float ohms) const {
 
 	float celsius = convertKelvinToCelcius(kelvin);
 
-	return {true, celsius};
+	return celsius;
 }
 
 void ThermistorFunc::configure(thermistor_conf_s &cfg) {
@@ -44,4 +45,9 @@ void ThermistorFunc::configure(thermistor_conf_s &cfg) {
 	m_c = ((u3 - u2) / (l3 - l2)) / (l1 + l2 + l3);
 	m_b = u2 - m_c * (l1 * l1 + l1 * l2 + l2 * l2);
 	m_a = y1 - (m_b + l1 * l1 * m_c) * l1;
+}
+
+void ThermistorFunc::showInfo(Logging* logger, float testInputValue) const {
+	const auto [valid, value] = convert(testInputValue);
+	scheduleMsg(logger, "    %.1f ohms -> valid: %d. %.1f deg C", testInputValue, valid, value);
 }

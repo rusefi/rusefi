@@ -42,6 +42,7 @@
 #include "hip9011_lookup.h"
 #include "hip9011.h"
 #include "adc_inputs.h"
+#include "perf_trace.h"
 
 #include "engine_controller.h"
 
@@ -55,7 +56,6 @@
 static NamedOutputPin intHold(PROTOCOL_HIP_NAME);
 
 extern uint32_t lastExecutionCount;
-extern EnginePins enginePins;
 
 uint32_t hipLastExecutionCount;
 
@@ -132,9 +132,7 @@ void Hip9011Hardware::sendCommand(unsigned char command) {
 	spiStartExchangeI(driver, 1, tx_buff, rx_buff);
 }
 
-EXTERN_ENGINE
-;
-
+EXTERN_ENGINE;
 
 static char hipPinNameBuffer[16];
 
@@ -175,9 +173,7 @@ static void showHipInfo(void) {
 			getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, pinNameBuffer),
 			hipValueMax,
 			CONFIG(useTpicAdvancedMode));
-	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(engineConfiguration->hip9011SpiDevice)));
-	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(engineConfiguration->hip9011SpiDevice)));
-	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(engineConfiguration->hip9011SpiDevice)));
+	printSpiConfig(logger, "hip9011", CONFIG(hip9011SpiDevice));
 #endif /* EFI_PROD_CODE */
 
 	scheduleMsg(logger, "start %.2f end %.2f", engineConfiguration->knockDetectionWindowStart,
@@ -253,7 +249,8 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitic
 	// this callback is invoked on interrupt thread
 	if (index != 0)
 		return;
-	engine->m.beforeHipCb = getTimeNowLowerNt();
+
+	ScopePerf perf(PE::Hip9011IntHoldCallback);
 
 	int rpm = GET_RPM_VALUE;
 	if (!isValidRpm(rpm))
@@ -268,7 +265,6 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index, efitic
 #endif /* EFI_PROD_CODE */
 	scheduleByAngle(&endTimer[structIndex], edgeTimestamp, engineConfiguration->knockDetectionWindowEnd,
 			&endIntegration);
-	engine->m.hipCbTime = getTimeNowLowerNt() - engine->m.beforeHipCb;
 }
 
 void setMaxKnockSubDeg(int value) {

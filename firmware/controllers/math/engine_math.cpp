@@ -24,14 +24,14 @@
 #include "engine_configuration.h"
 #include "interpolation.h"
 #include "allsensors.h"
+#include "sensor.h"
 #include "event_registry.h"
 #include "efi_gpio.h"
 #include "fuel_math.h"
 #include "advance_map.h"
 #include "config_engine_specs.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 #if EFI_UNIT_TEST
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
@@ -70,7 +70,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case LM_MAP:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_ALPHA_N:
-		return getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return Sensor::get(SensorType::Tps1).value_or(0);
 	case LM_REAL_MAF: {
 		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}

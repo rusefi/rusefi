@@ -14,6 +14,7 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 else
   MCU_DEFS = -DSTM32F767xx
   BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_F767ZI/board.c
+  CONFDIR=config/stm32f7ems
   BOARDINC = $(BOARDS_DIR)/nucleo_f767		# For board.h
   BOARDINC += $(PROJECT_DIR)/config/stm32f7ems	# efifeatures/halconf/chconf.h
   LDSCRIPT= $(BOARDS_DIR)/nucleo_f767/STM32F76xxI.ld

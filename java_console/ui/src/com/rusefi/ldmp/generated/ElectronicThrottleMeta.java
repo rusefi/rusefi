@@ -3,6 +3,7 @@ package com.rusefi.ldmp.generated;
 import com.rusefi.ldmp.*;
 
 public class ElectronicThrottleMeta {
+	/* todo: restore this functionality
 	public static final Request[] CONTENT = new Request[]{
 			new IfRequest("Engine", "hasEtbPedalPositionSensor",
 				new Request[]{
@@ -41,4 +42,5 @@ public class ElectronicThrottleMeta {
 				new TextRequest("No_Pedal_Sensor"),
 }),
 	};
+	 */
 }

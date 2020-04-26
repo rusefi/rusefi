@@ -258,7 +258,6 @@ void setBoardConfigurationOverrides(void) {
 	//engineConfiguration->isCJ125Enabled = true;
 	engineConfiguration->isCJ125Enabled = false;
 
-	engineConfiguration->canDeviceMode = CD_USE_CAN1;
 	engineConfiguration->canTxPin = GPIOB_9;
 	engineConfiguration->canRxPin = GPIOB_8;
 	

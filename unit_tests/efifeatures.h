@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef EFIFEATURES_H_
-#define EFIFEATURES_H_
+#pragma once
 
 #include "rusefi_true.h"
 
@@ -15,6 +14,10 @@
 #define EFI_CJ125 TRUE
 
 #define ENABLE_PERF_TRACE FALSE
+
+#define EFI_LAUNCH_CONTROL TRUE
+
+#define EFI_BOOST_CONTROL TRUE
 
 #define EFI_IDLE_CONTROL TRUE
 
@@ -60,11 +63,7 @@
 
 #define EFI_ANALOG_SENSORS TRUE
 
-#define BOARD_EXT_GPIOCHIPS	3
-
 #define EFI_BOARD_TEST FALSE
 #define EFI_JOYSTICK FALSE
 
 #define EFI_MAP_AVERAGING TRUE
-
-#endif /* EFIFEATURES_H_ */

@@ -1,7 +1,10 @@
 package com.rusefi.ui.widgets;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
+import com.rusefi.AutoTest;
 import com.rusefi.FileLog;
+import com.rusefi.InfixConverter;
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.storage.Node;
@@ -17,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 /**
  * Date: 3/20/13
@@ -24,6 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class AnyCommand {
     public static final String KEY = "last_value";
+    private static final String DECODE_RPN = "decode_rpn";
 
     private final JTextComponent text;
     private JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -107,6 +112,12 @@ public class AnyCommand {
         if (!isValidInput(rawCommand))
             return;
         String cmd = prepareCommand(rawCommand);
+        if (cmd == null) {
+            /**
+             * {@link #DECODE_RPN} for example does not send out anything
+             */
+            return;
+        }
         if (listener != null)
             listener.onSend();
         int timeout = CommandQueue.getTimeout(cmd);
@@ -117,9 +128,15 @@ public class AnyCommand {
 
     public static String prepareCommand(String rawCommand) {
         try {
-            if (rawCommand.startsWith("eval ")) {
+            if (rawCommand.startsWith("eval" + " ")) {
                 return prepareEvalCommand(rawCommand);
-            } else if (rawCommand.startsWith("set_fsio_expression ")) {
+            } else if (rawCommand.toLowerCase().startsWith("stim_check" + " ")) {
+                handleStimulationSelfCheck(rawCommand);
+                return null;
+            } else if (rawCommand.toLowerCase().startsWith(DECODE_RPN + " ")) {
+                handleDecodeRpn(rawCommand);
+                return null;
+            } else if (rawCommand.toLowerCase().startsWith("set_fsio_expression" + " ")) {
                 return prepareSetFsioCommand(rawCommand);
             } else {
                 return rawCommand;
@@ -130,6 +147,39 @@ public class AnyCommand {
         }
     }
 
+    /**
+     * stim_check 3000 5 30
+     * would set RPM to 3000, give it 5 seconds to settle, and test for 30 seconds
+     */
+    private static void handleStimulationSelfCheck(String rawCommand) {
+        String[] parts = rawCommand.split(" ", 4);
+        if (parts.length != 4) {
+            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Invalid command length " + parts);
+            return; // let's ignore invalid command
+        }
+        int rpm = Integer.parseInt(parts[1]);
+        int settleTime = Integer.parseInt(parts[2]);
+        int durationTime = Integer.parseInt(parts[3]);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MessagesCentral.getInstance().postMessage(AnyCommand.class, "Will test with RPM " + rpm + ", settle time" + settleTime + "s and duration" + durationTime + "s");
+                Function<String, Object> callback = new Function<String, Object>() {
+                    @Override
+                    public Object apply(String status) {
+                        if (status == null) {
+                            MessagesCentral.getInstance().postMessage(AnyCommand.class, rpm + " worked!");
+                        } else {
+                            MessagesCentral.getInstance().postMessage(AnyCommand.class, rpm + " failed " + status);
+                        }
+                        return null;
+                    }
+                };
+                AutoTest.assertRpmDoesNotJump(rpm, settleTime, durationTime, callback);
+            }
+        }).start();
+    }
+
     private static String prepareSetFsioCommand(String rawCommand) {
         String[] parts = rawCommand.split(" ", 3);
         if (parts.length != 3)
@@ -137,12 +187,23 @@ public class AnyCommand {
         return "set_rpn_expression " + parts[1] + " " + quote(infix2postfix(unquote(parts[2])));
     }
 
+    private static void handleDecodeRpn(String rawCommand) {
+        String[] parts = rawCommand.split(" ", 2);
+        if (parts.length != 2) {
+            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Failed to parse, one argument expected");
+            return;
+        }
+        String argument = unquote(parts[1]);
+        String humanForm = InfixConverter.getHumanInfixFormOrError(argument);
+        MessagesCentral.getInstance().postMessage(AnyCommand.class, "Human form is \"" + humanForm + "\"");
+    }
+
     private static String prepareEvalCommand(String rawCommand) {
         String[] parts = rawCommand.split(" ", 2);
         if (parts.length != 2)
             return rawCommand; // let's ignore invalid command
 
-        return "rpn_eval " + quote(infix2postfix(unquote(parts[1])));
+        return "rpn_eval" + " " + quote(infix2postfix(unquote(parts[1])));
     }
 
     private static String quote(String s) {
@@ -154,7 +215,7 @@ public class AnyCommand {
     }
 
     public static String unquote(String quoted) {
-        quoted = quoted.trim();
+        quoted = quoted.trim().replace('\u201C', '"').replace('\u201D', '"');
         if (quoted.charAt(0) == '"')
             return quoted.substring(1, quoted.length() - 1);
         return quoted; // ignoring invalid input

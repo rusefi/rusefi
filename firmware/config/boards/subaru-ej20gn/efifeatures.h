@@ -9,8 +9,7 @@
 
 #include "../../stm32f7ems/efifeatures.h"
 
-#ifndef EFIFEATURES_SUBARUEJ20G_H_
-#define EFIFEATURES_SUBARUEJ20G_H_
+#pragma once
 
 /* debug console */
 #undef EFI_USE_UART_FOR_CONSOLE
@@ -24,10 +23,6 @@
 
 /* do not use serial device for console */
 #undef TS_SERIAL_DEVICE
-
-/* additional space for pins on gpioext */
-#undef BOARD_EXT_PINREPOPINS
-#define BOARD_EXT_PINREPOPINS		(16 + 22)
 
 #undef EFI_RTC
 #define EFI_RTC						FALSE
@@ -113,4 +108,3 @@
 
 #define EFI_NARROW_EGO_AVERAGING		TRUE
 
-#endif /* EFIFEATURES_SUBARUEJ20G_H_ */

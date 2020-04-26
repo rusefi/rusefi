@@ -5,9 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef TEST_SIGNAL_EXECUTOR_H_
-#define TEST_SIGNAL_EXECUTOR_H_
+#pragma once
 
 int getRevolutionCounter();
-
-#endif /* TEST_SIGNAL_EXECUTOR_H_ */

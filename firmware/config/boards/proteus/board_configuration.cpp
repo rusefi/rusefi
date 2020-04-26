@@ -43,6 +43,15 @@ static const brain_pin_e ignPins[] = {
 	GPIOG_2,
 };
 
+static const ConfigOverrides configOverrides = {
+	.canTxPin = GPIOD_1,
+	.canRxPin = GPIOD_0,
+};
+
+const ConfigOverrides& getConfigOverrides() {
+	return configOverrides;
+}
+
 static void setInjectorPins() {
 	copyArray(engineConfiguration->injectionPins, injPins);
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
@@ -86,6 +95,8 @@ static void setupEtb() {
 	engineConfiguration->etbIo[0].controlPin1 = GPIOD_12;
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = GPIOD_10;
+	// Disable pin
+	engineConfiguration->etbIo[0].disablePin = GPIOD_11;
 	// Unused
 	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 
@@ -94,23 +105,14 @@ static void setupEtb() {
 	engineConfiguration->etbIo[1].controlPin1 = GPIOD_13;
 	// DIR pin
 	engineConfiguration->etbIo[1].directionPin1 = GPIOD_9;
+	// Disable pin
+	engineConfiguration->etbIo[1].disablePin = GPIOD_8;
 	// Unused
 	engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
-
-#if EFI_FSIO
-	// disable ETB by default
-	setFsio(7, GPIOD_8, "1" PASS_CONFIG_PARAMETER_SUFFIX);
-	setFsio(8, GPIOD_11, "1" PASS_CONFIG_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
 	engineConfiguration->etbFreq = 800;
-}
-
-static void setupCanPins() {
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
 }
 
 static void setupDefaultSensorInputs() {
@@ -164,7 +166,6 @@ void setBoardConfigurationOverrides(void) {
 	setLedPins();
 	setupVbatt();
 	setupEtb();
-	setupCanPins();
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

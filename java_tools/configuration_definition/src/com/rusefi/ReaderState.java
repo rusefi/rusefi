@@ -26,6 +26,7 @@ public class ReaderState {
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
     private static final String DEFINE_CONSTRUCTOR = "define_constructor";
+    public static final char MULT_TOKEN = '*';
     public Stack<ConfigStructure> stack = new Stack<>();
     public Map<String, Integer> tsCustomSize = new HashMap<>();
     public Map<String, String> tsCustomLine = new HashMap<>();
@@ -80,7 +81,7 @@ public class ReaderState {
         customSize = customSize.replaceAll("x", "*");
         line = VariableRegistry.INSTANCE.applyVariables(line);
 
-        int multPosition = customSize.indexOf('*');
+        int multPosition = customSize.indexOf(MULT_TOKEN);
         if (multPosition != -1) {
             String firstPart = customSize.substring(0, multPosition);
             int first;

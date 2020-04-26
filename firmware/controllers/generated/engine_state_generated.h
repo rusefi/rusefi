@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sat Feb 22 15:19:24 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Fri Apr 10 12:53:32 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
@@ -299,97 +299,97 @@ struct engine_state2_s {
 	bool isCrankingState : 1;
 	/**
 	offset 88 bit 1 */
-	bool hasEtbPedalPositionSensor : 1;
-	/**
-	offset 88 bit 2 */
 	bool isAutomaticIdle : 1;
 	/**
+	offset 88 bit 2 */
+	bool unusedBit_13_2 : 1;
+	/**
 	offset 88 bit 3 */
-	bool unusedBit_14_3 : 1;
+	bool unusedBit_13_3 : 1;
 	/**
 	offset 88 bit 4 */
-	bool unusedBit_14_4 : 1;
+	bool unusedBit_13_4 : 1;
 	/**
 	offset 88 bit 5 */
-	bool unusedBit_14_5 : 1;
+	bool unusedBit_13_5 : 1;
 	/**
 	offset 88 bit 6 */
-	bool unusedBit_14_6 : 1;
+	bool unusedBit_13_6 : 1;
 	/**
 	offset 88 bit 7 */
-	bool unusedBit_14_7 : 1;
+	bool unusedBit_13_7 : 1;
 	/**
 	offset 88 bit 8 */
-	bool unusedBit_14_8 : 1;
+	bool unusedBit_13_8 : 1;
 	/**
 	offset 88 bit 9 */
-	bool unusedBit_14_9 : 1;
+	bool unusedBit_13_9 : 1;
 	/**
 	offset 88 bit 10 */
-	bool unusedBit_14_10 : 1;
+	bool unusedBit_13_10 : 1;
 	/**
 	offset 88 bit 11 */
-	bool unusedBit_14_11 : 1;
+	bool unusedBit_13_11 : 1;
 	/**
 	offset 88 bit 12 */
-	bool unusedBit_14_12 : 1;
+	bool unusedBit_13_12 : 1;
 	/**
 	offset 88 bit 13 */
-	bool unusedBit_14_13 : 1;
+	bool unusedBit_13_13 : 1;
 	/**
 	offset 88 bit 14 */
-	bool unusedBit_14_14 : 1;
+	bool unusedBit_13_14 : 1;
 	/**
 	offset 88 bit 15 */
-	bool unusedBit_14_15 : 1;
+	bool unusedBit_13_15 : 1;
 	/**
 	offset 88 bit 16 */
-	bool unusedBit_14_16 : 1;
+	bool unusedBit_13_16 : 1;
 	/**
 	offset 88 bit 17 */
-	bool unusedBit_14_17 : 1;
+	bool unusedBit_13_17 : 1;
 	/**
 	offset 88 bit 18 */
-	bool unusedBit_14_18 : 1;
+	bool unusedBit_13_18 : 1;
 	/**
 	offset 88 bit 19 */
-	bool unusedBit_14_19 : 1;
+	bool unusedBit_13_19 : 1;
 	/**
 	offset 88 bit 20 */
-	bool unusedBit_14_20 : 1;
+	bool unusedBit_13_20 : 1;
 	/**
 	offset 88 bit 21 */
-	bool unusedBit_14_21 : 1;
+	bool unusedBit_13_21 : 1;
 	/**
 	offset 88 bit 22 */
-	bool unusedBit_14_22 : 1;
+	bool unusedBit_13_22 : 1;
 	/**
 	offset 88 bit 23 */
-	bool unusedBit_14_23 : 1;
+	bool unusedBit_13_23 : 1;
 	/**
 	offset 88 bit 24 */
-	bool unusedBit_14_24 : 1;
+	bool unusedBit_13_24 : 1;
 	/**
 	offset 88 bit 25 */
-	bool unusedBit_14_25 : 1;
+	bool unusedBit_13_25 : 1;
 	/**
 	offset 88 bit 26 */
-	bool unusedBit_14_26 : 1;
+	bool unusedBit_13_26 : 1;
 	/**
 	offset 88 bit 27 */
-	bool unusedBit_14_27 : 1;
+	bool unusedBit_13_27 : 1;
 	/**
 	offset 88 bit 28 */
-	bool unusedBit_14_28 : 1;
+	bool unusedBit_13_28 : 1;
 	/**
 	offset 88 bit 29 */
-	bool unusedBit_14_29 : 1;
+	bool unusedBit_13_29 : 1;
 	/**
 	offset 88 bit 30 */
-	bool unusedBit_14_30 : 1;
+	bool unusedBit_13_30 : 1;
 	/**
 	offset 88 bit 31 */
-	bool unusedBit_14_31 : 1;
+	bool unusedBit_13_31 : 1;
 	/**
 	 * offset 92
 	 */
@@ -430,4 +430,4 @@ typedef struct engine_state2_s engine_state2_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sat Feb 22 15:19:24 EST 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Fri Apr 10 12:53:32 EDT 2020

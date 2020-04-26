@@ -34,13 +34,12 @@
 #include "vehicle_speed.h"
 #include "map.h"
 #include "maf.h"
-#include "tps.h"
+#include "sensor.h"
 #include "engine_math.h"
 #include "fuel_math.h"
 #include "thermistors.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static LoggingWithStorage logger("obd2");
 
@@ -137,7 +136,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		break;
 	case PID_COOLANT_TEMP:
 		scheduleMsg(&logger, "Got CLT request");
-		obdSendValue(1, pid, 1, getCoolantTemperature() + 40.0f);
+		obdSendValue(1, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + 40.0f);
 		break;
 	case PID_INTAKE_MAP:
 		scheduleMsg(&logger, "Got MAP request");
@@ -160,7 +159,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		}
 	case PID_INTAKE_TEMP:
 		scheduleMsg(&logger, "Got IAT request");
-		obdSendValue(1, pid, 1, getIntakeAirTemperature() + 40.0f);
+		obdSendValue(1, pid, 1, Sensor::get(SensorType::Iat).value_or(0) + 40.0f);
 		break;
 	case PID_INTAKE_MAF:
 		scheduleMsg(&logger, "Got MAF request");
@@ -168,7 +167,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		break;
 	case PID_THROTTLE:
 		scheduleMsg(&logger, "Got throttle request");
-		obdSendValue(1, pid, 1, getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) * 2.55f);	// (A*100/255)
+		obdSendValue(1, pid, 1, Sensor::get(SensorType::Tps1).value_or(0) * 2.55f);	// (A*100/255)
 		break;
 	case PID_FUEL_RATE:
 		scheduleMsg(&logger, "Got fuel rate request");
@@ -182,7 +181,9 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 
 static void handleDtcRequest(int numCodes, int *dtcCode) {
 	// TODO: this appears to be unfinished?
-	
+	UNUSED(numCodes);
+	UNUSED(dtcCode);
+
 	// int numBytes = numCodes * 2;
 	// // write CAN-TP Single Frame header?
 	// txmsg.data8[0] = (uint8_t)((0 << 4) | numBytes);

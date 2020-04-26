@@ -1,8 +1,8 @@
 package com.rusefi.ui;
 
 import com.rusefi.FileLog;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
-import com.rusefi.io.ConnectionStatus;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ public class WarningPanel {
 
     private final JLabel label = new JLabel();
     private final JButton reset = new JButton("clear warning");
-    private final Timer fatalBlinking = new Timer(1000, new ActionListener() {
+    private final Timer criticalErrorBlinking = new Timer(1000, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             label.setVisible(!label.isVisible());
@@ -50,9 +50,9 @@ public class WarningPanel {
                 if (haveFatalError)
                     return;
 
-                if (message.startsWith(ConnectionStatus.FATAL_MESSAGE_PREFIX)) {
+                if (message.startsWith(Fields.CRITICAL_PREFIX)) {
                     haveFatalError = true;
-                    fatalBlinking.start();
+                    criticalErrorBlinking.start();
                     label.setText(message);
                     return;
                 }

@@ -8,8 +8,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef ADC_MATH_H_
-#define ADC_MATH_H_
+#pragma once
 
 #include "engine_configuration.h"
 #define ADC_MAX_VALUE 4095
@@ -22,4 +21,3 @@ float getVoltage(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER
 
 float getVoltageDivided(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-#endif /* ADC_MATH_H_ */

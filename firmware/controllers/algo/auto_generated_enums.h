@@ -16,7 +16,7 @@ const char *getAdc_channel_e(adc_channel_e value);
 const char *getAdc_channel_mode_e(adc_channel_mode_e value);
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value);
 const char *getBrain_pin_e(brain_pin_e value);
-const char *getCan_device_mode_e(can_device_mode_e value);
+
 const char *getCan_nbc_e(can_nbc_e value);
 const char *getChamber_style_e(chamber_style_e value);
 const char *getCranking_ignition_mode_e(cranking_ignition_mode_e value);

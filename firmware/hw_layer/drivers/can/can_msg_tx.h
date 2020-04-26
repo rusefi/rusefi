@@ -28,7 +28,7 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	CanTxMessage(uint32_t eid);
+	CanTxMessage(uint32_t eid, uint8_t dlc = 8);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
@@ -93,5 +93,7 @@ template <typename TData>
 void transmitStruct(uint32_t eid)
 {
 	CanTxTyped<TData> frame(eid);
+	// Destruction of an instance of CanTxMessage will transmit the message over the wire.
+	// see CanTxMessage::~CanTxMessage()
 	populateFrame(frame.get());
 }

@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef LOGIC_EXPRESSION_H_
-#define LOGIC_EXPRESSION_H_
+#pragma once
 
 #include "rusefi_enums.h"
 #include "fl_stack.h"
@@ -56,6 +55,7 @@ typedef enum {
 	LE_METHOD_IN_SHUTDOWN = 122,
 	LE_METHOD_FSIO_DIGITAL_INPUT = 123,
 	LE_METHOD_FSIO_SETTING = 124,
+	LE_METHOD_PPS = 125,
 
 #include "fsio_enums_generated.def"
 
@@ -135,5 +135,3 @@ const char *getNextToken(const char *line, char *buffer, const int bufferSize);
 bool isNumeric(const char* line);
 le_action_e parseAction(const char * line);
 bool float2bool(float v);
-
-#endif /* LOGIC_EXPRESSION_H_ */

@@ -49,7 +49,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20200317;
+    public static final int CONSOLE_VERSION = 20200424;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
@@ -66,8 +66,8 @@ public class Launcher {
     private static final String TOOL_NAME_COMPILE = "compile";
 
     private final String port;
-    // todo: the logic around 'fatalError' could be implemented nicer
-    private String fatalError;
+    // todo: the logic around 'criticalError' could be implemented nicer
+    private String criticalError;
     public static EngineSnifferPanel engineSnifferPanel;
     private static SensorCentral.SensorListener wrongVersionListener;
 
@@ -93,8 +93,8 @@ public class Launcher {
                 default:
                     text = "";
             }
-            if (fatalError != null) {
-                text = fatalError;
+            if (criticalError != null) {
+                text = criticalError;
                 g.setColor(Color.red);
             }
             int labelWidth = g.getFontMetrics().stringWidth(text);
@@ -149,8 +149,8 @@ public class Launcher {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (message.startsWith(ConnectionStatus.FATAL_MESSAGE_PREFIX))
-                    fatalError = message;
+                if (message.startsWith(Fields.CRITICAL_PREFIX))
+                    criticalError = message;
             }
         });
 

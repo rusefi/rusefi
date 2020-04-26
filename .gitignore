@@ -17,3 +17,5 @@ java_console_binary
 .vscode
 *.cmp
 *.net
+err.txt
+log.txt

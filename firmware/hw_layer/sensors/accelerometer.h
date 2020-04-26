@@ -5,10 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef HW_LAYER_ACCELEROMETER_H_
-#define HW_LAYER_ACCELEROMETER_H_
+#pragma once
 
-#include "global.h"
 #include "engine.h"
 
 void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -24,4 +22,3 @@ float getLongitudinalAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
  */
 float getTransverseAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-#endif /* HW_LAYER_ACCELEROMETER_H_ */

@@ -17,9 +17,11 @@ void configureHonda_1_4_24(TriggerWaveform *s, bool withOneEventSignal, bool wit
 		trigger_wheel_e const fourEventWave,
 		float d);
 
-void configureOnePlus16(TriggerWaveform *s, operation_mode_e operationMode);
+void configureOnePlus16(TriggerWaveform *s);
 
 void configureHondaCbr600(TriggerWaveform *s);
 void configureHondaCbr600custom(TriggerWaveform *s);
+
+void configureHondaK_12_1(TriggerWaveform *s);
 
 

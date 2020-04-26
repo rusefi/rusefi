@@ -35,16 +35,15 @@
 #include "lcd_menu_tree.h"
 #include "memstreams.h"
 #include "settings.h"
-#include "injector_central.h"
+#include "bench_test.h"
 #include "engine_controller.h"
 #include "mmc_card.h"
 #include "idle_thread.h"
 #include "fuel_math.h"
+#include "sensor.h"
 
 
-EXTERN_ENGINE
-;
-extern bool hasFirmwareErrorFlag;
+EXTERN_ENGINE;
 
 static MenuItem ROOT(NULL, NULL);
 
@@ -130,64 +129,6 @@ void initLcdController(void) {
 	msObjectInit(&lcdLineStream, (uint8_t *) lcdLineBuffer, sizeof(lcdLineBuffer), 0);
 }
 
-static const char* ignitionModeStr[] = { "1C", "IND", "WS" };
-static const char* injectionModeStr[] = { "Sim", "Seq", "Bch" };
-static const char* idleModeStr[] = { "I:A", "I:M" };
-
-//static const char *getPinShortName(io_pin_e pin) {
-//	switch (pin) {
-//	case ALTERNATOR_SWITCH:
-//		return "AL";
-//	case FUEL_PUMP_RELAY:
-//		return "FP";
-//	case FAN_RELAY:
-//		return "FN";
-//	case O2_HEATER:
-//		return "O2H";
-//	default:
-//		firmwareError(OBD_PCM_Processor_Fault, "No short name for %d", (int) pin);
-//		return "";
-//	}
-//}
-
-//char * appendPinStatus(char *buffer, io_pin_e pin) {
-//	char *ptr = appendStr(buffer, getPinShortName(pin));
-//	int state = getOutputPinValue(pin);
-//	// todo: should we handle INITIAL_PIN_STATE?
-//	if (state) {
-//		return appendStr(ptr, ":Y ");
-//	} else {
-//		return appendStr(ptr, ":n ");
-//	}
-//}
-
-#if 0
-static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char *buffer) {
-	char *ptr = buffer;
-
-	ptr = appendStr(ptr, " ");
-	ptr = appendStr(ptr, ignitionModeStr[engineConfiguration->ignitionMode]);
-
-	ptr = appendStr(ptr, " ");
-	ptr = appendStr(ptr, injectionModeStr[engineConfiguration->injectionMode]);
-
-	ptr = appendStr(ptr, " ");
-	ptr = appendStr(ptr, idleModeStr[engineConfiguration->idleMode]);
-
-	ptr = appendStr(ptr, " ");
-	return ptr;
-}
-#endif
-
-//static char * prepareStatusLine(char *buffer) {
-//	char *ptr = buffer;
-//
-//	ptr = appendPinStatus(ptr, FUEL_PUMP_RELAY);
-//	ptr = appendPinStatus(ptr, FAN_RELAY);
-//	ptr = appendPinStatus(ptr, O2_HEATER);
-//	return ptr;
-//}
-
 static char buffer[MAX_LCD_WIDTH + 4];
 
 static void lcdPrintf(const char *fmt, ...) {
@@ -230,10 +171,10 @@ static void showLine(lcd_line_e line, int screenY) {
 #endif
 		return;
 	case LL_CLT_TEMPERATURE:
-		lcdPrintf("Coolant %.2f", getCoolantTemperature());
+		lcdPrintf("Coolant %.2f", Sensor::get(SensorType::Clt).value_or(0));
 		return;
 	case LL_IAT_TEMPERATURE:
-		lcdPrintf("Intake Air %.2f", getIntakeAirTemperature());
+		lcdPrintf("Intake Air %.2f", Sensor::get(SensorType::Iat).value_or(0));
 		return;
 	case LL_ALGORITHM:
 		lcdPrintf(getEngine_load_mode_e(engineConfiguration->fuelAlgorithm));
@@ -250,13 +191,13 @@ static void showLine(lcd_line_e line, int screenY) {
 	case LL_TPS:
 		getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, buffer);
 
-		lcdPrintf("Throttle %s %.2f%%", buffer, getTPS());
+		lcdPrintf("Throttle %s %.2f%%", buffer, Sensor::get(SensorType::Tps1).value_or(0));
 		return;
 	case LL_FUEL_CLT_CORRECTION:
 		lcdPrintf("CLT corr %.2f", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_FUEL_IAT_CORRECTION:
-		lcdPrintf("IAT corr %.2f", getIatFuelCorrection(getIntakeAirTemperature() PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("IAT corr %.2f", getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_FUEL_INJECTOR_LAG:
 		lcdPrintf("ING LAG %.2f", getInjectorLag(engine->sensors.vBatt PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -355,7 +296,7 @@ void updateHD44780lcd(void) {
 	}
 
 
-	const char * message = hasFirmwareErrorFlag ? getFirmwareError() : getWarning();
+	const char * message = hasFirmwareErrorFlag ? getFirmwareError() : getWarningMessage();
 	memcpy(buffer, message, engineConfiguration->HD44780width);
 	buffer[engineConfiguration->HD44780width] = 0;
 	lcd_HD44780_set_position(engineConfiguration->HD44780height - 1, 0);
@@ -392,7 +333,7 @@ void updateHD44780lcd(void) {
 //
 //	lcd_HD44780_set_position(1, 0);
 //	memset(buffer, ' ', LCD_WIDTH);
-//	memcpy(buffer, getWarning(), LCD_WIDTH);
+//	memcpy(buffer, getWarningMessage(), LCD_WIDTH);
 //	buffer[LCD_WIDTH] = 0;
 //	lcd_HD44780_print_string(buffer);
 //

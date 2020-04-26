@@ -29,19 +29,19 @@
  */
 class StoredValueSensor : public Sensor {
 public:
-	SensorResult get() const final {
+	SensorResult get() const final override {
 		bool valid = m_isValid;
 		float value = m_value;
 
 		if (!valid) {
-			return {false, value};
+			return unexpected;
 		}
 
 		if (getTimeNowNt() - m_timeoutPeriod > m_lastUpdate) {
-			return {false, value};
+			return unexpected;
 		}
 
-		return {true, value};
+		return value;
 	}
 
 protected:

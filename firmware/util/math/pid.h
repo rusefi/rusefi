@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef PID_H_
-#define PID_H_
+#pragma once
 
 #include "engine_state_generated.h"
 #include "pid_state_generated.h"
@@ -128,5 +127,3 @@ public:
 private:
 	float limitOutput(float v) const;
 };
-
-#endif /* PID_H_ */

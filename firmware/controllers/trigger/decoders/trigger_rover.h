@@ -6,11 +6,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CONTROLLERS_TRIGGER_TRIGGER_ROVER_H_
-#define CONTROLLERS_TRIGGER_TRIGGER_ROVER_H_
+#pragma once
 
 #include "trigger_structure.h"
 
 void initializeRoverK(TriggerWaveform *s);
-
-#endif /* CONTROLLERS_TRIGGER_TRIGGER_ROVER_H_ */

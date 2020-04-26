@@ -35,8 +35,6 @@
 #include "engine.h"
 EXTERN_ENGINE;
 
-extern schfunc_t globalTimerCallback;
-
 /**
  * these fields are global in order to facilitate debugging
  */
@@ -45,14 +43,8 @@ static efitime_t nextEventTimeNt = 0;
 uint32_t hwSetTimerDuration;
 uint32_t lastExecutionCount;
 
-static void executorCallback(void *arg) {
-	(void)arg;
+void globalTimerCallback() {
 	efiAssertVoid(CUSTOM_ERR_6624, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "lowstck#2y");
-
-//	callbackTime = getTimeNowNt();
-//	if ((callbackTime > nextEventTimeNt) && (callbackTime - nextEventTimeNt > US2NT(5000))) {
-//		timerIsLate++;
-//	}
 
 	___engine.executor.onTimerCallback();
 }
@@ -180,7 +172,6 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 }
 
 void initSingleTimerExecutorHardware(void) {
-	globalTimerCallback = executorCallback;
 	initMicrosecondTimer();
 }
 
