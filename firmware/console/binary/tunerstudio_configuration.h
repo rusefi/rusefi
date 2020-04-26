@@ -21,11 +21,11 @@ typedef struct {
 
 enum class TsCalMode : uint8_t {
 	None = 0,
-	Tps1Min = 0,
 	Tps1Max = 1,
-	EtbKp = 2,
-	EtbKi = 3,
-	EtbKd = 4,
+	Tps1Min = 2,
+	EtbKp = 3,
+	EtbKi = 4,
+	EtbKd = 5,
 };
 
 /**
