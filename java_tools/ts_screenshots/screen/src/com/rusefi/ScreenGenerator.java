@@ -1,13 +1,18 @@
+package com.rusefi;
+
+import com.opensr5.ini.IniFileModel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -21,14 +26,13 @@ public class ScreenGenerator {
 
     private static final String DESTINATION = "images" + File.separator;
 
-    public static void main(String[] args) throws InterruptedException, InvocationTargetException, IOException, AWTException {
+    static Content content = new Content();
+
+    public static void main(String[] args) throws Exception {
+        IniFileModel iniFileModel = new IniFileModel();
+        iniFileModel.readIniFile("../../firmware/tunerstudio");
+
         new File(DESTINATION).mkdirs();
-
-        Thread t = new Thread(() -> TunerStudio.main(args));
-
-        t.setDaemon(false);
-        t.start();
-
 
         Frame mainFrame = findMainFrame();
 
@@ -48,8 +52,21 @@ public class ScreenGenerator {
 
         System.out.println("Done discovering buttons, " + topLevelButtons.size());
 
-        doJob(mainFrame);
+        handleTopLevelButtons(mainFrame, topLevelButtons);
     }
+
+    private static void writeXml(Content content) throws JAXBException, IOException {
+        JAXBContext jaxbContext = JAXBContext.newInstance(Content.class);
+
+        Marshaller marshaller = jaxbContext.createMarshaller();
+
+        StringWriter xmlWriter = new StringWriter();
+        marshaller.marshal(content, xmlWriter);
+        System.out.println(xmlWriter.toString());
+
+        marshaller.marshal(content, new FileWriter("output.xml"));
+    }
+
 
     private static Frame findMainFrame() throws InterruptedException {
         while (true) {
@@ -108,18 +125,22 @@ public class ScreenGenerator {
         return component instanceof bi.b;
     }
 
-    private static void doJob(Frame frame) throws InterruptedException, InvocationTargetException, IOException, AWTException {
+    private static void handleTopLevelButtons(Frame frame, ArrayList<AbstractButton> topLevelButtons) throws Exception {
         printAllDialogs("Dialogs before clicking ", JDialog.getWindows());
-
 
         for (AbstractButton topLevel : topLevelButtons) {
             handleTopLevelButton(frame, topLevel);
         }
     }
 
-    private static void handleTopLevelButton(Frame frame, AbstractButton topLevel) throws InterruptedException, InvocationTargetException, IOException {
+    private static void handleTopLevelButton(Frame frame, AbstractButton topLevel) throws Exception {
         SwingUtilities.invokeAndWait(topLevel::doClick);
         Thread.sleep(TOP_MENU_CLICK_DELAY);
+
+        content.getTopLevelMenus().add(new TopLevelMenu(topLevel.getText()));
+
+        writeXml(content);
+
 
         ImageIO.write(
                 getScreenShot(frame),
@@ -134,20 +155,13 @@ public class ScreenGenerator {
     }
 
     private static void handleMenuItem(JMenuItem menuItem) throws InterruptedException, InvocationTargetException {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                menuItem.doClick();
-            }
-        });
+        SwingUtilities.invokeAndWait(menuItem::doClick);
 
         Thread.sleep(MENU_CLICK_DELAY);
 
 
         AtomicReference<JDialog> ref = new AtomicReference<>();
-        SwingUtilities.invokeAndWait(() -> {
-            ref.set(findDynamicDialog());
-        });
+        SwingUtilities.invokeAndWait(() -> ref.set(findDynamicDialog()));
         // let's give it time to appear on the screen
         Thread.sleep(MENU_CLICK_DELAY);
         JDialog dialog = ref.get();
