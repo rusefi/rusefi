@@ -36,15 +36,14 @@ bool needEvent(const int currentIndex, const int size, MultiChannelStateSequence
 #include "trigger_central.h"
 #include "trigger_simulator.h"
 #include "settings.h"
-
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 
 TriggerEmulatorHelper::TriggerEmulatorHelper() {
 }
 
 EXTERN_ENGINE;
 
-static OutputPin emulatorOutputs[3];
+static OutputPin emulatorOutputs[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
 	efitick_t stamp = getTimeNowNt();

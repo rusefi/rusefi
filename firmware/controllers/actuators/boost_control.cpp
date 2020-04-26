@@ -22,7 +22,7 @@
 #include "engine_controller.h"
 #include "periodic_task.h"
 #include "pin_repository.h"
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 #include "pid_auto_tune.h"
 #include "local_version_holder.h"
 #define NO_PIN_PERIOD 500

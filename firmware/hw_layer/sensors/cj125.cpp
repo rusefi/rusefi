@@ -12,7 +12,7 @@
 
 #include "engine.h"
 #include "cj125.h"
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 #include "rpm_calculator.h"
 
 EXTERN_ENGINE;

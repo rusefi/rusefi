@@ -14,7 +14,6 @@
 #include "state_requence.h"
 #include "pwm_generator_logic.h"
 #include "engine.h"
-#include "pwm_generator.h"
 
 static LoggingWithStorage logger;
 
