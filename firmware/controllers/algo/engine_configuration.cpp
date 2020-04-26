@@ -629,6 +629,34 @@ void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->multisparkMaxSparkingAngle = 30;
 }
 
+void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// Same config for all channels
+	for (size_t i = 0; i < efi::size(CONFIG(gppwm)); i++) {
+		auto& cfg = CONFIG(gppwm)[i];
+
+		cfg.pin = GPIO_UNASSIGNED;
+		cfg.dutyIfError = 0;
+		cfg.onAboveDuty = 60;
+		cfg.offBelowDuty = 50;
+		cfg.pwmFrequency = 250;
+
+		for (size_t j = 0; j < efi::size(cfg.loadBins); j++) {
+			uint8_t z = j * 100 / (efi::size(cfg.loadBins) - 1);
+			cfg.loadBins[j] = z;
+
+			// Fill some values in the table
+			for (size_t k = 0; k < efi::size(cfg.rpmBins); k++) {
+				cfg.table[j][k] = z;
+			}
+			
+		}
+
+		for (size_t j = 0; j < efi::size(cfg.rpmBins); j++) {
+			cfg.rpmBins[j] = 1000 * j / RPM_1_BYTE_PACKING_MULT;
+		}
+	}
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
@@ -870,6 +898,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fixedModeTiming = 50;
 
 	setDefaultMultisparkParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	setDefaultGppwmParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if !EFI_UNIT_TEST
 	engineConfiguration->analogInputDividerCoefficient = 2;

@@ -1,6 +1,7 @@
 #include "electronic_throttle.h"
 #include "dc_motor.h"
 #include "table_helper.h"
+#include "pwm_generator_logic.h"
 
 #include "gmock/gmock.h"
 
@@ -36,4 +37,9 @@ public:
 class MockVp3d : public ValueProvider3D {
 public:
 	MOCK_METHOD(float, getValue, (float xRpm, float y), (const, override));
+};
+
+class MockPwm : public SimplePwm {
+public:
+	MOCK_METHOD(void, setSimplePwmDutyCycle, (float dutyCycle), (override));
 };
