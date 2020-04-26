@@ -314,8 +314,7 @@ void configureHondaAccordShifted(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 }
 
-void configureOnePlus16(TriggerWaveform *s, operation_mode_e operationMode) {
-	UNUSED(operationMode);
+void configureOnePlus16(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	int totalTeethCount = 16;
