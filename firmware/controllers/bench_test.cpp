@@ -291,7 +291,7 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case 0xA:
 		// cmd_write_config
-#if EFI_INTERNAL_FLASH
+#if EFI_PROD_CODE && EFI_CONFIGURATION_STORAGE
 		writeToFlashNow();
 #endif /* EFI_INTERNAL_FLASH */
 		return;

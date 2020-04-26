@@ -45,7 +45,7 @@ typedef enum {
 BOR_Level_t BOR_Get(void);
 BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 
-#if EFI_CONFIGURATION_STORAGE
+#if HAL_USE_FLASH
 void initFlash(void);
 #endif
 

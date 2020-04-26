@@ -16,7 +16,7 @@
 #include "flash_int.h"
 #include "engine_math.h"
 
-#if (EFI_FLASH_SPI == TRUE)
+#if (HAL_USE_FLASH == TRUE) && (EFI_FLASH_SPI == TRUE)
 #include "m25q.h"
 #endif
 
@@ -36,17 +36,15 @@ extern persistent_config_container_s persistentState;
 
 extern engine_configuration_s *engineConfiguration;
 
+#if (HAL_USE_FLASH == TRUE)
 /* Select internal vs external flash */
 #if (EFI_FLASH_SPI == TRUE)
-
 extern M25QDriver W25Flash;
 #define FLASH_DEVICE W25Flash
-
 #else
-
 #define FLASH_DEVICE EFLD1
-
 #endif
+#endif /* HAL_USE_FLASH */
 
 /**
  * https://sourceforge.net/p/rusefi/tickets/335/

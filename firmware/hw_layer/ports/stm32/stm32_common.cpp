@@ -369,9 +369,9 @@ M25QDriver W25Flash;
 
 void initFlash(void)
 {
-#if (HAL_USE_EFL == TRUE)
+#if (HAL_USE_EFL == TRUE) && (EFI_INTERNAL_FLASH == TRUE)
 	eflStart(&EFLD1, NULL);
-#endif /* HAL_USE_EFL */
+#endif /* HAL_USE_EFL && EFI_INTERNAL_FLASH */
 
 #if (EFI_FLASH_SPI == TRUE)
 	/* init SPI pins */

@@ -86,6 +86,8 @@ void baseMCUInit(void) {
      */
 	BOR_Set(BOR_Level_1); // one step above default value
 
+	/* this is ChibiOS flash driver(s) init call
+	 * if RusEFI flash driver is used - this call is not needed */
 #if (HAL_USE_FLASH == TRUE)
 	initFlash();
 #endif

@@ -29,3 +29,6 @@ else
 LDSCRIPT= $(PROJECT_DIR)/config/boards/prometheus/STM32F469xI.ld
 DDEFS += -DDEFAULT_ENGINE_TYPE=PROMETHEUS_DEFAULTS -DSTM32F469xx -DFIRMWARE_ID=\"prometeus469\"
 endif
+
+#Enable on-chip flash
+DDEFS += -DEFI_INTERNAL_FLASH=TRUE
