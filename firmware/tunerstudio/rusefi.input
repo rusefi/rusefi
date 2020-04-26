@@ -470,13 +470,6 @@ fileVersion = { @@TS_FILE_VERSION@@ }
      
      readOnly = warning_message
 
-	maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
-	maintainConstantValue = tpsMin, { (calibrationMode == 2 ) ? calibrationValue : tpsMin }
-
-	maintainConstantValue = etb_pFactor, { (calibrationMode == 3) ? calibrationValue : etb_pFactor }
-	maintainConstantValue = etb_iFactor, { (calibrationMode == 4) ? calibrationValue : etb_iFactor }
-	maintainConstantValue = etb_dFactor, { (calibrationMode == 5) ? calibrationValue : etb_dFactor }
-
 [CurveEditor]
 ;	xAxis       =  leftValue, rightValue, step
 ;	yAxis       =  bottomValue, topValue, step
@@ -958,6 +951,8 @@ gaugeCategory = Sensors - Basic
 
 gaugeCategory = Sensors - Extra 1
    VSSGauge          = vehicleSpeedKph,     "Vehicle speed",         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
+   accelerationXGauge = accelerationX,       @@GAUGE_NAME_ACCEL_X@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
+   accelerationYGauge = accelerationY,       @@GAUGE_NAME_ACCEL_Y@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    atmPresCGauge     = baroPressure,          "Barometric pressure",       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0
    vvtPositionGauge = vvtPosition, "VVT position", "deg",     0,   100,     0,    0,    720,  720,   0,   0
    internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    75,  100,   0,   0
@@ -1131,6 +1126,8 @@ gaugeCategory = Sensors - Raw
    entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
    entry = currentTargetAfr,@@GAUGE_NAME_TARGET_AFR@@,	float,"%.3f"
 
+   entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f", { LIS302DLCsPin != 0 }
+   entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f", { LIS302DLCsPin != 0 }
    entry = egt1,	        "EGT1",	float,"%.1f", { max31855_cs1 != 0}
    entry = egt2,	        "EGT2",	float,"%.1f", { max31855_cs2 != 0}
    entry = egt3,	        "EGT3",	float,"%.1f", { max31855_cs3 != 0}
@@ -1768,11 +1765,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Throttle2 max value",					tps2Max
 		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
 		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
-
-		field = "min", tpsMin, 0
-		field = "max", tpsMax, 0
-
-		commandButton = "Autocalibrate ETB TPS", cmd_calibrate_tps_1_closed
 
 	dialog = pedalSensorLeft, "Accelerator pedal"
 		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
