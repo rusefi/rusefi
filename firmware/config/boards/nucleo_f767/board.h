@@ -41,6 +41,9 @@
 #define EFI_USB_SERIAL_DM GPIOA_11
 #define EFI_USB_SERIAL_DP GPIOA_12
 
+// Ignore USB VBUS pin (we're never a host, only a device)
+#define BOARD_OTG_NOVBUSSENS TRUE
+
 /*
  * Ethernet PHY type.
  */

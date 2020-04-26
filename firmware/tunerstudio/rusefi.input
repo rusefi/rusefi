@@ -76,7 +76,7 @@ enable2ndByteCanID = false
    
  ; delayAfterPortOpen = 500  
    
-   blockingFactor = 400 ; max chunk size
+   blockingFactor = 256 ; max chunk size
 ;end communication settings
 
    ;  name      			= bits,   type, offset,  bits
@@ -332,6 +332,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       egt6            = scalar,  S16,    214,  "deg C",      1,         0
       egt7            = scalar,  S16,    216,  "deg C",      1,         0
       egt8            = scalar,  S16,    218,  "deg C",      1,         0
+;
+      TPS2Value       = scalar,  S16,    220,        "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 
 ;
@@ -357,6 +359,21 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 	enableLogDebugChannels = bits, U08, [0:0], "Yes", "No"
 	enableLogErrorList = bits, U08, [0:0], "Yes", "No"
 
+;                                            0                     1                     2            3                           4                      5                            6             7              8             9            10           11       12           13          14             15            16              17                       18                 19            20              21               22                23         24           25            26           27         28        29       30      31                32     33     34       35       36                 37
+;											 Alternator            TPS Acceleration      Warmup-Pid   Idle                        Engine Load Acc        Trigger Counters                                                                                                                                                                 ETB PID                                                                                                                                                                                           TLE8888                                           Boost
+    debugFieldF1List = bits,   U08,   [0:7], "Controller Output",  "From TPS",           "",          "Controller Output",        "",                    "Channel 1 Rise Counter",    "",           "",            "",           "",          "",          "",      "",          "",         "",            "",           "",             "ETB Controller Output", "",                "",           "df1",          "df1",           "22df1",          "",        "",          "",           "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "Open Loop Duty",  ""      
+    debugFieldF2List = bits,   U08,   [0:7], "I-Term",             "To TPS",             "",          "I-Term",                   "",                    "Channel 2 Rise Counter",    "",           "",            "",           "",          "",          "",      "",          "",         "",            "",           "",             "ETB I-Term",            "",                "",           "df2",          "df2",           "22df2",          "",        "",          "",           "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "Closed Loop Duty","" 
+    debugFieldF3List = bits,   U08,   [0:7], "Previous Error",     "Current TPS<>TPS",   "",          "",                         "",                    "Channel 3 Rise Counter",    "",           "",            "",           "",          "",          "",      "",          "",         "",            "",           "",             "ETB Previous Error",    "",                "",           "df3",          "df3",           "22df3",          "",        "",          "",           "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "",                "" 
+    debugFieldF4List = bits,   U08,   [0:7], "I Gain",             "Extra Fuel",         "",          "",                         "",                    "",                          "",           "",            "",           "",          "",          "",      "",          "",         "",            "",           "",             "ETB df4",               "",                "",           "df4",          "df4",           "22df4",          "",        "",          "",           "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "",                "" 
+    debugFieldF5List = bits,   U08,   [0:7], "D Gain",             "df5",                "df5",       "df5",                      "df5",                 "df5",                       "df5",        "",            "",           "",          "",          "",      "",          "",         "",            "",           "",             "ETB df5",               "df5",             "df5",        "df5",          "df5",           "22df5",          "",        "",          "",           "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "",                "" 
+    debugFieldF6List = bits,   U08,   [0:7], "D Term",             "",                   "",          "",                         "",                    "",                          "",           "",            "",           "",          "",          "",      "",          "",         "",            "",           "",             "ETB df6",               "",                "",           "df6",          "df6",           "22df6",          "",        "",          "",           "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "",                "" 
+    debugFieldF7List = bits,   U08,   [0:7], "Max-Value",          "",                   "",          "",                         "",                    "",                          "",           "",            "",           "",          "",          "",      "",          "",         "",            "",           "",             "ETB df7",               "",                "",           "df7",          "df7",           "22df7",          "",        "",          "",           "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "",                "" 
+   
+    debugFieldI1List = bits,   U08,   [0:7], "P-Gain",             "",                   "",          "",                         "",                    "Channel 2 Fall Counter",    "",           "",            "",           "",          "",          "",      "",          "",         "",            "",           "",             "ETB P-Gain",            "",                "",           "di1",          "di1",           "22",             "",        "",          "",           "",          "",         "",       "",     "",     "SPI Counter",    "",    "",    "",      "",      "",                "" 
+    debugFieldI2List = bits,   U08,   [0:7], "Offset",             "",                   "",          "",                         "",                    "Channel 3 Fall Counter",    "",           "",            "",           "",          "",          "",      "",          "",         "",            "",           "",             "ETB di2",               "",                "",           "di2",          "di2",           "22",             "",        "",          "",           "",          "",         "",       "",     "",     "Latest Transmit","",    "",    "",      "",      "",                "" 
+    debugFieldI3List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "",                    "",                          "",           "",            "",           "",          "",          "",      "",          "",         "",            "",           "",             "ETB di3",               "",                "",           "di3",          "di3",           "22",             "",        "",          "",           "",          "",         "",       "",     "",     "Latest Received","",    "",    "",      "",      "",                "" 
+    debugFieldI4List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "",                    "",                          "",           "",            "",           "",          "",          "",      "",          "",         "",            "",           "",             "ETB di4",               "",                "",           "di4",          "di4",           "22",             "",        "",          "",           "",          "",         "",       "",     "",     "Init Count",     "",    "",    "",      "",      "",                "" 
+    debugFieldI5List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "",                    "",                          "",           "",            "",           "",          "",          "",      "",          "",         "",            "di5",        "di5",          "ETB di5",               "di5",             "di5",        "di5",          "di5",           "22di5",          "di5",     "di5",       "di5",        "di5",       "di5",      "di5",    "di5",  "di5",  "di5",            "di5", "di5", "di5",   "di5",   "di5",             "di5"
 [ConstantsExtensions]
     defaultValue = wueAfrTargetOffset, -1.5 -1.4 -1.15 -0.95 -0.775 -0.65 -0.5625 -0.5 -0.4375 -0.375 -0.3125 -0.25 -0.1875 -0.125 -0.0625 0
 
@@ -828,19 +845,20 @@ gaugeCategory = ECU Status
    firmwareVersionGauge  = firmwareVersion , "ECU Software Version", "%",     0,   100,     0,    0,    100,  100,   0,   0
    timeSecondsGauge     =   timeSeconds, "Uptime", "sec",     0,   100,     0,    0,    100,  100,   0,   0
 
+
 gaugeCategory = Debug  
-   debugFloatField1Gauge = debugFloatField1, @@GAUGE_NAME_DEBUG_F1@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField2Gauge = debugFloatField2, @@GAUGE_NAME_DEBUG_F2@@, "%",     -100,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField3Gauge = debugFloatField3, @@GAUGE_NAME_DEBUG_F3@@, "%",     -100,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField4Gauge = debugFloatField4, @@GAUGE_NAME_DEBUG_F4@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField5Gauge = debugFloatField5, @@GAUGE_NAME_DEBUG_F5@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField6Gauge = debugFloatField6, @@GAUGE_NAME_DEBUG_F6@@, "%",     -100,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField7Gauge = debugFloatField7, @@GAUGE_NAME_DEBUG_F7@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugIntField1Gauge = debugIntField1, "debug i1: pParam", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   debugIntField2Gauge = debugIntField2, "debug i2: offset", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   debugIntField3Gauge = debugIntField3, "debug i3", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   debugIntField4Gauge = debugIntField4, "debug i4", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   debugIntField5Gauge = debugIntField5, "debug i5", "%",     0,   100,     0,    0,    100,  100,   0,   0
+  debugF1Gauge = debugFloatField1, {bitStringValue( debugFieldF1List,  debugMode )}, "",     0,   100,     0,    0,    100,  100,   4,   4
+  debugF2Gauge = debugFloatField2, {bitStringValue( debugFieldF2List,  debugMode )}, "",  -100,   100,     0,    0,    100,  100,   4,   4
+  debugF3Gauge = debugFloatField3, {bitStringValue( debugFieldF3List,  debugMode )}, "",  -100,   100,     0,    0,    100,  100,   4,   4
+  debugF4Gauge = debugFloatField4, {bitStringValue( debugFieldF4List,  debugMode )}, "",     0,   100,     0,    0,    100,  100,   4,   4
+  debugF5Gauge = debugFloatField5, {bitStringValue( debugFieldF5List,  debugMode )}, "",     0,   100,     0,    0,    100,  100,   4,   4
+  debugF6Gauge = debugFloatField6, {bitStringValue( debugFieldF6List,  debugMode )}, "",  -100,   100,     0,    0,    100,  100,   4,   4
+  debugF7Gauge = debugFloatField7, {bitStringValue( debugFieldF7List,  debugMode )}, "",     0,   100,     0,    0,    100,  100,   4,   4
+  debugI1Gauge = debugIntField1,   {bitStringValue( debugFieldI1List,  debugMode )}, "",     0,   100,     0,    0,    100,  100,   0,   0
+  debugI2Gauge = debugIntField2,   {bitStringValue( debugFieldI2List,  debugMode )}, "",     0,   100,     0,    0,    100,  100,   0,   0
+  debugI3Gauge = debugIntField3,   {bitStringValue( debugFieldI3List,  debugMode )}, "",     0,   100,     0,    0,    100,  100,   0,   0
+  debugI4Gauge = debugIntField4,   {bitStringValue( debugFieldI4List,  debugMode )}, "",     0,   100,     0,    0,    100,  100,   0,   0
+  debugI5Gauge = debugIntField5,   {bitStringValue( debugFieldI5List,  debugMode )}, "",     0,   100,     0,    0,    100,  100,   0,   0
 
 
 gaugeCategory = Sensors - Basic
@@ -909,6 +927,7 @@ gaugeCategory = Throttle Body (incl. ETB)
    pedalPositionGauge = throttlePedalPosition, @@GAUGE_NAME_THROTTLE_PEDAL@@,        "%",    0,    120,      0,     0,     100,   100,   1,   1
    tpsADCGauge       = tpsADC,           "tps1 ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0
    TPSGauge			 = TPSValue,      "Throttle position",         "%",        0,    100,       0,      0,     100,   100,   1,   1
+   TPS2Gauge		 = TPS2Value,     "Throttle position #2",         "%",        0,    100,       0,      0,     100,   100,   1,   1
 
    etbTargetGauge     = etbTarget,     @@GAUGE_NAME_ETB_TARGET@@, "%",    0,    100,    0,     0,     100,   100,   1,   1
    etbErrorGauge      = etb1Error,     @@GAUGE_NAME_ETB_ERROR@@,  "%",    -20,  20,    -10,   -5,    5,    10,  2, 0
@@ -1143,7 +1162,7 @@ menuDialog = main
 		
 		# Digital outputs
 		subMenu = mainRelay,				"Main relay"
-		subMenu = starterRelay,				"Starter relay"
+		subMenu = starterRelay,				"Starter Disable relay"
 		subMenu = fuelPump,					"Fuel rail"
 		subMenu = fanSetting,				"Fan"
 		subMenu = tachSettings,				"Tachometer"
@@ -1187,6 +1206,8 @@ menuDialog = main
 
 		subMenu = dwellSettings,			"Dwell", 0, {isIgnitionEnabled == 1}
 		subMenu = ignitionCylExtra,			"Ignition cylinder trim", 0, {isIgnitionEnabled == 1}
+		; todo: once proven, uncomment and remove from the "broken" menu
+		; subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
 
 		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 0}
@@ -1292,7 +1313,7 @@ menuDialog = main
 		
 		subMenu = lcdScreen,				"LCD" @@if_ts_show_lcd
 		subMenu = joystickPanel,			"Joystick" @@if_ts_show_joystick
-		subMenu = spiFunction,				"SPI"
+		subMenu = spiFunction,				"SPI"@@if_ts_show_spi
 		subMenu = monitoringSettings,		"rusEfi console"
 		subMenu = std_separator
 		
@@ -1304,6 +1325,7 @@ menuDialog = main
 
 		# EXPERIMENTAL FEATURES
 		subMenu = parkingLot,				"Experimental/Broken"
+		subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
@@ -1528,8 +1550,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
 	    field = "VVT position display offset",			vvtOffset
 	    field = "VVT display inverted",					vvtDisplayInverted
-	    field = "Miata NB2 from (temporary)",			miataNb2VVTRatioFrom
-	    field = "Miata NB2 to (temporary)",				miataNb2VVTRatioTo
 	    field = "nbVvtIndex",							nbVvtIndex
 	    field = "print verbose sync details to console",verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
@@ -1585,7 +1605,23 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Extra cyl #10",                       timing_offset_cylinder10, {cylindersCount > 9}
 		field = "Extra cyl #11",                       timing_offset_cylinder11, {cylindersCount > 10} 
 		field = "Extra cyl #12",                       timing_offset_cylinder12, {cylindersCount > 11}
-	
+
+	dialog = multisparkDwellParams, "Delay & Dwell"
+		field = "Spark Duration",						multisparkSparkDuration, {multisparkEnable}
+		field = "Dwell",								multisparkDwell, {multisparkEnable}
+
+	dialog = multisparkMain, "Configuration"
+		field = "Maximum engine speed",					multisparkMaxRpm, {multisparkEnable}
+		field = "Fire sparks for this angle duration"	multisparkMaxSparkingAngle, {multisparkEnable}
+		field = "Maximum extra spark count"				multisparkMaxExtraSparkCount, {multisparkEnable}
+
+	dialog = multisparkSettings, "Multispark"
+		field = "#WARNING! These settings have the potential to overheat ignition components"
+		field = "#and cause other nasty misbehavior.  Use with care, at your own risk!"
+		field = "Enable Multiple Sparks",				multisparkEnable
+		panel = multisparkMain
+		panel = multisparkDwellParams
+
 	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection,	Center
 		
@@ -1629,6 +1665,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Throttle1 2nd position sensor",		tps1_2AdcChannel
 		field = "Throttle2 position sensor",			tps2_1AdcChannel
 		field = "Throttle2 2nd position sensor",		tps2_2AdcChannel
+		field = "Throttle2 min value",					tps2Min
+		field = "Throttle2 max value",					tps2Max
 		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
 		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
 
@@ -1994,23 +2032,38 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Idle Solenoid Pin",					idle_solenoidPin, !useStepperIdle
 		field = "Second Idle Solenoid Pin",				secondSolenoidPin, { !useStepperIdle && isDoubleSolenoidIdle }
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
-	
+
+	dialog = hbridgeHardware, "H-Bridge Hardware"
+		field = "PWM Frequency",						etbFreq
+		field = "Two-wire mode",						etb_use_two_wires
+		field = "No1 Direction #1",						etbIo1_directionPin1
+		field = "No1 Direction #2",						etbIo1_directionPin2
+		field = "No1 Control #1",						etbIo1_controlPin1, { etb_use_two_wires == 0 }
+		field = "No2 Direction #1",						etbIo2_directionPin1
+		field = "No2 Direction #2",						etbIo2_directionPin2
+		field = "No2 Control #1",						etbIo2_controlPin1, { etb_use_two_wires == 0}
+
+	dialog = idleStepperHw, "Stepper Hardware"
+		field = "Idle Stepper Step Pin",				idle_stepperStepPin
+		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin
+		field = "Idle Stepper Enable Pin",				stepperEnablePin
+		field = "Idle Stepper Enable Pin Mode",			stepperEnablePinMode
+
 	dialog = idleStepper, "Stepper"
-		field = "Idle Stepper Step Pin",				idle_stepperStepPin, useStepperIdle
-		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin, useStepperIdle
-		field = "Idle Stepper Enable Pin",				stepperEnablePin, useStepperIdle
-		field = "Idle Stepper Enable Pin Mode",			stepperEnablePinMode, useStepperIdle
+		field = "Drive stepper with dual H bridges",	useHbridges, useStepperIdle
 		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
 		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
 		field = "Stepper parking extra steps, %",		stepperParkingExtraSteps, useStepperIdle
 		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle
-		
+		panel = idleStepperHw, { useStepperIdle && !useHbridges }
+		panel = hbridgeHardware, { useStepperIdle && useHbridges }
+
 	dialog = idleHwType, "Idle Valve Hardware",	border
 		panel = idleSolenoid,				West
 		panel = idleStepper,				East
-		
+
 	dialog = idlehw, "", yAxis
-	field = "!ECU reboot needed to apply these settings"
+		field = "!ECU reboot needed to apply these settings"
 		field = "Use Stepper",				useStepperIdle
 		field = "Double Solenoid Mode",		isDoubleSolenoidIdle
 		panel = idleHwType
@@ -2219,6 +2272,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
+		field = "Start/Stop Button Pin",				startStopButtonPin
+		field = "Start/Stop Button Mode",				startStopButtonMode
 
 
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
@@ -2237,7 +2292,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = analogInputSettings, "Analog Input Settings"
 		field = "!ECU reboot needed to apply these settings"
 		field = "Use fixed baro corr from MAP", 		useFixedBaroCorrFromMap
-		field = "Analog divider",						analogInputDividerCoefficient
+		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
 		field = "Use BiQuad averaging",					useBiQuadAnalogFiltering		
 		field = "Smoothing factor",						slowAdcAlpha, {useBiQuadAnalogFiltering == 0}
 		field = "Bi_Q a0",								biQuad_a0, {useBiQuadAnalogFiltering == 1}
@@ -2269,6 +2324,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Can Read Enabled",						canReadEnabled
 		field = "Can Write Enabled",					canWriteEnabled
 		field = "Can Nbc Type",							canNbcType
+		field = "Enable rusEfi CAN data",				enableVerboseCanTx
+		field = "rusEfi CAN data base address",			verboseCanBaseAddress
 		field = "Can Sleep Period",						canSleepPeriodMs
 		field = "RX pin",								canRxPin
 		field = "TX pin",								canTxPin
@@ -2350,7 +2407,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = crankingFuel, "Fuel"
 		field = "Injection mode",						crankingInjectionMode
 		field = "!Value '1' is currently recommended"
-		field = "Base fuel pulse width", 				cranking_baseFuel
+		field = "Fuel Source For Cranking",             useRunningMathForCranking
+		field = "Base fuel pulse width", 				cranking_baseFuel, {useRunningMathForCranking == 0}
 		
 	dialog = crankingIAC, "IAC"
 		field = "Cranking IAC position",					crankingIACposition
@@ -2436,8 +2494,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "output #16", 							fsioOutputPins16
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
-		field = ""
-		field = ""
+		field = "Start/Stop Button",					startStopButtonPin
+		field = ""			
 		
 	dialog = fsioFrequency, "Frequency"
 		field = "freq #1", 								fsioFrequency1
@@ -2596,17 +2654,12 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Pause ETB control",					pauseEtbControl
 		field = "Throttle Pedal Up",					throttlePedalUpVoltage
 		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
-		field = "Two-wire mode",						etb_use_two_wires, {throttlePedalPositionAdcChannel != 16}
-		field = "PWM Frequency",						etbFreq, {throttlePedalPositionAdcChannel != 16}
 		field = etbCalibrationOnStart,					etbCalibrationOnStart
-		field = "No1 Direction #1",						etbIo1_directionPin1, {throttlePedalPositionAdcChannel != 16}
-		field = "No1 Direction #2",						etbIo1_directionPin2, {throttlePedalPositionAdcChannel != 16}
-		field = "No1 Control #1",						etbIo1_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb_use_two_wires == 0}
-		field = "No2 Direction #1",						etbIo2_directionPin1, {throttlePedalPositionAdcChannel != 16}
-		field = "No2 Direction #2",						etbIo2_directionPin2, {throttlePedalPositionAdcChannel != 16}
-		field = "No2 Control #1",						etbIo2_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb_use_two_wires == 0}
-		field = "TPS#2 min",							tps2Min, {etbIo2_directionPin1 != 0} 
-		field = "TPS#2 max",							tps2Max, {etbIo2_directionPin1 != 0} 
+		field = "TPS#2 min",							tps2Min, { tps2_1AdcChannel != 16 }
+		field = "TPS#2 max",							tps2Max, { tps2_1AdcChannel != 16 }
+		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
+		; criteria for the same panel when used in multiple places
+		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != 16 || useStepperIdle && useHbridges  }
 		panel = etbPidDialog
 
 	dialog = etbDialogRight

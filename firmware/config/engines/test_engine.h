@@ -4,8 +4,8 @@
  * @date Nov 14, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#ifndef TEST_ENGINE_H_
-#define TEST_ENGINE_H_
+
+#pragma once
 
 #include "engine_configuration.h"
 
@@ -15,4 +15,3 @@ void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setTestEngineIssue366both(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setTestEngineIssue366rise(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-#endif /* TEST_ENGINE_H_ */

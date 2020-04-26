@@ -1,6 +1,5 @@
 
-#ifndef BOARDS_FT_H_
-#define BOARDS_FT_H_
+#pragma once
 
 #define ADC_LOGIC_TPS 0
 #define ADC_LOGIC_AFR 0
@@ -52,4 +51,3 @@ extern "C"
 }
 #endif /* __cplusplus */
 
-#endif /* BOARDS_FT_H_ */

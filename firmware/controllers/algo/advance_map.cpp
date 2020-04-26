@@ -28,6 +28,8 @@
 #include "idle_thread.h"
 #include "allsensors.h"
 
+#if EFI_ENGINE_CONTROL
+
 EXTERN_ENGINE
 ;
 
@@ -328,3 +330,4 @@ void buildTimingMap(float advanceMax DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	}
 }
 
+#endif // EFI_ENGINE_CONTROL

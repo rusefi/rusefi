@@ -318,7 +318,9 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 /* this breaks unit tests lovely TODO: fix this?
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
 */
+	engineConfiguration->tps1_2AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->tps2_2AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxFastSensor1_adcChannel = EFI_ADC_NONE;
 	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
@@ -667,6 +669,9 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
+	// Don't enable, but set default address
+	engineConfiguration->verboseCanBaseAddress = 0x200;
+
 	engineConfiguration->sdCardPeriodMs = 50;
 
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
@@ -708,7 +713,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->fsioCurve3Bins, 0, 100, 1);
 	setLinearCurve(engineConfiguration->fsioCurve4Bins, 0, 100, 1);
 
-
+#if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setDefaultWarmupFuelEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -974,8 +979,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->vehicleSpeedCoef = 1.0f;
 
-	engineConfiguration->logicAnalyzerMode[0] = false;
-	engineConfiguration->logicAnalyzerMode[1] = false;
 
 	engineConfiguration->mapErrorDetectionTooLow = 5;
 	engineConfiguration->mapErrorDetectionTooHigh = 250;
@@ -999,7 +1002,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
-
+#endif // EFI_ENGINE_CONTROL
 #if EFI_FSIO
 	/**
 	 * to test:
@@ -1109,33 +1112,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case DEFAULT_FRANKENSO:
-	case FRANKENSO_QA_ENGINE:
-		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_M73_F:
-		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_M73_M:
-		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case BMW_M73_PROTEUS:
-		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MRE_MIATA_NA6:
-		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-#if EFI_UNIT_TEST
-	case ISSUE_898:
-		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-#endif
-	case MRE_MIATA_NB2_MTB:
-		setMiataNB2_MRE_MTB(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MRE_MIATA_NB2:
-		setMiataNB2_MRE_ETB(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MICRO_RUS_EFI:
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS:
@@ -1147,7 +1123,48 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MRE_BOARD_TEST:
 		mreBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#if EFI_SUPPORT_DODGE_NEON
+	case TEST_ENGINE:
+		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#if EFI_UNIT_TEST
+	case TEST_ISSUE_366_BOTH:
+		setTestEngineIssue366both(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case TEST_ISSUE_366_RISE:
+		setTestEngineIssue366rise(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case ISSUE_898:
+		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // EFI_UNIT_TEST
+#if EFI_INCLUDE_ENGINE_PRESETS
+	case DEFAULT_FRANKENSO:
+		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case FRANKENSO_QA_ENGINE:
+		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_F:
+		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_M:
+		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_MRE:
+		setEngineBMW_M73_microRusEfi(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case BMW_M73_PROTEUS:
+		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_MIATA_NA6:
+		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_MIATA_NB2_MTB:
+		setMiataNB2_MRE_MTB(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_MIATA_NB2:
+		setMiataNB2_MRE_ETB(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1158,23 +1175,15 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case LADA_KALINA:
 		setLadaKalina(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-
-#endif /* EFI_SUPPORT_DODGE_NEON */
-#if EFI_SUPPORT_FORD_ASPIRE
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#endif /* EFI_SUPPORT_FORD_ASPIRE */
-#if EFI_SUPPORT_FORD_FIESTA
 	case FORD_FIESTA:
 		setFordFiestaDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
-#endif /* EFI_SUPPORT_FORD_FIESTA */
-#if EFI_SUPPORT_NISSAN_PRIMERA
 	case NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#endif
 	case HONDA_ACCORD_CD:
 		setHondaAccordConfigurationThreeWires(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1214,11 +1223,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MITSU_4G93:
 		setMitsubishiConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#if EFI_SUPPORT_1995_FORD_INLINE_6
 	case FORD_INLINE_6_1995:
 		setFordInline6(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */
 	case GY6_139QMB:
 		setGy6139qmbDefaultEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1267,21 +1274,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case VW_ABA:
 		setVwAba(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-#if EFI_UNIT_TEST
-	case TEST_ISSUE_366_BOTH:
-		setTestEngineIssue366both(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case TEST_ISSUE_366_RISE:
-		setTestEngineIssue366rise(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-#else
-	case TEST_ISSUE_366_BOTH:
-	case TEST_ISSUE_366_RISE:
-#endif
-
-	case TEST_ENGINE:
-		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MAZDA_MIATA_2003:
 		setMazdaMiata2003EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1315,7 +1307,10 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case TOYOTA_JZS147:
 		setToyota_jzs147EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-
+	case TEST_33816:
+		setTest33816EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+#endif // EFI_INCLUDE_ENGINE_PRESETS
 	default:
 		warning(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}

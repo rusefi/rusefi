@@ -2,8 +2,8 @@
  * @file flash.h
  *
  */
-#ifndef FLASH_H
-#define FLASH_H
+
+#pragma once
 
 #include "global.h"
 
@@ -165,4 +165,3 @@ int flashWrite(flashaddr_t address, const char* buffer, size_t size);
 }
 #endif /* __cplusplus */
 
-#endif /* FLASH_H */

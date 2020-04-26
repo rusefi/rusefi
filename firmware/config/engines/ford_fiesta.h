@@ -5,13 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef FORD_FIESTA_H_
-#define FORD_FIESTA_H_
-#if EFI_SUPPORT_FORD_FIESTA
+#pragma once
 
 #include "engine_configuration.h"
 
 void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-#endif /* EFI_SUPPORT_FORD_FIESTA */
-#endif /* FORD_FIESTA_H_ */

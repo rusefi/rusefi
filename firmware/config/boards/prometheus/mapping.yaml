@@ -1,4 +1,5 @@
 # TODO if anyone would be interested
+# https://github.com/andreika-git/prometheus/raw/master/hardware/prometheus-wiring-diagram.pdf
 
 outputs:
   GPIOB_7:  "Injector 3Z"

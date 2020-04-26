@@ -609,6 +609,8 @@ case BMW_M73_M:
   return "BMW_M73_M";
 case BMW_M73_PROTEUS:
   return "BMW_M73_P";
+case BMW_M73_MRE:
+  return "BMW_M73_MRE";
 case MIATA_1996:
   return "MIATA_1996";
 case MIATA_NA6_MAP:
@@ -661,6 +663,8 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case VAG_18_TURBO:
   return "VAG_18_TURBO";
+case TEST_33816:
+  return "TEST_33816";
 case VW_B6:
   return "VW_B6";
 case VW_ABA:

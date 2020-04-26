@@ -13,8 +13,7 @@
  *
  */
 
-#ifndef MCP3208_H_
-#define MCP3208_H_
+#pragma once
 
 #include "global.h"
 
@@ -43,4 +42,3 @@ int getMcp3208adc(int channel);
 
 #endif /* EFI_MCP_3208 */
 
-#endif /* MCP3208_H_ */

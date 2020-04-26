@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef ADC_INPUTS_H_
-#define ADC_INPUTS_H_
+#pragma once
 
 #include "global.h"
 #include "adc_math.h"
@@ -52,4 +51,3 @@ void removeChannel(const char *name, adc_channel_e setting);
 #define getAdcValue(msg, channel) 0
 #endif /* HAL_USE_ADC */
 
-#endif /* ADC_INPUTS_H_ */

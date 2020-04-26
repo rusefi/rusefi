@@ -224,7 +224,7 @@ void setBoardConfigurationOverrides(void) {
 	
 	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->is_enabled_spi_2 = false;
-	engineConfiguration->is_enabled_spi_3 = true;
+	CONFIG(is_enabled_spi_3) = true;
 	
 	engineConfiguration->spi1mosiPin = GPIOB_5;
 	engineConfiguration->spi1MosiMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL

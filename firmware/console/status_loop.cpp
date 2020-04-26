@@ -75,8 +75,8 @@ extern bool main_loop_started;
 #include "vehicle_speed.h"
 #include "single_timer_executor.h"
 #include "periodic_task.h"
-extern int icuWidthCallbackCounter;
-extern int icuWidthPeriodCounter;
+extern int icuRisingCallbackCounter;
+extern int icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125
@@ -310,7 +310,10 @@ static void printSensors(Logging *log) {
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			reportSensorF(log, GAUGE_NAME_FUEL_VE, "%", engine->engineState.currentBaroCorrectedVE * PERCENT_MULT, 2);
 		}
+
+#if EFI_SHAFT_POSITION_INPUT
 		reportSensorF(log, GAUGE_NAME_VVT, "deg", engine->triggerCentral.getVVTPosition(), 1);
+#endif
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	reportSensorF(log, GAUGE_NAME_ENGINE_LOAD, "x", engineLoad, 2);
@@ -721,10 +724,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 8
 	tsOutputChannels->intakeAirTemperature = intake;
 
-	SensorResult tps = Sensor::get(SensorType::Tps1);
-	tsOutputChannels->throttlePosition = tps.Value;
-	tsOutputChannels->isTpsError = !tps.Valid;
+	SensorResult tps1 = Sensor::get(SensorType::Tps1);
+	tsOutputChannels->throttlePosition = tps1.Value;
+	tsOutputChannels->isTpsError = !tps1.Valid;
 	tsOutputChannels->tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1));
+
+	SensorResult tps2 = Sensor::get(SensorType::Tps2);
+	tsOutputChannels->throttle2Position = tps2.Value;
+
 
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
@@ -767,7 +774,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 136
 	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE) ? getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 	// 140
+#if EFI_ENGINE_CONTROL
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 	// 148
 	tsOutputChannels->fuelTankLevel = engine->sensors.fuelTankLevel;
 	// 160
@@ -785,8 +794,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 224
 	efitimesec_t timeSeconds = getTimeNowSeconds();
 	tsOutputChannels->timeSeconds = timeSeconds;
+
+#if EFI_SHAFT_POSITION_INPUT
 	// 248
 	tsOutputChannels->vvtPosition = engine->triggerCentral.getVVTPosition();
+#endif
+
 	// 252
 	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// 120
@@ -816,9 +829,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->knockLevel = engine->knockVolts;
 
 	tsOutputChannels->hasFatalError = hasFirmwareError();
-
-	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
 #if EFI_HIP_9011
@@ -894,6 +904,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->brakePedalState = engine->brakePedalState;
 	tsOutputChannels->acSwitchState = engine->acSwitchState;
 
+#if EFI_ENGINE_CONTROL
 	// tCharge depends on the previous state, so we should use the stored value.
 	tsOutputChannels->tCharge = ENGINE(engineState.sd.tCharge);
 	float timing = engine->engineState.timingAdvance;
@@ -903,6 +914,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->crankingFuelMs = engine->isCylinderCleanupMode ? 0 : getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
 	tsOutputChannels->chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
 
+	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_ENGINE_CONTROL
 
 	switch (engineConfiguration->debugMode)	{
 	case DBG_AUX_TEMPERATURE:
@@ -941,7 +954,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_PROD_CODE && HAL_USE_ICU == TRUE
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.vvtEventRiseCounter;
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.vvtEventFallCounter;
-		tsOutputChannels->debugFloatField5 = icuWidthCallbackCounter + icuWidthPeriodCounter;
+		tsOutputChannels->debugFloatField5 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
 
 		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);

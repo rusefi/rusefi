@@ -16,6 +16,7 @@
 #include "eficonsole.h"
 #include "memstreams.h"
 #include "drivers/gpio/gpio_ext.h"
+#include "tle8888.h"
 
 #ifndef BOARD_EXT_PINREPOPINS
 	#define BOARD_EXT_PINREPOPINS 0
@@ -56,17 +57,19 @@ static PinRepository instance;
 extern "C" {
 	extern void tle8888_read_reg(uint16_t reg, uint16_t *val);
 }
-static void tle8888_dump_regs(void)
+void tle8888_dump_regs(void)
 {
-	int i;
-	uint16_t tmp;
-
+	// since responses are always in the NEXT transmission we will have this one first
 	tle8888_read_reg(0, NULL);
 
-	for (i = 0; i < 0x7e + 1; i++) {
-		tle8888_read_reg(i, &tmp);
+	scheduleMsg(&logger, "register: data");
+	for (int request = 0; request < 0x7e + 1; request++) {
+		uint16_t tmp;
+		tle8888_read_reg(request, &tmp);
+		uint8_t response = getRegisterFromResponse(tmp);
+		uint8_t data = (tmp >> 8) & 0xff;
 
-		scheduleMsg(&logger, "%02x: %02x", tmp & 0x7f ,(tmp >> 8) & 0xff);
+		scheduleMsg(&logger, "%02x: %02x", response, data);
 	}
 }
 
@@ -98,16 +101,16 @@ static void reportPins(void) {
 
 			/* use autogeneraged helpers here? */
 			if (pin_diag == PIN_OK) {
-				snprintf(pin_error, sizeof(pin_error), "Ok");
+				chsnprintf(pin_error, sizeof(pin_error), "Ok");
 			} else if (pin_diag != PIN_INVALID) {
-				snprintf(pin_error, sizeof(pin_error), "%s%s%s%s%s",
+				chsnprintf(pin_error, sizeof(pin_error), "%s%s%s%s%s",
 					pin_diag & PIN_OPEN ? "open_load " : "",
 					pin_diag & PIN_SHORT_TO_GND ? "short_to_gnd " : "",
 					pin_diag & PIN_SHORT_TO_BAT ? "short_to_bat " : "",
 					pin_diag & PIN_OVERLOAD ? "overload " : "",
 					pin_diag & PIN_DRIVER_OVERTEMP ? "overtemp": "");
 			} else {
-				snprintf(pin_error, sizeof(pin_error), "INVALID");
+				chsnprintf(pin_error, sizeof(pin_error), "INVALID");
 			}
 
 			/* here show all pins, unused too */
@@ -179,7 +182,11 @@ void initPinRepository(void) {
 	initialized = true;
 
 	addConsoleAction(CMD_PINS, reportPins);
+
+#if (BOARD_TLE8888_COUNT > 0)
 	addConsoleAction("tle8888", tle8888_dump_regs);
+	addConsoleAction("tle8888init", requestTLE8888initialization);
+#endif
 }
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)

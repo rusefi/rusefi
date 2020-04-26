@@ -11,6 +11,7 @@ TESTS_SRC_CPP = \
 	tests/test_miata_na6_real_cranking.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_dwell_corner_case_issue_796.cpp \
+	tests/test_symmetrical_crank.cpp \
 	tests/test_idle_controller.cpp \
 	tests/test_trigger_decoder.cpp \
 	tests/test_trigger_noiseless.cpp \

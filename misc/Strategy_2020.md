@@ -1,0 +1,1 @@
+Nothing has changed - see [Strategy 2019](Strategy_2019.md)

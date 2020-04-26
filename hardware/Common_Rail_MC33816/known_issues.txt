@@ -4,5 +4,12 @@
  4) RESOLVED IN R0.2 Jumpers are not needed. Connect VccIO->VccIO_Ext and Clk->Y1-3
  5) RESOLVED IN R0.2 D9 had wrong footprint blah. Wrong pin numbers to wrong pins. 
  6) RESOLVED IN R0.2 D10 --> D10_2, and D11 --> D11_2 should be the same package, they were 2 different / wrong footprints. 
-
- 2) RESOLVED IN R0.3 Moved several 0805 components to the back side of the PCB for lower cost assembly. 
+ 7) RESOLVED IN R0.3 Moved several 0805 components to the back side of the PCB for lower cost assembly.
+ 8)                  J15 needs silk and larger hole. J20 needs silk and should use same larger terminal as J8-J9-J10
+ 9)                  J15 & J20 silk ^^^ should be on both top and bottom sides of the board
+10)                  power LED. back side is pretty much free pre-assembled, front side is manual assembly. maybe one LED on each side?
+11)                  J5&J6 why do we need as jumpers? Shall we connect those permanently since looks like those shall be connected?
+12)                  move more small stuff to same (back) side
+13)
+14)
+15)

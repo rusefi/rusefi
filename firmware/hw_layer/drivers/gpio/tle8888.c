@@ -35,10 +35,13 @@
 
 #if (BOARD_TLE8888_COUNT > 0)
 
+#include "persistent_configuration.h"
 #include "hardware.h"
 #include "gpio/gpio_ext.h"
 #include "pin_repository.h"
 #include "os_util.h"
+
+EXTERN_ENGINE_CONFIGURATION;
 
 /*
  * TODO list:
@@ -87,17 +90,21 @@ typedef enum {
 */
 #define CMD_UNLOCK			CMD_WR(0x1e, 0x01)
 
+#define WWDStat             0x36
+#define FWDStat0            0x37
+#define FWDStat1            0x38
+
 /* Status registers */
 #define CMD_OPSTAT0			CMD_R(0x34)
 #define CMD_OPSTAT1			CMD_R(0x35)
-#define CMD_WWDSTAT			CMD_R(0x36)
-#define CMD_FWDSTAT(n)		CMD_R(0x37 + ((n) & 0x01))
+#define CMD_WWDSTAT			CMD_R(WWDStat)
+#define CMD_FWDSTAT0  		CMD_R(FWDStat0)
+#define CMD_FWDSTAT1        CMD_R(FWDStat1)
 #define CMD_TECSTAT			CMD_R(0x39)
 #define CMD_WdDiag			CMD_R(0x2e)
 
-#define FWDStat1            0x38
-#define CMD_FWDStat1        CMD_R(FWDStat1)
 
+#define CMD_OUTCONFIG(n, d)	CMD_WR(0x40 + (n), d)
 //#define CMD_VRSCONFIG0(d)	CMD_WR(0x49, d)
 #define CMD_VRSCONFIG1(d)	CMD_WR(0x4a, d)
 #define CMD_INCONFIG(n, d)	CMD_WR(0x53 + (n & 0x03), d)
@@ -161,12 +168,18 @@ static uint16_t wdDiagResponse = 0;
 //static_assert(TLE8888_POLL_INTERVAL_MS < Window_watchdog_open_window_time_ms)
 
 static bool needInitialSpi = true;
-int resetCounter = 0;
+static bool isWatchdogHappy = false;
+static bool wasWatchdogHappy = false;
+
+static int selfResetCounter = 0;
+static int lowVoltageResetCounter = 0;
+static int requestedResetCounter = 0;
+int tle8888reinitializationCounter = 0;
+
 float vBattForTle8888 = 0;
 
 // set debug_mode 31
 static int tle8888SpiCounter = 0;
-int tle8888reinitializationCounter = 0;
 // that's a strange variable for troubleshooting
 int tle8888initResponsesAccumulator = 0;
 static int initResponse0 = 0;
@@ -204,12 +217,17 @@ static const char* tle8888_pin_names[TLE8888_OUTPUTS] = {
 	"TLE8888.IGN1",		"TLE8888.IGN2",		"TLE8888.IGN3",		"TLE8888.IGN4"
 };
 
+#define getWindowWatchdog() ((WindowWatchdogErrorCounterValue >> 8) & 0x3f)
+#define getFunctionalWatchdog() ((FunctionalWatchdogPassCounterValue >> 8) & 0x3f)
+#define getTotalErrorCounter() ((TotalErrorCounterValue >> 8) & 0x3f)
+
 #if EFI_TUNER_STUDIO
+// set debug_mode 31
 void tle8888PostState(TsDebugChannels *debugChannels) {
 
-	debugChannels->debugIntField1 = (WindowWatchdogErrorCounterValue >> 8) & 0x3f;
-	debugChannels->debugIntField2 = (FunctionalWatchdogPassCounterValue >> 8) & 0x3f;
-	debugChannels->debugIntField3 = (TotalErrorCounterValue >> 8) & 0x3f;
+	debugChannels->debugIntField1 = getWindowWatchdog();
+	debugChannels->debugIntField2 = getFunctionalWatchdog();
+	debugChannels->debugIntField3 = getTotalErrorCounter();
 	//debugChannels->debugIntField1 = tle8888SpiCounter;
 	//debugChannels->debugIntField2 = spiTxb;
 	//debugChannels->debugIntField3 = spiRxb;
@@ -219,7 +237,7 @@ void tle8888PostState(TsDebugChannels *debugChannels) {
 	debugChannels->debugFloatField2 = initResponse1;
 
 	debugChannels->debugFloatField3 = chips[0].OpStat[1];
-	debugChannels->debugFloatField4 = resetCounter;
+	debugChannels->debugFloatField4 = selfResetCounter * 1000000 + requestedResetCounter * 10000 + lowVoltageResetCounter;
 	debugChannels->debugFloatField5 = functionWDrx;
 	debugChannels->debugFloatField6 = wdDiagResponse;
 }
@@ -420,6 +438,89 @@ static void handleFWDStat1(struct tle8888_priv *chip, int registerNum, int data)
 	tle8888_spi_rw(chip, CMD_WdDiag, &wdDiagResponse);
 }
 
+int startupConfiguration(struct tle8888_priv *chip) {
+	const struct tle8888_config	*cfg = chip->cfg;
+	uint16_t response = 0;
+	/* Set LOCK bit to 0 */
+	// second 0x13D=317 => 0x35=53
+	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
+	if (response == 53) {
+		tle8888initResponsesAccumulator += 8;
+	}
+	initResponse1 = response;
+
+	chip->o_direct_mask = 0;
+	chip->o_oe_mask		= 0;
+	/* enable direct drive of OUTPUT4..1
+	 * ...still need INJEN signal */
+	chip->o_direct_mask	|= 0x0000000f;
+	chip->o_oe_mask		|= 0x0000000f;
+	/* enable direct drive of IGN4..1
+	 * ...still need IGNEN signal */
+	chip->o_direct_mask |= 0x0f000000;
+	chip->o_oe_mask		|= 0x0f000000;
+
+	/* map and enable outputs for direct driven channels */
+	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
+		int out = cfg->direct_io[i].output;
+
+		/* not used? */
+		if (out == 0)
+			continue;
+
+		/* OUT1..4 driven direct only through dedicated pins */
+		if (out < 5)
+			return -1;
+
+		/* in config counted from 1 */
+		uint32_t mask = (1 << (out - 1));
+
+		/* check if output already occupied */
+		if (chip->o_direct_mask & mask) {
+			/* incorrect config? */
+			return -1;
+		}
+
+		/* enable direct drive and output enable */
+		chip->o_direct_mask	|= mask;
+		chip->o_oe_mask		|= mask;
+
+		/* set INCONFIG - aux input mapping */
+		tle8888_spi_rw(chip, CMD_INCONFIG(i, out - 5), NULL);
+	}
+
+	/* enable all ouputs
+	 * TODO: add API to enable/disable? */
+	chip->o_oe_mask		|= 0x0ffffff0;
+
+	/* set OE and DD registers */
+	for (int i = 0; i < 4; i++) {
+		uint8_t oe, dd;
+
+		oe = (chip->o_oe_mask >> (8 * i)) & 0xff;
+		dd = (chip->o_direct_mask >> (8 * i)) & 0xff;
+		tle8888_spi_rw(chip, CMD_OECONFIG(i, oe), NULL);
+		tle8888_spi_rw(chip, CMD_DDCONFIG(i, dd), NULL);
+	}
+
+	/* Debug: disable diagnostic */
+	for (int i = 0; i <= 5; i++) {
+		tle8888_spi_rw(chip, CMD_OUTCONFIG(i, 0), NULL);
+	}
+
+	/* enable outputs */
+	tle8888_spi_rw(chip, CMD_OE_SET, NULL);
+
+	if (cfg->hallMode) {
+		/**
+		 * By default "auto detection mode for VR sensor signals" is used
+		 * We know that for short Hall signals like Miata NB2 crank sensor this does not work well above certain RPM.
+		 */
+		tle8888_spi_rw(chip, CMD_VRSCONFIG1(MODE_MANUAL << 2), NULL);
+	}
+	return 0;
+}
+
 void watchdogLogic(struct tle8888_priv *chip) {
 	efitick_t nowNt = getTimeNowNt();
 	if (nowNt - lastWindowWatchdogTimeNt > MS2NT(Window_watchdog_close_window_time_ms)) {
@@ -432,21 +533,34 @@ void watchdogLogic(struct tle8888_priv *chip) {
 		/* the address and content of the selected register is transmitted with the
 		 * next SPI transmission (for not existing addresses or wrong access mode
 		 * the data is always '0' */
-		tle8888_spi_rw(chip, CMD_FWDStat1, &maybeFirstResponse);
+		tle8888_spi_rw(chip, CMD_FWDSTAT1, &maybeFirstResponse);
 		// here we get response of the 'FWDStat1' above
 		tle8888_spi_rw(chip, CMD_WdDiag, &functionWDrx);
-		handleFWDStat1(chip, (functionWDrx & 0xff) >> 1, (functionWDrx >> 8) & 0xff);
+		handleFWDStat1(chip, getRegisterFromResponse(functionWDrx), (functionWDrx >> 8) & 0xff);
 		lastFunctionWatchdogTimeNt = nowNt;
 	}
 
 	tle8888_spi_rw(chip, CMD_WWDSTAT, NULL);
-	tle8888_spi_rw(chip, CMD_FWDSTAT(0), &WindowWatchdogErrorCounterValue);
+	tle8888_spi_rw(chip, CMD_FWDSTAT0, &WindowWatchdogErrorCounterValue);
 	tle8888_spi_rw(chip, CMD_TECSTAT, &FunctionalWatchdogPassCounterValue);
 	tle8888_spi_rw(chip, CMD_TECSTAT, &TotalErrorCounterValue);
+
+
+	// sanity checking that we are looking at the right responses
+	if (getRegisterFromResponse(WindowWatchdogErrorCounterValue) == WWDStat &&
+			getRegisterFromResponse(FunctionalWatchdogPassCounterValue) == FWDStat0
+			) {
+
+		wasWatchdogHappy = isWatchdogHappy;
+		// reset state for error counters has us start in Safe Mode
+		isWatchdogHappy = (getWindowWatchdog() == 0 && getFunctionalWatchdog() == 0);
+		if (!wasWatchdogHappy && isWatchdogHappy) {
+			startupConfiguration(chip);
+		}
+	}
 }
 
 int tle8888SpiStartupExchange(struct tle8888_priv *chip);
-
 
 static THD_FUNCTION(tle8888_driver_thread, p) {
 	(void)p;
@@ -461,12 +575,15 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 
 		if (vBattForTle8888 < 7) {
 			// we assume TLE8888 is down and we should not bother with SPI communication
-			needInitialSpi = true;
+			if (!needInitialSpi) {
+				needInitialSpi = true;
+				lowVoltageResetCounter++;
+			}
 			continue; // we should not bother communicating with TLE8888 until we have +12
 		}
 
 		if (needInitialSpi) {
-			needInitialSpi = false;
+			wasWatchdogHappy = isWatchdogHappy = needInitialSpi = false;
 
 			for (int i = 0; i < BOARD_TLE8888_COUNT; i++) {
 				struct tle8888_priv *chip = &chips[i];
@@ -497,7 +614,7 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 			/* if bit OE is cleared - reset happened */
 			if (!(chip->OpStat[1] & (1 << 6))) {
 				needInitialSpi = true;
-				resetCounter++;
+				selfResetCounter++;
 			}
 		}
 	}
@@ -505,6 +622,7 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 
 void requestTLE8888initialization(void) {
 	needInitialSpi = true;
+	requestedResetCounter++;
 }
 
 /*==========================================================================*/
@@ -542,8 +660,6 @@ int tle8888_writePad(void *data, unsigned int pin, int value) {
  * @return 0 for valid configuration, -1 for invalid configuration
  */
 int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
-	const struct tle8888_config	*cfg = chip->cfg;
-
 	tle8888reinitializationCounter++;
 	tle8888initResponsesAccumulator = 0;
 
@@ -574,82 +690,12 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 	 */
 	chThdSleepMilliseconds(3);
 
-	/* Set LOCK bit to 0 */
-	// second 0x13D=317 => 0x35=53
-	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
-	if (response == 53) {
-		tle8888initResponsesAccumulator += 8;
+	startupConfiguration(chip);
+
+
+	if (CONFIG(verboseTLE8888)) {
+		tle8888_dump_regs();
 	}
-	initResponse1 = response;
-
-	chip->o_direct_mask = 0;
-	chip->o_oe_mask		= 0;
-	/* enable direct drive of OUTPUT4..1
-	 * ...still need INJEN signal */
-	chip->o_direct_mask	|= 0x0000000f;
-	chip->o_oe_mask		|= 0x0000000f;
-	/* enable direct drive of IGN4..1
-	 * ...still need IGNEN signal */
-	chip->o_direct_mask |= 0x0f000000;
-	chip->o_oe_mask		|= 0x0f000000;
-
-	/* map and enable outputs for direct driven channels */
-	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
-		int out;
-		uint32_t mask;
-
-		out = cfg->direct_io[i].output;
-
-		/* not used? */
-		if (out == 0)
-			continue;
-
-		/* OUT1..4 driven direct only through dedicated pins */
-		if (out < 5)
-			return -1;
-
-		/* in config counted from 1 */
-		mask = (1 << (out - 1));
-
-		/* check if output already ocupied */
-		if (chip->o_direct_mask & mask) {
-			/* incorrect config? */
-			return -1;
-		}
-
-		/* enable direct drive and output enable */
-		chip->o_direct_mask	|= mask;
-		chip->o_oe_mask		|= mask;
-
-		/* set INCONFIG - aux input mapping */
-		tle8888_spi_rw(chip, CMD_INCONFIG(i, out - 5), NULL);
-	}
-
-	/* enable all ouputs
-	 * TODO: add API to enable/disable? */
-	chip->o_oe_mask		|= 0x0ffffff0;
-
-	/* set OE and DD registers */
-	for (int i = 0; i < 4; i++) {
-		uint8_t oe, dd;
-
-		oe = (chip->o_oe_mask >> (8 * i)) & 0xff;
-		dd = (chip->o_direct_mask >> (8 * i)) & 0xff;
-		tle8888_spi_rw(chip, CMD_OECONFIG(i, oe), NULL);
-		tle8888_spi_rw(chip, CMD_DDCONFIG(i, dd), NULL);
-	}
-
-	/* enable outputs */
-	tle8888_spi_rw(chip, CMD_OE_SET, NULL);
-
-	if (cfg->hallMode) {
-		/**
-		 * By default "auto detection mode for VR sensor signals" is used
-		 * We know that for short Hall signals like Miata NB2 crank sensor this does not work well above certain RPM.
-		 */
-		tle8888_spi_rw(chip, CMD_VRSCONFIG1(MODE_MANUAL << 2), NULL);
-	}
-
 	return 0;
 }
 

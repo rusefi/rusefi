@@ -227,10 +227,12 @@ static void printMAPInfo(void) {
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 		scheduleMsg(logger, "instant value=%.2fHz @ %s", mapFreq, hwPortname(CONFIG(frequencyReportingMapInputPin)));
 	} else {
+#if EFI_MAP_AVERAGING
 		scheduleMsg(logger, "map type=%d/%s MAP=%.2fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
 				getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
 				getMap(),
 				mapMinBufferLength);
+#endif // EFI_MAP_AVERAGING
 
 		adc_channel_e mapAdc = engineConfiguration->map.sensor.hwChannel;
 		static char pinNameBuffer[16];
@@ -268,7 +270,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 #if HAL_USE_ICU
-		digital_input_s* digitalMapInput = startDigitalCapture("MAP freq", CONFIG(frequencyReportingMapInputPin), true);
+		digital_input_s* digitalMapInput = startDigitalCapture("MAP freq", CONFIG(frequencyReportingMapInputPin));
 
 		digitalMapInput->setWidthCallback((VoidInt) digitalMapWidthCallback, NULL);
 #else

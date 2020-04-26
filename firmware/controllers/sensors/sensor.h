@@ -59,6 +59,11 @@ struct SensorResult {
 	constexpr explicit operator bool() const {
 		return Valid;
 	}
+
+	// Easy default value handling
+	constexpr float value_or(float valueIfInvalid) const {
+		return Valid ? Value : valueIfInvalid;
+	}
 };
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type

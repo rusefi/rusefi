@@ -86,6 +86,10 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
+#define miataNb2VVTRatioFrom (8.50 * 0.75)
+#define miataNb2VVTRatioTo (14)
+
+
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
@@ -121,7 +125,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		if (engineConfiguration->verboseTriggerSynchDetails) {
 			scheduleMsg(logger, "vvt ratio %.2f", ratio);
 		}
-		if (ratio < CONFIG(miataNb2VVTRatioFrom) || ratio > CONFIG(miataNb2VVTRatioTo)) {
+		if (ratio < miataNb2VVTRatioFrom || ratio > miataNb2VVTRatioTo) {
 			return;
 		}
 		if (engineConfiguration->verboseTriggerSynchDetails) {
@@ -361,9 +365,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		// That's easy - trigger cycle matches engine cycle
 		triggerIndexForListeners = triggerState.getCurrentIndex();
 	} else {
-		// todo: should this logic reuse getCycleDuration?
-		bool isCrankDriven = operationMode == FOUR_STROKE_CRANK_SENSOR || operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR;
-		int crankDivider = isCrankDriven ? 2 : 4;
+		int crankDivider = operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : SYMMETRICAL_CRANK_SENSOR_DIVIDER;
 
 		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 
@@ -511,8 +513,8 @@ void resetMaxValues() {
 }
 
 #if HAL_USE_ICU == TRUE
-extern int icuWidthCallbackCounter;
-extern int icuWidthPeriodCounter;
+extern int icuRisingCallbackCounter;
+extern int icuFallingCallbackCounter;
 #endif /* HAL_USE_ICU */
 
 void triggerInfo(void) {
@@ -526,7 +528,7 @@ void triggerInfo(void) {
 #else
 
 #if HAL_USE_ICU == TRUE
-	scheduleMsg(logger, "trigger ICU hw: %d %d %d", icuWidthCallbackCounter, icuWidthPeriodCounter, engine->hwTriggerInputEnabled);
+	scheduleMsg(logger, "trigger ICU hw: %d %d %d", icuRisingCallbackCounter, icuFallingCallbackCounter, engine->hwTriggerInputEnabled);
 #endif /* HAL_USE_ICU */
 
 #endif /* HAL_TRIGGER_USE_PAL */
@@ -664,8 +666,6 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		isConfigurationChanged(vvtCamSensorUseRise) ||
 		isConfigurationChanged(vvtOffset) ||
 		isConfigurationChanged(vvtDisplayInverted) ||
-		isConfigurationChanged(miataNb2VVTRatioFrom) ||
-		isConfigurationChanged(miataNb2VVTRatioTo) ||
 		isConfigurationChanged(nbVvtIndex);
 	if (changed) {
 		assertEngineReference();

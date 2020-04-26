@@ -61,7 +61,7 @@ public class FirmwareFlasher {
         return OPENOCD_EXE + " -f openocd/" + cfg;
     }
 
-    protected static StringBuffer executeOpenOCDCommand(String command, StatusWindow wnd) {
+    protected static String executeOpenOCDCommand(String command, StatusWindow wnd) {
         return ExecHelper.executeCommand(BINARY_LOCATION,
                 BINARY_LOCATION + File.separator + command,
                 OPENOCD_EXE, wnd);
@@ -74,12 +74,12 @@ public class FirmwareFlasher {
             return;
         }
         StatusAnimation sa = new StatusAnimation(wnd);
-        StringBuffer error = executeOpenOCDCommand(getOpenocdCommand() + " -c \"program " +
+        String error = executeOpenOCDCommand(getOpenocdCommand() + " -c \"program " +
                 fileName +
                 " verify reset exit 0x08000000\"", wnd);
-        if (error.toString().contains(NO_DRIVER_MESSAGE_TAG)) {
+        if (error.contains(NO_DRIVER_MESSAGE_TAG)) {
             wnd.appendMsg(" !!! ERROR: looks like stm32 driver is not installed? The link is above !!!");
-        } else if (error.toString().contains(SUCCESS_MESSAGE_TAG) && !error.toString().toLowerCase().contains(FAILED_MESSAGE_TAG)) {
+        } else if (error.contains(SUCCESS_MESSAGE_TAG) && !error.toLowerCase().contains(FAILED_MESSAGE_TAG)) {
             wnd.appendMsg("Flashing looks good!");
             sa.stop();
             wnd.setStatus(DONE);

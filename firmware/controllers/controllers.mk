@@ -14,6 +14,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/actuators/electronic_throttle.cpp \
 	$(CONTROLLERS_DIR)/actuators/alternator_controller.cpp \
 	$(CONTROLLERS_DIR)/actuators/boost_control.cpp \
+	$(CONTROLLERS_DIR)/actuators/dc_motors.cpp \
 	$(CONTROLLERS_DIR)/actuators/idle_thread.cpp \
 	$(CONTROLLERS_DIR)/actuators/pwm_tester.cpp \
 	$(CONTROLLERS_DIR)/actuators/algo/aux_pid.cpp \
@@ -33,10 +34,14 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/engine_cycle/aux_valves.cpp \
 	$(CONTROLLERS_DIR)/flash_main.cpp \
 	$(CONTROLLERS_DIR)/injector_central.cpp \
-	$(CONTROLLERS_DIR)/obd2.cpp \
+	$(CONTROLLERS_DIR)/can/obd2.cpp \
+	$(CONTROLLERS_DIR)/can/can_verbose.cpp \
+	$(CONTROLLERS_DIR)/can/can_rx.cpp \
+	$(CONTROLLERS_DIR)/can/can_tx.cpp \
+	$(CONTROLLERS_DIR)/can/can_dash.cpp \
  	$(CONTROLLERS_DIR)/engine_controller.cpp \
 	$(CONTROLLERS_DIR)/persistent_store.cpp \
-	
+
 
 CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR) \
@@ -48,6 +53,7 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/trigger \
     $(CONTROLLERS_DIR)/sensors \
 	$(CONTROLLERS_DIR)/sensors/converters \
+	$(CONTROLLERS_DIR)/can \
 	$(CONTROLLERS_DIR)/core \
 	$(CONTROLLERS_DIR)/gauges \
 	$(CONTROLLERS_DIR)/math \

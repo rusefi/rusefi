@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef ADC_EXTERNAL_H_
-#define ADC_EXTERNAL_H_
+#pragma once
 
 #include "mcp3208.h"
 
@@ -16,4 +15,3 @@
 #define adcToVoltsDivided(adc) (5.0f / 4095 * adc)
 #define getVoltageDivided(msg, channel) (channel == EFI_ADC_NONE ? 66.66 : adcToVoltsDivided(getAdcValue(msg, channel)))
 
-#endif /* ADC_EXTERNAL_H_ */

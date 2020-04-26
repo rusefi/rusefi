@@ -79,7 +79,11 @@ void WaveReader::onFallEvent() {
 	efitick_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;
 
+#if EFI_SHAFT_POSITION_INPUT
 	int revolutionCounter = getRevolutionCounter();
+#else
+	int revolutionCounter = 0;
+#endif
 
 	totalOnTimeAccumulatorUs += width;
 	if (currentRevolutionCounter != revolutionCounter) {
@@ -106,14 +110,12 @@ static void initWave(const char *name, int index) {
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
 
-	bool mode = CONFIG(logicAnalyzerMode)[index];
-
 	waveReaderCount++;
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
 	WaveReader *reader = &readers[index];
 	reader->name = name;
 
-	reader->hw = startDigitalCapture("wave input", brainPin, mode);
+	reader->hw = startDigitalCapture("wave input", brainPin);
 
 	if (reader->hw != NULL) {
 		reader->hw->setWidthCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
@@ -227,7 +229,9 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 	initWave(PROTOCOL_WA_CHANNEL_3, 2);
 	initWave(PROTOCOL_WA_CHANNEL_4, 3);
 
+#if EFI_SHAFT_POSITION_INPUT
 	addTriggerEventListener(waTriggerEventListener, "wave analyzer", engine);
+#endif
 
 	addConsoleAction("waveinfo", showWaveInfo);
 

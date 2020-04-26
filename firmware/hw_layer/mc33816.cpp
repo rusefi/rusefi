@@ -28,6 +28,9 @@ static OutputPin chipSelect;
 static OutputPin resetB;
 static OutputPin driven;
 
+static unsigned short mcChipId;
+static Logging* logger;
+
 static SPIConfig spiCfg = { .circular = false,
 		.end_cb = NULL,
 		.ssport = NULL,
@@ -43,7 +46,7 @@ static SPIDriver *driver;
 
 
 static void showStats() {
-
+	scheduleMsg(logger, "MC %d", mcChipId);
 }
 
 // Mostly unused
@@ -71,7 +74,7 @@ static void spi_writew(unsigned short param) {
 	//spiUnselect(driver);
 }
 
-static unsigned short id() {
+static unsigned short readId() {
 	spiSelect(driver);
 	spi_writew(0xBAA1);
 	unsigned short ID =  recv_16bit_spi();
@@ -95,8 +98,7 @@ static void setup_spi() {
 	spiUnselect(driver);
 }
 
-static void enable_flash()
-{
+static void enable_flash() {
 	spiSelect(driver);
     spi_writew(0x2001); //ch1
     spi_writew(0x0018); //enable flash
@@ -261,7 +263,12 @@ static void download_register(int r_target) {
 	   spiUnselect(driver);
 }
 
-void initMc33816() {
+void initMc33816(Logging *sharedLogger) {
+	logger = sharedLogger;
+
+	//
+	// see setTest33816EngineConfiguration
+	//
 	// default spi3mosiPin PB5
 	// default spi3misoPin PB4
 	// default spi3sckPin  PB3
@@ -296,7 +303,7 @@ void initMc33816() {
 
 	spiStart(driver, &spiCfg);
 
-	//addConsoleAction("mc33_stats", showStats);
+	addConsoleAction("mc33_stats", showStats);
 	//addConsoleActionI("mc33_send", sendWord);
 
 	// Does starting turn this high to begin with??
@@ -309,7 +316,7 @@ void initMc33816() {
 	chThdSleepMilliseconds(10);
 
 	setup_spi();
-	int mc_id = id();
+	mcChipId = readId();
 
     download_RAM(CODE_RAM1);        // transfers code RAM1
     download_RAM(CODE_RAM2);        // transfers code RAM2

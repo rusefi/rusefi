@@ -22,8 +22,11 @@ include rusefi.mk
 # for 'release' options see 'clean_compile_two_versions.bat' file
 
 ifeq ($(DEBUG_LEVEL_OPT),)
-  # this value would be used by default. For 'release' configuration override with '-O2' or something along these lines
-  DEBUG_LEVEL_OPT = -O0 -ggdb -g3 
+  # Default to a release build - but leave in debug info.  It doesn't change the hex/bin output.
+  DEBUG_LEVEL_OPT = -O2 -ggdb -g3
+  # Comment the above and uncomment the line below if you want to debug the firmware (it's difficult-to-impossible
+  # to debug firmware with optimization enabled).
+  # DEBUG_LEVEL_OPT = -O0 -ggdb -g3
 endif
 
 
@@ -149,6 +152,8 @@ include console/binary/tunerstudio.mk
 ifeq ($(USE_FATFS),yes)
 include $(PROJECT_DIR)/ext/fatfs.mk
 endif
+
+BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
 include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
@@ -288,11 +293,11 @@ INCDIR = $(CHIBIOS)/os/license \
 	$(PROJECT_DIR)/console/fl_binary \
 	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/mass_storage \
-	hw_layer/serial_over_usb \
-	hw_layer/algo \
-	hw_layer/lcd \
+	$(PROJECT_DIR)/hw_layer/serial_over_usb \
+	$(PROJECT_DIR)/hw_layer/algo \
+	$(PROJECT_DIR)/hw_layer/lcd \
+	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(HW_SENSORS_INC) \
-	hw_layer/mass_storage \
 	$(HW_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	$(UTIL_INC) \

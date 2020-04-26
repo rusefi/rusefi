@@ -213,10 +213,23 @@ bool hasSecondThrottleBody(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->tps2_1AdcChannel != EFI_ADC_NONE;
 }
 
+extern float canPedal;
+
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_CANBUS_PEDAL
+		return canPedal;
+#endif
+
+
 	if (mockPedalPosition != MOCK_UNDEFINED) {
 		return mockPedalPosition;
 	}
+
+	// Don't choke without a pedal set
+	if (CONFIG(throttlePedalPositionAdcChannel) == EFI_ADC_NONE) {
+		return 0;
+	}
+
 	DISPLAY_TAG(PEDAL_SECTION);
 	DISPLAY_TEXT(Analog_MCU_reads);
 

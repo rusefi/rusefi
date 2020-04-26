@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef RUSEFIFUNCTIONALTEST_H_
-#define RUSEFIFUNCTIONALTEST_H_
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -20,5 +19,3 @@ void logMsg(const char *fmt, ...);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-#endif /* RUSEFIFUNCTIONALTEST_H_ */

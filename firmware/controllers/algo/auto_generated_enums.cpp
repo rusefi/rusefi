@@ -717,6 +717,8 @@ case BMW_M73_F:
   return "BMW_M73_F";
 case BMW_M73_M:
 	return "BMW_M73_M";
+case BMW_M73_MRE:
+  return "BMW_M73_MRE";
 case BMW_M73_PROTEUS:
   return "BMW_M73_P";
 case MRE_BOARD_TEST:
@@ -805,6 +807,8 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case VAG_18_TURBO:
   return "VAG_18_TURBO";
+case TEST_33816:
+  return "TEST_33816";
 case VW_B6:
   return "VW_B6";
 case VW_ABA:

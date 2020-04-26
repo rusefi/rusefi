@@ -5,6 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#pragma once
+
 #include "digital_input.h"
 
 #if HAL_USE_PAL
