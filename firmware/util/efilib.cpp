@@ -59,6 +59,10 @@ float minF(float i1, float i2) {
 	return i1 < i2 ? i1 : i2;
 }
 
+float clampF(float min, float clamp, float max) {
+	return maxF(min, minF(clamp, max));
+}
+
 uint32_t efiStrlen(const char *param) {
 	register const char *s;
 	for (s = param; *s; ++s)

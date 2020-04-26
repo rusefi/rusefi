@@ -86,11 +86,6 @@
 #define BOARD_MC33972_COUNT	0
 #define BOARD_TLE8888_COUNT 	0
 
-// Future: move these outside of efifeatures.h
-#define BOARD_EXT_GPIOCHIPS  (BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
-#define BOARD_EXT_PINREPOPINS 24
-
-
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
  * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
@@ -259,10 +254,8 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continuous ADC conversion for slow ADC?
-// https://github.com/rusefi/rusefi/issues/630
 // todo: switch to continues ADC conversion for fast ADC?
-#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
+#define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5
 

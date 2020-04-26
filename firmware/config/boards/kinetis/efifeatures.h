@@ -245,22 +245,17 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for slow ADC?
-// https://github.com/rusefi/rusefi/issues/630
 // todo: switch to continues ADC conversion for fast ADC?
-#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD2
+#define EFI_INTERNAL_FAST_ADC_GPT	&GPTD2
 
 // todo: why 64 SPLL prescaler doesn't work?
 // 168000000/64/128/1025 = ~20Hz
 // 168000000/64/16/16 = ~10.25kHz
 
 // todo: warning! these numbers are "tricky"! need to investigate further!
-//168000000/128/65535 = ~20Hz
-#define PWM_FREQ_SLOW 20507   /* PWM clock frequency. */
-#define PWM_PERIOD_SLOW 65535  /* PWM period (in PWM ticks).    */
 //168000000/128/131 = ~10kHz
-#define PWM_FREQ_FAST 20507/*164062*/  /* PWM clock frequency. */
-#define PWM_PERIOD_FAST 131   /* PWM period (in PWM ticks).    */
+#define GPT_FREQ_FAST 20507/*164062*/  /* PWM clock frequency. */
+#define GPT_PERIOD_FAST 131   /* PWM period (in PWM ticks).    */
 
 #define EFI_SPI1_AF 3
 
@@ -343,13 +338,9 @@
 
 //#define CONSOLE_THREAD_STACK_SIZE UTILITY_THREAD_STACK_SIZE
 
-#define BOARD_EXT_GPIOCHIPS 1
 #define BOARD_TLE6240_COUNT 1
 #define BOARD_MC33972_COUNT 0
 #define BOARD_TLE8888_COUNT 0
-
-// todo: move this outside of efifeatures.h
-#define BOARD_EXT_PINREPOPINS 24
 
 #define TLE6240_SS_PORT GPIOB
 #define TLE6240_SS_PAD  0U

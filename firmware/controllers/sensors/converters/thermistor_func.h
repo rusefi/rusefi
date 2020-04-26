@@ -2,7 +2,7 @@
  * @author Matthew Kennedy, (c) 2019
  * 
  * A function to convert resistance to thermistor temperature (NTC). Uses the
- * Steinhart-Hart equation to prevent having to compute many logarithms at runtime.
+ * Steinhart-Hart equation to avoid having to compute many logarithms at runtime.
  */
 
 #pragma once
@@ -15,6 +15,8 @@ public:
 	SensorResult convert(float ohms) const override;
 
 	void configure(thermistor_conf_s &cfg);
+
+	void showInfo(Logging* logger, float testRawValue) const override;
 
 private:
 	// Steinhart-Hart coefficients

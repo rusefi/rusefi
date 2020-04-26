@@ -32,17 +32,17 @@ extern WaveChart waveChart;
 EnginePins enginePins;
 static Logging* logger;
 
-pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
+static const pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 
-static const char *sparkNames[] = { "coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8",
-		"coil9", "coil10", "coil11", "coil12"};
+static const char *sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
+		"Coil 9", "Coil 10", "Coil 11", "Coil 12"};
 
 // these short names are part of engine sniffer protocol
 static const char *sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", "c4", "c5", "c6", "c7", "c8",
 		"c9", "cA", "cB", "cD"};
 
-static const char *injectorNames[] = { "injector1", "injector2", "injector3", "injector4", "injector5", "injector6",
-		"injector7", "injector8", "injector9", "injector10", "injector11", "injector12"};
+static const char *injectorNames[] = { "Injector 1", "Injector 2", "Injector 3", "Injector 4", "Injector 5", "Injector 6",
+		"Injector 7", "Injector 8", "Injector 9", "Injector 10", "Injector 11", "Injector 12"};
 
 static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
@@ -60,7 +60,7 @@ EnginePins::EnginePins() {
 	}
 
 	static_assert(efi::size(injectorNames) >= INJECTION_PIN_COUNT, "Too many injection pins"); 
-		for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
 		enginePins.injectors[i].shortName = injectorShortNames[i];
@@ -148,7 +148,15 @@ void EnginePins::unregisterPins() {
 	unregisterOutputIfPinOrModeChanged(mainRelay, mainRelayPin, mainRelayPinMode);
 	unregisterOutputIfPinOrModeChanged(starterRelayDisable, starterRelayDisablePin, starterRelayDisableMode);
 
+	unregisterOutputIfPinChanged(starterControl, starterControlPin);
+
 #endif /* EFI_PROD_CODE */
+}
+
+void EnginePins::startPins() {
+	startInjectionPins();
+	startIgnitionPins();
+	startAuxValves();
 }
 
 void EnginePins::reset() {
@@ -194,7 +202,7 @@ void EnginePins::startIgnitionPins(void) {
 		}
 	}
 	if (isPinOrModeChanged(dizzySparkOutputPin, dizzySparkOutputPinMode)) {
-		enginePins.dizzyOutput.initPin("dizzy tach", engineConfiguration->dizzySparkOutputPin,
+		enginePins.dizzyOutput.initPin("Distributor", engineConfiguration->dizzySparkOutputPin,
 				&engineConfiguration->dizzySparkOutputPinMode);
 
 	}
@@ -291,11 +299,6 @@ void IgnitionOutputPin::reset() {
 
 OutputPin::OutputPin() {
 	modePtr = &DEFAULT_OUTPUT;
-#if EFI_GPIO_HARDWARE
-	port = NULL;
-	pin = 0;
-#endif /* EFI_GPIO_HARDWARE */
-	currentLogicValue = INITIAL_PIN_STATE;
 }
 
 bool OutputPin::isInitialized() {
@@ -312,8 +315,14 @@ bool OutputPin::isInitialized() {
 
 void OutputPin::toggle() {
 	setValue(!getLogicValue());
-
 }
+
+bool OutputPin::getAndSet(int logicValue) {
+	bool oldValue = currentLogicValue;
+	setValue(logicValue);
+	return oldValue;
+}
+
 void OutputPin::setValue(int logicValue) {
 	ScopePerf perf(PE::OutputPinSetValue);
 
@@ -368,17 +377,18 @@ void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	memset(&outputs, 0, sizeof(outputs));
 
 #if HAL_USE_SPI
-	enginePins.sdCsPin.initPin("spi CS5", CONFIG(sdCardCsPin));
+	enginePins.sdCsPin.initPin("SD CS", CONFIG(sdCardCsPin));
 #endif /* HAL_USE_SPI */
 
 	// todo: should we move this code closer to the fuel pump logic?
-	enginePins.fuelPumpRelay.initPin("fuel pump relay", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
+	enginePins.fuelPumpRelay.initPin("Fuel pump", CONFIG(fuelPumpPin), &CONFIG(fuelPumpPinMode));
 
-	enginePins.mainRelay.initPin("main relay", CONFIG(mainRelayPin), &CONFIG(mainRelayPinMode));
-	enginePins.starterRelayDisable.initPin("starter relay", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisableMode));
+	enginePins.mainRelay.initPin("Main relay", CONFIG(mainRelayPin), &CONFIG(mainRelayPinMode));
+	enginePins.starterRelayDisable.initPin("Starter disable", CONFIG(starterRelayDisablePin), &CONFIG(starterRelayDisableMode));
+	enginePins.starterControl.initPin("Starter control", CONFIG(starterControlPin));
 
-	enginePins.fanRelay.initPin("fan relay", CONFIG(fanPin), &CONFIG(fanPinMode));
-	enginePins.o2heater.initPin("o2 heater", CONFIG(o2heaterPin));
+	enginePins.fanRelay.initPin("Fan", CONFIG(fanPin), &CONFIG(fanPinMode));
+	enginePins.o2heater.initPin("O2 heater", CONFIG(o2heaterPin));
 	enginePins.acRelay.initPin("A/C relay", CONFIG(acRelayPin), &CONFIG(acRelayPinMode));
 
 	// digit 1

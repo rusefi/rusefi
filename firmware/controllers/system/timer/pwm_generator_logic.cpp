@@ -11,7 +11,6 @@
 #include "global.h"
 #include "os_access.h"
 #include "pwm_generator_logic.h"
-#include "pwm_generator.h"
 #include "perf_trace.h"
 
 /**
@@ -67,13 +66,13 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		return;
 	}
 	if (cisnan(dutyCycle)) {
-		warning(CUSTOM_DUTY_INVALID, "spwd:dutyCycle %.2f", dutyCycle);
+		warning(CUSTOM_DUTY_INVALID, "%s spwd:dutyCycle %.2f", name, dutyCycle);
 		return;
 	} else if (dutyCycle < 0) {
-		warning(CUSTOM_DUTY_TOO_LOW, "spwd:dutyCycle %.2f", dutyCycle);
+		warning(CUSTOM_DUTY_TOO_LOW, "%s dutyCycle %.2f", name, dutyCycle);
 		dutyCycle = 0;
 	} else if (dutyCycle > 1) {
-		warning(CUSTOM_DUTY_TOO_HIGH, "spwd:dutyCycle %.2f", dutyCycle);
+		warning(CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty %.2f", name, dutyCycle);
 		dutyCycle = 1;
 	}
 	if (dutyCycle == 0.0f && stateChangeCallback != NULL) {
@@ -373,4 +372,3 @@ void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 		output->setValue(value);
 	}
 }
-

@@ -195,8 +195,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
-	engineConfiguration->nbVvtIndex = 0;
-
 	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
 
 	// set idle_position 35
@@ -273,7 +271,11 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set_whole_ve_map 80
 	setMazdaMiataNbInjectorLag(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
+	CONFIG(debugTriggerSync) = GPIOD_3;
+
+//	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
+	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
+
 	//set idle_offset 30
 	engineConfiguration->idleRpmPid.offset = 30;
 	engineConfiguration->idleRpmPid.pFactor = 0.07;
@@ -396,7 +398,10 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// see setDefaultIdleParameters
 
 	engineConfiguration->adcVcc = 3.3f;
-	engineConfiguration->vbattDividerCoeff = 9.70f;
+	engineConfiguration->vbattDividerCoeff = 8.80f;
+
+	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	// by the way NB2 MAF internal diameter is about 2.5 inches / 63mm
 	// 1K pull-down to read current from this MAF
@@ -420,7 +425,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3 blue
 
 	engineConfiguration->idleMode = IM_AUTO;
-	CONFIG(useETBforIdleControl) = true;
 	// set_analog_input_pin pps PA2
 /* a step back - Frankenso does not use ETB
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
@@ -461,8 +465,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	config->crankingFuelCoef[7] = 10;
 	config->crankingFuelBins[7] = 90;
 
-//	engineConfiguration->crankingIACposition = 65;
-
+	engineConfiguration->crankingIACposition = 90;
 }
 
 /**
@@ -500,7 +503,11 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->camInputs[0] = GPIOA_5;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
-	engineConfiguration->useTLE8888_hall_mode = true;
+	/**
+	 * By default "auto detection mode for VR sensor signals" is used
+	 * We know that for short & strange Hall (?) signals like Miata NB2 crank sensor this does not work well above certain RPM.
+	 */
+	engineConfiguration->tle8888mode = TL_MANUAL;
 
 	// GPIOD_6: "13 - GP Out 6" - selected to +12v
 	engineConfiguration->alternatorControlPin = GPIOD_6;
@@ -558,6 +565,8 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  */
 void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	CONFIG(useETBforIdleControl) = true;
 
 #if EFI_FSIO
 	// enable ETB

@@ -146,14 +146,14 @@ TEST(util, histogram) {
 
 static void testMalfunctionCentralRemoveNonExistent() {
 	print("******************************************* testMalfunctionCentralRemoveNonExistent\r\n");
-	initMalfunctionCentral();
+	clearWarnings();
 
 	// this should not crash
 	removeError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 }
 
 static void testMalfunctionCentralSameElementAgain() {
-	initMalfunctionCentral();
+	clearWarnings();
 	print("******************************************* testMalfunctionCentralSameElementAgain\r\n");
 	error_codes_set_s localCopy;
 
@@ -164,7 +164,7 @@ static void testMalfunctionCentralSameElementAgain() {
 }
 
 static void testMalfunctionCentralRemoveFirstElement() {
-	initMalfunctionCentral();
+	clearWarnings();
 	print("******************************************* testMalfunctionCentralRemoveFirstElement\r\n");
 	error_codes_set_s localCopy;
 
@@ -190,7 +190,7 @@ TEST(misc, testMalfunctionCentral) {
 	testMalfunctionCentralRemoveFirstElement();
 
 	print("******************************************* testMalfunctionCentral\r\n");
-	initMalfunctionCentral();
+	clearWarnings();
 
 	error_codes_set_s localCopy;
 

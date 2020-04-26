@@ -6,3 +6,7 @@
 #define ts_show_egt false
 #define ts_show_gps false
 #define ts_show_analog_divider false
+#define ts_show_spi false
+#define ts_show_sd_card false
+#define ts_show_can_pins false
+#define ts_show_tunerstudio_port false

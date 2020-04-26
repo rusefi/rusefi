@@ -274,7 +274,6 @@ static void listDirectory(const char *path) {
 
 	scheduleMsg(&logger, LS_RESPONSE);
 
-	int i = strlen(path);
 	for (int count = 0;count < FILE_LIST_MAX_COUNT;) {
 		FILINFO fno;
 

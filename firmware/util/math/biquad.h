@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CONTROLLERS_MATH_BIQUAD_H_
-#define CONTROLLERS_MATH_BIQUAD_H_
+#pragma once
 
 // todo: narrow this dependency further? only 'bi_quard_s' is needed, should it be extracted / moved to a smaller header?
 // todo: do we need to make code generation smarted and produce a larger number of smaller headers instead of one monster header?
@@ -21,5 +20,3 @@ public:
     float a0, a1, a2, b1, b2;
     float z1, z2;
 };
-
-#endif /* CONTROLLERS_MATH_BIQUAD_H_ */

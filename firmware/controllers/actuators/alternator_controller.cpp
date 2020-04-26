@@ -22,7 +22,7 @@
 #include "local_version_holder.h"
 #include "periodic_task.h"
 
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 #include "pin_repository.h"
 
 
@@ -30,14 +30,12 @@
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static Logging *logger;
 
 static SimplePwm alternatorControl("alt");
-static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
-static PidIndustrial alternatorPid(altPidS);
+static PidIndustrial alternatorPid(&persistentState.persistentConfiguration.engineConfiguration.alternatorControl);
 
 static percent_t currentAltDuty;
 
@@ -164,8 +162,7 @@ void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 
 	if (CONFIG(onOffAlternatorLogic)) {
-		enginePins.alternatorPin.initPin("on/off alternator", CONFIG(alternatorControlPin));
-
+		enginePins.alternatorPin.initPin("Alternator control", CONFIG(alternatorControlPin));
 	} else {
 		startSimplePwmExt(&alternatorControl,
 				"Alternator control",

@@ -341,21 +341,11 @@ case TLE6240_PIN_9:
   }
  return NULL;
 }
-const char *getCan_device_mode_e(can_device_mode_e value){
-switch(value) {
-case CD_OFF:
-  return "CD_OFF";
-case CD_USE_CAN1:
-  return "CD_USE_CAN1";
-case CD_USE_CAN2:
-  return "CD_USE_CAN2";
-case Internal_ForceMyEnumIntSize_can_device_mode:
-  return "Internal_ForceMyEnumIntSize_can_device_mode";
-  }
- return NULL;
-}
+
 const char *getCan_nbc_e(can_nbc_e value){
 switch(value) {
+case CAN_BUS_NBC_NONE:
+  return "CAN_BUS_NBC_NONE";
 case CAN_BUS_MAZDA_RX8:
   return "CAN_BUS_MAZDA_RX8";
 case CAN_BUS_NBC_BMW:
@@ -364,6 +354,8 @@ case CAN_BUS_NBC_FIAT:
   return "CAN_BUS_NBC_FIAT";
 case CAN_BUS_NBC_VAG:
   return "CAN_BUS_NBC_VAG";
+case CAN_BUS_W202_C180:
+  return "CAN_BUS_W202_C180";
 case Internal_ForceMyEnumIntSize_can_nbc:
   return "Internal_ForceMyEnumIntSize_can_nbc";
   }
@@ -399,8 +391,14 @@ case DBG_2:
   return "DBG_2";
 case DBG_BOOST:
   return "DBG_BOOST";
-case DBG_37:
-  return "DBG_37";
+case DBG_START_STOP:
+  return "DBG_START_STOP";
+case DBG_LAUNCH:
+  return "DBG_LAUNCH";
+case DBG_ETB_AUTOTUNE:
+  return "DBG_ETB_AUTOTUNE";
+case DBG_40:
+  return "DBG_40";
 case DBG_ALTERNATOR_PID:
   return "DBG_ALTERNATOR_PID";
 case DBG_ANALOG_INPUTS:
@@ -409,8 +407,8 @@ case DBG_ANALOG_INPUTS2:
   return "DBG_ANALOG_INPUTS2";
 case DBG_AUX_PID_1:
   return "DBG_AUX_PID_1";
-case DBG_AUX_TEMPERATURE:
-  return "DBG_AUX_TEMPERATURE";
+case DBG_34:
+  return "DBG_34";
 case DBG_AUX_VALVES:
   return "DBG_AUX_VALVES";
 case DBG_BENCH_TEST:
@@ -465,8 +463,8 @@ case DBG_TPS_ACCEL:
   return "DBG_TPS_ACCEL";
 case DBG_TRIGGER_COUNTERS:
   return "DBG_TRIGGER_COUNTERS";
-case DBG_TRIGGER_SYNC:
-  return "DBG_TRIGGER_SYNC";
+case DBG_16:
+  return "DBG_16";
 case DBG_VEHICLE_SPEED_SENSOR:
   return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:
@@ -611,6 +609,8 @@ case BMW_M73_PROTEUS:
   return "BMW_M73_P";
 case BMW_M73_MRE:
   return "BMW_M73_MRE";
+case BMW_M73_MRE_SLAVE:
+  return "BMW_M73_MRE_SLAVE";
 case MIATA_1996:
   return "MIATA_1996";
 case MIATA_NA6_MAP:
@@ -815,6 +815,8 @@ case FOUR_STROKE_CAM_SENSOR:
   return "FOUR_STROKE_CAM_SENSOR";
 case FOUR_STROKE_CRANK_SENSOR:
   return "FOUR_STROKE_CRANK_SENSOR";
+case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+  return "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR";
 case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
   return "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR";
 case Force_4_bytes_size_operation_mode_e:
@@ -1011,6 +1013,14 @@ case TT_MAZDA_MIATA_VVT_TEST:
   return "TT_MAZDA_MIATA_VVT_TEST";
 case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
+case TT_RENIX_66_2_2_2:
+  return "TT_RENIX_66_2_2_2";
+case TT_BOSCH_QUICK_START:
+  return "TT_BOSCH_QUICK_START";
+case TT_HONDA_K_12_1:
+  return "TT_HONDA_K_12_1";
+case TT_RENIX_44_2_2:
+  return "TT_RENIX_44_2_2";
 case TT_MIATA_NB2_VVT_CAM:
   return "TT_MIATA_NB2_VVT_CAM";
 case TT_MAZDA_Z5:

@@ -18,6 +18,7 @@ java -DSystemOut.name=gen_config ^
  -ts_destination tunerstudio ^
  -with_c_defines false ^
  -initialize_to_zero false ^
+ -tool gen_config.bat ^
  -c_defines        controllers\generated\rusefi_generated.h ^
  -c_destination    controllers\generated\engine_configuration_generated_structures.h ^
  -c_fsio_constants controllers\generated\fsio_enums_generated.def ^

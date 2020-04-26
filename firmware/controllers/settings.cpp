@@ -25,7 +25,7 @@
 #include "idle_thread.h"
 #include "allsensors.h"
 #include "alternator_controller.h"
-#include "trigger_emulator.h"
+#include "trigger_emulator_algo.h"
 #include "sensor.h"
 
 #if EFI_PROD_CODE
@@ -58,9 +58,7 @@ extern WaveChart waveChart;
 static char LOGGING_BUFFER[SETTINGS_LOGGING_BUFFER_SIZE];
 static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
-extern int maxNesting;
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 /*
  static void printIntArray(int array[], int size) {
@@ -279,8 +277,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
 			boolToString(engine->clutchDownState));
 
-	scheduleMsg(&logger, "nesting=%d", maxNesting);
-
 	scheduleMsg(&logger, "digitalPotentiometerSpiDevice %d", engineConfiguration->digitalPotentiometerSpiDevice);
 
 	for (int i = 0; i < DIGIPOT_COUNT; i++) {
@@ -399,39 +395,34 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 	scheduleMsg(&logger, "==============================");
 }
 
-void printTPSInfo(void) {
-	auto tps = Sensor::get(SensorType::Tps1);
-	auto raw = Sensor::getRaw(SensorType::Tps1);
+static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int16_t max, adc_channel_e channel) {
+	auto tps = Sensor::get(sensor);
+	auto raw = Sensor::getRaw(sensor);
 
 	if (!tps.Valid) {
 		scheduleMsg(&logger, "TPS not valid");
 	}
 	static char pinNameBuffer[16];
 
-	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
-			raw, getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
+	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", min, max,
+			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer));
 
-	if (hasPedalPositionSensor()) {
-		scheduleMsg(&logger, "pedal up %f / down %f",
-				engineConfiguration->throttlePedalUpVoltage,
-				engineConfiguration->throttlePedalWOTVoltage);
-	}
 
-	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", convertVoltageTo10bitADC(raw), tps.Value, getTpsRateOfChange());
+	scheduleMsg(&logger, "current 10bit=%d value=%.2f", convertVoltageTo10bitADC(raw), tps.Value);
+}
+
+void printTPSInfo(void) {
+	scheduleMsg(&logger, "pedal up %f / down %f",
+			engineConfiguration->throttlePedalUpVoltage,
+			engineConfiguration->throttlePedalWOTVoltage);
+
+	printTpsSenser("TPS", SensorType::Tps1, engineConfiguration->tpsMin, engineConfiguration->tpsMax, engineConfiguration->tps1_1AdcChannel);
+	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);
 }
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS
-	printThermistor("CLT", &engineConfiguration->clt, &engine->engineState.cltCurve,
-			engineConfiguration->useLinearCltSensor);
-	if (!isValidCoolantTemperature(getCoolantTemperature())) {
-		scheduleMsg(&logger, "CLT sensing error");
-	}
-	printThermistor("IAT", &engineConfiguration->iat, &engine->engineState.iatCurve,
-			engineConfiguration->useLinearIatSensor);
-	if (!isValidIntakeAirTemperature(getIntakeAirTemperature())) {
-		scheduleMsg(&logger, "IAT sensing error");
-	}
+	Sensor::showAllSensorInfo(&logger);
 
 	scheduleMsg(&logger, "fan=%s @ %s", boolToString(enginePins.fanRelay.getLogicValue()),
 			hwPortname(engineConfiguration->fanPin));
@@ -679,8 +670,28 @@ static void setMainRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->mainRelayPin, "main relay");
 }
 
+static void setCj125CsPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
+}
+
+static void setCj125HeaterPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->wboHeaterPin, "cj125 heater");
+}
+
+static void setTriggerSyncPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->debugTriggerSync, "trigger sync");
+}
+
 static void setStarterRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
+}
+
+static void setCanRxPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->canRxPin, "CAN RX");
+}
+
+static void setCanTxPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->canTxPin, "CAN TX");
 }
 
 static void setAlternatorPin(const char *pinName) {
@@ -888,12 +899,16 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		CONFIG(useTLE8888_cranking_hack) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		CONFIG(verboseTLE8888) = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
+		CONFIG(enableVerboseCanTx) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {
 		engineConfiguration->useConstantDwellDuringCranking = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125")) {
 		engineConfiguration->isCJ125Enabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "cj125verbose")) {
+		engineConfiguration->isCJ125Verbose = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_sniffer")) {
 		engineConfiguration->isEngineChartEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
@@ -957,7 +972,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "ignition")) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "self_stimulation")) {
-		engineConfiguration->directSelfStimulation = isEnabled;
+		engine->directSelfStimulation = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {
@@ -1120,12 +1135,10 @@ static void getValue(const char *paramStr) {
 #endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		scheduleMsg(&logger, "tps_min=%d", engineConfiguration->tpsMin);
+	} else if (strEqualCaseInsensitive(paramStr, "trigger_only_front")) {
+		scheduleMsg(&logger, "trigger_only_front=%d", engineConfiguration->useOnlyRisingEdgeForTrigger);
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
 		scheduleMsg(&logger, "tps_max=%d", engineConfiguration->tpsMax);
-	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
-		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
-	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
-		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		scheduleMsg(&logger, "global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
@@ -1164,9 +1177,6 @@ const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
 #if EFI_ENABLE_MOCK_ADC
 		{MOCK_IAT_COMMAND, setMockIatVoltage},
-		{MOCK_PPS_POSITION_COMMAND, setMockThrottlePedalPosition},
-		{MOCK_PPS_VOLTAGE_COMMAND, setMockThrottlePedalSensorVoltage},
-		{MOCK_TPS_COMMAND, setMockThrottlePositionSensorVoltage},
 		{MOCK_MAF_COMMAND, setMockMafVoltage},
 		{MOCK_AFR_COMMAND, setMockAfrVoltage},
 		{MOCK_MAP_COMMAND, setMockMapVoltage},
@@ -1259,6 +1269,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"bor", setBor},
 #if EFI_CAN_SUPPORT
 		{"can_mode", setCanType},
+		{"can_vss", setCanVss},
 #endif /* EFI_CAN_SUPPORT */
 #if EFI_IDLE_CONTROL
 		{"idle_position", setIdleValvePosition},
@@ -1343,8 +1354,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtOffset = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
 		engineConfiguration->vvtMode = (vvt_mode_e)valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
-		engineConfiguration->nbVvtIndex = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
 		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
@@ -1428,6 +1437,12 @@ void initSettings(void) {
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
+	addConsoleActionS("set_cj125_cs_pin", setCj125CsPin);
+	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
+	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
+
+	addConsoleActionS("set_can_rx_pin", setCanRxPin);
+	addConsoleActionS("set_can_tx_pin", setCanTxPin);
 
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);

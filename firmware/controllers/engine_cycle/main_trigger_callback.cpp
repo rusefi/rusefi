@@ -23,9 +23,6 @@
 
 #include "global.h"
 #include "os_access.h"
-#if EFI_PROD_CODE
-#include <nvic.h>
-#endif
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
@@ -51,12 +48,11 @@
 #include "event_queue.h"
 #include "engine.h"
 #include "perf_trace.h"
+#include "sensor.h"
 
 #include "backup_ram.h"
 
-EXTERN_ENGINE
-;
-extern bool hasFirmwareErrorFlag;
+EXTERN_ENGINE;
 
 static const char *prevOutputName = nullptr;
 
@@ -64,8 +60,7 @@ static InjectionEvent primeInjEvent;
 
 static Logging *logger;
 #if ! EFI_UNIT_TEST
-static pid_s *fuelPidS = &persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid;
-static Pid fuelPid(fuelPidS);
+static Pid fuelPid(&persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid);
 #endif
 
 // todo: figure out if this even helps?
@@ -235,8 +230,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		prevOutputName = outputName;
 	}
 
+#if EFI_UNIT_TEST || EFI_SIMULATOR || EFI_PRINTF_FUEL_DETAILS
 	InjectorOutputPin *output = event->outputs[0];
-#if EFI_PRINTF_FUEL_DETAILS
 	printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
 			(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM_VALUE)));
 #endif /*EFI_PRINTF_FUEL_DETAILS */
@@ -281,8 +276,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_UNIT_TEST
 	if (GET_RPM_VALUE < CONFIG(fuelClosedLoopRpmThreshold) ||
-			getCoolantTemperature() < CONFIG(fuelClosedLoopCltThreshold) ||
-			getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(fuelClosedLoopTpsThreshold) ||
+			Sensor::get(SensorType::Clt).value_or(0) < CONFIG(fuelClosedLoopCltThreshold) ||
+			Sensor::get(SensorType::Tps1).value_or(100) > CONFIG(fuelClosedLoopTpsThreshold) ||
 			ENGINE(sensors.currentAfr) < CONFIG(fuelClosedLoopAfrLowThreshold) ||
 			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
 		engine->engineState.running.pidCorrection = 0;
@@ -329,7 +324,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::get(SensorType::Tps1).value_or(0) PASS_ENGINE_PARAMETER_SUFFIX));
 	if (trgEventIndex == 0) {
 		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
 		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -363,7 +358,6 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 
 	(void) ckpSignalType;
 
-	ENGINE(m.beforeMainTrigger) = getTimeNowLowerNt();
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
@@ -454,17 +448,13 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
 	onTriggerEventSparkLogic(limitedSpark, trgEventIndex, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
-
-	if (trgEventIndex == 0) {
-		ENGINE(m.mainTriggerCallbackTime) = getTimeNowLowerNt() - ENGINE(m.beforeMainTrigger);
-	}
 }
 
 // Check if the engine is not stopped or cylinder cleanup is activated
 static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE))
 		return true;
-	return CONFIG(isCylinderCleanupEnabled) && (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS);
+	return CONFIG(isCylinderCleanupEnabled) && (Sensor::get(SensorType::Tps1).value_or(0) > CLEANUP_MODE_TPS);
 }
 
 /**
@@ -501,7 +491,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
 		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, CONFIG(startOfCrankingPrimingPulse),
-			CONFIG(primeInjFalloffTemperature), 0.0f, getCoolantTemperature());
+			CONFIG(primeInjFalloffTemperature), 0.0f, Sensor::get(SensorType::Clt).value_or(70));
 		if (pulseLength > 0) {
 			startSimultaniousInjection(engine);
 			efitimeus_t turnOffDelayUs = (efitimeus_t)efiRound(MS2US(pulseLength), 1.0f);

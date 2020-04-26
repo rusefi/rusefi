@@ -8,7 +8,15 @@
 
 EXTERN_ENGINE;
 
-#if !EFI_UNIT_TEST
+#if EFI_UNIT_TEST
+
+void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
+									  adc_channel_e channel,
+									  float voltsPerAdcVolt /*= 0.0f*/)
+{
+}
+
+#else
 
 struct AdcSubscriptionEntry {
 	FunctionalSensor *Sensor;

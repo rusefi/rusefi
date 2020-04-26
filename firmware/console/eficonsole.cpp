@@ -29,7 +29,7 @@
 
 static LoggingWithStorage logger("console");
 
-static void myfatal(void) {
+static void testCritical(void) {
 	chDbgCheck(0);
 }
 
@@ -46,11 +46,18 @@ static void sayNothing(void) {
 }
 
 static void sayHello(void) {
-	scheduleMsg(&logger, "*** rusEFI (c) Andrey Belomutskiy 2012-2019. All rights reserved.");
+	scheduleMsg(&logger, "*** rusEFI LLC (c) 2012-2020. All rights reserved.");
 	scheduleMsg(&logger, "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
 	scheduleMsg(&logger, "*** Chibios Kernel:       %s", CH_KERNEL_VERSION);
 	scheduleMsg(&logger, "*** Compiled:     " __DATE__ " - " __TIME__ "");
 	scheduleMsg(&logger, "COMPILER=%s", __VERSION__);
+
+#if defined(STM32F4) || defined(STM32F7)
+	uint32_t *uid = ((uint32_t *)UID_BASE);
+	scheduleMsg(&logger, "UID=%x %x %x", uid[0], uid[1], uid[2]);
+#endif
+
+
 #ifdef CH_FREQUENCY
 	scheduleMsg(&logger, "CH_FREQUENCY=%d", CH_FREQUENCY);
 #endif
@@ -183,7 +190,7 @@ void initializeConsole(Logging *sharedLogger) {
 	addConsoleAction("reset", scheduleReset);
 #endif
 
-	addConsoleAction("fatal", myfatal);
+	addConsoleAction("critical", testCritical);
 	addConsoleAction("error", myerror);
 	addConsoleAction("threadsinfo", cmd_threads);
 }

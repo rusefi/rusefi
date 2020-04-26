@@ -9,7 +9,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
 #include "engine.h"
 #include "allsensors.h"
 #include "efi_gpio.h"
@@ -25,9 +24,11 @@
 #include "map_averaging.h"
 #include "fsio_impl.h"
 #include "perf_trace.h"
+#include "sensor.h"
+#include "gppwm.h"
 
 #if EFI_PROD_CODE
-#include "injector_central.h"
+#include "bench_test.h"
 #else
 #define isRunningBenchTest() true
 #endif /* EFI_PROD_CODE */
@@ -40,8 +41,7 @@ static TriggerState initState CCM_OPTIONAL;
 
 LoggingWithStorage engineLogger("engine");
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -79,9 +79,9 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 
 	if (TRIGGER_WAVEFORM(bothFrontsRequired) && engineConfiguration->useOnlyRisingEdgeForTrigger) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "Inconsistent trigger setup");
+		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
 #else
-		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "Inconsistent trigger setup");
+		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
 #endif
 	}
 
@@ -115,7 +115,7 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS;
+		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && Sensor::get(SensorType::DriverThrottleIntent).value_or(0) > CLEANUP_MODE_TPS;
 	} else {
 		newValue = false;
 	}
@@ -140,6 +140,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #else
 	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
+
+	updateGppwm();
 
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -226,8 +228,6 @@ void Engine::reset() {
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
-
-	memset(&m, 0, sizeof(m));
 }
 
 
@@ -247,13 +247,6 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void Engine::OnTriggerStateDecodingError() {
 	Engine *engine = this;
 	EXPAND_Engine;
-	if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
-#if EFI_TUNER_STUDIO
-		tsOutputChannels.debugIntField1 = triggerCentral.triggerState.currentCycle.eventCount[0];
-		tsOutputChannels.debugIntField2 = triggerCentral.triggerState.currentCycle.eventCount[1];
-		tsOutputChannels.debugIntField3 = triggerCentral.triggerState.currentCycle.eventCount[2];
-#endif /* EFI_TUNER_STUDIO */
-	}
 
 	warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d/%d expected %d/%d/%d",
 			triggerCentral.triggerState.currentCycle.eventCount[0],
@@ -489,11 +482,9 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENGINE_CONTROL
-	engine->m.beforeFuelCalc = getTimeNowLowerNt();
 	int rpm = GET_RPM();
 
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->m.fuelCalcTime = getTimeNowLowerNt() - engine->m.beforeFuelCalc;
 #endif
 }
 

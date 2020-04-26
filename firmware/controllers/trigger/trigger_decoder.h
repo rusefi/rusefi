@@ -74,7 +74,7 @@ public:
 
 	bool validateEventCounters(TriggerWaveform *triggerShape) const;
 	void onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-			efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape);
+			efitick_t nowNt, TriggerWaveform *triggerShape);
 
 
 	bool isValidIndex(TriggerWaveform *triggerShape) const;

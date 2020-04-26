@@ -62,6 +62,7 @@ typedef enum {
 	TLE8888_FAILED
 } tle8888_drv_state;
 
+// tle8888_mode_e
 #define MODE_MANUAL 0x02
 #define MODE_HALL 0x03
 
@@ -511,12 +512,8 @@ int startupConfiguration(struct tle8888_priv *chip) {
 	/* enable outputs */
 	tle8888_spi_rw(chip, CMD_OE_SET, NULL);
 
-	if (cfg->hallMode) {
-		/**
-		 * By default "auto detection mode for VR sensor signals" is used
-		 * We know that for short Hall signals like Miata NB2 crank sensor this does not work well above certain RPM.
-		 */
-		tle8888_spi_rw(chip, CMD_VRSCONFIG1(MODE_MANUAL << 2), NULL);
+	if (cfg->mode > 0) {
+		tle8888_spi_rw(chip, CMD_VRSCONFIG1(cfg->mode << 2), NULL);
 	}
 	return 0;
 }

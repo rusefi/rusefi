@@ -1,9 +1,79 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Mar 20 19:55:09 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 26 14:18:05 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #include "rusefi_types.h"
+// start of stft_cell_cfg_s
+struct stft_cell_cfg_s {
+	/**
+	 * offset 0
+	 */
+	int8_t maxAdd;
+	/**
+	 * offset 1
+	 */
+	int8_t maxRemove;
+	/**
+	 * offset 2
+	 */
+	uint16_t timeConstant;
+	/** total size 4*/
+};
+
+typedef struct stft_cell_cfg_s stft_cell_cfg_s;
+
+// start of stft_s
+struct stft_s {
+	/**
+	 * Below this RPM, the idle region is active
+	 * offset 0
+	 */
+	uint8_t maxIdleRegionRpm;
+	/**
+	 * Below this engine load, the overrun region is active
+	 * offset 1
+	 */
+	uint8_t maxOverrunLoad;
+	/**
+	 * Above this engine load, the power region is active
+	 * offset 2
+	 */
+	uint8_t minPowerLoad;
+	/**
+	 * When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.
+	 * offset 3
+	 */
+	uint8_t deadband;
+	/**
+	 * Below this temperature, correction is disabled.
+	 * offset 4
+	 */
+	int8_t minClt;
+	/**
+	 * Below this AFR, correction is paused
+	 * offset 5
+	 */
+	uint8_t minAfr;
+	/**
+	 * Above this AFR, correction is paused
+	 * offset 6
+	 */
+	uint8_t maxAfr;
+	/**
+	 * Delay after starting the engine before beginning closed loop correction.
+	 * offset 7
+	 */
+	uint8_t startupDelay;
+	/**
+	 * offset 8
+	 */
+	stft_cell_cfg_s cellCfgs[STFT_CELL_COUNT];
+	/** total size 24*/
+};
+
+typedef struct stft_s stft_s;
+
 // start of pid_s
 struct pid_s {
 	/**
@@ -89,6 +159,61 @@ struct spi_pins {
 };
 
 typedef struct spi_pins spi_pins;
+
+// start of gppwm_channel
+struct gppwm_channel {
+	/**
+	 * Select a pin to use for PWM or on-off output.
+	 * offset 0
+	 */
+	output_pin_e pin;
+	/**
+	 * If an error (with a sensor, etc) is detected, this value is used instead of reading from the table.
+	 * This should be a safe value for whatever hardware is connected to prevent damage.
+	 * offset 1
+	 */
+	uint8_t dutyIfError;
+	/**
+	 * Select a frequency to run PWM at.
+	 * Set this to 0hz to enable on-off mode.
+	 * offset 2
+	 */
+	uint16_t pwmFrequency;
+	/**
+	 * In on-off mode, turn the output on when the table value is above this duty.
+	 * offset 4
+	 */
+	uint8_t onAboveDuty;
+	/**
+	 * In on-off mode, turn the output off when the table value is below this duty.
+	 * offset 5
+	 */
+	uint8_t offBelowDuty;
+	/**
+	 * Selects the load axis to use for the table.
+	 * offset 6
+	 */
+	gppwm_channel_e loadAxis;
+	/**
+	 * offset 7
+	 */
+	uint8_t pad;
+	/**
+	 * offset 8
+	 */
+	uint8_t loadBins[GPPWM_LOAD_COUNT];
+	/**
+	 * offset 16
+	 */
+	uint8_t rpmBins[GPPWM_RPM_COUNT];
+	/**
+	 * offset 24
+	 */
+	gppwm_table_t table;
+	/** total size 88*/
+};
+
+typedef struct gppwm_channel gppwm_channel;
 
 // start of air_pressure_sensor_config_s
 struct air_pressure_sensor_config_s {
@@ -278,33 +403,6 @@ struct injector_s {
 
 typedef struct injector_s injector_s;
 
-// start of bi_quard_s
-struct bi_quard_s {
-	/**
-	 * offset 0
-	 */
-	float a0;
-	/**
-	 * offset 4
-	 */
-	float a1;
-	/**
-	 * offset 8
-	 */
-	float a2;
-	/**
-	 * offset 12
-	 */
-	float b1;
-	/**
-	 * offset 16
-	 */
-	float b2;
-	/** total size 20*/
-};
-
-typedef struct bi_quard_s bi_quard_s;
-
 // start of specs_s
 struct specs_s {
 	/**
@@ -339,10 +437,10 @@ struct trigger_config_s {
 	trigger_type_e type;
 	/**
 	offset 4 bit 0 */
-	bool unusedTriggerBit0 : 1;
+	bool todoRemoveMeOneDay0 : 1;
 	/**
 	offset 4 bit 1 */
-	bool unusedTriggerBit1 : 1;
+	bool todoRemoveMeOneDay1 : 1;
 	/**
 	 * This option could be used if your second trigger channel is broken
 	offset 4 bit 2 */
@@ -522,7 +620,7 @@ struct etb_io {
 	/**
 	 * offset 3
 	 */
-	pin_output_mode_e controlPinMode;
+	brain_pin_e disablePin;
 	/** total size 4*/
 };
 
@@ -547,11 +645,8 @@ struct engine_configuration_s {
 	 */
 	injector_s injector;
 	/**
-	 * Should trigger emulator push data right into trigger handling logic, eliminating the need for physical jumper wires?
-	 * See also triggerSimulatorPins
-	 * PS: Funny name, right? :)
 	offset 76 bit 0 */
-	bool directSelfStimulation : 1;
+	bool unused76b0 : 1;
 	/**
 	offset 76 bit 1 */
 	bool activateAuxPid1 : 1;
@@ -577,8 +672,9 @@ struct engine_configuration_s {
 	offset 76 bit 8 */
 	bool isVerboseAuxPid4 : 1;
 	/**
+	 * enable cj125verbose/disable cj125verbose
 	offset 76 bit 9 */
-	bool useBiQuadAnalogFiltering : 1;
+	bool isCJ125Verbose : 1;
 	/**
 	 * Is your UA CJ125 output wired to MCU via resistor divider?
 	offset 76 bit 10 */
@@ -587,6 +683,7 @@ struct engine_configuration_s {
 	offset 76 bit 11 */
 	bool cj125isLsu49 : 1;
 	/**
+	 * TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 	offset 76 bit 12 */
 	bool etb_use_two_wires : 1;
 	/**
@@ -602,7 +699,7 @@ struct engine_configuration_s {
 	bool cj125isUrDivided : 1;
 	/**
 	offset 76 bit 16 */
-	bool useTLE8888_hall_mode : 1;
+	bool issue_294_unused : 1;
 	/**
 	offset 76 bit 17 */
 	bool useTLE8888_cranking_hack : 1;
@@ -627,7 +724,7 @@ struct engine_configuration_s {
 	bool useRunningMathForCranking : 1;
 	/**
 	offset 76 bit 24 */
-	bool issue_294_25 : 1;
+	bool displayLogicLevelsInEngineSniffer : 1;
 	/**
 	offset 76 bit 25 */
 	bool issue_294_26 : 1;
@@ -898,6 +995,7 @@ struct engine_configuration_s {
 	adc_channel_e fuelLevelSensor;
 	/**
 	 * Second throttle body position sensor, single channel so far
+	 * set_analog_input_pin tps2 X
 	 * offset 515
 	 */
 	adc_channel_e tps2_1AdcChannel;
@@ -959,6 +1057,7 @@ struct engine_configuration_s {
 	 * Electronic throttle pedal position input
 	 * First channel
 	 * See also tps1_1AdcChannel
+	 * set_analog_input_pin pps X
 	 * offset 580
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
@@ -1103,10 +1202,12 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e electronicThrottlePin1Mode;
 	/**
+	 * set_cj125_heater_pin XXX
 	 * offset 673
 	 */
 	brain_pin_e wboHeaterPin;
 	/**
+	 * set_cj125_cs_pin XXX
 	 * offset 674
 	 */
 	brain_pin_e cj125CsPin;
@@ -1196,10 +1297,12 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e sdCardCsPin;
 	/**
+	 * set_can_tx_pin X
 	 * offset 708
 	 */
 	brain_pin_e canTxPin;
 	/**
+	 * set_can_rx_pin X
 	 * offset 709
 	 */
 	brain_pin_e canRxPin;
@@ -1210,7 +1313,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 711
 	 */
-	brain_pin_e debugTimerCallback;
+	uint8_t unused711;
 	/**
 	 * offset 712
 	 */
@@ -1234,7 +1337,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 732
 	 */
-	can_device_mode_e canDeviceMode;
+	int anUnused4Bytes;
 	/**
 	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
 	 * See also directSelfStimulation which is different.
@@ -1298,6 +1401,7 @@ struct engine_configuration_s {
 	offset 744 bit 13 */
 	bool verboseTLE8888 : 1;
 	/**
+	 * enable can_broadcast/disable can_broadcast
 	offset 744 bit 14 */
 	bool enableVerboseCanTx : 1;
 	/**
@@ -1305,6 +1409,7 @@ struct engine_configuration_s {
 	offset 744 bit 15 */
 	bool onOffAlternatorLogic : 1;
 	/**
+	 * enable cj125/disable cj125
 	offset 744 bit 16 */
 	bool isCJ125Enabled : 1;
 	/**
@@ -1386,7 +1491,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 760
 	 */
-	int unrealisticRpmThreashold;
+	uint8_t mc33_hvolt;
+	/**
+	 * offset 761
+	 */
+	uint8_t unusedHere[3];
 	/**
 	 * offset 764
 	 */
@@ -1408,7 +1517,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 806
 	 */
-	brain_pin_e debugSetTimer;
+	uint8_t unused806;
 	/**
 	 * offset 807
 	 */
@@ -1445,15 +1554,18 @@ struct engine_configuration_s {
 	 */
 	int16_t stepperParkingExtraSteps;
 	/**
-	 * This magic property is specific to Mazda Miata NB2
 	 * offset 820
 	 */
-	float unusedmiataNb2VVTRatioFrom;
+	float unusedAntilagTimeout;
 	/**
-	 * This magic property is specific to Mazda Miata NB2
 	 * offset 824
 	 */
-	float unusedmiataNb2VVTRatioTo;
+	int16_t antiLagRpmTreshold;
+	/**
+	 * Maximum time to crank starter
+	 * offset 826
+	 */
+	int16_t startCrankingDuration;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 828
@@ -1603,22 +1715,22 @@ struct engine_configuration_s {
 	bool multisparkEnable : 1;
 	/**
 	offset 976 bit 4 */
-	bool unusedBit_251_4 : 1;
+	bool enableLaunchRetard : 1;
 	/**
 	offset 976 bit 5 */
-	bool unusedBit_251_5 : 1;
+	bool enableLaunchBoost : 1;
 	/**
 	offset 976 bit 6 */
-	bool unusedBit_251_6 : 1;
+	bool launchDisableBySpeed : 1;
 	/**
 	offset 976 bit 7 */
-	bool unusedBit_251_7 : 1;
+	bool enableCanVss : 1;
 	/**
 	offset 976 bit 8 */
-	bool unusedBit_251_8 : 1;
+	bool enableInnovateLC2 : 1;
 	/**
 	offset 976 bit 9 */
-	bool unusedBit_251_9 : 1;
+	bool showHumanReadableWarning : 1;
 	/**
 	offset 976 bit 10 */
 	bool unusedBit_251_10 : 1;
@@ -1681,10 +1793,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_280_30 : 1;
+	bool unusedBit_282_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_280_31 : 1;
+	bool unusedBit_282_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -1758,7 +1870,23 @@ struct engine_configuration_s {
 	/**
 	 * offset 1052
 	 */
-	int unusedAtOldBoardConfigurationEnd[103];
+	int launchAdvanceRpmRange;
+	/**
+	 * offset 1056
+	 */
+	int launchTpsTreshold;
+	/**
+	 * offset 1060
+	 */
+	float launchActivateDelay;
+	/**
+	 * offset 1064
+	 */
+	stft_s stft;
+	/**
+	 * offset 1088
+	 */
+	int unusedAtOldBoardConfigurationEnd[94];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -1790,9 +1918,11 @@ struct engine_configuration_s {
 	offset 1464 bit 7 */
 	bool useLinearCltSensor : 1;
 	/**
+	 * enable can_read/disable can_read
 	offset 1464 bit 8 */
 	bool canReadEnabled : 1;
 	/**
+	 * enable can_write/disable can_write
 	offset 1464 bit 9 */
 	bool canWriteEnabled : 1;
 	/**
@@ -2147,7 +2277,7 @@ struct engine_configuration_s {
 	 */
 	int16_t tps2Max;
 	/**
-	 * See also startStopButton
+	 * See also startStopButtonPin
 	 * offset 1772
 	 */
 	output_pin_e starterControlPin;
@@ -2158,7 +2288,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1774
 	 */
-	uint8_t unusedFormerWarmupAfrPid;
+	brain_pin_e mc33816_flag0;
 	/**
 	 * offset 1775
 	 */
@@ -2291,17 +2421,19 @@ struct engine_configuration_s {
 	 */
 	int16_t iacByTpsTaper;
 	/**
+	 * set_aux_tx_pin X
 	 * offset 2040
 	 */
-	brain_pin_e unusedErrorPin;
+	brain_pin_e auxSerialTxPin;
 	/**
 	 * offset 2041
 	 */
 	brain_pin_e warningLedPin;
 	/**
+	 * set_aux_rx_pin X
 	 * offset 2042
 	 */
-	brain_pin_e unused1234234;
+	brain_pin_e auxSerialRxPin;
 	/**
 	 * offset 2043
 	 */
@@ -2369,7 +2501,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2096
 	 */
-	uint32_t unused_former_warmup_target_afr[9];
+	uint32_t auxSerialSpeed;
+	/**
+	 * offset 2100
+	 */
+	uint32_t unused_former_warmup_target_afr[8];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -2479,7 +2615,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2332
 	 */
-	bi_quard_s biQuad;
+	uint8_t unusedOldBiquad[20];
 	/**
 	 * CLT-based timing correction
 	 * offset 2352
@@ -2492,7 +2628,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2416
 	 */
-	int nbVvtIndex;
+	tle8888_mode_e tle8888mode;
+	/**
+	 * offset 2417
+	 */
+	uint8_t unusedSomethingWasHere[3];
 	/**
 	 * offset 2420
 	 */
@@ -2508,7 +2648,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2432
 	 */
-	float postCrankingTargetClt;
+	float unused2432;
 	/**
 	 * Fuel multiplier taper, see also postCrankingDurationSec
 	 * offset 2436
@@ -2957,10 +3097,19 @@ struct engine_configuration_s {
 	 */
 	uint8_t iacPidMultRpmBins[IAC_PID_MULT_SIZE];
 	/**
+	 * set can_vss X
 	 * offset 4140
 	 */
-	int mainUnusedEnd[527];
-	/** total size 6248*/
+	can_vss_nbc_e canVssNbcType;
+	/**
+	 * offset 4144
+	 */
+	gppwm_channel gppwm[4];
+	/**
+	 * offset 4496
+	 */
+	int mainUnusedEnd[376];
+	/** total size 6000*/
 };
 
 typedef struct engine_configuration_s engine_configuration_s;
@@ -2971,6 +3120,26 @@ struct persistent_config_s {
 	 * offset 0
 	 */
 	engine_configuration_s engineConfiguration;
+	/**
+	 * offset 6000
+	 */
+	error_message_t warning_message;
+	/**
+	 * offset 6120
+	 */
+	float afterstartCoolantBins[AFTERSTART_HOLD_CURVE_SIZE];
+	/**
+	 * offset 6152
+	 */
+	float afterstartHoldTime[AFTERSTART_HOLD_CURVE_SIZE];
+	/**
+	 * offset 6184
+	 */
+	float afterstartEnrich[AFTERSTART_ENRICH_CURVE_SIZE];
+	/**
+	 * offset 6216
+	 */
+	float afterstartDecayTime[AFTERSTART_DECAY_CURVE_SIZE];
 	/**
 	 * offset 6248
 	 */
@@ -3242,4 +3411,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/rusefi_config.txt Fri Mar 20 19:55:09 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 26 14:18:05 EDT 2020

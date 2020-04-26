@@ -16,6 +16,7 @@
 #include "advance_map.h"
 #include "aux_valves.h"
 #include "perf_trace.h"
+#include "sensor.h"
 
 #if EFI_PROD_CODE
 #include "svnversion.h"
@@ -28,8 +29,7 @@
 extern fuel_Map3D_t veMap;
 extern afr_Map3D_t afrMap;
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 // this does not look exactly right
 extern LoggingWithStorage engineLogger;
@@ -119,19 +119,9 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 	engine->sensors.iat = getIntakeAirTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
+#if !EFI_CANBUS_SLAVE
 	engine->sensors.clt = getCoolantTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	// todo: reduce code duplication with 'getCoolantTemperature'
-	if (engineConfiguration->auxTempSensor1.adcChannel != EFI_ADC_NONE) {
-		engine->sensors.auxTemp1 = getTemperatureC(&engineConfiguration->auxTempSensor1,
-				&engine->engineState.auxTemp1Curve,
-				false PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-	if (engineConfiguration->auxTempSensor2.adcChannel != EFI_ADC_NONE) {
-		engine->sensors.auxTemp2 = getTemperatureC(&engineConfiguration->auxTempSensor2,
-				&engine->engineState.auxTemp2Curve,
-				false PASS_ENGINE_PARAMETER_SUFFIX);
-	}
+#endif /* EFI_CANBUS_SLAVE */
 
 #if EFI_UNIT_TEST
 	if (!cisnan(engine->sensors.mockClt)) {
@@ -164,7 +154,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
-	running.intakeTemperatureCoefficient = getIatFuelCorrection(getIntakeAirTemperature() PASS_ENGINE_PARAMETER_SUFFIX);
+	running.intakeTemperatureCoefficient = getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	running.coolantTemperatureCoefficient = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -197,9 +187,11 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 
+	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
-		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		updateTChargeK(rpm, tps PASS_ENGINE_PARAMETER_SUFFIX);
+		auto tps = Sensor::get(SensorType::Tps1);
+		updateTChargeK(rpm, tps.value_or(0) PASS_ENGINE_PARAMETER_SUFFIX);
 		float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		/**
@@ -207,15 +199,16 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		 */
 		if (CONFIG(useTPSBasedVeTable)) {
 			// todo: should we have 'veTpsMap' fuel_Map3D_t variable here?
-			currentRawVE = interpolate3d<float, float>(tps, CONFIG(ignitionTpsBins), IGN_TPS_COUNT, rpm, config->veRpmBins, FUEL_RPM_COUNT, veMap.pointers);
+			currentRawVE = interpolate3d<float, float>(tps.value_or(50), CONFIG(ignitionTpsBins), IGN_TPS_COUNT, rpm, config->veRpmBins, FUEL_RPM_COUNT, veMap.pointers);
 		} else {
 			currentRawVE = veMap.getValue(rpm, map);
 		}
+
 		// get VE from the separate table for Idle
-		if (CONFIG(useSeparateVeForIdle)) {
+		if (tps.Valid && CONFIG(useSeparateVeForIdle)) {
 			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe);
 			// interpolate between idle table and normal (running) table using TPS threshold
-			currentRawVE = interpolateClamped(0.0f, idleVe, CONFIG(idlePidDeactivationTpsThreshold), currentRawVE, tps);
+			currentRawVE = interpolateClamped(0.0f, idleVe, CONFIG(idlePidDeactivationTpsThreshold), currentRawVE, tps.Value);
 		}
 		currentBaroCorrectedVE = baroCorrection * currentRawVE * PERCENT_DIV;
 		targetAFR = afrMap.getValue(rpm, map);
@@ -227,7 +220,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL
-	float newTCharge = getTCharge(rpm, tps, getCoolantTemperature(), getIntakeAirTemperature() PASS_ENGINE_PARAMETER_SUFFIX);
+	float newTCharge = getTCharge(rpm, tps PASS_ENGINE_PARAMETER_SUFFIX);
 	// convert to microsecs and then to seconds
 	efitick_t curTime = getTimeNowNt();
 	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / 1000000.0f;
@@ -268,7 +261,7 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 
 void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (GET_RPM() == 0) {
-		bool isTpsAbove50 = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) >= 50;
+		bool isTpsAbove50 = Sensor::get(SensorType::DriverThrottleIntent).value_or(0) >= 50;
 
 		if (this->isTpsAbove50 != isTpsAbove50) {
 			setPumpsCounter(pumpsCounter + 1);

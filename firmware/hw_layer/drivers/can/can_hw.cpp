@@ -22,8 +22,7 @@
 #include "mpu_util.h"
 #include "engine.h"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
 static int canReadCounter = 0;
 static int canWriteOk = 0;
@@ -70,41 +69,6 @@ static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
 
-CANTxFrame txmsg;
-
-void setTxBit(int offset, int index) {
-	txmsg.data8[offset] = txmsg.data8[offset] | (1 << index);
-}
-
-void commonTxInit(int eid) {
-	memset(&txmsg, 0, sizeof(txmsg));
-	txmsg.IDE = CAN_IDE_STD;
-	txmsg.EID = eid;
-	txmsg.RTR = CAN_RTR_DATA;
-	txmsg.DLC = 8;
-}
-
-/**
- * send CAN message from txmsg buffer
- */
-void sendCanMessage(int size) {
-	CANDriver *device = detectCanDevice(CONFIG(canRxPin),
-			CONFIG(canTxPin));
-	if (device == NULL) {
-		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
-		return;
-	}
-	txmsg.DLC = size;
-
-	// 100 ms timeout
-	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, TIME_MS2I(100));
-	if (result == MSG_OK) {
-		canWriteOk++;
-	} else {
-		canWriteNotOk++;
-	}
-}
-
 class CanRead final : public ThreadController<256> {
 public:
 	CanRead()
@@ -113,7 +77,7 @@ public:
 	}
 
 	void ThreadTask() override {
-		CANDriver* device = detectCanDevice(CONFIG(canRxPin), CONFIG(canTxPin));
+		CANDriver* device = detectCanDevice(CONFIG_OVERRIDE(canRxPin), CONFIG_OVERRIDE(canTxPin));
 
 		if (!device) {
 			warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
@@ -131,7 +95,7 @@ public:
 			// Process the message
 			canReadCounter++;
 
-			processCanRxMessage(m_buffer, &logger);
+			processCanRxMessage(m_buffer, &logger, getTimeNowNt());
 		}
 	}
 
@@ -149,8 +113,12 @@ static void canInfo(void) {
 		return;
 	}
 
-	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIG(canTxPin)));
-	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIG(canRxPin)));
+#if EFI_CANBUS_SLAVE
+	scheduleMsg(&logger, "CAN SLAVE MODE");
+#endif
+
+	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
+	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));
 	scheduleMsg(&logger, "type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriodMs);
@@ -183,16 +151,16 @@ void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiSetPadMode("CAN TX", CONFIG(canTxPin), PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	efiSetPadMode("CAN RX", CONFIG(canRxPin), PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+	efiSetPadMode("CAN TX", CONFIG_OVERRIDE(canTxPin), PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	efiSetPadMode("CAN RX", CONFIG_OVERRIDE(canRxPin), PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
 void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
 	isCanEnabled = 
-		(CONFIG(canTxPin) != GPIO_UNASSIGNED) && // both pins are set...
-		(CONFIG(canRxPin) != GPIO_UNASSIGNED) &&
+		(CONFIG_OVERRIDE(canTxPin) != GPIO_UNASSIGNED) && // both pins are set...
+		(CONFIG_OVERRIDE(canRxPin) != GPIO_UNASSIGNED) &&
 		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
 
 	// nothing to do if we aren't enabled...
@@ -201,13 +169,13 @@ void initCan(void) {
 	}
 
 	// Validate pins
-	if (!isValidCanTxPin(CONFIG(canTxPin))) {
-		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG(canTxPin)));
+	if (!isValidCanTxPin(CONFIG_OVERRIDE(canTxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
 		return;
 	}
 
-	if (!isValidCanRxPin(CONFIG(canRxPin))) {
-		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG(canRxPin)));
+	if (!isValidCanRxPin(CONFIG_OVERRIDE(canRxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));
 		return;
 	}
 
@@ -222,8 +190,8 @@ void initCan(void) {
 
 	// Plumb CAN device to tx system
 	CanTxMessage::setDevice(detectCanDevice(
-		CONFIG(canRxPin),
-		CONFIG(canTxPin)
+		CONFIG_OVERRIDE(canRxPin),
+		CONFIG_OVERRIDE(canTxPin)
 	));
 
 	// fire up threads, as necessary

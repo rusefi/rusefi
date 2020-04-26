@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CONTROLLERS_ALGO_AUX_PID_H_
-#define CONTROLLERS_ALGO_AUX_PID_H_
+#pragma once
 
 #include "global.h"
 
@@ -14,4 +13,3 @@ void initAuxPid(Logging *sharedLogger);
 void startAuxPins(void);
 void stopAuxPins(void);
 
-#endif /* CONTROLLERS_ALGO_AUX_PID_H_ */

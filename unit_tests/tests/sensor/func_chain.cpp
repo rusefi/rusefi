@@ -4,19 +4,19 @@
 
 struct AddOne final : public SensorConverter {
     SensorResult convert(float input) const {
-        return {true, input + 1};
+        return input + 1;
     }
 };
 
 struct SubOne final : public SensorConverter {
     SensorResult convert(float input) const {
-        return {true, input - 1};
+        return input - 1;
     }
 };
 
 struct Doubler final : public SensorConverter {
     SensorResult convert(float input) const {
-        return {true, input * 2};
+        return input * 2;
     }
 };
 

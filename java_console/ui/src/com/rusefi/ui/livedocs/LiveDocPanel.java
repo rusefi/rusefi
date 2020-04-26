@@ -1,6 +1,7 @@
 package com.rusefi.ui.livedocs;
 
 import com.opensr5.ConfigurationImage;
+import com.rusefi.Launcher;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
@@ -8,8 +9,8 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ldmp.*;
 import com.rusefi.ldmp.generated.*;
-import com.rusefi.ui.config.DialogModel;
-import com.rusefi.ui.config.IniFileModel;
+import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.ui.livedocs.controls.Toolbox;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.DetachedSensor;
@@ -162,7 +163,7 @@ public class LiveDocPanel {
     }
 
     private static String getTooltipText(String configurationFieldName) {
-        DialogModel.Field dialogField = IniFileModel.getInstance().getField(configurationFieldName);
+        DialogModel.Field dialogField = IniFileModel.getInstance(Launcher.INI_FILE_PATH).getField(configurationFieldName);
         if (dialogField == null) {
             return "Configuration " + configurationFieldName;
         }
@@ -223,7 +224,8 @@ public class LiveDocPanel {
 
         liveDocs.add(createPanel("Idle", IdleThreadMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(createPanel("ETB", ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
+        // todo: restore this functionality
+        // liveDocs.add(createPanel("ETB", ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }
@@ -237,7 +239,11 @@ public class LiveDocPanel {
         liveDocs.add(createPanel("Intake Air Sensor", ThermistorsMeta.CONTENT, "IAT", Fields.LDS_IAT_STATE_INDEX
         ), CONSTRAINTS);
 
+/*
+        One day we shall have this back
         liveDocs.add(createPanel("Throttle Position Sensor", TpsMeta.TPS_SECTION), CONSTRAINTS);
+
+ */
 
         liveDocs.add(createPanel("Trigger", TriggerDecoderMeta.CONTENT), CONSTRAINTS);
 

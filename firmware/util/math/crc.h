@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef CRC_H_
-#define CRC_H_
+#pragma once
 
 #include "stdint.h"
 
@@ -23,5 +22,3 @@ uint32_t crc32inc(const void *buf, uint32_t crc, uint32_t size);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-#endif /* CRC_H_ */

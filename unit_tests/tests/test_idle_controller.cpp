@@ -14,6 +14,7 @@
 #include "allsensors.h"
 #include "engine_controller.h"
 #include "electronic_throttle.h"
+#include "sensor.h"
 
 extern IdleController idleControllerInstance;
 extern int timeNowUs;
@@ -50,8 +51,6 @@ TEST(idle, fsioPidParameters) {
 
 // see also util.pid test
 TEST(idle, timingPid) {
-	print("******************************************* testTimingPidController\r\n");
-
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// set PID settings
@@ -69,9 +68,9 @@ TEST(idle, timingPid) {
 	engineConfiguration->idleTimingPidWorkZone = 100;
 	engineConfiguration->idlePidFalloffDeltaRpm = 30;
 
-	// setup target rpm curve (we need only 1 value when CLT sensor is disabled)
+	// setup target rpm curve
 	const int idleRpmTarget = 700;
-	engineConfiguration->cltIdleRpm[0] = idleRpmTarget;
+	setArrayValues<float>(engineConfiguration->cltIdleRpm, idleRpmTarget);
 	
 	// setup other settings
 	engineConfiguration->idleTimingPid = pidS;
@@ -80,14 +79,8 @@ TEST(idle, timingPid) {
 	eth.engine.engineState.cltTimingCorrection = 0;
 
 	// configure TPS
-	engineConfiguration->tpsMin = 0;
-	engineConfiguration->tpsMax = 100;
 	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
-	setMockTpsAdc(0 PASS_ENGINE_PARAMETER_SUFFIX);
-
-	// disable temperature sensors
-	eth.engine.sensors.clt = NAN;
-	eth.engine.sensors.iat = NAN;
+	Sensor::setMockValue(SensorType::Tps1, 0);
 
 	// all corrections disabled, should be 0
 	engineConfiguration->useIdleTimingPidControl = false;
@@ -117,12 +110,12 @@ TEST(idle, timingPid) {
 	ASSERT_FLOAT_EQ(-5.75f, corr) << "getAdvanceCorrections#5";
 
 	// check if PID correction is disabled in running mode (tps > threshold):
-	setMockTpsAdc(engineConfiguration->idlePidDeactivationTpsThreshold + 1 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::Tps1, engineConfiguration->idlePidDeactivationTpsThreshold + 1);
 	corr = getAdvanceCorrections(idleRpmTarget PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(0, corr) << "getAdvanceCorrections#6";
 
 	// check if PID correction is interpolated for transient idle-running TPS positions
-	setMockTpsAdc(engineConfiguration->idlePidDeactivationTpsThreshold / 2 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::Tps1, engineConfiguration->idlePidDeactivationTpsThreshold / 2);
 	corr = getAdvanceCorrections(baseTestRpm PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_FLOAT_EQ(-5.0f, corr) << "getAdvanceCorrections#7";
 

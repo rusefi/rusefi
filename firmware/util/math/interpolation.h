@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef INTERPOLATION_3D_H_
-#define INTERPOLATION_3D_H_
+#pragma once
 
 #include <math.h>
 #include "datalogging.h"
@@ -133,10 +132,10 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 #endif /* DEBUG_INTERPOLATION */
 		if (yIndex == yBinSize - 1)
 			return map[0][yIndex];
-		kType keyMin = yBin[yIndex];
-		kType keyMax = yBin[yIndex + 1];
-		vType rpmMinValue = map[0][yIndex];
-		vType rpmMaxValue = map[0][yIndex + 1];
+		float keyMin = yBin[yIndex];
+		float keyMax = yBin[yIndex + 1];
+		float rpmMinValue = map[0][yIndex];
+		float rpmMaxValue = map[0][yIndex + 1];
 
 		return interpolateMsg("3d", keyMin, rpmMinValue, keyMax, rpmMaxValue, y);
 	}
@@ -148,10 +147,10 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 #endif /* DEBUG_INTERPOLATION */
 		if (xIndex == xBinSize - 1)
 			return map[xIndex][0];
-		kType key1 = xBin[xIndex];
-		kType key2 = xBin[xIndex + 1];
-		vType value1 = map[xIndex][0];
-		vType value2 = map[xIndex + 1][0];
+		float key1 = xBin[xIndex];
+		float key2 = xBin[xIndex + 1];
+		float value1 = map[xIndex][0];
+		float value2 = map[xIndex + 1][0];
 
 		return interpolateMsg("out3d", key1, value1, key2, value2, x);
 	}
@@ -171,10 +170,10 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 #endif /* DEBUG_INTERPOLATION */
 		// here yIndex is less than yBinSize - 1, we've checked that condition already
 
-		kType key1 = yBin[yIndex];
-		kType key2 = yBin[yIndex + 1];
-		vType value1 = map[xIndex][yIndex];
-		vType value2 = map[xIndex][yIndex + 1];
+		float key1 = yBin[yIndex];
+		float key2 = yBin[yIndex + 1];
+		float value1 = map[xIndex][yIndex];
+		float value2 = map[xIndex][yIndex + 1];
 
 		return interpolateMsg("out3d", key1, value1, key2, value2, y);
 	}
@@ -186,10 +185,10 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 #endif /* DEBUG_INTERPOLATION */
 		// here xIndex is less than xBinSize - 1, we've checked that condition already
 
-		kType key1 = xBin[xIndex];
-		kType key2 = xBin[xIndex + 1];
-		vType value1 = map[xIndex][yIndex];
-		vType value2 = map[xIndex + 1][yIndex];
+		float key1 = xBin[xIndex];
+		float key2 = xBin[xIndex + 1];
+		float value1 = map[xIndex][yIndex];
+		float value2 = map[xIndex + 1][yIndex];
 
 		return interpolateMsg("out3d", key1, value1, key2, value2, x);
 	}
@@ -199,10 +198,10 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 	 */
 	int rpmMaxIndex = xIndex + 1;
 
-	kType xMin = xBin[xIndex];
-	kType xMax = xBin[xIndex + 1];
-	vType rpmMinKeyMinValue = map[xIndex][yIndex];
-	vType rpmMaxKeyMinValue = map[xIndex + 1][yIndex];
+	float xMin = xBin[xIndex];
+	float xMax = xBin[xIndex + 1];
+	float rpmMinKeyMinValue = map[xIndex][yIndex];
+	float rpmMaxKeyMinValue = map[xIndex + 1][yIndex];
 
 	float keyMinValue = interpolateMsg("", xMin, rpmMinKeyMinValue, xMax, rpmMaxKeyMinValue, x);
 
@@ -214,10 +213,10 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 #endif /* DEBUG_INTERPOLATION */
 
 	int keyMaxIndex = yIndex + 1;
-	kType keyMin = yBin[yIndex];
-	kType keyMax = yBin[keyMaxIndex];
-	vType rpmMinKeyMaxValue = map[xIndex][keyMaxIndex];
-	vType rpmMaxKeyMaxValue = map[rpmMaxIndex][keyMaxIndex];
+	float keyMin = yBin[yIndex];
+	float keyMax = yBin[keyMaxIndex];
+	float rpmMinKeyMaxValue = map[xIndex][keyMaxIndex];
+	float rpmMaxKeyMaxValue = map[rpmMaxIndex][keyMaxIndex];
 
 	float keyMaxValue = interpolateMsg("3d", xMin, rpmMinKeyMaxValue, xMax, rpmMaxKeyMaxValue, x);
 
@@ -225,11 +224,14 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 	if (needInterpolationLogging()) {
 		printf("key=%.2f:\r\nrange %.2f - %.2f\r\n", y, keyMin, keyMax);
 		printf("key interpolation range %.2f   %.2f result %.2f\r\n", rpmMinKeyMaxValue, rpmMaxKeyMaxValue, keyMaxValue);
+
+		printf("%f", rpmMinKeyMaxValue);
+		printf("%f", rpmMaxKeyMaxValue);
+		printf("%f", keyMaxValue);
 	}
 #endif /* DEBUG_INTERPOLATION */
 
-	float result = interpolateMsg("3d", keyMin, keyMinValue, keyMax, keyMaxValue, y);
-	return result;
+	return interpolateMsg("3d", keyMin, keyMinValue, keyMax, keyMaxValue, y);
 }
 void setCurveValue(float bins[], float values[], int size, float key, float value);
 void initInterpolation(Logging *sharedLogger);
@@ -243,5 +245,3 @@ public:
 private:
 	float a, b;
 };
-
-#endif /* INTERPOLATION_3D_H_ */

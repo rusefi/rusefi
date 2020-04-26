@@ -17,8 +17,8 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-// for now I want most enums to be 32 bit integers. At some point maybe we will make the one-byte
-// this is about offsets and sizes in TunerStudio
+// Back in the day we wanted enums to be 32 bit integers.
+// as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
 #define ENUM_32_BITS 2000000000
 
 typedef enum {
@@ -1086,6 +1086,7 @@ typedef enum {
 	//P2155 Fuel Injector Group D Supply Voltage Circ/Open
 	//P2156 Fuel Injector Group D Supply Voltage Circ Low
 	//P2157 Fuel Injector Group D Supply Voltage Circ High
+	OBD_Vehicle_Speed_SensorB = 2158,
 	//P2158 Vehicle Speed SensorB
 	//P2159 Vehicle Speed SensorB Range/Perf
 	//P2160 Vehicle Speed SensorB Circ Low
@@ -1727,7 +1728,7 @@ typedef enum {
 	CUSTOM_OBD_6040 = 6040,
 	CUSTOM_OBD_KNOCK_PROCESSOR = 6041,
 	CUSTOM_OBD_LOCAL_FREEZE = 6042,
-	CUSTOM_OBD_MMC_ERROR = 6043,
+	CUSTOM_6043 = 6043,
 	CUSTOM_LOGGING_BUFFER_OVERFLOW = 6044,
 	/**
 	 * This is not engine miss detection - this is only internal scheduler state validation
@@ -1871,7 +1872,7 @@ typedef enum {
 	CUSTOM_ERR_UNEXPECTED_SPI = 6524,
 	CUSTOM_ERR_EXT_MODE = 6525,
 	CUSTOM_ERR_TIMER_OVERFLOW = 6526,
-	CUSTOM_ERR_NULL_TIMER_CALLBACK = 6527,
+	CUSTOM_ERR_6527 = 6527,
 	CUSTOM_ERR_SCHEDULING_ERROR = 6528,
 	CUSTOM_ERR_LOGGING_NOT_READY = 6529,
 	ERROR_NAN_FIND_INDEX = 6530,
@@ -2040,7 +2041,7 @@ typedef enum {
 	CUSTOM_ERR_6679 = 6679,
 
 	CUSTOM_ERR_6680 = 6680,
-	CUSTOM_ERR_6681 = 6681,
+	CUSTOM_DELTA_NOT_POSITIVE = 6681,
 	CUSTOM_ERR_6682 = 6682,
 	CUSTOM_SAME_TWICE = 6683,
 	CUSTOM_ERR_6684 = 6684,
@@ -2073,7 +2074,7 @@ typedef enum {
 	CUSTOM_ERR_TIMER_TEST_CALLBACK_WRONG_TIME = 6708,
 	CUSTOM_ERR_6709 = 6709,
 	CUSTOM_DUTY_INVALID = 6710,
-	CUSTOM_DUTY_TOO_HIGH = 6711,
+	CUSTOM_PWM_DUTY_TOO_HIGH = 6711,
 	CUSTOM_ERR_PWM_STATE_ASSERT = 6712,
 	CUSTOM_ERR_PWM_CALLBACK_ASSERT = 6713,
 	CUSTOM_ERR_PWM_SWITCH_ASSERT = 6714,
@@ -2082,7 +2083,7 @@ typedef enum {
 	CUSTOM_INVALID_ADC = 6720,
 	CUSTOM_INVALID_MODE_SETTING = 6721,
 	CUSTOM_ERR_TASK_TIMER_OVERFLOW = 6722,
-	CUSTOM_ERR_6723 = 6723,
+	CUSTOM_NO_ETB_FOR_IDLE = 6723,
 	CUSTOM_ERR_6724 = 6724,
 	CUSTOM_ERR_6725 = 6725,
 	CUSTOM_ERR_6726 = 6726,
@@ -2090,6 +2091,11 @@ typedef enum {
 	CUSTOM_ERR_6728 = 6728,
 	CUSTOM_ERR_6729 = 6729,
 
+
+	// 8000-8050 logging errors
+	CUSTOM_OBD_MMC_ERROR = 8000,
+
+	// 8000-8050 logging errors
 
 	CUSTOM_ERR_TRIGGER_SYNC = 9000,
 	CUSTOM_OBD_TRIGGER_WAVEFORM = 9001,
@@ -2107,6 +2113,8 @@ typedef enum {
 	 * Commanded fuel exceeds your fuel injector flow
 	 */
 	CUSTOM_TOO_LONG_FUEL_INJECTION = 9013,
+
+
 
 
 	// this is needed for proper enum size, this matters for malfunction_central

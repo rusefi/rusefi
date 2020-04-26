@@ -29,7 +29,7 @@ EXTERN_ENGINE;
 // conversions between wall clock and hardware frequencies are done right
 // delay in milliseconds
 #define TEST_CALLBACK_DELAY 30
-// if hardware timer is 20% off we throw a fatal error and call it a day
+// if hardware timer is 20% off we throw a critical error and call it a day
 // maybe this threshold should be 5%? 10%?
 #define TIMER_PRECISION_THRESHOLD 0.2
 
@@ -46,12 +46,10 @@ uint32_t maxPrecisionCallbackDuration = 0;
 
 static volatile efitick_t lastSetTimerTimeNt;
 static int lastSetTimerValue;
-static volatile bool isTimerPending = FALSE;
+static volatile bool isTimerPending = false;
 
 static volatile int timerCallbackCounter = 0;
 static volatile int timerRestartCounter = 0;
-
-schfunc_t globalTimerCallback;
 
 static const char * msg;
 
@@ -61,14 +59,11 @@ static int timerFreezeCounter = 0;
 static volatile int setHwTimerCounter = 0;
 static volatile bool hwStarted = false;
 
-extern bool hasFirmwareErrorFlag;
-
 /**
  * sets the alarm to the specified number of microseconds from now.
  * This function should be invoked under kernel lock which would disable interrupts.
  */
 void setHardwareUsTimer(int32_t deltaTimeUs) {
-	enginePins.debugSetTimer.setValue(1);
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwStarted, "HW.started");
 	setHwTimerCounter++;
 	/**
@@ -81,11 +76,10 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 	}
 	if (deltaTimeUs < 2)
 		deltaTimeUs = 2; // for some reason '1' does not really work
-	efiAssertVoid(CUSTOM_ERR_6681, deltaTimeUs > 0, "not positive deltaTimeUs");
+	efiAssertVoid(CUSTOM_DELTA_NOT_POSITIVE, deltaTimeUs > 0, "not positive deltaTimeUs");
 	if (deltaTimeUs >= TOO_FAR_INTO_FUTURE_US) {
 		// we are trying to set callback for too far into the future. This does not look right at all
 		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too far: %d", deltaTimeUs);
-		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
 	}
 
@@ -94,39 +88,32 @@ void setHardwareUsTimer(int32_t deltaTimeUs) {
 	}
 	if (GPTDEVICE.state != GPT_READY) {
 		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d/%d", GPTDEVICE.state, setHwTimerCounter);
-		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
 	}
 	if (hasFirmwareError()) {
-		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
 	}
 	gptStartOneShotI(&GPTDEVICE, deltaTimeUs);
 
 	lastSetTimerTimeNt = getTimeNowNt();
 	lastSetTimerValue = deltaTimeUs;
-	isTimerPending = TRUE;
+	isTimerPending = true;
 	timerRestartCounter++;
-	enginePins.debugSetTimer.setValue(0);
 }
+
+void globalTimerCallback();
 
 static void hwTimerCallback(GPTDriver *gptp) {
 	(void)gptp;
-	enginePins.debugTimerCallback.setValue(1);
 	timerCallbackCounter++;
-	if (globalTimerCallback == NULL) {
-		firmwareError(CUSTOM_ERR_NULL_TIMER_CALLBACK, "NULL globalTimerCallback");
-		return;
-	}
 	isTimerPending = false;
 
 	uint32_t before = getTimeNowLowerNt();
-	globalTimerCallback(NULL);
+	globalTimerCallback();
 	uint32_t precisionCallbackDuration = getTimeNowLowerNt() - before;
 	if (precisionCallbackDuration > maxPrecisionCallbackDuration) {
 		maxPrecisionCallbackDuration = precisionCallbackDuration;
 	}
-	enginePins.debugTimerCallback.setValue(0);
 }
 
 class MicrosecondTimerWatchdogController : public PeriodicTimerController {
@@ -205,7 +192,6 @@ static void validateHardwareTimer() {
 }
 
 void initMicrosecondTimer(void) {
-
 	gptStart(&GPTDEVICE, &gpt5cfg);
 	efiAssertVoid(CUSTOM_ERR_TIMER_STATE, GPTDEVICE.state == GPT_READY, "hw state");
 	hwStarted = true;

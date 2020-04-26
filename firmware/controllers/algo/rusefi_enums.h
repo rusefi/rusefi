@@ -196,6 +196,7 @@ typedef enum {
 	TEST_33816 = 103,
 
 	BMW_M73_MRE = 104,
+	BMW_M73_MRE_SLAVE = 105,
 
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
@@ -208,6 +209,9 @@ typedef enum {
 	TT_TOOTHED_WHEEL = 0,
 	TT_FORD_ASPIRE = 1,
 	TT_DODGE_NEON_1995 = 2,
+	/**
+	 * https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger#Mazda_Miata_NA
+	 */
 	TT_MAZDA_MIATA_NA = 3,
 	/**
 	 * NB1 means non-VVT NB, 99 and 00 1.8 engine
@@ -246,6 +250,9 @@ typedef enum {
 	TT_ONE = 18,
 
 	TT_DODGE_RAM = 19,
+	/**
+	 * It looks like this is the VR shape if you have your wires flipped
+	 */
 	TT_60_2_VW = 20,
 
 	TT_HONDA_1_24 = 21,
@@ -323,13 +330,24 @@ typedef enum {
 	 */
 	TT_MIATA_NB2_VVT_CAM = 43,
 
+	TT_RENIX_44_2_2 = 44,
+
+	/**
+	 * Same as TT_RENIX_44_2_2 but repeated three times, not two.
+	 */
+	TT_RENIX_66_2_2_2 = 45,
+
+	TT_HONDA_K_12_1 = 46,
+
+	TT_BOSCH_QUICK_START = 47,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 44, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 48, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -414,6 +432,15 @@ typedef enum {
 
 } display_mode_e;
 
+typedef enum  __attribute__ ((__packed__)){
+	TL_AUTO = 0,
+	TL_SEMI_AUTO = 1,
+	TL_MANUAL = 2,
+	TL_HALL = 3,
+
+} tle8888_mode_e;
+
+
 typedef enum {
 	LF_NATIVE = 0,
 	/**
@@ -484,8 +511,14 @@ typedef enum {
 
 	/**
 	 * 720 degree engine cycle but trigger is defined using a 180 cycle which is when repeated three more times
+	 * In other words, same pattern is repeatet on the crank wheel twice.
 	 */
 	FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR = 4,
+
+	/**
+	 * Same pattern repeated three times on crank wheel. Crazy, I know!
+	 */
+	FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5,
 
 	Force_4_bytes_size_operation_mode_e = ENUM_32_BITS,
 } operation_mode_e;
@@ -575,6 +608,12 @@ typedef enum __attribute__ ((__packed__)) {
 } spi_device_e;
 
 typedef enum {
+	BMW_e46 = 0,
+	W202 = 1,
+	Force_4_bytes_size_can_vss_nbc_e = ENUM_32_BITS,
+} can_vss_nbc_e;
+
+typedef enum {
 	MS_AUTO = 0,
 	MS_ALWAYS = 1,
 	MS_NEVER = 2,
@@ -634,7 +673,7 @@ typedef enum {
 	DBG_SD_CARD = 13,
 	DBG_SR5_PROTOCOL = 14,
 	DBG_KNOCK = 15,
-	DBG_TRIGGER_SYNC = 16,
+	DBG_16 = 16,
 	/**
 	 * See also DBG_ELECTRONIC_THROTTLE_EXTRA
 	 */
@@ -666,10 +705,13 @@ typedef enum {
 	 */
 	DBG_ANALOG_INPUTS2 = 32,
 	DBG_DWELL_METRIC = 33,
-	DBG_AUX_TEMPERATURE = 34,
+	DBG_34 = 34,
 	DBG_ETB_LOGIC = 35,
 	DBG_BOOST = 36,
-	DBG_37 = 37,
+	DBG_START_STOP = 37,
+	DBG_LAUNCH = 38,
+	DBG_ETB_AUTOTUNE = 39,
+	DBG_40 = 40,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
@@ -713,14 +755,6 @@ typedef enum {
 	
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
-
-typedef enum {
-	CD_OFF = 0,
-	CD_USE_CAN1 = 1,
-	CD_USE_CAN2 = 2,
-
-	Internal_ForceMyEnumIntSize_can_device_mode = ENUM_32_BITS,
-} can_device_mode_e;
 
 typedef enum {
 	SC_OFF = 0,
@@ -780,10 +814,12 @@ typedef enum {
  * Net Body Computer types
  */
 typedef enum {
-	CAN_BUS_NBC_BMW = 0,
+	CAN_BUS_NBC_NONE = 0,
 	CAN_BUS_NBC_FIAT = 1,
 	CAN_BUS_NBC_VAG = 2,
 	CAN_BUS_MAZDA_RX8 = 3,
+	CAN_BUS_NBC_BMW = 4,
+	CAN_BUS_W202_C180 = 5,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
@@ -870,3 +906,15 @@ typedef enum {
 	ALWAYS_ON_ANTILAG = 1,
 	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
 } antiLagActivationMode_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	GPPWM_Tps = 0,
+	GPPWM_Map = 1,
+	GPPWM_Clt = 2,
+	GPPWM_Iat = 3,
+} gppwm_channel_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	GPPWM_GreaterThan = 0,
+	GPPWM_LessThan = 1,
+} gppwm_compare_mode_e;

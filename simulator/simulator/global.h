@@ -28,7 +28,7 @@
 
 #define EFI_UNIT_TEST FALSE
 
-#define hasFatalError() (FALSE)
+#define hasOsPanicError() (FALSE)
 
 #define US_TO_NT_MULTIPLIER 100
 
@@ -47,6 +47,7 @@
 #define DL_OUTPUT_BUFFER 9000
 
 #define CCM_OPTIONAL
+#define NO_CACHE
 
 #define EFI_CUSTOM_PANIC_METHOD 1
 

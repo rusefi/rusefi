@@ -29,6 +29,7 @@ java -DSystemOut.name=gen_config_board ^
 java -DSystemOut.name=gen_config_board ^
  -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration\rusefi_config.txt ^
+ -tool gen_config.bat ^
  -ts_destination tunerstudio ^
  -ts_output_name rusefi_%BOARDNAME%.ini ^
  -prepend tunerstudio/%BOARDNAME%_prefix.txt ^

@@ -15,7 +15,7 @@
 #include "dc_motor.h"
 
 #include "efi_gpio.h"
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 
 EXTERN_ENGINE;
 
@@ -24,6 +24,7 @@ private:
 	OutputPin m_pinEnable;
 	OutputPin m_pinDir1;
 	OutputPin m_pinDir2;
+	OutputPin m_disablePin;
 
 	SimplePwm m_pwmEnable;
 	SimplePwm m_pwmDir1;
@@ -32,7 +33,7 @@ private:
 	SimplePwm etbPwmUp;
 
 public:
-	EtbHardware() : etbPwmUp("etbUp"), dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2) {}
+	EtbHardware() : etbPwmUp("etbUp"), dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2, &m_disablePin) {}
 
 	TwoPinDcMotor dcMotor;
 	
@@ -45,14 +46,17 @@ public:
 	void start(bool useTwoWires, 
 			brain_pin_e pinEnable,
 			// since we have pointer magic here we cannot simply have value parameter
-			const pin_output_mode_e *pinEnableMode,
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2,
+			brain_pin_e pinDisable,
 			ExecutorInterface* executor,
 			int frequency) {
 		dcMotor.setType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
 
-		m_pinEnable.initPin("ETB Enable", pinEnable, pinEnableMode);
+		// Configure the disable pin first - ensure things are in a safe state
+		m_disablePin.initPin("ETB Disable", pinDisable);
+
+		m_pinEnable.initPin("ETB Enable", pinEnable);
 		m_pinDir1.initPin("ETB Dir 1", pinDir1);
 		m_pinDir2.initPin("ETB Dir 2", pinDir2);
 
@@ -65,24 +69,21 @@ public:
 			executor,
 			&m_pinEnable,
 			clampedFrequency,
-			0,
-			(pwm_gen_callback*)applyPinState
+			0
 		);
 
 		startSimplePwm(&m_pwmDir1, "ETB Dir 1",
 			executor,
 			&m_pinDir1,
 			clampedFrequency,
-			0,
-			(pwm_gen_callback*)applyPinState
+			0
 		);
 
 		startSimplePwm(&m_pwmDir2, "ETB Dir 2",
 			executor,
 			&m_pinDir2,
 			clampedFrequency,
-			0,
-			(pwm_gen_callback*)applyPinState
+			0
 		);
 #endif /* EFI_UNIT_TEST */
 	}
@@ -95,13 +96,12 @@ DcMotor* initDcMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX)
 	const auto& io = engineConfiguration->etbIo[index];
 	auto& hw = etbHardware[index];
 
-	// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
 	hw.start(
 		CONFIG(etb_use_two_wires),
 		io.controlPin1,
-		&io.controlPinMode,
 		io.directionPin1,
 		io.directionPin2,
+		io.disablePin,
 		&ENGINE(executor),
 		CONFIG(etbFreq)
 	);

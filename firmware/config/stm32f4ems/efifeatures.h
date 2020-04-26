@@ -12,6 +12,9 @@
 #define EFI_GPIO_HARDWARE TRUE
 
 #define EFI_BOOST_CONTROL TRUE
+
+#define EFI_LAUNCH_CONTROL FALSE
+
 #define EFI_FSIO TRUE
 
 #ifndef EFI_CDM_INTEGRATION
@@ -142,12 +145,6 @@
 #ifndef BOARD_TLE8888_COUNT
 #define BOARD_TLE8888_COUNT 	1
 #endif
-
-// todo: move this outside of efifeatures.h
-#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
-
-// todo: move this outside of efifeatures.h
-#define BOARD_EXT_PINREPOPINS 24
 
 #define EFI_ANALOG_SENSORS TRUE
 
@@ -287,10 +284,8 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for slow ADC?
-// https://github.com/rusefi/rusefi/issues/630
 // todo: switch to continues ADC conversion for fast ADC?
-#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
+#define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5
 

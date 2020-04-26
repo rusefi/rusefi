@@ -26,8 +26,14 @@ public:
 		// check for NaN
 		bool valid = !(result != result);
 
-		return {valid, result};
+		if (!valid) {
+			return unexpected;
+		}
+
+		return result;
 	}
+
+	void showInfo(Logging* logger, const char* sensorName) const override {}
 
 private:
 	float (*m_func)();

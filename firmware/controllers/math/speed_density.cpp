@@ -16,6 +16,7 @@
 #include "maf2map.h"
 #include "config_engine_specs.h"
 #include "perf_trace.h"
+#include "sensor.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -35,11 +36,27 @@ baroCorr_Map3D_t baroCorrMap("baro");
 #define tpMax 100
 //  http://rusefi.com/math/t_charge.html
 /***panel:Charge Temperature*/
-temperature_t getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (cisnan(coolantTemp) || cisnan(airTemp)) {
-		warning(CUSTOM_ERR_NAN_TCHARGE, "t-getTCharge NaN");
-		return coolantTemp;
+temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	const auto clt = Sensor::get(SensorType::Clt);
+	const auto iat = Sensor::get(SensorType::Iat);
+
+	float airTemp = 0;
+
+	// Without either valid, return 0C.  It's wrong, but it'll pretend to be nice and dense, so at least you won't go lean.
+	if (!iat && !clt) {
+		return 0;
+	} else if (!clt && iat) {
+		// Intake temperature will almost always be colder (richer) than CLT - use that
+		return airTemp;
+	} else if (!iat && clt) {
+		// Without valid intake temperature, assume intake temp is 0C, and interpolate anyway
+		airTemp = 0;
+	} else {
+		// All is well - use real air temp
+		airTemp = iat.Value;
 	}
+
+	float coolantTemp = clt.Value;
 
 	DISPLAY_STATE(Engine)
 

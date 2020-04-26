@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -49,6 +50,46 @@ public class ConfigFieldParserTest {
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
 
         assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
+    }
+
+    @Test
+    public void multiplicationInDefine() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ERROR_BUFFER_SIZE 120\n" +
+                "#define ERROR_BUFFER_COUNT 120\n" +
+                "#define RESULT @@ERROR_BUFFER_SIZE@@*@@ERROR_BUFFER_COUNT@@\n" +
+                "\tint16_t periodMs;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n" +
+                "";
+
+        VariableRegistry.INSTANCE.clear();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+        new ReaderState().readBufferedReader(reader, Collections.emptyList());
+
+        assertEquals("#define ERROR_BUFFER_COUNT 120\n" +
+                "#define ERROR_BUFFER_SIZE 120\n" +
+                "#define RESULT 14400\n", VariableRegistry.INSTANCE.getDefinesSection());
+    }
+
+    @Test
+    public void useCustomType() throws IOException {
+        ReaderState state = new ReaderState();
+        String test = "struct pid_s\n" +
+                "#define ERROR_BUFFER_SIZE 120\n" +
+                "\tcustom critical_error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@\n" +
+                "\tcritical_error_message_t var;\n" +
+                "\tint16_t periodMs;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n" +
+                "";
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+
+        assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, FieldType.INT);\n" +
+                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16);\n",
+                javaFieldsConsumer.getJavaFieldsWriter());
+
     }
 
     @Test

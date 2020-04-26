@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "test_interpolation_3d.h"
 #include <stdlib.h>
 
 #include "interpolation.h"

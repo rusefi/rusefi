@@ -9,8 +9,7 @@
 
 #include "../../stm32f4ems/efifeatures.h"
 
-#ifndef EFIFEATURES_PROMETHEUS_H_
-#define EFIFEATURES_PROMETHEUS_H_
+#pragma once
 
 #undef EFI_RTC
 #define EFI_RTC FALSE
@@ -68,9 +67,6 @@
 #define BOARD_TLE8888_COUNT 	0
 #endif
 
-// todo: move this outside of efifeatures.h
-#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
-
 
 #undef EFI_CONSOLE_TX_PORT
 #define EFI_CONSOLE_TX_PORT GPIOA
@@ -115,4 +111,3 @@
 
 #define EFI_NARROW_EGO_AVERAGING TRUE
 
-#endif /* EFIFEATURES_PROMETHEUS_H_ */

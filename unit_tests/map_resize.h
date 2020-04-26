@@ -5,9 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef MAP_RESIZE_H_
-#define MAP_RESIZE_H_
+#pragma once
 
 void resizeMap(void);
-
-#endif /* MAP_RESIZE_H_ */
