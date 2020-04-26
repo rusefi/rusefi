@@ -470,6 +470,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
      
      readOnly = warning_message
 
+
 [CurveEditor]
 ;	xAxis       =  leftValue, rightValue, step
 ;	yAxis       =  bottomValue, topValue, step
