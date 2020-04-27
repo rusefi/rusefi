@@ -268,5 +268,12 @@ typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_ERROR = 17,
 } adc_channel_e;
 
+typedef enum __attribute__ ((__packed__)) {
+	B100KBPS = 0, // 100kbps
+	B250KBPS = 1, // 250kbps
+	B500KBPS = 2, // 500kbps
+	B1MBPS = 3, // 1Mbps
+} can_baudrate_e;
+
 #define INCOMPATIBLE_CONFIG_CHANGE EFI_ADC_0
 

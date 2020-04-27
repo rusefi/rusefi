@@ -35,11 +35,13 @@ static LoggingWithStorage logger("CAN driver");
 // Clock rate of 42mhz for f4, 54mhz for f7
 #ifdef STM32F4XX
 // These have an 85.7% sample point
+#define CAN_BTR_100 (CAN_BTR_SJW(0) | CAN_BTR_BRP(29) | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
 #define CAN_BTR_250 (CAN_BTR_SJW(0) | CAN_BTR_BRP(11) | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
 #define CAN_BTR_500 (CAN_BTR_SJW(0) | CAN_BTR_BRP(5)  | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
 #define CAN_BTR_1k0 (CAN_BTR_SJW(0) | CAN_BTR_BRP(2)  | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
 #elif defined(STM32F7XX)
 // These have an 88.9% sample point
+#define CAN_BTR_100 (CAN_BTR_SJW(0) | CAN_BTR_BRP(30) | CAN_BTR_TS1(15) | CAN_BTR_TS2(2))
 #define CAN_BTR_250 (CAN_BTR_SJW(0) | CAN_BTR_BRP(11) | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #define CAN_BTR_500 (CAN_BTR_SJW(0) | CAN_BTR_BRP(5)  | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
 #define CAN_BTR_1k0 (CAN_BTR_SJW(0) | CAN_BTR_BRP(2)  | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
@@ -57,6 +59,10 @@ static LoggingWithStorage logger("CAN driver");
  * CAN_TI0R_STID "Standard Identifier or Extended Identifier"? not mentioned as well
  */
 
+static const CANConfig canConfig100 = {
+CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+CAN_BTR_100 };
+
 static const CANConfig canConfig250 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_250 };
@@ -68,6 +74,8 @@ CAN_BTR_500 };
 static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_1k0 };
+
+static const CANConfig *canConfig = &canConfig500;
 
 class CanRead final : public ThreadController<256> {
 public:
@@ -187,13 +195,30 @@ void initCan(void) {
 		return;
 	}
 
+	switch (CONFIG(canBaudRate)) {
+	case B100KBPS:
+		canConfig = &canConfig100;
+		break;
+	case B250KBPS:
+		canConfig = &canConfig250;
+		break;
+	case B500KBPS:
+		canConfig = &canConfig500;
+		break;
+	case B1MBPS:
+		canConfig = &canConfig1000;
+		break;
+	default:
+		break;
+	}
+
 	// Initialize hardware
 #if STM32_CAN_USE_CAN2
 	// CAN1 is required for CAN2
-	canStart(&CAND1, &canConfig500);
-	canStart(&CAND2, &canConfig500);
+	canStart(&CAND1, canConfig);
+	canStart(&CAND2, canConfig);
 #else
-	canStart(&CAND1, &canConfig500);
+	canStart(&CAND1, canConfig);
 #endif /* STM32_CAN_USE_CAN2 */
 
 	// Plumb CAN device to tx system
