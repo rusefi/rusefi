@@ -145,16 +145,6 @@ void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canReadEnabled = false;
 }
 
-void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	brain_pin_markUnused(activeConfiguration.canTxPin);
-	brain_pin_markUnused(activeConfiguration.canRxPin);
-}
-
-void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiSetPadMode("CAN TX", CONFIG_OVERRIDE(canTxPin), PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	efiSetPadMode("CAN RX", CONFIG_OVERRIDE(canRxPin), PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
-}
-
 void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
@@ -204,7 +194,9 @@ void initCan(void) {
 		canRead.Start();
 	}
 
-	startCanPins();
+	// Lastly wire up the pins
+	efiSetPadMode("CAN TX", CONFIG_OVERRIDE(canTxPin), PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	efiSetPadMode("CAN RX", CONFIG_OVERRIDE(canRxPin), PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
 #endif /* EFI_CAN_SUPPORT */

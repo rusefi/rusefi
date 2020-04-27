@@ -285,9 +285,6 @@ void applyNewHardwareSettings(void) {
        
 	enginePins.stopInjectionPins();
     enginePins.stopIgnitionPins();
-#if EFI_CAN_SUPPORT
-	stopCanPins();
-#endif /* EFI_CAN_SUPPORT */
 
 #if EFI_HIP_9011
 	stopHip9001_pins();
@@ -359,10 +356,6 @@ void applyNewHardwareSettings(void) {
 
 	enginePins.startInjectionPins();
 	enginePins.startIgnitionPins();
-
-#if EFI_CAN_SUPPORT
-	startCanPins();
-#endif /* EFI_CAN_SUPPORT */
 
 #if EFI_HIP_9011
 	startHip9001_pins();
