@@ -56,6 +56,8 @@ public:
 	// Used to inspect the internal PID controller's state
 	const pid_state_s* getPidState() const { return &m_pid; };
 
+	void autocal();
+
 private:
 	int m_myIndex = 0;
 	DcMotor *m_motor = nullptr;
@@ -74,6 +76,9 @@ private:
 	float m_maxCycleTps = 0;
 	float m_a = 0;
 	float m_tu = 0;
+
+	// Automatic calibration helpers
+	bool m_isAutocal = false;
 };
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -90,3 +95,5 @@ void setEtbOffset(int value);
 void setThrottleDutyCycle(percent_t level);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
+
+void etbAutocal();

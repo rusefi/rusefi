@@ -412,6 +412,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
      ; defaultValue = constantName, value;
     defaultValue = wueAfrTargetOffset, -1.5 -1.4 -1.15 -0.95 -0.775 -0.65 -0.5625 -0.5 -0.4375 -0.375 -0.3125 -0.25 -0.1875 -0.125 -0.0625 0
 
+	maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
+	maintainConstantValue = tpsMin, { (calibrationMode == 2 ) ? calibrationValue : tpsMin }
 
      requiresPowerCycle = warningLedPin
      requiresPowerCycle = runningLedPin
