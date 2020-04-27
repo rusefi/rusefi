@@ -358,6 +358,14 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 
 	(void) ckpSignalType;
 
+
+	if (engineConfiguration->vvtMode == MIATA_NB2 && engine->triggerCentral.vvtSyncTimeNt == 0) {
+		// this is a bit spaghetti code for sure
+		// do not spark & do not fuel until we have VVT sync. NB2 is a special case
+		// due to symmetrical crank wheel and we need to make sure no spark happens out of sync
+		return;
+	}
+
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.

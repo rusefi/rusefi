@@ -56,6 +56,8 @@ public:
 	 */
 	efitick_t timeAtVirtualZeroNt = 0;
 
+	efitick_t vvtSyncTimeNt = 0;
+
 	TriggerWaveform triggerShape;
 
 	efitick_t previousVvtCamTime = DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
