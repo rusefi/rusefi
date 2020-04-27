@@ -133,10 +133,6 @@ void EtbController::showStatus(Logging* logger) {
 	m_pid.showPidStatus(logger, "ETB");
 }
 
-int EtbController::getPeriodMs() {
-	return GET_PERIOD_LIMITED(&engineConfiguration->etb);
-}
-
 expected<percent_t> EtbController::observePlant() const {
 	return Sensor::get(indexToTpsSensor(m_myIndex));
 }
@@ -291,7 +287,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t act
 		return getClosedLoopAutotune(actualThrottlePosition);
 	} else {
 		// Normal case - use PID to compute closed loop part
-		return m_pid.getOutput(target, actualThrottlePosition);
+		return m_pid.getOutput(target, actualThrottlePosition, 1000.0f / ETB_LOOP_FREQUENCY);
 	}
 }
 
@@ -313,7 +309,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	}
 }
 
-void EtbController::PeriodicTask() {
+void EtbController::PeriodicTask(efitick_t nowNt) {
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #0
 	if (m_myIndex == 0) {
@@ -531,21 +527,21 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		}
 	}
 
-
-	engineConfiguration->throttlePedalUpVoltage = 0; // that's voltage, not ADC like with TPS
-	engineConfiguration->throttlePedalWOTVoltage = 6; // that's voltage, not ADC like with TPS
+	// voltage, not ADC like with TPS
+	engineConfiguration->throttlePedalUpVoltage = 0;
+	engineConfiguration->throttlePedalWOTVoltage = 5;
 
 	engineConfiguration->etb = {
 		1,		// Kp
 		10,		// Ki
 		0.05,	// Kd
 		0,		// offset
-		(1000 / DEFAULT_ETB_LOOP_FREQUENCY),
+		0,		// Update rate, unused
 		-100, 100 // min/max
 	};
 
-	engineConfiguration->etb_iTermMin = -300;
-	engineConfiguration->etb_iTermMax = 300;
+	engineConfiguration->etb_iTermMin = -30;
+	engineConfiguration->etb_iTermMax = 30;
 }
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
