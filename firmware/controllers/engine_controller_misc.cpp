@@ -28,6 +28,10 @@ void contextSwitchHook() {
 	perfEventInstantGlobal(PE::ContextSwitch);
 }
 
+#else
+void irqEnterHook(void) {}
+void irqExitHook(void) {}
+void contextSwitchHook() {}
 #endif /* ENABLE_PERF_TRACE */
 
 #if EFI_ENABLE_MOCK_ADC
