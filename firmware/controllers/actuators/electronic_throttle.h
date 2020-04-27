@@ -14,29 +14,27 @@
 #include "engine.h"
 #include "closed_loop_controller.h"
 #include "expected.h"
-#include "periodic_thread_controller.h"
 
 class DcMotor;
 class Logging;
 
-class IEtbController : public PeriodicController<256>, public ClosedLoopController<percent_t, percent_t> {
+class IEtbController : public ClosedLoopController<percent_t, percent_t> {
 public:
-	IEtbController() : PeriodicController("ETB", NORMALPRIO + 3, ETB_LOOP_FREQUENCY) {}
-
 	DECLARE_ENGINE_PTR;
 	virtual void init(DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
 	virtual void reset() = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
+	virtual void start() = 0;
 };
 
-class EtbController final : public IEtbController {
+class EtbController : public IEtbController {
 public:
 	void init(DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
 	void setIdlePosition(percent_t pos) override;
 	void reset() override;
+	void start() override {}
 
-	// PeriodicController implementation
-	void PeriodicTask(efitick_t nowNt) override;
+	void update(efitick_t nowNt);
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.

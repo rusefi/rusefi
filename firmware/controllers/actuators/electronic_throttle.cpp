@@ -309,7 +309,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	}
 }
 
-void EtbController::PeriodicTask(efitick_t nowNt) {
+void EtbController::update(efitick_t nowNt) {
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #0
 	if (m_myIndex == 0) {
@@ -343,7 +343,7 @@ void EtbController::PeriodicTask(efitick_t nowNt) {
 		m_pid.showPidStatus(&logger, "ETB");
 	}
 
-	update();
+	ClosedLoopController::update();
 
 	DISPLAY_STATE(Engine)
 	DISPLAY_TEXT(Electronic_Throttle);
@@ -386,8 +386,23 @@ void EtbController::PeriodicTask(efitick_t nowNt) {
 /* DISPLAY_ENDIF */
 }
 
+#if !EFI_UNIT_TEST
+#include "periodic_thread_controller.h"
+struct EtbImpl final : public EtbController, public PeriodicController<256> {
+	EtbImpl() : PeriodicController("ETB", NORMALPRIO + 3, ETB_LOOP_FREQUENCY) {}
+
+	void PeriodicTask(efitick_t nowNt) override {
+		EtbController::update(nowNt);
+	}
+
+	void start() override {
+		Start();
+	}
+};
+
 // real implementation (we mock for some unit tests)
-EtbController etbControllers[ETB_COUNT];
+EtbImpl etbControllers[ETB_COUNT];
+#endif
 
 static void showEthInfo(void) {
 #if EFI_PROD_CODE
@@ -547,9 +562,11 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
+#if !EFI_UNIT_TEST
 	for (int i = 0; i < ETB_COUNT; i++) {
 		etbControllers[i].onConfigurationChange(&previousConfiguration->etb);
 	}
+#endif
 }
 
 #if EFI_PROD_CODE && 0
@@ -646,7 +663,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		engine->etbControllers[i]->Start();
+		engine->etbControllers[i]->start();
 	}
 }
 
@@ -655,9 +672,11 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
+#if !EFI_UNIT_TEST
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &etbControllers[i];
 	}
+#endif
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
