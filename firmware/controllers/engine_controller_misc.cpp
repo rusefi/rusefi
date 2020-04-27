@@ -16,11 +16,11 @@ extern LoggingWithStorage sharedLogger;
 
 #if ENABLE_PERF_TRACE
 
-void irqEnterHook(void) {
+void irqEnterHook() {
 	perfEventBegin(PE::ISR);
 }
 
-void irqExitHook(void) {
+void irqExitHook() {
 	perfEventEnd(PE::ISR);
 }
 
@@ -28,6 +28,10 @@ void contextSwitchHook() {
 	perfEventInstantGlobal(PE::ContextSwitch);
 }
 
+#else
+void irqEnterHook() {}
+void irqExitHook() {}
+void contextSwitchHook() {}
 #endif /* ENABLE_PERF_TRACE */
 
 #if EFI_ENABLE_MOCK_ADC
