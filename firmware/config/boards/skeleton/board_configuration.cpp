@@ -69,8 +69,6 @@ static void setupTle9201Etb() {
 	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
 	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
 	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
-	// PWM frequency needs to be configured to match the physical part
-	engineConfiguration->etbFreq = 800;
 }
 
 // Configure key sensors inputs.
