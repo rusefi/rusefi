@@ -195,6 +195,9 @@ expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
 	return ff;
 }
 
+int n = 0;
+int q = 0;
+
 expected<percent_t> EtbController::getClosedLoopAutotune(percent_t actualThrottlePosition) {
 	// Estimate gain at 60% position - this should be well away from the spring and in the linear region
 	bool isPositive = actualThrottlePosition > 60.0f;
@@ -226,29 +229,55 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t actualThrottl
 
 		// Publish to TS state
 #if EFI_TUNER_STUDIO
+		// Amplitude of input (duty cycle %)
+		float b = 2 * autotuneAmplitude;
+
+		// Ultimate gain per A-H relay tuning rule
+		float ku = 4 * b / (3.14159f * m_a);
+
+		// The multipliers below are somewhere near the "no overshoot" 
+		// and "some overshoot" flavors of the Ziegler-Nichols method
+		// Kp
+		float kp = 0.35f * ku;
+		float ki = 0.25f * ku / m_tu;
+		float kd = 0.08f * ku * m_tu;
+
 		if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
 			// a - amplitude of output (TPS %)
-
 			tsOutputChannels.debugFloatField1 = m_a;
-			float b = 2 * autotuneAmplitude;
 			// b - amplitude of input (Duty cycle %)
 			tsOutputChannels.debugFloatField2 = b;
 			// Tu - oscillation period (seconds)
 			tsOutputChannels.debugFloatField3 = m_tu;
 
-			// Ultimate gain per A-H relay tuning rule
-			// Ku
-			float ku = 4 * b / (3.14159f * m_a);
 			tsOutputChannels.debugFloatField4 = ku;
+			tsOutputChannels.debugFloatField5 = kp;
+			tsOutputChannels.debugFloatField6 = ki;
+			tsOutputChannels.debugFloatField7 = kd;
 
-			// The multipliers below are somewhere near the "no overshoot" 
-			// and "some overshoot" flavors of the Ziegler-Nichols method
-			// Kp
-			tsOutputChannels.debugFloatField5 = 0.35f * ku;
-			// Ki
-			tsOutputChannels.debugFloatField6 = 0.25f * ku / m_tu;
-			// Kd
-			tsOutputChannels.debugFloatField7 = 0.08f * ku * m_tu;
+			if (n == 5) {
+				n = 0;
+				q++;
+
+				if (q == 3) q = 0;
+			}
+
+			n++;
+
+			// Multiplex 3 signals on to the {mode, value} format
+			tsOutputChannels.calibrationMode = static_cast<TsCalMode>(q + 3);
+
+			switch (q) {
+			case 0:
+				tsOutputChannels.calibrationValue = kp;
+				break;
+			case 1:
+				tsOutputChannels.calibrationValue = ki;
+				break;
+			case 2:
+				tsOutputChannels.calibrationValue = kd;
+				break;
+			}
 		}
 #endif
 	}
