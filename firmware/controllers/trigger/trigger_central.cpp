@@ -135,6 +135,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
 	if (cisnan(oneDegreeUs)) {
+		// todo: this code branch is slowing NB2 cranking since we require RPM sync for VVT sync!
+		// todo: smarter code
+		//
 		// we are here if we are getting VVT position signals while engine is not running
 		// for example if crank position sensor is broken :)
 		return;
@@ -166,6 +169,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		}
 	}
 
+	tc->vvtSyncTimeNt = nowNt;
 
 	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
 

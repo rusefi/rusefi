@@ -264,11 +264,18 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE */
 
+	efitick_t nowNt = getTimeNowNt();
+
+	if (nowNt - engine->triggerCentral.vvtSyncTimeNt >= NT_PER_SECOND) {
+		// loss of VVT sync
+		engine->triggerCentral.vvtSyncTimeNt = 0;
+	}
+
 
 	/**
 	 * Update engine RPM state if needed (check timeouts).
 	 */
-	bool isSpinning = engine->rpmCalculator.checkIfSpinning(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	bool isSpinning = engine->rpmCalculator.checkIfSpinning(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	if (!isSpinning) {
 		engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
@@ -746,6 +753,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200422;
+	return 20200426;
 }
 #endif /* EFI_UNIT_TEST */
