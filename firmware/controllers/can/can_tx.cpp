@@ -19,7 +19,7 @@
 EXTERN_ENGINE;
 
 CanWrite::CanWrite()
-	: PeriodicController("CAN TX", NORMALPRIO, 50)
+	: PeriodicController("CAN TX", NORMALPRIO, 10)
 {
 }
 
@@ -27,8 +27,8 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 	UNUSED(nowNt);
 
 	if (CONFIG(enableVerboseCanTx)) {
-		void sendCanVerbose();
-		sendCanVerbose();
+		//void sendCanVerbose();
+		//sendCanVerbose();
 	}
 
 	// Transmit dash data, if enabled
@@ -47,6 +47,9 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 		break;
 	case CAN_BUS_W202_C180:
 		canDashboardW202();
+		break;
+	case CAN_BUS_BMW_E90:
+		canDashboardBMWE90();
 		break;
 	default:
 		break;

@@ -12,3 +12,4 @@ void canDashboardFiat();
 void canDashboardVAG();
 void canMazdaRX8();
 void canDashboardW202();
+void canDashboardBMWE90();

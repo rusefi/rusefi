@@ -472,7 +472,7 @@ float fsio_visible fanOffTemperature;+Cooling fan turn-off temperature threshold
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
 
-custom can_nbc_e 4 bits, U32, @OFFSET@, [0:7], "None", "FIAT", "VAG" , "MAZDA RX8", "BMW"
+custom can_nbc_e 4 bits, U32, @OFFSET@, [0:7], "None", "FIAT", "VAG" , "MAZDA RX8", "BMW", "BMW E90"
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
@@ -653,8 +653,12 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	uint32_t tunerStudioSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
 
-	int anUnused4Bytes;
+	brain_pin_e can2TxPin;set_can2_tx_pin X
+	brain_pin_e can2RxPin;set_can2_rx_pin X
 	
+	brain_pin_e unused1
+	brain_pin_e unused2
+
 	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.\nSee also directSelfStimulation which is different.
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
 	output_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. See wboHeaterPin
@@ -924,8 +928,8 @@ bit etbCalibrationOnStart
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled;
 bit launchSmoothRetard;+Interpolates the Ignition Retard from 0 to 100% within the RPM Range
-bit unused_1484_bit_24
-bit unused_1484_bit_25
+bit can2ReadEnabled;enable can_read/disable can_read
+bit can2WriteEnabled;enable can_write/disable can_write
 bit unused_1484_bit_26
 bit unused_1484_bit_27
 bit unused_1484_bit_28
@@ -1056,8 +1060,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	debug_mode_e debugMode;+See http://rusefi.com/s/debugmode\n\nset debug_mode X
 
 	uint32_t auxSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
+	uint32_t can2BaudRate;;"BPs",      1,      0,       0,1000000,      0
+	can_nbc_e can2NbcType;set can_mode X
 
-	uint32_t[8] unused_former_warmup_target_afr;
+	uint32_t[6] unused_former_warmup_target_afr;
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
@@ -1519,3 +1525,4 @@ end_struct
 #define ts_show_tunerstudio_port true
 #define ts_show_trigger_comparator false
 #define ts_show_auxserial_pins true
+#define ts_show_can2_pins true

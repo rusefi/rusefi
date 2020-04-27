@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 19 21:16:42 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Tue Apr 21 22:16:25 PDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1283,9 +1283,23 @@ struct engine_configuration_s {
 	 */
 	uint32_t tunerStudioSerialSpeed;
 	/**
+	 * set_can2_tx_pin X
 	 * offset 732
 	 */
-	int anUnused4Bytes;
+	brain_pin_e can2TxPin;
+	/**
+	 * set_can2_rx_pin X
+	 * offset 733
+	 */
+	brain_pin_e can2RxPin;
+	/**
+	 * offset 734
+	 */
+	brain_pin_e unused1;
+	/**
+	 * offset 735
+	 */
+	brain_pin_e unused2;
 	/**
 	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
 	 * See also directSelfStimulation which is different.
@@ -1741,10 +1755,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_282_30 : 1;
+	bool unusedBit_285_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_282_31 : 1;
+	bool unusedBit_285_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2062,11 +2076,13 @@ struct engine_configuration_s {
 	offset 1476 bit 23 */
 	bool launchSmoothRetard : 1;
 	/**
+	 * enable can_read/disable can_read
 	offset 1476 bit 24 */
-	bool unused_1484_bit_24 : 1;
+	bool can2ReadEnabled : 1;
 	/**
+	 * enable can_write/disable can_write
 	offset 1476 bit 25 */
-	bool unused_1484_bit_25 : 1;
+	bool can2WriteEnabled : 1;
 	/**
 	offset 1476 bit 26 */
 	bool unused_1484_bit_26 : 1;
@@ -2453,7 +2469,16 @@ struct engine_configuration_s {
 	/**
 	 * offset 2100
 	 */
-	uint32_t unused_former_warmup_target_afr[8];
+	uint32_t can2BaudRate;
+	/**
+	 * set can_mode X
+	 * offset 2104
+	 */
+	can_nbc_e can2NbcType;
+	/**
+	 * offset 2108
+	 */
+	uint32_t unused_former_warmup_target_afr[6];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -3351,4 +3376,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 19 21:16:42 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Tue Apr 21 22:16:25 PDT 2020

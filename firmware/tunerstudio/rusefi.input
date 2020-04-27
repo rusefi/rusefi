@@ -1946,6 +1946,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "servo#5",								servoOutputPins5
 		field = "AUX Serial TX", 						auxSerialTxPin
 		field = "AUX Serial RX", 						auxSerialRxPin
+		field = "CAN 2 RX pin",							can2RxPin @@if_ts_show_can2_pins
+		field = "CAN 2 TX pin",							can2TxPin @@if_ts_show_can2_pins
 
 
 	dialog = allPins1_1_and_2, "", xAxis
@@ -2414,6 +2416,17 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "RX pin",								canRxPin @@if_ts_show_can_pins
 		field = "TX pin",								canTxPin @@if_ts_show_can_pins
 
+	dialog = canBus2, "CAN Bus 2"
+		field = "Can 2 Read Enabled",					can2ReadEnabled
+		field = "Can 2 Write Enabled",					can2WriteEnabled
+		field = "Can 2 Baud Rate",						can2BaudRate
+		field = "Can 2 Type",							can2NbcType
+		field = "Enable rusEfi CAN data",				enableVerboseCanTx
+		field = "rusEfi CAN data base address",			verboseCanBaseAddress
+		field = "Can Sleep Period",						canSleepPeriodMs
+		field = "RX pin",								can2RxPin @@if_ts_show_can2_pins
+		field = "TX pin",								can2TxPin @@if_ts_show_can2_pins
+
 	dialog = auxSerial, "AUX Serial"
 		field = "RX pin",								auxSerialRxPin @@if_ts_show_auxserial_pins
 		field = "TX pin",								auxSerialTxPin @@if_ts_show_auxserial_pins
@@ -2454,6 +2467,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort							@@if_ts_show_tunerstudio_port
 		panel = canBus
+		panel = canBus2
 		panel = auxSerial
 		panel = sdCard							@@if_ts_show_sd_card
 		panel = gpsReceiver                       @@if_ts_show_gps

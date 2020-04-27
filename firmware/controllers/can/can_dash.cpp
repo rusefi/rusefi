@@ -50,6 +50,16 @@ EXTERN_ENGINE;
 #define W202_ALIVE	0x210
 #define W202_STAT_3 0x310
 
+
+#define E90_T15	0x130
+
+int tick_50ms;
+uint8_t rpmcounter;
+uint16_t msgcounter;
+uint8_t counter0d7;
+uint8_t abscounter;
+uint8_t airbagcounter;
+
 void canDashboardBMW(void) {
 	//BMW Dashboard
 	{
@@ -203,4 +213,101 @@ void canDashboardW202(void) {
 		msg[7] = 0x05; // Const
 	}
 }
+
+void canDashboardBMWE90()
+{
+	// tick_50ms++;
+	uint16_t temprpm;
+	msgcounter++;
+
+	// if (!(tick_50ms % 2)) // send every 100ms
+	{
+		CanTxMessage msg(E90_T15, 5);
+		msg[0] = 0x45;
+		msg[1] = 0x42;
+		msg[2] = 0x69;
+		msg[3] = 0x8F;
+		msg[4] = 0xE2;
+	}
+
+	{
+		rpmcounter++;
+		if (rpmcounter > 0xFE)
+			rpmcounter = 0xF0;
+
+		temprpm = GET_RPM() * 4;
+
+		CanTxMessage msg(0x175, 3);
+		msg[0] = rpmcounter;
+		msg[1] = temprpm & 0xFF;
+		msg[2] = temprpm >> 8;
+	}
+
+	{
+		if (msgcounter % 2)
+		{
+			counter0d7++;
+			if (counter0d7 > 0xFE)
+				counter0d7 = 0x00;
+
+			CanTxMessage msg(0x0D7, 2);
+			msg[0] = counter0d7;
+			msg[1] = 0xFF;
+		}
+	}
+
+	{
+		if (msgcounter % 2)
+		{
+			CanTxMessage msg(0x19E, 8);
+			msg[0] = 0x00;
+			msg[1] = 0xE0;
+			msg[2] = 0xB3;
+			msg[3] = 0xFC;
+			msg[4] = 0xF0;
+			msg[5] = 0x43;
+			msg[6] = 0x00;
+			msg[7] = 0x65;
+		}
+	}
+
+	{
+		if (msgcounter % 2)
+		{
+			abscounter++;
+			if (abscounter > 0xFE)
+				abscounter = 0xF0;
+
+			CanTxMessage msg(0x0C0, 2);
+			msg[0] = abscounter;
+			msg[1] = 0xFF;
+		}
+	}
+
+	{
+		if (msgcounter % 2)
+		{
+			CanTxMessage msg(0x349, 5); //fuel gauge
+			msg[0] = 0x76;
+			msg[1] = 0x0F;
+			msg[2] = 0xBE;
+			msg[3] = 0x1A;
+			msg[4] = 0x00;
+		}
+	}
+
+	{
+		if (msgcounter % 2)
+		{
+			CanTxMessage msg(0x1D2, 6); //transmission data
+			msg[0] = 0xF0;
+			msg[1] = 0x0F;
+			msg[2] = 0xFF;
+			msg[3] = 0x1C;
+			msg[4] = 0xF0;
+			msg[5] = 0xFF;
+		}
+	}
+}
+
 #endif // EFI_CAN_SUPPORT
