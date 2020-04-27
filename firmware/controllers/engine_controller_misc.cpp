@@ -16,11 +16,11 @@ extern LoggingWithStorage sharedLogger;
 
 #if ENABLE_PERF_TRACE
 
-void irqEnterHook(void) {
+void irqEnterHook() {
 	perfEventBegin(PE::ISR);
 }
 
-void irqExitHook(void) {
+void irqExitHook() {
 	perfEventEnd(PE::ISR);
 }
 
@@ -29,8 +29,8 @@ void contextSwitchHook() {
 }
 
 #else
-void irqEnterHook(void) {}
-void irqExitHook(void) {}
+void irqEnterHook() {}
+void irqExitHook() {}
 void contextSwitchHook() {}
 #endif /* ENABLE_PERF_TRACE */
 
