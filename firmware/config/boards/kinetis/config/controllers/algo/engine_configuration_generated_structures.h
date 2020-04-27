@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 26 21:14:47 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Mon Apr 27 16:07:09 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2828,6 +2828,7 @@ struct engine_configuration_s {
 	 */
 	float fsioCurve4[FSIO_CURVE_8];
 	/**
+	 * For pinout see https://rusefi.com/forum/viewtopic.php?f=5&t=1324
 	 * offset 3100
 	 */
 	uint8_t unusedFlexFuelSensor;
@@ -3412,4 +3413,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Apr 26 21:14:47 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Mon Apr 27 16:07:09 EDT 2020

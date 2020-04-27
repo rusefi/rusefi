@@ -1182,7 +1182,7 @@ tle8888_mode_e tle8888mode;
 	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
 
-	uint8_t unusedFlexFuelSensor;
+	uint8_t unusedFlexFuelSensor;For pinout see https://rusefi.com/forum/viewtopic.php?f=5&t=1324
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
 	adc_channel_e externalKnockSenseAdc;
