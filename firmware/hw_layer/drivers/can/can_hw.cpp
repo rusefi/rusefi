@@ -139,6 +139,12 @@ void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 #endif /* EFI_TUNER_STUDIO */
 
+void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	CONFIG(canTxPin) = GPIOB_6;
+	CONFIG(canRxPin) = GPIOB_12;
+	engineConfiguration->canReadEnabled = false;
+}
+
 static brain_pin_e currentTxPin = GPIO_UNASSIGNED;
 static brain_pin_e currentRxPin = GPIO_UNASSIGNED;
 
@@ -154,12 +160,6 @@ void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	efiSetPadMode("CAN TX", currentTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	efiSetPadMode("CAN RX", currentRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
-}
-
-void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	CONFIG(canTxPin) = GPIOB_6;
-	CONFIG(canRxPin) = GPIOB_12;
-	engineConfiguration->canReadEnabled = false;
 }
 
 void initCan(void) {
@@ -211,9 +211,7 @@ void initCan(void) {
 		canRead.Start();
 	}
 
-	// Lastly wire up the pins
-	efiSetPadMode("CAN TX", CONFIG_OVERRIDE(canTxPin), PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	efiSetPadMode("CAN RX", CONFIG_OVERRIDE(canRxPin), PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+	startCanPins();
 }
 
 #endif /* EFI_CAN_SUPPORT */
