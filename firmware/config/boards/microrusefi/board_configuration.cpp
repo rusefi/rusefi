@@ -130,8 +130,6 @@ static void setupEtb() {
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
-
-	engineConfiguration->etbFreq = 800;
 }
 
 static void setupDefaultSensorInputs() {

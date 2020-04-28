@@ -8,34 +8,33 @@
 #pragma once
 
 // https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem
-#define DEFAULT_ETB_LOOP_FREQUENCY 200
-#define DEFAULT_ETB_PWM_FREQUENCY 300
+#define ETB_LOOP_FREQUENCY 500
+#define DEFAULT_ETB_PWM_FREQUENCY 800
 
 #include "engine.h"
 #include "closed_loop_controller.h"
 #include "expected.h"
-#include "periodic_task.h"
 
 class DcMotor;
 class Logging;
 
-class IEtbController : public PeriodicTimerController, public ClosedLoopController<percent_t, percent_t> {
+class IEtbController : public ClosedLoopController<percent_t, percent_t> {
 public:
 	DECLARE_ENGINE_PTR;
 	virtual void init(DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
 	virtual void reset() = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
+	virtual void start() = 0;
 };
 
-class EtbController final : public IEtbController {
+class EtbController : public IEtbController {
 public:
 	void init(DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
 	void setIdlePosition(percent_t pos) override;
-
-	// PeriodicTimerController implementation
-	int getPeriodMs() override;
-	void PeriodicTask() override;
 	void reset() override;
+	void start() override {}
+
+	void update(efitick_t nowNt);
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
