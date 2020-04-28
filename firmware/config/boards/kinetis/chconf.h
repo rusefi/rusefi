@@ -52,47 +52,12 @@
 
 #define CHPRINTF_USE_FLOAT          	TRUE
 
-#if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
+#if !defined(ENABLE_PERF_TRACE) || defined(__DOXYGEN__)
 // looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
- #define EFI_CLOCK_LOCKS FALSE
-#endif /* EFI_CLOCK_LOCKS */
+ #define ENABLE_PERF_TRACE FALSE
+#endif /* ENABLE_PERF_TRACE */
 
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
- #ifndef __ASSEMBLER__
-  #if EFI_CLOCK_LOCKS
-    void irqEnterHook(void);
-    void irqExitHook(void);
-  #else /* EFI_CLOCK_LOCKS */
-    #define irqEnterHook() {}
-    #define irqExitHook() {}
-  #endif /*EFI_CLOCK_LOCKS */
- #endif /* __ASSEMBLER__ */
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-#if EFI_CLOCK_LOCKS
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-#ifndef __ASSEMBLER__
-  void onLockHook(void);
-  void onUnlockHook(void);
-#endif /* __ASSEMBLER__ */
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-  #define ON_LOCK_HOOK onLockHook()
-  #define ON_UNLOCK_HOOK onUnlockHook()
-#else /* EFI_CLOCK_LOCKS */
-  #define ON_LOCK_HOOK
-  #define ON_UNLOCK_HOOK
-#endif /* EFI_CLOCK_LOCKS */
+#include "chconf_common.h"
 
 /*===========================================================================*/
 /**
@@ -706,30 +671,6 @@ extern "C"
  */
 #define CH_CFG_THREAD_EXIT_HOOK(tp) {                                       \
   /* Add threads finalization code here.*/                                  \
-}
-
-/**
- * @brief   Context switch hook.
- * @details This hook is invoked just before switching between threads.
- */
-#define CH_CFG_CONTEXT_SWITCH_HOOK(ntp, otp) {                              \
-  /* Context switch code here.*/                                            \
-}
-
-/**
- * @brief   ISR enter hook.
- */
-#define CH_CFG_IRQ_PROLOGUE_HOOK() {                                        \
-  /* IRQ prologue code here.*/                                              \
-  irqEnterHook();                                                           \
-}
-
-/**
- * @brief   ISR exit hook.
- */
-#define CH_CFG_IRQ_EPILOGUE_HOOK() {                                        \
-  /* IRQ epilogue code here.*/                                              \
-  irqExitHook();                                                            \
 }
 
 /**

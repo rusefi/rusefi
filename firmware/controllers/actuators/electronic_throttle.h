@@ -7,7 +7,12 @@
 
 #pragma once
 
-// https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem
+/**
+ * Hard code ETB update speed.
+ * Since this is a safety critical system with no real reason for a user to ever need to change the update rate,
+ * it's locked to 500hz, along with the ADC.
+ * https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem
+ */
 #define ETB_LOOP_FREQUENCY 500
 #define DEFAULT_ETB_PWM_FREQUENCY 800
 
@@ -25,6 +30,7 @@ public:
 	virtual void reset() = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
 	virtual void start() = 0;
+	virtual void autoCalibrateTps() = 0;
 };
 
 class EtbController : public IEtbController {
@@ -56,7 +62,15 @@ public:
 	// Used to inspect the internal PID controller's state
 	const pid_state_s* getPidState() const { return &m_pid; };
 
-	void autocal();
+	// Use the throttle to automatically calibrate the relevant throttle position sensor(s).
+	void autoCalibrateTps() override;
+
+protected:
+	// This is set if an automatic TPS calibration should be run
+	bool m_isAutocal = false;
+
+	int getMyIndex() const { return m_myIndex; }
+	DcMotor* getMotor() { return m_motor; }
 
 private:
 	int m_myIndex = 0;
@@ -76,9 +90,6 @@ private:
 	float m_maxCycleTps = 0;
 	float m_a = 0;
 	float m_tu = 0;
-
-	// Automatic calibration helpers
-	bool m_isAutocal = false;
 };
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -96,4 +107,4 @@ void setThrottleDutyCycle(percent_t level);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
 
-void etbAutocal();
+void etbAutocal(size_t throttleIndex);

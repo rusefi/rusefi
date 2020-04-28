@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 26 21:14:31 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Apr 28 17:06:01 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1449,6 +1449,8 @@ struct engine_configuration_s {
 	offset 744 bit 26 */
 	bool is_enabled_spi_4 : 1;
 	/**
+	 * Disable the electronic throttle motor for testing.
+	 * This mode is for testing ETB position sensors, etc without actually driving the throttle.
 	offset 744 bit 27 */
 	bool pauseEtbControl : 1;
 	/**
@@ -2828,6 +2830,7 @@ struct engine_configuration_s {
 	 */
 	float fsioCurve4[FSIO_CURVE_8];
 	/**
+	 * For pinout see https://rusefi.com/forum/viewtopic.php?f=5&t=1324
 	 * offset 3100
 	 */
 	uint8_t unusedFlexFuelSensor;
@@ -3412,4 +3415,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 26 21:14:31 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Apr 28 17:06:01 EDT 2020

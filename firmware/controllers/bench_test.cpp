@@ -266,7 +266,7 @@ static void handleCommandX14(uint16_t index) {
 		engine->directSelfStimulation = true;
 		return;
 	case 0xE:
-		etbAutocal();
+		etbAutocal(0);
 		return;
 	}
 }

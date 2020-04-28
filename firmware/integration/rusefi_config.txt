@@ -713,7 +713,7 @@ bit is_enabled_spi_2
 	bit useIdleTimingPidControl
 	bit useTPSBasedVeTable
 	bit is_enabled_spi_4
-	bit pauseEtbControl
+	bit pauseEtbControl;+Disable the electronic throttle motor for testing.\nThis mode is for testing ETB position sensors, etc without actually driving the throttle.
 	bit alignEngineSnifferAtTDC
 	bit useETBforIdleControl;+This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
 	bit idleIncrementalPidCic
@@ -944,7 +944,7 @@ bit useFixedBaroCorrFromMap
 bit useSeparateAdvanceForCranking;+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
 bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
 bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
-bit etbCalibrationOnStart
+bit unused1476b20;
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled;
 bit launchSmoothRetard;+Interpolates the Ignition Retard from 0 to 100% within the RPM Range
@@ -1182,7 +1182,7 @@ tle8888_mode_e tle8888mode;
 	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
 
-	uint8_t unusedFlexFuelSensor;
+	uint8_t unusedFlexFuelSensor;For pinout see https://rusefi.com/forum/viewtopic.php?f=5&t=1324
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
 	adc_channel_e externalKnockSenseAdc;
