@@ -387,6 +387,11 @@ void EtbController::update(efitick_t nowNt) {
 }
 
 #if !EFI_UNIT_TEST
+/**
+ * Things running on a timer (instead of a thread) don't participate it the RTOS's thread priority system,
+ * and operate essentially "first come first serve", which risks starvation.
+ * Since ETB is a safety critical device, we need the hard RTOS guarantee that it will be scheduled over other less important tasks.
+ */
 #include "periodic_thread_controller.h"
 struct EtbImpl final : public EtbController, public PeriodicController<512> {
 	EtbImpl() : PeriodicController("ETB", NORMALPRIO + 3, ETB_LOOP_FREQUENCY) {}

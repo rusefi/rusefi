@@ -7,7 +7,12 @@
 
 #pragma once
 
-// https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem
+/**
+ * Hard code ETB update speed.
+ * Since this is a safety critical system with no real reason for a user to ever need to change the update rate,
+ * it's locked to 500hz, along with the ADC.
+ * https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem
+ */
 #define ETB_LOOP_FREQUENCY 500
 #define DEFAULT_ETB_PWM_FREQUENCY 800
 
