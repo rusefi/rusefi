@@ -145,6 +145,7 @@ void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canReadEnabled = false;
 }
 
+// this is related to #1375
 static brain_pin_e currentTxPin = GPIO_UNASSIGNED;
 static brain_pin_e currentRxPin = GPIO_UNASSIGNED;
 
