@@ -144,9 +144,9 @@ TEST(etb, testSetpointOnlyPedal) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 20);
 	EXPECT_EQ(20, etb.getSetpoint().value_or(-1));
 
-	// Test invalid pedal position - should give unexpected
+	// Test invalid pedal position - should give 0 position
 	Sensor::resetMockValue(SensorType::AcceleratorPedal);
-	EXPECT_EQ(etb.getSetpoint(), unexpected);
+	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
 }
 
 TEST(etb, setpointIdle) {
