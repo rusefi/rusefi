@@ -65,6 +65,13 @@ public:
 	// Use the throttle to automatically calibrate the relevant throttle position sensor(s).
 	void autoCalibrateTps() override;
 
+protected:
+	// This is set if an automatic TPS calibration should be run
+	bool m_isAutocal = false;
+
+	int getMyIndex() const { return m_myIndex; }
+	DcMotor* getMotor() { return m_motor; }
+
 private:
 	int m_myIndex = 0;
 	DcMotor *m_motor = nullptr;
@@ -83,10 +90,6 @@ private:
 	float m_maxCycleTps = 0;
 	float m_a = 0;
 	float m_tu = 0;
-
-protected:
-	// This is set if an automatic TPS calibration should be run
-	bool m_isAutocal = false;
 };
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
