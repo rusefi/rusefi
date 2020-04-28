@@ -265,9 +265,11 @@ static void handleCommandX14(uint16_t index) {
 	case 0xD:
 		engine->directSelfStimulation = true;
 		return;
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	case 0xE:
 		etbAutocal(0);
 		return;
+#endif
 	}
 }
 
