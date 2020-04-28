@@ -139,6 +139,23 @@ void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 #endif /* EFI_TUNER_STUDIO */
 
+static brain_pin_e currentTxPin = GPIO_UNASSIGNED;
+static brain_pin_e currentRxPin = GPIO_UNASSIGNED;
+
+void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	brain_pin_markUnused(currentTxPin);
+	brain_pin_markUnused(currentRxPin);
+}
+
+void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// Store pins so we can disable later
+	currentTxPin = CONFIG_OVERRIDE(canTxPin);
+	currentRxPin = CONFIG_OVERRIDE(canRxPin);
+
+	efiSetPadMode("CAN TX", currentTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	efiSetPadMode("CAN RX", currentRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+}
+
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(canTxPin) = GPIOB_6;
 	CONFIG(canRxPin) = GPIOB_12;
