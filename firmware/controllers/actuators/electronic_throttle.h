@@ -30,6 +30,7 @@ public:
 	virtual void reset() = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
 	virtual void start() = 0;
+	virtual void autoCalibrateTps() = 0;
 };
 
 class EtbController : public IEtbController {
@@ -61,7 +62,7 @@ public:
 	// Used to inspect the internal PID controller's state
 	const pid_state_s* getPidState() const { return &m_pid; };
 
-	void autocal();
+	void autoCalibrateTps() override;
 
 private:
 	int m_myIndex = 0;
@@ -101,4 +102,4 @@ void setThrottleDutyCycle(percent_t level);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
 
-void etbAutocal();
+void etbAutocal(size_t throttleIndex);

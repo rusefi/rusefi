@@ -340,17 +340,17 @@ void EtbController::update(efitick_t nowNt) {
 		// First grab open
 		m_motor->set(0.5f);
 		m_motor->enable();
-		//chThdSleepMilliseconds(1000);
+		chThdSleepMilliseconds(1000);
 		tsOutputChannels.calibrationMode = TsCalMode::Tps1Max;
 		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(m_myIndex)) * TPS_TS_CONVERSION;
 
 		// Let it return
 		m_motor->set(0);
-		//chThdSleepMilliseconds(200);
+		chThdSleepMilliseconds(200);
 
 		// Now grab closed
 		m_motor->set(-0.5f);
-		//chThdSleepMilliseconds(1000);
+		chThdSleepMilliseconds(1000);
 		tsOutputChannels.calibrationMode = TsCalMode::Tps1Min;
 		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(m_myIndex)) * TPS_TS_CONVERSION;
 
@@ -358,7 +358,7 @@ void EtbController::update(efitick_t nowNt) {
 		m_motor->disable();
 
 		// Wait to let TS grab the state before we leave cal mode
-		//chThdSleepMilliseconds(500);
+		chThdSleepMilliseconds(500);
 		tsOutputChannels.calibrationMode = TsCalMode::None;
 
 		m_isAutocal = false;
@@ -421,7 +421,7 @@ void EtbController::update(efitick_t nowNt) {
 /* DISPLAY_ENDIF */
 }
 
-void EtbController::autocal() {
+void EtbController::autoCalibrateTps() {
 	m_isAutocal = true;
 }
 
@@ -557,8 +557,16 @@ void setEtbOffset(int value) {
 	showEthInfo();
 }
 
-void etbAutocal() {
-	etbControllers[0].autocal();
+void etbAutocal(size_t throttleIndex) {
+	if (throttleIndex >= ETB_COUNT) {
+		return;
+	}
+
+	auto etb = engine->etbControllers[throttleIndex];
+
+	if (etb) {
+		etb->autoCalibrateTps();
+	}
 }
 
 #endif /* !EFI_UNIT_TEST */
