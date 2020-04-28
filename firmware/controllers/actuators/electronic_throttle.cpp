@@ -287,7 +287,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t act
 		return getClosedLoopAutotune(actualThrottlePosition);
 	} else {
 		// Normal case - use PID to compute closed loop part
-		return m_pid.getOutput(target, actualThrottlePosition, 1000.0f / ETB_LOOP_FREQUENCY);
+		return m_pid.getOutput(target, actualThrottlePosition, 1.0f / ETB_LOOP_FREQUENCY);
 	}
 }
 
@@ -388,7 +388,7 @@ void EtbController::update(efitick_t nowNt) {
 
 #if !EFI_UNIT_TEST
 #include "periodic_thread_controller.h"
-struct EtbImpl final : public EtbController, public PeriodicController<256> {
+struct EtbImpl final : public EtbController, public PeriodicController<512> {
 	EtbImpl() : PeriodicController("ETB", NORMALPRIO + 3, ETB_LOOP_FREQUENCY) {}
 
 	void PeriodicTask(efitick_t nowNt) override {
