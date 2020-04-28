@@ -124,7 +124,7 @@ void EtbController::reset() {
 }
 
 void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
-	if (m_motor && m_pid.isSame(previousConfiguration)) {
+	if (m_motor && !m_pid.isSame(previousConfiguration)) {
 		m_shouldResetPid = true;
 	}
 }
@@ -157,11 +157,11 @@ expected<percent_t> EtbController::getSetpoint() const {
 	}
 
 	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
-	if (!pedalPosition.Valid) {
-		return unexpected;
-	}
 
-	float sanitizedPedal = clampF(0, pedalPosition.Value, 100);
+	// If the pedal has failed, just use 0 position.
+	// This is safer than disabling throttle control - we can at least push the throttle closed
+	// and let the engine idle.
+	float sanitizedPedal = clampF(0, pedalPosition.value_or(0), 100);
 	
 	float rpm = GET_RPM();
 	float targetFromTable = m_pedalMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
