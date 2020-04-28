@@ -147,10 +147,6 @@ expected<percent_t> EtbController::getSetpoint() const {
 		return unexpected;
 	}
 
-	if (engineConfiguration->pauseEtbControl) {
-		return unexpected;
-	}
-
 	// If the pedal map hasn't been set, we can't provide a setpoint.
 	if (!m_pedalMap) {
 		return unexpected;
@@ -301,7 +297,8 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 
 	if (!m_motor) return;
 
-	if (outputValue) {
+	// If output is valid and we aren't paused, output to motor.
+	if (outputValue && !engineConfiguration->pauseEtbControl) {
 		m_motor->enable();
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
