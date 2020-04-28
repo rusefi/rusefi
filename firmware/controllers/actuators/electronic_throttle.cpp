@@ -327,46 +327,11 @@ void EtbController::update(efitick_t nowNt) {
 	}
 
 #if EFI_TUNER_STUDIO
-	if (m_isAutocal) {
-		// Don't allow if engine is running!
-		if (GET_RPM() > 0) {
-			m_isAutocal = false;
-			return;
-		}
-
-		// First grab open
-		m_motor->set(0.5f);
-		m_motor->enable();
-		chThdSleepMilliseconds(1000);
-		tsOutputChannels.calibrationMode = TsCalMode::Tps1Max;
-		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(m_myIndex)) * TPS_TS_CONVERSION;
-
-		// Let it return
-		m_motor->set(0);
-		chThdSleepMilliseconds(200);
-
-		// Now grab closed
-		m_motor->set(-0.5f);
-		chThdSleepMilliseconds(1000);
-		tsOutputChannels.calibrationMode = TsCalMode::Tps1Min;
-		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(m_myIndex)) * TPS_TS_CONVERSION;
-
-		// Finally disable and reset state
-		m_motor->disable();
-
-		// Wait to let TS grab the state before we leave cal mode
-		chThdSleepMilliseconds(500);
-		tsOutputChannels.calibrationMode = TsCalMode::None;
-
-		m_isAutocal = false;
-		return;
-	}
-
 	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 		tsOutputChannels.debugFloatField1 = engine->engineState.targetFromTable;
 		tsOutputChannels.debugFloatField2 = engine->engineState.idle.etbIdleAddition;
 	}
-#endif /* EFI_TUNER_STUDIO */
+#endif
 
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
@@ -433,6 +398,44 @@ struct EtbImpl final : public EtbController, public PeriodicController<512> {
 	EtbImpl() : PeriodicController("ETB", NORMALPRIO + 3, ETB_LOOP_FREQUENCY) {}
 
 	void PeriodicTask(efitick_t nowNt) override {
+
+#if EFI_TUNER_STUDIO
+	if (m_isAutocal) {
+		// Don't allow if engine is running!
+		if (GET_RPM() > 0) {
+			m_isAutocal = false;
+			return;
+		}
+
+		// First grab open
+		m_motor->set(0.5f);
+		m_motor->enable();
+		chThdSleepMilliseconds(1000);
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1Max;
+		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(m_myIndex)) * TPS_TS_CONVERSION;
+
+		// Let it return
+		m_motor->set(0);
+		chThdSleepMilliseconds(200);
+
+		// Now grab closed
+		m_motor->set(-0.5f);
+		chThdSleepMilliseconds(1000);
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1Min;
+		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(m_myIndex)) * TPS_TS_CONVERSION;
+
+		// Finally disable and reset state
+		m_motor->disable();
+
+		// Wait to let TS grab the state before we leave cal mode
+		chThdSleepMilliseconds(500);
+		tsOutputChannels.calibrationMode = TsCalMode::None;
+
+		m_isAutocal = false;
+		return;
+	}
+#endif /* EFI_TUNER_STUDIO */
+
 		EtbController::update(nowNt);
 	}
 

@@ -62,6 +62,7 @@ public:
 	// Used to inspect the internal PID controller's state
 	const pid_state_s* getPidState() const { return &m_pid; };
 
+	// Use the throttle to automatically calibrate the relevant throttle position sensor(s).
 	void autoCalibrateTps() override;
 
 private:
@@ -83,7 +84,8 @@ private:
 	float m_a = 0;
 	float m_tu = 0;
 
-	// Automatic calibration helpers
+protected:
+	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
 };
 
