@@ -263,10 +263,9 @@
 /**
  * Do we need GPS logic?
  */
-#define EFI_UART_GPS TRUE
-//#define EFI_UART_GPS FALSE
+#define EFI_UART_GPS FALSE
 
-#define EFI_SERVO TRUE
+#define EFI_SERVO FALSE
 
 #define EFI_ELECTRONIC_THROTTLE_BODY TRUE
 //#define EFI_ELECTRONIC_THROTTLE_BODY FALSE
