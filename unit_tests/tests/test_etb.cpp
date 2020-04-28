@@ -47,7 +47,7 @@ TEST(etb, initializationSingleThrottle) {
 	// Expect mock0 to be init with index 0, and PID params
 	EXPECT_CALL(mocks[0], init(_, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
-	EXPECT_CALL(mocks[0], Start);
+	EXPECT_CALL(mocks[0], start);
 
 	// We do not expect throttle #2 to be initialized
 
@@ -72,12 +72,12 @@ TEST(etb, initializationDualThrottle) {
 	// Expect mock0 to be init with index 0, and PID params
 	EXPECT_CALL(mocks[0], init(_, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
-	EXPECT_CALL(mocks[0], Start);
+	EXPECT_CALL(mocks[0], start);
 
 	// Expect mock1 to be init with index 2, and PID params
 	EXPECT_CALL(mocks[1], init(_, 1, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[1], reset);
-	EXPECT_CALL(mocks[1], Start);
+	EXPECT_CALL(mocks[1], start);
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
