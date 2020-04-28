@@ -238,6 +238,31 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t actualThrottl
 		float ki = 0.25f * ku / m_tu;
 		float kd = 0.08f * ku * m_tu;
 
+
+		if (n == 5) {
+			n = 0;
+			q++;
+
+			if (q == 3) q = 0;
+		}
+
+		n++;
+
+		// Multiplex 3 signals on to the {mode, value} format
+		tsOutputChannels.calibrationMode = static_cast<TsCalMode>(q + 3);
+
+		switch (q) {
+		case 0:
+			tsOutputChannels.calibrationValue = kp;
+			break;
+		case 1:
+			tsOutputChannels.calibrationValue = ki;
+			break;
+		case 2:
+			tsOutputChannels.calibrationValue = kd;
+			break;
+		}
+
 		if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
 			// a - amplitude of output (TPS %)
 			tsOutputChannels.debugFloatField1 = m_a;
@@ -250,30 +275,6 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t actualThrottl
 			tsOutputChannels.debugFloatField5 = kp;
 			tsOutputChannels.debugFloatField6 = ki;
 			tsOutputChannels.debugFloatField7 = kd;
-
-			if (n == 5) {
-				n = 0;
-				q++;
-
-				if (q == 3) q = 0;
-			}
-
-			n++;
-
-			// Multiplex 3 signals on to the {mode, value} format
-			tsOutputChannels.calibrationMode = static_cast<TsCalMode>(q + 3);
-
-			switch (q) {
-			case 0:
-				tsOutputChannels.calibrationValue = kp;
-				break;
-			case 1:
-				tsOutputChannels.calibrationValue = ki;
-				break;
-			case 2:
-				tsOutputChannels.calibrationValue = kd;
-				break;
-			}
 		}
 #endif
 	}
