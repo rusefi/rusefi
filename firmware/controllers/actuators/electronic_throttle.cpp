@@ -124,7 +124,7 @@ void EtbController::reset() {
 }
 
 void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
-	if (m_motor && m_pid.isSame(previousConfiguration)) {
+	if (m_motor && !m_pid.isSame(previousConfiguration)) {
 		m_shouldResetPid = true;
 	}
 }
@@ -147,21 +147,17 @@ expected<percent_t> EtbController::getSetpoint() const {
 		return unexpected;
 	}
 
-	if (engineConfiguration->pauseEtbControl) {
-		return unexpected;
-	}
-
 	// If the pedal map hasn't been set, we can't provide a setpoint.
 	if (!m_pedalMap) {
 		return unexpected;
 	}
 
 	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
-	if (!pedalPosition.Valid) {
-		return unexpected;
-	}
 
-	float sanitizedPedal = clampF(0, pedalPosition.Value, 100);
+	// If the pedal has failed, just use 0 position.
+	// This is safer than disabling throttle control - we can at least push the throttle closed
+	// and let the engine idle.
+	float sanitizedPedal = clampF(0, pedalPosition.value_or(0), 100);
 	
 	float rpm = GET_RPM();
 	float targetFromTable = m_pedalMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
@@ -301,7 +297,8 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 
 	if (!m_motor) return;
 
-	if (outputValue) {
+	// If output is valid and we aren't paused, output to motor.
+	if (outputValue && !engineConfiguration->pauseEtbControl) {
 		m_motor->enable();
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
