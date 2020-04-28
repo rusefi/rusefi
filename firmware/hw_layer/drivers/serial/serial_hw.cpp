@@ -18,7 +18,6 @@
 #include "mpu_util.h"
 #include "engine.h"
 
-
 EXTERN_ENGINE;
 
 static bool isSerialEnabled = false;
@@ -27,7 +26,7 @@ static bool isSerialRXEnabled = false;
 static LoggingWithStorage logger("SERIAL driver");
 
 
-static SerialConfig uartCfg;
+// static UARTConfig uartCfg;
 static SerialRead serialRead;
 static SerialWrite serialWrite;
 
@@ -50,9 +49,10 @@ void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	CONFIG(auxSerialRxPin) = engineConfiguration->auxSerialRxPin;
 	CONFIG(auxSerialSpeed) = engineConfiguration->auxSerialSpeed;
 	
-	uartCfg.speed = engineConfiguration->auxSerialSpeed;
+	// uartCfg.speed = engineConfiguration->auxSerialSpeed;
 
-	sdStart(&SD6, &uartCfg);
+	// uartStart(&UARTD6, &uartCfg);
+
 	scheduleMsg(&logger, "AUX Serial started");
 }
 

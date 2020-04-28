@@ -38,7 +38,7 @@ typedef struct
 	float AFR;
 	float AFR_multiplier;
 	float lambda;
-	int warmup;
+	float warmup;
 	sensor_error_code_t error_code;
 } sensor_data_t;
 
@@ -46,14 +46,14 @@ sensor_data_t innovate_o2_sensor[NUM_INNOVATE_O2_SENSORS-1];
 
 void SerialSendTest()
 {
-	char data[5]; // = "Hello world!\n\r";
-	data[0] = 178;
-	data[1] = 130;
-	data[2] = 91;
-	data[3] = 19;
-	data[4] = 0;
-	data[5] = 2;
-	sdWrite(&SD6, (uint8_t *)data, 6);
+	// char data[5]; // = "Hello world!\n\r";
+	// data[0] = 178;
+	// data[1] = 130;
+	// data[2] = 71;
+	// data[3] = 19;
+	// data[4] = 1;
+	// data[5] = 81;
+	// sdWrite(&SD6, (uint8_t *)data, 6);
 }
 
 uint16_t tmsglen;
@@ -68,16 +68,18 @@ void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 senso
 		switch (innovate_serial_id_state)
 		{
 		case UNKNOWN:
+			palClearPad(GPIOG, GPIOG_PIN13);
 			// read one byte, identify with mask, advance and read next byte
 			if (((ser_buffer[0]) & 162) == 162) // check if it's the first byte of header
 			{
 				// first byte identified, now read second byte and advance statemachine
-				// advance statemachine prior, since it's irq driven
 				innovate_serial_id_state = HEADER_FOUND;
 				innovate_start_byte = 1;
+				innovate_msg_len = 1;
 			}
 			else
 			{
+				innovate_serial_id_state = UNKNOWN;
 				innovate_start_byte = 0;
 				innovate_msg_len = 1;
 			}
@@ -98,11 +100,12 @@ void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 senso
 
 		case IDENTIFIED:
 			// serial packet fully identified
+			palSetPad(GPIOG, GPIOG_PIN13);
 
-			// HAL_GPIO_TogglePin(GPIOC, SERIAL_Pin);
 			ParseInnovateSerialMsg();
 			innovate_start_byte = 0; // now we can read entire packet
 			innovate_msg_len = tmsglen;
+			// iqResetI(&SD6.iqueue);
 			break;
 
 		default:
@@ -125,7 +128,7 @@ void ParseInnovateSerialMsg()
 	// 110 Error code in Lambda value
 	// 111 reserved
 
-	for (size_t i = 0; i < ((innovate_msg_len) / 4) && i < NUM_INNOVATE_O2_SENSORS - 1; i++)
+	for (size_t i = 0; i < ((innovate_msg_len - 2) / 4) && i <= (NUM_INNOVATE_O2_SENSORS - 1); i++)
 	{
 		innovate_o2_sensor[i].function_code = (ser_buffer[2 + i * 4] >> 2 & 0x7);
 		//catch potential overflow:
@@ -134,8 +137,8 @@ void ParseInnovateSerialMsg()
 		else if (innovate_o2_sensor[i].function_code <= 0)
 			innovate_o2_sensor[i].function_code = 0;
 
-		// innovate_o2_sensor[i].AFR_multiplier = ((ser_buffer[2 + i * 4] << 7 | ser_buffer[3 + i * 4]) & 0xFF);
-		innovate_o2_sensor[i].AFR_multiplier = AFR_MULTIPLIER;
+		innovate_o2_sensor[i].AFR_multiplier = ((ser_buffer[2 + i * 4] << 7 | ser_buffer[3 + i * 4]) & 0xFF);
+		// innovate_o2_sensor[i].AFR_multiplier = AFR_MULTIPLIER;
 
 		switch (innovate_o2_sensor[i].function_code)
 		{
@@ -143,11 +146,17 @@ void ParseInnovateSerialMsg()
 		case 1: //Lambda value contains o2 level in 1/10%
 			innovate_o2_sensor[i].lambda = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
 			raw_afr = ((innovate_o2_sensor[i].lambda + 500) * innovate_o2_sensor[i].AFR_multiplier);
-			if (innovate_o2_sensor[i].function_code)
+			if (innovate_o2_sensor[i].function_code) //case 1
 				innovate_o2_sensor[i].AFR = raw_afr * 0.001;
-			else
+			else // case 0
 				innovate_o2_sensor[i].AFR = raw_afr * 0.0001;
+
+			// if (innovate_o2_sensor[i].AFR <= 7)
+			// 	innovate_o2_sensor[i].AFR = 7;
+			// if (innovate_o2_sensor[i].AFR >= 25)
+			// 	innovate_o2_sensor[i].AFR = 25;
 			InnovateLC2AFR = innovate_o2_sensor[i].AFR;
+			
 			break;
 		// this is invalid o2 data, so we can ignore it:
 		//  case 2: // Free air Calib in progress, Lambda data not valid

@@ -22,7 +22,7 @@ EXTERN_ENGINE;
 
 static LoggingWithStorage logger("AUX Serial RX");
 
-uint8_t ser_buffer[64] = {};
+uint8_t ser_buffer[18] = {};
 uint16_t innovate_msg_len = 1;
 uint16_t innovate_start_byte = 0;
 
@@ -46,9 +46,17 @@ void SerialRead::ThreadTask()
 			sb = innovate_start_byte;
 		}
 
-		// This should be a blocking read (TIME_INFINITE), but it isn't
-		if ((sdReadTimeout(&SD6, &ser_buffer[sb], len, TIME_INFINITE)) > 0)
-			ParseSerialData();
+		// This should be a blocking read (TIME_INFINITE)
+		// if ((sdReadTimeout(&SD6, &ser_buffer[sb], len, TIME_INFINITE)) == len)
+		// {
+		// 	ParseSerialData();
+		// }
+
+		// if ((uartStartReceive(&SD6, len, &ser_buffer[sb])) == len)
+		// {
+		// 	ParseSerialData();
+		// }
+
 	}
 }
 
