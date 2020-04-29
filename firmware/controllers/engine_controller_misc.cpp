@@ -14,14 +14,13 @@ EXTERN_ENGINE;
 
 extern LoggingWithStorage sharedLogger;
 
+#if ENABLE_PERF_TRACE
 static uint8_t nextThreadId = 0;
 void threadInitHook(void* vtp) {
 	// No lock required, this is already under lock
 	auto tp = reinterpret_cast<thread_t*>(vtp);
 	tp->threadId = ++nextThreadId;
 }
-
-#if ENABLE_PERF_TRACE
 
 void irqEnterHook() {
 	perfEventBegin(PE::ISR);
@@ -36,6 +35,7 @@ void contextSwitchHook() {
 }
 
 #else
+void threadInitHook(void*) {}
 void irqEnterHook() {}
 void irqExitHook() {}
 void contextSwitchHook() {}
