@@ -30,6 +30,7 @@ public:
 	virtual void reset() = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
 	virtual void start() = 0;
+	virtual void autoCalibrateTps() = 0;
 };
 
 class EtbController : public IEtbController {
@@ -60,6 +61,16 @@ public:
 
 	// Used to inspect the internal PID controller's state
 	const pid_state_s* getPidState() const { return &m_pid; };
+
+	// Use the throttle to automatically calibrate the relevant throttle position sensor(s).
+	void autoCalibrateTps() override;
+
+protected:
+	// This is set if an automatic TPS calibration should be run
+	bool m_isAutocal = false;
+
+	int getMyIndex() const { return m_myIndex; }
+	DcMotor* getMotor() { return m_motor; }
 
 private:
 	int m_myIndex = 0;
@@ -95,3 +106,5 @@ void setEtbOffset(int value);
 void setThrottleDutyCycle(percent_t level);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
+
+void etbAutocal(size_t throttleIndex);

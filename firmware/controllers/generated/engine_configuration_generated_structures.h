@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Apr 27 16:06:39 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Apr 28 20:10:00 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1449,6 +1449,8 @@ struct engine_configuration_s {
 	offset 744 bit 26 */
 	bool is_enabled_spi_4 : 1;
 	/**
+	 * Disable the electronic throttle motor for testing.
+	 * This mode is for testing ETB position sensors, etc without actually driving the throttle.
 	offset 744 bit 27 */
 	bool pauseEtbControl : 1;
 	/**
@@ -2101,7 +2103,7 @@ struct engine_configuration_s {
 	bool useTPSAdvanceTable : 1;
 	/**
 	offset 1476 bit 20 */
-	bool etbCalibrationOnStart : 1;
+	bool unused1476b20 : 1;
 	/**
 	 * This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 	offset 1476 bit 21 */
@@ -3413,4 +3415,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Apr 27 16:06:39 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Apr 28 20:10:00 EDT 2020

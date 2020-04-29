@@ -603,8 +603,6 @@
 #define etbBiasBins_offset_hex f30
 #define etbBiasValues_offset 3920
 #define etbBiasValues_offset_hex f50
-#define etbCalibrationOnStart_offset 1476
-#define etbCalibrationOnStart_offset_hex 5c4
 #define etbDeadband_offset 3960
 #define etbDeadband_offset_hex f78
 #define etbFreq_offset 2514
@@ -2254,6 +2252,8 @@
 #define uartConsoleSerialSpeed_offset_hex 81c
 #define unused1059_offset 3964
 #define unused1059_offset_hex f7c
+#define unused1476b20_offset 1476
+#define unused1476b20_offset_hex 5c4
 #define unused2432_offset 2432
 #define unused2432_offset_hex 980
 #define unused711_offset 711
