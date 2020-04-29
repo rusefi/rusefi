@@ -1409,8 +1409,9 @@ menuDialog = main
 		subMenu = connection,            	"Connection"
 		subMenu = tle8888,					"TLE8888"
 		
-		subMenu = allPins1,					"Full pinout 1/2" @@if_ts_show_full_pinout
-		subMenu = allPins2,					"Full pinout 2/2" @@if_ts_show_full_pinout
+		subMenu = allPins1,					"Full pinout 1/3" @@if_ts_show_full_pinout
+		subMenu = allPins2,					"Full pinout 2/3" @@if_ts_show_full_pinout
+		subMenu = allPins3_1_and_2  		"Full pinout 3/3" @@if_ts_show_full_pinout
 		subMenu = std_separator
 
 
@@ -1846,23 +1847,24 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "A/C Switch",							acSwitchAdc
 		field = "Aux Temperature #1",					auxTempSensor1_adcChannel
 		field = "Aux Temperature #2",					auxTempSensor2_adcChannel
+		field = "Aux Fast Analog",						auxFastSensor1_adcChannel
+
+	dialog = allPinsMC33, "MC33816"
+		field = "Chip Select",							mc33816_cs
+		field = rstb,									mc33816_rstb
+		field = flag0,									mc33816_flag0
+		field = mc33816_driven,							mc33816_driven
+		field = mc33816spiDevice,						mc33816spiDevice
 
 	dialog = allPins1_1
-		field = mc33816_cs,								mc33816_cs
-		field = mc33816_rstb,							mc33816_rstb
-		field = mc33816_flag0,							mc33816_flag0
 		field = "trigger stimulator pin #1", 			triggerSimulatorPins1
 		field = "trigger stimulator pin #2", 			triggerSimulatorPins2
 		field = "trigger stimulator pin #2", 			triggerSimulatorPins3
 		field = high_fuel_pressure_sensor_1,			high_fuel_pressure_sensor_1
 		field = high_fuel_pressure_sensor_2,			high_fuel_pressure_sensor_2
-		field = mc33816_driven,							mc33816_driven
-		field = mc33816spiDevice,						mc33816spiDevice
 		field = "Warning Led",							warningLedPin
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
-		field = "mc33972_cs",							mc33972_cs
-		panel = allPinsSensors
 
 	dialog = allPins1_2
 		field = "Tachometer output Pin",					tachOutputPin
@@ -1884,16 +1886,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "ETB#2 Disable",						etbIo2_disablePin     @@if_ts_show_etb_pins
 		field = "SD CS Pin",							sdCardCsPin @@if_ts_show_sd_card
 		field = "MIL / Check Engine Pin",				malfunctionIndicatorPin
-		field = "Aux Pin #1",							auxPidPins1
-		field = "Aux Pin #2",							auxPidPins2
-		field = "Aux Pin #3",							auxPidPins3
-		field = "Aux Pin #4",							auxPidPins4
 		field = "test557pin",							test557pin
 		field = "Fan Pin",								fanPin
 		field = "Main Relay Pin",  						mainRelayPin
 		field = "Starter Relay Pin",  					starterRelayDisablePin
-		field = "aux valve #1", 						auxValves1
-		field = "aux valve #2", 						auxValves2
 
 	dialog = allPins2_1
 		field = "Injection Pin 1",						injectionPins1
@@ -1963,7 +1959,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "LCD D6 pin", 							HD44780_db6
 		field = "LCD D7 pin", 							HD44780_db7
 		field = "Debug Trigger Sync", 					debugTriggerSync
-		field = "Aux Fast Analog",						auxFastSensor1_adcChannel
+		panel = allPinsMC33
 
 	dialog = allPins1_3
 		field = "FSIO ADC #1",							fsioAdc1
@@ -1989,22 +1985,37 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Saab CDM knock",						cdmInputPin
 		field = "comm status light",					communicationLedPin
 		field = "running status light",					runningLedPin
-		field = "TLE8888 Chip Select",                  tle8888_cs @@if_ts_show_spi
-		field = "TLE 8888 spi",                         tle8888spiDevice @@if_ts_show_spi
+
+
+	dialog = allPins3_1
+		panel = allPinsSensors
+
+	dialog = allPins3_2
 		field = "servo#1",								servoOutputPins1
 		field = "servo#2",								servoOutputPins2
 		field = "servo#3",								servoOutputPins3
 		field = "servo#4",								servoOutputPins4
 		field = "servo#5",								servoOutputPins5
+		field = "Aux Pin #1",							auxPidPins1
+		field = "Aux Pin #2",							auxPidPins2
+		field = "Aux Pin #3",							auxPidPins3
+		field = "Aux Pin #4",							auxPidPins4
+		field = "Aux Valve #1", 						auxValves1
+		field = "Aux Valve #2", 						auxValves2
+		field = "TLE8888 Chip Select",                  tle8888_cs @@if_ts_show_spi
+		field = "TLE 8888 spi",                         tle8888spiDevice @@if_ts_show_spi
 		field = "AUX Serial TX", 						auxSerialTxPin
 		field = "AUX Serial RX", 						auxSerialRxPin
 
+	dialog = allPins3_1_and_2, "All Pins 3/3", xAxis
+		panel = allPins3_1
+		panel = allPins3_2
 
 	dialog = allPins1_1_and_2, "", xAxis
 		panel = allPins1_1
 		panel = allPins1_2
 
-	dialog = allPins1, "All Pins 1/2", xAxis
+	dialog = allPins1, "All Pins 1/3", xAxis
 		panel = allPins1_1_and_2
 		panel = allPins1_3
 
@@ -2012,7 +2023,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = allPins2_1
 		panel = allPins2_2
 
-	dialog = allPins2, "All Pins 2/2", xAxis
+	dialog = allPins2, "All Pins 2/3", xAxis
 		panel = allPins2_1_and_2
 		panel = allPins2_3
 
