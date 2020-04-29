@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Apr 26 14:16:11 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Apr 28 20:10:00 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -392,7 +392,6 @@ public class Fields {
 	public static final int etb_use_two_wires_offset = 76;
 	public static final int etbBiasBins_offset = 3888;
 	public static final int etbBiasValues_offset = 3920;
-	public static final int etbCalibrationOnStart_offset = 1476;
 	public static final int etbDeadband_offset = 3960;
 	public static final int etbFreq_offset = 2514;
 	public static final int etbIdleThrottleRange_offset = 4012;
@@ -1503,6 +1502,7 @@ public class Fields {
 	public static final int twoWireBatchInjection_offset = 1476;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
 	public static final int unused1059_offset = 3964;
+	public static final int unused1476b20_offset = 1476;
 	public static final int unused2432_offset = 2432;
 	public static final int unused2432_offset_hex = 980;
 	public static final int unused711_offset = 711;
@@ -2211,7 +2211,7 @@ public class Fields {
 	public static final Field USESEPARATEADVANCEFORCRANKING = Field.create("USESEPARATEADVANCEFORCRANKING", 1476, FieldType.BIT, 17);
 	public static final Field USEADVANCECORRECTIONSFORCRANKING = Field.create("USEADVANCECORRECTIONSFORCRANKING", 1476, FieldType.BIT, 18);
 	public static final Field USETPSADVANCETABLE = Field.create("USETPSADVANCETABLE", 1476, FieldType.BIT, 19);
-	public static final Field ETBCALIBRATIONONSTART = Field.create("ETBCALIBRATIONONSTART", 1476, FieldType.BIT, 20);
+	public static final Field UNUSED1476B20 = Field.create("UNUSED1476B20", 1476, FieldType.BIT, 20);
 	public static final Field USEIACPIDMULTTABLE = Field.create("USEIACPIDMULTTABLE", 1476, FieldType.BIT, 21);
 	public static final Field ISBOOSTCONTROLENABLED = Field.create("ISBOOSTCONTROLENABLED", 1476, FieldType.BIT, 22);
 	public static final Field LAUNCHSMOOTHRETARD = Field.create("LAUNCHSMOOTHRETARD", 1476, FieldType.BIT, 23);
@@ -3168,7 +3168,7 @@ public class Fields {
 	USESEPARATEADVANCEFORCRANKING,
 	USEADVANCECORRECTIONSFORCRANKING,
 	USETPSADVANCETABLE,
-	ETBCALIBRATIONONSTART,
+	UNUSED1476B20,
 	USEIACPIDMULTTABLE,
 	ISBOOSTCONTROLENABLED,
 	LAUNCHSMOOTHRETARD,

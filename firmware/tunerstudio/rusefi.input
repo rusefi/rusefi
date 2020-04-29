@@ -412,6 +412,8 @@ fileVersion = { @@TS_FILE_VERSION@@ }
      ; defaultValue = constantName, value;
     defaultValue = wueAfrTargetOffset, -1.5 -1.4 -1.15 -0.95 -0.775 -0.65 -0.5625 -0.5 -0.4375 -0.375 -0.3125 -0.25 -0.1875 -0.125 -0.0625 0
 
+	maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
+	maintainConstantValue = tpsMin, { (calibrationMode == 2 ) ? calibrationValue : tpsMin }
 
      requiresPowerCycle = warningLedPin
      requiresPowerCycle = runningLedPin
@@ -1500,6 +1502,7 @@ cmd_write_config     		 = "w\x00\x14\x00\x0A"
 cmd_test_starter_relay     	 = "w\x00\x14\x00\x0B"
 cmd_etb_autotune             = "w\x00\x14\x00\x0C"
 cmd_enable_self_stim         = "w\x00\x14\x00\x0D"
+cmb_etb_auto_calibrate       = "w\x00\x14\x00\x0E"
 
 cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
@@ -2793,8 +2796,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = etbDialogLeft
 		field = "https://rusefi.com/s/etb"
 		field = "Detailed status in console",			isVerboseETB
-		field = "Pause ETB control",					pauseEtbControl
-		field = etbCalibrationOnStart,					etbCalibrationOnStart
+		field = "Disable ETB Motor",					pauseEtbControl
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
 		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != 16 || useStepperIdle && useHbridges  }
@@ -2803,6 +2805,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "!Set debug mode below to 'ETB Autotune' to show results"
 		field = "Debug mode",							debugMode
 		commandButton = "ETB PID Autotune", cmd_etb_autotune
+		commandButton = "Auto Calibrate TPS", cmb_etb_auto_calibrate
 
 	dialog = etbDialogRight
 		panel = etbIdleDialog
