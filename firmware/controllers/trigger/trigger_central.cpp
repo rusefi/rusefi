@@ -227,7 +227,7 @@ uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
-	ScopePerf perf(PE::HandleShaftSignal, static_cast<uint8_t>(signal));
+	ScopePerf perf(PE::HandleShaftSignal);
 
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
