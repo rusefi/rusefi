@@ -65,6 +65,7 @@ static void perfEventImpl(PE event, EPhase phase)
 	// In addition, if we want to trace lock/unlock events, we can't
 	// be locking ourselves from the trace functionality.
 	{
+		uint32_t prim = __get_PRIMASK();
 		__disable_irq();
 
 		idx = s_nextIdx++;
@@ -73,7 +74,10 @@ static void perfEventImpl(PE event, EPhase phase)
 			s_isTracing = false;
 		}
 
-		__enable_irq();
+		// Restore previous interrupt state - don't restore if they weren't enabled
+		if (!prim) {
+			__enable_irq();
+		}
 	}
 
 	// We can safely write data out of the lock, our spot is reserved
