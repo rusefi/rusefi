@@ -21,6 +21,7 @@ extern "C"
  void irqEnterHook(void);
  void irqExitHook(void);
  void contextSwitchHook(void);
+ void threadInitHook(void* tp);
  #endif /* __ASSEMBLER__ */
 #ifdef __cplusplus
 }
@@ -84,5 +85,24 @@ extern "C" {
   /* IRQ epilogue code here.*/                                              \
   irqExitHook();                                                            \
 }
+
+/**
+ * @brief   Threads descriptor structure extension.
+ * @details User fields added to the end of the @p thread_t structure.
+ */
+#define CH_CFG_THREAD_EXTRA_FIELDS                                          \
+  void *activeStack; \
+  int remainingStack; \
+  unsigned char threadId; \
+  /* Add threads custom fields here.*/
+
+/**
+ * @brief   Threads initialization hook.
+ * @details User initialization code added to the @p chThdInit() API.
+ *
+ * @note    It is invoked from within @p chThdInit() and implicitly from all
+ *          the threads creation APIs.
+ */
+#define CH_CFG_THREAD_INIT_HOOK(tp) { threadInitHook(tp); }
 
 #endif /* CONFIG_CHCONF_COMMON_H_ */

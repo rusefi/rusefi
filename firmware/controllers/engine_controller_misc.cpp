@@ -14,6 +14,13 @@ EXTERN_ENGINE;
 
 extern LoggingWithStorage sharedLogger;
 
+static uint8_t nextThreadId = 0;
+void threadInitHook(void* vtp) {
+	// No lock required, this is already under lock
+	auto tp = reinterpret_cast<thread_t*>(vtp);
+	tp->threadId = ++nextThreadId;
+}
+
 #if ENABLE_PERF_TRACE
 
 void irqEnterHook() {
