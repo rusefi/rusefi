@@ -1,5 +1,7 @@
 package com.rusefi.tracing;
 
+import com.rusefi.PerfTraceTool;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
@@ -39,11 +41,14 @@ public class JsonOutput {
     private static final String EOL = "\r\n";
 
     public static void main(String[] args) throws IOException {
+        /**
+         * that's just a test I assume?
+         */
         List<Entry> testEntries = Arrays.asList(
-                new Entry("hello", Phase.B, 0.1),
-                new Entry("hello2", Phase.B, 0.2),
-                new Entry("hello2", Phase.E, 0.3),
-                new Entry("hello", Phase.E, 0.4)
+                new Entry("hello", Phase.B, 0.1, 0, 0),
+                new Entry("hello2", Phase.B, 0.2, 0, 0),
+                new Entry("hello2", Phase.E, 0.3, 0, 0),
+                new Entry("hello", Phase.E, 0.4, 0, 0)
         );
 
         writeToStream(testEntries, new FileOutputStream("hello_trace.json"));
