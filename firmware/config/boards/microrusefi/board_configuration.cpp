@@ -11,7 +11,7 @@
  * set engine_type 30
  *
  *
- * See https://github.com/rusefi/rusefi_documentation/wiki/Hardware_microRusEfi_wiring
+ * See https://github.com/rusefi/rusefi/wiki/Hardware_microRusEfi_wiring
  *
  * @author Matthew Kennedy, (c) 2019
  */

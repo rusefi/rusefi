@@ -5,7 +5,7 @@
  * @see test test_etb.cpp
  *
  *
- * Limited user documentation at https://github.com/rusefi/rusefi_documentation/wiki/HOWTO_electronic_throttle_body
+ * Limited user documentation at https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
  *
  * todo: make this more universal if/when we get other hardware options
  *
