@@ -14,11 +14,15 @@ public class Entry {
     private static final double MAGIC_NT = 168.0;
     private final String name;
     private final Phase phase;
+    private final int isr;
+    private final int thread;
     private double timestampSeconds;
 
-    public Entry(String name, Phase phase, double timestampSeconds) {
+    public Entry(String name, Phase phase, double timestampSeconds, int isr, int thread) {
         this.name = name;
         this.phase = phase;
+        this.isr = isr;
+        this.thread = thread;
         this.timestampSeconds = timestampSeconds;
     }
 
@@ -65,7 +69,7 @@ public class Entry {
             for (int i = 0; i < packet.length - 1; i += 8) {
                 byte type = is.readByte();
                 byte phase = is.readByte();
-                byte data = is.readByte();
+                byte isr = is.readByte();
                 byte thread = is.readByte();
 
                 int timestampNt = readInt(is);
@@ -91,7 +95,7 @@ public class Entry {
                     name = TypeNames[type];
                 }
 
-                Entry e = new Entry(name, Phase.decode(phase), timestampSeconds);
+                Entry e = new Entry(name, Phase.decode(phase), timestampSeconds, isr, thread);
                 result.add(e);
             }
 
@@ -119,10 +123,9 @@ public class Entry {
         sb.append(",");
         AppendKeyValuePair(sb, "ph", phase.toString());
         sb.append(",");
-        AppendKeyValuePair(sb, "tid", 0);
+        AppendKeyValuePair(sb, "tid", thread);
         sb.append(",");
-
-        AppendKeyValuePair(sb, "pid", 0);
+        AppendKeyValuePair(sb, "pid", isr);
         sb.append(",");
         AppendKeyValuePair(sb, "ts", timestampSeconds);
         sb.append("}");
