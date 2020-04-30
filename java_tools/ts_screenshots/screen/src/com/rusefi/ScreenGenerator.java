@@ -1,12 +1,11 @@
 package com.rusefi;
 
+import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
+import com.rusefi.xml.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
@@ -26,22 +25,36 @@ public class ScreenGenerator {
     private static final String DESTINATION = "images" + File.separator;
 
     static Content content = new Content();
+    static IniFileModel iniFileModel = new IniFileModel();
+
+    static Map<String, DialogModel.Field> byCleanUiName = new TreeMap<>();
 
     public static void main(String[] args) throws Exception {
-        IniFileModel iniFileModel = new IniFileModel();
-        iniFileModel.readIniFile("../../firmware/tunerstudio");
+        if (args.length != 1) {
+            System.out.println("One parameter expected: path to directory containing rusefi.ini file");
+            System.exit(-1);
+        }
 
+        iniFileModel.readIniFile(".");
+
+        for (Map.Entry<String, DialogModel.Field> a : iniFileModel.getAllFields().entrySet()) {
+            String cleanUiName = cleanName(a.getValue().getUiName());
+            byCleanUiName.put(cleanUiName, a.getValue());
+        }
+
+        System.out.println("mkdirs " + DESTINATION);
         new File(DESTINATION).mkdirs();
 
-        Frame mainFrame = findMainFrame();
+        System.out.println("Launching TunerStudioIntegraion");
+        Frame mainFrame = TunerStudioIntegraion.findMainFrame();
 
         while (topLevelButtons.isEmpty()) {
-            visitComponents(mainFrame, "", (parent, component) -> {
+            UiUtils.visitComponents(mainFrame, "", (parent, component) -> {
                 if (component instanceof AbstractButton) {
                     AbstractButton ab = (AbstractButton) component;
                     System.out.println("topLevelButton " + ab.getText());
 
-                    if (isTopLevelMenuButton(component)) {
+                    if (TunerStudioIntegraion.isTopLevelMenuButton(component)) {
                         topLevelButtons.add(ab);
                     }
                 }
@@ -54,117 +67,39 @@ public class ScreenGenerator {
         handleTopLevelButtons(mainFrame, topLevelButtons);
     }
 
-    private static void writeXml(Content content) throws JAXBException, IOException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(Content.class);
-
-        Marshaller marshaller = jaxbContext.createMarshaller();
-
-        StringWriter xmlWriter = new StringWriter();
-        marshaller.marshal(content, xmlWriter);
-        System.out.println(xmlWriter.toString());
-
-        marshaller.marshal(content, new FileWriter("output.xml"));
-    }
-
-
-    private static Frame findMainFrame() throws InterruptedException {
-        while (true) {
-            Frame[] all = JFrame.getFrames();
-
-            for (Frame frame : all) {
-                System.out.println("I see " + frame.getTitle());
-
-                if (frame.getTitle().contains("TunerStudio")) {
-                    return frame;
-                }
-            }
-            Thread.sleep(1000);
-        }
-    }
-
-    interface Callback {
-        void onComponent(Component parent, Component component);
-    }
-
-    public static void visitComponents(Component cmp, String prefix, Callback callback) {
-        visitComponents(cmp, null, prefix, callback);
-    }
-
-    public static void visitComponents(Component component, Component parent, String prefix, Callback callback) {
-        if (component == null)
-            throw new NullPointerException("component");
-        if (component instanceof AbstractButton) {
-            AbstractButton ab = (AbstractButton) component;
-            System.out.println("[button " + ab.getText() + "]");
-        } else if (component instanceof JLabel) {
-            JLabel ab = (JLabel) component;
-            System.out.println("[label " + ab.getText() + "]");
-        } else if (component instanceof JComboBox) {
-            JComboBox ab = (JComboBox) component;
-            System.out.println("[combo " + ab.getSelectedItem() + "]");
-        } else if (component instanceof JPanel) {
-            JPanel p = (JPanel) component;
-            System.out.println("[panel " + p.getLayout() + "] children=" + p.getComponents().length);
-            System.out.println("[panel " + p.getLayout() + "] " + p.getLocation() + " size = "+  p.getSize());
-        }
-
-
-        System.out.println(prefix + " I see " + component.getClass());
-        callback.onComponent(parent, component);
-        Container container = (Container) component;
-        if (container == null) {
-            // Not a container, return
-            return;
-        }
-        // Go visit and add all children
-        for (Component subComponent : container.getComponents()) {
-            if (subComponent == null)
-                continue;
-            visitComponents(subComponent, component, prefix + " " + subComponent.getClass().getSimpleName(), callback);
-        }
-    }
-
-    private static boolean isTopLevelMenuButton(Component component) {
-        return component instanceof bi.b;
-    }
-
     private static void handleTopLevelButtons(Frame frame, ArrayList<AbstractButton> topLevelButtons) throws Exception {
-        printAllDialogs("Dialogs before clicking ", JDialog.getWindows());
-
         for (AbstractButton topLevel : topLevelButtons) {
-            handleTopLevelButton(frame, topLevel);
+            handleTopLevelButton(frame, topLevel, content);
         }
+        XmlUtil.writeXml(content);
     }
 
-    private static void handleTopLevelButton(Frame frame, AbstractButton topLevel) throws Exception {
+    private static void handleTopLevelButton(Frame frame, AbstractButton topLevel, Content content) throws Exception {
         SwingUtilities.invokeAndWait(topLevel::doClick);
         Thread.sleep(TOP_MENU_CLICK_DELAY);
 
-        content.getTopLevelMenus().add(new TopLevelMenu(topLevel.getText()));
-
-        writeXml(content);
-
+        TopLevelMenu topLevelMenu = new TopLevelMenu(topLevel.getText());
+        ScreenGenerator.content.getTopLevelMenus().add(topLevelMenu);
 
         ImageIO.write(
-                getScreenShot(frame),
+                UiUtils.getScreenShot(frame),
                 "png",
                 new File(DESTINATION + cleanName(topLevel.getText()) + ".png"));
 
-        List<JMenuItem> menuItems = findMenuItems(frame);
+        List<JMenuItem> menuItems = TunerStudioIntegraion.findMenuItems(frame);
 
         for (JMenuItem menuItem : menuItems) {
-            handleMenuItem(menuItem);
+            handleMenuItem(menuItem, topLevelMenu);
         }
     }
 
-    private static void handleMenuItem(JMenuItem menuItem) throws InterruptedException, InvocationTargetException {
+    private static void handleMenuItem(JMenuItem menuItem, TopLevelMenu topLevelMenu) throws InterruptedException, InvocationTargetException {
         SwingUtilities.invokeAndWait(menuItem::doClick);
 
         Thread.sleep(MENU_CLICK_DELAY);
 
-
         AtomicReference<JDialog> ref = new AtomicReference<>();
-        SwingUtilities.invokeAndWait(() -> ref.set(findDynamicDialog()));
+        SwingUtilities.invokeAndWait(() -> ref.set(TunerStudioIntegraion.findDynamicDialog()));
         // let's give it time to appear on the screen
         Thread.sleep(MENU_CLICK_DELAY);
         JDialog dialog = ref.get();
@@ -173,28 +108,24 @@ public class ScreenGenerator {
             return;
         }
 
+        DialogDescription dialogDescription = new DialogDescription();
+        topLevelMenu.getDialogs().add(dialogDescription);
+
         SwingUtilities.invokeAndWait(() -> {
             try {
-                Map<Integer, String> yCoordinates = new TreeMap<>();
-
-                BufferedImage dialogScreenShot = getScreenShot(dialog);
-
-                findSlices(dialog, yCoordinates, dialog.getLocationOnScreen().y);
+                findSlices(dialog, dialogDescription);
 
                 if (dialog == null) {
                     // this happens for example for disabled menu items
                     return;
                 }
 
-
-                saveSlices(dialog, yCoordinates, dialogScreenShot);
-
-
 //                            Robot robot = new Robot();
 //                            Rectangle captureRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 //                            BufferedImage screenFullImage = robot.createScreenCapture(captureRect);
 //                            ImageIO.write(screenFullImage, PNG, new File(DESTINATION + "full_" + d.getTitle() + ".png"));
 
+                BufferedImage dialogScreenShot = UiUtils.getScreenShot(dialog);
                 ImageIO.write(
                         dialogScreenShot,
                         PNG,
@@ -207,7 +138,7 @@ public class ScreenGenerator {
         });
     }
 
-    private static void saveSlices(JDialog dialog, Map<Integer, String> yCoordinates, BufferedImage dialogScreenShot) throws IOException {
+    private static void saveSlices(String dialogTitle, Map<Integer, String> yCoordinates, BufferedImage dialogScreenShot, DialogDescription dialogDescription) {
         System.out.println("Label Y coordinates: " + yCoordinates);
         yCoordinates.put(0, "top");
         yCoordinates.put(dialogScreenShot.getHeight(), "bottom");
@@ -233,7 +164,14 @@ public class ScreenGenerator {
                 System.out.println("Weird");
                 continue;
             }
-            String fileName = cleanName(dialog.getTitle()) + "_slice_" + fromY + "_" + sectionName + ".png";
+            String fileName = cleanName(dialogTitle) + "_slice_" + fromY + "_" + sectionName + ".png";
+
+            DialogModel.Field f = byCleanUiName.get(sectionName);
+            if (f == null)
+                continue;
+
+            dialogDescription.fields.add(new FieldDescription(sectionNameWithSpecialCharacters, f.getKey(), fileName));
+
             File output = new File(DESTINATION + fileName);
             if (output == null) {
                 System.out.println(sectionName + " in " + fileName + " was not a success");
@@ -241,46 +179,58 @@ public class ScreenGenerator {
             }
             try {
                 ImageIO.write(slice, PNG, output);
-            } catch (NullPointerException | FileNotFoundException e) {
+            } catch (Exception e) {
                 System.out.println(sectionName + " in " + fileName + " was not a success?");
                 continue;
             }
         }
     }
 
-    private static void findSlices(JDialog dialog, Map<Integer, String> yCoordinates, int relativeY) {
-        visitComponents(dialog, "Dynamic dialog", new Callback() {
+    private static void findSlices(JDialog dialog, DialogDescription dialogDescription) {
+        UiUtils.visitComponents(dialog, "Dynamic dialog", new Callback() {
             @Override
             public void onComponent(Component parent, Component component) {
-                if (component instanceof JLabel) {
-                    JLabel label = (JLabel) component;
-                    if (!label.isVisible() || label.getSize().width == 0)
-                        return;
-                    String labelText = label.getText();
-                    if (labelText.length() > 0) {
-                        System.out.println("Looking at " + label);
-                        try {
-                            yCoordinates.put(label.getLocationOnScreen().y - relativeY, labelText);
-                        } catch (IllegalComponentStateException e) {
-                            System.out.printf("Did not go well for " + label);
-                        }
-                    }
+                if (component instanceof JPanel) {
+                    JPanel panel = (JPanel) component;
+                    handleBox(dialog.getTitle(), panel, dialogDescription);
                 }
-
             }
         });
     }
 
-    private static List<JMenuItem> findMenuItems(Frame frame) {
-        List<JMenuItem> menuItems = new ArrayList<>();
-        visitComponents(frame, "Just clicked ", (parent, component) -> {
-            if (component instanceof JMenuItem && component.getClass().getName().endsWith("aH.gc")) {
-                JMenuItem menuItem = (JMenuItem) component;
-                System.out.println("Menu item " + menuItem.getText());
-                menuItems.add(menuItem);
-            }
-        });
-        return menuItems;
+    private static void handleBox(String dialogTitle, JPanel panel, DialogDescription dialogDescription) {
+        if (panel.getLayout() instanceof BoxLayout) {
+            BoxLayout layout = (BoxLayout) panel.getLayout();
+            if (layout.getAxis() == BoxLayout.X_AXIS)
+                return;
+
+            BufferedImage panelImage = UiUtils.getScreenShot(panel);
+
+            Map<Integer, String> yCoordinates = new TreeMap<>();
+            int relativeY = panel.getLocationOnScreen().y;
+
+            UiUtils.visitComponents(panel, "Looking inside the box", new Callback() {
+                @Override
+                public void onComponent(Component parent, Component component) {
+                    if (component instanceof JLabel) {
+                        JLabel label = (JLabel) component;
+                        if (!label.isVisible() || label.getSize().width == 0)
+                            return;
+                        String labelText = label.getText();
+                        if (labelText.length() > 0) {
+                            System.out.println("Looking at " + label);
+                            try {
+                                yCoordinates.put(label.getLocationOnScreen().y - relativeY, labelText);
+                            } catch (IllegalComponentStateException e) {
+                                System.out.printf("Did not go well for " + label);
+                            }
+                        }
+                    }
+                }
+            });
+
+            saveSlices(dialogTitle, yCoordinates, panelImage, dialogDescription);
+        }
     }
 
     private static String cleanName(String title) {
@@ -295,33 +245,5 @@ public class ScreenGenerator {
         title = title.replace('\\', '_');
         title = title.replace("  ", " ");
         return title;
-    }
-
-    private static JDialog findDynamicDialog() {
-        for (Window d : Dialog.getWindows()) {
-            if (d.getClass().getName().equals(TS_DIALOG) && d.isVisible()) {
-                return (JDialog) d;
-            }
-        }
-        return null;
-    }
-
-    private static void printAllDialogs(String message, Window[] windows) {
-        System.out.println(message + windows.length);
-        for (Window window : windows)
-            System.out.println("type " + window.getClass());
-    }
-
-    public static BufferedImage getScreenShot(Component component) {
-
-        BufferedImage image = new BufferedImage(
-                component.getWidth(),
-                component.getHeight(),
-                BufferedImage.TYPE_INT_RGB
-        );
-        // call the Component's paint method, using
-        // the Graphics object of the image.
-        component.paint(image.getGraphics()); // alternately use .printAll(..)
-        return image;
     }
 }
