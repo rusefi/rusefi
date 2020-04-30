@@ -2035,8 +2035,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Input channel",						clt_adcChannel
 		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != 16}
 
-		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
+		field = "#Input three pairs of thermistor temperature and resistance."
+		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
 		field = "Lowest temperature",  					clt_tempC_1, {clt_adcChannel != 16}
 		field = "Resistance @ LT",         	   			clt_resistance_1, {clt_adcChannel != 16}
@@ -2049,17 +2049,21 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = ""
 		field = "Linear characteristic",				useLinearCltSensor, {clt_adcChannel != 16}
 
-	dialog = cltSensor, "", xAxis
-		panel = clt_thermistor
+	dialog = cltGauges
 		gauge = CLTGauge
+		gauge = rawCltGauge
+
+	dialog = cltSensor, "CLT Sensor", border
+		panel = clt_thermistor, West
+		panel = cltGauges, East
 
 ;			Sensors->IAT sensor
 	dialog = iat_thermistor, "IAT sensor"
 		field = "Input channel",						iat_adcChannel
 		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != 16}
 
-		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
+		field = "#Input three pairs of thermistor temperature and resistance."
+		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
 		field = "Lowest temperature",					iat_tempC_1, {iat_adcChannel != 16}
 		field = "Resistance @ LT",						iat_resistance_1, {iat_adcChannel != 16}
@@ -2072,21 +2076,29 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = ""
 		field = "Linear characteristic",				useLinearIatSensor, {iat_adcChannel != 16}
 
-	dialog = iatSensor, "", xAxis
-		panel = iat_thermistor
+	dialog = iatGauges
 		gauge = IATGauge
+		gauge = rawIatGauge
+
+	dialog = iatSensor, "IAT Sensor", border
+		panel = iat_thermistor, West
+		panel = iatGauges, East
 		
 ;			Sensors->Oil pressure sensor
-	dialog = oilp_settings, "Oil pressure sensor"
+	dialog = oilp_settings, "Oil Pressure Sensor"
 		field = "Oil Pressure ADC input",				oilPressure_hwChannel
 		field = "low voltage",							oilPressure_v1, {oilPressure_hwChannel != 16}
 		field = "low pressure",							oilPressure_value1, {oilPressure_hwChannel != 16}
 		field = "high voltage",							oilPressure_v2, {oilPressure_hwChannel != 16}
 		field = "high pressure",						oilPressure_value2, {oilPressure_hwChannel != 16}
 
-	dialog = oilPressureSensor, "", xAxis
-		panel = oilp_settings
+	dialog = oilPressureGauges
 		gauge = OilPressGauge
+		gauge = rawOilPressureGauge
+
+	dialog = oilPressureSensor, "", border
+		panel = oilp_settings, West
+		panel = oilPressureGauges, East
 
 ;			Sensors->MAP sensor
 	dialog = mapSensorAnalog, "MAP sensor", yAxis		
@@ -2562,10 +2574,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = crankingFuel, "Fuel"
 		field = "Injection mode",						crankingInjectionMode
-		field = "!Value '1' is currently recommended"
 		field = "Fuel Source For Cranking",             useRunningMathForCranking
 		field = "Base fuel pulse width", 				cranking_baseFuel, {useRunningMathForCranking == 0}
-		
+
 	dialog = crankingIAC, "IAC"
 		field = "Cranking IAC position",					crankingIACposition
 		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
@@ -2579,7 +2590,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
         field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
 		field = "Cranking Dwell Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
 	
-	dialog = postCrankingEnrichment, "Post-cranking short-time fuel enrichment (NOT IMPLEMENTED #331)"
+	dialog = postCrankingEnrichment, "After start enrichment"
 		field = "Post-Cranking factor", 				postCrankingFactor
 		field = "Duration", 				postCrankingDurationSec
 		
