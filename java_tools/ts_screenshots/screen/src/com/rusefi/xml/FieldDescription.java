@@ -7,11 +7,13 @@ public class FieldDescription {
     private final String uiName;
     private final String fieldName;
     private final String fileName;
+    private final String tooltip;
 
-    public FieldDescription(String uiName, String fieldName, String fileName) {
+    public FieldDescription(String uiName, String fieldName, String fileName, String tooltip) {
         this.uiName = uiName;
         this.fieldName = fieldName;
         this.fileName = fileName;
+        this.tooltip = tooltip == null ? "" : tooltip;
     }
 
     @XmlAttribute
@@ -27,5 +29,10 @@ public class FieldDescription {
     @XmlAttribute
     public String getFileName() {
         return fileName;
+    }
+
+    @XmlAttribute
+    public String getTooltip() {
+        return tooltip;
     }
 }

@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 public class XmlUtil {
+
+    public static final String FILE_NAME = "output.xml";
+
     public static void writeXml(Content content) throws JAXBException, IOException {
         JAXBContext jaxbContext = JAXBContext.newInstance(Content.class);
 
@@ -17,6 +20,8 @@ public class XmlUtil {
         marshaller.marshal(content, xmlWriter);
         System.out.println(xmlWriter.toString());
 
-        marshaller.marshal(content, new FileWriter("output.xml"));
+        System.out.println("Writing " + FILE_NAME);
+        marshaller.marshal(content, new FileWriter(FILE_NAME));
+        System.out.println("Done " + FILE_NAME);
     }
 }

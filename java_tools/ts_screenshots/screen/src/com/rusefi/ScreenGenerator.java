@@ -42,12 +42,26 @@ public class ScreenGenerator {
             byCleanUiName.put(cleanUiName, a.getValue());
         }
 
+        if (byCleanUiName.isEmpty())
+            throw new IllegalStateException("Something not right with input file. April 29 version is needed");
+
+
         System.out.println("mkdirs " + DESTINATION);
         new File(DESTINATION).mkdirs();
 
         System.out.println("Launching TunerStudioIntegraion");
         Frame mainFrame = TunerStudioIntegraion.findMainFrame();
 
+        waitForMainFrame(mainFrame);
+
+        System.out.println("Done discovering buttons, " + topLevelButtons.size());
+
+        handleTopLevelButtons(mainFrame, topLevelButtons);
+
+        XmlUtil.writeXml(content);
+    }
+
+    private static void waitForMainFrame(Frame mainFrame) throws InterruptedException {
         while (topLevelButtons.isEmpty()) {
             UiUtils.visitComponents(mainFrame, "", (parent, component) -> {
                 if (component instanceof AbstractButton) {
@@ -61,17 +75,12 @@ public class ScreenGenerator {
             });
             Thread.sleep(1000);
         }
-
-        System.out.println("Done discovering buttons, " + topLevelButtons.size());
-
-        handleTopLevelButtons(mainFrame, topLevelButtons);
     }
 
     private static void handleTopLevelButtons(Frame frame, ArrayList<AbstractButton> topLevelButtons) throws Exception {
         for (AbstractButton topLevel : topLevelButtons) {
             handleTopLevelButton(frame, topLevel, content);
         }
-        XmlUtil.writeXml(content);
     }
 
     private static void handleTopLevelButton(Frame frame, AbstractButton topLevel, Content content) throws Exception {
@@ -108,7 +117,10 @@ public class ScreenGenerator {
             return;
         }
 
-        DialogDescription dialogDescription = new DialogDescription();
+        String dialogTitle = dialog.getTitle();
+
+
+        DialogDescription dialogDescription = new DialogDescription(dialogTitle);
         topLevelMenu.getDialogs().add(dialogDescription);
 
         SwingUtilities.invokeAndWait(() -> {
@@ -129,7 +141,7 @@ public class ScreenGenerator {
                 ImageIO.write(
                         dialogScreenShot,
                         PNG,
-                        new File(DESTINATION + cleanName(dialog.getTitle()) + ".png"));
+                        new File(DESTINATION + cleanName(dialogTitle) + ".png"));
                 dialog.setVisible(false);
                 dialog.dispose();
             } catch (Exception e) {
@@ -170,7 +182,10 @@ public class ScreenGenerator {
             if (f == null)
                 continue;
 
-            dialogDescription.fields.add(new FieldDescription(sectionNameWithSpecialCharacters, f.getKey(), fileName));
+            String fieldName = f.getKey();
+            String tooltip = iniFileModel.tooltips.get(fieldName);
+
+            dialogDescription.fields.add(new FieldDescription(sectionNameWithSpecialCharacters, fieldName, fileName, tooltip));
 
             File output = new File(DESTINATION + fileName);
             if (output == null) {
