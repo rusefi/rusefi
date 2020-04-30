@@ -1,6 +1,4 @@
-package com.rusefi;
-
-import com.opensr5.ini.DialogModel;
+package com.rusefi.xml;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -13,7 +11,7 @@ public class TopLevelMenu {
 
     @XmlElementWrapper
     @XmlElement(name = "dialog")
-    private List<DialogModel> dialogs = new ArrayList<>();
+    private List<DialogDescription> dialogs = new ArrayList<>();
 
     public TopLevelMenu(String title) {
         this.title = title;
@@ -24,7 +22,7 @@ public class TopLevelMenu {
         return title;
     }
 
-    public List<DialogModel> getDialogs() {
+    public List<DialogDescription> getDialogs() {
         return dialogs;
     }
 }

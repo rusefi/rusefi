@@ -3,3 +3,4 @@ config
 TunerStudio.properties
 lib
 images
+output.xml

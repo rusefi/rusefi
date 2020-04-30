@@ -104,6 +104,10 @@ public class IniFileModel {
         System.out.println("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 
+    public Map<String, DialogModel.Field> getAllFields() {
+        return allFields;
+    }
+
     @Nullable
     public DialogModel.Field getField(String key) {
         DialogModel.Field field = allFields.get(key);
