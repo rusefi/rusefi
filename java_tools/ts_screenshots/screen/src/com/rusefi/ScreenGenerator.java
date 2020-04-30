@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -103,6 +102,10 @@ public class ScreenGenerator {
         } else if (component instanceof JComboBox) {
             JComboBox ab = (JComboBox) component;
             System.out.println("[combo " + ab.getSelectedItem() + "]");
+        } else if (component instanceof JPanel) {
+            JPanel p = (JPanel) component;
+            System.out.println("[panel " + p.getLayout() + "] children=" + p.getComponents().length);
+            System.out.println("[panel " + p.getLayout() + "] " + p.getLocation() + " size = "+  p.getSize());
         }
 
 
@@ -174,7 +177,9 @@ public class ScreenGenerator {
             try {
                 Map<Integer, String> yCoordinates = new TreeMap<>();
 
-                findSlices(dialog, yCoordinates);
+                BufferedImage dialogScreenShot = getScreenShot(dialog);
+
+                findSlices(dialog, yCoordinates, dialog.getLocationOnScreen().y);
 
                 if (dialog == null) {
                     // this happens for example for disabled menu items
@@ -182,48 +187,7 @@ public class ScreenGenerator {
                 }
 
 
-                System.out.println("Label Y coordinates: " + yCoordinates);
-                int topY = dialog.getLocationOnScreen().y;
-                yCoordinates.put(topY, "top");
-                yCoordinates.put(topY + dialog.getSize().height, "bottom");
-
-                List<Integer> sorted = new ArrayList<>(yCoordinates.keySet());
-
-                BufferedImage dialogScreenShot = getScreenShot(dialog);
-
-                for (int i = 0; i < sorted.size() - 1; i++) {
-                    Integer fromYScreen = sorted.get(i);
-                    int fromY = fromYScreen - topY;
-                    int toY = sorted.get(i + 1) - topY;
-
-                    String sectionNameWithSpecifalCharacters = yCoordinates.get(fromYScreen);
-                    String sectionName = cleanName(sectionNameWithSpecifalCharacters);
-
-                    BufferedImage slice;
-                    try {
-                        slice = dialogScreenShot.getSubimage(0, fromY, dialogScreenShot.getWidth(), toY - fromY);
-                    } catch (RasterFormatException e) {
-                        System.out.println("Dialog does not fit screen? " + sectionNameWithSpecifalCharacters);
-                        continue;
-                    }
-
-                    if (slice == null) {
-                        System.out.println("Weird");
-                        continue;
-                    }
-                    String fileName = cleanName(dialog.getTitle()) + "_slice_" + fromY + "_" + sectionName + ".png";
-                    File output = new File(DESTINATION + fileName);
-                    if (output == null) {
-                        System.out.println(sectionName + " in " + fileName + " was not a success");
-                        continue;
-                    }
-                    try {
-                        ImageIO.write(slice, PNG, output);
-                    } catch (NullPointerException | FileNotFoundException e) {
-                        System.out.println(sectionName + " in " + fileName + " was not a success?");
-                        continue;
-                    }
-                }
+                saveSlices(dialog, yCoordinates, dialogScreenShot);
 
 
 //                            Robot robot = new Robot();
@@ -243,7 +207,48 @@ public class ScreenGenerator {
         });
     }
 
-    private static void findSlices(JDialog dialog, Map<Integer, String> yCoordinates) {
+    private static void saveSlices(JDialog dialog, Map<Integer, String> yCoordinates, BufferedImage dialogScreenShot) throws IOException {
+        System.out.println("Label Y coordinates: " + yCoordinates);
+        yCoordinates.put(0, "top");
+        yCoordinates.put(dialogScreenShot.getHeight(), "bottom");
+
+        List<Integer> sorted = new ArrayList<>(yCoordinates.keySet());
+
+        for (int i = 0; i < sorted.size() - 1; i++) {
+            int fromY = sorted.get(i);
+            int toY = sorted.get(i + 1);
+
+            String sectionNameWithSpecialCharacters = yCoordinates.get(sorted.get(i));
+            String sectionName = cleanName(sectionNameWithSpecialCharacters);
+
+            BufferedImage slice;
+            try {
+                slice = dialogScreenShot.getSubimage(0, fromY, dialogScreenShot.getWidth(), toY - fromY);
+            } catch (RasterFormatException e) {
+                System.out.println("Dialog does not fit screen? " + sectionNameWithSpecialCharacters);
+                continue;
+            }
+
+            if (slice == null) {
+                System.out.println("Weird");
+                continue;
+            }
+            String fileName = cleanName(dialog.getTitle()) + "_slice_" + fromY + "_" + sectionName + ".png";
+            File output = new File(DESTINATION + fileName);
+            if (output == null) {
+                System.out.println(sectionName + " in " + fileName + " was not a success");
+                continue;
+            }
+            try {
+                ImageIO.write(slice, PNG, output);
+            } catch (NullPointerException | FileNotFoundException e) {
+                System.out.println(sectionName + " in " + fileName + " was not a success?");
+                continue;
+            }
+        }
+    }
+
+    private static void findSlices(JDialog dialog, Map<Integer, String> yCoordinates, int relativeY) {
         visitComponents(dialog, "Dynamic dialog", new Callback() {
             @Override
             public void onComponent(Component parent, Component component) {
@@ -255,7 +260,7 @@ public class ScreenGenerator {
                     if (labelText.length() > 0) {
                         System.out.println("Looking at " + label);
                         try {
-                            yCoordinates.put(label.getLocationOnScreen().y, labelText);
+                            yCoordinates.put(label.getLocationOnScreen().y - relativeY, labelText);
                         } catch (IllegalComponentStateException e) {
                             System.out.printf("Did not go well for " + label);
                         }
