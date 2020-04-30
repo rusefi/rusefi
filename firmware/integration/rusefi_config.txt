@@ -1125,8 +1125,8 @@ tle8888_mode_e tle8888mode;
 	float autoTuneTpsRocThreshold;
 	float autoTuneTpsQuietPeriod;
 	float unused2432;
-	float postCrankingFactor;Fuel multiplier taper, see also postCrankingDurationSec;"mult",        1,     0,  0,    100,  4
-	float postCrankingDurationSec;See also postCrankingFactor;"seconds",        1,     0,  0,    100,  2
+	float postCrankingFactor;+Fuel multiplier (enrichment) immediately after engine start;"mult",        1,     0,  0,    100,  4
+	float postCrankingDurationSec;+Time over which to taper out after start enrichment;"seconds",        1,     0,  0,    100,  2
 	ThermistorConf auxTempSensor1;todo: finish implementation #332
 	ThermistorConf auxTempSensor2;todo: finish implementation #332
 	int16_t fuelClosedLoopCltThreshold;;"C",        1,     0,  0,    100,  0
