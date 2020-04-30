@@ -2568,10 +2568,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = crankingFuel, "Fuel"
 		field = "Injection mode",						crankingInjectionMode
-		field = "!Value '1' is currently recommended"
 		field = "Fuel Source For Cranking",             useRunningMathForCranking
 		field = "Base fuel pulse width", 				cranking_baseFuel, {useRunningMathForCranking == 0}
-		
+
 	dialog = crankingIAC, "IAC"
 		field = "Cranking IAC position",					crankingIACposition
 		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
@@ -2585,7 +2584,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
         field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
 		field = "Cranking Dwell Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
 	
-	dialog = postCrankingEnrichment, "Post-cranking short-time fuel enrichment (NOT IMPLEMENTED #331)"
+	dialog = postCrankingEnrichment, "After start enrichment"
 		field = "Post-Cranking factor", 				postCrankingFactor
 		field = "Duration", 				postCrankingDurationSec
 		
