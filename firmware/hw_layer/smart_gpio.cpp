@@ -131,7 +131,7 @@ struct tle8888_config tle8888_cfg = {
 		[3] = {.port = NULL,	.pad = 0,	.output = 12},
 */
 	},
-	.hallMode = false,
+	.mode = TL_AUTO,
 };
 #endif
 
@@ -178,7 +178,7 @@ void initSmartGpio() {
 		tle8888_cfg.spi_config.sspad = getHwPin("tle8888 CS", engineConfiguration->tle8888_cs);
 		tle8888_cfg.spi_bus = getSpiDevice(engineConfiguration->tle8888spiDevice);
 
-		tle8888_cfg.hallMode = engineConfiguration->useTLE8888_hall_mode;
+		tle8888_cfg.mode = engineConfiguration->tle8888mode;
 
 		/* spi_bus == null checked in _add function */
 		ret = tle8888_add(0, &tle8888_cfg);

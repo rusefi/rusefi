@@ -43,6 +43,15 @@ static const brain_pin_e ignPins[] = {
 	GPIOG_2,
 };
 
+static const ConfigOverrides configOverrides = {
+	.canTxPin = GPIOD_1,
+	.canRxPin = GPIOD_0,
+};
+
+const ConfigOverrides& getConfigOverrides() {
+	return configOverrides;
+}
+
 static void setInjectorPins() {
 	copyArray(engineConfiguration->injectionPins, injPins);
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
@@ -103,12 +112,6 @@ static void setupEtb() {
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
-	engineConfiguration->etbFreq = 800;
-}
-
-static void setupCanPins() {
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
 }
 
 static void setupDefaultSensorInputs() {
@@ -162,7 +165,6 @@ void setBoardConfigurationOverrides(void) {
 	setLedPins();
 	setupVbatt();
 	setupEtb();
-	setupCanPins();
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

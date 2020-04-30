@@ -5,7 +5,7 @@
  * @see test test_etb.cpp
  *
  *
- * Limited user documentation at https://github.com/rusefi/rusefi_documentation/wiki/HOWTO_electronic_throttle_body
+ * Limited user documentation at https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
  *
  * todo: make this more universal if/when we get other hardware options
  *
@@ -124,17 +124,13 @@ void EtbController::reset() {
 }
 
 void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
-	if (m_motor && m_pid.isSame(previousConfiguration)) {
+	if (m_motor && !m_pid.isSame(previousConfiguration)) {
 		m_shouldResetPid = true;
 	}
 }
 
 void EtbController::showStatus(Logging* logger) {
 	m_pid.showPidStatus(logger, "ETB");
-}
-
-int EtbController::getPeriodMs() {
-	return GET_PERIOD_LIMITED(&engineConfiguration->etb);
 }
 
 expected<percent_t> EtbController::observePlant() const {
@@ -151,21 +147,17 @@ expected<percent_t> EtbController::getSetpoint() const {
 		return unexpected;
 	}
 
-	if (engineConfiguration->pauseEtbControl) {
-		return unexpected;
-	}
-
 	// If the pedal map hasn't been set, we can't provide a setpoint.
 	if (!m_pedalMap) {
 		return unexpected;
 	}
 
 	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
-	if (!pedalPosition.Valid) {
-		return unexpected;
-	}
 
-	float sanitizedPedal = clampF(0, pedalPosition.Value, 100);
+	// If the pedal has failed, just use 0 position.
+	// This is safer than disabling throttle control - we can at least push the throttle closed
+	// and let the engine idle.
+	float sanitizedPedal = clampF(0, pedalPosition.value_or(0), 100);
 	
 	float rpm = GET_RPM();
 	float targetFromTable = m_pedalMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
@@ -291,7 +283,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t act
 		return getClosedLoopAutotune(actualThrottlePosition);
 	} else {
 		// Normal case - use PID to compute closed loop part
-		return m_pid.getOutput(target, actualThrottlePosition);
+		return m_pid.getOutput(target, actualThrottlePosition, 1.0f / ETB_LOOP_FREQUENCY);
 	}
 }
 
@@ -305,7 +297,8 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 
 	if (!m_motor) return;
 
-	if (outputValue) {
+	// If output is valid and we aren't paused, output to motor.
+	if (outputValue && !engineConfiguration->pauseEtbControl) {
 		m_motor->enable();
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
@@ -313,7 +306,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	}
 }
 
-void EtbController::PeriodicTask() {
+void EtbController::update(efitick_t nowNt) {
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #0
 	if (m_myIndex == 0) {
@@ -333,12 +326,12 @@ void EtbController::PeriodicTask() {
 		return;
 	}
 
-	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 #if EFI_TUNER_STUDIO
+	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 		tsOutputChannels.debugFloatField1 = engine->engineState.targetFromTable;
 		tsOutputChannels.debugFloatField2 = engine->engineState.idle.etbIdleAddition;
-#endif /* EFI_TUNER_STUDIO */
 	}
+#endif
 
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
@@ -347,7 +340,7 @@ void EtbController::PeriodicTask() {
 		m_pid.showPidStatus(&logger, "ETB");
 	}
 
-	update();
+	ClosedLoopController::update();
 
 	DISPLAY_STATE(Engine)
 	DISPLAY_TEXT(Electronic_Throttle);
@@ -390,8 +383,78 @@ void EtbController::PeriodicTask() {
 /* DISPLAY_ENDIF */
 }
 
+void EtbController::autoCalibrateTps() {
+	m_isAutocal = true;
+}
+
+#if !EFI_UNIT_TEST
+/**
+ * Things running on a timer (instead of a thread) don't participate it the RTOS's thread priority system,
+ * and operate essentially "first come first serve", which risks starvation.
+ * Since ETB is a safety critical device, we need the hard RTOS guarantee that it will be scheduled over other less important tasks.
+ */
+#include "periodic_thread_controller.h"
+struct EtbImpl final : public EtbController, public PeriodicController<512> {
+	EtbImpl() : PeriodicController("ETB", NORMALPRIO + 3, ETB_LOOP_FREQUENCY) {}
+
+	void PeriodicTask(efitick_t nowNt) override {
+
+#if EFI_TUNER_STUDIO
+	if (m_isAutocal) {
+		// Don't allow if engine is running!
+		if (GET_RPM() > 0) {
+			m_isAutocal = false;
+			return;
+		}
+
+		auto motor = getMotor();
+		if (!motor) {
+			m_isAutocal = false;
+			return;
+		}
+
+		size_t myIndex = getMyIndex();
+
+		// First grab open
+		motor->set(0.5f);
+		motor->enable();
+		chThdSleepMilliseconds(1000);
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1Max;
+		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(myIndex)) * TPS_TS_CONVERSION;
+
+		// Let it return
+		motor->set(0);
+		chThdSleepMilliseconds(200);
+
+		// Now grab closed
+		motor->set(-0.5f);
+		chThdSleepMilliseconds(1000);
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1Min;
+		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(myIndex)) * TPS_TS_CONVERSION;
+
+		// Finally disable and reset state
+		motor->disable();
+
+		// Wait to let TS grab the state before we leave cal mode
+		chThdSleepMilliseconds(500);
+		tsOutputChannels.calibrationMode = TsCalMode::None;
+
+		m_isAutocal = false;
+		return;
+	}
+#endif /* EFI_TUNER_STUDIO */
+
+		EtbController::update(nowNt);
+	}
+
+	void start() override {
+		Start();
+	}
+};
+
 // real implementation (we mock for some unit tests)
-EtbController etbControllers[ETB_COUNT];
+EtbImpl etbControllers[ETB_COUNT];
+#endif
 
 static void showEthInfo(void) {
 #if EFI_PROD_CODE
@@ -502,7 +565,19 @@ void setEtbOffset(int value) {
 	showEthInfo();
 }
 
-#endif /* EFI_UNIT_TEST */
+void etbAutocal(size_t throttleIndex) {
+	if (throttleIndex >= ETB_COUNT) {
+		return;
+	}
+
+	auto etb = engine->etbControllers[throttleIndex];
+
+	if (etb) {
+		etb->autoCalibrateTps();
+	}
+}
+
+#endif /* !EFI_UNIT_TEST */
 
 /**
  * This specific throttle has default position of about 7% open
@@ -531,27 +606,31 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		}
 	}
 
+	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
 
-	engineConfiguration->throttlePedalUpVoltage = 0; // that's voltage, not ADC like with TPS
-	engineConfiguration->throttlePedalWOTVoltage = 6; // that's voltage, not ADC like with TPS
+	// voltage, not ADC like with TPS
+	engineConfiguration->throttlePedalUpVoltage = 0;
+	engineConfiguration->throttlePedalWOTVoltage = 5;
 
 	engineConfiguration->etb = {
 		1,		// Kp
 		10,		// Ki
 		0.05,	// Kd
 		0,		// offset
-		(1000 / DEFAULT_ETB_LOOP_FREQUENCY),
+		0,		// Update rate, unused
 		-100, 100 // min/max
 	};
 
-	engineConfiguration->etb_iTermMin = -300;
-	engineConfiguration->etb_iTermMax = 300;
+	engineConfiguration->etb_iTermMin = -30;
+	engineConfiguration->etb_iTermMax = 30;
 }
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
+#if !EFI_UNIT_TEST
 	for (int i = 0; i < ETB_COUNT; i++) {
 		etbControllers[i].onConfigurationChange(&previousConfiguration->etb);
 	}
+#endif
 }
 
 #if EFI_PROD_CODE && 0
@@ -626,29 +705,10 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif /* EFI_UNIT_TEST */
 
-#if EFI_PROD_CODE
-	if (engineConfiguration->etbCalibrationOnStart) {
-
-		for (int i = 0 ; i < engine->etbActualCount; i++) {
-			setDcMotorDuty(i, 70);
-			chThdSleep(600);
-			// todo: grab with proper index
-			grabTPSIsWideOpen();
-			setDcMotorDuty(i, -70);
-			chThdSleep(600);
-			// todo: grab with proper index
-			grabTPSIsClosed();
-		}
-	}
-
-	// manual duty cycle control without PID. Percent value from 0 to 100
-	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
-#endif /* EFI_PROD_CODE */
-
 	etbPidReset(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		engine->etbControllers[i]->Start();
+		engine->etbControllers[i]->start();
 	}
 }
 
@@ -657,9 +717,11 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
+#if !EFI_UNIT_TEST
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &etbControllers[i];
 	}
+#endif
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }

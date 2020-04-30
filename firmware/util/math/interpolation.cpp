@@ -203,14 +203,14 @@ float interpolate2d(const char *msg, float value, const float bin[], const float
 		firmwareError(CUSTOM_INTERPOLATE_NAN, "NaN in interpolate2d %s", msg);
 		return NAN;
 	}
-	int index = findIndexMsg("value", bin, size, value);
+	int index = findIndexMsg(msg, bin, size, value);
 
 	if (index == -1)
 		return values[0];
 	if (index == size - 1)
 		return values[size - 1];
 
-	return interpolateMsg("2d", bin[index], values[index], bin[index + 1], values[index + 1], value);
+	return interpolateMsg(msg, bin[index], values[index], bin[index + 1], values[index + 1], value);
 }
 }
 

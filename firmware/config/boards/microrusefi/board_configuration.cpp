@@ -11,7 +11,7 @@
  * set engine_type 30
  *
  *
- * See https://github.com/rusefi/rusefi_documentation/wiki/Hardware_microRusEfi_wiring
+ * See https://github.com/rusefi/rusefi/wiki/Hardware_microRusEfi_wiring
  *
  * @author Matthew Kennedy, (c) 2019
  */
@@ -25,10 +25,13 @@
 
 EXTERN_ENGINE;
 
+static const ConfigOverrides configOverrides = {
+	.canTxPin = GPIOB_6,
+	.canRxPin = GPIOB_12,
+};
 
-static void setupCanPins() {
-	engineConfiguration->canTxPin = GPIOB_6;
-	engineConfiguration->canRxPin = GPIOB_12;
+const ConfigOverrides& getConfigOverrides() {
+	return configOverrides;
 }
 
 static void setInjectorPins() {
@@ -127,8 +130,6 @@ static void setupEtb() {
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
-
-	engineConfiguration->etbFreq = 800;
 }
 
 static void setupDefaultSensorInputs() {
@@ -189,7 +190,6 @@ void setBoardConfigurationOverrides(void) {
 	setupVbatt();
 	setupTle8888();
 	setupEtb();
-	setupCanPins();
 
 	// MRE has a special main relay control low side pin
 	// rusEfi firmware is totally not involved with main relay control on microRusEfi board

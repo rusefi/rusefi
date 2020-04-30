@@ -17,8 +17,8 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-// for now I want most enums to be 32 bit integers. At some point maybe we will make the one-byte
-// this is about offsets and sizes in TunerStudio
+// Back in the day we wanted enums to be 32 bit integers.
+// as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
 #define ENUM_32_BITS 2000000000
 
 typedef enum {
@@ -1872,7 +1872,7 @@ typedef enum {
 	CUSTOM_ERR_UNEXPECTED_SPI = 6524,
 	CUSTOM_ERR_EXT_MODE = 6525,
 	CUSTOM_ERR_TIMER_OVERFLOW = 6526,
-	CUSTOM_ERR_NULL_TIMER_CALLBACK = 6527,
+	CUSTOM_ERR_6527 = 6527,
 	CUSTOM_ERR_SCHEDULING_ERROR = 6528,
 	CUSTOM_ERR_LOGGING_NOT_READY = 6529,
 	ERROR_NAN_FIND_INDEX = 6530,

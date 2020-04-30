@@ -19,6 +19,7 @@
             <src path="../java_tools/enum_to_string/src"/>
             <src path="io/src"/>
             <src path="models/src"/>
+            <src path="inifile/src"/>
             <src path="ui/src"/>
             <src path="romraider/src"/>
             <src path="opensr5/src"/>

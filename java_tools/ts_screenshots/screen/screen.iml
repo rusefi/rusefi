@@ -10,5 +10,6 @@
     <orderEntry type="library" name="TunerStudioMS" level="project" />
     <orderEntry type="library" name="serial" level="project" />
     <orderEntry type="library" name="3rd_party" level="project" />
+    <orderEntry type="module" module-name="inifile" />
   </component>
 </module>

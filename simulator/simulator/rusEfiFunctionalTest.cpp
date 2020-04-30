@@ -25,7 +25,6 @@
 #include "bench_test.h"
 #include "engine.h"
 #include "tunerstudio.h"
-#include "trigger_emulator.h"
 #include "engine_controller.h"
 #include "map_averaging.h"
 #include "memstreams.h"

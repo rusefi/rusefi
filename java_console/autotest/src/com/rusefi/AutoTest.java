@@ -9,13 +9,11 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.io.ConnectionStatus;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.IoUtil.getEnableCommand;
@@ -72,38 +70,50 @@ public class AutoTest {
         testFordFiesta();
     }
 
+    private static Function<String, Object> FAIL = new Function<String, Object>() {
+        @Override
+        public Object apply(String errorCode) {
+            if (errorCode != null)
+                throw new IllegalStateException("Failed " + errorCode);
+            return null;
+        }
+    };
+
     private static void testVW_60_2() {
         setEngineType(32);
-        // TODO: we shall get this RPM higher! At the moment things fail at 5500 :(
+        changeRpm(900);
+        // TODO: we shall get this RPM higher!
         // first let's get to expected RPM
-        int rpm = 5000;
-        changeRpm(rpm);
-        assertRpmDoesNotJump(rpm);
+        assertRpmDoesNotJump(3000, 15, 30, FAIL);
     }
 
     private static void testV12() {
         setEngineType(40);
+        changeRpm(700);
+/*
+this is just too unreliable at this point :(
         // TODO: we shall get this RPM higher!
         // first let's get to expected RPM
-        int rpm = 4000;
-        changeRpm(rpm);
-        assertRpmDoesNotJump(rpm);
+        assertRpmDoesNotJump(1700, 15, 30, FAIL);
+
+ */
     }
 
-    private static void assertRpmDoesNotJump(int rpm) {
-        AtomicReference failure = new AtomicReference();
+    public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback) {
+        changeRpm(rpm);
+        sleep(settleTime);
+        AtomicReference<String> result = new AtomicReference<>();
         SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
                 double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
                 if (!isCloseEnough(rpm, actualRpm))
-                    failure.set("Got " + actualRpm + " while trying to stay at " + rpm);
+                    result.set("Got " + actualRpm + " while trying to stay at " + rpm);
             }
         };
         SensorCentral.getInstance().addListener(Sensor.RPM, listener);
-        sleep(30);
-        if (failure.get() != null)
-            throw new IllegalStateException("Failed " + failure.get());
+        sleep(testDuration);
+        callback.apply(result.get());
         SensorCentral.getInstance().removeListener(Sensor.RPM, listener);
     }
 

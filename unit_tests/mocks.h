@@ -1,20 +1,18 @@
 #include "electronic_throttle.h"
 #include "dc_motor.h"
 #include "table_helper.h"
+#include "pwm_generator_logic.h"
 
 #include "gmock/gmock.h"
 
 class MockEtb : public IEtbController {
 public:
-	// PeriodicTimerController mocks
-	MOCK_METHOD(void, PeriodicTask, (), (override));
-	MOCK_METHOD(int, getPeriodMs, (), (override));
-
 	// IEtbController mocks
 	MOCK_METHOD(void, reset, (), ());
-	MOCK_METHOD(void, Start, (), (override));
+	MOCK_METHOD(void, start, (), (override));
 	MOCK_METHOD(void, init, (DcMotor* motor, int ownIndex, pid_s* pidParameters, const ValueProvider3D* pedalMap), (override));
 	MOCK_METHOD(void, setIdlePosition, (percent_t pos), (override));
+	MOCK_METHOD(void, autoCalibrateTps, (), (override));
 
 	// ClosedLoopController mocks
 	MOCK_METHOD(expected<percent_t>, getSetpoint, (), (const, override));
@@ -36,4 +34,9 @@ public:
 class MockVp3d : public ValueProvider3D {
 public:
 	MOCK_METHOD(float, getValue, (float xRpm, float y), (const, override));
+};
+
+class MockPwm : public SimplePwm {
+public:
+	MOCK_METHOD(void, setSimplePwmDutyCycle, (float dutyCycle), (override));
 };
