@@ -2047,9 +2047,13 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = ""
 		field = "Linear characteristic",				useLinearCltSensor, {clt_adcChannel != 16}
 
-	dialog = cltSensor, "", xAxis
-		panel = clt_thermistor
+	dialog = cltGauges
 		gauge = CLTGauge
+		gauge = rawCltGauge
+
+	dialog = cltSensor, "CLT Sensor", border
+		panel = clt_thermistor, West
+		gauge = cltGauges, East
 
 ;			Sensors->IAT sensor
 	dialog = iat_thermistor, "IAT sensor"
