@@ -765,7 +765,7 @@ custom fsio_pwm_freq_t 2 scalar,  U16,   @OFFSET@,         "Hz",      1,      0,
 	fsio_pwm_freq_t[FSIO_COMMAND_COUNT iterate] fsioFrequency;
 
 
-custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 18000,	  4
+custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 18000,	  2
 	fsio_setting_t[FSIO_COMMAND_COUNT iterate] fsio_setting;
 
 ! todo: migrate to spi_pins & combine with spi pin modes
