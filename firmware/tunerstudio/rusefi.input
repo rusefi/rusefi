@@ -2033,8 +2033,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Input channel",						clt_adcChannel
 		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != 16}
 
-		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
+		field = "#Input three pairs of thermistor temperature and resistance."
+		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
 		field = "Lowest temperature",  					clt_tempC_1, {clt_adcChannel != 16}
 		field = "Resistance @ LT",         	   			clt_resistance_1, {clt_adcChannel != 16}
@@ -2053,15 +2053,15 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = cltSensor, "CLT Sensor", border
 		panel = clt_thermistor, West
-		gauge = cltGauges, East
+		panel = cltGauges, East
 
 ;			Sensors->IAT sensor
 	dialog = iat_thermistor, "IAT sensor"
 		field = "Input channel",						iat_adcChannel
 		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != 16}
 
-		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
+		field = "#Input three pairs of thermistor temperature and resistance."
+		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
 		field = "Lowest temperature",					iat_tempC_1, {iat_adcChannel != 16}
 		field = "Resistance @ LT",						iat_resistance_1, {iat_adcChannel != 16}
@@ -2080,7 +2080,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = iatSensor, "IAT Sensor", border
 		panel = iat_thermistor, West
-		gauge = iatGauges, East
+		panel = iatGauges, East
 		
 ;			Sensors->Oil pressure sensor
 	dialog = oilp_settings, "Oil pressure sensor"
