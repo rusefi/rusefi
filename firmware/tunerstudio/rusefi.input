@@ -2074,9 +2074,13 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = ""
 		field = "Linear characteristic",				useLinearIatSensor, {iat_adcChannel != 16}
 
-	dialog = iatSensor, "", xAxis
-		panel = iat_thermistor
+	dialog = iatGauges
 		gauge = IATGauge
+		gauge = rawIatGauge
+
+	dialog = iatSensor, "IAT Sensor", border
+		panel = iat_thermistor, West
+		gauge = iatGauges, East
 		
 ;			Sensors->Oil pressure sensor
 	dialog = oilp_settings, "Oil pressure sensor"
