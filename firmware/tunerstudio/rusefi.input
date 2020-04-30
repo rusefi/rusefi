@@ -1238,6 +1238,7 @@ menuDialog = main
 	menu = "&Base &Engine"
 		subMenu = engineChars,				"Base engine"
 		subMenu = triggerConfiguration,		"Trigger"
+		subMenu = triggerConfiguration_IO, "Advanced Trigger"
 		subMenu = std_separator
 		subMenu = energySystems,			"Battery and alternator"
 		subMenu = std_separator
@@ -1354,7 +1355,6 @@ menuDialog = main
 
 	menu = "&Sensors"
 		# Base analog input settings
-		subMenu = triggerInputs,			"Trigger inputs"
 		subMenu = otherSensorInputs,		"Misc sensors"
 		subMenu = analogInputSettings,		"Analog input settings"
 		subMenu = std_separator
@@ -1631,7 +1631,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Firing Order",							firingOrder
 
 ;			Engine->Trigger configuration
-	dialog = triggerConfiguration_settings,	"Settings Trigger"
+	dialog = triggerConfiguration_settings,	"Trigger Pattern"
 		field = "!https://rusefi.com/s/trigger"
 		field = "Trigger type",							trigger_type
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
@@ -1646,7 +1646,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "total Tooth Count",					trigger_customTotalToothCount, {trigger_type == 0}
 		field = "skipped Tooth Count",					trigger_customSkippedToothCount, {trigger_type == 0}
 
-	dialog = triggerConfiguration_IO,	"Settings I/O"
+	dialog = triggerConfiguration_IO,	"Advanced Trigger"
 	    field = "!https://rusefi.com/s/vvt"
 	    field = "VVT mode",								vvtMode, {trigger_type != 80}
 	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
@@ -1655,9 +1655,21 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "print verbose sync details to console",verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@TRIGGER_TYPE_60_2@@ || trigger_type == @@TRIGGER_TYPE_36_1@@}
+
+	dialog = triggerInputs,					"Trigger Inputs"
+		field = "!ECU reboot needed to apply these settings"
+		field = "#Cam is primary if you have cam sensor"
+		field = "Primary channel", 						triggerInputPins1
+		field = "Invert Primary",						invertPrimaryTriggerSignal
+		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
+		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
+		field = "Cam Sync/VVT input",					camInputs1
+		panel = triggerInputComparator @@if_ts_show_trigger_comparator
+
+	
 	dialog = triggerConfiguration
 		panel = triggerConfiguration_settings,	North
-		panel = triggerConfiguration_IO,		South
+		panel = triggerInputs,		South
 
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
@@ -1809,16 +1821,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Comparator hysteresis voltage (Min)", triggerCompHystMin
 		field = "Comparator hysteresis voltage (Max)", triggerCompHystMax
 		field = "VR-sensor saturation RPM", triggerCompSensorSatRpm
-
-	dialog = triggerInputs,					"Trigger Inputs"
-		field = "!ECU reboot needed to apply these settings"
-		field = "#Cam is primary if you have cam sensor"
-		field = "Primary channel", 						triggerInputPins1
-		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
-		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
-		field = "Cam Sync/VVT input",					camInputs1
-		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
 ;
 ; allXXX sections allows a quick overview of used I/O in order to address conflicts mostly, not really to
