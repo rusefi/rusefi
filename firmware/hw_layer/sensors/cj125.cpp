@@ -5,6 +5,10 @@
  *
  * https://github.com/rusefi/hw_modular/tree/master/cj125_Module
  *
+ *
+ * See vag_18_Turbo for test configuration
+ * set engine_type 102
+ *
  * @date: Jun 24, 2016
  * @author Andrey Belomutskiy, (c) 2012-2020
  *
