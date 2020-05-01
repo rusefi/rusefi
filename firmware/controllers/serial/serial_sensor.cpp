@@ -194,6 +194,7 @@ void ParseInnovateSerialMsg()
 }
 
 void ParseSerialData()
+// static void ParseSerialData(UARTDriver *uartp)
 {
 	if (CONFIG(enableInnovateLC2))
 		IdentifyInnovateSerialMsg();
