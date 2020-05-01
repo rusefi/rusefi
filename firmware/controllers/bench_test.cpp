@@ -270,6 +270,9 @@ static void handleCommandX14(uint16_t index) {
 		etbAutocal(0);
 		return;
 #endif
+	case 0xF:
+		engine->directSelfStimulation = false;
+		return;
 	}
 }
 

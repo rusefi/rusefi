@@ -104,6 +104,7 @@ void cjPostState(TunerStudioOutputChannels *tsOutputChannels);
 
 void initCJ125(Logging *shared DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+void cjRestart(void);
 void cjCalibrate(void);
 float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool cjHasAfrSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);

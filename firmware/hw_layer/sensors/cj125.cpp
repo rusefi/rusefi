@@ -543,7 +543,7 @@ static void cjStartCalibration(void) {
 	globalInstance.state = CJ125_CALIBRATION;
 }
 
-static void cjRestart(void) {
+void cjRestart(void) {
 	if (!cjCheckConfig())
 		return;
 	globalInstance.state = CJ125_INIT;
