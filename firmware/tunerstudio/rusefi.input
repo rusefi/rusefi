@@ -1504,10 +1504,12 @@ cmd_test_starter_relay     	 = "w\x00\x14\x00\x0B"
 cmd_etb_autotune             = "w\x00\x14\x00\x0C"
 cmd_enable_self_stim         = "w\x00\x14\x00\x0D"
 cmb_etb_auto_calibrate       = "w\x00\x14\x00\x0E"
+cmd_disable_self_stim         = "w\x00\x14\x00\x0F"
 
 cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
 cmd_test_idle_valve          = "w\x00\x17\x00\x01"
+cmd_cj125_calibrate          = "w\x00\x18\x00\x00"
 cmd_call_from_pit            = "w\x00\x20\x34\x56"
 cmd_stop_engine              = "w\x00\x79\x00\x00"
 
@@ -2330,6 +2332,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Engine->cj125 Settings
 	dialog = cj125Function, "CJ125 Settings (wbo decoder)"
 		field = "Enabled",								isCJ125Enabled
+		commandButton = "Calibrate",					cmd_cj125_calibrate
 		field = "Using 4.9 sensor?",					cj125isLsu49
 		field = "!ECU reboot needed to apply these settings"
 		field = "ChipSelect pin",						cj125CsPin, {isCJ125Enabled == 1}
@@ -2899,6 +2902,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = ecuStimulator, "ECU stimulator"
 		field = "Trigger Simulator",   					triggerSimulatorFrequency
 		commandButton = "Enable Internal Trigger Simulation", cmd_enable_self_stim
+		commandButton = "Disable Internal Trigger Simulation", cmd_disable_self_stim
 		field = ""
 		field = "digipot spi", 							digitalPotentiometerSpiDevice
 		field = "digipot CS #0", 						digitalPotentiometerChipSelect1
