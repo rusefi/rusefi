@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu Apr 30 19:40:29 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri May 01 17:30:00 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -676,7 +676,8 @@ struct engine_configuration_s {
 	offset 76 bit 9 */
 	bool isCJ125Verbose : 1;
 	/**
-	 * Is your UA CJ125 output wired to MCU via resistor divider?
+	 * Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1
+	 * When exposed to free air and 17x gain, Ua will be 4.17 volt
 	offset 76 bit 10 */
 	bool cj125isUaDivided : 1;
 	/**
@@ -3415,4 +3416,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu Apr 30 19:40:29 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri May 01 17:30:00 EDT 2020
