@@ -366,6 +366,9 @@
  * @brief   Enables synchronous APIs.
  * @note    Disabling this option saves both code and data space.
  */
+
+// #define HAL_USE_UART TRUE
+
 #if !defined(UART_USE_WAIT) || defined(__DOXYGEN__)
 /* Configured in efifeatures.h */
 #if (TS_UART_DMA_MODE || TS_UART_MODE)
