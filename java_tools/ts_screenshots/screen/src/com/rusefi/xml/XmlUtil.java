@@ -11,17 +11,17 @@ public class XmlUtil {
 
     public static final String FILE_NAME = "output.xml";
 
-    public static void writeXml(Content content) throws JAXBException, IOException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(Content.class);
+    public static void writeXml(ContentModel contentModel) throws JAXBException, IOException {
+        JAXBContext jaxbContext = JAXBContext.newInstance(ContentModel.class);
 
         Marshaller marshaller = jaxbContext.createMarshaller();
 
         StringWriter xmlWriter = new StringWriter();
-        marshaller.marshal(content, xmlWriter);
+        marshaller.marshal(contentModel, xmlWriter);
         System.out.println(xmlWriter.toString());
 
         System.out.println("Writing " + FILE_NAME);
-        marshaller.marshal(content, new FileWriter(FILE_NAME));
+        marshaller.marshal(contentModel, new FileWriter(FILE_NAME));
         System.out.println("Done " + FILE_NAME);
     }
 }
