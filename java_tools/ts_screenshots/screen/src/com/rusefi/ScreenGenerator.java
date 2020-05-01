@@ -57,6 +57,8 @@ public class ScreenGenerator {
 
         System.out.println("Done discovering buttons, " + topLevelButtons.size());
 
+        Thread.sleep(2 * WAITING_FOR_FRAME_PERIOD); // we have this sleep to avoid an artifact on first screenshot
+
         handleTopLevelButtons(mainFrame, topLevelButtons);
 
         XmlUtil.writeXml(contentModel);

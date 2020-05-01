@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopLevelMenuModel {
-    private final String title;
-    private final String imageName;
+    private String title;
+    private String imageName;
 
     @XmlElementWrapper
     @XmlElement(name = "dialog")
     private List<DialogModel> dialogs = new ArrayList<>();
+
+    public TopLevelMenuModel() {
+    }
 
     public TopLevelMenuModel(String title, String imageName) {
         this.title = title;
@@ -24,12 +27,29 @@ public class TopLevelMenuModel {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @XmlAttribute
     public String getImageName() {
         return imageName;
     }
 
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
     public List<DialogModel> getDialogs() {
         return dialogs;
+    }
+
+    @Override
+    public String toString() {
+        return "TopLevelMenuModel{" +
+                "title='" + title + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", dialogs=" + dialogs +
+                '}';
     }
 }

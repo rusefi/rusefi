@@ -4,10 +4,13 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class FieldModel {
 
-    private final String uiName;
-    private final String fieldName;
-    private final String imageName;
-    private final String tooltip;
+    private String uiName;
+    private String fieldName;
+    private String imageName;
+    private String tooltip;
+
+    public FieldModel() {
+    }
 
     public FieldModel(String uiName, String fieldName, String fileName, String tooltip) {
         this.uiName = uiName;
@@ -21,9 +24,17 @@ public class FieldModel {
         return uiName;
     }
 
+    public void setUiName(String uiName) {
+        this.uiName = uiName;
+    }
+
     @XmlAttribute
     public String getFieldName() {
         return fieldName;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
     }
 
     @XmlAttribute
@@ -31,8 +42,26 @@ public class FieldModel {
         return imageName;
     }
 
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
     @XmlAttribute
     public String getTooltip() {
         return tooltip;
+    }
+
+    public void setTooltip(String tooltip) {
+        this.tooltip = tooltip;
+    }
+
+    @Override
+    public String toString() {
+        return "FieldModel{" +
+                "uiName='" + uiName + '\'' +
+                ", fieldName='" + fieldName + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", tooltip='" + tooltip + '\'' +
+                '}';
     }
 }
