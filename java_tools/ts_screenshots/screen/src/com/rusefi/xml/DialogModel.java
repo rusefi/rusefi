@@ -6,14 +6,21 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DialogDescription {
+public class DialogModel {
     private final String dialogTitle;
+    private final String imageName;
     @XmlElementWrapper
     @XmlElement(name = "field")
-    public List<FieldDescription> fields = new ArrayList<>();
+    public List<FieldModel> fields = new ArrayList<>();
 
-    public DialogDescription(String dialogTitle) {
+    public DialogModel(String dialogTitle, String imageName) {
         this.dialogTitle = dialogTitle;
+        this.imageName = imageName;
+    }
+
+    @XmlAttribute
+    public String getImageName() {
+        return imageName;
     }
 
     @XmlAttribute

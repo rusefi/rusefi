@@ -2,17 +2,17 @@ package com.rusefi.xml;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class FieldDescription {
+public class FieldModel {
 
     private final String uiName;
     private final String fieldName;
-    private final String fileName;
+    private final String imageName;
     private final String tooltip;
 
-    public FieldDescription(String uiName, String fieldName, String fileName, String tooltip) {
+    public FieldModel(String uiName, String fieldName, String fileName, String tooltip) {
         this.uiName = uiName;
         this.fieldName = fieldName;
-        this.fileName = fileName;
+        this.imageName = fileName;
         this.tooltip = tooltip == null ? "" : tooltip;
     }
 
@@ -27,8 +27,8 @@ public class FieldDescription {
     }
 
     @XmlAttribute
-    public String getFileName() {
-        return fileName;
+    public String getImageName() {
+        return imageName;
     }
 
     @XmlAttribute

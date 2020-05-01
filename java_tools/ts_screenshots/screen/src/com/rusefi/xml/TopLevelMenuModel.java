@@ -6,15 +6,17 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopLevelMenu {
+public class TopLevelMenuModel {
     private final String title;
+    private final String imageName;
 
     @XmlElementWrapper
     @XmlElement(name = "dialog")
-    private List<DialogDescription> dialogs = new ArrayList<>();
+    private List<DialogModel> dialogs = new ArrayList<>();
 
-    public TopLevelMenu(String title) {
+    public TopLevelMenuModel(String title, String imageName) {
         this.title = title;
+        this.imageName = imageName;
     }
 
     @XmlAttribute
@@ -22,7 +24,12 @@ public class TopLevelMenu {
         return title;
     }
 
-    public List<DialogDescription> getDialogs() {
+    @XmlAttribute
+    public String getImageName() {
+        return imageName;
+    }
+
+    public List<DialogModel> getDialogs() {
         return dialogs;
     }
 }
