@@ -5,8 +5,6 @@ import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 import static com.rusefi.Launcher.INPUT_FILES_PATH;
@@ -34,10 +32,8 @@ public class FirmwareFlasher {
     public static final String DONE = "DONE!";
 
     private final JButton button;
-    private String fileName;
 
     public FirmwareFlasher(String fileName, String buttonTest, String tooltip) {
-        this.fileName = fileName;
         button = new JButton(buttonTest);
         button.setToolTipText(tooltip);
         button.addActionListener(event -> doUpdateFirmware(fileName, button));
