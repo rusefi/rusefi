@@ -487,9 +487,11 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 				 * So the simple trick is to inverse the error by swapping the target and input values.
 				 */
 				float duty = globalInstance.heaterPid.getOutput(globalInstance.vUr, globalInstance.vUrCal, MS2SEC(CJ125_TICK_DELAY));
-				globalInstance.heaterPid.showPidStatus(logger, "cj");
 				instance->SetHeater(duty PASS_ENGINE_PARAMETER_SUFFIX);
-				cjPrintData();
+				if (engineConfiguration->isCJ125Verbose) {
+					globalInstance.heaterPid.showPidStatus(logger, "cj heater");
+					cjPrintData();
+				}
 				instance->prevNt = nowNt;
 			}
 			break;
