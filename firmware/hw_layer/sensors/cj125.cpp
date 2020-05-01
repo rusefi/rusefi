@@ -170,31 +170,27 @@ static uint32_t get16bitFromVoltage(float v) {
 	return (uint32_t)(v * CJ125_VOLTAGE_TO_16BIT_FACTOR);
 }
 
-static void cjPrintState() {
-	scheduleMsg(logger, "cj125: state=%d diag=0x%x (vUa=%.3f vUr=%.3f) (vUaCal=%.3f vUrCal=%.3f)",
-			globalInstance.state, globalInstance.diag,
-			globalInstance.vUa, globalInstance.vUr,
-			globalInstance.vUaCal, globalInstance.vUrCal);
-
-	scheduleMsg(logger, "cj125 P=%f I=%f D=%f",
-			globalInstance.heaterPidConfig.pFactor,
-			globalInstance.heaterPidConfig.iFactor,
-			globalInstance.heaterPidConfig.dFactor);
-}
-
-static void cjInfo() {
-	cjPrintState();
-#if HAL_USE_SPI
-	printSpiConfig(logger, "cj125", CONFIG(cj125SpiDevice));
-#endif /* HAL_USE_SPI */
-}
-
-static void cjPrintData() {
-#if ! EFI_UNIT_TEST
-	if (engineConfiguration->isCJ125Verbose) {
-		cjPrintState();
+static const char * getCjState(cj125_state_e stateCode) {
+	switch (stateCode) {
+	case CJ125_INIT:
+		return "INIT";
+	case CJ125_IDLE:
+		return "IDLE";
+	case CJ125_CALIBRATION:
+		return "CALIBRATION";
+	case CJ125_PREHEAT:
+		return "PREHEAT";
+	case CJ125_HEAT_UP:
+		return "HEAT UP";
+	case CJ125_READY:
+		return "READY";
+	case CJ125_OVERHEAT:
+		return "OVERHEAT";
+	case CJ125_ERROR:
+		return "ERROR";
+	default:
+		return "UNKNOWN";
 	}
-#endif /* EFI_UNIT_TEST */
 }
 
 static void cjPrintErrorCode(cj125_error_e errCode) {
@@ -220,6 +216,39 @@ static void cjPrintErrorCode(cj125_error_e errCode) {
 		break;
 	}
 	scheduleMsg(logger, "cj125 ERROR: %s.", errString);
+}
+
+static void cjPrintState() {
+	scheduleMsg(logger, "cj125: state=%s %s diag=0x%x (vUa=%.3f vUr=%.3f) (vUaCal=%.3f vUrCal=%.3f)",
+			getCjState(globalInstance.state), globalInstance.diag,
+			globalInstance.vUa, globalInstance.vUr,
+			globalInstance.vUaCal, globalInstance.vUrCal);
+
+	globalInstance.printDiag();
+
+	if (globalInstance.state == CJ125_ERROR) {
+		cjPrintErrorCode(globalInstance.errorCode);
+	}
+
+	scheduleMsg(logger, "cj125 P=%f I=%f D=%f",
+			globalInstance.heaterPidConfig.pFactor,
+			globalInstance.heaterPidConfig.iFactor,
+			globalInstance.heaterPidConfig.dFactor);
+}
+
+static void cjInfo() {
+	cjPrintState();
+#if HAL_USE_SPI
+	printSpiConfig(logger, "cj125", CONFIG(cj125SpiDevice));
+#endif /* HAL_USE_SPI */
+}
+
+static void cjPrintData() {
+#if ! EFI_UNIT_TEST
+	if (engineConfiguration->isCJ125Verbose) {
+		cjPrintState();
+	}
+#endif /* EFI_UNIT_TEST */
 }
 
 class RealSpi : public Cj125SpiStream {
@@ -249,12 +278,14 @@ static void cjUpdateAnalogValues() {
 #endif /* EFI_PROD_CODE */
 }
 
+#if ! EFI_UNIT_TEST
 void cjCalibrate(void) {
-	globalInstance.calibrate();
+	globalInstance.calibrate(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
+#endif /* EFI_UNIT_TEST */
 
-void CJ125::calibrate(void) {
-	cjIdentify();
+void CJ125::calibrate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	cjIdentify(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	scheduleMsg(logger, "cj125: Starting calibration...");
 	cjSetMode(CJ125_MODE_CALIBRATION);
@@ -318,7 +349,7 @@ static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 	
-	globalInstance.cjIdentify();
+	globalInstance.cjIdentify(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Load calibration values
 #if EFI_PROD_CODE
@@ -330,7 +361,7 @@ static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 	// if no calibration, try to calibrate now and store new values
 	if (storedLambda == 0 || storedHeater == 0) {
-		globalInstance.calibrate();
+		globalInstance.calibrate(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else {
 		scheduleMsg(logger, "cj125: Loading stored calibration data (%d %d)", storedLambda, storedHeater);
 		globalInstance.vUaCal = getVoltageFrom16bit(storedLambda);
@@ -395,7 +426,7 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		}
 
 		if (instance->state == CJ125_CALIBRATION) {
-			globalInstance.calibrate();
+			globalInstance.calibrate(PASS_ENGINE_PARAMETER_SIGNATURE);
 			// Start normal operation
 			instance->state = CJ125_INIT;
 			globalInstance.cjSetMode(CJ125_MODE_NORMAL_17);
