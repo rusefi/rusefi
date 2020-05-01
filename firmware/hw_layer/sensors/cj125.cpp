@@ -175,6 +175,11 @@ static void cjPrintState() {
 			globalInstance.state, globalInstance.diag,
 			globalInstance.vUa, globalInstance.vUr,
 			globalInstance.vUaCal, globalInstance.vUrCal);
+
+	scheduleMsg(logger, "cj125 P=%f I=%f D=%f",
+			globalInstance.heaterPidConfig.pFactor,
+			globalInstance.heaterPidConfig.iFactor,
+			globalInstance.heaterPidConfig.dFactor);
 }
 
 static void cjInfo() {

@@ -152,7 +152,8 @@ void CJ125::cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	heaterPidConfig.minValue = 0;
 	heaterPidConfig.maxValue = 1;
 	heaterPidConfig.offset = 0;
-	// todo: period?
-	heaterPidConfig.periodMs = 1.0f;
+	/**
+	 * See hard-coded CJ125_TICK_DELAY - we run PID at 50Hz
+	 */
 	heaterPid.reset();
 }
