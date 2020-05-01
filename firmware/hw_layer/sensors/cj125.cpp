@@ -219,7 +219,7 @@ static void cjPrintErrorCode(cj125_error_e errCode) {
 }
 
 static void cjPrintState() {
-	scheduleMsg(logger, "cj125: state=%s %s diag=0x%x (vUa=%.3f vUr=%.3f) (vUaCal=%.3f vUrCal=%.3f)",
+	scheduleMsg(logger, "cj125: state=%s diag=0x%x (vUa=%.3f vUr=%.3f) (vUaCal=%.3f vUrCal=%.3f)",
 			getCjState(globalInstance.state), globalInstance.diag,
 			globalInstance.vUa, globalInstance.vUr,
 			globalInstance.vUaCal, globalInstance.vUrCal);
