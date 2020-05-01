@@ -27,7 +27,7 @@ void SerialWrite::PeriodicTask(efitime_t nowNt)
 {
 	UNUSED(nowNt);
 
-	SerialSendTest();
+	// SerialSendTest();
 
 }
 

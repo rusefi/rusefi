@@ -30,7 +30,10 @@ uint16_t innovate_start_byte = 0;
 innovate_serial_id_state_t innovate_serial_id_state = UNKNOWN;
 
 uint16_t len = SERBUFFLEN;
+
 uint16_t sb = 0; 
+
+#define ONE_SEC TIME_MS2I(1000)
 
 SerialRead::SerialRead()
 	: ThreadController("AUX Serial RX", NORMALPRIO)
@@ -45,6 +48,8 @@ void SerialRead::ThreadTask()
 		{
 			// len = innovate_msg_len;
 			// sb = innovate_start_byte;
+
+
 		}
 
 		// This should be a blocking read (TIME_INFINITE), but it isn't
@@ -62,7 +67,18 @@ void SerialRead::ThreadTask()
 			ParseSerialData();
 		}
 
-		// std::fill_n(ser_buffer, SERBUFFLEN, 0);
+
+
+		// uartStartReceive(&UARTD6, len, &ser_buffer[sb]);
+		// if (uartReceiveTimeout(&UARTD6, &len, &ser_buffer[sb], ONE_SEC))
+		// {
+		// 	ParseSerialData();
+		// }
+
+		// if ((uartStartReceive(&SD6, len, &ser_buffer[sb])) == len)
+		// {
+		// 	ParseSerialData();
+		// }
 
 	}
 }

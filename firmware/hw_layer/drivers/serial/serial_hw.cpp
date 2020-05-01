@@ -17,6 +17,7 @@
 #include "string.h"
 #include "mpu_util.h"
 #include "engine.h"
+// #include "serial_sensor.h"
 
 EXTERN_ENGINE;
 
@@ -43,6 +44,11 @@ static void auxInfo(void)
 	scheduleMsg(&logger, "AUX Serial RX %s", hwPortname(CONFIG(auxSerialRxPin)));
 }
 
+// static void rxIRQHandler(UARTDriver *uartp)
+// {
+// 	ParseSerialData();
+// }
+
 void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 {
 	CONFIG(auxSerialTxPin) = engineConfiguration->auxSerialTxPin;
@@ -50,6 +56,7 @@ void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	CONFIG(auxSerialSpeed) = engineConfiguration->auxSerialSpeed;
 	
 	// uartCfg.speed = engineConfiguration->auxSerialSpeed;
+	//uartCfg.timeout_cb = rxIRQHandler;
 
 	// uartStart(&UARTD6, &uartCfg);
 
