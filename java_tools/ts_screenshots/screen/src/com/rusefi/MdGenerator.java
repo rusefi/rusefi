@@ -56,11 +56,13 @@ public class MdGenerator {
         FileWriter md = new FileWriter(PREFIX + ".md");
 
         for (TopLevelMenuModel topLevelMenuModel : contentModel.getTopLevelMenus()) {
-            md.append("# [" + topLevelMenuModel.getTitle() + "](" + getPageName(topLevelMenuModel) + ")" + EOL + EOL);
-            md.append(getImageTag(topLevelMenuModel.getImageName()));
+            String url = getPageName(topLevelMenuModel);
+            md.append("# [" + topLevelMenuModel.getTitle() + "](" + url + ")" + EOL + EOL);
+
+            md.append("<a href='" + url + "'>" + getImageTag(topLevelMenuModel.getImageName()) + "</a>");
 
             for (DialogModel dialogModel : topLevelMenuModel.getDialogs()) {
-                md.append("[" + dialogModel.getDialogTitle() + "](" + getPageName(topLevelMenuModel) + "#" + safeUrl(dialogModel.getDialogTitle()) + ")" + EOL + EOL);
+                md.append("[" + dialogModel.getDialogTitle() + "](" + url + "#" + safeUrl(dialogModel.getDialogTitle()) + ")" + EOL + EOL);
             }
 
             md.append(EOL);
