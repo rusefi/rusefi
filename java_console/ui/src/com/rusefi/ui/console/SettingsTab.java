@@ -1,4 +1,4 @@
-package com.rusefi.ui;
+package com.rusefi.ui.console;
 
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
@@ -7,6 +7,7 @@ import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.config.FieldsMap;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.config.*;
 import com.rusefi.ui.util.UiUtils;
 
