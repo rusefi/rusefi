@@ -50,7 +50,7 @@ public class ScreenGenerator {
         System.out.println("mkdirs " + DESTINATION);
         new File(DESTINATION).mkdirs();
 
-        System.out.println("Launching TunerStudioIntegraion");
+        System.out.println("Launching TunerStudioIntegration");
         Frame mainFrame = TunerStudioIntegration.findMainFrame();
 
         waitForMainFrame(mainFrame);

@@ -29,7 +29,7 @@ public class MdGenerator {
             md.append("## " + topLevelMenuModel.getTitle() + EOL);
 
             for (DialogModel dialogModel : topLevelMenuModel.getDialogs()) {
-                md.append("[" + dialogModel.getDialogTitle() + "](" + "#" + safeUrl(dialogModel.getDialogTitle()) + ")" + EOL + EOL);
+                md.append("[" + dialogModel.getDialogTitle() + "](" + "#" + safeUrl(dialogModel.getDialogTitle()).toLowerCase() + ")" + EOL + EOL);
             }
 
 
@@ -62,7 +62,7 @@ public class MdGenerator {
             md.append("<a href='" + url + "'>" + getImageTag(topLevelMenuModel.getImageName()) + "</a>");
 
             for (DialogModel dialogModel : topLevelMenuModel.getDialogs()) {
-                md.append("[" + dialogModel.getDialogTitle() + "](" + url + "#" + safeUrl(dialogModel.getDialogTitle()) + ")" + EOL + EOL);
+                md.append("[" + dialogModel.getDialogTitle() + "](" + url + "#" + safeUrl(dialogModel.getDialogTitle()).toLowerCase() + ")" + EOL + EOL);
             }
 
             md.append(EOL);
