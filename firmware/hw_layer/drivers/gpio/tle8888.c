@@ -113,8 +113,9 @@ typedef enum {
 
 #define CMD_OUTCONFIG(n, d)	CMD_WR(0x40 + (n), d)
 #define CMD_BRICONFIG(n, d)	CMD_WR(0x46 + ((n) & 0x01), d)
-//#define CMD_VRSCONFIG0(d)	CMD_WR(0x49, d)
-#define CMD_VRSCONFIG1(d)	CMD_WR(0x4a, d)
+#define CMD_IGNCONFIG(d)	CMD_WR(0x48, d)
+#define CMD_VRSCONFIG(n, d)	CMD_WR(0x49 + ((n) & 0x03), d)
+#define CMD_OPCONFIG0(d)	CMD_WR(0x4e, d)
 #define CMD_INCONFIG(n, d)	CMD_WR(0x53 + ((n) & 0x03), d)
 #define CMD_DDCONFIG(n, d)	CMD_WR(0x57 + ((n) & 0x03), d)
 #define CMD_OECONFIG(n, d)	CMD_WR(0x5b + ((n) & 0x03), d)
@@ -312,12 +313,33 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 
 static int tle8888_update_output(struct tle8888_priv *chip)
 {
+	int i;
 	int ret = 0;
 
 	/* TODO: lock? */
 
+	uint32_t briconfig0 = 0;
+	uint32_t out_data = chip->o_state;
+
+	/* calculate briconfig0 */
+	uint32_t pp_low = out_data & chip->o_pp_mask;
+	for (i = 20; i < 24; i++) {
+		if (pp_low & BIT(i)) {
+			/* low-side switch mode */
+		} else {
+			/* else enable high-side switch mode */
+			briconfig0 |= BIT((i - 20) * 2);
+		}
+	}
+	/* TODO: set freewheeling bits in briconfig0? */
+
+	/* output for push-pull pins is allways enabled
+	 * (at least until we start supporting hi-Z state) */
+	out_data |= chip->o_pp_mask;
+	/* TODO: apply hi-Z mask when support will be added */
+
 	/* set value only for non-direct driven pins */
-	uint32_t out_data = chip->o_state & (~chip->o_direct_mask);
+	out_data &= ~chip->o_direct_mask;
 	for (int i = 0; i < 4; i++) {
 		uint8_t od;
 
@@ -346,7 +368,6 @@ static int tle8888_update_status_and_diag(struct tle8888_priv *chip)
 
 	/* TODO: lock? */
 
-	// todo: extract helper method?
 	/* the address and content of the selected register is transmitted with the
 	 * next SPI transmission (for not existing addresses or wrong access mode
 	 * the data is always '0' */
