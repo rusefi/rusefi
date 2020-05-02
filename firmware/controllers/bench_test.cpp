@@ -300,7 +300,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 #endif /* EFI_IDLE_CONTROL */
 	} else if (subsystem == 0x18) {
 #if EFI_CJ125 && HAL_USE_SPI
-		cjCalibrate();
+		cjStartCalibration();
 #endif /* EFI_CJ125 */
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit
