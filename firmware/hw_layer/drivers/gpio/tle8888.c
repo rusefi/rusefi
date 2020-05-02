@@ -689,6 +689,7 @@ static int tle8888_writePad(void *data, unsigned int pin, int value) {
 
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 
+	uint32_t o_state_tmp = chip->o_state;
 	/* TODO: lock */
 	if (value) {
 		chip->o_state |=  (1 << pin);
@@ -700,7 +701,8 @@ static int tle8888_writePad(void *data, unsigned int pin, int value) {
 	if (chip->o_direct_mask & (1 << pin)) {
 		return tle8888_update_direct_output(chip, pin, value);
 	} else {
-		return tle8888_wake_driver(chip);
+		if (o_state_tmp != chip->o_state)
+			return tle8888_wake_driver(chip);
 	}
 	return 0;
 }
