@@ -255,6 +255,10 @@
 #define auxValves1_offset_hex 718
 #define auxValves2_offset 1817
 #define auxValves2_offset_hex 719
+#define auxVoltage1_offset 2713
+#define auxVoltage1_offset_hex a99
+#define auxVoltage2_offset 2714
+#define auxVoltage2_offset_hex a9a
 #define BARO_CORR_SIZE 4
 #define baroCorrPressureBins_offset 1544
 #define baroCorrPressureBins_offset_hex 608
@@ -955,7 +959,7 @@
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
-#define GAUGE_NAME_AIR_FLOW "air flow"
+#define GAUGE_NAME_AIR_FLOW "MAF air flow"
 #define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
@@ -2342,8 +2346,8 @@
 #define unusedSomethingWasHere_offset_hex 971
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding4_offset_hex a21
-#define unusedSpiPadding5_offset 2713
-#define unusedSpiPadding5_offset_hex a99
+#define unusedSpiPadding5_offset 2715
+#define unusedSpiPadding5_offset_hex a9b
 #define unusedSpiPadding7_offset 4005
 #define unusedSpiPadding7_offset_hex fa5
 #define unusedSpiPadding8_offset 4009

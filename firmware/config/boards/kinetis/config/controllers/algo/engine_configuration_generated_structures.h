@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri May 01 17:34:40 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 02 15:54:19 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2797,7 +2797,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 2713
 	 */
-	uint8_t unusedSpiPadding5[3];
+	adc_channel_e auxVoltage1;
+	/**
+	 * offset 2714
+	 */
+	adc_channel_e auxVoltage2;
+	/**
+	 * offset 2715
+	 */
+	uint8_t unusedSpiPadding5;
 	/**
 	 * offset 2716
 	 */
@@ -3416,4 +3424,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri May 01 17:34:40 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 02 15:54:19 EDT 2020
