@@ -1886,10 +1886,13 @@ struct engine_configuration_s {
 	 * offset 1064
 	 */
 	stft_s stft;
+
+	etb_io etbIo2[2];
+
 	/**
 	 * offset 1088
 	 */
-	int unusedAtOldBoardConfigurationEnd[94];
+	int unusedAtOldBoardConfigurationEnd[92];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
