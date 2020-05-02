@@ -661,8 +661,7 @@ static int tle8888_setPadMode(void *data, unsigned int pin, iomode_t mode) {
 	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
 		return -1;
 
-	/* do not enalbe PP mode yet */
-#if 0
+#if 1
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 
 	/* only OUT21..OUT24 support mode change: PP vs OD */
