@@ -101,7 +101,7 @@ const etb_io& getConfigForMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 DcMotor* initDcMotor(size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	const auto& io = getConfigForMotor(index);
+	const auto& io = getConfigForMotor(index PASS_ENGINE_PARAMETER_SUFFIX);
 	auto& hw = etbHardware[index];
 
 	hw.start(
