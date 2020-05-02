@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Apr 28 20:10:00 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 15:53:36 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -155,6 +155,8 @@ public class Fields {
 	public static final int auxValves1_offset_hex = 718;
 	public static final int auxValves2_offset = 1817;
 	public static final int auxValves2_offset_hex = 719;
+	public static final int auxVoltage1_offset = 2713;
+	public static final int auxVoltage2_offset = 2714;
 	public static final int BARO_CORR_SIZE = 4;
 	public static final int baroCorrPressureBins_offset = 1544;
 	public static final int baroCorrPressureBins_offset_hex = 608;
@@ -621,7 +623,7 @@ public class Fields {
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
 	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
-	public static final String GAUGE_NAME_AIR_FLOW = "air flow";
+	public static final String GAUGE_NAME_AIR_FLOW = "MAF air flow";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
 	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
 	public static final String GAUGE_NAME_DEBUG_F1 = "debug f1";
@@ -1553,7 +1555,7 @@ public class Fields {
 	public static final int unusedSomethingWasHere_offset = 2417;
 	public static final int unusedSomethingWasHere_offset_hex = 971;
 	public static final int unusedSpiPadding4_offset = 2593;
-	public static final int unusedSpiPadding5_offset = 2713;
+	public static final int unusedSpiPadding5_offset = 2715;
 	public static final int unusedSpiPadding7_offset = 4005;
 	public static final int unusedSpiPadding8_offset = 4009;
 	public static final int unusuedsw_offset = 4020;
@@ -2460,6 +2462,9 @@ public class Fields {
 	public static final Field OILPRESSURE_V2 = Field.create("OILPRESSURE_V2", 2704, FieldType.FLOAT);
 	public static final Field OILPRESSURE_VALUE2 = Field.create("OILPRESSURE_VALUE2", 2708, FieldType.FLOAT);
 	public static final Field ACCELEROMETERSPIDEVICE = Field.create("ACCELEROMETERSPIDEVICE", 2712, FieldType.INT8);
+	public static final Field AUXVOLTAGE1 = Field.create("AUXVOLTAGE1", 2713, FieldType.INT8, adc_channel_e);
+	public static final Field AUXVOLTAGE2 = Field.create("AUXVOLTAGE2", 2714, FieldType.INT8, adc_channel_e);
+	public static final Field UNUSEDSPIPADDING5 = Field.create("UNUSEDSPIPADDING5", 2715, FieldType.INT8);
 	public static final Field UNUSEDFLEXFUELSENSOR = Field.create("UNUSEDFLEXFUELSENSOR", 3100, FieldType.INT8);
 	public static final Field TEST557PIN = Field.create("TEST557PIN", 3101, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 3102, FieldType.INT8, pin_output_mode_e);
@@ -3413,6 +3418,9 @@ public class Fields {
 	OILPRESSURE_V2,
 	OILPRESSURE_VALUE2,
 	ACCELEROMETERSPIDEVICE,
+	AUXVOLTAGE1,
+	AUXVOLTAGE2,
+	UNUSEDSPIPADDING5,
 	UNUSEDFLEXFUELSENSOR,
 	TEST557PIN,
 	STEPPERDIRECTIONPINMODE,
