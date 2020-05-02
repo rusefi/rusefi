@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 02 15:54:19 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 02 18:38:10 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1886,11 +1886,12 @@ struct engine_configuration_s {
 	 * offset 1064
 	 */
 	stft_s stft;
-
-	etb_io etbIo2[2];
-
 	/**
 	 * offset 1088
+	 */
+	etb_io etbIo2[ETB_COUNT];
+	/**
+	 * offset 1096
 	 */
 	int unusedAtOldBoardConfigurationEnd[92];
 	/**
@@ -3427,4 +3428,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 02 15:54:19 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 02 18:38:10 EDT 2020

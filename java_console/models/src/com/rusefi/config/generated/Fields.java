@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 15:53:36 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 18:37:54 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -402,6 +402,26 @@ public class Fields {
 	public static final int etbIo1_directionPin2_offset = 981;
 	public static final int etbIo1_disablePin_offset = 983;
 	public static final int etbIo1_offset = 980;
+	public static final int etbIo21_controlPin1_offset = 1090;
+	public static final int etbIo21_controlPin1_offset_hex = 442;
+	public static final int etbIo21_directionPin1_offset = 1088;
+	public static final int etbIo21_directionPin1_offset_hex = 440;
+	public static final int etbIo21_directionPin2_offset = 1089;
+	public static final int etbIo21_directionPin2_offset_hex = 441;
+	public static final int etbIo21_disablePin_offset = 1091;
+	public static final int etbIo21_disablePin_offset_hex = 443;
+	public static final int etbIo21_offset = 1088;
+	public static final int etbIo21_offset_hex = 440;
+	public static final int etbIo22_controlPin1_offset = 1094;
+	public static final int etbIo22_controlPin1_offset_hex = 446;
+	public static final int etbIo22_directionPin1_offset = 1092;
+	public static final int etbIo22_directionPin1_offset_hex = 444;
+	public static final int etbIo22_directionPin2_offset = 1093;
+	public static final int etbIo22_directionPin2_offset_hex = 445;
+	public static final int etbIo22_disablePin_offset = 1095;
+	public static final int etbIo22_disablePin_offset_hex = 447;
+	public static final int etbIo22_offset = 1092;
+	public static final int etbIo22_offset_hex = 444;
 	public static final int etbIo2_controlPin1_offset = 986;
 	public static final int etbIo2_directionPin1_offset = 984;
 	public static final int etbIo2_directionPin2_offset = 985;
@@ -1523,8 +1543,8 @@ public class Fields {
 	public static final int unused_former_warmup_target_afr_offset_hex = 834;
 	public static final int unusedAntilagTimeout_offset = 820;
 	public static final int unusedAntilagTimeout_offset_hex = 334;
-	public static final int unusedAtOldBoardConfigurationEnd_offset = 1088;
-	public static final int unusedAtOldBoardConfigurationEnd_offset_hex = 440;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 1096;
+	public static final int unusedAtOldBoardConfigurationEnd_offset_hex = 448;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_10_offset = 976;
 	public static final int unusedBit_251_11_offset = 976;
@@ -2156,6 +2176,14 @@ public class Fields {
 	public static final Field STFT_CELLCFGS4_MAXADD = Field.create("STFT_CELLCFGS4_MAXADD", 1084, FieldType.INT8);
 	public static final Field STFT_CELLCFGS4_MAXREMOVE = Field.create("STFT_CELLCFGS4_MAXREMOVE", 1085, FieldType.INT8);
 	public static final Field STFT_CELLCFGS4_TIMECONSTANT = Field.create("STFT_CELLCFGS4_TIMECONSTANT", 1086, FieldType.INT16);
+	public static final Field ETBIO21_DIRECTIONPIN1 = Field.create("ETBIO21_DIRECTIONPIN1", 1088, FieldType.INT8, brain_pin_e);
+	public static final Field ETBIO21_DIRECTIONPIN2 = Field.create("ETBIO21_DIRECTIONPIN2", 1089, FieldType.INT8, brain_pin_e);
+	public static final Field ETBIO21_CONTROLPIN1 = Field.create("ETBIO21_CONTROLPIN1", 1090, FieldType.INT8, brain_pin_e);
+	public static final Field ETBIO21_DISABLEPIN = Field.create("ETBIO21_DISABLEPIN", 1091, FieldType.INT8, brain_pin_e);
+	public static final Field ETBIO22_DIRECTIONPIN1 = Field.create("ETBIO22_DIRECTIONPIN1", 1092, FieldType.INT8, brain_pin_e);
+	public static final Field ETBIO22_DIRECTIONPIN2 = Field.create("ETBIO22_DIRECTIONPIN2", 1093, FieldType.INT8, brain_pin_e);
+	public static final Field ETBIO22_CONTROLPIN1 = Field.create("ETBIO22_CONTROLPIN1", 1094, FieldType.INT8, brain_pin_e);
+	public static final Field ETBIO22_DISABLEPIN = Field.create("ETBIO22_DISABLEPIN", 1095, FieldType.INT8, brain_pin_e);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -3116,6 +3144,14 @@ public class Fields {
 	STFT_CELLCFGS4_MAXADD,
 	STFT_CELLCFGS4_MAXREMOVE,
 	STFT_CELLCFGS4_TIMECONSTANT,
+	ETBIO21_DIRECTIONPIN1,
+	ETBIO21_DIRECTIONPIN2,
+	ETBIO21_CONTROLPIN1,
+	ETBIO21_DISABLEPIN,
+	ETBIO22_DIRECTIONPIN1,
+	ETBIO22_DIRECTIONPIN2,
+	ETBIO22_CONTROLPIN1,
+	ETBIO22_DISABLEPIN,
 	VVTDISPLAYINVERTED,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
