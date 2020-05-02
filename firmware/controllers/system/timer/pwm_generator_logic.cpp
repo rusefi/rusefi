@@ -22,16 +22,6 @@
 // 1% duty cycle
 #define ZERO_PWM_THRESHOLD 0.01
 
-SimplePwm::SimplePwm() {
-	waveInstance.init(pinStates);
-	sr[0] = waveInstance;
-	init(_switchTimes, sr);
-}
-
-SimplePwm::SimplePwm(const char *name) : SimplePwm()  {
-	this->name = name;
-}
-
 PwmConfig::PwmConfig() {
 	memset((void*)&scheduling, 0, sizeof(scheduling));
 	memset((void*)&safe, 0, sizeof(safe));
@@ -53,45 +43,6 @@ PwmConfig::PwmConfig(float *st, SingleChannelStateSequence *waves) : PwmConfig()
 
 void PwmConfig::init(float *st, SingleChannelStateSequence *waves) {
 	multiChannelStateSequence.init(st, waves);
-}
-
-/**
- * This method allows you to change duty cycle on the fly
- * @param dutyCycle value between 0 and 1
- * See also setFrequency
- */
-void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
-	if (isStopRequested) {
-		// we are here in order to not change pin once PWM stop was requested
-		return;
-	}
-	if (cisnan(dutyCycle)) {
-		warning(CUSTOM_DUTY_INVALID, "%s spwd:dutyCycle %.2f", name, dutyCycle);
-		return;
-	} else if (dutyCycle < 0) {
-		warning(CUSTOM_DUTY_TOO_LOW, "%s dutyCycle %.2f", name, dutyCycle);
-		dutyCycle = 0;
-	} else if (dutyCycle > 1) {
-		warning(CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty %.2f", name, dutyCycle);
-		dutyCycle = 1;
-	}
-	if (dutyCycle == 0.0f && stateChangeCallback != NULL) {
-		/**
-		 * set the pin low just to be super sure
-		 * this custom handling of zero value comes from CJ125 heater code
-		 * TODO: is this really needed? cover by unit test?
-		 */
-		stateChangeCallback(0, arg);
-	}
-
-	if (dutyCycle < ZERO_PWM_THRESHOLD) {
-		mode = PM_ZERO;
-	} else if (dutyCycle > FULL_PWM_THRESHOLD) {
-		mode = PM_FULL;
-	} else {
-		mode = PM_NORMAL;
-		multiChannelStateSequence.setSwitchTime(0, dutyCycle);
-	}
 }
 
 /**
@@ -326,26 +277,18 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 	timerCallback(this);
 }
 
-void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
+void startSimplePwm(SimplePwm *pwm, const char *msg, ExecutorInterface *executor,
 		OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
-	efiAssertVoid(CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
+	efiAssertVoid(CUSTOM_ERR_PWM_STATE_ASSERT, pwm != nullptr, "state");
 	efiAssertVoid(CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
-	efiAssertVoid(CUSTOM_ERR_PWM_CALLBACK_ASSERT, stateChangeCallback != NULL, "listener");
+	efiAssertVoid(CUSTOM_ERR_PWM_CALLBACK_ASSERT, stateChangeCallback != nullptr, "listener");
+
 	if (frequency < 1) {
 		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
 		return;
 	}
 
-	float switchTimes[] = { dutyCycle, 1 };
-	pin_state_t pinStates0[] = { TV_FALL, TV_RISE };
-	state->setSimplePwmDutyCycle(dutyCycle);
-
-	pin_state_t *pinStates[1] = { pinStates0 };
-
-	state->outputPins[0] = output;
-
-	state->setFrequency(frequency);
-	state->weComplexInit(msg, executor, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);
+	pwm->init(executor, output, frequency, dutyCycle);
 }
 
 void startSimplePwmExt(SimplePwm *state, const char *msg,

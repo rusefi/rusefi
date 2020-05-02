@@ -26,6 +26,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/system/timer/signal_executor_sleep.cpp \
 	$(CONTROLLERS_DIR)/system/timer/single_timer_executor.cpp \
 	$(CONTROLLERS_DIR)/system/timer/pwm_generator_logic.cpp \
+	$(CONTROLLERS_DIR)/system/timer/simple_pwm.cpp \
 	$(CONTROLLERS_DIR)/system/timer/event_queue.cpp \
 	$(CONTROLLERS_DIR)/settings.cpp \
 	$(CONTROLLERS_DIR)/core/error_handling.cpp \

@@ -112,18 +112,7 @@ private:
 	float periodNt;
 };
 
-
-class SimplePwm : public PwmConfig {
-public:
-	SimplePwm();
-	explicit SimplePwm(const char *name);
-	virtual void setSimplePwmDutyCycle(float dutyCycle);
-	pin_state_t pinStates[2];
-	SingleChannelStateSequence sr[1];
-	float _switchTimes[2];
-private:
-	SingleChannelStateSequence waveInstance;
-};
+#include "simple_pwm.h"
 
 /**
  * default implementation of pwm_gen_callback which simply toggles the pins
