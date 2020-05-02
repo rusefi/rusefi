@@ -219,7 +219,7 @@ static void cjPrintErrorCode(cj125_error_e errCode) {
 }
 
 static void cjPrintState() {
-	scheduleMsg(logger, "cj125: state=%s diag=0x%x (vUa=%.3f vUr=%.3f) (vUaCal=%.3f vUrCal=%.3f)",
+	scheduleMsg(logger, "cj125: state=%s diag=0x%x (current Ua=%.3f Ur=%.3f) (calibration Ua=%.3f Ur=%.3f)",
 			getCjState(globalInstance.state), globalInstance.diag,
 			globalInstance.vUa, globalInstance.vUr,
 			globalInstance.vUaCal, globalInstance.vUrCal);
@@ -234,6 +234,14 @@ static void cjPrintState() {
 			globalInstance.heaterPidConfig.pFactor,
 			globalInstance.heaterPidConfig.iFactor,
 			globalInstance.heaterPidConfig.dFactor);
+}
+
+static void cjSetP(float value) {
+	globalInstance.heaterPidConfig.pFactor = value;
+}
+
+static void cjSetI(float value) {
+	globalInstance.heaterPidConfig.iFactor = value;
 }
 
 static void cjInfo() {
@@ -277,12 +285,6 @@ static void cjUpdateAnalogValues() {
     lastSlowAdcCounter = getSlowAdcCounter();
 #endif /* EFI_PROD_CODE */
 }
-
-#if ! EFI_UNIT_TEST
-void cjCalibrate(void) {
-	globalInstance.calibrate(PASS_ENGINE_PARAMETER_SIGNATURE);
-}
-#endif /* EFI_UNIT_TEST */
 
 void CJ125::calibrate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	cjIdentify(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -532,7 +534,7 @@ static bool cjCheckConfig(void) {
 	return true;
 }
 
-static void cjStartCalibration(void) {
+void cjStartCalibration(void) {
 	if (!cjCheckConfig())
 		return;
 	if (globalInstance.isWorkingState()) {
@@ -642,6 +644,8 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #if ! EFI_UNIT_TEST
 	addConsoleAction("cj125_info", cjInfo);
+	addConsoleActionF("cj125_set_p", cjSetP);
+	addConsoleActionF("cj125_set_i", cjSetI);
 	addConsoleAction("cj125_restart", cjRestart);
 	addConsoleAction("cj125_calibrate", cjStartCalibration);
 
