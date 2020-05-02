@@ -880,7 +880,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 
 	stft_s stft
 
-	int[94] unusedAtOldBoardConfigurationEnd;
+	etb_io[ETB_COUNT iterate] etbIo2
+
+	int[92] unusedAtOldBoardConfigurationEnd;
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
