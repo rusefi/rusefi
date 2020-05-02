@@ -1172,7 +1172,9 @@ tle8888_mode_e tle8888mode;
 	oil_pressure_config_s oilPressure;
 
 	spi_device_e accelerometerSpiDevice;
-	uint8_t[3] unusedSpiPadding5;
+	adc_channel_e auxVoltage1;
+	adc_channel_e auxVoltage2;
+	uint8_t[1] unusedSpiPadding5;
 	float[FSIO_CURVE_16] fsioCurve1Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_16] fsioCurve1;;"y",      1,     0,      -999,    1000.0,   3
 	float[FSIO_CURVE_16] fsioCurve2Bins;;"x",        1,     0,   -999,    1000.0,  3
@@ -1428,7 +1430,7 @@ end_struct
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 
-#define GAUGE_NAME_AIR_FLOW "air flow"
+#define GAUGE_NAME_AIR_FLOW "MAF air flow"
 #define GAUGE_NAME_AIR_MASS "air mass"
 
 #define GAUGE_NAME_WARNING_LAST "warning: last"
