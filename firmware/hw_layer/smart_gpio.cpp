@@ -126,8 +126,7 @@ struct tle8888_config tle8888_cfg = {
 		[0] = {.port = GPIOE,	.pad = 10,	.output =  5},
 		[1] = {.port = GPIOE,	.pad = 9,	.output =  6},
 		[2] = {.port = GPIOE,	.pad = 8,	.output = 21},
-		[3] = {.port = NULL,	.pad = 0,	.output = 15},
-//		[3] = {.port = GPIOE,	.pad = 7,	.output = 22},
+		[3] = {.port = GPIOE,	.pad = 7,	.output = 15},
 
 
 /*
