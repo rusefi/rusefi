@@ -211,6 +211,9 @@ struct tle8888_priv {
 
 	tle8888_drv_state			drv_state;
 
+	/* direct drive mapping registers */
+	uint32_t					InConfig[TLE8888_DIRECT_MISC];
+
 	/* diagnostic registers */
 	uint8_t						OutDiag[5];
 	uint8_t						BriDiag[2];
@@ -455,20 +458,6 @@ static int tle8888_update_direct_output(struct tle8888_priv *chip, int pin, int 
 	return -1;
 }
 
-// ChibiOS does not offer this function so that's a copy-paste of 'chSemSignal' without locking
-void chSemSignalS(semaphore_t *sp) {
-
-  chDbgCheck(sp != NULL);
-
-  chDbgAssert(((sp->cnt >= (cnt_t)0) && queue_isempty(&sp->queue)) ||
-              ((sp->cnt < (cnt_t)0) && queue_notempty(&sp->queue)),
-              "inconsistent semaphore");
-  if (++sp->cnt <= (cnt_t)0) {
-    chSchWakeupS(queue_fifo_remove(&sp->queue), MSG_OK);
-  }
-}
-
-
 /**
  * @brief TLE8888 chip driver wakeup.
  * @details Wake up driver. Will cause output register update
@@ -494,10 +483,6 @@ static int tle8888_wake_driver(struct tle8888_priv *chip)
 	return 0;
 }
 
-/*==========================================================================*/
-/* Driver thread.															*/
-/*==========================================================================*/
-
 static void handleFWDStat1(struct tle8888_priv *chip, int registerNum, int data) {
 	if (registerNum != FWDStat1)
 		return;
@@ -515,59 +500,17 @@ static void handleFWDStat1(struct tle8888_priv *chip, int registerNum, int data)
 	tle8888_spi_rw(chip, CMD_WdDiag, &wdDiagResponse);
 }
 
-static int startupConfiguration(struct tle8888_priv *chip) {
-	const struct tle8888_config	*cfg = chip->cfg;
+static int tle8888_chip_init(struct tle8888_priv *chip) {
 	uint16_t response = 0;
 	/* Set LOCK bit to 0 */
 	// second 0x13D=317 => 0x35=53
 	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
 
-	chip->o_direct_mask = 0;
-	chip->o_oe_mask		= 0;
-	/* HACK HERE if you want to enable PP for OUT21..OUT24
-	 * without approprirate call to setPinMode */
-	chip->o_pp_mask		= 0; /* = BIT(20) | BIT(21) | BIT(22) | BIT(23); */
-	/* enable direct drive of OUTPUT4..1
-	 * ...still need INJEN signal */
-	chip->o_direct_mask	|= 0x0000000f;
-	chip->o_oe_mask		|= 0x0000000f;
-	/* enable direct drive of IGN4..1
-	 * ...still need IGNEN signal */
-	chip->o_direct_mask |= 0x0f000000;
-	chip->o_oe_mask		|= 0x0f000000;
-
-	/* map and enable outputs for direct driven channels */
+	/* map direct driven channels */
 	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
-		int out = cfg->direct_io[i].output;
-
-		/* not used? */
-		if (out == 0)
-			continue;
-
-		/* OUT1..4 driven direct only through dedicated pins */
-		if (out < 5)
-			return -1;
-
-		/* in config counted from 1 */
-		uint32_t mask = (1 << (out - 1));
-
-		/* check if output already occupied */
-		if (chip->o_direct_mask & mask) {
-			/* incorrect config? */
-			return -1;
-		}
-
-		/* enable direct drive and output enable */
-		chip->o_direct_mask	|= mask;
-		chip->o_oe_mask		|= mask;
-
 		/* set INCONFIG - aux input mapping */
-		tle8888_spi_rw(chip, CMD_INCONFIG(i, out - 5), NULL);
+		tle8888_spi_rw(chip, CMD_INCONFIG(i, chip->InConfig[i]), NULL);
 	}
-
-	/* enable all ouputs
-	 * TODO: add API to enable/disable? */
-	chip->o_oe_mask		|= 0x0ffffff0;
 
 	/* set OE and DD registers */
 	for (int i = 0; i < 4; i++) {
@@ -584,12 +527,12 @@ static int startupConfiguration(struct tle8888_priv *chip) {
 		tle8888_spi_rw(chip, CMD_OUTCONFIG(i, 0), NULL);
 	}
 
+	/* set VR mode: VRS/Hall */
+	tle8888_spi_rw(chip, CMD_VRSCONFIG(1, chip->cfg->mode << 2), NULL);
+
 	/* enable outputs */
 	tle8888_spi_rw(chip, CMD_OE_SET, NULL);
 
-	if (cfg->mode > 0) {
-		tle8888_spi_rw(chip, CMD_VRSCONFIG1(cfg->mode << 2), NULL);
-	}
 	return 0;
 }
 
@@ -627,12 +570,16 @@ void watchdogLogic(struct tle8888_priv *chip) {
 		// reset state for error counters has us start in Safe Mode
 		isWatchdogHappy = (getWindowWatchdog() == 0 && getFunctionalWatchdog() == 0);
 		if (!wasWatchdogHappy && isWatchdogHappy) {
-			startupConfiguration(chip);
+			tle8888_chip_init(chip);
 		}
 	}
 }
 
 int tle8888SpiStartupExchange(struct tle8888_priv *chip);
+
+/*==========================================================================*/
+/* Driver thread.															*/
+/*==========================================================================*/
 
 static THD_FUNCTION(tle8888_driver_thread, p) {
 	(void)p;
@@ -857,7 +804,7 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 	 */
 	chThdSleepMilliseconds(3);
 
-	startupConfiguration(chip);
+	tle8888_chip_init(chip);
 
 	/* enable pins */
 	if (cfg->ign_en.port)
@@ -872,11 +819,17 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 	return 0;
 }
 
-static int tle8888_chip_init(void * data) {
+static int tle8888_chip_init_data(void * data) {
+	int i;
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 	const struct tle8888_config	*cfg = chip->cfg;
 
 	int ret = 0;
+
+	chip->o_direct_mask = 0;
+	chip->o_oe_mask		= 0;
+	chip->o_pp_mask		= 0;
+
 	/* mark pins used */
 	// we do not initialize CS pin so we should not be marking it used - i'm sad
 	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
@@ -904,11 +857,58 @@ static int tle8888_chip_init(void * data) {
 		}
 	}
 
+	for (i = 0; i < TLE8888_DIRECT_MISC; i++) {
+		int out = cfg->direct_io[i].output;
 
-	if (ret) {
-		ret = -1;
-		goto err_gpios;
+		if ((out == 0) || (cfg->direct_io[i].port == NULL))
+			continue;
+
+		ret = gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
+		if (ret) {
+			ret = -1;
+			goto err_gpios;
+		}
+
+		/* OUT1..4 driven direct only through dedicated pins */
+		if (out < 5) {
+			ret = -1;
+			goto err_gpios;
+		}
+
+		/* in config counted from 1 */
+		uint32_t mask = (1 << (out - 1));
+
+		/* check if output already occupied */
+		if (chip->o_direct_mask & mask) {
+			/* incorrect config? */
+			ret = -1;
+			goto err_gpios;
+		}
+
+		/* enable direct drive and output enable */
+		chip->o_direct_mask	|= mask;
+		chip->o_oe_mask		|= mask;
+
+		/* calculate INCONFIG - aux input mapping */
+		chip->InConfig[i] = out - 5;
 	}
+
+	/* HACK HERE if you want to enable PP for OUT21..OUT24
+	 * without approprirate call to setPinMode */
+	//chip->o_pp_mask		|= BIT(20) | BIT(21) | BIT(22) | BIT(23);
+
+	/* enable direct drive of OUTPUT4..1
+	 * ...still need INJEN signal */
+	chip->o_direct_mask	|= 0x0000000f;
+	chip->o_oe_mask		|= 0x0000000f;
+	/* enable direct drive of IGN4..1
+	 * ...still need IGNEN signal */
+	chip->o_direct_mask |= 0x0f000000;
+	chip->o_oe_mask		|= 0x0f000000;
+
+	/* enable all ouputs
+	 * TODO: add API to enable/disable? */
+	chip->o_oe_mask		|= 0x0ffffff0;
 
 	return 0;
 
@@ -931,14 +931,6 @@ err_gpios:
 	return ret;
 }
 
-/* DEBUG */
-void tle8888_read_reg(uint16_t reg, uint16_t *val)
-{
-	struct tle8888_priv *chip = &chips[0];
-
-	tle8888_spi_rw(chip, CMD_R(reg), val);
-}
-
 static int tle8888_init(void * data)
 {
 	int ret;
@@ -949,6 +941,10 @@ static int tle8888_init(void * data)
 	/* check for multiple init */
 	if (chip->drv_state != TLE8888_WAIT_INIT)
 		return -1;
+
+	ret = tle8888_chip_init_data(chip);
+	if (ret)
+		return ret;
 
 	ret = tle8888_chip_init(chip);
 	if (ret)
@@ -1028,6 +1024,16 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg) {
 	gpiochips_setPinNames(ret, tle8888_pin_names);
 
 	return ret;
+}
+
+/*==========================================================================*/
+/* Driver exported debug functions.												*/
+/*==========================================================================*/
+void tle8888_read_reg(uint16_t reg, uint16_t *val)
+{
+	struct tle8888_priv *chip = &chips[0];
+
+	tle8888_spi_rw(chip, CMD_R(reg), val);
 }
 
 #else /* BOARD_TLE8888_COUNT > 0 */
