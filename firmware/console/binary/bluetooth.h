@@ -1,7 +1,8 @@
 /**
- * @file	tunerstudio.h
+ * @file	bluetooth.h
  *
  * @date Aug 26, 2013
+ * @author andreika, (c) 2017
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
