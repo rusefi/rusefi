@@ -227,17 +227,17 @@ bool isCommandLineConsoleReady(void) {
 
 #if !defined(EFI_CONSOLE_NO_THREAD)
 
-static ts_channel_s binaryConsole;
+static ts_channel_s primaryChannel;
 
 static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
 static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("console thread");
 
-	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
-	if (binaryConsole.channel != NULL) {
+	primaryChannel.channel = (BaseChannel *) getConsoleChannel();
+	if (primaryChannel.channel != NULL) {
 #if EFI_TUNER_STUDIO
-		runBinaryProtocolLoop(&binaryConsole);
+		runBinaryProtocolLoop(&primaryChannel);
 #endif /* EFI_TUNER_STUDIO */
 	}
 }
