@@ -131,7 +131,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 CommandHandler console_line_callback;
 
 #if (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR )
-static SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
+SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR )
@@ -227,7 +227,7 @@ bool isCommandLineConsoleReady(void) {
 
 #if !defined(EFI_CONSOLE_NO_THREAD)
 
-static ts_channel_s primaryChannel;
+ts_channel_s primaryChannel;
 
 static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
 static THD_FUNCTION(consoleThreadEntryPoint, arg) {
