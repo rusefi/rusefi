@@ -372,10 +372,8 @@
 // todo: start using consoleSerial{Tx,Rx}Pin
 #define EFI_CONSOLE_AF 7
 #define TS_SERIAL_AF 7
-#define EFI_CONSOLE_TX_PORT GPIOC
-#define EFI_CONSOLE_TX_PIN 10
-#define EFI_CONSOLE_RX_PORT GPIOC
-#define EFI_CONSOLE_RX_PIN 11
+#define EFI_CONSOLE_TX_BRAIN_PIN GPIOC_10
+#define EFI_CONSOLE_RX_BRAIN_PIN GPIOC_11
 
 // todo: document the limitations of DMA mode for the UART.
 #undef TS_UART_DMA_MODE
