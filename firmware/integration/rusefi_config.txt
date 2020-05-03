@@ -1028,7 +1028,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	
 	brain_pin_e communicationLedPin;blue LED on discovery by default	
 	brain_pin_e runningLedPin;green LED on discovery by default
-	brain_pin_e binarySerialTxPin;See also EFI_CONSOLE_TX_PORT
+	brain_pin_e binarySerialTxPin;See also EFI_CONSOLE_RX_BRAIN_PIN
 	brain_pin_e binarySerialRxPin;	
 	
 	brain_pin_e[AUX_DIGITAL_VALVE_COUNT iterate] auxValves
