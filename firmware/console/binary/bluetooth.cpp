@@ -1,3 +1,9 @@
+/**
+ * @file	bluetooth.cpp
+ *
+ * @author andreika, (c) 2017
+ */
+
 #include "global.h"
 #include "os_access.h"
 #include "allsensors.h"
