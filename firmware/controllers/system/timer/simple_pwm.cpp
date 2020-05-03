@@ -77,20 +77,20 @@ void SimplePwm::update() {
 
 void SimplePwm::scheduleFall() {
 	// 0 low time -> 100% duty, so don't schedule the fall.  Reschedule another rise in a full period.
-	if (m_lowTime == 0) {
-		m_executor->scheduleByTimestampNt(&m_sched, getTimeNowNt() + m_highTime, { SimplePwm::setHighAdapter, this });
-	} else {
-		m_executor->scheduleByTimestampNt(&m_sched, getTimeNowNt() + m_highTime, { SimplePwm::setLowAdapter, this });
-	}
+	action_s action = m_lowTime == 0
+		? action_s(SimplePwm::setHighAdapter, this)
+		: action_s(SimplePwm::setLowAdapter, this);
+
+	m_executor->scheduleByTimestampNt(&m_sched, getTimeNowNt() + m_highTime, action);
 }
 
 void SimplePwm::scheduleRise() {
 	// 0 high time -> 0% duty, so don't schedule the rise.  Reschedule another fall in a full period.
-	if (m_highTime == 0) {
-		m_executor->scheduleByTimestampNt(&m_sched, getTimeNowNt() + m_lowTime, { SimplePwm::setLowAdapter, this });
-	} else {
-		m_executor->scheduleByTimestampNt(&m_sched, getTimeNowNt() + m_lowTime, { SimplePwm::setHighAdapter, this });
-	}
+	action_s action = m_highTime == 0
+		? action_s(SimplePwm::setLowAdapter, this)
+		: action_s(SimplePwm::setHighAdapter, this);
+
+	m_executor->scheduleByTimestampNt(&m_sched, getTimeNowNt() + m_lowTime, action);
 }
 
 // Callback on rising edge
