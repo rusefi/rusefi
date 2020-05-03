@@ -628,4 +628,13 @@ void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setMiataNB2_MRE_MTB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
 
+	// somehow MRE72 adapter 0.2 has TPS routed to pin 26?
+
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
+
+
+	// 1K pull-down to read current from this MAF
+	engineConfiguration->mafAdcChannel = EFI_ADC_13; // J30 AV5
+
+
 }
