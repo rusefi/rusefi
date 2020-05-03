@@ -1,6 +1,12 @@
 /**
  * @file	bluetooth.cpp
  *
+ *
+ * It looks like Bluetooth modules arrive in all kinds of initial configuration.
+ * Sometimes we need to execute a one-time initialization including settings the baud rate. rusEFI setting uartConsoleSerialSpeed or tunerStudioSerialSpeed
+ * has to match BT module configuration.
+ *
+ *
  * @author andreika, (c) 2017
  */
 
@@ -73,16 +79,29 @@ static void runCommands() {
 		
 		// if the baud rate is changed, reinit the UART
 		if (baudIdx != prevBaudIdx || restoreAndExit) {
+#if EFI_USB_SERIAL
+			extern SerialConfig serialConfig;
+			// if we have USB we assume BT operates on primary TTL
+			// todo: we need to clean a lot in this area :(
+			sdStop(EFI_CONSOLE_SERIAL_DEVICE);
+#else
 			// deinit UART
 			if (!stopTsPort(tsChannel)) {
 				scheduleMsg(&btLogger, "Failed! Cannot restart serial port connection!");
 				return;
 			}
+#endif /* EFI_USB_SERIAL */
 			chThdSleepMilliseconds(10);	// safety
 			// change the port speed
 			CONFIG(tunerStudioSerialSpeed) = restoreAndExit ? savedSerialSpeed : baudRates[baudIdx];
+
+#if EFI_USB_SERIAL
+			serialConfig.speed = CONFIG(tunerStudioSerialSpeed);
+			sdStart(EFI_CONSOLE_SERIAL_DEVICE, &serialConfig);
+#else
 			// init UART
 			startTsPort(tsChannel);
+#endif /* EFI_USB_SERIAL */
 			chThdSleepMilliseconds(10);	// safety
 			prevBaudIdx = baudIdx;
 		}
