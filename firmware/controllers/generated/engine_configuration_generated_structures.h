@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 18:37:54 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 22:11:06 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2354,12 +2354,12 @@ struct engine_configuration_s {
 	 *  todo: finish pin migration from hard-coded to configurable?
 	 * offset 1818
 	 */
-	brain_pin_e consoleSerialTxPin;
+	brain_pin_e unusedConsoleSerialTxPin;
 	/**
 	 * todo: finish pin migration from hard-coded to configurable?
 	 * offset 1819
 	 */
-	brain_pin_e consoleSerialRxPin;
+	brain_pin_e unusedConsoleSerialRxPin;
 	/**
 	 * Knock sensor output knock detection threshold depending on current RPM
 	 * offset 1820
@@ -3428,4 +3428,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 18:37:54 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 22:11:06 EDT 2020
