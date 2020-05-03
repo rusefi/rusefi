@@ -268,9 +268,8 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 		serialConfig.speed = engineConfiguration->uartConsoleSerialSpeed;
 		sdStart(EFI_CONSOLE_SERIAL_DEVICE, &serialConfig);
 
-		// cannot use pin repository here because pin repository prints to console
-		palSetPadMode(getHwPort("console", EFI_CONSOLE_RX_BRAIN_PIN), getHwPin("console", EFI_CONSOLE_RX_BRAIN_PIN), PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-		palSetPadMode(getHwPort("console", EFI_CONSOLE_TX_BRAIN_PIN), getHwPin("console", EFI_CONSOLE_TX_BRAIN_PIN), PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+		efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+		efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 
 		isSerialConsoleStarted = true;
 
@@ -279,9 +278,8 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 		uartConfig.speed = engineConfiguration->uartConsoleSerialSpeed;
 		uartStart(EFI_CONSOLE_UART_DEVICE, &uartConfig);
 
-		// cannot use pin repository here because pin repository prints to console
-		palSetPadMode(getHwPort("console", EFI_CONSOLE_RX_BRAIN_PIN), getHwPin("console", EFI_CONSOLE_RX_BRAIN_PIN), PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-		palSetPadMode(getHwPort("console", EFI_CONSOLE_TX_BRAIN_PIN), getHwPin("console", EFI_CONSOLE_TX_BRAIN_PIN), PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+		efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+		efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 
 		isSerialConsoleStarted = true;
 #endif /* EFI_CONSOLE_SERIAL_DEVICE || EFI_CONSOLE_UART_DEVICE */
