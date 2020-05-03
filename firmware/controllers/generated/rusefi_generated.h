@@ -459,10 +459,6 @@
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define consoleLoopPeriodMs_offset 716
 #define consoleLoopPeriodMs_offset_hex 2cc
-#define consoleSerialRxPin_offset 1819
-#define consoleSerialRxPin_offset_hex 71b
-#define consoleSerialTxPin_offset 1818
-#define consoleSerialTxPin_offset_hex 71a
 #define consoleUartDevice_offset 943
 #define consoleUartDevice_offset_hex 3af
 #define CRANKING_ADVANCE_CURVE_SIZE 4
@@ -2356,6 +2352,10 @@
 #define unusedBit_282_31_offset_hex 3d0
 #define unusedBit_34_31_offset 76
 #define unusedBit_34_31_offset_hex 4c
+#define unusedConsoleSerialRxPin_offset 1819
+#define unusedConsoleSerialRxPin_offset_hex 71b
+#define unusedConsoleSerialTxPin_offset 1818
+#define unusedConsoleSerialTxPin_offset_hex 71a
 #define unusedFlexFuelSensor_offset 3100
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedHere_offset 761

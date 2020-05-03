@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 18:37:54 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 22:11:06 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -297,8 +297,6 @@ public class Fields {
 	public static final int COMPOSITE_PACKET_SIZE = 5;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int consoleLoopPeriodMs_offset = 716;
-	public static final int consoleSerialRxPin_offset = 1819;
-	public static final int consoleSerialTxPin_offset = 1818;
 	public static final int consoleUartDevice_offset = 943;
 	public static final int CRANKING_ADVANCE_CURVE_SIZE = 4;
 	public static final int cranking_alignmentFill_at_6_offset = 94;
@@ -1569,6 +1567,8 @@ public class Fields {
 	public static final int unusedBit_282_30_offset = 976;
 	public static final int unusedBit_282_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
+	public static final int unusedConsoleSerialRxPin_offset = 1819;
+	public static final int unusedConsoleSerialTxPin_offset = 1818;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedHere_offset = 761;
 	public static final int unusedOldBiquad_offset = 2332;
@@ -2329,8 +2329,8 @@ public class Fields {
 	public static final Field BINARYSERIALRXPIN = Field.create("BINARYSERIALRXPIN", 1815, FieldType.INT8, brain_pin_e);
 	public static final Field AUXVALVES1 = Field.create("AUXVALVES1", 1816, FieldType.INT8, brain_pin_e);
 	public static final Field AUXVALVES2 = Field.create("AUXVALVES2", 1817, FieldType.INT8, brain_pin_e);
-	public static final Field CONSOLESERIALTXPIN = Field.create("CONSOLESERIALTXPIN", 1818, FieldType.INT8, brain_pin_e);
-	public static final Field CONSOLESERIALRXPIN = Field.create("CONSOLESERIALRXPIN", 1819, FieldType.INT8, brain_pin_e);
+	public static final Field UNUSEDCONSOLESERIALTXPIN = Field.create("UNUSEDCONSOLESERIALTXPIN", 1818, FieldType.INT8, brain_pin_e);
+	public static final Field UNUSEDCONSOLESERIALRXPIN = Field.create("UNUSEDCONSOLESERIALRXPIN", 1819, FieldType.INT8, brain_pin_e);
 	public static final Field THROTTLEPEDALUPVOLTAGE = Field.create("THROTTLEPEDALUPVOLTAGE", 1884, FieldType.FLOAT);
 	public static final Field THROTTLEPEDALWOTVOLTAGE = Field.create("THROTTLEPEDALWOTVOLTAGE", 1888, FieldType.FLOAT);
 	public static final Field STARTUPFUELPUMPDURATION = Field.create("STARTUPFUELPUMPDURATION", 1892, FieldType.INT16);
@@ -3297,8 +3297,8 @@ public class Fields {
 	BINARYSERIALRXPIN,
 	AUXVALVES1,
 	AUXVALVES2,
-	CONSOLESERIALTXPIN,
-	CONSOLESERIALRXPIN,
+	UNUSEDCONSOLESERIALTXPIN,
+	UNUSEDCONSOLESERIALRXPIN,
 	THROTTLEPEDALUPVOLTAGE,
 	THROTTLEPEDALWOTVOLTAGE,
 	STARTUPFUELPUMPDURATION,
