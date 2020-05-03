@@ -18,6 +18,9 @@
 
 class PinRepository {
 	public:
+	/**
+	 * Class constructors are a great way to have simple initialization sequence
+	 */
 	PinRepository();
 	int totalPinsUsed = 0;
 };
