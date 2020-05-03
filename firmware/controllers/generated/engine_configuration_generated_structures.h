@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 03 00:11:05 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 03 03:38:31 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1332,6 +1332,7 @@ struct engine_configuration_s {
 	 */
 	int generalPeriodicThreadPeriodMs;
 	/**
+	 * Secondary TTL channel baud rate
 	 * offset 728
 	 */
 	uint32_t tunerStudioSerialSpeed;
@@ -2483,6 +2484,7 @@ struct engine_configuration_s {
 	 */
 	float engineLoadAccelEnrichmentMultiplier;
 	/**
+	 * Band rate for primary TTL
 	 * offset 2076
 	 */
 	uint32_t uartConsoleSerialSpeed;
@@ -3429,4 +3431,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 03 00:11:05 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 03 03:38:31 EDT 2020
