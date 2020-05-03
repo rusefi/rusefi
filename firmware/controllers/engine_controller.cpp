@@ -687,9 +687,14 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 }
 
-// these two variables are here only to let us know how much RAM is available, also these
-// help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
-// linking process which is the way to raise the alarm
+/**
+ * these two variables are here only to let us know how much RAM is available, also these
+ * help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
+ * linking process which is the way to raise the alarm
+ *
+ * You get "cannot move location counter backwards" linker error when you run out of RAM. When you run out of RAM you shall reduce these
+ * UNUSED_SIZE contants.
+ */
 #ifndef RAM_UNUSED_SIZE
 #define RAM_UNUSED_SIZE 12200
 #endif
