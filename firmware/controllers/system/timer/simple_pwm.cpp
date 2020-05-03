@@ -76,8 +76,6 @@ void SimplePwm::update() {
 }
 
 void SimplePwm::scheduleFall() {
-	ScopePerf perf(PE::Temporary1);
-
 	// 0 low time -> 100% duty, so don't schedule the fall.  Reschedule another rise in a full period.
 	if (m_lowTime == 0) {
 		m_executor->scheduleByTimestampNt(&m_sched, getTimeNowNt() + m_highTime, { SimplePwm::setHighAdapter, this });
@@ -87,8 +85,6 @@ void SimplePwm::scheduleFall() {
 }
 
 void SimplePwm::scheduleRise() {
-	ScopePerf perf(PE::Temporary2);
-
 	// 0 high time -> 0% duty, so don't schedule the rise.  Reschedule another fall in a full period.
 	if (m_highTime == 0) {
 		m_executor->scheduleByTimestampNt(&m_sched, getTimeNowNt() + m_lowTime, { SimplePwm::setLowAdapter, this });
@@ -99,12 +95,16 @@ void SimplePwm::scheduleRise() {
 
 // Callback on rising edge
 void SimplePwm::setHigh() {
+	ScopePerf perf(PE::Temporary1);
+
 	m_pin->setValue(true);
 	scheduleFall();
 }
 
 // Callback on falling edge
 void SimplePwm::setLow() {
+	ScopePerf perf(PE::Temporary2);
+
 	m_pin->setValue(false);
 	scheduleRise();
 }
