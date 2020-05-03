@@ -19,7 +19,7 @@
 class PinRepository {
 	public:
 	PinRepository();
-
+	int totalPinsUsed = 0;
 };
 
 #endif /* __cplusplus */
