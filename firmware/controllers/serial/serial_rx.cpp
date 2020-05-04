@@ -32,6 +32,8 @@ innovate_serial_id_state_t innovate_serial_id_state = UNKNOWN;
 uint16_t len = SERBUFFLEN;
 uint16_t sb = 0; 
 
+#define ONE_SEC TIME_MS2I(1000)
+
 SerialRead::SerialRead()
 	: ThreadController("AUX Serial RX", NORMALPRIO)
 {

@@ -17,7 +17,7 @@
 #include "string.h"
 #include "mpu_util.h"
 #include "engine.h"
-
+// #include "serial_sensor.h"
 
 EXTERN_ENGINE;
 
@@ -27,7 +27,7 @@ static bool isSerialRXEnabled = false;
 static LoggingWithStorage logger("SERIAL driver");
 
 
-static SerialConfig uartCfg;
+// static UARTConfig uartCfg;
 static SerialRead serialRead;
 static SerialWrite serialWrite;
 
@@ -44,15 +44,22 @@ static void auxInfo(void)
 	scheduleMsg(&logger, "AUX Serial RX %s", hwPortname(CONFIG(auxSerialRxPin)));
 }
 
+// static void rxIRQHandler(UARTDriver *uartp)
+// {
+// 	ParseSerialData();
+// }
+
 void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 {
 	CONFIG(auxSerialTxPin) = engineConfiguration->auxSerialTxPin;
 	CONFIG(auxSerialRxPin) = engineConfiguration->auxSerialRxPin;
 	CONFIG(auxSerialSpeed) = engineConfiguration->auxSerialSpeed;
 	
-	uartCfg.speed = engineConfiguration->auxSerialSpeed;
+	// uartCfg.speed = engineConfiguration->auxSerialSpeed;
+	//uartCfg.timeout_cb = rxIRQHandler;
 
-	sdStart(&SD6, &uartCfg);
+	// uartStart(&UARTD6, &uartCfg);
+
 	scheduleMsg(&logger, "AUX Serial started");
 }
 
