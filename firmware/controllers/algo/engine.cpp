@@ -25,6 +25,7 @@
 #include "fsio_impl.h"
 #include "perf_trace.h"
 #include "sensor.h"
+#include "gppwm.h"
 
 #if EFI_PROD_CODE
 #include "bench_test.h"
@@ -139,6 +140,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #else
 	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
+
+	updateGppwm();
 
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 

@@ -135,6 +135,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
 	if (cisnan(oneDegreeUs)) {
+		// todo: this code branch is slowing NB2 cranking since we require RPM sync for VVT sync!
+		// todo: smarter code
+		//
 		// we are here if we are getting VVT position signals while engine is not running
 		// for example if crank position sensor is broken :)
 		return;
@@ -166,6 +169,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		}
 	}
 
+	tc->vvtSyncTimeNt = nowNt;
 
 	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
 
@@ -223,7 +227,7 @@ uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
-	ScopePerf perf(PE::HandleShaftSignal, static_cast<uint8_t>(signal));
+	ScopePerf perf(PE::HandleShaftSignal);
 
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
@@ -605,7 +609,7 @@ void triggerInfo(void) {
 			boolToString(ts->isSynchronizationNeeded),
 			boolToString(isTriggerDecoderError()), engine->triggerCentral.triggerState.totalTriggerErrorCounter,
 			engine->triggerCentral.triggerState.orderingErrorCounter, engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
-			boolToString(engineConfiguration->directSelfStimulation));
+			boolToString(engine->directSelfStimulation));
 
 	if (TRIGGER_WAVEFORM(isSynchronizationNeeded)) {
 		scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));

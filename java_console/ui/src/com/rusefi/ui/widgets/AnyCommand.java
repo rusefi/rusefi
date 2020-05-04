@@ -1,6 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
+import com.rusefi.AutoTest;
 import com.rusefi.FileLog;
 import com.rusefi.InfixConverter;
 import com.rusefi.core.MessagesCentral;
@@ -19,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 /**
  * Date: 3/20/13
@@ -113,7 +115,7 @@ public class AnyCommand {
         if (cmd == null) {
             /**
              * {@link #DECODE_RPN} for example does not send out anything
-              */
+             */
             return;
         }
         if (listener != null)
@@ -128,6 +130,9 @@ public class AnyCommand {
         try {
             if (rawCommand.startsWith("eval" + " ")) {
                 return prepareEvalCommand(rawCommand);
+            } else if (rawCommand.toLowerCase().startsWith("stim_check" + " ")) {
+                handleStimulationSelfCheck(rawCommand);
+                return null;
             } else if (rawCommand.toLowerCase().startsWith(DECODE_RPN + " ")) {
                 handleDecodeRpn(rawCommand);
                 return null;
@@ -140,6 +145,39 @@ public class AnyCommand {
             FileLog.MAIN.log(e);
             return rawCommand;
         }
+    }
+
+    /**
+     * stim_check 3000 5 30
+     * would set RPM to 3000, give it 5 seconds to settle, and test for 30 seconds
+     */
+    private static void handleStimulationSelfCheck(String rawCommand) {
+        String[] parts = rawCommand.split(" ", 4);
+        if (parts.length != 4) {
+            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Invalid command length " + parts);
+            return; // let's ignore invalid command
+        }
+        int rpm = Integer.parseInt(parts[1]);
+        int settleTime = Integer.parseInt(parts[2]);
+        int durationTime = Integer.parseInt(parts[3]);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MessagesCentral.getInstance().postMessage(AnyCommand.class, "Will test with RPM " + rpm + ", settle time" + settleTime + "s and duration" + durationTime + "s");
+                Function<String, Object> callback = new Function<String, Object>() {
+                    @Override
+                    public Object apply(String status) {
+                        if (status == null) {
+                            MessagesCentral.getInstance().postMessage(AnyCommand.class, rpm + " worked!");
+                        } else {
+                            MessagesCentral.getInstance().postMessage(AnyCommand.class, rpm + " failed " + status);
+                        }
+                        return null;
+                    }
+                };
+                AutoTest.assertRpmDoesNotJump(rpm, settleTime, durationTime, callback);
+            }
+        }).start();
     }
 
     private static String prepareSetFsioCommand(String rawCommand) {

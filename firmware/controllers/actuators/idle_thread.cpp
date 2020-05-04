@@ -32,7 +32,7 @@
 #if EFI_IDLE_CONTROL
 #include "engine_configuration.h"
 #include "rpm_calculator.h"
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 #include "idle_thread.h"
 #include "engine_math.h"
 
@@ -595,8 +595,8 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		StepperHw* hw;
 
 		if (CONFIG(useHbridges)) {
-			auto motorA = initDcMotor(0 PASS_ENGINE_PARAMETER_SUFFIX);
-			auto motorB = initDcMotor(1 PASS_ENGINE_PARAMETER_SUFFIX);
+			auto motorA = initDcMotor(2, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
+			auto motorB = initDcMotor(3, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
 
 			if (motorA && motorB) {
 				iacHbridgeHw.initialize(

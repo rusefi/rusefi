@@ -162,7 +162,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 
 #include "pin_repository.h"
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 // todo: that's about bench test mode, wrong header for sure!
 #include "bench_test.h"
 

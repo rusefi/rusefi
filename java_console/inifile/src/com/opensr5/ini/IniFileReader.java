@@ -1,4 +1,4 @@
-package com.opensr5.io;
+package com.opensr5.ini;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -54,6 +54,9 @@ public class IniFileReader {
         return c == ' ' || c == '\t' || c == '=' || c == ',';
     }
 
+    /**
+     * Just grabs an collecton of lines, no parsing logic here
+     */
     public static RawIniFile read(InputStream in) {
         List<RawIniFile.Line> lines = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -61,8 +64,7 @@ public class IniFileReader {
         try {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty() || RawIniFile.Line.isCommentLine(line)) {
-                    // let's skip comments right here
+                if (line.trim().isEmpty()) {
                     continue;
                 }
                 lines.add(new RawIniFile.Line(line));

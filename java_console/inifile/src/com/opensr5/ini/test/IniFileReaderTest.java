@@ -1,8 +1,8 @@
-package com.opensr5.io.test;
+package com.opensr5.ini.test;
 
-import com.opensr5.io.IniFileMetaInfo;
-import com.opensr5.io.IniFileReader;
-import com.opensr5.io.RawIniFile;
+import com.opensr5.ini.IniFileMetaInfo;
+import com.opensr5.ini.IniFileReader;
+import com.opensr5.ini.RawIniFile;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

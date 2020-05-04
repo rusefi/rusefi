@@ -1,4 +1,4 @@
-package com.opensr5.io;
+package com.opensr5.ini;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -90,6 +90,14 @@ public class RawIniFile {
 
         public String getRawText() {
             return rawText;
+        }
+
+        @Override
+        public String toString() {
+            return "Line{" +
+                    "rawText='" + rawText + '\'' +
+                    ", tokens=" + Arrays.toString(tokens) +
+                    '}';
         }
     }
 }

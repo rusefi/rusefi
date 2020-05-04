@@ -77,7 +77,7 @@ public:
 	}
 
 	void ThreadTask() override {
-		CANDriver* device = detectCanDevice(CONFIG(canRxPin), CONFIG(canTxPin));
+		CANDriver* device = detectCanDevice(CONFIG_OVERRIDE(canRxPin), CONFIG_OVERRIDE(canTxPin));
 
 		if (!device) {
 			warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
@@ -117,8 +117,8 @@ static void canInfo(void) {
 	scheduleMsg(&logger, "CAN SLAVE MODE");
 #endif
 
-	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIG(canTxPin)));
-	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIG(canRxPin)));
+	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
+	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));
 	scheduleMsg(&logger, "type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriodMs);
@@ -145,22 +145,30 @@ void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canReadEnabled = false;
 }
 
+// this is related to #1375
+static brain_pin_e currentTxPin = GPIO_UNASSIGNED;
+static brain_pin_e currentRxPin = GPIO_UNASSIGNED;
+
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	brain_pin_markUnused(activeConfiguration.canTxPin);
-	brain_pin_markUnused(activeConfiguration.canRxPin);
+	brain_pin_markUnused(currentTxPin);
+	brain_pin_markUnused(currentRxPin);
 }
 
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiSetPadMode("CAN TX", CONFIG(canTxPin), PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	efiSetPadMode("CAN RX", CONFIG(canRxPin), PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+	// Store pins so we can disable later
+	currentTxPin = CONFIG_OVERRIDE(canTxPin);
+	currentRxPin = CONFIG_OVERRIDE(canRxPin);
+
+	efiSetPadMode("CAN TX", currentTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	efiSetPadMode("CAN RX", currentRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
 void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
 	isCanEnabled = 
-		(CONFIG(canTxPin) != GPIO_UNASSIGNED) && // both pins are set...
-		(CONFIG(canRxPin) != GPIO_UNASSIGNED) &&
+		(CONFIG_OVERRIDE(canTxPin) != GPIO_UNASSIGNED) && // both pins are set...
+		(CONFIG_OVERRIDE(canRxPin) != GPIO_UNASSIGNED) &&
 		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
 
 	// nothing to do if we aren't enabled...
@@ -169,13 +177,13 @@ void initCan(void) {
 	}
 
 	// Validate pins
-	if (!isValidCanTxPin(CONFIG(canTxPin))) {
-		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG(canTxPin)));
+	if (!isValidCanTxPin(CONFIG_OVERRIDE(canTxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG_OVERRIDE(canTxPin)));
 		return;
 	}
 
-	if (!isValidCanRxPin(CONFIG(canRxPin))) {
-		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG(canRxPin)));
+	if (!isValidCanRxPin(CONFIG_OVERRIDE(canRxPin))) {
+		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG_OVERRIDE(canRxPin)));
 		return;
 	}
 
@@ -190,8 +198,8 @@ void initCan(void) {
 
 	// Plumb CAN device to tx system
 	CanTxMessage::setDevice(detectCanDevice(
-		CONFIG(canRxPin),
-		CONFIG(canTxPin)
+		CONFIG_OVERRIDE(canRxPin),
+		CONFIG_OVERRIDE(canTxPin)
 	));
 
 	// fire up threads, as necessary

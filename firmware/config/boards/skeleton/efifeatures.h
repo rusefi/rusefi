@@ -254,10 +254,8 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continuous ADC conversion for slow ADC?
-// https://github.com/rusefi/rusefi/issues/630
 // todo: switch to continues ADC conversion for fast ADC?
-#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
+#define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5
 
@@ -374,10 +372,8 @@
 // todo: start using consoleSerial{Tx,Rx}Pin
 #define EFI_CONSOLE_AF 7
 #define TS_SERIAL_AF 7
-#define EFI_CONSOLE_TX_PORT GPIOC
-#define EFI_CONSOLE_TX_PIN 10
-#define EFI_CONSOLE_RX_PORT GPIOC
-#define EFI_CONSOLE_RX_PIN 11
+#define EFI_CONSOLE_TX_BRAIN_PIN GPIOC_10
+#define EFI_CONSOLE_RX_BRAIN_PIN GPIOC_11
 
 // todo: document the limitations of DMA mode for the UART.
 #undef TS_UART_DMA_MODE

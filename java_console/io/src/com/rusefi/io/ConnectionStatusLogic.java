@@ -17,9 +17,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * todo: eliminate logic duplication with {@link ConnectionWatchdog}
  */
-public class ConnectionStatus {
+public class ConnectionStatusLogic {
     @NotNull
-    private Value value = Value.NOT_CONNECTED;
+    private ConnectionStatusValue value = ConnectionStatusValue.NOT_CONNECTED;
 
     public void executeOnceConnected(Runnable r) {
         /*
@@ -29,19 +29,13 @@ public class ConnectionStatus {
             r.run();
         } else {
             addListener(isConnected -> {
-                if (getValue() == Value.CONNECTED)
+                if (getValue() == ConnectionStatusValue.CONNECTED)
                     r.run();
             });
         }
     }
 
-    public enum Value {
-        NOT_CONNECTED,
-        LOADING,
-        CONNECTED
-    }
-
-    public static ConnectionStatus INSTANCE = new ConnectionStatus();
+    public static ConnectionStatusLogic INSTANCE = new ConnectionStatusLogic();
     private List<Listener> listeners = new CopyOnWriteArrayList<>();
 
     private final Timer timer = new Timer(Timeouts.CS_TIMEOUT, new ActionListener() {
@@ -51,7 +45,7 @@ public class ConnectionStatus {
         }
     });
 
-    private ConnectionStatus() {
+    private ConnectionStatusLogic() {
 
         LinkManager.engineState.timeListeners.add(new EngineTimeListener() {
             @Override
@@ -77,15 +71,15 @@ public class ConnectionStatus {
     }
 
     public void markConnected() {
-        if (value == Value.NOT_CONNECTED)
-            setValue(Value.LOADING);
+        if (value == ConnectionStatusValue.NOT_CONNECTED)
+            setValue(ConnectionStatusValue.LOADING);
         /**
          * this timer will catch engine inactivity and display a warning
          */
         timer.restart();
     }
 
-    public void setValue(@NotNull Value value) {
+    public void setValue(@NotNull ConnectionStatusValue value) {
         if (value == this.value)
             return;
         this.value = value;
@@ -94,11 +88,11 @@ public class ConnectionStatus {
     }
 
     public boolean isConnected() {
-        return value != Value.NOT_CONNECTED;
+        return value != ConnectionStatusValue.NOT_CONNECTED;
     }
 
     @NotNull
-    public Value getValue() {
+    public ConnectionStatusValue getValue() {
         return value;
     }
 

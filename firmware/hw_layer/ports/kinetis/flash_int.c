@@ -1,6 +1,6 @@
 /**
  *
- * @file    flash.c
+ * @file    flash_int.c
  * @brief	Lower-level code for Kinetis related to internal flash memory
  * @author  andreika <prometheus.pcb@gmail.com>
  */
@@ -9,7 +9,7 @@
 
 #if EFI_INTERNAL_FLASH
 
-#include "flash.h"
+#include "flash_int.h"
 #include "fsl_ftfx_flexnvm.h"
 #include <string.h>
 
@@ -112,7 +112,7 @@ static int alignToWord(int v) {
 	return (v + FSL_FEATURE_FLASH_FLEX_NVM_SECTOR_CMD_ADDRESS_ALIGMENT - 1) & ~(FSL_FEATURE_FLASH_FLEX_NVM_SECTOR_CMD_ADDRESS_ALIGMENT - 1);
 }
 
-int flashErase(flashaddr_t address, size_t size) {
+int intFlashErase(flashaddr_t address, size_t size) {
 	if (!flashUnlock())
 		return FLASH_RETURN_NO_PERMISSION;
 		
@@ -130,7 +130,7 @@ int flashErase(flashaddr_t address, size_t size) {
 	return -(int)status;
 }
 
-int flashWrite(flashaddr_t address, const char* buffer, size_t size) {
+int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	if (!flashUnlock())
 		return FLASH_RETURN_NO_PERMISSION;
 
@@ -150,7 +150,7 @@ int flashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	return -(int)status;
 }
 
-bool flashIsErased(flashaddr_t address, size_t size) {
+bool intFlashIsErased(flashaddr_t address, size_t size) {
 	/* Check for default set bits in the flash memory
 	 * For efficiency, compare flashdata_t values as much as possible,
 	 * then, fallback to byte per byte comparison. */
@@ -170,7 +170,7 @@ bool flashIsErased(flashaddr_t address, size_t size) {
 	return TRUE;
 }
 
-bool flashCompare(flashaddr_t address, const char* buffer, size_t size) {
+bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size) {
 #if 0
 	uint32_t failAddr = 0, failDat = 0;
 	status_t status = FLEXNVM_DflashVerifyProgram(&flashCfg, address, size, (const uint8_t *)buffer, 
@@ -197,7 +197,7 @@ bool flashCompare(flashaddr_t address, const char* buffer, size_t size) {
 	return TRUE;
 }
 
-int flashRead(flashaddr_t address, char* buffer, size_t size) {
+int intFlashRead(flashaddr_t address, char* buffer, size_t size) {
 	memcpy(buffer, (char*) address, size);
 	return FLASH_RETURN_SUCCESS;
 }

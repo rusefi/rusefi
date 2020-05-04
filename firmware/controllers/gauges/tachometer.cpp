@@ -12,7 +12,7 @@
 
 #include "tachometer.h"
 #include "trigger_central.h"
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 
 EXTERN_ENGINE;
 

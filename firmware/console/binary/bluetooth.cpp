@@ -1,3 +1,15 @@
+/**
+ * @file	bluetooth.cpp
+ *
+ *
+ * It looks like Bluetooth modules arrive in all kinds of initial configuration.
+ * Sometimes we need to execute a one-time initialization including settings the baud rate. rusEFI setting uartConsoleSerialSpeed or tunerStudioSerialSpeed
+ * has to match BT module configuration.
+ *
+ *
+ * @author andreika, (c) 2017
+ */
+
 #include "global.h"
 #include "os_access.h"
 #include "allsensors.h"
@@ -67,16 +79,42 @@ static void runCommands() {
 		
 		// if the baud rate is changed, reinit the UART
 		if (baudIdx != prevBaudIdx || restoreAndExit) {
+#if EFI_USB_SERIAL
+			// if we have USB we assume BT operates on primary TTL
+			// todo: we need to clean a lot in this area :(
+#ifdef EFI_CONSOLE_SERIAL_DEVICE
+			extern SerialConfig serialConfig;
+			sdStop(EFI_CONSOLE_SERIAL_DEVICE);
+#endif /*  EFI_CONSOLE_SERIAL_DEVICE */
+#ifdef EFI_CONSOLE_UART_DEVICE
+			extern UARTConfig uartConfig;
+			uartStop(EFI_CONSOLE_UART_DEVICE);
+#endif /* EFI_CONSOLE_UART_DEVICE */
+
+#else
 			// deinit UART
 			if (!stopTsPort(tsChannel)) {
 				scheduleMsg(&btLogger, "Failed! Cannot restart serial port connection!");
 				return;
 			}
+#endif /* EFI_USB_SERIAL */
 			chThdSleepMilliseconds(10);	// safety
 			// change the port speed
 			CONFIG(tunerStudioSerialSpeed) = restoreAndExit ? savedSerialSpeed : baudRates[baudIdx];
+
+#if EFI_USB_SERIAL
+#ifdef EFI_CONSOLE_SERIAL_DEVICE
+			serialConfig.speed = CONFIG(tunerStudioSerialSpeed);
+			sdStart(EFI_CONSOLE_SERIAL_DEVICE, &serialConfig);
+#endif /*  EFI_CONSOLE_SERIAL_DEVICE */
+#ifdef EFI_CONSOLE_UART_DEVICE
+			uartConfig.speed = CONFIG(tunerStudioSerialSpeed);
+			uartStart(EFI_CONSOLE_UART_DEVICE, &uartConfig);
+#endif /* EFI_CONSOLE_UART_DEVICE */
+#else
 			// init UART
 			startTsPort(tsChannel);
+#endif /* EFI_USB_SERIAL */
 			chThdSleepMilliseconds(10);	// safety
 			prevBaudIdx = baudIdx;
 		}
@@ -153,10 +191,10 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 	chThdExit(MSG_OK);
 }
 
-void bluetoothStart(ts_channel_s *tsChan, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
+void bluetoothStart(ts_channel_s *btChan, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
 	static const char *usage = "Usage: bluetooth_hc06 <baud> <name> <pincode>";
 
-	tsChannel = tsChan;
+	tsChannel = btChan;
 	
 	// if a binary protocol uses USB, we cannot init the bluetooth module!
 	if (!CONFIG(useSerialPort)) {

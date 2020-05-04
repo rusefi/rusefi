@@ -50,7 +50,7 @@ struct tle8888_config {
 		/* ...used to drive output (starts from 1, as in DS, coders gonna hate) */
 		int 			output;
 	} direct_io[TLE8888_DIRECT_MISC];
-	bool hallMode;
+	tle8888_mode_e mode;
 };
 
 #ifdef __cplusplus

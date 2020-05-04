@@ -49,4 +49,5 @@ TESTS_SRC_CPP = \
 	tests/sensor/redundant.cpp \
 	tests/sensor/test_sensor_init.cpp \
 	tests/test_closed_loop_controller.cpp \
+	tests/test_gppwm.cpp \
 

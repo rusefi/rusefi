@@ -51,6 +51,13 @@ static void sayHello(void) {
 	scheduleMsg(&logger, "*** Chibios Kernel:       %s", CH_KERNEL_VERSION);
 	scheduleMsg(&logger, "*** Compiled:     " __DATE__ " - " __TIME__ "");
 	scheduleMsg(&logger, "COMPILER=%s", __VERSION__);
+
+#if defined(STM32F4) || defined(STM32F7)
+	uint32_t *uid = ((uint32_t *)UID_BASE);
+	scheduleMsg(&logger, "UID=%x %x %x", uid[0], uid[1], uid[2]);
+#endif
+
+
 #ifdef CH_FREQUENCY
 	scheduleMsg(&logger, "CH_FREQUENCY=%d", CH_FREQUENCY);
 #endif

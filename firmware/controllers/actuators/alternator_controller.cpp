@@ -22,7 +22,7 @@
 #include "local_version_holder.h"
 #include "periodic_task.h"
 
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 #include "pin_repository.h"
 
 

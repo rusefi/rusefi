@@ -81,7 +81,7 @@
 /**
  * Bluetooth UART setup support.
  */
-#define EFI_BLUETOOTH_SETUP FALSE
+#define EFI_BLUETOOTH_SETUP TRUE
 
 /**
  * TunerStudio debug output
@@ -263,10 +263,9 @@
 /**
  * Do we need GPS logic?
  */
-#define EFI_UART_GPS TRUE
-//#define EFI_UART_GPS FALSE
+#define EFI_UART_GPS FALSE
 
-#define EFI_SERVO TRUE
+#define EFI_SERVO FALSE
 
 #define EFI_ELECTRONIC_THROTTLE_BODY TRUE
 //#define EFI_ELECTRONIC_THROTTLE_BODY FALSE
@@ -284,10 +283,8 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for slow ADC?
-// https://github.com/rusefi/rusefi/issues/630
 // todo: switch to continues ADC conversion for fast ADC?
-#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
+#define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5
 
@@ -352,18 +349,12 @@
 #endif
 
 // todo: start using consoleSerialTxPin? Not sure
-#ifndef EFI_CONSOLE_TX_PORT
-#define EFI_CONSOLE_TX_PORT GPIOC
-#endif
-#ifndef EFI_CONSOLE_TX_PIN
-#define EFI_CONSOLE_TX_PIN 10
+#ifndef EFI_CONSOLE_TX_BRAIN_PIN
+#define EFI_CONSOLE_TX_BRAIN_PIN GPIOC_10
 #endif
 // todo: start using consoleSerialRxPin? Not sure
-#ifndef EFI_CONSOLE_RX_PORT
-#define EFI_CONSOLE_RX_PORT GPIOC
-#endif
-#ifndef EFI_CONSOLE_RX_PIN
-#define EFI_CONSOLE_RX_PIN 11
+#ifndef EFI_CONSOLE_RX_BRAIN_PIN
+#define EFI_CONSOLE_RX_BRAIN_PIN GPIOC_11
 #endif
 // todo: this should be detected automatically based on pin selection
 #define EFI_CONSOLE_AF 7
