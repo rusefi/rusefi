@@ -136,7 +136,7 @@ SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR )
 /* Note: This structure is modified from the default ChibiOS layout! */
-static UARTConfig uartConfig = { 
+UARTConfig uartConfig = {
 	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL, 
 	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
 	.timeout_cb = NULL, .rxhalf_cb = NULL
