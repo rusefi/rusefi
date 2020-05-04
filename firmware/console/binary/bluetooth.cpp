@@ -80,10 +80,17 @@ static void runCommands() {
 		// if the baud rate is changed, reinit the UART
 		if (baudIdx != prevBaudIdx || restoreAndExit) {
 #if EFI_USB_SERIAL
-			extern SerialConfig serialConfig;
 			// if we have USB we assume BT operates on primary TTL
 			// todo: we need to clean a lot in this area :(
+#ifdef EFI_CONSOLE_SERIAL_DEVICE
+			extern SerialConfig serialConfig;
 			sdStop(EFI_CONSOLE_SERIAL_DEVICE);
+#endif /*  EFI_CONSOLE_SERIAL_DEVICE */
+#ifdef EFI_CONSOLE_UART_DEVICE
+			extern UARTConfig uartConfig;
+			uartStop(EFI_CONSOLE_UART_DEVICE);
+#endif /* EFI_CONSOLE_UART_DEVICE */
+
 #else
 			// deinit UART
 			if (!stopTsPort(tsChannel)) {
@@ -96,8 +103,14 @@ static void runCommands() {
 			CONFIG(tunerStudioSerialSpeed) = restoreAndExit ? savedSerialSpeed : baudRates[baudIdx];
 
 #if EFI_USB_SERIAL
+#ifdef EFI_CONSOLE_SERIAL_DEVICE
 			serialConfig.speed = CONFIG(tunerStudioSerialSpeed);
 			sdStart(EFI_CONSOLE_SERIAL_DEVICE, &serialConfig);
+#endif /*  EFI_CONSOLE_SERIAL_DEVICE */
+#ifdef EFI_CONSOLE_UART_DEVICE
+			uartConfig.speed = CONFIG(tunerStudioSerialSpeed);
+			uartStart(EFI_CONSOLE_UART_DEVICE, &uartConfig);
+#endif /* EFI_CONSOLE_UART_DEVICE */
 #else
 			// init UART
 			startTsPort(tsChannel);
