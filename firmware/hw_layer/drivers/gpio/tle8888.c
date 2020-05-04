@@ -276,11 +276,47 @@ static SPIDriver *get_bus(struct tle8888_priv *chip)
 	return chip->cfg->spi_bus;
 }
 
+static int tle8888_spi_validate(struct tle8888_priv *chip, uint16_t rx)
+{
+	uint8_t reg = getRegisterFromResponse(rx);
+
+	if ((chip->last_reg != REG_INVALID) && (chip->last_reg != reg)) {
+		/* unexpected SPI answers */
+		if (reg == REG_OPSTAT(0)) {
+			/* after power on reset: the address and the content of the
+			 * status register OpStat0 is transmitted with the next SPI
+			 * transmission */
+			chip->por_cnt++;
+		} else if (reg == REG_FWDSTAT(1)) {
+			/* after watchdog reset: the address and the content of the
+			 * diagnosis register FWDStat1 is transmitted with the first
+			 * SPI transmission after the low to high transition of RST */
+			chip->wdr_cnt++;
+		} else if (reg == REG_DIAG(0)) {
+			/* after an invalid communication frame: the address and the
+			 * content of the diagnosis register Diag0 is transmitted
+			 * with the next SPI transmission and the bit COMFE in
+			 * diagnosis register ComDiag is set to "1" */
+			chip->comfe_cnt++;
+		}
+		/* during power on reset: SPI commands are ignored, SDO is always
+		 * tristate */
+		/* during watchdog reset: SPI commands are ignored, SDO has the
+		 * value of the status flag */
+		chip->need_init = true;
+
+		return -1;
+	}
+
+	return 0;
+}
+
 /**
- * @return always return 0 for now
+ * @returns -1 in case of communication error
  */
 static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 {
+	int ret;
 	SPIDriver *spi = get_bus(chip);
 
 	/**
@@ -311,37 +347,65 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 	if (rx)
 		*rx = spiRxb;
 
-	uint8_t reg = getRegisterFromResponse(spiRxb);
-	if ((chip->last_reg != REG_INVALID) && (chip->last_reg != reg)) {
-		/* unexpected SPI answers */
-		if (reg == REG_OPSTAT(0)) {
-			/* after power on reset: the address and the content of the
-			 * status register OpStat0 is transmitted with the next SPI
-			 * transmission */
-			chip->por_cnt++;
-		} else if (reg == REG_FWDSTAT(1)) {
-			/* after watchdog reset: the address and the content of the
-			 * diagnosis register FWDStat1 is transmitted with the first
-			 * SPI transmission after the low to high transition of RST */
-			chip->wdr_cnt++;
-		} else if (reg == REG_DIAG(0)) {
-			/* after an invalid communication frame: the address and the
-			 * content of the diagnosis register Diag0 is transmitted
-			 * with the next SPI transmission and the bit COMFE in
-			 * diagnosis register ComDiag is set to "1" */
-			chip->comfe_cnt++;
-		}
-		/* during power on reset: SPI commands are ignored, SDO is always
-		 * tristate */
-		/* during watchdog reset: SPI commands are ignored, SDO has the
-		 * value of the status flag */
-		chip->need_init = true;
-	}
-
+	/* validate reply and save last accessed register */
+	ret = tle8888_spi_validate(chip, spiRxb);
 	chip->last_reg = getRegisterFromResponse(tx);
 
 	/* no errors for now */
-	return 0;
+	return ret;
+}
+
+/**
+ * @return -1 in case of communication error
+ */
+static int tle8888_spi_rw_array(struct tle8888_priv *chip, const uint16_t *tx, uint16_t *rx, int n)
+{
+	int ret;
+	uint16_t rxdata;
+	SPIDriver *spi = get_bus(chip);
+
+	/**
+	 * 15.1 SPI Protocol
+	 *
+	 * after a read or write command: the address and content of the selected register
+	 * is transmitted with the next SPI transmission (for not existing addresses or
+	 * wrong access mode the data is always 0)
+	 */
+
+	/* Acquire ownership of the bus. */
+	spiAcquireBus(spi);
+	/* Setup transfer parameters. */
+	spiStart(spi, &chip->cfg->spi_config);
+
+	for (int i = 0; i < n; i++) {
+		/* Slave Select assertion. */
+		spiSelect(spi);
+		/* data transfer */
+		rxdata = spiPolledExchange(spi, tx[i]);
+		//spiExchange(spi, 2, &tx, &rxb); 8 bit version just in case?
+		if (rx)
+			rx[i] = rxdata;
+		/* Slave Select de-assertion. */
+		spiUnselect(spi);
+
+		#ifdef TLE8888_DEBUG
+			spiTxb = tx[i];
+			spiRxb = rxdata;
+			tle8888SpiCounter++;
+		#endif
+
+		/* validate reply and save last accessed register */
+		ret = tle8888_spi_validate(chip, rxdata);
+		chip->last_reg = getRegisterFromResponse(tx[i]);
+
+		if (ret < 0)
+			break;
+	}
+	/* Ownership release. */
+	spiReleaseBus(spi);
+
+	/* no errors for now */
+	return ret;
 }
 
 /**
@@ -352,7 +416,7 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 static int tle8888_update_output(struct tle8888_priv *chip)
 {
 	int i;
-	int ret = 0;
+	int ret;
 
 	/* TODO: lock? */
 
@@ -370,6 +434,7 @@ static int tle8888_update_output(struct tle8888_priv *chip)
 		}
 	}
 	/* TODO: set freewheeling bits in briconfig0? */
+	/* TODO: apply hi-Z mask when support will be added */
 
 	/* set value only for non-direct driven pins */
 	out_data &= ~chip->o_direct_mask;
@@ -377,100 +442,76 @@ static int tle8888_update_output(struct tle8888_priv *chip)
 	/* output for push-pull pins is allways enabled
 	 * (at least until we start supporting hi-Z state) */
 	out_data |= chip->o_pp_mask;
-	/* TODO: apply hi-Z mask when support will be added */
 
-	for (int i = 0; i < 4; i++) {
-		uint8_t od;
+	uint16_t tx[] = {
+		/* bridge config */
+		CMD_BRICONFIG(0, briconfig0),
+		/* output enables */
+		CMD_CONT(0, out_data >>  0),
+		CMD_CONT(1, out_data >>  8),
+		CMD_CONT(2, out_data >> 16),
+		CMD_CONT(3, out_data >> 24)
+	};
+	ret = tle8888_spi_rw_array(chip, tx, NULL, ARRAY_SIZE(tx));
 
-		od = (out_data >> (8 * i)) & 0xff;
-		ret |= tle8888_spi_rw(chip, CMD_CONT(i, od), NULL);
-	}
+	/* TODO: unlock? */
 
 	if (ret == 0) {
 		/* atomic */
 		chip->o_state_cached = out_data;
 	}
 
-	/* TODO: unlock? */
-
 	return ret;
 }
 
 /**
- * @brief read TLE8888 OpStat1 and diagnostic registers data.
+ * @brief read TLE8888 diagnostic registers data.
  * @details Chained read of several registers
  */
 static int tle8888_update_status_and_diag(struct tle8888_priv *chip)
 {
 	int ret = 0;
-	uint16_t rx = 0;
+	const uint16_t tx[] = {
+		CMD_OUTDIAG(0),
+		CMD_OUTDIAG(1),
+		CMD_OUTDIAG(2),
+		CMD_OUTDIAG(3),
+		CMD_OUTDIAG(4),
+		CMD_BRIDIAG(0),
+		CMD_BRIDIAG(1),
+		CMD_IGNDIAG,
+		CMD_OPSTAT(0),
+		CMD_OPSTAT(1),
+		CMD_OPSTAT(1)
+	};
+	uint16_t rx[ARRAY_SIZE(tx)];
 
 	/* TODO: lock? */
-
-	/* the address and content of the selected register is transmitted with the
-	 * next SPI transmission (for not existing addresses or wrong access mode
-	 * the data is always '0' */
-	/* this is quite expensive to call tle8888_spi_rw on each register read
-	 * TODO: implement tle8888_spi_rw_array ? */
-
-	/* request OutDiad0, ignore received */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(0), NULL)))
-		return ret;
-
-	/* request OutDiad1, receive OutDiag0 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(1), &rx)))
-		return ret;
-	chip->OutDiag[0] = getDataFromResponse(rx);
-
-	/* request OutDiad2, receive OutDiag1 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(2), &rx)))
-		return ret;
-	chip->OutDiag[1] = getDataFromResponse(rx);
-
-	/* request OutDiad3, receive OutDiag2 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(3), &rx)))
-		return ret;
-	chip->OutDiag[2] = getDataFromResponse(rx);
-
-	/* request OutDiad4, receive OutDiag3 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(4), &rx)))
-		return ret;
-	chip->OutDiag[3] = getDataFromResponse(rx);
-
-	/* request BriDiag0, receive OutDiag4 */
-	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(0), &rx)))
-		return ret;
-	chip->OutDiag[4] = getDataFromResponse(rx);
-
-	/* request BriDiag1, receive BriDiag0 */
-	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(1), &rx)))
-		return ret;
-	chip->BriDiag[0] = getDataFromResponse(rx);
-
-	/* request IgnDiag, receive BriDiag1 */
-	if ((ret = tle8888_spi_rw(chip, CMD_IGNDIAG, &rx)))
-		return ret;
-	chip->BriDiag[1] = getDataFromResponse(rx);
-
-	/* request OpStat0, receive IgnDiag */
-	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(0), &rx)))
-		return ret;
-	chip->IgnDiag = getDataFromResponse(rx);
-
-	/* request OpStat1, receive OpStat0 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(1), &rx)))
-		return ret;
-	chip->OpStat[0] = getDataFromResponse(rx);
-
-	/* request OpStat1, receive OpStat1 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(1), &rx)))
-		return ret;
-	chip->OpStat[1] = getDataFromResponse(rx);
-
+	ret = tle8888_spi_rw_array(chip, tx, rx, ARRAY_SIZE(tx));
 	/* TODO: unlock? */
+
+	if (ret == 0) {
+		/* the address and content of the selected register is transmitted with the
+		 * next SPI transmission */
+		chip->OutDiag[0] = getDataFromResponse(rx[0 + 1]);
+		chip->OutDiag[1] = getDataFromResponse(rx[1 + 1]);
+		chip->OutDiag[2] = getDataFromResponse(rx[2 + 1]);
+		chip->OutDiag[3] = getDataFromResponse(rx[3 + 1]);
+		chip->OutDiag[4] = getDataFromResponse(rx[4 + 1]);
+		chip->BriDiag[0] = getDataFromResponse(rx[5 + 1]);
+		chip->BriDiag[1] = getDataFromResponse(rx[6 + 1]);
+		chip->IgnDiag    = getDataFromResponse(rx[7 + 1]);
+		chip->OpStat[0]  = getDataFromResponse(rx[8 + 1]);
+		chip->OpStat[1]  = getDataFromResponse(rx[9 + 1]);
+	}
 
 	return ret;
 }
+
+/**
+ * @brief Drives natve MCU pins connected to TLE8888 inputs
+ * @details This is faster than updating Cont registers over SPI
+ */
 
 static int tle8888_update_direct_output(struct tle8888_priv *chip, int pin, int value)
 {
@@ -546,76 +587,66 @@ static int tle8888_chip_reset(struct tle8888_priv *chip) {
 	return ret;
 }
 
-static int tle8888_chip_set_lock(struct tle8888_priv *chip, int lock) {
-	/* Set/Clear LOCK bit */
-	return tle8888_spi_rw(chip, lock ? CMD_LOCK : CMD_UNLOCK, NULL);
-}
+static int tle8888_chip_init(struct tle8888_priv *chip)
+{
+	int ret;
 
-static int tle8888_chip_init(struct tle8888_priv *chip) {
-	const struct tle8888_config	*cfg = chip->cfg;
+	#ifdef TLE8888_DEBUG
+		tle8888reinitializationCounter++;
+	#endif
 
-#if 0
-	/* Read diagnostic and status to clear pending errors */
-	tle8888_update_status_and_diag(chip);
-#endif
-
-#if 0
-	/* Debug: disable diagnostic */
-	for (int i = 0; i <= 5; i++) {
-		tle8888_spi_rw(chip, CMD_OUTCONFIG(i, 0), NULL);
-	}
-#else
-	/* defaults from datasheet */
-	tle8888_spi_rw(chip, CMD_OUTCONFIG(0, 0xff), NULL);
-	tle8888_spi_rw(chip, CMD_OUTCONFIG(1, 0x3f), NULL);
-	tle8888_spi_rw(chip, CMD_OUTCONFIG(2, 0x3f), NULL);
-	tle8888_spi_rw(chip, CMD_OUTCONFIG(3, 0x30), NULL);
-	tle8888_spi_rw(chip, CMD_OUTCONFIG(4, 0x3f), NULL);
-	tle8888_spi_rw(chip, CMD_OUTCONFIG(5, 0x3f), NULL);
-#endif
-
-	/* map direct driven channels */
-	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
+	uint16_t tx[] = {
+		/* unlock */
+		CMD_UNLOCK,
 		/* set INCONFIG - aux input mapping */
-		tle8888_spi_rw(chip, CMD_INCONFIG(i, chip->InConfig[i]), NULL);
+		CMD_INCONFIG(0, chip->InConfig[0]),
+		CMD_INCONFIG(1, chip->InConfig[1]),
+		CMD_INCONFIG(2, chip->InConfig[2]),
+		CMD_INCONFIG(3, chip->InConfig[3]),
+	#if 1
+		/* defaults from datasheet */
+		CMD_OUTCONFIG(0, 0xff),
+		CMD_OUTCONFIG(1, 0x3f),
+		CMD_OUTCONFIG(2, 0x3f),
+		CMD_OUTCONFIG(3, 0x30),
+		CMD_OUTCONFIG(4, 0x3f),
+		CMD_OUTCONFIG(5, 0x3f),
+	#endif
+		/* set OE and DD registers */
+		CMD_OECONFIG(0, chip->o_oe_mask >>  0),
+		CMD_DDCONFIG(0, chip->o_direct_mask >> 0),
+		CMD_OECONFIG(1, chip->o_oe_mask >>  8),
+		CMD_DDCONFIG(1, chip->o_direct_mask >> 8),
+		CMD_OECONFIG(2, chip->o_oe_mask >>  16),
+		CMD_DDCONFIG(2, chip->o_direct_mask >> 16),
+		CMD_OECONFIG(3, chip->o_oe_mask >>  24),
+		CMD_DDCONFIG(3, chip->o_direct_mask >> 24),
+		/* set VR mode: VRS/Hall */
+		CMD_VRSCONFIG(1, (0 << 4) |
+						 (chip->cfg->mode << 2) |
+						 (0 << 0)),
+		/* enable outputs */
+		CMD_OE_SET
+	};
+	/* TODO: lock? */
+	ret = tle8888_spi_rw_array(chip, tx, NULL, ARRAY_SIZE(tx));
+	/* TODO: unlock? */
+
+	if (ret == 0) {
+		const struct tle8888_config	*cfg = chip->cfg;
+
+		/* enable pins */
+		if (cfg->ign_en.port)
+			palSetPort(cfg->ign_en.port, PAL_PORT_BIT(cfg->ign_en.pad));
+		if (cfg->inj_en.port)
+			palSetPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
 	}
 
-	/* set OE and DD registers */
-	for (int i = 0; i < 4; i++) {
-		uint8_t dd;
-
-		dd = (chip->o_direct_mask >> (8 * i)) & 0xff;
-		tle8888_spi_rw(chip, CMD_DDCONFIG(i, dd), NULL);
-	}
-	for (int i = 0; i < 4; i++) {
-		uint8_t oe;
-
-		oe = (chip->o_oe_mask >> (8 * i)) & 0xff;
-		tle8888_spi_rw(chip, CMD_OECONFIG(i, oe), NULL);
-	}
-
-	/* set VR mode: VRS/Hall */
-	tle8888_spi_rw(chip, CMD_VRSCONFIG(1, chip->cfg->mode << 2), NULL);
-
-	/* enable outputs */
-	tle8888_spi_rw(chip, CMD_OE_SET, NULL);
-
-	/* enable pins */
-	if (cfg->ign_en.port)
-		palSetPort(cfg->ign_en.port, PAL_PORT_BIT(cfg->ign_en.pad));
-	if (cfg->inj_en.port)
-		palSetPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
-
-	//if (CONFIG(verboseTLE8888)) {
+	if (CONFIG(verboseTLE8888)) {
 		tle8888_dump_regs();
-	//}
+	}
 
-#if 0
-	/* Set LOCK bit to 1 */
-	tle8888_spi_rw(chip, CMD_LOCK, NULL);
-#endif
-
-	return 0;
+	return ret;
 }
 
 static int tle8888_wwd_feed(struct tle8888_priv *chip) {
@@ -1047,10 +1078,6 @@ static int tle8888_init(void * data)
 		return -1;
 
 	ret = tle8888_chip_reset(chip);
-	if (ret)
-		return ret;
-
-	ret = tle8888_chip_set_lock(chip, 0);
 	if (ret)
 		return ret;
 
