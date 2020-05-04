@@ -11,11 +11,13 @@
 
 #include "periodic_thread_controller.h"
 
+#define SERBUFFLEN 6
+
 class Logging;
 
 typedef enum {UNKNOWN, HEADER_FOUND, IDENTIFIED} innovate_serial_id_state_t;
 
-extern uint8_t ser_buffer[64]; //buffer for incoming serial data
+extern uint8_t ser_buffer[SERBUFFLEN]; //buffer for incoming serial data
 extern uint16_t innovate_msg_len;
 extern uint16_t innovate_start_byte;
 extern innovate_serial_id_state_t innovate_serial_id_state;
