@@ -18,17 +18,18 @@
 #include "allsensors.h"
 #include "vehicle_speed.h"
 
+#define TIMEREAD ((sysinterval_t)chTimeMS2I(100)) //10ms timeout
 EXTERN_ENGINE;
 
 static LoggingWithStorage logger("AUX Serial RX");
 
-uint8_t ser_buffer[64] = {};
-uint16_t innovate_msg_len = 1;
+uint8_t ser_buffer[SERBUFFLEN] = {};
+uint16_t innovate_msg_len = SERBUFFLEN;
 uint16_t innovate_start_byte = 0;
 
 innovate_serial_id_state_t innovate_serial_id_state = UNKNOWN;
 
-uint16_t len = 0;
+uint16_t len = SERBUFFLEN;
 uint16_t sb = 0; 
 
 SerialRead::SerialRead()
@@ -42,13 +43,27 @@ void SerialRead::ThreadTask()
 	{
 		if (CONFIG(enableInnovateLC2))
 		{
-			len = innovate_msg_len;
-			sb = innovate_start_byte;
+			// len = innovate_msg_len;
+			// sb = innovate_start_byte;
 		}
 
 		// This should be a blocking read (TIME_INFINITE), but it isn't
-		if ((sdReadTimeout(&SD6, &ser_buffer[sb], len, TIME_INFINITE)) > 0)
+		// if ((sdReadTimeout(&SD6, &ser_buffer[sb], len, TIMEREAD)) > 0)
+		// if (sdAsynchronousRead(&SD6, ser_buffer, len) == len)
+		// if (sdRead(&SD6, ser_buffer, len) == len)
+		if ((sdReadTimeout(&SD6, ser_buffer, len, TIMEREAD)) > 0)
+		{
+			if (ser_buffer[1] == 178)
+			{
+				ser_buffer[1] = 130;
+				palTogglePad(GPIOG, 13);
+				// should never be the case
+			}
 			ParseSerialData();
+		}
+
+		// std::fill_n(ser_buffer, SERBUFFLEN, 0);
+
 	}
 }
 
