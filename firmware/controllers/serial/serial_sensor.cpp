@@ -12,7 +12,7 @@
 #include "serial_sensor.h"
 #include "engine.h"
 
-#define NUM_INNOVATE_O2_SENSORS 2
+#define NUM_INNOVATE_O2_SENSORS 4
 #define AFR_MULTIPLIER	147
 
 EXTERN_ENGINE;
@@ -71,14 +71,13 @@ void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 senso
 		switch (innovate_serial_id_state)
 		{
 		case UNKNOWN:
-			palClearPad(GPIOG, GPIOG_PIN13);
 			// read one byte, identify with mask, advance and read next byte
 			if (((ser_buffer[0]) & 162) == 162) // check if it's the first byte of header
 			{
 				// first byte identified, now read second byte and advance statemachine
+				// advance statemachine prior, since it's irq driven
 				innovate_serial_id_state = HEADER_FOUND;
-				innovate_start_byte = 1;
-				innovate_msg_len = 1;
+				// innovate_msg_len = 6;
 			}
 			else
 			{
@@ -101,7 +100,7 @@ void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 senso
 				tmsglen *= 2; // this is length in bytes (incl header)
 				//advance state machine and read rest of package
 				innovate_serial_id_state = IDENTIFIED;
-				innovate_start_byte = 2;
+				// innovate_start_byte = 2;
 				// innovate_msg_len = tmsglen - 2;
 				innovate_msg_len = tmsglen;
 			}
@@ -114,13 +113,13 @@ void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 senso
 
 		case IDENTIFIED:
 			// serial packet fully identified
-			palSetPad(GPIOG, GPIOG_PIN13);
+			// palSetPad(GPIOG, GPIOG_PIN13);
 
 			// palTogglePad(GPIOG, 13);
 			// palSetPad(GPIOG, 13);
 			ParseInnovateSerialMsg(); //takes about 570ns
 			// palTogglePad(GPIOG, 13);
-			innovate_start_byte = 0; // now we can read entire packet
+			// innovate_start_byte = 0; // now we can read entire packet
 			//innovate_msg_len = tmsglen;
 			break;
 
@@ -147,7 +146,6 @@ void ParseInnovateSerialMsg()
 	for (size_t i = 0; i < ((6 - 2) / 4) && i < NUM_INNOVATE_O2_SENSORS - 1; i++)
 
 	{
-		// innovate_o2_sensor[i].function_code = 0;
 		innovate_o2_sensor[i].function_code = (ser_buffer[2 + i * 4] >> 2 & 0x7);
 		//catch potential overflow:
 		// if (innovate_o2_sensor[i].function_code >= 1023)
