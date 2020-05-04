@@ -18,7 +18,7 @@
 #include "allsensors.h"
 #include "vehicle_speed.h"
 
-#define TIMEREAD ((sysinterval_t)chTimeMS2I(100)) //10ms timeout
+#define TIMEREAD ((sysinterval_t)chTimeMS2I(100)) //100ms timeout
 EXTERN_ENGINE;
 
 static LoggingWithStorage logger("AUX Serial RX");
@@ -31,8 +31,6 @@ innovate_serial_id_state_t innovate_serial_id_state = UNKNOWN;
 
 uint16_t len = SERBUFFLEN;
 uint16_t sb = 0; 
-
-#define ONE_SEC TIME_MS2I(1000)
 
 SerialRead::SerialRead()
 	: ThreadController("AUX Serial RX", NORMALPRIO)

@@ -27,7 +27,7 @@ static bool isSerialRXEnabled = false;
 static LoggingWithStorage logger("SERIAL driver");
 
 
-// static UARTConfig uartCfg;
+static SerialConfig uartCfg;
 static SerialRead serialRead;
 static SerialWrite serialWrite;
 
@@ -55,10 +55,8 @@ void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	CONFIG(auxSerialRxPin) = engineConfiguration->auxSerialRxPin;
 	CONFIG(auxSerialSpeed) = engineConfiguration->auxSerialSpeed;
 	
-	// uartCfg.speed = engineConfiguration->auxSerialSpeed;
-	//uartCfg.timeout_cb = rxIRQHandler;
-
-	// uartStart(&UARTD6, &uartCfg);
+	uartCfg.speed = engineConfiguration->auxSerialSpeed;
+	sdStart(&SD6, &uartCfg);
 
 	scheduleMsg(&logger, "AUX Serial started");
 }
