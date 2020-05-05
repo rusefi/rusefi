@@ -25,7 +25,7 @@ public class FiringOrderTSLogic {
         readFiringOrders(fileName, state);
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 2; i <= state.maxOrdinal; i++) {
+        for (int i = 2; i <= 12; i++) {
             String line = processId(i, state);
             sb.append(line).append("\r\n");
         }
@@ -91,7 +91,10 @@ public class FiringOrderTSLogic {
         }
         String result = logic.length() == 0 ? "" : "|| (" + logic + ")";
 
-        String output = "#define ignitionPin" + cylinderId + "logic" + " " + result + "";
+        //String output = "#define ignitionPin" + cylinderId + "logic" + " " + result + "";
+        String output = "\t\tfield = \"Ignition Pin " + cylinderId +
+                "\",                       ignitionPins" + cylinderId +
+                ", {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount >= " + cylinderId + ") && (ignitionMode !=2 || twoWireBatchIgnition == 1 " + result + ")}";
         System.out.println(output);
         return output;
     }
