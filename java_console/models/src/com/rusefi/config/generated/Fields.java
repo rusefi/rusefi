@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 22:11:06 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue May 05 15:37:25 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1541,8 +1541,8 @@ public class Fields {
 	public static final int unused_former_warmup_target_afr_offset_hex = 834;
 	public static final int unusedAntilagTimeout_offset = 820;
 	public static final int unusedAntilagTimeout_offset_hex = 334;
-	public static final int unusedAtOldBoardConfigurationEnd_offset = 1096;
-	public static final int unusedAtOldBoardConfigurationEnd_offset_hex = 448;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 1128;
+	public static final int unusedAtOldBoardConfigurationEnd_offset_hex = 468;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_10_offset = 976;
 	public static final int unusedBit_251_11_offset = 976;
@@ -1620,6 +1620,9 @@ public class Fields {
 	public static final int vbattAdcChannel_offset = 513;
 	public static final int vbattAdcChannel_offset_hex = 201;
 	public static final int vbattDividerCoeff_offset = 464;
+	public static final int VEHICLE_NAME_SIZE = 32;
+	public static final int vehicleName_offset = 1096;
+	public static final int vehicleName_offset_hex = 448;
 	public static final int vehicleSpeedCoef_offset = 476;
 	public static final int vehicleSpeedSensorInputPin_offset = 968;
 	public static final int veLoadBins_offset = 18464;
@@ -1721,7 +1724,7 @@ public class Fields {
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 408, FieldType.FLOAT);
 	public static final Field SENSORSNIFFERRPMTHRESHOLD = Field.create("SENSORSNIFFERRPMTHRESHOLD", 412, FieldType.INT);
 	public static final Field RPMHARDLIMIT = Field.create("RPMHARDLIMIT", 416, FieldType.INT);
-	public static final String[] engine_load_mode_e = {"MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge"};
+	public static final String[] engine_load_mode_e = {"MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge"};
 	public static final Field FUELALGORITHM = Field.create("FUELALGORITHM", 420, FieldType.INT, engine_load_mode_e);
 	public static final Field CRANKINGINJECTIONMODE = Field.create("CRANKINGINJECTIONMODE", 424, FieldType.INT);
 	public static final Field INJECTIONMODE = Field.create("INJECTIONMODE", 428, FieldType.INT);
@@ -2184,6 +2187,7 @@ public class Fields {
 	public static final Field ETBIO22_DIRECTIONPIN2 = Field.create("ETBIO22_DIRECTIONPIN2", 1093, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO22_CONTROLPIN1 = Field.create("ETBIO22_CONTROLPIN1", 1094, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO22_DISABLEPIN = Field.create("ETBIO22_DISABLEPIN", 1095, FieldType.INT8, brain_pin_e);
+	public static final Field VEHICLENAME = Field.create("VEHICLENAME", 1096, FieldType.INT);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -3152,6 +3156,7 @@ public class Fields {
 	ETBIO22_DIRECTIONPIN2,
 	ETBIO22_CONTROLPIN1,
 	ETBIO22_DISABLEPIN,
+	VEHICLENAME,
 	VVTDISPLAYINVERTED,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
