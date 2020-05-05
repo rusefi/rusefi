@@ -554,7 +554,7 @@
 #define enableLaunchRetard_offset_hex 3d0
 #define enableVerboseCanTx_offset 744
 #define enableVerboseCanTx_offset_hex 2e8
-#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge"
+#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define engineChartSize_offset 1480
 #define engineChartSize_offset_hex 5c8
@@ -2291,8 +2291,8 @@
 #define unused_former_warmup_target_afr_offset_hex 834
 #define unusedAntilagTimeout_offset 820
 #define unusedAntilagTimeout_offset_hex 334
-#define unusedAtOldBoardConfigurationEnd_offset 1096
-#define unusedAtOldBoardConfigurationEnd_offset_hex 448
+#define unusedAtOldBoardConfigurationEnd_offset 1128
+#define unusedAtOldBoardConfigurationEnd_offset_hex 468
 #define unusedBit4_1476_offset 1476
 #define unusedBit4_1476_offset_hex 5c4
 #define unusedBit_251_10_offset 976
@@ -2442,6 +2442,9 @@
 #define vbattAdcChannel_offset_hex 201
 #define vbattDividerCoeff_offset 464
 #define vbattDividerCoeff_offset_hex 1d0
+#define VEHICLE_NAME_SIZE 32
+#define vehicleName_offset 1096
+#define vehicleName_offset_hex 448
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedCoef_offset_hex 1dc
 #define vehicleSpeedSensorInputPin_offset 968
