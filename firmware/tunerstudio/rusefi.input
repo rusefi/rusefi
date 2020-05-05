@@ -366,7 +366,6 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 ; todo: generate this section programatically
 	LM_PLAIN_MAF = {0},
 	LM_ALPHA_N = {1},
-	LM_MAP = {2},
 	LM_SPEED_DENSITY = {3},
 	LM_REAL_MAF = {4}
 
