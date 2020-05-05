@@ -13,7 +13,7 @@
 #include "engine.h"
 
 #define NUM_INNOVATE_O2_SENSORS 4
-#define AFR_MULTIPLIER	147
+#define AFR_MULTIPLIER 147
 
 EXTERN_ENGINE;
 
@@ -42,7 +42,7 @@ typedef struct
 	sensor_error_code_t error_code;
 } sensor_data_t;
 
-sensor_data_t innovate_o2_sensor[NUM_INNOVATE_O2_SENSORS-1]; 
+sensor_data_t innovate_o2_sensor[NUM_INNOVATE_O2_SENSORS];
 
 void SerialSendTest()
 {
@@ -74,16 +74,12 @@ void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 senso
 			// read one byte, identify with mask, advance and read next byte
 			if (((ser_buffer[0]) & 162) == 162) // check if it's the first byte of header
 			{
-				// first byte identified, now read second byte and advance statemachine
-				// advance statemachine prior, since it's irq driven
+				// first byte identified, now continue reading and advance statemachine
 				innovate_serial_id_state = HEADER_FOUND;
-				// innovate_msg_len = 6;
 			}
 			else
 			{
 				innovate_serial_id_state = UNKNOWN;
-				innovate_start_byte = 0;
-				// innovate_msg_len = 1;
 			}
 			break;
 
@@ -95,14 +91,11 @@ void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 senso
 
 			if (tmsglen)
 			{
-				tmsglen += 1;
-				// this is the length in words including header (2 bytes)
-				tmsglen *= 2; // this is length in bytes (incl header)
-				//advance state machine and read rest of package
-				innovate_serial_id_state = IDENTIFIED;
-				// innovate_start_byte = 2;
-				// innovate_msg_len = tmsglen - 2;
+				tmsglen += 1; // length in words including header (2 bytes)
+				tmsglen *= 2; // length in bytes (incl header)
 				innovate_msg_len = tmsglen;
+
+				innovate_serial_id_state = IDENTIFIED; //advance state machine
 			}
 			else
 			{
@@ -113,14 +106,7 @@ void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 senso
 
 		case IDENTIFIED:
 			// serial packet fully identified
-			// palSetPad(GPIOG, GPIOG_PIN13);
-
-			// palTogglePad(GPIOG, 13);
-			// palSetPad(GPIOG, 13);
 			ParseInnovateSerialMsg(); //takes about 570ns
-			// palTogglePad(GPIOG, 13);
-			// innovate_start_byte = 0; // now we can read entire packet
-			//innovate_msg_len = tmsglen;
 			break;
 
 		default:
@@ -147,20 +133,13 @@ void ParseInnovateSerialMsg()
 
 	{
 		innovate_o2_sensor[i].function_code = (ser_buffer[2 + i * 4] >> 2 & 0x7);
-		//catch potential overflow:
-		// if (innovate_o2_sensor[i].function_code >= 1023)
-		// 	innovate_o2_sensor[i].function_code = 1023;
-		// else if (innovate_o2_sensor[i].function_code <= 0)
-		// 	innovate_o2_sensor[i].function_code = 0;
-
-		innovate_o2_sensor[i].AFR_multiplier = ((ser_buffer[2 + i * 4] << 7 | ser_buffer[3 + i * 4]) & 0xFF);
-		// innovate_o2_sensor[i].AFR_multiplier = AFR_MULTIPLIER;
+		// innovate_o2_sensor[i].AFR_multiplier = ((ser_buffer[2 + i * 4] << 7 | ser_buffer[3 + i * 4]) & 0xFF);
+		innovate_o2_sensor[i].AFR_multiplier = AFR_MULTIPLIER;
 
 		switch (innovate_o2_sensor[i].function_code)
 		{
 		case 0: //Lambda valid and aux data valid, normal operation
 		case 1: //Lambda value contains o2 level in 1/10%
-			// InnovateLC2AFR = 10.11;
 			innovate_o2_sensor[i].lambda = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
 			raw_afr = ((innovate_o2_sensor[i].lambda + 500) * innovate_o2_sensor[i].AFR_multiplier);
 			if (innovate_o2_sensor[i].function_code) //case 1
@@ -168,22 +147,21 @@ void ParseInnovateSerialMsg()
 			else // case 0
 				innovate_o2_sensor[i].AFR = raw_afr * 0.0001;
 
-			// if (innovate_o2_sensor[i].AFR <= 7)
-			// 	innovate_o2_sensor[i].AFR = 7;
-			// if (innovate_o2_sensor[i].AFR >= 25)
-			// 	innovate_o2_sensor[i].AFR = 25;
+			if (innovate_o2_sensor[i].AFR > AFRMAX)
+				innovate_o2_sensor[i].AFR = AFRMAX;
+			else if (innovate_o2_sensor[i].AFR < AFRMIN)
+				innovate_o2_sensor[i].AFR = AFRMIN;
+
 			InnovateLC2AFR = innovate_o2_sensor[i].AFR;
 			
 			break;
 		// this is invalid o2 data, so we can ignore it:
 		//  case 2: // Free air Calib in progress, Lambda data not valid
-		//    innovate_o2_sensor.AFR = 7.7;
 		//    break;
 		//  case 3: // Need Free air Calibration Request, Lambda data not valid
-		//    innovate_o2_sensor.AFR = 7.8;
 		//    break;
 		case 4: // Warming up, Lambda value is temp in 1/10% of operating temp
-			InnovateLC2AFR = 10.14;
+			InnovateLC2AFR = AFR_DEFAULT;
 			innovate_o2_sensor[i].warmup = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
 			//catch potential overflow:
 			if (innovate_o2_sensor[i].warmup >= 1023)
@@ -192,10 +170,9 @@ void ParseInnovateSerialMsg()
 				innovate_o2_sensor[i].warmup = 0;
 			break;
 			//  case 5: // Heater Calibration, Lambda value contains calibration countdown
-			//    innovate_o2_sensor.AFR = 8.0;
 			//    break;
 		case 6: // Error code in Lambda value
-			InnovateLC2AFR = 10.16;
+			InnovateLC2AFR = AFR_DEFAULT;
 			innovate_o2_sensor[i].error_code = (sensor_error_code_t)((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
 			//catch potential overflow:
 			if (innovate_o2_sensor[i].error_code >= (sensor_error_code_t)1023)
@@ -204,7 +181,6 @@ void ParseInnovateSerialMsg()
 				innovate_o2_sensor[i].error_code = (sensor_error_code_t)0;
 			break;
 			//  case 7: // reserved
-			//    innovate_o2_sensor.AFR = 8.2;
 			//    break;
 		default:
 			break;

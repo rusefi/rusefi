@@ -8,6 +8,11 @@
 
 #pragma once
 
+#define AFRMIN 0
+#define AFRMAX 40
+
+#define AFR_DEFAULT 14.70
+
 void SerialSendTest();
 void IdentifyInnovateSerialMsg();
 void ParseInnovateSerialMsg();
