@@ -163,11 +163,9 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float halfCylCount = CONFIG(specs.cylindersCount) / 2.0f;
 
 	float cylinderAirmass = airPerRevolution / halfCylCount;
-	
-	//Calculation of 100% VE air mass in g/rev - 1 cylinder filling at 1.2929g/L
-	float StandardAirCharge = CONFIG(specs.displacement) / CONFIG(specs.cylindersCount) * 1.2929; 
+
 	//Create % load for fuel table using relative naturally aspiratedcylinder filling
-	float airChargeLoad = 100 * cylinderAirmass/StandardAirCharge;
+	float airChargeLoad = 100 * cylinderAirmass / ENGINE(standardAirCharge);
 	
 	//Correct air mass by VE table 
 	float corrCylAirmass = cylinderAirmass * veMap.getValue(rpm, airChargeLoad) / 100;
@@ -452,6 +450,15 @@ floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return getCrankingFuel3(Sensor::get(SensorType::Clt).value_or(20),
 			engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
 }
+
+float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	float totalDisplacement = CONFIG(specs.displacement);
+	float cylDisplacement = totalDisplacement / CONFIG(specs.cylindersCount);
+
+	// Calculation of 100% VE air mass in g/cyl - 1 cylinder filling at 1.204/L - air density at 20C
+	return cylDisplacement * 1.204f;
+}
+
 #endif
 
 float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX) {
