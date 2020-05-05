@@ -11,7 +11,7 @@
 
 #include "periodic_thread_controller.h"
 
-#define SERBUFFLEN 6
+#define SERBUFFLEN 64
 
 class Logging;
 
