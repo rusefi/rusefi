@@ -115,6 +115,8 @@ struct_no_prefix engine_configuration_s
 #define FSIO_COMMAND_COUNT 16
 #define AUX_PID_COUNT 4
 
+#define VEHICLE_NAME_SIZE 32
+
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 
@@ -792,6 +794,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 ! same length used for critical and soft error messages
 #define ERROR_BUFFER_SIZE 120
 
+	custom vehicle_name_t @@VEHICLE_NAME_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_NAME_SIZE@@
+
 	custom error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@
 	custom le_formula_t @@LE_COMMAND_LENGTH@@ string, ASCII, @OFFSET@, @@LE_COMMAND_LENGTH@@
 	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioDigitalInputs;todo:not finished\nThese input pins allow us to pull toggle buttons state;
@@ -869,7 +873,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 
 	etb_io[ETB_COUNT iterate] etbIo2
 
-	int[92] unusedAtOldBoardConfigurationEnd;
+	vehicle_name_t vehicleName;
+	
+	int[84] unusedAtOldBoardConfigurationEnd;
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
