@@ -1356,17 +1356,6 @@
 #define ignitionMode_offset_hex 1b8
 #define ignitionOffset_offset 444
 #define ignitionOffset_offset_hex 1bc
-#define ignitionPin10logic 
-#define ignitionPin11logic 
-#define ignitionPin12logic 
-#define ignitionPin2logic || ((firingOrder == 2) || (firingOrder == 7) || (firingOrder == 9) || (firingOrder == 11) || (firingOrder == 12))
-#define ignitionPin3logic || ((firingOrder == 1) || (firingOrder == 3) || (firingOrder == 4) || (firingOrder == 5) || (firingOrder == 9))
-#define ignitionPin4logic || ((firingOrder == 5) || (firingOrder == 7) || (firingOrder == 12))
-#define ignitionPin5logic || ((firingOrder == 4) || (firingOrder == 12))
-#define ignitionPin6logic 
-#define ignitionPin7logic || ((firingOrder == 11))
-#define ignitionPin8logic || ((firingOrder == 5) || (firingOrder == 11))
-#define ignitionPin9logic 
 #define ignitionPinMode_offset 649
 #define ignitionPinMode_offset_hex 289
 #define ignitionPins10_offset 645
