@@ -112,7 +112,6 @@ static void setupEtb() {
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
-	engineConfiguration->etbFreq = 800;
 }
 
 static void setupDefaultSensorInputs() {
@@ -148,8 +147,8 @@ void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
 }
 
 

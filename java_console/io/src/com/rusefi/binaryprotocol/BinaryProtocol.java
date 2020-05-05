@@ -6,7 +6,6 @@ import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.FileLog;
 import com.rusefi.Timeouts;
-import com.rusefi.config.FieldType;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
@@ -232,14 +231,14 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 continue;
             }
 
-            ConnectionStatus.INSTANCE.markConnected();
+            ConnectionStatusLogic.INSTANCE.markConnected();
             System.arraycopy(response, 1, image.getContent(), offset, requestSize);
 
             offset += requestSize;
         }
         setController(image);
         logger.info("Got configuration from controller.");
-        ConnectionStatus.INSTANCE.setValue(ConnectionStatus.Value.CONNECTED);
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
 
     /**

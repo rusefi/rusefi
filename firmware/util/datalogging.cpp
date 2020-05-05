@@ -39,10 +39,29 @@
 #include "console_io.h"
 #include "os_util.h"
 
-static MemoryStream intermediateLoggingBuffer;
 static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
-//todo define max-printf-buffer
-static bool intermediateLoggingBufferInited = false;
+
+class IntermediateLogging {
+public:
+	/**
+	 * Class constructors are a great way to have simple initialization sequence
+	 */
+	IntermediateLogging() {
+		msObjectInit(&intermediateLoggingBuffer, intermediateLoggingBufferData, INTERMEDIATE_LOGGING_BUFFER_SIZE, 0);
+	}
+	MemoryStream intermediateLoggingBuffer;
+
+	// todo: look into chsnprintf once on Chibios 3
+	void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
+		intermediateLoggingBuffer.eos = 0; // reset
+		efiAssertVoid(CUSTOM_ERR_6603, getCurrentRemainingStack() > 128, "lowstck#1b");
+		chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
+		intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
+		logging->append((char *)intermediateLoggingBuffer.buffer);
+	}
+};
+
+static IntermediateLogging intermediateLogging;
 
 /**
  * @returns true if data does not fit into this buffer
@@ -93,26 +112,13 @@ void appendFast(Logging *logging, const char *text) {
 	logging->linePointer = s - 1;
 }
 
-// todo: look into chsnprintf once on Chibios 3
-static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
-	if (!intermediateLoggingBufferInited) {
-		firmwareError(CUSTOM_ERR_BUFF_INIT_ERROR, "intermediateLoggingBufferInited not inited!");
-		return;
-	}
-	intermediateLoggingBuffer.eos = 0; // reset
-	efiAssertVoid(CUSTOM_ERR_6603, getCurrentRemainingStack() > 128, "lowstck#1b");
-	chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
-	intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
-	logging->append((char *)intermediateLoggingBuffer.buffer);
-}
-
 /**
  * this method acquires system lock to guard the shared intermediateLoggingBuffer memory stream
  */
 void Logging::vappendPrintf(const char *fmt, va_list arg) {
 	efiAssertVoid(CUSTOM_ERR_6604, getCurrentRemainingStack() > 128, "lowstck#5b");
 	int wasLocked = lockAnyContext();
-	vappendPrintfI(this, fmt, arg);
+	intermediateLogging.vappendPrintfI(this, fmt, arg);
 	if (!wasLocked) {
 		unlockAnyContext();
 	}
@@ -271,13 +277,6 @@ void printMsg(Logging *logger, const char *fmt, ...) {
 
 uint32_t remainingSize(Logging *logging) {
 	return logging->bufferSize - loggingSize(logging);
-}
-
-void initIntermediateLoggingBuffer(void) {
-	initLoggingCentral();
-
-	msObjectInit(&intermediateLoggingBuffer, intermediateLoggingBufferData, INTERMEDIATE_LOGGING_BUFFER_SIZE, 0);
-	intermediateLoggingBufferInited = true;
 }
 
 #else

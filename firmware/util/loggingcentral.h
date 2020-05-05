@@ -8,6 +8,5 @@
 
 class Logging;
 
-void initLoggingCentral(void);
 char * swapOutputBuffers(int *actualOutputBufferSize);
 void scheduleMsg(Logging *logging, const char *fmt, ...);

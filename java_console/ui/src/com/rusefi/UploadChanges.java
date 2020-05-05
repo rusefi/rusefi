@@ -9,7 +9,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSSC;
 import com.rusefi.ui.RecentCommands;
-import com.rusefi.ui.SettingsTab;
 import com.rusefi.ui.StatusWindow;
 import jssc.SerialPort;
 import jssc.SerialPortException;

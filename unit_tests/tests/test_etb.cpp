@@ -47,7 +47,7 @@ TEST(etb, initializationSingleThrottle) {
 	// Expect mock0 to be init with index 0, and PID params
 	EXPECT_CALL(mocks[0], init(_, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
-	EXPECT_CALL(mocks[0], Start);
+	EXPECT_CALL(mocks[0], start);
 
 	// We do not expect throttle #2 to be initialized
 
@@ -72,12 +72,12 @@ TEST(etb, initializationDualThrottle) {
 	// Expect mock0 to be init with index 0, and PID params
 	EXPECT_CALL(mocks[0], init(_, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
-	EXPECT_CALL(mocks[0], Start);
+	EXPECT_CALL(mocks[0], start);
 
 	// Expect mock1 to be init with index 2, and PID params
 	EXPECT_CALL(mocks[1], init(_, 1, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[1], reset);
-	EXPECT_CALL(mocks[1], Start);
+	EXPECT_CALL(mocks[1], start);
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -144,9 +144,9 @@ TEST(etb, testSetpointOnlyPedal) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 20);
 	EXPECT_EQ(20, etb.getSetpoint().value_or(-1));
 
-	// Test invalid pedal position - should give unexpected
+	// Test invalid pedal position - should give 0 position
 	Sensor::resetMockValue(SensorType::AcceleratorPedal);
-	EXPECT_EQ(etb.getSetpoint(), unexpected);
+	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
 }
 
 TEST(etb, setpointIdle) {
@@ -223,9 +223,12 @@ TEST(etb, etbTpsSensor) {
 }
 
 TEST(etb, setOutputInvalid) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
+	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(&motor, 0, nullptr, nullptr);
 
 	// Should be disabled in case of unexpected
@@ -235,9 +238,11 @@ TEST(etb, setOutputInvalid) {
 }
 
 TEST(etb, setOutputValid) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
+	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(&motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
@@ -249,10 +254,11 @@ TEST(etb, setOutputValid) {
 }
 
 TEST(etb, setOutputValid2) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
-
+	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(&motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
@@ -264,9 +270,11 @@ TEST(etb, setOutputValid2) {
 }
 
 TEST(etb, setOutputOutOfRangeHigh) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
+	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(&motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
@@ -278,9 +286,11 @@ TEST(etb, setOutputOutOfRangeHigh) {
 }
 
 TEST(etb, setOutputOutOfRangeLow) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
+	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(&motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
@@ -291,12 +301,29 @@ TEST(etb, setOutputOutOfRangeLow) {
 	etb.setOutput(-110);
 }
 
+TEST(etb, setOutputPauseControl) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	StrictMock<MockMotor> motor;
+
+	EtbController etb;
+	INJECT_ENGINE_REFERENCE(&etb);
+	etb.init(&motor, 0, nullptr, nullptr);
+
+	// Pause control - should get no output
+	engineConfiguration->pauseEtbControl = true;
+
+	// Disable should be called, and set shouldn't be called
+	EXPECT_CALL(motor, disable());
+
+	etb.setOutput(25.0f);
+}
+
 TEST(etb, closedLoopPid) {
 	pid_s pid = {};
 	pid.pFactor = 5;
 	pid.maxValue = 75;
 	pid.minValue = -60;
-	
+
 	EtbController etb;
 	etb.init(nullptr, 0, &pid, nullptr);
 

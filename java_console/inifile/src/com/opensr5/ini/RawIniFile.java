@@ -91,5 +91,13 @@ public class RawIniFile {
         public String getRawText() {
             return rawText;
         }
+
+        @Override
+        public String toString() {
+            return "Line{" +
+                    "rawText='" + rawText + '\'' +
+                    ", tokens=" + Arrays.toString(tokens) +
+                    '}';
+        }
     }
 }

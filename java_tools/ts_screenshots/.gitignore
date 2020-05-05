@@ -3,3 +3,5 @@ config
 TunerStudio.properties
 lib
 images
+output.xml
+rusEFI-project*.md

@@ -11,7 +11,7 @@
  * set engine_type 30
  *
  *
- * See https://github.com/rusefi/rusefi_documentation/wiki/Hardware_microRusEfi_wiring
+ * See https://github.com/rusefi/rusefi/wiki/Hardware_microRusEfi_wiring
  *
  * @author Matthew Kennedy, (c) 2019
  */
@@ -130,8 +130,6 @@ static void setupEtb() {
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
-
-	engineConfiguration->etbFreq = 800;
 }
 
 static void setupDefaultSensorInputs() {
@@ -170,11 +168,12 @@ void setPinConfigurationOverrides(void) {
 }
 
 void setSerialConfigurationOverrides(void) {
+	// why would MRE disable serial by default? we definitely have pads exposed
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
 }
 
 

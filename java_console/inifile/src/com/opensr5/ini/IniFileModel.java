@@ -21,9 +21,13 @@ public class IniFileModel {
     // this is only used while reading model - TODO extract reader
     private List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
 
+    public Map<String, String> tooltips = new TreeMap<>();
+
     public static void main(String[] args) {
         System.out.println(IniFileModel.getInstance("..").dialogs);
     }
+
+    static boolean isInSettingContextHelp = false;
 
     public void readIniFile(String iniFilePath) {
         String fileName = findMetaInfoFile(iniFilePath);
@@ -35,6 +39,7 @@ public class IniFileModel {
             return;
         }
 
+        System.out.println("Reading " + fileName);
         RawIniFile content = IniFileReader.read(input);
 
 
@@ -68,8 +73,27 @@ public class IniFileModel {
     }
 
     private void handleLine(RawIniFile.Line line) {
+
+        String rawTest = line.getRawText();
         try {
             LinkedList<String> list = new LinkedList<>(Arrays.asList(line.getTokens()));
+
+            // todo: use TSProjectConsumer constant
+            if (isInSettingContextHelp) {
+                // todo: use TSProjectConsumer constant
+                if (rawTest.contains("SettingContextHelpEnd")) {
+                    isInSettingContextHelp = false;
+                }
+                if (list.size() == 2)
+                    tooltips.put(list.get(0), list.get(1));
+                return;
+            } else if (rawTest.contains("SettingContextHelp")) {
+                isInSettingContextHelp = true;
+                return;
+            }
+
+            if (RawIniFile.Line.isCommentLine(rawTest))
+                return;
 
             trim(list);
 
@@ -77,14 +101,14 @@ public class IniFileModel {
                 return;
             String first = list.getFirst();
 
+
             if ("dialog".equals(first)) {
                 handleDialog(list);
-
             } else if ("field".equals(first)) {
                 handleField(list);
             }
         } catch (RuntimeException e) {
-            throw new IllegalStateException("While [" + line.getRawText() + "]", e);
+            throw new IllegalStateException("While [" + rawTest + "]", e);
         }
     }
 
@@ -102,6 +126,10 @@ public class IniFileModel {
         }
         fieldsOfCurrentDialog.add(field);
         System.out.println("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
+    }
+
+    public Map<String, DialogModel.Field> getAllFields() {
+        return allFields;
     }
 
     @Nullable

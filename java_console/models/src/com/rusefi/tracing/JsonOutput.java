@@ -1,5 +1,7 @@
 package com.rusefi.tracing;
 
+import com.rusefi.PerfTraceTool;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
@@ -15,34 +17,38 @@ public class JsonOutput {
     /**
      * those are special entries that change display settings
      * those set thread names and sort index based on those thread IDs
-     * (those thread IDs are interrupt numbers, and the name is the name of the interrupt handler)
+     * (those process IDs are interrupt numbers, and the name is the name of the interrupt handler)
      */
-    private static final String FORMATTING_SETTINGS
-            = "{\"name\":\"thread_name\",\"ph\":\"M\",\"tid\":18,\"pid\":0,\"args\":{\"name\":\"ADC\"}}," +
-            "{\"name\":\"thread_name\",\"ph\":\"M\",\"tid\":29,\"pid\":0,\"args\":{\"name\":\"TIM3\"}}," +
-            "{\"name\":\"thread_name\",\"ph\":\"M\",\"tid\":30,\"pid\":0,\"args\":{\"name\":\"TIM4\"}}," +
-            "{\"name\":\"thread_name\",\"ph\":\"M\",\"tid\":44,\"pid\":0,\"args\":{\"name\":\"TIM8/13\"}}," +
-            "{\"name\":\"thread_name\",\"ph\":\"M\",\"tid\":50,\"pid\":0,\"args\":{\"name\":\"TIM5\"}}," +
-            "{\"name\":\"thread_name\",\"ph\":\"M\",\"tid\":58,\"pid\":0,\"args\":{\"name\":\"DMA2s2\"}}," +
-            "{\"name\":\"thread_name\",\"ph\":\"M\",\"tid\":60,\"pid\":0,\"args\":{\"name\":\"DMA2s4\"}}," +
-            "{\"name\":\"thread_name\",\"ph\":\"M\",\"tid\":67,\"pid\":0,\"args\":{\"name\":\"USB\"}}," +
-            "{\"name\":\"thread_sort_index\",\"ph\":\"M\",\"tid\":18,\"pid\":0,\"args\":{\"sort_index\":4}}," +
-            "{\"name\":\"thread_sort_index\",\"ph\":\"M\",\"tid\":29,\"pid\":0,\"args\":{\"sort_index\":2}}," +
-            "{\"name\":\"thread_sort_index\",\"ph\":\"M\",\"tid\":30,\"pid\":0,\"args\":{\"sort_index\":5}}," +
-            "{\"name\":\"thread_sort_index\",\"ph\":\"M\",\"tid\":44,\"pid\":0,\"args\":{\"sort_index\":7}}," +
-            "{\"name\":\"thread_sort_index\",\"ph\":\"M\",\"tid\":50,\"pid\":0,\"args\":{\"sort_index\":3}}," +
-            "{\"name\":\"thread_sort_index\",\"ph\":\"M\",\"tid\":58,\"pid\":0,\"args\":{\"sort_index\":6}}," +
-            "{\"name\":\"thread_sort_index\",\"ph\":\"M\",\"tid\":60,\"pid\":0,\"args\":{\"sort_index\":8}}," +
-            "{\"name\":\"thread_sort_index\",\"ph\":\"M\",\"tid\":67,\"pid\":0,\"args\":{\"sort_index\":9}}"
+    private static final String FORMATTING_SETTINGS =
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":-16,\"tid\":0,\"args\":{\"name\":\"Main\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":-1,\"tid\":0,\"args\":{\"name\":\"SysTick\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":18,\"tid\":0,\"args\":{\"name\":\"ADC\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":19,\"tid\":0,\"args\":{\"name\":\"CAN1 TX\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":20,\"tid\":0,\"args\":{\"name\":\"CAN1 RX 0\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":21,\"tid\":0,\"args\":{\"name\":\"CAN1 RX 1\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":22,\"tid\":0,\"args\":{\"name\":\"CAN1 SCE\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":29,\"tid\":0,\"args\":{\"name\":\"TIM3\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":30,\"tid\":0,\"args\":{\"name\":\"TIM4\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":44,\"tid\":0,\"args\":{\"name\":\"TIM8/13\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":50,\"tid\":0,\"args\":{\"name\":\"TIM5\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":54,\"tid\":0,\"args\":{\"name\":\"TIM6\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":57,\"tid\":0,\"args\":{\"name\":\"DMA2s1\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":58,\"tid\":0,\"args\":{\"name\":\"DMA2s2\"}}," +
+			"{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":59,\"tid\":0,\"args\":{\"name\":\"DMA2s3\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":60,\"tid\":0,\"args\":{\"name\":\"DMA2s4\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":67,\"tid\":0,\"args\":{\"name\":\"USB\"}},"
             ;
     private static final String EOL = "\r\n";
 
     public static void main(String[] args) throws IOException {
+        /**
+         * that's just a test I assume?
+         */
         List<Entry> testEntries = Arrays.asList(
-                new Entry("hello", Phase.B, 0.1),
-                new Entry("hello2", Phase.B, 0.2),
-                new Entry("hello2", Phase.E, 0.3),
-                new Entry("hello", Phase.E, 0.4)
+                new Entry("hello", Phase.B, 0.1, 0, 0),
+                new Entry("hello2", Phase.B, 0.2, 0, 0),
+                new Entry("hello2", Phase.E, 0.3, 0, 0),
+                new Entry("hello", Phase.E, 0.4, 0, 0)
         );
 
         writeToStream(testEntries, new FileOutputStream("hello_trace.json"));
