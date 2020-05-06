@@ -14,21 +14,25 @@ import java.util.Map;
 public class FiringOrderTSLogic {
 
     private static final String FIRING_ORDER_PREFIX = "FO_";
-    private static final Map<Integer, String[]> ordinal2order = new HashMap<>();
-    private static int maxOrdinal;
 
     public static void main(String[] args) throws IOException {
         invoke("../firmware/controllers/algo/firing_order.h");
     }
 
-    public static void invoke(String fileName) throws IOException {
-        readFiringOrders(fileName);
+    public static String invoke(String fileName) throws IOException {
+        State state = new State();
 
-        for (int i = 2; i <= maxOrdinal; i++)
-            processId(i);
+        readFiringOrders(fileName, state);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 2; i <= 12; i++) {
+            String line = processId(i, state);
+            sb.append(line).append("\r\n");
+        }
+        return sb.toString();
     }
 
-    private static void readFiringOrders(String fileName) throws IOException {
+    private static void readFiringOrders(String fileName, State state) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
         String line;
@@ -39,11 +43,11 @@ public class FiringOrderTSLogic {
                 continue;
             }
             line = line.substring(index + FIRING_ORDER_PREFIX.length());
-            parseLine(line);
+            parseLine(line, state);
         }
     }
 
-    public static void parseLine(String line) {
+    public static void parseLine(String line, State state) {
         line = line.replaceAll("[\\s]*\\,.*", "");
         line = line.replaceAll("[\\s\\,]", "");
         System.out.println("Processing " + line);
@@ -54,16 +58,16 @@ public class FiringOrderTSLogic {
 
         System.out.println("order " + Arrays.toString(order) + ": " + ordinal);
 
-        maxOrdinal = Math.max(ordinal, maxOrdinal);
-        ordinal2order.put(ordinal, order);
+        state.maxOrdinal = Math.max(ordinal, state.maxOrdinal);
+        state.ordinal2order.put(ordinal, order);
     }
 
-    private static void processId(int cylinderId) {
+    private static String processId(int cylinderId, State state) {
 
         StringBuilder logic = new StringBuilder();
 
 
-        for (Map.Entry<Integer, String[]> e : ordinal2order.entrySet()) {
+        for (Map.Entry<Integer, String[]> e : state.ordinal2order.entrySet()) {
             Integer ordinal = e.getKey();
             String[] order = e.getValue();
             if (order.length % 2 != 0) {
@@ -87,9 +91,17 @@ public class FiringOrderTSLogic {
         }
         String result = logic.length() == 0 ? "" : "|| (" + logic + ")";
 
-
-
-        System.out.println("#define ignitionPin" + cylinderId + "logic"  + " " + result + "");
-
+        //String output = "#define ignitionPin" + cylinderId + "logic" + " " + result + "";
+        String output = "\t\tfield = \"Ignition Pin " + cylinderId +
+                "\",                       ignitionPins" + cylinderId +
+                ", {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount >= " + cylinderId + ") && (ignitionMode !=2 || twoWireBatchIgnition == 1 " + result + ")}";
+        System.out.println(output);
+        return output;
     }
+
+    public static class State {
+        final Map<Integer, String[]> ordinal2order = new HashMap<>();
+        int maxOrdinal;
+    }
+
 }

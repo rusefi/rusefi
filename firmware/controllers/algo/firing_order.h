@@ -35,11 +35,18 @@ typedef enum {
 	FO_1_2_3_4_5_6 = 9,
 	FO_1_6_3_2_5_4 = 13, // EG33
 
+	// todo: one day we shall support 7 cylinder radial, probably not before one actually approaches us
+
 	// 8 cylinder
 	FO_1_8_4_3_6_5_7_2 = 5,
 	FO_1_8_7_2_6_5_4_3 = 11,
 	FO_1_5_4_2_6_3_7_8 = 12,
 	FO_1_2_7_8_4_5_6_3 = 19,
+	FO_1_3_7_2_6_5_4_8 = 20, // Ford 5.0 HO and 351W
+
+	// 9 cylinder - for instance radial :)
+	// PS: Matt says that 9cyl is actually 1-3-5-7-9-2-4-6-8 or 1-8-6-4-2-9-7-5-3 for reverse rotation
+	FO_1_2_3_4_5_6_7_8_9 = 21,
 
 	// 10 cylinder
 	FO_1_10_9_4_3_6_5_8_7_2 = 14, // dodge and viper ram v10
@@ -52,7 +59,7 @@ typedef enum {
 	// 16 cylinder
 	// todo: 1-14-9-4-7-12-15-6-13-8-3-16-11-2-5-10
 
-	// max used = 19
+	// max used = 21
 
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;

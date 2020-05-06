@@ -193,16 +193,12 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	 * @return a Paramaters instance
 	 * @see Style
 	 */
-	public static Parameters getDefaultParameters() {
-		return getDefaultParameters(Style.STANDARD);
-	}
-	
 	/** Gets a copy of DoubleEvaluator default parameters.
 	 * <br>The returned parameters contains all the predefined operators, functions and constants.
 	 * <br>Each call to this method create a new instance of Parameters. 
 	 * @return a Paramaters instance
 	 */
-	public static Parameters getDefaultParameters(Style style) {
+	public static Parameters getDefaultParameters() {
 		Parameters result = new Parameters();
 		result.addOperators(Arrays.asList(OPERATORS));
 		result.addFunctions(FUNCTIONS);

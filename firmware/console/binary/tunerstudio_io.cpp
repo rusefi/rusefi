@@ -87,6 +87,9 @@ void startTsPort(ts_channel_s *tsChannel) {
 
 	#if EFI_PROD_CODE
 		#if defined(CONSOLE_USB_DEVICE)
+#if defined(TS_UART_DEVICE)
+#error 	"cannot have TS_UART_DEVICE and CONSOLE_USB_DEVICE"
+#endif
 			print("TunerStudio over USB serial");
 			/**
 			 * This method contains a long delay, that's the reason why this is not done on the main thread

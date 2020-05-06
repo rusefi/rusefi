@@ -65,9 +65,9 @@ enum class PE : uint8_t {
 	// please note that the tool requires a comma at the end of last value
 };
 
-void perfEventBegin(PE event, uint8_t data = 0);
-void perfEventEnd(PE event, uint8_t data = 0);
-void perfEventInstantGlobal(PE event, uint8_t data = 0);
+void perfEventBegin(PE event);
+void perfEventEnd(PE event);
+void perfEventInstantGlobal(PE event);
 
 // Enable one buffer's worth of perf tracing, and retrieve the buffer size in bytes
 void perfTraceEnable();
@@ -85,28 +85,23 @@ const TraceBufferResult perfTraceGetBuffer();
 class ScopePerf
 {
 public:
-	ScopePerf(PE event) : ScopePerf(event, 0) {}
-
-	ScopePerf(PE event, uint8_t data) : m_event(event), m_data(data)
-	{
-		perfEventBegin(event, data);
+	ScopePerf(PE event) : m_event(event) {
+		perfEventBegin(event);
 	}
 
 	~ScopePerf()
 	{
-		perfEventEnd(m_event, m_data);
+		perfEventEnd(m_event);
 	}
 
 private:
 	const PE m_event;
-	const uint8_t m_data;
 };
 
 #else /* if ENABLE_PERF_TRACE */
 
 struct ScopePerf {
-	ScopePerf(PE event) { (void)event; }
-	ScopePerf(PE event, uint8_t data) { (void)event; (void)data; }
+	ScopePerf(PE) {}
 };
 
 #endif /* ENABLE_PERF_TRACE */

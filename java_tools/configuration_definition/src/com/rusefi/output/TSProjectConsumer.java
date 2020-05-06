@@ -16,6 +16,8 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
     private static final String CONFIG_DEFINITION_END = "CONFIG_DEFINITION_END";
     private static final String TS_CONDITION = "@@if_";
+    public static final String SETTING_CONTEXT_HELP_END = "SettingContextHelpEnd";
+    public static final String SETTING_CONTEXT_HELP = "SettingContextHelp";
     public static String TS_FILE_OUTPUT_NAME = "rusefi.ini";
     private StringBuilder settingContextHelp = new StringBuilder();
 
@@ -119,8 +121,9 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         tsHeader.write("page = 1" + ConfigDefinition.EOL);
         tsHeader.write(fieldsSection);
         if (settingContextHelp.length() > 0) {
-            tsHeader.write("[SettingContextHelp]" + ConfigDefinition.EOL);
+            tsHeader.write("[" + SETTING_CONTEXT_HELP + "]" + ConfigDefinition.EOL);
             tsHeader.write(settingContextHelp.toString() + ConfigDefinition.EOL + ConfigDefinition.EOL);
+            tsHeader.write("; " + SETTING_CONTEXT_HELP_END + ConfigDefinition.EOL);
         }
         tsHeader.write("; " + CONFIG_DEFINITION_END + ConfigDefinition.EOL);
         tsHeader.write(tsContent.getPostfix());

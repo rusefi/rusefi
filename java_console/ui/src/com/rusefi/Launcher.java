@@ -3,25 +3,21 @@ package com.rusefi;
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
 import com.rusefi.io.serial.PortHolder;
-import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
+import com.rusefi.ui.console.MainFrame;
+import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.logview.LogViewer;
-import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.DefaultExceptionHandler;
-import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.JustOneInstance;
-import com.rusefi.ui.util.UiUtils;
 import jssc.SerialPortList;
 
 import javax.swing.*;
@@ -33,7 +29,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -49,11 +44,11 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20200424;
+    public static final int CONSOLE_VERSION = 20200502;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
-    private static final String TAB_INDEX = "main_tab";
+    public static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
 
@@ -64,79 +59,28 @@ public class Launcher {
     private static final String TOOL_NAME_PERF_ENUMS = "ptrace_enums";
     // todo: rename to something more FSIO-specific? would need to update documentation somewhere
     private static final String TOOL_NAME_COMPILE = "compile";
+    private static final int DEFAULT_TAB_INDEX = 0;
 
-    private final String port;
-    // todo: the logic around 'criticalError' could be implemented nicer
-    private String criticalError;
+    public static String port;
     public static EngineSnifferPanel engineSnifferPanel;
     private static SensorCentral.SensorListener wrongVersionListener;
 
-    private final JTabbedPane tabbedPane = new JTabbedPane() {
-        @Override
-        public void paint(Graphics g) {
-            super.paint(g);
-            paintStatusText(g);
-        }
+    public TabbedPanel tabbedPane = new TabbedPanel();
 
-        private void paintStatusText(Graphics g) {
-            Font f = g.getFont();
-            g.setFont(new Font(f.getName(), f.getStyle(), f.getSize() * 4));
-            Dimension d = getSize();
-            String text;
-            switch (ConnectionStatus.INSTANCE.getValue()) {
-                case NOT_CONNECTED:
-                    text = "Not connected";
-                    break;
-                case LOADING:
-                    text = "Loading";
-                    break;
-                default:
-                    text = "";
-            }
-            if (criticalError != null) {
-                text = criticalError;
-                g.setColor(Color.red);
-            }
-            int labelWidth = g.getFontMetrics().stringWidth(text);
-            g.drawString(text, (d.width - labelWidth) / 2, d.height / 2);
-        }
-    };
     public static AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
 
     private static Frame staticFrame;
-    private final TableEditorPane tableEditor = new TableEditorPane();
-    private final SettingsTab settingsTab = new SettingsTab();
-    private final LogDownloader logsManager = new LogDownloader();
-    private final FuelTunePane fuelTunePane;
-    private final PaneSettings paneSettings;
+
+    MainFrame mainFrame = new MainFrame(tabbedPane);
 
     /**
-     * @see StartupFrame
+     * We can listen to tab activation event if we so desire
      */
-    private FrameHelper mainFrame = new FrameHelper() {
-        @Override
-        protected void onWindowOpened() {
-            super.onWindowOpened();
-            windowOpenedHandler();
-        }
-
-        @Override
-        protected void onWindowClosed() {
-            /**
-             * here we would close the port and log a message about it
-             */
-            windowClosedHandler();
-            /**
-             * here we would close the log file
-             */
-            super.onWindowClosed();
-        }
-    };
-    private final Map<JComponent, ActionListener> tabSelectedListeners = new HashMap<JComponent, ActionListener>();
+    private final Map<JComponent, ActionListener> tabSelectedListeners = new HashMap<>();
 
     public Launcher(String port) {
-        this.port = port;
-        staticFrame = mainFrame.getFrame();
+        Launcher.port = port;
+        staticFrame = mainFrame.getFrame().getFrame();
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
 
         FileLog.MAIN.logLine("Hardware: " + FirmwareFlasher.getHardwareKind());
@@ -146,22 +90,12 @@ public class Launcher {
 
         LinkManager.start(port);
 
-        MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
-            @Override
-            public void onMessage(Class clazz, String message) {
-                if (message.startsWith(Fields.CRITICAL_PREFIX))
-                    criticalError = message;
-            }
-        });
-
-        paneSettings = new PaneSettings(getConfig().getRoot().getChild("panes"));
-
         engineSnifferPanel = new EngineSnifferPanel(getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
             engineSnifferPanel.setOutpinListener(LinkManager.engineState);
 
         if (LinkManager.isLogViewerMode(port))
-            tabbedPane.add("Log Viewer", new LogViewer(engineSnifferPanel));
+            tabbedPane.addTab("Log Viewer", new LogViewer(engineSnifferPanel));
 
         ConnectionWatchdog.start();
 
@@ -169,17 +103,17 @@ public class Launcher {
         GaugesPanel.DetachedRepository.INSTANCE.init(getConfig().getRoot().getChild("detached"));
         GaugesPanel.DetachedRepository.INSTANCE.load();
         if (!LinkManager.isLogViewer())
-            tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges"), paneSettings).getContent());
+            tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges"), tabbedPane.paneSettings).getContent());
 
         if (!LinkManager.isLogViewer()) {
             MessagesPane messagesPane = new MessagesPane(getConfig().getRoot().getChild("messages"));
             tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
         }
         if (!LinkManager.isLogViewer()) {
-            tabbedPane.add("Bench Test", new BenchTestPane().getContent());
-            if (paneSettings.showEtbPane)
-                tabbedPane.add("ETB", new ETBPane().getContent());
-            tabbedPane.add("Presets", new PresetsPane().getContent());
+            tabbedPane.addTab("Bench Test", new BenchTestPane().getContent());
+            if (tabbedPane.paneSettings.showEtbPane)
+                tabbedPane.addTab("ETB", new ETBPane().getContent());
+            tabbedPane.addTab("Presets", new PresetsPane().getContent());
         }
 
         tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
@@ -192,42 +126,41 @@ public class Launcher {
 //        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
-        if (paneSettings.showStimulatorPane && !LinkManager.isSimulationMode && !LinkManager.isLogViewerMode(port)) {
+        if (tabbedPane.paneSettings.showStimulatorPane && !LinkManager.isSimulationMode && !LinkManager.isLogViewerMode(port)) {
             // todo: rethink this UI? special command line key to enable it?
             EcuStimulator stimulator = EcuStimulator.getInstance();
-            tabbedPane.add("ECU stimulation", stimulator.getPanel());
+            tabbedPane.addTab("ECU stimulation", stimulator.getPanel());
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
         if (!LinkManager.isLogViewer())
-            tabbedPane.addTab("Table Editor", tableEditor);
+            tabbedPane.addTab("Table Editor", tabbedPane.tableEditor);
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
         if (!LinkManager.isLogViewer())
-            tabbedPane.add("Settings", settingsTab.createPane());
+            tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
         if (!LinkManager.isLogViewer()) {
             tabbedPane.addTab("Formulas/Live Data", new FormulasPane().getContent());
             tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane().getContent());
         }
 
         if (!LinkManager.isLogViewer() && false) // todo: fix it & better name?
-            tabbedPane.add("Logs Manager", logsManager.getContent());
-        fuelTunePane = new FuelTunePane(getConfig().getRoot().getChild("fueltune"));
-        if (paneSettings.showFuelTunePane)
-            tabbedPane.add("Fuel Tune", fuelTunePane.getContent());
+            tabbedPane.addTab("Logs Manager", tabbedPane.logsManager.getContent());
+        if (tabbedPane.paneSettings.showFuelTunePane)
+            tabbedPane.addTab("Fuel Tune", tabbedPane.fuelTunePane.getContent());
 
 
         if (!LinkManager.isLogViewer()) {
-            if (paneSettings.showTriggerShapePane)
-                tabbedPane.add("Trigger Shape", new AverageAnglePanel().getPanel());
+            if (tabbedPane.paneSettings.showTriggerShapePane)
+                tabbedPane.addTab("Trigger Shape", new AverageAnglePanel().getPanel());
         }
 
         if (!LinkManager.isLogViewerMode(port)) {
-            int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, 2);
-            if (selectedIndex < tabbedPane.getTabCount())
-                tabbedPane.setSelectedIndex(selectedIndex);
+            int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
+            if (selectedIndex < tabbedPane.tabbedPane.getTabCount())
+                tabbedPane.tabbedPane.setSelectedIndex(selectedIndex);
         }
 
-        tabbedPane.addChangeListener(new ChangeListener() {
+        tabbedPane.tabbedPane.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 if (e.getSource() instanceof JTabbedPane) {
@@ -241,79 +174,16 @@ public class Launcher {
             }
         });
 
-        StartupFrame.setAppIcon(mainFrame.getFrame());
-        mainFrame.showFrame(tabbedPane);
+        StartupFrame.setAppIcon(mainFrame.getFrame().getFrame());
+        mainFrame.getFrame().showFrame(tabbedPane.tabbedPane);
     }
 
+    /**
+     * Adds a tab with activation listener
+     */
     private void tabbedPaneAdd(String title, JComponent component, ActionListener tabSelectedListener) {
         tabSelectedListeners.put(component, tabSelectedListener);
-        tabbedPane.add(title, component);
-    }
-
-    private void windowOpenedHandler() {
-        setTitle();
-        ConnectionStatus.INSTANCE.addListener(new ConnectionStatus.Listener() {
-            @Override
-            public void onConnectionStatus(boolean isConnected) {
-                setTitle();
-                UiUtils.trueRepaint(tabbedPane); // this would repaint status label
-                if (ConnectionStatus.INSTANCE.getValue() == ConnectionStatus.Value.CONNECTED) {
-                    long unixGmtTime = System.currentTimeMillis() / 1000L;
-                    long withOffset = unixGmtTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
-                    CommandQueue.getInstance().write("set " +
-                                    Fields.CMD_DATE +
-                                    " " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
-                            InvocationConfirmationListener.VOID, false);
-                }
-            }
-        });
-
-        LinkManager.open(new ConnectionStateListener() {
-            @Override
-            public void onConnectionFailed() {
-            }
-
-            @Override
-            public void onConnectionEstablished() {
-                FileLog.MAIN.logLine("onConnectionEstablished");
-                tableEditor.showContent();
-                settingsTab.showContent();
-                logsManager.showContent();
-                fuelTunePane.showContent();
-                BinaryProtocolServer.start();
-            }
-        });
-
-        LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, new EngineState.ValueCallback<String>() {
-            @Override
-            public void onUpdate(String firmwareVersion) {
-                Launcher.firmwareVersion.set(firmwareVersion);
-                SensorLogger.init();
-                setTitle();
-                VersionChecker.getInstance().onFirmwareVersion(firmwareVersion);
-            }
-        });
-    }
-
-    private void setTitle() {
-        String disconnected = ConnectionStatus.INSTANCE.isConnected() ? "" : "DISCONNECTED ";
-        mainFrame.getFrame().setTitle(disconnected + "Console " + CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + port);
-    }
-
-    private void windowClosedHandler() {
-        /**
-         * looks like reconnectTimer in {@link com.rusefi.ui.RpmPanel} keeps AWT alive. Simplest solution would be to 'exit'
-         */
-        SimulatorHelper.onWindowClosed();
-        Node root = getConfig().getRoot();
-        root.setProperty("version", CONSOLE_VERSION);
-        root.setProperty(TAB_INDEX, tabbedPane.getSelectedIndex());
-        GaugesPanel.DetachedRepository.INSTANCE.saveConfig();
-        getConfig().save();
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
-        if (bp != null && !bp.isClosed)
-            bp.close(); // it could be that serial driver wants to be closed explicitly
-        System.exit(0);
+        tabbedPane.addTab(title, component);
     }
 
     /**

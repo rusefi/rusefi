@@ -27,7 +27,7 @@ struct TraceEntry
 {
 	PE Event;
 	EPhase Phase;
-	uint8_t Data;
+	int8_t IsrId;
 	uint8_t ThreadId;
 	uint32_t Timestamp;
 };
@@ -41,7 +41,7 @@ static size_t s_nextIdx = 0;
 
 static bool s_isTracing = false;
 
-void perfEventImpl(PE event, EPhase phase, uint8_t data)
+static void perfEventImpl(PE event, EPhase phase)
 {
 	// Bail if we aren't allowed to trace
 	if constexpr (!ENABLE_PERF_TRACE) {
@@ -65,6 +65,7 @@ void perfEventImpl(PE event, EPhase phase, uint8_t data)
 	// In addition, if we want to trace lock/unlock events, we can't
 	// be locking ourselves from the trace functionality.
 	{
+		uint32_t prim = __get_PRIMASK();
 		__disable_irq();
 
 		idx = s_nextIdx++;
@@ -73,7 +74,10 @@ void perfEventImpl(PE event, EPhase phase, uint8_t data)
 			s_isTracing = false;
 		}
 
-		__enable_irq();
+		// Restore previous interrupt state - don't restore if they weren't enabled
+		if (!prim) {
+			__enable_irq();
+		}
 	}
 
 	// We can safely write data out of the lock, our spot is reserved
@@ -81,22 +85,31 @@ void perfEventImpl(PE event, EPhase phase, uint8_t data)
 
 	entry.Event = event;
 	entry.Phase = phase;
-	// Get the current active interrupt - this is the "thread ID"
-	entry.ThreadId = static_cast<uint8_t>(SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk);
+	// Get the current active interrupt - this is the "process ID"
+	auto isr = static_cast<int8_t>(SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk);
+	entry.IsrId = isr - 16;
+
+	// Get the current thread (if not interrupt) and use as the thread ID
+	if (isr == 0) {
+		entry.ThreadId = chThdGetSelfX()->threadId;
+	} else {
+		// Interrupts have no thread - all are T0
+		entry.ThreadId = 0;
+	}
+
 	entry.Timestamp = timestamp;
-	entry.Data = data;
 }
 
-void perfEventBegin(PE event, uint8_t data) {
-	perfEventImpl(event, EPhase::Start, data);
+void perfEventBegin(PE event) {
+	perfEventImpl(event, EPhase::Start);
 }
 
-void perfEventEnd(PE event, uint8_t data) {
-	perfEventImpl(event, EPhase::End, data);
+void perfEventEnd(PE event) {
+	perfEventImpl(event, EPhase::End);
 }
 
-void perfEventInstantGlobal(PE event, uint8_t data) {
-	perfEventImpl(event, EPhase::InstantGlobal, data);
+void perfEventInstantGlobal(PE event) {
+	perfEventImpl(event, EPhase::InstantGlobal);
 }
 
 void perfTraceEnable() {
