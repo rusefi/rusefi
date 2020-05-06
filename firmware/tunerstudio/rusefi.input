@@ -1508,6 +1508,7 @@ cmd_etb_autotune             = "w\x00\x14\x00\x0C"
 cmd_enable_self_stim         = "w\x00\x14\x00\x0D"
 cmb_etb_auto_calibrate       = "w\x00\x14\x00\x0E"
 cmd_disable_self_stim        = "w\x00\x14\x00\x0F"
+cmd_etb_autotune_stop        = "w\x00\x14\x00\x10"
 
 cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
@@ -2823,10 +2824,13 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != 16 || useStepperIdle && useHbridges  }
 
 	dialog = etbAutotune, "PID Autotune"
-		field = "!Set debug mode below to 'ETB Autotune' to show results"
-		field = "Debug mode",							debugMode
-		commandButton = "ETB PID Autotune", cmd_etb_autotune
+		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
+		commandButton = "Stop ETB PID Autotune", cmd_etb_autotune_stop
+
 		commandButton = "Auto Calibrate TPS", cmb_etb_auto_calibrate
+
+		field = "!Set debug mode below to 'ETB Autotune' to show more detail"
+		field = "Debug mode",							debugMode
 
 	dialog = etbDialogRight
 		panel = etbIdleDialog
