@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue May 05 15:37:25 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 08:44:47 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -186,7 +186,6 @@ public class Fields {
 	public static final int boostControlPinMode_offset = 989;
 	public static final int boostCutPressure_offset = 2132;
 	public static final int boostCutPressure_offset_hex = 854;
-	public static final int boostMapBins_offset = 6312;
 	public static final int boostPid_dFactor_offset = 1000;
 	public static final int boostPid_iFactor_offset = 996;
 	public static final int boostPid_maxValue_offset = 1010;
@@ -1525,6 +1524,7 @@ public class Fields {
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused2432_offset = 2432;
 	public static final int unused2432_offset_hex = 980;
+	public static final int unused6312_offset = 6312;
 	public static final int unused711_offset = 711;
 	public static final int unused76b0_offset = 76;
 	public static final int unused806_offset = 806;
