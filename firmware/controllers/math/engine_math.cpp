@@ -24,6 +24,7 @@
 #include "engine_configuration.h"
 #include "interpolation.h"
 #include "allsensors.h"
+#include "sensor.h"
 #include "event_registry.h"
 #include "efi_gpio.h"
 #include "fuel_math.h"
@@ -64,12 +65,9 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 		return getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_SPEED_DENSITY:
-		// SD engine load is used for timing lookup but not for fuel calculation,
-		// so fall thru to the MAP case.
-	case LM_MAP:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_ALPHA_N:
-		return getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return Sensor::get(SensorType::Tps1).value_or(0);
 	case LM_REAL_MAF: {
 		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
@@ -292,6 +290,10 @@ static const int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
 static const int order_1_8_7_2_6_5_4_3[] = { 1, 8, 7, 2, 6, 5, 4, 3 };
 static const int order_1_5_4_2_6_3_7_8[] = { 1, 5, 4, 2, 6, 3, 7, 8 };
 static const int order_1_2_7_8_4_5_6_3[] = { 1, 2, 7, 8, 4, 5, 6, 3 };
+static const int order_1_3_7_2_6_5_4_8[] = { 1, 3, 7, 2, 6, 5, 4, 8 };
+
+// 9 cylinder
+static const int order_1_2_3_4_5_6_7_8_9[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 // 10 cylinder
 static const int order_1_10_9_4_3_6_5_8_7_2[] = {1, 10, 9, 4, 3, 6, 5, 8, 7, 2};
@@ -334,7 +336,12 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_8_7_2_6_5_4_3:
 	case FO_1_5_4_2_6_3_7_8:
 	case FO_1_2_7_8_4_5_6_3:
+	case FO_1_3_7_2_6_5_4_8:
 		return 8;
+
+// 9 cylinder radial
+	case FO_1_2_3_4_5_6_7_8_9:
+		return 9;
 
 // 10 cylinder
 	case FO_1_10_9_4_3_6_5_8_7_2:
@@ -417,6 +424,12 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return order_1_5_4_2_6_3_7_8[index];
 	case FO_1_2_7_8_4_5_6_3:
 		return order_1_2_7_8_4_5_6_3[index];
+	case FO_1_3_7_2_6_5_4_8:
+		return order_1_3_7_2_6_5_4_8[index];
+
+	case FO_1_2_3_4_5_6_7_8_9:
+		return order_1_2_3_4_5_6_7_8_9[index];
+
 
 // 10 cylinder
 	case FO_1_10_9_4_3_6_5_8_7_2:

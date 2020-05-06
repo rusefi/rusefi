@@ -30,12 +30,13 @@
 #include "rpm_calculator.h"
 #include "speed_density.h"
 #include "perf_trace.h"
+#include "sensor.h"
 
 EXTERN_ENGINE;
 
 fuel_Map3D_t fuelMap("fuel");
 static fuel_Map3D_t fuelPhaseMap("fl ph");
-extern fuel_Map3D_t ve2Map;
+extern fuel_Map3D_t veMap;
 extern afr_Map3D_t afrMap;
 extern baroCorr_Map3D_t baroCorrMap;
 
@@ -74,10 +75,10 @@ DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTem
 	DISPLAY_SENSOR(CLT);
 	DISPLAY_TEXT(eol);
 
-	percent_t tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
 	DISPLAY_TEXT(TPS_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = cisnan(tps) ? 1 : interpolate2d("crankTps", tps, engineConfiguration->crankingTpsBins,
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = tps.Valid ? 1 : interpolate2d("crankTps", tps.Value, engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef);
 	DISPLAY_SENSOR(TPS);
 	DISPLAY_TEXT(eol);
@@ -141,26 +142,38 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /* DISPLAY_ENDIF */
 
 /**
+ * Function block now works to create a standardised load from the cylinder filling as well as tune fuel via VE table. 
  * @return total duration of fuel injection per engine cycle, in milliseconds
  */
 float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (rpm == 0)
+	// If the engine is stopped, MAF is meaningless
+	if (rpm == 0) {
 		return 0;
-	// duration of engine cycle, in hours
-	float engineCycleDurationHr = 1.0 / 60 / rpm;
+	}
 
-	float airMassKg = airSpeed * engineCycleDurationHr;
+	// kg/hr -> g/s
+	float gramPerSecond = airSpeed * 1000 / 3600;
 
-	/**
-	 * todo: pre-calculate gramm/second injector flow to save one multiplication
-	 * open question if that's needed since that's just a multiplication
-	 */
-	float injectorFlowRate = cc_minute_to_gramm_second(engineConfiguration->injector.flow);
+	// 1/min -> 1/s
+	float revsPerSecond = rpm / 60.0f;
+	float airPerRevolution = gramPerSecond / revsPerSecond;
 
-	float afr = afrMap.getValue(rpm, airSpeed);
-	float fuelMassGramm = airMassKg / afr * 1000;
+	// Now we have to divide among cylinders - on a 4 stroke, half of the cylinders happen every rev
+	// This math is floating point to work properly on engines with odd cyl count
+	float halfCylCount = CONFIG(specs.cylindersCount) / 2.0f;
 
-	return 1000 * fuelMassGramm / injectorFlowRate;
+	float cylinderAirmass = airPerRevolution / halfCylCount;
+
+	//Create % load for fuel table using relative naturally aspiratedcylinder filling
+	float airChargeLoad = 100 * cylinderAirmass / ENGINE(standardAirCharge);
+	
+	//Correct air mass by VE table 
+	float corrCylAirmass = cylinderAirmass * veMap.getValue(rpm, airChargeLoad) / 100;
+	float fuelMassGram = corrCylAirmass / afrMap.getValue(rpm, airSpeed);
+	float pulseWidthSeconds = fuelMassGram / cc_minute_to_gramm_second(engineConfiguration->injector.flow);
+
+	// Convert to ms
+	return 1000 * pulseWidthSeconds;
 }
 
 /**
@@ -321,20 +334,29 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @brief Engine warm-up fuel correction.
  */
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!hasCltSensor())
+	const auto [valid, clt] = Sensor::get(SensorType::Clt);
+	
+	if (!valid)
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("cltf", getCoolantTemperature(), config->cltFuelCorrBins, config->cltFuelCorr);
+
+	return interpolate2d("cltf", clt, config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!hasCltSensor())
+	const auto [valid, clt] = Sensor::get(SensorType::Clt);
+
+	if (!valid)
 		return 0; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("timc", getCoolantTemperature(), engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
+
+	return interpolate2d("timc", clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
 }
 
-float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (cisnan(iat))
+float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	const auto [valid, iat] = Sensor::get(SensorType::Iat);
+
+	if (!valid)
 		return 1; // this error should be already reported somewhere else, let's just handle it
+
 	return interpolate2d("iatc", iat, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 
@@ -349,14 +371,23 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 
 	// coasting fuel cut-off correction
 	if (CONFIG(coastingFuelCutEnabled)) {
-		percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		auto [tpsValid, tpsPos] = Sensor::get(SensorType::Tps1);
+		if (!tpsValid) {
+			return 1.0f;
+		}
+
+		const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
+		if (!cltValid) {
+			return 1.0f;
+		}
+
 		float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	
 		// gather events
 		bool mapDeactivate = (map >= CONFIG(coastingFuelCutMap));
 		bool tpsDeactivate = (tpsPos >= CONFIG(coastingFuelCutTps));
 		// If no CLT sensor (or broken), don't allow DFCO
-		bool cltDeactivate = hasCltSensor() ? (getCoolantTemperature() < (float)CONFIG(coastingFuelCutClt)) : true;
+		bool cltDeactivate = clt < (float)CONFIG(coastingFuelCutClt);
 		bool rpmDeactivate = (rpm < CONFIG(coastingFuelCutRpmLow));
 		bool rpmActivate = (rpm > CONFIG(coastingFuelCutRpmHigh));
 		
@@ -416,9 +447,18 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return Duration of fuel injection while craning
  */
 floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getCrankingFuel3(getCoolantTemperature(),
+	return getCrankingFuel3(Sensor::get(SensorType::Clt).value_or(20),
 			engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
 }
+
+float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	float totalDisplacement = CONFIG(specs.displacement);
+	float cylDisplacement = totalDisplacement / CONFIG(specs.cylindersCount);
+
+	// Calculation of 100% VE air mass in g/cyl - 1 cylinder filling at 1.204/L - air density at 20C
+	return cylDisplacement * 1.204f;
+}
+
 #endif
 
 float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX) {

@@ -13,12 +13,15 @@
 #include "engine_test_helper.h"
 #include "efi_gpio.h"
 #include "advance_map.h"
+#include "sensor.h"
 
 extern float testMafValue;
 
 TEST(misc, testMafFuelMath) {
 	printf("====================================================================================== testMafFuelMath\r\n");
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	extern fuel_Map3D_t veMap;
+	veMap.setAll(75);
 
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
@@ -26,12 +29,10 @@ TEST(misc, testMafFuelMath) {
 	setAfrMap(config->afrTable, 13);
 
 	float fuelMs = getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("fuelMs", 26.7099, fuelMs);
+	assertEqualsM("fuelMs", 0.75 * 13.3550, fuelMs);
 }
 
 TEST(misc, testFuelMap) {
-	printf("====================================================================================== testFuelMap\r\n");
-
 	printf("Setting up FORD_ASPIRE_1996\r\n");
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
@@ -62,6 +63,9 @@ TEST(misc, testFuelMap) {
 
 	eth.engine.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	Sensor::setMockValue(SensorType::Clt, 36.605f);
+	Sensor::setMockValue(SensorType::Iat, 30.0f);
+
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel 1\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -70,25 +74,26 @@ TEST(misc, testFuelMap) {
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
-		eth.engine.config->iatFuelCorrBins[i] = i;
+		eth.engine.config->iatFuelCorrBins[i] = i * 10;
 		eth.engine.config->iatFuelCorr[i] = 2 * i;
 	}
 	eth.engine.config->iatFuelCorr[0] = 2;
 
 	printf("*************************************************** setting CLT table\r\n");
 	for (int i = 0; i < CLT_CURVE_SIZE; i++) {
-		eth.engine.config->cltFuelCorrBins[i] = i;
-		eth.engine.config->cltFuelCorr[i] = 1;
+		eth.engine.config->cltFuelCorrBins[i] = i * 10;
+		eth.engine.config->cltFuelCorr[i] = i;
 	}
+
+	Sensor::setMockValue(SensorType::Clt, 70.0f);
+	Sensor::setMockValue(SensorType::Iat, 30.0f);
 
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	ASSERT_FALSE(cisnan(getIntakeAirTemperature()));
-	float iatCorrection = getIatFuelCorrection(-KELV PASS_ENGINE_PARAMETER_SUFFIX);
-	ASSERT_EQ( 2,  iatCorrection) << "IAT";
-	ASSERT_FALSE(cisnan(getCoolantTemperature()));
+	float iatCorrection = getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	ASSERT_EQ( 6,  iatCorrection) << "IAT";
 	float cltCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 1,  cltCorrection) << "CLT";
+	ASSERT_EQ( 7,  cltCorrection) << "CLT";
 	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 0,  injectorLag) << "injectorLag";
 
@@ -98,7 +103,11 @@ TEST(misc, testFuelMap) {
 	printf("*************************************************** getRunningFuel 2\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ( 30150,  getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
+	EXPECT_EQ(baseFuel, 1005);
+
+	// Check that runningFuel corrects appropriately
+	EXPECT_EQ( 42,  getRunningFuel(1 PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
+	EXPECT_EQ( 84,  getRunningFuel(2 PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
 
 	testMafValue = 0;
 
@@ -246,9 +255,8 @@ TEST(fuel, testTpsBasedVeDefect799) {
 	// set TPS axis range which does not overlap MAP range for this test
 	setLinearCurve(CONFIG(ignitionTpsBins), 0, 15, 1);
 
-
 	engine->mockMapValue = 107;
-	setMockTpsValue(7 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::Tps1, 7);
 
 	engine->engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// value in the middle of the map as expected

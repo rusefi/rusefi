@@ -24,10 +24,6 @@
 /* do not use serial device for console */
 #undef TS_SERIAL_DEVICE
 
-/* additional space for pins on gpioext */
-#undef BOARD_EXT_PINREPOPINS
-#define BOARD_EXT_PINREPOPINS		(16 + 22)
-
 #undef EFI_RTC
 #define EFI_RTC						FALSE
 
@@ -61,14 +57,12 @@
 #define SERIAL_SPEED				115200
 
 #ifdef EFI_CONSOLE_SERIAL_DEVICE
-	#undef EFI_CONSOLE_TX_PORT
-	#define EFI_CONSOLE_TX_PORT 		GPIOA
-	#undef EFI_CONSOLE_TX_PIN
-	#define EFI_CONSOLE_TX_PIN			9
-	#undef EFI_CONSOLE_RX_PORT
-	#define EFI_CONSOLE_RX_PORT			GPIOA
-	#undef EFI_CONSOLE_RX_PIN
-	#define EFI_CONSOLE_RX_PIN 			10
+	#undef EFI_CONSOLE_TX_BRAIN_PIN
+	#define EFI_CONSOLE_TX_BRAIN_PIN 		GPIOA_9
+
+	#undef EFI_CONSOLE_RX_BRAIN_PIN
+	#define EFI_CONSOLE_RX_BRAIN_PIN			GPIOA_10
+
 	#undef EFI_CONSOLE_AF
 	#define EFI_CONSOLE_AF 				7
 #endif

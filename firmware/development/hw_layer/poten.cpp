@@ -1,5 +1,5 @@
 /**
- * @file	poten.c
+ * @file	poten.cpp
  * @brief	MCP42010 digital potentiometer driver
  *
  * @date Mar 16, 2013

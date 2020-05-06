@@ -1,3 +1,4 @@
+#include "init.h"
 #include "adc_subscription.h"
 #include "engine.h"
 #include "error_handling.h"
@@ -13,8 +14,7 @@ EXTERN_ENGINE;
 LinearFunc oilpSensorFunc;
 FunctionalSensor oilpSensor(SensorType::OilPressure, /* timeout = */ MS2NT(50));
 
-void configureOilPressure(LinearFunc func, const oil_pressure_config_s& cfg)
-{
+void configureOilPressure(LinearFunc& func, const oil_pressure_config_s& cfg) {
 	float val1 = cfg.value1;
 	float val2 = cfg.value2;
 
@@ -26,9 +26,9 @@ void configureOilPressure(LinearFunc func, const oil_pressure_config_s& cfg)
 	func.configure(cfg.v1, val1, cfg.v2, val2, /*minOutput*/ -5, greaterOutput);
 }
 
-void initOilPressure() {
+void initOilPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Only register if we have a sensor
-	auto channel = engineConfiguration->oilPressure.hwChannel;
+	auto channel = CONFIG(oilPressure.hwChannel);
 	if (channel == EFI_ADC_NONE) {
 		return;
 	}
@@ -44,6 +44,6 @@ void initOilPressure() {
 	}
 }
 
-void reconfigureOilPressure() {
+void reconfigureOilPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	configureOilPressure(oilpSensorFunc, CONFIG(oilPressure));
 }

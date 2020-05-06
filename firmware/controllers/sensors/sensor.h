@@ -48,23 +48,11 @@
 #pragma once
 
 #include "sensor_type.h"
+#include "expected.h"
 
 #include <cstddef>
 
-struct SensorResult {
-	const bool Valid;
-	const float Value;
-
-	// Implicit conversion operator to bool, so you can do things like if (myResult) { ... }
-	constexpr explicit operator bool() const {
-		return Valid;
-	}
-
-	// Easy default value handling
-	constexpr float value_or(float valueIfInvalid) const {
-		return Valid ? Value : valueIfInvalid;
-	}
-};
+using SensorResult = expected<float>;
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type
 struct SensorRegistryEntry;
@@ -104,6 +92,11 @@ public:
 	static float getRaw(SensorType type);
 
 	/*
+	 * Query whether there is a sensor of a particular type currently registered.
+	 */
+	static bool hasSensor(SensorType type);
+
+	/*
 	 * Mock a value for a particular sensor.
 	 */
 	static void setMockValue(SensorType type, float value);
@@ -122,6 +115,12 @@ public:
 	 * Reset mocking for all sensors.
 	 */
 	static void resetAllMocks();
+
+	/*
+	 * Get a friendly name for the sensor.
+	 * For example, CLT, IAT, Throttle Position 2, etc.
+	 */
+	const char* getSensorName() { return getSensorName(m_type); }
 
 protected:
 	// Protected constructor - only subclasses call this
@@ -145,7 +144,7 @@ private:
 		return 0;
 	}
 
-	SensorType m_type;
+	const SensorType m_type;
 
 	// Get this sensor's index in the list
 	constexpr size_t getIndex() {

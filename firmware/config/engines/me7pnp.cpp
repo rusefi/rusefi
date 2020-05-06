@@ -12,11 +12,14 @@
 #include "allsensors.h"
 #include "fsio_impl.h"
 #include "engine_configuration.h"
-#include "smart_gpio.h"
+#include "cj125.h"
 
 EXTERN_ENGINE;
 
-void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+/**
+ * set engine_type 102
+ */
+void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	//Base Engine Settings
 
@@ -54,8 +57,6 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_4;
 	engineConfiguration->vbattDividerCoeff = ((float) (10.0 + 33)) / 10 * 2;
-	engineConfiguration->cj125ur = EFI_ADC_11;
-	engineConfiguration->cj125ua = EFI_ADC_12;
 	engineConfiguration->mafAdcChannel = EFI_ADC_8;
 
 	//CAN Settings
@@ -91,10 +92,13 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	//SPI Settings
 	engineConfiguration->is_enabled_spi_1 = true;
-	engineConfiguration->is_enabled_spi_2 = true;
 	engineConfiguration->is_enabled_spi_3 = false;
-	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
+
+	cj125defaultPinout(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->cj125ur = EFI_ADC_11; // PC3
 	engineConfiguration->cj125CsPin = GPIOB_11;
+
+	engineConfiguration->debugMode = DBG_CJ125;
 
 	//Digital Inputs/Outputs
 #if (BOARD_TLE8888_COUNT > 0)
@@ -112,10 +116,10 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->brakePedalPin = GPIOE_10;
 	engineConfiguration->camInputs[0] = GPIOA_2;
 #if defined(STM32_HAS_GPIOG) && STM32_HAS_GPIOG
-	engineConfiguration->triggerInputPins[0] = GPIOG_7;
+//	engineConfiguration->triggerInputPins[0] = GPIOG_7;
 #endif /* STM32_HAS_GPIOF */
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
-	engineConfiguration->vehicleSpeedSensorInputPin = GPIOF_14;
+//	engineConfiguration->vehicleSpeedSensorInputPin = GPIOF_14;
 #endif /* STM32_HAS_GPIOF */
 
 
@@ -132,7 +136,6 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_FSIO
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
-	setFsio (12, GPIOF_12, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio (14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* STM32_HAS_GPIOF */
 	setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -142,15 +145,16 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
 	CONFIG(etbIo[0].directionPin2) = GPIOF_14;
+	CONFIG(etbIo[0].disablePin) = GPIOF_12;
 #endif /* STM32_HAS_GPIOF */
 	engineConfiguration->isHip9011Enabled = false;
 
 #if EFI_FSIO
-	setFsio (13, GPIOE_5, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio (15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	CONFIG(etbIo[1].directionPin1) = GPIOE_2;
 	CONFIG(etbIo[1].directionPin2) = GPIOE_4;
+	CONFIG(etbIo[1].disablePin) = GPIOE_5;
 
 	engineConfiguration->etb.pFactor = 1.07;
 	engineConfiguration->etb.iFactor = 0.18;

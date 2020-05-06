@@ -40,6 +40,7 @@
 #include "mmc_card.h"
 #include "idle_thread.h"
 #include "fuel_math.h"
+#include "sensor.h"
 
 
 EXTERN_ENGINE;
@@ -170,10 +171,10 @@ static void showLine(lcd_line_e line, int screenY) {
 #endif
 		return;
 	case LL_CLT_TEMPERATURE:
-		lcdPrintf("Coolant %.2f", getCoolantTemperature());
+		lcdPrintf("Coolant %.2f", Sensor::get(SensorType::Clt).value_or(0));
 		return;
 	case LL_IAT_TEMPERATURE:
-		lcdPrintf("Intake Air %.2f", getIntakeAirTemperature());
+		lcdPrintf("Intake Air %.2f", Sensor::get(SensorType::Iat).value_or(0));
 		return;
 	case LL_ALGORITHM:
 		lcdPrintf(getEngine_load_mode_e(engineConfiguration->fuelAlgorithm));
@@ -190,13 +191,13 @@ static void showLine(lcd_line_e line, int screenY) {
 	case LL_TPS:
 		getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, buffer);
 
-		lcdPrintf("Throttle %s %.2f%%", buffer, getTPS());
+		lcdPrintf("Throttle %s %.2f%%", buffer, Sensor::get(SensorType::Tps1).value_or(0));
 		return;
 	case LL_FUEL_CLT_CORRECTION:
 		lcdPrintf("CLT corr %.2f", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_FUEL_IAT_CORRECTION:
-		lcdPrintf("IAT corr %.2f", getIatFuelCorrection(getIntakeAirTemperature() PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("IAT corr %.2f", getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_FUEL_INJECTOR_LAG:
 		lcdPrintf("ING LAG %.2f", getInjectorLag(engine->sensors.vBatt PASS_ENGINE_PARAMETER_SIGNATURE));

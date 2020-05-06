@@ -8,12 +8,10 @@
 #include "engine_math.h"
 #include "engine_test_helper.h"
 #include "event_queue.h"
-#include "tps.h"
+#include "sensor.h"
 #include "fsio_impl.h"
 
 TEST(fuelCut, coasting) {
-	printf("*************************************************** testCoastingFuelCut\r\n");
-
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// configure coastingFuelCut
@@ -25,17 +23,15 @@ TEST(fuelCut, coasting) {
 	engineConfiguration->coastingFuelCutMap = 100;
 	// set cranking threshold
 	engineConfiguration->cranking.rpm = 999;
-	// configure TPS
-	engineConfiguration->tpsMin = 0;
-	engineConfiguration->tpsMax = 10;
 
 	// basic engine setup
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
 	// mock CLT - just above threshold ('hot engine')
-	float hotClt = engine->sensors.clt = engineConfiguration->coastingFuelCutClt + 1;
+	float hotClt = engineConfiguration->coastingFuelCutClt + 1;
+	Sensor::setMockValue(SensorType::Clt, hotClt);
 	// mock TPS - throttle is opened
-	setMockTpsAdc(6 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::Tps1, 60);
 	// set 'running' RPM - just above RpmHigh threshold
 	engine->rpmCalculator.mockRpm = engineConfiguration->coastingFuelCutRpmHigh + 1;
 	// 'advance' time (amount doesn't matter)
@@ -53,21 +49,21 @@ TEST(fuelCut, coasting) {
 	assertEqualsM("inj dur#1 norm", normalInjDuration, ENGINE(injectionDuration));
 
 	// 'releasing' the throttle
-	setMockTpsAdc(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::Tps1, 0);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Fuel cut-off is enabled now
 	assertEqualsM("inj dur#2 cut", 0.0f, ENGINE(injectionDuration));
 
 	// Now drop the CLT below threshold
-	engine->sensors.clt = engineConfiguration->coastingFuelCutClt - 1;
+	Sensor::setMockValue(SensorType::Clt, engineConfiguration->coastingFuelCutClt - 1);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Fuel cut-off should be diactivated - the engine is 'cold'
 	assertEqualsM("inj dur#3 clt", normalInjDuration, ENGINE(injectionDuration));
 
 	// restore CLT
-	engine->sensors.clt = hotClt;
+	Sensor::setMockValue(SensorType::Clt, hotClt);
 	// And set RPM - somewhere between RpmHigh and RpmLow threshold
 	engine->rpmCalculator.mockRpm = (engineConfiguration->coastingFuelCutRpmHigh + engineConfiguration->coastingFuelCutRpmLow) / 2;
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -118,6 +114,7 @@ TEST(fuelCut, criticalEngineTemperature) {
 	ASSERT_FALSE(engine->stopEngineRequestTimeNt > 0);
 
 	engine->sensors.mockClt = 200; // 200C is really hot!
+	Sensor::setMockValue(SensorType::Clt, 200);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 

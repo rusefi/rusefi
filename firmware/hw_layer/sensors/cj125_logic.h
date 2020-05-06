@@ -18,14 +18,14 @@ typedef enum {
 } cj125_sensor_type_e;
 
 typedef enum {
-	CJ125_INIT,
-	CJ125_IDLE,
-	CJ125_CALIBRATION,
-	CJ125_PREHEAT,
-	CJ125_HEAT_UP,
-	CJ125_READY,
-	CJ125_OVERHEAT,
-	CJ125_ERROR,
+	CJ125_INIT = 0,
+	CJ125_IDLE = 1,
+	CJ125_CALIBRATION = 2,
+	CJ125_PREHEAT = 3,
+	CJ125_HEAT_UP = 4,
+	CJ125_READY = 5,
+	CJ125_OVERHEAT = 6,
+	CJ125_ERROR = 7,
 
 } cj125_state_e;
 
@@ -54,8 +54,8 @@ public:
 class CJ125 {
 public:
 	CJ125();
-	Cj125SpiStream *spi = NULL;
-	Logging *logger = NULL;
+	Cj125SpiStream *spi = nullptr;
+	Logging *logger = nullptr;
 
 	SimplePwm wboHeaterControl;
 
@@ -77,11 +77,15 @@ public:
 	volatile float lambda = 1.0f;
 
 	// Current values
+	// lambda
 	volatile float vUa = 0.0f;
+	// heater
 	volatile float vUr = 0.0f;
 
 	// Calibration values
+	// lambda
 	volatile float vUaCal = 0.0f;
+	// header
 	volatile float vUrCal = 0.0f;
 
 	OutputPin wboHeaterPin;
@@ -97,7 +101,9 @@ public:
 	void SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void SetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENGINE_PARAMETER_SUFFIX);
-	bool cjIdentify(void);
+	bool cjIdentify(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void printDiag();
+	void calibrate(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void cjSetMode(cj125_mode_e m);
 	bool isValidState() const;
 	void cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE);

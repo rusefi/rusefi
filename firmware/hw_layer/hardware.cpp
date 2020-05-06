@@ -61,6 +61,10 @@
 #include "flash_main.h"
 #endif
 
+#if EFI_CAN_SUPPORT
+#include "can_vss.h"
+#endif
+
 EXTERN_ENGINE;
 
 static mutex_t spiMtx;
@@ -571,6 +575,10 @@ void initHardware(Logging *l) {
 
 #if EFI_VEHICLE_SPEED
 	initVehicleSpeed(sharedLogger);
+#endif
+
+#if EFI_CAN_SUPPORT
+	initCanVssSupport(sharedLogger);
 #endif
 
 #if EFI_CDM_INTEGRATION

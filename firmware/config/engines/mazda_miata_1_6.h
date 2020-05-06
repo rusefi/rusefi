@@ -9,7 +9,13 @@
 
 #include "engine_configuration.h"
 
+/**
+ * set engine_type 57
+ */
 void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+/**
+ * set engine_type 41
+ */
 void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void miataNAcommon(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 

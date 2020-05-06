@@ -11,6 +11,7 @@
 #include <cstddef>
 #include "efitime.h"
 #include "rusefi_enums.h"
+#include "engine.h"
 
 // Enable the tooth logger - this clears the buffer starts logging
 void EnableToothLogger();
@@ -19,7 +20,9 @@ void EnableToothLogger();
 void DisableToothLogger();
 
 // A new tooth has arrived! Log to the buffer if enabled.
-void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp);
+void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 struct ToothLoggerBuffer
 {

@@ -37,6 +37,7 @@
 #include "idle_thread.h"
 #include "periodic_thread_controller.h"
 #include "tps.h"
+#include "electronic_throttle.h"
 #include "cj125.h"
 #include "malfunction_central.h"
 
@@ -258,9 +259,21 @@ static void handleCommandX14(uint16_t index) {
 	case 0xB:
 		starterRelayBench();
 		return;
-
+	case 0xC:
+		engine->etbAutoTune = true;
+		return;
+	case 0xD:
+		engine->directSelfStimulation = true;
+		return;
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	case 0xE:
+		etbAutocal(0);
+		return;
+#endif
+	case 0xF:
+		engine->directSelfStimulation = false;
+		return;
 	}
-
 }
 
 // todo: this is probably a wrong place for this method now
@@ -286,8 +299,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		startIdleBench();
 #endif /* EFI_IDLE_CONTROL */
 	} else if (subsystem == 0x18) {
-#if EFI_CJ125
-		cjCalibrate();
+#if EFI_CJ125 && HAL_USE_SPI
+		cjStartCalibration();
 #endif /* EFI_CJ125 */
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit

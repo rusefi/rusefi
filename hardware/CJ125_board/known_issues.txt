@@ -5,16 +5,18 @@
  5) RESOLVED IN R0.3 Correct C9 should match C2 for 1kHz low pass filter. 
  6) RESOLVED IN R0.3 R12 is not routed right
  7) RESOLVED IN R0.3 voltage divider on UR and UA channels, 5V --> 3V (not clear if we need this on the little board - we can always use external divider)
+                     This is now implemented as R17/R18 and R19/R20. Default is 6.8k high side/10k low side = 1.68 ratio analogInputDividerCoefficient
  8) RESOLVED IN R0.3 R3 is now 0R and C3 is now DNP. These are here incase a filter is needed, as shown in some of the OEM's documentation. 
  9)                  enlarge silkscreen font - current font is too small
 10)                  match Frankenso GND/3v/5v pinout
 11) RESOLVED IN R0.3 provide 4 extra holes in corners just for flat mounting
 12) RESOLVED IN R0.3 power ON status LED, heater intensity LED
 13) RESOLVED IN R0.4 Change solder mask, from 0.007874015748 to 0.003. 
-14) RESOLVED IN R0.4.1 Change LSU4.9 to 301 ohms, as noted here https://rusefi.com/forum/viewtopic.php?f=4&t=1052&start=143
-15) RESOLVED IN R0.4.1 Change Rfb1 and Rfb2 should be increased to 5.11k and 511k as noted here https://rusefi.com/forum/viewtopic.php?f=4&t=1052&start=143
+14) RESOLVED IN R0.4.1 Change LSU4.9 to 301 ohms (R10 changed from 117.5R to 220R), as noted here https://rusefi.com/forum/viewtopic.php?f=4&t=1052&start=143
+15) RESOLVED IN R0.4.1 Change R11 Rfb1 and R14 Rfb2 should be increased R11 from 4.7K to 5.11k, R14 from 470K 511k as noted here https://rusefi.com/forum/viewtopic.php?f=4&t=1052&start=143
 16)                  Sepeate the signald GND and the power GND for a better design
 17)                  and the GND ring around pin 22 CF for better RF rejection. 
 18) RESOLVED IN R0.4.1 change label from sf.net/projects/rusefi/ to rusefi.com
 18) RESOLVED IN R0.4.2 Added LSU 4.2 and 4.9 notes about installing W1 and W2, etc. 
 19)                  D2 is reported to not turn off. It is believed the leakage of DIAHD pin is keeping it on even when the MOSFET is off. Unfortunately there is no solid math, or data to back this up. We need to look at what is required to make the LED blink, as well we need to look at the potential this parallel path is causing the heater measurement to measure wrong. 
+20)                  Change DIAHG silkscreen to GATE or Heater Gate or something less confusing than DIAHG

@@ -196,8 +196,6 @@ void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
-
 	engineConfiguration->triggerSimulatorFrequency = 300;
 	engineConfiguration->cranking.rpm = 100;
 
@@ -313,8 +311,6 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
-	engineConfiguration->directSelfStimulation = true;
-
 #if defined(STM32_HAS_GPIOG) && STM32_HAS_GPIOG
 	engineConfiguration->ignitionPins[0] = GPIOG_3;
 	engineConfiguration->ignitionPins[1] = GPIOG_4;
@@ -349,11 +345,11 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// SF  PF11
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 #if EFI_FSIO
-	setFsio(12, GPIOF_12, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio(14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
 	CONFIG(etbIo[0].directionPin2) = GPIOF_14;
+	CONFIG(etbIo[0].disablePin) = GPIOF_12;
 #endif /* STM32_HAS_GPIOF */
 	CONFIG(etb_use_two_wires) = true;
 	engineConfiguration->isHip9011Enabled = false;
@@ -365,11 +361,11 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// IN2 PE4
 	// SF  PE3
 #if EFI_FSIO
-	setFsio(13, GPIOE_5, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio(15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	CONFIG(etbIo[0].directionPin1) = GPIOE_2;
 	CONFIG(etbIo[0].directionPin2) = GPIOE_4;
+	CONFIG(etbIo[0].disablePin) = GPIOE_5;
 
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // PA3
@@ -403,8 +399,6 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  */
 void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
-	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
-
 	engineConfiguration->debugMode = DBG_TLE8888;
 
 	engineConfiguration->triggerSimulatorFrequency = 60;
@@ -528,12 +522,24 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// default spi3sckPin  PB3
 
 
+	CONFIG(triggerSimulatorPins[0]) = GPIO_UNASSIGNED;
+	CONFIG(triggerSimulatorPins[1]) = GPIO_UNASSIGNED;
+	CONFIG(triggerSimulatorPins[2]) = GPIO_UNASSIGNED;
+
+	engineConfiguration->injectionPins[0] = GPIOB_9; // #1
+	engineConfiguration->injectionPins[1] = GPIOE_2; // #2
+	engineConfiguration->injectionPins[2] = GPIOB_8; // #3
+	engineConfiguration->injectionPins[3] = GPIOB_7; // #4
+
+
 	// blue
 	CONFIG(mc33816_cs) = GPIOD_7;
 	// green
-	CONFIG(mc33816_rstb) = GPIOD_5;
+	CONFIG(mc33816_rstb) = GPIOD_4;
 	// yellow
 	CONFIG(mc33816_driven) = GPIOD_6;
+
+	CONFIG(mc33816_flag0) = GPIOD_3;
 
 	// enable_spi 3
 	CONFIG(is_enabled_spi_3) = true;
@@ -543,6 +549,8 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->spi3sckPin = GPIOB_3;
 
 	CONFIG(isSdCardEnabled) = false;
+
+	CONFIG(mc33_hvolt) = 63;
 
 	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
 }

@@ -45,6 +45,9 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 	case CAN_BUS_MAZDA_RX8:
 		canMazdaRX8();
 		break;
+	case CAN_BUS_W202_C180:
+		canDashboardW202();
+		break;
 	default:
 		break;
 	}

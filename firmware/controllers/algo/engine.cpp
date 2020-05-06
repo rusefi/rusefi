@@ -24,6 +24,8 @@
 #include "map_averaging.h"
 #include "fsio_impl.h"
 #include "perf_trace.h"
+#include "sensor.h"
+#include "gppwm.h"
 
 #if EFI_PROD_CODE
 #include "bench_test.h"
@@ -77,9 +79,9 @@ void Engine::initializeTriggerWaveform(Logging *logger DECLARE_ENGINE_PARAMETER_
 
 	if (TRIGGER_WAVEFORM(bothFrontsRequired) && engineConfiguration->useOnlyRisingEdgeForTrigger) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "Inconsistent trigger setup");
+		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
 #else
-		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "Inconsistent trigger setup");
+		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
 #endif
 	}
 
@@ -113,7 +115,7 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS;
+		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && Sensor::get(SensorType::DriverThrottleIntent).value_or(0) > CLEANUP_MODE_TPS;
 	} else {
 		newValue = false;
 	}
@@ -139,7 +141,11 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
 
+	updateGppwm();
+
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	standardAirCharge = getStandardAirCharge(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if (BOARD_TLE8888_COUNT > 0)
 	if (CONFIG(useTLE8888_cranking_hack) && ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
@@ -243,13 +249,6 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void Engine::OnTriggerStateDecodingError() {
 	Engine *engine = this;
 	EXPAND_Engine;
-	if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
-#if EFI_TUNER_STUDIO
-		tsOutputChannels.debugIntField1 = triggerCentral.triggerState.currentCycle.eventCount[0];
-		tsOutputChannels.debugIntField2 = triggerCentral.triggerState.currentCycle.eventCount[1];
-		tsOutputChannels.debugIntField3 = triggerCentral.triggerState.currentCycle.eventCount[2];
-#endif /* EFI_TUNER_STUDIO */
-	}
 
 	warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d/%d expected %d/%d/%d",
 			triggerCentral.triggerState.currentCycle.eventCount[0],

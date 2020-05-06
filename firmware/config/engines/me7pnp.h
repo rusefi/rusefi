@@ -1,5 +1,5 @@
 /*
- * me7pnp.h
+ * @file me7pnp.h
  *
  *  Created on: 1. mai 2019
  *      Author: Ola

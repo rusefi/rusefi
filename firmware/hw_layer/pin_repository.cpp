@@ -16,16 +16,12 @@
 #include "eficonsole.h"
 #include "memstreams.h"
 #include "drivers/gpio/gpio_ext.h"
-#include "tle8888.h"
-
-#ifndef BOARD_EXT_PINREPOPINS
-	#define BOARD_EXT_PINREPOPINS 0
-#endif
-
-static bool initialized = false;
+#include "smart_gpio.h"
+#include "hardware.h"
 
 static LoggingWithStorage logger("pin repos");
-static int totalPinsUsed = 0;
+
+static PinRepository pinRepository;
 
 static int brainPin_to_index(brain_pin_e brainPin)
 {
@@ -36,6 +32,25 @@ static int brainPin_to_index(brain_pin_e brainPin)
 
 	index = brainPin - GPIOA_0;
 
+	if ((unsigned)index < getNumBrainPins())
+		return index;
+
+	/* gpiochips magic: skip gates for absent chips */
+#ifdef TLE8888_PIN_1
+	if ((brainPin >= TLE8888_PIN_1) && (BOARD_TLE8888_COUNT == 0))
+		index -= (TLE8888_PIN_28 -TLE8888_PIN_1 + 1);
+#endif
+
+#ifdef MC33972_PIN_1
+	if ((brainPin >= MC33972_PIN_1) && (BOARD_MC33972_COUNT == 0))
+		index -= (MC33972_PIN_22 - MC33972_PIN_1 + 1);
+#endif
+
+#ifdef TLE6240_PIN_1
+	if ((brainPin >= TLE6240_PIN_1) && (BOARD_TLE6240_COUNT == 0))
+		index -= (TLE6240_PIN_16 - TLE6240_PIN_1 + 1);
+#endif
+
 	/* if index outside array boundary */
 	if ((unsigned)index >= getNumBrainPins() + BOARD_EXT_PINREPOPINS)
 		return -1;
@@ -43,16 +58,43 @@ static int brainPin_to_index(brain_pin_e brainPin)
 	return index;
 }
 
-static brain_pin_e index_to_brainPin(int i)
+static brain_pin_e index_to_brainPin(unsigned int i)
 {
-	return (brain_pin_e)((int)GPIOA_0 + i);
+	brain_pin_e brainPin = (brain_pin_e)((int)GPIOA_0 + i);
+
+	/* on-chip pins */
+	if (i < getNumBrainPins())
+		return brainPin;
+
+	/* gpiochips magic: skip absent chips */
+#ifdef TLE6240_PIN_1
+	if (BOARD_TLE6240_COUNT == 0)
+		brainPin += (TLE6240_PIN_16 - TLE6240_PIN_1 + 1);
+#endif
+
+#ifdef MC33972_PIN_1
+	if (BOARD_MC33972_COUNT == 0)
+		brainPin += (MC33972_PIN_22 - MC33972_PIN_1 + 1);
+#endif
+
+#ifdef TLE8888_PIN_1
+	if (BOARD_TLE8888_COUNT == 0)
+		brainPin += (TLE8888_PIN_28 -TLE8888_PIN_1 + 1);
+#endif
+
+	return brainPin;
 }
+
+static MemoryStream portNameStream;
+static char portNameBuffer[20];
 
 PinRepository::PinRepository() {
+	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
+
+	initBrainUsedPins();
 }
 
-static PinRepository instance;
-
+#if (BOARD_TLE8888_COUNT > 0)
 /* DEBUG */
 extern "C" {
 	extern void tle8888_read_reg(uint16_t reg, uint16_t *val);
@@ -72,6 +114,7 @@ void tle8888_dump_regs(void)
 		scheduleMsg(&logger, "%02x: %02x", response, data);
 	}
 }
+#endif
 
 static void reportPins(void) {
 	for (unsigned int i = 0; i < getNumBrainPins(); i++) {
@@ -129,11 +172,14 @@ static void reportPins(void) {
 		}
 	#endif
 
-	scheduleMsg(&logger, "Total pins count: %d", totalPinsUsed);
+	scheduleMsg(&logger, "Total pins count: %d", pinRepository.totalPinsUsed);
 }
 
-static MemoryStream portNameStream;
-static char portNameBuffer[20];
+void printSpiConfig(Logging *logging, const char *msg, spi_device_e device) {
+	scheduleMsg(logging, "%s %s mosi=%s", msg, getSpi_device_e(device), hwPortname(getMosiPin(device)));
+	scheduleMsg(logging, "%s %s miso=%s", msg, getSpi_device_e(device), hwPortname(getMisoPin(device)));
+	scheduleMsg(logging, "%s %s sck=%s",  msg, getSpi_device_e(device), hwPortname(getSckPin(device)));
+}
 
 const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
@@ -175,12 +221,6 @@ void initPinRepository(void) {
 	 * this method cannot use console because this method is invoked before console is initialized
 	 */
 
-	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
-
-	initBrainUsedPins();
-
-	initialized = true;
-
 	addConsoleAction(CMD_PINS, reportPins);
 
 #if (BOARD_TLE8888_COUNT > 0)
@@ -211,11 +251,6 @@ bool brain_pin_is_ext(brain_pin_e brainPin)
  */
 
 bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return false;
-	}
-
 #if ! EFI_BOOTLOADER
 	scheduleMsg(&logger, "%s on %s", msg, hwPortname(brainPin));
 #endif
@@ -231,12 +266,12 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 		 * connected, so the warning is never displayed on the console and that's quite a problem!
 		 */
 //		warning(OBD_PCM_Processor_Fault, "brain pin %d req by %s used by %s", brainPin, msg, getBrainUsedPin(index));
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by %s but is used by %s", hwPortname(brainPin), msg, getBrainUsedPin(index));
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by \"%s\" but is used by \"%s\"", hwPortname(brainPin), msg, getBrainUsedPin(index));
 		return true;
 	}
 
 	getBrainUsedPin(index) = msg;
-	totalPinsUsed++;
+	pinRepository.totalPinsUsed++;
 	return false;
 }
 
@@ -245,19 +280,12 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
  */
 
 void brain_pin_markUnused(brain_pin_e brainPin) {
-	int index;
-
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return;
-	}
-
-	index = brainPin_to_index(brainPin);
+	int index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return;
 
 	if (getBrainUsedPin(index) != NULL)
-		totalPinsUsed--;
+		pinRepository.totalPinsUsed--;
 	getBrainUsedPin(index) = nullptr;
 }
 
@@ -267,10 +295,6 @@ void brain_pin_markUnused(brain_pin_e brainPin) {
  */
 
 bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return false;
-	}
 	int index = getBrainIndex(port, pin);
 
 	if (getBrainUsedPin(index) != NULL) {
@@ -283,7 +307,7 @@ bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 		return true;
 	}
 	getBrainUsedPin(index) = msg;
-	totalPinsUsed++;
+	pinRepository.totalPinsUsed++;
 	return false;
 }
 
@@ -293,14 +317,10 @@ bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
  */
 
 void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return;
-	}
 	int index = getBrainIndex(port, pin);
 
 	if (getBrainUsedPin(index) != NULL)
-		totalPinsUsed--;
+		pinRepository.totalPinsUsed--;
 	getBrainUsedPin(index) = nullptr;
 }
 

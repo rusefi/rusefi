@@ -29,6 +29,7 @@
 #include "engine_math.h"
 #include "speed_density.h"
 #include "advance_map.h"
+#include "sensor.h"
 
 #include "hip9011_lookup.h"
 #if EFI_MEMS
@@ -66,6 +67,7 @@
 #include "test_engine.h"
 #include "sachs.h"
 #include "vw.h"
+#include "me7pnp.h"
 #include "vw_b6.h"
 #include "daihatsu.h"
 #include "chevrolet_camaro_4.h"
@@ -100,7 +102,7 @@
 #endif /* EFI_PROD_CODE */
 
 #if EFI_EMULATE_POSITION_SENSORS
-#include "trigger_emulator.h"
+#include "trigger_emulator_algo.h"
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
 #if EFI_TUNER_STUDIO
@@ -143,7 +145,7 @@ static fuel_table_t alphaNfuel = {
  * todo: place this field next to 'engineConfiguration'?
  */
 #ifdef EFI_ACTIVE_CONFIGURATION_IN_FLASH
-#include "flash.h"
+#include "flash_int.h"
 engine_configuration_s & activeConfiguration = reinterpret_cast<persistent_config_container_s*>(getFlashAddrFirstCopy())->persistentConfiguration.engineConfiguration;
 // we cannot use this activeConfiguration until we call rememberCurrentConfiguration()
 bool isActiveConfigurationVoid = true;
@@ -365,8 +367,6 @@ void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_10;
 	engineConfiguration->binarySerialRxPin = GPIOC_11;
-	engineConfiguration->consoleSerialTxPin = GPIOC_10;
-	engineConfiguration->consoleSerialRxPin = GPIOC_11;
 	engineConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = 115200;
 
@@ -608,14 +608,11 @@ void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
 }
 
 int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	float clt = getCoolantTemperature();
-	int targetRpm;
-	if (!hasCltSensor()) {
-		// error is already reported, let's take first value from the table should be good enough error handing solution
-		targetRpm = CONFIG(cltIdleRpm)[0];
-	} else {
-		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
-	}
+	// error is already reported, let's take the value at 0C since that should be a nice high idle
+	float clt = Sensor::get(SensorType::Clt).value_or(0);
+
+	int targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
+
 	return targetRpm + engine->fsioState.fsioIdleTargetRPMAdjustment;
 }
 
@@ -628,6 +625,34 @@ void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->multisparkMaxRpm = 1500;
 	engineConfiguration->multisparkMaxExtraSparkCount = 2;
 	engineConfiguration->multisparkMaxSparkingAngle = 30;
+}
+
+void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// Same config for all channels
+	for (size_t i = 0; i < efi::size(CONFIG(gppwm)); i++) {
+		auto& cfg = CONFIG(gppwm)[i];
+
+		cfg.pin = GPIO_UNASSIGNED;
+		cfg.dutyIfError = 0;
+		cfg.onAboveDuty = 60;
+		cfg.offBelowDuty = 50;
+		cfg.pwmFrequency = 250;
+
+		for (size_t j = 0; j < efi::size(cfg.loadBins); j++) {
+			uint8_t z = j * 100 / (efi::size(cfg.loadBins) - 1);
+			cfg.loadBins[j] = z;
+
+			// Fill some values in the table
+			for (size_t k = 0; k < efi::size(cfg.rpmBins); k++) {
+				cfg.table[j][k] = z;
+			}
+			
+		}
+
+		for (size_t j = 0; j < efi::size(cfg.rpmBins); j++) {
+			cfg.rpmBins[j] = 1000 * j / RPM_1_BYTE_PACKING_MULT;
+		}
+	}
 }
 
 /**
@@ -698,7 +723,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
 
-	engineConfiguration->postCrankingTargetClt = 25;
 	engineConfiguration->postCrankingDurationSec = 2;
 
 	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
@@ -873,6 +897,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setDefaultMultisparkParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	setDefaultGppwmParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if !EFI_UNIT_TEST
 	engineConfiguration->analogInputDividerCoefficient = 2;
 #endif
@@ -923,7 +949,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->mapHighValueVoltage = 5;
 
 	engineConfiguration->logFormat = LF_NATIVE;
-	engineConfiguration->directSelfStimulation = false;
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
@@ -1116,9 +1141,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	setBoardConfigurationOverrides();
 #endif
 
-#if EFI_SIMULATOR
-	engineConfiguration->directSelfStimulation = true;
-#endif /* */
 	engineConfiguration->engineType = engineType;
 
 	/**
@@ -1321,6 +1343,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case TOYOTA_JZS147:
 		setToyota_jzs147EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case VAG_18_TURBO:
+		vag_18_Turbo(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case TEST_33816:
 		setTest33816EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1432,3 +1457,8 @@ void copyTimingTable(ignition_table_t const source, ignition_table_t destination
 	}
 }
 
+static const ConfigOverrides defaultConfigOverrides{};
+// This symbol is weak so that a board_configuration.cpp file can override it
+__attribute__((weak)) const ConfigOverrides& getConfigOverrides() {
+	return defaultConfigOverrides;
+}

@@ -111,7 +111,7 @@
  * @brief   Enables the PWM subsystem.
  */
 #if !defined(HAL_USE_PWM) || defined(__DOXYGEN__)
-#define HAL_USE_PWM                 TRUE
+#define HAL_USE_PWM                 FALSE
 #endif
 
 /**
@@ -171,12 +171,18 @@
 #endif
 
 /**
- * @brief   Enables the Comparator subsystem.
+ * @brief   Enables the community overlay.
+ */
+#if !defined(HAL_USE_COMMUNITY) || defined(__DOXYGEN__)
+#define HAL_USE_COMMUNITY           TRUE
+#endif
+
+/**
+ * @brief   Enables the TIMCAP subsystem.
  */
 #if !defined(HAL_USE_COMP) || defined(__DOXYGEN__)
 #define HAL_USE_COMP                TRUE
 #endif
-
 
 /*===========================================================================*/
 /* PAL driver related settings.                                              */

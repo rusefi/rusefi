@@ -21,6 +21,7 @@
 #include "fuel_math.h"
 #include "spark_logic.h"
 #include "trigger_universal.h"
+#include "sensor.h"
 
 extern float testMafValue;
 extern WarningCodeState unitTestWarningCodeState;
@@ -152,6 +153,8 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
+	Sensor::setMockValue(SensorType::Iat, 49.579071f);
+
 	TriggerWaveform * shape = &engine->triggerCentral.triggerShape;
 
 	ASSERT_EQ( 0,  shape->getTriggerWaveformSynchPointIndex()) << "triggerShapeSynchPointIndex";
@@ -245,21 +248,17 @@ static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPo
 }
 
 TEST(misc, testStartupFuelPumping) {
-	printf("*************************************************** testStartupFuelPumping\r\n");
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
 	StartupFuelPumping sf;
 
 	engine->rpmCalculator.mockRpm = 0;
 
-	engineConfiguration->tpsMin = 0;
-	engineConfiguration->tpsMax = 10;
-
-	setMockTpsAdc(6 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 60);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#1";
 
-	setMockTpsAdc(3 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pumpsCounter#2";
 
@@ -270,16 +269,16 @@ TEST(misc, testStartupFuelPumping) {
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 0,  sf.pumpsCounter) << "pc#4";
 
-	setMockTpsAdc(7 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 70);
 	engine->rpmCalculator.mockRpm = 0;
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#5";
 
-	setMockTpsAdc(3 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#6";
 
-	setMockTpsAdc(7 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 70);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 2,  sf.pumpsCounter) << "pc#7";
 }
@@ -443,9 +442,14 @@ TEST(misc, testRpmCalculator) {
 	engine->executor.clear();
 }
 
+TEST(misc, testAnotherTriggerDecoder) {
+	testTriggerDecoder2("Miata 2003", MAZDA_MIATA_2003, 3, 0.4444458, 0.0);
+}
+
 TEST(misc, testTriggerDecoder) {
 	printf("====================================================================================== testTriggerDecoder\r\n");
 
+	{
 	persistent_config_s c;
 	Engine e(&c);
 	TriggerWaveform * s = &e.triggerCentral.triggerShape;
@@ -463,6 +467,8 @@ TEST(misc, testTriggerDecoder) {
 	ASSERT_EQ(s->wave.switchTimes[2], 0.75);
 	ASSERT_EQ(s->wave.switchTimes[3], 1);
 
+	}
+
 	printf("====================================================================================== testTriggerDecoder part 2\r\n");
 	testDodgeNeonDecoder();
 	testTriggerDecoder2("Dodge Neon 1995", DODGE_NEON_1995, 8, 0.4931, 0.2070);
@@ -476,7 +482,6 @@ TEST(misc, testTriggerDecoder) {
 
 
 	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB1, 12, 0.0833, 0.0444);
-	testTriggerDecoder2("Miata 2003", MAZDA_MIATA_2003, 3, 0.0444, 0.0);
 
 	printf("====================================================================================== testTriggerDecoder part 3\r\n");
 	testTriggerDecoder2("Civic 4/0 both", TEST_CIVIC_4_0_BOTH, 0, 0.5000, 0.0);

@@ -43,7 +43,6 @@
 #define ADC_BUF_DEPTH_FAST      4
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
-static const char * adcHwChannelUsage[HW_MAX_ADC_INDEX];
 
 EXTERN_ENGINE;
 
@@ -70,16 +69,16 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
-#if !defined(PWM_FREQ_FAST) || !defined(PWM_PERIOD_FAST)
+#if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
 /**
  * 8000 RPM is 133Hz
  * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
  */
 // todo: migrate to continues ADC mode? probably not - we cannot afford the callback in
 // todo: continues mode. todo: look into our options
-#define PWM_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
-#define PWM_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
-#endif /* PWM_FREQ_FAST PWM_PERIOD_FAST */
+#define GPT_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
+#define GPT_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
+#endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
 
 // is there a reason to have this configurable at runtime?
 #ifndef ADC_SLOW_DEVICE
@@ -199,13 +198,9 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 
 AdcDevice fastAdc(&adcgrpcfg_fast);
 
-#if HAL_USE_PWM
-
-static void pwmpcb_fast(PWMDriver *pwmp) {
-	efiAssertVoid(CUSTOM_ERR_6659, getCurrentRemainingStack()> 32, "lwStAdcFast");
+#if HAL_USE_GPT
+static void fast_adc_callback(GPTDriver*) {
 #if EFI_INTERNAL_ADC
-	(void) pwmp;
-
 	/*
 	 * Starts an asynchronous ADC conversion operation, the conversion
 	 * will be executed in parallel to the current PWM cycle and will
@@ -229,7 +224,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 	fastAdc.conversionCount++;
 #endif /* EFI_INTERNAL_ADC */
 }
-#endif /* HAL_USE_PWM */
+#endif /* HAL_USE_GPT */
 
 float getMCUInternalTemperature(void) {
 #if defined(ADC_CHANNEL_SENSOR)
@@ -270,20 +265,13 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	return slowAdc.getAdcValueByHwChannel(hwChannel);
 }
 
-#if HAL_USE_PWM
-static PWMConfig pwmcfg_fast = { PWM_FREQ_FAST, PWM_PERIOD_FAST, pwmpcb_fast, { {
-PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL }, {
-PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
-/* HW dependent part.*/
-0, 0 };
-#endif /* HAL_USE_PWM */
-
-static void initAdcPin(brain_pin_e pin, const char *msg) {
-	UNUSED(msg);
-	// todo: migrate to scheduleMsg if we want this back print("adc %s\r\n", msg);
-
-	efiSetPadMode("adc input", pin, PAL_MODE_INPUT_ANALOG);
-}
+#if HAL_USE_GPT
+static GPTConfig fast_adc_config = {
+	GPT_FREQ_FAST,
+	fast_adc_callback,
+	0, 0
+};
+#endif /* HAL_USE_GPT */
 
 const char * getAdcMode(adc_channel_e hwChannel) {
 	if (slowAdc.isHwUsed(hwChannel)) {
@@ -293,12 +281,6 @@ const char * getAdcMode(adc_channel_e hwChannel) {
 		return "fast";
 	}
 	return "INACTIVE - need restart";
-}
-
-static void initAdcHwChannel(adc_channel_e hwChannel) {
-	brain_pin_e pin = getAdcChannelBrainPin("adc", hwChannel);
-
-	initAdcPin(pin, "hw");
 }
 
 int AdcDevice::size() const {
@@ -354,10 +336,11 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	// todo: support for more then 12 channels? not sure how needed it would be
 }
 
-void AdcDevice::enableChannelAndPin(adc_channel_e hwChannel) {
+void AdcDevice::enableChannelAndPin(const char *msg, adc_channel_e hwChannel) {
 	enableChannel(hwChannel);
 
-	initAdcHwChannel(hwChannel);
+	brain_pin_e pin = getAdcChannelBrainPin(msg, hwChannel);
+	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
 }
 
 static void printAdcValue(int channel) {
@@ -415,7 +398,7 @@ int getSlowAdcCounter() {
 class SlowAdcController : public PeriodicController<256> {
 public:
 	SlowAdcController() 
-		: PeriodicController("ADC", NORMALPRIO + 5, 200)
+		: PeriodicController("ADC", NORMALPRIO + 5, 500)
 	{
 	}
 
@@ -470,13 +453,10 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 		return;
 	}
 
-	if (adcHwChannelEnabled[setting] != ADC_OFF) {
-		getPinNameByAdcChannel(name, setting, errorMsgBuff);
-		firmwareError(CUSTOM_ERR_ADC_USED, "Analog input error: input \"%s\" selected for %s but was already used by %s", errorMsgBuff, name, adcHwChannelUsage[setting]);
-	}
-
-	adcHwChannelUsage[setting] = name;
 	adcHwChannelEnabled[setting] = mode;
+
+	AdcDevice& dev = (mode == ADC_SLOW) ? slowAdc : fastAdc;
+	dev.enableChannelAndPin(name, setting);
 }
 
 void removeChannel(const char *name, adc_channel_e setting) {
@@ -489,7 +469,6 @@ void removeChannel(const char *name, adc_channel_e setting) {
 
 static void configureInputs(void) {
 	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
-	memset(adcHwChannelUsage, 0, sizeof(adcHwChannelUsage));
 
 	/**
 	 * order of analog channels here is totally random and has no meaning
@@ -565,19 +544,6 @@ void initAdcInputs() {
 	adcStart(&ADC_FAST_DEVICE, NULL);
 	adcSTM32EnableTSVREFE(); // Internal temperature sensor
 
-	for (int adc = 0; adc < HW_MAX_ADC_INDEX; adc++) {
-		adc_channel_mode_e mode = adcHwChannelEnabled[adc];
-
-		/**
-		 * in board test mode all currently enabled ADC channels are running in slow mode
-		 */
-		if (mode == ADC_SLOW) {
-			slowAdc.enableChannelAndPin((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
-		} else if (mode == ADC_FAST) {
-			fastAdc.enableChannelAndPin((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
-		}
-	}
-
 #if defined(ADC_CHANNEL_SENSOR)
 	// Internal temperature sensor, Available on ADC1 only
 	slowAdc.enableChannel((adc_channel_e)ADC_CHANNEL_SENSOR);
@@ -593,10 +559,10 @@ void initAdcInputs() {
 		/*
 		 * Initializes the PWM driver.
 		 */
-#if HAL_USE_PWM
-		pwmStart(EFI_INTERNAL_FAST_ADC_PWM, &pwmcfg_fast);
-		pwmEnablePeriodicNotification(EFI_INTERNAL_FAST_ADC_PWM);
-#endif /* HAL_USE_PWM */
+#if HAL_USE_GPT
+		gptStart(EFI_INTERNAL_FAST_ADC_GPT, &fast_adc_config);
+		gptStartContinuous(EFI_INTERNAL_FAST_ADC_GPT, GPT_PERIOD_FAST);
+#endif /* HAL_USE_GPT */
 	}
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);

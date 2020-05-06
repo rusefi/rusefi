@@ -4,7 +4,14 @@
  *
  * @brief Configuration defaults for the microRusefi board
  *
- * See https://github.com/rusefi/rusefi_documentation/wiki/Hardware_microRusEfi_wiring
+ * MICRO_RUS_EFI
+ * set engine_type 60
+ *
+ * MRE_BOARD_TEST
+ * set engine_type 30
+ *
+ *
+ * See https://github.com/rusefi/rusefi/wiki/Hardware_microRusEfi_wiring
  *
  * @author Matthew Kennedy, (c) 2019
  */
@@ -18,10 +25,13 @@
 
 EXTERN_ENGINE;
 
+static const ConfigOverrides configOverrides = {
+	.canTxPin = GPIOB_6,
+	.canRxPin = GPIOB_12,
+};
 
-static void setupCanPins() {
-	engineConfiguration->canTxPin = GPIOB_6;
-	engineConfiguration->canRxPin = GPIOB_12;
+const ConfigOverrides& getConfigOverrides() {
+	return configOverrides;
 }
 
 static void setInjectorPins() {
@@ -109,29 +119,17 @@ static void setupEtb() {
 	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
-
-	// set_fsio_output_pin 7 PC8
-#if EFI_FSIO
-	// set_rpn_expression 8 "1"
-	// disable ETB by default
-	setFsio(7, GPIOC_8, "1" PASS_CONFIG_PARAMETER_SUFFIX);
-	// enable ETB
-	// set_rpn_expression 8 "0"
-	//setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
-
+	// Disable pin
+	engineConfiguration->etbIo[0].disablePin = GPIOC_8;
+	// Unused
+	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
 	// engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
-	// Unused
-	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
-
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
-
-	engineConfiguration->etbFreq = 800;
 }
 
 static void setupDefaultSensorInputs() {
@@ -170,11 +168,12 @@ void setPinConfigurationOverrides(void) {
 }
 
 void setSerialConfigurationOverrides(void) {
+	// why would MRE disable serial by default? we definitely have pads exposed
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
 }
 
 
@@ -192,7 +191,6 @@ void setBoardConfigurationOverrides(void) {
 	setupVbatt();
 	setupTle8888();
 	setupEtb();
-	setupCanPins();
 
 	// MRE has a special main relay control low side pin
 	// rusEfi firmware is totally not involved with main relay control on microRusEfi board

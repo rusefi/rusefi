@@ -24,7 +24,7 @@
 #include "trigger_simulator.h"
 
 #include "rpm_calculator.h"
-
+#include "tooth_logger.h"
 #include "perf_trace.h"
 
 #if EFI_PROD_CODE
@@ -41,6 +41,11 @@ WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
 trigger_central_s::trigger_central_s() : hwEventCounters() {
+
+	static_assert(TRIGGER_TYPE_60_2 == TT_TOOTHED_WHEEL_60_2, "One we will have one source of this magic constant");
+	static_assert(TRIGGER_TYPE_36_1 == TT_TOOTHED_WHEEL_36_1, "One we will have one source of this magic constant");
+
+
 
 }
 
@@ -88,7 +93,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 
 #define miataNb2VVTRatioFrom (8.50 * 0.75)
 #define miataNb2VVTRatioTo (14)
-
+#define miataNbIndex (0)
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	TriggerCentral *tc = &engine->triggerCentral;
@@ -98,15 +103,41 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		tc->vvtEventFallCounter++;
 	}
 
+	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
+		addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
+	}
 
-	addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
 	if (CONFIG(vvtCamSensorUseRise) ^ (front != TV_FALL)) {
 		return;
 	}
 
+	if (CONFIG(displayLogicLevelsInEngineSniffer)) {
+		if (CONFIG(vvtCamSensorUseRise)) {
+			// todo: unify TS composite logger code with console Engine Sniffer
+			// todo: better API to reduce copy/paste?
+#if EFI_TOOTH_LOGGER
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_TOOTH_LOGGER */
+			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_UP);
+			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_DOWN);
+		} else {
+#if EFI_TOOTH_LOGGER
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_TOOTH_LOGGER */
+
+			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_DOWN);
+			addEngineSnifferEvent(PROTOCOL_VVT_NAME, PROTOCOL_ES_UP);
+		}
+	}
+
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
 	if (cisnan(oneDegreeUs)) {
+		// todo: this code branch is slowing NB2 cranking since we require RPM sync for VVT sync!
+		// todo: smarter code
+		//
 		// we are here if we are getting VVT position signals while engine is not running
 		// for example if crank position sensor is broken :)
 		return;
@@ -138,6 +169,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		}
 	}
 
+	tc->vvtSyncTimeNt = nowNt;
 
 	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
 
@@ -180,7 +212,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
-		while (tc->triggerState.getTotalRevolutionCounter() % 4 != engineConfiguration->nbVvtIndex) {
+		while (tc->triggerState.getTotalRevolutionCounter() % 4 != miataNbIndex) {
 			tc->triggerState.incrementTotalEventCounter();
 		}
 	}
@@ -195,13 +227,20 @@ uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
 void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
-	ScopePerf perf(PE::HandleShaftSignal, static_cast<uint8_t>(signal));
+	ScopePerf perf(PE::HandleShaftSignal);
 
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
-	LogTriggerTooth(signal, timestamp);
+
+	bool logLogicState = CONFIG(displayLogicLevelsInEngineSniffer && engineConfiguration->useOnlyRisingEdgeForTrigger);
+
+	if (!logLogicState) {
+		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder
+		LogTriggerTooth(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+
 #endif /* EFI_TOOTH_LOGGER */
 
 	// for effective noise filtering, we need both signal edges, 
@@ -211,6 +250,18 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 			return;
 		}
 	}
+
+#if EFI_TOOTH_LOGGER
+	if (logLogicState) {
+		LogTriggerTooth(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		if (signal == SHAFT_PRIMARY_RISING) {
+			LogTriggerTooth(SHAFT_PRIMARY_FALLING, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		} else {
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		}
+	}
+#endif /* EFI_TOOTH_LOGGER */
+
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
@@ -404,7 +455,7 @@ static void triggerShapeInfo(void) {
 	scheduleMsg(logger, "useRise=%s", boolToString(TRIGGER_WAVEFORM(useRiseEdge)));
 	scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
 
-	for (int i = 0; i < s->getSize(); i++) {
+	for (size_t i = 0; i < s->getSize(); i++) {
 		scheduleMsg(logger, "event %d %.2f", i, s->eventAngles[i]);
 	}
 #endif
@@ -558,7 +609,7 @@ void triggerInfo(void) {
 			boolToString(ts->isSynchronizationNeeded),
 			boolToString(isTriggerDecoderError()), engine->triggerCentral.triggerState.totalTriggerErrorCounter,
 			engine->triggerCentral.triggerState.orderingErrorCounter, engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
-			boolToString(engineConfiguration->directSelfStimulation));
+			boolToString(engine->directSelfStimulation));
 
 	if (TRIGGER_WAVEFORM(isSynchronizationNeeded)) {
 		scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_WAVEFORM(syncronizationRatioFrom[0]), TRIGGER_WAVEFORM(syncronizationRatioTo[0]));
@@ -646,8 +697,7 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		isConfigurationChanged(vvtMode) ||
 		isConfigurationChanged(vvtCamSensorUseRise) ||
 		isConfigurationChanged(vvtOffset) ||
-		isConfigurationChanged(vvtDisplayInverted) ||
-		isConfigurationChanged(nbVvtIndex);
+		isConfigurationChanged(vvtDisplayInverted);
 	if (changed) {
 		assertEngineReference();
 

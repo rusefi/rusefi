@@ -261,7 +261,7 @@ static THD_FUNCTION(mc33972_driver_thread, p)
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int mc33972_readPad(void *data, unsigned int pin) {
+static int mc33972_readPad(void *data, unsigned int pin) {
 	struct mc33972_priv *chip;
 
 	if ((pin >= MC33972_INPUTS) || (data == NULL))
@@ -273,7 +273,7 @@ int mc33972_readPad(void *data, unsigned int pin) {
 	return !!(chip->i_state & FLAG_PIN(pin));
 }
 
-brain_pin_diag_e mc33972_getDiag(void *data, unsigned int pin) {
+static brain_pin_diag_e mc33972_getDiag(void *data, unsigned int pin) {
 	brain_pin_diag_e diag = PIN_OK;
 	struct mc33972_priv *chip;
 
@@ -289,7 +289,7 @@ brain_pin_diag_e mc33972_getDiag(void *data, unsigned int pin) {
 	return diag;
 }
 
-int mc33972_init(void * data)
+static int mc33972_init(void * data)
 {
 	int ret;
 	struct mc33972_priv *chip;
@@ -311,7 +311,7 @@ int mc33972_init(void * data)
 	return 0;
 }
 
-int mc33972_deinit(void *data)
+static int mc33972_deinit(void *data)
 {
 	(void)data;
 

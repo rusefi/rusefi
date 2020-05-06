@@ -13,7 +13,7 @@
 #include "flash_main.h"
 #include "eficonsole.h"
 
-#include "flash.h"
+#include "flash_int.h"
 #include "engine_math.h"
 
 // this message is part of console API, see FLASH_SUCCESS_MSG in java code
@@ -69,8 +69,8 @@ void writeToFlashIfPending() {
 template <typename TStorage>
 int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data)
 {
-	flashErase(storageAddress, sizeof(TStorage));
-	return flashWrite(storageAddress, reinterpret_cast<const char*>(&data), sizeof(TStorage));
+	intFlashErase(storageAddress, sizeof(TStorage));
+	return intFlashWrite(storageAddress, reinterpret_cast<const char*>(&data), sizeof(TStorage));
 }
 
 void writeToFlashNow(void) {
@@ -114,7 +114,7 @@ persisted_configuration_state_e flashState;
 
 static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, Logging * logger) {
 	printMsg(logger, "readFromFlash %x", address);
-	flashRead(address, (char *) &persistentState, sizeof(persistentState));
+	intFlashRead(address, (char *) &persistentState, sizeof(persistentState));
 
 	if (!isValidCrc(&persistentState)) {
 		return CRC_FAILED;
@@ -150,7 +150,7 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();
-	memset(persistentState.persistentConfiguration.critical_error_message, 0, ERROR_BUFFER_SIZE);
+	memset(persistentState.persistentConfiguration.warning_message , 0, ERROR_BUFFER_SIZE);
 	validateConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	return result;
 }

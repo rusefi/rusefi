@@ -26,6 +26,7 @@ ifeq ($(USE_OPT),)
   USE_OPT = -c -Wall -O0 -ggdb -g3
   USE_OPT += -fprofile-arcs -ftest-coverage
   USE_OPT += -Werror=missing-field-initializers
+  USE_OPT += -Wno-unused-parameter -Wno-unused-function
 endif
 
 
@@ -102,6 +103,7 @@ include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/util/util.mk
+include $(PROJECT_DIR)/init/init.mk
 include test.mk
 include tests/tests.mk
 
@@ -138,6 +140,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TRIGGER_SRC_CPP) \
+	$(INIT_SRC_CPP) \
 	$(PROJECT_DIR)/../unit_tests/main.cpp
 
 
@@ -175,6 +178,7 @@ INCDIR = . \
 	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/hw_layer/algo \
 	$(PROJECT_DIR)/hw_layer/sensors/ \
+	$(PROJECT_DIR)/init/ \
 	$(HW_LAYER_DRIVERS_INC) \
 	test_data_structures \
 	googletest/googlemock/include \

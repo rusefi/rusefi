@@ -9,9 +9,11 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.io.ConnectionStatus;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
+
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.IoUtil.getEnableCommand;
@@ -25,7 +27,7 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  * java -cp rusefi_console.jar com.rusefi.AutoTest
  *
  * @author Andrey Belomutskiy
- *         3/5/14
+ * 3/5/14
  */
 public class AutoTest {
     public static final int COMPLEX_COMMAND_RETRY = 10000;
@@ -48,6 +50,8 @@ public class AutoTest {
         sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
         sendCommand(getEnableCommand(Fields.CMD_FUNCTIONAL_TEST_MODE));
         testCustomEngine();
+        testVW_60_2();
+        testV12();
         testMazdaMiata2003();
         test2003DodgeNeon();
         testFordAspire();
@@ -64,6 +68,53 @@ public class AutoTest {
         testMazda626();
         testFord6();
         testFordFiesta();
+    }
+
+    private static Function<String, Object> FAIL = new Function<String, Object>() {
+        @Override
+        public Object apply(String errorCode) {
+            if (errorCode != null)
+                throw new IllegalStateException("Failed " + errorCode);
+            return null;
+        }
+    };
+
+    private static void testVW_60_2() {
+        setEngineType(32);
+        changeRpm(900);
+        // TODO: we shall get this RPM higher!
+        // first let's get to expected RPM
+        assertRpmDoesNotJump(3000, 15, 30, FAIL);
+    }
+
+    private static void testV12() {
+        setEngineType(40);
+        changeRpm(700);
+/*
+this is just too unreliable at this point :(
+        // TODO: we shall get this RPM higher!
+        // first let's get to expected RPM
+        assertRpmDoesNotJump(1700, 15, 30, FAIL);
+
+ */
+    }
+
+    public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback) {
+        changeRpm(rpm);
+        sleep(settleTime);
+        AtomicReference<String> result = new AtomicReference<>();
+        SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
+            @Override
+            public void onSensorUpdate(double value) {
+                double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+                if (!isCloseEnough(rpm, actualRpm))
+                    result.set("Got " + actualRpm + " while trying to stay at " + rpm);
+            }
+        };
+        SensorCentral.getInstance().addListener(Sensor.RPM, listener);
+        sleep(testDuration);
+        callback.apply(result.get());
+        SensorCentral.getInstance().removeListener(Sensor.RPM, listener);
     }
 
     private static void testCustomEngine() {
@@ -167,7 +218,7 @@ public class AutoTest {
         IoUtil.changeRpm(200);
         IoUtil.changeRpm(250); // another approach to artificial delay
         IoUtil.changeRpm(200);
-        assertEquals("VBatt",12, SensorCentral.getInstance().getValue(Sensor.VBATT));
+        assertEquals("VBatt", 12, SensorCentral.getInstance().getValue(Sensor.VBATT));
 
         chart = nextChart();
         double x = 100;
@@ -425,7 +476,7 @@ public class AutoTest {
         IoUtil.changeRpm(2400);
         IoUtil.changeRpm(2000);
         chart = nextChart();
-        assertEquals("MAP",69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
+        assertEquals("MAP", 69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
         //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
         x = 8.88;
         assertWave(false, msg + " fuel SD #1", chart, EngineChart.INJECTOR_1, 0.577, 0.1, 0.1, x + 180);

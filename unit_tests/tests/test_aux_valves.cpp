@@ -2,13 +2,16 @@
  * @file test_aux_valves.cpp
  *
  * @date: Nov 23, 2019
- * @Author: Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_test_helper.h"
 #include "aux_valves.h"
+#include "sensor.h"
 
 TEST(misc, testAuxValves) {
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+
 	WITH_ENGINE_TEST_HELPER(NISSAN_PRIMERA);
 
 	engine->needTdcCallback = false;

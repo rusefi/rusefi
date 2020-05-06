@@ -9,6 +9,12 @@
 
 #include "trigger_toyota.h"
 
+/**
+ * TT_2JZ_1_12
+ * One cam + 12 crank
+ * http://rusefi.com/images/triggers/trigger_29.png
+ */
+
 void initialize2jzGE1_12(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
@@ -43,6 +49,9 @@ void initialize2jzGE1_12(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 }
 
+/**
+ * https://rusefi.com/forum/viewtopic.php?f=5&t=1720
+ */
 void initialize2jzGE3_34(TriggerWaveform *s) {
 	setToothedWheelConfiguration(s, 36, 2, FOUR_STROKE_CRANK_SENSOR);
 

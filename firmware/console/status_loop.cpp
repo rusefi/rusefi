@@ -204,18 +204,7 @@ static void printSensors(Logging *log) {
 #endif
 	// why do we still send data into console in text mode?
 
-	if (hasCltSensor()) {
-		reportSensorF(log, "CLT", "C", getCoolantTemperature(), 2); // log column #4
-	}
-
-	SensorResult tps = Sensor::get(SensorType::Tps1);
-	if (tps) {
-		reportSensorF(log, "TPS", "%", tps.Value, 2); // log column #5
-	}
-
-	if (hasIatSensor()) {
-		reportSensorF(log, "IAT", "C", getIntakeAirTemperature(), 2); // log column #7
-	}
+	Sensor::showAllSensorInfo(log);
 
 	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		reportSensorF(log, GAUGE_NAME_VBAT, "V", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #6
@@ -363,9 +352,6 @@ static void printSensors(Logging *log) {
 		reportSensorF(log, GAUGE_NAME_FUEL_INJ_DUTY, "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 2);
 		reportSensorF(log, GAUGE_NAME_DWELL_DUTY, "%", getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 2);
 
-
-
-//	debugFloat(&logger, "tch", getTCharge1(tps), 2);
 
 	for (int i = 0;i<FSIO_ANALOG_INPUT_COUNT;i++) {
 		if (engineConfiguration->fsioAdc[i] != EFI_ADC_NONE) {
@@ -585,8 +571,6 @@ static void initStatusLeds(void) {
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
 
 	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
-	enginePins.debugTimerCallback.initPin("debug: timer callback", CONFIG(debugTimerCallback));
-	enginePins.debugSetTimer.initPin("debug: set timer", CONFIG(debugSetTimer));
 }
 
 #define BLINKING_PERIOD_MS 33
@@ -703,9 +687,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
 
-	float coolant = getCoolantTemperature();
-	float intake = getIntakeAirTemperature();
-
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// header
@@ -713,10 +694,20 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	// offset 0
 	tsOutputChannels->rpm = rpm;
-	// offset 4
-	tsOutputChannels->coolantTemperature = coolant;
-	// offset 8
-	tsOutputChannels->intakeAirTemperature = intake;
+
+	SensorResult clt = Sensor::get(SensorType::Clt);
+	tsOutputChannels->coolantTemperature = clt.Value;
+	tsOutputChannels->isCltError = !clt.Valid;
+
+	SensorResult iat = Sensor::get(SensorType::Iat);
+	tsOutputChannels->intakeAirTemperature = iat.Value;
+	tsOutputChannels->isIatError = !iat.Valid;
+
+	SensorResult auxTemp1 = Sensor::get(SensorType::AuxTemp1);
+	tsOutputChannels->auxTemp1 = auxTemp1.Value;
+
+	SensorResult auxTemp2 = Sensor::get(SensorType::AuxTemp2);
+	tsOutputChannels->auxTemp2 = auxTemp2.Value;
 
 	SensorResult tps1 = Sensor::get(SensorType::Tps1);
 	tsOutputChannels->throttlePosition = tps1.Value;
@@ -728,7 +719,15 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	tsOutputChannels->pedalPosition = pedal.Value;
-	tsOutputChannels->isPedalError = !pedal.Valid;
+	// Only report fail if you have one (many people don't)
+	tsOutputChannels->isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedal);
+
+	// Set raw sensors
+	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1);
+	tsOutputChannels->rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedal);
+	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
+	tsOutputChannels->rawIat = Sensor::getRaw(SensorType::Iat);
+	tsOutputChannels->rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
 
 	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
@@ -739,10 +738,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	}
 	// offset 24
 	tsOutputChannels->engineLoad = engineLoad;
-	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		// offset 28
-		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
+
+	// KLUDGE? we always show VBatt because Proteus board has VBatt input sensor hardcoded
+	// offset 28
+	tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// offset 36
 #if EFI_ANALOG_SENSORS
@@ -883,9 +882,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_VEHICLE_SPEED */
 #endif /* EFI_PROD_CODE */
 
-	tsOutputChannels->isCltError = !hasCltSensor();
-	tsOutputChannels->isIatError = !hasIatSensor();
-
 	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
 
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
@@ -919,11 +915,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_START_STOP:
 		tsOutputChannels->debugIntField1 = engine->startStopStateToggleCounter;
 		break;
-	case DBG_AUX_TEMPERATURE:
-		// // 68
-		tsOutputChannels->debugFloatField1 = engine->sensors.auxTemp1;
-		tsOutputChannels->debugFloatField2 = engine->sensors.auxTemp2;
-		break;
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = timeSeconds;
 		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
@@ -951,16 +942,21 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_TRIGGER_COUNTERS:
 		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
-		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
+// no one uses shaft so far		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
 #if EFI_PROD_CODE && HAL_USE_ICU == TRUE
+		tsOutputChannels->debugIntField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.vvtEventRiseCounter;
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.vvtEventFallCounter;
-		tsOutputChannels->debugFloatField5 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
 
 		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
 		tsOutputChannels->debugFloatField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);
-		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
+
+		tsOutputChannels->debugIntField4 = engine->triggerCentral.triggerState.currentCycle.eventCount[0];
+		tsOutputChannels->debugIntField5 = engine->triggerCentral.triggerState.currentCycle.eventCount[1];
+
+		// debugFloatField6 used
+		// no one uses shaft so far		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
 		break;
 	case DBG_FSIO_ADC:
 		// todo: implement a proper loop

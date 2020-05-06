@@ -33,10 +33,13 @@ static const char* s_sensorNames[] = {
 	"Acc Pedal Primary",
 	"Acc Pedal Secondary",
 
-	"Driver Acc Intent"
+	"Driver Acc Intent",
+
+	"Aux Temp 1",
+	"Aux Temp 2",
 };
 
-static_assert(efi::size(s_sensorNames) == efi::size(s_sensorNames));
+static_assert(efi::size(s_sensorNames) == efi::size(s_sensorRegistry));
 
 bool Sensor::Register() {
 	// Get a ref to where we should be
@@ -84,12 +87,12 @@ bool Sensor::Register() {
 
 	// Check if this is a valid sensor entry
 	if (!entry) {
-		return {false, 0.0f};
+		return unexpected;
 	}
 
 	// Next check for mock
 	if (entry->useMock) {
-		return {true, entry->mockValue};
+		return entry->mockValue;
 	}
 
 	// Get the sensor out of the entry
@@ -100,7 +103,7 @@ bool Sensor::Register() {
 	}
 
 	// We've exhausted all valid ways to return something - sensor not found.
-	return {false, 0};
+	return unexpected;
 }
 
 /*static*/ float Sensor::getRaw(SensorType type) {
@@ -118,6 +121,16 @@ bool Sensor::Register() {
 
 	// We've exhausted all valid ways to return something - sensor not found.
 	return 0;
+}
+
+/*static*/ bool Sensor::hasSensor(SensorType type) {
+	const auto entry = getEntryForType(type);
+
+	if (!entry) {
+		return false;
+	}
+
+	return entry->useMock || entry->sensor;
 }
 
 /*static*/ void Sensor::setMockValue(SensorType type, float value) {

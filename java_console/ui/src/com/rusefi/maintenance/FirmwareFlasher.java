@@ -5,8 +5,6 @@ import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 import static com.rusefi.Launcher.INPUT_FILES_PATH;
@@ -19,9 +17,8 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * 2/4/15
  */
 public class FirmwareFlasher {
-    // Even on Windows openOCD insists on "/" for path separator
-    public static final String IMAGE_FILE = INPUT_FILES_PATH + File.separator + "rusefi.bin";
-    public static final String IMAGE_NO_ASSERTS_FILE = INPUT_FILES_PATH + File.separator + "rusefi_no_asserts.bin";
+    public static final String IMAGE_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
+    public static final String IMAGE_NO_ASSERTS_FILE = INPUT_FILES_PATH + "/" + "rusefi_no_asserts.bin";
     /**
      * SWD ST-LINK/V2 mode
      */
@@ -35,10 +32,8 @@ public class FirmwareFlasher {
     public static final String DONE = "DONE!";
 
     private final JButton button;
-    private String fileName;
 
     public FirmwareFlasher(String fileName, String buttonTest, String tooltip) {
-        this.fileName = fileName;
         button = new JButton(buttonTest);
         button.setToolTipText(tooltip);
         button.addActionListener(event -> doUpdateFirmware(fileName, button));

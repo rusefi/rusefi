@@ -1,10 +1,10 @@
 /*
  * @file bmw_m73.cpp
  *
- * https://github.com/rusefi/rusefi_documentation/wiki/BMW_e38_750
+ * https://github.com/rusefi/rusefi/wiki/BMW_e38_750
  *
  * https://rusefi.com/wiki/index.php?title=Hardware:OEM_connectors#134_pin
- * https://github.com/rusefi/rusefi_documentation/wiki/HOWTO_electronic_throttle_body
+ * https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
  * Ignition module https://rusefi.com/forum/viewtopic.php?f=4&t=286
  *
  *
@@ -30,8 +30,8 @@
  * ECU pin 6:  GND             ECU
  * ECU pin 15: OUT         BLK injector #2
  * ECU pin 20: IN          WHT hall effect camshaft sensor signal
- * ECU pin 21: GND BRN     BLK CLT sensor
- * ECU pin 22: IN  RED/BRN GRN CLT sensor
+ * ECU pin 21: GND BRN     BLK CLT sensor (only on first ECU)
+ * ECU pin 22: IN  RED/BRN GRN CLT sensor (only on first ECU)
  * ECU pin 27: OUT         ORG injector #6
  * ECU pin 28: OUT         RED injector #5
  * ECU pin 32: IN          ORG VR positive crankshaft sensor - only 2x 5k per channel, R111 not installed, W1002 not installed
@@ -39,7 +39,7 @@
  * ECU pin 41: OUT BRN/WHT BLU injector #1
  * ECU pin 45: GND             crankshaft shield
  * ECU pin 46: IN  BLK     BLU VR negative crankshaft sensor
- *
+ * ECU pin 47: IN              IAT sensor (only on second ECU)
  *
  * Plug #4 40 pin
  * ECU pin 6:  IN              start signal from ignition key
@@ -79,6 +79,7 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.displacement = 5.4;
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
+	CONFIG(isFasterEngineSpinUpEnabled) = true;
 
 	engineConfiguration->vvtMode = VVT_FIRST_HALF;
 

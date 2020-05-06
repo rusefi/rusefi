@@ -25,7 +25,6 @@
 #include "bench_test.h"
 #include "engine.h"
 #include "tunerstudio.h"
-#include "trigger_emulator.h"
 #include "engine_controller.h"
 #include "map_averaging.h"
 #include "memstreams.h"
@@ -91,7 +90,6 @@ static void runChprintfTest() {
 
 void rusEfiFunctionalTest(void) {
 	printToConsole("Running rusEfi simulator version:");
-	initErrorHandlingDataStructures();
 	static char versionBuffer[20];
 	itoa10(versionBuffer, (int)getRusEfiVersion());
 	printToConsole(versionBuffer);
@@ -105,8 +103,6 @@ void rusEfiFunctionalTest(void) {
 	initTriggerDecoderLogger(&sharedLogger);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-	initIntermediateLoggingBuffer();
-
 	engine->setConfig(config);
 
 	initializeConsole(&sharedLogger);
@@ -118,6 +114,7 @@ void rusEfiFunctionalTest(void) {
 	// todo: reduce code duplication with initEngineContoller
 
 	resetConfigurationExt(NULL, FORD_ESCORT_GT PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->directSelfStimulation = true;
 
 	commonInitEngineController(&sharedLogger);
 

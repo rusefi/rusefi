@@ -48,6 +48,7 @@
 #include "event_queue.h"
 #include "engine.h"
 #include "perf_trace.h"
+#include "sensor.h"
 
 #include "backup_ram.h"
 
@@ -229,8 +230,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		prevOutputName = outputName;
 	}
 
+#if EFI_UNIT_TEST || EFI_SIMULATOR || EFI_PRINTF_FUEL_DETAILS
 	InjectorOutputPin *output = event->outputs[0];
-#if EFI_PRINTF_FUEL_DETAILS
 	printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
 			(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM_VALUE)));
 #endif /*EFI_PRINTF_FUEL_DETAILS */
@@ -275,8 +276,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_UNIT_TEST
 	if (GET_RPM_VALUE < CONFIG(fuelClosedLoopRpmThreshold) ||
-			getCoolantTemperature() < CONFIG(fuelClosedLoopCltThreshold) ||
-			getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(fuelClosedLoopTpsThreshold) ||
+			Sensor::get(SensorType::Clt).value_or(0) < CONFIG(fuelClosedLoopCltThreshold) ||
+			Sensor::get(SensorType::Tps1).value_or(100) > CONFIG(fuelClosedLoopTpsThreshold) ||
 			ENGINE(sensors.currentAfr) < CONFIG(fuelClosedLoopAfrLowThreshold) ||
 			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
 		engine->engineState.running.pidCorrection = 0;
@@ -323,7 +324,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::get(SensorType::Tps1).value_or(0) PASS_ENGINE_PARAMETER_SUFFIX));
 	if (trgEventIndex == 0) {
 		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
 		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -356,6 +357,14 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 	ScopePerf perf(PE::MainTriggerCallback);
 
 	(void) ckpSignalType;
+
+
+	if (engineConfiguration->vvtMode == MIATA_NB2 && engine->triggerCentral.vvtSyncTimeNt == 0) {
+		// this is a bit spaghetti code for sure
+		// do not spark & do not fuel until we have VVT sync. NB2 is a special case
+		// due to symmetrical crank wheel and we need to make sure no spark happens out of sync
+		return;
+	}
 
 	if (hasFirmwareError()) {
 		/**
@@ -453,7 +462,7 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE))
 		return true;
-	return CONFIG(isCylinderCleanupEnabled) && (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS);
+	return CONFIG(isCylinderCleanupEnabled) && (Sensor::get(SensorType::Tps1).value_or(0) > CLEANUP_MODE_TPS);
 }
 
 /**
@@ -490,7 +499,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
 		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, CONFIG(startOfCrankingPrimingPulse),
-			CONFIG(primeInjFalloffTemperature), 0.0f, getCoolantTemperature());
+			CONFIG(primeInjFalloffTemperature), 0.0f, Sensor::get(SensorType::Clt).value_or(70));
 		if (pulseLength > 0) {
 			startSimultaniousInjection(engine);
 			efitimeus_t turnOffDelayUs = (efitimeus_t)efiRound(MS2US(pulseLength), 1.0f);

@@ -27,9 +27,9 @@ Important note - we now use submodules:
 
 # External Links
 
- * Wiki: http://rusefi.com
  * Forum http://rusefi.com/forum
- * Documentation is now moving to https://github.com/rusefi/rusefi_documentation
+ * Documentation https://github.com/rusefi/rusefi/wiki
+ * Legacy Wiki: http://rusefi.com/wiki
  * Doxygen documentation is available at http://rusefi.com/docs/html
  * General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
  * Facebook https://www.facebook.com/rusEfiECU
@@ -44,6 +44,10 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 04/18/2020    | r22231    | Renix 44-2-2 trigger support added |
+| 04/02/2020    |           | Start button feature |
+| 03/28/2020    |           | Critical error text is now displayed in TunerStudio |
+| 03/26/2020    |           | Multi-spark feature |
 | 09/05/2019    | r19849    | Electronic Throttle Body including idle control seems to work |
 | 07/28/2019    | r19612    | improvement #809: software jump to DFU |
 | 04/25/2019    | r17317    | bugfix #775: electrical noise reboot during settings change causes with full tune loss |

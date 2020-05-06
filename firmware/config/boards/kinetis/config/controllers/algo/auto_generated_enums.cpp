@@ -117,6 +117,8 @@ case MT_SUBY_DENSO:
   return "MT_SUBY_DENSO";
 case MT_TOYOTA_89420_02010:
   return "MT_TOYOTA_89420_02010";
+case MT_BOSCH_2_5:
+  return "MT_BOSCH_2_5";
   }
  return NULL;
 }
@@ -354,6 +356,8 @@ case CAN_BUS_NBC_FIAT:
   return "CAN_BUS_NBC_FIAT";
 case CAN_BUS_NBC_VAG:
   return "CAN_BUS_NBC_VAG";
+case CAN_BUS_W202_C180:
+  return "CAN_BUS_W202_C180";
 case Internal_ForceMyEnumIntSize_can_nbc:
   return "Internal_ForceMyEnumIntSize_can_nbc";
   }
@@ -393,8 +397,8 @@ case DBG_START_STOP:
   return "DBG_START_STOP";
 case DBG_LAUNCH:
   return "DBG_LAUNCH";
-case DBG_39:
-  return "DBG_39";
+case DBG_ETB_AUTOTUNE:
+  return "DBG_ETB_AUTOTUNE";
 case DBG_40:
   return "DBG_40";
 case DBG_ALTERNATOR_PID:
@@ -405,8 +409,8 @@ case DBG_ANALOG_INPUTS2:
   return "DBG_ANALOG_INPUTS2";
 case DBG_AUX_PID_1:
   return "DBG_AUX_PID_1";
-case DBG_AUX_TEMPERATURE:
-  return "DBG_AUX_TEMPERATURE";
+case DBG_34:
+  return "DBG_34";
 case DBG_AUX_VALVES:
   return "DBG_AUX_VALVES";
 case DBG_BENCH_TEST:
@@ -461,8 +465,8 @@ case DBG_TPS_ACCEL:
   return "DBG_TPS_ACCEL";
 case DBG_TRIGGER_COUNTERS:
   return "DBG_TRIGGER_COUNTERS";
-case DBG_TRIGGER_SYNC:
-  return "DBG_TRIGGER_SYNC";
+case DBG_16:
+  return "DBG_16";
 case DBG_VEHICLE_SPEED_SENSOR:
   return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:
@@ -512,8 +516,6 @@ case Force_4_bytes_size_engine_load_mode:
   return "Force_4_bytes_size_engine_load_mode";
 case LM_ALPHA_N:
   return "LM_ALPHA_N";
-case LM_MAP:
-  return "LM_MAP";
 case LM_PLAIN_MAF:
   return "LM_PLAIN_MAF";
 case LM_REAL_MAF:
@@ -813,6 +815,8 @@ case FOUR_STROKE_CAM_SENSOR:
   return "FOUR_STROKE_CAM_SENSOR";
 case FOUR_STROKE_CRANK_SENSOR:
   return "FOUR_STROKE_CRANK_SENSOR";
+case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+  return "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR";
 case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
   return "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR";
 case Force_4_bytes_size_operation_mode_e:
@@ -1009,6 +1013,14 @@ case TT_MAZDA_MIATA_VVT_TEST:
   return "TT_MAZDA_MIATA_VVT_TEST";
 case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
+case TT_RENIX_66_2_2_2:
+  return "TT_RENIX_66_2_2_2";
+case TT_BOSCH_QUICK_START:
+  return "TT_BOSCH_QUICK_START";
+case TT_HONDA_K_12_1:
+  return "TT_HONDA_K_12_1";
+case TT_RENIX_44_2_2:
+  return "TT_RENIX_44_2_2";
 case TT_MIATA_NB2_VVT_CAM:
   return "TT_MIATA_NB2_VVT_CAM";
 case TT_MAZDA_Z5:

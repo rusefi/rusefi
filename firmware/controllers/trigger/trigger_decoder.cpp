@@ -7,8 +7,8 @@
  *
  *
  * enable trigger_details
- * DBG_TRIGGER_SYNC = 16
- * set debug_mode 16
+ * DBG_TRIGGER_COUNTERS = 5
+ * set debug_mode 5
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -335,7 +335,7 @@ bool TriggerState::isEvenRevolution() const {
 bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 	bool isDecodingError = false;
 	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-		isDecodingError |= currentCycle.eventCount[i] != triggerShape->expectedEventCount[i];
+		isDecodingError |= (currentCycle.eventCount[i] != triggerShape->expectedEventCount[i]);
 	}
 
 
@@ -352,7 +352,7 @@ bool TriggerState::validateEventCounters(TriggerWaveform *triggerShape) const {
 }
 
 void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycleCallback,
-		efitick_t nowNt, trigger_wheel_e triggerWheel, TriggerWaveform *triggerShape) {
+		efitick_t nowNt, TriggerWaveform *triggerShape) {
 
 
 	if (triggerCycleCallback) {
@@ -383,7 +383,7 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
 void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const TriggerStateCallback triggerCycleCallback,
 		TriggerStateListener * triggerStateListener,
 		trigger_event_e const signal, efitick_t nowNt DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	ScopePerf perf(PE::DecodeTriggerEvent, static_cast<uint8_t>(signal));
+	ScopePerf perf(PE::DecodeTriggerEvent);
 	
 	if (nowNt - previousShaftEventTimeNt > NT_PER_SECOND) {
 		/**
@@ -498,14 +498,13 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 		DISPLAY(DISPLAY_FIELD(vvtCamCounter));
 
 		if (triggerShape->isSynchronizationNeeded) {
-			// this is getting a little out of hand, any ideas?
 
 			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
 
-			if (CONFIG(debugMode) == DBG_TRIGGER_SYNC) {
+			if (CONFIG(debugMode) == DBG_TRIGGER_COUNTERS) {
 #if EFI_TUNER_STUDIO
-				tsOutputChannels.debugFloatField1 = currentGap;
-				tsOutputChannels.debugFloatField2 = currentCycle.current_index;
+				tsOutputChannels.debugFloatField6 = currentGap;
+				tsOutputChannels.debugIntField3 = currentCycle.current_index;
 #endif /* EFI_TUNER_STUDIO */
 			}
 
@@ -548,7 +547,8 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 						scheduleMsg(logger, "index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						scheduleMsg(logger, "time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
+						scheduleMsg(logger, "rpm=%d time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
+							GET_RPM(),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							i,
 							gap,
@@ -628,7 +628,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 			nextTriggerEvent()
 			;
 
-			onShaftSynchronization(triggerCycleCallback, nowNt, triggerWheel, triggerShape);
+			onShaftSynchronization(triggerCycleCallback, nowNt, triggerShape);
 
 		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()

@@ -29,22 +29,21 @@ FunctionalSensor pedalSensor(SensorType::AcceleratorPedal, MS2NT(10));
 // This sensor indicates the driver's throttle intent - Pedal if we have one, TPS if not.
 ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 
-static void configureTps(LinearFunc& func, float closed, float open) {
+static void configureTps(LinearFunc& func, float closed, float open, float min, float max) {
 	func.configure(
 		closed, 0,
 		open, 100, 
-		CONFIG(tpsErrorDetectionTooLow),
-		CONFIG(tpsErrorDetectionTooHigh)
+		min, max
 	);
 }
 
-static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open) {
+static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
 	// Only register if we have a sensor
 	if (channel == EFI_ADC_NONE) {
 		return false;
 	}
 
-	configureTps(func, closed, open);
+	configureTps(func, closed, open, min, max);
 
 	sensor.setFunction(func);
 
@@ -83,12 +82,15 @@ void initTps() {
 	}
 
 	if (!driverIntent.Register()) {
-		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate TPS registration for TPS sensor");
+		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for driver acc intent sensor");
 	}
 }
 
-void reconfigureTps() {
-	configureTps(tpsFunc1p, CONFIG(tpsMin), CONFIG(tpsMax));
-	configureTps(tpsFunc2p, CONFIG(tps2Min), CONFIG(tps2Max));
-	configureTps(pedalFunc, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage));
+void reconfigureTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	float min = CONFIG(tpsErrorDetectionTooLow);
+	float max = CONFIG(tpsErrorDetectionTooHigh);
+
+	configureTps(tpsFunc1p, CONFIG(tpsMin), CONFIG(tpsMax), min, max);
+	configureTps(tpsFunc2p, CONFIG(tps2Min), CONFIG(tps2Max), min, max);
+	configureTps(pedalFunc, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
 }

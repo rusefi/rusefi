@@ -14,6 +14,7 @@
 #include "global.h"
 #include "fsio_impl.h"
 #include "allsensors.h"
+#include "sensor.h"
 
 EXTERN_ENGINE;
 
@@ -41,13 +42,12 @@ fsio8_Map3D_u8t fsioTable2("fsio#2");
 fsio8_Map3D_u8t fsioTable3("fsio#3");
 fsio8_Map3D_u8t fsioTable4("fsio#4");
 
-extern pin_output_mode_e DEFAULT_OUTPUT;
-
 /**
  * Here we define all rusEfi-specific methods
  */
 static LENameOrdinalPair leRpm(LE_METHOD_RPM, "rpm");
 static LENameOrdinalPair leTps(LE_METHOD_TPS, "tps");
+static LENameOrdinalPair lePps(LE_METHOD_PPS, "pps");
 static LENameOrdinalPair leMaf(LE_METHOD_MAF, "maf");
 static LENameOrdinalPair leMap(LE_METHOD_MAP, "map");
 static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
@@ -59,10 +59,10 @@ static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 // @returns float number of seconds since last A/C toggle
 static LENameOrdinalPair leTimeSinceAcToggle(LE_METHOD_TIME_SINCE_AC_TOGGLE, "time_since_ac_on_switch");
 static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
-static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
-static LENameOrdinalPair leFsioTable(LE_METHOD_FSIO_TABLE, "fsio_table");
-static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, "fsio_analog_input");
-static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, "fsio_digital_input");
+static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, FSIO_METHOD_FSIO_SETTING);
+static LENameOrdinalPair leFsioTable(LE_METHOD_FSIO_TABLE, FSIO_METHOD_FSIO_TABLE);
+static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, FSIO_METHOD_FSIO_ANALOG_INPUT);
+static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, FSIO_METHOD_FSIO_DIGITAL_INPUT);
 static LENameOrdinalPair leKnock(LE_METHOD_KNOCK, "knock");
 static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
 static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
@@ -121,11 +121,11 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_AC_TOGGLE:
 		return getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_COOLANT:
-		return getCoolantTemperature();
+		return Sensor::get(SensorType::Clt).value_or(0);
 	case LE_METHOD_IS_COOLANT_BROKEN:
-		return engine->isCltBroken;
+		return !Sensor::get(SensorType::Clt).Valid;
 	case LE_METHOD_INTAKE_AIR:
-		return getIntakeAirTemperature();
+		return Sensor::get(SensorType::Iat).value_or(0);
 	case LE_METHOD_RPM:
 		return engine->rpmCalculator.getRpm();
 	case LE_METHOD_MAF:
@@ -149,9 +149,11 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engine->isInShutdownMode();
 	case LE_METHOD_VBATT:
 		return getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
+	case LE_METHOD_TPS:
+		return Sensor::get(SensorType::DriverThrottleIntent).value_or(0);
 #include "fsio_getters.def"
 	default:
-		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO unexpected %d", action);
+		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO ERROR no data for action=%d", action);
 		return NAN;
 	}
 }
@@ -160,7 +162,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 
 #include "pin_repository.h"
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 // todo: that's about bench test mode, wrong header for sure!
 #include "bench_test.h"
 
@@ -571,8 +573,11 @@ static void showFsioInfo(void) {
 			 * in case of FSIO user interface indexes are starting with 0, the argument for that
 			 * is the fact that the target audience is more software developers
 			 */
-			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%.2f", (i + 1), exp,
-					hwPortname(CONFIG(fsioOutputPins)[i]), CONFIG(fsioFrequency)[i],
+			int freq = CONFIG(fsioFrequency)[i];
+			const char *modeMessage = freq == 0 ? " (on/off mode)" : "";
+			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz%s value=%.2f", (i + 1), exp,
+					hwPortname(CONFIG(fsioOutputPins)[i]),
+					freq, modeMessage,
 					engine->fsioState.fsioLastValue[i]);
 //			scheduleMsg(logger, "user-defined #%d value=%.2f", i, engine->engineConfigurationPtr2->fsioLastValue[i]);
 			showFsio(NULL, state.fsioLogics[i]);
@@ -686,7 +691,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		if (brainPin != GPIO_UNASSIGNED) {
 			int frequency = CONFIG(fsioFrequency)[i];
 			if (frequency == 0) {
-				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), CONFIG(fsioOutputPins)[i], &DEFAULT_OUTPUT);
+				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), CONFIG(fsioOutputPins)[i]);
 			} else {
 				startSimplePwmExt(&fsioPwm[i], "FSIOpwm",
 						&engine->executor,
@@ -743,8 +748,9 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	// see FAN_CONTROL_LOGIC
 	if (CONFIG(fanPin) != GPIO_UNASSIGNED) {
-		enginePins.fanRelay.setValue((enginePins.fanRelay.getLogicValue() && (getCoolantTemperature() > engineConfiguration->fanOffTemperature)) || 
-			(getCoolantTemperature() > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
+		auto clt = Sensor::get(SensorType::Clt);
+		enginePins.fanRelay.setValue(!clt.Valid || (enginePins.fanRelay.getLogicValue() && (clt.Value > engineConfiguration->fanOffTemperature)) || 
+			(clt.Value > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
 	}
 	// see AC_RELAY_LOGIC
 	if (CONFIG(acRelayPin) != GPIO_UNASSIGNED) {

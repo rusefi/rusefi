@@ -90,17 +90,17 @@ void initialize_Mazda_Engine_z5_Shape(TriggerWaveform *s) {
 void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 
-	float o = 160;
+	float o = 40;
 
 	s->tdcPosition = 60 + 655;
 
 	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
 	// 384
-	s->addEvent720(o + 4 * 56.0f, T_PRIMARY, TV_FALL);
+	s->addEventAngle(o + 56.0f, T_PRIMARY, TV_FALL);
 	// 400
-	s->addEvent720(o + 4 * 60.0f, T_PRIMARY, TV_RISE);
-	s->addEvent720(o + 4 * 136.0f, T_PRIMARY, TV_FALL);
-	s->addEvent720(o + 4 * 140.0f, T_PRIMARY, TV_RISE);
+	s->addEventAngle(o + 60.0f, T_PRIMARY, TV_RISE);
+	s->addEventAngle(o + 136.0f, T_PRIMARY, TV_FALL);
+	s->addEventAngle(o + 140.0f, T_PRIMARY, TV_RISE);
 }
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float offset) {

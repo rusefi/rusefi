@@ -21,17 +21,31 @@ int icuFallingCallbackCounter = 0;
 
 #include "trigger_input.h"
 #include "digital_input_icu.h"
+#include "tooth_logger.h"
 
 EXTERN_ENGINE;
 
 static Logging *logger;
 
 static void vvtRisingCallback(void *) {
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt());
+	efitick_t now = getTimeNowNt();
+#if EFI_TOOTH_LOGGER
+	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
+		// real physical fronts go into engine sniffer
+		LogTriggerTooth(SHAFT_SECONDARY_RISING, now);
+	}
+#endif /* EFI_TOOTH_LOGGER */
+	hwHandleVvtCamSignal(TV_RISE, now);
 }
 
 static void vvtFallingCallback(void *) {
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt());
+	efitick_t now = getTimeNowNt();
+#if EFI_TOOTH_LOGGER
+	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
+		LogTriggerTooth(SHAFT_SECONDARY_FALLING, now);
+	}
+#endif /* EFI_TOOTH_LOGGER */
+	hwHandleVvtCamSignal(TV_FALL, now);
 }
 
 /**
@@ -89,7 +103,7 @@ int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 		return -1;
 	}
 
-	digital_input_s* input = startDigitalCapture("trigger", brainPin);
+	digital_input_s* input = startDigitalCapture(msg, brainPin);
 	if (input == NULL) {
 		/* error already reported */
 		return -1;
@@ -108,7 +122,6 @@ int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 }
 
 void icuTriggerTurnOffInputPin(brain_pin_e brainPin) {
-
 	stopDigitalCapture("trigger", brainPin);
 }
 

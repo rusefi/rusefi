@@ -10,5 +10,6 @@
     <orderEntry type="library" name="annotations" level="project" />
     <orderEntry type="library" name="jssc" level="project" />
     <orderEntry type="library" name="junit" level="project" />
+    <orderEntry type="module" module-name="inifile" />
   </component>
 </module>

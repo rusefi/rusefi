@@ -14,6 +14,7 @@
 #include "allsensors.h"
 #include "engine_controller.h"
 #include "advance_map.h"
+#include "sensor.h"
 
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
@@ -64,9 +65,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	engine->engineConfigurationPtr->iat.adcChannel = TEST_IAT_CHANNEL;
 	// magic voltage to get nice CLT
 	testCltValue = 1.492964;
-	//todosetMockCltVoltage(1.492964 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::Clt, 70);
 	// magic voltage to get nice IAT
 	testIatValue = 4.03646;
+	Sensor::setMockValue(SensorType::Iat, 30);
 
 	// this is needed to have valid CLT and IAT.
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
@@ -74,7 +76,14 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 }
 
-EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
+EngineTestHelper::EngineTestHelper(engine_type_e engineType, const std::unordered_map<SensorType, float>& sensorValues) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
+	for (const auto [s, v] : sensorValues) {
+		Sensor::setMockValue(s, v);
+	}
+}
+
+EngineTestHelper::~EngineTestHelper() {
+	Sensor::resetRegistry();
 }
 
 /**

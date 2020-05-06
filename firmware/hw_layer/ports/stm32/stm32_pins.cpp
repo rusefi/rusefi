@@ -9,6 +9,9 @@
 #include "global.h"
 #include "engine.h"
 #include "efi_gpio.h"
+#include "pin_repository.h"
+#include "io_pins.h"
+#include "smart_gpio.h"
 
 #if EFI_GPIO_HARDWARE
 
@@ -44,8 +47,6 @@ static ioportid_t ports[] = {GPIOA,
 // todo: move this into PinRepository class
 static const char *PIN_USED[PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS];
 
-#include "pin_repository.h"
-#include "io_pins.h"
 
 extern ioportid_t PORTS[];
 
