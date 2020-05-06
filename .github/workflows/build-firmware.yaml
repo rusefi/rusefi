@@ -24,7 +24,7 @@ jobs:
           - build-target: frankenso-pal
             efi-cpu: ARCH_STM32F4
             efi-board: st_stm32f4
-            target-extra-params: -DHAL_TRIGGER_USE_PAL=TRUE -DHAL_USE_ICU=FALSE -DEFI_VEHICLE_SPEED=FALSE -DEFI_LOGIC_ANALYZER=FALSE
+            target-extra-params: -DHAL_TRIGGER_USE_PAL=TRUE -DEFI_ICU_INPUTS=FALSE -DEFI_VEHICLE_SPEED=FALSE -DEFI_LOGIC_ANALYZER=FALSE
             
           - build-target: mre-f4
             efi-cpu: ARCH_STM32F4
