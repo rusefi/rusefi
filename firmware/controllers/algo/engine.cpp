@@ -145,6 +145,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	standardAirCharge = getStandardAirCharge(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if (BOARD_TLE8888_COUNT > 0)
 	if (CONFIG(useTLE8888_cranking_hack) && ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		efitick_t nowNt = getTimeNowNt();

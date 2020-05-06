@@ -554,7 +554,7 @@
 #define enableLaunchRetard_offset_hex 3d0
 #define enableVerboseCanTx_offset 744
 #define enableVerboseCanTx_offset_hex 2e8
-#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge"
+#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define engineChartSize_offset 1480
 #define engineChartSize_offset_hex 5c8
@@ -1356,17 +1356,6 @@
 #define ignitionMode_offset_hex 1b8
 #define ignitionOffset_offset 444
 #define ignitionOffset_offset_hex 1bc
-#define ignitionPin10logic 
-#define ignitionPin11logic 
-#define ignitionPin12logic 
-#define ignitionPin2logic || ((firingOrder == 2) || (firingOrder == 7) || (firingOrder == 9) || (firingOrder == 11) || (firingOrder == 12))
-#define ignitionPin3logic || ((firingOrder == 1) || (firingOrder == 3) || (firingOrder == 4) || (firingOrder == 5) || (firingOrder == 9))
-#define ignitionPin4logic || ((firingOrder == 5) || (firingOrder == 7) || (firingOrder == 12))
-#define ignitionPin5logic || ((firingOrder == 4) || (firingOrder == 12))
-#define ignitionPin6logic 
-#define ignitionPin7logic || ((firingOrder == 11))
-#define ignitionPin8logic || ((firingOrder == 5) || (firingOrder == 11))
-#define ignitionPin9logic 
 #define ignitionPinMode_offset 649
 #define ignitionPinMode_offset_hex 289
 #define ignitionPins10_offset 645
@@ -2302,8 +2291,8 @@
 #define unused_former_warmup_target_afr_offset_hex 834
 #define unusedAntilagTimeout_offset 820
 #define unusedAntilagTimeout_offset_hex 334
-#define unusedAtOldBoardConfigurationEnd_offset 1096
-#define unusedAtOldBoardConfigurationEnd_offset_hex 448
+#define unusedAtOldBoardConfigurationEnd_offset 1128
+#define unusedAtOldBoardConfigurationEnd_offset_hex 468
 #define unusedBit4_1476_offset 1476
 #define unusedBit4_1476_offset_hex 5c4
 #define unusedBit_251_10_offset 976
@@ -2453,6 +2442,9 @@
 #define vbattAdcChannel_offset_hex 201
 #define vbattDividerCoeff_offset 464
 #define vbattDividerCoeff_offset_hex 1d0
+#define VEHICLE_NAME_SIZE 32
+#define vehicleName_offset 1096
+#define vehicleName_offset_hex 448
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedCoef_offset_hex 1dc
 #define vehicleSpeedSensorInputPin_offset 968

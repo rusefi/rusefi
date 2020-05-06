@@ -104,9 +104,6 @@
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 
-//#define EFI_UART_ECHO_TEST_MODE TRUE
-
-
 #define EFI_ICU_INPUTS TRUE
 
 #ifndef HAL_TRIGGER_USE_PAL
@@ -311,7 +308,7 @@
  */
 #define TS_UART_DMA_MODE FALSE
 
-#define TS_UART_DEVICE (&UARTD3)
+//#define TS_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_DEVICE (&SD3)
 
 // todo: add DMA-mode for Console?
@@ -365,8 +362,6 @@
 #define EFI_CONSOLE_SERIAL_DEVICE (&SD1)
 //#define EFI_CONSOLE_SERIAL_DEVICE (&SDU1)
 #define EFI_UART_ECHO_TEST_MODE TRUE
-#define TS_UART_DEVICE (&UARTD3)
-#define TS_SERIAL_DEVICE (&SD3)
 
 // USART3 is Alternate Function 7, UART4 is AF8
 // todo: start using consoleSerial{Tx,Rx}Pin

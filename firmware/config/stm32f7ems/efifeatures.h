@@ -85,7 +85,8 @@
 #define TS_UART_DMA_MODE FALSE
 
 #undef TS_UART_DEVICE
-#define TS_UART_DEVICE (&UARTD3)
+//#define TS_UART_DEVICE (&UARTD3)
+
 #undef TS_SERIAL_DEVICE
 #define TS_SERIAL_DEVICE (&SD3)
 
