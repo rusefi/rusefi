@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 08:44:47 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 12:32:31 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1894,11 +1894,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 1096
 	 */
-	vehicle_name_t vehicleName;
+	vehicle_info_t engineMake;
 	/**
 	 * offset 1128
 	 */
-	int unusedAtOldBoardConfigurationEnd[84];
+	vehicle_info_t engineCode;
+	/**
+	 * offset 1160
+	 */
+	int unusedAtOldBoardConfigurationEnd[76];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -3435,4 +3439,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 08:44:47 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 12:32:31 EDT 2020
