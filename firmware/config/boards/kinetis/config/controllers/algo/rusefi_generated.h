@@ -291,8 +291,6 @@
 #define boostControlPinMode_offset_hex 3dd
 #define boostCutPressure_offset 2132
 #define boostCutPressure_offset_hex 854
-#define boostMapBins_offset 6312
-#define boostMapBins_offset_hex 18a8
 #define boostPid_dFactor_offset 1000
 #define boostPid_dFactor_offset_hex 3e8
 #define boostPid_iFactor_offset 996
@@ -2265,6 +2263,8 @@
 #define unused1476b20_offset_hex 5c4
 #define unused2432_offset 2432
 #define unused2432_offset_hex 980
+#define unused6312_offset 6312
+#define unused6312_offset_hex 18a8
 #define unused711_offset 711
 #define unused711_offset_hex 2c7
 #define unused76b0_offset 76
