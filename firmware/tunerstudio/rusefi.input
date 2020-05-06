@@ -1492,7 +1492,6 @@ cmd_test_inj14 = "w\x00\x13\x00\x0e"
 cmd_test_inj15 = "w\x00\x13\x00\x0f"
 cmd_test_inj16 = "w\x00\x13\x00\x10"
 
-; 		
 cmd_test_fuel_pump           = "w\x00\x14\x00\x01"
 cmd_calibrate_tps_1_closed   = "w\x00\x14\x00\x02"
 cmd_calibrate_tps_1_wot      = "w\x00\x14\x00\x03"
