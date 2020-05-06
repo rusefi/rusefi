@@ -217,7 +217,10 @@ void setMazdaMiataNbInjectorLag(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
+
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.8;
 
@@ -254,6 +257,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelRailPressure = 400; // 400 kPa, 58 psi
 	engineConfiguration->absoluteFuelPressure = true;
 
+	engineConfiguration->crankingIACposition = 90;
 
 	CONFIG(isAlternatorControlEnabled) = true;
 	// enable altdebug
@@ -273,6 +277,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].maxValue = 44;
 	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
 
+	engineConfiguration->vvtCamSensorUseRise = true;
 	// set vvt_mode 3
 	engineConfiguration->vvtMode = MIATA_NB2;
 	engineConfiguration->vvtOffset = 98; // 2003 red car value
@@ -338,7 +343,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
 
-	engineConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->vvtDisplayInverted = true;
 
 	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
@@ -381,8 +385,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
 	// set tps_max 540
 	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
-
-
 
 
 	engineConfiguration->malfunctionIndicatorPin = GPIOD_5;
@@ -432,9 +434,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->adcVcc = 3.3f;
 	engineConfiguration->vbattDividerCoeff = 8.80f;
-
-	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	// by the way NB2 MAF internal diameter is about 2.5 inches / 63mm
 	// 1K pull-down to read current from this MAF
@@ -498,7 +497,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	config->crankingFuelCoef[7] = 10;
 	config->crankingFuelBins[7] = 90;
 
-	engineConfiguration->crankingIACposition = 90;
 }
 
 /**
@@ -535,7 +533,6 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->camInputs[0] = GPIOA_5;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	/**
 	 * By default "auto detection mode for VR sensor signals" is used
 	 * We know that for short & strange Hall (?) signals like Miata NB2 crank sensor this does not work well above certain RPM.
@@ -630,5 +627,14 @@ void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  */
 void setMiataNB2_MRE_MTB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	// somehow MRE72 adapter 0.2 has TPS routed to pin 26?
+
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
+
+
+	// 1K pull-down to read current from this MAF
+	engineConfiguration->mafAdcChannel = EFI_ADC_13; // J30 AV5
+
 
 }

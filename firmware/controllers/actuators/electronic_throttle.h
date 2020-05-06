@@ -88,8 +88,14 @@ private:
 	efitick_t m_cycleStartTime = 0;
 	float m_minCycleTps = 0;
 	float m_maxCycleTps = 0;
-	float m_a = 0;
-	float m_tu = 0;
+	// Autotune measured parameters: gain and ultimate period
+	// These are set to correct order of magnitude starting points
+	// so we converge more quickly on the correct values
+	float m_a = 8;
+	float m_tu = 0.1f; 
+
+	uint8_t m_autotuneCounter = 0;
+	uint8_t m_autotuneCurrentParam = 0;
 };
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);

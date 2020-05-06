@@ -5,6 +5,10 @@
  *
  * https://github.com/rusefi/hw_modular/tree/master/cj125_Module
  *
+ *
+ * See vag_18_Turbo for test configuration
+ * set engine_type 102
+ *
  * @date: Jun 24, 2016
  * @author Andrey Belomutskiy, (c) 2012-2020
  *
@@ -166,26 +170,27 @@ static uint32_t get16bitFromVoltage(float v) {
 	return (uint32_t)(v * CJ125_VOLTAGE_TO_16BIT_FACTOR);
 }
 
-static void cjPrintState() {
-	scheduleMsg(logger, "cj125: state=%d diag=0x%x (vUa=%.3f vUr=%.3f) (vUaCal=%.3f vUrCal=%.3f)",
-			globalInstance.state, globalInstance.diag,
-			globalInstance.vUa, globalInstance.vUr,
-			globalInstance.vUaCal, globalInstance.vUrCal);
-}
-
-static void cjInfo() {
-	cjPrintState();
-#if HAL_USE_SPI
-	printSpiConfig(logger, "cj125", CONFIG(cj125SpiDevice));
-#endif /* HAL_USE_SPI */
-}
-
-static void cjPrintData() {
-#if ! EFI_UNIT_TEST
-	if (engineConfiguration->isCJ125Verbose) {
-		cjPrintState();
+static const char * getCjState(cj125_state_e stateCode) {
+	switch (stateCode) {
+	case CJ125_INIT:
+		return "INIT";
+	case CJ125_IDLE:
+		return "IDLE";
+	case CJ125_CALIBRATION:
+		return "CALIBRATION";
+	case CJ125_PREHEAT:
+		return "PREHEAT";
+	case CJ125_HEAT_UP:
+		return "HEAT UP";
+	case CJ125_READY:
+		return "READY";
+	case CJ125_OVERHEAT:
+		return "OVERHEAT";
+	case CJ125_ERROR:
+		return "ERROR";
+	default:
+		return "UNKNOWN";
 	}
-#endif /* EFI_UNIT_TEST */
 }
 
 static void cjPrintErrorCode(cj125_error_e errCode) {
@@ -211,6 +216,47 @@ static void cjPrintErrorCode(cj125_error_e errCode) {
 		break;
 	}
 	scheduleMsg(logger, "cj125 ERROR: %s.", errString);
+}
+
+static void cjPrintState() {
+	scheduleMsg(logger, "cj125: state=%s diag=0x%x (current Ua=%.3f Ur=%.3f) (calibration Ua=%.3f Ur=%.3f)",
+			getCjState(globalInstance.state), globalInstance.diag,
+			globalInstance.vUa, globalInstance.vUr,
+			globalInstance.vUaCal, globalInstance.vUrCal);
+
+	globalInstance.printDiag();
+
+	if (globalInstance.state == CJ125_ERROR) {
+		cjPrintErrorCode(globalInstance.errorCode);
+	}
+
+	scheduleMsg(logger, "cj125 P=%f I=%f D=%f",
+			globalInstance.heaterPidConfig.pFactor,
+			globalInstance.heaterPidConfig.iFactor,
+			globalInstance.heaterPidConfig.dFactor);
+}
+
+static void cjSetP(float value) {
+	globalInstance.heaterPidConfig.pFactor = value;
+}
+
+static void cjSetI(float value) {
+	globalInstance.heaterPidConfig.iFactor = value;
+}
+
+static void cjInfo() {
+	cjPrintState();
+#if HAL_USE_SPI
+	printSpiConfig(logger, "cj125", CONFIG(cj125SpiDevice));
+#endif /* HAL_USE_SPI */
+}
+
+static void cjPrintData() {
+#if ! EFI_UNIT_TEST
+	if (engineConfiguration->isCJ125Verbose) {
+		cjPrintState();
+	}
+#endif /* EFI_UNIT_TEST */
 }
 
 class RealSpi : public Cj125SpiStream {
@@ -240,12 +286,8 @@ static void cjUpdateAnalogValues() {
 #endif /* EFI_PROD_CODE */
 }
 
-void cjCalibrate(void) {
-	globalInstance.calibrate();
-}
-
-void CJ125::calibrate(void) {
-	cjIdentify();
+void CJ125::calibrate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	cjIdentify(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	scheduleMsg(logger, "cj125: Starting calibration...");
 	cjSetMode(CJ125_MODE_CALIBRATION);
@@ -309,7 +351,7 @@ static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 	
-	globalInstance.cjIdentify();
+	globalInstance.cjIdentify(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Load calibration values
 #if EFI_PROD_CODE
@@ -321,7 +363,10 @@ static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 	// if no calibration, try to calibrate now and store new values
 	if (storedLambda == 0 || storedHeater == 0) {
-		globalInstance.calibrate();
+		/**
+		 * open question if we need special considerations for calibration. Some controllers insist on open air calibration
+		 */
+		globalInstance.calibrate(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else {
 		scheduleMsg(logger, "cj125: Loading stored calibration data (%d %d)", storedLambda, storedHeater);
 		globalInstance.vUaCal = getVoltageFrom16bit(storedLambda);
@@ -386,7 +431,7 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		}
 
 		if (instance->state == CJ125_CALIBRATION) {
-			globalInstance.calibrate();
+			globalInstance.calibrate(PASS_ENGINE_PARAMETER_SIGNATURE);
 			// Start normal operation
 			instance->state = CJ125_INIT;
 			globalInstance.cjSetMode(CJ125_MODE_NORMAL_17);
@@ -447,9 +492,11 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 				 * So the simple trick is to inverse the error by swapping the target and input values.
 				 */
 				float duty = globalInstance.heaterPid.getOutput(globalInstance.vUr, globalInstance.vUrCal, MS2SEC(CJ125_TICK_DELAY));
-				globalInstance.heaterPid.showPidStatus(logger, "cj");
 				instance->SetHeater(duty PASS_ENGINE_PARAMETER_SUFFIX);
-				cjPrintData();
+				if (engineConfiguration->isCJ125Verbose) {
+					globalInstance.heaterPid.showPidStatus(logger, "cj heater");
+					cjPrintData();
+				}
 				instance->prevNt = nowNt;
 			}
 			break;
@@ -490,7 +537,7 @@ static bool cjCheckConfig(void) {
 	return true;
 }
 
-static void cjStartCalibration(void) {
+void cjStartCalibration(void) {
 	if (!cjCheckConfig())
 		return;
 	if (globalInstance.isWorkingState()) {
@@ -501,7 +548,7 @@ static void cjStartCalibration(void) {
 	globalInstance.state = CJ125_CALIBRATION;
 }
 
-static void cjRestart(void) {
+void cjRestart(void) {
 	if (!cjCheckConfig())
 		return;
 	globalInstance.state = CJ125_INIT;
@@ -600,6 +647,8 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #if ! EFI_UNIT_TEST
 	addConsoleAction("cj125_info", cjInfo);
+	addConsoleActionF("cj125_set_p", cjSetP);
+	addConsoleActionF("cj125_set_i", cjSetI);
 	addConsoleAction("cj125_restart", cjRestart);
 	addConsoleAction("cj125_calibrate", cjStartCalibration);
 

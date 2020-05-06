@@ -1718,7 +1718,7 @@ typedef enum {
 	CUSTOM_OBD_TRG_DECODING = 6035,
 	// todo: looks like following two errors always happen together, it's just timing affects which one is published?
 	CUSTOM_SYNC_ERROR = 6036,
-	CUSTOM_SYNC_COUNT_MISMATCH = 6037,
+	CUSTOM_6037 = 6037,
 	/**
 	 * This error happens if some pinout configuration changes were applied but ECU was not reset afterwards.
 	 */
@@ -1730,11 +1730,8 @@ typedef enum {
 	CUSTOM_OBD_LOCAL_FREEZE = 6042,
 	CUSTOM_6043 = 6043,
 	CUSTOM_LOGGING_BUFFER_OVERFLOW = 6044,
-	/**
-	 * This is not engine miss detection - this is only internal scheduler state validation
-	 * Should not happen
-	 */
-	CUSTOM_OBD_SKIPPED_SPARK = 6045,
+	CUSTOM_OBD_6045 = 6045,
+	CUSTOM_OBD_6046 = 6046,
 	CUSTOM_OBD_6047 = 6047,
 	CUSTOM_OBD_PIN_CONFLICT = 6048,
 	CUSTOM_OBD_LOW_FREQUENCY = 6049,
@@ -1825,7 +1822,7 @@ typedef enum {
 	CUSTOM_ERR_6129 = 6129,
 
 	CUSTOM_ERR_INVALID_PIN = 6130,
-	CUSTOM_ERR_PIN_REPO = 6131,
+	CUSTOM_ERR_6131 = 6131,
 	CUSTOM_ERR_UNKNOWN_PORT = 6132,
 	CUSTOM_ERR_PIN_ALREADY_USED_1 = 6133,
 	CUSTOM_ERR_PIN_ALREADY_USED_2 = 6134,
@@ -2099,6 +2096,12 @@ typedef enum {
 
 	CUSTOM_ERR_TRIGGER_SYNC = 9000,
 	CUSTOM_OBD_TRIGGER_WAVEFORM = 9001,
+	CUSTOM_SYNC_COUNT_MISMATCH = 9002,
+	/**
+	 * This is not engine miss detection - this is only internal scheduler state validation
+	 * Should not happen
+	 */
+	CUSTOM_OBD_SKIPPED_SPARK = 9009,
 	/**
 	 * This is not engine miss detection - this is only internal scheduler state validation
 	 * Should not happen

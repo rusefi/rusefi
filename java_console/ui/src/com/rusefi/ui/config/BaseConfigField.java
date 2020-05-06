@@ -6,7 +6,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.Field;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.io.ConnectionStatus;
+import com.rusefi.io.ConnectionStatusLogic;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -24,7 +24,7 @@ public abstract class BaseConfigField {
     }
 
     protected void requestInitialValue(final Field field) {
-        ConnectionStatus.INSTANCE.executeOnceConnected(() -> processInitialValue(field));
+        ConnectionStatusLogic.INSTANCE.executeOnceConnected(() -> processInitialValue(field));
     }
 
     private void processInitialValue(Field field) {

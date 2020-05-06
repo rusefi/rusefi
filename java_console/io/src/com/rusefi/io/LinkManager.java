@@ -154,7 +154,7 @@ public class LinkManager {
     }
 
     public static void restart() {
-        ConnectionStatus.INSTANCE.setValue(ConnectionStatus.Value.NOT_CONNECTED);
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
         connector.restart();
     }
 

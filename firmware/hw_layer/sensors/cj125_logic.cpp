@@ -61,6 +61,21 @@ static void printDiagCode(Logging * logging, const char *msg, int code, const ch
 	case 2:
 		scheduleMsg(logging, "%s Short to Vbatt", msg);
 		return;
+	case 3:
+		scheduleMsg(logging, "%s LOOKS GOOD", msg);
+		return;
+	}
+}
+
+void CJ125::printDiag() {
+	if (diag == CJ125_DIAG_NORM) {
+		scheduleMsg(logger, "cj125: diag Looks great!");
+	} else {
+		scheduleMsg(logger, "cj125: diag NOT GOOD");
+		printDiagCode(logger, "VM", diag, LOW_VOLTAGE);
+		printDiagCode(logger, "UN", diag >> 2, LOW_VOLTAGE);
+		printDiagCode(logger, "IA", diag >> 4, LOW_VOLTAGE);
+		printDiagCode(logger, "HR", diag >> 6, "open load");
 	}
 }
 
@@ -68,7 +83,7 @@ static void printDiagCode(Logging * logging, const char *msg, int code, const ch
  * @return true in case of positive SPI identification
  *         false in case of unexpected SPI response
  */
-bool CJ125::cjIdentify(void) {
+bool CJ125::cjIdentify(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssert(OBD_PCM_Processor_Fault, spi!= NULL, "No SPI pointer", false);
 	// read Ident register
 	int ident = spi->ReadRegister(IDENT_REG_RD) & CJ125_IDENT_MASK;
@@ -84,24 +99,15 @@ bool CJ125::cjIdentify(void) {
 	scheduleMsg(logger, "cj125: Check ident=0x%x diag=0x%x init1=0x%x init2=0x%x", ident, diag, init1, init2);
 	if (ident != CJ125_IDENT) {
 		scheduleMsg(logger, "cj125: Error! Wrong ident! Cannot communicate with CJ125!");
-		errorCode = CJ125_ERROR_WRONG_IDENT;
-		state = CJ125_ERROR;
+		setError(CJ125_ERROR_WRONG_IDENT PASS_ENGINE_PARAMETER_SUFFIX);
 		return false;
 	}
 	if (init1 != CJ125_INIT1_NORMAL_17 || init2 != CJ125_INIT2_DIAG) {
 		scheduleMsg(logger, "cj125: Error! Cannot set init registers! Cannot communicate with CJ125!");
-		errorCode = CJ125_ERROR_WRONG_INIT;
-		state = CJ125_ERROR;
+		setError(CJ125_ERROR_WRONG_IDENT PASS_ENGINE_PARAMETER_SUFFIX);
 		return false;
 	}
-	if (diag == CJ125_DIAG_NORM) {
-		scheduleMsg(logger, "cj125: Looks great!");
-	} else {
-		printDiagCode(logger, "VM", diag, LOW_VOLTAGE);
-		printDiagCode(logger, "UN", diag >> 2, LOW_VOLTAGE);
-		printDiagCode(logger, "IA", diag >> 4, LOW_VOLTAGE);
-		printDiagCode(logger, "HR", diag >> 6, "open load");
-	}
+	printDiag();
 	return true;
 }
 
@@ -152,7 +158,8 @@ void CJ125::cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	heaterPidConfig.minValue = 0;
 	heaterPidConfig.maxValue = 1;
 	heaterPidConfig.offset = 0;
-	// todo: period?
-	heaterPidConfig.periodMs = 1.0f;
+	/**
+	 * See hard-coded CJ125_TICK_DELAY - we run PID at 50Hz
+	 */
 	heaterPid.reset();
 }

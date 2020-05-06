@@ -42,6 +42,7 @@ public enum Sensor {
     AFR("A/F ratio", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 34, 1.0 / PACK_MULT_AFR, BackgroundColor.MUD, 10, 20, "afr"),
 
     VBATT("VBatt", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 38, 1.0 / PACK_MULT_VOLTAGE, BackgroundColor.BEIGE, 4, 18, "Volts"),
+    oilPressure("Oil Pressure", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 40, 1.0 / PACK_MULT_PRESSURE, BackgroundColor.MUD, 0, 5, "X"),
     vvtPosition("vvt position", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 42, 1.0 / PACK_MULT_ANGLE, BackgroundColor.MUD, 0, 5, "deg"),
 
     // fuel math

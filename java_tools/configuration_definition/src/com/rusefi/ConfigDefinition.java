@@ -6,10 +6,12 @@ import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class ConfigDefinition {
     private static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
+    private static final String KEY_FIRING = "-firing_order";
     public static final String KEY_PREPEND = "-prepend";
     private static final String KEY_SKIP = "-skip";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
@@ -68,6 +71,8 @@ public class ConfigDefinition {
             );
             return;
         }
+
+        SystemOut.println("Invoked with " + Arrays.toString(args));
 
         String tsPath = null;
         String destCHeaderFileName = null;
@@ -109,6 +114,10 @@ public class ConfigDefinition {
                 destCDefinesFileName = args[i + 1];
             } else if (key.equals(KEY_JAVA_DESTINATION)) {
                 javaDestinationFileName = args[i + 1];
+            } else if (key.equals(KEY_FIRING)) {
+                String firingEnumFileName = args[i + 1];
+                SystemOut.println("Reading firing from " + firingEnumFileName);
+                VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
             } else if (key.equals(KEY_ROMRAIDER_DESTINATION)) {
                 romRaiderDestination = args[i + 1];
             } else if (key.equals(KEY_PREPEND)) {
@@ -124,7 +133,7 @@ public class ConfigDefinition {
 
         MESSAGE = getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
-        SystemOut.println("Reading from " + definitionInputFile);
+        SystemOut.println("Reading definition from " + definitionInputFile);
 
         String currentMD5 = getDefinitionMD5(definitionInputFile);
 

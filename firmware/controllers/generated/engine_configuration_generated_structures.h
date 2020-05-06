@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Apr 28 20:10:00 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 12:32:31 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -676,7 +676,8 @@ struct engine_configuration_s {
 	offset 76 bit 9 */
 	bool isCJ125Verbose : 1;
 	/**
-	 * Is your UA CJ125 output wired to MCU via resistor divider?
+	 * Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1
+	 * When exposed to free air and 17x gain, Ua will be 4.17 volt
 	offset 76 bit 10 */
 	bool cj125isUaDivided : 1;
 	/**
@@ -1331,6 +1332,7 @@ struct engine_configuration_s {
 	 */
 	int generalPeriodicThreadPeriodMs;
 	/**
+	 * Secondary TTL channel baud rate
 	 * offset 728
 	 */
 	uint32_t tunerStudioSerialSpeed;
@@ -1888,7 +1890,19 @@ struct engine_configuration_s {
 	/**
 	 * offset 1088
 	 */
-	int unusedAtOldBoardConfigurationEnd[94];
+	etb_io etbIo2[ETB_COUNT];
+	/**
+	 * offset 1096
+	 */
+	vehicle_info_t engineMake;
+	/**
+	 * offset 1128
+	 */
+	vehicle_info_t engineCode;
+	/**
+	 * offset 1160
+	 */
+	int unusedAtOldBoardConfigurationEnd[76];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -2334,6 +2348,7 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e runningLedPin;
 	/**
+	 * See also EFI_CONSOLE_RX_BRAIN_PIN
 	 * offset 1814
 	 */
 	brain_pin_e binarySerialTxPin;
@@ -2349,12 +2364,12 @@ struct engine_configuration_s {
 	 *  todo: finish pin migration from hard-coded to configurable?
 	 * offset 1818
 	 */
-	brain_pin_e consoleSerialTxPin;
+	brain_pin_e unusedConsoleSerialTxPin;
 	/**
 	 * todo: finish pin migration from hard-coded to configurable?
 	 * offset 1819
 	 */
-	brain_pin_e consoleSerialRxPin;
+	brain_pin_e unusedConsoleSerialRxPin;
 	/**
 	 * Knock sensor output knock detection threshold depending on current RPM
 	 * offset 1820
@@ -2477,6 +2492,7 @@ struct engine_configuration_s {
 	 */
 	float engineLoadAccelEnrichmentMultiplier;
 	/**
+	 * Band rate for primary TTL
 	 * offset 2076
 	 */
 	uint32_t uartConsoleSerialSpeed;
@@ -2652,12 +2668,12 @@ struct engine_configuration_s {
 	 */
 	float unused2432;
 	/**
-	 * Fuel multiplier taper, see also postCrankingDurationSec
+	 * Fuel multiplier (enrichment) immediately after engine start
 	 * offset 2436
 	 */
 	float postCrankingFactor;
 	/**
-	 * See also postCrankingFactor
+	 * Time over which to taper out after start enrichment
 	 * offset 2440
 	 */
 	float postCrankingDurationSec;
@@ -2796,7 +2812,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 2713
 	 */
-	uint8_t unusedSpiPadding5[3];
+	adc_channel_e auxVoltage1;
+	/**
+	 * offset 2714
+	 */
+	adc_channel_e auxVoltage2;
+	/**
+	 * offset 2715
+	 */
+	uint8_t unusedSpiPadding5;
 	/**
 	 * offset 2716
 	 */
@@ -3150,7 +3174,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6312
 	 */
-	uint8_t boostMapBins[BOOST_LOAD_COUNT];
+	uint8_t unused6312[8];
 	/**
 	 * offset 6320
 	 */
@@ -3415,4 +3439,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Apr 28 20:10:00 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 12:32:31 EDT 2020

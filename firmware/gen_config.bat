@@ -20,6 +20,7 @@ java -DSystemOut.name=gen_config ^
  -initialize_to_zero false ^
  -tool gen_config.bat ^
  -c_defines        controllers\generated\rusefi_generated.h ^
+ -firing_order controllers/algo/firing_order.h ^
  -c_destination    controllers\generated\engine_configuration_generated_structures.h ^
  -c_fsio_constants controllers\generated\fsio_enums_generated.def ^
  -c_fsio_getters   controllers\generated\fsio_getters.def ^

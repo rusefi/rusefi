@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.xml.*;
 
@@ -16,18 +15,20 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ScreenGenerator {
-    public static final String TS_DIALOG = "com.efiAnalytics.ui.dg";
-    public static final String PNG = "png";
-    private static final int MENU_CLICK_DELAY = 300;
-    private static final int TOP_MENU_CLICK_DELAY = 1000;
+    private static final String PNG = "png";
     private static ArrayList<AbstractButton> topLevelButtons = new ArrayList<>();
+
+    private static final int MENU_CLICK_DELAY = 50;
+    private static final int TOP_MENU_CLICK_DELAY = 200;
+    private static final int WAITING_FOR_FRAME_PERIOD = 1000;
+
 
     private static final String DESTINATION = "images" + File.separator;
 
-    static Content content = new Content();
+    static ContentModel contentModel = new ContentModel();
     static IniFileModel iniFileModel = new IniFileModel();
 
-    static Map<String, DialogModel.Field> byCleanUiName = new TreeMap<>();
+    static Map<String, com.opensr5.ini.DialogModel.Field> byCleanUiName = new TreeMap<>();
 
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
@@ -37,7 +38,7 @@ public class ScreenGenerator {
 
         iniFileModel.readIniFile(".");
 
-        for (Map.Entry<String, DialogModel.Field> a : iniFileModel.getAllFields().entrySet()) {
+        for (Map.Entry<String, com.opensr5.ini.DialogModel.Field> a : iniFileModel.getAllFields().entrySet()) {
             String cleanUiName = cleanName(a.getValue().getUiName());
             byCleanUiName.put(cleanUiName, a.getValue());
         }
@@ -49,16 +50,18 @@ public class ScreenGenerator {
         System.out.println("mkdirs " + DESTINATION);
         new File(DESTINATION).mkdirs();
 
-        System.out.println("Launching TunerStudioIntegraion");
-        Frame mainFrame = TunerStudioIntegraion.findMainFrame();
+        System.out.println("Launching TunerStudioIntegration");
+        Frame mainFrame = TunerStudioIntegration.findMainFrame();
 
         waitForMainFrame(mainFrame);
 
         System.out.println("Done discovering buttons, " + topLevelButtons.size());
 
+        Thread.sleep(2 * WAITING_FOR_FRAME_PERIOD); // we have this sleep to avoid an artifact on first screenshot
+
         handleTopLevelButtons(mainFrame, topLevelButtons);
 
-        XmlUtil.writeXml(content);
+        XmlUtil.writeXml(contentModel);
     }
 
     private static void waitForMainFrame(Frame mainFrame) throws InterruptedException {
@@ -68,47 +71,50 @@ public class ScreenGenerator {
                     AbstractButton ab = (AbstractButton) component;
                     System.out.println("topLevelButton " + ab.getText());
 
-                    if (TunerStudioIntegraion.isTopLevelMenuButton(component)) {
+                    if (TunerStudioIntegration.isTopLevelMenuButton(component)) {
                         topLevelButtons.add(ab);
                     }
                 }
             });
-            Thread.sleep(1000);
+            Thread.sleep(WAITING_FOR_FRAME_PERIOD);
         }
     }
 
     private static void handleTopLevelButtons(Frame frame, ArrayList<AbstractButton> topLevelButtons) throws Exception {
         for (AbstractButton topLevel : topLevelButtons) {
-            handleTopLevelButton(frame, topLevel, content);
+            handleTopLevelButton(frame, topLevel);
         }
     }
 
-    private static void handleTopLevelButton(Frame frame, AbstractButton topLevel, Content content) throws Exception {
+    private static void handleTopLevelButton(Frame frame, AbstractButton topLevel) throws Exception {
         SwingUtilities.invokeAndWait(topLevel::doClick);
         Thread.sleep(TOP_MENU_CLICK_DELAY);
 
-        TopLevelMenu topLevelMenu = new TopLevelMenu(topLevel.getText());
-        ScreenGenerator.content.getTopLevelMenus().add(topLevelMenu);
+
+        String imageName = "top_level_" + cleanName(topLevel.getText()) + "." + PNG;
+
+        TopLevelMenuModel topLevelMenuModel = new TopLevelMenuModel(topLevel.getText(), imageName);
+        ScreenGenerator.contentModel.getTopLevelMenus().add(topLevelMenuModel);
 
         ImageIO.write(
                 UiUtils.getScreenShot(frame),
-                "png",
-                new File(DESTINATION + cleanName(topLevel.getText()) + ".png"));
+                PNG,
+                new File(DESTINATION +  imageName));
 
-        List<JMenuItem> menuItems = TunerStudioIntegraion.findMenuItems(frame);
+        List<JMenuItem> menuItems = TunerStudioIntegration.findMenuItems(frame);
 
         for (JMenuItem menuItem : menuItems) {
-            handleMenuItem(menuItem, topLevelMenu);
+            handleMenuItem(menuItem, topLevelMenuModel);
         }
     }
 
-    private static void handleMenuItem(JMenuItem menuItem, TopLevelMenu topLevelMenu) throws InterruptedException, InvocationTargetException {
+    private static void handleMenuItem(JMenuItem menuItem, TopLevelMenuModel topLevelMenuModel) throws InterruptedException, InvocationTargetException {
         SwingUtilities.invokeAndWait(menuItem::doClick);
 
         Thread.sleep(MENU_CLICK_DELAY);
 
         AtomicReference<JDialog> ref = new AtomicReference<>();
-        SwingUtilities.invokeAndWait(() -> ref.set(TunerStudioIntegraion.findDynamicDialog()));
+        SwingUtilities.invokeAndWait(() -> ref.set(TunerStudioIntegration.findDynamicDialog()));
         // let's give it time to appear on the screen
         Thread.sleep(MENU_CLICK_DELAY);
         JDialog dialog = ref.get();
@@ -119,13 +125,13 @@ public class ScreenGenerator {
 
         String dialogTitle = dialog.getTitle();
 
-
-        DialogDescription dialogDescription = new DialogDescription(dialogTitle);
-        topLevelMenu.getDialogs().add(dialogDescription);
+        String imageName = "dialog_" + cleanName(dialogTitle) + "." + PNG;
+        DialogModel dialogModel = new DialogModel(dialogTitle, imageName);
+        topLevelMenuModel.getDialogs().add(dialogModel);
 
         SwingUtilities.invokeAndWait(() -> {
             try {
-                findSlices(dialog, dialogDescription);
+                findSlices(dialog, dialogModel);
 
                 if (dialog == null) {
                     // this happens for example for disabled menu items
@@ -141,7 +147,7 @@ public class ScreenGenerator {
                 ImageIO.write(
                         dialogScreenShot,
                         PNG,
-                        new File(DESTINATION + cleanName(dialogTitle) + ".png"));
+                        new File(DESTINATION + imageName));
                 dialog.setVisible(false);
                 dialog.dispose();
             } catch (Exception e) {
@@ -150,7 +156,7 @@ public class ScreenGenerator {
         });
     }
 
-    private static void saveSlices(String dialogTitle, Map<Integer, String> yCoordinates, BufferedImage dialogScreenShot, DialogDescription dialogDescription) {
+    private static void saveSlices(String dialogTitle, Map<Integer, String> yCoordinates, BufferedImage dialogScreenShot, DialogModel dialogModel) {
         System.out.println("Label Y coordinates: " + yCoordinates);
         yCoordinates.put(0, "top");
         yCoordinates.put(dialogScreenShot.getHeight(), "bottom");
@@ -176,16 +182,16 @@ public class ScreenGenerator {
                 System.out.println("Weird");
                 continue;
             }
-            String fileName = cleanName(dialogTitle) + "_slice_" + fromY + "_" + sectionName + ".png";
+            String fileName = cleanName(dialogTitle) + "_slice_" + fromY + "_" + sectionName + "." + PNG;
 
-            DialogModel.Field f = byCleanUiName.get(sectionName);
+            com.opensr5.ini.DialogModel.Field f = byCleanUiName.get(sectionName);
             if (f == null)
                 continue;
 
             String fieldName = f.getKey();
             String tooltip = iniFileModel.tooltips.get(fieldName);
 
-            dialogDescription.fields.add(new FieldDescription(sectionNameWithSpecialCharacters, fieldName, fileName, tooltip));
+            dialogModel.fields.add(new FieldModel(sectionNameWithSpecialCharacters, fieldName, fileName, tooltip));
 
             File output = new File(DESTINATION + fileName);
             if (output == null) {
@@ -201,19 +207,19 @@ public class ScreenGenerator {
         }
     }
 
-    private static void findSlices(JDialog dialog, DialogDescription dialogDescription) {
+    private static void findSlices(JDialog dialog, DialogModel dialogModel) {
         UiUtils.visitComponents(dialog, "Dynamic dialog", new Callback() {
             @Override
             public void onComponent(Component parent, Component component) {
                 if (component instanceof JPanel) {
                     JPanel panel = (JPanel) component;
-                    handleBox(dialog.getTitle(), panel, dialogDescription);
+                    handleBox(dialog.getTitle(), panel, dialogModel);
                 }
             }
         });
     }
 
-    private static void handleBox(String dialogTitle, JPanel panel, DialogDescription dialogDescription) {
+    private static void handleBox(String dialogTitle, JPanel panel, DialogModel dialogModel) {
         if (panel.getLayout() instanceof BoxLayout) {
             BoxLayout layout = (BoxLayout) panel.getLayout();
             if (layout.getAxis() == BoxLayout.X_AXIS)
@@ -244,7 +250,7 @@ public class ScreenGenerator {
                 }
             });
 
-            saveSlices(dialogTitle, yCoordinates, panelImage, dialogDescription);
+            saveSlices(dialogTitle, yCoordinates, panelImage, dialogModel);
         }
     }
 

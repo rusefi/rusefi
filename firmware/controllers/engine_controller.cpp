@@ -120,47 +120,6 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_ENGINE_CONTROL
 }
 
-static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if !EFI_UNIT_TEST
-	// This is tested independently - don't configure sensors for tests.
-	// This lets us selectively mock them for each test.
-	initNewSensors(sharedLogger);
-#endif /* EFI_UNIT_TEST */
-
-	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-
-	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-
-#if EFI_FSIO
-	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
-
-	initGpPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-#if EFI_IDLE_CONTROL
-	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_IDLE_CONTROL */
-
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-
-#if EFI_MAP_AVERAGING
-	if (engineConfiguration->isMapAveragingEnabled) {
-		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-#endif /* EFI_MAP_AVERAGING */
-
-#if EFI_BOOST_CONTROL
-	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_BOOST_CONTROL */
-
-#if EFI_LAUNCH_CONTROL
-	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_LAUNCH_CONTROL */
-
-}
-
 #if EFI_ENABLE_MOCK_ADC
 
 static void initMockVoltage(void) {
@@ -728,11 +687,16 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 }
 
-// these two variables are here only to let us know how much RAM is available, also these
-// help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
-// linking process which is the way to raise the alarm
+/**
+ * these two variables are here only to let us know how much RAM is available, also these
+ * help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
+ * linking process which is the way to raise the alarm
+ *
+ * You get "cannot move location counter backwards" linker error when you run out of RAM. When you run out of RAM you shall reduce these
+ * UNUSED_SIZE contants.
+ */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 14300
+#define RAM_UNUSED_SIZE 12200
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2900
@@ -753,6 +717,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200429;
+	return 20200503;
 }
 #endif /* EFI_UNIT_TEST */

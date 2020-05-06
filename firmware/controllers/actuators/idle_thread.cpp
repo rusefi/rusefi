@@ -595,8 +595,8 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		StepperHw* hw;
 
 		if (CONFIG(useHbridges)) {
-			auto motorA = initDcMotor(0 PASS_ENGINE_PARAMETER_SUFFIX);
-			auto motorB = initDcMotor(1 PASS_ENGINE_PARAMETER_SUFFIX);
+			auto motorA = initDcMotor(2, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
+			auto motorB = initDcMotor(3, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
 
 			if (motorA && motorB) {
 				iacHbridgeHw.initialize(

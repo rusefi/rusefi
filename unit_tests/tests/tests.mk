@@ -50,4 +50,7 @@ TESTS_SRC_CPP = \
 	tests/sensor/test_sensor_init.cpp \
 	tests/test_closed_loop_controller.cpp \
 	tests/test_stft.cpp \
+	tests/test_boost.cpp \
 	tests/test_gppwm.cpp \
+	tests/test_fuel_math.cpp \
+

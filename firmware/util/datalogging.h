@@ -47,8 +47,6 @@ public:
 	char DEFAULT_BUFFER[200];
 };
 
-void initIntermediateLoggingBuffer(void);
-
 int isInitialized(Logging *logging);
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);

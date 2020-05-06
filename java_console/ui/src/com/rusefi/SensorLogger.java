@@ -6,7 +6,8 @@ import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.ConnectionStatus;
+import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.config.ConfigField;
 
 import java.io.FileWriter;
@@ -99,7 +100,7 @@ public class SensorLogger {
         SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
-                if (ConnectionStatus.INSTANCE.getValue() != ConnectionStatus.Value.CONNECTED)
+                if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED)
                     return;
                 if (logFile == null) {
                     /*

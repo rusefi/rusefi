@@ -54,6 +54,8 @@ public class GaugesPanel {
     private static final String SHOW_RPM = "show_rpm";
     private static final String SPLIT_LOCATION = "SPLIT_LOCATION";
     public static final String DISABLE_LOGS = "DISABLE_LOGS";
+    private static final int DEFAULT_ROWS = 3;
+    private static final int DEFAULT_COLUMNS = 3;
     public static boolean IS_PAUSED; // dirty but works for not
 
     static {
@@ -76,7 +78,7 @@ public class GaugesPanel {
     private final JSplitPane middleSplitPanel;
 
     public GaugesPanel(final Node config, PaneSettings paneSettings) {
-        gauges = new GaugesGrid(3, 5);
+        gauges = new GaugesGrid(DEFAULT_ROWS, DEFAULT_COLUMNS);
         this.config = config;
         showRpmPanel = config.getBoolProperty(SHOW_RPM, true);
         showMessagesPanel = config.getBoolProperty(SHOW_MESSAGES, true);
@@ -85,8 +87,8 @@ public class GaugesPanel {
 
         lowerRpmPanel.add(new RpmLabel(15).getContent());
 
-        int rows = config.getIntProperty(GAUGES_ROWS, SizeSelectorPanel.HEIGHT);
-        int columns = config.getIntProperty(GAUGES_COLUMNS, SizeSelectorPanel.WIDTH);
+        int rows = config.getIntProperty(GAUGES_ROWS, DEFAULT_ROWS);
+        int columns = config.getIntProperty(GAUGES_COLUMNS, DEFAULT_COLUMNS);
 
         setSensorGridDimensions(rows, columns);
 
