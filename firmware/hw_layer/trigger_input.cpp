@@ -76,6 +76,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 		return 0;
 
 	/* try ICU first */
+#if EFI_ICU_INPUTS
 	if (icuTriggerTurnOnInputPin(msg, index, isTriggerShaft) >= 0) {
 		if (isTriggerShaft)
 			shaftTriggerType[index] = TRIGGER_ICU;
@@ -83,6 +84,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 			camTriggerType[index] = TRIGGER_ICU;
 		return 0;
 	}
+#endif
 
 	/* ... then EXTI */
 	if (extiTriggerTurnOnInputPin(msg, index, isTriggerShaft) >= 0) {
@@ -103,15 +105,19 @@ static void turnOffTriggerInputPin(int index, bool isTriggerShaft) {
 		activeConfiguration.triggerInputPins[index] : activeConfiguration.camInputs[index];
 
 	if (isTriggerShaft) {
+#if EFI_ICU_INPUTS
 		if (shaftTriggerType[index] == TRIGGER_ICU)
 			icuTriggerTurnOffInputPin(brainPin);
+#endif
 		if (shaftTriggerType[index] == TRIGGER_EXTI)
 			extiTriggerTurnOffInputPin(brainPin);
 
 		shaftTriggerType[index] = TRIGGER_NONE;
 	} else {
+#if EFI_ICU_INPUTS
 		if (camTriggerType[index] == TRIGGER_ICU)
 			icuTriggerTurnOffInputPin(brainPin);
+#endif
 		if (camTriggerType[index] == TRIGGER_EXTI)
 			extiTriggerTurnOffInputPin(brainPin);
 
