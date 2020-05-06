@@ -534,6 +534,13 @@ static int tle8888_chip_init(struct tle8888_priv *chip)
 		CMD_VRSCONFIG(1, (0 << 4) |
 						 (chip->cfg->mode << 2) |
 						 (0 << 0)),
+		/* disable diagnostic pull-down current, current limitation in case of overcurrent */
+		CMD_OUTCONFIG(0, 0x00),
+		CMD_OUTCONFIG(1, 0x00),
+		CMD_OUTCONFIG(2, 0x00),
+		CMD_OUTCONFIG(3, 0x00),
+		CMD_OUTCONFIG(4, 0x00),
+		CMD_OUTCONFIG(5, 0x00),
 		/* enable outputs */
 		CMD_OE_SET
 	};
