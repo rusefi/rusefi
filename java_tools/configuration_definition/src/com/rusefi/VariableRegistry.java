@@ -67,7 +67,10 @@ public class VariableRegistry  {
         SystemOut.println("Registering " + var + " as " + value);
         data.put(var, value);
 
-        cAllDefinitions.put(var, "#define " + var + " " + value + EOL);
+        if (!value.contains("\n")) {
+            // multi-lines are not supported in C headers
+            cAllDefinitions.put(var, "#define " + var + " " + value + EOL);
+        }
         tryToRegisterAsInteger(var, value);
     }
 

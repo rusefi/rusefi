@@ -25,6 +25,7 @@ class ThreadController : public ControllerBase
 private:
     THD_WORKING_AREA(m_threadstack, TStackSize);
     const tprio_t m_prio;
+	bool m_isStarted = false;
 
     /**
      * The OS can only call a function with a single void* param.  We have
@@ -57,8 +58,14 @@ public:
      */
     void Start()
     {
+		if (m_isStarted) {
+			warning(CUSTOM_OBD_6003, "Tried to start thread %s but it was already running", GetName());
+			return;
+		}
+
         m_thread = chThdCreateStatic(m_threadstack, sizeof(m_threadstack), m_prio, StaticThreadTaskAdapter, this);
         m_thread->name = GetName();
+		m_isStarted = true;
     }
 };
 

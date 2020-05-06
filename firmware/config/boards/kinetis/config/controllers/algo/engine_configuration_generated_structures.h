@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun May 03 03:40:24 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed May 06 12:33:00 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1894,7 +1894,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 1096
 	 */
-	int unusedAtOldBoardConfigurationEnd[92];
+	vehicle_info_t engineMake;
+	/**
+	 * offset 1128
+	 */
+	vehicle_info_t engineCode;
+	/**
+	 * offset 1160
+	 */
+	int unusedAtOldBoardConfigurationEnd[76];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -3166,7 +3174,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6312
 	 */
-	uint8_t boostMapBins[BOOST_LOAD_COUNT];
+	uint8_t unused6312[8];
 	/**
 	 * offset 6320
 	 */
@@ -3431,4 +3439,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun May 03 03:40:24 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed May 06 12:33:00 EDT 2020

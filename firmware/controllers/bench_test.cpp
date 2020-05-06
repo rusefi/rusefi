@@ -259,15 +259,18 @@ static void handleCommandX14(uint16_t index) {
 	case 0xB:
 		starterRelayBench();
 		return;
-	case 0xC:
-		engine->etbAutoTune = true;
-		return;
 	case 0xD:
 		engine->directSelfStimulation = true;
 		return;
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case 0xE:
 		etbAutocal(0);
+		return;
+	case 0xC:
+		engine->etbAutoTune = true;
+		return;
+	case 0x10:
+		engine->etbAutoTune = false;
 		return;
 #endif
 	case 0xF:
