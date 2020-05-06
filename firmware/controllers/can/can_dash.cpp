@@ -156,10 +156,13 @@ void canDashboardVAG(void) {
 
 void canDashboardW202(void) {
 	
+	uint16_t tmp;
 	{
 		CanTxMessage msg(W202_STAT_1);
+		tmp = GET_RPM();
 		msg[0] = 0x08; // Unknown
-		msg.setShortValue(GET_RPM(), 1); //RPM
+		msg[1] = (tmp >> 8); //RPM
+		msg[2] = (tmp & 0xff); //RPM
 		msg[3] = 0x00; // 0x01 - tank blink, 0x02 - EPC
 		msg[4] = 0x00; // Unknown
 		msg[5] = 0x00; // Unknown
@@ -169,7 +172,7 @@ void canDashboardW202(void) {
 
 	{
 		CanTxMessage msg(W202_STAT_2); //dlc 7
-		msg[0] = (int)(Sensor::get(SensorType::Clt).value_or(0) + 40); // CLT - 0x80 ~ 80C
+		msg[0] = (int)(Sensor::get(SensorType::Clt).value_or(0) + 40); // CLT -40 offset
 		msg[1] = 0x3D; // TBD
 		msg[2] = 0x63; // Const
 		msg[3] = 0x41; // Const

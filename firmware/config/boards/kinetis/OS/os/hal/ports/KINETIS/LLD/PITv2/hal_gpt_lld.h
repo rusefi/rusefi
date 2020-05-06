@@ -55,7 +55,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(KINETIS_GPT_USE_PIT1) || defined(__DOXYGEN__)
-#define KINETIS_GPT_USE_PIT1                  FALSE
+#define KINETIS_GPT_USE_PIT1                  TRUE
 #endif
 
 /**

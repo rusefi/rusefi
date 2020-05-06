@@ -196,8 +196,6 @@ void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
-
 	engineConfiguration->triggerSimulatorFrequency = 300;
 	engineConfiguration->cranking.rpm = 100;
 
@@ -313,8 +311,6 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
-	engineConfiguration->directSelfStimulation = true;
-
 #if defined(STM32_HAS_GPIOG) && STM32_HAS_GPIOG
 	engineConfiguration->ignitionPins[0] = GPIOG_3;
 	engineConfiguration->ignitionPins[1] = GPIOG_4;
@@ -403,8 +399,6 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  */
 void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
-	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
-
 	engineConfiguration->debugMode = DBG_TLE8888;
 
 	engineConfiguration->triggerSimulatorFrequency = 60;

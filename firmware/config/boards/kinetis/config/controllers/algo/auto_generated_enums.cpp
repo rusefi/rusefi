@@ -117,6 +117,8 @@ case MT_SUBY_DENSO:
   return "MT_SUBY_DENSO";
 case MT_TOYOTA_89420_02010:
   return "MT_TOYOTA_89420_02010";
+case MT_BOSCH_2_5:
+  return "MT_BOSCH_2_5";
   }
  return NULL;
 }
@@ -514,8 +516,6 @@ case Force_4_bytes_size_engine_load_mode:
   return "Force_4_bytes_size_engine_load_mode";
 case LM_ALPHA_N:
   return "LM_ALPHA_N";
-case LM_MAP:
-  return "LM_MAP";
 case LM_PLAIN_MAF:
   return "LM_PLAIN_MAF";
 case LM_REAL_MAF:
@@ -1015,6 +1015,8 @@ case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
 case TT_RENIX_66_2_2_2:
   return "TT_RENIX_66_2_2_2";
+case TT_BOSCH_QUICK_START:
+  return "TT_BOSCH_QUICK_START";
 case TT_HONDA_K_12_1:
   return "TT_HONDA_K_12_1";
 case TT_RENIX_44_2_2:

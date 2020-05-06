@@ -2,7 +2,7 @@
 #include "hardware.h"
 #include "efi_gpio.h"
 
-#include "flash.h"
+#include "flash_int.h"
 
 #include "dfu.h"
 
@@ -165,7 +165,7 @@ static void dfuHandleRead(void) {
     if (isInVirtualPageBuffer(addr))
     	memcpy(buffer, (uint8_t *)addr, numBytes);
     else
-		flashRead(addr, (char *)buffer, numBytes);
+		intFlashRead(addr, (char *)buffer, numBytes);
 
 	// transmit data
 	sr5WriteData(&blTsChannel, (uint8_t *)buffer, numBytes);
@@ -197,7 +197,7 @@ static void dfuHandleWrite(void) {
 	if (isInVirtualPageBuffer(addr))
     	memcpy((uint8_t *)addr, (buffer + 1), numBytes);
     else
-		flashWrite(addr, (const char *)(buffer + 1), numBytes);
+		intFlashWrite(addr, (const char *)(buffer + 1), numBytes);
 	
 	// we're done!
 	sendByte(DFU_ACK_BYTE);
@@ -233,7 +233,7 @@ static void dfuHandleErase(void) {
 			continue;
 		}
 		// erase sector
-		flashSectorErase(sectorIdx);
+		intFlashSectorErase(sectorIdx);
 	}
 
     sendByte(DFU_ACK_BYTE);

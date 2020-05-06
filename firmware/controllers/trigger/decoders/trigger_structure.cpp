@@ -516,15 +516,15 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		break;
 
 	case TT_ONE_PLUS_ONE:
-		configureOnePlusOne(this, ambiguousOperationMode);
+		configureOnePlusOne(this);
 		break;
 
 	case TT_3_1_CAM:
-		configure3_1_cam(this, ambiguousOperationMode);
+		configure3_1_cam(this);
 		break;
 
 	case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
-		configureOnePlus60_2(this, ambiguousOperationMode);
+		configureOnePlus60_2(this);
 		break;
 
 	case TT_ONE:
@@ -549,6 +549,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_TOOTHED_WHEEL_36_1:
 		setToothedWheelConfiguration(this, 36, 1, ambiguousOperationMode);
+		break;
+
+	case TT_BOSCH_QUICK_START:
+		configureQuickStartSenderWheel(this);
 		break;
 
 	case TT_HONDA_K_12_1:

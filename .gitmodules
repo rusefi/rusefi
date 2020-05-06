@@ -12,3 +12,6 @@
 [submodule "hardware/rusefi_lib"]
 	path = hardware/rusefi_lib
 	url = https://github.com/rusefi/kicad-libraries
+[submodule "hardware/InteractiveHtmlBom"]
+	path = hardware/InteractiveHtmlBom
+	url = https://github.com/openscopeproject/InteractiveHtmlBom.git

@@ -339,13 +339,15 @@ typedef enum {
 
 	TT_HONDA_K_12_1 = 46,
 
+	TT_BOSCH_QUICK_START = 47,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 47, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 48, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -404,10 +406,6 @@ typedef enum {
 	 */
 	LM_ALPHA_N = 1,
 	/**
-	 * raw Manifold Absolute Pressure sensor value is used as engine load http://en.wikipedia.org/wiki/MAP_sensor
-	 */
-	LM_MAP = 2,
-	/**
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
 	 */
@@ -429,6 +427,15 @@ typedef enum {
 	Force_4_bytes_size_display_mode = ENUM_32_BITS,
 
 } display_mode_e;
+
+typedef enum  __attribute__ ((__packed__)){
+	TL_AUTO = 0,
+	TL_SEMI_AUTO = 1,
+	TL_MANUAL = 2,
+	TL_HALL = 3,
+
+} tle8888_mode_e;
+
 
 typedef enum {
 	LF_NATIVE = 0,
@@ -742,6 +749,14 @@ typedef enum {
 	 */
 	MT_MPX4250A = 9, 
 	
+
+	/**
+	 * Bosch 2.5 Bar TMap Map Sensor with IAT
+	 * 20 kPa at 0.40V, 250 kPa at 4.65V
+	 */
+
+	MT_BOSCH_2_5 = 10,
+
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
 
@@ -895,3 +910,15 @@ typedef enum {
 	ALWAYS_ON_ANTILAG = 1,
 	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
 } antiLagActivationMode_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	GPPWM_Tps = 0,
+	GPPWM_Map = 1,
+	GPPWM_Clt = 2,
+	GPPWM_Iat = 3,
+} gppwm_channel_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	GPPWM_GreaterThan = 0,
+	GPPWM_LessThan = 1,
+} gppwm_compare_mode_e;

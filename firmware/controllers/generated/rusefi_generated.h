@@ -255,6 +255,10 @@
 #define auxValves1_offset_hex 718
 #define auxValves2_offset 1817
 #define auxValves2_offset_hex 719
+#define auxVoltage1_offset 2713
+#define auxVoltage1_offset_hex a99
+#define auxVoltage2_offset 2714
+#define auxVoltage2_offset_hex a9a
 #define BARO_CORR_SIZE 4
 #define baroCorrPressureBins_offset 1544
 #define baroCorrPressureBins_offset_hex 608
@@ -455,10 +459,6 @@
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define consoleLoopPeriodMs_offset 716
 #define consoleLoopPeriodMs_offset_hex 2cc
-#define consoleSerialRxPin_offset 1819
-#define consoleSerialRxPin_offset_hex 71b
-#define consoleSerialTxPin_offset 1818
-#define consoleSerialTxPin_offset_hex 71a
 #define consoleUartDevice_offset 943
 #define consoleUartDevice_offset_hex 3af
 #define CRANKING_ADVANCE_CURVE_SIZE 4
@@ -510,10 +510,6 @@
 #define debugMapAveraging_offset_hex 327
 #define debugMode_offset 2092
 #define debugMode_offset_hex 82c
-#define debugSetTimer_offset 806
-#define debugSetTimer_offset_hex 326
-#define debugTimerCallback_offset 711
-#define debugTimerCallback_offset_hex 2c7
 #define debugTriggerSync_offset 676
 #define debugTriggerSync_offset_hex 2a4
 #define DIGIPOT_COUNT 4
@@ -527,8 +523,6 @@
 #define digitalPotentiometerChipSelect4_offset_hex 29f
 #define digitalPotentiometerSpiDevice_offset 677
 #define digitalPotentiometerSpiDevice_offset_hex 2a5
-#define directSelfStimulation_offset 76
-#define directSelfStimulation_offset_hex 4c
 #define displacement_offset 396
 #define displacement_offset_hex 18c
 #define displayLogicLevelsInEngineSniffer_offset 76
@@ -560,7 +554,7 @@
 #define enableLaunchRetard_offset_hex 3d0
 #define enableVerboseCanTx_offset 744
 #define enableVerboseCanTx_offset_hex 2e8
-#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge"
+#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define engineChartSize_offset 1480
 #define engineChartSize_offset_hex 5c8
@@ -609,8 +603,6 @@
 #define etbBiasBins_offset_hex f30
 #define etbBiasValues_offset 3920
 #define etbBiasValues_offset_hex f50
-#define etbCalibrationOnStart_offset 1476
-#define etbCalibrationOnStart_offset_hex 5c4
 #define etbDeadband_offset 3960
 #define etbDeadband_offset_hex f78
 #define etbFreq_offset 2514
@@ -627,6 +619,26 @@
 #define etbIo1_disablePin_offset_hex 3d7
 #define etbIo1_offset 980
 #define etbIo1_offset_hex 3d4
+#define etbIo21_controlPin1_offset 1090
+#define etbIo21_controlPin1_offset_hex 442
+#define etbIo21_directionPin1_offset 1088
+#define etbIo21_directionPin1_offset_hex 440
+#define etbIo21_directionPin2_offset 1089
+#define etbIo21_directionPin2_offset_hex 441
+#define etbIo21_disablePin_offset 1091
+#define etbIo21_disablePin_offset_hex 443
+#define etbIo21_offset 1088
+#define etbIo21_offset_hex 440
+#define etbIo22_controlPin1_offset 1094
+#define etbIo22_controlPin1_offset_hex 446
+#define etbIo22_directionPin1_offset 1092
+#define etbIo22_directionPin1_offset_hex 444
+#define etbIo22_directionPin2_offset 1093
+#define etbIo22_directionPin2_offset_hex 445
+#define etbIo22_disablePin_offset 1095
+#define etbIo22_disablePin_offset_hex 447
+#define etbIo22_offset 1092
+#define etbIo22_offset_hex 444
 #define etbIo2_controlPin1_offset 986
 #define etbIo2_controlPin1_offset_hex 3da
 #define etbIo2_directionPin1_offset 984
@@ -963,7 +975,7 @@
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
-#define GAUGE_NAME_AIR_FLOW "air flow"
+#define GAUGE_NAME_AIR_FLOW "MAF air flow"
 #define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
@@ -1052,6 +1064,97 @@
 #define gpioPinModes8_offset_hex 303
 #define gpioPinModes9_offset 772
 #define gpioPinModes9_offset_hex 304
+#define gppwm1_dutyIfError_offset 4145
+#define gppwm1_dutyIfError_offset_hex 1031
+#define gppwm1_loadAxis_offset 4150
+#define gppwm1_loadAxis_offset_hex 1036
+#define gppwm1_loadBins_offset 4152
+#define gppwm1_loadBins_offset_hex 1038
+#define gppwm1_offBelowDuty_offset 4149
+#define gppwm1_offBelowDuty_offset_hex 1035
+#define gppwm1_offset 4144
+#define gppwm1_offset_hex 1030
+#define gppwm1_onAboveDuty_offset 4148
+#define gppwm1_onAboveDuty_offset_hex 1034
+#define gppwm1_pad_offset 4151
+#define gppwm1_pad_offset_hex 1037
+#define gppwm1_pin_offset 4144
+#define gppwm1_pin_offset_hex 1030
+#define gppwm1_pwmFrequency_offset 4146
+#define gppwm1_pwmFrequency_offset_hex 1032
+#define gppwm1_rpmBins_offset 4160
+#define gppwm1_rpmBins_offset_hex 1040
+#define gppwm1_table_offset 4168
+#define gppwm1_table_offset_hex 1048
+#define gppwm2_dutyIfError_offset 4233
+#define gppwm2_dutyIfError_offset_hex 1089
+#define gppwm2_loadAxis_offset 4238
+#define gppwm2_loadAxis_offset_hex 108e
+#define gppwm2_loadBins_offset 4240
+#define gppwm2_loadBins_offset_hex 1090
+#define gppwm2_offBelowDuty_offset 4237
+#define gppwm2_offBelowDuty_offset_hex 108d
+#define gppwm2_offset 4232
+#define gppwm2_offset_hex 1088
+#define gppwm2_onAboveDuty_offset 4236
+#define gppwm2_onAboveDuty_offset_hex 108c
+#define gppwm2_pad_offset 4239
+#define gppwm2_pad_offset_hex 108f
+#define gppwm2_pin_offset 4232
+#define gppwm2_pin_offset_hex 1088
+#define gppwm2_pwmFrequency_offset 4234
+#define gppwm2_pwmFrequency_offset_hex 108a
+#define gppwm2_rpmBins_offset 4248
+#define gppwm2_rpmBins_offset_hex 1098
+#define gppwm2_table_offset 4256
+#define gppwm2_table_offset_hex 10a0
+#define gppwm3_dutyIfError_offset 4321
+#define gppwm3_dutyIfError_offset_hex 10e1
+#define gppwm3_loadAxis_offset 4326
+#define gppwm3_loadAxis_offset_hex 10e6
+#define gppwm3_loadBins_offset 4328
+#define gppwm3_loadBins_offset_hex 10e8
+#define gppwm3_offBelowDuty_offset 4325
+#define gppwm3_offBelowDuty_offset_hex 10e5
+#define gppwm3_offset 4320
+#define gppwm3_offset_hex 10e0
+#define gppwm3_onAboveDuty_offset 4324
+#define gppwm3_onAboveDuty_offset_hex 10e4
+#define gppwm3_pad_offset 4327
+#define gppwm3_pad_offset_hex 10e7
+#define gppwm3_pin_offset 4320
+#define gppwm3_pin_offset_hex 10e0
+#define gppwm3_pwmFrequency_offset 4322
+#define gppwm3_pwmFrequency_offset_hex 10e2
+#define gppwm3_rpmBins_offset 4336
+#define gppwm3_rpmBins_offset_hex 10f0
+#define gppwm3_table_offset 4344
+#define gppwm3_table_offset_hex 10f8
+#define gppwm4_dutyIfError_offset 4409
+#define gppwm4_dutyIfError_offset_hex 1139
+#define gppwm4_loadAxis_offset 4414
+#define gppwm4_loadAxis_offset_hex 113e
+#define gppwm4_loadBins_offset 4416
+#define gppwm4_loadBins_offset_hex 1140
+#define gppwm4_offBelowDuty_offset 4413
+#define gppwm4_offBelowDuty_offset_hex 113d
+#define gppwm4_offset 4408
+#define gppwm4_offset_hex 1138
+#define gppwm4_onAboveDuty_offset 4412
+#define gppwm4_onAboveDuty_offset_hex 113c
+#define gppwm4_pad_offset 4415
+#define gppwm4_pad_offset_hex 113f
+#define gppwm4_pin_offset 4408
+#define gppwm4_pin_offset_hex 1138
+#define gppwm4_pwmFrequency_offset 4410
+#define gppwm4_pwmFrequency_offset_hex 113a
+#define gppwm4_rpmBins_offset 4424
+#define gppwm4_rpmBins_offset_hex 1148
+#define gppwm4_table_offset 4432
+#define gppwm4_table_offset_hex 1150
+#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT"
+#define GPPWM_LOAD_COUNT 8
+#define GPPWM_RPM_COUNT 8
 #define gps_rx_pin_offset 656
 #define gps_rx_pin_offset_hex 290
 #define gps_tx_pin_offset 657
@@ -1253,17 +1356,6 @@
 #define ignitionMode_offset_hex 1b8
 #define ignitionOffset_offset 444
 #define ignitionOffset_offset_hex 1bc
-#define ignitionPin10logic 
-#define ignitionPin11logic 
-#define ignitionPin12logic 
-#define ignitionPin2logic || ((firingOrder == 2) || (firingOrder == 7) || (firingOrder == 9) || (firingOrder == 11) || (firingOrder == 12))
-#define ignitionPin3logic || ((firingOrder == 1) || (firingOrder == 3) || (firingOrder == 4) || (firingOrder == 5) || (firingOrder == 9))
-#define ignitionPin4logic || ((firingOrder == 5) || (firingOrder == 7) || (firingOrder == 12))
-#define ignitionPin5logic || ((firingOrder == 4) || (firingOrder == 12))
-#define ignitionPin6logic 
-#define ignitionPin7logic || ((firingOrder == 11))
-#define ignitionPin8logic || ((firingOrder == 5) || (firingOrder == 11))
-#define ignitionPin9logic 
 #define ignitionPinMode_offset 649
 #define ignitionPinMode_offset_hex 289
 #define ignitionPins10_offset 645
@@ -1403,6 +1495,8 @@
 #define issue_294_30_offset_hex 4c
 #define issue_294_31_offset 76
 #define issue_294_31_offset_hex 4c
+#define issue_294_unused_offset 76
+#define issue_294_unused_offset_hex 4c
 #define isTunerStudioEnabled_offset 1476
 #define isTunerStudioEnabled_offset_hex 5c4
 #define isVerboseAlternator_offset 744
@@ -1521,8 +1615,8 @@
 #define mainRelayPin_offset_hex 2c2
 #define mainRelayPinMode_offset 752
 #define mainRelayPinMode_offset_hex 2f0
-#define mainUnusedEnd_offset 4144
-#define mainUnusedEnd_offset_hex 1030
+#define mainUnusedEnd_offset 4496
+#define mainUnusedEnd_offset_hex 1190
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPin_offset_hex 294
 #define malfunctionIndicatorPinMode_offset 661
@@ -1756,6 +1850,8 @@
 #define servoOutputPins7_offset_hex c4a
 #define servoOutputPins8_offset 3147
 #define servoOutputPins8_offset_hex c4b
+#define showHumanReadableWarning_offset 976
+#define showHumanReadableWarning_offset_hex 3d0
 #define showSdCardWarning_offset 76
 #define showSdCardWarning_offset_hex 4c
 #define silentTriggerError_offset 1464
@@ -1973,6 +2069,8 @@
 #define tle8888_cs_offset_hex c21
 #define tle8888_csPinMode_offset 3106
 #define tle8888_csPinMode_offset_hex c22
+#define tle8888mode_offset 2416
+#define tle8888mode_offset_hex 970
 #define tle8888spiDevice_offset 4000
 #define tle8888spiDevice_offset_hex fa0
 #define todoClutchDownPinInverted_offset 976
@@ -2135,7 +2233,7 @@
 #define triggerSimulatorPins3_offset 738
 #define triggerSimulatorPins3_offset_hex 2e2
 #define TS_FILE_VERSION 20200310
-#define TS_OUTPUT_SIZE 240
+#define TS_OUTPUT_SIZE 244
 #define ts_show_analog_divider true
 #define ts_show_auxserial_pins true
 #define ts_show_can_pins true
@@ -2152,7 +2250,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI v1.2020.3"
+#define TS_SIGNATURE "rusEFI v1.2020.4"
 #define tunerStudioSerialSpeed_offset 728
 #define tunerStudioSerialSpeed_offset_hex 2d8
 #define twoWireBatchIgnition_offset 1476
@@ -2163,8 +2261,16 @@
 #define uartConsoleSerialSpeed_offset_hex 81c
 #define unused1059_offset 3964
 #define unused1059_offset_hex f7c
+#define unused1476b20_offset 1476
+#define unused1476b20_offset_hex 5c4
 #define unused2432_offset 2432
 #define unused2432_offset_hex 980
+#define unused711_offset 711
+#define unused711_offset_hex 2c7
+#define unused76b0_offset 76
+#define unused76b0_offset_hex 4c
+#define unused806_offset 806
+#define unused806_offset_hex 326
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_24_offset_hex 5c4
 #define unused_1484_bit_25_offset 1476
@@ -2185,8 +2291,8 @@
 #define unused_former_warmup_target_afr_offset_hex 834
 #define unusedAntilagTimeout_offset 820
 #define unusedAntilagTimeout_offset_hex 334
-#define unusedAtOldBoardConfigurationEnd_offset 1088
-#define unusedAtOldBoardConfigurationEnd_offset_hex 440
+#define unusedAtOldBoardConfigurationEnd_offset 1128
+#define unusedAtOldBoardConfigurationEnd_offset_hex 468
 #define unusedBit4_1476_offset 1476
 #define unusedBit4_1476_offset_hex 5c4
 #define unusedBit_251_10_offset 976
@@ -2229,26 +2335,28 @@
 #define unusedBit_251_28_offset_hex 3d0
 #define unusedBit_251_29_offset 976
 #define unusedBit_251_29_offset_hex 3d0
-#define unusedBit_251_9_offset 976
-#define unusedBit_251_9_offset_hex 3d0
 #define unusedBit_282_30_offset 976
 #define unusedBit_282_30_offset_hex 3d0
 #define unusedBit_282_31_offset 976
 #define unusedBit_282_31_offset_hex 3d0
 #define unusedBit_34_31_offset 76
 #define unusedBit_34_31_offset_hex 4c
+#define unusedConsoleSerialRxPin_offset 1819
+#define unusedConsoleSerialRxPin_offset_hex 71b
+#define unusedConsoleSerialTxPin_offset 1818
+#define unusedConsoleSerialTxPin_offset_hex 71a
 #define unusedFlexFuelSensor_offset 3100
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedHere_offset 761
 #define unusedHere_offset_hex 2f9
 #define unusedOldBiquad_offset 2332
 #define unusedOldBiquad_offset_hex 91c
-#define unusedSomethingWasHere_offset 2416
-#define unusedSomethingWasHere_offset_hex 970
+#define unusedSomethingWasHere_offset 2417
+#define unusedSomethingWasHere_offset_hex 971
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding4_offset_hex a21
-#define unusedSpiPadding5_offset 2713
-#define unusedSpiPadding5_offset_hex a99
+#define unusedSpiPadding5_offset 2715
+#define unusedSpiPadding5_offset_hex a9b
 #define unusedSpiPadding7_offset 4005
 #define unusedSpiPadding7_offset_hex fa5
 #define unusedSpiPadding8_offset 4009
@@ -2323,8 +2431,6 @@
 #define useStepperIdle_offset_hex 2e8
 #define useTLE8888_cranking_hack_offset 76
 #define useTLE8888_cranking_hack_offset_hex 4c
-#define useTLE8888_hall_mode_offset 76
-#define useTLE8888_hall_mode_offset_hex 4c
 #define useTpicAdvancedMode_offset 744
 #define useTpicAdvancedMode_offset_hex 2e8
 #define useTPSAdvanceTable_offset 1476
@@ -2336,6 +2442,9 @@
 #define vbattAdcChannel_offset_hex 201
 #define vbattDividerCoeff_offset 464
 #define vbattDividerCoeff_offset_hex 1d0
+#define VEHICLE_NAME_SIZE 32
+#define vehicleName_offset 1096
+#define vehicleName_offset_hex 448
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedCoef_offset_hex 1dc
 #define vehicleSpeedSensorInputPin_offset 968

@@ -20,7 +20,7 @@
 #include "pwm_generator_logic.h"
 
 #include "poten.h"
-#include "trigger_emulator.h"
+#include "trigger_emulator_algo.h"
 
 EXTERN_ENGINE;
 

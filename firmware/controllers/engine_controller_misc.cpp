@@ -15,12 +15,18 @@ EXTERN_ENGINE;
 extern LoggingWithStorage sharedLogger;
 
 #if ENABLE_PERF_TRACE
+static uint8_t nextThreadId = 0;
+void threadInitHook(void* vtp) {
+	// No lock required, this is already under lock
+	auto tp = reinterpret_cast<thread_t*>(vtp);
+	tp->threadId = ++nextThreadId;
+}
 
-void irqEnterHook(void) {
+void irqEnterHook() {
 	perfEventBegin(PE::ISR);
 }
 
-void irqExitHook(void) {
+void irqExitHook() {
 	perfEventEnd(PE::ISR);
 }
 
@@ -28,6 +34,11 @@ void contextSwitchHook() {
 	perfEventInstantGlobal(PE::ContextSwitch);
 }
 
+#else
+void threadInitHook(void*) {}
+void irqEnterHook() {}
+void irqExitHook() {}
+void contextSwitchHook() {}
 #endif /* ENABLE_PERF_TRACE */
 
 #if EFI_ENABLE_MOCK_ADC

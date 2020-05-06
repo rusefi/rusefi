@@ -27,9 +27,9 @@ Important note - we now use submodules:
 
 # External Links
 
- * Wiki: http://rusefi.com
  * Forum http://rusefi.com/forum
- * Documentation is now moving to https://github.com/rusefi/rusefi_documentation
+ * Documentation https://github.com/rusefi/rusefi/wiki
+ * Legacy Wiki: http://rusefi.com/wiki
  * Doxygen documentation is available at http://rusefi.com/docs/html
  * General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
  * Facebook https://www.facebook.com/rusEfiECU

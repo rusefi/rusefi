@@ -2,7 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.ConnectionStatus;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 
 import javax.swing.*;
@@ -44,7 +44,7 @@ public class RpmLabel {
             }
         });
 
-        ConnectionStatus.INSTANCE.addListener(new ConnectionStatus.Listener() {
+        ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
             @Override
             public void onConnectionStatus(boolean isConnected) {
                 if (isConnected) {

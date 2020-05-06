@@ -24,8 +24,8 @@ void setSerialConfigurationOverrides(void) {
 
 	engineConfiguration->binarySerialTxPin = GPIOB_10;
 	engineConfiguration->binarySerialRxPin = GPIOB_11;
-	engineConfiguration->consoleSerialTxPin = GPIOB_10;
-	engineConfiguration->consoleSerialRxPin = GPIOB_11;
+//	engineConfiguration->consoleSerialTxPin = GPIOB_10;
+//	engineConfiguration->consoleSerialRxPin = GPIOB_11;
 
 }
 
