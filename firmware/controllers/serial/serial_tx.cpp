@@ -27,8 +27,6 @@ void SerialWrite::PeriodicTask(efitime_t nowNt)
 {
 	UNUSED(nowNt);
 
-	// SerialSendTest();
-
 }
 
 #endif // EFI_AUX_SERIAL
