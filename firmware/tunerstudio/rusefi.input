@@ -414,6 +414,10 @@ fileVersion = { @@TS_FILE_VERSION@@ }
 	maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
 	maintainConstantValue = tpsMin, { (calibrationMode == 2 ) ? calibrationValue : tpsMin }
 
+	maintainConstantValue = etb_pFactor, { (calibrationMode == 3 ) ? calibrationValue : etb_pFactor }
+	maintainConstantValue = etb_iFactor, { (calibrationMode == 4 ) ? calibrationValue : etb_iFactor }
+	maintainConstantValue = etb_dFactor, { (calibrationMode == 5 ) ? calibrationValue : etb_dFactor }
+
      requiresPowerCycle = warningLedPin
      requiresPowerCycle = runningLedPin
      requiresPowerCycle = binarySerialTxPin
@@ -1488,7 +1492,6 @@ cmd_test_inj14 = "w\x00\x13\x00\x0e"
 cmd_test_inj15 = "w\x00\x13\x00\x0f"
 cmd_test_inj16 = "w\x00\x13\x00\x10"
 
-; 		
 cmd_test_fuel_pump           = "w\x00\x14\x00\x01"
 cmd_calibrate_tps_1_closed   = "w\x00\x14\x00\x02"
 cmd_calibrate_tps_1_wot      = "w\x00\x14\x00\x03"
@@ -1504,6 +1507,7 @@ cmd_etb_autotune             = "w\x00\x14\x00\x0C"
 cmd_enable_self_stim         = "w\x00\x14\x00\x0D"
 cmb_etb_auto_calibrate       = "w\x00\x14\x00\x0E"
 cmd_disable_self_stim        = "w\x00\x14\x00\x0F"
+cmd_etb_autotune_stop        = "w\x00\x14\x00\x10"
 
 cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
@@ -2819,10 +2823,13 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != 16 || useStepperIdle && useHbridges  }
 
 	dialog = etbAutotune, "PID Autotune"
-		field = "!Set debug mode below to 'ETB Autotune' to show results"
-		field = "Debug mode",							debugMode
-		commandButton = "ETB PID Autotune", cmd_etb_autotune
+		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
+		commandButton = "Stop ETB PID Autotune", cmd_etb_autotune_stop
+
 		commandButton = "Auto Calibrate TPS", cmb_etb_auto_calibrate
+
+		field = "!Set debug mode below to 'ETB Autotune' to show more detail"
+		field = "Debug mode",							debugMode
 
 	dialog = etbDialogRight
 		panel = etbIdleDialog
