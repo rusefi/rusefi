@@ -422,7 +422,16 @@ void printTPSInfo(void) {
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS
-	Sensor::showAllSensorInfo(&logger);
+	printThermistor("CLT", &engineConfiguration->clt, &engine->engineState.cltCurve,
+			engineConfiguration->useLinearCltSensor);
+	if (!isValidCoolantTemperature(getCoolantTemperature())) {
+		scheduleMsg(&logger, "CLT sensing error");
+	}
+	printThermistor("IAT", &engineConfiguration->iat, &engine->engineState.iatCurve,
+			engineConfiguration->useLinearIatSensor);
+	if (!isValidIntakeAirTemperature(getIntakeAirTemperature())) {
+		scheduleMsg(&logger, "IAT sensing error");
+	}
 
 	scheduleMsg(&logger, "fan=%s @ %s", boolToString(enginePins.fanRelay.getLogicValue()),
 			hwPortname(engineConfiguration->fanPin));
@@ -692,6 +701,14 @@ static void setCanRxPin(const char *pinName) {
 
 static void setCanTxPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->canTxPin, "CAN TX");
+}
+
+static void setAuxRxpin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->auxSerialRxPin, "AUX RX");
+}
+
+static void setAuxTxpin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->auxSerialTxPin, "AUX TX");
 }
 
 static void setAlternatorPin(const char *pinName) {
@@ -1443,6 +1460,9 @@ void initSettings(void) {
 
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
+
+	addConsoleActionS("set_aux_tx_pin", setAuxTxpin);
+	addConsoleActionS("set_aux_rx_pin", setAuxRxpin);
 
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);

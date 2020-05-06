@@ -56,6 +56,7 @@
 #include "launch_control.h"
 #include "tachometer.h"
 #include "gppwm.h"
+#include "serial.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"

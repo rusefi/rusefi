@@ -33,6 +33,7 @@ static SerialWrite serialWrite;
 static void auxInfo(void) {
 	
 	if (!isSerialEnabled) {
+
 		scheduleMsg(&logger, "AUX Serial is not enabled, please enable & restart");
 		return;
 	}
