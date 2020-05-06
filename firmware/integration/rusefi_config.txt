@@ -115,7 +115,7 @@ struct_no_prefix engine_configuration_s
 #define FSIO_COMMAND_COUNT 16
 #define AUX_PID_COUNT 4
 
-#define VEHICLE_NAME_SIZE 32
+#define VEHICLE_INFO_SIZE 32
 
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
@@ -794,7 +794,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 ! same length used for critical and soft error messages
 #define ERROR_BUFFER_SIZE 120
 
-	custom vehicle_name_t @@VEHICLE_NAME_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_NAME_SIZE@@
+	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 
 	custom error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@
 	custom le_formula_t @@LE_COMMAND_LENGTH@@ string, ASCII, @OFFSET@, @@LE_COMMAND_LENGTH@@
@@ -873,9 +873,10 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 
 	etb_io[ETB_COUNT iterate] etbIo2
 
-	vehicle_name_t vehicleName;
+	vehicle_info_t engineMake;
+	vehicle_info_t engineCode;
 	
-	int[84] unusedAtOldBoardConfigurationEnd;
+	int[76] unusedAtOldBoardConfigurationEnd;
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
@@ -1285,7 +1286,7 @@ float[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds",      1,     0
 
 
 boost_table_t boostTableOpenLoop;
-uint8_t[BOOST_LOAD_COUNT] boostMapBins;;"",  @@LOAD_1_BYTE_PACKING_MULT@@,   0,        0,  600.0,   1
+uint8_t[8] unused6312;
 uint8_t[BOOST_RPM_COUNT] boostRpmBins;;"RPM",   @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0 
 
 boost_table_t boostTableClosedLoop;

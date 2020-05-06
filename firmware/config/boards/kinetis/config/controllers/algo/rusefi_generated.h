@@ -291,8 +291,6 @@
 #define boostControlPinMode_offset_hex 3dd
 #define boostCutPressure_offset 2132
 #define boostCutPressure_offset_hex 854
-#define boostMapBins_offset 6312
-#define boostMapBins_offset_hex 18a8
 #define boostPid_dFactor_offset 1000
 #define boostPid_dFactor_offset_hex 3e8
 #define boostPid_iFactor_offset 996
@@ -558,6 +556,8 @@
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define engineChartSize_offset 1480
 #define engineChartSize_offset_hex 5c8
+#define engineCode_offset 1128
+#define engineCode_offset_hex 468
 #define engineConfiguration_offset 0
 #define engineConfiguration_offset_hex 0
 #define engineLoadAccelEnrichmentMultiplier_offset 2072
@@ -570,6 +570,8 @@
 #define engineLoadDecelEnleanmentMultiplier_offset_hex 810
 #define engineLoadDecelEnleanmentThreshold_offset 2060
 #define engineLoadDecelEnleanmentThreshold_offset_hex 80c
+#define engineMake_offset 1096
+#define engineMake_offset_hex 448
 #define engineSnifferRpmThreshold_offset 4
 #define engineSnifferRpmThreshold_offset_hex 4
 #define engineType_offset 0
@@ -2265,6 +2267,8 @@
 #define unused1476b20_offset_hex 5c4
 #define unused2432_offset 2432
 #define unused2432_offset_hex 980
+#define unused6312_offset 6312
+#define unused6312_offset_hex 18a8
 #define unused711_offset 711
 #define unused711_offset_hex 2c7
 #define unused76b0_offset 76
@@ -2291,8 +2295,8 @@
 #define unused_former_warmup_target_afr_offset_hex 834
 #define unusedAntilagTimeout_offset 820
 #define unusedAntilagTimeout_offset_hex 334
-#define unusedAtOldBoardConfigurationEnd_offset 1128
-#define unusedAtOldBoardConfigurationEnd_offset_hex 468
+#define unusedAtOldBoardConfigurationEnd_offset 1160
+#define unusedAtOldBoardConfigurationEnd_offset_hex 488
 #define unusedBit4_1476_offset 1476
 #define unusedBit4_1476_offset_hex 5c4
 #define unusedBit_251_10_offset 976
@@ -2442,9 +2446,7 @@
 #define vbattAdcChannel_offset_hex 201
 #define vbattDividerCoeff_offset 464
 #define vbattDividerCoeff_offset_hex 1d0
-#define VEHICLE_NAME_SIZE 32
-#define vehicleName_offset 1096
-#define vehicleName_offset_hex 448
+#define VEHICLE_INFO_SIZE 32
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedCoef_offset_hex 1dc
 #define vehicleSpeedSensorInputPin_offset 968
