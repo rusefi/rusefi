@@ -18,3 +18,7 @@ HW_LAYER_DRIVERS_CPP = \
 	$(DRIVERS_DIR)/can/can_hw.cpp \
 	$(DRIVERS_DIR)/can/can_msg_tx.cpp \
 
+HW_LAYER_DRIVERS_CPP = \
+	$(DRIVERS_DIR)/can/can_hw.cpp \
+	$(DRIVERS_DIR)/can/can_msg_tx.cpp \
+	$(DRIVERS_DIR)/serial/serial_hw.cpp \
