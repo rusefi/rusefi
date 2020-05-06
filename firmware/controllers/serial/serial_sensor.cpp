@@ -17,7 +17,7 @@
 
 EXTERN_ENGINE;
 
-volatile float InnovateLC2AFR = 0;
+volatile float InnovateLC2AFR = AFR_ERROR;
 
 typedef enum
 {
@@ -32,6 +32,7 @@ typedef enum
 	SENSOR_TIMING_ERR = 8,
 	SUPP_V_LOW = 9
 } sensor_error_code_t;
+
 typedef struct
 {
 	int function_code;
@@ -42,63 +43,42 @@ typedef struct
 	sensor_error_code_t error_code;
 } sensor_data_t;
 
-sensor_data_t innovate_o2_sensor[NUM_INNOVATE_O2_SENSORS];
+static sensor_data_t innovate_o2_sensor[NUM_INNOVATE_O2_SENSORS];
 
-void SerialSendTest()
-{
-	// char data[5]; // = "Hello world!\n\r";
-	// data[0] = 178;
-	// data[1] = 130;
-	// data[2] = 71;
-	// data[3] = 19;
-	// data[4] = 1;
-	// data[5] = 81;
-	// sdWrite(&SD6, (uint8_t *)data, 6);
-}
+static size_t tmsglen;
 
-uint16_t tmsglen;
-
-void IdentifyInnovateSerialMsg() // this identifies an innovate LC1/LC2 o2 sensor by it's first word (header)
-{
-	if (CONFIG(enableInnovateLC2))
-	{
-		if (((ser_buffer[0]) & 162) != 162) //not serial header word
-		{
+void IdentifyInnovateSerialMsg() {		//this identifies an innovate LC1/LC2 o2 sensor by it's first word (header)
+	if (CONFIG(enableInnovateLC2)) {
+		if (((ser_buffer[0]) & 162) != 162) {		//not serial header word
 			innovate_serial_id_state = UNKNOWN;
 			innovate_msg_len = SERBUFFLEN;
 		}
 
-		switch (innovate_serial_id_state)
-		{
+		switch (innovate_serial_id_state) {
 		case UNKNOWN:
+			InnovateLC2AFR = AFR_ERROR;
 			// read one byte, identify with mask, advance and read next byte
-			if (((ser_buffer[0]) & 162) == 162) // check if it's the first byte of header
-			{
+			if (((ser_buffer[0]) & 162) == 162) { // check if it's the first byte of header
 				// first byte identified, now continue reading and advance statemachine
 				innovate_serial_id_state = HEADER_FOUND;
 			}
-			else
-			{
+			else {
 				innovate_serial_id_state = UNKNOWN;
 			}
 			break;
 
 		case HEADER_FOUND:
 			// now we should have both header bytes in array, and we can read the total packet length
-			// we could check if both header bytes mask OK: (skip for now)
-			//	if ((((ser_buffer[0] << 8) | ser_buffer[1]) & 41600) == 41600) //1010001010000000 mask
 			tmsglen = (((ser_buffer[0] << 8) | ser_buffer[1]) & 383); //0000000101111111 mask
 
-			if (tmsglen)
-			{
+			if (tmsglen) {
 				tmsglen += 1; // length in words including header (2 bytes)
 				tmsglen *= 2; // length in bytes (incl header)
 				innovate_msg_len = tmsglen;
 
 				innovate_serial_id_state = IDENTIFIED; //advance state machine
 			}
-			else
-			{
+			else {
 				innovate_serial_id_state = UNKNOWN;
 			}
 
@@ -129,14 +109,12 @@ void ParseInnovateSerialMsg()
 	// 110 Error code in Lambda value
 	// 111 reserved
 
-	for (size_t i = 0; i < ((tmsglen - 2) / 4) && i < NUM_INNOVATE_O2_SENSORS; i++)
-	{
+	for (size_t i = 0; i < ((tmsglen - 2) / 4) && i < NUM_INNOVATE_O2_SENSORS; i++) {
 		innovate_o2_sensor[i].function_code = (ser_buffer[2 + i * 4] >> 2 & 0x7);
 		// innovate_o2_sensor[i].AFR_multiplier = ((ser_buffer[2 + i * 4] << 7 | ser_buffer[3 + i * 4]) & 0xFF);
 		innovate_o2_sensor[i].AFR_multiplier = AFR_MULTIPLIER;
 
-		switch (innovate_o2_sensor[i].function_code)
-		{
+		switch (innovate_o2_sensor[i].function_code) {
 		case 0: //Lambda valid and aux data valid, normal operation
 		case 1: //Lambda value contains o2 level in 1/10%
 			innovate_o2_sensor[i].lambda = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
@@ -160,7 +138,7 @@ void ParseInnovateSerialMsg()
 		//  case 3: // Need Free air Calibration Request, Lambda data not valid
 		//    break;
 		case 4: // Warming up, Lambda value is temp in 1/10% of operating temp
-			InnovateLC2AFR = AFR_DEFAULT;
+			InnovateLC2AFR = AFR_ERROR;
 			innovate_o2_sensor[i].warmup = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
 			//catch potential overflow:
 			if (innovate_o2_sensor[i].warmup >= 1023)
@@ -171,7 +149,7 @@ void ParseInnovateSerialMsg()
 			//  case 5: // Heater Calibration, Lambda value contains calibration countdown
 			//    break;
 		case 6: // Error code in Lambda value
-			InnovateLC2AFR = AFR_DEFAULT;
+			InnovateLC2AFR = AFR_ERROR;
 			innovate_o2_sensor[i].error_code = (sensor_error_code_t)((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
 			//catch potential overflow:
 			if (innovate_o2_sensor[i].error_code >= (sensor_error_code_t)1023)
@@ -182,13 +160,13 @@ void ParseInnovateSerialMsg()
 			//  case 7: // reserved
 			//    break;
 		default:
+			InnovateLC2AFR = AFR_ERROR;
 			break;
 		}
 	}
 }
 
 void ParseSerialData()
-// static void ParseSerialData(UARTDriver *uartp)
 {
 	if (CONFIG(enableInnovateLC2))
 		IdentifyInnovateSerialMsg();

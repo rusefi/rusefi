@@ -9,9 +9,9 @@
 #pragma once
 
 #define AFRMIN 0
-#define AFRMAX 40
+#define AFRMAX 33
 
-#define AFR_DEFAULT 14.70
+#define AFR_ERROR 30
 
 void SerialSendTest();
 void IdentifyInnovateSerialMsg();

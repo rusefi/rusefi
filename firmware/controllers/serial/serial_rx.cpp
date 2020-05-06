@@ -18,39 +18,26 @@
 #include "allsensors.h"
 #include "vehicle_speed.h"
 
-#define TIMEREAD ((sysinterval_t)chTimeMS2I(10)) //10ms timeout
 EXTERN_ENGINE;
 
 static LoggingWithStorage logger("AUX Serial RX");
 
 uint8_t ser_buffer[SERBUFFLEN] = {};
 uint16_t innovate_msg_len = SERBUFFLEN;
-
 innovate_serial_id_state_t innovate_serial_id_state = UNKNOWN;
 
-uint16_t len = SERBUFFLEN;
-uint16_t sb = 0; 
-
 SerialRead::SerialRead()
-	: ThreadController("AUX Serial RX", NORMALPRIO)
-{
+	: ThreadController("AUX Serial RX", NORMALPRIO) {
 }
 
-void SerialRead::ThreadTask()
-{
-	while (true)
-	{
-		if (CONFIG(enableInnovateLC2))
-		{
+void SerialRead::ThreadTask() {
+	while (true) {
+		if (CONFIG(enableInnovateLC2)) {
 			len = innovate_msg_len;
 		}
 
-		if ((sdReadTimeout(&SD6, ser_buffer, len, TIMEREAD)) > 0)
+		if ((sdReadTimeout(AUX_SERIAL_PORT, ser_buffer, len, TIMEREAD)) > 0)
 			ParseSerialData();
-
-		// zero out ser_buffer:
-		// std::fill_n(ser_buffer, SERBUFFLEN, 0);
-
 	}
 }
 
