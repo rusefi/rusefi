@@ -12,7 +12,7 @@
 #include "serial_sensor.h"
 #include "engine.h"
 
-#define NUM_INNOVATE_O2_SENSORS 4
+#define NUM_INNOVATE_O2_SENSORS 1
 #define AFR_MULTIPLIER 147
 
 EXTERN_ENGINE;
@@ -129,8 +129,7 @@ void ParseInnovateSerialMsg()
 	// 110 Error code in Lambda value
 	// 111 reserved
 
-	for (size_t i = 0; i < ((6 - 2) / 4) && i < NUM_INNOVATE_O2_SENSORS - 1; i++)
-
+	for (size_t i = 0; i < ((tmsglen - 2) / 4) && i < NUM_INNOVATE_O2_SENSORS; i++)
 	{
 		innovate_o2_sensor[i].function_code = (ser_buffer[2 + i * 4] >> 2 & 0x7);
 		// innovate_o2_sensor[i].AFR_multiplier = ((ser_buffer[2 + i * 4] << 7 | ser_buffer[3 + i * 4]) & 0xFF);
@@ -152,8 +151,8 @@ void ParseInnovateSerialMsg()
 			else if (innovate_o2_sensor[i].AFR < AFRMIN)
 				innovate_o2_sensor[i].AFR = AFRMIN;
 
-			InnovateLC2AFR = innovate_o2_sensor[i].AFR;
-			
+			InnovateLC2AFR = innovate_o2_sensor[i].AFR; //only using one sensor right now
+
 			break;
 		// this is invalid o2 data, so we can ignore it:
 		//  case 2: // Free air Calib in progress, Lambda data not valid
