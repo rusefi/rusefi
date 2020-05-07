@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 12:32:31 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu May 07 00:52:01 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -646,7 +646,7 @@ struct engine_configuration_s {
 	injector_s injector;
 	/**
 	offset 76 bit 0 */
-	bool unused76b0 : 1;
+	bool isForcedInduction : 1;
 	/**
 	offset 76 bit 1 */
 	bool activateAuxPid1 : 1;
@@ -1337,9 +1337,10 @@ struct engine_configuration_s {
 	 */
 	uint32_t tunerStudioSerialSpeed;
 	/**
+	 * Just for reference really, not taken into account by any logic at this point
 	 * offset 732
 	 */
-	int anUnused4Bytes;
+	float compressionRatio;
 	/**
 	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
 	 * See also directSelfStimulation which is different.
@@ -3439,4 +3440,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 12:32:31 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu May 07 00:52:01 EDT 2020
