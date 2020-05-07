@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu May 07 01:13:04 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu May 07 13:45:58 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1546,8 +1546,7 @@ public class Fields {
 	public static final int unused_former_warmup_target_afr_offset_hex = 834;
 	public static final int unusedAntilagTimeout_offset = 820;
 	public static final int unusedAntilagTimeout_offset_hex = 334;
-	public static final int unusedAtOldBoardConfigurationEnd_offset = 1160;
-	public static final int unusedAtOldBoardConfigurationEnd_offset_hex = 488;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 1192;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_11_offset = 976;
 	public static final int unusedBit_251_12_offset = 976;
@@ -1625,6 +1624,8 @@ public class Fields {
 	public static final int vbattAdcChannel_offset_hex = 201;
 	public static final int vbattDividerCoeff_offset = 464;
 	public static final int VEHICLE_INFO_SIZE = 32;
+	public static final int vehicleName_offset = 1160;
+	public static final int vehicleName_offset_hex = 488;
 	public static final int vehicleSpeedCoef_offset = 476;
 	public static final int vehicleSpeedSensorInputPin_offset = 968;
 	public static final int veLoadBins_offset = 18464;
@@ -2191,6 +2192,7 @@ public class Fields {
 	public static final Field ETBIO22_DISABLEPIN = Field.create("ETBIO22_DISABLEPIN", 1095, FieldType.INT8, brain_pin_e);
 	public static final Field ENGINEMAKE = Field.create("ENGINEMAKE", 1096, FieldType.INT);
 	public static final Field ENGINECODE = Field.create("ENGINECODE", 1128, FieldType.INT);
+	public static final Field VEHICLENAME = Field.create("VEHICLENAME", 1160, FieldType.INT);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -3161,6 +3163,7 @@ public class Fields {
 	ETBIO22_DISABLEPIN,
 	ENGINEMAKE,
 	ENGINECODE,
+	VEHICLENAME,
 	VVTDISPLAYINVERTED,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
