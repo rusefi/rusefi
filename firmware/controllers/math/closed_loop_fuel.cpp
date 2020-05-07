@@ -58,7 +58,7 @@ static bool shouldCorrect(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// Check that the engine is hot enough (and clt not failed)
 	auto clt = Sensor::get(SensorType::Clt);
-	if (!clt.Valid || clt.value_or < cfg.minClt) {
+	if (!clt.Valid || clt.Value < cfg.minClt) {
 		return false;
 	}
 
@@ -84,7 +84,7 @@ float fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return 1.0f;
 	}
 
-	size_t binIdx = computeBin(GET_RPM(), getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE), CONFIG(stft));
+	size_t binIdx = computeStftBin(GET_RPM(), getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE), CONFIG(stft));
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
