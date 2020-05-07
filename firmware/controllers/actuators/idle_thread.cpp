@@ -120,12 +120,16 @@ static void showIdleInfo(void) {
 			getIdlePosition(), boolToString(CONFIG(useStepperIdle)));
 
 	if (CONFIG(useStepperIdle)) {
-		scheduleMsg(logger, "directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
-				engineConfiguration->idleStepperReactionTime);
-		scheduleMsg(logger, "stepPin=%s steps=%d", hwPortname(CONFIG(idle).stepperStepPin),
-				engineConfiguration->idleStepperTotalSteps);
-		scheduleMsg(logger, "enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
-				engineConfiguration->stepperEnablePinMode);
+		if (CONFIG(useHbridges)) {
+			/* TODO */
+		} else {
+			scheduleMsg(logger, "directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
+					engineConfiguration->idleStepperReactionTime);
+			scheduleMsg(logger, "stepPin=%s steps=%d", hwPortname(CONFIG(idle).stepperStepPin),
+					engineConfiguration->idleStepperTotalSteps);
+			scheduleMsg(logger, "enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
+					engineConfiguration->stepperEnablePinMode);
+		}
 	} else {
 		if (!CONFIG(isDoubleSolenoidIdle)) {
 			scheduleMsg(logger, "idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,

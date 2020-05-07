@@ -630,7 +630,7 @@ void requestTLE8888initialization(void) {
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int tle8888_writePad(void *data, unsigned int pin, int value) {
+static int tle8888_writePad(void *data, unsigned int pin, int value) {
 
 	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
 		return -1;
@@ -736,7 +736,7 @@ void tle8888_read_reg(uint16_t reg, uint16_t *val)
 	tle8888_spi_rw(chip, CMD_R(reg), val);
 }
 
-int tle8888_init(void * data)
+static int tle8888_init(void * data)
 {
 	int ret;
 	struct tle8888_priv *chip;
@@ -763,7 +763,7 @@ int tle8888_init(void * data)
 	return 0;
 }
 
-int tle8888_deinit(void *data)
+static int tle8888_deinit(void *data)
 {
 	(void)data;
 
