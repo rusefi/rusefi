@@ -1,5 +1,6 @@
 
 #include "closed_loop_fuel_cell.h"
+#include "closed_loop_fuel.h"
 
 #include "engine.h"
 
@@ -34,7 +35,6 @@ TEST(ClosedLoopCell, TestDeadband) {
 TEST(ClosedLoopFuelCell, AdjustRate) {
 	StrictMock<MockClCell> cl;
 
-	// Error is more than deadtime, so nothing else should be called
 	EXPECT_CALL(cl, getLambdaError(_, _, _))
 		.WillOnce(Return(0.1f));
 	EXPECT_CALL(cl, getMinAdjustment())
@@ -49,4 +49,33 @@ TEST(ClosedLoopFuelCell, AdjustRate) {
 	// Should have integrated 0.2 * dt
 	// dt = 1000.0f / FAST_CALLBACK_PERIOD_MS
 	EXPECT_FLOAT_EQ(cl.getAdjustment(), 1 + (0.2f / (1000.0f / FAST_CALLBACK_PERIOD_MS)));
+}
+
+TEST(ClosedLoopFuel, CellSelection) {
+	stft_s cfg;
+
+	// Sensible region config
+	cfg.maxIdleRegionRpm = 1500 / RPM_1_BYTE_PACKING_MULT;
+	cfg.minPowerLoad = 80;
+	cfg.maxOverrunLoad = 30;
+
+	// Test idle
+	EXPECT_EQ(0, computeStftBin(1000, 10, cfg));
+	EXPECT_EQ(0, computeStftBin(1000, 50, cfg));
+	EXPECT_EQ(0, computeStftBin(1000, 90, cfg));
+
+	// Test overrun
+	EXPECT_EQ(1, computeStftBin(2000, 10, cfg));
+	EXPECT_EQ(1, computeStftBin(4000, 10, cfg));
+	EXPECT_EQ(1, computeStftBin(10000, 10, cfg));
+
+	// Test load
+	EXPECT_EQ(2, computeStftBin(2000, 90, cfg));
+	EXPECT_EQ(2, computeStftBin(4000, 90, cfg));
+	EXPECT_EQ(2, computeStftBin(10000, 90, cfg));
+
+	// Main cell
+	EXPECT_EQ(3, computeStftBin(2000, 50, cfg));
+	EXPECT_EQ(3, computeStftBin(4000, 50, cfg));
+	EXPECT_EQ(3, computeStftBin(10000, 50, cfg));
 }
