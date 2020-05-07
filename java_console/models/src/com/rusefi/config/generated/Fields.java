@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 22:04:17 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu May 07 01:13:04 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -73,7 +73,6 @@ public class Fields {
 	public static final int antiLagEnabled_offset = 76;
 	public static final int antiLagRpmTreshold_offset = 824;
 	public static final int antiLagRpmTreshold_offset_hex = 338;
-	public static final int anUnused4Bytes_offset = 732;
 	public static final int autoTuneCltThreshold_offset = 2420;
 	public static final int autoTuneCltThreshold_offset_hex = 974;
 	public static final int autoTuneTpsQuietPeriod_offset = 2428;
@@ -294,6 +293,7 @@ public class Fields {
 	public static final int COMPOSITE_DATA_LENGTH = 2500;
 	public static final int COMPOSITE_PACKET_COUNT = 500;
 	public static final int COMPOSITE_PACKET_SIZE = 5;
+	public static final int compressionRatio_offset = 732;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int consoleLoopPeriodMs_offset = 716;
 	public static final int consoleUartDevice_offset = 943;
@@ -1004,6 +1004,7 @@ public class Fields {
 	public static final int isEngineControlEnabled_offset = 744;
 	public static final int isFastAdcEnabled_offset = 744;
 	public static final int isFasterEngineSpinUpEnabled_offset = 744;
+	public static final int isForcedInduction_offset = 76;
 	public static final int isHip9011Enabled_offset = 744;
 	public static final int isIgnitionEnabled_offset = 1476;
 	public static final int isInjectionEnabled_offset = 1476;
@@ -1531,7 +1532,6 @@ public class Fields {
 	public static final int unused2432_offset_hex = 980;
 	public static final int unused6312_offset = 6312;
 	public static final int unused711_offset = 711;
-	public static final int unused76b0_offset = 76;
 	public static final int unused806_offset = 806;
 	public static final int unused806_offset_hex = 326;
 	public static final int unused_1484_bit_24_offset = 1476;
@@ -1654,7 +1654,7 @@ public class Fields {
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT);
 	public static final Field ENGINESNIFFERRPMTHRESHOLD = Field.create("ENGINESNIFFERRPMTHRESHOLD", 4, FieldType.INT);
 	public static final Field INJECTOR_FLOW = Field.create("INJECTOR_FLOW", 8, FieldType.FLOAT);
-	public static final Field UNUSED76B0 = Field.create("UNUSED76B0", 76, FieldType.BIT, 0);
+	public static final Field ISFORCEDINDUCTION = Field.create("ISFORCEDINDUCTION", 76, FieldType.BIT, 0);
 	public static final Field ACTIVATEAUXPID1 = Field.create("ACTIVATEAUXPID1", 76, FieldType.BIT, 1);
 	public static final Field ISVERBOSEAUXPID1 = Field.create("ISVERBOSEAUXPID1", 76, FieldType.BIT, 2);
 	public static final Field ACTIVATEAUXPID2 = Field.create("ACTIVATEAUXPID2", 76, FieldType.BIT, 3);
@@ -1912,7 +1912,7 @@ public class Fields {
 	public static final Field LCDTHREADPERIODMS = Field.create("LCDTHREADPERIODMS", 720, FieldType.INT);
 	public static final Field GENERALPERIODICTHREADPERIODMS = Field.create("GENERALPERIODICTHREADPERIODMS", 724, FieldType.INT);
 	public static final Field TUNERSTUDIOSERIALSPEED = Field.create("TUNERSTUDIOSERIALSPEED", 728, FieldType.INT);
-	public static final Field ANUNUSED4BYTES = Field.create("ANUNUSED4BYTES", 732, FieldType.INT);
+	public static final Field COMPRESSIONRATIO = Field.create("COMPRESSIONRATIO", 732, FieldType.FLOAT);
 	public static final Field TRIGGERSIMULATORPINS1 = Field.create("TRIGGERSIMULATORPINS1", 736, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERSIMULATORPINS2 = Field.create("TRIGGERSIMULATORPINS2", 737, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERSIMULATORPINS3 = Field.create("TRIGGERSIMULATORPINS3", 738, FieldType.INT8, brain_pin_e);
@@ -2637,7 +2637,7 @@ public class Fields {
 	ENGINETYPE,
 	ENGINESNIFFERRPMTHRESHOLD,
 	INJECTOR_FLOW,
-	UNUSED76B0,
+	ISFORCEDINDUCTION,
 	ACTIVATEAUXPID1,
 	ISVERBOSEAUXPID1,
 	ACTIVATEAUXPID2,
@@ -2886,7 +2886,7 @@ public class Fields {
 	LCDTHREADPERIODMS,
 	GENERALPERIODICTHREADPERIODMS,
 	TUNERSTUDIOSERIALSPEED,
-	ANUNUSED4BYTES,
+	COMPRESSIONRATIO,
 	TRIGGERSIMULATORPINS1,
 	TRIGGERSIMULATORPINS2,
 	TRIGGERSIMULATORPINS3,
