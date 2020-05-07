@@ -109,8 +109,6 @@
 #define antiLagEnabled_offset_hex 4c
 #define antiLagRpmTreshold_offset 824
 #define antiLagRpmTreshold_offset_hex 338
-#define anUnused4Bytes_offset 732
-#define anUnused4Bytes_offset_hex 2dc
 #define autoTuneCltThreshold_offset 2420
 #define autoTuneCltThreshold_offset_hex 974
 #define autoTuneTpsQuietPeriod_offset 2428
@@ -454,6 +452,8 @@
 #define COMPOSITE_DATA_LENGTH 2500
 #define COMPOSITE_PACKET_COUNT 500
 #define COMPOSITE_PACKET_SIZE 5
+#define compressionRatio_offset 732
+#define compressionRatio_offset_hex 2dc
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define consoleLoopPeriodMs_offset 716
 #define consoleLoopPeriodMs_offset_hex 2cc
@@ -1473,6 +1473,8 @@
 #define isFastAdcEnabled_offset_hex 2e8
 #define isFasterEngineSpinUpEnabled_offset 744
 #define isFasterEngineSpinUpEnabled_offset_hex 2e8
+#define isForcedInduction_offset 76
+#define isForcedInduction_offset_hex 4c
 #define isHip9011Enabled_offset 744
 #define isHip9011Enabled_offset_hex 2e8
 #define isIgnitionEnabled_offset 1476
@@ -2271,8 +2273,6 @@
 #define unused6312_offset_hex 18a8
 #define unused711_offset 711
 #define unused711_offset_hex 2c7
-#define unused76b0_offset 76
-#define unused76b0_offset_hex 4c
 #define unused806_offset 806
 #define unused806_offset_hex 326
 #define unused_1484_bit_24_offset 1476
