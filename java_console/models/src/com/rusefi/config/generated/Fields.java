@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 12:32:31 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 22:04:17 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1335,6 +1335,7 @@ public class Fields {
 	public static final int stft_offset = 1064;
 	public static final int stft_offset_hex = 428;
 	public static final int stft_startupDelay_offset = 1071;
+	public static final int stftIgnoreErrorMagnitude_offset = 976;
 	public static final int storageMode_offset = 2260;
 	public static final int tachOutputPin_offset = 704;
 	public static final int tachOutputPinMode_offset = 705;
@@ -1548,7 +1549,6 @@ public class Fields {
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1160;
 	public static final int unusedAtOldBoardConfigurationEnd_offset_hex = 488;
 	public static final int unusedBit4_1476_offset = 1476;
-	public static final int unusedBit_251_10_offset = 976;
 	public static final int unusedBit_251_11_offset = 976;
 	public static final int unusedBit_251_12_offset = 976;
 	public static final int unusedBit_251_13_offset = 976;
@@ -2105,7 +2105,7 @@ public class Fields {
 	public static final Field ENABLECANVSS = Field.create("ENABLECANVSS", 976, FieldType.BIT, 7);
 	public static final Field ENABLEINNOVATELC2 = Field.create("ENABLEINNOVATELC2", 976, FieldType.BIT, 8);
 	public static final Field SHOWHUMANREADABLEWARNING = Field.create("SHOWHUMANREADABLEWARNING", 976, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_251_10 = Field.create("UNUSEDBIT_251_10", 976, FieldType.BIT, 10);
+	public static final Field STFTIGNOREERRORMAGNITUDE = Field.create("STFTIGNOREERRORMAGNITUDE", 976, FieldType.BIT, 10);
 	public static final Field UNUSEDBIT_251_11 = Field.create("UNUSEDBIT_251_11", 976, FieldType.BIT, 11);
 	public static final Field UNUSEDBIT_251_12 = Field.create("UNUSEDBIT_251_12", 976, FieldType.BIT, 12);
 	public static final Field UNUSEDBIT_251_13 = Field.create("UNUSEDBIT_251_13", 976, FieldType.BIT, 13);
@@ -3077,7 +3077,7 @@ public class Fields {
 	ENABLECANVSS,
 	ENABLEINNOVATELC2,
 	SHOWHUMANREADABLEWARNING,
-	UNUSEDBIT_251_10,
+	STFTIGNOREERRORMAGNITUDE,
 	UNUSEDBIT_251_11,
 	UNUSEDBIT_251_12,
 	UNUSEDBIT_251_13,

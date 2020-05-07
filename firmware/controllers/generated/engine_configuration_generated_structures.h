@@ -1737,7 +1737,7 @@ struct engine_configuration_s {
 	bool showHumanReadableWarning : 1;
 	/**
 	offset 976 bit 10 */
-	bool unusedBit_251_10 : 1;
+	bool stftIgnoreErrorMagnitude : 1;
 	/**
 	offset 976 bit 11 */
 	bool unusedBit_251_11 : 1;
