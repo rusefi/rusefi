@@ -24,6 +24,11 @@ public:
 		return m_lastState;
 	}
 
+	// Deadband has no concept of equal - only greater and less
+	bool lt(float lhs, float rhs) {
+		return !gt(rhs, lhs);
+	}
+
 private:
 	bool m_lastState =false;
 };
