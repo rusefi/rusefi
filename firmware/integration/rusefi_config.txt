@@ -873,10 +873,11 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 
 	etb_io[ETB_COUNT iterate] etbIo2
 
-	vehicle_info_t engineMake;
-	vehicle_info_t engineCode;
+	vehicle_info_t engineMake;+For example, BMW, GM or Chevrolet\nREQUIRED for rusEFI Online
+	vehicle_info_t engineCode;+For example, LS1 or NB2\nREQUIRED for rusEFI Online
+	vehicle_info_t vehicleName;+For example, Hunchback or Orange Miata\nVehicle name has to be unique between your vehicles.\nREQUIRED for rusEFI Online
 	
-	int[76] unusedAtOldBoardConfigurationEnd;
+	int[68] unusedAtOldBoardConfigurationEnd;
 
 	bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
