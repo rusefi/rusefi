@@ -126,12 +126,9 @@ void setDcMotorDuty(size_t index, float duty) {
 }
 
 #if EFI_PROD_CODE
-void showDcMotorInfo(Logging* logger) {
-	for (int i = 0 ; i < engine->etbActualCount; i++) {
-		EtbHardware *etb = &etbHardware[i];
+void showDcMotorInfo(Logging* logger, int i) {
+	EtbHardware *etb = &etbHardware[i];
 
-		scheduleMsg(logger, "ETB %d", i);
-		scheduleMsg(logger, "Motor: dir=%d DC=%f", etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
-	}
+	scheduleMsg(logger, " motor: dir=%d DC=%f", etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
 }
 #endif
