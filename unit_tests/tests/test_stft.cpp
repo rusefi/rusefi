@@ -35,7 +35,6 @@ TEST(ClosedLoopCell, TestDeadband) {
 TEST(ClosedLoopFuelCell, AdjustRate) {
 	StrictMock<MockClCell> cl;
 
-	// Error is more than deadtime, so nothing else should be called
 	EXPECT_CALL(cl, getLambdaError(_, _, _))
 		.WillOnce(Return(0.1f));
 	EXPECT_CALL(cl, getMinAdjustment())
