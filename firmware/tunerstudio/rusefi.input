@@ -1621,11 +1621,17 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = baseEngineConfig, "Engine Configuration"
 ;		field = "Engine Preset",						engineType
+; this field is useful for rusEFI online catalog
 		field = "Engine Make",							engineMake
+; this field is useful for rusEFI online catalog
 		field = "Engine Code",							engineCode
 		field = "Number of Cylinders",					cylindersCount
 		field = "Engine Displacement",         			displacement
 		field = "Firing Order",							firingOrder
+; this field is useful for rusEFI online catalog
+		field = "Compression Ratio",					compressionRatio
+; this field is useful for rusEFI online catalog
+		field = "Forced Induction?",					isForcedInduction
 
 ;			Engine->Trigger configuration
 	dialog = triggerConfiguration_settings,	"Trigger Pattern"
