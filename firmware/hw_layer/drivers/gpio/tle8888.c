@@ -135,6 +135,10 @@ typedef enum {
 #define CMD_INCONFIG(n, d)	CMD_WR(0x53 + ((n) & 0x03), d)
 #define CMD_DDCONFIG(n, d)	CMD_WR(0x57 + ((n) & 0x03), d)
 #define CMD_OECONFIG(n, d)	CMD_WR(0x5b + ((n) & 0x03), d)
+#define CMD_WWDCONFIG(n, d)	CMD_WR(0x5f + ((n) & 0x01), d)
+#define CMD_FWDCONFIG(d)	CMD_WR(0x61, d)
+#define CMD_TECCONFIG(d)	CMD_WR(0x62, d)
+#define CMD_WDCONFIG(n, d)	CMD_WR(0x63 + ((n) & 0x01), d)
 #define CMD_CONT(n, d)		CMD_WR(0x7b + ((n) & 0x03), d)
 
 const uint8_t watchDogResponses[16][4] = {
@@ -502,6 +506,22 @@ static int tle8888_reset(struct tle8888_priv *chip)
 	 * Table 8. Reset Times. All reset times not more than 20uS
 	 */
 	chThdSleepMilliseconds(3);
+
+	/* Set WatchDogs and Total Error countes */
+	uint16_t tx[] = {
+		/* Set LOCK bit to 0 */
+		CMD_UNLOCK,
+		/* Same WDs settings as on TLE8888QK */
+		CMD_WWDCONFIG(1, 0x77),
+		CMD_FWDCONFIG(0xf7),
+		CMD_TECCONFIG(0x77),
+		CMD_WWDSERVICE((0x3f << 2) | (0x03 << 0)), /* 100.8 mS - closed window, 12.8 mS - open window */
+		CMD_WDCONFIG(1, 0x1b),
+	};
+	ret = tle8888_spi_rw_array(chip, tx, NULL, ARRAY_SIZE(tx));
+	if (ret) {
+		return ret;
+	}
 
 	return ret;
 }
