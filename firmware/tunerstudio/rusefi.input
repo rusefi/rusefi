@@ -1624,7 +1624,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ; this field is useful for rusEFI online catalog
 		field = "Engine Make",							engineMake
 ; this field is useful for rusEFI online catalog
-		field = "Engine Code",							engineCode
+		field = "Manufacturer Engine Code",				engineCode
+; this field is useful for rusEFI online catalog
+		field = "Vehicle Name",							vehicleName
 		field = "Number of Cylinders",					cylindersCount
 		field = "Engine Displacement",         			displacement
 		field = "Firing Order",							firingOrder
