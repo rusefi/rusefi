@@ -1979,6 +1979,8 @@
 #define stft_offset_hex 428
 #define stft_startupDelay_offset 1071
 #define stft_startupDelay_offset_hex 42f
+#define stftIgnoreErrorMagnitude_offset 976
+#define stftIgnoreErrorMagnitude_offset_hex 3d0
 #define storageMode_offset 2260
 #define storageMode_offset_hex 8d4
 #define switch_input_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "N/A", "N/A", "PA10", "PA11", "PA12", "PA13", "N/A", "N/A", "N/A", "N/A", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "N/A", "N/A", "N/A", "N/A", "PB12", "PB13", "N/A", "N/A", "N/A", "N/A", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "N/A", "N/A", "N/A", "N/A", "PC14", "PC15", "PC16", "PC17", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "PD15", "PD16", "N/A", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A"
@@ -2299,8 +2301,6 @@
 #define unusedAtOldBoardConfigurationEnd_offset_hex 488
 #define unusedBit4_1476_offset 1476
 #define unusedBit4_1476_offset_hex 5c4
-#define unusedBit_251_10_offset 976
-#define unusedBit_251_10_offset_hex 3d0
 #define unusedBit_251_11_offset 976
 #define unusedBit_251_11_offset_hex 3d0
 #define unusedBit_251_12_offset 976
