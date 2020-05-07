@@ -817,7 +817,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit enableCanVss
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
-	bit unusedBit_251_10
+	bit stftIgnoreErrorMagnitude
 	bit unusedBit_251_11
 	bit unusedBit_251_12
 	bit unusedBit_251_13

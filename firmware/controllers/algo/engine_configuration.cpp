@@ -627,6 +627,44 @@ void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->multisparkMaxSparkingAngle = 30;
 }
 
+void setDefaultStftSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	auto& cfg = CONFIG(stft);
+
+	// Default to disabled
+	CONFIG(fuelClosedLoopCorrectionEnabled) = false;
+
+	// Default to proportional mode (for wideband sensors)
+	CONFIG(stftIgnoreErrorMagnitude) = false;
+
+	// 60 second startup delay - some O2 sensors are slow to warm up.
+	cfg.startupDelay = 60;
+
+	// Only correct in [12.0, 17.0]
+	cfg.minAfr = 120;
+	cfg.maxAfr = 170;
+
+	// Above 60 deg C
+	cfg.minClt = 60;
+
+	// 0.5% deadband
+	cfg.deadband = 5;
+
+	// Sensible region defaults
+	cfg.maxIdleRegionRpm = 1000 / RPM_1_BYTE_PACKING_MULT;
+	cfg.maxOverrunLoad = 35;
+	cfg.minPowerLoad = 85;
+
+	// Sensible cell defaults
+	for (size_t i = 0; i < efi::size(cfg.cellCfgs); i++) {
+		// 30 second time constant - nice and slow
+		cfg.cellCfgs[i].timeConstant = 30 * 10;
+
+		/// Allow +-5%
+		cfg.cellCfgs[i].maxAdd = 5;
+		cfg.cellCfgs[i].maxRemove = -5;
+	}
+}
+
 void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Same config for all channels
 	for (size_t i = 0; i < efi::size(CONFIG(gppwm)); i++) {
@@ -852,13 +890,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setDefaultCrankingSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
-	engineConfiguration->fuelClosedLoopCltThreshold = 70;
-	engineConfiguration->fuelClosedLoopRpmThreshold = 900;
-	engineConfiguration->fuelClosedLoopTpsThreshold = 80;
-	engineConfiguration->fuelClosedLoopAfrLowThreshold = 10.3;
-	engineConfiguration->fuelClosedLoopAfrHighThreshold = 19.8;
-	engineConfiguration->fuelClosedLoopPid.pFactor = -0.1;
+	setDefaultStftSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
 	 * Idle control defaults
