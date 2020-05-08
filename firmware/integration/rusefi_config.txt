@@ -1476,6 +1476,10 @@ end_struct
 #define GAUGE_NAME_DEBUG_I4 "debug i4"
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 
+#define ENGINE_MAKE_MAZDA "Mazda"
+#define ENGINE_MAKE_LADA "Lada"
+#define ENGINE_MAKE_GM "GM"
+#define ENGINE_MAKE_BMW "BMW"
 
 #define CMD_PINS "pins"
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
