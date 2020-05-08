@@ -406,10 +406,6 @@ typedef enum {
 	 */
 	LM_ALPHA_N = 1,
 	/**
-	 * raw Manifold Absolute Pressure sensor value is used as engine load http://en.wikipedia.org/wiki/MAP_sensor
-	 */
-	LM_MAP = 2,
-	/**
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
 	 */
@@ -753,6 +749,14 @@ typedef enum {
 	 */
 	MT_MPX4250A = 9, 
 	
+
+	/**
+	 * Bosch 2.5 Bar TMap Map Sensor with IAT
+	 * 20 kPa at 0.40V, 250 kPa at 4.65V
+	 */
+
+	MT_BOSCH_2_5 = 10,
+
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
 

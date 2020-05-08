@@ -40,7 +40,6 @@ extern bool hasFirmwareErrorFlag;
 // todo: rename to getCriticalErrorMessage
 char *getFirmwareError(void);
 
-void initErrorHandlingDataStructures(void);
 // todo: rename to getWarningMessage?
 char *getWarningMessage(void);
 

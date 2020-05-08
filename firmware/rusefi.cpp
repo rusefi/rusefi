@@ -158,11 +158,9 @@ static void scheduleReboot(void) {
 }
 
 void runRusEfi(void) {
-	initErrorHandlingDataStructures();
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	assertEngineReference();
 	engine->setConfig(config);
-	initIntermediateLoggingBuffer();
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
 

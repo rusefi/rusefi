@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 15:53:36 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu May 07 13:45:58 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -646,7 +646,7 @@ struct engine_configuration_s {
 	injector_s injector;
 	/**
 	offset 76 bit 0 */
-	bool unused76b0 : 1;
+	bool isForcedInduction : 1;
 	/**
 	offset 76 bit 1 */
 	bool activateAuxPid1 : 1;
@@ -1332,13 +1332,15 @@ struct engine_configuration_s {
 	 */
 	int generalPeriodicThreadPeriodMs;
 	/**
+	 * Secondary TTL channel baud rate
 	 * offset 728
 	 */
 	uint32_t tunerStudioSerialSpeed;
 	/**
+	 * Just for reference really, not taken into account by any logic at this point
 	 * offset 732
 	 */
-	int anUnused4Bytes;
+	float compressionRatio;
 	/**
 	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
 	 * See also directSelfStimulation which is different.
@@ -1735,8 +1737,9 @@ struct engine_configuration_s {
 	offset 976 bit 9 */
 	bool showHumanReadableWarning : 1;
 	/**
+	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.;
 	offset 976 bit 10 */
-	bool unusedBit_251_10 : 1;
+	bool stftIgnoreErrorMagnitude : 1;
 	/**
 	offset 976 bit 11 */
 	bool unusedBit_251_11 : 1;
@@ -1886,13 +1889,33 @@ struct engine_configuration_s {
 	 * offset 1064
 	 */
 	stft_s stft;
-
-	etb_io etbIo2[2];
-
 	/**
 	 * offset 1088
 	 */
-	int unusedAtOldBoardConfigurationEnd[92];
+	etb_io etbIo2[ETB_COUNT];
+	/**
+	 * For example, BMW, GM or Chevrolet
+	 * REQUIRED for rusEFI Online
+	 * offset 1096
+	 */
+	vehicle_info_t engineMake;
+	/**
+	 * For example, LS1 or NB2
+	 * REQUIRED for rusEFI Online
+	 * offset 1128
+	 */
+	vehicle_info_t engineCode;
+	/**
+	 * For example, Hunchback or Orange Miata
+	 * Vehicle name has to be unique between your vehicles.
+	 * REQUIRED for rusEFI Online
+	 * offset 1160
+	 */
+	vehicle_info_t vehicleName;
+	/**
+	 * offset 1192
+	 */
+	int unusedAtOldBoardConfigurationEnd[68];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -2338,6 +2361,7 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e runningLedPin;
 	/**
+	 * See also EFI_CONSOLE_RX_BRAIN_PIN
 	 * offset 1814
 	 */
 	brain_pin_e binarySerialTxPin;
@@ -2353,12 +2377,12 @@ struct engine_configuration_s {
 	 *  todo: finish pin migration from hard-coded to configurable?
 	 * offset 1818
 	 */
-	brain_pin_e consoleSerialTxPin;
+	brain_pin_e unusedConsoleSerialTxPin;
 	/**
 	 * todo: finish pin migration from hard-coded to configurable?
 	 * offset 1819
 	 */
-	brain_pin_e consoleSerialRxPin;
+	brain_pin_e unusedConsoleSerialRxPin;
 	/**
 	 * Knock sensor output knock detection threshold depending on current RPM
 	 * offset 1820
@@ -2481,6 +2505,7 @@ struct engine_configuration_s {
 	 */
 	float engineLoadAccelEnrichmentMultiplier;
 	/**
+	 * Band rate for primary TTL
 	 * offset 2076
 	 */
 	uint32_t uartConsoleSerialSpeed;
@@ -3162,7 +3187,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6312
 	 */
-	uint8_t boostMapBins[BOOST_LOAD_COUNT];
+	uint8_t unused6312[8];
 	/**
 	 * offset 6320
 	 */
@@ -3427,4 +3452,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 02 15:53:36 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu May 07 13:45:58 EDT 2020

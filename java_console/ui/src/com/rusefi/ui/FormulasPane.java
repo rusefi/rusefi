@@ -94,7 +94,6 @@ public class FormulasPane {
     enum engine_load_mode_e {
         LM_PLAIN_MAF("Plain MAF"),
         LM_ALPHA_N("Alpha-N/TPS"),
-        LM_MAP("Plain MAP"),
         LM_SPEED_DENSITY("Speed Density/MAP"),
         LM_REAL_MAF("MAF");
 

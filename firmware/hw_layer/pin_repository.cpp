@@ -19,10 +19,9 @@
 #include "smart_gpio.h"
 #include "hardware.h"
 
-static bool initialized = false;
-
 static LoggingWithStorage logger("pin repos");
-static int totalPinsUsed = 0;
+
+static PinRepository pinRepository;
 
 static int brainPin_to_index(brain_pin_e brainPin)
 {
@@ -86,10 +85,14 @@ static brain_pin_e index_to_brainPin(unsigned int i)
 	return brainPin;
 }
 
-PinRepository::PinRepository() {
-}
+static MemoryStream portNameStream;
+static char portNameBuffer[20];
 
-static PinRepository instance;
+PinRepository::PinRepository() {
+	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
+
+	initBrainUsedPins();
+}
 
 #if (BOARD_TLE8888_COUNT > 0)
 /* DEBUG */
@@ -105,10 +108,10 @@ void tle8888_dump_regs(void)
 	for (int request = 0; request < 0x7e + 1; request++) {
 		uint16_t tmp;
 		tle8888_read_reg(request, &tmp);
-		uint8_t response = getRegisterFromResponse(tmp);
-		uint8_t data = (tmp >> 8) & 0xff;
+		uint8_t reg = getRegisterFromResponse(tmp);
+		uint8_t data = getDataFromResponse(tmp);
 
-		scheduleMsg(&logger, "%02x: %02x", response, data);
+		scheduleMsg(&logger, "%02x: %02x", reg, data);
 	}
 }
 #endif
@@ -169,11 +172,8 @@ static void reportPins(void) {
 		}
 	#endif
 
-	scheduleMsg(&logger, "Total pins count: %d", totalPinsUsed);
+	scheduleMsg(&logger, "Total pins count: %d", pinRepository.totalPinsUsed);
 }
-
-static MemoryStream portNameStream;
-static char portNameBuffer[20];
 
 void printSpiConfig(Logging *logging, const char *msg, spi_device_e device) {
 	scheduleMsg(logging, "%s %s mosi=%s", msg, getSpi_device_e(device), hwPortname(getMosiPin(device)));
@@ -221,12 +221,6 @@ void initPinRepository(void) {
 	 * this method cannot use console because this method is invoked before console is initialized
 	 */
 
-	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
-
-	initBrainUsedPins();
-
-	initialized = true;
-
 	addConsoleAction(CMD_PINS, reportPins);
 
 #if (BOARD_TLE8888_COUNT > 0)
@@ -257,11 +251,6 @@ bool brain_pin_is_ext(brain_pin_e brainPin)
  */
 
 bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return false;
-	}
-
 #if ! EFI_BOOTLOADER
 	scheduleMsg(&logger, "%s on %s", msg, hwPortname(brainPin));
 #endif
@@ -282,7 +271,7 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 	}
 
 	getBrainUsedPin(index) = msg;
-	totalPinsUsed++;
+	pinRepository.totalPinsUsed++;
 	return false;
 }
 
@@ -291,19 +280,12 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
  */
 
 void brain_pin_markUnused(brain_pin_e brainPin) {
-	int index;
-
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return;
-	}
-
-	index = brainPin_to_index(brainPin);
+	int index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return;
 
 	if (getBrainUsedPin(index) != NULL)
-		totalPinsUsed--;
+		pinRepository.totalPinsUsed--;
 	getBrainUsedPin(index) = nullptr;
 }
 
@@ -313,10 +295,6 @@ void brain_pin_markUnused(brain_pin_e brainPin) {
  */
 
 bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return false;
-	}
 	int index = getBrainIndex(port, pin);
 
 	if (getBrainUsedPin(index) != NULL) {
@@ -329,7 +307,7 @@ bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 		return true;
 	}
 	getBrainUsedPin(index) = msg;
-	totalPinsUsed++;
+	pinRepository.totalPinsUsed++;
 	return false;
 }
 
@@ -339,14 +317,10 @@ bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
  */
 
 void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return;
-	}
 	int index = getBrainIndex(port, pin);
 
 	if (getBrainUsedPin(index) != NULL)
-		totalPinsUsed--;
+		pinRepository.totalPinsUsed--;
 	getBrainUsedPin(index) = nullptr;
 }
 

@@ -363,6 +363,9 @@ static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 	// if no calibration, try to calibrate now and store new values
 	if (storedLambda == 0 || storedHeater == 0) {
+		/**
+		 * open question if we need special considerations for calibration. Some controllers insist on open air calibration
+		 */
 		globalInstance.calibrate(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else {
 		scheduleMsg(logger, "cj125: Loading stored calibration data (%d %d)", storedLambda, storedHeater);

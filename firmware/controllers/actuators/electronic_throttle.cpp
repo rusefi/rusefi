@@ -222,29 +222,59 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t actualThrottl
 
 		// Publish to TS state
 #if EFI_TUNER_STUDIO
+		// Amplitude of input (duty cycle %)
+		float b = 2 * autotuneAmplitude;
+
+		// Ultimate gain per A-H relay tuning rule
+		float ku = 4 * b / (3.14159f * m_a);
+
+		// The multipliers below are somewhere near the "no overshoot" 
+		// and "some overshoot" flavors of the Ziegler-Nichols method
+		// Kp
+		float kp = 0.35f * ku;
+		float ki = 0.25f * ku / m_tu;
+		float kd = 0.08f * ku * m_tu;
+
+		// Every 5 cycles (of the throttle), cycle to the next value
+		if (m_autotuneCounter == 5) {
+			m_autotuneCounter = 0;
+			m_autotuneCurrentParam++;
+
+			if (m_autotuneCurrentParam >= 3) {
+				m_autotuneCurrentParam = 0;
+			}
+		}
+
+		m_autotuneCounter++;
+
+		// Multiplex 3 signals on to the {mode, value} format
+		tsOutputChannels.calibrationMode = static_cast<TsCalMode>(m_autotuneCurrentParam + 3);
+
+		switch (m_autotuneCurrentParam) {
+		case 0:
+			tsOutputChannels.calibrationValue = kp;
+			break;
+		case 1:
+			tsOutputChannels.calibrationValue = ki;
+			break;
+		case 2:
+			tsOutputChannels.calibrationValue = kd;
+			break;
+		}
+
+		// Also output to debug channels if configured
 		if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
 			// a - amplitude of output (TPS %)
-
 			tsOutputChannels.debugFloatField1 = m_a;
-			float b = 2 * autotuneAmplitude;
 			// b - amplitude of input (Duty cycle %)
 			tsOutputChannels.debugFloatField2 = b;
 			// Tu - oscillation period (seconds)
 			tsOutputChannels.debugFloatField3 = m_tu;
 
-			// Ultimate gain per A-H relay tuning rule
-			// Ku
-			float ku = 4 * b / (3.14159f * m_a);
 			tsOutputChannels.debugFloatField4 = ku;
-
-			// The multipliers below are somewhere near the "no overshoot" 
-			// and "some overshoot" flavors of the Ziegler-Nichols method
-			// Kp
-			tsOutputChannels.debugFloatField5 = 0.35f * ku;
-			// Ki
-			tsOutputChannels.debugFloatField6 = 0.25f * ku / m_tu;
-			// Kd
-			tsOutputChannels.debugFloatField7 = 0.08f * ku * m_tu;
+			tsOutputChannels.debugFloatField5 = kp;
+			tsOutputChannels.debugFloatField6 = ki;
+			tsOutputChannels.debugFloatField7 = kd;
 		}
 #endif
 	}
@@ -472,10 +502,15 @@ static void showEthInfo(void) {
 			hwPortname(CONFIG(etbIo[0].controlPin1)),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
-	scheduleMsg(&logger, "dir1=%s", hwPortname(CONFIG(etbIo[0].directionPin1)));
-	scheduleMsg(&logger, "dir2=%s", hwPortname(CONFIG(etbIo[0].directionPin2)));
-
-	showDcMotorInfo(&logger);
+	int i;
+	for (i = 0; i < engine->etbActualCount; i++) {
+		scheduleMsg(&logger, "ETB%d", i);
+		scheduleMsg(&logger, " dir1=%s", hwPortname(CONFIG(etbIo[i].directionPin1)));
+		scheduleMsg(&logger, " dir2=%s", hwPortname(CONFIG(etbIo[i].directionPin2)));
+		scheduleMsg(&logger, " control=%s", hwPortname(CONFIG(etbIo[i].controlPin1)));
+		scheduleMsg(&logger, " disable=%s", hwPortname(CONFIG(etbIo[i].disablePin)));
+		showDcMotorInfo(&logger, i);
+	}
 
 #endif /* EFI_PROD_CODE */
 }

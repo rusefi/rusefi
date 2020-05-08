@@ -20,5 +20,5 @@ void setDcMotorFrequency(size_t index, int hz);
 void setDcMotorDuty(size_t index, float duty);
 
 #if EFI_PROD_CODE
-void showDcMotorInfo(Logging* logger);
+void showDcMotorInfo(Logging* logger, int i);
 #endif
