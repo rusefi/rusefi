@@ -553,6 +553,10 @@
 #define enableVerboseCanTx_offset 744
 #define enableVerboseCanTx_offset_hex 2e8
 #define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge"
+#define ENGINE_MAKE_BMW "BMW"
+#define ENGINE_MAKE_GM "GM"
+#define ENGINE_MAKE_LADA "Lada"
+#define ENGINE_MAKE_MAZDA "Mazda"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define engineChartSize_offset 1480
 #define engineChartSize_offset_hex 5c8

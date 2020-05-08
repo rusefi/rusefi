@@ -553,6 +553,10 @@
 #define enableVerboseCanTx_offset 744
 #define enableVerboseCanTx_offset_hex 2e8
 #define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge"
+#define ENGINE_MAKE_BMW "BMW"
+#define ENGINE_MAKE_GM "GM"
+#define ENGINE_MAKE_LADA "Lada"
+#define ENGINE_MAKE_MAZDA "Mazda"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define engineChartSize_offset 1480
 #define engineChartSize_offset_hex 5c8
@@ -2297,8 +2301,8 @@
 #define unused_former_warmup_target_afr_offset_hex 834
 #define unusedAntilagTimeout_offset 820
 #define unusedAntilagTimeout_offset_hex 334
-#define unusedAtOldBoardConfigurationEnd_offset 1160
-#define unusedAtOldBoardConfigurationEnd_offset_hex 488
+#define unusedAtOldBoardConfigurationEnd_offset 1192
+#define unusedAtOldBoardConfigurationEnd_offset_hex 4a8
 #define unusedBit4_1476_offset 1476
 #define unusedBit4_1476_offset_hex 5c4
 #define unusedBit_251_11_offset 976
@@ -2447,6 +2451,8 @@
 #define vbattDividerCoeff_offset 464
 #define vbattDividerCoeff_offset_hex 1d0
 #define VEHICLE_INFO_SIZE 32
+#define vehicleName_offset 1160
+#define vehicleName_offset_hex 488
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedCoef_offset_hex 1dc
 #define vehicleSpeedSensorInputPin_offset 968

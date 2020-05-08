@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu May 07 13:45:58 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri May 08 17:02:39 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -358,6 +358,10 @@ public class Fields {
 	public static final int enableLaunchBoost_offset = 976;
 	public static final int enableLaunchRetard_offset = 976;
 	public static final int enableVerboseCanTx_offset = 744;
+	public static final String ENGINE_MAKE_BMW = "BMW";
+	public static final String ENGINE_MAKE_GM = "GM";
+	public static final String ENGINE_MAKE_LADA = "Lada";
+	public static final String ENGINE_MAKE_MAZDA = "Mazda";
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
 	public static final int engineChartSize_offset = 1480;
 	public static final int engineCode_offset = 1128;

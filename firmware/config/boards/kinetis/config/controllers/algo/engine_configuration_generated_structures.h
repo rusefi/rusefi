@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Thu May 07 09:06:40 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri May 08 16:32:39 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1894,17 +1894,28 @@ struct engine_configuration_s {
 	 */
 	etb_io etbIo2[ETB_COUNT];
 	/**
+	 * For example, BMW, GM or Chevrolet
+	 * REQUIRED for rusEFI Online
 	 * offset 1096
 	 */
 	vehicle_info_t engineMake;
 	/**
+	 * For example, LS1 or NB2
+	 * REQUIRED for rusEFI Online
 	 * offset 1128
 	 */
 	vehicle_info_t engineCode;
 	/**
+	 * For example, Hunchback or Orange Miata
+	 * Vehicle name has to be unique between your vehicles.
+	 * REQUIRED for rusEFI Online
 	 * offset 1160
 	 */
-	int unusedAtOldBoardConfigurationEnd[76];
+	vehicle_info_t vehicleName;
+	/**
+	 * offset 1192
+	 */
+	int unusedAtOldBoardConfigurationEnd[68];
 	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
@@ -3441,4 +3452,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Thu May 07 09:06:40 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri May 08 16:32:39 EDT 2020

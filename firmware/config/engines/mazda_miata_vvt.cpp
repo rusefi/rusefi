@@ -222,7 +222,9 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
-	engineConfiguration->specs.displacement = 1.8;
+	engineConfiguration->specs.displacement = 1.839;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
+	strcpy(CONFIG(engineCode), "NB2");
 
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);

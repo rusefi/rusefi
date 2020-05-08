@@ -36,6 +36,8 @@ void setMazdaMiataNA8Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.flow = 265;
 
 	engineConfiguration->specs.displacement = 1.839;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
+	strcpy(CONFIG(engineCode), "NA8");
 
 
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
