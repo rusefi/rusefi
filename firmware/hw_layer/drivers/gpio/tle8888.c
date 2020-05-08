@@ -920,6 +920,7 @@ static int tle8888_chip_init(void * data) {
 		goto err_gpios;
 	}
 
+	return 0;
 
 err_gpios:
 	/* unmark pins */
