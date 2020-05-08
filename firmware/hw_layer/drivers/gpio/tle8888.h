@@ -51,6 +51,14 @@ struct tle8888_config {
 		/* ...used to drive output (starts from 1, as in DS, coders gonna hate) */
 		int 			output;
 	} direct_io[TLE8888_DIRECT_MISC];
+	struct {
+		ioportid_t		port;
+		uint_fast8_t	pad;
+	} ign_en;
+	struct {
+		ioportid_t		port;
+		uint_fast8_t	pad;
+	} inj_en;
 	tle8888_mode_e mode;
 };
 
