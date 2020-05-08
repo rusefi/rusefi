@@ -18,8 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * @see FirmwareFlasher
@@ -87,12 +85,8 @@ public class DfuFlasher {
                 // ugly temporary solution
                 // see https://github.com/rusefi/rusefi/issues/1170
                 // see https://github.com/rusefi/rusefi/issues/1182
-                try {
-                    URLLabel.open(new URI(DFU_SETUP_EXE));
-                    wnd.appendMsg("Please install DfuSe_Demo_V3.0.6_Setup.exe, power cycle your device and try again.");
-                } catch (URISyntaxException e) {
-                    throw new IllegalStateException(e);
-                }
+                URLLabel.open(DFU_SETUP_EXE);
+                wnd.appendMsg("Please install DfuSe_Demo_V3.0.6_Setup.exe, power cycle your device and try again.");
             } else {
                 wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
             }

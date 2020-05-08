@@ -33,6 +33,14 @@ public class URLLabel extends JLabel {
         return oURI;
     }
 
+    public static void open(String url) {
+        try {
+            open(new URI(url));
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     public void setup(String t, final URI u) {
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         text = t;

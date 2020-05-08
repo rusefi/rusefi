@@ -1,11 +1,13 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URI;
 import java.util.Arrays;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -15,6 +17,8 @@ public class ProgramSelector {
     private static final String AUTO_DFU = "Auto DFU";
     private static final String MANUAL_DFU = "Manual DFU";
     private static final String ST_LINK = "ST-LINK";
+
+    private static final String HELP = "https://github.com/rusefi/rusefi/wiki/HOWTO_Update_Firmeware";
 
     private final JPanel controls = new JPanel(new FlowLayout());
     private final JComboBox mode = new JComboBox();
@@ -36,6 +40,9 @@ public class ProgramSelector {
         JButton updateFirmware = new JButton("Update Firmware",
                 UiUtils.loadIcon("/com/rusefi/upload48.jpg"));
         controls.add(updateFirmware);
+        JButton updateHelp = new JButton("?");
+        updateHelp.addActionListener(e -> URLLabel.open(HELP));
+        controls.add(updateHelp);
 
         updateFirmware.addActionListener(new ActionListener() {
             @Override
