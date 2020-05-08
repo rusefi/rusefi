@@ -131,6 +131,8 @@ struct tle8888_config tle8888_cfg = {
 		[3] = {.port = NULL,	.pad = 0,	.output = 12},
 */
 	},
+	.ign_en =  {.port = GPIOD,	.pad = 10},
+	.inj_en =  {.port = GPIOD,	.pad = 11},
 	.mode = TL_AUTO,
 };
 #endif

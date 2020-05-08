@@ -850,6 +850,8 @@ static brain_pin_diag_e tle8888_getDiag(void *data, unsigned int pin)
  * @return 0 for valid configuration, -1 for invalid configuration
  */
 int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
+	const struct tle8888_config	*cfg = chip->cfg;
+
 	tle8888reinitializationCounter++;
 	tle8888initResponsesAccumulator = 0;
 
@@ -882,6 +884,12 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 
 	startupConfiguration(chip);
 
+	/* enable pins */
+	if (cfg->ign_en.port)
+		palSetPort(cfg->ign_en.port, PAL_PORT_BIT(cfg->ign_en.pad));
+	if (cfg->inj_en.port)
+		palSetPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
+
 	if (CONFIG(verboseTLE8888)) {
 		tle8888_dump_regs();
 	}
@@ -899,6 +907,10 @@ static int tle8888_chip_init(void * data) {
 	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	if (cfg->reset.port != NULL)
 		ret |= gpio_pin_markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
+	if (cfg->ign_en.port != NULL)
+		ret |= gpio_pin_markUsed(cfg->ign_en.port, cfg->ign_en.pad, DRIVER_NAME " IGN EN");
+	if (cfg->inj_en.port != NULL)
+		ret |= gpio_pin_markUsed(cfg->inj_en.port, cfg->inj_en.pad, DRIVER_NAME " INJ EN");
 	for (int i = 0; i < TLE8888_DIRECT_MISC; i++)
 		if (cfg->direct_io[i].port)
 			ret |= gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
@@ -912,6 +924,10 @@ static int tle8888_chip_init(void * data) {
 err_gpios:
 	/* unmark pins */
 	//gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
+	if (cfg->inj_en.port != NULL)
+		gpio_pin_markUnused(cfg->inj_en.port, cfg->inj_en.pad);
+	if (cfg->ign_en.port != NULL)
+		gpio_pin_markUnused(cfg->ign_en.port, cfg->ign_en.pad);
 	if (cfg->reset.port != NULL)
 		gpio_pin_markUnused(cfg->reset.port, cfg->reset.pad);
 	for (int i = 0; i < TLE8888_DIRECT_MISC; i++)
@@ -958,9 +974,16 @@ static int tle8888_init(void * data)
 
 static int tle8888_deinit(void *data)
 {
-	(void)data;
+	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+	const struct tle8888_config	*cfg = chip->cfg;
 
-	/* TODO: set all pins to inactive state, stop task? */
+	/* disable pins */
+	if (cfg->ign_en.port)
+		palClearPort(cfg->ign_en.port, PAL_PORT_BIT(cfg->ign_en.pad));
+	if (cfg->inj_en.port)
+		palClearPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
+
+	/* TODO: stop task? */
 	return 0;
 }
 
