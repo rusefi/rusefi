@@ -43,7 +43,7 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 		// Finally configure the channel
 		INJECT_ENGINE_REFERENCE(&channels[i]);
-		channels[i].init(usePwm, &pins[i], &outputs[i], tables[i], &cfg);
+		channels[i].init(usePwm, &outputs[i], tables[i], &cfg);
 	}
 }
 
