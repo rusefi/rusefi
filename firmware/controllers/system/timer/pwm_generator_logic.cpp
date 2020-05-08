@@ -78,8 +78,10 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 
 	// Handle zero and full duty cycle.  This will cause the PWM output to behave like a plain digital output.
 	if (dutyCycle == 0.0f && stateChangeCallback) {
+		// Manually fire falling edge
 		stateChangeCallback(0, arg);
 	} else if (dutyCycle == 1.0f && stateChangeCallback) {
+		// Manually fire rising edge
 		stateChangeCallback(1, arg);
 	}
 
