@@ -75,13 +75,12 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		warning(CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty %.2f", name, dutyCycle);
 		dutyCycle = 1;
 	}
-	if (dutyCycle == 0.0f && stateChangeCallback != NULL) {
-		/**
-		 * set the pin low just to be super sure
-		 * this custom handling of zero value comes from CJ125 heater code
-		 * TODO: is this really needed? cover by unit test?
-		 */
+
+	// Handle zero and full duty cycle.  This will cause the PWM output to behave like a plain digital output.
+	if (dutyCycle == 0.0f && stateChangeCallback) {
 		stateChangeCallback(0, arg);
+	} else if (dutyCycle == 1.0f && stateChangeCallback) {
+		stateChangeCallback(1, arg);
 	}
 
 	if (dutyCycle < ZERO_PWM_THRESHOLD) {
