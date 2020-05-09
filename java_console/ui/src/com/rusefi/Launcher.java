@@ -229,7 +229,11 @@ public class Launcher {
         FileLog.MAIN.start();
 
         if (TOOL_NAME_REBOOT_ECU.equalsIgnoreCase(toolName)) {
-            invokeRebootTool();
+            sendCommand(Fields.CMD_REBOOT);
+            return;
+        }
+        if (Fields.CMD_REBOOT_DFU.equalsIgnoreCase(toolName)) {
+            sendCommand(Fields.CMD_REBOOT_DFU);
             return;
         }
 
@@ -252,7 +256,7 @@ public class Launcher {
         return CompileTool.run(Arrays.asList(args).subList(1, args.length));
     }
 
-    private static void invokeRebootTool() throws IOException {
+    private static void sendCommand(String command) throws IOException {
         String autoDetectedPort = PortDetector.autoDetectPort(null);
         if (autoDetectedPort == null) {
             System.err.println("rusEfi not detected");
@@ -262,7 +266,7 @@ public class Launcher {
         if (!establishConnection.isConnected())
             return;
         IoStream stream = establishConnection.getStream();
-        byte[] commandBytes = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT);
+        byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes, FileLog.LOGGER);
     }
 
