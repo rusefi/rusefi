@@ -23,7 +23,7 @@
 ! type name;comment
 
 
-#define TS_SIGNATURE "rusEFI v1.2020.4"
+#define TS_SIGNATURE "rusEFI v1.2020.5"
 
 !
 ! this is here so that rusEfi console can access it, too
@@ -35,8 +35,13 @@
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! so not forget to change fileVersion in rusefi.ini
 ! todo: is this not needed in light of TS_SIGNATURE?
-#define TS_FILE_VERSION 20200310
+#define TS_FILE_VERSION 20200508
 
+! This is the version of the data stored in flash configuration
+! Any time an incompatible change is made to the configuration format stored in flash,
+! update this string to the current date! It is required to also update TS_SIGNATURE above
+! when this happens.
+#define FLASH_DATA_VERSION 20200508
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
