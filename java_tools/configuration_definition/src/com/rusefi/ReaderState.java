@@ -58,7 +58,11 @@ public class ReaderState {
     }
 
     static boolean isEmptyDefinitionLine(String line) {
-        return line.length() == 0 || line.startsWith("!");
+        /**
+         * historically somehow '!' was the start of comment line
+         * '//' is the later added alternative.
+         */
+        return line.length() == 0 || line.startsWith("!") || line.startsWith("//");
     }
 
     private static void handleCustomLine(ReaderState state, String line) {
@@ -117,8 +121,10 @@ public class ReaderState {
         for (ConfigurationConsumer consumer : consumers)
             consumer.startFile();
 
+        int lineIndex = 0;
         String line;
         while ((line = definitionReader.readLine()) != null) {
+            lineIndex++;
             line = ConfigDefinition.trimLine(line);
             /**
              * we should ignore empty lines and comments
@@ -147,7 +153,7 @@ public class ReaderState {
                 ConfigDefinition.processDefine(line.substring(DEFINE.length()).trim());
             } else {
                 if (stack.isEmpty())
-                    throw new IllegalStateException("Expected to be within structure");
+                    throw new IllegalStateException("Expected to be within structure at line " + lineIndex + ": " + line);
                 addBitPadding();
                 processField(this, line);
             }
