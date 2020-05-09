@@ -86,7 +86,7 @@ void writeToFlashNow(void) {
 	bool isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
 
 	if (isSuccess) {
-		scheduleMsg(logger, FLASH_SUCCESS_MSG);
+		scheduleMsg(logger, "FLASH_SUCCESS");
 	} else {
 		scheduleMsg(logger, "Flashing failed");
 	}
