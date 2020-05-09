@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri May 08 17:02:39 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri May 08 22:09:51 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -795,6 +795,7 @@ public class Fields {
 	public static final int gppwm4_rpmBins_offset_hex = 1148;
 	public static final int gppwm4_table_offset = 4432;
 	public static final int gppwm4_table_offset_hex = 1150;
+	public static final int GPPWM_CHANNELS = 4;
 	public static final int GPPWM_LOAD_COUNT = 8;
 	public static final int GPPWM_RPM_COUNT = 8;
 	public static final int gps_rx_pin_offset = 656;
