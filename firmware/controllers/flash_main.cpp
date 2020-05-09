@@ -16,9 +16,6 @@
 #include "flash_int.h"
 #include "engine_math.h"
 
-// this message is part of console API, see FLASH_SUCCESS_MSG in java code
-#define FLASH_SUCCESS_MSG "FLASH_SUCESS"
-
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif
@@ -89,7 +86,7 @@ void writeToFlashNow(void) {
 	bool isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
 
 	if (isSuccess) {
-		scheduleMsg(logger, FLASH_SUCCESS_MSG);
+		scheduleMsg(logger, "FLASH_SUCCESS");
 	} else {
 		scheduleMsg(logger, "Flashing failed");
 	}

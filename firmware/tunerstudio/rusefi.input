@@ -175,8 +175,6 @@ enable2ndByteCanID = false
 
 [OutputChannels]
 
-fileVersion = { @@TS_FILE_VERSION@@ }
-
    ochGetCommand    = "O%2o%2c"
 
 ; see TS_OUTPUT_SIZE in console source code
@@ -302,7 +300,7 @@ fileVersion = { @@TS_FILE_VERSION@@ }
       seconds         = scalar,  U32,    112,    "sec",      1,       0.0
       engineMode      = scalar,  U32,    116,     "em",      1,       0.0;
       firmwareVersion = scalar,  U32,    120,"version_f",    1,         0
-      firmwareTsVersion=scalar,  U32,    124,"version_p",    1,         0
+
 
 ; calibation helpers
       calibrationValue = scalar, F32, 128, "", 1, 0
@@ -1057,7 +1055,6 @@ gaugeCategory = Sensors - Raw
 ;         =   expression,            off-label,            on-label,            off-bg, off-fg, on-bg, on-fg
 	; important status
     indicator = { ind_hasFatalError }, "",   "CRITICAL ERROR",   white, black, red,   black
-    indicator = { firmwareTsVersion == fileVersion }, "WRONG VERSION",   "version ok",   red, black, white,   black
     indicator = { ind_isWarnNow }, "",   "WARNING",   white, black, yellow,   black
     indicator = { ind_check_engine }, "",      "Check Engine",       white,  black,  red, black
     indicator = { isIgnitionEnabledIndicator}, "no ignition",   "ignition",   yellow, black, white,   black

@@ -676,6 +676,7 @@
 #define fixedTiming_offset 2204
 #define fixedTiming_offset_hex 89c
 #define FLASH_DATA_VERSION 20200508
+#define FLASH_SUCCESS_MSG "FLASH_SUCESS"
 #define frequencyReportingMapInputPin_offset 970
 #define frequencyReportingMapInputPin_offset_hex 3ca
 #define FSIO_ANALOG_INPUT_COUNT 4
@@ -1160,6 +1161,7 @@
 #define gppwm4_table_offset 4432
 #define gppwm4_table_offset_hex 1150
 #define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT"
+#define GPPWM_CHANNELS 4
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_RPM_COUNT 8
 #define gps_rx_pin_offset 656
