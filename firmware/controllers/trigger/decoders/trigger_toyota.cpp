@@ -57,64 +57,66 @@ void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s) {
 
 	float camD = 720 / 6; // 120
 
-	float crankAngle = 20; // skipping two teeth
+	float crankDelta = 720 / 36 / 2; // 10
+
+	float camAngle = 1;
+	float crankAngle = 2 * crankDelta; // skipping two teeth
 
 	for (int i = 0; i < 10; i++) {
 		s->addEvent720(crankAngle + 5, T_SECONDARY, TV_RISE);
-		s->addEvent720(crankAngle + 9.9, T_SECONDARY, TV_FALL); // 120
+		s->addEvent720(crankAngle + crankDelta, T_SECONDARY, TV_FALL); // 120
 		crankAngle += 10;
 	} // 2 + 10
 
-	float camAngle = 0;
 	camAngle += camD;
 	s->addEvent720(camAngle, T_PRIMARY, TV_RISE); // 120
+	s->addEvent720(camAngle + 3, T_PRIMARY, TV_FALL);
 
 	for (int i = 0; i < 12; i++) {
 		s->addEvent720(crankAngle + 5, T_SECONDARY, TV_RISE);
-		s->addEvent720(crankAngle + 9.9, T_SECONDARY, TV_FALL); // 120
+		s->addEvent720(crankAngle + crankDelta, T_SECONDARY, TV_FALL); // 120
 		crankAngle += 10;
 	} // 2 + 22
 
 
 	camAngle += camD;
-	s->addEventClamped(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 240
 
 	for (int i = 0; i < 12; i++) {
-		s->addEventClamped(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
-		s->addEventClamped(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
-		crankAngle += 10;
+		s->addEvent720(crankAngle + 5, T_SECONDARY, TV_RISE);
+		s->addEvent720(crankAngle + crankDelta, T_SECONDARY, TV_FALL); // 120
+		crankAngle += crankDelta;
 	} // 2 + 34
 
 	camAngle += camD;
-	s->addEventClamped(camAngle, T_PRIMARY, TV_RISE, -1, 721); // 360
+	s->addEvent720(camAngle, T_PRIMARY, TV_RISE); // 360
+	s->addEvent720(camAngle + 3, T_PRIMARY, TV_FALL);
 
 	crankAngle += 20; // skipping two teeth one more time
 	for (int i = 0; i < 10; i++) {
-		s->addEventClamped(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
-		s->addEventClamped(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
-		crankAngle += 10;
+		s->addEvent720(crankAngle + 5, T_SECONDARY, TV_RISE);
+		s->addEvent720(crankAngle + crankDelta, T_SECONDARY, TV_FALL); // 120
+		crankAngle += crankDelta;
 	} // 2 + 10
 
 	camAngle += camD;
-	s->addEventClamped(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 480
 
 	for (int i = 0; i < 12; i++) {
 		s->addEvent720(crankAngle + 5, T_SECONDARY, TV_RISE);
-		s->addEvent720(crankAngle + 9.9, T_SECONDARY, TV_FALL); // 120
-		crankAngle += 10;
+		s->addEvent720(crankAngle + crankDelta, T_SECONDARY, TV_FALL); // 120
+		crankAngle += crankDelta;
 	} // 2 + 22
 
 	camAngle += camD;
-	s->addEventClamped(camAngle, T_PRIMARY, TV_RISE, -1, 721); // 600
+	s->addEvent720(camAngle, T_PRIMARY, TV_RISE); // 600
+	s->addEvent720(camAngle + 3, T_PRIMARY, TV_FALL);
 
 
 	for (int i = 0; i < 12; i++) {
-		s->addEventClamped(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
-		s->addEventClamped(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
+		s->addEvent720(crankAngle + 5, T_SECONDARY, TV_RISE);
+		s->addEvent720(crankAngle + crankDelta, T_SECONDARY, TV_FALL); // 120
 		crankAngle += 10;
 	} // 2 + 32
 	camAngle += camD;
-	s->addEventClamped(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 720
 
 	s->shapeWithoutTdc = true;
 	s->isSynchronizationNeeded = false;
