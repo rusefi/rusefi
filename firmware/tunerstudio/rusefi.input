@@ -305,7 +305,9 @@ enable2ndByteCanID = false
 ; calibation helpers
       calibrationValue = scalar, F32, 128, "", 1, 0
       calibrationMode = scalar, U08, 132, "", 1, 0
-      ; 3 bytes padding1
+      ; 1 bytes padding1
+      
+      engineMakeCodeNameCrc16= scalar,  U16,    134,  "crc16",           1,         0
 
 ; Errors
       totalTriggerErrorCounter=scalar,U32,   136,"counter",           1,         0
@@ -1196,6 +1198,8 @@ gaugeCategory = Sensors - Raw
 
    entry = debugIntField5,   @@GAUGE_NAME_DEBUG_I5@@,int,"%d", { !enableLogDebugChannels }
 
+
+   entry = engineMakeCodeNameCrc16,   "Engine CRC16",int,"%d"
 
    entry = engineMode,   "Engine Mode",int,"%d"
    entry = warningCounter,   @@GAUGE_NAME_WARNING_COUNTER@@,int,"%d"
