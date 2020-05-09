@@ -300,7 +300,7 @@ enable2ndByteCanID = false
       seconds         = scalar,  U32,    112,    "sec",      1,       0.0
       engineMode      = scalar,  U32,    116,     "em",      1,       0.0;
       firmwareVersion = scalar,  U32,    120,"version_f",    1,         0
-      firmwareTsVersion=scalar,  U32,    124,"version_p",    1,         0
+
 
 ; calibation helpers
       calibrationValue = scalar, F32, 128, "", 1, 0
