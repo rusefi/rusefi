@@ -905,21 +905,36 @@ static int tle8888_chip_init(void * data) {
 	/* mark pins used */
 	// we do not initialize CS pin so we should not be marking it used - i'm sad
 	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
-	if (cfg->reset.port != NULL)
+	if (cfg->reset.port != NULL) {
 		ret |= gpio_pin_markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
-	if (cfg->ign_en.port != NULL)
+		palSetPadMode(cfg->reset.port, cfg->reset.pad, PAL_MODE_OUTPUT_PUSHPULL);
+		palSetPort(cfg->reset.port, PAL_PORT_BIT(cfg->reset.pad));
+	}
+	if (cfg->ign_en.port != NULL) {
 		ret |= gpio_pin_markUsed(cfg->ign_en.port, cfg->ign_en.pad, DRIVER_NAME " IGN EN");
-	if (cfg->inj_en.port != NULL)
+		palSetPadMode(cfg->ign_en.port, cfg->ign_en.pad, PAL_MODE_OUTPUT_PUSHPULL);
+		palClearPort(cfg->ign_en.port, PAL_PORT_BIT(cfg->ign_en.pad));
+	}
+	if (cfg->inj_en.port != NULL) {
 		ret |= gpio_pin_markUsed(cfg->inj_en.port, cfg->inj_en.pad, DRIVER_NAME " INJ EN");
-	for (int i = 0; i < TLE8888_DIRECT_MISC; i++)
-		if (cfg->direct_io[i].port)
+		palSetPadMode(cfg->inj_en.port, cfg->inj_en.pad, PAL_MODE_OUTPUT_PUSHPULL);
+		palClearPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
+	}
+	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
+		if (cfg->direct_io[i].port) {
 			ret |= gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
+// TODO: we need this but that's incompatible configuration change
+//			palSetPadMode(cfg->direct_io[i].port, cfg->direct_io[i].pad, PAL_MODE_OUTPUT_PUSHPULL);
+//			palClearPort(cfg->direct_io[i].port, PAL_PORT_BIT(cfg->direct_io[i].pad));
+		}
+	}
 
 	if (ret) {
 		ret = -1;
 		goto err_gpios;
 	}
 
+	return 0;
 
 err_gpios:
 	/* unmark pins */
