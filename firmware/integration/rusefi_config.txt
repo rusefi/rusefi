@@ -44,12 +44,6 @@
 ! when this happens.
 #define FLASH_DATA_VERSION 20200508
 
-! This is the version of the data stored in flash configuration
-! Any time an incompatible change is made to the configuration format stored in flash,
-! update this string to the current date! It is required to also update TS_SIGNATURE above
-! when this happens.
-#define FLASH_DATA_VERSION 10001
-
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
 
