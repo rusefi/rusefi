@@ -1159,6 +1159,7 @@
 #define gppwm4_table_offset 4432
 #define gppwm4_table_offset_hex 1150
 #define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT"
+#define GPPWM_CHANNELS 4
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_RPM_COUNT 8
 #define gps_rx_pin_offset 656
