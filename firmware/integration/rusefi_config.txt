@@ -1029,8 +1029,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	pid_s idleRpmPid;See cltIdleRpmBins
 	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
-	brain_pin_e communicationLedPin;blue LED on discovery by default	
-	brain_pin_e runningLedPin;green LED on discovery by default
+	brain_pin_e communicationLedPin;+blue LED on many rusEFI boards.\nBlue Communication LED which is expected to blink at 50% duty cycle during normal board operation.\nIf USB communication cable is connected Blue LED starts to blink faster. 	
+	brain_pin_e runningLedPin;+Green LED on many rusEFI boards.\nOff if engine is stopped, blinks if engine is cranking, solid if engine is running.
 	brain_pin_e binarySerialTxPin;See also EFI_CONSOLE_RX_BRAIN_PIN
 	brain_pin_e binarySerialRxPin;	
 	
