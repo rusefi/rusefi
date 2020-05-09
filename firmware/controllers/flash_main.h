@@ -10,8 +10,6 @@
 
 #include "engine.h"
 
-#define FLASH_DATA_VERSION 10001
-
 typedef enum {
 	PC_OK = 0,
 	CRC_FAILED = 1,
