@@ -37,7 +37,7 @@ static void configureTps(LinearFunc& func, float closed, float open, float min, 
 	);
 }
 
-static void initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
+static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
 	// Only register if we have a sensor
 	if (channel == EFI_ADC_NONE) {
 		return false;
@@ -69,7 +69,7 @@ void initTpsFuncAndRedund(RedundantSensor& redund, LinearFunc& func, FunctionalS
 
 void initTps() {
 	initTpsFunc(tpsFunc1p, tpsSens1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax));
-	initTpsFuncAndRedund(tps1, tpsFunc12, tpsSens12, CONFIG(tps1_2AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax));
+	initTpsFuncAndRedund(tps1, tpsFunc1s, tpsSens1s, CONFIG(tps1_2AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax));
 	initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max));
 	initTpsFuncAndRedund(tps2, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max));
 	initTpsFunc(pedalFunc, pedalSensor, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage));
