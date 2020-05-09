@@ -116,12 +116,21 @@ void idleDebug(const char *msg, percent_t value) {
 
 static void showIdleInfo(void) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
-	scheduleMsg(logger, "idleMode=%s position=%.2f isStepper=%s", idleModeStr,
-			getIdlePosition(), boolToString(CONFIG(useStepperIdle)));
+	scheduleMsg(logger, "useStepperIdle=%s useHbridges=%s",
+			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridges)));
+	scheduleMsg(logger, "idleMode=%s position=%.2f",
+			idleModeStr, getIdlePosition());
 
 	if (CONFIG(useStepperIdle)) {
 		if (CONFIG(useHbridges)) {
-			/* TODO */
+			scheduleMsg(logger, "Coil A:");
+			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(etbIo2[0].directionPin1)));
+			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(etbIo2[0].directionPin2)));
+			showDcMotorInfo(logger, 2);
+			scheduleMsg(logger, "Coil B:");
+			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(etbIo2[1].directionPin1)));
+			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(etbIo2[1].directionPin2)));
+			showDcMotorInfo(logger, 3);
 		} else {
 			scheduleMsg(logger, "directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
 					engineConfiguration->idleStepperReactionTime);
