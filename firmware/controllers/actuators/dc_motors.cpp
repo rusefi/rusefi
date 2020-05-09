@@ -125,10 +125,10 @@ void setDcMotorDuty(size_t index, float duty) {
 	etbHardware[index].dcMotor.set(duty);
 }
 
-#if EFI_PROD_CODE
+
 void showDcMotorInfo(Logging* logger, int i) {
 	EtbHardware *etb = &etbHardware[i];
 
 	scheduleMsg(logger, " motor: dir=%d DC=%f", etb->dcMotor.isOpenDirection(), etb->dcMotor.get());
 }
-#endif
+
