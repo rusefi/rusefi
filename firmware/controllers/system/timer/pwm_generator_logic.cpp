@@ -283,7 +283,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTime
 		}
 	}
 	if (state->mode == PM_NORMAL) {
-		state->multiChannelStateSequence.checkSwitchTimes(phaseCount);
+		state->multiChannelStateSequence.checkSwitchTimes(phaseCount, 1);
 	}
 }
 
