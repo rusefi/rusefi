@@ -183,7 +183,7 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? expectedEventCount[0] == 1 : expectedEventCount[0] == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
-		firmwareError(ERROR_TRIGGER_DRAMA, "trigger constraint violation");
+		firmwareError(ERROR_TRIGGER_DRAMA, "trigger sync constraint violation");
 	}
 
 // todo: move the following logic from below here
@@ -614,7 +614,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		break;
 
 	case TT_2JZ_3_34:
-		initialize2jzGE3_34(this);
+		initialize2jzGE3_34_simulation_shape(this);
 		break;
 
 	case TT_2JZ_1_12:

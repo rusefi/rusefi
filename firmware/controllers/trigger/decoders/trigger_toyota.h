@@ -10,5 +10,5 @@
 #include "trigger_structure.h"
 
 void initialize2jzGE1_12(TriggerWaveform *s);
-void initialize2jzGE3_34(TriggerWaveform *s);
+void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s);
 

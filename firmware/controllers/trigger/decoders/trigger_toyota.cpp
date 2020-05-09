@@ -52,72 +52,70 @@ void initialize2jzGE1_12(TriggerWaveform *s) {
 /**
  * https://rusefi.com/forum/viewtopic.php?f=5&t=1720
  */
-void initialize2jzGE3_34(TriggerWaveform *s) {
-	setToothedWheelConfiguration(s, 36, 2, FOUR_STROKE_CRANK_SENSOR);
+void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-//	s->initialize(FOUR_STROKE_CAM_SENSOR);
-//
-//	float camD = 720 / 6; // 120
-//
-//	float crankAngle = 20; // skipping two teeth
-//
-//	for (int i = 0; i < 10; i++) {
-//		s->addEvent2(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
-//		s->addEvent2(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
-//		crankAngle += 10;
-//	} // 2 + 10
-//
-//	float camAngle = 0;
-//	camAngle += camD;
-//	s->addEvent2(camAngle, T_PRIMARY, TV_RISE, -1, 721); // 120
-//
-//	for (int i = 0; i < 12; i++) {
-//		s->addEvent2(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
-//		s->addEvent2(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
-//		crankAngle += 10;
-//	} // 2 + 22
-//
-//
-//	camAngle += camD;
-//	s->addEvent2(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 240
-//
-//	for (int i = 0; i < 12; i++) {
-//		s->addEvent2(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
-//		s->addEvent2(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
-//		crankAngle += 10;
-//	} // 2 + 34
-//
-//	camAngle += camD;
-//	s->addEvent2(camAngle, T_PRIMARY, TV_RISE, -1, 721); // 360
-//
-//	crankAngle += 20; // skipping two teeth one more time
-//	for (int i = 0; i < 10; i++) {
-//		s->addEvent2(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
-//		s->addEvent2(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
-//		crankAngle += 10;
-//	} // 2 + 10
-//
-//	camAngle += camD;
-//	s->addEvent2(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 480
-//
-//	for (int i = 0; i < 12; i++) {
-//		s->addEvent2(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
-//		s->addEvent2(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
-//		crankAngle += 10;
-//	} // 2 + 22
-//
-//	camAngle += camD;
-//	s->addEvent2(camAngle, T_PRIMARY, TV_RISE, -1, 721); // 600
-//
-//
-//	for (int i = 0; i < 12; i++) {
-//		s->addEvent2(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
-//		s->addEvent2(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
-//		crankAngle += 10;
-//	} // 2 + 32
-//	camAngle += camD;
-//	s->addEvent2(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 720
-//
-//	s->isSynchronizationNeeded = false;
+	float camD = 720 / 6; // 120
 
+	float crankAngle = 20; // skipping two teeth
+
+	for (int i = 0; i < 10; i++) {
+		s->addEvent720(crankAngle + 5, T_SECONDARY, TV_RISE);
+		s->addEvent720(crankAngle + 9.9, T_SECONDARY, TV_FALL); // 120
+		crankAngle += 10;
+	} // 2 + 10
+
+	float camAngle = 0;
+	camAngle += camD;
+	s->addEvent720(camAngle, T_PRIMARY, TV_RISE); // 120
+
+	for (int i = 0; i < 12; i++) {
+		s->addEvent720(crankAngle + 5, T_SECONDARY, TV_RISE);
+		s->addEvent720(crankAngle + 9.9, T_SECONDARY, TV_FALL); // 120
+		crankAngle += 10;
+	} // 2 + 22
+
+
+	camAngle += camD;
+	s->addEventClamped(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 240
+
+	for (int i = 0; i < 12; i++) {
+		s->addEventClamped(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
+		s->addEventClamped(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
+		crankAngle += 10;
+	} // 2 + 34
+
+	camAngle += camD;
+	s->addEventClamped(camAngle, T_PRIMARY, TV_RISE, -1, 721); // 360
+
+	crankAngle += 20; // skipping two teeth one more time
+	for (int i = 0; i < 10; i++) {
+		s->addEventClamped(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
+		s->addEventClamped(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
+		crankAngle += 10;
+	} // 2 + 10
+
+	camAngle += camD;
+	s->addEventClamped(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 480
+
+	for (int i = 0; i < 12; i++) {
+		s->addEvent720(crankAngle + 5, T_SECONDARY, TV_RISE);
+		s->addEvent720(crankAngle + 9.9, T_SECONDARY, TV_FALL); // 120
+		crankAngle += 10;
+	} // 2 + 22
+
+	camAngle += camD;
+	s->addEventClamped(camAngle, T_PRIMARY, TV_RISE, -1, 721); // 600
+
+
+	for (int i = 0; i < 12; i++) {
+		s->addEventClamped(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
+		s->addEventClamped(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
+		crankAngle += 10;
+	} // 2 + 32
+	camAngle += camD;
+	s->addEventClamped(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 720
+
+	s->shapeWithoutTdc = true;
+	s->isSynchronizationNeeded = false;
 }
