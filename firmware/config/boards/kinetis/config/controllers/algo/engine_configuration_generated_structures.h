@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri May 08 22:00:16 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 09 18:58:46 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2351,12 +2351,15 @@ struct engine_configuration_s {
 	 */
 	float wwaeBeta;
 	/**
-	 * blue LED on discovery by default
+	 * blue LED on many rusEFI boards.
+	 * Blue Communication LED which is expected to blink at 50% duty cycle during normal board operation.
+	 * If USB communication cable is connected Blue LED starts to blink faster.
 	 * offset 1812
 	 */
 	brain_pin_e communicationLedPin;
 	/**
-	 * green LED on discovery by default
+	 * Green LED on many rusEFI boards.
+	 * Off if engine is stopped, blinks if engine is cranking, solid if engine is running.
 	 * offset 1813
 	 */
 	brain_pin_e runningLedPin;
@@ -3452,4 +3455,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri May 08 22:00:16 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 09 18:58:46 EDT 2020
