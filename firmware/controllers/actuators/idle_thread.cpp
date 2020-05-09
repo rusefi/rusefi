@@ -42,9 +42,10 @@
 #include "sensor.h"
 #include "electronic_throttle.h"
 
+
+#include "dc_motors.h"
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
-#include "dc_motors.h"
 #include "pin_repository.h"
 static StepDirectionStepper iacStepperHw;
 static DualHBridgeStepper iacHbridgeHw;
