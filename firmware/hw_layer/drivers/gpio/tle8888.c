@@ -922,8 +922,8 @@ static int tle8888_chip_init(void * data) {
 	}
 	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
 		if (cfg->direct_io[i].port) {
-			ret |= gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
 // TODO: we need this but that's incompatible configuration change
+//			ret |= gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
 //			palSetPadMode(cfg->direct_io[i].port, cfg->direct_io[i].pad, PAL_MODE_OUTPUT_PUSHPULL);
 //			palClearPort(cfg->direct_io[i].port, PAL_PORT_BIT(cfg->direct_io[i].pad));
 		}
@@ -945,9 +945,12 @@ err_gpios:
 		gpio_pin_markUnused(cfg->ign_en.port, cfg->ign_en.pad);
 	if (cfg->reset.port != NULL)
 		gpio_pin_markUnused(cfg->reset.port, cfg->reset.pad);
-	for (int i = 0; i < TLE8888_DIRECT_MISC; i++)
-		if (cfg->direct_io[i].port)
-			gpio_pin_markUnused(cfg->direct_io[i].port, cfg->direct_io[i].pad);
+	for (int i = 0; i < TLE8888_DIRECT_MISC; i++) {
+		if (cfg->direct_io[i].port) {
+// TODO: we need this but that's incompatible configuration change
+//			gpio_pin_markUnused(cfg->direct_io[i].port, cfg->direct_io[i].pad);
+		}
+	}
 
 	return ret;
 }
