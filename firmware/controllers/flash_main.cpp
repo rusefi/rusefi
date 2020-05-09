@@ -16,9 +16,6 @@
 #include "flash_int.h"
 #include "engine_math.h"
 
-// this message is part of console API, see FLASH_SUCCESS_MSG in java code
-#define FLASH_SUCCESS_MSG "FLASH_SUCESS"
-
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif

@@ -675,6 +675,7 @@
 #define fixedModeTiming_offset_hex 1c4
 #define fixedTiming_offset 2204
 #define fixedTiming_offset_hex 89c
+#define FLASH_DATA_VERSION 10001
 #define frequencyReportingMapInputPin_offset 970
 #define frequencyReportingMapInputPin_offset_hex 3ca
 #define FSIO_ANALOG_INPUT_COUNT 4
