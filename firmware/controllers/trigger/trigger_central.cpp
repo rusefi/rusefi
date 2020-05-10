@@ -145,6 +145,13 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
 	tc->vvtCamCounter++;
 
+	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
+	angle_t currentPosition = NT2US(offsetNt) / oneDegreeUs;
+	// convert engine cycle angle into trigger cycle angle
+	currentPosition -= tdcPosition();
+	fixAngle(currentPosition, "currentPosition", CUSTOM_ERR_6558);
+
+
 	switch(engineConfiguration->vvtMode) {
 	case MIATA_NB2:
 	 {
@@ -159,6 +166,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 			scheduleMsg(logger, "vvt ratio %.2f", ratio);
 		}
 		if (ratio < miataNb2VVTRatioFrom || ratio > miataNb2VVTRatioTo) {
+			// this is not NB2 sync tooth - exiting
 			return;
 		}
 		if (engineConfiguration->verboseTriggerSynchDetails) {
@@ -173,14 +181,6 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 	}
 
 	tc->vvtSyncTimeNt = nowNt;
-
-	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
-
-	angle_t currentPosition = NT2US(offsetNt) / oneDegreeUs;
-
-	// convert engine cycle angle into trigger cycle angle
-	currentPosition -= tdcPosition();
-	fixAngle(currentPosition, "currentPosition", CUSTOM_ERR_6558);
 
 	tc->vvtPosition = engineConfiguration->vvtOffset - currentPosition;
 
