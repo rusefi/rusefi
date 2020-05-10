@@ -765,6 +765,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	// 132
 	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;
+	// 134 we take 2 bytes of crc32, no idea if it's right to call it crc16 or not
+	tsOutputChannels->engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
 	// 68
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
 	// 140
