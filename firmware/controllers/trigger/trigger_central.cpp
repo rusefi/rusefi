@@ -145,7 +145,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
 	tc->vvtCamCounter++;
 
-	if (engineConfiguration->vvtMode == MIATA_NB2) {
+	switch(engineConfiguration->vvtMode) {
+	case MIATA_NB2:
+	 {
 		uint32_t currentDuration = nowNt - tc->previousVvtCamTime;
 		float ratio = ((float) currentDuration) / tc->previousVvtCamDuration;
 
@@ -168,18 +170,19 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 #endif /* EFI_TUNER_STUDIO */
 		}
 	}
+	}
 
 	tc->vvtSyncTimeNt = nowNt;
 
 	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
 
-	angle_t vvtPosition = NT2US(offsetNt) / oneDegreeUs;
+	angle_t currentPosition = NT2US(offsetNt) / oneDegreeUs;
 
 	// convert engine cycle angle into trigger cycle angle
-	vvtPosition -= tdcPosition();
-	fixAngle(vvtPosition, "vvtPosition", CUSTOM_ERR_6558);
+	currentPosition -= tdcPosition();
+	fixAngle(currentPosition, "currentPosition", CUSTOM_ERR_6558);
 
-	tc->vvtPosition = engineConfiguration->vvtOffset - vvtPosition;
+	tc->vvtPosition = engineConfiguration->vvtOffset - currentPosition;
 
 	switch (engineConfiguration->vvtMode) {
 	default:
