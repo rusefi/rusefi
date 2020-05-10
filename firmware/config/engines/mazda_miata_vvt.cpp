@@ -64,11 +64,11 @@ static const float injectorLagCorrection[VBAT_INJECTOR_CURVE_SIZE] = {
         1.5 ,        1.35,        1.25 ,        1.20
 };
 
-static const float ve18fsioRpmBins[FSIO_TABLE_8] =
+static const float vvt18fsioRpmBins[FSIO_TABLE_8] =
 {700.0, 1000.0, 2000.0, 3000.0, 3500.0, 4500.0, 5500.0, 6500.0}
 ;
 
-static const float ve18fsioLoadBins[FSIO_TABLE_8] =
+static const float vvt18fsioLoadBins[FSIO_TABLE_8] =
 {30.0, 40.0, 50.0, 60.0, 70.0, 75.0, 82.0, 85.0}
 ;
 
@@ -216,6 +216,29 @@ void setMazdaMiataNbInjectorLag(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	memcpy(engineConfiguration->injector.battLagCorrBins, injectorLagBins, sizeof(injectorLagBins));
 }
 
+void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	memcpy(config->fsioTable1RpmBins, vvt18fsioRpmBins, sizeof(vvt18fsioRpmBins));
+	memcpy(config->fsioTable1LoadBins, vvt18fsioLoadBins, sizeof(vvt18fsioLoadBins));
+	// todo: there should be a better way?
+	for (int loadIndex = 0; loadIndex < FSIO_TABLE_8; loadIndex++) {
+		for (int rpmIndex = 0; rpmIndex < FSIO_TABLE_8; rpmIndex++) {
+			config->fsioTable1[loadIndex][rpmIndex] = fsio_table_vvt_target[loadIndex][rpmIndex];
+		}
+	}
+
+	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
+
+	// VVT closed loop
+	engineConfiguration->auxPid[0].pFactor = 2;
+	engineConfiguration->auxPid[0].iFactor = 0.005;
+	engineConfiguration->auxPid[0].dFactor = 0;
+	engineConfiguration->auxPid[0].offset = 33;
+	engineConfiguration->auxPid[0].minValue = 24;
+	engineConfiguration->auxPid[0].maxValue = 44;
+
+	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
+}
+
 static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
@@ -232,8 +255,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 	setMAFTransferFunction(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
 
 	// set idle_position 35
 	engineConfiguration->manIdlePosition = 35;
@@ -270,14 +291,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.dFactor = 0;
 	engineConfiguration->alternatorControl.periodMs = 10;
 
-	// VVT closed loop
-	engineConfiguration->auxPid[0].pFactor = 2;
-	engineConfiguration->auxPid[0].iFactor = 0.005;
-	engineConfiguration->auxPid[0].dFactor = 0;
-	engineConfiguration->auxPid[0].offset = 33;
-	engineConfiguration->auxPid[0].minValue = 24;
-	engineConfiguration->auxPid[0].maxValue = 44;
-	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	// set vvt_mode 3
@@ -294,14 +307,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyTimingTable(mapBased18vvtTimingTable, config->ignitionTable);
 #endif
 
-	memcpy(config->fsioTable1RpmBins, ve18fsioRpmBins, sizeof(ve18fsioRpmBins));
-	memcpy(config->fsioTable1LoadBins, ve18fsioLoadBins, sizeof(ve18fsioLoadBins));
-	// todo: there should be a better way?
-	for (int loadIndex = 0; loadIndex < FSIO_TABLE_8; loadIndex++) {
-			for (int rpmIndex = 0; rpmIndex < FSIO_TABLE_8; rpmIndex++) {
-				config->fsioTable1[loadIndex][rpmIndex] = fsio_table_vvt_target[loadIndex][rpmIndex];
-			}
-		}
+	setMazdaNB2VVTSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// enable cylinder_cleanup
 	engineConfiguration->isCylinderCleanupEnabled = true;
