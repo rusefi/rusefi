@@ -23,8 +23,10 @@ EXTERN_ENGINE;
 static LoggingWithStorage logger("AUX Serial RX");
 
 uint8_t ser_buffer[SERBUFFLEN] = {};
-uint16_t innovate_msg_len = SERBUFFLEN;
+size_t innovate_msg_len = 1;
 innovate_serial_id_state_t innovate_serial_id_state = UNKNOWN;
+uint8_t sb = 0;
+bool clear_ser_buffer = false;
 
 SerialRead::SerialRead()
 	: ThreadController("AUX Serial RX", NORMALPRIO) {
@@ -36,8 +38,19 @@ void SerialRead::ThreadTask() {
 			len = innovate_msg_len;
 		}
 
-		if ((sdReadTimeout(AUX_SERIAL_PORT, ser_buffer, len, TIMEREAD)) > 0)
+        if (len >= SERBUFFLEN)
+		  len = SERBUFFLEN;
+
+		if (sdReadTimeout(AUX_SERIAL_DEVICE,  &ser_buffer[sb], len, TIME_100MSEC) == len)
 			ParseSerialData();
+		else
+			ResetSerialSensor();
+		
+		//clear buffer every frame to avoid parsing old data
+		if (clear_ser_buffer) {
+			ClearSerialBuffer();
+			clear_ser_buffer = false;
+		}
 	}
 }
 

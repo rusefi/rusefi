@@ -56,7 +56,6 @@
 #include "launch_control.h"
 #include "tachometer.h"
 #include "gppwm.h"
-#include "serial.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -697,7 +696,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE contants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 12200
+#define RAM_UNUSED_SIZE 9000
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2900

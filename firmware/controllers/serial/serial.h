@@ -11,18 +11,22 @@
 
 #include "periodic_thread_controller.h"
 
-#define TIMEREAD ((sysinterval_t)chTimeMS2I(10)) //10ms timeout
+#define TIME_100MSEC ((sysinterval_t)chTimeMS2I(100))
 
 #define SERBUFFLEN 64
-#define AUX_SERIAL_PORT (&SD6)
+
+constexpr uint8_t lc2_header_mask = 162;
+constexpr uint16_t lc2_pcklen_mask = 383;
 
 class Logging;
 
 typedef enum {UNKNOWN, HEADER_FOUND, IDENTIFIED} innovate_serial_id_state_t;
 
 extern uint8_t ser_buffer[SERBUFFLEN]; //buffer for incoming serial data
-extern uint16_t innovate_msg_len;
+extern size_t innovate_msg_len;
 extern innovate_serial_id_state_t innovate_serial_id_state;
+extern uint8_t sb;
+extern bool clear_ser_buffer;
 
 class SerialWrite final : public PeriodicController<512> {
 public:
@@ -35,7 +39,5 @@ public:
 	SerialRead();
 	void ThreadTask();
 
-	uint16_t len = SERBUFFLEN;
-
-private:
+	uint16_t len;
 };

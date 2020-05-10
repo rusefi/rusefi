@@ -49,18 +49,21 @@ static size_t tmsglen;
 
 void IdentifyInnovateSerialMsg() {		//this identifies an innovate LC1/LC2 o2 sensor by it's first word (header)
 	if (CONFIG(enableInnovateLC2)) {
-		if (((ser_buffer[0]) & 162) != 162) {		//not serial header word
+		if ((((ser_buffer[0]) & lc2_header_mask) != lc2_header_mask) && innovate_serial_id_state == IDENTIFIED) {		//not serial header word
 			innovate_serial_id_state = UNKNOWN;
-			innovate_msg_len = SERBUFFLEN;
+			innovate_msg_len = 1;
+			sb = 0;
 		}
 
 		switch (innovate_serial_id_state) {
 		case UNKNOWN:
 			InnovateLC2AFR = AFR_ERROR;
 			// read one byte, identify with mask, advance and read next byte
-			if (((ser_buffer[0]) & 162) == 162) { // check if it's the first byte of header
+			if (((ser_buffer[0]) & lc2_header_mask) == lc2_header_mask) { // check if it's the first byte of header
 				// first byte identified, now continue reading and advance statemachine
 				innovate_serial_id_state = HEADER_FOUND;
+				innovate_msg_len = 1;
+				sb = 1;
 			}
 			else {
 				innovate_serial_id_state = UNKNOWN;
@@ -69,13 +72,13 @@ void IdentifyInnovateSerialMsg() {		//this identifies an innovate LC1/LC2 o2 sen
 
 		case HEADER_FOUND:
 			// now we should have both header bytes in array, and we can read the total packet length
-			tmsglen = (((ser_buffer[0] << 8) | ser_buffer[1]) & 383); //0000000101111111 mask
+			tmsglen = (((ser_buffer[0] << 8) | ser_buffer[1]) & lc2_pcklen_mask); //0000000101111111 mask
 
 			if (tmsglen) {
 				tmsglen += 1; // length in words including header (2 bytes)
 				tmsglen *= 2; // length in bytes (incl header)
-				innovate_msg_len = tmsglen;
-
+				innovate_msg_len = tmsglen - 2;
+				sb = 2;
 				innovate_serial_id_state = IDENTIFIED; //advance state machine
 			}
 			else {
@@ -85,8 +88,11 @@ void IdentifyInnovateSerialMsg() {		//this identifies an innovate LC1/LC2 o2 sen
 			break;
 
 		case IDENTIFIED:
+		    innovate_msg_len = tmsglen;
+			sb = 0;
 			// serial packet fully identified
 			ParseInnovateSerialMsg(); //takes about 570ns
+			clear_ser_buffer = true;
 			break;
 
 		default:
@@ -95,8 +101,7 @@ void IdentifyInnovateSerialMsg() {		//this identifies an innovate LC1/LC2 o2 sen
 	}
 }
 
-void ParseInnovateSerialMsg()
-{
+void ParseInnovateSerialMsg() {
 	float raw_afr;
 	//get error code and afr
 
@@ -129,7 +134,7 @@ void ParseInnovateSerialMsg()
 			else if (innovate_o2_sensor[i].AFR < AFRMIN)
 				innovate_o2_sensor[i].AFR = AFRMIN;
 
-			InnovateLC2AFR = innovate_o2_sensor[i].AFR; //only using one sensor right now
+			InnovateLC2AFR = innovate_o2_sensor[0].AFR; //only using one sensor right now
 
 			break;
 		// this is invalid o2 data, so we can ignore it:
@@ -166,8 +171,16 @@ void ParseInnovateSerialMsg()
 	}
 }
 
-void ParseSerialData()
-{
+void ResetSerialSensor() {
+	ClearSerialBuffer();
+	ParseSerialData();
+}
+
+void ClearSerialBuffer() {
+	memset(ser_buffer, 0, sizeof(ser_buffer));
+}
+
+void ParseSerialData()  {
 	if (CONFIG(enableInnovateLC2))
 		IdentifyInnovateSerialMsg();
 }

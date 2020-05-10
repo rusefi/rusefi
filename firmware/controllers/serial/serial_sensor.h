@@ -17,3 +17,5 @@ void SerialSendTest();
 void IdentifyInnovateSerialMsg();
 void ParseInnovateSerialMsg();
 void ParseSerialData();
+void ResetSerialSensor();
+void ClearSerialBuffer();

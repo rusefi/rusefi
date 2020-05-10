@@ -347,6 +347,8 @@
 //#define TS_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_DEVICE (&SD3)
 
+#define AUX_SERIAL_DEVICE (&SD6)
+
 // todo: add DMA-mode for Console?
 #if (TS_UART_DMA_MODE || TS_UART_MODE)
 #undef EFI_CONSOLE_SERIAL_DEVICE

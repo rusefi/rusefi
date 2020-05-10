@@ -31,9 +31,7 @@ static SerialWrite serialWrite;
 
 
 static void auxInfo(void) {
-	
 	if (!isSerialEnabled) {
-
 		scheduleMsg(&logger, "AUX Serial is not enabled, please enable & restart");
 		return;
 	}
@@ -43,25 +41,22 @@ static void auxInfo(void) {
 }
 
 void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	
-	CONFIG(auxSerialTxPin) = engineConfiguration->auxSerialTxPin;
-	CONFIG(auxSerialRxPin) = engineConfiguration->auxSerialRxPin;
-	CONFIG(auxSerialSpeed) = engineConfiguration->auxSerialSpeed;
+	engineConfiguration->auxSerialTxPin = CONFIG(auxSerialTxPin);
+	engineConfiguration->auxSerialRxPin = CONFIG(auxSerialRxPin);
+	engineConfiguration->auxSerialSpeed = CONFIG(auxSerialSpeed);
 	
 	uartCfg.speed = engineConfiguration->auxSerialSpeed;
-	sdStart(&SD6, &uartCfg);
+	sdStart(AUX_SERIAL_DEVICE, &uartCfg);
 
 	scheduleMsg(&logger, "AUX Serial started");
 }
 
 void stopAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-
 	brain_pin_markUnused(activeConfiguration.auxSerialTxPin);
 	brain_pin_markUnused(activeConfiguration.auxSerialRxPin);
 }
 
 void startAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	
 	if (CONFIG(auxSerialTxPin))
 		efiSetPadMode("AuxSerial TX", CONFIG(auxSerialTxPin), PAL_MODE_ALTERNATE(8));
 	if (CONFIG(auxSerialRxPin))
@@ -71,7 +66,6 @@ void startAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void initAuxSerial(void) {
-
 	addConsoleAction("auxinfo", auxInfo);
 
 	isSerialEnabled =
@@ -94,8 +88,6 @@ void initAuxSerial(void) {
 
 	startAuxSerialPins();
 
-	if (isSerialTXEnabled)
-		serialWrite.Start(); //start serialwrite thread
 	if (isSerialRXEnabled)
 		serialRead.Start(); //start serialwrite thread
 }
