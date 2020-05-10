@@ -103,8 +103,6 @@ void setToyota_jzs147EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	common2jz(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	engineConfiguration->isSdCardEnabled = true;
-
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_2;
 
