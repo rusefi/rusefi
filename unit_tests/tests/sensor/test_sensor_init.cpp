@@ -45,6 +45,10 @@ TEST(SensorInit, Tps) {
 	// Test out of range
 	EXPECT_POINT_INVALID(s, 0.0f);
 	EXPECT_POINT_INVALID(s, 5.0f);
+
+	// Test that the passthru (redundant sensor) is working
+	EXPECT_POINT_VALID(s, 2.5f, 50.0f);
+	EXPECT_NEAR(50.0f, Sensor::get(SensorType::Tps1).value_or(-1), EPS2D);
 }
 
 TEST(SensorInit, Pedal) {
