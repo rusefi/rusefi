@@ -95,13 +95,17 @@ void setToyota_jzs147EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
+/**
+ * TOYOTA_2JZ_GTE_VVTi
+ * set engine_type 44
+ */
 void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	common2jz(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->isSdCardEnabled = true;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_2JZ_3_34;
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_2;
 
 	engineConfiguration->triggerInputPins[0] = GPIOA_5; // crank sensor
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED; // cam sensor will he handled by custom vtti code
