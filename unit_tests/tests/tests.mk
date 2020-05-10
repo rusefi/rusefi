@@ -1,20 +1,21 @@
 TESTS_SRC_CPP = \
+	tests/trigger/test_symmetrical_crank.cpp \
+	tests/trigger/test_trigger_decoder.cpp \
+	tests/trigger/test_trigger_noiseless.cpp \
+	tests/trigger/test_trigger_multi_sync.cpp \
+	tests/trigger/test_cam_vvt_input.cpp \
 	tests/test_util.cpp \
 	tests/test_ion.cpp \
 	tests/test_aux_valves.cpp \
 	tests/test_on_demand_parameters.cpp \
 	tests/test_hip9011.cpp \
 	tests/test_cj125.cpp \
-	tests/test_cam_vtt_input.cpp \
 	tests/test_engine_math.cpp \
 	tests/test_startOfCrankingPrimingPulse.cpp \
 	tests/test_miata_na6_real_cranking.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_dwell_corner_case_issue_796.cpp \
-	tests/test_symmetrical_crank.cpp \
 	tests/test_idle_controller.cpp \
-	tests/test_trigger_decoder.cpp \
-	tests/test_trigger_noiseless.cpp \
 	tests/test_issue_898.cpp \
 	tests/test_etb.cpp \
 	tests/test_ignition_scheduling.cpp \
@@ -23,7 +24,6 @@ TESTS_SRC_CPP = \
 	tests/test_one_cylinder_logic.cpp \
 	tests/test_maf2map.cpp \
 	tests/test_fuelCut.cpp \
-	tests/test_trigger_multi_sync.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_logic_expression.cpp \
 	tests/test_speed_density.cpp \
