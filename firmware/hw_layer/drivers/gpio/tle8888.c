@@ -321,39 +321,12 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 
 static int tle8888_update_output(struct tle8888_priv *chip)
 {
-	int i;
 	int ret = 0;
-	uint8_t briconfig0 = 0;
 
 	/* TODO: lock? */
 
-	uint32_t out_data = chip->o_state;
-
-	/* calculate briconfig0 */
-	uint32_t out_low = out_data & chip->o_pp_mask;
-	for (i = 20; i < 24; i++) {
-		if (out_low & BIT(i)) {
-			/* low-side switch mode */
-		} else {
-			/* else enable high-side switch mode */
-			briconfig0 |= BIT((i - 20) * 2);
-		}
-	}
-	/* TODO: set freewheeling bits in briconfig0? */
-
-	/* output for push-pull pins is allways enabled
-	 * (at least until we start supporting hi-Z state) */
-	out_data |= chip->o_pp_mask;
-	/* TODO: apply hi-Z mask when support will be added */
-
 	/* set value only for non-direct driven pins */
-	/* look like here is some conflict in case of
-	 * direct-driven PP output */
-	out_data &= (~chip->o_direct_mask);
-
-	/* bridge config */
-	ret = tle8888_spi_rw(chip, CMD_BRICONFIG(0, briconfig0), NULL);
-
+	uint32_t out_data = chip->o_state & (~chip->o_direct_mask);
 	for (int i = 0; i < 4; i++) {
 		uint8_t od;
 
