@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name bosch_88pin_02x44)(type Legacy)(uri ${KIPRJMOD}/bosch_88pin_02x44.lib)(options "")(descr ""))
+)

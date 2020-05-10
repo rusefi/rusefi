@@ -83,7 +83,7 @@ typedef void (*Void)(void);
 
 typedef char error_message_t[ERROR_BUFFER_SIZE];
 
-typedef char vehicle_name_t[VEHICLE_NAME_SIZE];
+typedef char vehicle_info_t[VEHICLE_INFO_SIZE];
 
 typedef char le_formula_t[LE_COMMAND_LENGTH];
 

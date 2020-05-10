@@ -27,6 +27,10 @@
 #include "sensor.h"
 #include "gppwm.h"
 
+#if EFI_TUNER_STUDIO
+#include "tunerstudio_configuration.h"
+#endif /* EFI_TUNER_STUDIO */
+
 #if EFI_PROD_CODE
 #include "bench_test.h"
 #else
@@ -238,11 +242,18 @@ void Engine::reset() {
  * so that we can prepare some helper structures
  */
 void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+// todo: start using this 'adcToVoltageInputDividerCoefficient' micro-optimization or... throw it away?
 #if HAL_USE_ADC
 	adcToVoltageInputDividerCoefficient = adcToVolts(1) * engineConfiguration->analogInputDividerCoefficient;
 #else
 	adcToVoltageInputDividerCoefficient = engineConfigurationPtr->analogInputDividerCoefficient;
 #endif
+
+#if EFI_TUNER_STUDIO
+	// we take 2 bytes of crc32, no idea if it's right to call it crc16 or not
+	// we have a hack here - we rely on the fact that engineMake is the first of three relevant fields
+	tsOutputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
+#endif /* EFI_TUNER_STUDIO */
 }
 
 #if EFI_SHAFT_POSITION_INPUT

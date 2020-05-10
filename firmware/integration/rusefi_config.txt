@@ -34,9 +34,16 @@
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! so not forget to change fileVersion in rusefi.ini
-! todo: is this not needed in light of TS_SIGNATURE?
+! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
+! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
 #define TS_FILE_VERSION 20200310
 
+
+! This is the version of the data stored in flash configuration
+! Any time an incompatible change is made to the configuration format stored in flash,
+! update this string to the current date! It is required to also update TS_SIGNATURE above
+! when this happens.
+#define FLASH_DATA_VERSION 10001
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -115,7 +122,7 @@ struct_no_prefix engine_configuration_s
 #define FSIO_COMMAND_COUNT 16
 #define AUX_PID_COUNT 4
 
-#define VEHICLE_NAME_SIZE 32
+#define VEHICLE_INFO_SIZE 32
 
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
@@ -191,6 +198,7 @@ custom boost_table_t	@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@ array,   U08,   @O
 
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_RPM_COUNT 8
+#define GPPWM_CHANNELS 4
 
 custom gppwm_table_t	@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@ array, U08, @OFFSET@, [@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@], "duty", 1, 0, 0, 100, 0
 
@@ -367,7 +375,7 @@ end_struct
 injector_s injector
 
 
-bit unused76b0;
+bit isForcedInduction;
 bit activateAuxPid1;
 bit isVerboseAuxPid1;
 bit activateAuxPid2;
@@ -403,8 +411,8 @@ bit issue_294_31,si_example,nada_example;
 int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\nSee also tps1_1AdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
 int16_t tpsMax;Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
 
-int16_t tpsErrorDetectionTooLow;+TPS error detection, what TPS % value is unrealistically low;"%",       1,     0,    -40, 200,     0
-int16_t tpsErrorDetectionTooHigh;+TPS error detection, what TPS % value is unrealistically high;"%",       1,     0,    -40, 200,     0
+int16_t tpsErrorDetectionTooLow;+TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equiped.;"%",       1,     0,    -10, 0,     0
+int16_t tpsErrorDetectionTooHigh;+TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equiped.;"%",       1,     0,    100, 110,     0
 
 cranking_parameters_s cranking
 float primingSquirtDurationMs;;"*C",       1,     0,    -40, 200,     1
@@ -516,7 +524,7 @@ struct trigger_config_s @brief Trigger wheel(s) configuration
 
 custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "trg48", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "trg49", "trg50", "INVALID"
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:7], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
@@ -666,7 +674,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	uint32_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs",      1,      0,       0,1000000,      0
 
-	int anUnused4Bytes;
+	float compressionRatio;+Just for reference really, not taken into account by any logic at this point;"CR",        1,     0,  0,    300.0,  1
 	
 	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.\nSee also directSelfStimulation which is different.
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
@@ -740,7 +748,8 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:7], "Off", "UART1", "UART2", "UA
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
 	int16_t stepperParkingExtraSteps;;"%",        1,     0,  0,    3000.0,  0
-	float unusedAntilagTimeout;
+	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
+	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 	int16_t antiLagRpmTreshold;
 	int16_t startCrankingDuration;Maximum time to crank starter;"Seconds",      1,      0,       0, 30,      0
 
@@ -794,7 +803,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 ! same length used for critical and soft error messages
 #define ERROR_BUFFER_SIZE 120
 
-	custom vehicle_name_t @@VEHICLE_NAME_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_NAME_SIZE@@
+	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 
 	custom error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@
 	custom le_formula_t @@LE_COMMAND_LENGTH@@ string, ASCII, @OFFSET@, @@LE_COMMAND_LENGTH@@
@@ -817,7 +826,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit enableCanVss
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
-	bit unusedBit_251_10
+	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error.  This mode may be easier to tune, and more tolerant of sensor noise.  Use of this mode is required if you have a narrowband O2 sensor.;
 	bit unusedBit_251_11
 	bit unusedBit_251_12
 	bit unusedBit_251_13
@@ -873,11 +882,16 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 
 	etb_io[ETB_COUNT iterate] etbIo2
 
-	vehicle_name_t vehicleName;
-	
-	int[84] unusedAtOldBoardConfigurationEnd;
+	vehicle_info_t engineMake;+For example, BMW, GM or Chevrolet\nREQUIRED for rusEFI Online
+	vehicle_info_t engineCode;+For example, LS1 or NB2\nREQUIRED for rusEFI Online
+	vehicle_info_t vehicleName;+For example, Hunchback or Orange Miata\nVehicle name has to be unique between your vehicles.\nREQUIRED for rusEFI Online
 
-	bit vvtDisplayInverted
+	int[67] unusedAtOldBoardConfigurationEnd;
+
+	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
+	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
+
+	bit unusedHereWeHave
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;+Print details into rusEfi console
 	bit isVerboseETB;+Prints ETB details to rusEFI console
@@ -1019,8 +1033,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	pid_s idleRpmPid;See cltIdleRpmBins
 	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
-	brain_pin_e communicationLedPin;blue LED on discovery by default	
-	brain_pin_e runningLedPin;green LED on discovery by default
+	brain_pin_e communicationLedPin;+blue LED on many rusEFI boards.\nBlue Communication LED which is expected to blink at 50% duty cycle during normal board operation.\nIf USB communication cable is connected Blue LED starts to blink faster. 	
+	brain_pin_e runningLedPin;+Green LED on many rusEFI boards.\nOff if engine is stopped, blinks if engine is cranking, solid if engine is running.
 	brain_pin_e binarySerialTxPin;See also EFI_CONSOLE_RX_BRAIN_PIN
 	brain_pin_e binarySerialRxPin;	
 	
@@ -1267,7 +1281,7 @@ uint8_t[4] unusuedsw;
  	custom can_vss_nbc_e 4 bits, U32, @OFFSET@, [0:7], "BMW_e46", "W202"
 	can_vss_nbc_e canVssNbcType;set can_vss X
 
-	gppwm_channel[4 iterate] gppwm;
+	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
 
 	int[376] mainUnusedEnd;
 
@@ -1285,7 +1299,7 @@ float[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds",      1,     0
 
 
 boost_table_t boostTableOpenLoop;
-uint8_t[BOOST_LOAD_COUNT] boostMapBins;;"",  @@LOAD_1_BYTE_PACKING_MULT@@,   0,        0,  600.0,   1
+uint8_t[8] unused6312;
 uint8_t[BOOST_RPM_COUNT] boostRpmBins;;"RPM",   @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0 
 
 boost_table_t boostTableClosedLoop;
@@ -1473,6 +1487,13 @@ end_struct
 #define GAUGE_NAME_DEBUG_I3 "debug i3"
 #define GAUGE_NAME_DEBUG_I4 "debug i4"
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
+
+#define ENGINE_MAKE_MAZDA "Mazda"
+#define ENGINE_MAKE_LADA "Lada"
+#define ENGINE_MAKE_GM "GM"
+#define ENGINE_MAKE_BMW "BMW"
+#define ENGINE_MAKE_TOYOTA "Toyota"
+#define ENGINE_MAKE_MERCEDES "Mercedes"
 
 
 #define CMD_PINS "pins"

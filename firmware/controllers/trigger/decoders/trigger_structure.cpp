@@ -183,7 +183,7 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? expectedEventCount[0] == 1 : expectedEventCount[0] == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
-		firmwareError(ERROR_TRIGGER_DRAMA, "trigger constraint violation");
+		firmwareError(ERROR_TRIGGER_DRAMA, "trigger sync constraint violation");
 	}
 
 // todo: move the following logic from below here
@@ -237,7 +237,10 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	efiAssertVoid(CUSTOM_ERR_6599, angle > 0, "angle should be positive");
 	if (privateTriggerDefinitionSize > 0) {
 		if (angle <= previousAngle) {
-			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f and prev=%.2f, size=%d", angle, previousAngle, privateTriggerDefinitionSize);
+			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f/%f and prev=%.2f/%f, size=%d",
+					angle, angle * getCycleDuration(),
+					previousAngle, previousAngle * getCycleDuration(),
+					privateTriggerDefinitionSize);
 			setShapeDefinitionError(true);
 			return;
 		}
@@ -543,6 +546,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		setToothedWheelConfiguration(this, 60, 2, ambiguousOperationMode);
 		break;
 
+	case TT_TOOTHED_WHEEL_36_2:
+		setToothedWheelConfiguration(this, 36, 2, ambiguousOperationMode);
+		break;
+
 	case TT_60_2_VW:
 		setVwConfiguration(this);
 		break;
@@ -614,7 +621,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		break;
 
 	case TT_2JZ_3_34:
-		initialize2jzGE3_34(this);
+		initialize2jzGE3_34_simulation_shape(this);
 		break;
 
 	case TT_2JZ_1_12:
@@ -653,7 +660,7 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 	version++;
 
 	if (!shapeDefinitionError) {
-		wave.checkSwitchTimes(getSize());
+		wave.checkSwitchTimes(getSize(), getCycleDuration());
 	}
 
 }

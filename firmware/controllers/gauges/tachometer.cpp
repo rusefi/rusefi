@@ -55,9 +55,9 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	}
 
 	// What is the angle per tach output period?
-	float cycleTimeMs = 60000.0 / GET_RPM();
+	float cycleTimeMs = 60000.0f / GET_RPM();
 	float periodTimeMs = cycleTimeMs / periods;
-	tachFreq = 1000.0 / periodTimeMs;
+	tachFreq = 1000.0f / periodTimeMs;
 	
 	if (CONFIG(tachPulseDurationAsDutyCycle)) {
 		// Simple case - duty explicitly set
@@ -68,7 +68,7 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	}
 
 	// In case Freq is under 1Hz, we stop pwm to avoid warnings!
-	if (tachFreq < 1.0) {
+	if (tachFreq < 1) {
 		tachFreq = NAN;
 	}
 	
@@ -87,7 +87,7 @@ void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				&engine->executor,
 				CONFIG(tachOutputPin),
 				&enginePins.tachOut,
-				NAN, 0.1, (pwm_gen_callback*)applyPinState);
+				NAN, 0.1f);
 
 #if EFI_SHAFT_POSITION_INPUT
 	addTriggerEventListener(tachSignalCallback, "tach", engine);
