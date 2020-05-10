@@ -2361,6 +2361,8 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedHere_offset 761
 #define unusedHere_offset_hex 2f9
+#define unusedHereWeHave_offset 1464
+#define unusedHereWeHave_offset_hex 5b8
 #define unusedOldBiquad_offset 2332
 #define unusedOldBiquad_offset_hex 91c
 #define unusedSomethingWasHere_offset 2417
@@ -2479,8 +2481,6 @@
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
 #define vvtCamSensorUseRise_offset 744
 #define vvtCamSensorUseRise_offset_hex 2e8
-#define vvtDisplayInverted_offset 1464
-#define vvtDisplayInverted_offset_hex 5b8
 #define vvtMode_offset 2328
 #define vvtMode_offset_hex 918
 #define vvtOffset_offset 2052

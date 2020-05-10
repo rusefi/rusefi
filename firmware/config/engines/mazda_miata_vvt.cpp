@@ -350,9 +350,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 //	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
-
-	engineConfiguration->vvtDisplayInverted = true;
-
 	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
 	//	/**
 	//	 * set_fsio_setting 1 0.55

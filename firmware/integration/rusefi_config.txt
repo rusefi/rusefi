@@ -887,7 +887,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	
 	int[68] unusedAtOldBoardConfigurationEnd;
 
-	bit vvtDisplayInverted
+	bit unusedHereWeHave
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;+Print details into rusEfi console
 	bit isVerboseETB;+Prints ETB details to rusEFI console
