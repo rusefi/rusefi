@@ -47,7 +47,6 @@ TESTS_SRC_CPP = \
 	tests/sensor/resist_func.cpp \
 	tests/sensor/therm_func.cpp \
 	tests/sensor/func_chain.cpp \
-	tests/sensor/redundant.cpp
 	tests/sensor/redundant.cpp \
 	tests/sensor/test_sensor_init.cpp \
 	tests/test_closed_loop_controller.cpp \
