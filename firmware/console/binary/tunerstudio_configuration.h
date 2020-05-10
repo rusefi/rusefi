@@ -176,6 +176,7 @@ typedef struct {
 	TsCalMode calibrationMode; // 132
 	uint8_t padding[1]; // 133
 
+	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
 	int16_t engineMakeCodeNameCrc16; // 134
 	// Errors
 	int totalTriggerErrorCounter; // 136
