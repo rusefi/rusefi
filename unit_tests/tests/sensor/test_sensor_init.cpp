@@ -34,7 +34,7 @@ TEST(SensorInit, Tps) {
 	initTps(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Ensure the sensors were registered
-	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::Tps1));
+	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::Tps1Primary));
 	ASSERT_NE(nullptr, s);
 
 	// Test in range
