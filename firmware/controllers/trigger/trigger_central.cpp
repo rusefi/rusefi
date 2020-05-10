@@ -179,7 +179,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 	vvtPosition -= tdcPosition();
 	fixAngle(vvtPosition, "vvtPosition", CUSTOM_ERR_6558);
 
-	tc->vvtPosition = (engineConfiguration->vvtDisplayInverted ? -vvtPosition : vvtPosition) + engineConfiguration->vvtOffset;
+	tc->vvtPosition = engineConfiguration->vvtOffset - vvtPosition;
 
 	switch (engineConfiguration->vvtMode) {
 	default:
@@ -704,8 +704,7 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		isConfigurationChanged(triggerInputPins[2]) ||
 		isConfigurationChanged(vvtMode) ||
 		isConfigurationChanged(vvtCamSensorUseRise) ||
-		isConfigurationChanged(vvtOffset) ||
-		isConfigurationChanged(vvtDisplayInverted);
+		isConfigurationChanged(vvtOffset);
 	if (changed) {
 		assertEngineReference();
 
