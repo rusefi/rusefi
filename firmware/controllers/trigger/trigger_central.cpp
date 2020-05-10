@@ -178,6 +178,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 #endif /* EFI_TUNER_STUDIO */
 		}
 	}
+	default:
+		// else, do nothing
+		break;
 	}
 
 	tc->vvtSyncTimeNt = nowNt;
