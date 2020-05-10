@@ -112,7 +112,7 @@ TEST(sensors, testCamInput) {
 
 	// asserting that error code has cleared
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	ASSERT_NEAR(181, engine->triggerCentral.getVVTPosition(), EPS3D);
+	ASSERT_NEAR(-181, engine->triggerCentral.getVVTPosition(), EPS3D);
 }
 
 TEST(sensors, testNB2CamInput) {
