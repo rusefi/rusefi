@@ -2101,6 +2101,10 @@
 #define tps1_1AdcChannel_offset_hex 200
 #define tps1_2AdcChannel_offset 681
 #define tps1_2AdcChannel_offset_hex 2a9
+#define tps1SecondaryMax_offset 822
+#define tps1SecondaryMax_offset_hex 336
+#define tps1SecondaryMin_offset 820
+#define tps1SecondaryMin_offset_hex 334
 #define tps2_1AdcChannel_offset 515
 #define tps2_1AdcChannel_offset_hex 203
 #define tps2_2AdcChannel_offset 682
@@ -2109,6 +2113,10 @@
 #define tps2Max_offset_hex 6ea
 #define tps2Min_offset 1768
 #define tps2Min_offset_hex 6e8
+#define tps2SecondaryMax_offset 1462
+#define tps2SecondaryMax_offset_hex 5b6
+#define tps2SecondaryMin_offset 1460
+#define tps2SecondaryMin_offset_hex 5b4
 #define TPS_1_BYTE_PACKING_MULT 2
 #define TPS_TPS_ACCEL_TABLE 8
 #define tpsAccelEnrichmentThreshold_offset 2048
@@ -2303,8 +2311,6 @@
 #define unused_1484_bit_31_offset_hex 5c4
 #define unused_former_warmup_target_afr_offset 2100
 #define unused_former_warmup_target_afr_offset_hex 834
-#define unusedAntilagTimeout_offset 820
-#define unusedAntilagTimeout_offset_hex 334
 #define unusedAtOldBoardConfigurationEnd_offset 1192
 #define unusedAtOldBoardConfigurationEnd_offset_hex 4a8
 #define unusedBit4_1476_offset 1476
@@ -2347,10 +2353,10 @@
 #define unusedBit_251_28_offset_hex 3d0
 #define unusedBit_251_29_offset 976
 #define unusedBit_251_29_offset_hex 3d0
-#define unusedBit_282_30_offset 976
-#define unusedBit_282_30_offset_hex 3d0
-#define unusedBit_282_31_offset 976
-#define unusedBit_282_31_offset_hex 3d0
+#define unusedBit_283_30_offset 976
+#define unusedBit_283_30_offset_hex 3d0
+#define unusedBit_283_31_offset 976
+#define unusedBit_283_31_offset_hex 3d0
 #define unusedBit_34_31_offset 76
 #define unusedBit_34_31_offset_hex 4c
 #define unusedConsoleSerialRxPin_offset 1819
