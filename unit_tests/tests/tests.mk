@@ -4,6 +4,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_trigger_noiseless.cpp \
 	tests/trigger/test_trigger_multi_sync.cpp \
 	tests/trigger/test_cam_vvt_input.cpp \
+	tests/trigger/test_2jz_vvt.cpp \
 	tests/test_util.cpp \
 	tests/test_ion.cpp \
 	tests/test_aux_valves.cpp \

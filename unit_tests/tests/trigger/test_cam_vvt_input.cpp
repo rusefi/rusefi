@@ -138,7 +138,7 @@ TEST(sensors, testNB2CamInput) {
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 	ASSERT_TRUE((totalRevolutionCountBeforeVvtSync % SYMMETRICAL_CRANK_SENSOR_DIVIDER) != 0);
 
-	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few anlges
+	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
 	// this would be ignored since we only consume the other kind of fronts here
 	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
