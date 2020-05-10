@@ -135,7 +135,6 @@ void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->enableLaunchRetard = true;
 	engineConfiguration->enableLaunchBoost = true;
 	engineConfiguration->launchSmoothRetard = true; //interpolates the advance linear from launchrpm to fully retarded at launchtimingrpmrange
-	engineConfiguration->unusedAntilagTimeout = 3;
 	engineConfiguration->antiLagRpmTreshold = 3000;
 }
 
