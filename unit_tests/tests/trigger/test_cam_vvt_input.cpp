@@ -1,5 +1,5 @@
 /*
- * test_cam_vtt_input.cpp
+ * test_cam_vvt_input.cpp
  *
  *  Created on: Jan 13, 2019
  * @author Andrey Belomutskiy, (c) 2012-2020
