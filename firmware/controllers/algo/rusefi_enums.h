@@ -388,9 +388,21 @@ typedef enum {
 } trigger_event_e;
 
 typedef enum {
+	/**
+	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
+	 */
 	VVT_FIRST_HALF = 0,
+	/**
+	 * Single-tooth cam sensor mode where TDC and cam signal happen in opposite 360 degree of 720 degree engine cycle
+	 */
 	VVT_SECOND_HALF = 1,
-	VVT_2GZ = 2,
+	/**
+	 * Toyota 2JZ has three cam tooth. We pick one of these three tooth to synchronize based on the expected angle position of the event
+	 */
+	VVT_2JZ = 2,
+	/**
+	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
+	 */
 	MIATA_NB2 = 3,
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;
