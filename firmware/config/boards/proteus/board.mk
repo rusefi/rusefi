@@ -27,4 +27,4 @@ DDEFS += $(MCU_DEFS) -DEFI_USE_OSC=TRUE -DEFI_FATAL_ERROR_PIN=GPIOE_3 -DFIRMWARE
 # Proteus <=v0.2 needs ADC hack - vbatt is on ADC3
 ifeq ($(PROTEUS_LEGACY),TRUE)
 	DDEFS +=  -DUSE_ADC3_VBATT_HACK
-else
+endif
