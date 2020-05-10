@@ -1488,6 +1488,9 @@ end_struct
 #define ENGINE_MAKE_LADA "Lada"
 #define ENGINE_MAKE_GM "GM"
 #define ENGINE_MAKE_BMW "BMW"
+#define ENGINE_MAKE_TOYOTA "Toyota"
+#define ENGINE_MAKE_MERCEDES "Mercedes"
+
 
 #define CMD_PINS "pins"
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
