@@ -1781,28 +1781,28 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = tpsNum1, "Throttle #1"
 		field = "!See Tools>Calibrate TPS"
 		field = "Primary sensor",				tps1_1AdcChannel
-		field = "Primary min",					tpsMin
-		field = "Primary max",					tpsMax
+		field = "Primary min",					tpsMin, {tps1_1AdcChannel != 16}
+		field = "Primary max",					tpsMax, {tps1_1AdcChannel != 16}
 		field = "Secondary sensor",				tps1_2AdcChannel
-		field = "Secondary min",				tps1SecondaryMin
-		field = "Secondary max",				tps1SecondaryMax
+		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != 16}
+		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != 16}
 
 	dialog = tpsNum2, "Throttle #2"
 		field = "Primary sensor",				tps2_1AdcChannel
-		field = "Primary min",					tps2Min
-		field = "Primary max",					tps2Max
+		field = "Primary min",					tps2Min, {tps2_1AdcChannel != 16}
+		field = "Primary max",					tps2Max, {tps2_1AdcChannel != 16}
 		field = "Secondary sensor",				tps2_2AdcChannel
-		field = "Secondary min",				tps2SecondaryMin
-		field = "Secondary max",				tps2SecondaryMax
+		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != 16}
+		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != 16}
 
 	dialog = tpsLimits, "TPS Limits"
 		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
 		field = "TPS maximum valid value",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
 
 	dialog = tpsSensor, "TPS"
+		panel = tpsLimits
 		panel = tpsNum1
 		panel = tpsNum2
-		panel = tpsLimits
 
 	dialog = pedalSensorLeft, "Accelerator pedal"
 		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
