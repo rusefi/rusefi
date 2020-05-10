@@ -1041,6 +1041,8 @@ case TT_ONE_PLUS_ONE:
   return "TT_ONE_PLUS_ONE";
 case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
   return "TT_ONE_PLUS_TOOTHED_WHEEL_60_2";
+case TT_TOOTHED_WHEEL_36_2:
+  return "TT_TOOTHED_WHEEL_36_2";
 case TT_ROVER_K:
   return "TT_ROVER_K";
 case TT_SUBARU_7_6:
@@ -1099,8 +1101,8 @@ case Force_4_bytes_size_vvt_mode:
   return "Force_4_bytes_size_vvt_mode";
 case MIATA_NB2:
   return "MIATA_NB2";
-case VVT_2GZ:
-  return "VVT_2GZ";
+case VVT_2JZ:
+  return "VVT_2JZ";
 case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
 case VVT_SECOND_HALF:

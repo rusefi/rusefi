@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 09 18:58:46 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun May 10 10:09:06 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -762,12 +762,14 @@ struct engine_configuration_s {
 	 */
 	int16_t tpsMax;
 	/**
-	 * TPS error detection, what TPS % value is unrealistically low
+	 * TPS error detection: what throttle % is unrealistically low?
+	 * Also used for accelerator pedal error detection if so equiped.
 	 * offset 84
 	 */
 	int16_t tpsErrorDetectionTooLow;
 	/**
-	 * TPS error detection, what TPS % value is unrealistically high
+	 * TPS error detection: what throttle % is unrealistically high?
+	 * Also used for accelerator pedal error detection if so equiped.
 	 * offset 86
 	 */
 	int16_t tpsErrorDetectionTooHigh;
@@ -1561,7 +1563,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 820
 	 */
-	float unusedAntilagTimeout;
+	uint16_t tps1SecondaryMin;
+	/**
+	 * offset 822
+	 */
+	uint16_t tps1SecondaryMax;
 	/**
 	 * offset 824
 	 */
@@ -1799,10 +1805,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_282_30 : 1;
+	bool unusedBit_283_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_282_31 : 1;
+	bool unusedBit_283_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -1915,10 +1921,18 @@ struct engine_configuration_s {
 	/**
 	 * offset 1192
 	 */
-	int unusedAtOldBoardConfigurationEnd[68];
+	int unusedAtOldBoardConfigurationEnd[67];
+	/**
+	 * offset 1460
+	 */
+	uint16_t tps2SecondaryMin;
+	/**
+	 * offset 1462
+	 */
+	uint16_t tps2SecondaryMax;
 	/**
 	offset 1464 bit 0 */
-	bool vvtDisplayInverted : 1;
+	bool unusedHereWeHave : 1;
 	/**
 	 * Enables lambda sensor closed loop feedback for fuelling.
 	offset 1464 bit 1 */
@@ -3455,4 +3469,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 09 18:58:46 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun May 10 10:09:06 EDT 2020

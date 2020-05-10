@@ -1193,6 +1193,8 @@ case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
 case TT_TOOTHED_WHEEL_36_1:
   return "TT_TOOTHED_WHEEL_36_1";
+case TT_TOOTHED_WHEEL_36_2:
+  return "TT_TOOTHED_WHEEL_36_2";
 case TT_TOOTHED_WHEEL_60_2:
   return "TT_TOOTHED_WHEEL_60_2";
 case TT_UNUSED:
@@ -1243,8 +1245,8 @@ case Force_4_bytes_size_vvt_mode:
   return "Force_4_bytes_size_vvt_mode";
 case MIATA_NB2:
   return "MIATA_NB2";
-case VVT_2GZ:
-  return "VVT_2GZ";
+case VVT_2JZ:
+  return "VVT_2JZ";
 case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
 case VVT_SECOND_HALF:

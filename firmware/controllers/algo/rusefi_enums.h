@@ -341,13 +341,15 @@ typedef enum {
 
 	TT_BOSCH_QUICK_START = 47,
 
+	TT_TOOTHED_WHEEL_36_2 = 48,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 48, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 49, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -386,9 +388,21 @@ typedef enum {
 } trigger_event_e;
 
 typedef enum {
+	/**
+	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
+	 */
 	VVT_FIRST_HALF = 0,
+	/**
+	 * Single-tooth cam sensor mode where TDC and cam signal happen in opposite 360 degree of 720 degree engine cycle
+	 */
 	VVT_SECOND_HALF = 1,
-	VVT_2GZ = 2,
+	/**
+	 * Toyota 2JZ has three cam tooth. We pick one of these three tooth to synchronize based on the expected angle position of the event
+	 */
+	VVT_2JZ = 2,
+	/**
+	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
+	 */
 	MIATA_NB2 = 3,
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;
