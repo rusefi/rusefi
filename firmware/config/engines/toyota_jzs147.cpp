@@ -20,6 +20,7 @@
 #include "toyota_jzs147.h"
 #include "custom_engine.h"
 #include "thermistors.h"
+#include "mazda_miata_vvt.h"
 
 EXTERN_CONFIG;
 
@@ -121,8 +122,19 @@ void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->twoWireBatchIgnition = true;
 	engineConfiguration->twoWireBatchInjection = true;
 
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_TOYOTA);
+	strcpy(CONFIG(engineCode), "2JZ");
+	strcpy(CONFIG(vehicleName), "VVT example");
 
 
+	// todo: these magic values would be hardcoded once we find out proper magic values
+	engineConfiguration->fsio_setting[14] = -90;
+	engineConfiguration->fsio_setting[15] = +90;
+
+	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
+
+	// Mazda VVT settings have nothing to do wit Toyota 2JZ settings but those are a good starting point for settings
+	setMazdaNB2VVTSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
 
 

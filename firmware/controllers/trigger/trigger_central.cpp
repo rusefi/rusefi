@@ -181,7 +181,11 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
 	tc->vvtPosition = (engineConfiguration->vvtDisplayInverted ? -vvtPosition : vvtPosition) + engineConfiguration->vvtOffset;
 
-	if (engineConfiguration->vvtMode == VVT_FIRST_HALF) {
+	switch (engineConfiguration->vvtMode) {
+	default:
+	case VVT_FIRST_HALF:
+	{
+
 		bool isEven = tc->triggerState.isEvenRevolution();
 		if (!isEven) {
 			/**
@@ -196,7 +200,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 #endif /* EFI_TUNER_STUDIO */
 			}
 		}
-	} else if (engineConfiguration->vvtMode == VVT_SECOND_HALF) {
+	}
+		break;
+	case VVT_SECOND_HALF:
+	{
 		bool isEven = tc->triggerState.isEvenRevolution();
 		if (isEven) {
 			// see above comment
@@ -207,8 +214,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 #endif /* EFI_TUNER_STUDIO */
 			}
 		}
-
-	} else if (engineConfiguration->vvtMode == MIATA_NB2) {
+	}
+		break;
+	case MIATA_NB2:
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
