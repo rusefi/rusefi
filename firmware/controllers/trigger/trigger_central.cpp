@@ -164,6 +164,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 			// outside of the expected range
 			return;
 		}
+		break;
 	case MIATA_NB2:
 	 {
 		uint32_t currentDuration = nowNt - tc->previousVvtCamTime;
