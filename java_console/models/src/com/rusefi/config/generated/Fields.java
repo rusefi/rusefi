@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 10 01:52:33 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 10 10:32:15 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1410,11 +1410,17 @@ public class Fields {
 	public static final int tps1_1AdcChannel_offset = 512;
 	public static final int tps1_1AdcChannel_offset_hex = 200;
 	public static final int tps1_2AdcChannel_offset = 681;
+	public static final int tps1SecondaryMax_offset = 822;
+	public static final int tps1SecondaryMax_offset_hex = 336;
+	public static final int tps1SecondaryMin_offset = 820;
+	public static final int tps1SecondaryMin_offset_hex = 334;
 	public static final int tps2_1AdcChannel_offset = 515;
 	public static final int tps2_1AdcChannel_offset_hex = 203;
 	public static final int tps2_2AdcChannel_offset = 682;
 	public static final int tps2Max_offset = 1770;
 	public static final int tps2Min_offset = 1768;
+	public static final int tps2SecondaryMax_offset = 1462;
+	public static final int tps2SecondaryMin_offset = 1460;
 	public static final int TPS_1_BYTE_PACKING_MULT = 2;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final int tpsAccelEnrichmentThreshold_offset = 2048;
@@ -1552,8 +1558,6 @@ public class Fields {
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_former_warmup_target_afr_offset = 2100;
 	public static final int unused_former_warmup_target_afr_offset_hex = 834;
-	public static final int unusedAntilagTimeout_offset = 820;
-	public static final int unusedAntilagTimeout_offset_hex = 334;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1192;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_11_offset = 976;
@@ -1575,8 +1579,8 @@ public class Fields {
 	public static final int unusedBit_251_27_offset = 976;
 	public static final int unusedBit_251_28_offset = 976;
 	public static final int unusedBit_251_29_offset = 976;
-	public static final int unusedBit_282_30_offset = 976;
-	public static final int unusedBit_282_31_offset = 976;
+	public static final int unusedBit_283_30_offset = 976;
+	public static final int unusedBit_283_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
 	public static final int unusedConsoleSerialRxPin_offset = 1819;
 	public static final int unusedConsoleSerialTxPin_offset = 1818;
@@ -2022,7 +2026,8 @@ public class Fields {
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
-	public static final Field UNUSEDANTILAGTIMEOUT = Field.create("UNUSEDANTILAGTIMEOUT", 820, FieldType.FLOAT);
+	public static final Field TPS1SECONDARYMIN = Field.create("TPS1SECONDARYMIN", 820, FieldType.INT16);
+	public static final Field TPS1SECONDARYMAX = Field.create("TPS1SECONDARYMAX", 822, FieldType.INT16);
 	public static final Field ANTILAGRPMTRESHOLD = Field.create("ANTILAGRPMTRESHOLD", 824, FieldType.INT16);
 	public static final Field STARTCRANKINGDURATION = Field.create("STARTCRANKINGDURATION", 826, FieldType.INT16);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 828, FieldType.INT8, brain_pin_e);
@@ -2134,8 +2139,8 @@ public class Fields {
 	public static final Field UNUSEDBIT_251_27 = Field.create("UNUSEDBIT_251_27", 976, FieldType.BIT, 27);
 	public static final Field UNUSEDBIT_251_28 = Field.create("UNUSEDBIT_251_28", 976, FieldType.BIT, 28);
 	public static final Field UNUSEDBIT_251_29 = Field.create("UNUSEDBIT_251_29", 976, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_282_30 = Field.create("UNUSEDBIT_282_30", 976, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_282_31 = Field.create("UNUSEDBIT_282_31", 976, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_283_30 = Field.create("UNUSEDBIT_283_30", 976, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_283_31 = Field.create("UNUSEDBIT_283_31", 976, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN1 = Field.create("ETBIO1_CONTROLPIN1", 982, FieldType.INT8, brain_pin_e);
@@ -2201,6 +2206,8 @@ public class Fields {
 	public static final Field ENGINEMAKE = Field.create("ENGINEMAKE", 1096, FieldType.INT);
 	public static final Field ENGINECODE = Field.create("ENGINECODE", 1128, FieldType.INT);
 	public static final Field VEHICLENAME = Field.create("VEHICLENAME", 1160, FieldType.INT);
+	public static final Field TPS2SECONDARYMIN = Field.create("TPS2SECONDARYMIN", 1460, FieldType.INT16);
+	public static final Field TPS2SECONDARYMAX = Field.create("TPS2SECONDARYMAX", 1462, FieldType.INT16);
 	public static final Field UNUSEDHEREWEHAVE = Field.create("UNUSEDHEREWEHAVE", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -2997,7 +3004,8 @@ public class Fields {
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,
-	UNUSEDANTILAGTIMEOUT,
+	TPS1SECONDARYMIN,
+	TPS1SECONDARYMAX,
 	ANTILAGRPMTRESHOLD,
 	STARTCRANKINGDURATION,
 	TRIGGERERRORPIN,
@@ -3107,8 +3115,8 @@ public class Fields {
 	UNUSEDBIT_251_27,
 	UNUSEDBIT_251_28,
 	UNUSEDBIT_251_29,
-	UNUSEDBIT_282_30,
-	UNUSEDBIT_282_31,
+	UNUSEDBIT_283_30,
+	UNUSEDBIT_283_31,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN1,
@@ -3172,6 +3180,8 @@ public class Fields {
 	ENGINEMAKE,
 	ENGINECODE,
 	VEHICLENAME,
+	TPS2SECONDARYMIN,
+	TPS2SECONDARYMAX,
 	UNUSEDHEREWEHAVE,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
