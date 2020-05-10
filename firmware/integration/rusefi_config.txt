@@ -411,8 +411,8 @@ bit issue_294_31,si_example,nada_example;
 int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\nSee also tps1_1AdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
 int16_t tpsMax;Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
 
-int16_t tpsErrorDetectionTooLow;+TPS error detection, what TPS % value is unrealistically low;"%",       1,     0,    -40, 200,     0
-int16_t tpsErrorDetectionTooHigh;+TPS error detection, what TPS % value is unrealistically high;"%",       1,     0,    -40, 200,     0
+int16_t tpsErrorDetectionTooLow;+TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equiped.;"%",       1,     0,    -10, 0,     0
+int16_t tpsErrorDetectionTooHigh;+TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equiped.;"%",       1,     0,    100, 110,     0
 
 cranking_parameters_s cranking
 float primingSquirtDurationMs;;"*C",       1,     0,    -40, 200,     1
