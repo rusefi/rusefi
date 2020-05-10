@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 10 00:25:55 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 10 01:52:33 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1582,6 +1582,7 @@ public class Fields {
 	public static final int unusedConsoleSerialTxPin_offset = 1818;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedHere_offset = 761;
+	public static final int unusedHereWeHave_offset = 1464;
 	public static final int unusedOldBiquad_offset = 2332;
 	public static final int unusedSomethingWasHere_offset = 2417;
 	public static final int unusedSomethingWasHere_offset_hex = 971;
@@ -1647,7 +1648,6 @@ public class Fields {
 	public static final int veTable_offset_hex = 4420;
 	public static final int vRefAdcChannel_offset = 1470;
 	public static final int vvtCamSensorUseRise_offset = 744;
-	public static final int vvtDisplayInverted_offset = 1464;
 	public static final int vvtMode_offset = 2328;
 	public static final int vvtMode_offset_hex = 918;
 	public static final int vvtOffset_offset = 2052;
@@ -2201,7 +2201,7 @@ public class Fields {
 	public static final Field ENGINEMAKE = Field.create("ENGINEMAKE", 1096, FieldType.INT);
 	public static final Field ENGINECODE = Field.create("ENGINECODE", 1128, FieldType.INT);
 	public static final Field VEHICLENAME = Field.create("VEHICLENAME", 1160, FieldType.INT);
-	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
+	public static final Field UNUSEDHEREWEHAVE = Field.create("UNUSEDHEREWEHAVE", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
 	public static final Field ISVERBOSEETB = Field.create("ISVERBOSEETB", 1464, FieldType.BIT, 3);
@@ -3172,7 +3172,7 @@ public class Fields {
 	ENGINEMAKE,
 	ENGINECODE,
 	VEHICLENAME,
-	VVTDISPLAYINVERTED,
+	UNUSEDHEREWEHAVE,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
 	ISVERBOSEETB,
