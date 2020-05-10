@@ -546,6 +546,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		setToothedWheelConfiguration(this, 60, 2, ambiguousOperationMode);
 		break;
 
+	case TT_TOOTHED_WHEEL_36_2:
+		setToothedWheelConfiguration(this, 36, 2, ambiguousOperationMode);
+		break;
+
 	case TT_60_2_VW:
 		setVwConfiguration(this);
 		break;
