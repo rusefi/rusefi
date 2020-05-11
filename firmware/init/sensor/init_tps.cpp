@@ -50,7 +50,7 @@ static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 	AdcSubscription::SubscribeSensor(sensor, channel);
 
 	if (!sensor.Register()) {
-		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate TPS registration for TPS sensor");
+		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for sensor \"%s\"", sensor.getSensorName());
 		return false;
 	}
 
@@ -63,7 +63,7 @@ static void initTpsFuncAndRedund(RedundantSensor& redund, LinearFunc& func, Func
 	redund.configure(5.0f, !hasSecond);
 
 	if (!redund.Register()) {
-		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate TPS registration for TPS sensor");
+		firmwareError(CUSTOM_INVALID_TPS_SETTING, "Duplicate registration for sensor \"%s\"", redund.getSensorName());
 	}
 }
 
