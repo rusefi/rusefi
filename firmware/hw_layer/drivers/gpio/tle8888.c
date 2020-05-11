@@ -362,49 +362,49 @@ static int tle8888_update_status_and_diag(struct tle8888_priv *chip)
 	/* this is quite expensive to call tle8888_spi_rw on each register read
 	 * TODO: implement tle8888_spi_rw_array ? */
 
-	/* request OutDiad0, ignore received */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(0), NULL)))
-		return ret;
-
-	/* request OutDiad1, receive OutDiag0 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(1), &rx)))
-		return ret;
-	chip->OutDiag[0] = getDataFromResponse(rx);
-
-	/* request OutDiad2, receive OutDiag1 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(2), &rx)))
-		return ret;
-	chip->OutDiag[1] = getDataFromResponse(rx);
-
-	/* request OutDiad3, receive OutDiag2 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(3), &rx)))
-		return ret;
-	chip->OutDiag[2] = getDataFromResponse(rx);
-
-	/* request OutDiad4, receive OutDiag3 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(4), &rx)))
-		return ret;
-	chip->OutDiag[3] = getDataFromResponse(rx);
-
-	/* request BriDiag0, receive OutDiag4 */
-	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(0), &rx)))
-		return ret;
-	chip->OutDiag[4] = getDataFromResponse(rx);
-
-	/* request BriDiag1, receive BriDiag0 */
-	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(1), &rx)))
-		return ret;
-	chip->BriDiag[0] = getDataFromResponse(rx);
-
-	/* request IgnDiag, receive BriDiag1 */
-	if ((ret = tle8888_spi_rw(chip, CMD_IGNDIAG, &rx)))
-		return ret;
-	chip->BriDiag[1] = getDataFromResponse(rx);
+//	/* request OutDiad0, ignore received */
+//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(0), NULL)))
+//		return ret;
+//
+//	/* request OutDiad1, receive OutDiag0 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(1), &rx)))
+//		return ret;
+//	chip->OutDiag[0] = getDataFromResponse(rx);
+//
+//	/* request OutDiad2, receive OutDiag1 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(2), &rx)))
+//		return ret;
+//	chip->OutDiag[1] = getDataFromResponse(rx);
+//
+//	/* request OutDiad3, receive OutDiag2 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(3), &rx)))
+//		return ret;
+//	chip->OutDiag[2] = getDataFromResponse(rx);
+//
+//	/* request OutDiad4, receive OutDiag3 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(4), &rx)))
+//		return ret;
+//	chip->OutDiag[3] = getDataFromResponse(rx);
+//
+//	/* request BriDiag0, receive OutDiag4 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(0), &rx)))
+//		return ret;
+//	chip->OutDiag[4] = getDataFromResponse(rx);
+//
+//	/* request BriDiag1, receive BriDiag0 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(1), &rx)))
+//		return ret;
+//	chip->BriDiag[0] = getDataFromResponse(rx);
+//
+//	/* request IgnDiag, receive BriDiag1 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_IGNDIAG, &rx)))
+//		return ret;
+//	chip->BriDiag[1] = getDataFromResponse(rx);
 
 	/* request OpStat0, receive IgnDiag */
 	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(0), &rx)))
 		return ret;
-	chip->IgnDiag = getDataFromResponse(rx);
+//	chip->IgnDiag = getDataFromResponse(rx);
 
 	/* request OpStat1, receive OpStat0 */
 	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(1), &rx)))
