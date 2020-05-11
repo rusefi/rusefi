@@ -33,7 +33,7 @@ static bool flag0before = false;
 static bool flag0after = false;
 
 static unsigned short mcChipId;
-volatile static unsigned short mcDriverStatus;
+static unsigned short mcDriverStatus;
 static Logging* logger;
 
 static SPIConfig spiCfg = { .circular = false,
