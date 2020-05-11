@@ -1,5 +1,5 @@
 /*
- * test_cam_vtt_input.cpp
+ * test_cam_vvt_input.cpp
  *
  *  Created on: Jan 13, 2019
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -112,7 +112,7 @@ TEST(sensors, testCamInput) {
 
 	// asserting that error code has cleared
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	ASSERT_NEAR(181, engine->triggerCentral.getVVTPosition(), EPS3D);
+	ASSERT_NEAR(-181, engine->triggerCentral.getVVTPosition(), EPS3D);
 }
 
 TEST(sensors, testNB2CamInput) {
@@ -138,7 +138,7 @@ TEST(sensors, testNB2CamInput) {
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 	ASSERT_TRUE((totalRevolutionCountBeforeVvtSync % SYMMETRICAL_CRANK_SENSOR_DIVIDER) != 0);
 
-	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few anlges
+	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
 	// this would be ignored since we only consume the other kind of fronts here
 	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);

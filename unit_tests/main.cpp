@@ -9,7 +9,6 @@
 #include <stdlib.h>
 
 #include "global.h"
-#include "test_find_index.h"
 
 #include "engine_configuration.h"
 
@@ -40,7 +39,7 @@ GTEST_API_ int main(int argc, char **argv) {
 //	printTriggerDebug = true;
 
 	//	resizeMap();
-	printf("Success 20200131\r\n");
+	printf("Success 20200510\r\n");
 	printAllTriggers();
 //	printConvertedTable();
 	testing::InitGoogleTest(&argc, argv);

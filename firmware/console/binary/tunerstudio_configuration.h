@@ -174,8 +174,10 @@ typedef struct {
 	// it wants to send have been sent.
 	float calibrationValue;	// 128
 	TsCalMode calibrationMode; // 132
-	uint8_t padding[3]; // 133-135
+	uint8_t padding[1]; // 133
 
+	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
+	int16_t engineMakeCodeNameCrc16; // 134
 	// Errors
 	int totalTriggerErrorCounter; // 136
 	int orderingErrorCounter; // 140

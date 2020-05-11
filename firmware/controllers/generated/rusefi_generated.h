@@ -557,6 +557,8 @@
 #define ENGINE_MAKE_GM "GM"
 #define ENGINE_MAKE_LADA "Lada"
 #define ENGINE_MAKE_MAZDA "Mazda"
+#define ENGINE_MAKE_MERCEDES "Mercedes"
+#define ENGINE_MAKE_TOYOTA "Toyota"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define engineChartSize_offset 1480
 #define engineChartSize_offset_hex 5c8
@@ -2099,6 +2101,10 @@
 #define tps1_1AdcChannel_offset_hex 200
 #define tps1_2AdcChannel_offset 681
 #define tps1_2AdcChannel_offset_hex 2a9
+#define tps1SecondaryMax_offset 822
+#define tps1SecondaryMax_offset_hex 336
+#define tps1SecondaryMin_offset 820
+#define tps1SecondaryMin_offset_hex 334
 #define tps2_1AdcChannel_offset 515
 #define tps2_1AdcChannel_offset_hex 203
 #define tps2_2AdcChannel_offset 682
@@ -2107,6 +2113,10 @@
 #define tps2Max_offset_hex 6ea
 #define tps2Min_offset 1768
 #define tps2Min_offset_hex 6e8
+#define tps2SecondaryMax_offset 1462
+#define tps2SecondaryMax_offset_hex 5b6
+#define tps2SecondaryMin_offset 1460
+#define tps2SecondaryMin_offset_hex 5b4
 #define TPS_1_BYTE_PACKING_MULT 2
 #define TPS_TPS_ACCEL_TABLE 8
 #define tpsAccelEnrichmentThreshold_offset 2048
@@ -2149,7 +2159,7 @@
 #define trigger_todoRemoveMeOneDay1_offset_hex 210
 #define TRIGGER_TYPE_36_1 9
 #define TRIGGER_TYPE_60_2 8
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "trg48", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "trg49", "trg50", "INVALID"
 #define trigger_type_offset 524
 #define trigger_type_offset_hex 20c
 #define trigger_unusedBit_4_10_offset 528
@@ -2301,8 +2311,6 @@
 #define unused_1484_bit_31_offset_hex 5c4
 #define unused_former_warmup_target_afr_offset 2100
 #define unused_former_warmup_target_afr_offset_hex 834
-#define unusedAntilagTimeout_offset 820
-#define unusedAntilagTimeout_offset_hex 334
 #define unusedAtOldBoardConfigurationEnd_offset 1192
 #define unusedAtOldBoardConfigurationEnd_offset_hex 4a8
 #define unusedBit4_1476_offset 1476
@@ -2345,10 +2353,10 @@
 #define unusedBit_251_28_offset_hex 3d0
 #define unusedBit_251_29_offset 976
 #define unusedBit_251_29_offset_hex 3d0
-#define unusedBit_282_30_offset 976
-#define unusedBit_282_30_offset_hex 3d0
-#define unusedBit_282_31_offset 976
-#define unusedBit_282_31_offset_hex 3d0
+#define unusedBit_283_30_offset 976
+#define unusedBit_283_30_offset_hex 3d0
+#define unusedBit_283_31_offset 976
+#define unusedBit_283_31_offset_hex 3d0
 #define unusedBit_34_31_offset 76
 #define unusedBit_34_31_offset_hex 4c
 #define unusedConsoleSerialRxPin_offset 1819
@@ -2359,6 +2367,8 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedHere_offset 761
 #define unusedHere_offset_hex 2f9
+#define unusedHereWeHave_offset 1464
+#define unusedHereWeHave_offset_hex 5b8
 #define unusedOldBiquad_offset 2332
 #define unusedOldBiquad_offset_hex 91c
 #define unusedSomethingWasHere_offset 2417
@@ -2477,8 +2487,6 @@
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
 #define vvtCamSensorUseRise_offset 744
 #define vvtCamSensorUseRise_offset_hex 2e8
-#define vvtDisplayInverted_offset 1464
-#define vvtDisplayInverted_offset_hex 5b8
 #define vvtMode_offset 2328
 #define vvtMode_offset_hex 918
 #define vvtOffset_offset 2052
