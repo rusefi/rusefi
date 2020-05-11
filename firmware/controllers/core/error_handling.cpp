@@ -64,14 +64,14 @@ char *getFirmwareError(void) {
 
 #if EFI_PROD_CODE
 
-extern ioportid_t errorLedPort;
-extern ioportmask_t errorLedPin;
+extern ioportid_t criticalErrorLedPort;
+extern ioportmask_t criticalErrorLedPin;
 
 /**
  * low-level function is used here to reduce stack usage
  */
 #define ON_CRITICAL_ERROR() \
-		palWritePad(errorLedPort, errorLedPin, 1); \
+		palWritePad(criticalErrorLedPort, criticalErrorLedPin, 1); \
 		turnAllPinsOff(); \
 		enginePins.communicationLedPin.setValue(1);
 #endif /* EFI_PROD_CODE */

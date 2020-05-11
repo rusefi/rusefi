@@ -368,8 +368,8 @@
 // todo: this should be detected automatically based on pin selection
 #define TS_SERIAL_AF 7
 
-#ifndef LED_ERROR_BRAIN_PIN
-#define LED_ERROR_BRAIN_PIN GPIOD_14
+#ifndef LED_CRITICAL_ERROR_BRAIN_PIN
+#define LED_CRITICAL_ERROR_BRAIN_PIN GPIOD_14
 #endif
 
 // USART1 -> check defined STM32_SERIAL_USE_USART1
