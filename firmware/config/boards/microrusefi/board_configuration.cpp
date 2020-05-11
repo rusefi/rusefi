@@ -64,7 +64,6 @@ static void setIgnitionPins() {
 }
 
 static void setLedPins() {
-	//engineConfiguration->atalErrorPin = GPIOE_3;		// d21 = red
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else
