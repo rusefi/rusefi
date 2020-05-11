@@ -149,7 +149,7 @@ void ParseInnovateSerialMsg() {
 			//catch potential overflow:
 			if (innovate_o2_sensor[i].warmup >= 1023) {
 				innovate_o2_sensor[i].warmup = 1023;
-			} else if (innovate_o2_sensor[i].warmup <= 0)
+			} else if (innovate_o2_sensor[i].warmup <= 0) {
 				innovate_o2_sensor[i].warmup = 0;
 			}	
 			break;
