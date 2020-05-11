@@ -178,6 +178,10 @@
 #define EFI_CAN_SUPPORT TRUE
 #endif
 
+#ifndef EFI_AUX_SERIAL
+#define EFI_AUX_SERIAL TRUE
+#endif
+
 #ifndef EFI_HD44780_LCD
 #define EFI_HD44780_LCD TRUE
 #endif
@@ -342,6 +346,8 @@
 
 //#define TS_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_DEVICE (&SD3)
+
+#define AUX_SERIAL_DEVICE (&SD6)
 
 // todo: add DMA-mode for Console?
 #if (TS_UART_DMA_MODE || TS_UART_MODE)

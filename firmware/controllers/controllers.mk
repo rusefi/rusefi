@@ -45,6 +45,8 @@ CONTROLLERS_SRC_CPP = \
  	$(CONTROLLERS_DIR)/engine_controller.cpp \
  	$(CONTROLLERS_DIR)/engine_controller_misc.cpp \
 	$(CONTROLLERS_DIR)/persistent_store.cpp \
+	$(CONTROLLERS_DIR)/serial/serial_rx.cpp \
+	$(CONTROLLERS_DIR)/serial/serial_sensor.cpp \
 
 
 CONTROLLERS_INC=\
@@ -64,4 +66,5 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/generated \
 	$(CONTROLLERS_DIR)/actuators \
 	$(CONTROLLERS_DIR)/actuators/gppwm \
+	$(CONTROLLERS_DIR)/serial \
 
