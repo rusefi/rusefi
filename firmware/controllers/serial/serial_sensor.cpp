@@ -131,7 +131,7 @@ void ParseInnovateSerialMsg() {
 
 			if (innovate_o2_sensor[i].AFR > AFRMAX) {
 				innovate_o2_sensor[i].AFR = AFRMAX;
-			} else if (innovate_o2_sensor[i].AFR < AFRMIN)
+			} else if (innovate_o2_sensor[i].AFR < AFRMIN) {
 				innovate_o2_sensor[i].AFR = AFRMIN;
 		    }
 
