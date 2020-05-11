@@ -383,7 +383,7 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
 void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const TriggerStateCallback triggerCycleCallback,
 		TriggerStateListener * triggerStateListener,
 		trigger_event_e const signal, efitick_t nowNt DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	ScopePerf perf(PE::DecodeTriggerEvent, static_cast<uint8_t>(signal));
+	ScopePerf perf(PE::DecodeTriggerEvent);
 	
 	if (nowNt - previousShaftEventTimeNt > NT_PER_SECOND) {
 		/**

@@ -19,6 +19,9 @@
 
 #define BIT(n) (UINT32_C(1) << (n))
 
+// we also have efi::size which probably does not work for C code
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+
 // human-readable IDs start from 1 while computer-readbale indexes start from 0
 #define ID2INDEX(id) ((id) - 1)
 
@@ -61,6 +64,12 @@ float maxF(float i1, float i2);
 float minF(float i1, float i2);
 char* itoa10(char *p, int num);
 bool isSameF(float v1, float v2);
+float clampF(float min, float clamp, float max);
+
+/**
+ * clamps value into the [0, 100] range
+ */
+#define clampPercentValue(x) (clampF(0, x, 100))
 
 bool strEqualCaseInsensitive(const char *str1, const char *str2);
 bool strEqual(const char *str1, const char *str2);

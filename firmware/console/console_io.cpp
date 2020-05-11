@@ -6,6 +6,22 @@
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
+ * rusEFI can communicate with external universe via native USB or some sort of TTL mode
+ * We have an interesting situation with TTL communication channels, we have
+ * 1) SERIAL - this one was implemented first simply because the code was readily available (works on stm32)
+ *    this one is most suitable for streaming HAL API
+ *    this one is not great since each byte requires an IRQ and with enough IRQ delay we have a risk of data loss
+ * 2) UART DMA - the best one since FIFO buffer reduces data loss (works on stm32)
+ *    We have two halves of DMA buffer - one is used for TTL while rusEFI prepares next batch of data in the other side.
+ *    We need idle support in order to not wait for the complete buffer to get full in order to recieve a message.
+ *    Back when we were implementing this STM32_DMA_CR_HTIE was not available in ChibiOS driver so we have added it.
+ *    we have custom rusEFI changes to ChibiOS HAL driver v1
+ *    F7 uses driver v2 which currently does not have rusEFI changes.
+ *    open question if fresh ChibiOS is better in this regard.
+ * 3) UART this one is useful on platforms with hardware FIFO buffer like Kinetis.
+ *    stm32 does not have such buffer so for stm32 UART without DMA has no advantages
+ *
+ *
  * rusEfi is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation; either
  * version 3 of the License, or (at your option) any later version.
@@ -131,12 +147,12 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 CommandHandler console_line_callback;
 
 #if (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR )
-static SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
+SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR )
 /* Note: This structure is modified from the default ChibiOS layout! */
-static UARTConfig uartConfig = { 
+UARTConfig uartConfig = {
 	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL, 
 	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
 	.timeout_cb = NULL, .rxhalf_cb = NULL
@@ -227,17 +243,17 @@ bool isCommandLineConsoleReady(void) {
 
 #if !defined(EFI_CONSOLE_NO_THREAD)
 
-static ts_channel_s binaryConsole;
+ts_channel_s primaryChannel;
 
 static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
 static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("console thread");
 
-	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
-	if (binaryConsole.channel != NULL) {
+	primaryChannel.channel = (BaseChannel *) getConsoleChannel();
+	if (primaryChannel.channel != NULL) {
 #if EFI_TUNER_STUDIO
-		runBinaryProtocolLoop(&binaryConsole);
+		runBinaryProtocolLoop(&primaryChannel);
 #endif /* EFI_TUNER_STUDIO */
 	}
 }
@@ -268,9 +284,8 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 		serialConfig.speed = engineConfiguration->uartConsoleSerialSpeed;
 		sdStart(EFI_CONSOLE_SERIAL_DEVICE, &serialConfig);
 
-		// cannot use pin repository here because pin repository prints to console
-		palSetPadMode(EFI_CONSOLE_RX_PORT, EFI_CONSOLE_RX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-		palSetPadMode(EFI_CONSOLE_TX_PORT, EFI_CONSOLE_TX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+		efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+		efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 
 		isSerialConsoleStarted = true;
 
@@ -279,9 +294,8 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 		uartConfig.speed = engineConfiguration->uartConsoleSerialSpeed;
 		uartStart(EFI_CONSOLE_UART_DEVICE, &uartConfig);
 
-		// cannot use pin repository here because pin repository prints to console
-		palSetPadMode(EFI_CONSOLE_RX_PORT, EFI_CONSOLE_RX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-		palSetPadMode(EFI_CONSOLE_TX_PORT, EFI_CONSOLE_TX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+		efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+		efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 
 		isSerialConsoleStarted = true;
 #endif /* EFI_CONSOLE_SERIAL_DEVICE || EFI_CONSOLE_UART_DEVICE */

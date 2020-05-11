@@ -14,10 +14,4 @@ BOARDSRC_CPP += $(CONTROLLERS_ALGO_AUTO_GENERATED_ENUMS)
 # Define linker script file here
 LDSCRIPT= $(STARTUPLD)/MKE1xF512.ld
 
-PLATFORMSRC += $(PLATFORMSRC_CONTRIB)
-PLATFORMINC += $(PLATFORMINC_CONTRIB)
-
-# Using external ChibiOS-Contrib code for Comparator HAL
-HALSRC += $(CHIBIOS_CONTRIB)/os/hal/src/hal_comp.c
-
-
+CONFDIR = $(BOARD_DIR)

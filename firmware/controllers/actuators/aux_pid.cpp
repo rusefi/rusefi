@@ -12,7 +12,7 @@
 #include "allsensors.h"
 
 #if EFI_AUX_PID
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 #include "tunerstudio_configuration.h"
 #include "fsio_impl.h"
 #include "engine_math.h"

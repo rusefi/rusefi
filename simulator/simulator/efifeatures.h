@@ -10,7 +10,7 @@
 #include "rusefi_true.h"
 
 #define EFI_ENABLE_ASSERTS TRUE
-
+#define EFI_LAUNCH_CONTROL FALSE
 #define EFI_ENABLE_MOCK_ADC TRUE
 
 #define ENABLE_PERF_TRACE FALSE

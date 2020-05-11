@@ -2,7 +2,7 @@
  * @file mazda_miata_1_6.cpp
  *
  *
- * https://github.com/rusefi/rusefi_documentation/wiki/Frankenso_MazdaMiataNA6_pnp
+ * https://github.com/rusefi/rusefi/wiki/Frankenso_MazdaMiataNA6_pnp
  *
  *
  * Frankenso board
@@ -185,6 +185,8 @@ static void setMiataNA6_settings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	config->crankingFuelBins[7] = 90;
 
 	engineConfiguration->specs.displacement = 1.6;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
+	strcpy(CONFIG(engineCode), "NA6");
 
 	// my car was originally a manual so proper TPS
 	engineConfiguration->tpsMin = 93; // convert 12to10 bit (ADC/4)

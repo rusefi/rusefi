@@ -11,5 +11,3 @@
 #include "trigger_structure.h"
 
 void initializeRoverK(TriggerWaveform *s);
-
-

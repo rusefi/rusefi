@@ -571,8 +571,6 @@ static void initStatusLeds(void) {
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
 
 	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
-	enginePins.debugTimerCallback.initPin("debug: timer callback", CONFIG(debugTimerCallback));
-	enginePins.debugSetTimer.initPin("debug: set timer", CONFIG(debugSetTimer));
 }
 
 #define BLINKING_PERIOD_MS 33
@@ -721,7 +719,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	tsOutputChannels->pedalPosition = pedal.Value;
-	tsOutputChannels->isPedalError = !pedal.Valid;
+	// Only report fail if you have one (many people don't)
+	tsOutputChannels->isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedal);
 
 	// Set raw sensors
 	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1);

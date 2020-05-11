@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed Apr 15 21:13:41 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 10 10:08:58 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -159,6 +159,61 @@ struct spi_pins {
 };
 
 typedef struct spi_pins spi_pins;
+
+// start of gppwm_channel
+struct gppwm_channel {
+	/**
+	 * Select a pin to use for PWM or on-off output.
+	 * offset 0
+	 */
+	output_pin_e pin;
+	/**
+	 * If an error (with a sensor, etc) is detected, this value is used instead of reading from the table.
+	 * This should be a safe value for whatever hardware is connected to prevent damage.
+	 * offset 1
+	 */
+	uint8_t dutyIfError;
+	/**
+	 * Select a frequency to run PWM at.
+	 * Set this to 0hz to enable on-off mode.
+	 * offset 2
+	 */
+	uint16_t pwmFrequency;
+	/**
+	 * In on-off mode, turn the output on when the table value is above this duty.
+	 * offset 4
+	 */
+	uint8_t onAboveDuty;
+	/**
+	 * In on-off mode, turn the output off when the table value is below this duty.
+	 * offset 5
+	 */
+	uint8_t offBelowDuty;
+	/**
+	 * Selects the load axis to use for the table.
+	 * offset 6
+	 */
+	gppwm_channel_e loadAxis;
+	/**
+	 * offset 7
+	 */
+	uint8_t pad;
+	/**
+	 * offset 8
+	 */
+	uint8_t loadBins[GPPWM_LOAD_COUNT];
+	/**
+	 * offset 16
+	 */
+	uint8_t rpmBins[GPPWM_RPM_COUNT];
+	/**
+	 * offset 24
+	 */
+	gppwm_table_t table;
+	/** total size 88*/
+};
+
+typedef struct gppwm_channel gppwm_channel;
 
 // start of air_pressure_sensor_config_s
 struct air_pressure_sensor_config_s {
@@ -590,11 +645,8 @@ struct engine_configuration_s {
 	 */
 	injector_s injector;
 	/**
-	 * Should trigger emulator push data right into trigger handling logic, eliminating the need for physical jumper wires?
-	 * See also triggerSimulatorPins
-	 * PS: Funny name, right? :)
 	offset 76 bit 0 */
-	bool directSelfStimulation : 1;
+	bool isForcedInduction : 1;
 	/**
 	offset 76 bit 1 */
 	bool activateAuxPid1 : 1;
@@ -624,7 +676,8 @@ struct engine_configuration_s {
 	offset 76 bit 9 */
 	bool isCJ125Verbose : 1;
 	/**
-	 * Is your UA CJ125 output wired to MCU via resistor divider?
+	 * Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1
+	 * When exposed to free air and 17x gain, Ua will be 4.17 volt
 	offset 76 bit 10 */
 	bool cj125isUaDivided : 1;
 	/**
@@ -647,7 +700,7 @@ struct engine_configuration_s {
 	bool cj125isUrDivided : 1;
 	/**
 	offset 76 bit 16 */
-	bool useTLE8888_hall_mode : 1;
+	bool issue_294_unused : 1;
 	/**
 	offset 76 bit 17 */
 	bool useTLE8888_cranking_hack : 1;
@@ -709,12 +762,14 @@ struct engine_configuration_s {
 	 */
 	int16_t tpsMax;
 	/**
-	 * TPS error detection, what TPS % value is unrealistically low
+	 * TPS error detection: what throttle % is unrealistically low?
+	 * Also used for accelerator pedal error detection if so equiped.
 	 * offset 84
 	 */
 	int16_t tpsErrorDetectionTooLow;
 	/**
-	 * TPS error detection, what TPS % value is unrealistically high
+	 * TPS error detection: what throttle % is unrealistically high?
+	 * Also used for accelerator pedal error detection if so equiped.
 	 * offset 86
 	 */
 	int16_t tpsErrorDetectionTooHigh;
@@ -1261,7 +1316,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 711
 	 */
-	brain_pin_e debugTimerCallback;
+	uint8_t unused711;
 	/**
 	 * offset 712
 	 */
@@ -1279,13 +1334,15 @@ struct engine_configuration_s {
 	 */
 	int generalPeriodicThreadPeriodMs;
 	/**
+	 * Secondary TTL channel baud rate
 	 * offset 728
 	 */
 	uint32_t tunerStudioSerialSpeed;
 	/**
+	 * Just for reference really, not taken into account by any logic at this point
 	 * offset 732
 	 */
-	int anUnused4Bytes;
+	float compressionRatio;
 	/**
 	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
 	 * See also directSelfStimulation which is different.
@@ -1397,6 +1454,8 @@ struct engine_configuration_s {
 	offset 744 bit 26 */
 	bool is_enabled_spi_4 : 1;
 	/**
+	 * Disable the electronic throttle motor for testing.
+	 * This mode is for testing ETB position sensors, etc without actually driving the throttle.
 	offset 744 bit 27 */
 	bool pauseEtbControl : 1;
 	/**
@@ -1465,7 +1524,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 806
 	 */
-	brain_pin_e debugSetTimer;
+	uint8_t unused806;
 	/**
 	 * offset 807
 	 */
@@ -1504,7 +1563,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 820
 	 */
-	float unusedAntilagTimeout;
+	uint16_t tps1SecondaryMin;
+	/**
+	 * offset 822
+	 */
+	uint16_t tps1SecondaryMax;
 	/**
 	 * offset 824
 	 */
@@ -1672,16 +1735,17 @@ struct engine_configuration_s {
 	bool launchDisableBySpeed : 1;
 	/**
 	offset 976 bit 7 */
-	bool unusedBit_251_7 : 1;
+	bool enableCanVss : 1;
 	/**
 	offset 976 bit 8 */
-	bool unusedBit_251_8 : 1;
+	bool enableInnovateLC2 : 1;
 	/**
 	offset 976 bit 9 */
-	bool unusedBit_251_9 : 1;
+	bool showHumanReadableWarning : 1;
 	/**
+	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.;
 	offset 976 bit 10 */
-	bool unusedBit_251_10 : 1;
+	bool stftIgnoreErrorMagnitude : 1;
 	/**
 	offset 976 bit 11 */
 	bool unusedBit_251_11 : 1;
@@ -1741,10 +1805,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_282_30 : 1;
+	bool unusedBit_283_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_282_31 : 1;
+	bool unusedBit_283_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -1834,10 +1898,41 @@ struct engine_configuration_s {
 	/**
 	 * offset 1088
 	 */
-	int unusedAtOldBoardConfigurationEnd[94];
+	etb_io etbIo2[ETB_COUNT];
+	/**
+	 * For example, BMW, GM or Chevrolet
+	 * REQUIRED for rusEFI Online
+	 * offset 1096
+	 */
+	vehicle_info_t engineMake;
+	/**
+	 * For example, LS1 or NB2
+	 * REQUIRED for rusEFI Online
+	 * offset 1128
+	 */
+	vehicle_info_t engineCode;
+	/**
+	 * For example, Hunchback or Orange Miata
+	 * Vehicle name has to be unique between your vehicles.
+	 * REQUIRED for rusEFI Online
+	 * offset 1160
+	 */
+	vehicle_info_t vehicleName;
+	/**
+	 * offset 1192
+	 */
+	int unusedAtOldBoardConfigurationEnd[67];
+	/**
+	 * offset 1460
+	 */
+	uint16_t tps2SecondaryMin;
+	/**
+	 * offset 1462
+	 */
+	uint16_t tps2SecondaryMax;
 	/**
 	offset 1464 bit 0 */
-	bool vvtDisplayInverted : 1;
+	bool unusedHereWeHave : 1;
 	/**
 	 * Enables lambda sensor closed loop feedback for fuelling.
 	offset 1464 bit 1 */
@@ -2049,7 +2144,7 @@ struct engine_configuration_s {
 	bool useTPSAdvanceTable : 1;
 	/**
 	offset 1476 bit 20 */
-	bool etbCalibrationOnStart : 1;
+	bool unused1476b20 : 1;
 	/**
 	 * This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 	offset 1476 bit 21 */
@@ -2270,16 +2365,20 @@ struct engine_configuration_s {
 	 */
 	float wwaeBeta;
 	/**
-	 * blue LED on discovery by default
+	 * blue LED on many rusEFI boards.
+	 * Blue Communication LED which is expected to blink at 50% duty cycle during normal board operation.
+	 * If USB communication cable is connected Blue LED starts to blink faster.
 	 * offset 1812
 	 */
 	brain_pin_e communicationLedPin;
 	/**
-	 * green LED on discovery by default
+	 * Green LED on many rusEFI boards.
+	 * Off if engine is stopped, blinks if engine is cranking, solid if engine is running.
 	 * offset 1813
 	 */
 	brain_pin_e runningLedPin;
 	/**
+	 * See also EFI_CONSOLE_RX_BRAIN_PIN
 	 * offset 1814
 	 */
 	brain_pin_e binarySerialTxPin;
@@ -2295,12 +2394,12 @@ struct engine_configuration_s {
 	 *  todo: finish pin migration from hard-coded to configurable?
 	 * offset 1818
 	 */
-	brain_pin_e consoleSerialTxPin;
+	brain_pin_e unusedConsoleSerialTxPin;
 	/**
 	 * todo: finish pin migration from hard-coded to configurable?
 	 * offset 1819
 	 */
-	brain_pin_e consoleSerialRxPin;
+	brain_pin_e unusedConsoleSerialRxPin;
 	/**
 	 * Knock sensor output knock detection threshold depending on current RPM
 	 * offset 1820
@@ -2369,17 +2468,19 @@ struct engine_configuration_s {
 	 */
 	int16_t iacByTpsTaper;
 	/**
+	 * set_aux_tx_pin X
 	 * offset 2040
 	 */
-	brain_pin_e unusedErrorPin;
+	brain_pin_e auxSerialTxPin;
 	/**
 	 * offset 2041
 	 */
 	brain_pin_e warningLedPin;
 	/**
+	 * set_aux_rx_pin X
 	 * offset 2042
 	 */
-	brain_pin_e unused1234234;
+	brain_pin_e auxSerialRxPin;
 	/**
 	 * offset 2043
 	 */
@@ -2421,6 +2522,7 @@ struct engine_configuration_s {
 	 */
 	float engineLoadAccelEnrichmentMultiplier;
 	/**
+	 * Band rate for primary TTL
 	 * offset 2076
 	 */
 	uint32_t uartConsoleSerialSpeed;
@@ -2447,7 +2549,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2096
 	 */
-	uint32_t unused_former_warmup_target_afr[9];
+	uint32_t auxSerialSpeed;
+	/**
+	 * offset 2100
+	 */
+	uint32_t unused_former_warmup_target_afr[8];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -2570,7 +2676,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2416
 	 */
-	int unusedSomethingWasHere;
+	tle8888_mode_e tle8888mode;
+	/**
+	 * offset 2417
+	 */
+	uint8_t unusedSomethingWasHere[3];
 	/**
 	 * offset 2420
 	 */
@@ -2586,14 +2696,14 @@ struct engine_configuration_s {
 	/**
 	 * offset 2432
 	 */
-	float postCrankingTargetClt;
+	float unused2432;
 	/**
-	 * Fuel multiplier taper, see also postCrankingDurationSec
+	 * Fuel multiplier (enrichment) immediately after engine start
 	 * offset 2436
 	 */
 	float postCrankingFactor;
 	/**
-	 * See also postCrankingFactor
+	 * Time over which to taper out after start enrichment
 	 * offset 2440
 	 */
 	float postCrankingDurationSec;
@@ -2732,7 +2842,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 2713
 	 */
-	uint8_t unusedSpiPadding5[3];
+	adc_channel_e auxVoltage1;
+	/**
+	 * offset 2714
+	 */
+	adc_channel_e auxVoltage2;
+	/**
+	 * offset 2715
+	 */
+	uint8_t unusedSpiPadding5;
 	/**
 	 * offset 2716
 	 */
@@ -2766,6 +2884,7 @@ struct engine_configuration_s {
 	 */
 	float fsioCurve4[FSIO_CURVE_8];
 	/**
+	 * For pinout see https://rusefi.com/forum/viewtopic.php?f=5&t=1324
 	 * offset 3100
 	 */
 	uint8_t unusedFlexFuelSensor;
@@ -3035,9 +3154,18 @@ struct engine_configuration_s {
 	 */
 	uint8_t iacPidMultRpmBins[IAC_PID_MULT_SIZE];
 	/**
+	 * set can_vss X
 	 * offset 4140
 	 */
-	int mainUnusedEnd[465];
+	can_vss_nbc_e canVssNbcType;
+	/**
+	 * offset 4144
+	 */
+	gppwm_channel gppwm[GPPWM_CHANNELS];
+	/**
+	 * offset 4496
+	 */
+	int mainUnusedEnd[376];
 	/** total size 6000*/
 };
 
@@ -3052,7 +3180,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6000
 	 */
-	critical_error_message_t critical_error_message;
+	error_message_t warning_message;
 	/**
 	 * offset 6120
 	 */
@@ -3076,7 +3204,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6312
 	 */
-	uint8_t boostMapBins[BOOST_LOAD_COUNT];
+	uint8_t unused6312[8];
 	/**
 	 * offset 6320
 	 */
@@ -3186,6 +3314,7 @@ struct persistent_config_s {
 	 */
 	float cltIdleCorr[CLT_CURVE_SIZE];
 	/**
+	 * Also known as MAF transfer function.
 	 * kg/hour value.
 	 * By the way 2.081989116 kg/h = 1 ft3/m
 	 * offset 10784
@@ -3340,4 +3469,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed Apr 15 21:13:41 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 10 10:08:58 EDT 2020

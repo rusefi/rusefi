@@ -13,12 +13,11 @@
 class DcMotor;
 class Logger;
 
-DcMotor* initDcMotor(size_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
+DcMotor* initDcMotor(size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 // Manual control of motors for use by console commands
 void setDcMotorFrequency(size_t index, int hz);
 void setDcMotorDuty(size_t index, float duty);
 
-#if EFI_PROD_CODE
-void showDcMotorInfo(Logging* logger);
-#endif
+void showDcMotorInfo(Logging* logger, int i);
+

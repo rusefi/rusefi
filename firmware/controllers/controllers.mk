@@ -18,6 +18,8 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/actuators/idle_thread.cpp \
 	$(CONTROLLERS_DIR)/actuators/pwm_tester.cpp \
 	$(CONTROLLERS_DIR)/actuators/algo/aux_pid.cpp \
+	$(CONTROLLERS_DIR)/actuators/gppwm/gppwm_channel.cpp \
+	$(CONTROLLERS_DIR)/actuators/gppwm/gppwm.cpp \
 	$(CONTROLLERS_DIR)/gauges/tachometer.cpp \
 	$(CONTROLLERS_DIR)/gauges/malfunction_indicator.cpp \
 	$(CONTROLLERS_DIR)/gauges/lcd_controller.cpp \
@@ -39,6 +41,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/can/can_rx.cpp \
 	$(CONTROLLERS_DIR)/can/can_tx.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash.cpp \
+	$(CONTROLLERS_DIR)/can/can_vss.cpp \
  	$(CONTROLLERS_DIR)/engine_controller.cpp \
  	$(CONTROLLERS_DIR)/engine_controller_misc.cpp \
 	$(CONTROLLERS_DIR)/persistent_store.cpp \
@@ -60,4 +63,5 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/math \
 	$(CONTROLLERS_DIR)/generated \
 	$(CONTROLLERS_DIR)/actuators \
+	$(CONTROLLERS_DIR)/actuators/gppwm \
 

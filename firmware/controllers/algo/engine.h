@@ -54,7 +54,7 @@ public:
 	explicit Engine(persistent_config_s *config);
 	Engine();
 
-	IEtbController *etbControllers[ETB_COUNT];
+	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 
 	cyclic_buffer<int> triggerErrorDetection;
 
@@ -216,6 +216,9 @@ public:
 	 */
 	floatms_t actualLastInjection = 0;
 
+	// Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
+	float standardAirCharge = 0;
+
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -259,6 +262,8 @@ public:
 	 * some areas
 	 */
 	bool isTestMode = false;
+
+	bool directSelfStimulation = false;
 
 	void resetEngineSnifferIfInTestMode();
 

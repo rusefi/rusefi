@@ -17,7 +17,10 @@
  * Looks like 252 is explained by 60 tooth * 2 (number of fronts) * 2 (number of crank rotations within engine cycle)
  */
 #ifndef PWM_PHASE_MAX_COUNT
-#define PWM_PHASE_MAX_COUNT 252
+// as of April 2020, trigger which requires most array length is REMIX_66_2_2_2
+// we can probably reduce RAM usage if we have more custom logic of triggers with large number of tooth while
+// pretty easy logic. like we do not need to REALLY have an array to remember the shape of evenly spaces 360 or 60/2 trigger :)
+#define PWM_PHASE_MAX_COUNT 280
 #endif /* PWM_PHASE_MAX_COUNT */
 #define PWM_PHASE_MAX_WAVE_PER_PWM 3
 
@@ -68,7 +71,7 @@ public:
 	void reset(void);
 	float getSwitchTime(const int phaseIndex) const;
 	void setSwitchTime(const int phaseIndex, const float value);
-	void checkSwitchTimes(const int size);
+	void checkSwitchTimes(const int size, const float scale);
 	pin_state_t getChannelState(const int channelIndex, const int phaseIndex) const;
 
 	int findAngleMatch(const float angle, const int size) const;

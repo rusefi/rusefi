@@ -163,11 +163,9 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float halfCylCount = CONFIG(specs.cylindersCount) / 2.0f;
 
 	float cylinderAirmass = airPerRevolution / halfCylCount;
-	
-	//Calculation of 100% VE air mass in g/rev - 1 cylinder filling at 1.2929g/L
-	float StandardAirCharge = CONFIG(specs.displacement) / CONFIG(specs.cylindersCount) * 1.2929; 
+
 	//Create % load for fuel table using relative naturally aspiratedcylinder filling
-	float airChargeLoad = 100 * cylinderAirmass/StandardAirCharge;
+	float airChargeLoad = 100 * cylinderAirmass / ENGINE(standardAirCharge);
 	
 	//Correct air mass by VE table 
 	float corrCylAirmass = cylinderAirmass * veMap.getValue(rpm, airChargeLoad) / 100;
@@ -336,20 +334,29 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @brief Engine warm-up fuel correction.
  */
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!hasCltSensor())
+	const auto [valid, clt] = Sensor::get(SensorType::Clt);
+	
+	if (!valid)
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("cltf", getCoolantTemperature(), config->cltFuelCorrBins, config->cltFuelCorr);
+
+	return interpolate2d("cltf", clt, config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!hasCltSensor())
+	const auto [valid, clt] = Sensor::get(SensorType::Clt);
+
+	if (!valid)
 		return 0; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("timc", getCoolantTemperature(), engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
+
+	return interpolate2d("timc", clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
 }
 
-float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (cisnan(iat))
+float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	const auto [valid, iat] = Sensor::get(SensorType::Iat);
+
+	if (!valid)
 		return 1; // this error should be already reported somewhere else, let's just handle it
+
 	return interpolate2d("iatc", iat, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 
@@ -440,9 +447,18 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return Duration of fuel injection while craning
  */
 floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getCrankingFuel3(getCoolantTemperature(),
+	return getCrankingFuel3(Sensor::get(SensorType::Clt).value_or(20),
 			engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
 }
+
+float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	float totalDisplacement = CONFIG(specs.displacement);
+	float cylDisplacement = totalDisplacement / CONFIG(specs.cylindersCount);
+
+	// Calculation of 100% VE air mass in g/cyl - 1 cylinder filling at 1.204/L - air density at 20C
+	return cylDisplacement * 1.204f;
+}
+
 #endif
 
 float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX) {

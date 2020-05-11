@@ -11,7 +11,6 @@
 #include "global.h"
 #include "os_access.h"
 #include "pwm_generator_logic.h"
-#include "pwm_generator.h"
 #include "perf_trace.h"
 
 /**
@@ -67,22 +66,23 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		return;
 	}
 	if (cisnan(dutyCycle)) {
-		warning(CUSTOM_DUTY_INVALID, "spwd:dutyCycle %.2f", dutyCycle);
+		warning(CUSTOM_DUTY_INVALID, "%s spwd:dutyCycle %.2f", name, dutyCycle);
 		return;
 	} else if (dutyCycle < 0) {
-		warning(CUSTOM_DUTY_TOO_LOW, "spwd:dutyCycle %.2f", dutyCycle);
+		warning(CUSTOM_DUTY_TOO_LOW, "%s dutyCycle %.2f", name, dutyCycle);
 		dutyCycle = 0;
 	} else if (dutyCycle > 1) {
-		warning(CUSTOM_DUTY_TOO_HIGH, "spwd:dutyCycle %.2f", dutyCycle);
+		warning(CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty %.2f", name, dutyCycle);
 		dutyCycle = 1;
 	}
-	if (dutyCycle == 0.0f && stateChangeCallback != NULL) {
-		/**
-		 * set the pin low just to be super sure
-		 * this custom handling of zero value comes from CJ125 heater code
-		 * TODO: is this really needed? cover by unit test?
-		 */
+
+	// Handle zero and full duty cycle.  This will cause the PWM output to behave like a plain digital output.
+	if (dutyCycle == 0.0f && stateChangeCallback) {
+		// Manually fire falling edge
 		stateChangeCallback(0, arg);
+	} else if (dutyCycle == 1.0f && stateChangeCallback) {
+		// Manually fire rising edge
+		stateChangeCallback(1, arg);
 	}
 
 	if (dutyCycle < ZERO_PWM_THRESHOLD) {
@@ -284,7 +284,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTime
 		}
 	}
 	if (state->mode == PM_NORMAL) {
-		state->multiChannelStateSequence.checkSwitchTimes(phaseCount);
+		state->multiChannelStateSequence.checkSwitchTimes(phaseCount, 1);
 	}
 }
 

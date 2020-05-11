@@ -1,10 +1,10 @@
 /*
  * @file bmw_m73.cpp
  *
- * https://github.com/rusefi/rusefi_documentation/wiki/BMW_e38_750
+ * https://github.com/rusefi/rusefi/wiki/BMW_e38_750
  *
  * https://rusefi.com/wiki/index.php?title=Hardware:OEM_connectors#134_pin
- * https://github.com/rusefi/rusefi_documentation/wiki/HOWTO_electronic_throttle_body
+ * https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
  * Ignition module https://rusefi.com/forum/viewtopic.php?f=4&t=286
  *
  *
@@ -78,6 +78,8 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.displacement = 5.4;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_BMW);
+	strcpy(CONFIG(engineCode), "M73");
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
 	CONFIG(isFasterEngineSpinUpEnabled) = true;
 
@@ -264,6 +266,8 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 12 injectors defined in boards/proteus/board_configuration.cpp
 	// set_analog_input_pin pps pa4
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_4;
+
+	strcpy(CONFIG(vehicleName), "Using Proteus");
 
 	// set vbatt_divider 8.16
 	// engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * 16.8f / 10.0f;

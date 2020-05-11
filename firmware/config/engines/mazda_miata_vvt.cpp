@@ -64,11 +64,11 @@ static const float injectorLagCorrection[VBAT_INJECTOR_CURVE_SIZE] = {
         1.5 ,        1.35,        1.25 ,        1.20
 };
 
-static const float ve18fsioRpmBins[FSIO_TABLE_8] =
+static const float vvt18fsioRpmBins[FSIO_TABLE_8] =
 {700.0, 1000.0, 2000.0, 3000.0, 3500.0, 4500.0, 5500.0, 6500.0}
 ;
 
-static const float ve18fsioLoadBins[FSIO_TABLE_8] =
+static const float vvt18fsioLoadBins[FSIO_TABLE_8] =
 {30.0, 40.0, 50.0, 60.0, 70.0, 75.0, 82.0, 85.0}
 ;
 
@@ -168,6 +168,38 @@ static const ignition_table_t mapBased18vvtTimingTable = {
 };
 #endif
 
+#define MAF_TRANSFER_SIZE 8
+
+static const float mafTransferVolts[MAF_TRANSFER_SIZE] = {1.365,
+		1.569,
+		2.028,
+		2.35,
+		2.611,
+		2.959,
+		3.499,
+		4.011,
+};
+
+static const float mafTransferKgH[MAF_TRANSFER_SIZE] = {
+		0,
+		3.9456,
+		18.7308,
+		45.4788,
+		82.278,
+		154.4328,
+		329.8104,
+		594.2772
+};
+
+static void setMAFTransferFunction(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	memcpy(config->mafDecoding, mafTransferKgH, sizeof(mafTransferKgH));
+	memcpy(config->mafDecodingBins, mafTransferVolts, sizeof(mafTransferVolts));
+	for (int i = MAF_TRANSFER_SIZE;i<MAF_DECODING_COUNT;i++) {
+		config->mafDecodingBins[i] = config->mafDecodingBins[MAF_TRANSFER_SIZE - 1] + i * 0.01;
+		config->mafDecoding[i] = config->mafDecoding[MAF_TRANSFER_SIZE - 1];
+	}
+}
+
 void setMazdaMiataNbTpsTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	memcpy(config->tpsTpsAccelFromRpmBins, tpsTspSame, sizeof(tpsTspSame));
 	memcpy(config->tpsTpsAccelFromRpmBins, tpsTspSame, sizeof(tpsTspSame));
@@ -184,18 +216,45 @@ void setMazdaMiataNbInjectorLag(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	memcpy(engineConfiguration->injector.battLagCorrBins, injectorLagBins, sizeof(injectorLagBins));
 }
 
+void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	memcpy(config->fsioTable1RpmBins, vvt18fsioRpmBins, sizeof(vvt18fsioRpmBins));
+	memcpy(config->fsioTable1LoadBins, vvt18fsioLoadBins, sizeof(vvt18fsioLoadBins));
+	// todo: there should be a better way?
+	for (int loadIndex = 0; loadIndex < FSIO_TABLE_8; loadIndex++) {
+		for (int rpmIndex = 0; rpmIndex < FSIO_TABLE_8; rpmIndex++) {
+			config->fsioTable1[loadIndex][rpmIndex] = fsio_table_vvt_target[loadIndex][rpmIndex];
+		}
+	}
+
+	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
+
+	// VVT closed loop
+	engineConfiguration->auxPid[0].pFactor = 2;
+	engineConfiguration->auxPid[0].iFactor = 0.005;
+	engineConfiguration->auxPid[0].dFactor = 0;
+	engineConfiguration->auxPid[0].offset = 33;
+	engineConfiguration->auxPid[0].minValue = 24;
+	engineConfiguration->auxPid[0].maxValue = 44;
+
+	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
+}
+
 static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
+
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
-	engineConfiguration->specs.displacement = 1.8;
+	engineConfiguration->specs.displacement = 1.839;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
+	strcpy(CONFIG(engineCode), "NB2");
 
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
 
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
-
-	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
+	setMAFTransferFunction(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// set idle_position 35
 	engineConfiguration->manIdlePosition = 35;
@@ -221,6 +280,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelRailPressure = 400; // 400 kPa, 58 psi
 	engineConfiguration->absoluteFuelPressure = true;
 
+	engineConfiguration->crankingIACposition = 90;
 
 	CONFIG(isAlternatorControlEnabled) = true;
 	// enable altdebug
@@ -231,15 +291,8 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.dFactor = 0;
 	engineConfiguration->alternatorControl.periodMs = 10;
 
-	// VVT closed loop
-	engineConfiguration->auxPid[0].pFactor = 2;
-	engineConfiguration->auxPid[0].iFactor = 0.005;
-	engineConfiguration->auxPid[0].dFactor = 0;
-	engineConfiguration->auxPid[0].offset = 33;
-	engineConfiguration->auxPid[0].minValue = 24;
-	engineConfiguration->auxPid[0].maxValue = 44;
-	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
 
+	engineConfiguration->vvtCamSensorUseRise = true;
 	// set vvt_mode 3
 	engineConfiguration->vvtMode = MIATA_NB2;
 	engineConfiguration->vvtOffset = 98; // 2003 red car value
@@ -254,14 +307,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyTimingTable(mapBased18vvtTimingTable, config->ignitionTable);
 #endif
 
-	memcpy(config->fsioTable1RpmBins, ve18fsioRpmBins, sizeof(ve18fsioRpmBins));
-	memcpy(config->fsioTable1LoadBins, ve18fsioLoadBins, sizeof(ve18fsioLoadBins));
-	// todo: there should be a better way?
-	for (int loadIndex = 0; loadIndex < FSIO_TABLE_8; loadIndex++) {
-			for (int rpmIndex = 0; rpmIndex < FSIO_TABLE_8; rpmIndex++) {
-				config->fsioTable1[loadIndex][rpmIndex] = fsio_table_vvt_target[loadIndex][rpmIndex];
-			}
-		}
+	setMazdaNB2VVTSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// enable cylinder_cleanup
 	engineConfiguration->isCylinderCleanupEnabled = true;
@@ -304,10 +350,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 //	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
-
-	engineConfiguration->vvtCamSensorUseRise = true;
-	engineConfiguration->vvtDisplayInverted = true;
-
 	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
 	//	/**
 	//	 * set_fsio_setting 1 0.55
@@ -348,8 +390,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
 	// set tps_max 540
 	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
-
-
 
 
 	engineConfiguration->malfunctionIndicatorPin = GPIOD_5;
@@ -398,7 +438,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// see setDefaultIdleParameters
 
 	engineConfiguration->adcVcc = 3.3f;
-	engineConfiguration->vbattDividerCoeff = 9.70f;
+	engineConfiguration->vbattDividerCoeff = 8.80f;
 
 	// by the way NB2 MAF internal diameter is about 2.5 inches / 63mm
 	// 1K pull-down to read current from this MAF
@@ -422,7 +462,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3 blue
 
 	engineConfiguration->idleMode = IM_AUTO;
-	CONFIG(useETBforIdleControl) = true;
 	// set_analog_input_pin pps PA2
 /* a step back - Frankenso does not use ETB
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
@@ -463,8 +502,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	config->crankingFuelCoef[7] = 10;
 	config->crankingFuelBins[7] = 90;
 
-//	engineConfiguration->crankingIACposition = 65;
-
 }
 
 /**
@@ -501,8 +538,11 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->camInputs[0] = GPIOA_5;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
-	engineConfiguration->useTLE8888_hall_mode = true;
+	/**
+	 * By default "auto detection mode for VR sensor signals" is used
+	 * We know that for short & strange Hall (?) signals like Miata NB2 crank sensor this does not work well above certain RPM.
+	 */
+	engineConfiguration->tle8888mode = TL_MANUAL;
 
 	// GPIOD_6: "13 - GP Out 6" - selected to +12v
 	engineConfiguration->alternatorControlPin = GPIOD_6;
@@ -561,6 +601,8 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
 
+	CONFIG(useETBforIdleControl) = true;
+
 #if EFI_FSIO
 	// enable ETB
 	// set_rpn_expression 8 "0"
@@ -590,5 +632,14 @@ void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  */
 void setMiataNB2_MRE_MTB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	// somehow MRE72 adapter 0.2 has TPS routed to pin 26?
+
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
+
+
+	// 1K pull-down to read current from this MAF
+	engineConfiguration->mafAdcChannel = EFI_ADC_13; // J30 AV5
+
 
 }

@@ -55,6 +55,7 @@
 #include "boost_control.h"
 #include "launch_control.h"
 #include "tachometer.h"
+#include "gppwm.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -76,20 +77,18 @@
 #include "bootloader/bootloader.h"
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 #include "periodic_task.h"
-#endif
+
 
 #if ! EFI_UNIT_TEST
 #include "init.h"
 #endif /* EFI_UNIT_TEST */
 
-#if EFI_PROD_CODE
-#include "pwm_generator.h"
 #include "adc_inputs.h"
+#include "pwm_generator_logic.h"
 
+#if EFI_PROD_CODE
 #include "pwm_tester.h"
-#include "pwm_generator.h"
 #include "lcd_controller.h"
 #include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
@@ -119,45 +118,6 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif // EFI_ENGINE_CONTROL
-}
-
-static void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if !EFI_UNIT_TEST
-	// This is tested independently - don't configure sensors for tests.
-	// This lets us selectively mock them for each test.
-	initNewSensors(sharedLogger);
-#endif /* EFI_UNIT_TEST */
-
-	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-
-	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-
-#if EFI_FSIO
-	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
-
-#if EFI_IDLE_CONTROL
-	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_IDLE_CONTROL */
-
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-
-#if EFI_MAP_AVERAGING
-	if (engineConfiguration->isMapAveragingEnabled) {
-		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-#endif /* EFI_MAP_AVERAGING */
-
-#if EFI_BOOST_CONTROL
-	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_BOOST_CONTROL */
-
-#if EFI_LAUNCH_CONTROL
-	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
-
 }
 
 #if EFI_ENABLE_MOCK_ADC
@@ -263,16 +223,23 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE */
 
+	efitick_t nowNt = getTimeNowNt();
+
+	if (nowNt - engine->triggerCentral.vvtSyncTimeNt >= NT_PER_SECOND) {
+		// loss of VVT sync
+		engine->triggerCentral.vvtSyncTimeNt = 0;
+	}
+
 
 	/**
 	 * Update engine RPM state if needed (check timeouts).
 	 */
-	bool isSpinning = engine->rpmCalculator.checkIfSpinning(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	bool isSpinning = engine->rpmCalculator.checkIfSpinning(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	if (!isSpinning) {
 		engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
-	if (CONFIG(directSelfStimulation) || engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (ENGINE(directSelfStimulation) || engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		/**
 		 * rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
 		 * postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
@@ -592,7 +559,43 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	}
 #endif
 
-	mostCommonInitEngineController(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#if !EFI_UNIT_TEST
+	// This is tested independently - don't configure sensors for tests.
+	// This lets us selectively mock them for each test.
+	initNewSensors(sharedLogger);
+#endif /* EFI_UNIT_TEST */
+
+	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+
+	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+
+#if EFI_FSIO
+	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_FSIO */
+
+	initGpPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+#if EFI_IDLE_CONTROL
+	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_IDLE_CONTROL */
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
+#if EFI_MAP_AVERAGING
+	if (engineConfiguration->isMapAveragingEnabled) {
+		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+#endif /* EFI_MAP_AVERAGING */
+
+#if EFI_BOOST_CONTROL
+	initBoostCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_BOOST_CONTROL */
+
+#if EFI_LAUNCH_CONTROL
+	initLaunchControl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 
 #if EFI_SHAFT_POSITION_INPUT
 	/**
@@ -619,9 +622,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 #if !EFI_UNIT_TEST
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_SIMULATOR
-	printf("initEngineContoller\n");
-#endif
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
@@ -631,10 +631,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
 	commonInitEngineController(sharedLogger);
-
-#if EFI_PROD_CODE
-	initPwmGenerator();
-#endif
 
 #if EFI_LOGIC_ANALYZER
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
@@ -691,14 +687,19 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 }
 
-// these two variables are here only to let us know how much RAM is available, also these
-// help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
-// linking process which is the way to raise the alarm
+/**
+ * these two variables are here only to let us know how much RAM is available, also these
+ * help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
+ * linking process which is the way to raise the alarm
+ *
+ * You get "cannot move location counter backwards" linker error when you run out of RAM. When you run out of RAM you shall reduce these
+ * UNUSED_SIZE contants.
+ */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 13600
+#define RAM_UNUSED_SIZE 12200
 #endif
 #ifndef CCM_UNUSED_SIZE
-#define CCM_UNUSED_SIZE 3700
+#define CCM_UNUSED_SIZE 2900
 #endif
 static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
@@ -716,6 +717,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200417;
+	return 20200510;
 }
 #endif /* EFI_UNIT_TEST */

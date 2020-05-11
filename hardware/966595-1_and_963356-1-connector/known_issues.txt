@@ -1,0 +1,2 @@
+1)                 need "68" anywhere on the board
+2)                 please use larger font at least for some of silkscreen
