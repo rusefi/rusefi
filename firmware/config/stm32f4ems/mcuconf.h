@@ -303,7 +303,7 @@
 #define STM32_SERIAL_USE_USART3             TRUE
 #define STM32_SERIAL_USE_UART4              FALSE
 #define STM32_SERIAL_USE_UART5              FALSE
-#define STM32_SERIAL_USE_USART6             FALSE
+#define STM32_SERIAL_USE_USART6             TRUE
 /**
  * UART priority should not be too low so that we do not miss bytes
  */
