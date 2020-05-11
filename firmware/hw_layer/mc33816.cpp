@@ -33,6 +33,7 @@ static bool flag0before = false;
 static bool flag0after = false;
 
 static unsigned short mcChipId;
+static unsigned short mcDriverStatus;
 static Logging* logger;
 
 static SPIConfig spiCfg = { .circular = false,
@@ -54,7 +55,7 @@ static bool validateChipId() {
 
 static void showStats() {
 	// x9D is product code or something, and 43 is the revision?
-	scheduleMsg(logger, "MC %x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
+	scheduleMsg(logger, "MC 0x%x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
 
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
     	scheduleMsg(logger, "flag0 before %d after %d", flag0before, flag0after);
@@ -65,6 +66,7 @@ static void showStats() {
     	scheduleMsg(logger, "No flag0 pin selected");
     }
     scheduleMsg(logger, "MC voltage %d", CONFIG(mc33_hvolt));
+    scheduleMsg(logger, "MC driver status 0x%x", mcDriverStatus);
 }
 
 static void mcRestart();
@@ -187,6 +189,32 @@ static bool check_flash() {
 
     spiUnselect(driver);
 	return true;
+}
+
+static unsigned short readDriverStatus(){
+	// Note: There is a config at 0x1CE & 1 that can reset this status reg on read
+	// otherwise the reload/recheck occurs with a write
+	// resetting it is necessary to reload - if the interrupt condition has been resolved
+
+	unsigned short driverStatus;
+	setup_spi(); // ensure on common page?
+	spiSelect(driver);
+    spi_writew((0x8000 | 0x1D2 << 5) + 1);
+    driverStatus = recv_16bit_spi();
+	spiUnselect(driver);
+	return driverStatus;
+}
+
+static bool checkUndervoltV5(unsigned short driverStatus){
+	return (driverStatus  & (1<<1));
+}
+
+static bool checkOverTemp(unsigned short driverStatus){
+	return (driverStatus  & (1<<3));
+}
+
+static bool checkDrivenEnabled(unsigned short driverStatus){
+	return (driverStatus  & (1<<4));
 }
 
 static void enable_flash() {
@@ -422,8 +450,14 @@ static void mcRestart() {
 
 
 	setup_spi();
-	mcChipId = readId();
 
+    mcDriverStatus = readDriverStatus();
+    if(checkUndervoltV5(mcDriverStatus)){
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 5V Under-Voltage!");
+    	return;
+    }
+
+	mcChipId = readId();
 	if (!validateChipId()) {
 		firmwareError(OBD_PCM_Processor_Fault, "No comm with MC33");
 		return;
@@ -458,6 +492,13 @@ static void mcRestart() {
     }
     setBoostVoltage(CONFIG(mc33_hvolt));
     driven.setValue(1); // driven = HV
+
+    mcDriverStatus = readDriverStatus();
+    if(!checkDrivenEnabled(mcDriverStatus)){
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 Driven did not stick!");
+    	return;
+    }
+
 }
 
 #endif /* EFI_MC33816 */
