@@ -140,7 +140,6 @@ void setBoardConfigurationOverrides(void) {
 	// This is often redundant with efifeatures.h or the run-time config
 	engineConfiguration->triggerErrorPin = GPIOE_1;
 	engineConfiguration->communicationLedPin = GPIOE_2;
-	engineConfiguration->FatalErrorPin = GPIOE_3;
 	engineConfiguration->runningLedPin = GPIOE_4;
 	engineConfiguration->warningLedPin = GPIOE_5;
 	engineConfiguration->checkEngineLedPin = GPIOE_6;
