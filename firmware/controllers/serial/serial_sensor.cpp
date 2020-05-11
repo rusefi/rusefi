@@ -64,8 +64,7 @@ void IdentifyInnovateSerialMsg() {		//this identifies an innovate LC1/LC2 o2 sen
 				innovate_serial_id_state = HEADER_FOUND;
 				innovate_msg_len = 1;
 				sb = 1;
-			}
-			else {
+			} else {
 				innovate_serial_id_state = UNKNOWN;
 			}
 			break;
@@ -80,8 +79,7 @@ void IdentifyInnovateSerialMsg() {		//this identifies an innovate LC1/LC2 o2 sen
 				innovate_msg_len = tmsglen - 2;
 				sb = 2;
 				innovate_serial_id_state = IDENTIFIED; //advance state machine
-			}
-			else {
+			} else {
 				innovate_serial_id_state = UNKNOWN;
 			}
 
@@ -124,15 +122,18 @@ void ParseInnovateSerialMsg() {
 		case 1: //Lambda value contains o2 level in 1/10%
 			innovate_o2_sensor[i].lambda = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
 			raw_afr = ((innovate_o2_sensor[i].lambda + 500) * innovate_o2_sensor[i].AFR_multiplier);
-			if (innovate_o2_sensor[i].function_code) //case 1
-				innovate_o2_sensor[i].AFR = raw_afr * 0.001;
-			else // case 0
-				innovate_o2_sensor[i].AFR = raw_afr * 0.0001;
 
-			if (innovate_o2_sensor[i].AFR > AFRMAX)
+			if (innovate_o2_sensor[i].function_code) {//case 1
+				innovate_o2_sensor[i].AFR = raw_afr * 0.001;
+			} else { // case 0
+				innovate_o2_sensor[i].AFR = raw_afr * 0.0001;
+			}
+
+			if (innovate_o2_sensor[i].AFR > AFRMAX) {
 				innovate_o2_sensor[i].AFR = AFRMAX;
-			else if (innovate_o2_sensor[i].AFR < AFRMIN)
+			} else if (innovate_o2_sensor[i].AFR < AFRMIN)
 				innovate_o2_sensor[i].AFR = AFRMIN;
+		    }
 
 			InnovateLC2AFR = innovate_o2_sensor[0].AFR; //only using one sensor right now
 
@@ -146,10 +147,11 @@ void ParseInnovateSerialMsg() {
 			InnovateLC2AFR = AFR_ERROR;
 			innovate_o2_sensor[i].warmup = ((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
 			//catch potential overflow:
-			if (innovate_o2_sensor[i].warmup >= 1023)
+			if (innovate_o2_sensor[i].warmup >= 1023) {
 				innovate_o2_sensor[i].warmup = 1023;
-			else if (innovate_o2_sensor[i].warmup <= 0)
+			} else if (innovate_o2_sensor[i].warmup <= 0)
 				innovate_o2_sensor[i].warmup = 0;
+			}	
 			break;
 			//  case 5: // Heater Calibration, Lambda value contains calibration countdown
 			//    break;
@@ -157,10 +159,11 @@ void ParseInnovateSerialMsg() {
 			InnovateLC2AFR = AFR_ERROR;
 			innovate_o2_sensor[i].error_code = (sensor_error_code_t)((ser_buffer[4 + i * 4] << 7 | ser_buffer[5 + i * 4]) & 0x1FFF);
 			//catch potential overflow:
-			if (innovate_o2_sensor[i].error_code >= (sensor_error_code_t)1023)
+			if (innovate_o2_sensor[i].error_code >= (sensor_error_code_t)1023) {
 				innovate_o2_sensor[i].error_code = (sensor_error_code_t)1023;
-			else if (innovate_o2_sensor[i].error_code <= 0)
+			} else if (innovate_o2_sensor[i].error_code <= 0) {
 				innovate_o2_sensor[i].error_code = (sensor_error_code_t)0;
+			}
 			break;
 			//  case 7: // reserved
 			//    break;

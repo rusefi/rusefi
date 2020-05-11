@@ -41,10 +41,11 @@ void SerialRead::ThreadTask() {
         if (len >= SERBUFFLEN)
 		  len = SERBUFFLEN;
 
-		if (sdReadTimeout(AUX_SERIAL_DEVICE,  &ser_buffer[sb], len, TIME_100MSEC) == len)
+		if (sdReadTimeout(AUX_SERIAL_DEVICE,  &ser_buffer[sb], len, TIME_100MSEC) == len) {
 			ParseSerialData();
-		else
+		} else {
 			ResetSerialSensor();
+		}
 		
 		//clear buffer every frame to avoid parsing old data
 		if (clear_ser_buffer) {
