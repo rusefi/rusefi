@@ -63,15 +63,7 @@ if not exist firmware/deliver/rusefi.bin echo %script_name%: rusefi.bin not foun
 if not exist firmware/deliver/rusefi.bin exit -1
 
 cd temp
-echo "Please copy find.exe to findcyg.exe in cygwin folder"
-findcyg . -name '.svn' > folders_to_delete.txt
-IF NOT ERRORLEVEL 0 echo %script_name%: ERROR INVOKING findcyg
-IF NOT ERRORLEVEL 0 EXIT /B 1
 
-echo "Deleting .svn"
-xargs rm  -rf < folders_to_delete.txt
-echo "%script_name%: Deleted .svn"
-rm -rf folders_to_delete.txt
 
 echo "Building bundle"
 pwd
