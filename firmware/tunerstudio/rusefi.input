@@ -412,9 +412,15 @@ enable2ndByteCanID = false
      ; defaultValue = constantName, value;
     defaultValue = wueAfrTargetOffset, -1.5 -1.4 -1.15 -0.95 -0.775 -0.65 -0.5625 -0.5 -0.4375 -0.375 -0.3125 -0.25 -0.1875 -0.125 -0.0625 0
 
+	; TPS 1 Primary
 	maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
 	maintainConstantValue = tpsMin, { (calibrationMode == 2 ) ? calibrationValue : tpsMin }
 
+	; TPS 1 Secondary
+	maintainConstantValue = tps1SecondaryMax, { (calibrationMode == 6 ) ? calibrationValue : tps1SecondaryMax }
+	maintainConstantValue = tps1SecondaryMin, { (calibrationMode == 7 ) ? calibrationValue : tps1SecondaryMin }
+
+	; ETB Auto Gain Calibration
 	maintainConstantValue = etb_pFactor, { (calibrationMode == 3 ) ? calibrationValue : etb_pFactor }
 	maintainConstantValue = etb_iFactor, { (calibrationMode == 4 ) ? calibrationValue : etb_iFactor }
 	maintainConstantValue = etb_dFactor, { (calibrationMode == 5 ) ? calibrationValue : etb_dFactor }

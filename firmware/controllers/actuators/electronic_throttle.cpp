@@ -105,6 +105,20 @@ static SensorType indexToTpsSensor(size_t index) {
 	}
 }
 
+static SensorType indexToTpsSensorPrimary(size_t index) {
+	switch(index) {
+		case 0:  return SensorType::Tps1Primary;
+		default: return SensorType::Tps2Primary;
+	}
+}
+
+static SensorType indexToTpsSensorSecondary(size_t index) {
+	switch(index) {
+		case 0:  return SensorType::Tps1Secondary;
+		default: return SensorType::Tps2Secondary;
+	}
+}
+
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
 
@@ -450,7 +464,7 @@ struct EtbImpl final : public EtbController, public PeriodicController<512> {
 		motor->enable();
 		chThdSleepMilliseconds(1000);
 		tsOutputChannels.calibrationMode = TsCalMode::Tps1Max;
-		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(myIndex)) * TPS_TS_CONVERSION;
+		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensorPrimary(myIndex)) * TPS_TS_CONVERSION;
 
 		// Let it return
 		motor->set(0);
@@ -460,7 +474,7 @@ struct EtbImpl final : public EtbController, public PeriodicController<512> {
 		motor->set(-0.5f);
 		chThdSleepMilliseconds(1000);
 		tsOutputChannels.calibrationMode = TsCalMode::Tps1Min;
-		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(myIndex)) * TPS_TS_CONVERSION;
+		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensorPrimary(myIndex)) * TPS_TS_CONVERSION;
 
 		// Finally disable and reset state
 		motor->disable();
