@@ -206,8 +206,8 @@ static unsigned short readDriverStatus(){
 	unsigned short driverStatus;
 	setup_spi(); // ensure on common page?
 	spiSelect(driver);
-    spi_writew((0x8000 | 0x1D2 << 5) + 1);
-    driverStatus = recv_16bit_spi();
+    	spi_writew((0x8000 | 0x1D2 << 5) + 1);
+    	driverStatus = recv_16bit_spi();
 	spiUnselect(driver);
 	return driverStatus;
 }
