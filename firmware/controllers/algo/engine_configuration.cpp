@@ -961,8 +961,14 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fanOnTemperature = 95;
 	engineConfiguration->fanOffTemperature = 91;
 
-	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
-	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(5);
+	engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(0);
+	engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(5);
+	engineConfiguration->tps2Min = convertVoltageTo10bitADC(0);
+	engineConfiguration->tps2Max = convertVoltageTo10bitADC(5);
+	engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(0);
+	engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(5);
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 

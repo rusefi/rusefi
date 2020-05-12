@@ -501,15 +501,15 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin) {
 
 // questionable trick: we avoid using 'getHwPort' and 'getHwPin' in case of errors in order to increase the changes of turning the LED
 // by reducing stack requirement
-ioportid_t errorLedPort;
-ioportmask_t errorLedPin;
+ioportid_t criticalErrorLedPort;
+ioportmask_t criticalErrorLedPin;
 
 void initPrimaryPins(Logging *sharedLogger) {
 	logger = sharedLogger;
 #if EFI_PROD_CODE
-	enginePins.errorLedPin.initPin("led: ERROR status", LED_ERROR_BRAIN_PIN);
-	errorLedPort = getHwPort("primary", LED_ERROR_BRAIN_PIN);
-	errorLedPin = getHwPin("primary", LED_ERROR_BRAIN_PIN);
+	enginePins.errorLedPin.initPin("led: CRITICAL status", LED_CRITICAL_ERROR_BRAIN_PIN);
+	criticalErrorLedPort = getHwPort("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
+	criticalErrorLedPin = getHwPin("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
 #endif /* EFI_PROD_CODE */
 }
 

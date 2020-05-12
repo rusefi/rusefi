@@ -151,12 +151,30 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 	currentPosition -= tdcPosition();
 	fixAngle(currentPosition, "currentPosition", CUSTOM_ERR_6558);
 
+	tc->currentVVTEventPosition = currentPosition;
+	if (engineConfiguration->debugMode == DBG_VVT) {
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.debugFloatField1 = currentPosition;
+#endif /* EFI_TUNER_STUDIO */
+	}
 
 	switch(engineConfiguration->vvtMode) {
+	case VVT_2JZ:
+		if (currentPosition < engineConfiguration->fsio_setting[14] || currentPosition > engineConfiguration->fsio_setting[15]) {
+			// outside of the expected range
+			return;
+		}
+		break;
 	case MIATA_NB2:
 	 {
 		uint32_t currentDuration = nowNt - tc->previousVvtCamTime;
 		float ratio = ((float) currentDuration) / tc->previousVvtCamDuration;
+
+		if (engineConfiguration->debugMode == DBG_VVT) {
+#if EFI_TUNER_STUDIO
+			tsOutputChannels.debugFloatField2 = ratio;
+#endif /* EFI_TUNER_STUDIO */
+		}
 
 
 		tc->previousVvtCamDuration = currentDuration;
