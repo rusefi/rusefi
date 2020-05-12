@@ -191,11 +191,18 @@ static bool check_flash() {
 	return true;
 }
 
-static unsigned short readDriverStatus(){
-	// Note: There is a config at 0x1CE & 1 that can reset this status reg on read
-	// otherwise the reload/recheck occurs with a write
-	// resetting it is necessary to reload - if the interrupt condition has been resolved
+static void mcClearDriverStatus(){
+	// Note: There is a config at 0x1CE & 1 that can reset this status config register on read
+	// otherwise the reload/recheck occurs with this write
+	// resetting it is necessary to clear default reset behavoir, as well as if an issue has been resolved
+	setup_spi(); // ensure on common page?
+	spiSelect(driver);
+	spi_writew((0x0000 | 0x1D2 << 5) + 1); // write, location, one word
+	spi_writew(0x0000); // anything to clear
+	spiUnselect(driver);
+}
 
+static unsigned short readDriverStatus(){
 	unsigned short driverStatus;
 	setup_spi(); // ensure on common page?
 	spiSelect(driver);
@@ -451,6 +458,7 @@ static void mcRestart() {
 
 	setup_spi();
 
+	mcClearDriverStatus();
     mcDriverStatus = readDriverStatus();
     if(checkUndervoltV5(mcDriverStatus)){
     	firmwareError(OBD_PCM_Processor_Fault, "MC33 5V Under-Voltage!");
