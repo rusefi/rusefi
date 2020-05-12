@@ -2321,7 +2321,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 	dialog = statusLeds, "Status LEDs"
 		field = "Running status LED",					runningLedPin
-		field = "TS communication status LED",					communicationLedPin
+		field = "TS communication status LED",			communicationLedPin
+		field = "Warning LED",							warningLedPin
 	    field = "Trigger error LED",					triggerErrorPin
 
 ;			Engine->MIL Settings
