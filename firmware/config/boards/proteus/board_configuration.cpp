@@ -66,10 +66,10 @@ void setSdCardConfigurationOverrides(void) {
 }
 
 static void setLedPins() {
-	CONFIG(warningLedPin) = GPIOE_3;
+	// PE3 is error LED, configured in board.mk
 	CONFIG(communicationLedPin) = GPIOE_4;
-	engineConfiguration->runningLedPin = GPIOE_5;
-	engineConfiguration->triggerErrorPin = GPIOE_6;
+	CONFIG(runningLedPin) = GPIOE_5;
+	CONFIG(warningLedPin) = GPIOE_6;
 }
 
 static void setupVbatt() {
