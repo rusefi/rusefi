@@ -12,6 +12,8 @@
 #include "global.h"
 #include "engine_configuration.h"
 
+#define LOW_VBATT 7
+
 float getVRef(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool hasVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE);

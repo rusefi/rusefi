@@ -740,7 +740,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// see MAIN_RELAY_LOGIC
 	if (CONFIG(mainRelayPin) != GPIO_UNASSIGNED) {
-		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > 5) || engine->isInShutdownMode());
+		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > LOW_VBATT) || engine->isInShutdownMode());
 	}
 	// see STARTER_RELAY_LOGIC
 	if (CONFIG(starterRelayDisablePin) != GPIO_UNASSIGNED) {
