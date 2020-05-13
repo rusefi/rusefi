@@ -463,8 +463,8 @@ struct EtbImpl final : public EtbController, public PeriodicController<512> {
 		motor->set(0.5f);
 		motor->enable();
 		chThdSleepMilliseconds(1000);
-		tsOutputChannels.calibrationMode = TsCalMode::Tps1Max;
-		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensorPrimary(myIndex)) * TPS_TS_CONVERSION;
+		float primaryMax = Sensor::getRaw(indexToTpsSensorPrimary(myIndex)) * TPS_TS_CONVERSION;
+		float secondaryMax = Sensor::getRaw(indexToTpsSensorSecondary(myIndex)) * TPS_TS_CONVERSION;
 
 		// Let it return
 		motor->set(0);
@@ -473,14 +473,27 @@ struct EtbImpl final : public EtbController, public PeriodicController<512> {
 		// Now grab closed
 		motor->set(-0.5f);
 		chThdSleepMilliseconds(1000);
-		tsOutputChannels.calibrationMode = TsCalMode::Tps1Min;
-		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensorPrimary(myIndex)) * TPS_TS_CONVERSION;
+		float primaryMin = Sensor::getRaw(indexToTpsSensorPrimary(myIndex)) * TPS_TS_CONVERSION;
+		float secondaryMin = Sensor::getRaw(indexToTpsSensorSecondary(myIndex)) * TPS_TS_CONVERSION;
 
 		// Finally disable and reset state
 		motor->disable();
 
-		// Wait to let TS grab the state before we leave cal mode
-		chThdSleepMilliseconds(500);
+		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1Max;
+		tsOutputChannels.calibrationValue = primaryMax;
+		chThdSleepMilliseconds(250);
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1Min;
+		tsOutputChannels.calibrationValue = primaryMin;
+		chThdSleepMilliseconds(250);
+
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1SecondaryMax;
+		tsOutputChannels.calibrationValue = secondaryMax;
+		chThdSleepMilliseconds(250);
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1SecondaryMin;
+		tsOutputChannels.calibrationValue = secondaryMin;
+		chThdSleepMilliseconds(250);
+
 		tsOutputChannels.calibrationMode = TsCalMode::None;
 
 		m_isAutocal = false;
