@@ -70,7 +70,7 @@ static void setLedPins() {
 	engineConfiguration->communicationLedPin = GPIOE_2; // d23 = blue
 #endif /* EFI_COMMUNICATION_PIN */
 	engineConfiguration->runningLedPin = GPIOE_4;		// d22 = green
-	engineConfiguration->triggerErrorPin = GPIOE_1;		// d27 = orange
+	engineConfiguration->warningLedPin = GPIOE_1;		// d27 = orange or yellow
 }
 
 static void setupVbatt() {
