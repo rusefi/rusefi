@@ -627,7 +627,7 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 		/* should we care about msg == MSG_TIMEOUT? */
 		(void)msg;
 
-		if (vBattForTle8888 < 7) {
+		if (vBattForTle8888 < LOW_VBATT) {
 			// we assume TLE8888 is down and we should not bother with SPI communication
 			if (!needInitialSpi) {
 				needInitialSpi = true;

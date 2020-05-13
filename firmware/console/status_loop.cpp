@@ -604,6 +604,9 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 
 	void PeriodicTask() override {
 		counter++;
+
+		bool lowVBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) < LOW_VBATT;
+
 		if (counter == 1) {
 			// first invocation of BlinkingTask
 			setAllLeds(1);
@@ -612,7 +615,9 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			setAllLeds(0);
 		} else if (counter % 2 == 0) {
 			enginePins.communicationLedPin.setValue(0);
-			enginePins.warningLedPin.setValue(0);
+			if (!lowVBatt) {
+				enginePins.warningLedPin.setValue(0);
+			}
 		} else {
 			if (hasFirmwareError()) {
 				// special behavior in case of critical error - not equal on/off time
@@ -632,7 +637,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 
 			enginePins.communicationLedPin.setValue(1);
 	#if EFI_ENGINE_CONTROL
-			if (isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
+			if (lowVBatt || isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
 				consoleByteArrived = false;
 				enginePins.warningLedPin.setValue(1);
 			}
