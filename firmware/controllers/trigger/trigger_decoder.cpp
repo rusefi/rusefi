@@ -718,7 +718,7 @@ void initTriggerDecoderLogger(Logging *sharedLogger) {
 
  void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
-	enginePins.triggerDecoderErrorPin.initPin("trg_err", CONFIG(triggerErrorPin),
+	enginePins.triggerDecoderErrorPin.initPin("led: warning", CONFIG(triggerErrorPin),
 			&CONFIG(triggerErrorPinMode));
 #endif /* EFI_GPIO_HARDWARE */
 }
