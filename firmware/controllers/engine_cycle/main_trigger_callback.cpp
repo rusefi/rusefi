@@ -168,7 +168,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
+void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 		int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	/**
