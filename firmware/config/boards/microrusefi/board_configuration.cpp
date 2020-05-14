@@ -70,7 +70,7 @@ static void setLedPins() {
 	engineConfiguration->communicationLedPin = GPIOE_2; // d23 = blue
 #endif /* EFI_COMMUNICATION_PIN */
 	engineConfiguration->runningLedPin = GPIOE_4;		// d22 = green
-	engineConfiguration->triggerErrorPin = GPIOE_1;		// d27 = orange
+	engineConfiguration->warningLedPin = GPIOE_1;		// d27 = orange or yellow
 }
 
 static void setupVbatt() {
@@ -86,6 +86,7 @@ static void setupVbatt() {
 	// set vbatt_divider 8.23
 	// R139=39k high side/R141=10k low side multiplied by above analogInputDividerCoefficient = 8.232f
 	engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
+	// PC1, pin #1 input +12 from Main Relay. Main Relay controlled by TLE8888
 	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
 
 	engineConfiguration->adcVcc = 3.29f;
