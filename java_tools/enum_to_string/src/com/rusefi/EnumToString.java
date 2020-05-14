@@ -72,6 +72,7 @@ public class EnumToString {
 
         headerFileContent.append("#endif /*_A_H_HEADER_ */\r\n");
 
+        new File(outputPath).mkdirs();
         writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_enums");
         SystemOut.close();
     }
@@ -88,7 +89,7 @@ public class EnumToString {
 
     private static void consumeFile(String inputPath, String inFileName) throws IOException {
         File f = new File(inputPath + File.separator + inFileName);
-        SystemOut.println("Reading from " + inFileName);
+        SystemOut.println("Reading enums from " + inFileName);
         String simpleFileName = f.getName();
 
         bothFilesHeader.insert(0, "// " +
@@ -99,11 +100,14 @@ public class EnumToString {
     }
 
     public static void outputData() {
+        SystemOut.println("Preparing output for " + EnumsReader.enums.size() + " enums\r\n");
+
         for (Map.Entry<String, Map<String, Value>> e : EnumsReader.enums.entrySet()) {
             String enumName = e.getKey();
             cppFileContent.append(makeCode(enumName, e.getValue().values()));
-            EnumToString.headerFileContent.append(getMethodSignature(enumName) + ";\r\n");
+            headerFileContent.append(getMethodSignature(enumName) + ";\r\n");
         }
+        SystemOut.println("EnumToString: " + headerFileContent.length() + " bytes of content\r\n");
     }
 
     public static void clear() {
