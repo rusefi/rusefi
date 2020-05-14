@@ -22,13 +22,13 @@ public class EnumsReader {
             line = removeSpaces(line);
 
             if (line.startsWith("typedefenum{") || line.startsWith("typedefenum__attribute__")) {
-                SystemOut.println("Entering enum");
+                SystemOut.println("  EnumsReader: Entering enum");
                 currentValues.clear();
                 isInsideEnum = true;
             } else if (line.startsWith("}") && line.endsWith(";")) {
                 isInsideEnum = false;
                 line = line.substring(1, line.length() - 1);
-                SystemOut.println("Ending enum " + line);
+                SystemOut.println("  EnumsReader: Ending enum " + line  + " found " + currentValues.size() + " values");
                 enums.put(line, new TreeMap<>(currentValues));
             } else {
                 line = line.replaceAll("//.+", "");
@@ -41,7 +41,7 @@ public class EnumsReader {
                             value = line.substring(index + 1);
                             line = line.substring(0, index);
                         }
-                        SystemOut.println("Line " + line);
+                        SystemOut.println("    EnumsReader: Line " + line);
                         currentValues.put(line, new Value(line, value));
                     }
                 }
