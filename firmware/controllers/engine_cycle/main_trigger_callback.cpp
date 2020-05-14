@@ -257,14 +257,8 @@ void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 	}
 
 	efitick_t startTime = scheduleByAngle(&event->signalTimerUp, nowNt, event->injectionStart.angleOffsetFromTriggerEvent, startAction PASS_ENGINE_PARAMETER_SUFFIX);
-
-	// Only turn off the injector if the computed duty cycle isn't really high.
-	// If the duty cycle is very high, just pin the injector fully open, as that's the best we can do
-	// in those conditions
-	if (getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX) < 95.0f) {
-		efitick_t turnOffTime = startTime + US2NT((int)durationUs);
-		engine->executor.scheduleByTimestampNt(&event->endOfInjectionEvent, turnOffTime, endAction);
-	}
+	efitick_t turnOffTime = startTime + US2NT((int)durationUs);
+	engine->executor.scheduleByTimestampNt(&event->endOfInjectionEvent, turnOffTime, endAction);
 
 #if EFI_UNIT_TEST
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffsetFromTriggerEvent, NT2US(startTime - nowNt), injectionDuration);
@@ -316,6 +310,11 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 		return;
 	}
 
+	// If duty cycle is high, impose a fuel cut rev limiter.
+	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
+	if (getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX) > 96.0f) {
+		return;
+	}
 
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
