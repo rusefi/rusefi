@@ -204,6 +204,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->spi3misoPin = GPIOC_11;
 	engineConfiguration->spi3sckPin = GPIOC_10;
 	engineConfiguration->sdCardCsPin = GPIOB_9;
+	CONFIG(is_enabled_spi_3) = true;
 //	engineConfiguration->isSdCardEnabled = true;
 
 
