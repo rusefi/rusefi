@@ -122,7 +122,6 @@ typedef enum __attribute__ ((__packed__)) {
 	GPIOE_17 = 91,
 
 	// TLE6240 pins go right after on chips
-	//#define TLE6240_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + (n)))
 	TLE6240_PIN_1 = 130,
 	TLE6240_PIN_2 = 131,
 	TLE6240_PIN_3 = 132,
