@@ -38,34 +38,3 @@ TEST(injectionScheduling, NormalDutyCycle) {
 
 	handleFuelInjectionEvent(0, &event, 1000, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
-
-TEST(injectionScheduling, HighDutyCycle) {
-	StrictMock<MockExecutor> mockExec;
-
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	engine->executor.setMockExecutor(&mockExec);
-
-	efitick_t nowNt = 1000000;
-
-	InjectionEvent event;
-	InjectorOutputPin pin;
-	pin.injectorIndex = 0;
-	event.outputs[0] = &pin;
-
-	// Injection duration of 20ms
-	engine->injectionDuration = 20.0f;
-
-	{
-		InSequence is;
-
-		// Should schedule a rising, but no falling
-		// rising edge now
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(&event.signalTimerUp, nowNt + 0, _));
-
-		// no falling edge: under high duty cycle, we skip falling edges to just keep injectors open
-	}
-
-	engine->rpmCalculator.oneDegreeUs = 100;
-
-	handleFuelInjectionEvent(0, &event, 7000, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-}
