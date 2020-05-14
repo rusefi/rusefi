@@ -24,6 +24,9 @@ public class EnumToStringTest {
         assertTrue(isKeyValueLine("MIN"));
         assertTrue(isKeyValueLine("MIN = 2,"));
         assertTrue(isKeyValueLine("MIN = -3,"));
+        assertTrue(isKeyValueLine("MIN = 0x02,"));
+        assertTrue(isKeyValueLine("MIN = 0xa2,"));
+        assertTrue(isKeyValueLine("MIN = 0xB2,"));
     }
 
     @Test
@@ -33,15 +36,23 @@ public class EnumToStringTest {
                 "typedef enum {\n" +
                         "\tGPIO_UNASSIGNED = 0,\n" +
                         "\tGPIO_INVALID = 1,\n" +
+                        "\tGPIO_HEX = 0xA1,\n" +
                         "}brain_pin_e;"));
 
         List<Value> values = new ArrayList<>(EnumsReader.enums.get("brain_pin_e").values());
-        assertEquals(2, values.size());
-        assertEquals("GPIO_INVALID", values.get(0).getName());
-        assertEquals("1", values.get(0).getValue());
+        assertEquals(3, values.size());
+        Value first = values.get(0);
+        assertEquals("GPIO_HEX", first.getName());
+        assertEquals("0xA1", first.getValue());
+
+        Value second = values.get(1);
+        assertEquals("GPIO_INVALID", second.getName());
+        assertEquals("1", second.getValue());
 
         assertEquals("const char *getBrain_pin_e(brain_pin_e value){\n" +
                 "switch(value) {\n" +
+                "case GPIO_HEX:\n" +
+                "  return \"GPIO_HEX\";\n" +
                 "case GPIO_INVALID:\n" +
                 "  return \"GPIO_INVALID\";\n" +
                 "case GPIO_UNASSIGNED:\n" +

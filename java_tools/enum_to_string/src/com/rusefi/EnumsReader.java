@@ -43,6 +43,8 @@ public class EnumsReader {
                         }
                         SystemOut.println("    EnumsReader: Line " + line);
                         currentValues.put(line, new Value(line, value));
+                    } else {
+                        SystemOut.println("    EnumsReader: Skipping Line " + line);
                     }
                 }
             }
@@ -54,6 +56,6 @@ public class EnumsReader {
     }
 
     static boolean isKeyValueLine(String line) {
-        return removeSpaces(line).matches("[a-zA-Z_$][a-zA-Z\\d_$]*[=-a-zA-Z\\d_*]*,?");
+        return removeSpaces(line).matches("[a-zA-Z_$][a-zA-Z\\d_$]*(=(0x[0-9a-fA-F]+|(-)?[0-9]+))*,?");
     }
 }
