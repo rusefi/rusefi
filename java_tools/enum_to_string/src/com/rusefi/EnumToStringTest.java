@@ -40,15 +40,15 @@ public class EnumToStringTest {
         assertEquals("GPIO_INVALID", values.get(0).getName());
         assertEquals("1", values.get(0).getValue());
 
-        assertEquals("const char *getBrain_pin_e(brain_pin_e value){\r\n" +
-                "switch(value) {\r\n" +
-                "case GPIO_INVALID:\r\n" +
-                "  return \"GPIO_INVALID\";\r\n" +
-                "case GPIO_UNASSIGNED:\r\n" +
-                "  return \"GPIO_UNASSIGNED\";\r\n" +
-                "  }\r\n" +
-                " return NULL;\r\n" +
-                "}\r\n", EnumToString.getCppFileContent());
+        assertEquals("const char *getBrain_pin_e(brain_pin_e value){\n" +
+                "switch(value) {\n" +
+                "case GPIO_INVALID:\n" +
+                "  return \"GPIO_INVALID\";\n" +
+                "case GPIO_UNASSIGNED:\n" +
+                "  return \"GPIO_UNASSIGNED\";\n" +
+                "  }\n" +
+                " return NULL;\n" +
+                "}\n", EnumToString.getCppFileContent());
     }
 
     @Test
@@ -59,14 +59,14 @@ public class EnumToStringTest {
                         "\tGPIO_UNASSIGNED = 0,\n" +
                         "\tGPIO_INVALID = 1,\n" +
                         "} brain_pin_e ;"));
-        assertEquals("const char *getBrain_pin_e(brain_pin_e value){\r\n" +
-                "switch(value) {\r\n" +
-                "case GPIO_INVALID:\r\n" +
-                "  return \"GPIO_INVALID\";\r\n" +
-                "case GPIO_UNASSIGNED:\r\n" +
-                "  return \"GPIO_UNASSIGNED\";\r\n" +
-                "  }\r\n" +
-                " return NULL;\r\n" +
-                "}\r\n", EnumToString.getCppFileContent());
+        assertEquals("const char *getBrain_pin_e(brain_pin_e value){\n" +
+                "switch(value) {\n" +
+                "case GPIO_INVALID:\n" +
+                "  return \"GPIO_INVALID\";\n" +
+                "case GPIO_UNASSIGNED:\n" +
+                "  return \"GPIO_UNASSIGNED\";\n" +
+                "  }\n" +
+                " return NULL;\n" +
+                "}\n", EnumToString.getCppFileContent());
     }
 }
