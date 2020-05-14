@@ -30,5 +30,10 @@ ifeq ($(LED_CRITICAL_ERROR_BRAIN_PIN),)
 endif
 
 
+# breaking TTL thus breaking Bluetooth for microRusEFI in order to enable SPI3 for SD card
+EFI_CONSOLE_TX_BRAIN_PIN = -DEFI_CONSOLE_TX_BRAIN_PIN=GPIOE_15
+
+
 # Add them all together
-DDEFS += $(MCU_DEFS) -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"microRusEfi\" $(DEFAULT_ENGINE_TYPE)
+DDEFS += $(MCU_DEFS) -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"microRusEfi\" $(DEFAULT_ENGINE_TYPE) $(LED_CRITICAL_ERROR_BRAIN_PIN) $(EFI_CONSOLE_TX_BRAIN_PIN)
+

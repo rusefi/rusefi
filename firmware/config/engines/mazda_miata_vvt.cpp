@@ -168,6 +168,8 @@ static const ignition_table_t mapBased18vvtTimingTable = {
 };
 #endif
 
+
+/*
 #define MAF_TRANSFER_SIZE 8
 
 static const float mafTransferVolts[MAF_TRANSFER_SIZE] = {1.365,
@@ -180,6 +182,9 @@ static const float mafTransferVolts[MAF_TRANSFER_SIZE] = {1.365,
 		4.011,
 };
 
+
+according to internet this should be the Miata NB transfer function but in reality it seems off
+this could be related to us not using proper signal conditioning hardware
 static const float mafTransferKgH[MAF_TRANSFER_SIZE] = {
 		0,
 		3.9456,
@@ -190,6 +195,39 @@ static const float mafTransferKgH[MAF_TRANSFER_SIZE] = {
 		329.8104,
 		594.2772
 };
+
+
+*/
+
+#define MAF_TRANSFER_SIZE 10
+
+// this transfer function somehow works with 1K pull-down
+static const float mafTransferVolts[MAF_TRANSFER_SIZE] = {
+		0.50,
+		0.87,
+		1.07,
+		1.53,
+		1.85,
+		2.11,
+		2.46,
+		3.00,
+		3.51,
+		4.50
+};
+
+static const float mafTransferKgH[MAF_TRANSFER_SIZE] = {
+		0.00,
+		0.00,
+		1.00,
+		3.00,
+		8.00,
+		19.00,
+		45.00,
+		100.00,
+		175.00,
+		350.00
+};
+
 
 static void setMAFTransferFunction(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	memcpy(config->mafDecoding, mafTransferKgH, sizeof(mafTransferKgH));
@@ -634,8 +672,7 @@ void setMiataNB2_MRE_MTB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// somehow MRE72 adapter 0.2 has TPS routed to pin 26?
-
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_6; // PA6
 
 
 	// 1K pull-down to read current from this MAF

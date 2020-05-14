@@ -70,7 +70,7 @@ static void setLedPins() {
 	engineConfiguration->communicationLedPin = GPIOE_2; // d23 = blue
 #endif /* EFI_COMMUNICATION_PIN */
 	engineConfiguration->runningLedPin = GPIOE_4;		// d22 = green
-	engineConfiguration->triggerErrorPin = GPIOE_1;		// d27 = orange
+	engineConfiguration->warningLedPin = GPIOE_1;		// d27 = orange or yellow
 }
 
 static void setupVbatt() {
@@ -86,6 +86,7 @@ static void setupVbatt() {
 	// set vbatt_divider 8.23
 	// R139=39k high side/R141=10k low side multiplied by above analogInputDividerCoefficient = 8.232f
 	engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
+	// PC1, pin #1 input +12 from Main Relay. Main Relay controlled by TLE8888
 	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
 
 	engineConfiguration->adcVcc = 3.29f;
@@ -197,6 +198,14 @@ void setBoardConfigurationOverrides(void) {
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  TLE8888_IN11 / TLE8888_OUT21
 	// GPIOE_8: "35 - GP Out 1"
 	engineConfiguration->fuelPumpPin = GPIOE_8;
+
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	engineConfiguration->spi3mosiPin = GPIOC_12;
+	engineConfiguration->spi3misoPin = GPIOC_11;
+	engineConfiguration->spi3sckPin = GPIOC_10;
+	engineConfiguration->sdCardCsPin = GPIOB_9;
+	CONFIG(is_enabled_spi_3) = true;
+//	engineConfiguration->isSdCardEnabled = true;
 
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5

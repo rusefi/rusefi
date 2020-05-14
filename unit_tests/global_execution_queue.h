@@ -19,6 +19,9 @@ public:
 	int executeAll(efitime_t now);
 	int size();
 	scheduling_s* getForUnitTest(int index);
+
+	void setMockExecutor(ExecutorInterface* exec);
 private:
 	EventQueue schedulingQueue;
+	ExecutorInterface* m_mockExecutor = nullptr;
 };
