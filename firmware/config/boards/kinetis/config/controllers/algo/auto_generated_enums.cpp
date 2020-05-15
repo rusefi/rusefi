@@ -1105,6 +1105,8 @@ case MIATA_NB2:
   return "MIATA_NB2";
 case VVT_2JZ:
   return "VVT_2JZ";
+case VVT_INACTIVE:
+  return "VVT_INACTIVE";
 case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
 case VVT_SECOND_HALF:

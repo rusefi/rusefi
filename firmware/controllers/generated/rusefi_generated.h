@@ -2484,7 +2484,7 @@
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define vRefAdcChannel_offset 1470
 #define vRefAdcChannel_offset_hex 5be
-#define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
+#define vvt_mode_e_enum "Inactive", "Second half", "2GZ", "Miata NB2", "First half", "mode5", "mode6", "mode7"
 #define vvtCamSensorUseRise_offset 744
 #define vvtCamSensorUseRise_offset_hex 2e8
 #define vvtMode_offset 2328
