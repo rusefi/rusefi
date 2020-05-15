@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu May 14 20:41:10 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Thu May 14 23:44:58 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2412,7 +2412,7 @@ public class Fields {
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 2256, FieldType.INT);
 	public static final String[] mass_storage_e = {"Auto", "Always", "Never"};
 	public static final Field STORAGEMODE = Field.create("STORAGEMODE", 2260, FieldType.INT, mass_storage_e);
-	public static final String[] vvt_mode_e = {"First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"};
+	public static final String[] vvt_mode_e = {"Inactive", "Second half", "2GZ", "Miata NB2", "First half", "mode5", "mode6", "mode7"};
 	public static final Field VVTMODE = Field.create("VVTMODE", 2328, FieldType.INT, vvt_mode_e);
 	public static final Field TLE8888MODE = Field.create("TLE8888MODE", 2416, FieldType.INT8);
 	public static final Field AUTOTUNECLTTHRESHOLD = Field.create("AUTOTUNECLTTHRESHOLD", 2420, FieldType.FLOAT);
