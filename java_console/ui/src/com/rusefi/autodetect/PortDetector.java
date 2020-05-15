@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,11 @@ public class PortDetector {
      */
     public static String autoDetectSerial() {
         String[] serialPorts = SerialPortList.getPortNames();
+        if (serialPorts.length == 0) {
+            System.err.println("No serial ports detected");
+            return null;
+        }
+        System.out.printf("Trying " + Arrays.toString(serialPorts));
         List<Thread> serialFinder = new ArrayList<>();
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<String> result = new AtomicReference<>();
