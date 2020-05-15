@@ -258,9 +258,11 @@ public class Launcher {
     }
 
     private static void runHeadless() {
-        String autoDetectedPort = getString();
-        if (autoDetectedPort == null)
+        String autoDetectedPort = PortDetector.autoDetectSerial();
+        if (autoDetectedPort == null) {
+            System.err.println("rusEFI not detected");
             return;
+        }
         new SerialConnector(autoDetectedPort).connect(new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
@@ -282,7 +284,7 @@ public class Launcher {
     }
 
     private static void sendCommand(String command) throws IOException {
-        String autoDetectedPort = getString();
+        String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
         PortHolder.EstablishConnection establishConnection = new PortHolder.EstablishConnection(autoDetectedPort).invoke();
@@ -294,7 +296,7 @@ public class Launcher {
     }
 
     @Nullable
-    private static String getString() {
+    private static String autoDetectPort() {
         String autoDetectedPort = PortDetector.autoDetectPort(null);
         if (autoDetectedPort == null) {
             System.err.println("rusEFI not detected");
