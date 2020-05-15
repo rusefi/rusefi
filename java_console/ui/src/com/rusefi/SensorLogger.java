@@ -138,13 +138,14 @@ public class SensorLogger {
     }
 
     private static void startSensorLogFile() {
+        FileLog.createFolderIfNeeded();
         String fileName = FileLog.DIR + FileLog.getDate() + ".msl";
 
         fileStartTime = System.currentTimeMillis();
         try {
             logFile = new FileWriter(fileName);
 
-            logFile.write("\"rusEfi console" + Launcher.CONSOLE_VERSION + " firmware " + Launcher.firmwareVersion.get() + "\"\r\n");
+            logFile.write("\"rusEFI console" + Launcher.CONSOLE_VERSION + " firmware " + Launcher.firmwareVersion.get() + "\"\r\n");
             logFile.write("Captured " + FileLog.getDate() + "\r\n");
 
             int debugMode = -1;
