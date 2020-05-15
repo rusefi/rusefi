@@ -206,7 +206,6 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 	tc->vvtPosition = engineConfiguration->vvtOffset - currentPosition;
 
 	switch (engineConfiguration->vvtMode) {
-	default:
 	case VVT_FIRST_HALF:
 	{
 
@@ -247,6 +246,11 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 		while (tc->triggerState.getTotalRevolutionCounter() % 4 != miataNbIndex) {
 			tc->triggerState.incrementTotalEventCounter();
 		}
+		break;
+	default:
+	case VVT_INACTIVE:
+		// do nothing
+		break;
 	}
 
 }

@@ -391,9 +391,10 @@ typedef enum {
 
 typedef enum {
 	/**
-	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
+	 * This mode is useful for troubleshooting and research - events are logged but no effects on phase synchronization
 	 */
-	VVT_FIRST_HALF = 0,
+	VVT_INACTIVE = 0,
+
 	/**
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in opposite 360 degree of 720 degree engine cycle
 	 */
@@ -406,6 +407,12 @@ typedef enum {
 	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
 	 */
 	MIATA_NB2 = 3,
+
+	/**
+	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
+	 */
+	VVT_FIRST_HALF = 4,
+
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;
 
