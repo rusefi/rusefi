@@ -41,16 +41,11 @@ WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
 trigger_central_s::trigger_central_s() : hwEventCounters() {
-
-	static_assert(TRIGGER_TYPE_60_2 == TT_TOOTHED_WHEEL_60_2, "One we will have one source of this magic constant");
-	static_assert(TRIGGER_TYPE_36_1 == TT_TOOTHED_WHEEL_36_1, "One we will have one source of this magic constant");
-
-
-
+	static_assert(TRIGGER_TYPE_60_2 == TT_TOOTHED_WHEEL_60_2, "One day we will have one source of this magic constant");
+	static_assert(TRIGGER_TYPE_36_1 == TT_TOOTHED_WHEEL_36_1, "One day we will have one source of this magic constant");
 }
 
 TriggerCentral::TriggerCentral() : trigger_central_s() {
-
 	clearCallbacks(&triggerListeneres);
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
@@ -105,6 +100,14 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
 	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
 		addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
+
+#if EFI_TOOTH_LOGGER
+		if (front == TV_RISE) {
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		} else {
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		}
+#endif /* EFI_TOOTH_LOGGER */
 	}
 
 
@@ -160,7 +163,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
 	switch(engineConfiguration->vvtMode) {
 	case VVT_2JZ:
-		if (currentPosition < engineConfiguration->fsio_setting[14] || currentPosition > engineConfiguration->fsio_setting[15]) {
+		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
+		if ((currentPosition < engineConfiguration->fsio_setting[14]       || currentPosition > engineConfiguration->fsio_setting[15]) &&
+		    (currentPosition < engineConfiguration->fsio_setting[14] + 360 || currentPosition > engineConfiguration->fsio_setting[15] + 360)) {
 			// outside of the expected range
 			return;
 		}
