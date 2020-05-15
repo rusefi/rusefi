@@ -82,6 +82,7 @@ TEST(sensors, testCamInput) {
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+	engineConfiguration->vvtMode = VVT_FIRST_HALF;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
 
