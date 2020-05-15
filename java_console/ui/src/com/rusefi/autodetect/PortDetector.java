@@ -24,7 +24,7 @@ public class PortDetector {
             System.err.println("No serial ports detected");
             return null;
         }
-        System.out.printf("Trying " + Arrays.toString(serialPorts));
+        System.out.println("Trying " + Arrays.toString(serialPorts));
         List<Thread> serialFinder = new ArrayList<>();
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<String> result = new AtomicReference<>();
