@@ -3,7 +3,7 @@ rem these images placed into unit_tests/triggers
 rem and later manually published at https://rusefi.com/images/triggers/
 
 cd ../unit_tests
-make
+make -j4
 if not exist build/rusefi_test.exe echo UNIT TEST COMPILATION FAILED
 if not exist build/rusefi_test.exe exit -1
 
