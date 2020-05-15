@@ -1047,6 +1047,8 @@ case TT_ROVER_K:
   return "TT_ROVER_K";
 case TT_SUBARU_7_6:
   return "TT_SUBARU_7_6";
+case TT_SUBARU_SVX:
+  return "TT_SUBARU_SVX";
 case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
 case TT_TOOTHED_WHEEL_36_1:
