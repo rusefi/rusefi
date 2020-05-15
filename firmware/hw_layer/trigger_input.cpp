@@ -82,6 +82,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 			shaftTriggerType[index] = TRIGGER_ICU;
 		else
 			camTriggerType[index] = TRIGGER_ICU;
+		brain_pin_markUsed(brainPin, msg);
 		return 0;
 	}
 #endif
@@ -92,6 +93,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 			shaftTriggerType[index] = TRIGGER_EXTI;
 		else
 			camTriggerType[index] = TRIGGER_EXTI;
+		brain_pin_markUsed(brainPin, msg);
 		return 0;
 	}
 
@@ -123,6 +125,7 @@ static void turnOffTriggerInputPin(int index, bool isTriggerShaft) {
 
 		camTriggerType[index] = TRIGGER_NONE;
 	}
+	brain_pin_markUnused(brainPin);
 }
 
 /*==========================================================================*/

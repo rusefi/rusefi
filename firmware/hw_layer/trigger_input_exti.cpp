@@ -76,6 +76,7 @@ static void cam_callback(void *arg) {
 /*==========================================================================*/
 
 int extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
+	int ret;
 	brain_pin_e brainPin = isTriggerShaft ? CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 
 	scheduleMsg(logger, "extiTriggerTurnOnInputPin %s %s", msg, hwPortname(brainPin));
@@ -83,8 +84,10 @@ int extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	/* TODO:
 	 * * do not set to both edges if we need only one
 	 * * simplify callback in case of one edge */
-	ioline_t pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
-	efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line);
+	ioline_t pal_line = PAL_LINE(getHwPort(msg, brainPin), getHwPin(msg, brainPin));
+	ret = efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line);
+	if (ret)
+		return ret;
 
 	return 0;
 }
