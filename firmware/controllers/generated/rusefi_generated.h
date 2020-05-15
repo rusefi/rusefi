@@ -2268,6 +2268,8 @@
 #define ts_show_hip9011 true
 #define ts_show_joystick true
 #define ts_show_lcd true
+#define ts_show_main_relay true
+#define ts_show_main_relay_microRusEFI_message false
 #define ts_show_sd_card true
 #define ts_show_spi true
 #define ts_show_trigger_comparator false

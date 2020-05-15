@@ -1249,7 +1249,7 @@ menuDialog = main
 		subMenu = std_separator
 		
 		# Digital outputs
-		subMenu = mainRelay,				"Main relay"
+		subMenu = mainRelayDialog,			"Main relay"
 		subMenu = starterRelay,				"Starter Disable relay"
 		subMenu = fuelPump,					"Fuel pump & rail"
 		subMenu = fanSetting,				"Fan"
@@ -2319,9 +2319,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 
 ;			Controller->Actuator Outputs
-	dialog = mainRelay, "Main relay output"
-		field = "Pin",  						mainRelayPin
-		field = "Pin mode",			         	mainRelayPinMode
+	dialog = mainRelayDialog, "Main relay output"
+		field = "microRusEFI main relay control is hard wired on pin #29"@@if_ts_show_main_relay_microRusEFI_message
+		field = "Pin",  						mainRelayPin@@if_ts_show_main_relay
+		field = "Pin mode",			         	mainRelayPinMode@@if_ts_show_main_relay
 
 	dialog = starterRelay, "Starter relay output"
 		field = "Pin",  					starterRelayDisablePin
