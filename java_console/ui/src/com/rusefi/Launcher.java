@@ -9,6 +9,7 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
 import com.rusefi.io.serial.PortHolder;
+import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
@@ -19,6 +20,7 @@ import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
 import jssc.SerialPortList;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -44,7 +46,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20200514;
+    public static final int CONSOLE_VERSION = 20200515;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
@@ -60,6 +62,7 @@ public class Launcher {
     // todo: rename to something more FSIO-specific? would need to update documentation somewhere
     private static final String TOOL_NAME_COMPILE = "compile";
     private static final int DEFAULT_TAB_INDEX = 0;
+    private static final String TOOL_NAME_HEADLESS = "headless";
 
     public static String port;
     public static EngineSnifferPanel engineSnifferPanel;
@@ -193,6 +196,11 @@ public class Launcher {
     public static void main(final String[] args) throws Exception {
         String toolName = args.length == 0 ? null : args[0];
 
+        if (TOOL_NAME_HEADLESS.equalsIgnoreCase(toolName)) {
+            runHeadless();
+            return;
+        }
+
         if (TOOL_NAME_FUNCTIONAL_TEST.equals(toolName)) {
             // passing port argument if it was specified
             String[] toolArgs = args.length == 1 ? new String[0] : new String[]{args[1]};
@@ -249,6 +257,23 @@ public class Launcher {
         });
     }
 
+    private static void runHeadless() {
+        String autoDetectedPort = getString();
+        if (autoDetectedPort == null)
+            return;
+        new SerialConnector(autoDetectedPort).connect(new ConnectionStateListener() {
+            @Override
+            public void onConnectionEstablished() {
+                SensorLogger.init();
+            }
+
+            @Override
+            public void onConnectionFailed() {
+
+            }
+        });
+    }
+
     private static int invokeCompileFileTool(String[] args) throws IOException {
         /**
          * re-packaging array which contains input and output file names
@@ -257,17 +282,25 @@ public class Launcher {
     }
 
     private static void sendCommand(String command) throws IOException {
-        String autoDetectedPort = PortDetector.autoDetectPort(null);
-        if (autoDetectedPort == null) {
-            System.err.println("rusEfi not detected");
+        String autoDetectedPort = getString();
+        if (autoDetectedPort == null)
             return;
-        }
         PortHolder.EstablishConnection establishConnection = new PortHolder.EstablishConnection(autoDetectedPort).invoke();
         if (!establishConnection.isConnected())
             return;
         IoStream stream = establishConnection.getStream();
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes, FileLog.LOGGER);
+    }
+
+    @Nullable
+    private static String getString() {
+        String autoDetectedPort = PortDetector.autoDetectPort(null);
+        if (autoDetectedPort == null) {
+            System.err.println("rusEFI not detected");
+            return null;
+        }
+        return autoDetectedPort;
     }
 
     private static void invokeCompileExpressionTool(String[] args) {
