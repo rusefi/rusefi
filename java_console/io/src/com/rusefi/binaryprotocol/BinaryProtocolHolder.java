@@ -7,6 +7,7 @@ import com.rusefi.io.LinkManager;
 /**
  * At any given moment of time JVM manages one communication stream
  *
+ * TODO: remove this dead class?
  *
  * (c) Andrey Belomutskiy
  * 6/21/2017.
@@ -14,19 +15,15 @@ import com.rusefi.io.LinkManager;
 public enum BinaryProtocolHolder {
     INSTANCE;
 
-    private BinaryProtocol currentStream;
-
     public static BinaryProtocolHolder getInstance() {
         return INSTANCE;
     }
 
-    public BinaryProtocol create(final Logger logger, IoStream stream) {
-        BinaryProtocol result = new BinaryProtocol(logger, stream);
-        currentStream = result;
-        return result;
+    public static BinaryProtocol create(final Logger logger, IoStream stream) {
+        return new BinaryProtocol(logger, stream);
     }
 
-    public BinaryProtocol getCurrentStreamState() {
+    public static BinaryProtocol getCurrentStreamState() {
         return LinkManager.connector.getBinaryProtocol();
     }
 }
