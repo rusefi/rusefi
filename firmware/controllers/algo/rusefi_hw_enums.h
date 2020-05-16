@@ -161,7 +161,6 @@ typedef enum __attribute__ ((__packed__)) {
 	GPIOH_15 = 129,
 
 	/* TLE6240 pins go right after on chips */
-	//#define TLE6240_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + (n)))
 	TLE6240_PIN_1 = 130,
 	TLE6240_PIN_2 = 131,
 	TLE6240_PIN_3 = 132,
@@ -180,7 +179,6 @@ typedef enum __attribute__ ((__packed__)) {
 	TLE6240_PIN_16 = 145,
 
 	/* MC33972 pins go right after TLE6240 */
-	//#define MC33972_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + 16 + (n)))
 	MC33972_PIN_1 = 146,
 	MC33972_PIN_21 = 166,
 	MC33972_PIN_22 = 167,

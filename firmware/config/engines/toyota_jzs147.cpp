@@ -128,8 +128,8 @@ void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->debugMode = DBG_VVT;
 
 	// todo: these magic values would be hardcoded once we find out proper magic values
-	engineConfiguration->fsio_setting[14] = -90;
-	engineConfiguration->fsio_setting[15] = +90;
+	engineConfiguration->fsio_setting[14] = 175 - 45;
+	engineConfiguration->fsio_setting[15] = 175 + 45;
 
 	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
 

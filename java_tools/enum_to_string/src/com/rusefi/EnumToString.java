@@ -17,12 +17,12 @@ public class EnumToString {
     private final static StringBuilder cppFileContent = new StringBuilder();
     private final static StringBuilder includesSection = new StringBuilder();
 
-    private final static StringBuilder bothFilesHeader = new StringBuilder("// by enum2string.jar tool\r\n" +
-            "// on " + new Date() + "\r\n" +
-            "// see also gen_config_and_enums.bat\r\n" +
-            "\r\n" +
-            "\r\n" +
-            "\r\n");
+    private final static StringBuilder bothFilesHeader = new StringBuilder("// by enum2string.jar tool\n" +
+            "// on " + new Date() + "\n" +
+            "// see also gen_config_and_enums.bat\n" +
+            "\n" +
+            "\n" +
+            "\n");
 
     private final static StringBuilder headerFileContent = new StringBuilder();
 
@@ -33,9 +33,9 @@ public class EnumToString {
     public static void main(String[] args) throws IOException {
         if (args.length < 4) {
             SystemOut.println("Please specify at least\n\n" +
-                            KEY_INPUT_PATH + "XXX\r\n" +
+                            KEY_INPUT_PATH + "XXX\n" +
 //                            KEY_INPUT_FILE + "XXX" +
-                            KEY_OUTPUT + "XXX\r\n"
+                            KEY_OUTPUT + "XXX\n"
             );
             return;
         }
@@ -55,8 +55,8 @@ public class EnumToString {
 
         }
 
-        headerFileContent.append("#ifndef _A_H_HEADER_\r\n");
-        headerFileContent.append("#define _A_H_HEADER_\r\n");
+        headerFileContent.append("#ifndef _A_H_HEADER_\n");
+        headerFileContent.append("#define _A_H_HEADER_\n");
 
         outputData();
 
@@ -65,13 +65,14 @@ public class EnumToString {
         cppFileContent.insert(0, includesSection);
         headerFileContent.insert(0, includesSection);
 
-        SystemOut.println("includesSection:\r\n" + includesSection + "end of includesSection\r\n");
+        SystemOut.println("includesSection:\n" + includesSection + "end of includesSection\n");
 
-        cppFileContent.insert(0, "#include \"global.h\"\r\n");
+        cppFileContent.insert(0, "#include \"global.h\"\n");
         headerFileContent.insert(0, bothFilesHeader.toString());
 
-        headerFileContent.append("#endif /*_A_H_HEADER_ */\r\n");
+        headerFileContent.append("#endif /*_A_H_HEADER_ */\n");
 
+        new File(outputPath).mkdirs();
         writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_enums");
         SystemOut.close();
     }
@@ -88,22 +89,25 @@ public class EnumToString {
 
     private static void consumeFile(String inputPath, String inFileName) throws IOException {
         File f = new File(inputPath + File.separator + inFileName);
-        SystemOut.println("Reading from " + inFileName);
+        SystemOut.println("Reading enums from " + inFileName);
         String simpleFileName = f.getName();
 
         bothFilesHeader.insert(0, "// " +
-                LazyFile.LAZY_FILE_TAG + " from " + simpleFileName + "\r\n");
+                LazyFile.LAZY_FILE_TAG + " from " + simpleFileName + "\n");
 
-        includesSection.append("#include \"" + simpleFileName + "\"\r\n");
+        includesSection.append("#include \"" + simpleFileName + "\"\n");
         EnumsReader.process(new FileReader(inFileName));
     }
 
     public static void outputData() {
+        SystemOut.println("Preparing output for " + EnumsReader.enums.size() + " enums\n");
+
         for (Map.Entry<String, Map<String, Value>> e : EnumsReader.enums.entrySet()) {
             String enumName = e.getKey();
             cppFileContent.append(makeCode(enumName, e.getValue().values()));
-            EnumToString.headerFileContent.append(getMethodSignature(enumName) + ";\r\n");
+            headerFileContent.append(getMethodSignature(enumName) + ";\n");
         }
+        SystemOut.println("EnumToString: " + headerFileContent.length() + " bytes of content\n");
     }
 
     public static void clear() {
@@ -112,18 +116,18 @@ public class EnumToString {
 
     private static String makeCode(String enumName, Collection<Value> values) {
         StringBuilder sb = new StringBuilder();
-        sb.append(getMethodSignature(enumName) + "{\r\n");
+        sb.append(getMethodSignature(enumName) + "{\n");
 
-        sb.append("switch(value) {\r\n");
+        sb.append("switch(value) {\n");
 
         for (Value e : values) {
-            sb.append("case " + e.getName() + ":\r\n");
-            sb.append("  return \"" + e.getName() + "\";\r\n");
+            sb.append("case " + e.getName() + ":\n");
+            sb.append("  return \"" + e.getName() + "\";\n");
         }
 
-        sb.append("  }\r\n");
-        sb.append(" return NULL;\r\n");
-        sb.append("}\r\n");
+        sb.append("  }\n");
+        sb.append(" return NULL;\n");
+        sb.append("}\n");
 
         return sb.toString();
     }

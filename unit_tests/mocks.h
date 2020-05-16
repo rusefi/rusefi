@@ -40,3 +40,10 @@ class MockPwm : public SimplePwm {
 public:
 	MOCK_METHOD(void, setSimplePwmDutyCycle, (float dutyCycle), (override));
 };
+
+class MockExecutor : public TestExecutor {
+public:
+	MOCK_METHOD(void, scheduleByTimestamp, (scheduling_s *scheduling, efitimeus_t timeUs, action_s action), (override));
+	MOCK_METHOD(void, scheduleByTimestampNt, (scheduling_s *scheduling, efitime_t timeUs, action_s action), (override));
+	MOCK_METHOD(void, scheduleForLater, (scheduling_s *scheduling, int delayUs, action_s action), (override));
+};
