@@ -86,7 +86,7 @@ public class UploadChanges {
     public static void scheduleUpload(final ConfigurationImage newVersion, final Runnable afterUpload) {
         JFrame frame = wnd.getFrame();
         frame.setVisible(true);
-        LinkManager.COMMUNICATION_EXECUTOR.execute(new Runnable() {
+        LinkManager.execute(new Runnable() {
             @Override
             public void run() {
                 try {
