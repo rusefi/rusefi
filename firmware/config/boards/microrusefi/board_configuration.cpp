@@ -199,7 +199,7 @@ void setBoardConfigurationOverrides(void) {
 	// todo: maybe even set EFI_MAIN_RELAY_CONTROL to FALSE for MRE configuration
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  TLE8888_IN11 / TLE8888_OUT21
 	// GPIOE_8: "35 - GP Out 1"
-	engineConfiguration->fuelPumpPin = GPIOE_8;
+	engineConfiguration->fuelPumpPin = TLE8888_PIN_21;
 
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 	engineConfiguration->spi3mosiPin = GPIOC_12;
@@ -212,7 +212,7 @@ void setBoardConfigurationOverrides(void) {
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
 	// GPIOE_10: "3 - Lowside 2"
-	engineConfiguration->idle.solenoidPin = GPIOE_10;
+	engineConfiguration->idle.solenoidPin = TLE8888_PIN_5;
 
 
 	// TLE8888_PIN_22: "34 - GP Out 2"
