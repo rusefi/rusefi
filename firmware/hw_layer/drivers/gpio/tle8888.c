@@ -751,20 +751,21 @@ static THD_FUNCTION(tle8888_driver_thread, p)
 
 				if (tle8888_WD_get_status(chip) == 0) {
 					chip->drv_state = TLE8888_STATE_WAIT_INIT;
-				} else {
-					continue;
-				}
+				}// else {
+				//	continue;
+				//}
 			}
 
 			if (chip->drv_state == TLE8888_STATE_WAIT_INIT) {
 				if (tle8888_chip_init(chip) == 0) {
 					chip->drv_state = TLE8888_STATE_READY;
-				} else {
-					continue;
-				}
+				}// else {
+				//	continue;
+				//}
 			}
 
-			if (chip->drv_state == TLE8888_STATE_READY) {
+			if ((chip->drv_state == TLE8888_STATE_READY) || (1)) {
+				tle8888_chip_init(chip);
 				int ret = tle8888_update_output(chip);
 				if (ret) {
 					/* set state to TLE8888_FAILED? */
