@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -62,7 +63,13 @@ public class Launcher {
     // todo: rename to something more FSIO-specific? would need to update documentation somewhere
     private static final String TOOL_NAME_COMPILE = "compile";
     private static final int DEFAULT_TAB_INDEX = 0;
-    private static final String TOOL_NAME_HEADLESS = "headless";
+
+    private static Map<String, ConsoleTool> TOOLS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    static {
+        TOOLS.put("help", args -> printToolsAndExit());
+        TOOLS.put("headless", args -> runHeadless());
+    }
 
     public static String port;
     public static EngineSnifferPanel engineSnifferPanel;
@@ -196,8 +203,9 @@ public class Launcher {
     public static void main(final String[] args) throws Exception {
         String toolName = args.length == 0 ? null : args[0];
 
-        if (TOOL_NAME_HEADLESS.equalsIgnoreCase(toolName)) {
-            runHeadless();
+        ConsoleTool consoleTool = TOOLS.get(toolName);
+        if (consoleTool != null) {
+            consoleTool.runTool(args);
             return;
         }
 
@@ -227,6 +235,8 @@ public class Launcher {
             PerfTraceTool.readPerfTrace(args[1], args[2], args[3], args[4]);
             System.exit(0);
         }
+
+        printTools();
 
         System.out.println("Optional tools: " + Arrays.asList(TOOL_NAME_COMPILE_FSIO_FILE,
                 TOOL_NAME_COMPILE,
@@ -370,5 +380,20 @@ public class Launcher {
 
     public static Frame getFrame() {
         return staticFrame;
+    }
+
+    private static void printToolsAndExit() {
+        printTools();
+        System.exit(0);
+    }
+
+    private static void printTools() {
+        for (String key : TOOLS.keySet()) {
+            System.out.println("Tool available: " + key);
+        }
+    }
+
+    interface ConsoleTool {
+        void runTool(String args[]);
     }
 }
