@@ -208,7 +208,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
 	tc->vvtSyncTimeNt = nowNt;
 
-	tc->vvtPosition = engineConfiguration->vvtOffset - currentPosition;
+	float vvtPosition = engineConfiguration->vvtOffset - currentPosition;
+	fixAngle(vvtPosition, "vvtPosition", CUSTOM_ERR_6556);
+	tc->vvtPosition = vvtPosition;
 
 	switch (engineConfiguration->vvtMode) {
 	case VVT_FIRST_HALF:

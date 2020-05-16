@@ -1431,6 +1431,8 @@ end_struct
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 
+#define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
+
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 
 
