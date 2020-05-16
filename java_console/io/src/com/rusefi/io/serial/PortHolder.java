@@ -7,6 +7,7 @@ import com.rusefi.io.CommunicationLoggingHolder;
 import com.rusefi.io.ConnectionStateListener;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -19,6 +20,8 @@ import java.awt.*;
  * (c) Andrey Belomutskiy
  */
 public class PortHolder {
+    private static final DataListener dataListener = freshData -> LinkManager.engineState.processNewData(new String(freshData), LinkManager.ENCODER);
+
     public ConnectionStateListener listener;
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
@@ -31,11 +34,13 @@ public class PortHolder {
     @Nullable
     private IoStream serialPort;
 
-    boolean connectAndReadConfiguration(String port, DataListener dataListener) {
+    public String port;
+
+    boolean connectAndReadConfiguration() {
         if (port == null)
             return false;
 
-        CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(SerialManager.class, "Opening port: " + port);
+        CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(getClass(), "Opening port: " + port);
 
         IoStream stream = SerialIoStreamJSerialComm.openPort(port);
         synchronized (portLock) {
