@@ -5,6 +5,7 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
+import com.sun.corba.se.spi.activation.ServerHolder;
 
 /**
  * @author Andrey Belomutskiy
@@ -12,7 +13,7 @@ import com.rusefi.io.LinkManager;
  */
 public class SerialConnector implements LinkConnector {
     public SerialConnector(String serialPort) {
-        SerialManager.port = serialPort;
+        PortHolder.getInstance().port = serialPort;
     }
 
     @Override
@@ -24,7 +25,7 @@ public class SerialConnector implements LinkConnector {
             @Override
             public void run() {
                 FileLog.MAIN.logLine("scheduleOpening>openPort");
-                PortHolder.getInstance().connectAndReadConfiguration(SerialManager.port, SerialManager.dataListener);
+                PortHolder.getInstance().connectAndReadConfiguration();
             }
         });
     }
@@ -34,11 +35,11 @@ public class SerialConnector implements LinkConnector {
         LinkManager.COMMUNICATION_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
-                MessagesCentral.getInstance().postMessage(SerialManager.class, "Restarting serial IO");
+                MessagesCentral.getInstance().postMessage(getClass(), "Restarting serial IO");
 //                if (closed)
 //                    return;
                 PortHolder.getInstance().close();
-                PortHolder.getInstance().connectAndReadConfiguration(SerialManager.port, SerialManager.dataListener);
+                PortHolder.getInstance().connectAndReadConfiguration();
             }
         });
     }
