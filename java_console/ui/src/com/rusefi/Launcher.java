@@ -1,20 +1,19 @@
 package com.rusefi;
 
-import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.rusefi.autodetect.PortDetector;
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.*;
+import com.rusefi.io.ConnectionWatchdog;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
-import com.rusefi.io.serial.SerialConnector;
-import com.rusefi.io.serial.SerialIoStreamJSerialComm;
-import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
-import com.rusefi.ui.*;
+import com.rusefi.ui.FormulasPane;
+import com.rusefi.ui.GaugesPanel;
+import com.rusefi.ui.MessagesPane;
+import com.rusefi.ui.SensorsLiveDataPane;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -29,11 +28,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -58,20 +54,6 @@ public class Launcher {
     protected static final String SPEED_KEY = "speed";
 
     private static final int DEFAULT_TAB_INDEX = 0;
-
-    private static Map<String, ConsoleTool> TOOLS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
-    static {
-        TOOLS.put("help", args -> printTools());
-        TOOLS.put("headless", Launcher::runHeadless);
-        TOOLS.put("compile", Launcher::invokeCompileExpressionTool);
-        TOOLS.put("ptrace_enums", Launcher::runPerfTraceTool);
-        TOOLS.put("functional_test", Launcher::runFunctionalTest);
-        TOOLS.put("compile_fsio_file", Launcher::runCompileTool);
-        TOOLS.put("firing_order", Launcher::runFiringOrderTool);
-        TOOLS.put("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT));
-        TOOLS.put(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU));
-    }
 
     public static String port;
     public static EngineSnifferPanel engineSnifferPanel;
@@ -202,17 +184,12 @@ public class Launcher {
      * @see StartupFrame if no parameters specified
      */
     public static void main(final String[] args) throws Exception {
-        String toolName = args.length == 0 ? null : args[0];
 
-        if (args.length > 0) {
-            ConsoleTool consoleTool = TOOLS.get(toolName);
-            if (consoleTool != null) {
-                consoleTool.runTool(args);
-                return;
-            }
+        if (ConsoleTools.runTool(args)) {
+            return;
         }
 
-        printTools();
+        ConsoleTools.printTools();
 
         System.out.println("Starting rusEfi UI console " + CONSOLE_VERSION);
 
@@ -223,115 +200,17 @@ public class Launcher {
         FileLog.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         VersionChecker.start();
-        SwingUtilities.invokeAndWait(new Runnable() {
-            public void run() {
-                awtCode(args);
-            }
-        });
-    }
-
-    private static void runPerfTraceTool(String[] args) throws IOException {
-        PerfTraceTool.readPerfTrace(args[1], args[2], args[3], args[4]);
-    }
-
-    private static void runFiringOrderTool(String[] args) throws IOException {
-        FiringOrderTSLogic.invoke(args[1]);
-    }
-
-    private static void runCompileTool(String[] args) throws IOException {
-        int returnCode = invokeCompileFileTool(args);
-        System.exit(returnCode);
-    }
-
-    private static void runFunctionalTest(String[] args) throws InterruptedException {
-        // passing port argument if it was specified
-        String[] toolArgs = args.length == 1 ? new String[0] : new String[]{args[1]};
-        RealHwTest.main(toolArgs);
-    }
-
-    private static void runHeadless(String[] args) {
-        String onConnectedCallback = args.length > 1 ? args[1] : null;
-        String onDisconnectedCallback = args.length > 2 ? args[2] : null;
-
-        ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
-            @Override
-            public void onConnectionStatus(boolean isConnected) {
-                if (isConnected) {
-                    invokeCallback(onConnectedCallback);
-                } else {
-                    invokeCallback(onDisconnectedCallback);
-                }
-            }
-        });
-
-        String autoDetectedPort = PortDetector.autoDetectSerial();
-        if (autoDetectedPort == null) {
-            System.err.println("rusEFI not detected");
-            return;
-        }
-        LinkManager.start(autoDetectedPort);
-        LinkManager.connector.connect(new ConnectionStateListener() {
-            @Override
-            public void onConnectionEstablished() {
-                SensorLogger.init();
-            }
-
-            @Override
-            public void onConnectionFailed() {
-
-            }
-        });
-    }
-
-    private static void invokeCallback(String callback) {
-        if (callback == null)
-            return;
-        System.out.println("Invoking " + callback);
-        ExecHelper.submitAction(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Runtime.getRuntime().exec(callback);
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                }
-            }
-        }, "callback");
-    }
-
-    private static int invokeCompileFileTool(String[] args) throws IOException {
-        /**
-         * re-packaging array which contains input and output file names
-         */
-        return CompileTool.run(Arrays.asList(args).subList(1, args.length));
-    }
-
-    private static void sendCommand(String command) throws IOException {
-        String autoDetectedPort = autoDetectPort();
-        if (autoDetectedPort == null)
-            return;
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
-        byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
-        stream.sendPacket(commandBytes, FileLog.LOGGER);
+        SwingUtilities.invokeAndWait(() -> awtCode(args));
     }
 
     @Nullable
-    private static String autoDetectPort() {
+    static String autoDetectPort() {
         String autoDetectedPort = PortDetector.autoDetectPort(null);
         if (autoDetectedPort == null) {
             System.err.println("rusEFI not detected");
             return null;
         }
         return autoDetectedPort;
-    }
-
-    private static void invokeCompileExpressionTool(String[] args) {
-        if (args.length != 2) {
-            System.err.println("input expression parameter expected");
-            System.exit(-1);
-        }
-        String expression = args[1];
-        System.out.println(DoubleEvaluator.process(expression).getPosftfixExpression());
     }
 
     private static void awtCode(String[] args) {
@@ -390,15 +269,5 @@ public class Launcher {
 
     public static Frame getFrame() {
         return staticFrame;
-    }
-
-    private static void printTools() {
-        for (String key : TOOLS.keySet()) {
-            System.out.println("Tool available: " + key);
-        }
-    }
-
-    interface ConsoleTool {
-        void runTool(String args[]) throws Exception;
     }
 }
