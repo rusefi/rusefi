@@ -88,7 +88,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(BinaryProtocol.class, "Sending [" + command + "]");
         }
 
-        Future f = LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
+        Future f = LinkManager.submit(new Runnable() {
             @Override
             public void run() {
                 sendTextCommand(command);
@@ -139,7 +139,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 while (!isClosed) {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
                     if (LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
-                        LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
+                        LinkManager.submit(new Runnable() {
                             @Override
                             public void run() {
                                 if (requestOutputChannels())

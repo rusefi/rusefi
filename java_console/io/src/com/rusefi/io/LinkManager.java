@@ -40,6 +40,14 @@ public class LinkManager {
         return connected;
     }
 
+    public static void execute(Runnable runnable) {
+        COMMUNICATION_EXECUTOR.execute(runnable);
+    }
+
+    public static Future submit(Runnable runnable) {
+        return COMMUNICATION_EXECUTOR.submit(runnable);
+    }
+
     public enum LogLevel {
         INFO,
         DEBUG,
@@ -87,12 +95,23 @@ public class LinkManager {
     private static Thread COMMUNICATION_THREAD;
 
     static {
-        COMMUNICATION_EXECUTOR.submit(new Runnable() {
+/*
+        Future future = submit(new Runnable() {
             @Override
             public void run() {
+            // WAT? this is hanging?!
                 COMMUNICATION_THREAD = Thread.currentThread();
+                System.out.println("Done");
             }
         });
+        try {
+            // let's wait for the above trivial task to finish
+            future.get();
+            System.out.println("Done2");
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IllegalStateException(e);
+        }
+ */
     }
 
     public static void assertCommunicationThread() {
