@@ -85,7 +85,6 @@
 #define BOARD_TLE6240_COUNT	0
 #define BOARD_MC33972_COUNT	0
 #define BOARD_TLE8888_COUNT 	0
-#define BOARD_MC33810_COUNT	0
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you

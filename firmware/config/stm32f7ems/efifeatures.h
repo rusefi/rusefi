@@ -50,10 +50,6 @@
 #define BOARD_TLE8888_COUNT 	1
 #endif
 
-#ifndef BOARD_MC33810_COUNT
-#define BOARD_MC33810_COUNT		0
-#endif
-
 #undef EFI_CAN_SUPPORT
 #define EFI_CAN_SUPPORT TRUE
 
