@@ -62,7 +62,7 @@ public class Launcher {
 
     static {
         TOOLS.put("help", args -> printTools());
-        TOOLS.put("headless", args -> runHeadless());
+        TOOLS.put("headless", Launcher::runHeadless);
         TOOLS.put("compile", Launcher::invokeCompileExpressionTool);
         TOOLS.put("ptrace_enums", Launcher::runPerfTraceTool);
         TOOLS.put("functional_test", Launcher::runFunctionalTest);
@@ -249,7 +249,10 @@ public class Launcher {
         RealHwTest.main(toolArgs);
     }
 
-    private static void runHeadless() {
+    private static void runHeadless(String[] args) {
+        String onConnectedCallback = args.length > 1 ? args[1] : null;
+        String onDisconnectedCallback = args.length > 2 ? args[2] : null;
+
         String autoDetectedPort = PortDetector.autoDetectSerial();
         if (autoDetectedPort == null) {
             System.err.println("rusEFI not detected");
