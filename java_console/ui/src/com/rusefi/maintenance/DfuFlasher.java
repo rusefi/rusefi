@@ -7,7 +7,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.serial.PortHolder;
+import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
@@ -50,7 +50,7 @@ public class DfuFlasher {
             JOptionPane.showMessageDialog(Launcher.getFrame(), "rusEfi serial port not detected");
             return;
         }
-        IoStream stream = SerialIoStreamJSerialComm.open(port, PortHolder.BAUD_RATE, FileLog.LOGGER);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(port);
         byte[] command = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT_DFU);
         try {
             stream.sendPacket(command, FileLog.LOGGER);

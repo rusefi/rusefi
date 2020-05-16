@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.maintenance.*;
 import com.rusefi.ui.util.HorizontalLine;
@@ -112,7 +113,7 @@ public class StartupFrame {
         connectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PortHolder.BAUD_RATE = Integer.parseInt((String) comboSpeeds.getSelectedItem());
+                BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
                 String selectedPort = comboPorts.getSelectedItem().toString();
                 if (SerialPortScanner.AUTO_SERIAL.equals(selectedPort)) {
                     String autoDetectedPort = PortDetector.autoDetectPort(StartupFrame.this.frame);

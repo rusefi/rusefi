@@ -19,10 +19,7 @@ import java.awt.*;
  * (c) Andrey Belomutskiy
  */
 public class PortHolder {
-    /**
-     * Nasty code: this field is not final, we have UI which overrides this default!
-     */
-    public static int BAUD_RATE = 115200;
+    public ConnectionStateListener listener;
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
 
@@ -34,11 +31,21 @@ public class PortHolder {
     @Nullable
     private IoStream serialPort;
 
-    boolean openPort(String port, DataListener dataListener, ConnectionStateListener listener) {
-        CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(SerialManager.class, "Opening port: " + port);
+    boolean connectAndReadConfiguration(String port, DataListener dataListener) {
         if (port == null)
             return false;
-        boolean result = open(port, dataListener);
+
+        CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(SerialManager.class, "Opening port: " + port);
+
+        IoStream stream = SerialIoStreamJSerialComm.openPort(port);
+        synchronized (portLock) {
+            this.serialPort = stream;
+            portLock.notifyAll();
+        }
+
+        bp = BinaryProtocolHolder.getInstance().create(FileLog.LOGGER, stream);
+
+        boolean result = bp.connectAndReadConfiguration(dataListener);
         if (listener != null) {
             if (result) {
                 listener.onConnectionEstablished();
@@ -47,21 +54,6 @@ public class PortHolder {
             }
         }
         return result;
-    }
-
-    /**
-     * @return true if everything fine
-     */
-    private boolean open(String port, final DataListener listener) {
-        IoStream stream = EstablishConnection.create(port);
-        synchronized (portLock) {
-            PortHolder.this.serialPort = stream;
-            portLock.notifyAll();
-        }
-
-        bp = BinaryProtocolHolder.getInstance().create(FileLog.LOGGER, stream);
-
-        return bp.connectAndReadConfiguration(listener);
     }
 
     public void close() {
@@ -94,11 +86,5 @@ public class PortHolder {
 
     public static PortHolder getInstance() {
         return instance;
-    }
-
-    public static class EstablishConnection {
-        public static IoStream create(String port) {
-            return SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
-        }
     }
 }

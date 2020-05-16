@@ -27,6 +27,11 @@ import java.util.concurrent.TimeoutException;
 import static com.rusefi.binaryprotocol.IoHelper.*;
 
 /**
+ * This object represents logical state of physical connection.
+ *
+ * Instance is connected until we experience issues. Once we decide to close the connection there is no restart -
+ * new instance of this class would need to be created once we establish a new physical connection.
+ *
  * (c) Andrey Belomutskiy
  * 3/6/2015
  * @see BinaryProtocolHolder
