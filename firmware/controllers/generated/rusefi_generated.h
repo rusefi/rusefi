@@ -986,6 +986,7 @@
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_AIR_FLOW "MAF air flow"
 #define GAUGE_NAME_AIR_MASS "air mass"
+#define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
 #define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
@@ -2268,6 +2269,8 @@
 #define ts_show_hip9011 true
 #define ts_show_joystick true
 #define ts_show_lcd true
+#define ts_show_main_relay true
+#define ts_show_main_relay_microRusEFI_message false
 #define ts_show_sd_card true
 #define ts_show_spi true
 #define ts_show_trigger_comparator false

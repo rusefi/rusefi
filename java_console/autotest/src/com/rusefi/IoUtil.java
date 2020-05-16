@@ -43,8 +43,6 @@ public class IoUtil {
     static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
-        if (LinkManager.hasError())
-            throw new IllegalStateException("IO error");
         FileLog.MAIN.logLine("Sending command [" + command + "]");
         final long begin = System.currentTimeMillis();
         CommandQueue.getInstance().write(command, retryTimeoutMs, new InvocationConfirmationListener() {
@@ -57,8 +55,6 @@ public class IoUtil {
         wait(responseLatch, totalTimeoutSeconds);
         if (responseLatch.getCount() > 0)
             FileLog.MAIN.logLine("No confirmation in " + retryTimeoutMs);
-        if (LinkManager.hasError())
-            throw new IllegalStateException("IO error");
         FileLog.MAIN.logLine("Command [" + command + "] executed in " + (System.currentTimeMillis() - time));
     }
 

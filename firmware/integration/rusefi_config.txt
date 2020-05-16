@@ -1431,6 +1431,8 @@ end_struct
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 
+#define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
+
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 
 
@@ -1551,6 +1553,8 @@ end_struct
 
 ! some board files override this value using prepend file
 #define ts_show_hip9011 true
+#define ts_show_main_relay true
+#define ts_show_main_relay_microRusEFI_message false
 #define ts_show_cj125 true
 #define ts_show_etb true
 #define ts_show_etb_pins true

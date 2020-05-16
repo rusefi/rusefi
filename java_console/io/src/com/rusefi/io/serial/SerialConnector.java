@@ -1,6 +1,7 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkConnector;
@@ -11,41 +12,42 @@ import com.rusefi.io.LinkManager;
  *         3/3/14
  */
 public class SerialConnector implements LinkConnector {
+
+    private final PortHolder portHolder = new PortHolder();
+
     public SerialConnector(String serialPort) {
-        SerialManager.port = serialPort;
+        portHolder.port = serialPort;
     }
 
     @Override
     public void connect(ConnectionStateListener listener) {
         FileLog.MAIN.logLine("SerialConnector: connecting");
-        SerialManager.listener = listener;
+        portHolder.listener = listener;
         FileLog.MAIN.logLine("scheduleOpening");
-        LinkManager.COMMUNICATION_EXECUTOR.execute(new Runnable() {
+        LinkManager.execute(new Runnable() {
             @Override
             public void run() {
                 FileLog.MAIN.logLine("scheduleOpening>openPort");
-                PortHolder.getInstance().openPort(SerialManager.port, SerialManager.dataListener, SerialManager.listener);
+                portHolder.connectAndReadConfiguration();
             }
         });
+    }
+
+    @Override
+    public BinaryProtocol getBinaryProtocol() {
+        return portHolder.getBp();
     }
 
     @Override
     public void restart() {
-        LinkManager.COMMUNICATION_EXECUTOR.execute(new Runnable() {
+        LinkManager.execute(new Runnable() {
             @Override
             public void run() {
-                MessagesCentral.getInstance().postMessage(SerialManager.class, "Restarting serial IO");
-//                if (closed)
-//                    return;
-                PortHolder.getInstance().close();
-                PortHolder.getInstance().openPort(SerialManager.port, SerialManager.dataListener, SerialManager.listener);
+                MessagesCentral.getInstance().postMessage(getClass(), "Restarting serial IO");
+                portHolder.close();
+                portHolder.connectAndReadConfiguration();
             }
         });
-    }
-
-    @Override
-    public boolean hasError() {
-        return false;
     }
 
     @Override
@@ -55,6 +57,6 @@ public class SerialConnector implements LinkConnector {
 
     @Override
     public void send(String text, boolean fireEvent) throws InterruptedException {
-        PortHolder.getInstance().packAndSend(text, fireEvent);
+        portHolder.packAndSend(text, fireEvent);
     }
 }

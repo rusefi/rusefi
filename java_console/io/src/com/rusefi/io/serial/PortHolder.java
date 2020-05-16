@@ -7,6 +7,7 @@ import com.rusefi.io.CommunicationLoggingHolder;
 import com.rusefi.io.ConnectionStateListener;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -19,26 +20,32 @@ import java.awt.*;
  * (c) Andrey Belomutskiy
  */
 public class PortHolder {
-    /**
-     * Nasty code: this field is not final, we have UI which overrides this default!
-     */
-    public static int BAUD_RATE = 115200;
-    private static PortHolder instance = new PortHolder();
+    private static final DataListener dataListener = freshData -> LinkManager.engineState.processNewData(new String(freshData), LinkManager.ENCODER);
+
+    public ConnectionStateListener listener;
     private final Object portLock = new Object();
 
+    @Nullable
     private BinaryProtocol bp;
 
-    private PortHolder() {
+    protected PortHolder() {
     }
 
-    @Nullable
-    private IoStream serialPort;
+    public String port;
 
-    boolean openPort(String port, DataListener dataListener, ConnectionStateListener listener) {
-        CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(SerialManager.class, "Opening port: " + port);
+    boolean connectAndReadConfiguration() {
         if (port == null)
             return false;
-        boolean result = open(port, dataListener);
+
+        CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(getClass(), "Opening port: " + port);
+
+        IoStream stream = SerialIoStreamJSerialComm.openPort(port);
+        synchronized (portLock) {
+            bp = BinaryProtocolHolder.getInstance().create(FileLog.LOGGER, stream);
+            portLock.notifyAll();
+        }
+
+        boolean result = bp.connectAndReadConfiguration(dataListener);
         if (listener != null) {
             if (result) {
                 listener.onConnectionEstablished();
@@ -49,40 +56,22 @@ public class PortHolder {
         return result;
     }
 
-    /**
-     * @return true if everything fine
-     */
-    private boolean open(String port, final DataListener listener) {
-        EstablishConnection establishConnection = new EstablishConnection(port).invoke();
-        if (!establishConnection.isConnected())
-            return false;
-        synchronized (portLock) {
-            PortHolder.this.serialPort = establishConnection.stream;
-            portLock.notifyAll();
-        }
-        IoStream stream = establishConnection.getStream();
-
-        bp = BinaryProtocolHolder.create(FileLog.LOGGER, stream);
-
-        return bp.connectAndReadConfiguration(listener);
-    }
-
-    private static boolean isWindows10() {
-        // todo: this code is fragile! What about Windows 11, 12 etc!? this is a problem for the later day :(
-        return System.getProperty(FileLog.OS_VERSION).startsWith("10");
-    }
-
     public void close() {
         synchronized (portLock) {
-            if (serialPort != null) {
+            if (bp != null) {
                 try {
-                    serialPort.close();
-                    serialPort = null;
+                    bp.close();
+                    bp = null;
                 } finally {
                     portLock.notifyAll();
                 }
             }
         }
+    }
+
+    @Nullable
+    public BinaryProtocol getBp() {
+        return bp;
     }
 
     /**
@@ -98,42 +87,5 @@ public class PortHolder {
         }
 
         bp.doSend(command, fireEvent);
-    }
-
-    public static PortHolder getInstance() {
-        return instance;
-    }
-
-    public static class EstablishConnection {
-        private boolean isConnected;
-        private String port;
-        private IoStream stream;
-
-        public EstablishConnection(String port) {
-            this.port = port;
-        }
-
-        // todo: remove dead code - always true?
-        public boolean isConnected() {
-            return isConnected;
-        }
-
-        public IoStream getStream() {
-            return stream;
-        }
-
-        public EstablishConnection invoke() {
-            stream = SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
-/*
-todo: remove dead code
-            if (stream == null) {
-                isConnected = false;
-                return this;
-            }
-             */
-
-            isConnected = true;
-            return this;
-        }
     }
 }

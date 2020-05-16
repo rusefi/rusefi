@@ -33,7 +33,6 @@
 #define BOARD_NAME                  "STM32F407 for RusEFI"
 
 #define EFI_USB_AF 10U
-#define EFI_USB_SERIAL_ID GPIOA_10
 #define EFI_USB_SERIAL_DM GPIOA_11
 #define EFI_USB_SERIAL_DP GPIOA_12
 

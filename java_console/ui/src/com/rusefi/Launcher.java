@@ -8,8 +8,10 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
-import com.rusefi.io.serial.PortHolder;
+import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.SerialConnector;
+import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -46,7 +49,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20200515;
+    public static final int CONSOLE_VERSION = 20200516;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
@@ -54,15 +57,21 @@ public class Launcher {
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
 
-    private static final String TOOL_NAME_COMPILE_FSIO_FILE = "compile_fsio_file";
-    private static final String TOOL_NAME_REBOOT_ECU = "reboot_ecu";
-    private static final String TOOL_NAME_FIRING_ORDER = "firing_order";
-    private static final String TOOL_NAME_FUNCTIONAL_TEST = "functional_test";
-    private static final String TOOL_NAME_PERF_ENUMS = "ptrace_enums";
-    // todo: rename to something more FSIO-specific? would need to update documentation somewhere
-    private static final String TOOL_NAME_COMPILE = "compile";
     private static final int DEFAULT_TAB_INDEX = 0;
-    private static final String TOOL_NAME_HEADLESS = "headless";
+
+    private static Map<String, ConsoleTool> TOOLS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    static {
+        TOOLS.put("help", args -> printTools());
+        TOOLS.put("headless", Launcher::runHeadless);
+        TOOLS.put("compile", Launcher::invokeCompileExpressionTool);
+        TOOLS.put("ptrace_enums", Launcher::runPerfTraceTool);
+        TOOLS.put("functional_test", Launcher::runFunctionalTest);
+        TOOLS.put("compile_fsio_file", Launcher::runCompileTool);
+        TOOLS.put("firing_order", Launcher::runFiringOrderTool);
+        TOOLS.put("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT));
+        TOOLS.put(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU));
+    }
 
     public static String port;
     public static EngineSnifferPanel engineSnifferPanel;
@@ -89,7 +98,7 @@ public class Launcher {
         FileLog.MAIN.logLine("Hardware: " + FirmwareFlasher.getHardwareKind());
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
-        getConfig().getRoot().setProperty(SPEED_KEY, PortHolder.BAUD_RATE);
+        getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
         LinkManager.start(port);
 
@@ -191,59 +200,25 @@ public class Launcher {
 
     /**
      * rusEfi console entry point
+     *
      * @see StartupFrame if no parameters specified
      */
     public static void main(final String[] args) throws Exception {
         String toolName = args.length == 0 ? null : args[0];
 
-        if (TOOL_NAME_HEADLESS.equalsIgnoreCase(toolName)) {
-            runHeadless();
-            return;
+        if (args.length > 0) {
+            ConsoleTool consoleTool = TOOLS.get(toolName);
+            if (consoleTool != null) {
+                consoleTool.runTool(args);
+                return;
+            }
         }
 
-        if (TOOL_NAME_FUNCTIONAL_TEST.equals(toolName)) {
-            // passing port argument if it was specified
-            String[] toolArgs = args.length == 1 ? new String[0] : new String[]{args[1]};
-            RealHwTest.main(toolArgs);
-            return;
-        }
+        printTools();
 
-        if (TOOL_NAME_COMPILE_FSIO_FILE.equalsIgnoreCase(toolName)) {
-            int returnCode = invokeCompileFileTool(args);
-            System.exit(returnCode);
-        }
-
-        if (TOOL_NAME_COMPILE.equals(toolName)) {
-            invokeCompileExpressionTool(args);
-            System.exit(0);
-        }
-
-        if (TOOL_NAME_FIRING_ORDER.equals(toolName)) {
-            FiringOrderTSLogic.invoke(args[1]);
-            System.exit(0);
-        }
-
-        if (TOOL_NAME_PERF_ENUMS.equals(toolName)) {
-            PerfTraceTool.readPerfTrace(args[1], args[2], args[3], args[4]);
-            System.exit(0);
-        }
-
-        System.out.println("Optional tools: " + Arrays.asList(TOOL_NAME_COMPILE_FSIO_FILE,
-                TOOL_NAME_COMPILE,
-                TOOL_NAME_REBOOT_ECU,
-                TOOL_NAME_FIRING_ORDER));
         System.out.println("Starting rusEfi UI console " + CONSOLE_VERSION);
 
         FileLog.MAIN.start();
-
-        if (TOOL_NAME_REBOOT_ECU.equalsIgnoreCase(toolName)) {
-            sendCommand(Fields.CMD_REBOOT);
-            return;
-        }
-        if (Fields.CMD_REBOOT_DFU.equalsIgnoreCase(toolName)) {
-            sendCommand(Fields.CMD_REBOOT_DFU);
-            return;
-        }
 
 
         getConfig().load();
@@ -257,7 +232,40 @@ public class Launcher {
         });
     }
 
-    private static void runHeadless() {
+    private static void runPerfTraceTool(String[] args) throws IOException {
+        PerfTraceTool.readPerfTrace(args[1], args[2], args[3], args[4]);
+    }
+
+    private static void runFiringOrderTool(String[] args) throws IOException {
+        FiringOrderTSLogic.invoke(args[1]);
+    }
+
+    private static void runCompileTool(String[] args) throws IOException {
+        int returnCode = invokeCompileFileTool(args);
+        System.exit(returnCode);
+    }
+
+    private static void runFunctionalTest(String[] args) throws InterruptedException {
+        // passing port argument if it was specified
+        String[] toolArgs = args.length == 1 ? new String[0] : new String[]{args[1]};
+        RealHwTest.main(toolArgs);
+    }
+
+    private static void runHeadless(String[] args) {
+        String onConnectedCallback = args.length > 1 ? args[1] : null;
+        String onDisconnectedCallback = args.length > 2 ? args[2] : null;
+
+        ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {
+                if (isConnected) {
+                    invokeCallback(onConnectedCallback);
+                } else {
+                    invokeCallback(onDisconnectedCallback);
+                }
+            }
+        });
+
         String autoDetectedPort = PortDetector.autoDetectSerial();
         if (autoDetectedPort == null) {
             System.err.println("rusEFI not detected");
@@ -276,6 +284,21 @@ public class Launcher {
         });
     }
 
+    private static void invokeCallback(String callback) {
+        if (callback == null)
+            return;
+        ExecHelper.submitAction(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Runtime.getRuntime().exec(callback);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }, "callback");
+    }
+
     private static int invokeCompileFileTool(String[] args) throws IOException {
         /**
          * re-packaging array which contains input and output file names
@@ -287,10 +310,7 @@ public class Launcher {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
-        PortHolder.EstablishConnection establishConnection = new PortHolder.EstablishConnection(autoDetectedPort).invoke();
-        if (!establishConnection.isConnected())
-            return;
-        IoStream stream = establishConnection.getStream();
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes, FileLog.LOGGER);
     }
@@ -341,7 +361,7 @@ public class Launcher {
             boolean isPortDefined = args.length > 0;
             boolean isBaudRateDefined = args.length > 1;
             if (isBaudRateDefined)
-                PortHolder.BAUD_RATE = Integer.parseInt(args[1]);
+                BaudRateHolder.INSTANCE.baudRate = Integer.parseInt(args[1]);
 
             String port = null;
             if (isPortDefined)
@@ -370,5 +390,15 @@ public class Launcher {
 
     public static Frame getFrame() {
         return staticFrame;
+    }
+
+    private static void printTools() {
+        for (String key : TOOLS.keySet()) {
+            System.out.println("Tool available: " + key);
+        }
+    }
+
+    interface ConsoleTool {
+        void runTool(String args[]) throws Exception;
     }
 }

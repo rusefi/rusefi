@@ -255,12 +255,6 @@ void NamedOutputPin::setLow() {
 	// turn off the output
 	setValue(false);
 
-#if EFI_DEFAILED_LOGGING
-//	systime_t after = getTimeNowUs();
-//	debugInt(&signal->logging, "a_time", after - signal->hi_time);
-//	scheduleLogging(&signal->logging);
-#endif /* EFI_DEFAILED_LOGGING */
-
 #if EFI_ENGINE_SNIFFER
 	addEngineSnifferEvent(getShortName(), PROTOCOL_ES_DOWN);
 #endif /* EFI_ENGINE_SNIFFER */

@@ -136,7 +136,7 @@ public class FuelTunePane {
 
     private void uploadCurrentResult() {
         byte[] newVeMap = FuelTunePane.this.newVeMap;
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
         if (newVeMap == null || bp == null)
             return;
         ConfigurationImage ci = bp.getController().clone();
@@ -313,7 +313,7 @@ public class FuelTunePane {
     }
 
     private byte[] reloadVeTable() {
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
 
         byte[] content = bp.getController().getContent();
         loadData(veTable.getXAxis(), content, veRpmOffset);
@@ -329,7 +329,7 @@ public class FuelTunePane {
     }
 
     private void loadArray(double[] array, int offset) {
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
         if (bp == null) {
             FileLog.MAIN.logLine("bp not ready");
             return;

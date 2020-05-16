@@ -27,6 +27,11 @@ import java.util.concurrent.TimeoutException;
 import static com.rusefi.binaryprotocol.IoHelper.*;
 
 /**
+ * This object represents logical state of physical connection.
+ *
+ * Instance is connected until we experience issues. Once we decide to close the connection there is no restart -
+ * new instance of this class would need to be created once we establish a new physical connection.
+ *
  * (c) Andrey Belomutskiy
  * 3/6/2015
  * @see BinaryProtocolHolder
@@ -83,7 +88,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(BinaryProtocol.class, "Sending [" + command + "]");
         }
 
-        Future f = LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
+        Future f = LinkManager.submit(new Runnable() {
             @Override
             public void run() {
                 sendTextCommand(command);
@@ -134,7 +139,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 while (!isClosed) {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
                     if (LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
-                        LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
+                        LinkManager.submit(new Runnable() {
                             @Override
                             public void run() {
                                 if (requestOutputChannels())
