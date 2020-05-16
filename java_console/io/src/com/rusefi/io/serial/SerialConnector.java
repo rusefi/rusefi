@@ -1,6 +1,7 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkConnector;
@@ -30,6 +31,11 @@ public class SerialConnector implements LinkConnector {
                 portHolder.connectAndReadConfiguration();
             }
         });
+    }
+
+    @Override
+    public BinaryProtocol getBinaryProtocol() {
+        return portHolder.getBp();
     }
 
     @Override

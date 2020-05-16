@@ -126,6 +126,7 @@ public class LinkManager {
             ConnectionWatchdog.onDataArrived();
         }
     });
+
     public static LinkConnector connector;
 
     /**
