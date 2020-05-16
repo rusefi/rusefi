@@ -134,12 +134,12 @@ public class LinkManager {
     public static boolean isSimulationMode;
 
     public static void startAndConnect(String port, ConnectionStateListener stateListener) {
-        FileLog.MAIN.logLine("LinkManager: Starting " + port);
         start(port);
-        connect(stateListener);
+        connector.connectAndReadConfiguration(stateListener);
     }
 
     public static void start(String port) {
+        FileLog.MAIN.logLine("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
             connector = LinkConnector.VOID;
         } else if (TcpConnector.isTcpPort(port)) {
@@ -156,12 +156,6 @@ public class LinkManager {
 
     public static boolean isLogViewer() {
         return connector == LinkConnector.VOID;
-    }
-
-    public static void connect(ConnectionStateListener listener) {
-        if (connector == null)
-            throw new NullPointerException("connector");
-        connector.connectAndReadConfiguration(listener);
     }
 
     public static void send(String command, boolean fireEvent) throws InterruptedException {

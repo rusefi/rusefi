@@ -139,7 +139,7 @@ public class FuelTunePane {
         BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
         if (newVeMap == null || bp == null)
             return;
-        ConfigurationImage ci = bp.getController().clone();
+        ConfigurationImage ci = bp.getControllerConfiguration().clone();
         System.arraycopy(newVeMap, 0, ci.getContent(), Fields.VETABLE.getOffset(), newVeMap.length);
         Runnable afterBurn = new Runnable() {
             @Override
@@ -315,7 +315,7 @@ public class FuelTunePane {
     private byte[] reloadVeTable() {
         BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
 
-        byte[] content = bp.getController().getContent();
+        byte[] content = bp.getControllerConfiguration().getContent();
         loadData(veTable.getXAxis(), content, veRpmOffset);
         loadData(veTable.getYAxis(), content, veLoadOffset);
         loadData(veTable, content, Fields.VETABLE.getOffset());
@@ -335,7 +335,7 @@ public class FuelTunePane {
             return;
         }
         for (int i = 0; i < array.length; i++)
-            array[i] = bp.getController().getByteBuffer(offset + 4 * i, 4).getFloat();
+            array[i] = bp.getControllerConfiguration().getByteBuffer(offset + 4 * i, 4).getFloat();
         System.out.println("FuelTunePane: Loaded " + Arrays.toString(array));
     }
 

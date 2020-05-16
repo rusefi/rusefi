@@ -112,7 +112,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 short count = dis.readShort(); // no swap here? interesting!
                 System.out.println("CRC check " + page + "/" + offset + "/" + count);
                 BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
-                int result = IoHelper.getCrc32(bp.getController().getContent(), offset, count);
+                int result = IoHelper.getCrc32(bp.getControllerConfiguration().getContent(), offset, count);
                 ByteArrayOutputStream response = new ByteArrayOutputStream();
                 response.write(TS_OK.charAt(0));
                 new DataOutputStream(response).write(result);
@@ -130,7 +130,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                     BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
                     byte[] response = new byte[1 + count];
                     response[0] = (byte) TS_OK.charAt(0);
-                    System.arraycopy(bp.getController().getContent(), offset, response, 1, count);
+                    System.arraycopy(bp.getControllerConfiguration().getContent(), offset, response, 1, count);
                     stream.sendPacket(response, FileLog.LOGGER);
                 }
             } else if (command == COMMAND_OUTPUTS) {

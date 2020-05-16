@@ -59,6 +59,7 @@ public class ConfigurationImageFile {
     }
 
     public static void saveToFile(ConfigurationImage configurationImage, String fileName) throws IOException {
+        System.out.printf("Saving " + configurationImage.getSize() + " bytes of configuration into " + fileName);
         FileOutputStream fos = new FileOutputStream(fileName);
         fos.write(getFileContent(configurationImage));
         fos.close();

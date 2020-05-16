@@ -35,7 +35,7 @@ public class TableEditorPane extends JPanel {
             BinaryProtocol instance = BinaryProtocolHolder.getInstance().getCurrentStreamState();
             if (instance == null)
                 throw new NullPointerException("instance");
-            ConfigurationImage image = instance.getController();
+            ConfigurationImage image = instance.getControllerConfiguration();
             byte[] fileContent = ConfigurationImageFile.getFileContent(image);
             ECUEditor.openImage(fileContent);
         } catch (Exception e) {

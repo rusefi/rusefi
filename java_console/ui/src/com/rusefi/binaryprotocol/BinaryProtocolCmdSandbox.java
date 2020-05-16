@@ -41,7 +41,7 @@ public class BinaryProtocolCmdSandbox {
         //
 //        image.saveToFile("rusefi_configuration.bin");
 //
-        doShowImage(bp.getController());
+        doShowImage(bp.getControllerConfiguration());
     }
 
     private static void doShowImage(ConfigurationImage image) throws Exception {

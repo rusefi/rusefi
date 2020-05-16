@@ -151,7 +151,7 @@ public class SensorLogger {
             int debugMode = -1;
             BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
             if (bp != null) {
-                ConfigurationImage ci = bp.getController();
+                ConfigurationImage ci = bp.getControllerConfiguration();
                 if (ci != null) {
                     debugMode = ConfigField.getIntValue(ci, Fields.DEBUGMODE);
                 }
