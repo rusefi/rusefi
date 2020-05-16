@@ -23,12 +23,11 @@ public class PortHolder {
     private static final DataListener dataListener = freshData -> LinkManager.engineState.processNewData(new String(freshData), LinkManager.ENCODER);
 
     public ConnectionStateListener listener;
-    private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
 
     private BinaryProtocol bp;
 
-    private PortHolder() {
+    protected PortHolder() {
     }
 
     @Nullable
@@ -87,9 +86,5 @@ public class PortHolder {
         }
 
         bp.doSend(command, fireEvent);
-    }
-
-    public static PortHolder getInstance() {
-        return instance;
     }
 }
