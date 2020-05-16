@@ -10,6 +10,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.maintenance.ExecHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ public class ConsoleTools {
         TOOLS.put("headless", ConsoleTools::runHeadless);
         TOOLS.put("compile", ConsoleTools::invokeCompileExpressionTool);
         TOOLS.put("ptrace_enums", ConsoleTools::runPerfTraceTool);
+        TOOLS.put("save_binary_configuration", ConsoleTools::saveBinaryConfig);
         TOOLS.put("functional_test", ConsoleTools::runFunctionalTest);
         TOOLS.put("compile_fsio_file", ConsoleTools::runCompileTool);
         TOOLS.put("firing_order", ConsoleTools::runFiringOrderTool);
@@ -37,8 +39,12 @@ public class ConsoleTools {
         }
     }
 
+    private static void saveBinaryConfig(String[] args) {
+    }
+
+
     private static void sendCommand(String command) throws IOException {
-        String autoDetectedPort = Launcher.autoDetectPort();
+        String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
         IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
@@ -86,8 +92,7 @@ public class ConsoleTools {
             System.err.println("rusEFI not detected");
             return;
         }
-        LinkManager.start(autoDetectedPort);
-        LinkManager.connector.connect(new ConnectionStateListener() {
+        LinkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 SensorLogger.init();
@@ -142,6 +147,16 @@ public class ConsoleTools {
             return true;
         }
         return false;    }
+
+    @Nullable
+    private static String autoDetectPort() {
+        String autoDetectedPort = PortDetector.autoDetectPort(null);
+        if (autoDetectedPort == null) {
+            System.err.println("rusEFI not detected");
+            return null;
+        }
+        return autoDetectedPort;
+    }
 
     interface ConsoleTool {
         void runTool(String args[]) throws Exception;

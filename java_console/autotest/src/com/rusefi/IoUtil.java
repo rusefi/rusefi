@@ -5,6 +5,7 @@ import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
@@ -131,11 +132,11 @@ public class IoUtil {
 //        Thread.sleep(3000);
 //
 //        FileLog.rlog("Got a TCP port! Connecting...");
-        LinkManager.start("" + TcpConnector.DEFAULT_PORT);
+
         /**
          * TCP connector is blocking
          */
-        LinkManager.open();
+        LinkManager.startAndConnect("" + TcpConnector.DEFAULT_PORT, ConnectionStateListener.VOID);
         LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         waitForFirstResponse();
     }

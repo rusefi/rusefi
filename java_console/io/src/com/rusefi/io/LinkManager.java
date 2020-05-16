@@ -18,9 +18,8 @@ import java.util.concurrent.*;
 public class LinkManager {
     @NotNull
     public static CountDownLatch connect(String port) {
-        start(port);
         final CountDownLatch connected = new CountDownLatch(1);
-        open(new ConnectionStateListener() {
+        startAndConnect(port, new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
                 System.out.println("CONNECTION FAILED, did you specify the right port name?");
@@ -134,7 +133,7 @@ public class LinkManager {
      */
     public static boolean isSimulationMode;
 
-    public static void start(String port) {
+    public static void startAndConnect(String port, ConnectionStateListener stateListener) {
         FileLog.MAIN.logLine("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
             connector = LinkConnector.VOID;
@@ -144,6 +143,7 @@ public class LinkManager {
         } else {
             connector = new SerialConnector(port);
         }
+        connect(stateListener);
     }
 
     public static boolean isLogViewerMode(String port) {
@@ -154,17 +154,14 @@ public class LinkManager {
         return connector == LinkConnector.VOID;
     }
 
-    /**
-     * todo: should this be merged into {@link #start(String)} ?
-     */
-    public static void open(ConnectionStateListener listener) {
+    public static void connect(ConnectionStateListener listener) {
         if (connector == null)
             throw new NullPointerException("connector");
         connector.connect(listener);
     }
 
-    public static void open() {
-        open(ConnectionStateListener.VOID);
+    public static void connect() {
+        connect(ConnectionStateListener.VOID);
     }
 
     public static void send(String command, boolean fireEvent) throws InterruptedException {
