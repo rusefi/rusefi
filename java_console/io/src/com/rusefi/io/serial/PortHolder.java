@@ -53,14 +53,11 @@ public class PortHolder {
      * @return true if everything fine
      */
     private boolean open(String port, final DataListener listener) {
-        EstablishConnection establishConnection = new EstablishConnection(port).invoke();
-        if (!establishConnection.isConnected())
-            return false;
+        IoStream stream = EstablishConnection.create(port);
         synchronized (portLock) {
-            PortHolder.this.serialPort = establishConnection.stream;
+            PortHolder.this.serialPort = stream;
             portLock.notifyAll();
         }
-        IoStream stream = establishConnection.getStream();
 
         bp = BinaryProtocolHolder.getInstance().create(FileLog.LOGGER, stream);
 
@@ -100,27 +97,8 @@ public class PortHolder {
     }
 
     public static class EstablishConnection {
-        private boolean isConnected;
-        private String port;
-        private IoStream stream;
-
-        public EstablishConnection(String port) {
-            this.port = port;
-        }
-
-        // todo: remove dead code - always true?
-        public boolean isConnected() {
-            return isConnected;
-        }
-
-        public IoStream getStream() {
-            return stream;
-        }
-
-        public EstablishConnection invoke() {
-            stream = SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
-            isConnected = true;
-            return this;
+        public static IoStream create(String port) {
+            return SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
         }
     }
 }
