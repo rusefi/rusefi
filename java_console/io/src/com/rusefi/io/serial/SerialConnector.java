@@ -20,7 +20,7 @@ public class SerialConnector implements LinkConnector {
     }
 
     @Override
-    public void connect(ConnectionStateListener listener) {
+    public void connectAndReadConfiguration(ConnectionStateListener listener) {
         FileLog.MAIN.logLine("SerialConnector: connecting");
         portHolder.listener = listener;
         FileLog.MAIN.logLine("scheduleOpening");

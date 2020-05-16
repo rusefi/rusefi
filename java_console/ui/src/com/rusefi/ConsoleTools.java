@@ -40,6 +40,16 @@ public class ConsoleTools {
     }
 
     private static void saveBinaryConfig(String[] args) {
+        if (args.length < 2) {
+            System.out.println("Please specify output file name for binary configuration");
+            System.exit(-1);
+        }
+
+        String autoDetectedPort = autoDetectPort();
+        if (autoDetectedPort == null)
+            return;
+        LinkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
+
     }
 
 

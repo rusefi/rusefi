@@ -9,7 +9,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 public interface LinkConnector extends LinkDecoder {
     LinkConnector VOID = new LinkConnector() {
         @Override
-        public void connect(ConnectionStateListener listener) {
+        public void connectAndReadConfiguration(ConnectionStateListener listener) {
         }
 
         @Override
@@ -31,7 +31,7 @@ public interface LinkConnector extends LinkDecoder {
         }
     };
 
-    void connect(ConnectionStateListener listener);
+    void connectAndReadConfiguration(ConnectionStateListener listener);
 
     void send(String command, boolean fireEvent) throws InterruptedException;
 
