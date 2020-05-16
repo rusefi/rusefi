@@ -65,7 +65,7 @@ public class Launcher {
 
     private static Frame staticFrame;
 
-    MainFrame mainFrame = new MainFrame(tabbedPane);
+    private MainFrame mainFrame = new MainFrame(tabbedPane);
 
     /**
      * We can listen to tab activation event if we so desire
@@ -201,16 +201,6 @@ public class Launcher {
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         VersionChecker.start();
         SwingUtilities.invokeAndWait(() -> awtCode(args));
-    }
-
-    @Nullable
-    static String autoDetectPort() {
-        String autoDetectedPort = PortDetector.autoDetectPort(null);
-        if (autoDetectedPort == null) {
-            System.err.println("rusEFI not detected");
-            return null;
-        }
-        return autoDetectedPort;
     }
 
     private static void awtCode(String[] args) {
