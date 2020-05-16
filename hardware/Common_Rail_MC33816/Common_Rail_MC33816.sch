@@ -2333,7 +2333,6 @@ Connection ~ 6575 3500
 Wire Wire Line
 	4250 4650 4475 4650
 Connection ~ 4475 4650
-Connection ~ 5775 5200
 Wire Wire Line
 	4250 5200 4475 5200
 Wire Wire Line
@@ -2817,10 +2816,6 @@ Wire Wire Line
 Wire Wire Line
 	4475 2975 4475 3200
 Wire Wire Line
-	11750 6425 11750 6575
-Wire Wire Line
-	4475 5200 5775 5200
-Wire Wire Line
 	9200 1425 9200 1525
 Wire Wire Line
 	6100 2350 6100 2325
@@ -2940,4 +2935,16 @@ Wire Wire Line
 Connection ~ 10775 4100
 Wire Wire Line
 	10775 4100 11000 4100
+Wire Wire Line
+	11750 6575 11750 6525
+Connection ~ 11750 6425
+Connection ~ 11750 6525
+Wire Wire Line
+	11750 6525 11750 6425
+Wire Wire Line
+	5775 5200 4700 5200
+Connection ~ 5775 5200
+Connection ~ 4700 5200
+Wire Wire Line
+	4700 5200 4475 5200
 $EndSCHEMATC
