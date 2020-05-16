@@ -10,6 +10,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
+import com.rusefi.tools.ConsoleTools;
 import com.rusefi.ui.FormulasPane;
 import com.rusefi.ui.GaugesPanel;
 import com.rusefi.ui.MessagesPane;
@@ -21,7 +22,6 @@ import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
 import jssc.SerialPortList;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

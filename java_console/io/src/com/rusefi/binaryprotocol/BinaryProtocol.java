@@ -175,7 +175,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public void uploadChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException, SerialPortException {
-        ConfigurationImage current = getController();
+        ConfigurationImage current = getControllerConfiguration();
         // let's have our own copy which no one would be able to change
         newVersion = newVersion.clone();
         int offset = 0;
@@ -329,7 +329,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
-    public ConfigurationImage getController() {
+    /**
+     * Configuration as it is in the controller to the best of our knowledge
+     */
+    public ConfigurationImage getControllerConfiguration() {
         synchronized (imageLock) {
             if (controller == null)
                 return null;

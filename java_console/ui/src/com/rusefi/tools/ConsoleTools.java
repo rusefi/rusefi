@@ -1,6 +1,9 @@
-package com.rusefi;
+package com.rusefi.tools;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
+import com.opensr5.ConfigurationImage;
+import com.opensr5.io.ConfigurationImageFile;
+import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
@@ -15,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 public class ConsoleTools {
@@ -39,19 +43,40 @@ public class ConsoleTools {
         }
     }
 
-    private static void saveBinaryConfig(String[] args) {
+    private static void saveBinaryConfig(String[] args) throws IOException {
         if (args.length < 2) {
             System.out.println("Please specify output file name for binary configuration");
             System.exit(-1);
         }
+        String fileName = args[1];
 
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
-        LinkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
+        LinkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
+            @Override
+            public void onConnectionEstablished() {
+                BinaryProtocol binaryProtocol = LinkManager.connector.getBinaryProtocol();
+                Objects.requireNonNull(binaryProtocol, "binaryProtocol");
+                ConfigurationImage configurationImage = binaryProtocol.getControllerConfiguration();
+                Objects.requireNonNull(configurationImage, "configurationImage");
 
+                try {
+                    ConfigurationImageFile.saveToFile(configurationImage, fileName);
+                    System.exit(0);
+                } catch (IOException e) {
+                    System.out.println("While writing " + e);
+                    System.exit(-1);
+                }
+            }
+
+            @Override
+            public void onConnectionFailed() {
+                System.out.println("onConnectionFailed");
+                System.exit(-1);
+            }
+        });
     }
-
 
     private static void sendCommand(String command) throws IOException {
         String autoDetectedPort = autoDetectPort();
@@ -156,7 +181,8 @@ public class ConsoleTools {
             consoleTool.runTool(args);
             return true;
         }
-        return false;    }
+        return false;
+    }
 
     @Nullable
     private static String autoDetectPort() {
