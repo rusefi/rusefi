@@ -11,7 +11,6 @@
 #include "digital_input_exti.h"
 #include "efi_gpio.h"
 #include "error_handling.h"
-#include "pin_repository.h"
 
 /**
  * EXTI is a funny thing: you can only use same pin on one port. For example, you can use
@@ -24,23 +23,23 @@
 static ioportmask_t ext_used = 0;
 
 // EXT is not able to give you the front direction but you could read the pin in the callback.
-int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palcallback_t cb, void *cb_data) {
+void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palcallback_t cb, void *cb_data) {
 
 	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
 	 * and we will fail on next check */
 	if (brainPin == GPIO_UNASSIGNED)
-		return -1;
+		return;
 
 	ioportid_t port = getHwPort(msg, brainPin);
 	if (port == NULL)
-		return -1;
+		return;
 
 	int index = getHwPin(msg, brainPin);
 
 	/* is this index already used? */
 	if (ext_used & PAL_PORT_BIT(index)) {
 		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %d: exti index already used", msg, brainPin);
-		return -1;
+		return;
 	}
 
 	ioline_t line = PAL_LINE(port, index);
@@ -49,9 +48,6 @@ int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palca
 
 	/* mark used */
 	ext_used |= PAL_PORT_BIT(index);
-	brain_pin_markUsed(brainPin, msg);
-
-	return 0;
 }
 
 void efiExtiDisablePin(brain_pin_e brainPin)
@@ -77,7 +73,6 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 
 	/* mark unused */
 	ext_used &= ~PAL_PORT_BIT(index);
-	brain_pin_markUnused(brainPin);
 }
 
 #endif /* HAL_USE_PAL && EFI_PROD_CODE */
