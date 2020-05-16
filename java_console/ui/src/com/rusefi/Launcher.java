@@ -278,10 +278,7 @@ public class Launcher {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
-        PortHolder.EstablishConnection establishConnection = new PortHolder.EstablishConnection(autoDetectedPort).invoke();
-        if (!establishConnection.isConnected())
-            return;
-        IoStream stream = establishConnection.getStream();
+        IoStream stream = PortHolder.EstablishConnection.create(autoDetectedPort);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes, FileLog.LOGGER);
     }

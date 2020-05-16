@@ -27,10 +27,7 @@ class SerialAutoChecker implements Runnable {
 
     @Override
     public void run() {
-        PortHolder.EstablishConnection establishConnection = new PortHolder.EstablishConnection(serialPort).invoke();
-        if (!establishConnection.isConnected())
-            return;
-        IoStream stream = establishConnection.getStream();
+        IoStream stream = PortHolder.EstablishConnection.create(serialPort);
         Logger logger = FileLog.LOGGER;
         IncomingDataBuffer incomingData = new IncomingDataBuffer(logger);
         stream.setInputListener(incomingData::addData);
