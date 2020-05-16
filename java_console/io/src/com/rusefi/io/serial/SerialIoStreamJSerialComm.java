@@ -5,6 +5,7 @@ import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
+import com.rusefi.FileLog;
 import com.rusefi.io.IoStream;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,14 +68,16 @@ public class SerialIoStreamJSerialComm implements IoStream {
         sp.writeBytes(bytes, bytes.length);
     }
 
+    public static IoStream openPort(String port) {
+        return openPort(port, BaudRateHolder.INSTANCE.baudRate, FileLog.LOGGER);
+    }
+
     @NotNull
-    public static IoStream open(String port, int baudRate, Logger logger) {
+    private static IoStream openPort(String port, int baudRate, Logger logger) {
         logger.info("[SerialIoStreamJSerialComm] " + port);
         SerialPort sp = SerialPort.getCommPort(port);
         sp.setBaudRate(baudRate);
         sp.openPort();
-
-
         return new SerialIoStreamJSerialComm(sp);
     }
 }

@@ -8,8 +8,9 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
-import com.rusefi.io.serial.PortHolder;
+import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.SerialConnector;
+import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
@@ -96,7 +97,7 @@ public class Launcher {
         FileLog.MAIN.logLine("Hardware: " + FirmwareFlasher.getHardwareKind());
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
-        getConfig().getRoot().setProperty(SPEED_KEY, PortHolder.BAUD_RATE);
+        getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
         LinkManager.start(port);
 
@@ -278,7 +279,7 @@ public class Launcher {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
-        IoStream stream = PortHolder.EstablishConnection.create(autoDetectedPort);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes, FileLog.LOGGER);
     }
@@ -329,7 +330,7 @@ public class Launcher {
             boolean isPortDefined = args.length > 0;
             boolean isBaudRateDefined = args.length > 1;
             if (isBaudRateDefined)
-                PortHolder.BAUD_RATE = Integer.parseInt(args[1]);
+                BaudRateHolder.INSTANCE.baudRate = Integer.parseInt(args[1]);
 
             String port = null;
             if (isPortDefined)

@@ -18,13 +18,13 @@ public class SerialConnector implements LinkConnector {
     @Override
     public void connect(ConnectionStateListener listener) {
         FileLog.MAIN.logLine("SerialConnector: connecting");
-        SerialManager.listener = listener;
+        PortHolder.getInstance().listener = listener;
         FileLog.MAIN.logLine("scheduleOpening");
         LinkManager.COMMUNICATION_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 FileLog.MAIN.logLine("scheduleOpening>openPort");
-                PortHolder.getInstance().openPort(SerialManager.port, SerialManager.dataListener, SerialManager.listener);
+                PortHolder.getInstance().connectAndReadConfiguration(SerialManager.port, SerialManager.dataListener);
             }
         });
     }
@@ -38,7 +38,7 @@ public class SerialConnector implements LinkConnector {
 //                if (closed)
 //                    return;
                 PortHolder.getInstance().close();
-                PortHolder.getInstance().openPort(SerialManager.port, SerialManager.dataListener, SerialManager.listener);
+                PortHolder.getInstance().connectAndReadConfiguration(SerialManager.port, SerialManager.dataListener);
             }
         });
     }
