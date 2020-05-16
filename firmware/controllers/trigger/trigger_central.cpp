@@ -208,9 +208,12 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
 	tc->vvtSyncTimeNt = nowNt;
 
-	float vvtPosition = engineConfiguration->vvtOffset - currentPosition;
-	fixAngle(vvtPosition, "vvtPosition", CUSTOM_ERR_6556);
-	tc->vvtPosition = vvtPosition;
+    // we do NOT clamp VVT position into the [0, engineCycle) range - we expect vvtOffset to be configured so that
+    // it's not necessary
+	tc->vvtPosition = engineConfiguration->vvtOffset - currentPosition;
+	if (tc->vvtPosition < 0 || tc->vvtPosition > ENGINE(engineCycle)) {
+		warning(CUSTOM_ERR_VVT_OUT_OF_RANGE, "Please adjust vvtOffset since position %f", tc->vvtPosition);
+	}
 
 	switch (engineConfiguration->vvtMode) {
 	case VVT_FIRST_HALF:
