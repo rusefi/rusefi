@@ -62,14 +62,9 @@ public class PortHolder {
         }
         IoStream stream = establishConnection.getStream();
 
-        bp = BinaryProtocolHolder.create(FileLog.LOGGER, stream);
+        bp = BinaryProtocolHolder.getInstance().create(FileLog.LOGGER, stream);
 
         return bp.connectAndReadConfiguration(listener);
-    }
-
-    private static boolean isWindows10() {
-        // todo: this code is fragile! What about Windows 11, 12 etc!? this is a problem for the later day :(
-        return System.getProperty(FileLog.OS_VERSION).startsWith("10");
     }
 
     public void close() {
@@ -124,14 +119,6 @@ public class PortHolder {
 
         public EstablishConnection invoke() {
             stream = SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
-/*
-todo: remove dead code
-            if (stream == null) {
-                isConnected = false;
-                return this;
-            }
-             */
-
             isConnected = true;
             return this;
         }

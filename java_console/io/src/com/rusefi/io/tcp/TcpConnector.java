@@ -118,7 +118,7 @@ public class TcpConnector implements LinkConnector {
         };
 //        ioStream.setInputListener(listener1);
 
-        bp = BinaryProtocolHolder.create(FileLog.LOGGER, new TcpIoStream(stream, os));
+        bp = BinaryProtocolHolder.getInstance().create(FileLog.LOGGER, new TcpIoStream(stream, os));
 
         boolean result = bp.connectAndReadConfiguration(listener1);
         if (result) {
@@ -130,7 +130,6 @@ public class TcpConnector implements LinkConnector {
 
     @Override
     public void restart() {
-//        FileLog.rlog("Restarting on " + port);
     }
 
     @Override
@@ -141,7 +140,6 @@ public class TcpConnector implements LinkConnector {
     @Override
     public String unpack(String packet) {
         return packet;
-//        return EngineState.unpackString(packet);
     }
 
     @Override
@@ -152,15 +150,6 @@ public class TcpConnector implements LinkConnector {
         }
 
         bp.doSend(command, fireEvent);
-//        String command = LinkManager.encodeCommand(text);
-//        FileLog.MAIN.logLine("Writing " + command);
-//        try {
-//            ioStream.write((command + "\n").getBytes());
-//        } catch (IOException e) {
-//            withError = true;
-//            System.err.println("err in send");
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
     }
 
     public static Collection<String> getAvailablePorts() {
