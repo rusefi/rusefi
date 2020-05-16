@@ -65,7 +65,7 @@ public class MainFrame {
             }
         });
 
-        LinkManager.connect(new ConnectionStateListener() {
+        LinkManager.startAndConnect(Launcher.port, new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
             }

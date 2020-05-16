@@ -82,6 +82,8 @@ public class Launcher {
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
+        LinkManager.start(port);
+
         engineSnifferPanel = new EngineSnifferPanel(getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
             engineSnifferPanel.setOutpinListener(LinkManager.engineState);

@@ -4,6 +4,8 @@ import com.opensr5.Logger;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 
+import java.util.Objects;
+
 /**
  * At any given moment of time JVM manages one communication stream
  *
@@ -24,6 +26,7 @@ public enum BinaryProtocolHolder {
     }
 
     public static BinaryProtocol getCurrentStreamState() {
+        Objects.requireNonNull(LinkManager.connector, "connector");
         return LinkManager.connector.getBinaryProtocol();
     }
 }
