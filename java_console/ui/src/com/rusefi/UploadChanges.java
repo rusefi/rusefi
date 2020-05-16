@@ -73,7 +73,7 @@ public class UploadChanges {
 
         final ConfigurationImage ci2 = ConfigurationImageFile.readFromFile("rusefi_configuration.bin");
 
-        final BinaryProtocol bp = BinaryProtocolHolder.create(logger, new SerialIoStreamJSSC(serialPort, logger));
+        final BinaryProtocol bp = BinaryProtocolHolder.getInstance().create(logger, new SerialIoStreamJSSC(serialPort, logger));
         bp.setController(ci1);
 
         scheduleUpload(ci2);
@@ -86,11 +86,11 @@ public class UploadChanges {
     public static void scheduleUpload(final ConfigurationImage newVersion, final Runnable afterUpload) {
         JFrame frame = wnd.getFrame();
         frame.setVisible(true);
-        LinkManager.COMMUNICATION_EXECUTOR.execute(new Runnable() {
+        LinkManager.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    BinaryProtocolHolder.getInstance().get().uploadChanges(newVersion, logger);
+                    BinaryProtocolHolder.getInstance().getCurrentStreamState().uploadChanges(newVersion, logger);
                     if (afterUpload != null)
                         afterUpload.run();
                 } catch (InterruptedException | EOFException | SerialPortException e) {

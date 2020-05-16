@@ -343,13 +343,15 @@ typedef enum {
 
 	TT_TOOTHED_WHEEL_36_2 = 48,
 
+	TT_SUBARU_SVX = 49,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 49, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 50, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -389,9 +391,10 @@ typedef enum {
 
 typedef enum {
 	/**
-	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
+	 * This mode is useful for troubleshooting and research - events are logged but no effects on phase synchronization
 	 */
-	VVT_FIRST_HALF = 0,
+	VVT_INACTIVE = 0,
+
 	/**
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in opposite 360 degree of 720 degree engine cycle
 	 */
@@ -404,6 +407,12 @@ typedef enum {
 	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
 	 */
 	MIATA_NB2 = 3,
+
+	/**
+	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
+	 */
+	VVT_FIRST_HALF = 4,
+
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;
 
@@ -609,6 +618,11 @@ typedef enum __attribute__ ((__packed__)) {
 	_150KHz
 } spi_speed_e;
 
+
+/**
+ * See spi3mosiPin
+ * See spi2MisoMode
+ */
 typedef enum __attribute__ ((__packed__)) {
 	SPI_NONE = 0,
 	SPI_DEVICE_1 = 1,

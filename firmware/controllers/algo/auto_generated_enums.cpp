@@ -4,7 +4,7 @@
 // was generated automatically by rusEfi tool  from rusefi_hw_enums.h
 // was generated automatically by rusEfi tool  from rusefi_enums.h
 // by enum2string.jar tool
-// on Mon Jun 17 19:49:25 EDT 2019
+// on Fri May 15 03:26:02 MSK 2020
 // see also gen_config_and_enums.bat
 
 
@@ -1189,6 +1189,8 @@ case TT_ROVER_K:
   return "TT_ROVER_K";
 case TT_SUBARU_7_6:
   return "TT_SUBARU_7_6";
+case TT_SUBARU_SVX:
+  return "TT_SUBARU_SVX";
 case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
 case TT_TOOTHED_WHEEL_36_1:
@@ -1247,6 +1249,8 @@ case MIATA_NB2:
   return "MIATA_NB2";
 case VVT_2JZ:
   return "VVT_2JZ";
+case VVT_INACTIVE:
+  return "VVT_INACTIVE";
 case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
 case VVT_SECOND_HALF:

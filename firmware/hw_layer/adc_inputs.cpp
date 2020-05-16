@@ -442,8 +442,6 @@ public:
 	}
 };
 
-static char errorMsgBuff[_MAX_FILLER + 2];
-
 void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
 	if (setting == EFI_ADC_NONE) {
 		return;

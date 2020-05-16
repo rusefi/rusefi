@@ -40,6 +40,7 @@
 #include "gpio/gpio_ext.h"
 #include "pin_repository.h"
 #include "os_util.h"
+#include "voltage.h"
 
 EXTERN_ENGINE_CONFIGURATION;
 
@@ -82,7 +83,8 @@ typedef enum {
 #define FWDRespCmd(d)       CMD_WR(0x16, d)
 #define FWDRespSyncCmd(d)   CMD_WR(0x17, d)
 
-#define CMD_SR				CMD_WR(0x1a, 0x03)
+#define CMD_SR_CODE			0x1a
+#define CMD_SR				CMD_WR(CMD_SR_CODE, 0x03)
 // 0x238 = 568
 #define CMD_OE_SET			CMD_WR(0x1c, 0x02)
 /* not used
@@ -191,10 +193,6 @@ float vBattForTle8888 = 0;
 
 // set debug_mode 31
 static int tle8888SpiCounter = 0;
-// that's a strange variable for troubleshooting
-int tle8888initResponsesAccumulator = 0;
-static int initResponse0 = 0;
-static int initResponse1 = 0;
 static uint16_t spiRxb = 0, spiTxb = 0;
 
 
@@ -253,10 +251,7 @@ void tle8888PostState(TsDebugChannels *debugChannels) {
 	//debugChannels->debugIntField1 = tle8888SpiCounter;
 	//debugChannels->debugIntField2 = spiTxb;
 	//debugChannels->debugIntField3 = spiRxb;
-	debugChannels->debugIntField4 = tle8888initResponsesAccumulator;
 	debugChannels->debugIntField5 = tle8888reinitializationCounter;
-	debugChannels->debugFloatField1 = initResponse0;
-	debugChannels->debugFloatField2 = initResponse1;
 
 	debugChannels->debugFloatField3 = chips[0].OpStat[1];
 	debugChannels->debugFloatField4 = selfResetCounter * 1000000 + requestedResetCounter * 10000 + lowVoltageResetCounter;
@@ -321,39 +316,12 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 
 static int tle8888_update_output(struct tle8888_priv *chip)
 {
-	int i;
 	int ret = 0;
-	uint8_t briconfig0 = 0;
 
 	/* TODO: lock? */
 
-	uint32_t out_data = chip->o_state;
-
-	/* calculate briconfig0 */
-	uint32_t out_low = out_data & chip->o_pp_mask;
-	for (i = 20; i < 24; i++) {
-		if (out_low & BIT(i)) {
-			/* low-side switch mode */
-		} else {
-			/* else enable high-side switch mode */
-			briconfig0 |= BIT((i - 20) * 2);
-		}
-	}
-	/* TODO: set freewheeling bits in briconfig0? */
-
-	/* output for push-pull pins is allways enabled
-	 * (at least until we start supporting hi-Z state) */
-	out_data |= chip->o_pp_mask;
-	/* TODO: apply hi-Z mask when support will be added */
-
 	/* set value only for non-direct driven pins */
-	/* look like here is some conflict in case of
-	 * direct-driven PP output */
-	out_data &= (~chip->o_direct_mask);
-
-	/* bridge config */
-	ret = tle8888_spi_rw(chip, CMD_BRICONFIG(0, briconfig0), NULL);
-
+	uint32_t out_data = chip->o_state & (~chip->o_direct_mask);
 	for (int i = 0; i < 4; i++) {
 		uint8_t od;
 
@@ -389,49 +357,49 @@ static int tle8888_update_status_and_diag(struct tle8888_priv *chip)
 	/* this is quite expensive to call tle8888_spi_rw on each register read
 	 * TODO: implement tle8888_spi_rw_array ? */
 
-	/* request OutDiad0, ignore received */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(0), NULL)))
-		return ret;
-
-	/* request OutDiad1, receive OutDiag0 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(1), &rx)))
-		return ret;
-	chip->OutDiag[0] = getDataFromResponse(rx);
-
-	/* request OutDiad2, receive OutDiag1 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(2), &rx)))
-		return ret;
-	chip->OutDiag[1] = getDataFromResponse(rx);
-
-	/* request OutDiad3, receive OutDiag2 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(3), &rx)))
-		return ret;
-	chip->OutDiag[2] = getDataFromResponse(rx);
-
-	/* request OutDiad4, receive OutDiag3 */
-	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(4), &rx)))
-		return ret;
-	chip->OutDiag[3] = getDataFromResponse(rx);
-
-	/* request BriDiag0, receive OutDiag4 */
-	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(0), &rx)))
-		return ret;
-	chip->OutDiag[4] = getDataFromResponse(rx);
-
-	/* request BriDiag1, receive BriDiag0 */
-	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(1), &rx)))
-		return ret;
-	chip->BriDiag[0] = getDataFromResponse(rx);
-
-	/* request IgnDiag, receive BriDiag1 */
-	if ((ret = tle8888_spi_rw(chip, CMD_IGNDIAG, &rx)))
-		return ret;
-	chip->BriDiag[1] = getDataFromResponse(rx);
+//	/* request OutDiad0, ignore received */
+//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(0), NULL)))
+//		return ret;
+//
+//	/* request OutDiad1, receive OutDiag0 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(1), &rx)))
+//		return ret;
+//	chip->OutDiag[0] = getDataFromResponse(rx);
+//
+//	/* request OutDiad2, receive OutDiag1 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(2), &rx)))
+//		return ret;
+//	chip->OutDiag[1] = getDataFromResponse(rx);
+//
+//	/* request OutDiad3, receive OutDiag2 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(3), &rx)))
+//		return ret;
+//	chip->OutDiag[2] = getDataFromResponse(rx);
+//
+//	/* request OutDiad4, receive OutDiag3 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_OUTDIAG(4), &rx)))
+//		return ret;
+//	chip->OutDiag[3] = getDataFromResponse(rx);
+//
+//	/* request BriDiag0, receive OutDiag4 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(0), &rx)))
+//		return ret;
+//	chip->OutDiag[4] = getDataFromResponse(rx);
+//
+//	/* request BriDiag1, receive BriDiag0 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_BRIDIAG(1), &rx)))
+//		return ret;
+//	chip->BriDiag[0] = getDataFromResponse(rx);
+//
+//	/* request IgnDiag, receive BriDiag1 */
+//	if ((ret = tle8888_spi_rw(chip, CMD_IGNDIAG, &rx)))
+//		return ret;
+//	chip->BriDiag[1] = getDataFromResponse(rx);
 
 	/* request OpStat0, receive IgnDiag */
 	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(0), &rx)))
 		return ret;
-	chip->IgnDiag = getDataFromResponse(rx);
+//	chip->IgnDiag = getDataFromResponse(rx);
 
 	/* request OpStat1, receive OpStat0 */
 	if ((ret = tle8888_spi_rw(chip, CMD_OPSTAT(1), &rx)))
@@ -530,16 +498,12 @@ static void handleFWDStat1(struct tle8888_priv *chip, int registerNum, int data)
 	tle8888_spi_rw(chip, CMD_WdDiag, &wdDiagResponse);
 }
 
-int startupConfiguration(struct tle8888_priv *chip) {
+static int startupConfiguration(struct tle8888_priv *chip) {
 	const struct tle8888_config	*cfg = chip->cfg;
 	uint16_t response = 0;
 	/* Set LOCK bit to 0 */
 	// second 0x13D=317 => 0x35=53
 	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
-	if (response == 53) {
-		tle8888initResponsesAccumulator += 8;
-	}
-	initResponse1 = response;
 
 	chip->o_direct_mask = 0;
 	chip->o_oe_mask		= 0;
@@ -664,7 +628,7 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 		/* should we care about msg == MSG_TIMEOUT? */
 		(void)msg;
 
-		if (vBattForTle8888 < 7) {
+		if (vBattForTle8888 < LOW_VBATT) {
 			// we assume TLE8888 is down and we should not bother with SPI communication
 			if (!needInitialSpi) {
 				needInitialSpi = true;
@@ -853,7 +817,6 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 	const struct tle8888_config	*cfg = chip->cfg;
 
 	tle8888reinitializationCounter++;
-	tle8888initResponsesAccumulator = 0;
 
 	/**
 	 * We need around 50ms to get reliable TLE8888 start if MCU is powered externally but +12 goes gown and then goes up
@@ -864,17 +827,12 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 	watchdogLogic(chip);
 
 	/* Software reset */
-	// first packet: 0x335=821 > 0xFD=253
 	uint16_t response = 0;
-	tle8888_spi_rw(chip, CMD_SR, &response);
-	if (response == 253) {
-		// I've seen this response on red board
-		tle8888initResponsesAccumulator += 4;
-	} else if (response == 2408) {
-		// and I've seen this response on red board
-		tle8888initResponsesAccumulator += 100;
+	tle8888_spi_rw(chip, CMD_SR, NULL);
+	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
+	if (response != (CMD_WRITE | CMD_REG_ADDR(CMD_SR_CODE))) {
+		firmwareError(CUSTOM_ERR_6724, "TLE8888 SR Unexpected response %x", response);
 	}
-	initResponse0 = response;
 
 	/**
 	 * Table 8. Reset Times. All reset times not more than 20uS
@@ -928,6 +886,7 @@ static int tle8888_chip_init(void * data) {
 //			palClearPort(cfg->direct_io[i].port, PAL_PORT_BIT(cfg->direct_io[i].pad));
 		}
 	}
+
 
 	if (ret) {
 		ret = -1;

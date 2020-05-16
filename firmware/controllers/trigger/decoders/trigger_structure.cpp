@@ -648,6 +648,10 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		initGmLS24(this);
 		break;
 
+	case TT_SUBARU_SVX:
+		initializeSubaru_SVX(this);
+		break;
+
 	default:
 		setShapeDefinitionError(true);
 		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerConfig->type);

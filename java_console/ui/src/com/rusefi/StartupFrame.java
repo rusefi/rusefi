@@ -2,7 +2,7 @@ package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.io.LinkManager;
-import com.rusefi.io.serial.PortHolder;
+import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.*;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
@@ -109,21 +109,18 @@ public class StartupFrame {
         //connectButton.setBackground(new Color(RUSEFI_ORANGE)); // custom orange
         setToolTip(connectButton, "Connect to real hardware");
         connectPanel.add(connectButton);
-        connectButton.addActionListener(new ActionListener() {
+
+        frame.getRootPane().setDefaultButton(connectButton);
+        connectButton.addKeyListener(new KeyAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                PortHolder.BAUD_RATE = Integer.parseInt((String) comboSpeeds.getSelectedItem());
-                String selectedPort = comboPorts.getSelectedItem().toString();
-                if (SerialPortScanner.AUTO_SERIAL.equals(selectedPort)) {
-                    String autoDetectedPort = PortDetector.autoDetectPort(StartupFrame.this.frame);
-                    if (autoDetectedPort == null)
-                        return;
-                    selectedPort = autoDetectedPort;
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    connectButtonAction(comboSpeeds);
                 }
-                disposeFrameAndProceed();
-                new Launcher(selectedPort);
             }
         });
+
+        connectButton.addActionListener(e -> connectButtonAction(comboSpeeds));
 
         leftPanel.add(realHardwarePanel);
         leftPanel.add(miscPanel);
@@ -222,6 +219,19 @@ public class StartupFrame {
         for (Component component : getAllComponents(frame)) {
             component.addKeyListener(hwTestEasterEgg);
         }
+    }
+
+    private void connectButtonAction(JComboBox<String> comboSpeeds) {
+        BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
+        String selectedPort = comboPorts.getSelectedItem().toString();
+        if (SerialPortScanner.AUTO_SERIAL.equals(selectedPort)) {
+            String autoDetectedPort = PortDetector.autoDetectPort(StartupFrame.this.frame);
+            if (autoDetectedPort == null)
+                return;
+            selectedPort = autoDetectedPort;
+        }
+        disposeFrameAndProceed();
+        new Launcher(selectedPort);
     }
 
     /**

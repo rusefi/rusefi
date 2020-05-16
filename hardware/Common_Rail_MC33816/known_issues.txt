@@ -10,6 +10,6 @@
 10)                  power LED. back side is pretty much free pre-assembled, front side is manual assembly. maybe one LED on each side?
 11)                  J5&J6 why do we need as jumpers? Shall we connect those permanently since looks like those shall be connected?
 12)                  move more small stuff to same (back) side
-13)
+13)                  Fix courtyard warnings on back side, move components slightly. 
 14)
 15)

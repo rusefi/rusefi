@@ -29,8 +29,12 @@ public class LazyFile implements Output {
     @Override
     public void write(String line) {
         content.append(line);
-        if (!line.contains(LAZY_FILE_TAG))
-            contentWithoutTag.append(line);
+        String lines[] = line.split("\\r?\\n");
+        for (String subLine : lines) {
+            if (!subLine.contains(LAZY_FILE_TAG)) {
+                contentWithoutTag.append(subLine);
+            }
+        }
     }
 
     @Override
@@ -38,7 +42,7 @@ public class LazyFile implements Output {
         String fileContent = unifySpaces(readCurrentContent(filename));
         String newContent = unifySpaces(contentWithoutTag.toString().trim());
         if (fileContent.equals(newContent)) {
-            SystemOut.println(getClass().getSimpleName() + ": Not updating " + filename + " since looks to be the same content");
+            SystemOut.println(getClass().getSimpleName() + ": Not updating " + filename + " since looks to be the same content, new content size=" + contentWithoutTag.length());
             return;
         }
         for (int i = 0; i < Math.min(fileContent.length(), newContent.length()); i++) {
@@ -62,8 +66,10 @@ public class LazyFile implements Output {
     }
 
     private String readCurrentContent(String filename) throws IOException {
-        if (!new File(filename).exists())
+        if (!new File(filename).exists()) {
+            SystemOut.println(filename + " does not exist considering empty current content");
             return "";
+        }
         Scanner in = new Scanner(Paths.get(filename), IoUtils.CHARSET.name());
         Pattern pat = Pattern.compile(".*\\R|.+\\z");
         String line;

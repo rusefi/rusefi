@@ -129,30 +129,22 @@ static int logFileLineIndex = 0;
 
 static void reportSensorF(Logging *log, const char *caption, const char *units, float value,
 		int precision) {
-	bool isLogFileFormatting = true;
-
-	if (!isLogFileFormatting) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-		debugFloat(log, caption, value, precision);
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
-	} else {
 
 #if EFI_FILE_LOGGING
-		if (logFileLineIndex == 0) {
-			append(log, caption);
-			append(log, TAB);
-		} else if (logFileLineIndex == 1) {
-			append(log, units);
-			append(log, TAB);
-		} else {
-			appendFloat(log, value, precision);
-			append(log, TAB);
-		}
-#else
-		UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
-		UNUSED(precision);
-#endif /* EFI_FILE_LOGGING */
+	if (logFileLineIndex == 0) {
+		append(log, caption);
+		append(log, TAB);
+	} else if (logFileLineIndex == 1) {
+		append(log, units);
+		append(log, TAB);
+	} else {
+		appendFloat(log, value, precision);
+		append(log, TAB);
 	}
+#else
+	UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
+	UNUSED(precision);
+#endif /* EFI_FILE_LOGGING */
 }
 
 static void reportSensorI(Logging *log, const char *caption, const char *units, int value) {
@@ -604,6 +596,9 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 
 	void PeriodicTask() override {
 		counter++;
+
+		bool lowVBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) < LOW_VBATT;
+
 		if (counter == 1) {
 			// first invocation of BlinkingTask
 			setAllLeds(1);
@@ -612,7 +607,9 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			setAllLeds(0);
 		} else if (counter % 2 == 0) {
 			enginePins.communicationLedPin.setValue(0);
-			enginePins.warningLedPin.setValue(0);
+			if (!lowVBatt) {
+				enginePins.warningLedPin.setValue(0);
+			}
 		} else {
 			if (hasFirmwareError()) {
 				// special behavior in case of critical error - not equal on/off time
@@ -632,7 +629,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 
 			enginePins.communicationLedPin.setValue(1);
 	#if EFI_ENGINE_CONTROL
-			if (isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
+			if (lowVBatt || isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
 				consoleByteArrived = false;
 				enginePins.warningLedPin.setValue(1);
 			}

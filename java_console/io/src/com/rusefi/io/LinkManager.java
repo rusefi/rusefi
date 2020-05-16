@@ -18,9 +18,8 @@ import java.util.concurrent.*;
 public class LinkManager {
     @NotNull
     public static CountDownLatch connect(String port) {
-        start(port);
         final CountDownLatch connected = new CountDownLatch(1);
-        open(new ConnectionStateListener() {
+        startAndConnect(port, new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
                 System.out.println("CONNECTION FAILED, did you specify the right port name?");
@@ -38,6 +37,14 @@ public class LinkManager {
             throw new IllegalStateException(e);
         }
         return connected;
+    }
+
+    public static void execute(Runnable runnable) {
+        COMMUNICATION_EXECUTOR.execute(runnable);
+    }
+
+    public static Future submit(Runnable runnable) {
+        return COMMUNICATION_EXECUTOR.submit(runnable);
     }
 
     public enum LogLevel {
@@ -87,12 +94,23 @@ public class LinkManager {
     private static Thread COMMUNICATION_THREAD;
 
     static {
-        COMMUNICATION_EXECUTOR.submit(new Runnable() {
+/*
+        Future future = submit(new Runnable() {
             @Override
             public void run() {
+            // WAT? this is hanging?!
                 COMMUNICATION_THREAD = Thread.currentThread();
+                System.out.println("Done");
             }
         });
+        try {
+            // let's wait for the above trivial task to finish
+            future.get();
+            System.out.println("Done2");
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IllegalStateException(e);
+        }
+ */
     }
 
     public static void assertCommunicationThread() {
@@ -107,12 +125,18 @@ public class LinkManager {
             ConnectionWatchdog.onDataArrived();
         }
     });
+
     public static LinkConnector connector;
 
     /**
      * This flag controls if mock controls are needed
      */
     public static boolean isSimulationMode;
+
+    public static void startAndConnect(String port, ConnectionStateListener stateListener) {
+        start(port);
+        connector.connectAndReadConfiguration(stateListener);
+    }
 
     public static void start(String port) {
         FileLog.MAIN.logLine("LinkManager: Starting " + port);
@@ -134,19 +158,6 @@ public class LinkManager {
         return connector == LinkConnector.VOID;
     }
 
-    /**
-     * todo: should this be merged into {@link #start(String)} ?
-     */
-    public static void open(ConnectionStateListener listener) {
-        if (connector == null)
-            throw new NullPointerException("connector");
-        connector.connect(listener);
-    }
-
-    public static void open() {
-        open(ConnectionStateListener.VOID);
-    }
-
     public static void send(String command, boolean fireEvent) throws InterruptedException {
         if (connector == null)
             throw new NullPointerException("connector");
@@ -160,10 +171,6 @@ public class LinkManager {
 
     public static String unpack(String packet) {
         return connector.unpack(packet);
-    }
-
-    public static boolean hasError() {
-        return connector.hasError();
     }
 
     public static String unpackConfirmation(String message) {
