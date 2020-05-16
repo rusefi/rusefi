@@ -231,7 +231,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
                 String code = (response == null || response.length == 0) ? "empty" : "code " + response[0];
-                String info = response == null ? "null" : (code + " size " + response.length);
+                String info = response == null ? "NO RESPONSE" : (code + " size " + response.length);
                 logger.error("readImage: Something is wrong, retrying... " + info);
                 continue;
             }

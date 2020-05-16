@@ -18,19 +18,23 @@ import org.jetbrains.annotations.NotNull;
 public class SerialIoStreamJSerialComm implements IoStream {
     private boolean isClosed;
     private SerialPort sp;
+    private final String port;
 
-    SerialIoStreamJSerialComm(SerialPort sp) {
+    SerialIoStreamJSerialComm(SerialPort sp, String port) {
         this.sp = sp;
+        this.port = port;
     }
 
     @Override
     public void setInputListener(DataListener listener) {
         sp.addDataListener(new SerialPortDataListener() {
             @Override
-            public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_AVAILABLE; }
+            public int getListeningEvents() {
+                return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+            }
+
             @Override
-            public void serialEvent(SerialPortEvent event)
-            {
+            public void serialEvent(SerialPortEvent event) {
                 if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
                     return;
                 int bytesAvailable = sp.bytesAvailable();
@@ -54,8 +58,10 @@ public class SerialIoStreamJSerialComm implements IoStream {
 
     @Override
     public void close() {
+        FileLog.LOGGER.info(port + ": Closing port...");
         isClosed = true;
         sp.closePort();
+        FileLog.LOGGER.info(port + ": Closed port.");
     }
 
     @Override
@@ -78,6 +84,6 @@ public class SerialIoStreamJSerialComm implements IoStream {
         SerialPort sp = SerialPort.getCommPort(port);
         sp.setBaudRate(baudRate);
         sp.openPort();
-        return new SerialIoStreamJSerialComm(sp);
+        return new SerialIoStreamJSerialComm(sp, port);
     }
 }
