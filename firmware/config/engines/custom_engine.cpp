@@ -477,16 +477,16 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[10 - 1] = TLE8888_PIN_23;
 
 	// LED #3 - INJ#2
-	engineConfiguration->injectionPins[9 - 1] = GPIOE_13;
+	engineConfiguration->injectionPins[9 - 1] = TLE8888_PIN_1; //GPIOE_13;
 
 	// LED #4 - INJ#1
-	engineConfiguration->injectionPins[4 - 1] = GPIOE_14;
+	engineConfiguration->injectionPins[4 - 1] = TLE8888_PIN_2; //GPIOE_14;
 
 	// LED #5 - INJ#3
-	engineConfiguration->injectionPins[3 - 1] = GPIOE_12;
+	engineConfiguration->injectionPins[3 - 1] = TLE8888_PIN_3; //GPIOE_12;
 
 	// LED #6 - INJ#4
-	engineConfiguration->injectionPins[6 - 1] = GPIOE_11;
+	engineConfiguration->injectionPins[6 - 1] = TLE8888_PIN_4; //GPIOE_11;
 
 	// LED #7
 	// TLE8888_PIN_24: "43 - GP Out 4"
@@ -495,17 +495,17 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// LED #8
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
 	// GPIOE_8: "35 - GP Out 1"
-	engineConfiguration->injectionPins[8 - 1] = GPIOE_8;
+	engineConfiguration->injectionPins[8 - 1] = TLE8888_PIN_21;
 
 	// LED #9
 	// TLE8888 high current low side: IN10
 	// GPIOE_9:  "7 - Lowside 1"
-	engineConfiguration->injectionPins[7 - 1] = GPIOE_9;
+	engineConfiguration->injectionPins[7 - 1] = TLE8888_PIN_6;
 
 	// LED #10
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
 	// GPIOE_10: "3 - Lowside 2"
-	engineConfiguration->injectionPins[2 - 1] = GPIOE_10;
+	engineConfiguration->injectionPins[2 - 1] = TLE8888_PIN_5;
 #endif /* BOARD_TLE8888_COUNT */
 }
 
@@ -530,10 +530,10 @@ void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 #if (BOARD_TLE8888_COUNT > 0)
-	engineConfiguration->fsioOutputPins[0] = GPIOE_14;// "37 - Injector 1"
-	engineConfiguration->fsioOutputPins[1] = GPIOE_13;// "38 - Injector 2"
-	engineConfiguration->fsioOutputPins[2] = GPIOE_12;// "41 - Injector 3"
-	engineConfiguration->fsioOutputPins[3] = GPIOE_11;// "42 - Injector 4"
+	engineConfiguration->fsioOutputPins[0] = TLE8888_PIN_1; //GPIOE_14;// "37 - Injector 1"
+	engineConfiguration->fsioOutputPins[1] = TLE8888_PIN_2; //GPIOE_13;// "38 - Injector 2"
+	engineConfiguration->fsioOutputPins[2] = TLE8888_PIN_3; //GPIOE_12;// "41 - Injector 3"
+	engineConfiguration->fsioOutputPins[3] = TLE8888_PIN_4; //GPIOE_11;// "42 - Injector 4"
 // 	engineConfiguration->fsioOutputPins[4] = LS1
 // 			engineConfiguration->fsioOutputPins[5] = LS2
 
@@ -572,7 +572,7 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// LED #8
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
 	// GPIOE_8: "35 - GP Out 1"
-	engineConfiguration->ignitionPins[9 - 1] = GPIOE_8;
+	engineConfiguration->ignitionPins[9 - 1] = TLE8888_PIN_21;//GPIOE_8;
 
 	// LED #1
     // GPIOE_7: "34 - GP Out 2"
@@ -595,21 +595,20 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// TLE8888 high current low side: IN10
 	// GPIOE_9:  "7 - Lowside 1"
-	engineConfiguration->injectionPins[1 - 1] = GPIOE_9;
+	engineConfiguration->injectionPins[1 - 1] = TLE8888_PIN_6;//GPIOE_9;
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
 	// GPIOE_10: "3 - Lowside 2"
-	engineConfiguration->injectionPins[2 - 1] = GPIOE_10;
+	engineConfiguration->injectionPins[2 - 1] = TLE8888_PIN_5;//GPIOE_10;
 
 	//          INJ#4
-	engineConfiguration->injectionPins[3 - 1] = GPIOE_11;
+	engineConfiguration->injectionPins[3 - 1] = TLE8888_PIN_4; //GPIOE_11;
 	//          INJ#3
-	engineConfiguration->injectionPins[4 - 1] = GPIOE_12;
+	engineConfiguration->injectionPins[4 - 1] = TLE8888_PIN_3; //GPIOE_12;
 	//          INJ#2
-	engineConfiguration->injectionPins[5 - 1] = GPIOE_13;
-
+	engineConfiguration->injectionPins[5 - 1] = TLE8888_PIN_2; //GPIOE_13;
 	// LED #3 - INJ#1
-	engineConfiguration->injectionPins[6 - 1] = GPIOE_14;
+	engineConfiguration->injectionPins[6 - 1] = TLE8888_PIN_1; //GPIOE_14;
 
 
 	engineConfiguration->injectionPins[7 - 1] = GPIOA_4; // AV10
