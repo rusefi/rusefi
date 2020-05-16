@@ -62,11 +62,11 @@ public class Launcher {
     static {
         TOOLS.put("help", args -> printTools());
         TOOLS.put("headless", args -> runHeadless());
-        TOOLS.put("compile", args -> invokeCompileExpressionTool(args));
-        TOOLS.put("ptrace_enums", args -> runPerfTraceTool(args));
-        TOOLS.put("functional_test", args -> runFunctionalTest(args));
-        TOOLS.put("compile_fsio_file", args -> runCompileTool(args));
-        TOOLS.put("firing_order", args -> runFiringOrderTool(args));
+        TOOLS.put("compile", Launcher::invokeCompileExpressionTool);
+        TOOLS.put("ptrace_enums", Launcher::runPerfTraceTool);
+        TOOLS.put("functional_test", Launcher::runFunctionalTest);
+        TOOLS.put("compile_fsio_file", Launcher::runCompileTool);
+        TOOLS.put("firing_order", Launcher::runFiringOrderTool);
         TOOLS.put("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT));
         TOOLS.put(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU));
     }
