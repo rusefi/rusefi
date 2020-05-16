@@ -149,7 +149,7 @@ public class SensorLogger {
             logFile.write("Captured " + FileLog.getDate() + "\r\n");
 
             int debugMode = -1;
-            BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+            BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
             if (bp != null) {
                 ConfigurationImage ci = bp.getController();
                 if (ci != null) {
