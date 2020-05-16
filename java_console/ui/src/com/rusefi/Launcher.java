@@ -11,6 +11,7 @@ import com.rusefi.io.*;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
@@ -48,7 +49,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20200515;
+    public static final int CONSOLE_VERSION = 20200516;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
@@ -199,6 +200,7 @@ public class Launcher {
 
     /**
      * rusEfi console entry point
+     *
      * @see StartupFrame if no parameters specified
      */
     public static void main(final String[] args) throws Exception {
@@ -253,6 +255,17 @@ public class Launcher {
         String onConnectedCallback = args.length > 1 ? args[1] : null;
         String onDisconnectedCallback = args.length > 2 ? args[2] : null;
 
+        ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {
+                if (isConnected) {
+                    invokeCallback(onConnectedCallback);
+                } else {
+                    invokeCallback(onDisconnectedCallback);
+                }
+            }
+        });
+
         String autoDetectedPort = PortDetector.autoDetectSerial();
         if (autoDetectedPort == null) {
             System.err.println("rusEFI not detected");
@@ -269,6 +282,21 @@ public class Launcher {
 
             }
         });
+    }
+
+    private static void invokeCallback(String callback) {
+        if (callback == null)
+            return;
+        ExecHelper.submitAction(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Runtime.getRuntime().exec(callback);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }, "callback");
     }
 
     private static int invokeCompileFileTool(String[] args) throws IOException {
