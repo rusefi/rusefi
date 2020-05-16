@@ -206,6 +206,9 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
+    /**
+     * read complete tune from physical data stream
+     */
     public void readImage(int size) {
         ConfigurationImage image = new ConfigurationImage(size);
 
