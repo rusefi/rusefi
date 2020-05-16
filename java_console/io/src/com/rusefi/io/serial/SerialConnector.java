@@ -43,7 +43,7 @@ public class SerialConnector implements LinkConnector {
         LinkManager.execute(new Runnable() {
             @Override
             public void run() {
-                MessagesCentral.getInstance().postMessage(getClass(), "Restarting serial IO");
+                MessagesCentral.getInstance().postMessage(SerialConnector.this.getClass(), "Restarting serial IO");
                 portHolder.close();
                 portHolder.connectAndReadConfiguration();
             }

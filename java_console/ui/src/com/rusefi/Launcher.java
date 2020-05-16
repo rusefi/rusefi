@@ -100,8 +100,6 @@ public class Launcher {
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
-        LinkManager.start(port);
-
         engineSnifferPanel = new EngineSnifferPanel(getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
             engineSnifferPanel.setOutpinListener(LinkManager.engineState);
@@ -271,7 +269,8 @@ public class Launcher {
             System.err.println("rusEFI not detected");
             return;
         }
-        new SerialConnector(autoDetectedPort).connect(new ConnectionStateListener() {
+        LinkManager.start(autoDetectedPort);
+        LinkManager.connector.connect(new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 SensorLogger.init();
@@ -287,6 +286,7 @@ public class Launcher {
     private static void invokeCallback(String callback) {
         if (callback == null)
             return;
+        System.out.println("Invoking " + callback);
         ExecHelper.submitAction(new Runnable() {
             @Override
             public void run() {
