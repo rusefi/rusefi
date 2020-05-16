@@ -162,10 +162,6 @@ public class LinkManager {
         return connector.unpack(packet);
     }
 
-    public static boolean hasError() {
-        return connector.hasError();
-    }
-
     public static String unpackConfirmation(String message) {
         if (message.startsWith(CommandQueue.CONFIRMATION_PREFIX))
             return message.substring(CommandQueue.CONFIRMATION_PREFIX.length());

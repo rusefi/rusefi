@@ -133,11 +133,6 @@ public class TcpConnector implements LinkConnector {
     }
 
     @Override
-    public boolean hasError() {
-        return false;
-    }
-
-    @Override
     public String unpack(String packet) {
         return packet;
     }

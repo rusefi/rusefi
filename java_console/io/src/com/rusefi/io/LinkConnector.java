@@ -11,16 +11,11 @@ public interface LinkConnector extends LinkDecoder {
         }
 
         @Override
-        public void send(String command, boolean fireEvent) throws InterruptedException {
+        public void send(String command, boolean fireEvent) {
         }
 
         @Override
         public void restart() {
-        }
-
-        @Override
-        public boolean hasError() {
-            return false;
         }
 
         @Override
@@ -35,5 +30,4 @@ public interface LinkConnector extends LinkDecoder {
 
     void restart();
 
-    boolean hasError();
 }
