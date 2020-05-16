@@ -1,5 +1,7 @@
 package com.rusefi.io;
 
+import com.rusefi.binaryprotocol.BinaryProtocol;
+
 /**
  * @author Andrey Belomutskiy
  *         3/3/14
@@ -19,6 +21,11 @@ public interface LinkConnector extends LinkDecoder {
         }
 
         @Override
+        public BinaryProtocol getBinaryProtocol() {
+            return null;
+        }
+
+        @Override
         public String unpack(String packet) {
             return LinkDecoder.TEXT_PROTOCOL_DECODER.unpack(packet);
         }
@@ -30,4 +37,5 @@ public interface LinkConnector extends LinkDecoder {
 
     void restart();
 
+    BinaryProtocol getBinaryProtocol();
 }

@@ -25,13 +25,11 @@ public class PortHolder {
     public ConnectionStateListener listener;
     private final Object portLock = new Object();
 
+    @Nullable
     private BinaryProtocol bp;
 
     protected PortHolder() {
     }
-
-    @Nullable
-    private IoStream serialPort;
 
     public String port;
 
@@ -43,11 +41,9 @@ public class PortHolder {
 
         IoStream stream = SerialIoStreamJSerialComm.openPort(port);
         synchronized (portLock) {
-            this.serialPort = stream;
+            bp = BinaryProtocolHolder.getInstance().create(FileLog.LOGGER, stream);
             portLock.notifyAll();
         }
-
-        bp = BinaryProtocolHolder.getInstance().create(FileLog.LOGGER, stream);
 
         boolean result = bp.connectAndReadConfiguration(dataListener);
         if (listener != null) {
@@ -62,15 +58,20 @@ public class PortHolder {
 
     public void close() {
         synchronized (portLock) {
-            if (serialPort != null) {
+            if (bp != null) {
                 try {
-                    serialPort.close();
-                    serialPort = null;
+                    bp.close();
+                    bp = null;
                 } finally {
                     portLock.notifyAll();
                 }
             }
         }
+    }
+
+    @Nullable
+    public BinaryProtocol getBp() {
+        return bp;
     }
 
     /**

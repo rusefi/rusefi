@@ -37,6 +37,10 @@ public class TcpConnector implements LinkConnector {
         }
     }
 
+    public BinaryProtocol getBinaryProtocol() {
+        return bp;
+    }
+
     public static boolean isTcpPort(String port) {
         try {
             getTcpPort(port);
