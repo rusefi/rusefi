@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Page {
-    public final List<Constant> constants = new ArrayList<>();
+    public final List<Constant> constant = new ArrayList<>();
 
     @XmlAttribute
     public int getNumber() {

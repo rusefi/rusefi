@@ -214,18 +214,18 @@ public class ConsoleTools {
 
         IniFileModel ini = IniFileModel.getInstance(Launcher.INI_FILE_PATH);
 
-        handle(tune, ini, "tpsMin", image);
-        handle(tune, ini, "tpsMax", image);
-        handle(tune, ini, "primingSquirtDurationMs", image);
+        for (String key : ini.allIniFields.keySet())
+            handle(tune, ini, key, image);
+
 //        handle(tune, ini, "injector_battLagCorrBins");
 
 
-        XmlUtil.writeXml(tune, Msq.class, "a.xml");
+        XmlUtil.writeXml(tune, Msq.class, "a.msq");
     }
 
     private static void handle(Msq tune, IniFileModel ini, String key, ConfigurationImage image) {
         IniField field = ini.allIniFields.get(key);
-        tune.getPage().constants.add(prepareConstant(field, image));
+        tune.getPage().constant.add(prepareConstant(field, image));
     }
 
     private static Constant prepareConstant(IniField field, ConfigurationImage image) {
