@@ -24,7 +24,7 @@ size_t LogField::writeHeader(char* buffer) const {
     strncpy(&buffer[1], m_name, 34);
 
     // Offset 35, length 10 = units
-    strncpy(&buffer[35], m_name, 10);
+    strncpy(&buffer[35], m_units, 10);
 
     // Offset 45, length 1 = Display style
     // value 0 -> floating point number
