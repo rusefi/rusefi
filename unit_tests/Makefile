@@ -173,6 +173,7 @@ INCDIR = . \
 	$(PROJECT_DIR)/config/engines \
 	$(CONTROLLERS_INC) \
 	$(PROJECT_DIR)/console \
+	$(PROJECT_DIR)/console/binary_log \
  	$(DEVELOPMENT_DIR) \
 	$(PROJECT_DIR)/ext_algo \
 	$(PROJECT_DIR)/hw_layer \
