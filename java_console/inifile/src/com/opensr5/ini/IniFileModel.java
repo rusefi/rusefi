@@ -12,6 +12,11 @@ import java.util.*;
 public class IniFileModel {
     public static final String RUSEFI_INI_PREFIX = "rusefi";
     public static final String RUSEFI_INI_SUFFIX = ".ini";
+    private static final String SECTION_PAGE = "page";
+    private static final String FIELD_TYPE_SCALAR = "scalar";
+    private static final String FIELD_TYPE_STRING = "string";
+    private static final String FIELD_TYPE_ARRAY = "array";
+    private static final String FIELD_TYPE_BITS = "bits";
 
     private static IniFileModel INSTANCE;
     private String dialogId;
@@ -27,7 +32,8 @@ public class IniFileModel {
         System.out.println(IniFileModel.getInstance("..").dialogs);
     }
 
-    static boolean isInSettingContextHelp = false;
+    private boolean isInSettingContextHelp = false;
+    private boolean isInsidePageDefinition;
 
     public void readIniFile(String iniFilePath) {
         String fileName = findMetaInfoFile(iniFilePath);
@@ -42,12 +48,15 @@ public class IniFileModel {
         System.out.println("Reading " + fileName);
         RawIniFile content = IniFileReader.read(input);
 
+        readIniFile(content);
+    }
 
+    public IniFileModel readIniFile(RawIniFile content) {
         for (RawIniFile.Line line : content.getLines()) {
             handleLine(line);
         }
-
         finishDialog();
+        return this;
     }
 
     private String findMetaInfoFile(String iniFilePath) {
@@ -78,6 +87,11 @@ public class IniFileModel {
         try {
             LinkedList<String> list = new LinkedList<>(Arrays.asList(line.getTokens()));
 
+            if (!list.isEmpty() && list.get(0).equals(SECTION_PAGE)) {
+                isInsidePageDefinition = true;
+                return;
+            }
+
             // todo: use TSProjectConsumer constant
             if (isInSettingContextHelp) {
                 // todo: use TSProjectConsumer constant
@@ -88,6 +102,7 @@ public class IniFileModel {
                     tooltips.put(list.get(0), list.get(1));
                 return;
             } else if (rawTest.contains("SettingContextHelp")) {
+                isInsidePageDefinition = false;
                 isInSettingContextHelp = true;
                 return;
             }
@@ -99,8 +114,13 @@ public class IniFileModel {
 
             if (list.isEmpty())
                 return;
-            String first = list.getFirst();
 
+            if (isInsidePageDefinition) {
+                handleFieldDefinition(list);
+                return;
+            }
+
+            String first = list.getFirst();
 
             if ("dialog".equals(first)) {
                 handleDialog(list);
@@ -110,6 +130,19 @@ public class IniFileModel {
         } catch (RuntimeException e) {
             throw new IllegalStateException("While [" + rawTest + "]", e);
         }
+    }
+
+    private void handleFieldDefinition(LinkedList<String> list) {
+        if (list.get(1).equals(FIELD_TYPE_SCALAR)) {
+
+        } else if (list.get(1).equals(FIELD_TYPE_STRING)) {
+        } else if (list.get(1).equals(FIELD_TYPE_ARRAY)) {
+        } else if (list.get(1).equals(FIELD_TYPE_BITS)) {
+
+        } else {
+            throw new IllegalStateException("Unexpected " + list);
+        }
+
     }
 
     private void handleField(LinkedList<String> list) {
@@ -134,16 +167,13 @@ public class IniFileModel {
 
     @Nullable
     public DialogModel.Field getField(String key) {
-        DialogModel.Field field = allFields.get(key);
-        return field;
+        return allFields.get(key);
     }
 
     private void handleDialog(LinkedList<String> list) {
         finishDialog();
-        State state;
         list.removeFirst(); // "dialog"
-        state = State.DIALOG;
-//                    trim(list);
+        //                    trim(list);
         String keyword = list.removeFirst();
 //                    trim(list);
         String name = list.isEmpty() ? null : list.removeFirst();

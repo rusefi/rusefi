@@ -23,7 +23,7 @@ public class IniFileMetaInfo {
 
     public IniFileMetaInfo(RawIniFile file) {
 
-        nPages = file.getSimpleIntegerProperty("nPages");
+        nPages = file.getSimpleIntegerProperty("nPages", 1);
 
         blockingFactor = file.getSimpleIntegerProperty("blockingFactor", DEFAULT_BLOCKING_FACTOR);
 
