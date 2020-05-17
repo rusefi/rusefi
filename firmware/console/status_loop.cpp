@@ -374,7 +374,7 @@ void writeLogLine(void) {
 
 	if (isSdCardAlive()) {
 		appendPrintf(&fileLogger, "\r\n");
-		appendToLog(fileLogger.buffer);
+		appendToLog(fileLogger.buffer, strlen(fileLogger.buffer));
 		logFileLineIndex++;
 	}
 #endif /* EFI_FILE_LOGGING */
