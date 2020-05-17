@@ -482,17 +482,17 @@ struct EtbImpl final : public EtbController, public PeriodicController<512> {
 		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
 		tsOutputChannels.calibrationMode = TsCalMode::Tps1Max;
 		tsOutputChannels.calibrationValue = primaryMax;
-		chThdSleepMilliseconds(250);
+		chThdSleepMilliseconds(500);
 		tsOutputChannels.calibrationMode = TsCalMode::Tps1Min;
 		tsOutputChannels.calibrationValue = primaryMin;
-		chThdSleepMilliseconds(250);
+		chThdSleepMilliseconds(500);
 
 		tsOutputChannels.calibrationMode = TsCalMode::Tps1SecondaryMax;
 		tsOutputChannels.calibrationValue = secondaryMax;
-		chThdSleepMilliseconds(250);
+		chThdSleepMilliseconds(500);
 		tsOutputChannels.calibrationMode = TsCalMode::Tps1SecondaryMin;
 		tsOutputChannels.calibrationValue = secondaryMin;
-		chThdSleepMilliseconds(250);
+		chThdSleepMilliseconds(500);
 
 		tsOutputChannels.calibrationMode = TsCalMode::None;
 
