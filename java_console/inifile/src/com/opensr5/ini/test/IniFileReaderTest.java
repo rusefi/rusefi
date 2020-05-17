@@ -4,6 +4,7 @@ import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.RawIniFile;
+import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -126,12 +127,15 @@ public class IniFileReaderTest {
 
     @Test
     public void testCurveField() {
-        String string =
-                " \tmap_samplingAngleBins\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n";
+        String string = "page = 1\n" +
+                " \tname\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n";
 
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = new IniFileModel().readIniFile(lines);
 
-        assertEquals(0, model.getAllFields().size());
+        assertEquals(1, model.allIniFields.size());
+        ArrayIniField field = (ArrayIniField) model.allIniFields.get("name");
+        assertEquals(1, field.getCols());
+        assertEquals(8, field.getRows());
     }
 }
