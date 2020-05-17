@@ -52,9 +52,9 @@ static int totalSyncCounter = 0;
 
 #define LOG_INDEX_FILENAME "index.txt"
 
-#define RUSEFI_LOG_PREFIX "rus"
-#define PREFIX_LEN 3
-#define SHORT_TIME_LEN 11
+#define RUSEFI_LOG_PREFIX "rusefi_"
+#define PREFIX_LEN 7
+#define SHORT_TIME_LEN 13
 
 #define LS_RESPONSE "ls_result"
 #define FILE_LIST_MAX_COUNT 20
