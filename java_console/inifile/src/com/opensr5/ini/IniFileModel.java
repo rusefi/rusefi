@@ -1,5 +1,6 @@
 package com.opensr5.ini;
 
+import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
@@ -138,17 +139,15 @@ public class IniFileModel {
 
     private void handleFieldDefinition(LinkedList<String> list) {
         if (list.get(1).equals(FIELD_TYPE_SCALAR)) {
-            ScalarIniField field = ScalarIniField.parse(list);
-            registerField(field);
+            registerField(ScalarIniField.parse(list));
         } else if (list.get(1).equals(FIELD_TYPE_STRING)) {
         } else if (list.get(1).equals(FIELD_TYPE_ARRAY)) {
+            registerField(ArrayIniField.parse(list));
         } else if (list.get(1).equals(FIELD_TYPE_BITS)) {
-            EnumIniField field = EnumIniField.parse(list);
-            registerField(field);
+            registerField(EnumIniField.parse(list));
         } else {
             throw new IllegalStateException("Unexpected " + list);
         }
-
     }
 
     private void registerField(IniField field) {
