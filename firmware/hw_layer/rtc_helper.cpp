@@ -86,7 +86,7 @@ static void put2(int offset, char *lcd_str, int value) {
  */
 bool dateToStringShort(char *lcd_str) {
 #if EFI_RTC
-	strcpy(lcd_str, "0000_000000\0");
+	strcpy(lcd_str, "000000_000000\0");
 	struct tm timp;
 	date_get_tm(&timp);
 	if (timp.tm_year < 116 || timp.tm_year > 130) {
@@ -94,11 +94,14 @@ bool dateToStringShort(char *lcd_str) {
 		lcd_str[0] = 0;
 		return false;
 	}
-	put2(0, lcd_str, timp.tm_mon + 1); // months since January	0-11
-	put2(2, lcd_str, timp.tm_mday); // day of the month	1-31
-	put2(5, lcd_str, timp.tm_hour); // hours since midnight	0-23
-	put2(7, lcd_str, timp.tm_min);
-	put2(9, lcd_str, timp.tm_sec);
+
+	put2(0, lcd_str, timp.tm_year % 100); // Years since 1900 - format as just the last two digits
+	put2(2, lcd_str, timp.tm_mon + 1);     // months since January	0-11
+	put2(4, lcd_str, timp.tm_mday);        // day of the month	1-31
+
+	put2(7, lcd_str, timp.tm_hour);        // hours since midnight	0-23
+	put2(9, lcd_str, timp.tm_min);        // Minutes
+	put2(11, lcd_str, timp.tm_sec);        // seconds
 
 	return true;
 #else
