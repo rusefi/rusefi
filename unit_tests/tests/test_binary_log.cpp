@@ -36,15 +36,15 @@ TEST(BinaryLogField, FieldHeader) {
 }
 
 TEST(BinaryLogField, Value) {
-	scaled_channel<uint32_t, 1> testValue;
-	*reinterpret_cast<uint32_t*>(&testValue) = 0x12345678;
+	scaled_channel<uint32_t, 1> testValue = 12345678;
 	LogField lf(testValue, "test", "unit", 0);
 
 	char buffer[6];
+	memset(buffer, 0xAA, sizeof(buffer));
 
 	// Should write 4 bytes
 	EXPECT_EQ(4, lf.writeData(buffer));
 
 	// Check that big endian data was written, and bytes after weren't touched
-	EXPECT_THAT(buffer, ElementsAre(0x12, 0x34, 0x56, 0x78, 0xAA, 0xAA));
+	EXPECT_THAT(buffer, ElementsAre(0x00, 0xbc, 0x61, 0x4e, 0xAA, 0xAA));
 }
