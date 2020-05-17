@@ -190,6 +190,7 @@ INCDIR = . \
           $(PROJECT_DIR)/init \
           $(PROJECT_DIR)/console \
           $(PROJECT_DIR)/console/binary \
+          $(PROJECT_DIR)/console/binary_log \
           $(PROJECT_DIR)/console/fl_binary \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \

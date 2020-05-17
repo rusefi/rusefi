@@ -297,6 +297,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	console_util \
 	console \
 	$(PROJECT_DIR)/console/binary \
+	$(PROJECT_DIR)/console/binary_log \
 	$(PROJECT_DIR)/console/fl_binary \
 	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/mass_storage \
