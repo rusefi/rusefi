@@ -25,4 +25,5 @@ enum {
 };
 
 void initMc33816(Logging *logger);
+static void mcShutdown();
 
