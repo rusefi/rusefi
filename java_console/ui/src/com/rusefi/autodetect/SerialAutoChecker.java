@@ -6,7 +6,7 @@ import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.serial.PortHolder;
+import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -27,10 +27,7 @@ class SerialAutoChecker implements Runnable {
 
     @Override
     public void run() {
-        PortHolder.EstablishConnection establishConnection = new PortHolder.EstablishConnection(serialPort).invoke();
-        if (!establishConnection.isConnected())
-            return;
-        IoStream stream = establishConnection.getStream();
+        IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort);
         Logger logger = FileLog.LOGGER;
         IncomingDataBuffer incomingData = new IncomingDataBuffer(logger);
         stream.setInputListener(incomingData::addData);

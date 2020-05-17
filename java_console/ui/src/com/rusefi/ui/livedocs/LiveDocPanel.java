@@ -102,7 +102,7 @@ public class LiveDocPanel {
                 result.actionsListAdd(new LiveDataContext(Fields.LDS_ENGINE_STATE_INDEX), new RefreshActions() {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
-                        String value = field.getAnyValue(bp.getController()).toString();
+                        String value = field.getAnyValue(bp.getControllerConfiguration()).toString();
                         label.setText(value);
                     }
                 });

@@ -57,7 +57,7 @@ public class BenchTestPane {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BinaryProtocol bp = BinaryProtocolHolder.INSTANCE.get();
+                BinaryProtocol bp = BinaryProtocolHolder.INSTANCE.getCurrentStreamState();
                 bp.executeCommand(new byte[]{'r'}, "begin trace", false);
 
                 try {
