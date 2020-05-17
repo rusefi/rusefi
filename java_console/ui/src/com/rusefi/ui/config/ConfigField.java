@@ -2,6 +2,7 @@ package com.rusefi.ui.config;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
+import com.rusefi.config.FieldCommandResponse;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
 import com.rusefi.ui.util.JTextFieldWithWidth;
@@ -24,8 +25,8 @@ public class ConfigField extends BaseConfigField {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (Field.isIntValueMessage(message) || Field.isFloatValueMessage(message)) {
-                    Pair<Integer, ?> p = Field.parseResponse(message);
+                if (FieldCommandResponse.isIntValueMessage(message) || FieldCommandResponse.isFloatValueMessage(message)) {
+                    Pair<Integer, ?> p = FieldCommandResponse.parseResponse(message);
                     if (p != null && p.first == field.getOffset()) {
                         Object value = p.second;
                         setValue(value);

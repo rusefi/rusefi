@@ -2,6 +2,7 @@ package com.rusefi.ui.config;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
+import com.rusefi.config.FieldCommandResponse;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
@@ -37,8 +38,8 @@ public class EnumConfigField extends BaseConfigField {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (Field.isIntValueMessage(message)) {
-                    Pair<Integer, ?> p = Field.parseResponse(message);
+                if (FieldCommandResponse.isIntValueMessage(message)) {
+                    Pair<Integer, ?> p = FieldCommandResponse.parseResponse(message);
                     if (p != null && p.first == field.getOffset()) {
                         int ordinal = (Integer) p.second;
                         setValue(ordinal);
