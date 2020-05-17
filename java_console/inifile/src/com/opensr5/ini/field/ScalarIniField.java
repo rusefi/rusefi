@@ -28,7 +28,11 @@ public class ScalarIniField extends IniField {
     @Override
     public String getValue(ConfigurationImage image) {
         Field f = new Field(getName(), getOffset(), getType());
-        return f.getValue(image).toString();
+        try {
+            return f.getValue(image).toString();
+        } catch (Throwable e) {
+            throw new IllegalStateException("While getting " + getName(), e);
+        }
     }
 
     public static ScalarIniField parse(LinkedList<String> list) {

@@ -4,6 +4,7 @@ import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.RawIniFile;
+import com.opensr5.ini.field.EnumIniField;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -99,6 +100,29 @@ public class IniFileReaderTest {
         assertEquals(2, model.allIniFields.size());
     }
 
+    @Test
+    public void testBitLogic() {
+        assertEquals(1, EnumIniField.getBitRange(0xff, 0, 0));
+
+        assertEquals(1, EnumIniField.getBitRange(0xf0, 4, 0));
+        assertEquals(2, EnumIniField.getBitRange(0xf0, 3, 1));
+    }
+
+    @Test
+    public void testBitField() {
+        String string = "page = 1\n" +
+                "\tname\t= bits,    U32,   \t744, [3:5], \"false\", \"true\"";
+
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+
+        assertEquals(1, model.allIniFields.size());
+
+        EnumIniField field = (EnumIniField) model.allIniFields.get("name");
+        assertEquals(3, field.getBitPosition());
+        assertEquals(2, field.getBitSize());
+        assertEquals(2, field.getEnums().size());
+    }
 
     @Test
     public void testCurveField() {

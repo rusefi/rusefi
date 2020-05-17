@@ -1,6 +1,6 @@
 package com.opensr5.ini;
 
-import com.opensr5.ini.field.BitIniField;
+import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import org.jetbrains.annotations.Nullable;
@@ -143,7 +143,7 @@ public class IniFileModel {
         } else if (list.get(1).equals(FIELD_TYPE_STRING)) {
         } else if (list.get(1).equals(FIELD_TYPE_ARRAY)) {
         } else if (list.get(1).equals(FIELD_TYPE_BITS)) {
-            BitIniField field = BitIniField.parse(list);
+            EnumIniField field = EnumIniField.parse(list);
             registerField(field);
         } else {
             throw new IllegalStateException("Unexpected " + list);
