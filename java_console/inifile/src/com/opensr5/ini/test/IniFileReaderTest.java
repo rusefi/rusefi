@@ -96,7 +96,7 @@ public class IniFileReaderTest {
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = new IniFileModel().readIniFile(lines);
 
-        assertEquals(0, model.getAllFields().size());
+        assertEquals(2, model.allIniFields.size());
     }
 
 

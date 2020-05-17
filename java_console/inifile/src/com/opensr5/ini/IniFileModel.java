@@ -1,5 +1,8 @@
 package com.opensr5.ini;
 
+import com.opensr5.ini.field.BitIniField;
+import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -25,6 +28,7 @@ public class IniFileModel {
     private Map<String, DialogModel.Field> allFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     // this is only used while reading model - TODO extract reader
     private List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
+    public Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public Map<String, String> tooltips = new TreeMap<>();
 
@@ -134,15 +138,21 @@ public class IniFileModel {
 
     private void handleFieldDefinition(LinkedList<String> list) {
         if (list.get(1).equals(FIELD_TYPE_SCALAR)) {
-
+            ScalarIniField field = ScalarIniField.parse(list);
+            registerField(field);
         } else if (list.get(1).equals(FIELD_TYPE_STRING)) {
         } else if (list.get(1).equals(FIELD_TYPE_ARRAY)) {
         } else if (list.get(1).equals(FIELD_TYPE_BITS)) {
-
+            BitIniField field = BitIniField.parse(list);
+            registerField(field);
         } else {
             throw new IllegalStateException("Unexpected " + list);
         }
 
+    }
+
+    private void registerField(IniField field) {
+        allIniFields.put(field.getName(), field);
     }
 
     private void handleField(LinkedList<String> list) {

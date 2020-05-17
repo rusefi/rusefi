@@ -2,8 +2,8 @@ package com.rusefi.tools;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.IniField;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
@@ -214,20 +214,25 @@ public class ConsoleTools {
 
         IniFileModel ini = IniFileModel.getInstance(Launcher.INI_FILE_PATH);
 
-        handle(tune, ini, "tpsMin");
+        handle(tune, ini, "tpsMin", image);
+        handle(tune, ini, "tpsMax", image);
+        handle(tune, ini, "primingSquirtDurationMs", image);
 //        handle(tune, ini, "injector_battLagCorrBins");
 
 
         XmlUtil.writeXml(tune, Msq.class, "a.xml");
     }
 
-    private static void handle(Msq tune, IniFileModel ini, String key) {
-        DialogModel.Field field = ini.getField(key);
-        tune.getPage().constants.add(prepareConstant(field));
+    private static void handle(Msq tune, IniFileModel ini, String key, ConfigurationImage image) {
+        IniField field = ini.allIniFields.get(key);
+        tune.getPage().constants.add(prepareConstant(field, image));
     }
 
-    private static Constant prepareConstant(DialogModel.Field field) {
-        return new Constant(field.getKey(), null);
+    private static Constant prepareConstant(IniField field, ConfigurationImage image) {
+
+        String value = field.getValue(image);
+
+        return new Constant(field.getName(), field.getUnits(), value);
     }
 
     interface ConsoleTool {
