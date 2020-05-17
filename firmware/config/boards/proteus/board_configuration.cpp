@@ -137,9 +137,6 @@ static void setupDefaultSensorInputs() {
 
 	// MAP = Analog volt 1 = PC0
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
-
-	// No battery voltage setting - see adc_hack.cpp
-	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 }
 
 void setPinConfigurationOverrides(void) {
