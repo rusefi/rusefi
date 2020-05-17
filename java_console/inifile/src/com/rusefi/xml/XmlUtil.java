@@ -15,6 +15,7 @@ public class XmlUtil {
         JAXBContext jaxbContext = JAXBContext.newInstance(modelClass);
 
         Marshaller marshaller = jaxbContext.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
         StringWriter xmlWriter = new StringWriter();
         marshaller.marshal(instance, xmlWriter);
