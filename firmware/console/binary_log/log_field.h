@@ -71,35 +71,35 @@ private:
 
 template<>
 constexpr LogField::Type LogField::resolveType<uint8_t>() {
-    return Type::U08;
+	return Type::U08;
 }
 
 template<>
 constexpr LogField::Type LogField::resolveType<int8_t>() {
-    return Type::S08;
+	return Type::S08;
 }
 
 template<>
 constexpr LogField::Type LogField::resolveType<uint16_t>() {
-    return Type::U16;
+	return Type::U16;
 }
 
 template<>
 constexpr LogField::Type LogField::resolveType<int16_t>() {
-    return Type::S16;
+	return Type::S16;
 }
 
 template<>
 constexpr LogField::Type LogField::resolveType<uint32_t>() {
-    return Type::U32;
+	return Type::U32;
 }
 
 template<>
 constexpr LogField::Type LogField::resolveType<int32_t>() {
-    return Type::S32;
+	return Type::S32;
 }
 
 template<>
 constexpr LogField::Type LogField::resolveType<float>() {
-    return Type::F32;
+	return Type::F32;
 }
