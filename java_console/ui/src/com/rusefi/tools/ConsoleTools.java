@@ -16,7 +16,6 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tune.xml.Constant;
-import com.rusefi.tune.xml.CurveConstant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.Nullable;
@@ -228,7 +227,7 @@ public class ConsoleTools {
     }
 
     private static Constant prepareConstant(DialogModel.Field field) {
-        return new CurveConstant(field.getKey(), null);
+        return new Constant(field.getKey(), null);
     }
 
     interface ConsoleTool {
