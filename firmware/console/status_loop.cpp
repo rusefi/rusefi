@@ -380,14 +380,9 @@ void writeLogLine(void) {
 #endif /* EFI_FILE_LOGGING */
 }
 
-volatile int needToReportStatus = FALSE;
 static int prevCkpEventCounter = -1;
 
 static LoggingWithStorage logger2("main event handler");
-
-static void printStatus(void) {
-	needToReportStatus = TRUE;
-}
 
 /**
  * Time when the firmware version was reported last time, in seconds
@@ -1049,11 +1044,6 @@ void initStatusLoop(void) {
 	addConsoleActionFF("fuelinfo2", (VoidFloatFloat) showFuelInfo2);
 	addConsoleAction("fuelinfo", showFuelInfo);
 #endif
-
-#if EFI_PROD_CODE
-
-	addConsoleAction("status", printStatus);
-#endif /* EFI_PROD_CODE */
 }
 
 void startStatusThreads(void) {
