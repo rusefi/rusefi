@@ -13,6 +13,7 @@ public enum FieldType {
     BIT(/*bits are stored in 4 byte packs */4),
     FLOAT(4);
 
+    // todo: this is used for text protocol parsing - constant should be reused between firmware and console
     public static final String INT_TYPE_STRING = "int";
     public static final String FLOAT_TYPE_STRING = "float";
     public static final String BYTE_TYPE_STRING = "byte";
@@ -42,6 +43,22 @@ public enum FieldType {
             default:
                 return INT_TYPE_STRING;
         }
+    }
+
+    public static FieldType parseTs(String type) {
+        if (type.equalsIgnoreCase("f32"))
+            return FLOAT;
+        if (type.equalsIgnoreCase("s32") || type.equalsIgnoreCase("u32"))
+            return INT;
+        if (type.equalsIgnoreCase("s16"))
+            return INT16;
+        if (type.equalsIgnoreCase("u16"))
+            return UINT16;
+        if (type.equalsIgnoreCase("s08"))
+            return INT8;
+        if (type.equalsIgnoreCase("u08"))
+            return UINT8;
+        throw new IllegalStateException(type);
     }
 
     public String getLoadCommand() {
