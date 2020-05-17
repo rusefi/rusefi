@@ -94,6 +94,9 @@ void reconfigureTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float max = CONFIG(tpsErrorDetectionTooHigh);
 
 	configureTps(tpsFunc1p, CONFIG(tpsMin), CONFIG(tpsMax), min, max);
+	configureTps(tpsFunc1s, CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max);
 	configureTps(tpsFunc2p, CONFIG(tps2Min), CONFIG(tps2Max), min, max);
+	configureTps(tpsFunc2s, CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
+
 	configureTps(pedalFunc, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
 }
