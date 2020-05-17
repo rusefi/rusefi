@@ -9,11 +9,6 @@ import java.util.List;
 public class Page {
     public final List<Constant> constants = new ArrayList<>();
 
-    public Page() {
-        constants.add(new Constant("name1", "units1"));
-        constants.add(new Constant("name2", "units2"));
-    }
-
     @XmlAttribute
     public int getNumber() {
         return 0;
