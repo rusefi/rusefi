@@ -105,10 +105,10 @@ public class FormulasPane {
     }
 
     private void updateFormula() {
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
         if (bp == null)
             return;
-        ConfigurationImage ci = bp.getController();
+        ConfigurationImage ci = bp.getControllerConfiguration();
         if (ci == null)
             return;
 

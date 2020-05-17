@@ -43,7 +43,7 @@ public class AutoTest {
             }
         });
 
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
         // let's make sure 'burn' command works since sometimes it does not
         bp.burn(Logger.CONSOLE);
 

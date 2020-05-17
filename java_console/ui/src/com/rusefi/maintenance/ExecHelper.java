@@ -76,7 +76,7 @@ public class ExecHelper {
         return error.toString();
     }
 
-    protected static void submitAction(Runnable runnable, String threadName) {
+    public static void submitAction(Runnable runnable, String threadName) {
         Thread thread = new Thread(runnable, threadName);
         thread.setDaemon(true);
         thread.start();

@@ -25,7 +25,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 public class VersionChecker {
     private static final String JAVA_CONSOLE_TAG = "java_console";
     private static final String FIRMWARE_TAG = "firmware";
-    private static final String VERSIONS_URL = "http://rusefi.com/console/versions.txt";
+    private static final String VERSIONS_URL = "https://rusefi.com/console/versions.txt";
 
     private static final VersionChecker instance = new VersionChecker();
 
@@ -42,7 +42,7 @@ public class VersionChecker {
                 try {
                     instance.readAndProcess();
                 } catch (IOException e) {
-                    FileLog.MAIN.logLine("Failed to read from " + VERSIONS_URL);
+                    FileLog.MAIN.logLine("Failed to read from " + VERSIONS_URL + e);
                 }
             }
         }, "version checker");

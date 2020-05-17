@@ -129,30 +129,22 @@ static int logFileLineIndex = 0;
 
 static void reportSensorF(Logging *log, const char *caption, const char *units, float value,
 		int precision) {
-	bool isLogFileFormatting = true;
-
-	if (!isLogFileFormatting) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-		debugFloat(log, caption, value, precision);
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
-	} else {
 
 #if EFI_FILE_LOGGING
-		if (logFileLineIndex == 0) {
-			append(log, caption);
-			append(log, TAB);
-		} else if (logFileLineIndex == 1) {
-			append(log, units);
-			append(log, TAB);
-		} else {
-			appendFloat(log, value, precision);
-			append(log, TAB);
-		}
-#else
-		UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
-		UNUSED(precision);
-#endif /* EFI_FILE_LOGGING */
+	if (logFileLineIndex == 0) {
+		append(log, caption);
+		append(log, TAB);
+	} else if (logFileLineIndex == 1) {
+		append(log, units);
+		append(log, TAB);
+	} else {
+		appendFloat(log, value, precision);
+		append(log, TAB);
 	}
+#else
+	UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
+	UNUSED(precision);
+#endif /* EFI_FILE_LOGGING */
 }
 
 static void reportSensorI(Logging *log, const char *caption, const char *units, int value) {
@@ -382,7 +374,7 @@ void writeLogLine(void) {
 
 	if (isSdCardAlive()) {
 		appendPrintf(&fileLogger, "\r\n");
-		appendToLog(fileLogger.buffer);
+		appendToLog(fileLogger.buffer, strlen(fileLogger.buffer));
 		logFileLineIndex++;
 	}
 #endif /* EFI_FILE_LOGGING */

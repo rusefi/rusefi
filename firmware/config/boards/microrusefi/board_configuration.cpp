@@ -93,19 +93,21 @@ static void setupVbatt() {
 }
 
 static void setupTle8888() {
-	// Enable spi3
-	CONFIG(is_enabled_spi_3) = true;
+	// on microRusEFI SPI3 is exposed on PC10/PC11 and there is interest to use SD card there
+	// PB3/PB4 could be either SPI1 or SP3, let's use not SPI3 to address the contention
+	// Enable spi1
+	CONFIG(is_enabled_spi_1) = true;
 
-	// Wire up spi3
-	engineConfiguration->spi3mosiPin = GPIOB_5;
-	engineConfiguration->spi3misoPin = GPIOB_4;
-	engineConfiguration->spi3sckPin = GPIOB_3;
+	// Wire up spi1
+	engineConfiguration->spi1mosiPin = GPIOB_5;
+	engineConfiguration->spi1misoPin = GPIOB_4;
+	engineConfiguration->spi1sckPin = GPIOB_3;
 
 	// Chip select
 	engineConfiguration->tle8888_cs = GPIOD_5;
 
 	// SPI device
-	engineConfiguration->tle8888spiDevice = SPI_DEVICE_3;
+	engineConfiguration->tle8888spiDevice = SPI_DEVICE_1;
 }
 
 static void setupEtb() {

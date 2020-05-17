@@ -1047,6 +1047,8 @@ case TT_ROVER_K:
   return "TT_ROVER_K";
 case TT_SUBARU_7_6:
   return "TT_SUBARU_7_6";
+case TT_SUBARU_SVX:
+  return "TT_SUBARU_SVX";
 case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
 case TT_TOOTHED_WHEEL_36_1:
@@ -1103,6 +1105,8 @@ case MIATA_NB2:
   return "MIATA_NB2";
 case VVT_2JZ:
   return "VVT_2JZ";
+case VVT_INACTIVE:
+  return "VVT_INACTIVE";
 case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
 case VVT_SECOND_HALF:
