@@ -55,7 +55,7 @@ public class IniFileReader {
     }
 
     /**
-     * Just grabs an collecton of lines, no parsing logic here
+     * Just grabs an collection of lines, no parsing logic here
      */
     public static RawIniFile read(InputStream in) {
         List<RawIniFile.Line> lines = new ArrayList<>();

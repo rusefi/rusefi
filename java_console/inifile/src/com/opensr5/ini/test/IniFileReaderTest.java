@@ -1,8 +1,10 @@
 package com.opensr5.ini.test;
 
 import com.opensr5.ini.IniFileMetaInfo;
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.RawIniFile;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -14,6 +16,9 @@ import static org.junit.Assert.assertEquals;
  * 3/1/2017
  */
 public class IniFileReaderTest {
+    private static final String PAGE_READ = "    pageReadCommand     = \"X\",       \"X\",     \"X\"\n\n\n\n";
+    private static final String SIGNATURE_UNIT_TEST = "  signature      = \"unit test\"\n";
+
     @Test
     public void testSplit() {
         {
@@ -61,14 +66,12 @@ public class IniFileReaderTest {
     @Test
     public void testTotalPagesSize() {
         String string = "   nPages              = 3\n" +
-                "  signature      = \"unit test\"\n" +
-                "    pageReadCommand     = \"X\",       \"X\",     \"X\"\n\n\n\n" +
+                SIGNATURE_UNIT_TEST +
+                PAGE_READ +
                 "   pageSize            = 288,   64,     288\n";
 
 
-        RawIniFile content = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-
-        IniFileMetaInfo meta = new IniFileMetaInfo(content);
+        IniFileMetaInfo meta = new IniFileMetaInfo(fromString(string));
 
         assertEquals(3, meta.getnPages());
         assertEquals(IniFileMetaInfo.DEFAULT_BLOCKING_FACTOR, meta.getBlockingFactor());
@@ -77,5 +80,34 @@ public class IniFileReaderTest {
 
         assertEquals(64, meta.getPageSize(1));
         assertEquals("X", meta.getPageReadCommand(1));
+    }
+
+    @NotNull
+    private RawIniFile fromString(String string) {
+        return IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+    }
+
+    @Test
+    public void testEasyFields() {
+        String string = "page = 1\n" +
+                "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
+                "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\", \"PA5\", \"PA6\", \"PA7\", \"PB0\", \"PB1\", \"PC0\", \"PC1\", \"PC2\", \"PC3\", \"PC4\", \"PC5\", \"Disabled\", \"PB12\", \"PB13\", \"PC14\", \"PC15\", \"PC16\", \"PC17\", \"PD3\", \"PD4\", \"PE2\", \"PE6\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\"\n";
+
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+
+        assertEquals(0, model.getAllFields().size());
+    }
+
+
+    @Test
+    public void testCurveField() {
+        String string =
+                " \tmap_samplingAngleBins\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n";
+
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = new IniFileModel().readIniFile(lines);
+
+        assertEquals(0, model.getAllFields().size());
     }
 }
