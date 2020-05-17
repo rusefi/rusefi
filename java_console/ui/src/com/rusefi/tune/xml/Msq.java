@@ -6,6 +6,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Msq {
+    private final Page page = new Page();
+
     @XmlAttribute
     public String getXmlns() {
         return "http://www.msefi.com/:msq";
@@ -23,6 +25,6 @@ public class Msq {
 
     @XmlElement
     public Page getPage() {
-        return new Page();
+        return page;
     }
 }

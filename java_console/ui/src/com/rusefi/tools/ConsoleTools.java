@@ -2,6 +2,7 @@ package com.rusefi.tools;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
@@ -14,6 +15,8 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.maintenance.ExecHelper;
+import com.rusefi.tune.xml.Constant;
+import com.rusefi.tune.xml.CurveConstant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.Nullable;
@@ -202,10 +205,6 @@ public class ConsoleTools {
     private static void convertBinaryToXml(String[] args) throws IOException, JAXBException {
         Msq tune = new Msq();
 
-        XmlUtil.writeXml(tune, Msq.class, "a.xml");
-
-
-
         if (args.length < 2) {
             System.err.println("Binary file input expected");
             System.exit(-1);
@@ -215,6 +214,21 @@ public class ConsoleTools {
         System.out.println("Got " + image.getSize() + " of configuration from " + fileName);
 
         IniFileModel ini = IniFileModel.getInstance(Launcher.INI_FILE_PATH);
+
+        handle(tune, ini, "tpsMin");
+//        handle(tune, ini, "injector_battLagCorrBins");
+
+
+        XmlUtil.writeXml(tune, Msq.class, "a.xml");
+    }
+
+    private static void handle(Msq tune, IniFileModel ini, String key) {
+        DialogModel.Field field = ini.getField(key);
+        tune.getPage().constants.add(prepareConstant(field));
+    }
+
+    private static Constant prepareConstant(DialogModel.Field field) {
+        return new CurveConstant(field.getKey(), null);
     }
 
     interface ConsoleTool {
