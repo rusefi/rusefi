@@ -121,6 +121,8 @@ case MT_MPX4250A:
   return "MT_MPX4250A";
 case MT_SUBY_DENSO:
   return "MT_SUBY_DENSO";
+case MT_MAZDA_1_BAR:
+  return "MT_MAZDA_1_BAR";
 case MT_TOYOTA_89420_02010:
   return "MT_TOYOTA_89420_02010";
 case MT_BOSCH_2_5:
