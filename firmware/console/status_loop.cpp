@@ -1011,8 +1011,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField7 = (engineConfiguration->afr.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
 		break;
 	case DBG_ANALOG_INPUTS2:
-		tsOutputChannels->debugFloatField1 = Sensor::get(SensorType::Tps1Primary) - Sensor::get(SensorType::Tps1Secondary);
-		tsOutputChannels->debugFloatField2 = Sensor::get(SensorType::Tps2Primary) - Sensor::get(SensorType::Tps2Secondary);
+		tsOutputChannels->debugFloatField1 = Sensor::get(SensorType::Tps1Primary).value_or(0) - Sensor::get(SensorType::Tps1Secondary).value_or(0);
+		tsOutputChannels->debugFloatField2 = Sensor::get(SensorType::Tps2Primary).value_or(0) - Sensor::get(SensorType::Tps2Secondary).value_or(0);
 		break;
 	case DBG_INSTANT_RPM:
 		{
