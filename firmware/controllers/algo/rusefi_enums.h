@@ -785,6 +785,8 @@ typedef enum {
 
 	MT_BOSCH_2_5 = 10,
 
+	MT_MAZDA_1_BAR = 11,
+
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
 

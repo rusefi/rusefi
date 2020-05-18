@@ -72,6 +72,11 @@ static FastInterpolation dodgeNeon2003(0.4 /* volts */, 15.34 /* kPa */, 4.5 /* 
 static FastInterpolation densoToyota(3.7 - 2 /* volts */, 33.322271 /* kPa */, 3.7 /* volts */ , 100 /* kPa */);
 
 /**
+ * Open question how to get this Miata NB2 sensor read MAP
+ */
+static FastInterpolation mazda1bar(0 /* volts */, 15 /* kPa */, 5 /* volts */ , 115 /* kPa */);
+
+/**
  * Bosch 2.5 Bar TMap Map Sensor with IAT
  */
 static FastInterpolation bosch2_5(0.4 /* volts */, 20 /* kPa */, 4.65 /* volts */ , 250 /* kPa */);
@@ -100,6 +105,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 	case MT_TOYOTA_89420_02010:
 	case MT_MPX4100:
 	case MT_BOSCH_2_5:
+	case MT_MAZDA_1_BAR:
 		return getDecoder(mapConfig->type)->getValue(voltage);
 	default:
 		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: p %d", mapConfig->type);
@@ -201,6 +207,8 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 		return &gm3bar;
 	case MT_TOYOTA_89420_02010:
 		return &densoToyota;
+	case MT_MAZDA_1_BAR:
+		return &mazda1bar;
 	case MT_BOSCH_2_5:
 		return &bosch2_5;
 	default:
