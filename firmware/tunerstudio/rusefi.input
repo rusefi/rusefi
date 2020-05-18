@@ -1384,7 +1384,7 @@ menuDialog = main
 
 		# MAF
 		subMenu = mafSettings,				"MAF sensor"
-		subMenu = mafDecodingCurve,			"MAF transfer function", 0, {mafAdcChannel != 16}
+		subMenu = mafDecodingCurve,			"MAF transfer function", 0, {mafAdcChannel != @@ADC_CHANNEL_NONE@@ }
 		subMenu = std_separator
 
 		# O2 sensor(s)
@@ -1747,57 +1747,57 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Sensors->AUX1 Thermistor Sensor Setting
 	dialog = auxTempSensor1Sensor,	"aux1 Thermistor Settings"
 		field = "Input channel",			auxTempSensor1_adcChannel
-		field = "Bias resistor",       		auxTempSensor1_bias_resistor, {auxTempSensor1_adcChannel != 16}
+		field = "Bias resistor",       		auxTempSensor1_bias_resistor, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
 		field = ""
-		field = "Lowest temperature",					auxTempSensor1_tempC_1, {auxTempSensor1_adcChannel != 16}
-		field = "Resistance @ LT",						auxTempSensor1_resistance_1, {auxTempSensor1_adcChannel != 16}
+		field = "Lowest temperature",					auxTempSensor1_tempC_1, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",						auxTempSensor1_resistance_1, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Middle temperature",					auxTempSensor1_tempC_2, {auxTempSensor1_adcChannel != 16}
-		field = "Resistance @ MT",						auxTempSensor1_resistance_2, {auxTempSensor1_adcChannel != 16}
+		field = "Middle temperature",					auxTempSensor1_tempC_2, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",						auxTempSensor1_resistance_2, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Highest temperature",					auxTempSensor1_tempC_3, {auxTempSensor1_adcChannel != 16}
-		field = "Resistance @ HT",						auxTempSensor1_resistance_3, {auxTempSensor1_adcChannel != 16}
+		field = "Highest temperature",					auxTempSensor1_tempC_3, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",						auxTempSensor1_resistance_3, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 ;			Sensors->AUX2 Thermistor Sensor Setting
 	dialog = auxTempSensor2Sensor, "aux2 Thermistor Settings"
 		field = "Input channel",						auxTempSensor2_adcChannel
-		field = "Bias resistor",						auxTempSensor2_bias_resistor, {auxTempSensor2_adcChannel != 16}
+		field = "Bias resistor",						auxTempSensor2_bias_resistor, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
 		field = ""
-		field = "Lowest temperature",					auxTempSensor2_tempC_1, {auxTempSensor2_adcChannel != 16}
-		field = "Resistance @ LT",						auxTempSensor2_resistance_1, {auxTempSensor2_adcChannel != 16}
+		field = "Lowest temperature",					auxTempSensor2_tempC_1, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",						auxTempSensor2_resistance_1, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Middle temperature",					auxTempSensor2_tempC_2, {auxTempSensor2_adcChannel != 16}
-		field = "Resistance @ MT",						auxTempSensor2_resistance_2, {auxTempSensor2_adcChannel != 16}
+		field = "Middle temperature",					auxTempSensor2_tempC_2, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",						auxTempSensor2_resistance_2, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Highest temperature",					auxTempSensor2_tempC_3, {auxTempSensor2_adcChannel != 16}
-		field = "Resistance @ HT",						auxTempSensor2_resistance_3, {auxTempSensor2_adcChannel != 16}
+		field = "Highest temperature",					auxTempSensor2_tempC_3, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",						auxTempSensor2_resistance_3, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 	
 	dialog = tpsNum1, "Throttle #1"
 		field = "!See Tools>Calibrate TPS"
 		field = "Primary sensor",				tps1_1AdcChannel
-		field = "Primary min",					tpsMin, {tps1_1AdcChannel != 16}
-		field = "Primary max",					tpsMax, {tps1_1AdcChannel != 16}
+		field = "Primary min",					tpsMin, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Primary max",					tpsMax, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary sensor",				tps1_2AdcChannel
-		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != 16}
-		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != 16}
+		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsNum2, "Throttle #2"
 		field = "Primary sensor",				tps2_1AdcChannel
-		field = "Primary min",					tps2Min, {tps2_1AdcChannel != 16}
-		field = "Primary max",					tps2Max, {tps2_1AdcChannel != 16}
+		field = "Primary min",					tps2Min, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Primary max",					tps2Max, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary sensor",				tps2_2AdcChannel
-		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != 16}
-		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != 16}
+		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsLimits, "TPS Limits"
-		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
-		field = "TPS maximum valid value",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
+		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "TPS maximum valid value",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsSensor, "TPS"
 		panel = tpsLimits
@@ -2062,21 +2062,21 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Sensors->CLT sensor
 	dialog = clt_thermistor, "CLT sensor"
 		field = "Input channel",						clt_adcChannel
-		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != 16}
+		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 		field = "#Input three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
-		field = "Lowest temperature",  					clt_tempC_1, {clt_adcChannel != 16}
-		field = "Resistance @ LT",         	   			clt_resistance_1, {clt_adcChannel != 16}
+		field = "Lowest temperature",  					clt_tempC_1, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",         	   			clt_resistance_1, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Middle temperature",    		  	    clt_tempC_2, {clt_adcChannel != 16}
-		field = "Resistance @ MT",         	    		clt_resistance_2, {clt_adcChannel != 16}
+		field = "Middle temperature",    		  	    clt_tempC_2, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",         	    		clt_resistance_2, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Highest temperature",				 	clt_tempC_3, {clt_adcChannel != 16}
-		field = "Resistance @ HT",         	    		clt_resistance_3, {clt_adcChannel != 16}
+		field = "Highest temperature",				 	clt_tempC_3, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",         	    		clt_resistance_3, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Linear characteristic",				useLinearCltSensor, {clt_adcChannel != 16}
+		field = "Linear characteristic",				useLinearCltSensor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = cltGauges
 		gauge = CLTGauge
@@ -2089,21 +2089,21 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Sensors->IAT sensor
 	dialog = iat_thermistor, "IAT sensor"
 		field = "Input channel",						iat_adcChannel
-		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != 16}
+		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 		field = "#Input three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
-		field = "Lowest temperature",					iat_tempC_1, {iat_adcChannel != 16}
-		field = "Resistance @ LT",						iat_resistance_1, {iat_adcChannel != 16}
+		field = "Lowest temperature",					iat_tempC_1, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",						iat_resistance_1, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Middle temperature",					iat_tempC_2, {iat_adcChannel != 16}
-		field = "Resistance @ MT",						iat_resistance_2, {iat_adcChannel != 16}
+		field = "Middle temperature",					iat_tempC_2, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",						iat_resistance_2, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Highest temperature",					iat_tempC_3, {iat_adcChannel != 16}
-		field = "Resistance @ HT",						iat_resistance_3, {iat_adcChannel != 16}
+		field = "Highest temperature",					iat_tempC_3, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",						iat_resistance_3, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Linear characteristic",				useLinearIatSensor, {iat_adcChannel != 16}
+		field = "Linear characteristic",				useLinearIatSensor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = iatGauges
 		gauge = IATGauge
@@ -2116,10 +2116,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Sensors->Oil pressure sensor
 	dialog = oilp_settings, "Oil Pressure Sensor"
 		field = "Oil Pressure ADC input",				oilPressure_hwChannel
-		field = "low voltage",							oilPressure_v1, {oilPressure_hwChannel != 16}
-		field = "low pressure",							oilPressure_value1, {oilPressure_hwChannel != 16}
-		field = "high voltage",							oilPressure_v2, {oilPressure_hwChannel != 16}
-		field = "high pressure",						oilPressure_value2, {oilPressure_hwChannel != 16}
+		field = "low voltage",							oilPressure_v1, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "low pressure",							oilPressure_value1, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high voltage",							oilPressure_v2, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high pressure",						oilPressure_value2, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = oilPressureGauges
 		gauge = OilPressGauge
@@ -2132,11 +2132,11 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Sensors->MAP sensor
 	dialog = mapSensorAnalog, "MAP sensor", yAxis		
 		field = "MAP ADC input", 						map_sensor_hwChannel
-		field = "MAP type",								map_sensor_type
-		field = "MAP value low point",  		        map_sensor_lowValue
-		field = "MAP voltage low point", 	 		    mapLowValueVoltage
-		field = "MAP value high point",               	map_sensor_highValue
-		field = "MAP voltage high value",               mapHighValueVoltage
+		field = "MAP type",								map_sensor_type,     { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ }
+		field = "MAP value low point",  		        map_sensor_lowValue, { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
+		field = "MAP voltage low point", 	 		    mapLowValueVoltage,  { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
+		field = "MAP value high point",               	map_sensor_highValue,{ map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
+		field = "MAP voltage high value",               mapHighValueVoltage, { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
 		
 	dialog = mapSensorFreq, "MAP frequency sensor", yAxis
 		field = "MAP Freq",								frequencyReportingMapInputPin
