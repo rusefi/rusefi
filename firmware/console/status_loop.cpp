@@ -374,20 +374,15 @@ void writeLogLine(void) {
 
 	if (isSdCardAlive()) {
 		appendPrintf(&fileLogger, "\r\n");
-		appendToLog(fileLogger.buffer);
+		appendToLog(fileLogger.buffer, strlen(fileLogger.buffer));
 		logFileLineIndex++;
 	}
 #endif /* EFI_FILE_LOGGING */
 }
 
-volatile int needToReportStatus = FALSE;
 static int prevCkpEventCounter = -1;
 
 static LoggingWithStorage logger2("main event handler");
-
-static void printStatus(void) {
-	needToReportStatus = TRUE;
-}
 
 /**
  * Time when the firmware version was reported last time, in seconds
@@ -1011,7 +1006,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField7 = (engineConfiguration->afr.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
 		break;
 	case DBG_ANALOG_INPUTS2:
-		tsOutputChannels->debugFloatField4 = getVoltage("debug", engineConfiguration->throttlePedalPositionAdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField1 = Sensor::get(SensorType::Tps1Primary).value_or(0) - Sensor::get(SensorType::Tps1Secondary).value_or(0);
+		tsOutputChannels->debugFloatField2 = Sensor::get(SensorType::Tps2Primary).value_or(0) - Sensor::get(SensorType::Tps2Secondary).value_or(0);
 		break;
 	case DBG_INSTANT_RPM:
 		{
@@ -1049,11 +1045,6 @@ void initStatusLoop(void) {
 	addConsoleActionFF("fuelinfo2", (VoidFloatFloat) showFuelInfo2);
 	addConsoleAction("fuelinfo", showFuelInfo);
 #endif
-
-#if EFI_PROD_CODE
-
-	addConsoleAction("status", printStatus);
-#endif /* EFI_PROD_CODE */
 }
 
 void startStatusThreads(void) {

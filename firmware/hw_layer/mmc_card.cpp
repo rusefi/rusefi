@@ -52,9 +52,9 @@ static int totalSyncCounter = 0;
 
 #define LOG_INDEX_FILENAME "index.txt"
 
-#define RUSEFI_LOG_PREFIX "rus"
-#define PREFIX_LEN 3
-#define SHORT_TIME_LEN 11
+#define RUSEFI_LOG_PREFIX "rusefi_"
+#define PREFIX_LEN 7
+#define SHORT_TIME_LEN 13
 
 #define LS_RESPONSE "ls_result"
 #define FILE_LIST_MAX_COUNT 20
@@ -307,7 +307,7 @@ void readLogFileContent(char *buffer, short fileId, short offset, short length) 
 /**
  * @brief Appends specified line to the current log file
  */
-void appendToLog(const char *line) {
+void appendToLog(const char *line, size_t lineLength) {
 	UINT bytesWritten;
 
 	if (!isSdCardAlive()) {
@@ -316,7 +316,7 @@ void appendToLog(const char *line) {
 		errorReported = TRUE;
 		return;
 	}
-	UINT lineLength = strlen(line);
+
 	totalLoggedBytes += lineLength;
 	lockSpi(SPI_NONE);
 	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWritten);
@@ -494,7 +494,9 @@ void initMmcCard(void) {
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t)(void*) MMCmonThread, NULL);
 
 	addConsoleAction("mountsd", MMCmount);
-	addConsoleActionS("appendtolog", appendToLog);
+	addConsoleActionS("appendtolog", [](const char* str) {
+		appendToLog(str, strlen(str));
+	});
 	addConsoleAction("umountsd", mmcUnMount);
 	addConsoleActionS("ls", listDirectory);
 	addConsoleActionS("del", removeFile);

@@ -25,6 +25,7 @@
 
 EXTERN_CONFIG;
 
+
 static OutputPin chipSelect;
 static OutputPin resetB;
 static OutputPin driven;
@@ -210,6 +211,10 @@ static unsigned short readDriverStatus(){
     	driverStatus = recv_16bit_spi();
 	spiUnselect(driver);
 	return driverStatus;
+}
+
+static bool checkUndervoltVccP(unsigned short driverStatus){
+	return (driverStatus  & (1<<0));
 }
 
 static bool checkUndervoltV5(unsigned short driverStatus){
@@ -458,16 +463,18 @@ static void mcRestart() {
 
 	setup_spi();
 
-	mcClearDriverStatus();
+	mcClearDriverStatus(); // Initial clear necessary
     mcDriverStatus = readDriverStatus();
     if(checkUndervoltV5(mcDriverStatus)){
     	firmwareError(OBD_PCM_Processor_Fault, "MC33 5V Under-Voltage!");
+    	mcShutdown();
     	return;
     }
 
 	mcChipId = readId();
 	if (!validateChipId()) {
 		firmwareError(OBD_PCM_Processor_Fault, "No comm with MC33");
+		mcShutdown();
 		return;
 	}
 
@@ -482,7 +489,7 @@ static void mcRestart() {
    		flag0after = efiReadPin(CONFIG(mc33816_flag0));
    		if (flag0before || !flag0after) {
    			firmwareError(OBD_PCM_Processor_Fault, "MC33 flag0 transition no buena");
-
+   			mcShutdown();
    			return;
    		}
     }
@@ -491,22 +498,44 @@ static void mcRestart() {
     download_register(REG_CH2);     // download channel 2 register configurations
     download_register(REG_IO);      // download IO register configurations
     download_register(REG_DIAG);    // download diag register configuration
+
     // Finished downloading, let's run the code
     enable_flash();
     if(!check_flash())
     {
     	firmwareError(OBD_PCM_Processor_Fault, "MC33 no flash");
+    	mcShutdown();
     	return;
     }
+
+    mcDriverStatus = readDriverStatus();
+    if(checkUndervoltVccP(mcDriverStatus)){
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 VccP (7V) Under-Voltage!");
+    	mcShutdown();
+    	return;
+    }
+
+    // Drive High Voltage if possible
     setBoostVoltage(CONFIG(mc33_hvolt));
     driven.setValue(1); // driven = HV
-
+    chThdSleepMilliseconds(10); // Give it a moment
     mcDriverStatus = readDriverStatus();
     if(!checkDrivenEnabled(mcDriverStatus)){
     	firmwareError(OBD_PCM_Processor_Fault, "MC33 Driven did not stick!");
+    	mcShutdown();
     	return;
     }
 
+    mcDriverStatus = readDriverStatus();
+    if(checkUndervoltVccP(mcDriverStatus)){
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 VccP Under-Voltage After Driven"); // Likely DC-DC LS7 is dead!
+    	mcShutdown();
+    	return;
+    }
 }
 
+static void mcShutdown() {
+	driven.setValue(0); // ensure HV is off
+	resetB.setValue(0); // turn off the chip
+}
 #endif /* EFI_MC33816 */
