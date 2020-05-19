@@ -150,6 +150,36 @@ void mcUpdateDram(MC33816Mem addr, unsigned short data) {
     spiUnselect(driver);
 }
 
+static short dacEquation(unsigned short current) {
+	/*
+	Current, given in mA->A
+	I = (DAC_VALUE * V_DAC_LSB - V_DA_BIAS)/(G_DA_DIFF * R_SENSEx)
+	DAC_VALUE = ((I*G_DA_DIFF * R_SENSEx) + V_DA_BIAS) /  V_DAC_LSB
+	V_DAC_LSB is the DAC resolution = 9.77mv
+	V_DA_BIAS = 250mV
+	G_DA_DIFF = Gain: 5.79, 8.68, [12.53], 19.25
+	R_SENSE = 10mOhm soldered on board
+	*/
+	return (short)(((current/1000.0f * 12.53f * 10) + 250.0f) / 9.77f);
+}
+
+static void setTimings() {
+
+	// Convert mA to DAC values
+	mcUpdateDram(MC33816Mem::Iboost, dacEquation(CONFIG(mc33_i_boost)));
+	mcUpdateDram(MC33816Mem::Ipeak, dacEquation(CONFIG(mc33_i_peak)));
+	mcUpdateDram(MC33816Mem::Ihold, dacEquation(CONFIG(mc33_i_hold)));
+
+	// uint16_t mc33_t_max_boost; // not yet implemented in microcode
+
+	// in micro seconds to clock cycles
+	mcUpdateDram(MC33816Mem::Tpeak_off, (MC_CK * CONFIG(mc33_t_peak_off)));
+	mcUpdateDram(MC33816Mem::Tpeak_tot, (MC_CK * CONFIG(mc33_t_peak_tot)));
+	mcUpdateDram(MC33816Mem::Tbypass, (MC_CK * CONFIG(mc33_t_bypass)));
+	mcUpdateDram(MC33816Mem::Thold_off, (MC_CK * CONFIG(mc33_t_hold_off)));
+	mcUpdateDram(MC33816Mem::Thold_tot, (MC_CK * CONFIG(mc33_t_hold_tot)));
+}
+
 void setBoostVoltage(float volts)
 {
 	// Sanity checks, Datasheet says not too high, nor too low
@@ -498,6 +528,8 @@ static void mcRestart() {
     download_register(REG_CH2);     // download channel 2 register configurations
     download_register(REG_IO);      // download IO register configurations
     download_register(REG_DIAG);    // download diag register configuration
+
+    setTimings();
 
     // Finished downloading, let's run the code
     enable_flash();

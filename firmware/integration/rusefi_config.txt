@@ -1284,7 +1284,17 @@ uint8_t[4] unusuedsw;
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
 
-	int[376] mainUnusedEnd;
+	uint16_t mc33_i_boost;
+	uint16_t mc33_i_peak;
+	uint16_t mc33_i_hold;
+	uint16_t mc33_t_max_boost;
+	uint16_t mc33_t_peak_off;
+	uint16_t mc33_t_peak_tot;
+	uint16_t mc33_t_bypass;
+	uint16_t mc33_t_hold_off;
+	uint16_t mc33_t_hold_tot;
+
+	int[358] mainUnusedEnd;
 
 ! end of engine_configuration_s
 end_struct
