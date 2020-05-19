@@ -60,6 +60,7 @@
 #include "can_hw.h"
 #include "periodic_thread_controller.h"
 #include "cdm_ion_sense.h"
+#include "binary_logging.h"
 
 extern afr_Map3D_t afrMap;
 extern bool main_loop_started;
@@ -119,7 +120,7 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static char FILE_LOGGER[1000] MAIN_RAM;
+static char FILE_LOGGER[2048] MAIN_RAM;
 static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
 static int logFileLineIndex = 0;
 
@@ -365,18 +366,26 @@ static void printSensors(Logging *log) {
 #endif /* EFI_FILE_LOGGING */
 
 
+static uint64_t binaryLogCount = 0;
+
 void writeLogLine(void) {
 #if EFI_FILE_LOGGING
 	if (!main_loop_started)
 		return;
-	resetLogging(&fileLogger);
-	printSensors(&fileLogger);
 
-	if (isSdCardAlive()) {
-		appendPrintf(&fileLogger, "\r\n");
-		appendToLog(fileLogger.buffer, strlen(fileLogger.buffer));
-		logFileLineIndex++;
+	size_t length = 2048;
+
+	if (binaryLogCount == 0) {
+		memset(fileLogger.buffer, 0xAA, 2048);
+		writeHeader(fileLogger.buffer);
+	} else {
+		updateTunerStudioState(&tsOutputChannels);
+		length = writeBlock(fileLogger.buffer);
 	}
+
+	appendToLog(fileLogger.buffer, length);
+	
+	binaryLogCount++;
 #endif /* EFI_FILE_LOGGING */
 }
 
