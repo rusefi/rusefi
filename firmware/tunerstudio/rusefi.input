@@ -389,21 +389,21 @@ enable2ndByteCanID = false
 
 ; wall of debug mode :)
 ; https://rusefi.com/wiki/index.php?title=Manual:Debug_fields
-;                                            0                     1                     2            3                           4                      5                            6             7              8                9            10                   11       12           13          14             15            16              17                       18                 19            20              21               22                23         24           25                26           27         28        29      30       31                32     33     34       35       36                       37              38            39
-;											 Alternator            TPS Acceleration      Warmup-Pid   Idle                        Engine Load Acc        Trigger Counters                                          VVT              Cranking     Ignition Timing                                                                                     ETB PID                                                                                                                              CJ125             CAN                                                TLE8888                                           Boost                    Start           Launcher      ETB Autotune
-    debugFieldF1List = bits,   U08,   [0:7], "Controller Output",  "From TPS",           "",          "Controller Output",        "Idle output",         "Channel 1 Rise Counter",    "",           "",            "VVT Event Position","",          "Ign IAT Corr",      "",      "",         "",         "",            "",           "",             "ETB Controller Output", "",                "",           "df1",          "df1",           "22df1",          "",        "23:df1",     "CJ125: output",  "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "Boost Open Loop Duty",  "S unused"      "",           "Osc Amplitude"
-    debugFieldF2List = bits,   U08,   [0:7], "I-Term",             "To TPS",             "",          "I-Term",                   "Idle df2",            "Channel 2 Rise Counter",    "",           "",            "VVT Ratio",         "",          "Ign CLT Corr",      "",      "",         "",         "",            "",           "",             "ETB I-Term",            "",                "",           "df2",          "df2",           "22df2",          "",        "23:df2",     "CJ125: i-term",  "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "Boost Closed Loop Duty","S unused"      "",           "Duty Amplitude"
-    debugFieldF3List = bits,   U08,   [0:7], "Previous Error",     "Current TPS<>TPS",   "",          "",                         "Idle df3",            "ICU sum",                   "",           "",            "",                  "",          "Ign FSIO Adj",      "",      "",         "",         "",            "",           "",             "ETB err",               "",                "",           "df3",          "df3",           "22df3",          "",        "23:df3",     "CJ125: err",     "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "",                      "S unused"      "",           "Tu"
-    debugFieldF4List = bits,   U08,   [0:7], "I Gain",             "Extra Fuel",         "",          "",                         "Idle df4",            "VVT rise",                  "",           "",            "",                  "",          "Ign PID Adj",       "",      "",         "",         "",            "",           "",             "ETB I setting",         "",                "",           "df4",          "df4",           "22df4",          "",        "23:df4",     "CJ125: UA",      "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "",                      "S unused"      "",           "Ku"
-    debugFieldF5List = bits,   U08,   [0:7], "D Gain",             "df5",                "df5",       "df5",                      "Idle df5",            "VVT fall",                  "df5",        "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB D setting",         "df5",             "df5",        "df5",          "df5",           "22df5",          "",        "23:df5",     "CJ125: UR",      "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "",                      "S unused"      "",           "Kp"
-    debugFieldF6List = bits,   U08,   [0:7], "D Term",             "",                   "",          "",                         "Idle df6",            "Current Gap",               "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB df6",               "",                "",           "df6",          "df6",           "22df6",          "",        "23:df6",     "cj: f7",         "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "",                      "S unused"      "",           "Ki"
-    debugFieldF7List = bits,   U08,   [0:7], "Max-Value",          "",                   "",          "",                         "Idle df7",            "",                          "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB df7",               "",                "",           "df7",          "df7",           "22df7",          "",        "23:df7",     "cj: f7",         "",          "",         "",       "",     "",     "",               "",    "",    "",      "",      "",                      "S unused"      "",           "Kd"
+;                                            0                     1                     2            3                           4                      5                            6             7              8                    9            10                   11       12           13          14             15            16              17                       18                 19            20              21               22                23         24           25                26           27         28        29      30       31                32                      33     34       35       36                       37              38            39
+;											 Alternator            TPS Acceleration      Warmup-Pid   Idle                        Engine Load Acc        Trigger Counters                                          VVT                  Cranking     Ignition Timing                                                                                     ETB PID                                                                                                                              CJ125             CAN                                                TLE8888           Analog inputs 2         Boost                    Start           Launcher      ETB Autotune
+    debugFieldF1List = bits,   U08,   [0:7], "Controller Output",  "From TPS",           "",          "Controller Output",        "Idle output",         "Channel 1 Rise Counter",    "",           "",            "VVT Event Position","",          "Ign IAT Corr",      "",      "",         "",         "",            "",           "",             "ETB Controller Output", "",                "",           "df1",          "df1",           "22df1",          "",        "23:df1",     "CJ125: output",  "",          "",         "",       "",     "",     "",               "TPS1 Pri/Sec Diff",    "",    "",      "",      "Boost Open Loop Duty",  "S unused"      "",           "Osc Amplitude"
+    debugFieldF2List = bits,   U08,   [0:7], "I-Term",             "To TPS",             "",          "I-Term",                   "Idle df2",            "Channel 2 Rise Counter",    "",           "",            "VVT Ratio",         "",          "Ign CLT Corr",      "",      "",         "",         "",            "",           "",             "ETB I-Term",            "",                "",           "df2",          "df2",           "22df2",          "",        "23:df2",     "CJ125: i-term",  "",          "",         "",       "",     "",     "",               "TPS2 Pri/Sec Diff",    "",    "",      "",      "Boost Closed Loop Duty","S unused"      "",           "Duty Amplitude"
+    debugFieldF3List = bits,   U08,   [0:7], "Previous Error",     "Current TPS<>TPS",   "",          "",                         "Idle df3",            "ICU sum",                   "",           "",            "",                  "",          "Ign FSIO Adj",      "",      "",         "",         "",            "",           "",             "ETB err",               "",                "",           "df3",          "df3",           "22df3",          "",        "23:df3",     "CJ125: err",     "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Tu"
+    debugFieldF4List = bits,   U08,   [0:7], "I Gain",             "Extra Fuel",         "",          "",                         "Idle df4",            "VVT rise",                  "",           "",            "",                  "",          "Ign PID Adj",       "",      "",         "",         "",            "",           "",             "ETB I setting",         "",                "",           "df4",          "df4",           "22df4",          "",        "23:df4",     "CJ125: UA",      "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Ku"
+    debugFieldF5List = bits,   U08,   [0:7], "D Gain",             "df5",                "df5",       "df5",                      "Idle df5",            "VVT fall",                  "df5",        "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB D setting",         "df5",             "df5",        "df5",          "df5",           "22df5",          "",        "23:df5",     "CJ125: UR",      "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Kp"
+    debugFieldF6List = bits,   U08,   [0:7], "D Term",             "",                   "",          "",                         "Idle df6",            "Current Gap",               "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB df6",               "",                "",           "df6",          "df6",           "22df6",          "",        "23:df6",     "cj: f7",         "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Ki"
+    debugFieldF7List = bits,   U08,   [0:7], "Max-Value",          "",                   "",          "",                         "Idle df7",            "",                          "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB df7",               "",                "",           "df7",          "df7",           "22df7",          "",        "23:df7",     "cj: f7",         "",          "",         "",       "",     "",     "",               "",                     "",    "",      "",      "",                      "S unused"      "",           "Kd"
 
-    debugFieldI1List = bits,   U08,   [0:7], "P-Gain",             "",                   "",          "",                         "Idle di1",            "Channel 1 Fall Counter",    "",           "",            "VVT Sync Counter",  "",          "Multispark Count",  "",      "",         "",         "",            "",           "",             "ETB P-Gain",            "",                "",           "di1",          "di1",           "22di1",          "",        "23:di1",     "CJ125: state",   "read count","",         "",       "",     "",     "SPI Counter",    "",    "",    "",      "",      "",                      "Start Count"   "",           ""
-    debugFieldI2List = bits,   U08,   [0:7], "Offset",             "",                   "",          "",                         "Idle di2",            "Channel 2 Fall Counter",    "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB di2",               "",                "",           "di2",          "di2",           "22di2",          "",        "23:di2",     "",               "",          "",         "",       "",     "",     "Latest Transmit","",    "",    "",      "",      "",                      "S unused"      "",           ""
-    debugFieldI3List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle di3",            "Cycle Index",               "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB di3",               "",                "",           "di3",          "di3",           "22di3",          "",        "23:di3",     "",               "",          "",         "",       "",     "",     "Latest Received","",    "",    "",      "",      "",                      "S unused"      "",           ""
-    debugFieldI4List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle di4",            "Cycle Cnt 1",               "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB di4",               "",                "",           "di4",          "di4",           "22di4",          "",        "23:di4",      "",              "",          "",         "",       "",     "",     "Init Count",     "",    "",    "",      "",      "",                      "S unused"      "",           ""
-    debugFieldI5List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle di5",            "Cycle Cnt 2",               "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "di5",        "di5",          "ETB di5",               "di5",             "di5",        "di5",          "di5",           "22di5",          "di5",     "di5",        "di5",            "di5",       "di5",      "di5",    "di5",  "di5",  "di5",            "di5", "di5", "di5",   "di5",   "di5",                   "S di5"         "",           ""
+    debugFieldI1List = bits,   U08,   [0:7], "P-Gain",             "",                   "",          "",                         "Idle di1",            "Channel 1 Fall Counter",    "",           "",            "VVT Sync Counter",  "",          "Multispark Count",  "",      "",         "",         "",            "",           "",             "ETB P-Gain",            "",                "",           "di1",          "di1",           "22di1",          "",        "23:di1",     "CJ125: state",   "read count","",         "",       "",     "",     "SPI Counter",    "",                     "",    "",      "",      "",                      "Start Count"   "",           ""
+    debugFieldI2List = bits,   U08,   [0:7], "Offset",             "",                   "",          "",                         "Idle di2",            "Channel 2 Fall Counter",    "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB di2",               "",                "",           "di2",          "di2",           "22di2",          "",        "23:di2",     "",               "",          "",         "",       "",     "",     "Latest Transmit","",                     "",    "",      "",      "",                      "S unused"      "",           ""
+    debugFieldI3List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle di3",            "Cycle Index",               "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB di3",               "",                "",           "di3",          "di3",           "22di3",          "",        "23:di3",     "",               "",          "",         "",       "",     "",     "Latest Received","",                     "",    "",      "",      "",                      "S unused"      "",           ""
+    debugFieldI4List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle di4",            "Cycle Cnt 1",               "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "",           "",             "ETB di4",               "",                "",           "di4",          "di4",           "22di4",          "",        "23:di4",      "",              "",          "",         "",       "",     "",     "Init Count",     "",                     "",    "",      "",      "",                      "S unused"      "",           ""
+    debugFieldI5List = bits,   U08,   [0:7], "",                   "",                   "",          "",                         "Idle di5",            "Cycle Cnt 2",               "",           "",            "",                  "",          "",                  "",      "",         "",         "",            "di5",        "di5",          "ETB di5",               "di5",             "di5",        "di5",          "di5",           "22di5",          "di5",     "di5",        "di5",            "di5",       "di5",      "di5",    "di5",  "di5",  "di5",            "",                     "di5", "di5",   "di5",   "di5",                   "S di5"         "",           ""
 
 [ConstantsExtensions]
      ; defaultValue is used to provide TunerStudio with a value to use in the case of
@@ -412,9 +412,15 @@ enable2ndByteCanID = false
      ; defaultValue = constantName, value;
     defaultValue = wueAfrTargetOffset, -1.5 -1.4 -1.15 -0.95 -0.775 -0.65 -0.5625 -0.5 -0.4375 -0.375 -0.3125 -0.25 -0.1875 -0.125 -0.0625 0
 
+	; TPS 1 Primary
 	maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
 	maintainConstantValue = tpsMin, { (calibrationMode == 2 ) ? calibrationValue : tpsMin }
 
+	; TPS 1 Secondary
+	maintainConstantValue = tps1SecondaryMax, { (calibrationMode == 6 ) ? calibrationValue : tps1SecondaryMax }
+	maintainConstantValue = tps1SecondaryMin, { (calibrationMode == 7 ) ? calibrationValue : tps1SecondaryMin }
+
+	; ETB Auto Gain Calibration
 	maintainConstantValue = etb_pFactor, { (calibrationMode == 3 ) ? calibrationValue : etb_pFactor }
 	maintainConstantValue = etb_iFactor, { (calibrationMode == 4 ) ? calibrationValue : etb_iFactor }
 	maintainConstantValue = etb_dFactor, { (calibrationMode == 5 ) ? calibrationValue : etb_dFactor }
@@ -1384,7 +1390,7 @@ menuDialog = main
 
 		# MAF
 		subMenu = mafSettings,				"MAF sensor"
-		subMenu = mafDecodingCurve,			"MAF transfer function", 0, {mafAdcChannel != 16}
+		subMenu = mafDecodingCurve,			"MAF transfer function", 0, {mafAdcChannel != @@ADC_CHANNEL_NONE@@ }
 		subMenu = std_separator
 
 		# O2 sensor(s)
@@ -1747,57 +1753,57 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Sensors->AUX1 Thermistor Sensor Setting
 	dialog = auxTempSensor1Sensor,	"aux1 Thermistor Settings"
 		field = "Input channel",			auxTempSensor1_adcChannel
-		field = "Bias resistor",       		auxTempSensor1_bias_resistor, {auxTempSensor1_adcChannel != 16}
+		field = "Bias resistor",       		auxTempSensor1_bias_resistor, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
 		field = ""
-		field = "Lowest temperature",					auxTempSensor1_tempC_1, {auxTempSensor1_adcChannel != 16}
-		field = "Resistance @ LT",						auxTempSensor1_resistance_1, {auxTempSensor1_adcChannel != 16}
+		field = "Lowest temperature",					auxTempSensor1_tempC_1, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",						auxTempSensor1_resistance_1, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Middle temperature",					auxTempSensor1_tempC_2, {auxTempSensor1_adcChannel != 16}
-		field = "Resistance @ MT",						auxTempSensor1_resistance_2, {auxTempSensor1_adcChannel != 16}
+		field = "Middle temperature",					auxTempSensor1_tempC_2, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",						auxTempSensor1_resistance_2, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Highest temperature",					auxTempSensor1_tempC_3, {auxTempSensor1_adcChannel != 16}
-		field = "Resistance @ HT",						auxTempSensor1_resistance_3, {auxTempSensor1_adcChannel != 16}
+		field = "Highest temperature",					auxTempSensor1_tempC_3, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",						auxTempSensor1_resistance_3, {auxTempSensor1_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 ;			Sensors->AUX2 Thermistor Sensor Setting
 	dialog = auxTempSensor2Sensor, "aux2 Thermistor Settings"
 		field = "Input channel",						auxTempSensor2_adcChannel
-		field = "Bias resistor",						auxTempSensor2_bias_resistor, {auxTempSensor2_adcChannel != 16}
+		field = "Bias resistor",						auxTempSensor2_bias_resistor, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
 		field = ""
-		field = "Lowest temperature",					auxTempSensor2_tempC_1, {auxTempSensor2_adcChannel != 16}
-		field = "Resistance @ LT",						auxTempSensor2_resistance_1, {auxTempSensor2_adcChannel != 16}
+		field = "Lowest temperature",					auxTempSensor2_tempC_1, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",						auxTempSensor2_resistance_1, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Middle temperature",					auxTempSensor2_tempC_2, {auxTempSensor2_adcChannel != 16}
-		field = "Resistance @ MT",						auxTempSensor2_resistance_2, {auxTempSensor2_adcChannel != 16}
+		field = "Middle temperature",					auxTempSensor2_tempC_2, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",						auxTempSensor2_resistance_2, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Highest temperature",					auxTempSensor2_tempC_3, {auxTempSensor2_adcChannel != 16}
-		field = "Resistance @ HT",						auxTempSensor2_resistance_3, {auxTempSensor2_adcChannel != 16}
+		field = "Highest temperature",					auxTempSensor2_tempC_3, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",						auxTempSensor2_resistance_3, {auxTempSensor2_adcChannel != @@ADC_CHANNEL_NONE@@}
 	
 	dialog = tpsNum1, "Throttle #1"
 		field = "!See Tools>Calibrate TPS"
 		field = "Primary sensor",				tps1_1AdcChannel
-		field = "Primary min",					tpsMin, {tps1_1AdcChannel != 16}
-		field = "Primary max",					tpsMax, {tps1_1AdcChannel != 16}
+		field = "Primary min",					tpsMin, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Primary max",					tpsMax, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary sensor",				tps1_2AdcChannel
-		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != 16}
-		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != 16}
+		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsNum2, "Throttle #2"
 		field = "Primary sensor",				tps2_1AdcChannel
-		field = "Primary min",					tps2Min, {tps2_1AdcChannel != 16}
-		field = "Primary max",					tps2Max, {tps2_1AdcChannel != 16}
+		field = "Primary min",					tps2Min, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Primary max",					tps2Max, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary sensor",				tps2_2AdcChannel
-		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != 16}
-		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != 16}
+		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsLimits, "TPS Limits"
-		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
-		field = "TPS maximum valid value",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
+		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "TPS maximum valid value",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = tpsSensor, "TPS"
 		panel = tpsLimits
@@ -2062,21 +2068,21 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Sensors->CLT sensor
 	dialog = clt_thermistor, "CLT sensor"
 		field = "Input channel",						clt_adcChannel
-		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != 16}
+		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 		field = "#Input three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
-		field = "Lowest temperature",  					clt_tempC_1, {clt_adcChannel != 16}
-		field = "Resistance @ LT",         	   			clt_resistance_1, {clt_adcChannel != 16}
+		field = "Lowest temperature",  					clt_tempC_1, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",         	   			clt_resistance_1, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Middle temperature",    		  	    clt_tempC_2, {clt_adcChannel != 16}
-		field = "Resistance @ MT",         	    		clt_resistance_2, {clt_adcChannel != 16}
+		field = "Middle temperature",    		  	    clt_tempC_2, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",         	    		clt_resistance_2, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Highest temperature",				 	clt_tempC_3, {clt_adcChannel != 16}
-		field = "Resistance @ HT",         	    		clt_resistance_3, {clt_adcChannel != 16}
+		field = "Highest temperature",				 	clt_tempC_3, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",         	    		clt_resistance_3, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Linear characteristic",				useLinearCltSensor, {clt_adcChannel != 16}
+		field = "Linear characteristic",				useLinearCltSensor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = cltGauges
 		gauge = CLTGauge
@@ -2089,21 +2095,21 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Sensors->IAT sensor
 	dialog = iat_thermistor, "IAT sensor"
 		field = "Input channel",						iat_adcChannel
-		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != 16}
+		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 		field = "#Input three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
-		field = "Lowest temperature",					iat_tempC_1, {iat_adcChannel != 16}
-		field = "Resistance @ LT",						iat_resistance_1, {iat_adcChannel != 16}
+		field = "Lowest temperature",					iat_tempC_1, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ LT",						iat_resistance_1, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Middle temperature",					iat_tempC_2, {iat_adcChannel != 16}
-		field = "Resistance @ MT",						iat_resistance_2, {iat_adcChannel != 16}
+		field = "Middle temperature",					iat_tempC_2, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ MT",						iat_resistance_2, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Highest temperature",					iat_tempC_3, {iat_adcChannel != 16}
-		field = "Resistance @ HT",						iat_resistance_3, {iat_adcChannel != 16}
+		field = "Highest temperature",					iat_tempC_3, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Resistance @ HT",						iat_resistance_3, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
 		field = ""
-		field = "Linear characteristic",				useLinearIatSensor, {iat_adcChannel != 16}
+		field = "Linear characteristic",				useLinearIatSensor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = iatGauges
 		gauge = IATGauge
@@ -2116,10 +2122,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Sensors->Oil pressure sensor
 	dialog = oilp_settings, "Oil Pressure Sensor"
 		field = "Oil Pressure ADC input",				oilPressure_hwChannel
-		field = "low voltage",							oilPressure_v1, {oilPressure_hwChannel != 16}
-		field = "low pressure",							oilPressure_value1, {oilPressure_hwChannel != 16}
-		field = "high voltage",							oilPressure_v2, {oilPressure_hwChannel != 16}
-		field = "high pressure",						oilPressure_value2, {oilPressure_hwChannel != 16}
+		field = "low voltage",							oilPressure_v1, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "low pressure",							oilPressure_value1, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high voltage",							oilPressure_v2, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "high pressure",						oilPressure_value2, {oilPressure_hwChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = oilPressureGauges
 		gauge = OilPressGauge
@@ -2132,11 +2138,11 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Sensors->MAP sensor
 	dialog = mapSensorAnalog, "MAP sensor", yAxis		
 		field = "MAP ADC input", 						map_sensor_hwChannel
-		field = "MAP type",								map_sensor_type
-		field = "MAP value low point",  		        map_sensor_lowValue
-		field = "MAP voltage low point", 	 		    mapLowValueVoltage
-		field = "MAP value high point",               	map_sensor_highValue
-		field = "MAP voltage high value",               mapHighValueVoltage
+		field = "MAP type",								map_sensor_type,     { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ }
+		field = "MAP value low point",  		        map_sensor_lowValue, { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
+		field = "MAP voltage low point", 	 		    mapLowValueVoltage,  { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
+		field = "MAP value high point",               	map_sensor_highValue,{ map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
+		field = "MAP voltage high value",               mapHighValueVoltage, { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
 		
 	dialog = mapSensorFreq, "MAP frequency sensor", yAxis
 		field = "MAP Freq",								frequencyReportingMapInputPin

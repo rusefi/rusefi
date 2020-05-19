@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri May 15 21:04:15 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon May 18 01:21:34 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -18,6 +18,7 @@ public class Fields {
 	public static final int activateAuxPid2_offset = 76;
 	public static final int activateAuxPid3_offset = 76;
 	public static final int activateAuxPid4_offset = 76;
+	public static final int ADC_CHANNEL_NONE = 16;
 	public static final int adcVcc_offset = 548;
 	public static final int adcVcc_offset_hex = 224;
 	public static final int afr_alignAf_offset = 561;

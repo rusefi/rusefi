@@ -26,6 +26,8 @@ enum class TsCalMode : uint8_t {
 	EtbKp = 3,
 	EtbKi = 4,
 	EtbKd = 5,
+	Tps1SecondaryMax = 6,
+	Tps1SecondaryMin = 7,
 };
 
 /**
