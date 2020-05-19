@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue May 19 08:38:18 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue May 19 11:53:58 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -3206,8 +3206,8 @@ struct engine_configuration_s {
 	/**
 	 * offset 4516
 	 */
-	int mainUnusedEnd[358];
-	/** total size 5948*/
+	int mainUnusedEnd[371];
+	/** total size 6000*/
 };
 
 typedef struct engine_configuration_s engine_configuration_s;
@@ -3219,295 +3219,295 @@ struct persistent_config_s {
 	 */
 	engine_configuration_s engineConfiguration;
 	/**
-	 * offset 5948
+	 * offset 6000
 	 */
 	error_message_t warning_message;
 	/**
-	 * offset 6068
+	 * offset 6120
 	 */
 	float afterstartCoolantBins[AFTERSTART_HOLD_CURVE_SIZE];
 	/**
-	 * offset 6100
+	 * offset 6152
 	 */
 	float afterstartHoldTime[AFTERSTART_HOLD_CURVE_SIZE];
 	/**
-	 * offset 6132
+	 * offset 6184
 	 */
 	float afterstartEnrich[AFTERSTART_ENRICH_CURVE_SIZE];
 	/**
-	 * offset 6164
+	 * offset 6216
 	 */
 	float afterstartDecayTime[AFTERSTART_DECAY_CURVE_SIZE];
 	/**
-	 * offset 6196
+	 * offset 6248
 	 */
 	boost_table_t boostTableOpenLoop;
 	/**
-	 * offset 6260
+	 * offset 6312
 	 */
 	uint8_t unused6312[8];
 	/**
-	 * offset 6268
+	 * offset 6320
 	 */
 	uint8_t boostRpmBins[BOOST_RPM_COUNT];
 	/**
-	 * offset 6276
+	 * offset 6328
 	 */
 	boost_table_t boostTableClosedLoop;
 	/**
-	 * offset 6340
+	 * offset 6392
 	 */
 	uint8_t boostTpsBins[BOOST_LOAD_COUNT];
 	/**
-	 * offset 6348
+	 * offset 6400
 	 */
 	pedal_to_tps_t pedalToTpsTable;
 	/**
-	 * offset 6412
+	 * offset 6464
 	 */
 	uint8_t pedalToTpsPedalBins[PEDAL_TO_TPS_SIZE];
 	/**
-	 * offset 6420
+	 * offset 6472
 	 */
 	uint8_t pedalToTpsRpmBins[PEDAL_TO_TPS_SIZE];
 	/**
 	 * CLT-based cranking position multiplier for simple manual idle controller
-	 * offset 6428
+	 * offset 6480
 	 */
 	float cltCrankingCorrBins[CLT_CRANKING_CURVE_SIZE];
 	/**
 	 * CLT-based cranking position multiplier for simple manual idle controller
-	 * offset 6460
+	 * offset 6512
 	 */
 	float cltCrankingCorr[CLT_CRANKING_CURVE_SIZE];
 	/**
 	 * Optional timing advance table for Idle (see useSeparateAdvanceForIdle)
-	 * offset 6492
+	 * offset 6544
 	 */
 	float idleAdvanceBins[IDLE_ADVANCE_CURVE_SIZE];
 	/**
 	 * Optional timing advance table for Idle (see useSeparateAdvanceForIdle)
-	 * offset 6524
+	 * offset 6576
 	 */
 	float idleAdvance[IDLE_ADVANCE_CURVE_SIZE];
 	/**
 	 * Optional VE table for Idle (see useSeparateVEForIdle)
-	 * offset 6556
+	 * offset 6608
 	 */
 	float idleVeBins[IDLE_VE_CURVE_SIZE];
 	/**
 	 *  Optional VE table for Idle (see useSeparateVEForIdle)
-	 * offset 6588
+	 * offset 6640
 	 */
 	float idleVe[IDLE_VE_CURVE_SIZE];
 	/**
-	 * offset 6620
+	 * offset 6672
 	 */
 	le_formula_t fsioFormulas[FSIO_COMMAND_COUNT];
 	/**
-	 * offset 9820
+	 * offset 9872
 	 */
 	le_formula_t timingMultiplier;
 	/**
-	 * offset 10020
+	 * offset 10072
 	 */
 	le_formula_t timingAdditive;
 	/**
-	 * offset 10220
+	 * offset 10272
 	 */
 	float cltFuelCorrBins[CLT_CURVE_SIZE];
 	/**
-	 * offset 10284
+	 * offset 10336
 	 */
 	float cltFuelCorr[CLT_CURVE_SIZE];
 	/**
-	 * offset 10348
+	 * offset 10400
 	 */
 	float iatFuelCorrBins[IAT_CURVE_SIZE];
 	/**
-	 * offset 10412
+	 * offset 10464
 	 */
 	float iatFuelCorr[IAT_CURVE_SIZE];
 	/**
-	 * offset 10476
+	 * offset 10528
 	 */
 	float crankingFuelCoef[CRANKING_CURVE_SIZE];
 	/**
-	 * offset 10508
+	 * offset 10560
 	 */
 	float crankingFuelBins[CRANKING_CURVE_SIZE];
 	/**
-	 * offset 10540
+	 * offset 10592
 	 */
 	float crankingCycleCoef[CRANKING_CURVE_SIZE];
 	/**
-	 * offset 10572
+	 * offset 10624
 	 */
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
 	/**
 	 * CLT-based idle position multiplier for simple manual idle controller
-	 * offset 10604
+	 * offset 10656
 	 */
 	float cltIdleCorrBins[CLT_CURVE_SIZE];
 	/**
 	 *  CLT-based idle position multiplier for simple manual idle controller
-	 * offset 10668
+	 * offset 10720
 	 */
 	float cltIdleCorr[CLT_CURVE_SIZE];
 	/**
 	 * Also known as MAF transfer function.
 	 * kg/hour value.
 	 * By the way 2.081989116 kg/h = 1 ft3/m
-	 * offset 10732
+	 * offset 10784
 	 */
 	float mafDecoding[MAF_DECODING_COUNT];
 	/**
-	 * offset 11756
+	 * offset 11808
 	 */
 	float mafDecodingBins[MAF_DECODING_COUNT];
 	/**
-	 * offset 12780
+	 * offset 12832
 	 */
 	angle_table_t ignitionIatCorrTable;
 	/**
-	 * offset 13804
+	 * offset 13856
 	 */
 	float ignitionIatCorrLoadBins[IGN_LOAD_COUNT];
 	/**
-	 * offset 13868
+	 * offset 13920
 	 */
 	float ignitionIatCorrRpmBins[IGN_RPM_COUNT];
 	/**
-	 * offset 13932
+	 * offset 13984
 	 */
 	angle_table_t injectionPhase;
 	/**
-	 * offset 14956
+	 * offset 15008
 	 */
 	float injPhaseLoadBins[FUEL_LOAD_COUNT];
 	/**
-	 * offset 15020
+	 * offset 15072
 	 */
 	float injPhaseRpmBins[FUEL_RPM_COUNT];
 	/**
-	 * offset 15084
+	 * offset 15136
 	 */
 	fuel_table_t fuelTable;
 	/**
-	 * offset 16108
+	 * offset 16160
 	 */
 	float fuelLoadBins[FUEL_LOAD_COUNT];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
-	 * offset 16172
+	 * offset 16224
 	 */
 	float fuelRpmBins[FUEL_RPM_COUNT];
 	/**
-	 * offset 16236
+	 * offset 16288
 	 */
 	ignition_table_t ignitionTable;
 	/**
-	 * offset 17260
+	 * offset 17312
 	 */
 	float ignitionLoadBins[IGN_LOAD_COUNT];
 	/**
-	 * offset 17324
+	 * offset 17376
 	 */
 	float ignitionRpmBins[IGN_RPM_COUNT];
 	/**
-	 * offset 17388
+	 * offset 17440
 	 */
 	ve_table_t veTable;
 	/**
-	 * offset 18412
+	 * offset 18464
 	 */
 	float veLoadBins[FUEL_LOAD_COUNT];
 	/**
-	 * offset 18476
+	 * offset 18528
 	 */
 	float veRpmBins[FUEL_RPM_COUNT];
 	/**
-	 * offset 18540
+	 * offset 18592
 	 */
 	afr_table_t afrTable;
 	/**
-	 * offset 18796
+	 * offset 18848
 	 */
 	float afrLoadBins[FUEL_LOAD_COUNT];
 	/**
-	 * offset 18860
+	 * offset 18912
 	 */
 	float afrRpmBins[FUEL_RPM_COUNT];
 	/**
-	 * offset 18924
+	 * offset 18976
 	 */
 	tps_tps_table_t tpsTpsAccelTable;
 	/**
-	 * offset 19180
+	 * offset 19232
 	 */
 	float tpsTpsAccelFromRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
-	 * offset 19212
+	 * offset 19264
 	 */
 	float tpsTpsAccelToRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
-	 * offset 19244
+	 * offset 19296
 	 */
 	fsio_table_8x8_f32t fsioTable1;
 	/**
-	 * offset 19500
+	 * offset 19552
 	 */
 	float fsioTable1LoadBins[FSIO_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
-	 * offset 19532
+	 * offset 19584
 	 */
 	float fsioTable1RpmBins[FSIO_TABLE_8];
 	/**
-	 * offset 19564
+	 * offset 19616
 	 */
 	fsio_table_8x8_u8t fsioTable2;
 	/**
-	 * offset 19628
+	 * offset 19680
 	 */
 	float fsioTable2LoadBins[FSIO_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
-	 * offset 19660
+	 * offset 19712
 	 */
 	float fsioTable2RpmBins[FSIO_TABLE_8];
 	/**
-	 * offset 19692
+	 * offset 19744
 	 */
 	fsio_table_8x8_u8t fsioTable3;
 	/**
-	 * offset 19756
+	 * offset 19808
 	 */
 	float fsioTable3LoadBins[FSIO_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
-	 * offset 19788
+	 * offset 19840
 	 */
 	float fsioTable3RpmBins[FSIO_TABLE_8];
 	/**
-	 * offset 19820
+	 * offset 19872
 	 */
 	fsio_table_8x8_u8t fsioTable4;
 	/**
-	 * offset 19884
+	 * offset 19936
 	 */
 	float fsioTable4LoadBins[FSIO_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
-	 * offset 19916
+	 * offset 19968
 	 */
 	float fsioTable4RpmBins[FSIO_TABLE_8];
-	/** total size 19948*/
+	/** total size 20000*/
 };
 
 typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue May 19 08:38:18 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue May 19 11:53:58 EDT 2020

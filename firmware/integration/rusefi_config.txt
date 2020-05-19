@@ -1294,7 +1294,8 @@ uint8_t[4] unusuedsw;
 	uint16_t mc33_t_hold_off;
 	uint16_t mc33_t_hold_tot;
 
-	int[358] mainUnusedEnd;
+! just a reminder that 'int' and 'float' are 4 bytes each
+	int[371] mainUnusedEnd;
 
 ! end of engine_configuration_s
 end_struct
