@@ -11,10 +11,7 @@ import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.tools.ConsoleTools;
-import com.rusefi.ui.FormulasPane;
-import com.rusefi.ui.GaugesPanel;
-import com.rusefi.ui.MessagesPane;
-import com.rusefi.ui.SensorsLiveDataPane;
+import com.rusefi.ui.*;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -45,7 +42,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20200516;
+    public static final int CONSOLE_VERSION = 20200520;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
@@ -147,6 +144,9 @@ public class Launcher {
             if (tabbedPane.paneSettings.showTriggerShapePane)
                 tabbedPane.addTab("Trigger Shape", new AverageAnglePanel().getPanel());
         }
+
+        tabbedPane.addTab("rusEFI Online", new OnlineTab().getContent());
+
 
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
