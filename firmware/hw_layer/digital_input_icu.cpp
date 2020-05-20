@@ -182,6 +182,20 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 		return &ICUD3;
 	}
 #endif
+#if STM32_ICU_USE_TIM8
+	if (hwPin == GPIOC_6 ||
+		hwPin == GPIOC_7) {
+		return &ICUD8;
+	}
+#endif
+#if STM32_ICU_USE_TIM9
+	if (hwPin == GPIOA_2 ||
+		hwPin == GPIOA_3 ||
+		hwPin == GPIOE_5 ||
+		hwPin == GPIOE_6) {
+		return &ICUD9;
+	}
+#endif
 	return nullptr;
 }
 
