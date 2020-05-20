@@ -252,6 +252,11 @@ stm32_hardware_pwm pwmChannels[] = {
 
 /*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty)
 {
+	// Slow PWM isn't worth doing on hardware - reserve that timer for something faster if needed.
+	if (frequencyHz < 100) {
+		return nullptr;
+	}
+
 	for (size_t i = 0; i < efi::size(pwmChannels); i++) {
 		auto& channel = pwmChannels[i];
 		if (channel.BrainPin == pin) {
