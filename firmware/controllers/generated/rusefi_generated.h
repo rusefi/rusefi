@@ -2051,6 +2051,23 @@
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
 #define tChargeMode_offset 3884
 #define tChargeMode_offset_hex f2c
+#define tcu_solenoid1_offset 1192
+#define tcu_solenoid1_offset_hex 4a8
+#define tcu_solenoid2_offset 1193
+#define tcu_solenoid2_offset_hex 4a9
+#define tcu_solenoid3_offset 1194
+#define tcu_solenoid3_offset_hex 4aa
+#define tcu_solenoid4_offset 1195
+#define tcu_solenoid4_offset_hex 4ab
+#define tcu_solenoid5_offset 1196
+#define tcu_solenoid5_offset_hex 4ac
+#define tcu_solenoid6_offset 1197
+#define tcu_solenoid6_offset_hex 4ad
+#define tcu_solenoid7_offset 1198
+#define tcu_solenoid7_offset_hex 4ae
+#define tcu_solenoid8_offset 1199
+#define tcu_solenoid8_offset_hex 4af
+#define TCU_SOLENOID_COUNT 8
 #define test557pin_offset 3101
 #define test557pin_offset_hex c1d
 #define throttlePedalPositionAdcChannel_offset 580
@@ -2335,8 +2352,8 @@
 #define unused_1484_bit_31_offset_hex 5c4
 #define unused_former_warmup_target_afr_offset 2100
 #define unused_former_warmup_target_afr_offset_hex 834
-#define unusedAtOldBoardConfigurationEnd_offset 1192
-#define unusedAtOldBoardConfigurationEnd_offset_hex 4a8
+#define unusedAtOldBoardConfigurationEnd_offset 1200
+#define unusedAtOldBoardConfigurationEnd_offset_hex 4b0
 #define unusedBit4_1476_offset 1476
 #define unusedBit4_1476_offset_hex 5c4
 #define unusedBit_251_11_offset 976
