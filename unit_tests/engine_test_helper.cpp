@@ -57,7 +57,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	commonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-	engine->engineConfigurationPtr->mafAdcChannel = TEST_MAF_CHANNEL;
+	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
