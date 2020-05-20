@@ -1289,15 +1289,15 @@ uint8_t[4] unusuedsw;
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
 
-	uint16_t mc33_i_boost;
-	uint16_t mc33_i_peak;
-	uint16_t mc33_i_hold;
-	uint16_t mc33_t_max_boost;
-	uint16_t mc33_t_peak_off;
-	uint16_t mc33_t_peak_tot;
-	uint16_t mc33_t_bypass;
-	uint16_t mc33_t_hold_off;
-	uint16_t mc33_t_hold_tot;
+	uint16_t mc33_i_boost;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_i_peak;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_i_hold;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_max_boost;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_peak_off;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_peak_tot;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_bypass;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_hold_off;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_hold_tot;;"X",   1,   0.0,        0,  64000,   0
 
 ! just a reminder that 'int' and 'float' are 4 bytes each
 	int[371] mainUnusedEnd;
