@@ -18,7 +18,6 @@
 
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
-extern float testMafValue;
 extern engine_configuration_s & activeConfiguration;
 
 EngineTestHelperBase::EngineTestHelperBase() { 
@@ -29,7 +28,7 @@ EngineTestHelperBase::EngineTestHelperBase() {
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback) {
 	unitTestWarningCodeState.clear();
 
-	testMafValue = 0;
+
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
 	enginePins.reset();
