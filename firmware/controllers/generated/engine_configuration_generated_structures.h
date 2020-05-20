@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue May 19 11:53:58 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 20 01:18:09 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1921,7 +1921,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1192
 	 */
-	int unusedAtOldBoardConfigurationEnd[67];
+	output_pin_e tcu_solenoid[TCU_SOLENOID_COUNT];
+	/**
+	 * offset 1200
+	 */
+	int unusedAtOldBoardConfigurationEnd[65];
 	/**
 	 * offset 1460
 	 */
@@ -3510,4 +3514,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue May 19 11:53:58 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 20 01:18:09 EDT 2020
