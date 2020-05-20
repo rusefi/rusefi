@@ -39,7 +39,7 @@ public class ConsoleTools {
         TOOLS.put("functional_test", ConsoleTools::runFunctionalTest);
         TOOLS.put("compile_fsio_file", ConsoleTools::runCompileTool);
         TOOLS.put("firing_order", ConsoleTools::runFiringOrderTool);
-        TOOLS.put("fun_convert", ConsoleTools::convertBinaryToXml);
+        TOOLS.put("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml);
         TOOLS.put("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT));
         TOOLS.put(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU));
     }
