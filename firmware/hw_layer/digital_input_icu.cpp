@@ -195,7 +195,7 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 		return &ICUD9;
 	}
 #endif
-	return (ICUDriver *) NULL;
+	return nullptr;
 }
 
 void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {

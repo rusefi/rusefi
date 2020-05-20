@@ -120,7 +120,6 @@ temperature_t getCoolantTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  			engineConfiguration->useLinearCltSensor PASS_ENGINE_PARAMETER_SUFFIX);
 	if (!isValidCoolantTemperature(temperature)) {
 		efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
-		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT %.2f", temperature);
 		engine->isCltBroken = true;
 		return LIMPING_MODE_CLT_TEMPERATURE;
 	}
@@ -197,9 +196,6 @@ temperature_t getIntakeAirTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			engineConfiguration->useLinearIatSensor PASS_ENGINE_PARAMETER_SUFFIX);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
-#if EFI_PROD_CODE || EFI_UNIT_TEST
-		warning(OBD_Intake_Air_Temperature_Circuit_Malfunction, "unrealistic IAT %.2f", temperature);
-#endif /* EFI_PROD_CODE */
 		return LIMPING_MODE_IAT_TEMPERATURE;
 	}
 	return temperature;

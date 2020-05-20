@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue May 19 11:53:58 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 20 01:18:09 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1379,6 +1379,15 @@ public class Fields {
 	public static final int tChargeMinRpmMaxTps_offset = 2236;
 	public static final int tChargeMinRpmMinTps_offset = 2232;
 	public static final int tChargeMode_offset = 3884;
+	public static final int tcu_solenoid1_offset = 1192;
+	public static final int tcu_solenoid2_offset = 1193;
+	public static final int tcu_solenoid3_offset = 1194;
+	public static final int tcu_solenoid4_offset = 1195;
+	public static final int tcu_solenoid5_offset = 1196;
+	public static final int tcu_solenoid6_offset = 1197;
+	public static final int tcu_solenoid7_offset = 1198;
+	public static final int tcu_solenoid8_offset = 1199;
+	public static final int TCU_SOLENOID_COUNT = 8;
 	public static final int test557pin_offset = 3101;
 	public static final int throttlePedalPositionAdcChannel_offset = 580;
 	public static final int throttlePedalPositionAdcChannel_offset_hex = 244;
@@ -1574,7 +1583,7 @@ public class Fields {
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_former_warmup_target_afr_offset = 2100;
 	public static final int unused_former_warmup_target_afr_offset_hex = 834;
-	public static final int unusedAtOldBoardConfigurationEnd_offset = 1192;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 1200;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_11_offset = 976;
 	public static final int unusedBit_251_12_offset = 976;
@@ -2222,6 +2231,14 @@ public class Fields {
 	public static final Field ENGINEMAKE = Field.create("ENGINEMAKE", 1096, FieldType.INT);
 	public static final Field ENGINECODE = Field.create("ENGINECODE", 1128, FieldType.INT);
 	public static final Field VEHICLENAME = Field.create("VEHICLENAME", 1160, FieldType.INT);
+	public static final Field TCU_SOLENOID1 = Field.create("TCU_SOLENOID1", 1192, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID2 = Field.create("TCU_SOLENOID2", 1193, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID3 = Field.create("TCU_SOLENOID3", 1194, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID4 = Field.create("TCU_SOLENOID4", 1195, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID5 = Field.create("TCU_SOLENOID5", 1196, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID6 = Field.create("TCU_SOLENOID6", 1197, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID7 = Field.create("TCU_SOLENOID7", 1198, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID8 = Field.create("TCU_SOLENOID8", 1199, FieldType.INT8, output_pin_e);
 	public static final Field TPS2SECONDARYMIN = Field.create("TPS2SECONDARYMIN", 1460, FieldType.INT16);
 	public static final Field TPS2SECONDARYMAX = Field.create("TPS2SECONDARYMAX", 1462, FieldType.INT16);
 	public static final Field UNUSEDHEREWEHAVE = Field.create("UNUSEDHEREWEHAVE", 1464, FieldType.BIT, 0);
@@ -3205,6 +3222,14 @@ public class Fields {
 	ENGINEMAKE,
 	ENGINECODE,
 	VEHICLENAME,
+	TCU_SOLENOID1,
+	TCU_SOLENOID2,
+	TCU_SOLENOID3,
+	TCU_SOLENOID4,
+	TCU_SOLENOID5,
+	TCU_SOLENOID6,
+	TCU_SOLENOID7,
+	TCU_SOLENOID8,
 	TPS2SECONDARYMIN,
 	TPS2SECONDARYMAX,
 	UNUSEDHEREWEHAVE,
