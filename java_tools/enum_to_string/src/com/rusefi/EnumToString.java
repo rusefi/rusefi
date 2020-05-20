@@ -89,11 +89,10 @@ public class EnumToString {
         SystemOut.println("Reading enums from " + inFileName);
         String simpleFileName = f.getName();
 
-        bothFilesHeader.insert(0, "// " +
-                LazyFile.LAZY_FILE_TAG + " from " + simpleFileName + " ");
+        bothFilesHeader.insert(0, "// " + LazyFile.LAZY_FILE_TAG + " from " + simpleFileName + " ");
 
         includesSection.append("#include \"" + simpleFileName + "\"\n");
-        EnumsReader.process(new FileReader(inFileName));
+        EnumsReader.process(new FileReader(f));
     }
 
     public static void outputData() {
