@@ -4,7 +4,7 @@
 // was generated automatically by rusEfi tool  from rusefi_hw_enums.h
 // was generated automatically by rusEfi tool  from rusefi_enums.h
 // by enum2string.jar tool
-// on Wed May 20 00:37:44 EDT 2020
+// on Wed May 20 01:03:28 EDT 2020
 // see also gen_config_and_enums.bat
 
 
@@ -737,6 +737,8 @@ case GEAR_4:
   return "GEAR_4";
 case NEUTRAL:
   return "NEUTRAL";
+case REVERSE:
+  return "REVERSE";
   }
  return NULL;
 }
