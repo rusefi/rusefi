@@ -1,7 +1,6 @@
 package com.rusefi.ui.livedocs;
 
 import com.opensr5.ConfigurationImage;
-import com.rusefi.Launcher;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
@@ -163,7 +162,7 @@ public class LiveDocPanel {
     }
 
     private static String getTooltipText(String configurationFieldName) {
-        DialogModel.Field dialogField = IniFileModel.getInstance(Launcher.INI_FILE_PATH).getField(configurationFieldName);
+        DialogModel.Field dialogField = IniFileModel.getInstance().getField(configurationFieldName);
         if (dialogField == null) {
             return "Configuration " + configurationFieldName;
         }
