@@ -8,6 +8,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Msq {
     private final Page page = new Page();
 
+    private final VersionInfo versionInfo;
+
+    public Msq() {
+        versionInfo = new VersionInfo("rusEFI+2020");
+    }
+
     @XmlAttribute
     public String getXmlns() {
         return "http://www.msefi.com/:msq";
@@ -20,7 +26,7 @@ public class Msq {
 
     @XmlElement
     public VersionInfo getVersionInfo() {
-        return new VersionInfo();
+        return versionInfo;
     }
 
     @XmlElement
