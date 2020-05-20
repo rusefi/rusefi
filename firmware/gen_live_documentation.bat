@@ -16,12 +16,6 @@ java -DSystemOut.name=gen_live_documentation ^
 
 java -DSystemOut.name=gen_live_documentation ^
  -jar ../java_tools/ConfigDefinition.jar ^
- -definition integration/thermistor_state.txt ^
- -java_destination ../java_console/models/src/com/rusefi/config/generated/ThermistorState.java ^
- -c_destination controllers/generated/thermistor_generated.h
-
-java -DSystemOut.name=gen_live_documentation ^
- -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration/trigger_central.txt ^
  -java_destination ../java_console/models/src/com/rusefi/config/generated/TriggerCentral.java ^
  -c_destination controllers/generated/trigger_central_generated.h

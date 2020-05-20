@@ -13,7 +13,6 @@
 EXTERN_ENGINE;
 
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initThermistors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 	initMapDecoder(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 }
 

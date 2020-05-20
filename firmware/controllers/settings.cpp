@@ -373,28 +373,6 @@ static void setOperationMode(int value) {
 
 static char pinNameBuffer[16];
 
-static void printThermistor(const char *msg, ThermistorConf *config, ThermistorMath *tm, bool useLinear) {
-	adc_channel_e adcChannel = config->adcChannel;
-	float voltage = getVoltageDivided("term", adcChannel PASS_ENGINE_PARAMETER_SUFFIX);
-	float r = getResistance(config, voltage);
-
-	float t = getTemperatureC(config, tm, useLinear);
-
-	thermistor_conf_s *tc = &config->config;
-
-	scheduleMsg(&logger, "%s volts=%.2f Celsius=%.2f sensorR=%.2f on channel %d", msg, voltage, t, r, adcChannel);
-	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(msg, adcChannel, pinNameBuffer));
-	scheduleMsg(&logger, "C=%.2f/R=%.2f C=%.2f/R=%.2f C=%.2f/R=%.2f",
-			tc->tempC_1, tc->resistance_1,
-			tc->tempC_2, tc->resistance_2,
-			tc->tempC_3, tc->resistance_3);
-
-	// %.5f
-	scheduleMsg(&logger, "bias resistor=%.2fK A=%.5f B=%.5f C=%.5f", tc->bias_resistor / 1000,
-			tm->s_h_a, tm->s_h_b, tm->s_h_c);
-	scheduleMsg(&logger, "==============================");
-}
-
 static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int16_t max, adc_channel_e channel) {
 	auto tps = Sensor::get(sensor);
 	auto raw = Sensor::getRaw(sensor);

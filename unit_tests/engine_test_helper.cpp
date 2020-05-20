@@ -244,9 +244,6 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT";
-
-
 	ASSERT_EQ( 0,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #1";
 	eth->setTriggerType(trigger PASS_ENGINE_PARAMETER_SUFFIX);
 }

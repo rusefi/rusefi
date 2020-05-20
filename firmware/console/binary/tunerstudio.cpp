@@ -274,10 +274,6 @@ static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 
 static const void * getStructAddr(int structId) {
 	switch (structId) {
-	case LDS_CLT_STATE_INDEX:
-		return static_cast<thermistor_state_s*>(&engine->engineState.cltCurve);
-	case LDS_IAT_STATE_INDEX:
-		return static_cast<thermistor_state_s*>(&engine->engineState.iatCurve);
 	case LDS_ENGINE_STATE_INDEX:
 		return static_cast<engine_state2_s*>(&engine->engineState);
 	case LDS_FUEL_TRIM_STATE_INDEX:
