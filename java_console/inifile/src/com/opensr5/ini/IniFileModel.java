@@ -13,6 +13,7 @@ import java.util.*;
 public class IniFileModel {
     public static final String RUSEFI_INI_PREFIX = "rusefi";
     public static final String RUSEFI_INI_SUFFIX = ".ini";
+    public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     private static final String SECTION_PAGE = "page";
     private static final String FIELD_TYPE_SCALAR = "scalar";
     private static final String FIELD_TYPE_STRING = "string";
@@ -31,7 +32,7 @@ public class IniFileModel {
     public Map<String, String> tooltips = new TreeMap<>();
 
     public static void main(String[] args) {
-        System.out.println(IniFileModel.getInstance("..").dialogs);
+        System.out.println(IniFileModel.getInstance().dialogs);
     }
 
     private boolean isInSettingContextHelp = false;
@@ -200,10 +201,10 @@ public class IniFileModel {
         DIALOG
     }
 
-    public static synchronized IniFileModel getInstance(String iniFilePath) {
+    public static synchronized IniFileModel getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new IniFileModel();
-            INSTANCE.readIniFile(iniFilePath);
+            INSTANCE.readIniFile(INI_FILE_PATH);
         }
         return INSTANCE;
     }
