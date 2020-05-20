@@ -14,6 +14,7 @@
 #include "global.h"
 #include "fsio_impl.h"
 #include "allsensors.h"
+#include "sensor.h"
 
 EXTERN_ENGINE;
 
@@ -24,7 +25,6 @@ EXTERN_ENGINE;
 #include "rpm_calculator.h"
 #include "efi_gpio.h"
 #include "pwm_generator_logic.h"
-#include "sensor.h"
 
 /**
  * in case of zero frequency pin is operating as simple on/off. '1' for ON and '0' for OFF
@@ -59,10 +59,10 @@ static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 // @returns float number of seconds since last A/C toggle
 static LENameOrdinalPair leTimeSinceAcToggle(LE_METHOD_TIME_SINCE_AC_TOGGLE, "time_since_ac_on_switch");
 static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
-static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
-static LENameOrdinalPair leFsioTable(LE_METHOD_FSIO_TABLE, "fsio_table");
-static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, "fsio_analog_input");
-static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, "fsio_digital_input");
+static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, FSIO_METHOD_FSIO_SETTING);
+static LENameOrdinalPair leFsioTable(LE_METHOD_FSIO_TABLE, FSIO_METHOD_FSIO_TABLE);
+static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, FSIO_METHOD_FSIO_ANALOG_INPUT);
+static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, FSIO_METHOD_FSIO_DIGITAL_INPUT);
 static LENameOrdinalPair leKnock(LE_METHOD_KNOCK, "knock");
 static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
 static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
@@ -125,7 +125,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_IS_COOLANT_BROKEN:
 		return !Sensor::get(SensorType::Clt).Valid;
 	case LE_METHOD_INTAKE_AIR:
-		return getIntakeAirTemperature();
+		return Sensor::get(SensorType::Iat).value_or(0);
 	case LE_METHOD_RPM:
 		return engine->rpmCalculator.getRpm();
 	case LE_METHOD_MAF:
@@ -162,7 +162,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 
 #include "pin_repository.h"
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 // todo: that's about bench test mode, wrong header for sure!
 #include "bench_test.h"
 
@@ -740,7 +740,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// see MAIN_RELAY_LOGIC
 	if (CONFIG(mainRelayPin) != GPIO_UNASSIGNED) {
-		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > 5) || engine->isInShutdownMode());
+		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > LOW_VBATT) || engine->isInShutdownMode());
 	}
 	// see STARTER_RELAY_LOGIC
 	if (CONFIG(starterRelayDisablePin) != GPIO_UNASSIGNED) {
@@ -748,8 +748,9 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	// see FAN_CONTROL_LOGIC
 	if (CONFIG(fanPin) != GPIO_UNASSIGNED) {
-		enginePins.fanRelay.setValue((enginePins.fanRelay.getLogicValue() && (getCoolantTemperature() > engineConfiguration->fanOffTemperature)) || 
-			(getCoolantTemperature() > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
+		auto clt = Sensor::get(SensorType::Clt);
+		enginePins.fanRelay.setValue(!clt.Valid || (enginePins.fanRelay.getLogicValue() && (clt.Value > engineConfiguration->fanOffTemperature)) || 
+			(clt.Value > engineConfiguration->fanOnTemperature) || engine->isCltBroken);
 	}
 	// see AC_RELAY_LOGIC
 	if (CONFIG(acRelayPin) != GPIO_UNASSIGNED) {

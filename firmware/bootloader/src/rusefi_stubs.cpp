@@ -33,4 +33,5 @@ LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT
 void irqEnterHook() {}
 void irqExitHook() {}
 void contextSwitchHook() {}
+void threadInitHook(void*) {}
 //#endif /* ENABLE_PERF_TRACE */

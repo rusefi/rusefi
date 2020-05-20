@@ -32,7 +32,8 @@ public:
 	OutputPin();
 	/**
 	 * initializes pin & registers it in pin repository
-	 * todo: add a comment explaining why outputMode POINTER not VALUE?
+	 * outputMode being a pointer allow us to change configuration (for example invert logical pin) in configuration and get resuts applied
+	 * away, or at least I hope that's why
 	 */
 	void initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode);
 	/**
@@ -145,8 +146,6 @@ public:
 	OutputPin runningLedPin; // green LED on brain board by default
 
 	OutputPin debugTriggerSync;
-	OutputPin debugTimerCallback;
-	OutputPin debugSetTimer;
 	OutputPin boostPin;
 	OutputPin idleSolenoidPin;
 	OutputPin secondIdleSolenoidPin;

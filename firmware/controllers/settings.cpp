@@ -25,7 +25,7 @@
 #include "idle_thread.h"
 #include "allsensors.h"
 #include "alternator_controller.h"
-#include "trigger_emulator.h"
+#include "trigger_emulator_algo.h"
 #include "sensor.h"
 
 #if EFI_PROD_CODE
@@ -694,6 +694,14 @@ static void setCanTxPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->canTxPin, "CAN TX");
 }
 
+static void setAuxRxpin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->auxSerialRxPin, "AUX RX");
+}
+
+static void setAuxTxpin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->auxSerialTxPin, "AUX TX");
+}
+
 static void setAlternatorPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->alternatorControlPin, "alternator");
 }
@@ -972,7 +980,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "ignition")) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "self_stimulation")) {
-		engineConfiguration->directSelfStimulation = isEnabled;
+		engine->directSelfStimulation = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {
@@ -1135,6 +1143,8 @@ static void getValue(const char *paramStr) {
 #endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		scheduleMsg(&logger, "tps_min=%d", engineConfiguration->tpsMin);
+	} else if (strEqualCaseInsensitive(paramStr, "trigger_only_front")) {
+		scheduleMsg(&logger, "trigger_only_front=%d", engineConfiguration->useOnlyRisingEdgeForTrigger);
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
 		scheduleMsg(&logger, "tps_max=%d", engineConfiguration->tpsMax);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
@@ -1267,6 +1277,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"bor", setBor},
 #if EFI_CAN_SUPPORT
 		{"can_mode", setCanType},
+		{"can_vss", setCanVss},
 #endif /* EFI_CAN_SUPPORT */
 #if EFI_IDLE_CONTROL
 		{"idle_position", setIdleValvePosition},
@@ -1440,6 +1451,9 @@ void initSettings(void) {
 
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
+
+	addConsoleActionS("set_aux_tx_pin", setAuxTxpin);
+	addConsoleActionS("set_aux_rx_pin", setAuxRxpin);
 
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);

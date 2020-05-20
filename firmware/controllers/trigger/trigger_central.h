@@ -50,11 +50,17 @@ public:
 
 	angle_t getVVTPosition();
 
+	// latest VVT event position (could be not synchronization event)
+	angle_t currentVVTEventPosition = 0;
+	// synchronization event position
 	angle_t vvtPosition = 0;
+
 	/**
 	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic
 	 */
 	efitick_t timeAtVirtualZeroNt = 0;
+
+	efitick_t vvtSyncTimeNt = 0;
 
 	TriggerWaveform triggerShape;
 

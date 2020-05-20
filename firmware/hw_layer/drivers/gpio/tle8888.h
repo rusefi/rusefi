@@ -26,6 +26,7 @@
 #define Window_watchdog_close_window_time_ms 100.8
 
 #define getRegisterFromResponse(x) (((x) >> 1) & 0x7f)
+#define getDataFromResponse(x) (((x) >> 8) & 0xff)
 
 // unchangeable value for TLE8888QK
 // unused for now
@@ -50,7 +51,15 @@ struct tle8888_config {
 		/* ...used to drive output (starts from 1, as in DS, coders gonna hate) */
 		int 			output;
 	} direct_io[TLE8888_DIRECT_MISC];
-	bool hallMode;
+	struct {
+		ioportid_t		port;
+		uint_fast8_t	pad;
+	} ign_en;
+	struct {
+		ioportid_t		port;
+		uint_fast8_t	pad;
+	} inj_en;
+	tle8888_mode_e mode;
 };
 
 #ifdef __cplusplus

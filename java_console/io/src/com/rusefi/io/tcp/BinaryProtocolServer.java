@@ -111,8 +111,8 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 short offset = dis.readShort();
                 short count = dis.readShort(); // no swap here? interesting!
                 System.out.println("CRC check " + page + "/" + offset + "/" + count);
-                BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
-                int result = IoHelper.getCrc32(bp.getController().getContent(), offset, count);
+                BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+                int result = IoHelper.getCrc32(bp.getControllerConfiguration().getContent(), offset, count);
                 ByteArrayOutputStream response = new ByteArrayOutputStream();
                 response.write(TS_OK.charAt(0));
                 new DataOutputStream(response).write(result);
@@ -127,10 +127,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                     FileLog.MAIN.logLine("Error: negative read request " + offset + "/" + count);
                 } else {
                     System.out.println("read " + page + "/" + offset + "/" + count);
-                    BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+                    BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
                     byte[] response = new byte[1 + count];
                     response[0] = (byte) TS_OK.charAt(0);
-                    System.arraycopy(bp.getController().getContent(), offset, response, 1, count);
+                    System.arraycopy(bp.getControllerConfiguration().getContent(), offset, response, 1, count);
                     stream.sendPacket(response, FileLog.LOGGER);
                 }
             } else if (command == COMMAND_OUTPUTS) {
@@ -141,7 +141,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
                 byte[] response = new byte[1 + Fields.TS_OUTPUT_SIZE];
                 response[0] = (byte) TS_OK.charAt(0);
-                BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+                BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
                 byte[] currentOutputs = bp.currentOutputs;
                 if (currentOutputs != null)
                     System.arraycopy(currentOutputs, 1, response, 1, Fields.TS_OUTPUT_SIZE);

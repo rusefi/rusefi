@@ -69,8 +69,6 @@ static void setupTle9201Etb() {
 	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
 	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
 	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
-	// PWM frequency needs to be configured to match the physical part
-	engineConfiguration->etbFreq = 800;
 }
 
 // Configure key sensors inputs.
@@ -124,8 +122,8 @@ void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
 }
 
 
@@ -142,7 +140,6 @@ void setBoardConfigurationOverrides(void) {
 	// This is often redundant with efifeatures.h or the run-time config
 	engineConfiguration->triggerErrorPin = GPIOE_1;
 	engineConfiguration->communicationLedPin = GPIOE_2;
-	engineConfiguration->FatalErrorPin = GPIOE_3;
 	engineConfiguration->runningLedPin = GPIOE_4;
 	engineConfiguration->warningLedPin = GPIOE_5;
 	engineConfiguration->checkEngineLedPin = GPIOE_6;

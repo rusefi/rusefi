@@ -27,8 +27,8 @@ void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOD_8;
 	engineConfiguration->binarySerialRxPin = GPIOD_9;
-	engineConfiguration->consoleSerialTxPin = GPIOD_8;
-	engineConfiguration->consoleSerialRxPin = GPIOD_9;
+//	engineConfiguration->consoleSerialTxPin = GPIOD_8;
+//	engineConfiguration->consoleSerialRxPin = GPIOD_9;
 	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }

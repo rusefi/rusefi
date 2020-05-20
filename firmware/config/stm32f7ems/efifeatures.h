@@ -50,10 +50,11 @@
 #define BOARD_TLE8888_COUNT 	1
 #endif
 
-
-
 #undef EFI_CAN_SUPPORT
 #define EFI_CAN_SUPPORT TRUE
+
+#undef EFI_AUX_SERIAL
+#define EFI_AUX_SERIAL TRUE
 
 #undef EFI_HD44780_LCD
 #define EFI_HD44780_LCD TRUE
@@ -78,16 +79,18 @@
 
 // todo: start using consoleUartDevice? Not sure
 #undef EFI_CONSOLE_SERIAL_DEVICE
-#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
 
 // todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32F7
 #undef TS_UART_DMA_MODE
 #define TS_UART_DMA_MODE FALSE
 
 #undef TS_UART_DEVICE
-#define TS_UART_DEVICE (&UARTD3)
+//#define TS_UART_DEVICE (&UARTD3)
+
 #undef TS_SERIAL_DEVICE
 #define TS_SERIAL_DEVICE (&SD3)
+
+#define AUX_SERIAL_DEVICE (&SD6)
 
 // todo: add DMA-mode for Console?
 #if (TS_UART_DMA_MODE || TS_UART_MODE)
@@ -95,15 +98,12 @@
 #endif
 
 // todo: start using consoleSerialTxPin? Not sure
-#undef EFI_CONSOLE_TX_PORT
-#define EFI_CONSOLE_TX_PORT GPIOD
-#undef EFI_CONSOLE_TX_PIN
-#define EFI_CONSOLE_TX_PIN 8
+#undef EFI_CONSOLE_TX_BRAIN_PIN
+#define EFI_CONSOLE_TX_BRAIN_PIN GPIOD_8
+
 // todo: start using consoleSerialRxPin? Not sure
-#undef EFI_CONSOLE_RX_PORT
-#define EFI_CONSOLE_RX_PORT GPIOD
-#undef EFI_CONSOLE_RX_PIN
-#define EFI_CONSOLE_RX_PIN 9
+#undef EFI_CONSOLE_RX_BRAIN_PIN
+#define EFI_CONSOLE_RX_BRAIN_PIN GPIOD_9
 
 // todo: temporary ignore errors, this is a test config
 #define EFI_PRINT_ERRORS_AS_WARNINGS TRUE

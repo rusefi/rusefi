@@ -8,15 +8,33 @@
 #include "engine.h"
 #include "os_access.h"
 
+static char warningBuffer[ERROR_BUFFER_SIZE];
+static critical_msg_t criticalErrorMessageBuffer;
+
 #if EFI_SIMULATOR || EFI_PROD_CODE
 //todo: move into simulator global
 #include "memstreams.h"
-static MemoryStream warningStream;
-static MemoryStream firmwareErrorMessageStream;
-#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
+class ErrorState {
+public:
+	/**
+	 * Class constructors are a great way to have simple initialization sequence
+	 */
+	ErrorState();
+	MemoryStream warningStream;
+	MemoryStream firmwareErrorMessageStream;
+};
 
-static char warningBuffer[ERROR_BUFFER_SIZE];
-static volatile bool isWarningStreamInitialized = false;
+ErrorState::ErrorState() {
+	/**
+	 * these methods only change RAM state of data structures without any HAL access thus safe in contructor
+	 */
+	msObjectInit(&warningStream, (uint8_t *) warningBuffer, ERROR_BUFFER_SIZE, 0);
+	msObjectInit(&firmwareErrorMessageStream, criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer), 0);
+}
+
+static ErrorState errorState;
+
+#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"
@@ -31,7 +49,6 @@ EXTERN_ENGINE;
 extern int warningEnabled;
 extern bool main_loop_started;
 
-static critical_msg_t criticalErrorMessageBuffer;
 bool hasFirmwareErrorFlag = false;
 
 const char *dbg_panic_file;
@@ -47,14 +64,14 @@ char *getFirmwareError(void) {
 
 #if EFI_PROD_CODE
 
-extern ioportid_t errorLedPort;
-extern ioportmask_t errorLedPin;
+extern ioportid_t criticalErrorLedPort;
+extern ioportmask_t criticalErrorLedPin;
 
 /**
  * low-level function is used here to reduce stack usage
  */
 #define ON_CRITICAL_ERROR() \
-		palWritePad(errorLedPort, errorLedPin, 1); \
+		palWritePad(criticalErrorLedPort, criticalErrorLedPin, 1); \
 		turnAllPinsOff(); \
 		enginePins.communicationLedPin.setValue(1);
 #endif /* EFI_PROD_CODE */
@@ -105,7 +122,17 @@ static void printWarning(const char *fmt, va_list ap) {
 
 	logger.append(WARNING_PREFIX);
 
-	printToStream(&warningStream, fmt, ap);
+	printToStream(&errorState.warningStream, fmt, ap);
+
+	if (CONFIG(showHumanReadableWarning)) {
+#if EFI_TUNER_STUDIO
+ #if defined(EFI_NO_CONFIG_WORKING_COPY)
+  memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
+ #else /* defined(EFI_NO_CONFIG_WORKING_COPY) */
+  memcpy(configWorkingCopy.warning_message, warningBuffer, sizeof(warningBuffer));
+ #endif /* defined(EFI_NO_CONFIG_WORKING_COPY) */
+#endif /* EFI_TUNER_STUDIO */
+	}
 
 	logger.append(warningBuffer);
 	append(&logger, DELIMETER);
@@ -131,10 +158,6 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 #endif /* EFI_SIMULATOR */
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
-	if (!isWarningStreamInitialized) {
-		firmwareError(CUSTOM_ERR_ASSERT, "warn stream not initialized for %d", code);
-		return false;
-	}
 	engine->engineState.warnings.addWarningCode(code);
 
 	// todo: move this logic into WarningCodeState?
@@ -199,20 +222,6 @@ void onUnlockHook(void) {
 
 #endif /* EFI_CLOCK_LOCKS */
 
-/**
- * This method should be invoked really early in firmware initialization cycle.
- *
- * Implementation can only do trivial things like changing memory state. No hardware or OS access allowed
- * within this method.
- */
-void initErrorHandlingDataStructures(void) {
-#if EFI_SIMULATOR || EFI_PROD_CODE
-	msObjectInit(&warningStream, (uint8_t *) warningBuffer, ERROR_BUFFER_SIZE, 0);
-	msObjectInit(&firmwareErrorMessageStream, criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer), 0);
-#endif
-	isWarningStreamInitialized = true;
-}
-
 void firmwareError(obd_code_e code, const char *fmt, ...) {
 #if EFI_PROD_CODE
 	if (hasFirmwareErrorFlag)
@@ -236,22 +245,14 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 		criticalErrorMessageBuffer[sizeof(criticalErrorMessageBuffer) - 1] = 0; // just to be sure
 	} else {
 		// todo: look into chsnprintf once on Chibios 3
-		firmwareErrorMessageStream.eos = 0; // reset
+		errorState.firmwareErrorMessageStream.eos = 0; // reset
 		va_list ap;
 		va_start(ap, fmt);
-		chvprintf((BaseSequentialStream *) &firmwareErrorMessageStream, fmt, ap);
+		chvprintf((BaseSequentialStream *) &errorState.firmwareErrorMessageStream, fmt, ap);
 		va_end(ap);
 		// todo: reuse warning buffer helper method
-		firmwareErrorMessageStream.buffer[firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
+		errorState.firmwareErrorMessageStream.buffer[errorState.firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
 	}
-
-#if EFI_TUNER_STUDIO
- #if defined(EFI_NO_CONFIG_WORKING_COPY)
-  memcpy(persistentState.persistentConfiguration.critical_error_message, criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer));
- #else /* defined(EFI_NO_CONFIG_WORKING_COPY) */
-  memcpy(configWorkingCopy.critical_error_message, criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer));
- #endif /* defined(EFI_NO_CONFIG_WORKING_COPY) */
-#endif /* EFI_TUNER_STUDIO */
 
 #else
 	printf("firmwareError [%s]\r\n", fmt);

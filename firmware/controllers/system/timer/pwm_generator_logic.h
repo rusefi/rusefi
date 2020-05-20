@@ -118,7 +118,7 @@ class SimplePwm : public PwmConfig {
 public:
 	SimplePwm();
 	explicit SimplePwm(const char *name);
-	void setSimplePwmDutyCycle(float dutyCycle);
+	virtual void setSimplePwmDutyCycle(float dutyCycle);
 	pin_state_t pinStates[2];
 	SingleChannelStateSequence sr[1];
 	float _switchTimes[2];

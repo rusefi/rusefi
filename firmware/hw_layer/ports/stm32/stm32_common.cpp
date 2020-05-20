@@ -272,3 +272,23 @@ void jump_to_bootloader() {
 	NVIC_SystemReset();
 }
 #endif /* EFI_PROD_CODE */
+
+#if EFI_AUX_SERIAL
+
+static bool isValidUART6TxPin(brain_pin_e pin) {
+	return pin == GPIOC_6 || pin == GPIOG_14;
+}
+
+static bool isValidUART6RxPin(brain_pin_e pin) {
+	return pin == GPIOC_7 || pin == GPIOG_9;
+}
+
+bool isValidSerialTxPin(brain_pin_e pin) {
+   return isValidUART6TxPin(pin);
+}
+
+bool isValidSerialRxPin(brain_pin_e pin) {
+   return isValidUART6RxPin(pin);
+}
+
+#endif /*EFI_AUX_SERIAL*/

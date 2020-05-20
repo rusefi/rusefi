@@ -11,7 +11,7 @@
 #if EFI_PROD_CODE
 
 #include "mpu_util.h"
-#include "flash.h"
+#include "flash_int.h"
 #include "engine.h"
 #include "pin_repository.h"
 #include "os_util.h"

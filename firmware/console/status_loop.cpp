@@ -129,30 +129,22 @@ static int logFileLineIndex = 0;
 
 static void reportSensorF(Logging *log, const char *caption, const char *units, float value,
 		int precision) {
-	bool isLogFileFormatting = true;
-
-	if (!isLogFileFormatting) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-		debugFloat(log, caption, value, precision);
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
-	} else {
 
 #if EFI_FILE_LOGGING
-		if (logFileLineIndex == 0) {
-			append(log, caption);
-			append(log, TAB);
-		} else if (logFileLineIndex == 1) {
-			append(log, units);
-			append(log, TAB);
-		} else {
-			appendFloat(log, value, precision);
-			append(log, TAB);
-		}
-#else
-		UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
-		UNUSED(precision);
-#endif /* EFI_FILE_LOGGING */
+	if (logFileLineIndex == 0) {
+		append(log, caption);
+		append(log, TAB);
+	} else if (logFileLineIndex == 1) {
+		append(log, units);
+		append(log, TAB);
+	} else {
+		appendFloat(log, value, precision);
+		append(log, TAB);
 	}
+#else
+	UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
+	UNUSED(precision);
+#endif /* EFI_FILE_LOGGING */
 }
 
 static void reportSensorI(Logging *log, const char *caption, const char *units, int value) {
@@ -382,20 +374,15 @@ void writeLogLine(void) {
 
 	if (isSdCardAlive()) {
 		appendPrintf(&fileLogger, "\r\n");
-		appendToLog(fileLogger.buffer);
+		appendToLog(fileLogger.buffer, strlen(fileLogger.buffer));
 		logFileLineIndex++;
 	}
 #endif /* EFI_FILE_LOGGING */
 }
 
-volatile int needToReportStatus = FALSE;
 static int prevCkpEventCounter = -1;
 
 static LoggingWithStorage logger2("main event handler");
-
-static void printStatus(void) {
-	needToReportStatus = TRUE;
-}
 
 /**
  * Time when the firmware version was reported last time, in seconds
@@ -571,8 +558,6 @@ static void initStatusLeds(void) {
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
 
 	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
-	enginePins.debugTimerCallback.initPin("debug: timer callback", CONFIG(debugTimerCallback));
-	enginePins.debugSetTimer.initPin("debug: set timer", CONFIG(debugSetTimer));
 }
 
 #define BLINKING_PERIOD_MS 33
@@ -606,6 +591,9 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 
 	void PeriodicTask() override {
 		counter++;
+
+		bool lowVBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) < LOW_VBATT;
+
 		if (counter == 1) {
 			// first invocation of BlinkingTask
 			setAllLeds(1);
@@ -614,7 +602,9 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			setAllLeds(0);
 		} else if (counter % 2 == 0) {
 			enginePins.communicationLedPin.setValue(0);
-			enginePins.warningLedPin.setValue(0);
+			if (!lowVBatt) {
+				enginePins.warningLedPin.setValue(0);
+			}
 		} else {
 			if (hasFirmwareError()) {
 				// special behavior in case of critical error - not equal on/off time
@@ -634,7 +624,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 
 			enginePins.communicationLedPin.setValue(1);
 	#if EFI_ENGINE_CONTROL
-			if (isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
+			if (lowVBatt || isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
 				consoleByteArrived = false;
 				enginePins.warningLedPin.setValue(1);
 			}
@@ -721,7 +711,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	tsOutputChannels->pedalPosition = pedal.Value;
-	tsOutputChannels->isPedalError = !pedal.Valid;
+	// Only report fail if you have one (many people don't)
+	tsOutputChannels->isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedal);
 
 	// Set raw sensors
 	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1);
@@ -1015,7 +1006,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField7 = (engineConfiguration->afr.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
 		break;
 	case DBG_ANALOG_INPUTS2:
-		tsOutputChannels->debugFloatField4 = getVoltage("debug", engineConfiguration->throttlePedalPositionAdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField1 = Sensor::get(SensorType::Tps1Primary).value_or(0) - Sensor::get(SensorType::Tps1Secondary).value_or(0);
+		tsOutputChannels->debugFloatField2 = Sensor::get(SensorType::Tps2Primary).value_or(0) - Sensor::get(SensorType::Tps2Secondary).value_or(0);
 		break;
 	case DBG_INSTANT_RPM:
 		{
@@ -1053,11 +1045,6 @@ void initStatusLoop(void) {
 	addConsoleActionFF("fuelinfo2", (VoidFloatFloat) showFuelInfo2);
 	addConsoleAction("fuelinfo", showFuelInfo);
 #endif
-
-#if EFI_PROD_CODE
-
-	addConsoleAction("status", printStatus);
-#endif /* EFI_PROD_CODE */
 }
 
 void startStatusThreads(void) {

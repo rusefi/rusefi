@@ -222,9 +222,15 @@ public:
 	/* 0..1 angle range */
 	void addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 	/* 0..720 angle range
-	 * Deprecated?
+	 * Deprecated!
 	 */
 	void addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+
+	/**
+	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
+	 * For example, 0..180 for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
+	 */
+	void addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
 	/* 0..720 angle range
 	 * Deprecated?
@@ -253,6 +259,8 @@ public:
 	 * See eventAngles array
 	 */
 	angle_t getAngle(int phaseIndex) const;
+
+	angle_t getCycleDuration() const;
 
 	/**
 	 * index of synchronization event within TriggerWaveform
@@ -283,9 +291,6 @@ private:
 	 * this is part of performance optimization
 	 */
 	operation_mode_e operationMode;
-
-
-	angle_t getCycleDuration() const;
 };
 
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);

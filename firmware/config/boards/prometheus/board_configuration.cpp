@@ -112,8 +112,8 @@ void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOA_0;
 	engineConfiguration->binarySerialRxPin = GPIOA_1;
-	engineConfiguration->consoleSerialTxPin = GPIOA_0;
-	engineConfiguration->consoleSerialRxPin = GPIOA_1;
+//	engineConfiguration->consoleSerialTxPin = GPIOA_0;
+//	engineConfiguration->consoleSerialRxPin = GPIOA_1;
 	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
@@ -171,7 +171,6 @@ void setBoardConfigurationOverrides(void) {
 
 	engineConfiguration->communicationLedPin = GPIO_UNASSIGNED;// GPIOA_13; // yellow LED
 	engineConfiguration->runningLedPin = GPIOA_13; //GPIOA_13; // yellow LED
-	//engineConfiguration->fatalErrorPin = GPIOA_13;
 	engineConfiguration->warningLedPin = GPIO_UNASSIGNED;
 
 	engineConfiguration->triggerInputPins[0] = GPIOA_5;

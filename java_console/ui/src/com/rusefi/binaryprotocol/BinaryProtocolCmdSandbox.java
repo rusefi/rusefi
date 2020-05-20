@@ -32,7 +32,7 @@ public class BinaryProtocolCmdSandbox {
         if (!opened) {
             logger.error("failed to open " + port);
         }
-        BinaryProtocol bp = BinaryProtocolHolder.create(logger, new SerialIoStreamJSSC(serialPort, logger));
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().create(logger, new SerialIoStreamJSSC(serialPort, logger));
 
         SerialIoStreamJSSC.setupPort(serialPort, 38400);
         logger.info("Binary looks good!");
@@ -41,7 +41,7 @@ public class BinaryProtocolCmdSandbox {
         //
 //        image.saveToFile("rusefi_configuration.bin");
 //
-        doShowImage(bp.getController());
+        doShowImage(bp.getControllerConfiguration());
     }
 
     private static void doShowImage(ConfigurationImage image) throws Exception {

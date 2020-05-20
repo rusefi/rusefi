@@ -39,7 +39,6 @@ import com.opensr5.ConfigurationImage;
 import com.rusefi.UploadChanges;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.ui.SettingsTab;
 
 public class ECUEditorToolBar extends JToolBar {
 

@@ -6,7 +6,6 @@ import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.FileLog;
 import com.rusefi.Timeouts;
-import com.rusefi.config.FieldType;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
@@ -28,6 +27,11 @@ import java.util.concurrent.TimeoutException;
 import static com.rusefi.binaryprotocol.IoHelper.*;
 
 /**
+ * This object represents logical state of physical connection.
+ *
+ * Instance is connected until we experience issues. Once we decide to close the connection there is no restart -
+ * new instance of this class would need to be created once we establish a new physical connection.
+ *
  * (c) Andrey Belomutskiy
  * 3/6/2015
  * @see BinaryProtocolHolder
@@ -84,7 +88,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(BinaryProtocol.class, "Sending [" + command + "]");
         }
 
-        Future f = LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
+        Future f = LinkManager.submit(new Runnable() {
             @Override
             public void run() {
                 sendTextCommand(command);
@@ -135,7 +139,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 while (!isClosed) {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
                     if (LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
-                        LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
+                        LinkManager.submit(new Runnable() {
                             @Override
                             public void run() {
                                 if (requestOutputChannels())
@@ -171,7 +175,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public void uploadChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException, SerialPortException {
-        ConfigurationImage current = getController();
+        ConfigurationImage current = getControllerConfiguration();
         // let's have our own copy which no one would be able to change
         newVersion = newVersion.clone();
         int offset = 0;
@@ -202,6 +206,9 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
+    /**
+     * read complete tune from physical data stream
+     */
     public void readImage(int size) {
         ConfigurationImage image = new ConfigurationImage(size);
 
@@ -227,19 +234,19 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
                 String code = (response == null || response.length == 0) ? "empty" : "code " + response[0];
-                String info = response == null ? "null" : (code + " size " + response.length);
+                String info = response == null ? "NO RESPONSE" : (code + " size " + response.length);
                 logger.error("readImage: Something is wrong, retrying... " + info);
                 continue;
             }
 
-            ConnectionStatus.INSTANCE.markConnected();
+            ConnectionStatusLogic.INSTANCE.markConnected();
             System.arraycopy(response, 1, image.getContent(), offset, requestSize);
 
             offset += requestSize;
         }
         setController(image);
         logger.info("Got configuration from controller.");
-        ConnectionStatus.INSTANCE.setValue(ConnectionStatus.Value.CONNECTED);
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
 
     /**
@@ -322,7 +329,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
-    public ConfigurationImage getController() {
+    /**
+     * Configuration as it is in the controller to the best of our knowledge
+     */
+    public ConfigurationImage getControllerConfiguration() {
         synchronized (imageLock) {
             if (controller == null)
                 return null;

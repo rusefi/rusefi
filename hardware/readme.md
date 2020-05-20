@@ -18,11 +18,14 @@ todo: move Connectors wiki page content into git
 * [52 pin](172319-1_52pin-connector) Mitsubishi Galant VR4
 * [55 pin](963063-15_55_pin_connector) TE Lada
 * [55 pin](breakout_55_pin) Motronic 1.5.x BMW/GM
+*  60 pin Ford coming soon!
 * [64 pin](176122-6-connector) Mazda Miata NA NB1, Honda Civic
-* [72 pin](1123038-2-connector) Mazda Miata NB2 
-* [121 pin](368255-2-connector) Audi
+* [68 pin](966595-1_and_963356-1-connector) Volkswagen Audi VAG
+* [72 pin](1123038-2-connector) Mazda Miata NB2
+* [88 pin](Bosch_88pin_Breakout) Volkswagen Audi VAG
+* [121 pin](368255-2-connector) Volkswagen Audi VAG
 * [134 pin](Breakout_134pin_7-967288-1) BWM
-* [154 pin](284617-1-connector) Audi
+* [154 pin](284617-1-connector) Volkswagen Audi VAG
 
 ![img](breakout_boards.jpg)
 

@@ -330,13 +330,28 @@ typedef enum {
 	 */
 	TT_MIATA_NB2_VVT_CAM = 43,
 
+	TT_RENIX_44_2_2 = 44,
+
+	/**
+	 * Same as TT_RENIX_44_2_2 but repeated three times, not two.
+	 */
+	TT_RENIX_66_2_2_2 = 45,
+
+	TT_HONDA_K_12_1 = 46,
+
+	TT_BOSCH_QUICK_START = 47,
+
+	TT_TOOTHED_WHEEL_36_2 = 48,
+
+	TT_SUBARU_SVX = 49,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 44, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 50, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -375,10 +390,29 @@ typedef enum {
 } trigger_event_e;
 
 typedef enum {
-	VVT_FIRST_HALF = 0,
+	/**
+	 * This mode is useful for troubleshooting and research - events are logged but no effects on phase synchronization
+	 */
+	VVT_INACTIVE = 0,
+
+	/**
+	 * Single-tooth cam sensor mode where TDC and cam signal happen in opposite 360 degree of 720 degree engine cycle
+	 */
 	VVT_SECOND_HALF = 1,
-	VVT_2GZ = 2,
+	/**
+	 * Toyota 2JZ has three cam tooth. We pick one of these three tooth to synchronize based on the expected angle position of the event
+	 */
+	VVT_2JZ = 2,
+	/**
+	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
+	 */
 	MIATA_NB2 = 3,
+
+	/**
+	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
+	 */
+	VVT_FIRST_HALF = 4,
+
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;
 
@@ -394,10 +428,6 @@ typedef enum {
 	 * Throttle Position Sensor value is used as engine load. http://en.wikipedia.org/wiki/Throttle_position_sensor
 	 */
 	LM_ALPHA_N = 1,
-	/**
-	 * raw Manifold Absolute Pressure sensor value is used as engine load http://en.wikipedia.org/wiki/MAP_sensor
-	 */
-	LM_MAP = 2,
 	/**
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
@@ -420,6 +450,15 @@ typedef enum {
 	Force_4_bytes_size_display_mode = ENUM_32_BITS,
 
 } display_mode_e;
+
+typedef enum  __attribute__ ((__packed__)){
+	TL_AUTO = 0,
+	TL_SEMI_AUTO = 1,
+	TL_MANUAL = 2,
+	TL_HALL = 3,
+
+} tle8888_mode_e;
+
 
 typedef enum {
 	LF_NATIVE = 0,
@@ -491,8 +530,14 @@ typedef enum {
 
 	/**
 	 * 720 degree engine cycle but trigger is defined using a 180 cycle which is when repeated three more times
+	 * In other words, same pattern is repeatet on the crank wheel twice.
 	 */
 	FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR = 4,
+
+	/**
+	 * Same pattern repeated three times on crank wheel. Crazy, I know!
+	 */
+	FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5,
 
 	Force_4_bytes_size_operation_mode_e = ENUM_32_BITS,
 } operation_mode_e;
@@ -573,6 +618,11 @@ typedef enum __attribute__ ((__packed__)) {
 	_150KHz
 } spi_speed_e;
 
+
+/**
+ * See spi3mosiPin
+ * See spi2MisoMode
+ */
 typedef enum __attribute__ ((__packed__)) {
 	SPI_NONE = 0,
 	SPI_DEVICE_1 = 1,
@@ -580,6 +630,12 @@ typedef enum __attribute__ ((__packed__)) {
 	SPI_DEVICE_3 = 3,
 	SPI_DEVICE_4 = 4,
 } spi_device_e;
+
+typedef enum {
+	BMW_e46 = 0,
+	W202 = 1,
+	Force_4_bytes_size_can_vss_nbc_e = ENUM_32_BITS,
+} can_vss_nbc_e;
 
 typedef enum {
 	MS_AUTO = 0,
@@ -721,6 +777,14 @@ typedef enum {
 	 */
 	MT_MPX4250A = 9, 
 	
+
+	/**
+	 * Bosch 2.5 Bar TMap Map Sensor with IAT
+	 * 20 kPa at 0.40V, 250 kPa at 4.65V
+	 */
+
+	MT_BOSCH_2_5 = 10,
+
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
 
@@ -874,3 +938,15 @@ typedef enum {
 	ALWAYS_ON_ANTILAG = 1,
 	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
 } antiLagActivationMode_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	GPPWM_Tps = 0,
+	GPPWM_Map = 1,
+	GPPWM_Clt = 2,
+	GPPWM_Iat = 3,
+} gppwm_channel_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	GPPWM_GreaterThan = 0,
+	GPPWM_LessThan = 1,
+} gppwm_compare_mode_e;

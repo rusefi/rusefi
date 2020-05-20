@@ -14,6 +14,7 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 else
   MCU_DEFS = -DSTM32F767xx
   BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_F767ZI/board.c
+  CONFDIR=config/stm32f7ems
   BOARDINC = $(BOARDS_DIR)/nucleo_f767		# For board.h
   BOARDINC += $(PROJECT_DIR)/config/stm32f7ems	# efifeatures/halconf/chconf.h
   LDSCRIPT= $(BOARDS_DIR)/nucleo_f767/STM32F76xxI.ld
@@ -24,10 +25,16 @@ ifeq ($(DEFAULT_ENGINE_TYPE),)
   DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=MICRO_RUS_EFI
 endif
 
-ifeq ($(EFI_FATAL_ERROR_PIN),)
-  EFI_FATAL_ERROR_PIN = -DEFI_FATAL_ERROR_PIN=GPIOE_3
+ifeq ($(LED_CRITICAL_ERROR_BRAIN_PIN),)
+  LED_CRITICAL_ERROR_BRAIN_PIN = -DLED_CRITICAL_ERROR_BRAIN_PIN=GPIOE_3
 endif
 
 
+# *TEMPORARY* breaking TTL thus breaking Bluetooth for microRusEFI in order to enable SPI3 for SD card
+# *TODO* need to give people the horrible choice between Bluetooth via TTL or SD card via SPI :( horrible choice 
+EFI_CONSOLE_TTL_PINS = -DEFI_CONSOLE_TX_BRAIN_PIN=GPIOG_14 -DEFI_CONSOLE_RX_BRAIN_PIN=GPIOG_15
+
+
 # Add them all together
-DDEFS += $(MCU_DEFS) -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"microRusEfi\" $(DEFAULT_ENGINE_TYPE)
+DDEFS += $(MCU_DEFS) -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"microRusEfi\" $(DEFAULT_ENGINE_TYPE) $(LED_CRITICAL_ERROR_BRAIN_PIN) $(EFI_CONSOLE_TTL_PINS)
+

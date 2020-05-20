@@ -47,15 +47,10 @@ public:
 	char DEFAULT_BUFFER[200];
 };
 
-void initIntermediateLoggingBuffer(void);
-
 int isInitialized(Logging *logging);
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
 
-void debugInt(Logging *logging, const char *caption, int value);
-
-void debugFloat(Logging *logging, const char *text, float value, int precision);
 void appendFloat(Logging *logging, float value, int precision);
 
 void resetLogging(Logging *logging);

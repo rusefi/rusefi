@@ -15,6 +15,9 @@ bool isValidCanRxPin(brain_pin_e pin);
 CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
 #endif // HAL_USE_CAN
 
+bool isValidSerialTxPin(brain_pin_e pin);
+bool isValidSerialRxPin(brain_pin_e pin);
+
 // SPI
 #if HAL_USE_SPI
 void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,

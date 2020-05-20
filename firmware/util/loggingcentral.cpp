@@ -31,14 +31,32 @@ static log_buf_t pendingBuffers0;
 static log_buf_t pendingBuffers1;
 
 /**
- * amount of data accumulated so far
- */
-static uint32_t accumulatedSize;
-
-/**
  * We copy all the pending data into this buffer once we are ready to push it out
  */
 static char * outputBuffer;
+
+
+class LoggingCentral {
+public:
+	/**
+	 * Class constructors are a great way to have simple initialization sequence
+	 */
+	LoggingCentral() {
+		pendingBuffers0[0] = 0;
+		pendingBuffers1[0] = 0;
+		accumulationBuffer = pendingBuffers0;
+		outputBuffer = pendingBuffers1;
+		accumulatedSize = 0;
+	}
+
+	/**
+	 * amount of data accumulated so far
+	 */
+	uint32_t accumulatedSize;
+};
+
+static LoggingCentral loggingCentral;
+
 
 /**
  * This method appends the content of specified thread-local logger into the global buffer
@@ -54,7 +72,7 @@ void scheduleLogging(Logging *logging) {
 	int newLength = efiStrlen(logging->buffer);
 
 	bool alreadyLocked = lockOutputBuffer();
-	if (accumulatedSize + newLength >= MAX_DL_CAPACITY) {
+	if (loggingCentral.accumulatedSize + newLength >= MAX_DL_CAPACITY) {
 		/**
 		 * if no one is consuming the data we have to drop it
 		 * this happens in case of serial-over-USB, todo: find a better solution?
@@ -66,8 +84,8 @@ void scheduleLogging(Logging *logging) {
 		return;
 	}
 	// memcpy is faster then strcpy because it is not looking for line terminator
-	memcpy(accumulationBuffer + accumulatedSize, logging->buffer, newLength + 1);
-	accumulatedSize += newLength;
+	memcpy(accumulationBuffer + loggingCentral.accumulatedSize, logging->buffer, newLength + 1);
+	loggingCentral.accumulatedSize += newLength;
 	if (!alreadyLocked) {
 		unlockOutputBuffer();
 	}
@@ -93,12 +111,12 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 		char *temp = outputBuffer;
 
 #if EFI_ENABLE_ASSERTS
-		expectedOutputSize = accumulatedSize;
+		expectedOutputSize = loggingCentral.accumulatedSize;
 #endif /* EFI_ENABLE_ASSERTS */
 		outputBuffer = accumulationBuffer;
 
 		accumulationBuffer = temp;
-		accumulatedSize = 0;
+		loggingCentral.accumulatedSize = 0;
 		accumulationBuffer[0] = 0;
 
 		if (!alreadyLocked) {
@@ -117,14 +135,6 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	}
 #endif /* EFI_ENABLE_ASSERTS */
 	return outputBuffer;
-}
-
-void initLoggingCentral(void) {
-	pendingBuffers0[0] = 0;
-	pendingBuffers1[0] = 0;
-	accumulationBuffer = pendingBuffers0;
-	outputBuffer = pendingBuffers1;
-	accumulatedSize = 0;
 }
 
 /**

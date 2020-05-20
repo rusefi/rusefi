@@ -383,7 +383,7 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
 void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const TriggerStateCallback triggerCycleCallback,
 		TriggerStateListener * triggerStateListener,
 		trigger_event_e const signal, efitick_t nowNt DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	ScopePerf perf(PE::DecodeTriggerEvent, static_cast<uint8_t>(signal));
+	ScopePerf perf(PE::DecodeTriggerEvent);
 	
 	if (nowNt - previousShaftEventTimeNt > NT_PER_SECOND) {
 		/**
@@ -718,7 +718,7 @@ void initTriggerDecoderLogger(Logging *sharedLogger) {
 
  void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
-	enginePins.triggerDecoderErrorPin.initPin("trg_err", CONFIG(triggerErrorPin),
+	enginePins.triggerDecoderErrorPin.initPin("led: trigger debug", CONFIG(triggerErrorPin),
 			&CONFIG(triggerErrorPinMode));
 #endif /* EFI_GPIO_HARDWARE */
 }

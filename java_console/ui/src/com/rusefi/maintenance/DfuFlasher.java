@@ -7,7 +7,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.serial.PortHolder;
+import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
@@ -18,8 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * @see FirmwareFlasher
@@ -52,7 +50,7 @@ public class DfuFlasher {
             JOptionPane.showMessageDialog(Launcher.getFrame(), "rusEfi serial port not detected");
             return;
         }
-        IoStream stream = SerialIoStreamJSerialComm.open(port, PortHolder.BAUD_RATE, FileLog.LOGGER);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(port);
         byte[] command = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT_DFU);
         try {
             stream.sendPacket(command, FileLog.LOGGER);
@@ -87,12 +85,8 @@ public class DfuFlasher {
                 // ugly temporary solution
                 // see https://github.com/rusefi/rusefi/issues/1170
                 // see https://github.com/rusefi/rusefi/issues/1182
-                try {
-                    URLLabel.open(new URI(DFU_SETUP_EXE));
-                    wnd.appendMsg("Please install DfuSe_Demo_V3.0.6_Setup.exe, power cycle your device and try again.");
-                } catch (URISyntaxException e) {
-                    throw new IllegalStateException(e);
-                }
+                URLLabel.open(DFU_SETUP_EXE);
+                wnd.appendMsg("Please install DfuSe_Demo_V3.0.6_Setup.exe, power cycle your device and try again.");
             } else {
                 wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
             }

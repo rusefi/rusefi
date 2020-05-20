@@ -2,6 +2,7 @@ package com.rusefi.ui.config;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
+import com.rusefi.config.FieldCommandResponse;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 
@@ -21,7 +22,7 @@ public class BitConfigField extends BaseConfigField {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (Field.isBitValueMessage(message)) {
+                if (FieldCommandResponse.isBitValueMessage(message)) {
                     String expectedPrefix = "bit" +
                             Fields.CONSOLE_DATA_PROTOCOL_TAG + field.getOffset() + "/" + field.getBitOffset() + " is ";
                     if (message.startsWith(expectedPrefix) && message.length() == expectedPrefix.length() + 1) {

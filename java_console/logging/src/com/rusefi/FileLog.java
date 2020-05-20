@@ -80,7 +80,7 @@ public enum FileLog {
         return new FileOutputStream(fileName, true);
     }
 
-    private static void createFolderIfNeeded() {
+    static void createFolderIfNeeded() {
         File dir = new File(DIR);
         if (dir.exists())
             return;

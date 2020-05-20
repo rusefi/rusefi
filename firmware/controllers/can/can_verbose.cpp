@@ -99,8 +99,8 @@ struct Sensors1 {
 static void populateFrame(Sensors1& msg) {
     msg.map = getMap();
 
-    msg.clt = getCoolantTemperature() + PACK_ADD_TEMPERATURE;
-    msg.iat = getIntakeAirTemperature() + PACK_ADD_TEMPERATURE;
+    msg.clt = Sensor::get(SensorType::Clt).value_or(0) + PACK_ADD_TEMPERATURE;
+    msg.iat = Sensor::get(SensorType::Iat).value_or(0) + PACK_ADD_TEMPERATURE;
 
     // todo: does aux temp even work?
     msg.aux1 = 0 + PACK_ADD_TEMPERATURE;

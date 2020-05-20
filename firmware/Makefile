@@ -80,12 +80,6 @@ ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = no
 endif
 
-# If enabled, this option makes the build process faster by not compiling
-# modules not used in the current configuration.
-ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = no
-endif
-
 ifeq ($(USE_BOOTLOADER),)
   USE_BOOTLOADER = no
 endif
@@ -133,6 +127,20 @@ MAKEFLAGS += ${NUMJOBS}
 # Project, sources and paths
 #
 
+BOARDS_DIR = $(PROJECT_DIR)/config/boards
+
+include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
+
+# If enabled, this option makes the build process faster by not compiling
+# modules not used in the current configuration.
+# without USE_SMART_BUILD all ChibiOS (including all drivers) are builded. And all drivers includes get included.
+ifeq ($(USE_SMART_BUILD),)
+  USE_SMART_BUILD = yes
+endif
+ifeq ($(CONFDIR),)
+  CONFDIR = $(PROJECT_DIR)/config/stm32f4ems
+endif
+
 # Startup files.
 include $(CPU_STARTUP_DIR)
 # HAL-OSAL files (optional).
@@ -153,9 +161,6 @@ ifeq ($(USE_FATFS),yes)
 include $(PROJECT_DIR)/ext/fatfs.mk
 endif
 
-BOARDS_DIR = $(PROJECT_DIR)/config/boards
-
-include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
@@ -171,7 +176,6 @@ ifeq ($(BOOTLOADERINC),)
   # include default bootloader code
   BOOTLOADERINC= $(PROJECT_DIR)/bootloader/
 endif
-
 
 ifeq ($(USE_BOOTLOADER),yes)
 include $(PROJECT_DIR)/bootloader/bootloader.mk
@@ -189,7 +193,9 @@ CSRC = $(STARTUPSRC) \
 	$(PORTSRC) \
 	$(OSALSRC) \
 	$(HALSRC) \
+	$(HALSRC_CONTRIB) \
 	$(PLATFORMSRC) \
+	$(PLATFORMSRC_CONTRIB) \
 	$(BOARDSRC) \
 	$(BOOTLOADERSRC) \
 	$(CHIBIOS)/os/ex/ST/lis302dl.c \
@@ -275,6 +281,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	$(HALINC) \
 	$(HALINC_CONTRIB) \
 	$(PLATFORMINC) \
+	$(PLATFORMINC_CONTRIB) \
 	$(BOARDINC) \
 	$(BOOTLOADERINC) \
 	$(CHCPPINC) \
@@ -290,6 +297,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	console_util \
 	console \
 	$(PROJECT_DIR)/console/binary \
+	$(PROJECT_DIR)/console/binary_log \
 	$(PROJECT_DIR)/console/fl_binary \
 	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/mass_storage \

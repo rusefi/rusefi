@@ -6,7 +6,8 @@ import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.ConnectionStatus;
+import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.config.ConfigField;
 
 import java.io.FileWriter;
@@ -99,7 +100,7 @@ public class SensorLogger {
         SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
-                if (ConnectionStatus.INSTANCE.getValue() != ConnectionStatus.Value.CONNECTED)
+                if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED)
                     return;
                 if (logFile == null) {
                     /*
@@ -137,19 +138,20 @@ public class SensorLogger {
     }
 
     private static void startSensorLogFile() {
+        FileLog.createFolderIfNeeded();
         String fileName = FileLog.DIR + FileLog.getDate() + ".msl";
 
         fileStartTime = System.currentTimeMillis();
         try {
             logFile = new FileWriter(fileName);
 
-            logFile.write("\"rusEfi console" + Launcher.CONSOLE_VERSION + " firmware " + Launcher.firmwareVersion.get() + "\"\r\n");
+            logFile.write("\"rusEFI console" + Launcher.CONSOLE_VERSION + " firmware " + Launcher.firmwareVersion.get() + "\"\r\n");
             logFile.write("Captured " + FileLog.getDate() + "\r\n");
 
             int debugMode = -1;
-            BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+            BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
             if (bp != null) {
-                ConfigurationImage ci = bp.getController();
+                ConfigurationImage ci = bp.getControllerConfiguration();
                 if (ci != null) {
                     debugMode = ConfigField.getIntValue(ci, Fields.DEBUGMODE);
                 }

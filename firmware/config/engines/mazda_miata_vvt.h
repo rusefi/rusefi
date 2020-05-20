@@ -13,6 +13,7 @@
 
 void setMazdaMiataNbInjectorLag(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setMazdaMiataNbTpsTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 /**
  * Primary rusEfi test mule https://rusefi.com/forum/viewtopic.php?f=3&t=1095

@@ -168,7 +168,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
+void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 		int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	/**
@@ -276,7 +276,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_UNIT_TEST
 	if (GET_RPM_VALUE < CONFIG(fuelClosedLoopRpmThreshold) ||
-			getCoolantTemperature() < CONFIG(fuelClosedLoopCltThreshold) ||
+			Sensor::get(SensorType::Clt).value_or(0) < CONFIG(fuelClosedLoopCltThreshold) ||
 			Sensor::get(SensorType::Tps1).value_or(100) > CONFIG(fuelClosedLoopTpsThreshold) ||
 			ENGINE(sensors.currentAfr) < CONFIG(fuelClosedLoopAfrLowThreshold) ||
 			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
@@ -310,6 +310,11 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 		return;
 	}
 
+	// If duty cycle is high, impose a fuel cut rev limiter.
+	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
+	if (getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX) > 96.0f) {
+		return;
+	}
 
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
@@ -357,6 +362,14 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 	ScopePerf perf(PE::MainTriggerCallback);
 
 	(void) ckpSignalType;
+
+
+	if (engineConfiguration->vvtMode == MIATA_NB2 && engine->triggerCentral.vvtSyncTimeNt == 0) {
+		// this is a bit spaghetti code for sure
+		// do not spark & do not fuel until we have VVT sync. NB2 is a special case
+		// due to symmetrical crank wheel and we need to make sure no spark happens out of sync
+		return;
+	}
 
 	if (hasFirmwareError()) {
 		/**
@@ -491,7 +504,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
 		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, CONFIG(startOfCrankingPrimingPulse),
-			CONFIG(primeInjFalloffTemperature), 0.0f, getCoolantTemperature());
+			CONFIG(primeInjFalloffTemperature), 0.0f, Sensor::get(SensorType::Clt).value_or(70));
 		if (pulseLength > 0) {
 			startSimultaniousInjection(engine);
 			efitimeus_t turnOffDelayUs = (efitimeus_t)efiRound(MS2US(pulseLength), 1.0f);

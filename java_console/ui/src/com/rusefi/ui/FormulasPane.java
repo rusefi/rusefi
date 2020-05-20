@@ -94,7 +94,6 @@ public class FormulasPane {
     enum engine_load_mode_e {
         LM_PLAIN_MAF("Plain MAF"),
         LM_ALPHA_N("Alpha-N/TPS"),
-        LM_MAP("Plain MAP"),
         LM_SPEED_DENSITY("Speed Density/MAP"),
         LM_REAL_MAF("MAF");
 
@@ -106,10 +105,10 @@ public class FormulasPane {
     }
 
     private void updateFormula() {
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
         if (bp == null)
             return;
-        ConfigurationImage ci = bp.getController();
+        ConfigurationImage ci = bp.getControllerConfiguration();
         if (ci == null)
             return;
 

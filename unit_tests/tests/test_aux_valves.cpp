@@ -2,7 +2,7 @@
  * @file test_aux_valves.cpp
  *
  * @date: Nov 23, 2019
- * @Author: Andrey Belomutskiy, (c) 2012-2019
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "engine_test_helper.h"

@@ -11,11 +11,8 @@
     <orderEntry type="module" module-name="io" />
     <orderEntry type="library" name="jssc" level="project" />
     <orderEntry type="library" name="miglayout" level="project" />
-    <orderEntry type="library" name="annotations" level="project" />
-    <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="library" name="surfaceplotter" level="project" />
     <orderEntry type="library" name="batik" level="project" />
-    <orderEntry type="module" module-name="models" />
     <orderEntry type="library" name="SteelSeries" level="project" />
     <orderEntry type="module" module-name="autotest" />
     <orderEntry type="module" module-name="romraider" />

@@ -32,7 +32,7 @@
 #if EFI_IDLE_CONTROL
 #include "engine_configuration.h"
 #include "rpm_calculator.h"
-#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 #include "idle_thread.h"
 #include "engine_math.h"
 
@@ -40,10 +40,12 @@
 #include "periodic_task.h"
 #include "allsensors.h"
 #include "sensor.h"
+#include "electronic_throttle.h"
 
+
+#include "dc_motors.h"
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
-#include "dc_motors.h"
 #include "pin_repository.h"
 static StepDirectionStepper iacStepperHw;
 static DualHBridgeStepper iacHbridgeHw;
@@ -115,16 +117,29 @@ void idleDebug(const char *msg, percent_t value) {
 
 static void showIdleInfo(void) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
-	scheduleMsg(logger, "idleMode=%s position=%.2f isStepper=%s", idleModeStr,
-			getIdlePosition(), boolToString(CONFIG(useStepperIdle)));
+	scheduleMsg(logger, "useStepperIdle=%s useHbridges=%s",
+			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridges)));
+	scheduleMsg(logger, "idleMode=%s position=%.2f",
+			idleModeStr, getIdlePosition());
 
 	if (CONFIG(useStepperIdle)) {
-		scheduleMsg(logger, "directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
-				engineConfiguration->idleStepperReactionTime);
-		scheduleMsg(logger, "stepPin=%s steps=%d", hwPortname(CONFIG(idle).stepperStepPin),
-				engineConfiguration->idleStepperTotalSteps);
-		scheduleMsg(logger, "enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
-				engineConfiguration->stepperEnablePinMode);
+		if (CONFIG(useHbridges)) {
+			scheduleMsg(logger, "Coil A:");
+			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(etbIo2[0].directionPin1)));
+			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(etbIo2[0].directionPin2)));
+			showDcMotorInfo(logger, 2);
+			scheduleMsg(logger, "Coil B:");
+			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(etbIo2[1].directionPin1)));
+			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(etbIo2[1].directionPin2)));
+			showDcMotorInfo(logger, 3);
+		} else {
+			scheduleMsg(logger, "directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
+					engineConfiguration->idleStepperReactionTime);
+			scheduleMsg(logger, "stepPin=%s steps=%d", hwPortname(CONFIG(idle).stepperStepPin),
+					engineConfiguration->idleStepperTotalSteps);
+			scheduleMsg(logger, "enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
+					engineConfiguration->stepperEnablePinMode);
+		}
 	} else {
 		if (!CONFIG(isDoubleSolenoidIdle)) {
 			scheduleMsg(logger, "idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,
@@ -154,7 +169,14 @@ static void applyIACposition(percent_t position) {
 	float duty = PERCENT_TO_DUTY(position);
 
 	if (CONFIG(useETBforIdleControl)) {
-		engine->engineState.idle.etbIdleAddition = duty * CONFIG(etbIdleThrottleRange);
+		if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
+			firmwareError(CUSTOM_NO_ETB_FOR_IDLE, "No ETB to use for idle");
+			return;
+		}
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+		setEtbIdlePosition(position);
+#endif
 #if ! EFI_UNIT_TEST
 	} if (CONFIG(useStepperIdle)) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
@@ -196,10 +218,6 @@ void setIdleValvePosition(int positionPercent) {
 static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	percent_t correctedPosition = cltCorrection * CONFIG(manIdlePosition);
-
-	// let's put the value into the right range
-	correctedPosition = maxF(correctedPosition, 0.01);
-	correctedPosition = minF(correctedPosition, 99.9);
 
 	return correctedPosition;
 }
@@ -418,7 +436,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 			engine->engineState.idle.idleState = BLIP;
 		} else if (!isRunning) {
 			// during cranking it's always manual mode, PID would make no sense during cranking
-			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
+			iacPosition = clampPercentValue(cltCorrection * engineConfiguration->crankingIACposition);
 			// save cranking position & cycles counter for taper transition
 			lastCrankingIacPosition = iacPosition;
 			lastCrankingCyclesCounter = engine->rpmCalculator.getRevolutionCounterSinceStart();
@@ -431,6 +449,8 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 				iacPosition = automaticIdleController(tps.Value PASS_ENGINE_PARAMETER_SUFFIX);
 			}
 			
+			iacPosition = clampPercentValue(iacPosition);
+
 			// store 'base' iacPosition without adjustments
 			engine->engineState.idle.baseIdlePosition = iacPosition;
 
@@ -589,8 +609,8 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		StepperHw* hw;
 
 		if (CONFIG(useHbridges)) {
-			auto motorA = initDcMotor(0 PASS_ENGINE_PARAMETER_SUFFIX);
-			auto motorB = initDcMotor(1 PASS_ENGINE_PARAMETER_SUFFIX);
+			auto motorA = initDcMotor(2, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
+			auto motorB = initDcMotor(3, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
 
 			if (motorA && motorB) {
 				iacHbridgeHw.initialize(

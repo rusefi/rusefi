@@ -26,6 +26,7 @@ java ^
  -definition integration/rusefi_config.txt ^
  -ts_destination tunerstudio ^
  -tool kineris_gen_config.bat ^
+ -firing_order controllers/algo/firing_order.h ^
  -with_c_defines false ^
  -initialize_to_zero false ^
  -ts_output_name rusefi_kinetis.ini ^

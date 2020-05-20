@@ -43,6 +43,15 @@ static const brain_pin_e ignPins[] = {
 	GPIOG_2,
 };
 
+static const ConfigOverrides configOverrides = {
+	.canTxPin = GPIOD_1,
+	.canRxPin = GPIOD_0,
+};
+
+const ConfigOverrides& getConfigOverrides() {
+	return configOverrides;
+}
+
 static void setInjectorPins() {
 	copyArray(engineConfiguration->injectionPins, injPins);
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
@@ -57,10 +66,10 @@ void setSdCardConfigurationOverrides(void) {
 }
 
 static void setLedPins() {
-	CONFIG(warningLedPin) = GPIOE_3;
+	// PE3 is error LED, configured in board.mk
 	CONFIG(communicationLedPin) = GPIOE_4;
-	engineConfiguration->runningLedPin = GPIOE_5;
-	engineConfiguration->triggerErrorPin = GPIOE_6;
+	CONFIG(runningLedPin) = GPIOE_5;
+	CONFIG(warningLedPin) = GPIOE_6;
 }
 
 static void setupVbatt() {
@@ -69,7 +78,9 @@ static void setupVbatt() {
 
 	// 82k high side/10k low side = 9.2
 	engineConfiguration->vbattDividerCoeff = (92.0f / 10.0f);
-	//engineConfiguration->vbattAdcChannel = TODO;
+
+	// Battery sense on PA7
+	engineConfiguration->vbattAdcChannel = EFI_ADC_7;
 
 	engineConfiguration->adcVcc = 3.3f;
 }
@@ -103,12 +114,6 @@ static void setupEtb() {
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
-	engineConfiguration->etbFreq = 800;
-}
-
-static void setupCanPins() {
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
 }
 
 static void setupDefaultSensorInputs() {
@@ -132,9 +137,6 @@ static void setupDefaultSensorInputs() {
 
 	// MAP = Analog volt 1 = PC0
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
-
-	// No battery voltage setting - see adc_hack.cpp
-	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 }
 
 void setPinConfigurationOverrides(void) {
@@ -144,8 +146,8 @@ void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
+//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
 }
 
 
@@ -162,7 +164,6 @@ void setBoardConfigurationOverrides(void) {
 	setLedPins();
 	setupVbatt();
 	setupEtb();
-	setupCanPins();
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

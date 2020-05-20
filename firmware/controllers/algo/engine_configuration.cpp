@@ -102,7 +102,7 @@
 #endif /* EFI_PROD_CODE */
 
 #if EFI_EMULATE_POSITION_SENSORS
-#include "trigger_emulator.h"
+#include "trigger_emulator_algo.h"
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
 #if EFI_TUNER_STUDIO
@@ -145,7 +145,7 @@ static fuel_table_t alphaNfuel = {
  * todo: place this field next to 'engineConfiguration'?
  */
 #ifdef EFI_ACTIVE_CONFIGURATION_IN_FLASH
-#include "flash.h"
+#include "flash_int.h"
 engine_configuration_s & activeConfiguration = reinterpret_cast<persistent_config_container_s*>(getFlashAddrFirstCopy())->persistentConfiguration.engineConfiguration;
 // we cannot use this activeConfiguration until we call rememberCurrentConfiguration()
 bool isActiveConfigurationVoid = true;
@@ -312,6 +312,7 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->vRefAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
@@ -367,8 +368,6 @@ void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_10;
 	engineConfiguration->binarySerialRxPin = GPIOC_11;
-	engineConfiguration->consoleSerialTxPin = GPIOC_10;
-	engineConfiguration->consoleSerialRxPin = GPIOC_11;
 	engineConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = 115200;
 
@@ -629,6 +628,72 @@ void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->multisparkMaxSparkingAngle = 30;
 }
 
+void setDefaultStftSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	auto& cfg = CONFIG(stft);
+
+	// Default to disabled
+	CONFIG(fuelClosedLoopCorrectionEnabled) = false;
+
+	// Default to proportional mode (for wideband sensors)
+	CONFIG(stftIgnoreErrorMagnitude) = false;
+
+	// 60 second startup delay - some O2 sensors are slow to warm up.
+	cfg.startupDelay = 60;
+
+	// Only correct in [12.0, 17.0]
+	cfg.minAfr = 120;
+	cfg.maxAfr = 170;
+
+	// Above 60 deg C
+	cfg.minClt = 60;
+
+	// 0.5% deadband
+	cfg.deadband = 5;
+
+	// Sensible region defaults
+	cfg.maxIdleRegionRpm = 1000 / RPM_1_BYTE_PACKING_MULT;
+	cfg.maxOverrunLoad = 35;
+	cfg.minPowerLoad = 85;
+
+	// Sensible cell defaults
+	for (size_t i = 0; i < efi::size(cfg.cellCfgs); i++) {
+		// 30 second time constant - nice and slow
+		cfg.cellCfgs[i].timeConstant = 30 * 10;
+
+		/// Allow +-5%
+		cfg.cellCfgs[i].maxAdd = 5;
+		cfg.cellCfgs[i].maxRemove = -5;
+	}
+}
+
+void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// Same config for all channels
+	for (size_t i = 0; i < efi::size(CONFIG(gppwm)); i++) {
+		auto& cfg = CONFIG(gppwm)[i];
+
+		cfg.pin = GPIO_UNASSIGNED;
+		cfg.dutyIfError = 0;
+		cfg.onAboveDuty = 60;
+		cfg.offBelowDuty = 50;
+		cfg.pwmFrequency = 250;
+
+		for (size_t j = 0; j < efi::size(cfg.loadBins); j++) {
+			uint8_t z = j * 100 / (efi::size(cfg.loadBins) - 1);
+			cfg.loadBins[j] = z;
+
+			// Fill some values in the table
+			for (size_t k = 0; k < efi::size(cfg.rpmBins); k++) {
+				cfg.table[j][k] = z;
+			}
+			
+		}
+
+		for (size_t j = 0; j < efi::size(cfg.rpmBins); j++) {
+			cfg.rpmBins[j] = 1000 * j / RPM_1_BYTE_PACKING_MULT;
+		}
+	}
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
@@ -691,13 +756,14 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	CONFIG(startCrankingDuration) = 7;
 
+	CONFIG(compressionRatio) = 9;
+
 	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;
 
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
 
-	engineConfiguration->postCrankingTargetClt = 25;
 	engineConfiguration->postCrankingDurationSec = 2;
 
 	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
@@ -827,13 +893,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setDefaultCrankingSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
-	engineConfiguration->fuelClosedLoopCltThreshold = 70;
-	engineConfiguration->fuelClosedLoopRpmThreshold = 900;
-	engineConfiguration->fuelClosedLoopTpsThreshold = 80;
-	engineConfiguration->fuelClosedLoopAfrLowThreshold = 10.3;
-	engineConfiguration->fuelClosedLoopAfrHighThreshold = 19.8;
-	engineConfiguration->fuelClosedLoopPid.pFactor = -0.1;
+	setDefaultStftSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
 	 * Idle control defaults
@@ -872,6 +932,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setDefaultMultisparkParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	setDefaultGppwmParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if !EFI_UNIT_TEST
 	engineConfiguration->analogInputDividerCoefficient = 2;
 #endif
@@ -899,8 +961,14 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fanOnTemperature = 95;
 	engineConfiguration->fanOffTemperature = 91;
 
-	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
-	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(5);
+	engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(0);
+	engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(5);
+	engineConfiguration->tps2Min = convertVoltageTo10bitADC(0);
+	engineConfiguration->tps2Max = convertVoltageTo10bitADC(5);
+	engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(0);
+	engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(5);
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
@@ -922,7 +990,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->mapHighValueVoltage = 5;
 
 	engineConfiguration->logFormat = LF_NATIVE;
-	engineConfiguration->directSelfStimulation = false;
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
@@ -1115,9 +1182,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	setBoardConfigurationOverrides();
 #endif
 
-#if EFI_SIMULATOR
-	engineConfiguration->directSelfStimulation = true;
-#endif /* */
 	engineConfiguration->engineType = engineType;
 
 	/**
@@ -1349,6 +1413,7 @@ void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
 		engineConfiguration->adcVcc = 3.0f;
 	}
+	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -1434,3 +1499,8 @@ void copyTimingTable(ignition_table_t const source, ignition_table_t destination
 	}
 }
 
+static const ConfigOverrides defaultConfigOverrides{};
+// This symbol is weak so that a board_configuration.cpp file can override it
+__attribute__((weak)) const ConfigOverrides& getConfigOverrides() {
+	return defaultConfigOverrides;
+}
