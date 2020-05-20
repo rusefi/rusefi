@@ -1,15 +1,11 @@
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h
-// was generated automatically by rusEfi tool  from rusefi_enums.h
-// by enum2string.jar tool
-// on Wed May 20 00:37:41 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed May 20 09:04:42 EDT 2020
 // see also gen_config_and_enums.bat
 
 
 
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-#ifndef _A_H_HEADER_
-#define _A_H_HEADER_
+#pragma once
 const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);
 const char *getPidAutoTune_Peak(PidAutoTune_Peak value);
 const char *getAdc_channel_e(adc_channel_e value);
@@ -56,4 +52,3 @@ const char *getTrigger_value_e(trigger_value_e value);
 const char *getTrigger_wheel_e(trigger_wheel_e value);
 const char *getUart_device_e(uart_device_e value);
 const char *getVvt_mode_e(vvt_mode_e value);
-#endif /*_A_H_HEADER_ */
