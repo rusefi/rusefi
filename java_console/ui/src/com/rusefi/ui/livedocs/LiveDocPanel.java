@@ -233,12 +233,6 @@ public class LiveDocPanel {
     public static JPanel createSensorsLiveDataPanel() {
         JPanel liveDocs = new JPanel(new MigLayout(LAYOUT));
 
-        liveDocs.add(createPanel("Coolant Sensor", ThermistorsMeta.CONTENT, "CLT", Fields.LDS_CLT_STATE_INDEX
-        ), CONSTRAINTS);
-
-        liveDocs.add(createPanel("Intake Air Sensor", ThermistorsMeta.CONTENT, "IAT", Fields.LDS_IAT_STATE_INDEX
-        ), CONSTRAINTS);
-
 /*
         One day we shall have this back
         liveDocs.add(createPanel("Throttle Position Sensor", TpsMeta.TPS_SECTION), CONSTRAINTS);

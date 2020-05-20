@@ -49,9 +49,6 @@ TEST(misc, testFuelMap) {
 
 	ASSERT_EQ( 1005,  getBaseTableFuel(5, 5)) << "base fuel table";
 
-	printf("*************************************************** initThermistors\r\n");
-
-
 	printf("*** getInjectorLag\r\n");
 //	engine->engineState.vb
 	assertEqualsM("lag", 1.04, getInjectorLag(12 PASS_ENGINE_PARAMETER_SUFFIX));

@@ -37,11 +37,7 @@ TEST(engine, testStartOfCrankingPrimingPulse) {
 
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
 
-	// this -70 value comes from CLT error handling code
-	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT#1";
-
 	// we need below freezing temperature to get prime fuel
-	engine->sensors.clt = -10;
 	Sensor::setMockValue(SensorType::Clt, -10);
 
 	// prod code invokes this on ECU start, here we have to mimic this behavior

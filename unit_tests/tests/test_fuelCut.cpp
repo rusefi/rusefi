@@ -113,7 +113,6 @@ TEST(fuelCut, criticalEngineTemperature) {
 
 	ASSERT_FALSE(engine->stopEngineRequestTimeNt > 0);
 
-	engine->sensors.mockClt = 200; // 200C is really hot!
 	Sensor::setMockValue(SensorType::Clt, 200);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
