@@ -97,7 +97,9 @@ TEST(misc, testFuelMap) {
 	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 0,  injectorLag) << "injectorLag";
 
-	testMafValue = 5;
+
+	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 5 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel 2\r\n");
@@ -109,7 +111,7 @@ TEST(misc, testFuelMap) {
 	EXPECT_EQ( 42,  getRunningFuel(1 PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
 	EXPECT_EQ( 84,  getRunningFuel(2 PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
 
-	testMafValue = 0;
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->cranking.baseFuel = 4;
 

@@ -23,7 +23,6 @@
 #include "trigger_universal.h"
 #include "sensor.h"
 
-extern float testMafValue;
 extern WarningCodeState unitTestWarningCodeState;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
@@ -944,7 +943,9 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	eth.executeActions();
 
 	engine->mockMapValue = 0;
-	testMafValue = 0;
+
+	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
 	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
 }
