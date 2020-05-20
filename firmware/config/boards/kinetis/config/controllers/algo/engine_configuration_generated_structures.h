@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun May 10 10:09:06 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed May 20 01:18:15 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1921,7 +1921,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1192
 	 */
-	int unusedAtOldBoardConfigurationEnd[67];
+	output_pin_e tcu_solenoid[TCU_SOLENOID_COUNT];
+	/**
+	 * offset 1200
+	 */
+	int unusedAtOldBoardConfigurationEnd[65];
 	/**
 	 * offset 1460
 	 */
@@ -3165,7 +3169,48 @@ struct engine_configuration_s {
 	/**
 	 * offset 4496
 	 */
-	int mainUnusedEnd[376];
+	uint16_t mc33_i_boost;
+	/**
+	 * offset 4498
+	 */
+	uint16_t mc33_i_peak;
+	/**
+	 * offset 4500
+	 */
+	uint16_t mc33_i_hold;
+	/**
+	 * offset 4502
+	 */
+	uint16_t mc33_t_max_boost;
+	/**
+	 * offset 4504
+	 */
+	uint16_t mc33_t_peak_off;
+	/**
+	 * offset 4506
+	 */
+	uint16_t mc33_t_peak_tot;
+	/**
+	 * offset 4508
+	 */
+	uint16_t mc33_t_bypass;
+	/**
+	 * offset 4510
+	 */
+	uint16_t mc33_t_hold_off;
+	/**
+	 * offset 4512
+	 */
+	uint16_t mc33_t_hold_tot;
+	/**
+	 * need 4 byte alignment
+	 * offset 4514
+	 */
+	uint8_t alignmentFill_at_4514[2];
+	/**
+	 * offset 4516
+	 */
+	int mainUnusedEnd[371];
 	/** total size 6000*/
 };
 
@@ -3469,4 +3514,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun May 10 10:09:06 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed May 20 01:18:15 EDT 2020

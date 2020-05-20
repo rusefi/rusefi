@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon May 18 01:21:34 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 20 01:18:09 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -51,6 +51,7 @@ public class Fields {
 	public static final int afterstartHoldTime_offset_hex = 1808;
 	public static final int alFIn_offset = 4024;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
+	public static final int alignmentFill_at_4514_offset = 4514;
 	public static final int alternator_antiwindupFreq_offset = 1764;
 	public static final int alternator_derivativeFilterLoss_offset = 1760;
 	public static final int alternatorControl_dFactor_offset = 1724;
@@ -1102,8 +1103,7 @@ public class Fields {
 	public static final int mafSensorType_offset = 948;
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
-	public static final int mainUnusedEnd_offset = 4496;
-	public static final int mainUnusedEnd_offset_hex = 1190;
+	public static final int mainUnusedEnd_offset = 4516;
 	public static final int malfunctionIndicatorPin_offset = 660;
 	public static final int malfunctionIndicatorPin_offset_hex = 294;
 	public static final int malfunctionIndicatorPinMode_offset = 661;
@@ -1163,6 +1163,20 @@ public class Fields {
 	public static final int mc33972_csPinMode_offset = 679;
 	public static final int mc33972spiDevice_offset = 4008;
 	public static final int mc33_hvolt_offset = 760;
+	public static final int mc33_i_boost_offset = 4496;
+	public static final int mc33_i_boost_offset_hex = 1190;
+	public static final int mc33_i_hold_offset = 4500;
+	public static final int mc33_i_hold_offset_hex = 1194;
+	public static final int mc33_i_peak_offset = 4498;
+	public static final int mc33_i_peak_offset_hex = 1192;
+	public static final int mc33_t_bypass_offset = 4508;
+	public static final int mc33_t_hold_off_offset = 4510;
+	public static final int mc33_t_hold_tot_offset = 4512;
+	public static final int mc33_t_max_boost_offset = 4502;
+	public static final int mc33_t_max_boost_offset_hex = 1196;
+	public static final int mc33_t_peak_off_offset = 4504;
+	public static final int mc33_t_peak_off_offset_hex = 1198;
+	public static final int mc33_t_peak_tot_offset = 4506;
 	public static final int measureMapOnlyInOneCylinder_offset = 744;
 	public static final String MOCK_AFR_COMMAND = "mock_afr_voltage";
 	public static final String MOCK_CLT_COMMAND = "mock_clt_voltage";
@@ -1365,6 +1379,15 @@ public class Fields {
 	public static final int tChargeMinRpmMaxTps_offset = 2236;
 	public static final int tChargeMinRpmMinTps_offset = 2232;
 	public static final int tChargeMode_offset = 3884;
+	public static final int tcu_solenoid1_offset = 1192;
+	public static final int tcu_solenoid2_offset = 1193;
+	public static final int tcu_solenoid3_offset = 1194;
+	public static final int tcu_solenoid4_offset = 1195;
+	public static final int tcu_solenoid5_offset = 1196;
+	public static final int tcu_solenoid6_offset = 1197;
+	public static final int tcu_solenoid7_offset = 1198;
+	public static final int tcu_solenoid8_offset = 1199;
+	public static final int TCU_SOLENOID_COUNT = 8;
 	public static final int test557pin_offset = 3101;
 	public static final int throttlePedalPositionAdcChannel_offset = 580;
 	public static final int throttlePedalPositionAdcChannel_offset_hex = 244;
@@ -1560,7 +1583,7 @@ public class Fields {
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_former_warmup_target_afr_offset = 2100;
 	public static final int unused_former_warmup_target_afr_offset_hex = 834;
-	public static final int unusedAtOldBoardConfigurationEnd_offset = 1192;
+	public static final int unusedAtOldBoardConfigurationEnd_offset = 1200;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_11_offset = 976;
 	public static final int unusedBit_251_12_offset = 976;
@@ -2208,6 +2231,14 @@ public class Fields {
 	public static final Field ENGINEMAKE = Field.create("ENGINEMAKE", 1096, FieldType.INT);
 	public static final Field ENGINECODE = Field.create("ENGINECODE", 1128, FieldType.INT);
 	public static final Field VEHICLENAME = Field.create("VEHICLENAME", 1160, FieldType.INT);
+	public static final Field TCU_SOLENOID1 = Field.create("TCU_SOLENOID1", 1192, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID2 = Field.create("TCU_SOLENOID2", 1193, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID3 = Field.create("TCU_SOLENOID3", 1194, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID4 = Field.create("TCU_SOLENOID4", 1195, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID5 = Field.create("TCU_SOLENOID5", 1196, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID6 = Field.create("TCU_SOLENOID6", 1197, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID7 = Field.create("TCU_SOLENOID7", 1198, FieldType.INT8, output_pin_e);
+	public static final Field TCU_SOLENOID8 = Field.create("TCU_SOLENOID8", 1199, FieldType.INT8, output_pin_e);
 	public static final Field TPS2SECONDARYMIN = Field.create("TPS2SECONDARYMIN", 1460, FieldType.INT16);
 	public static final Field TPS2SECONDARYMAX = Field.create("TPS2SECONDARYMAX", 1462, FieldType.INT16);
 	public static final Field UNUSEDHEREWEHAVE = Field.create("UNUSEDHEREWEHAVE", 1464, FieldType.BIT, 0);
@@ -2619,6 +2650,15 @@ public class Fields {
 	public static final Field GPPWM4_LOADAXIS = Field.create("GPPWM4_LOADAXIS", 4414, FieldType.INT8, gppwm_channel_e);
 	public static final Field GPPWM4_PAD = Field.create("GPPWM4_PAD", 4415, FieldType.INT8);
 	public static final Field GPPWM4_TABLE = Field.create("GPPWM4_TABLE", 4432, FieldType.INT);
+	public static final Field MC33_I_BOOST = Field.create("MC33_I_BOOST", 4496, FieldType.INT16);
+	public static final Field MC33_I_PEAK = Field.create("MC33_I_PEAK", 4498, FieldType.INT16);
+	public static final Field MC33_I_HOLD = Field.create("MC33_I_HOLD", 4500, FieldType.INT16);
+	public static final Field MC33_T_MAX_BOOST = Field.create("MC33_T_MAX_BOOST", 4502, FieldType.INT16);
+	public static final Field MC33_T_PEAK_OFF = Field.create("MC33_T_PEAK_OFF", 4504, FieldType.INT16);
+	public static final Field MC33_T_PEAK_TOT = Field.create("MC33_T_PEAK_TOT", 4506, FieldType.INT16);
+	public static final Field MC33_T_BYPASS = Field.create("MC33_T_BYPASS", 4508, FieldType.INT16);
+	public static final Field MC33_T_HOLD_OFF = Field.create("MC33_T_HOLD_OFF", 4510, FieldType.INT16);
+	public static final Field MC33_T_HOLD_TOT = Field.create("MC33_T_HOLD_TOT", 4512, FieldType.INT16);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 6000, FieldType.INT);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT);
@@ -3182,6 +3222,14 @@ public class Fields {
 	ENGINEMAKE,
 	ENGINECODE,
 	VEHICLENAME,
+	TCU_SOLENOID1,
+	TCU_SOLENOID2,
+	TCU_SOLENOID3,
+	TCU_SOLENOID4,
+	TCU_SOLENOID5,
+	TCU_SOLENOID6,
+	TCU_SOLENOID7,
+	TCU_SOLENOID8,
 	TPS2SECONDARYMIN,
 	TPS2SECONDARYMAX,
 	UNUSEDHEREWEHAVE,
@@ -3587,6 +3635,15 @@ public class Fields {
 	GPPWM4_LOADAXIS,
 	GPPWM4_PAD,
 	GPPWM4_TABLE,
+	MC33_I_BOOST,
+	MC33_I_PEAK,
+	MC33_I_HOLD,
+	MC33_T_MAX_BOOST,
+	MC33_T_PEAK_OFF,
+	MC33_T_PEAK_TOT,
+	MC33_T_BYPASS,
+	MC33_T_HOLD_OFF,
+	MC33_T_HOLD_TOT,
 	WARNING_MESSAGE,
 	BOOSTTABLEOPENLOOP,
 	BOOSTTABLECLOSEDLOOP,

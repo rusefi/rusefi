@@ -95,6 +95,8 @@ struct_no_prefix engine_configuration_s
 #define CLT_TIMING_CURVE_SIZE 8
 #define IDLE_VE_CURVE_SIZE 8
 
+#define TCU_SOLENOID_COUNT 8
+
 #define ETB_COUNT 2
 
 #define AUX_DIGITAL_VALVE_COUNT 2
@@ -887,7 +889,10 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	vehicle_info_t engineCode;+For example, LS1 or NB2\nREQUIRED for rusEFI Online
 	vehicle_info_t vehicleName;+For example, Hunchback or Orange Miata\nVehicle name has to be unique between your vehicles.\nREQUIRED for rusEFI Online
 
-	int[67] unusedAtOldBoardConfigurationEnd;
+	output_pin_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid;
+
+
+	int[65] unusedAtOldBoardConfigurationEnd;
 
 	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
@@ -1284,17 +1289,18 @@ uint8_t[4] unusuedsw;
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
 
-	uint16_t mc33_i_boost;
-	uint16_t mc33_i_peak;
-	uint16_t mc33_i_hold;
-	uint16_t mc33_t_max_boost;
-	uint16_t mc33_t_peak_off;
-	uint16_t mc33_t_peak_tot;
-	uint16_t mc33_t_bypass;
-	uint16_t mc33_t_hold_off;
-	uint16_t mc33_t_hold_tot;
+	uint16_t mc33_i_boost;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_i_peak;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_i_hold;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_max_boost;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_peak_off;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_peak_tot;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_bypass;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_hold_off;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_hold_tot;;"X",   1,   0.0,        0,  64000,   0
 
-	int[358] mainUnusedEnd;
+! just a reminder that 'int' and 'float' are 4 bytes each
+	int[371] mainUnusedEnd;
 
 ! end of engine_configuration_s
 end_struct
