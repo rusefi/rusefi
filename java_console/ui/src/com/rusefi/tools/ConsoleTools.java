@@ -15,12 +15,14 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.maintenance.ExecHelper;
+import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
@@ -208,9 +210,9 @@ public class ConsoleTools {
             System.err.println("Binary file input expected");
             System.exit(-1);
         }
-        String fileName = args[1];
-        ConfigurationImage image = ConfigurationImageFile.readFromFile(fileName);
-        System.out.println("Got " + image.getSize() + " of configuration from " + fileName);
+        String inputBinaryFileName = args[1];
+        ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName);
+        System.out.println("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
 
         IniFileModel ini = IniFileModel.getInstance(Launcher.INI_FILE_PATH);
 
@@ -219,8 +221,9 @@ public class ConsoleTools {
 
 //        handle(tune, ini, "injector_battLagCorrBins");
 
-
-        XmlUtil.writeXml(tune, Msq.class, "a.msq");
+        String outputXmlFile = "output.msq";
+        XmlUtil.writeXml(tune, Msq.class, outputXmlFile);
+        Online.upload(new File(outputXmlFile), "x");
     }
 
     private static void handle(Msq tune, IniFileModel ini, String key, ConfigurationImage image) {

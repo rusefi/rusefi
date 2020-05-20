@@ -1,9 +1,6 @@
 package com.opensr5.ini;
 
-import com.opensr5.ini.field.ArrayIniField;
-import com.opensr5.ini.field.EnumIniField;
-import com.opensr5.ini.field.IniField;
-import com.opensr5.ini.field.ScalarIniField;
+import com.opensr5.ini.field.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -141,6 +138,7 @@ public class IniFileModel {
         if (list.get(1).equals(FIELD_TYPE_SCALAR)) {
             registerField(ScalarIniField.parse(list));
         } else if (list.get(1).equals(FIELD_TYPE_STRING)) {
+            registerField(StringIniField.parse(list));
         } else if (list.get(1).equals(FIELD_TYPE_ARRAY)) {
             registerField(ArrayIniField.parse(list));
         } else if (list.get(1).equals(FIELD_TYPE_BITS)) {
