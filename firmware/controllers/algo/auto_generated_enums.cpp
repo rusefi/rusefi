@@ -77,10 +77,6 @@ case EFI_ADC_ERROR:
   return "EFI_ADC_ERROR";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
-#if EFI_UNIT_TEST
-case TEST_MAF_CHANNEL:
-  return "EFI_TEST";
-#endif /* EFI_UNIT_TEST */
   }
  return NULL;
 }
