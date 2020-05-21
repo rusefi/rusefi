@@ -602,6 +602,11 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			setAllLeds(0);
 		} else if (counter % 2 == 0) {
 			enginePins.communicationLedPin.setValue(0);
+#if HW_CHECK_MODE
+			// we have to do anything possible to help users notice FACTORY MODE
+			enginePins.errorLedPin.setValue(1);
+			enginePins.runningLedPin.setValue(1);
+#endif // HW_CHECK_MODE
 			if (!lowVBatt) {
 				enginePins.warningLedPin.setValue(0);
 			}
@@ -623,6 +628,12 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			}
 
 			enginePins.communicationLedPin.setValue(1);
+#if HW_CHECK_MODE
+			// we have to do anything possible to help users notice FACTORY MODE
+			enginePins.errorLedPin.setValue(0);
+			enginePins.runningLedPin.setValue(0);
+#endif // HW_CHECK_MODE
+
 	#if EFI_ENGINE_CONTROL
 			if (lowVBatt || isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
 				consoleByteArrived = false;
@@ -814,7 +825,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->knockCount = engine->knockCount;
 	tsOutputChannels->knockLevel = engine->knockVolts;
 
+#if HW_CHECK_MODE
+	tsOutputChannels->hasCriticalError = 1;
+#else
 	tsOutputChannels->hasCriticalError = hasFirmwareError();
+#endif // HW_CHECK_MODE
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
 #if EFI_HIP_9011
