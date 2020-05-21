@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed May 20 11:23:11 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed May 20 22:25:09 EDT 2020
 // see also gen_config_and_enums.bat
 
 
@@ -106,6 +106,8 @@ case MT_GM_3_BAR:
   return "MT_GM_3_BAR";
 case MT_HONDA3BAR:
   return "MT_HONDA3BAR";
+case MT_MAZDA_1_BAR:
+  return "MT_MAZDA_1_BAR";
 case MT_MPX4100:
   return "MT_MPX4100";
 case MT_MPX4250:
@@ -114,8 +116,6 @@ case MT_MPX4250A:
   return "MT_MPX4250A";
 case MT_SUBY_DENSO:
   return "MT_SUBY_DENSO";
-case MT_MAZDA_1_BAR:
-  return "MT_MAZDA_1_BAR";
 case MT_TOYOTA_89420_02010:
   return "MT_TOYOTA_89420_02010";
   }
