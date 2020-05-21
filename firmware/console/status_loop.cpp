@@ -60,6 +60,7 @@
 #include "can_hw.h"
 #include "periodic_thread_controller.h"
 #include "cdm_ion_sense.h"
+#include "binary_logging.h"
 
 extern afr_Map3D_t afrMap;
 extern bool main_loop_started;
@@ -119,49 +120,10 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static char FILE_LOGGER[1000] MAIN_RAM;
-static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
-static int logFileLineIndex = 0;
+static char sdLogBuffer[2048] MAIN_RAM;
+static uint64_t binaryLogCount = 0;
 
 #endif /* EFI_FILE_LOGGING */
-
-#define TAB "\t"
-
-static void reportSensorF(Logging *log, const char *caption, const char *units, float value,
-		int precision) {
-
-#if EFI_FILE_LOGGING
-	if (logFileLineIndex == 0) {
-		append(log, caption);
-		append(log, TAB);
-	} else if (logFileLineIndex == 1) {
-		append(log, units);
-		append(log, TAB);
-	} else {
-		appendFloat(log, value, precision);
-		append(log, TAB);
-	}
-#else
-	UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
-	UNUSED(precision);
-#endif /* EFI_FILE_LOGGING */
-}
-
-static void reportSensorI(Logging *log, const char *caption, const char *units, int value) {
-#if EFI_FILE_LOGGING
-		if (logFileLineIndex == 0) {
-			append(log, caption);
-			append(log, TAB);
-		} else if (logFileLineIndex == 1) {
-			append(log, units);
-			append(log, TAB);
-		} else {
-			appendPrintf(log, "%d%s", value, TAB);
-		}
-#else
-		UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
-#endif /* EFI_FILE_LOGGING */
-}
 
 EXTERN_ENGINE;
 
@@ -181,202 +143,24 @@ static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
 }
 
-#if EFI_FILE_LOGGING
-static void printSensors(Logging *log) {
-	bool fileFormat = true; // todo:remove this unused variable
-	// current time, in milliseconds
-	int nowMs = currentTimeMillis();
-	float sec = ((float) nowMs) / 1000;
-	reportSensorF(log, "time", "", sec, 3); // log column 1
-
-	int rpm = 0;
-#if EFI_SHAFT_POSITION_INPUT
-	rpm = GET_RPM();
-	reportSensorI(log, "rpm", "RPM", rpm); // log column 2
-#endif
-	// why do we still send data into console in text mode?
-
-	Sensor::showAllSensorInfo(log);
-
-	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		reportSensorF(log, GAUGE_NAME_VBAT, "V", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #6
-	}
-
-
-	// 312
-	reportSensorF(log, GAUGE_NAME_ETB_TARGET, "v", tsOutputChannels.etbTarget, 2);
-	// 316
-	reportSensorF(log, GAUGE_NAME_ETB_DUTY, "e", tsOutputChannels.etb1DutyCycle, 2);
-	// 320
-	reportSensorF(log, GAUGE_NAME_ETB_ERROR, "d", tsOutputChannels.etb1Error, 2);
-
-
-	reportSensorF(log, GAUGE_NAME_FUEL_BARO_CORR, "x", engine->engineState.baroCorrection, 2);
-
-	reportSensorF(log, GAUGE_NAME_AIR_FLOW, "v", getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
-	reportSensorF(log, GAUGE_NAME_AIR_MASS, "x", engine->engineState.sd.airMassInOneCylinder, 2);
-
-//	if (hasMafSensor()) {
-//		reportSensorF(log, , "V", getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
-//	}
-
-#if EFI_ANALOG_SENSORS
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		reportSensorF(log, "MAP", "kPa", getMap(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
-//		reportSensorF(log, "map_r", "V", getRawMap(), 2);
-	}
-#endif /* EFI_ANALOG_SENSORS */
-#if EFI_ANALOG_SENSORS
-	if (hasBaroSensor()) {
-		reportSensorF(log, "baro", "kPa", getBaroPressure(), 2);
-	}
-#endif /* EFI_ANALOG_SENSORS */
-
-
-	if (!fileFormat) {
-		return;
-	}
-
-	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		reportSensorF(log, GAUGE_NAME_AFR, "AFR", getAfr(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
-	}
-
-	// below are the more advanced data points which only go into log file
-
-
-#if HAL_USE_ADC
-	reportSensorF(log, GAUGE_NAME_CPU_TEMP, "C", getMCUInternalTemperature(), 2); // log column #3
-#endif
-
-	reportSensorI(log, "mode", "v", packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE)); // log column #3
-
-	reportSensorF(log, GAUGE_NAME_ACCEL_X, "G", engine->sensors.accelerometer.x, 3);
-	reportSensorF(log, GAUGE_NAME_ACCEL_Y, "G", engine->sensors.accelerometer.y, 3);
-
-	if (hasMafSensor()) {
-		reportSensorF(log, "maf", "V", getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
-		reportSensorF(log, "mafr", "kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
-	}
-
-#if EFI_IDLE_CONTROL
-	reportSensorF(log, GAUGE_NAME_IAC, "%", getIdlePosition(), 2);
-#endif /* EFI_IDLE_CONTROL */
-
-#if EFI_ANALOG_SENSORS
-	reportSensorF(log, GAUGE_NAME_TARGET_AFR, "AFR", engine->engineState.targetAFR, 2);
-#endif /* EFI_ANALOG_SENSORS */
-
-
-#define DEBUG_F_PRECISION 6
-
-#if EFI_TUNER_STUDIO
-		reportSensorF(log, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField1, DEBUG_F_PRECISION);
-		reportSensorF(log, GAUGE_NAME_DEBUG_F2, "v", tsOutputChannels.debugFloatField2, DEBUG_F_PRECISION);
-		reportSensorF(log, GAUGE_NAME_DEBUG_F3, "v", tsOutputChannels.debugFloatField3, DEBUG_F_PRECISION);
-		reportSensorF(log, GAUGE_NAME_DEBUG_F4, "v", tsOutputChannels.debugFloatField4, DEBUG_F_PRECISION);
-		reportSensorF(log, GAUGE_NAME_DEBUG_F5, "v", tsOutputChannels.debugFloatField5, DEBUG_F_PRECISION);
-		reportSensorF(log, GAUGE_NAME_DEBUG_F6, "v", tsOutputChannels.debugFloatField6, DEBUG_F_PRECISION);
-		reportSensorF(log, GAUGE_NAME_DEBUG_F7, "v", tsOutputChannels.debugFloatField7, DEBUG_F_PRECISION);
-
-		reportSensorI(log, GAUGE_NAME_DEBUG_I1, "v", tsOutputChannels.debugIntField1);
-		reportSensorI(log, GAUGE_NAME_DEBUG_I2, "v", tsOutputChannels.debugIntField2);
-		reportSensorI(log, GAUGE_NAME_DEBUG_I3, "v", tsOutputChannels.debugIntField3);
-		reportSensorI(log, GAUGE_NAME_DEBUG_I4, "v", tsOutputChannels.debugIntField4);
-		reportSensorI(log, GAUGE_NAME_DEBUG_I5, "v", tsOutputChannels.debugIntField5);
-#endif /* EFI_TUNER_STUDIO */
-
-		reportSensorF(log, GAUGE_NAME_TCHARGE, "K", engine->engineState.sd.tChargeK, 2); // log column #8
-		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			reportSensorF(log, GAUGE_NAME_FUEL_VE, "%", engine->engineState.currentBaroCorrectedVE * PERCENT_MULT, 2);
-		}
-
-#if EFI_SHAFT_POSITION_INPUT
-		reportSensorF(log, GAUGE_NAME_VVT, "deg", engine->triggerCentral.getVVTPosition(), 1);
-#endif
-
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
-	reportSensorF(log, GAUGE_NAME_ENGINE_LOAD, "x", engineLoad, 2);
-
-
-	reportSensorF(log, GAUGE_COIL_DWELL_TIME, "ms", ENGINE(engineState.sparkDwell), 2);
-	reportSensorF(log, GAUGE_NAME_TIMING_ADVANCE, "deg", engine->engineState.timingAdvance, 2);
-
-
-	reportSensorF(log, GAUGE_NAME_THROTTLE_PEDAL, "%", Sensor::get(SensorType::AcceleratorPedal).value_or(0), 2);
-
-	floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	reportSensorF(log, GAUGE_NAME_FUEL_BASE, "ms", fuelBase, 2);
-	reportSensorF(log, GAUGE_NAME_FUEL_LAST_INJECTION, "ms", ENGINE(actualLastInjection), 2);
-	reportSensorF(log, GAUGE_NAME_INJECTOR_LAG, "ms", engine->engineState.running.injectorLag, 2);
-	reportSensorF(log, GAUGE_NAME_FUEL_RUNNING, "ms", ENGINE(engineState.running.fuel), 2);
-	// 268
-	reportSensorF(log, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.running.pidCorrection), 2);
-
-	reportSensorF(log, GAUGE_NAME_FUEL_WALL_AMOUNT, "v", ENGINE(wallFuel[0]).getWallFuel(), 2);
-	reportSensorF(log, GAUGE_NAME_FUEL_WALL_CORRECTION, "v", ENGINE(wallFuel[0]).wallFuelCorrection, 2);
-
-	reportSensorI(log, GAUGE_NAME_VERSION, "#", getRusEfiVersion());
-
-#if EFI_VEHICLE_SPEED
-	if (hasVehicleSpeedSensor()) {
-		float vehicleSpeed = getVehicleSpeed();
-		reportSensorF(log, GAUGE_NAME_VVS, "kph", vehicleSpeed, 2);
-		float sp2rpm = rpm == 0 ? 0 : vehicleSpeed / rpm;
-		reportSensorF(log, "sp2rpm", "x", sp2rpm, 2);
-	}
-#endif /* EFI_PROD_CODE */
-
-
-	reportSensorF(log, GAUGE_NAME_KNOCK_COUNTER, "count", engine->knockCount, 0);
-	reportSensorF(log, GAUGE_NAME_KNOCK_LEVEL, "v", engine->knockVolts, 2);
-
-	//	reportSensorF(log, "vref", "V", getVRef(engineConfiguration), 2);
-
-
-		reportSensorF(log, "f: tps delta", "v", engine->tpsAccelEnrichment.getMaxDelta(), 2);
-		reportSensorF(log, GAUGE_NAME_FUEL_TPS_EXTRA, "ms", engine->engineState.tpsAccelEnrich, 2);
-
-		reportSensorF(log, "f: el delta", "v", engine->engineLoadAccelEnrichment.getMaxDelta(), 2);
-		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			reportSensorF(log, "f: el fuel", "v", engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / getMap(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
-		}
-
-		reportSensorF(log, GAUGE_NAME_FUEL_INJ_DUTY, "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 2);
-		reportSensorF(log, GAUGE_NAME_DWELL_DUTY, "%", getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 2);
-
-
-	for (int i = 0;i<FSIO_ANALOG_INPUT_COUNT;i++) {
-		if (engineConfiguration->fsioAdc[i] != EFI_ADC_NONE) {
-			strcpy(buf, "adcX");
-			buf[3] = '0' + i;
-			reportSensorF(log, buf, "", getVoltage("fsio", engineConfiguration->fsioAdc[i] PASS_ENGINE_PARAMETER_SUFFIX), 2);
-		}
-	}
-
-		reportSensorI(log, GAUGE_NAME_WARNING_COUNTER, "count", engine->engineState.warnings.warningCounter);
-		reportSensorI(log, GAUGE_NAME_WARNING_LAST, "code", engine->engineState.warnings.lastErrorCode);
-
-		reportSensorI(log, INDICATOR_NAME_CLUTCH_UP, "bool", engine->clutchUpState);
-		reportSensorI(log, INDICATOR_NAME_CLUTCH_DOWN, "bool", engine->clutchDownState);
-		reportSensorI(log, INDICATOR_NAME_BRAKE_DOWN, "bool", engine->brakePedalState);
-		reportSensorI(log, INDICATOR_NAME_AC_SWITCH, "bool", engine->acSwitchState);
-
-}
-#endif /* EFI_FILE_LOGGING */
-
-
-void writeLogLine(void) {
+void writeLogLine() {
 #if EFI_FILE_LOGGING
 	if (!main_loop_started)
 		return;
-	resetLogging(&fileLogger);
-	printSensors(&fileLogger);
 
-	if (isSdCardAlive()) {
-		appendPrintf(&fileLogger, "\r\n");
-		appendToLog(fileLogger.buffer, strlen(fileLogger.buffer));
-		logFileLineIndex++;
+	size_t length = efi::size(sdLogBuffer);
+
+	if (binaryLogCount == 0) {
+		memset(sdLogBuffer, 0xAA, length);
+		writeHeader(sdLogBuffer);
+	} else {
+		updateTunerStudioState(&tsOutputChannels);
+		length = writeBlock(sdLogBuffer);
 	}
+
+	appendToLog(sdLogBuffer, length);
+
+	binaryLogCount++;
 #endif /* EFI_FILE_LOGGING */
 }
 
