@@ -7,9 +7,11 @@
  * MICRO_RUS_EFI
  * set engine_type 60
  *
- * MRE_BOARD_TEST
+ * MRE_BOARD_OLD_TEST
  * set engine_type 30
  *
+ * MRE_BOARD_NEW_TEST
+ * set engine_type 31
  *
  * See https://github.com/rusefi/rusefi/wiki/Hardware_microRusEfi_wiring
  *

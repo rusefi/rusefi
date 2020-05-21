@@ -102,9 +102,10 @@ typedef enum {
 
 	SACHS = 29,
 
-	MRE_BOARD_TEST = 30,
+	// LED physical order set for older test fixtures
+	MRE_BOARD_OLD_TEST = 30,
 
-	DODGE_RAM = 31,
+	MRE_BOARD_NEW_TEST = 31,
 
 	VW_ABA = 32,
 
@@ -184,6 +185,8 @@ typedef enum {
 	VW_B6 = 62,
 
 	BMW_M73_PROTEUS = 63,
+
+	DODGE_RAM = 64,
 
 	/**
 	 * this configuration has as few pins configured as possible
