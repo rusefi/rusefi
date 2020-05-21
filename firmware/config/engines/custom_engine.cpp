@@ -397,7 +397,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * set engine_type 30
  * MRE_BOARD_TEST
  */
-void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->debugMode = DBG_TLE8888;
 

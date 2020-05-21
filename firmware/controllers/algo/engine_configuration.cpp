@@ -1196,8 +1196,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
-	case MRE_BOARD_TEST:
-		mreBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case MRE_BOARD_OLD_TEST:
+	case MRE_BOARD_NEW_TEST:
+		mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_ENGINE:
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
