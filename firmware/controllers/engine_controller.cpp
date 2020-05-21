@@ -275,13 +275,13 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 	if (hwChannel == EFI_ADC_NONE) {
 		strcpy(buffer, "NONE");
 	} else {
-		strcpy((char*) buffer, portname(getAdcChannelPort(msg, hwChannel)));
+		strcpy(buffer, portname(getAdcChannelPort(msg, hwChannel)));
 		itoa10(&buffer[2], getAdcChannelPin(hwChannel));
 	}
 #else
 	strcpy(buffer, "NONE");
 #endif /* HAL_USE_ADC */
-	return (char*) buffer;
+	return buffer;
 }
 
 static char pinNameBuffer[16];
