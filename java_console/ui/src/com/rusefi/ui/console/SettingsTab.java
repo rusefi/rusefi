@@ -2,7 +2,6 @@ package com.rusefi.ui.console;
 
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
-import com.rusefi.Launcher;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.config.FieldsMap;
@@ -40,7 +39,7 @@ public class SettingsTab {
     }
 
     public void showContent() {
-        final Map<String, DialogModel> dialogs = IniFileModel.getInstance(Launcher.INI_FILE_PATH).getDialogs();
+        final Map<String, DialogModel> dialogs = IniFileModel.getInstance().getDialogs();
         if (dialogs.isEmpty()) {
             content.removeAll();
             content.add(new JLabel("Meta data not found: " + RUSEFI_INI_PREFIX + "*" + RUSEFI_INI_SUFFIX));
@@ -132,7 +131,7 @@ public class SettingsTab {
         dialog.setText(name);
         dialogBody.removeAll();
 
-        DialogModel m = IniFileModel.getInstance(Launcher.INI_FILE_PATH).getDialogs().get(name);
+        DialogModel m = IniFileModel.getInstance().getDialogs().get(name);
 
         dialogBody.setLayout(new GridLayout(m.getFields().size(), 1));
 

@@ -805,7 +805,7 @@ typedef enum {
 } sensor_chart_e;
 
 typedef enum {
-//todo fix enum generator  java tool to support negative	REVERSE = -1,
+	REVERSE = -1,
 	NEUTRAL = 0,
 	GEAR_1 = 1,
 	GEAR_2 = 2,

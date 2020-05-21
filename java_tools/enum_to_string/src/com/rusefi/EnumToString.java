@@ -17,8 +17,8 @@ public class EnumToString {
     private final static StringBuilder cppFileContent = new StringBuilder();
     private final static StringBuilder includesSection = new StringBuilder();
 
-    private final static StringBuilder bothFilesHeader = new StringBuilder("// by enum2string.jar tool\n" +
-            "// on " + new Date() + "\n" +
+    private final static StringBuilder bothFilesHeader = new StringBuilder("// by enum2string.jar tool " +
+            "on " + new Date() + "\n" +
             "// see also gen_config_and_enums.bat\n" +
             "\n" +
             "\n" +
@@ -55,8 +55,7 @@ public class EnumToString {
 
         }
 
-        headerFileContent.append("#ifndef _A_H_HEADER_\n");
-        headerFileContent.append("#define _A_H_HEADER_\n");
+        headerFileContent.append("#pragma once\n");
 
         outputData();
 
@@ -69,8 +68,6 @@ public class EnumToString {
 
         cppFileContent.insert(0, "#include \"global.h\"\n");
         headerFileContent.insert(0, bothFilesHeader.toString());
-
-        headerFileContent.append("#endif /*_A_H_HEADER_ */\n");
 
         new File(outputPath).mkdirs();
         writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_enums");
@@ -92,11 +89,10 @@ public class EnumToString {
         SystemOut.println("Reading enums from " + inFileName);
         String simpleFileName = f.getName();
 
-        bothFilesHeader.insert(0, "// " +
-                LazyFile.LAZY_FILE_TAG + " from " + simpleFileName + "\n");
+        bothFilesHeader.insert(0, "// " + LazyFile.LAZY_FILE_TAG + " from " + simpleFileName + " ");
 
         includesSection.append("#include \"" + simpleFileName + "\"\n");
-        EnumsReader.process(new FileReader(inFileName));
+        EnumsReader.process(new FileReader(f));
     }
 
     public static void outputData() {

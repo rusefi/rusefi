@@ -3,7 +3,6 @@ package com.rusefi.tools;
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.field.IniField;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
@@ -15,12 +14,14 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.maintenance.ExecHelper;
-import com.rusefi.tune.xml.Constant;
+import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.xml.XmlUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class ConsoleTools {
         TOOLS.put("functional_test", ConsoleTools::runFunctionalTest);
         TOOLS.put("compile_fsio_file", ConsoleTools::runCompileTool);
         TOOLS.put("firing_order", ConsoleTools::runFiringOrderTool);
-        TOOLS.put("fun_convert", ConsoleTools::convertBinaryToXml);
+        TOOLS.put("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml);
         TOOLS.put("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT));
         TOOLS.put(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU));
     }
@@ -202,37 +203,27 @@ public class ConsoleTools {
     }
 
     private static void convertBinaryToXml(String[] args) throws IOException, JAXBException {
-        Msq tune = new Msq();
 
         if (args.length < 2) {
             System.err.println("Binary file input expected");
             System.exit(-1);
         }
-        String fileName = args[1];
-        ConfigurationImage image = ConfigurationImageFile.readFromFile(fileName);
-        System.out.println("Got " + image.getSize() + " of configuration from " + fileName);
+        String inputBinaryFileName = args[1];
+        ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName);
+        System.out.println("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
 
-        IniFileModel ini = IniFileModel.getInstance(Launcher.INI_FILE_PATH);
+        Msq tune = toMsq(image);
+        XmlUtil.writeXml(tune, Msq.class, Msq.outputXmlFileName);
+        Online.upload(new File(Msq.outputXmlFileName), "x");
+    }
 
+    @NotNull
+    public static Msq toMsq(ConfigurationImage image) {
+        IniFileModel ini = IniFileModel.getInstance();
+        Msq tune = new Msq();
         for (String key : ini.allIniFields.keySet())
-            handle(tune, ini, key, image);
-
-//        handle(tune, ini, "injector_battLagCorrBins");
-
-
-        XmlUtil.writeXml(tune, Msq.class, "a.msq");
-    }
-
-    private static void handle(Msq tune, IniFileModel ini, String key, ConfigurationImage image) {
-        IniField field = ini.allIniFields.get(key);
-        tune.getPage().constant.add(prepareConstant(field, image));
-    }
-
-    private static Constant prepareConstant(IniField field, ConfigurationImage image) {
-
-        String value = field.getValue(image);
-
-        return new Constant(field.getName(), field.getUnits(), value);
+            tune.loadConstant(ini, key, image);
+        return tune;
     }
 
     interface ConsoleTool {
