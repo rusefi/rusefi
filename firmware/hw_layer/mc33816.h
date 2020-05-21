@@ -9,6 +9,8 @@
 
 #include "global.h"
 
+const int MC_CK = 6; // PLL x24 / CLK_DIV 4 = 6Mhz
+
 const int MAX_SPI_MODE_A_TRANSFER_SIZE = 31;  //max size for register config transfer
 
 enum {

@@ -23,7 +23,6 @@
 #include "trigger_universal.h"
 #include "sensor.h"
 
-extern float testMafValue;
 extern WarningCodeState unitTestWarningCodeState;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
@@ -677,7 +676,9 @@ static void setTestBug299(EngineTestHelper *eth) {
 	ASSERT_EQ( 1,  engine->engineState.running.coolantTemperatureCoefficient) << "cltC";
 	ASSERT_EQ( 0,  engine->engineState.running.injectorLag) << "lag";
 
-	testMafValue = 0;
+	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+
 	ASSERT_EQ( 0,  getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maf";
 
 	ASSERT_EQ( 3000,  GET_RPM()) << "setTestBug299: RPM";
@@ -685,7 +686,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertEqualsM("fuel#1", 1.5, engine->injectionDuration);
 	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
-	testMafValue = 3;
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 3 PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 3,  getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maf";
 }
 
@@ -712,7 +713,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	assertInjectors("#0_inj", 0, 0);
 
 
-	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
+	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
 	ASSERT_EQ(8, engineLoadIndex);
 	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 25);
 	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 25);
@@ -942,7 +943,9 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	eth.executeActions();
 
 	engine->mockMapValue = 0;
-	testMafValue = 0;
+
+	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
 	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
 }
@@ -965,7 +968,7 @@ TEST(big, testDifferentInjectionModes) {
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
 
 	// set fuel map values - extract method?
-	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
+	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
 	ASSERT_EQ(8, engineLoadIndex);
 	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 40);
 	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 40);
@@ -996,7 +999,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
 
 	// set fuel map values - extract method?
-	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
+	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
 	ASSERT_EQ(8, engineLoadIndex);
 	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
 	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);

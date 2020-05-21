@@ -18,9 +18,6 @@
 
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
-extern float testMafValue;
-extern float testCltValue;
-extern float testIatValue;
 extern engine_configuration_s & activeConfiguration;
 
 EngineTestHelperBase::EngineTestHelperBase() { 
@@ -31,7 +28,7 @@ EngineTestHelperBase::EngineTestHelperBase() {
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback) {
 	unitTestWarningCodeState.clear();
 
-	testMafValue = 0;
+
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
 	enginePins.reset();
@@ -60,14 +57,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	commonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-	engine->engineConfigurationPtr->mafAdcChannel = TEST_MAF_CHANNEL;
-	engine->engineConfigurationPtr->clt.adcChannel = TEST_CLT_CHANNEL;
-	engine->engineConfigurationPtr->iat.adcChannel = TEST_IAT_CHANNEL;
-	// magic voltage to get nice CLT
-	testCltValue = 1.492964;
+	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+
 	Sensor::setMockValue(SensorType::Clt, 70);
-	// magic voltage to get nice IAT
-	testIatValue = 4.03646;
 	Sensor::setMockValue(SensorType::Iat, 30);
 
 	// this is needed to have valid CLT and IAT.

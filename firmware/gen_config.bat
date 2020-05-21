@@ -57,4 +57,7 @@ IF NOT ERRORLEVEL 0 EXIT /B 1
 
 
 cd config\boards\kinetis\config
-!gen_config.bat
+call !gen_config.bat
+pwd
+
+call gen_enum_to_string.bat
