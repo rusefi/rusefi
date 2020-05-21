@@ -141,14 +141,15 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 
 #if HAL_USE_PWM
 struct stm32_hardware_pwm : public hardware_pwm {
-	const brain_pin_e BrainPin;
 	PWMDriver* const Driver;
+	const brain_pin_e BrainPin;
+
 	const uint8_t Channel;
 	const uint8_t AlternateFunc;
 
 	stm32_hardware_pwm(brain_pin_e pin, PWMDriver* drv, uint8_t channel, uint8_t altFunc)
-		: BrainPin(pin)
-		, Driver(drv)
+		: Driver(drv)
+		, BrainPin(pin)
 		, Channel(channel)
 		, AlternateFunc(altFunc)
 	{
