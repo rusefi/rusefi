@@ -146,7 +146,7 @@ static void setupDefaultSensorInputs() {
 	// open question if it's great to have TPS in default TPS - the down-side is for
 	// vehicles without TPS or for first start without TPS one would have to turn in off
 	// to avoid cranking corrections based on wrong TPS data
-	// tps = "20 - AN volt 5"
+	// tps = "20 - AN volt 5" PC3
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 

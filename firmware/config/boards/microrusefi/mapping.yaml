@@ -31,6 +31,12 @@ outputs:
   TLE8888_PIN_23: "33 - GP Out 3"
   TLE8888_PIN_24: "43 - GP Out 4"
 
+  # J2
+  GPIOA_15: "AUX J2 PA15"
+  GPIOB_9:  "AUX J2 PB9"
+
+
+
 event_inputs:
   # RC filter input for hall
   GPIOA_5: "25 - Hall Cam"
