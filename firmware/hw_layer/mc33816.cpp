@@ -469,6 +469,11 @@ void initMc33816(Logging *sharedLogger) {
 	mcRestart();
 }
 
+static void mcShutdown() {
+	driven.setValue(0); // ensure HV is off
+	resetB.setValue(0); // turn off the chip
+}
+
 static void mcRestart() {
 	flag0before = false;
 	flag0after = false;
@@ -566,8 +571,4 @@ static void mcRestart() {
     }
 }
 
-static void mcShutdown() {
-	driven.setValue(0); // ensure HV is off
-	resetB.setValue(0); // turn off the chip
-}
 #endif /* EFI_MC33816 */
