@@ -303,6 +303,9 @@ static const int order_1_7_5_11_3_9_6_12_2_8_4_10[] = {1, 7, 5, 11, 3, 9, 6, 12,
 static const int order_1_7_4_10_2_8_6_12_3_9_5_11[] = {1, 7, 4, 10, 2, 8, 6, 12, 3, 9, 5, 11};
 static const int order_1_12_5_8_3_10_6_7_2_11_4_9[] = {1, 12, 5, 8, 3, 10, 6, 7, 2, 11, 4, 9};
 
+// no comments
+static const int order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10[] = {1, 14, 9, 4, 7, 12, 15, 6, 13, 8, 3, 16, 11, 2, 5, 10};
+
 static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	switch (CONFIG(specs.firingOrder)) {
@@ -352,6 +355,9 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_7_4_10_2_8_6_12_3_9_5_11:
 	case FO_1_12_5_8_3_10_6_7_2_11_4_9:
 		return 12;
+
+	case FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10:
+		return 16;
 
 	default:
 		warning(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "getCylinderId not supported for %d", CONFIG(specs.firingOrder));
@@ -442,6 +448,10 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return order_1_7_4_10_2_8_6_12_3_9_5_11[index];
 	case FO_1_12_5_8_3_10_6_7_2_11_4_9:
 		return order_1_12_5_8_3_10_6_7_2_11_4_9[index];
+
+// do not ask
+	case FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10:
+		return order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10[index];
 
 	default:
 		warning(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "getCylinderId not supported for %d", CONFIG(specs.firingOrder));
