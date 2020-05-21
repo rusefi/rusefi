@@ -2,6 +2,7 @@ package com.rusefi.binaryprotocol;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
+import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.FileLog;
@@ -13,6 +14,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import jssc.SerialPortException;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -40,6 +42,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     private static final int TEXT_PULL_PERIOD = 100;
+    private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.rusefi_binary";
     /**
      * This properly allows to switch to non-CRC32 mode
      * todo: finish this feature, assuming we even need it.
@@ -210,7 +213,22 @@ public class BinaryProtocol implements BinaryProtocolCommands {
      * read complete tune from physical data stream
      */
     public void readImage(int size) {
-        ConfigurationImage image = new ConfigurationImage(size);
+        ConfigurationImage image = getAndValidateLocallyCached();
+
+        if (image == null) {
+            image = readFullImageFromController(size);
+            if (image == null)
+                return;
+        }
+        setController(image);
+        logger.info("Got configuration from controller.");
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+    }
+
+    @Nullable
+    private ConfigurationImage readFullImageFromController(int size) {
+        ConfigurationImage image;
+        image = new ConfigurationImage(size);
 
         int offset = 0;
 
@@ -219,7 +237,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
         while (offset < image.getSize() && (System.currentTimeMillis() - start < Timeouts.READ_IMAGE_TIMEOUT)) {
             if (isClosed)
-                return;
+                return null;
 
             int remainingSize = image.getSize() - offset;
             int requestSize = Math.min(remainingSize, BLOCKING_FACTOR);
@@ -244,9 +262,43 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
             offset += requestSize;
         }
-        setController(image);
-        logger.info("Got configuration from controller.");
-        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+        try {
+            ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
+        } catch (IOException e) {
+            System.err.println("Ignoring " + e);
+        }
+        return image;
+    }
+
+    private ConfigurationImage getAndValidateLocallyCached() {
+        ConfigurationImage localCached;
+        try {
+            localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY);
+        } catch (IOException e) {
+            System.err.println("Error reading " + CONFIGURATION_RUSEFI_BINARY + ": no worries " + e);
+            return null;
+        }
+
+        if (localCached != null) {
+            int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
+            System.out.printf("Local cache CRC %x\n", crcOfLocallyCachedConfiguration);
+
+            byte packet[] = new byte[7];
+            packet[0] = COMMAND_CRC32;
+            byte[] response = executeCommand(packet, "get CRC32", false);
+
+            if (checkResponseCode(response, RESPONSE_OK) && response.length == 5) {
+                ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
+                // that's unusual - most of the protocol is LITTLE_ENDIAN
+                bb.order(ByteOrder.BIG_ENDIAN);
+                int crcFromController = bb.getInt();
+                System.out.printf("From rusEFI CRC %x\n", crcFromController);
+                if (crcOfLocallyCachedConfiguration == crcFromController) {
+                    return localCached;
+                }
+            }
+        }
+        return null;
     }
 
     /**
