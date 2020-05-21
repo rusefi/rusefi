@@ -18,6 +18,8 @@ public interface BinaryProtocolCommands {
     char COMMAND_CRC_CHECK_COMMAND = 'k';
     char COMMAND_PAGE = 'P';
     char COMMAND_READ = 'R'; // 082 decimal
+    // todo: make crc32CheckCommand shorted one day later
+    char COMMAND_CRC32 = 'k';
     char COMMAND_CHUNK_WRITE = 'C'; // pageChunkWrite
     char COMMAND_BURN = 'B'; // burnCommand
     char COMMAND_GET_STRUCT = '9'; // TS_GET_STRUCT
