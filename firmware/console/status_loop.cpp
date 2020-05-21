@@ -120,8 +120,7 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static char FILE_LOGGER[2048] MAIN_RAM;
-static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
+static char sdLogBuffer[2048] MAIN_RAM;
 static uint64_t binaryLogCount = 0;
 
 #endif /* EFI_FILE_LOGGING */
@@ -144,24 +143,23 @@ static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
 }
 
-
-void writeLogLine(void) {
+void writeLogLine() {
 #if EFI_FILE_LOGGING
 	if (!main_loop_started)
 		return;
 
-	size_t length = 2048;
+	size_t length = efi::size(sdLogBuffer);
 
 	if (binaryLogCount == 0) {
-		memset(fileLogger.buffer, 0xAA, 2048);
-		writeHeader(fileLogger.buffer);
+		memset(sdLogBuffer, 0xAA, length);
+		writeHeader(sdLogBuffer);
 	} else {
 		updateTunerStudioState(&tsOutputChannels);
-		length = writeBlock(fileLogger.buffer);
+		length = writeBlock(sdLogBuffer);
 	}
 
-	appendToLog(fileLogger.buffer, length);
-	
+	appendToLog(sdLogBuffer, length);
+
 	binaryLogCount++;
 #endif /* EFI_FILE_LOGGING */
 }
