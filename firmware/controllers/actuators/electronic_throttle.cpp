@@ -350,7 +350,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	}
 }
 
-void EtbController::update(efitick_t nowNt) {
+void EtbController::update(efitick_t) {
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #0
 	if (m_myIndex == 0) {
