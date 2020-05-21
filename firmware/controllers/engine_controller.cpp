@@ -275,13 +275,13 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 	if (hwChannel == EFI_ADC_NONE) {
 		strcpy(buffer, "NONE");
 	} else {
-		strcpy((char*) buffer, portname(getAdcChannelPort(msg, hwChannel)));
+		strcpy(buffer, portname(getAdcChannelPort(msg, hwChannel)));
 		itoa10(&buffer[2], getAdcChannelPin(hwChannel));
 	}
 #else
 	strcpy(buffer, "NONE");
 #endif /* HAL_USE_ADC */
-	return (char*) buffer;
+	return buffer;
 }
 
 static char pinNameBuffer[16];
@@ -696,7 +696,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * UNUSED_SIZE contants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 9800
+#define RAM_UNUSED_SIZE 8900
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2900
@@ -717,6 +717,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200515;
+	return 20200520;
 }
 #endif /* EFI_UNIT_TEST */

@@ -77,10 +77,11 @@ public class SerialIoStreamJSerialComm implements IoStream {
      * @see PortHolder#connectAndReadConfiguration()
      */
     public static IoStream openPort(String port) {
-        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] " + port);
+        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] openPort " + port);
         SerialPort serialPort = SerialPort.getCommPort(port);
         serialPort.setBaudRate(BaudRateHolder.INSTANCE.baudRate);
-        serialPort.openPort();
+        serialPort.openPort(0);
+//        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] opened " + port);
         return new SerialIoStreamJSerialComm(serialPort, port);
     }
 }

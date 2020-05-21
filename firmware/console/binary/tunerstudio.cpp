@@ -233,7 +233,7 @@ static void sendErrorCode(ts_channel_s *tsChannel) {
 	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
 }
 
-void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
+static void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
 	tsState.pageCommandCounter++;
 
 	scheduleMsg(&tsLogger, "PAGE %d", pageId);
@@ -345,7 +345,7 @@ static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, uint16_
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
+static void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
 
@@ -362,15 +362,12 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	sendOkResponse(tsChannel, mode);
 }
 
-void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
-		uint16_t count) {
+static void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
 	UNUSED(pageId);
 
 	tsState.crc32CheckCommandCounter++;
 
-	count = getTunerStudioPageSize();
-
-	scheduleMsg(&tsLogger, "CRC32 request: offset %d size %d", offset, count);
+	uint16_t count = getTunerStudioPageSize();
 
 	uint32_t crc = SWAP_UINT32(crc32((void * ) getWorkingPageAddr(), count));
 
@@ -383,7 +380,7 @@ void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
  */
-void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset,
+static void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset,
 		uint8_t value) {
 	UNUSED(tsChannel);
 	UNUSED(mode);
@@ -414,7 +411,7 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 //	scheduleMsg(logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
 }
 
-void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
+static void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
 		uint16_t count) {
 	tsState.readPageCommandsCounter++;
 
@@ -455,7 +452,7 @@ static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel,
 /**
  * 'Burn' command is a command to commit the changes
  */
-void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page) {
+static void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page) {
 	UNUSED(page);
 	
 	efitimems_t nowMs = currentTimeMillis();
@@ -645,8 +642,9 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 
 /**
  * @brief 'Output' command sends out a snapshot of current values
+ * Gauges refresh
  */
-void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+static void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	if (offset + count > sizeof(TunerStudioOutputChannels)) {
 		scheduleMsg(&tsLogger, "TS: Version Mismatch? Too much data requested %d+%d", offset, count);
 		sendErrorCode(tsChannel);
@@ -659,7 +657,10 @@ void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e m
 	sr5SendResponse(tsChannel, mode, ((const uint8_t *) &tsOutputChannels) + offset, count);
 }
 
-void handleTestCommand(ts_channel_s *tsChannel) {
+/**
+ * rusEfi own test command
+ */
+static void handleTestCommand(ts_channel_s *tsChannel) {
 	tsState.testCommandCounter++;
 	static char testOutputBuffer[24];
 	/**
@@ -794,7 +795,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 		break;
 	case TS_CRC_CHECK_COMMAND:
-		handleCrc32Check(tsChannel, TS_CRC, data16[0], data16[1], data16[2]);
+		handleCrc32Check(tsChannel, TS_CRC, data16[0]);
 		break;
 	case TS_BURN_COMMAND:
 		handleBurnCommand(tsChannel, TS_CRC, data16[0]);
@@ -862,9 +863,15 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 		break;
 #endif /* ENABLE_PERF_TRACE */
-	case TS_GET_CONFIG_ERROR:
-		sr5SendResponse(tsChannel, TS_CRC, reinterpret_cast<const uint8_t*>(getFirmwareError()), strlen(getFirmwareError()));
+	case TS_GET_CONFIG_ERROR: {
+#if HW_CHECK_MODE
+  #define configError "FACTORY_MODE_PLEASE_CONTACT_SUPPORT"
+#else
+		char * configError = getFirmwareError();
+#endif // HW_CHECK_MODE
+		sr5SendResponse(tsChannel, TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
 		break;
+	}
 	default:
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;

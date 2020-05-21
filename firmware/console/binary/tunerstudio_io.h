@@ -67,7 +67,7 @@ typedef struct {
 #define TS_PAGE_COMMAND 'P' // 0x50
 #define TS_COMMAND_F 'F' // 0x46
 #define TS_GET_FIRMWARE_VERSION 'V' // versionInfo
-#define TS_GET_CONFIG_ERROR 'e' // returns getFirmwareError()
+#define TS_GET_CONFIG_ERROR 'e' // returns getFirmwareError(), works together with ind_hasFatalError
 
 // High speed logger commands
 #define TS_SET_LOGGER_MODE   'l'

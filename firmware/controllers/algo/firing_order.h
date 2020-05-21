@@ -57,9 +57,10 @@ typedef enum {
 	FO_1_12_5_8_3_10_6_7_2_11_4_9 = 18, // VAG W12
 
 	// 16 cylinder
-	// todo: 1-14-9-4-7-12-15-6-13-8-3-16-11-2-5-10
+	// unfortunately not supported by default firmware because INJECTION_PIN_COUNT=IGNITION_PIN_COUNT=12 by default
+	FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10 = 22, // WR16
 
-	// max used = 21
+	// max used = 22
 
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;
