@@ -36,24 +36,11 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command);
 int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize);
 
 /**
- * rusEfi own test command
- */
-void handleTestCommand(ts_channel_s *tsChannel);
-/**
  * this command is part of protocol initialization
  */
 void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
-/**
- * Gauges refresh
- */
-void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
 
 char *getWorkingPageAddr();
-void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset, uint8_t value);
-void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, short offset, short count, void *content);
-void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId);
-void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset, uint16_t count);
-void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page);
 
 void tunerStudioDebug(const char *msg);
 void tunerStudioError(const char *msg);
