@@ -60,15 +60,15 @@ typedef enum {
 
 	ROVER_V8 = 10,
 
-	MRE_MIATA_NB2_MTB = 11,
+	MRE_MIATA_NB2_MAP = 11,
 
 	MRE_MIATA_NA6 = 12,
 
-	MRE_MIATA_NB2 = 13,
+	MRE_MIATA_NB2_ETB = 13,
 
 	FORD_ESCORT_GT = 14,
 
-	CITROEN_TU3JP = 15,
+	MRE_MIATA_NB2_MAF = 15,
 
 	MITSU_4G93 = 16,
 
@@ -187,6 +187,7 @@ typedef enum {
 	BMW_M73_PROTEUS = 63,
 
 	DODGE_RAM = 64,
+	CITROEN_TU3JP = 65,
 
 	/**
 	 * this configuration has as few pins configured as possible

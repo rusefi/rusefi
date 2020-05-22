@@ -55,12 +55,14 @@ typedef enum {
 	FO_1_7_5_11_3_9_6_12_2_8_4_10 = 15, // bmw M70 & M73 etc
 	FO_1_7_4_10_2_8_6_12_3_9_5_11 = 16, // lamborghini, typical rusEfi use-case
 	FO_1_12_5_8_3_10_6_7_2_11_4_9 = 18, // VAG W12
+	FO_1_2_3_4_5_6_7_8_9_10_11_12 = 23, // mostly for hardware testing purposes
+
 
 	// 16 cylinder
 	// unfortunately not supported by default firmware because INJECTION_PIN_COUNT=IGNITION_PIN_COUNT=12 by default
 	FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10 = 22, // WR16
 
-	// max used = 22
+	// max used = 23
 
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;
