@@ -74,6 +74,7 @@ public class DfuFlasher {
         String errorResponse = ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
                 FirmwareFlasher.BINARY_LOCATION + File.separator + getDfuCommand(),
                 DFU_BINARY, wnd, stdout);
+        // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
         if (stdout.toString().contains("Verify successful") || stdout.toString().contains("Upgrade successful")) {
             wnd.appendMsg("SUCCESS!");
         } else {
