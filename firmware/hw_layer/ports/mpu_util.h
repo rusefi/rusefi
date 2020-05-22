@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rusefi_enums.h"
+#include "rusefi_types.h"
 
 #include "port_mpu_util.h"
 
