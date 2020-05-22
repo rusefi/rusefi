@@ -179,7 +179,7 @@ this is just too unreliable at this point :(
     }
 
     private static void testCitroenBerlingo() {
-        setEngineType(15);
+        setEngineType(65);
         String msg = "Citroen";
         IoUtil.changeRpm(1200);
         // todo: add more content
