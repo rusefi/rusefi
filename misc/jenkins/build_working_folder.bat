@@ -60,7 +60,7 @@ rem probably not needed cp firmware/build/rusefi.elf %folder%
 cp firmware/deliver/rusefi.dfu %folder%
 
 if [%bundle_name%] neq [] (
-    cp %folder%/rusefi.dfu %folder%/rusefi_%bundle_name%.dfu
+    mv %folder%/rusefi.dfu %folder%/rusefi_%bundle_name%.dfu
 )
 
 
