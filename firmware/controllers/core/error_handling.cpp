@@ -264,7 +264,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	printf("\r\n");
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
-	exit(-1);
+	throw "fatal error";
 #endif /* EFI_SIMULATOR */
 #endif
 }
