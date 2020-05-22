@@ -1564,8 +1564,9 @@ end_struct
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
 
-#define ET_CITROEN_TU3JP 65
+#define ET_MRE_MIATA_NA6 12
 #define ET_MRE_MIATA_NB2_MAF 15
+#define ET_CITROEN_TU3JP 65
 
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 
