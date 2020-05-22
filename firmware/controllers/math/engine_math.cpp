@@ -302,6 +302,7 @@ static const int order_1_10_9_4_3_6_5_8_7_2[] = {1, 10, 9, 4, 3, 6, 5, 8, 7, 2};
 static const int order_1_7_5_11_3_9_6_12_2_8_4_10[] = {1, 7, 5, 11, 3, 9, 6, 12, 2, 8, 4, 10};
 static const int order_1_7_4_10_2_8_6_12_3_9_5_11[] = {1, 7, 4, 10, 2, 8, 6, 12, 3, 9, 5, 11};
 static const int order_1_12_5_8_3_10_6_7_2_11_4_9[] = {1, 12, 5, 8, 3, 10, 6, 7, 2, 11, 4, 9};
+static const int order_1_2_3_4_5_6_7_8_9_10_11_12[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
 
 // no comments
 static const int order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10[] = {1, 14, 9, 4, 7, 12, 15, 6, 13, 8, 3, 16, 11, 2, 5, 10};
@@ -354,6 +355,7 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_7_5_11_3_9_6_12_2_8_4_10:
 	case FO_1_7_4_10_2_8_6_12_3_9_5_11:
 	case FO_1_12_5_8_3_10_6_7_2_11_4_9:
+	case FO_1_2_3_4_5_6_7_8_9_10_11_12:
 		return 12;
 
 	case FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10:
@@ -448,6 +450,8 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return order_1_7_4_10_2_8_6_12_3_9_5_11[index];
 	case FO_1_12_5_8_3_10_6_7_2_11_4_9:
 		return order_1_12_5_8_3_10_6_7_2_11_4_9[index];
+	case FO_1_2_3_4_5_6_7_8_9_10_11_12:
+		return order_1_2_3_4_5_6_7_8_9_10_11_12[index];
 
 // do not ask
 	case FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10:

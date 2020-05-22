@@ -1237,10 +1237,13 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MRE_MIATA_NA6:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MRE_MIATA_NB2_MTB:
-		setMiataNB2_MRE_MTB(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case MRE_MIATA_NB2_MAP:
+		setMiataNB2_MRE_MAP(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MRE_MIATA_NB2:
+	case MRE_MIATA_NB2_MAF:
+		setMiataNB2_MRE_MAF(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_MIATA_NB2_ETB:
 		setMiataNB2_MRE_ETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_1995:

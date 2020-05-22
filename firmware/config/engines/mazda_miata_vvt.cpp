@@ -3,7 +3,7 @@
  *
  * Miata NB2, also known as MX-5 Mk2.5
  *
- * MAZDA_MIATA_2003
+ * Frankenso MAZDA_MIATA_2003
  * set engine_type 47
  *
  * coil1/4          (p1 +5 VP)    GPIOE_14
@@ -666,9 +666,10 @@ void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 /**
+ * Normal mechanical throttle body
  * set engine_type 11
  */
-void setMiataNB2_MRE_MTB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setMiataNB2_MRE_MAP(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// somehow MRE72 adapter 0.2 has TPS routed to pin 26?
@@ -677,6 +678,8 @@ void setMiataNB2_MRE_MTB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// 1K pull-down to read current from this MAF
 	engineConfiguration->mafAdcChannel = EFI_ADC_13; // J30 AV5
+}
 
-
+void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNB2_MRE_MAP(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
