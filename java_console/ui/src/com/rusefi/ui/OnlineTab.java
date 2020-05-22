@@ -1,10 +1,8 @@
 package com.rusefi.ui;
 
 import com.rusefi.io.LinkManager;
-import com.rusefi.tools.ConsoleTools;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.xml.XmlUtil;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -44,9 +42,9 @@ public class OnlineTab {
         upload.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Msq tune = ConsoleTools.toMsq(LinkManager.connector.getBinaryProtocol().getControllerConfiguration());
+                Msq tune = Msq.toMsq(LinkManager.connector.getBinaryProtocol().getControllerConfiguration());
                 try {
-                    XmlUtil.writeXml(tune, Msq.class, Msq.outputXmlFileName);
+                    tune.writeXmlFile(Msq.outputXmlFileName);
                     // todo: network upload should not happen on UI thread
                     Online.upload(new File(Msq.outputXmlFileName), textField.getText());
                 } catch (JAXBException | IOException ex) {

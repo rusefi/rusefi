@@ -12,6 +12,7 @@ import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
+import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import jssc.SerialPortException;
 import org.jetbrains.annotations.Nullable;
@@ -43,6 +44,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     private static final int TEXT_PULL_PERIOD = 100;
     private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.rusefi_binary";
+    private static final String CONFIGURATION_RUSEFI_XML = "current_configuration.msq";
     /**
      * This properly allows to switch to non-CRC32 mode
      * todo: finish this feature, assuming we even need it.
@@ -264,7 +266,9 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
         try {
             ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
-        } catch (IOException e) {
+            Msq tune = Msq.toMsq(image);
+            tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
+        } catch (Exception e) {
             System.err.println("Ignoring " + e);
         }
         return image;
