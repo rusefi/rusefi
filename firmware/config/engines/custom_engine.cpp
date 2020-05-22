@@ -476,10 +476,10 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// TLE8888_PIN_23: "33 - GP Out 3"
 	engineConfiguration->injectionPins[10 - 1] = TLE8888_PIN_23;
 
-	// LED #3 - INJ#1
+	// LED #3 - INJ#2
 	engineConfiguration->injectionPins[9 - 1] = GPIOE_13;
 
-	// LED #4 - INJ#2
+	// LED #4 - INJ#1
 	engineConfiguration->injectionPins[4 - 1] = GPIOE_14;
 
 	// LED #5 - INJ#3
@@ -508,6 +508,60 @@ void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[2 - 1] = GPIOE_10;
 #endif /* BOARD_TLE8888_COUNT */
 }
+
+/**
+ * MRE_BOARD_NEW_TEST
+ * set engine_type 31
+ */
+void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	engineConfiguration->specs.cylindersCount = 12;
+	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
+
+
+#if (BOARD_TLE8888_COUNT > 0)
+	// TLE8888 high current low side: IN10
+	// GPIOE_9:  "7 - Lowside 1"
+	engineConfiguration->injectionPins[1 - 1] = GPIOE_9;
+
+	// TLE8888 high current low side: VVT2 IN9 / OUT5
+	// GPIOE_10: "3 - Lowside 2"
+	engineConfiguration->injectionPins[2 - 1] = GPIOE_10;
+
+	//          INJ#4
+	engineConfiguration->injectionPins[3 - 1] = GPIOE_11;
+	//          INJ#3
+	engineConfiguration->injectionPins[4 - 1] = GPIOE_12;
+	//          INJ#2
+	engineConfiguration->injectionPins[5 - 1] = GPIOE_13;
+
+	// LED #3 - INJ#1
+	engineConfiguration->injectionPins[6 - 1] = GPIOE_14;
+
+
+	// LED #8
+	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
+	// GPIOE_8: "35 - GP Out 1"
+	engineConfiguration->injectionPins[7 - 1] = GPIOE_8;
+
+	// LED #1
+    // GPIOE_7: "34 - GP Out 2"
+	engineConfiguration->injectionPins[8 - 1] = TLE8888_PIN_22;//GPIOE_7;
+
+	// LED #2
+	// TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->injectionPins[9  - 1] = TLE8888_PIN_23;
+
+	// LED #7
+	// TLE8888_PIN_24: "43 - GP Out 4"
+	engineConfiguration->injectionPins[10 - 1] = TLE8888_PIN_24;
+
+
+#endif /* BOARD_TLE8888_COUNT */
+
+}
+
 
 /**
  * set engine_type 103
