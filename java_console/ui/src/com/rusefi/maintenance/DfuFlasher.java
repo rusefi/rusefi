@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
@@ -7,7 +8,6 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
@@ -24,9 +24,6 @@ import java.io.IOException;
  */
 public class DfuFlasher {
     public static final String DFU_BINARY = Launcher.TOOLS_PATH + File.separator + "DfuSe/DfuSeCommand.exe";
-    // TODO: integration with DFU command line tool
-    static final String DFU_COMMAND = DFU_BINARY + " -c -d --v --fn " + Launcher.INPUT_FILES_PATH + File.separator +
-            "rusefi.dfu";
     private static final String DFU_SETUP_EXE = "https://github.com/rusefi/rusefi_external_utils/raw/master/DFU_mode/DfuSe_Demo_V3.0.6_Setup.exe";
 
     private final JButton button = new JButton("Auto Program via DFU");
@@ -75,7 +72,7 @@ public class DfuFlasher {
         }
         StringBuffer stdout = new StringBuffer();
         String errorResponse = ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
-                FirmwareFlasher.BINARY_LOCATION + File.separator + DFU_COMMAND,
+                FirmwareFlasher.BINARY_LOCATION + File.separator + getDfuCommand(),
                 DFU_BINARY, wnd, stdout);
         if (stdout.toString().contains("Verify successful")) {
             wnd.appendMsg("SUCCESS!");
@@ -93,6 +90,12 @@ public class DfuFlasher {
             wnd.appendMsg("ERROR: does not look like DFU has worked!");
         }
         wnd.appendMsg("Please power cycle device to exit DFU mode");
+    }
+
+    private static String getDfuCommand() {
+        String fileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, "rusefi", ".dfu");
+
+        return DFU_BINARY + " -c -d --v --fn " + fileName;
     }
 
     /**
