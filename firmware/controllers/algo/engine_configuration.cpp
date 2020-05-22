@@ -1432,11 +1432,11 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_ENGINE_CONTROL
 	ENGINE(initializeTriggerWaveform(logger PASS_ENGINE_PARAMETER_SUFFIX));
-#endif
+#endif // EFI_ENGINE_CONTROL
 
 #if EFI_FSIO
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
+#endif // EFI_FSIO
 }
 
 #if EFI_ENGINE_CONTROL
