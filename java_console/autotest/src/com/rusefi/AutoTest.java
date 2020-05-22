@@ -18,6 +18,7 @@ import java.util.function.Function;
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.*;
+import static com.rusefi.config.generated.Fields.ET_CITROEN_TU3JP;
 import static com.rusefi.config.generated.Fields.MOCK_MAF_COMMAND;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
@@ -179,7 +180,7 @@ this is just too unreliable at this point :(
     }
 
     private static void testCitroenBerlingo() {
-        setEngineType(65);
+        setEngineType(ET_CITROEN_TU3JP);
         String msg = "Citroen";
         IoUtil.changeRpm(1200);
         // todo: add more content

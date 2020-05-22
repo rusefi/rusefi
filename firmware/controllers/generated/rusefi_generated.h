@@ -586,6 +586,8 @@
 #define engineType_offset 0
 #define engineType_offset_hex 0
 #define ERROR_BUFFER_SIZE 120
+#define ET_CITROEN_TU3JP 65
+#define ET_MRE_MIATA_NB2_MAF 15
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
