@@ -831,7 +831,7 @@ int tle8888SpiStartupExchange(struct tle8888_priv *chip) {
 	tle8888_spi_rw(chip, CMD_SR, NULL);
 	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
 	if (response != (CMD_WRITE | CMD_REG_ADDR(CMD_SR_CODE))) {
-		firmwareError(CUSTOM_ERR_6724, "TLE8888 SR Unexpected response %x", response);
+		firmwareError(CUSTOM_ERR_6724, "TLE8888 SR Unexpected response %x while %f", response, vBattForTle8888);
 	}
 
 	/**
