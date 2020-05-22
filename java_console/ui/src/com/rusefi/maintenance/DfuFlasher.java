@@ -74,7 +74,7 @@ public class DfuFlasher {
         String errorResponse = ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
                 FirmwareFlasher.BINARY_LOCATION + File.separator + getDfuCommand(),
                 DFU_BINARY, wnd, stdout);
-        if (stdout.toString().contains("Verify successful")) {
+        if (stdout.toString().contains("Verify successful") || stdout.toString().contains("Upgrade successful")) {
             wnd.appendMsg("SUCCESS!");
         } else {
             if (stdout.length() == 0 && errorResponse.length() == 0) {
