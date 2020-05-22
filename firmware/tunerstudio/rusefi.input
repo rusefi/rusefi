@@ -1532,12 +1532,10 @@ cmd_dfu         			 = "w\x00\xba\x00\x00"
 cmd_set_engine_type_microRusEFI_Miata_NB2_MAP		= "w\x00\x30\x00\x0B"
 
 ; MRE_MIATA_NA6 12
-cmd_set_engine_type_microRusEFI_Miata_NA6			= "w\x00\x30@@ET_MRE_MIATA_NA6_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NA6			= "w\x00\x30@@ET_MRE_MIATA_NA6_16_hex@@"
 
 ; MRE_MIATA_NB2_MAF = 15
-cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "w\x00\x30\x00\x0F"
-
-cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "w\x00\x30\x00\x0F"
+cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "w\x00\x30@@ET_MRE_MIATA_NB2_MAF_16_hex@@"
 
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "w\x00\x30\x00\x29"
