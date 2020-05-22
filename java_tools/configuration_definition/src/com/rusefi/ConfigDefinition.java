@@ -288,7 +288,12 @@ public class ConfigDefinition {
             name = line.substring(0, index);
             line = line.substring(index).trim();
         }
-        VariableRegistry.INSTANCE.register(name, line);
+        if (VariableRegistry.isNumeric(line)) {
+            Integer v = Integer.valueOf(line);
+            VariableRegistry.INSTANCE.register(name, v);
+        } else {
+            VariableRegistry.INSTANCE.register(name, line);
+        }
     }
 
     private static String getMd5(byte[] content) {
