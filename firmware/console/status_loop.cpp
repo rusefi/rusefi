@@ -182,10 +182,6 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 }
 #endif /* EFI_PROD_CODE */
 
-#ifndef FIRMWARE_ID
-#define FIRMWARE_ID "source"
-#endif
-
 void printOverallStatus(systime_t nowSeconds) {
 #if EFI_ENGINE_SNIFFER
 	waveChart.publishIfFull();
