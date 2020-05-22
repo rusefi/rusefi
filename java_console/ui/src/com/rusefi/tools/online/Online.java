@@ -22,7 +22,7 @@ public class Online {
         FileBody uploadFilePart = new FileBody(xmlFile);
         MultipartEntity reqEntity = new MultipartEntity();
         reqEntity.addPart("upload-file", uploadFilePart);
-        reqEntity.addPart("auth_token", new StringBody(authTokenValue));
+        reqEntity.addPart("rusefi_token", new StringBody(authTokenValue));
 
         httpPost.setEntity(reqEntity);
 
