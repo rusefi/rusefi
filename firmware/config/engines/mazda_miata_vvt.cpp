@@ -624,10 +624,10 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->idleMode = IM_AUTO;
 
-	// set vbatt_divider 11
-	// 0.3#4 has wrong R139 as well?
-	// 56k high side/10k low side multiplied by above analogInputDividerCoefficient = 11
-	engineConfiguration->vbattDividerCoeff = (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
+	// 0.3#4 has wrong R139? TODO: fix that custom board to match proper value!!!
+	// set vbatt_divider 10.956
+	// 56k high side/10k low side multiplied by analogInputDividerCoefficient
+	// vbattDividerCoeff = 10.956 (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
 #endif /* BOARD_TLE8888_COUNT */
 }
 
