@@ -417,11 +417,6 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 		}
 	}
 
-	if (limitedSpark || limitedFuel) {
-		// todo: this is not really a warning
-		warning(CUSTOM_SKIPPING_STROKE, "skipping stroke due to rpm=%d", rpm);
-	}
-
 	if (trgEventIndex == 0) {
 		if (HAVE_CAM_INPUT()) {
 			engine->triggerCentral.validateCamVvtCounters();
