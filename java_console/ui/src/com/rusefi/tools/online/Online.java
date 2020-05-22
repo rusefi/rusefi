@@ -38,8 +38,20 @@ public class Online {
         }
 
 
-        int responseCode = ((HttpURLConnection) connection).getResponseCode();
+        HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
+        int responseCode = httpURLConnection.getResponseCode();
         System.out.println(responseCode); // Should be 200
+
+        BufferedReader br;
+        if (responseCode >= 200 && responseCode <= 299) {
+            br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+        } else {
+            br = new BufferedReader(new InputStreamReader(httpURLConnection.getErrorStream()));
+        }
+        String output;
+        while ((output = br.readLine()) != null) {
+            System.out.println(output);
+        }
     }
 
     private static void sendParameter(String boundary, PrintWriter writer, String parameterName, String value) {
