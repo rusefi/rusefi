@@ -21,5 +21,7 @@ public class VariableRegistryTest {
         assertEquals("ab256cd", VariableRegistry.INSTANCE.applyVariables("ab@@var@@cd"));
         // both decimal and hex values here
         assertEquals("aa256qwe100fff", VariableRegistry.INSTANCE.applyVariables("aa@@var@@qwe@@var_hex@@fff"));
+
+        assertEquals("\\x01\\x00", VariableRegistry.INSTANCE.applyVariables("@@var_16_hex@@"));
     }
 }
