@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 20 01:18:09 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri May 22 00:18:18 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -388,6 +388,8 @@ public class Fields {
 	public static final int engineType_offset = 0;
 	public static final int engineType_offset_hex = 0;
 	public static final int ERROR_BUFFER_SIZE = 120;
+	public static final int ET_CITROEN_TU3JP = 65;
+	public static final int ET_MRE_MIATA_NB2_MAF = 15;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int etb_dFactor_offset = 1744;

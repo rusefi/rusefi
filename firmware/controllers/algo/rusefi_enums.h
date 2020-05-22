@@ -68,7 +68,7 @@ typedef enum {
 
 	FORD_ESCORT_GT = 14,
 
-	MRE_MIATA_NB2_MAF = 15,
+	MRE_MIATA_NB2_MAF = ET_MRE_MIATA_NB2_MAF,
 
 	MITSU_4G93 = 16,
 
@@ -187,7 +187,7 @@ typedef enum {
 	BMW_M73_PROTEUS = 63,
 
 	DODGE_RAM = 64,
-	CITROEN_TU3JP = 65,
+	CITROEN_TU3JP = ET_CITROEN_TU3JP,
 
 	/**
 	 * this configuration has as few pins configured as possible
