@@ -1884,6 +1884,9 @@
 #define servoOutputPins7_offset_hex c4a
 #define servoOutputPins8_offset 3147
 #define servoOutputPins8_offset_hex c4b
+#define show_Frankenso_presets true
+#define show_microRusEFI_presets true
+#define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showHumanReadableWarning_offset_hex 3d0
 #define showSdCardWarning_offset 76
