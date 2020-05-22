@@ -62,7 +62,7 @@ typedef enum {
 
 	MRE_MIATA_NB2_MAP = 11,
 
-	MRE_MIATA_NA6 = 12,
+	MRE_MIATA_NA6 = ET_MRE_MIATA_NA6,
 
 	MRE_MIATA_NB2_ETB = 13,
 
