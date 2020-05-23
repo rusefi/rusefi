@@ -20,7 +20,7 @@ rem IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 rem IF NOT ERRORLEVEL 0 EXIT /B 1
 rem pwd
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4-test rusefi_microrusefi.ini
+call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4-hardware-QC-special-build rusefi_microrusefi.ini
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd
