@@ -1096,7 +1096,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	uint32_t auxSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
 
-	uint32_t[8] unused_former_warmup_target_afr;
+	float throttlePedalSecondaryUpVoltage;;"voltage",      1,     0,    -6,   6,      2
+	float throttlePedalSecondaryWOTVoltage;+Pedal in the floor;"voltage",      1,     0,    -6,   6,      2
+
+	uint32_t[6] unused_former_warmup_target_afr;
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 

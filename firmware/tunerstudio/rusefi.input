@@ -1828,6 +1828,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Up voltage",							throttlePedalUpVoltage
 		field = "Down (WOT) voltage",					throttlePedalWOTVoltage
 		field = "Accelerator position 2nd sensor",		throttlePedalPositionSecondAdcChannel
+		field = "Up voltage"							throttlePedalSecondaryUpVoltage
+		field = "Down (WOT) voltage",					throttlePedalSecondaryWOTVoltage
 
 	dialog = pedalGauges
 		gauge = pedalPositionGauge
