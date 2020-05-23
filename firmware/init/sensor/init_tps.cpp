@@ -104,5 +104,5 @@ void reconfigureTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	configureTps(tpsFunc2s, CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
 
 	configureTps(pedalFuncPrimary, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
-	configureTps(pedalFuncSecondary, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
+	configureTps(pedalFuncSecondary, CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
 }
