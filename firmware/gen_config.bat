@@ -27,8 +27,8 @@ java -DSystemOut.name=gen_config ^
  -c_fsio_names     controllers\generated\fsio_names.def ^
  -c_fsio_strings   controllers\generated\fsio_strings.def ^
  -java_destination ../java_console/models/src/com/rusefi/config/generated/Fields.java ^
- -romraider_destination ../java_console/rusefi.xml ^
- -skip build/config.gen
+ -romraider_destination ../java_console/rusefi.xml
+
 IF NOT ERRORLEVEL 0 echo ERROR generating
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
