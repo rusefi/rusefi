@@ -1151,6 +1151,8 @@
 #define test557pin_offset 3101
 #define throttlePedalPositionAdcChannel_offset 580
 #define throttlePedalPositionSecondAdcChannel_offset 683
+#define throttlePedalSecondaryUpVoltage_offset 2100
+#define throttlePedalSecondaryWOTVoltage_offset 2104
 #define throttlePedalUpPin_offset 583
 #define throttlePedalUpPinMode_offset 710
 #define throttlePedalUpVoltage_offset 1884
@@ -1305,7 +1307,7 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_former_warmup_target_afr_offset 2100
+#define unused_former_warmup_target_afr_offset 2108
 #define unusedAtOldBoardConfigurationEnd_offset 1200
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_11_offset 976

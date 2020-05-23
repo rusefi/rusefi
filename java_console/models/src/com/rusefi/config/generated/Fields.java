@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri May 22 01:36:16 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 23 10:54:57 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1134,6 +1134,8 @@ public class Fields {
 	public static final int test557pin_offset = 3101;
 	public static final int throttlePedalPositionAdcChannel_offset = 580;
 	public static final int throttlePedalPositionSecondAdcChannel_offset = 683;
+	public static final int throttlePedalSecondaryUpVoltage_offset = 2100;
+	public static final int throttlePedalSecondaryWOTVoltage_offset = 2104;
 	public static final int throttlePedalUpPin_offset = 583;
 	public static final int throttlePedalUpPinMode_offset = 710;
 	public static final int throttlePedalUpVoltage_offset = 1884;
@@ -1269,7 +1271,7 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1476;
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
-	public static final int unused_former_warmup_target_afr_offset = 2100;
+	public static final int unused_former_warmup_target_afr_offset = 2108;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1200;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_11_offset = 976;
@@ -2093,6 +2095,8 @@ public class Fields {
 	public static final String[] debug_mode_e = {"Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "Mode40"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2092, FieldType.INT, debug_mode_e);
 	public static final Field AUXSERIALSPEED = Field.create("AUXSERIALSPEED", 2096, FieldType.INT);
+	public static final Field THROTTLEPEDALSECONDARYUPVOLTAGE = Field.create("THROTTLEPEDALSECONDARYUPVOLTAGE", 2100, FieldType.FLOAT);
+	public static final Field THROTTLEPEDALSECONDARYWOTVOLTAGE = Field.create("THROTTLEPEDALSECONDARYWOTVOLTAGE", 2104, FieldType.FLOAT);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
 	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2200, FieldType.INT8, adc_channel_e);
 	public static final Field FSIOADC2 = Field.create("FSIOADC2", 2201, FieldType.INT8, adc_channel_e);
@@ -3083,6 +3087,8 @@ public class Fields {
 	SLOWADCALPHA,
 	DEBUGMODE,
 	AUXSERIALSPEED,
+	THROTTLEPEDALSECONDARYUPVOLTAGE,
+	THROTTLEPEDALSECONDARYWOTVOLTAGE,
 	BOOSTCUTPRESSURE,
 	FSIOADC1,
 	FSIOADC2,
