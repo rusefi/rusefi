@@ -410,16 +410,11 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 	bool limitedSpark = rpm > CONFIG(rpmHardLimit);
 	bool limitedFuel = rpm > CONFIG(rpmHardLimit);
 
-	if (CONFIG(boostCutPressure) !=0) {
+	if (CONFIG(boostCutPressure) != 0) {
 		if (getMap(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(boostCutPressure)) {
 			limitedSpark = true;
 			limitedFuel = true;
 		}
-	}
-
-	if (limitedSpark || limitedFuel) {
-		// todo: this is not really a warning
-		warning(CUSTOM_SKIPPING_STROKE, "skipping stroke due to rpm=%d", rpm);
 	}
 
 	if (trgEventIndex == 0) {
