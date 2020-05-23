@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed May 20 01:18:15 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 23 19:22:14 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2557,7 +2557,16 @@ struct engine_configuration_s {
 	/**
 	 * offset 2100
 	 */
-	uint32_t unused_former_warmup_target_afr[8];
+	float throttlePedalSecondaryUpVoltage;
+	/**
+	 * Pedal in the floor
+	 * offset 2104
+	 */
+	float throttlePedalSecondaryWOTVoltage;
+	/**
+	 * offset 2108
+	 */
+	uint32_t unused_former_warmup_target_afr[6];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -3514,4 +3523,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Wed May 20 01:18:15 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sat May 23 19:22:14 EDT 2020
