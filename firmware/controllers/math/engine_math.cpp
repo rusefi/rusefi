@@ -60,7 +60,8 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	switch (engineConfiguration->fuelAlgorithm) {
 	case LM_PLAIN_MAF:
 		if (!hasMafSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			firmwareError(CUSTOM_MAF_NEEDED, "MAF sensor needed for current fuel algorithm");
+		    // todo: make this not happen during hardware CI
+			warning(CUSTOM_MAF_NEEDED, "MAF sensor needed for current fuel algorithm");
 			return NAN;
 		}
 		return getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE);
