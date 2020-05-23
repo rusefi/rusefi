@@ -61,7 +61,7 @@ TEST(SensorInit, Pedal) {
 	initTps(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Ensure the sensors were registered
-	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::AcceleratorPedal));
+	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::AcceleratorPedalPrimary));
 	ASSERT_NE(nullptr, s);
 
 	// Test in range
@@ -72,6 +72,10 @@ TEST(SensorInit, Pedal) {
 	// Test out of range
 	EXPECT_POINT_INVALID(s, 0.0f);
 	EXPECT_POINT_INVALID(s, 5.0f);
+
+	// Test that the passthru (redundant sensor) is working
+	EXPECT_POINT_VALID(s, 2.5f, 50.0f);
+	EXPECT_NEAR(50.0f, Sensor::get(SensorType::AcceleratorPedal).value_or(-1), EPS2D);
 }
 
 TEST(SensorInit, DriverIntentNoPedal) {
