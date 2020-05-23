@@ -229,7 +229,9 @@ TEST(misc, testFordAspire) {
 static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
 	printf("====================================================================================== testTriggerDecoder2 msg=%s\r\n", msg);
 
-	WITH_ENGINE_TEST_HELPER(type);
+	// Some configs use aux valves, which requires this sensor
+	std::unordered_map<SensorType, float> sensorVals = {{SensorType::DriverThrottleIntent, 0}};
+	WITH_ENGINE_TEST_HELPER_SENS(type, sensorVals);
 
 	TriggerWaveform *t = &ENGINE(triggerCentral.triggerShape);
 
