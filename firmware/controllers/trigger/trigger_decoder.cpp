@@ -133,7 +133,7 @@ void calculateTriggerSynchPoint(TriggerWaveform *shape, TriggerState *state DECL
 	engine->engineCycleEventCount = length;
 	efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
 	if (length >= PWM_PHASE_MAX_COUNT) {
-		warning(CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG, "Count above %d", length);
+		firmwareError(CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG, "Trigger length above maximum: %d", length);
 		shape->setShapeDefinitionError(true);
 		return;
 	}
