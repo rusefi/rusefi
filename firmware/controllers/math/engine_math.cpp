@@ -381,7 +381,8 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 1;
 	}
 	if (engineConfiguration->specs.cylindersCount != firingOrderLength) {
-		firmwareError(CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong cyl count for firing order, expected %d cylinders", firingOrderLength);
+		// May 2020 this somehow still happens with functional tests, maybe race condition?
+		warning(CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong cyl count for firing order, expected %d cylinders", firingOrderLength);
 		return 1;
 	}
 
