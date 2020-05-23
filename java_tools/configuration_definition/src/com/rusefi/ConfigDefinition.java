@@ -123,6 +123,7 @@ public class ConfigDefinition {
             } else if (key.equals(KEY_PREPEND)) {
                 prependFiles.add(args[i + 1]);
             } else if (key.equals(KEY_SKIP)) {
+                // is this now not needed in light if LazyFile surving the same goal of not changing output unless needed?
                 skipRebuildFile = args[i + 1];
             } else if (key.equals("-ts_output_name")) {
                 TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
