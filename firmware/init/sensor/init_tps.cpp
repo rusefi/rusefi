@@ -23,8 +23,12 @@ FunctionalSensor tpsSens2s(SensorType::Tps2Secondary, MS2NT(10));
 RedundantSensor tps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
 RedundantSensor tps2(SensorType::Tps2, SensorType::Tps2Primary, SensorType::Tps2Secondary);
 
-LinearFunc pedalFunc;
-FunctionalSensor pedalSensor(SensorType::AcceleratorPedal, MS2NT(10));
+LinearFunc pedalFuncPrimary;
+LinearFunc pedalFuncSecondary;
+FunctionalSensor pedalSensorPrimary(SensorType::AcceleratorPedalPrimary, MS2NT(10));
+FunctionalSensor pedalSensorSecondary(SensorType::AcceleratorPedalSecondary, MS2NT(10));
+
+RedundantSensor pedal(SensorType::AcceleratorPedal, SensorType::AcceleratorPedalPrimary, SensorType::AcceleratorPedalSecondary);
 
 // This sensor indicates the driver's throttle intent - Pedal if we have one, TPS if not.
 ProxySensor driverIntent(SensorType::DriverThrottleIntent);
@@ -75,7 +79,8 @@ void initTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initTpsFuncAndRedund(tps1, tpsFunc1s, tpsSens1s, CONFIG(tps1_2AdcChannel), CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max);
 	initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max), min, max);
 	initTpsFuncAndRedund(tps2, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
-	initTpsFunc(pedalFunc, pedalSensor, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
+	initTpsFunc(pedalFuncPrimary, pedalSensorPrimary, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
+	initTpsFuncAndRedund(pedal, pedalFuncSecondary, pedalSensorSecondary, CONFIG(throttlePedalPositionSecondAdcChannel), CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
 
 	// Route the pedal or TPS to driverIntent as appropriate
 	if (CONFIG(throttlePedalPositionAdcChannel) != EFI_ADC_NONE) {
@@ -98,5 +103,6 @@ void reconfigureTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	configureTps(tpsFunc2p, CONFIG(tps2Min), CONFIG(tps2Max), min, max);
 	configureTps(tpsFunc2s, CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
 
-	configureTps(pedalFunc, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
+	configureTps(pedalFuncPrimary, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
+	configureTps(pedalFuncSecondary, CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
 }
