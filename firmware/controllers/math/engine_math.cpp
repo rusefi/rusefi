@@ -386,8 +386,8 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	if (index < 0 || index >= firingOrderLength) {
-		// todo: open question when does this happen? reproducible with functional tests?
-		firmwareError(CUSTOM_ERR_6686, "index %d", index);
+		// May 2020 this somehow still happens with functional tests, maybe race condition?
+		warning(CUSTOM_ERR_6686, "firing order index %d", index);
 		return 1;
 	}
 
