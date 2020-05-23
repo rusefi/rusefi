@@ -520,7 +520,28 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
 
 
+
+
 #if (BOARD_TLE8888_COUNT > 0)
+	engineConfiguration->ignitionPins[1 - 1] = GPIOD_6;
+	engineConfiguration->ignitionPins[2 - 1] = GPIOD_7;
+	engineConfiguration->ignitionPins[3 - 1] = GPIOD_1;
+	engineConfiguration->ignitionPins[4 - 1] = GPIOD_2;
+	engineConfiguration->ignitionPins[5 - 1] = GPIOD_3;
+	engineConfiguration->ignitionPins[6 - 1] = GPIOD_4;
+
+	engineConfiguration->ignitionPins[7 - 1] = TLE8888_PIN_11;
+	engineConfiguration->ignitionPins[8 - 1] = TLE8888_PIN_12;
+
+	engineConfiguration->ignitionPins[9 - 1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[10 - 1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[11 - 1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[12 - 1] = GPIO_UNASSIGNED;
+
+
+
+
+
 	// TLE8888 high current low side: IN10
 	// GPIOE_9:  "7 - Lowside 1"
 	engineConfiguration->injectionPins[1 - 1] = GPIOE_9;
@@ -540,22 +561,27 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[6 - 1] = GPIOE_14;
 
 
+	engineConfiguration->injectionPins[7 - 1] = TLE8888_PIN_13;
+
+	engineConfiguration->injectionPins[8 - 1] = TLE8888_PIN_10;
+
+
 	// LED #8
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
 	// GPIOE_8: "35 - GP Out 1"
-	engineConfiguration->injectionPins[7 - 1] = GPIOE_8;
+	engineConfiguration->injectionPins[9 - 1] = GPIOE_8;
 
 	// LED #1
     // GPIOE_7: "34 - GP Out 2"
-	engineConfiguration->injectionPins[8 - 1] = TLE8888_PIN_22;//GPIOE_7;
+	engineConfiguration->injectionPins[10- 1] = TLE8888_PIN_22;//GPIOE_7;
 
 	// LED #2
 	// TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->injectionPins[9  - 1] = TLE8888_PIN_23;
+	engineConfiguration->injectionPins[11 - 1] = TLE8888_PIN_23;
 
 	// LED #7
 	// TLE8888_PIN_24: "43 - GP Out 4"
-	engineConfiguration->injectionPins[10 - 1] = TLE8888_PIN_24;
+	engineConfiguration->injectionPins[12 - 1] = TLE8888_PIN_24;
 
 
 #endif /* BOARD_TLE8888_COUNT */
