@@ -135,7 +135,7 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 	}
 
 	if (result == CRC_FAILED) {
-		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
+		firmwareError(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
 		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
 	} else if (result == INCOMPATIBLE_VERSION) {
 		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);

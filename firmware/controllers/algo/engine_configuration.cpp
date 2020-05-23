@@ -1398,7 +1398,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 #endif // EFI_INCLUDE_ENGINE_PRESETS
 	default:
-		warning(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
+		firmwareError(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}
 	applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
 

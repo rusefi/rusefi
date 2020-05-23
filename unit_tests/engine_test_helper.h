@@ -31,6 +31,7 @@ class EngineTestHelper : public EngineTestHelperBase {
 public:
 	EngineTestHelper(engine_type_e engineType, const std::unordered_map<SensorType, float>& sensorValues);
 	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback);
+	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback, const std::unordered_map<SensorType, float>& sensorValues);
 	~EngineTestHelper();
 
 	void applyTriggerWaveform();
