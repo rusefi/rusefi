@@ -26,6 +26,7 @@
 #include "perf_trace.h"
 #include "sensor.h"
 #include "gppwm.h"
+#include "software_knock.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_configuration.h"
@@ -491,6 +492,8 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_MAP_AVERAGING
 	refreshMapAveragingPreCalc(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
+
+	processLastKnockEvent();
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 

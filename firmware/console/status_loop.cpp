@@ -602,8 +602,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->manifoldAirPressure = mapValue;
 	}
 
-	tsOutputChannels->knockCount = engine->knockCount;
-	tsOutputChannels->knockLevel = engine->knockVolts;
+	//tsOutputChannels->knockCount = engine->knockCount;
+	//tsOutputChannels->knockLevel = engine->knockVolts;
 
 #if HW_CHECK_MODE
 	tsOutputChannels->hasCriticalError = 1;

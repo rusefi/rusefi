@@ -5,6 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "software_knock.h"
 #include "spark_logic.h"
 #include "os_access.h"
 #include "engine_math.h"
@@ -191,6 +192,8 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		// If all events have been scheduled, prepare for next time.
 		prepareCylinderIgnitionSchedule(dwellAngleDuration, sparkDwell, event PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+
+	startKnockSampling(event->cylinderIndex);
 }
 
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
