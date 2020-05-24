@@ -8,6 +8,7 @@
 
 #include "global.h"
 #include "efi_gpio.h"
+#include "expected.h"
 
 #ifndef EFI_PIN_ADC9
 #define EFI_PIN_ADC9 GPIOB_1
@@ -140,31 +141,26 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 #if EFI_PROD_CODE
 
 #if HAL_USE_PWM
-struct stm32_hardware_pwm : public hardware_pwm {
+namespace {
+struct stm32_pwm_config {
 	PWMDriver* const Driver;
-	const brain_pin_e BrainPin;
-
 	const uint8_t Channel;
 	const uint8_t AlternateFunc;
+};
 
-	stm32_hardware_pwm(brain_pin_e pin, PWMDriver* drv, uint8_t channel, uint8_t altFunc)
-		: Driver(drv)
-		, BrainPin(pin)
-		, Channel(channel)
-		, AlternateFunc(altFunc)
-	{
-	}
-
-	uint32_t m_period;
-
-	pwmcnt_t getHighTime(float duty) const {
-		return m_period * duty;
+class stm32_hardware_pwm : public hardware_pwm {
+public:
+	bool hasInit() const {
+		return m_driver != nullptr;
 	}
 
 	// 2MHz, 16-bit timer gets us a usable frequency range of 31hz to 10khz
 	static constexpr uint32_t c_timerFrequency = 2000000;
 
-	void start(const char* msg, float frequency, float duty) {
+	void start(const char* msg, const stm32_pwm_config& config, float frequency, float duty) {
+		m_driver = config.Driver;
+		m_channel = config.Channel;
+
 		m_period = c_timerFrequency / frequency;
 
 		// These timers are only 16 bit - don't risk overflow
@@ -195,76 +191,109 @@ struct stm32_hardware_pwm : public hardware_pwm {
 		};
 
 		// Start the timer running
-		pwmStart(Driver, &pwmcfg);
+		pwmStart(m_driver, &pwmcfg);
 
 		// Set initial duty cycle
 		setDuty(duty);
-
-		// Finally connect the timer to physical pin
-		efiSetPadMode(msg, BrainPin, PAL_MODE_ALTERNATE(AlternateFunc));
 	}
 
 	void setDuty(float duty) override {
-		pwm_lld_enable_channel(Driver, Channel, getHighTime(duty));
+		if (!m_driver) {
+			firmwareError(OBD_PCM_Processor_Fault, "Attempted to set duty on null hard PWM device");
+			return;
+		}
+
+		pwm_lld_enable_channel(m_driver, m_channel, getHighTime(duty));
+	}
+
+private:
+	PWMDriver* m_driver = nullptr;
+	uint8_t m_channel = 0;
+	uint32_t m_period = 0;
+
+	pwmcnt_t getHighTime(float duty) const {
+		return m_period * duty;
+	}
+};
+}
+
+static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
+	switch (pin) {
+#if STM32_PWM_USE_TIM1
+	case GPIOA_8: return stm32_pwm_config{&PWMD1, 0, 1};
+	case GPIOA_9: return stm32_pwm_config{&PWMD1, 1, 1};
+	case GPIOA_10: return stm32_pwm_config{&PWMD1, 2, 1};
+	case GPIOA_11: return stm32_pwm_config{&PWMD1, 3, 1};
+
+	case GPIOE_9: return stm32_pwm_config{&PWMD1, 0, 1};
+	case GPIOE_11: return stm32_pwm_config{&PWMD1, 1, 1};
+	case GPIOE_13: return stm32_pwm_config{&PWMD1, 2, 1};
+	case GPIOE_14: return stm32_pwm_config{&PWMD1, 3, 1};
+#endif
+#if STM32_PWM_USE_TIM2
+	case GPIOA_15: return stm32_pwm_config{&PWMD2, 0, 1};
+	case GPIOB_3: return stm32_pwm_config{&PWMD2, 1, 1};
+	case GPIOB_10: return stm32_pwm_config{&PWMD2, 2, 1};
+	case GPIOB_11: return stm32_pwm_config{&PWMD2, 3, 1};
+#endif
+#if STM32_PWM_USE_TIM3
+	case GPIOB_4: return stm32_pwm_config{&PWMD3, 0, 2};
+	case GPIOB_5: return stm32_pwm_config{&PWMD3, 1, 2};
+#endif
+#if STM32_PWM_USE_TIM4
+	case GPIOB_6: return stm32_pwm_config{&PWMD4, 0, 2};
+	case GPIOB_7: return stm32_pwm_config{&PWMD4, 1, 2};
+	case GPIOB_8: return stm32_pwm_config{&PWMD4, 2, 2};
+	case GPIOB_9: return stm32_pwm_config{&PWMD4, 3, 2};
+
+	case GPIOD_12: return stm32_pwm_config{&PWMD4, 0, 2};
+	case GPIOD_13: return stm32_pwm_config{&PWMD4, 1, 2};
+	case GPIOD_14: return stm32_pwm_config{&PWMD4, 2, 2};
+	case GPIOD_15: return stm32_pwm_config{&PWMD4, 3, 2};
+#endif
+#if STM32_PWM_USE_TIM8
+	case GPIOC_6: return stm32_pwm_config{&PWMD8, 0, 3};
+	case GPIOC_7: return stm32_pwm_config{&PWMD8, 1, 3};
+	case GPIOC_8: return stm32_pwm_config{&PWMD8, 2, 3};
+	case GPIOC_9: return stm32_pwm_config{&PWMD8, 3, 3};
+#endif
+	default: return unexpected;
 	}
 };
 
-stm32_hardware_pwm pwmChannels[] = {
-#if STM32_PWM_USE_TIM1
-	stm32_hardware_pwm(GPIOA_8,  &PWMD1, 0, 1),
-	stm32_hardware_pwm(GPIOA_9,  &PWMD1, 1, 1),
-	stm32_hardware_pwm(GPIOA_10, &PWMD1, 2, 1),
-	stm32_hardware_pwm(GPIOA_11, &PWMD1, 3, 1),
+stm32_hardware_pwm pwms[5];
 
-	stm32_hardware_pwm(GPIOE_9,  &PWMD1, 0, 1),
-	stm32_hardware_pwm(GPIOE_11, &PWMD1, 1, 1),
-	stm32_hardware_pwm(GPIOE_13, &PWMD1, 2, 1),
-	stm32_hardware_pwm(GPIOE_14, &PWMD1, 3, 1),
-#endif
-#if STM32_PWM_USE_TIM2
-	stm32_hardware_pwm(GPIOA_15, &PWMD2, 0, 1),
-	stm32_hardware_pwm(GPIOB_3,  &PWMD2, 1, 1),
-	stm32_hardware_pwm(GPIOB_10, &PWMD2, 2, 1),
-	stm32_hardware_pwm(GPIOB_11, &PWMD2, 3, 1),
-#endif
-#if STM32_PWM_USE_TIM3
-	stm32_hardware_pwm(GPIOB_4, &PWMD3, 0, 2),
-	stm32_hardware_pwm(GPIOB_5, &PWMD3, 1, 2),
-#endif
-#if STM32_PWM_USE_TIM4
-	stm32_hardware_pwm(GPIOB_6, &PWMD4, 0, 2),
-	stm32_hardware_pwm(GPIOB_7, &PWMD4, 1, 2),
-	stm32_hardware_pwm(GPIOB_8, &PWMD4, 2, 2),
-	stm32_hardware_pwm(GPIOB_9, &PWMD4, 3, 2),
+stm32_hardware_pwm* getNextPwmDevice() {
+	for (size_t i = 0; i < efi::size(pwms); i++) {
+		if (!pwms[i].hasInit()) {
+			return &pwms[i];
+		}
+	}
 
-	stm32_hardware_pwm(GPIOD_12, &PWMD4, 0, 2),
-	stm32_hardware_pwm(GPIOD_13, &PWMD4, 1, 2),
-	stm32_hardware_pwm(GPIOD_14, &PWMD4, 2, 2),
-	stm32_hardware_pwm(GPIOD_15, &PWMD4, 3, 2),
-#endif
+	firmwareError(OBD_PCM_Processor_Fault, "Run out of hardware PWM devices!");
+	return nullptr;
+}
 
-#if STM32_PWM_USE_TIM8
-	stm32_hardware_pwm(GPIOC_6, &PWMD8, 0, 3),
-	stm32_hardware_pwm(GPIOC_7, &PWMD8, 1, 3),
-	stm32_hardware_pwm(GPIOC_8, &PWMD8, 2, 3),
-	stm32_hardware_pwm(GPIOC_9, &PWMD8, 3, 3),
-#endif
-};
-
-/*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty)
-{
+/*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty) {
 	// Slow PWM isn't worth doing on hardware - reserve that timer for something faster if needed.
 	if (frequencyHz < 100) {
 		return nullptr;
 	}
 
-	for (size_t i = 0; i < efi::size(pwmChannels); i++) {
-		auto& channel = pwmChannels[i];
-		if (channel.BrainPin == pin) {
-			channel.start(msg, frequencyHz, duty);
+	auto cfg = getConfigForPin(pin);
 
-			return &channel;
-		}
+	// This pin can't do hardware PWM
+	if (!cfg) {
+		return nullptr;
+	}
+
+	if (stm32_hardware_pwm* device = getNextPwmDevice()) {
+		device->start(msg, cfg.Value, frequencyHz, duty);
+
+		// Finally connect the timer to physical pin
+		efiSetPadMode(msg, pin, PAL_MODE_ALTERNATE(cfg.Value.AlternateFunc));
+
+		return device;
 	}
 
 	return nullptr;
