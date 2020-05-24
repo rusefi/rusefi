@@ -1,4 +1,4 @@
-name: rusEFI console
+name: rusEFI console 11
 
 on: [push,pull_request]
 
@@ -10,6 +10,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '11'
 
       - name: Test Compiler
         run: javac -version
