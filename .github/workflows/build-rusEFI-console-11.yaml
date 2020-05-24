@@ -10,9 +10,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
+      # todo: switch to 11 once we have modules access
       - uses: actions/setup-java@v1
        with:
-         # todo: switch to 11 once we have modules access
          java-version: '8'
 
       - name: Test Compiler
