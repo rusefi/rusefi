@@ -322,6 +322,7 @@
 #define engineSnifferRpmThreshold_offset 4
 #define engineType_offset 0
 #define ERROR_BUFFER_SIZE 120
+#define ET_BMW_M73_PROTEUS 63
 #define ET_CITROEN_TU3JP 65
 #define ET_MRE_MIATA_NA6 12
 #define ET_MRE_MIATA_NB2_MAF 15
@@ -1053,6 +1054,7 @@
 #define servoOutputPins8_offset 3147
 #define show_Frankenso_presets true
 #define show_microRusEFI_presets true
+#define show_Proteus_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
