@@ -11,8 +11,9 @@ jobs:
         with:
           submodules: recursive
       - uses: actions/setup-java@v1
-        with:
-          java-version: '11'
+# todo: need modules access
+#        with:
+#          java-version: '11'
 
       - name: Test Compiler
         run: javac -version
