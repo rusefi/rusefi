@@ -11,6 +11,9 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Build Bootloader
+      - name: Test Compiler
+        run: javac -version
+
+      - name: Build console
         working-directory: ./java_console
         run: ant
