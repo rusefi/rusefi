@@ -78,6 +78,9 @@
             <zipfileset src="lib/swing-layout-1.0.jar" includes="**/*.class"/>
             <zipfileset src="lib/log4j.jar" includes="**/*.class"/>
             <zipfileset src="lib/jep.jar" includes="**/*.class"/>
+            <zipfileset src="lib/httpclient.jar" includes="**/*.class"/>
+            <zipfileset src="lib/httpcore.jar" includes="**/*.class"/>
+            <zipfileset src="lib/httpmime.jar" includes="**/*.class"/>
             <zipfileset src="lib/jaxb-api.jar" includes="**/*.class"/>
             <zipfileset src="lib/jssc.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
             <zipfileset src="lib/jSerialComm.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
