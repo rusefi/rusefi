@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="XML for 11">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jaxb-api.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
