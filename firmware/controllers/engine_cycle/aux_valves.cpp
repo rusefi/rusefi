@@ -126,7 +126,7 @@ void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	if (!Sensor::hasSensor(SensorType::DriverThrottleIntent)) {
-		warning(CUSTOM_OBD_91, "No TPS for Aux Valves");
+		firmwareError(CUSTOM_OBD_91, "No TPS for Aux Valves");
 		return;
 	}
 

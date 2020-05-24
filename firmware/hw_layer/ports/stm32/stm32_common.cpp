@@ -119,6 +119,8 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 		return EFI_ADC_14;
 	case GPIOC_5:
 		return EFI_ADC_15;
+	case GPIO_UNASSIGNED:
+		return EFI_ADC_NONE;
 	default:
 		return EFI_ADC_ERROR;
 	}

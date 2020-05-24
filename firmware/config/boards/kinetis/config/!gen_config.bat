@@ -33,6 +33,5 @@ java ^
  -c_defines config/boards/kinetis/config/controllers/algo/rusefi_generated.h ^
  -c_destination config/boards/kinetis/config/controllers/algo/engine_configuration_generated_structures.h ^
  -prepend config/boards/kinetis/config/rusefi_config_kinetis.txt ^
- -prepend config/boards/kinetis/config/tunerstudio/kinetis_prefix.txt ^
- -skip build_kinetis/config.gen
+ -prepend config/boards/kinetis/config/tunerstudio/kinetis_prefix.txt
 

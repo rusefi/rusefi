@@ -62,13 +62,18 @@ public class IniFileModel {
         return this;
     }
 
-    private String findMetaInfoFile(String iniFilePath) {
-        File dir = new File(iniFilePath);
+    private static String findMetaInfoFile(String iniFilePath) {
+        return findFile(iniFilePath, RUSEFI_INI_PREFIX, RUSEFI_INI_SUFFIX);
+    }
+
+    @Nullable
+    public static String findFile(String fileDirectory, String prefix, String suffix) {
+        File dir = new File(fileDirectory);
         if (!dir.isDirectory())
             return null;
         for (String file : dir.list()) {
-            if (file.startsWith(RUSEFI_INI_PREFIX) && file.endsWith(RUSEFI_INI_SUFFIX))
-                return iniFilePath + File.separator + file;
+            if (file.startsWith(prefix) && file.endsWith(suffix))
+                return fileDirectory + File.separator + file;
         }
         return null;
     }

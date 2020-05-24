@@ -48,7 +48,7 @@ public class EnumIniField extends IniField {
 
     public static int getBitRange(int ordinal, int bitPosition, int bitSize) {
         ordinal = ordinal >> bitPosition;
-        ordinal = ordinal  & (1 << bitSize);
+        ordinal = ordinal  & ((1 << (bitSize + 1)) - 1);
         return ordinal;
     }
 

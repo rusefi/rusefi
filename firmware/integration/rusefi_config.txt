@@ -1096,7 +1096,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	uint32_t auxSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
 
-	uint32_t[8] unused_former_warmup_target_afr;
+	float throttlePedalSecondaryUpVoltage;;"voltage",      1,     0,    -6,   6,      2
+	float throttlePedalSecondaryWOTVoltage;+Pedal in the floor;"voltage",      1,     0,    -6,   6,      2
+
+	uint32_t[6] unused_former_warmup_target_afr;
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
@@ -1564,6 +1567,10 @@ end_struct
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
 
+#define ET_MRE_MIATA_NA6 12
+#define ET_MRE_MIATA_NB2_MAF 15
+#define ET_CITROEN_TU3JP 65
+
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
@@ -1587,3 +1594,7 @@ end_struct
 #define ts_show_tunerstudio_port true
 #define ts_show_trigger_comparator false
 #define ts_show_auxserial_pins true
+
+#define show_test_presets true
+#define show_Frankenso_presets true
+#define show_microRusEFI_presets true

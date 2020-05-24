@@ -30,7 +30,13 @@ void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGN
 void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 /**
- * OEM mechanical throttle body
+ * OEM mechanical throttle body, with MAP
  * set engine_type 11
  */
-void setMiataNB2_MRE_MTB(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNB2_MRE_MAP(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
+/**
+ * OEM mechanical throttle body using OEM MAF
+ * set engine_type 15
+ */
+void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE);

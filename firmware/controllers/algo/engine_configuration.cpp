@@ -1197,8 +1197,10 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
 	case MRE_BOARD_OLD_TEST:
-	case MRE_BOARD_NEW_TEST:
 		mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_BOARD_NEW_TEST:
+		mreBoardNewTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_ENGINE:
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1237,10 +1239,13 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MRE_MIATA_NA6:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MRE_MIATA_NB2_MTB:
-		setMiataNB2_MRE_MTB(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case MRE_MIATA_NB2_MAP:
+		setMiataNB2_MRE_MAP(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MRE_MIATA_NB2:
+	case MRE_MIATA_NB2_MAF:
+		setMiataNB2_MRE_MAF(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_MIATA_NB2_ETB:
 		setMiataNB2_MRE_ETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_1995:
@@ -1393,7 +1398,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 #endif // EFI_INCLUDE_ENGINE_PRESETS
 	default:
-		warning(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
+		firmwareError(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}
 	applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -1427,11 +1432,11 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_ENGINE_CONTROL
 	ENGINE(initializeTriggerWaveform(logger PASS_ENGINE_PARAMETER_SUFFIX));
-#endif
+#endif // EFI_ENGINE_CONTROL
 
 #if EFI_FSIO
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
+#endif // EFI_FSIO
 }
 
 #if EFI_ENGINE_CONTROL

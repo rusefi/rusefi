@@ -59,6 +59,11 @@ cp firmware/deliver/rusefi.bin %folder%
 rem probably not needed cp firmware/build/rusefi.elf %folder%
 cp firmware/deliver/rusefi.dfu %folder%
 
+if [%bundle_name%] neq [] (
+    mv %folder%/rusefi.dfu %folder%/rusefi_%bundle_name%.dfu
+)
+
+
 if not exist firmware/deliver/rusefi.bin echo %script_name%: rusefi.bin not found
 if not exist firmware/deliver/rusefi.bin exit -1
 

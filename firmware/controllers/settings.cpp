@@ -154,10 +154,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Gy6139";
 	case MAZDA_MIATA_NB1:
 		return "MiataNB1";
-	case MRE_MIATA_NA6:
-		return "MRE Miata 1.6";
-	case MRE_MIATA_NB2:
-		return "MRE_MIATA_NB2";
 	case FORD_ESCORT_GT:
 		return "EscrtGT";
 	case CITROEN_TU3JP:
@@ -766,7 +762,8 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 }
 
 #if HAL_USE_ADC
-// set_analog_input_pin pps
+// set_analog_input_pin pps pa4
+// set_analog_input_pin afr none
 static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -784,6 +781,9 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	} else if (strEqual("pps", sensorStr)) {
 		engineConfiguration->throttlePedalPositionAdcChannel = channel;
 		scheduleMsg(&logger, "setting PPS to %s/%d", pinName, channel);
+	} else if (strEqual("afr", sensorStr)) {
+		engineConfiguration->afr.hwChannel = channel;
+		scheduleMsg(&logger, "setting AFR to %s/%d", pinName, channel);
 	} else if (strEqual("clt", sensorStr)) {
 		engineConfiguration->clt.adcChannel = channel;
 		scheduleMsg(&logger, "setting CLT to %s/%d", pinName, channel);

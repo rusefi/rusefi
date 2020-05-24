@@ -60,6 +60,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	switch (engineConfiguration->fuelAlgorithm) {
 	case LM_PLAIN_MAF:
 		if (!hasMafSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		    // todo: make this not happen during hardware CI
 			warning(CUSTOM_MAF_NEEDED, "MAF sensor needed for current fuel algorithm");
 			return NAN;
 		}
@@ -68,11 +69,10 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_ALPHA_N:
 		return Sensor::get(SensorType::Tps1).value_or(0);
-	case LM_REAL_MAF: {
+	case LM_REAL_MAF:
 		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
 	default:
-		warning(CUSTOM_UNKNOWN_ALGORITHM, "Unexpected engine load parameter: %d", engineConfiguration->fuelAlgorithm);
+		firmwareError(CUSTOM_UNKNOWN_ALGORITHM, "Unexpected engine load parameter: %d", engineConfiguration->fuelAlgorithm);
 		return -1;
 	}
 }
@@ -156,7 +156,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		// does not look exactly right, not too consistent with IM_SEQUENTIAL
 		injectorIndex = i % (engineConfiguration->specs.cylindersCount / 2);
 	} else {
-		warning(CUSTOM_OBD_UNEXPECTED_INJECTION_MODE, "Unexpected injection mode %d", mode);
+		firmwareError(CUSTOM_OBD_UNEXPECTED_INJECTION_MODE, "Unexpected injection mode %d", mode);
 		injectorIndex = 0;
 	}
 
@@ -166,7 +166,8 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	int cylindersCount = CONFIG(specs.cylindersCount);
 	if (cylindersCount < 1) {
-		warning(CUSTOM_OBD_ZERO_CYLINDER_COUNT, "temp cylindersCount %d", cylindersCount);
+	    // May 2020 this somehow still happens with functional tests, maybe race condition?
+		warning(CUSTOM_OBD_ZERO_CYLINDER_COUNT, "Invalid cylinder count: %d", cylindersCount);
 		return false;
 	}
 
@@ -302,6 +303,7 @@ static const int order_1_10_9_4_3_6_5_8_7_2[] = {1, 10, 9, 4, 3, 6, 5, 8, 7, 2};
 static const int order_1_7_5_11_3_9_6_12_2_8_4_10[] = {1, 7, 5, 11, 3, 9, 6, 12, 2, 8, 4, 10};
 static const int order_1_7_4_10_2_8_6_12_3_9_5_11[] = {1, 7, 4, 10, 2, 8, 6, 12, 3, 9, 5, 11};
 static const int order_1_12_5_8_3_10_6_7_2_11_4_9[] = {1, 12, 5, 8, 3, 10, 6, 7, 2, 11, 4, 9};
+static const int order_1_2_3_4_5_6_7_8_9_10_11_12[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
 
 // no comments
 static const int order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10[] = {1, 14, 9, 4, 7, 12, 15, 6, 13, 8, 3, 16, 11, 2, 5, 10};
@@ -354,13 +356,14 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_7_5_11_3_9_6_12_2_8_4_10:
 	case FO_1_7_4_10_2_8_6_12_3_9_5_11:
 	case FO_1_12_5_8_3_10_6_7_2_11_4_9:
+	case FO_1_2_3_4_5_6_7_8_9_10_11_12:
 		return 12;
 
 	case FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10:
 		return 16;
 
 	default:
-		warning(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "getCylinderId not supported for %d", CONFIG(specs.firingOrder));
+		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", CONFIG(specs.firingOrder));
 	}
 	return 1;
 }
@@ -379,13 +382,14 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 1;
 	}
 	if (engineConfiguration->specs.cylindersCount != firingOrderLength) {
-		warning(CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong firing order %d/%d", engineConfiguration->specs.cylindersCount, firingOrderLength);
+		// May 2020 this somehow still happens with functional tests, maybe race condition?
+		warning(CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong cyl count for firing order, expected %d cylinders", firingOrderLength);
 		return 1;
 	}
 
 	if (index < 0 || index >= firingOrderLength) {
-		// todo: open question when does this happen? reproducible with functional tests?
-		warning(CUSTOM_ERR_6686, "index %d", index);
+		// May 2020 this somehow still happens with functional tests, maybe race condition?
+		warning(CUSTOM_ERR_6686, "firing order index %d", index);
 		return 1;
 	}
 
@@ -448,13 +452,15 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return order_1_7_4_10_2_8_6_12_3_9_5_11[index];
 	case FO_1_12_5_8_3_10_6_7_2_11_4_9:
 		return order_1_12_5_8_3_10_6_7_2_11_4_9[index];
+	case FO_1_2_3_4_5_6_7_8_9_10_11_12:
+		return order_1_2_3_4_5_6_7_8_9_10_11_12[index];
 
 // do not ask
 	case FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10:
 		return order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10[index];
 
 	default:
-		warning(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "getCylinderId not supported for %d", CONFIG(specs.firingOrder));
+		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", CONFIG(specs.firingOrder));
 	}
 	return 1;
 }
@@ -479,7 +485,7 @@ static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUF
 		return cylinderIndex % 2;
 
 	default:
-		warning(CUSTOM_OBD_IGNITION_MODE, "unsupported ignitionMode %d in getIgnitionPinForIndex()", engineConfiguration->ignitionMode);
+		firmwareError(CUSTOM_OBD_IGNITION_MODE, "Invalid ignition mode getIgnitionPinForIndex(): %d", engineConfiguration->ignitionMode);
 		return 0;
 	}
 }

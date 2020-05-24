@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu May 21 18:17:55 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu May 21 20:39:11 EDT 2020
 // see also gen_config_and_enums.bat
 
 
@@ -675,10 +675,12 @@ case MRE_BOARD_OLD_TEST:
   return "MRE_BOARD_OLD_TEST";
 case MRE_MIATA_NA6:
   return "MRE_MIATA_NA6";
-case MRE_MIATA_NB2:
-  return "MRE_MIATA_NB2";
-case MRE_MIATA_NB2_MTB:
-  return "MRE_MIATA_NB2_MTB";
+case MRE_MIATA_NB2_ETB:
+  return "MRE_MIATA_NB2_ETB";
+case MRE_MIATA_NB2_MAF:
+  return "MRE_MIATA_NB2_MAF";
+case MRE_MIATA_NB2_MAP:
+  return "MRE_MIATA_NB2_MAP";
 case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
 case PROMETHEUS_DEFAULTS:
