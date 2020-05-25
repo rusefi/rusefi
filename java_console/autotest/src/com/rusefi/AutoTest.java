@@ -190,7 +190,7 @@ this is just too unreliable at this point :(
         FileLog.MAIN.logLine("AUTOTEST setEngineType " + type);
 //        sendCommand(CMD_PINS);
         currentEngineType = type;
-        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, 30);
+        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, 2 * Timeouts.CMD_TIMEOUT);
         // TODO: document the reason for this sleep?!
         sleep(1);
         sendCommand(getEnableCommand("self_stimulation"));
