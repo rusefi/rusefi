@@ -14,5 +14,6 @@ public interface Timeouts {
 
     int CMD_TIMEOUT = 20 * SECOND;
     int SET_ENGINE_TIMEOUT = 60 * SECOND;
+    int TEXT_PULL_PERIOD = 100;
 }
 

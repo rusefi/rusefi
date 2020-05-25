@@ -42,7 +42,6 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
 public class BinaryProtocol implements BinaryProtocolCommands {
 
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
-    private static final int TEXT_PULL_PERIOD = 100;
     private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.rusefi_binary";
     private static final String CONFIGURATION_RUSEFI_XML = "current_configuration.msq";
     /**
@@ -156,7 +155,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                             }
                         });
                     }
-                    sleep(TEXT_PULL_PERIOD);
+                    sleep(Timeouts.TEXT_PULL_PERIOD);
                 }
                 FileLog.MAIN.logLine("Stopping text pull");
             }
@@ -423,7 +422,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     public static byte[] getTextCommandBytes(String text) {
         byte[] asBytes = text.getBytes();
         byte[] command = new byte[asBytes.length + 1];
-        command[0] = 'E';
+        command[0] = Fields.TS_EXECUTE;
         System.arraycopy(asBytes, 0, command, 1, asBytes.length);
         return command;
     }
@@ -432,7 +431,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         if (isClosed)
             return null;
         try {
-            byte[] response = executeCommand(new byte[]{'G'}, "text", true);
+            byte[] response = executeCommand(new byte[]{Fields.TS_GET_TEXT}, "text", true);
             if (response != null && response.length == 1)
                 Thread.sleep(100);
             //        System.out.println(result);

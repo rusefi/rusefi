@@ -1572,6 +1572,14 @@ end_struct
 #define TS_CRC_CHECK_COMMAND 'k'
 // 0x52
 #define TS_READ_COMMAND 'R'
+// 0x47
+#define TS_GET_TEXT 'G'
+// 0x45
+#define TS_EXECUTE 'E'
+// 0x39
+#define TS_GET_STRUCT '9'
+
+
 
 // High speed logger commands
 #define TS_SET_LOGGER_SWITCH   'l'

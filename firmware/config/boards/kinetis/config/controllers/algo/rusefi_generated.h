@@ -1271,8 +1271,11 @@
 #define triggerSimulatorPins2_offset 737
 #define triggerSimulatorPins3_offset 738
 #define TS_CRC_CHECK_COMMAND 'k'
+#define TS_EXECUTE 'E'
 #define TS_FILE_VERSION 20200310
 #define TS_GET_LOGGER_GET_BUFFER 'L'
+#define TS_GET_STRUCT '9'
+#define TS_GET_TEXT 'G'
 #define TS_HELLO_COMMAND 'S'
 #define TS_OUTPUT_COMMAND 'O'
 #define TS_OUTPUT_SIZE 244
