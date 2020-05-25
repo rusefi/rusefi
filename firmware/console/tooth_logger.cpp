@@ -16,7 +16,7 @@ EXTERN_ENGINE;
 #include <cstddef>
 #include "efitime.h"
 #include "efilib.h"
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 
 typedef struct __attribute__ ((packed)) {
     uint16_t timestamp;

@@ -16,7 +16,7 @@
 #if EFI_ENGINE_CONTROL
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #endif /* EFI_TUNER_STUDIO */
 
 EXTERN_ENGINE;

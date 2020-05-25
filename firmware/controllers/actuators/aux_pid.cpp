@@ -13,7 +13,7 @@
 
 #if EFI_AUX_PID
 #include "pwm_generator_logic.h"
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #include "fsio_impl.h"
 #include "engine_math.h"
 #include "pin_repository.h"
