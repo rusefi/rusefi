@@ -1,5 +1,6 @@
 /**
  * @file	tunerstudio_io.h
+ * @file TS protocol commands and methods are here
  *
  * @date Mar 8, 2015
  * @author Andrey Belomutskiy, (c) 2012-2020
