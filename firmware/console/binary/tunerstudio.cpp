@@ -476,8 +476,8 @@ static bool isKnownCommand(char command) {
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_STRUCT
 			|| command == TS_GET_FILE_RANGE
-			|| command == TS_SET_LOGGER_MODE
-			|| command == TS_GET_LOGGER_BUFFER
+			|| command == TS_SET_LOGGER_SWITCH
+			|| command == TS_GET_LOGGER_GET_BUFFER
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
@@ -826,7 +826,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 		break;
 #if EFI_TOOTH_LOGGER
-	case TS_SET_LOGGER_MODE:
+	case TS_SET_LOGGER_SWITCH:
 		switch(data[0]) {
 		case 0x01:
 			EnableToothLogger();
@@ -842,7 +842,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		sendOkResponse(tsChannel, TS_CRC);
 
 		break;
-	case TS_GET_LOGGER_BUFFER:
+	case TS_GET_LOGGER_GET_BUFFER:
 		{
 			auto toothBuffer = GetToothLoggerBuffer();
 			sr5SendResponse(tsChannel, TS_CRC, toothBuffer.Buffer, toothBuffer.Length);
