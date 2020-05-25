@@ -1929,7 +1929,7 @@
         <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio_algo.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio_configuration.h</name>
+        <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio_outputs.h</name>
       </file>
     </group>
     <file>

@@ -10,7 +10,7 @@
 #include "tunerstudio_io.h"
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 
 typedef struct {
 	int queryCommandCounter;
