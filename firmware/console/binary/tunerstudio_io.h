@@ -61,18 +61,14 @@ typedef struct {
 #define TS_EXECUTE 'E' // 0x45
 #define TS_GET_STRUCT '9' // 0x39
 
-// These commands are used by TunerStudio and the rusEfi console
-#define TS_HELLO_COMMAND 'S' // 0x53 queryCommand
-#define TS_OUTPUT_COMMAND 'O' // 0x4F ochGetCommand
-#define TS_READ_COMMAND 'R' // 0x52
+// many commands are now defined in rusefi_config.txt see TS_* constants
+// this way we reuse between firmware and java code
+
 #define TS_PAGE_COMMAND 'P' // 0x50
 #define TS_COMMAND_F 'F' // 0x46
 #define TS_GET_FIRMWARE_VERSION 'V' // versionInfo
 #define TS_GET_CONFIG_ERROR 'e' // returns getFirmwareError(), works together with ind_hasFatalError
 
-// High speed logger commands
-#define TS_SET_LOGGER_SWITCH   'l'
-#define TS_GET_LOGGER_GET_BUFFER 'L'
 
 // Performance tracing
 #define TS_PERF_TRACE_BEGIN 'r'
@@ -83,7 +79,6 @@ typedef struct {
 #define TS_BURN_COMMAND 'B' // 0x42 burnCommand
 #define TS_IO_TEST_COMMAND 'w' // 0x77
 
-#define TS_CRC_CHECK_COMMAND 'k' // 0x6B
 
 #define CRC_VALUE_SIZE 4
 // todo: double-check this

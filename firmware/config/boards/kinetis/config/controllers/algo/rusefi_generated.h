@@ -1270,8 +1270,14 @@
 #define triggerSimulatorPins1_offset 736
 #define triggerSimulatorPins2_offset 737
 #define triggerSimulatorPins3_offset 738
+#define TS_CRC_CHECK_COMMAND 'k'
 #define TS_FILE_VERSION 20200310
+#define TS_GET_LOGGER_GET_BUFFER 'L'
+#define TS_HELLO_COMMAND 'S'
+#define TS_OUTPUT_COMMAND 'O'
 #define TS_OUTPUT_SIZE 244
+#define TS_READ_COMMAND 'R'
+#define TS_SET_LOGGER_SWITCH 'l'
 #define ts_show_analog_divider true
 #define ts_show_auxserial_pins true
 #define ts_show_can_pins true

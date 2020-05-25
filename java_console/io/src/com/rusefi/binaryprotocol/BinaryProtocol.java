@@ -288,7 +288,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             System.out.printf("Local cache CRC %x\n", crcOfLocallyCachedConfiguration);
 
             byte packet[] = new byte[7];
-            packet[0] = COMMAND_CRC32;
+            packet[0] = COMMAND_CRC_CHECK_COMMAND;
             byte[] response = executeCommand(packet, "get CRC32", false);
 
             if (checkResponseCode(response, RESPONSE_OK) && response.length == 5) {
