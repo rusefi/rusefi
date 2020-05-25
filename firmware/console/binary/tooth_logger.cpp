@@ -41,15 +41,6 @@ static uint32_t lastEdgeTimestamp = 0;
 static bool trigger1 = false;
 static bool trigger2 = false;
 
-//char (*__kaboom)[sizeof( composite_logger_s )] = 1;
-//char (*__kaboom)[sizeof( buffer )] = 1;
-
-//void SetNextToothEntry(uint16_t entry) {
-	// TS uses big endian, grumble
-//	buffer[NextIdx] = SWAP_UINT16(entry);
-	//NextIdx++;
-
-
 static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigger2,
 		bool isTDC DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	uint32_t nowUs = NT2US(timestamp);
@@ -59,9 +50,6 @@ static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigg
 	buffer[NextIdx].secLevel = trigger2;
 	buffer[NextIdx].trigger = isTDC;
 	buffer[NextIdx].sync = engine->triggerCentral.triggerState.shaft_is_synchronized;
-	// todo:
-	//buffer[NextIdx].sync = isSynced;
-	//buffer[NextIdx].trigger = wtfIsTriggerIdk;
 
 	NextIdx++;
 
