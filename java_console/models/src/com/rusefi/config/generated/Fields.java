@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon May 25 18:48:06 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon May 25 19:18:41 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1252,8 +1252,11 @@ public class Fields {
 	public static final int triggerSimulatorPins2_offset = 737;
 	public static final int triggerSimulatorPins3_offset = 738;
 	public static final char TS_CRC_CHECK_COMMAND = 'k';
+	public static final char TS_EXECUTE = 'E';
 	public static final int TS_FILE_VERSION = 20200310;
 	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
+	public static final char TS_GET_STRUCT = '9';
+	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_OUTPUT_COMMAND = 'O';
 	public static final int TS_OUTPUT_SIZE = 244;
