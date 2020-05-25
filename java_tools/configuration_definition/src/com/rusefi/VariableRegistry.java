@@ -41,10 +41,6 @@ public class VariableRegistry  {
         Matcher m;
         while ((m = VAR.matcher(line)).find()) {
             String key = m.group(2);
-
-
-            //     key =
-
             if (!data.containsKey(key))
                 throw new IllegalStateException("No such variable: " + key);
             String s = data.get(key);
@@ -99,20 +95,29 @@ public class VariableRegistry  {
         } catch (NumberFormatException e) {
             SystemOut.println("Not an integer: " + value);
 
-            if (isQuoted(value) && !var.trim().endsWith(ConfigField.ENUM_SUFFIX)) {
-                // quoted and not with enum suffix means plain string define statement
-                javaDefinitions.put(var, "\tpublic static final String " + var + " = " + value + ";" + EOL);
+            if (!var.trim().endsWith(ConfigField.ENUM_SUFFIX)) {
+                if (isQuoted(value, '"')) {
+                    // quoted and not with enum suffix means plain string define statement
+                    javaDefinitions.put(var, "\tpublic static final String " + var + " = " + value + ";" + EOL);
+                } else if (isQuoted(value, '\'')) {
+                    // quoted and not with enum suffix means plain string define statement
+                    javaDefinitions.put(var, "\tpublic static final char " + var + " = " + value + ";" + EOL);
+                }
             }
         }
     }
 
-    private boolean isQuoted(String value) {
+    private boolean isQuoted(String value, char quote) {
         if (value == null)
             return false;
         value = value.trim();
         if (value.isEmpty())
             return false;
-        return value.charAt(0) == '"' && value.charAt(value.length() - 1) == '"';
+        return isQ(value, quote);
+    }
+
+    private boolean isQ(String value, char quote) {
+        return value.charAt(0) == quote && value.charAt(value.length() - 1) == quote;
     }
 
     /**
