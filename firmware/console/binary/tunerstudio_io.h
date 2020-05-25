@@ -71,8 +71,8 @@ typedef struct {
 #define TS_GET_CONFIG_ERROR 'e' // returns getFirmwareError(), works together with ind_hasFatalError
 
 // High speed logger commands
-#define TS_SET_LOGGER_MODE   'l'
-#define TS_GET_LOGGER_BUFFER 'L'
+#define TS_SET_LOGGER_SWITCH   'l'
+#define TS_GET_LOGGER_GET_BUFFER 'L'
 
 // Performance tracing
 #define TS_PERF_TRACE_BEGIN 'r'
