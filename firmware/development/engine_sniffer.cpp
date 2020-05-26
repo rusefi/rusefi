@@ -209,7 +209,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	 * at least that's 32 bit division now
 	 */
 	uint32_t diffNt = nowNt - startTimeNt;
-	uint32_t time100 = NT2US(diffNt / 10);
+	uint32_t time100 = NT2US(diffNt / ENGINE_SNIFFER_UNIT_US);
 
 	if (remainingSize(&logging) > 35) {
 		/**

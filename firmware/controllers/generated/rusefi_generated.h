@@ -310,6 +310,7 @@
 #define ENGINE_MAKE_MERCEDES "Mercedes"
 #define ENGINE_MAKE_TOYOTA "Toyota"
 #define ENGINE_NOISE_CURVE_SIZE 8
+#define ENGINE_SNIFFER_UNIT_US 10
 #define engineChartSize_offset 1480
 #define engineCode_offset 1128
 #define engineConfiguration_offset 0

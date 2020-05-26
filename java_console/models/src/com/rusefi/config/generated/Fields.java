@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon May 25 23:12:49 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue May 26 01:03:51 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -306,6 +306,7 @@ public class Fields {
 	public static final String ENGINE_MAKE_MERCEDES = "Mercedes";
 	public static final String ENGINE_MAKE_TOYOTA = "Toyota";
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
+	public static final int ENGINE_SNIFFER_UNIT_US = 10;
 	public static final int engineChartSize_offset = 1480;
 	public static final int engineCode_offset = 1128;
 	public static final int engineConfiguration_offset = 0;

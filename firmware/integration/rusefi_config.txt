@@ -1580,7 +1580,8 @@ end_struct
 #define TS_GET_STRUCT '9'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 
-
+// Engine Sniffer time stamp unit, in microseconds
+#define ENGINE_SNIFFER_UNIT_US 10
 
 // High speed logger commands
 #define TS_SET_LOGGER_SWITCH   'l'
