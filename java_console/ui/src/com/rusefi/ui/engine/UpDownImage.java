@@ -275,14 +275,13 @@ public class UpDownImage extends JPanel {
         g.drawLine(x1, y, x1, d.height);
         g.drawLine(x2, y, x2, d.height);
 
-        g.setColor(Color.red);
-        String durationString = String.format(" %.2fms", upDown.getDuration() / EngineReport.SYS_TICKS_PER_MS);
-
         if (showMouseOverText) {
+            g.setColor(Color.red);
+            String durationString = String.format(" %.2fms", upDown.getDuration() / EngineReport.SYS_TICKS_PER_MS);
             g.drawString(durationString, x1, (int) (0.5 * d.height));
 
-            double fromAngle = time2rpm.getCrankAngleByTime((double) upDown.upTime);
-            double toAngle = time2rpm.getCrankAngleByTime((double) upDown.downTime);
+            double fromAngle = time2rpm.getCrankAngleByTime(upDown.upTime);
+            double toAngle = time2rpm.getCrankAngleByTime(upDown.downTime);
 
             String fromAngleStr = RevolutionLog.angle2string(fromAngle);
 
