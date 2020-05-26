@@ -12,4 +12,7 @@
 12)                  move more small stuff to same (back) side
 13)                  Fix courtyard warnings on back side, move components slightly. 
 14)                  The current board layout is very hard to work with - can we please have all components on top? PCB space cost nothing comparing with the stress of flipping and poking
-15)
+15)                  Noxz is asking to move C21 to next to C22
+16)
+17)
+18)
