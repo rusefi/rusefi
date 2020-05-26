@@ -160,8 +160,9 @@ void WaveChart::publish() {
  */
 void WaveChart::addEvent3(const char *name, const char * msg) {
 	ScopePerf perf(PE::EngineSniffer);
+	efitick_t nowNt = getTimeNowNt();
 
-	if (getTimeNowNt() < pauseEngineSnifferUntilNt) {
+	if (nowNt < pauseEngineSnifferUntilNt) {
 		return;
 	}
 #if EFI_TEXT_LOGGING
@@ -190,9 +191,6 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	if (isFull()) {
 		return;
 	}
-
-
-	efitick_t nowNt = getTimeNowNt();
 
 	bool alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
 
