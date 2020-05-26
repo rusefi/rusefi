@@ -25,7 +25,7 @@ public class EngineReport implements TimeAxisTranslator {
     /**
      * number of ChibiOS systicks per ms
      */
-    public static final double SYS_TICKS_PER_MS = 100;
+    public static final double SYS_TICKS_PER_MS = 1000 / Fields.ENGINE_SNIFFER_UNIT_US;
     public static final double RATIO = 0.05;
     public static final int mult = (int) (100 * SYS_TICKS_PER_MS); // 100ms
 
