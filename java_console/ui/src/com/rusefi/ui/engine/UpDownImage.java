@@ -119,22 +119,22 @@ public class UpDownImage extends JPanel {
         return new TimeAxisTranslator() {
             @Override
             public int timeToScreen(int time, int width) {
-                return UpDownImage.this.engineReport.timeToScreen(time, width);
+                return UpDownImage.this.engineReport.getTimeAxisTranslator().timeToScreen(time, width);
             }
 
             @Override
             public double screenToTime(int screen, int width) {
-                return UpDownImage.this.engineReport.screenToTime(screen, width);
+                return UpDownImage.this.engineReport.getTimeAxisTranslator().screenToTime(screen, width);
             }
 
             @Override
             public int getMaxTime() {
-                return UpDownImage.this.engineReport.getMaxTime();
+                return UpDownImage.this.engineReport.getTimeAxisTranslator().getMaxTime();
             }
 
             @Override
             public int getMinTime() {
-                return UpDownImage.this.engineReport.getMinTime();
+                return UpDownImage.this.engineReport.getTimeAxisTranslator().getMinTime();
             }
 
             @Override

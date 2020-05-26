@@ -24,7 +24,7 @@ public class EngineSnifferStatusPanel {
     private final JLabel timeLabel = new JLabel();
     private final JLabel angleLabel = new JLabel();
     private final JLabel rpmLabel = new JLabel();
-    private TimeAxisTranslator translator = EngineReport.MOCK;
+    private TimeAxisTranslator translator = EngineReport.MOCK.getTimeAxisTranslator();
 
     private RevolutionLog time2rpm = RevolutionLog.parseRevolutions(null);
 
