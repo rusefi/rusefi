@@ -1,6 +1,5 @@
 package com.rusefi.ui.engine;
 
-import com.rusefi.Launcher;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -65,13 +64,9 @@ public class UpDownImage extends JPanel {
     public UpDownImage(final String name) {
         this(EngineReport.MOCK, name);
         setToolTip();
-        // this code is horrible, I am in a rush :(
-        EngineSnifferPanel p = Launcher.engineSnifferPanel;
-        if (p != null) {
-            String pin = p.channelName2PhysicalPin.get(name);
-            if (pin != null)
-                setPhysicalPin(pin);
-        }
+        String pin = ChannelNaming.INSTANCE.channelName2PhysicalPin.get(name);
+        if (pin != null)
+            setPhysicalPin(pin);
     }
 
     public void setSignalBody(Color signalBody) {

@@ -16,7 +16,6 @@ import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineChartParser;
 import com.rusefi.waves.EngineReport;
-import com.rusefi.waves.RevolutionLog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,8 +69,6 @@ public class EngineSnifferPanel {
     private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel(zoomControl.getZoomProvider());
     private final UpDownImage crank = createImage(Fields.PROTOCOL_CRANK1);
     private final ChartScrollControl scrollControl;
-    // todo: move it some sort of a singleton?
-    public final HashMap<String, String> channelName2PhysicalPin = new HashMap<>();
     private AnyCommand command;
 
     private boolean isPaused;
@@ -193,7 +190,7 @@ public class EngineSnifferPanel {
                 String channel = pinInfo[0];
                 String pin = pinInfo[1];
                 UpDownImage image = images.get(channel);
-                channelName2PhysicalPin.put(channel, pin);
+                ChannelNaming.INSTANCE.channelName2PhysicalPin.put(channel, pin);
                 if (image != null)
                     image.setPhysicalPin(pin);
             }
