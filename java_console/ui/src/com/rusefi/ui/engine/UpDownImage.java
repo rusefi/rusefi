@@ -30,6 +30,7 @@ import java.util.Date;
  * @see EngineReport
  */
 public class UpDownImage extends JPanel {
+    private static final int TIMESCALE_MULT = (int) (100 * EngineReport.ENGINE_SNIFFER_TICKS_PER_MS); // 100ms
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
     private static final int LINE_SIZE = 20;
     public static final Color TIME_SCALE_COLOR = Color.red;
@@ -236,14 +237,14 @@ public class UpDownImage extends JPanel {
             new float[]{21.0f, 7.0f}, 0.0f);
 
     /**
-     * This method draws a vertical line every millisecond
+     * This method draws a vertical line every 100 milliseconds
      */
     private void paintScaleLines(Graphics2D g2, Dimension d) {
-        int fromMs = translator.getMinTime() / EngineReport.mult;
+        int fromMs = translator.getMinTime() / TIMESCALE_MULT;
         g2.setStroke(LONG_STROKE);
         g2.setColor(TIME_SCALE_COLOR);
 
-        int toMs = translator.getMaxTime() / EngineReport.mult;
+        int toMs = translator.getMaxTime() / TIMESCALE_MULT;
 
         if (toMs - fromMs > d.getWidth() / 5) {
             /**
@@ -255,7 +256,7 @@ public class UpDownImage extends JPanel {
         }
 
         for (int ms = fromMs; ms <= toMs; ms++) {
-            int tick = ms * EngineReport.mult;
+            int tick = ms * TIMESCALE_MULT;
             int x = translator.timeToScreen(tick, d.width);
             g2.drawLine(x, 0, x, d.height);
         }
@@ -277,7 +278,7 @@ public class UpDownImage extends JPanel {
 
         if (showMouseOverText) {
             g.setColor(Color.red);
-            String durationString = String.format(" %.2fms", upDown.getDuration() / EngineReport.SYS_TICKS_PER_MS);
+            String durationString = String.format(" %.2fms", upDown.getDuration() / EngineReport.ENGINE_SNIFFER_TICKS_PER_MS);
             g.drawString(durationString, x1, (int) (0.5 * d.height));
 
             double fromAngle = time2rpm.getCrankAngleByTime(upDown.upTime);
