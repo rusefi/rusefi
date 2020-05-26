@@ -282,12 +282,12 @@ public class UpDownImage extends JPanel {
             String fromAngleStr = RevolutionLog.angle2string(fromAngle);
 
             g.setColor(Color.darkGray);
-            if (upDown.upIndex != -1) {
-                g.drawString("" + upDown.upIndex, x1, (int) (0.25 * d.height));
+            if (upDown.upTriggerCycleIndex != -1) {
+                g.drawString("" + upDown.upTriggerCycleIndex, x1, (int) (0.25 * d.height));
 //            System.out.println("digital_event," + upDown.upIndex + "," + fromAngleStr);
             }
-            if (upDown.downIndex != -1) {
-                g.drawString("" + upDown.downIndex, x2, (int) (0.25 * d.height));
+            if (upDown.downTriggerCycleIndex != -1) {
+                g.drawString("" + upDown.downTriggerCycleIndex, x2, (int) (0.25 * d.height));
 //            System.out.println("digital_event," + upDown.downIndex + "," + toAngleStr);
             }
 
