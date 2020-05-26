@@ -17,9 +17,9 @@ public class EngineReportTest {
         EngineReport wr = new EngineReport(report);
         assertEquals(14, wr.getList().size());
 
-        assertEquals(14679, wr.getMinTime());
-        assertEquals(43849, wr.getMaxTime());
+        assertEquals(14679, wr.getTimeAxisTranslator().getMinTime());
+        assertEquals(43849, wr.getTimeAxisTranslator().getMaxTime());
 
-        assertEquals(59, wr.timeToScreen(18134, 500));
+        assertEquals(59, wr.getTimeAxisTranslator().timeToScreen(18134, 500));
     }
 }

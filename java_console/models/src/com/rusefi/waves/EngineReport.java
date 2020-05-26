@@ -19,7 +19,7 @@ import static com.rusefi.config.generated.Fields.PROTOCOL_ES_UP;
  *
  * @see SensorSnifferPane
  */
-public class EngineReport implements TimeAxisTranslator {
+public class EngineReport {
     public static final String ENGINE_CHART = Fields.PROTOCOL_ENGINE_SNIFFER;
     public static final EngineReport MOCK = new EngineReport(Collections.singletonList(new UpDown(0, -1, 1, -1)));
     /**
@@ -68,14 +68,33 @@ public class EngineReport implements TimeAxisTranslator {
         return list;
     }
 
-    @Override
-    public int getMaxTime() {
-        return maxTime;
-    }
 
-    @Override
-    public int getMinTime() {
-        return minTime;
+    private TimeAxisTranslator timeAxisTranslator = new TimeAxisTranslator() {
+        @Override
+        public int getMaxTime() {
+            return maxTime;
+        }
+
+        @Override
+        public int getMinTime() {
+            return minTime;
+        }
+
+        @Override
+        public int timeToScreen(int time, int width) {
+            double translated = (time - minTime) * 1.0 / getDuration();
+            return (int) (width * translated);
+        }
+
+        @Override
+        public double screenToTime(int screenX, int screenWidth) {
+            double time = 1.0 * screenX * getDuration() / screenWidth + minTime;
+            return (int) time;
+        }
+    };
+
+    public TimeAxisTranslator getTimeAxisTranslator() {
+        return timeAxisTranslator;
     }
 
     /**
@@ -119,18 +138,6 @@ public class EngineReport implements TimeAxisTranslator {
             index += 4;
         }
         return times;
-    }
-
-    @Override
-    public int timeToScreen(int time, int width) {
-        double translated = (time - minTime) * 1.0 / getDuration();
-        return (int) (width * translated);
-    }
-
-    @Override
-    public double screenToTime(int screenX, int screenWidth) {
-        double time = 1.0 * screenX * getDuration() / screenWidth + minTime;
-        return (int) time;
     }
 
     /**
