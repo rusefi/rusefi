@@ -32,6 +32,10 @@ typedef struct __attribute__ ((packed)) {
 	bool sync : 1;
 } composite_logger_s;
 
+/**
+ * Engine idles around 20Hz and revs up to 140Hz, at 60/2 and 8 cylinders we have about 20Khz events
+ * If we can read buffer at 50Hz we want buffer to be about 400 elements.
+ */
 static composite_logger_s buffer[COMPOSITE_PACKET_COUNT] CCM_OPTIONAL;
 static size_t NextIdx = 0;
 static volatile bool ToothLoggerEnabled = false;
