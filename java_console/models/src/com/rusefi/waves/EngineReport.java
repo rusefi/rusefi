@@ -159,15 +159,18 @@ public class EngineReport {
     public static class UpDown {
         // times in sys ticks
         public final int upTime;
-        public final int upIndex;
+        /**
+         * Only trigger channels have these
+         */
+        public final int upTriggerCycleIndex;
         public final int downTime;
-        public final int downIndex;
+        public final int downTriggerCycleIndex;
 
         public UpDown(int upTime, int upIndex, int downTime, int downIndex) {
             this.upTime = upTime;
-            this.upIndex = upIndex;
+            this.upTriggerCycleIndex = upIndex;
             this.downTime = downTime;
-            this.downIndex = downIndex;
+            this.downTriggerCycleIndex = downIndex;
         }
 
         public int getDuration() {
