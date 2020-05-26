@@ -24,6 +24,10 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_P
 
 void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 struct ToothLoggerBuffer
 {
 	const uint8_t* const Buffer;

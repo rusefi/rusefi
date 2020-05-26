@@ -41,9 +41,8 @@
 #include "cdm_ion_sense.h"
 #include "engine_controller.h"
 #include "efi_gpio.h"
-#if EFI_PROD_CODE
+#include "tooth_logger.h"
 #include "os_util.h"
-#endif /* EFI_PROD_CODE */
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "engine.h"
@@ -120,6 +119,12 @@ static inline void turnInjectionPinHigh(InjectorOutputPin *output) {
 }
 
 void turnInjectionPinHigh(InjectionEvent *event) {
+	efitick_t nowNt = getTimeNowNt();
+
+#if EFI_TOOTH_LOGGER
+	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
+
 	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
 
@@ -154,6 +159,12 @@ static inline void turnInjectionPinLow(InjectorOutputPin *output) {
 }
 
 void turnInjectionPinLow(InjectionEvent *event) {
+	efitick_t nowNt = getTimeNowNt();
+
+#if EFI_TOOTH_LOGGER
+	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
+
 	event->isScheduled = false;
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
