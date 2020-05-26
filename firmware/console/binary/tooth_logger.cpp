@@ -30,6 +30,8 @@ typedef struct __attribute__ ((packed)) {
 	bool secLevel : 1;
 	bool trigger : 1;
 	bool sync : 1;
+	bool coil : 1;
+	bool injector : 1;
 } composite_logger_s;
 
 /**
@@ -44,6 +46,10 @@ static uint32_t lastEdgeTimestamp = 0;
 
 static bool trigger1 = false;
 static bool trigger2 = false;
+// any coil, all coils thrown together
+static bool coil = false;
+// same about injectors
+static bool injector = false;
 
 static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigger2,
 		bool isTDC DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -54,6 +60,8 @@ static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigg
 	buffer[NextIdx].secLevel = trigger2;
 	buffer[NextIdx].trigger = isTDC;
 	buffer[NextIdx].sync = engine->triggerCentral.triggerState.shaft_is_synchronized;
+	buffer[NextIdx].coil = coil;
+	buffer[NextIdx].injector = injector;
 
 	NextIdx++;
 
@@ -113,6 +121,22 @@ void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX
 		return;
 	}
 	SetNextCompositeEntry(timestamp, trigger1, trigger2, true PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!ToothLoggerEnabled) {
+		return;
+	}
+	coil = state;
+	SetNextCompositeEntry(timestamp, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!ToothLoggerEnabled) {
+		return;
+	}
+	injector = state;
+	SetNextCompositeEntry(timestamp, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EnableToothLogger() {

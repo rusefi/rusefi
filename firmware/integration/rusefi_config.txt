@@ -1578,6 +1578,7 @@ end_struct
 #define TS_EXECUTE 'E'
 // 0x39
 #define TS_GET_STRUCT '9'
+#define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 
 
 
