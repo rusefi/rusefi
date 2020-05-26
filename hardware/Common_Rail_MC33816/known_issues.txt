@@ -11,5 +11,5 @@
 11)                  J5&J6 why do we need as jumpers? Shall we connect those permanently since looks like those shall be connected?
 12)                  move more small stuff to same (back) side
 13)                  Fix courtyard warnings on back side, move components slightly. 
-14)
+14)                  The current board layout is very hard to work with - can we please have all components on top? PCB space cost nothing comparing with the stress of flipping and poking
 15)
