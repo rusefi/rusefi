@@ -26,8 +26,10 @@
             <src path="logging/src"/>
 		<!-- not really used at the moment but let's compile for the sake of Eclipse users -->
             <src path="tools/src"/>
+<!-- uncomment if you want to compile under java 11
             <compilerarg line="--add-exports java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED"/>
             <compilerarg line="--add-exports java.xml/com.sun.org.apache.xml.internal.serialize=ALL-UNNAMED"/>
+            -->
         </javac>
 
         <junit fork="no"
