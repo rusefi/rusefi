@@ -63,7 +63,7 @@ public class RevolutionLog {
             double diff = time - entry.getKey();
 
             Integer rpm = entry.getValue();
-            double timeForRevolution = 60000 * EngineReport.SYS_TICKS_PER_MS / rpm;
+            double timeForRevolution = 60000 * EngineReport.ENGINE_SNIFFER_TICKS_PER_MS / rpm;
 
             return 360.0 * diff / timeForRevolution;
         }

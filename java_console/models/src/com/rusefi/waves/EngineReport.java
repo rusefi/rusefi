@@ -23,16 +23,15 @@ public class EngineReport implements TimeAxisTranslator {
     public static final String ENGINE_CHART = Fields.PROTOCOL_ENGINE_SNIFFER;
     public static final EngineReport MOCK = new EngineReport(Collections.singletonList(new UpDown(0, -1, 1, -1)));
     /**
-     * number of ChibiOS systicks per ms
+     * number of Engine Sniffer ticks per ms
      */
-    public static final double SYS_TICKS_PER_MS = 1000 / Fields.ENGINE_SNIFFER_UNIT_US;
+    public static final double ENGINE_SNIFFER_TICKS_PER_MS = 1000 / Fields.ENGINE_SNIFFER_UNIT_US;
     public static final double RATIO = 0.05;
-    public static final int mult = (int) (100 * SYS_TICKS_PER_MS); // 100ms
 
     private final List<UpDown> list;
     private int maxTime;
     /**
-     * min timestamp on this chart, in systicks
+     * min timestamp on this chart, in Engine Sniffer ticks
      */
     private int minTime;
 
@@ -130,15 +129,12 @@ public class EngineReport implements TimeAxisTranslator {
 
     @Override
     public double screenToTime(int screenX, int screenWidth) {
-        //  / SYS_TICKS_PER_MS / 1000
         double time = 1.0 * screenX * getDuration() / screenWidth + minTime;
-//        int x2 = timeToScreen((int) time, screenWidth, zoomProvider);
-//        FileLog.rlog("screenToTime " + (screen - x2));
         return (int) time;
     }
 
     /**
-     * @return Length of this chart in systicks
+     * @return Length of this chart in Engine Sniffer ticks
      */
     public int getDuration() {
         return maxTime - minTime;
