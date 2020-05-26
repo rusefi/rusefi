@@ -9,7 +9,6 @@ import com.rusefi.ui.util.UiUtils;
 import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.TimeAxisTranslator;
-import com.rusefi.waves.ZoomProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,9 +85,6 @@ public class UpDownImage extends JPanel {
         // no physical pin information in simulator
         String secondLine = LinkManager.isSimulationMode ? "" : "Physical pin: " + pin;
         UiUtils.setToolTip(this, "Channel " + NameUtil.getUiName(name), secondLine);
-    }
-
-    public void setZoomProvider(ZoomProvider zoomProvider) {
     }
 
     public UpDownImage(EngineReport wr, String name) {
@@ -181,7 +177,6 @@ public class UpDownImage extends JPanel {
         if (showMouseOverText)
             paintScaleLines(g2, d);
 
-        int duration = engineReport.getDuration();
         g2.setColor(Color.black);
 
         int line = 0;

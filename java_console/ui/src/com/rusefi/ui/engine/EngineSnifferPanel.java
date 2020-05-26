@@ -161,7 +161,6 @@ public class EngineSnifferPanel {
             }
         };
 
-        crank.setZoomProvider(zoomControl.getZoomProvider());
         resetImagePanel();
 
         LinkManager.engineState.registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
@@ -256,7 +255,6 @@ public class EngineSnifferPanel {
         UpDownImage image = createImage(name);
         images.put(name, image);
         image.setTranslator(crank.createTranslator());
-        image.setZoomProvider(zoomControl.getZoomProvider());
         imagePanel.add(image, index);
         imagePanel.setLayout(new GridLayout(images.size(), 1));
     }
