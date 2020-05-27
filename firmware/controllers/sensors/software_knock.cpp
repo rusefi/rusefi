@@ -90,8 +90,12 @@ struct biquad {
 };
 
 
-biquad firstStage {0.01448672709139305, 0.0289734541827861, 0.01448672709139305, 1.7842324802680964, -0.9036658556014872};
+//biquad firstStage {0.01448672709139305, 0.0289734541827861, 0.01448672709139305, 1.7842324802680964, -0.9036658556014872};
+//biquad secondStage {0.25, -0.5, 0.25, 1.858554646427233, -0.926428331962136};
+
+biquad firstStage {0.0255, 0.0511, 0.0255, -1.607, 0.709};
 biquad secondStage {0.25, -0.5, 0.25, 1.858554646427233, -0.926428331962136};
+
 
 void processLastKnockEvent() {
 	if (!knockNeedsProcess) {
@@ -112,20 +116,21 @@ void processLastKnockEvent() {
 		float volts = ratio * sampleBuffer[i];
 
 		float inter = firstStage.filter(volts);
-		float filtered = secondStage.filter(inter);
+		float filtered = inter;
+		//float filtered = secondStage.filter(inter);
 
-		//sum += filtered;
+		sum += filtered;
 		sumSq += filtered * filtered;
 	}
 
-	//float dcVoltage = sum / sampleCount;
-	//float squareDcVoltage = dcVoltage * dcVoltage;
+	float dcVoltage = sum / sampleCount;
+	float squareDcVoltage = dcVoltage * dcVoltage;
 
 	// mean of squares (not yet root)
 	float avgSquaresWithDc = sumSq / sampleCount;
 
 	// Compute RMS of just the AC component
-	tsOutputChannels.knockLevel /*db*/ = 10 * log10(avgSquaresWithDc/* - squareDcVoltage*/);
+	tsOutputChannels.knockLevel /*db*/ = 10 * log10(avgSquaresWithDc - squareDcVoltage);
 
 	knockNeedsProcess = false;
 }
