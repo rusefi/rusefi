@@ -12,11 +12,12 @@
 #include "utlist.h"
 #include "event_queue.h"
 #include "perf_trace.h"
+#include "tooth_logger.h"
 
 #if EFI_ENGINE_CONTROL
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #endif /* EFI_TUNER_STUDIO */
 
 EXTERN_ENGINE;
@@ -124,6 +125,12 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 }
 
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
+	efitick_t nowNt = getTimeNowNt();
+
+#if EFI_TOOTH_LOGGER
+	LogTriggerCoilState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
+
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 
@@ -235,6 +242,13 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 
 void turnSparkPinHigh(IgnitionEvent *event) {
 	event->actualStartOfDwellNt = getTimeNowLowerNt();
+
+	efitick_t nowNt = getTimeNowNt();
+
+#if EFI_TOOTH_LOGGER
+	LogTriggerCoilState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
+
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 		if (output != NULL) {

@@ -28,7 +28,7 @@
 #include "gppwm.h"
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #endif /* EFI_TUNER_STUDIO */
 
 #if EFI_PROD_CODE

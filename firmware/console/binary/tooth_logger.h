@@ -13,6 +13,10 @@
 #include "rusefi_enums.h"
 #include "engine.h"
 
+int getCompositeRecordCount();
+
+void EnableToothLoggerIfNotEnabled();
+
 // Enable the tooth logger - this clears the buffer starts logging
 void EnableToothLogger();
 
@@ -23,6 +27,10 @@ void DisableToothLogger();
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 struct ToothLoggerBuffer
 {

@@ -41,7 +41,7 @@ public class IoUtil {
     /**
      * blocking method which would for confirmation from rusEfi
      */
-    static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {
+    static void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
         FileLog.MAIN.logLine("Sending command [" + command + "]");
@@ -53,15 +53,15 @@ public class IoUtil {
                 FileLog.MAIN.logLine("Got confirmation in " + (System.currentTimeMillis() - begin) + "ms");
             }
         });
-        wait(responseLatch, totalTimeoutSeconds);
+        wait(responseLatch, timeoutMs);
         if (responseLatch.getCount() > 0)
             FileLog.MAIN.logLine("No confirmation in " + retryTimeoutMs);
         FileLog.MAIN.logLine("Command [" + command + "] executed in " + (System.currentTimeMillis() - time));
     }
 
-    static void wait(CountDownLatch responseLatch, int seconds) {
+    static void wait(CountDownLatch responseLatch, int milliseconds) {
         try {
-            responseLatch.await(seconds, TimeUnit.SECONDS);
+            responseLatch.await(milliseconds, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }

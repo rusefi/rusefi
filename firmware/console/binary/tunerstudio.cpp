@@ -69,7 +69,7 @@
 #include "flash_main.h"
 
 #include "tunerstudio_io.h"
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #include "malfunction_central.h"
 #include "console_io.h"
 #include "crc.h"
@@ -476,8 +476,8 @@ static bool isKnownCommand(char command) {
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_STRUCT
 			|| command == TS_GET_FILE_RANGE
-			|| command == TS_SET_LOGGER_MODE
-			|| command == TS_GET_LOGGER_BUFFER
+			|| command == TS_SET_LOGGER_SWITCH
+			|| command == TS_GET_LOGGER_GET_BUFFER
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
@@ -749,6 +749,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	}
 }
 
+static int transmitted = 0;
+
 
 int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
@@ -826,7 +828,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 		break;
 #if EFI_TOOTH_LOGGER
-	case TS_SET_LOGGER_MODE:
+	case TS_SET_LOGGER_SWITCH:
 		switch(data[0]) {
 		case 0x01:
 			EnableToothLogger();
@@ -842,7 +844,27 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		sendOkResponse(tsChannel, TS_CRC);
 
 		break;
-	case TS_GET_LOGGER_BUFFER:
+		case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
+		{
+			const uint8_t* const buffer = GetToothLoggerBuffer().Buffer;
+
+			const uint8_t* const start = buffer + COMPOSITE_PACKET_SIZE * transmitted;
+
+			int currentEnd = getCompositeRecordCount();
+
+			if (currentEnd > transmitted) {
+				// more normal case - tail after head
+				sr5SendResponse(tsChannel, TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted));
+				transmitted = currentEnd;
+			} else {
+				// we are here if tail of buffer has reached the end of buffer and re-started from the start of buffer
+				// sending end of the buffer, next transmission would take care of the rest
+				sr5SendResponse(tsChannel, TS_CRC, start, COMPOSITE_PACKET_SIZE * (COMPOSITE_PACKET_COUNT - transmitted));
+				transmitted = 0;
+			}
+		}
+		break;
+	case TS_GET_LOGGER_GET_BUFFER:
 		{
 			auto toothBuffer = GetToothLoggerBuffer();
 			sr5SendResponse(tsChannel, TS_CRC, toothBuffer.Buffer, toothBuffer.Length);

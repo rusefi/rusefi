@@ -16,7 +16,7 @@ EXTERN_ENGINE;
 #include <cstddef>
 #include "efitime.h"
 #include "efilib.h"
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 
 typedef struct __attribute__ ((packed)) {
     uint16_t timestamp;
@@ -30,8 +30,14 @@ typedef struct __attribute__ ((packed)) {
 	bool secLevel : 1;
 	bool trigger : 1;
 	bool sync : 1;
+	bool coil : 1;
+	bool injector : 1;
 } composite_logger_s;
 
+/**
+ * Engine idles around 20Hz and revs up to 140Hz, at 60/2 and 8 cylinders we have about 20Khz events
+ * If we can read buffer at 50Hz we want buffer to be about 400 elements.
+ */
 static composite_logger_s buffer[COMPOSITE_PACKET_COUNT] CCM_OPTIONAL;
 static size_t NextIdx = 0;
 static volatile bool ToothLoggerEnabled = false;
@@ -40,15 +46,14 @@ static uint32_t lastEdgeTimestamp = 0;
 
 static bool trigger1 = false;
 static bool trigger2 = false;
+// any coil, all coils thrown together
+static bool coil = false;
+// same about injectors
+static bool injector = false;
 
-//char (*__kaboom)[sizeof( composite_logger_s )] = 1;
-//char (*__kaboom)[sizeof( buffer )] = 1;
-
-//void SetNextToothEntry(uint16_t entry) {
-	// TS uses big endian, grumble
-//	buffer[NextIdx] = SWAP_UINT16(entry);
-	//NextIdx++;
-
+int getCompositeRecordCount() {
+	return NextIdx;
+}
 
 static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigger2,
 		bool isTDC DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -59,9 +64,8 @@ static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigg
 	buffer[NextIdx].secLevel = trigger2;
 	buffer[NextIdx].trigger = isTDC;
 	buffer[NextIdx].sync = engine->triggerCentral.triggerState.shaft_is_synchronized;
-	// todo:
-	//buffer[NextIdx].sync = isSynced;
-	//buffer[NextIdx].trigger = wtfIsTriggerIdk;
+	buffer[NextIdx].coil = coil;
+	buffer[NextIdx].injector = injector;
 
 	NextIdx++;
 
@@ -123,6 +127,22 @@ void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX
 	SetNextCompositeEntry(timestamp, trigger1, trigger2, true PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
+void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!ToothLoggerEnabled) {
+		return;
+	}
+	coil = state;
+	SetNextCompositeEntry(timestamp, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!ToothLoggerEnabled) {
+		return;
+	}
+	injector = state;
+	SetNextCompositeEntry(timestamp, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
 void EnableToothLogger() {
 	// Clear the buffer
 	memset(buffer, 0, sizeof(buffer));
@@ -141,6 +161,12 @@ void EnableToothLogger() {
 	// yet.  However, we can let it continuously read out the buffer
 	// as we update it, which looks pretty nice.
 	tsOutputChannels.toothLogReady = true;
+}
+
+void EnableToothLoggerIfNotEnabled() {
+	if (!ToothLoggerEnabled) {
+		EnableToothLogger();
+	}
 }
 
 void DisableToothLogger() {

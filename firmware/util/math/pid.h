@@ -11,7 +11,7 @@
 #include "pid_state_generated.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #endif
 
 // See PidCic below

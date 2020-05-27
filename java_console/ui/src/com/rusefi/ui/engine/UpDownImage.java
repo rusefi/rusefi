@@ -1,6 +1,5 @@
 package com.rusefi.ui.engine;
 
-import com.rusefi.Launcher;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -9,7 +8,6 @@ import com.rusefi.ui.util.UiUtils;
 import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.TimeAxisTranslator;
-import com.rusefi.waves.ZoomProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +29,7 @@ import java.util.Date;
  * @see EngineReport
  */
 public class UpDownImage extends JPanel {
+    private static final int TIMESCALE_MULT = (int) (100 * EngineReport.ENGINE_SNIFFER_TICKS_PER_MS); // 100ms
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
     private static final int LINE_SIZE = 20;
     public static final Color TIME_SCALE_COLOR = Color.red;
@@ -65,13 +64,9 @@ public class UpDownImage extends JPanel {
     public UpDownImage(final String name) {
         this(EngineReport.MOCK, name);
         setToolTip();
-        // this code is horrible, I am in a rush :(
-        EngineSnifferPanel p = Launcher.engineSnifferPanel;
-        if (p != null) {
-            String pin = p.channelName2PhysicalPin.get(name);
-            if (pin != null)
-                setPhysicalPin(pin);
-        }
+        String pin = ChannelNaming.INSTANCE.channelName2PhysicalPin.get(name);
+        if (pin != null)
+            setPhysicalPin(pin);
     }
 
     public void setSignalBody(Color signalBody) {
@@ -86,9 +81,6 @@ public class UpDownImage extends JPanel {
         // no physical pin information in simulator
         String secondLine = LinkManager.isSimulationMode ? "" : "Physical pin: " + pin;
         UiUtils.setToolTip(this, "Channel " + NameUtil.getUiName(name), secondLine);
-    }
-
-    public void setZoomProvider(ZoomProvider zoomProvider) {
     }
 
     public UpDownImage(EngineReport wr, String name) {
@@ -122,22 +114,22 @@ public class UpDownImage extends JPanel {
         return new TimeAxisTranslator() {
             @Override
             public int timeToScreen(int time, int width) {
-                return UpDownImage.this.engineReport.timeToScreen(time, width);
+                return UpDownImage.this.engineReport.getTimeAxisTranslator().timeToScreen(time, width);
             }
 
             @Override
             public double screenToTime(int screen, int width) {
-                return UpDownImage.this.engineReport.screenToTime(screen, width);
+                return UpDownImage.this.engineReport.getTimeAxisTranslator().screenToTime(screen, width);
             }
 
             @Override
             public int getMaxTime() {
-                return UpDownImage.this.engineReport.getMaxTime();
+                return UpDownImage.this.engineReport.getTimeAxisTranslator().getMaxTime();
             }
 
             @Override
             public int getMinTime() {
-                return UpDownImage.this.engineReport.getMinTime();
+                return UpDownImage.this.engineReport.getTimeAxisTranslator().getMinTime();
             }
 
             @Override
@@ -181,7 +173,6 @@ public class UpDownImage extends JPanel {
         if (showMouseOverText)
             paintScaleLines(g2, d);
 
-        int duration = engineReport.getDuration();
         g2.setColor(Color.black);
 
         int line = 0;
@@ -241,14 +232,14 @@ public class UpDownImage extends JPanel {
             new float[]{21.0f, 7.0f}, 0.0f);
 
     /**
-     * This method draws a vertical line every millisecond
+     * This method draws a vertical line every 100 milliseconds
      */
     private void paintScaleLines(Graphics2D g2, Dimension d) {
-        int fromMs = translator.getMinTime() / EngineReport.mult;
+        int fromMs = translator.getMinTime() / TIMESCALE_MULT;
         g2.setStroke(LONG_STROKE);
         g2.setColor(TIME_SCALE_COLOR);
 
-        int toMs = translator.getMaxTime() / EngineReport.mult;
+        int toMs = translator.getMaxTime() / TIMESCALE_MULT;
 
         if (toMs - fromMs > d.getWidth() / 5) {
             /**
@@ -260,7 +251,7 @@ public class UpDownImage extends JPanel {
         }
 
         for (int ms = fromMs; ms <= toMs; ms++) {
-            int tick = ms * EngineReport.mult;
+            int tick = ms * TIMESCALE_MULT;
             int x = translator.timeToScreen(tick, d.width);
             g2.drawLine(x, 0, x, d.height);
         }
@@ -280,24 +271,23 @@ public class UpDownImage extends JPanel {
         g.drawLine(x1, y, x1, d.height);
         g.drawLine(x2, y, x2, d.height);
 
-        g.setColor(Color.red);
-        String durationString = String.format(" %.2fms", upDown.getDuration() / EngineReport.SYS_TICKS_PER_MS);
-
         if (showMouseOverText) {
+            g.setColor(Color.red);
+            String durationString = String.format(" %.2fms", upDown.getDuration() / EngineReport.ENGINE_SNIFFER_TICKS_PER_MS);
             g.drawString(durationString, x1, (int) (0.5 * d.height));
 
-            double fromAngle = time2rpm.getCrankAngleByTime((double) upDown.upTime);
-            double toAngle = time2rpm.getCrankAngleByTime((double) upDown.downTime);
+            double fromAngle = time2rpm.getCrankAngleByTime(upDown.upTime);
+            double toAngle = time2rpm.getCrankAngleByTime(upDown.downTime);
 
             String fromAngleStr = RevolutionLog.angle2string(fromAngle);
 
             g.setColor(Color.darkGray);
-            if (upDown.upIndex != -1) {
-                g.drawString("" + upDown.upIndex, x1, (int) (0.25 * d.height));
+            if (upDown.upTriggerCycleIndex != -1) {
+                g.drawString("" + upDown.upTriggerCycleIndex, x1, (int) (0.25 * d.height));
 //            System.out.println("digital_event," + upDown.upIndex + "," + fromAngleStr);
             }
-            if (upDown.downIndex != -1) {
-                g.drawString("" + upDown.downIndex, x2, (int) (0.25 * d.height));
+            if (upDown.downTriggerCycleIndex != -1) {
+                g.drawString("" + upDown.downTriggerCycleIndex, x2, (int) (0.25 * d.height));
 //            System.out.println("digital_event," + upDown.downIndex + "," + toAngleStr);
             }
 
