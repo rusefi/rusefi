@@ -13,6 +13,10 @@
 #include "rusefi_enums.h"
 #include "engine.h"
 
+int getCompositeRecordCount();
+
+void EnableToothLoggerIfNotEnabled();
+
 // Enable the tooth logger - this clears the buffer starts logging
 void EnableToothLogger();
 

@@ -51,6 +51,10 @@ static bool coil = false;
 // same about injectors
 static bool injector = false;
 
+int getCompositeRecordCount() {
+	return NextIdx;
+}
+
 static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigger2,
 		bool isTDC DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	uint32_t nowUs = NT2US(timestamp);
@@ -157,6 +161,12 @@ void EnableToothLogger() {
 	// yet.  However, we can let it continuously read out the buffer
 	// as we update it, which looks pretty nice.
 	tsOutputChannels.toothLogReady = true;
+}
+
+void EnableToothLoggerIfNotEnabled() {
+	if (!ToothLoggerEnabled) {
+		EnableToothLogger();
+	}
 }
 
 void DisableToothLogger() {

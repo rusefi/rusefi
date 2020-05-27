@@ -749,6 +749,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	}
 }
 
+static int transmitted = 0;
+
 
 int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
@@ -841,6 +843,26 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 		sendOkResponse(tsChannel, TS_CRC);
 
+		break;
+		case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
+		{
+			const uint8_t* const buffer = GetToothLoggerBuffer().Buffer;
+
+			const uint8_t* const start = buffer + COMPOSITE_PACKET_SIZE * transmitted;
+
+			int currentEnd = getCompositeRecordCount();
+
+			if (currentEnd > transmitted) {
+				// more normal case - tail after head
+				sr5SendResponse(tsChannel, TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted));
+				transmitted = currentEnd;
+			} else {
+				// we are here if tail of buffer has reached the end of buffer and re-started from the start of buffer
+				// sending end of the buffer, next transmission would take care of the rest
+				sr5SendResponse(tsChannel, TS_CRC, start, COMPOSITE_PACKET_SIZE * (COMPOSITE_PACKET_COUNT - transmitted));
+				transmitted = 0;
+			}
+		}
 		break;
 	case TS_GET_LOGGER_GET_BUFFER:
 		{
