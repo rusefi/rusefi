@@ -1,5 +1,9 @@
+rem for example 'protesus'
 set COMPILE_FOLDER=%1
+
+rem for example 'mre-f4'
 set bundle_name=%2
+
 set ini_file_override=%3
 set rusefi_console_settings=%4
 

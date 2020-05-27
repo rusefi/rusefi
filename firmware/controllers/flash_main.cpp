@@ -135,6 +135,7 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 	}
 
 	if (result == CRC_FAILED) {
+	    // we are here on first boot on brand new chip
 		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
 		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
 	} else if (result == INCOMPATIBLE_VERSION) {

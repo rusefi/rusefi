@@ -7,7 +7,6 @@ import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.EngineChartParser;
-import sun.misc.IOUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -154,13 +153,13 @@ public class TestingUtils {
                 result.set(value);
             }
         });
-        int timeout = 60;
+        int timeoutMs = 60 * Timeouts.SECOND;
         long waitStartTime = System.currentTimeMillis();
-        IoUtil.wait(engineChartLatch, timeout);
+        IoUtil.wait(engineChartLatch, timeoutMs);
         FileLog.MAIN.logLine("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + AutoTest.currentEngineType);
         LinkManager.engineState.replaceStringValueAction(EngineReport.ENGINE_CHART, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         if (result.get() == null)
-            throw new IllegalStateException("Chart timeout: " + timeout);
+            throw new IllegalStateException("Chart timeout: " + timeoutMs);
         return result.get();
     }
 }

@@ -312,7 +312,7 @@ struct gppwm_channel
 	gppwm_table_t table;
 end_struct
 
-custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:7]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "type11", "type12", "type13"
+custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:7]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "type12", "type13"
 !
 ! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
 ! 
@@ -1096,7 +1096,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	uint32_t auxSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
 
-	uint32_t[8] unused_former_warmup_target_afr;
+	float throttlePedalSecondaryUpVoltage;;"voltage",      1,     0,    -6,   6,      2
+	float throttlePedalSecondaryWOTVoltage;+Pedal in the floor;"voltage",      1,     0,    -6,   6,      2
+
+	uint32_t[6] unused_former_warmup_target_afr;
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
@@ -1558,9 +1561,37 @@ end_struct
 #define PROTOCOL_WA_CHANNEL_4 "input4"
 
 
+// These commands are used by TunerStudio and the rusEfi console
+// 0x4F ochGetCommand
+#define TS_OUTPUT_COMMAND 'O'
+// 0x53 queryCommand
+#define TS_HELLO_COMMAND 'S'
+// 0x6B
+#define TS_CRC_CHECK_COMMAND 'k'
+// 0x52
+#define TS_READ_COMMAND 'R'
+// 0x47
+#define TS_GET_TEXT 'G'
+// 0x45
+#define TS_EXECUTE 'E'
+// 0x39
+#define TS_GET_STRUCT '9'
+#define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
+
+// Engine Sniffer time stamp unit, in microseconds
+#define ENGINE_SNIFFER_UNIT_US 10
+
+// High speed logger commands
+#define TS_SET_LOGGER_SWITCH   'l'
+#define TS_GET_LOGGER_GET_BUFFER 'L'
 
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
+
+#define ET_MRE_MIATA_NA6 12
+#define ET_MRE_MIATA_NB2_MAF 15
+#define ET_BMW_M73_PROTEUS 63
+#define ET_CITROEN_TU3JP 65
 
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 
@@ -1585,3 +1616,9 @@ end_struct
 #define ts_show_tunerstudio_port true
 #define ts_show_trigger_comparator false
 #define ts_show_auxserial_pins true
+
+#define show_test_presets true
+#define show_Frankenso_presets true
+#define show_microRusEFI_presets true
+#define show_Proteus_presets true
+

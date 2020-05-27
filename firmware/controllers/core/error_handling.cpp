@@ -253,6 +253,13 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 		// todo: reuse warning buffer helper method
 		errorState.firmwareErrorMessageStream.buffer[errorState.firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
 	}
+	int size = strlen((char*)criticalErrorMessageBuffer);
+	static char versionBuffer[32];
+	chsnprintf(versionBuffer, sizeof(versionBuffer), " %d@%s", getRusEfiVersion(), FIRMWARE_ID);
+
+	if (size + strlen(versionBuffer) < sizeof(criticalErrorMessageBuffer)) {
+		strcpy((char*)(criticalErrorMessageBuffer) + size, versionBuffer);
+	}
 
 #else
 	printf("firmwareError [%s]\r\n", fmt);
@@ -264,7 +271,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	printf("\r\n");
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
-	exit(-1);
+	throw "fatal error";
 #endif /* EFI_SIMULATOR */
 #endif
 }

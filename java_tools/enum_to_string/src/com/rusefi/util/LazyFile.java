@@ -40,7 +40,7 @@ public class LazyFile implements Output {
     @Override
     public void close() throws IOException {
         String fileContent = unifySpaces(readCurrentContent(filename));
-        String newContent = unifySpaces(contentWithoutTag.toString().trim());
+        String newContent = unifySpaces(contentWithoutTag.toString());
         if (fileContent.equals(newContent)) {
             SystemOut.println(getClass().getSimpleName() + ": Not updating " + filename + " since looks to be the same content, new content size=" + contentWithoutTag.length());
             return;
@@ -60,9 +60,9 @@ public class LazyFile implements Output {
         fw.close();
     }
 
-    private static String unifySpaces(String line) {
+    public static String unifySpaces(String line) {
         line = line.replace("\r", "");
-        return line.replaceAll("\n[\n]*", "\n").trim();
+        return line.replaceAll("\n[\n]*", "");
     }
 
     private String readCurrentContent(String filename) throws IOException {

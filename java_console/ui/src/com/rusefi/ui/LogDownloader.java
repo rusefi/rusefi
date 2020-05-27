@@ -126,7 +126,9 @@ public class LogDownloader {
     }
 
     private void listDirectory() {
+/*
         CommandQueue.getInstance().write("ls /", CommandQueue.DEFAULT_TIMEOUT, InvocationConfirmationListener.VOID,
                 false);
+ */
     }
 }

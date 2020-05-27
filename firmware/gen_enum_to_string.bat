@@ -9,3 +9,6 @@ java -DSystemOut.name=gen_enum_to_string ^
  -enumInputFile controllers/algo/rusefi_enums.h ^
  -enumInputFile controllers/algo/rusefi_hw_enums.h ^
 
+pwd
+cd config/boards/kinetis/config
+call "!gen_enum_to_string.bat"

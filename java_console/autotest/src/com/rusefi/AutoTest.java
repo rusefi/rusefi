@@ -18,6 +18,7 @@ import java.util.function.Function;
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.*;
+import static com.rusefi.config.generated.Fields.ET_CITROEN_TU3JP;
 import static com.rusefi.config.generated.Fields.MOCK_MAF_COMMAND;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
@@ -179,7 +180,7 @@ this is just too unreliable at this point :(
     }
 
     private static void testCitroenBerlingo() {
-        setEngineType(15);
+        setEngineType(ET_CITROEN_TU3JP);
         String msg = "Citroen";
         IoUtil.changeRpm(1200);
         // todo: add more content
@@ -189,7 +190,7 @@ this is just too unreliable at this point :(
         FileLog.MAIN.logLine("AUTOTEST setEngineType " + type);
 //        sendCommand(CMD_PINS);
         currentEngineType = type;
-        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, 30);
+        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
         // TODO: document the reason for this sleep?!
         sleep(1);
         sendCommand(getEnableCommand("self_stimulation"));
@@ -494,9 +495,9 @@ this is just too unreliable at this point :(
         sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
     }
 
-    private static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {
+    private static void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
         assertNull("Fatal not expected", criticalError);
-        IoUtil.sendCommand(command, retryTimeoutMs, totalTimeoutSeconds);
+        IoUtil.sendCommand(command, retryTimeoutMs, timeoutMs);
     }
 
     private static void assertEquals(double expected, double actual) {

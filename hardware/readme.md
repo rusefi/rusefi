@@ -22,7 +22,7 @@ todo: move Connectors wiki page content into git
 * [64 pin](176122-6-connector) Mazda Miata NA NB1, Honda Civic
 * [68 pin](966595-1_and_963356-1-connector) Volkswagen Audi VAG
 * [72 pin](1123038-2-connector) Mazda Miata NB2
-* [88 pin](Bosch_88pin_Breakout) Volkswagen Audi VAG
+* [88 pin](Breakout_88pin_VAG) Volkswagen Audi VAG
 * [121 pin](368255-2-connector) Volkswagen Audi VAG
 * [134 pin](Breakout_134pin_7-967288-1) BWM
 * [154 pin](284617-1-connector) Volkswagen Audi VAG

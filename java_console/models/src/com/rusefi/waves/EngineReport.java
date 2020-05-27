@@ -19,20 +19,19 @@ import static com.rusefi.config.generated.Fields.PROTOCOL_ES_UP;
  *
  * @see SensorSnifferPane
  */
-public class EngineReport implements TimeAxisTranslator {
+public class EngineReport {
     public static final String ENGINE_CHART = Fields.PROTOCOL_ENGINE_SNIFFER;
     public static final EngineReport MOCK = new EngineReport(Collections.singletonList(new UpDown(0, -1, 1, -1)));
     /**
-     * number of ChibiOS systicks per ms
+     * number of Engine Sniffer ticks per ms
      */
-    public static final double SYS_TICKS_PER_MS = 100;
+    public static final double ENGINE_SNIFFER_TICKS_PER_MS = 1000 / Fields.ENGINE_SNIFFER_UNIT_US;
     public static final double RATIO = 0.05;
-    public static final int mult = (int) (100 * SYS_TICKS_PER_MS); // 100ms
 
     private final List<UpDown> list;
     private int maxTime;
     /**
-     * min timestamp on this chart, in systicks
+     * min timestamp on this chart, in Engine Sniffer ticks
      */
     private int minTime;
 
@@ -69,14 +68,33 @@ public class EngineReport implements TimeAxisTranslator {
         return list;
     }
 
-    @Override
-    public int getMaxTime() {
-        return maxTime;
-    }
 
-    @Override
-    public int getMinTime() {
-        return minTime;
+    private TimeAxisTranslator timeAxisTranslator = new TimeAxisTranslator() {
+        @Override
+        public int getMaxTime() {
+            return maxTime;
+        }
+
+        @Override
+        public int getMinTime() {
+            return minTime;
+        }
+
+        @Override
+        public int timeToScreen(int time, int width) {
+            double translated = (time - minTime) * 1.0 / getDuration();
+            return (int) (width * translated);
+        }
+
+        @Override
+        public double screenToTime(int screenX, int screenWidth) {
+            double time = 1.0 * screenX * getDuration() / screenWidth + minTime;
+            return (int) time;
+        }
+    };
+
+    public TimeAxisTranslator getTimeAxisTranslator() {
+        return timeAxisTranslator;
     }
 
     /**
@@ -122,23 +140,8 @@ public class EngineReport implements TimeAxisTranslator {
         return times;
     }
 
-    @Override
-    public int timeToScreen(int time, int width) {
-        double translated = (time - minTime) * 1.0 / getDuration();
-        return (int) (width * translated);
-    }
-
-    @Override
-    public double screenToTime(int screenX, int screenWidth) {
-        //  / SYS_TICKS_PER_MS / 1000
-        double time = 1.0 * screenX * getDuration() / screenWidth + minTime;
-//        int x2 = timeToScreen((int) time, screenWidth, zoomProvider);
-//        FileLog.rlog("screenToTime " + (screen - x2));
-        return (int) time;
-    }
-
     /**
-     * @return Length of this chart in systicks
+     * @return Length of this chart in Engine Sniffer ticks
      */
     public int getDuration() {
         return maxTime - minTime;
@@ -156,15 +159,18 @@ public class EngineReport implements TimeAxisTranslator {
     public static class UpDown {
         // times in sys ticks
         public final int upTime;
-        public final int upIndex;
+        /**
+         * Only trigger channels have these
+         */
+        public final int upTriggerCycleIndex;
         public final int downTime;
-        public final int downIndex;
+        public final int downTriggerCycleIndex;
 
         public UpDown(int upTime, int upIndex, int downTime, int downIndex) {
             this.upTime = upTime;
-            this.upIndex = upIndex;
+            this.upTriggerCycleIndex = upIndex;
             this.downTime = downTime;
-            this.downIndex = downIndex;
+            this.downTriggerCycleIndex = downIndex;
         }
 
         public int getDuration() {

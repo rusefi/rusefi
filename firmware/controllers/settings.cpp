@@ -154,10 +154,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Gy6139";
 	case MAZDA_MIATA_NB1:
 		return "MiataNB1";
-	case MRE_MIATA_NA6:
-		return "MRE Miata 1.6";
-	case MRE_MIATA_NB2:
-		return "MRE_MIATA_NB2";
 	case FORD_ESCORT_GT:
 		return "EscrtGT";
 	case CITROEN_TU3JP:
@@ -188,8 +184,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "CAMARO_4";
 	case CHEVY_C20_1973:
 		return "CHEVY C20";
-	case MRE_BOARD_TEST:
-	  return "MRE_TEST";
 	case DODGE_RAM:
 		return "DODGE_RAM";
 	default:
@@ -371,8 +365,6 @@ static void setOperationMode(int value) {
 	doPrintConfiguration();
 }
 
-static char pinNameBuffer[16];
-
 static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int16_t max, adc_channel_e channel) {
 	auto tps = Sensor::get(sensor);
 	auto raw = Sensor::getRaw(sensor);
@@ -380,7 +372,8 @@ static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int1
 	if (!tps.Valid) {
 		scheduleMsg(&logger, "TPS not valid");
 	}
-	static char pinNameBuffer[16];
+
+	char pinNameBuffer[16];
 
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", min, max,
 			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer));
@@ -769,7 +762,8 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 }
 
 #if HAL_USE_ADC
-// set_analog_input_pin pps
+// set_analog_input_pin pps pa4
+// set_analog_input_pin afr none
 static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -787,6 +781,9 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	} else if (strEqual("pps", sensorStr)) {
 		engineConfiguration->throttlePedalPositionAdcChannel = channel;
 		scheduleMsg(&logger, "setting PPS to %s/%d", pinName, channel);
+	} else if (strEqual("afr", sensorStr)) {
+		engineConfiguration->afr.hwChannel = channel;
+		scheduleMsg(&logger, "setting AFR to %s/%d", pinName, channel);
 	} else if (strEqual("clt", sensorStr)) {
 		engineConfiguration->clt.adcChannel = channel;
 		scheduleMsg(&logger, "setting CLT to %s/%d", pinName, channel);

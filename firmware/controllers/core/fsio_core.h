@@ -7,9 +7,8 @@
 
 #pragma once
 
-#include "rusefi_enums.h"
-#include "fl_stack.h"
 #include "engine.h"
+#include "fl_stack.h"
 
 #define MAX_TABLE_INDEX 4
 

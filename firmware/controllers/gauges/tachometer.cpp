@@ -49,8 +49,8 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	// How many tach pulse periods do we have?
 	int periods = CONFIG(tachPulsePerRev);
 
-	if(periods == 0){
-		warning(CUSTOM_ERR_6709,"Check Tachometer Pulse per Rev!");
+	if (periods == 0 || periods > 10){
+		firmwareError(CUSTOM_ERR_6709, "Invalid tachometer pulse per rev: %d", periods);
 		return;
 	}
 

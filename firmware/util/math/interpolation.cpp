@@ -200,7 +200,8 @@ namespace priv
  */
 float interpolate2d(const char *msg, float value, const float bin[], const float values[], int size) {
 	if (isnan(value)) {
-		firmwareError(CUSTOM_INTERPOLATE_NAN, "NaN in interpolate2d %s", msg);
+	    // this unfortunately sometimes happens during functional tests on real hardware
+		warning(CUSTOM_INTERPOLATE_NAN, "NaN in interpolate2d %s", msg);
 		return NAN;
 	}
 	int index = findIndexMsg(msg, bin, size, value);

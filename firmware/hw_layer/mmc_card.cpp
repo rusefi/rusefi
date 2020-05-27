@@ -188,7 +188,7 @@ static void prepareLogFileName(void) {
 	} else {
 		ptr = itoa10(&logName[PREFIX_LEN], logFileIndex);
 	}
-	strcat(ptr, ".msl");
+	strcat(ptr, ".mlg");
 
 }
 

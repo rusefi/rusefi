@@ -76,6 +76,9 @@ void CJ125::printDiag() {
 		printDiagCode(logger, "UN", diag >> 2, LOW_VOLTAGE);
 		printDiagCode(logger, "IA", diag >> 4, LOW_VOLTAGE);
 		printDiagCode(logger, "HR", diag >> 6, "open load");
+/* todo: do we want to throw CRITICAL on diag start-up error? probably not?
+		firmwareError(CUSTOM_ERR_CJ125_DIAG, "CJ125 is not well");
+*/
 	}
 }
 

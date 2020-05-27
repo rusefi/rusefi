@@ -15,8 +15,6 @@
 #include "advance_map.h"
 #include "sensor.h"
 
-extern float testMafValue;
-
 TEST(misc, testMafFuelMath) {
 	printf("====================================================================================== testMafFuelMath\r\n");
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);

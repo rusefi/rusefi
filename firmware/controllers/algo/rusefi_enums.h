@@ -60,15 +60,15 @@ typedef enum {
 
 	ROVER_V8 = 10,
 
-	MRE_MIATA_NB2_MTB = 11,
+	MRE_MIATA_NB2_MAP = 11,
 
-	MRE_MIATA_NA6 = 12,
+	MRE_MIATA_NA6 = ET_MRE_MIATA_NA6,
 
-	MRE_MIATA_NB2 = 13,
+	MRE_MIATA_NB2_ETB = 13,
 
 	FORD_ESCORT_GT = 14,
 
-	CITROEN_TU3JP = 15,
+	MRE_MIATA_NB2_MAF = ET_MRE_MIATA_NB2_MAF,
 
 	MITSU_4G93 = 16,
 
@@ -102,9 +102,10 @@ typedef enum {
 
 	SACHS = 29,
 
-	MRE_BOARD_TEST = 30,
+	// LED physical order set for older test fixtures
+	MRE_BOARD_OLD_TEST = 30,
 
-	DODGE_RAM = 31,
+	MRE_BOARD_NEW_TEST = 31,
 
 	VW_ABA = 32,
 
@@ -183,7 +184,10 @@ typedef enum {
 
 	VW_B6 = 62,
 
-	BMW_M73_PROTEUS = 63,
+	BMW_M73_PROTEUS = ET_BMW_M73_PROTEUS,
+
+	DODGE_RAM = 64,
+	CITROEN_TU3JP = ET_CITROEN_TU3JP,
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -784,6 +788,8 @@ typedef enum {
 	 */
 
 	MT_BOSCH_2_5 = 10,
+
+	MT_MAZDA_1_BAR = 11,
 
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;

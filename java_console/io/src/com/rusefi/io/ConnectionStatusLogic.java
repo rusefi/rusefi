@@ -38,7 +38,7 @@ public class ConnectionStatusLogic {
     public static ConnectionStatusLogic INSTANCE = new ConnectionStatusLogic();
     private List<Listener> listeners = new CopyOnWriteArrayList<>();
 
-    private final Timer timer = new Timer(Timeouts.CS_TIMEOUT, new ActionListener() {
+    private final Timer timer = new Timer(Timeouts.CONNECTION_STATUS_TIMEOUT, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
 //            setValue(Value.NOT_CONNECTED);

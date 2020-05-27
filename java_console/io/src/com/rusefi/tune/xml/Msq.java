@@ -3,10 +3,14 @@ package com.rusefi.tune.xml;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.xml.XmlUtil;
+import org.jetbrains.annotations.NotNull;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.IOException;
 
 @XmlRootElement
 public class Msq {
@@ -18,6 +22,19 @@ public class Msq {
 
     public Msq() {
         versionInfo = new VersionInfo("rusEFI+2020");
+    }
+
+    @NotNull
+    public static Msq toMsq(ConfigurationImage image) {
+        IniFileModel ini = IniFileModel.getInstance();
+        Msq tune = new Msq();
+        for (String key : ini.allIniFields.keySet())
+            tune.loadConstant(ini, key, image);
+        return tune;
+    }
+
+    public void writeXmlFile(String outputXmlFileName) throws JAXBException, IOException {
+        XmlUtil.writeXml(this, Msq.class, outputXmlFileName);
     }
 
     public void loadConstant(IniFileModel ini, String key, ConfigurationImage image) {

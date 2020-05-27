@@ -1,10 +1,9 @@
 package com.rusefi.ui;
 
 import com.rusefi.io.LinkManager;
-import com.rusefi.tools.ConsoleTools;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.xml.XmlUtil;
+import com.rusefi.ui.util.URLLabel;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -19,6 +18,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class OnlineTab {
     private static final String AUTH_TOKEN = "auth_token";
+    private static final String TOKEN_WARNING = "Please copy token from your forum profile";
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
@@ -26,7 +26,13 @@ public class OnlineTab {
         JTextField textField = new JTextField();
         textField.setPreferredSize(new Dimension(200, 24));
 
-        textField.setText(getConfig().getRoot().getProperty(AUTH_TOKEN));
+        String authToken = getConfig().getRoot().getProperty(AUTH_TOKEN);
+        if (authToken.trim().isEmpty())
+            authToken = TOKEN_WARNING;
+
+        textField.setText(authToken);
+
+        content.add(new URLLabel("rusEFI Online manual", "https://github.com/rusefi/rusefi/wiki/Online"));
 
         content.add(textField);
 
@@ -44,11 +50,16 @@ public class OnlineTab {
         upload.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Msq tune = ConsoleTools.toMsq(LinkManager.connector.getBinaryProtocol().getControllerConfiguration());
+                String text = textField.getText();
+                if (text.contains(TOKEN_WARNING)) {
+                    JOptionPane.showMessageDialog(content, "Does not work without auth token");
+                    return;
+                }
+                Msq tune = Msq.toMsq(LinkManager.connector.getBinaryProtocol().getControllerConfiguration());
                 try {
-                    XmlUtil.writeXml(tune, Msq.class, Msq.outputXmlFileName);
+                    tune.writeXmlFile(Msq.outputXmlFileName);
                     // todo: network upload should not happen on UI thread
-                    Online.upload(new File(Msq.outputXmlFileName), textField.getText());
+                    Online.upload(new File(Msq.outputXmlFileName), text);
                 } catch (JAXBException | IOException ex) {
                     throw new IllegalStateException(ex);
                 }

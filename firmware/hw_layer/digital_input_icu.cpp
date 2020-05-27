@@ -119,13 +119,11 @@ static uint32_t getAlternateFunctions(ICUDriver *driver) {
 
 icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 	switch (hwPin) {
-	case GPIOA_2: // TIM9
 	case GPIOA_5: // TIM2 stm32f4discovery/Frankenso default
 	case GPIOA_6: // TIM3
 	case GPIOA_8: // TIM1
 	case GPIOA_15: // TIM2
-	case GPIOC_6: // TIM3 or TIM8 stm32f4discovery/Frankenso default
-	case GPIOE_5: // TIM9
+	case GPIOC_6: // TIM3 stm32f4discovery/Frankenso default
 	case GPIOE_9: // TIM1
 		return ICU_CHANNEL_1;
 
@@ -135,8 +133,7 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 	case GPIOA_9: // TIM1
 	case GPIOB_3: // TIM2
 	case GPIOB_5: // TIM2
-	case GPIOC_7: // TIM3 or TIM8
-	case GPIOE_6: // TIM9
+	case GPIOC_7: // TIM3
 	case GPIOE_11: // TIM1
 		return ICU_CHANNEL_2;
 	default:
@@ -199,7 +196,7 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 		return &ICUD9;
 	}
 #endif
-	return (ICUDriver *) NULL;
+	return nullptr;
 }
 
 void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {

@@ -123,6 +123,7 @@ public class ConfigDefinition {
             } else if (key.equals(KEY_PREPEND)) {
                 prependFiles.add(args[i + 1]);
             } else if (key.equals(KEY_SKIP)) {
+                // is this now not needed in light if LazyFile surving the same goal of not changing output unless needed?
                 skipRebuildFile = args[i + 1];
             } else if (key.equals("-ts_output_name")) {
                 TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
@@ -288,7 +289,12 @@ public class ConfigDefinition {
             name = line.substring(0, index);
             line = line.substring(index).trim();
         }
-        VariableRegistry.INSTANCE.register(name, line);
+        if (VariableRegistry.isNumeric(line)) {
+            Integer v = Integer.valueOf(line);
+            VariableRegistry.INSTANCE.register(name, v);
+        } else {
+            VariableRegistry.INSTANCE.register(name, line);
+        }
     }
 
     private static String getMd5(byte[] content) {

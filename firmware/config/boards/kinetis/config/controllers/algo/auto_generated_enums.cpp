@@ -1,10 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h
-// was generated automatically by rusEfi tool  from rusefi_enums.h
-// by enum2string.jar tool
-// on Wed May 20 01:03:28 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu May 21 20:39:11 EDT 2020
 // see also gen_config_and_enums.bat
 
 
@@ -109,6 +106,8 @@ case MT_GM_3_BAR:
   return "MT_GM_3_BAR";
 case MT_HONDA3BAR:
   return "MT_HONDA3BAR";
+case MT_MAZDA_1_BAR:
+  return "MT_MAZDA_1_BAR";
 case MT_MPX4100:
   return "MT_MPX4100";
 case MT_MPX4250:
@@ -670,14 +669,18 @@ case MINIMAL_PINS:
   return "MINIMAL_PINS";
 case MITSU_4G93:
   return "MITSU_4G93";
-case MRE_BOARD_TEST:
-  return "MRE_BOARD_TEST";
+case MRE_BOARD_NEW_TEST:
+  return "MRE_BOARD_NEW_TEST";
+case MRE_BOARD_OLD_TEST:
+  return "MRE_BOARD_OLD_TEST";
 case MRE_MIATA_NA6:
   return "MRE_MIATA_NA6";
-case MRE_MIATA_NB2:
-  return "MRE_MIATA_NB2";
-case MRE_MIATA_NB2_MTB:
-  return "MRE_MIATA_NB2_MTB";
+case MRE_MIATA_NB2_ETB:
+  return "MRE_MIATA_NB2_ETB";
+case MRE_MIATA_NB2_MAF:
+  return "MRE_MIATA_NB2_MAF";
+case MRE_MIATA_NB2_MAP:
+  return "MRE_MIATA_NB2_MAP";
 case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
 case PROMETHEUS_DEFAULTS:

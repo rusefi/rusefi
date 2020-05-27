@@ -69,7 +69,7 @@
 #include "flash_main.h"
 
 #include "tunerstudio_io.h"
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #include "malfunction_central.h"
 #include "console_io.h"
 #include "crc.h"
@@ -233,7 +233,7 @@ static void sendErrorCode(ts_channel_s *tsChannel) {
 	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
 }
 
-void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
+static void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
 	tsState.pageCommandCounter++;
 
 	scheduleMsg(&tsLogger, "PAGE %d", pageId);
@@ -341,7 +341,7 @@ static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, uint16_
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
+static void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
 
@@ -358,15 +358,12 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	sendOkResponse(tsChannel, mode);
 }
 
-void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
-		uint16_t count) {
+static void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
 	UNUSED(pageId);
 
 	tsState.crc32CheckCommandCounter++;
 
-	count = getTunerStudioPageSize();
-
-	scheduleMsg(&tsLogger, "CRC32 request: offset %d size %d", offset, count);
+	uint16_t count = getTunerStudioPageSize();
 
 	uint32_t crc = SWAP_UINT32(crc32((void * ) getWorkingPageAddr(), count));
 
@@ -379,7 +376,7 @@ void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
  */
-void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset,
+static void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset,
 		uint8_t value) {
 	UNUSED(tsChannel);
 	UNUSED(mode);
@@ -410,7 +407,7 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 //	scheduleMsg(logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
 }
 
-void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
+static void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
 		uint16_t count) {
 	tsState.readPageCommandsCounter++;
 
@@ -451,7 +448,7 @@ static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel,
 /**
  * 'Burn' command is a command to commit the changes
  */
-void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page) {
+static void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page) {
 	UNUSED(page);
 	
 	efitimems_t nowMs = currentTimeMillis();
@@ -475,8 +472,8 @@ static bool isKnownCommand(char command) {
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_STRUCT
 			|| command == TS_GET_FILE_RANGE
-			|| command == TS_SET_LOGGER_MODE
-			|| command == TS_GET_LOGGER_BUFFER
+			|| command == TS_SET_LOGGER_SWITCH
+			|| command == TS_GET_LOGGER_GET_BUFFER
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
@@ -641,8 +638,9 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 
 /**
  * @brief 'Output' command sends out a snapshot of current values
+ * Gauges refresh
  */
-void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+static void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	if (offset + count > sizeof(TunerStudioOutputChannels)) {
 		scheduleMsg(&tsLogger, "TS: Version Mismatch? Too much data requested %d+%d", offset, count);
 		sendErrorCode(tsChannel);
@@ -655,7 +653,10 @@ void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e m
 	sr5SendResponse(tsChannel, mode, ((const uint8_t *) &tsOutputChannels) + offset, count);
 }
 
-void handleTestCommand(ts_channel_s *tsChannel) {
+/**
+ * rusEfi own test command
+ */
+static void handleTestCommand(ts_channel_s *tsChannel) {
 	tsState.testCommandCounter++;
 	static char testOutputBuffer[24];
 	/**
@@ -744,6 +745,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	}
 }
 
+static int transmitted = 0;
+
 
 int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
@@ -790,7 +793,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 		break;
 	case TS_CRC_CHECK_COMMAND:
-		handleCrc32Check(tsChannel, TS_CRC, data16[0], data16[1], data16[2]);
+		handleCrc32Check(tsChannel, TS_CRC, data16[0]);
 		break;
 	case TS_BURN_COMMAND:
 		handleBurnCommand(tsChannel, TS_CRC, data16[0]);
@@ -821,7 +824,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 		break;
 #if EFI_TOOTH_LOGGER
-	case TS_SET_LOGGER_MODE:
+	case TS_SET_LOGGER_SWITCH:
 		switch(data[0]) {
 		case 0x01:
 			EnableToothLogger();
@@ -837,7 +840,27 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		sendOkResponse(tsChannel, TS_CRC);
 
 		break;
-	case TS_GET_LOGGER_BUFFER:
+		case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
+		{
+			const uint8_t* const buffer = GetToothLoggerBuffer().Buffer;
+
+			const uint8_t* const start = buffer + COMPOSITE_PACKET_SIZE * transmitted;
+
+			int currentEnd = getCompositeRecordCount();
+
+			if (currentEnd > transmitted) {
+				// more normal case - tail after head
+				sr5SendResponse(tsChannel, TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted));
+				transmitted = currentEnd;
+			} else {
+				// we are here if tail of buffer has reached the end of buffer and re-started from the start of buffer
+				// sending end of the buffer, next transmission would take care of the rest
+				sr5SendResponse(tsChannel, TS_CRC, start, COMPOSITE_PACKET_SIZE * (COMPOSITE_PACKET_COUNT - transmitted));
+				transmitted = 0;
+			}
+		}
+		break;
+	case TS_GET_LOGGER_GET_BUFFER:
 		{
 			auto toothBuffer = GetToothLoggerBuffer();
 			sr5SendResponse(tsChannel, TS_CRC, toothBuffer.Buffer, toothBuffer.Length);
@@ -858,9 +881,15 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 		break;
 #endif /* ENABLE_PERF_TRACE */
-	case TS_GET_CONFIG_ERROR:
-		sr5SendResponse(tsChannel, TS_CRC, reinterpret_cast<const uint8_t*>(getFirmwareError()), strlen(getFirmwareError()));
+	case TS_GET_CONFIG_ERROR: {
+#if HW_CHECK_MODE
+  #define configError "FACTORY_MODE_PLEASE_CONTACT_SUPPORT"
+#else
+		char * configError = getFirmwareError();
+#endif // HW_CHECK_MODE
+		sr5SendResponse(tsChannel, TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
 		break;
+	}
 	default:
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;

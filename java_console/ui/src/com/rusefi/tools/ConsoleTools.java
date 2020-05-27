@@ -2,7 +2,6 @@ package com.rusefi.tools;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
@@ -16,8 +15,6 @@ import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.xml.XmlUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
@@ -212,18 +209,9 @@ public class ConsoleTools {
         ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName);
         System.out.println("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
 
-        Msq tune = toMsq(image);
-        XmlUtil.writeXml(tune, Msq.class, Msq.outputXmlFileName);
+        Msq tune = Msq.toMsq(image);
+        tune.writeXmlFile(Msq.outputXmlFileName);
         Online.upload(new File(Msq.outputXmlFileName), "x");
-    }
-
-    @NotNull
-    public static Msq toMsq(ConfigurationImage image) {
-        IniFileModel ini = IniFileModel.getInstance();
-        Msq tune = new Msq();
-        for (String key : ini.allIniFields.keySet())
-            tune.loadConstant(ini, key, image);
-        return tune;
     }
 
     interface ConsoleTool {

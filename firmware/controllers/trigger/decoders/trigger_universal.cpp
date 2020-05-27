@@ -31,7 +31,7 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerWaveform *s, int
 void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode) {
 	if (totalTeethCount <= 0) {
-		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "totalTeethCount is zero or less: %d", totalTeethCount);
+		firmwareError(CUSTOM_OBD_TRIGGER_WAVEFORM, "Invalid total tooth count for missing tooth decoder: %d", totalTeethCount);
 		s->setShapeDefinitionError(true);
 		return;
 	}

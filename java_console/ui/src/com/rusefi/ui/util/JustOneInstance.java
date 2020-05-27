@@ -1,6 +1,7 @@
 package com.rusefi.ui.util;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -12,10 +13,12 @@ import java.net.Socket;
  */
 public class JustOneInstance {
     private static final int PORT = 29212;
+    private static final int LOCAL_CONNECTION_TIMEOUT_MS = 100;
 
     public static boolean isAlreadyRunning() {
         try {
-            Socket clientSocket = new Socket("localhost", PORT);
+            Socket clientSocket = new Socket();
+            clientSocket.connect(new InetSocketAddress("localhost", PORT), LOCAL_CONNECTION_TIMEOUT_MS);
             System.out.println("*** Already running!");
             return true;
         } catch (IOException e) {

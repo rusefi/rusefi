@@ -15,6 +15,8 @@ import static com.rusefi.ReaderState.MULT_TOKEN;
  * 3/30/2015
  */
 public class VariableRegistry  {
+    private static final String _16_HEX_SUFFIX = "_16_hex";
+    private static final String _HEX_SUFFIX = "_hex";
     private TreeMap<String, String> data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final VariableRegistry INSTANCE = new VariableRegistry();
 
@@ -39,10 +41,6 @@ public class VariableRegistry  {
         Matcher m;
         while ((m = VAR.matcher(line)).find()) {
             String key = m.group(2);
-
-
-            //     key =
-
             if (!data.containsKey(key))
                 throw new IllegalStateException("No such variable: " + key);
             String s = data.get(key);
@@ -69,9 +67,20 @@ public class VariableRegistry  {
 
         if (!value.contains("\n")) {
             // multi-lines are not supported in C headers
-            cAllDefinitions.put(var, "#define " + var + " " + value + EOL);
+            if (!var.endsWith(_16_HEX_SUFFIX) && !var.endsWith(_HEX_SUFFIX)) {
+                cAllDefinitions.put(var, "#define " + var + " " + value + EOL);
+            }
         }
         tryToRegisterAsInteger(var, value);
+    }
+
+    public static boolean isNumeric(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
@@ -80,24 +89,35 @@ public class VariableRegistry  {
             int intValue = Integer.parseInt(value);
             SystemOut.println("key [" + var + "] value: " + intValue);
             intValues.put(var, intValue);
-            javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + EOL);
+            if (!var.endsWith(_HEX_SUFFIX)) {
+                javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + EOL);
+            }
         } catch (NumberFormatException e) {
             SystemOut.println("Not an integer: " + value);
 
-            if (isQuoted(value) && !var.trim().endsWith(ConfigField.ENUM_SUFFIX)) {
-                // quoted and not with enum suffix means plain string define statement
-                javaDefinitions.put(var, "\tpublic static final String " + var + " = " + value + ";" + EOL);
+            if (!var.trim().endsWith(ConfigField.ENUM_SUFFIX)) {
+                if (isQuoted(value, '"')) {
+                    // quoted and not with enum suffix means plain string define statement
+                    javaDefinitions.put(var, "\tpublic static final String " + var + " = " + value + ";" + EOL);
+                } else if (isQuoted(value, '\'')) {
+                    // quoted and not with enum suffix means plain string define statement
+                    javaDefinitions.put(var, "\tpublic static final char " + var + " = " + value + ";" + EOL);
+                }
             }
         }
     }
 
-    private boolean isQuoted(String value) {
+    private boolean isQuoted(String value, char quote) {
         if (value == null)
             return false;
         value = value.trim();
         if (value.isEmpty())
             return false;
-        return value.charAt(0) == '"' && value.charAt(value.length() - 1) == '"';
+        return isQ(value, quote);
+    }
+
+    private boolean isQ(String value, char quote) {
+        return value.charAt(0) == quote && value.charAt(value.length() - 1) == quote;
     }
 
     /**
@@ -105,7 +125,9 @@ public class VariableRegistry  {
      */
     public void register(String name, int value) {
         register(name, Integer.toString(value));
-        register(name + "_hex", Integer.toString(value, 16));
+        register(name + _HEX_SUFFIX, Integer.toString(value, 16));
+        String _16_hex = String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF);
+        register(name + _16_HEX_SUFFIX, _16_hex);
     }
 
     public void writeDefinesToFile(String fileName) throws IOException {

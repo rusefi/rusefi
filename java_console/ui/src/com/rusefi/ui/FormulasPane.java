@@ -92,8 +92,10 @@ public class FormulasPane {
     }
 
     enum engine_load_mode_e {
+        // todo: this should NOT be copy-pasted from
         LM_PLAIN_MAF("Plain MAF"),
         LM_ALPHA_N("Alpha-N/TPS"),
+        UNUSED_2("Unused value 2"),
         LM_SPEED_DENSITY("Speed Density/MAP"),
         LM_REAL_MAF("MAF");
 
@@ -115,7 +117,7 @@ public class FormulasPane {
         int algorithm = ConfigField.getIntValue(ci, Fields.FUELALGORITHM);
         engine_load_mode_e[] values = engine_load_mode_e.values();
         if (algorithm >= values.length) {
-            FileLog.MAIN.logLine("Invalid algorithm" + algorithm);
+            FileLog.MAIN.logLine("Invalid algorithm: " + algorithm);
             algorithm = 0; // we are here for example in case of an invalid/incompatible configuration
         }
         engine_load_mode_e algo = values[algorithm];

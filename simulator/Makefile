@@ -188,10 +188,7 @@ INCDIR = . \
           $(BOARDINC) \
           $(UTIL_INC) \
           $(PROJECT_DIR)/init \
-          $(PROJECT_DIR)/console \
-          $(PROJECT_DIR)/console/binary \
-          $(PROJECT_DIR)/console/binary_log \
-          $(PROJECT_DIR)/console/fl_binary \
+          $(CONSOLE_INC) \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \
          $(HW_LAYER_DRIVERS_INC) \
