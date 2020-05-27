@@ -214,6 +214,8 @@ void runRusEfi(void) {
 	 */
 	initHardware(&sharedLogger);
 
+	efiSetPadMode("knock", GPIOF_4, PAL_MODE_INPUT_ANALOG);
+
 	initStatusLoop();
 	/**
 	 * Now let's initialize actual engine control logic
