@@ -277,8 +277,8 @@ stm32_hardware_pwm* getNextPwmDevice() {
 }
 
 /*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty) {
-	// Slow PWM isn't worth doing on hardware - reserve that timer for something faster if needed.
-	if (frequencyHz < 100) {
+	// Hardware PWM can't do very slow PWM - the timer counter is only 16 bits, so at 2MHz counting, that's a minimum of 31hz.
+	if (frequencyHz < 50) {
 		return nullptr;
 	}
 
