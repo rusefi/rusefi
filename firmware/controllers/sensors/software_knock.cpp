@@ -42,6 +42,13 @@ void startKnockSampling(uint8_t cylinderIndex) {
 		return;
 	}
 
+	// Cancel if ADC isn't ready
+	if (!((ADCD3.state == ADC_READY) ||
+			(ADCD3.state == ADC_COMPLETE) ||
+			(ADCD3.state == ADC_ERROR))) {
+		return;
+	}
+
 	// If there's pending processing, skip
 	if (knockNeedsProcess) {
 		return;
@@ -72,15 +79,20 @@ struct biquad {
 		z2 = input * a2 - b2 * result;
 		return result;
 	}
+
+	void configureBandpass(float samplingFrequency, float centerFrequency, float Q) {
+		float K = tanf(3.14159 * centerFrequency / samplingFrequency);
+		float norm = 1 / (1 + K / Q + K * K);
+
+		a0 = K / Q * norm;
+		a1 = 0;
+		a2 = -a0;
+		b1 = 2 * (K * K - 1) * norm;
+		b2 = (1 - K / Q + K * K) * norm;
+	}
 };
 
-biquad biquadFilter {
-	0.037668622557956444,
-	0,
-	-0.037668622557956444,
-	-1.8278626556533384,
-	0.9246627548840871,
-};
+biquad biquadFilter;
 
 void processLastKnockEvent() {
 	if (!knockNeedsProcess) {
@@ -93,6 +105,7 @@ void processLastKnockEvent() {
 	constexpr float ratio = 3.3f / 4095.0f;
 
 	biquadFilter.reset();
+	biquadFilter.configureBandpass(217000, 11000, 10);
 
 	// Compute the sum and sum of squares
 	for (size_t i = 0; i < sampleCount; i++)
