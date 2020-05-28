@@ -50,6 +50,7 @@
 #include "aux_pid.h"
 #include "perf_trace.h"
 #include "boost_control.h"
+#include "software_knock.h"
 #if EFI_MC33816
 #include "mc33816.h"
 #endif /* EFI_MC33816 */
@@ -489,6 +490,10 @@ void initHardware(Logging *l) {
 	// wait for first set of ADC values so that we do not produce invalid sensor data
 	waitForSlowAdc(1);
 #endif /* HAL_USE_ADC */
+
+#if EFI_SOFTWARE_KNOCK
+	initSoftwareKnock();
+#endif /* EFI_SOFTWARE_KNOCK */
 
 	initRtc();
 

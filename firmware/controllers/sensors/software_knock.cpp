@@ -94,6 +94,11 @@ struct biquad {
 
 biquad biquadFilter;
 
+void initSoftwareKnock() {
+	biquadFilter.configureBandpass(217000, CONFIG(knockBandCustom), 3);
+	adcStart(&ADCD3, nullptr);
+}
+
 void processLastKnockEvent() {
 	if (!knockNeedsProcess) {
 		return;
