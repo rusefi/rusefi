@@ -26,8 +26,8 @@ static void errorCallback(ADCDriver*, adcerror_t err) {
 static ADCConversionGroup adcConvGroup = { FALSE, 1, &completionCallback, &errorCallback,
 	0,
 	ADC_CR2_SWSTART,
-	0, // sample times for channels 10...18
-	ADC_SMPR2_SMP_AN9(ADC_SAMPLE_84),
+	ADC_SMPR1_SMP_AN14(ADC_SAMPLE_84), // sample times for channels 10...18
+	0,
 
 	0,	// htr
 	0,	// ltr
@@ -56,46 +56,31 @@ void startKnockSampling(uint8_t cylinderIndex) {
 }
 
 struct biquad {
-	float b0, b1, b2, a1, a2;
+	float a0, a1, a2, b1, b2;
 
-	float w0 = 0;
-	float w1 = 0;
-	float w2 = 0;
+	float z1 = 0;
+	float z2 = 0;
 
 	void reset() {
-		w0 = 0;
-		w1 = 0;
-		w2 = 0;
+		z1 = 0;
+		z2 = 0;
 	}
 
 	float filter(float input) {
-		// Feedback part
-		float accumulator = w2 * a2;
-		accumulator += w1 * a1;
-		accumulator += input;
-
-		w0 = accumulator;
-
-		// Feedforward part
-		accumulator = w0 * b0;
-		accumulator += w1 * b1;
-		accumulator += w2 * b2;
-
-		// Shuffle history
-		w2 = w1;
-		w1 = w0;
-
-		return accumulator;
+		float result = input * a0 + z1;
+		z1 = input * a1 + z2 - b1 * result;
+		z2 = input * a2 - b2 * result;
+		return result;
 	}
 };
 
-
-//biquad firstStage {0.01448672709139305, 0.0289734541827861, 0.01448672709139305, 1.7842324802680964, -0.9036658556014872};
-//biquad secondStage {0.25, -0.5, 0.25, 1.858554646427233, -0.926428331962136};
-
-biquad firstStage {0.0255, 0.0511, 0.0255, -1.607, 0.709};
-biquad secondStage {0.25, -0.5, 0.25, 1.858554646427233, -0.926428331962136};
-
+biquad biquadFilter {
+	0.037668622557956444,
+	0,
+	-0.037668622557956444,
+	-1.8278626556533384,
+	0.9246627548840871,
+};
 
 void processLastKnockEvent() {
 	if (!knockNeedsProcess) {
@@ -107,30 +92,25 @@ void processLastKnockEvent() {
 
 	constexpr float ratio = 3.3f / 4095.0f;
 
-	firstStage.reset();
-	secondStage.reset();
+	biquadFilter.reset();
 
 	// Compute the sum and sum of squares
 	for (size_t i = 0; i < sampleCount; i++)
 	{
-		float volts = ratio * sampleBuffer[i];
+		float volts = ratio * (sampleBuffer[i] - 2048);
 
-		float inter = firstStage.filter(volts);
-		float filtered = inter;
-		//float filtered = secondStage.filter(inter);
+		float filtered = biquadFilter.filter(volts);
 
-		sum += filtered;
 		sumSq += filtered * filtered;
 	}
 
-	float dcVoltage = sum / sampleCount;
-	float squareDcVoltage = dcVoltage * dcVoltage;
-
 	// mean of squares (not yet root)
-	float avgSquaresWithDc = sumSq / sampleCount;
+	float meanSquares = sumSq / sampleCount;
 
-	// Compute RMS of just the AC component
-	tsOutputChannels.knockLevel /*db*/ = 10 * log10(avgSquaresWithDc - squareDcVoltage);
+	// RMS
+	float db = 10 * log10(meanSquares);
+
+	tsOutputChannels.knockLevel = db;
 
 	knockNeedsProcess = false;
 }
