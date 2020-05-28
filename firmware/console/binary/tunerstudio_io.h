@@ -62,21 +62,6 @@ typedef struct {
 // many commands are now defined in rusefi_config.txt see TS_* constants
 // this way we reuse between firmware and java code
 
-#define TS_PAGE_COMMAND 'P' // 0x50
-#define TS_COMMAND_F 'F' // 0x46
-#define TS_GET_FIRMWARE_VERSION 'V' // versionInfo
-#define TS_GET_CONFIG_ERROR 'e' // returns getFirmwareError(), works together with ind_hasFatalError
-
-
-// Performance tracing
-#define TS_PERF_TRACE_BEGIN 'r'
-#define TS_PERF_TRACE_GET_BUFFER 'b'
-
-#define TS_SINGLE_WRITE_COMMAND 'W' // 0x57 pageValueWrite
-#define TS_CHUNK_WRITE_COMMAND 'C' // 0x43 pageChunkWrite
-#define TS_BURN_COMMAND 'B' // 0x42 burnCommand
-#define TS_IO_TEST_COMMAND 'w' // 0x77
-
 
 #define CRC_VALUE_SIZE 4
 // todo: double-check this

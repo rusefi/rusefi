@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue May 26 01:03:51 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 27 23:26:48 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1252,19 +1252,29 @@ public class Fields {
 	public static final int triggerSimulatorPins1_offset = 736;
 	public static final int triggerSimulatorPins2_offset = 737;
 	public static final int triggerSimulatorPins3_offset = 738;
+	public static final char TS_BURN_COMMAND = 'B';
+	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
+	public static final char TS_COMMAND_F = 'F';
 	public static final char TS_CRC_CHECK_COMMAND = 'k';
 	public static final char TS_EXECUTE = 'E';
 	public static final int TS_FILE_VERSION = 20200310;
 	public static final char TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY = '8';
+	public static final char TS_GET_CONFIG_ERROR = 'e';
+	public static final char TS_GET_FIRMWARE_VERSION = 'V';
 	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
 	public static final char TS_GET_STRUCT = '9';
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
+	public static final char TS_IO_TEST_COMMAND = 'w';
 	public static final char TS_OUTPUT_COMMAND = 'O';
 	public static final int TS_OUTPUT_SIZE = 244;
+	public static final char TS_PAGE_COMMAND = 'P';
+	public static final char TS_PERF_TRACE_BEGIN = 'r';
+	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
 	public static final char TS_READ_COMMAND = 'R';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
 	public static final String TS_SIGNATURE = "rusEFI v1.2020.4";
+	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;
