@@ -1271,16 +1271,25 @@
 #define triggerSimulatorPins1_offset 736
 #define triggerSimulatorPins2_offset 737
 #define triggerSimulatorPins3_offset 738
+#define TS_BURN_COMMAND 'B'
+#define TS_CHUNK_WRITE_COMMAND 'C'
+#define TS_COMMAND_F 'F'
 #define TS_CRC_CHECK_COMMAND 'k'
 #define TS_EXECUTE 'E'
 #define TS_FILE_VERSION 20200310
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
+#define TS_GET_CONFIG_ERROR 'e'
+#define TS_GET_FIRMWARE_VERSION 'V'
 #define TS_GET_LOGGER_GET_BUFFER 'L'
 #define TS_GET_STRUCT '9'
 #define TS_GET_TEXT 'G'
 #define TS_HELLO_COMMAND 'S'
+#define TS_IO_TEST_COMMAND 'w'
 #define TS_OUTPUT_COMMAND 'O'
 #define TS_OUTPUT_SIZE 244
+#define TS_PAGE_COMMAND 'P'
+#define TS_PERF_TRACE_BEGIN 'r'
+#define TS_PERF_TRACE_GET_BUFFER 'b'
 #define TS_READ_COMMAND 'R'
 #define TS_SET_LOGGER_SWITCH 'l'
 #define ts_show_analog_divider true
@@ -1302,6 +1311,7 @@
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
 #define TS_SIGNATURE "rusEFI v1.2020.4"
+#define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
 #define twoWireBatchInjection_offset 1476
