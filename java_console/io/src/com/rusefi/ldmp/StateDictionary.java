@@ -16,9 +16,7 @@ public enum StateDictionary {
     private Map<Integer, Field[]> map = new HashMap<>();
 
     StateDictionary() {
-        register(Fields.LDS_CLT_STATE_INDEX, ThermistorState.VALUES); // 0
-        register(Fields.LDS_IAT_STATE_INDEX, ThermistorState.VALUES);
-        register(Fields.LDS_SPEED_DENSITY_STATE_INDEX, EngineState.VALUES);
+        register(Fields.LDS_SPEED_DENSITY_STATE_INDEX, EngineState.VALUES); // 2
         register(Fields.LDS_ENGINE_STATE_INDEX, EngineState.VALUES); // 3
         register(Fields.LDS_FUEL_TRIM_STATE_INDEX, EngineState.VALUES);
         register(Fields.LDS_TPS_TPS_ENEICHMENT_STATE_INDEX, EngineState.VALUES); // 5
