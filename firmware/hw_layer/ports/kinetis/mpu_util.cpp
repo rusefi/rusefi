@@ -257,5 +257,10 @@ uintptr_t getFlashAddrSecondCopy() {
 	return 0x10008000;
 }
 
+/*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char*, brain_pin_e, float, float) {
+	// TODO: implement me!
+	return nullptr;
+}
+
 #endif /* EFI_PROD_CODE */
 
