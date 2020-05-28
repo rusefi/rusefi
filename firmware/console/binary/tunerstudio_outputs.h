@@ -1,5 +1,5 @@
 /*
- * @file	tunerstudio_configuration.h
+ * @file	tunerstudio_outputs.h
  * @brief	Tuner Studio connectivity configuration
  *
  * In this file the configuration of TunerStudio is defined

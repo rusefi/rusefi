@@ -9,7 +9,7 @@
 
 #include "efifeatures.h"
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #endif /* EFI_TUNER_STUDIO */
 
 void initCan(void);

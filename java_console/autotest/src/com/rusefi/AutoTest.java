@@ -190,7 +190,7 @@ this is just too unreliable at this point :(
         FileLog.MAIN.logLine("AUTOTEST setEngineType " + type);
 //        sendCommand(CMD_PINS);
         currentEngineType = type;
-        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, 30);
+        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
         // TODO: document the reason for this sleep?!
         sleep(1);
         sendCommand(getEnableCommand("self_stimulation"));
@@ -495,9 +495,9 @@ this is just too unreliable at this point :(
         sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
     }
 
-    private static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {
+    private static void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
         assertNull("Fatal not expected", criticalError);
-        IoUtil.sendCommand(command, retryTimeoutMs, totalTimeoutSeconds);
+        IoUtil.sendCommand(command, retryTimeoutMs, timeoutMs);
     }
 
     private static void assertEquals(double expected, double actual) {

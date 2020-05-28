@@ -99,6 +99,7 @@ PROJECT = rusefi_test
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/development/development.mk
+include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
@@ -173,8 +174,7 @@ INCDIR = . \
 	$(UTIL_INC) \
 	$(PROJECT_DIR)/config/engines \
 	$(CONTROLLERS_INC) \
-	$(PROJECT_DIR)/console \
-	$(PROJECT_DIR)/console/binary_log \
+	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \
 	$(PROJECT_DIR)/ext_algo \
 	$(PROJECT_DIR)/hw_layer \

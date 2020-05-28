@@ -310,6 +310,7 @@
 #define ENGINE_MAKE_MERCEDES "Mercedes"
 #define ENGINE_MAKE_TOYOTA "Toyota"
 #define ENGINE_NOISE_CURVE_SIZE 8
+#define ENGINE_SNIFFER_UNIT_US 10
 #define engineChartSize_offset 1480
 #define engineCode_offset 1128
 #define engineConfiguration_offset 0
@@ -322,6 +323,7 @@
 #define engineSnifferRpmThreshold_offset 4
 #define engineType_offset 0
 #define ERROR_BUFFER_SIZE 120
+#define ET_BMW_M73_PROTEUS 63
 #define ET_CITROEN_TU3JP 65
 #define ET_MRE_MIATA_NA6 12
 #define ET_MRE_MIATA_NB2_MAF 15
@@ -1053,6 +1055,7 @@
 #define servoOutputPins8_offset 3147
 #define show_Frankenso_presets true
 #define show_microRusEFI_presets true
+#define show_Proteus_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
@@ -1268,8 +1271,27 @@
 #define triggerSimulatorPins1_offset 736
 #define triggerSimulatorPins2_offset 737
 #define triggerSimulatorPins3_offset 738
+#define TS_BURN_COMMAND 'B'
+#define TS_CHUNK_WRITE_COMMAND 'C'
+#define TS_COMMAND_F 'F'
+#define TS_CRC_CHECK_COMMAND 'k'
+#define TS_EXECUTE 'E'
 #define TS_FILE_VERSION 20200310
+#define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
+#define TS_GET_CONFIG_ERROR 'e'
+#define TS_GET_FIRMWARE_VERSION 'V'
+#define TS_GET_LOGGER_GET_BUFFER 'L'
+#define TS_GET_STRUCT '9'
+#define TS_GET_TEXT 'G'
+#define TS_HELLO_COMMAND 'S'
+#define TS_IO_TEST_COMMAND 'w'
+#define TS_OUTPUT_COMMAND 'O'
 #define TS_OUTPUT_SIZE 244
+#define TS_PAGE_COMMAND 'P'
+#define TS_PERF_TRACE_BEGIN 'r'
+#define TS_PERF_TRACE_GET_BUFFER 'b'
+#define TS_READ_COMMAND 'R'
+#define TS_SET_LOGGER_SWITCH 'l'
 #define ts_show_analog_divider true
 #define ts_show_auxserial_pins true
 #define ts_show_can_pins true
@@ -1289,6 +1311,7 @@
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
 #define TS_SIGNATURE "rusEFI v1.2020.4"
+#define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
 #define twoWireBatchInjection_offset 1476

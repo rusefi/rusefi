@@ -29,7 +29,7 @@
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 
 #include "microsecond_timer.h"
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #include "os_util.h"
 
 #include "engine.h"

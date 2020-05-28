@@ -1,5 +1,6 @@
 /**
  * @file	bluetooth.h
+ * @file Bluethoot modules hardware initialization
  *
  * @date Aug 26, 2013
  * @author andreika, (c) 2017

@@ -32,10 +32,10 @@ public class EngineChartParserTest {
 
         EngineReport.UpDown upDown = list.get(0);
         assertEquals(24, upDown.upTime);
-        assertEquals(156, upDown.upIndex);
+        assertEquals(156, upDown.upTriggerCycleIndex);
 
         assertEquals(39, upDown.downTime);
-        assertEquals(157, upDown.downIndex);
+        assertEquals(157, upDown.downTriggerCycleIndex);
     }
 
     @Test

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sat May 23 10:54:57 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 27 23:26:48 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -306,6 +306,7 @@ public class Fields {
 	public static final String ENGINE_MAKE_MERCEDES = "Mercedes";
 	public static final String ENGINE_MAKE_TOYOTA = "Toyota";
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
+	public static final int ENGINE_SNIFFER_UNIT_US = 10;
 	public static final int engineChartSize_offset = 1480;
 	public static final int engineCode_offset = 1128;
 	public static final int engineConfiguration_offset = 0;
@@ -318,6 +319,7 @@ public class Fields {
 	public static final int engineSnifferRpmThreshold_offset = 4;
 	public static final int engineType_offset = 0;
 	public static final int ERROR_BUFFER_SIZE = 120;
+	public static final int ET_BMW_M73_PROTEUS = 63;
 	public static final int ET_CITROEN_TU3JP = 65;
 	public static final int ET_MRE_MIATA_NA6 = 12;
 	public static final int ET_MRE_MIATA_NB2_MAF = 15;
@@ -1250,9 +1252,29 @@ public class Fields {
 	public static final int triggerSimulatorPins1_offset = 736;
 	public static final int triggerSimulatorPins2_offset = 737;
 	public static final int triggerSimulatorPins3_offset = 738;
+	public static final char TS_BURN_COMMAND = 'B';
+	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
+	public static final char TS_COMMAND_F = 'F';
+	public static final char TS_CRC_CHECK_COMMAND = 'k';
+	public static final char TS_EXECUTE = 'E';
 	public static final int TS_FILE_VERSION = 20200310;
+	public static final char TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY = '8';
+	public static final char TS_GET_CONFIG_ERROR = 'e';
+	public static final char TS_GET_FIRMWARE_VERSION = 'V';
+	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
+	public static final char TS_GET_STRUCT = '9';
+	public static final char TS_GET_TEXT = 'G';
+	public static final char TS_HELLO_COMMAND = 'S';
+	public static final char TS_IO_TEST_COMMAND = 'w';
+	public static final char TS_OUTPUT_COMMAND = 'O';
 	public static final int TS_OUTPUT_SIZE = 244;
+	public static final char TS_PAGE_COMMAND = 'P';
+	public static final char TS_PERF_TRACE_BEGIN = 'r';
+	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
+	public static final char TS_READ_COMMAND = 'R';
+	public static final char TS_SET_LOGGER_SWITCH = 'l';
 	public static final String TS_SIGNATURE = "rusEFI v1.2020.4";
+	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;
