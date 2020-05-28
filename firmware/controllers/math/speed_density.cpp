@@ -13,7 +13,6 @@
 #include "interpolation.h"
 #include "engine.h"
 #include "engine_math.h"
-#include "maf2map.h"
 #include "config_engine_specs.h"
 #include "perf_trace.h"
 #include "sensor.h"
@@ -212,5 +211,4 @@ void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
 	afrMap.init(config->afrTable, config->afrLoadBins, config->afrRpmBins);
 	baroCorrMap.init(engineConfiguration->baroCorrTable, engineConfiguration->baroCorrPressureBins, engineConfiguration->baroCorrRpmBins);
-	initMaf2Map();
 }
