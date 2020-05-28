@@ -128,7 +128,6 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 		return ICU_CHANNEL_1;
 
 	case GPIOA_1: // TIM2
-	case GPIOA_3: // TIM9
 	case GPIOA_7: // TIM3
 	case GPIOA_9: // TIM1
 	case GPIOB_3: // TIM2
