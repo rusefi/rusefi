@@ -116,18 +116,6 @@ EngineState::EngineState() {
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// this feeds rusEfi console Live Data
 	engine->engineState.isCrankingState = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-
-	engine->sensors.iat = getIntakeAirTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
-#if !EFI_CANBUS_SLAVE
-	engine->sensors.clt = getCoolantTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_CANBUS_SLAVE */
-
-#if EFI_UNIT_TEST
-	if (!cisnan(engine->sensors.mockClt)) {
-		engine->sensors.clt = engine->sensors.mockClt;
-	}
-#endif
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
