@@ -55,7 +55,7 @@ void startKnockSampling(uint8_t cylinderIndex) {
 	}
 
 	// Sample for 60 degrees
-	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * 60 * 1e-6;
+	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * 45 * 1e-6;
 	constexpr int sampleRate = 217000;
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
