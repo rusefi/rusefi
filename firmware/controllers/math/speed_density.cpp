@@ -212,5 +212,4 @@ void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
 	afrMap.init(config->afrTable, config->afrLoadBins, config->afrRpmBins);
 	baroCorrMap.init(engineConfiguration->baroCorrTable, engineConfiguration->baroCorrPressureBins, engineConfiguration->baroCorrRpmBins);
-	initMaf2Map();
 }
