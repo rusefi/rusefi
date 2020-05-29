@@ -127,7 +127,7 @@ typedef struct {
 	scaled_percent iatCorrection; // 64
 	scaled_percent cltCorrection; // 66
 	scaled_percent baroCorrection; // 68
-	scaled_ms fuelPidCorrection; // 70
+	scaled_percent shortTermFuelTrim; // 70
 
 	// Wall model AE
 	scaled_ms wallFuelAmount; // 72
