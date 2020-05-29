@@ -58,12 +58,12 @@ public class BenchTestPane {
             @Override
             public void actionPerformed(ActionEvent e) {
                 BinaryProtocol bp = BinaryProtocolHolder.INSTANCE.getCurrentStreamState();
-                bp.executeCommand(new byte[]{'r'}, "begin trace", false);
+                bp.executeCommand(new byte[]{Fields.TS_PERF_TRACE_BEGIN}, "begin trace");
 
                 try {
                     Thread.sleep(500);
 
-                    byte[] packet = bp.executeCommand(new byte[]{'b'}, "get trace", true);
+                    byte[] packet = bp.executeCommand(new byte[]{Fields.TS_PERF_TRACE_GET_BUFFER}, "get trace", true);
                     if (!checkResponseCode(packet, RESPONSE_OK) || ((packet.length - 1) % 8) != 0)
                         throw new IllegalStateException("Unexpected packet");
 

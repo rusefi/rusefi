@@ -47,7 +47,7 @@ public enum LiveDocsRegistry {
         putShort(packet, 1, swap16(liveDocRequestId)); // offset
         putShort(packet, 3, swap16(size));
 
-        byte[] responseWithCode = binaryProtocol.executeCommand(packet, "get LiveDoc", false);
+        byte[] responseWithCode = binaryProtocol.executeCommand(packet, "get LiveDoc");
         if (responseWithCode == null || responseWithCode.length != (size + 1) || responseWithCode[0] != RESPONSE_OK)
             return;
 

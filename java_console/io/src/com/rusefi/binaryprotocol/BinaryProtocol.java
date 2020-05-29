@@ -249,7 +249,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             putShort(packet, 3, swap16(offset));
             putShort(packet, 5, swap16(requestSize));
 
-            byte[] response = executeCommand(packet, "load image offset=" + offset, false);
+            byte[] response = executeCommand(packet, "load image offset=" + offset);
 
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
                 String code = (response == null || response.length == 0) ? "empty" : "code " + response[0];
@@ -288,7 +288,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
             byte packet[] = new byte[7];
             packet[0] = COMMAND_CRC_CHECK_COMMAND;
-            byte[] response = executeCommand(packet, "get CRC32", false);
+            byte[] response = executeCommand(packet, "get CRC32");
 
             if (checkResponseCode(response, RESPONSE_OK) && response.length == 5) {
                 ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
@@ -302,6 +302,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             }
         }
         return null;
+    }
+
+    public byte[] executeCommand(byte[] packet, String msg) {
+        return executeCommand(packet, msg, false);
     }
 
     /**
@@ -351,7 +355,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = executeCommand(packet, "writeImage", false);
+            byte[] response = executeCommand(packet, "writeImage");
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != 1) {
                 logger.error("writeData: Something is wrong, retrying...");
                 continue;
@@ -368,7 +372,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         while (true) {
             if (isClosed)
                 return;
-            byte[] response = executeCommand(new byte[]{COMMAND_BURN}, "burn", false);
+            byte[] response = executeCommand(new byte[]{COMMAND_BURN}, "burn");
             if (!checkResponseCode(response, RESPONSE_BURN_OK) || response.length != 1) {
                 continue;
             }
@@ -440,6 +444,17 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             FileLog.MAIN.log(e);
             return null;
         }
+    }
+
+    public void getComposite() throws IOException {
+        if (isClosed)
+            return;
+
+        byte packet[] = new byte[1];
+        packet[0] = Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY;
+
+//        executeCommand()
+
     }
 
     public boolean requestOutputChannels() {
