@@ -139,7 +139,7 @@ public class SensorLogger {
 
     private static void startSensorLogFile() {
         FileLog.createFolderIfNeeded();
-        String fileName = FileLog.DIR + FileLog.getDate() + ".msl";
+        String fileName = FileLog.DIR + "rusEFI_" + FileLog.getDate() + ".msl";
 
         fileStartTime = System.currentTimeMillis();
         try {
