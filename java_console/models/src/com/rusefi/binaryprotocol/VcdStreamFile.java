@@ -19,6 +19,8 @@ public class VcdStreamFile extends StreamFile {
     private static final String TAG_SECONDARY = "s";
     private static final String TAG_TRG = "r";
     private static final String TAG_SYNC = "y";
+    private static final String TAG_COIL = "c";
+    private static final String TAG_INJ = "i";
 
     private static void writeHeader(Writer writer, Date date) throws IOException {
         writer.write("$date\n");
@@ -35,6 +37,8 @@ public class VcdStreamFile extends StreamFile {
                 "$var wire 1 " + TAG_SECONDARY + " SEC_TRG $end\n" +
                 "$var wire 1 " + TAG_TRG + " TRG $end\n" +
                 "$var wire 1 " + TAG_SYNC + " SYNC $end\n" +
+                "$var wire 1 " + TAG_COIL + " COIL $end\n" +
+                "$var wire 1 " + TAG_INJ + " INJ $end\n" +
                 "$upscope $end\n" +
                 "$enddefinitions $end\n" +
                 "$dumpvars\n");
@@ -47,7 +51,8 @@ public class VcdStreamFile extends StreamFile {
             writer.write(event.isSecondaryTriggerAsInt() + TAG_SECONDARY + "\n");
             writer.write(event.isTrgAsInt() + TAG_TRG + "\n");
             writer.write(event.isSyncAsInt() + TAG_SYNC + "\n");
-
+            writer.write(event.isCoil() + TAG_COIL + "\n");
+            writer.write(event.isInjector() + TAG_INJ + "\n");
         }
         writer.flush();
     }
