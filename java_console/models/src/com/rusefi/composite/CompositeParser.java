@@ -41,12 +41,4 @@ public class CompositeParser {
         return events;
     }
 
-    public static void writeVCD(List<CompositeEvent> events, Writer writer, Date date) throws IOException {
-        VcdStreamFile.writeHeader(writer, date);
-        VcdStreamFile.appendEvents(events, writer);
-    }
-
-    public static void writeVCD(List<CompositeEvent> events, FileWriter fileWriter) throws IOException {
-        writeVCD(events, fileWriter, new Date());
-    }
 }

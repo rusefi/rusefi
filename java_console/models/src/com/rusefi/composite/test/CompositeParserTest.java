@@ -1,5 +1,6 @@
 package com.rusefi.composite.test;
 
+import com.rusefi.binaryprotocol.VcdStreamFile;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
 import org.junit.Test;
@@ -18,6 +19,6 @@ public class CompositeParserTest {
 
         StringWriter writer = new StringWriter();
         //FileWriter writer = new FileWriter("rusEFI.vcd");
-        CompositeParser.writeVCD(events, writer, new Date(1590847552574L));
+        VcdStreamFile.writeVCD(events, writer, new Date(1590847552574L));
     }
 }

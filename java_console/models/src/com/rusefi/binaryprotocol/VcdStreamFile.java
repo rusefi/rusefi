@@ -14,15 +14,13 @@ import java.util.List;
  *
  * @see FileLog#WIKI_URL
  */
-public class VcdStreamFile implements StreamFile {
+public class VcdStreamFile extends StreamFile {
     private static final String TAG_PRIMARY = "t";
     private static final String TAG_SECONDARY = "s";
     private static final String TAG_TRG = "r";
     private static final String TAG_SYNC = "y";
 
-    private FileWriter writer;
-
-    public static void writeHeader(Writer writer, Date date) throws IOException {
+    private static void writeHeader(Writer writer, Date date) throws IOException {
         writer.write("$date\n");
         writer.write("\t" + date + "\n");
         writer.write("$end\n" +
@@ -54,6 +52,14 @@ public class VcdStreamFile implements StreamFile {
         writer.flush();
     }
 
+    public static void writeVCD(List<CompositeEvent> events, Writer writer, Date date) throws IOException {
+        writeHeader(writer, date);
+        appendEvents(events, writer);
+    }
+
+    public static void writeVCD(List<CompositeEvent> events, FileWriter fileWriter) throws IOException {
+        writeVCD(events, fileWriter, new Date());
+    }
 
     @Override
     public void append(List<CompositeEvent> events) {
@@ -67,17 +73,5 @@ public class VcdStreamFile implements StreamFile {
         } catch (IOException e) {
             // ignoring this one
         }
-    }
-
-    @Override
-    public void close() {
-        if (writer != null) {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                // ignoring this one
-            }
-        }
-        writer = null;
     }
 }
