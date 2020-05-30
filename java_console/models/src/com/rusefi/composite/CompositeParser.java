@@ -1,16 +1,11 @@
 package com.rusefi.composite;
 
 import com.opensr5.ini.field.EnumIniField;
-import com.rusefi.binaryprotocol.VcdStreamFile;
 import com.rusefi.config.generated.Fields;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CompositeParser {
@@ -33,10 +28,12 @@ public class CompositeParser {
             boolean secondaryTrigger = EnumIniField.getBit(flags, 1);
             boolean trg = EnumIniField.getBit(flags, 2);
             boolean sync = EnumIniField.getBit(flags, 3);
+            boolean coil = EnumIniField.getBit(flags, 4);
+            boolean injector  = EnumIniField.getBit(flags, 5);
 
             ptr += Fields.COMPOSITE_PACKET_SIZE;
 
-            events.add(new CompositeEvent(timestamp, primaryTrigger, secondaryTrigger, trg, sync));
+            events.add(new CompositeEvent(timestamp, primaryTrigger, secondaryTrigger, trg, sync, coil, injector));
         }
         return events;
     }
