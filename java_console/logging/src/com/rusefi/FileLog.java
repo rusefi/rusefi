@@ -22,6 +22,7 @@ public enum FileLog {
     public static final String LOG_INFO_TEXT = "Writing logs to '" + DIR + "'";
     public static final String OS_VERSION = "os.version";
     public static final String DATE_PATTERN = "yyyy-MM-dd_HH_mm_ss_SSS";
+    private static final String WIKI_URL = "https://github.com/rusefi/rusefi/wiki/rusEFI-logs-folder";
     public static String currentLogName;
     public static final String END_OF_TIMESTAND_TAG = "<EOT>: ";
     public static final Logger LOGGER = new Logger() {
@@ -62,8 +63,7 @@ public enum FileLog {
 
     private static void writeReadmeFile() {
         LazyFile file = new LazyFile(DIR + "README.html");
-        file.write("<center>" +
-                "<a href='https://github.com/rusefi/rusefi/wiki/rusEFI-logs-folder'>More info online<br/><img src=https://raw.githubusercontent.com/wiki/rusefi/rusefi/logo.gif></a>");
+        file.write("<center>" + "<a href='" + WIKI_URL + "'>More info online<br/><img src=https://raw.githubusercontent.com/wiki/rusefi/rusefi/logo.gif></a>");
         try {
             file.close();
         } catch (IOException e) {

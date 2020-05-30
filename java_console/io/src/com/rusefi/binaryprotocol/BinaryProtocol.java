@@ -67,12 +67,32 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private final Object imageLock = new Object();
     private ConfigurationImage controller;
 
+    private static final int COMPOSITE_OFF_RPM = 300;
+
+    /**
+     * Composite logging turns off after 10 seconds of RPM above 300
+     */
+    private boolean needCompositeLogger = true;
+    private boolean isCompositeLoggerEnabled;
+    private long lastLowRpmTime = System.currentTimeMillis();
+
+    private VcdStreamFile composite = new VcdStreamFile();
+
     public boolean isClosed;
     /**
      * Snapshot of current gauges status
      * @see BinaryProtocolCommands#COMMAND_OUTPUTS
      */
     public byte[] currentOutputs;
+    private SensorCentral.SensorListener rpmListener = value -> {
+        if (value <= COMPOSITE_OFF_RPM) {
+            needCompositeLogger = true;
+            lastLowRpmTime = System.currentTimeMillis();
+        } else if (System.currentTimeMillis() - lastLowRpmTime > 10 * Timeouts.SECOND) {
+            FileLog.MAIN.logLine("Time to turn off composite logging");
+            needCompositeLogger = false;
+        }
+    };
 
     protected BinaryProtocol(final Logger logger, IoStream stream) {
         this.logger = logger;
@@ -134,6 +154,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             return false;
 
         startTextPullThread(listener);
+        SensorCentral.getInstance().addListener(Sensor.RPM, rpmListener);
         return true;
     }
 
@@ -152,7 +173,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                             public void run() {
                                 if (requestOutputChannels())
                                 	ConnectionWatchdog.onDataArrived();
-//                                getComposite();
+                                compositeLogic();
                                 String text = requestPendingMessages();
                                 if (text != null)
                                     listener.onDataArrived((text + "\r\n").getBytes());
@@ -168,6 +189,19 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         Thread tr = new Thread(textPull);
         tr.setName("text pull");
         tr.start();
+    }
+
+    private void compositeLogic() {
+        if (needCompositeLogger) {
+            getComposite();
+        } else if (isCompositeLoggerEnabled) {
+            byte packet[] = new byte[2];
+            packet[0] = Fields.TS_SET_LOGGER_SWITCH;
+            packet[1] = Fields.TS_COMPOSITE_DISABLE;
+            executeCommand(packet, "disable composite");
+            isCompositeLoggerEnabled = false;
+            composite.close();
+        }
     }
 
     public Logger getLogger() {
@@ -338,6 +372,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         if (isClosed)
             return;
         isClosed = true;
+        SensorCentral.getInstance().removeListener(Sensor.RPM, rpmListener);
         stream.close();
     }
 
@@ -443,7 +478,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             byte[] response = executeCommand(new byte[]{Fields.TS_GET_TEXT}, "text", true);
             if (response != null && response.length == 1)
                 Thread.sleep(100);
-            //        System.out.println(result);
             return new String(response, 1, response.length - 1);
         } catch (InterruptedException e) {
             FileLog.MAIN.log(e);
@@ -457,15 +491,14 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
         byte packet[] = new byte[1];
         packet[0] = Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY;
+        // get command would enable composite logging in controller but we need to turn it off from our end
+        // todo: actually if console gets disconnected composite logging might end up enabled in controller?
+        isCompositeLoggerEnabled = true;
 
         byte[] response = executeCommand(packet, "composite log", true);
         if (checkResponseCode(response, RESPONSE_OK)) {
             List<CompositeEvent> events = CompositeParser.parse(response);
-            try {
-                CompositeParser.writeVCD(events, new FileWriter("rusEFI.vcd"));
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
+            composite.append(events);
         }
     }
 
