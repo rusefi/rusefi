@@ -1149,6 +1149,8 @@
 #define tcu_solenoid7_offset 1198
 #define tcu_solenoid8_offset 1199
 #define TCU_SOLENOID_COUNT 8
+#define tcuDownshiftButtonPin_offset 1819
+#define tcuUpshiftButtonPin_offset 1818
 #define test557pin_offset 3101
 #define throttlePedalPositionAdcChannel_offset 580
 #define throttlePedalPositionSecondAdcChannel_offset 683
@@ -1353,8 +1355,6 @@
 #define unusedBit_283_30_offset 976
 #define unusedBit_283_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedConsoleSerialRxPin_offset 1819
-#define unusedConsoleSerialTxPin_offset 1818
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHere_offset 761
 #define unusedHereWeHave_offset 1464
