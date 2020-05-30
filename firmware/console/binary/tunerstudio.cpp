@@ -827,10 +827,10 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 #if EFI_TOOTH_LOGGER
 	case TS_SET_LOGGER_SWITCH:
 		switch(data[0]) {
-		case 0x01:
+		case TS_COMPOSITE_ENABLE:
 			EnableToothLogger();
 			break;
-		case 0x02:
+		case TS_COMPOSITE_DISABLE:
 			DisableToothLogger();
 			break;
 		default:
