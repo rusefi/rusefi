@@ -76,7 +76,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private boolean isCompositeLoggerEnabled;
     private long lastLowRpmTime = System.currentTimeMillis();
 
-    private VcdStreamFile composite = new VcdStreamFile();
+    private List<StreamFile> compositeLogs = Arrays.asList(new VcdStreamFile(), new TSHighSpeedLog());
 
     public boolean isClosed;
     /**
@@ -200,7 +200,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             packet[1] = Fields.TS_COMPOSITE_DISABLE;
             executeCommand(packet, "disable composite");
             isCompositeLoggerEnabled = false;
-            composite.close();
+            for (StreamFile composite : compositeLogs)
+                composite.close();
         }
     }
 
@@ -498,7 +499,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         byte[] response = executeCommand(packet, "composite log", true);
         if (checkResponseCode(response, RESPONSE_OK)) {
             List<CompositeEvent> events = CompositeParser.parse(response);
-            composite.append(events);
+            for (StreamFile composite : compositeLogs)
+                composite.append(events);
         }
     }
 
