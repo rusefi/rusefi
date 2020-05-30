@@ -48,6 +48,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.rusefi_binary";
     private static final String CONFIGURATION_RUSEFI_XML = "current_configuration.msq";
+    private static final int HIGH_RPM_DELAY = Integer.getInteger("high_speed_logger_time", 10);
     /**
      * This properly allows to switch to non-CRC32 mode
      * todo: finish this feature, assuming we even need it.
@@ -88,7 +89,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         if (value <= COMPOSITE_OFF_RPM) {
             needCompositeLogger = true;
             lastLowRpmTime = System.currentTimeMillis();
-        } else if (System.currentTimeMillis() - lastLowRpmTime > 10 * Timeouts.SECOND) {
+        } else if (System.currentTimeMillis() - lastLowRpmTime > HIGH_RPM_DELAY * Timeouts.SECOND) {
             FileLog.MAIN.logLine("Time to turn off composite logging");
             needCompositeLogger = false;
         }
