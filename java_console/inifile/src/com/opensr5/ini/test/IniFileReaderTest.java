@@ -108,9 +108,9 @@ public class IniFileReaderTest {
         assertEquals(0, EnumIniField.getBitRange(4, 0, 1));
         assertEquals(3, EnumIniField.getBitRange(7, 0, 1));
 
-        assertEquals(1, EnumIniField.getBitRange(0xff, 0, 0));
+        assertEquals(true, EnumIniField.getBit(0xff, 0));
 
-        assertEquals(1, EnumIniField.getBitRange(0xf0, 4, 0));
+        assertEquals(true, EnumIniField.getBit(0xf0, 4));
         assertEquals(2, EnumIniField.getBitRange(0xf0, 3, 1));
     }
 

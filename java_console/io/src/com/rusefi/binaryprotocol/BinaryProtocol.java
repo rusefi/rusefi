@@ -7,6 +7,8 @@ import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.FileLog;
 import com.rusefi.Timeouts;
+import com.rusefi.composite.CompositeEvent;
+import com.rusefi.composite.CompositeParser;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
@@ -18,10 +20,12 @@ import jssc.SerialPortException;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.EOFException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -148,6 +152,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                             public void run() {
                                 if (requestOutputChannels())
                                 	ConnectionWatchdog.onDataArrived();
+//                                getComposite();
                                 String text = requestPendingMessages();
                                 if (text != null)
                                     listener.onDataArrived((text + "\r\n").getBytes());
@@ -446,15 +451,22 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
-    public void getComposite() throws IOException {
+    public void getComposite() {
         if (isClosed)
             return;
 
         byte packet[] = new byte[1];
         packet[0] = Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY;
 
-//        executeCommand()
-
+        byte[] response = executeCommand(packet, "composite log", true);
+        if (checkResponseCode(response, RESPONSE_OK)) {
+            List<CompositeEvent> events = CompositeParser.parse(response);
+            try {
+                CompositeParser.writeVCD(events, new FileWriter("rusEFI.vcd"));
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+        }
     }
 
     public boolean requestOutputChannels() {
