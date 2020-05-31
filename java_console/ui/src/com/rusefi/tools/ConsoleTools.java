@@ -2,15 +2,18 @@ package com.rusefi.tools;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.Logger;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.io.ConnectionStateListener;
-import com.rusefi.io.ConnectionStatusLogic;
-import com.rusefi.io.IoStream;
-import com.rusefi.io.LinkManager;
+import com.rusefi.core.EngineState;
+import com.rusefi.core.ResponseBuffer;
+import com.rusefi.io.*;
+import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
@@ -27,6 +30,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class ConsoleTools {
@@ -36,25 +40,27 @@ public class ConsoleTools {
     private static Map<String, String> toolsHelp = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     static {
-        TOOLSput("help", args -> printTools(), "Print this help.");
-        TOOLSput("headless", ConsoleTools::runHeadless, "Connect to rusEFI controller and start saving logs.");
+        registerTool("help", args -> printTools(), "Print this help.");
+        registerTool("headless", ConsoleTools::runHeadless, "Connect to rusEFI controller and start saving logs.");
 
-        TOOLSput("ptrace_enums", ConsoleTools::runPerfTraceTool, "NOT A USER TOOL. Development tool to process pefrormance trace enums");
-        TOOLSput("firing_order", ConsoleTools::runFiringOrderTool, "NOT A USER TOOL. Development tool relating to adding new firing order into rusEFI firmware.");
-        TOOLSput("functional_test", ConsoleTools::runFunctionalTest, "NOT A USER TOOL. Development tool related to functional testing");
-        TOOLSput("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");
+        registerTool("ptrace_enums", ConsoleTools::runPerfTraceTool, "NOT A USER TOOL. Development tool to process pefrormance trace enums");
+        registerTool("firing_order", ConsoleTools::runFiringOrderTool, "NOT A USER TOOL. Development tool relating to adding new firing order into rusEFI firmware.");
+        registerTool("functional_test", ConsoleTools::runFunctionalTest, "NOT A USER TOOL. Development tool related to functional testing");
+        registerTool("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");
 
-        TOOLSput("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
-        TOOLSput("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
+        registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
+        registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
-        TOOLSput("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
-        TOOLSput(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI authentication token.");
+        registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
+        registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI authentication token.");
 
-        TOOLSput("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
-        TOOLSput(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+
+        registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
+        registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
+        registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
     }
 
-    private static void TOOLSput(String command, ConsoleTool callback, String help) {
+    private static void registerTool(String command, ConsoleTool callback, String help) {
         TOOLS.put(command, callback);
         toolsHelp.put(command, help);
     }
@@ -234,6 +240,59 @@ public class ConsoleTools {
                     resource.getProtocol() + " for class: " +
                     clazz.getName() + " resource: " + resource.toString());
         }
+    }
+
+    static void detect(String[] strings) throws IOException, InterruptedException {
+        String autoDetectedPort = autoDetectPort();
+        if (autoDetectedPort == null) {
+            System.out.println("rusEFI not detected");
+            return;
+        }
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
+        Logger logger = FileLog.LOGGER;
+        IncomingDataBuffer incomingData = BinaryProtocol.createDataBuffer(stream, logger);
+        byte[] commandBytes = BinaryProtocol.getTextCommandBytes("hello");
+        stream.sendPacket(commandBytes, logger);
+        // skipping response
+        incomingData.getPacket(logger, "", true);
+
+        sleep(300);
+        stream.sendPacket(new byte[]{Fields.TS_GET_TEXT}, logger);
+        sleep(300);
+
+        byte[] response = incomingData.getPacket(logger, "", true);
+        if (response == null) {
+            System.out.println("No response");
+            return;
+        }
+        String textResponse = new String(response, 1, response.length - 1);
+
+        StringBuilder messages = new StringBuilder();
+
+        ResponseBuffer responseBuffer = new ResponseBuffer(unpack -> {
+            EngineState.ValueCallback<String> callback = new EngineState.ValueCallback<String>() {
+                @Override
+                public void onUpdate(String value) {
+                    if (value.startsWith(Fields.PROTOCOL_HELLO_PREFIX))
+                        messages.append(value + "\n");
+                }
+            };
+            while (!unpack.isEmpty()) {
+                String original = unpack;
+                unpack = EngineState.handleStringActionPair(unpack, new EngineState.StringActionPair(Fields.PROTOCOL_MSG, callback), null);
+                if (original.length() == unpack.length()) {
+                    // skip key
+                    unpack = EngineState.skipToken(unpack);
+                    // skip value
+                    unpack = EngineState.skipToken(unpack);
+                }
+            }
+        });
+        responseBuffer.append(textResponse + "\r\n", LinkManager.ENCODER);
+
+        System.out.println("Signature: " + SerialAutoChecker.SIGNATURE);
+        System.out.println("It says " + messages);
+        System.exit(0);
     }
 
     interface ConsoleTool {
