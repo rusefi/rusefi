@@ -1045,8 +1045,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	brain_pin_e binarySerialRxPin;	
 	
 	brain_pin_e[AUX_DIGITAL_VALVE_COUNT iterate] auxValves
-	brain_pin_e unusedConsoleSerialTxPin;	todo: finish pin migration from hard-coded to configurable?
-	brain_pin_e unusedConsoleSerialRxPin;todo: finish pin migration from hard-coded to configurable?
+	switch_input_pin_e tcuUpshiftButtonPin
+	switch_input_pin_e tcuDownshiftButtonPin
 
 
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;"v",      1,     0,   0.0,    10,   2
@@ -1577,6 +1577,9 @@ end_struct
 // 0x39
 #define TS_GET_STRUCT '9'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
+
+#define TS_COMPOSITE_ENABLE 1
+#define TS_COMPOSITE_DISABLE 2
 
 // Performance tracing
 #define TS_PERF_TRACE_BEGIN 'r'

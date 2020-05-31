@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="annotations" level="project" />
     <orderEntry type="module" module-name="opensr5" exported="" />
+    <orderEntry type="module" module-name="enum_to_string" />
   </component>
 </module>

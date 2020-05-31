@@ -7,6 +7,8 @@ import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.FileLog;
 import com.rusefi.Timeouts;
+import com.rusefi.composite.CompositeEvent;
+import com.rusefi.composite.CompositeParser;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
@@ -18,10 +20,12 @@ import jssc.SerialPortException;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.EOFException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -44,6 +48,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.rusefi_binary";
     private static final String CONFIGURATION_RUSEFI_XML = "current_configuration.msq";
+    private static final int HIGH_RPM_DELAY = Integer.getInteger("high_speed_logger_time", 10);
     /**
      * This properly allows to switch to non-CRC32 mode
      * todo: finish this feature, assuming we even need it.
@@ -63,12 +68,32 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private final Object imageLock = new Object();
     private ConfigurationImage controller;
 
+    private static final int COMPOSITE_OFF_RPM = 300;
+
+    /**
+     * Composite logging turns off after 10 seconds of RPM above 300
+     */
+    private boolean needCompositeLogger = true;
+    private boolean isCompositeLoggerEnabled;
+    private long lastLowRpmTime = System.currentTimeMillis();
+
+    private List<StreamFile> compositeLogs = Arrays.asList(new VcdStreamFile(), new TSHighSpeedLog());
+
     public boolean isClosed;
     /**
      * Snapshot of current gauges status
      * @see BinaryProtocolCommands#COMMAND_OUTPUTS
      */
     public byte[] currentOutputs;
+    private SensorCentral.SensorListener rpmListener = value -> {
+        if (value <= COMPOSITE_OFF_RPM) {
+            needCompositeLogger = true;
+            lastLowRpmTime = System.currentTimeMillis();
+        } else if (System.currentTimeMillis() - lastLowRpmTime > HIGH_RPM_DELAY * Timeouts.SECOND) {
+            FileLog.MAIN.logLine("Time to turn off composite logging");
+            needCompositeLogger = false;
+        }
+    };
 
     protected BinaryProtocol(final Logger logger, IoStream stream) {
         this.logger = logger;
@@ -130,6 +155,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             return false;
 
         startTextPullThread(listener);
+        SensorCentral.getInstance().addListener(Sensor.RPM, rpmListener);
         return true;
     }
 
@@ -148,6 +174,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                             public void run() {
                                 if (requestOutputChannels())
                                 	ConnectionWatchdog.onDataArrived();
+                                compositeLogic();
                                 String text = requestPendingMessages();
                                 if (text != null)
                                     listener.onDataArrived((text + "\r\n").getBytes());
@@ -163,6 +190,20 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         Thread tr = new Thread(textPull);
         tr.setName("text pull");
         tr.start();
+    }
+
+    private void compositeLogic() {
+        if (needCompositeLogger) {
+            getComposite();
+        } else if (isCompositeLoggerEnabled) {
+            byte packet[] = new byte[2];
+            packet[0] = Fields.TS_SET_LOGGER_SWITCH;
+            packet[1] = Fields.TS_COMPOSITE_DISABLE;
+            executeCommand(packet, "disable composite");
+            isCompositeLoggerEnabled = false;
+            for (StreamFile composite : compositeLogs)
+                composite.close();
+        }
     }
 
     public Logger getLogger() {
@@ -333,6 +374,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         if (isClosed)
             return;
         isClosed = true;
+        SensorCentral.getInstance().removeListener(Sensor.RPM, rpmListener);
         stream.close();
     }
 
@@ -438,7 +480,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             byte[] response = executeCommand(new byte[]{Fields.TS_GET_TEXT}, "text", true);
             if (response != null && response.length == 1)
                 Thread.sleep(100);
-            //        System.out.println(result);
             return new String(response, 1, response.length - 1);
         } catch (InterruptedException e) {
             FileLog.MAIN.log(e);
@@ -446,15 +487,22 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
-    public void getComposite() throws IOException {
+    public void getComposite() {
         if (isClosed)
             return;
 
         byte packet[] = new byte[1];
         packet[0] = Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY;
+        // get command would enable composite logging in controller but we need to turn it off from our end
+        // todo: actually if console gets disconnected composite logging might end up enabled in controller?
+        isCompositeLoggerEnabled = true;
 
-//        executeCommand()
-
+        byte[] response = executeCommand(packet, "composite log", true);
+        if (checkResponseCode(response, RESPONSE_OK)) {
+            List<CompositeEvent> events = CompositeParser.parse(response);
+            for (StreamFile composite : compositeLogs)
+                composite.append(events);
+        }
     }
 
     public boolean requestOutputChannels() {

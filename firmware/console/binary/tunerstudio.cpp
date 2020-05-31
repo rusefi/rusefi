@@ -474,6 +474,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_FILE_RANGE
 			|| command == TS_SET_LOGGER_SWITCH
 			|| command == TS_GET_LOGGER_GET_BUFFER
+			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
@@ -826,10 +827,10 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 #if EFI_TOOTH_LOGGER
 	case TS_SET_LOGGER_SWITCH:
 		switch(data[0]) {
-		case 0x01:
+		case TS_COMPOSITE_ENABLE:
 			EnableToothLogger();
 			break;
-		case 0x02:
+		case TS_COMPOSITE_DISABLE:
 			DisableToothLogger();
 			break;
 		default:
@@ -841,17 +842,28 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 		break;
 		case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
+
 		{
+			EnableToothLoggerIfNotEnabled();
 			const uint8_t* const buffer = GetToothLoggerBuffer().Buffer;
 
 			const uint8_t* const start = buffer + COMPOSITE_PACKET_SIZE * transmitted;
 
 			int currentEnd = getCompositeRecordCount();
 
+			// set debug_mode 40
+			if (engineConfiguration->debugMode == DBG_40) {
+				tsOutputChannels.debugIntField1 = currentEnd;
+				tsOutputChannels.debugIntField2 = transmitted;
+
+			}
+
 			if (currentEnd > transmitted) {
 				// more normal case - tail after head
 				sr5SendResponse(tsChannel, TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted));
 				transmitted = currentEnd;
+			} else if (currentEnd == transmitted) {
+				sr5SendResponse(tsChannel, TS_CRC, start, 0);
 			} else {
 				// we are here if tail of buffer has reached the end of buffer and re-started from the start of buffer
 				// sending end of the buffer, next transmission would take care of the rest
