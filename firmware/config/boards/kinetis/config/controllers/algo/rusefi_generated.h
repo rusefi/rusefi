@@ -1018,6 +1018,7 @@
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
 #define PROTOCOL_ES_DOWN "d"
 #define PROTOCOL_ES_UP "u"
+#define PROTOCOL_HELLO_PREFIX "***"
 #define PROTOCOL_HIP_NAME "HIP"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
 #define PROTOCOL_MSG "msg"

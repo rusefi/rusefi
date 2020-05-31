@@ -56,7 +56,7 @@ public class VariableRegistry  {
         }
         value = applyVariables(value);
         int multPosition = value.indexOf(MULT_TOKEN);
-        if (multPosition != -1) {
+        if (!isQuoted(value, '"') && multPosition != -1) {
             Integer first = Integer.valueOf(value.substring(0, multPosition));
             Integer second = Integer.valueOf(value.substring(multPosition + 1));
             value = String.valueOf(first * second);

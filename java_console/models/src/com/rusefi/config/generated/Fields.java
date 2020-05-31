@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 31 13:45:22 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 31 14:04:20 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1007,6 +1007,7 @@ public class Fields {
 	public static final String PROTOCOL_ENGINE_SNIFFER = "wave_chart";
 	public static final String PROTOCOL_ES_DOWN = "d";
 	public static final String PROTOCOL_ES_UP = "u";
+	public static final String PROTOCOL_HELLO_PREFIX = "***";
 	public static final String PROTOCOL_HIP_NAME = "HIP";
 	public static final String PROTOCOL_INJ1_SHORT_NAME = "i1";
 	public static final String PROTOCOL_MSG = "msg";
