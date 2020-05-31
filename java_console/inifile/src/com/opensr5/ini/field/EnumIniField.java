@@ -46,6 +46,10 @@ public class EnumIniField extends IniField {
         return enums.get(ordinal);
     }
 
+    public static boolean getBit(int ordinal, int bitPosition) {
+        return getBitRange(ordinal, bitPosition, 0) == 1;
+    }
+
     public static int getBitRange(int ordinal, int bitPosition, int bitSize) {
         ordinal = ordinal >> bitPosition;
         ordinal = ordinal  & ((1 << (bitSize + 1)) - 1);

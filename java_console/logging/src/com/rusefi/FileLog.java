@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.opensr5.Logger;
+import com.rusefi.util.LazyFile;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -21,6 +22,7 @@ public enum FileLog {
     public static final String LOG_INFO_TEXT = "Writing logs to '" + DIR + "'";
     public static final String OS_VERSION = "os.version";
     public static final String DATE_PATTERN = "yyyy-MM-dd_HH_mm_ss_SSS";
+    private static final String WIKI_URL = "https://github.com/rusefi/rusefi/wiki/rusEFI-logs-folder";
     public static String currentLogName;
     public static final String END_OF_TIMESTAND_TAG = "<EOT>: ";
     public static final Logger LOGGER = new Logger() {
@@ -54,8 +56,19 @@ public enum FileLog {
         } catch (FileNotFoundException e) {
             throw new IllegalStateException(e);
         }
+        new Thread(FileLog::writeReadmeFile).start();
         // a bit strange spot for this invocation for sure
         printOsInfo();
+    }
+
+    private static void writeReadmeFile() {
+        LazyFile file = new LazyFile(DIR + "README.html");
+        file.write("<center>" + "<a href='" + WIKI_URL + "'>More info online<br/><img src=https://raw.githubusercontent.com/wiki/rusefi/rusefi/logo.gif></a>");
+        try {
+            file.close();
+        } catch (IOException e) {
+            // ignoring this one
+        }
     }
 
     private static void printOsInfo() {

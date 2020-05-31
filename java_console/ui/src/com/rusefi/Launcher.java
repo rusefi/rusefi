@@ -41,8 +41,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see StartupFrame
  * @see EngineSnifferPanel
  */
-public class Launcher {
-    public static final int CONSOLE_VERSION = 20200522;
+public class Launcher extends rusEFIVersion {
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
     public static final String TAB_INDEX = "main_tab";
@@ -56,8 +55,6 @@ public class Launcher {
     private static SensorCentral.SensorListener wrongVersionListener;
 
     public TabbedPanel tabbedPane = new TabbedPanel();
-
-    public static AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
 
     private static Frame staticFrame;
 
