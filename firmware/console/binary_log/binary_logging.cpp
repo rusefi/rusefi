@@ -27,7 +27,7 @@ static const LogField fields[] = {
 	{tsOutputChannels.veValue, GAUGE_NAME_FUEL_VE, "%", 1},
 	{tsOutputChannels.tCharge, "tCharge", "C", 1},
 	{tsOutputChannels.injectorLagMs, GAUGE_NAME_INJECTOR_LAG, "ms", 3},
-	{tsOutputChannels.fuelPidCorrection, GAUGE_NAME_FUEL_PID_CORR, "ms", 3},
+	{tsOutputChannels.shortTermFuelTrim, GAUGE_NAME_FUEL_PID_CORR, "%", 3},
 	{tsOutputChannels.wallFuelCorrection, GAUGE_NAME_FUEL_WALL_CORRECTION, "ms", 3},
 	{tsOutputChannels.tpsAccelFuel, GAUGE_NAME_FUEL_TPS_EXTRA, "ms", 3},
 	{tsOutputChannels.ignitionAdvance, GAUGE_NAME_TIMING_ADVANCE, "deg", 1},
