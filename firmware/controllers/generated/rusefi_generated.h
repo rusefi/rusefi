@@ -1020,6 +1020,7 @@
 #define PROTOCOL_ES_UP "u"
 #define PROTOCOL_HIP_NAME "HIP"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
+#define PROTOCOL_MSG "msg"
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_TACH_NAME "tach"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
