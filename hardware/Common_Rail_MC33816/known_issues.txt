@@ -14,5 +14,5 @@
 14) RESOLVED IN R0.3.2 The current board layout is very hard to work with - can we please have all components on top? PCB space cost nothing comparing with the stress of flipping and poking
 15) RESOLVED IN R0.3.2 Noxz is asking to move C21 to next to C22
 16)                  terminals usability is asking for improvements. Ideally can we move more terminals to the edge of the board?
-17)  Add many LED's for easier diagnostics like PT2000 board. 
+17) RESOLVED IN R0.3.2 Add many LED's for easier diagnostics like PT2000 board. 
 18)
