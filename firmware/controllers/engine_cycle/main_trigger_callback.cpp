@@ -58,9 +58,6 @@ static const char *prevOutputName = nullptr;
 static InjectionEvent primeInjEvent;
 
 static Logging *logger;
-#if ! EFI_UNIT_TEST
-static Pid fuelPid(&persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid);
-#endif
 
 // todo: figure out if this even helps?
 //#if defined __GNUC__
@@ -284,30 +281,6 @@ void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 #endif /* EFI_DEFAILED_LOGGING */
 }
 
-static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if ! EFI_UNIT_TEST
-	if (GET_RPM_VALUE < CONFIG(fuelClosedLoopRpmThreshold) ||
-			Sensor::get(SensorType::Clt).value_or(0) < CONFIG(fuelClosedLoopCltThreshold) ||
-			Sensor::get(SensorType::Tps1).value_or(100) > CONFIG(fuelClosedLoopTpsThreshold) ||
-			ENGINE(sensors.currentAfr) < CONFIG(fuelClosedLoopAfrLowThreshold) ||
-			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
-		engine->engineState.running.pidCorrection = 0;
-		fuelPid.reset();
-		return;
-	}
-
-	engine->engineState.running.pidCorrection = fuelPid.getOutput(ENGINE(engineState.targetAFR), ENGINE(sensors.currentAfr), NOT_TIME_BASED_PID);
-	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
-#if EFI_TUNER_STUDIO
-		tsOutputChannels.debugFloatField1 = engine->engineState.running.pidCorrection;
-		fuelPid.postState(&tsOutputChannels);
-#endif /* EFI_TUNER_STUDIO */
-	}
-
-#endif
-}
-
-
 static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::HandleFuel);
 	
@@ -441,10 +414,6 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 
 			// we need this to apply new 'triggerIndexByAngle' values
 			engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-		}
-
-		if (CONFIG(fuelClosedLoopCorrectionEnabled)) {
-			fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 		}
 	}
 
