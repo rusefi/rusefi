@@ -1439,12 +1439,12 @@ menuDialog = main
 		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
 		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
 		subMenu = std_separator		
-        subMenu = smLaunchControl,			"Launch Control"
-		subMenu = std_separator	
-		subMenu = smRollingLaunch,			"Rolling Launch"
-		subMenu = std_separator	
-		subMenu = antiLag,        			"Antilag Setup"
-		subMenu = std_separator	
+#        subMenu = smLaunchControl,			"Launch Control"
+#		subMenu = std_separator
+#		subMenu = smRollingLaunch,			"Rolling Launch"
+#		subMenu = std_separator
+#		subMenu = antiLag,        			"Antilag Setup"
+#		subMenu = std_separator
 
 
       menu = "Help"
