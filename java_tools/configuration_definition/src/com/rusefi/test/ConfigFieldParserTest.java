@@ -53,6 +53,17 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void manyStartAreNotMultiplication() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ERROR_BUFFER_SIZE \"***\"\n" +
+                "end_struct\n" +
+                "";
+        VariableRegistry.INSTANCE.clear();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+        new ReaderState().readBufferedReader(reader, Collections.emptyList());
+    }
+
+    @Test
     public void multiplicationInDefine() throws IOException {
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
