@@ -20,7 +20,6 @@ import jssc.SerialPortException;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.EOFException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -99,11 +98,16 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         this.logger = logger;
         this.stream = stream;
 
-        incomingData = new IncomingDataBuffer(logger);
-        stream.setInputListener(incomingData::addData);
+        incomingData = createDataBuffer(stream, logger);
     }
 
-    private static void sleep(int millis) {
+    public static IncomingDataBuffer createDataBuffer(IoStream stream, Logger logger) {
+        IncomingDataBuffer incomingData = new IncomingDataBuffer(logger);
+        stream.setInputListener(incomingData::addData);
+        return incomingData;
+    }
+
+    public static void sleep(int millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
