@@ -24,11 +24,6 @@ public interface LinkConnector extends LinkDecoder {
         public BinaryProtocol getBinaryProtocol() {
             return null;
         }
-
-        @Override
-        public String unpack(String packet) {
-            return LinkDecoder.TEXT_PROTOCOL_DECODER.unpack(packet);
-        }
     };
 
     void connectAndReadConfiguration(ConnectionStateListener listener);

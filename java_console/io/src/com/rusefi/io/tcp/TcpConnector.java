@@ -137,11 +137,6 @@ public class TcpConnector implements LinkConnector {
     }
 
     @Override
-    public String unpack(String packet) {
-        return packet;
-    }
-
-    @Override
     public void send(String command, boolean fireEvent) throws InterruptedException {
         if (bp == null) {
             FileLog.MAIN.logLine("Not connected");
