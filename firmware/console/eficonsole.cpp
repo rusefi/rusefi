@@ -46,11 +46,11 @@ static void sayNothing(void) {
 }
 
 static void sayHello(void) {
-	scheduleMsg(&logger, "*** rusEFI LLC (c) 2012-2020. All rights reserved.");
-	scheduleMsg(&logger, "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
-	scheduleMsg(&logger, "*** Chibios Kernel:       %s", CH_KERNEL_VERSION);
-	scheduleMsg(&logger, "*** Compiled:     " __DATE__ " - " __TIME__ "");
-	scheduleMsg(&logger, "COMPILER=%s", __VERSION__);
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2020. All rights reserved.");
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " COMPILER=%s", __VERSION__);
 
 #if defined(STM32F4) || defined(STM32F7)
 	uint32_t *uid = ((uint32_t *)UID_BASE);
