@@ -17,7 +17,6 @@ import java.io.IOException;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class OnlineTab {
-    public static final String AUTH_TOKEN = "auth_token";
     private static final String TOKEN_WARNING = "Please copy token from your forum profile";
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
@@ -26,7 +25,7 @@ public class OnlineTab {
         JTextField textField = new JTextField();
         textField.setPreferredSize(new Dimension(200, 24));
 
-        String authToken = getConfig().getRoot().getProperty(AUTH_TOKEN);
+        String authToken = getConfig().getRoot().getProperty(Online.AUTH_TOKEN);
         if (authToken.trim().isEmpty())
             authToken = TOKEN_WARNING;
 
@@ -40,7 +39,7 @@ public class OnlineTab {
         save.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                getConfig().getRoot().setProperty(AUTH_TOKEN, textField.getText());
+                getConfig().getRoot().setProperty(Online.AUTH_TOKEN, textField.getText());
             }
         });
         content.add(save);
