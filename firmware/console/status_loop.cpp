@@ -503,11 +503,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	tsOutputChannels->pedalPosition = pedal.Value;
 	// Only report fail if you have one (many people don't)
-	tsOutputChannels->isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedal);
+	tsOutputChannels->isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 
 	// Set raw sensors
-	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1);
-	tsOutputChannels->rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedal);
+	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1Primary);
+	tsOutputChannels->rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
 	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
 	tsOutputChannels->rawIat = Sensor::getRaw(SensorType::Iat);
 	tsOutputChannels->rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
