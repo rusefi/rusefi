@@ -225,7 +225,7 @@ void printWithLength(char *line) {
 }
 
 void appendMsgPrefix(Logging *logging) {
-	append(logging, "msg" DELIMETER);
+	append(logging, PROTOCOL_MSG DELIMETER);
 }
 
 void appendMsgPostfix(Logging *logging) {

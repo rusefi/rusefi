@@ -1534,6 +1534,8 @@ end_struct
 #define CMD_DISABLE "disable"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 
+#define PROTOCOL_MSG "msg"
+
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
