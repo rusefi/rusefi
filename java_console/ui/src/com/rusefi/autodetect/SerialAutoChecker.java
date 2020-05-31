@@ -14,10 +14,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
-class SerialAutoChecker implements Runnable {
+public class SerialAutoChecker implements Runnable {
     private final String serialPort;
     private final CountDownLatch portFound;
     private final AtomicReference<String> result;
+    public static String SIGNATURE;
 
     public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<String> result) {
         this.serialPort = serialPort;
@@ -36,10 +37,11 @@ class SerialAutoChecker implements Runnable {
             byte[] response = incomingData.getPacket(logger, "", false, System.currentTimeMillis());
             if (!checkResponseCode(response, BinaryProtocolCommands.RESPONSE_OK))
                 return;
-            String message = new String(response, 1, response.length - 1);
-            System.out.println("Got " + message + " from " + serialPort);
+            String signature = new String(response, 1, response.length - 1);
+            SIGNATURE = signature;
+            System.out.println("Got " + signature + " from " + serialPort);
             String signatureWithoutMinorVersion = Fields.TS_SIGNATURE.substring(0, Fields.TS_SIGNATURE.length() - 2);
-            if (message.startsWith(signatureWithoutMinorVersion)) {
+            if (signature.startsWith(signatureWithoutMinorVersion)) {
                 result.set(serialPort);
                 portFound.countDown();
             }
