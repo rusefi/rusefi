@@ -17,7 +17,7 @@ import java.io.IOException;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class OnlineTab {
-    private static final String AUTH_TOKEN = "auth_token";
+    public static final String AUTH_TOKEN = "auth_token";
     private static final String TOKEN_WARNING = "Please copy token from your forum profile";
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());

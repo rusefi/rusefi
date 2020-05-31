@@ -15,72 +15,59 @@ import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.ui.OnlineTab;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
+import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+
 public class ConsoleTools {
+    public static final String SET_AUTH_TOKEN = "set_auth_token";
     private static Map<String, ConsoleTool> TOOLS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
+    private static Map<String, String> toolsHelp = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
     static {
-        TOOLS.put("help", args -> printTools());
-        TOOLS.put("headless", ConsoleTools::runHeadless);
-        TOOLS.put("compile", ConsoleTools::invokeCompileExpressionTool);
-        TOOLS.put("ptrace_enums", ConsoleTools::runPerfTraceTool);
-        TOOLS.put("save_binary_configuration", ConsoleTools::saveBinaryConfig);
-        TOOLS.put("functional_test", ConsoleTools::runFunctionalTest);
-        TOOLS.put("compile_fsio_file", ConsoleTools::runCompileTool);
-        TOOLS.put("firing_order", ConsoleTools::runFiringOrderTool);
-        TOOLS.put("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml);
-        TOOLS.put("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT));
-        TOOLS.put(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU));
+        TOOLSput("help", args -> printTools(), "Print this help.");
+        TOOLSput("headless", ConsoleTools::runHeadless, "Connect to rusEFI controller and start saving logs.");
+
+        TOOLSput("ptrace_enums", ConsoleTools::runPerfTraceTool, "NOT A USER TOOL. Development tool to process pefrormance trace enums");
+        TOOLSput("firing_order", ConsoleTools::runFiringOrderTool, "NOT A USER TOOL. Development tool relating to adding new firing order into rusEFI firmware.");
+        TOOLSput("functional_test", ConsoleTools::runFunctionalTest, "NOT A USER TOOL. Development tool related to functional testing");
+        TOOLSput("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");
+
+        TOOLSput("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
+        TOOLSput("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
+
+        TOOLSput("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
+        TOOLSput(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI authentication token.");
+
+        TOOLSput("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
+        TOOLSput(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+    }
+
+    private static void TOOLSput(String command, ConsoleTool callback, String help) {
+        TOOLS.put(command, callback);
+        toolsHelp.put(command, help);
     }
 
     public static void printTools() {
         for (String key : TOOLS.keySet()) {
             System.out.println("Tool available: " + key);
-        }
-    }
-
-    private static void saveBinaryConfig(String[] args) throws IOException {
-        if (args.length < 2) {
-            System.out.println("Please specify output file name for binary configuration");
-            System.exit(-1);
-        }
-        String fileName = args[1];
-
-        String autoDetectedPort = autoDetectPort();
-        if (autoDetectedPort == null)
-            return;
-        LinkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
-            @Override
-            public void onConnectionEstablished() {
-                BinaryProtocol binaryProtocol = LinkManager.connector.getBinaryProtocol();
-                Objects.requireNonNull(binaryProtocol, "binaryProtocol");
-                ConfigurationImage configurationImage = binaryProtocol.getControllerConfiguration();
-                Objects.requireNonNull(configurationImage, "configurationImage");
-
-                try {
-                    ConfigurationImageFile.saveToFile(configurationImage, fileName);
-                    System.exit(0);
-                } catch (IOException e) {
-                    System.out.println("While writing " + e);
-                    System.exit(-1);
-                }
+            String help = toolsHelp.get(key);
+            if (help != null) {
+                System.out.println("\t" + help);
+                System.out.println("\n");
             }
-
-            @Override
-            public void onConnectionFailed() {
-                System.out.println("onConnectionFailed");
-                System.exit(-1);
-            }
-        });
+        }
     }
 
     private static void sendCommand(String command) throws IOException {
@@ -104,6 +91,21 @@ public class ConsoleTools {
     private static void runCompileTool(String[] args) throws IOException {
         int returnCode = invokeCompileFileTool(args);
         System.exit(returnCode);
+    }
+
+    private static void setAuthToken(String[] args) {
+        String newToken = args[1];
+        getConfig().getRoot().setProperty(OnlineTab.AUTH_TOKEN, newToken);
+    }
+
+    private static void printAuthToken() {
+        String authToken = getConfig().getRoot().getProperty(OnlineTab.AUTH_TOKEN);
+        if (authToken.trim().isEmpty()) {
+            System.out.println("Auth token not defined. Please use " + SET_AUTH_TOKEN + " command");
+            System.out.println("\tPlease see https://github.com/rusefi/rusefi/wiki/Online");
+            return;
+        }
+        System.out.println("Auth token: " + authToken);
     }
 
     private static void runFunctionalTest(String[] args) throws InterruptedException {
@@ -212,6 +214,26 @@ public class ConsoleTools {
         Msq tune = Msq.toMsq(image);
         tune.writeXmlFile(Msq.outputXmlFileName);
         Online.upload(new File(Msq.outputXmlFileName), "x");
+    }
+
+    public static long classBuildTimeMillis() throws URISyntaxException, IllegalStateException, IllegalArgumentException {
+        Class<?> clazz = ConsoleTools.class;
+        URL resource = clazz.getResource(clazz.getSimpleName() + ".class");
+        if (resource == null) {
+            throw new IllegalStateException("Failed to find class file for class: " +
+                    clazz.getName());
+        }
+
+        if (resource.getProtocol().equals("file")) {
+            return new File(resource.toURI()).lastModified();
+        } else if (resource.getProtocol().equals("jar")) {
+            String path = resource.getPath();
+            return new File(path.substring(5, path.indexOf("!"))).lastModified();
+        } else {
+            throw new IllegalArgumentException("Unhandled url protocol: " +
+                    resource.getProtocol() + " for class: " +
+                    clazz.getName() + " resource: " + resource.toString());
+        }
     }
 
     interface ConsoleTool {
