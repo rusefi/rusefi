@@ -13,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.*;
 
 public class Online {
+    public static final String AUTH_TOKEN = "auth_token";
     private static final String url = "https://rusefi.com/online/upload.php";
 
     public static void upload(File xmlFile, String authTokenValue) throws IOException {

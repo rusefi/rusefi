@@ -13,12 +13,10 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.ResponseBuffer;
 import com.rusefi.io.*;
-import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.ui.OnlineTab;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
@@ -53,11 +51,19 @@ public class ConsoleTools {
 
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
         registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI authentication token.");
+        registerTool("upload_tune", ConsoleTools::uploadTune, "Upload specified tune file using auth token from settings");
 
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
         registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
         registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+    }
+
+    private static void uploadTune(String[] args) throws IOException {
+        String fileName = args[1];
+        String authToken = getConfig().getRoot().getProperty(Online.AUTH_TOKEN);
+        System.out.println("Trying to upload " + fileName + " using " + authToken);
+        Online.upload(new File(fileName), authToken);
     }
 
     private static void registerTool(String command, ConsoleTool callback, String help) {
@@ -101,11 +107,12 @@ public class ConsoleTools {
 
     private static void setAuthToken(String[] args) {
         String newToken = args[1];
-        getConfig().getRoot().setProperty(OnlineTab.AUTH_TOKEN, newToken);
+        System.out.println("Saving auth token " + newToken);
+        getConfig().getRoot().setProperty(Online.AUTH_TOKEN, newToken);
     }
 
     private static void printAuthToken() {
-        String authToken = getConfig().getRoot().getProperty(OnlineTab.AUTH_TOKEN);
+        String authToken = getConfig().getRoot().getProperty(Online.AUTH_TOKEN);
         if (authToken.trim().isEmpty()) {
             System.out.println("Auth token not defined. Please use " + SET_AUTH_TOKEN + " command");
             System.out.println("\tPlease see https://github.com/rusefi/rusefi/wiki/Online");
@@ -208,7 +215,6 @@ public class ConsoleTools {
     }
 
     private static void convertBinaryToXml(String[] args) throws IOException, JAXBException {
-
         if (args.length < 2) {
             System.err.println("Binary file input expected");
             System.exit(-1);
@@ -219,7 +225,9 @@ public class ConsoleTools {
 
         Msq tune = Msq.toMsq(image);
         tune.writeXmlFile(Msq.outputXmlFileName);
-        Online.upload(new File(Msq.outputXmlFileName), "x");
+        String authToken = getConfig().getRoot().getProperty(Online.AUTH_TOKEN);
+        System.out.println("Using " + authToken);
+        Online.upload(new File(Msq.outputXmlFileName), authToken);
     }
 
     public static long classBuildTimeMillis() throws URISyntaxException, IllegalStateException, IllegalArgumentException {
