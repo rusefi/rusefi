@@ -31,6 +31,10 @@ public class IncomingDataBuffer {
         this.logger = logger;
     }
 
+    public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
+        return getPacket(logger, msg, allowLongResponse, System.currentTimeMillis());
+    }
+
     public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse, long start) throws InterruptedException, EOFException {
         boolean isTimeout = waitForBytes(msg + " header", start, 2);
         if (isTimeout)
