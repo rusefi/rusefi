@@ -206,7 +206,7 @@ public class ConsoleTools {
 
     @Nullable
     private static String autoDetectPort() {
-        String autoDetectedPort = PortDetector.autoDetectPort(null);
+        String autoDetectedPort = PortDetector.autoDetectSerial();
         if (autoDetectedPort == null) {
             System.err.println("rusEFI not detected");
             return null;
