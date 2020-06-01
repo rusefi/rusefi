@@ -495,7 +495,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	SensorResult tps1 = Sensor::get(SensorType::Tps1);
 	tsOutputChannels->throttlePosition = tps1.Value;
 	tsOutputChannels->isTpsError = !tps1.Valid;
-	tsOutputChannels->tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1));
+	tsOutputChannels->tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1Primary));
 
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	tsOutputChannels->throttle2Position = tps2.Value;
