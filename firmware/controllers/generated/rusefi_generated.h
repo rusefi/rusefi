@@ -509,20 +509,7 @@
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
 #define fuelAlgorithm_offset 420
-#define fuelClosedLoopAfrHighThreshold_offset 2536
-#define fuelClosedLoopAfrLowThreshold_offset 696
-#define fuelClosedLoopCltThreshold_offset 2508
 #define fuelClosedLoopCorrectionEnabled_offset 1464
-#define fuelClosedLoopPid_dFactor_offset 2524
-#define fuelClosedLoopPid_iFactor_offset 2520
-#define fuelClosedLoopPid_maxValue_offset 2534
-#define fuelClosedLoopPid_minValue_offset 2532
-#define fuelClosedLoopPid_offset 2516
-#define fuelClosedLoopPid_offset_offset 2528
-#define fuelClosedLoopPid_periodMs_offset 2530
-#define fuelClosedLoopPid_pFactor_offset 2516
-#define fuelClosedLoopRpmThreshold_offset 2512
-#define fuelClosedLoopTpsThreshold_offset 2510
 #define fuelLevelEmptyTankVoltage_offset 684
 #define fuelLevelFullTankVoltage_offset 688
 #define fuelLevelSensor_offset 514
@@ -568,7 +555,7 @@
 #define GAUGE_NAME_FUEL_IAT_CORR "fuel: IAT correction"
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: Last injection"
-#define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term closed loop correction"
+#define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term fuel trim"
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel ms"
 #define GAUGE_NAME_FUEL_TPS_ROC "fuel: TPS change"
@@ -1018,8 +1005,10 @@
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
 #define PROTOCOL_ES_DOWN "d"
 #define PROTOCOL_ES_UP "u"
+#define PROTOCOL_HELLO_PREFIX "***"
 #define PROTOCOL_HIP_NAME "HIP"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
+#define PROTOCOL_MSG "msg"
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_TACH_NAME "tach"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
@@ -1321,7 +1310,10 @@
 #define unused1059_offset 3964
 #define unused1476b20_offset 1476
 #define unused2432_offset 2432
+#define unused2508_offset 2508
+#define unused2516_offset 2516
 #define unused6312_offset 6312
+#define unused696_offset 696
 #define unused711_offset 711
 #define unused806_offset 806
 #define unused_1484_bit_24_offset 1476

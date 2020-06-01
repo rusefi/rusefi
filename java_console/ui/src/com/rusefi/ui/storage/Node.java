@@ -6,6 +6,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @see PersistentConfiguration
+ */
 public class Node {
     private String prefix;
     private Map<String, Object> config = new HashMap<>();

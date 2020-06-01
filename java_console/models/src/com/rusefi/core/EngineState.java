@@ -29,10 +29,10 @@ public class EngineState {
     /**
      * text protocol key and callback associated with this key
      */
-    private static class StringActionPair extends Pair<String, ValueCallback<String>> {
+    public static class StringActionPair extends Pair<String, ValueCallback<String>> {
         public final String prefix;
 
-        StringActionPair(String key, ValueCallback<String> second) {
+        public StringActionPair(String key, ValueCallback<String> second) {
             super(key, second);
             prefix = key.toLowerCase() + SEPARATOR;
         }
@@ -53,6 +53,7 @@ public class EngineState {
         buffer = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
             public void onResponse(String response) {
                 if (response != null) {
+                    // let's remove timestamp if we get content from a log file not controller
                     int i = response.indexOf(FileLog.END_OF_TIMESTAND_TAG);
                     if (i != -1)
                         response = response.substring(i + FileLog.END_OF_TIMESTAND_TAG.length());
@@ -172,7 +173,16 @@ public class EngineState {
         return response;
     }
 
-    private String handleStringActionPair(String response, StringActionPair pair, EngineStateListener listener) {
+    public static String skipToken(String string) {
+        int keyEnd = string.indexOf(SEPARATOR);
+        if (keyEnd == -1) {
+            // discarding invalid line
+            return "";
+        }
+        return string.substring(keyEnd + SEPARATOR.length());
+    }
+
+    public static String handleStringActionPair(String response, StringActionPair pair, EngineStateListener listener) {
         if (startWithIgnoreCase(response, pair.prefix)) {
             String key = pair.first;
             int beginIndex = key.length() + 1;
@@ -182,7 +192,8 @@ public class EngineState {
 
             String strValue = response.substring(beginIndex, endIndex);
             pair.second.onUpdate(strValue);
-            listener.onKeyValue(key, strValue);
+            if (listener != null)
+                listener.onKeyValue(key, strValue);
 
             response = response.substring(endIndex);
             if (!response.isEmpty())

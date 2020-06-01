@@ -63,7 +63,7 @@ public class LinkManager {
     public static LinkDecoder ENCODER = new LinkDecoder() {
         @Override
         public String unpack(String packedLine) {
-            return LinkManager.unpack(packedLine);
+            return packedLine;
         }
     };
 
@@ -167,10 +167,6 @@ public class LinkManager {
     public static void restart() {
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
         connector.restart();
-    }
-
-    public static String unpack(String packet) {
-        return connector.unpack(packet);
     }
 
     public static String unpackConfirmation(String message) {

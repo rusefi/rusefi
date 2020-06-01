@@ -264,7 +264,7 @@ enable2ndByteCanID = false
       iatCorrection   = scalar,  S16,     64,        "%",{1/@@PACK_MULT_PERCENT@@},         0
       cltCorrection   = scalar,  S16,     66,        "%",{1/@@PACK_MULT_PERCENT@@},         0
       baroCorrection  = scalar,  S16,     68,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      fuelPidCorrection=scalar,  S16,     70,     "ms",{1/@@PACK_MULT_MS@@},         0
+      fuelPidCorrection=scalar,  S16,     70,       "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 ; Wall model AE
       wallFuelAmount  = scalar,  U16,     72,     "ms",{1/@@PACK_MULT_MS@@},         0
@@ -999,7 +999,7 @@ gaugeCategory = Fueling
    injectorLagMsGauge = injectorLagMs,       @@GAUGE_NAME_INJECTOR_LAG@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
-   fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_PID_CORR@@,      "mSec",        -11,   11,     1.0,    1.2,      20,    25,   3, 1
+   fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_PID_CORR@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
 
 gaugeCategory = Throttle Body (incl. ETB)
    pedalPositionGauge = throttlePedalPosition, @@GAUGE_NAME_THROTTLE_PEDAL@@,        "%",    0,    120,      0,     0,     100,   100,   1,   1
@@ -1271,7 +1271,7 @@ menuDialog = main
 
 		# Targets & closed loop
 		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1 && (fuelAlgorithm == LM_SPEED_DENSITY || fuelAlgorithm == LM_REAL_MAF)}
-		subMenu = fuelClosedLoopDialog, 	"Closed loop correction", 0, {isInjectionEnabled == 1}
+		subMenu = fuelClosedLoopDialog, 	"Closed loop fuel correction", 0, {isInjectionEnabled == 1}
 		subMenu = coastingFuelCutControl, 	"Deceleration fuel cutoff (DFCO)", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
@@ -1439,12 +1439,12 @@ menuDialog = main
 		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
 		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
 		subMenu = std_separator		
-        subMenu = smLaunchControl,			"Launch Control"
-		subMenu = std_separator	
-		subMenu = smRollingLaunch,			"Rolling Launch"
-		subMenu = std_separator	
-		subMenu = antiLag,        			"Antilag Setup"
-		subMenu = std_separator	
+#        subMenu = smLaunchControl,			"Launch Control"
+#		subMenu = std_separator
+#		subMenu = smRollingLaunch,			"Rolling Launch"
+#		subMenu = std_separator
+#		subMenu = antiLag,        			"Antilag Setup"
+#		subMenu = std_separator
 
 
       menu = "Help"
@@ -2433,23 +2433,46 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "SPI3sck mode",							spi3SckMode, {is_enabled_spi_3 == 1}
 		field = "LIS302DLCsPin",						LIS302DLCsPin
 
-	dialog = fuelClosedLoopDialog, "Fuel short-term closed-loop correction"
-		field = "#This is just the cherry on the cake once you have good VE table"
-		field = "Enabled",								fuelClosedLoopCorrectionEnabled
-		field = "!No correction below these value"
-		field = "CLT - low threshod", 					fuelClosedLoopCltThreshold, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "RPM - low threshod", 					fuelClosedLoopRpmThreshold, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "EGO - low threshod", 					fuelClosedLoopAfrLowThreshold, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "!No correction above these value"
-		field = "TPS - high threshod", 					fuelClosedLoopTpsThreshold, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "EGO - high threshod", 					fuelClosedLoopAfrHighThreshold, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "!PID settings"
-		field = "P factor",								fuelClosedLoopPid_pFactor, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "I factor",								fuelClosedLoopPid_iFactor, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "D factor",								fuelClosedLoopPid_dFactor, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "min",									fuelClosedLoopPid_minValue, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "max",									fuelClosedLoopPid_maxValue, {fuelClosedLoopCorrectionEnabled == 1}
+	dialog = stftPartitioning, "Region Configuration"
+		field = "Idle region RPM",						stft_maxIdleRegionRpm
+		field = "Overrun region load",					stft_maxOverrunLoad
+		field = "Power region load",					stft_minPowerLoad
 
+	dialog = stftPartitionSettingsMain, "Main Region", xAxis
+		field = "Time Const",							stft_cellCfgs4_timeConstant
+		field = "Max add",								stft_cellCfgs4_maxAdd
+		field = "Max remove",							stft_cellCfgs4_maxRemove
+
+	dialog = stftPartitionSettingsIdle, "Idle Region", xAxis
+		field = "Time Const",							stft_cellCfgs1_timeConstant
+		field = "Max add",								stft_cellCfgs1_maxAdd
+		field = "Max remove",							stft_cellCfgs1_maxRemove
+
+	dialog = stftPartitionSettingsPower, "Power Region", xAxis
+		field = "Time Const",							stft_cellCfgs3_timeConstant
+		field = "Max add",								stft_cellCfgs3_maxAdd
+		field = "Max remove",							stft_cellCfgs3_maxRemove
+
+	dialog = stftPartitionSettingsOverrun, "Overrun Region", xAxis
+		field = "Time Const",							stft_cellCfgs2_timeConstant
+		field = "Max add",								stft_cellCfgs2_maxAdd
+		field = "Max remove",							stft_cellCfgs2_maxRemove
+
+	dialog = fuelClosedLoopDialog, "Short-term fuel trim"
+		field = "Enabled",								fuelClosedLoopCorrectionEnabled
+
+		field = "Startup delay"							stft_startupDelay, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "Minimum CLT for correction",			stft_minClt, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "Minimum AFR for correction",			stft_minAfr, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "Maximum AFR for correction",			stft_maxAfr, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "Adjustment deadband",					stft_deadband, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "Ignore error magnitude",				stftIgnoreErrorMagnitude, {fuelClosedLoopCorrectionEnabled == 1}
+
+		panel = stftPartitioning, {fuelClosedLoopCorrectionEnabled == 1}
+		panel = stftPartitionSettingsMain, {fuelClosedLoopCorrectionEnabled == 1}
+		panel = stftPartitionSettingsIdle, {fuelClosedLoopCorrectionEnabled == 1}
+		panel = stftPartitionSettingsPower, {fuelClosedLoopCorrectionEnabled == 1}
+		panel = stftPartitionSettingsOverrun, {fuelClosedLoopCorrectionEnabled == 1}
 
 	dialog = auxPidDialog, "Aux PID"
 		field = "Enabled",								activateAuxPid1

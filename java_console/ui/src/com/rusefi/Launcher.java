@@ -25,9 +25,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
@@ -182,6 +182,9 @@ public class Launcher extends rusEFIVersion {
      * @see StartupFrame if no parameters specified
      */
     public static void main(final String[] args) throws Exception {
+        System.out.println("rusEfi UI console " + CONSOLE_VERSION);
+        System.out.println("Compiled " + new Date(ConsoleTools.classBuildTimeMillis()));
+        System.out.println("\n\n");
 
         if (ConsoleTools.runTool(args)) {
             return;
@@ -189,10 +192,7 @@ public class Launcher extends rusEFIVersion {
 
         ConsoleTools.printTools();
 
-        System.out.println("Starting rusEfi UI console " + CONSOLE_VERSION);
-
         FileLog.MAIN.start();
-
 
         getConfig().load();
         FileLog.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
