@@ -1351,7 +1351,6 @@
 #define unusedBit_34_31_offset 76
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHere_offset 761
-#define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
 #define unusedSomethingWasHere_offset 2417
 #define unusedSpiPadding4_offset 2593
