@@ -264,7 +264,7 @@ enable2ndByteCanID = false
       iatCorrection   = scalar,  S16,     64,        "%",{1/@@PACK_MULT_PERCENT@@},         0
       cltCorrection   = scalar,  S16,     66,        "%",{1/@@PACK_MULT_PERCENT@@},         0
       baroCorrection  = scalar,  S16,     68,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      fuelPidCorrection=scalar,  S16,     70,       "ms",{1/@@PACK_MULT_PERCENT@@},         0
+      fuelPidCorrection=scalar,  S16,     70,       "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 ; Wall model AE
       wallFuelAmount  = scalar,  U16,     72,     "ms",{1/@@PACK_MULT_MS@@},         0
