@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun May 31 17:00:13 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Jun 01 07:18:30 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -505,20 +505,7 @@ public class Fields {
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
 	public static final int fuelAlgorithm_offset = 420;
-	public static final int fuelClosedLoopAfrHighThreshold_offset = 2536;
-	public static final int fuelClosedLoopAfrLowThreshold_offset = 696;
-	public static final int fuelClosedLoopCltThreshold_offset = 2508;
 	public static final int fuelClosedLoopCorrectionEnabled_offset = 1464;
-	public static final int fuelClosedLoopPid_dFactor_offset = 2524;
-	public static final int fuelClosedLoopPid_iFactor_offset = 2520;
-	public static final int fuelClosedLoopPid_maxValue_offset = 2534;
-	public static final int fuelClosedLoopPid_minValue_offset = 2532;
-	public static final int fuelClosedLoopPid_offset = 2516;
-	public static final int fuelClosedLoopPid_offset_offset = 2528;
-	public static final int fuelClosedLoopPid_periodMs_offset = 2530;
-	public static final int fuelClosedLoopPid_pFactor_offset = 2516;
-	public static final int fuelClosedLoopRpmThreshold_offset = 2512;
-	public static final int fuelClosedLoopTpsThreshold_offset = 2510;
 	public static final int fuelLevelEmptyTankVoltage_offset = 684;
 	public static final int fuelLevelFullTankVoltage_offset = 688;
 	public static final int fuelLevelSensor_offset = 514;
@@ -1286,7 +1273,10 @@ public class Fields {
 	public static final int unused1059_offset = 3964;
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused2432_offset = 2432;
+	public static final int unused2508_offset = 2508;
+	public static final int unused2516_offset = 2516;
 	public static final int unused6312_offset = 6312;
+	public static final int unused696_offset = 696;
 	public static final int unused711_offset = 711;
 	public static final int unused806_offset = 806;
 	public static final int unused_1484_bit_24_offset = 1476;
@@ -1635,7 +1625,7 @@ public class Fields {
 	public static final Field FUELLEVELFULLTANKVOLTAGE = Field.create("FUELLEVELFULLTANKVOLTAGE", 688, FieldType.FLOAT);
 	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"};
 	public static final Field AFR_TYPE = Field.create("AFR_TYPE", 692, FieldType.INT, ego_sensor_e);
-	public static final Field FUELCLOSEDLOOPAFRLOWTHRESHOLD = Field.create("FUELCLOSEDLOOPAFRLOWTHRESHOLD", 696, FieldType.FLOAT);
+	public static final Field UNUSED696 = Field.create("UNUSED696", 696, FieldType.INT);
 	public static final Field TRIGGERINPUTPINS1 = Field.create("TRIGGERINPUTPINS1", 700, FieldType.INT8, brain_input_pin_e);
 	public static final Field TRIGGERINPUTPINS2 = Field.create("TRIGGERINPUTPINS2", 701, FieldType.INT8, brain_input_pin_e);
 	public static final Field TRIGGERINPUTPINS3 = Field.create("TRIGGERINPUTPINS3", 702, FieldType.INT8, brain_input_pin_e);
@@ -2175,18 +2165,7 @@ public class Fields {
 	public static final Field AUXTEMPSENSOR2_RESISTANCE_3 = Field.create("AUXTEMPSENSOR2_RESISTANCE_3", 2496, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR2_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR2_BIAS_RESISTOR", 2500, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR2_ADCCHANNEL = Field.create("AUXTEMPSENSOR2_ADCCHANNEL", 2504, FieldType.INT8, adc_channel_e);
-	public static final Field FUELCLOSEDLOOPCLTTHRESHOLD = Field.create("FUELCLOSEDLOOPCLTTHRESHOLD", 2508, FieldType.INT16);
-	public static final Field FUELCLOSEDLOOPTPSTHRESHOLD = Field.create("FUELCLOSEDLOOPTPSTHRESHOLD", 2510, FieldType.INT16);
-	public static final Field FUELCLOSEDLOOPRPMTHRESHOLD = Field.create("FUELCLOSEDLOOPRPMTHRESHOLD", 2512, FieldType.INT16);
 	public static final Field ETBFREQ = Field.create("ETBFREQ", 2514, FieldType.INT16);
-	public static final Field FUELCLOSEDLOOPPID_PFACTOR = Field.create("FUELCLOSEDLOOPPID_PFACTOR", 2516, FieldType.FLOAT);
-	public static final Field FUELCLOSEDLOOPPID_IFACTOR = Field.create("FUELCLOSEDLOOPPID_IFACTOR", 2520, FieldType.FLOAT);
-	public static final Field FUELCLOSEDLOOPPID_DFACTOR = Field.create("FUELCLOSEDLOOPPID_DFACTOR", 2524, FieldType.FLOAT);
-	public static final Field FUELCLOSEDLOOPPID_OFFSET = Field.create("FUELCLOSEDLOOPPID_OFFSET", 2528, FieldType.INT16);
-	public static final Field FUELCLOSEDLOOPPID_PERIODMS = Field.create("FUELCLOSEDLOOPPID_PERIODMS", 2530, FieldType.INT16);
-	public static final Field FUELCLOSEDLOOPPID_MINVALUE = Field.create("FUELCLOSEDLOOPPID_MINVALUE", 2532, FieldType.INT16);
-	public static final Field FUELCLOSEDLOOPPID_MAXVALUE = Field.create("FUELCLOSEDLOOPPID_MAXVALUE", 2534, FieldType.INT16);
-	public static final Field FUELCLOSEDLOOPAFRHIGHTHRESHOLD = Field.create("FUELCLOSEDLOOPAFRHIGHTHRESHOLD", 2536, FieldType.FLOAT);
 	public static final Field TIMING_OFFSET_CYLINDER1 = Field.create("TIMING_OFFSET_CYLINDER1", 2540, FieldType.INT);
 	public static final Field TIMING_OFFSET_CYLINDER2 = Field.create("TIMING_OFFSET_CYLINDER2", 2544, FieldType.INT);
 	public static final Field TIMING_OFFSET_CYLINDER3 = Field.create("TIMING_OFFSET_CYLINDER3", 2548, FieldType.INT);
@@ -2632,7 +2611,7 @@ public class Fields {
 	FUELLEVELEMPTYTANKVOLTAGE,
 	FUELLEVELFULLTANKVOLTAGE,
 	AFR_TYPE,
-	FUELCLOSEDLOOPAFRLOWTHRESHOLD,
+	UNUSED696,
 	TRIGGERINPUTPINS1,
 	TRIGGERINPUTPINS2,
 	TRIGGERINPUTPINS3,
@@ -3165,18 +3144,7 @@ public class Fields {
 	AUXTEMPSENSOR2_RESISTANCE_3,
 	AUXTEMPSENSOR2_BIAS_RESISTOR,
 	AUXTEMPSENSOR2_ADCCHANNEL,
-	FUELCLOSEDLOOPCLTTHRESHOLD,
-	FUELCLOSEDLOOPTPSTHRESHOLD,
-	FUELCLOSEDLOOPRPMTHRESHOLD,
 	ETBFREQ,
-	FUELCLOSEDLOOPPID_PFACTOR,
-	FUELCLOSEDLOOPPID_IFACTOR,
-	FUELCLOSEDLOOPPID_DFACTOR,
-	FUELCLOSEDLOOPPID_OFFSET,
-	FUELCLOSEDLOOPPID_PERIODMS,
-	FUELCLOSEDLOOPPID_MINVALUE,
-	FUELCLOSEDLOOPPID_MAXVALUE,
-	FUELCLOSEDLOOPAFRHIGHTHRESHOLD,
 	TIMING_OFFSET_CYLINDER1,
 	TIMING_OFFSET_CYLINDER2,
 	TIMING_OFFSET_CYLINDER3,

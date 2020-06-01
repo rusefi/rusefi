@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri May 29 21:22:15 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Jun 01 07:18:30 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1273,7 +1273,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 696
 	 */
-	float fuelClosedLoopAfrLowThreshold;
+	uint32_t unused696;
 	/**
 	 * offset 700
 	 */
@@ -2731,15 +2731,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2508
 	 */
-	int16_t fuelClosedLoopCltThreshold;
-	/**
-	 * offset 2510
-	 */
-	int16_t fuelClosedLoopTpsThreshold;
-	/**
-	 * offset 2512
-	 */
-	int16_t fuelClosedLoopRpmThreshold;
+	uint8_t unused2508[6];
 	/**
 	 * offset 2514
 	 */
@@ -2747,11 +2739,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2516
 	 */
-	pid_s fuelClosedLoopPid;
-	/**
-	 * offset 2536
-	 */
-	float fuelClosedLoopAfrHighThreshold;
+	uint8_t unused2516[24];
 	/**
 	 * per-cylinder timing correction
 	 * offset 2540
@@ -3521,4 +3509,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Fri May 29 21:22:15 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Jun 01 07:18:30 EDT 2020
