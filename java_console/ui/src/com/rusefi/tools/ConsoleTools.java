@@ -142,7 +142,7 @@ public class ConsoleTools {
             }
         });
 
-        String autoDetectedPort = PortDetector.autoDetectSerial();
+        String autoDetectedPort = PortDetector.autoDetectSerial(null);
         if (autoDetectedPort == null) {
             System.err.println("rusEFI not detected");
             return;
@@ -206,7 +206,7 @@ public class ConsoleTools {
 
     @Nullable
     private static String autoDetectPort() {
-        String autoDetectedPort = PortDetector.autoDetectSerial();
+        String autoDetectedPort = PortDetector.autoDetectSerial(null);
         if (autoDetectedPort == null) {
             System.err.println("rusEFI not detected");
             return null;

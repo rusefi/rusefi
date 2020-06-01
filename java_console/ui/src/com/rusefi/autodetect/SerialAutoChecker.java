@@ -12,6 +12,7 @@ import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
@@ -19,12 +20,18 @@ public class SerialAutoChecker implements Runnable {
     private final String serialPort;
     private final CountDownLatch portFound;
     private final AtomicReference<String> result;
+    private final Function<IoStream, Void> callback;
     public static String SIGNATURE;
 
-    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<String> result) {
+    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<String> result, Function<IoStream, Void> callback) {
         this.serialPort = serialPort;
         this.portFound = portFound;
         this.result = result;
+        this.callback = callback;
+    }
+
+    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<String> result) {
+        this(serialPort, portFound, result, null);
     }
 
     @Override
@@ -42,6 +49,9 @@ public class SerialAutoChecker implements Runnable {
             System.out.println("Got " + signature + " from " + serialPort);
             String signatureWithoutMinorVersion = Fields.TS_SIGNATURE.substring(0, Fields.TS_SIGNATURE.length() - 2);
             if (signature.startsWith(signatureWithoutMinorVersion)) {
+                if (callback != null) {
+                    callback.apply(stream);
+                }
                 result.set(serialPort);
                 portFound.countDown();
             }
