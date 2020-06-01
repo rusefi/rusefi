@@ -391,8 +391,8 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
-	bool limitedSpark = rpm > CONFIG(rpmHardLimit);
-	bool limitedFuel = rpm > CONFIG(rpmHardLimit);
+	bool limitedSpark = rpm > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool limitedFuel = rpm > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (CONFIG(boostCutPressure) != 0) {
 		if (getMap(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(boostCutPressure)) {

@@ -87,6 +87,8 @@ public:
 	float fsioIdleOffset = 0;
 	float fsioIdleMinValue = 0;
 
+	float fsioRpmHardLimit;
+
 #if EFI_UNIT_TEST
 	float mockFan = 0;
 	float mockRpm = 0;
