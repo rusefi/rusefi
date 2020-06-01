@@ -516,6 +516,10 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &ENGINE(fsioState.fsioTimingAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
+	if (engineConfiguration->useFSIO6ForRevLimiter) {
+		updateValueOrWarning(6 - 1, "rpm limit", &ENGINE(fsioState.fsioRpmHardLimit) PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+
 	if (engineConfiguration->useFSIO8ForServo1) {
 		useFsioForServo(0 PASS_ENGINE_PARAMETER_SUFFIX);
 	}
