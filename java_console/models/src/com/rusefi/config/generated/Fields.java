@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Jun 01 07:18:30 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Jun 01 07:54:47 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1314,7 +1314,6 @@ public class Fields {
 	public static final int unusedBit_34_31_offset = 76;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedHere_offset = 761;
-	public static final int unusedHereWeHave_offset = 1464;
 	public static final int unusedOldBiquad_offset = 2332;
 	public static final int unusedSomethingWasHere_offset = 2417;
 	public static final int unusedSpiPadding4_offset = 2593;
@@ -1934,7 +1933,7 @@ public class Fields {
 	public static final Field TCU_SOLENOID8 = Field.create("TCU_SOLENOID8", 1199, FieldType.INT8, output_pin_e);
 	public static final Field TPS2SECONDARYMIN = Field.create("TPS2SECONDARYMIN", 1460, FieldType.INT16);
 	public static final Field TPS2SECONDARYMAX = Field.create("TPS2SECONDARYMAX", 1462, FieldType.INT16);
-	public static final Field UNUSEDHEREWEHAVE = Field.create("UNUSEDHEREWEHAVE", 1464, FieldType.BIT, 0);
+	public static final Field USEFSIO6FORREVLIMITER = Field.create("USEFSIO6FORREVLIMITER", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
 	public static final Field ISVERBOSEETB = Field.create("ISVERBOSEETB", 1464, FieldType.BIT, 3);
@@ -2916,7 +2915,7 @@ public class Fields {
 	TCU_SOLENOID8,
 	TPS2SECONDARYMIN,
 	TPS2SECONDARYMAX,
-	UNUSEDHEREWEHAVE,
+	USEFSIO6FORREVLIMITER,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
 	ISVERBOSEETB,
