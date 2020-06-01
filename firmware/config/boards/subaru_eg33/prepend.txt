@@ -1,0 +1,18 @@
+//TODO: understand this.
+
+#define ts_show_hip9011 true
+#define ts_show_cj125 false
+#define ts_show_lcd false
+#define ts_show_joystick false
+#define ts_show_egt false
+#define ts_show_gps false
+#define ts_show_etb_pins true
+#define ts_show_analog_divider false
+#define ts_show_spi true
+#define ts_show_sd_card true
+#define ts_show_can_pins true
+#define ts_show_tunerstudio_port false
+
+#define show_test_presets false
+#define show_Frankenso_presets false
+#define show_Proteus_presets false
