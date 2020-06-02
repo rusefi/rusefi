@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name eec-iv)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/eec-iv.lib)(options "")(descr ""))
+)
