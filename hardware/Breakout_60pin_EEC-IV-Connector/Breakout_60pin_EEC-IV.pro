@@ -1,4 +1,4 @@
-update=6/2/2020 6:29:49 AM
+update=06/02/20 06:57:16
 version=1
 last_client=kicad
 [general]
@@ -24,7 +24,7 @@ LabSize=50
 ERC_TestSimilarLabels=1
 [pcbnew]
 version=1
-PageLayoutDescrFile=rusefi_lib_external/Border.kicad_wks
+PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
 LastNetListRead=134pin_7-967288-1.net
 CopperLayerCount=2
 BoardThickness=1.6
@@ -86,7 +86,7 @@ OthersTextUpright=1
 SolderMaskClearance=7.599999999999999e-05
 SolderMaskMinWidth=0
 SolderPasteClearance=0
-SolderPasteRatio=-0
+SolderPasteRatio=0
 [pcbnew/Layer.F.Cu]
 Name=F.Cu
 Type=0
