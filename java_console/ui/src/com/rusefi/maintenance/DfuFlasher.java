@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Function;
 
 /**
  * @see FirmwareFlasher
@@ -42,19 +43,42 @@ public class DfuFlasher {
 
     public static void doAutoDfu(JComboBox<String> comboPorts) {
         String port = comboPorts.getSelectedItem().toString();
-        port = PortDetector.autoDetectSerialIfNeeded(port);
-        if (port == null) {
-            JOptionPane.showMessageDialog(Launcher.getFrame(), "rusEfi serial port not detected");
-            return;
+        StringBuilder messages = new StringBuilder();
+
+        if (!PortDetector.isAutoPort(port)) {
+            messages.append("Using selected " + port + "\n");
+            IoStream stream = SerialIoStreamJSerialComm.openPort(port);
+            sendDfuRebootCommand(stream, messages);
+        } else {
+            messages.append("Auto-detecting port...\n");
+            // instead of opening the just-detected port we execute the command using the same stream we used to discover port
+            // it's more reliable this way
+            port = PortDetector.autoDetectSerial(stream -> {
+                sendDfuRebootCommand(stream, messages);
+                return null;
+            });
+            if (port == null) {
+                JOptionPane.showMessageDialog(Launcher.getFrame(), "rusEfi serial port not detected");
+                return;
+            } else {
+                messages.append("Detected rusEFI on " + port + "\n");
+            }
         }
-        IoStream stream = SerialIoStreamJSerialComm.openPort(port);
+        StatusWindow wnd = new StatusWindow();
+        wnd.showFrame("DFU status " + Launcher.CONSOLE_VERSION);
+        wnd.appendMsg(messages.toString());
+        ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
+    }
+
+    private static void sendDfuRebootCommand(IoStream stream, StringBuilder messages) {
         byte[] command = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT_DFU);
         try {
             stream.sendPacket(command, FileLog.LOGGER);
             stream.close();
-        } catch (IOException ignored) {
+            messages.append("Reboot command sent!\n");
+        } catch (IOException e) {
+            messages.append("Error " + e);
         }
-        runDfuProgramming();
     }
 
     public static void runDfuProgramming() {

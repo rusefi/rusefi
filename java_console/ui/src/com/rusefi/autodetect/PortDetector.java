@@ -1,6 +1,7 @@
 package com.rusefi.autodetect;
 
 import com.rusefi.FileLog;
+import com.rusefi.io.IoStream;
 import jssc.SerialPortList;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 /**
  * (c) Andrey Belomutskiy 2013-2019
@@ -18,8 +20,9 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PortDetector {
     /**
      * Connect to all serial ports and find out which one respond first
+     * @param callback
      */
-    public static String autoDetectSerial() {
+    public static String autoDetectSerial(Function<IoStream, Void> callback) {
         String[] serialPorts = getPortNames();
         if (serialPorts.length == 0) {
             System.err.println("No serial ports detected");
@@ -30,7 +33,7 @@ public class PortDetector {
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<String> result = new AtomicReference<>();
         for (String serialPort : serialPorts) {
-            Thread thread = new Thread(new SerialAutoChecker(serialPort, portFound, result));
+            Thread thread = new Thread(new SerialAutoChecker(serialPort, portFound, result, callback));
             serialFinder.add(thread);
             thread.start();
         }
@@ -55,7 +58,7 @@ public class PortDetector {
 
     @Nullable
     public static String autoDetectPort(JFrame parent) {
-        String autoDetectedPort = autoDetectSerial();
+        String autoDetectedPort = autoDetectSerial(null);
         if (autoDetectedPort == null) {
             JOptionPane.showMessageDialog(parent, "Failed to located device");
             return null;
@@ -64,8 +67,12 @@ public class PortDetector {
     }
 
     public static String autoDetectSerialIfNeeded(String port) {
-        if (!port.toLowerCase().startsWith("auto"))
+        if (!isAutoPort(port))
             return port;
-        return autoDetectSerial();
+        return autoDetectSerial(null);
+    }
+
+    public static boolean isAutoPort(String port) {
+        return port.toLowerCase().startsWith("auto");
     }
 }
