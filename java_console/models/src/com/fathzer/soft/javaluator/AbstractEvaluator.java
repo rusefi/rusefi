@@ -138,7 +138,7 @@ public abstract class AbstractEvaluator<T> {
 			rpnPush("deq", operator.getSymbol());
 			values.push(evaluate(operator, getArguments(values, operator.getOperandCount()), evaluationContext));
 		} else {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException(token.toString());
 		}
 	}
 
