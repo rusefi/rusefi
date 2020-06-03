@@ -32,7 +32,7 @@ $Comp
 L Connector_Generic:Conn_01x10 J2
 U 1 1 5DD70BCF
 P 7875 1100
-F 0 "J2" H 7875 1450 50  0000 C CNN
+F 0 "J2" H 8000 1450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 3126 50  0001 C CNN
 F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 1100 50  0001 C CNN
 F 3 "~" H 7875 1100 50  0001 C CNN
@@ -196,7 +196,7 @@ $Comp
 L Connector_Generic:Conn_01x10 J3
 U 1 1 5E376794
 P 7875 2100
-F 0 "J3" H 7875 2450 50  0000 C CNN
+F 0 "J3" H 8000 2450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 4126 50  0001 C CNN
 F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 2100 50  0001 C CNN
 F 3 "~" H 7875 2100 50  0001 C CNN
@@ -207,7 +207,7 @@ $Comp
 L Connector_Generic:Conn_01x10 J4
 U 1 1 5E3771EB
 P 7875 3100
-F 0 "J4" H 7875 3450 50  0000 C CNN
+F 0 "J4" H 7975 3450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 5126 50  0001 C CNN
 F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 3100 50  0001 C CNN
 F 3 "~" H 7875 3100 50  0001 C CNN
@@ -229,7 +229,7 @@ $Comp
 L Connector_Generic:Conn_01x10 J5
 U 1 1 5E37A504
 P 7875 4100
-F 0 "J5" H 7875 4450 50  0000 C CNN
+F 0 "J5" H 8000 4450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 6126 50  0001 C CNN
 F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 4100 50  0001 C CNN
 F 3 "~" H 7875 4100 50  0001 C CNN
@@ -324,7 +324,7 @@ $Comp
 L Connector_Generic:Conn_01x10 J6
 U 1 1 5EE53A3D
 P 7875 5100
-F 0 "J6" H 7875 5450 50  0000 C CNN
+F 0 "J6" H 8000 5450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 7126 50  0001 C CNN
 F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 5100 50  0001 C CNN
 F 3 "~" H 7875 5100 50  0001 C CNN
@@ -346,7 +346,7 @@ $Comp
 L Connector_Generic:Conn_01x10 J7
 U 1 1 5EE55E51
 P 7875 6100
-F 0 "J7" H 7875 6450 50  0000 C CNN
+F 0 "J7" H 8000 6450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 8126 50  0001 C CNN
 F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 6100 50  0001 C CNN
 F 3 "~" H 7875 6100 50  0001 C CNN
@@ -545,4 +545,26 @@ Text Label 8375 1100 0    50   ~ 0
 5
 Text Label 8375 700  0    50   ~ 0
 1
+$Comp
+L logo:LOGO G2
+U 1 1 5F1903D8
+P 5525 7725
+F 0 "G2" H 5525 7622 60  0001 C CNN
+F 1 "LOGO" H 5525 7828 60  0001 C CNN
+F 2 "rusEFI:LOGO" H 5525 7725 50  0001 C CNN
+F 3 "" H 5525 7725 50  0001 C CNN
+	1    5525 7725
+	1    0    0    -1  
+$EndComp
+$Comp
+L Off_Road_Disclaimer:Disclaimer G1
+U 1 1 5F1910EA
+P 9775 6800
+F 0 "G1" H 9775 7150 60  0001 C CNN
+F 1 "Disclaimer" H 9775 7050 60  0001 C CNN
+F 2 "rusEFI:Off_Road_Disclaimer" H 9775 6800 50  0001 C CNN
+F 3 "" H 9775 6800 50  0001 C CNN
+	1    9775 6800
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
