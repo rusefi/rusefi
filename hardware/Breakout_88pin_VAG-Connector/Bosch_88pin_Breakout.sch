@@ -1,25 +1,25 @@
 EESchema Schematic File Version 4
 EELAYER 30 0
 EELAYER END
-$Descr A4 11693 8268
+$Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
+Title "88 Pin Vag Breakout"
+Date "2020-06-03"
+Rev "R0.1"
+Comp "rusEFI.com"
+Comment1 "Snake____1"
 Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L UserParts:BOSCH_88PIN_02X44 J1
+L bosch_88pin_02x44:BOSCH_88PIN_02X44 J1
 U 1 1 5F034FB1
 P 3600 3500
 F 0 "J1" H 3600 5550 50  0000 C CNN
 F 1 "BOSCH_88PIN_02X44" V 3600 3500 50  0000 C CNN
-F 2 "UserConnectors:BOSCH-88pin" H 3600 3500 50  0001 C CNN
+F 2 "rusefi_lib:BOSCH-88pin" H 3600 3500 50  0001 C CNN
 F 3 "" H 3600 3500 50  0001 C CNN
 	1    3600 3500
 	1    0    0    -1  
