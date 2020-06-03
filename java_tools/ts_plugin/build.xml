@@ -1,6 +1,7 @@
 <project default="jar">
     <property name="jar_file_folder" value="build/jar"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_plugin.jar"/>
+    <property name="console_path" value="../../java_console"/>
 
     <target name="clean">
         <delete dir="build"/>
@@ -8,6 +9,14 @@
 
     <target name="compile">
         <mkdir dir="build/classes"/>
+
+        <javac debug="yes"
+               destdir="build/classes"
+               classpath="${console_path}/lib/junit.jar:${console_path}/lib/annotations.jar"
+        >
+            <src path="../../java_console/inifile/src"/>
+        </javac>
+
     </target>
 
     <target name="jar" depends="compile">

@@ -2,11 +2,20 @@ package com.rusefi;
 
 import com.efiAnalytics.plugin.ApplicationPlugin;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
+import com.rusefi.ui.util.Misc;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TsPlugin implements ApplicationPlugin {
     private ControllerAccess controllerAccess;
+    private JPanel content = new JPanel(new BorderLayout());
+
+    public TsPlugin() {
+
+        content.add(Misc.getRusEFI_online_manual());
+
+    }
 
     @Override
     public String getIdName() {
@@ -51,7 +60,7 @@ public class TsPlugin implements ApplicationPlugin {
 
     @Override
     public JComponent getPluginPanel() {
-        return null;
+        return content;
     }
 
     @Override

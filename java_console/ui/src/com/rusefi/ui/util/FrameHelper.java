@@ -12,7 +12,7 @@ import java.awt.event.WindowEvent;
  */
 public class FrameHelper {
     private final JFrame frame = new JFrame();
-    
+
     public JFrame getFrame() {
         return frame;
     }

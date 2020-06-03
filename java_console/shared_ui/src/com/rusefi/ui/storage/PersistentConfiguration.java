@@ -1,7 +1,5 @@
 package com.rusefi.ui.storage;
 
-import com.rusefi.FileLog;
-
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
@@ -31,7 +29,7 @@ public class PersistentConfiguration {
             e.close();
             System.out.println("Got configuration from " + CONFIG_FILE_NAME);
         } catch (Throwable e) {
-            FileLog.MAIN.logLine("Console configuration not found " + CONFIG_FILE_NAME + ", using defaults");
+            System.out.println("Console configuration not found " + CONFIG_FILE_NAME + ", using defaults");
         }
         isLoaded = true;
     }
@@ -50,7 +48,7 @@ public class PersistentConfiguration {
             e.close();
             System.out.println("Saved settings to " + CONFIG_FILE_NAME);
         } catch (FileNotFoundException e1) {
-            FileLog.MAIN.logLine("Error saving " + CONFIG_FILE_NAME);
+            System.out.println("Error saving " + CONFIG_FILE_NAME);
         }
     }
 

@@ -3,7 +3,7 @@ package com.rusefi.ui;
 import com.rusefi.io.LinkManager;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.ui.util.URLLabel;
+import com.rusefi.ui.util.Misc;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -31,7 +31,7 @@ public class OnlineTab {
 
         textField.setText(authToken);
 
-        content.add(new URLLabel("rusEFI Online manual", "https://github.com/rusefi/rusefi/wiki/Online"));
+        content.add(Misc.getRusEFI_online_manual());
 
         content.add(textField);
 

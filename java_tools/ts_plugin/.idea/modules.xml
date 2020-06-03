@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../../java_console/inifile/inifile.iml" filepath="$PROJECT_DIR$/../../java_console/inifile/inifile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../java_console/shared_ui/shared_ui.iml" filepath="$PROJECT_DIR$/../../java_console/shared_ui/shared_ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/ts_plugin.iml" filepath="$PROJECT_DIR$/ts_plugin.iml" />
     </modules>
   </component>
