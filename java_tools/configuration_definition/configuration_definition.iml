@@ -7,17 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.10.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="junit" level="project" />
-    <orderEntry type="library" name="snakeyaml" level="project" />
-    <orderEntry type="module" module-name="enum_to_string" />
+    <orderEntry type="module" module-name="enum_to_string" exported="" />
   </component>
 </module>
