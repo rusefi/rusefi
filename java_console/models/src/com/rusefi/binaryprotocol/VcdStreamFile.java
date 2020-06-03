@@ -1,6 +1,5 @@
 package com.rusefi.binaryprotocol;
 
-import com.rusefi.FileLog;
 import com.rusefi.composite.CompositeEvent;
 
 import java.io.FileWriter;
@@ -21,6 +20,11 @@ public class VcdStreamFile extends StreamFile {
     private static final String TAG_SYNC = "y";
     private static final String TAG_COIL = "c";
     private static final String TAG_INJ = "i";
+    private final String fileName;
+
+    public VcdStreamFile(String fileName) {
+        this.fileName = fileName;
+    }
 
     private static void writeHeader(Writer writer, Date date) throws IOException {
         writer.write("$date\n");
@@ -70,7 +74,6 @@ public class VcdStreamFile extends StreamFile {
     public void append(List<CompositeEvent> events) {
         try {
             if (writer == null) {
-                String fileName = FileLog.DIR + "rusEFI_trigger_log_" + FileLog.getDate() + ".vcd";
                 writer = new FileWriter(fileName);
                 writeHeader(writer, new Date());
             }

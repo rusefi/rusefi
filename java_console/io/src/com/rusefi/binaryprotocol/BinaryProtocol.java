@@ -17,6 +17,7 @@ import com.rusefi.io.*;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import jssc.SerialPortException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.EOFException;
@@ -76,7 +77,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private boolean isCompositeLoggerEnabled;
     private long lastLowRpmTime = System.currentTimeMillis();
 
-    private List<StreamFile> compositeLogs = Arrays.asList(new VcdStreamFile(), new TSHighSpeedLog());
+    private List<StreamFile> compositeLogs = Arrays.asList(new VcdStreamFile(getFileName("rusEFI_trigger_log_")), new TSHighSpeedLog(getFileName("rusEFI_trigger_log_")));
 
     public boolean isClosed;
     /**
@@ -113,6 +114,11 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    @NotNull
+    public static String getFileName(String prefix) {
+        return FileLog.DIR + prefix + FileLog.getDate() + ".csv";
     }
 
     public void doSend(final String command, boolean fireEvent) throws InterruptedException {

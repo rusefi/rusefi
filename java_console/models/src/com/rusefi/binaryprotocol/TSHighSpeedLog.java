@@ -1,9 +1,7 @@
 package com.rusefi.binaryprotocol;
 
-import com.rusefi.FileLog;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.rusEFIVersion;
-import sun.misc.Launcher;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,7 +9,12 @@ import java.io.Writer;
 import java.util.List;
 
 public class TSHighSpeedLog extends StreamFile {
+    private final String fileName;
     private int prevTime = 0;
+
+    public TSHighSpeedLog(String fileName) {
+        this.fileName = fileName;
+    }
 
     private static void writeHeader(Writer writer) throws IOException {
         writer.write("#Firmware: console" + rusEFIVersion.CONSOLE_VERSION + " firmware " + rusEFIVersion.firmwareVersion.get() + "\n");
@@ -23,7 +26,6 @@ public class TSHighSpeedLog extends StreamFile {
     void append(List<CompositeEvent> events) {
         try {
             if (writer == null) {
-                String fileName = FileLog.DIR + "rusEFI_trigger_log_" + FileLog.getDate() + ".csv";
                 writer = new FileWriter(fileName);
                 writeHeader(writer);
             }
