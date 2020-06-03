@@ -12,9 +12,7 @@ public class TsPlugin implements ApplicationPlugin {
     private JPanel content = new JPanel(new BorderLayout());
 
     public TsPlugin() {
-
         content.add(Misc.getRusEFI_online_manual());
-
     }
 
     @Override
@@ -50,7 +48,7 @@ public class TsPlugin implements ApplicationPlugin {
 
     @Override
     public boolean isMenuEnabled() {
-        return false;
+        return true;
     }
 
     @Override
