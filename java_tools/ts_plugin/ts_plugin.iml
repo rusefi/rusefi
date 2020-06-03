@@ -7,5 +7,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="TunerStudioPluginAPI" level="project" />
+    <orderEntry type="library" name="httpclient-javadoc" level="project" />
+    <orderEntry type="library" name="annotations" level="project" />
   </component>
 </module>
