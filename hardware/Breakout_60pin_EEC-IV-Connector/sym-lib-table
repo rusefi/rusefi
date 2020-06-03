@@ -1,5 +1,5 @@
 (sym_lib_table
   (lib (name eec-iv)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/eec-iv.lib)(options "")(descr ""))
-  (lib (name logo)(type Legacy)(uri C:/Users/Owner/Desktop/rusefi_GH_PLEASEdoNOTforget20/hardware/rusefi_lib/logo.lib)(options "")(descr ""))
-  (lib (name Off_Road_Disclaimer)(type Legacy)(uri C:/Users/Owner/Desktop/rusefi_GH_PLEASEdoNOTforget20/hardware/rusefi_lib/Off_Road_Disclaimer.lib)(options "")(descr ""))
+  (lib (name logo)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/logo.lib)(options "")(descr ""))
+  (lib (name Off_Road_Disclaimer)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/Off_Road_Disclaimer.lib)(options "")(descr ""))
 )
