@@ -2,6 +2,10 @@ package com.rusefi;
 
 import com.efiAnalytics.plugin.ApplicationPlugin;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
+import com.efiAnalytics.plugin.ecu.ControllerException;
+import com.efiAnalytics.plugin.ecu.ControllerParameter;
+import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
+import com.rusefi.tune.xml.Constant;
 import com.rusefi.ui.util.Misc;
 
 import javax.swing.*;
@@ -38,6 +42,28 @@ public class TsPlugin implements ApplicationPlugin {
     @Override
     public void initialize(ControllerAccess controllerAccess) {
         this.controllerAccess = controllerAccess;
+        for (String config : controllerAccess.getEcuConfigurationNames()) {
+            System.out.println("EcuConfigurationName " + config);
+        }
+
+        String configurationName = getConfigurationName();
+        ControllerParameterServer controllerParameterServer = controllerAccess.getControllerParameterServer();
+        String[] parameterNames = controllerParameterServer.getParameterNames(configurationName);
+        try {
+            for (String parameterName : parameterNames) {
+                ControllerParameter cp = controllerParameterServer.getControllerParameter(configurationName, parameterName);
+                String type = cp.getParamClass();
+
+                //new Constant(parameterName, cp.getUnits())
+
+            }
+        } catch (ControllerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getConfigurationName() {
+        return ControllerAccess.getInstance().getEcuConfigurationNames()[0];
     }
 
     @Override
