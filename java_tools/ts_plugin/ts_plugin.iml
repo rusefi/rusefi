@@ -11,5 +11,6 @@
     <orderEntry type="library" name="httpclient-javadoc" level="project" />
     <orderEntry type="library" name="annotations" level="project" />
     <orderEntry type="module" module-name="shared_ui" />
+    <orderEntry type="module" module-name="inifile" />
   </component>
 </module>
