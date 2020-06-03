@@ -34,7 +34,7 @@ U 1 1 5DD70BCF
 P 7875 1100
 F 0 "J2" H 7875 1450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 3126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 7875 1100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 1100 50  0001 C CNN
 F 3 "~" H 7875 1100 50  0001 C CNN
 	1    7875 1100
 	-1   0    0    -1  
@@ -165,7 +165,7 @@ U 1 1 5E370115
 P 8175 1100
 F 0 "J8" H 8175 1450 50  0000 C CNN
 F 1 "Conn_01x10" H 8093 3126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 8175 1100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 8175 1100 50  0001 C CNN
 F 3 "~" H 8175 1100 50  0001 C CNN
 	1    8175 1100
 	-1   0    0    -1  
@@ -176,7 +176,7 @@ U 1 1 5E374575
 P 8175 2100
 F 0 "J9" H 8175 2450 50  0000 C CNN
 F 1 "Conn_01x10" H 8093 4126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 8175 2100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 8175 2100 50  0001 C CNN
 F 3 "~" H 8175 2100 50  0001 C CNN
 	1    8175 2100
 	-1   0    0    -1  
@@ -187,7 +187,7 @@ U 1 1 5E3757F6
 P 8175 3100
 F 0 "J10" H 8175 3450 50  0000 C CNN
 F 1 "Conn_01x10" H 8093 5126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 8175 3100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 8175 3100 50  0001 C CNN
 F 3 "~" H 8175 3100 50  0001 C CNN
 	1    8175 3100
 	-1   0    0    -1  
@@ -198,7 +198,7 @@ U 1 1 5E376794
 P 7875 2100
 F 0 "J3" H 7875 2450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 4126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 7875 2100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 2100 50  0001 C CNN
 F 3 "~" H 7875 2100 50  0001 C CNN
 	1    7875 2100
 	-1   0    0    -1  
@@ -209,7 +209,7 @@ U 1 1 5E3771EB
 P 7875 3100
 F 0 "J4" H 7875 3450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 5126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 7875 3100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 3100 50  0001 C CNN
 F 3 "~" H 7875 3100 50  0001 C CNN
 	1    7875 3100
 	-1   0    0    -1  
@@ -220,7 +220,7 @@ U 1 1 5E37933C
 P 8175 4100
 F 0 "J11" H 8175 4450 50  0000 C CNN
 F 1 "Conn_01x10" H 8093 6126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 8175 4100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 8175 4100 50  0001 C CNN
 F 3 "~" H 8175 4100 50  0001 C CNN
 	1    8175 4100
 	-1   0    0    -1  
@@ -231,7 +231,7 @@ U 1 1 5E37A504
 P 7875 4100
 F 0 "J5" H 7875 4450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 6126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 7875 4100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 4100 50  0001 C CNN
 F 3 "~" H 7875 4100 50  0001 C CNN
 	1    7875 4100
 	-1   0    0    -1  
@@ -315,7 +315,7 @@ U 1 1 5EE52D7D
 P 8175 5100
 F 0 "J12" H 8175 5450 50  0000 C CNN
 F 1 "Conn_01x10" H 8093 7126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 8175 5100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 8175 5100 50  0001 C CNN
 F 3 "~" H 8175 5100 50  0001 C CNN
 	1    8175 5100
 	-1   0    0    -1  
@@ -326,7 +326,7 @@ U 1 1 5EE53A3D
 P 7875 5100
 F 0 "J6" H 7875 5450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 7126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 7875 5100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 5100 50  0001 C CNN
 F 3 "~" H 7875 5100 50  0001 C CNN
 	1    7875 5100
 	-1   0    0    -1  
@@ -337,7 +337,7 @@ U 1 1 5EE5401D
 P 8175 6100
 F 0 "J13" H 8175 6450 50  0000 C CNN
 F 1 "Conn_01x10" H 8093 8126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 8175 6100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 8175 6100 50  0001 C CNN
 F 3 "~" H 8175 6100 50  0001 C CNN
 	1    8175 6100
 	-1   0    0    -1  
@@ -348,7 +348,7 @@ U 1 1 5EE55E51
 P 7875 6100
 F 0 "J7" H 7875 6450 50  0000 C CNN
 F 1 "Conn_01x10" H 7793 8126 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 7875 6100 50  0001 C CNN
+F 2 "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_10-G-3.81_1x10_P3.81mm_Vertical" H 7875 6100 50  0001 C CNN
 F 3 "~" H 7875 6100 50  0001 C CNN
 	1    7875 6100
 	-1   0    0    -1  
