@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="junit" level="project" />
     <orderEntry type="library" exported="" name="annotations" level="project" />
+    <orderEntry type="module" module-name="models" exported="" />
   </component>
 </module>
