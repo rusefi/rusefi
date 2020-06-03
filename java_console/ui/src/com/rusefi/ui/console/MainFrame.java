@@ -38,7 +38,8 @@ public class MainFrame {
             /**
              * here we would close the log file
              */
-            super.onWindowClosed();
+            FileLog.MAIN.logLine("onWindowClosed");
+            FileLog.MAIN.close();
         }
     };
 

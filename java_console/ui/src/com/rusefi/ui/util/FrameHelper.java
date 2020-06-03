@@ -11,9 +11,8 @@ import java.awt.event.WindowEvent;
  * (c) Andrey Belomutskiy
  */
 public class FrameHelper {
-    protected final JFrame frame = new JFrame();
-    public static int defaultFontSize;
-
+    private final JFrame frame = new JFrame();
+    
     public JFrame getFrame() {
         return frame;
     }
@@ -44,12 +43,6 @@ public class FrameHelper {
             }
         });
         frame.add(component);
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-                defaultFontSize = frame.getFont().getSize();
-            }
-        });
     }
 
     protected void onWindowOpened() {
@@ -57,11 +50,5 @@ public class FrameHelper {
     }
 
     protected void onWindowClosed() {
-        FileLog.MAIN.logLine("onWindowClosed");
-        FileLog.MAIN.close();
-    }
-
-    public int getDefaultFontSize() {
-        return defaultFontSize;
     }
 }
