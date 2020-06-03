@@ -76,7 +76,7 @@ please remove the space between '-' and '-add-exports' it should be double-dash
             <manifest>
                 <attribute name="Main-Class" value="com.rusefi.Launcher"/>
                 <attribute name="Built-Date" value="${TODAY}"/>
-                <attribute name="Signature-Vendor" value="rusEfi LLC"/>
+                <attribute name="Signature-Vendor" value="rusEFI LLC"/>
             </manifest>
             <zipfileset src="lib/SteelSeries-3.9.30.jar" includes="**/*.class"/>
             <zipfileset src="lib/trident-6.2.jar" includes="**/*.class"/>
