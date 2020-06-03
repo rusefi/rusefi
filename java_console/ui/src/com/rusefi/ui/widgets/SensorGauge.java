@@ -6,6 +6,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.GaugesPanel;
 import com.rusefi.ui.util.UiUtils;
 import eu.hansolo.steelseries.gauges.Radial;
+import eu.hansolo.steelseries.tools.BackgroundColor;
 import eu.hansolo.steelseries.tools.ColorDef;
 
 import javax.swing.*;
@@ -51,7 +52,7 @@ public class SensorGauge {
         UiUtils.setToolTip(gauge, HINT_LINE_1, HINT_LINE_2);
         UiUtils.setToolTip(wrapper, HINT_LINE_1, HINT_LINE_2);
 
-        gauge.setBackgroundColor(sensor.getColor());
+        gauge.setBackgroundColor(BackgroundColor.LIGHT_GRAY);
 
         SensorCentral.getInstance().addListener(sensor, new SensorCentral.SensorListener() {
             public void onSensorUpdate(double value) {
