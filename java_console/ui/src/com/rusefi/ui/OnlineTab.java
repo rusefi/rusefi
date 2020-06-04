@@ -14,42 +14,25 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 
+import static com.rusefi.ui.AuthTokenPanel.TOKEN_WARNING;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class OnlineTab {
-    private static final String TOKEN_WARNING = "Please copy token from your forum profile";
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
     public OnlineTab() {
-        JTextField textField = new JTextField();
-        textField.setPreferredSize(new Dimension(200, 24));
-
-        String authToken = getConfig().getRoot().getProperty(Online.AUTH_TOKEN);
-        if (authToken.trim().isEmpty())
-            authToken = TOKEN_WARNING;
-
-        textField.setText(authToken);
+        AuthTokenPanel authTokenPanel = new AuthTokenPanel();
 
         content.add(Misc.getRusEFI_online_manual());
 
-        content.add(textField);
-
-        JButton save = new JButton("Save");
-        save.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                getConfig().getRoot().setProperty(Online.AUTH_TOKEN, textField.getText());
-            }
-        });
-        content.add(save);
-
+        content.add(authTokenPanel.getContent());
 
         JButton upload = new JButton("Upload");
         upload.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String text = textField.getText();
+                String text = authTokenPanel.getToken();
                 if (text.contains(TOKEN_WARNING)) {
                     JOptionPane.showMessageDialog(content, "Does not work without auth token");
                     return;

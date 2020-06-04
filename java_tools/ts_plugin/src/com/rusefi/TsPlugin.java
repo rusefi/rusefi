@@ -5,22 +5,27 @@ import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
-import com.rusefi.config.Field;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.ui.AuthTokenPanel;
+import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.Misc;
+import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBException;
-import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class TsPlugin implements ApplicationPlugin {
     private ControllerAccess controllerAccess;
-    private JPanel content = new JPanel(new BorderLayout());
+    private final JPanel content = new JPanel(new VerticalFlowLayout());
 
     public TsPlugin() {
         content.add(Misc.getRusEFI_online_manual());
+        content.add(new AuthTokenPanel().getContent());
     }
 
     @Override
@@ -46,49 +51,58 @@ public class TsPlugin implements ApplicationPlugin {
     @Override
     public void initialize(ControllerAccess controllerAccess) {
         this.controllerAccess = controllerAccess;
-        for (String config : controllerAccess.getEcuConfigurationNames()) {
-            System.out.println("EcuConfigurationName " + config);
-        }
+        printEcuConfigurationNames(controllerAccess);
 
+        uploadCurrentTune(controllerAccess);
+    }
+
+    private static String uploadCurrentTune(ControllerAccess controllerAccess) {
         Msq msq = new Msq();
-
         String configurationName = getConfigurationName();
         ControllerParameterServer controllerParameterServer = controllerAccess.getControllerParameterServer();
-        String[] parameterNames = controllerParameterServer.getParameterNames(configurationName);
         try {
+            String[] parameterNames = controllerParameterServer.getParameterNames(configurationName);
             for (String parameterName : parameterNames) {
                 ControllerParameter cp = controllerParameterServer.getControllerParameter(configurationName, parameterName);
                 String type = cp.getParamClass();
                 String value;
                 if (ControllerParameter.PARAM_CLASS_BITS.equals(type)) {
                     value = cp.getStringValue();
-                    System.out.println("bits " + parameterName + ": " + value);
+                    System.out.println("TsPlugin bits " + parameterName + ": " + value);
                 } else if (ControllerParameter.PARAM_CLASS_SCALAR.equals(type)) {
                     value = cp.getStringValue();
-                    System.out.println("scalar " + parameterName + ": " + cp.getScalarValue() + "/" + cp.getStringValue());
+                    System.out.println("TsPlugin scalar " + parameterName + ": " + cp.getScalarValue() + "/" + cp.getStringValue());
 
                 } else if (ControllerParameter.PARAM_CLASS_ARRAY.equals(type)) {
                     value = getArrayValue(cp.getArrayValues());
+                } else if ("string".equals(type)) {
+                    System.out.println("TsPlugin name=" + parameterName + " string=" + cp.getStringValue());
+                    value = cp.getStringValue();
                 } else {
-                    System.out.println("name=" + parameterName + " type " + type + "/" + cp.getStringValue());
+                    System.out.println("TsPlugin name=" + parameterName + " unexpected type " + type + "/" + cp.getStringValue());
                     value = cp.getStringValue();
                 }
 
                 msq.getPage().constant.add(new Constant(parameterName, cp.getUnits(), value));
             }
 
-            try {
-                msq.writeXmlFile("plugin.xml");
-            } catch (JAXBException | IOException e) {
-                System.out.println("Error writing XML: " + e);
-            }
-
-        } catch (ControllerException e) {
-            e.printStackTrace();
+            Path tempDirWithPrefix = Files.createTempDirectory("rusefi_ts_plugin");
+            String fileName = tempDirWithPrefix + File.separator + "plugin.xml";
+            msq.writeXmlFile(fileName);
+            return fileName;
+        } catch (JAXBException | IOException | ControllerException e) {
+            System.out.println("Error writing XML: " + e);
+            return null;
         }
     }
 
-    private String getArrayValue(double[][] arrayValues) {
+    private void printEcuConfigurationNames(ControllerAccess controllerAccess) {
+        for (String config : controllerAccess.getEcuConfigurationNames()) {
+            System.out.println("EcuConfigurationName " + config);
+        }
+    }
+
+    private static String getArrayValue(double[][] arrayValues) {
         StringBuilder sb = new StringBuilder();
         for (int rowIndex = 0; rowIndex < arrayValues.length; rowIndex++) {
             double[] array = arrayValues[rowIndex];
@@ -100,6 +114,7 @@ public class TsPlugin implements ApplicationPlugin {
             }
         }
         sb.append("\n");
+        return sb.toString();
     }
 
     public static String getConfigurationName() {
@@ -129,7 +144,8 @@ public class TsPlugin implements ApplicationPlugin {
 
     @Override
     public void close() {
-
+        System.out.printf("TsPlugin#close");
+        PersistentConfiguration.getConfig().save();
     }
 
     @Override

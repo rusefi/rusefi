@@ -47,8 +47,8 @@ public class PersistentConfiguration {
             e.writeObject(config);
             e.close();
             System.out.println("Saved settings to " + CONFIG_FILE_NAME);
-        } catch (FileNotFoundException e1) {
-            System.out.println("Error saving " + CONFIG_FILE_NAME);
+        } catch (FileNotFoundException e) {
+            System.out.println("Error saving " + CONFIG_FILE_NAME + e);
         }
     }
 

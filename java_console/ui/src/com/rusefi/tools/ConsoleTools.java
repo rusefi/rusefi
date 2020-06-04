@@ -17,6 +17,7 @@ import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.ui.AuthTokenPanel;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
@@ -61,7 +62,7 @@ public class ConsoleTools {
 
     private static void uploadTune(String[] args) throws IOException {
         String fileName = args[1];
-        String authToken = getConfig().getRoot().getProperty(Online.AUTH_TOKEN);
+        String authToken = getConfig().getRoot().getProperty(AuthTokenPanel.AUTH_TOKEN);
         System.out.println("Trying to upload " + fileName + " using " + authToken);
         Online.upload(new File(fileName), authToken);
     }
@@ -108,11 +109,11 @@ public class ConsoleTools {
     private static void setAuthToken(String[] args) {
         String newToken = args[1];
         System.out.println("Saving auth token " + newToken);
-        getConfig().getRoot().setProperty(Online.AUTH_TOKEN, newToken);
+        getConfig().getRoot().setProperty(AuthTokenPanel.AUTH_TOKEN, newToken);
     }
 
     private static void printAuthToken() {
-        String authToken = getConfig().getRoot().getProperty(Online.AUTH_TOKEN);
+        String authToken = getConfig().getRoot().getProperty(AuthTokenPanel.AUTH_TOKEN);
         if (authToken.trim().isEmpty()) {
             System.out.println("Auth token not defined. Please use " + SET_AUTH_TOKEN + " command");
             System.out.println("\tPlease see https://github.com/rusefi/rusefi/wiki/Online");
@@ -225,7 +226,7 @@ public class ConsoleTools {
 
         Msq tune = Msq.toMsq(image);
         tune.writeXmlFile(Msq.outputXmlFileName);
-        String authToken = getConfig().getRoot().getProperty(Online.AUTH_TOKEN);
+        String authToken = getConfig().getRoot().getProperty(AuthTokenPanel.AUTH_TOKEN);
         System.out.println("Using " + authToken);
         Online.upload(new File(Msq.outputXmlFileName), authToken);
     }
