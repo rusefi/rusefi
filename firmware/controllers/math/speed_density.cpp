@@ -8,12 +8,11 @@
  */
 
 #include "global.h"
-#include "globalaccess.h"
 #include "speed_density.h"
+#include "fuel_math.h"
 #include "interpolation.h"
 #include "engine.h"
 #include "engine_math.h"
-#include "config_engine_specs.h"
 #include "perf_trace.h"
 #include "sensor.h"
 
@@ -120,40 +119,19 @@ temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * @return air mass in grams
  */
-static float getCycleAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_GLOBAL_SUFFIX) {
-	return (get_specs_displacement * volumetricEfficiency * MAP) / (GAS_R * tempK);
+static float getCycleAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return (CONFIG(specs.displacement) * volumetricEfficiency * MAP) / (GAS_R * tempK);
 }
 
-float getCylinderAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_GLOBAL_SUFFIX) {
-	return getCycleAirMass(volumetricEfficiency, MAP, tempK PASS_GLOBAL_SUFFIX)
-			/ get_specs_cylindersCount;
+float getCylinderAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return getCycleAirMass(volumetricEfficiency, MAP, tempK PASS_ENGINE_PARAMETER_SUFFIX)
+			/ CONFIG(specs.cylindersCount);
 }
-
-/**
- * @return per cylinder injection time, in seconds
- */
-float sdMath(float airMass, float AFR DECLARE_GLOBAL_SUFFIX) {
-
-	/**
-	 * todo: pre-calculate gramm/second injector flow to save one multiplication
-	 * open question if that's needed since that's just a multiplication
-	 */
-	float injectorFlowRate = cc_minute_to_gramm_second(get_injector_flow);
-	/**
-	 * injection_pulse_duration = fuel_mass / injector_flow
-	 * fuel_mass = air_mass / target_afr
-	 *
-	 * injection_pulse_duration = (air_mass / target_afr) / injector_flow
-	 */
-	return airMass / (AFR * injectorFlowRate);
-}
-
-EXTERN_ENGINE;
 
 /**
  * @return per cylinder injection time, in Milliseconds
  */
-floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
+floatms_t getSpeedDensityFuel(float map DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::GetSpeedDensityFuel);
 
 	/**
@@ -166,12 +144,12 @@ floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
 	}
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(map), "NaN map", 0);
 
-	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_GLOBAL_SIGNATURE);
+	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", 0);
 
-	float airMass = getCylinderAirMass(ENGINE(engineState.currentBaroCorrectedVE), adjustedMap, tChargeK PASS_GLOBAL_SUFFIX);
+	float airMass = getCylinderAirMass(ENGINE(engineState.currentBaroCorrectedVE), adjustedMap, tChargeK PASS_ENGINE_PARAMETER_SUFFIX);
 	if (cisnan(airMass)) {
 		warning(CUSTOM_ERR_6685, "NaN airMass");
 		return 0;
@@ -182,7 +160,7 @@ floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	engine->engineState.sd.airMassInOneCylinder = airMass;
-	return sdMath(airMass, ENGINE(engineState.targetAFR) PASS_GLOBAL_SUFFIX) * 1000;
+	return getInjectionDurationForAirmass(airMass, ENGINE(engineState.targetAFR) PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
 }
 
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
