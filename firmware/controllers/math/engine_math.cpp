@@ -29,7 +29,6 @@
 #include "efi_gpio.h"
 #include "fuel_math.h"
 #include "advance_map.h"
-#include "config_engine_specs.h"
 
 EXTERN_ENGINE;
 #if EFI_UNIT_TEST

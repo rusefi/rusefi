@@ -16,7 +16,6 @@
 #include "sensor.h"
 
 TEST(misc, testMafFuelMath) {
-	printf("====================================================================================== testMafFuelMath\r\n");
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 	extern fuel_Map3D_t veMap;
 	veMap.setAll(75);
@@ -26,8 +25,7 @@ TEST(misc, testMafFuelMath) {
 
 	setAfrMap(config->afrTable, 13);
 
-	float fuelMs = getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("fuelMs", 0.75 * 13.3550, fuelMs);
+	EXPECT_NEAR(0.75 * 13.3547, getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 }
 
 TEST(misc, testFuelMap) {

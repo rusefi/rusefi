@@ -169,11 +169,25 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	
 	//Correct air mass by VE table 
 	float corrCylAirmass = cylinderAirmass * veMap.getValue(rpm, airChargeLoad) / 100;
-	float fuelMassGram = corrCylAirmass / afrMap.getValue(rpm, airSpeed);
-	float pulseWidthSeconds = fuelMassGram / cc_minute_to_gramm_second(engineConfiguration->injector.flow);
+	float afr = afrMap.getValue(rpm, airChargeLoad);
+	float pulseWidthSeconds = getInjectionDurationForAirmass(corrCylAirmass, afr PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// Convert to ms
 	return 1000 * pulseWidthSeconds;
+}
+
+constexpr float convertToGramsPerSecond(float ccPerMinute) {
+	float ccPerSecond = ccPerMinute / 60;
+	return ccPerSecond * 0.72f;	// 0.72g/cc fuel density
+}
+
+/**
+ * @return per cylinder injection time, in seconds
+ */
+float getInjectionDurationForAirmass(float airMass, float afr DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	float gPerSec = convertToGramsPerSecond(CONFIG(injector.flow));
+
+	return airMass / (afr * gPerSec);
 }
 
 /**
