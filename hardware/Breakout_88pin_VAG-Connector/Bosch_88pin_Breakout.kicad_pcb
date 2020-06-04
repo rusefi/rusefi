@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 214)
+    (drawings 213)
     (tracks 507)
     (zones 0)
     (modules 97)
@@ -4369,7 +4369,6 @@
   (gr_text https://github.com/rusefi/rusefi/tree/master/hardware (at 211 103 270) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )
-  (target plus (at 75 75) (size 5) (width 0.05) (layer Edge.Cuts))
   (gr_text 88 (at 90 100 180) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )
