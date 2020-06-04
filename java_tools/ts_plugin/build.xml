@@ -16,6 +16,8 @@
         >
             <src path="${console_path}/shared_ui/src"/>
             <src path="${console_path}/inifile/src"/>
+            <src path="${console_path}/logging/src"/>
+            <src path="${console_path}/models/src"/>
             <src path="src"/>
         </javac>
 
