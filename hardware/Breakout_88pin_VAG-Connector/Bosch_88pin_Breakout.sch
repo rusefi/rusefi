@@ -1036,4 +1036,61 @@ F 3 "~" H 3150 6100 50  0001 C CNN
 	1    3150 6100
 	1    0    0    -1  
 $EndComp
+$Comp
+L Off_Road_Disclaimer:Disclaimer G2
+U 1 1 5F1A7554
+P 9725 6800
+F 0 "G2" H 9725 7150 60  0001 C CNN
+F 1 "Disclaimer" H 9725 7050 60  0001 C CNN
+F 2 "rusefi_lib:Off_Road_Disclaimer" H 9725 6800 50  0001 C CNN
+F 3 "" H 9725 6800 50  0001 C CNN
+	1    9725 6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L logo:LOGO G1
+U 1 1 5F1A9772
+P 6025 7825
+F 0 "G1" H 6025 7722 60  0001 C CNN
+F 1 "LOGO" H 6025 7928 60  0001 C CNN
+F 2 "rusefi_lib:LOGO" H 6025 7825 50  0001 C CNN
+F 3 "" H 6025 7825 50  0001 C CNN
+	1    6025 7825
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J90
+U 1 1 5F1AF1B2
+P 6150 7250
+F 0 "J90" V 6150 7350 50  0000 L CNN
+F 1 "GND" H 6200 7250 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Bridge_Pitch2.54mm_Drill1.3mm" H 6150 7250 50  0001 C CNN
+F 3 "~" H 6150 7250 50  0001 C CNN
+	1    6150 7250
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR01
+U 1 1 5F1B1397
+P 6150 7500
+F 0 "#PWR01" H 6150 7250 50  0001 C CNN
+F 1 "GND" H 6155 7327 50  0000 C CNN
+F 2 "" H 6150 7500 50  0001 C CNN
+F 3 "" H 6150 7500 50  0001 C CNN
+	1    6150 7500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6150 7450 6150 7500
+$Comp
+L Graphic:Logo_Open_Hardware_Small LOGO1
+U 1 1 5F1B2ED3
+P 5550 7800
+F 0 "LOGO1" H 5550 8075 50  0001 C CNN
+F 1 "Logo_Open_Hardware_Small" H 5550 7575 50  0001 C CNN
+F 2 "Symbol:OSHW-Logo2_7.3x6mm_SilkScreen" H 5550 7800 50  0001 C CNN
+F 3 "~" H 5550 7800 50  0001 C CNN
+	1    5550 7800
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
