@@ -46,7 +46,11 @@ public class PersistentConfiguration {
     @SuppressWarnings("unchecked")
     public void load() {
         try {
-            XMLDecoder e = new XMLDecoder(new BufferedInputStream(new FileInputStream(CONFIG_FILE_NAME)));
+            BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(CONFIG_FILE_NAME));
+            /**
+             * interesting things are happening while this is executed under TS as a plugin so we need non-default CL parameter
+             */
+            XMLDecoder e = new XMLDecoder(inputStream, null, null, PersistentConfiguration.class.getClassLoader());
             config = (Map<String, Object>) e.readObject();
             e.close();
             System.out.println("Console configuration from " + CONFIG_FILE_NAME);
