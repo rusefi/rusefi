@@ -202,7 +202,6 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			currentRawVE = interpolateClamped(0.0f, idleVe, CONFIG(idlePidDeactivationTpsThreshold), currentRawVE, tps.Value);
 		}
 		currentBaroCorrectedVE = baroCorrection * currentRawVE * PERCENT_DIV;
-		targetAFR = afrMap.getValue(rpm, map);
 	} else {
 		baseTableFuel = getBaseTableFuel(rpm, engineLoad);
 	}
