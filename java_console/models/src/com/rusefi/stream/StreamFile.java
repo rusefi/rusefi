@@ -32,14 +32,15 @@ public abstract class StreamFile {
             } catch (IOException e) {
                 // ignoring this one
             }
+            writer = null;
         }
-        writer = null;
         if (stream != null) {
             try {
                 stream.close();
             } catch (IOException e) {
                 // ignoring this one
             }
+            stream = null;
         }
     }
 
