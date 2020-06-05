@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * by the way TS installs stuff into %user%\.efianalytics\TunerStudio\plugins folder
+ */
 public class TsPlugin implements ApplicationPlugin {
     private ControllerAccess controllerAccess;
     private final JPanel content = new JPanel(new VerticalFlowLayout());

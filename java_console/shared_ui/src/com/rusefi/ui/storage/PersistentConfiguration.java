@@ -8,7 +8,14 @@ import java.util.Map;
 
 public class PersistentConfiguration {
     private static final PersistentConfiguration INSTANCE = new PersistentConfiguration();
-    private static final String CONFIG_FILE_NAME = "rusefi_console_properties.xml";
+
+    private static final String RUSEFI_SETTINGS_FOLDER = System.getProperty("user.home") + File.separator + ".rusEFI";
+
+    static {
+        new File(RUSEFI_SETTINGS_FOLDER).mkdirs();
+    }
+
+    private static final String CONFIG_FILE_NAME = RUSEFI_SETTINGS_FOLDER + File.separator + "console_properties.xml";
 
     private Map<String, Object> config = new HashMap<>();
     private boolean isLoaded;
