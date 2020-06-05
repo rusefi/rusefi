@@ -21,9 +21,13 @@ public abstract class StreamFile {
     public abstract void append(List<CompositeEvent> events);
 
     public synchronized void close() {
+        try {
+            writeFooter();
+        } catch (IOException e) {
+            return;
+        }
         if (writer != null) {
             try {
-                writeFooter(writer);
                 writer.close();
             } catch (IOException e) {
                 // ignoring this one
@@ -44,6 +48,6 @@ public abstract class StreamFile {
         writer = new OutputStreamWriter(stream);
     }
 
-    protected void writeFooter(Writer writer) throws IOException {
+    protected void writeFooter() throws IOException {
     }
 }
