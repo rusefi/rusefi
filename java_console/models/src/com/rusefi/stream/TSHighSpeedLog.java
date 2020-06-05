@@ -1,11 +1,9 @@
-package com.rusefi.binaryprotocol;
+package com.rusefi.stream;
 
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.rusEFIVersion;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.util.List;
 
 public class TSHighSpeedLog extends StreamFile {
@@ -23,10 +21,10 @@ public class TSHighSpeedLog extends StreamFile {
     }
 
     @Override
-    void append(List<CompositeEvent> events) {
+    public void append(List<CompositeEvent> events) {
         try {
             if (writer == null) {
-                writer = new FileWriter(fileName);
+                createFileWriter(fileName);
                 writeHeader(writer);
             }
             for (CompositeEvent event : events) {
@@ -43,7 +41,7 @@ public class TSHighSpeedLog extends StreamFile {
     }
 
     @Override
-    protected void writeFooter(FileWriter writer) throws IOException {
+    protected void writeFooter(Writer writer) throws IOException {
         writer.write("MARK 028\n");
     }
 }

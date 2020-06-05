@@ -1,4 +1,4 @@
-package com.rusefi.binaryprotocol;
+package com.rusefi.stream;
 
 import com.rusefi.composite.CompositeEvent;
 
@@ -74,7 +74,7 @@ public class VcdStreamFile extends StreamFile {
     public void append(List<CompositeEvent> events) {
         try {
             if (writer == null) {
-                writer = new FileWriter(fileName);
+                createFileWriter(fileName);
                 writeHeader(writer, new Date());
             }
             appendEvents(events, writer);

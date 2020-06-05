@@ -1,6 +1,6 @@
 package com.rusefi.composite.test;
 
-import com.rusefi.binaryprotocol.VcdStreamFile;
+import com.rusefi.stream.VcdStreamFile;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
 import org.junit.Test;
