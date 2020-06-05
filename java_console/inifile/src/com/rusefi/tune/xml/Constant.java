@@ -4,9 +4,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
 public class Constant {
-    private final String name;
-    private final String units;
-    private final String value;
+    private String name;
+    private String units;
+    private String value;
+
+    public Constant() {
+    }
 
     public Constant(String name, String units, String value) {
         this.name = name;
@@ -29,4 +32,15 @@ public class Constant {
         return value;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUnits(String units) {
+        this.units = units;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

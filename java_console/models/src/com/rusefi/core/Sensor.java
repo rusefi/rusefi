@@ -91,9 +91,8 @@ public enum Sensor {
     FIRMWARE_VERSION("FW version", SensorCategory.OPERATIONS, FieldType.INT, 120),
     TS_CONFIG_VERSION(".ini version", SensorCategory.OPERATIONS, FieldType.INT, 124),
 
+    engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.INT16, 134, 0, 5),
     // Errors
-    totalTriggerErrorCounter("trigger total error counter", SensorCategory.STATUS, FieldType.INT, 128, 0, 5),
-    orderingErrorCounter("trigger order error counter", SensorCategory.STATUS, FieldType.INT, 132, 0, 5),
     errorCodeCounter("error counter", SensorCategory.STATUS, FieldType.INT, 136, 0, 5),
     lastErrorCode("last error", SensorCategory.STATUS, FieldType.INT, 138, 0, 5),
 
@@ -110,6 +109,8 @@ public enum Sensor {
     debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.DEBUG, FieldType.INT, 192, 0, 5),
     debugIntField4("debug i4", SensorCategory.DEBUG, FieldType.INT16, 196, 0, 5),
     debugIntField5("debug i5", SensorCategory.DEBUG, FieldType.INT16, 198, 0, 5),
+
+    tuneCrc16("tune crc16", SensorCategory.STATUS, FieldType.INT16, 240, 0, 5),
 
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),

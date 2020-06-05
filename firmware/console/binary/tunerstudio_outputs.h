@@ -162,6 +162,9 @@ typedef struct {
 	uint32_t timeSeconds; // 112
 	uint32_t engineMode; // 116
 	uint32_t firmwareVersion; // 120
+	// todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
+	// rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
+
 	uint32_t tsConfigVersion; // 124
 
 	// These two fields indicate to TS that we'd like to set a particular field to a particular value
@@ -216,7 +219,8 @@ typedef struct {
 	scaled_voltage rawIat;				// 236
 	scaled_voltage rawOilPressure;		// 238
 
-	uint8_t unusedAtTheEnd[4]; // we have some unused bytes to allow compatible TS changes
+	int16_t tuneCrc16; // 240
+	uint8_t unusedAtTheEnd[2]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
