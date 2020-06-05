@@ -16,6 +16,7 @@ import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.logview.LogViewer;
+import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
 import jssc.SerialPortList;
@@ -185,6 +186,7 @@ public class Launcher extends rusEFIVersion {
         System.out.println("rusEfi UI console " + CONSOLE_VERSION);
         System.out.println("Compiled " + new Date(ConsoleTools.classBuildTimeMillis()));
         System.out.println("\n\n");
+        PersistentConfiguration.registerShutdownHook();
 
         if (ConsoleTools.runTool(args)) {
             return;
