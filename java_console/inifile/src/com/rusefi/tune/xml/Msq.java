@@ -8,9 +8,7 @@ import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -18,7 +16,7 @@ import java.io.IOException;
 public class Msq {
     public static final String outputXmlFileName = PersistentConfiguration.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
 
-    private final Page page = new Page();
+    private Page page = new Page();
 
     private final VersionInfo versionInfo;
 
@@ -45,11 +43,6 @@ public class Msq {
         getPage().constant.add(new Constant(field.getName(), field.getUnits(), value));
     }
 
-    @XmlAttribute
-    public String getXmlns() {
-        return "http://www.msefi.com/:msq";
-    }
-
     @XmlElement
     public Bibliography getBibliography() {
         return new Bibliography();
@@ -63,5 +56,19 @@ public class Msq {
     @XmlElement
     public Page getPage() {
         return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
+    }
+
+    @XmlElement
+    public Settings getSettings() {
+        return new Settings();
+    }
+
+    @XmlElement
+    public UserComments getUserComments() {
+        return new UserComments();
     }
 }
