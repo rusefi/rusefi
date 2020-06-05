@@ -12,7 +12,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class AuthTokenPanel {
     public static final String TOKEN_WARNING = "Please copy token from your forum profile";
-    public static final String AUTH_TOKEN = "auth_token";
+    private static final String AUTH_TOKEN = "auth_token";
     private static final String TOKEN_PROFILE_URL = "https://rusefi.com/forum/ucp.php?i=254";
 
     private JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -22,12 +22,13 @@ public class AuthTokenPanel {
         textField.setPreferredSize(new Dimension(200, 24));
 
         String authToken = getAuthToken();
+        System.out.println("Got from settings: " + authToken);
 
         JButton save = new JButton("Save");
         save.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                getConfig().getRoot().setProperty(AUTH_TOKEN, textField.getText());
+                setAuthToken(AuthTokenPanel.this.textField.getText());
                 PersistentConfiguration.getConfig().save();
             }
         });
@@ -40,6 +41,10 @@ public class AuthTokenPanel {
             content.add(new URLLabel("Get it here", TOKEN_PROFILE_URL));
         }
         textField.setText(authToken);
+    }
+
+    public static void setAuthToken(String value) {
+        getConfig().getRoot().setProperty(AUTH_TOKEN, value);
     }
 
     @NotNull
