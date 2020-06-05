@@ -359,6 +359,9 @@ enable2ndByteCanID = false
       rawIat          = scalar,	 U16,    236, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
       rawOilPressure  = scalar,	 U16,    238, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 
+	; we use this to match logs to tunes
+	tuneCrc16= scalar,  U16,    240,  "crc16",           1,         0
+
 ;
 ; see TunerStudioOutputChannels struct
 ;
@@ -1207,6 +1210,7 @@ gaugeCategory = Sensors - Raw
 
 
    entry = engineMakeCodeNameCrc16,   "Engine CRC16",int,"%d"
+   entry = tuneCrc16,   "Tune CRC16",int,"%d"
 
    entry = engineMode,   "Engine Mode",int,"%d"
    entry = warningCounter,   @@GAUGE_NAME_WARNING_COUNTER@@,int,"%d"
