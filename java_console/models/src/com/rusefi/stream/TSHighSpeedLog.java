@@ -42,6 +42,7 @@ public class TSHighSpeedLog extends StreamFile {
 
     @Override
     protected void writeFooter() throws IOException {
-        writer.write("MARK 028\n");
+        if (writer != null)
+            writer.write("MARK 028\n");
     }
 }

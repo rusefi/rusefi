@@ -28,6 +28,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -81,9 +82,15 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private boolean isCompositeLoggerEnabled;
     private long lastLowRpmTime = System.currentTimeMillis();
 
-    private List<StreamFile> compositeLogs = Arrays.asList(new VcdStreamFile(getFileName("rusEFI_trigger_log_")),
-            new TSHighSpeedLog(getFileName("rusEFI_trigger_log_")),
-            new LogicdataStreamFile(getFileName("rusEFI_trigger_log_", ".logicdata")));
+    private List<StreamFile> compositeLogs = new ArrayList<>();
+
+    private void createCompositesIfNeeded() {
+        if (!compositeLogs.isEmpty())
+            return;
+        compositeLogs.addAll(Arrays.asList(new VcdStreamFile(getFileName("rusEFI_trigger_log_")),
+                new TSHighSpeedLog(getFileName("rusEFI_trigger_log_")),
+                new LogicdataStreamFile(getFileName("rusEFI_trigger_log_", ".logicdata"))));
+    }
 
     public boolean isClosed;
     /**
@@ -101,11 +108,14 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     };
 
+    private final Thread hook = new Thread(() -> closeComposites());
+
     protected BinaryProtocol(final Logger logger, IoStream stream) {
         this.logger = logger;
         this.stream = stream;
 
         incomingData = createDataBuffer(stream, logger);
+        Runtime.getRuntime().addShutdownHook(hook);
     }
 
     public static IncomingDataBuffer createDataBuffer(IoStream stream, Logger logger) {
@@ -222,9 +232,15 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             packet[1] = Fields.TS_COMPOSITE_DISABLE;
             executeCommand(packet, "disable composite");
             isCompositeLoggerEnabled = false;
-            for (StreamFile composite : compositeLogs)
-                composite.close();
+            closeComposites();
         }
+    }
+
+    private void closeComposites() {
+        for (StreamFile composite : compositeLogs) {
+            composite.close();
+        }
+        compositeLogs.clear();
     }
 
     public Logger getLogger() {
@@ -397,6 +413,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         isClosed = true;
         SensorCentral.getInstance().removeListener(Sensor.RPM, rpmListener);
         stream.close();
+        closeComposites();
+        Runtime.getRuntime().removeShutdownHook(hook);
     }
 
     public void writeData(byte[] content, Integer offset, int size, Logger logger) throws SerialPortException, EOFException, InterruptedException {
@@ -521,6 +539,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         byte[] response = executeCommand(packet, "composite log", true);
         if (checkResponseCode(response, RESPONSE_OK)) {
             List<CompositeEvent> events = CompositeParser.parse(response);
+            createCompositesIfNeeded();
             for (StreamFile composite : compositeLogs)
                 composite.append(events);
         }
