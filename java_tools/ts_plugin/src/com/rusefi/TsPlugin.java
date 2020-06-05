@@ -5,6 +5,7 @@ import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
+import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
@@ -14,10 +15,8 @@ import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBException;
-import java.io.File;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  * by the way TS installs stuff into %user%\.efianalytics\TunerStudio\plugins folder
@@ -26,9 +25,22 @@ public class TsPlugin implements ApplicationPlugin {
     private ControllerAccess controllerAccess;
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
+    private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
+
     public TsPlugin() {
+        content.add(new JLabel("" + rusEFIVersion.CONSOLE_VERSION));
         content.add(Misc.getRusEFI_online_manual());
-        content.add(new AuthTokenPanel().getContent());
+        content.add(tokenPanel.getContent());
+
+        JButton upload = new JButton("Upload");
+        upload.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Msq tune = writeCurrentTune(controllerAccess);
+                Online.uploadTune(tune, tokenPanel, content);
+            }
+        });
+        content.add(upload);
     }
 
     @Override
@@ -55,11 +67,9 @@ public class TsPlugin implements ApplicationPlugin {
     public void initialize(ControllerAccess controllerAccess) {
         this.controllerAccess = controllerAccess;
         printEcuConfigurationNames(controllerAccess);
-
-        uploadCurrentTune(controllerAccess);
     }
 
-    private static String uploadCurrentTune(ControllerAccess controllerAccess) {
+    private static Msq writeCurrentTune(ControllerAccess controllerAccess) {
         Msq msq = new Msq();
         String configurationName = getConfigurationName();
         ControllerParameterServer controllerParameterServer = controllerAccess.getControllerParameterServer();
@@ -89,10 +99,9 @@ public class TsPlugin implements ApplicationPlugin {
                 msq.getPage().constant.add(new Constant(parameterName, cp.getUnits(), value));
             }
 
-            Path tempDirWithPrefix = Files.createTempDirectory("rusefi_ts_plugin");
-            String fileName = tempDirWithPrefix + File.separator + "plugin.xml";
+            String fileName = Msq.outputXmlFileName;
             msq.writeXmlFile(fileName);
-            return fileName;
+            return msq;
         } catch (JAXBException | IOException | ControllerException e) {
             System.out.println("Error writing XML: " + e);
             return null;
@@ -158,7 +167,7 @@ public class TsPlugin implements ApplicationPlugin {
 
     @Override
     public String getVersion() {
-        return "0.00000001";
+        return Integer.toString(rusEFIVersion.CONSOLE_VERSION);
     }
 
     @Override

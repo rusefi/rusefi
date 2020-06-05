@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="annotations" level="project" />
+    <orderEntry type="module" module-name="inifile" />
+    <orderEntry type="library" name="httpclient" level="project" />
   </component>
 </module>

@@ -9,7 +9,8 @@ import java.util.Map;
 public class PersistentConfiguration {
     private static final PersistentConfiguration INSTANCE = new PersistentConfiguration();
 
-    private static final String RUSEFI_SETTINGS_FOLDER = System.getProperty("user.home") + File.separator + ".rusEFI";
+    public static final String RUSEFI_SETTINGS_FOLDER = System.getProperty("user.home") + File.separator + ".rusEFI";
+    private static boolean hookRegistered;
 
     static {
         new File(RUSEFI_SETTINGS_FOLDER).mkdirs();
@@ -25,7 +26,22 @@ public class PersistentConfiguration {
     }
 
     private PersistentConfiguration() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> getConfig().save()));
+        registerShutdownHook();
+    }
+
+    /**
+     * Does not work under TS plugin looks like TS does a violent System.exit?
+     */
+    public static synchronized void registerShutdownHook() {
+        if (hookRegistered) {
+            hookRegistered = true;
+            return;
+        }
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Shutdown hook...");
+            getConfig().save();
+            System.out.println("Shutdown hook!");
+        }));
     }
 
     @SuppressWarnings("unchecked")

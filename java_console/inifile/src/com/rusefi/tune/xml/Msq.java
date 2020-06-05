@@ -3,6 +3,7 @@ package com.rusefi.tune.xml;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,11 +11,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.File;
 import java.io.IOException;
 
 @XmlRootElement
 public class Msq {
-    public static final String outputXmlFileName = "output.msq";
+    public static final String outputXmlFileName = PersistentConfiguration.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
 
     private final Page page = new Page();
 
