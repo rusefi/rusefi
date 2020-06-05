@@ -14,6 +14,7 @@ import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
+import com.rusefi.stream.LogicdataStreamFile;
 import com.rusefi.stream.StreamFile;
 import com.rusefi.stream.TSHighSpeedLog;
 import com.rusefi.stream.VcdStreamFile;
@@ -80,7 +81,9 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private boolean isCompositeLoggerEnabled;
     private long lastLowRpmTime = System.currentTimeMillis();
 
-    private List<StreamFile> compositeLogs = Arrays.asList(new VcdStreamFile(getFileName("rusEFI_trigger_log_")), new TSHighSpeedLog(getFileName("rusEFI_trigger_log_")));
+    private List<StreamFile> compositeLogs = Arrays.asList(new VcdStreamFile(getFileName("rusEFI_trigger_log_")),
+            new TSHighSpeedLog(getFileName("rusEFI_trigger_log_")),
+            new LogicdataStreamFile(getFileName("rusEFI_trigger_log_", ".logicdata")));
 
     public boolean isClosed;
     /**
@@ -121,7 +124,12 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     @NotNull
     public static String getFileName(String prefix) {
-        return FileLog.DIR + prefix + FileLog.getDate() + ".csv";
+        return getFileName(prefix, ".csv");
+    }
+
+    @NotNull
+    public static String getFileName(String prefix, String fileType) {
+        return FileLog.DIR + prefix + FileLog.getDate() + fileType;
     }
 
     public void doSend(final String command, boolean fireEvent) throws InterruptedException {
