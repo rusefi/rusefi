@@ -26,7 +26,6 @@ public class PersistentConfiguration {
     }
 
     private PersistentConfiguration() {
-        registerShutdownHook();
     }
 
     /**
@@ -50,7 +49,7 @@ public class PersistentConfiguration {
             XMLDecoder e = new XMLDecoder(new BufferedInputStream(new FileInputStream(CONFIG_FILE_NAME)));
             config = (Map<String, Object>) e.readObject();
             e.close();
-            System.out.println("Got configuration from " + CONFIG_FILE_NAME);
+            System.out.println("Console configuration from " + CONFIG_FILE_NAME);
         } catch (Throwable e) {
             System.out.println("Console configuration not found " + CONFIG_FILE_NAME + ", using defaults");
         }

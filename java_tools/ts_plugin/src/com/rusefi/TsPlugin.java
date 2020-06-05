@@ -17,6 +17,8 @@ import javax.swing.*;
 import javax.xml.bind.JAXBException;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * by the way TS installs stuff into %user%\.efianalytics\TunerStudio\plugins folder
@@ -73,6 +75,13 @@ public class TsPlugin implements ApplicationPlugin {
         Msq msq = new Msq();
         String configurationName = getConfigurationName();
         ControllerParameterServer controllerParameterServer = controllerAccess.getControllerParameterServer();
+
+        Msq tsTune = TsTuneReader.readTsTune(configurationName);
+        Map<String, Constant> byName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        for (Constant c : tsTune.getPage().constant) {
+            byName.put(c.getName(), c);
+        }
+
         try {
             String[] parameterNames = controllerParameterServer.getParameterNames(configurationName);
             for (String parameterName : parameterNames) {
@@ -83,14 +92,23 @@ public class TsPlugin implements ApplicationPlugin {
                     value = cp.getStringValue();
                     System.out.println("TsPlugin bits " + parameterName + ": " + value);
                 } else if (ControllerParameter.PARAM_CLASS_SCALAR.equals(type)) {
-                    value = cp.getStringValue();
+                    value = toString(cp.getScalarValue(), cp.getDecimalPlaces());
                     System.out.println("TsPlugin scalar " + parameterName + ": " + cp.getScalarValue() + "/" + cp.getStringValue());
 
                 } else if (ControllerParameter.PARAM_CLASS_ARRAY.equals(type)) {
                     value = getArrayValue(cp.getArrayValues());
                 } else if ("string".equals(type)) {
-                    System.out.println("TsPlugin name=" + parameterName + " string=" + cp.getStringValue());
-                    value = cp.getStringValue();
+                    //value = cp.getStringValue();
+                    // WOW hack
+                    // TS does not provide values for string parameters?! so we read the file directly
+                    Constant constant = byName.get(parameterName);
+                    if (constant == null) {
+                        System.out.println("Not found in TS tune " + parameterName);
+                        value = null;
+                    } else {
+                        value = constant.getValue();
+                        System.out.println("TsPlugin name=" + parameterName + " string=" + cp.getStringValue() + "/h=" + value);
+                    }
                 } else {
                     System.out.println("TsPlugin name=" + parameterName + " unexpected type " + type + "/" + cp.getStringValue());
                     value = cp.getStringValue();
@@ -106,6 +124,11 @@ public class TsPlugin implements ApplicationPlugin {
             System.out.println("Error writing XML: " + e);
             return null;
         }
+    }
+
+    private static String toString(double scalarValue, int decimalPlaces) {
+        // todo: start using decimalPlaces parameter!
+        return Double.toString(scalarValue);
     }
 
     private void printEcuConfigurationNames(ControllerAccess controllerAccess) {

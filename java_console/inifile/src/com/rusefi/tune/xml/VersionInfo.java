@@ -5,7 +5,10 @@ import com.rusefi.config.generated.Fields;
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class VersionInfo {
-    private final String firmwareInfo;
+    private String firmwareInfo;
+
+    public VersionInfo() {
+    }
 
     public VersionInfo(String firmwareInfo) {
         this.firmwareInfo = firmwareInfo;
