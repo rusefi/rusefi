@@ -216,7 +216,8 @@ typedef struct {
 	scaled_voltage rawIat;				// 236
 	scaled_voltage rawOilPressure;		// 238
 
-	uint8_t unusedAtTheEnd[4]; // we have some unused bytes to allow compatible TS changes
+	int16_t tuneCrc16;
+	uint8_t unusedAtTheEnd[2]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
