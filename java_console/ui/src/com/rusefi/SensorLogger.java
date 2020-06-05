@@ -84,6 +84,8 @@ public class SensorLogger {
             Sensor.errorCodeCounter,
             Sensor.lastErrorCode,
 
+            Sensor.engineMakeCodeNameCrc16,
+            Sensor.tuneCrc16,
     };
     private static long fileStartTime;
 

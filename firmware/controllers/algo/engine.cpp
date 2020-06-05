@@ -253,6 +253,11 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// we take 2 bytes of crc32, no idea if it's right to call it crc16 or not
 	// we have a hack here - we rely on the fact that engineMake is the first of three relevant fields
 	tsOutputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
+
+	// 'warning_message' has very annoying complications but unfortunately I find 'warning_message' to be useful enough :(
+	// a proper solution could be to move 'warning_message' to a separate TS page
+	tsOutputChannels.tuneCrc16 = crc32(engineConfiguration, sizeof(engine_configuration_s)) +
+			crc32(engine->config->afterstartCoolantBins, sizeof(persistent_config_s) - afterstartCoolantBins_offset);
 #endif /* EFI_TUNER_STUDIO */
 }
 

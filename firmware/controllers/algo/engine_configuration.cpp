@@ -171,6 +171,7 @@ extern LoggingWithStorage sharedLogger;
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
  *
  * this method is NOT currently invoked on ECU start - actual user input has to happen!
+ * See preCalculate which is invoked BOTH on start and configuration change
  */
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ENGINE(globalConfigurationVersion++);
