@@ -27,7 +27,7 @@ public class LogicdataStreamFile extends StreamFile {
 
 	private static final int FLAG_NOTEMPTY = 2;
 	private static final int FLAG_EMPTY = 5;
-	
+
 	private static final int LOGIC4 = 0x40FD;
 	private static final int LOGIC8 = 0x673B;
 
@@ -81,7 +81,7 @@ public class LogicdataStreamFile extends StreamFile {
 
     	// we need to split the combined events into separate channels
     	for (int ch = 0; ch < numChannels; ch++) {
-    		List<Integer> chDeltas = new ArrayList<Integer>();
+    		List<Integer> chDeltas = new ArrayList<>();
 			int chPrevState = -1;
 			int prevTs = 0;
         	for (CompositeEvent event : events) {
@@ -100,14 +100,14 @@ public class LogicdataStreamFile extends StreamFile {
 					// encode state
 					if (chState == 0)
 						delta |= 0x8000;
-					
+
 					chDeltas.add(delta);
 
 					prevTs = ts;
 					chPrevState = chState;
 				}
 			}
-    	
+
     		writeChannelData(ch, chDeltas, chPrevState, prevTs);
         }
 
@@ -137,7 +137,7 @@ public class LogicdataStreamFile extends StreamFile {
 
     private void writeHeader() throws IOException {
         stream.write(magic);
-        
+
         write(title.length());
         write(title);
         stream.flush();
@@ -161,7 +161,7 @@ public class LogicdataStreamFile extends StreamFile {
         write(0);
 
         write(BLOCK);
-        
+
         int4or5 = (numChannels == 4) ? 4 : 5;
         writeId(int4or5, int4or5);
 		write(SUB);
@@ -245,7 +245,7 @@ public class LogicdataStreamFile extends StreamFile {
 		writeId(0, 0);
 		write(new int[]{ 0, 1, 1, 0, 1, 0x13 });
 		write(SUB);
-		
+
 		write(BLOCK);
 		write(0);
 		write(realDurationInSamples);
@@ -265,16 +265,16 @@ public class LogicdataStreamFile extends StreamFile {
 			write(SUB);
 			write(BLOCK);
 		}
-		
+
 		write(ch + 1);
 		write(0);
 		write(realDurationInSamples);
 		write(1);
 		writeAs(lastRecord, 2);
-		
+
 		int numSamplesLeft = realDurationInSamples - lastRecord;
 		write(numSamplesLeft);
-		
+
 		write(chLastState);
 
 		if (numEdges == 0) {	// empty
@@ -282,7 +282,7 @@ public class LogicdataStreamFile extends StreamFile {
 			write(0, 30);
 			return;
 		}
-			
+
 		write(FLAG_NOTEMPTY);
 
 		if (ch == 0) {
@@ -293,7 +293,7 @@ public class LogicdataStreamFile extends StreamFile {
 		} else {
 			write(0, 10);
 		}
-			
+
 		write(numEdges);
 		write(0);
 		write(numEdges);
@@ -342,7 +342,8 @@ public class LogicdataStreamFile extends StreamFile {
     	write(numChannels);
     }
 
-    protected void writeFooter() throws IOException {
+    @Override
+	protected void writeFooter() throws IOException {
         write(BLOCK);
         for (int i = 0; i < numChannels; i++) {
         	writeId(i, 1);
@@ -386,6 +387,7 @@ public class LogicdataStreamFile extends StreamFile {
         writeTimingMarker();
 
         stream.flush();
+		System.out.println("writeFooter " + fileName);
     }
 
     private void writeTimingMarker() throws IOException {
@@ -413,10 +415,10 @@ public class LogicdataStreamFile extends StreamFile {
     		write(value);
     }
 
-    private void write(int [] values) throws IOException {
-    	for (int i = 0; i < values.length; i++)
-    		write(values[i]);
-    }
+	private void write(int[] values) throws IOException {
+		for (int value : values)
+			write(value);
+	}
 
     private void writeAs(long value, int numBytes) throws IOException {
     	if (value == 0) {
@@ -445,14 +447,14 @@ public class LogicdataStreamFile extends StreamFile {
 			writeAs(value, 4);
 		}
 	}
-    
+
     private void write(double value) throws IOException {
 		if (value == 0.0) {
 			stream.write(0);
 		} else {
 			stream.write(8);
 			// doubles are saved little-endian, sorry Java :)
-			ByteBuffer bb = ByteBuffer.allocate(8); 
+			ByteBuffer bb = ByteBuffer.allocate(8);
 			bb.order(ByteOrder.LITTLE_ENDIAN);
 	        bb.putDouble(value);
 	        bb.rewind();
