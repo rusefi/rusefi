@@ -195,14 +195,9 @@ public class StartupFrame {
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
 
-        ImageIcon logoIcon = UiUtils.loadIcon(LOGO);
-        if (logoIcon != null) {
-            JLabel logo = new JLabel(logoIcon);
-            logo.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
-            URLLabel.addUrlAction(logo, URLLabel.createUri(URI));
-            logo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JLabel logo = createLogoLabel();
+        if (logo != null)
             rightPanel.add(logo);
-        }
         rightPanel.add(new URLLabel(LINK_TEXT, URI));
         rightPanel.add(new JLabel("Version " + Launcher.CONSOLE_VERSION));
 
@@ -219,6 +214,17 @@ public class StartupFrame {
         for (Component component : getAllComponents(frame)) {
             component.addKeyListener(hwTestEasterEgg);
         }
+    }
+
+    public static JLabel createLogoLabel() {
+        ImageIcon logoIcon = UiUtils.loadIcon(LOGO);
+        if (logoIcon == null)
+            return null;
+        JLabel logo = new JLabel(logoIcon);
+        logo.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        URLLabel.addUrlAction(logo, URLLabel.createUri(URI));
+        logo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return logo;
     }
 
     private void connectButtonAction(JComboBox<String> comboSpeeds) {
