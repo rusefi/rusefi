@@ -8,6 +8,7 @@
 #pragma once
 
 #include "engine.h"
+#include "airmass.h"
 
 #define gramm_second_to_cc_minute(gs) ((gs) / 0.0119997981)
 #define cc_minute_to_gramm_second(ccm) ((ccm) * 0.0119997981)
@@ -17,4 +18,4 @@ float getCylinderAirMass(float volumetricEfficiency, float MAP, float tempK DECL
 
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-floatms_t getSpeedDensityFuel(float map DECLARE_ENGINE_PARAMETER_SUFFIX);
+AirmassResult getSpeedDensityAirmass(float map DECLARE_ENGINE_PARAMETER_SUFFIX);
