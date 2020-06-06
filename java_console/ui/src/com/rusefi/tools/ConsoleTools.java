@@ -21,6 +21,7 @@ import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
+import com.rusefi.ui.light.LightweightGUI;
 import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
@@ -57,9 +58,16 @@ public class ConsoleTools {
         registerTool("upload_tune", ConsoleTools::uploadTune, "Upload specified tune file using auth token from settings");
 
 
+        registerTool("lightui", ConsoleTools::lightUI, "Start lightweight GUI for tiny screens");
+
+
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
         registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
         registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+    }
+
+    private static void lightUI(String[] strings) {
+        LightweightGUI.start();
     }
 
     private static void uploadTune(String[] args) throws IOException {
