@@ -1,11 +1,18 @@
-echo Packaging temp\%bundle_file% file
+set full_bundle_file=%bundle_full_name%.zip
+set update_bundle_file=%bundle_full_name%_autoupdate.zip
+
+echo Packaging temp\%full_bundle_file% file
+
+rm -rf temp
+mkdir temp
 
 set script_name=build_working_folder.bat
 echo Entering %script_name%
 
-echo %bundle_file% > temp/bundle_name.ini
+echo %bundle_full_name% > temp/bundle_name.ini
 
 pwd
+rem This working folder name starts with 'temp/'
 echo %script_name%: Working folder: %folder%
 mkdir %folder%
 set console_folder=%folder%\console
@@ -76,13 +83,28 @@ cd temp
 
 echo "Building bundle"
 pwd
-zip -r %bundle_file% *
+zip -r %full_bundle_file% *
 IF NOT ERRORLEVEL 0 echo %script_name%: ERROR INVOKING zip
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
-echo %script_name%: Bundle %bundle_file% ready
-ls -l %bundle_file%
+echo %script_name%: Bundle %full_bundle_file% ready
+ls -l %full_bundle_file%
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% . %full_bundle_file%
+
 cd ..
+
+mkdir artifacts
+mv temp/%full_bundle_file% artifacts
+
+echo removing more static content
+cd temp
+rm -rf %console_folder%/DfuSe
+rm -rf %drivers_folder%
+zip -r %update_bundle_file% *
+ls -l %update_bundle_file%
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% . %update_bundle_file%
+cd ..
+
 echo "%script_name%: We are back in root directory"
 
 pwd
