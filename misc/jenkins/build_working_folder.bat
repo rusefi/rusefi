@@ -1,6 +1,8 @@
 set script_name=build_working_folder.bat
 echo Entering %script_name%
 
+echo %bundle_file% > temp/bundle_name.ini
+
 pwd
 echo %script_name%: Working folder: %folder%
 mkdir %folder%
