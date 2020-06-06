@@ -89,6 +89,11 @@ IF NOT ERRORLEVEL 0 EXIT /B 1
 
 echo %script_name%: Bundle %full_bundle_file% ready
 ls -l %full_bundle_file%
+
+if not exist %full_bundle_file% echo %script_name%: ERROR not found %full_bundle_file%
+if not exist %full_bundle_file% EXIT /B 1
+
+echo "%script_name%: Uploading full bundle"
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% . %full_bundle_file%
 
 cd ..

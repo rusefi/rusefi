@@ -98,12 +98,6 @@ echo "%script_name%: Going back to root folder"
 cd %root_folder%
 pwd
 
-cd temp
-if not exist %full_bundle_file% echo %script_name%: ERROR not found rusefi_bundle.zip
-if not exist %full_bundle_file% EXIT /B 1
-echo "%script_name%: Uploading stuff"
-cd ..
-
 
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files temp/rusefi_console.zip
 
