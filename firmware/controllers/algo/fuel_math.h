@@ -8,6 +8,7 @@
 #pragma once
 
 #include "engine.h"
+#include "airmass.h"
 
 void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -21,7 +22,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
  */
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-floatms_t getRealMafFuel(float airMass, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+AirmassResult getRealMafAirmass(float airMass, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 floatms_t getBaseTableFuel(int rpm, float engineLoad);
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);

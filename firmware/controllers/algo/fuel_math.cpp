@@ -22,6 +22,7 @@
  */
 
 #include "global.h"
+#include "airmass.h"
 #include "fuel_math.h"
 #include "interpolation.h"
 #include "engine_configuration.h"
@@ -145,10 +146,10 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * Function block now works to create a standardised load from the cylinder filling as well as tune fuel via VE table. 
  * @return total duration of fuel injection per engine cycle, in milliseconds
  */
-float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+AirmassResult getRealMafAirmass(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// If the engine is stopped, MAF is meaningless
 	if (rpm == 0) {
-		return 0;
+		return {};
 	}
 
 	// kg/hr -> g/s
@@ -167,13 +168,13 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	//Create % load for fuel table using relative naturally aspiratedcylinder filling
 	float airChargeLoad = 100 * cylinderAirmass / ENGINE(standardAirCharge);
 	
-	//Correct air mass by VE table 
-	float corrCylAirmass = cylinderAirmass * veMap.getValue(rpm, airChargeLoad) / 100;
-	float afr = afrMap.getValue(rpm, airChargeLoad);
-	float pulseWidthSeconds = getInjectionDurationForAirmass(corrCylAirmass, afr PASS_ENGINE_PARAMETER_SUFFIX);
+	//Correct air mass by VE table
+	float correctedAirmass = cylinderAirmass * veMap.getValue(rpm, airChargeLoad) / 100;
 
-	// Convert to ms
-	return 1000 * pulseWidthSeconds;
+	return {
+		correctedAirmass,
+		airChargeLoad, // AFR/VE table Y axis
+	};
 }
 
 constexpr float convertToGramsPerSecond(float ccPerMinute) {
@@ -190,6 +191,19 @@ float getInjectionDurationForAirmass(float airMass, float afr DECLARE_ENGINE_PAR
 	return airMass / (afr * gPerSec);
 }
 
+AirmassResult getAirmass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	switch (CONFIG(fuelAlgorithm)) {
+	case LM_SPEED_DENSITY:
+		return getSpeedDensityAirmass(getMap(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+	case LM_REAL_MAF: {
+		float maf = getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return getRealMafAirmass(maf, rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	} default:
+		firmwareError(CUSTOM_ERR_ASSERT, "Fuel mode %d is not airmass mode", CONFIG(fuelAlgorithm));
+		return {};
+	}
+}
+
 /**
  * per-cylinder fuel amount
  * todo: rename this method since it's now base+TPSaccel
@@ -202,17 +216,27 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ENGINE(engineState.tpsAccelEnrich) = tpsAccelEnrich;
 
 	floatms_t baseFuel;
-	if (CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) {
-		baseFuel = getSpeedDensityFuel(getMap(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN sd baseFuel", 0);
-	} else if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF) {
-		float maf = getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
-		baseFuel = getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER_SUFFIX);
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN rm baseFuel", 0);
+
+	if ((CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) || (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)) {
+		// airmass modes - get airmass first, then convert to fuel
+		auto airmass = getAirmass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
+		// The airmass mode will tell us how to look up AFR - use the provided Y axis value
+		float targetAfr = afrMap.getValue(rpm, airmass.EngineLoadPercent);
+
+		// TODO: surface airmass.EngineLoadPercent to tunerstudio for proper display
+
+		// Plop some state for others to read
+		ENGINE(engineState.targetAFR) = targetAfr;
+		ENGINE(engineState.sd.airMassInOneCylinder) = airmass.CylinderAirmass;
+
+		baseFuel = getInjectionDurationForAirmass(airmass.CylinderAirmass, targetAfr PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
+		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN baseFuel", 0);
 	} else {
 		baseFuel = engine->engineState.baseTableFuel;
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN bt baseFuel", 0);
 	}
+
 	engine->engineState.baseFuel = baseFuel;
 
 	return tpsAccelEnrich + baseFuel;
