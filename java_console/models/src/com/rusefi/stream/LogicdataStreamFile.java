@@ -40,6 +40,7 @@ public class LogicdataStreamFile extends StreamFile {
     private static int int4or5 = 4;
 
 	private final String fileName;
+	private final List<CompositeEvent> eventsBuffer = new ArrayList<>();
 
 	public LogicdataStreamFile(String fileName) {
 		this.fileName = fileName;
@@ -61,13 +62,16 @@ public class LogicdataStreamFile extends StreamFile {
                 stream = new FileOutputStream(fileName);
                 writeHeader();
             }
-            appendEvents(events);
+            eventsBuffer.addAll(events);
         } catch (IOException e) {
             // ignoring this one
         }
     }
 
-    private void appendEvents(List<CompositeEvent> events) throws IOException {
+	/**
+	 * this file format is not streaming, we have to write everything at once
+	 */
+	private void writeEvents(List<CompositeEvent> events) throws IOException {
     	// we need at least 2 records
     	if (events == null || events.size() < 2)
     		return;
@@ -254,7 +258,6 @@ public class LogicdataStreamFile extends StreamFile {
 		write(new int[]{ 1, 0, 1 });
 	}
 
-
     private void writeChannelData(int ch, List<Integer> chDeltas, int chLastState, int lastRecord) throws IOException {
     	int numEdges = chDeltas.size();
     	if (numEdges == 0)
@@ -346,6 +349,7 @@ public class LogicdataStreamFile extends StreamFile {
 	protected void writeFooter() throws IOException {
 		if (stream == null)
 			return;
+		writeEvents(eventsBuffer);
         write(BLOCK);
         for (int i = 0; i < numChannels; i++) {
         	writeId(i, 1);
