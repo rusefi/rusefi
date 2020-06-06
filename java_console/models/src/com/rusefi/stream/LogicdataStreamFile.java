@@ -12,6 +12,12 @@ import java.util.List;
 /**
  * Support for Saleae .logicdata format.
  * (c) andreika 2020
+ *
+ * Jun 6 status: this code mostly works but it does not work completely
+ * 1) at some point it looked like file produced by LogicdataStreamFileSandbox was valid but it's again not valid?
+ * 2) event gaps above 32ms are not supported but those are absolutely required for cranking attempts
+ *
+ * @see LogicdataStreamFileSandbox
  */
 public class LogicdataStreamFile extends StreamFile {
 
@@ -99,7 +105,8 @@ public class LogicdataStreamFile extends StreamFile {
 					int delta = ts - prevTs;
 					if (delta > 0x7fff) {
 						// todo: split too long events?
-						throw new IOException();
+						// this is just 32ms cap between events which is very possible during cranking attempts
+						throw new IllegalArgumentException("Event too long.");
 					}
 					// encode state
 					if (chState == 0)
