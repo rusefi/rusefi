@@ -131,7 +131,7 @@ float getCylinderAirMass(float volumetricEfficiency, float MAP, float tempK DECL
 /**
  * @return per cylinder injection time, in Milliseconds
  */
-floatms_t getSpeedDensityFuel(float map DECLARE_ENGINE_PARAMETER_SUFFIX) {
+AirmassResult getSpeedDensityAirmass(float map DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::GetSpeedDensityFuel);
 
 	/**
@@ -140,27 +140,29 @@ floatms_t getSpeedDensityFuel(float map DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float tChargeK = ENGINE(engineState.sd.tChargeK);
 	if (cisnan(tChargeK)) {
 		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "tChargeK not ready"); // this would happen before we have CLT reading for example
-		return 0;
+		return {};
 	}
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(map), "NaN map", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(map), "NaN map", {});
 
 	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", {});
 
 	float airMass = getCylinderAirMass(ENGINE(engineState.currentBaroCorrectedVE), adjustedMap, tChargeK PASS_ENGINE_PARAMETER_SUFFIX);
 	if (cisnan(airMass)) {
 		warning(CUSTOM_ERR_6685, "NaN airMass");
-		return 0;
+		return {};
 	}
 #if EFI_PRINTF_FUEL_DETAILS
 	printf("map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
 			map, adjustedMap, engine->engineState.sd.adjustedManifoldAirPressure);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	engine->engineState.sd.airMassInOneCylinder = airMass;
-	return getInjectionDurationForAirmass(airMass, ENGINE(engineState.targetAFR) PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
+	return {
+		airMass,
+		map,	// AFR/VE table Y axis
+	};
 }
 
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
