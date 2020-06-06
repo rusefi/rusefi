@@ -100,21 +100,22 @@ echo "%script_name%: Going back to root folder"
 cd %root_folder%
 pwd
 
-echo "%script_name%: Making rusefi_simulator.zip"
-pwd
-zip -j temp/rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
-
 cd temp
 if not exist rusefi_bundle.zip echo %script_name%: ERROR not found rusefi_bundle.zip
 if not exist rusefi_bundle.zip EXIT /B 1
-
 echo "%script_name%: Uploading stuff"
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% . rusefi_bundle.zip
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files rusefi_simulator.zip
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files rusefi_console.zip
-
 cd ..
-echo "TIMESTAMP %date% %time%"
 
+
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files temp/rusefi_console.zip
+
+echo "%script_name%: Making rusefi_simulator.zip"
+pwd
+zip -j temp/rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files temp/rusefi_simulator.zip
+
+
+echo "TIMESTAMP %date% %time%"
 pwd
 echo "exiting %script_name%"
