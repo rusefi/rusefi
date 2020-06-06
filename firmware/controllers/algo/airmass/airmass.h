@@ -2,5 +2,5 @@
 
 struct AirmassResult {
 	float CylinderAirmass = 0;
-	float TablesYAxis = 100;
+	float EngineLoadPercent = 100;
 };

@@ -222,9 +222,9 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		auto airmass = getAirmass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 		// The airmass mode will tell us how to look up AFR - use the provided Y axis value
-		float targetAfr = afrMap.getValue(rpm, airmass.TablesYAxis);
+		float targetAfr = afrMap.getValue(rpm, airmass.EngineLoadPercent);
 
-		// TODO: surface airmass.TablesYAxis to tunerstudio for proper display
+		// TODO: surface airmass.EngineLoadPercent to tunerstudio for proper display
 
 		// Plop some state for others to read
 		ENGINE(engineState.targetAFR) = targetAfr;

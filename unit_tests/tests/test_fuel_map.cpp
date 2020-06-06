@@ -25,7 +25,11 @@ TEST(misc, testMafFuelMath) {
 
 	setAfrMap(config->afrTable, 13);
 
-	EXPECT_NEAR(0.75 * 13.3547, getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	auto airmass = getRealMafAirmass(200, 6000 PASS_ENGINE_PARAMETER_SUFFIX);
+
+	// Check results
+	EXPECT_NEAR(0.277777f * 0.75f, airmass.CylinderAirmass, EPS4D);
+	EXPECT_NEAR(70.9884, airmass.EngineLoadPercent, EPS4D);
 }
 
 TEST(misc, testFuelMap) {
