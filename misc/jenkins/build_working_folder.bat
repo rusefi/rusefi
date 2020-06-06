@@ -9,12 +9,12 @@ mkdir temp
 set script_name=build_working_folder.bat
 echo Entering %script_name%
 
-echo %bundle_full_name% > %folder%\bundle_name.ini
-
 pwd
 rem This working folder name starts with 'temp/'
 echo %script_name%: Working folder: %folder%
 mkdir %folder%
+echo %bundle_full_name% > %folder%\bundle_name.ini
+
 set console_folder=%folder%\console
 set drivers_folder=%folder%\drivers
 mkdir %console_folder%
@@ -102,7 +102,10 @@ mkdir artifacts
 mv temp/%full_bundle_file% artifacts
 
 echo Removing more static content
+rm -rf %console_folder%/openocd
 rm -rf %console_folder%/DfuSe
+rm -rf %console_folder%/rusefi_simulator.exe
+
 rm -rf %drivers_folder%
 
 cd temp
