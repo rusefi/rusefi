@@ -101,10 +101,11 @@ cd ..
 mkdir artifacts
 mv temp/%full_bundle_file% artifacts
 
-echo removing more static content
-cd temp
+echo Removing more static content
 rm -rf %console_folder%/DfuSe
 rm -rf %drivers_folder%
+
+cd temp
 zip -r %update_bundle_file% *
 ls -l %update_bundle_file%
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% . %update_bundle_file%
