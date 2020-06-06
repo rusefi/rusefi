@@ -80,7 +80,8 @@ set folder=temp\%folder%
 echo "%script_name%: folder variable3=%folder%"
 
 pwd
-set bundle_file=rusefi_bundle.zip
+set bundle_full_name=rusefi_bundle
+set bundle_file=%bundle_full_name%.zip
 call misc\jenkins\build_working_folder.bat
 IF NOT ERRORLEVEL 0 (
  echo %script_name%: ERROR: invoking build_working_folder.bat
@@ -102,7 +103,7 @@ cd %root_folder%
 pwd
 
 cd temp
-if not exist rusefi_bundle.zip echo %script_name%: ERROR not found rusefi_bundle.zip
+if not exist %bundle_file% echo %script_name%: ERROR not found rusefi_bundle.zip
 if not exist rusefi_bundle.zip EXIT /B 1
 echo "%script_name%: Uploading stuff"
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% . %bundle_file%

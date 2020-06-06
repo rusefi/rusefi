@@ -16,17 +16,14 @@ for /f %%i in ('datecyg +%%Y%%m%%d_%%H%%M%%S') do set TIMESTAMP=%%i
 set folder=snapshot_%TIMESTAMP%_%bundle_name%_rusefi
 set folder=temp\%folder%
 
-set bundle_file=rusefi_bundle_%bundle_name%.zip
+set bundle_full_name=rusefi_bundle_%bundle_name%
+set bundle_file=%bundle_full_name%.zip
 
-echo Packaging temp\rusefi_bundle.zip file
 call misc\jenkins\build_working_folder.bat
 
 cd temp
-mv rusefi_bundle.zip %bundle_file%
-
 echo Uploading %bundle_file%
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% . %bundle_file%
-
 cd ..
 
 pwd
