@@ -1,3 +1,5 @@
+echo Packaging temp\%bundle_file% file
+
 set script_name=build_working_folder.bat
 echo Entering %script_name%
 
@@ -74,13 +76,12 @@ cd temp
 
 echo "Building bundle"
 pwd
-set zip_name=rusefi_bundle.zip
-zip -r %zip_name% *
+zip -r %bundle_file% *
 IF NOT ERRORLEVEL 0 echo %script_name%: ERROR INVOKING zip
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
-echo %script_name%: Bundle %zip_name% ready
-ls -l %zip_name%
+echo %script_name%: Bundle %bundle_file% ready
+ls -l %bundle_file%
 cd ..
 echo "%script_name%: We are back in root directory"
 
