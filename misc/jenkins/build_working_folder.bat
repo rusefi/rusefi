@@ -9,7 +9,7 @@ mkdir temp
 set script_name=build_working_folder.bat
 echo Entering %script_name%
 
-echo %bundle_full_name% > temp/bundle_name.ini
+echo %bundle_full_name% > %folder%\bundle_name.ini
 
 pwd
 rem This working folder name starts with 'temp/'
