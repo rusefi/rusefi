@@ -1,3 +1,5 @@
+autoupdate_build
+rusefi_autoupdate.jar
 logs/
 rusefi_console_properties.xml
 output.c
