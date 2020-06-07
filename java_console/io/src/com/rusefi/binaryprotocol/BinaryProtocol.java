@@ -19,7 +19,6 @@ import com.rusefi.stream.TSHighSpeedLog;
 import com.rusefi.stream.VcdStreamFile;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
-import jssc.SerialPortException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -257,7 +256,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
-    public void uploadChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException, SerialPortException {
+    public void uploadChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException {
         ConfigurationImage current = getControllerConfiguration();
         // let's have our own copy which no one would be able to change
         newVersion = newVersion.clone();
@@ -418,7 +417,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         Runtime.getRuntime().removeShutdownHook(hook);
     }
 
-    public void writeData(byte[] content, Integer offset, int size, Logger logger) throws SerialPortException, EOFException, InterruptedException {
+    public void writeData(byte[] content, Integer offset, int size, Logger logger) {
         if (size > BLOCKING_FACTOR) {
             writeData(content, offset, BLOCKING_FACTOR, logger);
             writeData(content, offset + BLOCKING_FACTOR, size - BLOCKING_FACTOR, logger);
@@ -446,7 +445,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
-    public void burn(Logger logger) throws InterruptedException, EOFException, SerialPortException {
+    public void burn(Logger logger) throws InterruptedException, EOFException {
         if (!isBurnPending)
             return;
         logger.info("Need to burn");

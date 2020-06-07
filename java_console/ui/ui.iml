@@ -21,5 +21,6 @@
     <orderEntry type="library" name="XML for 11" level="project" />
     <orderEntry type="module" module-name="shared_ui" />
     <orderEntry type="module" module-name="autoupdate" exported="" />
+    <orderEntry type="library" name="jSerialComm" level="project" />
   </component>
 </module>

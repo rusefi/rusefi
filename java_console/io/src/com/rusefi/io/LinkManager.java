@@ -1,11 +1,11 @@
 package com.rusefi.io;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.io.tcp.TcpConnector;
-import jssc.SerialPortList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -45,6 +45,14 @@ public class LinkManager {
 
     public static Future submit(Runnable runnable) {
         return COMMUNICATION_EXECUTOR.submit(runnable);
+    }
+
+    public static String[] getCommPorts() {
+        SerialPort[] ports = SerialPort.getCommPorts();
+        String[] result = new String[ports.length];
+        for (int i = 0; i < ports.length; i++)
+            result[i] = ports[i].getSystemPortName();
+        return result;
     }
 
     public enum LogLevel {
@@ -179,7 +187,7 @@ public class LinkManager {
      * @return null if no port located
      */
     public static String getDefaultPort() {
-        String[] ports = SerialPortList.getPortNames();
+        String[] ports = getCommPorts();
         if (ports.length == 0) {
             System.out.println("Port not specified and no ports found");
             return null;

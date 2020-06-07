@@ -1,7 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
-import jssc.SerialPortList;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -31,7 +31,7 @@ public enum SerialPortScanner {
     @NotNull
     void findAllAvailablePorts() {
         List<String> ports = new ArrayList<>();
-        String[] serialPorts = SerialPortList.getPortNames();
+        String[] serialPorts = LinkManager.getCommPorts();
         if (serialPorts.length > 0 || serialPorts.length < 15)
             ports.add(AUTO_SERIAL);
         ports.addAll(Arrays.asList(serialPorts));
