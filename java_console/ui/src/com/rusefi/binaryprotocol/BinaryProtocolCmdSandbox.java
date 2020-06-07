@@ -7,8 +7,7 @@ import com.romraider.editor.ecu.ECUEditor;
 import com.rusefi.RomRaiderWrapper;
 import com.rusefi.UploadChanges;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.io.serial.SerialIoStreamJSSC;
-import jssc.SerialPort;
+import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 
 /**
  * (c) Andrey Belomutskiy
@@ -26,15 +25,15 @@ public class BinaryProtocolCmdSandbox {
 
         Logger logger = UploadChanges.logger;
 
-        SerialPort serialPort;
-        serialPort = new SerialPort(port);
-        boolean opened = serialPort.openPort();
-        if (!opened) {
-            logger.error("failed to open " + port);
-        }
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().create(logger, new SerialIoStreamJSSC(serialPort, logger));
+        //SerialPort serialPort;
+//        serialPort = new SerialPort(port);
+//        boolean opened = serialPort.openPort();
+//        if (!opened) {
+//            logger.error("failed to open " + port);
+//        }
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().create(logger, SerialIoStreamJSerialComm.openPort(port));
 
-        SerialIoStreamJSSC.setupPort(serialPort, 38400);
+        //SerialIoStreamJSSC.setupPort(serialPort, 38400);
         logger.info("Binary looks good!");
 
         bp.readImage(Fields.TOTAL_CONFIG_SIZE);

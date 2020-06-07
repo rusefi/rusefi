@@ -2,15 +2,11 @@ package com.rusefi;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
-import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
-import com.rusefi.io.serial.SerialIoStreamJSSC;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.StatusWindow;
-import jssc.SerialPort;
 import jssc.SerialPortException;
 
 import javax.swing.*;
@@ -59,6 +55,7 @@ public class UploadChanges {
     }
 
     private static void showUi(String port) throws SerialPortException, IOException, InterruptedException {
+/*
         SerialPort serialPort;
 
         serialPort = new SerialPort(port);
@@ -77,6 +74,8 @@ public class UploadChanges {
         bp.setController(ci1);
 
         scheduleUpload(ci2);
+
+ */
     }
 
     public static void scheduleUpload(final ConfigurationImage newVersion) {
