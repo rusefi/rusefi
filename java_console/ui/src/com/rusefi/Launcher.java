@@ -84,8 +84,10 @@ public class Launcher extends rusEFIVersion {
         if (LinkManager.isLogViewerMode(port))
             tabbedPane.addTab("Log Viewer", new LogViewer(engineSnifferPanel));
 
-        ConnectionWatchdog.start();
-
+        new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
+            FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting");
+            LinkManager.restart();
+        }).start();
 
         GaugesPanel.DetachedRepository.INSTANCE.init(getConfig().getRoot().getChild("detached"));
         GaugesPanel.DetachedRepository.INSTANCE.load();
