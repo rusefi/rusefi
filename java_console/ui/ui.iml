@@ -21,5 +21,6 @@
     <orderEntry type="library" name="httpclient" level="project" />
     <orderEntry type="library" name="XML for 11" level="project" />
     <orderEntry type="module" module-name="shared_ui" />
+    <orderEntry type="module" module-name="autoupdate" exported="" />
   </component>
 </module>

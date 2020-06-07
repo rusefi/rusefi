@@ -25,7 +25,7 @@ public class MainFrame {
     private FrameHelper frame = new FrameHelper() {
         @Override
         protected void onWindowOpened() {
-            super.onWindowOpened();
+            FileLog.MAIN.logLine("onWindowOpened");
             windowOpenedHandler();
         }
 
