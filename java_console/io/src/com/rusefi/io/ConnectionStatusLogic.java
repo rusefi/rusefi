@@ -35,14 +35,6 @@ public class ConnectionStatusLogic {
     private List<Listener> listeners = new CopyOnWriteArrayList<>();
 
     private ConnectionStatusLogic() {
-
-        LinkManager.engineState.timeListeners.add(new EngineTimeListener() {
-            @Override
-            public void onTime(double time) {
-                markConnected();
-            }
-        });
-
         SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {

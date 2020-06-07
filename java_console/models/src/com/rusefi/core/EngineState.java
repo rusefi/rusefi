@@ -253,7 +253,7 @@ public class EngineState {
         void onUpdate(V value);
     }
 
-    public interface EngineStateListener extends EngineTimeListener {
+    public interface EngineStateListener {
         void beforeLine(String fullLine);
 
         void onKeyValue(String key, String value);
@@ -270,9 +270,6 @@ public class EngineState {
         }
 
         public void afterLine(String fullLine) {
-        }
-
-        public void onTime(double time) {
         }
     }
 }

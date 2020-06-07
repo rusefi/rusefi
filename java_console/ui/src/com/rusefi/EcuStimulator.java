@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
-import com.rusefi.core.EngineTimeListener;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.file.TableGenerator;
 import com.rusefi.models.Point3D;
@@ -13,14 +12,15 @@ import com.rusefi.ui.ChartHelper;
 import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.widgets.PotCommand;
 import com.rusefi.ui.widgets.RpmCommand;
-import com.rusefi.io.LinkManager;
 import net.ericaro.surfaceplotter.DefaultSurfaceModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -283,6 +283,7 @@ public class EcuStimulator {
 
         final CountDownLatch latch = new CountDownLatch(MEASURES);
 
+        /*
         EngineTimeListener listener = new EngineTimeListener() {
             @Override
             public void onTime(double time) {
@@ -303,6 +304,7 @@ public class EcuStimulator {
             throw new IllegalStateException(e);
         }
         LinkManager.engineState.timeListeners.remove(listener);
+         */
         return result;
     }
 

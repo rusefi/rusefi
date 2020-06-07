@@ -1,13 +1,7 @@
 package com.rusefi.file;
 
 import com.rusefi.FileLog;
-import com.rusefi.core.EngineState;
-import com.rusefi.models.Point3D;
 import com.rusefi.models.XYData;
-import com.rusefi.waves.EngineReport;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 7/18/13
@@ -23,6 +17,7 @@ public class BaseMap {
         FileLog.MAIN.logLine("Loading " + key + ">" + value);
         final XYData data = new XYData();
 
+        /*
         EngineState.EngineStateListener listener = new EngineState.EngineStateListenerImpl() {
             Map<String, String> values = new HashMap<String, String>();
 
@@ -58,6 +53,7 @@ public class BaseMap {
         });
         FileUtils.readFile2(filename, engineState);
         //return AverageData.average(data, 8);
+         */
         return data;
     }
 }
