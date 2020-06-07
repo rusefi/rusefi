@@ -9,6 +9,7 @@ import com.rusefi.io.tcp.TcpConnector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 /**
@@ -142,11 +143,13 @@ public class LinkManager {
     public static boolean isSimulationMode;
 
     public static void startAndConnect(String port, ConnectionStateListener stateListener) {
+        Objects.requireNonNull(port, "port");
         start(port);
         connector.connectAndReadConfiguration(stateListener);
     }
 
     public static void start(String port) {
+        Objects.requireNonNull(port, "port");
         FileLog.MAIN.logLine("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
             connector = LinkConnector.VOID;
@@ -159,6 +162,7 @@ public class LinkManager {
     }
 
     public static boolean isLogViewerMode(String port) {
+        Objects.requireNonNull(port, "port");
         return port.equals(LOG_VIEWER);
     }
 

@@ -184,7 +184,7 @@ public class StartupFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 disposeFrameAndProceed();
-                new Launcher(LinkManager.LOG_VIEWER);
+                new ConsoleUI(LinkManager.LOG_VIEWER);
             }
         });
 
@@ -237,7 +237,7 @@ public class StartupFrame {
             selectedPort = autoDetectedPort;
         }
         disposeFrameAndProceed();
-        new Launcher(selectedPort);
+        new ConsoleUI(selectedPort);
     }
 
     /**
@@ -299,13 +299,13 @@ public class StartupFrame {
         comboPorts.removeAllItems();
         for (final String port : ports)
             comboPorts.addItem(port);
-        String defaultPort = getConfig().getRoot().getProperty(Launcher.PORT_KEY);
+        String defaultPort = getConfig().getRoot().getProperty(ConsoleUI.PORT_KEY);
         comboPorts.setSelectedItem(defaultPort);
     }
 
     private static JComboBox<String> createSpeedCombo() {
         JComboBox<String> combo = new JComboBox<>();
-        String defaultSpeed = getConfig().getRoot().getProperty(Launcher.SPEED_KEY, "115200");
+        String defaultSpeed = getConfig().getRoot().getProperty(ConsoleUI.SPEED_KEY, "115200");
         for (int speed : new int[]{9600, 14400, 19200, 38400, 57600, 115200, 460800, 921600})
             combo.addItem(Integer.toString(speed));
         combo.setSelectedItem(defaultSpeed);

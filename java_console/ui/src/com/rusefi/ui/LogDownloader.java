@@ -1,9 +1,8 @@
 package com.rusefi.ui;
 
-import com.rusefi.Launcher;
+import com.rusefi.ConsoleUI;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
@@ -77,7 +76,7 @@ public class LogDownloader {
         removeFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int i = JOptionPane.showConfirmDialog(Launcher.getFrame(), ("Do you really want to delete " + name + "?"),
+                int i = JOptionPane.showConfirmDialog(ConsoleUI.getFrame(), ("Do you really want to delete " + name + "?"),
                         UIManager.getString("OptionPane.titleText"),
                         JOptionPane.YES_NO_OPTION);
                 if (i == JOptionPane.YES_OPTION) {

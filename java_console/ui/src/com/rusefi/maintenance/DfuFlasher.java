@@ -1,6 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.opensr5.ini.IniFileModel;
+import com.rusefi.ConsoleUI;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
@@ -18,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Function;
 
 /**
  * @see FirmwareFlasher
@@ -58,7 +58,7 @@ public class DfuFlasher {
                 return null;
             });
             if (port == null) {
-                JOptionPane.showMessageDialog(Launcher.getFrame(), "rusEfi serial port not detected");
+                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEfi serial port not detected");
                 return;
             } else {
                 messages.append("Detected rusEFI on " + port + "\n");
