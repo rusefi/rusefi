@@ -10,10 +10,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class InternetStatus {
-    public static final String GOOGLE = "http://google.com";
+    private static final String GOOGLE = "http://google.com";
+    private final JPanel panel = new JPanel();
     private final JLabel status = new JLabel();
 
     public InternetStatus() {
+        panel.add(status);
+        Font defaultFont = status.getFont();
+        status.setFont(new Font(defaultFont.getName(), defaultFont.getStyle(), 2 * defaultFont.getSize()));
+
         new Thread(() -> {
             while (true) {
                 boolean isConnected = isServerReachable();
@@ -23,10 +28,10 @@ public class InternetStatus {
                         public void run() {
                             if (isConnected) {
                                 status.setText("online");
-                                status.setForeground(Color.green);
+                                panel.setBackground(Color.green);
                             } else {
                                 status.setText("offline");
-                                status.setForeground(Color.red);
+                                panel.setBackground(Color.red);
                             }
                         }
                     });
@@ -55,6 +60,6 @@ public class InternetStatus {
     }
 
     public Component getContent() {
-        return status;
+        return panel;
     }
 }

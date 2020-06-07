@@ -2,7 +2,7 @@ package com.rusefi.autodetect;
 
 import com.rusefi.FileLog;
 import com.rusefi.io.IoStream;
-import jssc.SerialPortList;
+import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -51,7 +51,7 @@ public class PortDetector {
 
     private static String[] getPortNames() {
 //        long now = System.currentTimeMillis();
-        String[] portNames = SerialPortList.getPortNames();
+        String[] portNames = LinkManager.getCommPorts();
 //        FileLog.MAIN.logLine("Took " + (System.currentTimeMillis() - now));
         return portNames;
     }

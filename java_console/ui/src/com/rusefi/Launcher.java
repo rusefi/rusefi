@@ -19,7 +19,6 @@ import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
-import jssc.SerialPortList;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -247,7 +246,7 @@ public class Launcher extends rusEFIVersion {
             if (isPortDefined) {
                 new Launcher(port);
             } else {
-                for (String p : SerialPortList.getPortNames())
+                for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
                 new StartupFrame().chooseSerialPort();
             }

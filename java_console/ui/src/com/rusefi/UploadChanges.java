@@ -7,7 +7,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.StatusWindow;
-import jssc.SerialPortException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +34,7 @@ public class UploadChanges {
     
     public static final Logger logger = createUiLogger();
 
-    public static void main(String[] args) throws SerialPortException, InvocationTargetException, InterruptedException {
+    public static void main(String[] args) throws InvocationTargetException, InterruptedException {
         if (args.length != 1) {
             System.out.println("Exactly one parameter expected");
             return;
@@ -47,14 +46,14 @@ public class UploadChanges {
             public void run() {
                 try {
                     showUi(port);
-                } catch (SerialPortException | IOException | InterruptedException e) {
+                } catch (IOException | InterruptedException e) {
                     throw new IllegalStateException(e);
                 }
             }
         });
     }
 
-    private static void showUi(String port) throws SerialPortException, IOException, InterruptedException {
+    private static void showUi(String port) throws IOException, InterruptedException {
 /*
         SerialPort serialPort;
 
@@ -92,7 +91,7 @@ public class UploadChanges {
                     BinaryProtocolHolder.getInstance().getCurrentStreamState().uploadChanges(newVersion, logger);
                     if (afterUpload != null)
                         afterUpload.run();
-                } catch (InterruptedException | EOFException | SerialPortException e) {
+                } catch (InterruptedException | EOFException e) {
                     logger.error("Error: " + e);
                     throw new IllegalStateException(e);
                 }
