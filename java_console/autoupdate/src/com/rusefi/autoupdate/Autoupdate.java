@@ -9,7 +9,9 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -20,10 +22,12 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class Autoupdate {
     private static final String TITLE = "rusEFI Bundle Updater 20200607";
-    private static final String BUNDLE_NAME_FILE = "bundle_name.ini";
+    private static final String BUNDLE_NAME_FILE = "../bundle_name.ini";
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final int BUFFER_SIZE = 32 * 1024;
-    private static final int STEPS = 100000;
+    private static final int STEPS = 1000;
+    private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";
+    private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
 
     public static void main(String[] args) {
         UpdateMode mode = getMode();
@@ -33,8 +37,9 @@ public class Autoupdate {
                 System.out.println("Handling " + bundleFullName);
                 handleBundle(bundleFullName, mode);
             }
+        } else {
+            System.out.println("Update mode: NEVER");
         }
-
         startConsole(args);
     }
 
@@ -42,10 +47,16 @@ public class Autoupdate {
         try {
             // we want to make sure that files are available to write so we use reflection to get lazy class initialization
             System.out.println("Running rusEFI console");
-            Class mainClass = Class.forName("com.rusefi.Launcher");
+            // since we are overriding file we cannot just use static java classpath while launching
+            URLClassLoader child = new URLClassLoader(
+                    new URL[]{new File(RUSEFI_CONSOLE_JAR).toURI().toURL()},
+                    Autoupdate.class.getClassLoader()
+            );
+
+            Class mainClass = Class.forName(COM_RUSEFI_LAUNCHER, true, child);
             Method mainMethod = mainClass.getMethod("main", args.getClass());
             mainMethod.invoke(null, new Object[]{args});
-        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | MalformedURLException e) {
             System.out.println(e);
         }
     }
@@ -87,7 +98,7 @@ public class Autoupdate {
             file.setLastModified(lastModified);
             System.out.println("Downloaded " + file.length() + " bytes");
 
-            unzip(zipFileName, ".");
+            unzip(zipFileName, "..");
         } catch (IOException e) {
             System.err.println(e);
         }
@@ -219,6 +230,7 @@ public class Autoupdate {
                 return null; // just paranoia check
             return fullName;
         } catch (IOException e) {
+            System.err.println("Error reading " + BUNDLE_NAME_FILE);
             return null;
         }
     }
@@ -230,18 +242,26 @@ public class Autoupdate {
         ZipEntry zipEntry = zis.getNextEntry();
         while (zipEntry != null) {
             File newFile = newFile(destDir, zipEntry);
-            System.out.println("Unzipping " + newFile);
-            FileOutputStream fos = new FileOutputStream(newFile);
-            int len;
-            while ((len = zis.read(buffer)) > 0) {
-                fos.write(buffer, 0, len);
+            if (newFile.isDirectory()) {
+                System.out.println("Nothing to do for directory " + newFile);
+            } else {
+                unzipFile(buffer, zis, newFile);
             }
-            fos.close();
             zipEntry = zis.getNextEntry();
         }
         zis.closeEntry();
         zis.close();
         System.out.println("Unzip " + zipFileName + " to " + destPath + " worked!");
+    }
+
+    private static void unzipFile(byte[] buffer, ZipInputStream zis, File newFile) throws IOException {
+        System.out.println("Unzipping " + newFile);
+        FileOutputStream fos = new FileOutputStream(newFile);
+        int len;
+        while ((len = zis.read(buffer)) > 0) {
+            fos.write(buffer, 0, len);
+        }
+        fos.close();
     }
 
     private static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
