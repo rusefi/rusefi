@@ -1,7 +1,5 @@
 package com.rusefi.ui.util;
 
-import com.rusefi.FileLog;
-
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -46,7 +44,6 @@ public class FrameHelper {
     }
 
     protected void onWindowOpened() {
-        FileLog.MAIN.logLine("onWindowOpened");
     }
 
     protected void onWindowClosed() {
