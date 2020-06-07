@@ -13,13 +13,17 @@ import java.net.URL;
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class Autoupdate {
+    private static final String TITLE = "rusEFI Bundle Updater 20200607";
     private static final String BUNDLE_NAME_FILE = "bundle_name.ini";
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final int BUFFER_SIZE = 32 * 1024;
+    private static final int STEPS = 100000;
 
     public static void main(String[] args) {
         UpdateMode mode = getMode();
@@ -37,9 +41,10 @@ public class Autoupdate {
     private static void startConsole(String[] args) {
         try {
             // we want to make sure that files are available to write so we use reflection to get lazy class initialization
+            System.out.println("Running rusEFI console");
             Class mainClass = Class.forName("com.rusefi.Launcher");
             Method mainMethod = mainClass.getMethod("main", args.getClass());
-            mainMethod.invoke(null, new Object[] {args});
+            mainMethod.invoke(null, new Object[]{args});
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             System.out.println(e);
         }
@@ -76,49 +81,56 @@ public class Autoupdate {
 
             System.out.println(bundleFullName + " " + completeFileSize + " bytes, last modified " + new Date(lastModified));
 
-            BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
-            FileOutputStream fos = new FileOutputStream(zipFileName);
-            BufferedOutputStream bout = new BufferedOutputStream(fos, BUFFER_SIZE);
-            byte[] data = new byte[BUFFER_SIZE];
-            long downloadedFileSize = 0;
-            int newDataSize;
-
-            int printedPercentage = 0;
-
-            while ((newDataSize = in.read(data, 0, BUFFER_SIZE)) >= 0) {
-                downloadedFileSize += newDataSize;
-
-                // calculate progress
-                final int currentProgress = (int) ((((double) downloadedFileSize) / ((double) completeFileSize)) * 100000d);
-
-                int currentPercentage = (int) (100L * downloadedFileSize / completeFileSize);
-                if (currentPercentage > printedPercentage + 5) {
-                    System.out.println("Downloaded " + currentPercentage + "%");
-                    printedPercentage = currentPercentage;
-                }
-
-//            // update progress bar
-//            SwingUtilities.invokeLater(new Runnable() {
-//
-//                @Override
-//                public void run() {
-//                    jProgressBar.setValue(currentProgress);
-//                }
-//            });
-
-                bout.write(data, 0, newDataSize);
-            }
-            bout.close();
-            in.close();
+            downloadAutoupdateFile(zipFileName, httpConnection, completeFileSize);
 
             File file = new File(zipFileName);
             file.setLastModified(lastModified);
             System.out.println("Downloaded " + file.length() + " bytes");
 
-
+            unzip(zipFileName, ".");
         } catch (IOException e) {
-
+            System.err.println(e);
         }
+    }
+
+    private static void downloadAutoupdateFile(String zipFileName, HttpURLConnection httpConnection, long completeFileSize) throws IOException {
+        BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
+        FileOutputStream fos = new FileOutputStream(zipFileName);
+        BufferedOutputStream bout = new BufferedOutputStream(fos, BUFFER_SIZE);
+        byte[] data = new byte[BUFFER_SIZE];
+        long downloadedFileSize = 0;
+        int newDataSize;
+
+        int printedPercentage = 0;
+
+        FrameHelper frameHelper = new FrameHelper();
+        frameHelper.getFrame().setTitle(TITLE);
+
+        final JProgressBar jProgressBar = new JProgressBar();
+        jProgressBar.setMaximum(STEPS);
+
+        frameHelper.showFrame(jProgressBar, true);
+
+        while ((newDataSize = in.read(data, 0, BUFFER_SIZE)) >= 0) {
+            downloadedFileSize += newDataSize;
+
+            // calculate progress
+            final int currentProgress = (int) ((((double) downloadedFileSize) / ((double) completeFileSize)) * STEPS);
+
+            int currentPercentage = (int) (100L * downloadedFileSize / completeFileSize);
+            if (currentPercentage > printedPercentage + 5) {
+                System.out.println("Downloaded " + currentPercentage + "%");
+                printedPercentage = currentPercentage;
+            }
+
+            SwingUtilities.invokeLater(() -> jProgressBar.setValue(currentProgress));
+
+            bout.write(data, 0, newDataSize);
+        }
+        bout.close();
+        in.close();
+
+        frameHelper.getFrame().dispose();
     }
 
     private static boolean askUserIfUpdateIsDesired() {
@@ -131,6 +143,7 @@ public class Autoupdate {
                 frameClosed.countDown();
             }
         };
+        frameHelper.getFrame().setTitle(TITLE);
         JPanel choice = new JPanel(new BorderLayout());
 
         choice.add(new JLabel("Do you want to update bundle to latest version?"), BorderLayout.NORTH);
@@ -208,6 +221,40 @@ public class Autoupdate {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    private static void unzip(String zipFileName, String destPath) throws IOException {
+        File destDir = new File(destPath);
+        byte[] buffer = new byte[1024];
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFileName));
+        ZipEntry zipEntry = zis.getNextEntry();
+        while (zipEntry != null) {
+            File newFile = newFile(destDir, zipEntry);
+            System.out.println("Unzipping " + newFile);
+            FileOutputStream fos = new FileOutputStream(newFile);
+            int len;
+            while ((len = zis.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);
+            }
+            fos.close();
+            zipEntry = zis.getNextEntry();
+        }
+        zis.closeEntry();
+        zis.close();
+        System.out.println("Unzip " + zipFileName + " to " + destPath + " worked!");
+    }
+
+    private static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
+        File destFile = new File(destinationDir, zipEntry.getName());
+
+        String destDirPath = destinationDir.getCanonicalPath();
+        String destFilePath = destFile.getCanonicalPath();
+
+        if (!destFilePath.startsWith(destDirPath + File.separator)) {
+            throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+        }
+
+        return destFile;
     }
 
     enum UpdateMode {
