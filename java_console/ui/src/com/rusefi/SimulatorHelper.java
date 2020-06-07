@@ -56,7 +56,7 @@ public class SimulatorHelper {
             throw new IllegalStateException("Port not opened?");
         FileLog.MAIN.logLine("Port " + TcpConnector.DEFAULT_PORT + " is alive");
 
-        new Launcher("" + TcpConnector.DEFAULT_PORT);
+        new ConsoleUI("" + TcpConnector.DEFAULT_PORT);
     }
 
     public static JComponent createSimulatorComponent(final StartupFrame portSelector) {

@@ -1,5 +1,6 @@
 package com.rusefi.ui.logview;
 
+import com.rusefi.ConsoleUI;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.core.EngineState;
@@ -179,7 +180,7 @@ public class LogViewer extends JPanel {
         ChartRepository.getInstance().clear();
         EngineState engineState = new EngineState(listener);
         // this is pretty dirty, better OOP desperately needed
-        Launcher.engineSnifferPanel.setOutpinListener(engineState);
+        ConsoleUI.engineSnifferPanel.setOutpinListener(engineState);
         engineState.registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {

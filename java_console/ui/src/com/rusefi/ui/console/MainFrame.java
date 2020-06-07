@@ -18,6 +18,7 @@ import java.util.TimeZone;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class MainFrame {
+    private final ConsoleUI consoleUI;
     private final TabbedPanel tabbedPane;
     /**
      * @see StartupFrame
@@ -43,7 +44,8 @@ public class MainFrame {
         }
     };
 
-    public MainFrame(TabbedPanel tabbedPane) {
+    public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
+        this.consoleUI = consoleUI;
 
         this.tabbedPane = tabbedPane;
     }
@@ -66,7 +68,7 @@ public class MainFrame {
             }
         });
 
-        LinkManager.startAndConnect(Launcher.port, new ConnectionStateListener() {
+        LinkManager.startAndConnect(consoleUI.port, new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
             }
@@ -99,7 +101,7 @@ public class MainFrame {
 
     private void setTitle() {
         String disconnected = ConnectionStatusLogic.INSTANCE.isConnected() ? "" : "DISCONNECTED ";
-        frame.getFrame().setTitle(disconnected + "Console " + Launcher.CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + Launcher.port);
+        frame.getFrame().setTitle(disconnected + "Console " + Launcher.CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.port);
     }
 
     private void windowClosedHandler() {
@@ -109,7 +111,7 @@ public class MainFrame {
         SimulatorHelper.onWindowClosed();
         Node root = getConfig().getRoot();
         root.setProperty("version", Launcher.CONSOLE_VERSION);
-        root.setProperty(Launcher.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
+        root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
         GaugesPanel.DetachedRepository.INSTANCE.saveConfig();
         getConfig().save();
         BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();

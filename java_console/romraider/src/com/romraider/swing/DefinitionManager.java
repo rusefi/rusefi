@@ -28,9 +28,8 @@ import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.ListSelectionModel;
 
-import com.romraider.editor.ecu.ECUEditorManager;
 import com.romraider.util.SettingsManager;
-import com.rusefi.Launcher;
+import com.rusefi.ConsoleUI;
 
 public class DefinitionManager extends javax.swing.JFrame implements ActionListener {
 
@@ -41,7 +40,7 @@ public class DefinitionManager extends javax.swing.JFrame implements ActionListe
     Vector<String> fileNames;
 
     public DefinitionManager() {
-        this.setIconImage(Launcher.getFrame().getIconImage());
+        this.setIconImage(ConsoleUI.getFrame().getIconImage());
         initComponents();
         initSettings();
 
