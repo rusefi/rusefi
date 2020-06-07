@@ -111,7 +111,7 @@ rm -rf %drivers_folder%
 cd temp
 zip -r %update_bundle_file% *
 ls -l %update_bundle_file%
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% . %update_bundle_file%
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% autoupdate %update_bundle_file%
 cd ..
 
 echo "%script_name%: We are back in root directory"
