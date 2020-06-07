@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Date: 12/25/12
@@ -42,8 +41,6 @@ public class EngineState {
             return "Pair(" + first + "," + second + "}";
         }
     }
-
-    public final List<EngineTimeListener> timeListeners = new CopyOnWriteArrayList<>();
 
     private final ResponseBuffer buffer;
     private final List<StringActionPair> actions = new ArrayList<>();

@@ -204,7 +204,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                             @Override
                             public void run() {
                                 if (requestOutputChannels())
-                                	ConnectionWatchdog.onDataArrived();
+                                    HeartBeatListeners.onDataArrived();
                                 compositeLogic();
                                 String text = requestPendingMessages();
                                 if (text != null)
@@ -336,6 +336,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 continue;
             }
 
+            HeartBeatListeners.onDataArrived();
             ConnectionStatusLogic.INSTANCE.markConnected();
             System.arraycopy(response, 1, image.getContent(), offset, requestSize);
 

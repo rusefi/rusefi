@@ -2,8 +2,6 @@ package com.rusefi.io;
 
 import com.rusefi.FileLog;
 import com.rusefi.Timeouts;
-import com.rusefi.core.EngineTimeListener;
-import com.rusefi.io.LinkManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -23,17 +21,11 @@ public class ConnectionWatchdog {
     }
 
     public static void start() {
+        HeartBeatListeners.INSTANCE.addListener(ConnectionWatchdog::onDataArrived);
         onDataArrived();
-
-        LinkManager.engineState.timeListeners.add(new EngineTimeListener() {
-            @Override
-            public void onTime(double time) {
-                onDataArrived();
-            }
-        });
     }
 
-    public static void onDataArrived() {
+    private static void onDataArrived() {
         /**
          * this timer will reconnect
          */

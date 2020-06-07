@@ -1,7 +1,6 @@
 package com.rusefi.io;
 
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.EngineTimeListener;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
