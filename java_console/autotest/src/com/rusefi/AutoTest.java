@@ -102,7 +102,7 @@ this is just too unreliable at this point :(
 
     public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback) {
         changeRpm(rpm);
-        sleep(settleTime);
+        sleepSeconds(settleTime);
         AtomicReference<String> result = new AtomicReference<>();
         SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
             @Override
@@ -113,7 +113,7 @@ this is just too unreliable at this point :(
             }
         };
         SensorCentral.getInstance().addListener(Sensor.RPM, listener);
-        sleep(testDuration);
+        sleepSeconds(testDuration);
         callback.apply(result.get());
         SensorCentral.getInstance().removeListener(Sensor.RPM, listener);
     }
@@ -192,7 +192,7 @@ this is just too unreliable at this point :(
         currentEngineType = type;
         sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
         // TODO: document the reason for this sleep?!
-        sleep(1);
+        sleepSeconds(1);
         sendCommand(getEnableCommand("self_stimulation"));
     }
 
