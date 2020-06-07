@@ -67,26 +67,7 @@ public class EngineState {
         }
         );
 
-        registerStringValueAction("msg", new ValueCallback<String>() {
-            @Override
-            public void onUpdate(String value) {
-                MessagesCentral.getInstance().postMessage(ENGINE_STATE_CLASS, value);
-            }
-        });
-
-        registerStringValueAction("time", new ValueCallback<String>() {
-            public void onUpdate(String value) {
-                double time;
-                try {
-                    time = Double.parseDouble(value);
-                } catch (NumberFormatException e) {
-                    return;
-                }
-                listener.onTime(time);
-                for (EngineTimeListener l : timeListeners)
-                    l.onTime(time);
-            }
-        });
+        registerStringValueAction(Fields.PROTOCOL_MSG, value -> MessagesCentral.getInstance().postMessage(ENGINE_STATE_CLASS, value));
     }
 
     /**
