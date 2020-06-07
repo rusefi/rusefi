@@ -92,13 +92,11 @@ public class SensorLogger {
     private SensorLogger() {
     }
 
-    private static boolean isRunning;
+    static {
+        init();
+    }
 
-    public static void init() {
-        if (isRunning)
-            return;
-        isRunning = true;
-
+    private static void init() {
         SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
@@ -114,7 +112,6 @@ public class SensorLogger {
                 writeSensorLogLine();
             }
         });
-
     }
 
     private static void writeSensorLogLine() {

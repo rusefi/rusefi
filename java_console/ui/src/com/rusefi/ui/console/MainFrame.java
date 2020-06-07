@@ -88,7 +88,6 @@ public class MainFrame {
             @Override
             public void onUpdate(String firmwareVersion) {
                 Launcher.firmwareVersion.set(firmwareVersion);
-                SensorLogger.init();
                 setTitle();
                 VersionChecker.getInstance().onFirmwareVersion(firmwareVersion);
             }
