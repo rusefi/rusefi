@@ -8,7 +8,7 @@ import com.rusefi.FileLog;
 import com.rusefi.io.IoStream;
 
 /**
- * https://github.com/Fazecast/jSerialComm looks to be alive as of 2019
+ * https://github.com/Fazecast/jSerialComm looks to be alive as of 2020
  * <p>
  * (c) Andrey Belomutskiy
  * 06/03/2019
@@ -18,7 +18,10 @@ public class SerialIoStreamJSerialComm implements IoStream {
     private SerialPort sp;
     private final String port;
 
-    SerialIoStreamJSerialComm(SerialPort sp, String port) {
+    /**
+     * @see #openPort(String)
+     */
+    private SerialIoStreamJSerialComm(SerialPort sp, String port) {
         this.sp = sp;
         this.port = port;
     }

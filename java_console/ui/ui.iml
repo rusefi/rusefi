@@ -9,7 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="io" />
-    <orderEntry type="library" name="jssc" level="project" />
     <orderEntry type="library" name="miglayout" level="project" />
     <orderEntry type="library" name="surfaceplotter" level="project" />
     <orderEntry type="library" name="batik" level="project" />
