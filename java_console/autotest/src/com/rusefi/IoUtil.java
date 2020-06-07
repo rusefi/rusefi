@@ -142,7 +142,7 @@ public class IoUtil {
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    static void sleep(int seconds) {
+    public static void sleepSeconds(int seconds) {
         FileLog.MAIN.logLine("Sleeping " + seconds + " seconds");
         try {
             Thread.sleep(seconds * 1000L);
