@@ -158,17 +158,7 @@ public class ConsoleTools {
             System.err.println("rusEFI not detected");
             return;
         }
-        LinkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
-            @Override
-            public void onConnectionEstablished() {
-                SensorLogger.init();
-            }
-
-            @Override
-            public void onConnectionFailed() {
-
-            }
-        });
+        LinkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
     }
 
     private static void invokeCallback(String callback) {

@@ -75,7 +75,7 @@ public class ConsoleUI {
             tabbedPane.addTab("Log Viewer", new LogViewer(engineSnifferPanel));
 
         new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
-            FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting");
+            FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
             LinkManager.restart();
         }).start();
 

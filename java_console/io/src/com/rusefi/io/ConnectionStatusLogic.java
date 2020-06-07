@@ -9,9 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * todo: eliminate logic duplication with {@link ConnectionWatchdog}
- */
 public class ConnectionStatusLogic {
     @NotNull
     private ConnectionStatusValue value = ConnectionStatusValue.NOT_CONNECTED;
