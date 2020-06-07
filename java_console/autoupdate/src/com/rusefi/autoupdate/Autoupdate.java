@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
@@ -33,6 +35,14 @@ public class Autoupdate {
     }
 
     private static void startConsole(String[] args) {
+        try {
+            // we want to make sure that files are available to write so we use reflection to get lazy class initialization
+            Class mainClass = Class.forName("com.rusefi.Launcher");
+            Method mainMethod = mainClass.getMethod("main", args.getClass());
+            mainMethod.invoke(null, new Object[] {args});
+        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            System.out.println(e);
+        }
     }
 
     private static UpdateMode getMode() {
