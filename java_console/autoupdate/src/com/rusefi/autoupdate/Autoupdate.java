@@ -74,6 +74,7 @@ public class Autoupdate {
         try {
             String zipFileName = bundleFullName + "_autoupdate" + ".zip";
             ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke();
+            System.out.println("Server has " + connectionAndMeta.completeFileSize + " from " + new Date(connectionAndMeta.getLastModified()));
 
             if (hasExistingFile(zipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
                 System.out.println("We already have latest update " + new Date(connectionAndMeta.getLastModified()));
@@ -218,6 +219,7 @@ public class Autoupdate {
 
     private static boolean hasExistingFile(String zipFileName, long completeFileSize, long lastModified) {
         File file = new File(zipFileName);
+        System.out.println("We have " + file.length() + " " + new Date(file.lastModified()));
         return file.length() == completeFileSize && file.lastModified() == lastModified;
     }
 
