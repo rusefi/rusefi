@@ -10,7 +10,6 @@ public interface Timeouts {
     int READ_IMAGE_TIMEOUT = 60 * SECOND;
 
     int CONNECTION_RESTART_DELAY = 20 * SECOND;
-    int CONNECTION_STATUS_TIMEOUT = 3 * SECOND;
 
     int CMD_TIMEOUT = 20 * SECOND;
     int SET_ENGINE_TIMEOUT = 60 * SECOND;
