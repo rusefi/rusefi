@@ -109,8 +109,10 @@ rm -rf %console_folder%/rusefi_simulator.exe
 
 rm -rf %drivers_folder%
 
-cd temp
-zip -r %update_bundle_file% *
+rem for autoupdate we do not want the unique folder name with timestamp
+cd %folder%
+zip -r ../%update_bundle_file% *
+cd ..
 ls -l %update_bundle_file%
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% autoupdate %update_bundle_file%
 cd ..
