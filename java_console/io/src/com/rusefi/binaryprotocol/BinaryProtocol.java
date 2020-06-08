@@ -14,6 +14,7 @@ import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
+import com.rusefi.stream.LogicdataStreamFile;
 import com.rusefi.stream.StreamFile;
 import com.rusefi.stream.TSHighSpeedLog;
 import com.rusefi.stream.VcdStreamFile;
@@ -87,7 +88,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             return;
         compositeLogs.addAll(Arrays.asList(
                 new VcdStreamFile(getFileName("rusEFI_trigger_log_", ".vcd")),
-//                new LogicdataStreamFile(getFileName("rusEFI_trigger_log_", ".logicdata")),
+                new LogicdataStreamFile(getFileName("rusEFI_trigger_log_", ".logicdata")),
                 new TSHighSpeedLog(getFileName("rusEFI_trigger_log_"))
         ));
     }
