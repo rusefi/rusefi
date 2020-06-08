@@ -15,6 +15,7 @@ import java.net.URLClassLoader;
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -28,6 +29,7 @@ public class Autoupdate {
     private static final int STEPS = 1000;
     private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
+    private static final boolean runHeadless = Boolean.getBoolean("run_headless") ||  GraphicsEnvironment.isHeadless();
 
     public static void main(String[] args) {
         UpdateMode mode = getMode();
@@ -115,13 +117,17 @@ public class Autoupdate {
 
         int printedPercentage = 0;
 
-        FrameHelper frameHelper = new FrameHelper();
-        frameHelper.getFrame().setTitle(TITLE);
+        FrameHelper frameHelper = null;
+        final AtomicReference<JProgressBar> jProgressBarAtomicReference = new AtomicReference<>();
+        if (!runHeadless) {
+            frameHelper = new FrameHelper();
+            JProgressBar jProgressBar = new JProgressBar();
 
-        final JProgressBar jProgressBar = new JProgressBar();
-        jProgressBar.setMaximum(STEPS);
-
-        frameHelper.showFrame(jProgressBar, true);
+            frameHelper.getFrame().setTitle(TITLE);
+            jProgressBar.setMaximum(STEPS);
+            jProgressBarAtomicReference.set(jProgressBar);
+            frameHelper.showFrame(jProgressBar, true);
+        }
 
         while ((newDataSize = in.read(data, 0, BUFFER_SIZE)) >= 0) {
             downloadedFileSize += newDataSize;
@@ -135,20 +141,33 @@ public class Autoupdate {
                 printedPercentage = currentPercentage;
             }
 
-            SwingUtilities.invokeLater(() -> jProgressBar.setValue(currentProgress));
+            if (!runHeadless) {
+                SwingUtilities.invokeLater(() -> jProgressBarAtomicReference.get().setValue(currentProgress));
+            }
 
             bout.write(data, 0, newDataSize);
         }
         bout.close();
         in.close();
 
-        frameHelper.getFrame().dispose();
+        if (!runHeadless) {
+            frameHelper.getFrame().dispose();
+        }
     }
 
     private static boolean askUserIfUpdateIsDesired() {
         AtomicBoolean doUpdate = new AtomicBoolean();
         CountDownLatch frameClosed = new CountDownLatch(1);
 
+        if (runHeadless) {
+            // todo: command line ask for options
+            return true;
+        }
+
+        return askUserIfUpdateIsDesiredWithGUI(doUpdate, frameClosed);
+    }
+
+    private static boolean askUserIfUpdateIsDesiredWithGUI(AtomicBoolean doUpdate, CountDownLatch frameClosed) {
         FrameHelper frameHelper = new FrameHelper() {
             @Override
             protected void onWindowClosed() {
@@ -204,7 +223,6 @@ public class Autoupdate {
             }
         });
         middle.add(always);
-
 
         choice.add(middle, BorderLayout.CENTER);
 
