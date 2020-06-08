@@ -13,9 +13,7 @@ import java.util.List;
  * Support for Saleae .logicdata format.
  * (c) andreika 2020
  *
- * Jun 6 status: this code mostly works but it does not work completely
- * 1) at some point it looked like file produced by LogicdataStreamFileSandbox was valid but it's again not valid?
- * 2) event gaps above 32ms are not supported but those are absolutely required for cranking attempts
+ * Jun 7 status: this code mostly works but it needs more testing
  *
  * @see LogicdataStreamFileSandbox
  */
@@ -32,6 +30,7 @@ public class LogicdataStreamFile extends StreamFile {
 	private static final int SUB = 0x54;
 
 	private static final int FLAG_NOTEMPTY = 2;
+	private static final int FLAG_NOTEMPTY_LONG = 3;
 	private static final int FLAG_EMPTY = 5;
 
 	private static final int LOGIC4 = 0x40FD;
@@ -39,14 +38,18 @@ public class LogicdataStreamFile extends StreamFile {
 
 	private static final int [] CHANNEL_FLAGS = { 0x13458b, 0x0000ff, 0x00a0f9, 0x00ffff, 0x00ff00, 0xff0000, 0xf020a0, };
 
+	private static final long SIGN_FLAG = 0x80000000L;
+
     private static int numChannels = 6;
     private static int reservedDurationInSamples = 10;
     private static int realDurationInSamples = 0;
     private static int scaledDurationInSamples = 0;
-    private static int int4or5 = 4;
 
 	private final String fileName;
 	private final List<CompositeEvent> eventsBuffer = new ArrayList<>();
+
+	private static final String [] channelNames = { "Primary", "Secondary", "Trg", "Sync", "Coil", "Injector", "Channel 6", "Channel 7" };
+
 
 	public LogicdataStreamFile(String fileName) {
 		this.fileName = fileName;
@@ -89,9 +92,10 @@ public class LogicdataStreamFile extends StreamFile {
 
 		writeChannelDataHeader();
 
+		boolean useLongDeltas = false;
     	// we need to split the combined events into separate channels
     	for (int ch = 0; ch < numChannels; ch++) {
-    		List<Integer> chDeltas = new ArrayList<>();
+			List<Long> chDeltas = new ArrayList<>();
 			int chPrevState = -1;
 			int prevTs = 0;
         	for (CompositeEvent event : events) {
@@ -102,15 +106,13 @@ public class LogicdataStreamFile extends StreamFile {
         			chPrevState = chState;
         		}
 				if (chState != chPrevState) {
-					int delta = ts - prevTs;
+					long delta = ts - prevTs;
 					if (delta > 0x7fff) {
-						// todo: split too long events?
-						// this is just 32ms cap between events which is very possible during cranking attempts
-						throw new IllegalArgumentException("Event too long.");
+						useLongDeltas = true;
 					}
 					// encode state
 					if (chState == 0)
-						delta |= 0x8000;
+						delta |= SIGN_FLAG;
 
 					chDeltas.add(delta);
 
@@ -119,7 +121,7 @@ public class LogicdataStreamFile extends StreamFile {
 				}
 			}
 
-    		writeChannelData(ch, chDeltas, chPrevState, prevTs);
+			writeChannelData(ch, chDeltas, chPrevState, prevTs, useLongDeltas);
         }
 
         writeChannelDataFooter();
@@ -173,16 +175,15 @@ public class LogicdataStreamFile extends StreamFile {
 
         write(BLOCK);
 
-        int4or5 = (numChannels == 4) ? 4 : 5;
-        writeId(int4or5, int4or5);
-		write(SUB);
-        write(0);
+		writeId(0, 0);
+		write(0);
+		write(0);
     }
 
     private void writeChannelHeader(int ch) throws IOException {
 		write(0xff);
 		write(ch);
-		write("Channel " + ch);
+		write(channelNames[ch]);
 		write(0, 2);
 		write(1.0);
 		write(0);
@@ -233,7 +234,7 @@ public class LogicdataStreamFile extends StreamFile {
 		write(0, 2);
 		write(1);
 		write(0, 3);
-		writeId(int4or5, 0);
+		writeId(0, 0);
 
 		write(BLOCK);
 		write(new int[]{ realDurationInSamples, realDurationInSamples, realDurationInSamples });
@@ -265,7 +266,7 @@ public class LogicdataStreamFile extends StreamFile {
 		write(new int[]{ 1, 0, 1 });
 	}
 
-    private void writeChannelData(int ch, List<Integer> chDeltas, int chLastState, int lastRecord) throws IOException {
+	private void writeChannelData(int ch, List<Long> chDeltas, int chLastState, int lastRecord, boolean useLongDeltas) throws IOException {
     	int numEdges = chDeltas.size();
     	if (numEdges == 0)
     		lastRecord = 0;
@@ -280,28 +281,30 @@ public class LogicdataStreamFile extends StreamFile {
 		write(0);
 		write(realDurationInSamples);
 		write(1);
-		writeAs(lastRecord, 2);
+		write(lastRecord);
 
 		int numSamplesLeft = realDurationInSamples - lastRecord;
 		write(numSamplesLeft);
 
 		write(chLastState);
 
-		if (numEdges == 0) {	// empty
-			write(FLAG_EMPTY);
-			write(0, 30);
-			return;
-		}
-
-		write(FLAG_NOTEMPTY);
+		int chFlag = (numEdges == 0) ? FLAG_EMPTY : (useLongDeltas ? FLAG_NOTEMPTY_LONG : FLAG_NOTEMPTY);
+		write(chFlag);
 
 		if (ch == 0) {
 			write(0);
 			write(BLOCK);
 			write(0, 11);
+			if (useLongDeltas) {
+				write(BLOCK);
+				write(0, 6);
+			}
 			write(BLOCK);
 		} else {
 			write(0, 10);
+			if (useLongDeltas) {
+				write(0, 5);
+			}
 		}
 
 		write(numEdges);
@@ -310,18 +313,26 @@ public class LogicdataStreamFile extends StreamFile {
 		write(0);
 		write(numEdges);
 
-		writeEdges(chDeltas);
+		writeEdges(chDeltas, useLongDeltas);
 
 		if (ch == 0) {
 			write(BLOCK);
 			write(0, 6);
-
-			write(BLOCK);
-			write(0, 6);
-
+			if (!useLongDeltas) {
+				write(BLOCK);
+				write(0, 6);
+			}
 			write(BLOCK);
 		} else {
-			write(0, 9);
+			write(0, 4);
+			if (!useLongDeltas) {
+				write(0, 5);
+			}
+		}
+
+		if (numEdges == 0) {
+			write(0, 5);
+			return;
 		}
 
 		write(1);
@@ -332,17 +343,24 @@ public class LogicdataStreamFile extends StreamFile {
     	write(0, 16);
 
     	writeRaw(0xFF, 8);
-	   	writeRaw(0x02, 1);
+		writeRaw(chFlag, 1);
 	   	writeRaw(0x00, 7);
     }
 
-    private void writeEdges(List<Integer> chDeltas) throws IOException {
-    	for (int d : chDeltas) {
-    		stream.write(d & 0xff);
-    		stream.write((d >> 8) & 0xff);
-    	}
-    	stream.write(0x00);
-    }
+	private void writeEdges(List<Long> chDeltas, boolean useLongDeltas) throws IOException {
+		for (long d : chDeltas) {
+			// set 16-bit 'sign' flag
+			if (!useLongDeltas && (d & SIGN_FLAG) == SIGN_FLAG)
+				d = (d & 0x7fff) | (SIGN_FLAG >> 16);
+			stream.write((byte)(d & 0xff));
+			stream.write((byte)((d >> 8) & 0xff));
+			if (useLongDeltas) {
+				stream.write((byte)((d >> 16) & 0xff));
+				stream.write((byte)((d >> 24) & 0xff));
+			}
+		}
+		stream.write(0x00);
+	}
 
     private void writeChannelDataFooter() throws IOException {
     	write(0, 3);
