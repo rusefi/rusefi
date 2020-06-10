@@ -24,7 +24,7 @@ import java.util.function.Function;
 
 /**
  * Date: 3/20/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class AnyCommand {
     public static final String KEY = "last_value";

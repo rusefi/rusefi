@@ -21,7 +21,7 @@ import static com.rusefi.ui.etb.EtbTestSequence.*;
 
 /**
  * 3/2/2019
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class EtbMonteCarloSequence {
     private static final int TOTAL_CYCLES_COUNT = 15;

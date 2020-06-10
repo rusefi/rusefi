@@ -17,7 +17,7 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/15/15
  */
 public class ConfigFieldParserTest {

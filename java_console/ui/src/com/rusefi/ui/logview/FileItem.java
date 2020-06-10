@@ -4,7 +4,7 @@ import java.io.File;
 
 /**
  * 4/7/14
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 class FileItem {
     private final File file;

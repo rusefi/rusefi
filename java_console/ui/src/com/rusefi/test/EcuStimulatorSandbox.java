@@ -5,7 +5,7 @@ import com.rusefi.ui.util.FrameHelper;
 
 /**
  * 8/13/14
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class EcuStimulatorSandbox extends FrameHelper {
     public static void main(String[] args) {

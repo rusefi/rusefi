@@ -23,7 +23,7 @@ import java.util.Hashtable;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * (c) Andrey Belomutskiy 2013-2019
+ * Andrey Belomutskiy, (c) 2013-2020
  * 11/2/14
  */
 public class DetachedSensor {

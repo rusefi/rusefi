@@ -12,7 +12,7 @@ import static junit.framework.Assert.assertEquals;
 
 /**
  * 6/25/14
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 
 public class EngineSnifferPanelTest {

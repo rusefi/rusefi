@@ -10,7 +10,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 6/21/2017
  */
 public class BinaryProtocolCmdSandbox {

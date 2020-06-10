@@ -7,7 +7,7 @@ import com.rusefi.core.Pair;
  * This class has the logic of finding all ranges of changes between who {@link ConfigurationImage}
  * It's used to send just the diff to the ECU.
  *
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
  */
 public class ConfigurationImageDiff {

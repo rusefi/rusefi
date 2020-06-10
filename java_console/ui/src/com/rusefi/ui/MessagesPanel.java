@@ -12,7 +12,7 @@ import java.awt.*;
  * <p/>
  * <p/>
  * Date: 4/27/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  *
  * @see AnyCommand
  */

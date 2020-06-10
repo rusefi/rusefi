@@ -3,7 +3,7 @@ package com.opensr5;
 import java.util.Date;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 3/7/2015
  */
 public interface Logger {

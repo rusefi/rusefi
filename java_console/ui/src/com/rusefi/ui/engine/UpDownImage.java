@@ -23,7 +23,7 @@ import java.util.Date;
  * <p/>
  * <p/>
  * Date: 6/23/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  *
  * @see EngineSnifferPanel
  * @see EngineReport

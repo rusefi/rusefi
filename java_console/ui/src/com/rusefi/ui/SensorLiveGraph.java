@@ -13,7 +13,7 @@ import java.awt.event.*;
 import java.util.LinkedList;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 8/22/2015.
  */
 @SuppressWarnings("InfiniteLoopStatement")

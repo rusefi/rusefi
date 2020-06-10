@@ -1,7 +1,7 @@
 package com.rusefi.io;
 
 /**
- * (c) Andrey Belomutskiy 2013-2019
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public interface IMethodInvocation {
     String getCommand();

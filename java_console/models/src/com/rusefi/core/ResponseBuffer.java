@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * this class takes buffers input characters and separates them into full response lines
  * <p/>
  * Date: 12/25/12
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  *
  * @see ResponseBufferTest
  */

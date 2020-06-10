@@ -13,7 +13,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 /**
  * @see DfuFlasher
  * <p>
- * (c) Andrey Belomutskiy 2013-2018
+ * Andrey Belomutskiy, (c) 2013-2020
  * 2/4/15
  */
 public class FirmwareFlasher {

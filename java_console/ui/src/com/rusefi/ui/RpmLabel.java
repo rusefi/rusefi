@@ -12,7 +12,7 @@ import java.awt.*;
  * Digital RPM gauge which stays green while rusEfi is connected
  * <p/>
  * 9/17/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class RpmLabel {
     private static final String NO_CONNECTION = "N/C";

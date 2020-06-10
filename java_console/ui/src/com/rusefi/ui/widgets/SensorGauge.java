@@ -19,7 +19,7 @@ import java.awt.event.*;
  * On double-click a {@link DetachedSensor} is created
  *
  * Date: 7/9/14
- * (c) Andrey Belomutskiy 2012-2014
+ * Andrey Belomutskiy, (c) 2013-2020
  * @see GaugesPanel
  */
 

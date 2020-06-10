@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
 /**
  * This tab is about uploading log files from ECU.
  * 
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 6/20/2015.
  * @see LogViewer
  */

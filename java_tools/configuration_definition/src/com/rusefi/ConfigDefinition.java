@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/12/15
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")

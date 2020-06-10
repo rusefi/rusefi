@@ -2,7 +2,7 @@ package com.rusefi.ui.widgets;
 
 /**
  * Date: 1/14/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class WaveInfoPanel extends BooleanFlagControlPanel {
     public WaveInfoPanel(final int index) {

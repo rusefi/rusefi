@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * https://en.wikipedia.org/wiki/Standard_deviation of error posted to specified sensor
  * <p>
  * 11/16/2017
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  *
  * @see SensorStats
  */

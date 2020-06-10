@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * 7/27/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class ChartRepository {
     private static final ChartRepository instance = new ChartRepository();

@@ -8,7 +8,7 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
 /**
  * Mutable representation of a list of related {@link ConfigField}
  * <p>
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/15/15
  */
 public class ConfigStructure {

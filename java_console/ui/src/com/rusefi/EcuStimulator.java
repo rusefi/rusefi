@@ -28,7 +28,7 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Date: 3/24/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  *
  * @see EcuStimulatorSandbox
  */

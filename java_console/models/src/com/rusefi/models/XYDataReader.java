@@ -6,7 +6,7 @@ import java.io.*;
 
 /**
  * 6/30/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class XYDataReader {
     public static XYData readFile(String fileName) {

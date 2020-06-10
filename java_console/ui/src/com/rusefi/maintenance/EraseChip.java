@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import static com.rusefi.maintenance.FirmwareFlasher.TITLE;
 
 /**
- * (c) Andrey Belomutskiy 2013-2018
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class EraseChip {
     private static final String FLASH_SIZE = "0x0100000";

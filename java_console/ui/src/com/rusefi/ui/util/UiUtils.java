@@ -20,7 +20,7 @@ import static com.rusefi.ui.util.LocalizedMessages.RESUME;
 
 /**
  * 7/7/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class UiUtils {
     private static final String SAVE_IMAGE = "save image";

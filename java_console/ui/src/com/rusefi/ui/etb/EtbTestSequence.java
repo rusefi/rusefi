@@ -24,7 +24,7 @@ import static com.rusefi.Timeouts.SECOND;
  * https://github.com/rusefi/rusefi/issues/494
  * <p>
  * 11/16/2017
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  *
  * @see TimeBasedBuffer
  */

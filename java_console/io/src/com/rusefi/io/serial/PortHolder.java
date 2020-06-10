@@ -17,7 +17,7 @@ import java.awt.*;
  * This class holds the reference to the actual Serial port object
  * <p/>
  * 7/25/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class PortHolder {
     private static final DataListener dataListener = freshData -> LinkManager.engineState.processNewData(new String(freshData), LinkManager.ENCODER);

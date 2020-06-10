@@ -12,7 +12,7 @@ import java.util.Map;
  * @see EngineChartParser
  * <p/>
  * Date: 3/17/14
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class EngineChart {
     // todo: merge with NameUtil

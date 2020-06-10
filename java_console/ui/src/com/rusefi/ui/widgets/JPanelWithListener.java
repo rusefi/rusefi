@@ -7,7 +7,7 @@ import java.awt.event.MouseListener;
 import java.util.LinkedList;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 8/21/2015.
  */
 public class JPanelWithListener extends JPanel {

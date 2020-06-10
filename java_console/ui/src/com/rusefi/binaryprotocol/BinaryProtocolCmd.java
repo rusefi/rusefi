@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.io.File;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
  */
 public class BinaryProtocolCmd {

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 /**
  * This is an immutable model of an individual field
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/15/15
  */
 public class ConfigField {

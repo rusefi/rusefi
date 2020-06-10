@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * Date: 12/25/12
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  *
  * @see #registerStringValueAction
  */

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 /**
  * Date: 12/27/12
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class RpmModelTest {
     @Test

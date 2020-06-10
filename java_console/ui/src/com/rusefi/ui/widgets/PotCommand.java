@@ -13,7 +13,7 @@ import java.awt.*;
 
 /**
  * Date: 3/17/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class PotCommand {
     public static final double VOLTAGE_CORRECTION = 2.9 / 3;

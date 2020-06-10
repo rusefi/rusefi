@@ -43,7 +43,7 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  * Instance is connected until we experience issues. Once we decide to close the connection there is no restart -
  * new instance of this class would need to be created once we establish a new physical connection.
  *
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
  * @see BinaryProtocolHolder
  */

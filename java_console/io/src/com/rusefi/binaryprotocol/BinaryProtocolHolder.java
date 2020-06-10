@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * TODO: remove this dead class?
  *
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 6/21/2017.
  */
 public enum BinaryProtocolHolder {

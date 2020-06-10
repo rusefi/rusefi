@@ -6,7 +6,7 @@ import java.util.TreeMap;
 
 /**
  * Date: 1/14/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class BooleanInputsModel {
     private static final Map<Integer, String> inputTitle = new HashMap<Integer, String>();

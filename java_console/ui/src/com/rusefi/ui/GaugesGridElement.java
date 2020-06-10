@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 /**
  * This panel contains either a {@link SensorGauge} or {@link SensorLiveGraph}
  *
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 8/21/2015.
  */
 public class GaugesGridElement {

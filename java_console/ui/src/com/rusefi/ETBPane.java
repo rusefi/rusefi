@@ -13,7 +13,7 @@ import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
 /**
  * Controls related to Electronic Throttle Body
  *
- * (c) Andrey Belomutskiy 2013-2019
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class ETBPane {
     private final JPanel content = new JPanel(new BorderLayout());

@@ -5,7 +5,7 @@ import com.rusefi.models.XYData;
 
 /**
  * 7/18/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class BaseMap {
     public static void main(String[] args) {
