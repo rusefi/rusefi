@@ -12,7 +12,7 @@ import java.awt.*;
 
 /**
  * 7/22/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class Live3DReport {
     public static final Range KEY_RANGE = new Range(1.5f, 4.0f);

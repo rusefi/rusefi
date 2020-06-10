@@ -11,7 +11,7 @@ import static com.rusefi.Launcher.*;
 
 /**
  * 6/30/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler {
     private static boolean hadExceptionAlready;

@@ -19,7 +19,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 /**
  * This class checks the recommended versions numbers and compares them with current versions
  * <p/>
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 8/10/14
  */
 public class VersionChecker {

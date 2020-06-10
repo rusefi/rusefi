@@ -28,7 +28,7 @@ import java.util.TreeMap;
  * <p/>
  * <p/>
  * 7/27/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * @see LogDownloader
  */
 public class LogViewer extends JPanel {

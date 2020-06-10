@@ -8,7 +8,7 @@ import java.net.Socket;
 /**
  * This class is used to figure out if we have multiple instances of rusEfi console running
  *
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 5/4/2015
  */
 public class JustOneInstance {

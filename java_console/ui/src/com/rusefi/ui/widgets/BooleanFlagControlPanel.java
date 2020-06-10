@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
  * This panel turns ON/OFF some rusefi configuration property
  * <p/>
  * 7/11/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class BooleanFlagControlPanel {
     private final JPanel content = new JPanel(new MigLayout());

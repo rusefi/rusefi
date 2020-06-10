@@ -4,7 +4,7 @@ import com.rusefi.ui.fsio.FlexibleControls;
 import com.rusefi.ui.util.FrameHelper;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 12/4/14
  */
 public class FlexibleControlsSandbox {

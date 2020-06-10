@@ -1,7 +1,7 @@
 package com.rusefi.logic;
 
 /**
- * (c) Andrey Belomutskiy 2012-2016
+ * Andrey Belomutskiy, (c) 2013-2020
  * 12/24/2015
  */
 public class IgnitionMapBuilder {

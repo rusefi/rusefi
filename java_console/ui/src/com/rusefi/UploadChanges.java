@@ -16,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * (c) Andrey Belomutskiy 2013-2018
+ * Andrey Belomutskiy, (c) 2013-2020
  * 3/7/2015
  */
 public class UploadChanges {

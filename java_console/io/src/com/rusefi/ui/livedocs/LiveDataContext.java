@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Type-safe unique structure identifier
  * <p>
- * (c) Andrey Belomutskiy 2013-2019
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class LiveDataContext {
     private final int id;

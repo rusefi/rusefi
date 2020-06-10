@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * what the hell is this anyway? todo: migrate to log4j2
  * 6/30/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public enum FileLog {
     MAIN,

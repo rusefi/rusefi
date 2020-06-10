@@ -3,7 +3,7 @@ package com.rusefi;
 import com.rusefi.io.LinkManager;
 
 /**
- * (c) Andrey Belomutskiy 2013-2018
+ * Andrey Belomutskiy, (c) 2013-2020
  * 2/22/2015
  */
 public class CmdLine {

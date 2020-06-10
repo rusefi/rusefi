@@ -11,7 +11,7 @@ import static com.rusefi.Timeouts.SECOND;
 
 /**
  * this test connects to real hardware via serial port
- * (c) Andrey Belomutskiy 2013-2019
+ * Andrey Belomutskiy, (c) 2013-2020
  * 2/22/2015
  */
 public class RealHwTest {

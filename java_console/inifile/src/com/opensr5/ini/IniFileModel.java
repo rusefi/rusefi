@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 12/23/2015.
  */
 public class IniFileModel {

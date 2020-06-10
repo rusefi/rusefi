@@ -5,7 +5,7 @@ import com.rusefi.config.generated.Fields;
 /**
  * Air/Fuel ratio data point
  *
- * (c) Andrey Belomutskiy 2013-2018
+ * Andrey Belomutskiy, (c) 2013-2020
  * 2/23/2016.
  */
 public class AfrDataPoint {

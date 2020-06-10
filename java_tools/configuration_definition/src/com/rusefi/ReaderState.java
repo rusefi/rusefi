@@ -15,7 +15,7 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
 /**
  * We keep state here as we read configuration definition
  *
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 12/19/18
  */
 public class ReaderState {

@@ -1,7 +1,7 @@
 package com.rusefi.io;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 6/20/2015.
  */
 public interface LinkDecoder {

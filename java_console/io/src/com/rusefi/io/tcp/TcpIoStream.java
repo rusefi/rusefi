@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 5/11/2015.
  */
 public class TcpIoStream implements IoStream {

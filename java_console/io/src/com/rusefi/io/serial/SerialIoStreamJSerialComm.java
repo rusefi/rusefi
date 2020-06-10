@@ -10,7 +10,7 @@ import com.rusefi.io.IoStream;
 /**
  * https://github.com/Fazecast/jSerialComm looks to be alive as of 2020
  * <p>
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 06/03/2019
  */
 public class SerialIoStreamJSerialComm implements IoStream {

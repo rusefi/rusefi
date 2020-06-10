@@ -14,7 +14,7 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
 /**
  * Thread-safe byte queue with blocking {@link #waitForBytes} method
  *
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 6/20/2015.
  */
 @ThreadSafe

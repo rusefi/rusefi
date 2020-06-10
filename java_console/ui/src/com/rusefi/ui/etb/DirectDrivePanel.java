@@ -13,7 +13,7 @@ import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
 /**
  * Little panel to drive ETB duty cycle directly
  *
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * @see Fields#CMD_ETB_DUTY
  */
 public class DirectDrivePanel {

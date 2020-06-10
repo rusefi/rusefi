@@ -15,7 +15,7 @@ import static com.rusefi.config.generated.Fields.PROTOCOL_ES_UP;
  * A model of a digital signal represented as a sequence of {@link UpDown}
  *
  * Date: 6/23/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  *
  * @see SensorSnifferPane
  */

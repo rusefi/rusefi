@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 
 /**
  * 7/7/13
- * (c) Andrey Belomutskiy 2013-2018
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 class ZoomControl extends JPanel {
     private double value;

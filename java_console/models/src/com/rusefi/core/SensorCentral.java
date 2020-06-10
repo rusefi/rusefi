@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * <p/>
  * <p/>
  * Date: 1/6/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class SensorCentral implements ISensorCentral {
     public static final String RPM_KEY = "rpm";

@@ -19,7 +19,7 @@ import static com.rusefi.models.Utils.parseIntWithReason;
 
 /**
  * Date: 1/22/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class ChartHelper {
     private ChartHelper() {

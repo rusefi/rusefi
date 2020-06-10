@@ -6,7 +6,7 @@ import static com.rusefi.models.Utils.parseIntWithReason;
 
 /**
  * 1/11/14.
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class RevolutionLog {
     private final TreeMap<Integer, Integer> time2rpm;

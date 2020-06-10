@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * (c) Andrey Belomutskiy 2013-2018
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/9/2016
  *
  * @see FuelAutoTune

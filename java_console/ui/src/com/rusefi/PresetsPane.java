@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
- * (c) Andrey Belomutskiy 2013-2019
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class PresetsPane {
     // see rusefi_enums.h

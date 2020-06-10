@@ -12,7 +12,7 @@ import java.util.List;
  * constantly
  * <p/>
  * Date: 12/27/12
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class RpmModel {
     private static final RpmModel INSTANCE = new RpmModel();

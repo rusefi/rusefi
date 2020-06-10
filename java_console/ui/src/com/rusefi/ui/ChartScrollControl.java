@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 4/7/14
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class ChartScrollControl {
     private final JPanel content = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));

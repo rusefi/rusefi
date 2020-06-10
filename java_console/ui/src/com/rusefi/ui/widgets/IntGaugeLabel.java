@@ -9,7 +9,7 @@ import javax.swing.*;
 /**
  * Read-only text representation of an int {@link Sensor}
  * <p>
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 8/5/2017
  */
 public class IntGaugeLabel extends JLabel {

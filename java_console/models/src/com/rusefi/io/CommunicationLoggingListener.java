@@ -1,7 +1,7 @@
 package com.rusefi.io;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 9/4/14
  */
 public interface CommunicationLoggingListener {

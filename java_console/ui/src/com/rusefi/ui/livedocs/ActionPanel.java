@@ -12,7 +12,7 @@ import java.util.Map;
  * Multi-line horizontal flow panel.
  * <p>
  * <p>
- * (c) Andrey Belomutskiy 2013-2019
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class ActionPanel {
     private final RefreshActionsMap refreshActions = new RefreshActionsMap();

@@ -19,7 +19,7 @@ import java.util.List;
  * This utility produces images of trigger signals supported by rusEfi
  *
  * 06/23/15
- * (c) Andrey Belomutskiy 2013-2018
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class TriggerImage {
     private static final String TRIGGERTYPE = "TRIGGERTYPE";

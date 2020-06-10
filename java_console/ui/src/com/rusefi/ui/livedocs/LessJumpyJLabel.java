@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * (c) Andrey Belomutskiy 2013-2019
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class LessJumpyJLabel extends JLabel {
     private int maxPreferredWidth = 0;

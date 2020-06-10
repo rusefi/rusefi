@@ -19,7 +19,7 @@ import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
  * This tool finds interesting ETB duty cycles like the value when in starts to open or the value
  * when it's completely open
  * <p>
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 10/21/2018
  */
 public class MagicSpotsFinder {

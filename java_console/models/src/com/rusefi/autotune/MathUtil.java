@@ -3,7 +3,7 @@ package com.rusefi.autotune;
 import java.util.Arrays;
 
 /**
- * (c) Andrey Belomutskiy 2013-2018
+ * Andrey Belomutskiy, (c) 2013-2020
  * 2/18/2016.
  */
 public class MathUtil {

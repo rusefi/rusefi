@@ -7,7 +7,7 @@ import javax.swing.*;
 
 /**
  * 8/2/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class IdleLabel extends JLabel {
     public IdleLabel() {
