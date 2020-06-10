@@ -98,8 +98,10 @@ public class DfuFlasher {
         String errorResponse = ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
                 FirmwareFlasher.BINARY_LOCATION + File.separator + getDfuCommand(),
                 DFU_BINARY, wnd, stdout);
-        // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
-        if (stdout.toString().contains("Verify successful") || stdout.toString().contains("Upgrade successful")) {
+        if (stdout.toString().contains("0x12340005")) {
+            wnd.appendMsg("Driver issue? Maybe driver conflict with STM32Cube? rusEFI currently uses older incompatible driver");
+        } else if (stdout.toString().contains("Verify successful") || stdout.toString().contains("Upgrade successful")) {
+            // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
             wnd.appendMsg("SUCCESS!");
         } else {
             if (stdout.length() == 0 && errorResponse.length() == 0) {
