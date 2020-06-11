@@ -4,7 +4,8 @@ UTILSRC = \
 	$(UTIL_DIR)/containers/data_buffer.c \
 	$(UTIL_DIR)/math/crc.c \
 	$(UTIL_DIR)/os_util.c \
-	$(UTIL_DIR)/histogram.c
+	$(UTIL_DIR)/histogram.c \
+	$(UTIL_DIR)/unaligned.c
 
 UTILSRC_CPP = \
     $(UTIL_DIR)/containers/cyclic_buffer.cpp \

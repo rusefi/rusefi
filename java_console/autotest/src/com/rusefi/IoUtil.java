@@ -5,6 +5,7 @@ import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
@@ -40,11 +41,9 @@ public class IoUtil {
     /**
      * blocking method which would for confirmation from rusEfi
      */
-    static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {
+    static void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
-        if (LinkManager.hasError())
-            throw new IllegalStateException("IO error");
         FileLog.MAIN.logLine("Sending command [" + command + "]");
         final long begin = System.currentTimeMillis();
         CommandQueue.getInstance().write(command, retryTimeoutMs, new InvocationConfirmationListener() {
@@ -54,17 +53,15 @@ public class IoUtil {
                 FileLog.MAIN.logLine("Got confirmation in " + (System.currentTimeMillis() - begin) + "ms");
             }
         });
-        wait(responseLatch, totalTimeoutSeconds);
+        wait(responseLatch, timeoutMs);
         if (responseLatch.getCount() > 0)
             FileLog.MAIN.logLine("No confirmation in " + retryTimeoutMs);
-        if (LinkManager.hasError())
-            throw new IllegalStateException("IO error");
         FileLog.MAIN.logLine("Command [" + command + "] executed in " + (System.currentTimeMillis() - time));
     }
 
-    static void wait(CountDownLatch responseLatch, int seconds) {
+    static void wait(CountDownLatch responseLatch, int milliseconds) {
         try {
-            responseLatch.await(seconds, TimeUnit.SECONDS);
+            responseLatch.await(milliseconds, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
@@ -135,17 +132,17 @@ public class IoUtil {
 //        Thread.sleep(3000);
 //
 //        FileLog.rlog("Got a TCP port! Connecting...");
-        LinkManager.start("" + TcpConnector.DEFAULT_PORT);
+
         /**
          * TCP connector is blocking
          */
-        LinkManager.open();
+        LinkManager.startAndConnect("" + TcpConnector.DEFAULT_PORT, ConnectionStateListener.VOID);
         LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         waitForFirstResponse();
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    static void sleep(int seconds) {
+    public static void sleepSeconds(int seconds) {
         FileLog.MAIN.logLine("Sleeping " + seconds + " seconds");
         try {
             Thread.sleep(seconds * 1000L);

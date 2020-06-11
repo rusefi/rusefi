@@ -1,5 +1,7 @@
 package com.rusefi.io;
 
+import com.rusefi.binaryprotocol.BinaryProtocol;
+
 /**
  * @author Andrey Belomutskiy
  *         3/3/14
@@ -7,11 +9,11 @@ package com.rusefi.io;
 public interface LinkConnector extends LinkDecoder {
     LinkConnector VOID = new LinkConnector() {
         @Override
-        public void connect(ConnectionStateListener listener) {
+        public void connectAndReadConfiguration(ConnectionStateListener listener) {
         }
 
         @Override
-        public void send(String command, boolean fireEvent) throws InterruptedException {
+        public void send(String command, boolean fireEvent) {
         }
 
         @Override
@@ -19,21 +21,16 @@ public interface LinkConnector extends LinkDecoder {
         }
 
         @Override
-        public boolean hasError() {
-            return false;
-        }
-
-        @Override
-        public String unpack(String packet) {
-            return LinkDecoder.TEXT_PROTOCOL_DECODER.unpack(packet);
+        public BinaryProtocol getBinaryProtocol() {
+            return null;
         }
     };
 
-    void connect(ConnectionStateListener listener);
+    void connectAndReadConfiguration(ConnectionStateListener listener);
 
     void send(String command, boolean fireEvent) throws InterruptedException;
 
     void restart();
 
-    boolean hasError();
+    BinaryProtocol getBinaryProtocol();
 }

@@ -19,6 +19,9 @@
 
 #define BIT(n) (UINT32_C(1) << (n))
 
+// we also have efi::size which probably does not work for C code
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+
 // human-readable IDs start from 1 while computer-readbale indexes start from 0
 #define ID2INDEX(id) ((id) - 1)
 

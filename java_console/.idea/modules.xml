@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/autotest/autotest.iml" filepath="$PROJECT_DIR$/autotest/autotest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/autoupdate/autoupdate.iml" filepath="$PROJECT_DIR$/autoupdate/autoupdate.iml" />
       <module fileurl="file://$PROJECT_DIR$/../java_tools/configuration_definition/configuration_definition.iml" filepath="$PROJECT_DIR$/../java_tools/configuration_definition/configuration_definition.iml" />
       <module fileurl="file://$PROJECT_DIR$/../java_tools/enum_to_string/enum_to_string.iml" filepath="$PROJECT_DIR$/../java_tools/enum_to_string/enum_to_string.iml" />
       <module fileurl="file://$PROJECT_DIR$/inifile/inifile.iml" filepath="$PROJECT_DIR$/inifile/inifile.iml" />
@@ -11,6 +12,7 @@
       <module fileurl="file://$PROJECT_DIR$/models/models.iml" filepath="$PROJECT_DIR$/models/models.iml" />
       <module fileurl="file://$PROJECT_DIR$/opensr5/opensr5.iml" filepath="$PROJECT_DIR$/opensr5/opensr5.iml" />
       <module fileurl="file://$PROJECT_DIR$/romraider/romraider.iml" filepath="$PROJECT_DIR$/romraider/romraider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shared_ui/shared_ui.iml" filepath="$PROJECT_DIR$/shared_ui/shared_ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/tools/tools.iml" filepath="$PROJECT_DIR$/tools/tools.iml" />
       <module fileurl="file://$PROJECT_DIR$/ui/ui.iml" filepath="$PROJECT_DIR$/ui/ui.iml" />
     </modules>

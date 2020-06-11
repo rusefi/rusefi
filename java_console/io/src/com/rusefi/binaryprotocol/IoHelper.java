@@ -5,7 +5,7 @@ import java.util.zip.CRC32;
 /**
  * Utility methods for {@link BinaryProtocol}
  *
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
  */
 public class IoHelper {

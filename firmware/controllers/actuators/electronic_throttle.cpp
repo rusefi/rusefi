@@ -9,6 +9,7 @@
  *
  * todo: make this more universal if/when we get other hardware options
  *
+ * May 2020 two vehicles have driver 500 miles each
  * Sep 2019 two-wire TLE9201 official driving around the block! https://www.youtube.com/watch?v=1vCeICQnbzI
  * May 2019 two-wire TLE7209 now behaves same as three-wire VNH2SP30 "eBay red board" on BOSCH 0280750009
  * Apr 2019 two-wire TLE7209 support added
@@ -102,6 +103,20 @@ static SensorType indexToTpsSensor(size_t index) {
 	switch(index) {
 		case 0:  return SensorType::Tps1;
 		default: return SensorType::Tps2;
+	}
+}
+
+static SensorType indexToTpsSensorPrimary(size_t index) {
+	switch(index) {
+		case 0:  return SensorType::Tps1Primary;
+		default: return SensorType::Tps2Primary;
+	}
+}
+
+static SensorType indexToTpsSensorSecondary(size_t index) {
+	switch(index) {
+		case 0:  return SensorType::Tps1Secondary;
+		default: return SensorType::Tps2Secondary;
 	}
 }
 
@@ -336,7 +351,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	}
 }
 
-void EtbController::update(efitick_t nowNt) {
+void EtbController::update(efitick_t) {
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #0
 	if (m_myIndex == 0) {
@@ -449,8 +464,8 @@ struct EtbImpl final : public EtbController, public PeriodicController<512> {
 		motor->set(0.5f);
 		motor->enable();
 		chThdSleepMilliseconds(1000);
-		tsOutputChannels.calibrationMode = TsCalMode::Tps1Max;
-		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(myIndex)) * TPS_TS_CONVERSION;
+		float primaryMax = Sensor::getRaw(indexToTpsSensorPrimary(myIndex)) * TPS_TS_CONVERSION;
+		float secondaryMax = Sensor::getRaw(indexToTpsSensorSecondary(myIndex)) * TPS_TS_CONVERSION;
 
 		// Let it return
 		motor->set(0);
@@ -459,14 +474,27 @@ struct EtbImpl final : public EtbController, public PeriodicController<512> {
 		// Now grab closed
 		motor->set(-0.5f);
 		chThdSleepMilliseconds(1000);
-		tsOutputChannels.calibrationMode = TsCalMode::Tps1Min;
-		tsOutputChannels.calibrationValue = Sensor::getRaw(indexToTpsSensor(myIndex)) * TPS_TS_CONVERSION;
+		float primaryMin = Sensor::getRaw(indexToTpsSensorPrimary(myIndex)) * TPS_TS_CONVERSION;
+		float secondaryMin = Sensor::getRaw(indexToTpsSensorSecondary(myIndex)) * TPS_TS_CONVERSION;
 
 		// Finally disable and reset state
 		motor->disable();
 
-		// Wait to let TS grab the state before we leave cal mode
+		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1Max;
+		tsOutputChannels.calibrationValue = primaryMax;
 		chThdSleepMilliseconds(500);
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1Min;
+		tsOutputChannels.calibrationValue = primaryMin;
+		chThdSleepMilliseconds(500);
+
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1SecondaryMax;
+		tsOutputChannels.calibrationValue = secondaryMax;
+		chThdSleepMilliseconds(500);
+		tsOutputChannels.calibrationMode = TsCalMode::Tps1SecondaryMin;
+		tsOutputChannels.calibrationValue = secondaryMin;
+		chThdSleepMilliseconds(500);
+
 		tsOutputChannels.calibrationMode = TsCalMode::None;
 
 		m_isAutocal = false;
@@ -502,10 +530,15 @@ static void showEthInfo(void) {
 			hwPortname(CONFIG(etbIo[0].controlPin1)),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
-	scheduleMsg(&logger, "dir1=%s", hwPortname(CONFIG(etbIo[0].directionPin1)));
-	scheduleMsg(&logger, "dir2=%s", hwPortname(CONFIG(etbIo[0].directionPin2)));
-
-	showDcMotorInfo(&logger);
+	int i;
+	for (i = 0; i < engine->etbActualCount; i++) {
+		scheduleMsg(&logger, "ETB%d", i);
+		scheduleMsg(&logger, " dir1=%s", hwPortname(CONFIG(etbIo[i].directionPin1)));
+		scheduleMsg(&logger, " dir2=%s", hwPortname(CONFIG(etbIo[i].directionPin2)));
+		scheduleMsg(&logger, " control=%s", hwPortname(CONFIG(etbIo[i].controlPin1)));
+		scheduleMsg(&logger, " disable=%s", hwPortname(CONFIG(etbIo[i].disablePin)));
+		showDcMotorInfo(&logger, i);
+	}
 
 #endif /* EFI_PROD_CODE */
 }

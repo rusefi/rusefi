@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  * 7/18/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class AverageData {
     public static XYData average(XYData data, int divider) {

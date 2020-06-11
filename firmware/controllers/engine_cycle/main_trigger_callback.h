@@ -24,3 +24,7 @@ void turnInjectionPinLow(InjectionEvent *event);
 
 // reset injection switch counter if the engine started spinning
 void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+// Internal use only - exposed for tests
+void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
+		int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);

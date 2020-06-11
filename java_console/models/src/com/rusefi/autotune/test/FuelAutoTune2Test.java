@@ -12,7 +12,7 @@ import static com.rusefi.autotune.test.FuelAutoTuneTest.createVeTable;
 
 /**
  * 2/23/2016
- * (c) Andrey Belomutskiy 2013-2018
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class FuelAutoTune2Test {
 

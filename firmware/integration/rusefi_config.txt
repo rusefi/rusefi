@@ -34,9 +34,16 @@
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! so not forget to change fileVersion in rusefi.ini
-! todo: is this not needed in light of TS_SIGNATURE?
+! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
+! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
 #define TS_FILE_VERSION 20200310
 
+
+! This is the version of the data stored in flash configuration
+! Any time an incompatible change is made to the configuration format stored in flash,
+! update this string to the current date! It is required to also update TS_SIGNATURE above
+! when this happens.
+#define FLASH_DATA_VERSION 10001
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -87,6 +94,8 @@ struct_no_prefix engine_configuration_s
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define CLT_TIMING_CURVE_SIZE 8
 #define IDLE_VE_CURVE_SIZE 8
+
+#define TCU_SOLENOID_COUNT 8
 
 #define ETB_COUNT 2
 
@@ -160,6 +169,7 @@ struct_no_prefix engine_configuration_s
 
 #define TPS_TPS_ACCEL_TABLE 8
 #define MAP_ACCEL_TAPER 8
+#define ADC_CHANNEL_NONE 16
 
 #define BARO_CORR_SIZE 4
 
@@ -191,6 +201,7 @@ custom boost_table_t	@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@ array,   U08,   @O
 
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_RPM_COUNT 8
+#define GPPWM_CHANNELS 4
 
 custom gppwm_table_t	@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@ array, U08, @OFFSET@, [@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@], "duty", 1, 0, 0, 100, 0
 
@@ -235,7 +246,7 @@ end_struct
 #define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "Mode40"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@debug_mode_e_enum@@
 
-#define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
+#define vvt_mode_e_enum "Inactive", "Second half", "2GZ", "Miata NB2", "First half", "mode5", "mode6", "mode7"
 custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@vvt_mode_e_enum@@
 
 #define mass_storage_e_enum "Auto", "Always", "Never"
@@ -301,7 +312,7 @@ struct gppwm_channel
 	gppwm_table_t table;
 end_struct
 
-custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:7]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "type11", "type12", "type13"
+custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:7]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "type12", "type13"
 !
 ! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
 ! 
@@ -367,7 +378,7 @@ end_struct
 injector_s injector
 
 
-bit unused76b0;
+bit isForcedInduction;
 bit activateAuxPid1;
 bit isVerboseAuxPid1;
 bit activateAuxPid2;
@@ -403,8 +414,8 @@ bit issue_294_31,si_example,nada_example;
 int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\nSee also tps1_1AdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
 int16_t tpsMax;Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
 
-int16_t tpsErrorDetectionTooLow;+TPS error detection, what TPS % value is unrealistically low;"%",       1,     0,    -40, 200,     0
-int16_t tpsErrorDetectionTooHigh;+TPS error detection, what TPS % value is unrealistically high;"%",       1,     0,    -40, 200,     0
+int16_t tpsErrorDetectionTooLow;+TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equiped.;"%",       1,     0,    -10, 0,     0
+int16_t tpsErrorDetectionTooHigh;+TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equiped.;"%",       1,     0,    100, 110,     0
 
 cranking_parameters_s cranking
 float primingSquirtDurationMs;;"*C",       1,     0,    -40, 200,     1
@@ -516,7 +527,7 @@ struct trigger_config_s @brief Trigger wheel(s) configuration
 
 custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "trg48", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "trg50", "INVALID"
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:7], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
@@ -643,7 +654,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:7], "Off", "Slow", "Fas
 	float fuelLevelFullTankVoltage;;"V",      1,      0,       0,10,      2
 
 	ego_sensor_e afr_type;AFR, WBO, EGO - whatever you like to call it;
-	float fuelClosedLoopAfrLowThreshold;;"ratio",        1,     0,  0,    100,  1
+	uint32_t unused696;
 
 	brain_input_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputPins;
 	pin_output_mode_e hip9011CsPinMode;
@@ -666,7 +677,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	uint32_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs",      1,      0,       0,1000000,      0
 
-	int anUnused4Bytes;
+	float compressionRatio;+Just for reference really, not taken into account by any logic at this point;"CR",        1,     0,  0,    300.0,  1
 	
 	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.\nSee also directSelfStimulation which is different.
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
@@ -689,8 +700,8 @@ bit is_enabled_spi_2
 	bit useTpicAdvancedMode;
 	bit useLcdScreen;
 	bit verboseTLE8888;
-	bit enableVerboseCanTx;enable can_broadcast/disable can_broadcast
-	bit onOffAlternatorLogic; +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
+	bit enableVerboseCanTx;+CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
+	bit onOffAlternatorLogic;+This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	bit isCJ125Enabled;enable cj125/disable cj125
 	bit vvtCamSensorUseRise;+Use rise or fall signal front
 	bit measureMapOnlyInOneCylinder;+Useful for individual intakes
@@ -740,7 +751,8 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:7], "Off", "UART1", "UART2", "UA
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
 	int16_t stepperParkingExtraSteps;;"%",        1,     0,  0,    3000.0,  0
-	float unusedAntilagTimeout;
+	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
+	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 	int16_t antiLagRpmTreshold;
 	int16_t startCrankingDuration;Maximum time to crank starter;"Seconds",      1,      0,       0, 30,      0
 
@@ -817,7 +829,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	bit enableCanVss
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
-	bit unusedBit_251_10
+	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error.  This mode may be easier to tune, and more tolerant of sensor noise.  Use of this mode is required if you have a narrowband O2 sensor.;
 	bit unusedBit_251_11
 	bit unusedBit_251_12
 	bit unusedBit_251_13
@@ -873,12 +885,19 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 
 	etb_io[ETB_COUNT iterate] etbIo2
 
-	vehicle_info_t engineMake;
-	vehicle_info_t engineCode;
-	
-	int[76] unusedAtOldBoardConfigurationEnd;
+	vehicle_info_t engineMake;+For example, BMW, GM or Chevrolet\nREQUIRED for rusEFI Online
+	vehicle_info_t engineCode;+For example, LS1 or NB2\nREQUIRED for rusEFI Online
+	vehicle_info_t vehicleName;+For example, Hunchback or Orange Miata\nVehicle name has to be unique between your vehicles.\nREQUIRED for rusEFI Online
 
-	bit vvtDisplayInverted
+	output_pin_e[TCU_SOLENOID_COUNT iterate] tcu_solenoid;
+
+
+	int[65] unusedAtOldBoardConfigurationEnd;
+
+	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
+	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
+
+	bit unusedHereWeHave
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;+Print details into rusEfi console
 	bit isVerboseETB;+Prints ETB details to rusEFI console
@@ -1020,14 +1039,14 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	pid_s idleRpmPid;See cltIdleRpmBins
 	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
-	brain_pin_e communicationLedPin;blue LED on discovery by default	
-	brain_pin_e runningLedPin;green LED on discovery by default
+	brain_pin_e communicationLedPin;+blue LED on many rusEFI boards.\nBlue Communication LED which is expected to blink at 50% duty cycle during normal board operation.\nIf USB communication cable is connected Blue LED starts to blink faster. 	
+	brain_pin_e runningLedPin;+Green LED on many rusEFI boards.\nOff if engine is stopped, blinks if engine is cranking, solid if engine is running.
 	brain_pin_e binarySerialTxPin;See also EFI_CONSOLE_RX_BRAIN_PIN
 	brain_pin_e binarySerialRxPin;	
 	
 	brain_pin_e[AUX_DIGITAL_VALVE_COUNT iterate] auxValves
-	brain_pin_e unusedConsoleSerialTxPin;	todo: finish pin migration from hard-coded to configurable?
-	brain_pin_e unusedConsoleSerialRxPin;todo: finish pin migration from hard-coded to configurable?
+	switch_input_pin_e tcuUpshiftButtonPin
+	switch_input_pin_e tcuDownshiftButtonPin
 
 
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;"v",      1,     0,   0.0,    10,   2
@@ -1077,7 +1096,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	uint32_t auxSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
 
-	uint32_t[8] unused_former_warmup_target_afr;
+	float throttlePedalSecondaryUpVoltage;;"voltage",      1,     0,    -6,   6,      2
+	float throttlePedalSecondaryWOTVoltage;+Pedal in the floor;"voltage",      1,     0,    -6,   6,      2
+
+	uint32_t[6] unused_former_warmup_target_afr;
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
@@ -1125,13 +1147,10 @@ tle8888_mode_e tle8888mode;
 	float postCrankingDurationSec;+Time over which to taper out after start enrichment;"seconds",        1,     0,  0,    100,  2
 	ThermistorConf auxTempSensor1;todo: finish implementation #332
 	ThermistorConf auxTempSensor2;todo: finish implementation #332
-	int16_t fuelClosedLoopCltThreshold;;"C",        1,     0,  0,    100,  0
-	int16_t fuelClosedLoopTpsThreshold;;"%",        1,     0,  0,    100,  0
-	int16_t fuelClosedLoopRpmThreshold;;"rpm",        1,     0,  0,    5000,  0
+	uint8_t[6] unused2508;
 	int16_t etbFreq;;"Hz",      1,     0,    0, 30000,      0
-	pid_s fuelClosedLoopPid;
-	float fuelClosedLoopAfrHighThreshold;;"ratio",        1,     0,  0,    100,  1
-	
+	uint8_t[24] unused2516;
+
 	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       -20000000, 20000000,	  1
 	cfg_float_t_1f[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction
 
@@ -1268,9 +1287,20 @@ uint8_t[4] unusuedsw;
  	custom can_vss_nbc_e 4 bits, U32, @OFFSET@, [0:7], "BMW_e46", "W202"
 	can_vss_nbc_e canVssNbcType;set can_vss X
 
-	gppwm_channel[4 iterate] gppwm;
+	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
 
-	int[376] mainUnusedEnd;
+	uint16_t mc33_i_boost;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_i_peak;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_i_hold;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_max_boost;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_peak_off;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_peak_tot;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_bypass;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_hold_off;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_t_hold_tot;;"X",   1,   0.0,        0,  64000,   0
+
+! just a reminder that 'int' and 'float' are 4 bytes each
+	int[371] mainUnusedEnd;
 
 ! end of engine_configuration_s
 end_struct
@@ -1388,8 +1418,6 @@ end_struct
 
 
 ! Live Documentation Structure
-#define LDS_CLT_STATE_INDEX 0
-#define LDS_IAT_STATE_INDEX 1
 #define LDS_SPEED_DENSITY_STATE_INDEX 2
 #define LDS_ENGINE_STATE_INDEX 3
 #define LDS_FUEL_TRIM_STATE_INDEX 4
@@ -1417,6 +1445,8 @@ end_struct
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
+
+#define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
 
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 
@@ -1451,7 +1481,7 @@ end_struct
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
 #define GAUGE_NAME_FUEL_LAST_INJECTION  "fuel: Last injection"
 #define GAUGE_NAME_FUEL_BASE "fuel: base"
-#define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term closed loop correction"
+#define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term fuel trim"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
 
@@ -1475,6 +1505,13 @@ end_struct
 #define GAUGE_NAME_DEBUG_I4 "debug i4"
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 
+#define ENGINE_MAKE_MAZDA "Mazda"
+#define ENGINE_MAKE_LADA "Lada"
+#define ENGINE_MAKE_GM "GM"
+#define ENGINE_MAKE_BMW "BMW"
+#define ENGINE_MAKE_TOYOTA "Toyota"
+#define ENGINE_MAKE_MERCEDES "Mercedes"
+
 
 #define CMD_PINS "pins"
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
@@ -1493,6 +1530,9 @@ end_struct
 #define CMD_ENABLE "enable"
 #define CMD_DISABLE "disable"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
+
+#define PROTOCOL_MSG "msg"
+#define PROTOCOL_HELLO_PREFIX "***"
 
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_ANALOG_CHART "analog_chart"
@@ -1521,9 +1561,64 @@ end_struct
 #define PROTOCOL_WA_CHANNEL_4 "input4"
 
 
+// These commands are used by TunerStudio and the rusEfi console
+// 0x4F ochGetCommand
+#define TS_OUTPUT_COMMAND 'O'
+// 0x53 queryCommand
+#define TS_HELLO_COMMAND 'S'
+// 0x6B
+#define TS_CRC_CHECK_COMMAND 'k'
+// 0x52
+#define TS_READ_COMMAND 'R'
+// 0x47
+#define TS_GET_TEXT 'G'
+// 0x45
+#define TS_EXECUTE 'E'
+// 0x39
+#define TS_GET_STRUCT '9'
+#define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
+
+#define TS_COMPOSITE_ENABLE 1
+#define TS_COMPOSITE_DISABLE 2
+
+// Performance tracing
+#define TS_PERF_TRACE_BEGIN 'r'
+#define TS_PERF_TRACE_GET_BUFFER 'b'
+
+// 0x50
+#define TS_PAGE_COMMAND 'P'
+// 0x46
+#define TS_COMMAND_F 'F'
+// versionInfo
+#define TS_GET_FIRMWARE_VERSION 'V'
+// returns getFirmwareError(), works together with ind_hasFatalError
+#define TS_GET_CONFIG_ERROR 'e'
+
+
+// 0x57 pageValueWrite
+#define TS_SINGLE_WRITE_COMMAND 'W' 
+// 0x43 pageChunkWrite
+#define TS_CHUNK_WRITE_COMMAND 'C' 
+// 0x42 burnCommand
+#define TS_BURN_COMMAND 'B' 
+// 0x77
+#define TS_IO_TEST_COMMAND 'w'
+
+
+// Engine Sniffer time stamp unit, in microseconds
+#define ENGINE_SNIFFER_UNIT_US 10
+
+// High speed logger commands
+#define TS_SET_LOGGER_SWITCH   'l'
+#define TS_GET_LOGGER_GET_BUFFER 'L'
 
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
+
+#define ET_MRE_MIATA_NA6 12
+#define ET_MRE_MIATA_NB2_MAF 15
+#define ET_BMW_M73_PROTEUS 63
+#define ET_CITROEN_TU3JP 65
 
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 
@@ -1531,6 +1626,8 @@ end_struct
 
 ! some board files override this value using prepend file
 #define ts_show_hip9011 true
+#define ts_show_main_relay true
+#define ts_show_main_relay_microRusEFI_message false
 #define ts_show_cj125 true
 #define ts_show_etb true
 #define ts_show_etb_pins true
@@ -1546,3 +1643,9 @@ end_struct
 #define ts_show_tunerstudio_port true
 #define ts_show_trigger_comparator false
 #define ts_show_auxserial_pins true
+
+#define show_test_presets true
+#define show_Frankenso_presets true
+#define show_microRusEFI_presets true
+#define show_Proteus_presets true
+

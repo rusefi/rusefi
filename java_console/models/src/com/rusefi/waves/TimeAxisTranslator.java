@@ -2,7 +2,7 @@ package com.rusefi.waves;
 
 /**
  * Date: 6/25/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public interface TimeAxisTranslator {
     int timeToScreen(int time, int width);

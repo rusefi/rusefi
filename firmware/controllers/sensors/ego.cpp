@@ -96,7 +96,7 @@ void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (CONFIG(enableAemXSeries)) {
+	if (CONFIG(enableAemXSeries) || CONFIG(enableInnovateLC2)) {
 		return true;
 	}
 
@@ -109,12 +109,18 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 extern float aemXSeriesLambda;
+extern float InnovateLC2AFR;
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_CAN_SUPPORT
 	if (CONFIG(enableAemXSeries)) {
 		return aemXSeriesLambda * 14.7f;
 	}
+#endif
+
+#if EFI_AUX_SERIAL
+	if (CONFIG(enableInnovateLC2))
+		return InnovateLC2AFR;
 #endif
 
 #if EFI_CJ125 && HAL_USE_SPI

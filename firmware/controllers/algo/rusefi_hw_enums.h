@@ -161,7 +161,6 @@ typedef enum __attribute__ ((__packed__)) {
 	GPIOH_15 = 129,
 
 	/* TLE6240 pins go right after on chips */
-	//#define TLE6240_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + (n)))
 	TLE6240_PIN_1 = 130,
 	TLE6240_PIN_2 = 131,
 	TLE6240_PIN_3 = 132,
@@ -180,7 +179,6 @@ typedef enum __attribute__ ((__packed__)) {
 	TLE6240_PIN_16 = 145,
 
 	/* MC33972 pins go right after TLE6240 */
-	//#define MC33972_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + 16 + (n)))
 	MC33972_PIN_1 = 146,
 	MC33972_PIN_21 = 166,
 	MC33972_PIN_22 = 167,
@@ -268,15 +266,6 @@ typedef enum __attribute__ ((__packed__)) {
 	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
 	EFI_ADC_NONE = 16,
 	EFI_ADC_ERROR = 17,
-#if EFI_UNIT_TEST
-	/**
-	 * these values are unfortunately visible to BoardReader
-	 * and TunerStudio would need these ordinals to fit into field size
-	 */
-    TEST_MAF_CHANNEL = 18,
-    TEST_CLT_CHANNEL = 19,
-    TEST_IAT_CHANNEL = 20,
-#endif /* EFI_UNIT_TEST */
 } adc_channel_e;
 
 #define INCOMPATIBLE_CONFIG_CHANGE EFI_ADC_0

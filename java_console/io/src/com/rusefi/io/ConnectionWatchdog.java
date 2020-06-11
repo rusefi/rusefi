@@ -1,39 +1,26 @@
 package com.rusefi.io;
 
-import com.rusefi.FileLog;
-import com.rusefi.Timeouts;
-import com.rusefi.core.EngineTimeListener;
-import com.rusefi.io.LinkManager;
-
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
+/**
+ * todo: open question if it's OK to use AWT timer in headless cases?
+ */
 public class ConnectionWatchdog {
-    private static final Timer reconnectTimer = new Timer(Timeouts.CONNECTION_RESTART_DELAY, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting");
-            LinkManager.restart();
+    private final Timer reconnectTimer;
+
+    public ConnectionWatchdog(int timeoutMs, Runnable action) {
+        reconnectTimer = new Timer(timeoutMs, e -> {
+            action.run();
             onDataArrived();
-        }
-    });
-
-    private ConnectionWatchdog() {
-    }
-
-    public static void start() {
-        onDataArrived();
-
-        LinkManager.engineState.timeListeners.add(new EngineTimeListener() {
-            @Override
-            public void onTime(double time) {
-                onDataArrived();
-            }
         });
     }
 
-    public static void onDataArrived() {
+    public void start() {
+        HeartBeatListeners.INSTANCE.addListener(this::onDataArrived);
+        onDataArrived();
+    }
+
+    private void onDataArrived() {
         /**
          * this timer will reconnect
          */

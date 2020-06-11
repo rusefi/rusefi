@@ -516,6 +516,10 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &ENGINE(fsioState.fsioTimingAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
+	if (engineConfiguration->useFSIO6ForRevLimiter) {
+		updateValueOrWarning(6 - 1, "rpm limit", &ENGINE(fsioState.fsioRpmHardLimit) PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+
 	if (engineConfiguration->useFSIO8ForServo1) {
 		useFsioForServo(0 PASS_ENGINE_PARAMETER_SUFFIX);
 	}
@@ -740,7 +744,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// see MAIN_RELAY_LOGIC
 	if (CONFIG(mainRelayPin) != GPIO_UNASSIGNED) {
-		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > 5) || engine->isInShutdownMode());
+		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) > LOW_VBATT) || engine->isInShutdownMode());
 	}
 	// see STARTER_RELAY_LOGIC
 	if (CONFIG(starterRelayDisablePin) != GPIO_UNASSIGNED) {

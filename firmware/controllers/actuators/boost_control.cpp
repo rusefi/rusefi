@@ -9,7 +9,7 @@
 #if EFI_BOOST_CONTROL
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_configuration.h"
+#include "tunerstudio_outputs.h"
 #endif /* EFI_TUNER_STUDIO */
 #include "engine.h"
 #include "boost_control.h"

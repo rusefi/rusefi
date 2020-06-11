@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 3/1/2017
  */
 public class IniFileMetaInfo {
@@ -23,7 +23,7 @@ public class IniFileMetaInfo {
 
     public IniFileMetaInfo(RawIniFile file) {
 
-        nPages = file.getSimpleIntegerProperty("nPages");
+        nPages = file.getSimpleIntegerProperty("nPages", 1);
 
         blockingFactor = file.getSimpleIntegerProperty("blockingFactor", DEFAULT_BLOCKING_FACTOR);
 

@@ -27,8 +27,8 @@ java -DSystemOut.name=gen_config ^
  -c_fsio_names     controllers\generated\fsio_names.def ^
  -c_fsio_strings   controllers\generated\fsio_strings.def ^
  -java_destination ../java_console/models/src/com/rusefi/config/generated/Fields.java ^
- -romraider_destination ../java_console/rusefi.xml ^
- -skip build/config.gen
+ -romraider_destination ../java_console/rusefi.xml
+
 IF NOT ERRORLEVEL 0 echo ERROR generating
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
@@ -57,4 +57,7 @@ IF NOT ERRORLEVEL 0 EXIT /B 1
 
 
 cd config\boards\kinetis\config
-!gen_config.bat
+call !gen_config.bat
+pwd
+
+call gen_enum_to_string.bat

@@ -154,10 +154,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Gy6139";
 	case MAZDA_MIATA_NB1:
 		return "MiataNB1";
-	case MRE_MIATA_NA6:
-		return "MRE Miata 1.6";
-	case MRE_MIATA_NB2:
-		return "MRE_MIATA_NB2";
 	case FORD_ESCORT_GT:
 		return "EscrtGT";
 	case CITROEN_TU3JP:
@@ -188,8 +184,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "CAMARO_4";
 	case CHEVY_C20_1973:
 		return "CHEVY C20";
-	case MRE_BOARD_TEST:
-	  return "MRE_TEST";
 	case DODGE_RAM:
 		return "DODGE_RAM";
 	default:
@@ -371,30 +365,6 @@ static void setOperationMode(int value) {
 	doPrintConfiguration();
 }
 
-static char pinNameBuffer[16];
-
-static void printThermistor(const char *msg, ThermistorConf *config, ThermistorMath *tm, bool useLinear) {
-	adc_channel_e adcChannel = config->adcChannel;
-	float voltage = getVoltageDivided("term", adcChannel PASS_ENGINE_PARAMETER_SUFFIX);
-	float r = getResistance(config, voltage);
-
-	float t = getTemperatureC(config, tm, useLinear);
-
-	thermistor_conf_s *tc = &config->config;
-
-	scheduleMsg(&logger, "%s volts=%.2f Celsius=%.2f sensorR=%.2f on channel %d", msg, voltage, t, r, adcChannel);
-	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(msg, adcChannel, pinNameBuffer));
-	scheduleMsg(&logger, "C=%.2f/R=%.2f C=%.2f/R=%.2f C=%.2f/R=%.2f",
-			tc->tempC_1, tc->resistance_1,
-			tc->tempC_2, tc->resistance_2,
-			tc->tempC_3, tc->resistance_3);
-
-	// %.5f
-	scheduleMsg(&logger, "bias resistor=%.2fK A=%.5f B=%.5f C=%.5f", tc->bias_resistor / 1000,
-			tm->s_h_a, tm->s_h_b, tm->s_h_c);
-	scheduleMsg(&logger, "==============================");
-}
-
 static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int16_t max, adc_channel_e channel) {
 	auto tps = Sensor::get(sensor);
 	auto raw = Sensor::getRaw(sensor);
@@ -402,7 +372,8 @@ static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int1
 	if (!tps.Valid) {
 		scheduleMsg(&logger, "TPS not valid");
 	}
-	static char pinNameBuffer[16];
+
+	char pinNameBuffer[16];
 
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", min, max,
 			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer));
@@ -694,6 +665,14 @@ static void setCanTxPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->canTxPin, "CAN TX");
 }
 
+static void setAuxRxpin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->auxSerialRxPin, "AUX RX");
+}
+
+static void setAuxTxpin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->auxSerialTxPin, "AUX TX");
+}
+
 static void setAlternatorPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->alternatorControlPin, "alternator");
 }
@@ -783,7 +762,8 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 }
 
 #if HAL_USE_ADC
-// set_analog_input_pin pps
+// set_analog_input_pin pps pa4
+// set_analog_input_pin afr none
 static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -801,6 +781,9 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	} else if (strEqual("pps", sensorStr)) {
 		engineConfiguration->throttlePedalPositionAdcChannel = channel;
 		scheduleMsg(&logger, "setting PPS to %s/%d", pinName, channel);
+	} else if (strEqual("afr", sensorStr)) {
+		engineConfiguration->afr.hwChannel = channel;
+		scheduleMsg(&logger, "setting AFR to %s/%d", pinName, channel);
 	} else if (strEqual("clt", sensorStr)) {
 		engineConfiguration->clt.adcChannel = channel;
 		scheduleMsg(&logger, "setting CLT to %s/%d", pinName, channel);
@@ -1443,6 +1426,9 @@ void initSettings(void) {
 
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
+
+	addConsoleActionS("set_aux_tx_pin", setAuxTxpin);
+	addConsoleActionS("set_aux_rx_pin", setAuxRxpin);
 
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);

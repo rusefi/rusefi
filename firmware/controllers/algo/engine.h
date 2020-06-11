@@ -49,6 +49,11 @@ class RpmCalculator;
 
 class IEtbController;
 
+class TCU {
+public:
+	gear_e currentGear = NEUTRAL;
+};
+
 class Engine : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
@@ -57,6 +62,8 @@ public:
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 
 	cyclic_buffer<int> triggerErrorDetection;
+
+	TCU tcu;
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();
@@ -234,6 +241,7 @@ public:
 
 	bool isRunningPwmTest = false;
 
+	int getRpmHardLimit(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	FsioState fsioState;
 

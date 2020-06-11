@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 /**
  * Date: 1/29/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class ReportReader {
     private static final Pattern LINE_PATTERN = Pattern.compile("\\D*(\\d*);a0;(\\d*);a1;-1;rpm;(\\d*);wave;(\\d*).*");

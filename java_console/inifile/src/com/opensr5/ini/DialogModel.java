@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/17/2016.
  */
 public class DialogModel {

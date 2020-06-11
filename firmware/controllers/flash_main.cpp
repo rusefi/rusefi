@@ -16,9 +16,6 @@
 #include "flash_int.h"
 #include "engine_math.h"
 
-// this message is part of console API, see FLASH_SUCCESS_MSG in java code
-#define FLASH_SUCCESS_MSG "FLASH_SUCESS"
-
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif
@@ -89,7 +86,7 @@ void writeToFlashNow(void) {
 	bool isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
 
 	if (isSuccess) {
-		scheduleMsg(logger, FLASH_SUCCESS_MSG);
+		scheduleMsg(logger, "FLASH_SUCCESS");
 	} else {
 		scheduleMsg(logger, "Flashing failed");
 	}
@@ -138,6 +135,7 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 	}
 
 	if (result == CRC_FAILED) {
+	    // we are here on first boot on brand new chip
 		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
 		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
 	} else if (result == INCOMPATIBLE_VERSION) {

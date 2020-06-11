@@ -15,10 +15,7 @@
 #include "advance_map.h"
 #include "sensor.h"
 
-extern float testMafValue;
-
 TEST(misc, testMafFuelMath) {
-	printf("====================================================================================== testMafFuelMath\r\n");
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 	extern fuel_Map3D_t veMap;
 	veMap.setAll(75);
@@ -28,8 +25,11 @@ TEST(misc, testMafFuelMath) {
 
 	setAfrMap(config->afrTable, 13);
 
-	float fuelMs = getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("fuelMs", 0.75 * 13.3550, fuelMs);
+	auto airmass = getRealMafAirmass(200, 6000 PASS_ENGINE_PARAMETER_SUFFIX);
+
+	// Check results
+	EXPECT_NEAR(0.277777f * 0.75f, airmass.CylinderAirmass, EPS4D);
+	EXPECT_NEAR(70.9884, airmass.EngineLoadPercent, EPS4D);
 }
 
 TEST(misc, testFuelMap) {
@@ -48,9 +48,6 @@ TEST(misc, testFuelMap) {
 		eth.engine.config->fuelRpmBins[i] = i;
 
 	ASSERT_EQ( 1005,  getBaseTableFuel(5, 5)) << "base fuel table";
-
-	printf("*************************************************** initThermistors\r\n");
-
 
 	printf("*** getInjectorLag\r\n");
 //	engine->engineState.vb
@@ -97,7 +94,9 @@ TEST(misc, testFuelMap) {
 	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 0,  injectorLag) << "injectorLag";
 
-	testMafValue = 5;
+
+	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 5 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel 2\r\n");
@@ -109,7 +108,7 @@ TEST(misc, testFuelMap) {
 	EXPECT_EQ( 42,  getRunningFuel(1 PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
 	EXPECT_EQ( 84,  getRunningFuel(2 PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
 
-	testMafValue = 0;
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->cranking.baseFuel = 4;
 

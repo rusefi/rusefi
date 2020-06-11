@@ -7,7 +7,7 @@ import com.rusefi.waves.EngineReport;
 
 /**
  * 7/26/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class SensorStats {
 
@@ -65,7 +65,7 @@ public class SensorStats {
         SensorCentral.getInstance().addListener(input1, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
-                double valueMs = 1.0 * (value - SensorCentral.getInstance().getValue(input2)) / EngineReport.SYS_TICKS_PER_MS;
+                double valueMs = 1.0 * (value - SensorCentral.getInstance().getValue(input2)) / EngineReport.ENGINE_SNIFFER_TICKS_PER_MS;
                 SensorCentral.getInstance().setValue(valueMs, destination);
             }
         });

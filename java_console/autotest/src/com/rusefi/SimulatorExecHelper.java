@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 /**
  * 3/18/14
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class SimulatorExecHelper {
     // see also SimulatorHelper

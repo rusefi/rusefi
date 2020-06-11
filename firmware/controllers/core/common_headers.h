@@ -103,3 +103,9 @@ extern bool isActiveConfigurationVoid;
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 #define isPinOrModeChanged(pin, mode) (isConfigurationChanged(pin) || isConfigurationChanged(mode))
+
+
+#ifndef FIRMWARE_ID
+#define FIRMWARE_ID "source"
+#endif
+

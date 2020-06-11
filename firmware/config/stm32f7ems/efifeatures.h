@@ -50,10 +50,11 @@
 #define BOARD_TLE8888_COUNT 	1
 #endif
 
-
-
 #undef EFI_CAN_SUPPORT
 #define EFI_CAN_SUPPORT TRUE
+
+#undef EFI_AUX_SERIAL
+#define EFI_AUX_SERIAL TRUE
 
 #undef EFI_HD44780_LCD
 #define EFI_HD44780_LCD TRUE
@@ -78,7 +79,6 @@
 
 // todo: start using consoleUartDevice? Not sure
 #undef EFI_CONSOLE_SERIAL_DEVICE
-#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
 
 // todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32F7
 #undef TS_UART_DMA_MODE
@@ -89,6 +89,8 @@
 
 #undef TS_SERIAL_DEVICE
 #define TS_SERIAL_DEVICE (&SD3)
+
+#define AUX_SERIAL_DEVICE (&SD6)
 
 // todo: add DMA-mode for Console?
 #if (TS_UART_DMA_MODE || TS_UART_MODE)

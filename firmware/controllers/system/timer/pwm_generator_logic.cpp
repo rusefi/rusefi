@@ -13,6 +13,10 @@
 #include "pwm_generator_logic.h"
 #include "perf_trace.h"
 
+#if EFI_PROD_CODE
+#include "mpu_util.h"
+#endif
+
 /**
  * We need to limit the number of iterations in order to avoid precision loss while calculating
  * next toggle time
@@ -75,13 +79,21 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		warning(CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty %.2f", name, dutyCycle);
 		dutyCycle = 1;
 	}
-	if (dutyCycle == 0.0f && stateChangeCallback != NULL) {
-		/**
-		 * set the pin low just to be super sure
-		 * this custom handling of zero value comes from CJ125 heater code
-		 * TODO: is this really needed? cover by unit test?
-		 */
+
+#if EFI_PROD_CODE
+	if (hardPwm) {
+		hardPwm->setDuty(dutyCycle);
+		return;
+	}
+#endif
+
+	// Handle zero and full duty cycle.  This will cause the PWM output to behave like a plain digital output.
+	if (dutyCycle == 0.0f && stateChangeCallback) {
+		// Manually fire falling edge
 		stateChangeCallback(0, arg);
+	} else if (dutyCycle == 1.0f && stateChangeCallback) {
+		// Manually fire rising edge
+		stateChangeCallback(1, arg);
 	}
 
 	if (dutyCycle < ZERO_PWM_THRESHOLD) {
@@ -283,7 +295,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTime
 		}
 	}
 	if (state->mode == PM_NORMAL) {
-		state->multiChannelStateSequence.checkSwitchTimes(phaseCount);
+		state->multiChannelStateSequence.checkSwitchTimes(phaseCount, 1);
 	}
 }
 
@@ -356,6 +368,23 @@ void startSimplePwmExt(SimplePwm *state, const char *msg,
 	output->initPin(msg, brainPin);
 
 	startSimplePwm(state, msg, executor, output, frequency, dutyCycle, stateChangeCallback);
+}
+
+void startSimplePwmHard(SimplePwm *state, const char *msg,
+		ExecutorInterface *executor,
+		brain_pin_e brainPin, OutputPin *output, float frequency,
+		float dutyCycle) {
+#if EFI_PROD_CODE && HAL_USE_PWM
+	auto hardPwm = hardware_pwm::tryInitPin(msg, brainPin, frequency, dutyCycle);
+
+	if (hardPwm) {
+		state->hardPwm = hardPwm;
+	} else {
+#endif
+		startSimplePwmExt(state, msg, executor, brainPin, output, frequency, dutyCycle);
+#if EFI_PROD_CODE && HAL_USE_PWM
+	}
+#endif
 }
 
 /**

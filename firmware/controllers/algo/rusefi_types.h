@@ -19,9 +19,9 @@
 typedef unsigned int time_t;
 #endif
 
+#include "rusefi_generated.h"
 #include "rusefi_enums.h"
 #include "firing_order.h"
-#include "rusefi_generated.h"
 
 #define DEFAULT_FUEL_LOAD_COUNT 16
 #define DEFAULT_IGN_LOAD_COUNT 16

@@ -171,6 +171,7 @@ extern LoggingWithStorage sharedLogger;
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
  *
  * this method is NOT currently invoked on ECU start - actual user input has to happen!
+ * See preCalculate which is invoked BOTH on start and configuration change
  */
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ENGINE(globalConfigurationVersion++);
@@ -312,6 +313,7 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->vRefAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
@@ -627,6 +629,44 @@ void setDefaultMultisparkParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->multisparkMaxSparkingAngle = 30;
 }
 
+void setDefaultStftSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	auto& cfg = CONFIG(stft);
+
+	// Default to disabled
+	CONFIG(fuelClosedLoopCorrectionEnabled) = false;
+
+	// Default to proportional mode (for wideband sensors)
+	CONFIG(stftIgnoreErrorMagnitude) = false;
+
+	// 60 second startup delay - some O2 sensors are slow to warm up.
+	cfg.startupDelay = 60;
+
+	// Only correct in [12.0, 17.0]
+	cfg.minAfr = 120;
+	cfg.maxAfr = 170;
+
+	// Above 60 deg C
+	cfg.minClt = 60;
+
+	// 0.5% deadband
+	cfg.deadband = 5;
+
+	// Sensible region defaults
+	cfg.maxIdleRegionRpm = 1000 / RPM_1_BYTE_PACKING_MULT;
+	cfg.maxOverrunLoad = 35;
+	cfg.minPowerLoad = 85;
+
+	// Sensible cell defaults
+	for (size_t i = 0; i < efi::size(cfg.cellCfgs); i++) {
+		// 30 second time constant - nice and slow
+		cfg.cellCfgs[i].timeConstant = 30 * 10;
+
+		/// Allow +-5%
+		cfg.cellCfgs[i].maxAdd = 5;
+		cfg.cellCfgs[i].maxRemove = -5;
+	}
+}
+
 void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Same config for all channels
 	for (size_t i = 0; i < efi::size(CONFIG(gppwm)); i++) {
@@ -716,6 +756,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(mapMinBufferLength) = 1;
 
 	CONFIG(startCrankingDuration) = 7;
+
+	CONFIG(compressionRatio) = 9;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;
@@ -852,13 +894,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setDefaultCrankingSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
-	engineConfiguration->fuelClosedLoopCltThreshold = 70;
-	engineConfiguration->fuelClosedLoopRpmThreshold = 900;
-	engineConfiguration->fuelClosedLoopTpsThreshold = 80;
-	engineConfiguration->fuelClosedLoopAfrLowThreshold = 10.3;
-	engineConfiguration->fuelClosedLoopAfrHighThreshold = 19.8;
-	engineConfiguration->fuelClosedLoopPid.pFactor = -0.1;
+	setDefaultStftSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
 	 * Idle control defaults
@@ -926,8 +962,14 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fanOnTemperature = 95;
 	engineConfiguration->fanOffTemperature = 91;
 
-	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
-	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(5);
+	engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(0);
+	engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(5);
+	engineConfiguration->tps2Min = convertVoltageTo10bitADC(0);
+	engineConfiguration->tps2Max = convertVoltageTo10bitADC(5);
+	engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(0);
+	engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(5);
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
@@ -1155,8 +1197,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
-	case MRE_BOARD_TEST:
-		mreBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case MRE_BOARD_OLD_TEST:
+		mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_BOARD_NEW_TEST:
+		mreBoardNewTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_ENGINE:
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1195,10 +1240,13 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MRE_MIATA_NA6:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MRE_MIATA_NB2_MTB:
-		setMiataNB2_MRE_MTB(PASS_CONFIG_PARAMETER_SIGNATURE);
+	case MRE_MIATA_NB2_MAP:
+		setMiataNB2_MRE_MAP(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MRE_MIATA_NB2:
+	case MRE_MIATA_NB2_MAF:
+		setMiataNB2_MRE_MAF(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_MIATA_NB2_ETB:
 		setMiataNB2_MRE_ETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_1995:
@@ -1351,7 +1399,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 #endif // EFI_INCLUDE_ENGINE_PRESETS
 	default:
-		warning(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
+		firmwareError(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}
 	applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -1372,6 +1420,7 @@ void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
 		engineConfiguration->adcVcc = 3.0f;
 	}
+	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -1384,11 +1433,11 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_ENGINE_CONTROL
 	ENGINE(initializeTriggerWaveform(logger PASS_ENGINE_PARAMETER_SUFFIX));
-#endif
+#endif // EFI_ENGINE_CONTROL
 
 #if EFI_FSIO
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
+#endif // EFI_FSIO
 }
 
 #if EFI_ENGINE_CONTROL

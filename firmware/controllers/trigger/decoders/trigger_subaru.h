@@ -11,4 +11,5 @@
 
 void initialize36_2_2_2(TriggerWaveform *s);
 void initializeSubaru7_6(TriggerWaveform *s);
+void initializeSubaru_SVX(TriggerWaveform *s);
 

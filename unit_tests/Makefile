@@ -99,6 +99,7 @@ PROJECT = rusefi_test
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/development/development.mk
+include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
@@ -141,7 +142,8 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TRIGGER_SRC_CPP) \
 	$(INIT_SRC_CPP) \
-	$(PROJECT_DIR)/../unit_tests/main.cpp
+	$(PROJECT_DIR)/../unit_tests/main.cpp \
+	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
 
 
 # C sources to be compiled in ARM mode regardless of the global setting.
@@ -172,7 +174,7 @@ INCDIR = . \
 	$(UTIL_INC) \
 	$(PROJECT_DIR)/config/engines \
 	$(CONTROLLERS_INC) \
-	$(PROJECT_DIR)/console \
+	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \
 	$(PROJECT_DIR)/ext_algo \
 	$(PROJECT_DIR)/hw_layer \

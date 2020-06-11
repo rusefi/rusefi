@@ -1,14 +1,15 @@
 package com.rusefi.io;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.io.tcp.TcpConnector;
-import jssc.SerialPortList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 /**
@@ -18,9 +19,8 @@ import java.util.concurrent.*;
 public class LinkManager {
     @NotNull
     public static CountDownLatch connect(String port) {
-        start(port);
         final CountDownLatch connected = new CountDownLatch(1);
-        open(new ConnectionStateListener() {
+        startAndConnect(port, new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
                 System.out.println("CONNECTION FAILED, did you specify the right port name?");
@@ -40,6 +40,22 @@ public class LinkManager {
         return connected;
     }
 
+    public static void execute(Runnable runnable) {
+        COMMUNICATION_EXECUTOR.execute(runnable);
+    }
+
+    public static Future submit(Runnable runnable) {
+        return COMMUNICATION_EXECUTOR.submit(runnable);
+    }
+
+    public static String[] getCommPorts() {
+        SerialPort[] ports = SerialPort.getCommPorts();
+        String[] result = new String[ports.length];
+        for (int i = 0; i < ports.length; i++)
+            result[i] = ports[i].getSystemPortName();
+        return result;
+    }
+
     public enum LogLevel {
         INFO,
         DEBUG,
@@ -56,7 +72,7 @@ public class LinkManager {
     public static LinkDecoder ENCODER = new LinkDecoder() {
         @Override
         public String unpack(String packedLine) {
-            return LinkManager.unpack(packedLine);
+            return packedLine;
         }
     };
 
@@ -87,12 +103,23 @@ public class LinkManager {
     private static Thread COMMUNICATION_THREAD;
 
     static {
-        COMMUNICATION_EXECUTOR.submit(new Runnable() {
+/*
+        Future future = submit(new Runnable() {
             @Override
             public void run() {
+            // WAT? this is hanging?!
                 COMMUNICATION_THREAD = Thread.currentThread();
+                System.out.println("Done");
             }
         });
+        try {
+            // let's wait for the above trivial task to finish
+            future.get();
+            System.out.println("Done2");
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IllegalStateException(e);
+        }
+ */
     }
 
     public static void assertCommunicationThread() {
@@ -104,9 +131,10 @@ public class LinkManager {
         @Override
         public void beforeLine(String fullLine) {
             FileLog.MAIN.logLine(fullLine);
-            ConnectionWatchdog.onDataArrived();
+            HeartBeatListeners.onDataArrived();
         }
     });
+
     public static LinkConnector connector;
 
     /**
@@ -114,7 +142,14 @@ public class LinkManager {
      */
     public static boolean isSimulationMode;
 
+    public static void startAndConnect(String port, ConnectionStateListener stateListener) {
+        Objects.requireNonNull(port, "port");
+        start(port);
+        connector.connectAndReadConfiguration(stateListener);
+    }
+
     public static void start(String port) {
+        Objects.requireNonNull(port, "port");
         FileLog.MAIN.logLine("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
             connector = LinkConnector.VOID;
@@ -127,24 +162,12 @@ public class LinkManager {
     }
 
     public static boolean isLogViewerMode(String port) {
+        Objects.requireNonNull(port, "port");
         return port.equals(LOG_VIEWER);
     }
 
     public static boolean isLogViewer() {
         return connector == LinkConnector.VOID;
-    }
-
-    /**
-     * todo: should this be merged into {@link #start(String)} ?
-     */
-    public static void open(ConnectionStateListener listener) {
-        if (connector == null)
-            throw new NullPointerException("connector");
-        connector.connect(listener);
-    }
-
-    public static void open() {
-        open(ConnectionStateListener.VOID);
     }
 
     public static void send(String command, boolean fireEvent) throws InterruptedException {
@@ -158,14 +181,6 @@ public class LinkManager {
         connector.restart();
     }
 
-    public static String unpack(String packet) {
-        return connector.unpack(packet);
-    }
-
-    public static boolean hasError() {
-        return connector.hasError();
-    }
-
     public static String unpackConfirmation(String message) {
         if (message.startsWith(CommandQueue.CONFIRMATION_PREFIX))
             return message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
@@ -176,7 +191,7 @@ public class LinkManager {
      * @return null if no port located
      */
     public static String getDefaultPort() {
-        String[] ports = SerialPortList.getPortNames();
+        String[] ports = getCommPorts();
         if (ports.length == 0) {
             System.out.println("Port not specified and no ports found");
             return null;

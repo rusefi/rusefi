@@ -7,11 +7,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Date: 12/25/12
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  *
  * @see #registerStringValueAction
  */
@@ -29,10 +28,10 @@ public class EngineState {
     /**
      * text protocol key and callback associated with this key
      */
-    private static class StringActionPair extends Pair<String, ValueCallback<String>> {
+    public static class StringActionPair extends Pair<String, ValueCallback<String>> {
         public final String prefix;
 
-        StringActionPair(String key, ValueCallback<String> second) {
+        public StringActionPair(String key, ValueCallback<String> second) {
             super(key, second);
             prefix = key.toLowerCase() + SEPARATOR;
         }
@@ -43,8 +42,6 @@ public class EngineState {
         }
     }
 
-    public final List<EngineTimeListener> timeListeners = new CopyOnWriteArrayList<>();
-
     private final ResponseBuffer buffer;
     private final List<StringActionPair> actions = new ArrayList<>();
     private final Set<String> keys = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
@@ -53,6 +50,7 @@ public class EngineState {
         buffer = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
             public void onResponse(String response) {
                 if (response != null) {
+                    // let's remove timestamp if we get content from a log file not controller
                     int i = response.indexOf(FileLog.END_OF_TIMESTAND_TAG);
                     if (i != -1)
                         response = response.substring(i + FileLog.END_OF_TIMESTAND_TAG.length());
@@ -66,26 +64,7 @@ public class EngineState {
         }
         );
 
-        registerStringValueAction("msg", new ValueCallback<String>() {
-            @Override
-            public void onUpdate(String value) {
-                MessagesCentral.getInstance().postMessage(ENGINE_STATE_CLASS, value);
-            }
-        });
-
-        registerStringValueAction("time", new ValueCallback<String>() {
-            public void onUpdate(String value) {
-                double time;
-                try {
-                    time = Double.parseDouble(value);
-                } catch (NumberFormatException e) {
-                    return;
-                }
-                listener.onTime(time);
-                for (EngineTimeListener l : timeListeners)
-                    l.onTime(time);
-            }
-        });
+        registerStringValueAction(Fields.PROTOCOL_MSG, value -> MessagesCentral.getInstance().postMessage(ENGINE_STATE_CLASS, value));
     }
 
     /**
@@ -172,7 +151,16 @@ public class EngineState {
         return response;
     }
 
-    private String handleStringActionPair(String response, StringActionPair pair, EngineStateListener listener) {
+    public static String skipToken(String string) {
+        int keyEnd = string.indexOf(SEPARATOR);
+        if (keyEnd == -1) {
+            // discarding invalid line
+            return "";
+        }
+        return string.substring(keyEnd + SEPARATOR.length());
+    }
+
+    public static String handleStringActionPair(String response, StringActionPair pair, EngineStateListener listener) {
         if (startWithIgnoreCase(response, pair.prefix)) {
             String key = pair.first;
             int beginIndex = key.length() + 1;
@@ -182,7 +170,8 @@ public class EngineState {
 
             String strValue = response.substring(beginIndex, endIndex);
             pair.second.onUpdate(strValue);
-            listener.onKeyValue(key, strValue);
+            if (listener != null)
+                listener.onKeyValue(key, strValue);
 
             response = response.substring(endIndex);
             if (!response.isEmpty())
@@ -261,7 +250,7 @@ public class EngineState {
         void onUpdate(V value);
     }
 
-    public interface EngineStateListener extends EngineTimeListener {
+    public interface EngineStateListener {
         void beforeLine(String fullLine);
 
         void onKeyValue(String key, String value);
@@ -278,9 +267,6 @@ public class EngineState {
         }
 
         public void afterLine(String fullLine) {
-        }
-
-        public void onTime(double time) {
         }
     }
 }

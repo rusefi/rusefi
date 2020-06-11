@@ -16,7 +16,7 @@ public class MdGenerator {
         //FOLDER = "images/";
         FOLDER = "overview/TS_generated/";
 
-        ContentModel contentModel = XmlUtil.readModel();
+        ContentModel contentModel = XmlUtil.readModel(ContentModel.class, ScreenGenerator.FILE_NAME);
 
         generateTopLevel(contentModel);
 

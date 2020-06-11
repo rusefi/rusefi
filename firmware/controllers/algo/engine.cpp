@@ -27,6 +27,10 @@
 #include "sensor.h"
 #include "gppwm.h"
 
+#if EFI_TUNER_STUDIO
+#include "tunerstudio_outputs.h"
+#endif /* EFI_TUNER_STUDIO */
+
 #if EFI_PROD_CODE
 #include "bench_test.h"
 #else
@@ -126,8 +130,6 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
-static efitick_t tle8888CrankingResetTime = 0;
-
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 	
@@ -148,6 +150,8 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	standardAirCharge = getStandardAirCharge(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if (BOARD_TLE8888_COUNT > 0)
+	static efitick_t tle8888CrankingResetTime = 0;
+
 	if (CONFIG(useTLE8888_cranking_hack) && ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		efitick_t nowNt = getTimeNowNt();
 		if (nowNt - tle8888CrankingResetTime > MS2NT(300)) {
@@ -238,11 +242,22 @@ void Engine::reset() {
  * so that we can prepare some helper structures
  */
 void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+// todo: start using this 'adcToVoltageInputDividerCoefficient' micro-optimization or... throw it away?
 #if HAL_USE_ADC
 	adcToVoltageInputDividerCoefficient = adcToVolts(1) * engineConfiguration->analogInputDividerCoefficient;
 #else
 	adcToVoltageInputDividerCoefficient = engineConfigurationPtr->analogInputDividerCoefficient;
 #endif
+
+#if EFI_TUNER_STUDIO
+	// we take 2 bytes of crc32, no idea if it's right to call it crc16 or not
+	// we have a hack here - we rely on the fact that engineMake is the first of three relevant fields
+	tsOutputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
+
+	// we need and can empty warning message for CRC purposes
+	memset(engine->config->warning_message, 0, sizeof(error_message_t));
+	tsOutputChannels.tuneCrc16 = crc32(engine->config, sizeof(persistent_config_s));
+#endif /* EFI_TUNER_STUDIO */
 }
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -468,6 +483,13 @@ operation_mode_e Engine::getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * For instance for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
 	 */
 	return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : engineConfiguration->ambiguousOperationMode;
+}
+
+int Engine::getRpmHardLimit(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engineConfiguration->useFSIO6ForRevLimiter) {
+		return fsioState.fsioRpmHardLimit;
+	}
+	return CONFIG(rpmHardLimit);
 }
 
 /**

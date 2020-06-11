@@ -12,7 +12,7 @@ import java.util.TreeMap;
  * Y>Z mapping for the same X
  * <p/>
  * Date: 3/24/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class YAxisData {
     private final TreeMap<Double, ValuesHolder> values = new TreeMap<Double, ValuesHolder>();

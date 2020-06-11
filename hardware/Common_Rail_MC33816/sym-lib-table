@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name mc33816)(type Legacy)(uri ${KIPRJMOD}/../rusefi_lib/mc33816.lib)(options "")(descr ""))
+)

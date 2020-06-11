@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 12:32:31 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Jun 09 21:51:00 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -646,7 +646,7 @@ struct engine_configuration_s {
 	injector_s injector;
 	/**
 	offset 76 bit 0 */
-	bool unused76b0 : 1;
+	bool isForcedInduction : 1;
 	/**
 	offset 76 bit 1 */
 	bool activateAuxPid1 : 1;
@@ -762,12 +762,14 @@ struct engine_configuration_s {
 	 */
 	int16_t tpsMax;
 	/**
-	 * TPS error detection, what TPS % value is unrealistically low
+	 * TPS error detection: what throttle % is unrealistically low?
+	 * Also used for accelerator pedal error detection if so equiped.
 	 * offset 84
 	 */
 	int16_t tpsErrorDetectionTooLow;
 	/**
-	 * TPS error detection, what TPS % value is unrealistically high
+	 * TPS error detection: what throttle % is unrealistically high?
+	 * Also used for accelerator pedal error detection if so equiped.
 	 * offset 86
 	 */
 	int16_t tpsErrorDetectionTooHigh;
@@ -1271,7 +1273,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 696
 	 */
-	float fuelClosedLoopAfrLowThreshold;
+	uint32_t unused696;
 	/**
 	 * offset 700
 	 */
@@ -1337,9 +1339,10 @@ struct engine_configuration_s {
 	 */
 	uint32_t tunerStudioSerialSpeed;
 	/**
+	 * Just for reference really, not taken into account by any logic at this point
 	 * offset 732
 	 */
-	int anUnused4Bytes;
+	float compressionRatio;
 	/**
 	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
 	 * See also directSelfStimulation which is different.
@@ -1403,11 +1406,12 @@ struct engine_configuration_s {
 	offset 744 bit 13 */
 	bool verboseTLE8888 : 1;
 	/**
+	 * CAN broadcast using custom rusEFI protocol
 	 * enable can_broadcast/disable can_broadcast
 	offset 744 bit 14 */
 	bool enableVerboseCanTx : 1;
 	/**
-	 *  +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
+	 * This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	offset 744 bit 15 */
 	bool onOffAlternatorLogic : 1;
 	/**
@@ -1560,7 +1564,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 820
 	 */
-	float unusedAntilagTimeout;
+	uint16_t tps1SecondaryMin;
+	/**
+	 * offset 822
+	 */
+	uint16_t tps1SecondaryMax;
 	/**
 	 * offset 824
 	 */
@@ -1736,8 +1744,9 @@ struct engine_configuration_s {
 	offset 976 bit 9 */
 	bool showHumanReadableWarning : 1;
 	/**
+	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.;
 	offset 976 bit 10 */
-	bool unusedBit_251_10 : 1;
+	bool stftIgnoreErrorMagnitude : 1;
 	/**
 	offset 976 bit 11 */
 	bool unusedBit_251_11 : 1;
@@ -1797,10 +1806,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_282_30 : 1;
+	bool unusedBit_283_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_282_31 : 1;
+	bool unusedBit_283_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -1892,20 +1901,43 @@ struct engine_configuration_s {
 	 */
 	etb_io etbIo2[ETB_COUNT];
 	/**
+	 * For example, BMW, GM or Chevrolet
+	 * REQUIRED for rusEFI Online
 	 * offset 1096
 	 */
 	vehicle_info_t engineMake;
 	/**
+	 * For example, LS1 or NB2
+	 * REQUIRED for rusEFI Online
 	 * offset 1128
 	 */
 	vehicle_info_t engineCode;
 	/**
+	 * For example, Hunchback or Orange Miata
+	 * Vehicle name has to be unique between your vehicles.
+	 * REQUIRED for rusEFI Online
 	 * offset 1160
 	 */
-	int unusedAtOldBoardConfigurationEnd[76];
+	vehicle_info_t vehicleName;
+	/**
+	 * offset 1192
+	 */
+	output_pin_e tcu_solenoid[TCU_SOLENOID_COUNT];
+	/**
+	 * offset 1200
+	 */
+	int unusedAtOldBoardConfigurationEnd[65];
+	/**
+	 * offset 1460
+	 */
+	uint16_t tps2SecondaryMin;
+	/**
+	 * offset 1462
+	 */
+	uint16_t tps2SecondaryMax;
 	/**
 	offset 1464 bit 0 */
-	bool vvtDisplayInverted : 1;
+	bool unusedHereWeHave : 1;
 	/**
 	 * Enables lambda sensor closed loop feedback for fuelling.
 	offset 1464 bit 1 */
@@ -2338,12 +2370,15 @@ struct engine_configuration_s {
 	 */
 	float wwaeBeta;
 	/**
-	 * blue LED on discovery by default
+	 * blue LED on many rusEFI boards.
+	 * Blue Communication LED which is expected to blink at 50% duty cycle during normal board operation.
+	 * If USB communication cable is connected Blue LED starts to blink faster.
 	 * offset 1812
 	 */
 	brain_pin_e communicationLedPin;
 	/**
-	 * green LED on discovery by default
+	 * Green LED on many rusEFI boards.
+	 * Off if engine is stopped, blinks if engine is cranking, solid if engine is running.
 	 * offset 1813
 	 */
 	brain_pin_e runningLedPin;
@@ -2361,15 +2396,13 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e auxValves[AUX_DIGITAL_VALVE_COUNT];
 	/**
-	 *  todo: finish pin migration from hard-coded to configurable?
 	 * offset 1818
 	 */
-	brain_pin_e unusedConsoleSerialTxPin;
+	switch_input_pin_e tcuUpshiftButtonPin;
 	/**
-	 * todo: finish pin migration from hard-coded to configurable?
 	 * offset 1819
 	 */
-	brain_pin_e unusedConsoleSerialRxPin;
+	switch_input_pin_e tcuDownshiftButtonPin;
 	/**
 	 * Knock sensor output knock detection threshold depending on current RPM
 	 * offset 1820
@@ -2523,7 +2556,16 @@ struct engine_configuration_s {
 	/**
 	 * offset 2100
 	 */
-	uint32_t unused_former_warmup_target_afr[8];
+	float throttlePedalSecondaryUpVoltage;
+	/**
+	 * Pedal in the floor
+	 * offset 2104
+	 */
+	float throttlePedalSecondaryWOTVoltage;
+	/**
+	 * offset 2108
+	 */
+	uint32_t unused_former_warmup_target_afr[6];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -2690,15 +2732,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2508
 	 */
-	int16_t fuelClosedLoopCltThreshold;
-	/**
-	 * offset 2510
-	 */
-	int16_t fuelClosedLoopTpsThreshold;
-	/**
-	 * offset 2512
-	 */
-	int16_t fuelClosedLoopRpmThreshold;
+	uint8_t unused2508[6];
 	/**
 	 * offset 2514
 	 */
@@ -2706,11 +2740,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2516
 	 */
-	pid_s fuelClosedLoopPid;
-	/**
-	 * offset 2536
-	 */
-	float fuelClosedLoopAfrHighThreshold;
+	uint8_t unused2516[24];
 	/**
 	 * per-cylinder timing correction
 	 * offset 2540
@@ -3131,11 +3161,52 @@ struct engine_configuration_s {
 	/**
 	 * offset 4144
 	 */
-	gppwm_channel gppwm[4];
+	gppwm_channel gppwm[GPPWM_CHANNELS];
 	/**
 	 * offset 4496
 	 */
-	int mainUnusedEnd[376];
+	uint16_t mc33_i_boost;
+	/**
+	 * offset 4498
+	 */
+	uint16_t mc33_i_peak;
+	/**
+	 * offset 4500
+	 */
+	uint16_t mc33_i_hold;
+	/**
+	 * offset 4502
+	 */
+	uint16_t mc33_t_max_boost;
+	/**
+	 * offset 4504
+	 */
+	uint16_t mc33_t_peak_off;
+	/**
+	 * offset 4506
+	 */
+	uint16_t mc33_t_peak_tot;
+	/**
+	 * offset 4508
+	 */
+	uint16_t mc33_t_bypass;
+	/**
+	 * offset 4510
+	 */
+	uint16_t mc33_t_hold_off;
+	/**
+	 * offset 4512
+	 */
+	uint16_t mc33_t_hold_tot;
+	/**
+	 * need 4 byte alignment
+	 * offset 4514
+	 */
+	uint8_t alignmentFill_at_4514[2];
+	/**
+	 * offset 4516
+	 */
+	int mainUnusedEnd[371];
 	/** total size 6000*/
 };
 
@@ -3439,4 +3510,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Wed May 06 12:32:31 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Jun 09 21:51:00 EDT 2020

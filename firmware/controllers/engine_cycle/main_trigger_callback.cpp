@@ -41,9 +41,8 @@
 #include "cdm_ion_sense.h"
 #include "engine_controller.h"
 #include "efi_gpio.h"
-#if EFI_PROD_CODE
+#include "tooth_logger.h"
 #include "os_util.h"
-#endif /* EFI_PROD_CODE */
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "engine.h"
@@ -59,9 +58,6 @@ static const char *prevOutputName = nullptr;
 static InjectionEvent primeInjEvent;
 
 static Logging *logger;
-#if ! EFI_UNIT_TEST
-static Pid fuelPid(&persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid);
-#endif
 
 // todo: figure out if this even helps?
 //#if defined __GNUC__
@@ -120,6 +116,12 @@ static inline void turnInjectionPinHigh(InjectorOutputPin *output) {
 }
 
 void turnInjectionPinHigh(InjectionEvent *event) {
+	efitick_t nowNt = getTimeNowNt();
+
+#if EFI_TOOTH_LOGGER
+	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
+
 	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
 
@@ -154,6 +156,12 @@ static inline void turnInjectionPinLow(InjectorOutputPin *output) {
 }
 
 void turnInjectionPinLow(InjectionEvent *event) {
+	efitick_t nowNt = getTimeNowNt();
+
+#if EFI_TOOTH_LOGGER
+	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
+
 	event->isScheduled = false;
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
@@ -168,7 +176,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
+void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 		int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	/**
@@ -273,30 +281,6 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 #endif /* EFI_DEFAILED_LOGGING */
 }
 
-static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if ! EFI_UNIT_TEST
-	if (GET_RPM_VALUE < CONFIG(fuelClosedLoopRpmThreshold) ||
-			Sensor::get(SensorType::Clt).value_or(0) < CONFIG(fuelClosedLoopCltThreshold) ||
-			Sensor::get(SensorType::Tps1).value_or(100) > CONFIG(fuelClosedLoopTpsThreshold) ||
-			ENGINE(sensors.currentAfr) < CONFIG(fuelClosedLoopAfrLowThreshold) ||
-			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
-		engine->engineState.running.pidCorrection = 0;
-		fuelPid.reset();
-		return;
-	}
-
-	engine->engineState.running.pidCorrection = fuelPid.getOutput(ENGINE(engineState.targetAFR), ENGINE(sensors.currentAfr), NOT_TIME_BASED_PID);
-	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
-#if EFI_TUNER_STUDIO
-		tsOutputChannels.debugFloatField1 = engine->engineState.running.pidCorrection;
-		fuelPid.postState(&tsOutputChannels);
-#endif /* EFI_TUNER_STUDIO */
-	}
-
-#endif
-}
-
-
 static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::HandleFuel);
 	
@@ -310,6 +294,11 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 		return;
 	}
 
+	// If duty cycle is high, impose a fuel cut rev limiter.
+	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
+	if (getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX) > 96.0f) {
+		return;
+	}
 
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
@@ -402,19 +391,14 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
-	bool limitedSpark = rpm > CONFIG(rpmHardLimit);
-	bool limitedFuel = rpm > CONFIG(rpmHardLimit);
+	bool limitedSpark = rpm > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool limitedFuel = rpm > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (CONFIG(boostCutPressure) !=0) {
+	if (CONFIG(boostCutPressure) != 0) {
 		if (getMap(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(boostCutPressure)) {
 			limitedSpark = true;
 			limitedFuel = true;
 		}
-	}
-
-	if (limitedSpark || limitedFuel) {
-		// todo: this is not really a warning
-		warning(CUSTOM_SKIPPING_STROKE, "skipping stroke due to rpm=%d", rpm);
 	}
 
 	if (trgEventIndex == 0) {
@@ -430,10 +414,6 @@ static void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEvent
 
 			// we need this to apply new 'triggerIndexByAngle' values
 			engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-		}
-
-		if (CONFIG(fuelClosedLoopCorrectionEnabled)) {
-			fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 		}
 	}
 

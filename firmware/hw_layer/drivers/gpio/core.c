@@ -227,8 +227,9 @@ int gpiochips_init(void)
  * return -1 if driver does not implemet setPadMode ops
  * else return value from gpiochip driver.
  */
-
-int gpiochips_setPadMode(brain_pin_e pin, int mode)
+/* this fuction uses iomode_t that is related to STM32 (or other MCU)
+ * output modes. Use some common enums? */
+int gpiochips_setPadMode(brain_pin_e pin, iomode_t mode)
 {
 	struct gpiochip *chip = gpiochip_find(pin);
 

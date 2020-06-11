@@ -178,6 +178,10 @@
 #define EFI_CAN_SUPPORT TRUE
 #endif
 
+#ifndef EFI_AUX_SERIAL
+#define EFI_AUX_SERIAL TRUE
+#endif
+
 #ifndef EFI_HD44780_LCD
 #define EFI_HD44780_LCD TRUE
 #endif
@@ -343,6 +347,8 @@
 //#define TS_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_DEVICE (&SD3)
 
+#define AUX_SERIAL_DEVICE (&SD6)
+
 // todo: add DMA-mode for Console?
 #if (TS_UART_DMA_MODE || TS_UART_MODE)
 #undef EFI_CONSOLE_SERIAL_DEVICE
@@ -362,8 +368,8 @@
 // todo: this should be detected automatically based on pin selection
 #define TS_SERIAL_AF 7
 
-#ifndef LED_ERROR_BRAIN_PIN
-#define LED_ERROR_BRAIN_PIN GPIOD_14
+#ifndef LED_CRITICAL_ERROR_BRAIN_PIN
+#define LED_CRITICAL_ERROR_BRAIN_PIN GPIOD_14
 #endif
 
 // USART1 -> check defined STM32_SERIAL_USE_USART1

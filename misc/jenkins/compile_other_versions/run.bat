@@ -10,6 +10,21 @@ if not exist java_console_binary/rusefi_console.jar exit -1
 call misc\jenkins\build_simulator.bat
 if not exist simulator/build/rusefi_simulator.exe exit -1
 
+call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4 rusefi_microrusefi.ini
+IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
+IF NOT ERRORLEVEL 0 EXIT /B 1
+pwd
+
+rem call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4-slave rusefi_microrusefi.ini
+rem IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
+rem IF NOT ERRORLEVEL 0 EXIT /B 1
+rem pwd
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4-hardware-QC-special-build rusefi_microrusefi.ini
+IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
+IF NOT ERRORLEVEL 0 EXIT /B 1
+pwd
+
 call misc\jenkins\compile_other_versions\compile_and_upload.bat kinetis kinetis
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
@@ -33,30 +48,15 @@ IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4 rusefi_microrusefi.ini
-IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
-IF NOT ERRORLEVEL 0 EXIT /B 1
-pwd
-
-rem call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4-slave rusefi_microrusefi.ini
-rem IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
-rem IF NOT ERRORLEVEL 0 EXIT /B 1
-rem pwd
-
-call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f4-test rusefi_microrusefi.ini
-IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
-IF NOT ERRORLEVEL 0 EXIT /B 1
-pwd
-
 call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f7 rusefi_microrusefi.ini %f7_console_setting%
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f7-test rusefi_microrusefi.ini %f7_console_setting%
-IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
-IF NOT ERRORLEVEL 0 EXIT /B 1
-pwd
+rem call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-f7-test rusefi_microrusefi.ini %f7_console_setting%
+rem IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
+rem IF NOT ERRORLEVEL 0 EXIT /B 1
+rem pwd
 
 call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f746 stm32f746_nucleo no %f7_console_setting%
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat

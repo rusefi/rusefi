@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Physical bi-directional controller communication level
  * <p>
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * <p>
  * 5/11/2015.
  */

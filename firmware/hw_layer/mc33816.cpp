@@ -25,6 +25,7 @@
 
 EXTERN_CONFIG;
 
+
 static OutputPin chipSelect;
 static OutputPin resetB;
 static OutputPin driven;
@@ -33,6 +34,7 @@ static bool flag0before = false;
 static bool flag0after = false;
 
 static unsigned short mcChipId;
+static unsigned short mcDriverStatus;
 static Logging* logger;
 
 static SPIConfig spiCfg = { .circular = false,
@@ -54,7 +56,7 @@ static bool validateChipId() {
 
 static void showStats() {
 	// x9D is product code or something, and 43 is the revision?
-	scheduleMsg(logger, "MC %x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
+	scheduleMsg(logger, "MC 0x%x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
 
     if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
     	scheduleMsg(logger, "flag0 before %d after %d", flag0before, flag0after);
@@ -65,6 +67,7 @@ static void showStats() {
     	scheduleMsg(logger, "No flag0 pin selected");
     }
     scheduleMsg(logger, "MC voltage %d", CONFIG(mc33_hvolt));
+    scheduleMsg(logger, "MC driver status 0x%x", mcDriverStatus);
 }
 
 static void mcRestart();
@@ -147,6 +150,36 @@ void mcUpdateDram(MC33816Mem addr, unsigned short data) {
     spiUnselect(driver);
 }
 
+static short dacEquation(unsigned short current) {
+	/*
+	Current, given in mA->A
+	I = (DAC_VALUE * V_DAC_LSB - V_DA_BIAS)/(G_DA_DIFF * R_SENSEx)
+	DAC_VALUE = ((I*G_DA_DIFF * R_SENSEx) + V_DA_BIAS) /  V_DAC_LSB
+	V_DAC_LSB is the DAC resolution = 9.77mv
+	V_DA_BIAS = 250mV
+	G_DA_DIFF = Gain: 5.79, 8.68, [12.53], 19.25
+	R_SENSE = 10mOhm soldered on board
+	*/
+	return (short)(((current/1000.0f * 12.53f * 10) + 250.0f) / 9.77f);
+}
+
+static void setTimings() {
+
+	// Convert mA to DAC values
+	mcUpdateDram(MC33816Mem::Iboost, dacEquation(CONFIG(mc33_i_boost)));
+	mcUpdateDram(MC33816Mem::Ipeak, dacEquation(CONFIG(mc33_i_peak)));
+	mcUpdateDram(MC33816Mem::Ihold, dacEquation(CONFIG(mc33_i_hold)));
+
+	// uint16_t mc33_t_max_boost; // not yet implemented in microcode
+
+	// in micro seconds to clock cycles
+	mcUpdateDram(MC33816Mem::Tpeak_off, (MC_CK * CONFIG(mc33_t_peak_off)));
+	mcUpdateDram(MC33816Mem::Tpeak_tot, (MC_CK * CONFIG(mc33_t_peak_tot)));
+	mcUpdateDram(MC33816Mem::Tbypass, (MC_CK * CONFIG(mc33_t_bypass)));
+	mcUpdateDram(MC33816Mem::Thold_off, (MC_CK * CONFIG(mc33_t_hold_off)));
+	mcUpdateDram(MC33816Mem::Thold_tot, (MC_CK * CONFIG(mc33_t_hold_tot)));
+}
+
 void setBoostVoltage(float volts)
 {
 	// Sanity checks, Datasheet says not too high, nor too low
@@ -187,6 +220,43 @@ static bool check_flash() {
 
     spiUnselect(driver);
 	return true;
+}
+
+static void mcClearDriverStatus(){
+	// Note: There is a config at 0x1CE & 1 that can reset this status config register on read
+	// otherwise the reload/recheck occurs with this write
+	// resetting it is necessary to clear default reset behavoir, as well as if an issue has been resolved
+	setup_spi(); // ensure on common page?
+	spiSelect(driver);
+	spi_writew((0x0000 | 0x1D2 << 5) + 1); // write, location, one word
+	spi_writew(0x0000); // anything to clear
+	spiUnselect(driver);
+}
+
+static unsigned short readDriverStatus(){
+	unsigned short driverStatus;
+	setup_spi(); // ensure on common page?
+	spiSelect(driver);
+    	spi_writew((0x8000 | 0x1D2 << 5) + 1);
+    	driverStatus = recv_16bit_spi();
+	spiUnselect(driver);
+	return driverStatus;
+}
+
+static bool checkUndervoltVccP(unsigned short driverStatus){
+	return (driverStatus  & (1<<0));
+}
+
+static bool checkUndervoltV5(unsigned short driverStatus){
+	return (driverStatus  & (1<<1));
+}
+
+static bool checkOverTemp(unsigned short driverStatus){
+	return (driverStatus  & (1<<3));
+}
+
+static bool checkDrivenEnabled(unsigned short driverStatus){
+	return (driverStatus  & (1<<4));
 }
 
 static void enable_flash() {
@@ -399,6 +469,11 @@ void initMc33816(Logging *sharedLogger) {
 	mcRestart();
 }
 
+static void mcShutdown() {
+	driven.setValue(0); // ensure HV is off
+	resetB.setValue(0); // turn off the chip
+}
+
 static void mcRestart() {
 	flag0before = false;
 	flag0after = false;
@@ -422,10 +497,19 @@ static void mcRestart() {
 
 
 	setup_spi();
-	mcChipId = readId();
 
+	mcClearDriverStatus(); // Initial clear necessary
+    mcDriverStatus = readDriverStatus();
+    if(checkUndervoltV5(mcDriverStatus)){
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 5V Under-Voltage!");
+    	mcShutdown();
+    	return;
+    }
+
+	mcChipId = readId();
 	if (!validateChipId()) {
 		firmwareError(OBD_PCM_Processor_Fault, "No comm with MC33");
+		mcShutdown();
 		return;
 	}
 
@@ -440,7 +524,7 @@ static void mcRestart() {
    		flag0after = efiReadPin(CONFIG(mc33816_flag0));
    		if (flag0before || !flag0after) {
    			firmwareError(OBD_PCM_Processor_Fault, "MC33 flag0 transition no buena");
-
+   			mcShutdown();
    			return;
    		}
     }
@@ -449,15 +533,42 @@ static void mcRestart() {
     download_register(REG_CH2);     // download channel 2 register configurations
     download_register(REG_IO);      // download IO register configurations
     download_register(REG_DIAG);    // download diag register configuration
+
+    setTimings();
+
     // Finished downloading, let's run the code
     enable_flash();
     if(!check_flash())
     {
     	firmwareError(OBD_PCM_Processor_Fault, "MC33 no flash");
+    	mcShutdown();
     	return;
     }
+
+    mcDriverStatus = readDriverStatus();
+    if(checkUndervoltVccP(mcDriverStatus)){
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 VccP (7V) Under-Voltage!");
+    	mcShutdown();
+    	return;
+    }
+
+    // Drive High Voltage if possible
     setBoostVoltage(CONFIG(mc33_hvolt));
     driven.setValue(1); // driven = HV
+    chThdSleepMilliseconds(10); // Give it a moment
+    mcDriverStatus = readDriverStatus();
+    if(!checkDrivenEnabled(mcDriverStatus)){
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 Driven did not stick!");
+    	mcShutdown();
+    	return;
+    }
+
+    mcDriverStatus = readDriverStatus();
+    if(checkUndervoltVccP(mcDriverStatus)){
+    	firmwareError(OBD_PCM_Processor_Fault, "MC33 VccP Under-Voltage After Driven"); // Likely DC-DC LS7 is dead!
+    	mcShutdown();
+    	return;
+    }
 }
 
 #endif /* EFI_MC33816 */

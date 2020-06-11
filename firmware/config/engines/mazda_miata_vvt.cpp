@@ -3,7 +3,7 @@
  *
  * Miata NB2, also known as MX-5 Mk2.5
  *
- * MAZDA_MIATA_2003
+ * Frankenso MAZDA_MIATA_2003
  * set engine_type 47
  *
  * coil1/4          (p1 +5 VP)    GPIOE_14
@@ -64,11 +64,11 @@ static const float injectorLagCorrection[VBAT_INJECTOR_CURVE_SIZE] = {
         1.5 ,        1.35,        1.25 ,        1.20
 };
 
-static const float ve18fsioRpmBins[FSIO_TABLE_8] =
+static const float vvt18fsioRpmBins[FSIO_TABLE_8] =
 {700.0, 1000.0, 2000.0, 3000.0, 3500.0, 4500.0, 5500.0, 6500.0}
 ;
 
-static const float ve18fsioLoadBins[FSIO_TABLE_8] =
+static const float vvt18fsioLoadBins[FSIO_TABLE_8] =
 {30.0, 40.0, 50.0, 60.0, 70.0, 75.0, 82.0, 85.0}
 ;
 
@@ -168,6 +168,8 @@ static const ignition_table_t mapBased18vvtTimingTable = {
 };
 #endif
 
+
+/*
 #define MAF_TRANSFER_SIZE 8
 
 static const float mafTransferVolts[MAF_TRANSFER_SIZE] = {1.365,
@@ -180,6 +182,9 @@ static const float mafTransferVolts[MAF_TRANSFER_SIZE] = {1.365,
 		4.011,
 };
 
+
+according to internet this should be the Miata NB transfer function but in reality it seems off
+this could be related to us not using proper signal conditioning hardware
 static const float mafTransferKgH[MAF_TRANSFER_SIZE] = {
 		0,
 		3.9456,
@@ -190,6 +195,39 @@ static const float mafTransferKgH[MAF_TRANSFER_SIZE] = {
 		329.8104,
 		594.2772
 };
+
+
+*/
+
+#define MAF_TRANSFER_SIZE 10
+
+// this transfer function somehow works with 1K pull-down
+static const float mafTransferVolts[MAF_TRANSFER_SIZE] = {
+		0.50,
+		0.87,
+		1.07,
+		1.53,
+		1.85,
+		2.11,
+		2.46,
+		3.00,
+		3.51,
+		4.50
+};
+
+static const float mafTransferKgH[MAF_TRANSFER_SIZE] = {
+		0.00,
+		0.00,
+		1.00,
+		3.00,
+		8.00,
+		19.00,
+		45.00,
+		100.00,
+		175.00,
+		350.00
+};
+
 
 static void setMAFTransferFunction(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	memcpy(config->mafDecoding, mafTransferKgH, sizeof(mafTransferKgH));
@@ -216,13 +254,38 @@ void setMazdaMiataNbInjectorLag(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	memcpy(engineConfiguration->injector.battLagCorrBins, injectorLagBins, sizeof(injectorLagBins));
 }
 
+void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	memcpy(config->fsioTable1RpmBins, vvt18fsioRpmBins, sizeof(vvt18fsioRpmBins));
+	memcpy(config->fsioTable1LoadBins, vvt18fsioLoadBins, sizeof(vvt18fsioLoadBins));
+	// todo: there should be a better way?
+	for (int loadIndex = 0; loadIndex < FSIO_TABLE_8; loadIndex++) {
+		for (int rpmIndex = 0; rpmIndex < FSIO_TABLE_8; rpmIndex++) {
+			config->fsioTable1[loadIndex][rpmIndex] = fsio_table_vvt_target[loadIndex][rpmIndex];
+		}
+	}
+
+	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
+
+	// VVT closed loop
+	engineConfiguration->auxPid[0].pFactor = 2;
+	engineConfiguration->auxPid[0].iFactor = 0.005;
+	engineConfiguration->auxPid[0].dFactor = 0;
+	engineConfiguration->auxPid[0].offset = 33;
+	engineConfiguration->auxPid[0].minValue = 24;
+	engineConfiguration->auxPid[0].maxValue = 44;
+
+	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
+}
+
 static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
-	engineConfiguration->specs.displacement = 1.8;
+	engineConfiguration->specs.displacement = 1.839;
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
+	strcpy(CONFIG(engineCode), "NB2");
 
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
@@ -230,8 +293,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 	setMAFTransferFunction(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
 
 	// set idle_position 35
 	engineConfiguration->manIdlePosition = 35;
@@ -268,14 +329,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.dFactor = 0;
 	engineConfiguration->alternatorControl.periodMs = 10;
 
-	// VVT closed loop
-	engineConfiguration->auxPid[0].pFactor = 2;
-	engineConfiguration->auxPid[0].iFactor = 0.005;
-	engineConfiguration->auxPid[0].dFactor = 0;
-	engineConfiguration->auxPid[0].offset = 33;
-	engineConfiguration->auxPid[0].minValue = 24;
-	engineConfiguration->auxPid[0].maxValue = 44;
-	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	// set vvt_mode 3
@@ -292,14 +345,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyTimingTable(mapBased18vvtTimingTable, config->ignitionTable);
 #endif
 
-	memcpy(config->fsioTable1RpmBins, ve18fsioRpmBins, sizeof(ve18fsioRpmBins));
-	memcpy(config->fsioTable1LoadBins, ve18fsioLoadBins, sizeof(ve18fsioLoadBins));
-	// todo: there should be a better way?
-	for (int loadIndex = 0; loadIndex < FSIO_TABLE_8; loadIndex++) {
-			for (int rpmIndex = 0; rpmIndex < FSIO_TABLE_8; rpmIndex++) {
-				config->fsioTable1[loadIndex][rpmIndex] = fsio_table_vvt_target[loadIndex][rpmIndex];
-			}
-		}
+	setMazdaNB2VVTSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// enable cylinder_cleanup
 	engineConfiguration->isCylinderCleanupEnabled = true;
@@ -341,9 +387,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 
 //	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
-
-
-	engineConfiguration->vvtDisplayInverted = true;
 
 	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
 	//	/**
@@ -581,10 +624,10 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->idleMode = IM_AUTO;
 
-	// set vbatt_divider 11
-	// 0.3#4 has wrong R139 as well?
-	// 56k high side/10k low side multiplied by above analogInputDividerCoefficient = 11
-	engineConfiguration->vbattDividerCoeff = (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
+	// 0.3#4 has wrong R139? TODO: fix that custom board to match proper value!!!
+	// set vbatt_divider 10.956
+	// 56k high side/10k low side multiplied by analogInputDividerCoefficient
+	// vbattDividerCoeff = 10.956 (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
 #endif /* BOARD_TLE8888_COUNT */
 }
 
@@ -623,18 +666,22 @@ void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 /**
+ * Normal mechanical throttle body
  * set engine_type 11
  */
-void setMiataNB2_MRE_MTB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setMiataNB2_MRE_MAP(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// somehow MRE72 adapter 0.2 has TPS routed to pin 26?
-
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_6; // PA6
 
 
 	// 1K pull-down to read current from this MAF
 	engineConfiguration->mafAdcChannel = EFI_ADC_13; // J30 AV5
+}
 
+void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNB2_MRE_MAP(PASS_CONFIG_PARAMETER_SIGNATURE);
 
+	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 }

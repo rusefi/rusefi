@@ -1,7 +1,7 @@
 package com.rusefi.trigger;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/18/2015
  */
 public class TriggerShapeHolder {

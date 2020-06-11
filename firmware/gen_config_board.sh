@@ -34,8 +34,7 @@ java -DSystemOut.name=gen_config_board \
 	-ts_destination tunerstudio \
 	-ts_output_name rusefi_${BOARDNAME}.ini \
 	-prepend tunerstudio/${BOARDNAME}_prefix.txt \
-	-prepend config/boards/${BOARDNAME}/prepend.txt \
-	-skip build/config.gen
+	-prepend config/boards/${BOARDNAME}/prepend.txt
 
 [ $? -eq 0 ] || (echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit $?)
 

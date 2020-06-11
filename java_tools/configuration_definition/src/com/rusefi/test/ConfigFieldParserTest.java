@@ -17,7 +17,7 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/15/15
  */
 public class ConfigFieldParserTest {
@@ -50,6 +50,17 @@ public class ConfigFieldParserTest {
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
 
         assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
+    }
+
+    @Test
+    public void manyStartAreNotMultiplication() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ERROR_BUFFER_SIZE \"***\"\n" +
+                "end_struct\n" +
+                "";
+        VariableRegistry.INSTANCE.clear();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+        new ReaderState().readBufferedReader(reader, Collections.emptyList());
     }
 
     @Test

@@ -295,9 +295,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	ext \
 	ext_algo \
 	console_util \
-	console \
-	$(PROJECT_DIR)/console/binary \
-	$(PROJECT_DIR)/console/fl_binary \
+	$(CONSOLE_INC) \
 	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/mass_storage \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb \

@@ -1,4 +1,4 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jan 31 14:07:20 EST 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Jun 01 07:18:30 EDT 2020
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 	case FSIO_SETTING_FANONTEMPERATURE:
@@ -23,10 +23,6 @@
 		return "cfg_idleRpmPid_minValue";
 	case FSIO_SETTING_STARTUPFUELPUMPDURATION:
 		return "cfg_startUpFuelPumpDuration";
-	case FSIO_SETTING_FUELCLOSEDLOOPPID_OFFSET:
-		return "cfg_fuelClosedLoopPid_offset";
-	case FSIO_SETTING_FUELCLOSEDLOOPPID_MINVALUE:
-		return "cfg_fuelClosedLoopPid_minValue";
 	case FSIO_SETTING_AUXPID1_OFFSET:
 		return "cfg_auxPid1_offset";
 	case FSIO_SETTING_AUXPID1_MINVALUE:

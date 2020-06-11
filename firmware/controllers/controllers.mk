@@ -45,6 +45,8 @@ CONTROLLERS_SRC_CPP = \
  	$(CONTROLLERS_DIR)/engine_controller.cpp \
  	$(CONTROLLERS_DIR)/engine_controller_misc.cpp \
 	$(CONTROLLERS_DIR)/persistent_store.cpp \
+	$(CONTROLLERS_DIR)/serial/serial_rx.cpp \
+	$(CONTROLLERS_DIR)/serial/serial_sensor.cpp \
 
 
 CONTROLLERS_INC=\
@@ -52,6 +54,7 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/system \
 	$(CONTROLLERS_DIR)/system/timer \
 	$(CONTROLLERS_DIR)/algo \
+	$(CONTROLLERS_DIR)/algo/airmass \
 	$(CONTROLLERS_DIR)/engine_cycle \
 	$(CONTROLLERS_DIR)/trigger/decoders \
 	$(CONTROLLERS_DIR)/trigger \
@@ -64,4 +67,5 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/generated \
 	$(CONTROLLERS_DIR)/actuators \
 	$(CONTROLLERS_DIR)/actuators/gppwm \
+	$(CONTROLLERS_DIR)/serial \
 

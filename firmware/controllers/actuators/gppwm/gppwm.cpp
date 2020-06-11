@@ -7,9 +7,9 @@
 
 EXTERN_ENGINE;
 
-static GppwmChannel channels[4];
-static OutputPin pins[4];
-static SimplePwm outputs[4];
+static GppwmChannel channels[GPPWM_CHANNELS];
+static OutputPin pins[GPPWM_CHANNELS];
+static SimplePwm outputs[GPPWM_CHANNELS];
 
 static gppwm_Map3D_t table1("GPPWM 1");
 static gppwm_Map3D_t table2("GPPWM 2");

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rusefi_enums.h"
+#include "rusefi_types.h"
 
 #include "port_mpu_util.h"
 
@@ -15,6 +15,9 @@ bool isValidCanRxPin(brain_pin_e pin);
 CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
 #endif // HAL_USE_CAN
 
+bool isValidSerialTxPin(brain_pin_e pin);
+bool isValidSerialRxPin(brain_pin_e pin);
+
 // SPI
 #if HAL_USE_SPI
 void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
@@ -26,6 +29,12 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 void turnOnSpi(spi_device_e device);
 #endif // HAL_USE_SPI
+
+// Hardware PWM
+struct hardware_pwm {
+	static hardware_pwm* tryInitPin(const char* msg, brain_pin_e pin, float frequencyHz, float duty);
+	virtual void setDuty(float duty) = 0;
+};
 
 // Brownout Reset
 typedef enum {

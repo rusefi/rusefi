@@ -242,6 +242,7 @@ INCDIR = .. $(CHIBIOS)/os/license \
 	$(PROJECT_DIR)/console_util \
 	$(PROJECT_DIR)/console \
 	$(PROJECT_DIR)/console/binary \
+	$(PROJECT_DIR)/console/binary_log \
 	$(PROJECT_DIR)/console/fl_binary \
 	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/mass_storage \

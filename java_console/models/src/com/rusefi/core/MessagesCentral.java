@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Messages from the firmware and UI panels which want to display them
  *
  * Date: 4/27/13
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class MessagesCentral {
     private static final MessagesCentral INSTANCE = new MessagesCentral();

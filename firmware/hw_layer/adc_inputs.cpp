@@ -259,6 +259,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		return value;
 	}
 	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
+	    // todo: make this not happen during hardware continues integration
 		warning(CUSTOM_OBD_WRONG_ADC_MODE, "ADC is off [%s] index=%d", msg, hwChannel);
 	}
 
@@ -441,8 +442,6 @@ public:
 		}
 	}
 };
-
-static char errorMsgBuff[_MAX_FILLER + 2];
 
 void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
 	if (setting == EFI_ADC_NONE) {

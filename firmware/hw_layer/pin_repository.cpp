@@ -108,10 +108,10 @@ void tle8888_dump_regs(void)
 	for (int request = 0; request < 0x7e + 1; request++) {
 		uint16_t tmp;
 		tle8888_read_reg(request, &tmp);
-		uint8_t response = getRegisterFromResponse(tmp);
-		uint8_t data = (tmp >> 8) & 0xff;
+		uint8_t reg = getRegisterFromResponse(tmp);
+		uint8_t data = getDataFromResponse(tmp);
 
-		scheduleMsg(&logger, "%02x: %02x", response, data);
+		scheduleMsg(&logger, "%02x: %02x", reg, data);
 	}
 }
 #endif

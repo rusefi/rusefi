@@ -14,7 +14,7 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
 /**
  * Thread-safe byte queue with blocking {@link #waitForBytes} method
  *
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 6/20/2015.
  */
 @ThreadSafe
@@ -29,6 +29,10 @@ public class IncomingDataBuffer {
     public IncomingDataBuffer(Logger logger) {
         this.cbb = new CircularByteBuffer(BUFFER_SIZE);
         this.logger = logger;
+    }
+
+    public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
+        return getPacket(logger, msg, allowLongResponse, System.currentTimeMillis());
     }
 
     public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse, long start) throws InterruptedException, EOFException {

@@ -41,16 +41,11 @@ WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
 trigger_central_s::trigger_central_s() : hwEventCounters() {
-
-	static_assert(TRIGGER_TYPE_60_2 == TT_TOOTHED_WHEEL_60_2, "One we will have one source of this magic constant");
-	static_assert(TRIGGER_TYPE_36_1 == TT_TOOTHED_WHEEL_36_1, "One we will have one source of this magic constant");
-
-
-
+	static_assert(TRIGGER_TYPE_60_2 == TT_TOOTHED_WHEEL_60_2, "One day we will have one source of this magic constant");
+	static_assert(TRIGGER_TYPE_36_1 == TT_TOOTHED_WHEEL_36_1, "One day we will have one source of this magic constant");
 }
 
 TriggerCentral::TriggerCentral() : trigger_central_s() {
-
 	clearCallbacks(&triggerListeneres);
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
@@ -105,6 +100,14 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
 	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
 		addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
+
+#if EFI_TOOTH_LOGGER
+		if (front == TV_RISE) {
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		} else {
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		}
+#endif /* EFI_TOOTH_LOGGER */
 	}
 
 
@@ -145,9 +148,38 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 
 	tc->vvtCamCounter++;
 
-	if (engineConfiguration->vvtMode == MIATA_NB2) {
+	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
+	angle_t currentPosition = NT2US(offsetNt) / oneDegreeUs;
+	// convert engine cycle angle into trigger cycle angle
+	currentPosition -= tdcPosition();
+	fixAngle(currentPosition, "currentPosition", CUSTOM_ERR_6558);
+
+	tc->currentVVTEventPosition = currentPosition;
+	if (engineConfiguration->debugMode == DBG_VVT) {
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.debugFloatField1 = currentPosition;
+#endif /* EFI_TUNER_STUDIO */
+	}
+
+	switch(engineConfiguration->vvtMode) {
+	case VVT_2JZ:
+		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
+		if ((currentPosition < engineConfiguration->fsio_setting[14]       || currentPosition > engineConfiguration->fsio_setting[15]) &&
+		    (currentPosition < engineConfiguration->fsio_setting[14] + 360 || currentPosition > engineConfiguration->fsio_setting[15] + 360)) {
+			// outside of the expected range
+			return;
+		}
+		break;
+	case MIATA_NB2:
+	 {
 		uint32_t currentDuration = nowNt - tc->previousVvtCamTime;
 		float ratio = ((float) currentDuration) / tc->previousVvtCamDuration;
+
+		if (engineConfiguration->debugMode == DBG_VVT) {
+#if EFI_TUNER_STUDIO
+			tsOutputChannels.debugFloatField2 = ratio;
+#endif /* EFI_TUNER_STUDIO */
+		}
 
 
 		tc->previousVvtCamDuration = currentDuration;
@@ -157,6 +189,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 			scheduleMsg(logger, "vvt ratio %.2f", ratio);
 		}
 		if (ratio < miataNb2VVTRatioFrom || ratio > miataNb2VVTRatioTo) {
+			// this is not NB2 sync tooth - exiting
 			return;
 		}
 		if (engineConfiguration->verboseTriggerSynchDetails) {
@@ -168,20 +201,24 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 #endif /* EFI_TUNER_STUDIO */
 		}
 	}
+	default:
+		// else, do nothing
+		break;
+	}
 
 	tc->vvtSyncTimeNt = nowNt;
 
-	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
+    // we do NOT clamp VVT position into the [0, engineCycle) range - we expect vvtOffset to be configured so that
+    // it's not necessary
+	tc->vvtPosition = engineConfiguration->vvtOffset - currentPosition;
+	if (tc->vvtPosition < 0 || tc->vvtPosition > ENGINE(engineCycle)) {
+		warning(CUSTOM_ERR_VVT_OUT_OF_RANGE, "Please adjust vvtOffset since position %f", tc->vvtPosition);
+	}
 
-	angle_t vvtPosition = NT2US(offsetNt) / oneDegreeUs;
+	switch (engineConfiguration->vvtMode) {
+	case VVT_FIRST_HALF:
+	{
 
-	// convert engine cycle angle into trigger cycle angle
-	vvtPosition -= tdcPosition();
-	fixAngle(vvtPosition, "vvtPosition", CUSTOM_ERR_6558);
-
-	tc->vvtPosition = (engineConfiguration->vvtDisplayInverted ? -vvtPosition : vvtPosition) + engineConfiguration->vvtOffset;
-
-	if (engineConfiguration->vvtMode == VVT_FIRST_HALF) {
 		bool isEven = tc->triggerState.isEvenRevolution();
 		if (!isEven) {
 			/**
@@ -196,7 +233,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 #endif /* EFI_TUNER_STUDIO */
 			}
 		}
-	} else if (engineConfiguration->vvtMode == VVT_SECOND_HALF) {
+	}
+		break;
+	case VVT_SECOND_HALF:
+	{
 		bool isEven = tc->triggerState.isEvenRevolution();
 		if (isEven) {
 			// see above comment
@@ -207,14 +247,20 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt DECLARE_ENGINE_
 #endif /* EFI_TUNER_STUDIO */
 			}
 		}
-
-	} else if (engineConfiguration->vvtMode == MIATA_NB2) {
+	}
+		break;
+	case MIATA_NB2:
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
 		while (tc->triggerState.getTotalRevolutionCounter() % 4 != miataNbIndex) {
 			tc->triggerState.incrementTotalEventCounter();
 		}
+		break;
+	default:
+	case VVT_INACTIVE:
+		// do nothing
+		break;
 	}
 
 }
@@ -696,8 +742,7 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		isConfigurationChanged(triggerInputPins[2]) ||
 		isConfigurationChanged(vvtMode) ||
 		isConfigurationChanged(vvtCamSensorUseRise) ||
-		isConfigurationChanged(vvtOffset) ||
-		isConfigurationChanged(vvtDisplayInverted);
+		isConfigurationChanged(vvtOffset);
 	if (changed) {
 		assertEngineReference();
 

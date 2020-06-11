@@ -42,9 +42,10 @@
 #include "sensor.h"
 #include "electronic_throttle.h"
 
+
+#include "dc_motors.h"
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
-#include "dc_motors.h"
 #include "pin_repository.h"
 static StepDirectionStepper iacStepperHw;
 static DualHBridgeStepper iacHbridgeHw;
@@ -116,16 +117,29 @@ void idleDebug(const char *msg, percent_t value) {
 
 static void showIdleInfo(void) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
-	scheduleMsg(logger, "idleMode=%s position=%.2f isStepper=%s", idleModeStr,
-			getIdlePosition(), boolToString(CONFIG(useStepperIdle)));
+	scheduleMsg(logger, "useStepperIdle=%s useHbridges=%s",
+			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridges)));
+	scheduleMsg(logger, "idleMode=%s position=%.2f",
+			idleModeStr, getIdlePosition());
 
 	if (CONFIG(useStepperIdle)) {
-		scheduleMsg(logger, "directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
-				engineConfiguration->idleStepperReactionTime);
-		scheduleMsg(logger, "stepPin=%s steps=%d", hwPortname(CONFIG(idle).stepperStepPin),
-				engineConfiguration->idleStepperTotalSteps);
-		scheduleMsg(logger, "enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
-				engineConfiguration->stepperEnablePinMode);
+		if (CONFIG(useHbridges)) {
+			scheduleMsg(logger, "Coil A:");
+			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(etbIo2[0].directionPin1)));
+			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(etbIo2[0].directionPin2)));
+			showDcMotorInfo(logger, 2);
+			scheduleMsg(logger, "Coil B:");
+			scheduleMsg(logger, " pin1=%s", hwPortname(CONFIG(etbIo2[1].directionPin1)));
+			scheduleMsg(logger, " pin2=%s", hwPortname(CONFIG(etbIo2[1].directionPin2)));
+			showDcMotorInfo(logger, 3);
+		} else {
+			scheduleMsg(logger, "directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
+					engineConfiguration->idleStepperReactionTime);
+			scheduleMsg(logger, "stepPin=%s steps=%d", hwPortname(CONFIG(idle).stepperStepPin),
+					engineConfiguration->idleStepperTotalSteps);
+			scheduleMsg(logger, "enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
+					engineConfiguration->stepperEnablePinMode);
+		}
 	} else {
 		if (!CONFIG(isDoubleSolenoidIdle)) {
 			scheduleMsg(logger, "idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,

@@ -71,6 +71,8 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	CONFIG(isFasterEngineSpinUpEnabled) = true;
 
+	strcpy(CONFIG(vehicleName), "microRusEFIx2");
+
 	engineConfiguration->globalTriggerAngleOffset = 90;
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 5.4 / 2;

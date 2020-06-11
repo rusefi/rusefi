@@ -60,15 +60,15 @@ typedef enum {
 
 	ROVER_V8 = 10,
 
-	MRE_MIATA_NB2_MTB = 11,
+	MRE_MIATA_NB2_MAP = 11,
 
-	MRE_MIATA_NA6 = 12,
+	MRE_MIATA_NA6 = ET_MRE_MIATA_NA6,
 
-	MRE_MIATA_NB2 = 13,
+	MRE_MIATA_NB2_ETB = 13,
 
 	FORD_ESCORT_GT = 14,
 
-	CITROEN_TU3JP = 15,
+	MRE_MIATA_NB2_MAF = ET_MRE_MIATA_NB2_MAF,
 
 	MITSU_4G93 = 16,
 
@@ -102,9 +102,10 @@ typedef enum {
 
 	SACHS = 29,
 
-	MRE_BOARD_TEST = 30,
+	// LED physical order set for older test fixtures
+	MRE_BOARD_OLD_TEST = 30,
 
-	DODGE_RAM = 31,
+	MRE_BOARD_NEW_TEST = 31,
 
 	VW_ABA = 32,
 
@@ -183,7 +184,10 @@ typedef enum {
 
 	VW_B6 = 62,
 
-	BMW_M73_PROTEUS = 63,
+	BMW_M73_PROTEUS = ET_BMW_M73_PROTEUS,
+
+	DODGE_RAM = 64,
+	CITROEN_TU3JP = ET_CITROEN_TU3JP,
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -341,13 +345,17 @@ typedef enum {
 
 	TT_BOSCH_QUICK_START = 47,
 
+	TT_TOOTHED_WHEEL_36_2 = 48,
+
+	TT_SUBARU_SVX = 49,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 48, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 50, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -386,10 +394,29 @@ typedef enum {
 } trigger_event_e;
 
 typedef enum {
-	VVT_FIRST_HALF = 0,
+	/**
+	 * This mode is useful for troubleshooting and research - events are logged but no effects on phase synchronization
+	 */
+	VVT_INACTIVE = 0,
+
+	/**
+	 * Single-tooth cam sensor mode where TDC and cam signal happen in opposite 360 degree of 720 degree engine cycle
+	 */
 	VVT_SECOND_HALF = 1,
-	VVT_2GZ = 2,
+	/**
+	 * Toyota 2JZ has three cam tooth. We pick one of these three tooth to synchronize based on the expected angle position of the event
+	 */
+	VVT_2JZ = 2,
+	/**
+	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
+	 */
 	MIATA_NB2 = 3,
+
+	/**
+	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
+	 */
+	VVT_FIRST_HALF = 4,
+
 	Force_4_bytes_size_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;
 
@@ -595,6 +622,11 @@ typedef enum __attribute__ ((__packed__)) {
 	_150KHz
 } spi_speed_e;
 
+
+/**
+ * See spi3mosiPin
+ * See spi2MisoMode
+ */
 typedef enum __attribute__ ((__packed__)) {
 	SPI_NONE = 0,
 	SPI_DEVICE_1 = 1,
@@ -757,6 +789,8 @@ typedef enum {
 
 	MT_BOSCH_2_5 = 10,
 
+	MT_MAZDA_1_BAR = 11,
+
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
 
@@ -775,7 +809,7 @@ typedef enum {
 } sensor_chart_e;
 
 typedef enum {
-//todo fix enum generator  java tool to support negative	REVERSE = -1,
+	REVERSE = -1,
 	NEUTRAL = 0,
 	GEAR_1 = 1,
 	GEAR_2 = 2,

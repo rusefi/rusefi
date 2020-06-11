@@ -18,9 +18,6 @@
 
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
-extern float testMafValue;
-extern float testCltValue;
-extern float testIatValue;
 extern engine_configuration_s & activeConfiguration;
 
 EngineTestHelperBase::EngineTestHelperBase() { 
@@ -28,10 +25,25 @@ EngineTestHelperBase::EngineTestHelperBase() {
 	timeNowUs = 0; 
 }
 
-EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback) {
+EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback)
+	: EngineTestHelper(engineType, boardCallback, {}) {
+}
+
+EngineTestHelper::EngineTestHelper(engine_type_e engineType, const std::unordered_map<SensorType, float>& sensorValues)
+	: EngineTestHelper(engineType, &emptyCallbackWithConfiguration, sensorValues) {
+}
+
+EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback, const std::unordered_map<SensorType, float>& sensorValues) {
+	Sensor::setMockValue(SensorType::Clt, 70);
+	Sensor::setMockValue(SensorType::Iat, 30);
+
+	for (const auto [s, v] : sensorValues) {
+		Sensor::setMockValue(s, v);
+	}
+
 	unitTestWarningCodeState.clear();
 
-	testMafValue = 0;
+
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
 	enginePins.reset();
@@ -60,26 +72,12 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	commonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-	engine->engineConfigurationPtr->mafAdcChannel = TEST_MAF_CHANNEL;
-	engine->engineConfigurationPtr->clt.adcChannel = TEST_CLT_CHANNEL;
-	engine->engineConfigurationPtr->iat.adcChannel = TEST_IAT_CHANNEL;
-	// magic voltage to get nice CLT
-	testCltValue = 1.492964;
-	Sensor::setMockValue(SensorType::Clt, 70);
-	// magic voltage to get nice IAT
-	testIatValue = 4.03646;
-	Sensor::setMockValue(SensorType::Iat, 30);
+	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// this is needed to have valid CLT and IAT.
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-}
-
-EngineTestHelper::EngineTestHelper(engine_type_e engineType, const std::unordered_map<SensorType, float>& sensorValues) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
-	for (const auto [s, v] : sensorValues) {
-		Sensor::setMockValue(s, v);
-	}
 }
 
 EngineTestHelper::~EngineTestHelper() {
@@ -250,9 +248,6 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	setArrayValues(engineConfiguration->injector.battLagCorr, 0.0f);
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT";
-
 
 	ASSERT_EQ( 0,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #1";
 	eth->setTriggerType(trigger PASS_ENGINE_PARAMETER_SUFFIX);

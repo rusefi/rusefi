@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * Utility class to read/write {@link ConfigurationImage} into a file
  *
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 6/20/2015.
  */
 public class ConfigurationImageFile {
@@ -59,6 +59,7 @@ public class ConfigurationImageFile {
     }
 
     public static void saveToFile(ConfigurationImage configurationImage, String fileName) throws IOException {
+        System.out.printf("Saving " + configurationImage.getSize() + " bytes of configuration into " + fileName);
         FileOutputStream fos = new FileOutputStream(fileName);
         fos.write(getFileContent(configurationImage));
         fos.close();

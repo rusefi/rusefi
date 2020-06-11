@@ -153,12 +153,6 @@ int isInitialized(Logging *logging) {
 	return logging->isInitialized;
 }
 
-void debugInt(Logging *logging, const char *caption, int value) {
-	append(logging, caption);
-	append(logging, DELIMETER);
-	appendPrintf(logging, "%d%s", value, DELIMETER);
-}
-
 void appendFloat(Logging *logging, float value, int precision) {
 	/**
 	 * todo: #1 this implementation is less than perfect
@@ -188,14 +182,6 @@ void appendFloat(Logging *logging, float value, int precision) {
 	default:
 		appendPrintf(logging, "%.2f", value);
 	}
-}
-
-void debugFloat(Logging *logging, const char *caption, float value, int precision) {
-	append(logging, caption);
-	append(logging, DELIMETER);
-
-	appendFloat(logging, value, precision);
-	append(logging, DELIMETER);
 }
 
 static char header[16];
@@ -239,7 +225,7 @@ void printWithLength(char *line) {
 }
 
 void appendMsgPrefix(Logging *logging) {
-	append(logging, "msg" DELIMETER);
+	append(logging, PROTOCOL_MSG DELIMETER);
 }
 
 void appendMsgPostfix(Logging *logging) {

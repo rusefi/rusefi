@@ -19,3 +19,5 @@ java_console_binary
 *.net
 err.txt
 log.txt
+*.rusefi_binary
+*.msq
