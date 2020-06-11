@@ -34,13 +34,15 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 
 void GppwmChannel::setOutput(float result) {
 	// Not init yet, nothing to do.
-	if (!m_pwm || !m_config) {
+	if (!m_config) {
 		return;
 	}
 
 	if (m_usePwm) {
+		efiAssertVoid(OBD_PCM_Processor_Fault, m_usePwm, "m_usePwm null");
 		m_pwm->setSimplePwmDutyCycle(clampF(0, result / 100.0f, 1));
 	} else {
+		efiAssertVoid(OBD_PCM_Processor_Fault, m_output, "m_output null");
 		// Apply hysteresis with provided values
 		if (m_state && result < m_config->offBelowDuty) {
 			m_state = false;
