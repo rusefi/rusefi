@@ -41,6 +41,11 @@ public:
 	MOCK_METHOD(void, setSimplePwmDutyCycle, (float dutyCycle), (override));
 };
 
+class MockOutputPin : public OutputPin {
+public:
+	MOCK_METHOD(void, setValue, (int value), (override));
+};
+
 class MockExecutor : public TestExecutor {
 public:
 	MOCK_METHOD(void, scheduleByTimestamp, (scheduling_s *scheduling, efitimeus_t timeUs, action_s action), (override));
