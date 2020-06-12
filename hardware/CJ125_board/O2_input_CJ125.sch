@@ -6,7 +6,7 @@ encoding utf-8
 Sheet 1 1
 Title "CJ125 Wide O2 "
 Date "2020-06-12"
-Rev "R0.4.2"
+Rev "R0.5"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""

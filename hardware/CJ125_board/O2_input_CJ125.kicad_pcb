@@ -13,7 +13,7 @@
   (title_block
     (title "CJ125 Wide O2 ")
     (date 2020-06-12)
-    (rev R0.4.2)
+    (rev R0.5)
     (company http://rusefi.com/)
   )
 
@@ -1704,7 +1704,7 @@
   (gr_text rusEFI.com (at 112.395 131.318 90) (layer B.SilkS) (tstamp 5EE3DF0B)
     (effects (font (size 1 1) (thickness 0.127)) (justify mirror))
   )
-  (gr_text R0.4.2 (at 120.015 138.43) (layer B.SilkS) (tstamp 5EE3DF07)
+  (gr_text R0.5 (at 120.015 138.43) (layer B.SilkS) (tstamp 5EE3DF07)
     (effects (font (size 1.016 1.016) (thickness 0.127)) (justify mirror))
   )
   (dimension 34.29 (width 0.127) (layer Cmts.User)
@@ -1832,7 +1832,7 @@
   (gr_text 5V (at 116.967 109.855 90) (layer F.SilkS)
     (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
   )
-  (gr_text R0.4.2 (at 120.015 138.43) (layer F.SilkS)
+  (gr_text R0.5 (at 120.015 138.43) (layer F.SilkS)
     (effects (font (size 1.016 1.016) (thickness 0.127)))
   )
   (gr_text T-0 (at 113.157 134.493) (layer F.Cu)
