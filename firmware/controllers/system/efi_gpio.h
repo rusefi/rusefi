@@ -23,6 +23,13 @@ void turnAllPinsOff(void);
 #define turnAllPinsOff() {}
 #endif /* EFI_GPIO_HARDWARE */
 
+// Used if you want a function to be virtual only for unit testing purposes
+#if EFI_UNIT_TEST
+#define TEST_VIRTUAL virtual
+#else
+#define TEST_VIRTUAL
+#endif
+
 #ifdef __cplusplus
 /**
  * @brief   Single output pin reference and state
@@ -48,7 +55,7 @@ public:
 	bool isInitialized();
 
 	bool getAndSet(int logicValue);
-	void setValue(int logicValue);
+	TEST_VIRTUAL void setValue(int logicValue);
 	void toggle();
 	bool getLogicValue() const;
 
