@@ -2,7 +2,9 @@ package com.opensr5.ini.field;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.FieldType;
+import com.rusefi.tune.xml.Constant;
 
+import javax.management.ObjectName;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,13 +48,26 @@ public class EnumIniField extends IniField {
         return enums.get(ordinal);
     }
 
+    private static boolean isQuoted(String q) {
+        final int len = q.length();
+        return (len >= 2 && q.charAt(0) == '"' && q.charAt(len - 1) == '"');
+    }
+
+    @Override
+    public void setValue(ConfigurationImage image, Constant constant) {
+        String v = constant.getValue();
+        int ordinal = enums.indexOf(isQuoted(v) ? ObjectName.unquote(v) : v);
+        if (ordinal == -1)
+            throw new IllegalArgumentException("Not found " + v);
+    }
+
     public static boolean getBit(int ordinal, int bitPosition) {
         return getBitRange(ordinal, bitPosition, 0) == 1;
     }
 
     public static int getBitRange(int ordinal, int bitPosition, int bitSize) {
         ordinal = ordinal >> bitPosition;
-        ordinal = ordinal  & ((1 << (bitSize + 1)) - 1);
+        ordinal = ordinal & ((1 << (bitSize + 1)) - 1);
         return ordinal;
     }
 
