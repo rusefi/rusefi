@@ -340,8 +340,6 @@ static void initStatusLeds(void) {
 	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
 }
 
-#define BLINKING_PERIOD_MS 33
-
 #if EFI_PROD_CODE
 
 static bool isTriggerErrorNow() {
@@ -391,20 +389,25 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 				enginePins.warningLedPin.setValue(0);
 			}
 		} else {
+#define BLINKING_PERIOD_MS 33
+
 			if (hasFirmwareError()) {
 				// special behavior in case of critical error - not equal on/off time
 				// this special behaviour helps to notice that something is not right, also
 				// differentiates software firmware error from critical interrupt error with CPU halt.
 				offTimeMs = 50;
 				onTimeMs = 450;
+			} else if (consoleByteArrived) {
+				consoleByteArrived = false;
+				offTimeMs = 100;
+				onTimeMs = 33;
+#if EFI_INTERNAL_FLASH
+			} else if (getNeedToWriteConfiguration()) {
+				offTimeMs = onTimeMs = 500;
+#endif // EFI_INTERNAL_FLASH
 			} else {
 				onTimeMs = is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS : BLINKING_PERIOD_MS;
-#if EFI_INTERNAL_FLASH
-				if (getNeedToWriteConfiguration()) {
-					onTimeMs = 2 * onTimeMs;
-				}
-#endif
-				offTimeMs = onTimeMs;
+				offTimeMs = 0.6 * onTimeMs;
 			}
 
 			enginePins.communicationLedPin.setValue(1);
@@ -415,8 +418,8 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 #endif // HW_CHECK_MODE
 
 	#if EFI_ENGINE_CONTROL
-			if (lowVBatt || isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
-				consoleByteArrived = false;
+			if (lowVBatt || isTriggerErrorNow() || isIgnitionTimingError()) {
+				// todo: at the moment warning codes do not affect warning LED?!
 				enginePins.warningLedPin.setValue(1);
 			}
 	#endif /* EFI_ENGINE_CONTROL */
