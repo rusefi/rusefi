@@ -38,8 +38,12 @@ public class IniFileModel {
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
 
-    public void readIniFile(String iniFilePath) {
+    public void findAndReadIniFile(String iniFilePath) {
         String fileName = findMetaInfoFile(iniFilePath);
+        readIniFile(fileName);
+    }
+
+    public void readIniFile(String fileName) {
         File input = null;
         if (fileName != null)
             input = new File(fileName);
@@ -209,7 +213,7 @@ public class IniFileModel {
     public static synchronized IniFileModel getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new IniFileModel();
-            INSTANCE.readIniFile(INI_FILE_PATH);
+            INSTANCE.findAndReadIniFile(INI_FILE_PATH);
         }
         return INSTANCE;
     }
