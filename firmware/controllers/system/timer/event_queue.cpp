@@ -136,12 +136,15 @@ int EventQueue::executeAll(efitime_t now) {
 			break;
 		}
 
-		// Only execute events that occured in the past.
-		// The list is sorted, so as soon as we see an event
-		// in the future, we're done.
-		if (current->momentX > now) {
+		// If the next event is far in the future, we'll reschedule
+		// and execute it next time.
+		if (current->momentX > now + US2NT(10)) {
 			break;
 		}
+
+		// near future - spin wait for the event to happen and avoid the
+		// overhead of rescheduling the timer.
+		while (current->momentX > getTimeNowNt()) ;
 
 		executionCounter++;
 
