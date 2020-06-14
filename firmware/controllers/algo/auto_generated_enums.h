@@ -1,4 +1,4 @@
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed May 20 09:04:42 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Jun 14 17:00:25 EDT 2020
 // see also gen_config_and_enums.bat
 
 
@@ -15,6 +15,7 @@ const char *getAntiLagActivationMode_e(antiLagActivationMode_e value);
 const char *getBoostType_e(boostType_e value);
 const char *getBrain_pin_diag_e(brain_pin_diag_e value);
 const char *getBrain_pin_e(brain_pin_e value);
+const char *getCan_baudrate_e(can_baudrate_e value);
 const char *getCan_nbc_e(can_nbc_e value);
 const char *getCan_vss_nbc_e(can_vss_nbc_e value);
 const char *getChamber_style_e(chamber_style_e value);
