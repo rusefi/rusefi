@@ -1062,10 +1062,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->mapErrorDetectionTooLow = 5;
 	engineConfiguration->mapErrorDetectionTooHigh = 250;
 
-	engineConfiguration->idleThreadPeriodMs = 100;
-	engineConfiguration->consoleLoopPeriodMs = 200;
-	engineConfiguration->lcdThreadPeriodMs = 300;
-	engineConfiguration->generalPeriodicThreadPeriodMs = 50;
 	engineConfiguration->useLcdScreen = true;
 
 	engineConfiguration->hip9011Gain = 1;
