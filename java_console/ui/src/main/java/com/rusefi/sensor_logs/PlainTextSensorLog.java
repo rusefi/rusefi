@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class PlainTextSensorLog extends SensorLog {
-    Writer logFile;
+    private Writer logFile;
 
     private long fileStartTime;
 
