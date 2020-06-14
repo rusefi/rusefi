@@ -28,7 +28,7 @@ Field format:
 		0001h = name (34 bytes)
 		0023h = units (11 bytes)
 		002Eh = scale (4 bytes) = float
-		0032h = zeroes (4 bytes)
+		0032h = shift (4 bytes) = float, usually zero for rusEFI
 		0036h = precision (1 byte) 1="%.1f", 2="%.2f",...
 	} fields[num_fields]
 
@@ -41,5 +41,5 @@ Data format:
 	{
 		0000h = "counter-ish" (4 bytes)
 		0004h = packed fields data (see type_and_size)
-		..... = crc (1 byte)
+		..... = checksum just the sum of all packed fields bytes (1 byte)
 	} records[]
