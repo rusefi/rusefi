@@ -19,7 +19,7 @@
 EXTERN_ENGINE;
 
 CanWrite::CanWrite()
-	: PeriodicController("CAN TX", NORMALPRIO, 50)
+	: PeriodicController("CAN TX", NORMALPRIO, 10)
 {
 }
 
@@ -27,8 +27,8 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 	UNUSED(nowNt);
 
 	if (CONFIG(enableVerboseCanTx)) {
-		void sendCanVerbose();
-		sendCanVerbose();
+		//void sendCanVerbose();
+		//sendCanVerbose();
 	}
 
 	// Transmit dash data, if enabled
