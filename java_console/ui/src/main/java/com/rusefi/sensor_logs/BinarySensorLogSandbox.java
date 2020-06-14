@@ -20,11 +20,13 @@ public class BinarySensorLogSandbox {
         BinarySensorLog l = new BinarySensorLog(valueProvider,
                 Sensor.TIME_SECONDS,
                 Sensor.RPM,
+                Sensor.VSS,
                 Sensor.FIRMWARE_VERSION,
                 Sensor.CLT);
 
         values.put(Sensor.TIME_SECONDS, 1.0);
         values.put(Sensor.RPM, 0.0);
+        values.put(Sensor.VSS, 60.0);
         values.put(Sensor.FIRMWARE_VERSION, 20200101.0);
         values.put(Sensor.CLT, 29.0);
 
@@ -39,6 +41,5 @@ public class BinarySensorLogSandbox {
         }
 
         l.close();
-
     }
 }

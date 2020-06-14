@@ -146,13 +146,13 @@ public class Field {
      */
     @NotNull
     @Deprecated
-    public Number getValue(ConfigurationImage ci) {
+    public Double getValue(ConfigurationImage ci) {
         return getValue(ci, 1);
     }
 
     // todo: rename to getNumberValue?
     @NotNull
-    public Number getValue(ConfigurationImage ci, double multiplier) {
+    public Double getValue(ConfigurationImage ci, double multiplier) {
         Objects.requireNonNull(ci);
         Number value;
         ByteBuffer wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
