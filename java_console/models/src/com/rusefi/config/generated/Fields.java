@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Jun 14 13:28:18 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Jun 14 14:24:28 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -522,6 +522,7 @@ public class Fields {
 	public static final String GAUGE_NAME_AIR_FLOW = "MAF air flow";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
+	public static final String GAUGE_NAME_CLT = "CLT";
 	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
 	public static final String GAUGE_NAME_DEBUG_F1 = "debug f1";
 	public static final String GAUGE_NAME_DEBUG_F2 = "debug f2: iTerm";
@@ -561,9 +562,11 @@ public class Fields {
 	public static final String GAUGE_NAME_INJECTOR_LAG = "fuel: injector lag";
 	public static final String GAUGE_NAME_KNOCK_COUNTER = "knock: counter";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "knock: current level";
+	public static final String GAUGE_NAME_RPM = "RPM";
 	public static final String GAUGE_NAME_TARGET_AFR = "fuel: target AFR";
 	public static final String GAUGE_NAME_TCHARGE = "fuel: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
+	public static final String GAUGE_NAME_TIME = "Time";
 	public static final String GAUGE_NAME_TIMING_ADVANCE = "timing";
 	public static final String GAUGE_NAME_VBAT = "VBatt";
 	public static final String GAUGE_NAME_VERSION = "firmware";
@@ -934,6 +937,7 @@ public class Fields {
 	public static final int mc33_t_peak_off_offset = 4504;
 	public static final int mc33_t_peak_tot_offset = 4506;
 	public static final int measureMapOnlyInOneCylinder_offset = 744;
+	public static final int MLQ_FIELD_HEADER_SIZE = 55;
 	public static final int MLQ_HEADER_SIZE = 22;
 	public static final String MOCK_AFR_COMMAND = "mock_afr_voltage";
 	public static final String MOCK_CLT_COMMAND = "mock_clt_voltage";
