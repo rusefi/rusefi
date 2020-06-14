@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu May 21 20:39:11 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Jun 14 17:00:26 EDT 2020
 // see also gen_config_and_enums.bat
 
 
@@ -385,6 +385,8 @@ case TLE6240_PIN_9:
 }
 const char *getCan_nbc_e(can_nbc_e value){
 switch(value) {
+case CAN_BUS_BMW_E90:
+  return "CAN_BUS_BMW_E90";
 case CAN_BUS_MAZDA_RX8:
   return "CAN_BUS_MAZDA_RX8";
 case CAN_BUS_NBC_BMW:
