@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -99,6 +100,17 @@ public class IniFileReaderTest {
         IniFileModel model = new IniFileModel().readIniFile(lines);
 
         assertEquals(2, model.allIniFields.size());
+    }
+
+    @Test
+    public void testSetBits() {
+        assertEquals((byte) 0xFE, EnumIniField.setBitRange((byte) 0xFF, 0, 0, 1));
+        assertEquals((byte) 0xF0, EnumIniField.setBitRange((byte) 0xFF, 0, 0, 4));
+        assertEquals((byte) 0x0F, EnumIniField.setBitRange((byte) 0xFF, 0, 4, 4));
+
+        assertEquals((byte)    1, EnumIniField.setBitRange((byte) 0xFF, 3, 0, 1));
+        assertEquals((byte)  -13, EnumIniField.setBitRange((byte) 0xFF, 3, 0, 4));
+        assertEquals((byte) 0x3F, EnumIniField.setBitRange((byte) 0xFF, 3, 4, 4));
     }
 
     @Test
