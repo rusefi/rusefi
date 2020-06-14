@@ -22,6 +22,18 @@ public class IniFileReaderTest {
     private static final String SIGNATURE_UNIT_TEST = "  signature      = \"unit test\"\n";
 
     @Test
+    public void testSplitWithEmptyUnits() {
+        {
+            String[] s = IniFileReader.splitTokens("\tverboseCanBaseAddress\t\t\t= \"\", 1");
+            assertEquals(2, s.length);
+        }
+        {
+            String[] s = IniFileReader.splitTokens("\tverboseCanBaseAddress\t\t\t= scalar, U32,\t756,\t\"\", 1, 0, 0, 536870911, 0");
+            assertEquals(9, s.length);
+        }
+    }
+
+    @Test
     public void testSplit() {
         {
             String[] s = IniFileReader.splitTokens("1");
