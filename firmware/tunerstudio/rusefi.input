@@ -2576,6 +2576,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Can Read Enabled",						canReadEnabled
 		field = "Can Write Enabled",					canWriteEnabled
 		field = "Can Nbc Type",							canNbcType
+		field = "Can Baud Rate",						canBaudRate
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
 		field = "rusEfi CAN data base address",			verboseCanBaseAddress
 		field = "Can Sleep Period",						canSleepPeriodMs
