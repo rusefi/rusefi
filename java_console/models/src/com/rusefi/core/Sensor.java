@@ -239,6 +239,10 @@ public enum Sensor {
 
     public void writeToLog(DataOutputStream dos, double value) throws IOException {
         switch (type) {
+            case INT8:
+            case UINT8:
+                dos.write((int) value);
+                return;
             case FLOAT:
                 dos.writeFloat((float) value);
                 return;

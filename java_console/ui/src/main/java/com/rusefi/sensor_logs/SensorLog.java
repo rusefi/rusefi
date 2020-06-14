@@ -4,4 +4,6 @@ public abstract class SensorLog {
     public abstract double getSecondsSinceFileStart();
 
     abstract void writeSensorLogLine();
+
+    public abstract void close();
 }

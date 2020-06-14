@@ -10,6 +10,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
+import com.rusefi.sensor_logs.SensorLogger;
 import com.rusefi.ui.*;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
@@ -135,6 +136,7 @@ public class ConsoleUI {
 
         tabbedPane.addTab("rusEFI Online", new OnlineTab().getContent());
 
+        SensorLogger.init();
 
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);

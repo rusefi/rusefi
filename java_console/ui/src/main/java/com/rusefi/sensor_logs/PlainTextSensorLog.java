@@ -14,13 +14,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
+/**
+ * Legacy human readable CSV log file
+ * </p>
+ * Andrey Belomutskiy, (c) 2013-2020
+ */
 public class PlainTextSensorLog extends SensorLog {
     private Writer logFile;
 
     private long fileStartTime;
 
-
-    public void startIfNeeded() {
+    private void startIfNeeded() {
         if (logFile == null) {
             /*
              * we only start file header once we have first bunch of data
@@ -75,7 +79,6 @@ public class PlainTextSensorLog extends SensorLog {
         return msSinceFileStart / 1000.0;
     }
 
-
     @Override
     void writeSensorLogLine() {
         startIfNeeded();
@@ -93,6 +96,12 @@ public class PlainTextSensorLog extends SensorLog {
             e.printStackTrace();
             logFile = null;
         }
+    }
+
+    @Override
+    public void close() {
+        BinarySensorLog.close(logFile);
+        logFile = null;
     }
 }
 

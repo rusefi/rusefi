@@ -1,34 +1,46 @@
 package com.rusefi.sensor_logs;
 
 import com.rusefi.FileLog;
+import com.rusefi.config.FieldType;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.rusEFIVersion;
 
 import java.io.*;
-import java.util.Date;
+import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+/**
+ * MLV .mlq binary log file
+ * </p>
+ * Andrey Belomutskiy, (c) 2013-2020
+ */
 public class BinarySensorLog extends SensorLog {
     private final Function<Sensor, Double> valueProvider;
-    private final Sensor[] sensors;
+    private final Collection<Sensor> sensors;
     private DataOutputStream stream;
 
     private int counter;
 
     public BinarySensorLog() {
-        this(new Function<Sensor, Double>() {
-            @Override
-            public Double apply(Sensor sensor) {
-                return SensorCentral.getInstance().getValue(sensor);
-            }
-        }, SensorLogger.SENSORS);
+        this(sensor -> SensorCentral.getInstance().getValue(sensor), SensorLogger.SENSORS);
     }
 
     public BinarySensorLog(Function<Sensor, Double> valueProvider, Sensor... sensors) {
         this.valueProvider = valueProvider;
-        this.sensors = sensors;
+        this.sensors = filterOutSensorsWithoutType(Objects.requireNonNull(sensors, "sensors"));
+    }
+
+    private Collection<Sensor> filterOutSensorsWithoutType(Sensor[] sensors) {
+        return Arrays.stream(sensors).filter(new Predicate<Sensor>() {
+            @Override
+            public boolean test(Sensor sensor) {
+                return sensor.getType() != null;
+            }
+        }).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -44,11 +56,11 @@ public class BinarySensorLog extends SensorLog {
 
             try {
                 stream = new DataOutputStream(new FileOutputStream(fileName));
-            } catch (IOException e) {
+                writeHeader();
+            } catch (Throwable e) {
                 e.printStackTrace();
                 stream = null;
             }
-            writeHeader();
         }
 
         if (stream != null) {
@@ -73,69 +85,76 @@ public class BinarySensorLog extends SensorLog {
                 stream.write(byteArray);
                 stream.write(checkSum);
 
+                if (counter % 20 == 0) {
+                    // for not flush on each block of data but still flush
+                    stream.flush();
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void writeHeader() {
-        try {
+    private void writeHeader() throws IOException {
+        String headerText = "\"rusEFI " + rusEFIVersion.CONSOLE_VERSION + "\"\n" +
+                "\"Capture Date: " + new Date() + "\"\n";
 
-            String headerText = "\"rusEFI " + rusEFIVersion.CONSOLE_VERSION + "\"\n" +
-                    "\"Capture Date: " + new Date() + "\"\n";
-
-            for (char c : "MLVLG\0".toCharArray()) {
-                stream.write(c);
-            }
-
-            int fieldsDataSize = 0;
-            for (Sensor sensor : sensors) {
-                fieldsDataSize += sensor.getType().getStorageSize();
-            }
-
-            // 0006h Format version = 01
-            stream.write(0);
-            stream.write(1);
-            // 0008h Timestamp
-            stream.writeInt(0);
-            // 000ch
-            int offsetToText = Fields.MLQ_HEADER_SIZE + Fields.MLQ_FIELD_HEADER_SIZE * sensors.length;
-            stream.writeShort(offsetToText);
-            stream.writeShort(0); // reserved?
-            // 0010h = offset_to_data
-            stream.writeShort(offsetToText + headerText.length());
-            // 0012h
-            stream.writeShort(fieldsDataSize);
-            // 0014h number of fields
-            stream.writeShort(sensors.length);
-
-            for (Sensor sensor : sensors) {
-                String name = SensorLogger.getSensorName(sensor, 0);
-                String unit = sensor.getUnits();
-
-                // 0000h
-                stream.write(getSensorTypeValue(sensor));
-                // 0001h
-                writeLine(stream, name, 34);
-                // 0023h
-                writeLine(stream, unit, 11);
-                // 002Eh scale
-                stream.writeFloat(1); // todo: multiplier?
-                // 0032h zeroes
-                stream.writeInt(0);
-                // 0036h precision
-                stream.write(2);
-            }
-            writeLine(stream, headerText, 0);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (char c : "MLVLG\0".toCharArray()) {
+            stream.write(c);
         }
+
+        int fieldsDataSize = 0;
+        for (Sensor sensor : sensors) {
+            FieldType type = sensor.getType();
+            if (type == null)
+                throw new NullPointerException("No type for " + sensor);
+            fieldsDataSize += type.getStorageSize();
+        }
+
+        // 0006h Format version = 01
+        stream.write(0);
+        stream.write(1);
+        // 0008h Timestamp
+        stream.writeInt(0);
+        // 000ch
+        int offsetToText = Fields.MLQ_HEADER_SIZE + Fields.MLQ_FIELD_HEADER_SIZE * sensors.size();
+        stream.writeShort(offsetToText);
+        stream.writeShort(0); // reserved?
+        // 0010h = offset_to_data
+        stream.writeShort(offsetToText + headerText.length());
+        // 0012h
+        stream.writeShort(fieldsDataSize);
+        // 0014h number of fields
+        stream.writeShort(sensors.size());
+
+        for (Sensor sensor : sensors) {
+            String name = SensorLogger.getSensorName(sensor, 0);
+            String unit = sensor.getUnits();
+
+            // 0000h
+            stream.write(getSensorTypeValue(sensor));
+            // 0001h
+            writeLine(stream, name, 34);
+            // 0023h
+            writeLine(stream, unit, 11);
+            // 002Eh scale
+            stream.writeFloat(1); // todo: multiplier?
+            // 0032h zeroes
+            stream.writeInt(0);
+            // 0036h precision
+            stream.write(2);
+        }
+        writeLine(stream, headerText, 0);
+
     }
 
     private int getSensorTypeValue(Sensor sensor) {
         switch (sensor.getType()) {
+            case UINT8:
+                return 0;
+            case INT8:
+                return 1;
             case UINT16:
                 return 2;
             case INT16:
@@ -149,8 +168,10 @@ public class BinarySensorLog extends SensorLog {
         }
     }
 
+    @Override
     public void close() {
         close(stream);
+        stream = null;
     }
 
     public static void close(Closeable closeable) {
