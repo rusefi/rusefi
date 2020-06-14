@@ -1127,7 +1127,7 @@ gaugeCategory = Sensors - Raw
    entry = massAirFlowValue,@@GAUGE_NAME_AIR_FLOW@@,    float,  "%.3f"
    entry = chargeAirMass,   @@GAUGE_NAME_AIR_MASS@@,    float,  "%.3f"
    entry = throttlePedalPosition,   @@GAUGE_NAME_THROTTLE_PEDAL@@,       float,  "%.3f"
-   entry = totalTriggerErrorCounter, "trg err",int,    "%d"
+   entry = totalTriggerErrorCounter, @@GAUGE_NAME_TRG_ERR@@,int,    "%d"
    entry = idleAirValvePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
 
 

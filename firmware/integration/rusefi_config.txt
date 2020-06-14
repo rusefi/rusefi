@@ -1433,6 +1433,7 @@ end_struct
 
 
 #define GAUGE_NAME_VERSION "firmware"
+#define GAUGE_NAME_TRG_ERR "trg err"
 #define GAUGE_NAME_VVT "VVT position"
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VVS "Vehicle Speed"

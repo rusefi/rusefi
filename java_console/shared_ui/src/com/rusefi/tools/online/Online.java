@@ -21,11 +21,11 @@ import static com.rusefi.ui.AuthTokenPanel.TOKEN_WARNING;
 public class Online {
     private static final String url = "https://rusefi.com/online/upload.php";
 
-    public static void upload(File xmlFile, String authTokenValue) throws IOException {
+    public static void upload(File fileName, String authTokenValue) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(url);
 
-        FileBody uploadFilePart = new FileBody(xmlFile);
+        FileBody uploadFilePart = new FileBody(fileName);
         MultipartEntity reqEntity = new MultipartEntity();
         reqEntity.addPart("upload-file", uploadFilePart);
         reqEntity.addPart("rusefi_token", new StringBody(authTokenValue));
