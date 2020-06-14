@@ -579,6 +579,7 @@
 #define GAUGE_NAME_TIME "Time"
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_TPS "TPS"
+#define GAUGE_NAME_TRG_ERR "trg err"
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_VVS "Vehicle Speed"
