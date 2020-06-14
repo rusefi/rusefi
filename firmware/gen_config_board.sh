@@ -31,13 +31,10 @@ java -DSystemOut.name=gen_config_board \
 java -DSystemOut.name=gen_config_board \
 	-jar ../java_tools/ConfigDefinition.jar \
 	-definition integration/rusefi_config.txt \
-	-tool gen_config.sh \
 	-ts_destination tunerstudio \
-	-firing_order controllers/algo/firing_order.h \
 	-ts_output_name rusefi_${BOARDNAME}.ini \
 	-prepend tunerstudio/${BOARDNAME}_prefix.txt \
-	-prepend config/boards/${BOARDNAME}/prepend.txt \
-	-skip build/config.gen
+	-prepend config/boards/${BOARDNAME}/prepend.txt
 
 [ $? -eq 0 ] || (echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit $?)
 
