@@ -3,8 +3,10 @@ package com.opensr5.ini.field;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.FieldType;
 import com.rusefi.tune.xml.Constant;
+import org.jetbrains.annotations.NotNull;
 
 import javax.management.ObjectName;
+import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,12 +42,17 @@ public class EnumIniField extends IniField {
 
     @Override
     public String getValue(ConfigurationImage image) {
-        int ordinal = image.getByteBuffer(getOffset(), type.getStorageSize()).get();
+        int ordinal = getByteBuffer(image).getInt();
         ordinal = getBitRange(ordinal, bitPosition, bitSize);
 
         if (ordinal >= enums.size())
             throw new IllegalStateException(ordinal + " in " + getName());
         return enums.get(ordinal);
+    }
+
+    @NotNull
+    private ByteBuffer getByteBuffer(ConfigurationImage image) {
+        return image.getByteBuffer(getOffset(), 4);
     }
 
     private static boolean isQuoted(String q) {
@@ -59,6 +66,15 @@ public class EnumIniField extends IniField {
         int ordinal = enums.indexOf(isQuoted(v) ? ObjectName.unquote(v) : v);
         if (ordinal == -1)
             throw new IllegalArgumentException("Not found " + v);
+        int value = getByteBuffer(image).getInt();
+        value = setBitRange(value, ordinal, bitPosition, bitSize);
+        getByteBuffer(image).putInt(value);
+    }
+
+    public static int setBitRange(int value, int ordinal, int bitPosition, int bitSize) {
+        int num = ((1 << bitSize) - 1) << bitPosition;
+        int clearBitRange = value & ~num;
+        return (byte) (clearBitRange + (ordinal << bitPosition));
     }
 
     public static boolean getBit(int ordinal, int bitPosition) {
