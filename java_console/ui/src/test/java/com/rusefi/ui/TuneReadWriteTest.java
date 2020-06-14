@@ -10,7 +10,11 @@ import com.rusefi.tune.xml.Msq;
 import com.rusefi.xml.XmlUtil;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Objects;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * from IDEA this unit test needs to be exectuted with "empty" working directory
@@ -26,15 +30,28 @@ public class TuneReadWriteTest {
         Msq tsTune = XmlUtil.readModel(Msq.class, PATH + "CurrentTune.msq");
         System.out.println(tsTune);
 
-        makeBinaryTune(tsTune, IniFileModel.getInstance());
+        ConfigurationImage tsBinaryData = makeBinaryTune(tsTune, IniFileModel.getInstance());
 
 
         String binary = PATH + "current_configuration.rusefi_binary";
         System.out.println("Reading " + binary);
-        ConfigurationImageFile.readFromFile(binary);
+        ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(binary);
+
+
+        byte[] tsBinaryDataContent = tsBinaryData.getContent();
+        byte[] fileBinaryDataContent = fileBinaryData.getContent();
+        for (int i = 0; i < tsBinaryDataContent.length; i++) {
+            byte tsByte = tsBinaryDataContent[i];
+            byte fileByte = fileBinaryDataContent[i];
+            if (tsByte != fileByte) {
+//                System.out.println("Out issue is at " + IniFileModel.getInstance().findByOffset(i) + " " + tsByte + "/" + fileByte);
+//                throw new IllegalStateException("Content not same at " + i);
+            }
+        }
+//        assertEquals(Arrays.toString(tsBinaryDataContent), Arrays.toString(fileBinaryDataContent));
     }
 
-    private void makeBinaryTune(Msq tsTune, IniFileModel instance) {
+    private ConfigurationImage makeBinaryTune(Msq tsTune, IniFileModel instance) {
         ConfigurationImage ci = new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE);
 
         for (Constant constant : tsTune.getPage().constant) {
@@ -43,7 +60,9 @@ public class TuneReadWriteTest {
             }
             IniField field = instance.allIniFields.get(constant.getName());
             Objects.requireNonNull(field, "Field for " + constant.getName());
+            System.out.println("Setting " + field);
             field.setValue(ci, constant);
         }
+        return ci;
     }
 }

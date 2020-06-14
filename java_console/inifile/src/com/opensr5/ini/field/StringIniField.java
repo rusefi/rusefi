@@ -14,6 +14,11 @@ public class StringIniField extends IniField {
     }
 
     @Override
+    public int getSize() {
+        return size;
+    }
+
+    @Override
     public String getValue(ConfigurationImage image) {
         String value = new String(image.getContent(), getOffset(), size);
         value = value.trim();
