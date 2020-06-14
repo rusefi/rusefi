@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <msq xmlns="http://www.msefi.com/:msq">
-<bibliography author="TunerStudio MS Dev 3.1.03 - EFI Analytics, Inc." tuneComment="" writeDate="Wed Jun 10 20:16:44 EDT 2020"/>
+<bibliography author="TunerStudio MS Dev 3.1.03 - EFI Analytics, Inc." tuneComment="" writeDate="Sun Jun 14 00:00:04 EDT 2020"/>
 <versionInfo fileFormat="5.0" firmwareInfo="rusEFI+v20200604%4023532" nPages="1" signature="rusEFI v1.2020.4"/>
 <page>
 <pcVariable name="tsCanId">"0"</pcVariable>
@@ -559,8 +559,8 @@
 <constant name="unusedBit_251_27">"false"</constant>
 <constant name="unusedBit_251_28">"false"</constant>
 <constant name="unusedBit_251_29">"false"</constant>
-<constant name="unusedBit_283_30">"false"</constant>
-<constant name="unusedBit_283_31">"false"</constant>
+<constant name="unusedBit_280_30">"false"</constant>
+<constant name="unusedBit_280_31">"false"</constant>
 <constant name="etbIo1_directionPin1">"NONE"</constant>
 <constant name="etbIo1_directionPin2">"NONE"</constant>
 <constant name="etbIo1_controlPin1">"NONE"</constant>
@@ -631,7 +631,7 @@
 <constant name="tcu_solenoid8">"NONE"</constant>
 <constant digits="0" name="tps2SecondaryMin" units="ADC">0.0</constant>
 <constant digits="0" name="tps2SecondaryMax" units="ADC">1000.0</constant>
-<constant name="useFSIO6ForRevLimiter">"false"</constant>
+<constant name="unusedHereWeHave">"false"</constant>
 <constant name="fuelClosedLoopCorrectionEnabled">"false"</constant>
 <constant name="isVerboseIAC">"false"</constant>
 <constant name="isVerboseETB">"false"</constant>
@@ -662,6 +662,7 @@
 <constant name="useFSIO4ForSeriousEngineWarning">"false"</constant>
 <constant name="useFSIO12ForIdleOffset">"false"</constant>
 <constant name="useFSIO13ForIdleMinValue">"false"</constant>
+<constant name="useFSIO6ForRevLimiter">"false"</constant>
 <constant name="hipOutputChannel">"PC0"</constant>
 <constant name="acSwitchAdc">"Disabled"</constant>
 <constant name="vRefAdcChannel">"Disabled"</constant>
@@ -703,6 +704,9 @@
 <constant digits="0" name="idlePidRpmUpperLimit" units="RPM">0.0</constant>
 <constant digits="0" name="primeInjFalloffTemperature" units="*C">0.0</constant>
 <constant digits="0" name="ignMathCalculateAtIndex" units="index">0.0</constant>
+<constant digits="0" name="acCutoffLowRpm" units="RPM">700.0</constant>
+<constant digits="0" name="acCutoffHighRpm" units="RPM">5000.0</constant>
+<constant digits="0" name="acIdleRpmBump" units="RPM">200.0</constant>
 <constant digits="0" name="warningPeriod" units="seconds">10.0</constant>
 <constant digits="2" name="knockDetectionWindowStart" units="angle">35.0</constant>
 <constant digits="2" name="knockDetectionWindowEnd" units="angle">135.0</constant>
@@ -1314,6 +1318,7 @@
          22.0 
          25.0 
       </constant>
+<constant digits="2" name="hip9011Gain">1.0</constant>
 <constant digits="0" name="etb_iTermMin">-30.0</constant>
 <constant digits="0" name="etb_iTermMax">30.0</constant>
 <constant digits="2" name="etbDeadband">0.0</constant>
@@ -3206,15 +3211,7 @@
          0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_14" rows="6" units="RAW">
-         188.0 
-         2.0 
-         136.0 
-         19.0 
-         200.0 
-         0.0 
-      </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_15" rows="24" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_14" rows="24" units="RAW">
          0.0 
          0.0 
          0.0 
@@ -3240,7 +3237,7 @@
          0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_16" rows="20" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_15" rows="20" units="RAW">
          0.0 
          0.0 
          0.0 
@@ -3262,7 +3259,7 @@
          0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_17" rows="19" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_16" rows="19" units="RAW">
          0.0 
          0.0 
          0.0 
@@ -3283,38 +3280,12 @@
          0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_18" rows="3" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_17" rows="3" units="RAW">
          0.0 
          0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_19" rows="9" units="RAW">
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-      </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_20" rows="24" units="RAW">
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
-         0.0 
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_18" rows="9" units="RAW">
          0.0 
          0.0 
          0.0 
@@ -3325,27 +3296,47 @@
          0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_21" rows="3" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_19" rows="24" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
          0.0 
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_22" units="RAW">
-         0.0 
-      </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_23" rows="4" units="RAW">
-         0.0 
-         0.0 
-         128.0 
-         63.0 
-      </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_24" rows="4" units="RAW">
-         0.0 
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_20" rows="3" units="RAW">
          0.0 
          0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_25" rows="20" units="RAW">
+<constant digits="0" name="UNALLOCATED_SPACE_0_21" units="RAW">
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_22" rows="4" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_23" rows="20" units="RAW">
          0.0 
          0.0 
          0.0 
@@ -3365,6 +3356,12 @@
          0.0 
          0.0 
          0.0 
+         0.0 
+      </constant>
+<constant digits="0" name="UNALLOCATED_SPACE_0_24" units="RAW">
+         0.0 
+      </constant>
+<constant digits="0" name="UNALLOCATED_SPACE_0_25" units="RAW">
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_26" units="RAW">
@@ -3373,13 +3370,7 @@
 <constant digits="0" name="UNALLOCATED_SPACE_0_27" units="RAW">
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_28" units="RAW">
-         0.0 
-      </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_29" units="RAW">
-         0.0 
-      </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_30" rows="1486" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_28" rows="1486" units="RAW">
          0.0 
          0.0 
          0.0 
@@ -4867,7 +4858,7 @@
          0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_31" rows="8" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_29" rows="8" units="RAW">
          0.0 
          0.0 
          0.0 

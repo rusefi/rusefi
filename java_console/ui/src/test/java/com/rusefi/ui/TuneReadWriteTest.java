@@ -40,15 +40,21 @@ public class TuneReadWriteTest {
 
         byte[] tsBinaryDataContent = tsBinaryData.getContent();
         byte[] fileBinaryDataContent = fileBinaryData.getContent();
+
+        int mismatchCounter = 0;
+
         for (int i = 0; i < tsBinaryDataContent.length; i++) {
             byte tsByte = tsBinaryDataContent[i];
             byte fileByte = fileBinaryDataContent[i];
             if (tsByte != fileByte) {
-//                System.out.println("Out issue is at " + IniFileModel.getInstance().findByOffset(i) + " " + tsByte + "/" + fileByte);
-//                throw new IllegalStateException("Content not same at " + i);
+                IniField field = IniFileModel.getInstance().findByOffset(i);
+                System.out.println("Mismatch at " + (field == null ? "offset " + i : field) + " " + tsByte + "/" + fileByte);
+                mismatchCounter++;
             }
         }
-//        assertEquals(Arrays.toString(tsBinaryDataContent), Arrays.toString(fileBinaryDataContent));
+        System.out.println("Total mismatch count " + mismatchCounter);
+        // for different legit reasons we have some mismatches
+        assertEquals(7, mismatchCounter);
     }
 
     private ConfigurationImage makeBinaryTune(Msq tsTune, IniFileModel instance) {
