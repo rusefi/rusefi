@@ -29,6 +29,6 @@ public class IniField {
     }
 
     public void setValue(ConfigurationImage image, Constant constant) {
-//        throw new UnsupportedOperationException("On " + getClass());
+        throw new UnsupportedOperationException("On " + getClass());
     }
 }
