@@ -25,7 +25,7 @@ public class OnlineTab {
         upload.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Msq tune = Msq.toMsq(LinkManager.connector.getBinaryProtocol().getControllerConfiguration());
+                Msq tune = Msq.valueOf(LinkManager.connector.getBinaryProtocol().getControllerConfiguration());
                 Online.uploadTune(tune, authTokenPanel, content);
             }
         });

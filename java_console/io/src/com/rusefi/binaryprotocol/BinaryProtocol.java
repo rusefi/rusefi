@@ -345,7 +345,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
         try {
             ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
-            Msq tune = Msq.toMsq(image);
+            Msq tune = Msq.valueOf(image);
             tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
         } catch (Exception e) {
             System.err.println("Ignoring " + e);
