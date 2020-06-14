@@ -228,6 +228,7 @@ static systime_t timeOfPreviousReport = (systime_t) -1;
  * @brief Sends all pending data to rusEfi console
  *
  * This method is periodically invoked by the main loop
+ * todo: is this mostly dead code?
  */
 void updateDevConsoleState(void) {
 	// todo: make SWO work
@@ -443,7 +444,7 @@ public:
 private:
 	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
-		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->lcdThreadPeriodMs));
+		setPeriod(NOT_TOO_OFTEN(10 /* ms */, 300));
 		if (engineConfiguration->useLcdScreen) {
 #if EFI_HD44780_LCD
 			updateHD44780lcd();
