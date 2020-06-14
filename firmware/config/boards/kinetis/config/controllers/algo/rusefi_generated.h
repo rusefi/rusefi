@@ -249,7 +249,6 @@
 #define COMPOSITE_PACKET_SIZE 5
 #define compressionRatio_offset 732
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
-#define consoleLoopPeriodMs_offset 716
 #define consoleUartDevice_offset 943
 #define CRANKING_ADVANCE_CURVE_SIZE 4
 #define cranking_alignmentFill_at_6_offset 94
@@ -576,7 +575,6 @@
 #define GAUGE_NAME_VVT "VVT position"
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
 #define GAUGE_NAME_WARNING_LAST "warning: last"
-#define generalPeriodicThreadPeriodMs_offset 724
 #define globalFuelCorrection_offset 544
 #define globalTriggerAngleOffset_offset 456
 #define gpioPinModes10_offset 773
@@ -724,7 +722,6 @@
 #define idleRpmPid_pFactor_offset 1788
 #define idleStepperReactionTime_offset 1508
 #define idleStepperTotalSteps_offset 1532
-#define idleThreadPeriodMs_offset 712
 #define idleTimingPid_dFactor_offset 3976
 #define idleTimingPid_iFactor_offset 3972
 #define idleTimingPid_maxValue_offset 3986
@@ -860,7 +857,6 @@
 #define launchTimingRetard_offset 320
 #define launchTimingRpmRange_offset 1036
 #define launchTpsTreshold_offset 1056
-#define lcdThreadPeriodMs_offset 720
 #define LDS_ALTERNATOR_PID_STATE_INDEX 9
 #define LDS_CJ125_PID_STATE_INDEX 10
 #define LDS_ENGINE_STATE_INDEX 3
@@ -975,7 +971,6 @@
 #define onOffAlternatorLogic_offset 744
 #define output_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "N/A", "N/A", "PA10", "PA11", "PA12", "PA13", "N/A", "N/A", "N/A", "N/A", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "N/A", "N/A", "N/A", "N/A", "PB12", "PB13", "N/A", "N/A", "N/A", "N/A", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "N/A", "N/A", "N/A", "N/A", "PC14", "PC15", "PC16", "PC17", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "PD15", "PD16", "N/A", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16"
 #define overrideCrankingIacSetting_offset 1476
-#define overrideCrankingIgnition_offset 516
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_ANGLE 50
@@ -1325,6 +1320,7 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_former_warmup_target_afr_offset 2108
+#define unusedAt712_offset 712
 #define unusedAtOldBoardConfigurationEnd_offset 1200
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_11_offset 976
@@ -1346,8 +1342,8 @@
 #define unusedBit_251_27_offset 976
 #define unusedBit_251_28_offset 976
 #define unusedBit_251_29_offset 976
-#define unusedBit_283_30_offset 976
-#define unusedBit_283_31_offset 976
+#define unusedBit_280_30_offset 976
+#define unusedBit_280_31_offset 976
 #define unusedBit_34_31_offset 76
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHere_offset 761
@@ -1358,6 +1354,7 @@
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding7_offset 4005
 #define unusedSpiPadding8_offset 4009
+#define unusedValueHere_offset 516
 #define unusuedsw_offset 4020
 #define unusuedvref_offset 4016
 #define useAdvanceCorrectionsForCranking_offset 1476
