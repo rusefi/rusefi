@@ -34,8 +34,7 @@ java -DSystemOut.name=gen_config_board ^
  -firing_order controllers/algo/firing_order.h ^
  -ts_output_name rusefi_%BOARDNAME%.ini ^
  -prepend tunerstudio/%BOARDNAME%_prefix.txt ^
- -prepend config/boards/%BOARDNAME%/prepend.txt ^
- -skip build/config.gen
+ -prepend config/boards/%BOARDNAME%/prepend.txt
 
 
 rem This would automatically copy latest file to 'dev' TS project
