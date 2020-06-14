@@ -64,12 +64,15 @@ EXTERN_ENGINE;
 
 static uint8_t rpmcounter;
 static uint16_t e90msgcounter;
-static uint8_t rpmcounter;
-
+static uint8_t seatbeltcnt;
+static uint8_t abscounter = 0xF0;
+static uint8_t brakecnt_1 = 0xF0, brakecnt_2 = 0xF0;
 static uint8_t mph_a, mph_2a, mph_last, tmp_cnt, gear_cnt;
 static uint16_t mph_counter = 0xF000;
 static time_msecs_t mph_timer;
 static time_msecs_t mph_ctr;
+
+constexpr uint8_t e90_temp_offset = 49;
 
 void canDashboardBMW(void) {
 	//BMW Dashboard
