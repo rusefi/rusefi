@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.romraider.util.ThreadUtil.sleep;
-import static com.rusefi.SensorLogger.getSecondsSinceFileStart;
+import static com.rusefi.sensor_logs.SensorLogger.getSecondsSinceFileStart;
 import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
 import static com.rusefi.etb.TestSequenceStep.count;

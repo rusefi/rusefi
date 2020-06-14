@@ -93,7 +93,7 @@ public enum FileLog {
         return new FileOutputStream(fileName, true);
     }
 
-    static void createFolderIfNeeded() {
+    public static void createFolderIfNeeded() {
         File dir = new File(DIR);
         if (dir.exists())
             return;
