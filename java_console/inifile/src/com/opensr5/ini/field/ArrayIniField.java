@@ -12,12 +12,14 @@ public class ArrayIniField extends IniField {
     private final FieldType type;
     private final int cols;
     private final int rows;
+    private final double multiplier;
 
-    public ArrayIniField(String name, int offset, FieldType type, int cols, int rows) {
+    public ArrayIniField(String name, int offset, FieldType type, int cols, int rows, String unit, double multiplier) {
         super(name, offset);
         this.type = type;
         this.cols = cols;
         this.rows = rows;
+        this.multiplier = multiplier;
     }
 
     public FieldType getType() {
@@ -66,7 +68,7 @@ public class ArrayIniField extends IniField {
             for (int colIndex = 0; colIndex < cols; colIndex++) {
                 String value = values[rowIndex * cols + colIndex];
                 ByteBuffer wrapped = image.getByteBuffer(getOffset(rowIndex, colIndex), type.getStorageSize());
-                ScalarIniField.setValue(wrapped, type, value, Field.NO_BIT_OFFSET);
+                ScalarIniField.setValue(wrapped, type, value, Field.NO_BIT_OFFSET, multiplier);
             }
         }
     }
@@ -87,6 +89,9 @@ public class ArrayIniField extends IniField {
         FieldType type = FieldType.parseTs(list.get(2));
         int offset = Integer.parseInt(list.get(3));
         String size = list.get(4);
+        String unit = list.get(5);
+        double multiplier = Double.parseDouble(list.get(6));
+
         size = size.replaceAll("[\\]\\[x]", " ").trim();
         String dimentions[] = size.split(" ");
         int cols;
@@ -101,6 +106,6 @@ public class ArrayIniField extends IniField {
             throw new IllegalStateException("Unexpected " + size);
         }
 
-        return new ArrayIniField(name, offset, type, cols, rows);
+        return new ArrayIniField(name, offset, type, cols, rows, unit, multiplier);
     }
 }
