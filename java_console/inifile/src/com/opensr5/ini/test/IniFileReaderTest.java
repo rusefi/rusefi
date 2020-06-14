@@ -25,11 +25,12 @@ public class IniFileReaderTest {
     public void testSplitWithEmptyUnits() {
         {
             String[] s = IniFileReader.splitTokens("\tverboseCanBaseAddress\t\t\t= \"\", 1");
-            assertEquals(2, s.length);
+            assertEquals(3, s.length);
+            assertEquals("", s[1]);
         }
         {
             String[] s = IniFileReader.splitTokens("\tverboseCanBaseAddress\t\t\t= scalar, U32,\t756,\t\"\", 1, 0, 0, 536870911, 0");
-            assertEquals(9, s.length);
+            assertEquals(10, s.length);
         }
     }
 
