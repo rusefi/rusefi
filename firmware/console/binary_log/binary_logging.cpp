@@ -1,3 +1,8 @@
+/**
+ * See also BinarySensorLog.java
+ * See also mlq_file_format.txt
+ */
+
 
 #include "tunerstudio_outputs.h"
 #include "log_field.h"
