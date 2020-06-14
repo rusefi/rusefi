@@ -1235,7 +1235,7 @@ gaugeCategory = Sensors - Raw
 
 ; Electronic throttle body
    entry = etb1Error,      "ETB Error", float, "%.3f"
-   entry = etb1DutyCycle,  "ETB Duty", float, "%.3f"
+   entry = etb1DutyCycle,  @@GAUGE_NAME_ETB_DUTY@@, float, "%.3f"
    entry = etbTarget,      "ETB Target", float, "%.3f"
    
    
