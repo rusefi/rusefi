@@ -21,6 +21,7 @@ public class Field {
     private final FieldType type;
     private final int bitOffset;
     private final String[] options;
+    // todo: add multiplier support!
 
     public Field(String name, int offset, FieldType type) {
         this(name, offset, type, NO_BIT_OFFSET);
@@ -129,10 +130,10 @@ public class Field {
                 '}';
     }
 
-    public Object getAnyValue(ConfigurationImage ci) {
+    public Object getAnyValue(ConfigurationImage ci, double multiplier) {
         if (options == null) {
             // we are here for non-enum types
-            return niceToString(getValue(ci));
+            return niceToString(getValue(ci, multiplier));
         }
         if (type != INT8)
             throw new IllegalStateException("Unsupported enum " + type);
@@ -140,9 +141,18 @@ public class Field {
         return options[ordinal];
     }
 
+    /**
+     * each usage is a potential bug?! we are supposed to have explicit multiplier for each field
+     */
+    @NotNull
+    @Deprecated
+    public Number getValue(ConfigurationImage ci) {
+        return getValue(ci, 1);
+    }
+
     // todo: rename to getNumberValue?
     @NotNull
-    public Number getValue(ConfigurationImage ci) {
+    public Number getValue(ConfigurationImage ci, double multiplier) {
         Objects.requireNonNull(ci);
         Number value;
         ByteBuffer wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
@@ -158,7 +168,7 @@ public class Field {
         } else {
             value = wrapped.getFloat();
         }
-        return value;
+        return value.doubleValue() * multiplier;
     }
 
     @NotNull
