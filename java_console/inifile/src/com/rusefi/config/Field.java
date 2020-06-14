@@ -131,6 +131,7 @@ public class Field {
 
     public Object getAnyValue(ConfigurationImage ci) {
         if (options == null) {
+            // we are here for non-enum types
             return niceToString(getValue(ci));
         }
         if (type != INT8)

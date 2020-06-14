@@ -43,20 +43,23 @@ public class ScalarIniField extends IniField {
     public void setValue(ConfigurationImage image, Constant constant) {
         Field f = new Field(getName(), getOffset(), getType());
         ByteBuffer wrapped = image.getByteBuffer(getOffset(), type.getStorageSize());
-        if (f.getBitOffset() != Field.NO_BIT_OFFSET) {
-            throw new UnsupportedOperationException("For " + constant);
+        setValue(wrapped, type, constant.getValue(), f.getBitOffset());
+    }
+
+    public static void setValue(ByteBuffer wrapped, FieldType type, String value, int bitOffset) {
+        if (bitOffset != Field.NO_BIT_OFFSET) {
+            throw new UnsupportedOperationException("For " + value);
 //            int packed = wrapped.getInt();
 //            value = (packed >> bitOffset) & 1;
         } else if (type == INT8 || type == UINT8) {
-            wrapped.put((byte) Double.parseDouble(constant.getValue()));
+            wrapped.put((byte) Double.parseDouble(value));
         } else if (type == INT) {
-            wrapped.putInt((int) Double.parseDouble(constant.getValue()));
+            wrapped.putInt((int) Double.parseDouble(value));
         } else if (type == INT16 || type == UINT16) {
-            wrapped.putShort((short) Double.parseDouble(constant.getValue()));
+            wrapped.putShort((short) Double.parseDouble(value));
         } else {
-            wrapped.putFloat(Float.parseFloat(constant.getValue()));
+            wrapped.putFloat(Float.parseFloat(value));
         }
-        super.setValue(image, constant);
     }
 
     public static ScalarIniField parse(LinkedList<String> list) {
