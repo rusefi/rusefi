@@ -546,7 +546,7 @@
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
-#define GAUGE_NAME_ETB_DUTY "ETB duty cycle"
+#define GAUGE_NAME_ETB_DUTY "ETB Duty"
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
 #define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure correction"

@@ -18,10 +18,12 @@ import java.util.stream.Collectors;
  * </p>
  * Andrey Belomutskiy, (c) 2013-2020
  */
-public class BinarySensorLog extends SensorLog {
+public class BinarySensorLog implements SensorLog {
     private final Function<Sensor, Double> valueProvider;
     private final Collection<Sensor> sensors;
     private DataOutputStream stream;
+
+    private String fileName;
 
     private int counter;
 
@@ -49,10 +51,10 @@ public class BinarySensorLog extends SensorLog {
     }
 
     @Override
-    void writeSensorLogLine() {
+    public void writeSensorLogLine() {
         if (stream == null) {
             FileLog.createFolderIfNeeded();
-            String fileName = FileLog.DIR + "rusEFI_gauges_" + FileLog.getDate() + ".mlg";
+            fileName = FileLog.DIR + "rusEFI_gauges_" + FileLog.getDate() + ".mlg";
 
             try {
                 stream = new DataOutputStream(new FileOutputStream(fileName));
@@ -180,6 +182,10 @@ public class BinarySensorLog extends SensorLog {
         } catch (IOException e) {
             // ignoring
         }
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 
     private void writeLine(DataOutputStream stream, String name, int length) throws IOException {

@@ -76,7 +76,7 @@ public class FormulasPane {
         content.add(topButtonsPanel, BorderLayout.NORTH);
 
         JPanel bottomPanel = new JPanel(new FlowLayout());
-        bottomPanel.add(new IntGaugeLabel("count", Sensor.errorCodeCounter));
+        bottomPanel.add(new IntGaugeLabel("count", Sensor.totalTriggerErrorCounter));
         bottomPanel.add(new IntGaugeLabel("error", Sensor.lastErrorCode));
 
         content.add(bottomPanel, BorderLayout.SOUTH);

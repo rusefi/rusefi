@@ -19,7 +19,7 @@ import java.io.Writer;
  * </p>
  * Andrey Belomutskiy, (c) 2013-2020
  */
-public class PlainTextSensorLog extends SensorLog {
+public class PlainTextSensorLog implements SensorLog {
     private Writer logFile;
 
     private long fileStartTime;
@@ -80,7 +80,7 @@ public class PlainTextSensorLog extends SensorLog {
     }
 
     @Override
-    void writeSensorLogLine() {
+    public void writeSensorLogLine() {
         startIfNeeded();
         if (logFile == null)
             return;

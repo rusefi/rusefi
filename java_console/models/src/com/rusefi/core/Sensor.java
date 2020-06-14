@@ -95,7 +95,7 @@ public enum Sensor {
 
     engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.INT16, 134, 0, 5),
     // Errors
-    errorCodeCounter("error counter", SensorCategory.STATUS, FieldType.INT, 136, 0, 5),
+    totalTriggerErrorCounter(GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, 136, 0, 5),
     lastErrorCode("last error", SensorCategory.STATUS, FieldType.INT, 138, 0, 5),
 
     // Debug

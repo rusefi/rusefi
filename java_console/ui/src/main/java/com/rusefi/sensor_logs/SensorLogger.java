@@ -73,14 +73,14 @@ public class SensorLogger {
             Sensor.debugIntField4,
             Sensor.debugIntField5,
 
-            Sensor.errorCodeCounter,
+            Sensor.totalTriggerErrorCounter,
             Sensor.lastErrorCode,
 
             Sensor.engineMakeCodeNameCrc16,
             Sensor.tuneCrc16,
     };
 
-    private static List<SensorLog> sensorLogs = Arrays.asList(new PlainTextSensorLog(), new BinarySensorLog());
+    private static List<SensorLog> sensorLogs = Arrays.asList(new PlainTextSensorLog(), new BinarySensorLogRestarter());
 
     private static boolean isInitialized;
 
