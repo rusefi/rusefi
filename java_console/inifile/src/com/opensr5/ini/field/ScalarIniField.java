@@ -3,8 +3,12 @@ package com.opensr5.ini.field;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
+import com.rusefi.tune.xml.Constant;
 
+import java.nio.ByteBuffer;
 import java.util.LinkedList;
+
+import static com.rusefi.config.FieldType.*;
 
 public class ScalarIniField extends IniField {
     private final String unit;
@@ -33,6 +37,26 @@ public class ScalarIniField extends IniField {
         } catch (Throwable e) {
             throw new IllegalStateException("While getting " + getName(), e);
         }
+    }
+
+    @Override
+    public void setValue(ConfigurationImage image, Constant constant) {
+        Field f = new Field(getName(), getOffset(), getType());
+        ByteBuffer wrapped = image.getByteBuffer(getOffset(), type.getStorageSize());
+        if (f.getBitOffset() != Field.NO_BIT_OFFSET) {
+            throw new UnsupportedOperationException("For " + constant);
+//            int packed = wrapped.getInt();
+//            value = (packed >> bitOffset) & 1;
+        } else if (type == INT8 || type == UINT8) {
+            wrapped.put((byte) Double.parseDouble(constant.getValue()));
+        } else if (type == INT) {
+            wrapped.putInt((int) Double.parseDouble(constant.getValue()));
+        } else if (type == INT16 || type == UINT16) {
+            wrapped.putShort((short) Double.parseDouble(constant.getValue()));
+        } else {
+            wrapped.putFloat(Float.parseFloat(constant.getValue()));
+        }
+        super.setValue(image, constant);
     }
 
     public static ScalarIniField parse(LinkedList<String> list) {
