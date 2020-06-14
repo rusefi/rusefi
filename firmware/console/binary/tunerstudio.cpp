@@ -367,7 +367,9 @@ static void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	uint32_t crc = SWAP_UINT32(crc32((void * ) getWorkingPageAddr(), count));
 
-	scheduleMsg(&tsLogger, "CRC32 response: %x", crc);
+#if 0
+	scheduleMsg(&tsLogger, "Sending CRC32 response: %x", crc);
+#endif
 
 	sr5SendResponse(tsChannel, mode, (const uint8_t *) &crc, 4);
 }

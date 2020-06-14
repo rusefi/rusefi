@@ -34,11 +34,15 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 
 void GppwmChannel::setOutput(float result) {
 	// Not init yet, nothing to do.
-	if (!m_pwm || !m_config) {
+	if (!m_config) {
 		return;
 	}
-	
-	if (!m_usePwm) {
+
+	if (m_usePwm) {
+		efiAssertVoid(OBD_PCM_Processor_Fault, m_usePwm, "m_usePwm null");
+		m_pwm->setSimplePwmDutyCycle(clampF(0, result / 100.0f, 1));
+	} else {
+		efiAssertVoid(OBD_PCM_Processor_Fault, m_output, "m_output null");
 		// Apply hysteresis with provided values
 		if (m_state && result < m_config->offBelowDuty) {
 			m_state = false;
@@ -46,15 +50,14 @@ void GppwmChannel::setOutput(float result) {
 			m_state = true;
 		}
 
-		result = m_state ? 100 : 0;
+		m_output->setValue(m_state);
 	}
-
-	m_pwm->setSimplePwmDutyCycle(clampF(0, result / 100.0f, 1));
 }
 
-void GppwmChannel::init(bool usePwm, SimplePwm* pwm, const ValueProvider3D* table, const gppwm_channel* config) {
+void GppwmChannel::init(bool usePwm, SimplePwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config) {
 	m_usePwm = usePwm;
 	m_pwm = pwm;
+	m_output = outputPin;
 	m_table = table;
 	m_config = config;
 }

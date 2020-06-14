@@ -28,8 +28,7 @@ public class ConfigurationImage {
 
     @NotNull
     public ByteBuffer getByteBuffer(int offset, int size) {
-        byte data[] = getRange(offset, size);
-        ByteBuffer wrapped = ByteBuffer.wrap(data);
+        ByteBuffer wrapped = ByteBuffer.wrap(content, offset, size);
         wrapped.order(ByteOrder.LITTLE_ENDIAN);
         return wrapped;
     }
