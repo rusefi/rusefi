@@ -53,8 +53,8 @@ public class TuneReadWriteTest {
             }
         }
         System.out.println("Total mismatch count " + mismatchCounter);
-        // for different legit reasons we have some mismatches
-        assertEquals(7, mismatchCounter);
+        // todo: why one byte mismatch? since it's in floats I kind of do not care, floats are weird
+        assertEquals(1, mismatchCounter);
     }
 
     private ConfigurationImage makeBinaryTune(Msq tsTune, IniFileModel instance) {
