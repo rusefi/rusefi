@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Jun 14 17:00:26 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Jun 14 18:18:14 EDT 2020
 // see also gen_config_and_enums.bat
 
 
@@ -380,6 +380,19 @@ case TLE6240_PIN_8:
   return "TLE6240_PIN_8";
 case TLE6240_PIN_9:
   return "TLE6240_PIN_9";
+  }
+ return NULL;
+}
+const char *getCan_baudrate_e(can_baudrate_e value){
+switch(value) {
+case B100KBPS:
+  return "B100KBPS";
+case B1MBPS:
+  return "B1MBPS";
+case B250KBPS:
+  return "B250KBPS";
+case B500KBPS:
+  return "B500KBPS";
   }
  return NULL;
 }
