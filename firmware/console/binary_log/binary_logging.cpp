@@ -83,7 +83,7 @@ void writeHeader(char* buffer) {
 	buffer[21] = efi::size(fields);
 
 	// Write the actual logger fields, offset 22
-	char* entryHeaders = buffer + 22;
+	char* entryHeaders = buffer + MLQ_HEADER_SIZE;
 	for (size_t i = 0; i < efi::size(fields); i++) {
 		size_t sz = fields[i].writeHeader(entryHeaders);
 		entryHeaders += sz;
