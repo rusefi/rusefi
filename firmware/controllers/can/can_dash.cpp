@@ -64,11 +64,12 @@ EXTERN_ENGINE;
 #define E90_LIGHTS 0x21A
 
 static uint8_t rpmcounter;
-static uint16_t msgcounter;
+static uint16_t e90msgcounter;
 static uint8_t counter0d7;
 static uint8_t abscounter = 0xF0;
-static uint8_t airbagcounter;
 static uint8_t brakecnt_1 = 0xF0, brakecnt_2 = 0xF0;
+
+constexpr uint8_t e90_temp_offset = 49;
 
 static uint8_t mph_a, mph_2a, mph_last, tmp_cnt, gear_cnt;
 static uint16_t mph_counter = 0xF000;
@@ -231,12 +232,11 @@ void canDashboardW202(void) {
 
 void canDashboardBMWE90()
 {
-	// palTogglePad(GPIOG, 13);
+	if (e90msgcounter == UINT16_MAX)
+		e90msgcounter = 0;
+	e90msgcounter++;
 
-	uint16_t temprpm;
-	msgcounter++;
-
-	{ //E90_T15
+	{ //T15 'turn-on'
 		CanTxMessage msg(E90_T15, 5);
 		msg[0] = 0x45;
 		msg[1] = 0x41;
@@ -244,67 +244,57 @@ void canDashboardBMWE90()
 		msg[3] = 0x8F;
 		msg[4] = 0xFC;			
 	}
-	{
+
+	{ //Ebrake light
 		CanTxMessage msg(E90_EBRAKE, 2);
 		msg[0] = 0xFD;
 		msg[1] = 0xFF;
 	}
 
-	{ //E90_RPM
+	{ //RPM
 		rpmcounter++;
 		if (rpmcounter > 0xFE)
 			rpmcounter = 0xF0;
-
-		temprpm = GET_RPM() * 4;
-
 		CanTxMessage msg(E90_RPM, 3);
 		msg[0] = rpmcounter;
-		msg[1] = temprpm & 0xFF;
-		msg[2] = temprpm >> 8;
+		msg[1] = (GET_RPM() * 4) & 0xFF;
+		msg[2] = (GET_RPM() * 4) >> 8;
 	}
 
-	
-	{ //E90_TEMP
-		// if (msgcounter % 2) {
+	{ //oil & coolant temp
 			tmp_cnt++;
 			if (tmp_cnt >= 0x0F)
 				tmp_cnt = 0x00;
 			CanTxMessage msg(E90_TEMP, 8);
-			int temp = 90;
-			msg[0] = 0x59; //coolant
-			msg[1] = 0xAA; //olio
+			msg[0] = (int)(Sensor::get(SensorType::Clt).value_or(0) + e90_temp_offset); //coolant
+			msg[1] = (int)(Sensor::get(SensorType::AuxTemp1).value_or(0) + e90_temp_offset); //oil (AuxTemp1)
 			msg[2] = tmp_cnt;
 			msg[3] = 0xC8;
 			msg[4] = 0xA7;
 			msg[5] = 0xD3;
 			msg[6] = 0x0D;
 			msg[7] = 0xA8;
-		// }
 	}
 
-	{ //E90_SEATBELT_COUNTER
-		if (msgcounter % 2) {
+	{ //Seatbelt counter
+		if (e90msgcounter % 2) {
 			counter0d7++;
 			if (counter0d7 > 0xFE)
 				counter0d7 = 0x00;
-
 			CanTxMessage msg(E90_SEATBELT_COUNTER, 2);
 			msg[0] = counter0d7;
 			msg[1] = 0xFF;
 		}
 	}
 
-	{ //E90_BRAKE_COUNTER
-		if (msgcounter % 2) {
-
+	{ //Brake counter
+		if (e90msgcounter % 2) {
 			brakecnt_1 += 16;
 			brakecnt_2 += 16;
-
 			if (brakecnt_1 > 0xEF)
 				brakecnt_1 = 0x0F;
 			if (brakecnt_2 > 0xF0)
 				brakecnt_2 = 0xA0;
-
 			CanTxMessage msg(E90_BRAKE_COUNTER, 8);
 			msg[0] = 0x00;
 			msg[1] = 0xE0;
@@ -317,20 +307,19 @@ void canDashboardBMWE90()
 		}
 	}
 
-	{ //E90_ABS_COUNTER
-		if (msgcounter % 2) {
+	{ //ABS counter
+		if (e90msgcounter % 2) {
 			abscounter++;
 			if (abscounter > 0xFE)
 				abscounter = 0xF0;
-
 			CanTxMessage msg(E90_ABS_COUNTER, 2);
 			msg[0] = abscounter;
 			msg[1] = 0xFF;
 		}
 	}
 
-	{ //E90_FUEL
-		if (msgcounter % 2) {
+	{ //Fuel gauge
+		if (e90msgcounter % 2) {
 			CanTxMessage msg(E90_FUEL, 5); //fuel gauge
 			msg[0] = 0x76;
 			msg[1] = 0x0F;
@@ -340,9 +329,8 @@ void canDashboardBMWE90()
 		}
 	}
 
-	{ //E90_GEAR
-	if (msgcounter % 2) {
-
+	{ //Gear indicator/counter
+		if (e90msgcounter % 2) {
 			gear_cnt++;
 			if (gear_cnt >= 0x0F)
 				gear_cnt = 0x00;
@@ -357,45 +345,27 @@ void canDashboardBMWE90()
 	}
 
 	{ //E90_SPEED
-		if (msgcounter % 2) {
-		// float mph = getVehicleSpeed() * 0.6213712;
-		float mph = 0;
-
-		systime_t timer = TIME_I2MS(chVTGetSystemTime());
-
-		mph_ctr = ((TIME_I2MS(chVTGetSystemTime()) - mph_timer) / 50);
-        mph_a = (mph_ctr * mph / 2);
-		mph_2a = mph_a + mph_last;
-		mph_last = mph_2a;
-		mph_counter += mph_ctr * 100;
-		if(mph_counter >= 0xFFF0)
-			mph_counter = 0xF000;
-		mph_timer = TIME_I2MS(chVTGetSystemTime());
-
-		CanTxMessage msg(E90_SPEED, 8);
-		msg[0] = mph_2a & 0xFF;
-		msg[1] = mph_2a >> 8;
-		msg[2] = mph_2a & 0xFF;
-		msg[3] = mph_2a >> 8;
-		msg[4] = mph_2a & 0xFF;
-		msg[5] = mph_2a >> 8;
-		msg[6] = mph_counter & 0xFF;
-		msg[7] = (mph_counter >> 8) | 0xF0;
+		if (e90msgcounter % 2) {
+			float mph = getVehicleSpeed() * 0.6213712;
+			mph_ctr = ((TIME_I2MS(chVTGetSystemTime()) - mph_timer) / 50);
+			mph_a = (mph_ctr * mph / 2);
+			mph_2a = mph_a + mph_last;
+			mph_last = mph_2a;
+			mph_counter += mph_ctr * 100;
+			if(mph_counter >= 0xFFF0)
+				mph_counter = 0xF000;
+			mph_timer = TIME_I2MS(chVTGetSystemTime());
+			CanTxMessage msg(E90_SPEED, 8);
+			msg[0] = mph_2a & 0xFF;
+			msg[1] = mph_2a >> 8;
+			msg[2] = mph_2a & 0xFF;
+			msg[3] = mph_2a >> 8;
+			msg[4] = mph_2a & 0xFF;
+			msg[5] = mph_2a >> 8;
+			msg[6] = mph_counter & 0xFF;
+			msg[7] = (mph_counter >> 8) | 0xF0;
 		}
 	}
-
-	// { // WARNING msg
-	// 	CanTxMessage msg(0x592, 8);
-	// 	msg[0] = 0x40;
-	// 	msg[1] = 0x99; // error ID
-	// 	msg[2] = 0x00;
-	// 	msg[3] = 0x31; // first bit indicates on or off. 1 on, 0 off.
-	// 	msg[4] = 0xFF;
-	// 	msg[5] = 0xFF;
-	// 	msg[6] = 0xFF;
-	// 	msg[7] = 0xFF;
-
-	// }
 }
 
 #endif // EFI_CAN_SUPPORT
