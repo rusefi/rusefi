@@ -11,14 +11,14 @@
 #include "crc.h"
 
 static const LogField fields[] = {
-	{tsOutputChannels.rpm, "RPM", "rpm", 0},
+	{tsOutputChannels.rpm, GAUGE_NAME_RPM, "rpm", 0},
 	{tsOutputChannels.vehicleSpeedKph, GAUGE_NAME_VVS, "kph", 0},
 	{tsOutputChannels.internalMcuTemperature, GAUGE_NAME_CPU_TEMP, "C", 0},
-	{tsOutputChannels.coolantTemperature, "CLT", "C", 1},
-	{tsOutputChannels.intakeAirTemperature, "IAT", "C", 1},
-	{tsOutputChannels.throttlePosition, "TPS", "%", 2},
+	{tsOutputChannels.coolantTemperature, GAUGE_NAME_CLT, "C", 1},
+	{tsOutputChannels.intakeAirTemperature, GAUGE_NAME_IAT, "C", 1},
+	{tsOutputChannels.throttlePosition, GAUGE_NAME_TPS, "%", 2},
 	{tsOutputChannels.pedalPosition, GAUGE_NAME_THROTTLE_PEDAL, "%", 2},
-	{tsOutputChannels.manifoldAirPressure, "MAP", "kPa", 1},
+	{tsOutputChannels.manifoldAirPressure, GAUGE_NAME_MAP, "kPa", 1},
 	{tsOutputChannels.airFuelRatio, GAUGE_NAME_AFR, "afr", 2},
 	{tsOutputChannels.vBatt, GAUGE_NAME_VBAT, "v", 2},
 	{tsOutputChannels.oilPressure, "Oil Press", "kPa", 0},

@@ -4,6 +4,8 @@ import com.rusefi.config.FieldType;
 import com.rusefi.config.generated.Fields;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Set;
@@ -28,17 +30,17 @@ public enum Sensor {
     // Temperatures
     INT_TEMP(GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 10, 1, 0, 5, "C"),
     CLT(GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 12, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
-    IAT("IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 14, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
+    IAT(GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 14, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
 
     // throttle, pedal
-    TPS("TPS", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 20, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // throttle position sensor
+    TPS(GAUGE_NAME_TPS, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 20, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // throttle position sensor
     PPS(GAUGE_NAME_THROTTLE_PEDAL, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 22, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // pedal position sensor
 
     // air flow/mass measurement
-    MAF("MAF", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 26, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "Volts"),
-    MAP("MAP", SensorCategory.SENSOR_INPUTS, FieldType.UINT16,  30, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
+    MAF(GAUGE_NAME_MAF, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 26, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "Volts"),
+    MAP(GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 30, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
 
-    AFR("A/F ratio", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 34, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
+    AFR(GAUGE_NAME_AFR, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 34, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
 
     VBATT(GAUGE_NAME_VBAT, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 38, 1.0 / PACK_MULT_VOLTAGE, 4, 18, "Volts"),
     oilPressure("Oil Pressure", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 40, 1.0 / PACK_MULT_PRESSURE, 0, 5, "X"),
@@ -47,7 +49,7 @@ public enum Sensor {
     // fuel math
     CHARGE_AIR_MASS("airmass", SensorCategory.OPERATIONS, FieldType.UINT16, 44, 0.001, 0, 3, "g/cyl"),
     crankingFuel(GAUGE_NAME_FUEL_CRANKING, SensorCategory.FUEL, FieldType.UINT16, 46, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
-    TARGET_AFR("A/F target", SensorCategory.OPERATIONS, FieldType.INT16, 48, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
+    TARGET_AFR(GAUGE_NAME_TARGET_AFR, SensorCategory.OPERATIONS, FieldType.INT16, 48, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
     baseFuel(Fields.GAUGE_NAME_FUEL_BASE, SensorCategory.FUEL, FieldType.UINT16, 50, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
     runningFuel(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.UINT16, 52, 1.0 / PACK_MULT_MS, 0, 15, "ms"),
     actualLastInjection(GAUGE_NAME_FUEL_LAST_INJECTION, SensorCategory.FUEL, FieldType.UINT16, 54, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
@@ -59,7 +61,7 @@ public enum Sensor {
     injectorLagMs(GAUGE_NAME_INJECTOR_LAG, SensorCategory.FUEL, FieldType.UINT16, 62, 1.0 / PACK_MULT_MS, 0, 15, "ms"),
     iatCorrection(GAUGE_NAME_FUEL_IAT_CORR, SensorCategory.FUEL, FieldType.INT16, 64, 1.0 / PACK_MULT_PERCENT, 0, 5, "ratio"),
     cltCorrection(GAUGE_NAME_FUEL_CLT_CORR, SensorCategory.FUEL, FieldType.INT16, 66, 1.0 / PACK_MULT_PERCENT, 0, 5, "ratio"),
-    fuelPidCorrection("Fuel PID", SensorCategory.FUEL, FieldType.INT16, 70,  1.0 / PACK_MULT_MS, -2, 2, "ms"),
+    fuelPidCorrection("Fuel PID", SensorCategory.FUEL, FieldType.INT16, 70, 1.0 / PACK_MULT_MS, -2, 2, "ms"),
 
     // Wall model AE
     wallFuelAmount(GAUGE_NAME_FUEL_WALL_AMOUNT, SensorCategory.FUEL, FieldType.UINT16, 72, 1.0 / PACK_MULT_MS, 0, 20, "ms"),
@@ -233,5 +235,22 @@ public enum Sensor {
 
     public double translateValue(double value) {
         return value;
+    }
+
+    public void writeToLog(DataOutputStream dos, double value) throws IOException {
+        switch (type) {
+            case FLOAT:
+                dos.writeFloat((float) value);
+                return;
+            case UINT16:
+            case INT16:
+                dos.writeShort((int) value);
+                return;
+            case INT:
+                dos.writeInt((int) value);
+                return;
+            default:
+                throw new UnsupportedOperationException("Type " + type);
+        }
     }
 }
