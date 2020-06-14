@@ -30,6 +30,11 @@ public class ScalarIniField extends IniField {
     }
 
     @Override
+    public int getSize() {
+        return type.getStorageSize();
+    }
+
+    @Override
     public String getValue(ConfigurationImage image) {
         Field f = new Field(getName(), getOffset(), getType());
         try {

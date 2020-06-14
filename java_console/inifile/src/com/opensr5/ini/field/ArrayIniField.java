@@ -33,6 +33,11 @@ public class ArrayIniField extends IniField {
     }
 
     @Override
+    public int getSize() {
+        return type.getStorageSize() * cols * rows;
+    }
+
+    @Override
     public String getValue(ConfigurationImage image) {
         StringBuilder sb = new StringBuilder();
         for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
@@ -60,10 +65,21 @@ public class ArrayIniField extends IniField {
         for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
             for (int colIndex = 0; colIndex < cols; colIndex++) {
                 String value = values[rowIndex * cols + colIndex];
-                ByteBuffer wrapped = image.getByteBuffer(getOffset(), type.getStorageSize());
+                ByteBuffer wrapped = image.getByteBuffer(getOffset(rowIndex, colIndex), type.getStorageSize());
                 ScalarIniField.setValue(wrapped, type, value, Field.NO_BIT_OFFSET);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ArrayIniField{" +
+                "name=" + getName() +
+                ", offset=" + getOffset() +
+                ", type=" + type +
+                ", cols=" + cols +
+                ", rows=" + rows +
+                '}';
     }
 
     public static IniField parse(LinkedList<String> list) {

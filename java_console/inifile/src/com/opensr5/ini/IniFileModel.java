@@ -205,6 +205,14 @@ public class IniFileModel {
             list.removeFirst();
     }
 
+    public IniField findByOffset(int i) {
+        for (IniField field : allIniFields.values()) {
+            if (i >= field.getOffset() && i < field.getOffset() + field.getSize())
+                return field;
+        }
+        return null;
+    }
+
     enum State {
         SKIPPING,
         DIALOG

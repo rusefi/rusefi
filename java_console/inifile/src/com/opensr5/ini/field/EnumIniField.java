@@ -24,6 +24,11 @@ public class EnumIniField extends IniField {
         this.bitSize = bitSize;
     }
 
+    @Override
+    public int getSize() {
+        return type.getStorageSize();
+    }
+
     public int getBitPosition() {
         return bitPosition;
     }
@@ -69,6 +74,18 @@ public class EnumIniField extends IniField {
         int value = getByteBuffer(image).getInt();
         value = setBitRange(value, ordinal, bitPosition, bitSize);
         getByteBuffer(image).putInt(value);
+    }
+
+    @Override
+    public String toString() {
+        return "EnumIniField{" +
+                "name=" + getName() +
+                ", offset=" + getOffset() +
+                ", type=" + type +
+                ", enums=" + enums +
+                ", bitPosition=" + bitPosition +
+                ", bitSize=" + bitSize +
+                '}';
     }
 
     public static int setBitRange(int value, int ordinal, int bitPosition, int bitSize) {
