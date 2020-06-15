@@ -51,7 +51,8 @@ void globalTimerCallback() {
 
 SingleTimerExecutor::SingleTimerExecutor() {
 	/**
-	 * todo: a good comment
+	 * See comments in "getNextEventTime"
+	 * todo: is this current value of 'lateDelay' a bit too high?
 	 */
 	queue.setLateDelay(US2NT(100));
 }

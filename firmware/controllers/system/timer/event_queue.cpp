@@ -94,10 +94,13 @@ efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
 	if (head != NULL) {
 		if (head->momentX <= nowX) {
 			/**
-			 * We are here if action timestamp is in the past
+			 * We are here if action timestamp is in the past. We should rarely be here since this 'getNextEventTime()' is
+			 * always invoked by 'scheduleTimerCallback' which is always invoked right after 'executeAllPendingActions' - but still,
+			 * for events which are really close to each other we would end up here.
 			 *
 			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
 			 * for the next scheduled event
+			 *
 			 */
 			efitime_t aBitInTheFuture = nowX + lateDelay;
 			return aBitInTheFuture;
