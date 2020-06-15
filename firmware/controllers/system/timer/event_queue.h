@@ -45,8 +45,6 @@
  */
 class EventQueue {
 public:
-	EventQueue();
-
 	/**
 	 * O(size) - linear search in sorted linked list
 	 */
@@ -58,7 +56,6 @@ public:
 	void clear(void);
 	int size(void) const;
 	scheduling_s *getElementAtIndexForUnitText(int index);
-	void setLateDelay(int value);
 	scheduling_s * getHead();
 	void assertListIsSorted() const;
 private:
@@ -66,7 +63,6 @@ private:
 	/**
 	 * this list is sorted
 	 */
-	scheduling_s *head;
-	efitime_t lateDelay;
+	scheduling_s *head = nullptr;
 };
 

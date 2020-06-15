@@ -24,11 +24,6 @@ extern bool verboseMode;
 
 uint32_t maxSchedulingPrecisionLoss = 0;
 
-EventQueue::EventQueue() {
-	head = nullptr;
-	setLateDelay(100);
-}
-
 bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 	assertNotInListMethodBody(scheduling_s, head, scheduling, nextScheduling_s);
 }
@@ -100,10 +95,8 @@ efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
 			 *
 			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
 			 * for the next scheduled event
-			 *
 			 */
-			efitime_t aBitInTheFuture = nowX + lateDelay;
-			return aBitInTheFuture;
+			return nowX + US2NT(10);
 		} else {
 			return head->momentX;
 		}
@@ -188,10 +181,6 @@ void EventQueue::assertListIsSorted() const {
 		efiAssertVoid(CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
 		current = current->nextScheduling_s;
 	}
-}
-
-void EventQueue::setLateDelay(int value) {
-	lateDelay = value;
 }
 
 scheduling_s * EventQueue::getHead() {

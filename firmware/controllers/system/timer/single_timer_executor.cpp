@@ -49,14 +49,6 @@ void globalTimerCallback() {
 	___engine.executor.onTimerCallback();
 }
 
-SingleTimerExecutor::SingleTimerExecutor() {
-	/**
-	 * See comments in "getNextEventTime"
-	 * todo: is this current value of 'lateDelay' a bit too high?
-	 */
-	queue.setLateDelay(US2NT(100));
-}
-
 void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
 	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, action);
 }
