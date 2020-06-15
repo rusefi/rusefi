@@ -2369,6 +2369,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "TS communication status LED",			communicationLedPin
 		field = "Warning LED",							warningLedPin
 	    field = "Trigger error LED",					triggerErrorPin
+		field = "Debug Trigger Sync", 					debugTriggerSync
 
 ;			Engine->MIL Settings
 	dialog = malfunction,	"Check Engine Settings"
