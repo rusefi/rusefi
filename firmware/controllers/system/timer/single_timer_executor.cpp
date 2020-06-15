@@ -52,9 +52,9 @@ void globalTimerCallback() {
 SingleTimerExecutor::SingleTimerExecutor() {
 	/**
 	 * See comments in "getNextEventTime"
-	 * todo: is this current value of 'lateDelay' a bit too high?
+	 * 10us is roughly double the cost of the interrupt + overhead of a single timer event
 	 */
-	queue.setLateDelay(US2NT(100));
+	queue.setLateDelay(US2NT(10));
 }
 
 void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
