@@ -1106,16 +1106,16 @@ gaugeCategory = Sensors - Raw
 
 [Datalog]
    ;       Channel          Label          Type    Format
-   entry = time,            "Time",        float,  "%.3f"
-   entry = RPMValue,        "RPM",         int,    "%d"
+   entry = time,            @@GAUGE_NAME_TIME@@,        float,  "%.3f"
+   entry = RPMValue,        @@GAUGE_NAME_RPM@@,         int,    "%d"
    entry = firmwareVersion, @@GAUGE_NAME_VERSION@@,     int,    "%d"
-   entry = coolant,         "CLT",         float,  "%.2f"
-   entry = intake,          "IAT",         float,  "%.2f"
+   entry = coolant,         @@GAUGE_NAME_CLT@@,         float,  "%.2f"
+   entry = intake,          @@GAUGE_NAME_IAT@@,         float,  "%.2f"
    entry = oilPressure,		"Oil Press",   float,  "%.1f"
-   entry = TPSValue,             "TPS",         float,  "%.2f"
-   entry = MAFValue,             "MAF",         float,  "%.2f"
-   entry = MAPValue,        "MAP",         float,  "%.1f"
-   entry = AFRValue,       @@GAUGE_NAME_AFR@@,         float,  "%.2f"
+   entry = TPSValue,        @@GAUGE_NAME_TPS@@,         float,  "%.2f"
+   entry = MAFValue,        @@GAUGE_NAME_MAF@@,         float,  "%.2f"
+   entry = MAPValue,        @@GAUGE_NAME_MAP@@,         float,  "%.1f"
+   entry = AFRValue,        @@GAUGE_NAME_AFR@@,         float,  "%.2f"
    entry = VBatt,           @@GAUGE_NAME_VBAT@@,       float,  "%.2f"
    entry = engineLoad,	    @@GAUGE_NAME_ENGINE_LOAD@@, 	   float,  "%.1f"
    entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
@@ -1127,7 +1127,7 @@ gaugeCategory = Sensors - Raw
    entry = massAirFlowValue,@@GAUGE_NAME_AIR_FLOW@@,    float,  "%.3f"
    entry = chargeAirMass,   @@GAUGE_NAME_AIR_MASS@@,    float,  "%.3f"
    entry = throttlePedalPosition,   @@GAUGE_NAME_THROTTLE_PEDAL@@,       float,  "%.3f"
-   entry = totalTriggerErrorCounter, "trg err",int,    "%d"
+   entry = totalTriggerErrorCounter, @@GAUGE_NAME_TRG_ERR@@,int,    "%d"
    entry = idleAirValvePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
 
 
@@ -1235,7 +1235,7 @@ gaugeCategory = Sensors - Raw
 
 ; Electronic throttle body
    entry = etb1Error,      "ETB Error", float, "%.3f"
-   entry = etb1DutyCycle,  "ETB Duty", float, "%.3f"
+   entry = etb1DutyCycle,  @@GAUGE_NAME_ETB_DUTY@@, float, "%.3f"
    entry = etbTarget,      "ETB Target", float, "%.3f"
    
    
@@ -2576,6 +2576,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Can Read Enabled",						canReadEnabled
 		field = "Can Write Enabled",					canWriteEnabled
 		field = "Can Nbc Type",							canNbcType
+		field = "Can Baud Rate",						canBaudRate
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
 		field = "rusEfi CAN data base address",			verboseCanBaseAddress
 		field = "Can Sleep Period",						canSleepPeriodMs

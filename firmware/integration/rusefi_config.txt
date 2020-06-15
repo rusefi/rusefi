@@ -496,7 +496,7 @@ float fsio_visible fanOffTemperature;+Cooling fan turn-off temperature threshold
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
 
-custom can_nbc_e 4 bits, U32, @OFFSET@, [0:7], "None", "FIAT", "VAG" , "MAZDA RX8", "BMW", "W202"
+custom can_nbc_e 4 bits, U32, @OFFSET@, [0:7], "None", "FIAT", "VAG" , "MAZDA RX8", "BMW", "W202", "BMW E90"
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
@@ -519,7 +519,7 @@ adc_channel_e vbattAdcChannel;+This is the processor input pin that the battery 
 adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined. 
 	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far\nset_analog_input_pin tps2 X
 
-	int overrideCrankingIgnition;
+	int unusedValueHere;
 	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
@@ -669,16 +669,12 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:7], "Off", "Slow", "Fas
 pin_input_mode_e throttlePedalUpPinMode;
 	uint8_t unused711;
 
-	int idleThreadPeriodMs;
-	int consoleLoopPeriodMs;
-	int lcdThreadPeriodMs;
-
-	int generalPeriodicThreadPeriodMs;
+	int[4] unusedAt712;
 
 	uint32_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs",      1,      0,       0,1000000,      0
 
 	float compressionRatio;+Just for reference really, not taken into account by any logic at this point;"CR",        1,     0,  0,    300.0,  1
-	
+
 	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.\nSee also directSelfStimulation which is different.
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
 	output_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. See wboHeaterPin
@@ -981,12 +977,13 @@ bit unused_1484_bit_31
 
 	int ignMathCalculateAtIndex;+At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index",      1,      0,       0, 7000,      0
 
-	int16_t acCutoffLowRpm;
-	int16_t acCutoffHighRpm;
+// todo: start using these parameters!
+	int16_t acCutoffLowRpm;;"RPM",      1,      0,       1, 15000,      0
+	int16_t acCutoffHighRpm;;"RPM",      1,      0,       1, 15000,      0
+	int16_t acIdleRpmBump;;"RPM",      1,      0,       1, 15000,      0
 
-	int16_t acIdleRpmBump;
+
 	int16_t warningPeriod;set warningPeriod X;"seconds",      1,      0,       0, 60,      0
-
 
 	float knockDetectionWindowStart;;"angle",      1,      0,       -1000, 1000,      2
 	float knockDetectionWindowEnd;;"angle",      1,      0,       -1000, 1000,      2
@@ -1099,7 +1096,11 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float throttlePedalSecondaryUpVoltage;;"voltage",      1,     0,    -6,   6,      2
 	float throttlePedalSecondaryWOTVoltage;+Pedal in the floor;"voltage",      1,     0,    -6,   6,      2
 
-	uint32_t[6] unused_former_warmup_target_afr;
+	#define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
+	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@
+	can_baudrate_e canBaudRate; set can_baudrate
+
+	uint32_t[5] unused_former_warmup_target_afr;
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
@@ -1241,7 +1242,7 @@ tChargeMode_e tChargeMode;
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%\nTODO: use int8 data date once we template interpolation method;"target TPS position",   1,   0.0,        0,  100.0,   0
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias",   1,   0.0,        -100,  100.0,   2
 	
-	float hip9011Gain;
+	float hip9011Gain;;"",        1,     0,  0,    100.0,  2
 	int16_t etb_iTermMin;iTerm min value;"",        1,     0,  -30000,    30000.0,  0
 	int16_t etb_iTermMax;iTerm max value;"",        1,     0,  -30000,    30000.0,  0
 	float etbDeadband;;"",        1,     0,  0,    100.0,  2
@@ -1432,15 +1433,23 @@ end_struct
 
 
 #define GAUGE_NAME_VERSION "firmware"
+#define GAUGE_NAME_TRG_ERR "trg err"
 #define GAUGE_NAME_VVT "VVT position"
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VVS "Vehicle Speed"
 #define GAUGE_NAME_VBAT "VBatt"
+#define GAUGE_NAME_TIME "Time"
+#define GAUGE_NAME_RPM "RPM"
+#define GAUGE_NAME_CLT "CLT"
+#define GAUGE_NAME_IAT "IAT"
+#define GAUGE_NAME_TPS "TPS"
+#define GAUGE_NAME_MAP "MAP"
+#define GAUGE_NAME_MAF "MAF"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
-#define GAUGE_NAME_ETB_DUTY "ETB duty cycle"
+#define GAUGE_NAME_ETB_DUTY "ETB Duty"
 
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -1533,6 +1542,9 @@ end_struct
 
 #define PROTOCOL_MSG "msg"
 #define PROTOCOL_HELLO_PREFIX "***"
+
+#define MLQ_HEADER_SIZE 22
+#define MLQ_FIELD_HEADER_SIZE 55
 
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_ANALOG_CHART "analog_chart"
@@ -1648,4 +1660,3 @@ end_struct
 #define show_Frankenso_presets true
 #define show_microRusEFI_presets true
 #define show_Proteus_presets true
-

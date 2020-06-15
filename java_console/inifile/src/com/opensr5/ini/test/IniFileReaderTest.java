@@ -22,6 +22,19 @@ public class IniFileReaderTest {
     private static final String SIGNATURE_UNIT_TEST = "  signature      = \"unit test\"\n";
 
     @Test
+    public void testSplitWithEmptyUnits() {
+        {
+            String[] s = IniFileReader.splitTokens("\tverboseCanBaseAddress\t\t\t= \"\", 1");
+            assertEquals(3, s.length);
+            assertEquals("", s[1]);
+        }
+        {
+            String[] s = IniFileReader.splitTokens("\tverboseCanBaseAddress\t\t\t= scalar, U32,\t756,\t\"\", 1, 0, 0, 536870911, 0");
+            assertEquals(10, s.length);
+        }
+    }
+
+    @Test
     public void testSplit() {
         {
             String[] s = IniFileReader.splitTokens("1");
@@ -102,16 +115,29 @@ public class IniFileReaderTest {
     }
 
     @Test
+    public void testSetBits() {
+        assertEquals(0xFE, EnumIniField.setBitRange(0xFF, 0, 0, 1));
+        assertEquals(0xF0, EnumIniField.setBitRange(0xFF, 0, 0, 4));
+        assertEquals(0x0F, EnumIniField.setBitRange(0xFF, 0, 4, 4));
+
+        assertEquals(0xff, EnumIniField.setBitRange(0xFF, 3, 0, 2));
+        assertEquals(0xF3, EnumIniField.setBitRange(0xFF, 3, 0, 4));
+        assertEquals(0x3F, EnumIniField.setBitRange(0xFF, 3, 4, 4));
+
+        assertEquals(0x400, EnumIniField.setBitRange(0, 1, 10, 1));
+    }
+
+    @Test
     public void testBitLogic() {
-        assertEquals(4, EnumIniField.getBitRange(4, 0, 7));
-        assertEquals(4, EnumIniField.getBitRange(4, 0, 2));
-        assertEquals(0, EnumIniField.getBitRange(4, 0, 1));
-        assertEquals(3, EnumIniField.getBitRange(7, 0, 1));
+        assertEquals(4, EnumIniField.getBitRange(4, 0, 8));
+        assertEquals(4, EnumIniField.getBitRange(4, 0, 3));
+        assertEquals(0, EnumIniField.getBitRange(4, 0, 2));
+        assertEquals(3, EnumIniField.getBitRange(7, 0, 2));
 
         assertEquals(true, EnumIniField.getBit(0xff, 0));
 
         assertEquals(true, EnumIniField.getBit(0xf0, 4));
-        assertEquals(2, EnumIniField.getBitRange(0xf0, 3, 1));
+        assertEquals(2, EnumIniField.getBitRange(0xf0, 3, 2));
     }
 
     @Test
@@ -126,7 +152,7 @@ public class IniFileReaderTest {
 
         EnumIniField field = (EnumIniField) model.allIniFields.get("name");
         assertEquals(3, field.getBitPosition());
-        assertEquals(2, field.getBitSize());
+        assertEquals(2, field.getBitSize0());
         assertEquals(2, field.getEnums().size());
     }
 

@@ -50,10 +50,9 @@ void globalTimerCallback() {
 }
 
 SingleTimerExecutor::SingleTimerExecutor() {
-	reentrantFlag = false;
-	doExecuteCounter = scheduleCounter = timerCallbackCounter = 0;
 	/**
-	 * todo: a good comment
+	 * See comments in "getNextEventTime"
+	 * todo: is this current value of 'lateDelay' a bit too high?
 	 */
 	queue.setLateDelay(US2NT(100));
 }
@@ -97,7 +96,7 @@ void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitim
 	}
 	bool needToResetTimer = queue.insertTask(scheduling, nt, action);
 	if (!reentrantFlag) {
-		doExecute();
+		executeAllPendingActions();
 		if (needToResetTimer) {
 			scheduleTimerCallback();
 		}
@@ -109,7 +108,7 @@ void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitim
 void SingleTimerExecutor::onTimerCallback() {
 	timerCallbackCounter++;
 	bool alreadyLocked = lockAnyContext();
-	doExecute();
+	executeAllPendingActions();
 	scheduleTimerCallback();
 	if (!alreadyLocked)
 		unlockAnyContext();
@@ -118,10 +117,10 @@ void SingleTimerExecutor::onTimerCallback() {
 /*
  * this private method is executed under lock
  */
-void SingleTimerExecutor::doExecute() {
+void SingleTimerExecutor::executeAllPendingActions() {
 	ScopePerf perf(PE::SingleTimerExecutorDoExecute);
 
-	doExecuteCounter++;
+	executeAllPendingActionsInvocationCounter++;
 	/**
 	 * Let's execute actions we should execute at this point.
 	 * reentrantFlag takes care of the use case where the actions we are executing are scheduling
@@ -179,7 +178,7 @@ void executorStatistics() {
 	if (engineConfiguration->debugMode == DBG_EXECUTOR) {
 #if EFI_TUNER_STUDIO && EFI_SIGNAL_EXECUTOR_ONE_TIMER
 		tsOutputChannels.debugIntField1 = ___engine.executor.timerCallbackCounter;
-		tsOutputChannels.debugIntField2 = ___engine.executor.doExecuteCounter;
+		tsOutputChannels.debugIntField2 = ___engine.executor.executeAllPendingActionsInvocationCounter;
 		tsOutputChannels.debugIntField3 = ___engine.executor.scheduleCounter;
 #endif /* EFI_TUNER_STUDIO */
 	}

@@ -101,7 +101,8 @@ public class LiveDocPanel {
                 result.actionsListAdd(new LiveDataContext(Fields.LDS_ENGINE_STATE_INDEX), new RefreshActions() {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
-                        String value = field.getAnyValue(bp.getControllerConfiguration()).toString();
+                        double multiplier = 1; // todo: PROPER MULTIPLIER!!!
+                        String value = field.getAnyValue(bp.getControllerConfiguration(), multiplier).toString();
                         label.setText(value);
                     }
                 });
@@ -192,7 +193,7 @@ public class LiveDocPanel {
         combined.put(context, new RefreshActions() {
             @Override
             public void refresh(BinaryProtocol bp, byte[] response) {
-                int value = (int) conditionField.getValue(new ConfigurationImage(response));
+                int value = (int) conditionField.getValue(new ConfigurationImage(response)).intValue();
                 conditionLabel.setText(request.getField() + " is " + (value == 1 ? "TRUE" : "FALSE"));
                 JPanel active;
                 JPanel passive;

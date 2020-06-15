@@ -20,7 +20,7 @@ public class IniFileReader {
      *  {x, y, "Z"}
      * array of Strings
      *
-     * equals sign, space, tab and commas are all equally considered not parts of the token, quotes are supportd
+     * equals sign, space, tab and commas are all equally considered not parts of the token, quotes are supported
      *
      * Technically a line like
      *     x, y = z
@@ -31,15 +31,25 @@ public class IniFileReader {
     public static String[] splitTokens(String str) {
         ArrayList<String> strings = new ArrayList<>();
         boolean inQuote = false;
+        boolean hadQuote = false;
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
             if (c == '\"' || isTokenSeparator(c) && !inQuote) {
-                if (c == '\"')
+                if (c == '\"') {
                     inQuote = !inQuote;
+                    if (!inQuote) {
+                        // we are here when we close quotes
+                        hadQuote = true;
+                    }
+                }
                 if (!inQuote && sb.length() > 0) {
                     strings.add(sb.toString());
                     sb.delete(0, sb.length());
+                    hadQuote = false;
+                } else if (hadQuote) {
+                    strings.add("");
+                    hadQuote = false;
                 }
             } else
                 sb.append(c);

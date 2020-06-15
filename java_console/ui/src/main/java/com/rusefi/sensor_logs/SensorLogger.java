@@ -1,27 +1,19 @@
-package com.rusefi;
+package com.rusefi.sensor_logs;
 
-import com.opensr5.ConfigurationImage;
-import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
-import com.rusefi.ui.config.ConfigField;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  * 4/15/2016.
  */
 public class SensorLogger {
-    private static Writer logFile;
-
-    private static Sensor[] SENSORS = {Sensor.RPM,
+    protected static Sensor[] SENSORS = {Sensor.RPM,
             Sensor.INT_TEMP,
 
             Sensor.engineMode,
@@ -81,13 +73,16 @@ public class SensorLogger {
             Sensor.debugIntField4,
             Sensor.debugIntField5,
 
-            Sensor.errorCodeCounter,
+            Sensor.totalTriggerErrorCounter,
             Sensor.lastErrorCode,
 
             Sensor.engineMakeCodeNameCrc16,
             Sensor.tuneCrc16,
     };
-    private static long fileStartTime;
+
+    private static List<SensorLog> sensorLogs = Arrays.asList(new PlainTextSensorLog(), new BinarySensorLogRestarter());
+
+    private static boolean isInitialized;
 
     private SensorLogger() {
     }
@@ -96,87 +91,27 @@ public class SensorLogger {
         init();
     }
 
-    private static void init() {
+    public synchronized static void init() {
+        if (isInitialized) {
+            return;
+        }
+        isInitialized = true;
         SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
                 if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED)
                     return;
-                if (logFile == null) {
-                    /*
-                     * we only start file header once we have first bunch of data
-                     */
-                    startSensorLogFile();
-                }
-
-                writeSensorLogLine();
+                for (SensorLog sensorLog : sensorLogs)
+                    sensorLog.writeSensorLogLine();
             }
         });
     }
 
-    private static void writeSensorLogLine() {
-        if (logFile == null)
-            return;
-
-        try {
-            logFile.write(getSecondsSinceFileStart() + "\t");
-            for (Sensor sensor : SENSORS) {
-                logFile.write(SensorCentral.getInstance().getValue(sensor) + "\t");
-            }
-            logFile.write("\r\n");
-            logFile.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-            logFile = null;
-        }
-    }
-
     public static double getSecondsSinceFileStart() {
-        long msSinceFileStart = System.currentTimeMillis() - fileStartTime;
-        return msSinceFileStart / 1000.0;
+        return sensorLogs.get(0).getSecondsSinceFileStart();
     }
 
-    private static void startSensorLogFile() {
-        FileLog.createFolderIfNeeded();
-        String fileName = FileLog.DIR + "rusEFI_gauges_" + FileLog.getDate() + ".msl";
-
-        fileStartTime = System.currentTimeMillis();
-        try {
-            logFile = new FileWriter(fileName);
-
-            logFile.write("\"rusEFI console" + Launcher.CONSOLE_VERSION + " firmware " + Launcher.firmwareVersion.get() + "\"\r\n");
-            logFile.write("Captured " + FileLog.getDate() + "\r\n");
-
-            int debugMode = -1;
-            BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
-            if (bp != null) {
-                ConfigurationImage ci = bp.getControllerConfiguration();
-                if (ci != null) {
-                    debugMode = ConfigField.getIntValue(ci, Fields.DEBUGMODE);
-                }
-            }
-            System.out.println("debug mode " + debugMode);
-            logFile.write("Time\t");
-            for (Sensor sensor : SENSORS) {
-                logFile.write(getSensorName(sensor, debugMode) + "\t");
-            }
-            logFile.write("\r\n");
-
-            logFile.write("Time\t");
-            for (Sensor sensor : SENSORS) {
-                logFile.write(sensor.getUnits() + "\t");
-            }
-            logFile.write("\r\n");
-            logFile.flush();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            logFile = null;
-        }
-    }
-
-    private static String getSensorName(Sensor sensor, int debugMode) {
+    static String getSensorName(Sensor sensor, int debugMode) {
         if (sensor == Sensor.debugFloatField1 && isPidDebugMode(debugMode)) {
             return "PID: output";
         }

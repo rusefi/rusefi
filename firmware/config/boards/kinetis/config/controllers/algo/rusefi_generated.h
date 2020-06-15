@@ -38,6 +38,7 @@
 #define afterstartHoldTime_offset 6152
 #define alFIn_offset 4024
 #define alignEngineSnifferAtTDC_offset 744
+#define alignmentFill_at_2109_offset 2109
 #define alignmentFill_at_4514_offset 4514
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
@@ -177,7 +178,9 @@
 #define camInputs2_offset 557
 #define camInputs3_offset 558
 #define camInputs4_offset 559
+#define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
+#define canBaudRate_offset 2108
 #define canNbcType_offset 480
 #define canReadEnabled_offset 1464
 #define canRxPin_offset 709
@@ -249,7 +252,6 @@
 #define COMPOSITE_PACKET_SIZE 5
 #define compressionRatio_offset 732
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
-#define consoleLoopPeriodMs_offset 716
 #define consoleUartDevice_offset 943
 #define CRANKING_ADVANCE_CURVE_SIZE 4
 #define cranking_alignmentFill_at_6_offset 94
@@ -527,6 +529,7 @@
 #define GAUGE_NAME_AIR_FLOW "MAF air flow"
 #define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
+#define GAUGE_NAME_CLT "CLT"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
 #define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
@@ -543,7 +546,7 @@
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
-#define GAUGE_NAME_ETB_DUTY "ETB duty cycle"
+#define GAUGE_NAME_ETB_DUTY "ETB Duty"
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
 #define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure correction"
@@ -563,20 +566,26 @@
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
 #define GAUGE_NAME_IAC "Idle Air Valve"
+#define GAUGE_NAME_IAT "IAT"
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
+#define GAUGE_NAME_MAF "MAF"
+#define GAUGE_NAME_MAP "MAP"
+#define GAUGE_NAME_RPM "RPM"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
 #define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
+#define GAUGE_NAME_TIME "Time"
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
+#define GAUGE_NAME_TPS "TPS"
+#define GAUGE_NAME_TRG_ERR "trg err"
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_VVS "Vehicle Speed"
 #define GAUGE_NAME_VVT "VVT position"
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
 #define GAUGE_NAME_WARNING_LAST "warning: last"
-#define generalPeriodicThreadPeriodMs_offset 724
 #define globalFuelCorrection_offset 544
 #define globalTriggerAngleOffset_offset 456
 #define gpioPinModes10_offset 773
@@ -724,7 +733,6 @@
 #define idleRpmPid_pFactor_offset 1788
 #define idleStepperReactionTime_offset 1508
 #define idleStepperTotalSteps_offset 1532
-#define idleThreadPeriodMs_offset 712
 #define idleTimingPid_dFactor_offset 3976
 #define idleTimingPid_iFactor_offset 3972
 #define idleTimingPid_maxValue_offset 3986
@@ -860,7 +868,6 @@
 #define launchTimingRetard_offset 320
 #define launchTimingRpmRange_offset 1036
 #define launchTpsTreshold_offset 1056
-#define lcdThreadPeriodMs_offset 720
 #define LDS_ALTERNATOR_PID_STATE_INDEX 9
 #define LDS_CJ125_PID_STATE_INDEX 10
 #define LDS_ENGINE_STATE_INDEX 3
@@ -946,6 +953,8 @@
 #define mc33_t_peak_off_offset 4504
 #define mc33_t_peak_tot_offset 4506
 #define measureMapOnlyInOneCylinder_offset 744
+#define MLQ_FIELD_HEADER_SIZE 55
+#define MLQ_HEADER_SIZE 22
 #define MOCK_AFR_COMMAND "mock_afr_voltage"
 #define MOCK_CLT_COMMAND "mock_clt_voltage"
 #define MOCK_IAT_COMMAND "mock_iat_voltage"
@@ -975,7 +984,6 @@
 #define onOffAlternatorLogic_offset 744
 #define output_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "N/A", "N/A", "PA10", "PA11", "PA12", "PA13", "N/A", "N/A", "N/A", "N/A", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "N/A", "N/A", "N/A", "N/A", "PB12", "PB13", "N/A", "N/A", "N/A", "N/A", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "N/A", "N/A", "N/A", "N/A", "PC14", "PC15", "PC16", "PC17", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "PD15", "PD16", "N/A", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16"
 #define overrideCrankingIacSetting_offset 1476
-#define overrideCrankingIgnition_offset 516
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_ANGLE 50
@@ -1324,7 +1332,8 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_former_warmup_target_afr_offset 2108
+#define unused_former_warmup_target_afr_offset 2112
+#define unusedAt712_offset 712
 #define unusedAtOldBoardConfigurationEnd_offset 1200
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_11_offset 976
@@ -1346,8 +1355,8 @@
 #define unusedBit_251_27_offset 976
 #define unusedBit_251_28_offset 976
 #define unusedBit_251_29_offset 976
-#define unusedBit_283_30_offset 976
-#define unusedBit_283_31_offset 976
+#define unusedBit_280_30_offset 976
+#define unusedBit_280_31_offset 976
 #define unusedBit_34_31_offset 76
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHere_offset 761
@@ -1358,6 +1367,7 @@
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding7_offset 4005
 #define unusedSpiPadding8_offset 4009
+#define unusedValueHere_offset 516
 #define unusuedsw_offset 4020
 #define unusuedvref_offset 4016
 #define useAdvanceCorrectionsForCranking_offset 1476
