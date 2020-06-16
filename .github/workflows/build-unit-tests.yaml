@@ -23,4 +23,5 @@ jobs:
       run: sudo apt-get install ncftp lcov
 
     - name: Generate Code Coverage
-      run: ./unit_tests/ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+      workind-directory: ./unit_tests/
+      run: ./ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
