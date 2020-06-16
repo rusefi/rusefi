@@ -13,7 +13,7 @@ if %BOARDNAME%.==. (
 echo BOARDNAME=%BOARDNAME%
 
 java -DSystemOut.name=gen_config_board ^
- -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definition/lib/snakeyaml.jar ^
+ -cp ../java_tools/ConfigDefinition.jar ^
  com.rusefi.board_generator.BoardReader ^
  -board %BOARDNAME% ^
  -firmware_path . ^
@@ -32,7 +32,3 @@ java -DSystemOut.name=gen_config_board ^
  -prepend tunerstudio/%BOARDNAME%_prefix.txt ^
  -prepend config/boards/%BOARDNAME%/prepend.txt
 
-
-rem This would automatically copy latest file to 'dev' TS project
-set ts_path="%HOMEDRIVE%%HOMEPATH%\Documents\TunerStudioProjects\dev\projectCfg"
-rem cp tunerstudio/rusefi_microrusefi.ini %ts_path%\mainController.ini
