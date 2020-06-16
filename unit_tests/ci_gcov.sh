@@ -26,5 +26,5 @@ echo "Generating HTML"
 genhtml coverage.info --output-directory gcov
 
 echo "Uploading HTML"
-ncftpput -m -R -v -u $1 -p $2 $3 /unit_tests_coverage gcov/*
+ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
 
