@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class SensorLogger {
     protected static Sensor[] SENSORS = {Sensor.RPM,
+            Sensor.TIME_SECONDS,
             Sensor.INT_TEMP,
 
             Sensor.engineMode,
@@ -27,6 +28,7 @@ public class SensorLogger {
 
             Sensor.PPS,
             Sensor.ETB_CONTROL_QUALITY,
+            Sensor.etb1DutyCycle,
 
             Sensor.idlePosition,
 
