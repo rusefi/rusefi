@@ -99,7 +99,24 @@ jobs:
       working-directory: ./firmware/
       run: make -j4 PROJECT_BOARD=${{matrix.efi-board}} PROJECT_CPU=${{matrix.efi-cpu}} EXTRA_PARAMS="${{matrix.type-extra-params}} ${{matrix.target-extra-params}}" DEBUG_LEVEL_OPT='${{matrix.build-debug-level-opt}}' ${{matrix.extra-options}}
       
-    # The next two steps upload the bin and elf as build artifacts
+    # Get hex2dfu
+    - name: Fetch hex2dfu
+      uses: actions/checkout@v2
+      with:
+        repository: 'rusefi/hex2dfu'
+        path: hex2dfu
+
+    # Build hex2dfu
+    - name: Build hex2dfu
+      working-directory: ./hex2dfu
+      run: gcc hex2dfu.c -o hex2dfu
+
+    # Convert hex to dfu
+    - name: Create DFU file
+      run: ./hex2dfu/hex2dfu -i ./firmware/build/rusefi.hex -o ./firmware/build/rusefi.dfu
+     
+
+    # The next two steps upload the bin, elf, and dfu as build artifacts
     - name: Upload elf
       uses: actions/upload-artifact@v1
       with:
@@ -111,3 +128,9 @@ jobs:
       with:
         name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-bin
         path: ./firmware/build/rusefi.bin
+
+    - name: Upload dfu
+      uses: actions/upload-artifact@v1
+      with:
+        name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-dfu
+        path: ./firmware/build/rusefi.dfu

@@ -14,9 +14,6 @@ BOARDNAME=$1
 
 echo "BOARDNAME=${BOARDNAME}"
 
-echo lazy is broken - TS input is not considered a change
-rm build/config.gen
-
 java -DSystemOut.name=gen_config_board \
 	-cp ../java_tools/ConfigDefinition.jar:../java_tools/configuration_definition/lib/snakeyaml.jar \
 	com.rusefi.board_generator.BoardReader \
