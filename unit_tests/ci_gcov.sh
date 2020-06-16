@@ -29,6 +29,7 @@ echo "Uploading HTML"
 if [ $1 ] && [ $2 ] && [ $3 ]; then
  ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
 else
+ echo "Error: FTP server details seem to be missing"
  return 1
 fi
 
