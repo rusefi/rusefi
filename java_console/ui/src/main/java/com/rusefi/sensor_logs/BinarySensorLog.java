@@ -6,6 +6,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.rusEFIVersion;
+import com.rusefi.util.SystemOut;
 
 import java.io.*;
 import java.util.*;
@@ -118,7 +119,7 @@ public class BinarySensorLog implements SensorLog {
         stream.write(0);
         stream.write(1);
         // 0008h Timestamp
-        stream.writeInt(0);
+        stream.writeInt((int) (System.currentTimeMillis() / 1000));
         // 000ch
         int offsetToText = Fields.MLQ_HEADER_SIZE + Fields.MLQ_FIELD_HEADER_SIZE * sensors.size();
         stream.writeShort(offsetToText);
@@ -147,6 +148,8 @@ public class BinarySensorLog implements SensorLog {
             // 0036h precision
             stream.write(2);
         }
+        if (stream.size() != offsetToText)
+            throw new IllegalStateException("We are doing something wrong :( stream.size=" + stream.size());
         writeLine(stream, headerText, 0);
 
     }
@@ -178,7 +181,9 @@ public class BinarySensorLog implements SensorLog {
 
     public static void close(Closeable closeable) {
         try {
-            closeable.close();
+            if (closeable != null) {
+                closeable.close();
+            }
         } catch (IOException e) {
             // ignoring
         }
@@ -189,7 +194,7 @@ public class BinarySensorLog implements SensorLog {
     }
 
     private void writeLine(DataOutputStream stream, String name, int length) throws IOException {
-        for (int i = 0; i < name.length(); i++) {
+        for (int i = 0; i < Math.min(name.length(), length); i++) {
             stream.write(name.charAt(i));
         }
         for (int i = name.length(); i < length; i++)
