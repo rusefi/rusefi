@@ -26,13 +26,13 @@ else
 	cp -v tunerstudio/rusefi_microrusefi.ini $TS_PATH/dev_mre/projectCfg/mainController.ini
 fi
 
-./gen_config_board.sh microrusefi
+sh gen_config_board.sh microrusefi
 [ $? -eq 0 ] || (echo "ERROR generating microrusefi"; exit $?)
 
-./gen_config_board.sh frankenso
+sh gen_config_board.sh frankenso
 [ $? -eq 0 ] || (echo "ERROR generating frankenso"; exit $?)
 
-./gen_config_board.sh prometheus
+sh gen_config_board.sh prometheus
 [ $? -eq 0 ] || (echo "ERROR generating prometheus"; exit $?)
 
 #cd config\boards\kinetis\config
