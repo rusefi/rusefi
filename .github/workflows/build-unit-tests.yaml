@@ -19,5 +19,8 @@ jobs:
     - name: Run Tests
       run: ./unit_tests/build/rusefi_test
 
+    - name: Install Coverage Tools
+      run: sudo apt-get install ncftp lcov
+
     - name: Generate Code Coverage
       run: ./unit_tests/ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
