@@ -15,7 +15,7 @@ BOARDNAME=$1
 echo "BOARDNAME=${BOARDNAME}"
 
 java -DSystemOut.name=gen_config_board \
-	-cp ../java_tools/ConfigDefinition.jar:../java_tools/configuration_definition/lib/snakeyaml.jar \
+	-cp ../java_tools/ConfigDefinition.jar \
 	com.rusefi.board_generator.BoardReader \
 	-board ${BOARDNAME} \
 	-firmware_path . \
