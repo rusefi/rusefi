@@ -5,6 +5,11 @@
 # this scripts replaces run_gcov.sh
 #
 
+if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
+ echo "No Secrets"
+ exit 0
+fi
+
 rm -rf gcov_working_area
 
 mkdir gcov_working_area
@@ -31,10 +36,5 @@ echo -e "\nGenerating HTML"
 genhtml coverage.info --output-directory gcov
 
 echo -e "\nUploading HTML"
-if [ $1 ] && [ $2 ] && [ $3 ]; then
- ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
-else
- echo "Error: FTP server details seem to be missing"
- exit 1
-fi
 
+ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
