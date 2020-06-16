@@ -16,16 +16,16 @@ xargs -L 1 -I {} cp {} . < source_files.txt
 
 cp ../build/obj/* .
 
-echo "Generating coverage"
+echo -e "\nGenerating coverage"
 gcov *.c* > gcov.log 2>gcov.err
 
-echo "Collecting coverage"
+echo -e "\nCollecting coverage"
 lcov --capture --directory . --output-file coverage.info
 
-echo "Generating HTML"
+echo -e "\nGenerating HTML"
 genhtml coverage.info --output-directory gcov
 
-echo "Uploading HTML"
+echo -e "\nUploading HTML"
 if [ $1 ] && [ $2 ] && [ $3 ]; then
  ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
 else
