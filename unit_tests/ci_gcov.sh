@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#
+# this one used by github actions
+# this scripts replaces run_gcov.sh
+#
+
 rm -rf gcov_working_area
 
 mkdir gcov_working_area

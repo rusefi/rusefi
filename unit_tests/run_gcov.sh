@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#
+# this script is now replaced by ci_gcov.sh which is executed by Github actions
+# this script is part of the legacy non-github jenkins which is no longer needed
+#
+
 rm -rf gcov_working_area
 
 mkdir gcov_working_area
