@@ -32,7 +32,3 @@ java -DSystemOut.name=gen_config_board ^
  -prepend tunerstudio/%BOARDNAME%_prefix.txt ^
  -prepend config/boards/%BOARDNAME%/prepend.txt
 
-
-rem This would automatically copy latest file to 'dev' TS project
-set ts_path="%HOMEDRIVE%%HOMEPATH%\Documents\TunerStudioProjects\dev\projectCfg"
-rem cp tunerstudio/rusefi_microrusefi.ini %ts_path%\mainController.ini
