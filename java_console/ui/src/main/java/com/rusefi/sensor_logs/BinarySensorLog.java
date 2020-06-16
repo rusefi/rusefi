@@ -6,7 +6,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.rusEFIVersion;
-import com.rusefi.util.SystemOut;
 
 import java.io.*;
 import java.util.*;
@@ -150,8 +149,7 @@ public class BinarySensorLog implements SensorLog {
         }
         if (stream.size() != offsetToText)
             throw new IllegalStateException("We are doing something wrong :( stream.size=" + stream.size());
-        writeLine(stream, headerText, 0);
-
+        writeLine(stream, headerText, headerText.length());
     }
 
     private int getSensorTypeValue(Sensor sensor) {
