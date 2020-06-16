@@ -66,18 +66,18 @@ static void tsRxIRQIdleHandler(UARTDriver *uartp) {
 /* Note: This structure is modified from the default ChibiOS layout! */
 static UARTConfig tsDmaUartConfig = { 
 	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL, 
-	.speed = 0, .cr1 = 0, .cr2 = 0, .cr3 = 0,
+	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
 	.timeout_cb = tsRxIRQIdleHandler, .rxhalf_cb = tsRxIRQHalfHandler
 };
 #elif TS_UART_MODE
 /* Note: This structure is modified from the default ChibiOS layout! */
 static UARTConfig tsUartConfig = { 
 	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL, 
-	.speed = 0, .cr1 = 0, .cr2 = 0, .cr3 = 0,
+	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
 	.timeout_cb = NULL, .rxhalf_cb = NULL
 };
 #else
-static SerialConfig tsSerialConfig = { .speed = 0, .cr1 = 0, .cr2 = 0, .cr3 = 0 };
+static SerialConfig tsSerialConfig = { .speed = 0, .cr1 = 0, .cr2 = USART_CR2_STOP1_BITS | USART_CR2_LINEN, .cr3 = 0 };
 #endif /* TS_UART_DMA_MODE */
 #endif /* EFI_PROD_CODE */
 
@@ -103,7 +103,7 @@ void startTsPort(ts_channel_s *tsChannel) {
 		#if defined(TS_UART_DEVICE) || defined(TS_SERIAL_DEVICE)
 			if (CONFIG(useSerialPort)) {
 
-				//print("TunerStudio over USART");
+				print("TunerStudio over USART");
 				/**
 				 * We have hard-coded USB serial console so that it would be clear how to connect to each specific board,
 				 * but for UART serial we allow users to change settings.

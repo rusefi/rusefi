@@ -239,7 +239,7 @@
 #endif
 
 #ifndef EFI_USB_SERIAL
-//#define EFI_USB_SERIAL TRUE
+#define EFI_USB_SERIAL TRUE
 #endif
 
 /**
@@ -342,10 +342,10 @@
  *  STM32_UART_USE_USARTx
  * in mcuconf.h
  */
-#define TS_UART_DMA_MODE TRUE
+#define TS_UART_DMA_MODE FALSE
 
-#define TS_UART_DEVICE (&UARTD3)
-//#define TS_SERIAL_DEVICE (&SD3)
+//#define TS_UART_DEVICE (&UARTD3)
+#define TS_SERIAL_DEVICE (&SD3)
 
 #define AUX_SERIAL_DEVICE (&SD6)
 
