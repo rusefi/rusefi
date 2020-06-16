@@ -44,6 +44,7 @@
                 <attribute name="Main-Class" value="com.rusefi.ConfigDefinition"/>
             </manifest>
             <zipfileset dir="build/classes" includes="**/*.class"/>
+            <zipfileset src="lib/snakeyaml.jar" includes="**/*.class"/>
         </jar>
     </target>
 
