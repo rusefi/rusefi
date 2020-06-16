@@ -9,9 +9,6 @@ echo "the storage section of rusefi.ini is updated as well"
 rm gen_config.log
 rm gen_config_board.log
 
-echo "lazy is broken - TS input is not considered a change"
-rm build/config.gen
-
 mkdir build
 
 java $(< gen_config.conf)
