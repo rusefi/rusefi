@@ -1,7 +1,9 @@
 package com.rusefi.sensor_logs;
 
-public abstract class SensorLog {
-    public abstract double getSecondsSinceFileStart();
+public interface SensorLog {
+    double getSecondsSinceFileStart();
 
-    abstract void writeSensorLogLine();
+    void writeSensorLogLine();
+
+    void close();
 }

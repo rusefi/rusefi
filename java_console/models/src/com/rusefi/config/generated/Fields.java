@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Jun 14 15:09:07 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Jun 14 18:44:35 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -41,6 +41,7 @@ public class Fields {
 	public static final int afterstartHoldTime_offset = 6152;
 	public static final int alFIn_offset = 4024;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
+	public static final int alignmentFill_at_2109_offset = 2109;
 	public static final int alignmentFill_at_4514_offset = 4514;
 	public static final int alternator_antiwindupFreq_offset = 1764;
 	public static final int alternator_derivativeFilterLoss_offset = 1760;
@@ -177,6 +178,7 @@ public class Fields {
 	public static final int camInputs2_offset = 557;
 	public static final int camInputs3_offset = 558;
 	public static final int camInputs4_offset = 559;
+	public static final int canBaudRate_offset = 2108;
 	public static final int canNbcType_offset = 480;
 	public static final int canReadEnabled_offset = 1464;
 	public static final int canRxPin_offset = 709;
@@ -539,7 +541,7 @@ public class Fields {
 	public static final String GAUGE_NAME_DWELL_DUTY = "dwell: coil duty cycle";
 	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
 	public static final String GAUGE_NAME_ENGINE_LOAD = "Engine Load";
-	public static final String GAUGE_NAME_ETB_DUTY = "ETB duty cycle";
+	public static final String GAUGE_NAME_ETB_DUTY = "ETB Duty";
 	public static final String GAUGE_NAME_ETB_ERROR = "ETB position error";
 	public static final String GAUGE_NAME_ETB_TARGET = "ETB position target";
 	public static final String GAUGE_NAME_FUEL_BARO_CORR = "fuel: Barometric pressure correction";
@@ -572,6 +574,7 @@ public class Fields {
 	public static final String GAUGE_NAME_TIME = "Time";
 	public static final String GAUGE_NAME_TIMING_ADVANCE = "timing";
 	public static final String GAUGE_NAME_TPS = "TPS";
+	public static final String GAUGE_NAME_TRG_ERR = "trg err";
 	public static final String GAUGE_NAME_VBAT = "VBatt";
 	public static final String GAUGE_NAME_VERSION = "firmware";
 	public static final String GAUGE_NAME_VVS = "Vehicle Speed";
@@ -1291,7 +1294,7 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1476;
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
-	public static final int unused_former_warmup_target_afr_offset = 2108;
+	public static final int unused_former_warmup_target_afr_offset = 2112;
 	public static final int unusedAt712_offset = 712;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1200;
 	public static final int unusedBit4_1476_offset = 1476;
@@ -2113,6 +2116,8 @@ public class Fields {
 	public static final Field AUXSERIALSPEED = Field.create("AUXSERIALSPEED", 2096, FieldType.INT);
 	public static final Field THROTTLEPEDALSECONDARYUPVOLTAGE = Field.create("THROTTLEPEDALSECONDARYUPVOLTAGE", 2100, FieldType.FLOAT);
 	public static final Field THROTTLEPEDALSECONDARYWOTVOLTAGE = Field.create("THROTTLEPEDALSECONDARYWOTVOLTAGE", 2104, FieldType.FLOAT);
+	public static final String[] can_baudrate_e = {"100kbps", "250kbps" , "500kbps", "1Mbps"};
+	public static final Field CANBAUDRATE = Field.create("CANBAUDRATE", 2108, FieldType.INT8, can_baudrate_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
 	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2200, FieldType.INT8, adc_channel_e);
 	public static final Field FSIOADC2 = Field.create("FSIOADC2", 2201, FieldType.INT8, adc_channel_e);
@@ -3090,6 +3095,7 @@ public class Fields {
 	AUXSERIALSPEED,
 	THROTTLEPEDALSECONDARYUPVOLTAGE,
 	THROTTLEPEDALSECONDARYWOTVOLTAGE,
+	CANBAUDRATE,
 	BOOSTCUTPRESSURE,
 	FSIOADC1,
 	FSIOADC2,

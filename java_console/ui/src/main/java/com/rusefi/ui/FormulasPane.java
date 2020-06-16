@@ -76,7 +76,7 @@ public class FormulasPane {
         content.add(topButtonsPanel, BorderLayout.NORTH);
 
         JPanel bottomPanel = new JPanel(new FlowLayout());
-        bottomPanel.add(new IntGaugeLabel("count", Sensor.errorCodeCounter));
+        bottomPanel.add(new IntGaugeLabel("count", Sensor.totalTriggerErrorCounter));
         bottomPanel.add(new IntGaugeLabel("error", Sensor.lastErrorCode));
 
         content.add(bottomPanel, BorderLayout.SOUTH);
@@ -210,7 +210,7 @@ public class FormulasPane {
         double displacement = ConfigField.getFloatValue(ci, Fields.DISPLACEMENT);
         int cylinderCount = ConfigField.getIntValue(ci, Fields.CYLINDERSCOUNT);
         String cylinderDisplacement = oneDecimal(displacement / cylinderCount);
-        String injectorFlow = oneDecimal((float) Fields.INJECTOR_FLOW.getValue(ci));
+        String injectorFlow = oneDecimal((float) Fields.INJECTOR_FLOW.getValue(ci).doubleValue());
 
         String tCharge = "$Tcharge=f(CLT=" + oneDecimal(Sensor.CLT) + "C,IAT=" + IAT
                 + "C,TPS=" + tpsStr + "\\%, RPM = " + RPM + ")=" + T_CHARGE + "C$";

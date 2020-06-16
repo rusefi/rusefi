@@ -12,7 +12,7 @@ public class BinarySensorLogSandbox {
         Map<Sensor, Double> values = new HashMap<>();
 
         Function<Sensor, Double> valueProvider = sensor -> {
-            Double result = values.get(sensor);
+            Double result = values.getOrDefault(sensor, 0.0);
             Objects.requireNonNull(result, "value for sensor");
             return result;
         };
@@ -20,11 +20,22 @@ public class BinarySensorLogSandbox {
         BinarySensorLog l = new BinarySensorLog(valueProvider,
                 Sensor.TIME_SECONDS,
                 Sensor.RPM,
+                Sensor.VSS,
+                Sensor.TPS,
+                Sensor.tpsAccelFuel,
+                Sensor.PPS,
+                Sensor.veValue,
+                Sensor.etbTarget,
+                Sensor.etb1DutyCycle,
+                Sensor.totalTriggerErrorCounter,
+                Sensor.AFR,
+                Sensor.TARGET_AFR,
                 Sensor.FIRMWARE_VERSION,
                 Sensor.CLT);
 
         values.put(Sensor.TIME_SECONDS, 1.0);
         values.put(Sensor.RPM, 0.0);
+        values.put(Sensor.VSS, 60.0);
         values.put(Sensor.FIRMWARE_VERSION, 20200101.0);
         values.put(Sensor.CLT, 29.0);
 
@@ -39,6 +50,5 @@ public class BinarySensorLogSandbox {
         }
 
         l.close();
-
     }
 }
