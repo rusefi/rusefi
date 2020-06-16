@@ -26,5 +26,9 @@ echo "Generating HTML"
 genhtml coverage.info --output-directory gcov
 
 echo "Uploading HTML"
-ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
+if [ $1 ] && [ $2 ] && [ $3 ]; then
+ ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
+else
+ return 1
+fi
 
