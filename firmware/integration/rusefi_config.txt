@@ -235,8 +235,8 @@ struct pid_s
 	int16_t maxValue;Output max value;"",        1,     0,  -30000,    30000.0,  0
 end_struct
 
-#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
-custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:7], @@ego_sensor_e_enum@@
+#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"
+custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 
 struct cranking_parameters_s
 float baseFuel;+Base duration of the fuel injection during cranking, this is modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.;"ms",       1,     0,    0, 200,     1
@@ -247,10 +247,10 @@ end_struct
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "Inactive", "Second half", "2GZ", "Miata NB2", "First half", "mode5", "mode6", "mode7"
-custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@vvt_mode_e_enum@@
+custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:3], @@vvt_mode_e_enum@@
 
-#define mass_storage_e_enum "Auto", "Always", "Never"
-custom mass_storage_e 4 bits, U32, @OFFSET@, [0:7], @@mass_storage_e_enum@@
+#define mass_storage_e_enum "Auto", "Always", "Never", "INVALID"
+custom mass_storage_e 4 bits, U32, @OFFSET@, [0:1], @@mass_storage_e_enum@@
 
 ! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
 ! todo: as of ChibiOS3, only channels 1 & 2 are allowed to capture input, that's a ChibiOS driver limitation
@@ -282,7 +282,7 @@ custom output_pin_e 1 bits,    U08,   @OFFSET@, [0:7], @@output_pin_e_enum@@
 
 
 #define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
-custom pin_output_mode_e 1 bits,    U08,   @OFFSET@, [0:7], @@pin_output_mode_e_enum@@
+custom pin_output_mode_e 1 bits,    U08,   @OFFSET@, [0:1], @@pin_output_mode_e_enum@@
 
 custom pin_input_mode_e 1 scalar, U08,	@OFFSET@,	"todo", 1, 0, 0, 20, 1	
 
@@ -312,7 +312,8 @@ struct gppwm_channel
 	gppwm_table_t table;
 end_struct
 
-custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:7]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "type12", "type13"
+custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:4]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "type12", "type13", "INVALID", "INVALID"
+
 !
 ! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
 ! 
@@ -441,7 +442,7 @@ float[DWELL_CURVE_SIZE] sparkDwellRpmBins;On single-coil or wasted spark setups 
 struct_no_prefix specs_s
 float displacement;Engine displacement, in litres\nsee also cylindersCount;"L",    1,      0,       0,  1000.0,        2
 
-custom cylinders_count_t 4 bits,    U32,    @OFFSET@, [0:7], "INVALID", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, "INVALID", "INVALID", "INVALID"
+custom cylinders_count_t 4 bits,    U32,    @OFFSET@, [0:3], "INVALID", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, "INVALID", "INVALID", "INVALID"
 cylinders_count_t cylindersCount;
 
 ! see firing_order.h
@@ -450,7 +451,7 @@ cylinders_count_t cylindersCount;
 ! FO_1_8_4_3_6_5_7_2 = 5
 ! FO_1_2_4_5_3 = 6
 
-custom firing_order_e 4 bits,    U32,    @OFFSET@, [0:7], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1_2_3_4_5_6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8", "1-2-3-4-5-6-7-8-9", "fo22", "fo23", "fo24", "fo25", "INVALID"
+custom firing_order_e 4 bits,    U32,    @OFFSET@, [0:4], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1_2_3_4_5_6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8", "1-2-3-4-5-6-7-8-9", "fo22", "fo23", "fo24", "fo25", "INVALID"
 firing_order_e firingOrder;
 end_struct
 
@@ -467,13 +468,13 @@ custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:7], @@engine_load_mode_e_enu
 engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nSee also useTPSAdvanceTable\nset algorithm X
 
 
-custom injection_mode_e 4 bits, U32, @OFFSET@, [0:7], "Simultaneous", "Sequential", "Batch", "Single Point"
+custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
 injection_mode_e crankingInjectionMode;+This is the injection strategy during engine start.  See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
 injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups.  If your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
 angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
 
-custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:7], "One coil", "Individual Coils", "Wasted", "Two distributors"
+custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "Two distributors"
 ignition_mode_e ignitionMode;+"One Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
 
 angle_t ignitionOffset;+this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
