@@ -19,10 +19,10 @@ public class AutoupdateUtil {
     private static final int BUFFER_SIZE = 32 * 1024;
     private static final int STEPS = 1000;
 
-    public static void downloadAutoupdateFile(String zipFileName, HttpURLConnection httpConnection, long completeFileSize, String title) throws IOException {
+    public static void downloadAutoupdateFile(String localZipFileName, HttpURLConnection httpConnection, long completeFileSize, String title) throws IOException {
         Objects.requireNonNull(httpConnection, "httpConnection");
         BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
-        FileOutputStream fos = new FileOutputStream(zipFileName);
+        FileOutputStream fos = new FileOutputStream(localZipFileName);
         BufferedOutputStream bout = new BufferedOutputStream(fos, BUFFER_SIZE);
         byte[] data = new byte[BUFFER_SIZE];
         long downloadedFileSize = 0;

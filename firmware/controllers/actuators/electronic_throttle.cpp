@@ -388,6 +388,7 @@ void EtbController::update(efitick_t) {
 	ClosedLoopController::update();
 
 	DISPLAY_STATE(Engine)
+DISPLAY(DISPLAY_IF(1))
 	DISPLAY_TEXT(Electronic_Throttle);
 	DISPLAY_SENSOR(TPS)
 	DISPLAY_TEXT(eol);

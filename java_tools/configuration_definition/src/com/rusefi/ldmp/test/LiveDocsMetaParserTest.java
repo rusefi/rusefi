@@ -8,6 +8,10 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class LiveDocsMetaParserTest {
+    public static MetaInfo parse(String s) {
+        return LiveDocsMetaParser.parse(s, "unit_test");
+    }
+
     @Test
     public void getClassName() {
         assertEquals("TpsMeta", LiveDocsMetaParser.getClassName("controllers/sensors/tps.cpp"));
@@ -16,7 +20,7 @@ public class LiveDocsMetaParserTest {
 
     @Test
     public void parseConfigElements() {
-        MetaInfo r = LiveDocsMetaParser.parse("\t\t// TCHARGE_MODE_RPM_TPS\n" +
+        MetaInfo r = parse("\t\t// TCHARGE_MODE_RPM_TPS\n" +
                 "\t\tfloat minRpmKcurrentTPS = interpolateMsg(\"minRpm\", tpMin, DISPLAY_CONFIG(tChargeMinRpmMinTps), tpMax,\n" +
                 "\t\t\t\t/***display*/CONFIG(tChargeMinRpmMaxTps), tps);\n" +
                 "\t\tfloat maxRpmKcurrentTPS = interpolateMsg(\"maxRpm\", tpMin, DISPLAY_CONFIG(tChargeMaxRpmMinTps), tpMax,\n" +
@@ -29,7 +33,7 @@ public class LiveDocsMetaParserTest {
 
     @Test
     public void parseField() {
-        MetaInfo r = LiveDocsMetaParser.parse(
+        MetaInfo r = parse(
                 "DISPLAY_STATE(tps)\n" +
                         "\tDISPLAY_TEXT(Analog_MCU_reads);\n" +
                 "\tengine->engineState.DISPLAY_FIELD(currentTpsAdc) = adc;\n" +
@@ -40,7 +44,7 @@ public class LiveDocsMetaParserTest {
 
     @Test
     public void parseTextWithSpecialCharacters() {
-        MetaInfo r = LiveDocsMetaParser.parse(
+        MetaInfo r = parse(
                 "DISPLAY_TEXT(\"Analog: !MCU_reads\");"
         );
         assertEquals(1, r.first().size());
@@ -50,7 +54,7 @@ public class LiveDocsMetaParserTest {
 
     @Test
     public void parseTextWithSpecialCharactersAndSpaces() {
-        MetaInfo r = LiveDocsMetaParser.parse(
+        MetaInfo r = parse(
                 "DISPLAY_TEXT(\"Analog: !MCU_reads\");"
         );
         assertEquals(1, r.first().size());
@@ -60,7 +64,7 @@ public class LiveDocsMetaParserTest {
 
     @Test
     public void parseDisplayConfig() {
-        MetaInfo r = LiveDocsMetaParser.parse("\t\t// DISPLAY_TEXT(interpolate(\")\n" +
+        MetaInfo r = parse("\t\t// DISPLAY_TEXT(interpolate(\")\n" +
                 "+\t\tDISPLAY_SENSOR(RPM) DISPLAY_TEXT(TCHARGE_MODE_RPM_TPS)\n" +
                 "\t\tfloat minRpmKcurrentTPS = interpolateMsg(\"minRpm\", tpMin, DISPLAY_CONFIG(tChargeMinRpmMinTps), tpMax,\n");
         assertEquals(4, r.first().size());
@@ -86,7 +90,7 @@ public class LiveDocsMetaParserTest {
 
     @Test
     public void testField() {
-        MetaInfo r = LiveDocsMetaParser.parse(
+        MetaInfo r = parse(
                 "DISPLAY_STATE(tps)\n" +
                         "tm->DISPLAY_FIELD(voltageMCU) = getVoltage(\"term\", config->adcChannel);\n" +
 
@@ -99,7 +103,7 @@ public class LiveDocsMetaParserTest {
 
     @Test
     public void parseIf() {
-        MetaInfo r = LiveDocsMetaParser.parse("\tDisPLAY_IF(cond)\t// DISPLAY_TEXT(\"interpolate(\")\n" +
+        MetaInfo r = parse("\tDisPLAY_IF(cond)\t// DISPLAY_TEXT(\"interpolate(\")\n" +
                 "+\t\tDISPLAY_SENSOR(RPM)" +
                 "/* DISPLAY_ElsE */ DISPLAY_TEXT(\"TCHARGE_MODE_RPM_TPS\")\n" +
                 "\t\tfloat minRpmKcurrentTPS = interpolateMsg(\"minRpm\", tpMin, DISPLAY_CONFIG(tChargeMinRpmMinTps), tpMax,\n" +

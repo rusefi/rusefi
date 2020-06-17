@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="enum_to_string" exported="" />
+    <orderEntry type="library" name="annotations" level="project" />
+    <orderEntry type="module" module-name="inifile" />
   </component>
 </module>

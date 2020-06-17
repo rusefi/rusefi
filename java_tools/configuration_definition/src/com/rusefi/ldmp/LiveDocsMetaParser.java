@@ -25,6 +25,7 @@ public class LiveDocsMetaParser {
     private static final String DISPLAY_ELSE = "DISPLAY_ELSE";
     private static final String DISPLAY_ENDIF = "DISPLAY_ENDIF";
     private static final char QUOTE_SYMBOL = '"';
+    public static final String TODO_MAKE_THIS_DESTINATION_PARAMETER = "/ui/src/main/java/com/rusefi/ldmp/generated/";
     private static StringBuilder prefix = new StringBuilder();
 
     private static String readLineByLine(String filePath) throws IOException {
@@ -48,7 +49,9 @@ public class LiveDocsMetaParser {
 
         String className = getClassName(inputFileName);
         String javaCode = generateJavaCode(metaInfo, className);
-        FileWriter fw = new FileWriter(destinationPath + "/ui/src/com/rusefi/ldmp/generated/" + className + ".java");
+        String fullDestination = destinationPath + TODO_MAKE_THIS_DESTINATION_PARAMETER;
+        new File(fullDestination).mkdirs();
+        FileWriter fw = new FileWriter(fullDestination + className + ".java");
         fw.write(javaCode);
         fw.close();
         SystemOut.close();
@@ -59,10 +62,10 @@ public class LiveDocsMetaParser {
         if (!new File(fileName).exists())
             throw new IllegalStateException("Not found " + fileName);
         String content = readLineByLine(fileName);
-        return parse(content);
+        return parse(content, fileName);
     }
 
-    public static MetaInfo parse(String string) {
+    public static MetaInfo parse(String string, String context) {
         Stack<List<Request>> stack = new Stack<>();
 
 
@@ -131,7 +134,7 @@ public class LiveDocsMetaParser {
                 }
             } else if (DISPLAY_ELSE.equalsIgnoreCase(token)) {
                 if (stack.isEmpty())
-                    throw new IllegalStateException("No IF statement on stack");
+                    throw new IllegalStateException("No IF statement on stack while we have DISPLAY_ELSE while " + context);
                 List<Request> onStack = stack.peek();
                 if (onStack.isEmpty())
                     throw new IllegalStateException("Empty on stack");
