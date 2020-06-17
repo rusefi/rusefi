@@ -188,7 +188,6 @@ public class RecentCommands {
                         content.add(createButton(reentrant, entry.command));
                     }
                 }
-                UiUtils.trueRepaint(content.getParent());
                 UiUtils.trueLayout(content.getParent());
             }
         });

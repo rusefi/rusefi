@@ -76,6 +76,14 @@ public class AutoupdateUtil {
         );
     }
 
+    public static void trueLayout(Component component) {
+        if (component == null)
+            return;
+        component.invalidate();
+        component.validate();
+        component.repaint();
+    }
+
     public static class ConnectionAndMeta {
         private String zipFileName;
         private HttpURLConnection httpConnection;

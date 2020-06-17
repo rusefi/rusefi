@@ -78,7 +78,6 @@ public class SensorGauge {
         wrapper.removeAllChildrenAndListeners();
         wrapper.addMouseListener(mouseListener);
         wrapper.add(gauge, BorderLayout.CENTER);
-        UiUtils.trueRepaint(wrapper.getParent());
         UiUtils.trueLayout(wrapper.getParent());
     }
 
