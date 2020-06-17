@@ -293,15 +293,10 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 static floatms_t getFuel(bool isCranking, floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	floatms_t fuelPerCycle;
 	if (isCranking) {
 		return getCrankingFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		return getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_PRINTF_FUEL_DETAILS
-	printf("baseFuel=%.2f fuelPerCycle=%.2f \t\n",
-			baseFuel, fuelPerCycle);
-#endif /*EFI_PRINTF_FUEL_DETAILS */
 	}
 }
 
