@@ -1,4 +1,6 @@
-package com.rusefi;
+package com.rusefi.ts_plugin;
+
+import com.rusefi.ts_plugin.TsPluginLauncher;
 
 import javax.swing.*;
 
@@ -8,7 +10,7 @@ public class Sandbox {
         frame.setSize(800, 500);
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        frame.add(new TsPlugin().getPluginPanel());
+        frame.add(new TsPluginLauncher().getPluginPanel());
 
         frame.setVisible(true);
     }

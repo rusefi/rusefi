@@ -1,9 +1,10 @@
-package com.rusefi;
+package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
+import com.rusefi.TsTuneReader;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
@@ -17,13 +18,13 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Content {
+public class PluginEntry implements TsPluginBody {
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
     private final JComponent content = new JPanel();
 
     private ControllerAccess controllerAccess;
 
-    public Content() {
+    public PluginEntry() {
         content.add(tokenPanel.getContent());
 
         JButton upload = new JButton("Upload Tune");
