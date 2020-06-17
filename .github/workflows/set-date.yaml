@@ -1,8 +1,9 @@
 name: Set Date
 
+# Run once every day
 on:
   schedule:
-    - cron: '* 0 * * *'
+    - cron: '0 0 * * *'
 
 jobs:
   update-date:
