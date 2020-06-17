@@ -736,7 +736,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	// If you don't have a pedal, we have no business here.
-	if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
+	if (!Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
 		return;
 	}
 
