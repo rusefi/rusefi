@@ -43,6 +43,7 @@ TEST(etb, initializationSingleThrottle) {
 
 	// Must have a sensor configured before init
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
+	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
 	// Expect mock0 to be init with index 0, and PID params
 	EXPECT_CALL(mocks[0], init(_, 0, &engineConfiguration->etb, Ne(nullptr)));
@@ -65,6 +66,7 @@ TEST(etb, initializationDualThrottle) {
 
 	// Must have a sensor configured before init
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
+	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
 	// The presence of a second TPS indicates dual throttle
 	Sensor::setMockValue(SensorType::Tps2, 25.0f);
