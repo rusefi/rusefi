@@ -1,5 +1,5 @@
 //
-// was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt
+// was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt
 //
 
 #define absoluteFuelPressure_offset 76
@@ -293,7 +293,7 @@
 #define dizzySparkOutputPin_offset 2226
 #define dizzySparkOutputPinMode_offset 2227
 #define DWELL_CURVE_SIZE 8
-#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
+#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"
 #define egoValueShift_offset 2216
 #define EGT_CHANNEL_COUNT 8
 #define electronicThrottlePin1Mode_offset 672
@@ -923,7 +923,7 @@
 #define mapHighValueVoltage_offset 2212
 #define mapLowValueVoltage_offset 2208
 #define mapMinBufferLength_offset 812
-#define mass_storage_e_enum "Auto", "Always", "Never"
+#define mass_storage_e_enum "Auto", "Always", "Never", "INVALID"
 #define max31855_cs1_offset 796
 #define max31855_cs2_offset 797
 #define max31855_cs3_offset 798
