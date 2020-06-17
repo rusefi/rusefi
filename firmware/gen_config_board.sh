@@ -14,11 +14,8 @@ BOARDNAME=$1
 
 echo "BOARDNAME=${BOARDNAME}"
 
-echo lazy is broken - TS input is not considered a change
-rm build/config.gen
-
 java -DSystemOut.name=gen_config_board \
-	-cp ../java_tools/ConfigDefinition.jar:../java_tools/configuration_definition/lib/snakeyaml.jar \
+	-cp ../java_tools/ConfigDefinition.jar \
 	com.rusefi.board_generator.BoardReader \
 	-board ${BOARDNAME} \
 	-firmware_path . \
@@ -31,7 +28,9 @@ java -DSystemOut.name=gen_config_board \
 java -DSystemOut.name=gen_config_board \
 	-jar ../java_tools/ConfigDefinition.jar \
 	-definition integration/rusefi_config.txt \
+	-tool gen_config.sh \
 	-ts_destination tunerstudio \
+	-firing_order controllers/algo/firing_order.h \
 	-ts_output_name rusefi_${BOARDNAME}.ini \
 	-prepend tunerstudio/${BOARDNAME}_prefix.txt \
 	-prepend config/boards/${BOARDNAME}/prepend.txt

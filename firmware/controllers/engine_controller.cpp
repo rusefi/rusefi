@@ -152,9 +152,8 @@ class PeriodicSlowController : public PeriodicTimerController {
 	}
 
 	int getPeriodMs() override {
-		// we need at least protection from zero value while resetting configuration
-		int periodMs = maxI(50, CONFIG(generalPeriodicThreadPeriodMs));
-		return periodMs;
+		// no reason to have this configurable, looks like everyone is happy with 20Hz
+		return 50;
 	}
 };
 
@@ -717,6 +716,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200604;
+	return 20200614;
 }
 #endif /* EFI_UNIT_TEST */

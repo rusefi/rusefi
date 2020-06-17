@@ -1,7 +1,8 @@
 <project default="jar">
     <property name="jar_file_folder" value="build/jar"/>
-    <property name="jar_file" value="${jar_file_folder}/rusefi_plugin.jar"/>
+    <property name="jar_file" value="${jar_file_folder}/rusefi_plugin_body.jar"/>
     <property name="console_path" value="../../java_console"/>
+    <property name="launcher_path" value="../ts_plugin_launcher"/>
 
     <target name="clean">
         <delete dir="build"/>
@@ -12,12 +13,14 @@
 
         <javac debug="yes"
                destdir="build/classes"
-               classpath="${console_path}/lib/junit.jar:${console_path}/lib/annotations.jar:lib/TunerStudioPluginAPI.jar:${console_path}/lib/httpclient.jar:${console_path}/lib/httpmime.jar:${console_path}/lib/httpcore.jar"
+               classpath="${console_path}/lib/junit.jar:${console_path}/lib/annotations.jar:${launcher_path}/lib/TunerStudioPluginAPI.jar:${console_path}/lib/httpclient.jar:${console_path}/lib/httpmime.jar:${console_path}/lib/httpcore.jar"
         >
             <src path="${console_path}/shared_ui/src"/>
+            <src path="${console_path}/autoupdate/src"/>
             <src path="${console_path}/inifile/src"/>
             <src path="${console_path}/logging/src"/>
             <src path="${console_path}/models/src"/>
+            <src path="${launcher_path}/src"/>
             <src path="src"/>
         </javac>
 
@@ -35,18 +38,17 @@
             <manifest>
                 <attribute name="Built-Date" value="${TODAY}"/>
                 <attribute name="Signature-Vendor" value="rusEFI LLC"/>
-                <attribute name="ApplicationPlugin" value="com.rusefi.TsPlugin"/>
             </manifest>
 
             <zipfileset src="../../java_console/lib/httpclient.jar" includes="**/*.class"/>
             <zipfileset src="../../java_console/lib/httpcore.jar" includes="**/*.class"/>
             <zipfileset src="../../java_console/lib/httpmime.jar" includes="**/*.class"/>
-            <zipfileset src="lib/commons-logging.jar" includes="**/*.class"/>
+<!--            <zipfileset src="lib/commons-logging.jar" includes="**/*.class"/>-->
         </jar>
 
     </target>
 
-    <target name="local_install" depends="jar">
+    <target name="body_local_install" depends="jar">
         <copy file="${jar_file}" todir="${user.home}/.efianalytics/TunerStudio/plugins"/>
     </target>
 </project>

@@ -25,7 +25,6 @@ public class BoardReader {
             );
             return;
         }
-
         String boardName = null;
         String firmwarePath = "firmware";
         String outputPath = ".";
@@ -44,20 +43,24 @@ public class BoardReader {
         }
 
         Yaml yaml = new Yaml();
-        Map<String, Object> data = yaml.load(new FileReader(firmwarePath + "/config/boards/" + boardName + "/mapping.yaml"));
-        Objects.requireNonNull(data, "mapping for " + boardName);
-        SystemOut.println(data);
+        String fileName = firmwarePath + "/config/boards/" + boardName + "/mapping.yaml";
+        Map<String, Object> data = yaml.load(new FileReader(fileName));
+        if (data == null) {
+            SystemOut.println("Null yaml for " + fileName);
+        } else {
+            SystemOut.println(data);
 
+            BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath + File.separator + boardName + "_prefix.txt"));
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath + File.separator + boardName + "_prefix.txt"));
+            bw.write(processSection(data, "brain_pin_e", "output_pin_e", "outputs", "GPIO_UNASSIGNED"));
+            bw.write(processSection(data, "adc_channel_e", "adc_channel_e", "analog_inputs", "EFI_ADC_NONE"));
 
-        bw.write(processSection(data, "brain_pin_e", "output_pin_e", "outputs", "GPIO_UNASSIGNED"));
-        bw.write(processSection(data, "adc_channel_e", "adc_channel_e", "analog_inputs", "EFI_ADC_NONE"));
+            bw.write(processSection(data, "brain_pin_e", "brain_input_pin_e", "event_inputs", "GPIO_UNASSIGNED"));
+            bw.write(processSection(data, "brain_pin_e", "switch_input_pin_e", "switch_inputs", "GPIO_UNASSIGNED"));
 
-        bw.write(processSection(data, "brain_pin_e", "brain_input_pin_e", "event_inputs", "GPIO_UNASSIGNED"));
-        bw.write(processSection(data, "brain_pin_e", "switch_input_pin_e", "switch_inputs", "GPIO_UNASSIGNED"));
-
-        bw.close();
+            bw.close();
+        }
+        SystemOut.close();
     }
 
     private static String processSection(Map<String, Object> data, String headerEnumName, String outputEnumName, String sectionName, String NOTHING_NAME) {

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Jun 09 21:51:00 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Jun 14 17:00:00 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1005,7 +1005,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 516
 	 */
-	int overrideCrankingIgnition;
+	int unusedValueHere;
 	/**
 	 * offset 520
 	 */
@@ -1320,19 +1320,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 712
 	 */
-	int idleThreadPeriodMs;
-	/**
-	 * offset 716
-	 */
-	int consoleLoopPeriodMs;
-	/**
-	 * offset 720
-	 */
-	int lcdThreadPeriodMs;
-	/**
-	 * offset 724
-	 */
-	int generalPeriodicThreadPeriodMs;
+	int unusedAt712[4];
 	/**
 	 * Secondary TTL channel baud rate
 	 * offset 728
@@ -1806,10 +1794,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_283_30 : 1;
+	bool unusedBit_280_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_283_31 : 1;
+	bool unusedBit_280_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2563,9 +2551,19 @@ struct engine_configuration_s {
 	 */
 	float throttlePedalSecondaryWOTVoltage;
 	/**
+	 *  set can_baudrate
 	 * offset 2108
 	 */
-	uint32_t unused_former_warmup_target_afr[6];
+	can_baudrate_e canBaudRate;
+	/**
+	 * need 4 byte alignment
+	 * offset 2109
+	 */
+	uint8_t alignmentFill_at_2109[3];
+	/**
+	 * offset 2112
+	 */
+	uint32_t unused_former_warmup_target_afr[5];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -3510,4 +3508,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Tue Jun 09 21:51:00 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Sun Jun 14 17:00:00 EDT 2020

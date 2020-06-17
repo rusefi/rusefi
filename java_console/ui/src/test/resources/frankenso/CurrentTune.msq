@@ -1,0 +1,4876 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<msq xmlns="http://www.msefi.com/:msq">
+<bibliography author="TunerStudio MS Dev 3.1.03 - EFI Analytics, Inc." tuneComment="" writeDate="Sun Jun 14 00:00:04 EDT 2020"/>
+<versionInfo fileFormat="5.0" firmwareInfo="rusEFI+v20200604%4023532" nPages="1" signature="rusEFI v1.2020.4"/>
+<page>
+<pcVariable name="tsCanId">"0"</pcVariable>
+<pcVariable cols="1" digits="1" name="wueAfrTargetOffset" rows="16" units=":1">
+         -1.5 
+         -1.4 
+         -1.1 
+         -0.9 
+         -0.8 
+         -0.6 
+         -0.6 
+         -0.5 
+         -0.4 
+         -0.4 
+         -0.3 
+         -0.2 
+         -0.2 
+         -0.1 
+         -0.1 
+         0.0 
+      </pcVariable>
+</page>
+<page number="0" size="20000">
+<constant name="engineType">"AUDI_AAN"</constant>
+<constant digits="0" name="engineSnifferRpmThreshold" units="RPM">2500.0</constant>
+<constant digits="2" name="injector_flow" units="cm3/min">200.0</constant>
+<constant cols="1" digits="2" name="injector_battLagCorrBins" rows="8" units="volts">
+         6.0 
+         8.0 
+         10.0 
+         11.0 
+         12.0 
+         13.0 
+         14.0 
+         15.0 
+      </constant>
+<constant cols="1" digits="2" name="injector_battLagCorr" rows="8" units="ms">
+         3.371000051498413 
+         1.9739999771118164 
+         1.3830000162124634 
+         1.194000005722046 
+         1.0399999618530273 
+         0.9139999747276306 
+         0.796999990940094 
+         0.7260000109672546 
+      </constant>
+<constant name="isForcedInduction">"false"</constant>
+<constant name="activateAuxPid1">"false"</constant>
+<constant name="isVerboseAuxPid1">"false"</constant>
+<constant name="activateAuxPid2">"false"</constant>
+<constant name="isVerboseAuxPid2">"false"</constant>
+<constant name="activateAuxPid3">"false"</constant>
+<constant name="isVerboseAuxPid3">"false"</constant>
+<constant name="activateAuxPid4">"false"</constant>
+<constant name="isVerboseAuxPid4">"false"</constant>
+<constant name="isCJ125Verbose">"false"</constant>
+<constant name="cj125isUaDivided">"true"</constant>
+<constant name="cj125isLsu49">"false"</constant>
+<constant name="etb_use_two_wires">"false"</constant>
+<constant name="isDoubleSolenoidIdle">"false"</constant>
+<constant name="showSdCardWarning">"false"</constant>
+<constant name="cj125isUrDivided">"false"</constant>
+<constant name="issue_294_unused">"false"</constant>
+<constant name="useTLE8888_cranking_hack">"true"</constant>
+<constant name="useInstantRpmForIdle">"false"</constant>
+<constant name="absoluteFuelPressure">"false"</constant>
+<constant name="launchControlEnabled">"false"</constant>
+<constant name="rollingLaunchEnabled">"false"</constant>
+<constant name="antiLagEnabled">"false"</constant>
+<constant name="useRunningMathForCranking">"Fixed"</constant>
+<constant name="displayLogicLevelsInEngineSniffer">"false"</constant>
+<constant name="issue_294_26">"false"</constant>
+<constant name="issue_294_27">"false"</constant>
+<constant name="issue_294_28">"false"</constant>
+<constant name="issue_294_29">"false"</constant>
+<constant name="issue_294_30">"false"</constant>
+<constant name="issue_294_31">"nada_example"</constant>
+<constant name="unusedBit_34_31">"false"</constant>
+<constant digits="0" name="tpsMin" units="ADC">0.0</constant>
+<constant digits="0" name="tpsMax" units="ADC">1000.0</constant>
+<constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
+<constant digits="0" name="tpsErrorDetectionTooHigh" units="%">110.0</constant>
+<constant digits="1" name="cranking_baseFuel" units="ms">5.0</constant>
+<constant digits="0" name="cranking_rpm" units="RPM">550.0</constant>
+<constant digits="1" name="primingSquirtDurationMs" units="*C">5.0</constant>
+<constant digits="1" name="ignitionDwellForCrankingMs" units="ms">6.0</constant>
+<constant digits="0" name="crankingChargeAngle" units="deg">70.0</constant>
+<constant cols="1" digits="2" name="map_samplingAngleBins" rows="8">
+         800.0 
+         1686.0 
+         2571.0 
+         3457.0 
+         4343.0 
+         5229.0 
+         6114.0 
+         7000.0 
+      </constant>
+<constant cols="1" digits="2" name="map_samplingAngle" rows="8" units="deg">
+         100.0 
+         104.0 
+         109.0 
+         113.0 
+         117.0 
+         121.0 
+         126.0 
+         130.0 
+      </constant>
+<constant cols="1" digits="2" name="map_samplingWindowBins" rows="8">
+         800.0 
+         1686.0 
+         2571.0 
+         3457.0 
+         4343.0 
+         5229.0 
+         6114.0 
+         7000.0 
+      </constant>
+<constant cols="1" digits="2" name="map_samplingWindow" rows="8" units="deg">
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+      </constant>
+<constant digits="2" name="map_sensor_lowValue" units="kpa">0.0</constant>
+<constant digits="2" name="map_sensor_highValue" units="kpa">0.0</constant>
+<constant name="map_sensor_type">"MPX4250"</constant>
+<constant name="map_sensor_hwChannel">"PA0"</constant>
+<constant digits="1" name="clt_tempC_1" units="*C">-20.0</constant>
+<constant digits="1" name="clt_tempC_2" units="*C">23.888900756835938</constant>
+<constant digits="1" name="clt_tempC_3" units="*C">120.0</constant>
+<constant digits="1" name="clt_resistance_1" units="Ohm">18000.0</constant>
+<constant digits="1" name="clt_resistance_2" units="Ohm">2100.0</constant>
+<constant digits="1" name="clt_resistance_3" units="Ohm">100.0</constant>
+<constant digits="1" name="clt_bias_resistor" units="Ohm">2700.0</constant>
+<constant name="clt_adcChannel">"PC2"</constant>
+<constant digits="1" name="iat_tempC_1" units="*C">-20.0</constant>
+<constant digits="1" name="iat_tempC_2" units="*C">23.888900756835938</constant>
+<constant digits="1" name="iat_tempC_3" units="*C">120.0</constant>
+<constant digits="1" name="iat_resistance_1" units="Ohm">18000.0</constant>
+<constant digits="1" name="iat_resistance_2" units="Ohm">2100.0</constant>
+<constant digits="1" name="iat_resistance_3" units="Ohm">100.0</constant>
+<constant digits="1" name="iat_bias_resistor" units="Ohm">2700.0</constant>
+<constant name="iat_adcChannel">"PC1"</constant>
+<constant digits="2" name="launchRpm" units="rpm">3000.0</constant>
+<constant digits="2" name="launchTimingRetard" units="deg">10.0</constant>
+<constant digits="0" name="hip9011PrescalerAndSDO" units="integer">6.0</constant>
+<constant digits="2" name="knockBandCustom" units="kHz">0.0</constant>
+<constant cols="1" digits="2" name="sparkDwellRpmBins" rows="8" units="RPM">
+         0.0 
+         1000.0 
+         2000.0 
+         3000.0 
+         4000.0 
+         5000.0 
+         6000.0 
+         7000.0 
+      </constant>
+<constant cols="1" digits="2" name="sparkDwellValues" rows="8" units="ms">
+         4.0 
+         4.0 
+         4.0 
+         4.0 
+         4.0 
+         4.0 
+         4.0 
+         4.0 
+      </constant>
+<constant digits="2" name="displacement" units="L">2.0</constant>
+<constant name="cylindersCount">4</constant>
+<constant name="firingOrder">"1-3-4-2"</constant>
+<constant digits="2" name="cylinderBore" units="mm">87.5</constant>
+<constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
+<constant digits="2" name="rpmHardLimit" units="rpm">7000.0</constant>
+<constant name="fuelAlgorithm">"SPEED DENSITY"</constant>
+<constant name="crankingInjectionMode">"Simultaneous"</constant>
+<constant name="injectionMode">"Sequential"</constant>
+<constant digits="2" name="extraInjectionOffset" units="deg">0.0</constant>
+<constant digits="2" name="crankingTimingAngle" units="deg">0.0</constant>
+<constant name="ignitionMode">"One coil"</constant>
+<constant digits="0" name="ignitionOffset" units="RPM">0.0</constant>
+<constant name="timingMode">"dynamic"</constant>
+<constant digits="0" name="fixedModeTiming" units="RPM">50.0</constant>
+<constant digits="0" name="globalTriggerAngleOffset" units="deg">0.0</constant>
+<constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
+<constant digits="2" name="vbattDividerCoeff" units="coef">8.600000381469727</constant>
+<constant digits="0" name="fanOnTemperature" units="*C">95.0</constant>
+<constant digits="0" name="fanOffTemperature" units="*C">91.0</constant>
+<constant digits="2" name="vehicleSpeedCoef" units="coef">1.0</constant>
+<constant name="canNbcType">"MAZDA RX8"</constant>
+<constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
+<constant name="ambiguousOperationMode">"4 stroke with cam sensor"</constant>
+<constant name="displayMode">"hd44780"</constant>
+<constant name="logFormat">"native"</constant>
+<constant digits="0" name="byFirmwareVersion" units="index">2.0200604E7</constant>
+<constant digits="0" name="HD44780width" units="index">20.0</constant>
+<constant digits="0" name="HD44780height" units="index">4.0</constant>
+<constant name="tps1_1AdcChannel">"PA2"</constant>
+<constant name="vbattAdcChannel">"PC4"</constant>
+<constant name="fuelLevelSensor">"Disabled"</constant>
+<constant name="tps2_1AdcChannel">"Disabled"</constant>
+<constant digits="0" name="sensorChartFrequency" units="index">20.0</constant>
+<constant name="trigger_type">"1+1"</constant>
+<constant name="trigger_todoRemoveMeOneDay0">"false"</constant>
+<constant name="trigger_todoRemoveMeOneDay1">"false"</constant>
+<constant name="trigger_useOnlyFirstChannel">"false"</constant>
+<constant name="trigger_unusedBit_4_3">"false"</constant>
+<constant name="trigger_unusedBit_4_4">"false"</constant>
+<constant name="trigger_unusedBit_4_5">"false"</constant>
+<constant name="trigger_unusedBit_4_6">"false"</constant>
+<constant name="trigger_unusedBit_4_7">"false"</constant>
+<constant name="trigger_unusedBit_4_8">"false"</constant>
+<constant name="trigger_unusedBit_4_9">"false"</constant>
+<constant name="trigger_unusedBit_4_10">"false"</constant>
+<constant name="trigger_unusedBit_4_11">"false"</constant>
+<constant name="trigger_unusedBit_4_12">"false"</constant>
+<constant name="trigger_unusedBit_4_13">"false"</constant>
+<constant name="trigger_unusedBit_4_14">"false"</constant>
+<constant name="trigger_unusedBit_4_15">"false"</constant>
+<constant name="trigger_unusedBit_4_16">"false"</constant>
+<constant name="trigger_unusedBit_4_17">"false"</constant>
+<constant name="trigger_unusedBit_4_18">"false"</constant>
+<constant name="trigger_unusedBit_4_19">"false"</constant>
+<constant name="trigger_unusedBit_4_20">"false"</constant>
+<constant name="trigger_unusedBit_4_21">"false"</constant>
+<constant name="trigger_unusedBit_4_22">"false"</constant>
+<constant name="trigger_unusedBit_4_23">"false"</constant>
+<constant name="trigger_unusedBit_4_24">"false"</constant>
+<constant name="trigger_unusedBit_4_25">"false"</constant>
+<constant name="trigger_unusedBit_4_26">"false"</constant>
+<constant name="trigger_unusedBit_4_27">"false"</constant>
+<constant name="trigger_unusedBit_4_28">"false"</constant>
+<constant name="trigger_unusedBit_4_29">"false"</constant>
+<constant name="trigger_unusedBit_4_30">"false"</constant>
+<constant name="trigger_unusedBit_4_31">"false"</constant>
+<constant digits="0" name="trigger_customTotalToothCount" units="number">0.0</constant>
+<constant digits="0" name="trigger_customSkippedToothCount" units="number">0.0</constant>
+<constant name="hip9011SpiDevice">"SPI2"</constant>
+<constant name="high_fuel_pressure_sensor_1">"Disabled"</constant>
+<constant name="high_fuel_pressure_sensor_2">"Disabled"</constant>
+<constant name="mafAdcChannel">"Disabled"</constant>
+<constant digits="2" name="globalFuelCorrection" units="coef">1.0</constant>
+<constant digits="3" name="adcVcc" units="volts">3.0</constant>
+<constant digits="0" name="maxKnockSubDeg" units="Deg">20.0</constant>
+<constant name="camInputs1">"NONE"</constant>
+<constant name="camInputs2">"NONE"</constant>
+<constant name="camInputs3">"NONE"</constant>
+<constant name="camInputs4">"NONE"</constant>
+<constant name="afr_hwChannel">"PC3"</constant>
+<constant digits="2" name="afr_v1" units="volts">0.0</constant>
+<constant digits="2" name="afr_value1" units="AFR">9.996000289916992</constant>
+<constant digits="2" name="afr_v2" units="volts">5.0</constant>
+<constant digits="2" name="afr_value2" units="AFR">19.992000579833984</constant>
+<constant name="throttlePedalPositionAdcChannel">"Disabled"</constant>
+<constant name="tle6240_cs">"NONE"</constant>
+<constant name="tle6240_csPinMode">"default"</constant>
+<constant name="throttlePedalUpPin">"NONE"</constant>
+<constant digits="2" name="baroSensor_lowValue" units="kpa">0.0</constant>
+<constant digits="2" name="baroSensor_highValue" units="kpa">500.0</constant>
+<constant name="baroSensor_type">"Custom"</constant>
+<constant name="baroSensor_hwChannel">"Disabled"</constant>
+<constant digits="0" name="idle_solenoidFrequency" units="Hz">200.0</constant>
+<constant name="idle_solenoidPin">"PC13"</constant>
+<constant name="idle_stepperDirectionPin">"PE10"</constant>
+<constant name="idle_stepperStepPin">"PE12"</constant>
+<constant name="idle_solenoidPinMode">"default"</constant>
+<constant digits="0" name="manIdlePosition" units="%">50.0</constant>
+<constant digits="2" name="mapFrequency0Kpa" units="Hz">0.0</constant>
+<constant digits="2" name="mapFrequency100Kpa" units="Hz">0.0</constant>
+<constant digits="0" name="triggerSimulatorFrequency" units="Rpm">1200.0</constant>
+<constant name="injectionPins1">"PB9"</constant>
+<constant name="injectionPins2">"PE2"</constant>
+<constant name="injectionPins3">"PB8"</constant>
+<constant name="injectionPins4">"PB7"</constant>
+<constant name="injectionPins5">"NONE"</constant>
+<constant name="injectionPins6">"NONE"</constant>
+<constant name="injectionPins7">"NONE"</constant>
+<constant name="injectionPins8">"NONE"</constant>
+<constant name="injectionPins9">"NONE"</constant>
+<constant name="injectionPins10">"NONE"</constant>
+<constant name="injectionPins11">"NONE"</constant>
+<constant name="injectionPins12">"NONE"</constant>
+<constant name="ignitionPins1">"PE14"</constant>
+<constant name="ignitionPins2">"PC7"</constant>
+<constant name="ignitionPins3">"PC9"</constant>
+<constant name="ignitionPins4">"PE10"</constant>
+<constant name="ignitionPins5">"NONE"</constant>
+<constant name="ignitionPins6">"NONE"</constant>
+<constant name="ignitionPins7">"NONE"</constant>
+<constant name="ignitionPins8">"NONE"</constant>
+<constant name="ignitionPins9">"NONE"</constant>
+<constant name="ignitionPins10">"NONE"</constant>
+<constant name="ignitionPins11">"NONE"</constant>
+<constant name="ignitionPins12">"NONE"</constant>
+<constant name="injectionPinMode">"default"</constant>
+<constant name="ignitionPinMode">"default"</constant>
+<constant name="HD44780_rs">"PE7"</constant>
+<constant name="HD44780_e">"PE9"</constant>
+<constant name="HD44780_db4">"PE11"</constant>
+<constant name="HD44780_db5">"PE13"</constant>
+<constant name="HD44780_db6">"PE15"</constant>
+<constant name="HD44780_db7">"PB10"</constant>
+<constant name="gps_rx_pin">"NONE"</constant>
+<constant name="gps_tx_pin">"NONE"</constant>
+<constant name="fuelPumpPin">"PE4"</constant>
+<constant name="fuelPumpPinMode">"default"</constant>
+<constant name="malfunctionIndicatorPin">"NONE"</constant>
+<constant name="malfunctionIndicatorPinMode">"default"</constant>
+<constant name="fanPinMode">"default"</constant>
+<constant name="fanPin">"PE5"</constant>
+<constant name="clutchDownPin">"NONE"</constant>
+<constant name="alternatorControlPin">"NONE"</constant>
+<constant name="alternatorControlPinMode">"default"</constant>
+<constant digits="1" name="clutchDownPinMode" units="todo">1.0</constant>
+<constant name="digitalPotentiometerChipSelect1">"PD7"</constant>
+<constant name="digitalPotentiometerChipSelect2">"NONE"</constant>
+<constant name="digitalPotentiometerChipSelect3">"PD5"</constant>
+<constant name="digitalPotentiometerChipSelect4">"NONE"</constant>
+<constant name="electronicThrottlePin1Mode">"default"</constant>
+<constant name="wboHeaterPin">"NONE"</constant>
+<constant name="cj125CsPin">"NONE"</constant>
+<constant name="max31855spiDevice">"Off"</constant>
+<constant name="debugTriggerSync">"NONE"</constant>
+<constant name="digitalPotentiometerSpiDevice">"Off"</constant>
+<constant name="mc33972_cs">"NONE"</constant>
+<constant name="mc33972_csPinMode">"default"</constant>
+<constant name="auxFastSensor1_adcChannel">"Disabled"</constant>
+<constant name="tps1_2AdcChannel">"Disabled"</constant>
+<constant name="tps2_2AdcChannel">"Disabled"</constant>
+<constant name="throttlePedalPositionSecondAdcChannel">"Disabled"</constant>
+<constant digits="2" name="fuelLevelEmptyTankVoltage" units="V">0.0</constant>
+<constant digits="2" name="fuelLevelFullTankVoltage" units="V">5.0</constant>
+<constant name="afr_type">"14Point7"</constant>
+<constant name="triggerInputPins1">"PC6"</constant>
+<constant name="triggerInputPins2">"PA5"</constant>
+<constant name="triggerInputPins3">"NONE"</constant>
+<constant name="hip9011CsPinMode">"open collector"</constant>
+<constant name="tachOutputPin">"NONE"</constant>
+<constant name="tachOutputPinMode">"default"</constant>
+<constant name="mainRelayPin">"PD7"</constant>
+<constant name="sdCardCsPin">"PD4"</constant>
+<constant name="canTxPin">"PB6"</constant>
+<constant name="canRxPin">"PB12"</constant>
+<constant digits="1" name="throttlePedalUpPinMode" units="todo">0.0</constant>
+<constant digits="0" name="tunerStudioSerialSpeed" units="BPs">38400.0</constant>
+<constant digits="1" name="compressionRatio" units="CR">9.0</constant>
+<constant name="triggerSimulatorPins1">"PD1"</constant>
+<constant name="triggerSimulatorPins2">"PD2"</constant>
+<constant name="triggerSimulatorPins3">"NONE"</constant>
+<constant name="triggerSimulatorPinModes1">"default"</constant>
+<constant name="triggerSimulatorPinModes2">"default"</constant>
+<constant name="triggerSimulatorPinModes3">"default"</constant>
+<constant name="o2heaterPin">"NONE"</constant>
+<constant name="o2heaterPinModeTodO">"default"</constant>
+<constant name="is_enabled_spi_1">"false"</constant>
+<constant name="is_enabled_spi_2">"false"</constant>
+<constant name="is_enabled_spi_3">"true"</constant>
+<constant name="isSdCardEnabled">"true"</constant>
+<constant name="isFastAdcEnabled">"true"</constant>
+<constant name="isEngineControlEnabled">"true"</constant>
+<constant name="isHip9011Enabled">"true"</constant>
+<constant name="isVerboseAlternator">"false"</constant>
+<constant name="useSerialPort">"true"</constant>
+<constant name="useStepperIdle">"false"</constant>
+<constant name="enabledStep1Limiter">"false"</constant>
+<constant name="useTpicAdvancedMode">"false"</constant>
+<constant name="useLcdScreen">"true"</constant>
+<constant name="verboseTLE8888">"false"</constant>
+<constant name="enableVerboseCanTx">"false"</constant>
+<constant name="onOffAlternatorLogic">"false"</constant>
+<constant name="isCJ125Enabled">"false"</constant>
+<constant name="vvtCamSensorUseRise">"false"</constant>
+<constant name="measureMapOnlyInOneCylinder">"false"</constant>
+<constant name="stepperForceParkingEveryRestart">"false"</constant>
+<constant name="isFasterEngineSpinUpEnabled">"false"</constant>
+<constant name="coastingFuelCutEnabled">"false"</constant>
+<constant name="useIacTableForCoasting">"false"</constant>
+<constant name="useNoiselessTriggerDecoder">"false"</constant>
+<constant name="useIdleTimingPidControl">"false"</constant>
+<constant name="useTPSBasedVeTable">"false"</constant>
+<constant name="is_enabled_spi_4">"false"</constant>
+<constant name="pauseEtbControl">"false"</constant>
+<constant name="alignEngineSnifferAtTDC">"false"</constant>
+<constant name="useETBforIdleControl">"false"</constant>
+<constant name="idleIncrementalPidCic">"false"</constant>
+<constant name="enableAemXSeries">"false"</constant>
+<constant name="logicAnalyzerPins1">"NONE"</constant>
+<constant name="logicAnalyzerPins2">"NONE"</constant>
+<constant name="logicAnalyzerPins3">"NONE"</constant>
+<constant name="logicAnalyzerPins4">"NONE"</constant>
+<constant name="mainRelayPinMode">"default"</constant>
+<constant name="hip9011CsPin">"PB0"</constant>
+<constant name="hip9011IntHoldPin">"PB11"</constant>
+<constant name="hip9011IntHoldPinMode">"open collector"</constant>
+<constant digits="0" name="verboseCanBaseAddress">512.0</constant>
+<constant digits="0" name="mc33_hvolt" units="v">0.0</constant>
+<constant name="gpioPinModes1">"default"</constant>
+<constant name="gpioPinModes2">"default"</constant>
+<constant name="gpioPinModes3">"default"</constant>
+<constant name="gpioPinModes4">"default"</constant>
+<constant name="gpioPinModes5">"default"</constant>
+<constant name="gpioPinModes6">"default"</constant>
+<constant name="gpioPinModes7">"default"</constant>
+<constant name="gpioPinModes8">"default"</constant>
+<constant name="gpioPinModes9">"default"</constant>
+<constant name="gpioPinModes10">"default"</constant>
+<constant name="gpioPinModes11">"default"</constant>
+<constant name="gpioPinModes12">"default"</constant>
+<constant name="gpioPinModes13">"default"</constant>
+<constant name="gpioPinModes14">"default"</constant>
+<constant name="gpioPinModes15">"default"</constant>
+<constant name="gpioPinModes16">"default"</constant>
+<constant name="fsioOutputPins1">"NONE"</constant>
+<constant name="fsioOutputPins2">"NONE"</constant>
+<constant name="fsioOutputPins3">"NONE"</constant>
+<constant name="fsioOutputPins4">"NONE"</constant>
+<constant name="fsioOutputPins5">"NONE"</constant>
+<constant name="fsioOutputPins6">"NONE"</constant>
+<constant name="fsioOutputPins7">"NONE"</constant>
+<constant name="fsioOutputPins8">"NONE"</constant>
+<constant name="fsioOutputPins9">"NONE"</constant>
+<constant name="fsioOutputPins10">"NONE"</constant>
+<constant name="fsioOutputPins11">"NONE"</constant>
+<constant name="fsioOutputPins12">"NONE"</constant>
+<constant name="fsioOutputPins13">"NONE"</constant>
+<constant name="fsioOutputPins14">"NONE"</constant>
+<constant name="fsioOutputPins15">"NONE"</constant>
+<constant name="fsioOutputPins16">"NONE"</constant>
+<constant name="max31855_cs1">"NONE"</constant>
+<constant name="max31855_cs2">"NONE"</constant>
+<constant name="max31855_cs3">"NONE"</constant>
+<constant name="max31855_cs4">"NONE"</constant>
+<constant name="max31855_cs5">"NONE"</constant>
+<constant name="max31855_cs6">"NONE"</constant>
+<constant name="max31855_cs7">"NONE"</constant>
+<constant name="max31855_cs8">"NONE"</constant>
+<constant digits="0" name="sdCardPeriodMs" units="ms">50.0</constant>
+<constant name="debugMapAveraging">"NONE"</constant>
+<constant name="starterRelayDisablePin">"NONE"</constant>
+<constant name="starterRelayDisableMode">"default"</constant>
+<constant name="secondSolenoidPin">"NONE"</constant>
+<constant name="startStopButtonPin">"NONE"</constant>
+<constant digits="0" name="mapMinBufferLength" units="count">1.0</constant>
+<constant digits="0" name="idlePidDeactivationTpsThreshold" units="%">2.0</constant>
+<constant digits="0" name="stepperParkingExtraSteps" units="%">0.0</constant>
+<constant digits="0" name="tps1SecondaryMin" units="ADC">0.0</constant>
+<constant digits="0" name="tps1SecondaryMax" units="ADC">1000.0</constant>
+<constant digits="0" name="startCrankingDuration" units="Seconds">7.0</constant>
+<constant name="triggerErrorPin">"NONE"</constant>
+<constant name="triggerErrorPinMode">"default"</constant>
+<constant name="acRelayPin">"NONE"</constant>
+<constant name="acRelayPinMode">"default"</constant>
+<constant digits="0" name="fsioFrequency1" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency2" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency3" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency4" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency5" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency6" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency7" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency8" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency9" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency10" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency11" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency12" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency13" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency14" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency15" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency16" units="Hz">0.0</constant>
+<constant digits="2" name="fsio_setting1" units="Val">5000.0</constant>
+<constant digits="2" name="fsio_setting2" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting3" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting4" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting5" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting6" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting7" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting8" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting9" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting10" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting11" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting12" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting13" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting14" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting15" units="Val">0.0</constant>
+<constant digits="2" name="fsio_setting16" units="Val">0.0</constant>
+<constant name="spi1mosiPin">"PB5"</constant>
+<constant name="spi1misoPin">"PB4"</constant>
+<constant name="spi1sckPin">"PB3"</constant>
+<constant name="spi2mosiPin">"PB15"</constant>
+<constant name="spi2misoPin">"PB14"</constant>
+<constant name="spi2sckPin">"PB13"</constant>
+<constant name="spi3mosiPin">"PB5"</constant>
+<constant name="spi3misoPin">"PB4"</constant>
+<constant name="spi3sckPin">"PB3"</constant>
+<constant name="cdmInputPin">"NONE"</constant>
+<constant name="joystickCenterPin">"PC8"</constant>
+<constant name="joystickAPin">"PD10"</constant>
+<constant name="joystickBPin">"NONE"</constant>
+<constant name="joystickCPin">"NONE"</constant>
+<constant name="joystickDPin">"PD11"</constant>
+<constant name="consoleUartDevice">"Off"</constant>
+<constant name="sensorChartMode">"none"</constant>
+<constant name="mafSensorType">"v1"</constant>
+<constant name="fsioDigitalInputs1">"NONE"</constant>
+<constant name="fsioDigitalInputs2">"NONE"</constant>
+<constant name="fsioDigitalInputs3">"NONE"</constant>
+<constant name="fsioDigitalInputs4">"NONE"</constant>
+<constant name="fsioDigitalInputs5">"NONE"</constant>
+<constant name="fsioDigitalInputs6">"NONE"</constant>
+<constant name="fsioDigitalInputs7">"NONE"</constant>
+<constant name="fsioDigitalInputs8">"NONE"</constant>
+<constant name="fsioDigitalInputs9">"NONE"</constant>
+<constant name="fsioDigitalInputs10">"NONE"</constant>
+<constant name="fsioDigitalInputs11">"NONE"</constant>
+<constant name="fsioDigitalInputs12">"NONE"</constant>
+<constant name="fsioDigitalInputs13">"NONE"</constant>
+<constant name="fsioDigitalInputs14">"NONE"</constant>
+<constant name="fsioDigitalInputs15">"NONE"</constant>
+<constant name="fsioDigitalInputs16">"NONE"</constant>
+<constant name="vehicleSpeedSensorInputPin">"NONE"</constant>
+<constant name="clutchUpPin">"NONE"</constant>
+<constant name="frequencyReportingMapInputPin">"NONE"</constant>
+<constant digits="1" name="clutchUpPinMode" units="todo">1.0</constant>
+<constant digits="0" name="multisparkMaxRpm" units="rpm">1500.0</constant>
+<constant digits="0" name="multisparkMaxSparkingAngle" units="deg">30.0</constant>
+<constant digits="0" name="multisparkMaxExtraSparkCount" units="count">2.0</constant>
+<constant name="todoClutchUpPinInverted">"false"</constant>
+<constant name="todoClutchDownPinInverted">"false"</constant>
+<constant name="useHbridges">"false"</constant>
+<constant name="multisparkEnable">"false"</constant>
+<constant name="enableLaunchRetard">"false"</constant>
+<constant name="enableLaunchBoost">"false"</constant>
+<constant name="launchDisableBySpeed">"false"</constant>
+<constant name="enableCanVss">"false"</constant>
+<constant name="enableInnovateLC2">"false"</constant>
+<constant name="showHumanReadableWarning">"false"</constant>
+<constant name="stftIgnoreErrorMagnitude">"false"</constant>
+<constant name="unusedBit_251_11">"false"</constant>
+<constant name="unusedBit_251_12">"false"</constant>
+<constant name="unusedBit_251_13">"false"</constant>
+<constant name="unusedBit_251_14">"false"</constant>
+<constant name="unusedBit_251_15">"false"</constant>
+<constant name="unusedBit_251_16">"false"</constant>
+<constant name="unusedBit_251_17">"false"</constant>
+<constant name="unusedBit_251_18">"false"</constant>
+<constant name="unusedBit_251_19">"false"</constant>
+<constant name="unusedBit_251_20">"false"</constant>
+<constant name="unusedBit_251_21">"false"</constant>
+<constant name="unusedBit_251_22">"false"</constant>
+<constant name="unusedBit_251_23">"false"</constant>
+<constant name="unusedBit_251_24">"false"</constant>
+<constant name="unusedBit_251_25">"false"</constant>
+<constant name="unusedBit_251_26">"false"</constant>
+<constant name="unusedBit_251_27">"false"</constant>
+<constant name="unusedBit_251_28">"false"</constant>
+<constant name="unusedBit_251_29">"false"</constant>
+<constant name="unusedBit_280_30">"false"</constant>
+<constant name="unusedBit_280_31">"false"</constant>
+<constant name="etbIo1_directionPin1">"NONE"</constant>
+<constant name="etbIo1_directionPin2">"NONE"</constant>
+<constant name="etbIo1_controlPin1">"NONE"</constant>
+<constant name="etbIo1_disablePin">"NONE"</constant>
+<constant name="etbIo2_directionPin1">"NONE"</constant>
+<constant name="etbIo2_directionPin2">"NONE"</constant>
+<constant name="etbIo2_controlPin1">"NONE"</constant>
+<constant name="etbIo2_disablePin">"NONE"</constant>
+<constant name="boostControlPin">"NONE"</constant>
+<constant name="boostControlPinMode">"default"</constant>
+<constant name="antiLagActivatePin">"NONE"</constant>
+<constant name="launchActivatePin">"NONE"</constant>
+<constant digits="4" name="boostPid_pFactor">0.5</constant>
+<constant digits="4" name="boostPid_iFactor">0.30000001192092896</constant>
+<constant digits="4" name="boostPid_dFactor">0.0</constant>
+<constant digits="0" name="boostPid_offset">0.0</constant>
+<constant digits="0" name="boostPid_periodMs" units="ms">100.0</constant>
+<constant digits="0" name="boostPid_minValue">-99.0</constant>
+<constant digits="0" name="boostPid_maxValue">99.0</constant>
+<constant name="boostType">"Open Loop"</constant>
+<constant digits="0" name="boostPwmFrequency" units="Hz">55.0</constant>
+<constant name="launchActivationMode">"Switch Input"</constant>
+<constant name="antiLagActivationMode">"Always Active"</constant>
+<constant digits="0" name="launchSpeedTreshold" units="Kph">0.0</constant>
+<constant digits="0" name="launchRpmTreshold" units="RPM">0.0</constant>
+<constant digits="0" name="launchTimingRpmRange" units="RPM">500.0</constant>
+<constant digits="0" name="launchFuelAdded" units="%">0.0</constant>
+<constant digits="0" name="launchBoostDuty" units="%">0.0</constant>
+<constant digits="2" name="hardCutRpmRange" units="rpm">500.0</constant>
+<constant digits="0" name="stft_maxIdleRegionRpm" units="RPM">1000.0</constant>
+<constant digits="0" name="stft_maxOverrunLoad" units="load">35.0</constant>
+<constant digits="0" name="stft_minPowerLoad" units="load">85.0</constant>
+<constant digits="1" name="stft_deadband" units="%">0.5</constant>
+<constant digits="0" name="stft_minClt" units="C">60.0</constant>
+<constant digits="1" name="stft_minAfr" units="afr">12.0</constant>
+<constant digits="1" name="stft_maxAfr" units="afr">17.0</constant>
+<constant digits="0" name="stft_startupDelay" units="seconds">60.0</constant>
+<constant digits="0" name="stft_cellCfgs1_maxAdd" units="%">5.0</constant>
+<constant digits="0" name="stft_cellCfgs1_maxRemove" units="%">-5.0</constant>
+<constant digits="2" name="stft_cellCfgs1_timeConstant" units="sec">30.0</constant>
+<constant digits="0" name="stft_cellCfgs2_maxAdd" units="%">5.0</constant>
+<constant digits="0" name="stft_cellCfgs2_maxRemove" units="%">-5.0</constant>
+<constant digits="2" name="stft_cellCfgs2_timeConstant" units="sec">30.0</constant>
+<constant digits="0" name="stft_cellCfgs3_maxAdd" units="%">5.0</constant>
+<constant digits="0" name="stft_cellCfgs3_maxRemove" units="%">-5.0</constant>
+<constant digits="2" name="stft_cellCfgs3_timeConstant" units="sec">30.0</constant>
+<constant digits="0" name="stft_cellCfgs4_maxAdd" units="%">5.0</constant>
+<constant digits="0" name="stft_cellCfgs4_maxRemove" units="%">-5.0</constant>
+<constant digits="2" name="stft_cellCfgs4_timeConstant" units="sec">30.0</constant>
+<constant name="etbIo21_directionPin1">"NONE"</constant>
+<constant name="etbIo21_directionPin2">"NONE"</constant>
+<constant name="etbIo21_controlPin1">"NONE"</constant>
+<constant name="etbIo21_disablePin">"NONE"</constant>
+<constant name="etbIo22_directionPin1">"NONE"</constant>
+<constant name="etbIo22_directionPin2">"NONE"</constant>
+<constant name="etbIo22_controlPin1">"NONE"</constant>
+<constant name="etbIo22_disablePin">"NONE"</constant>
+<constant name="engineMake"/>
+<constant name="engineCode"/>
+<constant name="vehicleName"/>
+<constant name="tcu_solenoid1">"NONE"</constant>
+<constant name="tcu_solenoid2">"NONE"</constant>
+<constant name="tcu_solenoid3">"NONE"</constant>
+<constant name="tcu_solenoid4">"NONE"</constant>
+<constant name="tcu_solenoid5">"NONE"</constant>
+<constant name="tcu_solenoid6">"NONE"</constant>
+<constant name="tcu_solenoid7">"NONE"</constant>
+<constant name="tcu_solenoid8">"NONE"</constant>
+<constant digits="0" name="tps2SecondaryMin" units="ADC">0.0</constant>
+<constant digits="0" name="tps2SecondaryMax" units="ADC">1000.0</constant>
+<constant name="unusedHereWeHave">"false"</constant>
+<constant name="fuelClosedLoopCorrectionEnabled">"false"</constant>
+<constant name="isVerboseIAC">"false"</constant>
+<constant name="isVerboseETB">"false"</constant>
+<constant name="useConstantDwellDuringCranking">"true"</constant>
+<constant name="isEngineChartEnabled">"true"</constant>
+<constant name="silentTriggerError">"true"</constant>
+<constant name="useLinearCltSensor">"false"</constant>
+<constant name="canReadEnabled">"false"</constant>
+<constant name="canWriteEnabled">"true"</constant>
+<constant name="useLinearIatSensor">"false"</constant>
+<constant name="useFSIO16ForTimingAdjustment">"false"</constant>
+<constant name="tachPulseDurationAsDutyCycle">"false"</constant>
+<constant name="isAlternatorControlEnabled">"false"</constant>
+<constant name="invertPrimaryTriggerSignal">"false"</constant>
+<constant name="invertSecondaryTriggerSignal">"false"</constant>
+<constant name="cutFuelOnHardLimit">"true"</constant>
+<constant name="cutSparkOnHardLimit">"true"</constant>
+<constant name="launchFuelCutEnable">"false"</constant>
+<constant name="launchSparkCutEnable">"false"</constant>
+<constant name="hasFrequencyReportingMapSensor">"false"</constant>
+<constant name="useFSIO8ForServo1">"false"</constant>
+<constant name="useFSIO9ForServo2">"false"</constant>
+<constant name="useFSIO10ForServo3">"false"</constant>
+<constant name="useFSIO11ForServo4">"false"</constant>
+<constant name="useFSIO12ForServo5">"false"</constant>
+<constant name="useFSIO15ForIdleRpmAdjustment">"false"</constant>
+<constant name="useFSIO5ForCriticalIssueEngineStop">"false"</constant>
+<constant name="useFSIO4ForSeriousEngineWarning">"false"</constant>
+<constant name="useFSIO12ForIdleOffset">"false"</constant>
+<constant name="useFSIO13ForIdleMinValue">"false"</constant>
+<constant name="useFSIO6ForRevLimiter">"false"</constant>
+<constant name="hipOutputChannel">"PC0"</constant>
+<constant name="acSwitchAdc">"Disabled"</constant>
+<constant name="vRefAdcChannel">"Disabled"</constant>
+<constant digits="0" name="etbNeutralPosition" units="%">0.0</constant>
+<constant name="idleMode">"Manual"</constant>
+<constant name="isInjectionEnabled">"true"</constant>
+<constant name="isIgnitionEnabled">"true"</constant>
+<constant name="isCylinderCleanupEnabled">"false"</constant>
+<constant name="secondTriggerChannelEnabled">"true"</constant>
+<constant name="unusedBit4_1476">"false"</constant>
+<constant name="isMapAveragingEnabled">"true"</constant>
+<constant name="overrideCrankingIacSetting">"false"</constant>
+<constant name="useSeparateAdvanceForIdle">"false"</constant>
+<constant name="isTunerStudioEnabled">"true"</constant>
+<constant name="isWaveAnalyzerEnabled">"true"</constant>
+<constant name="useSeparateVeForIdle">"false"</constant>
+<constant name="verboseTriggerSynchDetails">"false"</constant>
+<constant name="isManualSpinningMode">"false"</constant>
+<constant name="twoWireBatchInjection">"false"</constant>
+<constant name="useOnlyRisingEdgeForTrigger">"false"</constant>
+<constant name="twoWireBatchIgnition">"false"</constant>
+<constant name="useFixedBaroCorrFromMap">"false"</constant>
+<constant name="useSeparateAdvanceForCranking">"false"</constant>
+<constant name="useAdvanceCorrectionsForCranking">"false"</constant>
+<constant name="useTPSAdvanceTable">"false"</constant>
+<constant name="unused1476b20">"false"</constant>
+<constant name="useIacPidMultTable">"false"</constant>
+<constant name="isBoostControlEnabled">"true"</constant>
+<constant name="launchSmoothRetard">"false"</constant>
+<constant name="unused_1484_bit_24">"false"</constant>
+<constant name="unused_1484_bit_25">"false"</constant>
+<constant name="unused_1484_bit_26">"false"</constant>
+<constant name="unused_1484_bit_27">"false"</constant>
+<constant name="unused_1484_bit_28">"false"</constant>
+<constant name="unused_1484_bit_29">"false"</constant>
+<constant name="unused_1484_bit_30">"false"</constant>
+<constant name="unused_1484_bit_31">"false"</constant>
+<constant digits="0" name="engineChartSize" units="count">300.0</constant>
+<constant digits="0" name="idlePidRpmUpperLimit" units="RPM">0.0</constant>
+<constant digits="0" name="primeInjFalloffTemperature" units="*C">0.0</constant>
+<constant digits="0" name="ignMathCalculateAtIndex" units="index">0.0</constant>
+<constant digits="0" name="acCutoffLowRpm" units="RPM">700.0</constant>
+<constant digits="0" name="acCutoffHighRpm" units="RPM">5000.0</constant>
+<constant digits="0" name="acIdleRpmBump" units="RPM">200.0</constant>
+<constant digits="0" name="warningPeriod" units="seconds">10.0</constant>
+<constant digits="2" name="knockDetectionWindowStart" units="angle">35.0</constant>
+<constant digits="2" name="knockDetectionWindowEnd" units="angle">135.0</constant>
+<constant digits="0" name="idleStepperReactionTime" units="ms">10.0</constant>
+<constant digits="2" name="knockVThreshold" units="V">4.0</constant>
+<constant digits="1" name="fsioInputModes1" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes2" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes3" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes4" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes5" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes6" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes7" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes8" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes9" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes10" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes11" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes12" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes13" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes14" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes15" units="todo">0.0</constant>
+<constant digits="1" name="fsioInputModes16" units="todo">0.0</constant>
+<constant digits="0" name="idleStepperTotalSteps" units="count">150.0</constant>
+<constant digits="0" name="noAccelAfterHardLimitPeriodSecs" units="sec">3.0</constant>
+<constant digits="0" name="mapAveragingSchedulingAtIndex" units="index">0.0</constant>
+<constant cols="1" digits="2" name="baroCorrPressureBins" rows="4" units="kPa">
+         75.0 
+         85.0 
+         95.0 
+         105.0 
+      </constant>
+<constant cols="1" digits="2" name="baroCorrRpmBins" rows="4" units="RPM">
+         650.0 
+         800.0 
+         3750.0 
+         7000.0 
+      </constant>
+<constant cols="4" digits="2" name="baroCorrTable" rows="4" units="ratio">
+         1.0 1.0 1.0 1.0 
+         1.0 1.0 1.0 1.0 
+         1.0 1.0 1.0 1.0 
+         1.0 1.0 1.0 1.0 
+      </constant>
+<constant cols="1" digits="2" name="crankingTpsCoef" rows="8" units="Ratio">
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+      </constant>
+<constant cols="1" digits="2" name="crankingTpsBins" rows="8" units="%">
+         0.0 
+         14.0 
+         29.0 
+         43.0 
+         57.0 
+         71.0 
+         86.0 
+         100.0 
+      </constant>
+<constant digits="2" name="tachPulseDuractionMs" units="ms">4.0</constant>
+<constant digits="0" name="tachPulseTriggerIndex" units="index">4.0</constant>
+<constant digits="2" name="wwaeTau" units="Seconds">0.0</constant>
+<constant digits="4" name="alternatorControl_pFactor">30.0</constant>
+<constant digits="4" name="alternatorControl_iFactor">0.0</constant>
+<constant digits="4" name="alternatorControl_dFactor">0.0</constant>
+<constant digits="0" name="alternatorControl_offset">0.0</constant>
+<constant digits="0" name="alternatorControl_periodMs" units="ms">100.0</constant>
+<constant digits="0" name="alternatorControl_minValue">10.0</constant>
+<constant digits="0" name="alternatorControl_maxValue">90.0</constant>
+<constant digits="4" name="etb_pFactor">1.0</constant>
+<constant digits="4" name="etb_iFactor">10.0</constant>
+<constant digits="4" name="etb_dFactor">0.04999995231628418</constant>
+<constant digits="0" name="etb_offset">0.0</constant>
+<constant digits="0" name="etb_periodMs" units="ms">0.0</constant>
+<constant digits="0" name="etb_minValue">-100.0</constant>
+<constant digits="0" name="etb_maxValue">100.0</constant>
+<constant digits="2" name="fuelRailPressure" units="kPa">0.0</constant>
+<constant digits="4" name="alternator_derivativeFilterLoss" units="x">0.0</constant>
+<constant digits="4" name="alternator_antiwindupFreq" units="x">0.0</constant>
+<constant digits="0" name="tps2Min" units="ADC">0.0</constant>
+<constant digits="0" name="tps2Max" units="ADC">1000.0</constant>
+<constant name="starterControlPin">"NONE"</constant>
+<constant digits="1" name="startStopButtonMode" units="todo">0.0</constant>
+<constant name="mc33816_flag0">"NONE"</constant>
+<constant digits="0" name="tachPulsePerRev" units="Pulse">0.0</constant>
+<constant digits="2" name="mapErrorDetectionTooLow" units="kPa">5.0</constant>
+<constant digits="2" name="mapErrorDetectionTooHigh" units="kPa">250.0</constant>
+<constant digits="2" name="multisparkSparkDuration" units="ms">1.0</constant>
+<constant digits="2" name="multisparkDwell" units="ms">2.0</constant>
+<constant digits="4" name="idleRpmPid_pFactor">0.05000000074505806</constant>
+<constant digits="4" name="idleRpmPid_iFactor">0.0020000000949949026</constant>
+<constant digits="4" name="idleRpmPid_dFactor">0.0</constant>
+<constant digits="0" name="idleRpmPid_offset">0.0</constant>
+<constant digits="0" name="idleRpmPid_periodMs" units="ms">10.0</constant>
+<constant digits="0" name="idleRpmPid_minValue">0.0</constant>
+<constant digits="0" name="idleRpmPid_maxValue">99.0</constant>
+<constant digits="2" name="wwaeBeta" units="Fraction">0.0</constant>
+<constant name="communicationLedPin">"PD15"</constant>
+<constant name="runningLedPin">"PD12"</constant>
+<constant name="binarySerialTxPin">"PC10"</constant>
+<constant name="binarySerialRxPin">"PC11"</constant>
+<constant name="auxValves1">"NONE"</constant>
+<constant name="auxValves2">"NONE"</constant>
+<constant name="tcuUpshiftButtonPin">"NONE"</constant>
+<constant name="tcuDownshiftButtonPin">"NONE"</constant>
+<constant cols="1" digits="2" name="knockNoise" rows="8" units="v">
+         2.0 
+         2.0 
+         2.0 
+         2.0 
+         2.0 
+         2.0 
+         2.0 
+         2.0 
+      </constant>
+<constant cols="1" digits="2" name="knockNoiseRpmBins" rows="8" units="RPM">
+         650.0 
+         800.0 
+         1700.0 
+         2600.0 
+         3500.0 
+         4400.0 
+         5300.0 
+         7000.0 
+      </constant>
+<constant digits="2" name="throttlePedalUpVoltage" units="voltage">0.0</constant>
+<constant digits="2" name="throttlePedalWOTVoltage" units="voltage">5.0</constant>
+<constant digits="0" name="startUpFuelPumpDuration" units="seconds">4.0</constant>
+<constant digits="0" name="idlePidRpmDeadZone" units="RPM">50.0</constant>
+<constant cols="1" digits="2" name="cltIdleRpmBins" rows="16" units="C">
+         -40.0 
+         -30.0 
+         -20.0 
+         0.0 
+         10.0 
+         20.0 
+         30.0 
+         40.0 
+         60.0 
+         70.0 
+         80.0 
+         90.0 
+         100.0 
+         120.0 
+         130.0 
+         140.0 
+      </constant>
+<constant cols="1" digits="0" name="cltIdleRpm" rows="16">
+         0.0 
+         1350.0 
+         1200.0 
+         1150.0 
+         1100.0 
+         1050.0 
+         1000.0 
+         950.0 
+         950.0 
+         930.0 
+         900.0 
+         900.0 
+         1100.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant digits="1" name="targetVBatt" units="Volts">14.0</constant>
+<constant digits="2" name="alternatorOffAboveTps" units="%">120.0</constant>
+<constant digits="1" name="startOfCrankingPrimingPulse" units="ms">0.0</constant>
+<constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">0.0</constant>
+<constant digits="0" name="iacByTpsTaper" units="percent">0.0</constant>
+<constant name="auxSerialTxPin">"NONE"</constant>
+<constant name="warningLedPin">"PD13"</constant>
+<constant name="auxSerialRxPin">"NONE"</constant>
+<constant name="LIS302DLCsPin">"NONE"</constant>
+<constant digits="0" name="tpsAccelLength" units="cycles">12.0</constant>
+<constant digits="3" name="tpsAccelEnrichmentThreshold" units="roc">40.0</constant>
+<constant digits="1" name="vvtOffset" units="value">0.0</constant>
+<constant digits="0" name="engineLoadAccelLength" units="cycles">6.0</constant>
+<constant digits="3" name="engineLoadDecelEnleanmentThreshold" units="roc">0.0</constant>
+<constant digits="3" name="engineLoadDecelEnleanmentMultiplier" units="coeff">0.0</constant>
+<constant digits="3" name="engineLoadAccelEnrichmentThreshold" units="roc">5.0</constant>
+<constant digits="3" name="engineLoadAccelEnrichmentMultiplier" units="coeff">0.0</constant>
+<constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
+<constant digits="3" name="tpsDecelEnleanmentThreshold" units="roc">0.0</constant>
+<constant digits="3" name="tpsDecelEnleanmentMultiplier" units="coeff">0.0</constant>
+<constant digits="3" name="slowAdcAlpha" units="coeff">0.3333300054073334</constant>
+<constant name="debugMode">"Alternator PID"</constant>
+<constant digits="0" name="auxSerialSpeed" units="BPs">0.0</constant>
+<constant digits="2" name="throttlePedalSecondaryUpVoltage" units="voltage">0.0</constant>
+<constant digits="2" name="throttlePedalSecondaryWOTVoltage" units="voltage">0.0</constant>
+<constant digits="0" name="boostCutPressure" units="kPa">0.0</constant>
+<constant cols="1" digits="0" name="mapAccelTaperBins" rows="8" units="counter">
+         0.0 
+         4.0 
+         8.0 
+         12.0 
+         20.0 
+         24.0 
+         28.0 
+         32.0 
+      </constant>
+<constant cols="1" digits="2" name="mapAccelTaperMult" rows="8" units="mult">
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+      </constant>
+<constant name="fsioAdc1">"Disabled"</constant>
+<constant name="fsioAdc2">"Disabled"</constant>
+<constant name="fsioAdc3">"Disabled"</constant>
+<constant name="fsioAdc4">"Disabled"</constant>
+<constant digits="2" name="fixedTiming" units="deg">0.0</constant>
+<constant digits="2" name="mapLowValueVoltage" units="v">0.0</constant>
+<constant digits="2" name="mapHighValueVoltage" units="v">5.0</constant>
+<constant digits="2" name="egoValueShift" units="value">0.0</constant>
+<constant name="auxPidPins1">"NONE"</constant>
+<constant name="auxPidPins2">"NONE"</constant>
+<constant name="auxPidPins3">"NONE"</constant>
+<constant name="auxPidPins4">"NONE"</constant>
+<constant name="cj125SpiDevice">"SPI2"</constant>
+<constant name="cj125CsPinMode">"default"</constant>
+<constant name="dizzySparkOutputPin">"NONE"</constant>
+<constant name="dizzySparkOutputPinMode">"default"</constant>
+<constant digits="0" name="crankingIACposition" units="percent">50.0</constant>
+<constant digits="4" name="tChargeMinRpmMinTps" units="mult">0.25</constant>
+<constant digits="4" name="tChargeMinRpmMaxTps" units="mult">0.25</constant>
+<constant digits="4" name="tChargeMaxRpmMinTps" units="mult">0.25</constant>
+<constant digits="4" name="tChargeMaxRpmMaxTps" units="mult">0.8999999761581421</constant>
+<constant digits="0" name="auxPidFrequency1" units="Hz">0.0</constant>
+<constant digits="0" name="auxPidFrequency2" units="Hz">0.0</constant>
+<constant digits="0" name="auxPidFrequency3" units="Hz">0.0</constant>
+<constant digits="0" name="auxPidFrequency4" units="Hz">0.0</constant>
+<constant digits="0" name="alternatorPwmFrequency" units="Hz">300.0</constant>
+<constant name="storageMode">"Auto"</constant>
+<constant cols="1" digits="3" name="narrowToWideOxygenBins" rows="8" units="V">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="2" name="narrowToWideOxygen" rows="8" units="ratio">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant name="vvtMode">"Inactive"</constant>
+<constant cols="1" digits="1" name="cltTimingBins" rows="8" units="C">
+         -40.0 
+         -17.0 
+         6.0 
+         29.0 
+         51.0 
+         74.0 
+         97.0 
+         120.0 
+      </constant>
+<constant cols="1" digits="0" name="cltTimingExtra" rows="8" units="degree">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant name="tle8888mode">"Auto"</constant>
+<constant digits="4" name="postCrankingFactor" units="mult">0.0</constant>
+<constant digits="2" name="postCrankingDurationSec" units="seconds">2.0</constant>
+<constant digits="1" name="auxTempSensor1_tempC_1" units="*C">0.0</constant>
+<constant digits="1" name="auxTempSensor1_tempC_2" units="*C">0.0</constant>
+<constant digits="1" name="auxTempSensor1_tempC_3" units="*C">0.0</constant>
+<constant digits="1" name="auxTempSensor1_resistance_1" units="Ohm">0.0</constant>
+<constant digits="1" name="auxTempSensor1_resistance_2" units="Ohm">0.0</constant>
+<constant digits="1" name="auxTempSensor1_resistance_3" units="Ohm">0.0</constant>
+<constant digits="1" name="auxTempSensor1_bias_resistor" units="Ohm">0.0</constant>
+<constant name="auxTempSensor1_adcChannel">"Disabled"</constant>
+<constant digits="1" name="auxTempSensor2_tempC_1" units="*C">0.0</constant>
+<constant digits="1" name="auxTempSensor2_tempC_2" units="*C">0.0</constant>
+<constant digits="1" name="auxTempSensor2_tempC_3" units="*C">0.0</constant>
+<constant digits="1" name="auxTempSensor2_resistance_1" units="Ohm">0.0</constant>
+<constant digits="1" name="auxTempSensor2_resistance_2" units="Ohm">0.0</constant>
+<constant digits="1" name="auxTempSensor2_resistance_3" units="Ohm">0.0</constant>
+<constant digits="1" name="auxTempSensor2_bias_resistor" units="Ohm">0.0</constant>
+<constant name="auxTempSensor2_adcChannel">"Disabled"</constant>
+<constant digits="0" name="etbFreq" units="Hz">800.0</constant>
+<constant digits="1" name="timing_offset_cylinder1" units="Val">0.0</constant>
+<constant digits="1" name="timing_offset_cylinder2" units="Val">0.0</constant>
+<constant digits="1" name="timing_offset_cylinder3" units="Val">0.0</constant>
+<constant digits="1" name="timing_offset_cylinder4" units="Val">0.0</constant>
+<constant digits="1" name="timing_offset_cylinder5" units="Val">0.0</constant>
+<constant digits="1" name="timing_offset_cylinder6" units="Val">0.0</constant>
+<constant digits="1" name="timing_offset_cylinder7" units="Val">0.0</constant>
+<constant digits="1" name="timing_offset_cylinder8" units="Val">0.0</constant>
+<constant digits="1" name="timing_offset_cylinder9" units="Val">0.0</constant>
+<constant digits="1" name="timing_offset_cylinder10" units="Val">0.0</constant>
+<constant digits="1" name="timing_offset_cylinder11" units="Val">0.0</constant>
+<constant digits="1" name="timing_offset_cylinder12" units="Val">0.0</constant>
+<constant digits="1" name="idlePidActivationTime" units="seconds">0.0</constant>
+<constant name="sdCardSpiDevice">"SPI3"</constant>
+<constant name="spi1SckMode">"default"</constant>
+<constant name="spi1MosiMode">"default"</constant>
+<constant name="spi1MisoMode">"default"</constant>
+<constant name="spi2SckMode">"opendrain"</constant>
+<constant name="spi2MosiMode">"opendrain"</constant>
+<constant name="spi2MisoMode">"PULLUP"</constant>
+<constant name="spi3SckMode">"default"</constant>
+<constant name="spi3MosiMode">"default"</constant>
+<constant name="spi3MisoMode">"default"</constant>
+<constant name="stepperEnablePinMode">"default"</constant>
+<constant name="mc33816_rstb">"NONE"</constant>
+<constant name="mc33816_driven">"NONE"</constant>
+<constant name="brakePedalPin">"NONE"</constant>
+<constant name="cj125ua">"Disabled"</constant>
+<constant name="cj125ur">"Disabled"</constant>
+<constant digits="1" name="brakePedalPinMode" units="todo">1.0</constant>
+<constant digits="4" name="auxPid1_pFactor">0.0</constant>
+<constant digits="4" name="auxPid1_iFactor">0.0</constant>
+<constant digits="4" name="auxPid1_dFactor">0.0</constant>
+<constant digits="0" name="auxPid1_offset">0.0</constant>
+<constant digits="0" name="auxPid1_periodMs" units="ms">0.0</constant>
+<constant digits="0" name="auxPid1_minValue">10.0</constant>
+<constant digits="0" name="auxPid1_maxValue">90.0</constant>
+<constant digits="4" name="auxPid2_pFactor">0.0</constant>
+<constant digits="4" name="auxPid2_iFactor">0.0</constant>
+<constant digits="4" name="auxPid2_dFactor">0.0</constant>
+<constant digits="0" name="auxPid2_offset">0.0</constant>
+<constant digits="0" name="auxPid2_periodMs" units="ms">0.0</constant>
+<constant digits="0" name="auxPid2_minValue">0.0</constant>
+<constant digits="0" name="auxPid2_maxValue">0.0</constant>
+<constant digits="4" name="auxPid3_pFactor">0.0</constant>
+<constant digits="4" name="auxPid3_iFactor">0.0</constant>
+<constant digits="4" name="auxPid3_dFactor">0.0</constant>
+<constant digits="0" name="auxPid3_offset">0.0</constant>
+<constant digits="0" name="auxPid3_periodMs" units="ms">0.0</constant>
+<constant digits="0" name="auxPid3_minValue">0.0</constant>
+<constant digits="0" name="auxPid3_maxValue">0.0</constant>
+<constant digits="4" name="auxPid4_pFactor">0.0</constant>
+<constant digits="4" name="auxPid4_iFactor">0.0</constant>
+<constant digits="4" name="auxPid4_dFactor">0.0</constant>
+<constant digits="0" name="auxPid4_offset">0.0</constant>
+<constant digits="0" name="auxPid4_periodMs" units="ms">0.0</constant>
+<constant digits="0" name="auxPid4_minValue">0.0</constant>
+<constant digits="0" name="auxPid4_maxValue">0.0</constant>
+<constant name="oilPressure_hwChannel">"Disabled"</constant>
+<constant digits="2" name="oilPressure_v1" units="volts">0.5</constant>
+<constant digits="2" name="oilPressure_value1" units="kPa">0.0</constant>
+<constant digits="2" name="oilPressure_v2" units="volts">4.5</constant>
+<constant digits="2" name="oilPressure_value2" units="kPa">689.4760131835938</constant>
+<constant name="accelerometerSpiDevice">"SPI1"</constant>
+<constant name="auxVoltage1">"PA0"</constant>
+<constant name="auxVoltage2">"PA0"</constant>
+<constant cols="1" digits="3" name="fsioCurve1Bins" rows="16" units="x">
+         0.0 
+         7.0 
+         13.0 
+         20.0 
+         27.0 
+         33.0 
+         40.0 
+         47.0 
+         53.0 
+         60.0 
+         67.0 
+         73.0 
+         80.0 
+         87.0 
+         93.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="3" name="fsioCurve1" rows="16" units="y">
+         0.0 
+         7.0 
+         13.0 
+         20.0 
+         27.0 
+         33.0 
+         40.0 
+         47.0 
+         53.0 
+         60.0 
+         67.0 
+         73.0 
+         80.0 
+         87.0 
+         93.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="3" name="fsioCurve2Bins" rows="16" units="x">
+         0.0 
+         7.0 
+         13.0 
+         20.0 
+         27.0 
+         33.0 
+         40.0 
+         47.0 
+         53.0 
+         60.0 
+         67.0 
+         73.0 
+         80.0 
+         87.0 
+         93.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="3" name="fsioCurve2" rows="16" units="y">
+         30.0 
+         39.0 
+         49.0 
+         58.0 
+         67.0 
+         77.0 
+         86.0 
+         95.0 
+         105.0 
+         114.0 
+         123.0 
+         133.0 
+         142.0 
+         151.0 
+         161.0 
+         170.0 
+      </constant>
+<constant cols="1" digits="3" name="fsioCurve3Bins" rows="8" units="x">
+         0.0 
+         14.0 
+         29.0 
+         43.0 
+         57.0 
+         71.0 
+         86.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="3" name="fsioCurve3" rows="8" units="y">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="3" name="fsioCurve4Bins" rows="8" units="x">
+         0.0 
+         14.0 
+         29.0 
+         43.0 
+         57.0 
+         71.0 
+         86.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="3" name="fsioCurve4" rows="8" units="y">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant name="test557pin">"NONE"</constant>
+<constant name="stepperDirectionPinMode">"default"</constant>
+<constant name="externalKnockSenseAdc">"Disabled"</constant>
+<constant name="stepperEnablePin">"PE14"</constant>
+<constant name="tle8888_cs">"NONE"</constant>
+<constant name="tle8888_csPinMode">"default"</constant>
+<constant name="mc33816_cs">"NONE"</constant>
+<constant cols="1" digits="2" name="crankingAdvanceBins" rows="4" units="RPM">
+         0.0 
+         200.0 
+         400.0 
+         1000.0 
+      </constant>
+<constant cols="1" digits="2" name="crankingAdvance" rows="4" units="deg">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant name="servoOutputPins1">"NONE"</constant>
+<constant name="servoOutputPins2">"NONE"</constant>
+<constant name="servoOutputPins3">"NONE"</constant>
+<constant name="servoOutputPins4">"NONE"</constant>
+<constant name="servoOutputPins5">"NONE"</constant>
+<constant name="servoOutputPins6">"NONE"</constant>
+<constant name="servoOutputPins7">"NONE"</constant>
+<constant name="servoOutputPins8">"NONE"</constant>
+<constant digits="0" name="coastingFuelCutRpmHigh" units="rpm">1500.0</constant>
+<constant digits="0" name="coastingFuelCutRpmLow" units="rpm">1300.0</constant>
+<constant digits="1" name="coastingFuelCutTps" units="%">2.0</constant>
+<constant digits="0" name="coastingFuelCutClt" units="C">30.0</constant>
+<constant digits="0" name="pidExtraForLowRpm" units="%">0.0</constant>
+<constant digits="0" name="coastingFuelCutMap" units="kPa">30.0</constant>
+<constant cols="1" digits="2" name="iacCoastingBins" rows="16" units="C">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="2" name="iacCoasting" rows="16" units="%">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="16" digits="2" name="ignitionTpsTable" rows="16" units="deg">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+      </constant>
+<constant cols="1" digits="2" name="ignitionTpsBins" rows="16" units="TPS">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant digits="4" name="tChargeAirCoefMin" units="Min tCharge Coeff.">0.09799999743700027</constant>
+<constant digits="4" name="tChargeAirCoefMax" units="Max tCharge Coeff.">0.9020000100135803</constant>
+<constant digits="1" name="tChargeAirFlowMax" units="Max Air Flow, kg/h">153.60000610351562</constant>
+<constant digits="1" name="tChargeAirIncrLimit" units="tChange Increment Limit, deg/sec">1.0</constant>
+<constant digits="1" name="tChargeAirDecrLimit" units="tChange Decrement Limit, deg/sec">12.5</constant>
+<constant name="tChargeMode">"RPM+TPS (Default)"</constant>
+<constant cols="1" digits="0" name="etbBiasBins" rows="8" units="target TPS position">
+         0.0 
+         1.0 
+         2.0 
+         4.0 
+         7.0 
+         98.0 
+         99.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="2" name="etbBiasValues" rows="8" units="ETB duty cycle bias">
+         -20.0 
+         -18.0 
+         -17.0 
+         0.0 
+         20.0 
+         21.0 
+         22.0 
+         25.0 
+      </constant>
+<constant digits="2" name="hip9011Gain">1.0</constant>
+<constant digits="0" name="etb_iTermMin">-30.0</constant>
+<constant digits="0" name="etb_iTermMax">30.0</constant>
+<constant digits="2" name="etbDeadband">0.0</constant>
+<constant digits="4" name="idleTimingPid_pFactor">0.0</constant>
+<constant digits="4" name="idleTimingPid_iFactor">0.0</constant>
+<constant digits="4" name="idleTimingPid_dFactor">0.0</constant>
+<constant digits="0" name="idleTimingPid_offset">0.0</constant>
+<constant digits="0" name="idleTimingPid_periodMs" units="ms">0.0</constant>
+<constant digits="0" name="idleTimingPid_minValue">0.0</constant>
+<constant digits="0" name="idleTimingPid_maxValue">0.0</constant>
+<constant digits="0" name="idleTimingPidWorkZone" units="RPM">0.0</constant>
+<constant digits="0" name="idleTimingPidDeadZone" units="RPM">0.0</constant>
+<constant digits="0" name="idlePidFalloffDeltaRpm" units="RPM">0.0</constant>
+<constant digits="0" name="tpsAccelFractionPeriod" units="cycles">0.0</constant>
+<constant digits="2" name="tpsAccelFractionDivisor" units="coef">0.0</constant>
+<constant name="tle8888spiDevice">"Off"</constant>
+<constant name="mc33816spiDevice">"Off"</constant>
+<constant digits="0" name="idlerpmpid_iTermMin">-200.0</constant>
+<constant name="tle6240spiDevice">"Off"</constant>
+<constant digits="0" name="idlerpmpid_iTermMax">200.0</constant>
+<constant name="mc33972spiDevice">"Off"</constant>
+<constant digits="0" name="etbIdleThrottleRange" units="%">5.0</constant>
+<constant digits="2" name="triggerCompCenterVolt" units="V">0.0</constant>
+<constant digits="2" name="triggerCompHystMin" units="V">0.0</constant>
+<constant digits="2" name="triggerCompHystMax" units="V">0.0</constant>
+<constant digits="0" name="triggerCompSensorSatRpm" units="RPM">0.0</constant>
+<constant digits="4" name="idleRpmPid2_pFactor">0.0</constant>
+<constant digits="4" name="idleRpmPid2_iFactor">0.0</constant>
+<constant digits="4" name="idleRpmPid2_dFactor">0.0</constant>
+<constant digits="0" name="idleRpmPid2_offset">0.0</constant>
+<constant digits="0" name="idleRpmPid2_periodMs" units="ms">0.0</constant>
+<constant digits="0" name="idleRpmPid2_minValue">0.0</constant>
+<constant digits="0" name="idleRpmPid2_maxValue">0.0</constant>
+<constant cols="8" digits="2" name="iacPidMultTable" rows="8" units="%">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+      </constant>
+<constant cols="1" digits="2" name="iacPidMultLoadBins" rows="8" units="Load">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="iacPidMultRpmBins" rows="8" units="RPM">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant name="canVssNbcType">"BMW_e46"</constant>
+<constant name="gppwm1_pin">"NONE"</constant>
+<constant digits="0" name="gppwm1_dutyIfError" units="%">0.0</constant>
+<constant digits="0" name="gppwm1_pwmFrequency" units="hz">250.0</constant>
+<constant digits="0" name="gppwm1_onAboveDuty" units="%">60.0</constant>
+<constant digits="0" name="gppwm1_offBelowDuty" units="%">50.0</constant>
+<constant name="gppwm1_loadAxis">"TPS"</constant>
+<constant cols="1" digits="0" name="gppwm1_loadBins" rows="8" units="load">
+         0.0 
+         14.0 
+         28.0 
+         42.0 
+         57.0 
+         71.0 
+         85.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="0" name="gppwm1_rpmBins" rows="8" units="RPM">
+         0.0 
+         1000.0 
+         2000.0 
+         3000.0 
+         4000.0 
+         5000.0 
+         6000.0 
+         7000.0 
+      </constant>
+<constant cols="8" digits="0" name="gppwm1_table" rows="8" units="duty">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         28.0 28.0 28.0 28.0 28.0 28.0 28.0 28.0 
+         42.0 42.0 42.0 42.0 42.0 42.0 42.0 42.0 
+         57.0 57.0 57.0 57.0 57.0 57.0 57.0 57.0 
+         71.0 71.0 71.0 71.0 71.0 71.0 71.0 71.0 
+         85.0 85.0 85.0 85.0 85.0 85.0 85.0 85.0 
+         100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 
+      </constant>
+<constant name="gppwm2_pin">"NONE"</constant>
+<constant digits="0" name="gppwm2_dutyIfError" units="%">0.0</constant>
+<constant digits="0" name="gppwm2_pwmFrequency" units="hz">250.0</constant>
+<constant digits="0" name="gppwm2_onAboveDuty" units="%">60.0</constant>
+<constant digits="0" name="gppwm2_offBelowDuty" units="%">50.0</constant>
+<constant name="gppwm2_loadAxis">"TPS"</constant>
+<constant cols="1" digits="0" name="gppwm2_loadBins" rows="8" units="load">
+         0.0 
+         14.0 
+         28.0 
+         42.0 
+         57.0 
+         71.0 
+         85.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="0" name="gppwm2_rpmBins" rows="8" units="RPM">
+         0.0 
+         1000.0 
+         2000.0 
+         3000.0 
+         4000.0 
+         5000.0 
+         6000.0 
+         7000.0 
+      </constant>
+<constant cols="8" digits="0" name="gppwm2_table" rows="8" units="duty">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         28.0 28.0 28.0 28.0 28.0 28.0 28.0 28.0 
+         42.0 42.0 42.0 42.0 42.0 42.0 42.0 42.0 
+         57.0 57.0 57.0 57.0 57.0 57.0 57.0 57.0 
+         71.0 71.0 71.0 71.0 71.0 71.0 71.0 71.0 
+         85.0 85.0 85.0 85.0 85.0 85.0 85.0 85.0 
+         100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 
+      </constant>
+<constant name="gppwm3_pin">"NONE"</constant>
+<constant digits="0" name="gppwm3_dutyIfError" units="%">0.0</constant>
+<constant digits="0" name="gppwm3_pwmFrequency" units="hz">250.0</constant>
+<constant digits="0" name="gppwm3_onAboveDuty" units="%">60.0</constant>
+<constant digits="0" name="gppwm3_offBelowDuty" units="%">50.0</constant>
+<constant name="gppwm3_loadAxis">"TPS"</constant>
+<constant cols="1" digits="0" name="gppwm3_loadBins" rows="8" units="load">
+         0.0 
+         14.0 
+         28.0 
+         42.0 
+         57.0 
+         71.0 
+         85.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="0" name="gppwm3_rpmBins" rows="8" units="RPM">
+         0.0 
+         1000.0 
+         2000.0 
+         3000.0 
+         4000.0 
+         5000.0 
+         6000.0 
+         7000.0 
+      </constant>
+<constant cols="8" digits="0" name="gppwm3_table" rows="8" units="duty">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         28.0 28.0 28.0 28.0 28.0 28.0 28.0 28.0 
+         42.0 42.0 42.0 42.0 42.0 42.0 42.0 42.0 
+         57.0 57.0 57.0 57.0 57.0 57.0 57.0 57.0 
+         71.0 71.0 71.0 71.0 71.0 71.0 71.0 71.0 
+         85.0 85.0 85.0 85.0 85.0 85.0 85.0 85.0 
+         100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 
+      </constant>
+<constant name="gppwm4_pin">"NONE"</constant>
+<constant digits="0" name="gppwm4_dutyIfError" units="%">0.0</constant>
+<constant digits="0" name="gppwm4_pwmFrequency" units="hz">250.0</constant>
+<constant digits="0" name="gppwm4_onAboveDuty" units="%">60.0</constant>
+<constant digits="0" name="gppwm4_offBelowDuty" units="%">50.0</constant>
+<constant name="gppwm4_loadAxis">"TPS"</constant>
+<constant cols="1" digits="0" name="gppwm4_loadBins" rows="8" units="load">
+         0.0 
+         14.0 
+         28.0 
+         42.0 
+         57.0 
+         71.0 
+         85.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="0" name="gppwm4_rpmBins" rows="8" units="RPM">
+         0.0 
+         1000.0 
+         2000.0 
+         3000.0 
+         4000.0 
+         5000.0 
+         6000.0 
+         7000.0 
+      </constant>
+<constant cols="8" digits="0" name="gppwm4_table" rows="8" units="duty">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         28.0 28.0 28.0 28.0 28.0 28.0 28.0 28.0 
+         42.0 42.0 42.0 42.0 42.0 42.0 42.0 42.0 
+         57.0 57.0 57.0 57.0 57.0 57.0 57.0 57.0 
+         71.0 71.0 71.0 71.0 71.0 71.0 71.0 71.0 
+         85.0 85.0 85.0 85.0 85.0 85.0 85.0 85.0 
+         100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 
+      </constant>
+<constant digits="0" name="mc33_i_boost" units="X">0.0</constant>
+<constant digits="0" name="mc33_i_peak" units="X">0.0</constant>
+<constant digits="0" name="mc33_i_hold" units="X">0.0</constant>
+<constant digits="0" name="mc33_t_max_boost" units="X">0.0</constant>
+<constant digits="0" name="mc33_t_peak_off" units="X">0.0</constant>
+<constant digits="0" name="mc33_t_peak_tot" units="X">0.0</constant>
+<constant digits="0" name="mc33_t_bypass" units="X">0.0</constant>
+<constant digits="0" name="mc33_t_hold_off" units="X">0.0</constant>
+<constant digits="0" name="mc33_t_hold_tot" units="X">0.0</constant>
+<constant name="warning_message"/>
+<constant cols="1" digits="0" name="afterstartCoolantBins" rows="8" units="C">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="1" name="afterstartHoldTime" rows="8" units="Seconds">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="1" name="afterstartEnrich" rows="8" units="%">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="1" name="afterstartDecayTime" rows="8" units="Seconds">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="8" digits="0" name="boostTableOpenLoop" rows="8">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         28.0 28.0 28.0 28.0 28.0 28.0 28.0 28.0 
+         42.0 42.0 42.0 42.0 42.0 42.0 42.0 42.0 
+         58.0 58.0 58.0 58.0 58.0 58.0 58.0 58.0 
+         72.0 72.0 72.0 72.0 72.0 72.0 72.0 72.0 
+         86.0 86.0 86.0 86.0 86.0 86.0 86.0 86.0 
+         100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 
+      </constant>
+<constant cols="1" digits="0" name="boostRpmBins" rows="8" units="RPM">
+         0.0 
+         1150.0 
+         2300.0 
+         3450.0 
+         4550.0 
+         5700.0 
+         6850.0 
+         8000.0 
+      </constant>
+<constant cols="8" digits="0" name="boostTableClosedLoop" rows="8">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         28.0 28.0 28.0 28.0 28.0 28.0 28.0 28.0 
+         42.0 42.0 42.0 42.0 42.0 42.0 42.0 42.0 
+         58.0 58.0 58.0 58.0 58.0 58.0 58.0 58.0 
+         72.0 72.0 72.0 72.0 72.0 72.0 72.0 72.0 
+         86.0 86.0 86.0 86.0 86.0 86.0 86.0 86.0 
+         100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 
+      </constant>
+<constant cols="1" digits="2" name="boostTpsBins" rows="8" units="%">
+         0.0 
+         14.0 
+         28.0 
+         42.0 
+         58.0 
+         72.0 
+         86.0 
+         100.0 
+      </constant>
+<constant cols="8" digits="0" name="pedalToTpsTable" rows="8" units="%">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         29.0 29.0 29.0 29.0 29.0 29.0 29.0 29.0 
+         43.0 43.0 43.0 43.0 43.0 43.0 43.0 43.0 
+         57.0 57.0 57.0 57.0 57.0 57.0 57.0 57.0 
+         71.0 71.0 71.0 71.0 71.0 71.0 71.0 71.0 
+         86.0 86.0 86.0 86.0 86.0 86.0 86.0 86.0 
+         100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 
+      </constant>
+<constant cols="1" digits="0" name="pedalToTpsPedalBins" rows="8" units="%">
+         0.0 
+         14.0 
+         29.0 
+         43.0 
+         57.0 
+         71.0 
+         86.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="0" name="pedalToTpsRpmBins" rows="8" units="RPM">
+         0.0 
+         1150.0 
+         2300.0 
+         3450.0 
+         4550.0 
+         5700.0 
+         6850.0 
+         8000.0 
+      </constant>
+<constant cols="1" digits="2" name="cltCrankingCorrBins" rows="8" units="C">
+         -40.0 
+         -20.0 
+         0.0 
+         20.0 
+         40.0 
+         60.0 
+         80.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="2" name="cltCrankingCorr" rows="8" units="%">
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+      </constant>
+<constant cols="1" digits="2" name="idleAdvanceBins" rows="8" units="RPM">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="2" name="idleAdvance" rows="8" units="deg">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="2" name="idleVeBins" rows="8" units="RPM">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="2" name="idleVe" rows="8" units="%">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant name="fsioFormulas1">rpm 1 fsio_setting &gt;</constant>
+<constant name="fsioFormulas2"/>
+<constant name="fsioFormulas3"/>
+<constant name="fsioFormulas4"/>
+<constant name="fsioFormulas5"/>
+<constant name="fsioFormulas6"/>
+<constant name="fsioFormulas7"/>
+<constant name="fsioFormulas8"/>
+<constant name="fsioFormulas9"/>
+<constant name="fsioFormulas10"/>
+<constant name="fsioFormulas11"/>
+<constant name="fsioFormulas12"/>
+<constant name="fsioFormulas13"/>
+<constant name="fsioFormulas14"/>
+<constant name="fsioFormulas15"/>
+<constant name="fsioFormulas16"/>
+<constant name="timingMultiplier">1</constant>
+<constant name="timingAdditive">0</constant>
+<constant cols="1" digits="2" name="cltFuelCorrBins" rows="16" units="C">
+         -40.0 
+         -30.0 
+         -20.0 
+         -10.0 
+         0.0 
+         10.0 
+         20.0 
+         30.0 
+         40.0 
+         50.0 
+         60.0 
+         70.0 
+         80.0 
+         90.0 
+         100.0 
+         110.0 
+      </constant>
+<constant cols="1" digits="2" name="cltFuelCorr" rows="16" units="ratio">
+         1.5 
+         1.5 
+         1.4199999570846558 
+         1.3600000143051147 
+         1.2799999713897705 
+         1.190000057220459 
+         1.1200000047683716 
+         1.100000023841858 
+         1.059999942779541 
+         1.059999942779541 
+         1.0299999713897705 
+         1.0099999904632568 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+      </constant>
+<constant cols="1" digits="2" name="iatFuelCorrBins" rows="16" units="C">
+         -40.0 
+         -30.0 
+         -20.0 
+         -10.0 
+         0.0 
+         10.0 
+         20.0 
+         30.0 
+         40.0 
+         50.0 
+         60.0 
+         70.0 
+         80.0 
+         90.0 
+         100.0 
+         110.0 
+      </constant>
+<constant cols="1" digits="2" name="iatFuelCorr" rows="16" units="ratio">
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+      </constant>
+<constant cols="1" digits="2" name="crankingFuelCoef" rows="8" units="ratio">
+         2.799999952316284 
+         2.200000047683716 
+         1.7999999523162842 
+         1.5 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+      </constant>
+<constant cols="1" digits="2" name="crankingFuelBins" rows="8" units="C">
+         -20.0 
+         -10.0 
+         5.0 
+         30.0 
+         35.0 
+         50.0 
+         65.0 
+         90.0 
+      </constant>
+<constant cols="1" digits="2" name="crankingCycleCoef" rows="8" units="ratio">
+         1.5 
+         1.350000023841858 
+         1.0499999523162842 
+         0.75 
+         0.5 
+         0.5 
+         0.5 
+         0.5 
+      </constant>
+<constant cols="1" digits="0" name="crankingCycleBins" rows="8" units="counter">
+         4.0 
+         8.0 
+         12.0 
+         16.0 
+         74.0 
+         75.0 
+         76.0 
+         77.0 
+      </constant>
+<constant cols="1" digits="2" name="cltIdleCorrBins" rows="16" units="C">
+         -40.0 
+         -30.0 
+         -20.0 
+         -10.0 
+         0.0 
+         10.0 
+         20.0 
+         30.0 
+         40.0 
+         50.0 
+         60.0 
+         70.0 
+         80.0 
+         90.0 
+         100.0 
+         110.0 
+      </constant>
+<constant cols="1" digits="2" name="cltIdleCorr" rows="16" units="ratio">
+         1.5 
+         1.5 
+         1.3333333730697632 
+         1.3333333730697632 
+         1.3333333730697632 
+         1.3333333730697632 
+         1.3333333730697632 
+         1.3333333730697632 
+         1.3333333730697632 
+         1.2333333492279053 
+         1.1666666269302368 
+         1.100000023841858 
+         1.0 
+         1.0 
+         1.0 
+         1.0 
+      </constant>
+<constant cols="1" digits="2" name="mafDecoding" rows="256" units="kg/hour">
+         -34.5 
+         -6.0 
+         10.5 
+         105.30000305175781 
+         387.5 
+         738.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+         200.0 
+      </constant>
+<constant cols="1" digits="2" name="mafDecodingBins" rows="256" units="V">
+         0.0 
+         0.78125 
+         1.38671875 
+         2.91015625 
+         4.2578125 
+         4.98046875 
+         16.0 
+         17.0 
+         18.0 
+         19.0 
+         20.0 
+         21.0 
+         22.0 
+         23.0 
+         24.0 
+         25.0 
+         26.0 
+         27.0 
+         28.0 
+         29.0 
+         30.0 
+         31.0 
+         32.0 
+         33.0 
+         34.0 
+         35.0 
+         36.0 
+         37.0 
+         38.0 
+         39.0 
+         40.0 
+         41.0 
+         42.0 
+         43.0 
+         44.0 
+         45.0 
+         46.0 
+         47.0 
+         48.0 
+         49.0 
+         50.0 
+         51.0 
+         52.0 
+         53.0 
+         54.0 
+         55.0 
+         56.0 
+         57.0 
+         58.0 
+         59.0 
+         60.0 
+         61.0 
+         62.0 
+         63.0 
+         64.0 
+         65.0 
+         66.0 
+         67.0 
+         68.0 
+         69.0 
+         70.0 
+         71.0 
+         72.0 
+         73.0 
+         74.0 
+         75.0 
+         76.0 
+         77.0 
+         78.0 
+         79.0 
+         80.0 
+         81.0 
+         82.0 
+         83.0 
+         84.0 
+         85.0 
+         86.0 
+         87.0 
+         88.0 
+         89.0 
+         90.0 
+         91.0 
+         92.0 
+         93.0 
+         94.0 
+         95.0 
+         96.0 
+         97.0 
+         98.0 
+         99.0 
+         100.0 
+         101.0 
+         102.0 
+         103.0 
+         104.0 
+         105.0 
+         106.0 
+         107.0 
+         108.0 
+         109.0 
+         110.0 
+         111.0 
+         112.0 
+         113.0 
+         114.0 
+         115.0 
+         116.0 
+         117.0 
+         118.0 
+         119.0 
+         120.0 
+         121.0 
+         122.0 
+         123.0 
+         124.0 
+         125.0 
+         126.0 
+         127.0 
+         128.0 
+         129.0 
+         130.0 
+         131.0 
+         132.0 
+         133.0 
+         134.0 
+         135.0 
+         136.0 
+         137.0 
+         138.0 
+         139.0 
+         140.0 
+         141.0 
+         142.0 
+         143.0 
+         144.0 
+         145.0 
+         146.0 
+         147.0 
+         148.0 
+         149.0 
+         150.0 
+         151.0 
+         152.0 
+         153.0 
+         154.0 
+         155.0 
+         156.0 
+         157.0 
+         158.0 
+         159.0 
+         160.0 
+         161.0 
+         162.0 
+         163.0 
+         164.0 
+         165.0 
+         166.0 
+         167.0 
+         168.0 
+         169.0 
+         170.0 
+         171.0 
+         172.0 
+         173.0 
+         174.0 
+         175.0 
+         176.0 
+         177.0 
+         178.0 
+         179.0 
+         180.0 
+         181.0 
+         182.0 
+         183.0 
+         184.0 
+         185.0 
+         186.0 
+         187.0 
+         188.0 
+         189.0 
+         190.0 
+         191.0 
+         192.0 
+         193.0 
+         194.0 
+         195.0 
+         196.0 
+         197.0 
+         198.0 
+         199.0 
+         200.0 
+         201.0 
+         202.0 
+         203.0 
+         204.0 
+         205.0 
+         206.0 
+         207.0 
+         208.0 
+         209.0 
+         210.0 
+         211.0 
+         212.0 
+         213.0 
+         214.0 
+         215.0 
+         216.0 
+         217.0 
+         218.0 
+         219.0 
+         220.0 
+         221.0 
+         222.0 
+         223.0 
+         224.0 
+         225.0 
+         226.0 
+         227.0 
+         228.0 
+         229.0 
+         230.0 
+         231.0 
+         232.0 
+         233.0 
+         234.0 
+         235.0 
+         236.0 
+         237.0 
+         238.0 
+         239.0 
+         240.0 
+         241.0 
+         242.0 
+         243.0 
+         244.0 
+         245.0 
+         246.0 
+         247.0 
+         248.0 
+         249.0 
+         250.0 
+         251.0 
+         252.0 
+         253.0 
+         254.0 
+         255.0 
+         256.0 
+         257.0 
+         258.0 
+         259.0 
+         260.0 
+         261.0 
+         262.0 
+         263.0 
+         264.0 
+         265.0 
+      </constant>
+<constant cols="16" digits="2" name="ignitionIatCorrTable" rows="16" units="deg">
+         4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 2.0 2.0 2.0 2.0 2.0 
+         4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 2.0 2.0 2.0 2.0 2.0 
+         4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 2.0 2.0 2.0 2.0 2.0 
+         4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 2.0 2.0 2.0 2.0 2.0 
+         3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 2.0 2.0 2.0 2.0 2.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 2.0 2.0 2.0 2.0 2.0 
+         2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 
+         -3.299999952316284 -3.4000000953674316 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.400000095367432 -4.400000095367432 -4.400000095367432 -4.400000095367432 -4.400000095367432 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 -0.8999999761581421 
+         -4.400000095367432 -4.900000095367432 -5.900000095367432 -5.900000095367432 -5.900000095367432 -5.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -2.4000000953674316 -2.4000000953674316 -2.4000000953674316 -2.4000000953674316 -2.4000000953674316 
+         -4.400000095367432 -4.900000095367432 -5.900000095367432 -5.900000095367432 -5.900000095367432 -5.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -2.9000000953674316 -2.9000000953674316 -2.9000000953674316 -2.9000000953674316 -2.9000000953674316 
+         -4.400000095367432 -4.900000095367432 -5.900000095367432 -5.900000095367432 -5.900000095367432 -5.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -3.9000000953674316 -3.9000000953674316 -3.9000000953674316 -3.9000000953674316 -3.9000000953674316 
+         -4.400000095367432 -4.900000095367432 -5.900000095367432 -5.900000095367432 -5.900000095367432 -5.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -3.9000000953674316 -3.9000000953674316 -3.9000000953674316 -3.9000000953674316 -3.9000000953674316 
+         -4.400000095367432 -4.900000095367432 -5.900000095367432 -5.900000095367432 -5.900000095367432 -5.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -4.900000095367432 -3.9000000953674316 -3.9000000953674316 -3.9000000953674316 -3.9000000953674316 -3.9000000953674316 
+      </constant>
+<constant cols="1" digits="2" name="ignitionIatCorrLoadBins" rows="16" units="Temperature">
+         -40.0 
+         -30.0 
+         -20.0 
+         -10.0 
+         0.0 
+         10.0 
+         20.0 
+         30.0 
+         40.0 
+         50.0 
+         60.0 
+         70.0 
+         80.0 
+         90.0 
+         100.0 
+         110.0 
+      </constant>
+<constant cols="1" digits="2" name="ignitionIatCorrRpmBins" rows="16" units="RPM">
+         880.0 
+         1260.0 
+         1640.0 
+         2020.0 
+         2400.0 
+         2780.0 
+         3000.0 
+         3380.0 
+         3760.0 
+         4140.0 
+         4520.0 
+         5000.0 
+         5700.0 
+         6500.0 
+         7200.0 
+         8000.0 
+      </constant>
+<constant cols="16" digits="2" name="injectionPhase" rows="16" units="deg">
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+         -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 -180.0 
+      </constant>
+<constant cols="1" digits="2" name="injPhaseLoadBins" rows="16" units="Load">
+         10.0 
+         20.0 
+         30.0 
+         40.0 
+         50.0 
+         60.0 
+         70.0 
+         80.0 
+         90.0 
+         100.0 
+         110.0 
+         120.0 
+         130.0 
+         140.0 
+         150.0 
+         160.0 
+      </constant>
+<constant cols="1" digits="2" name="injPhaseRpmBins" rows="16" units="RPM">
+         650.0 
+         800.0 
+         1100.0 
+         1400.0 
+         1700.0 
+         2000.0 
+         2300.0 
+         2600.0 
+         2900.0 
+         3200.0 
+         3500.0 
+         3800.0 
+         4100.0 
+         4400.0 
+         4700.0 
+         7000.0 
+      </constant>
+<constant cols="16" digits="2" name="fuelTable" rows="16" units="ms">
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+         3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 3.0 
+      </constant>
+<constant cols="1" digits="2" name="fuelLoadBins" rows="16" units="V">
+         1.1999999284744263 
+         1.409999966621399 
+         1.6299999952316284 
+         1.8399999141693115 
+         2.049999952316284 
+         2.2699999809265137 
+         2.4800000190734863 
+         2.690000057220459 
+         2.9099998474121094 
+         3.119999885559082 
+         3.3299999237060547 
+         3.549999952316284 
+         3.759999990463257 
+         3.9700000286102295 
+         4.190000057220459 
+         4.400000095367432 
+      </constant>
+<constant cols="1" digits="2" name="fuelRpmBins" rows="16" units="RPM">
+         800.0 
+         1213.3299560546875 
+         1626.669921875 
+         2040.0 
+         2453.329833984375 
+         2866.669921875 
+         3280.0 
+         3693.329833984375 
+         4106.669921875 
+         4520.0 
+         4933.330078125 
+         5346.669921875 
+         5760.0 
+         6173.330078125 
+         6586.669921875 
+         7000.0 
+      </constant>
+<constant cols="16" digits="2" name="ignitionTable" rows="16" units="deg">
+         12.199999809265137 14.199999809265137 18.100000381469727 22.0 25.899999618530273 29.80000114440918 33.79999923706055 37.70000076293945 41.60000228881836 42.900001525878906 42.900001525878906 42.900001525878906 42.900001525878906 42.900001525878906 42.900001525878906 42.900001525878906 
+         12.100000381469727 14.0 17.899999618530273 21.700000762939453 25.600000381469727 29.399999618530273 33.29999923706055 37.20000076293945 41.0 42.29999923706055 42.29999923706055 42.29999923706055 42.29999923706055 42.29999923706055 42.29999923706055 42.29999923706055 
+         12.0 13.90000057220459 17.700000762939453 21.5 25.30000114440918 29.0 32.79999923706055 36.60000228881836 40.400001525878906 41.70000076293945 41.70000076293945 41.70000076293945 41.70000076293945 41.70000076293945 41.70000076293945 41.70000076293945 
+         11.800000190734863 13.699999809265137 17.399999618530273 21.200000762939453 24.899999618530273 28.600000381469727 32.400001525878906 36.10000228881836 39.900001525878906 41.10000228881836 41.10000228881836 41.10000228881836 41.10000228881836 41.10000228881836 41.10000228881836 41.10000228881836 
+         11.600000381469727 13.5 17.100000381469727 20.80000114440918 24.399999618530273 28.0 31.700000762939453 35.29999923706055 39.0 40.20000076293945 40.20000076293945 40.20000076293945 40.20000076293945 40.20000076293945 40.20000076293945 40.20000076293945 
+         11.5 13.300000190734863 16.899999618530273 20.5 24.100000381469727 27.600000381469727 31.200000762939453 34.79999923706055 38.400001525878906 39.60000228881836 39.60000228881836 39.60000228881836 39.60000228881836 39.60000228881836 39.60000228881836 39.60000228881836 
+         11.40000057220459 13.199999809265137 16.700000762939453 20.200000762939453 23.700000762939453 27.200000762939453 30.80000114440918 34.29999923706055 37.79999923706055 39.0 39.0 39.0 39.0 39.0 39.0 39.0 
+         11.300000190734863 13.0 16.5 19.899999618530273 23.399999618530273 26.80000114440918 30.30000114440918 33.79999923706055 37.20000076293945 38.400001525878906 38.400001525878906 38.400001525878906 38.400001525878906 38.400001525878906 38.400001525878906 38.400001525878906 
+         11.100000381469727 12.800000190734863 16.200000762939453 19.600000381469727 23.0 26.399999618530273 29.899999618530273 33.29999923706055 36.70000076293945 37.79999923706055 37.79999923706055 37.79999923706055 37.79999923706055 37.79999923706055 37.79999923706055 37.79999923706055 
+         10.90000057220459 12.600000381469727 15.90000057220459 19.200000762939453 22.5 25.80000114440918 29.200000762939453 32.5 35.79999923706055 36.900001525878906 36.900001525878906 36.900001525878906 36.900001525878906 36.900001525878906 36.900001525878906 36.900001525878906 
+         10.800000190734863 12.40000057220459 15.699999809265137 18.899999618530273 22.200000762939453 25.399999618530273 28.700000762939453 32.0 35.20000076293945 36.29999923706055 36.29999923706055 36.29999923706055 36.29999923706055 36.29999923706055 36.29999923706055 36.29999923706055 
+         10.699999809265137 12.300000190734863 15.5 18.700000762939453 21.899999618530273 25.100000381469727 28.200000762939453 31.399999618530273 34.60000228881836 35.70000076293945 35.70000076293945 35.70000076293945 35.70000076293945 35.70000076293945 35.70000076293945 35.70000076293945 
+         10.5 12.100000381469727 15.199999809265137 18.399999618530273 21.5 24.700000762939453 27.80000114440918 30.899999618530273 34.10000228881836 35.10000228881836 35.10000228881836 35.10000228881836 35.10000228881836 35.10000228881836 35.10000228881836 35.10000228881836 
+         10.5 12.100000381469727 15.199999809265137 18.30000114440918 21.5 24.600000381469727 27.700000762939453 30.80000114440918 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0 
+         10.5 12.100000381469727 15.199999809265137 18.30000114440918 21.5 24.600000381469727 27.700000762939453 30.80000114440918 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0 
+         10.5 12.100000381469727 15.199999809265137 18.30000114440918 21.5 24.600000381469727 27.700000762939453 30.80000114440918 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0 
+      </constant>
+<constant cols="1" digits="2" name="ignitionLoadBins" rows="16" units="Load">
+         21.0 
+         27.0 
+         33.0 
+         39.0 
+         48.0 
+         54.0 
+         60.0 
+         66.0 
+         72.0 
+         81.0 
+         87.0 
+         93.0 
+         99.0 
+         108.0 
+         114.0 
+         120.0 
+      </constant>
+<constant cols="1" digits="2" name="ignitionRpmBins" rows="16" units="RPM">
+         650.0 
+         800.0 
+         1100.0 
+         1400.0 
+         1700.0 
+         2000.0 
+         2300.0 
+         2600.0 
+         2900.0 
+         3200.0 
+         3500.0 
+         3800.0 
+         4100.0 
+         4400.0 
+         4700.0 
+         7000.0 
+      </constant>
+<constant cols="16" digits="2" name="veTable" rows="16" units="%">
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+         80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 80.0 
+      </constant>
+<constant cols="1" digits="2" name="veLoadBins" rows="16" units="kPa">
+         10.0 
+         20.0 
+         30.0 
+         40.0 
+         50.0 
+         60.0 
+         70.0 
+         80.0 
+         90.0 
+         100.0 
+         110.0 
+         120.0 
+         130.0 
+         140.0 
+         150.0 
+         160.0 
+      </constant>
+<constant cols="1" digits="2" name="veRpmBins" rows="16" units="RPM">
+         650.0 
+         800.0 
+         1100.0 
+         1400.0 
+         1700.0 
+         2000.0 
+         2300.0 
+         2600.0 
+         2900.0 
+         3200.0 
+         3500.0 
+         3800.0 
+         4100.0 
+         4400.0 
+         4700.0 
+         7000.0 
+      </constant>
+<constant cols="16" digits="1" name="afrTable" rows="16" units="deg">
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+         14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 14.0 
+      </constant>
+<constant cols="1" digits="2" name="afrLoadBins" rows="16">
+         10.0 
+         20.0 
+         30.0 
+         40.0 
+         50.0 
+         60.0 
+         70.0 
+         80.0 
+         90.0 
+         100.0 
+         110.0 
+         120.0 
+         130.0 
+         140.0 
+         150.0 
+         160.0 
+      </constant>
+<constant cols="1" digits="2" name="afrRpmBins" rows="16" units="RPM">
+         650.0 
+         800.0 
+         1100.0 
+         1400.0 
+         1700.0 
+         2000.0 
+         2300.0 
+         2600.0 
+         2900.0 
+         3200.0 
+         3500.0 
+         3800.0 
+         4100.0 
+         4400.0 
+         4700.0 
+         7000.0 
+      </constant>
+<constant cols="8" digits="2" name="tpsTpsAccelTable" rows="8" units="value">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         10.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         17.0 10.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         23.0 17.0 10.0 0.0 0.0 0.0 0.0 0.0 
+         28.0 23.0 17.0 10.0 0.0 0.0 0.0 0.0 
+         32.0 28.0 23.0 17.0 10.0 0.0 0.0 0.0 
+         35.0 32.0 28.0 23.0 17.0 10.0 0.0 0.0 
+         37.0 35.0 32.0 28.0 23.0 17.0 10.0 0.0 
+      </constant>
+<constant cols="1" digits="2" name="tpsTpsAccelFromRpmBins" rows="8" units="from">
+         0.0 
+         10.0 
+         30.0 
+         40.0 
+         60.0 
+         70.0 
+         90.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="2" name="tpsTpsAccelToRpmBins" rows="8" units="to">
+         0.0 
+         10.0 
+         30.0 
+         40.0 
+         60.0 
+         70.0 
+         90.0 
+         100.0 
+      </constant>
+<constant cols="8" digits="2" name="fsioTable1" rows="8" units="value">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+      </constant>
+<constant cols="1" digits="2" name="fsioTable1LoadBins" rows="8" units="L">
+         20.0 
+         30.0 
+         50.0 
+         60.0 
+         80.0 
+         90.0 
+         110.0 
+         120.0 
+      </constant>
+<constant cols="1" digits="2" name="fsioTable1RpmBins" rows="8" units="RPM">
+         650.0 
+         800.0 
+         1700.0 
+         2600.0 
+         3500.0 
+         4400.0 
+         5300.0 
+         7000.0 
+      </constant>
+<constant cols="8" digits="0" name="fsioTable2" rows="8" units="value">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+      </constant>
+<constant cols="1" digits="0" name="fsioTable2LoadBins" rows="8" units="L">
+         20.0 
+         30.0 
+         50.0 
+         60.0 
+         80.0 
+         90.0 
+         110.0 
+         120.0 
+      </constant>
+<constant cols="1" digits="2" name="fsioTable2RpmBins" rows="8" units="RPM">
+         650.0 
+         800.0 
+         1700.0 
+         2600.0 
+         3500.0 
+         4400.0 
+         5300.0 
+         7000.0 
+      </constant>
+<constant cols="8" digits="0" name="fsioTable3" rows="8" units="value">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+      </constant>
+<constant cols="1" digits="0" name="fsioTable3LoadBins" rows="8" units="L">
+         20.0 
+         30.0 
+         50.0 
+         60.0 
+         80.0 
+         90.0 
+         110.0 
+         120.0 
+      </constant>
+<constant cols="1" digits="2" name="fsioTable3RpmBins" rows="8" units="RPM">
+         650.0 
+         800.0 
+         1700.0 
+         2600.0 
+         3500.0 
+         4400.0 
+         5300.0 
+         7000.0 
+      </constant>
+<constant cols="8" digits="0" name="fsioTable4" rows="8" units="value">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 
+      </constant>
+<constant cols="1" digits="0" name="fsioTable4LoadBins" rows="8" units="L">
+         20.0 
+         30.0 
+         50.0 
+         60.0 
+         80.0 
+         90.0 
+         110.0 
+         120.0 
+      </constant>
+<constant cols="1" digits="2" name="fsioTable4RpmBins" rows="8" units="RPM">
+         650.0 
+         800.0 
+         1700.0 
+         2600.0 
+         3500.0 
+         4400.0 
+         5300.0 
+         7000.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_0" rows="2" units="RAW">
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_1" rows="3" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_2" rows="3" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_3" rows="3" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_4" rows="4" units="RAW">
+         1.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_5" rows="3" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_6" rows="3" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_7" rows="4" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_8" rows="17" units="RAW">
+         0.0 
+         100.0 
+         0.0 
+         0.0 
+         0.0 
+         200.0 
+         0.0 
+         0.0 
+         0.0 
+         44.0 
+         1.0 
+         0.0 
+         0.0 
+         50.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_9" rows="3" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant digits="0" name="UNALLOCATED_SPACE_0_10" units="RAW">
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_11" rows="2" units="RAW">
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_12" rows="12" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_13" rows="260" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_14" rows="24" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_15" rows="20" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_16" rows="19" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_17" rows="3" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_18" rows="9" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_19" rows="24" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_20" rows="3" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant digits="0" name="UNALLOCATED_SPACE_0_21" units="RAW">
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_22" rows="4" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_23" rows="20" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant digits="0" name="UNALLOCATED_SPACE_0_24" units="RAW">
+         0.0 
+      </constant>
+<constant digits="0" name="UNALLOCATED_SPACE_0_25" units="RAW">
+         0.0 
+      </constant>
+<constant digits="0" name="UNALLOCATED_SPACE_0_26" units="RAW">
+         0.0 
+      </constant>
+<constant digits="0" name="UNALLOCATED_SPACE_0_27" units="RAW">
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_28" rows="1486" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_29" rows="8" units="RAW">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+</page>
+<settings Comment="These setting are only used if this msq is opened without a project.">
+<setting name="tuneByLoad" value="tuneByLoad"/>
+</settings>
+<userComments Comment="These are user comments that can be related to a particular setting or dialog."/>
+</msq>

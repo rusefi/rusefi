@@ -17,13 +17,13 @@ public:
 	void scheduleByTimestampNt(scheduling_s *scheduling, efitime_t timeNt, action_s action) override;
 	void scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) override;
 	void onTimerCallback();
-	int timerCallbackCounter;
-	int scheduleCounter;
-	int doExecuteCounter;
+	int timerCallbackCounter = 0;
+	int scheduleCounter = 0;
+	int executeAllPendingActionsInvocationCounter = 0;
 private:
 	EventQueue queue;
-	bool reentrantFlag;
-	void doExecute();
+	bool reentrantFlag = false;
+	void executeAllPendingActions();
 	void scheduleTimerCallback();
 };
 
