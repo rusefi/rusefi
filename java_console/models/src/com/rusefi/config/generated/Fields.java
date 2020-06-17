@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 17 12:44:49 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 17 16:44:43 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1466,7 +1466,7 @@ public class Fields {
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 408, FieldType.FLOAT);
 	public static final Field SENSORSNIFFERRPMTHRESHOLD = Field.create("SENSORSNIFFERRPMTHRESHOLD", 412, FieldType.INT);
 	public static final Field RPMHARDLIMIT = Field.create("RPMHARDLIMIT", 416, FieldType.INT);
-	public static final String[] engine_load_mode_e = {"MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge"};
+	public static final String[] engine_load_mode_e = {"MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge", "INVALID", "INVALID"};
 	public static final Field FUELALGORITHM = Field.create("FUELALGORITHM", 420, FieldType.INT, engine_load_mode_e);
 	public static final Field CRANKINGINJECTIONMODE = Field.create("CRANKINGINJECTIONMODE", 424, FieldType.INT);
 	public static final Field INJECTIONMODE = Field.create("INJECTIONMODE", 428, FieldType.INT);
