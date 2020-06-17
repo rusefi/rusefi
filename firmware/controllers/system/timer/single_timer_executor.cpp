@@ -49,12 +49,10 @@ void globalTimerCallback() {
 	___engine.executor.onTimerCallback();
 }
 
-SingleTimerExecutor::SingleTimerExecutor() {
-	/**
-	 * See comments in "getNextEventTime"
-	 * 10us is roughly double the cost of the interrupt + overhead of a single timer event
-	 */
-	queue.setLateDelay(US2NT(10));
+SingleTimerExecutor::SingleTimerExecutor()
+	// 10us is roughly double the cost of the interrupt + overhead of a single timer event
+	: queue(US2NT(10))
+{
 }
 
 void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
