@@ -15,8 +15,11 @@ import javax.swing.*;
 import javax.xml.bind.JAXBException;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 /**
  * TsPlugin launcher creates an instance of this class via reflection.
@@ -130,6 +133,26 @@ public class PluginEntry implements TsPluginBody {
         } catch (JAXBException | IOException | ControllerException e) {
             System.out.println("Error writing XML: " + e);
             return null;
+        }
+    }
+
+    /**
+     * this method is invoked by refection
+     *
+     * @see TsPluginBody#GET_VERSION
+     */
+    @SuppressWarnings("unused")
+    public static String getVersion() {
+        try {
+            InputStream stream = PluginEntry.class.getResourceAsStream("/META-INF/MANIFEST.MF");
+            Manifest manifest = new Manifest(stream);
+
+            Attributes attributes = manifest.getMainAttributes();
+
+            String result = attributes.getValue("Built-Date");
+            return result == null ? "Unknown version" : result;
+        } catch (IOException e) {
+            return "Unknown version";
         }
     }
 }
