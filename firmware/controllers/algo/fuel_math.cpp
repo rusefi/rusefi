@@ -50,12 +50,14 @@ DISPLAY(DISPLAY_FIELD(dwellAngle))
 DISPLAY(DISPLAY_FIELD(cltTimingCorrection))
 DISPLAY_TEXT(eol);
 
-DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTemperature,
+DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(
+	floatms_t baseFuel,
+	float coolantTemperature,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// these magic constants are in Celsius
 	float baseCrankingFuel;
 	if (engineConfiguration->useRunningMathForCranking) {
-		baseCrankingFuel = engine->engineState.running.baseFuel;
+		baseCrankingFuel = baseFuel;
 	} else {
 		baseCrankingFuel = engineConfiguration->cranking.baseFuel;
 	}
@@ -290,6 +292,14 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
 
+static floatms_t getFuel(bool isCranking, floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (isCranking) {
+		return getCrankingFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
+	} else {
+		return getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+}
+
 /**
  * @returns	Length of each individual fuel injection, in milliseconds
  *     in case of single point injection mode the amount of fuel into all cylinders, otherwise the amount for one cylinder
@@ -307,19 +317,13 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		warning(CUSTOM_CONFIG_NOT_READY, "config not ready");
 		return 0; // we can end up here during configuration reset
 	}
-	floatms_t fuelPerCycle;
-	if (isCranking) {
-		fuelPerCycle = getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelPerCycle), "NaN cranking fuelPerCycle", 0);
-	} else {
-		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-		fuelPerCycle = getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelPerCycle), "NaN fuelPerCycle", 0);
-#if EFI_PRINTF_FUEL_DETAILS
-	printf("baseFuel=%.2f fuelPerCycle=%.2f \t\n",
-			baseFuel, fuelPerCycle);
-#endif /*EFI_PRINTF_FUEL_DETAILS */
-	}
+
+	// Always update base fuel - some cranking modes use it
+	floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
+	floatms_t fuelPerCycle = getFuel(isCranking, baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelPerCycle), "NaN fuelPerCycle", 0);
+
 	if (mode == IM_SINGLE_POINT) {
 		// here we convert per-cylinder fuel amount into total engine amount since the single injector serves all cylinders
 		fuelPerCycle *= engineConfiguration->specs.cylindersCount;
@@ -484,8 +488,8 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @return Duration of fuel injection while craning
  */
-floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getCrankingFuel3(Sensor::get(SensorType::Clt).value_or(20),
+floatms_t getCrankingFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return getCrankingFuel3(baseFuel, Sensor::get(SensorType::Clt).value_or(20),
 			engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
