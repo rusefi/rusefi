@@ -1,6 +1,7 @@
 package com.rusefi.ts_plugin;
 
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.ui.storage.PersistentConfiguration;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -16,6 +17,7 @@ import static com.rusefi.ts_plugin.TsPluginLauncher.VERSION;
 
 public class Updater {
     private static final String PLUGIN_BODY_JAR = "rusefi_plugin_body.jar";
+    public static final String LOCAL_JAR_FILE_NAME = PersistentConfiguration.RUSEFI_SETTINGS_FOLDER + File.separator + PLUGIN_BODY_JAR;
     private static final String TITLE = "rusEFI plugin installer " + VERSION;
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
@@ -24,7 +26,7 @@ public class Updater {
         content.add(new JLabel("" + VERSION));
 
         String version = null;
-        if (new File(PLUGIN_BODY_JAR).exists()) {
+        if (new File(LOCAL_JAR_FILE_NAME).exists()) {
             version = getVersion();
         }
 
@@ -76,12 +78,13 @@ public class Updater {
         try {
             AutoupdateUtil.ConnectionAndMeta connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
 
-            AutoupdateUtil.downloadAutoupdateFile(PLUGIN_BODY_JAR, connectionAndMeta.getHttpConnection(), connectionAndMeta.getCompleteFileSize(),
+            AutoupdateUtil.downloadAutoupdateFile(LOCAL_JAR_FILE_NAME, connectionAndMeta.getHttpConnection(), connectionAndMeta.getCompleteFileSize(),
                     TITLE);
 
             startPlugin();
 
         } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
             download.setEnabled(true);
         }
     }
@@ -98,7 +101,7 @@ public class Updater {
     }
 
     private static Class getPluginClass() throws MalformedURLException, ClassNotFoundException {
-        URLClassLoader jarClassLoader = AutoupdateUtil.getClassLoaderByJar(PLUGIN_BODY_JAR);
+        URLClassLoader jarClassLoader = AutoupdateUtil.getClassLoaderByJar(LOCAL_JAR_FILE_NAME);
         return Class.forName("com.rusefi.ts_plugin.PluginEntry", true, jarClassLoader);
     }
 
