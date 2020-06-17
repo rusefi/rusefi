@@ -1,6 +1,7 @@
 package com.rusefi.ui.util;
 
 import com.rusefi.StartupFrame;
+import com.rusefi.autoupdate.AutoupdateUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -77,27 +78,14 @@ public class UiUtils {
      * to hack http://rusefi.com/forum/viewtopic.php?f=2&t=631&p=10083#p10081
      */
     public static void trueRepaint(JComponent control) {
-        control.invalidate();
-        control.repaint();
-    }
-
-    public static void trueRepaint(Container control) {
         trueLayout(control);
-//        if (control == null)
-//            return;
-//        control.invalidate();
-//        control.repaint();
     }
 
     /**
      * todo: one 'trueXXX' method should be enough, which one?
      */
     public static void trueLayout(Component component) {
-        if (component == null)
-            return;
-        component.invalidate();
-        component.validate();
-        component.repaint();
+        AutoupdateUtil.trueLayout(component);
     }
 
     public static java.util.List<Component> getAllComponents(final Container c) {
