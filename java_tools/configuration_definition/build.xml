@@ -2,6 +2,7 @@
 
     <property name="javac.source" value="1.8"/>
     <property name="javac.target" value="1.8"/>
+    <property name="console_path" value="../../java_console"/>
 
     <target name="clean">
         <delete dir="build"/>
@@ -16,7 +17,10 @@
                 destdir="build/classes"
                 classpath="lib/junit.jar:../../java_console/lib/annotations.jar:lib/snakeyaml.jar">
             <src path="src"/>
-            <src path="../../java_console/logging/src"/>
+            <src path="${console_path}/autoupdate/src"/>
+            <src path="${console_path}/inifile/src"/>
+            <src path="${console_path}/logging/src"/>
+            <src path="${console_path}/models/src"/>
             <src path="../enum_to_string/src"/>
         </javac>
 
