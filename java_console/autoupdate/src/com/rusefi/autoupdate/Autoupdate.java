@@ -241,7 +241,7 @@ public class Autoupdate {
         return file.length() == completeFileSize && file.lastModified() == lastModified;
     }
 
-    private static String readBundleFullName() {
+    public static String readBundleFullName() {
         try {
             BufferedReader r = new BufferedReader(new FileReader(BUNDLE_NAME_FILE));
             String fullName = r.readLine();
