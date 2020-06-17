@@ -96,7 +96,7 @@ efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
 			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
 			 * for the next scheduled event
 			 */
-			return nowX + US2NT(10);
+			return nowX + lateDelay;
 		} else {
 			return head->momentX;
 		}
@@ -134,7 +134,7 @@ int EventQueue::executeAll(efitime_t now) {
 
 		// If the next event is far in the future, we'll reschedule
 		// and execute it next time.
-		if (current->momentX > now + US2NT(10)) {
+		if (current->momentX > now + lateDelay) {
 			break;
 		}
 

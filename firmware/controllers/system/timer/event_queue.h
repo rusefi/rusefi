@@ -45,6 +45,8 @@
  */
 class EventQueue {
 public:
+	EventQueue(efitime_t lateDelay = 0) : lateDelay(lateDelay) {}
+
 	/**
 	 * O(size) - linear search in sorted linked list
 	 */
@@ -64,5 +66,6 @@ private:
 	 * this list is sorted
 	 */
 	scheduling_s *head = nullptr;
+	const efitime_t lateDelay;
 };
 
