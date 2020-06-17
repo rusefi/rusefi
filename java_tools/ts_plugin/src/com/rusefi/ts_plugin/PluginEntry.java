@@ -18,11 +18,12 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * TsPlugin launcher creates an instance of this class via reflection.
+ */
 public class PluginEntry implements TsPluginBody {
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
     private final JComponent content = new JPanel();
-
-    private ControllerAccess controllerAccess;
 
     public PluginEntry() {
         content.add(tokenPanel.getContent());
@@ -31,12 +32,16 @@ public class PluginEntry implements TsPluginBody {
         upload.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Msq tune = writeCurrentTune(controllerAccess);
+                Msq tune = writeCurrentTune(ControllerAccess.getInstance());
                 Online.uploadTune(tune, tokenPanel, content);
             }
         });
         content.add(upload);
+    }
 
+    @Override
+    public JComponent getContent() {
+        return content;
     }
 
     public void close() {
@@ -67,7 +72,6 @@ public class PluginEntry implements TsPluginBody {
     public static String getConfigurationName() {
         return ControllerAccess.getInstance().getEcuConfigurationNames()[0];
     }
-
 
     private static String toString(double scalarValue, int decimalPlaces) {
         // todo: start using decimalPlaces parameter!

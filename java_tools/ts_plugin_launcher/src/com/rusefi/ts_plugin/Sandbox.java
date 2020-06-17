@@ -1,7 +1,5 @@
 package com.rusefi.ts_plugin;
 
-import com.rusefi.ts_plugin.TsPluginLauncher;
-
 import javax.swing.*;
 
 public class Sandbox {

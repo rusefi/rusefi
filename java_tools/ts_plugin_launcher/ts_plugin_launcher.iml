@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="TunerStudioPluginAPI" level="project" />
+    <orderEntry type="module" module-name="autoupdate" />
   </component>
 </module>

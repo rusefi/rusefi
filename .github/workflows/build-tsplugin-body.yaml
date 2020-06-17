@@ -17,7 +17,7 @@ jobs:
       - name: Test Compiler
         run: javac -version
 
-      - name: Install Coverage Tools
+      - name: Install Tools
         run: sudo apt-get install ncftp
 
       - name: Build TS plugin body

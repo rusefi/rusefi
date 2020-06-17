@@ -10,11 +10,13 @@ import javax.swing.*;
  * by the way TS installs stuff into %user%\.efianalytics\TunerStudio\plugins folder
  */
 public class TsPluginLauncher implements ApplicationPlugin {
-    private static final String VERSION = "alpha2020";
+
+    public static final String VERSION = "alpha2020";
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
     public TsPluginLauncher() {
         content.add(new JLabel("" + VERSION));
+        content.add(new Updater().getContent());
     }
 
     @Override
