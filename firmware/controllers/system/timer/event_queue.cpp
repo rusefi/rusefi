@@ -24,11 +24,6 @@ extern bool verboseMode;
 
 uint32_t maxSchedulingPrecisionLoss = 0;
 
-EventQueue::EventQueue() {
-	head = nullptr;
-	setLateDelay(100);
-}
-
 bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 	assertNotInListMethodBody(scheduling_s, head, scheduling, nextScheduling_s);
 }
@@ -100,10 +95,8 @@ efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
 			 *
 			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
 			 * for the next scheduled event
-			 *
 			 */
-			efitime_t aBitInTheFuture = nowX + lateDelay;
-			return aBitInTheFuture;
+			return nowX + lateDelay;
 		} else {
 			return head->momentX;
 		}
@@ -139,12 +132,19 @@ int EventQueue::executeAll(efitime_t now) {
 			break;
 		}
 
-		// Only execute events that occured in the past.
-		// The list is sorted, so as soon as we see an event
-		// in the future, we're done.
-		if (current->momentX > now) {
+		// If the next event is far in the future, we'll reschedule
+		// and execute it next time.
+		// We do this when the next event is close enough that the overhead of
+		// resetting the timer and scheduling an new interrupt is greater than just
+		// waiting for the time to arrive.  On current CPUs, this is reasonable to set
+		// around 10 microseconds.
+		if (current->momentX > now + lateDelay) {
 			break;
 		}
+
+		// near future - spin wait for the event to happen and avoid the
+		// overhead of rescheduling the timer.
+		while (current->momentX > getTimeNowNt()) ;
 
 		executionCounter++;
 
@@ -185,10 +185,6 @@ void EventQueue::assertListIsSorted() const {
 		efiAssertVoid(CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
 		current = current->nextScheduling_s;
 	}
-}
-
-void EventQueue::setLateDelay(int value) {
-	lateDelay = value;
 }
 
 scheduling_s * EventQueue::getHead() {
