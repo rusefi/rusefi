@@ -2,7 +2,7 @@ package com.rusefi;
 
 import javax.swing.*;
 
-public class Standalone {
+public class Sandbox {
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setSize(800, 500);
