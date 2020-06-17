@@ -100,3 +100,5 @@ void print(const char *fmt, ...);
 #define lockAnyContext() false
 
 #define unlockAnyContext() {}
+
+#define UNIT_TEST_BUSY_WAIT_CALLBACK() { 	timeNowUs++; }

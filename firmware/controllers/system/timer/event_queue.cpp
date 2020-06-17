@@ -19,6 +19,7 @@
 #include "perf_trace.h"
 
 #if EFI_UNIT_TEST
+extern int timeNowUs;
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
@@ -144,7 +145,10 @@ int EventQueue::executeAll(efitime_t now) {
 
 		// near future - spin wait for the event to happen and avoid the
 		// overhead of rescheduling the timer.
-		while (current->momentX > getTimeNowNt()) ;
+		// yes, that's a busy wait but that's what we need here
+		while (current->momentX > getTimeNowNt()) {
+			UNIT_TEST_BUSY_WAIT_CALLBACK();
+		}
 
 		executionCounter++;
 

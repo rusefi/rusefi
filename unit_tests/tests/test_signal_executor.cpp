@@ -38,8 +38,7 @@ static void complexCallback(TestPwm *testPwm) {
 			{ complexCallback, testPwm });
 }
 
-static void testSignalExecutor2(void) {
-	print("*************************************** testSignalExecutor2\r\n");
+TEST(misc, testSignalExecutor2) {
 	EventQueue eq;
 	TestPwm p1(&eq);
 	TestPwm p2(&eq);
@@ -85,7 +84,6 @@ TEST(misc, testSignalExecutor3) {
 	eq.insertTask(&s1, 10, { orderCallback, (void*)1 });
 	eq.insertTask(&s2, 11, { orderCallback, (void*)2 });
 	eq.insertTask(&s3, 12, { orderCallback, (void*)3 });
-
 	eq.executeAll(100);
 }
 
@@ -160,5 +158,4 @@ TEST(misc, testSignalExecutor) {
 	eq.executeAll(11);
 
 	ASSERT_EQ(2, callbackCounter);
-	testSignalExecutor2();
 }
