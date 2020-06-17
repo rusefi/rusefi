@@ -3,8 +3,37 @@ name: Firmware CI
 on: [push,pull_request]
 
 jobs:
+  config:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pusher }}
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Generate Configs
+      working-directory: ./firmware/
+      run: sh gen_config.sh
+
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: sh gen_live_documentation.sh
+
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub build-firmware Action"
+        git commit -am "Auto-generated configs and docs" 2>&1 | grep -E '(nothing to commit|changed)'
+
+    - name: Push configs
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ github.token }}
+
   build:
     runs-on: ubuntu-latest
+    needs: config
     
     strategy:
       # Let all builds finish even if one fails early
