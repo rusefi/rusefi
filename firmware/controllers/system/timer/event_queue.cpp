@@ -134,6 +134,10 @@ int EventQueue::executeAll(efitime_t now) {
 
 		// If the next event is far in the future, we'll reschedule
 		// and execute it next time.
+		// We do this when the next event is close enough that the overhead of
+		// resetting the timer and scheduling an new interrupt is greater than just
+		// waiting for the time to arrive.  On current CPUs, this is reasonable to set
+		// around 10 microseconds.
 		if (current->momentX > now + lateDelay) {
 			break;
 		}

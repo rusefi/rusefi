@@ -45,6 +45,9 @@
  */
 class EventQueue {
 public:
+	// See comment in EventQueue::executeAll for info about lateDelay - it sets the 
+	// time gap between events for which we will wait instead of rescheduling the next
+	// event in a group of events near one another.
 	EventQueue(efitime_t lateDelay = 0) : lateDelay(lateDelay) {}
 
 	/**
