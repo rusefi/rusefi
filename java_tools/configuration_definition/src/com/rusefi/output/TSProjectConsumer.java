@@ -1,5 +1,6 @@
 package com.rusefi.output;
 
+import com.opensr5.ini.RawIniFile;
 import com.rusefi.*;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.Output;
@@ -60,6 +61,9 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
         if (configField.getState().tsCustomLine.containsKey(configField.getType())) {
             String bits = configField.getState().tsCustomLine.get(configField.getType());
+
+            RawIniFile.Line line = new RawIniFile.Line(bits);
+
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH));
             int size = configField.getState().tsCustomSize.get(configField.getType());
 //            tsHeader.headerWrite("\t" + size + ",");

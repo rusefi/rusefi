@@ -10,5 +10,6 @@
     <orderEntry type="library" exported="" name="junit" level="project" />
     <orderEntry type="module" module-name="models" exported="" />
     <orderEntry type="module" module-name="autoupdate" exported="" />
+    <orderEntry type="library" name="annotations" level="project" />
   </component>
 </module>
