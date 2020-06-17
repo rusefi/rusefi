@@ -14,6 +14,10 @@
                destdir="build/classes"
                classpath="${console_path}/lib/junit.jar:${console_path}/lib/annotations.jar:lib/TunerStudioPluginAPI.jar:${console_path}/lib/httpclient.jar:${console_path}/lib/httpmime.jar:${console_path}/lib/httpcore.jar"
         >
+            <src path="${console_path}/shared_ui/src"/>
+            <src path="${console_path}/inifile/src"/>
+            <src path="${console_path}/logging/src"/>
+            <src path="${console_path}/models/src"/>
             <src path="src"/>
         </javac>
 
