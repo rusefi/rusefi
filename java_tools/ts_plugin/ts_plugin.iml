@@ -10,5 +10,6 @@
     <orderEntry type="module" module-name="inifile" />
     <orderEntry type="module" module-name="shared_ui" />
     <orderEntry type="library" name="TunerStudioPluginAPI" level="project" />
+    <orderEntry type="module" module-name="ts_plugin_launcher" />
   </component>
 </module>

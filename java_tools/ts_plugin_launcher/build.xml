@@ -31,7 +31,7 @@
             <manifest>
                 <attribute name="Built-Date" value="${TODAY}"/>
                 <attribute name="Signature-Vendor" value="rusEFI LLC"/>
-                <attribute name="ApplicationPlugin" value="com.rusefi.TsPlugin"/>
+                <attribute name="ApplicationPlugin" value="com.rusefi.ts_plugin.TsPluginLauncher"/>
             </manifest>
 
             <zipfileset src="../../java_console/lib/httpclient.jar" includes="**/*.class"/>
@@ -42,7 +42,7 @@
 
     </target>
 
-    <target name="local_install" depends="jar">
+    <target name="launcher_local_install" depends="jar">
         <copy file="${jar_file}" todir="${user.home}/.efianalytics/TunerStudio/plugins"/>
     </target>
 </project>

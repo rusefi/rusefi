@@ -1,4 +1,4 @@
-package com.rusefi;
+package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ApplicationPlugin;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
@@ -9,11 +9,11 @@ import javax.swing.*;
 /**
  * by the way TS installs stuff into %user%\.efianalytics\TunerStudio\plugins folder
  */
-public class TsPlugin implements ApplicationPlugin {
+public class TsPluginLauncher implements ApplicationPlugin {
     private static final String VERSION = "alpha2020";
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
-    public TsPlugin() {
+    public TsPluginLauncher() {
         content.add(new JLabel("" + VERSION));
     }
 
