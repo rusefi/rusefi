@@ -15,9 +15,7 @@ jobs:
 
     - name: Write Date File
       run: |
-        echo -e -n "#ifndef VCS_DATE\n#define VCS_DATE $(date "+%Y%m%d")\n#endif" > ./firmware/date_stamp.h
-        echo -e -n "#ifndef VCS_DATE\n#define VCS_DATE $(date "+%Y%m%d")\n#endif" > ./simulator/date_stamp.h
-        echo -e -n "#ifndef VCS_DATE\n#define VCS_DATE $(date "+%Y%m%d")\n#endif" > ./unit_tests/date_stamp.h
+        echo -e -n "#ifndef VCS_DATE\n#define VCS_DATE $(date "+%Y%m%d")\n#endif" > ./firmware/controllers/date_stamp.h
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git commit -m "Update date" -a 2>&1 | grep -E '(nothing to commit|changed)'
