@@ -11,6 +11,7 @@ import javax.swing.*;
  */
 public class TsPluginLauncher implements ApplicationPlugin {
     static final String VERSION = "alpha2020";
+    private static final String HELP_URL = "https://github.com/rusefi/rusefi/wiki/TS-Plugin";
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
@@ -70,7 +71,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
 
     @Override
     public String getHelpUrl() {
-        return "https://rusefi.com";
+        return HELP_URL;
     }
 
     @Override

@@ -22,13 +22,12 @@ public class Updater {
     private static final String TITLE = "rusEFI plugin installer " + VERSION;
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
+    public static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
 
     public Updater() {
         content.add(new JLabel("" + VERSION));
 
-        ImageIcon logo = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
-
-        content.add(new JLabel(logo));
+        content.add(new JLabel(LOGO));
 
         String version = null;
         File localFile = new File(LOCAL_JAR_FILE_NAME);
@@ -140,6 +139,7 @@ public class Updater {
         content.add(instance.getContent());
         AutoupdateUtil.trueLayout(content.getParent());
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(content);
+        AutoupdateUtil.trueLayout(topFrame);
         topFrame.pack();
         AutoupdateUtil.trueLayout(topFrame);
     }

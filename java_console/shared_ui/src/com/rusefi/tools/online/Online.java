@@ -14,9 +14,8 @@ import org.apache.http.util.EntityUtils;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBException;
-import java.io.*;
-
-import static com.rusefi.ui.AuthTokenPanel.TOKEN_WARNING;
+import java.io.File;
+import java.io.IOException;
 
 public class Online {
     private static final String url = "https://rusefi.com/online/upload.php";
@@ -43,8 +42,8 @@ public class Online {
 
     public static void uploadTune(Msq tune, AuthTokenPanel authTokenPanel, JComponent parent) {
         String authToken = authTokenPanel.getToken();
-        if (authToken.contains(TOKEN_WARNING)) {
-            JOptionPane.showMessageDialog(parent, "Does not work without auth token");
+        if (!authTokenPanel.hasToken()) {
+            authTokenPanel.showError(parent);
             return;
         }
         new Thread(() -> doUpload(authToken, tune)).start();
