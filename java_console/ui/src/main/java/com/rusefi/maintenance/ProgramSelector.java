@@ -1,13 +1,12 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.ui.util.URLLabel;
-import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URI;
 import java.util.Arrays;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -38,7 +37,7 @@ public class ProgramSelector {
             mode.setSelectedItem(persistedMode);
 
         JButton updateFirmware = new JButton("Update Firmware",
-                UiUtils.loadIcon("/com/rusefi/upload48.jpg"));
+                AutoupdateUtil.loadIcon("/com/rusefi/upload48.jpg"));
         controls.add(updateFirmware);
         JButton updateHelp = new JButton("?");
         updateHelp.addActionListener(e -> URLLabel.open(HELP));

@@ -124,14 +124,6 @@ public class UiUtils {
         return imageButton;
     }
 
-    public static ImageIcon loadIcon(String strPath) {
-        URL imgURL = StartupFrame.class.getResource(strPath);
-        if (imgURL != null)
-            return new ImageIcon(imgURL);
-        else
-            return null;
-    }
-
     public static void invokeAndWait(Runnable runnable) throws InterruptedException, InvocationTargetException {
         if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();

@@ -24,6 +24,10 @@
         <mkdir dir="${jar_file_folder}"/>
         <delete file="${jar_file}"/>
 
+        <copy todir="build/classes">
+            <fileset dir="resources" includes="**/*.png"/>
+        </copy>
+
         <tstamp>
             <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>

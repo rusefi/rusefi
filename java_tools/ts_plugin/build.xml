@@ -31,12 +31,12 @@
         <delete file="${jar_file}"/>
 
         <tstamp>
-            <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss"/>
+            <format property="TODAY_DATE" pattern="yyyy-MM-dd"/>
         </tstamp>
 
         <jar destfile="${jar_file}" basedir="build/classes">
             <manifest>
-                <attribute name="Built-Date" value="${TODAY}"/>
+                <attribute name="Built-Date" value="${TODAY_DATE}"/>
                 <attribute name="Signature-Vendor" value="rusEFI LLC"/>
             </manifest>
 
