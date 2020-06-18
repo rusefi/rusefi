@@ -47,7 +47,7 @@ public class ConfigFieldParserTest {
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
-        assertEquals("\tafr_type\t\t\t\t\t = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
+        assertEquals("\tafr_type\t\t\t\t\t = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "; total TS size = 4\n", new String(writer.toCharArray()));
     }
 
