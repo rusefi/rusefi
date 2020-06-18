@@ -57,8 +57,7 @@ public class TuneReadWriteTest {
 
         ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(IniFileModel.getInstance());
 
-        // todo: why one byte mismatch? since it's in floats I kind of do not care, floats are weird
-        assertEquals(1, compareImages(originalBinaryData, binaryDataFromXml));
+        assertEquals(0, compareImages(originalBinaryData, binaryDataFromXml));
         Files.delete(path);
     }
 
