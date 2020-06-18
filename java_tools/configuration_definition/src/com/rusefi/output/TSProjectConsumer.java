@@ -62,8 +62,6 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         if (configField.getState().tsCustomLine.containsKey(configField.getType())) {
             String bits = configField.getState().tsCustomLine.get(configField.getType());
 
-            RawIniFile.Line line = new RawIniFile.Line(bits);
-
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH));
             int size = configField.getState().tsCustomSize.get(configField.getType());
 //            tsHeader.headerWrite("\t" + size + ",");

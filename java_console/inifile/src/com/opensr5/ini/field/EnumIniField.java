@@ -113,15 +113,35 @@ public class EnumIniField extends IniField {
         int offset = Integer.parseInt(list.get(3));
 
         String bitRange = list.get(4);
-        bitRange = bitRange.replaceAll("[\\]\\[:]", " ").trim();
-        String bitPositions[] = bitRange.split(" ");
-        if (bitPositions.length != 2)
-            throw new IllegalStateException("Bit position " + bitRange);
-        int bitPosition = Integer.parseInt(bitPositions[0]);
-        int bitSize0 = Integer.parseInt(bitPositions[1]) - bitPosition;
+        ParseBitRange parseBitRange = new ParseBitRange().invoke(bitRange);
+        int bitPosition = parseBitRange.getBitPosition();
+        int bitSize0 = parseBitRange.getBitSize0();
 
         List<String> enums = list.subList(5, list.size());
 
         return new EnumIniField(name, offset, type, enums, bitPosition, bitSize0);
+    }
+
+    public static class ParseBitRange {
+        private int bitPosition;
+        private int bitSize0;
+
+        public int getBitPosition() {
+            return bitPosition;
+        }
+
+        public int getBitSize0() {
+            return bitSize0;
+        }
+
+        public ParseBitRange invoke(String bitRange) {
+            bitRange = bitRange.replaceAll("[\\]\\[:]", " ").trim();
+            String bitPositions[] = bitRange.split(" ");
+            if (bitPositions.length != 2)
+                throw new IllegalStateException("Bit position " + bitRange);
+            bitPosition = Integer.parseInt(bitPositions[0]);
+            bitSize0 = Integer.parseInt(bitPositions[1]) - bitPosition;
+            return this;
+        }
     }
 }
