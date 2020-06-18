@@ -5,25 +5,28 @@ on: [push,pull_request]
 jobs:
   config:
     runs-on: ubuntu-latest
-    # We can tell if this is a push rather than a pull request by testing for the existence of the 'pusher' object
-    if: ${{ github.event.pusher }}
 
     steps:
     - uses: actions/checkout@v2
+      # We can tell if this is a push rather than a pull request by testing for the existence of the 'pusher' object
+      if: ${{ github.event.pusher }}
       # Because we are making changes, we need to fetch all history
       with:
         fetch-depth: 0
 
     - name: Generate Configs
+      if: ${{ github.event.pusher }}
       working-directory: ./firmware/
       run: sh gen_config.sh
 
     - name: Generate Live Documentation
+      if: ${{ github.event.pusher }}
       working-directory: ./firmware/
       run: sh gen_live_documentation.sh
 
     # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit changes
+      if: ${{ github.event.pusher }}
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-firmware Action"
@@ -31,11 +34,13 @@ jobs:
 
     # We need to know what branch this is in order to push to the correct branch
     - name: Extract branch name
+      if: ${{ github.event.pusher }}
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
 
     - name: Push configs
+      if: ${{ github.event.pusher }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}
