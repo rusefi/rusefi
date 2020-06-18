@@ -7,16 +7,14 @@ pwd
 
 rem Prior to running unit tests we build real hardware firmware
 
-cd firmware
 
 git submodule update --init
 
-rm -fR .dep
-rm -fR build
+cd firmware
 call update_version.bat
 IF NOT ERRORLEVEL 0 echo ERROR: INVOKING VERSION HEADER GENERATOR
 IF NOT ERRORLEVEL 0 EXIT /B 1
-
+cd ..
 
 echo We are in root folder
 pwd
