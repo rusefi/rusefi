@@ -30,6 +30,10 @@
         <mkdir dir="${jar_file_folder}"/>
         <delete file="${jar_file}"/>
 
+        <copy todir="build/classes">
+            <fileset dir="../ts_plugin_launcher/resources" includes="**/*.png"/>
+        </copy>
+
         <tstamp>
             <format property="TODAY_DATE" pattern="yyyy-MM-dd"/>
         </tstamp>

@@ -2,7 +2,7 @@ package com.rusefi.ts_plugin;
 
 import javax.swing.*;
 
-public class Sandbox {
+public class PluginLauncherSandbox {
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setSize(800, 500);

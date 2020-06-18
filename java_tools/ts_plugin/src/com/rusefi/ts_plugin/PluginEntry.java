@@ -10,12 +10,12 @@ import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.storage.PersistentConfiguration;
+import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBException;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,20 +28,26 @@ import java.util.jar.Manifest;
 public class PluginEntry implements TsPluginBody {
     public static final String BUILT_DATE = "Built-Date";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
-    private final JComponent content = new JPanel();
+    private final JComponent content = new JPanel(new VerticalFlowLayout());
 
     public PluginEntry() {
-        content.add(tokenPanel.getContent());
 
-        JButton upload = new JButton("Upload Tune");
+        JButton upload = new JButton("Upload Current Tune");
         upload.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!tokenPanel.hasToken()) {
+                    tokenPanel.showError(content);
+                    return;
+                }
                 Msq tune = writeCurrentTune(ControllerAccess.getInstance());
                 Online.uploadTune(tune, tokenPanel, content);
             }
         });
+
         content.add(upload);
+        content.add(new JLabel(Updater.LOGO));
+        content.add(tokenPanel.getContent());
     }
 
     @Override
@@ -75,7 +81,12 @@ public class PluginEntry implements TsPluginBody {
     }
 
     public static String getConfigurationName() {
-        return ControllerAccess.getInstance().getEcuConfigurationNames()[0];
+        ControllerAccess controllerAccess = ControllerAccess.getInstance();
+        if (controllerAccess == null) {
+            System.out.println("No ControllerAccess");
+            return null;
+        }
+        return controllerAccess.getEcuConfigurationNames()[0];
     }
 
     private static String toString(double scalarValue, int decimalPlaces) {
