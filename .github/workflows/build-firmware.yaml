@@ -5,10 +5,12 @@ on: [push,pull_request]
 jobs:
   config:
     runs-on: ubuntu-latest
+    # We can tell if this is a push rather than a pull request by testing for the existence of the 'pusher' object
     if: ${{ github.event.pusher }}
 
     steps:
     - uses: actions/checkout@v2
+      # Because we are making changes, we need to fetch all history
       with:
         fetch-depth: 0
 
@@ -20,12 +22,14 @@ jobs:
       working-directory: ./firmware/
       run: sh gen_live_documentation.sh
 
+    # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-firmware Action"
         git commit -am "Auto-generated configs and docs" 2>&1 | grep -E '(nothing to commit|changed)'
 
+    # We need to know what branch this is in order to push to the correct branch
     - name: Extract branch name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
