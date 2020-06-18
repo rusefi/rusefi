@@ -34,7 +34,7 @@ float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 floatms_t getCrankingFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
-floatms_t getCrankingFuel3(floatms_t baseFuel, float coolantTemperature, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX);
+floatms_t getCrankingFuel3(floatms_t baseFuel, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX);
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
