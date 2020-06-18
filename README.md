@@ -44,6 +44,7 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 06/17/2020    | r23656    | bugfix #1491 major performance/scheduling improvement |
 | 05/21/2020    | r22961    | rusEFI console start-up time improvements |
 | 04/18/2020    | r22231    | Renix 44-2-2 trigger support added |
 | 04/02/2020    |           | Start button feature |
