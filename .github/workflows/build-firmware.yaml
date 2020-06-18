@@ -41,7 +41,7 @@ jobs:
         github_token: ${{ github.token }}
         branch: ${{ steps.extract_branch.outputs.branch }}
 
-  build:
+  build-firmware:
     runs-on: ubuntu-latest
     needs: config
     
@@ -173,3 +173,42 @@ jobs:
       with:
         name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-dfu
         path: ./firmware/build/rusefi.dfu
+
+  build-tests:
+    runs-on: ubuntu-latest
+    needs: config
+    
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
+      
+    - name: Build Tests
+      working-directory: ./unit_tests/
+      run: make -j4
+      
+    - name: Run Tests
+      run: ./unit_tests/build/rusefi_test
+
+    - name: Install Coverage Tools
+      run: sudo apt-get install ncftp lcov
+
+    - name: Generate Code Coverage
+      working-directory: ./unit_tests/
+      run: ./ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+
+  build-simulator:
+    runs-on: ubuntu-latest
+    needs: config
+
+    steps:
+    - name: Install Simulator Deps
+      run: sudo apt-get update && sudo apt-get install -y gcc-multilib g++-multilib
+
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
+
+    - name: Build Simulator
+      working-directory: ./simulator/
+      run: make -j4
