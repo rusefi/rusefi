@@ -159,12 +159,18 @@ public class Field {
         if (bitOffset != NO_BIT_OFFSET) {
             int packed = wrapped.getInt();
             value = (packed >> bitOffset) & 1;
-        } else if (type == INT8 || type == UINT8) {
+        } else if (type == INT8) {
             value = wrapped.get();
+        } else if (type == UINT8) {
+            byte signed = wrapped.get();
+            value = signed & 0xFF;
         } else if (type == INT) {
             value = wrapped.getInt();
-        } else if (type == INT16 || type == UINT16) {
+        } else if (type == INT16) {
             value = wrapped.getShort();
+        } else if (type == UINT16) {
+            short signed = wrapped.getShort();
+            value = signed & 0xFFFF;
         } else {
             value = wrapped.getFloat();
         }
