@@ -8,8 +8,6 @@
 #include "engine_test_helper.h"
 
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
-	printf("*************************************************** testPlainCrankingWithoutAdvancedFeatures\r\n");
-
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);

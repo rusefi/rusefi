@@ -52,7 +52,6 @@ DISPLAY_TEXT(eol);
 
 DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(
 	floatms_t baseFuel,
-	float coolantTemperature,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// these magic constants are in Celsius
 	float baseCrankingFuel;
@@ -71,10 +70,12 @@ DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(
 
 	/**
 	 * Cranking fuel is different depending on engine coolant temperature
+	 * If the sensor is failed, use 20 deg C
 	 */
+	auto clt = Sensor::get(SensorType::Clt);
 	DISPLAY_TEXT(Coolant_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(coolantTemperatureCoefficient) = cisnan(coolantTemperature) ? 1 : interpolate2d("crank", coolantTemperature, config->crankingFuelBins,
-			config->crankingFuelCoef);
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(coolantTemperatureCoefficient) =
+		interpolate2d("crank", clt.value_or(20), config->crankingFuelBins, config->crankingFuelCoef);
 	DISPLAY_SENSOR(CLT);
 	DISPLAY_TEXT(eol);
 
@@ -83,6 +84,13 @@ DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(
 	DISPLAY_TEXT(TPS_coef);
 	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = tps.Valid ? 1 : interpolate2d("crankTps", tps.Value, engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef);
+
+
+	/*
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) =
+		tps.Valid 
+		? interpolate2d("crankTps", tps.Value, engineConfiguration->crankingTpsBins, engineConfiguration->crankingTpsCoef)
+		: 1; // in case of failed TPS, don't correct.*/
 	DISPLAY_SENSOR(TPS);
 	DISPLAY_TEXT(eol);
 
@@ -489,8 +497,7 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return Duration of fuel injection while craning
  */
 floatms_t getCrankingFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return getCrankingFuel3(baseFuel, Sensor::get(SensorType::Clt).value_or(20),
-			engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
+	return getCrankingFuel3(baseFuel, engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
