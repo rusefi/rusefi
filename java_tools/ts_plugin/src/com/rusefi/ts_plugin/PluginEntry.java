@@ -10,6 +10,7 @@ import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.storage.PersistentConfiguration;
+import com.rusefi.ui.util.URLLabel;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -27,6 +28,7 @@ import java.util.jar.Manifest;
  */
 public class PluginEntry implements TsPluginBody {
     public static final String BUILT_DATE = "Built-Date";
+    public static final String REO = "https://rusefi.com/online/";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
     private final JComponent content = new JPanel(new VerticalFlowLayout());
 
@@ -40,7 +42,13 @@ public class PluginEntry implements TsPluginBody {
                     tokenPanel.showError(content);
                     return;
                 }
-                Msq tune = writeCurrentTune(ControllerAccess.getInstance());
+                String configurationName = getConfigurationName();
+                if (configurationName == null) {
+                    JOptionPane.showMessageDialog(content, "No project opened");
+                    return;
+                }
+
+                Msq tune = writeCurrentTune(ControllerAccess.getInstance(), configurationName);
                 Online.uploadTune(tune, tokenPanel, content);
             }
         });
@@ -48,6 +56,7 @@ public class PluginEntry implements TsPluginBody {
         content.add(upload);
         content.add(new JLabel(Updater.LOGO));
         content.add(tokenPanel.getContent());
+        content.add(new URLLabel(REO));
     }
 
     @Override
@@ -94,9 +103,8 @@ public class PluginEntry implements TsPluginBody {
         return Double.toString(scalarValue);
     }
 
-    private static Msq writeCurrentTune(ControllerAccess controllerAccess) {
+    private static Msq writeCurrentTune(ControllerAccess controllerAccess, String configurationName) {
         Msq msq = new Msq();
-        String configurationName = getConfigurationName();
         ControllerParameterServer controllerParameterServer = controllerAccess.getControllerParameterServer();
 
         Msq tsTune = TsTuneReader.readTsTune(configurationName);

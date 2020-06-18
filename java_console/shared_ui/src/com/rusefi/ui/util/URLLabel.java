@@ -15,6 +15,10 @@ public class URLLabel extends JLabel {
         setup(text, uri);
     }
 
+    public URLLabel(String uri) {
+        this(uri, uri);
+    }
+
     public URLLabel(String text, String uri) {
         setup(text, createUri(uri));
     }
