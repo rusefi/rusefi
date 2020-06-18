@@ -49,6 +49,6 @@
     </target>
 
     <target name="body_local_install" depends="jar">
-        <copy file="${jar_file}" todir="${user.home}/.efianalytics/TunerStudio/plugins"/>
+        <copy file="${jar_file}" todir="${user.home}/.rusEFI/"/>
     </target>
 </project>

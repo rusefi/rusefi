@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -19,7 +20,9 @@ public class AutoupdateUtil {
     private static final int BUFFER_SIZE = 32 * 1024;
     private static final int STEPS = 1000;
 
-    public static void downloadAutoupdateFile(String localZipFileName, HttpURLConnection httpConnection, long completeFileSize, String title) throws IOException {
+    public static void downloadAutoupdateFile(String localZipFileName, ConnectionAndMeta connectionAndMeta, String title) throws IOException {
+        HttpURLConnection httpConnection = connectionAndMeta.httpConnection;
+        long completeFileSize = connectionAndMeta.completeFileSize;
         Objects.requireNonNull(httpConnection, "httpConnection");
         BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
         FileOutputStream fos = new FileOutputStream(localZipFileName);
@@ -62,6 +65,7 @@ public class AutoupdateUtil {
         }
         bout.close();
         in.close();
+        new File(localZipFileName).setLastModified(connectionAndMeta.lastModified);
 
         if (!runHeadless) {
             frameHelper.getFrame().dispose();
@@ -82,6 +86,12 @@ public class AutoupdateUtil {
         component.invalidate();
         component.validate();
         component.repaint();
+    }
+
+    public static boolean hasExistingFile(String zipFileName, long completeFileSize, long lastModified) {
+        File file = new File(zipFileName);
+        System.out.println("We have " + file.length() + " " + new Date(file.lastModified()));
+        return file.length() == completeFileSize && file.lastModified() == lastModified;
     }
 
     public static class ConnectionAndMeta {
