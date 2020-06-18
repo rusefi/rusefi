@@ -25,6 +25,7 @@ import java.util.jar.Manifest;
  * TsPlugin launcher creates an instance of this class via reflection.
  */
 public class PluginEntry implements TsPluginBody {
+    public static final String BUILT_DATE = "Built-Date";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
     private final JComponent content = new JPanel();
 
@@ -148,10 +149,16 @@ public class PluginEntry implements TsPluginBody {
             Manifest manifest = new Manifest(stream);
 
             Attributes attributes = manifest.getMainAttributes();
+            System.out.println("Attributed " + attributes);
+            System.out.println("Attributed " + attributes.keySet());
+            System.out.println("Attributed " + attributes.getValue("Class-Path"));
+            System.out.println("Attributed " + attributes.getValue("Main-Class"));
 
-            String result = attributes.getValue("Built-Date");
+            String result = attributes.getValue(BUILT_DATE);
+            System.out.println(BUILT_DATE + " " + result);
             return result == null ? "Unknown version" : result;
         } catch (IOException e) {
+            e.printStackTrace();
             return "Unknown version";
         }
     }

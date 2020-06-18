@@ -70,7 +70,7 @@ public class Autoupdate {
             AutoupdateUtil.ConnectionAndMeta connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(zipFileName).invoke();
             System.out.println("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
 
-            if (hasExistingFile(zipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
+            if (AutoupdateUtil.hasExistingFile(zipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
                 System.out.println("We already have latest update " + new Date(connectionAndMeta.getLastModified()));
                 return;
             }
@@ -88,7 +88,7 @@ public class Autoupdate {
 
             System.out.println(bundleFullName + " " + completeFileSize + " bytes, last modified " + new Date(lastModified));
 
-            AutoupdateUtil.downloadAutoupdateFile(zipFileName, httpConnection, completeFileSize, TITLE);
+            AutoupdateUtil.downloadAutoupdateFile(zipFileName, connectionAndMeta, TITLE);
 
             File file = new File(zipFileName);
             file.setLastModified(lastModified);
@@ -178,12 +178,6 @@ public class Autoupdate {
             // ignore
         }
         return doUpdate.get();
-    }
-
-    private static boolean hasExistingFile(String zipFileName, long completeFileSize, long lastModified) {
-        File file = new File(zipFileName);
-        System.out.println("We have " + file.length() + " " + new Date(file.lastModified()));
-        return file.length() == completeFileSize && file.lastModified() == lastModified;
     }
 
     public static String readBundleFullName() {

@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URLClassLoader;
+import java.util.Date;
 
 import static com.rusefi.ts_plugin.TsPluginLauncher.VERSION;
 
@@ -26,8 +27,11 @@ public class Updater {
         content.add(new JLabel("" + VERSION));
 
         String version = null;
-        if (new File(LOCAL_JAR_FILE_NAME).exists()) {
+        long localJarTimestamp = 0;
+        File localFile = new File(LOCAL_JAR_FILE_NAME);
+        if (localFile.exists()) {
             version = getVersion();
+
         }
 
         JButton download = new JButton("Download latest");
@@ -46,6 +50,30 @@ public class Updater {
 
             content.add(run);
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AutoupdateUtil.ConnectionAndMeta connectionAndMeta = null;
+                try {
+                    connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                System.out.println("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
+
+                if (AutoupdateUtil.hasExistingFile(LOCAL_JAR_FILE_NAME, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
+                    System.out.println("We already have latest update " + new Date(connectionAndMeta.getLastModified()));
+                    SwingUtilities.invokeLater(() -> {
+                        download.setText("We have latest plugin version");
+                        download.setEnabled(false);
+                    });
+                    return;
+                }
+
+            }
+        }).start();
 
         download.addActionListener(new AbstractAction() {
             @Override
@@ -78,7 +106,7 @@ public class Updater {
         try {
             AutoupdateUtil.ConnectionAndMeta connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
 
-            AutoupdateUtil.downloadAutoupdateFile(LOCAL_JAR_FILE_NAME, connectionAndMeta.getHttpConnection(), connectionAndMeta.getCompleteFileSize(),
+            AutoupdateUtil.downloadAutoupdateFile(LOCAL_JAR_FILE_NAME, connectionAndMeta,
                     TITLE);
 
             startPlugin();
@@ -109,6 +137,9 @@ public class Updater {
         content.removeAll();
         content.add(instance.getContent());
         AutoupdateUtil.trueLayout(content.getParent());
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(content);
+        topFrame.pack();
+        AutoupdateUtil.trueLayout(topFrame);
     }
 
     public JPanel getContent() {
