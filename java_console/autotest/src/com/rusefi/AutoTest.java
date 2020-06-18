@@ -85,7 +85,7 @@ public class AutoTest {
         changeRpm(900);
         // TODO: we shall get this RPM higher!
         // first let's get to expected RPM
-        assertRpmDoesNotJump(6100, 15, 30, FAIL);
+        assertRpmDoesNotJump(8000, 15, 30, FAIL);
     }
 
     private static void testV12() {
