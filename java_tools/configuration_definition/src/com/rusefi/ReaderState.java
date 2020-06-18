@@ -86,6 +86,8 @@ public class ReaderState {
                 throw new IllegalStateException("Too many options in " + tunerStudioLine + " capacity=" + totalCount + "/size=" + enums.size());
             if (enums.size() <= totalCount / 2)
                 throw new IllegalStateException("Too many bits allocated for " + enums + " capacity=" + totalCount + "/size=" + enums.size());
+            for (int i = enums.size(); i < totalCount; i++)
+                tunerStudioLine += ", \"INVALID\"";
         }
 
         state.tsCustomLine.put(name, tunerStudioLine);
