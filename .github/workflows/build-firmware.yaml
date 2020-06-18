@@ -9,6 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       # We can tell if this is a push rather than a pull request by testing for the existence of the 'pusher' object
+      # We have to do this on each step in this job rather than the whole job, or everything that needs this job will be skipped.
       if: ${{ github.event.pusher }}
       # Because we are making changes, we need to fetch all history
       with:
