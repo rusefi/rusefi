@@ -4,7 +4,6 @@ on: [push,pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     
     steps:
@@ -12,6 +11,14 @@ jobs:
       with:
         submodules: recursive
       
+    - name: Generate Configs
+      working-directory: ./firmware/
+      run: sh gen_config.sh
+
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: sh gen_live_documentation.sh
+
     - name: Build Tests
       working-directory: ./unit_tests/
       run: make -j4
