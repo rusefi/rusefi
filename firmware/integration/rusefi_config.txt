@@ -818,7 +818,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	uint8_t multisparkMaxExtraSparkCount;;"count", 1, 0, 0, 5, 0
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
-	bit useHbridges
+	bit useHbridges;+If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable
 	bit enableLaunchRetard
 	bit enableLaunchBoost
