@@ -28,6 +28,7 @@ jobs:
     - name: Commit changes
       if: ${{ github.event.pusher }}
       run: |
+        echo ${{ github.event.pusher }}
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-firmware Action"
         git commit -am "Auto-generated configs and docs" 2>&1 | grep -E '(nothing to commit|changed)'
