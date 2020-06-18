@@ -1,0 +1,38 @@
+name: Generate configs and live docs
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Generate Configs
+      working-directory: ./firmware/
+      run: sh gen_config.sh
+
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: sh gen_live_documentation.sh
+
+    # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub build-firmware Action"
+        git commit -am "Auto-generated configs and docs" 2>&1 | grep -E '(nothing to commit|changed)'
+
+    # We need to know what branch this is in order to push to the correct branch
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+
+    - name: Push configs
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ github.token }}
+        branch: ${{ steps.extract_branch.outputs.branch }}
