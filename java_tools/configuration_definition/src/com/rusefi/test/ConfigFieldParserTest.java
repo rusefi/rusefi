@@ -38,7 +38,7 @@ public class ConfigFieldParserTest {
     public void testCustomEnum() throws IOException {
         String test = "struct pid_s\n" +
                 "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
-                "custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:2], @@ego_sensor_e_enum@@\n" +
+                "custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
                 "ego_sensor_e afr_type;\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
@@ -47,7 +47,7 @@ public class ConfigFieldParserTest {
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
-        assertEquals("\tafr_type\t\t\t\t\t = bits, S32, 0, [0:2], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
+        assertEquals("\tafr_type\t\t\t\t\t = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
                 "; total TS size = 4\n", new String(writer.toCharArray()));
     }
 
