@@ -26,17 +26,19 @@ public class Updater {
     public Updater() {
         content.add(new JLabel("" + VERSION));
 
+        ImageIcon logo = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
+
+        content.add(new JLabel(logo));
+
         String version = null;
-        long localJarTimestamp = 0;
         File localFile = new File(LOCAL_JAR_FILE_NAME);
         if (localFile.exists()) {
             version = getVersion();
-
         }
 
-        JButton download = new JButton("Download latest");
+        JButton download = new JButton("Update plugin");
         if (version != null) {
-            JButton run = new JButton("Run " + version);
+            JButton run = new JButton("Run Version " + version);
             run.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

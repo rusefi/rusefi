@@ -16,6 +16,7 @@ import javax.xml.bind.JAXBException;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.jar.Attributes;
@@ -144,10 +145,18 @@ public class PluginEntry implements TsPluginBody {
      */
     @SuppressWarnings("unused")
     public static String getVersion() {
+        // all this magic below to make sure we are reading manifest of the *our* jar file not TS main jar file
+        Class clazz = PluginEntry.class;
+        String className = clazz.getSimpleName() + ".class";
+        String classPath = clazz.getResource(className).toString();
+        if (!classPath.startsWith("jar")) {
+            // Class not from JAR
+            return "Local Run";
+        }
+        String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +
+                "/META-INF/MANIFEST.MF";
         try {
-            InputStream stream = PluginEntry.class.getResourceAsStream("/META-INF/MANIFEST.MF");
-            Manifest manifest = new Manifest(stream);
-
+            Manifest manifest = new Manifest(new URL(manifestPath).openStream());
             Attributes attributes = manifest.getMainAttributes();
             System.out.println("Attributed " + attributes);
             System.out.println("Attributed " + attributes.keySet());

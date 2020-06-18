@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.*;
@@ -37,7 +38,7 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
 public class StartupFrame {
     // todo: figure out a better way to work with absolute path
     private static final String APPICON = "appicon.png";
-    private static final String LOGO = "logo.gif";
+    private static final String LOGO = "/com/rusefi/logo.gif";
     public static final String LINK_TEXT = "rusEFI (c) 2012-2020";
     private static final String URI = "http://rusefi.com/?java_console";
     // private static final int RUSEFI_ORANGE = 0xff7d03;
@@ -84,7 +85,7 @@ public class StartupFrame {
     }
 
     public static void setAppIcon(JFrame frame) {
-        ImageIcon icon = UiUtils.loadIcon(APPICON);
+        ImageIcon icon = AutoupdateUtil.loadIcon(APPICON);
         if (icon != null)
             frame.setIconImage(icon.getImage());
     }
@@ -217,7 +218,7 @@ public class StartupFrame {
     }
 
     public static JLabel createLogoLabel() {
-        ImageIcon logoIcon = UiUtils.loadIcon(LOGO);
+        ImageIcon logoIcon = AutoupdateUtil.loadIcon(LOGO);
         if (logoIcon == null)
             return null;
         JLabel logo = new JLabel(logoIcon);
@@ -272,7 +273,7 @@ public class StartupFrame {
     }
 
     private Component createShowDeviceManagerButton() {
-        JButton showDeviceManager = new JButton(UiUtils.loadIcon("DeviceManager.png"));
+        JButton showDeviceManager = new JButton(AutoupdateUtil.loadIcon("DeviceManager.png"));
         showDeviceManager.setMargin(new Insets(0, 0, 0, 0));
         showDeviceManager.setToolTipText("Show Device Manager");
         showDeviceManager.addActionListener(event -> {

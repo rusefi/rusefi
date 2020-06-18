@@ -94,6 +94,15 @@ public class AutoupdateUtil {
         return file.length() == completeFileSize && file.lastModified() == lastModified;
     }
 
+    public static ImageIcon loadIcon(String strPath) {
+        URL imgURL = AutoupdateUtil.class.getResource(strPath);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL);
+        } else {
+            return null;
+        }
+    }
+
     public static class ConnectionAndMeta {
         private String zipFileName;
         private HttpURLConnection httpConnection;
