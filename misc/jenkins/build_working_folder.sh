@@ -24,7 +24,7 @@ ls -l $FOLDER
 wget https://rusefi.com/build_server/st_files/silent_st_drivers.exe -P $DRIVERS_FOLDER
 [ -e $DRIVERS_FOLDER/silent_st_drivers.exe ] || (echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers.exe"; exit 1)
 
-if [ $INI_FILE_OVERRIDE = "no" ]; then
+if [ "$INI_FILE_OVERRIDE" = "no" ]; then
     INI_FILE_OVERRIDE="rusefi.ini"
     echo "$SCRIPT_NAME: N/a ini_file_override specified"
 fi
@@ -40,7 +40,7 @@ if [ -z $RUSEFI_CONSOLE_SETTINGS ]; then
 else
   echo "Using rusefi_console_settings [$RUSEFI_CONSOLE_SETTINGS]"
   cp $RUSEFI_CONSOLE_SETTINGS $CONSOLE_FOLDER
-}
+fi
 
 cp java_console/rusefi_autoupdate.jar     $CONSOLE_FOLDER
 cp java_console_binary/rusefi_console.jar $CONSOLE_FOLDER
