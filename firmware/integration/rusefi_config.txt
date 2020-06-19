@@ -520,7 +520,7 @@ adc_channel_e vbattAdcChannel;+This is the processor input pin that the battery 
 adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined. 
 	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far\nset_analog_input_pin tps2 X
 
-	int unusedValueHere;
+	int unusedAt516;
 	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
@@ -670,7 +670,10 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 pin_input_mode_e throttlePedalUpPinMode;
 	uint8_t unused711;
 
-	int[4] unusedAt712;
+	int unusedAt712;
+	int unusedAt716;
+	int unusedAt720;
+	int unusedAt724;
 
 	uint32_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs",      1,      0,       0,1000000,      0
 
