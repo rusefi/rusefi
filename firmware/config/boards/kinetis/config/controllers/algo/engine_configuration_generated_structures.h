@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Jun 14 17:00:22 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri Jun 19 09:31:15 EDT 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1005,7 +1005,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 516
 	 */
-	int unusedValueHere;
+	int unusedAt516;
 	/**
 	 * offset 520
 	 */
@@ -1320,7 +1320,19 @@ struct engine_configuration_s {
 	/**
 	 * offset 712
 	 */
-	int unusedAt712[4];
+	int unusedAt712;
+	/**
+	 * offset 716
+	 */
+	int unusedAt716;
+	/**
+	 * offset 720
+	 */
+	int unusedAt720;
+	/**
+	 * offset 724
+	 */
+	int unusedAt724;
 	/**
 	 * Secondary TTL channel baud rate
 	 * offset 728
@@ -1708,6 +1720,7 @@ struct engine_configuration_s {
 	offset 976 bit 1 */
 	bool todoClutchDownPinInverted : 1;
 	/**
+	 * If enabled we use two H-bridges to drive stepper idle air valve
 	offset 976 bit 2 */
 	bool useHbridges : 1;
 	/**
@@ -1794,10 +1807,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_280_30 : 1;
+	bool unusedBit_283_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_280_31 : 1;
+	bool unusedBit_283_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -3508,4 +3521,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Sun Jun 14 17:00:22 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri Jun 19 09:31:15 EDT 2020

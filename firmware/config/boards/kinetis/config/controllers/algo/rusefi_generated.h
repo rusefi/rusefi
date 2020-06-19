@@ -293,7 +293,7 @@
 #define dizzySparkOutputPin_offset 2226
 #define dizzySparkOutputPinMode_offset 2227
 #define DWELL_CURVE_SIZE 8
-#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
+#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"
 #define egoValueShift_offset 2216
 #define EGT_CHANNEL_COUNT 8
 #define electronicThrottlePin1Mode_offset 672
@@ -304,7 +304,7 @@
 #define enableLaunchBoost_offset 976
 #define enableLaunchRetard_offset 976
 #define enableVerboseCanTx_offset 744
-#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge"
+#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge", "INVALID", "INVALID"
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_GM "GM"
 #define ENGINE_MAKE_LADA "Lada"
@@ -923,7 +923,7 @@
 #define mapHighValueVoltage_offset 2212
 #define mapLowValueVoltage_offset 2208
 #define mapMinBufferLength_offset 812
-#define mass_storage_e_enum "Auto", "Always", "Never"
+#define mass_storage_e_enum "Auto", "Always", "Never", "INVALID"
 #define max31855_cs1_offset 796
 #define max31855_cs2_offset 797
 #define max31855_cs3_offset 798
@@ -1333,7 +1333,11 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_former_warmup_target_afr_offset 2112
+#define unusedAt516_offset 516
 #define unusedAt712_offset 712
+#define unusedAt716_offset 716
+#define unusedAt720_offset 720
+#define unusedAt724_offset 724
 #define unusedAtOldBoardConfigurationEnd_offset 1200
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_11_offset 976
@@ -1355,8 +1359,8 @@
 #define unusedBit_251_27_offset 976
 #define unusedBit_251_28_offset 976
 #define unusedBit_251_29_offset 976
-#define unusedBit_280_30_offset 976
-#define unusedBit_280_31_offset 976
+#define unusedBit_283_30_offset 976
+#define unusedBit_283_31_offset 976
 #define unusedBit_34_31_offset 76
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHere_offset 761
@@ -1367,7 +1371,6 @@
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding7_offset 4005
 #define unusedSpiPadding8_offset 4009
-#define unusedValueHere_offset 516
 #define unusuedsw_offset 4020
 #define unusuedvref_offset 4016
 #define useAdvanceCorrectionsForCranking_offset 1476
