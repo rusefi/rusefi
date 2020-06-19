@@ -32,6 +32,9 @@ sh gen_config_board.sh frankenso
 sh gen_config_board.sh prometheus
 [ $? -eq 0 ] || (echo "ERROR generating prometheus"; exit $?)
 
+sh gen_config_board.sh prometeus
+[ $? -eq 0 ] || (echo "ERROR generating prometeus"; exit $?)
+
 #cd config\boards\kinetis\config
 #!gen_config.bat
 

@@ -1333,7 +1333,11 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_former_warmup_target_afr_offset 2112
+#define unusedAt516_offset 516
 #define unusedAt712_offset 712
+#define unusedAt716_offset 716
+#define unusedAt720_offset 720
+#define unusedAt724_offset 724
 #define unusedAtOldBoardConfigurationEnd_offset 1200
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_11_offset 976
@@ -1355,8 +1359,8 @@
 #define unusedBit_251_27_offset 976
 #define unusedBit_251_28_offset 976
 #define unusedBit_251_29_offset 976
-#define unusedBit_280_30_offset 976
-#define unusedBit_280_31_offset 976
+#define unusedBit_283_30_offset 976
+#define unusedBit_283_31_offset 976
 #define unusedBit_34_31_offset 76
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHere_offset 761
@@ -1367,7 +1371,6 @@
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding7_offset 4005
 #define unusedSpiPadding8_offset 4009
-#define unusedValueHere_offset 516
 #define unusuedsw_offset 4020
 #define unusuedvref_offset 4016
 #define useAdvanceCorrectionsForCranking_offset 1476
