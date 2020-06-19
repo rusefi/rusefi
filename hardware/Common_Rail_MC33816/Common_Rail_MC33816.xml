@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>C:\Users\Owner\Desktop\rusefi_GH_PLEASEdoNOTforget20\hardware\Common_Rail_MC33816\Common_Rail_MC33816.sch</source>
-    <date>6/18/2020 9:41:11 PM</date>
+    <date>6/18/2020 10:51:57 PM</date>
     <tool>Eeschema (5.1.5)-3</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -49,7 +49,7 @@
       <value>BUK9230-100B</value>
       <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
       <fields>
-        <field name="LCSC">C194346</field>
+        <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
         <field name="VEND1,VEND1#">DIGI,1727-4708-1-ND</field>
         <field name="VEND2,VEND2#">,</field>
@@ -62,7 +62,7 @@
       <value>BUK9230-100B</value>
       <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
       <fields>
-        <field name="LCSC">C194346</field>
+        <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
         <field name="VEND1,VEND1#">DIGI,1727-4708-1-ND</field>
         <field name="VEND2,VEND2#">,</field>
@@ -166,7 +166,7 @@
       <value>BUK9230-100B</value>
       <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
       <fields>
-        <field name="LCSC">C194346</field>
+        <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
         <field name="VEND1,VEND1#">DIGI,1727-4708-1-ND</field>
         <field name="VEND2,VEND2#">,</field>
@@ -244,7 +244,7 @@
       <value>BUK9230-100B</value>
       <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
       <fields>
-        <field name="LCSC">C194346</field>
+        <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
         <field name="VEND1,VEND1#">DIGI,1727-4708-1-ND</field>
         <field name="VEND2,VEND2#">,</field>
@@ -320,7 +320,7 @@
       <value>BUK9230-100B</value>
       <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
       <fields>
-        <field name="LCSC">C194346</field>
+        <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
         <field name="VEND1,VEND1#">DIGI,1727-4708-1-ND</field>
         <field name="VEND2,VEND2#">,</field>
@@ -333,7 +333,7 @@
       <value>BUK9230-100B</value>
       <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
       <fields>
-        <field name="LCSC">C194346</field>
+        <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
         <field name="VEND1,VEND1#">DIGI,1727-4708-1-ND</field>
         <field name="VEND2,VEND2#">,</field>
@@ -561,7 +561,7 @@
       <value>BUK9230-100B</value>
       <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
       <fields>
-        <field name="LCSC">C194346</field>
+        <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
         <field name="VEND1,VEND1#">DIGI,1727-4708-1-ND</field>
         <field name="VEND2,VEND2#">,</field>
@@ -897,7 +897,7 @@
       <value>BUK9230-100B</value>
       <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
       <fields>
-        <field name="LCSC">C194346</field>
+        <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
         <field name="VEND1,VEND1#">DIGI,1727-4708-1-ND</field>
         <field name="VEND2,VEND2#">,</field>
@@ -910,7 +910,7 @@
       <value>BUK9230-100B</value>
       <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
       <fields>
-        <field name="LCSC">C194346</field>
+        <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
         <field name="VEND1,VEND1#">DIGI,1727-4708-1-ND</field>
         <field name="VEND2,VEND2#">,</field>
@@ -1014,7 +1014,7 @@
       <value>BUK9230-100B</value>
       <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
       <fields>
-        <field name="LCSC">C194346</field>
+        <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
         <field name="VEND1,VEND1#">DIGI,1727-4708-1-ND</field>
         <field name="VEND2,VEND2#">,</field>
@@ -1079,7 +1079,7 @@
       <value>BUK9230-100B</value>
       <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
       <fields>
-        <field name="LCSC">C194346</field>
+        <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
         <field name="VEND1,VEND1#">DIGI,1727-4708-1-ND</field>
         <field name="VEND2,VEND2#">,</field>
