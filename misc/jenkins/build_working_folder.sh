@@ -40,7 +40,7 @@ if [ -z $RUSEFI_CONSOLE_SETTINGS ]; then
 else
   echo "Using rusefi_console_settings [$RUSEFI_CONSOLE_SETTINGS]"
   cp $RUSEFI_CONSOLE_SETTINGS $CONSOLE_FOLDER
-)
+}
 
 cp java_console/rusefi_autoupdate.jar     $CONSOLE_FOLDER
 cp java_console_binary/rusefi_console.jar $CONSOLE_FOLDER
