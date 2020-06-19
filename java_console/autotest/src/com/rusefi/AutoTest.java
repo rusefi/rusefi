@@ -84,7 +84,7 @@ public class AutoTest {
         setEngineType(32);
         changeRpm(900);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(12000, 15, 30, FAIL);
+        assertRpmDoesNotJump(20000, 15, 30, FAIL);
     }
 
     private static void testV12() {
