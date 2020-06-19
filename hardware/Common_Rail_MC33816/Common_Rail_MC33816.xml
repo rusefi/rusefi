@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>C:\Users\Owner\Desktop\rusefi_GH_PLEASEdoNOTforget20\hardware\Common_Rail_MC33816\Common_Rail_MC33816.sch</source>
-    <date>6/18/2020 10:51:57 PM</date>
+    <source>C:\Users\setup\Desktop\rusefi_GH_PLEASEdoNOTforget20\hardware\Common_Rail_MC33816\Common_Rail_MC33816.sch</source>
+    <date>6/19/2020 1:13:53 PM</date>
     <tool>Eeschema (5.1.5)-3</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -47,7 +47,7 @@
     </comp>
     <comp ref="Q6">
       <value>BUK9230-100B</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
@@ -60,7 +60,7 @@
     </comp>
     <comp ref="Q5">
       <value>BUK9230-100B</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
@@ -164,7 +164,7 @@
     </comp>
     <comp ref="Q9">
       <value>BUK9230-100B</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
@@ -242,7 +242,7 @@
     </comp>
     <comp ref="Q10">
       <value>BUK9230-100B</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
@@ -306,7 +306,7 @@
     </comp>
     <comp ref="D9">
       <value>FFD10UP20S</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="MFG,MFG#">ONSEMI,FFD10UP20S</field>
         <field name="VEND1,VEND1#">DIGI,FFD10UP20SCT-ND</field>
@@ -318,7 +318,7 @@
     </comp>
     <comp ref="Q11">
       <value>BUK9230-100B</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
@@ -331,7 +331,7 @@
     </comp>
     <comp ref="Q2">
       <value>BUK9230-100B</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
@@ -370,7 +370,7 @@
     </comp>
     <comp ref="R9">
       <value>5.1R</value>
-      <footprint>rusefi_lib:R_0805</footprint>
+      <footprint>R_0805</footprint>
       <fields>
         <field name="LCSC">C247080</field>
         <field name="MFG,MFG#">Stackpole,RMCF0805JT5R10</field>
@@ -396,7 +396,7 @@
     </comp>
     <comp ref="R10">
       <value>5.1R</value>
-      <footprint>rusefi_lib:R_0805</footprint>
+      <footprint>R_0805</footprint>
       <fields>
         <field name="LCSC">C247080</field>
         <field name="MFG,MFG#">Stackpole,RMCF0805JT5R10</field>
@@ -437,6 +437,7 @@
       <value>0R010</value>
       <footprint>Resistors_SMD:R_1206_HandSoldering</footprint>
       <fields>
+        <field name="LCSC">C76294</field>
         <field name="MFG,MFG#">Ohmite,MCS1632R010FER</field>
         <field name="VEND1,VEND1#">DIGI,MCS1632R010FERCT-ND</field>
         <field name="VEND2,VEND2#">,</field>
@@ -559,7 +560,7 @@
     </comp>
     <comp ref="Q12">
       <value>BUK9230-100B</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
@@ -895,7 +896,7 @@
     </comp>
     <comp ref="Q4">
       <value>BUK9230-100B</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
@@ -908,7 +909,7 @@
     </comp>
     <comp ref="Q3">
       <value>BUK9230-100B</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
@@ -1012,7 +1013,7 @@
     </comp>
     <comp ref="Q8">
       <value>BUK9230-100B</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
@@ -1077,7 +1078,7 @@
     </comp>
     <comp ref="Q7">
       <value>BUK9230-100B</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C67277 </field>
         <field name="MFG,MFG#">Nexperia,BUK9230-100B</field>
@@ -1274,7 +1275,7 @@
     </comp>
     <comp ref="D11">
       <value>SBR10200CTL</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C135494</field>
         <field name="MFG,MFG#">Diodes,SBR10200CTL-13</field>
@@ -1287,7 +1288,7 @@
     </comp>
     <comp ref="D10">
       <value>SBR10200CTL</value>
-      <footprint>TO_SOT_Packages_SMD:TO-252-2Lead</footprint>
+      <footprint>Package_TO_SOT_SMD:TO-252-2</footprint>
       <fields>
         <field name="LCSC">C135494</field>
         <field name="MFG,MFG#">Diodes,SBR10200CTL-13</field>
@@ -2276,7 +2277,7 @@
       <uri>C:\Program Files\KiCad\share\kicad\library/Oscillator.lib</uri>
     </library>
     <library logical="mc33816">
-      <uri>C:\Users\Owner\Desktop\rusefi_GH_PLEASEdoNOTforget20\hardware\Common_Rail_MC33816/../rusefi_lib/mc33816.lib</uri>
+      <uri>C:\Users\setup\Desktop\rusefi_GH_PLEASEdoNOTforget20\hardware\Common_Rail_MC33816/../rusefi_lib/mc33816.lib</uri>
     </library>
   </libraries>
   <nets>
