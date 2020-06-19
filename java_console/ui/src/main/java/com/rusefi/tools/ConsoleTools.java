@@ -3,6 +3,7 @@ package com.rusefi.tools;
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
@@ -34,6 +35,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
+import static com.rusefi.binaryprotocol.IoHelper.getCrc32;
 
 public class ConsoleTools {
     public static final String SET_AUTH_TOKEN = "set_auth_token";
@@ -50,6 +52,9 @@ public class ConsoleTools {
         registerTool("functional_test", ConsoleTools::runFunctionalTest, "NOT A USER TOOL. Development tool related to functional testing");
         registerTool("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");
 
+        registerTool("get_image_tune_crc", ConsoleTools::calcBinaryImageTuneCrc, "Calculate tune CRC for given binary tune");
+        registerTool("get_xml_tune_crc", ConsoleTools::calcXmlImageTuneCrc, "Calculate tune CRC for given XML tune");
+
         registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
         registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
@@ -64,6 +69,26 @@ public class ConsoleTools {
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
         registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
         registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+    }
+
+    private static void calcXmlImageTuneCrc(String[] args) throws Exception {
+        String fileName = args[1];
+        Msq msq = Msq.readTune(fileName);
+        ConfigurationImage image = msq.asImage(IniFileModel.getInstance());
+        printCrc(image);
+    }
+
+    private static void calcBinaryImageTuneCrc(String[] args) throws IOException {
+        String fileName = args[1];
+        ConfigurationImage image = ConfigurationImageFile.readFromFile(fileName);
+        printCrc(image);
+    }
+
+    private static void printCrc(ConfigurationImage image) {
+        for (int i = 0; i < Fields.ERROR_BUFFER_SIZE; i++)
+            image.getContent()[Fields.warning_message_offset + i] = 0;
+        int crc16 = getCrc32(image.getContent()) & 0xFFFF;
+        System.out.println("tune_CRC16=" + crc16);
     }
 
     private static void lightUI(String[] strings) {

@@ -88,7 +88,7 @@ public class PlainTextSensorLog implements SensorLog {
         try {
             logFile.write(getSecondsSinceFileStart() + "\t");
             for (Sensor sensor : SensorLogger.SENSORS) {
-                logFile.write(SensorCentral.getInstance().getValue(sensor) + "\t");
+                logFile.write( sensor.getLogValue(SensorCentral.getInstance().getValue(sensor)) + "\t");
             }
             logFile.write("\r\n");
             logFile.flush();
