@@ -1424,7 +1424,12 @@ void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0;i < CLT_CURVE_SIZE;i++) {
 		engineConfiguration->cltIdleRpmBins[i] = fixNegativeZero(engineConfiguration->cltIdleRpmBins[i]);
 	}
-
+	// having zeros in unsued fields is important for REO CRC match
+	engineConfiguration->unusedAt516 = 0;
+	engineConfiguration->unusedAt712 = 0;
+	engineConfiguration->unusedAt716 = 0;
+	engineConfiguration->unusedAt720 = 0;
+	engineConfiguration->unusedAt724 = 0;
 }
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
