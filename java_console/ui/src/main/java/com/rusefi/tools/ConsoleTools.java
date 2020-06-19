@@ -71,14 +71,22 @@ public class ConsoleTools {
         registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
     }
 
-    private static void calcXmlImageTuneCrc(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
+        System.out.println(Arrays.toString(new File(".").list()));
+        System.setProperty("ini_file_path", "../firmware/tunerstudio");
+        calcBinaryImageTuneCrc(null, "current_configuration.rusefi_binary");
+
+        calcXmlImageTuneCrc(null, "CurrentTune.msq");
+    }
+
+    private static void calcXmlImageTuneCrc(String... args) throws Exception {
         String fileName = args[1];
         Msq msq = Msq.readTune(fileName);
         ConfigurationImage image = msq.asImage(IniFileModel.getInstance());
         printCrc(image);
     }
 
-    private static void calcBinaryImageTuneCrc(String[] args) throws IOException {
+    private static void calcBinaryImageTuneCrc(String... args) throws IOException {
         String fileName = args[1];
         ConfigurationImage image = ConfigurationImageFile.readFromFile(fileName);
         printCrc(image);
@@ -87,7 +95,10 @@ public class ConsoleTools {
     private static void printCrc(ConfigurationImage image) {
         for (int i = 0; i < Fields.ERROR_BUFFER_SIZE; i++)
             image.getContent()[Fields.warning_message_offset + i] = 0;
-        int crc16 = getCrc32(image.getContent()) & 0xFFFF;
+        int crc32 = getCrc32(image.getContent());
+        int crc16 = crc32 & 0xFFFF;
+        System.out.printf("tune_CRC32_hex=0x%x\n", crc32);
+        System.out.printf("tune_CRC16_hex=0x%x\n", crc16);
         System.out.println("tune_CRC16=" + crc16);
     }
 

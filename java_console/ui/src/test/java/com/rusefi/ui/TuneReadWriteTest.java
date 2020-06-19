@@ -37,7 +37,6 @@ public class TuneReadWriteTest {
         ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
 
         int mismatchCounter = compareImages(tsBinaryData, fileBinaryData);
-        // todo: why one byte mismatch? since it's in floats I kind of do not care, floats are weird
         assertEquals(0, mismatchCounter);
     }
 
