@@ -29,6 +29,6 @@ for BOARD in "microrusefi" "frankenso" "prometheus" "proteus"; do
 done
 
 cd config/boards/kinetis/config
-sh gen_config.bat
+sh gen_config.sh
 
 exit 0
