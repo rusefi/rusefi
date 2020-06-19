@@ -86,6 +86,8 @@ float expf_taylor(float x);
 
 #include <cstddef>
 
+#define IS_NEGATIVE_ZERO(value) (std::signbit(value) && value==0)
+
 // C++ helpers go here
 namespace efi
 {
