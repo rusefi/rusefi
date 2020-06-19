@@ -12,10 +12,10 @@ EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\"default_no_assert\" -DEFI_ENABLE_ASSERTS=F
 make -j4 DEBUG_LEVEL_OPT='-O2'
 EXTRA_PARAMS=""
 
-# mv build\rusefi.elf deliver\rusefi_no_asserts.elf
-mv build\rusefi.bin deliver\rusefi_no_asserts.bin
+# mv build/rusefi.elf deliver/rusefi_no_asserts.elf
+mv build/rusefi.bin deliver/rusefi_no_asserts.bin
 # this file is needed for DFU generation
-mv build\rusefi.hex deliver\rusefi_no_asserts.hex
+mv build/rusefi.hex deliver/rusefi_no_asserts.hex
 echo "Release compilation results 1/2"
 echo "TIMESTAMP $(date "+%D %T.%2N")"
 ls -l build
@@ -27,11 +27,11 @@ EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\"default\""
 make -j4
 EXTRA_PARAMS=""
 
-mv build\rusefi.elf deliver\rusefi.elf
+mv build/rusefi.elf deliver/rusefi.elf
 # this file is needed for DFU generation
-mv build\rusefi.hex deliver\rusefi.hex
+mv build/rusefi.hex deliver/rusefi.hex
 # Keeping file in place since hw_test.bat would take it from current location
-cp build\rusefi.bin deliver\rusefi.bin
+cp build/rusefi.bin deliver/rusefi.bin
 echo Debug compilation results 2/2
 echo "TIMESTAMP $(date "+%D %T.%2N")"
 ls -l build
