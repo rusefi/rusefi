@@ -11,31 +11,24 @@ rm gen_config_board.log
 
 mkdir build
 
-java $(< gen_config.conf)
+java $(< ../gen_config.conf)
 
 [ $? -eq 0 ] || (echo "ERROR generating"; exit $?)
 
 if [ -z "${TS_PATH}" ]; then
-	echo "TS_PATH not defined"
+ echo "TS_PATH not defined"
 else
-	echo "This would automatically copy latest file to 'dev' TS project at ${TS_PATH}"
-	cp -v tunerstudio/rusefi.ini $TS_PATH/dev/projectCfg/mainController.ini
-	cp -v tunerstudio/rusefi_microrusefi.ini $TS_PATH/dev_mre/projectCfg/mainController.ini
+ echo "This would automatically copy latest file to 'dev' TS project at ${TS_PATH}"
+ cp -v tunerstudio/rusefi.ini $TS_PATH/dev/projectCfg/mainController.ini
+ cp -v tunerstudio/rusefi_microrusefi.ini $TS_PATH/dev_mre/projectCfg/mainController.ini
 fi
 
-sh gen_config_board.sh microrusefi
-[ $? -eq 0 ] || (echo "ERROR generating microrusefi"; exit $?)
+for BOARD in "microrusefi" "frankenso" "prometheus" "proteus"; do
+ sh gen_config_board.sh $BOARD
+ [ $? -eq 0 ] || (echo "ERROR generating $BOARD"; exit $?)
+done
 
-sh gen_config_board.sh frankenso
-[ $? -eq 0 ] || (echo "ERROR generating frankenso"; exit $?)
-
-sh gen_config_board.sh prometheus
-[ $? -eq 0 ] || (echo "ERROR generating prometheus"; exit $?)
-
-sh gen_config_board.sh prometeus
-[ $? -eq 0 ] || (echo "ERROR generating prometeus"; exit $?)
-
-#cd config\boards\kinetis\config
-#!gen_config.bat
+cd config/boards/kinetis/config
+sh gen_config.bat
 
 exit 0
