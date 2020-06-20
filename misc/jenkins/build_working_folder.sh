@@ -75,48 +75,45 @@ if [ -n $BUNDLE_NAME ]; then
 fi
 
 
-if not exist firmware/deliver/rusefi.bin echo %script_name%: rusefi.bin not found
-if not exist firmware/deliver/rusefi.bin exit -1
+[ -e firmware/deliver/rusefi.bin ] || (echo "$SCRIPT_NAME: rusefi.bin not found"; exit -1)
 
 cd temp
 
 
 echo "Building bundle"
 pwd
-zip -r %full_bundle_file% *
-IF NOT ERRORLEVEL 0 echo %script_name%: ERROR INVOKING zip
-IF NOT ERRORLEVEL 0 EXIT /B 1
+zip -r $FULL_BUNDLE_FILE *
+[ $? == 0 ] || (echo "$SCRIPT_NAME: ERROR INVOKING zip"); exit 1)
 
-echo %script_name%: Bundle %full_bundle_file% ready
-ls -l %full_bundle_file%
+echo "$SCRIPT_FILE: Bundle $FULL_BUNDLE_FILE ready"
+ls -l $FULL_BUNDLE_FILE
 
-if not exist %full_bundle_file% echo %script_name%: ERROR not found %full_bundle_file%
-if not exist %full_bundle_file% EXIT /B 1
+[ -e $FULL_BUNDLE_FILE ] || (echo "$SCRIPT_NAME: ERROR not found $FULL_BUNDLE_FILE"; exit 1)
 
-echo "%script_name%: Uploading full bundle"
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% . %full_bundle_file%
+echo "$SCRIPT_NAME: Uploading full bundle"
+ncftpput -u $RUSEFI_BUILD_FTP_USER -p $RUSEFI_BUILD_FTP_PASS $RUSEFI_FTP_SERVER . $FULL_BUNDLE_FILE
 
 cd ..
 
 mkdir artifacts
-mv temp/%full_bundle_file% artifacts
+mv temp/$FULL_BUNDLE_FILE artifacts
 
-echo Removing more static content
-rm -rf %console_folder%/openocd
-rm -rf %console_folder%/DfuSe
-rm -rf %console_folder%/rusefi_simulator.exe
+echo "Removing more static content"
+rm -rf $CONSOLE_FOLDER/openocd
+rm -rf $CONSOLE_FOLDER/DfuSe
+rm -rf $CONSOLE_FOLDER/rusefi_simulator.exe
 
-rm -rf %drivers_folder%
+rm -rf $CONSOLE_FOLDER
 
-rem for autoupdate we do not want the unique folder name with timestamp
-cd %folder%
-zip -r ../%update_bundle_file% *
+# for autoupdate we do not want the unique folder name with timestamp
+cd $FOLDER
+zip -r ../$UPDATE_BUNDLE_FILE *
 cd ..
-ls -l %update_bundle_file%
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% autoupdate %update_bundle_file%
+ls -l $UPDATE_BUNDLE_FILE
+ncftpput -u $RUSEFI_BUILD_FTP_USER -p $RUSEFI_BUILD_FTP_PASS $RUSEFI_FTP_SERVER autoupdate $UPDATE_BUNDLE_FILE
 cd ..
 
-echo "%script_name%: We are back in root directory"
+echo "$SCRIPT_NAME: We are back in root directory"
 
 pwd
-echo Exiting %script_name%
+echo "Exiting $SCRIPT_NAME"
