@@ -1577,6 +1577,7 @@ end_struct
 #define PROTOCOL_WA_CHANNEL_4 "input4"
 
 
+#define TS_PROTOCOL "001"
 // These commands are used by TunerStudio and the rusEfi console
 // 0x4F ochGetCommand
 #define TS_OUTPUT_COMMAND 'O'

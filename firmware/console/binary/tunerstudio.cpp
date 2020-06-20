@@ -740,7 +740,7 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		 */
 
 		tunerStudioDebug("not ignoring F");
-		sr5WriteData(tsChannel, (const uint8_t *) PROTOCOL, strlen(PROTOCOL));
+		sr5WriteData(tsChannel, (const uint8_t *) TS_PROTOCOL, strlen(TS_PROTOCOL));
 		return true;
 	} else {
 		// This wasn't a valid command
