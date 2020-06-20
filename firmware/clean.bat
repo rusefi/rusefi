@@ -1,3 +1,8 @@
-echo Entering firmware\clean.bat
-rd /s /q .dep
-rd /s /q build
+@echo off
+sh.exe clean.sh || (
+  if exist C:\cygwin64 (
+    C:\cygwin64\bin\sh.exe clean.sh
+  ) else (
+    if exist C:\cygwin ( C:\cygwin\bin\sh.exe clean.sh )
+  )
+)
