@@ -384,6 +384,7 @@ void canDashboardBMWE90()
 			msg[5] = (timp.tm_year + 1900) & 0xFF;
 			msg[6] = ((timp.tm_year + 1900) >> 8) | 0xF0;
 			msg[7] = 0xF2;
+			cluster_time_set = 1;
 		}
 	}
 }
