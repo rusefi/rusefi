@@ -17,6 +17,7 @@
 #include "sensor.h"
 #include "allsensors.h"
 #include "vehicle_speed.h"
+#include "rtc_helper.h"
 
 EXTERN_ENGINE;
 
@@ -61,6 +62,7 @@ EXTERN_ENGINE;
 #define E90_GEAR 0x1D2
 #define E90_FUEL 0x349
 #define E90_EBRAKE 0x34F
+#define E90_TIME 0x39E
 
 static uint8_t rpmcounter;
 static uint16_t e90msgcounter;
@@ -71,6 +73,7 @@ static uint8_t mph_a, mph_2a, mph_last, tmp_cnt, gear_cnt;
 static uint16_t mph_counter = 0xF000;
 static time_msecs_t mph_timer;
 static time_msecs_t mph_ctr;
+static bool cluster_time_set;
 
 constexpr uint8_t e90_temp_offset = 49;
 
@@ -365,6 +368,22 @@ void canDashboardBMWE90()
 			msg[5] = mph_2a >> 8;
 			msg[6] = mph_counter & 0xFF;
 			msg[7] = (mph_counter >> 8) | 0xF0;
+		}
+	}
+
+	{
+		if (!cluster_time_set) {
+			struct tm timp;
+			date_get_tm(&timp);
+			CanTxMessage msg(E90_TIME, 8);
+			msg[0] = timp.tm_hour;
+			msg[1] = timp.tm_min;
+			msg[2] = timp.tm_sec;
+			msg[3] = timp.tm_mday;
+			msg[4] = (((timp.tm_mon + 1) << 4) | 0x0F);
+			msg[5] = (timp.tm_year + 1900) & 0xFF;
+			msg[6] = ((timp.tm_year + 1900) >> 8) | 0xF0;
+			msg[7] = 0xF2;
 		}
 	}
 }
