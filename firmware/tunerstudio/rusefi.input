@@ -385,6 +385,8 @@ enable2ndByteCanID = false
 	gppwm4_load = {(gppwm4_loadAxis == 0) ? TPSValue : ((gppwm4_loadAxis == 1) ? MAPValue : ((gppwm4_loadAxis == 2) ? coolant : intake))}
 
 [PcVariables]
+	tuneCrcPcVariable = continuousChannelValue, tuneCrc16
+
     wueAfrTargetOffset = array, S16, [ 16], ":1",   0.1, 0.0, -3.0, 3.0, 1;
     wueAnalRecommend   = array, U08, [ 16], "%",  1.00, 0.0, 100, 255.00, 0
 
