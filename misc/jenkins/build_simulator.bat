@@ -1,12 +1,8 @@
-echo "TIMESTAMP %date% %time% Building rusefi simulator"
-pwd
-cd simulator
-gcc -v
-make -v
-mkdir out
-rm -rf build
-rm -rf .dep
-call compile.bat
-cd ..
-if not exist simulator/build/rusefi_simulator.exe echo SIMULATOR COMPILATION FAILED
-if not exist simulator/build/rusefi_simulator.exe exit -1
+@echo off
+sh.exe build_simulator.sh || (
+  if exist C:\cygwin64 (
+    C:\cygwin64\bin\sh.exe build_simulator.sh
+  ) else (
+    if exist C:\cygwin ( C:\cygwin\bin\sh.exe build_simulator.sh )
+  )
+)
