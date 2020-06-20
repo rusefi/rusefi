@@ -1289,6 +1289,7 @@
 #define TS_PAGE_COMMAND 'P'
 #define TS_PERF_TRACE_BEGIN 'r'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
+#define TS_PROTOCOL "001"
 #define TS_READ_COMMAND 'R'
 #define TS_SET_LOGGER_SWITCH 'l'
 #define ts_show_analog_divider true

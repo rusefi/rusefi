@@ -14,8 +14,6 @@
 #include "pin_repository.h"
 #endif
 
-#define PROTOCOL  "001"
-
 #define TS_RESPONSE_OK 0x00
 #define TS_RESPONSE_BURN_OK 0x04
 #define TS_RESPONSE_COMMAND_OK 0x07
