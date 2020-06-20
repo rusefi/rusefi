@@ -1,3 +1,5 @@
+#!/bin/sh
+
 SCRIPT_NAME="prepare_bundle.sh"
 echo "Entering $SCRIPT_NAME with $BUNDLE_NAME"
 echo "RUSEFI_BUILD_FTP_USER=$RUSEFI_BUILD_FTP_USER"

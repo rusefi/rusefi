@@ -1,3 +1,5 @@
+#!/bin/sh
+
 echo "TIMESTAMP $(date "+%D %T.%2N") Building rusefi simulator"
 pwd
 cd simulator

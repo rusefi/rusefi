@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # for example 'proteus'
 COMPILE_FOLDER="$1"
 
