@@ -1,5 +1,5 @@
 //
-// was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt
+// was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt
 //
 
 #define absoluteFuelPressure_offset 76
@@ -38,6 +38,7 @@
 #define afterstartHoldTime_offset 6152
 #define alFIn_offset 4024
 #define alignEngineSnifferAtTDC_offset 744
+#define alignmentFill_at_2109_offset 2109
 #define alignmentFill_at_4514_offset 4514
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
@@ -177,7 +178,9 @@
 #define camInputs2_offset 557
 #define camInputs3_offset 558
 #define camInputs4_offset 559
+#define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
+#define canBaudRate_offset 2108
 #define canNbcType_offset 480
 #define canReadEnabled_offset 1464
 #define canRxPin_offset 709
@@ -290,7 +293,7 @@
 #define dizzySparkOutputPin_offset 2226
 #define dizzySparkOutputPinMode_offset 2227
 #define DWELL_CURVE_SIZE 8
-#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
+#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"
 #define egoValueShift_offset 2216
 #define EGT_CHANNEL_COUNT 8
 #define electronicThrottlePin1Mode_offset 672
@@ -301,7 +304,7 @@
 #define enableLaunchBoost_offset 976
 #define enableLaunchRetard_offset 976
 #define enableVerboseCanTx_offset 744
-#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge"
+#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge", "INVALID", "INVALID"
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_GM "GM"
 #define ENGINE_MAKE_LADA "Lada"
@@ -526,6 +529,7 @@
 #define GAUGE_NAME_AIR_FLOW "MAF air flow"
 #define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
+#define GAUGE_NAME_CLT "CLT"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
 #define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
@@ -542,7 +546,7 @@
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
-#define GAUGE_NAME_ETB_DUTY "ETB duty cycle"
+#define GAUGE_NAME_ETB_DUTY "ETB Duty"
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
 #define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure correction"
@@ -562,13 +566,20 @@
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
 #define GAUGE_NAME_IAC "Idle Air Valve"
+#define GAUGE_NAME_IAT "IAT"
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
+#define GAUGE_NAME_MAF "MAF"
+#define GAUGE_NAME_MAP "MAP"
+#define GAUGE_NAME_RPM "RPM"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
 #define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
+#define GAUGE_NAME_TIME "Time"
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
+#define GAUGE_NAME_TPS "TPS"
+#define GAUGE_NAME_TRG_ERR "trg err"
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_VVS "Vehicle Speed"
@@ -912,7 +923,7 @@
 #define mapHighValueVoltage_offset 2212
 #define mapLowValueVoltage_offset 2208
 #define mapMinBufferLength_offset 812
-#define mass_storage_e_enum "Auto", "Always", "Never"
+#define mass_storage_e_enum "Auto", "Always", "Never", "INVALID"
 #define max31855_cs1_offset 796
 #define max31855_cs2_offset 797
 #define max31855_cs3_offset 798
@@ -942,6 +953,8 @@
 #define mc33_t_peak_off_offset 4504
 #define mc33_t_peak_tot_offset 4506
 #define measureMapOnlyInOneCylinder_offset 744
+#define MLQ_FIELD_HEADER_SIZE 55
+#define MLQ_HEADER_SIZE 22
 #define MOCK_AFR_COMMAND "mock_afr_voltage"
 #define MOCK_CLT_COMMAND "mock_clt_voltage"
 #define MOCK_IAT_COMMAND "mock_iat_voltage"
@@ -1319,8 +1332,12 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
-#define unused_former_warmup_target_afr_offset 2108
+#define unused_former_warmup_target_afr_offset 2112
+#define unusedAt516_offset 516
 #define unusedAt712_offset 712
+#define unusedAt716_offset 716
+#define unusedAt720_offset 720
+#define unusedAt724_offset 724
 #define unusedAtOldBoardConfigurationEnd_offset 1200
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_11_offset 976
@@ -1342,8 +1359,8 @@
 #define unusedBit_251_27_offset 976
 #define unusedBit_251_28_offset 976
 #define unusedBit_251_29_offset 976
-#define unusedBit_280_30_offset 976
-#define unusedBit_280_31_offset 976
+#define unusedBit_283_30_offset 976
+#define unusedBit_283_31_offset 976
 #define unusedBit_34_31_offset 76
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHere_offset 761
@@ -1354,7 +1371,6 @@
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding7_offset 4005
 #define unusedSpiPadding8_offset 4009
-#define unusedValueHere_offset 516
 #define unusuedsw_offset 4020
 #define unusuedvref_offset 4016
 #define useAdvanceCorrectionsForCranking_offset 1476

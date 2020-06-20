@@ -14,18 +14,17 @@ import org.apache.http.util.EntityUtils;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBException;
-import java.io.*;
-
-import static com.rusefi.ui.AuthTokenPanel.TOKEN_WARNING;
+import java.io.File;
+import java.io.IOException;
 
 public class Online {
     private static final String url = "https://rusefi.com/online/upload.php";
 
-    public static void upload(File xmlFile, String authTokenValue) throws IOException {
+    public static void upload(File fileName, String authTokenValue) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(url);
 
-        FileBody uploadFilePart = new FileBody(xmlFile);
+        FileBody uploadFilePart = new FileBody(fileName);
         MultipartEntity reqEntity = new MultipartEntity();
         reqEntity.addPart("upload-file", uploadFilePart);
         reqEntity.addPart("rusefi_token", new StringBody(authTokenValue));
@@ -43,8 +42,8 @@ public class Online {
 
     public static void uploadTune(Msq tune, AuthTokenPanel authTokenPanel, JComponent parent) {
         String authToken = authTokenPanel.getToken();
-        if (authToken.contains(TOKEN_WARNING)) {
-            JOptionPane.showMessageDialog(parent, "Does not work without auth token");
+        if (!authTokenPanel.hasToken()) {
+            authTokenPanel.showError(parent);
             return;
         }
         new Thread(() -> doUpload(authToken, tune)).start();

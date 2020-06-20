@@ -5,14 +5,16 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  * 4/15/2016.
  */
 public class SensorLogger {
-    private static SensorLog sensorLog = new PlainTextSensorLog();
-
     protected static Sensor[] SENSORS = {Sensor.RPM,
+            Sensor.TIME_SECONDS,
             Sensor.INT_TEMP,
 
             Sensor.engineMode,
@@ -26,6 +28,7 @@ public class SensorLogger {
 
             Sensor.PPS,
             Sensor.ETB_CONTROL_QUALITY,
+            Sensor.etb1DutyCycle,
 
             Sensor.idlePosition,
 
@@ -72,12 +75,16 @@ public class SensorLogger {
             Sensor.debugIntField4,
             Sensor.debugIntField5,
 
-            Sensor.errorCodeCounter,
+            Sensor.totalTriggerErrorCounter,
             Sensor.lastErrorCode,
 
             Sensor.engineMakeCodeNameCrc16,
             Sensor.tuneCrc16,
     };
+
+    private static List<SensorLog> sensorLogs = Arrays.asList(new PlainTextSensorLog(), new BinarySensorLogRestarter());
+
+    private static boolean isInitialized;
 
     private SensorLogger() {
     }
@@ -86,19 +93,24 @@ public class SensorLogger {
         init();
     }
 
-    private static void init() {
+    public synchronized static void init() {
+        if (isInitialized) {
+            return;
+        }
+        isInitialized = true;
         SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
                 if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED)
                     return;
-                sensorLog.writeSensorLogLine();
+                for (SensorLog sensorLog : sensorLogs)
+                    sensorLog.writeSensorLogLine();
             }
         });
     }
 
     public static double getSecondsSinceFileStart() {
-        return sensorLog.getSecondsSinceFileStart();
+        return sensorLogs.get(0).getSecondsSinceFileStart();
     }
 
     static String getSensorName(Sensor sensor, int debugMode) {

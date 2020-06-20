@@ -47,7 +47,7 @@ public class ArrayIniField extends IniField {
             for (int colIndex = 0; colIndex < cols; colIndex++) {
                 Field f = new Field("", getOffset(rowIndex, colIndex), getType());
                 sb.append(' ');
-                sb.append(f.getAnyValue(image));
+                sb.append(f.getAnyValue(image, multiplier));
             }
         }
         sb.append("\n");

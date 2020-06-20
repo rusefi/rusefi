@@ -162,6 +162,30 @@ X ~ 2 0 -150 130 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
+# Device_D_Schottky_AKA
+#
+DEF Device_D_Schottky_AKA D 0 0 Y N 1 F N
+F0 "D" 0 100 50 H V C CNN
+F1 "Device_D_Schottky_AKA" 0 -100 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ TO-???*
+ *_Diode_*
+ *SingleDiode*
+ D_*
+$ENDFPLIST
+DRAW
+C 100 0 10 0 1 0 F
+P 4 0 1 8 50 50 50 -50 -50 0 50 50 N
+P 4 0 1 0 150 100 100 100 100 0 -50 0 N
+P 6 0 1 8 -75 25 -75 50 -50 50 -50 -50 -25 -50 -25 -25 N
+X A 1 200 100 100 L 50 50 1 1 I
+X K 2 -150 0 100 R 50 50 1 1 P
+X A 3 200 0 100 L 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
 # Device_D_Schottky_KKA
 #
 DEF Device_D_Schottky_KKA D 0 0 Y N 1 F N

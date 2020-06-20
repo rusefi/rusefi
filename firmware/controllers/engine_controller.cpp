@@ -56,6 +56,7 @@
 #include "launch_control.h"
 #include "tachometer.h"
 #include "gppwm.h"
+#include "date_stamp.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -716,6 +717,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200613;
+	return VCS_DATE;
 }
 #endif /* EFI_UNIT_TEST */

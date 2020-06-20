@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 public class XmlUtil {
+    static {
+        XmlUtil.setParserImpl();
+    }
 
     public static void writeXml(Object instance, Class<?> modelClass, String fileName) throws JAXBException, IOException {
         JAXBContext jaxbContext = JAXBContext.newInstance(modelClass);
@@ -37,7 +40,7 @@ public class XmlUtil {
     /**
      * See https://stackoverflow.com/questions/25644023/error-unmarshalling-xml-in-java-8-secure-processing-org-xml-sax-saxnotrecognize
      */
-    public static void setParserImpl() {
+    private static void setParserImpl() {
         System.setProperty("org.xml.sax.driver", "com.sun.org.apache.xerces.internal.parsers.SAXParser");
         System.setProperty("javax.xml.parsers.DocumentBuilderFactory","com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
         System.setProperty("javax.xml.parsers.SAXParserFactory","com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");

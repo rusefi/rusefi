@@ -2,11 +2,16 @@ package com.rusefi.ui.light;
 
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autoupdate.Autoupdate;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
+import com.rusefi.sensor_logs.SensorLogger;
 import com.rusefi.ui.util.FrameHelper;
+import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,13 +38,26 @@ public class LightweightGUI {
         topPanel.add(new InternetStatus().getContent());
 
 
-        content.add(topPanel, BorderLayout.NORTH);
-        content.add(new JLabel(StartupFrame.LINK_TEXT), BorderLayout.CENTER);
+        JPanel leftPanel = new JPanel(new VerticalFlowLayout());
+        leftPanel.add(new JLabel(Autoupdate.readBundleFullName()));
 
-        JLabel logo = createLogoLabel();
-        if (logo != null) {
-            content.add(logo, BorderLayout.EAST);
-        }
+
+        JLabel firmwareVersion = new JLabel();
+        SensorCentral.getInstance().addListener(Sensor.FIRMWARE_VERSION, new SensorCentral.SensorListener() {
+            @Override
+            public void onSensorUpdate(double value) {
+                firmwareVersion.setText(Integer.toString((int) value));
+            }
+        });
+
+        leftPanel.add(firmwareVersion);
+
+        content.add(topPanel, BorderLayout.NORTH);
+        content.add(leftPanel, BorderLayout.WEST);
+
+        content.add(createLogoUrlPanel(), BorderLayout.EAST);
+
+
         frameHelper.showFrame(content, true);
     }
 
@@ -54,6 +72,7 @@ public class LightweightGUI {
         ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
             @Override
             public void onConnectionStatus(boolean isConnected) {
+                SensorLogger.init();
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -62,7 +81,18 @@ public class LightweightGUI {
                 });
             }
         });
+    }
 
+    private static JPanel createLogoUrlPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        panel.add(new JLabel(StartupFrame.LINK_TEXT), BorderLayout.SOUTH);
+        JLabel logo = createLogoLabel();
+        if (logo != null) {
+            panel.add(logo, BorderLayout.CENTER);
+        }
+
+        return panel;
     }
 
     private void setConnectedUI(boolean isConnected) {

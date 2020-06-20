@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.AverageAnglesUtil;
 import com.rusefi.FileLog;
+import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
@@ -54,28 +55,28 @@ public class RecentCommands {
     private final static Map<String, Icon> COMMAND_ICONS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     static {
-        COMMAND_ICONS.put(STOPENGINE, UiUtils.loadIcon("stop.jpg"));
-        ImageIcon infoIcon = UiUtils.loadIcon("info.png");
+        COMMAND_ICONS.put(STOPENGINE, AutoupdateUtil.loadIcon("stop.jpg"));
+        ImageIcon infoIcon = AutoupdateUtil.loadIcon("info.png");
         COMMAND_ICONS.put(SHOWCONFIG, infoIcon);
-        COMMAND_ICONS.put(HELP, UiUtils.loadIcon("help.jpg"));
+        COMMAND_ICONS.put(HELP, AutoupdateUtil.loadIcon("help.jpg"));
         COMMAND_ICONS.put(ANALOGINFO, infoIcon);
-        COMMAND_ICONS.put(CMD_TRIGGERINFO, UiUtils.loadIcon("trigger.jpg"));
+        COMMAND_ICONS.put(CMD_TRIGGERINFO, AutoupdateUtil.loadIcon("trigger.jpg"));
         COMMAND_ICONS.put(IDLEINFO, infoIcon);
-        COMMAND_ICONS.put(ALTINFO, UiUtils.loadIcon("alternator.jpg"));
+        COMMAND_ICONS.put(ALTINFO, AutoupdateUtil.loadIcon("alternator.jpg"));
         COMMAND_ICONS.put(ACCELINFO, infoIcon);
         COMMAND_ICONS.put(TSINFO, infoIcon);
         COMMAND_ICONS.put(TPSINFO, infoIcon);
         COMMAND_ICONS.put(MAPINFO, infoIcon);
-        COMMAND_ICONS.put(joystickINFO, UiUtils.loadIcon("joystick.png"));
+        COMMAND_ICONS.put(joystickINFO, AutoupdateUtil.loadIcon("joystick.png"));
         COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
         COMMAND_ICONS.put(TEMPINFO, infoIcon);
-        COMMAND_ICONS.put(HIPINFO, UiUtils.loadIcon("knock.jpg"));
-        COMMAND_ICONS.put(SDINFO, UiUtils.loadIcon("sdinfo.jpg"));
+        COMMAND_ICONS.put(HIPINFO, AutoupdateUtil.loadIcon("knock.jpg"));
+        COMMAND_ICONS.put(SDINFO, AutoupdateUtil.loadIcon("sdinfo.jpg"));
         COMMAND_ICONS.put(FSIOINFO, infoIcon);
         COMMAND_ICONS.put(PINS, infoIcon);
-        COMMAND_ICONS.put(Fields.CMD_WRITECONFIG, UiUtils.loadIcon("writeconfig.jpg"));
-        COMMAND_ICONS.put(SPEEDINFO, UiUtils.loadIcon("speedinfo.jpg"));
+        COMMAND_ICONS.put(Fields.CMD_WRITECONFIG, AutoupdateUtil.loadIcon("writeconfig.jpg"));
+        COMMAND_ICONS.put(SPEEDINFO, AutoupdateUtil.loadIcon("speedinfo.jpg"));
     }
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
@@ -167,7 +168,7 @@ public class RecentCommands {
                 if (LinkManager.isLogViewer())
                     content.add(createButton());
 
-                JButton reset = new JButton(UiUtils.loadIcon("undo.jpg"));
+                JButton reset = new JButton(AutoupdateUtil.loadIcon("undo.jpg"));
                 reset.setContentAreaFilled(false);
                 reset.setFocusPainted(false);
                 reset.setBorder(BorderFactory.createEmptyBorder());
@@ -188,7 +189,6 @@ public class RecentCommands {
                         content.add(createButton(reentrant, entry.command));
                     }
                 }
-                UiUtils.trueRepaint(content.getParent());
                 UiUtils.trueLayout(content.getParent());
             }
         });

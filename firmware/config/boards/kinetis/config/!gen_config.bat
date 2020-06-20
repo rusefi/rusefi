@@ -8,7 +8,7 @@ cd ../../../..
 pwd
 
 java ^
- -DSystemOut.name=gen_config ^
+ -DSystemOut.name=gen_config_kinetis_board ^
  -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definition/lib/snakeyaml.jar ^
  com.rusefi.board_generator.BoardReader ^
  -board kinetis ^
@@ -17,10 +17,8 @@ java ^
  -enumInputFile controllers/algo/rusefi_enums.h ^
  -enumInputFile config/boards/kinetis/rusefi_hw_enums.h
 
-mkdir build_kinetis
-
 java ^
- -DSystemOut.name=gen_config ^
+ -DSystemOut.name=gen_config_kinetis ^
  -Drusefi.generator.lazyfile.enabled=true ^
  -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration/rusefi_config.txt ^

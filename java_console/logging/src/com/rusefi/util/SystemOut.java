@@ -28,6 +28,13 @@ public class SystemOut {
         String fileName = System.getProperty("SystemOut.name", "rusefi_tool") + LOG;
         System.out.println("Opening " + fileName);
         logFile = new PrintWriter(new FileWriter(fileName, true));
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                close();
+                System.out.println("SystemOut Hook done!");
+            }
+        }));
     }
 
     @SuppressWarnings("ThrowablePrintedToSystemOut")
@@ -45,8 +52,10 @@ public class SystemOut {
         println(object == null ? "(null)" : object.toString());
     }
 
-    public static void close() {
-        logFile.close();
+    public synchronized static void close() {
+        if (logFile != null) {
+            logFile.close();
+        }
         logFile = null;
     }
 }

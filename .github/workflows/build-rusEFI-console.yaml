@@ -1,4 +1,4 @@
-name: rusEFI console 8
+name: rusEFI console
 
 on: [push,pull_request]
 

@@ -14,9 +14,6 @@
 #include "pwm_generator_logic.h"
 #include "unit_test_framework.h"
 
-// this instance is used by some unit tests here which reference it directly
-static EventQueue eq;
-
 static int callbackCounter = 0;
 
 static void callback(void *a) {
@@ -25,23 +22,26 @@ static void callback(void *a) {
 
 static int complexTestNow;
 
-typedef struct {
+struct TestPwm {
+	TestPwm(EventQueue *eventQueue) {
+		this->eventQueue = eventQueue;
+	}
 	scheduling_s s;
 	int period;
-} TestPwm;
+	EventQueue *eventQueue;
+};
 
 static void complexCallback(TestPwm *testPwm) {
 	callbackCounter++;
 
-	eq.insertTask(&testPwm->s, complexTestNow + testPwm->period,
+	testPwm->eventQueue->insertTask(&testPwm->s, complexTestNow + testPwm->period,
 			{ complexCallback, testPwm });
 }
 
-static void testSignalExecutor2(void) {
-	print("*************************************** testSignalExecutor2\r\n");
-	eq.clear();
-	TestPwm p1;
-	TestPwm p2;
+TEST(misc, testSignalExecutor2) {
+	EventQueue eq;
+	TestPwm p1(&eq);
+	TestPwm p2(&eq);
 	p1.period = 2;
 	p2.period = 3;
 
@@ -74,10 +74,8 @@ static void orderCallback(void *a) {
 	prevValue = value;
 }
 
-
-static void testSignalExecutor3(void) {
-	print("*************************************** testSignalExecutor3\r\n");
-	eq.clear();
+TEST(misc, testSignalExecutor3) {
+	EventQueue eq;
 
 	scheduling_s s1;
 	scheduling_s s2;
@@ -86,15 +84,13 @@ static void testSignalExecutor3(void) {
 	eq.insertTask(&s1, 10, { orderCallback, (void*)1 });
 	eq.insertTask(&s2, 11, { orderCallback, (void*)2 });
 	eq.insertTask(&s3, 12, { orderCallback, (void*)3 });
-
 	eq.executeAll(100);
 }
 
 TEST(misc, testSignalExecutor) {
-	testSignalExecutor3();
 	print("*************************************** testSignalExecutor\r\n");
 
-	eq.clear();
+	EventQueue eq;
 	ASSERT_EQ(EMPTY_QUEUE, eq.getNextEventTime(0));
 	scheduling_s s1;
 	scheduling_s s2;
@@ -162,5 +158,4 @@ TEST(misc, testSignalExecutor) {
 	eq.executeAll(11);
 
 	ASSERT_EQ(2, callbackCounter);
-	testSignalExecutor2();
 }

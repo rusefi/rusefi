@@ -1,6 +1,7 @@
 package com.rusefi.ui.livedocs;
 
 import com.opensr5.ConfigurationImage;
+import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
@@ -11,7 +12,6 @@ import com.rusefi.ldmp.generated.*;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.ui.livedocs.controls.Toolbox;
-import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.DetachedSensor;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
@@ -78,7 +78,7 @@ public class LiveDocPanel {
                 LiveDataContext context = getFieldContext(defaultContext, request.getStateContext());
                 Field field = getField(defaultContext, request);
                 JLabel label = new LessJumpyJLabel("*");
-                label.setIcon(UiUtils.loadIcon("livedocs/variable.png"));
+                label.setIcon(AutoupdateUtil.loadIcon("livedocs/variable.png"));
                 label.setToolTipText("Variable " + field.getName());
                 result.addControl(label);
                 result.actionsListAdd(context, new RefreshActions() {
@@ -94,14 +94,15 @@ public class LiveDocPanel {
                 Field field = Field.findField(Fields.VALUES, settingsInstancePrefix, request.getField());
 
                 JLabel label = new LessJumpyJLabel("*");
-                label.setIcon(UiUtils.loadIcon("livedocs/setting.png"));
+                label.setIcon(AutoupdateUtil.loadIcon("livedocs/setting.png"));
                 label.setToolTipText(getTooltipText(field.getName()));
                 result.addControl(label);
                 // todo: use different notification flow altogether since configuration has nothing to do with live data structures
                 result.actionsListAdd(new LiveDataContext(Fields.LDS_ENGINE_STATE_INDEX), new RefreshActions() {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
-                        String value = field.getAnyValue(bp.getControllerConfiguration()).toString();
+                        double multiplier = 1; // todo: PROPER MULTIPLIER!!!
+                        String value = field.getAnyValue(bp.getControllerConfiguration(), multiplier).toString();
                         label.setText(value);
                     }
                 });
@@ -109,7 +110,7 @@ public class LiveDocPanel {
                 SensorRequest request = (SensorRequest) r;
                 Sensor sensor = Sensor.find(request.getValue());
                 JLabel label = new LessJumpyJLabel("*");
-                label.setIcon(UiUtils.loadIcon("livedocs/gauge.png"));
+                label.setIcon(AutoupdateUtil.loadIcon("livedocs/gauge.png"));
                 label.setToolTipText("Sensor " + request.getValue());
                 label.addMouseListener(new MouseAdapter() {
                     @Override
@@ -192,7 +193,7 @@ public class LiveDocPanel {
         combined.put(context, new RefreshActions() {
             @Override
             public void refresh(BinaryProtocol bp, byte[] response) {
-                int value = (int) conditionField.getValue(new ConfigurationImage(response));
+                int value = (int) conditionField.getValue(new ConfigurationImage(response)).intValue();
                 conditionLabel.setText(request.getField() + " is " + (value == 1 ? "TRUE" : "FALSE"));
                 JPanel active;
                 JPanel passive;

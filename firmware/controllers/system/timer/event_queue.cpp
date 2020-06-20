@@ -19,15 +19,11 @@
 #include "perf_trace.h"
 
 #if EFI_UNIT_TEST
+extern int timeNowUs;
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
 uint32_t maxSchedulingPrecisionLoss = 0;
-
-EventQueue::EventQueue() {
-	head = nullptr;
-	setLateDelay(100);
-}
 
 bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 	assertNotInListMethodBody(scheduling_s, head, scheduling, nextScheduling_s);
@@ -94,13 +90,14 @@ efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
 	if (head != NULL) {
 		if (head->momentX <= nowX) {
 			/**
-			 * We are here if action timestamp is in the past
+			 * We are here if action timestamp is in the past. We should rarely be here since this 'getNextEventTime()' is
+			 * always invoked by 'scheduleTimerCallback' which is always invoked right after 'executeAllPendingActions' - but still,
+			 * for events which are really close to each other we would end up here.
 			 *
 			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
 			 * for the next scheduled event
 			 */
-			efitime_t aBitInTheFuture = nowX + lateDelay;
-			return aBitInTheFuture;
+			return nowX + lateDelay;
 		} else {
 			return head->momentX;
 		}
@@ -136,11 +133,21 @@ int EventQueue::executeAll(efitime_t now) {
 			break;
 		}
 
-		// Only execute events that occured in the past.
-		// The list is sorted, so as soon as we see an event
-		// in the future, we're done.
-		if (current->momentX > now) {
+		// If the next event is far in the future, we'll reschedule
+		// and execute it next time.
+		// We do this when the next event is close enough that the overhead of
+		// resetting the timer and scheduling an new interrupt is greater than just
+		// waiting for the time to arrive.  On current CPUs, this is reasonable to set
+		// around 10 microseconds.
+		if (current->momentX > now + lateDelay) {
 			break;
+		}
+
+		// near future - spin wait for the event to happen and avoid the
+		// overhead of rescheduling the timer.
+		// yes, that's a busy wait but that's what we need here
+		while (current->momentX > getTimeNowNt()) {
+			UNIT_TEST_BUSY_WAIT_CALLBACK();
 		}
 
 		executionCounter++;
@@ -182,10 +189,6 @@ void EventQueue::assertListIsSorted() const {
 		efiAssertVoid(CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
 		current = current->nextScheduling_s;
 	}
-}
-
-void EventQueue::setLateDelay(int value) {
-	lateDelay = value;
 }
 
 scheduling_s * EventQueue::getHead() {

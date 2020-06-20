@@ -112,13 +112,18 @@ TEST(misc, testFuelMap) {
 
 	engineConfiguration->cranking.baseFuel = 4;
 
-	printf("*************************************************** getStartingFuel\r\n");
-	// NAN in case we have issues with the CLT sensor
-	ASSERT_EQ( 6.0,  getCrankingFuel3(NAN, 0 PASS_ENGINE_PARAMETER_SUFFIX)) << "getStartingFuel nan";
-	assertEqualsM("getStartingFuel#1", 11.6, getCrankingFuel3(0, 4 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEqualsM("getStartingFuel#2", 5.82120, getCrankingFuel3(8, 15 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEqualsM("getStartingFuel#3", 6.000, getCrankingFuel3(70, 0 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEqualsM("getStartingFuel#4", 2.41379, getCrankingFuel3(70, 50 PASS_ENGINE_PARAMETER_SUFFIX));
+	// Should use 20 degree correction in case of failed sensor
+	Sensor::resetMockValue(SensorType::Clt);
+	EXPECT_NEAR( 9.71999,  getCrankingFuel3(2, 0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+
+	Sensor::setMockValue(SensorType::Clt, 0);
+	EXPECT_NEAR(11.6, getCrankingFuel3(2, 4 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	Sensor::setMockValue(SensorType::Clt, 8);
+	EXPECT_NEAR(5.82120, getCrankingFuel3(2, 15 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	Sensor::setMockValue(SensorType::Clt, 70);
+	EXPECT_NEAR(6.000, getCrankingFuel3(2, 0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	Sensor::setMockValue(SensorType::Clt, 70);
+	EXPECT_NEAR(2.41379, getCrankingFuel3(2, 50 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 }
 
 

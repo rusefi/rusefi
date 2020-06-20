@@ -205,8 +205,10 @@ enable2ndByteCanID = false
       acSwitchIndicator =bits,   U32,      0,  [17:17], "true", "false";
       ind_tps_error   = bits,    U32,      0,  [18:18], "true", "false";
       ind_clt_error   = bits,    U32,      0,  [19:19], "true", "false";
-      ind_map_error   = bits,    U32,      0,  [20:21], "true", "false";
-      ind_iat_error   = bits,    U32,      0,  [21:22], "true", "false";
+; not implemented
+;      ind_map_error   = bits,    U32,      0,  [20:20], "true", "false";
+
+      ind_iat_error   = bits,    U32,      0,  [21:21], "true", "false";
       ind_isTriggerError = bits, U32,      0,  [23:23], "true", "false";
       ind_hasFatalError=bits,    U32,      0,  [24:24], "true", "false";
 	  ind_isWarnNow    =bits,    U32,      0,  [25:25], "true", "false";
@@ -1093,7 +1095,10 @@ gaugeCategory = Sensors - Raw
     indicator = { ind_tps_error}, "tps",   "tps error",   white, black, red,   black
     indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
     indicator = { ind_iat_error}, "iat",   "iat error",   white, black, red,   black
-    indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
+
+;  not implemented
+;    indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
+
 	indicator = { ind_pedal_error}, "pedal",   "pedal error",   white, black, red,   black
 
     indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
@@ -1106,16 +1111,16 @@ gaugeCategory = Sensors - Raw
 
 [Datalog]
    ;       Channel          Label          Type    Format
-   entry = time,            "Time",        float,  "%.3f"
-   entry = RPMValue,        "RPM",         int,    "%d"
+   entry = time,            @@GAUGE_NAME_TIME@@,        float,  "%.3f"
+   entry = RPMValue,        @@GAUGE_NAME_RPM@@,         int,    "%d"
    entry = firmwareVersion, @@GAUGE_NAME_VERSION@@,     int,    "%d"
-   entry = coolant,         "CLT",         float,  "%.2f"
-   entry = intake,          "IAT",         float,  "%.2f"
+   entry = coolant,         @@GAUGE_NAME_CLT@@,         float,  "%.2f"
+   entry = intake,          @@GAUGE_NAME_IAT@@,         float,  "%.2f"
    entry = oilPressure,		"Oil Press",   float,  "%.1f"
-   entry = TPSValue,             "TPS",         float,  "%.2f"
-   entry = MAFValue,             "MAF",         float,  "%.2f"
-   entry = MAPValue,        "MAP",         float,  "%.1f"
-   entry = AFRValue,       @@GAUGE_NAME_AFR@@,         float,  "%.2f"
+   entry = TPSValue,        @@GAUGE_NAME_TPS@@,         float,  "%.2f"
+   entry = MAFValue,        @@GAUGE_NAME_MAF@@,         float,  "%.2f"
+   entry = MAPValue,        @@GAUGE_NAME_MAP@@,         float,  "%.1f"
+   entry = AFRValue,        @@GAUGE_NAME_AFR@@,         float,  "%.2f"
    entry = VBatt,           @@GAUGE_NAME_VBAT@@,       float,  "%.2f"
    entry = engineLoad,	    @@GAUGE_NAME_ENGINE_LOAD@@, 	   float,  "%.1f"
    entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
@@ -1127,7 +1132,7 @@ gaugeCategory = Sensors - Raw
    entry = massAirFlowValue,@@GAUGE_NAME_AIR_FLOW@@,    float,  "%.3f"
    entry = chargeAirMass,   @@GAUGE_NAME_AIR_MASS@@,    float,  "%.3f"
    entry = throttlePedalPosition,   @@GAUGE_NAME_THROTTLE_PEDAL@@,       float,  "%.3f"
-   entry = totalTriggerErrorCounter, "trg err",int,    "%d"
+   entry = totalTriggerErrorCounter, @@GAUGE_NAME_TRG_ERR@@,int,    "%d"
    entry = idleAirValvePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
 
 
@@ -1235,7 +1240,7 @@ gaugeCategory = Sensors - Raw
 
 ; Electronic throttle body
    entry = etb1Error,      "ETB Error", float, "%.3f"
-   entry = etb1DutyCycle,  "ETB Duty", float, "%.3f"
+   entry = etb1DutyCycle,  @@GAUGE_NAME_ETB_DUTY@@, float, "%.3f"
    entry = etbTarget,      "ETB Target", float, "%.3f"
    
    
@@ -2369,6 +2374,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "TS communication status LED",			communicationLedPin
 		field = "Warning LED",							warningLedPin
 	    field = "Trigger error LED",					triggerErrorPin
+		field = "Debug Trigger Sync", 					debugTriggerSync
 
 ;			Engine->MIL Settings
 	dialog = malfunction,	"Check Engine Settings"

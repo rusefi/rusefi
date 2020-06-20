@@ -1,4 +1,7 @@
 
+echo TL,DR: gcov does NOT work on windows!
+exit
+
 rm -rf gcov_working_area
 
 mkdir gcov_working_area

@@ -21,6 +21,7 @@ public class Field {
     private final FieldType type;
     private final int bitOffset;
     private final String[] options;
+    // todo: add multiplier support!
 
     public Field(String name, int offset, FieldType type) {
         this(name, offset, type, NO_BIT_OFFSET);
@@ -129,10 +130,10 @@ public class Field {
                 '}';
     }
 
-    public Object getAnyValue(ConfigurationImage ci) {
+    public Object getAnyValue(ConfigurationImage ci, double multiplier) {
         if (options == null) {
             // we are here for non-enum types
-            return niceToString(getValue(ci));
+            return niceToString(getValue(ci, multiplier));
         }
         if (type != INT8)
             throw new IllegalStateException("Unsupported enum " + type);
@@ -140,25 +141,40 @@ public class Field {
         return options[ordinal];
     }
 
+    /**
+     * each usage is a potential bug?! we are supposed to have explicit multiplier for each field
+     */
+    @NotNull
+    @Deprecated
+    public Double getValue(ConfigurationImage ci) {
+        return getValue(ci, 1);
+    }
+
     // todo: rename to getNumberValue?
     @NotNull
-    public Number getValue(ConfigurationImage ci) {
+    public Double getValue(ConfigurationImage ci, double multiplier) {
         Objects.requireNonNull(ci);
         Number value;
         ByteBuffer wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
         if (bitOffset != NO_BIT_OFFSET) {
             int packed = wrapped.getInt();
             value = (packed >> bitOffset) & 1;
-        } else if (type == INT8 || type == UINT8) {
+        } else if (type == INT8) {
             value = wrapped.get();
+        } else if (type == UINT8) {
+            byte signed = wrapped.get();
+            value = signed & 0xFF;
         } else if (type == INT) {
             value = wrapped.getInt();
-        } else if (type == INT16 || type == UINT16) {
+        } else if (type == INT16) {
             value = wrapped.getShort();
+        } else if (type == UINT16) {
+            short signed = wrapped.getShort();
+            value = signed & 0xFFFF;
         } else {
             value = wrapped.getFloat();
         }
-        return value;
+        return value.doubleValue() * multiplier;
     }
 
     @NotNull

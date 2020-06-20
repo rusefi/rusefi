@@ -504,12 +504,6 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-#if EFI_ENGINE_CONTROL
-	int rpm = GET_RPM();
-
-	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
 }
 
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
