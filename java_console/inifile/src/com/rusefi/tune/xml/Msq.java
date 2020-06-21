@@ -3,6 +3,7 @@ package com.rusefi.tune.xml;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.xml.XmlUtil;
@@ -12,13 +13,15 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @XmlRootElement
 public class Msq {
     public static final String outputXmlFileName = PersistentConfiguration.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
 
-    private Page page = new Page();
+    public List<Page> page = new ArrayList<>();
 
     private final VersionInfo versionInfo;
 
@@ -30,6 +33,8 @@ public class Msq {
     public static Msq valueOf(ConfigurationImage image) {
         IniFileModel ini = IniFileModel.getInstance();
         Msq tune = new Msq();
+        tune.page.add(new Page(null, null));
+        tune.page.add(new Page(0, Fields.TOTAL_CONFIG_SIZE));
         for (String key : ini.allIniFields.keySet())
             tune.loadConstant(ini, key, image);
         return tune;
@@ -74,13 +79,8 @@ public class Msq {
         return versionInfo;
     }
 
-    @XmlElement
-    public Page getPage() {
-        return page;
-    }
-
-    public void setPage(Page page) {
-        this.page = page;
+    private Page getPage() {
+        return page.get(1);
     }
 
     @XmlElement
