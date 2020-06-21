@@ -11,9 +11,11 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
+
 /**
  * This class makes rusEfi console a proxy for other tuning software, this way we can have two tools connected via same
- * serial port simultaniously
+ * serial port simultaneously
  *
  * @author Andrey Belomutskiy
  *         11/24/15
@@ -22,9 +24,6 @@ import java.net.Socket;
 public class BinaryProtocolServer implements BinaryProtocolCommands {
     private static final int PROXY_PORT = 2390;
     private static final String TS_OK = "\0";
-
-    private static final String TS_SIGNATURE = "MShift v0.01";
-    private static final String TS_PROTOCOL = "001";
 
     public static void start() {
         FileLog.MAIN.logLine("BinaryProtocolServer on " + PROXY_PORT);
@@ -102,10 +101,12 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
             TcpIoStream stream = new TcpIoStream(clientSocket.getInputStream(), clientSocket.getOutputStream());
             if (command == COMMAND_HELLO) {
-                stream.sendPacket((TS_OK + TS_SIGNATURE).getBytes(), FileLog.LOGGER);
+                stream.sendPacket((TS_OK + Fields.TS_SIGNATURE).getBytes(), FileLog.LOGGER);
             } else if (command == COMMAND_PROTOCOL) {
 //                System.out.println("Ignoring crc F command");
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes(), FileLog.LOGGER);
+            } else if (command == Fields.TS_GET_FIRMWARE_VERSION) {
+                stream.sendPacket((TS_OK + "rusEFI proxy").getBytes(), FileLog.LOGGER);
             } else if (command == COMMAND_CRC_CHECK_COMMAND) {
                 short page = dis.readShort();
                 short offset = dis.readShort();
