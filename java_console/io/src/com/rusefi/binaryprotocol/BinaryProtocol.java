@@ -600,4 +600,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 throw new UnsupportedOperationException("type " + sensor.getType());
         }
     }
+
+    public void setRange(byte[] src, int scrPos, int offset, int count) {
+        synchronized (imageLock) {
+            System.arraycopy(src, scrPos, controller.getContent(), offset, count);
+        }
+    }
 }

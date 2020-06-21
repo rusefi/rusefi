@@ -13,7 +13,7 @@ public class IoHelper {
         return getCrc32(packet, 0, packet.length);
     }
 
-    public static int getCrc32(byte[] packet, int offset, int length) {
+    private static int getCrc32(byte[] packet, int offset, int length) {
         CRC32 c = new CRC32();
         c.update(packet, offset, length);
         return (int) c.getValue();
