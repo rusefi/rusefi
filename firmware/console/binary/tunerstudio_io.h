@@ -31,23 +31,6 @@ typedef struct {
 	char crcReadBuffer[BLOCKING_FACTOR + 30];
 } ts_channel_s;
 
-// See uart_dma_s
-#define TS_FIFO_BUFFER_SIZE (BLOCKING_FACTOR + 30)
-// This must be a power of 2!
-#define TS_DMA_BUFFER_SIZE 32
-
-// struct needed for async DMA transfer mode (see TS_UART_DMA_MODE)
-typedef struct {
-	// circular DMA buffer
-	uint8_t dmaBuffer[TS_DMA_BUFFER_SIZE];
-	// current read position for the DMA buffer
-	volatile int readPos;
-	// secondary FIFO buffer for async. transfer
-	uint8_t buffer[TS_FIFO_BUFFER_SIZE];
-	// input FIFO Rx queue
-	input_queue_t fifoRxQueue;
-} uart_dma_s;
-
 // These commands are used exclusively by the rusEfi console
 #define TS_TEST_COMMAND 't' // 0x74
 #define TS_GET_FILE_RANGE '2' // 0x32
