@@ -24,3 +24,9 @@ typedef struct {
 	// input FIFO Rx queue
 	input_queue_t fifoRxQueue;
 } uart_dma_s;
+
+#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
+void startUartDmaConnector(UARTDriver *uartp DECLARE_CONFIG_PARAMETER_SUFFIX);
+#endif
+
+

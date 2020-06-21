@@ -22,14 +22,18 @@ typedef enum {
 	TS_CRC = 1
 } ts_response_format_e;
 
-typedef struct {
+struct ts_channel_s {
 	BaseChannel * channel;
 	uint8_t writeBuffer[7];	// size(2 bytes) + response(1 byte) + crc32 (4 bytes)
 	/**
 	 * See 'blockingFactor' in rusefi.ini
 	 */
 	char crcReadBuffer[BLOCKING_FACTOR + 30];
-} ts_channel_s;
+
+#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
+	UARTDriver *uartp = nullptr;
+#endif // TS_UART_DMA_MODE
+};
 
 // These commands are used exclusively by the rusEfi console
 #define TS_TEST_COMMAND 't' // 0x74
