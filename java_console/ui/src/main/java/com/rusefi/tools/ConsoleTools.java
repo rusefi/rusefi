@@ -74,7 +74,7 @@ public class ConsoleTools {
     public static void main(String[] args) throws Exception {
         System.out.println(Arrays.toString(new File(".").list()));
         System.setProperty("ini_file_path", "../firmware/tunerstudio");
-        calcBinaryImageTuneCrc(null, "current_configuration.rusefi_binary");
+//        calcBinaryImageTuneCrc(null, "current_configuration.rusefi_binary");
 
         calcXmlImageTuneCrc(null, "CurrentTune.msq");
     }
