@@ -38,6 +38,7 @@
 #include "console_io.h"
 #include "os_util.h"
 #include "tunerstudio.h"
+#include "connector_uart_dma.h"
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
@@ -232,7 +233,7 @@ BaseChannel * getConsoleChannel(void) {
 #if HAL_USE_SERIAL_USB
 	return (BaseChannel *) &CONSOLE_USB_DEVICE;
 #else
-	return NULL;
+	return nullptr;
 #endif /* HAL_USE_SERIAL_USB */
 }
 
@@ -250,7 +251,10 @@ static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("console thread");
 
+#if !PRIMARY_UART_DMA_MODE
 	primaryChannel.channel = (BaseChannel *) getConsoleChannel();
+#endif
+
 	if (primaryChannel.channel != NULL) {
 #if EFI_TUNER_STUDIO
 		runBinaryProtocolLoop(&primaryChannel);
@@ -283,7 +287,11 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 #endif
 
 
-#if (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR)
+#if (defined(CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR)
+		primaryChannel.uartp = CONSOLE_UART_DEVICE;
+		startUartDmaConnector(primaryChannel.uartp PASS_CONFIG_PARAMETER_SUFFIX);
+
+#elif (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR)
 		/*
 		 * Activates the serial
 		 * it is important to set 'NONE' as flow control! in terminal application on the PC

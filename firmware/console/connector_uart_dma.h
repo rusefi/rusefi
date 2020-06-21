@@ -7,6 +7,7 @@
 
 #pragma once
 #include "global.h"
+#include "engine_configuration.h"
 
 // See uart_dma_s
 #define TS_FIFO_BUFFER_SIZE (BLOCKING_FACTOR + 30)
