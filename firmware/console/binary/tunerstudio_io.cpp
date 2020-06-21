@@ -9,6 +9,8 @@
 #include "os_access.h"
 #include "tunerstudio_io.h"
 #include "console_io.h"
+#include "connector_uart_dma.h"
+
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif
