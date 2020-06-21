@@ -47,9 +47,6 @@ static ioportid_t ports[] = {GPIOA,
 // todo: move this into PinRepository class
 static const char *PIN_USED[PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS];
 
-
-extern ioportid_t PORTS[];
-
 /**
  * @deprecated - use hwPortname() instead
  */
@@ -131,7 +128,7 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
 		return GPIO_NULL;
 	}
-	return PORTS[(brainPin - GPIOA_0) / PORT_SIZE];
+	return ports[(brainPin - GPIOA_0) / PORT_SIZE];
 }
 
 /**
