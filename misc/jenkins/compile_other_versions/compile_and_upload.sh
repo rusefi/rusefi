@@ -9,7 +9,7 @@ export BUNDLE_NAME="$2"
 export INI_FILE_OVERRIDE="$3"
 export RUSEFI_CONSOLE_SETTINGS="$4"
 
-SCRIPT_NAME=compile_and_upload.bat
+SCRIPT_NAME=compile_and_upload.sh
 echo "Entering $SCRIPT_NAME with 1=$1 2=$2 3=$3 4=$4"
 
 [ -n $COMPILE_FOLDER ] || (echo "COMPILE_FOLDER parameter expected"; exit -1)
