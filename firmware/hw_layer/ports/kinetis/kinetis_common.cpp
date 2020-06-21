@@ -10,10 +10,6 @@
 #include "engine.h"
 #include "pin_repository.h"
 
-extern ioportid_t PORTS[];
-
-ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE};
-
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 
 // ADC_CHANNEL_IN0 // PA2   (def=VIGN)
