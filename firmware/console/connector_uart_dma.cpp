@@ -5,16 +5,20 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "connector_uart_dma.h"
+
 #if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
+
+EXTERN_CONFIG;
 
 // Async. FIFO buffer takes some RAM...
 uart_dma_s tsUartDma;
 
 /* Common function for all DMA-UART IRQ handlers. */
-static void tsCopyDataFromDMA() {
+static void tsCopyDataFromDMA(UARTDriver *uartp) {
 	chSysLockFromISR();
 	// get 0-based DMA buffer position
-	int dmaPos = TS_DMA_BUFFER_SIZE - dmaStreamGetTransactionSize(TS_UART_DEVICE->dmarx);
+	int dmaPos = TS_DMA_BUFFER_SIZE - dmaStreamGetTransactionSize(uartp->dmarx);
 	// if the position is wrapped (circular DMA-mode enabled)
 	if (dmaPos < tsUartDma.readPos)
 		dmaPos += TS_DMA_BUFFER_SIZE;
@@ -35,13 +39,13 @@ static void tsCopyDataFromDMA() {
 static void tsRxIRQHalfHandler(UARTDriver *uartp, uartflags_t full) {
 	UNUSED(uartp);
 	UNUSED(full);
-	tsCopyDataFromDMA();
+	tsCopyDataFromDMA(uartp);
 }
 
 /* This handler is called right after the UART receiver has finished its work. */
 static void tsRxIRQIdleHandler(UARTDriver *uartp) {
 	UNUSED(uartp);
-	tsCopyDataFromDMA();
+	tsCopyDataFromDMA(uartp);
 }
 
 /* Note: This structure is modified from the default ChibiOS layout! */
@@ -58,7 +62,7 @@ void startUartDmaConnector(UARTDriver *uartp DECLARE_CONFIG_PARAMETER_SUFFIX) {
 
 	// start DMA driver
 	tsDmaUartConfig.speed = CONFIG(tunerStudioSerialSpeed);
-	uartStart(TS_UART_DEVICE, &tsDmaUartConfig);
+	uartStart(uartp, &tsDmaUartConfig);
 
 	// start continuous DMA transfer using our circular buffer
 	tsUartDma.readPos = 0;
