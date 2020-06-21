@@ -12,7 +12,6 @@ public interface BinaryProtocolCommands {
     byte RESPONSE_OK = 0;
     byte RESPONSE_BURN_OK = 0x04;
     byte RESPONSE_COMMAND_OK = 0x07;
-    char COMMAND_OUTPUTS = Fields.TS_OUTPUT_COMMAND;
     char COMMAND_HELLO = Fields.TS_HELLO_COMMAND;
     char COMMAND_PROTOCOL = 'F';
     // todo: make crc32CheckCommand shorted one day later - no need in 6 empty bytes

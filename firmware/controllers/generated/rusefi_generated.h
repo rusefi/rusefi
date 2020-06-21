@@ -1291,6 +1291,9 @@
 #define TS_PERF_TRACE_GET_BUFFER 'b'
 #define TS_PROTOCOL "001"
 #define TS_READ_COMMAND 'R'
+#define TS_RESPONSE_BURN_OK 4
+#define TS_RESPONSE_COMMAND_OK 7
+#define TS_RESPONSE_OK 0
 #define TS_SET_LOGGER_SWITCH 'l'
 #define ts_show_analog_divider true
 #define ts_show_auxserial_pins true

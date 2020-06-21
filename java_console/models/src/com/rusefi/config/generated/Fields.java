@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 20 18:31:24 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 20 22:28:34 EDT 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1271,6 +1271,9 @@ public class Fields {
 	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
 	public static final String TS_PROTOCOL = "001";
 	public static final char TS_READ_COMMAND = 'R';
+	public static final int TS_RESPONSE_BURN_OK = 4;
+	public static final int TS_RESPONSE_COMMAND_OK = 7;
+	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
 	public static final String TS_SIGNATURE = "rusEFI v1.2020.4";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
