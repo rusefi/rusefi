@@ -205,7 +205,9 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	} else {
 		baseTableFuel = getBaseTableFuel(rpm, engineLoad);
 	}
-#endif
+
+	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_ENGINE_CONTROL
 }
 
 void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {

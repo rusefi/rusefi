@@ -67,7 +67,7 @@ typedef struct {
 	unsigned int isCltError : 1; // bit 19
 	unsigned int isMapError : 1; // bit 20
 	unsigned int isIatError : 1; // bit 21
-	unsigned int isAcSwitchEngaged : 1; // bit 22
+	unsigned int unusedAt22 : 1; // bit 22
 	unsigned int isTriggerError : 1; // bit 23
 	unsigned int hasCriticalError : 1; // bit 24
 	unsigned int isWarnNow : 1; // bit 25

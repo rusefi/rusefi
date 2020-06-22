@@ -19,6 +19,7 @@ public class FuelMathMeta {
 				new TextRequest("eol"),
 				new TextRequest("TPS_coef"),
 				new FieldRequest("Engine", "cranking_tpsCoefficient"),
+				new FieldRequest("Engine", "cranking_tpsCoefficient"),
 				new SensorRequest("TPS"),
 				new TextRequest("eol"),
 				new TextRequest("Cranking_fuel"),

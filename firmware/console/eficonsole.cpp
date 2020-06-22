@@ -169,9 +169,13 @@ void print(const char *format, ...) {
 	if (!isCommandLineConsoleReady()) {
 		return;
 	}
+	BaseSequentialStream * channel = (BaseSequentialStream*) getConsoleChannel();
+	if (channel == nullptr) {
+		return;
+	}
 	va_list ap;
 	va_start(ap, format);
-	chvprintf((BaseSequentialStream*) getConsoleChannel(), format, ap);
+	chvprintf(channel, format, ap);
 	va_end(ap);
 #else
 	UNUSED(format);

@@ -11,9 +11,13 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import static com.rusefi.binaryprotocol.IoHelper.swap16;
+import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
+import static com.rusefi.config.generated.Fields.TS_RESPONSE_BURN_OK;
+
 /**
  * This class makes rusEfi console a proxy for other tuning software, this way we can have two tools connected via same
- * serial port simultaniously
+ * serial port simultaneously
  *
  * @author Andrey Belomutskiy
  *         11/24/15
@@ -22,9 +26,6 @@ import java.net.Socket;
 public class BinaryProtocolServer implements BinaryProtocolCommands {
     private static final int PROXY_PORT = 2390;
     private static final String TS_OK = "\0";
-
-    private static final String TS_SIGNATURE = "MShift v0.01";
-    private static final String TS_PROTOCOL = "001";
 
     public static void start() {
         FileLog.MAIN.logLine("BinaryProtocolServer on " + PROXY_PORT);
@@ -102,57 +103,75 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
             TcpIoStream stream = new TcpIoStream(clientSocket.getInputStream(), clientSocket.getOutputStream());
             if (command == COMMAND_HELLO) {
-                stream.sendPacket((TS_OK + TS_SIGNATURE).getBytes(), FileLog.LOGGER);
+                stream.sendPacket((TS_OK + Fields.TS_SIGNATURE).getBytes(), FileLog.LOGGER);
             } else if (command == COMMAND_PROTOCOL) {
 //                System.out.println("Ignoring crc F command");
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes(), FileLog.LOGGER);
+            } else if (command == Fields.TS_GET_FIRMWARE_VERSION) {
+                stream.sendPacket((TS_OK + "rusEFI proxy").getBytes(), FileLog.LOGGER);
             } else if (command == COMMAND_CRC_CHECK_COMMAND) {
-                short page = dis.readShort();
-                short offset = dis.readShort();
-                short count = dis.readShort(); // no swap here? interesting!
-                System.out.println("CRC check " + page + "/" + offset + "/" + count);
-                BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
-                int result = IoHelper.getCrc32(bp.getControllerConfiguration().getContent(), offset, count);
-                ByteArrayOutputStream response = new ByteArrayOutputStream();
-                response.write(TS_OK.charAt(0));
-                new DataOutputStream(response).write(result);
-                stream.sendPacket(response.toByteArray(), FileLog.LOGGER);
+                handleCrc(stream);
             } else if (command == COMMAND_PAGE) {
                 stream.sendPacket(TS_OK.getBytes(), FileLog.LOGGER);
             } else if (command == COMMAND_READ) {
-                short page = dis.readShort();
-                short offset = swap16(dis.readShort());
-                short count = swap16(dis.readShort());
-                if (count <= 0) {
-                    FileLog.MAIN.logLine("Error: negative read request " + offset + "/" + count);
-                } else {
-                    System.out.println("read " + page + "/" + offset + "/" + count);
-                    BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
-                    byte[] response = new byte[1 + count];
-                    response[0] = (byte) TS_OK.charAt(0);
-                    System.arraycopy(bp.getControllerConfiguration().getContent(), offset, response, 1, count);
-                    stream.sendPacket(response, FileLog.LOGGER);
-                }
-            } else if (command == COMMAND_OUTPUTS) {
+                handleRead(dis, stream);
+            } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
+                handleWrite(packet, dis, stream);
+            } else if (command == Fields.TS_BURN_COMMAND) {
+                stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK}, FileLog.LOGGER);
+            } else if (command == Fields.TS_OUTPUT_COMMAND) {
+                int offset = swap16(dis.readShort());
+                int count = swap16(dis.readShort());
+                System.out.println("TS_OUTPUT_COMMAND offset=" + offset + "/count=" + count);
 
-                if (System.currentTimeMillis() > 0)
-                    throw new UnsupportedOperationException("offset and count not supported see #429");
-                // todo: new version with offset and
-
-                byte[] response = new byte[1 + Fields.TS_OUTPUT_SIZE];
+                byte[] response = new byte[1 + count];
                 response[0] = (byte) TS_OK.charAt(0);
                 BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
                 byte[] currentOutputs = bp.currentOutputs;
                 if (currentOutputs != null)
-                    System.arraycopy(currentOutputs, 1, response, 1, Fields.TS_OUTPUT_SIZE);
+                    System.arraycopy(currentOutputs, 1 + offset , response, 1, count);
                 stream.sendPacket(response, FileLog.LOGGER);
             } else {
+                new IllegalStateException().printStackTrace();
                 FileLog.MAIN.logLine("Error: unknown command " + command);
             }
         }
     }
 
-    private static short swap16(short x) {
-        return (short) (((x) << 8) | ((x) >> 8));
+    private static void handleWrite(byte[] packet, DataInputStream dis, TcpIoStream stream) throws IOException {
+        dis.readShort(); // page
+        int offset = swap16(dis.readShort());
+        int count = swap16(dis.readShort());
+        FileLog.MAIN.logLine("TS_CHUNK_WRITE_COMMAND: offset=" + offset + " count=" + count);
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        bp.setRange(packet, 7, offset, count);
+        stream.sendPacket(TS_OK.getBytes(), FileLog.LOGGER);
+    }
+
+    private static void handleRead(DataInputStream dis, TcpIoStream stream) throws IOException {
+        short page = dis.readShort();
+        int offset = swap16(dis.readShort());
+        int count = swap16(dis.readShort());
+        if (count <= 0) {
+            FileLog.MAIN.logLine("Error: negative read request " + offset + "/" + count);
+        } else {
+            System.out.println("read " + page + "/" + offset + "/" + count);
+            BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+            byte[] response = new byte[1 + count];
+            response[0] = (byte) TS_OK.charAt(0);
+            System.arraycopy(bp.getControllerConfiguration().getContent(), offset, response, 1, count);
+            stream.sendPacket(response, FileLog.LOGGER);
+        }
+    }
+
+    private static void handleCrc(TcpIoStream stream) throws IOException {
+        System.out.println("CRC check");
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        byte[] content = bp.getControllerConfiguration().getContent();
+        int result = IoHelper.getCrc32(content);
+        ByteArrayOutputStream response = new ByteArrayOutputStream();
+        response.write(TS_OK.charAt(0));
+        new DataOutputStream(response).writeInt(result);
+        stream.sendPacket(response.toByteArray(), FileLog.LOGGER);
     }
 }

@@ -1,3 +1,8 @@
-echo Entering simulator\clean.bat
-rm -rf .dep
-rm -rf build
+@echo off
+sh.exe compile.sh || (
+  if exist C:\cygwin64 (
+    C:\cygwin64\bin\sh.exe compile.sh
+  ) else (
+    if exist C:\cygwin ( C:\cygwin\bin\sh.exe compile.sh )
+  )
+)

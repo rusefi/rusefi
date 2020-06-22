@@ -83,21 +83,15 @@ public class AutoTest {
     private static void testVW_60_2() {
         setEngineType(32);
         changeRpm(900);
-        // TODO: we shall get this RPM higher!
         // first let's get to expected RPM
-        //assertRpmDoesNotJump(3000, 15, 30, FAIL);
+        assertRpmDoesNotJump(20000, 15, 30, FAIL);
     }
 
     private static void testV12() {
         setEngineType(40);
         changeRpm(700);
-/*
-this is just too unreliable at this point :(
-        // TODO: we shall get this RPM higher!
         // first let's get to expected RPM
-        assertRpmDoesNotJump(1700, 15, 30, FAIL);
-
- */
+        assertRpmDoesNotJump(15000, 15, 30, FAIL);
     }
 
     public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback) {

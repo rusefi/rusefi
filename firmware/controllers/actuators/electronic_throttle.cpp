@@ -388,6 +388,7 @@ void EtbController::update(efitick_t) {
 	ClosedLoopController::update();
 
 	DISPLAY_STATE(Engine)
+DISPLAY(DISPLAY_IF(1))
 	DISPLAY_TEXT(Electronic_Throttle);
 	DISPLAY_SENSOR(TPS)
 	DISPLAY_TEXT(eol);
@@ -736,7 +737,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	// If you don't have a pedal, we have no business here.
-	if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
+	if (!Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
 		return;
 	}
 

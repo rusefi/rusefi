@@ -234,7 +234,7 @@ public class EngineSnifferPanel {
          * this is to fix the UI glitch when images tab shows a tiny square
          */
         System.out.println("displayChart");
-        UiUtils.trueRepaint(chartPanel.getParent());
+        UiUtils.trueLayout(chartPanel.getParent());
     }
 
     public JPanel getPanel() {

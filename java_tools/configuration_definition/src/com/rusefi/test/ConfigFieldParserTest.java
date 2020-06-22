@@ -4,13 +4,13 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.VariableRegistry;
+import com.rusefi.output.ConfigurationConsumer;
 import com.rusefi.output.FsioSettingsConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
+import com.rusefi.output.TSProjectConsumer;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -32,6 +32,23 @@ public class ConfigFieldParserTest {
             assertEquals(cf.getSize(null), 8);
             assertFalse("isIterate", cf.isIterate());
         }
+    }
+
+    @Test
+    public void testCustomEnum() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
+                "custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
+                "ego_sensor_e afr_type;\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        CharArrayWriter writer = new CharArrayWriter();
+        TestTSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        assertEquals("\tafr_type\t\t\t\t\t = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+                "; total TS size = 4\n", new String(writer.toCharArray()));
     }
 
     @Test

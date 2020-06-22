@@ -12,7 +12,7 @@ jobs:
       matrix:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
-        build-target: [frankenso, frankenso-pal, mre-f4, mre-f7, prometheus-405, prometheus-469, proteus, kinetis]
+        build-target: [frankenso, frankenso-pal, mre-f4, mre-f7, prometheus-405, prometheus-469, proteus-f4, proteus-f7, kinetis]
         build-type: [debug, release]
         
         include:
@@ -42,7 +42,11 @@ jobs:
             efi-cpu: ARCH_STM32F4
             efi-board: prometheus/f469
 
-          - build-target: proteus
+          - build-target: proteus-f4
+            efi-cpu: ARCH_STM32F4
+            efi-board: proteus
+
+          - build-target: proteus-f7
             efi-cpu: ARCH_STM32F7
             efi-board: proteus
 
@@ -73,7 +77,9 @@ jobs:
             build-type: debug
           - build-target: prometheus-469
             build-type: debug
-          - build-target: proteus
+          - build-target: proteus-f4
+            build-type: debug
+          - build-target: proteus-f7
             build-type: debug
           - build-target: kinetis
             build-type: debug
@@ -83,6 +89,14 @@ jobs:
       with:
         submodules: recursive
   
+    - name: Generate Configs
+      working-directory: ./firmware/
+      run: sh gen_config.sh
+
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: sh gen_live_documentation.sh
+
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     - name: Download & Install GCC
       run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time

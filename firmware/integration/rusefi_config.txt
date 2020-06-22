@@ -235,8 +235,8 @@ struct pid_s
 	int16_t maxValue;Output max value;"",        1,     0,  -30000,    30000.0,  0
 end_struct
 
-#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
-custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:7], @@ego_sensor_e_enum@@
+#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"
+custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 
 struct cranking_parameters_s
 float baseFuel;+Base duration of the fuel injection during cranking, this is modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.;"ms",       1,     0,    0, 200,     1
@@ -244,13 +244,13 @@ int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel 
 end_struct
 
 #define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "Mode40"
-custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@debug_mode_e_enum@@
+custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "Inactive", "Second half", "2GZ", "Miata NB2", "First half", "mode5", "mode6", "mode7"
-custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:7], @@vvt_mode_e_enum@@
+custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:2], @@vvt_mode_e_enum@@
 
-#define mass_storage_e_enum "Auto", "Always", "Never"
-custom mass_storage_e 4 bits, U32, @OFFSET@, [0:7], @@mass_storage_e_enum@@
+#define mass_storage_e_enum "Auto", "Always", "Never", "INVALID"
+custom mass_storage_e 4 bits, U32, @OFFSET@, [0:1], @@mass_storage_e_enum@@
 
 ! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
 ! todo: as of ChibiOS3, only channels 1 & 2 are allowed to capture input, that's a ChibiOS driver limitation
@@ -282,7 +282,7 @@ custom output_pin_e 1 bits,    U08,   @OFFSET@, [0:7], @@output_pin_e_enum@@
 
 
 #define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
-custom pin_output_mode_e 1 bits,    U08,   @OFFSET@, [0:7], @@pin_output_mode_e_enum@@
+custom pin_output_mode_e 1 bits,    U08,   @OFFSET@, [0:1], @@pin_output_mode_e_enum@@
 
 custom pin_input_mode_e 1 scalar, U08,	@OFFSET@,	"todo", 1, 0, 0, 20, 1	
 
@@ -312,12 +312,13 @@ struct gppwm_channel
 	gppwm_table_t table;
 end_struct
 
-custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:7]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "type12", "type13"
+custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:3]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "type12", "type13", "INVALID", "INVALID"
+
 !
 ! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
 ! 
 #define adc_channel_e_enum "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "PB12", "PB13", "PC14", "PC15", "PC16", "PC17", "PD3", "PD4", "PE2", "PE6", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
-custom adc_channel_e 1 bits, U08, @OFFSET@, [0:7]  @@adc_channel_e_enum@@
+custom adc_channel_e 1 bits, U08, @OFFSET@, [0:4]  @@adc_channel_e_enum@@
 
 struct air_pressure_sensor_config_s
 float lowValue;kPa value at low volts;"kpa",      1,     0,    -400, 800,     2
@@ -361,7 +362,7 @@ struct ThermistorConf @brief Thermistor curve parameters
 	adc_channel_e adcChannel;
 end_struct
 
-custom engine_type_e 4 bits, S32, @OFFSET@,   [0:7], "AUDI_AAN", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD", "FORD_INLINE_6_1995", "GY6_139QMB"
+custom engine_type_e 4 bits, S32, @OFFSET@,   [0:2], "AUDI_AAN", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD", "FORD_INLINE_6_1995", "GY6_139QMB"
 engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type\nset engine_type X
 
 int engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM",      1,     0,    0,30000,      0
@@ -441,7 +442,7 @@ float[DWELL_CURVE_SIZE] sparkDwellRpmBins;On single-coil or wasted spark setups 
 struct_no_prefix specs_s
 float displacement;Engine displacement, in litres\nsee also cylindersCount;"L",    1,      0,       0,  1000.0,        2
 
-custom cylinders_count_t 4 bits,    U32,    @OFFSET@, [0:7], "INVALID", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, "INVALID", "INVALID", "INVALID"
+custom cylinders_count_t 4 bits,    U32,    @OFFSET@, [0:3], "INVALID", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, "INVALID", "INVALID", "INVALID"
 cylinders_count_t cylindersCount;
 
 ! see firing_order.h
@@ -450,7 +451,7 @@ cylinders_count_t cylindersCount;
 ! FO_1_8_4_3_6_5_7_2 = 5
 ! FO_1_2_4_5_3 = 6
 
-custom firing_order_e 4 bits,    U32,    @OFFSET@, [0:7], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1_2_3_4_5_6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8", "1-2-3-4-5-6-7-8-9", "fo22", "fo23", "fo24", "fo25", "INVALID"
+custom firing_order_e 4 bits,    U32,    @OFFSET@, [0:4], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1_2_3_4_5_6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8", "1-2-3-4-5-6-7-8-9", "fo22", "fo23", "fo24", "fo25", "INVALID"
 firing_order_e firingOrder;
 end_struct
 
@@ -460,20 +461,20 @@ int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM",     
 	int rpmHardLimit;set rpm_hard_limit X;"rpm",    1,      0,       0, 20000.0,        2
 
 
-#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge" 
+#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge", "INVALID", "INVALID" 
 
 
-custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:7], @@engine_load_mode_e_enum@@
+custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
 engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nSee also useTPSAdvanceTable\nset algorithm X
 
 
-custom injection_mode_e 4 bits, U32, @OFFSET@, [0:7], "Simultaneous", "Sequential", "Batch", "Single Point"
+custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
 injection_mode_e crankingInjectionMode;+This is the injection strategy during engine start.  See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
 injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups.  If your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
 angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
 
-custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:7], "One coil", "Individual Coils", "Wasted", "Two distributors"
+custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "Two distributors"
 ignition_mode_e ignitionMode;+"One Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
 
 angle_t ignitionOffset;+this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
@@ -496,16 +497,16 @@ float fsio_visible fanOffTemperature;+Cooling fan turn-off temperature threshold
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
 
-custom can_nbc_e 4 bits, U32, @OFFSET@, [0:7], "None", "FIAT", "VAG" , "MAZDA RX8", "BMW", "W202", "BMW E90"
+custom can_nbc_e 4 bits, U32, @OFFSET@, [0:3], "None", "FIAT", "VAG" , "MAZDA RX8", "BMW", "W202", "BMW E90", "INVALID", "INVALID"
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
 
 
-custom operation_mode_e 4 bits,    U32,    @OFFSET@, [0:7], "INVALID", "4 stroke without cam sensor", "4 stroke with cam sensor", "2 stroke", "4 stroke with symmetrical crank (requires VVT input)", "INVALID", "INVALID", "INVALID"
+custom operation_mode_e 4 bits,    U32,    @OFFSET@, [0:2], "INVALID", "4 stroke without cam sensor", "4 stroke with cam sensor", "2 stroke", "4 stroke with symmetrical crank (requires VVT input)", "INVALID", "INVALID", "INVALID"
 operation_mode_e ambiguousOperationMode;+'Some triggers could be mounted differently. Most well-known triggers imply specific sensor setup. 4 stroke with symmetrical crank' is a pretty special case for example on Miata NB2\nSee engineCycle\nset operation_mode X
 
-custom display_mode_e 4 bits,    U32,    @OFFSET@, [0:7], "none", "hd44780", "hd44780 over pcf8574", "INVALID"
+custom display_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "none", "hd44780", "hd44780 over pcf8574", "INVALID"
 display_mode_e displayMode;
 
 custom log_format_e 4 bits,    U32,    @OFFSET@, [0:0], "native", "Mega Log Viewer"
@@ -519,7 +520,7 @@ adc_channel_e vbattAdcChannel;+This is the processor input pin that the battery 
 adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined. 
 	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far\nset_analog_input_pin tps2 X
 
-	int unusedValueHere;
+	int unusedAt516;
 	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
@@ -529,7 +530,7 @@ custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
 #define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "trg50", "INVALID"
 
-custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:7], @@trigger_type_e_enum@@
+custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:5], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
 
 	bit todoRemoveMeOneDay0;
@@ -542,7 +543,7 @@ end_struct
 
 trigger_config_s trigger;
 
-custom spi_device_e 1 bits,U32,   @OFFSET@, [0:7], "Off", "SPI1", "SPI2", "SPI3", "SPI4" 
+custom spi_device_e 1 bits,U32,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "INVALID", "INVALID", "INVALID" 
 	spi_device_e hip9011SpiDevice;
 	adc_channel_e high_fuel_pressure_sensor_1;
 	adc_channel_e high_fuel_pressure_sensor_2;
@@ -641,7 +642,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	pin_output_mode_e mc33972_csPinMode;
 
 
-custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:7], "Off", "Slow", "Fast", "INVALID" 
+custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
 
 	adc_channel_e auxFastSensor1_adcChannel;Useful in Research&Development phase
 	adc_channel_e tps1_2AdcChannel;First throttle body, second sensor.
@@ -669,7 +670,10 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:7], "Off", "Slow", "Fas
 pin_input_mode_e throttlePedalUpPinMode;
 	uint8_t unused711;
 
-	int[4] unusedAt712;
+	int unusedAt712;
+	int unusedAt716;
+	int unusedAt720;
+	int unusedAt724;
 
 	uint32_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs",      1,      0,       0,1000000,      0
 
@@ -735,7 +739,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 
 
 
-custom uart_device_e 1 bits,U32,   @OFFSET@, [0:7], "Off", "UART1", "UART2", "UART3" 
+custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
 	int16_t sdCardPeriodMs;+SD card logging period, in milliseconds;"ms",        1,     0,  0,    30000,  0
 	uint8_t unused806
 	brain_pin_e debugMapAveraging;
@@ -788,12 +792,12 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 
 
 #define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1", "INVALID", "INVALID"
-custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:7], @@sensor_chart_e_enum@@
+custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:2], @@sensor_chart_e_enum@@
 sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode
 
 
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
-custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@@
+custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@@
 
 
 	maf_sensor_type_e mafSensorType;
@@ -817,7 +821,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
 	uint8_t multisparkMaxExtraSparkCount;;"count", 1, 0, 0, 5, 0
 	bit todoClutchUpPinInverted
 	bit todoClutchDownPinInverted
-	bit useHbridges
+	bit useHbridges;+If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable
 	bit enableLaunchRetard
 	bit enableLaunchBoost
@@ -860,7 +864,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:7], @@maf_sensor_type_e_enum@
     int boostPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
 
 	#define launchActivationMode_e_enum "Switch Input", "Clutch Input", "Always Active(Disabled By Speed)","INVALID"
-    custom launchActivationMode_e  4 bits, S32, @OFFSET@, [0:7], @@launchActivationMode_e_enum@@
+    custom launchActivationMode_e  4 bits, S32, @OFFSET@, [0:1], @@launchActivationMode_e_enum@@
     launchActivationMode_e launchActivationMode;
 
     #define antiLagActivationMode_e_enum "Always Active", "Switch Input"
@@ -1006,7 +1010,7 @@ float[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM",      1,     0,   0.0,    18000,   
 baro_corr_table_t baroCorrTable;
 	
 	#define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"
-custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:7], @@pin_mode_e_enum@@
+custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	
 	
 	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"Ratio",      1,     0,      0.0,    700.0,   2
@@ -1136,7 +1140,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	uint8_t[20] unusedOldBiquad
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C",        1,     0,   -100.0,    250.0,  1
 	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree",      1,     0,      -400.0,    400.0,   0
-custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:7], "Auto", "SemiAuto", "Manual", "Hall"
+custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual", "Hall"
 tle8888_mode_e tle8888mode;
 
 	uint8_t[3] unusedSomethingWasHere;
@@ -1285,7 +1289,7 @@ uint8_t[4] unusuedsw;
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load",   1,   0.0,        0,  500.0,   2
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultRpmBins;;"RPM",        @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0	
 
- 	custom can_vss_nbc_e 4 bits, U32, @OFFSET@, [0:7], "BMW_e46", "W202"
+ 	custom can_vss_nbc_e 4 bits, U32, @OFFSET@, [0:0], "BMW_e46", "W202"
 	can_vss_nbc_e canVssNbcType;set can_vss X
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
@@ -1573,6 +1577,7 @@ end_struct
 #define PROTOCOL_WA_CHANNEL_4 "input4"
 
 
+#define TS_PROTOCOL "001"
 // These commands are used by TunerStudio and the rusEfi console
 // 0x4F ochGetCommand
 #define TS_OUTPUT_COMMAND 'O'
@@ -1616,6 +1621,9 @@ end_struct
 // 0x77
 #define TS_IO_TEST_COMMAND 'w'
 
+#define TS_RESPONSE_OK 0
+#define TS_RESPONSE_BURN_OK 4
+#define TS_RESPONSE_COMMAND_OK 7
 
 // Engine Sniffer time stamp unit, in microseconds
 #define ENGINE_SNIFFER_UNIT_US 10
@@ -1628,7 +1636,13 @@ end_struct
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
 
 #define ET_MRE_MIATA_NA6 12
+#define ET_MRE_MIATA_NB2_MAP 11
 #define ET_MRE_MIATA_NB2_MAF 15
+#define ET_MRE_OLD_TEST_BOARD 30
+#define ET_MRE_NEW_TEST_BOARD 31
+#define ET_FRANKENSO_MIATA_NA6 41
+#define ET_FRANKENSO_MIATA_NB2 47
+#define ET_FRANKENSO_MIATA_NA6_VAF 57
 #define ET_BMW_M73_PROTEUS 63
 #define ET_CITROEN_TU3JP 65
 

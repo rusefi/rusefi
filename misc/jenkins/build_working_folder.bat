@@ -46,6 +46,7 @@ if %rusefi_console_settings%.==. (
 
 cp java_console/rusefi_autoupdate.jar     %console_folder%
 cp java_console_binary/rusefi_console.jar %console_folder%
+cp java_tools/ts_plugin_launcher/build/jar/rusefi_plugin_launcher.jar %console_folder%
 cp simulator/build/rusefi_simulator.exe   %console_folder%
 cp misc/console_launcher/rusefi_*.exe     %console_folder%
 cp java_console/rusefi.xml                %console_folder%

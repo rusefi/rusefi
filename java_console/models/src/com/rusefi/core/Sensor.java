@@ -93,7 +93,7 @@ public enum Sensor {
     FIRMWARE_VERSION(GAUGE_NAME_VERSION, SensorCategory.OPERATIONS, FieldType.INT, 120, 1, 0, 100, "version_f"),
     TS_CONFIG_VERSION(".ini version", SensorCategory.OPERATIONS, FieldType.INT, 124),
 
-    engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.INT16, 134, 0, 5),
+    engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 134, 0, 5),
     // Errors
     totalTriggerErrorCounter(GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, 136, 0, 5),
     lastErrorCode("last error", SensorCategory.STATUS, FieldType.INT, 138, 0, 5),
@@ -112,7 +112,7 @@ public enum Sensor {
     debugIntField4("debug i4", SensorCategory.DEBUG, FieldType.INT16, 196, 0, 5),
     debugIntField5("debug i5", SensorCategory.DEBUG, FieldType.INT16, 198, 0, 5),
 
-    tuneCrc16("tune crc16", SensorCategory.STATUS, FieldType.INT16, 240, 0, 5),
+    tuneCrc16("tune crc16", SensorCategory.STATUS, FieldType.UINT16, 240, 0, 5),
 
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),
@@ -256,5 +256,20 @@ public enum Sensor {
             default:
                 throw new UnsupportedOperationException("Type " + type);
         }
+    }
+
+    public String getLogValue(double value) {
+        if (scale == 1 && type != null) {
+            // only handle sensors without scale, i.e. not packed floats
+            switch (type) {
+                case UINT16: {
+                    int v = ((int) value) & 0xFFFF;
+                    return Integer.toString(v);
+                }
+            }
+
+        }
+
+        return Double.toString(value);
     }
 }

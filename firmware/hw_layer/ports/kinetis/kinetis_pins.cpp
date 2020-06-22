@@ -20,10 +20,7 @@ static ioportid_t ports[] = {GPIOA,
 		GPIOB,
 		GPIOC,
 		GPIOD,
-		GPIOE,
-		nullptr,
-		nullptr,
-		nullptr,
+		GPIOE
 };
 
 #define PIN_REPO_SIZE (sizeof(ports) / sizeof(ports[0])) * PORT_SIZE
@@ -32,8 +29,6 @@ static const char *PIN_USED[PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS];
 
 #include "pin_repository.h"
 #include "io_pins.h"
-
-extern ioportid_t PORTS[];
 
 /**
  * @deprecated - use hwPortname() instead
@@ -88,7 +83,7 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
 		return GPIO_NULL;
 	}
-	return PORTS[(brainPin - GPIOA_0) / PORT_SIZE];
+	return ports[(brainPin - GPIOA_0) / PORT_SIZE];
 }
 
 /**
