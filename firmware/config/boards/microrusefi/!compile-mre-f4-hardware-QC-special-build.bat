@@ -1,11 +1,8 @@
-
-cd ../../..
-
-set PROJECT_BOARD=microrusefi
-set PROJECT_CPU=ARCH_STM32F4
-set DEFAULT_ENGINE_TYPE=-DDEFAULT_ENGINE_TYPE=MRE_BOARD_NEW_TEST
-set EXTRA_PARAMS=-DHW_CHECK_MODE=TRUE
-
-call config/boards/common_make.bat
-
-
+@echo off
+sh.exe compile-mre-f4-hardware-QC-special-build.sh || (
+  if exist C:\cygwin64 (
+    C:\cygwin64\bin\sh.exe compile-mre-f4-hardware-QC-special-build.sh
+  ) else (
+    if exist C:\cygwin ( C:\cygwin\bin\sh.exe compile-mre-f4-hardware-QC-special-build.sh )
+  )
+)
