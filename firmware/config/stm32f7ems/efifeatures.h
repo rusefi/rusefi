@@ -80,6 +80,8 @@
 // todo: start using consoleUartDevice? Not sure
 #undef EFI_CONSOLE_SERIAL_DEVICE
 
+#undef EFI_CONSOLE_UART_DEVICE
+
 // todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32F7
 #undef TS_UART_DMA_MODE
 #define TS_UART_DMA_MODE FALSE
