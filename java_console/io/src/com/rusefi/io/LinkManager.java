@@ -161,6 +161,10 @@ public class LinkManager {
         }
     }
 
+    public static void setConnector(LinkConnector connector) {
+        LinkManager.connector = connector;
+    }
+
     public static boolean isLogViewerMode(String port) {
         Objects.requireNonNull(port, "port");
         return port.equals(LOG_VIEWER);

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 19 00:15:35 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 22 02:17:44 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -322,8 +322,14 @@ public class Fields {
 	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ET_BMW_M73_PROTEUS = 63;
 	public static final int ET_CITROEN_TU3JP = 65;
+	public static final int ET_FRANKENSO_MIATA_NA6 = 41;
+	public static final int ET_FRANKENSO_MIATA_NA6_VAF = 57;
+	public static final int ET_FRANKENSO_MIATA_NB2 = 47;
 	public static final int ET_MRE_MIATA_NA6 = 12;
 	public static final int ET_MRE_MIATA_NB2_MAF = 15;
+	public static final int ET_MRE_MIATA_NB2_MAP = 11;
+	public static final int ET_MRE_NEW_TEST_BOARD = 31;
+	public static final int ET_MRE_OLD_TEST_BOARD = 30;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int etb_dFactor_offset = 1744;
@@ -1269,7 +1275,11 @@ public class Fields {
 	public static final char TS_PAGE_COMMAND = 'P';
 	public static final char TS_PERF_TRACE_BEGIN = 'r';
 	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
+	public static final String TS_PROTOCOL = "001";
 	public static final char TS_READ_COMMAND = 'R';
+	public static final int TS_RESPONSE_BURN_OK = 4;
+	public static final int TS_RESPONSE_COMMAND_OK = 7;
+	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
 	public static final String TS_SIGNATURE = "rusEFI v1.2020.4";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';

@@ -35,12 +35,14 @@
         </copy>
 
         <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss"/>
             <format property="TODAY_DATE" pattern="yyyy-MM-dd"/>
         </tstamp>
 
         <jar destfile="${jar_file}" basedir="build/classes">
             <manifest>
                 <attribute name="Built-Date" value="${TODAY_DATE}"/>
+                <attribute name="Built-Timestamp" value="${TODAY}"/>
                 <attribute name="Signature-Vendor" value="rusEFI LLC"/>
             </manifest>
 

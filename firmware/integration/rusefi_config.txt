@@ -1577,6 +1577,7 @@ end_struct
 #define PROTOCOL_WA_CHANNEL_4 "input4"
 
 
+#define TS_PROTOCOL "001"
 // These commands are used by TunerStudio and the rusEfi console
 // 0x4F ochGetCommand
 #define TS_OUTPUT_COMMAND 'O'
@@ -1620,6 +1621,9 @@ end_struct
 // 0x77
 #define TS_IO_TEST_COMMAND 'w'
 
+#define TS_RESPONSE_OK 0
+#define TS_RESPONSE_BURN_OK 4
+#define TS_RESPONSE_COMMAND_OK 7
 
 // Engine Sniffer time stamp unit, in microseconds
 #define ENGINE_SNIFFER_UNIT_US 10
@@ -1632,7 +1636,13 @@ end_struct
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
 
 #define ET_MRE_MIATA_NA6 12
+#define ET_MRE_MIATA_NB2_MAP 11
 #define ET_MRE_MIATA_NB2_MAF 15
+#define ET_MRE_OLD_TEST_BOARD 30
+#define ET_MRE_NEW_TEST_BOARD 31
+#define ET_FRANKENSO_MIATA_NA6 41
+#define ET_FRANKENSO_MIATA_NB2 47
+#define ET_FRANKENSO_MIATA_NA6_VAF 57
 #define ET_BMW_M73_PROTEUS 63
 #define ET_CITROEN_TU3JP 65
 

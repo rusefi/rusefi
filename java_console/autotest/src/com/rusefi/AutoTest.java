@@ -84,14 +84,14 @@ public class AutoTest {
         setEngineType(32);
         changeRpm(900);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(12000, 15, 30, FAIL);
+        assertRpmDoesNotJump(20000, 15, 30, FAIL);
     }
 
     private static void testV12() {
         setEngineType(40);
         changeRpm(700);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(9000, 15, 30, FAIL);
+        assertRpmDoesNotJump(15000, 15, 30, FAIL);
     }
 
     public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback) {

@@ -327,8 +327,14 @@
 #define ERROR_BUFFER_SIZE 120
 #define ET_BMW_M73_PROTEUS 63
 #define ET_CITROEN_TU3JP 65
+#define ET_FRANKENSO_MIATA_NA6 41
+#define ET_FRANKENSO_MIATA_NA6_VAF 57
+#define ET_FRANKENSO_MIATA_NB2 47
 #define ET_MRE_MIATA_NA6 12
 #define ET_MRE_MIATA_NB2_MAF 15
+#define ET_MRE_MIATA_NB2_MAP 11
+#define ET_MRE_NEW_TEST_BOARD 31
+#define ET_MRE_OLD_TEST_BOARD 30
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
@@ -1289,7 +1295,11 @@
 #define TS_PAGE_COMMAND 'P'
 #define TS_PERF_TRACE_BEGIN 'r'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
+#define TS_PROTOCOL "001"
 #define TS_READ_COMMAND 'R'
+#define TS_RESPONSE_BURN_OK 4
+#define TS_RESPONSE_COMMAND_OK 7
+#define TS_RESPONSE_OK 0
 #define TS_SET_LOGGER_SWITCH 'l'
 #define ts_show_analog_divider true
 #define ts_show_auxserial_pins true

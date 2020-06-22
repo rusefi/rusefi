@@ -273,7 +273,7 @@ public class StartupFrame {
     }
 
     private Component createShowDeviceManagerButton() {
-        JButton showDeviceManager = new JButton(AutoupdateUtil.loadIcon("DeviceManager.png"));
+        JButton showDeviceManager = new JButton(AutoupdateUtil.loadIcon("/DeviceManager.png"));
         showDeviceManager.setMargin(new Insets(0, 0, 0, 0));
         showDeviceManager.setToolTipText("Show Device Manager");
         showDeviceManager.addActionListener(event -> {
