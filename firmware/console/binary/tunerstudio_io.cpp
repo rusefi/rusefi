@@ -164,7 +164,6 @@ int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int 
 	}
 #endif
 
-
 #if TS_UART_DMA_MODE
 #elif TS_UART_MODE
 	UNUSED(tsChannel);

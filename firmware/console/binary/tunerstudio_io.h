@@ -23,7 +23,7 @@ typedef enum {
 } ts_response_format_e;
 
 struct ts_channel_s {
-	BaseChannel * channel;
+	BaseChannel * channel = nullptr;
 	uint8_t writeBuffer[7];	// size(2 bytes) + response(1 byte) + crc32 (4 bytes)
 	/**
 	 * See 'blockingFactor' in rusefi.ini
