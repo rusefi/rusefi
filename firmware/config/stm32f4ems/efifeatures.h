@@ -335,7 +335,7 @@
 //#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
 #endif
 
-#define CONSOLE_UART_DEVICE (&UARTD3)
+//#define CONSOLE_UART_DEVICE (&UARTD3)
 
 /**
  * Use 'HAL_USE_UART' DMA-mode driver instead of 'HAL_USE_SERIAL'

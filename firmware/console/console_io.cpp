@@ -222,10 +222,6 @@ bool isUsbSerial(BaseChannel * channel) {
 }
 
 BaseChannel * getConsoleChannel(void) {
-#if defined(CONSOLE_UART_DEVICE)
-	return nullptr;
-#endif //CONSOLE_UART_DEVICE
-
 #if defined(EFI_CONSOLE_SERIAL_DEVICE)
 	return (BaseChannel *) EFI_CONSOLE_SERIAL_DEVICE;
 #endif /* EFI_CONSOLE_SERIAL_DEVICE */
