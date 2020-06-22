@@ -42,7 +42,7 @@ jobs:
             efi-cpu: ARCH_STM32F4
             efi-board: prometheus/f469
 
-          - build-target: proteus
+          - build-target: proteus-f7
             efi-cpu: ARCH_STM32F7
             efi-board: proteus
 
