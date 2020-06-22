@@ -221,7 +221,16 @@ bool isUsbSerial(BaseChannel * channel) {
 #endif
 }
 
+ts_channel_s primaryChannel;
+
 BaseChannel * getConsoleChannel(void) {
+#if PRIMARY_UART_DMA_MODE
+	if (primaryChannel.uartp != nullptr) {
+		// primary channel is in DMA mode - we do not have a stream implementation for this.
+		return nullptr;
+	}
+#endif
+
 #if defined(EFI_CONSOLE_SERIAL_DEVICE)
 	return (BaseChannel *) EFI_CONSOLE_SERIAL_DEVICE;
 #endif /* EFI_CONSOLE_SERIAL_DEVICE */
@@ -243,8 +252,6 @@ bool isCommandLineConsoleReady(void) {
 #endif /* EFI_PROD_CODE || EFI_EGT */
 
 #if !defined(EFI_CONSOLE_NO_THREAD)
-
-ts_channel_s primaryChannel;
 
 static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
 static THD_FUNCTION(consoleThreadEntryPoint, arg) {
