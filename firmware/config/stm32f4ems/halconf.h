@@ -382,7 +382,7 @@
  */
 #if !defined(UART_USE_WAIT) || defined(__DOXYGEN__)
 /* Configured in efifeatures.h */
-#if (TS_UART_DMA_MODE || TS_UART_MODE)
+#if (PRIMARY_UART_DMA_MODE || TS_UART_DMA_MODE || TS_UART_MODE)
 #define UART_USE_WAIT               TRUE
 #else
 #define UART_USE_WAIT               FALSE
