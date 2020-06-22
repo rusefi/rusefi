@@ -109,7 +109,7 @@ public class PluginEntry implements TsPluginBody {
 
         Msq tsTune = TsTuneReader.readTsTune(configurationName);
         Map<String, Constant> byName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        for (Constant c : tsTune.getPage().constant) {
+        for (Constant c : tsTune.findPage().constant) {
             byName.put(c.getName(), c);
         }
 
@@ -145,7 +145,7 @@ public class PluginEntry implements TsPluginBody {
                     value = cp.getStringValue();
                 }
 
-                msq.getPage().constant.add(new Constant(parameterName, cp.getUnits(), value));
+                msq.findPage().constant.add(new Constant(parameterName, cp.getUnits(), value));
             }
 
             String fileName = Msq.outputXmlFileName;

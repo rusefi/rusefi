@@ -3,7 +3,6 @@ package com.rusefi.tune.xml;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
-import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.xml.XmlUtil;
@@ -43,7 +42,7 @@ public class Msq {
     public ConfigurationImage asImage(IniFileModel instance) {
         ConfigurationImage ci = new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE);
 
-        for (Constant constant : getPage().constant) {
+        for (Constant constant : findPage().constant) {
             if (constant.getName().startsWith("UNALLOCATED_SPACE")) {
                 continue;
             }
@@ -66,7 +65,7 @@ public class Msq {
     public void loadConstant(IniFileModel ini, String key, ConfigurationImage image) {
         IniField field = ini.allIniFields.get(key);
         String value = field.getValue(image);
-        getPage().constant.add(new Constant(field.getName(), field.getUnits(), value));
+        findPage().constant.add(new Constant(field.getName(), field.getUnits(), value));
     }
 
     @XmlElement
@@ -79,7 +78,7 @@ public class Msq {
         return versionInfo;
     }
 
-    private Page getPage() {
+    public Page findPage() {
         return page.get(1);
     }
 
