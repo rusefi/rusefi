@@ -13,7 +13,7 @@
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
-#endif
+#endif // EFI_SIMULATOR
 
 EXTERN_ENGINE;
 
@@ -123,11 +123,14 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 			logMsg("chSequentialStreamWrite [%d]\r\n", size);
 #endif
 
-#if (TS_UART_DMA_MODE || TS_UART_MODE) && EFI_PROD_CODE
-	UNUSED(tsChannel);
-	int transferred = size;
-	uartSendTimeout(TS_UART_DEVICE, (size_t *)&transferred, buffer, BINARY_IO_TIMEOUT);
-#else
+#if (PRIMARY_UART_DMA_MODE || TS_UART_DMA_MODE || TS_UART_MODE) && EFI_PROD_CODE
+	if (tsChannel->uartp != nullptr) {
+		int transferred = size;
+		uartSendTimeout(tsChannel->uartp, (size_t *)&transferred, buffer, BINARY_IO_TIMEOUT);
+		return;
+	}
+#endif // UART
+
 	if (tsChannel->channel == nullptr)
 		return;
 
@@ -143,7 +146,6 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 		stillToTransfer -= thisTransferSize;
 	}
 
-#endif
 
 #if EFI_SIMULATOR
 			logMsg("transferred [%d]\r\n", transferred);
