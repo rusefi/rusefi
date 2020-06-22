@@ -126,7 +126,7 @@ typedef enum {
 	BMW_M73_F = 40,
 
 	// Frankenso board
-	MIATA_NA6_MAP = 41,
+	MIATA_NA6_MAP = ET_FRANKENSO_MIATA_NA6,
 
 	ZIL_130 = 42,
 
@@ -141,7 +141,7 @@ typedef enum {
 	/**
 	 * proper NB2 setup, 2003 red test mule car
 	 */
-	MAZDA_MIATA_2003 = 47,
+	MAZDA_MIATA_2003 = ET_FRANKENSO_MIATA_NB2,
 
 	HONDA_ACCORD_1_24_SHIFTED = 48,
 
@@ -172,7 +172,7 @@ typedef enum {
 	MAZDA_MIATA_NA8 = 56,
 
 	// see also	MIATA_NA6_MAP = 41
-	MIATA_NA6_VAF = 57,
+	MIATA_NA6_VAF = ET_FRANKENSO_MIATA_NA6_VAF,
 
 	ETB_BENCH_ENGINE = 58,
 
