@@ -19,6 +19,8 @@ public class AutoupdateUtil {
 
     private static final int BUFFER_SIZE = 32 * 1024;
     private static final int STEPS = 1000;
+    // todo: figure out a better way to work with absolute path
+    private static final String APPICON = "/appicon.png";
 
     public static void downloadAutoupdateFile(String localZipFileName, ConnectionAndMeta connectionAndMeta, String title) throws IOException {
         HttpURLConnection httpConnection = connectionAndMeta.httpConnection;
@@ -101,6 +103,12 @@ public class AutoupdateUtil {
         } else {
             return null;
         }
+    }
+
+    public static void setAppIcon(JFrame frame) {
+        ImageIcon icon = loadIcon(APPICON);
+        if (icon != null)
+            frame.setIconImage(icon.getImage());
     }
 
     public static class ConnectionAndMeta {
