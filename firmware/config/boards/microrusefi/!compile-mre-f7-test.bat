@@ -1,11 +1,8 @@
-
-cd ../../..
-
-set LDSCRIPT = config/boards/NUCLEO_F767/STM32F76xxI.ld
-
-set PROJECT_BOARD=microrusefi
-set PROJECT_CPU=ARCH_STM32F7
-set DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=MRE_BOARD_TEST
-
-call config/boards/common_make.bat
-
+@echo off
+sh.exe compile-mre-f7-test.sh || (
+  if exist C:\cygwin64 (
+    C:\cygwin64\bin\sh.exe compile-mre-f7-test.sh
+  ) else (
+    if exist C:\cygwin ( C:\cygwin\bin\sh.exe compile-mre-f7-test.sh )
+  )
+)
