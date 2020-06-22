@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 22 02:07:11 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 22 02:13:02 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -327,6 +327,8 @@ public class Fields {
 	public static final int ET_FRANKENSO_MIATA_NB2 = 47;
 	public static final int ET_MRE_MIATA_NA6 = 12;
 	public static final int ET_MRE_MIATA_NB2_MAF = 15;
+	public static final int ET_MRE_NEW_TEST_BOARD = 31;
+	public static final int ET_MRE_OLD_TEST_BOARD = 30;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int etb_dFactor_offset = 1744;

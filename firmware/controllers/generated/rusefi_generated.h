@@ -332,6 +332,8 @@
 #define ET_FRANKENSO_MIATA_NB2 47
 #define ET_MRE_MIATA_NA6 12
 #define ET_MRE_MIATA_NB2_MAF 15
+#define ET_MRE_NEW_TEST_BOARD 31
+#define ET_MRE_OLD_TEST_BOARD 30
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
