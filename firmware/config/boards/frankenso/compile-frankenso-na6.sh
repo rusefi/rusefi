@@ -1,3 +1,5 @@
+#!/bin/sh
+
 cd ../../..
 
 export EXTRA_PARAMS="-DDUMMY \
