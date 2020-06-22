@@ -96,7 +96,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     public boolean isClosed;
     /**
      * Snapshot of current gauges status
-     * @see BinaryProtocolCommands#COMMAND_OUTPUTS
+     * @see Fields#TS_OUTPUT_COMMAND
      */
     public byte[] currentOutputs;
     private SensorCentral.SensorListener rpmListener = value -> {
@@ -552,7 +552,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             return false;
 
         byte packet[] = new byte[5];
-        packet[0] = COMMAND_OUTPUTS;
+        packet[0] = Fields.TS_OUTPUT_COMMAND;
         putShort(packet, 1, 0); // offset
         putShort(packet, 3, swap16(Fields.TS_OUTPUT_SIZE));
 
@@ -598,6 +598,12 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 return (byte)(bb.getInt() & 0xFF);
             default:
                 throw new UnsupportedOperationException("type " + sensor.getType());
+        }
+    }
+
+    public void setRange(byte[] src, int scrPos, int offset, int count) {
+        synchronized (imageLock) {
+            System.arraycopy(src, scrPos, controller.getContent(), offset, count);
         }
     }
 }

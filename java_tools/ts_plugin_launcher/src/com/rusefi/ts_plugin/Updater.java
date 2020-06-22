@@ -6,6 +6,7 @@ import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +14,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URLClassLoader;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.rusefi.ts_plugin.TsPluginLauncher.VERSION;
 
@@ -22,7 +24,28 @@ public class Updater {
     private static final String TITLE = "rusEFI plugin installer " + VERSION;
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
-    public static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
+    private static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
+    private final JLabel countDownLabel = new JLabel();
+    private final AtomicInteger autoStartCounter = new AtomicInteger(4);
+    private final Timer timer = new Timer(1000, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (autoStartCounter.decrementAndGet() == 0) {
+                timer.stop();
+                try {
+                    if (shouldAutoStart) {
+                        startPlugin();
+                    }
+                } catch (IllegalAccessException | MalformedURLException | ClassNotFoundException | InstantiationException ex) {
+                    JOptionPane.showMessageDialog(content, "Error " + ex);
+                }
+            } else {
+                countDownLabel.setText("Will auto-start in " + autoStartCounter + " seconds");
+            }
+        }
+    });
+
+    private boolean shouldAutoStart = true;
 
     public Updater() {
         content.add(new JLabel("" + VERSION));
@@ -50,12 +73,15 @@ public class Updater {
             });
 
             content.add(run);
+
+            content.add(countDownLabel);
+            timer.start();
         }
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AutoupdateUtil.ConnectionAndMeta connectionAndMeta = null;
+                AutoupdateUtil.ConnectionAndMeta connectionAndMeta;
                 try {
                     connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
                 } catch (IOException e) {
@@ -79,11 +105,17 @@ public class Updater {
         download.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                cancelAutoStart();
                 new Thread(() -> startDownload(download)).start();
             }
         });
 
         content.add(download);
+    }
+
+    private void cancelAutoStart() {
+        timer.stop();
+        shouldAutoStart = false;
     }
 
     private String getVersion() {

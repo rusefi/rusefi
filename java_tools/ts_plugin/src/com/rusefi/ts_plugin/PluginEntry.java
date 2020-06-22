@@ -5,12 +5,14 @@ import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
 import com.rusefi.TsTuneReader;
+import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.URLLabel;
+import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -27,14 +29,40 @@ import java.util.jar.Manifest;
  * TsPlugin launcher creates an instance of this class via reflection.
  */
 public class PluginEntry implements TsPluginBody {
-    public static final String BUILT_DATE = "Built-Date";
+    private static final String BUILT_DATE = "Built-Date";
+    private static final String BUILT_TIMESTAMP = "Built-Timestamp";
     public static final String REO = "https://rusefi.com/online/";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
     private final JComponent content = new JPanel(new VerticalFlowLayout());
+    private static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
+
+    private final JButton upload = new JButton("Upload Current Tune");
+    private static final JLabel warning = new JLabel("Please open project");
 
     public PluginEntry() {
 
-        JButton upload = new JButton("Upload Current Tune");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    boolean isProjectActive = getConfigurationName() != null;
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            warning.setVisible(!isProjectActive);
+                            upload.setEnabled(isProjectActive);
+                        }
+                    });
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
         upload.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -53,8 +81,12 @@ public class PluginEntry implements TsPluginBody {
             }
         });
 
+        content.add(new JLabel(getAttribute(BUILT_TIMESTAMP)));
+//        content.add(new JLabel("Active project: " + getConfigurationName()));
+
+        content.add(warning);
         content.add(upload);
-        content.add(new JLabel(Updater.LOGO));
+        content.add(new JLabel(LOGO));
         content.add(tokenPanel.getContent());
         content.add(new URLLabel(REO));
     }
@@ -95,7 +127,10 @@ public class PluginEntry implements TsPluginBody {
             System.out.println("No ControllerAccess");
             return null;
         }
-        return controllerAccess.getEcuConfigurationNames()[0];
+        String[] configurationNames = controllerAccess.getEcuConfigurationNames();
+        if (configurationNames.length == 0)
+            return null;
+        return configurationNames[0];
     }
 
     private static String toString(double scalarValue, int decimalPlaces) {
@@ -109,7 +144,7 @@ public class PluginEntry implements TsPluginBody {
 
         Msq tsTune = TsTuneReader.readTsTune(configurationName);
         Map<String, Constant> byName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        for (Constant c : tsTune.getPage().constant) {
+        for (Constant c : tsTune.findPage().constant) {
             byName.put(c.getName(), c);
         }
 
@@ -145,7 +180,7 @@ public class PluginEntry implements TsPluginBody {
                     value = cp.getStringValue();
                 }
 
-                msq.getPage().constant.add(new Constant(parameterName, cp.getUnits(), value));
+                msq.findPage().constant.add(new Constant(parameterName, cp.getUnits(), value));
             }
 
             String fileName = Msq.outputXmlFileName;
@@ -164,6 +199,11 @@ public class PluginEntry implements TsPluginBody {
      */
     @SuppressWarnings("unused")
     public static String getVersion() {
+        return getAttribute(BUILT_DATE);
+    }
+
+    @NotNull
+    private static String getAttribute(String attributeName) {
         // all this magic below to make sure we are reading manifest of the *our* jar file not TS main jar file
         Class clazz = PluginEntry.class;
         String className = clazz.getSimpleName() + ".class";
@@ -177,12 +217,8 @@ public class PluginEntry implements TsPluginBody {
         try {
             Manifest manifest = new Manifest(new URL(manifestPath).openStream());
             Attributes attributes = manifest.getMainAttributes();
-            System.out.println("Attributed " + attributes);
-            System.out.println("Attributed " + attributes.keySet());
-            System.out.println("Attributed " + attributes.getValue("Class-Path"));
-            System.out.println("Attributed " + attributes.getValue("Main-Class"));
 
-            String result = attributes.getValue(BUILT_DATE);
+            String result = attributes.getValue(attributeName);
             System.out.println(BUILT_DATE + " " + result);
             return result == null ? "Unknown version" : result;
         } catch (IOException e) {

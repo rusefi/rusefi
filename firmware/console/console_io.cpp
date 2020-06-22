@@ -38,6 +38,7 @@
 #include "console_io.h"
 #include "os_util.h"
 #include "tunerstudio.h"
+#include "connector_uart_dma.h"
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
@@ -210,6 +211,8 @@ static const struct BaseChannelVMT uartChannelVmt = {
 static const BaseChannel uartChannel = { .vmt = &uartChannelVmt };
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
+ts_channel_s primaryChannel;
+
 #if EFI_PROD_CODE || EFI_EGT
 
 bool isUsbSerial(BaseChannel * channel) {
@@ -219,8 +222,14 @@ bool isUsbSerial(BaseChannel * channel) {
 	return false;
 #endif
 }
-
 BaseChannel * getConsoleChannel(void) {
+#if PRIMARY_UART_DMA_MODE
+	if (primaryChannel.uartp != nullptr) {
+		// primary channel is in DMA mode - we do not have a stream implementation for this.
+		return nullptr;
+	}
+#endif
+
 #if defined(EFI_CONSOLE_SERIAL_DEVICE)
 	return (BaseChannel *) EFI_CONSOLE_SERIAL_DEVICE;
 #endif /* EFI_CONSOLE_SERIAL_DEVICE */
@@ -232,7 +241,7 @@ BaseChannel * getConsoleChannel(void) {
 #if HAL_USE_SERIAL_USB
 	return (BaseChannel *) &CONSOLE_USB_DEVICE;
 #else
-	return NULL;
+	return nullptr;
 #endif /* HAL_USE_SERIAL_USB */
 }
 
@@ -243,30 +252,35 @@ bool isCommandLineConsoleReady(void) {
 
 #if !defined(EFI_CONSOLE_NO_THREAD)
 
-ts_channel_s primaryChannel;
-
 static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
 static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("console thread");
 
+#if !PRIMARY_UART_DMA_MODE
 	primaryChannel.channel = (BaseChannel *) getConsoleChannel();
-	if (primaryChannel.channel != NULL) {
+#endif
+
 #if EFI_TUNER_STUDIO
-		runBinaryProtocolLoop(&primaryChannel);
+	runBinaryProtocolLoop(&primaryChannel);
 #endif /* EFI_TUNER_STUDIO */
-	}
 }
 
 #endif /* EFI_CONSOLE_NO_THREAD */
 
 void consolePutChar(int x) {
-	chnWriteTimeout(getConsoleChannel(), (const uint8_t *)&x, 1, CONSOLE_WRITE_TIMEOUT);
+	BaseChannel * channel = getConsoleChannel();
+	if (channel != nullptr) {
+		chnWriteTimeout(channel, (const uint8_t *)&x, 1, CONSOLE_WRITE_TIMEOUT);
+	}
 }
 
 void consoleOutputBuffer(const uint8_t *buf, int size) {
 #if !EFI_UART_ECHO_TEST_MODE
-	chnWriteTimeout(getConsoleChannel(), buf, size, CONSOLE_WRITE_TIMEOUT);
+	BaseChannel * channel = getConsoleChannel();
+	if (channel != nullptr) {
+		chnWriteTimeout(channel, buf, size, CONSOLE_WRITE_TIMEOUT);
+	}
 #endif /* EFI_UART_ECHO_TEST_MODE */
 }
 
@@ -276,7 +290,17 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 	logger = sharedLogger;
 	console_line_callback = console_line_callback_p;
 
-#if (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR)
+#if (defined(EFI_CONSOLE_SERIAL_DEVICE) || defined(EFI_CONSOLE_UART_DEVICE)) && ! EFI_SIMULATOR
+		efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+		efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+#endif
+
+
+#if PRIMARY_UART_DMA_MODE && ! EFI_SIMULATOR
+		primaryChannel.uartp = EFI_CONSOLE_UART_DEVICE;
+		startUartDmaConnector(primaryChannel.uartp PASS_CONFIG_PARAMETER_SUFFIX);
+		isSerialConsoleStarted = true;
+#elif (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR)
 		/*
 		 * Activates the serial
 		 * it is important to set 'NONE' as flow control! in terminal application on the PC
@@ -284,19 +308,11 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 		serialConfig.speed = engineConfiguration->uartConsoleSerialSpeed;
 		sdStart(EFI_CONSOLE_SERIAL_DEVICE, &serialConfig);
 
-		efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-		efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-
-		isSerialConsoleStarted = true;
-
 		chEvtRegisterMask((event_source_t *) chnGetEventSource(EFI_CONSOLE_SERIAL_DEVICE), &consoleEventListener, 1);
+		isSerialConsoleStarted = true;
 #elif (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR)
 		uartConfig.speed = engineConfiguration->uartConsoleSerialSpeed;
 		uartStart(EFI_CONSOLE_UART_DEVICE, &uartConfig);
-
-		efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-		efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-
 		isSerialConsoleStarted = true;
 #endif /* EFI_CONSOLE_SERIAL_DEVICE || EFI_CONSOLE_UART_DEVICE */
 

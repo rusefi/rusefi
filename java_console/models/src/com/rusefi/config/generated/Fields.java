@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 17 16:44:43 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 22 02:17:44 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -322,8 +322,14 @@ public class Fields {
 	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ET_BMW_M73_PROTEUS = 63;
 	public static final int ET_CITROEN_TU3JP = 65;
+	public static final int ET_FRANKENSO_MIATA_NA6 = 41;
+	public static final int ET_FRANKENSO_MIATA_NA6_VAF = 57;
+	public static final int ET_FRANKENSO_MIATA_NB2 = 47;
 	public static final int ET_MRE_MIATA_NA6 = 12;
 	public static final int ET_MRE_MIATA_NB2_MAF = 15;
+	public static final int ET_MRE_MIATA_NB2_MAP = 11;
+	public static final int ET_MRE_NEW_TEST_BOARD = 31;
+	public static final int ET_MRE_OLD_TEST_BOARD = 30;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int etb_dFactor_offset = 1744;
@@ -1269,7 +1275,11 @@ public class Fields {
 	public static final char TS_PAGE_COMMAND = 'P';
 	public static final char TS_PERF_TRACE_BEGIN = 'r';
 	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
+	public static final String TS_PROTOCOL = "001";
 	public static final char TS_READ_COMMAND = 'R';
+	public static final int TS_RESPONSE_BURN_OK = 4;
+	public static final int TS_RESPONSE_COMMAND_OK = 7;
+	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
 	public static final String TS_SIGNATURE = "rusEFI v1.2020.4";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
@@ -1295,7 +1305,11 @@ public class Fields {
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_former_warmup_target_afr_offset = 2112;
+	public static final int unusedAt516_offset = 516;
 	public static final int unusedAt712_offset = 712;
+	public static final int unusedAt716_offset = 716;
+	public static final int unusedAt720_offset = 720;
+	public static final int unusedAt724_offset = 724;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1200;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_11_offset = 976;
@@ -1317,8 +1331,8 @@ public class Fields {
 	public static final int unusedBit_251_27_offset = 976;
 	public static final int unusedBit_251_28_offset = 976;
 	public static final int unusedBit_251_29_offset = 976;
-	public static final int unusedBit_280_30_offset = 976;
-	public static final int unusedBit_280_31_offset = 976;
+	public static final int unusedBit_283_30_offset = 976;
+	public static final int unusedBit_283_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedHere_offset = 761;
@@ -1329,7 +1343,6 @@ public class Fields {
 	public static final int unusedSpiPadding5_offset = 2715;
 	public static final int unusedSpiPadding7_offset = 4005;
 	public static final int unusedSpiPadding8_offset = 4009;
-	public static final int unusedValueHere_offset = 516;
 	public static final int unusuedsw_offset = 4020;
 	public static final int unusuedvref_offset = 4016;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
@@ -1494,7 +1507,7 @@ public class Fields {
 	public static final Field VBATTADCCHANNEL = Field.create("VBATTADCCHANNEL", 513, FieldType.INT8, adc_channel_e);
 	public static final Field FUELLEVELSENSOR = Field.create("FUELLEVELSENSOR", 514, FieldType.INT8, adc_channel_e);
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 515, FieldType.INT8, adc_channel_e);
-	public static final Field UNUSEDVALUEHERE = Field.create("UNUSEDVALUEHERE", 516, FieldType.INT);
+	public static final Field UNUSEDAT516 = Field.create("UNUSEDAT516", 516, FieldType.INT);
 	public static final Field SENSORCHARTFREQUENCY = Field.create("SENSORCHARTFREQUENCY", 520, FieldType.INT);
 	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "trg50", "INVALID"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 524, FieldType.INT, trigger_type_e);
@@ -1647,6 +1660,10 @@ public class Fields {
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 709, FieldType.INT8, brain_pin_e);
 	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 710, FieldType.INT8);
 	public static final Field UNUSED711 = Field.create("UNUSED711", 711, FieldType.INT8);
+	public static final Field UNUSEDAT712 = Field.create("UNUSEDAT712", 712, FieldType.INT);
+	public static final Field UNUSEDAT716 = Field.create("UNUSEDAT716", 716, FieldType.INT);
+	public static final Field UNUSEDAT720 = Field.create("UNUSEDAT720", 720, FieldType.INT);
+	public static final Field UNUSEDAT724 = Field.create("UNUSEDAT724", 724, FieldType.INT);
 	public static final Field TUNERSTUDIOSERIALSPEED = Field.create("TUNERSTUDIOSERIALSPEED", 728, FieldType.INT);
 	public static final Field COMPRESSIONRATIO = Field.create("COMPRESSIONRATIO", 732, FieldType.FLOAT);
 	public static final Field TRIGGERSIMULATORPINS1 = Field.create("TRIGGERSIMULATORPINS1", 736, FieldType.INT8, brain_pin_e);
@@ -1862,8 +1879,8 @@ public class Fields {
 	public static final Field UNUSEDBIT_251_27 = Field.create("UNUSEDBIT_251_27", 976, FieldType.BIT, 27);
 	public static final Field UNUSEDBIT_251_28 = Field.create("UNUSEDBIT_251_28", 976, FieldType.BIT, 28);
 	public static final Field UNUSEDBIT_251_29 = Field.create("UNUSEDBIT_251_29", 976, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_280_30 = Field.create("UNUSEDBIT_280_30", 976, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_280_31 = Field.create("UNUSEDBIT_280_31", 976, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_283_30 = Field.create("UNUSEDBIT_283_30", 976, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_283_31 = Field.create("UNUSEDBIT_283_31", 976, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN1 = Field.create("ETBIO1_CONTROLPIN1", 982, FieldType.INT8, brain_pin_e);
@@ -2485,7 +2502,7 @@ public class Fields {
 	VBATTADCCHANNEL,
 	FUELLEVELSENSOR,
 	TPS2_1ADCCHANNEL,
-	UNUSEDVALUEHERE,
+	UNUSEDAT516,
 	SENSORCHARTFREQUENCY,
 	TRIGGER_TYPE,
 	TRIGGER_TODOREMOVEMEONEDAY0,
@@ -2631,6 +2648,10 @@ public class Fields {
 	CANRXPIN,
 	THROTTLEPEDALUPPINMODE,
 	UNUSED711,
+	UNUSEDAT712,
+	UNUSEDAT716,
+	UNUSEDAT720,
+	UNUSEDAT724,
 	TUNERSTUDIOSERIALSPEED,
 	COMPRESSIONRATIO,
 	TRIGGERSIMULATORPINS1,
@@ -2844,8 +2865,8 @@ public class Fields {
 	UNUSEDBIT_251_27,
 	UNUSEDBIT_251_28,
 	UNUSEDBIT_251_29,
-	UNUSEDBIT_280_30,
-	UNUSEDBIT_280_31,
+	UNUSEDBIT_283_30,
+	UNUSEDBIT_283_31,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN1,
