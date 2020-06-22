@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
  */
 public class PresetsPane {
     // see rusefi_enums.h
-    private static final int MRE_BOARD_TEST = 30;
     private static final int TEST_V_12 = 49;
     private static final int ETB_BENCH = 58;
     private static final int MINIMAL_PINS = 99;
@@ -28,7 +27,8 @@ public class PresetsPane {
         content.add(new SetEngineTypeCommandControl("Frankenso V12", "/engines/v12", TEST_V_12).getContent());
         content.add(new SetEngineTypeCommandControl("ETB bench", "", ETB_BENCH).getContent());
         content.add(new SetEngineTypeCommandControl("Minimal", "", MINIMAL_PINS).getContent());
-        content.add(new SetEngineTypeCommandControl("MRE test", "", MRE_BOARD_TEST).getContent());
+        content.add(new SetEngineTypeCommandControl("MRE old test", "", Fields.ET_MRE_OLD_TEST_BOARD).getContent());
+        content.add(new SetEngineTypeCommandControl("MRE new test", "", Fields.ET_MRE_NEW_TEST_BOARD).getContent());
     }
 
     public JPanel getContent() {
