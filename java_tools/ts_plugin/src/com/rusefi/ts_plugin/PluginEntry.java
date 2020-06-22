@@ -5,6 +5,7 @@ import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
 import com.rusefi.TsTuneReader;
+import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
@@ -31,6 +32,7 @@ public class PluginEntry implements TsPluginBody {
     public static final String REO = "https://rusefi.com/online/";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
     private final JComponent content = new JPanel(new VerticalFlowLayout());
+    private static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
 
     public PluginEntry() {
 
@@ -54,7 +56,7 @@ public class PluginEntry implements TsPluginBody {
         });
 
         content.add(upload);
-        content.add(new JLabel(Updater.LOGO));
+        content.add(new JLabel(LOGO));
         content.add(tokenPanel.getContent());
         content.add(new URLLabel(REO));
     }
