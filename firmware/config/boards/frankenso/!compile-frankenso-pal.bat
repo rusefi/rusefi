@@ -1,13 +1,8 @@
-
-cd ../../..
-
-set EXTRA_PARAMS=-DDUMMY ^
- -DHAL_TRIGGER_USE_PAL=TRUE ^
- -DEFI_VEHICLE_SPEED=FALSE ^
- -DHAL_USE_ICU=FALSE ^
- -DEFI_LOGIC_ANALYZER=FALSE ^
- -DDEFAULT_ENGINE_TYPE=MIATA_NA6_VAF ^
- -DFIRMWARE_ID=\"frankensoNA6\"
-
-call config/boards/common_make.bat
-
+@echo off
+sh.exe compile-frankenso-pal.sh || (
+  if exist C:\cygwin64 (
+    C:\cygwin64\bin\sh.exe compile-frankenso-pal.sh
+  ) else (
+    if exist C:\cygwin ( C:\cygwin\bin\sh.exe compile-frankenso-pal.sh )
+  )
+)
