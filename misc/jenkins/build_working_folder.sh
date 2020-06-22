@@ -85,7 +85,7 @@ cd temp
 echo "Building bundle"
 pwd
 zip -r $FULL_BUNDLE_FILE *
-[ $? == 0 ] || (echo "$SCRIPT_NAME: ERROR INVOKING zip"); exit 1)
+[ $? == 0 ] || (echo "$SCRIPT_NAME: ERROR INVOKING zip"; exit 1)
 
 echo "$SCRIPT_FILE: Bundle $FULL_BUNDLE_FILE ready"
 ls -l $FULL_BUNDLE_FILE
