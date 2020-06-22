@@ -155,7 +155,8 @@
 #define EFI_MCP_3208 FALSE
 
 #ifndef EFI_HIP_9011
-#define EFI_HIP_9011 TRUE
+// disabling for now - DMA conflict with SPI1
+#define EFI_HIP_9011 FALSE
 #endif
 
 #ifndef EFI_CJ125
@@ -331,8 +332,10 @@
 
 // todo: start using consoleUartDevice? Not sure
 #ifndef EFI_CONSOLE_SERIAL_DEVICE
-#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
+//#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
 #endif
+
+#define CONSOLE_UART_DEVICE (&UARTD3)
 
 /**
  * Use 'HAL_USE_UART' DMA-mode driver instead of 'HAL_USE_SERIAL'
@@ -343,10 +346,10 @@
  * in mcuconf.h
  */
 #define TS_UART_DMA_MODE FALSE
-#define PRIMARY_UART_DMA_MODE FALSE
+#define PRIMARY_UART_DMA_MODE TRUE
 
 //#define TS_UART_DEVICE (&UARTD3)
-#define TS_SERIAL_DEVICE (&SD3)
+//#define TS_SERIAL_DEVICE (&SD3)
 
 #define AUX_SERIAL_DEVICE (&SD6)
 
