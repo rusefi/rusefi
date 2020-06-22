@@ -290,7 +290,7 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 	logger = sharedLogger;
 	console_line_callback = console_line_callback_p;
 
-#if (defined(CONSOLE_UART_DEVICE) || defined(EFI_CONSOLE_SERIAL_DEVICE) || defined(EFI_CONSOLE_UART_DEVICE)) && ! EFI_SIMULATOR
+#if (defined(EFI_CONSOLE_SERIAL_DEVICE) || defined(EFI_CONSOLE_UART_DEVICE)) && ! EFI_SIMULATOR
 		efiSetPadMode("console RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 		efiSetPadMode("console TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 #endif
