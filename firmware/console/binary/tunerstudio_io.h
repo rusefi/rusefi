@@ -30,7 +30,7 @@ struct ts_channel_s {
 	 */
 	char crcReadBuffer[BLOCKING_FACTOR + 30];
 
-#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
+#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
 	UARTDriver *uartp = nullptr;
 #endif // TS_UART_DMA_MODE
 };
