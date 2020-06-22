@@ -1,9 +1,8 @@
-
-cd ../../..
-
-set PROJECT_BOARD=microrusefi
-set PROJECT_CPU=ARCH_STM32F4
-
-call config/boards/common_make.bat
-
-
+@echo off
+sh.exe compile-mre-f4.sh || (
+  if exist C:\cygwin64 (
+    C:\cygwin64\bin\sh.exe compile-mre-f4.sh
+  ) else (
+    if exist C:\cygwin ( C:\cygwin\bin\sh.exe compile-mre-f4.sh )
+  )
+)
