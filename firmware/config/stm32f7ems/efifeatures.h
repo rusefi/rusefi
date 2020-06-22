@@ -83,7 +83,10 @@
 // todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32F7
 #undef TS_UART_DMA_MODE
 #define TS_UART_DMA_MODE FALSE
+
+#ifndef PRIMARY_UART_DMA_MODE
 #define PRIMARY_UART_DMA_MODE FALSE
+#endif
 
 #undef TS_UART_DEVICE
 //#define TS_UART_DEVICE (&UARTD3)
