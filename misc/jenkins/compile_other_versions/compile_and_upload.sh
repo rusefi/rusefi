@@ -16,7 +16,7 @@ echo "Entering $SCRIPT_NAME with 1=$1 2=$2 3=$3 4=$4"
 
 [ -n $BUNDLE_NAME ] || (echo "BUNDLE_NAME parameter expected"; exit -1)
 
-COMPILE_SCRIPT="compile-$BUNDLE_NAME.sh"
+COMPILE_SCRIPT="compile_$BUNDLE_NAME.sh"
 
 cd firmware
 sh clean.sh
