@@ -211,6 +211,8 @@ static const struct BaseChannelVMT uartChannelVmt = {
 static const BaseChannel uartChannel = { .vmt = &uartChannelVmt };
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
+ts_channel_s primaryChannel;
+
 #if EFI_PROD_CODE || EFI_EGT
 
 bool isUsbSerial(BaseChannel * channel) {
@@ -220,9 +222,6 @@ bool isUsbSerial(BaseChannel * channel) {
 	return false;
 #endif
 }
-
-ts_channel_s primaryChannel;
-
 BaseChannel * getConsoleChannel(void) {
 #if PRIMARY_UART_DMA_MODE
 	if (primaryChannel.uartp != nullptr) {
