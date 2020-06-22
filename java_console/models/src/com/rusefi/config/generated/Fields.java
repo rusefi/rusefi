@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 20 22:28:34 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 22 02:07:11 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -322,6 +322,9 @@ public class Fields {
 	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ET_BMW_M73_PROTEUS = 63;
 	public static final int ET_CITROEN_TU3JP = 65;
+	public static final int ET_FRANKENSO_MIATA_NA6 = 41;
+	public static final int ET_FRANKENSO_MIATA_NA6_VAF = 57;
+	public static final int ET_FRANKENSO_MIATA_NB2 = 47;
 	public static final int ET_MRE_MIATA_NA6 = 12;
 	public static final int ET_MRE_MIATA_NB2_MAF = 15;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
