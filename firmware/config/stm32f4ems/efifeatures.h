@@ -346,7 +346,10 @@
  * in mcuconf.h
  */
 #define TS_UART_DMA_MODE FALSE
+
+#ifndef PRIMARY_UART_DMA_MODE
 #define PRIMARY_UART_DMA_MODE TRUE
+#endif
 
 //#define TS_UART_DEVICE (&UARTD3)
 //#define TS_SERIAL_DEVICE (&SD3)
