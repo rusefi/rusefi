@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
@@ -158,7 +159,7 @@ public class ConsoleUI {
             }
         });
 
-        StartupFrame.setAppIcon(mainFrame.getFrame().getFrame());
+        AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
         mainFrame.getFrame().showFrame(tabbedPane.tabbedPane);
     }
 

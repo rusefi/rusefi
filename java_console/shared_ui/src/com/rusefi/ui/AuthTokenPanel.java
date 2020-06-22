@@ -98,7 +98,7 @@ public class AuthTokenPanel {
         try {
             String data = (String) clipboard.getData(DataFlavor.stringFlavor);
             paste.setEnabled(AutoTokenUtil.isToken(data));
-        } catch (IOException | UnsupportedFlavorException ex) {
+        } catch (IOException | IllegalStateException | UnsupportedFlavorException ex) {
             // ignoring this exception
         }
     }

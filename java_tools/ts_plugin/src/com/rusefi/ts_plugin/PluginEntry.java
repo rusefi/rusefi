@@ -1,10 +1,6 @@
 package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
-import com.efiAnalytics.plugin.ecu.ControllerException;
-import com.efiAnalytics.plugin.ecu.ControllerParameter;
-import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
-import com.rusefi.TsTuneReader;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Constant;
@@ -16,12 +12,12 @@ import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
-import javax.xml.bind.JAXBException;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.function.Supplier;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -37,20 +33,42 @@ public class PluginEntry implements TsPluginBody {
     private static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
 
     private final JButton upload = new JButton("Upload Current Tune");
-    private static final JLabel warning = new JLabel("Please open project");
+    private static final JLabel projectWarning = new JLabel("Please open project");
+    private static final JLabel tuneWarning = new JLabel();
+    private final Supplier<ControllerAccess> controllerAccessSupplier;
 
+    private String currentConfiguration;
+    private boolean tuneIsOk;
+    private boolean projectIsOk;
+
+    /**
+     * the real constructor - this one is invoked via reflection
+     */
     public PluginEntry() {
+        this(ControllerAccess::getInstance);
+    }
+
+    public PluginEntry(Supplier<ControllerAccess> controllerAccessSupplier) {
+        this.controllerAccessSupplier = controllerAccessSupplier;
+        upload.setBackground(new Color(0x90EE90));
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    boolean isProjectActive = getConfigurationName() != null;
+                    String configurationName = getConfigurationName();
+                    if ((currentConfiguration == null && configurationName != null)
+                            || !currentConfiguration.equals(configurationName)) {
+                        handleConfigurationChange(configurationName);
+                    }
+
+                    boolean isProjectActive = configurationName != null;
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            warning.setVisible(!isProjectActive);
-                            upload.setEnabled(isProjectActive);
+                            projectWarning.setVisible(!isProjectActive);
+                            projectIsOk = isProjectActive;
+                            updateUploadEnabled();
                         }
                     });
 
@@ -76,7 +94,7 @@ public class PluginEntry implements TsPluginBody {
                     return;
                 }
 
-                Msq tune = writeCurrentTune(ControllerAccess.getInstance(), configurationName);
+                Msq tune = TuneUploder.writeCurrentTune(ControllerAccess.getInstance(), configurationName);
                 Online.uploadTune(tune, tokenPanel, content);
             }
         });
@@ -84,11 +102,49 @@ public class PluginEntry implements TsPluginBody {
         content.add(new JLabel(getAttribute(BUILT_TIMESTAMP)));
 //        content.add(new JLabel("Active project: " + getConfigurationName()));
 
-        content.add(warning);
+        content.add(projectWarning);
+        content.add(tuneWarning);
         content.add(upload);
         content.add(new JLabel(LOGO));
         content.add(tokenPanel.getContent());
         content.add(new URLLabel(REO));
+    }
+
+    private void handleConfigurationChange(String configurationName) {
+        Map<String, Constant> fileSystemValues = TuneUploder.getFileSystemValues(configurationName);
+        Constant engineMake = fileSystemValues.get("enginemake");
+        Constant engineCode = fileSystemValues.get("enginecode");
+        Constant vehicleName = fileSystemValues.get("VEHICLENAME");
+        String warning = "";
+        if (isEmpty(engineMake.getValue())) {
+            warning += " engine make";
+        }
+        if (isEmpty(engineCode.getValue())) {
+            warning += " engine code";
+        }
+        if (isEmpty(vehicleName.getValue())) {
+            warning += " vehicle name";
+        }
+        if (warning.isEmpty()) {
+            tuneWarning.setVisible(false);
+            tuneIsOk = true;
+            updateUploadEnabled();
+        } else {
+            tuneWarning.setText("<html>Please set " + warning + " on Base Settings tab<br>and reopen Project");
+            tuneWarning.setForeground(Color.red);
+            tuneWarning.setVisible(true);
+            tuneIsOk = false;
+            updateUploadEnabled();
+        }
+        currentConfiguration = configurationName;
+    }
+
+    private void updateUploadEnabled() {
+        upload.setEnabled(tuneIsOk && projectIsOk);
+    }
+
+    private boolean isEmpty(String engineCode) {
+        return engineCode == null || engineCode.trim().length() == 0;
     }
 
     @Override
@@ -106,23 +162,8 @@ public class PluginEntry implements TsPluginBody {
         }
     }
 
-    private static String getArrayValue(double[][] arrayValues) {
-        StringBuilder sb = new StringBuilder();
-        for (int rowIndex = 0; rowIndex < arrayValues.length; rowIndex++) {
-            double[] array = arrayValues[rowIndex];
-            sb.append("\n\t");
-            for (int colIndex = 0; colIndex < array.length; colIndex++) {
-                double value = array[colIndex];
-                sb.append(' ');
-                sb.append(value);
-            }
-        }
-        sb.append("\n");
-        return sb.toString();
-    }
-
-    public static String getConfigurationName() {
-        ControllerAccess controllerAccess = ControllerAccess.getInstance();
+    private String getConfigurationName() {
+        ControllerAccess controllerAccess = controllerAccessSupplier.get();
         if (controllerAccess == null) {
             System.out.println("No ControllerAccess");
             return null;
@@ -131,65 +172,6 @@ public class PluginEntry implements TsPluginBody {
         if (configurationNames.length == 0)
             return null;
         return configurationNames[0];
-    }
-
-    private static String toString(double scalarValue, int decimalPlaces) {
-        // todo: start using decimalPlaces parameter!
-        return Double.toString(scalarValue);
-    }
-
-    private static Msq writeCurrentTune(ControllerAccess controllerAccess, String configurationName) {
-        Msq msq = new Msq();
-        ControllerParameterServer controllerParameterServer = controllerAccess.getControllerParameterServer();
-
-        Msq tsTune = TsTuneReader.readTsTune(configurationName);
-        Map<String, Constant> byName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        for (Constant c : tsTune.findPage().constant) {
-            byName.put(c.getName(), c);
-        }
-
-        try {
-            String[] parameterNames = controllerParameterServer.getParameterNames(configurationName);
-            for (String parameterName : parameterNames) {
-                ControllerParameter cp = controllerParameterServer.getControllerParameter(configurationName, parameterName);
-                String type = cp.getParamClass();
-                String value;
-                if (ControllerParameter.PARAM_CLASS_BITS.equals(type)) {
-                    value = cp.getStringValue();
-                    System.out.println("TsPlugin bits " + parameterName + ": " + value);
-                } else if (ControllerParameter.PARAM_CLASS_SCALAR.equals(type)) {
-                    value = toString(cp.getScalarValue(), cp.getDecimalPlaces());
-                    System.out.println("TsPlugin scalar " + parameterName + ": " + cp.getScalarValue() + "/" + cp.getStringValue());
-
-                } else if (ControllerParameter.PARAM_CLASS_ARRAY.equals(type)) {
-                    value = getArrayValue(cp.getArrayValues());
-                } else if ("string".equals(type)) {
-                    //value = cp.getStringValue();
-                    // WOW hack
-                    // TS does not provide values for string parameters?! so we read the file directly
-                    Constant constant = byName.get(parameterName);
-                    if (constant == null) {
-                        System.out.println("Not found in TS tune " + parameterName);
-                        value = null;
-                    } else {
-                        value = constant.getValue();
-                        System.out.println("TsPlugin name=" + parameterName + " string=" + cp.getStringValue() + "/h=" + value);
-                    }
-                } else {
-                    System.out.println("TsPlugin name=" + parameterName + " unexpected type " + type + "/" + cp.getStringValue());
-                    value = cp.getStringValue();
-                }
-
-                msq.findPage().constant.add(new Constant(parameterName, cp.getUnits(), value));
-            }
-
-            String fileName = Msq.outputXmlFileName;
-            msq.writeXmlFile(fileName);
-            return msq;
-        } catch (JAXBException | IOException | ControllerException e) {
-            System.out.println("Error writing XML: " + e);
-            return null;
-        }
     }
 
     /**

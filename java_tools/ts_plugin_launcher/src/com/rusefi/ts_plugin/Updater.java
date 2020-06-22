@@ -5,6 +5,7 @@ import com.rusefi.ui.storage.PersistentConfiguration;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -61,6 +62,7 @@ public class Updater {
         JButton download = new JButton("Update plugin");
         if (version != null) {
             JButton run = new JButton("Run Version " + version);
+            run.setBackground(new Color(0x90EE90));
             run.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
