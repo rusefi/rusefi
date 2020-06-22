@@ -9,6 +9,10 @@
 
 #if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
 
+#if TS_UART_DMA_MODE && PRIMARY_UART_DMA_MODE
+ #error "Only single-DMA implemented right now"
+#endif
+
 EXTERN_CONFIG;
 
 // Async. FIFO buffer takes some RAM...
