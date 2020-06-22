@@ -21,7 +21,7 @@
 /*==========================================================================*/
 
 /* fist available gpio number after on-chip gpios */
-#define EXT_GPIOS_FIRST (BRAIN_PIN_LAST_ONCHIP + 1)
+#define EXT_GPIOS_FIRST (BRAIN_PIN_ONCHIP_LAST + 1)
 static brain_pin_e gpio_base_free = EXT_GPIOS_FIRST;
 
 /*==========================================================================*/
