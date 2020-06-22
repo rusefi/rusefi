@@ -1,11 +1,8 @@
-
-cd ../../..
-
-set PROJECT_BOARD=microrusefi
-set PROJECT_CPU=ARCH_STM32F4
-set DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=BMW_M73_MRE_SLAVE
-set EXTRA_PARAMS=-DDUMMY -DEFI_CANBUS_SLAVE=TRUE
-
-call config/boards/common_make.bat
-
-
+@echo off
+sh.exe compile-mre-f4-slave.sh || (
+  if exist C:\cygwin64 (
+    C:\cygwin64\bin\sh.exe compile-mre-f4-slave.sh
+  ) else (
+    if exist C:\cygwin ( C:\cygwin\bin\sh.exe compile-mre-f4-slave.sh )
+  )
+)
