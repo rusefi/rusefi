@@ -175,6 +175,8 @@ int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int 
 		return 0;
 	return chnReadTimeout(tsChannel->channel, (uint8_t * )buffer, size, timeout);
 #endif /* TS_UART_DMA_MODE */
+	firmwareError(CUSTOM_ERR_6126, "Unexpected channel situation");
+	return 0;
 }
 
 int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
