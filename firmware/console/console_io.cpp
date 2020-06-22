@@ -222,6 +222,10 @@ bool isUsbSerial(BaseChannel * channel) {
 }
 
 BaseChannel * getConsoleChannel(void) {
+#if defined(CONSOLE_UART_DEVICE)
+	return nullptr;
+#endif //CONSOLE_UART_DEVICE
+
 #if defined(EFI_CONSOLE_SERIAL_DEVICE)
 	return (BaseChannel *) EFI_CONSOLE_SERIAL_DEVICE;
 #endif /* EFI_CONSOLE_SERIAL_DEVICE */
@@ -255,11 +259,9 @@ static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 	primaryChannel.channel = (BaseChannel *) getConsoleChannel();
 #endif
 
-	if (primaryChannel.channel != NULL) {
 #if EFI_TUNER_STUDIO
-		runBinaryProtocolLoop(&primaryChannel);
+	runBinaryProtocolLoop(&primaryChannel);
 #endif /* EFI_TUNER_STUDIO */
-	}
 }
 
 #endif /* EFI_CONSOLE_NO_THREAD */
