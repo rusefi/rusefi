@@ -297,8 +297,8 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 #endif
 
 
-#if (defined(CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR)
-		primaryChannel.uartp = CONSOLE_UART_DEVICE;
+#if PRIMARY_UART_DMA_MODE && ! EFI_SIMULATOR
+		primaryChannel.uartp = EFI_CONSOLE_UART_DEVICE;
 		startUartDmaConnector(primaryChannel.uartp PASS_CONFIG_PARAMETER_SUFFIX);
 		isSerialConsoleStarted = true;
 #elif (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR)
