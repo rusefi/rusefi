@@ -173,9 +173,7 @@ public class Updater {
         content.add(instance.getContent());
         AutoupdateUtil.trueLayout(content.getParent());
         Window windowAncestor = SwingUtilities.getWindowAncestor(content);
-        AutoupdateUtil.trueLayout(windowAncestor);
-        windowAncestor.pack();
-        AutoupdateUtil.trueLayout(windowAncestor);
+        AutoupdateUtil.pack(windowAncestor);
     }
 
     public JPanel getContent() {

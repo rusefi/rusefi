@@ -26,7 +26,7 @@ public class XmlUtil {
 
         System.out.println("Writing " + fileName);
         marshaller.marshal(instance, new FileWriter(fileName));
-        System.out.println("Done " + fileName);
+        System.out.println("Marshalling finished " + fileName);
     }
 
     public static <T> T readModel(Class<?> modelClass, String fileName) throws Exception {
