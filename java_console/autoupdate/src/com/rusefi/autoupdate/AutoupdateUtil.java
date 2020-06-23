@@ -111,6 +111,12 @@ public class AutoupdateUtil {
             frame.setIconImage(icon.getImage());
     }
 
+    public static void pack(Window window) {
+        trueLayout(window);
+        window.pack();
+        trueLayout(window);
+    }
+
     public static class ConnectionAndMeta {
         private String zipFileName;
         private HttpURLConnection httpConnection;

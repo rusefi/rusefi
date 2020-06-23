@@ -8,7 +8,9 @@ import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.URLLabel;
+import org.apache.http.concurrent.FutureCallback;
 import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONArray;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -30,11 +32,12 @@ public class PluginEntry implements TsPluginBody {
     public static final String REO = "https://rusefi.com/online/";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
     private final JComponent content = new JPanel(new VerticalFlowLayout());
-    private static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
+    private final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
 
     private final JButton upload = new JButton("Upload Current Tune");
-    private static final JLabel projectWarning = new JLabel("Please open project");
-    private static final JLabel tuneWarning = new JLabel();
+    private final JLabel uploadState = new JLabel();
+    private final JLabel projectWarning = new JLabel("Please open project");
+    private final JLabel tuneWarning = new JLabel();
     private final Supplier<ControllerAccess> controllerAccessSupplier;
 
     private String currentConfiguration;
@@ -95,16 +98,38 @@ public class PluginEntry implements TsPluginBody {
                 }
 
                 Msq tune = TuneUploder.writeCurrentTune(ControllerAccess.getInstance(), configurationName);
-                Online.uploadTune(tune, tokenPanel, content);
+                Online.uploadTune(tune, tokenPanel, content, new FutureCallback<JSONArray>() {
+                    @Override
+                    public void completed(JSONArray array) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                uploadState.setText(array.toString());
+                                uploadState.setVisible(true);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failed(Exception e) {
+                    }
+
+                    @Override
+                    public void cancelled() {
+                    }
+                });
             }
         });
 
         content.add(new JLabel(getAttribute(BUILT_TIMESTAMP)));
 //        content.add(new JLabel("Active project: " + getConfigurationName()));
 
+        uploadState.setVisible(false);
+
         content.add(projectWarning);
         content.add(tuneWarning);
         content.add(upload);
+        content.add(uploadState);
         content.add(new JLabel(LOGO));
         content.add(tokenPanel.getContent());
         content.add(new URLLabel(REO));
