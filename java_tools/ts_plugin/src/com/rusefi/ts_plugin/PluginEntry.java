@@ -116,13 +116,13 @@ public class PluginEntry implements TsPluginBody {
         Constant engineCode = fileSystemValues.get("enginecode");
         Constant vehicleName = fileSystemValues.get("VEHICLENAME");
         String warning = "";
-        if (isEmpty(engineMake.getValue())) {
+        if (isEmpty(engineMake)) {
             warning += " engine make";
         }
-        if (isEmpty(engineCode.getValue())) {
+        if (isEmpty(engineCode)) {
             warning += " engine code";
         }
-        if (isEmpty(vehicleName.getValue())) {
+        if (isEmpty(vehicleName)) {
             warning += " vehicle name";
         }
         if (warning.isEmpty()) {
@@ -139,12 +139,18 @@ public class PluginEntry implements TsPluginBody {
         currentConfiguration = configurationName;
     }
 
+    private boolean isEmpty(Constant constant) {
+        if (constant == null)
+            return true;
+        return isEmpty(constant.getValue());
+    }
+
     private void updateUploadEnabled() {
         upload.setEnabled(tuneIsOk && projectIsOk);
     }
 
-    private boolean isEmpty(String engineCode) {
-        return engineCode == null || engineCode.trim().length() == 0;
+    private boolean isEmpty(String value) {
+        return value == null || value.trim().length() == 0;
     }
 
     @Override
