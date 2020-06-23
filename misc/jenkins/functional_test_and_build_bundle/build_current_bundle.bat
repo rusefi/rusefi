@@ -98,15 +98,6 @@ echo "%script_name%: Going back to root folder"
 cd %root_folder%
 pwd
 
-
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files temp/rusefi_console.zip
-
-echo "%script_name%: Making rusefi_simulator.zip"
-pwd
-zip -j temp/rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files temp/rusefi_simulator.zip
-
-
 echo "TIMESTAMP %date% %time%"
 pwd
 echo "exiting %script_name%"
