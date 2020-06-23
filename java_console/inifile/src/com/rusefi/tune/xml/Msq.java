@@ -88,7 +88,10 @@ public class Msq {
 
     public Page findPage() {
         for (Page p : page) {
-            if (p.getSize() == Fields.TOTAL_CONFIG_SIZE) {
+            Integer size = p.getSize();
+            if (size == null)
+                continue;
+            if (size == Fields.TOTAL_CONFIG_SIZE) {
                 return p;
             }
         }
