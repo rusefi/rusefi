@@ -7,6 +7,7 @@ import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
 import com.rusefi.TsTuneReader;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.tune.xml.Page;
 import org.jetbrains.annotations.NotNull;
 
 import javax.xml.bind.JAXBException;
@@ -17,7 +18,7 @@ import java.util.TreeMap;
 
 public class TuneUploder {
     static Msq writeCurrentTune(ControllerAccess controllerAccess, String configurationName) {
-        Msq msq = new Msq();
+        Msq msq = Msq.create();
         ControllerParameterServer controllerParameterServer = controllerAccess.getControllerParameterServer();
 
         Map<String, Constant> fileSystemValues = getFileSystemValues(configurationName);
@@ -79,7 +80,8 @@ public class TuneUploder {
             value = cp.getStringValue();
         }
 
-        msq.findPage().constant.add(new Constant(parameterName, cp.getUnits(), value));
+        Page page = msq.findPage();
+        page.constant.add(new Constant(parameterName, cp.getUnits(), value));
     }
 
     private static String getArrayValue(double[][] arrayValues) {

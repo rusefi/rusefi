@@ -31,11 +31,17 @@ public class Msq {
     @NotNull
     public static Msq valueOf(ConfigurationImage image) {
         IniFileModel ini = IniFileModel.getInstance();
+        Msq tune = create();
+        for (String key : ini.allIniFields.keySet())
+            tune.loadConstant(ini, key, image);
+        return tune;
+    }
+
+    @NotNull
+    public static Msq create() {
         Msq tune = new Msq();
         tune.page.add(new Page(null, null));
         tune.page.add(new Page(0, Fields.TOTAL_CONFIG_SIZE));
-        for (String key : ini.allIniFields.keySet())
-            tune.loadConstant(ini, key, image);
         return tune;
     }
 
