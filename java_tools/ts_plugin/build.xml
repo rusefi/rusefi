@@ -22,6 +22,7 @@
             <src path="${console_path}/models/src"/>
             <src path="${launcher_path}/src"/>
             <src path="src"/>
+            <exclude name="**/*Sandbox.java"/>
         </javac>
 
     </target>
