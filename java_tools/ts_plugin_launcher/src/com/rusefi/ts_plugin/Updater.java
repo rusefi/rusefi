@@ -172,10 +172,10 @@ public class Updater {
         content.removeAll();
         content.add(instance.getContent());
         AutoupdateUtil.trueLayout(content.getParent());
-        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(content);
-        AutoupdateUtil.trueLayout(topFrame);
-        topFrame.pack();
-        AutoupdateUtil.trueLayout(topFrame);
+        Window windowAncestor = SwingUtilities.getWindowAncestor(content);
+        AutoupdateUtil.trueLayout(windowAncestor);
+        windowAncestor.pack();
+        AutoupdateUtil.trueLayout(windowAncestor);
     }
 
     public JPanel getContent() {

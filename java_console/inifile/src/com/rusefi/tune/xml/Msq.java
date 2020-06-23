@@ -42,7 +42,10 @@ public class Msq {
     public ConfigurationImage asImage(IniFileModel instance) {
         ConfigurationImage ci = new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE);
 
-        for (Constant constant : findPage().constant) {
+        Page page = findPage();
+        if (page == null)
+            return ci;
+        for (Constant constant : page.constant) {
             if (constant.getName().startsWith("UNALLOCATED_SPACE")) {
                 continue;
             }
@@ -65,7 +68,12 @@ public class Msq {
     public void loadConstant(IniFileModel ini, String key, ConfigurationImage image) {
         IniField field = ini.allIniFields.get(key);
         String value = field.getValue(image);
-        findPage().constant.add(new Constant(field.getName(), field.getUnits(), value));
+        Page page = findPage();
+        if (page == null) {
+            System.out.println("Msq: No page");
+            return;
+        }
+        page.constant.add(new Constant(field.getName(), field.getUnits(), value));
     }
 
     @XmlElement
@@ -79,7 +87,12 @@ public class Msq {
     }
 
     public Page findPage() {
-        return page.get(1);
+        for (Page p : page) {
+            if (p.getSize() == Fields.TOTAL_CONFIG_SIZE) {
+                return p;
+            }
+        }
+        return null;
     }
 
     @XmlElement
