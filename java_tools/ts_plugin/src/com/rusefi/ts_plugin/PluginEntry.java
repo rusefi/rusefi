@@ -115,7 +115,7 @@ public class PluginEntry implements TsPluginBody {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                uploadState.setText(array.toString());
+                                uploadState.setText(array.get(0).toString());
                                 uploadState.setVisible(true);
                             }
                         });
