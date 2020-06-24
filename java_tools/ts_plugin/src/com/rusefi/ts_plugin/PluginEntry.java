@@ -1,6 +1,7 @@
 package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
+import com.rusefi.TsTuneReader;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Constant;
@@ -16,6 +17,7 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
@@ -30,14 +32,15 @@ public class PluginEntry implements TsPluginBody {
     private static final String BUILT_DATE = "Built-Date";
     private static final String BUILT_TIMESTAMP = "Built-Timestamp";
     public static final String REO = "https://rusefi.com/online/";
+    private static final String NO_PROJECT = "Please open project";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
     private final JComponent content = new JPanel(new VerticalFlowLayout());
     private final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
 
     private final JButton upload = new JButton("Upload Current Tune");
     private final JLabel uploadState = new JLabel();
-    private final JLabel projectWarning = new JLabel("Please open project");
-    private final JLabel tuneWarning = new JLabel();
+    private final JLabel projectWarning = new JLabel(NO_PROJECT);
+    private final JLabel tuneInfo = new JLabel();
     private final Supplier<ControllerAccess> controllerAccessSupplier;
 
     private String currentConfiguration;
@@ -69,8 +72,16 @@ public class PluginEntry implements TsPluginBody {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            projectWarning.setVisible(!isProjectActive);
-                            projectIsOk = isProjectActive;
+                            if (!isProjectActive) {
+                                projectWarning.setText(NO_PROJECT);
+                                projectIsOk = false;
+                            } else if (!new File(TsTuneReader.getTsTuneFileName(configurationName)).exists()) {
+                                projectWarning.setText("Tune not found " + configurationName);
+                                projectIsOk = false;
+                            } else {
+                                projectIsOk = true;
+                            }
+                            projectWarning.setVisible(!projectIsOk);
                             updateUploadEnabled();
                         }
                     });
@@ -127,7 +138,7 @@ public class PluginEntry implements TsPluginBody {
         uploadState.setVisible(false);
 
         content.add(projectWarning);
-        content.add(tuneWarning);
+        content.add(tuneInfo);
         content.add(upload);
         content.add(uploadState);
         content.add(new JLabel(LOGO));
@@ -151,13 +162,12 @@ public class PluginEntry implements TsPluginBody {
             warning += " vehicle name";
         }
         if (warning.isEmpty()) {
-            tuneWarning.setVisible(false);
+            tuneInfo.setText(engineMake.getValue() + " " + engineCode.getValue() + " " + vehicleName.getValue());
             tuneIsOk = true;
             updateUploadEnabled();
         } else {
-            tuneWarning.setText("<html>Please set " + warning + " on Base Settings tab<br>and reopen Project");
-            tuneWarning.setForeground(Color.red);
-            tuneWarning.setVisible(true);
+            tuneInfo.setText("<html>Please set " + warning + " on Base Settings tab<br>and reopen Project");
+            tuneInfo.setForeground(Color.red);
             tuneIsOk = false;
             updateUploadEnabled();
         }

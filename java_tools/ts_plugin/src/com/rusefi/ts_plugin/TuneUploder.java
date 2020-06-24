@@ -42,7 +42,12 @@ public class TuneUploder {
     static Map<String, Constant> getFileSystemValues(String configurationName) {
         if (configurationName == null)
             return Collections.emptyMap();
-        Msq tsTune = TsTuneReader.readTsTune(configurationName);
+        Msq tsTune;
+        try {
+            tsTune = TsTuneReader.readTsTune(configurationName);
+        } catch (Exception e) {
+            return Collections.emptyMap();
+        }
         Map<String, Constant> byName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         for (Constant c : tsTune.findPage().constant) {
             byName.put(c.getName(), c);
