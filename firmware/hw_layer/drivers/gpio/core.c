@@ -169,9 +169,39 @@ int gpiochip_register(brain_pin_e base, const char *name, struct gpiochip_ops *o
 	chip->ops  = ops;
 	chip->base = base;
 	chip->size = size;
+	chip->gpio_names = NULL;
 	chip->priv = priv;
 
 	return (chip->base);
+}
+
+
+/**
+ * @brief Unregister gpiochip
+ * @details removes chip from list
+ * TODO: call deinit?
+ */
+
+int gpiochip_unregister(brain_pin_e base)
+{
+	struct gpiochip *chip = gpiochip_find(base);
+
+	if (!chip)
+		return -1;
+
+	/* gpiochip_find - returns chip if base within its range, but we need it to be base */
+	if (chip->base != base)
+		return -1;
+
+	/* unregister chip */
+	chip->name = NULL;
+	chip->ops  = NULL;
+	chip->base = 0;
+	chip->size = 0;
+	chip->gpio_names = NULL;
+	chip->priv = NULL;
+
+	return 0;
 }
 
 /**
