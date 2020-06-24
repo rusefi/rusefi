@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -86,7 +85,7 @@ public class Updater {
                 AutoupdateUtil.ConnectionAndMeta connectionAndMeta;
                 try {
                     connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     return;
                 }
@@ -146,7 +145,7 @@ public class Updater {
 
             startPlugin();
 
-        } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             download.setEnabled(true);
         }
