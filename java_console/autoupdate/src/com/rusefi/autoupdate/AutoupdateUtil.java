@@ -3,6 +3,7 @@ package com.rusefi.autoupdate;
 import com.rusefi.ui.util.FrameHelper;
 import org.jetbrains.annotations.NotNull;
 
+import javax.net.ssl.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -10,6 +11,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
@@ -119,7 +125,7 @@ public class AutoupdateUtil {
 
     public static class ConnectionAndMeta {
         private String zipFileName;
-        private HttpURLConnection httpConnection;
+        private HttpsURLConnection httpConnection;
         private long completeFileSize;
         private long lastModified;
 
@@ -139,12 +145,31 @@ public class AutoupdateUtil {
             return lastModified;
         }
 
-        public ConnectionAndMeta invoke() throws IOException {
+        public ConnectionAndMeta invoke() throws IOException, NoSuchAlgorithmException, KeyManagementException {
+            // user can have java with expired certificates or funny proxy, we shall accept any certificate :(
+            SSLContext ctx = SSLContext.getInstance("TLS");
+            ctx.init(new KeyManager[0], new TrustManager[] {new AcceptAnyCertificateTrustManager()}, new SecureRandom());
+
             URL url = new URL("https://rusefi.com/build_server/autoupdate/" + zipFileName);
-            httpConnection = (HttpURLConnection) url.openConnection();
+            httpConnection = (HttpsURLConnection) url.openConnection();
+            httpConnection.setSSLSocketFactory(ctx.getSocketFactory());
             completeFileSize = httpConnection.getContentLength();
             lastModified = httpConnection.getLastModified();
             return this;
+        }
+    }
+
+    private static class AcceptAnyCertificateTrustManager implements X509TrustManager {
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
         }
     }
 }
