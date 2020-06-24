@@ -231,6 +231,11 @@ void initSmartGpio() {
 		efiAssertVoid(OBD_PCM_Processor_Fault, ret == DRV8860_PIN_1, "drv8860");
 	}
 #endif /* (BOARD_DRV8860_COUNT > 0) */
+
+#if (BOARD_MC33810_COUNT > 0)
+	/* none of official boards has this IC */
+#endif /* (BOARD_MC33810_COUNT > 0) */
+
 	/* in case of disabled asserts... supress 'set but not used' error */
 	(void)ret;
 
@@ -254,6 +259,9 @@ void stopSmartCsPins() {
 #if (BOARD_DRV8860_COUNT > 0)
 	efiSetPadUnused(activeConfiguration.drv8860_cs);
 #endif /* BOARD_DRV8860_COUNT */
+#if (BOARD_MC33810_COUNT > 0)
+	/* none of official boards has this IC */
+#endif /* (BOARD_MC33810_COUNT > 0) */
 }
 
 void startSmartCsPins() {
@@ -277,6 +285,9 @@ void startSmartCsPins() {
 				&engineConfiguration->drv8860_csPinMode);
 	drv8860Cs.setValue(true);
 #endif /* BOARD_DRV8860_COUNT */
+#if (BOARD_MC33810_COUNT > 0)
+	/* none of official boards has this IC */
+#endif /* (BOARD_MC33810_COUNT > 0) */
 }
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
