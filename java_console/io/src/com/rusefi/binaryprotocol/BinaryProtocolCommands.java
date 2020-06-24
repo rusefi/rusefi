@@ -9,9 +9,9 @@ import com.rusefi.config.generated.Fields;
 public interface BinaryProtocolCommands {
     // see BLOCKING_FACTOR in firmware code
     int BLOCKING_FACTOR = Fields.BLOCKING_FACTOR;
-    byte RESPONSE_OK = 0;
-    byte RESPONSE_BURN_OK = 0x04;
-    byte RESPONSE_COMMAND_OK = 0x07;
+    byte RESPONSE_OK = Fields.TS_RESPONSE_OK;
+    byte RESPONSE_BURN_OK = Fields.TS_RESPONSE_BURN_OK;
+    byte RESPONSE_COMMAND_OK = Fields.TS_RESPONSE_COMMAND_OK;
     char COMMAND_HELLO = Fields.TS_HELLO_COMMAND;
     char COMMAND_PROTOCOL = 'F';
     // todo: make crc32CheckCommand shorted one day later - no need in 6 empty bytes
