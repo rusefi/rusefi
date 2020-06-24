@@ -18,6 +18,7 @@ import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
@@ -194,7 +195,17 @@ public class ConsoleTools {
             System.err.println("rusEFI not detected");
             return;
         }
-        LinkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
+        LinkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
+            @Override
+            public void onConnectionEstablished() {
+                BinaryProtocolServer.start();
+            }
+
+            @Override
+            public void onConnectionFailed() {
+
+            }
+        });
     }
 
     private static void invokeCallback(String callback) {
