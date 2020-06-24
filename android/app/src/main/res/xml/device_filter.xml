@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Accept all device VID/PID combinations -->
+    <usb-device />
+</resources>
