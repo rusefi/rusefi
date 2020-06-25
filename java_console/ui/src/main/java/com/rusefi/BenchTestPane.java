@@ -1,8 +1,8 @@
 package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.LinkManager;
 import com.rusefi.tracing.Entry;
 import com.rusefi.tracing.JsonOutput;
 import com.rusefi.ui.MessagesView;
@@ -57,7 +57,7 @@ public class BenchTestPane {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BinaryProtocol bp = BinaryProtocolHolder.INSTANCE.getCurrentStreamState();
+                BinaryProtocol bp = LinkManager.getCurrentStreamState();
                 bp.executeCommand(new byte[]{Fields.TS_PERF_TRACE_BEGIN}, "begin trace");
 
                 try {

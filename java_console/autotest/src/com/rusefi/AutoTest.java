@@ -3,12 +3,12 @@ package com.rusefi;
 
 import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 
@@ -44,7 +44,7 @@ public class AutoTest {
             }
         });
 
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = LinkManager.getCurrentStreamState();
         // let's make sure 'burn' command works since sometimes it does not
         bp.burn(Logger.CONSOLE);
 

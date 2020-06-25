@@ -13,11 +13,11 @@ import com.rusefi.autotune.FuelAutoTune;
 import com.rusefi.autotune.Result;
 import com.rusefi.autotune.AfrDataPoint;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.io.LinkManager;
 import com.rusefi.ui.storage.Node;
 
 import javax.swing.*;
@@ -136,7 +136,7 @@ public class FuelTunePane {
 
     private void uploadCurrentResult() {
         byte[] newVeMap = FuelTunePane.this.newVeMap;
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = LinkManager.getCurrentStreamState();
         if (newVeMap == null || bp == null)
             return;
         ConfigurationImage ci = bp.getControllerConfiguration().clone();
@@ -313,7 +313,7 @@ public class FuelTunePane {
     }
 
     private byte[] reloadVeTable() {
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = LinkManager.getCurrentStreamState();
 
         byte[] content = bp.getControllerConfiguration().getContent();
         loadData(veTable.getXAxis(), content, veRpmOffset);
@@ -329,7 +329,7 @@ public class FuelTunePane {
     }
 
     private void loadArray(double[] array, int offset) {
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = LinkManager.getCurrentStreamState();
         if (bp == null) {
             FileLog.MAIN.logLine("bp not ready");
             return;

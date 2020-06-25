@@ -3,6 +3,7 @@ package com.rusefi.io;
 import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.io.tcp.TcpConnector;
@@ -54,6 +55,11 @@ public class LinkManager {
         for (int i = 0; i < ports.length; i++)
             result[i] = ports[i].getSystemPortName();
         return result;
+    }
+
+    public static BinaryProtocol getCurrentStreamState() {
+        Objects.requireNonNull(connector, "connector");
+        return connector.getBinaryProtocol();
     }
 
     public enum LogLevel {

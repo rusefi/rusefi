@@ -45,7 +45,6 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  *
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
- * @see BinaryProtocolHolder
  */
 public class BinaryProtocol implements BinaryProtocolCommands {
 
@@ -111,7 +110,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     private final Thread hook = new Thread(() -> closeComposites());
 
-    protected BinaryProtocol(final Logger logger, IoStream stream) {
+    public BinaryProtocol(final Logger logger, IoStream stream) {
         this.logger = logger;
         this.stream = stream;
 

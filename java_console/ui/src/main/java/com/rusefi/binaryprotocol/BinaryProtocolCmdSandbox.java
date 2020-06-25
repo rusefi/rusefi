@@ -31,7 +31,7 @@ public class BinaryProtocolCmdSandbox {
 //        if (!opened) {
 //            logger.error("failed to open " + port);
 //        }
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().create(logger, SerialIoStreamJSerialComm.openPort(port));
+        BinaryProtocol bp = new BinaryProtocol(logger, SerialIoStreamJSerialComm.openPort(port));
 
         //SerialIoStreamJSSC.setupPort(serialPort, 38400);
         logger.info("Binary looks good!");
