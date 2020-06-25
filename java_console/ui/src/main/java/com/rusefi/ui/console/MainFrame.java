@@ -2,7 +2,6 @@ package com.rusefi.ui.console;
 
 import com.rusefi.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.*;
@@ -113,7 +112,7 @@ public class MainFrame {
         root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
         GaugesPanel.DetachedRepository.INSTANCE.saveConfig();
         getConfig().save();
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = LinkManager.getCurrentStreamState();
         if (bp != null && !bp.isClosed)
             bp.close(); // it could be that serial driver wants to be closed explicitly
         System.exit(0);

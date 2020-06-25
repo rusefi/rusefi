@@ -3,9 +3,9 @@ package com.rusefi.io.tcp;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolCommands;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.LinkManager;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -126,7 +126,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
                 byte[] response = new byte[1 + count];
                 response[0] = (byte) TS_OK.charAt(0);
-                BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+                BinaryProtocol bp = LinkManager.getCurrentStreamState();
                 byte[] currentOutputs = bp.currentOutputs;
                 if (currentOutputs != null)
                     System.arraycopy(currentOutputs, 1 + offset , response, 1, count);
@@ -143,7 +143,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         int offset = swap16(dis.readShort());
         int count = swap16(dis.readShort());
         FileLog.MAIN.logLine("TS_CHUNK_WRITE_COMMAND: offset=" + offset + " count=" + count);
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = LinkManager.getCurrentStreamState();
         bp.setRange(packet, 7, offset, count);
         stream.sendPacket(TS_OK.getBytes(), FileLog.LOGGER);
     }
@@ -156,7 +156,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             FileLog.MAIN.logLine("Error: negative read request " + offset + "/" + count);
         } else {
             System.out.println("read " + page + "/" + offset + "/" + count);
-            BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+            BinaryProtocol bp = LinkManager.getCurrentStreamState();
             byte[] response = new byte[1 + count];
             response[0] = (byte) TS_OK.charAt(0);
             System.arraycopy(bp.getControllerConfiguration().getContent(), offset, response, 1, count);
@@ -166,7 +166,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     private static void handleCrc(TcpIoStream stream) throws IOException {
         System.out.println("CRC check");
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = LinkManager.getCurrentStreamState();
         byte[] content = bp.getControllerConfiguration().getContent();
         int result = IoHelper.getCrc32(content);
         ByteArrayOutputStream response = new ByteArrayOutputStream();

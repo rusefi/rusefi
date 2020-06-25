@@ -4,10 +4,10 @@ import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.io.LinkManager;
 import com.rusefi.ui.config.ConfigField;
 
 import java.io.FileWriter;
@@ -45,7 +45,7 @@ public class PlainTextSensorLog implements SensorLog {
             logFile.write("Captured " + FileLog.getDate() + "\r\n");
 
             int debugMode = -1;
-            BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+            BinaryProtocol bp = LinkManager.getCurrentStreamState();
             if (bp != null) {
                 ConfigurationImage ci = bp.getControllerConfiguration();
                 if (ci != null) {

@@ -5,7 +5,7 @@ import com.romraider.editor.ecu.ECUEditor;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolCmd;
 import com.opensr5.io.ConfigurationImageFile;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
+import com.rusefi.io.LinkManager;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
@@ -32,7 +32,7 @@ public class TableEditorPane extends JPanel {
 
             add(editor.getContent());
 
-            BinaryProtocol instance = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+            BinaryProtocol instance = LinkManager.getCurrentStreamState();
             if (instance == null)
                 throw new NullPointerException("instance");
             ConfigurationImage image = instance.getControllerConfiguration();

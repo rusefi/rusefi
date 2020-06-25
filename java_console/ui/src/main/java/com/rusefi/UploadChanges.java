@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.RecentCommands;
@@ -88,7 +87,7 @@ public class UploadChanges {
             @Override
             public void run() {
                 try {
-                    BinaryProtocolHolder.getInstance().getCurrentStreamState().uploadChanges(newVersion, logger);
+                    LinkManager.getCurrentStreamState().uploadChanges(newVersion, logger);
                     if (afterUpload != null)
                         afterUpload.run();
                 } catch (InterruptedException | EOFException e) {

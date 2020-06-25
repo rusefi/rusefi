@@ -3,10 +3,10 @@ package com.rusefi.ui.config;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.Field;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -28,7 +28,7 @@ public abstract class BaseConfigField {
     }
 
     private void processInitialValue(Field field) {
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = LinkManager.getCurrentStreamState();
         if (bp == null)
             return;
         ConfigurationImage ci = bp.getControllerConfiguration();

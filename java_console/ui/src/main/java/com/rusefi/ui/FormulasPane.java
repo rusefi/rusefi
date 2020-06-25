@@ -3,10 +3,10 @@ package com.rusefi.ui;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.io.LinkManager;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.util.UiUtils;
@@ -107,7 +107,7 @@ public class FormulasPane {
     }
 
     private void updateFormula() {
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = LinkManager.getCurrentStreamState();
         if (bp == null)
             return;
         ConfigurationImage ci = bp.getControllerConfiguration();

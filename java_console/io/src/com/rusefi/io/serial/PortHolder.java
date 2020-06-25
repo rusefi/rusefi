@@ -2,7 +2,6 @@ package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.io.CommunicationLoggingHolder;
 import com.rusefi.io.ConnectionStateListener;
 import com.opensr5.io.DataListener;
@@ -41,7 +40,7 @@ public class PortHolder {
 
         IoStream stream = SerialIoStreamJSerialComm.openPort(port);
         synchronized (portLock) {
-            bp = BinaryProtocolHolder.getInstance().create(FileLog.LOGGER, stream);
+            bp = new BinaryProtocol(FileLog.LOGGER, stream);
             portLock.notifyAll();
         }
 
