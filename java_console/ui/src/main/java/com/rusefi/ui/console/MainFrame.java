@@ -75,7 +75,7 @@ public class MainFrame {
             @Override
             public void onConnectionEstablished() {
                 FileLog.MAIN.logLine("onConnectionEstablished");
-                tabbedPane.tableEditor.showContent();
+//                tabbedPane.romEditorPane.showContent();
                 tabbedPane.settingsTab.showContent();
                 tabbedPane.logsManager.showContent();
                 tabbedPane.fuelTunePane.showContent();

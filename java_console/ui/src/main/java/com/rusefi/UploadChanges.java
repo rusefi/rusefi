@@ -6,6 +6,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.StatusWindow;
+import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,18 +77,18 @@ public class UploadChanges {
  */
     }
 
-    public static void scheduleUpload(final ConfigurationImage newVersion) {
-        scheduleUpload(newVersion, null);
+    public static void scheduleUpload(UIContext uiContext, final ConfigurationImage newVersion) {
+        scheduleUpload(uiContext, newVersion, null);
     }
 
-    public static void scheduleUpload(final ConfigurationImage newVersion, final Runnable afterUpload) {
+    public static void scheduleUpload(UIContext uiContext, final ConfigurationImage newVersion, final Runnable afterUpload) {
         JFrame frame = wnd.getFrame();
         frame.setVisible(true);
         LinkManager.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    LinkManager.getCurrentStreamState().uploadChanges(newVersion, logger);
+                    uiContext.getLinkManager().getCurrentStreamState().uploadChanges(newVersion, logger);
                     if (afterUpload != null)
                         afterUpload.run();
                 } catch (InterruptedException | EOFException e) {

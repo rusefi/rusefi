@@ -6,6 +6,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolCmd;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.io.LinkManager;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
@@ -13,10 +14,13 @@ import java.awt.*;
 
 import static com.romraider.editor.ecu.ECUEditorManager.getECUEditor;
 
-public class TableEditorPane extends JPanel {
+public class RomEditorPane extends JPanel {
 
-    public TableEditorPane() {
+    private final UIContext uiContext;
+
+    public RomEditorPane(UIContext uiContext) {
         super(new BorderLayout());
+        this.uiContext = uiContext;
         UiUtils.showLoadingMessage(this);
     }
 

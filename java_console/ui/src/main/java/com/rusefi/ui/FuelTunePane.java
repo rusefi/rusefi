@@ -51,10 +51,12 @@ public class FuelTunePane {
     private final JButton upload = new JButton("Upload");
     private final JCheckBox collect = new JCheckBox("enable");
     private final JButton clean = new JButton("clear");
+    private final UIContext uiContext;
     private byte[] newVeMap;
     private DataOutputStream dos;
 
-    public FuelTunePane(Node config) {
+    public FuelTunePane(UIContext uiContext, Node config) {
+        this.uiContext = uiContext;
         final JLabel incomingBufferSize = new JLabel();
 
         JButton runLogic = new JButton("one iteration");
@@ -136,7 +138,7 @@ public class FuelTunePane {
 
     private void uploadCurrentResult() {
         byte[] newVeMap = FuelTunePane.this.newVeMap;
-        BinaryProtocol bp = LinkManager.getCurrentStreamState();
+        BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
         if (newVeMap == null || bp == null)
             return;
         ConfigurationImage ci = bp.getControllerConfiguration().clone();
@@ -154,7 +156,7 @@ public class FuelTunePane {
                 });
             }
         };
-        UploadChanges.scheduleUpload(ci, afterBurn);
+        UploadChanges.scheduleUpload(uiContext, ci, afterBurn);
     }
 
     private void doClean() {
@@ -313,7 +315,7 @@ public class FuelTunePane {
     }
 
     private byte[] reloadVeTable() {
-        BinaryProtocol bp = LinkManager.getCurrentStreamState();
+        BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
 
         byte[] content = bp.getControllerConfiguration().getContent();
         loadData(veTable.getXAxis(), content, veRpmOffset);
@@ -329,7 +331,7 @@ public class FuelTunePane {
     }
 
     private void loadArray(double[] array, int offset) {
-        BinaryProtocol bp = LinkManager.getCurrentStreamState();
+        BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
         if (bp == null) {
             FileLog.MAIN.logLine("bp not ready");
             return;
