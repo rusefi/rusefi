@@ -6,7 +6,6 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.LinkManager;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.util.UiUtils;
@@ -37,11 +36,13 @@ public class FormulasPane {
      */
     private final JPanel content = new JPanel(new BorderLayout());
     private final JPanel formulaProxy = new JPanel(new BorderLayout());
+    private final UIContext uiContext;
     private boolean isPaused;
 
     private JPanel liveDocs = LiveDocPanel.createLiveDocumentationPanel();
 
-    public FormulasPane() {
+    public FormulasPane(UIContext uiContext) {
+        this.uiContext = uiContext;
 
         JPanel vertical = new JPanel(new VerticalFlowLayout());
         vertical.add(liveDocs);
@@ -107,7 +108,7 @@ public class FormulasPane {
     }
 
     private void updateFormula() {
-        BinaryProtocol bp = LinkManager.getCurrentStreamState();
+        BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
         if (bp == null)
             return;
         ConfigurationImage ci = bp.getControllerConfiguration();

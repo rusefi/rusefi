@@ -44,9 +44,11 @@ public class ConsoleUI {
 
     static Frame staticFrame;
 
-    private final TabbedPanel tabbedPane = new TabbedPanel();
+    private final TabbedPanel tabbedPane;
 
-    private final MainFrame mainFrame = new MainFrame(this, tabbedPane);
+    private final MainFrame mainFrame;
+
+    private final UIContext uiContext = new UIContext();
 
     /**
      * We can listen to tab activation event if we so desire
@@ -58,7 +60,9 @@ public class ConsoleUI {
     }
 
     public ConsoleUI(String port) {
+        tabbedPane = new TabbedPanel(uiContext);
         this.port = port;
+        mainFrame = new MainFrame(this, tabbedPane);
         ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
 
@@ -113,14 +117,14 @@ public class ConsoleUI {
             tabbedPane.addTab("ECU stimulation", stimulator.getPanel());
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-        if (!LinkManager.isLogViewer())
-            tabbedPane.addTab("Table Editor", tabbedPane.tableEditor);
+//        if (!LinkManager.isLogViewer())
+//            tabbedPane.addTab("Table Editor", tabbedPane.romEditorPane);
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
         if (!LinkManager.isLogViewer())
             tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
         if (!LinkManager.isLogViewer()) {
-            tabbedPane.addTab("Formulas/Live Data", new FormulasPane().getContent());
+            tabbedPane.addTab("Formulas/Live Data", new FormulasPane(uiContext).getContent());
             tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane().getContent());
         }
 
