@@ -66,10 +66,9 @@ public class rusEFI extends Activity {
 
 //        listDevices(manager);
 
-        ProbeTable customTable = new ProbeTable();
+        ProbeTable customTable = UsbSerialProber.getDefaultProbeTable();
         customTable.addProduct(VENDOR_ST, ST_CDC, CdcAcmSerialDriver.class);
         UsbSerialProber prober = new UsbSerialProber(customTable);
-        // todo: handle both custom ST CDC and default hard-coded USB chips
 
         List<UsbSerialDriver> availableDrivers = prober.findAllDrivers(manager);
         if (availableDrivers.isEmpty()) {
@@ -100,7 +99,7 @@ public class rusEFI extends Activity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mResultView.append(new String(data));
+                            mResultView.append("WE GOT DATA: " + new String(data) + "\n");
                         }
                     });
                 }
