@@ -7,6 +7,7 @@ import com.rusefi.core.EngineState;
 import com.rusefi.file.FileUtils;
 import com.rusefi.ui.ChartRepository;
 import com.rusefi.ui.LogDownloader;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.io.LinkManager;
@@ -43,12 +44,14 @@ public class LogViewer extends JPanel {
     private final JLabel fileLabel = new JLabel();
     private final DefaultListModel<FileItem> fileListModel = new DefaultListModel<FileItem>();
     private final JList<FileItem> fileList = new JList<FileItem>(fileListModel);
+    private final UIContext uiContext;
     private final EngineSnifferPanel engineSnifferPanel;
     private String currentFolder;
     private static JPanel descPanel = new JPanel();
 
-    public LogViewer(EngineSnifferPanel engineSnifferPanel) {
+    public LogViewer(UIContext uiContext, EngineSnifferPanel engineSnifferPanel) {
         super(new BorderLayout());
+        this.uiContext = uiContext;
         this.engineSnifferPanel = engineSnifferPanel;
 
         setBackground(Color.green);
@@ -125,7 +128,7 @@ public class LogViewer extends JPanel {
 
         int index = 0;
 
-        while (files.length > index && LinkManager.isLogViewer()) {
+        while (files.length > index && uiContext.getLinkManager().isLogViewer()) {
             File file = files[index];
             if (file.getName().endsWith(FileLog.currentLogName)) {
                 /**

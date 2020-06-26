@@ -107,9 +107,9 @@ public class EngineSnifferPanel {
         upperPanel.add(clearButton);
         upperPanel.add(saveImageButton);
         upperPanel.add(pauseButton);
-        upperPanel.add(new RpmLabel(2).getContent());
+        upperPanel.add(new RpmLabel(uiContext,2).getContent());
 
-        if (!LinkManager.isLogViewer()) {
+        if (!uiContext.getLinkManager().isLogViewer()) {
             command = AnyCommand.createField(config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true);
             upperPanel.add(command.getContent());
         }
@@ -122,14 +122,14 @@ public class EngineSnifferPanel {
                 displayChart(chart);
             }
         });
-        if (LinkManager.isLogViewer())
+        if (uiContext.getLinkManager().isLogViewer())
             upperPanel.add(scrollControl.getContent());
 
         upperPanel.add(new URLLabel(HELP_TEXT, HELP_URL));
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
 
-        if (!LinkManager.isLogViewer()) {
+        if (!uiContext.getLinkManager().isLogViewer()) {
             JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
             lowerButtons.add(new ConfigField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
             lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());

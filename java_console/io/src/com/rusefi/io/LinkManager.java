@@ -41,11 +41,11 @@ public class LinkManager {
         return connected;
     }
 
-    public static void execute(Runnable runnable) {
+    public void execute(Runnable runnable) {
         COMMUNICATION_EXECUTOR.execute(runnable);
     }
 
-    public static Future submit(Runnable runnable) {
+    public Future submit(Runnable runnable) {
         return COMMUNICATION_EXECUTOR.submit(runnable);
     }
 
@@ -87,7 +87,7 @@ public class LinkManager {
      *
      * @see #COMMUNICATION_EXECUTOR
      */
-    public final static Executor TCP_READ_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
+    public final Executor TCP_READ_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
         @Override
         public Thread newThread(@NotNull Runnable r) {
             Thread t = new Thread(r);
@@ -97,16 +97,15 @@ public class LinkManager {
         }
     });
     public static final String LOG_VIEWER = "log viewer";
-    public static final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
+    public final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
     /**
      * All request/responses to underlying controller are happening on this single-threaded executor in a FIFO manner
      * @see #TCP_READ_EXECUTOR
      */
-    public static final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
+    public final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
             COMMUNICATION_QUEUE,
             new NamedThreadFactory("communication executor"));
-    private static Thread COMMUNICATION_THREAD;
 
     static {
 /*
@@ -154,20 +153,20 @@ public class LinkManager {
         connector.connectAndReadConfiguration(stateListener);
     }
 
-    public static void start(String port) {
+    public void start(String port) {
         Objects.requireNonNull(port, "port");
         FileLog.MAIN.logLine("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
             connector = LinkConnector.VOID;
         } else if (TcpConnector.isTcpPort(port)) {
-            connector = new TcpConnector(port);
+            connector = new TcpConnector(this, port);
             isSimulationMode = true;
         } else {
-            connector = new SerialConnector(port);
+            connector = new SerialConnector(this, port);
         }
     }
 
-    public static void setConnector(LinkConnector connector) {
+    public void setConnector(LinkConnector connector) {
         LinkManager.connector = connector;
     }
 
@@ -176,7 +175,7 @@ public class LinkManager {
         return port.equals(LOG_VIEWER);
     }
 
-    public static boolean isLogViewer() {
+    public boolean isLogViewer() {
         return connector == LinkConnector.VOID;
     }
 
@@ -186,7 +185,7 @@ public class LinkManager {
         connector.send(command, fireEvent);
     }
 
-    public static void restart() {
+    public void restart() {
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
         connector.restart();
     }

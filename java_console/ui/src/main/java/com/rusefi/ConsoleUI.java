@@ -70,30 +70,31 @@ public class ConsoleUI {
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
-        uiContext.getLinkManager().start(port);
+        LinkManager linkManager = uiContext.getLinkManager();
+        linkManager.start(port);
 
         engineSnifferPanel = new EngineSnifferPanel(uiContext, getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
             engineSnifferPanel.setOutpinListener(LinkManager.engineState);
 
         if (LinkManager.isLogViewerMode(port))
-            tabbedPane.addTab("Log Viewer", new LogViewer(engineSnifferPanel));
+            tabbedPane.addTab("Log Viewer", new LogViewer(uiContext, engineSnifferPanel));
 
         new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
             FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
-            LinkManager.restart();
+            linkManager.restart();
         }).start();
 
         GaugesPanel.DetachedRepository.INSTANCE.init(getConfig().getRoot().getChild("detached"));
         GaugesPanel.DetachedRepository.INSTANCE.load();
-        if (!LinkManager.isLogViewer())
-            tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges"), tabbedPane.paneSettings).getContent());
+        if (!linkManager.isLogViewer())
+            tabbedPane.addTab("Gauges", new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges"), tabbedPane.paneSettings).getContent());
 
-        if (!LinkManager.isLogViewer()) {
-            MessagesPane messagesPane = new MessagesPane(getConfig().getRoot().getChild("messages"));
+        if (!linkManager.isLogViewer()) {
+            MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
             tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
         }
-        if (!LinkManager.isLogViewer()) {
+        if (!linkManager.isLogViewer()) {
             tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext).getContent());
             if (tabbedPane.paneSettings.showEtbPane)
                 tabbedPane.addTab("ETB", new ETBPane(uiContext).getContent());
@@ -102,7 +103,7 @@ public class ConsoleUI {
 
         tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
 
-        if (!LinkManager.isLogViewer()) {
+        if (!linkManager.isLogViewer()) {
             SensorSnifferPane sensorSniffer = new SensorSnifferPane(uiContext, getConfig().getRoot().getChild("sensor_sniffer"));
             tabbedPaneAdd("Sensor Sniffer", sensorSniffer.getPanel(), sensorSniffer.getTabSelectedListener());
         }
@@ -120,20 +121,20 @@ public class ConsoleUI {
 //            tabbedPane.addTab("Table Editor", tabbedPane.romEditorPane);
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
-        if (!LinkManager.isLogViewer())
+        if (!linkManager.isLogViewer())
             tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
-        if (!LinkManager.isLogViewer()) {
+        if (!linkManager.isLogViewer()) {
             tabbedPane.addTab("Formulas/Live Data", new FormulasPane(uiContext).getContent());
             tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane().getContent());
         }
 
-        if (!LinkManager.isLogViewer() && false) // todo: fix it & better name?
+        if (!linkManager.isLogViewer() && false) // todo: fix it & better name?
             tabbedPane.addTab("Logs Manager", tabbedPane.logsManager.getContent());
         if (tabbedPane.paneSettings.showFuelTunePane)
             tabbedPane.addTab("Fuel Tune", tabbedPane.fuelTunePane.getContent());
 
 
-        if (!LinkManager.isLogViewer()) {
+        if (!linkManager.isLogViewer()) {
             if (tabbedPane.paneSettings.showTriggerShapePane)
                 tabbedPane.addTab("Trigger Shape", new AverageAnglePanel().getPanel());
         }

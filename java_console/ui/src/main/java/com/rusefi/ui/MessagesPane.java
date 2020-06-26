@@ -26,7 +26,7 @@ public class MessagesPane {
     private final JButton fontButton = new JButton("Font");
     private final AnyCommand command;
 
-    public MessagesPane(final Node config) {
+    public MessagesPane(UIContext uiContext, final Node config) {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
         command = AnyCommand.createArea(config, config.getProperty(AnyCommand.KEY), true, false);
@@ -35,11 +35,11 @@ public class MessagesPane {
 
         JPanel middlePanel = new JPanel(new BorderLayout());
         middlePanel.add(upperPanel.getMessagesScroll(), BorderLayout.CENTER);
-        middlePanel.add(new RecentCommands().getContent(), BorderLayout.EAST);
+        middlePanel.add(new RecentCommands(uiContext).getContent(), BorderLayout.EAST);
 
         content.add(middlePanel, BorderLayout.CENTER);
 
-        upperPanel.getButtonPanel().add(new RpmLabel(2).getContent());
+        upperPanel.getButtonPanel().add(new RpmLabel(uiContext, 2).getContent());
         topPanel.add(upperPanel.getButtonPanel());
         topPanel.add(fontButton);
         topPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
@@ -47,7 +47,7 @@ public class MessagesPane {
 
         JPanel statsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        statsPanel.add(new RpmLabel().getContent());
+        statsPanel.add(new RpmLabel(uiContext).getContent());
         statsPanel.add(new IdleLabel());
         statsPanel.add(new WarningPanel().getPanel());
 

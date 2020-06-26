@@ -113,7 +113,7 @@ public class LightweightGUI {
 
         new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
             FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
-            LinkManager.restart();
+            linkManager.restart();
         }).start();
     }
 

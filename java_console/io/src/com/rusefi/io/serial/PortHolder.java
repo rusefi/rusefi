@@ -20,6 +20,7 @@ import java.awt.*;
  */
 public class PortHolder {
     private static final DataListener dataListener = freshData -> LinkManager.engineState.processNewData(new String(freshData), LinkManager.ENCODER);
+    private final LinkManager linkManager;
 
     public ConnectionStateListener listener;
     private final Object portLock = new Object();
@@ -27,7 +28,8 @@ public class PortHolder {
     @Nullable
     private BinaryProtocol bp;
 
-    protected PortHolder() {
+    protected PortHolder(LinkManager linkManager) {
+        this.linkManager = linkManager;
     }
 
     public String port;
@@ -40,7 +42,7 @@ public class PortHolder {
 
         IoStream stream = SerialIoStreamJSerialComm.openPort(port);
         synchronized (portLock) {
-            bp = new BinaryProtocol(FileLog.LOGGER, stream);
+            bp = new BinaryProtocol(linkManager, FileLog.LOGGER, stream);
             portLock.notifyAll();
         }
 

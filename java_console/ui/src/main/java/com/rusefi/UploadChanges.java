@@ -84,7 +84,7 @@ public class UploadChanges {
     public static void scheduleUpload(UIContext uiContext, final ConfigurationImage newVersion, final Runnable afterUpload) {
         JFrame frame = wnd.getFrame();
         frame.setVisible(true);
-        LinkManager.execute(new Runnable() {
+        uiContext.getLinkManager().execute(new Runnable() {
             @Override
             public void run() {
                 try {

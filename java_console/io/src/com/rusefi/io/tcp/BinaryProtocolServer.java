@@ -101,7 +101,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 throw new IllegalStateException("CRC mismatch");
 
 
-            TcpIoStream stream = new TcpIoStream(clientSocket.getInputStream(), clientSocket.getOutputStream());
+            TcpIoStream stream = new TcpIoStream(linkManager, clientSocket.getInputStream(), clientSocket.getOutputStream());
             if (command == COMMAND_HELLO) {
                 stream.sendPacket((TS_OK + Fields.TS_SIGNATURE).getBytes(), FileLog.LOGGER);
             } else if (command == COMMAND_PROTOCOL) {

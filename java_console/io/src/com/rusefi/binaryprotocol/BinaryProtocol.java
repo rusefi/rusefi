@@ -61,6 +61,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         FileLog.MAIN.logLine(USE_PLAIN_PROTOCOL_PROPERTY + ": " + PLAIN_PROTOCOL);
     }
 
+    private final LinkManager linkManager;
     private final Logger logger;
     private final IoStream stream;
     private final IncomingDataBuffer incomingData;
@@ -110,7 +111,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     private final Thread hook = new Thread(() -> closeComposites());
 
-    public BinaryProtocol(final Logger logger, IoStream stream) {
+    public BinaryProtocol(LinkManager linkManager, final Logger logger, IoStream stream) {
+        this.linkManager = linkManager;
         this.logger = logger;
         this.stream = stream;
 
@@ -148,7 +150,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(BinaryProtocol.class, "Sending [" + command + "]");
         }
 
-        Future f = LinkManager.submit(new Runnable() {
+        Future f = linkManager.submit(new Runnable() {
             @Override
             public void run() {
                 sendTextCommand(command);
@@ -191,16 +193,16 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     private void startTextPullThread(final DataListener listener) {
-        if (!LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
-            System.out.println("Current queue: " + LinkManager.COMMUNICATION_QUEUE.size());
+        if (!linkManager.COMMUNICATION_QUEUE.isEmpty()) {
+            System.out.println("Current queue: " + linkManager.COMMUNICATION_QUEUE.size());
         }
         Runnable textPull = new Runnable() {
             @Override
             public void run() {
                 while (!isClosed) {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
-                    if (LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
-                        LinkManager.submit(new Runnable() {
+                    if (linkManager.COMMUNICATION_QUEUE.isEmpty()) {
+                        linkManager.submit(new Runnable() {
                             @Override
                             public void run() {
                                 if (requestOutputChannels())
