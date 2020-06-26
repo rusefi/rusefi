@@ -19,7 +19,7 @@ import java.awt.*;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class PortHolder {
-    private static final DataListener dataListener = freshData -> LinkManager.engineState.processNewData(new String(freshData), LinkManager.ENCODER);
+    private final DataListener dataListener;
     private final LinkManager linkManager;
 
     public ConnectionStateListener listener;
@@ -30,6 +30,7 @@ public class PortHolder {
 
     protected PortHolder(LinkManager linkManager) {
         this.linkManager = linkManager;
+        dataListener = freshData -> linkManager.getEngineState().processNewData(new String(freshData), LinkManager.ENCODER);
     }
 
     public String port;
