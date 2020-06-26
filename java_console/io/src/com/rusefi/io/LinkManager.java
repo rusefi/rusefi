@@ -57,7 +57,12 @@ public class LinkManager {
         return result;
     }
 
-    public static BinaryProtocol getCurrentStreamState() {
+    public static BinaryProtocol getCurrentStreamStateStatic() {
+        Objects.requireNonNull(connector, "connector");
+        return connector.getBinaryProtocol();
+    }
+
+    public BinaryProtocol getCurrentStreamState() {
         Objects.requireNonNull(connector, "connector");
         return connector.getBinaryProtocol();
     }

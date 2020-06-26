@@ -62,7 +62,7 @@ public class TabbedPanel {
         });
         fuelTunePane = new FuelTunePane(uiContext, getConfig().getRoot().getChild("fueltune"));
 //        romEditorPane = new RomEditorPane(uiContext);
-        settingsTab = new SettingsTab();
+        settingsTab = new SettingsTab(uiContext);
     }
 
     public void addTab(String title, Component component) {

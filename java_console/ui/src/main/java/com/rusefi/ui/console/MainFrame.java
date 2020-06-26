@@ -79,7 +79,7 @@ public class MainFrame {
                 tabbedPane.settingsTab.showContent();
                 tabbedPane.logsManager.showContent();
                 tabbedPane.fuelTunePane.showContent();
-                BinaryProtocolServer.start();
+                BinaryProtocolServer.start(consoleUI.uiContext.getLinkManager());
             }
         });
 
@@ -112,7 +112,7 @@ public class MainFrame {
         root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
         GaugesPanel.DetachedRepository.INSTANCE.saveConfig();
         getConfig().save();
-        BinaryProtocol bp = LinkManager.getCurrentStreamState();
+        BinaryProtocol bp = LinkManager.getCurrentStreamStateStatic();
         if (bp != null && !bp.isClosed)
             bp.close(); // it could be that serial driver wants to be closed explicitly
         System.exit(0);

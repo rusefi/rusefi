@@ -17,7 +17,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.LinkManager;
 import com.rusefi.ui.storage.Node;
 
 import javax.swing.*;

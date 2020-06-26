@@ -73,7 +73,7 @@ public class EngineSnifferPanel {
 
     private boolean isPaused;
 
-    public EngineSnifferPanel(Node config) {
+    public EngineSnifferPanel(UIContext uiContext, Node config) {
         statusPanel.setTimeAxisTranslator(crank.createTranslator());
 
         final JButton pauseButton = UiUtils.createPauseButton();
@@ -132,8 +132,8 @@ public class EngineSnifferPanel {
         if (!LinkManager.isLogViewer()) {
             JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
             lowerButtons.add(new ConfigField(Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
-            lowerButtons.add(new BitConfigField(Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
-            lowerButtons.add(new BitConfigField(Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
+            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
+            lowerButtons.add(new BitConfigField(uiContext, Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
             lowerButtons.add(new ConfigField(Fields.SENSORCHARTFREQUENCY, "Frequency").getContent());
             lowerButtons.add(new ConfigField(Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
             lowerButtons.add(new ConfigField(Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
