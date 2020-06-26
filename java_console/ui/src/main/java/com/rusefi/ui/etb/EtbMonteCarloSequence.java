@@ -7,12 +7,12 @@ import com.rusefi.etb.EtbTarget;
 import com.rusefi.etb.StandardTestSequence;
 import com.rusefi.etb.TestSequenceStep;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.romraider.util.ThreadUtil.sleep;
-import static com.rusefi.sensor_logs.SensorLogger.getSecondsSinceFileStart;
 import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
 import static com.rusefi.etb.TestSequenceStep.count;
@@ -28,11 +28,13 @@ public class EtbMonteCarloSequence {
     private static final double DEFAULT_POSITION = 7;
     private static final int CLT_THRESHOLD = 75;
     private final JButton button = new JButton("ETB I feel lucky!");
+    private final UIContext uiContext;
     private int counter;
 
     private double bestResultSoFar = 750;
 
-    public EtbMonteCarloSequence() {
+    public EtbMonteCarloSequence(UIContext uiContext) {
+        this.uiContext = uiContext;
         button.addActionListener(e -> {
             counter = 0;
 
@@ -68,7 +70,7 @@ public class EtbMonteCarloSequence {
         CommandQueue.getInstance().write("set etb_d " + dFactor);
 
         MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
-                getSecondsSinceFileStart() + " running " + stats);
+                uiContext.sensorLogger.getSecondsSinceFileStart() + " running " + stats);
 
         TestSequenceStep firstStep = new EtbTarget(10 * SECOND, DEFAULT_POSITION, null, TestSequenceStep.Condition.YES);
         TestSequenceStep.Condition condition = new TestSequenceStep.Condition() {
@@ -108,10 +110,10 @@ public class EtbMonteCarloSequence {
                 if (cycleResult < bestResultSoFar) {
                     bestResultSoFar = cycleResult;
                     MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
-                            getSecondsSinceFileStart() + ":" + stats + ":new_record:" + bestResultSoFar);
+                            uiContext.sensorLogger.getSecondsSinceFileStart() + ":" + stats + ":new_record:" + bestResultSoFar);
                 }
                 MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
-                        getSecondsSinceFileStart() + ":" + stats + ":result:" + cycleResult);
+                        uiContext.sensorLogger.getSecondsSinceFileStart() + ":" + stats + ":result:" + cycleResult);
                 if (counter == TOTAL_CYCLES_COUNT) {
                     stopETB();
                     MessagesCentral.getInstance().postMessage(EtbTestSequence.class, "ETB MC sequence done!");
