@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.LinkManager;
 
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.RealHwTest.startRealHardwareTest;
@@ -10,6 +11,7 @@ public class EnduranceTest {
     private static final int DEFAULT_COUNT = 2000;
 
     public static void main(String[] args) {
+        LinkManager linkManager = new LinkManager();
         long start = System.currentTimeMillis();
         int count = parseCount(args);
         try {
@@ -22,7 +24,7 @@ public class EnduranceTest {
 
             FileLog.MAIN.logLine("Running " + count + " cycles");
 
-            IoUtil.realHardwareConnect(port);
+            IoUtil.realHardwareConnect(linkManager, port);
             for (int i = 0; i < count; i++) {
                 AutoTest.currentEngineType = 3;
                 sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 3, AutoTest.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);

@@ -26,7 +26,8 @@ public class CmdLine {
     private static void executeCommand(String command, String port) {
         System.out.println("Sending " + command);
         System.out.println("Sending to " + port);
-        IoUtil.realHardwareConnect(port);
+        LinkManager linkManager = new LinkManager();
+        IoUtil.realHardwareConnect(linkManager, port);
 
         IoUtil.sendCommand(command);
         System.out.println("Done!");
