@@ -110,7 +110,7 @@ public class EngineSnifferPanel {
         upperPanel.add(new RpmLabel(uiContext,2).getContent());
 
         if (!uiContext.getLinkManager().isLogViewer()) {
-            command = AnyCommand.createField(config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true);
+            command = AnyCommand.createField(uiContext, config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true);
             upperPanel.add(command.getContent());
         }
 

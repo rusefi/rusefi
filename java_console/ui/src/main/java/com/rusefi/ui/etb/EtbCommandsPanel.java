@@ -24,11 +24,11 @@ public class EtbCommandsPanel {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
     public EtbCommandsPanel(UIContext uiContext) {
-        content.add(new DirectDrivePanel().getContent());
+        content.add(new DirectDrivePanel(uiContext).getContent());
 
         JPanel testParameters = new JPanel(new VerticalFlowLayout());
         testParameters.setBorder(BorderFactory.createTitledBorder("Try PID settings"));
-        EtbTestSequence etbTestSequence = new EtbTestSequence();
+        EtbTestSequence etbTestSequence = new EtbTestSequence(uiContext);
         testParameters.add(etbTestSequence.getButton());
         testParameters.add(UiUtils.wrap(etbTestSequence.getCancelButton()));
         testParameters.add(etbTestSequence.getResult());

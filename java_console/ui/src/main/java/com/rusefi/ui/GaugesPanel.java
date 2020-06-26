@@ -213,7 +213,7 @@ public class GaugesPanel {
         leftUpperPanel.add(createPauseButton());
         leftUpperPanel.add(createSaveImageButton());
         leftUpperPanel.add(new RpmLabel(uiContext, 2).getContent());
-        AnyCommand command = AnyCommand.createField(config, false, false);
+        AnyCommand command = AnyCommand.createField(uiContext, config, false, false);
         leftUpperPanel.add(command.getContent());
         return leftUpperPanel;
     }
