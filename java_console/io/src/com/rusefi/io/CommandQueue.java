@@ -24,6 +24,7 @@ public class CommandQueue {
     public static final int SLOW_CONFIRMATION_TIMEOUT = 5000;
     public static final Class<CommandQueue> COMMAND_QUEUE_CLASS = CommandQueue.class;
     private final Object lock = new Object();
+    private final LinkManager linkManager;
     /**
      * One complex use-case is when we send out a bunch of commands and then we need to handle all the configurations
      * correctly
@@ -31,7 +32,6 @@ public class CommandQueue {
      */
     private Set<String> pendingConfirmations = Collections.synchronizedSet(new HashSet<String>());
 
-    public static final CommandQueue instance = new CommandQueue();
     private final BlockingQueue<IMethodInvocation> pendingCommands = new LinkedBlockingQueue<>();
     private final List<CommandQueueListener> commandListeners = new ArrayList<>();
 
@@ -89,7 +89,7 @@ public class CommandQueue {
         while (!pendingConfirmations.contains(command)) {
             counter++;
 //            FileLog.MAIN.logLine("templog sending " + command + " " + System.currentTimeMillis() + " " + new Date());
-            LinkManager.send(command, commandRequest.isFireEvent());
+            linkManager.send(command, commandRequest.isFireEvent());
             long now = System.currentTimeMillis();
             synchronized (lock) {
                 lock.wait(commandRequest.getTimeout());
@@ -114,7 +114,8 @@ public class CommandQueue {
             MessagesCentral.getInstance().postMessage(CommandQueue.class, "Took " + counter + " attempts");
     }
 
-    private CommandQueue() {
+    public CommandQueue(LinkManager linkManager) {
+        this.linkManager = linkManager;
         Thread thread = new Thread(runnable, "Commands Queue");
         thread.setDaemon(true);
         thread.start();
@@ -138,10 +139,6 @@ public class CommandQueue {
         synchronized (lock) {
             lock.notifyAll();
         }
-    }
-
-    public static CommandQueue getInstance() {
-        return instance;
     }
 
     public void write(String command) {

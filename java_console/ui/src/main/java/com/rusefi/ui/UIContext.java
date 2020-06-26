@@ -15,6 +15,6 @@ public class UIContext {
     }
 
     public CommandQueue getCommandQueue() {
-        return CommandQueue.instance;
+        return linkManager.getCommandQueue();
     }
 }

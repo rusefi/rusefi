@@ -19,6 +19,21 @@ import java.util.concurrent.*;
  */
 public class LinkManager {
     @NotNull
+    public static LogLevel LOG_LEVEL = LogLevel.INFO;
+
+    public static LinkDecoder ENCODER = new LinkDecoder() {
+        @Override
+        public String unpack(String packedLine) {
+            return packedLine;
+        }
+    };
+
+    public static final String LOG_VIEWER = "log viewer";
+    private final CommandQueue commandQueue = new CommandQueue(this);
+
+    private LinkConnector connector;
+
+    @NotNull
     public CountDownLatch connect(String port) {
         final CountDownLatch connected = new CountDownLatch(1);
         startAndConnect(port, new ConnectionStateListener() {
@@ -63,7 +78,7 @@ public class LinkManager {
     }
 
     public CommandQueue getCommandQueue() {
-        return CommandQueue.getInstance();
+        return commandQueue;
     }
 
     public enum LogLevel {
@@ -75,16 +90,6 @@ public class LinkManager {
             return this == DEBUG || this == TRACE;
         }
     }
-
-    @NotNull
-    public static LogLevel LOG_LEVEL = LogLevel.INFO;
-
-    public static LinkDecoder ENCODER = new LinkDecoder() {
-        @Override
-        public String unpack(String packedLine) {
-            return packedLine;
-        }
-    };
 
     /**
      * Threading of the whole input/output does not look healthy at all!
@@ -100,7 +105,6 @@ public class LinkManager {
             return t;
         }
     });
-    public static final String LOG_VIEWER = "log viewer";
     public final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
     /**
      * All request/responses to underlying controller are happening on this single-threaded executor in a FIFO manner
@@ -144,8 +148,6 @@ public class LinkManager {
         }
     });
 
-    private static LinkConnector connector;
-
     /**
      * This flag controls if mock controls are needed
      */
@@ -171,7 +173,7 @@ public class LinkManager {
     }
 
     public void setConnector(LinkConnector connector) {
-        LinkManager.connector = connector;
+        this.connector = connector;
     }
 
     public static boolean isLogViewerMode(String port) {
@@ -183,10 +185,10 @@ public class LinkManager {
         return connector == LinkConnector.VOID;
     }
 
-    public static void send(String command, boolean fireEvent) throws InterruptedException {
-        if (connector == null)
+    public void send(String command, boolean fireEvent) throws InterruptedException {
+        if (this.connector == null)
             throw new NullPointerException("connector");
-        connector.send(command, fireEvent);
+        this.connector.send(command, fireEvent);
     }
 
     public void restart() {
