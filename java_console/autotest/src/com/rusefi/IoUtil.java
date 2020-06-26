@@ -26,8 +26,8 @@ public class IoUtil {
      *
      * @throws IllegalStateException if command was not confirmed
      */
-    static void sendCommand(String command) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT, CommandQueue.getInstance());
+    static void sendCommand(String command, CommandQueue commandQueue) {
+        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT, commandQueue);
     }
 
     public static String getEnableCommand(String settingName) {
@@ -69,7 +69,7 @@ public class IoUtil {
 
     static void changeRpm(final int rpm) {
         FileLog.MAIN.logLine("AUTOTEST rpm EN " + rpm);
-        sendCommand("rpm " + rpm);
+        sendCommand("rpm " + rpm, CommandQueue.getInstance());
         long time = System.currentTimeMillis();
 
         final CountDownLatch rpmLatch = new CountDownLatch(1);

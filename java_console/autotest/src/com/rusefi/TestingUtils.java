@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
+import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
@@ -106,30 +107,17 @@ public class TestingUtils {
 
     static EngineChart nextChart() {
         long start = System.currentTimeMillis();
-        /**
-         * we are pretty inefficient here :( we wait for the next chart with new settings already applied
-         * a potential improvement would be maybe a special test mode which would reset engine sniffer buffer on each
-         * setting change?
-         *
-         * also open question why do we skip TWO full charts. maybe we account for fast or slow callback period?
-         *
-         * WOW, actually we DO have CMD_RESET_ENGINE_SNIFFER already and yet things are STILL pretty slow and unreliable?!
-         * @see Fields#CMD_FUNCTIONAL_TEST_MODE
-         * @see Fields#CMD_RESET_ENGINE_SNIFFER
-         */
-//        getNextWaveChart();
-//        getNextWaveChart();
-        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart());
+        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(CommandQueue.getInstance()));
         FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
         return chart;
     }
 
     static EngineChart nextChart1() {
-        return EngineChartParser.unpackToMap(getNextWaveChart());
+        return nextChart();
     }
 
-    static String getNextWaveChart() {
-        IoUtil.sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER);
+    static String getNextWaveChart(CommandQueue commandQueue) {
+        IoUtil.sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER, commandQueue);
         String result = getEngineChart();
         FileLog.MAIN.logLine("current chart: " + result);
         return result;
