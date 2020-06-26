@@ -47,7 +47,7 @@ public abstract class TestSequenceStep {
     protected abstract void doJob();
 
     public TestSequenceStep addNext(UIContext uiContext, long duration, double position, Runnable onEachStep, Condition condition) {
-        return addNext(new EtbTarget(duration, position, onEachStep, condition));
+        return addNext(new EtbTarget(uiContext, duration, position, onEachStep, condition));
     }
 
     public TestSequenceStep addNext(TestSequenceStep step) {

@@ -6,7 +6,6 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.etb.EtbTarget;
 import com.rusefi.etb.StandardTestSequence;
 import com.rusefi.etb.TestSequenceStep;
-import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
@@ -72,7 +71,7 @@ public class EtbMonteCarloSequence {
         MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
                 uiContext.sensorLogger.getSecondsSinceFileStart() + " running " + stats);
 
-        TestSequenceStep firstStep = new EtbTarget(10 * SECOND, DEFAULT_POSITION, null, TestSequenceStep.Condition.YES);
+        TestSequenceStep firstStep = new EtbTarget(uiContext, 10 * SECOND, DEFAULT_POSITION, null, TestSequenceStep.Condition.YES);
         TestSequenceStep.Condition condition = new TestSequenceStep.Condition() {
             @Override
             public boolean shouldRunTask() {

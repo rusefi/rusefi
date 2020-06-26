@@ -9,8 +9,6 @@ import com.rusefi.ui.etb.EtbCommandsPanel;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
-
 /**
  * Controls related to Electronic Throttle Body
  *
@@ -21,9 +19,9 @@ public class ETBPane {
 
     public ETBPane(UIContext uiContext) {
         JPanel centerPanel = new JPanel(new GridLayout(3, 1));
-        centerPanel.add(GaugesGridElement.create(Sensor.PPS));
-        centerPanel.add(GaugesGridElement.create(Sensor.ETB_CONTROL_QUALITY));
-        centerPanel.add(GaugesGridElement.create(Sensor.TPS));
+        centerPanel.add(GaugesGridElement.create(uiContext, Sensor.PPS));
+        centerPanel.add(GaugesGridElement.create(uiContext, Sensor.ETB_CONTROL_QUALITY));
+        centerPanel.add(GaugesGridElement.create(uiContext, Sensor.TPS));
 
         content.add(new EtbCommandsPanel(uiContext).getContent(), BorderLayout.WEST);
         content.add(centerPanel, BorderLayout.CENTER);

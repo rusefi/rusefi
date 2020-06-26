@@ -123,8 +123,8 @@ public class FuelTunePane {
         GaugesGrid grid = new GaugesGrid(1, 3);
         rightPanel.add(grid.panel);
 
-        grid.panel.add(GaugesGridElement.read(config.getChild("1"), Sensor.RPM));
-        grid.panel.add(GaugesGridElement.read(config.getChild("2"), Sensor.AFR));
+        grid.panel.add(GaugesGridElement.read(uiContext, config.getChild("1"), Sensor.RPM));
+        grid.panel.add(GaugesGridElement.read(uiContext, config.getChild("2"), Sensor.AFR));
 
         JPanel middlePanel = new JPanel(new GridLayout(1, 2));
         middlePanel.add(veTable);

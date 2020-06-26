@@ -50,7 +50,7 @@ public abstract class BaseConfigField {
     protected void sendValue(Field field, String newValue) {
         String msg = field.setCommand() + " " + newValue;
         FileLog.MAIN.logLine("Sending " + msg);
-        CommandQueue.getInstance().write(msg);
+        uiContext.getCommandQueue().write(msg);
         status.setText("S");
         status.setToolTipText("Storing...");
     }

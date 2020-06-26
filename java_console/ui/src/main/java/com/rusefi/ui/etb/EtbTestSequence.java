@@ -70,7 +70,7 @@ public class EtbTestSequence {
                 result.setText(String.format(state + " Result: %.3f", value));
             });
 
-            TestSequenceStep firstStep = new EtbTarget(10 * SECOND, 4, /*position*/onEachStep, TestSequenceStep.Condition.YES);
+            TestSequenceStep firstStep = new EtbTarget(uiContext, 10 * SECOND, 4, /*position*/onEachStep, TestSequenceStep.Condition.YES);
             TestSequenceStep result = StandardTestSequence.addSequence(uiContext, firstStep, onEachStep, new TestSequenceStep.Condition() {
                 @Override
                 public boolean shouldRunTask() {

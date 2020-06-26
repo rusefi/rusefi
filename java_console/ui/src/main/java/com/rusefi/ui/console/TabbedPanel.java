@@ -20,7 +20,7 @@ public class TabbedPanel {
 
 //    public final RomEditorPane romEditorPane;
     public final SettingsTab settingsTab;
-    public final LogDownloader logsManager = new LogDownloader();
+    public final LogDownloader logsManager;
     public final FuelTunePane fuelTunePane;
     public final PaneSettings paneSettings = new PaneSettings(getConfig().getRoot().getChild("panes"));
 
@@ -63,6 +63,7 @@ public class TabbedPanel {
         fuelTunePane = new FuelTunePane(uiContext, getConfig().getRoot().getChild("fueltune"));
 //        romEditorPane = new RomEditorPane(uiContext);
         settingsTab = new SettingsTab(uiContext);
+        logsManager = new LogDownloader(uiContext);
     }
 
     public void addTab(String title, Component component) {

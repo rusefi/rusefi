@@ -67,9 +67,9 @@ public class IoUtil {
         }
     }
 
-    static void changeRpm(final int rpm) {
+    static void changeRpm(CommandQueue commandQueue, final int rpm) {
         FileLog.MAIN.logLine("AUTOTEST rpm EN " + rpm);
-        sendCommand("rpm " + rpm, CommandQueue.getInstance());
+        sendCommand("rpm " + rpm, commandQueue);
         long time = System.currentTimeMillis();
 
         final CountDownLatch rpmLatch = new CountDownLatch(1);

@@ -8,6 +8,7 @@ public class UIContext {
     private final LinkManager linkManager = new LinkManager();
 
     public SensorLogger sensorLogger = new SensorLogger(this);
+    public GaugesPanel.DetachedRepository DetachedRepositoryINSTANCE = new GaugesPanel.DetachedRepository(this);
 
     public LinkManager getLinkManager() {
         return linkManager;

@@ -111,7 +111,7 @@ public class MainFrame {
         Node root = getConfig().getRoot();
         root.setProperty("version", Launcher.CONSOLE_VERSION);
         root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
-        GaugesPanel.DetachedRepository.INSTANCE.saveConfig();
+        consoleUI.uiContext.DetachedRepositoryINSTANCE.saveConfig();
         getConfig().save();
         BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
         if (bp != null && !bp.isClosed)

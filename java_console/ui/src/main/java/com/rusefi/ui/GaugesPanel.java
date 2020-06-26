@@ -250,7 +250,7 @@ public class GaugesPanel {
         for (int i = 0; i < rows * columns; i++) {
             // sometimes grid is quite large so we shall be careful with default sensor index
             Sensor defaultSensor = DEFAULT_LAYOUT[Math.min(i, DEFAULT_LAYOUT.length - 1)];
-            Component element = GaugesGridElement.read(config.getChild("element_" + i), defaultSensor);
+            Component element = GaugesGridElement.read(uiContext, config.getChild("element_" + i), defaultSensor);
 
             gauges.panel.add(element);
         }
@@ -272,13 +272,18 @@ public class GaugesPanel {
         return content;
     }
 
-    public enum DetachedRepository {
-        INSTANCE;
+    public static class DetachedRepository {
 
         public static final String COUNT = "count";
         public static final String DETACHED = "detached";
+        private final UIContext uiContext;
         private List<DetachedSensor> list = new ArrayList<>();
         private Node config;
+
+        public DetachedRepository(UIContext uiContext) {
+
+            this.uiContext = uiContext;
+        }
 
         public void add(DetachedSensor detachedSensor) {
             list.add(detachedSensor);
@@ -293,7 +298,7 @@ public class GaugesPanel {
         public void load() {
             int count = config.getIntProperty(COUNT, 0);
             for (int i = 0; i < count; i++) {
-                DetachedSensor.create(config.getChild(DETACHED + i));
+                DetachedSensor.create(uiContext, config.getChild(DETACHED + i));
             }
         }
 
