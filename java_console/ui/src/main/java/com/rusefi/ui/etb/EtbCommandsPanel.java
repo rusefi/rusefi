@@ -22,8 +22,10 @@ import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
  */
 public class EtbCommandsPanel {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
+    private final UIContext uiContext;
 
     public EtbCommandsPanel(UIContext uiContext) {
+        this.uiContext = uiContext;
         content.add(new DirectDrivePanel(uiContext).getContent());
 
         JPanel testParameters = new JPanel(new VerticalFlowLayout());
@@ -65,14 +67,14 @@ public class EtbCommandsPanel {
 
         content.add(createMagicSpotsPanel());
         content.add(UiUtils.wrap(new EtbMonteCarloSequence(uiContext).getButton()));
-        content.add(UiUtils.wrap(new EtbReturnToNeutral().getContent()));
+        content.add(UiUtils.wrap(new EtbReturnToNeutral(uiContext).getContent()));
     }
 
     @NotNull
     private JPanel createMagicSpotsPanel() {
         JPanel spotsPane = new JPanel(new VerticalFlowLayout());
         spotsPane.setBorder(BorderFactory.createTitledBorder("Magic Spots"));
-        MagicSpotsFinder magicSpotsFinder = new MagicSpotsFinder();
+        MagicSpotsFinder magicSpotsFinder = new MagicSpotsFinder(uiContext);
         spotsPane.add(UiUtils.wrap(magicSpotsFinder.getButton()));
         spotsPane.add(magicSpotsFinder.getPoints());
         return spotsPane;

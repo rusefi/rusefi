@@ -39,12 +39,13 @@ public class FormulasPane {
     private final UIContext uiContext;
     private boolean isPaused;
 
-    private JPanel liveDocs = LiveDocPanel.createLiveDocumentationPanel();
+    private JPanel liveDocs;
 
     public FormulasPane(UIContext uiContext) {
         this.uiContext = uiContext;
 
         JPanel vertical = new JPanel(new VerticalFlowLayout());
+        liveDocs = LiveDocPanel.createLiveDocumentationPanel(uiContext);
         vertical.add(liveDocs);
         vertical.add(formulaProxy);
 

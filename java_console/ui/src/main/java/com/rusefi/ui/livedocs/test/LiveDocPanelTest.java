@@ -1,10 +1,7 @@
 package com.rusefi.ui.livedocs.test;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.livedocs.LiveDocPanel;
 import org.junit.Test;
-
-import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -17,11 +14,11 @@ public class LiveDocPanelTest {
 
     @Test
     public void testValidDocumentationMetaInfo() {
-        assertNotNull(LiveDocPanel.createLiveDocumentationPanel());
+        assertNotNull(LiveDocPanel.createLiveDocumentationPanel(null));
     }
 
     @Test
     public void testValidSensorsMetaInfo() {
-        assertNotNull(LiveDocPanel.createSensorsLiveDataPanel());
+        assertNotNull(LiveDocPanel.createSensorsLiveDataPanel(null));
     }
 }

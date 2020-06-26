@@ -85,8 +85,8 @@ public class ConsoleUI {
             linkManager.restart();
         }).start();
 
-        GaugesPanel.DetachedRepository.INSTANCE.init(getConfig().getRoot().getChild("detached"));
-        GaugesPanel.DetachedRepository.INSTANCE.load();
+        uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));
+        uiContext.DetachedRepositoryINSTANCE.load();
         if (!linkManager.isLogViewer())
             tabbedPane.addTab("Gauges", new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges"), tabbedPane.paneSettings).getContent());
 
@@ -125,7 +125,7 @@ public class ConsoleUI {
             tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
         if (!linkManager.isLogViewer()) {
             tabbedPane.addTab("Formulas/Live Data", new FormulasPane(uiContext).getContent());
-            tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane().getContent());
+            tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
         }
 
         if (!linkManager.isLogViewer() && false) // todo: fix it & better name?

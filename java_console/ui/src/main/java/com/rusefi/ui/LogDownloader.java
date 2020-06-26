@@ -37,8 +37,10 @@ public class LogDownloader {
             listDirectory();
         }
     });
+    private final UIContext uiContext;
 
-    public LogDownloader() {
+    public LogDownloader(UIContext uiContext) {
+        this.uiContext = uiContext;
         UiUtils.showLoadingMessage(content);
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
@@ -80,7 +82,7 @@ public class LogDownloader {
                         UIManager.getString("OptionPane.titleText"),
                         JOptionPane.YES_NO_OPTION);
                 if (i == JOptionPane.YES_OPTION) {
-                    CommandQueue.getInstance().write("del " + name);
+                    uiContext.getCommandQueue().write("del " + name);
                     timer.restart();
                 }
             }
@@ -90,7 +92,7 @@ public class LogDownloader {
         downloadFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CommandQueue.getInstance().write("get_file 0 " + name);
+                uiContext.getCommandQueue().write("get_file 0 " + name);
             }
         });
 

@@ -11,6 +11,7 @@ import com.rusefi.ldmp.*;
 import com.rusefi.ldmp.generated.*;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.livedocs.controls.Toolbox;
 import com.rusefi.ui.widgets.DetachedSensor;
 import net.miginfocom.swing.MigLayout;
@@ -34,15 +35,15 @@ public class LiveDocPanel {
 
 
     @NotNull
-    public static JPanel createPanel(String title, Request[] content) {
-        return createPanel(title, content, "", StateDictionary.NONE);
+    public static JPanel createPanel(UIContext uiContext, String title, Request[] content) {
+        return createPanel(uiContext, title, content, "", StateDictionary.NONE);
     }
 
     @NotNull
-    static JPanel createPanel(String title, Request[] content, String settingsInstancePrefix, final int defaultContextId) {
+    static JPanel createPanel(UIContext uiContext, String title, Request[] content, String settingsInstancePrefix, final int defaultContextId) {
         LiveDataContext defaultContext = new LiveDataContext(defaultContextId);
 
-        ActionPanel ap = createComponents(title, content, settingsInstancePrefix, defaultContext);
+        ActionPanel ap = createComponents(uiContext, title, content, settingsInstancePrefix, defaultContext);
         JPanel panel = ap.getPanel();
 
         LiveDocHolder holder = new LiveDocHolder(defaultContext, ap.getRefreshActions()) {
@@ -62,7 +63,7 @@ public class LiveDocPanel {
         return c.isVisible() && (parent == null || isRecursivelyVisible(parent));
     }
 
-    private static ActionPanel createComponents(String title, Request[] content, String settingsInstancePrefix, LiveDataContext defaultContext) {
+    private static ActionPanel createComponents(UIContext uiContext, String title, Request[] content, String settingsInstancePrefix, LiveDataContext defaultContext) {
         ActionPanel result = new ActionPanel(title);
 
         for (Request r : content) {
@@ -116,7 +117,7 @@ public class LiveDocPanel {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if (e.getClickCount() == 2 && !SwingUtilities.isRightMouseButton(e)) {
-                            final DetachedSensor ds = new DetachedSensor(sensor, MAGIC_DETACHED_GAUGE_SIZE);
+                            final DetachedSensor ds = new DetachedSensor(uiContext, sensor, MAGIC_DETACHED_GAUGE_SIZE);
                             ds.show(e);
                         }
                     }
@@ -131,7 +132,7 @@ public class LiveDocPanel {
             } else if (r instanceof IfRequest) {
                 IfRequest request = (IfRequest) r;
 
-                IfConditionPanel panel = createIfRequestPanel(request, defaultContext);
+                IfConditionPanel panel = createIfRequestPanel(uiContext, request, defaultContext);
 
                 result.actionsListAddAll(panel.getActionsList());
 
@@ -170,7 +171,7 @@ public class LiveDocPanel {
         return "Configuration " + dialogField.getUiName() + " (" + configurationFieldName + ")";
     }
 
-    private static IfConditionPanel createIfRequestPanel(IfRequest request, LiveDataContext defaultContext) {
+    private static IfConditionPanel createIfRequestPanel(UIContext uiContext, IfRequest request, LiveDataContext defaultContext) {
         Field conditionField = getField(defaultContext, request);
 
         JPanel result = new JPanel(new VerticalFlowLayout());
@@ -179,8 +180,8 @@ public class LiveDocPanel {
         result.add(conditionLabel);
 
 
-        ActionPanel trueAP = createComponents("", request.trueBlock.toArray(new Request[0]), "", defaultContext);
-        ActionPanel falseAP = createComponents("", request.falseBlock.toArray(new Request[0]), "", defaultContext);
+        ActionPanel trueAP = createComponents(uiContext, "", request.trueBlock.toArray(new Request[0]), "", defaultContext);
+        ActionPanel falseAP = createComponents(uiContext, "", request.falseBlock.toArray(new Request[0]), "", defaultContext);
 
         result.add(trueAP.getPanel());
         result.add(falseAP.getPanel());
@@ -215,14 +216,14 @@ public class LiveDocPanel {
     }
 
     @NotNull
-    public static JPanel createLiveDocumentationPanel() {
+    public static JPanel createLiveDocumentationPanel(UIContext uiContext) {
         JPanel liveDocs = new JPanel(new MigLayout(LAYOUT));
 
-        liveDocs.add(createPanel("Fuel", FuelMathMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel(uiContext,"Fuel", FuelMathMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(createPanel("tCharge", SpeedDensityMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel(uiContext, "tCharge", SpeedDensityMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(createPanel("Idle", IdleThreadMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel(uiContext, "Idle", IdleThreadMeta.CONTENT), CONSTRAINTS);
 
         // todo: restore this functionality
         // liveDocs.add(createPanel("ETB", ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
@@ -230,7 +231,7 @@ public class LiveDocPanel {
         return liveDocs;
     }
 
-    public static JPanel createSensorsLiveDataPanel() {
+    public static JPanel createSensorsLiveDataPanel(UIContext uiContext) {
         JPanel liveDocs = new JPanel(new MigLayout(LAYOUT));
 
 /*
@@ -239,7 +240,7 @@ public class LiveDocPanel {
 
  */
 
-        liveDocs.add(createPanel("Trigger", TriggerDecoderMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel(uiContext, "Trigger", TriggerDecoderMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }
