@@ -75,7 +75,7 @@ public class ConsoleUI {
 
         engineSnifferPanel = new EngineSnifferPanel(uiContext, getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
-            engineSnifferPanel.setOutpinListener(LinkManager.engineState);
+            engineSnifferPanel.setOutpinListener(uiContext.getLinkManager().getEngineState());
 
         if (LinkManager.isLogViewerMode(port))
             tabbedPane.addTab("Log Viewer", new LogViewer(uiContext, engineSnifferPanel));
@@ -136,7 +136,7 @@ public class ConsoleUI {
 
         if (!linkManager.isLogViewer()) {
             if (tabbedPane.paneSettings.showTriggerShapePane)
-                tabbedPane.addTab("Trigger Shape", new AverageAnglePanel().getPanel());
+                tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
         }
 
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());

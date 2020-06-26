@@ -96,7 +96,7 @@ public class Wizard {
 
         panel.add(content, BorderLayout.CENTER);
 
-        panel.add(new AverageAnglePanel().getPanel(), BorderLayout.SOUTH);
+        panel.add(new AverageAnglePanel(null).getPanel(), BorderLayout.SOUTH);
 
         button.addActionListener(new AbstractAction() {
             @Override

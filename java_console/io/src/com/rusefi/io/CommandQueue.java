@@ -121,6 +121,10 @@ public class CommandQueue {
         thread.start();
     }
 
+    public LinkManager getLinkManager() {
+        return linkManager;
+    }
+
     /**
      * this method handles command confirmations packed as
      * TODO: add example, todo: refactor method and add unit test
