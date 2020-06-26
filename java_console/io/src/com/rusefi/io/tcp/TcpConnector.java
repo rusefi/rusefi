@@ -96,13 +96,11 @@ public class TcpConnector implements LinkConnector {
     @Override
     public void connectAndReadConfiguration(ConnectionStateListener listener) {
         FileLog.MAIN.logLine("Connecting to host=" + hostname + "/port=" + port);
-        OutputStream os;
-        BufferedInputStream stream;
+        TcpIoStream tcpIoStream;
+
         try {
             Socket socket = new Socket(hostname, port);
-            os = socket.getOutputStream();
-            stream = new BufferedInputStream(socket.getInputStream());
-//            ioStream = new TcpIoStream(os, stream);
+            tcpIoStream = new TcpIoStream(linkManager, socket);
         } catch (IOException e) {
             listener.onConnectionFailed();
             FileLog.MAIN.logLine("Failed to connect to " + hostname + "/port=" + port);
@@ -124,7 +122,7 @@ public class TcpConnector implements LinkConnector {
         };
 //        ioStream.setInputListener(listener1);
 
-        bp = new BinaryProtocol(linkManager, FileLog.LOGGER, new TcpIoStream(linkManager, stream, os));
+        bp = new BinaryProtocol(linkManager, FileLog.LOGGER, tcpIoStream);
 
         boolean result = bp.connectAndReadConfiguration(listener1);
         if (result) {
