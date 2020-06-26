@@ -48,7 +48,7 @@ public class ConsoleUI {
 
     private final MainFrame mainFrame;
 
-    private final UIContext uiContext = new UIContext();
+    public final UIContext uiContext = new UIContext();
 
     /**
      * We can listen to tab activation event if we so desire
@@ -73,7 +73,7 @@ public class ConsoleUI {
 
         LinkManager.start(port);
 
-        engineSnifferPanel = new EngineSnifferPanel(getConfig().getRoot().getChild("digital_sniffer"));
+        engineSnifferPanel = new EngineSnifferPanel(uiContext, getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
             engineSnifferPanel.setOutpinListener(LinkManager.engineState);
 
@@ -95,10 +95,10 @@ public class ConsoleUI {
             tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
         }
         if (!LinkManager.isLogViewer()) {
-            tabbedPane.addTab("Bench Test", new BenchTestPane().getContent());
+            tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext).getContent());
             if (tabbedPane.paneSettings.showEtbPane)
-                tabbedPane.addTab("ETB", new ETBPane().getContent());
-            tabbedPane.addTab("Presets", new PresetsPane().getContent());
+                tabbedPane.addTab("ETB", new ETBPane(uiContext).getContent());
+            tabbedPane.addTab("Presets", new PresetsPane(uiContext).getContent());
         }
 
         tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());

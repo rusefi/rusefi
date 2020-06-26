@@ -2,6 +2,7 @@ package com.rusefi.ui.etb;
 
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.ui.UIContext;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
@@ -14,7 +15,7 @@ import java.awt.event.ActionEvent;
 public class CalibrationPanel {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
-    public CalibrationPanel() {
+    public CalibrationPanel(UIContext uiContext) {
         content.setBorder(BorderFactory.createTitledBorder("Calibration"));
         content.add(createCommandButton("Grab TPS#1 fully closed", "calibrate_tps_1_closed"));
         content.add(createCommandButton("Grab TPS#1 Wide Open", "calibrate_tps_1_wot"));

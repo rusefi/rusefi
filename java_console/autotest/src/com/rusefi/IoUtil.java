@@ -108,7 +108,7 @@ public class IoUtil {
         FileLog.MAIN.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart));
     }
 
-    static void connectToSimulator(boolean startProcess) throws InterruptedException {
+    static void connectToSimulator(LinkManager linkManager, boolean startProcess) throws InterruptedException {
         if (startProcess) {
             if (!TcpConnector.getAvailablePorts().isEmpty())
                 throw new IllegalStateException("Port already binded on startup?");
@@ -136,8 +136,8 @@ public class IoUtil {
         /**
          * TCP connector is blocking
          */
-        LinkManager.startAndConnect("" + TcpConnector.DEFAULT_PORT, ConnectionStateListener.VOID);
-        LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        linkManager.startAndConnect("" + TcpConnector.DEFAULT_PORT, ConnectionStateListener.VOID);
+        linkManager.engineState.registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         waitForFirstResponse();
     }
 

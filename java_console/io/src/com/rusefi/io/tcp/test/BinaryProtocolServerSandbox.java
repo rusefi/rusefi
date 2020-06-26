@@ -41,6 +41,6 @@ class BinaryProtocolServerSandbox {
         });
         bp.setController(new ConfigurationImage(new byte[Fields.TOTAL_CONFIG_SIZE]));
         bp.currentOutputs = new byte[1 + Fields.TS_OUTPUT_SIZE];
-        BinaryProtocolServer.start();
+        BinaryProtocolServer.start(new LinkManager());
     }
 }

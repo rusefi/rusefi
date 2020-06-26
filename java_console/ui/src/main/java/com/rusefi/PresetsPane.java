@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.ui.UIContext;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -19,7 +20,7 @@ public class PresetsPane {
 
     private JPanel content = new JPanel(new GridLayout(2, 4));
 
-    public PresetsPane() {
+    public PresetsPane(UIContext uiContext) {
         content.add(new SetEngineTypeCommandControl("Frankenso Miata NA6 Stage 0", "/engines/miata_na.png", Fields.ET_FRANKENSO_MIATA_NA6_VAF).getContent());
         content.add(new SetEngineTypeCommandControl("Frankenso Miata NA6 Stage 1", "/engines/miata_na.png", Fields.ET_FRANKENSO_MIATA_NA6).getContent());
         content.add(new SetEngineTypeCommandControl("Frankenso Miata NB2", "/engines/miata_nb.png", Fields.ET_FRANKENSO_MIATA_NB2).getContent());

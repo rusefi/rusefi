@@ -28,7 +28,7 @@ public abstract class BaseConfigField {
     }
 
     private void processInitialValue(Field field) {
-        BinaryProtocol bp = LinkManager.getCurrentStreamState();
+        BinaryProtocol bp = LinkManager.getCurrentStreamStateStatic();
         if (bp == null)
             return;
         ConfigurationImage ci = bp.getControllerConfiguration();

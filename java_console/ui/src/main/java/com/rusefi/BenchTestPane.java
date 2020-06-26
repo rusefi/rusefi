@@ -7,6 +7,7 @@ import com.rusefi.tracing.Entry;
 import com.rusefi.tracing.JsonOutput;
 import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.RpmModel;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,8 +25,10 @@ import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
 public class BenchTestPane {
     private final JPanel content = new JPanel(new GridLayout(2, 5));
+    private final UIContext uiContext;
 
-    public BenchTestPane() {
+    public BenchTestPane(UIContext uiContext) {
+        this.uiContext = uiContext;
         content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         content.add(grabPerformanceTrace());
@@ -57,7 +60,7 @@ public class BenchTestPane {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BinaryProtocol bp = LinkManager.getCurrentStreamState();
+                BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
                 bp.executeCommand(new byte[]{Fields.TS_PERF_TRACE_BEGIN}, "begin trace");
 
                 try {

@@ -14,8 +14,9 @@ import java.awt.*;
 
 import static com.romraider.editor.ecu.ECUEditorManager.getECUEditor;
 
-public class RomEditorPane extends JPanel {
 
+public class RomEditorPane extends JPanel {
+/*
     private final UIContext uiContext;
 
     public RomEditorPane(UIContext uiContext) {
@@ -36,7 +37,7 @@ public class RomEditorPane extends JPanel {
 
             add(editor.getContent());
 
-            BinaryProtocol instance = LinkManager.getCurrentStreamState();
+            BinaryProtocol instance = LinkManager.getCurrentStreamStateStatic();
             if (instance == null)
                 throw new NullPointerException("instance");
             ConfigurationImage image = instance.getControllerConfiguration();
@@ -47,4 +48,6 @@ public class RomEditorPane extends JPanel {
         }
         UiUtils.trueLayout(this);
     }
+*/
+
 }

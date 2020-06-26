@@ -84,6 +84,6 @@ public class RealHwTest {
 
     private static void runRealHardwareTest(String port) throws Exception {
         IoUtil.realHardwareConnect(port);
-        mainTestBody();
+        mainTestBody(new LinkManager());
     }
 }

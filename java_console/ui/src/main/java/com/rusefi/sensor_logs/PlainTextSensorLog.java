@@ -45,7 +45,7 @@ public class PlainTextSensorLog implements SensorLog {
             logFile.write("Captured " + FileLog.getDate() + "\r\n");
 
             int debugMode = -1;
-            BinaryProtocol bp = LinkManager.getCurrentStreamState();
+            BinaryProtocol bp = LinkManager.getCurrentStreamStateStatic();
             if (bp != null) {
                 ConfigurationImage ci = bp.getControllerConfiguration();
                 if (ci != null) {

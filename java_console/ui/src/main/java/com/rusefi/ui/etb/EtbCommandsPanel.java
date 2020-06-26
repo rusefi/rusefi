@@ -3,6 +3,7 @@ package com.rusefi.ui.etb;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.ldmp.generated.ElectronicThrottleMeta;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.config.BitConfigField;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.config.EnumConfigField;
@@ -24,7 +25,7 @@ import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
 public class EtbCommandsPanel {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
-    public EtbCommandsPanel() {
+    public EtbCommandsPanel(UIContext uiContext) {
         content.add(new DirectDrivePanel().getContent());
 
         JPanel testParameters = new JPanel(new VerticalFlowLayout());
@@ -41,7 +42,7 @@ public class EtbCommandsPanel {
         testParameters.add(new JLabel("For example:"));
         testParameters.add(new JLabel("set etb_p 1.1"));
 
-        testParameters.add(new BitConfigField(Fields.PAUSEETBCONTROL, "Pause").getContent());
+        testParameters.add(new BitConfigField(uiContext, Fields.PAUSEETBCONTROL, "Pause").getContent());
         testParameters.add(new ConfigField(Fields.ETB_PFACTOR, "pFactor").getContent());
         testParameters.add(new ConfigField(Fields.ETB_IFACTOR, "iFactor").getContent());
         testParameters.add(new ConfigField(Fields.ETB_DFACTOR, "dFactor").getContent());

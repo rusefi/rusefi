@@ -35,7 +35,7 @@ public class AutoTest {
     static int currentEngineType;
     private static String criticalError;
 
-    static void mainTestBody() throws Exception {
+    static void mainTestBody(LinkManager linkManager) throws Exception {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
@@ -44,7 +44,8 @@ public class AutoTest {
             }
         });
 
-        BinaryProtocol bp = LinkManager.getCurrentStreamState();
+
+        BinaryProtocol bp = linkManager.getCurrentStreamState();
         // let's make sure 'burn' command works since sometimes it does not
         bp.burn(Logger.CONSOLE);
 
@@ -538,8 +539,9 @@ public class AutoTest {
 
         boolean failed = false;
         try {
-            IoUtil.connectToSimulator(startSimulator);
-            mainTestBody();
+            LinkManager linkManager = new LinkManager();
+            IoUtil.connectToSimulator(linkManager, startSimulator);
+            mainTestBody(linkManager);
         } catch (Throwable e) {
             e.printStackTrace();
             failed = true;
