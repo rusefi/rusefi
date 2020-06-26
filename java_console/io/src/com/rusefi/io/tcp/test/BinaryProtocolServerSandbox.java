@@ -18,7 +18,7 @@ class BinaryProtocolServerSandbox {
     public static void main(String[] args) {
         LinkManager linkManager = new LinkManager();
         TcpIoStream stream = new TcpIoStream(linkManager, new ByteArrayInputStream(new byte[0]), new ByteArrayOutputStream());
-        BinaryProtocol bp = new BinaryProtocol(linkManager, FileLog.LOGGER, (IoStream) stream);
+        BinaryProtocol bp = new BinaryProtocol(linkManager, FileLog.LOGGER, stream);
         linkManager.setConnector(new LinkConnector() {
             @Override
             public void connectAndReadConfiguration(ConnectionStateListener listener) {
