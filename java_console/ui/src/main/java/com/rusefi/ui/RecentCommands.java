@@ -95,7 +95,7 @@ public class RecentCommands {
 
     public RecentCommands(UIContext uiContext) {
         this.uiContext = uiContext;
-        CommandQueue.getInstance().addListener(new CommandQueue.CommandQueueListener() {
+        uiContext.getCommandQueue().addListener(new CommandQueue.CommandQueueListener() {
             @Override
             public void onCommand(String command) {
                 if (!reentrant.get())
@@ -168,7 +168,7 @@ public class RecentCommands {
                 content.removeAll();
 
                 if (uiContext.getLinkManager().isLogViewer())
-                    content.add(createButton());
+                    content.add(createButton(uiContext));
 
                 JButton reset = new JButton(AutoupdateUtil.loadIcon("/undo.jpg"));
                 reset.setContentAreaFilled(false);
@@ -188,7 +188,7 @@ public class RecentCommands {
                     sorted.addAll(entries.keySet());
 
                     for (Entry entry : sorted) {
-                        content.add(createButton(reentrant, entry.command));
+                        content.add(createButton(uiContext, reentrant, entry.command));
                     }
                 }
                 UiUtils.trueLayout(content.getParent());
@@ -197,7 +197,7 @@ public class RecentCommands {
         getConfig().getRoot().setProperty(KEY, pack());
     }
 
-    public static JComponent createButton(final AtomicBoolean reentrant, final String command) {
+    public static JComponent createButton(UIContext uiContext, final AtomicBoolean reentrant, final String command) {
         JButton button = new JButton(command);
         Icon icon = COMMAND_ICONS.get(command);
         if (icon != null)
@@ -209,7 +209,7 @@ public class RecentCommands {
             public void actionPerformed(ActionEvent e) {
                 reentrant.set(true);
                 int timeout = CommandQueue.getTimeout(command);
-                CommandQueue.getInstance().write(command, timeout);
+                uiContext.getCommandQueue().write(command, timeout);
                 reentrant.set(false);
             }
         });
@@ -279,7 +279,7 @@ public class RecentCommands {
     }
 
 
-    public static JButton createButton() {
+    public static JButton createButton(UIContext uiContext) {
         JButton button = new JButton("Read trigger log");
         button.addActionListener(new ActionListener() {
             @Override

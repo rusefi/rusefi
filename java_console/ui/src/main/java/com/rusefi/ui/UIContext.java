@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.sensor_logs.SensorLogger;
 
@@ -10,5 +11,9 @@ public class UIContext {
 
     public LinkManager getLinkManager() {
         return linkManager;
+    }
+
+    public CommandQueue getCommandQueue() {
+        return CommandQueue.instance;
     }
 }
