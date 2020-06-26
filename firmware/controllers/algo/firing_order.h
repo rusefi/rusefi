@@ -19,7 +19,7 @@ typedef enum {
 
 	// 3 cylinder
 	FO_1_2_3 = 10,
-	FO_1_3_2 = 23,
+	FO_1_3_2 = 24,
 
 	// 4 cylinder
 	FO_1_3_4_2 = 1, // typical inline 4
