@@ -15,6 +15,11 @@ public class AnyCommandTest {
     }
 
     @Test
+    public void testNoExceptionIsThrown() {
+        assertEquals("eval \"2 2 +\"", AnyCommand.prepareEvalCommand("eval \"2 2 +\""));
+    }
+
+    @Test
     public void testUnquote() {
         assertEquals("1 2 3", AnyCommand.unquote("  \"1 2 3\"  "));
     }

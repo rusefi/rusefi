@@ -133,7 +133,14 @@ public class AnyCommand {
     public static String prepareCommand(String rawCommand, LinkManager linkManager) {
         try {
             if (rawCommand.startsWith("eval" + " ")) {
-                return prepareEvalCommand(rawCommand);
+                String result = prepareEvalCommand(rawCommand);
+                if (result.equals(rawCommand)) {
+                    // result was not translated
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Not valid expression");
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Please try eval \"2 + 2\"");
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "For RPN use rpn_eval \"2 2 +\"");
+                }
+                return result;
             } else if (rawCommand.toLowerCase().startsWith("stim_check" + " ")) {
                 handleStimulationSelfCheck(rawCommand, linkManager);
                 return null;
@@ -202,12 +209,16 @@ public class AnyCommand {
         MessagesCentral.getInstance().postMessage(AnyCommand.class, "Human form is \"" + humanForm + "\"");
     }
 
-    private static String prepareEvalCommand(String rawCommand) {
+    public static String prepareEvalCommand(String rawCommand) {
         String[] parts = rawCommand.split(" ", 2);
         if (parts.length != 2)
             return rawCommand; // let's ignore invalid command
 
-        return "rpn_eval" + " " + quote(infix2postfix(unquote(parts[1])));
+        try {
+            return "rpn_eval" + " " + quote(infix2postfix(unquote(parts[1])));
+        } catch (IllegalArgumentException e) {
+            return rawCommand;
+        }
     }
 
     private static String quote(String s) {
