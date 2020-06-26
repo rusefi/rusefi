@@ -67,10 +67,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
 
+    private BinaryProtocolState state = new BinaryProtocolState();
+
     // todo: this ioLock needs better documentation!
     private final Object ioLock = new Object();
-    private final Object imageLock = new Object();
-    private ConfigurationImage controller;
 
     private static final int COMPOSITE_OFF_RPM = 300;
 
@@ -94,11 +94,15 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public boolean isClosed;
-    /**
-     * Snapshot of current gauges status
-     * @see Fields#TS_OUTPUT_COMMAND
-     */
-    public byte[] currentOutputs;
+
+    public byte[] getCurrentOutputs() {
+        return state.getCurrentOutputs();
+    }
+
+    public void setCurrentOutputs(byte[] currentOutputs) {
+        state.setCurrentOutputs(currentOutputs);
+    }
+
     private SensorCentral.SensorListener rpmListener = value -> {
         if (value <= COMPOSITE_OFF_RPM) {
             needCompositeLogger = true;
@@ -467,20 +471,14 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public void setController(ConfigurationImage controller) {
-        synchronized (imageLock) {
-            this.controller = controller.clone();
-        }
+        state.setController(controller);
     }
 
     /**
      * Configuration as it is in the controller to the best of our knowledge
      */
     public ConfigurationImage getControllerConfiguration() {
-        synchronized (imageLock) {
-            if (controller == null)
-                return null;
-            return controller.clone();
-        }
+        return state.getControllerConfiguration();
     }
 
     private void sendPacket(byte[] command) throws IOException {
@@ -561,7 +559,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != RESPONSE_OK)
             return false;
 
-        currentOutputs = response;
+        state.setCurrentOutputs(response);
 
         for (Sensor sensor : Sensor.values()) {
             if (sensor.getType() == null) {
@@ -603,8 +601,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public void setRange(byte[] src, int scrPos, int offset, int count) {
-        synchronized (imageLock) {
-            System.arraycopy(src, scrPos, controller.getContent(), offset, count);
-        }
+        state.setRange(src, scrPos, offset, count);
     }
 }
