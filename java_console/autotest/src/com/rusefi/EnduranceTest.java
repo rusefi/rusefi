@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 
 import static com.rusefi.IoUtil.*;
@@ -12,6 +13,7 @@ public class EnduranceTest {
 
     public static void main(String[] args) {
         LinkManager linkManager = new LinkManager();
+        CommandQueue commandQueue = CommandQueue.getInstance();
         long start = System.currentTimeMillis();
         int count = parseCount(args);
         try {
@@ -27,12 +29,12 @@ public class EnduranceTest {
             IoUtil.realHardwareConnect(linkManager, port);
             for (int i = 0; i < count; i++) {
                 AutoTest.currentEngineType = 3;
-                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 3, AutoTest.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
+                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 3, AutoTest.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
                 sleepSeconds(2);
                 sendCommand(getEnableCommand("self_stimulation"));
 //                IoUtil.changeRpm(1200);
                 AutoTest.currentEngineType = 28;
-                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 28, AutoTest.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
+                sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 28, AutoTest.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
                 sleepSeconds(2);
                 FileLog.MAIN.logLine("++++++++++++++++++++++++++++++++++++  " + i + "   +++++++++++++++");
             }
