@@ -17,10 +17,12 @@ public class PresetsPane {
     private static final int TEST_V_12 = 49;
     private static final int ETB_BENCH = 58;
     private static final int MINIMAL_PINS = 99;
+    private final UIContext uiContext;
 
     private JPanel content = new JPanel(new GridLayout(2, 4));
 
     public PresetsPane(UIContext uiContext) {
+        this.uiContext = uiContext;
         content.add(new SetEngineTypeCommandControl("Frankenso Miata NA6 Stage 0", "/engines/miata_na.png", Fields.ET_FRANKENSO_MIATA_NA6_VAF).getContent());
         content.add(new SetEngineTypeCommandControl("Frankenso Miata NA6 Stage 1", "/engines/miata_na.png", Fields.ET_FRANKENSO_MIATA_NA6).getContent());
         content.add(new SetEngineTypeCommandControl("Frankenso Miata NB2", "/engines/miata_nb.png", Fields.ET_FRANKENSO_MIATA_NB2).getContent());
@@ -53,7 +55,7 @@ public class PresetsPane {
                 if (dialogResult != JOptionPane.YES_OPTION)
                     return;
 
-                CommandQueue.getInstance().write(getCommand());
+                uiContext.getCommandQueue().write(getCommand());
             };
         }
     }

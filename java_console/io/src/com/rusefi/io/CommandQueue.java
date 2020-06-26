@@ -31,7 +31,7 @@ public class CommandQueue {
      */
     private Set<String> pendingConfirmations = Collections.synchronizedSet(new HashSet<String>());
 
-    private static final CommandQueue instance = new CommandQueue();
+    public static final CommandQueue instance = new CommandQueue();
     private final BlockingQueue<IMethodInvocation> pendingCommands = new LinkedBlockingQueue<>();
     private final List<CommandQueueListener> commandListeners = new ArrayList<>();
 

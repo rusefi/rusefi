@@ -99,7 +99,8 @@ public class ECUEditorToolBar extends JToolBar {
         burnImage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CommandQueue.getInstance().write(Fields.CMD_WRITECONFIG);
+                throw new UnsupportedOperationException("Disabled");
+                //CommandQueue.getInstance().write(Fields.CMD_WRITECONFIG);
             }
         });
     }
