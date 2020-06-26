@@ -6,7 +6,7 @@ import com.rusefi.sensor_logs.SensorLogger;
 public class UIContext {
     private final LinkManager linkManager = new LinkManager();
 
-    public SensorLogger sensorLogger = new SensorLogger();
+    public SensorLogger sensorLogger = new SensorLogger(this);
 
     public LinkManager getLinkManager() {
         return linkManager;

@@ -64,7 +64,7 @@ public class EtbCommandsPanel {
         content.add(new EnumConfigField(uiContext, Fields.DEBUGMODE, "Debug Mode").getContent());
 
         content.add(createMagicSpotsPanel());
-        content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
+        content.add(UiUtils.wrap(new EtbMonteCarloSequence(uiContext).getButton()));
         content.add(UiUtils.wrap(new EtbReturnToNeutral().getContent()));
     }
 
