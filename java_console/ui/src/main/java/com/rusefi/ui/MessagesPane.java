@@ -29,7 +29,7 @@ public class MessagesPane {
     public MessagesPane(UIContext uiContext, final Node config) {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
-        command = AnyCommand.createArea(config, config.getProperty(AnyCommand.KEY), true, false);
+        command = AnyCommand.createArea(uiContext, config, config.getProperty(AnyCommand.KEY), true, false);
         final MessagesPanel upperPanel = new MessagesPanel(command.getContent());
         upperPanel.loadFont(config);
 

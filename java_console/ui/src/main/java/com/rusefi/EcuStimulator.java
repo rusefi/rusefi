@@ -4,6 +4,7 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.file.TableGenerator;
+import com.rusefi.io.CommandQueue;
 import com.rusefi.models.Point3D;
 import com.rusefi.models.Range;
 import com.rusefi.models.XYData;
@@ -189,7 +190,7 @@ public class EcuStimulator {
         int actual;
         int attempt = 0;
         do {
-            RpmCommand.requestRpmChange(rpm);
+            RpmCommand.requestRpmChange(rpm, null);
             sleepRuntime(50);
             actual = RpmModel.getInstance().getValue();
         } while (attempt++ < 10 && Math.abs(rpm - actual) >= 100);

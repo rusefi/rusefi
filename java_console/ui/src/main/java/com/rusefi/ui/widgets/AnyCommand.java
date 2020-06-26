@@ -31,12 +31,14 @@ public class AnyCommand {
     public static final String KEY = "last_value";
     private static final String DECODE_RPN = "decode_rpn";
 
+    private final UIContext uiContext;
     private final JTextComponent text;
     private JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
     private boolean reentrant;
     private Listener listener;
 
-    private AnyCommand(final JTextComponent text, final Node config, String defaultCommand, final boolean listenToCommands, boolean withCommandCaption) {
+    private AnyCommand(UIContext uiContext, final JTextComponent text, final Node config, String defaultCommand, final boolean listenToCommands, boolean withCommandCaption) {
+        this.uiContext = uiContext;
         this.text = text;
         installCtrlEnterAction();
         text.setText(defaultCommand);
@@ -55,7 +57,7 @@ public class AnyCommand {
         });
         content.add(go);
 
-        CommandQueue.getInstance().addListener(command -> {
+        uiContext.getCommandQueue().addListener(command -> {
             if (listenToCommands && !reentrant)
                 text.setText(command);
         });
@@ -123,7 +125,7 @@ public class AnyCommand {
             listener.onSend();
         int timeout = CommandQueue.getTimeout(cmd);
         reentrant = true;
-        CommandQueue.getInstance().write(cmd.toLowerCase(), timeout);
+        uiContext.getCommandQueue().write(cmd.toLowerCase(), timeout);
         reentrant = false;
     }
 
@@ -260,7 +262,7 @@ public class AnyCommand {
     public static AnyCommand createField(UIContext uiContext, Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
         final JTextField text = new JTextFieldWithWidth(200);
 
-        final AnyCommand command = new AnyCommand(text, config, defaultCommand, listenToCommands, withCommandCaption);
+        final AnyCommand command = new AnyCommand(uiContext, text, config, defaultCommand, listenToCommands, withCommandCaption);
         text.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -292,7 +294,7 @@ public class AnyCommand {
         return command;
     }
 
-    public static AnyCommand createArea(Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
+    public static AnyCommand createArea(UIContext uiContext, Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
         final JTextArea text = new JTextArea(3, 20) {
             @Override
             public Dimension getPreferredSize() {
@@ -302,6 +304,6 @@ public class AnyCommand {
         };
 //        text.setMax
 
-        return new AnyCommand(text, config, defaultCommand, listenToCommands, withCommandCaption);
+        return new AnyCommand(uiContext, text, config, defaultCommand, listenToCommands, withCommandCaption);
     }
 }

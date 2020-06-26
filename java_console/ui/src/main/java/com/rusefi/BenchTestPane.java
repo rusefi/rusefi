@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.io.LinkManager;
 import com.rusefi.tracing.Entry;
 import com.rusefi.tracing.JsonOutput;
 import com.rusefi.ui.MessagesView;
@@ -40,13 +39,13 @@ public class BenchTestPane {
         content.add(createMILTest());
         content.add(createIdleTest());
         content.add(createDizzyTest());
-        content.add(new CommandControl("Reboot", "", "Reboot") {
+        content.add(new CommandControl(uiContext, "Reboot", "", "Reboot") {
             @Override
             protected String getCommand() {
                 return Fields.CMD_REBOOT;
             }
         }.getContent());
-        content.add(new CommandControl("Reboot to DFU", "", "Reboot to DFU") {
+        content.add(new CommandControl(uiContext,"Reboot to DFU", "", "Reboot to DFU") {
             @Override
             protected String getCommand() {
                 return Fields.CMD_REBOOT_DFU;
@@ -86,7 +85,7 @@ public class BenchTestPane {
     }
 
     private Component createMILTest() {
-        CommandControl panel = new CommandControl("MIL", "check_engine.jpg", TEST) {
+        CommandControl panel = new CommandControl(uiContext,"MIL", "check_engine.jpg", TEST) {
             @NotNull
             protected String getCommand() {
                 return "milbench";
@@ -96,7 +95,7 @@ public class BenchTestPane {
     }
 
     private Component createIdleTest() {
-        CommandControl panel = new CommandControl("Idle Valve", "idle_valve.png", TEST) {
+        CommandControl panel = new CommandControl(uiContext,"Idle Valve", "idle_valve.png", TEST) {
             @NotNull
             protected String getCommand() {
                 return "idlebench";
@@ -127,7 +126,7 @@ public class BenchTestPane {
 
     private Component createSparkTest() {
         final JComboBox<Integer> indexes = createIndexCombo();
-        CommandControl panel = new CommandControl("Spark #", "spark.jpg", TEST, indexes) {
+        CommandControl panel = new CommandControl(uiContext,"Spark #", "spark.jpg", TEST, indexes) {
             @Override
             protected String getCommand() {
                 return "sparkbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";
@@ -138,7 +137,7 @@ public class BenchTestPane {
 
     private Component createInjectorTest() {
         final JComboBox<Integer> indexes = createIndexCombo();
-        CommandControl panel = new CommandControl("Injector #", "injector.png", TEST, indexes) {
+        CommandControl panel = new CommandControl(uiContext,"Injector #", "injector.png", TEST, indexes) {
             @Override
             protected String getCommand() {
                 return "fuelbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";
