@@ -199,7 +199,7 @@ public class ConsoleTools {
         linkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
-                BinaryProtocolServer.start(linkManager);
+                new BinaryProtocolServer().start(linkManager);
             }
 
             @Override

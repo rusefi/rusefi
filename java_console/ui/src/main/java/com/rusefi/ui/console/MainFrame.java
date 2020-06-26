@@ -80,7 +80,7 @@ public class MainFrame {
                 tabbedPane.settingsTab.showContent();
                 tabbedPane.logsManager.showContent();
                 tabbedPane.fuelTunePane.showContent();
-                BinaryProtocolServer.start(linkManager);
+                new BinaryProtocolServer().start(linkManager);
             }
         });
 
