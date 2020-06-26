@@ -112,10 +112,6 @@ public class TestingUtils {
         return chart;
     }
 
-    static EngineChart nextChart1() {
-        return nextChart();
-    }
-
     static String getNextWaveChart(CommandQueue commandQueue) {
         IoUtil.sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER, commandQueue);
         String result = getEngineChart();

@@ -10,6 +10,10 @@ import static org.junit.Assert.assertEquals;
  * 3/9/2017.
  */
 public class AnyCommandTest {
+    private static String prepareCommand(String rawCommand) {
+        return AnyCommand.prepareCommand(rawCommand, null);
+    }
+
     @Test
     public void testUnquote() {
         assertEquals("1 2 3", AnyCommand.unquote("  \"1 2 3\"  "));
@@ -17,13 +21,13 @@ public class AnyCommandTest {
 
     @Test
     public void testPrepareEvalCommand() {
-        assertEquals("rpn_eval \"2 3 +\"", AnyCommand.prepareCommand("eval   \"2 + 3\" "));
+        assertEquals("rpn_eval \"2 3 +\"", prepareCommand("eval   \"2 + 3\" "));
     }
 
     @Test
     public void testSetFSIOexpression() {
         // todo: parameter order needs to be in postfix form
-        assertEquals("set_rpn_expression 1 \"rpm fsio_setting 0 >\"", AnyCommand.prepareCommand("set_fsio_expression 1 \"rpm > fsio_setting 0\""));
+        assertEquals("set_rpn_expression 1 \"rpm fsio_setting 0 >\"", prepareCommand("set_fsio_expression 1 \"rpm > fsio_setting 0\""));
     }
 
     @Test
@@ -32,6 +36,6 @@ public class AnyCommandTest {
         assertEquals("tps > 10", AnyCommand.unquote("\u201Ctps > 10\u201D"));
 
 
-        assertEquals("set_rpn_expression 1 \"tps 10 >\"", AnyCommand.prepareCommand("Set_fsio_expression 1 \u201Ctps > 10\u201D"));
+        assertEquals("set_rpn_expression 1 \"tps 10 >\"", prepareCommand("Set_fsio_expression 1 \u201Ctps > 10\u201D"));
     }
 }

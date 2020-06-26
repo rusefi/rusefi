@@ -85,6 +85,6 @@ public class RealHwTest {
     private static void runRealHardwareTest(String port) throws Exception {
         LinkManager linkManager = new LinkManager();
         IoUtil.realHardwareConnect(linkManager, port);
-        new AutoTest(linkManager, CommandQueue.getInstance()).mainTestBody();
+        new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
     }
 }

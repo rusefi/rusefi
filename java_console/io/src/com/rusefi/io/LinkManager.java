@@ -62,6 +62,10 @@ public class LinkManager {
         return connector.getBinaryProtocol();
     }
 
+    public CommandQueue getCommandQueue() {
+        return CommandQueue.getInstance();
+    }
+
     public enum LogLevel {
         INFO,
         DEBUG,

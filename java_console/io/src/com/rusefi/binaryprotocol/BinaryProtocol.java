@@ -173,7 +173,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         /**
          * this here to make CommandQueue happy
          */
-        CommandQueue.getInstance().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
+        linkManager.getCommandQueue().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
     /**
