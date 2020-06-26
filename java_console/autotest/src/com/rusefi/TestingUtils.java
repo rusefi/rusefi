@@ -105,9 +105,9 @@ public class TestingUtils {
         assertTrue(msg, value == null);
     }
 
-    static EngineChart nextChart() {
+    static EngineChart nextChart(CommandQueue commandQueue) {
         long start = System.currentTimeMillis();
-        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(CommandQueue.getInstance()));
+        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(commandQueue));
         FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
         return chart;
     }
