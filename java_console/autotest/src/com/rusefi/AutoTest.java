@@ -35,7 +35,15 @@ public class AutoTest {
     static int currentEngineType;
     private static String criticalError;
 
-    static void mainTestBody(LinkManager linkManager) throws Exception {
+    private final LinkManager linkManager;
+    private CommandQueue commandQueue;
+
+    public AutoTest(LinkManager linkManager, CommandQueue commandQueue) {
+        this.linkManager = linkManager;
+        this.commandQueue = commandQueue;
+    }
+
+    void mainTestBody() throws Exception {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
@@ -81,21 +89,21 @@ public class AutoTest {
         }
     };
 
-    private static void testVW_60_2() {
+    private void testVW_60_2() {
         setEngineType(32);
         changeRpm(900);
         // first let's get to expected RPM
         assertRpmDoesNotJump(20000, 15, 30, FAIL);
     }
 
-    private static void testV12() {
+    private void testV12() {
         setEngineType(40);
         changeRpm(700);
         // first let's get to expected RPM
         assertRpmDoesNotJump(15000, 15, 30, FAIL);
     }
 
-    public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback) {
+    public void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback) {
         changeRpm(rpm);
         sleepSeconds(settleTime);
         AtomicReference<String> result = new AtomicReference<>();
@@ -113,7 +121,7 @@ public class AutoTest {
         SensorCentral.getInstance().removeListener(Sensor.RPM, listener);
     }
 
-    private static void testCustomEngine() {
+    private void testCustomEngine() {
         setEngineType(0);
         sendCommand("set_toothed_wheel 4 0");
 //        sendCommand("enable trigger_only_front");
@@ -124,24 +132,24 @@ public class AutoTest {
 //        changeRpm(1500);
     }
 
-    private static void testMazdaMiata2003() {
+    private void testMazdaMiata2003() {
         setEngineType(47);
         sendCommand("get cranking_dwell"); // just test coverage
 //        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
     }
 
-    private static void testCamaro() {
+    private void testCamaro() {
         setEngineType(35);
     }
 
-    private static void testSachs() {
+    private void testSachs() {
         setEngineType(29);
         String msg = "BMW";
         IoUtil.changeRpm(1200);
         // todo: add more content
     }
 
-    private static void testBmwE34() {
+    private void testBmwE34() {
         setEngineType(25);
         sendCommand("chart 1");
         String msg = "BMW";
@@ -164,24 +172,28 @@ public class AutoTest {
         assertWave(msg, chart, EngineChart.MAP_AVERAGING, 0.139, x, x + 120, x + 240, x + 360, x + 480, x + 600);
     }
 
-    private static void testMitsu() {
+    void changeRpm(final int rpm) {
+        IoUtil.changeRpm(rpm);
+    }
+
+    private void testMitsu() {
         setEngineType(16);
         sendCommand("disable cylinder_cleanup");
         String msg = "Mitsubishi";
-        IoUtil.changeRpm(200);
+        changeRpm(200);
 
-        IoUtil.changeRpm(1200);
+        changeRpm(1200);
         // todo: add more content
     }
 
-    private static void testCitroenBerlingo() {
+    private void testCitroenBerlingo() {
         setEngineType(ET_CITROEN_TU3JP);
         String msg = "Citroen";
-        IoUtil.changeRpm(1200);
+        changeRpm(1200);
         // todo: add more content
     }
 
-    static void setEngineType(int type) {
+    private void setEngineType(int type) {
         FileLog.MAIN.logLine("AUTOTEST setEngineType " + type);
 //        sendCommand(CMD_PINS);
         currentEngineType = type;
@@ -191,7 +203,7 @@ public class AutoTest {
         sendCommand(getEnableCommand("self_stimulation"));
     }
 
-    private static void testMazda626() {
+    private void testMazda626() {
         setEngineType(28);
         String msg = "mazda 626 default cranking";
         IoUtil.changeRpm(200);
@@ -202,7 +214,7 @@ public class AutoTest {
         assertWave(msg, chart, EngineChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
     }
 
-    private static void test2003DodgeNeon() {
+    private void test2003DodgeNeon() {
         setEngineType(23);
         sendCommand("set wwaeTau 0");
         sendCommand("set wwaeBeta 0");
@@ -268,7 +280,7 @@ public class AutoTest {
         assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, EngineReport.RATIO, EngineReport.RATIO, x + 180, x + 540);
     }
 
-    private static void testMazdaProtege() {
+    private void testMazdaProtege() {
         setEngineType(14);
         EngineChart chart;
         sendCommand("set mock_vbatt_voltage 1.395");
@@ -295,7 +307,7 @@ public class AutoTest {
         assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.21433333333333345, x, x + 360);
     }
 
-    private static void test1995DodgeNeon() {
+    private void test1995DodgeNeon() {
         setEngineType(2);
         EngineChart chart;
         sendComplexCommand("set_whole_fuel_map 3");
@@ -329,11 +341,11 @@ public class AutoTest {
         assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.493, x + 540);
     }
 
-    private static void testRoverV8() {
+    private void testRoverV8() {
         setEngineType(10);
     }
 
-    private static void testFordFiesta() {
+    private void testFordFiesta() {
         setEngineType(4);
         EngineChart chart;
         IoUtil.changeRpm(2000);
@@ -347,7 +359,7 @@ public class AutoTest {
         assertWaveNull(msg, chart, EngineChart.SPARK_4);
     }
 
-    private static void testFord6() {
+    private void testFord6() {
         setEngineType(7);
         EngineChart chart;
         IoUtil.changeRpm(2000);
@@ -364,7 +376,7 @@ public class AutoTest {
         assertTrue(msg, chart.get(EngineChart.TRIGGER_2) != null);
     }
 
-    private static void testFordAspire() {
+    private void testFordAspire() {
         setEngineType(3);
         sendCommand("disable cylinder_cleanup");
         sendCommand("set mock_map_voltage 1");
@@ -486,13 +498,13 @@ public class AutoTest {
         assertWaveNull("hard limit check", chart, EngineChart.INJECTOR_1);
     }
 
-    private static void sendCommand(String command) {
+    private void sendCommand(String command) {
         sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
     }
 
-    private static void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
+    private void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
         assertNull("Fatal not expected", criticalError);
-        IoUtil.sendCommand(command, retryTimeoutMs, timeoutMs);
+        IoUtil.sendCommand(command, retryTimeoutMs, timeoutMs, commandQueue);
     }
 
     private static void assertEquals(double expected, double actual) {
@@ -511,7 +523,7 @@ public class AutoTest {
     /**
      * This method waits for longer then usual.
      */
-    private static void sendComplexCommand(String command) {
+    private void sendComplexCommand(String command) {
         sendCommand(command, COMPLEX_COMMAND_RETRY, Timeouts.CMD_TIMEOUT);
     }
 
@@ -541,7 +553,7 @@ public class AutoTest {
         try {
             LinkManager linkManager = new LinkManager();
             IoUtil.connectToSimulator(linkManager, startSimulator);
-            mainTestBody(linkManager);
+            new AutoTest(linkManager, CommandQueue.getInstance()).mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
             failed = true;

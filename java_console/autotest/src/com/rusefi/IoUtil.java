@@ -27,7 +27,7 @@ public class IoUtil {
      * @throws IllegalStateException if command was not confirmed
      */
     static void sendCommand(String command) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
+        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT, CommandQueue.getInstance());
     }
 
     public static String getEnableCommand(String settingName) {
@@ -41,12 +41,12 @@ public class IoUtil {
     /**
      * blocking method which would for confirmation from rusEfi
      */
-    static void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
+    static void sendCommand(String command, int retryTimeoutMs, int timeoutMs, CommandQueue commandQueue) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
         FileLog.MAIN.logLine("Sending command [" + command + "]");
         final long begin = System.currentTimeMillis();
-        CommandQueue.getInstance().write(command, retryTimeoutMs, new InvocationConfirmationListener() {
+        commandQueue.write(command, retryTimeoutMs, new InvocationConfirmationListener() {
             @Override
             public void onCommandConfirmation() {
                 responseLatch.countDown();

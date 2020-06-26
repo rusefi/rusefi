@@ -1,12 +1,12 @@
 package com.rusefi;
 
+import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static com.rusefi.AutoTest.mainTestBody;
 import static com.rusefi.Timeouts.SECOND;
 
 /**
@@ -85,6 +85,6 @@ public class RealHwTest {
     private static void runRealHardwareTest(String port) throws Exception {
         LinkManager linkManager = new LinkManager();
         IoUtil.realHardwareConnect(linkManager, port);
-        mainTestBody(linkManager);
+        new AutoTest(linkManager, CommandQueue.getInstance()).mainTestBody();
     }
 }
