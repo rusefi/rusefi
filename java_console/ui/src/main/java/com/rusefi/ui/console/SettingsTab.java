@@ -151,9 +151,9 @@ public class SettingsTab {
             if (field.getType() == FieldType.BIT) {
                 control = new BitConfigField(uiContext, field, f.getUiName()).getContent();
             } else if (field.getOptions() != null) {
-                control = new EnumConfigField(field, f.getUiName()).getContent();
+                control = new EnumConfigField(uiContext, field, f.getUiName()).getContent();
             } else {
-                control = new ConfigField(field, f.getUiName()).getContent();
+                control = new ConfigField(uiContext, field, f.getUiName()).getContent();
             }
 
             dialogBody.add(control);

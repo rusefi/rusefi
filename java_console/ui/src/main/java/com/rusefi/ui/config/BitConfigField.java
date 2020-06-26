@@ -16,7 +16,7 @@ public class BitConfigField extends BaseConfigField {
     private boolean ec;
 
     public BitConfigField(UIContext uiContext, final Field field, String caption) {
-        super(field);
+        super(uiContext, field);
         createUi(caption, view);
         requestInitialValue(field); // this is not in base constructor so that view is created by the time we invoke it
 

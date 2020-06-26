@@ -10,6 +10,7 @@ import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
 import com.rusefi.sensor_logs.SensorLogger;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.FrameHelper;
 import org.putgemin.VerticalFlowLayout;
 
@@ -62,6 +63,9 @@ public class LightweightGUI {
     }
 
     public static void start() {
+
+        UIContext uiContext = new UIContext();
+
         LightweightGUI gui = new LightweightGUI();
 
         gui.setConnectedUI(false);
@@ -72,7 +76,7 @@ public class LightweightGUI {
         ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
             @Override
             public void onConnectionStatus(boolean isConnected) {
-                SensorLogger.init();
+                uiContext.sensorLogger.init();
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {

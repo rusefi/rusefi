@@ -3,6 +3,7 @@ package com.rusefi;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.RpmLabel;
 import com.rusefi.ui.RpmModel;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.config.EnumConfigField;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -38,7 +39,7 @@ public class SensorSnifferPane {
 
     private boolean paused = false;
 
-    public SensorSnifferPane(Node config) {
+    public SensorSnifferPane(UIContext uiContext, Node config) {
         SensorSnifferCentral.addListener(new SensorSnifferCentral.AnalogChartListener() {
             @Override
             public void onAnalogChart(final String message) {
@@ -108,9 +109,9 @@ public class SensorSnifferPane {
         lowerPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
         content.add(lowerPanel, BorderLayout.SOUTH);
 
-        lowerPanel.add(new EnumConfigField(Fields.SENSORCHARTMODE, "Mode").getContent());
-        lowerPanel.add(new ConfigField(Fields.SENSORCHARTFREQUENCY, "Every XXX engine cycles").getContent());
-        lowerPanel.add(new ConfigField(Fields.SENSORSNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
+        lowerPanel.add(new EnumConfigField(uiContext, Fields.SENSORCHARTMODE, "Mode").getContent());
+        lowerPanel.add(new ConfigField(uiContext, Fields.SENSORCHARTFREQUENCY, "Every XXX engine cycles").getContent());
+        lowerPanel.add(new ConfigField(uiContext, Fields.SENSORSNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
     }
 
     private void setPaused(JButton pauseButton, boolean isPaused) {

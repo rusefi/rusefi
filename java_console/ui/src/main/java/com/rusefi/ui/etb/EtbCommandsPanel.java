@@ -2,12 +2,10 @@ package com.rusefi.ui.etb;
 
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
-import com.rusefi.ldmp.generated.ElectronicThrottleMeta;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.config.BitConfigField;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.config.EnumConfigField;
-import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
@@ -43,9 +41,9 @@ public class EtbCommandsPanel {
         testParameters.add(new JLabel("set etb_p 1.1"));
 
         testParameters.add(new BitConfigField(uiContext, Fields.PAUSEETBCONTROL, "Pause").getContent());
-        testParameters.add(new ConfigField(Fields.ETB_PFACTOR, "pFactor").getContent());
-        testParameters.add(new ConfigField(Fields.ETB_IFACTOR, "iFactor").getContent());
-        testParameters.add(new ConfigField(Fields.ETB_DFACTOR, "dFactor").getContent());
+        testParameters.add(new ConfigField(uiContext, Fields.ETB_PFACTOR, "pFactor").getContent());
+        testParameters.add(new ConfigField(uiContext, Fields.ETB_IFACTOR, "iFactor").getContent());
+        testParameters.add(new ConfigField(uiContext, Fields.ETB_DFACTOR, "dFactor").getContent());
 
         content.setBorder(BorderFactory.createTitledBorder("Commands"));
 
@@ -63,7 +61,7 @@ public class EtbCommandsPanel {
         // todo: restore this functionality
         // content.add(LiveDocPanel.createPanel("ETB", ElectronicThrottleMeta.CONTENT));
 
-        content.add(new EnumConfigField(Fields.DEBUGMODE, "Debug Mode").getContent());
+        content.add(new EnumConfigField(uiContext, Fields.DEBUGMODE, "Debug Mode").getContent());
 
         content.add(createMagicSpotsPanel());
         content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));

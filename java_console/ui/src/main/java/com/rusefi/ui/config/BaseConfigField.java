@@ -7,6 +7,7 @@ import com.rusefi.config.Field;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
+import com.rusefi.ui.UIContext;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -16,9 +17,11 @@ import java.nio.ByteBuffer;
 public abstract class BaseConfigField {
     protected final JLabel status = new JLabel("P");
     private final JPanel panel = new JPanel(new BorderLayout());
+    private final UIContext uiContext;
     protected final Field field;
 
-    public BaseConfigField(final Field field) {
+    public BaseConfigField(UIContext uiContext, final Field field) {
+        this.uiContext = uiContext;
         this.field = field;
         status.setToolTipText("Pending...");
     }
@@ -28,7 +31,7 @@ public abstract class BaseConfigField {
     }
 
     private void processInitialValue(Field field) {
-        BinaryProtocol bp = LinkManager.getCurrentStreamStateStatic();
+        BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
         if (bp == null)
             return;
         ConfigurationImage ci = bp.getControllerConfiguration();
