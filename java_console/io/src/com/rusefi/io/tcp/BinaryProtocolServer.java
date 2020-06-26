@@ -126,7 +126,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 byte[] response = new byte[1 + count];
                 response[0] = (byte) TS_OK.charAt(0);
                 BinaryProtocol bp = linkManager.getCurrentStreamState();
-                byte[] currentOutputs = bp.currentOutputs;
+                byte[] currentOutputs = bp.getCurrentOutputs();
                 if (currentOutputs != null)
                     System.arraycopy(currentOutputs, 1 + offset , response, 1, count);
                 stream.sendPacket(response, FileLog.LOGGER);
