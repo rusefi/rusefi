@@ -6,6 +6,7 @@ import com.rusefi.FileLog;
 import com.rusefi.InfixConverter;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.LinkManager;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.storage.Node;
@@ -114,7 +115,7 @@ public class AnyCommand {
     private void sendCommand(String rawCommand) {
         if (!isValidInput(rawCommand))
             return;
-        String cmd = prepareCommand(rawCommand);
+        String cmd = prepareCommand(rawCommand, uiContext.getLinkManager());
         if (cmd == null) {
             /**
              * {@link #DECODE_RPN} for example does not send out anything
@@ -129,12 +130,12 @@ public class AnyCommand {
         reentrant = false;
     }
 
-    public static String prepareCommand(String rawCommand) {
+    public static String prepareCommand(String rawCommand, LinkManager linkManager) {
         try {
             if (rawCommand.startsWith("eval" + " ")) {
                 return prepareEvalCommand(rawCommand);
             } else if (rawCommand.toLowerCase().startsWith("stim_check" + " ")) {
-                handleStimulationSelfCheck(rawCommand);
+                handleStimulationSelfCheck(rawCommand, linkManager);
                 return null;
             } else if (rawCommand.toLowerCase().startsWith(DECODE_RPN + " ")) {
                 handleDecodeRpn(rawCommand);
@@ -154,7 +155,7 @@ public class AnyCommand {
      * stim_check 3000 5 30
      * would set RPM to 3000, give it 5 seconds to settle, and test for 30 seconds
      */
-    private static void handleStimulationSelfCheck(String rawCommand) {
+    private static void handleStimulationSelfCheck(String rawCommand, LinkManager linkManager) {
         String[] parts = rawCommand.split(" ", 4);
         if (parts.length != 4) {
             MessagesCentral.getInstance().postMessage(AnyCommand.class, "Invalid command length " + parts);
@@ -178,7 +179,7 @@ public class AnyCommand {
                         return null;
                     }
                 };
-                AutoTest.assertRpmDoesNotJump(rpm, settleTime, durationTime, callback);
+                AutoTest.assertRpmDoesNotJump(rpm, settleTime, durationTime, callback, linkManager.getCommandQueue());
             }
         }).start();
     }

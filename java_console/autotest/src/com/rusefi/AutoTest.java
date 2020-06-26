@@ -93,18 +93,18 @@ public class AutoTest {
         setEngineType(32);
         changeRpm(900);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(20000, 15, 30, FAIL);
+        assertRpmDoesNotJump(20000, 15, 30, FAIL, linkManager.getCommandQueue());
     }
 
     private void testV12() {
         setEngineType(40);
         changeRpm(700);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(15000, 15, 30, FAIL);
+        assertRpmDoesNotJump(15000, 15, 30, FAIL, linkManager.getCommandQueue());
     }
 
-    public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback) {
-        IoUtil.changeRpm(CommandQueue.getInstance(), rpm);
+    public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback, CommandQueue commandQueue) {
+        IoUtil.changeRpm(commandQueue, rpm);
         sleepSeconds(settleTime);
         AtomicReference<String> result = new AtomicReference<>();
         SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
@@ -155,13 +155,13 @@ public class AutoTest {
         String msg = "BMW";
         EngineChart chart;
         changeRpm(200);
-        chart = nextChart1();
+        chart = nextChart();
         double x = 173.988;
         // something is wrong here - it's a 6 cylinder here, why 4 cylinder cycle?
         assertWave(msg, chart, EngineChart.SPARK_1, 0.0199666, x, x + 180, x + 360, x + 540);
 
         changeRpm(1200);
-        chart = nextChart1();
+        chart = nextChart();
 
         x = 688.464;
         // something is wrong here - it's a 6 cylinder here, why 4 cylinder cycle?
@@ -173,7 +173,7 @@ public class AutoTest {
     }
 
     void changeRpm(final int rpm) {
-        IoUtil.changeRpm(CommandQueue.getInstance(), rpm);
+        IoUtil.changeRpm(linkManager.getCommandQueue(), rpm);
     }
 
     private void testMitsu() {
@@ -208,7 +208,7 @@ public class AutoTest {
         String msg = "mazda 626 default cranking";
         changeRpm(200);
         EngineChart chart;
-        chart = nextChart1();
+        chart = nextChart();
 
         double x = 102;
         assertWave(msg, chart, EngineChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
@@ -274,12 +274,12 @@ public class AutoTest {
         assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.29233, 0.1, 0.2, x);
 
         sendCommand("set_whole_timing_map 520");
-        chart = nextChart1();
+        chart = nextChart();
         x = 328;
         assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, EngineReport.RATIO, EngineReport.RATIO, x + 180, x + 540);
 
         sendCommand("set_whole_timing_map 0");
-        chart = nextChart1();
+        chart = nextChart();
         x = 128;
         assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, EngineReport.RATIO, EngineReport.RATIO, x + 180, x + 540);
     }
@@ -292,7 +292,7 @@ public class AutoTest {
         changeRpm(260);
         changeRpm(200);
         String msg = "ProtegeLX cranking";
-        chart = nextChart1();
+        chart = nextChart();
         assertEquals("", 12, SensorCentral.getInstance().getValue(Sensor.VBATT), 0.1);
         double x = 107;
         assertWave(msg, chart, EngineChart.SPARK_3, 0.194433, x);
@@ -303,7 +303,7 @@ public class AutoTest {
 
         msg = "ProtegeLX running";
         changeRpm(2000);
-        chart = nextChart1();
+        chart = nextChart();
         x = 112;
         assertWave(msg, chart, EngineChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
         x = 0;
@@ -320,7 +320,7 @@ public class AutoTest {
          * note that command order matters - RPM change resets wave chart
          */
         changeRpm(2000);
-        chart = nextChart1();
+        chart = nextChart();
 
         String msg = "1995 Neon";
         double x = -70;
@@ -340,7 +340,7 @@ public class AutoTest {
         sendComplexCommand("set algorithm 3");
         changeRpm(2600);
         changeRpm(2000);
-        chart = nextChart1();
+        chart = nextChart();
         x = -70;
         assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.493, x + 540);
     }
@@ -353,7 +353,7 @@ public class AutoTest {
         setEngineType(4);
         EngineChart chart;
         changeRpm(2000);
-        chart = nextChart1();
+        chart = nextChart();
 
         String msg = "Fiesta";
         double x = 312;
@@ -367,7 +367,7 @@ public class AutoTest {
         setEngineType(7);
         EngineChart chart;
         changeRpm(2000);
-        chart = nextChart1();
+        chart = nextChart();
 
         String msg = "ford 6";
 
@@ -376,7 +376,7 @@ public class AutoTest {
 
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
         sendComplexCommand("set " + "trigger_type" + " 1"); // TT_FORD_ASPIRE
-        chart = nextChart1();
+        chart = nextChart();
         assertTrue(msg, chart.get(EngineChart.TRIGGER_2) != null);
     }
 
@@ -392,14 +392,14 @@ public class AutoTest {
         changeRpm(200);
 
         double x;
-        chart = nextChart1();
+        chart = nextChart();
         assertEquals(12, SensorCentral.getInstance().getValue(Sensor.VBATT));
         x = 55;
         assertWave("aspire default cranking ", chart, EngineChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
 
 
         changeRpm(600);
-        chart = nextChart1();
+        chart = nextChart();
         x = 78;
         assertWave(true, "aspire default running ", chart, EngineChart.SPARK_1, 0.04, 0.1, 0.1, x, x + 180, x + 360, x + 540);
 
@@ -557,7 +557,7 @@ public class AutoTest {
         try {
             LinkManager linkManager = new LinkManager();
             IoUtil.connectToSimulator(linkManager, startSimulator);
-            new AutoTest(linkManager, CommandQueue.getInstance()).mainTestBody();
+            new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
             failed = true;

@@ -105,22 +105,22 @@ public class BenchTestPane {
     }
 
     private Component createDizzyTest() {
-        CommandControl panel = new FixedCommandControl("Dizzy", "dizzy.jpg", TEST, "dizzybench");
+        CommandControl panel = new FixedCommandControl(uiContext, "Dizzy", "dizzy.jpg", TEST, "dizzybench");
         return panel.getContent();
     }
 
     private Component createFanTest() {
-        CommandControl panel = new FixedCommandControl("Radiator Fan", "radiator_fan.jpg", TEST, "fanbench");
+        CommandControl panel = new FixedCommandControl(uiContext, "Radiator Fan", "radiator_fan.jpg", TEST, "fanbench");
         return panel.getContent();
     }
 
     private Component createAcRelayTest() {
-        CommandControl panel = new FixedCommandControl("A/C Compressor Relay", ".jpg", TEST, "acrelaybench");
+        CommandControl panel = new FixedCommandControl(uiContext, "A/C Compressor Relay", ".jpg", TEST, "acrelaybench");
         return panel.getContent();
     }
 
     private Component createFuelPumpTest() {
-        CommandControl panel = new FixedCommandControl("Fuel Pump", "fuel_pump.jpg", TEST, "fuelpumpbench");
+        CommandControl panel = new FixedCommandControl(uiContext, "Fuel Pump", "fuel_pump.jpg", TEST, "fuelpumpbench");
         return panel.getContent();
     }
 

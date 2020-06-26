@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
-import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.UIContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,15 +22,15 @@ public class PresetsPane {
 
     public PresetsPane(UIContext uiContext) {
         this.uiContext = uiContext;
-        content.add(new SetEngineTypeCommandControl("Frankenso Miata NA6 Stage 0", "/engines/miata_na.png", Fields.ET_FRANKENSO_MIATA_NA6_VAF).getContent());
-        content.add(new SetEngineTypeCommandControl("Frankenso Miata NA6 Stage 1", "/engines/miata_na.png", Fields.ET_FRANKENSO_MIATA_NA6).getContent());
-        content.add(new SetEngineTypeCommandControl("Frankenso Miata NB2", "/engines/miata_nb.png", Fields.ET_FRANKENSO_MIATA_NB2).getContent());
-        content.add(new SetEngineTypeCommandControl("MRE Miata NB2 MAF", "engines/miata_nb.png", Fields.ET_MRE_MIATA_NB2_MAF).getContent());
-        content.add(new SetEngineTypeCommandControl("Frankenso V12", "/engines/v12", TEST_V_12).getContent());
-        content.add(new SetEngineTypeCommandControl("ETB bench", "", ETB_BENCH).getContent());
-        content.add(new SetEngineTypeCommandControl("Minimal", "", MINIMAL_PINS).getContent());
-        content.add(new SetEngineTypeCommandControl("MRE old test", "", Fields.ET_MRE_OLD_TEST_BOARD).getContent());
-        content.add(new SetEngineTypeCommandControl("MRE new test", "", Fields.ET_MRE_NEW_TEST_BOARD).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext,"Frankenso Miata NA6 Stage 0", "/engines/miata_na.png", Fields.ET_FRANKENSO_MIATA_NA6_VAF).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso Miata NA6 Stage 1", "/engines/miata_na.png", Fields.ET_FRANKENSO_MIATA_NA6).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso Miata NB2", "/engines/miata_nb.png", Fields.ET_FRANKENSO_MIATA_NB2).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NB2 MAF", "engines/miata_nb.png", Fields.ET_MRE_MIATA_NB2_MAF).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso V12", "/engines/v12", TEST_V_12).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "ETB bench", "", ETB_BENCH).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Minimal", "", MINIMAL_PINS).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "MRE old test", "", Fields.ET_MRE_OLD_TEST_BOARD).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "MRE new test", "", Fields.ET_MRE_NEW_TEST_BOARD).getContent());
     }
 
     public JPanel getContent() {
@@ -41,8 +40,8 @@ public class PresetsPane {
     private class SetEngineTypeCommandControl extends FixedCommandControl {
         private final String labelTest;
 
-        public SetEngineTypeCommandControl(String labelTest, String imageFileName, int engineType) {
-            super(labelTest, imageFileName, CommandControl.SET, "set " + Fields.CMD_ENGINE_TYPE + " " + engineType);
+        public SetEngineTypeCommandControl(UIContext uiContext, String labelTest, String imageFileName, int engineType) {
+            super(uiContext, labelTest, imageFileName, CommandControl.SET, "set " + Fields.CMD_ENGINE_TYPE + " " + engineType);
             this.labelTest = labelTest;
         }
 
