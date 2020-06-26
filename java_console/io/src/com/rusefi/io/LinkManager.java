@@ -140,17 +140,17 @@ public class LinkManager {
 //            throw new IllegalStateException("Communication on wrong thread");
     }
 
-    public EngineState getEngineState() {
-        return engineState;
-    }
-
-    public static EngineState engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
+    private EngineState engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
         @Override
         public void beforeLine(String fullLine) {
             FileLog.MAIN.logLine(fullLine);
             HeartBeatListeners.onDataArrived();
         }
     });
+
+    public EngineState getEngineState() {
+        return engineState;
+    }
 
     /**
      * This flag controls if mock controls are needed

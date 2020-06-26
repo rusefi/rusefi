@@ -142,7 +142,7 @@ public class TestingUtils {
         long waitStartTime = System.currentTimeMillis();
         IoUtil.wait(engineChartLatch, timeoutMs);
         FileLog.MAIN.logLine("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + AutoTest.currentEngineType);
-        LinkManager.engineState.replaceStringValueAction(EngineReport.ENGINE_CHART, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         if (result.get() == null)
             throw new IllegalStateException("Chart timeout: " + timeoutMs);
         return result.get();
