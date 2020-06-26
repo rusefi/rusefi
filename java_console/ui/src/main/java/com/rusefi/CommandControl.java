@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
@@ -18,8 +19,10 @@ abstract class CommandControl {
     public static final String SET = "Set";
     protected final JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
     final JButton test;
+    private final UIContext uiContext;
 
-    public CommandControl(String labelText, String iconFileName, String buttonText, JComponent... components) {
+    public CommandControl(UIContext uiContext, String labelText, String iconFileName, String buttonText, JComponent... components) {
+        this.uiContext = uiContext;
         ImageIcon icon = AutoupdateUtil.loadIcon(iconFileName);
         JPanel rightVerticalPanel = new JPanel(new VerticalFlowLayout());
         rightVerticalPanel.add(new JLabel(labelText));
@@ -40,7 +43,7 @@ abstract class CommandControl {
 
     @NotNull
     protected ActionListener createButtonListener() {
-        return e -> CommandQueue.getInstance().write(getCommand());
+        return e -> uiContext.getCommandQueue().write(getCommand());
     }
 
     protected abstract String getCommand();

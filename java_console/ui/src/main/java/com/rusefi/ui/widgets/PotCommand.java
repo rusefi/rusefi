@@ -84,7 +84,8 @@ public class PotCommand {
     public static void requestPotChange(int channel, int resistance) {
         if (resistance < 0 || resistance > 10000)
             throw new IllegalArgumentException("resistance: " + resistance);
-        CommandQueue.getInstance().write("pot " + channel + " " + resistance);
+        CommandQueue commandQueue = null;
+        commandQueue.write("pot " + channel + " " + resistance);
     }
 
     public static int getPotResistance(double vout, double vRef) {

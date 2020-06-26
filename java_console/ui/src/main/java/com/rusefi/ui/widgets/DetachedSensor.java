@@ -6,7 +6,6 @@ import com.rusefi.io.CommandQueue;
 import com.rusefi.io.IMethodInvocation;
 import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;
-import com.rusefi.ui.GaugesPanel;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
@@ -109,7 +108,7 @@ public class DetachedSensor {
         mockControlPanel.removeAll();
         boolean isMockable = isMockable();
         if (isMockable) {
-            Component mockComponent = createMockVoltageSlider(sensor);
+            Component mockComponent = createMockVoltageSlider(uiContext.getCommandQueue(), sensor);
             mockControlPanel.add(mockComponent);
         }
         UiUtils.trueLayout(content);
@@ -122,7 +121,7 @@ public class DetachedSensor {
         return MOCKABLE.contains(sensor) && LinkManager.isSimulationMode;
     }
 
-    public static Component createMockVoltageSlider(final Sensor sensor) {
+    public static Component createMockVoltageSlider(CommandQueue commandQueue, final Sensor sensor) {
         final JSlider slider = new JSlider(0, _5_VOLTS_WITH_DECIMAL);
         slider.setLabelTable(SLIDER_LABELS);
         slider.setPaintLabels(true);
@@ -157,7 +156,6 @@ public class DetachedSensor {
 
         slider.addChangeListener(e -> {
             double value = slider.getValue() / 10.0;
-            CommandQueue commandQueue = CommandQueue.getInstance();
             pendingValue.set(value);
 
             /*

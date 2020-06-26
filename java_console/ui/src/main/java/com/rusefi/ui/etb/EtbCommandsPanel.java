@@ -51,11 +51,11 @@ public class EtbCommandsPanel {
 
         content.add(testParameters);
 
-        content.add(AnyCommand.createArea(new Node(), CMD_ETB_DUTY + " " + "10", false, false).getContent());
+        content.add(AnyCommand.createArea(uiContext, new Node(), CMD_ETB_DUTY + " " + "10", false, false).getContent());
 
         JPanel mockPpsPanel = new JPanel(new VerticalFlowLayout());
         mockPpsPanel.setBorder(BorderFactory.createTitledBorder("Mock PPS"));
-        mockPpsPanel.add(DetachedSensor.createMockVoltageSlider(Sensor.PPS));
+        mockPpsPanel.add(DetachedSensor.createMockVoltageSlider(uiContext.getCommandQueue(), Sensor.PPS));
 
 
         content.add(mockPpsPanel);
