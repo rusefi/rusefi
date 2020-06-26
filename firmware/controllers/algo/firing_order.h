@@ -19,6 +19,7 @@ typedef enum {
 
 	// 3 cylinder
 	FO_1_2_3 = 10,
+	FO_1_3_2 = 23,
 
 	// 4 cylinder
 	FO_1_3_4_2 = 1, // typical inline 4
@@ -62,7 +63,7 @@ typedef enum {
 	// unfortunately not supported by default firmware because INJECTION_PIN_COUNT=IGNITION_PIN_COUNT=12 by default
 	FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10 = 22, // WR16
 
-	// max used = 23
+	// max used = 24
 
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;
