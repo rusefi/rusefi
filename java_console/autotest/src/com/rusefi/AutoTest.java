@@ -214,6 +214,10 @@ public class AutoTest {
         assertWave(msg, chart, EngineChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
     }
 
+    static EngineChart nextChart() {
+        return TestingUtils.nextChart();
+    }
+
     private void test2003DodgeNeon() {
         setEngineType(23);
         sendCommand("set wwaeTau 0");

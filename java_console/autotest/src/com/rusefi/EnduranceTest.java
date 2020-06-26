@@ -31,7 +31,7 @@ public class EnduranceTest {
                 AutoTest.currentEngineType = 3;
                 sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 3, AutoTest.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
                 sleepSeconds(2);
-                sendCommand(getEnableCommand("self_stimulation"));
+                sendCommand(getEnableCommand("self_stimulation"), CommandQueue.getInstance());
 //                IoUtil.changeRpm(1200);
                 AutoTest.currentEngineType = 28;
                 sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 28, AutoTest.COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);

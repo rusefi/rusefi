@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 
 /**
@@ -29,7 +30,7 @@ public class CmdLine {
         LinkManager linkManager = new LinkManager();
         IoUtil.realHardwareConnect(linkManager, port);
 
-        IoUtil.sendCommand(command);
+        IoUtil.sendCommand(command, CommandQueue.getInstance());
         System.out.println("Done!");
         System.exit(-1);
     }
