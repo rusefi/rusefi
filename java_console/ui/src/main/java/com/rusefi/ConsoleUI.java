@@ -70,7 +70,7 @@ public class ConsoleUI {
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
-        LinkManager.start(port);
+        uiContext.getLinkManager().start(port);
 
         engineSnifferPanel = new EngineSnifferPanel(uiContext, getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
@@ -138,7 +138,7 @@ public class ConsoleUI {
                 tabbedPane.addTab("Trigger Shape", new AverageAnglePanel().getPanel());
         }
 
-        tabbedPane.addTab("rusEFI Online", new OnlineTab().getContent());
+        tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 
         uiContext.sensorLogger.init();
 

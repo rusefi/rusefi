@@ -14,7 +14,7 @@ public class OnlineTab {
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
-    public OnlineTab() {
+    public OnlineTab(UIContext uiContext) {
         AuthTokenPanel authTokenPanel = new AuthTokenPanel();
 
         content.add(Misc.getRusEFI_online_manual());
@@ -25,7 +25,7 @@ public class OnlineTab {
         upload.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Msq tune = Msq.valueOf(LinkManager.connector.getBinaryProtocol().getControllerConfiguration());
+                Msq tune = Msq.valueOf(uiContext.getLinkManager().getCurrentStreamState().getControllerConfiguration());
                 Online.uploadTune(tune, authTokenPanel, content, null);
             }
         });

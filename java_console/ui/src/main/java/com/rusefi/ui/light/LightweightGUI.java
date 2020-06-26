@@ -9,7 +9,6 @@ import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
-import com.rusefi.sensor_logs.SensorLogger;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.FrameHelper;
 import org.putgemin.VerticalFlowLayout;
@@ -21,13 +20,15 @@ import static com.rusefi.StartupFrame.createLogoLabel;
 
 public class LightweightGUI {
 
+    private final UIContext uiContext;
     private FrameHelper frameHelper = new FrameHelper();
     private JPanel content = new JPanel(new BorderLayout());
 
     private JPanel connectedPanel = new JPanel();
     private JLabel connectedLabel = new JLabel();
 
-    public LightweightGUI() {
+    public LightweightGUI(UIContext uiContext) {
+        this.uiContext = uiContext;
         frameHelper.getFrame().setTitle("rusEFI Lightweight " + rusEFIVersion.CONSOLE_VERSION);
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -66,12 +67,12 @@ public class LightweightGUI {
 
         UIContext uiContext = new UIContext();
 
-        LightweightGUI gui = new LightweightGUI();
+        LightweightGUI gui = new LightweightGUI(uiContext);
 
         gui.setConnectedUI(false);
 
 
-        new Thread(() -> waitForDeviceAndStart()).start();
+        new Thread(() -> waitForDeviceAndStart(uiContext.getLinkManager())).start();
 
         ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
             @Override
@@ -104,11 +105,11 @@ public class LightweightGUI {
         connectedPanel.setBackground(isConnected ? Color.green : Color.red);
     }
 
-    public static void waitForDeviceAndStart() {
+    public static void waitForDeviceAndStart(LinkManager linkManager) {
         String autoDetectedPort = detectPortUntilDetected();
         System.out.println("First time port detected: " + autoDetectedPort);
 
-        LinkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
+        linkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
 
         new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
             FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);

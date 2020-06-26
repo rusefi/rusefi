@@ -19,7 +19,7 @@ import java.util.concurrent.*;
  */
 public class LinkManager {
     @NotNull
-    public static CountDownLatch connect(String port) {
+    public CountDownLatch connect(String port) {
         final CountDownLatch connected = new CountDownLatch(1);
         startAndConnect(port, new ConnectionStateListener() {
             @Override
@@ -141,14 +141,14 @@ public class LinkManager {
         }
     });
 
-    public static LinkConnector connector;
+    private static LinkConnector connector;
 
     /**
      * This flag controls if mock controls are needed
      */
     public static boolean isSimulationMode;
 
-    public static void startAndConnect(String port, ConnectionStateListener stateListener) {
+    public void startAndConnect(String port, ConnectionStateListener stateListener) {
         Objects.requireNonNull(port, "port");
         start(port);
         connector.connectAndReadConfiguration(stateListener);

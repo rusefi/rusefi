@@ -151,12 +151,12 @@ public class IoUtil {
         }
     }
 
-    static void realHardwareConnect(String port) {
+    static void realHardwareConnect(LinkManager linkManager, String port) {
         LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_OUTPIN, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         LinkManager.engineState.registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
 
-        final CountDownLatch connected = LinkManager.connect(port);
+        final CountDownLatch connected = linkManager.connect(port);
         if (connected.getCount() > 0)
             throw new IllegalStateException("Not connected in time");
     }

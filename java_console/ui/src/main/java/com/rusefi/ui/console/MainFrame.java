@@ -67,7 +67,8 @@ public class MainFrame {
             }
         });
 
-        LinkManager.startAndConnect(consoleUI.port, new ConnectionStateListener() {
+        final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
+        linkManager.startAndConnect(consoleUI.port, new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
             }
@@ -79,7 +80,7 @@ public class MainFrame {
                 tabbedPane.settingsTab.showContent();
                 tabbedPane.logsManager.showContent();
                 tabbedPane.fuelTunePane.showContent();
-                BinaryProtocolServer.start(consoleUI.uiContext.getLinkManager());
+                BinaryProtocolServer.start(linkManager);
             }
         });
 
