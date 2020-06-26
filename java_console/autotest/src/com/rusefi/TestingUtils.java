@@ -114,7 +114,7 @@ public class TestingUtils {
 
     static String getNextWaveChart(CommandQueue commandQueue) {
         IoUtil.sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER, commandQueue);
-        String result = getEngineChart();
+        String result = getEngineChart(commandQueue);
         FileLog.MAIN.logLine("current chart: " + result);
         return result;
     }
@@ -123,14 +123,15 @@ public class TestingUtils {
      * This method is blocking and waits for the next wave chart to arrive
      *
      * @return next wave chart in the I/O pipeline
+     * @param commandQueue
      */
-    private static String getEngineChart() {
+    private static String getEngineChart(CommandQueue commandQueue) {
         final CountDownLatch engineChartLatch = new CountDownLatch(1);
 
         final AtomicReference<String> result = new AtomicReference<>();
 
         FileLog.MAIN.logLine("waiting for next chart");
-        LinkManager.engineState.replaceStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
+        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 engineChartLatch.countDown();

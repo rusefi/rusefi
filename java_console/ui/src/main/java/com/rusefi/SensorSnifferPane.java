@@ -40,7 +40,7 @@ public class SensorSnifferPane {
     private boolean paused = false;
 
     public SensorSnifferPane(UIContext uiContext, Node config) {
-        SensorSnifferCentral.addListener(new SensorSnifferCentral.AnalogChartListener() {
+        uiContext.sensorSnifferCentral.addListener(new SensorSnifferCentral.AnalogChartListener() {
             @Override
             public void onAnalogChart(final String message) {
                 // this callback is invoked from the connectivity thread, need to handle in AWT for thread-safety

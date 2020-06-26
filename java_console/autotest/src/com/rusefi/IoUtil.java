@@ -137,7 +137,7 @@ public class IoUtil {
          * TCP connector is blocking
          */
         linkManager.startAndConnect("" + TcpConnector.DEFAULT_PORT, ConnectionStateListener.VOID);
-        linkManager.engineState.registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         waitForFirstResponse();
     }
 
@@ -152,9 +152,9 @@ public class IoUtil {
     }
 
     static void realHardwareConnect(LinkManager linkManager, String port) {
-        LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
-        LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_OUTPIN, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
-        LinkManager.engineState.registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_OUTPIN, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        linkManager.getEngineState().registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
 
         final CountDownLatch connected = linkManager.connect(port);
         if (connected.getCount() > 0)

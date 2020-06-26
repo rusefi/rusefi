@@ -112,7 +112,7 @@ public class TcpConnector implements LinkConnector {
         final ResponseBuffer rb = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
             @Override
             public void onResponse(String line) {
-                LinkManager.engineState.processNewData(line + "\r\n", LinkManager.ENCODER);
+                linkManager.getEngineState().processNewData(line + "\r\n", LinkManager.ENCODER);
             }
         });
 

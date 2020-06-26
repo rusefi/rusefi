@@ -160,7 +160,7 @@ public class EngineSnifferPanel {
 
         resetImagePanel();
 
-        LinkManager.engineState.registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
+        uiContext.getLinkManager().getEngineState().registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 if (isPaused)
