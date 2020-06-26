@@ -603,4 +603,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     public void setRange(byte[] src, int scrPos, int offset, int count) {
         state.setRange(src, scrPos, offset, count);
     }
+
+    public BinaryProtocolState getBinaryProtocolState() {
+        return state;
+    }
 }

@@ -4,6 +4,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.io.tcp.TcpConnector;
@@ -75,6 +76,10 @@ public class LinkManager {
     public BinaryProtocol getCurrentStreamState() {
         Objects.requireNonNull(connector, "connector");
         return connector.getBinaryProtocol();
+    }
+
+    public BinaryProtocolState getBinaryProtocolState() {
+        return connector.getBinaryProtocolState();
     }
 
     public CommandQueue getCommandQueue() {
