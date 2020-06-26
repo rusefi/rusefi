@@ -112,7 +112,7 @@ public class MainFrame {
         root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
         GaugesPanel.DetachedRepository.INSTANCE.saveConfig();
         getConfig().save();
-        BinaryProtocol bp = LinkManager.getCurrentStreamStateStatic();
+        BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
         if (bp != null && !bp.isClosed)
             bp.close(); // it could be that serial driver wants to be closed explicitly
         System.exit(0);

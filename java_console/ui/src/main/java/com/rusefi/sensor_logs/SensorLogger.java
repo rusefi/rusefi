@@ -86,14 +86,7 @@ public class SensorLogger {
 
     private static boolean isInitialized;
 
-    private SensorLogger() {
-    }
-
-    static {
-        init();
-    }
-
-    public synchronized static void init() {
+    public synchronized void init() {
         if (isInitialized) {
             return;
         }
