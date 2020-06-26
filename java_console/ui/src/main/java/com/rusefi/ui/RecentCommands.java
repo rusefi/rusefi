@@ -91,8 +91,10 @@ public class RecentCommands {
     private final AtomicBoolean reentrant = new AtomicBoolean();
 
     private final JScrollPane messagesScroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    private final UIContext uiContext;
 
-    public RecentCommands() {
+    public RecentCommands(UIContext uiContext) {
+        this.uiContext = uiContext;
         CommandQueue.getInstance().addListener(new CommandQueue.CommandQueueListener() {
             @Override
             public void onCommand(String command) {
@@ -165,7 +167,7 @@ public class RecentCommands {
             public void run() {
                 content.removeAll();
 
-                if (LinkManager.isLogViewer())
+                if (uiContext.getLinkManager().isLogViewer())
                     content.add(createButton());
 
                 JButton reset = new JButton(AutoupdateUtil.loadIcon("/undo.jpg"));

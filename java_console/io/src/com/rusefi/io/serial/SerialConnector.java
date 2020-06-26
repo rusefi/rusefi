@@ -13,9 +13,12 @@ import com.rusefi.io.LinkManager;
  */
 public class SerialConnector implements LinkConnector {
 
-    private final PortHolder portHolder = new PortHolder();
+    private final PortHolder portHolder;
+    private final LinkManager linkManager;
 
-    public SerialConnector(String serialPort) {
+    public SerialConnector(LinkManager linkManager, String serialPort) {
+        this.linkManager = linkManager;
+        portHolder = new PortHolder(linkManager);
         portHolder.port = serialPort;
     }
 
@@ -24,7 +27,7 @@ public class SerialConnector implements LinkConnector {
         FileLog.MAIN.logLine("SerialConnector: connecting");
         portHolder.listener = listener;
         FileLog.MAIN.logLine("scheduleOpening");
-        LinkManager.execute(new Runnable() {
+        linkManager.execute(new Runnable() {
             @Override
             public void run() {
                 FileLog.MAIN.logLine("scheduleOpening>openPort");
@@ -40,7 +43,7 @@ public class SerialConnector implements LinkConnector {
 
     @Override
     public void restart() {
-        LinkManager.execute(new Runnable() {
+        linkManager.execute(new Runnable() {
             @Override
             public void run() {
                 MessagesCentral.getInstance().postMessage(SerialConnector.this.getClass(), "Restarting serial IO");

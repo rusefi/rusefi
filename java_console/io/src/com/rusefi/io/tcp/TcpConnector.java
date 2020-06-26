@@ -25,10 +25,12 @@ public class TcpConnector implements LinkConnector {
     public static final String LOCALHOST = "localhost";
     private final int port;
     private final String hostname;
+    private final LinkManager linkManager;
 
     private BinaryProtocol bp;
 
-    public TcpConnector(String port) {
+    public TcpConnector(LinkManager linkManager, String port) {
+        this.linkManager = linkManager;
         try {
             this.port = getTcpPort(port);
             this.hostname = getHostname(port);
@@ -122,7 +124,7 @@ public class TcpConnector implements LinkConnector {
         };
 //        ioStream.setInputListener(listener1);
 
-        bp = new BinaryProtocol(FileLog.LOGGER, (IoStream) new TcpIoStream(stream, os));
+        bp = new BinaryProtocol(linkManager, FileLog.LOGGER, new TcpIoStream(linkManager, stream, os));
 
         boolean result = bp.connectAndReadConfiguration(listener1);
         if (result) {

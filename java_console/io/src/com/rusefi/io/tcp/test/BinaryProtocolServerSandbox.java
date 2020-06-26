@@ -16,9 +16,10 @@ import java.io.ByteArrayOutputStream;
 
 class BinaryProtocolServerSandbox {
     public static void main(String[] args) {
-        TcpIoStream stream = new TcpIoStream(new ByteArrayInputStream(new byte[0]), new ByteArrayOutputStream());
-        BinaryProtocol bp = new BinaryProtocol(FileLog.LOGGER, (IoStream) stream);
-        LinkManager.setConnector(new LinkConnector() {
+        LinkManager linkManager = new LinkManager();
+        TcpIoStream stream = new TcpIoStream(linkManager, new ByteArrayInputStream(new byte[0]), new ByteArrayOutputStream());
+        BinaryProtocol bp = new BinaryProtocol(linkManager, FileLog.LOGGER, (IoStream) stream);
+        linkManager.setConnector(new LinkConnector() {
             @Override
             public void connectAndReadConfiguration(ConnectionStateListener listener) {
                 throw new UnsupportedOperationException();
@@ -41,6 +42,6 @@ class BinaryProtocolServerSandbox {
         });
         bp.setController(new ConfigurationImage(new byte[Fields.TOTAL_CONFIG_SIZE]));
         bp.currentOutputs = new byte[1 + Fields.TS_OUTPUT_SIZE];
-        BinaryProtocolServer.start(new LinkManager());
+        BinaryProtocolServer.start(linkManager);
     }
 }

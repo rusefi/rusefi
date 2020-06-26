@@ -17,9 +17,11 @@ import java.util.Arrays;
 public class TcpIoStream implements IoStream {
     private final InputStream input;
     private final OutputStream output;
+    private final LinkManager linkManager;
     private boolean isClosed;
 
-    public TcpIoStream(InputStream input, OutputStream output) {
+    public TcpIoStream(LinkManager linkManager, InputStream input, OutputStream output) {
+        this.linkManager = linkManager;
         if (input == null)
             throw new NullPointerException("input");
         if (output == null)
@@ -46,7 +48,7 @@ public class TcpIoStream implements IoStream {
 
     @Override
     public void setInputListener(final DataListener listener) {
-        LinkManager.TCP_READ_EXECUTOR.execute(new Runnable() {
+        linkManager.TCP_READ_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 Thread.currentThread().setName("TCP connector loop");

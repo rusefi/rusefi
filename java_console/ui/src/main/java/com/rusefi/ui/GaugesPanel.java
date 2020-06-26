@@ -67,6 +67,7 @@ public class GaugesPanel {
     private final JPanel content = new JPanel(new BorderLayout());
     private final GaugesGrid gauges;
     private final Node config;
+    private final UIContext uiContext;
 
     private boolean showRpmPanel;
     private boolean showMessagesPanel;
@@ -77,7 +78,8 @@ public class GaugesPanel {
     private final JPanel messagesPanel = new JPanel(new BorderLayout());
     private final JSplitPane middleSplitPanel;
 
-    public GaugesPanel(final Node config, PaneSettings paneSettings) {
+    public GaugesPanel(UIContext uiContext, final Node config, PaneSettings paneSettings) {
+        this.uiContext = uiContext;
         gauges = new GaugesGrid(DEFAULT_ROWS, DEFAULT_COLUMNS);
         this.config = config;
         showRpmPanel = config.getBoolProperty(SHOW_RPM, true);
@@ -85,7 +87,7 @@ public class GaugesPanel {
 
         prepareMessagesPanel();
 
-        lowerRpmPanel.add(new RpmLabel(15).getContent());
+        lowerRpmPanel.add(new RpmLabel(uiContext,15).getContent());
 
         int rows = config.getIntProperty(GAUGES_ROWS, DEFAULT_ROWS);
         int columns = config.getIntProperty(GAUGES_COLUMNS, DEFAULT_COLUMNS);
@@ -210,7 +212,7 @@ public class GaugesPanel {
         JPanel leftUpperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         leftUpperPanel.add(createPauseButton());
         leftUpperPanel.add(createSaveImageButton());
-        leftUpperPanel.add(new RpmLabel(2).getContent());
+        leftUpperPanel.add(new RpmLabel(uiContext, 2).getContent());
         AnyCommand command = AnyCommand.createField(config, false, false);
         leftUpperPanel.add(command.getContent());
         return leftUpperPanel;
