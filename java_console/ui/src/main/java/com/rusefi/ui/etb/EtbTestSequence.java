@@ -5,6 +5,7 @@ import com.rusefi.core.Sensor;
 import com.rusefi.etb.EtbTarget;
 import com.rusefi.etb.StandardTestSequence;
 import com.rusefi.etb.TestSequenceStep;
+import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -41,7 +42,7 @@ public class EtbTestSequence {
     private final JButton cancelButton = new JButton("Cancel");
     private boolean isCancelled;
 
-    public EtbTestSequence() {
+    public EtbTestSequence(UIContext uiContext) {
         cancelButton.setEnabled(false);
 
         button.addActionListener(e -> {
@@ -70,7 +71,7 @@ public class EtbTestSequence {
             });
 
             TestSequenceStep firstStep = new EtbTarget(10 * SECOND, 4, /*position*/onEachStep, TestSequenceStep.Condition.YES);
-            TestSequenceStep result = StandardTestSequence.addSequence(firstStep, onEachStep, new TestSequenceStep.Condition() {
+            TestSequenceStep result = StandardTestSequence.addSequence(uiContext, firstStep, onEachStep, new TestSequenceStep.Condition() {
                 @Override
                 public boolean shouldRunTask() {
                     if (isCancelled)

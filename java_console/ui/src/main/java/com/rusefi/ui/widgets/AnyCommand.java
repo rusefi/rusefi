@@ -7,6 +7,7 @@ import com.rusefi.InfixConverter;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.RecentCommands;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.JTextFieldWithWidth;
 
@@ -252,11 +253,11 @@ public class AnyCommand {
         void onSend();
     }
 
-    public static AnyCommand createField(Node config, boolean listenToCommands, boolean withCommandCaption) {
-        return createField(config, config.getProperty(KEY), listenToCommands, withCommandCaption);
+    public static AnyCommand createField(UIContext uiContext, Node config, boolean listenToCommands, boolean withCommandCaption) {
+        return createField(uiContext, config, config.getProperty(KEY), listenToCommands, withCommandCaption);
     }
 
-    public static AnyCommand createField(Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
+    public static AnyCommand createField(UIContext uiContext, Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
         final JTextField text = new JTextFieldWithWidth(200);
 
         final AnyCommand command = new AnyCommand(text, config, defaultCommand, listenToCommands, withCommandCaption);

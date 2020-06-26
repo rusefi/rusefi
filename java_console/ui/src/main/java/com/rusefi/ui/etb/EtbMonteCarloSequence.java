@@ -41,7 +41,7 @@ public class EtbMonteCarloSequence {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    CommandQueue.getInstance().write(CANCEL_DIRECT_DRIVE_COMMAND);
+                    uiContext.getCommandQueue().write(CANCEL_DIRECT_DRIVE_COMMAND);
                     sleep(3 * SECOND);
                     // 30000 data points at 100Hz should be 300 seconds worth of data
                     StandardTestSequence.metric.start(/* buffer size: */durationSeconds * frequencyHz, /*period, ms: */ 1000 / frequencyHz);
@@ -63,11 +63,11 @@ public class EtbMonteCarloSequence {
                 ":iFactor:" + iFactor +
                 ":dFactor:" + dFactor;
         MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class, stats);
-        CommandQueue.getInstance().write("etbreset");
-        CommandQueue.getInstance().write("set etb_o " + offset);
-        CommandQueue.getInstance().write("set etb_p " + pFactor);
-        CommandQueue.getInstance().write("set etb_i " + iFactor);
-        CommandQueue.getInstance().write("set etb_d " + dFactor);
+        uiContext.getCommandQueue().write("etbreset");
+        uiContext.getCommandQueue().write("set etb_o " + offset);
+        uiContext.getCommandQueue().write("set etb_p " + pFactor);
+        uiContext.getCommandQueue().write("set etb_i " + iFactor);
+        uiContext.getCommandQueue().write("set etb_d " + dFactor);
 
         MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
                 uiContext.sensorLogger.getSecondsSinceFileStart() + " running " + stats);
@@ -96,7 +96,7 @@ public class EtbMonteCarloSequence {
             MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,"Running " + state + ", current=" + value);
         });
 
-        TestSequenceStep last = StandardTestSequence.addSequence(firstStep, onEachStep, condition);
+        TestSequenceStep last = StandardTestSequence.addSequence(uiContext, firstStep, onEachStep, condition);
         last.addNext(new TestSequenceStep(5 * SECOND, EtbTarget.Condition.YES) {
             @Override
             protected void doJob() {
@@ -134,6 +134,6 @@ public class EtbMonteCarloSequence {
     }
 
     private void stopETB() {
-        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + 0);
+        uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + 0);
     }
 }
