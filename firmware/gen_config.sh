@@ -43,14 +43,11 @@ else
  cp -v tunerstudio/rusefi_microrusefi.ini $TS_PATH/dev_mre/projectCfg/mainController.ini
 fi
 
-board_names=("microrusefi" "frankenso" "prometheus" "proteus")
-board_short_names=("mre" "fra" "pth" "pro")
-
-for board_idx in "${!board_names[@]}"; do
- BOARD_NAME=${board_names[$board_idx]}
- SHORT_BOARD_NAME=${board_short_names[$board_idx]}
- sh gen_config_board.sh $BOARD_NAME $SHORT_BOARD_NAME
- [ $? -eq 0 ] || (echo "ERROR generating $BOARD_NAME $SHORT_BOARD_NAME"; exit $?)
+for BOARD in "microrusefi mre" "frankenso fra" "prometheus pth" "proteus pro"; do
+ BOARD_NAME="${BOARD% *}"
+ BOARD_SHORT_NAME="${BOARD#* }"
+ sh gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME
+ [ $? -eq 0 ] || (echo "ERROR generating $BOARD_NAME $BOARD_SHORT_NAME"; exit $?)
 done
 
 cd config/boards/kinetis/config
