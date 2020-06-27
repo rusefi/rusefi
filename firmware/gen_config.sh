@@ -30,7 +30,7 @@ java -DSystemOut.name=gen_config \
  -c_fsio_names     controllers/generated/fsio_names.def \
  -c_fsio_strings   controllers/generated/fsio_strings.def \
  -java_destination ../java_console/models/src/com/rusefi/config/generated/Fields.java \
- -prepend tunerstudio/signature_all.txt \
+ -signature tunerstudio/signature_all.txt \
  -romraider_destination ../java_console/rusefi.xml
 
 [ $? -eq 0 ] || (echo "ERROR generating"; exit $?)
