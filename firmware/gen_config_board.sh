@@ -18,6 +18,7 @@ echo "BOARDNAME=${BOARDNAME} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
 sh gen_signature.sh ${SHORT_BOARDNAME}
 
 java -DSystemOut.name=gen_config_board \
+	-Drusefi.generator.lazyfile.enabled=true \
 	-cp ../java_tools/ConfigDefinition.jar \
 	com.rusefi.board_generator.BoardReader \
 	-board ${BOARDNAME} \
