@@ -11,6 +11,8 @@ rm gen_config_board.log
 
 mkdir build
 
+sh gen_signature.sh all
+
 java -DSystemOut.name=gen_config \
  -Drusefi.generator.lazyfile.enabled=true \
  -jar ../java_tools/ConfigDefinition.jar \
@@ -28,6 +30,7 @@ java -DSystemOut.name=gen_config \
  -c_fsio_names     controllers/generated/fsio_names.def \
  -c_fsio_strings   controllers/generated/fsio_strings.def \
  -java_destination ../java_console/models/src/com/rusefi/config/generated/Fields.java \
+ -prepend tunerstudio/signature_all.txt \
  -romraider_destination ../java_console/rusefi.xml
 
 [ $? -eq 0 ] || (echo "ERROR generating"; exit $?)
@@ -40,9 +43,14 @@ else
  cp -v tunerstudio/rusefi_microrusefi.ini $TS_PATH/dev_mre/projectCfg/mainController.ini
 fi
 
-for BOARD in "microrusefi" "frankenso" "prometheus" "proteus"; do
- sh gen_config_board.sh $BOARD
- [ $? -eq 0 ] || (echo "ERROR generating $BOARD"; exit $?)
+board_names=("microrusefi" "frankenso" "prometheus" "proteus")
+board_short_names=("mre" "fra" "pth" "pro")
+
+for board_idx in "${!board_names[@]}"; do
+ BOARD_NAME=${board_names[$board_idx]}
+ SHORT_BOARD_NAME=${board_short_names[$board_idx]}
+ sh gen_config_board.sh $BOARD_NAME $SHORT_BOARD_NAME
+ [ $? -eq 0 ] || (echo "ERROR generating $BOARD_NAME $SHORT_BOARD_NAME"; exit $?)
 done
 
 cd config/boards/kinetis/config

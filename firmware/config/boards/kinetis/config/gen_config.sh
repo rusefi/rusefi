@@ -5,6 +5,8 @@ cd ../../../..
 
 pwd
 
+sh gen_signature.sh kin
+
 java \
  -DSystemOut.name=gen_config_kinetis_board \
  -cp ../java_tools/ConfigDefinition.jar \
@@ -28,6 +30,7 @@ java \
  -ts_output_name rusefi_kinetis.ini \
  -c_defines config/boards/kinetis/config/controllers/algo/rusefi_generated.h \
  -c_destination config/boards/kinetis/config/controllers/algo/engine_configuration_generated_structures.h \
+ -prepend tunerstudio/signature_kin.txt \
  -prepend config/boards/kinetis/config/rusefi_config_kinetis.txt \
  -prepend config/boards/kinetis/config/tunerstudio/kinetis_prefix.txt
 
