@@ -10,6 +10,7 @@ import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -40,6 +41,7 @@ public class ConfigDefinition {
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     private static final String KEY_FIRING = "-firing_order";
     public static final String KEY_PREPEND = "-prepend";
+    public static final String KEY_SIGNATURE = "-signature";
     private static final String KEY_SKIP = "-skip";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     public static boolean needZeroInit = true;
@@ -86,7 +88,17 @@ public class ConfigDefinition {
         List<String> prependFiles = new ArrayList<>();
         String skipRebuildFile = null;
         String romRaiderInputFile = null;
+        String firingEnumFileName = null;
         CHeaderConsumer.withC_Defines = true;
+
+        // used to update .ini files
+        List<String> inputTsFiles = new ArrayList<>();
+        List<String> outputTsFiles = new ArrayList<>();
+        // used to update other files
+        List<String> inputFiles = new ArrayList<>();
+        List<String> outputFiles = new ArrayList<>();
+        // disable the lazy checks because we use timestamps to detect changes
+        LazyFile.setLazyFileEnabled(false);
 
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
@@ -94,44 +106,78 @@ public class ConfigDefinition {
                 ConfigDefinition.TOOL = args[i + 1];
             } else if (key.equals(KEY_DEFINITION)) {
                 definitionInputFile = args[i + 1];
+                inputFiles.add(definitionInputFile);
             } else if (key.equals(KEY_TS_DESTINATION)) {
                 tsPath = args[i + 1];
             } else if (key.equals(KEY_C_DESTINATION)) {
                 destCHeaderFileName = args[i + 1];
+                outputFiles.add(destCHeaderFileName);
             } else if (key.equals(KEY_C_FSIO_GETTERS)) {
                 destCFsioGettersFileName = args[i + 1];
+                outputFiles.add(destCFsioGettersFileName);
             } else if (key.equals(KEY_C_FSIO_STRING)) {
                 stringsCFileName = args[i + 1];
+                outputFiles.add(stringsCFileName);
             } else if (key.equals(KEY_C_FSIO_NAMES)) {
                 namesCFileName = args[i + 1];
+                outputFiles.add(namesCFileName);
             } else if (key.equals(KEY_C_FSIO_CONSTANTS)) {
                 destCFsioConstantsFileName = args[i + 1];
+                outputFiles.add(destCFsioConstantsFileName);
             } else if (key.equals(KEY_ZERO_INIT)) {
                 needZeroInit = Boolean.parseBoolean(args[i + 1]);
             } else if (key.equals(KEY_WITH_C_DEFINES)) {
                 CHeaderConsumer.withC_Defines = Boolean.parseBoolean(args[i + 1]);
             } else if (key.equals(KEY_C_DEFINES)) {
                 destCDefinesFileName = args[i + 1];
+                outputFiles.add(destCDefinesFileName);
             } else if (key.equals(KEY_JAVA_DESTINATION)) {
                 javaDestinationFileName = args[i + 1];
+                outputFiles.add(javaDestinationFileName);
             } else if (key.equals(KEY_FIRING)) {
-                String firingEnumFileName = args[i + 1];
-                SystemOut.println("Reading firing from " + firingEnumFileName);
-                VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
+                firingEnumFileName = args[i + 1];
+                inputFiles.add(firingEnumFileName);
             } else if (key.equals(KEY_ROMRAIDER_DESTINATION)) {
                 romRaiderDestination = args[i + 1];
+                outputFiles.add(romRaiderDestination);
             } else if (key.equals(KEY_PREPEND)) {
                 prependFiles.add(args[i + 1]);
+                inputFiles.add(args[i + 1]);
+            } else if (key.equals(KEY_SIGNATURE)) {
+                prependFiles.add(args[i + 1]);
+                // don't add this file to the 'inputFiles'
             } else if (key.equals(KEY_SKIP)) {
                 // is this now not needed in light if LazyFile surving the same goal of not changing output unless needed?
                 skipRebuildFile = args[i + 1];
             } else if (key.equals("-ts_output_name")) {
                 TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
             } else if (key.equals(KEY_ROM_INPUT)) {
-                romRaiderInputFile = args[i + 1];
+                String inputFilePath = args[i + 1];
+                romRaiderInputFile  = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
+                inputFiles.add(romRaiderInputFile);
             }
         }
 
+        if (tsPath != null) {
+            inputTsFiles = new ArrayList<>(inputFiles);
+            inputTsFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
+            outputTsFiles.add(TSProjectConsumer.getTsFileOutputName(tsPath));
+        }
+
+        SystemOut.println("Check the input/output TS file timestamps:");
+        boolean needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputTsFiles, outputTsFiles);
+        SystemOut.println("Check the input/output other file timestamps:");
+        boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, outputFiles);
+        if (!needToUpdateTsFiles && !needToUpdateOtherFiles)
+        {
+            SystemOut.println("All output files are up-to-date, nothing to do here!");
+            return;
+        }
+
+        if (firingEnumFileName != null) {
+            SystemOut.println("Reading firing from " + firingEnumFileName);
+            VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
+        }
         MESSAGE = getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
         SystemOut.println("Reading definition from " + definitionInputFile);
@@ -153,23 +199,25 @@ public class ConfigDefinition {
         ReaderState state = new ReaderState();
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
-        if (destCHeaderFileName != null) {
-            destinations.add(new CHeaderConsumer(destCHeaderFileName));
-        }
-        if (tsPath != null) {
+        if (tsPath != null && needToUpdateTsFiles) {
             CharArrayWriter tsWriter = new CharArrayWriter();
             destinations.add(new TSProjectConsumer(tsWriter, tsPath, state));
         }
-        if (javaDestinationFileName != null) {
-            destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
-        }
+        if (needToUpdateOtherFiles) {
+            if (destCHeaderFileName != null) {
+                destinations.add(new CHeaderConsumer(destCHeaderFileName));
+            }
+            if (javaDestinationFileName != null) {
+                destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
+            }
 
-        if (destCFsioConstantsFileName != null || destCFsioGettersFileName != null) {
-            destinations.add(new FileFsioSettingsConsumer(state,
-                    destCFsioConstantsFileName,
-                    destCFsioGettersFileName,
-                    namesCFileName,
-                    stringsCFileName));
+            if (destCFsioConstantsFileName != null || destCFsioGettersFileName != null) {
+                destinations.add(new FileFsioSettingsConsumer(state,
+                        destCFsioConstantsFileName,
+                        destCFsioGettersFileName,
+                        namesCFileName,
+                        stringsCFileName));
+            }
         }
 
         if (destinations.isEmpty())
@@ -178,12 +226,11 @@ public class ConfigDefinition {
 
 
 
-        if (destCDefinesFileName != null)
+        if (destCDefinesFileName != null && needToUpdateOtherFiles)
             VariableRegistry.INSTANCE.writeDefinesToFile(destCDefinesFileName);
 
-        if (romRaiderDestination != null && romRaiderInputFile != null) {
-            String inputFileName = romRaiderInputFile + File.separator + ROM_RAIDER_XML_TEMPLATE;
-            processTextTemplate(inputFileName, romRaiderDestination);
+        if (romRaiderDestination != null && romRaiderInputFile != null && needToUpdateOtherFiles) {
+            processTextTemplate(romRaiderInputFile, romRaiderDestination);
         }
         if (skipRebuildFile != null) {
             SystemOut.println("Writing " + currentMD5 + " to " + skipRebuildFile);
@@ -319,5 +366,28 @@ public class ConfigDefinition {
             // For specifying wrong message digest algorithms
             throw new RuntimeException(e);
         }
+    }
+
+    private static boolean checkIfOutputFilesAreOutdated(List<String> inputFiles, List<String> outputFiles) {
+        // first get the newest modified input file
+        long iFileLastModified = 0;
+            for (String iFile : inputFiles) {
+            File file = new File(iFile);
+            iFileLastModified = Math.max(iFileLastModified, file.lastModified());
+        }
+
+        // now check if any of the output files is older (or absent)
+        for (String oFile : outputFiles) {
+            File file = new File(oFile);
+            long oFileLastModified = file.lastModified();
+            if (oFileLastModified < iFileLastModified) { // lastModified=0 for absent files
+                System.out.println("* the file " + oFile + " is outdated:");
+                System.out.println("  inputModified = " + (new SimpleDateFormat("dd/MM/yyyy hh:mm:ss")).format(iFileLastModified));
+                System.out.println("  outputModified = " + (new SimpleDateFormat("dd/MM/yyyy hh:mm:ss")).format(oFileLastModified));
+                return true;
+            }
+        }
+        System.out.println("* all the files are up-to-date!");
+        return false;
     }
 }
