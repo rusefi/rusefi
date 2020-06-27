@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #set -x
 #TS_PATH="/home/<user>/TunerStudioProjects/"
