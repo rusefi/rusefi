@@ -10,12 +10,22 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * This tool read mapping yaml file and produces a .txt file with defines in the rusefi.txt format
+ *
+ * This is a lazy to implement mapping as a separate phase of code generation. Technically this could be merged into
+ * the primary generation to avoid the intermediate file.
+ */
 public class BoardReader {
+    private static final String INVALID = "INVALID";
+
     private static final String KEY_BOARD_NAME = "-board";
     private static final String KEY_OUTFOLDER = "-out";
     private static final String KEY_FIRMWARE_PATH = "-firmware_path";
-    private static final String INVALID = "INVALID";
     private final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
+
+    private static final String OUTPUT_FILE_PREFIX = "_prefix.txt";
+    private static final String MAPPING_YAML = "mapping.yaml";
 
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
@@ -43,14 +53,14 @@ public class BoardReader {
         }
 
         Yaml yaml = new Yaml();
-        String fileName = firmwarePath + "/config/boards/" + boardName + "/mapping.yaml";
+        String fileName = firmwarePath + "/config/boards/" + boardName + "/" + MAPPING_YAML;
         Map<String, Object> data = yaml.load(new FileReader(fileName));
         if (data == null) {
             SystemOut.println("Null yaml for " + fileName);
         } else {
             SystemOut.println(data);
 
-            BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath + File.separator + boardName + "_prefix.txt"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath + File.separator + boardName + OUTPUT_FILE_PREFIX));
 
             bw.write(processSection(data, "brain_pin_e", "output_pin_e", "outputs", "GPIO_UNASSIGNED"));
             bw.write(processSection(data, "adc_channel_e", "adc_channel_e", "analog_inputs", "EFI_ADC_NONE"));
