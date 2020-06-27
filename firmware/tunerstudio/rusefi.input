@@ -1961,6 +1961,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "MIL / Check Engine Pin",				malfunctionIndicatorPin
 		field = "test557pin",							test557pin
 		field = "Fan Pin",								fanPin
+		field = "A/C Relay",							acRelayPin
 		field = "Main Relay Pin",  						mainRelayPin
 		field = "Starter Relay Pin",  					starterRelayDisablePin
 
