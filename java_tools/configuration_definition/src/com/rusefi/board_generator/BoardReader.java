@@ -2,6 +2,8 @@ package com.rusefi.board_generator;
 
 import com.rusefi.EnumsReader;
 import com.rusefi.enum_reader.Value;
+import com.rusefi.util.LazyFile;
+import com.rusefi.util.Output;
 import com.rusefi.util.SystemOut;
 import org.yaml.snakeyaml.Yaml;
 
@@ -50,7 +52,7 @@ public class BoardReader {
         } else {
             SystemOut.println(data);
 
-            BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath + File.separator + boardName + "_prefix.txt"));
+            Output bw = new LazyFile(outputPath + File.separator + boardName + "_prefix.txt");
 
             bw.write(processSection(data, "brain_pin_e", "output_pin_e", "outputs", "GPIO_UNASSIGNED"));
             bw.write(processSection(data, "adc_channel_e", "adc_channel_e", "analog_inputs", "EFI_ADC_NONE"));
