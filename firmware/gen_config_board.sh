@@ -15,6 +15,7 @@ BOARDNAME=$1
 echo "BOARDNAME=${BOARDNAME}"
 
 java -DSystemOut.name=gen_config_board \
+	-Drusefi.generator.lazyfile.enabled=true \
 	-cp ../java_tools/ConfigDefinition.jar \
 	com.rusefi.board_generator.BoardReader \
 	-board ${BOARDNAME} \
