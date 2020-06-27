@@ -25,6 +25,7 @@ public class BoardReader {
     private final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
 
     private static final String OUTPUT_FILE_PREFIX = "_prefix.txt";
+    private static final String MAPPING_YAML = "mapping.yaml";
 
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
@@ -52,7 +53,7 @@ public class BoardReader {
         }
 
         Yaml yaml = new Yaml();
-        String fileName = firmwarePath + "/config/boards/" + boardName + "/mapping.yaml";
+        String fileName = firmwarePath + "/config/boards/" + boardName + "/" + MAPPING_YAML;
         Map<String, Object> data = yaml.load(new FileReader(fileName));
         if (data == null) {
             SystemOut.println("Null yaml for " + fileName);
