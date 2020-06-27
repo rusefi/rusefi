@@ -131,7 +131,6 @@ enable2ndByteCanID = false
 ;       recordField = toothTime, "tooth", 0, 16, 0.01, "ms"
 
 
-
 		; recordDef = headerLen, footerLen, recordLen
 		recordDef =   0,   0,   @@COMPOSITE_PACKET_SIZE@@
 
