@@ -2345,6 +2345,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Pin mode",							fanPinMode
 		field = "On temperature",					fanOnTemperature
 		field = "Off temperature",					fanOffTemperature
+; this one has build-in FSIO logic
+		field = "A/C Relay",						acRelayPin
+		field = "A/C Relay Mode",					acRelayPinMode
 
 	dialog = fuelPumpConfig, "Fuel Pump"
 		field = "Pin",						fuelPumpPin
