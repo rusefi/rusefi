@@ -11,8 +11,11 @@ if [ -z "$1" ]; then
 fi
 
 BOARDNAME=$1
+SHORT_BOARDNAME=$2
 
-echo "BOARDNAME=${BOARDNAME}"
+echo "BOARDNAME=${BOARDNAME} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
+
+sh gen_signature.sh ${SHORT_BOARDNAME}
 
 java -DSystemOut.name=gen_config_board \
 	-Drusefi.generator.lazyfile.enabled=true \
@@ -34,6 +37,7 @@ java -DSystemOut.name=gen_config_board \
 	-cache tunerstudio/cache/${BOARDNAME} \
 	-firing_order controllers/algo/firing_order.h \
 	-ts_output_name rusefi_${BOARDNAME}.ini \
+	-signature tunerstudio/signature_${SHORT_BOARDNAME}.txt \
 	-prepend tunerstudio/${BOARDNAME}_prefix.txt \
 	-prepend config/boards/${BOARDNAME}/prepend.txt
 
