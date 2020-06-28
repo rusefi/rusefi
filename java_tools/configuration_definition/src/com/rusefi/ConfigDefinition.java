@@ -393,9 +393,10 @@ public class ConfigDefinition {
 
     private static boolean saveCachedInputFiles(List<String> inputFiles, String cachePath) throws IOException {
         if (cachePath == null) {
+            SystemOut.println("* cache storage is disabled.");
             return false;
         }
-        // find if any input file was changed from the cached version
+        // copy all input files to the cache
         for (String iFile : inputFiles) {
             File newFile = new File(iFile);
             File cachedFile = new File(getCachedInputFile(newFile.getName(), cachePath));
