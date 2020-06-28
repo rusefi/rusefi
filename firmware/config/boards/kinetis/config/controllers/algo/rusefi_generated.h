@@ -1,5 +1,5 @@
 //
-// was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt
+// was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt
 //
 
 #define absoluteFuelPressure_offset 76
