@@ -1,0 +1,4 @@
+! https://github.com/andreika-git/prometheus/raw/master/hardware/prometheus-wiring-diagram.pdf
+
+#define ts_show_hip9011 false
+#define ts_show_etb false
