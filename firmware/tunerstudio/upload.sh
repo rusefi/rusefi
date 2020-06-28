@@ -13,7 +13,7 @@ for f in *.ini; do if [[ -f "$f" ]]; then
   sig=$(grep "^ *signature *=" $f | cut -f2 -d "=")
   if [ ! -z "$sig" -a "$sig" != " " ]; then
     echo "* found signature: $sig"
-    if [[ "$sig" =~ rusEFI.*([0-9]{4}[^\"]+) ]]; then
+    if [[ "$sig" =~ rusEFI.*([0-9]{4}\.[^\"]+) ]]; then
       sig=${BASH_REMATCH[1]}
       sig="${sig//\./\/}.ini"
       path="/rusefi/$sig"
