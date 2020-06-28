@@ -18,7 +18,8 @@ for f in *.ini; do if [[ -f "$f" ]]; then
       sig="${sig//\./\/}.ini"
       path="/online/ini/rusefi/$sig"
       echo "* found path: $path"
-      #ncftpput -m -R -v -u "$1" -p "$2" "$3" autoupdate $path
+      ncftpput -m -R -v -u "$1" -p "$2" "$3" autoupdate $path
+      echo "* upload done!"
     fi
   fi
 fi; done
