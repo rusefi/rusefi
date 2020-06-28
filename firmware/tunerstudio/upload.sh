@@ -18,8 +18,12 @@ for f in *.ini; do if [[ -f "$f" ]]; then
       sig="${sig//\./\/}.ini"
       path="/rusefi/$sig"
       echo "* found path: $path"
-      ncftpput -m -R -v -u "$1" -p "$2" "$3" . rusefi.ini
-      ncftpput -m -R -v -u "$1" -p "$2" "$3" autoupdate $path
+      ncftpput -m -R -v -u "$1" -p "$2" "$3" $path $f
+      retVal=$?
+      if [ $retVal -ne 0 ]; then
+        echo "Upload failed"
+        exit -1
+      fi
       echo "* upload done!"
     fi
   fi
