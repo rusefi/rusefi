@@ -160,9 +160,9 @@ public class ConfigDefinition {
             inputTsFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
         }
 
-        SystemOut.println("Check the input/output TS file timestamps:");
+        SystemOut.println("Check the input/output TS files:");
         boolean needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputTsFiles, cachePath);
-        SystemOut.println("Check the input/output other file timestamps:");
+        SystemOut.println("Check the input/output other files:");
         boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, cachePath);
         if (!needToUpdateTsFiles && !needToUpdateOtherFiles)
         {
