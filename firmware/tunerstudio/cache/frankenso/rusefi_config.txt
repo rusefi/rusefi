@@ -641,15 +641,12 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	brain_pin_e mc33972_cs;
 	pin_output_mode_e mc33972_csPinMode;
 
-
 custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
 
 	adc_channel_e auxFastSensor1_adcChannel;Useful in Research&Development phase
 	adc_channel_e tps1_2AdcChannel;First throttle body, second sensor.
 	adc_channel_e tps2_2AdcChannel;Second throttle body, second sensor.
 	adc_channel_e throttlePedalPositionSecondAdcChannel;Electronic throttle pedal position input\nSecond channel\nSee also tps1_1AdcChannel
-
-	
 
 	float fuelLevelEmptyTankVoltage;;"V",      1,      0,       0,10,      2
 	float fuelLevelFullTankVoltage;;"V",      1,      0,       0,10,      2
