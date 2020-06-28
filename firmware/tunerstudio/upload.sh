@@ -16,7 +16,7 @@ for f in *.ini; do if [[ -f "$f" ]]; then
     if [[ "$sig" =~ rusEFI.*([0-9]{4}[^\"]+) ]]; then
       sig=${BASH_REMATCH[1]}
       sig="${sig//\./\/}.ini"
-      path="/online/ini/rusefi/$sig"
+      path="/rusefi/$sig"
       echo "* found path: $path"
       ncftpput -m -R -v -u "$1" -p "$2" "$3" autoupdate $path
       echo "* upload done!"
