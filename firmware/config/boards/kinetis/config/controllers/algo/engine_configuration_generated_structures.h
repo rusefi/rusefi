@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 28 14:03:24 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 28 14:11:58 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1440,7 +1440,7 @@ struct engine_configuration_s {
 	offset 744 bit 21 */
 	bool coastingFuelCutEnabled : 1;
 	/**
-	 * This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars.
+	 * This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars. Used in Auto-PID Idle mode.
 	offset 744 bit 22 */
 	bool useIacTableForCoasting : 1;
 	/**
@@ -2192,7 +2192,7 @@ struct engine_configuration_s {
 	 */
 	uint32_t engineChartSize;
 	/**
-	 * Relative to the target idle RPM
+	 * Relative to the target idle RPM - this limit is coupled with useIacTableForCoasting and iacCoasting parameters
 	 * offset 1484
 	 */
 	int16_t idlePidRpmUpperLimit;
@@ -3522,4 +3522,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 28 14:03:24 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 28 14:11:58 UTC 2020
