@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/trigger_state.txt Sun Jun 28 14:29:54 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/trigger_state.txt Sun Jun 28 15:10:05 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_TRIGGER_STATE_GENERATED_H
@@ -17,4 +17,4 @@ typedef struct trigger_state_s trigger_state_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/trigger_state.txt Sun Jun 28 14:29:54 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/trigger_state.txt Sun Jun 28 15:10:05 UTC 2020
