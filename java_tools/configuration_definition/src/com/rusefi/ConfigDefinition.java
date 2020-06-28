@@ -8,6 +8,8 @@ import com.rusefi.util.SystemOut;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -42,6 +44,7 @@ public class ConfigDefinition {
     private static final String KEY_FIRING = "-firing_order";
     public static final String KEY_PREPEND = "-prepend";
     public static final String KEY_SIGNATURE = "-signature";
+    public static final String KEY_CACHE = "-cache";
     private static final String KEY_SKIP = "-skip";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     public static boolean needZeroInit = true;
@@ -89,14 +92,13 @@ public class ConfigDefinition {
         String skipRebuildFile = null;
         String romRaiderInputFile = null;
         String firingEnumFileName = null;
+        String cachePath = null;
         CHeaderConsumer.withC_Defines = true;
 
         // used to update .ini files
         List<String> inputTsFiles = new ArrayList<>();
-        List<String> outputTsFiles = new ArrayList<>();
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
-        List<String> outputFiles = new ArrayList<>();
         // disable the lazy checks because we use timestamps to detect changes
         LazyFile.setLazyFileEnabled(false);
 
@@ -111,42 +113,37 @@ public class ConfigDefinition {
                 tsPath = args[i + 1];
             } else if (key.equals(KEY_C_DESTINATION)) {
                 destCHeaderFileName = args[i + 1];
-                outputFiles.add(destCHeaderFileName);
             } else if (key.equals(KEY_C_FSIO_GETTERS)) {
                 destCFsioGettersFileName = args[i + 1];
-                outputFiles.add(destCFsioGettersFileName);
             } else if (key.equals(KEY_C_FSIO_STRING)) {
                 stringsCFileName = args[i + 1];
-                outputFiles.add(stringsCFileName);
             } else if (key.equals(KEY_C_FSIO_NAMES)) {
                 namesCFileName = args[i + 1];
-                outputFiles.add(namesCFileName);
             } else if (key.equals(KEY_C_FSIO_CONSTANTS)) {
                 destCFsioConstantsFileName = args[i + 1];
-                outputFiles.add(destCFsioConstantsFileName);
             } else if (key.equals(KEY_ZERO_INIT)) {
                 needZeroInit = Boolean.parseBoolean(args[i + 1]);
             } else if (key.equals(KEY_WITH_C_DEFINES)) {
                 CHeaderConsumer.withC_Defines = Boolean.parseBoolean(args[i + 1]);
             } else if (key.equals(KEY_C_DEFINES)) {
                 destCDefinesFileName = args[i + 1];
-                outputFiles.add(destCDefinesFileName);
             } else if (key.equals(KEY_JAVA_DESTINATION)) {
                 javaDestinationFileName = args[i + 1];
-                outputFiles.add(javaDestinationFileName);
             } else if (key.equals(KEY_FIRING)) {
                 firingEnumFileName = args[i + 1];
                 inputFiles.add(firingEnumFileName);
             } else if (key.equals(KEY_ROMRAIDER_DESTINATION)) {
                 romRaiderDestination = args[i + 1];
-                outputFiles.add(romRaiderDestination);
             } else if (key.equals(KEY_PREPEND)) {
                 prependFiles.add(args[i + 1]);
                 inputFiles.add(args[i + 1]);
             } else if (key.equals(KEY_SIGNATURE)) {
                 prependFiles.add(args[i + 1]);
                 // don't add this file to the 'inputFiles'
-            } else if (key.equals(KEY_SKIP)) {
+            } else if (key.equals(KEY_CACHE)) {
+                cachePath = args[i + 1];
+            }
+            else if (key.equals(KEY_SKIP)) {
                 // is this now not needed in light if LazyFile surving the same goal of not changing output unless needed?
                 skipRebuildFile = args[i + 1];
             } else if (key.equals("-ts_output_name")) {
@@ -161,13 +158,12 @@ public class ConfigDefinition {
         if (tsPath != null) {
             inputTsFiles = new ArrayList<>(inputFiles);
             inputTsFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
-            outputTsFiles.add(TSProjectConsumer.getTsFileOutputName(tsPath));
         }
 
         SystemOut.println("Check the input/output TS file timestamps:");
-        boolean needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputTsFiles, outputTsFiles);
+        boolean needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputTsFiles, cachePath);
         SystemOut.println("Check the input/output other file timestamps:");
-        boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, outputFiles);
+        boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, cachePath);
         if (!needToUpdateTsFiles && !needToUpdateOtherFiles)
         {
             SystemOut.println("All output files are up-to-date, nothing to do here!");
@@ -238,6 +234,8 @@ public class ConfigDefinition {
             writer.write(currentMD5);
             writer.close();
         }
+
+        saveCachedInputFiles(inputTsFiles, cachePath);
     }
 
     private static boolean needToSkipRebuild(String skipRebuildFile, String currentMD5) throws IOException {
@@ -368,26 +366,51 @@ public class ConfigDefinition {
         }
     }
 
-    private static boolean checkIfOutputFilesAreOutdated(List<String> inputFiles, List<String> outputFiles) {
-        // first get the newest modified input file
-        long iFileLastModified = 0;
-            for (String iFile : inputFiles) {
-            File file = new File(iFile);
-            iFileLastModified = Math.max(iFileLastModified, file.lastModified());
-        }
-
-        // now check if any of the output files is older (or absent)
-        for (String oFile : outputFiles) {
-            File file = new File(oFile);
-            long oFileLastModified = file.lastModified();
-            if (oFileLastModified < iFileLastModified) { // lastModified=0 for absent files
-                System.out.println("* the file " + oFile + " is outdated:");
-                System.out.println("  inputModified = " + (new SimpleDateFormat("dd/MM/yyyy hh:mm:ss")).format(iFileLastModified));
-                System.out.println("  outputModified = " + (new SimpleDateFormat("dd/MM/yyyy hh:mm:ss")).format(oFileLastModified));
+    private static boolean checkIfOutputFilesAreOutdated(List<String> inputFiles, String cachePath) {
+        if (cachePath == null)
+            return true;
+        // find if any input file was changed from the cached version
+        for (String iFile : inputFiles) {
+            File newFile = new File(iFile);
+            File cachedFile = new File(getCachedInputFile(newFile.getName(), cachePath));
+            //boolean isEqual = FileUtils.contentEquals(newFile, cachedFile);
+            try {
+                byte[] f1 = Files.readAllBytes(newFile.toPath());
+                byte[] f2 = Files.readAllBytes(cachedFile.toPath());
+                boolean isEqual = Arrays.equals(f1, f2);
+                if (!isEqual) {
+                    SystemOut.println("* the file " + iFile + " is changed!");
+                    return true;
+                }
+            } catch(java.io.IOException e) {
+                SystemOut.println("* cannot validate the file " + iFile + ", so assuming it's changed.");
                 return true;
             }
         }
-        System.out.println("* all the files are up-to-date!");
+        SystemOut.println("* all the files are up-to-date!");
         return false;
+    }
+
+    private static boolean saveCachedInputFiles(List<String> inputFiles, String cachePath) throws IOException {
+        if (cachePath == null) {
+            return false;
+        }
+        // find if any input file was changed from the cached version
+        for (String iFile : inputFiles) {
+            File newFile = new File(iFile);
+            File cachedFile = new File(getCachedInputFile(newFile.getName(), cachePath));
+            cachedFile.mkdirs();
+            try {
+                Files.copy(newFile.toPath(), cachedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch(java.io.IOException e) {
+                SystemOut.println("* cannot store the cached file for " + iFile);
+                throw e;
+            }
+        }
+        return true;
+    }
+
+    private static String getCachedInputFile(String inputFile, String cachePath) {
+        return cachePath + File.separator + inputFile;
     }
 }

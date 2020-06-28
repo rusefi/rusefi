@@ -20,6 +20,7 @@ java \
  -Drusefi.generator.lazyfile.enabled=true \
  -jar ../java_tools/ConfigDefinition.jar \
  -definition integration/rusefi_config.txt \
+ -cache tunerstudio/cache/kinetis \
  -ts_destination tunerstudio \
  -tool kineris_gen_config.bat \
  -firing_order controllers/algo/firing_order.h \
