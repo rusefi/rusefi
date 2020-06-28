@@ -96,7 +96,7 @@ public class ConfigDefinition {
         CHeaderConsumer.withC_Defines = true;
 
         // used to update .ini files
-        List<String> inputTsFiles = new ArrayList<>();
+        List<String> inputAllFiles = new ArrayList<>();
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
         // disable the lazy checks because we use timestamps to detect changes
@@ -155,13 +155,13 @@ public class ConfigDefinition {
             }
         }
 
+        inputAllFiles = new ArrayList<>(inputFiles);
+        boolean needToUpdateTsFiles = false;
         if (tsPath != null) {
-            inputTsFiles = new ArrayList<>(inputFiles);
-            inputTsFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
+            inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
+            SystemOut.println("Check the input/output TS files:");
+            needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputAllFiles, cachePath);
         }
-
-        SystemOut.println("Check the input/output TS files:");
-        boolean needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputTsFiles, cachePath);
         SystemOut.println("Check the input/output other files:");
         boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, cachePath);
         if (!needToUpdateTsFiles && !needToUpdateOtherFiles)
@@ -235,7 +235,7 @@ public class ConfigDefinition {
             writer.close();
         }
 
-        saveCachedInputFiles(inputTsFiles, cachePath);
+        saveCachedInputFiles(inputAllFiles, cachePath);
     }
 
     private static boolean needToSkipRebuild(String skipRebuildFile, String currentMD5) throws IOException {
@@ -408,6 +408,7 @@ public class ConfigDefinition {
                 throw e;
             }
         }
+        SystemOut.println("* input files copied to the cached folder");
         return true;
     }
 
