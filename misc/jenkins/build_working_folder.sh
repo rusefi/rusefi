@@ -112,7 +112,7 @@ cd $FOLDER
 zip -r ../$UPDATE_BUNDLE_FILE *
 cd ..
 ls -l $UPDATE_BUNDLE_FILE
-ncftpput -u $RUSEFI_BUILD_FTP_USER -p $RUSEFI_BUILD_FTP_PASS $RUSEFI_FTP_SERVER autoupdate $UPDATE_BUNDLE_FILE
+ncftpput -u "$RUSEFI_BUILD_FTP_USER" -p "$RUSEFI_BUILD_FTP_PASS" "$RUSEFI_FTP_SERVER" autoupdate "$UPDATE_BUNDLE_FILE"
 cd ..
 
 echo "$SCRIPT_NAME: We are back in root directory"
