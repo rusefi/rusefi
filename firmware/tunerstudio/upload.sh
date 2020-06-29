@@ -13,21 +13,24 @@ for f in *.ini; do if [[ -f "$f" ]]; then
   sig=$(grep "^ *signature *=" $f | cut -f2 -d "=")
   if [ ! -z "$sig" -a "$sig" != " " ]; then
     echo "* found signature: $sig"
-    if [[ "$sig" =~ rusEFI.*([0-9]{4}\.[^\"]+) ]]; then
-      sig=${BASH_REMATCH[1]}
-      sig="${sig//\./\/}.ini"
-      path="/rusefi/$sig"
+    if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-z0-9]+)\.([0-9]+) ]]; then
+      year=${BASH_REMATCH[1]}
+      month=${BASH_REMATCH[2]}
+      day=${BASH_REMATCH[3]}
+      board=${BASH_REMATCH[4]}
+      hash=${BASH_REMATCH[5]}
+      path="$year/$month/$day/$board/$hash.ini"
       echo "* found path: $path"
       # unbeliveable, ncftpput does not work with special characters in password?!
       # ncftpput -m -R -v -u "$1" -p "$2" "$3" $path $f
       # we do not have ssh for this user
       # sftp does not support -p flag on mkdir :(
       echo cd rusefi > cmd
-      echo mkdir 2020 >> cmd
-      echo cd 2020 >> cmd
-      echo mkdir 06 >> cmd
-      echo cd 06 >> cmd
-      echo put $f >> cmd
+      echo mkdir $year >> cmd
+      echo mkdir $year/$month >> cmd
+      echo mkdir $year/$month/$day >> cmd
+      echo mkdir $year/$month/$day/$board >> cmd
+      echo put $f $path >> cmd
       cat cmd
       sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3 <<< `cat cmd`
       retVal=$?
