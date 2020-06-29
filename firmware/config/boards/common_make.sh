@@ -10,8 +10,12 @@ mkdir deliver
 
 rm -f deliver/rusefi.dfu
 echo "$SCRIPT_NAME: invoking hex2dfu"
-chmod u+x ../misc/encedo_hex2dfu/hex2dfu.bin
-../misc/encedo_hex2dfu/hex2dfu.bin -i build/rusefi.hex -o deliver/rusefi.dfu
+if uname | grep "NT"; then
+ ../misc/encedo_hex2dfu/hex2dfu.exe -i build/rusefi.hex -o deliver/rusefi.dfu
+else
+ chmod u+x ../misc/encedo_hex2dfu/hex2dfu.bin
+ ../misc/encedo_hex2dfu/hex2dfu.bin -i build/rusefi.hex -o deliver/rusefi.dfu
+fi
 cp build/rusefi.bin deliver/
 
 echo "$SCRIPT_NAME: deliver folder"
