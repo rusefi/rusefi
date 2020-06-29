@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.rusefi.app"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -22,6 +22,7 @@ android {
 }
 
 dependencies {
+    implementation files('lib/dfu_java.jar')
     implementation 'com.github.mik3y:usb-serial-for-android:v2.2.3'
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.1.0'
