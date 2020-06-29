@@ -5,6 +5,7 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.InvocationConfirmationListener;
+import com.rusefi.ui.UIContext;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -31,6 +32,7 @@ public class MagicSpotsFinder {
     private final JButton button = new JButton(MAGIC_SPOTS_FINDER);
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private final static double MEASURMENT_PRECISION = 0.5;
+    private final UIContext uiContext;
     private double defaultTpsPosition;
 
 //    private boolean isStarted;
@@ -67,7 +69,7 @@ public class MagicSpotsFinder {
 
                     if (tpsPosition >= 100 - MEASURMENT_PRECISION) {
                         currentDutyCycle -= DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
+                        uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
                     } else if (tpsPosition > defaultTpsPosition + MEASURMENT_PRECISION) {
 
                         if (startedToCloseValue == 0) {
@@ -78,7 +80,7 @@ public class MagicSpotsFinder {
                         }
 
                         currentDutyCycle -= DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
+                        uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
                     } else {
                         backToZeroValue = currentDutyCycle;
                         backToZeroValueLabel.setText(String.format("Back Zero %.1f", backToZeroValue));
@@ -110,7 +112,7 @@ public class MagicSpotsFinder {
                     if (tpsPosition < defaultTpsPosition + MEASURMENT_PRECISION) {
                         // ETB has not moved yet, keep going up
                         currentDutyCycle += DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
+                        uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
                     } else if (tpsPosition < 100 - MEASURMENT_PRECISION) {
 
                         if (startedToOpenValue == 0) {
@@ -123,7 +125,7 @@ public class MagicSpotsFinder {
 
                         // ETB has not reached 100%, keep going up
                         currentDutyCycle += DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
+                        uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
 
                     } else {
                         // looks like we have reached 100%, cool!
@@ -132,7 +134,7 @@ public class MagicSpotsFinder {
                         MessagesCentral.getInstance().postMessage(getClass(), "startedToOpenValue = " + startedToOpenValue + ", reached100Value = " + reached100Value);
 
                         currentDutyCycle -= DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
+                        uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
                     }
                 }
 
@@ -157,7 +159,7 @@ public class MagicSpotsFinder {
                     MessagesCentral.getInstance().postMessage(getClass(), "Start!");
                     resetValues();
 
-                    CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
+                    uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
                     sleep(INITIAL_SLEEP);
                     defaultTpsPosition = SensorCentral.getInstance().getValue(Sensor.TPS);
                 }
@@ -173,7 +175,8 @@ public class MagicSpotsFinder {
         backToZeroValue = 0;
     }
 
-    public MagicSpotsFinder() {
+    public MagicSpotsFinder(UIContext uiContext) {
+        this.uiContext = uiContext;
         points.add(startedToOpenValueLabel);
         points.add(reached100ValueLabel);
         points.add(startedToCloseValueLabel);
@@ -193,7 +196,7 @@ public class MagicSpotsFinder {
                     public void run() {
                         // magic constant for DBG_ELECTRONIC_THROTTLE_EXTRA
                         state = State.DEBUG_MODE;
-                        CommandQueue.getInstance().write("set debug_mode " + 29, setDebugModeConfiguration);
+                        uiContext.getCommandQueue().write("set debug_mode " + 29, setDebugModeConfiguration);
                     }
                 });
             }

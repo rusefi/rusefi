@@ -3,9 +3,9 @@ package com.rusefi.io.tcp;
 import com.opensr5.io.DataListener;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.core.ResponseBuffer;
 import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 
@@ -25,10 +25,12 @@ public class TcpConnector implements LinkConnector {
     public static final String LOCALHOST = "localhost";
     private final int port;
     private final String hostname;
+    private final LinkManager linkManager;
 
     private BinaryProtocol bp;
 
-    public TcpConnector(String port) {
+    public TcpConnector(LinkManager linkManager, String port) {
+        this.linkManager = linkManager;
         try {
             this.port = getTcpPort(port);
             this.hostname = getHostname(port);
@@ -94,13 +96,11 @@ public class TcpConnector implements LinkConnector {
     @Override
     public void connectAndReadConfiguration(ConnectionStateListener listener) {
         FileLog.MAIN.logLine("Connecting to host=" + hostname + "/port=" + port);
-        OutputStream os;
-        BufferedInputStream stream;
+        TcpIoStream tcpIoStream;
+
         try {
             Socket socket = new Socket(hostname, port);
-            os = socket.getOutputStream();
-            stream = new BufferedInputStream(socket.getInputStream());
-//            ioStream = new TcpIoStream(os, stream);
+            tcpIoStream = new TcpIoStream(linkManager, socket);
         } catch (IOException e) {
             listener.onConnectionFailed();
             FileLog.MAIN.logLine("Failed to connect to " + hostname + "/port=" + port);
@@ -110,7 +110,7 @@ public class TcpConnector implements LinkConnector {
         final ResponseBuffer rb = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
             @Override
             public void onResponse(String line) {
-                LinkManager.engineState.processNewData(line + "\r\n", LinkManager.ENCODER);
+                linkManager.getEngineState().processNewData(line + "\r\n", LinkManager.ENCODER);
             }
         });
 
@@ -122,7 +122,7 @@ public class TcpConnector implements LinkConnector {
         };
 //        ioStream.setInputListener(listener1);
 
-        bp = BinaryProtocolHolder.getInstance().create(FileLog.LOGGER, new TcpIoStream(stream, os));
+        bp = new BinaryProtocol(linkManager, FileLog.LOGGER, tcpIoStream);
 
         boolean result = bp.connectAndReadConfiguration(listener1);
         if (result) {

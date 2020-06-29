@@ -33,7 +33,9 @@ outputs:
 
   # J2
   GPIOA_15: "AUX J2 PA15"
+  GPIOB_8:  "AUX J2 PB8"
   GPIOB_9:  "AUX J2 PB9"
+  GPIOC_12: "AUX J2 PC12"
 
   # Dual purpose input/output
 #  TLE8888_PIN_12:  "AV6 outmode"

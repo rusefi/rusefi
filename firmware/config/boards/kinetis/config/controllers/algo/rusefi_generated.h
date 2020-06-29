@@ -1,5 +1,5 @@
 //
-// was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt
+// was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt
 //
 
 #define absoluteFuelPressure_offset 76
@@ -1060,6 +1060,9 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
+#define SIGNATURE_BOARD kin
+#define SIGNATURE_DATE 2020.06.28
+#define SIGNATURE_HASH 129197315
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1319,7 +1322,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI v1.2020.4"
+#define TS_SIGNATURE "rusEFI 2020.06.28.kin.129197315"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476

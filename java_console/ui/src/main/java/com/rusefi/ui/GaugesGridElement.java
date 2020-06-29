@@ -21,14 +21,16 @@ public class GaugesGridElement {
     private static final String IS_LIVE_GRAPH = "type";
 
     private final JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
+    private final UIContext uiContext;
     private final Node config;
 
-    private GaugesGridElement(Node config) {
+    private GaugesGridElement(UIContext uiContext, Node config) {
+        this.uiContext = uiContext;
         this.config = config;
     }
 
-    public static JComponent create(Sensor sensor) {
-        return new GaugesGridElement(new Node()).createGauge(sensor);
+    public static JComponent create(UIContext uiContext, Sensor sensor) {
+        return new GaugesGridElement(uiContext, new Node()).createGauge(sensor);
     }
 
     private JComponent createLiveBarElement(final Sensor defaultSensor) {
@@ -70,19 +72,19 @@ public class GaugesGridElement {
         });
 
         wrapper.setLayout(new BorderLayout());
-        SensorGauge.createGaugeBody(sensor, wrapper, gaugeChangeListener, switchToLiveGraph);
+        SensorGauge.createGaugeBody(uiContext, sensor, wrapper, gaugeChangeListener, switchToLiveGraph);
 
         return wrapper;
     }
 
-    public static JComponent read(final Node config, Sensor defaultSensor) {
+    public static JComponent read(UIContext uiContext, final Node config, Sensor defaultSensor) {
 
         if (config.getBoolProperty(IS_LIVE_GRAPH)) {
-            return new GaugesGridElement(config).createLiveBarElement(defaultSensor);
+            return new GaugesGridElement(uiContext, config).createLiveBarElement(defaultSensor);
         }
 
         String gaugeName = config.getProperty(GAUGE_TYPE, defaultSensor.name());
         Sensor sensor = Sensor.lookup(gaugeName, defaultSensor);
-        return new GaugesGridElement(config).createGauge(sensor);
+        return new GaugesGridElement(uiContext, config).createGauge(sensor);
     }
 }

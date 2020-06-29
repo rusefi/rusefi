@@ -2,7 +2,6 @@ package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.io.CommunicationLoggingHolder;
 import com.rusefi.io.ConnectionStateListener;
 import com.opensr5.io.DataListener;
@@ -20,7 +19,8 @@ import java.awt.*;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class PortHolder {
-    private static final DataListener dataListener = freshData -> LinkManager.engineState.processNewData(new String(freshData), LinkManager.ENCODER);
+    private final DataListener dataListener;
+    private final LinkManager linkManager;
 
     public ConnectionStateListener listener;
     private final Object portLock = new Object();
@@ -28,7 +28,9 @@ public class PortHolder {
     @Nullable
     private BinaryProtocol bp;
 
-    protected PortHolder() {
+    protected PortHolder(LinkManager linkManager) {
+        this.linkManager = linkManager;
+        dataListener = freshData -> linkManager.getEngineState().processNewData(new String(freshData), LinkManager.ENCODER);
     }
 
     public String port;
@@ -41,7 +43,7 @@ public class PortHolder {
 
         IoStream stream = SerialIoStreamJSerialComm.openPort(port);
         synchronized (portLock) {
-            bp = BinaryProtocolHolder.getInstance().create(FileLog.LOGGER, stream);
+            bp = new BinaryProtocol(linkManager, FileLog.LOGGER, stream);
             portLock.notifyAll();
         }
 

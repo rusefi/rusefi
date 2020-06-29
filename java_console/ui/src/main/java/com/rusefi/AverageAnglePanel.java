@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +16,7 @@ public class AverageAnglePanel {
     private final AverageAngles aa = new AverageAngles();
     private final JTextArea text = new JTextArea();
 
-    public AverageAnglePanel() {
+    public AverageAnglePanel(UIContext uiContext) {
         JButton reset = new JButton(RESET.getMessage());
         reset.addActionListener(new AbstractAction() {
             @Override
@@ -33,7 +34,7 @@ public class AverageAnglePanel {
             }
         }, BorderLayout.CENTER);
 
-        SensorSnifferCentral.addListener(new SensorSnifferCentral.AnalogChartListener() {
+        uiContext.sensorSnifferCentral.addListener(new SensorSnifferCentral.AnalogChartListener() {
                                            @Override
                                            public void onAnalogChart(String message) {
                                                int rpm = (int) SensorCentral.getInstance().getValue(Sensor.RPM);

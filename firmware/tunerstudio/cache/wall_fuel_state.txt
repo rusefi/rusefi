@@ -1,0 +1,5 @@
+struct_no_prefix wall_fuel_state
+float wallFuelCorrection;* fuel injection time correction to account for wall wetting effect, for current cycle
+floatms_t wallFuel;Amount of fuel on the wall, in ms of injector open time, for each injector.
+! wall_fuel_state
+end_struct

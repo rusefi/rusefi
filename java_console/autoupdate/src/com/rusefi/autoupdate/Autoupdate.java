@@ -82,7 +82,6 @@ public class Autoupdate {
             }
 
             // todo: user could have waited hours to respond to question above, we probably need to re-establish connection
-            HttpURLConnection httpConnection = connectionAndMeta.getHttpConnection();
             long completeFileSize = connectionAndMeta.getCompleteFileSize();
             long lastModified = connectionAndMeta.getLastModified();
 
@@ -95,7 +94,7 @@ public class Autoupdate {
             System.out.println("Downloaded " + file.length() + " bytes");
 
             unzip(zipFileName, "..");
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println(e);
         }
     }

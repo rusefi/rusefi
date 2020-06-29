@@ -2,11 +2,10 @@ package com.rusefi.ui.etb;
 
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
-import com.rusefi.ldmp.generated.ElectronicThrottleMeta;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.config.BitConfigField;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.config.EnumConfigField;
-import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
@@ -23,13 +22,15 @@ import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
  */
 public class EtbCommandsPanel {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
+    private final UIContext uiContext;
 
-    public EtbCommandsPanel() {
-        content.add(new DirectDrivePanel().getContent());
+    public EtbCommandsPanel(UIContext uiContext) {
+        this.uiContext = uiContext;
+        content.add(new DirectDrivePanel(uiContext).getContent());
 
         JPanel testParameters = new JPanel(new VerticalFlowLayout());
         testParameters.setBorder(BorderFactory.createTitledBorder("Try PID settings"));
-        EtbTestSequence etbTestSequence = new EtbTestSequence();
+        EtbTestSequence etbTestSequence = new EtbTestSequence(uiContext);
         testParameters.add(etbTestSequence.getButton());
         testParameters.add(UiUtils.wrap(etbTestSequence.getCancelButton()));
         testParameters.add(etbTestSequence.getResult());
@@ -41,20 +42,20 @@ public class EtbCommandsPanel {
         testParameters.add(new JLabel("For example:"));
         testParameters.add(new JLabel("set etb_p 1.1"));
 
-        testParameters.add(new BitConfigField(Fields.PAUSEETBCONTROL, "Pause").getContent());
-        testParameters.add(new ConfigField(Fields.ETB_PFACTOR, "pFactor").getContent());
-        testParameters.add(new ConfigField(Fields.ETB_IFACTOR, "iFactor").getContent());
-        testParameters.add(new ConfigField(Fields.ETB_DFACTOR, "dFactor").getContent());
+        testParameters.add(new BitConfigField(uiContext, Fields.PAUSEETBCONTROL, "Pause").getContent());
+        testParameters.add(new ConfigField(uiContext, Fields.ETB_PFACTOR, "pFactor").getContent());
+        testParameters.add(new ConfigField(uiContext, Fields.ETB_IFACTOR, "iFactor").getContent());
+        testParameters.add(new ConfigField(uiContext, Fields.ETB_DFACTOR, "dFactor").getContent());
 
         content.setBorder(BorderFactory.createTitledBorder("Commands"));
 
         content.add(testParameters);
 
-        content.add(AnyCommand.createArea(new Node(), CMD_ETB_DUTY + " " + "10", false, false).getContent());
+        content.add(AnyCommand.createArea(uiContext, new Node(), CMD_ETB_DUTY + " " + "10", false, false).getContent());
 
         JPanel mockPpsPanel = new JPanel(new VerticalFlowLayout());
         mockPpsPanel.setBorder(BorderFactory.createTitledBorder("Mock PPS"));
-        mockPpsPanel.add(DetachedSensor.createMockVoltageSlider(Sensor.PPS));
+        mockPpsPanel.add(DetachedSensor.createMockVoltageSlider(uiContext.getCommandQueue(), Sensor.PPS));
 
 
         content.add(mockPpsPanel);
@@ -62,18 +63,18 @@ public class EtbCommandsPanel {
         // todo: restore this functionality
         // content.add(LiveDocPanel.createPanel("ETB", ElectronicThrottleMeta.CONTENT));
 
-        content.add(new EnumConfigField(Fields.DEBUGMODE, "Debug Mode").getContent());
+        content.add(new EnumConfigField(uiContext, Fields.DEBUGMODE, "Debug Mode").getContent());
 
         content.add(createMagicSpotsPanel());
-        content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
-        content.add(UiUtils.wrap(new EtbReturnToNeutral().getContent()));
+        content.add(UiUtils.wrap(new EtbMonteCarloSequence(uiContext).getButton()));
+        content.add(UiUtils.wrap(new EtbReturnToNeutral(uiContext).getContent()));
     }
 
     @NotNull
     private JPanel createMagicSpotsPanel() {
         JPanel spotsPane = new JPanel(new VerticalFlowLayout());
         spotsPane.setBorder(BorderFactory.createTitledBorder("Magic Spots"));
-        MagicSpotsFinder magicSpotsFinder = new MagicSpotsFinder();
+        MagicSpotsFinder magicSpotsFinder = new MagicSpotsFinder(uiContext);
         spotsPane.add(UiUtils.wrap(magicSpotsFinder.getButton()));
         spotsPane.add(magicSpotsFinder.getPoints());
         return spotsPane;

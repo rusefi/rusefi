@@ -12,6 +12,7 @@ public class LazyFile implements Output {
     public static final String LAZY_FILE_TAG = "was generated automatically by rusEfi tool ";
     private static final String PROPERTY_NAME = "rusefi.generator.lazyfile.enabled";
     private static boolean ENABLED = Boolean.getBoolean(PROPERTY_NAME);
+    private static boolean isLazyCheckEnabled = true;
 
     static {
         SystemOut.println(PROPERTY_NAME + "=" + ENABLED);
@@ -41,7 +42,8 @@ public class LazyFile implements Output {
     public void close() throws IOException {
         String fileContent = unifySpaces(readCurrentContent(filename));
         String newContent = unifySpaces(contentWithoutTag.toString());
-        if (fileContent.equals(newContent)) {
+
+        if (fileContent.equals(newContent) && LazyFile.isLazyCheckEnabled()) {
             SystemOut.println(getClass().getSimpleName() + ": Not updating " + filename + " since looks to be the same content, new content size=" + contentWithoutTag.length());
             return;
         }
@@ -58,6 +60,14 @@ public class LazyFile implements Output {
         Writer fw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), IoUtils.CHARSET));
         fw.write(content.toString());
         fw.close();
+    }
+
+    public static void setLazyFileEnabled(boolean isEnabled) {
+        LazyFile.isLazyCheckEnabled = isEnabled;
+    }
+
+    public static boolean isLazyCheckEnabled() {
+        return LazyFile.isLazyCheckEnabled;
     }
 
     public static String unifySpaces(String line) {

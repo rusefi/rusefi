@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 19 00:15:35 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 28 17:41:28 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -688,6 +688,7 @@ struct engine_configuration_s {
 	offset 76 bit 12 */
 	bool etb_use_two_wires : 1;
 	/**
+	 * Subaru style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 	offset 76 bit 13 */
 	bool isDoubleSolenoidIdle : 1;
 	/**
@@ -1439,7 +1440,7 @@ struct engine_configuration_s {
 	offset 744 bit 21 */
 	bool coastingFuelCutEnabled : 1;
 	/**
-	 * This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars.
+	 * This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars. Used in Auto-PID Idle mode.
 	offset 744 bit 22 */
 	bool useIacTableForCoasting : 1;
 	/**
@@ -2191,7 +2192,7 @@ struct engine_configuration_s {
 	 */
 	uint32_t engineChartSize;
 	/**
-	 * Relative to the target idle RPM
+	 * Relative to the target idle RPM - this limit is coupled with useIacTableForCoasting and iacCoasting parameters
 	 * offset 1484
 	 */
 	int16_t idlePidRpmUpperLimit;
@@ -3521,4 +3522,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 19 00:15:35 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 28 17:41:28 UTC 2020

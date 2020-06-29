@@ -5,6 +5,7 @@ import com.rusefi.config.Field;
 import com.rusefi.config.FieldCommandResponse;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.JTextFieldWithWidth;
 
 import javax.swing.*;
@@ -17,8 +18,8 @@ public class ConfigField extends BaseConfigField {
     private final JTextField view = new JTextFieldWithWidth(200);
     private final static DecimalFormat df = new DecimalFormat("0.0000");
 
-    public ConfigField(final Field field, String topLabel) {
-        super(field);
+    public ConfigField(UIContext uiContext, final Field field, String topLabel) {
+        super(uiContext, field);
         createUi(topLabel, view);
         requestInitialValue(field); // this is not in base constructor so that view is created by the time we invoke it
 

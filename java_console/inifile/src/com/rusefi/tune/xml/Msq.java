@@ -31,18 +31,27 @@ public class Msq {
     @NotNull
     public static Msq valueOf(ConfigurationImage image) {
         IniFileModel ini = IniFileModel.getInstance();
+        Msq tune = create();
+        for (String key : ini.allIniFields.keySet())
+            tune.loadConstant(ini, key, image);
+        return tune;
+    }
+
+    @NotNull
+    public static Msq create() {
         Msq tune = new Msq();
         tune.page.add(new Page(null, null));
         tune.page.add(new Page(0, Fields.TOTAL_CONFIG_SIZE));
-        for (String key : ini.allIniFields.keySet())
-            tune.loadConstant(ini, key, image);
         return tune;
     }
 
     public ConfigurationImage asImage(IniFileModel instance) {
         ConfigurationImage ci = new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE);
 
-        for (Constant constant : findPage().constant) {
+        Page page = findPage();
+        if (page == null)
+            return ci;
+        for (Constant constant : page.constant) {
             if (constant.getName().startsWith("UNALLOCATED_SPACE")) {
                 continue;
             }
@@ -65,7 +74,12 @@ public class Msq {
     public void loadConstant(IniFileModel ini, String key, ConfigurationImage image) {
         IniField field = ini.allIniFields.get(key);
         String value = field.getValue(image);
-        findPage().constant.add(new Constant(field.getName(), field.getUnits(), value));
+        Page page = findPage();
+        if (page == null) {
+            System.out.println("Msq: No page");
+            return;
+        }
+        page.constant.add(new Constant(field.getName(), field.getUnits(), value));
     }
 
     @XmlElement
@@ -79,7 +93,15 @@ public class Msq {
     }
 
     public Page findPage() {
-        return page.get(1);
+        for (Page p : page) {
+            Integer size = p.getSize();
+            if (size == null)
+                continue;
+            if (size == Fields.TOTAL_CONFIG_SIZE) {
+                return p;
+            }
+        }
+        return null;
     }
 
     @XmlElement
