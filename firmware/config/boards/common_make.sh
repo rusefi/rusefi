@@ -1,4 +1,4 @@
-SCRIPT_NAME="common_make.bat"
+SCRIPT_NAME="common_make.sh"
 echo "Entering $SCRIPT_NAME"
 
 mkdir .dep
