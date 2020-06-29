@@ -10,7 +10,8 @@ mkdir deliver
 
 rm -f deliver/rusefi.dfu
 echo "$SCRIPT_NAME: invoking hex2dfu"
-../misc/encedo_hex2dfu/hex2dfu -i build/rusefi.hex -o deliver/rusefi.dfu
+chmod u+x ../misc/encedo_hex2dfu/hex2dfu.bin
+../misc/encedo_hex2dfu/hex2dfu.bin -i build/rusefi.hex -o deliver/rusefi.dfu
 cp build/rusefi.bin deliver/
 
 echo "$SCRIPT_NAME: deliver folder"
