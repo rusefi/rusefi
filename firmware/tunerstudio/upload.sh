@@ -18,7 +18,9 @@ for f in *.ini; do if [[ -f "$f" ]]; then
       sig="${sig//\./\/}.ini"
       path="/rusefi/$sig"
       echo "* found path: $path"
-      ncftpput -m -R -v -u "$1" -p "$2" "$3" $path $f
+      # unbeliveable, ncftpput does not work with special characters in password?!
+      # ncftpput -m -R -v -u "$1" -p "$2" "$3" $path $f
+      sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3 <<< $'put rusefi.ini'
       retVal=$?
       if [ $retVal -ne 0 ]; then
         echo "Upload failed"
