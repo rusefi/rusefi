@@ -30,7 +30,7 @@ java -DSystemOut.name=gen_config \
  -java_destination ../java_console/models/src/com/rusefi/config/generated/Fields.java \
  -romraider_destination ../java_console/rusefi.xml
 
-[ $? -eq 0 ] || (echo "ERROR generating"; exit $?)
+[ $? -eq 0 ] || { echo "ERROR generating"; exit $?; }
 
 if [ -z "${TS_PATH}" ]; then
  echo "TS_PATH not defined"
@@ -42,7 +42,7 @@ fi
 
 for BOARD in "microrusefi" "frankenso" "prometheus" "proteus"; do
  sh gen_config_board.sh $BOARD
- [ $? -eq 0 ] || (echo "ERROR generating $BOARD"; exit $?)
+ [ $? -eq 0 ] || { echo "ERROR generating $BOARD"; exit $?; }
 done
 
 cd config/boards/kinetis/config

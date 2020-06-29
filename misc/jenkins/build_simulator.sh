@@ -10,4 +10,4 @@ rm -rf build
 rm -rf .dep
 sh compile.sh
 cd ..
-[ -e simulator/build/rusefi_simulator.exe ] || (echo "SIMULATOR COMPILATION FAILED"; exit -1)
+[ -e simulator/build/rusefi_simulator.exe ] || { echo "SIMULATOR COMPILATION FAILED"; exit -1; }

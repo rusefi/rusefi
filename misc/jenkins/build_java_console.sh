@@ -14,5 +14,5 @@ cd java_tools/ts_plugin_launcher
 ant clean jar
 cd ../..
 
-[ -e java_console_binary/rusefi_console.jar ] || (echo "CONSOLE COMPILATION FAILED"; exit 1)
+[ -e java_console_binary/rusefi_console.jar ] || { echo "CONSOLE COMPILATION FAILED"; exit 1; }
 echo "java console looks good"

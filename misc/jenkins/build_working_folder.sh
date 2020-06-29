@@ -24,7 +24,7 @@ mkdir $DRIVERS_FOLDER
 ls -l $FOLDER
 
 wget https://rusefi.com/build_server/st_files/silent_st_drivers.exe -P $DRIVERS_FOLDER
-[ -e $DRIVERS_FOLDER/silent_st_drivers.exe ] || (echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers.exe"; exit 1)
+[ -e $DRIVERS_FOLDER/silent_st_drivers.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers.exe"; exit 1; }
 
 if [ "$INI_FILE_OVERRIDE" = "no" ]; then
     INI_FILE_OVERRIDE="rusefi.ini"
@@ -77,7 +77,7 @@ if [ -n $BUNDLE_NAME ]; then
 fi
 
 
-[ -e firmware/deliver/rusefi.bin ] || (echo "$SCRIPT_NAME: rusefi.bin not found"; exit -1)
+[ -e firmware/deliver/rusefi.bin ] || { echo "$SCRIPT_NAME: rusefi.bin not found"; exit -1; }
 
 cd temp
 
@@ -90,7 +90,7 @@ zip -r $FULL_BUNDLE_FILE *
 echo "$SCRIPT_FILE: Bundle $FULL_BUNDLE_FILE ready"
 ls -l $FULL_BUNDLE_FILE
 
-[ -e $FULL_BUNDLE_FILE ] || (echo "$SCRIPT_NAME: ERROR not found $FULL_BUNDLE_FILE"; exit 1)
+[ -e $FULL_BUNDLE_FILE ] || { echo "$SCRIPT_NAME: ERROR not found $FULL_BUNDLE_FILE"; exit 1; }
 
 echo "$SCRIPT_NAME: Uploading full bundle"
 ncftpput -u $RUSEFI_BUILD_FTP_USER -p $RUSEFI_BUILD_FTP_PASS $RUSEFI_FTP_SERVER . $FULL_BUNDLE_FILE

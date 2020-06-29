@@ -12,9 +12,9 @@ export RUSEFI_CONSOLE_SETTINGS="$4"
 SCRIPT_NAME=compile_and_upload.sh
 echo "Entering $SCRIPT_NAME with 1=$1 2=$2 3=$3 4=$4"
 
-[ -n $COMPILE_FOLDER ] || (echo "COMPILE_FOLDER parameter expected"; exit -1)
+[ -n $COMPILE_FOLDER ] || { echo "COMPILE_FOLDER parameter expected"; exit -1; }
 
-[ -n $BUNDLE_NAME ] || (echo "BUNDLE_NAME parameter expected"; exit -1)
+[ -n $BUNDLE_NAME ] || { echo "BUNDLE_NAME parameter expected"; exit -1; }
 
 COMPILE_SCRIPT="compile_$BUNDLE_NAME.sh"
 
@@ -29,7 +29,7 @@ pwd
 echo "Invoking $COMPILE_SCRIPT"
 
 sh $COMPILE_SCRIPT
-[ -e build/rusefi.hex ] || (echo "Just to confirm - FAILED to compile with $COMPILE_SCRIPT"; exit -1)
+[ -e build/rusefi.hex ] || { echo "Just to confirm - FAILED to compile with $COMPILE_SCRIPT"; exit -1; }
 
 cd ../../../..
 # We are back at root rusEfi folder
