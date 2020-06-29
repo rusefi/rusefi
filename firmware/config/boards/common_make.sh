@@ -11,6 +11,7 @@ mkdir deliver
 rm -f deliver/rusefi.dfu
 echo "$SCRIPT_NAME: invoking hex2dfu"
 if uname | grep "NT"; then
+ chmod u+x ../misc/encedo_hex2dfu/hex2dfu.exe
  ../misc/encedo_hex2dfu/hex2dfu.exe -i build/rusefi.hex -o deliver/rusefi.dfu
 else
  chmod u+x ../misc/encedo_hex2dfu/hex2dfu.bin
