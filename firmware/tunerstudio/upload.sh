@@ -22,7 +22,13 @@ for f in *.ini; do if [[ -f "$f" ]]; then
       # ncftpput -m -R -v -u "$1" -p "$2" "$3" $path $f
       # we do not have ssh for this user
       # sftp does not support -p flag on mkdir :(
-      echo put $f > cmd
+      echo cd rusefi > cmd
+      echo mkdir 2020 >> cmd
+      echo cd 2020 >> cmd
+      echo mkdir 06 >> cmd
+      echo cd 06 >> cmd
+      echo put $f >> cmd
+      cat cmd
       sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3 <<< `cat cmd`
       retVal=$?
       if [ $retVal -ne 0 ]; then
