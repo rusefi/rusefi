@@ -304,7 +304,7 @@ struct gppwm_channel
 	uint8_t offBelowDuty;+In on-off mode, turn the output off when the table value is below this duty.;"%", 1, 0, 0, 100, 0
 
 	gppwm_channel_e loadAxis;+Selects the load axis to use for the table.;
-	uint8_t[1] pad;
+	uint8_t[1] alignmentFill;
 
 	uint8_t[GPPWM_LOAD_COUNT] loadBins;;"load",      1,     0,   0.0,    250,   0
 	uint8_t[GPPWM_RPM_COUNT] rpmBins;;"RPM",  @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0
@@ -324,7 +324,7 @@ float lowValue;kPa value at low volts;"kpa",      1,     0,    -400, 800,     2
 float highValue;kPa value at high volts;"kpa",      1,     0,    -400, 800,     2
 air_pressure_sensor_type_e type;
 adc_channel_e hwChannel;
-uint8_t[3] align;
+uint8_t[3] alignmentFill;
 
 end_struct
 
@@ -349,7 +349,7 @@ end_struct
 
 struct oil_pressure_config_s @brief Oil pressure sensor interpolation
 	adc_channel_e hwChannel;
-	uint8_t[3] align;
+	uint8_t[3] alignmentFill;
 	float v1;;         "volts",    1,    0.0,       0,    10.0,        2
 	float value1;;     "kPa",    1,      0.0,       0,  1000.0,        2
 	float v2;;         "volts",    1,    0.0,       0,    10.0,        2
@@ -557,7 +557,7 @@ float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0, 
 	
 struct afr_sensor_s
 	adc_channel_e hwChannel;
-uint8_t[3] alignAf;
+uint8_t[3] alignmentFill_afr;
 	float v1;;         "volts",    1,    0.0,       0,    10.0,        2
 	float value1;;     "AFR",    1,      0.0,       0,  1000.0,        2
 	float v2;;         "volts",    1,    0.0,       0,    10.0,        2
@@ -749,7 +749,7 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	int16_t stepperParkingExtraSteps;;"%",        1,     0,  0,    3000.0,  0
 	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
-	int16_t antiLagRpmTreshold;
+	int16_t antiLagRpmTreshold;;"rpm", 1, 0, 0, 20000, 0
 	int16_t startCrankingDuration;Maximum time to crank starter;"Seconds",      1,      0,       0, 30,      0
 
 	brain_pin_e triggerErrorPin;+This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
@@ -873,9 +873,9 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
     int launchFuelAdded;+Extra Fuel Added;"%",        1,     0,  0,    100.0,  0
     int launchBoostDuty;+Duty Cycle for the Boost Solenoid;"%",        1,     0,  0,    100.0,  0
 	int hardCutRpmRange;+RPM Range for Hard Cut;"rpm",    1,      0,       0, 3000.0,        2
-	int launchAdvanceRpmRange;
-	int launchTpsTreshold;
-	float launchActivateDelay;
+	int launchAdvanceRpmRange;;"rpm", 1, 0, 0, 20000, 0
+	int launchTpsTreshold;;"rpm", 1, 0, 0, 20000, 0
+	float launchActivateDelay;;"rpm", 1, 0, 0, 20000, 0
 
 	stft_s stft
 
@@ -1140,9 +1140,9 @@ custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual"
 tle8888_mode_e tle8888mode;
 
 	uint8_t[3] unusedSomethingWasHere;
-	float autoTuneCltThreshold;
-	float autoTuneTpsRocThreshold;
-	float autoTuneTpsQuietPeriod;
+	float unused244_1;
+	float unused244_2;
+	float unused244_3;
 	float unused2432;
 	float postCrankingFactor;+Fuel multiplier (enrichment) immediately after engine start;"mult",        1,     0,  0,    100,  4
 	float postCrankingDurationSec;+Time over which to taper out after start enrichment;"seconds",        1,     0,  0,    100,  2
@@ -1270,9 +1270,9 @@ tChargeMode_e tChargeMode;
 
 	float etbIdleThrottleRange; ETB idle authority; "%", 1, 0, 0, 15, 0
 
-uint8_t[4] unusuedvref;
-uint8_t[4] unusuedsw;
-	int[3] alFIn;
+uint8_t[4] unusedvref;
+uint8_t[4] unusedsw;
+	int[3] unused_alFIn;
 
 	uint8_t triggerCompCenterVolt;+Trigger comparator center point voltage;"V",        @@VOLTAGE_1_BYTE_PACKING_DIV@@,     0,      0.0,   5.1,   2
 	uint8_t triggerCompHystMin;+Trigger comparator hysteresis voltage (Min);"V",        @@VOLTAGE_1_BYTE_PACKING_DIV@@,     0,      0.0,   5.1,   2

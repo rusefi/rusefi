@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 28 17:41:28 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jun 30 01:45:56 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -20,7 +20,7 @@ public class Fields {
 	public static final int activateAuxPid4_offset = 76;
 	public static final int ADC_CHANNEL_NONE = 16;
 	public static final int adcVcc_offset = 548;
-	public static final int afr_alignAf_offset = 561;
+	public static final int afr_alignmentFill_afr_offset = 561;
 	public static final int afr_hwChannel_offset = 560;
 	public static final int afr_offset = 560;
 	public static final int afr_type_offset = 692;
@@ -39,7 +39,6 @@ public class Fields {
 	public static final int afterstartDecayTime_offset = 6216;
 	public static final int afterstartEnrich_offset = 6184;
 	public static final int afterstartHoldTime_offset = 6152;
-	public static final int alFIn_offset = 4024;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
 	public static final int alignmentFill_at_2109_offset = 2109;
 	public static final int alignmentFill_at_4514_offset = 4514;
@@ -63,9 +62,6 @@ public class Fields {
 	public static final int antiLagActivationMode_offset = 1024;
 	public static final int antiLagEnabled_offset = 76;
 	public static final int antiLagRpmTreshold_offset = 824;
-	public static final int autoTuneCltThreshold_offset = 2420;
-	public static final int autoTuneTpsQuietPeriod_offset = 2428;
-	public static final int autoTuneTpsRocThreshold_offset = 2424;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
 	public static final int AUX_PID_COUNT = 4;
 	public static final int auxFastSensor1_adcChannel_offset = 680;
@@ -142,7 +138,7 @@ public class Fields {
 	public static final int baroCorrPressureBins_offset = 1544;
 	public static final int baroCorrRpmBins_offset = 1560;
 	public static final int baroCorrTable_offset = 1576;
-	public static final int baroSensor_align_offset = 597;
+	public static final int baroSensor_alignmentFill_offset = 597;
 	public static final int baroSensor_highValue_offset = 588;
 	public static final int baroSensor_hwChannel_offset = 596;
 	public static final int baroSensor_lowValue_offset = 584;
@@ -605,46 +601,46 @@ public class Fields {
 	public static final int gpioPinModes7_offset = 770;
 	public static final int gpioPinModes8_offset = 771;
 	public static final int gpioPinModes9_offset = 772;
+	public static final int gppwm1_alignmentFill_offset = 4151;
 	public static final int gppwm1_dutyIfError_offset = 4145;
 	public static final int gppwm1_loadAxis_offset = 4150;
 	public static final int gppwm1_loadBins_offset = 4152;
 	public static final int gppwm1_offBelowDuty_offset = 4149;
 	public static final int gppwm1_offset = 4144;
 	public static final int gppwm1_onAboveDuty_offset = 4148;
-	public static final int gppwm1_pad_offset = 4151;
 	public static final int gppwm1_pin_offset = 4144;
 	public static final int gppwm1_pwmFrequency_offset = 4146;
 	public static final int gppwm1_rpmBins_offset = 4160;
 	public static final int gppwm1_table_offset = 4168;
+	public static final int gppwm2_alignmentFill_offset = 4239;
 	public static final int gppwm2_dutyIfError_offset = 4233;
 	public static final int gppwm2_loadAxis_offset = 4238;
 	public static final int gppwm2_loadBins_offset = 4240;
 	public static final int gppwm2_offBelowDuty_offset = 4237;
 	public static final int gppwm2_offset = 4232;
 	public static final int gppwm2_onAboveDuty_offset = 4236;
-	public static final int gppwm2_pad_offset = 4239;
 	public static final int gppwm2_pin_offset = 4232;
 	public static final int gppwm2_pwmFrequency_offset = 4234;
 	public static final int gppwm2_rpmBins_offset = 4248;
 	public static final int gppwm2_table_offset = 4256;
+	public static final int gppwm3_alignmentFill_offset = 4327;
 	public static final int gppwm3_dutyIfError_offset = 4321;
 	public static final int gppwm3_loadAxis_offset = 4326;
 	public static final int gppwm3_loadBins_offset = 4328;
 	public static final int gppwm3_offBelowDuty_offset = 4325;
 	public static final int gppwm3_offset = 4320;
 	public static final int gppwm3_onAboveDuty_offset = 4324;
-	public static final int gppwm3_pad_offset = 4327;
 	public static final int gppwm3_pin_offset = 4320;
 	public static final int gppwm3_pwmFrequency_offset = 4322;
 	public static final int gppwm3_rpmBins_offset = 4336;
 	public static final int gppwm3_table_offset = 4344;
+	public static final int gppwm4_alignmentFill_offset = 4415;
 	public static final int gppwm4_dutyIfError_offset = 4409;
 	public static final int gppwm4_loadAxis_offset = 4414;
 	public static final int gppwm4_loadBins_offset = 4416;
 	public static final int gppwm4_offBelowDuty_offset = 4413;
 	public static final int gppwm4_offset = 4408;
 	public static final int gppwm4_onAboveDuty_offset = 4412;
-	public static final int gppwm4_pad_offset = 4415;
 	public static final int gppwm4_pin_offset = 4408;
 	public static final int gppwm4_pwmFrequency_offset = 4410;
 	public static final int gppwm4_rpmBins_offset = 4424;
@@ -904,7 +900,7 @@ public class Fields {
 	public static final int map_samplingAngleBins_offset = 108;
 	public static final int map_samplingWindow_offset = 204;
 	public static final int map_samplingWindowBins_offset = 172;
-	public static final int map_sensor_align_offset = 249;
+	public static final int map_sensor_alignmentFill_offset = 249;
 	public static final int map_sensor_highValue_offset = 240;
 	public static final int map_sensor_hwChannel_offset = 248;
 	public static final int map_sensor_lowValue_offset = 236;
@@ -971,7 +967,7 @@ public class Fields {
 	public static final int noAccelAfterHardLimitPeriodSecs_offset = 1536;
 	public static final int o2heaterPin_offset = 742;
 	public static final int o2heaterPinModeTodO_offset = 743;
-	public static final int oilPressure_align_offset = 2693;
+	public static final int oilPressure_alignmentFill_offset = 2693;
 	public static final int oilPressure_hwChannel_offset = 2692;
 	public static final int oilPressure_offset = 2692;
 	public static final int oilPressure_v1_offset = 2696;
@@ -1043,7 +1039,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 668900467;
+	public static final int SIGNATURE_HASH = 520656958;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1282,7 +1278,7 @@ public class Fields {
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.06.28.all.668900467";
+	public static final String TS_SIGNATURE = "rusEFI 2020.06.30.all.520656958";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -1291,6 +1287,9 @@ public class Fields {
 	public static final int unused1059_offset = 3964;
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused2432_offset = 2432;
+	public static final int unused244_1_offset = 2420;
+	public static final int unused244_2_offset = 2424;
+	public static final int unused244_3_offset = 2428;
 	public static final int unused2508_offset = 2508;
 	public static final int unused2516_offset = 2516;
 	public static final int unused6312_offset = 6312;
@@ -1305,6 +1304,7 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1476;
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
+	public static final int unused_alFIn_offset = 4024;
 	public static final int unused_former_warmup_target_afr_offset = 2112;
 	public static final int unusedAt516_offset = 516;
 	public static final int unusedAt712_offset = 712;
@@ -1344,8 +1344,8 @@ public class Fields {
 	public static final int unusedSpiPadding5_offset = 2715;
 	public static final int unusedSpiPadding7_offset = 4005;
 	public static final int unusedSpiPadding8_offset = 4009;
-	public static final int unusuedsw_offset = 4020;
-	public static final int unusuedvref_offset = 4016;
+	public static final int unusedsw_offset = 4020;
+	public static final int unusedvref_offset = 4016;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
 	public static final int useConstantDwellDuringCranking_offset = 1464;
 	public static final int useETBforIdleControl_offset = 744;
@@ -2168,9 +2168,9 @@ public class Fields {
 	public static final String[] vvt_mode_e = {"Inactive", "Second half", "2GZ", "Miata NB2", "First half", "mode5", "mode6", "mode7"};
 	public static final Field VVTMODE = Field.create("VVTMODE", 2328, FieldType.INT, vvt_mode_e);
 	public static final Field TLE8888MODE = Field.create("TLE8888MODE", 2416, FieldType.INT8);
-	public static final Field AUTOTUNECLTTHRESHOLD = Field.create("AUTOTUNECLTTHRESHOLD", 2420, FieldType.FLOAT);
-	public static final Field AUTOTUNETPSROCTHRESHOLD = Field.create("AUTOTUNETPSROCTHRESHOLD", 2424, FieldType.FLOAT);
-	public static final Field AUTOTUNETPSQUIETPERIOD = Field.create("AUTOTUNETPSQUIETPERIOD", 2428, FieldType.FLOAT);
+	public static final Field UNUSED244_1 = Field.create("UNUSED244_1", 2420, FieldType.FLOAT);
+	public static final Field UNUSED244_2 = Field.create("UNUSED244_2", 2424, FieldType.FLOAT);
+	public static final Field UNUSED244_3 = Field.create("UNUSED244_3", 2428, FieldType.FLOAT);
 	public static final Field UNUSED2432 = Field.create("UNUSED2432", 2432, FieldType.FLOAT);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 2436, FieldType.FLOAT);
 	public static final Field POSTCRANKINGDURATIONSEC = Field.create("POSTCRANKINGDURATIONSEC", 2440, FieldType.FLOAT);
@@ -2333,7 +2333,7 @@ public class Fields {
 	public static final Field GPPWM1_OFFBELOWDUTY = Field.create("GPPWM1_OFFBELOWDUTY", 4149, FieldType.INT8);
 	public static final String[] gppwm_channel_e = {"TPS", "MAP", "CLT", "IAT"};
 	public static final Field GPPWM1_LOADAXIS = Field.create("GPPWM1_LOADAXIS", 4150, FieldType.INT8, gppwm_channel_e);
-	public static final Field GPPWM1_PAD = Field.create("GPPWM1_PAD", 4151, FieldType.INT8);
+	public static final Field GPPWM1_ALIGNMENTFILL = Field.create("GPPWM1_ALIGNMENTFILL", 4151, FieldType.INT8);
 	public static final Field GPPWM1_TABLE = Field.create("GPPWM1_TABLE", 4168, FieldType.INT);
 	public static final Field GPPWM2_PIN = Field.create("GPPWM2_PIN", 4232, FieldType.INT8, output_pin_e);
 	public static final Field GPPWM2_DUTYIFERROR = Field.create("GPPWM2_DUTYIFERROR", 4233, FieldType.INT8);
@@ -2341,7 +2341,7 @@ public class Fields {
 	public static final Field GPPWM2_ONABOVEDUTY = Field.create("GPPWM2_ONABOVEDUTY", 4236, FieldType.INT8);
 	public static final Field GPPWM2_OFFBELOWDUTY = Field.create("GPPWM2_OFFBELOWDUTY", 4237, FieldType.INT8);
 	public static final Field GPPWM2_LOADAXIS = Field.create("GPPWM2_LOADAXIS", 4238, FieldType.INT8, gppwm_channel_e);
-	public static final Field GPPWM2_PAD = Field.create("GPPWM2_PAD", 4239, FieldType.INT8);
+	public static final Field GPPWM2_ALIGNMENTFILL = Field.create("GPPWM2_ALIGNMENTFILL", 4239, FieldType.INT8);
 	public static final Field GPPWM2_TABLE = Field.create("GPPWM2_TABLE", 4256, FieldType.INT);
 	public static final Field GPPWM3_PIN = Field.create("GPPWM3_PIN", 4320, FieldType.INT8, output_pin_e);
 	public static final Field GPPWM3_DUTYIFERROR = Field.create("GPPWM3_DUTYIFERROR", 4321, FieldType.INT8);
@@ -2349,7 +2349,7 @@ public class Fields {
 	public static final Field GPPWM3_ONABOVEDUTY = Field.create("GPPWM3_ONABOVEDUTY", 4324, FieldType.INT8);
 	public static final Field GPPWM3_OFFBELOWDUTY = Field.create("GPPWM3_OFFBELOWDUTY", 4325, FieldType.INT8);
 	public static final Field GPPWM3_LOADAXIS = Field.create("GPPWM3_LOADAXIS", 4326, FieldType.INT8, gppwm_channel_e);
-	public static final Field GPPWM3_PAD = Field.create("GPPWM3_PAD", 4327, FieldType.INT8);
+	public static final Field GPPWM3_ALIGNMENTFILL = Field.create("GPPWM3_ALIGNMENTFILL", 4327, FieldType.INT8);
 	public static final Field GPPWM3_TABLE = Field.create("GPPWM3_TABLE", 4344, FieldType.INT);
 	public static final Field GPPWM4_PIN = Field.create("GPPWM4_PIN", 4408, FieldType.INT8, output_pin_e);
 	public static final Field GPPWM4_DUTYIFERROR = Field.create("GPPWM4_DUTYIFERROR", 4409, FieldType.INT8);
@@ -2357,7 +2357,7 @@ public class Fields {
 	public static final Field GPPWM4_ONABOVEDUTY = Field.create("GPPWM4_ONABOVEDUTY", 4412, FieldType.INT8);
 	public static final Field GPPWM4_OFFBELOWDUTY = Field.create("GPPWM4_OFFBELOWDUTY", 4413, FieldType.INT8);
 	public static final Field GPPWM4_LOADAXIS = Field.create("GPPWM4_LOADAXIS", 4414, FieldType.INT8, gppwm_channel_e);
-	public static final Field GPPWM4_PAD = Field.create("GPPWM4_PAD", 4415, FieldType.INT8);
+	public static final Field GPPWM4_ALIGNMENTFILL = Field.create("GPPWM4_ALIGNMENTFILL", 4415, FieldType.INT8);
 	public static final Field GPPWM4_TABLE = Field.create("GPPWM4_TABLE", 4432, FieldType.INT);
 	public static final Field MC33_I_BOOST = Field.create("MC33_I_BOOST", 4496, FieldType.INT16);
 	public static final Field MC33_I_PEAK = Field.create("MC33_I_PEAK", 4498, FieldType.INT16);
@@ -3148,9 +3148,9 @@ public class Fields {
 	STORAGEMODE,
 	VVTMODE,
 	TLE8888MODE,
-	AUTOTUNECLTTHRESHOLD,
-	AUTOTUNETPSROCTHRESHOLD,
-	AUTOTUNETPSQUIETPERIOD,
+	UNUSED244_1,
+	UNUSED244_2,
+	UNUSED244_3,
 	UNUSED2432,
 	POSTCRANKINGFACTOR,
 	POSTCRANKINGDURATIONSEC,
@@ -3310,7 +3310,7 @@ public class Fields {
 	GPPWM1_ONABOVEDUTY,
 	GPPWM1_OFFBELOWDUTY,
 	GPPWM1_LOADAXIS,
-	GPPWM1_PAD,
+	GPPWM1_ALIGNMENTFILL,
 	GPPWM1_TABLE,
 	GPPWM2_PIN,
 	GPPWM2_DUTYIFERROR,
@@ -3318,7 +3318,7 @@ public class Fields {
 	GPPWM2_ONABOVEDUTY,
 	GPPWM2_OFFBELOWDUTY,
 	GPPWM2_LOADAXIS,
-	GPPWM2_PAD,
+	GPPWM2_ALIGNMENTFILL,
 	GPPWM2_TABLE,
 	GPPWM3_PIN,
 	GPPWM3_DUTYIFERROR,
@@ -3326,7 +3326,7 @@ public class Fields {
 	GPPWM3_ONABOVEDUTY,
 	GPPWM3_OFFBELOWDUTY,
 	GPPWM3_LOADAXIS,
-	GPPWM3_PAD,
+	GPPWM3_ALIGNMENTFILL,
 	GPPWM3_TABLE,
 	GPPWM4_PIN,
 	GPPWM4_DUTYIFERROR,
@@ -3334,7 +3334,7 @@ public class Fields {
 	GPPWM4_ONABOVEDUTY,
 	GPPWM4_OFFBELOWDUTY,
 	GPPWM4_LOADAXIS,
-	GPPWM4_PAD,
+	GPPWM4_ALIGNMENTFILL,
 	GPPWM4_TABLE,
 	MC33_I_BOOST,
 	MC33_I_PEAK,
