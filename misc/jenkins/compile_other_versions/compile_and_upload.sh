@@ -29,6 +29,8 @@ pwd
 echo "Invoking $COMPILE_SCRIPT"
 
 sh $COMPILE_SCRIPT
+
+cd ../../..
 [ -e build/rusefi.hex ] || { echo "Just to confirm - FAILED to compile with $COMPILE_SCRIPT"; exit 1; }
 
 cd ../../../..
