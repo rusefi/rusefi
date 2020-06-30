@@ -70,11 +70,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
             tsPosition += size;
         } else if (configField.getTsInfo() == null) {
-            if (!configField.getName().toLowerCase().contains(ConfigStructure.ALIGNMENT_FILL.toLowerCase()) && !configField.getName().toLowerCase().contains("unused")) {
-                throw new IllegalArgumentException("Need TS info for " + configField.getName() + " at "+ prefix);
-            }
-            tsHeader.write(";no TS info - skipping " + prefix + configField.getName() + " offset " + tsPosition);
-            tsPosition += configField.getArraySize() * configField.getElementSize();
+            throw new IllegalArgumentException("Need TS info for " + configField.getName() + " at "+ prefix);
         } else if (configField.getArraySize() != 1) {
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH) + "\t\t= array, ");
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
