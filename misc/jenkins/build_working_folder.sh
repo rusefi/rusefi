@@ -77,7 +77,7 @@ if [ -n $BUNDLE_NAME ]; then
 fi
 
 
-[ -e firmware/deliver/rusefi.bin ] || { echo "$SCRIPT_NAME: rusefi.bin not found"; exit -1; }
+[ -e firmware/deliver/rusefi.bin ] || { echo "$SCRIPT_NAME: rusefi.bin not found"; exit 1; }
 
 cd temp
 
