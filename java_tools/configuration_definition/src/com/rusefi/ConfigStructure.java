@@ -12,9 +12,7 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  * 1/15/15
  */
 public class ConfigStructure {
-
-    public static final String ALIGNMENT_FILL = "alignmentFill";
-    private static final String ALIGNMENT_FILL_AT = ALIGNMENT_FILL + "_at_";
+    private static final String ALIGNMENT_FILL_AT = "alignmentFill_at_";
 
     public final String name;
     public final String comment;
