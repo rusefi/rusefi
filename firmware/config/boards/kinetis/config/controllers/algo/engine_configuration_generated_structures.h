@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 28 17:41:33 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Jun 30 01:46:06 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -197,7 +197,7 @@ struct gppwm_channel {
 	/**
 	 * offset 7
 	 */
-	uint8_t pad;
+	uint8_t alignmentFill;
 	/**
 	 * offset 8
 	 */
@@ -238,7 +238,7 @@ struct air_pressure_sensor_config_s {
 	/**
 	 * offset 13
 	 */
-	uint8_t align[3];
+	uint8_t alignmentFill[3];
 	/** total size 16*/
 };
 
@@ -331,7 +331,7 @@ struct oil_pressure_config_s {
 	/**
 	 * offset 1
 	 */
-	uint8_t align[3];
+	uint8_t alignmentFill[3];
 	/**
 	 * offset 4
 	 */
@@ -554,7 +554,7 @@ struct afr_sensor_s {
 	/**
 	 * offset 1
 	 */
-	uint8_t alignAf[3];
+	uint8_t alignmentFill_afr[3];
 	/**
 	 * offset 4
 	 */
@@ -2708,15 +2708,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 2420
 	 */
-	float autoTuneCltThreshold;
+	float unused244_1;
 	/**
 	 * offset 2424
 	 */
-	float autoTuneTpsRocThreshold;
+	float unused244_2;
 	/**
 	 * offset 2428
 	 */
-	float autoTuneTpsQuietPeriod;
+	float unused244_3;
 	/**
 	 * offset 2432
 	 */
@@ -3120,15 +3120,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 4016
 	 */
-	uint8_t unusuedvref[4];
+	uint8_t unusedvref[4];
 	/**
 	 * offset 4020
 	 */
-	uint8_t unusuedsw[4];
+	uint8_t unusedsw[4];
 	/**
 	 * offset 4024
 	 */
-	int alFIn[3];
+	int unused_alFIn[3];
 	/**
 	 * Trigger comparator center point voltage
 	 * offset 4036
@@ -3522,4 +3522,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jun 28 17:41:33 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Jun 30 01:46:06 UTC 2020
