@@ -70,6 +70,9 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
             tsPosition += size;
         } else if (configField.getTsInfo() == null) {
+            if (!configField.getName().toLowerCase().contains("alignmentFill".toLowerCase()) && !configField.getName().toLowerCase().contains("unused")) {
+                throw new IllegalArgumentException("Need TS info for " + configField.getName() + " at "+ prefix);
+            }
             tsHeader.write(";no TS info - skipping " + prefix + configField.getName() + " offset " + tsPosition);
             tsPosition += configField.getArraySize() * configField.getElementSize();
         } else if (configField.getArraySize() != 1) {

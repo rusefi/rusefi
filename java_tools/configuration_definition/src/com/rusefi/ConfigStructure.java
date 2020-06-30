@@ -13,6 +13,8 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  */
 public class ConfigStructure {
 
+    private static final String ALIGNMENT_FILL_AT = "alignmentFill_at_";
+
     public final String name;
     public final String comment;
     public final boolean withPrefix;
@@ -65,7 +67,7 @@ public class ConfigStructure {
         int fillSize = totalSize % 4 == 0 ? 0 : 4 - (totalSize % 4);
 
         if (fillSize != 0) {
-            ConfigField fill = new ConfigField(state, "alignmentFill_at_" + totalSize, "need 4 byte alignment",
+            ConfigField fill = new ConfigField(state, ALIGNMENT_FILL_AT + totalSize, "need 4 byte alignment",
                     "" + fillSize,
                     TypesHelper.UINT8_T, fillSize, null, false, false, null, -1, null, null);
             addBoth(fill);
