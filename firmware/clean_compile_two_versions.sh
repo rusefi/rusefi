@@ -24,7 +24,7 @@ ls -l build
 
 sh clean.sh
 echo "TIMESTAMP $(date "+%D %T.%2N")"
-EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\"default\""
+EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default\\\""
 make -j4
 EXTRA_PARAMS=""
 
