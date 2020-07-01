@@ -5,7 +5,7 @@ pwd
 cd simulator
 gcc -v
 make -v
-mkdir out
+mkdir -p out
 rm -rf build
 rm -rf .dep
 sh compile.sh

@@ -97,7 +97,7 @@ ncftpput -u $RUSEFI_BUILD_FTP_USER -p $RUSEFI_BUILD_FTP_PASS $RUSEFI_FTP_SERVER 
 
 cd ..
 
-mkdir artifacts
+mkdir -p artifacts
 mv temp/$FULL_BUNDLE_FILE artifacts
 
 echo "Removing more static content"

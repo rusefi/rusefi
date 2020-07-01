@@ -6,7 +6,7 @@ mkdir .dep
 make -j4 -r
 [ -e build/rusefi.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
 
-mkdir deliver
+mkdir -p deliver
 
 rm -f deliver/rusefi.dfu
 echo "$SCRIPT_NAME: invoking hex2dfu"
