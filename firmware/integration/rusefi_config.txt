@@ -304,7 +304,7 @@ struct gppwm_channel
 	uint8_t offBelowDuty;+In on-off mode, turn the output off when the table value is below this duty.;"%", 1, 0, 0, 100, 0
 
 	gppwm_channel_e loadAxis;+Selects the load axis to use for the table.;
-	uint8_t[1] alignmentFill;
+	uint8_t alignmentFill_map;;"unit",      1,     0,    0, 100,     0
 
 	uint8_t[GPPWM_LOAD_COUNT] loadBins;;"load",      1,     0,   0.0,    250,   0
 	uint8_t[GPPWM_RPM_COUNT] rpmBins;;"RPM",  @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0
