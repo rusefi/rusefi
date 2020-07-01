@@ -48,7 +48,8 @@ public class Wizard {
 
         @Override
         public Component getContent() {
-            CommandQueue.getInstance().write(command, CommandQueue.DEFAULT_TIMEOUT, new InvocationConfirmationListener() {
+            CommandQueue instance = null;
+            instance.write(command, CommandQueue.DEFAULT_TIMEOUT, new InvocationConfirmationListener() {
                 @Override
                 public void onCommandConfirmation() {
                     SwingUtilities.invokeLater(new Runnable() {
@@ -95,7 +96,7 @@ public class Wizard {
 
         panel.add(content, BorderLayout.CENTER);
 
-        panel.add(new AverageAnglePanel().getPanel(), BorderLayout.SOUTH);
+        panel.add(new AverageAnglePanel(null).getPanel(), BorderLayout.SOUTH);
 
         button.addActionListener(new AbstractAction() {
             @Override

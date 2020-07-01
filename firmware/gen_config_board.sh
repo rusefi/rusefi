@@ -11,10 +11,14 @@ if [ -z "$1" ]; then
 fi
 
 BOARDNAME=$1
+SHORT_BOARDNAME=$2
 
-echo "BOARDNAME=${BOARDNAME}"
+echo "BOARDNAME=${BOARDNAME} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
+
+sh gen_signature.sh ${SHORT_BOARDNAME}
 
 java -DSystemOut.name=gen_config_board \
+	-Drusefi.generator.lazyfile.enabled=true \
 	-cp ../java_tools/ConfigDefinition.jar \
 	com.rusefi.board_generator.BoardReader \
 	-board ${BOARDNAME} \
@@ -23,19 +27,21 @@ java -DSystemOut.name=gen_config_board \
 	-enumInputFile controllers/algo/rusefi_enums.h \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h
 
-[ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit $?; }
+[ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
 java -DSystemOut.name=gen_config_board \
 	-jar ../java_tools/ConfigDefinition.jar \
 	-definition integration/rusefi_config.txt \
 	-tool gen_config.sh \
 	-ts_destination tunerstudio \
+	-cache tunerstudio/cache/${BOARDNAME} \
 	-firing_order controllers/algo/firing_order.h \
 	-ts_output_name rusefi_${BOARDNAME}.ini \
+	-signature tunerstudio/signature_${SHORT_BOARDNAME}.txt \
 	-prepend tunerstudio/${BOARDNAME}_prefix.txt \
 	-prepend config/boards/${BOARDNAME}/prepend.txt
 
-[ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit $?; }
+[ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
 if [ -z "${TS_PATH}" ]; then
 	echo "TS_PATH not defined"

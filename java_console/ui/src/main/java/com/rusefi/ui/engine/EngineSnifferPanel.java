@@ -73,7 +73,7 @@ public class EngineSnifferPanel {
 
     private boolean isPaused;
 
-    public EngineSnifferPanel(Node config) {
+    public EngineSnifferPanel(UIContext uiContext, Node config) {
         statusPanel.setTimeAxisTranslator(crank.createTranslator());
 
         final JButton pauseButton = UiUtils.createPauseButton();
@@ -107,10 +107,10 @@ public class EngineSnifferPanel {
         upperPanel.add(clearButton);
         upperPanel.add(saveImageButton);
         upperPanel.add(pauseButton);
-        upperPanel.add(new RpmLabel(2).getContent());
+        upperPanel.add(new RpmLabel(uiContext,2).getContent());
 
-        if (!LinkManager.isLogViewer()) {
-            command = AnyCommand.createField(config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true);
+        if (!uiContext.getLinkManager().isLogViewer()) {
+            command = AnyCommand.createField(uiContext, config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true);
             upperPanel.add(command.getContent());
         }
 
@@ -122,21 +122,21 @@ public class EngineSnifferPanel {
                 displayChart(chart);
             }
         });
-        if (LinkManager.isLogViewer())
+        if (uiContext.getLinkManager().isLogViewer())
             upperPanel.add(scrollControl.getContent());
 
         upperPanel.add(new URLLabel(HELP_TEXT, HELP_URL));
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
 
-        if (!LinkManager.isLogViewer()) {
+        if (!uiContext.getLinkManager().isLogViewer()) {
             JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-            lowerButtons.add(new ConfigField(Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
-            lowerButtons.add(new BitConfigField(Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
-            lowerButtons.add(new BitConfigField(Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
-            lowerButtons.add(new ConfigField(Fields.SENSORCHARTFREQUENCY, "Frequency").getContent());
-            lowerButtons.add(new ConfigField(Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
-            lowerButtons.add(new ConfigField(Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
+            lowerButtons.add(new ConfigField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
+            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
+            lowerButtons.add(new BitConfigField(uiContext, Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
+            lowerButtons.add(new ConfigField(uiContext, Fields.SENSORCHARTFREQUENCY, "Frequency").getContent());
+            lowerButtons.add(new ConfigField(uiContext, Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
+            lowerButtons.add(new ConfigField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
             bottomPanel.add(lowerButtons, BorderLayout.NORTH);
         }
 
@@ -160,7 +160,7 @@ public class EngineSnifferPanel {
 
         resetImagePanel();
 
-        LinkManager.engineState.registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
+        uiContext.getLinkManager().getEngineState().registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 if (isPaused)

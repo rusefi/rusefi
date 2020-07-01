@@ -1,0 +1,3 @@
+struct_no_prefix trigger_state_s
+	float currentGap;
+end_struct

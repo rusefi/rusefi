@@ -17,7 +17,7 @@
 #define adc_channel_e_enum "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "PB12", "PB13", "PC14", "PC15", "PC16", "PC17", "PD3", "PD4", "PE2", "PE6", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 #define ADC_CHANNEL_NONE 16
 #define adcVcc_offset 548
-#define afr_alignAf_offset 561
+#define afr_alignmentFill_afr_offset 561
 #define afr_hwChannel_offset 560
 #define afr_offset 560
 #define afr_type_offset 692
@@ -36,7 +36,6 @@
 #define afterstartDecayTime_offset 6216
 #define afterstartEnrich_offset 6184
 #define afterstartHoldTime_offset 6152
-#define alFIn_offset 4024
 #define alignEngineSnifferAtTDC_offset 744
 #define alignmentFill_at_2109_offset 2109
 #define alignmentFill_at_4514_offset 4514
@@ -61,9 +60,6 @@
 #define antiLagActivationMode_offset 1024
 #define antiLagEnabled_offset 76
 #define antiLagRpmTreshold_offset 824
-#define autoTuneCltThreshold_offset 2420
-#define autoTuneTpsQuietPeriod_offset 2428
-#define autoTuneTpsRocThreshold_offset 2424
 #define AUX_DIGITAL_VALVE_COUNT 2
 #define AUX_PID_COUNT 4
 #define auxFastSensor1_adcChannel_offset 680
@@ -140,7 +136,7 @@
 #define baroCorrPressureBins_offset 1544
 #define baroCorrRpmBins_offset 1560
 #define baroCorrTable_offset 1576
-#define baroSensor_align_offset 597
+#define baroSensor_alignmentFill_offset 597
 #define baroSensor_highValue_offset 588
 #define baroSensor_hwChannel_offset 596
 #define baroSensor_lowValue_offset 584
@@ -330,6 +326,7 @@
 #define ET_FRANKENSO_MIATA_NA6 41
 #define ET_FRANKENSO_MIATA_NA6_VAF 57
 #define ET_FRANKENSO_MIATA_NB2 47
+#define ET_MRE_DEFAULTS 60
 #define ET_MRE_MIATA_NA6 12
 #define ET_MRE_MIATA_NB2_MAF 15
 #define ET_MRE_MIATA_NB2_MAP 11
@@ -610,46 +607,46 @@
 #define gpioPinModes7_offset 770
 #define gpioPinModes8_offset 771
 #define gpioPinModes9_offset 772
+#define gppwm1_alignmentFill_map_offset 4151
 #define gppwm1_dutyIfError_offset 4145
 #define gppwm1_loadAxis_offset 4150
 #define gppwm1_loadBins_offset 4152
 #define gppwm1_offBelowDuty_offset 4149
 #define gppwm1_offset 4144
 #define gppwm1_onAboveDuty_offset 4148
-#define gppwm1_pad_offset 4151
 #define gppwm1_pin_offset 4144
 #define gppwm1_pwmFrequency_offset 4146
 #define gppwm1_rpmBins_offset 4160
 #define gppwm1_table_offset 4168
+#define gppwm2_alignmentFill_map_offset 4239
 #define gppwm2_dutyIfError_offset 4233
 #define gppwm2_loadAxis_offset 4238
 #define gppwm2_loadBins_offset 4240
 #define gppwm2_offBelowDuty_offset 4237
 #define gppwm2_offset 4232
 #define gppwm2_onAboveDuty_offset 4236
-#define gppwm2_pad_offset 4239
 #define gppwm2_pin_offset 4232
 #define gppwm2_pwmFrequency_offset 4234
 #define gppwm2_rpmBins_offset 4248
 #define gppwm2_table_offset 4256
+#define gppwm3_alignmentFill_map_offset 4327
 #define gppwm3_dutyIfError_offset 4321
 #define gppwm3_loadAxis_offset 4326
 #define gppwm3_loadBins_offset 4328
 #define gppwm3_offBelowDuty_offset 4325
 #define gppwm3_offset 4320
 #define gppwm3_onAboveDuty_offset 4324
-#define gppwm3_pad_offset 4327
 #define gppwm3_pin_offset 4320
 #define gppwm3_pwmFrequency_offset 4322
 #define gppwm3_rpmBins_offset 4336
 #define gppwm3_table_offset 4344
+#define gppwm4_alignmentFill_map_offset 4415
 #define gppwm4_dutyIfError_offset 4409
 #define gppwm4_loadAxis_offset 4414
 #define gppwm4_loadBins_offset 4416
 #define gppwm4_offBelowDuty_offset 4413
 #define gppwm4_offset 4408
 #define gppwm4_onAboveDuty_offset 4412
-#define gppwm4_pad_offset 4415
 #define gppwm4_pin_offset 4408
 #define gppwm4_pwmFrequency_offset 4410
 #define gppwm4_rpmBins_offset 4424
@@ -912,7 +909,7 @@
 #define map_samplingAngleBins_offset 108
 #define map_samplingWindow_offset 204
 #define map_samplingWindowBins_offset 172
-#define map_sensor_align_offset 249
+#define map_sensor_alignmentFill_offset 249
 #define map_sensor_highValue_offset 240
 #define map_sensor_hwChannel_offset 248
 #define map_sensor_lowValue_offset 236
@@ -980,7 +977,7 @@
 #define noAccelAfterHardLimitPeriodSecs_offset 1536
 #define o2heaterPin_offset 742
 #define o2heaterPinModeTodO_offset 743
-#define oilPressure_align_offset 2693
+#define oilPressure_alignmentFill_offset 2693
 #define oilPressure_hwChannel_offset 2692
 #define oilPressure_offset 2692
 #define oilPressure_v1_offset 2696
@@ -1060,6 +1057,9 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
+#define SIGNATURE_BOARD all
+#define SIGNATURE_DATE 2020.07.01
+#define SIGNATURE_HASH 129680412
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1319,7 +1319,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI v1.2020.4"
+#define TS_SIGNATURE "rusEFI 2020.07.01.all.129680412"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
@@ -1328,6 +1328,9 @@
 #define unused1059_offset 3964
 #define unused1476b20_offset 1476
 #define unused2432_offset 2432
+#define unused244_1_offset 2420
+#define unused244_2_offset 2424
+#define unused244_3_offset 2428
 #define unused2508_offset 2508
 #define unused2516_offset 2516
 #define unused6312_offset 6312
@@ -1342,6 +1345,7 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
+#define unused_alFIn_offset 4024
 #define unused_former_warmup_target_afr_offset 2112
 #define unusedAt516_offset 516
 #define unusedAt712_offset 712
@@ -1381,8 +1385,8 @@
 #define unusedSpiPadding5_offset 2715
 #define unusedSpiPadding7_offset 4005
 #define unusedSpiPadding8_offset 4009
-#define unusuedsw_offset 4020
-#define unusuedvref_offset 4016
+#define unusedsw_offset 4020
+#define unusedvref_offset 4016
 #define useAdvanceCorrectionsForCranking_offset 1476
 #define useConstantDwellDuringCranking_offset 1464
 #define useETBforIdleControl_offset 744

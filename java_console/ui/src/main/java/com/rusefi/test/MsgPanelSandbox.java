@@ -6,6 +6,6 @@ import com.rusefi.ui.storage.PersistentConfiguration;
 
 public class MsgPanelSandbox extends FrameHelper {
     public static void main(String[] args) {
-        new FrameHelper().showFrame(new MessagesPane(PersistentConfiguration.getConfig().getRoot()).getContent());
+        new FrameHelper().showFrame(new MessagesPane(null, PersistentConfiguration.getConfig().getRoot()).getContent());
     }
 }

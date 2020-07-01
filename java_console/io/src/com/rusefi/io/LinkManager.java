@@ -3,6 +3,8 @@ package com.rusefi.io;
 import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.io.tcp.TcpConnector;
@@ -18,7 +20,22 @@ import java.util.concurrent.*;
  */
 public class LinkManager {
     @NotNull
-    public static CountDownLatch connect(String port) {
+    public static LogLevel LOG_LEVEL = LogLevel.INFO;
+
+    public static LinkDecoder ENCODER = new LinkDecoder() {
+        @Override
+        public String unpack(String packedLine) {
+            return packedLine;
+        }
+    };
+
+    public static final String LOG_VIEWER = "log viewer";
+    private final CommandQueue commandQueue = new CommandQueue(this);
+
+    private LinkConnector connector;
+
+    @NotNull
+    public CountDownLatch connect(String port) {
         final CountDownLatch connected = new CountDownLatch(1);
         startAndConnect(port, new ConnectionStateListener() {
             @Override
@@ -40,11 +57,11 @@ public class LinkManager {
         return connected;
     }
 
-    public static void execute(Runnable runnable) {
+    public void execute(Runnable runnable) {
         COMMUNICATION_EXECUTOR.execute(runnable);
     }
 
-    public static Future submit(Runnable runnable) {
+    public Future submit(Runnable runnable) {
         return COMMUNICATION_EXECUTOR.submit(runnable);
     }
 
@@ -54,6 +71,19 @@ public class LinkManager {
         for (int i = 0; i < ports.length; i++)
             result[i] = ports[i].getSystemPortName();
         return result;
+    }
+
+    public BinaryProtocol getCurrentStreamState() {
+        Objects.requireNonNull(connector, "connector");
+        return connector.getBinaryProtocol();
+    }
+
+    public BinaryProtocolState getBinaryProtocolState() {
+        return connector.getBinaryProtocolState();
+    }
+
+    public CommandQueue getCommandQueue() {
+        return commandQueue;
     }
 
     public enum LogLevel {
@@ -66,22 +96,12 @@ public class LinkManager {
         }
     }
 
-    @NotNull
-    public static LogLevel LOG_LEVEL = LogLevel.INFO;
-
-    public static LinkDecoder ENCODER = new LinkDecoder() {
-        @Override
-        public String unpack(String packedLine) {
-            return packedLine;
-        }
-    };
-
     /**
      * Threading of the whole input/output does not look healthy at all!
      *
      * @see #COMMUNICATION_EXECUTOR
      */
-    public final static Executor TCP_READ_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
+    public final Executor TCP_READ_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
         @Override
         public Thread newThread(@NotNull Runnable r) {
             Thread t = new Thread(r);
@@ -90,17 +110,15 @@ public class LinkManager {
             return t;
         }
     });
-    public static final String LOG_VIEWER = "log viewer";
-    public static final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
+    public final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
     /**
      * All request/responses to underlying controller are happening on this single-threaded executor in a FIFO manner
      * @see #TCP_READ_EXECUTOR
      */
-    public static final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
+    public final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
             COMMUNICATION_QUEUE,
             new NamedThreadFactory("communication executor"));
-    private static Thread COMMUNICATION_THREAD;
 
     static {
 /*
@@ -127,7 +145,7 @@ public class LinkManager {
 //            throw new IllegalStateException("Communication on wrong thread");
     }
 
-    public static EngineState engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
+    private EngineState engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
         @Override
         public void beforeLine(String fullLine) {
             FileLog.MAIN.logLine(fullLine);
@@ -135,34 +153,36 @@ public class LinkManager {
         }
     });
 
-    public static LinkConnector connector;
+    public EngineState getEngineState() {
+        return engineState;
+    }
 
     /**
      * This flag controls if mock controls are needed
      */
     public static boolean isSimulationMode;
 
-    public static void startAndConnect(String port, ConnectionStateListener stateListener) {
+    public void startAndConnect(String port, ConnectionStateListener stateListener) {
         Objects.requireNonNull(port, "port");
         start(port);
         connector.connectAndReadConfiguration(stateListener);
     }
 
-    public static void start(String port) {
+    public void start(String port) {
         Objects.requireNonNull(port, "port");
         FileLog.MAIN.logLine("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
             connector = LinkConnector.VOID;
         } else if (TcpConnector.isTcpPort(port)) {
-            connector = new TcpConnector(port);
+            connector = new TcpConnector(this, port);
             isSimulationMode = true;
         } else {
-            connector = new SerialConnector(port);
+            connector = new SerialConnector(this, port);
         }
     }
 
-    public static void setConnector(LinkConnector connector) {
-        LinkManager.connector = connector;
+    public void setConnector(LinkConnector connector) {
+        this.connector = connector;
     }
 
     public static boolean isLogViewerMode(String port) {
@@ -170,17 +190,17 @@ public class LinkManager {
         return port.equals(LOG_VIEWER);
     }
 
-    public static boolean isLogViewer() {
+    public boolean isLogViewer() {
         return connector == LinkConnector.VOID;
     }
 
-    public static void send(String command, boolean fireEvent) throws InterruptedException {
-        if (connector == null)
+    public void send(String command, boolean fireEvent) throws InterruptedException {
+        if (this.connector == null)
             throw new NullPointerException("connector");
-        connector.send(command, fireEvent);
+        this.connector.send(command, fireEvent);
     }
 
-    public static void restart() {
+    public void restart() {
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
         connector.restart();
     }

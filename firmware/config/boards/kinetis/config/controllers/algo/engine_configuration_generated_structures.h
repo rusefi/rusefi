@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri Jun 19 09:31:15 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jul 01 01:01:17 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -197,7 +197,7 @@ struct gppwm_channel {
 	/**
 	 * offset 7
 	 */
-	uint8_t pad;
+	uint8_t alignmentFill_map;
 	/**
 	 * offset 8
 	 */
@@ -238,7 +238,7 @@ struct air_pressure_sensor_config_s {
 	/**
 	 * offset 13
 	 */
-	uint8_t align[3];
+	uint8_t alignmentFill[3];
 	/** total size 16*/
 };
 
@@ -331,7 +331,7 @@ struct oil_pressure_config_s {
 	/**
 	 * offset 1
 	 */
-	uint8_t align[3];
+	uint8_t alignmentFill[3];
 	/**
 	 * offset 4
 	 */
@@ -554,7 +554,7 @@ struct afr_sensor_s {
 	/**
 	 * offset 1
 	 */
-	uint8_t alignAf[3];
+	uint8_t alignmentFill_afr[3];
 	/**
 	 * offset 4
 	 */
@@ -688,6 +688,7 @@ struct engine_configuration_s {
 	offset 76 bit 12 */
 	bool etb_use_two_wires : 1;
 	/**
+	 * Subaru style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 	offset 76 bit 13 */
 	bool isDoubleSolenoidIdle : 1;
 	/**
@@ -1439,7 +1440,7 @@ struct engine_configuration_s {
 	offset 744 bit 21 */
 	bool coastingFuelCutEnabled : 1;
 	/**
-	 * This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars.
+	 * This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars. Used in Auto-PID Idle mode.
 	offset 744 bit 22 */
 	bool useIacTableForCoasting : 1;
 	/**
@@ -2191,7 +2192,7 @@ struct engine_configuration_s {
 	 */
 	uint32_t engineChartSize;
 	/**
-	 * Relative to the target idle RPM
+	 * Relative to the target idle RPM - this limit is coupled with useIacTableForCoasting and iacCoasting parameters
 	 * offset 1484
 	 */
 	int16_t idlePidRpmUpperLimit;
@@ -2707,15 +2708,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 2420
 	 */
-	float autoTuneCltThreshold;
+	float unused244_1;
 	/**
 	 * offset 2424
 	 */
-	float autoTuneTpsRocThreshold;
+	float unused244_2;
 	/**
 	 * offset 2428
 	 */
-	float autoTuneTpsQuietPeriod;
+	float unused244_3;
 	/**
 	 * offset 2432
 	 */
@@ -3119,15 +3120,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 4016
 	 */
-	uint8_t unusuedvref[4];
+	uint8_t unusedvref[4];
 	/**
 	 * offset 4020
 	 */
-	uint8_t unusuedsw[4];
+	uint8_t unusedsw[4];
 	/**
 	 * offset 4024
 	 */
-	int alFIn[3];
+	int unused_alFIn[3];
 	/**
 	 * Trigger comparator center point voltage
 	 * offset 4036
@@ -3521,4 +3522,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kineris_gen_config.bat integration/rusefi_config.txt Fri Jun 19 09:31:15 EDT 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jul 01 01:01:17 UTC 2020

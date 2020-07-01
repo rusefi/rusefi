@@ -8,8 +8,11 @@ import com.rusefi.util.SystemOut;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -40,6 +43,8 @@ public class ConfigDefinition {
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     private static final String KEY_FIRING = "-firing_order";
     public static final String KEY_PREPEND = "-prepend";
+    public static final String KEY_SIGNATURE = "-signature";
+    public static final String KEY_CACHE = "-cache";
     private static final String KEY_SKIP = "-skip";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     public static boolean needZeroInit = true;
@@ -86,7 +91,16 @@ public class ConfigDefinition {
         List<String> prependFiles = new ArrayList<>();
         String skipRebuildFile = null;
         String romRaiderInputFile = null;
+        String firingEnumFileName = null;
+        String cachePath = null;
         CHeaderConsumer.withC_Defines = true;
+
+        // used to update .ini files
+        List<String> inputAllFiles = new ArrayList<>();
+        // used to update other files
+        List<String> inputFiles = new ArrayList<>();
+        // disable the lazy checks because we use timestamps to detect changes
+        LazyFile.setLazyFileEnabled(false);
 
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
@@ -94,6 +108,7 @@ public class ConfigDefinition {
                 ConfigDefinition.TOOL = args[i + 1];
             } else if (key.equals(KEY_DEFINITION)) {
                 definitionInputFile = args[i + 1];
+                inputFiles.add(definitionInputFile);
             } else if (key.equals(KEY_TS_DESTINATION)) {
                 tsPath = args[i + 1];
             } else if (key.equals(KEY_C_DESTINATION)) {
@@ -115,23 +130,50 @@ public class ConfigDefinition {
             } else if (key.equals(KEY_JAVA_DESTINATION)) {
                 javaDestinationFileName = args[i + 1];
             } else if (key.equals(KEY_FIRING)) {
-                String firingEnumFileName = args[i + 1];
-                SystemOut.println("Reading firing from " + firingEnumFileName);
-                VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
+                firingEnumFileName = args[i + 1];
+                inputFiles.add(firingEnumFileName);
             } else if (key.equals(KEY_ROMRAIDER_DESTINATION)) {
                 romRaiderDestination = args[i + 1];
             } else if (key.equals(KEY_PREPEND)) {
                 prependFiles.add(args[i + 1]);
-            } else if (key.equals(KEY_SKIP)) {
+                inputFiles.add(args[i + 1]);
+            } else if (key.equals(KEY_SIGNATURE)) {
+                prependFiles.add(args[i + 1]);
+                // don't add this file to the 'inputFiles'
+            } else if (key.equals(KEY_CACHE)) {
+                cachePath = args[i + 1];
+            }
+            else if (key.equals(KEY_SKIP)) {
                 // is this now not needed in light if LazyFile surving the same goal of not changing output unless needed?
                 skipRebuildFile = args[i + 1];
             } else if (key.equals("-ts_output_name")) {
                 TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
             } else if (key.equals(KEY_ROM_INPUT)) {
-                romRaiderInputFile = args[i + 1];
+                String inputFilePath = args[i + 1];
+                romRaiderInputFile  = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
+                inputFiles.add(romRaiderInputFile);
             }
         }
 
+        inputAllFiles = new ArrayList<>(inputFiles);
+        boolean needToUpdateTsFiles = false;
+        if (tsPath != null) {
+            inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
+            SystemOut.println("Check the input/output TS files:");
+            needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputAllFiles, cachePath);
+        }
+        SystemOut.println("Check the input/output other files:");
+        boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, cachePath);
+        if (!needToUpdateTsFiles && !needToUpdateOtherFiles)
+        {
+            SystemOut.println("All output files are up-to-date, nothing to do here!");
+            return;
+        }
+
+        if (firingEnumFileName != null) {
+            SystemOut.println("Reading firing from " + firingEnumFileName);
+            VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
+        }
         MESSAGE = getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
         SystemOut.println("Reading definition from " + definitionInputFile);
@@ -153,23 +195,25 @@ public class ConfigDefinition {
         ReaderState state = new ReaderState();
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
-        if (destCHeaderFileName != null) {
-            destinations.add(new CHeaderConsumer(destCHeaderFileName));
-        }
-        if (tsPath != null) {
+        if (tsPath != null && needToUpdateTsFiles) {
             CharArrayWriter tsWriter = new CharArrayWriter();
             destinations.add(new TSProjectConsumer(tsWriter, tsPath, state));
         }
-        if (javaDestinationFileName != null) {
-            destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
-        }
+        if (needToUpdateOtherFiles) {
+            if (destCHeaderFileName != null) {
+                destinations.add(new CHeaderConsumer(destCHeaderFileName));
+            }
+            if (javaDestinationFileName != null) {
+                destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
+            }
 
-        if (destCFsioConstantsFileName != null || destCFsioGettersFileName != null) {
-            destinations.add(new FileFsioSettingsConsumer(state,
-                    destCFsioConstantsFileName,
-                    destCFsioGettersFileName,
-                    namesCFileName,
-                    stringsCFileName));
+            if (destCFsioConstantsFileName != null || destCFsioGettersFileName != null) {
+                destinations.add(new FileFsioSettingsConsumer(state,
+                        destCFsioConstantsFileName,
+                        destCFsioGettersFileName,
+                        namesCFileName,
+                        stringsCFileName));
+            }
         }
 
         if (destinations.isEmpty())
@@ -178,12 +222,11 @@ public class ConfigDefinition {
 
 
 
-        if (destCDefinesFileName != null)
+        if (destCDefinesFileName != null && needToUpdateOtherFiles)
             VariableRegistry.INSTANCE.writeDefinesToFile(destCDefinesFileName);
 
-        if (romRaiderDestination != null && romRaiderInputFile != null) {
-            String inputFileName = romRaiderInputFile + File.separator + ROM_RAIDER_XML_TEMPLATE;
-            processTextTemplate(inputFileName, romRaiderDestination);
+        if (romRaiderDestination != null && romRaiderInputFile != null && needToUpdateOtherFiles) {
+            processTextTemplate(romRaiderInputFile, romRaiderDestination);
         }
         if (skipRebuildFile != null) {
             SystemOut.println("Writing " + currentMD5 + " to " + skipRebuildFile);
@@ -191,6 +234,8 @@ public class ConfigDefinition {
             writer.write(currentMD5);
             writer.close();
         }
+
+        saveCachedInputFiles(inputAllFiles, cachePath);
     }
 
     private static boolean needToSkipRebuild(String skipRebuildFile, String currentMD5) throws IOException {
@@ -319,5 +364,55 @@ public class ConfigDefinition {
             // For specifying wrong message digest algorithms
             throw new RuntimeException(e);
         }
+    }
+
+    private static boolean checkIfOutputFilesAreOutdated(List<String> inputFiles, String cachePath) {
+        if (cachePath == null)
+            return true;
+        // find if any input file was changed from the cached version
+        for (String iFile : inputFiles) {
+            File newFile = new File(iFile);
+            File cachedFile = new File(getCachedInputFile(newFile.getName(), cachePath));
+            //boolean isEqual = FileUtils.contentEquals(newFile, cachedFile);
+            try {
+                byte[] f1 = Files.readAllBytes(newFile.toPath());
+                byte[] f2 = Files.readAllBytes(cachedFile.toPath());
+                boolean isEqual = Arrays.equals(f1, f2);
+                if (!isEqual) {
+                    SystemOut.println("* the file " + iFile + " is changed!");
+                    return true;
+                }
+            } catch(java.io.IOException e) {
+                SystemOut.println("* cannot validate the file " + iFile + ", so assuming it's changed.");
+                return true;
+            }
+        }
+        SystemOut.println("* all the files are up-to-date!");
+        return false;
+    }
+
+    private static boolean saveCachedInputFiles(List<String> inputFiles, String cachePath) throws IOException {
+        if (cachePath == null) {
+            SystemOut.println("* cache storage is disabled.");
+            return false;
+        }
+        // copy all input files to the cache
+        for (String iFile : inputFiles) {
+            File newFile = new File(iFile);
+            File cachedFile = new File(getCachedInputFile(newFile.getName(), cachePath));
+            cachedFile.mkdirs();
+            try {
+                Files.copy(newFile.toPath(), cachedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch(java.io.IOException e) {
+                SystemOut.println("* cannot store the cached file for " + iFile);
+                throw e;
+            }
+        }
+        SystemOut.println("* input files copied to the cached folder");
+        return true;
+    }
+
+    private static String getCachedInputFile(String inputFile, String cachePath) {
+        return cachePath + File.separator + inputFile;
     }
 }

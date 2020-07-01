@@ -1,12 +1,12 @@
 package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.tracing.Entry;
 import com.rusefi.tracing.JsonOutput;
 import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.RpmModel;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,8 +24,10 @@ import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
 public class BenchTestPane {
     private final JPanel content = new JPanel(new GridLayout(2, 5));
+    private final UIContext uiContext;
 
-    public BenchTestPane() {
+    public BenchTestPane(UIContext uiContext) {
+        this.uiContext = uiContext;
         content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         content.add(grabPerformanceTrace());
@@ -37,13 +39,13 @@ public class BenchTestPane {
         content.add(createMILTest());
         content.add(createIdleTest());
         content.add(createDizzyTest());
-        content.add(new CommandControl("Reboot", "", "Reboot") {
+        content.add(new CommandControl(uiContext, "Reboot", "", "Reboot") {
             @Override
             protected String getCommand() {
                 return Fields.CMD_REBOOT;
             }
         }.getContent());
-        content.add(new CommandControl("Reboot to DFU", "", "Reboot to DFU") {
+        content.add(new CommandControl(uiContext,"Reboot to DFU", "", "Reboot to DFU") {
             @Override
             protected String getCommand() {
                 return Fields.CMD_REBOOT_DFU;
@@ -57,7 +59,7 @@ public class BenchTestPane {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BinaryProtocol bp = BinaryProtocolHolder.INSTANCE.getCurrentStreamState();
+                BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
                 bp.executeCommand(new byte[]{Fields.TS_PERF_TRACE_BEGIN}, "begin trace");
 
                 try {
@@ -83,7 +85,7 @@ public class BenchTestPane {
     }
 
     private Component createMILTest() {
-        CommandControl panel = new CommandControl("MIL", "check_engine.jpg", TEST) {
+        CommandControl panel = new CommandControl(uiContext,"MIL", "check_engine.jpg", TEST) {
             @NotNull
             protected String getCommand() {
                 return "milbench";
@@ -93,7 +95,7 @@ public class BenchTestPane {
     }
 
     private Component createIdleTest() {
-        CommandControl panel = new CommandControl("Idle Valve", "idle_valve.png", TEST) {
+        CommandControl panel = new CommandControl(uiContext,"Idle Valve", "idle_valve.png", TEST) {
             @NotNull
             protected String getCommand() {
                 return "idlebench";
@@ -103,28 +105,28 @@ public class BenchTestPane {
     }
 
     private Component createDizzyTest() {
-        CommandControl panel = new FixedCommandControl("Dizzy", "dizzy.jpg", TEST, "dizzybench");
+        CommandControl panel = new FixedCommandControl(uiContext, "Dizzy", "dizzy.jpg", TEST, "dizzybench");
         return panel.getContent();
     }
 
     private Component createFanTest() {
-        CommandControl panel = new FixedCommandControl("Radiator Fan", "radiator_fan.jpg", TEST, "fanbench");
+        CommandControl panel = new FixedCommandControl(uiContext, "Radiator Fan", "radiator_fan.jpg", TEST, "fanbench");
         return panel.getContent();
     }
 
     private Component createAcRelayTest() {
-        CommandControl panel = new FixedCommandControl("A/C Compressor Relay", ".jpg", TEST, "acrelaybench");
+        CommandControl panel = new FixedCommandControl(uiContext, "A/C Compressor Relay", ".jpg", TEST, "acrelaybench");
         return panel.getContent();
     }
 
     private Component createFuelPumpTest() {
-        CommandControl panel = new FixedCommandControl("Fuel Pump", "fuel_pump.jpg", TEST, "fuelpumpbench");
+        CommandControl panel = new FixedCommandControl(uiContext, "Fuel Pump", "fuel_pump.jpg", TEST, "fuelpumpbench");
         return panel.getContent();
     }
 
     private Component createSparkTest() {
         final JComboBox<Integer> indexes = createIndexCombo();
-        CommandControl panel = new CommandControl("Spark #", "spark.jpg", TEST, indexes) {
+        CommandControl panel = new CommandControl(uiContext,"Spark #", "spark.jpg", TEST, indexes) {
             @Override
             protected String getCommand() {
                 return "sparkbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";
@@ -135,7 +137,7 @@ public class BenchTestPane {
 
     private Component createInjectorTest() {
         final JComboBox<Integer> indexes = createIndexCombo();
-        CommandControl panel = new CommandControl("Injector #", "injector.png", TEST, indexes) {
+        CommandControl panel = new CommandControl(uiContext,"Injector #", "injector.png", TEST, indexes) {
             @Override
             protected String getCommand() {
                 return "fuelbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";

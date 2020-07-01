@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
@@ -10,7 +11,6 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
-import com.rusefi.sensor_logs.SensorLogger;
 import com.rusefi.ui.*;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
@@ -28,6 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.rusEFIVersion.CONSOLE_VERSION;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
@@ -43,9 +44,11 @@ public class ConsoleUI {
 
     static Frame staticFrame;
 
-    private final TabbedPanel tabbedPane = new TabbedPanel();
+    private final TabbedPanel tabbedPane;
 
-    private final MainFrame mainFrame = new MainFrame(this, tabbedPane);
+    private final MainFrame mainFrame;
+
+    public final UIContext uiContext = new UIContext();
 
     /**
      * We can listen to tab activation event if we so desire
@@ -57,8 +60,11 @@ public class ConsoleUI {
     }
 
     public ConsoleUI(String port) {
+        tabbedPane = new TabbedPanel(uiContext);
         this.port = port;
+        mainFrame = new MainFrame(this, tabbedPane);
         ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
+        setFrameIcon(ConsoleUI.staticFrame);
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
 
         FileLog.MAIN.logLine("Hardware: " + FirmwareFlasher.getHardwareKind());
@@ -66,40 +72,41 @@ public class ConsoleUI {
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
-        LinkManager.start(port);
+        LinkManager linkManager = uiContext.getLinkManager();
+        linkManager.start(port);
 
-        engineSnifferPanel = new EngineSnifferPanel(getConfig().getRoot().getChild("digital_sniffer"));
+        engineSnifferPanel = new EngineSnifferPanel(uiContext, getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
-            engineSnifferPanel.setOutpinListener(LinkManager.engineState);
+            engineSnifferPanel.setOutpinListener(uiContext.getLinkManager().getEngineState());
 
         if (LinkManager.isLogViewerMode(port))
-            tabbedPane.addTab("Log Viewer", new LogViewer(engineSnifferPanel));
+            tabbedPane.addTab("Log Viewer", new LogViewer(uiContext, engineSnifferPanel));
 
         new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
             FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
-            LinkManager.restart();
+            linkManager.restart();
         }).start();
 
-        GaugesPanel.DetachedRepository.INSTANCE.init(getConfig().getRoot().getChild("detached"));
-        GaugesPanel.DetachedRepository.INSTANCE.load();
-        if (!LinkManager.isLogViewer())
-            tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges"), tabbedPane.paneSettings).getContent());
+        uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));
+        uiContext.DetachedRepositoryINSTANCE.load();
+        if (!linkManager.isLogViewer())
+            tabbedPane.addTab("Gauges", new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges"), tabbedPane.paneSettings).getContent());
 
-        if (!LinkManager.isLogViewer()) {
-            MessagesPane messagesPane = new MessagesPane(getConfig().getRoot().getChild("messages"));
+        if (!linkManager.isLogViewer()) {
+            MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
             tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
         }
-        if (!LinkManager.isLogViewer()) {
-            tabbedPane.addTab("Bench Test", new BenchTestPane().getContent());
+        if (!linkManager.isLogViewer()) {
+            tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext).getContent());
             if (tabbedPane.paneSettings.showEtbPane)
-                tabbedPane.addTab("ETB", new ETBPane().getContent());
-            tabbedPane.addTab("Presets", new PresetsPane().getContent());
+                tabbedPane.addTab("ETB", new ETBPane(uiContext).getContent());
+            tabbedPane.addTab("Presets", new PresetsPane(uiContext).getContent());
         }
 
         tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
 
-        if (!LinkManager.isLogViewer()) {
-            SensorSnifferPane sensorSniffer = new SensorSnifferPane(getConfig().getRoot().getChild("sensor_sniffer"));
+        if (!linkManager.isLogViewer()) {
+            SensorSnifferPane sensorSniffer = new SensorSnifferPane(uiContext, getConfig().getRoot().getChild("sensor_sniffer"));
             tabbedPaneAdd("Sensor Sniffer", sensorSniffer.getPanel(), sensorSniffer.getTabSelectedListener());
         }
 
@@ -112,31 +119,31 @@ public class ConsoleUI {
             tabbedPane.addTab("ECU stimulation", stimulator.getPanel());
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-        if (!LinkManager.isLogViewer())
-            tabbedPane.addTab("Table Editor", tabbedPane.tableEditor);
+//        if (!LinkManager.isLogViewer())
+//            tabbedPane.addTab("Table Editor", tabbedPane.romEditorPane);
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
-        if (!LinkManager.isLogViewer())
+        if (!linkManager.isLogViewer())
             tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
-        if (!LinkManager.isLogViewer()) {
-            tabbedPane.addTab("Formulas/Live Data", new FormulasPane().getContent());
-            tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane().getContent());
+        if (!linkManager.isLogViewer()) {
+            tabbedPane.addTab("Formulas/Live Data", new FormulasPane(uiContext).getContent());
+            tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
         }
 
-        if (!LinkManager.isLogViewer() && false) // todo: fix it & better name?
+        if (!linkManager.isLogViewer() && false) // todo: fix it & better name?
             tabbedPane.addTab("Logs Manager", tabbedPane.logsManager.getContent());
         if (tabbedPane.paneSettings.showFuelTunePane)
             tabbedPane.addTab("Fuel Tune", tabbedPane.fuelTunePane.getContent());
 
 
-        if (!LinkManager.isLogViewer()) {
+        if (!linkManager.isLogViewer()) {
             if (tabbedPane.paneSettings.showTriggerShapePane)
-                tabbedPane.addTab("Trigger Shape", new AverageAnglePanel().getPanel());
+                tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
         }
 
-        tabbedPane.addTab("rusEFI Online", new OnlineTab().getContent());
+        tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 
-        SensorLogger.init();
+        uiContext.sensorLogger.init();
 
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
@@ -158,7 +165,7 @@ public class ConsoleUI {
             }
         });
 
-        StartupFrame.setAppIcon(mainFrame.getFrame().getFrame());
+        AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
         mainFrame.getFrame().showFrame(tabbedPane.tabbedPane);
     }
 

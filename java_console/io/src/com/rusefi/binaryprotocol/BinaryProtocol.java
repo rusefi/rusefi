@@ -45,7 +45,6 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  *
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
- * @see BinaryProtocolHolder
  */
 public class BinaryProtocol implements BinaryProtocolCommands {
 
@@ -62,15 +61,16 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         FileLog.MAIN.logLine(USE_PLAIN_PROTOCOL_PROPERTY + ": " + PLAIN_PROTOCOL);
     }
 
+    private final LinkManager linkManager;
     private final Logger logger;
     private final IoStream stream;
     private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
 
+    private BinaryProtocolState state = new BinaryProtocolState();
+
     // todo: this ioLock needs better documentation!
     private final Object ioLock = new Object();
-    private final Object imageLock = new Object();
-    private ConfigurationImage controller;
 
     private static final int COMPOSITE_OFF_RPM = 300;
 
@@ -94,11 +94,15 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public boolean isClosed;
-    /**
-     * Snapshot of current gauges status
-     * @see Fields#TS_OUTPUT_COMMAND
-     */
-    public byte[] currentOutputs;
+
+    public byte[] getCurrentOutputs() {
+        return state.getCurrentOutputs();
+    }
+
+    public void setCurrentOutputs(byte[] currentOutputs) {
+        state.setCurrentOutputs(currentOutputs);
+    }
+
     private SensorCentral.SensorListener rpmListener = value -> {
         if (value <= COMPOSITE_OFF_RPM) {
             needCompositeLogger = true;
@@ -111,7 +115,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     private final Thread hook = new Thread(() -> closeComposites());
 
-    protected BinaryProtocol(final Logger logger, IoStream stream) {
+    public BinaryProtocol(LinkManager linkManager, final Logger logger, IoStream stream) {
+        this.linkManager = linkManager;
         this.logger = logger;
         this.stream = stream;
 
@@ -149,7 +154,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(BinaryProtocol.class, "Sending [" + command + "]");
         }
 
-        Future f = LinkManager.submit(new Runnable() {
+        Future f = linkManager.submit(new Runnable() {
             @Override
             public void run() {
                 sendTextCommand(command);
@@ -172,7 +177,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         /**
          * this here to make CommandQueue happy
          */
-        CommandQueue.getInstance().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
+        linkManager.getCommandQueue().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
     /**
@@ -192,16 +197,16 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     private void startTextPullThread(final DataListener listener) {
-        if (!LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
-            System.out.println("Current queue: " + LinkManager.COMMUNICATION_QUEUE.size());
+        if (!linkManager.COMMUNICATION_QUEUE.isEmpty()) {
+            System.out.println("Current queue: " + linkManager.COMMUNICATION_QUEUE.size());
         }
         Runnable textPull = new Runnable() {
             @Override
             public void run() {
                 while (!isClosed) {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
-                    if (LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
-                        LinkManager.submit(new Runnable() {
+                    if (linkManager.COMMUNICATION_QUEUE.isEmpty()) {
+                        linkManager.submit(new Runnable() {
                             @Override
                             public void run() {
                                 if (requestOutputChannels())
@@ -466,20 +471,14 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public void setController(ConfigurationImage controller) {
-        synchronized (imageLock) {
-            this.controller = controller.clone();
-        }
+        state.setController(controller);
     }
 
     /**
      * Configuration as it is in the controller to the best of our knowledge
      */
     public ConfigurationImage getControllerConfiguration() {
-        synchronized (imageLock) {
-            if (controller == null)
-                return null;
-            return controller.clone();
-        }
+        return state.getControllerConfiguration();
     }
 
     private void sendPacket(byte[] command) throws IOException {
@@ -560,7 +559,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != RESPONSE_OK)
             return false;
 
-        currentOutputs = response;
+        state.setCurrentOutputs(response);
 
         for (Sensor sensor : Sensor.values()) {
             if (sensor.getType() == null) {
@@ -602,8 +601,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public void setRange(byte[] src, int scrPos, int offset, int count) {
-        synchronized (imageLock) {
-            System.arraycopy(src, scrPos, controller.getContent(), offset, count);
-        }
+        state.setRange(src, scrPos, offset, count);
+    }
+
+    public BinaryProtocolState getBinaryProtocolState() {
+        return state;
     }
 }

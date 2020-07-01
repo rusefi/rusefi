@@ -21,12 +21,12 @@ public class RpmLabel {
     private final JLabel rpmValue = new JLabel();
     private final JLabel rpmCaption = new JLabel("RPM:");
 
-    public RpmLabel() {
-        this(1);
+    public RpmLabel(UIContext uiContext) {
+        this(uiContext, 1);
     }
 
-    public RpmLabel(int size) {
-        String initialLabel = LinkManager.isLogViewer() ? "LOG" : NO_CONNECTION;
+    public RpmLabel(UIContext uiContext, int size) {
+        String initialLabel = uiContext.getLinkManager().isLogViewer() ? "LOG" : NO_CONNECTION;
         rpmValue.setText(initialLabel);
         rpmValue.setForeground(Color.red);
 

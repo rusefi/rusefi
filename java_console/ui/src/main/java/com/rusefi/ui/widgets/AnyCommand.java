@@ -6,7 +6,9 @@ import com.rusefi.FileLog;
 import com.rusefi.InfixConverter;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.LinkManager;
 import com.rusefi.ui.RecentCommands;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.JTextFieldWithWidth;
 
@@ -30,12 +32,14 @@ public class AnyCommand {
     public static final String KEY = "last_value";
     private static final String DECODE_RPN = "decode_rpn";
 
+    private final UIContext uiContext;
     private final JTextComponent text;
     private JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
     private boolean reentrant;
     private Listener listener;
 
-    private AnyCommand(final JTextComponent text, final Node config, String defaultCommand, final boolean listenToCommands, boolean withCommandCaption) {
+    private AnyCommand(UIContext uiContext, final JTextComponent text, final Node config, String defaultCommand, final boolean listenToCommands, boolean withCommandCaption) {
+        this.uiContext = uiContext;
         this.text = text;
         installCtrlEnterAction();
         text.setText(defaultCommand);
@@ -54,7 +58,7 @@ public class AnyCommand {
         });
         content.add(go);
 
-        CommandQueue.getInstance().addListener(command -> {
+        uiContext.getCommandQueue().addListener(command -> {
             if (listenToCommands && !reentrant)
                 text.setText(command);
         });
@@ -111,7 +115,7 @@ public class AnyCommand {
     private void sendCommand(String rawCommand) {
         if (!isValidInput(rawCommand))
             return;
-        String cmd = prepareCommand(rawCommand);
+        String cmd = prepareCommand(rawCommand, uiContext.getLinkManager());
         if (cmd == null) {
             /**
              * {@link #DECODE_RPN} for example does not send out anything
@@ -122,16 +126,23 @@ public class AnyCommand {
             listener.onSend();
         int timeout = CommandQueue.getTimeout(cmd);
         reentrant = true;
-        CommandQueue.getInstance().write(cmd.toLowerCase(), timeout);
+        uiContext.getCommandQueue().write(cmd.toLowerCase(), timeout);
         reentrant = false;
     }
 
-    public static String prepareCommand(String rawCommand) {
+    public static String prepareCommand(String rawCommand, LinkManager linkManager) {
         try {
             if (rawCommand.startsWith("eval" + " ")) {
-                return prepareEvalCommand(rawCommand);
+                String result = prepareEvalCommand(rawCommand);
+                if (result.equals(rawCommand)) {
+                    // result was not translated
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Not valid expression");
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Please try eval \"2 + 2\"");
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "For RPN use rpn_eval \"2 2 +\"");
+                }
+                return result;
             } else if (rawCommand.toLowerCase().startsWith("stim_check" + " ")) {
-                handleStimulationSelfCheck(rawCommand);
+                handleStimulationSelfCheck(rawCommand, linkManager);
                 return null;
             } else if (rawCommand.toLowerCase().startsWith(DECODE_RPN + " ")) {
                 handleDecodeRpn(rawCommand);
@@ -151,7 +162,7 @@ public class AnyCommand {
      * stim_check 3000 5 30
      * would set RPM to 3000, give it 5 seconds to settle, and test for 30 seconds
      */
-    private static void handleStimulationSelfCheck(String rawCommand) {
+    private static void handleStimulationSelfCheck(String rawCommand, LinkManager linkManager) {
         String[] parts = rawCommand.split(" ", 4);
         if (parts.length != 4) {
             MessagesCentral.getInstance().postMessage(AnyCommand.class, "Invalid command length " + parts);
@@ -175,7 +186,7 @@ public class AnyCommand {
                         return null;
                     }
                 };
-                AutoTest.assertRpmDoesNotJump(rpm, settleTime, durationTime, callback);
+                AutoTest.assertRpmDoesNotJump(rpm, settleTime, durationTime, callback, linkManager.getCommandQueue());
             }
         }).start();
     }
@@ -198,12 +209,16 @@ public class AnyCommand {
         MessagesCentral.getInstance().postMessage(AnyCommand.class, "Human form is \"" + humanForm + "\"");
     }
 
-    private static String prepareEvalCommand(String rawCommand) {
+    public static String prepareEvalCommand(String rawCommand) {
         String[] parts = rawCommand.split(" ", 2);
         if (parts.length != 2)
             return rawCommand; // let's ignore invalid command
 
-        return "rpn_eval" + " " + quote(infix2postfix(unquote(parts[1])));
+        try {
+            return "rpn_eval" + " " + quote(infix2postfix(unquote(parts[1])));
+        } catch (IllegalArgumentException e) {
+            return rawCommand;
+        }
     }
 
     private static String quote(String s) {
@@ -252,14 +267,14 @@ public class AnyCommand {
         void onSend();
     }
 
-    public static AnyCommand createField(Node config, boolean listenToCommands, boolean withCommandCaption) {
-        return createField(config, config.getProperty(KEY), listenToCommands, withCommandCaption);
+    public static AnyCommand createField(UIContext uiContext, Node config, boolean listenToCommands, boolean withCommandCaption) {
+        return createField(uiContext, config, config.getProperty(KEY), listenToCommands, withCommandCaption);
     }
 
-    public static AnyCommand createField(Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
+    public static AnyCommand createField(UIContext uiContext, Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
         final JTextField text = new JTextFieldWithWidth(200);
 
-        final AnyCommand command = new AnyCommand(text, config, defaultCommand, listenToCommands, withCommandCaption);
+        final AnyCommand command = new AnyCommand(uiContext, text, config, defaultCommand, listenToCommands, withCommandCaption);
         text.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -291,7 +306,7 @@ public class AnyCommand {
         return command;
     }
 
-    public static AnyCommand createArea(Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
+    public static AnyCommand createArea(UIContext uiContext, Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
         final JTextArea text = new JTextArea(3, 20) {
             @Override
             public Dimension getPreferredSize() {
@@ -301,6 +316,6 @@ public class AnyCommand {
         };
 //        text.setMax
 
-        return new AnyCommand(text, config, defaultCommand, listenToCommands, withCommandCaption);
+        return new AnyCommand(uiContext, text, config, defaultCommand, listenToCommands, withCommandCaption);
     }
 }

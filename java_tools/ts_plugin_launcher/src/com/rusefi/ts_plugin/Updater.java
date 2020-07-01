@@ -5,10 +5,10 @@ import com.rusefi.ui.storage.PersistentConfiguration;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -61,6 +61,7 @@ public class Updater {
         JButton download = new JButton("Update plugin");
         if (version != null) {
             JButton run = new JButton("Run Version " + version);
+            run.setBackground(new Color(0x90EE90));
             run.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -84,7 +85,7 @@ public class Updater {
                 AutoupdateUtil.ConnectionAndMeta connectionAndMeta;
                 try {
                     connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     return;
                 }
@@ -144,7 +145,7 @@ public class Updater {
 
             startPlugin();
 
-        } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             download.setEnabled(true);
         }
@@ -170,10 +171,8 @@ public class Updater {
         content.removeAll();
         content.add(instance.getContent());
         AutoupdateUtil.trueLayout(content.getParent());
-        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(content);
-        AutoupdateUtil.trueLayout(topFrame);
-        topFrame.pack();
-        AutoupdateUtil.trueLayout(topFrame);
+        Window windowAncestor = SwingUtilities.getWindowAncestor(content);
+        AutoupdateUtil.pack(windowAncestor);
     }
 
     public JPanel getContent() {

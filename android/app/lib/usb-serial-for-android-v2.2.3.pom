@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.mik3y</groupId>
+  <artifactId>usb-serial-for-android</artifactId>
+  <version>v2.2.3</version>
+  <packaging>aar</packaging>
+  <name>mik3y/usb-serial-for-android</name>
+  <description>Android USB host serial driver library for CDC, FTDI, Arduino and other devices.</description>
+  <url>https://github.com/mik3y/usb-serial-for-android</url>
+  <inceptionYear>2013</inceptionYear>
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License v2.1</name>
+      <url>https://api.github.com/licenses/lgpl-2.1</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>mik3y</id>
+      <name>mike w</name>
+      <email></email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git://github.com/mik3y/usb-serial-for-android.git</connection>
+    <developerConnection>scm:git://github.com/mik3y/usb-serial-for-android.git</developerConnection>
+    <url>git://github.com/mik3y/usb-serial-for-android.git</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

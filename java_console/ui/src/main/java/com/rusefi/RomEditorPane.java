@@ -5,7 +5,8 @@ import com.romraider.editor.ecu.ECUEditor;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolCmd;
 import com.opensr5.io.ConfigurationImageFile;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
+import com.rusefi.io.LinkManager;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
@@ -13,10 +14,14 @@ import java.awt.*;
 
 import static com.romraider.editor.ecu.ECUEditorManager.getECUEditor;
 
-public class TableEditorPane extends JPanel {
 
-    public TableEditorPane() {
+public class RomEditorPane extends JPanel {
+/*
+    private final UIContext uiContext;
+
+    public RomEditorPane(UIContext uiContext) {
         super(new BorderLayout());
+        this.uiContext = uiContext;
         UiUtils.showLoadingMessage(this);
     }
 
@@ -32,7 +37,7 @@ public class TableEditorPane extends JPanel {
 
             add(editor.getContent());
 
-            BinaryProtocol instance = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+            BinaryProtocol instance = LinkManager.getCurrentStreamStateStatic();
             if (instance == null)
                 throw new NullPointerException("instance");
             ConfigurationImage image = instance.getControllerConfiguration();
@@ -43,4 +48,6 @@ public class TableEditorPane extends JPanel {
         }
         UiUtils.trueLayout(this);
     }
+*/
+
 }

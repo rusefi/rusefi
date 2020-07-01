@@ -5,6 +5,8 @@ cd ../../../..
 
 pwd
 
+sh gen_signature.sh kin
+
 java \
  -DSystemOut.name=gen_config_kinetis_board \
  -cp ../java_tools/ConfigDefinition.jar \
@@ -20,14 +22,16 @@ java \
  -Drusefi.generator.lazyfile.enabled=true \
  -jar ../java_tools/ConfigDefinition.jar \
  -definition integration/rusefi_config.txt \
+ -cache tunerstudio/cache/kinetis \
  -ts_destination tunerstudio \
- -tool kineris_gen_config.bat \
+ -tool kinetis_gen_config.bat \
  -firing_order controllers/algo/firing_order.h \
  -with_c_defines false \
  -initialize_to_zero false \
  -ts_output_name rusefi_kinetis.ini \
  -c_defines config/boards/kinetis/config/controllers/algo/rusefi_generated.h \
  -c_destination config/boards/kinetis/config/controllers/algo/engine_configuration_generated_structures.h \
+ -signature tunerstudio/signature_kin.txt \
  -prepend config/boards/kinetis/config/rusefi_config_kinetis.txt \
  -prepend config/boards/kinetis/config/tunerstudio/kinetis_prefix.txt
 

@@ -5,9 +5,11 @@ import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.Socket;
 import java.util.Arrays;
 
 /**
@@ -17,9 +19,15 @@ import java.util.Arrays;
 public class TcpIoStream implements IoStream {
     private final InputStream input;
     private final OutputStream output;
+    private final LinkManager linkManager;
     private boolean isClosed;
 
-    public TcpIoStream(InputStream input, OutputStream output) {
+    public TcpIoStream(LinkManager linkManager, Socket socket) throws IOException {
+        this(linkManager, new BufferedInputStream(socket.getInputStream()), socket.getOutputStream());
+    }
+
+    public TcpIoStream(LinkManager linkManager, InputStream input, OutputStream output) {
+        this.linkManager = linkManager;
         if (input == null)
             throw new NullPointerException("input");
         if (output == null)
@@ -46,7 +54,7 @@ public class TcpIoStream implements IoStream {
 
     @Override
     public void setInputListener(final DataListener listener) {
-        LinkManager.TCP_READ_EXECUTOR.execute(new Runnable() {
+        linkManager.TCP_READ_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 Thread.currentThread().setName("TCP connector loop");
