@@ -19,7 +19,7 @@ mv build/rusefi.hex deliver/rusefi_no_asserts.hex
 echo "Release compilation results 1/2"
 echo "TIMESTAMP $(date "+%D %T.%2N")"
 ls -l build
-[ -e deliver/rusefi_no_asserts.hex ] || (echo "FAILED to compile NO ASSERTS version"; exit 1)
+[ -e deliver/rusefi_no_asserts.hex ] || { echo "FAILED to compile NO ASSERTS version"; exit 1; }
 
 sh clean.sh
 echo "TIMESTAMP $(date "+%D %T.%2N")"
@@ -35,6 +35,6 @@ cp build/rusefi.bin deliver/rusefi.bin
 echo Debug compilation results 2/2
 echo "TIMESTAMP $(date "+%D %T.%2N")"
 ls -l build
-[ -e deliver/rusefi.hex ] || (echo "FAILED to compile DEFAULT with DEBUG"; exit 1)
+[ -e deliver/rusefi.hex ] || { echo "FAILED to compile DEFAULT with DEBUG"; exit 1; }
 
 echo "clean_compile_two_versions: Looks good!"
