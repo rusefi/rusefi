@@ -1,3 +1,3 @@
-echo "Entering firmware/clean.bat"
+echo "Entering firmware/clean.sh"
 rm -rf .dep
 rm -rf build
