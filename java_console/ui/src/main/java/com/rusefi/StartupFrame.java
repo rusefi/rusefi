@@ -199,6 +199,7 @@ public class StartupFrame {
         content.add(rightPanel, BorderLayout.EAST);
         frame.add(content);
         frame.pack();
+        setFrameIcon(frame);
         frame.setVisible(true);
         UiUtils.centerWindow(frame);
 
@@ -207,6 +208,12 @@ public class StartupFrame {
         for (Component component : getAllComponents(frame)) {
             component.addKeyListener(hwTestEasterEgg);
         }
+    }
+
+    public static void setFrameIcon(Frame frame) {
+        ImageIcon icon = AutoupdateUtil.loadIcon(LOGO);
+        if (icon != null)
+            frame.setIconImage(icon.getImage());
     }
 
     public static JLabel createLogoLabel() {
