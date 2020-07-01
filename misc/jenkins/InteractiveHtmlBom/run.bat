@@ -1,2 +1,2 @@
 @echo off
-sh.exe run.sh
+sh.exe misc\jenkins\InteractiveHtmlBom\run.sh

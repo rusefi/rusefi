@@ -3,7 +3,7 @@
 echo "Should be executed from project root folder. Will try to upload to $RUSEFI_FTP_SERVER"
 
 # ibom is part of Doxygen job simply in order to reduce workspace HDD usage on my tiny build server
-sh misc/jenkins/InteractiveHtmlBom/run.bat
+sh misc/jenkins/InteractiveHtmlBom/run.sh
 echo "Uploading IBOMs"
 ncftpput -R -v -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" /ibom hardware/ibom/*
 
