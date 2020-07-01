@@ -8,6 +8,7 @@ mkdir deliver
 
 sh clean.sh
 echo "TIMESTAMP $(date "+%D %T.%2N")"
+
 EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default_no_assert\\\" -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE"
 make -j4 DEBUG_LEVEL_OPT='-O2'
 EXTRA_PARAMS=""
@@ -23,7 +24,7 @@ ls -l build
 
 sh clean.sh
 echo "TIMESTAMP $(date "+%D %T.%2N")"
-EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\"default\""
+EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default\\\""
 make -j4
 EXTRA_PARAMS=""
 
