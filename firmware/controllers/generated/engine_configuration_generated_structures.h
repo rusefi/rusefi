@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jun 30 19:19:29 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 01 01:01:09 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -197,7 +197,7 @@ struct gppwm_channel {
 	/**
 	 * offset 7
 	 */
-	uint8_t alignmentFill;
+	uint8_t alignmentFill_map;
 	/**
 	 * offset 8
 	 */
@@ -3522,4 +3522,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jun 30 19:19:29 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 01 01:01:09 UTC 2020

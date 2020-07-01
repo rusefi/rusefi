@@ -304,7 +304,7 @@ struct gppwm_channel
 	uint8_t offBelowDuty;+In on-off mode, turn the output off when the table value is below this duty.;"%", 1, 0, 0, 100, 0
 
 	gppwm_channel_e loadAxis;+Selects the load axis to use for the table.;
-	uint8_t[1] alignmentFill;
+	uint8_t alignmentFill_map;;"unit",      1,     0,    0, 100,     0
 
 	uint8_t[GPPWM_LOAD_COUNT] loadBins;;"load",      1,     0,   0.0,    250,   0
 	uint8_t[GPPWM_RPM_COUNT] rpmBins;;"RPM",  @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0
@@ -324,7 +324,7 @@ float lowValue;kPa value at low volts;"kpa",      1,     0,    -400, 800,     2
 float highValue;kPa value at high volts;"kpa",      1,     0,    -400, 800,     2
 air_pressure_sensor_type_e type;
 adc_channel_e hwChannel;
-uint8_t[3] alignmentFill;
+uint8_t[3] alignmentFill;;"unit",      1,     0,    0, 100,     0
 
 end_struct
 
@@ -349,7 +349,7 @@ end_struct
 
 struct oil_pressure_config_s @brief Oil pressure sensor interpolation
 	adc_channel_e hwChannel;
-	uint8_t[3] alignmentFill;
+	uint8_t[3] alignmentFill;;"unit",      1,     0,    0, 100,     0
 	float v1;;         "volts",    1,    0.0,       0,    10.0,        2
 	float value1;;     "kPa",    1,      0.0,       0,  1000.0,        2
 	float v2;;         "volts",    1,    0.0,       0,    10.0,        2
@@ -557,7 +557,7 @@ float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0, 
 	
 struct afr_sensor_s
 	adc_channel_e hwChannel;
-uint8_t[3] alignmentFill_afr;
+uint8_t[3] alignmentFill_afr;;"unit",      1,     0,    0, 100,     0
 	float v1;;         "volts",    1,    0.0,       0,    10.0,        2
 	float value1;;     "AFR",    1,      0.0,       0,  1000.0,        2
 	float v2;;         "volts",    1,    0.0,       0,    10.0,        2
@@ -1315,7 +1315,6 @@ float[AFTERSTART_HOLD_CURVE_SIZE] afterstartHoldTime;;"Seconds",        1,     0
 float[AFTERSTART_ENRICH_CURVE_SIZE] afterstartEnrich;;"%",              1,     0,      0,    600,   1
 float[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds",      1,     0,      0,    100,   1
 
-
 boost_table_t boostTableOpenLoop;
 uint8_t[8] unused6312;;"units", 1, 0, -20, 100, 0
 uint8_t[BOOST_RPM_COUNT] boostRpmBins;;"RPM",   @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0 
@@ -1636,6 +1635,8 @@ end_struct
 #define ET_MRE_MIATA_NB2_MAF 15
 #define ET_MRE_OLD_TEST_BOARD 30
 #define ET_MRE_NEW_TEST_BOARD 31
+#define ET_MRE_DEFAULTS 60
+
 #define ET_FRANKENSO_MIATA_NA6 41
 #define ET_FRANKENSO_MIATA_NB2 47
 #define ET_FRANKENSO_MIATA_NA6_VAF 57
