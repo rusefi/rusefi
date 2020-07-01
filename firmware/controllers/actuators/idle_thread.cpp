@@ -371,8 +371,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
 		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
-			// todo: print each bit using 'getIdle_state_e' method
-			scheduleMsg(logger, "Idle state %d%s", engine->engineState.idle.idleState,
+			scheduleMsg(logger, "Idle state %s%s", getIdle_state_e(engine->engineState.idle.idleState),
 					(prettyClose ? " pretty close" : ""));
 			idlePid.showPidStatus(logger, "idle");
 		}
@@ -489,12 +488,10 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		prettyClose = absF(iacPosition - engine->engineState.idle.currentIdlePosition) < idlePositionSensitivityThreshold;
 		// The threshold is dependent on IAC type (see initIdleHardware())
 		if (prettyClose) {
-			engine->engineState.idle.idleState = (idle_state_e)(engine->engineState.idle.idleState);
 			return; // value is pretty close, let's leave the poor valve alone
 		}
 
 		engine->engineState.idle.currentIdlePosition = iacPosition;
-		engine->engineState.idle.idleState = (idle_state_e)(engine->engineState.idle.idleState);
 #if ! EFI_UNIT_TEST
 		applyIACposition(engine->engineState.idle.currentIdlePosition);
 #endif /* EFI_UNIT_TEST */
