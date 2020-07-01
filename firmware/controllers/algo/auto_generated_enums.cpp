@@ -950,8 +950,6 @@ case IM_MANUAL:
 }
 const char *getIdle_state_e(idle_state_e value){
 switch(value) {
-case ADJUSTING:
-  return "ADJUSTING";
 case BLIP:
   return "BLIP";
 case Force_4bytes_size_idle_state_e:
@@ -962,8 +960,6 @@ case PID_UPPER:
   return "PID_UPPER";
 case PID_VALUE:
   return "PID_VALUE";
-case PWM_PRETTY_CLOSE:
-  return "PWM_PRETTY_CLOSE";
 case RPM_DEAD_ZONE:
   return "RPM_DEAD_ZONE";
 case TPS_THRESHOLD:
