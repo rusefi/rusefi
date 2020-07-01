@@ -10,7 +10,7 @@ echo "#define SIGNATURE_DATE $date" > tunerstudio/signature_${SHORT_BOARDNAME}.t
 echo "#define SIGNATURE_BOARD ${SHORT_BOARDNAME}" >> tunerstudio/signature_${SHORT_BOARDNAME}.txt
 
 nanosec=$(date +"%N")
-nanosec=${nanosec#0} # numbers starting from 0 can be treated as octal numbers
+nanosec=$((10#$nanosec)) # numbers starting from 0 can be treated as octal numbers
 hash=$(($nanosec % 2147483648))
 echo "#define SIGNATURE_HASH $hash" >> tunerstudio/signature_${SHORT_BOARDNAME}.txt
 
