@@ -11,5 +11,6 @@
     <orderEntry type="module" module-name="models" exported="" />
     <orderEntry type="module" module-name="autoupdate" exported="" />
     <orderEntry type="library" name="annotations" level="project" />
+    <orderEntry type="module" module-name="shared_io" />
   </component>
 </module>
