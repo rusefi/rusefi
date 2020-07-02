@@ -36,7 +36,7 @@ for f in *.ini; do if [[ -f "$f" ]]; then
       retVal=$?
       if [ $retVal -ne 0 ]; then
         echo "Upload failed"
-        exit -1
+        exit 1
       fi
       echo "* upload done!"
     fi

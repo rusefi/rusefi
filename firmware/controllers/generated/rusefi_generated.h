@@ -326,6 +326,7 @@
 #define ET_FRANKENSO_MIATA_NA6 41
 #define ET_FRANKENSO_MIATA_NA6_VAF 57
 #define ET_FRANKENSO_MIATA_NB2 47
+#define ET_MRE_DEFAULTS 60
 #define ET_MRE_MIATA_NA6 12
 #define ET_MRE_MIATA_NB2_MAF 15
 #define ET_MRE_MIATA_NB2_MAP 11
@@ -606,7 +607,7 @@
 #define gpioPinModes7_offset 770
 #define gpioPinModes8_offset 771
 #define gpioPinModes9_offset 772
-#define gppwm1_alignmentFill_offset 4151
+#define gppwm1_alignmentFill_map_offset 4151
 #define gppwm1_dutyIfError_offset 4145
 #define gppwm1_loadAxis_offset 4150
 #define gppwm1_loadBins_offset 4152
@@ -617,7 +618,7 @@
 #define gppwm1_pwmFrequency_offset 4146
 #define gppwm1_rpmBins_offset 4160
 #define gppwm1_table_offset 4168
-#define gppwm2_alignmentFill_offset 4239
+#define gppwm2_alignmentFill_map_offset 4239
 #define gppwm2_dutyIfError_offset 4233
 #define gppwm2_loadAxis_offset 4238
 #define gppwm2_loadBins_offset 4240
@@ -628,7 +629,7 @@
 #define gppwm2_pwmFrequency_offset 4234
 #define gppwm2_rpmBins_offset 4248
 #define gppwm2_table_offset 4256
-#define gppwm3_alignmentFill_offset 4327
+#define gppwm3_alignmentFill_map_offset 4327
 #define gppwm3_dutyIfError_offset 4321
 #define gppwm3_loadAxis_offset 4326
 #define gppwm3_loadBins_offset 4328
@@ -639,7 +640,7 @@
 #define gppwm3_pwmFrequency_offset 4322
 #define gppwm3_rpmBins_offset 4336
 #define gppwm3_table_offset 4344
-#define gppwm4_alignmentFill_offset 4415
+#define gppwm4_alignmentFill_map_offset 4415
 #define gppwm4_dutyIfError_offset 4409
 #define gppwm4_loadAxis_offset 4414
 #define gppwm4_loadBins_offset 4416
@@ -1057,8 +1058,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.06.30
-#define SIGNATURE_HASH 520656958
+#define SIGNATURE_DATE 2020.07.01
+#define SIGNATURE_HASH 129680412
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1318,7 +1319,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.06.30.all.520656958"
+#define TS_SIGNATURE "rusEFI 2020.07.01.all.129680412"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476

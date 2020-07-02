@@ -34,7 +34,7 @@ java -DSystemOut.name=gen_config \
  -signature tunerstudio/signature_all.txt \
  -romraider_destination ../java_console/rusefi.xml
 
-[ $? -eq 0 ] || (echo "ERROR generating"; exit $?)
+[ $? -eq 0 ] || { echo "ERROR generating default"; exit 1; }
 
 if [ -z "${TS_PATH}" ]; then
  echo "TS_PATH not defined"
@@ -48,7 +48,7 @@ for BOARD in "microrusefi mre" "frankenso fra" "prometheus pth" "proteus pro"; d
  BOARD_NAME="${BOARD% *}"
  BOARD_SHORT_NAME="${BOARD#* }"
  sh gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME
- [ $? -eq 0 ] || (echo "ERROR generating $BOARD_NAME $BOARD_SHORT_NAME"; exit $?)
+ [ $? -eq 0 ] || { echo "ERROR generating board $BOARD_NAME $BOARD_SHORT_NAME"; exit 1; }
 done
 
 cd config/boards/kinetis/config

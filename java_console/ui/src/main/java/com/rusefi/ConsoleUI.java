@@ -28,6 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.rusEFIVersion.CONSOLE_VERSION;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
@@ -63,6 +64,7 @@ public class ConsoleUI {
         this.port = port;
         mainFrame = new MainFrame(this, tabbedPane);
         ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
+        setFrameIcon(ConsoleUI.staticFrame);
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
 
         FileLog.MAIN.logLine("Hardware: " + FirmwareFlasher.getHardwareKind());
