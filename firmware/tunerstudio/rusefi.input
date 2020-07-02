@@ -21,7 +21,6 @@
 ;
 ;
 
-
 ; this should stop TS from looking for the CAN ID in the 2nd byte location and allow the page reads to work correctly.
 enable2ndByteCanID = false
 
