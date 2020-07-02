@@ -4,21 +4,17 @@ import com.rusefi.output.*;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
-import com.rusefi.shared.FileUtil;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.net.URI;
+import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.zip.CRC32;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -407,7 +403,7 @@ public class ConfigDefinition {
                 byte[] f1 = Files.readAllBytes(newFile.toPath());
                 byte[] f2;
                 if (cacheZipFile != null) {
-                    f2 = FileUtil.unzipFileContents(cacheZipFile, cachePath + File.separator + iFile);
+                    f2 = unzipFileContents(cacheZipFile, cachePath + File.separator + iFile);
                 } else {
                     String cachedFileName = getCachedInputFileName(newFile.getName(), cachePath);
                     File cachedFile = new File(cachedFileName);
@@ -436,7 +432,7 @@ public class ConfigDefinition {
         }
         // copy all input files to the cache
         if (cacheZipFile != null) {
-            FileUtil.zipAddFiles(cacheZipFile, inputFiles, cachePath);
+            zipAddFiles(cacheZipFile, inputFiles, cachePath);
         } else {
             for (String iFile : inputFiles) {
                 File newFile = new File(iFile);
@@ -470,5 +466,53 @@ public class ConfigDefinition {
         File file = new File(fileName);
         // todo: validate?
         file.delete();
+    }
+
+    private static byte [] unzipFileContents(String zipFileName, String fileName) throws IOException {
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFileName));
+        ZipEntry zipEntry;
+        byte [] data = null;
+        while ((zipEntry = zis.getNextEntry()) != null) {
+            Path zippedName = Paths.get(zipEntry.getName()).normalize();
+            Path searchName = Paths.get(fileName).normalize();
+            if (zippedName.equals(searchName) && zipEntry.getSize() >= 0) {
+                int offset = 0;
+                byte [] tmpData = new byte[(int)zipEntry.getSize()];
+                int bytesLeft = tmpData.length, bytesRead;
+                while (bytesLeft > 0 && (bytesRead = zis.read(tmpData, offset, bytesLeft)) >= 0) {
+                    offset += bytesRead;
+                    bytesLeft -= bytesRead;
+                }
+                if (bytesLeft == 0) {
+                    data = tmpData;
+                } else {
+                    System.out.println("Unzip: error extracting file " + fileName);
+                }
+                break;
+            }
+        }
+        zis.closeEntry();
+        zis.close();
+        System.out.println("Unzip " + zipFileName + ": " + fileName + (data != null ? " extracted!" : " failed!"));
+        return data;
+    }
+
+    private static boolean zipAddFiles(String zipFileName, List<String> fileNames, String zipPath) throws IOException {
+        // requires Java7+
+        Map<String, String> env = new HashMap<>();
+        env.put("create", "true");
+        Path path = Paths.get(zipFileName);
+        URI uri = URI.create("jar:" + path.toUri());
+        FileSystem fs = FileSystems.newFileSystem(uri, env);
+        for (String fileName : fileNames) {
+            String fileNameInZip = zipPath + File.separator + fileName;
+            Path extFile = Paths.get(fileName);
+            Path zippedFile = fs.getPath(fileNameInZip);
+            Files.createDirectories(zippedFile.getParent());
+            //fs.provider().checkAccess(zippedFile, AccessMode.READ);
+            Files.copy(extFile, zippedFile, StandardCopyOption.REPLACE_EXISTING);
+        }
+        fs.close();
+        return true;
     }
 }
