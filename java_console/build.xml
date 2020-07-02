@@ -18,6 +18,7 @@
                 classpath="lib/annotations.jar"
         >
             <src path="autoupdate/src"/>
+            <src path="shared_io/src/main/java"/>
         </javac>
     </target>
 
@@ -47,6 +48,7 @@
             <src path="models/src"/>
             <src path="inifile/src"/>
             <src path="shared_ui/src"/>
+            <src path="shared_io/src/main/java"/>
             <src path="ui/src/main/java"/>
             <src path="ui/src/test/java"/>
             <src path="romraider/src"/>

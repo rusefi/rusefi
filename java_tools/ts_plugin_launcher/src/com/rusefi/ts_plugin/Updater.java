@@ -1,6 +1,7 @@
 package com.rusefi.ts_plugin;
 
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.shared.ConnectionAndMeta;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import org.putgemin.VerticalFlowLayout;
 
@@ -82,9 +83,9 @@ public class Updater {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AutoupdateUtil.ConnectionAndMeta connectionAndMeta;
+                ConnectionAndMeta connectionAndMeta;
                 try {
-                    connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
+                    connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
                 } catch (Exception e) {
                     e.printStackTrace();
                     return;
@@ -138,7 +139,7 @@ public class Updater {
         });
 
         try {
-            AutoupdateUtil.ConnectionAndMeta connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
+            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
 
             AutoupdateUtil.downloadAutoupdateFile(LOCAL_JAR_FILE_NAME, connectionAndMeta,
                     TITLE);

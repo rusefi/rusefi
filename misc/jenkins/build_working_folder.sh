@@ -1,7 +1,7 @@
 #!/bin/sh
 
 FULL_BUNDLE_FILE="$BUNDLE_FULL_NAME.zip"
-UPDATE_BUNDLE_FILE="$BUNDLE_FULL_NAME_autoupdate.zip"
+UPDATE_BUNDLE_FILE="${BUNDLE_FULL_NAME}_autoupdate.zip"
 
 echo "Packaging temp/$FULL_BUNDLE_FILE file"
 
@@ -15,7 +15,7 @@ pwd
 # This working folder name starts with 'temp/'
 echo "$SCRIPT_NAME: Working folder: $FOLDER"
 mkdir $FOLDER
-echo $BUNDLE_FULL_NAME > $FOLDER/bundle_name.ini
+echo $BUNDLE_FULL_NAME > $FOLDER/bundle_name.txt
 
 CONSOLE_FOLDER="$FOLDER/console"
 DRIVERS_FOLDER="$FOLDER/drivers"

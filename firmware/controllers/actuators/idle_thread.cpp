@@ -57,6 +57,8 @@ static Logging *logger;
 
 EXTERN_ENGINE;
 
+static bool prettyClose = false;
+
 static bool shouldResetPid = false;
 // The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.
 // The throttle pedal can be pressed for a long time, making the PID data obsolete (thus the reset is required).
@@ -369,8 +371,8 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
 		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
-			// todo: print each bit using 'getIdle_state_e' method
-			scheduleMsg(logger, "state %d", engine->engineState.idle.idleState);
+			scheduleMsg(logger, "Idle state %s%s", getIdle_state_e(engine->engineState.idle.idleState),
+					(prettyClose ? " pretty close" : ""));
 			idlePid.showPidStatus(logger, "idle");
 		}
 
@@ -483,14 +485,13 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 			}
 		}
 
+		prettyClose = absF(iacPosition - engine->engineState.idle.currentIdlePosition) < idlePositionSensitivityThreshold;
 		// The threshold is dependent on IAC type (see initIdleHardware())
-		if (absF(iacPosition - engine->engineState.idle.currentIdlePosition) < idlePositionSensitivityThreshold) {
-			engine->engineState.idle.idleState = (idle_state_e)(engine->engineState.idle.idleState | PWM_PRETTY_CLOSE);
+		if (prettyClose) {
 			return; // value is pretty close, let's leave the poor valve alone
 		}
 
 		engine->engineState.idle.currentIdlePosition = iacPosition;
-		engine->engineState.idle.idleState = (idle_state_e)(engine->engineState.idle.idleState | ADJUSTING);
 #if ! EFI_UNIT_TEST
 		applyIACposition(engine->engineState.idle.currentIdlePosition);
 #endif /* EFI_UNIT_TEST */
