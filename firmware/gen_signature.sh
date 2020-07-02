@@ -15,4 +15,6 @@ nanosec="1$nanosec"
 hash=$(($nanosec % 2147483648))
 echo "#define SIGNATURE_HASH $hash" >> tunerstudio/signature_${SHORT_BOARDNAME}.txt
 
+echo "#define TS_SIGNATURE \"rusEFI @@SIGNATURE_DATE@@.@@SIGNATURE_BOARD@@.@@SIGNATURE_HASH@@\"" >> tunerstudio/signature_${SHORT_BOARDNAME}.txt
+
 exit 0

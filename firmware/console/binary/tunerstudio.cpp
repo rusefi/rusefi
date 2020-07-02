@@ -87,6 +87,8 @@
 #include "mmc_card.h"
 #include "perf_trace.h"
 
+#include "signature.h"
+
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif /* EFI_SIMULATOR */
@@ -636,7 +638,8 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	scheduleMsg(&tsLogger, "got S/H (queryCommand) mode=%d", mode);
 	printTsStats();
 #endif
-	sr5SendResponse(tsChannel, mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
+	const char *signature = getTsSignature();
+	sr5SendResponse(tsChannel, mode, (const uint8_t *)signature, strlen(signature) + 1);
 }
 
 /**
