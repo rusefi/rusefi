@@ -4,7 +4,6 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +17,7 @@ import java.util.Objects;
 
 @XmlRootElement
 public class Msq {
-    public static final String outputXmlFileName = PersistentConfiguration.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
+    public static final String outputXmlFileName = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
 
     public List<Page> page = new ArrayList<>();
 

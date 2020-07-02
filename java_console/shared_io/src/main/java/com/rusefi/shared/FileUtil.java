@@ -13,6 +13,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class FileUtil {
+    public static final String RUSEFI_SETTINGS_FOLDER = System.getProperty("user.home") + File.separator + ".rusEFI";
+
     public static void unzip(String zipFileName, String destPath) throws IOException {
         File destDir = new File(destPath);
         byte[] buffer = new byte[1024];
