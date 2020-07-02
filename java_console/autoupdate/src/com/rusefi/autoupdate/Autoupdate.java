@@ -1,5 +1,6 @@
 package com.rusefi.autoupdate;
 
+import com.rusefi.shared.ConnectionAndMeta;
 import com.rusefi.ui.util.FrameHelper;
 
 import javax.swing.*;
@@ -8,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URLClassLoader;
 import java.util.Date;
@@ -67,7 +67,7 @@ public class Autoupdate {
     private static void handleBundle(String bundleFullName, UpdateMode mode) {
         try {
             String zipFileName = bundleFullName + "_autoupdate" + ".zip";
-            AutoupdateUtil.ConnectionAndMeta connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(zipFileName).invoke();
+            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke();
             System.out.println("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
 
             if (AutoupdateUtil.hasExistingFile(zipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
