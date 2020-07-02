@@ -27,7 +27,7 @@ public class VariableRegistry  {
     private final Map<String, String> cAllDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, String> javaDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-    private VariableRegistry() {
+    public VariableRegistry() {
     }
 
     /**

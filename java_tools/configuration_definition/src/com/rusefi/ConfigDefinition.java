@@ -45,6 +45,7 @@ public class ConfigDefinition {
     private static final String KEY_FIRING = "-firing_order";
     public static final String KEY_PREPEND = "-prepend";
     public static final String KEY_SIGNATURE = "-signature";
+    public static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
     public static final String KEY_CACHE = "-cache";
     public static final String KEY_CACHE_ZIP_FILE = "-cache_zip_file";
     private static final String KEY_SKIP = "-skip";
@@ -96,6 +97,8 @@ public class ConfigDefinition {
         String firingEnumFileName = null;
         String cachePath = null;
         String cacheZipFile = null;
+        String signatureDestination = null;
+        String signaturePrependFile = null;
         CHeaderConsumer.withC_Defines = true;
 
         // used to update .ini files
@@ -141,8 +144,11 @@ public class ConfigDefinition {
                 prependFiles.add(args[i + 1]);
                 inputFiles.add(args[i + 1]);
             } else if (key.equals(KEY_SIGNATURE)) {
+                signaturePrependFile = args[i + 1];
                 prependFiles.add(args[i + 1]);
                 // don't add this file to the 'inputFiles'
+            } else if (key.equals(KEY_SIGNATURE_DESTINATION)) {
+                signatureDestination = args[i + 1];
             } else if (key.equals(KEY_CACHE)) {
                 cachePath = args[i + 1];
             } else if (key.equals(KEY_CACHE_ZIP_FILE)) {
@@ -193,7 +199,7 @@ public class ConfigDefinition {
         }
 
         for (String prependFile : prependFiles)
-            readPrependValues(prependFile);
+            readPrependValues(VariableRegistry.INSTANCE, prependFile);
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
         ReaderState state = new ReaderState();
@@ -202,6 +208,10 @@ public class ConfigDefinition {
         if (tsPath != null && needToUpdateTsFiles) {
             CharArrayWriter tsWriter = new CharArrayWriter();
             destinations.add(new TSProjectConsumer(tsWriter, tsPath, state));
+
+            VariableRegistry tmpRegistry = new VariableRegistry();
+            readPrependValues(tmpRegistry, signaturePrependFile);
+            destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
         if (needToUpdateOtherFiles) {
             if (destCHeaderFileName != null) {
@@ -258,7 +268,7 @@ public class ConfigDefinition {
         return getMd5(content);
     }
 
-    private static void readPrependValues(String prependFile) throws IOException {
+    private static void readPrependValues(VariableRegistry registry, String prependFile) throws IOException {
         BufferedReader definitionReader = new BufferedReader(new FileReader(prependFile));
         String line;
         while ((line = definitionReader.readLine()) != null) {
@@ -269,7 +279,7 @@ public class ConfigDefinition {
             if (ReaderState.isEmptyDefinitionLine(line))
                 continue;
             if (startsWithToken(line, ReaderState.DEFINE)) {
-                processDefine(line.substring(ReaderState.DEFINE.length()).trim());
+                processDefine(registry, line.substring(ReaderState.DEFINE.length()).trim());
             }
 
         }
@@ -328,7 +338,7 @@ public class ConfigDefinition {
         return Integer.parseInt(s);
     }
 
-    static void processDefine(String line) {
+    static void processDefine(VariableRegistry registry, String line) {
         int index = line.indexOf(' ');
         String name;
         if (index == -1) {
@@ -340,9 +350,9 @@ public class ConfigDefinition {
         }
         if (VariableRegistry.isNumeric(line)) {
             Integer v = Integer.valueOf(line);
-            VariableRegistry.INSTANCE.register(name, v);
+            registry.register(name, v);
         } else {
-            VariableRegistry.INSTANCE.register(name, line);
+            registry.register(name, line);
         }
     }
 

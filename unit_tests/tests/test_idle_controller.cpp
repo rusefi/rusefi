@@ -19,9 +19,6 @@
 extern IdleController idleControllerInstance;
 extern int timeNowUs;
 
-#define Q(x) #x
-#define QUOTE(x) Q(x)
-
 TEST(idle, fsioPidParameters) {
 	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);
 
