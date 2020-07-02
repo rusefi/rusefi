@@ -2,11 +2,19 @@
  * @file	signature.cpp
  * @brief A special file which is recompiled every time the .ini file changes.
  *
+ * This is a minimalistic fast-compiling cpp-file. Any additional massive includes are not welcomed.
+ *
  * @date Jul 2, 2020
  * @author andreika (c) 2020
  */
 
 #include "signature.h"
+
+// We take these precautions to avoid redefinition of signature in generated .h files
+#undef SIGNATURE_BOARD
+#undef SIGNATURE_DATE
+#undef SIGNATURE_HASH
+#undef TS_SIGNATURE
 
 #ifndef SHORT_BOARD_NAME
 #define SHORT_BOARD_NAME all
