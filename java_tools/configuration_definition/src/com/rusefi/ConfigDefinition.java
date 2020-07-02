@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.CRC32;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -169,6 +170,9 @@ public class ConfigDefinition {
         boolean needToUpdateTsFiles = false;
         if (tsPath != null) {
             inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
+        }
+
+        if (tsPath != null) {
             SystemOut.println("Check the input/output TS files:");
             needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputAllFiles, cachePath, cacheZipFile);
         }
@@ -179,6 +183,17 @@ public class ConfigDefinition {
             SystemOut.println("All output files are up-to-date, nothing to do here!");
             return;
         }
+
+        // get CRC32 of given input files
+        long crc32 = 0;
+        for (String iFile : inputAllFiles) {
+            long c = getCrc32(iFile) & 0xffffffffL;
+            SystemOut.println("CRC32 from " + iFile + " = " + c);
+            crc32 ^= c;
+        }
+        SystemOut.println("CRC32 from all input files = " + crc32);
+        // store the CRC32 as a built-in variable
+        VariableRegistry.INSTANCE.register("SIGNATURE_HASH", "" + crc32);
 
         if (firingEnumFileName != null) {
             SystemOut.println("Reading firing from " + firingEnumFileName);
@@ -210,6 +225,8 @@ public class ConfigDefinition {
             destinations.add(new TSProjectConsumer(tsWriter, tsPath, state));
 
             VariableRegistry tmpRegistry = new VariableRegistry();
+            // store the CRC32 as a built-in variable
+            tmpRegistry.register("SIGNATURE_HASH", "" + crc32);
             readPrependValues(tmpRegistry, signaturePrependFile);
             destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
@@ -439,5 +456,19 @@ public class ConfigDefinition {
 
     private static String getCachedInputFileName(String inputFile, String cachePath) {
         return cachePath + File.separator + inputFile;
+    }
+
+    private static long getCrc32(String fileName) throws IOException {
+        File file = new File(fileName);
+        byte[] f1 = Files.readAllBytes(file.toPath());
+        CRC32 c = new CRC32();
+        c.update(f1, 0, f1.length);
+        return c.getValue();
+    }
+
+    private static void deleteFile(String fileName) throws IOException {
+        File file = new File(fileName);
+        // todo: validate?
+        file.delete();
     }
 }
