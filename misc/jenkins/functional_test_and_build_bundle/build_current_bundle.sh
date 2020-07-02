@@ -59,7 +59,7 @@ sh misc/jenkins/build_simulator.sh
 [ -e simulator/build/rusefi_simulator.exe ] || { echo "rusefi_simulator.exe build FAILED"; exit -1; }
 
 STM_ARCH="stm32f407"
-TIMESTAMP=$(date +%Y%m%d_%H%M%S')
+TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
 
 FOLDER="snapshot_${TIMESTAMP}_${STM_ARCH}_rusefi"
 echo "$SCRIPT_NAME: folder variable1=$FOLDER"
