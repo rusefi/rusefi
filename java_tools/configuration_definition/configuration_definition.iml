@@ -10,5 +10,6 @@
     <orderEntry type="module" module-name="enum_to_string" exported="" />
     <orderEntry type="library" name="annotations" level="project" />
     <orderEntry type="module" module-name="inifile" />
+    <orderEntry type="module" module-name="shared_io" />
   </component>
 </module>

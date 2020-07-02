@@ -19,7 +19,8 @@ java -DSystemOut.name=gen_config \
  -definition integration/rusefi_config.txt \
  -romraider integration \
  -ts_destination tunerstudio \
- -cache tunerstudio/cache \
+ -cache . \
+ -cache_zip_file tunerstudio/cache.zip \
  -with_c_defines false \
  -initialize_to_zero false \
  -tool gen_config.sh \
