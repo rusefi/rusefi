@@ -4,6 +4,7 @@ import com.rusefi.output.*;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
+import com.rusefi.shared.FileUtil;
 
 import java.io.*;
 import java.lang.reflect.Array;
@@ -45,6 +46,7 @@ public class ConfigDefinition {
     public static final String KEY_PREPEND = "-prepend";
     public static final String KEY_SIGNATURE = "-signature";
     public static final String KEY_CACHE = "-cache";
+    public static final String KEY_CACHE_ZIP_FILE = "-cache_zip_file";
     private static final String KEY_SKIP = "-skip";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     public static boolean needZeroInit = true;
@@ -93,6 +95,7 @@ public class ConfigDefinition {
         String romRaiderInputFile = null;
         String firingEnumFileName = null;
         String cachePath = null;
+        String cacheZipFile = null;
         CHeaderConsumer.withC_Defines = true;
 
         // used to update .ini files
@@ -142,8 +145,9 @@ public class ConfigDefinition {
                 // don't add this file to the 'inputFiles'
             } else if (key.equals(KEY_CACHE)) {
                 cachePath = args[i + 1];
-            }
-            else if (key.equals(KEY_SKIP)) {
+            } else if (key.equals(KEY_CACHE_ZIP_FILE)) {
+                cacheZipFile = args[i + 1];
+            } else if (key.equals(KEY_SKIP)) {
                 // is this now not needed in light if LazyFile surving the same goal of not changing output unless needed?
                 skipRebuildFile = args[i + 1];
             } else if (key.equals("-ts_output_name")) {
@@ -160,10 +164,10 @@ public class ConfigDefinition {
         if (tsPath != null) {
             inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
             SystemOut.println("Check the input/output TS files:");
-            needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputAllFiles, cachePath);
+            needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputAllFiles, cachePath, cacheZipFile);
         }
         SystemOut.println("Check the input/output other files:");
-        boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, cachePath);
+        boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, cachePath, cacheZipFile);
         if (!needToUpdateTsFiles && !needToUpdateOtherFiles)
         {
             SystemOut.println("All output files are up-to-date, nothing to do here!");
@@ -235,7 +239,7 @@ public class ConfigDefinition {
             writer.close();
         }
 
-        saveCachedInputFiles(inputAllFiles, cachePath);
+        saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
     }
 
     private static boolean needToSkipRebuild(String skipRebuildFile, String currentMD5) throws IOException {
@@ -366,21 +370,28 @@ public class ConfigDefinition {
         }
     }
 
-    private static boolean checkIfOutputFilesAreOutdated(List<String> inputFiles, String cachePath) {
+    private static boolean checkIfOutputFilesAreOutdated(List<String> inputFiles, String cachePath, String cacheZipFile) {
         if (cachePath == null)
             return true;
         // find if any input file was changed from the cached version
         for (String iFile : inputFiles) {
             File newFile = new File(iFile);
-            File cachedFile = new File(getCachedInputFile(newFile.getName(), cachePath));
-            //boolean isEqual = FileUtils.contentEquals(newFile, cachedFile);
             try {
                 byte[] f1 = Files.readAllBytes(newFile.toPath());
-                byte[] f2 = Files.readAllBytes(cachedFile.toPath());
+                byte[] f2;
+                if (cacheZipFile != null) {
+                    f2 = FileUtil.unzipFileContents(cacheZipFile, cachePath + File.separator + iFile);
+                } else {
+                    String cachedFileName = getCachedInputFileName(newFile.getName(), cachePath);
+                    File cachedFile = new File(cachedFileName);
+                    f2 = Files.readAllBytes(cachedFile.toPath());
+                }
                 boolean isEqual = Arrays.equals(f1, f2);
                 if (!isEqual) {
                     SystemOut.println("* the file " + iFile + " is changed!");
                     return true;
+                } else {
+                    SystemOut.println("* the file " + iFile + " is NOT changed!");
                 }
             } catch(java.io.IOException e) {
                 SystemOut.println("* cannot validate the file " + iFile + ", so assuming it's changed.");
@@ -391,28 +402,32 @@ public class ConfigDefinition {
         return false;
     }
 
-    private static boolean saveCachedInputFiles(List<String> inputFiles, String cachePath) throws IOException {
+    private static boolean saveCachedInputFiles(List<String> inputFiles, String cachePath, String cacheZipFile) throws IOException {
         if (cachePath == null) {
             SystemOut.println("* cache storage is disabled.");
             return false;
         }
         // copy all input files to the cache
-        for (String iFile : inputFiles) {
-            File newFile = new File(iFile);
-            File cachedFile = new File(getCachedInputFile(newFile.getName(), cachePath));
-            cachedFile.mkdirs();
-            try {
-                Files.copy(newFile.toPath(), cachedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            } catch(java.io.IOException e) {
-                SystemOut.println("* cannot store the cached file for " + iFile);
-                throw e;
+        if (cacheZipFile != null) {
+            FileUtil.zipAddFiles(cacheZipFile, inputFiles, cachePath);
+        } else {
+            for (String iFile : inputFiles) {
+                File newFile = new File(iFile);
+                File cachedFile = new File(getCachedInputFileName(newFile.getName(), cachePath));
+                cachedFile.mkdirs();
+                try {
+                    Files.copy(newFile.toPath(), cachedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (java.io.IOException e) {
+                    SystemOut.println("* cannot store the cached file for " + iFile);
+                    throw e;
+                }
             }
         }
         SystemOut.println("* input files copied to the cached folder");
         return true;
     }
 
-    private static String getCachedInputFile(String inputFile, String cachePath) {
+    private static String getCachedInputFileName(String inputFile, String cachePath) {
         return cachePath + File.separator + inputFile;
     }
 }
