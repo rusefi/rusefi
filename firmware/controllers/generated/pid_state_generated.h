@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/pid_state.txt Sun Jun 28 15:10:05 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/pid_state.txt Thu Jul 02 12:17:25 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_PID_STATE_GENERATED_H
@@ -45,4 +45,4 @@ typedef struct pid_state_s pid_state_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/pid_state.txt Sun Jun 28 15:10:05 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/pid_state.txt Thu Jul 02 12:17:25 UTC 2020
