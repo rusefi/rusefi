@@ -8,6 +8,7 @@
  * @author andreika (c) 2020
  */
 
+#include "efilib.h"
 #include "signature.h"
 
 // We take these precautions to avoid redefinition of signature in generated .h files
@@ -19,9 +20,6 @@
 #ifndef SHORT_BOARD_NAME
 #define SHORT_BOARD_NAME all
 #endif /* SHORT_BOARD_NAME */
-
-#define Q(x) #x
-#define QUOTE(x) Q(x)
 
 #pragma message ("SHORT_BOARD_NAME: " QUOTE(SHORT_BOARD_NAME))
 
