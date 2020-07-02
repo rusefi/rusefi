@@ -1175,43 +1175,18 @@ gaugeCategory = Sensors - Raw
    entry = injectionOffset, "injOffset"  , float, "%.2F"
 
 ; is there a way to log parameter?   entry = debugMode,   "debugMode",int,"%d"
-; Alternator_PID: alternator duty cycle
-; DBG_TPS_ACCEL: from TPS 
-   entry = debugFloatField1,   @@GAUGE_NAME_DEBUG_F1@@,float,"%.4f", { !enableLogDebugChannels }
-
-; Alternator_PID: current integration term
-; DBG_TPS_ACCEL: to TPS
-   entry = debugFloatField2,   @@GAUGE_NAME_DEBUG_F2@@,float,"%.4f", { !enableLogDebugChannels }
-   
-; Alternator_PID: previous error
-; DBG_TPS_ACCEL: tps<>tps table value
-   entry = debugFloatField3,   @@GAUGE_NAME_DEBUG_F3@@,float,"%.4f", { !enableLogDebugChannels }
-   
-; Alternator_PID: I setting
-; DBG_TPS_ACCEL: extra fuel   
-   entry = debugFloatField4,   @@GAUGE_NAME_DEBUG_F4@@,float,"%.4f", { !enableLogDebugChannels }
-
-; Alternator_PID: D setting
-   entry = debugFloatField5,   @@GAUGE_NAME_DEBUG_F5@@,float,"%.4f", { !enableLogDebugChannels }
-
-; Alternator_PID: dTerm
-   entry = debugFloatField6,   @@GAUGE_NAME_DEBUG_F6@@,float,"%.4f", { !enableLogDebugChannels }
-   
-   entry = debugFloatField7,   @@GAUGE_NAME_DEBUG_F7@@,float,"%.4f", { !enableLogDebugChannels }
-
-
-; Alternator_PID: P setting
-   entry = debugIntField1,   @@GAUGE_NAME_DEBUG_I1@@,int,"%d", { !enableLogDebugChannels }
-
-; Alternator_PID: offset setting
-   entry = debugIntField2,   @@GAUGE_NAME_DEBUG_I2@@,int,"%d", { !enableLogDebugChannels }
-   
-; Alternator_PID: PID reset counter   
-   entry = debugIntField3,   @@GAUGE_NAME_DEBUG_I3@@,int,"%d", { !enableLogDebugChannels }
-
-   entry = debugIntField4,   @@GAUGE_NAME_DEBUG_I4@@,int,"%d", { !enableLogDebugChannels }
-
-   entry = debugIntField5,   @@GAUGE_NAME_DEBUG_I5@@,int,"%d", { !enableLogDebugChannels }
+   entry = debugFloatField1,   {bitStringValue( debugFieldF1List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
+   entry = debugFloatField2,   {bitStringValue( debugFieldF2List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
+   entry = debugFloatField3,   {bitStringValue( debugFieldF3List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
+   entry = debugFloatField4,   {bitStringValue( debugFieldF4List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
+   entry = debugFloatField5,   {bitStringValue( debugFieldF5List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
+   entry = debugFloatField6,   {bitStringValue( debugFieldF6List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
+   entry = debugFloatField7,   {bitStringValue( debugFieldF7List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
+   entry = debugIntField1,     {bitStringValue( debugFieldI1List,  debugMode )},int,"%d", { !enableLogDebugChannels }
+   entry = debugIntField2,     {bitStringValue( debugFieldI2List,  debugMode )},int,"%d", { !enableLogDebugChannels }
+   entry = debugIntField3,     {bitStringValue( debugFieldI3List,  debugMode )},int,"%d", { !enableLogDebugChannels }
+   entry = debugIntField4,     {bitStringValue( debugFieldI4List,  debugMode )},int,"%d", { !enableLogDebugChannels }
+   entry = debugIntField5,     {bitStringValue( debugFieldI5List,  debugMode )},int,"%d", { !enableLogDebugChannels }
 
 
    entry = engineMakeCodeNameCrc16,   "Engine CRC16",int,"%d"
