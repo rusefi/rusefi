@@ -22,6 +22,8 @@ android {
 }
 
 dependencies {
+    implementation project(':shared_io')
+
     implementation files('lib/dfu_java.jar')
     implementation 'com.github.mik3y:usb-serial-for-android:v2.2.3'
     implementation fileTree(dir: "libs", include: ["*.jar"])
