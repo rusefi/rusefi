@@ -76,7 +76,7 @@ pwd
 ls
 zip $ROOT_FOLDER/temp/rusefi_console.zip $ROOT_FOLDER/java_console_binary/rusefi_console.jar $ROOT_FOLDER/java_console/rusefi.xml
 
-[ -e $ROOT_FOLDER/temp/rusefi_console.zip ] || { echo "CONSOLE ZIP FAILED"; exit 1; }
+[ -e "$ROOT_FOLDER/temp/rusefi_console.zip" ] || { echo "CONSOLE ZIP FAILED"; exit 1; }
 
 echo "$SCRIPT_NAME: only console ready"
 
