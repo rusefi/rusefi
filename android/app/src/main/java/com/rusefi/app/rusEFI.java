@@ -36,8 +36,13 @@ import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 import com.rusefi.dfu.android.DfuDeviceLocator;
+import com.rusefi.shared.ConnectionAndMeta;
+import com.rusefi.shared.FileUtil;
 
+import java.io.File;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -47,6 +52,7 @@ public class rusEFI extends Activity {
     private static final int ST_CDC = 0x5740;
 
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+    public static final String FILE = "rusefi_bundle_mre_f4_autoupdate.zip";
 
     /* UI elements */
     private TextView mStatusView;
@@ -70,6 +76,51 @@ public class rusEFI extends Activity {
 
         mStatusView.setText("Hello");
 
+        final String localFullFile = getExternalFilesDir(null) + File.separator + FILE;
+        if (new File(localFullFile).exists()) {
+            mResultView.append(FILE + " found!\n");
+        } else {
+            mResultView.append(FILE + " not found!\n");
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ConnectionAndMeta c = new ConnectionAndMeta(FILE).invoke();
+                        ConnectionAndMeta.downloadFile(localFullFile, c, new ConnectionAndMeta.DownloadProgressListener() {
+                            @Override
+                            public void onPercentage(final int currentProgress) {
+                                mResultView.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mResultView.append("Downloading " + currentProgress + "\n");
+                                    }
+                                });
+                            }
+                        });
+                        mResultView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mResultView.append("Downloaded! " + "\n");
+                            }
+                        });
+
+                    } catch (IOException | KeyManagementException | NoSuchAlgorithmException e) {
+                        mResultView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mResultView.append("Error downloading " + e + "\n");
+                            }
+                        });
+                    }
+
+                }
+            }).start();
+
+
+        }
+
+
         handleButton();
     }
 
@@ -80,7 +131,7 @@ public class rusEFI extends Activity {
                 synchronized (this) {
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         UsbDevice dfuDevice = DfuDeviceLocator.findDevice(usbManager);
-                        new DfuDeviceLocator().openDfu(usbManager, dfuDevice);
+                        doJob(dfuDevice);
 //                        if (device != null) {
 //                            //call method to set up device communication
 //                        }
@@ -93,12 +144,14 @@ public class rusEFI extends Activity {
     };
 
     private void handleButton() {
-        mResultView.append("rusEFI app v0.0000001\n");
+        mResultView.append("rusEFI app v0.0000002\n");
 
         UsbDevice dfuDevice = DfuDeviceLocator.findDevice(usbManager);
 
-        if (usbManager.hasPermission(dfuDevice)) {
-            new DfuDeviceLocator().openDfu(usbManager, dfuDevice);
+        if (dfuDevice == null) {
+            mResultView.append("No DFU device\n");
+        } else if (usbManager.hasPermission(dfuDevice)) {
+            doJob(dfuDevice);
         } else {
             PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
             usbManager.requestPermission(dfuDevice, mPermissionIntent);
@@ -160,10 +213,8 @@ public class rusEFI extends Activity {
         }
     }
 
-    private void listDevices(UsbManager manager) {
-        for (final UsbDevice usbDevice : manager.getDeviceList().values()) {
-            mResultView.append(usbDevice.getDeviceName() + " " + usbDevice.getVendorId() + " " + usbDevice.getProductId() + "\n");
-        }
+    private DfuDeviceLocator.Result doJob(UsbDevice dfuDevice) {
+        return new DfuDeviceLocator().openDfu(usbManager, dfuDevice);
     }
 
     /**
