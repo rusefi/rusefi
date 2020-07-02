@@ -1,7 +1,7 @@
 #!/bin/sh
 
 FULL_BUNDLE_FILE="$BUNDLE_FULL_NAME.zip"
-UPDATE_BUNDLE_FILE="$BUNDLE_FULL_NAME_autoupdate.zip"
+UPDATE_BUNDLE_FILE="${BUNDLE_FULL_NAME}_autoupdate.zip"
 
 echo "Packaging temp/$FULL_BUNDLE_FILE file"
 
