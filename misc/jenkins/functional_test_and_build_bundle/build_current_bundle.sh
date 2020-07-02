@@ -81,7 +81,7 @@ zip "$ROOT_FOLDER/temp/rusefi_console.zip" "$ROOT_FOLDER/java_console_binary/rus
 echo "$SCRIPT_NAME: only console ready"
 
 echo "$SCRIPT_NAME: Going back to root folder"
-cd $ROOT_FOLDER
+cd "$ROOT_FOLDER"
 pwd
 
 echo "TIMESTAMP $(date "+%a %D %T.%2S")"
