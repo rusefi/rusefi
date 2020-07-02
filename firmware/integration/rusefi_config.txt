@@ -22,7 +22,6 @@
 ! each field is declared as
 ! type name;comment
 
-#define TS_SIGNATURE "rusEFI @@SIGNATURE_DATE@@.@@SIGNATURE_BOARD@@.@@SIGNATURE_HASH@@"
 
 !
 ! this is here so that rusEfi console can access it, too

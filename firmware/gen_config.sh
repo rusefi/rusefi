@@ -33,6 +33,7 @@ java -DSystemOut.name=gen_config \
  -c_fsio_strings   controllers/generated/fsio_strings.def \
  -java_destination ../java_console/models/src/com/rusefi/config/generated/Fields.java \
  -signature tunerstudio/signature_all.txt \
+ -signature_destination controllers/generated/signature_all.h \
  -romraider_destination ../java_console/rusefi.xml
 
 [ $? -eq 0 ] || { echo "ERROR generating default"; exit 1; }

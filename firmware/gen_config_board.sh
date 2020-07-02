@@ -39,6 +39,7 @@ java -DSystemOut.name=gen_config_board \
 	-firing_order controllers/algo/firing_order.h \
 	-ts_output_name rusefi_${BOARDNAME}.ini \
 	-signature tunerstudio/signature_${SHORT_BOARDNAME}.txt \
+	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
 	-prepend tunerstudio/${BOARDNAME}_prefix.txt \
 	-prepend config/boards/${BOARDNAME}/prepend.txt
 
