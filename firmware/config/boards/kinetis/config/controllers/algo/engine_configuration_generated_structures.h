@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 03 18:55:58 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 03 19:10:45 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -589,11 +589,11 @@ struct idle_hardware_s {
 	/**
 	 * offset 5
 	 */
-	brain_pin_e stepperDirectionPin;
+	output_pin_e stepperDirectionPin;
 	/**
 	 * offset 6
 	 */
-	brain_pin_e stepperStepPin;
+	output_pin_e stepperStepPin;
 	/**
 	 * offset 7
 	 */
@@ -2915,7 +2915,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3104
 	 */
-	brain_pin_e stepperEnablePin;
+	output_pin_e stepperEnablePin;
 	/**
 	 * offset 3105
 	 */
@@ -3522,4 +3522,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 03 18:55:58 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 03 19:10:45 UTC 2020
