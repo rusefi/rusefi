@@ -67,7 +67,7 @@ public class MainFrame {
         });
 
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
-        linkManager.startAndConnect(consoleUI.port, new ConnectionStateListener() {
+        linkManager.getConnector().connectAndReadConfiguration(new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
             }

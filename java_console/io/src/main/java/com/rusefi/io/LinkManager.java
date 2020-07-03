@@ -34,6 +34,7 @@ public class LinkManager {
     private final Logger logger;
 
     private LinkConnector connector;
+    private boolean isStarted;
 
     public LinkManager(Logger logger) {
         this.logger = logger;
@@ -175,7 +176,15 @@ public class LinkManager {
         connector.connectAndReadConfiguration(stateListener);
     }
 
+    public LinkConnector getConnector() {
+        return connector;
+    }
+
     public void start(String port) {
+        if (isStarted) {
+            throw new IllegalStateException("Already started");
+        }
+        isStarted = true;
         Objects.requireNonNull(port, "port");
         logger.info("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
