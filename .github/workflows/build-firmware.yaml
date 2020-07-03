@@ -139,19 +139,19 @@ jobs:
 
     # The next two steps upload the bin, elf, and dfu as build artifacts
     - name: Upload elf
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-elf
         path: ./firmware/build/rusefi.elf
         
     - name: Upload bin
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-bin
         path: ./firmware/build/rusefi.bin
 
     - name: Upload dfu
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-dfu
         path: ./firmware/build/rusefi.dfu
