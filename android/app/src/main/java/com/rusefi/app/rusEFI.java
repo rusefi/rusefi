@@ -35,6 +35,7 @@ import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
+import com.rusefi.dfu.DfuImage;
 import com.rusefi.dfu.android.DfuDeviceLocator;
 import com.rusefi.shared.ConnectionAndMeta;
 import com.rusefi.shared.FileUtil;
@@ -76,9 +77,14 @@ public class rusEFI extends Activity {
 
         mStatusView.setText("Hello");
 
-        final String localFullFile = getExternalFilesDir(null) + File.separator + FILE;
+
+        final File localFolder = getExternalFilesDir(null);
+        final String localFullFile = localFolder + File.separator + FILE;
+        final String localDfuName = localFolder + File.separator + "rusefi_mre_f4.dfu";
+
         if (new File(localFullFile).exists()) {
             mResultView.append(FILE + " found!\n");
+            uncompressFile(localFullFile, localFolder, localDfuName);
         } else {
             mResultView.append(FILE + " not found!\n");
 
@@ -104,6 +110,7 @@ public class rusEFI extends Activity {
                                 mResultView.append("Downloaded! " + "\n");
                             }
                         });
+                        uncompressFile(localFullFile, localFolder, localDfuName);
 
                     } catch (IOException | KeyManagementException | NoSuchAlgorithmException e) {
                         mResultView.post(new Runnable() {
@@ -116,12 +123,40 @@ public class rusEFI extends Activity {
 
                 }
             }).start();
-
-
         }
 
-
         handleButton();
+    }
+
+    private void uncompressFile(final String localFullFile, final File localFolder, final String localDfuName) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FileUtil.unzip(localFullFile, localFolder);
+
+                    final int size = (int) new File(localDfuName).length();
+
+                    mResultView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mResultView.append("File size: " + size + "\n");
+                        }
+                    });
+                    DfuImage dfuImage = new DfuImage();
+                    dfuImage.read(localDfuName);
+
+                } catch (final IOException e) {
+                    mResultView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mResultView.append("Error uncompressing " + e + "\n");
+                        }
+                    });
+                }
+
+            }
+        }).start();
     }
 
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
