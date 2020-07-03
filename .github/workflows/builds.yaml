@@ -1,4 +1,4 @@
-name: rusEFI tasks for push
+name: rusEFI build tasks
 
 on: [push, pull_request]
 
@@ -87,7 +87,7 @@ jobs:
   
     # Build the firmware!
     - name: Build Firmware
-      run: sh misc/jenkins/compile_other_versions/compile_and_upload.sh ${{matrix.folder}} ${{matrex.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
+      run: sh misc/jenkins/compile_other_versions/compile_and_upload.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
       
   build-primary-bundle:
    steps:
