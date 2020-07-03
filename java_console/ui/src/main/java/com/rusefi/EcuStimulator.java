@@ -100,7 +100,7 @@ public class EcuStimulator {
                         putValue("engine_load", engineLoad) +
                         putValue("advance", advance) +
                         putValue("dwell", dwell);
-                MessagesCentral.getInstance().postMessage(EcuStimulator.class, msg);
+                MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EcuStimulator.class, msg);
 
                 try {
                     csv.write(msg + "\r\n");
@@ -232,7 +232,7 @@ public class EcuStimulator {
     }
 
     private static void log(String message) {
-        MessagesCentral.getInstance().postMessage(EcuStimulator.class, message);
+        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EcuStimulator.class, message);
         FileLog.MAIN.logLine(message);
     }
 

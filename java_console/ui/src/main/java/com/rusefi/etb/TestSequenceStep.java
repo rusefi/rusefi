@@ -40,7 +40,7 @@ public abstract class TestSequenceStep {
                 next.execute(executor);
             }
         } else {
-            MessagesCentral.getInstance().postMessage(TestSequenceStep.class, "ETB test sequence done!");
+            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, TestSequenceStep.class, "ETB test sequence done!");
         }
     }
 
