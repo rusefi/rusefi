@@ -50,16 +50,25 @@ jobs:
           - build-target: prometheus_405
             folder: prometheus
 
-          - build-target: prometheus-469
+          - build-target: prometheus_469
             folder: prometheus
 
-          - build-target: proteus-f4
+          - build-target: proteus_f4
             folder: prometheus
             ini-file: rusefi_proteus.ini
 
-          - build-target: proteus-f7
+          - build-target: proteus_f7
             folder: prometheus
             ini-file: rusefi_proteus.ini
+
+          - build-target: stm32f746_nucleo
+            folder: nucleo_f746
+
+          - build-target: stm32f767_nucleo
+            folder: nucleo_f767
+
+          - build-target: stm32f767_osc
+            folder: nucleo_f767
 
     steps:
     - uses: actions/checkout@v1
