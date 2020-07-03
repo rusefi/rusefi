@@ -577,8 +577,8 @@ struct idle_hardware_s
 	int solenoidFrequency;;"Hz",      1,      0,       0, 3000,      0
 
 	output_pin_e solenoidPin;
-	brain_pin_e stepperDirectionPin;
-	brain_pin_e stepperStepPin; 
+	output_pin_e stepperDirectionPin;
+	output_pin_e stepperStepPin; 
 	pin_output_mode_e solenoidPinMode;
 end_struct
 
@@ -1202,7 +1202,7 @@ tle8888_mode_e tle8888mode;
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
 	adc_channel_e externalKnockSenseAdc;
-	brain_pin_e stepperEnablePin;
+	output_pin_e stepperEnablePin;
 	brain_pin_e tle8888_cs;
 	pin_output_mode_e tle8888_csPinMode;
 	brain_pin_e mc33816_cs;
