@@ -40,11 +40,11 @@ echo "$SCRIPT_NAME: Building DFU"
 if uname | grep "NT"; then
  chmod u+x ../misc/encedo_hex2dfu/hex2dfu.exe
  ../misc/encedo_hex2dfu/hex2dfu.exe -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
- ../misc/encedo_hex2dfu/hex2dfu.exe -i build/rusefi.hex -o deliver/rusefi.dfu
+ ../misc/encedo_hex2dfu/hex2dfu.exe -i deliver/rusefi.hex -o deliver/rusefi.dfu
 else
  chmod u+x ../misc/encedo_hex2dfu/hex2dfu.bin
  ../misc/encedo_hex2dfu/hex2dfu.bin -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
- ../misc/encedo_hex2dfu/hex2dfu.bin -i build/rusefi.hex -o deliver/rusefi.dfu
+ ../misc/encedo_hex2dfu/hex2dfu.bin -i deliver/rusefi.hex -o deliver/rusefi.dfu
 fi
 
 ls -l deliver
