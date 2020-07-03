@@ -17,6 +17,12 @@ jobs:
       - name: Test Compiler
         run: javac -version
 
-      - name: Build console
+      - name: Build Android
         working-directory: ./android
         run: bash ./gradlew build
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-release-unsigned
+          path: ./android/app/build/outputs/apk/release/app-release-unsigned.apk
