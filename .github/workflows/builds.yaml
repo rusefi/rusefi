@@ -54,9 +54,13 @@ jobs:
 
           - build-target: stm32f746_nucleo
             folder: nucleo_f746
+            ini-file: no
+            console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
 
           - build-target: stm32f767_nucleo
             folder: nucleo_f767
+            ini-file: no
+            console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
 
     steps:
     - uses: actions/checkout@v1
