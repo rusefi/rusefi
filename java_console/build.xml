@@ -44,7 +44,8 @@
             <src path="autoupdate/src"/>
             <src path="../java_tools/configuration_definition/src"/>
             <src path="../java_tools/enum_to_string/src"/>
-            <src path="io/src/main/src"/>
+            <src path="io/src/main/java"/>
+            <src path="io/src/test/java"/>
             <src path="models/src"/>
             <src path="inifile/src"/>
             <src path="shared_ui/src"/>
@@ -78,7 +79,7 @@
             <batchtest todir="build">
                 <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="autoupdate/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="io/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="io/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="models/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="ui/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="romraider/src" includes="**/test/**/*Test.java"/>
