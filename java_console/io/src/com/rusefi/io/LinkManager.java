@@ -1,6 +1,7 @@
 package com.rusefi.io;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -31,8 +32,13 @@ public class LinkManager {
 
     public static final String LOG_VIEWER = "log viewer";
     private final CommandQueue commandQueue = new CommandQueue(this);
+    private final Logger logger;
 
     private LinkConnector connector;
+
+    public LinkManager(Logger logger) {
+        this.logger = logger;
+    }
 
     @NotNull
     public CountDownLatch connect(String port) {

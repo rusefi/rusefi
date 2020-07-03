@@ -57,9 +57,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
      * todo: finish this feature, assuming we even need it.
      */
     public static boolean PLAIN_PROTOCOL = Boolean.getBoolean(USE_PLAIN_PROTOCOL_PROPERTY);
-    static {
-        FileLog.MAIN.logLine(USE_PLAIN_PROTOCOL_PROPERTY + ": " + PLAIN_PROTOCOL);
-    }
 
     private final LinkManager linkManager;
     private final Logger logger;
@@ -103,15 +100,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         state.setCurrentOutputs(currentOutputs);
     }
 
-    private SensorCentral.SensorListener rpmListener = value -> {
-        if (value <= COMPOSITE_OFF_RPM) {
-            needCompositeLogger = true;
-            lastLowRpmTime = System.currentTimeMillis();
-        } else if (System.currentTimeMillis() - lastLowRpmTime > HIGH_RPM_DELAY * Timeouts.SECOND) {
-            FileLog.MAIN.logLine("Time to turn off composite logging");
-            needCompositeLogger = false;
-        }
-    };
+    private SensorCentral.SensorListener rpmListener;
 
     private final Thread hook = new Thread(() -> closeComposites());
 
@@ -122,6 +111,15 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
         incomingData = createDataBuffer(stream, logger);
         Runtime.getRuntime().addShutdownHook(hook);
+        rpmListener = value -> {
+            if (value <= COMPOSITE_OFF_RPM) {
+                needCompositeLogger = true;
+                lastLowRpmTime = System.currentTimeMillis();
+            } else if (System.currentTimeMillis() - lastLowRpmTime > HIGH_RPM_DELAY * Timeouts.SECOND) {
+                logger.info("Time to turn off composite logging");
+                needCompositeLogger = false;
+            }
+        };
     }
 
     public static IncomingDataBuffer createDataBuffer(IoStream stream, Logger logger) {
@@ -149,7 +147,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public void doSend(final String command, boolean fireEvent) throws InterruptedException {
-        FileLog.MAIN.logLine("Sending [" + command + "]");
+        logger.info("Sending [" + command + "]");
         if (fireEvent && LinkManager.LOG_LEVEL.isDebugEnabled()) {
             CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(BinaryProtocol.class, "Sending [" + command + "]");
         }
@@ -221,7 +219,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                     }
                     sleep(Timeouts.TEXT_PULL_PERIOD);
                 }
-                FileLog.MAIN.logLine("Stopping text pull");
+                logger.info("Stopping text pull");
             }
         };
         Thread tr = new Thread(textPull);

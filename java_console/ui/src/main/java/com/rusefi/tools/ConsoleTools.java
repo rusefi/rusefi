@@ -195,7 +195,7 @@ public class ConsoleTools {
             System.err.println("rusEFI not detected");
             return;
         }
-        LinkManager linkManager = new LinkManager();
+        LinkManager linkManager = new LinkManager(FileLog.LOGGER);
         linkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {

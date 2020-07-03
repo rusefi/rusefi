@@ -22,6 +22,11 @@ public interface Logger {
         public void error(String msg) {
             System.err.println(new Date() + " " + msg);
         }
+
+        @Override
+        public boolean isTradeEnabled() {
+            return false;
+        }
     };
 
     void trace(String msg);
@@ -29,4 +34,6 @@ public interface Logger {
     void info(String msg);
 
     void error(String msg);
+
+    boolean isTradeEnabled();
 }

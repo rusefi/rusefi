@@ -2,6 +2,7 @@ package com.rusefi.io.test;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
@@ -30,7 +31,7 @@ public class TcpCommunicationIntegrationTest {
         state.setController(ci);
         state.setCurrentOutputs(new byte[1 + Fields.TS_OUTPUT_SIZE]);
 
-        LinkManager linkManager = new LinkManager();
+        LinkManager linkManager = new LinkManager(FileLog.LOGGER);
         linkManager.setConnector(LinkConnector.getDetachedConnector(state));
         BinaryProtocolServer server = new BinaryProtocolServer();
         server.start(linkManager, port);
@@ -39,7 +40,7 @@ public class TcpCommunicationIntegrationTest {
 
         // todo: remove CONFIGURATION_RUSEFI_BINARY or nicer API to disable local file load
 
-        LinkManager clientManager = new LinkManager();
+        LinkManager clientManager = new LinkManager(FileLog.LOGGER);
         clientManager.startAndConnect(Integer.toString(port), new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
