@@ -1,4 +1,4 @@
-package com.rusefi.io.test;
+package com.rusefi.io;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.ScalarIniField;
