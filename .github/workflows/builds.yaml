@@ -3,7 +3,7 @@ name: rusEFI build tasks
 on: [push, pull_request]
 
 env:
-  RUSEFI_SKIP_UPLOAD: ${{github.event.pusher}}
+  RUSEFI_SKIP_UPLOAD: ${{github.event.pusher}}"false"
 
 jobs:
   build-firmware:
