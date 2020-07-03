@@ -14,5 +14,6 @@
     <orderEntry type="library" name="org.mockito:mockito-all:1.10.19" level="project" />
     <orderEntry type="library" name="json-simple" level="project" />
     <orderEntry type="library" name="httpclient" level="project" />
+    <orderEntry type="module" module-name="models" />
   </component>
 </module>
