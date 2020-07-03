@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
@@ -28,6 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.rusefi.StartupFrame.createLogoLabel;
 import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.rusEFIVersion.CONSOLE_VERSION;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -140,6 +142,8 @@ public class ConsoleUI {
             if (tabbedPane.paneSettings.showTriggerShapePane)
                 tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
         }
+
+        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocol.COMPOSITE_OFF_RPM);
 
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 
