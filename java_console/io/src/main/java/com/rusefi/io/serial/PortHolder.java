@@ -18,24 +18,25 @@ import java.awt.*;
  * 7/25/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
-public class PortHolder {
+public abstract class PortHolder {
     private final DataListener dataListener;
     private final Logger logger;
     private final LinkManager linkManager;
 
     public ConnectionStateListener listener;
     private final Object portLock = new Object();
+    private final String port;
 
     @Nullable
     private BinaryProtocol bp;
 
-    protected PortHolder(LinkManager linkManager, Logger logger) {
+    protected PortHolder(String port, LinkManager linkManager, Logger logger) {
+        this.port = port;
         this.linkManager = linkManager;
         dataListener = freshData -> linkManager.getEngineState().processNewData(new String(freshData), LinkManager.ENCODER);
         this.logger = logger;
     }
 
-    public String port;
 
     boolean connectAndReadConfiguration() {
         if (port == null)
@@ -43,7 +44,7 @@ public class PortHolder {
 
         MessagesCentral.getInstance().postMessage(logger, getClass(), "Opening port: " + port);
 
-        IoStream stream = SerialIoStreamJSerialComm.openPort(port, logger);
+        IoStream stream = openStream();
         synchronized (portLock) {
             bp = new BinaryProtocol(linkManager, logger, stream);
             portLock.notifyAll();
@@ -59,6 +60,8 @@ public class PortHolder {
         }
         return result;
     }
+
+    protected abstract IoStream openStream();
 
     public void close() {
         synchronized (portLock) {
