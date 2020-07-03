@@ -35,6 +35,7 @@ lcov --capture --directory . --output-file coverage.info
 echo -e "\nGenerating HTML"
 genhtml coverage.info --output-directory gcov
 
-echo -e "\nUploading HTML"
-
-ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
+if [ ! "RUSEFI_SKIP_UPLOAD" ] || [ "$RUSEFI_SKIP_UPLOAD" = "false" ]; then
+ echo -e "\nUploading HTML"
+ ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
+fi

@@ -92,8 +92,10 @@ ls -l $FULL_BUNDLE_FILE
 
 [ -e $FULL_BUNDLE_FILE ] || { echo "$SCRIPT_NAME: ERROR not found $FULL_BUNDLE_FILE"; exit 1; }
 
-echo "$SCRIPT_NAME: Uploading full bundle"
-ncftpput -u $RUSEFI_BUILD_FTP_USER -p $RUSEFI_BUILD_FTP_PASS $RUSEFI_FTP_SERVER . $FULL_BUNDLE_FILE
+if [ ! "RUSEFI_SKIP_UPLOAD" ] || [ "$RUSEFI_SKIP_UPLOAD" = "false" ]; then
+ echo "$SCRIPT_NAME: Uploading full bundle"
+ ncftpput -u $RUSEFI_BUILD_FTP_USER -p $RUSEFI_BUILD_FTP_PASS $RUSEFI_FTP_SERVER . $FULL_BUNDLE_FILE
+fi
 
 cd ..
 
@@ -113,7 +115,9 @@ cd $FOLDER
 zip -r ../$UPDATE_BUNDLE_FILE *
 cd ..
 ls -l $UPDATE_BUNDLE_FILE
-ncftpput -u "$RUSEFI_BUILD_FTP_USER" -p "$RUSEFI_BUILD_FTP_PASS" "$RUSEFI_FTP_SERVER" autoupdate "$UPDATE_BUNDLE_FILE"
+if [ ! "RUSEFI_SKIP_UPLOAD" ] || [ "$RUSEFI_SKIP_UPLOAD" = "false" ]; then
+ ncftpput -u "$RUSEFI_BUILD_FTP_USER" -p "$RUSEFI_BUILD_FTP_PASS" "$RUSEFI_FTP_SERVER" autoupdate "$UPDATE_BUNDLE_FILE"
+fi
 cd ..
 
 echo "$SCRIPT_NAME: We are back in root directory"
