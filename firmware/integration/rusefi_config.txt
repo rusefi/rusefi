@@ -1187,7 +1187,7 @@ tle8888_mode_e tle8888mode;
 
 	spi_device_e accelerometerSpiDevice;
 	uint8_t[1] unusedAuxVoltage1_TODO_332;;"units", 1, 0, -20, 100, 0
-	uint8_t[1] unusedAuxVoltage1_TODO_332;;"units", 1, 0, -20, 100, 0
+	uint8_t[1] unusedAuxVoltage2_TODO_332;;"units", 1, 0, -20, 100, 0
 	uint8_t[1] unusedSpiPadding5;;"units", 1, 0, -20, 100, 0
 	float[FSIO_CURVE_16] fsioCurve1Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_16] fsioCurve1;;"y",      1,     0,      -999,    1000.0,   3
