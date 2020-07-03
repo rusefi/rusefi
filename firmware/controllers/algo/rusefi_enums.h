@@ -178,7 +178,7 @@ typedef enum {
 
 	TLE8888_BENCH_ENGINE = 59,
 
-	MICRO_RUS_EFI = 60,
+	MICRO_RUS_EFI = ET_MRE_DEFAULTS,
 
 	PROTEUS = 61,
 
@@ -916,9 +916,7 @@ typedef enum {
 	TPS_THRESHOLD = 1,
 	RPM_DEAD_ZONE = 2,
 	PID_VALUE = 4,
-	PWM_PRETTY_CLOSE = 8,
 	PID_UPPER = 16,
-	ADJUSTING = 32,
 	BLIP = 64,
 	/**
 	 * Live Docs reads 4 byte value so we want 4 byte enum

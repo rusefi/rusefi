@@ -8,7 +8,8 @@ mkdir deliver
 
 sh clean.sh
 echo "TIMESTAMP $(date "+%D %T.%2N")"
-EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\"default_no_assert\" -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE"
+
+EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default_no_assert\\\" -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE"
 make -j4 DEBUG_LEVEL_OPT='-O2'
 EXTRA_PARAMS=""
 
@@ -19,11 +20,11 @@ mv build/rusefi.hex deliver/rusefi_no_asserts.hex
 echo "Release compilation results 1/2"
 echo "TIMESTAMP $(date "+%D %T.%2N")"
 ls -l build
-[ -e deliver/rusefi_no_asserts.hex ] || (echo "FAILED to compile NO ASSERTS version"; exit 1)
+[ -e deliver/rusefi_no_asserts.hex ] || { echo "FAILED to compile NO ASSERTS version"; exit 1; }
 
 sh clean.sh
 echo "TIMESTAMP $(date "+%D %T.%2N")"
-EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\"default\""
+EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default\\\""
 make -j4
 EXTRA_PARAMS=""
 
@@ -35,6 +36,6 @@ cp build/rusefi.bin deliver/rusefi.bin
 echo Debug compilation results 2/2
 echo "TIMESTAMP $(date "+%D %T.%2N")"
 ls -l build
-[ -e deliver/rusefi.hex ] || (echo "FAILED to compile DEFAULT with DEBUG"; exit 1)
+[ -e deliver/rusefi.hex ] || { echo "FAILED to compile DEFAULT with DEBUG"; exit 1; }
 
 echo "clean_compile_two_versions: Looks good!"
