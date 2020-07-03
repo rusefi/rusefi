@@ -16,6 +16,6 @@ class BinaryProtocolServerSandbox {
 
         LinkManager linkManager = new LinkManager(FileLog.LOGGER);
         linkManager.setConnector(LinkConnector.getDetachedConnector(state));
-        new BinaryProtocolServer().start(linkManager);
+        new BinaryProtocolServer(FileLog.LOGGER).start(linkManager);
     }
 }

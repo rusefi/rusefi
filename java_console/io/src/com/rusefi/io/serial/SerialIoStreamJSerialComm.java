@@ -3,8 +3,8 @@ package com.rusefi.io.serial;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
-import com.rusefi.FileLog;
 import com.rusefi.io.IoStream;
 
 /**
@@ -17,13 +17,15 @@ public class SerialIoStreamJSerialComm implements IoStream {
     private boolean isClosed;
     private SerialPort sp;
     private final String port;
+    private final Logger logger;
 
     /**
-     * @see #openPort(String)
+     * @see #openPort(String, Logger)
      */
-    private SerialIoStreamJSerialComm(SerialPort sp, String port) {
+    private SerialIoStreamJSerialComm(SerialPort sp, String port, Logger logger) {
         this.sp = sp;
         this.port = port;
+        this.logger = logger;
     }
 
     @Override
@@ -59,10 +61,10 @@ public class SerialIoStreamJSerialComm implements IoStream {
 
     @Override
     public void close() {
-        FileLog.LOGGER.info(port + ": Closing port...");
+        logger.info(port + ": Closing port...");
         isClosed = true;
         sp.closePort();
-        FileLog.LOGGER.info(port + ": Closed port.");
+        logger.info(port + ": Closed port.");
     }
 
     @Override
@@ -79,12 +81,12 @@ public class SerialIoStreamJSerialComm implements IoStream {
      * Just open physical serial and not much more
      * @see PortHolder#connectAndReadConfiguration()
      */
-    public static IoStream openPort(String port) {
-        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] openPort " + port);
+    public static IoStream openPort(String port, Logger logger) {
+        logger.info("[SerialIoStreamJSerialComm] openPort " + port);
         SerialPort serialPort = SerialPort.getCommPort(port);
         serialPort.setBaudRate(BaudRateHolder.INSTANCE.baudRate);
         serialPort.openPort(0);
 //        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] opened " + port);
-        return new SerialIoStreamJSerialComm(serialPort, port);
+        return new SerialIoStreamJSerialComm(serialPort, port, logger);
     }
 }

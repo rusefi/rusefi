@@ -1,6 +1,6 @@
 package com.rusefi.io.serial;
 
-import com.rusefi.FileLog;
+import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStateListener;
@@ -14,23 +14,25 @@ import com.rusefi.io.LinkManager;
 public class SerialConnector implements LinkConnector {
 
     private final PortHolder portHolder;
+    private final Logger logger;
     private final LinkManager linkManager;
 
-    public SerialConnector(LinkManager linkManager, String serialPort) {
+    public SerialConnector(LinkManager linkManager, String serialPort, Logger logger) {
         this.linkManager = linkManager;
-        portHolder = new PortHolder(linkManager);
+        portHolder = new PortHolder(linkManager, logger);
+        this.logger = logger;
         portHolder.port = serialPort;
     }
 
     @Override
     public void connectAndReadConfiguration(ConnectionStateListener listener) {
-        FileLog.MAIN.logLine("SerialConnector: connecting");
+        logger.info("SerialConnector: connecting");
         portHolder.listener = listener;
-        FileLog.MAIN.logLine("scheduleOpening");
+        logger.info("scheduleOpening");
         linkManager.execute(new Runnable() {
             @Override
             public void run() {
-                FileLog.MAIN.logLine("scheduleOpening>openPort");
+                logger.info("scheduleOpening>openPort");
                 portHolder.connectAndReadConfiguration();
             }
         });

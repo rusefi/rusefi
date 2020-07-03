@@ -1,5 +1,6 @@
 package com.opensr5;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -28,6 +29,12 @@ public interface Logger {
             return false;
         }
     };
+    String DIR = "logs/";
+    String DATE_PATTERN = "yyyy-MM-dd_HH_mm_ss_SSS";
+
+    static String getDate() {
+        return new SimpleDateFormat(DATE_PATTERN).format(new Date());
+    }
 
     void trace(String msg);
 

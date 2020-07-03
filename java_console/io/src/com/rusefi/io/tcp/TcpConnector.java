@@ -1,17 +1,14 @@
 package com.rusefi.io.tcp;
 
+import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
-import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.ResponseBuffer;
 import com.rusefi.io.ConnectionStateListener;
-import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,11 +23,13 @@ public class TcpConnector implements LinkConnector {
     private final int port;
     private final String hostname;
     private final LinkManager linkManager;
+    private final Logger logger;
 
     private BinaryProtocol bp;
 
-    public TcpConnector(LinkManager linkManager, String port) {
+    public TcpConnector(LinkManager linkManager, String port, Logger logger) {
         this.linkManager = linkManager;
+        this.logger = logger;
         try {
             this.port = getTcpPort(port);
             this.hostname = getHostname(port);
@@ -95,15 +94,15 @@ public class TcpConnector implements LinkConnector {
      */
     @Override
     public void connectAndReadConfiguration(ConnectionStateListener listener) {
-        FileLog.MAIN.logLine("Connecting to host=" + hostname + "/port=" + port);
+        logger.info("Connecting to host=" + hostname + "/port=" + port);
         TcpIoStream tcpIoStream;
 
         try {
             Socket socket = new Socket(hostname, port);
-            tcpIoStream = new TcpIoStream(linkManager, socket);
+            tcpIoStream = new TcpIoStream(logger, linkManager, socket);
         } catch (IOException e) {
             listener.onConnectionFailed();
-            FileLog.MAIN.logLine("Failed to connect to " + hostname + "/port=" + port);
+            logger.error("Failed to connect to " + hostname + "/port=" + port);
             return;
         }
 
@@ -122,7 +121,7 @@ public class TcpConnector implements LinkConnector {
         };
 //        ioStream.setInputListener(listener1);
 
-        bp = new BinaryProtocol(linkManager, FileLog.LOGGER, tcpIoStream);
+        bp = new BinaryProtocol(linkManager, logger, tcpIoStream);
 
         boolean result = bp.connectAndReadConfiguration(listener1);
         if (result) {
@@ -139,7 +138,7 @@ public class TcpConnector implements LinkConnector {
     @Override
     public void send(String command, boolean fireEvent) throws InterruptedException {
         if (bp == null) {
-            FileLog.MAIN.logLine("Not connected");
+            logger.info("Not connected");
             return;
         }
 

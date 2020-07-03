@@ -1,6 +1,6 @@
 package com.rusefi.io;
 
-import com.rusefi.FileLog;
+import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import org.jetbrains.annotations.NotNull;
@@ -35,21 +35,7 @@ public class CommandQueue {
     private final BlockingQueue<IMethodInvocation> pendingCommands = new LinkedBlockingQueue<>();
     private final List<CommandQueueListener> commandListeners = new ArrayList<>();
 
-    private final Runnable runnable = new Runnable() {
-        @SuppressWarnings("InfiniteLoopStatement")
-        @Override
-        public void run() {
-            MessagesCentral.getInstance().postMessage(COMMAND_QUEUE_CLASS, "SerialIO started");
-            while (true) {
-                try {
-                    sendPendingCommand();
-                } catch (Throwable e) {
-                    FileLog.MAIN.logException("CommandQueue error", e);
-                    System.exit(-2);
-                }
-            }
-        }
-    };
+    private final Runnable runnable;
 
     private static boolean isSlowCommand(String cmd) {
         String lc = cmd.toLowerCase();
@@ -114,8 +100,23 @@ public class CommandQueue {
             MessagesCentral.getInstance().postMessage(CommandQueue.class, "Took " + counter + " attempts");
     }
 
-    public CommandQueue(LinkManager linkManager) {
+    public CommandQueue(LinkManager linkManager, Logger logger) {
         this.linkManager = linkManager;
+        runnable = new Runnable() {
+            @SuppressWarnings("InfiniteLoopStatement")
+            @Override
+            public void run() {
+                MessagesCentral.getInstance().postMessage(COMMAND_QUEUE_CLASS, "SerialIO started");
+                while (true) {
+                    try {
+                        sendPendingCommand();
+                    } catch (Throwable e) {
+                        logger.error("CommandQueue error" + e);
+                        System.exit(-2);
+                    }
+                }
+            }
+        };
         Thread thread = new Thread(runnable, "Commands Queue");
         thread.setDaemon(true);
         thread.start();

@@ -1,8 +1,8 @@
 package com.rusefi.ui.logview;
 
+import com.opensr5.Logger;
 import com.rusefi.ConsoleUI;
 import com.rusefi.FileLog;
-import com.rusefi.Launcher;
 import com.rusefi.core.EngineState;
 import com.rusefi.file.FileUtils;
 import com.rusefi.ui.ChartRepository;
@@ -10,7 +10,6 @@ import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.util.UiUtils;
-import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineReport;
 
 import javax.swing.*;
@@ -22,7 +21,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
-import java.util.TreeMap;
 
 /**
  * This tab is the entry point of rusEfi own log browser
@@ -39,7 +37,7 @@ public class LogViewer extends JPanel {
             return pathname.getName().contains("MAIN_rfi_report");
         }
     };
-    public static final String DEFAULT_LOG_LOCATION = FileLog.DIR;
+    public static final String DEFAULT_LOG_LOCATION = Logger.DIR;
     private final JLabel folderLabel = new JLabel();
     private final JLabel fileLabel = new JLabel();
     private final DefaultListModel<FileItem> fileListModel = new DefaultListModel<FileItem>();
