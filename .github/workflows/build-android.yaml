@@ -22,7 +22,7 @@ jobs:
         run: bash ./gradlew build
 
       - name: Upload APK
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
-          name: app-release-unsigned
+          name: rusEFI-release-unsigned
           path: ./android/app/build/outputs/apk/release/app-release-unsigned.apk
