@@ -2,7 +2,7 @@
 
 # STM32F767 version of the firmware for Nucleo-F746ZG board
 
-export SCRIPT_NAME="compile_nucleo_f746.sh"
+SCRIPT_NAME="compile_nucleo_f746.sh"
 echo "Entering $SCRIPT_NAME"
 
 cd ../../..
