@@ -92,7 +92,7 @@ public class Autoupdate {
             file.setLastModified(lastModified);
             System.out.println("Downloaded " + file.length() + " bytes");
 
-            FileUtil.unzip(zipFileName, "..");
+            FileUtil.unzip(zipFileName, new File(".."));
         } catch (Exception e) {
             System.err.println(e);
         }
