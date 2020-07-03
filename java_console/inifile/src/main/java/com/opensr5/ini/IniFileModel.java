@@ -95,7 +95,7 @@ public class IniFileModel {
 
     private void handleLine(RawIniFile.Line line) {
 
-        String rawTest = line.getRawText();
+        String rawText = line.getRawText();
         try {
             LinkedList<String> list = new LinkedList<>(Arrays.asList(line.getTokens()));
 
@@ -107,19 +107,19 @@ public class IniFileModel {
             // todo: use TSProjectConsumer constant
             if (isInSettingContextHelp) {
                 // todo: use TSProjectConsumer constant
-                if (rawTest.contains("SettingContextHelpEnd")) {
+                if (rawText.contains("SettingContextHelpEnd")) {
                     isInSettingContextHelp = false;
                 }
                 if (list.size() == 2)
                     tooltips.put(list.get(0), list.get(1));
                 return;
-            } else if (rawTest.contains("SettingContextHelp")) {
+            } else if (rawText.contains("SettingContextHelp")) {
                 isInsidePageDefinition = false;
                 isInSettingContextHelp = true;
                 return;
             }
 
-            if (RawIniFile.Line.isCommentLine(rawTest))
+            if (RawIniFile.Line.isCommentLine(rawText))
                 return;
 
             trim(list);
@@ -140,7 +140,7 @@ public class IniFileModel {
                 handleField(list);
             }
         } catch (RuntimeException e) {
-            throw new IllegalStateException("While [" + rawTest + "]", e);
+            throw new IllegalStateException("While [" + rawText + "]", e);
         }
     }
 
