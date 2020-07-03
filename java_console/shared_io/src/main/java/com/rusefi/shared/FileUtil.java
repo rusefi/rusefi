@@ -10,15 +10,18 @@ import java.util.zip.ZipInputStream;
 public class FileUtil {
     public static final String RUSEFI_SETTINGS_FOLDER = System.getProperty("user.home") + File.separator + ".rusEFI";
 
-    public static void unzip(String zipFileName, String destPath) throws IOException {
-        File destDir = new File(destPath);
+    public static void unzip(String zipFileName, File destDir) throws IOException {
         byte[] buffer = new byte[1024];
         ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFileName));
         ZipEntry zipEntry = zis.getNextEntry();
         while (zipEntry != null) {
             File newFile = newFile(destDir, zipEntry);
-            if (newFile.isDirectory()) {
-                System.out.println("Nothing to do for directory " + newFile);
+            if (zipEntry.isDirectory()) {
+                if (!newFile.isDirectory()) {
+                    // we already have a file with name matching directory name
+                    newFile.delete();
+                }
+                newFile.mkdirs();
             } else {
                 unzipFile(buffer, zis, newFile);
             }
@@ -26,7 +29,7 @@ public class FileUtil {
         }
         zis.closeEntry();
         zis.close();
-        System.out.println("Unzip " + zipFileName + " to " + destPath + " worked!");
+        System.out.println("Unzip " + zipFileName + " to " + destDir + " worked!");
     }
 
     private static void unzipFile(byte[] buffer, ZipInputStream zis, File newFile) throws IOException {
