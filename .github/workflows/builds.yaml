@@ -1,6 +1,6 @@
 name: rusEFI tasks for push
 
-on: [push, pull-request]
+on: [push, pull_request]
 
 env:
   RUSEFI_SKIP_UPLOAD: ${{github.event.pusher}}
