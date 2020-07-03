@@ -37,10 +37,10 @@ public class AverageAnglesUtil {
         AverageAngles aa = new AverageAngles();
 
         while ((line = br.readLine()) != null) {
-            int index = line.indexOf(FileLog.END_OF_TIMESTAND_TAG);
+            int index = line.indexOf(Logger.END_OF_TIMESTAND_TAG);
             if (index == -1)
                 continue;
-            line = line.substring(index + FileLog.END_OF_TIMESTAND_TAG.length());
+            line = line.substring(index + Logger.END_OF_TIMESTAND_TAG.length());
 
             if (line.startsWith("time")) {
                 String[] f = line.split(",");

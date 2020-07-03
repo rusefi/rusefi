@@ -1,6 +1,6 @@
 package com.rusefi.waves;
 
-import com.rusefi.FileLog;
+import com.opensr5.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,10 +15,10 @@ public class EngineChartParser {
     /**
      * This method unpacks a mixed-key message into a Map of messages by key
      */
-    public static EngineChart unpackToMap(String value) {
+    public static EngineChart unpackToMap(String value, Logger logger) {
         if (value == null)
             throw new NullPointerException("value");
-        FileLog.MAIN.logLine(": " + value);
+        logger.info(": " + value);
 
         String[] array = value.split(DELI);
 

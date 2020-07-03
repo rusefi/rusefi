@@ -1,6 +1,6 @@
 package com.rusefi.core;
 
-import com.rusefi.FileLog;
+import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkDecoder;
 import org.jetbrains.annotations.NotNull;
@@ -43,17 +43,18 @@ public class EngineState {
     }
 
     private final ResponseBuffer buffer;
+    private final Logger logger;
     private final List<StringActionPair> actions = new ArrayList<>();
     private final Set<String> keys = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
-    public EngineState(@NotNull final EngineStateListener listener) {
+    public EngineState(@NotNull final EngineStateListener listener, Logger logger) {
         buffer = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
             public void onResponse(String response) {
                 if (response != null) {
                     // let's remove timestamp if we get content from a log file not controller
-                    int i = response.indexOf(FileLog.END_OF_TIMESTAND_TAG);
+                    int i = response.indexOf(Logger.END_OF_TIMESTAND_TAG);
                     if (i != -1)
-                        response = response.substring(i + FileLog.END_OF_TIMESTAND_TAG.length());
+                        response = response.substring(i + Logger.END_OF_TIMESTAND_TAG.length());
                     String copy = response;
                     listener.beforeLine(response);
                     while (!response.isEmpty())
@@ -63,8 +64,9 @@ public class EngineState {
             }
         }
         );
+        this.logger = logger;
 
-        registerStringValueAction(Fields.PROTOCOL_MSG, value -> MessagesCentral.getInstance().postMessage(ENGINE_STATE_CLASS, value));
+        registerStringValueAction(Fields.PROTOCOL_MSG, value -> MessagesCentral.getInstance().postMessage(logger, ENGINE_STATE_CLASS, value));
     }
 
     /**
@@ -82,7 +84,7 @@ public class EngineState {
      * @return null in case of error, line message if valid packed ine
      * @see #packString(String)
      */
-    public static String unpackString(String message) {
+    public static String unpackString(String message, Logger logger) {
         String prefix = "line" + PACKING_DELIMITER;
         /**
          * If we get this tag we have probably connected to the wrong port
@@ -93,13 +95,13 @@ public class EngineState {
             return null;
         }
         if (!message.startsWith(prefix)) {
-            FileLog.MAIN.logLine("EngineState: unexpected header: " + message + " while looking for " + prefix);
+            logger.info("EngineState: unexpected header: " + message + " while looking for " + prefix);
             return null;
         }
         message = message.substring(prefix.length());
         int delimiterIndex = message.indexOf(PACKING_DELIMITER);
         if (delimiterIndex == -1) {
-            FileLog.MAIN.logLine("Delimiter not found in: " + message);
+            logger.info("Delimiter not found in: " + message);
             return null;
         }
         String lengthToken = message.substring(0, delimiterIndex);
@@ -107,13 +109,13 @@ public class EngineState {
         try {
             expectedLen = Integer.parseInt(lengthToken);
         } catch (NumberFormatException e) {
-            FileLog.MAIN.logLine("invalid len: " + lengthToken);
+            logger.info("invalid len: " + lengthToken);
             return null;
         }
 
         String response = message.substring(delimiterIndex + 1);
         if (response.length() != expectedLen) {
-            FileLog.MAIN.logLine("message len does not match header: " + message);
+            logger.info("message len does not match header: " + message);
             response = null;
         }
         return response;
@@ -131,7 +133,7 @@ public class EngineState {
                 response = handleStringActionPair(response, pair, listener);
         }
         if (originalResponse.length() == response.length()) {
-            FileLog.MAIN.logLine("EngineState.unknown: " + response);
+            logger.info("EngineState.unknown: " + response);
             int keyEnd = response.indexOf(SEPARATOR);
             if (keyEnd == -1) {
                 // discarding invalid line
@@ -144,7 +146,7 @@ public class EngineState {
                 return "";
             }
             String value = response.substring(keyEnd, valueEnd);
-            FileLog.MAIN.logLine("Invalid key [" + unknownKey + "] value [" + value + "]");
+            logger.info("Invalid key [" + unknownKey + "] value [" + value + "]");
             // trying to process the rest of the line
             response = response.substring(valueEnd + SEPARATOR.length());
         }

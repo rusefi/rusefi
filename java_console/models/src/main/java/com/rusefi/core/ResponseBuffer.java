@@ -1,6 +1,5 @@
 package com.rusefi.core;
 
-import com.rusefi.core.test.ResponseBufferTest;
 import com.rusefi.io.LinkDecoder;
 import org.jetbrains.annotations.NotNull;
 

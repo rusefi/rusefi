@@ -204,7 +204,7 @@ public class EngineSnifferPanel {
     }
 
     public void displayChart(String value) {
-        EngineChart map = EngineChartParser.unpackToMap(value);
+        EngineChart map = EngineChartParser.unpackToMap(value, FileLog.LOGGER);
 
         StringBuilder revolutions = map.get(Fields.TOP_DEAD_CENTER_MESSAGE);
 

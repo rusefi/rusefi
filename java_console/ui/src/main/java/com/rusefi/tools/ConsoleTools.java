@@ -10,6 +10,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.ResponseBuffer;
@@ -83,7 +84,7 @@ public class ConsoleTools {
     private static void calcXmlImageTuneCrc(String... args) throws Exception {
         String fileName = args[1];
         Msq msq = Msq.readTune(fileName);
-        ConfigurationImage image = msq.asImage(IniFileModel.getInstance());
+        ConfigurationImage image = msq.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
         printCrc(image);
     }
 
@@ -272,11 +273,11 @@ public class ConsoleTools {
         ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName);
         System.out.println("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
 
-        Msq tune = Msq.valueOf(image);
-        tune.writeXmlFile(Msq.outputXmlFileName);
+        Msq tune = MsqFactory.valueOf(image);
+        tune.writeXmlFile(Online.outputXmlFileName);
         String authToken = AuthTokenPanel.getAuthToken();
         System.out.println("Using " + authToken);
-        Online.upload(new File(Msq.outputXmlFileName), authToken);
+        Online.upload(new File(Online.outputXmlFileName), authToken);
     }
 
     public static long classBuildTimeMillis() throws URISyntaxException, IllegalStateException, IllegalArgumentException {

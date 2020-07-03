@@ -1,11 +1,10 @@
 package com.rusefi.tune.xml;
 
-import com.rusefi.config.generated.Fields;
-
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class VersionInfo {
     private String firmwareInfo;
+    private String tsSignature;
 
     public VersionInfo() {
     }
@@ -20,17 +19,25 @@ public class VersionInfo {
     }
 
     @XmlAttribute
-    public String getFirmwareInfo() {
-        return firmwareInfo;
-    }
-
-    @XmlAttribute
     public String getNPages() {
         return "1";
     }
 
     @XmlAttribute
+    public String getFirmwareInfo() {
+        return firmwareInfo;
+    }
+
+    @XmlAttribute
     public String getSignature() {
-        return Fields.TS_SIGNATURE;
+        return tsSignature;
+    }
+
+    public void setFirmwareInfo(String firmwareInfo) {
+        this.firmwareInfo = firmwareInfo;
+    }
+
+    public void setTsSignature(String tsSignature) {
+        this.tsSignature = tsSignature;
     }
 }

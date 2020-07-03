@@ -1,11 +1,8 @@
 package com.rusefi.core;
 
-import com.rusefi.FileLog;
-import com.rusefi.io.CommunicationLoggingHolder;
-import com.rusefi.io.CommunicationLoggingListener;
+import com.opensr5.Logger;
 
 import javax.swing.*;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -20,12 +17,6 @@ public class MessagesCentral {
     private final List<MessageListener> listeners = new CopyOnWriteArrayList<>();
 
     private MessagesCentral() {
-        CommunicationLoggingHolder.communicationLoggingListener = new CommunicationLoggingListener() {
-            @Override
-            public void onPortHolderMessage(Class clazz, String message) {
-                postMessage(clazz, message);
-            }
-        };
     }
 
     public static MessagesCentral getInstance() {
@@ -36,8 +27,8 @@ public class MessagesCentral {
         listeners.add(listener);
     }
 
-    public void postMessage(final Class clazz, final String message) {
-        FileLog.MAIN.logLine("postMessage " + clazz.getSimpleName() + ": " + message);
+    public void postMessage(Logger logger, final Class clazz, final String message) {
+        logger.info("postMessage " + clazz.getSimpleName() + ": " + message);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

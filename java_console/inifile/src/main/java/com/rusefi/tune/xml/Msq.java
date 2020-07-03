@@ -3,14 +3,11 @@ package com.rusefi.tune.xml;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
-import com.rusefi.config.generated.Fields;
-import com.rusefi.shared.FileUtil;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +15,6 @@ import java.util.Objects;
 
 @XmlRootElement
 public class Msq {
-    public static final String outputXmlFileName = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
 
     public List<Page> page = new ArrayList<>();
 
@@ -29,24 +25,25 @@ public class Msq {
     }
 
     @NotNull
-    public static Msq valueOf(ConfigurationImage image) {
+    public static Msq valueOf(ConfigurationImage image, int totalConfigSize, String tsSignature) {
         IniFileModel ini = IniFileModel.getInstance();
-        Msq tune = create();
+        Msq tune = create(totalConfigSize, tsSignature);
         for (String key : ini.allIniFields.keySet())
             tune.loadConstant(ini, key, image);
         return tune;
     }
 
     @NotNull
-    public static Msq create() {
+    public static Msq create(int totalConfigSize, String tsSignature) {
         Msq tune = new Msq();
+        tune.versionInfo.setTsSignature(tsSignature);
         tune.page.add(new Page(null, null));
-        tune.page.add(new Page(0, Fields.TOTAL_CONFIG_SIZE));
+        tune.page.add(new Page(0, totalConfigSize));
         return tune;
     }
 
-    public ConfigurationImage asImage(IniFileModel instance) {
-        ConfigurationImage ci = new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE);
+    public ConfigurationImage asImage(IniFileModel instance, int totalConfigSize) {
+        ConfigurationImage ci = new ConfigurationImage(totalConfigSize);
 
         Page page = findPage();
         if (page == null)
@@ -97,9 +94,7 @@ public class Msq {
             Integer size = p.getSize();
             if (size == null)
                 continue;
-            if (size == Fields.TOTAL_CONFIG_SIZE) {
-                return p;
-            }
+            return p;
         }
         return null;
     }

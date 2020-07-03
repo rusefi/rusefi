@@ -12,5 +12,6 @@
     <orderEntry type="library" name="jSerialComm" level="project" />
     <orderEntry type="module" module-name="opensr5" exported="" />
     <orderEntry type="module" module-name="logging-api" exported="" />
+    <orderEntry type="module" module-name="models" />
   </component>
 </module>

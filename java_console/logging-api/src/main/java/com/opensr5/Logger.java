@@ -31,6 +31,7 @@ public interface Logger {
     };
     String DIR = "logs/";
     String DATE_PATTERN = "yyyy-MM-dd_HH_mm_ss_SSS";
+    String END_OF_TIMESTAND_TAG = "<EOT>: ";
 
     static String getDate() {
         return new SimpleDateFormat(DATE_PATTERN).format(new Date());

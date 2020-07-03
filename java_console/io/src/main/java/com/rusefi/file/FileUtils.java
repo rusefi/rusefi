@@ -1,5 +1,6 @@
 package com.rusefi.file;
 
+import com.opensr5.Logger;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.LinkManager;
 
@@ -11,8 +12,8 @@ import java.util.List;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class FileUtils {
-    public static void readFile(String filename, EngineState.EngineStateListener listener) {
-        readFile2(filename, new EngineState(listener));
+    public static void readFile(String filename, EngineState.EngineStateListener listener, Logger logger) {
+        readFile2(filename, new EngineState(listener, logger));
     }
 
     public static void readFile2(String filename, EngineState engineState) {

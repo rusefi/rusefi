@@ -43,7 +43,7 @@ public class LinkManager {
                 logger.info(fullLine);
                 HeartBeatListeners.onDataArrived();
             }
-        });
+        }, logger);
         commandQueue = new CommandQueue(this, logger);
     }
 
