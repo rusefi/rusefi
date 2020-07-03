@@ -38,16 +38,6 @@ set f7_console_setting=firmware\config\boards\nucleo_f767\rusefi_console_propert
 
 rem                     folter_name configuration_name [optional .ini file name]
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat proteus     proteus_f4 rusefi_proteus.ini
-IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
-IF %ERRORLEVEL% NEQ 0 EXIT /B 1
-pwd
-
-call misc\jenkins\compile_other_versions\compile_and_upload.bat proteus     proteus_f7 rusefi_proteus.ini
-IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
-IF %ERRORLEVEL% NEQ 0 EXIT /B 1
-pwd
-
 call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre_f7 rusefi_microrusefi.ini %f7_console_setting%
 IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 IF %ERRORLEVEL% NEQ 0 EXIT /B 1
@@ -57,6 +47,27 @@ rem call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi 
 rem IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 rem IF %ERRORLEVEL% NEQ 0 EXIT /B 1
 rem pwd
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat prometheus prometheus_405
+IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
+IF %ERRORLEVEL% NEQ 0 EXIT /B 1
+pwd
+
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat prometheus prometheus_469
+IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
+IF %ERRORLEVEL% NEQ 0 EXIT /B 1
+pwd
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat proteus     proteus_f4 rusefi_proteus.ini
+IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
+IF %ERRORLEVEL% NEQ 0 EXIT /B 1
+pwd
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat proteus     proteus_f7 rusefi_proteus.ini
+IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
+IF %ERRORLEVEL% NEQ 0 EXIT /B 1
+pwd
 
 call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f746 stm32f746_nucleo no %f7_console_setting%
 IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
@@ -74,16 +85,3 @@ rem call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f767 
 rem IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 rem IF %ERRORLEVEL% NEQ 0 EXIT /B 1
 rem pwd
-
-
-call misc\jenkins\compile_other_versions\compile_and_upload.bat prometheus prometheus_405
-IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
-IF %ERRORLEVEL% NEQ 0 EXIT /B 1
-pwd
-
-
-call misc\jenkins\compile_other_versions\compile_and_upload.bat prometheus prometheus_469
-IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
-IF %ERRORLEVEL% NEQ 0 EXIT /B 1
-pwd
-
