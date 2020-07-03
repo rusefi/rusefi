@@ -231,7 +231,7 @@ public class ConsoleUI {
                 new ConsoleUI(port);
             } else {
                 for (String p : LinkManager.getCommPorts())
-                    MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
+                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, Launcher.class, "Available port: " + p);
                 new StartupFrame().chooseSerialPort();
             }
 
