@@ -47,7 +47,8 @@
             <src path="io/src/main/java"/>
             <src path="io/src/test/java"/>
             <src path="models/src"/>
-            <src path="inifile/src"/>
+            <src path="inifile/src/main/java"/>
+            <src path="inifile/src/test/java"/>
             <src path="shared_ui/src"/>
             <src path="shared_io/src/main/java"/>
             <src path="logging-api/src/main/java"/>
@@ -80,6 +81,7 @@
                 <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="autoupdate/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="io/src/test/java" includes="**/test/**/*Test.java"/>
+                <fileset dir="inifile/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="models/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="ui/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="romraider/src" includes="**/test/**/*Test.java"/>

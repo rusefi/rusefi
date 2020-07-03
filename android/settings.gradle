@@ -1,3 +1,5 @@
 include ':app'
 include ':shared_io'
 project(':shared_io').projectDir = new File('../java_console/shared_io')
+include ':io'
+project(':io').projectDir = new File('../java_console/io')
