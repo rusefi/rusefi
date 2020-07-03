@@ -31,6 +31,11 @@ public enum FileLog {
         }
 
         @Override
+        public boolean isTradeEnabled() {
+            return false;
+        }
+
+        @Override
         public void info(String msg) {
             MAIN.logLine(msg);
         }

@@ -555,7 +555,7 @@ public class AutoTest {
 
         boolean failed = false;
         try {
-            LinkManager linkManager = new LinkManager();
+            LinkManager linkManager = new LinkManager(FileLog.LOGGER);
             IoUtil.connectToSimulator(linkManager, startSimulator);
             new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
         } catch (Throwable e) {

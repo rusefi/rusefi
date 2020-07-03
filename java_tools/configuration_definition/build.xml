@@ -20,6 +20,7 @@
             <src path="${console_path}/autoupdate/src"/>
             <src path="${console_path}/inifile/src"/>
             <src path="${console_path}/logging/src"/>
+            <src path="${console_path}/logging-api/src/main/java"/>
             <src path="${console_path}/models/src"/>
             <src path="${console_path}/shared_io/src/main/java"/>
             <src path="../enum_to_string/src"/>
