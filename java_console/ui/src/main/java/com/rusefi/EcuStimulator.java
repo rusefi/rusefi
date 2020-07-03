@@ -1,10 +1,10 @@
 package com.rusefi;
 
+import com.opensr5.Logger;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.file.TableGenerator;
-import com.rusefi.io.CommandQueue;
 import com.rusefi.models.Point3D;
 import com.rusefi.models.Range;
 import com.rusefi.models.XYData;
@@ -80,7 +80,7 @@ public class EcuStimulator {
 //        if (1 == 1)
 //            return;
 
-        String csvFileName = "table_" + inputs.getRpmStep() + "_" + inputs.getEngineLoadStep() + FileLog.getDate() + ".csv";
+        String csvFileName = "table_" + inputs.getRpmStep() + "_" + inputs.getEngineLoadStep() + Logger.getDate() + ".csv";
         FileLog.MAIN.logLine("Wring to " + csvFileName);
 
         final BufferedWriter csv;
@@ -121,7 +121,7 @@ public class EcuStimulator {
             throw new IllegalStateException(e);
         }
 
-        TableGenerator.writeAsC(data, C_PREFIX, "map" + FileLog.getDate() + ".c");
+        TableGenerator.writeAsC(data, C_PREFIX, "map" + Logger.getDate() + ".c");
     }
 
     private void buildTable(ResultListener listener, Sensor dwellSensor) {

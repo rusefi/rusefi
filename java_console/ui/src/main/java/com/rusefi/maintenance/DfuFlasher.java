@@ -47,7 +47,7 @@ public class DfuFlasher {
 
         if (!PortDetector.isAutoPort(port)) {
             messages.append("Using selected " + port + "\n");
-            IoStream stream = SerialIoStreamJSerialComm.openPort(port);
+            IoStream stream = SerialIoStreamJSerialComm.openPort(port, FileLog.LOGGER);
             sendDfuRebootCommand(stream, messages);
         } else {
             messages.append("Auto-detecting port...\n");

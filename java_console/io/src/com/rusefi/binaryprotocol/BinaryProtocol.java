@@ -5,7 +5,6 @@ import com.opensr5.Logger;
 import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
-import com.rusefi.FileLog;
 import com.rusefi.Timeouts;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
@@ -143,7 +142,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     @NotNull
     public static String getFileName(String prefix, String fileType) {
-        return FileLog.DIR + prefix + FileLog.getDate() + fileType;
+        return Logger.DIR + prefix + Logger.getDate() + fileType;
     }
 
     public void doSend(final String command, boolean fireEvent) throws InterruptedException {
@@ -520,7 +519,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 Thread.sleep(100);
             return new String(response, 1, response.length - 1);
         } catch (InterruptedException e) {
-            FileLog.MAIN.log(e);
+            logger.error(e.toString());
             return null;
         }
     }

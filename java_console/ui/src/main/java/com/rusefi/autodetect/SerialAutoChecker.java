@@ -17,26 +17,28 @@ import java.util.function.Function;
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
 public class SerialAutoChecker implements Runnable {
+    private final Logger logger;
     private final String serialPort;
     private final CountDownLatch portFound;
     private final AtomicReference<String> result;
     private final Function<IoStream, Void> callback;
     public static String SIGNATURE;
 
-    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<String> result, Function<IoStream, Void> callback) {
+    public SerialAutoChecker(Logger logger, String serialPort, CountDownLatch portFound, AtomicReference<String> result, Function<IoStream, Void> callback) {
+        this.logger = logger;
         this.serialPort = serialPort;
         this.portFound = portFound;
         this.result = result;
         this.callback = callback;
     }
 
-    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<String> result) {
-        this(serialPort, portFound, result, null);
+    public SerialAutoChecker(Logger logger, String serialPort, CountDownLatch portFound, AtomicReference<String> result) {
+        this(logger, serialPort, portFound, result, null);
     }
 
     @Override
     public void run() {
-        IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort, logger);
         Logger logger = FileLog.LOGGER;
         IncomingDataBuffer incomingData = BinaryProtocol.createDataBuffer(stream, logger);
         try {

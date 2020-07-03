@@ -7,7 +7,6 @@ import com.rusefi.core.EngineState;
 import com.rusefi.io.*;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
-import com.rusefi.ui.GaugesPanel;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
@@ -80,7 +79,7 @@ public class MainFrame {
                 tabbedPane.settingsTab.showContent();
                 tabbedPane.logsManager.showContent();
                 tabbedPane.fuelTunePane.showContent();
-                new BinaryProtocolServer().start(linkManager);
+                new BinaryProtocolServer(FileLog.LOGGER).start(linkManager);
             }
         });
 

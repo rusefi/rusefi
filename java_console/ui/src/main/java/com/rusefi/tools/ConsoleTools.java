@@ -134,7 +134,7 @@ public class ConsoleTools {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes, FileLog.LOGGER);
     }
@@ -199,7 +199,7 @@ public class ConsoleTools {
         linkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
-                new BinaryProtocolServer().start(linkManager);
+                new BinaryProtocolServer(FileLog.LOGGER).start(linkManager);
             }
 
             @Override
@@ -305,7 +305,7 @@ public class ConsoleTools {
             System.out.println("rusEFI not detected");
             return;
         }
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
         Logger logger = FileLog.LOGGER;
         IncomingDataBuffer incomingData = BinaryProtocol.createDataBuffer(stream, logger);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes("hello");

@@ -2,7 +2,6 @@ package com.rusefi.io;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.opensr5.Logger;
-import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
@@ -31,13 +30,21 @@ public class LinkManager {
     };
 
     public static final String LOG_VIEWER = "log viewer";
-    private final CommandQueue commandQueue = new CommandQueue(this);
+    private final CommandQueue commandQueue;
     private final Logger logger;
 
     private LinkConnector connector;
 
     public LinkManager(Logger logger) {
         this.logger = logger;
+        engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
+            @Override
+            public void beforeLine(String fullLine) {
+                logger.info(fullLine);
+                HeartBeatListeners.onDataArrived();
+            }
+        });
+        commandQueue = new CommandQueue(this, logger);
     }
 
     @NotNull
@@ -151,13 +158,7 @@ public class LinkManager {
 //            throw new IllegalStateException("Communication on wrong thread");
     }
 
-    private EngineState engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
-        @Override
-        public void beforeLine(String fullLine) {
-            FileLog.MAIN.logLine(fullLine);
-            HeartBeatListeners.onDataArrived();
-        }
-    });
+    private EngineState engineState;
 
     public EngineState getEngineState() {
         return engineState;
@@ -176,14 +177,14 @@ public class LinkManager {
 
     public void start(String port) {
         Objects.requireNonNull(port, "port");
-        FileLog.MAIN.logLine("LinkManager: Starting " + port);
+        logger.info("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
             connector = LinkConnector.VOID;
         } else if (TcpConnector.isTcpPort(port)) {
-            connector = new TcpConnector(this, port);
+            connector = new TcpConnector(this, port, logger);
             isSimulationMode = true;
         } else {
-            connector = new SerialConnector(this, port);
+            connector = new SerialConnector(this, port, logger);
         }
     }
 

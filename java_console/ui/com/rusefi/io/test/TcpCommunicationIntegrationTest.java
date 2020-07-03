@@ -33,7 +33,7 @@ public class TcpCommunicationIntegrationTest {
 
         LinkManager linkManager = new LinkManager(FileLog.LOGGER);
         linkManager.setConnector(LinkConnector.getDetachedConnector(state));
-        BinaryProtocolServer server = new BinaryProtocolServer();
+        BinaryProtocolServer server = new BinaryProtocolServer(FileLog.LOGGER);
         server.start(linkManager, port);
 
         CountDownLatch countDownLatch = new CountDownLatch(1);

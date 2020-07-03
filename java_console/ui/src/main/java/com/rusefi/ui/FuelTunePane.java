@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.Logger;
 import com.romraider.Settings;
 import com.romraider.maps.Scale;
 import com.romraider.maps.Table;
@@ -257,7 +258,7 @@ public class FuelTunePane {
 
     private DataOutputStream getTuneLogStream() {
         if (dos == null) {
-            String fileName = FileLog.DIR + "tune_" + FileLog.getDate() + ".txt";
+            String fileName = Logger.DIR + "tune_" + Logger.getDate() + ".txt";
             try {
                 dos = new DataOutputStream(new FileOutputStream(fileName));
             } catch (FileNotFoundException e) {

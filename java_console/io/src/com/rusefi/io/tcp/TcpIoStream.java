@@ -1,6 +1,6 @@
 package com.rusefi.io.tcp;
 
-import com.rusefi.FileLog;
+import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
@@ -19,14 +19,16 @@ import java.util.Arrays;
 public class TcpIoStream implements IoStream {
     private final InputStream input;
     private final OutputStream output;
+    private final Logger logger;
     private final LinkManager linkManager;
     private boolean isClosed;
 
-    public TcpIoStream(LinkManager linkManager, Socket socket) throws IOException {
-        this(linkManager, new BufferedInputStream(socket.getInputStream()), socket.getOutputStream());
+    public TcpIoStream(Logger logger, LinkManager linkManager, Socket socket) throws IOException {
+        this(logger, linkManager, new BufferedInputStream(socket.getInputStream()), socket.getOutputStream());
     }
 
-    public TcpIoStream(LinkManager linkManager, InputStream input, OutputStream output) {
+    private TcpIoStream(Logger logger, LinkManager linkManager, InputStream input, OutputStream output) {
+        this.logger = logger;
         this.linkManager = linkManager;
         if (input == null)
             throw new NullPointerException("input");
@@ -58,7 +60,7 @@ public class TcpIoStream implements IoStream {
             @Override
             public void run() {
                 Thread.currentThread().setName("TCP connector loop");
-                FileLog.MAIN.logLine("Running TCP connection loop");
+                logger.info("Running TCP connection loop");
 
                 byte inputBuffer[] = new byte[256];
                 while (true) {
