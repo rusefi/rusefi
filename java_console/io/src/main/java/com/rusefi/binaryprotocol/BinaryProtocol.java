@@ -69,7 +69,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     // todo: this ioLock needs better documentation!
     private final Object ioLock = new Object();
 
-    private static final int COMPOSITE_OFF_RPM = 300;
+    public static final int COMPOSITE_OFF_RPM = Integer.getInteger("high_speed_logger_rpm", 300);
 
     /**
      * Composite logging turns off after 10 seconds of RPM above 300
