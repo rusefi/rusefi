@@ -2,6 +2,9 @@ name: rusEFI tasks for push
 
 on: [push, pull-request]
 
+env:
+  RUSEFI_SKIP_UPLOAD: ${{github.event.pusher}}
+
 jobs:
   build-firmware:
     runs-on: ubuntu-latest
