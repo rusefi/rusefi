@@ -9,6 +9,7 @@ import com.rusefi.Timeouts;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -91,6 +92,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     public boolean isClosed;
 
+    public CommunicationLoggingListener communicationLoggingListener = CommunicationLoggingListener.VOID;
+
     public byte[] getCurrentOutputs() {
         return state.getCurrentOutputs();
     }
@@ -107,6 +110,13 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         this.linkManager = linkManager;
         this.logger = logger;
         this.stream = stream;
+
+        communicationLoggingListener = new CommunicationLoggingListener() {
+            @Override
+            public void onPortHolderMessage(Class clazz, String message) {
+                MessagesCentral.getInstance().postMessage(logger, clazz, message);
+            }
+        };
 
         incomingData = createDataBuffer(stream, logger);
         Runtime.getRuntime().addShutdownHook(hook);
@@ -148,7 +158,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     public void doSend(final String command, boolean fireEvent) throws InterruptedException {
         logger.info("Sending [" + command + "]");
         if (fireEvent && LinkManager.LOG_LEVEL.isDebugEnabled()) {
-            CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(BinaryProtocol.class, "Sending [" + command + "]");
+            communicationLoggingListener.onPortHolderMessage(BinaryProtocol.class, "Sending [" + command + "]");
         }
 
         Future f = linkManager.submit(new Runnable() {
@@ -347,7 +357,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
         try {
             ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
-            Msq tune = Msq.valueOf(image);
+            Msq tune = MsqFactory.valueOf(image);
             tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
         } catch (Exception e) {
             System.err.println("Ignoring " + e);

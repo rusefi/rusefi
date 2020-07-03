@@ -20,7 +20,6 @@ public enum FileLog {
     public static final String OS_VERSION = "os.version";
     private static final String WIKI_URL = "https://github.com/rusefi/rusefi/wiki/rusEFI-logs-folder";
     public static String currentLogName;
-    public static final String END_OF_TIMESTAND_TAG = "<EOT>: ";
     public static final Logger LOGGER = new Logger() {
         @Override
         public void trace(String msg) {
@@ -104,7 +103,7 @@ public enum FileLog {
     }
 
     public synchronized void logLine(String fullLine) {
-        String withDate = Logger.getDate() + END_OF_TIMESTAND_TAG + fullLine;
+        String withDate = Logger.getDate() + Logger.END_OF_TIMESTAND_TAG + fullLine;
         System.out.println(withDate);
         if (suspendLogging)
             return;

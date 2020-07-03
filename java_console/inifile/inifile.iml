@@ -9,9 +9,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="junit" level="project" />
-    <orderEntry type="module" module-name="models" exported="" />
     <orderEntry type="module" module-name="autoupdate" exported="" />
-    <orderEntry type="library" name="annotations" level="project" />
-    <orderEntry type="module" module-name="shared_io" />
+    <orderEntry type="library" exported="" name="annotations" level="project" />
+    <orderEntry type="module" module-name="shared_io" exported="" />
   </component>
 </module>
