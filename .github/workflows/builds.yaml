@@ -54,11 +54,11 @@ jobs:
             folder: prometheus
 
           - build-target: proteus_f4
-            folder: prometheus
+            folder: proteus
             ini-file: rusefi_proteus.ini
 
           - build-target: proteus_f7
-            folder: prometheus
+            folder: proteus
             ini-file: rusefi_proteus.ini
 
           - build-target: stm32f746_nucleo
