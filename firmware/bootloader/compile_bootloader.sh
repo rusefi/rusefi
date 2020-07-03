@@ -18,7 +18,8 @@ echo "$SCRIPT_NAME: Bootloader build success."
 
 cd blbuild
 # Generate a header file with binary bootloader code
-java -jar ../../../java_tools/bin2header.jar bootloader.bin $BOOTLOADER_CODE_DESTINATION_FILE "$BOOTLOADER_COMMENT static const volatile uint8_t bootloader_code[] BOOTLOADER_SECTION"
+java -jar ../../../java_tools/bin2header.jar bootloader.bin "$BOOTLOADER_CODE_DESTINATION_FILE" "$BOOTLOADER_COMMENT static const volatile uint8_t bootloader_code[] BOOTLOADER_SECTION"
+[ $? -eq 0 ] || { echo "$SCRIPT_NAME: error generating header file"; exit 1; }
 cd ..
 
 # Touch 'bootloader_storage.c' to update its modification date (needed for make)
