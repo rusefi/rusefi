@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 02 18:26:29 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 03 18:55:52 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -132,8 +132,6 @@ public class Fields {
 	public static final int auxTempSensor2_tempC_3_offset = 2484;
 	public static final int auxValves1_offset = 1816;
 	public static final int auxValves2_offset = 1817;
-	public static final int auxVoltage1_offset = 2713;
-	public static final int auxVoltage2_offset = 2714;
 	public static final int BARO_CORR_SIZE = 4;
 	public static final int baroCorrPressureBins_offset = 1544;
 	public static final int baroCorrRpmBins_offset = 1560;
@@ -1040,6 +1038,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 783749765;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1278,7 +1277,7 @@ public class Fields {
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.07.02.all.4274229142";
+	public static final String TS_SIGNATURE = "rusEFI 2020.07.03.all.783749765";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -1312,6 +1311,8 @@ public class Fields {
 	public static final int unusedAt720_offset = 720;
 	public static final int unusedAt724_offset = 724;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1200;
+	public static final int unusedAuxVoltage1_TODO_332_offset = 2713;
+	public static final int unusedAuxVoltage2_TODO_332_offset = 2714;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_11_offset = 976;
 	public static final int unusedBit_251_12_offset = 976;
@@ -2256,8 +2257,8 @@ public class Fields {
 	public static final Field OILPRESSURE_V2 = Field.create("OILPRESSURE_V2", 2704, FieldType.FLOAT);
 	public static final Field OILPRESSURE_VALUE2 = Field.create("OILPRESSURE_VALUE2", 2708, FieldType.FLOAT);
 	public static final Field ACCELEROMETERSPIDEVICE = Field.create("ACCELEROMETERSPIDEVICE", 2712, FieldType.INT8);
-	public static final Field AUXVOLTAGE1 = Field.create("AUXVOLTAGE1", 2713, FieldType.INT8, adc_channel_e);
-	public static final Field AUXVOLTAGE2 = Field.create("AUXVOLTAGE2", 2714, FieldType.INT8, adc_channel_e);
+	public static final Field UNUSEDAUXVOLTAGE1_TODO_332 = Field.create("UNUSEDAUXVOLTAGE1_TODO_332", 2713, FieldType.INT8);
+	public static final Field UNUSEDAUXVOLTAGE2_TODO_332 = Field.create("UNUSEDAUXVOLTAGE2_TODO_332", 2714, FieldType.INT8);
 	public static final Field UNUSEDSPIPADDING5 = Field.create("UNUSEDSPIPADDING5", 2715, FieldType.INT8);
 	public static final Field UNUSEDFLEXFUELSENSOR = Field.create("UNUSEDFLEXFUELSENSOR", 3100, FieldType.INT8);
 	public static final Field TEST557PIN = Field.create("TEST557PIN", 3101, FieldType.INT8, brain_pin_e);
@@ -3235,8 +3236,8 @@ public class Fields {
 	OILPRESSURE_V2,
 	OILPRESSURE_VALUE2,
 	ACCELEROMETERSPIDEVICE,
-	AUXVOLTAGE1,
-	AUXVOLTAGE2,
+	UNUSEDAUXVOLTAGE1_TODO_332,
+	UNUSEDAUXVOLTAGE2_TODO_332,
 	UNUSEDSPIPADDING5,
 	UNUSEDFLEXFUELSENSOR,
 	TEST557PIN,
