@@ -44,7 +44,7 @@
             <src path="autoupdate/src"/>
             <src path="../java_tools/configuration_definition/src"/>
             <src path="../java_tools/enum_to_string/src"/>
-            <src path="io/src"/>
+            <src path="io/src/main/src"/>
             <src path="models/src"/>
             <src path="inifile/src"/>
             <src path="shared_ui/src"/>
