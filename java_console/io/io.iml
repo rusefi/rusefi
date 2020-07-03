@@ -10,7 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="jcip-annotations" level="project" />
     <orderEntry type="library" name="jSerialComm" level="project" />
-    <orderEntry type="module" module-name="opensr5" exported="" />
     <orderEntry type="module" module-name="logging-api" exported="" />
     <orderEntry type="module" module-name="models" />
   </component>
