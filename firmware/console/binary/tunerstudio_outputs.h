@@ -95,7 +95,7 @@ typedef struct {
 
 	// air flow/mass measurment
 	scaled_voltage massAirFlowVoltage; // 26
-	scaled_channel<uint16_t, 10> massAirFlow; // 28
+	scaled_channel<uint16_t, PACK_MULT_MASS_FLOW> massAirFlow; // 28
 	scaled_pressure manifoldAirPressure; // 30
 	scaled_pressure baroPressure; // 32
 

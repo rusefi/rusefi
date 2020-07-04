@@ -233,7 +233,7 @@ enable2ndByteCanID = false
 
 ; air flow/mass measurments
       MAFValue        = scalar,  U16,     26,        "V",,{1/@@PACK_MULT_VOLTAGE@@},,         0
-      massAirFlowValue= scalar,  U16,     28,     "Kg/h", 0.1,         0
+      massAirFlowValue= scalar,  U16,     28,     "Kg/h", {1/@@PACK_MULT_MASS_FLOW@@},         0
       MAPValue        = scalar,  U16,     30,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
       baroPressure    = scalar,  U16,     32,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
       AFRValue        = scalar,  U16,     34,      "AFR",,{1/@@PACK_MULT_AFR@@},,       0.0
