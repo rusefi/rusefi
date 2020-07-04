@@ -648,7 +648,7 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
  */
 static void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	if (offset + count > sizeof(TunerStudioOutputChannels)) {
-		scheduleMsg(&tsLogger, "TS: Version Mismatch? Too much outpus requested %d/%d/%d", offset, count,
+		scheduleMsg(&tsLogger, "TS: Version Mismatch? Too much outputs requested %d/%d/%d", offset, count,
 				sizeof(TunerStudioOutputChannels));
 		sendErrorCode(tsChannel);
 		return;
