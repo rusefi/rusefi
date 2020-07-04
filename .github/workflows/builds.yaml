@@ -82,8 +82,8 @@ jobs:
         tar -xvf compiler.tar.xz
         echo "::add-path::`pwd`/gcc-arm-none-eabi-9-2019-q4-major/bin"
   
-    - name: Install gcc-multilib
-      run: sudo apt-get install gcc-multilib g++-multilib
+    - name: Install multilib and mingw
+      run: sudo apt-get install gcc-multilib g++-multilib gcc-mingw-w64
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
@@ -125,8 +125,8 @@ jobs:
         tar -xvf compiler.tar.xz
         echo "::add-path::`pwd`/gcc-arm-none-eabi-9-2019-q4-major/bin"
   
-    - name: Install gcc-multilib
-      run: sudo apt-get install gcc-multilib g++-multilib
+    - name: Install multilib and mingw
+      run: sudo apt-get install gcc-multilib g++-multilib g++-multilib gcc-mingw-w64
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
@@ -146,8 +146,8 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Install gcc-multilib
-      run: sudo apt-get install gcc-multilib g++-multilib
+    - name: Install multilib and mingw
+      run: sudo apt-get install gcc-multilib g++-multilib g++-multilib gcc-mingw-w64
 
     - name: Compile Simulator
       run: sh misc/jenkins/build_simulator.sh
