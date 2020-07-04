@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 03 19:10:35 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 04 03:06:48 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -978,6 +978,7 @@ public class Fields {
 	public static final int PACK_ADD_TEMPERATURE = 40;
 	public static final int PACK_MULT_AFR = 1000;
 	public static final int PACK_MULT_ANGLE = 50;
+	public static final int PACK_MULT_MASS_FLOW = 10;
 	public static final int PACK_MULT_MS = 300;
 	public static final int PACK_MULT_PERCENT = 100;
 	public static final int PACK_MULT_PRESSURE = 30;
@@ -1038,7 +1039,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 963687772;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1277,7 +1277,7 @@ public class Fields {
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.07.03.all.963687772";
+	public static final String TS_SIGNATURE = "rusEFI 2020.07.04.all.3568439367";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;

@@ -988,6 +988,7 @@
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_ANGLE 50
+#define PACK_MULT_MASS_FLOW 10
 #define PACK_MULT_MS 300
 #define PACK_MULT_PERCENT 100
 #define PACK_MULT_PRESSURE 30
@@ -1056,8 +1057,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.07.03
-#define SIGNATURE_HASH 4098779590
+#define SIGNATURE_DATE 2020.07.04
+#define SIGNATURE_HASH 428657885
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1317,7 +1318,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.07.03.kin.4098779590"
+#define TS_SIGNATURE "rusEFI 2020.07.04.kin.428657885"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
