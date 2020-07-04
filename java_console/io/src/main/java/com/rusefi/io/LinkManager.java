@@ -174,6 +174,7 @@ public class LinkManager {
 
     /**
      * This flag controls if mock controls are needed
+     * todo: decouple from TcpConnector since not really related
      */
     public static boolean isSimulationMode;
 
@@ -188,16 +189,12 @@ public class LinkManager {
     }
 
     public void start(String port, ConnectionStateListener stateListener) {
-        if (isStarted) {
-            throw new IllegalStateException("Already started");
-        }
-        isStarted = true;
         Objects.requireNonNull(port, "port");
         logger.info("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
-            connector = LinkConnector.VOID;
+            setConnector(LinkConnector.VOID);
         } else if (TcpConnector.isTcpPort(port)) {
-            connector = new SerialConnector(this, port, logger, new Callable<IoStream>() {
+            setConnector(new SerialConnector(this, port, logger, new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
                     Socket socket;
@@ -211,14 +208,18 @@ public class LinkManager {
                         return null;
                     }
                 }
-            });
+            }));
             isSimulationMode = true;
         } else {
-            connector = new SerialConnector(this, port, logger, () -> SerialIoStreamJSerialComm.openPort(port, logger));
+            setConnector(new SerialConnector(this, port, logger, () -> SerialIoStreamJSerialComm.openPort(port, logger)));
         }
     }
 
     public void setConnector(LinkConnector connector) {
+        if (isStarted) {
+            throw new IllegalStateException("Already started");
+        }
+        isStarted = true;
         this.connector = connector;
     }
 
