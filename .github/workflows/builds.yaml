@@ -85,7 +85,15 @@ jobs:
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
       run: arm-none-eabi-gcc -v
+
+    # Build rusEFI console
+    - name: Build console
+      run: sh misc/jenkins/build_java_console.sh
   
+    # Build the simulator
+    - name: Build simulator
+      run: sh misc/jenkins/build_simulator.sh
+
     # Build the firmware!
     - name: Build Firmware
       run: sh misc/jenkins/compile_other_versions/compile_and_upload.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
