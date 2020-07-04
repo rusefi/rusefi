@@ -152,6 +152,7 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_VOLTAGE 1000
+#define PACK_MULT_MASS_FLOW 10
 #define TPS_1_BYTE_PACKING_MULT 2
 #define LOAD_1_BYTE_PACKING_MULT 2
 #define FSIO_TABLE_8 8
