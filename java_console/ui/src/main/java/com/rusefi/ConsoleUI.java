@@ -29,7 +29,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.rusefi.StartupFrame.createLogoLabel;
 import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.rusEFIVersion.CONSOLE_VERSION;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -75,7 +74,8 @@ public class ConsoleUI {
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
         LinkManager linkManager = uiContext.getLinkManager();
-        linkManager.start(port);
+        // todo: this blocking IO operation should NOT be happening on the UI thread
+        linkManager.start(port, mainFrame.listener);
 
         engineSnifferPanel = new EngineSnifferPanel(uiContext, getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))

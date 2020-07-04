@@ -1,13 +1,13 @@
 package com.rusefi.io.serial;
 
 import com.opensr5.Logger;
+import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Andrey Belomutskiy
@@ -19,15 +19,11 @@ public class SerialConnector implements LinkConnector {
     private final Logger logger;
     private final LinkManager linkManager;
 
-    public SerialConnector(LinkManager linkManager, String serialPort, Logger logger) {
+    public SerialConnector(LinkManager linkManager, String portName, Logger logger, Callable<IoStream> streamFactory) {
         this.linkManager = linkManager;
         this.logger = logger;
-        portHolder = new PortHolder(serialPort, linkManager, logger) {
-            @NotNull
-            public IoStream openStream() {
-                return SerialIoStreamJSerialComm.openPort(serialPort, logger);
-            }
-        };
+
+        portHolder = new PortHolder(portName, linkManager, logger, streamFactory);
     }
 
     @Override
@@ -47,6 +43,11 @@ public class SerialConnector implements LinkConnector {
     @Override
     public BinaryProtocol getBinaryProtocol() {
         return portHolder.getBp();
+    }
+
+    @Override
+    public void stop() {
+        portHolder.close();
     }
 
     @Override
