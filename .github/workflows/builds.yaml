@@ -150,4 +150,5 @@ jobs:
       run: sudo apt-get install gcc-multilib g++-multilib
 
     - name: Compile Simulator
-      run: sh simulator/compile.sh
+      working-directory: ./simulator/
+      run: sh compile.sh
