@@ -93,26 +93,26 @@ public enum Sensor {
     FIRMWARE_VERSION(GAUGE_NAME_VERSION, SensorCategory.OPERATIONS, FieldType.INT, 120, 1, 0, 100, "version_f"),
     TS_CONFIG_VERSION(".ini version", SensorCategory.OPERATIONS, FieldType.INT, 124),
 
-    engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 134, 0, 5),
+    engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 138, 0, 5),
     // Errors
-    totalTriggerErrorCounter(GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, 136, 0, 5),
-    lastErrorCode("last error", SensorCategory.STATUS, FieldType.INT, 138, 0, 5),
+    totalTriggerErrorCounter(GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, 140, 0, 5),
+    lastErrorCode("last error", SensorCategory.STATUS, FieldType.INT, 150, 0, 5),
 
     // Debug
-    debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.DEBUG, FieldType.FLOAT, 156, 0, 5),
-    debugFloatField2(GAUGE_NAME_DEBUG_F2, SensorCategory.DEBUG, FieldType.FLOAT, 160, 0, 5),
-    debugFloatField3(GAUGE_NAME_DEBUG_F3, SensorCategory.DEBUG, FieldType.FLOAT, 164, 0, 5),
-    debugFloatField4(GAUGE_NAME_DEBUG_F4, SensorCategory.DEBUG, FieldType.FLOAT, 168, 0, 5),
-    debugFloatField5(GAUGE_NAME_DEBUG_F5, SensorCategory.DEBUG, FieldType.FLOAT, 172, 0, 5),
-    debugFloatField6(GAUGE_NAME_DEBUG_F6, SensorCategory.DEBUG, FieldType.FLOAT, 176, 0, 5),
-    debugFloatField7(GAUGE_NAME_DEBUG_F7, SensorCategory.DEBUG, FieldType.FLOAT, 180, 0, 5),
-    debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.DEBUG, FieldType.INT, 184, 0, 5),
-    debugIntField2(GAUGE_NAME_DEBUG_I2, SensorCategory.DEBUG, FieldType.INT, 188, 0, 5),
-    debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.DEBUG, FieldType.INT, 192, 0, 5),
-    debugIntField4("debug i4", SensorCategory.DEBUG, FieldType.INT16, 196, 0, 5),
-    debugIntField5("debug i5", SensorCategory.DEBUG, FieldType.INT16, 198, 0, 5),
+    debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.DEBUG, FieldType.FLOAT, 168, 0, 5),
+    debugFloatField2(GAUGE_NAME_DEBUG_F2, SensorCategory.DEBUG, FieldType.FLOAT, 172, 0, 5),
+    debugFloatField3(GAUGE_NAME_DEBUG_F3, SensorCategory.DEBUG, FieldType.FLOAT, 176, 0, 5),
+    debugFloatField4(GAUGE_NAME_DEBUG_F4, SensorCategory.DEBUG, FieldType.FLOAT, 180, 0, 5),
+    debugFloatField5(GAUGE_NAME_DEBUG_F5, SensorCategory.DEBUG, FieldType.FLOAT, 184, 0, 5),
+    debugFloatField6(GAUGE_NAME_DEBUG_F6, SensorCategory.DEBUG, FieldType.FLOAT, 188, 0, 5),
+    debugFloatField7(GAUGE_NAME_DEBUG_F7, SensorCategory.DEBUG, FieldType.FLOAT, 192, 0, 5),
+    debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.DEBUG, FieldType.INT, 196, 0, 5),
+    debugIntField2(GAUGE_NAME_DEBUG_I2, SensorCategory.DEBUG, FieldType.INT, 200, 0, 5),
+    debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.DEBUG, FieldType.INT, 204, 0, 5),
+    debugIntField4("debug i4", SensorCategory.DEBUG, FieldType.INT16, 208, 0, 5),
+    debugIntField5("debug i5", SensorCategory.DEBUG, FieldType.INT16, 210, 0, 5),
 
-    tuneCrc16("tune crc16", SensorCategory.STATUS, FieldType.UINT16, 240, 0, 5),
+    tuneCrc16("tune crc16", SensorCategory.STATUS, FieldType.UINT16, 244, 0, 5),
 
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),
