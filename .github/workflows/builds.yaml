@@ -134,9 +134,14 @@ jobs:
         OS: Windows_NT
       run: sh misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
 
-  build-simulator
+  # This is just to ensure the simulator compiles on Linux
+  build-simulator:
     runs-on: ubuntu-latest
-    # This is just to ensure the simulator compiles on Linux
+
     steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
+
     - name: Compile Simulator
       run: sh misc/jenkins/build_simulator.sh
