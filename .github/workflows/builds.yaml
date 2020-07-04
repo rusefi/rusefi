@@ -146,8 +146,8 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Install multilib and mingw
-      run: sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64
+    - name: Install multilib
+      run: sudo apt-get install gcc-multilib g++-multilib
 
     - name: Compile Simulator
-      run: sh misc/jenkins/build_simulator.sh
+      run: sh simulator/compile.sh
