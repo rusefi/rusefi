@@ -77,6 +77,8 @@ public class TcpCommunicationIntegrationTest {
         });
         assertTrue(connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
         assertEquals(0, server.unknownCommands.get());
+
+        clientManager.stop();
     }
 
     @NotNull

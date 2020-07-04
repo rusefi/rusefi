@@ -12,7 +12,9 @@
 #include "global.h"
 #include "efilib.h"
 
-#if ! EFI_UNIT_TEST
+#if EFI_UNIT_TEST
+extern bool verboseMode;
+#endif /* EFI_UNIT_TEST */
 
 typedef char log_buf_t[DL_OUTPUT_BUFFER];
 
@@ -145,10 +147,19 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
  *
  * this is really 'global lock + printf + scheduleLogging + unlock' a bit more clear
  */
-void scheduleMsg(Logging *logging, const char *fmt, ...) {
-	for (unsigned int i = 0;i<strlen(fmt);i++) {
+void scheduleMsg(Logging *logging, const char *format, ...) {
+#if EFI_UNIT_TEST
+	if (verboseMode) {
+		va_list ap;
+		va_start(ap, format);
+		vprintf(format, ap);
+		va_end(ap);
+		printf("\r\n");
+	}
+#else
+	for (unsigned int i = 0;i<strlen(format);i++) {
 		// todo: open question which layer would not handle CR/LF properly?
-		efiAssertVoid(OBD_PCM_Processor_Fault, fmt[i] != '\n', "No CRLF please");
+		efiAssertVoid(OBD_PCM_Processor_Fault, format[i] != '\n', "No CRLF please");
 	}
 #if EFI_TEXT_LOGGING
 	if (logging == NULL) {
@@ -160,8 +171,8 @@ void scheduleMsg(Logging *logging, const char *fmt, ...) {
 	appendMsgPrefix(logging);
 
 	va_list ap;
-	va_start(ap, fmt);
-	logging->vappendPrintf(fmt, ap);
+	va_start(ap, format);
+	logging->vappendPrintf(format, ap);
 	va_end(ap);
 
 	appendMsgPostfix(logging);
@@ -170,7 +181,6 @@ void scheduleMsg(Logging *logging, const char *fmt, ...) {
 		unlockAnyContext();
 	}
 #endif /* EFI_TEXT_LOGGING */
+#endif /* EFI_UNIT_TEST */
 }
 
-
-#endif /* EFI_UNIT_TEST */
