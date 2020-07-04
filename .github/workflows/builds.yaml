@@ -95,9 +95,7 @@ jobs:
   
     # Build the simulator
     - name: Build simulator
-      env:
-        OS: Windows_NT
-      run: sh misc/jenkins/build_simulator.sh
+      run: OS="Windows_NT" sh misc/jenkins/build_simulator.sh
 
     # Build the firmware!
     - name: Build Firmware
@@ -133,9 +131,7 @@ jobs:
       run: arm-none-eabi-gcc -v
 
     - name: Build Primary Bundle
-      env:
-        OS: Windows_NT
-      run: sh misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
+      run: OS="Windows_NT" sh misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
 
   # This is just to ensure the simulator compiles on Linux
   build-simulator:
