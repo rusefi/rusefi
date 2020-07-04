@@ -2,21 +2,27 @@ package com.rusefi.io;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.opensr5.Logger;
+import com.rusefi.Callable;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.SerialConnector;
+import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.io.tcp.TcpIoStream;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.*;
 
 /**
+ * See TcpCommunicationIntegrationTest
+ *
  * @author Andrey Belomutskiy
- *         3/3/14
+ * 3/3/14
  */
 public class LinkManager {
     @NotNull
@@ -127,6 +133,7 @@ public class LinkManager {
     public final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
     /**
      * All request/responses to underlying controller are happening on this single-threaded executor in a FIFO manner
+     *
      * @see #TCP_READ_EXECUTOR
      */
     public final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
@@ -172,7 +179,7 @@ public class LinkManager {
 
     public void startAndConnect(String port, ConnectionStateListener stateListener) {
         Objects.requireNonNull(port, "port");
-        start(port);
+        start(port, stateListener);
         connector.connectAndReadConfiguration(stateListener);
     }
 
@@ -180,7 +187,7 @@ public class LinkManager {
         return connector;
     }
 
-    public void start(String port) {
+    public void start(String port, ConnectionStateListener stateListener) {
         if (isStarted) {
             throw new IllegalStateException("Already started");
         }
@@ -190,10 +197,24 @@ public class LinkManager {
         if (isLogViewerMode(port)) {
             connector = LinkConnector.VOID;
         } else if (TcpConnector.isTcpPort(port)) {
-            connector = new TcpConnector(this, port, logger);
+            connector = new SerialConnector(this, port, logger, new Callable<IoStream>() {
+                @Override
+                public IoStream call() {
+                    Socket socket;
+                    try {
+                        int portPart = TcpConnector.getTcpPort(port);
+                        String hostname = TcpConnector.getHostname(port);
+                        socket = new Socket(hostname, portPart);
+                        return new TcpIoStream(logger, LinkManager.this, socket);
+                    } catch (Throwable e) {
+                        stateListener.onConnectionFailed();
+                        return null;
+                    }
+                }
+            });
             isSimulationMode = true;
         } else {
-            connector = new SerialConnector(this, port, logger);
+            connector = new SerialConnector(this, port, logger, () -> SerialIoStreamJSerialComm.openPort(port, logger));
         }
     }
 
@@ -219,6 +240,10 @@ public class LinkManager {
     public void restart() {
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
         connector.restart();
+    }
+
+    public void stop() {
+        connector.stop();
     }
 
     public static String unpackConfirmation(String message) {

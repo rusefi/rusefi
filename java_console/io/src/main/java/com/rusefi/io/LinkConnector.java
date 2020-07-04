@@ -69,4 +69,7 @@ public interface LinkConnector extends LinkDecoder {
     default BinaryProtocolState getBinaryProtocolState() {
         return getBinaryProtocol().getBinaryProtocolState();
     }
+
+    default void stop() {
+    }
 }

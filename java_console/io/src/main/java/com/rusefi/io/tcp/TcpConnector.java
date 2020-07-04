@@ -84,7 +84,7 @@ public class TcpConnector implements LinkConnector {
         }
     }
 
-    private static String getHostname(String port) {
+    public static String getHostname(String port) {
         String[] portParts = port.split(":");
         return (portParts.length == 1 ? LOCALHOST : portParts[0].length() > 0 ? portParts[0] : LOCALHOST);
     }
