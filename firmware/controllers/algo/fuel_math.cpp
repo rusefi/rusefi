@@ -239,10 +239,18 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		// Plop some state for others to read
 		ENGINE(engineState.targetAFR) = targetAfr;
 		ENGINE(engineState.sd.airMassInOneCylinder) = airmass.CylinderAirmass;
+		ENGINE(engineState.fuelingLoad) = airmass.EngineLoadPercent;
+		// TODO: independently selectable ignition load mode
+		ENGINE(engineState.ignitionLoad) = airmass.EngineLoadPercent;
 
 		baseFuel = getInjectionDurationForAirmass(airmass.CylinderAirmass, targetAfr PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN baseFuel", 0);
 	} else {
+		float tps = Sensor::get(SensorType::Tps1).value_or(0);
+		ENGINE(engineState.fuelingLoad) = tps;
+		// TODO: independently selectable ignition load mode
+		ENGINE(engineState.ignitionLoad) = tps;
+
 		baseFuel = engine->engineState.baseTableFuel;
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN bt baseFuel", 0);
 	}

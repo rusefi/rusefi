@@ -474,8 +474,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
 
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 
@@ -524,7 +522,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->airFuelRatio = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 	// offset 24
-	tsOutputChannels->engineLoad = engineLoad;
+	tsOutputChannels->engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	tsOutputChannels->fuelingLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// KLUDGE? we always show VBatt because Proteus board has VBatt input sensor hardcoded
 	// offset 28
