@@ -265,7 +265,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             if (isClosed)
                 return;
             incomingData.dropPending();
-            stream.purge();
         }
     }
 

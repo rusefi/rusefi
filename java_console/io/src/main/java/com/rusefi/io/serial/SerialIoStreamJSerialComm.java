@@ -68,11 +68,6 @@ public class SerialIoStreamJSerialComm implements IoStream {
     }
 
     @Override
-    public void purge() {
-
-    }
-
-    @Override
     public void write(byte[] bytes) {
         sp.writeBytes(bytes, bytes.length);
     }
