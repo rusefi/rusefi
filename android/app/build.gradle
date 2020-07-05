@@ -28,6 +28,7 @@ android {
 
 dependencies {
     implementation project(':ecu_io')
+    implementation project(':logging-api')
     implementation project(':shared_io')
 
     implementation files('lib/dfu_java.jar')

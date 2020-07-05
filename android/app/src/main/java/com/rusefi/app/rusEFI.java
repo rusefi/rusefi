@@ -32,8 +32,10 @@ import android.widget.TextView;
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
+import com.opensr5.Logger;
 import com.rusefi.dfu.DfuImage;
 import com.rusefi.dfu.android.DfuDeviceLocator;
+import com.rusefi.io.DfuHelper;
 import com.rusefi.shared.ConnectionAndMeta;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.*;
@@ -175,22 +177,16 @@ public class rusEFI extends Activity {
 
         UsbDevice dfuDevice = DfuDeviceLocator.findDevice(usbManager);
 
-        if (dfuDevice == null) {
-            mResultView.append("No DFU device\n");
-        } else if (usbManager.hasPermission(dfuDevice)) {
-            dfuUpdate(dfuDevice);
+        if (dfuDevice != null) {
+            handleDfuDevice(dfuDevice);
         } else {
-            PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
-            usbManager.requestPermission(dfuDevice, mPermissionIntent);
+            mResultView.append("No DFU device\n");
+            handleSerialDevice();
         }
-
-
-        if (1 == 1)
-            return;
-
-
 //        listDevices(manager);
+    }
 
+    private void handleSerialDevice() {
         List<UsbSerialDriver> availableDrivers = AndroidSerial.findUsbSerial(usbManager);
         if (availableDrivers.isEmpty()) {
             mStatusView.setText("Not connected");
@@ -212,27 +208,20 @@ public class rusEFI extends Activity {
             port.open(connection);
             port.setParameters(115200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
 
-            port.write("t".getBytes(), 500);
-
-            SerialInputOutputManager usbIoManager = new SerialInputOutputManager(port, new SerialInputOutputManager.Listener() {
-                @Override
-                public void onNewData(final byte[] data) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mResultView.append("WE GOT DATA: " + new String(data) + "\n");
-                        }
-                    });
-                }
-
-                @Override
-                public void onRunError(Exception e) {
-                }
-            });
-            Executors.newSingleThreadExecutor().submit(usbIoManager);
+            AndroidSerial serial = new AndroidSerial(port);
+            DfuHelper.sendDfuRebootCommand(serial, new StringBuilder(), Logger.CONSOLE);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private void handleDfuDevice(UsbDevice dfuDevice) {
+        if (usbManager.hasPermission(dfuDevice)) {
+            dfuUpdate(dfuDevice);
+        } else {
+            PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+            usbManager.requestPermission(dfuDevice, mPermissionIntent);
         }
     }
 
