@@ -214,6 +214,8 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 # Compiler settings
 #
 
+$(info OS is [${OS}])
+
 ifeq ($(OS),Windows_NT)
   # ChibiOS seem to require 32 bit compiler at least on Windows
   # base 32-bit Cygwin is needed with mingw64 32-bit version 
