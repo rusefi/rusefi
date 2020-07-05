@@ -100,10 +100,10 @@ cd ..
 mkdir -p artifacts
 mv temp/$FULL_BUNDLE_FILE artifacts
 
-echo "Removing more static content"
+echo "Removing more static content from ${CONSOLE_FOLDER}"
 rm -rf $CONSOLE_FOLDER/openocd
 rm -rf $CONSOLE_FOLDER/DfuSe
-rm -rf $CONSOLE_FOLDER/drivers
+rm -rf $CONSOLE_FOLDER/../drivers
 rm -rf $CONSOLE_FOLDER/rusefi_simulator.exe
 
 rm -rf $CONSOLE_FOLDER
