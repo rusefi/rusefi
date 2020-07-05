@@ -271,7 +271,14 @@ static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 		memcpy(((char*) &persistentState.persistentConfiguration) + offset, ((char*) &configWorkingCopy) + offset,
 				count);
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
+
 	}
+	// todo: ECU does not burn while engine is running yet tune CRC
+	// tune CRC is calculated based on the latest online part (FSIO formulas are in online region of the tune)
+	// open question what's the best strategy to balance coding efforts, performance matters and tune crc functionality
+	// open question what is the runtime cost of wiping 2K of bytes on each IO communication, could be that 2K of byte memset
+	// is negligable comparing with the IO costs?
+	//		wipeStrings(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static const void * getStructAddr(int structId) {
