@@ -169,6 +169,8 @@ extern LoggingWithStorage sharedLogger;
 static void wipeString(char *string, int size) {
 	// we have to reset bytes after \0 symbol in order to calculate correct tune CRC from MSQ file
 	for (int i = strlen(string) + 1; i < size; i++) {
+		// todo: open question if it's worth replacing for loop with a memset. would a memset be much faster?
+		// do we care about performance here?
 		string[i] = 0;
 	}
 }
