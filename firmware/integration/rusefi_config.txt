@@ -1491,12 +1491,17 @@ end_struct
 #define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term fuel trim"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
+#define GAUGE_NAME_FUEL_LOAD "fuel: load"
 
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_IAC "Idle Air Valve"
+
+#define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
+#define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
+#define GAUGE_NAME_IGNITION_LOAD "ign: load"
 
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
 #define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
@@ -1641,10 +1646,6 @@ end_struct
 #define ET_FRANKENSO_MIATA_NA6_VAF 57
 #define ET_BMW_M73_PROTEUS 63
 #define ET_CITROEN_TU3JP 65
-
-#define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
-
-#define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
 
 ! some board files override this value using prepend file
 #define ts_show_hip9011 true
