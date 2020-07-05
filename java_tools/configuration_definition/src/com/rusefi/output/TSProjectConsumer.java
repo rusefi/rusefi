@@ -70,8 +70,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
             tsPosition += size;
         } else if (configField.getTsInfo() == null) {
-            tsHeader.write(";no TS info - skipping " + prefix + configField.getName() + " offset " + tsPosition);
-            tsPosition += configField.getArraySize() * configField.getElementSize();
+            throw new IllegalArgumentException("Need TS info for " + configField.getName() + " at "+ prefix);
         } else if (configField.getArraySize() != 1) {
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH) + "\t\t= array, ");
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
@@ -108,7 +107,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         SystemOut.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
 
         // File.getPath() would eliminate potential separator at the end of the path
-        String fileName = new File(tsPath).getPath() + File.separator + TS_FILE_OUTPUT_NAME;
+        String fileName = getTsFileOutputName(new File(tsPath).getPath());
         Output tsHeader = new LazyFile(fileName);
         writeContent(fieldsSection, tsContent, tsHeader);
     }
@@ -132,7 +131,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     private static TsFileContent readTsFile(String tsPath) throws IOException {
-        String fileName = tsPath + File.separator + TS_FILE_INPUT_NAME;
+        String fileName = getTsFileInputName(tsPath);
         BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), CHARSET.name()));
 
         StringBuilder prefix = new StringBuilder();
@@ -190,6 +189,14 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             index++;
         }
         return token;
+    }
+
+    public static String getTsFileOutputName(String tsPath) {
+        return tsPath + File.separator + TS_FILE_OUTPUT_NAME;
+    }
+
+    public static String getTsFileInputName(String tsPath) {
+        return tsPath + File.separator + TS_FILE_INPUT_NAME;
     }
 
     @Override

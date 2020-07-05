@@ -1,13 +1,13 @@
 package com.rusefi.sensor_logs;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.LinkManager;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.config.ConfigField;
 
@@ -41,14 +41,14 @@ public class PlainTextSensorLog implements SensorLog {
 
     private void startSensorLogFile() {
         FileLog.createFolderIfNeeded();
-        String fileName = FileLog.DIR + "rusEFI_gauges_" + FileLog.getDate() + ".msl";
+        String fileName = Logger.DIR + "rusEFI_gauges_" + Logger.getDate() + ".msl";
 
         fileStartTime = System.currentTimeMillis();
         try {
             logFile = new FileWriter(fileName);
 
             logFile.write("\"rusEFI console" + Launcher.CONSOLE_VERSION + " firmware " + Launcher.firmwareVersion.get() + "\"\r\n");
-            logFile.write("Captured " + FileLog.getDate() + "\r\n");
+            logFile.write("Captured " + Logger.getDate() + "\r\n");
 
             int debugMode = -1;
             BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();

@@ -27,5 +27,6 @@
     <orderEntry type="module" module-name="autoupdate" exported="" />
     <orderEntry type="library" name="jSerialComm" level="project" />
     <orderEntry type="library" name="json-simple" level="project" />
+    <orderEntry type="module" module-name="models" />
   </component>
 </module>

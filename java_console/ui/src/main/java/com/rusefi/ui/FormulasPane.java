@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
@@ -58,7 +59,7 @@ public class FormulasPane {
         saveImage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fileName = FileLog.getDate() + "_formulas.png";
+                String fileName = Logger.getDate() + "_formulas.png";
 
                 UiUtils.saveImageWithPrompt(fileName, formulaProxy, formulaProxy);
             }

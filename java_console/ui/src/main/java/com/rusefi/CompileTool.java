@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
+import com.opensr5.Logger;
 
 import java.io.*;
 import java.util.List;
@@ -32,7 +33,7 @@ public class CompileTool {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(outputFileName))) {
             bw.write("// this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically" + NEWLINE);
             bw.write("// from " + inputFileName + NEWLINE);
-            bw.write("// on " + FileLog.getDate() + NEWLINE + "//" + NEWLINE);
+            bw.write("// on " + Logger.getDate() + NEWLINE + "//" + NEWLINE);
 
             String line;
             while ((line = br.readLine()) != null) {

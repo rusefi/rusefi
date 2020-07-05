@@ -58,13 +58,3 @@ void print(const char *format, ...) {
 
 void initLogging(LoggingWithStorage *logging, const char *name) {
 }
-
-void scheduleMsg(Logging *logging, const char *format, ...) {
-	if (verboseMode) {
-		va_list ap;
-		va_start(ap, format);
-		vprintf(format, ap);
-		va_end(ap);
-		printf("\r\n");
-	}
-}

@@ -87,6 +87,8 @@
 #include "mmc_card.h"
 #include "perf_trace.h"
 
+#include "signature.h"
+
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif /* EFI_SIMULATOR */
@@ -269,7 +271,14 @@ static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 		memcpy(((char*) &persistentState.persistentConfiguration) + offset, ((char*) &configWorkingCopy) + offset,
 				count);
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
+
 	}
+	// todo: ECU does not burn while engine is running yet tune CRC
+	// tune CRC is calculated based on the latest online part (FSIO formulas are in online region of the tune)
+	// open question what's the best strategy to balance coding efforts, performance matters and tune crc functionality
+	// open question what is the runtime cost of wiping 2K of bytes on each IO communication, could be that 2K of byte memset
+	// is negligable comparing with the IO costs?
+	//		wipeStrings(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static const void * getStructAddr(int structId) {
@@ -317,7 +326,7 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
 // Returns true if an overrun would occur.
 static bool validateOffsetCount(size_t offset, size_t count, ts_channel_s *tsChannel) {
 	if (offset + count > getTunerStudioPageSize()) {
-		scheduleMsg(&tsLogger, "TS: Project mismatch? Too much data requested %d/%d", offset, count);
+		scheduleMsg(&tsLogger, "TS: Project mismatch? Too much configuration requested %d/%d", offset, count);
 		tunerStudioError("ERROR: out of range");
 		sendErrorCode(tsChannel);
 		return true;
@@ -435,10 +444,11 @@ static void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e 
 }
 
 void requestBurn(void) {
+	onBurnRequest(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_INTERNAL_FLASH
 	setNeedToWriteConfiguration();
 #endif
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel, const uint8_t responseCode) {
@@ -636,7 +646,8 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	scheduleMsg(&tsLogger, "got S/H (queryCommand) mode=%d", mode);
 	printTsStats();
 #endif
-	sr5SendResponse(tsChannel, mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
+	const char *signature = getTsSignature();
+	sr5SendResponse(tsChannel, mode, (const uint8_t *)signature, strlen(signature) + 1);
 }
 
 /**
@@ -645,7 +656,8 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
  */
 static void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	if (offset + count > sizeof(TunerStudioOutputChannels)) {
-		scheduleMsg(&tsLogger, "TS: Version Mismatch? Too much data requested %d+%d", offset, count);
+		scheduleMsg(&tsLogger, "TS: Version Mismatch? Too much outputs requested %d/%d/%d", offset, count,
+				sizeof(TunerStudioOutputChannels));
 		sendErrorCode(tsChannel);
 		return;
 	}
@@ -854,7 +866,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 			int currentEnd = getCompositeRecordCount();
 
 			// set debug_mode 40
-			if (engineConfiguration->debugMode == DBG_40) {
+			if (engineConfiguration->debugMode == DBG_COMPOSITE_LOG) {
 				tsOutputChannels.debugIntField1 = currentEnd;
 				tsOutputChannels.debugIntField2 = transmitted;
 

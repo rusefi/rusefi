@@ -20,40 +20,47 @@ jobs:
           - build-target: frankenso
             efi-cpu: ARCH_STM32F4
             efi-board: st_stm32f4
+            target-extra-params: -DSHORT_BOARD_NAME=fra
             
           - build-target: frankenso-pal
             efi-cpu: ARCH_STM32F4
             efi-board: st_stm32f4
-            target-extra-params: -DHAL_TRIGGER_USE_PAL=TRUE -DEFI_ICU_INPUTS=FALSE -DEFI_VEHICLE_SPEED=FALSE -DEFI_LOGIC_ANALYZER=FALSE
+            target-extra-params: -DSHORT_BOARD_NAME=fra -DHAL_TRIGGER_USE_PAL=TRUE -DEFI_ICU_INPUTS=FALSE -DEFI_VEHICLE_SPEED=FALSE -DEFI_LOGIC_ANALYZER=FALSE
             
           - build-target: mre-f4
             efi-cpu: ARCH_STM32F4
             efi-board: microrusefi
+            target-extra-params: -DSHORT_BOARD_NAME=mre
             
           - build-target: mre-f7
             efi-cpu: ARCH_STM32F7
             efi-board: microrusefi
+            target-extra-params: -DSHORT_BOARD_NAME=mre
 
           - build-target: prometheus-405
             efi-cpu: ARCH_STM32F4
             efi-board: prometheus/f405
+            target-extra-params: -DSHORT_BOARD_NAME=pth
 
           - build-target: prometheus-469
             efi-cpu: ARCH_STM32F4
             efi-board: prometheus/f469
+            target-extra-params: -DSHORT_BOARD_NAME=pth
 
           - build-target: proteus-f4
             efi-cpu: ARCH_STM32F4
             efi-board: proteus
+            target-extra-params: -DSHORT_BOARD_NAME=pro
 
           - build-target: proteus-f7
             efi-cpu: ARCH_STM32F7
             efi-board: proteus
+            target-extra-params: -DSHORT_BOARD_NAME=pro
 
           - build-target: kinetis
             efi-cpu: kinetis
             efi-board: kinetis
-            target-extra-params: -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__USE_CMSI -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
+            target-extra-params: -DSHORT_BOARD_NAME=kin -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__USE_CMSI -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
             extra-options: USE_FATFS=no USE_BOOTLOADER=no
 
           # Debug vs. release configuration
@@ -132,19 +139,19 @@ jobs:
 
     # The next two steps upload the bin, elf, and dfu as build artifacts
     - name: Upload elf
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-elf
         path: ./firmware/build/rusefi.elf
         
     - name: Upload bin
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-bin
         path: ./firmware/build/rusefi.bin
 
     - name: Upload dfu
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-dfu
         path: ./firmware/build/rusefi.dfu

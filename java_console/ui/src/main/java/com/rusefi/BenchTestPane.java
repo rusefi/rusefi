@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.tracing.Entry;
@@ -72,7 +73,7 @@ public class BenchTestPane {
                     List<Entry> data = Entry.parseBuffer(packet);
 
                     int rpm = RpmModel.getInstance().getValue();
-                    String fileName = FileLog.getDate() + "_rpm_" + rpm + "_rusEfi_trace" + ".json";
+                    String fileName = Logger.getDate() + "_rpm_" + rpm + "_rusEfi_trace" + ".json";
 
 
                     JsonOutput.writeToStream(data, new FileOutputStream(fileName));

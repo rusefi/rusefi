@@ -1,0 +1,28 @@
+name: rusEFI Android
+
+on: [push,pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '8'
+
+      - name: Test Compiler
+        run: javac -version
+
+      - name: Build Android
+        working-directory: ./android
+        run: bash ./gradlew build
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: rusEFI-release-unsigned
+          path: ./android/app/build/outputs/apk/release/app-release-unsigned.apk
