@@ -36,7 +36,7 @@ public class JsonOutput {
             "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":58,\"tid\":0,\"args\":{\"name\":\"DMA2s2\"}}," +
 			"{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":59,\"tid\":0,\"args\":{\"name\":\"DMA2s3\"}}," +
             "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":60,\"tid\":0,\"args\":{\"name\":\"DMA2s4\"}}," +
-            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":67,\"tid\":0,\"args\":{\"name\":\"USB\"}},"
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":67,\"tid\":0,\"args\":{\"name\":\"USB\"}}"
             ;
     private static final String EOL = "\r\n";
 
