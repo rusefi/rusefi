@@ -11,4 +11,4 @@ java -DSystemOut.name=gen_enum_to_string \
 
 pwd
 cd config/boards/kinetis/config
-sh kintes_gen_enum_to_string.sh
+sh kinetis_gen_enum_to_string.sh
