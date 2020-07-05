@@ -173,7 +173,7 @@ static void wipeString(char *string, int size) {
 	}
 }
 
-void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	wipeString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));
@@ -181,6 +181,10 @@ void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		wipeString(config->fsioFormulas[i], sizeof(le_formula_t));
 	}
+}
+
+void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	wipeStrings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
