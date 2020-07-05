@@ -858,7 +858,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 			int currentEnd = getCompositeRecordCount();
 
 			// set debug_mode 40
-			if (engineConfiguration->debugMode == DBG_40) {
+			if (engineConfiguration->debugMode == DBG_COMPOSITE_LOG) {
 				tsOutputChannels.debugIntField1 = currentEnd;
 				tsOutputChannels.debugIntField2 = transmitted;
 
