@@ -840,7 +840,7 @@ enable2ndByteCanID = false
 #if tuneByTPS
       yBins       = ignitionTpsBins,  TPSValue
 #else
-      yBins       = veLoadBins,  MAPValue
+      yBins       = veLoadBins,  fuelingLoad
 #endif
       zBins       = veTable
 ;      gridHeight  = 2.0
