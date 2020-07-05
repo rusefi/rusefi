@@ -57,6 +57,10 @@ static Logging *logger;
 
 EXTERN_ENGINE;
 
+#if EFI_UNIT_TEST
+	Engine *unitTestEngine;
+#endif
+
 static bool prettyClose = false;
 
 static bool shouldResetPid = false;
@@ -74,7 +78,12 @@ PidCic idlePid;
 class PidWithOverrides : public Pid {
 public:
 	float getOffset() const override {
-#if EFI_FSIO && ! EFI_UNIT_TEST
+#if EFI_UNIT_TEST
+	Engine *engine = unitTestEngine;
+	EXPAND_Engine;
+#endif
+
+#if EFI_FSIO
 			if (engineConfiguration->useFSIO12ForIdleOffset) {
 				return ENGINE(fsioState.fsioIdleOffset);
 			}
@@ -83,7 +92,11 @@ public:
 	}
 
 	float getMinValue() const override {
-#if EFI_FSIO && ! EFI_UNIT_TEST
+#if EFI_UNIT_TEST
+	Engine *engine = unitTestEngine;
+	EXPAND_Engine;
+#endif
+#if EFI_FSIO
 			if (engineConfiguration->useFSIO13ForIdleMinValue) {
 				return ENGINE(fsioState.fsioIdleMinValue);
 			}
@@ -94,6 +107,11 @@ public:
 
 PidWithOverrides idlePid;
 #endif /* EFI_IDLE_PID_CIC */
+
+
+float getIdlePidOffset() {
+	return idlePid.getOffset();
+}
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
 static SimplePwm idleSolenoidOpen("idle open");
