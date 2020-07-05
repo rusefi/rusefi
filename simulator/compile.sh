@@ -1,4 +1,3 @@
 rm -f build/rusefi_simulator.exe
-echo $OS
-OS=$OS make -j4 -r
+make -j4 -r >out
 echo "TIMESTAMP $(date "+%D %T.%2N") just compiled rusefi simulator"
