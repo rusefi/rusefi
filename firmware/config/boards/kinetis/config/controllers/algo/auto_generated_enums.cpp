@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sun Jun 14 18:18:14 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Jul 04 21:11:33 EDT 2020
 // see also gen_config_and_enums.bat
 
 
@@ -460,8 +460,10 @@ case DBG_2:
   return "DBG_2";
 case DBG_34:
   return "DBG_34";
-case DBG_40:
-  return "DBG_40";
+case DBG_43:
+  return "DBG_43";
+case DBG_44:
+  return "DBG_44";
 case DBG_ALTERNATOR_PID:
   return "DBG_ALTERNATOR_PID";
 case DBG_ANALOG_INPUTS:
@@ -480,6 +482,8 @@ case DBG_CAN:
   return "DBG_CAN";
 case DBG_CJ125:
   return "DBG_CJ125";
+case DBG_COMPOSITE_LOG:
+  return "DBG_COMPOSITE_LOG";
 case DBG_CRANKING_DETAILS:
   return "DBG_CRANKING_DETAILS";
 case DBG_DWELL_METRIC:
@@ -498,8 +502,12 @@ case DBG_EXECUTOR:
   return "DBG_EXECUTOR";
 case DBG_FSIO_ADC:
   return "DBG_FSIO_ADC";
-case DBG_FSIO_EXPRESSION:
-  return "DBG_FSIO_EXPRESSION";
+case DBG_FSIO_EXPRESSION_1_7:
+  return "DBG_FSIO_EXPRESSION_1_7";
+case DBG_FSIO_EXPRESSION_8_14:
+  return "DBG_FSIO_EXPRESSION_8_14";
+case DBG_FSIO_SPECIAL:
+  return "DBG_FSIO_SPECIAL";
 case DBG_FUEL_PID_CORRECTION:
   return "DBG_FUEL_PID_CORRECTION";
 case DBG_IDLE_CONTROL:
