@@ -50,11 +50,6 @@ public class TcpIoStream implements IoStream {
     }
 
     @Override
-    public void purge() {
-
-    }
-
-    @Override
     public void setInputListener(final DataListener listener) {
         linkManager.TCP_READ_EXECUTOR.execute(new Runnable() {
             @Override

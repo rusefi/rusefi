@@ -48,9 +48,4 @@ public interface IoStream extends WriteStream {
     boolean isClosed();
 
     void close();
-
-    /**
-     * purges pending input and output
-     */
-    void purge();
 }
