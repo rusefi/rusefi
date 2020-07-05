@@ -116,25 +116,10 @@ public class LinkManager {
         }
     }
 
-    /**
-     * Threading of the whole input/output does not look healthy at all!
-     *
-     * @see #COMMUNICATION_EXECUTOR
-     */
-    public final Executor TCP_READ_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
-        @Override
-        public Thread newThread(@NotNull Runnable r) {
-            Thread t = new Thread(r);
-            t.setName("IO executor thread");
-            t.setDaemon(true);  // need daemon thread so that COM thread is also daemon
-            return t;
-        }
-    });
     public final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
     /**
      * All request/responses to underlying controller are happening on this single-threaded executor in a FIFO manner
      *
-     * @see #TCP_READ_EXECUTOR
      */
     public final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
