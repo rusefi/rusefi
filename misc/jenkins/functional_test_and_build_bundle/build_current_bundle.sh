@@ -34,7 +34,7 @@ sh update_version.sh
 sh clean_compile_two_versions.sh
 [ -e deliver/rusefi_no_asserts.hex ] || { echo "Just to confirm - FAILED to compile no_asserts"; exit 1; }
 
-[ -e deliver/rusefi.hex ] { echo "Just to confirm - FAILED to compile default DEBUG"; exit 1; }
+[ -e deliver/rusefi.hex ] || { echo "Just to confirm - FAILED to compile default DEBUG"; exit 1; }
 
 echo "$SCRIPT_NAME: Building DFU"
 if uname | grep "NT"; then
