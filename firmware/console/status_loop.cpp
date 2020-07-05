@@ -778,6 +778,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_FSIO_SPECIAL:
 		tsOutputChannels->debugFloatField1 = ENGINE(fsioState.fsioIdleOffset);
 		tsOutputChannels->debugFloatField2 = ENGINE(fsioState.fsioIdleMinValue);
+		break;
 #endif /* EFI_FSIO */
 	case DBG_VEHICLE_SPEED_SENSOR:
 		tsOutputChannels->debugIntField1 = engine->engineState.vssEventCounter;
