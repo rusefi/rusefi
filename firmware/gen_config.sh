@@ -46,7 +46,7 @@ else
  cp -v tunerstudio/rusefi_microrusefi.ini $TS_PATH/dev_mre/projectCfg/mainController.ini
 fi
 
-for BOARD in "microrusefi mre" "frankenso fra" "prometheus pth" "proteus pro"; do
+for BOARD in "microrusefi mre_f7" "microrusefi mre_f4" "frankenso frankenso_na6" "prometheus prometheus_469" "prometheus prometheus_405" "proteus proteus_f7" "proteus proteus_f4"; do
  BOARD_NAME="${BOARD% *}"
  BOARD_SHORT_NAME="${BOARD#* }"
  sh gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME
