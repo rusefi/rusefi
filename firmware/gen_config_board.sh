@@ -46,20 +46,6 @@ java -DSystemOut.name=gen_config_board \
 	-prepend tunerstudio/generated/${BOARDNAME}_prefix.txt \
 	-prepend config/boards/${BOARDNAME}/prepend.txt
 
-java -DSystemOut.name=gen_config_board \
-	-jar ../java_tools/ConfigDefinition.jar \
-	-definition integration/rusefi_config.txt \
-	-tool gen_config.sh \
-	-ts_destination tunerstudio \
-	-cache ${BOARDNAME} \
-	-cache_zip_file tunerstudio/generated/cache.zip \
-	-firing_order controllers/algo/firing_order.h \
-	-ts_output_name rusefi_${BOARDNAME}.ini \
-	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
-	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
-	-prepend tunerstudio/generated/${BOARDNAME}_prefix.txt \
-	-prepend config/boards/${BOARDNAME}/prepend.txt
-
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
 if [ -z "${TS_PATH}" ]; then
