@@ -6,5 +6,6 @@ cd ../../..
 export PROJECT_BOARD=prometheus/f405
 export EXTRA_PARAMS=-DSHORT_BOARD_NAME=pth
 
+
 sh config/boards/common_make.sh
 
