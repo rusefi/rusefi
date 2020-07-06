@@ -53,7 +53,7 @@ cp java_console/rusefi.xml                $CONSOLE_FOLDER
 
 cp misc/console_launcher/readme.html $FOLDER
 
-cp firmware/tunerstudio/$INI_FILE_OVERRIDE $FOLDER
+cp firmware/tunerstudio/generated/$INI_FILE_OVERRIDE $FOLDER
 # Unsetting since would not be used anywhere else
 INI_FILE_OVERRIDE=""
 RUSEFI_CONSOLE_SETTINGS=""
