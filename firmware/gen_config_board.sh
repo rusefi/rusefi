@@ -67,7 +67,7 @@ if [ -z "${TS_PATH}" ]; then
 else
 	if [ -d "${TS_PATH}/dev_${BOARDNAME}/" ]; then
 		echo "This would automatically copy latest file to 'dev_${BOARDNAME}' TS project $TS_PATH"
-		cp -v tunerstudio/rusefi_${BOARDNAME}.ini ${TS_PATH}/dev_${BOARDNAME}/projectCfg/mainController.ini
+		cp -v tunerstudio/generated/rusefi_${BOARDNAME}.ini ${TS_PATH}/dev_${BOARDNAME}/projectCfg/mainController.ini
 	fi
 fi
 
