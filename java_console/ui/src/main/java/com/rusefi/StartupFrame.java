@@ -36,8 +36,6 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  * @see FirmwareFlasher
  */
 public class StartupFrame {
-    // todo: figure out a better way to work with absolute path
-    private static final String APPICON = "appicon.png";
     private static final String LOGO = "/com/rusefi/logo.gif";
     public static final String LINK_TEXT = "rusEFI (c) 2012-2020";
     private static final String URI = "http://rusefi.com/?java_console";
@@ -80,14 +78,8 @@ public class StartupFrame {
                 }
             }
         });
-        setAppIcon(frame);
+        AutoupdateUtil.setAppIcon(frame);
         SerialPortScanner.INSTANCE.startTimer();
-    }
-
-    public static void setAppIcon(JFrame frame) {
-        ImageIcon icon = AutoupdateUtil.loadIcon(APPICON);
-        if (icon != null)
-            frame.setIconImage(icon.getImage());
     }
 
     public void chooseSerialPort() {
@@ -207,6 +199,7 @@ public class StartupFrame {
         content.add(rightPanel, BorderLayout.EAST);
         frame.add(content);
         frame.pack();
+        setFrameIcon(frame);
         frame.setVisible(true);
         UiUtils.centerWindow(frame);
 
@@ -215,6 +208,12 @@ public class StartupFrame {
         for (Component component : getAllComponents(frame)) {
             component.addKeyListener(hwTestEasterEgg);
         }
+    }
+
+    public static void setFrameIcon(Frame frame) {
+        ImageIcon icon = AutoupdateUtil.loadIcon(LOGO);
+        if (icon != null)
+            frame.setIconImage(icon.getImage());
     }
 
     public static JLabel createLogoLabel() {
@@ -273,7 +272,7 @@ public class StartupFrame {
     }
 
     private Component createShowDeviceManagerButton() {
-        JButton showDeviceManager = new JButton(AutoupdateUtil.loadIcon("DeviceManager.png"));
+        JButton showDeviceManager = new JButton(AutoupdateUtil.loadIcon("/com/rusefi/DeviceManager.png"));
         showDeviceManager.setMargin(new Insets(0, 0, 0, 0));
         showDeviceManager.setToolTipText("Show Device Manager");
         showDeviceManager.addActionListener(event -> {

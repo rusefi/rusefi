@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.opensr5.Logger;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -79,7 +80,7 @@ public class EcuStimulator {
 //        if (1 == 1)
 //            return;
 
-        String csvFileName = "table_" + inputs.getRpmStep() + "_" + inputs.getEngineLoadStep() + FileLog.getDate() + ".csv";
+        String csvFileName = "table_" + inputs.getRpmStep() + "_" + inputs.getEngineLoadStep() + Logger.getDate() + ".csv";
         FileLog.MAIN.logLine("Wring to " + csvFileName);
 
         final BufferedWriter csv;
@@ -99,7 +100,7 @@ public class EcuStimulator {
                         putValue("engine_load", engineLoad) +
                         putValue("advance", advance) +
                         putValue("dwell", dwell);
-                MessagesCentral.getInstance().postMessage(EcuStimulator.class, msg);
+                MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EcuStimulator.class, msg);
 
                 try {
                     csv.write(msg + "\r\n");
@@ -120,7 +121,7 @@ public class EcuStimulator {
             throw new IllegalStateException(e);
         }
 
-        TableGenerator.writeAsC(data, C_PREFIX, "map" + FileLog.getDate() + ".c");
+        TableGenerator.writeAsC(data, C_PREFIX, "map" + Logger.getDate() + ".c");
     }
 
     private void buildTable(ResultListener listener, Sensor dwellSensor) {
@@ -189,7 +190,7 @@ public class EcuStimulator {
         int actual;
         int attempt = 0;
         do {
-            RpmCommand.requestRpmChange(rpm);
+            RpmCommand.requestRpmChange(rpm, null);
             sleepRuntime(50);
             actual = RpmModel.getInstance().getValue();
         } while (attempt++ < 10 && Math.abs(rpm - actual) >= 100);
@@ -231,7 +232,7 @@ public class EcuStimulator {
     }
 
     private static void log(String message) {
-        MessagesCentral.getInstance().postMessage(EcuStimulator.class, message);
+        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EcuStimulator.class, message);
         FileLog.MAIN.logLine(message);
     }
 

@@ -8,3 +8,7 @@ java -DSystemOut.name=gen_enum_to_string \
 	-outputPath controllers/algo \
 	-enumInputFile controllers/algo/rusefi_enums.h \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
+
+pwd
+cd config/boards/kinetis/config
+sh kinetis_gen_enum_to_string.sh

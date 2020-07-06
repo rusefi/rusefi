@@ -2,6 +2,8 @@ package com.rusefi.board_generator;
 
 import com.rusefi.EnumsReader;
 import com.rusefi.enum_reader.Value;
+import com.rusefi.util.LazyFile;
+import com.rusefi.util.Output;
 import com.rusefi.util.SystemOut;
 import org.yaml.snakeyaml.Yaml;
 
@@ -10,12 +12,24 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * This tool read mapping yaml file and produces a .txt file with defines in the rusefi.txt format
+ *
+ * This is a lazy to implement mapping as a separate phase of code generation. Technically this could be merged into
+ * the primary generation to avoid the intermediate file.
+ */
 public class BoardReader {
+    private static final String INVALID = "INVALID";
+
     private static final String KEY_BOARD_NAME = "-board";
+    private static final String YAML_INPUT_NAME = "-yaml";
+    private static final String OUTPUT_FILE_NAME = "-output_file";
     private static final String KEY_OUTFOLDER = "-out";
     private static final String KEY_FIRMWARE_PATH = "-firmware_path";
-    private static final String INVALID = "INVALID";
     private final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
+
+    private static final String OUTPUT_FILE_PREFIX = "_prefix.txt";
+    private static final String MAPPING_YAML = "mapping.yaml";
 
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
@@ -28,10 +42,17 @@ public class BoardReader {
         String boardName = null;
         String firmwarePath = "firmware";
         String outputPath = ".";
+        String yamlInputFile = null;
+        String outputFileName = null;
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
             if (key.equals(KEY_BOARD_NAME)) {
                 boardName = args[i + 1];
+                yamlInputFile = firmwarePath + "/config/boards/" + boardName + "/" + MAPPING_YAML;
+            } else if (key.equals(OUTPUT_FILE_NAME)) {
+                outputFileName = args[i + 1];
+            } else if (key.equals(YAML_INPUT_NAME)) {
+                yamlInputFile = args[i + 1];
             } else if (key.equals(KEY_FIRMWARE_PATH)) {
                 firmwarePath = args[i + 1];
             } else if (key.equals(KEY_ENUM_INPUT_FILE)) {
@@ -43,14 +64,15 @@ public class BoardReader {
         }
 
         Yaml yaml = new Yaml();
-        String fileName = firmwarePath + "/config/boards/" + boardName + "/mapping.yaml";
-        Map<String, Object> data = yaml.load(new FileReader(fileName));
+        Map<String, Object> data = yaml.load(new FileReader(yamlInputFile));
         if (data == null) {
-            SystemOut.println("Null yaml for " + fileName);
+            SystemOut.println("Null yaml for " + yamlInputFile);
         } else {
             SystemOut.println(data);
 
-            BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath + File.separator + boardName + "_prefix.txt"));
+            if (outputFileName == null)
+                outputFileName = outputPath + File.separator + boardName + OUTPUT_FILE_PREFIX;
+            Output bw = new LazyFile(outputFileName);
 
             bw.write(processSection(data, "brain_pin_e", "output_pin_e", "outputs", "GPIO_UNASSIGNED"));
             bw.write(processSection(data, "adc_channel_e", "adc_channel_e", "analog_inputs", "EFI_ADC_NONE"));

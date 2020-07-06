@@ -28,6 +28,14 @@
 
 #include "gtest/gtest.h"
 
+TEST(util, negativeZero) {
+	ASSERT_TRUE(IS_NEGATIVE_ZERO(-0.0));
+
+	ASSERT_FALSE(IS_NEGATIVE_ZERO(-10.0));
+	ASSERT_FALSE(IS_NEGATIVE_ZERO(10.0));
+	ASSERT_FALSE(IS_NEGATIVE_ZERO(0.0));
+}
+
 TEST(util, crc) {
 	ASSERT_EQ(4, efiRound(4.4, 1));
 	ASSERT_FLOAT_EQ(1.2, efiRound(1.2345, 0.1));

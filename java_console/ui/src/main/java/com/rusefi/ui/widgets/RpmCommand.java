@@ -3,15 +3,13 @@ package com.rusefi.ui.widgets;
 import com.rusefi.io.CommandQueue;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
 
 /**
  * Date: 3/17/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class RpmCommand extends JPanel {
+/*
     public RpmCommand() {
         setBorder(BorderFactory.createLineBorder(Color.ORANGE));
         setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -36,11 +34,11 @@ public class RpmCommand extends JPanel {
         });
         add(spinner);
     }
-
-    public static void requestRpmChange(int rpm) {
+*/
+    public static void requestRpmChange(int rpm, CommandQueue commandQueue) {
         /**
          * @see
          */
-        CommandQueue.getInstance().write("rpm " + rpm);
+        commandQueue.write("rpm " + rpm);
     }
 }

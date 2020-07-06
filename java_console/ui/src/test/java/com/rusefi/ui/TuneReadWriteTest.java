@@ -4,6 +4,8 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.io.ConfigurationImageFile;
+import com.rusefi.binaryprotocol.MsqFactory;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.tune.xml.Msq;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,40 +33,39 @@ public class TuneReadWriteTest {
         Msq tsTune = Msq.readTune(PATH + "CurrentTune.msq");
         System.out.println(tsTune);
 
-        ConfigurationImage tsBinaryData = tsTune.asImage(IniFileModel.getInstance());
+        ConfigurationImage tsBinaryData = tsTune.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
 
         System.out.println("Reading " + TEST_BINARY_FILE);
         ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
 
         int mismatchCounter = compareImages(tsBinaryData, fileBinaryData);
-        // todo: why one byte mismatch? since it's in floats I kind of do not care, floats are weird
-        assertEquals(1, mismatchCounter);
+        assertEquals(0, mismatchCounter);
     }
 
     @Test
     public void testWriteAndReadTSTune() throws Exception {
-        ConfigurationImage originalBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
+        ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
 
         Path path = Files.createTempFile("unit_test_", ".xml");
         String fileName = path.getFileName().toString();
 
         // writing TS XML tune file with rusEFI code
-        Msq tuneFromBinary = Msq.valueOf(originalBinaryData);
+        Msq tuneFromBinary = MsqFactory.valueOf(fileBinaryData);
         tuneFromBinary.writeXmlFile(fileName);
 
         // and now reading that XML back
         Msq tuneFromFile = Msq.readTune(fileName);
 
-        ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(IniFileModel.getInstance());
+        ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
 
-        // todo: why one byte mismatch? since it's in floats I kind of do not care, floats are weird
-        assertEquals(1, compareImages(originalBinaryData, binaryDataFromXml));
+        assertEquals(0, compareImages(binaryDataFromXml, fileBinaryData));
+        // todo: looks like this is not removing the temporary file?
         Files.delete(path);
     }
 
-    private static int compareImages(ConfigurationImage image1, ConfigurationImage image2) {
+    private static int compareImages(ConfigurationImage image1, ConfigurationImage fileData) {
         byte[] tsBinaryDataContent = image1.getContent();
-        byte[] fileBinaryDataContent = image2.getContent();
+        byte[] fileBinaryDataContent = fileData.getContent();
 
         int mismatchCounter = 0;
 
@@ -73,7 +74,7 @@ public class TuneReadWriteTest {
             byte fileByte = fileBinaryDataContent[i];
             if (tsByte != fileByte) {
                 IniField field = IniFileModel.getInstance().findByOffset(i);
-                System.out.println("Mismatch at " + (field == null ? "offset " + i : field) + " " + tsByte + "/" + fileByte);
+                System.out.println("Mismatch at offset=" + i + ", " + (field == null ? "(no field)" : field) + " runtime=" + tsByte + "/file=" + fileByte);
                 mismatchCounter++;
             }
         }

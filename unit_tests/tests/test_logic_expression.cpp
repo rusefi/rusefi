@@ -11,6 +11,7 @@
 #include "cli_registry.h"
 #include "engine_test_helper.h"
 #include "thermistors.h"
+#include "allsensors.h"
 
 #define TEST_POOL_SIZE 256
 
@@ -26,17 +27,13 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engine->fsioState.mockCrankingRpm;
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return engine->fsioState.mockTimeSinceBoot;
-	case FSIO_SETTING_FANONTEMPERATURE:
-	case FSIO_SETTING_FANOFFTEMPERATURE:
-		return 0;
 	case LE_METHOD_VBATT:
 		return 12;
-	case LE_METHOD_IS_COOLANT_BROKEN:
-	case FSIO_SETTING_IDLERPMPID_MINVALUE:
-	case FSIO_SETTING_IDLERPMPID2_MINVALUE:
-		return 0;
 	case LE_METHOD_AC_TOGGLE:
-		return engine->fsioState.mockAcToggle;
+		return getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	case LE_METHOD_IS_COOLANT_BROKEN:
+		return 0;
+#include "fsio_getters.def"
 	default:
 	firmwareError(OBD_PCM_Processor_Fault, "FSIO: No mock value for %d", action);
 		return NAN;
@@ -92,7 +89,7 @@ static void testExpression2(float selfValue, const char *line, float expected, E
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 	LEElement * element = pool.parseExpression(line);
-	print("Parsing [%s]", line);
+	print("Parsing [%s]\n", line);
 	ASSERT_TRUE(element != NULL) << "Not NULL expected";
 	LECalculator c;
 
@@ -194,32 +191,43 @@ TEST(fsio, testLogicExpressions) {
 
 	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1, sensorVals);
 
-	WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
-	LEElement thepool[TEST_POOL_SIZE];
-	LEElementPool pool(thepool, TEST_POOL_SIZE);
-	LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
-	ASSERT_TRUE(element != NULL) << "Not NULL expected";
-	LECalculator c;
-	ASSERT_EQ( 1,  c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
+	{
+		WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
+		LEElement thepool[TEST_POOL_SIZE];
+		LEElementPool pool(thepool, TEST_POOL_SIZE);
+		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
+		ASSERT_TRUE(element != NULL) << "Not NULL expected";
+		LECalculator c;
+		ASSERT_EQ( 1,  c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
 
-	ASSERT_EQ(12, c.currentCalculationLogPosition);
-	ASSERT_EQ(102, c.calcLogAction[0]);
-	ASSERT_EQ(0, c.calcLogValue[0]);
+		ASSERT_EQ(12, c.currentCalculationLogPosition);
+		ASSERT_EQ(102, c.calcLogAction[0]);
+		ASSERT_EQ(0, c.calcLogValue[0]);
+	}
 
-	testExpression("cfg_fanOffTemperature", 0);
-	testExpression("coolant cfg_fanOffTemperature >", 1);
 
 	testExpression("0 1 &", 0);
 	testExpression("0 1 |", 1);
 
 	testExpression("0 1 >", 0);
 
-	testExpression(FAN_CONTROL_LOGIC, 1);
+	{
+		WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
+		engineConfiguration->fanOnTemperature = 0;
+		engineConfiguration->fanOffTemperature = 0;
 
-	engine->fsioState.mockRpm = 900;
-	engine->fsioState.mockCrankingRpm = 200;
-	testExpression2(0, "rpm", 900, engine);
-	testExpression2(0, "cranking_rpm", 200, engine);
-	testExpression2(0, STARTER_RELAY_LOGIC, 0, engine);
-	testExpression2(0, "rpm cranking_rpm > ", 1, engine);
+		testExpression2(0, "cfg_fanOffTemperature", 0, engine);
+		testExpression2(0, FAN_CONTROL_LOGIC, 1, engine);
+		testExpression2(0, "coolant cfg_fanOffTemperature >", 1, engine);
+	}
+
+	{
+		WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
+		engine->fsioState.mockRpm = 900;
+		engine->fsioState.mockCrankingRpm = 200;
+		testExpression2(0, "rpm", 900, engine);
+		testExpression2(0, "cranking_rpm", 200, engine);
+		testExpression2(0, STARTER_RELAY_LOGIC, 0, engine);
+		testExpression2(0, "rpm cranking_rpm > ", 1, engine);
+	}
 }

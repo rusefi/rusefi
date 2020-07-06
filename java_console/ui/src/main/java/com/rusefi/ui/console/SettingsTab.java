@@ -7,6 +7,7 @@ import com.rusefi.config.FieldType;
 import com.rusefi.config.FieldsMap;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.RecentCommands;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.config.*;
 import com.rusefi.ui.util.UiUtils;
 
@@ -29,8 +30,10 @@ public class SettingsTab {
     private final JPanel panel = new JPanel(new GridLayout(1, 3));
     private final JButton dialog = new JButton();
     private final JPanel dialogBody = new JPanel();
+    private final UIContext uiContext;
 
-    public SettingsTab() {
+    public SettingsTab(UIContext uiContext) {
+        this.uiContext = uiContext;
         UiUtils.showLoadingMessage(content);
     }
 
@@ -118,7 +121,7 @@ public class SettingsTab {
 
         panel.add(dialogBody);
 
-        panel.add(UiUtils.wrap(RecentCommands.createButton(new AtomicBoolean(), Fields.CMD_WRITECONFIG)));
+        panel.add(UiUtils.wrap(RecentCommands.createButton(uiContext, new AtomicBoolean(), Fields.CMD_WRITECONFIG)));
 
         JLabel unusable = new JLabel("This is painfully unusable, TunerStudio works way better for settings!");
         unusable.setForeground(Color.red);
@@ -146,11 +149,11 @@ public class SettingsTab {
 
             JComponent control;
             if (field.getType() == FieldType.BIT) {
-                control = new BitConfigField(field, f.getUiName()).getContent();
+                control = new BitConfigField(uiContext, field, f.getUiName()).getContent();
             } else if (field.getOptions() != null) {
-                control = new EnumConfigField(field, f.getUiName()).getContent();
+                control = new EnumConfigField(uiContext, field, f.getUiName()).getContent();
             } else {
-                control = new ConfigField(field, f.getUiName()).getContent();
+                control = new ConfigField(uiContext, field, f.getUiName()).getContent();
             }
 
             dialogBody.add(control);

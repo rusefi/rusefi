@@ -14,12 +14,6 @@
 #include "pin_repository.h"
 #endif
 
-#define PROTOCOL  "001"
-
-#define TS_RESPONSE_OK 0x00
-#define TS_RESPONSE_BURN_OK 0x04
-#define TS_RESPONSE_COMMAND_OK 0x07
-
 #define TS_RESPONSE_UNDERRUN 0x80
 #define TS_RESPONSE_CRC_FAILURE 0x82
 
@@ -28,31 +22,18 @@ typedef enum {
 	TS_CRC = 1
 } ts_response_format_e;
 
-typedef struct {
-	BaseChannel * channel;
+struct ts_channel_s {
+	BaseChannel * channel = nullptr;
 	uint8_t writeBuffer[7];	// size(2 bytes) + response(1 byte) + crc32 (4 bytes)
 	/**
 	 * See 'blockingFactor' in rusefi.ini
 	 */
 	char crcReadBuffer[BLOCKING_FACTOR + 30];
-} ts_channel_s;
 
-// See uart_dma_s
-#define TS_FIFO_BUFFER_SIZE (BLOCKING_FACTOR + 30)
-// This must be a power of 2!
-#define TS_DMA_BUFFER_SIZE 32
-
-// struct needed for async DMA transfer mode (see TS_UART_DMA_MODE)
-typedef struct {
-	// circular DMA buffer
-	uint8_t dmaBuffer[TS_DMA_BUFFER_SIZE];
-	// current read position for the DMA buffer
-	volatile int readPos;
-	// secondary FIFO buffer for async. transfer
-	uint8_t buffer[TS_FIFO_BUFFER_SIZE];
-	// input FIFO Rx queue
-	input_queue_t fifoRxQueue;
-} uart_dma_s;
+#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE || TS_UART_MODE
+	UARTDriver *uartp = nullptr;
+#endif // TS_UART_DMA_MODE
+};
 
 // These commands are used exclusively by the rusEfi console
 #define TS_TEST_COMMAND 't' // 0x74

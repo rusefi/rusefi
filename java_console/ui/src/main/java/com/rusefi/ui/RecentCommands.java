@@ -55,28 +55,28 @@ public class RecentCommands {
     private final static Map<String, Icon> COMMAND_ICONS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     static {
-        COMMAND_ICONS.put(STOPENGINE, AutoupdateUtil.loadIcon("stop.jpg"));
-        ImageIcon infoIcon = AutoupdateUtil.loadIcon("info.png");
+        COMMAND_ICONS.put(STOPENGINE, AutoupdateUtil.loadIcon("/stop.jpg"));
+        ImageIcon infoIcon = AutoupdateUtil.loadIcon("/info.png");
         COMMAND_ICONS.put(SHOWCONFIG, infoIcon);
         COMMAND_ICONS.put(HELP, AutoupdateUtil.loadIcon("help.jpg"));
         COMMAND_ICONS.put(ANALOGINFO, infoIcon);
-        COMMAND_ICONS.put(CMD_TRIGGERINFO, AutoupdateUtil.loadIcon("trigger.jpg"));
+        COMMAND_ICONS.put(CMD_TRIGGERINFO, AutoupdateUtil.loadIcon("/trigger.jpg"));
         COMMAND_ICONS.put(IDLEINFO, infoIcon);
-        COMMAND_ICONS.put(ALTINFO, AutoupdateUtil.loadIcon("alternator.jpg"));
+        COMMAND_ICONS.put(ALTINFO, AutoupdateUtil.loadIcon("/alternator.jpg"));
         COMMAND_ICONS.put(ACCELINFO, infoIcon);
         COMMAND_ICONS.put(TSINFO, infoIcon);
         COMMAND_ICONS.put(TPSINFO, infoIcon);
         COMMAND_ICONS.put(MAPINFO, infoIcon);
-        COMMAND_ICONS.put(joystickINFO, AutoupdateUtil.loadIcon("joystick.png"));
+        COMMAND_ICONS.put(joystickINFO, AutoupdateUtil.loadIcon("/joystick.png"));
         COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
         COMMAND_ICONS.put(TEMPINFO, infoIcon);
-        COMMAND_ICONS.put(HIPINFO, AutoupdateUtil.loadIcon("knock.jpg"));
-        COMMAND_ICONS.put(SDINFO, AutoupdateUtil.loadIcon("sdinfo.jpg"));
+        COMMAND_ICONS.put(HIPINFO, AutoupdateUtil.loadIcon("/knock.jpg"));
+        COMMAND_ICONS.put(SDINFO, AutoupdateUtil.loadIcon("/sdinfo.jpg"));
         COMMAND_ICONS.put(FSIOINFO, infoIcon);
         COMMAND_ICONS.put(PINS, infoIcon);
-        COMMAND_ICONS.put(Fields.CMD_WRITECONFIG, AutoupdateUtil.loadIcon("writeconfig.jpg"));
-        COMMAND_ICONS.put(SPEEDINFO, AutoupdateUtil.loadIcon("speedinfo.jpg"));
+        COMMAND_ICONS.put(Fields.CMD_WRITECONFIG, AutoupdateUtil.loadIcon("/writeconfig.jpg"));
+        COMMAND_ICONS.put(SPEEDINFO, AutoupdateUtil.loadIcon("/speedinfo.jpg"));
     }
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
@@ -91,9 +91,11 @@ public class RecentCommands {
     private final AtomicBoolean reentrant = new AtomicBoolean();
 
     private final JScrollPane messagesScroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    private final UIContext uiContext;
 
-    public RecentCommands() {
-        CommandQueue.getInstance().addListener(new CommandQueue.CommandQueueListener() {
+    public RecentCommands(UIContext uiContext) {
+        this.uiContext = uiContext;
+        uiContext.getCommandQueue().addListener(new CommandQueue.CommandQueueListener() {
             @Override
             public void onCommand(String command) {
                 if (!reentrant.get())
@@ -165,10 +167,10 @@ public class RecentCommands {
             public void run() {
                 content.removeAll();
 
-                if (LinkManager.isLogViewer())
-                    content.add(createButton());
+                if (uiContext.getLinkManager().isLogViewer())
+                    content.add(createButton(uiContext));
 
-                JButton reset = new JButton(AutoupdateUtil.loadIcon("undo.jpg"));
+                JButton reset = new JButton(AutoupdateUtil.loadIcon("/undo.jpg"));
                 reset.setContentAreaFilled(false);
                 reset.setFocusPainted(false);
                 reset.setBorder(BorderFactory.createEmptyBorder());
@@ -186,7 +188,7 @@ public class RecentCommands {
                     sorted.addAll(entries.keySet());
 
                     for (Entry entry : sorted) {
-                        content.add(createButton(reentrant, entry.command));
+                        content.add(createButton(uiContext, reentrant, entry.command));
                     }
                 }
                 UiUtils.trueLayout(content.getParent());
@@ -195,7 +197,7 @@ public class RecentCommands {
         getConfig().getRoot().setProperty(KEY, pack());
     }
 
-    public static JComponent createButton(final AtomicBoolean reentrant, final String command) {
+    public static JComponent createButton(UIContext uiContext, final AtomicBoolean reentrant, final String command) {
         JButton button = new JButton(command);
         Icon icon = COMMAND_ICONS.get(command);
         if (icon != null)
@@ -207,7 +209,7 @@ public class RecentCommands {
             public void actionPerformed(ActionEvent e) {
                 reentrant.set(true);
                 int timeout = CommandQueue.getTimeout(command);
-                CommandQueue.getInstance().write(command, timeout);
+                uiContext.getCommandQueue().write(command, timeout);
                 reentrant.set(false);
             }
         });
@@ -277,7 +279,7 @@ public class RecentCommands {
     }
 
 
-    public static JButton createButton() {
+    public static JButton createButton(UIContext uiContext) {
         JButton button = new JButton("Read trigger log");
         button.addActionListener(new ActionListener() {
             @Override
@@ -291,7 +293,7 @@ public class RecentCommands {
                     } catch (IOException e) {
                         throw new IllegalStateException(e);
                     }
-                    MessagesCentral.getInstance().postMessage(AverageAnglesUtil.class, report);
+                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AverageAnglesUtil.class, report);
                 }
             }
         });

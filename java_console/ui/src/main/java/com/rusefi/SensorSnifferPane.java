@@ -1,8 +1,10 @@
 package com.rusefi;
 
+import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.RpmLabel;
 import com.rusefi.ui.RpmModel;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.config.EnumConfigField;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -38,8 +40,8 @@ public class SensorSnifferPane {
 
     private boolean paused = false;
 
-    public SensorSnifferPane(Node config) {
-        SensorSnifferCentral.addListener(new SensorSnifferCentral.AnalogChartListener() {
+    public SensorSnifferPane(UIContext uiContext, Node config) {
+        uiContext.sensorSnifferCentral.addListener(new SensorSnifferCentral.AnalogChartListener() {
             @Override
             public void onAnalogChart(final String message) {
                 // this callback is invoked from the connectivity thread, need to handle in AWT for thread-safety
@@ -76,7 +78,7 @@ public class SensorSnifferPane {
                                           @Override
                                           public void actionPerformed(ActionEvent e) {
                                               int rpm = RpmModel.getInstance().getValue();
-                                              String fileName = FileLog.getDate() + "_rpm_" + rpm + "_sensor" + ".png";
+                                              String fileName = Logger.getDate() + "_rpm_" + rpm + "_sensor" + ".png";
 
                                               UiUtils.saveImageWithPrompt(fileName, upperPanel, canvas);
                                           }
@@ -84,9 +86,9 @@ public class SensorSnifferPane {
         );
 
         upperPanel.add(pauseButton);
-        upperPanel.add(new RpmLabel(2).getContent());
+        upperPanel.add(new RpmLabel(uiContext,2).getContent());
 
-        command = AnyCommand.createField(config, true, false);
+        command = AnyCommand.createField(uiContext, config, true, false);
         upperPanel.add(command.getContent());
 
         upperPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
@@ -108,9 +110,9 @@ public class SensorSnifferPane {
         lowerPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
         content.add(lowerPanel, BorderLayout.SOUTH);
 
-        lowerPanel.add(new EnumConfigField(Fields.SENSORCHARTMODE, "Mode").getContent());
-        lowerPanel.add(new ConfigField(Fields.SENSORCHARTFREQUENCY, "Every XXX engine cycles").getContent());
-        lowerPanel.add(new ConfigField(Fields.SENSORSNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
+        lowerPanel.add(new EnumConfigField(uiContext, Fields.SENSORCHARTMODE, "Mode").getContent());
+        lowerPanel.add(new ConfigField(uiContext, Fields.SENSORCHARTFREQUENCY, "Every XXX engine cycles").getContent());
+        lowerPanel.add(new ConfigField(uiContext, Fields.SENSORSNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
     }
 
     private void setPaused(JButton pauseButton, boolean isPaused) {

@@ -1,7 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
-import com.rusefi.io.CommandQueue;
+import com.rusefi.ui.UIContext;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -13,24 +13,26 @@ import java.awt.event.ActionListener;
  */
 public class PresetsPane {
     // see rusefi_enums.h
-    private static final int MRE_BOARD_TEST = 30;
-    private static final int MIATA_NA6_MAP = 41;
-    private static final int MIATA_NA6_VAF = 57;
-    private static final int MAZDA_MIATA_2003 = 47;
     private static final int TEST_V_12 = 49;
     private static final int ETB_BENCH = 58;
     private static final int MINIMAL_PINS = 99;
+    private final UIContext uiContext;
 
     private JPanel content = new JPanel(new GridLayout(2, 4));
 
-    public PresetsPane() {
-        content.add(new SetEngineTypeCommandControl("Miata NA6 Stage 0", "engines/miata_na.png", MIATA_NA6_VAF).getContent());
-        content.add(new SetEngineTypeCommandControl("Miata NA6 Stage 1", "engines/miata_na.png", MIATA_NA6_MAP).getContent());
-        content.add(new SetEngineTypeCommandControl("Miata NB2", "engines/miata_nb.png", MAZDA_MIATA_2003).getContent());
-        content.add(new SetEngineTypeCommandControl("Frankenso V12", "engines/v12", TEST_V_12).getContent());
-        content.add(new SetEngineTypeCommandControl("ETB bench", "", ETB_BENCH).getContent());
-        content.add(new SetEngineTypeCommandControl("Minimal", "", MINIMAL_PINS).getContent());
-        content.add(new SetEngineTypeCommandControl("MRE test", "", MRE_BOARD_TEST).getContent());
+    public PresetsPane(UIContext uiContext) {
+        this.uiContext = uiContext;
+        content.add(new SetEngineTypeCommandControl(uiContext,"Frankenso Miata NA6 Stage 0", "/engines/miata_na.png", Fields.ET_FRANKENSO_MIATA_NA6_VAF).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso Miata NA6 Stage 1", "/engines/miata_na.png", Fields.ET_FRANKENSO_MIATA_NA6).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso Miata NB2", "/engines/miata_nb.png", Fields.ET_FRANKENSO_MIATA_NB2).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NB2 MAP", "engines/miata_nb.png", Fields.ET_MRE_MIATA_NB2_MAP).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NB2 MAF", "engines/miata_nb.png", Fields.ET_MRE_MIATA_NB2_MAF).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata Defaults", "", Fields.ET_MRE_DEFAULTS).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso V12", "/engines/v12", TEST_V_12).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "ETB bench", "", ETB_BENCH).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Minimal", "", MINIMAL_PINS).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "MRE old test", "", Fields.ET_MRE_OLD_TEST_BOARD).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "MRE new test", "", Fields.ET_MRE_NEW_TEST_BOARD).getContent());
     }
 
     public JPanel getContent() {
@@ -40,8 +42,8 @@ public class PresetsPane {
     private class SetEngineTypeCommandControl extends FixedCommandControl {
         private final String labelTest;
 
-        public SetEngineTypeCommandControl(String labelTest, String imageFileName, int engineType) {
-            super(labelTest, imageFileName, CommandControl.SET, "set " + Fields.CMD_ENGINE_TYPE + " " + engineType);
+        public SetEngineTypeCommandControl(UIContext uiContext, String labelTest, String imageFileName, int engineType) {
+            super(uiContext, labelTest, imageFileName, CommandControl.SET, "set " + Fields.CMD_ENGINE_TYPE + " " + engineType);
             this.labelTest = labelTest;
         }
 
@@ -54,7 +56,7 @@ public class PresetsPane {
                 if (dialogResult != JOptionPane.YES_OPTION)
                     return;
 
-                CommandQueue.getInstance().write(getCommand());
+                uiContext.getCommandQueue().write(getCommand());
             };
         }
     }

@@ -1,7 +1,9 @@
 package com.rusefi.autodetect;
 
+import com.rusefi.FileLog;
 import com.rusefi.IoUtil;
 import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.io.LinkManager;
 import com.rusefi.ui.light.LightweightGUI;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -9,7 +11,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ReconnectSandbox {
     public static void main(String[] args) {
 
-        LightweightGUI.waitForDeviceAndStart();
+        LinkManager linkManager = new LinkManager(FileLog.LOGGER);
+
+        LightweightGUI.waitForDeviceAndStart(linkManager);
 
         AtomicBoolean status = new AtomicBoolean();
 

@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.PaneSettings;
 import com.rusefi.core.Sensor;
@@ -67,6 +68,7 @@ public class GaugesPanel {
     private final JPanel content = new JPanel(new BorderLayout());
     private final GaugesGrid gauges;
     private final Node config;
+    private final UIContext uiContext;
 
     private boolean showRpmPanel;
     private boolean showMessagesPanel;
@@ -77,7 +79,8 @@ public class GaugesPanel {
     private final JPanel messagesPanel = new JPanel(new BorderLayout());
     private final JSplitPane middleSplitPanel;
 
-    public GaugesPanel(final Node config, PaneSettings paneSettings) {
+    public GaugesPanel(UIContext uiContext, final Node config, PaneSettings paneSettings) {
+        this.uiContext = uiContext;
         gauges = new GaugesGrid(DEFAULT_ROWS, DEFAULT_COLUMNS);
         this.config = config;
         showRpmPanel = config.getBoolProperty(SHOW_RPM, true);
@@ -85,7 +88,7 @@ public class GaugesPanel {
 
         prepareMessagesPanel();
 
-        lowerRpmPanel.add(new RpmLabel(15).getContent());
+        lowerRpmPanel.add(new RpmLabel(uiContext,15).getContent());
 
         int rows = config.getIntProperty(GAUGES_ROWS, DEFAULT_ROWS);
         int columns = config.getIntProperty(GAUGES_COLUMNS, DEFAULT_COLUMNS);
@@ -210,8 +213,8 @@ public class GaugesPanel {
         JPanel leftUpperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         leftUpperPanel.add(createPauseButton());
         leftUpperPanel.add(createSaveImageButton());
-        leftUpperPanel.add(new RpmLabel(2).getContent());
-        AnyCommand command = AnyCommand.createField(config, false, false);
+        leftUpperPanel.add(new RpmLabel(uiContext, 2).getContent());
+        AnyCommand command = AnyCommand.createField(uiContext, config, false, false);
         leftUpperPanel.add(command.getContent());
         return leftUpperPanel;
     }
@@ -234,7 +237,7 @@ public class GaugesPanel {
         saveImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fileName = FileLog.getDate() + "_gauges.png";
+                String fileName = Logger.getDate() + "_gauges.png";
 
                 UiUtils.saveImageWithPrompt(fileName, content, gauges.panel);
             }
@@ -248,7 +251,7 @@ public class GaugesPanel {
         for (int i = 0; i < rows * columns; i++) {
             // sometimes grid is quite large so we shall be careful with default sensor index
             Sensor defaultSensor = DEFAULT_LAYOUT[Math.min(i, DEFAULT_LAYOUT.length - 1)];
-            Component element = GaugesGridElement.read(config.getChild("element_" + i), defaultSensor);
+            Component element = GaugesGridElement.read(uiContext, config.getChild("element_" + i), defaultSensor);
 
             gauges.panel.add(element);
         }
@@ -270,13 +273,18 @@ public class GaugesPanel {
         return content;
     }
 
-    public enum DetachedRepository {
-        INSTANCE;
+    public static class DetachedRepository {
 
         public static final String COUNT = "count";
         public static final String DETACHED = "detached";
+        private final UIContext uiContext;
         private List<DetachedSensor> list = new ArrayList<>();
         private Node config;
+
+        public DetachedRepository(UIContext uiContext) {
+
+            this.uiContext = uiContext;
+        }
 
         public void add(DetachedSensor detachedSensor) {
             list.add(detachedSensor);
@@ -291,7 +299,7 @@ public class GaugesPanel {
         public void load() {
             int count = config.getIntProperty(COUNT, 0);
             for (int i = 0; i < count; i++) {
-                DetachedSensor.create(config.getChild(DETACHED + i));
+                DetachedSensor.create(uiContext, config.getChild(DETACHED + i));
             }
         }
 

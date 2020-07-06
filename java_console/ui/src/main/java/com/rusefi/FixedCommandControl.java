@@ -1,10 +1,12 @@
 package com.rusefi;
 
+import com.rusefi.ui.UIContext;
+
 public class FixedCommandControl extends CommandControl {
     private final String command;
 
-    public FixedCommandControl(String labelText, String iconFileName, String buttonText, String command) {
-        super(labelText, iconFileName, buttonText);
+    public FixedCommandControl(UIContext uiContext, String labelText, String iconFileName, String buttonText, String command) {
+        super(uiContext, labelText, iconFileName, buttonText);
         this.command = command;
     }
 

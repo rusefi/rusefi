@@ -83,9 +83,13 @@ public class ReaderState {
             int totalCount = 1 << (bitRange.getBitSize0() + 1);
             List<String> enums = Arrays.asList(rawLine.getTokens()).subList(4, rawLine.getTokens().length);
             if (enums.size() > totalCount)
-                throw new IllegalStateException("Too many options in " + tunerStudioLine + " capacity=" + totalCount + "/size=" + enums.size());
+                throw new IllegalStateException(name + ": Too many options in " + tunerStudioLine + " capacity=" + totalCount + "/size=" + enums.size());
+/*
+    this does not work right now since smt32 and kinetis enum sizes could be different but same .txt file
+    todo: identify relevant bitsizes and use variables for bitsizes?
             if (enums.size() <= totalCount / 2)
                 throw new IllegalStateException("Too many bits allocated for " + enums + " capacity=" + totalCount + "/size=" + enums.size());
+*/
             for (int i = enums.size(); i < totalCount; i++)
                 tunerStudioLine += ", \"INVALID\"";
         }
@@ -163,7 +167,7 @@ public class ReaderState {
                  * for example
                  * #define CLT_CURVE_SIZE 16
                  */
-                ConfigDefinition.processDefine(line.substring(DEFINE.length()).trim());
+                ConfigDefinition.processDefine(VariableRegistry.INSTANCE, line.substring(DEFINE.length()).trim());
             } else {
                 if (stack.isEmpty())
                     throw new IllegalStateException("Expected to be within structure at line " + lineIndex + ": " + line);

@@ -4,6 +4,7 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
+import com.rusefi.ui.UIContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -81,19 +82,18 @@ public class SensorLogger {
             Sensor.engineMakeCodeNameCrc16,
             Sensor.tuneCrc16,
     };
+    private final UIContext uiContext;
 
-    private static List<SensorLog> sensorLogs = Arrays.asList(new PlainTextSensorLog(), new BinarySensorLogRestarter());
+    private List<SensorLog> sensorLogs;
 
-    private static boolean isInitialized;
+    private boolean isInitialized;
 
-    private SensorLogger() {
+    public SensorLogger(UIContext uiContext) {
+        this.uiContext = uiContext;
+        sensorLogs = Arrays.asList(new PlainTextSensorLog(uiContext), new BinarySensorLogRestarter());
     }
 
-    static {
-        init();
-    }
-
-    public synchronized static void init() {
+    public synchronized void init() {
         if (isInitialized) {
             return;
         }
@@ -109,7 +109,7 @@ public class SensorLogger {
         });
     }
 
-    public static double getSecondsSinceFileStart() {
+    public double getSecondsSinceFileStart() {
         return sensorLogs.get(0).getSecondsSinceFileStart();
     }
 

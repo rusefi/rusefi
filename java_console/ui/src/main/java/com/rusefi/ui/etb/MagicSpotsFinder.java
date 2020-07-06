@@ -1,10 +1,12 @@
 package com.rusefi.ui.etb;
 
+import com.rusefi.FileLog;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.InvocationConfirmationListener;
+import com.rusefi.ui.UIContext;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -31,6 +33,7 @@ public class MagicSpotsFinder {
     private final JButton button = new JButton(MAGIC_SPOTS_FINDER);
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private final static double MEASURMENT_PRECISION = 0.5;
+    private final UIContext uiContext;
     private double defaultTpsPosition;
 
 //    private boolean isStarted;
@@ -63,29 +66,29 @@ public class MagicSpotsFinder {
                     sleep(SLEEP);
 
                     double tpsPosition = SensorCentral.getInstance().getValue(Sensor.TPS);
-                    MessagesCentral.getInstance().postMessage(getClass(), "ETB duty " + currentDutyCycle + ": tps=" + tpsPosition);
+                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), "ETB duty " + currentDutyCycle + ": tps=" + tpsPosition);
 
                     if (tpsPosition >= 100 - MEASURMENT_PRECISION) {
                         currentDutyCycle -= DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
+                        uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
                     } else if (tpsPosition > defaultTpsPosition + MEASURMENT_PRECISION) {
 
                         if (startedToCloseValue == 0) {
                             // if that's the first we've moved let's remember duty cycle value
                             startedToCloseValue = currentDutyCycle;
                             startedToCloseValueLabel.setText(String.format("Started Close %.1f", startedToCloseValue));
-                            MessagesCentral.getInstance().postMessage(getClass(), "Started to close at " + startedToCloseValue);
+                            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), "Started to close at " + startedToCloseValue);
                         }
 
                         currentDutyCycle -= DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
+                        uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
                     } else {
                         backToZeroValue = currentDutyCycle;
                         backToZeroValueLabel.setText(String.format("Back Zero %.1f", backToZeroValue));
-                        MessagesCentral.getInstance().postMessage(getClass(), "Back closed to close at " + backToZeroValue);
+                        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), "Back closed to close at " + backToZeroValue);
 
-                        MessagesCentral.getInstance().postMessage(getClass(), "startedToOpenValue = " + startedToOpenValue + ", reached100Value = " + reached100Value);
-                        MessagesCentral.getInstance().postMessage(getClass(), "startedToCloseValue = " + startedToCloseValue + ", backToZeroValue = " + backToZeroValue);
+                        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), "startedToOpenValue = " + startedToOpenValue + ", reached100Value = " + reached100Value);
+                        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), "startedToCloseValue = " + startedToCloseValue + ", backToZeroValue = " + backToZeroValue);
                         button.setEnabled(true);
                         button.setText(MAGIC_SPOTS_FINDER);
                     }
@@ -105,34 +108,34 @@ public class MagicSpotsFinder {
                     sleep(SLEEP);
 
                     double tpsPosition = SensorCentral.getInstance().getValue(Sensor.TPS);
-                    MessagesCentral.getInstance().postMessage(getClass(), "ETB duty " + currentDutyCycle + ": tps=" + tpsPosition);
+                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), "ETB duty " + currentDutyCycle + ": tps=" + tpsPosition);
 
                     if (tpsPosition < defaultTpsPosition + MEASURMENT_PRECISION) {
                         // ETB has not moved yet, keep going up
                         currentDutyCycle += DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
+                        uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
                     } else if (tpsPosition < 100 - MEASURMENT_PRECISION) {
 
                         if (startedToOpenValue == 0) {
                             // if that's the first we've moved let's remember duty cycle value
                             startedToOpenValue = currentDutyCycle;
                             startedToOpenValueLabel.setText(String.format("Start to open: %.1f", startedToOpenValue));
-                            MessagesCentral.getInstance().postMessage(getClass(), "Started to open at " + startedToOpenValue);
+                            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), "Started to open at " + startedToOpenValue);
                         }
 
 
                         // ETB has not reached 100%, keep going up
                         currentDutyCycle += DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
+                        uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
 
                     } else {
                         // looks like we have reached 100%, cool!
                         reached100Value = currentDutyCycle;
                         reached100ValueLabel.setText(String.format("Reached 100: %.1f", reached100Value));
-                        MessagesCentral.getInstance().postMessage(getClass(), "startedToOpenValue = " + startedToOpenValue + ", reached100Value = " + reached100Value);
+                        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), "startedToOpenValue = " + startedToOpenValue + ", reached100Value = " + reached100Value);
 
                         currentDutyCycle -= DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
+                        uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingDown);
                     }
                 }
 
@@ -154,10 +157,10 @@ public class MagicSpotsFinder {
                 public void run() {
                     state = State.START;
 
-                    MessagesCentral.getInstance().postMessage(getClass(), "Start!");
+                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), "Start!");
                     resetValues();
 
-                    CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
+                    uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + currentDutyCycle, goingUp);
                     sleep(INITIAL_SLEEP);
                     defaultTpsPosition = SensorCentral.getInstance().getValue(Sensor.TPS);
                 }
@@ -173,7 +176,8 @@ public class MagicSpotsFinder {
         backToZeroValue = 0;
     }
 
-    public MagicSpotsFinder() {
+    public MagicSpotsFinder(UIContext uiContext) {
+        this.uiContext = uiContext;
         points.add(startedToOpenValueLabel);
         points.add(reached100ValueLabel);
         points.add(startedToCloseValueLabel);
@@ -193,7 +197,7 @@ public class MagicSpotsFinder {
                     public void run() {
                         // magic constant for DBG_ELECTRONIC_THROTTLE_EXTRA
                         state = State.DEBUG_MODE;
-                        CommandQueue.getInstance().write("set debug_mode " + 29, setDebugModeConfiguration);
+                        uiContext.getCommandQueue().write("set debug_mode " + 29, setDebugModeConfiguration);
                     }
                 });
             }
@@ -206,7 +210,7 @@ public class MagicSpotsFinder {
 
     private void sleep(long millis) {
         try {
-            MessagesCentral.getInstance().postMessage(getClass(), "Sleeping " + millis + "ms");
+            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), "Sleeping " + millis + "ms");
             Thread.sleep(millis);
         } catch (InterruptedException unexpected) {
             unexpected.printStackTrace();

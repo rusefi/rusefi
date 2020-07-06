@@ -3,12 +3,14 @@ package com.rusefi.tools;
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.ResponseBuffer;
@@ -17,6 +19,7 @@ import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
@@ -34,6 +37,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
+import static com.rusefi.binaryprotocol.IoHelper.getCrc32;
 
 public class ConsoleTools {
     public static final String SET_AUTH_TOKEN = "set_auth_token";
@@ -50,6 +54,9 @@ public class ConsoleTools {
         registerTool("functional_test", ConsoleTools::runFunctionalTest, "NOT A USER TOOL. Development tool related to functional testing");
         registerTool("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");
 
+        registerTool("get_image_tune_crc", ConsoleTools::calcBinaryImageTuneCrc, "Calculate tune CRC for given binary tune");
+        registerTool("get_xml_tune_crc", ConsoleTools::calcXmlImageTuneCrc, "Calculate tune CRC for given XML tune");
+
         registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
         registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
@@ -64,6 +71,37 @@ public class ConsoleTools {
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
         registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
         registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+    }
+
+    public static void main(String[] args) throws Exception {
+        System.out.println(Arrays.toString(new File(".").list()));
+        System.setProperty("ini_file_path", "../firmware/tunerstudio");
+//        calcBinaryImageTuneCrc(null, "current_configuration.rusefi_binary");
+
+        calcXmlImageTuneCrc(null, "CurrentTune.msq");
+    }
+
+    private static void calcXmlImageTuneCrc(String... args) throws Exception {
+        String fileName = args[1];
+        Msq msq = Msq.readTune(fileName);
+        ConfigurationImage image = msq.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
+        printCrc(image);
+    }
+
+    private static void calcBinaryImageTuneCrc(String... args) throws IOException {
+        String fileName = args[1];
+        ConfigurationImage image = ConfigurationImageFile.readFromFile(fileName);
+        printCrc(image);
+    }
+
+    private static void printCrc(ConfigurationImage image) {
+        for (int i = 0; i < Fields.ERROR_BUFFER_SIZE; i++)
+            image.getContent()[Fields.warning_message_offset + i] = 0;
+        int crc32 = getCrc32(image.getContent());
+        int crc16 = crc32 & 0xFFFF;
+        System.out.printf("tune_CRC32_hex=0x%x\n", crc32);
+        System.out.printf("tune_CRC16_hex=0x%x\n", crc16);
+        System.out.println("tune_CRC16=" + crc16);
     }
 
     private static void lightUI(String[] strings) {
@@ -97,7 +135,7 @@ public class ConsoleTools {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes, FileLog.LOGGER);
     }
@@ -158,7 +196,18 @@ public class ConsoleTools {
             System.err.println("rusEFI not detected");
             return;
         }
-        LinkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
+        LinkManager linkManager = new LinkManager(FileLog.LOGGER);
+        linkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
+            @Override
+            public void onConnectionEstablished() {
+                new BinaryProtocolServer(FileLog.LOGGER).start(linkManager);
+            }
+
+            @Override
+            public void onConnectionFailed() {
+
+            }
+        });
     }
 
     private static void invokeCallback(String callback) {
@@ -224,11 +273,11 @@ public class ConsoleTools {
         ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName);
         System.out.println("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
 
-        Msq tune = Msq.valueOf(image);
-        tune.writeXmlFile(Msq.outputXmlFileName);
+        Msq tune = MsqFactory.valueOf(image);
+        tune.writeXmlFile(Online.outputXmlFileName);
         String authToken = AuthTokenPanel.getAuthToken();
         System.out.println("Using " + authToken);
-        Online.upload(new File(Msq.outputXmlFileName), authToken);
+        Online.upload(new File(Online.outputXmlFileName), authToken);
     }
 
     public static long classBuildTimeMillis() throws URISyntaxException, IllegalStateException, IllegalArgumentException {
@@ -257,7 +306,7 @@ public class ConsoleTools {
             System.out.println("rusEFI not detected");
             return;
         }
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
         Logger logger = FileLog.LOGGER;
         IncomingDataBuffer incomingData = BinaryProtocol.createDataBuffer(stream, logger);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes("hello");

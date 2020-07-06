@@ -1,11 +1,2 @@
-echo java version
-java -version
-
-echo Building java console
-pwd
-cd java_console
-call ant clean clean_out_folder jar
-cd ..
-
-if not exist java_console_binary/rusefi_console.jar echo CONSOLE COMPILATION FAILED
-echo java console looks good
+@echo off
+sh.exe misc\jenkins\build_java_console.sh

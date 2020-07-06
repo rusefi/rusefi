@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/wall_fuel.txt Sat Aug 31 23:11:37 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/wall_fuel_state.txt Thu Jul 02 12:27:25 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_WALL_FUEL_GENERATED_H
@@ -23,4 +23,4 @@ typedef struct wall_fuel_state wall_fuel_state;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/wall_fuel.txt Sat Aug 31 23:11:37 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/wall_fuel_state.txt Thu Jul 02 12:27:25 UTC 2020
