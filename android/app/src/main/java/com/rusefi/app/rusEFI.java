@@ -25,39 +25,39 @@ import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.opensr5.Logger;
-import com.rusefi.dfu.DfuCommmand;
+import com.rusefi.Listener;
 import com.rusefi.dfu.DfuConnection;
 import com.rusefi.dfu.DfuImage;
 import com.rusefi.dfu.DfuLogic;
-import com.rusefi.dfu.FlashRange;
+import com.rusefi.dfu.android.AndroidDfuConnection;
 import com.rusefi.dfu.android.DfuDeviceLocator;
-import com.rusefi.dfu.commands.DfuCommandGetStatus;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.shared.ConnectionAndMeta;
 import com.rusefi.shared.FileUtil;
-import com.rusefi.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 
-import static android.hardware.usb.UsbConstants.USB_DIR_IN;
-import static android.hardware.usb.UsbConstants.USB_DIR_OUT;
-
 public class rusEFI extends Activity {
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
-    public static final String FILE = "rusefi_bundle_mre_f4_autoupdate.zip";
+    //public static final String FILE = "rusefi_bundle_mre_f4_autoupdate.zip";
+    //private static final String DFU_FILE_NAME = "rusefi_mre_f4.dfu";
+    private static final String BUNDLE_FILE = "rusefi_bundle_autoupdate.zip";
+    private static final String DFU_FILE_NAME = "rusefi_.dfu";
 
     private static final byte REQUEST_TYPE_CLASS = 32;
     private static final byte RECIPIENT_INTERFACE = 0x01;
@@ -79,6 +79,8 @@ public class rusEFI extends Activity {
 
         usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
+        // turn on scree while ADB debugging idle phone
+        turnScreenOn();
 
         mStatusView = (TextView) findViewById(R.id.text_status);
         mResultView = (TextView) findViewById(R.id.text_result);
@@ -90,20 +92,20 @@ public class rusEFI extends Activity {
 
 
         final File localFolder = getExternalFilesDir(null);
-        final String localFullFile = localFolder + File.separator + FILE;
-        localDfuImageFileName = localFolder + File.separator + "rusefi_mre_f4.dfu";
+        final String localFullFile = localFolder + File.separator + BUNDLE_FILE;
+        localDfuImageFileName = localFolder + File.separator + DFU_FILE_NAME;
 
         if (new File(localFullFile).exists()) {
-            mResultView.append(FILE + " found!\n");
+            mResultView.append(BUNDLE_FILE + " found!\n");
             uncompressFile(localFullFile, localFolder, localDfuImageFileName);
         } else {
-            mResultView.append(FILE + " not found!\n");
+            mResultView.append(BUNDLE_FILE + " not found!\n");
 
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        ConnectionAndMeta c = new ConnectionAndMeta(FILE).invoke();
+                        ConnectionAndMeta c = new ConnectionAndMeta(BUNDLE_FILE).invoke();
                         ConnectionAndMeta.downloadFile(localFullFile, c, new ConnectionAndMeta.DownloadProgressListener() {
                             @Override
                             public void onPercentage(final int currentProgress) {
@@ -137,6 +139,15 @@ public class rusEFI extends Activity {
         }
 
         handleButton();
+    }
+
+    private void turnScreenOn() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setTurnScreenOn(true);
+        } else {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        }
     }
 
     private void uncompressFile(final String localFullFile, final File localFolder, final String localDfuImageFileName) {
@@ -248,65 +259,18 @@ public class rusEFI extends Activity {
         dfuImage.read(localDfuImageFileName);
         mResultView.append("Image size " + dfuImage.getImageSize() + "\n");
 
-        DfuConnection c = new DfuConnection() {
-            @Override
-            public FlashRange getFlashRange() {
-                return dfu.getFlashRange();
-            }
-
-            @Override
-            public int getTransferSize() {
-                return dfu.getTransferSize();
-            }
-
-            @Override
-            public int receiveData(DfuCommmand dfuCommmand, short wValue, ByteBuffer byteBuffer) {
-                return transfer(dfu.getConnection(), USB_DIR_IN, dfuCommmand.getValue(), wValue, byteBuffer);
-            }
-
-            @Override
-            public int sendData(DfuCommmand dfuCommmand, short wValue, ByteBuffer byteBuffer) {
-                return transfer(dfu.getConnection(), USB_DIR_OUT, dfuCommmand.getValue(), wValue, byteBuffer);
-            }
-        };
-
+        DfuConnection connection = new AndroidDfuConnection(dfu.getConnection(), dfu.getInterfaceIndex(), dfu.getTransferSize(), dfu.getFlashRange());
 
         DfuLogic.Logger logger = DfuLogic.Logger.CONSOLE;
         try {
 //            DfuCommandGetStatus.State state = DfuCommandGetStatus.read(c);
 //            mResultView.append("State " + state + "\n");
 
-            DfuCommandGetStatus.DeviceStatus state = DfuCommandGetStatus.read(logger, c);
-
-            if (state.getState() == DfuCommandGetStatus.State.APP_IDLE) {
-                System.out.println("Wow?");
-
-
-                c.sendData(DfuCommmand.DETACH, (short) DFU_DETACH_TIMEOUT, ByteBuffer.allocateDirect(0));
-
-
-            }
-
-            if (state.getState() == DfuCommandGetStatus.State.APP_IDLE) {
-                System.out.println("Wow?2");
-
-
-                c.sendData(DfuCommmand.DETACH, (short) DFU_DETACH_TIMEOUT, ByteBuffer.allocateDirect(0));
-
-
-            }
-
-
-            DfuLogic.uploadImage(logger, c, dfuImage, dfu.getFlashRange());
+            DfuLogic.uploadImage(logger, connection, dfuImage, dfu.getFlashRange());
 
         } catch (IllegalStateException e) {
             mResultView.append("Error " + e + "\n");
         }
-    }
-
-    private static int transfer(UsbDeviceConnection connection, int direction, int request, short wValue, ByteBuffer byteBuffer) {
-        return connection.controlTransfer(REQUEST_TYPE_CLASS | RECIPIENT_INTERFACE | direction, request,
-                wValue, 0, byteBuffer.array(), byteBuffer.limit(), 500);
     }
 
     /**
