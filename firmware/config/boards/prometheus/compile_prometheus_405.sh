@@ -4,7 +4,8 @@
 
 cd ../../..
 export PROJECT_BOARD=prometheus/f405
-export EXTRA_PARAMS=-DSHORT_BOARD_NAME=pth
+export EXTRA_PARAMS=-DSHORT_BOARD_NAME=prometheus_405
+
 
 sh config/boards/common_make.sh
 

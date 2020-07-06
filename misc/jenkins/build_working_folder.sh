@@ -53,13 +53,13 @@ cp java_console/rusefi.xml                $CONSOLE_FOLDER
 
 cp misc/console_launcher/readme.html $FOLDER
 
-cp firmware/tunerstudio/$INI_FILE_OVERRIDE $FOLDER
+cp firmware/tunerstudio/generated/$INI_FILE_OVERRIDE $FOLDER
 # Unsetting since would not be used anywhere else
 INI_FILE_OVERRIDE=""
 RUSEFI_CONSOLE_SETTINGS=""
 
 # users probably do not really care for this file
-# cp firmware/svnversion.h %folder%
+# cp firmware/svnversion.h $FOLDER
 
 cp -r misc/install/openocd $CONSOLE_FOLDER
 cp -r misc/install/DfuSe $CONSOLE_FOLDER
@@ -67,15 +67,13 @@ cp -r misc/install/DfuSe $CONSOLE_FOLDER
 cp firmware/deliver/rusefi_no_asserts.bin $FOLDER
 cp firmware/deliver/rusefi_no_asserts.dfu $FOLDER
 # just for now - DFU work in progress
-cp firmware/deliver/rusefi_no_asserts.hex %folder%
+cp firmware/deliver/rusefi_no_asserts.hex $FOLDER
 
-# 746 builds one version at the moment
-# probably not needed cp firmware/build/rusefi.hex %folder%
 cp firmware/deliver/rusefi.bin $FOLDER
-# probably not needed cp firmware/build/rusefi.elf %folder%
+# probably not needed cp firmware/build/rusefi.elf $FOLDER
 cp firmware/deliver/rusefi.dfu $FOLDER
 # just for now - DFU work in progress
-cp firmware/deliver/rusefi.hex %folder%
+cp firmware/deliver/rusefi.hex $FOLDER
 
 if [ -n $BUNDLE_NAME ]; then
     mv $FOLDER/rusefi.dfu $FOLDER/rusefi_$BUNDLE_NAME.dfu

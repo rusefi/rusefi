@@ -20,7 +20,7 @@ java -DSystemOut.name=gen_config \
  -romraider integration \
  -ts_destination tunerstudio \
  -cache . \
- -cache_zip_file tunerstudio/cache.zip \
+ -cache_zip_file tunerstudio/generated/cache.zip \
  -with_c_defines false \
  -initialize_to_zero false \
  -tool gen_config.sh \
@@ -32,7 +32,7 @@ java -DSystemOut.name=gen_config \
  -c_fsio_names     controllers/generated/fsio_names.def \
  -c_fsio_strings   controllers/generated/fsio_strings.def \
  -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
- -signature tunerstudio/signature_all.txt \
+ -signature tunerstudio/generated/signature_all.txt \
  -signature_destination controllers/generated/signature_all.h \
  -romraider_destination ../java_console/rusefi.xml
 
@@ -43,10 +43,10 @@ if [ -z "${TS_PATH}" ]; then
 else
  echo "This would automatically copy latest file to 'dev' TS project at ${TS_PATH}"
  cp -v tunerstudio/rusefi.ini $TS_PATH/dev/projectCfg/mainController.ini
- cp -v tunerstudio/rusefi_microrusefi.ini $TS_PATH/dev_mre/projectCfg/mainController.ini
+ cp -v tunerstudio/generated/rusefi_microrusefi.ini $TS_PATH/dev_mre/projectCfg/mainController.ini
 fi
 
-for BOARD in "microrusefi mre" "frankenso fra" "prometheus pth" "proteus pro"; do
+for BOARD in "microrusefi mre_f7" "microrusefi mre_f4" "frankenso frankenso_na6" "prometheus prometheus_469" "prometheus prometheus_405" "proteus proteus_f7" "proteus proteus_f4"; do
  BOARD_NAME="${BOARD% *}"
  BOARD_SHORT_NAME="${BOARD#* }"
  sh gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME
