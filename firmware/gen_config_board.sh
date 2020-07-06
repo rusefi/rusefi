@@ -2,8 +2,8 @@
 
 #set -x
 
-echo "This batch files reads rusefi_config.txt and produses firmware persistent configuration headers"
-echo "the storage section of rusefi.ini is updated as well"
+echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
+echo "the storage section of rusefiXXX.ini is updated as well"
 
 if [ -z "$1" ]; then
 	echo "Board name parameter expected"
