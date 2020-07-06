@@ -4,7 +4,7 @@
 
 cd ../../..
 export PROJECT_BOARD=prometheus/f469
-export EXTRA_PARAMS=-DSHORT_BOARD_NAME=pth
+export EXTRA_PARAMS=-DSHORT_BOARD_NAME=prometheus_469
 export USE_BOOTLOADER=yes
 
 sh config/boards/common_make.sh
