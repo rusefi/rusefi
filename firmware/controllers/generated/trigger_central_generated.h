@@ -1,10 +1,11 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/trigger_central.txt Thu Jul 02 12:27:25 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/trigger_central.txt Mon Jul 06 05:07:58 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_TRIGGER_CENTRAL_GENERATED_H
 #define CONTROLLERS_GENERATED_TRIGGER_CENTRAL_GENERATED_H
 #include "rusefi_types.h"
 #define HW_EVENT_TYPES 6
+#define SIGNATURE_HASH 3281507236
 // start of trigger_central_s
 struct trigger_central_s {
 	trigger_central_s();
@@ -32,4 +33,4 @@ typedef struct trigger_central_s trigger_central_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/trigger_central.txt Thu Jul 02 12:27:25 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/trigger_central.txt Mon Jul 06 05:07:58 UTC 2020
