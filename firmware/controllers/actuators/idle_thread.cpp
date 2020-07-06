@@ -315,8 +315,11 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		rpm = GET_RPM();
 	}
 
+
+	// #1553 we need to give FSIO variable offset or minValue a chance
+	bool acToggleJustTouched = (getTimeNowUs() - engine->acSwitchLastChangeTime) < MS2US(500);
 	// check if within the dead zone
-	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
+	if (!acToggleJustTouched && absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
 		engine->engineState.idle.idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything
 		return engine->engineState.idle.baseIdlePosition;
