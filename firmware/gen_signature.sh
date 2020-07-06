@@ -5,7 +5,7 @@
 SHORT_BOARDNAME=$1
 
 
-SIGNATURE_FILE_NAME=tunerstudio/signature_${SHORT_BOARDNAME}.txt
+SIGNATURE_FILE_NAME=tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt
 echo "Generating signature for ${SHORT_BOARDNAME}"
 
 # generate a unique signature
