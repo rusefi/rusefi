@@ -32,18 +32,18 @@ sh clean.sh
 sh update_version.sh
 
 sh clean_compile_two_versions.sh
-[ -e deliver/rusefi_no_asserts.hex ] || { echo "Just to confirm - FAILED to compile no_asserts"; exit 1; }
+#[ -e deliver/rusefi_no_asserts.hex ] || { echo "Just to confirm - FAILED to compile no_asserts"; exit 1; }
 
 [ -e deliver/rusefi.hex ] || { echo "Just to confirm - FAILED to compile default DEBUG"; exit 1; }
 
 echo "$SCRIPT_NAME: Building DFU"
 if uname | grep "NT"; then
  chmod u+x ../misc/encedo_hex2dfu/hex2dfu.exe
- ../misc/encedo_hex2dfu/hex2dfu.exe -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
+# ../misc/encedo_hex2dfu/hex2dfu.exe -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
  ../misc/encedo_hex2dfu/hex2dfu.exe -i deliver/rusefi.hex -o deliver/rusefi.dfu
 else
  chmod u+x ../misc/encedo_hex2dfu/hex2dfu.bin
- ../misc/encedo_hex2dfu/hex2dfu.bin -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
+# ../misc/encedo_hex2dfu/hex2dfu.bin -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
  ../misc/encedo_hex2dfu/hex2dfu.bin -i deliver/rusefi.hex -o deliver/rusefi.dfu
 fi
 
