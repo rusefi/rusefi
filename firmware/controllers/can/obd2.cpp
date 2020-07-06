@@ -157,6 +157,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		break;
 	default:
 		// ignore unhandled PIDs
+		break;
 	}
 }
 
