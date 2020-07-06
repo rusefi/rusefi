@@ -1,10 +1,8 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Mon Jul 06 05:10:55 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Mon Jul 06 06:07:19 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
-#ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
-#define CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
+#pragma once
 #include "rusefi_types.h"
-#define SIGNATURE_HASH 3980360194
 // start of speed_density_s
 struct speed_density_s {
 	/**
@@ -429,6 +427,5 @@ struct engine_state2_s {
 
 typedef struct engine_state2_s engine_state2_s;
 
-#endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Mon Jul 06 05:10:55 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Mon Jul 06 06:07:19 UTC 2020
