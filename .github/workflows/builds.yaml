@@ -87,11 +87,6 @@ jobs:
         tar -xvf compiler.tar.xz
         echo "::add-path::`pwd`/gcc-arm-none-eabi-9-2019-q4-major/bin"
   
-    - name: Upgrade all software
-      run: |
-        sudo apt-get update
-        sudo apt-get upgrade
-
     - name: Install multilib and mingw
       run: sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64
 
