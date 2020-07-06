@@ -100,7 +100,11 @@ endif
 #
 
 # Define project name here
-PROJECT = rusefi_simulator
+ifeq ($(OS),Windows_NT)
+  PROJECT = rusefi_simulator.exe
+else
+  PROJECT = rusefi_simulator
+endif
 PROJECT_DIR = ../firmware
 
 # Imported source files and paths
