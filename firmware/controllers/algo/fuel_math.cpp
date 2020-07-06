@@ -264,17 +264,22 @@ angle_t getInjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(rpm)) {
 		return 0; // error already reported
 	}
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	float engineLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	if (cisnan(engineLoad)) {
 		return 0; // error already reported
 	}
+
 	angle_t value = fuelPhaseMap.getValue(rpm, engineLoad);
+
 	if (cisnan(value)) {
 		// we could be here while resetting configuration for example
 		warning(CUSTOM_ERR_6569, "phase map not ready");
 		return 0;
 	}
-	angle_t result =  value + CONFIG(extraInjectionOffset);
+
+	angle_t result = value + CONFIG(extraInjectionOffset);
 	fixAngle(result, "inj offset#2", CUSTOM_ERR_6553);
 	return result;
 }
