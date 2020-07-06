@@ -24,11 +24,9 @@ public class BoardReader {
     private static final String KEY_BOARD_NAME = "-board";
     private static final String YAML_INPUT_NAME = "-yaml";
     private static final String OUTPUT_FILE_NAME = "-output_file";
-    private static final String KEY_OUTFOLDER = "-out";
     private static final String KEY_FIRMWARE_PATH = "-firmware_path";
     private final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
 
-    private static final String OUTPUT_FILE_PREFIX = "_prefix.txt";
     private static final String MAPPING_YAML = "mapping.yaml";
 
     public static void main(String[] args) throws IOException {
@@ -41,7 +39,6 @@ public class BoardReader {
         }
         String boardName = null;
         String firmwarePath = "firmware";
-        String outputPath = ".";
         String yamlInputFile = null;
         String outputFileName = null;
         for (int i = 0; i < args.length - 1; i += 2) {
@@ -58,8 +55,6 @@ public class BoardReader {
             } else if (key.equals(KEY_ENUM_INPUT_FILE)) {
                 String inputFile = args[i + 1];
                 EnumsReader.process(new FileReader(firmwarePath + File.separator + inputFile));
-            } else if (key.equals(KEY_OUTFOLDER)) {
-                outputPath = args[i + 1];
             }
         }
 
@@ -70,8 +65,6 @@ public class BoardReader {
         } else {
             SystemOut.println(data);
 
-            if (outputFileName == null)
-                outputFileName = outputPath + File.separator + boardName + OUTPUT_FILE_PREFIX;
             Output bw = new LazyFile(outputFileName);
 
             bw.write(processSection(data, "brain_pin_e", "output_pin_e", "outputs", "GPIO_UNASSIGNED"));

@@ -25,7 +25,7 @@ java -DSystemOut.name=gen_config_board \
 	com.rusefi.board_generator.BoardReader \
 	-yaml config/boards/${BOARDNAME}/mapping.yaml \
 	-firmware_path . \
-  -output_file tunerstudio/${BOARDNAME}_prefix.txt \
+  -output_file tunerstudio/generated/${BOARDNAME}_prefix.txt \
 	-enumInputFile controllers/algo/rusefi_enums.h \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h
 
@@ -43,7 +43,7 @@ java -DSystemOut.name=gen_config_board \
 	-ts_output_name rusefi_${SHORT_BOARDNAME}.ini \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
 	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
-	-prepend tunerstudio/${BOARDNAME}_prefix.txt \
+	-prepend tunerstudio/generated/${BOARDNAME}_prefix.txt \
 	-prepend config/boards/${BOARDNAME}/prepend.txt
 
 java -DSystemOut.name=gen_config_board \
@@ -57,7 +57,7 @@ java -DSystemOut.name=gen_config_board \
 	-ts_output_name rusefi_${BOARDNAME}.ini \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
 	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
-	-prepend tunerstudio/${BOARDNAME}_prefix.txt \
+	-prepend tunerstudio/generated/${BOARDNAME}_prefix.txt \
 	-prepend config/boards/${BOARDNAME}/prepend.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
