@@ -40,7 +40,7 @@ java -DSystemOut.name=gen_config_board \
 	-cache ${SHORT_BOARDNAME} \
 	-cache_zip_file tunerstudio/generated/cache.zip \
 	-firing_order controllers/algo/firing_order.h \
-	-ts_output_name rusefi_${SHORT_BOARDNAME}.ini \
+	-ts_output_name generated/rusefi_${SHORT_BOARDNAME}.ini \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
 	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
 	-prepend tunerstudio/generated/${BOARDNAME}_prefix.txt \
