@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Mon Jul 06 05:07:58 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Mon Jul 06 05:10:55 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
@@ -431,4 +431,4 @@ typedef struct engine_state2_s engine_state2_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Mon Jul 06 05:07:58 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Mon Jul 06 05:10:55 UTC 2020
