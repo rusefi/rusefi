@@ -10,6 +10,10 @@ if not exist java_console_binary/rusefi_console.jar exit -1
 call misc\jenkins\build_simulator.bat
 if not exist simulator/build/rusefi_simulator.exe exit -1
 
+rem #
+rem # see gen_config.sh where short<>long name dictionary is hard-coded
+rem #
+
 call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre_f4 rusefi_microrusefi.ini
 IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 IF %ERRORLEVEL% NEQ 0 EXIT /B 1
