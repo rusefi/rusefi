@@ -47,6 +47,7 @@ else
  ../misc/encedo_hex2dfu/hex2dfu.bin -i deliver/rusefi.hex -o deliver/rusefi.dfu
 fi
 
+echo "${SCRIPT_NAME} ls -l deliver"
 ls -l deliver
 cd ..
 
