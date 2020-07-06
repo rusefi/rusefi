@@ -98,8 +98,6 @@ public class ConfigDefinition {
         String signaturePrependFile = null;
         CHeaderConsumer.withC_Defines = true;
 
-        // used to update .ini files
-        List<String> inputAllFiles = new ArrayList<>();
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
         // disable the lazy checks because we use timestamps to detect changes
@@ -162,7 +160,8 @@ public class ConfigDefinition {
             }
         }
 
-        inputAllFiles = new ArrayList<>(inputFiles);
+        // used to update .ini files
+        List<String> inputAllFiles = new ArrayList<>(inputFiles);
         boolean needToUpdateTsFiles = false;
         if (tsPath != null) {
             inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));

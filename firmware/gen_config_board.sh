@@ -37,7 +37,7 @@ java -DSystemOut.name=gen_config_board \
 	-definition integration/rusefi_config.txt \
 	-tool gen_config.sh \
 	-ts_destination tunerstudio \
-	-cache ${BOARDNAME} \
+	-cache ${SHORT_BOARDNAME} \
 	-cache_zip_file tunerstudio/cache.zip \
 	-firing_order controllers/algo/firing_order.h \
 	-ts_output_name rusefi_${SHORT_BOARDNAME}.ini \
