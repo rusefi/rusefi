@@ -35,5 +35,5 @@ java \
  -signature tunerstudio/generated/signature_kin.txt \
  -signature_destination controllers/generated/signature_kin.h \
  -prepend config/boards/kinetis/config/rusefi_config_kinetis.txt \
- -prepend config/boards/kinetis/config/tunerstudio/kinetis_prefix.txt
+ -prepend config/boards/kinetis/config/tunerstudio/generated/kinetis_prefix.txt
 
