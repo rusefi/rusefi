@@ -2,21 +2,27 @@ package com.rusefi.io;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.opensr5.Logger;
+import com.rusefi.Callable;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.SerialConnector;
+import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.io.tcp.TcpIoStream;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.*;
 
 /**
+ * See TcpCommunicationIntegrationTest
+ *
  * @author Andrey Belomutskiy
- *         3/3/14
+ * 3/3/14
  */
 public class LinkManager {
     @NotNull
@@ -34,6 +40,7 @@ public class LinkManager {
     private final Logger logger;
 
     private LinkConnector connector;
+    private boolean isStarted;
 
     public LinkManager(Logger logger) {
         this.logger = logger;
@@ -109,24 +116,10 @@ public class LinkManager {
         }
     }
 
-    /**
-     * Threading of the whole input/output does not look healthy at all!
-     *
-     * @see #COMMUNICATION_EXECUTOR
-     */
-    public final Executor TCP_READ_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
-        @Override
-        public Thread newThread(@NotNull Runnable r) {
-            Thread t = new Thread(r);
-            t.setName("IO executor thread");
-            t.setDaemon(true);  // need daemon thread so that COM thread is also daemon
-            return t;
-        }
-    });
     public final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
     /**
      * All request/responses to underlying controller are happening on this single-threaded executor in a FIFO manner
-     * @see #TCP_READ_EXECUTOR
+     *
      */
     public final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
@@ -166,29 +159,52 @@ public class LinkManager {
 
     /**
      * This flag controls if mock controls are needed
+     * todo: decouple from TcpConnector since not really related
      */
     public static boolean isSimulationMode;
 
     public void startAndConnect(String port, ConnectionStateListener stateListener) {
         Objects.requireNonNull(port, "port");
-        start(port);
+        start(port, stateListener);
         connector.connectAndReadConfiguration(stateListener);
     }
 
-    public void start(String port) {
+    public LinkConnector getConnector() {
+        return connector;
+    }
+
+    public void start(String port, ConnectionStateListener stateListener) {
         Objects.requireNonNull(port, "port");
         logger.info("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
-            connector = LinkConnector.VOID;
+            setConnector(LinkConnector.VOID);
         } else if (TcpConnector.isTcpPort(port)) {
-            connector = new TcpConnector(this, port, logger);
+            setConnector(new SerialConnector(this, port, logger, new Callable<IoStream>() {
+                @Override
+                public IoStream call() {
+                    Socket socket;
+                    try {
+                        int portPart = TcpConnector.getTcpPort(port);
+                        String hostname = TcpConnector.getHostname(port);
+                        socket = new Socket(hostname, portPart);
+                        return new TcpIoStream(logger, LinkManager.this, socket);
+                    } catch (Throwable e) {
+                        stateListener.onConnectionFailed();
+                        return null;
+                    }
+                }
+            }));
             isSimulationMode = true;
         } else {
-            connector = new SerialConnector(this, port, logger);
+            setConnector(new SerialConnector(this, port, logger, () -> SerialIoStreamJSerialComm.openPort(port, logger)));
         }
     }
 
     public void setConnector(LinkConnector connector) {
+        if (isStarted) {
+            throw new IllegalStateException("Already started");
+        }
+        isStarted = true;
         this.connector = connector;
     }
 
@@ -210,6 +226,10 @@ public class LinkManager {
     public void restart() {
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
         connector.restart();
+    }
+
+    public void stop() {
+        connector.stop();
     }
 
     public static String unpackConfirmation(String message) {

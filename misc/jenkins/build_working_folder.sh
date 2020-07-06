@@ -66,11 +66,16 @@ cp -r misc/install/DfuSe $CONSOLE_FOLDER
 # 407 has additional version of firmware
 cp firmware/deliver/rusefi_no_asserts.bin $FOLDER
 cp firmware/deliver/rusefi_no_asserts.dfu $FOLDER
+# just for now - DFU work in progress
+cp firmware/deliver/rusefi_no_asserts.hex %folder%
+
 # 746 builds one version at the moment
 # probably not needed cp firmware/build/rusefi.hex %folder%
 cp firmware/deliver/rusefi.bin $FOLDER
 # probably not needed cp firmware/build/rusefi.elf %folder%
 cp firmware/deliver/rusefi.dfu $FOLDER
+# just for now - DFU work in progress
+cp firmware/deliver/rusefi.hex %folder%
 
 if [ -n $BUNDLE_NAME ]; then
     mv $FOLDER/rusefi.dfu $FOLDER/rusefi_$BUNDLE_NAME.dfu
@@ -102,13 +107,9 @@ cd ..
 mkdir -p artifacts
 mv temp/$FULL_BUNDLE_FILE artifacts
 
-echo "Removing more static content"
-rm -rf $CONSOLE_FOLDER/openocd
-rm -rf $CONSOLE_FOLDER/DfuSe
-rm -rf $CONSOLE_FOLDER/drivers
-rm -rf $CONSOLE_FOLDER/rusefi_simulator.exe
-
+echo "Removing static content from ${CONSOLE_FOLDER} and $DRIVERS_FOLDER"
 rm -rf $CONSOLE_FOLDER
+rm -rf $DRIVERS_FOLDER
 
 # for autoupdate we do not want the unique folder name with timestamp
 cd $FOLDER

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 02 18:26:29 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 06 00:05:58 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -132,8 +132,6 @@ public class Fields {
 	public static final int auxTempSensor2_tempC_3_offset = 2484;
 	public static final int auxValves1_offset = 1816;
 	public static final int auxValves2_offset = 1817;
-	public static final int auxVoltage1_offset = 2713;
-	public static final int auxVoltage2_offset = 2714;
 	public static final int BARO_CORR_SIZE = 4;
 	public static final int baroCorrPressureBins_offset = 1544;
 	public static final int baroCorrRpmBins_offset = 1560;
@@ -556,6 +554,7 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_IAT_CORR = "fuel: IAT correction";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last injection";
+	public static final String GAUGE_NAME_FUEL_LOAD = "fuel: load";
 	public static final String GAUGE_NAME_FUEL_PID_CORR = "fuel: Short-term fuel trim";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "fuel: running";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration extra fuel ms";
@@ -565,6 +564,7 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "fuel: wall corr ms";
 	public static final String GAUGE_NAME_IAC = "Idle Air Valve";
 	public static final String GAUGE_NAME_IAT = "IAT";
+	public static final String GAUGE_NAME_IGNITION_LOAD = "ign: load";
 	public static final String GAUGE_NAME_INJECTOR_LAG = "fuel: injector lag";
 	public static final String GAUGE_NAME_KNOCK_COUNTER = "knock: counter";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "knock: current level";
@@ -980,6 +980,7 @@ public class Fields {
 	public static final int PACK_ADD_TEMPERATURE = 40;
 	public static final int PACK_MULT_AFR = 1000;
 	public static final int PACK_MULT_ANGLE = 50;
+	public static final int PACK_MULT_MASS_FLOW = 10;
 	public static final int PACK_MULT_MS = 300;
 	public static final int PACK_MULT_PERCENT = 100;
 	public static final int PACK_MULT_PRESSURE = 30;
@@ -1009,6 +1010,7 @@ public class Fields {
 	public static final String PROTOCOL_INJ1_SHORT_NAME = "i1";
 	public static final String PROTOCOL_MSG = "msg";
 	public static final String PROTOCOL_OUTPIN = "outpin";
+	public static final String PROTOCOL_SIGNATURE_PREFIX = "rusEFI ";
 	public static final String PROTOCOL_TACH_NAME = "tach";
 	public static final String PROTOCOL_TEST_RESPONSE_TAG = "ts_p_alive";
 	public static final String PROTOCOL_VERSION_TAG = "rusEfiVersion";
@@ -1268,7 +1270,7 @@ public class Fields {
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_IO_TEST_COMMAND = 'w';
 	public static final char TS_OUTPUT_COMMAND = 'O';
-	public static final int TS_OUTPUT_SIZE = 244;
+	public static final int TS_OUTPUT_SIZE = 248;
 	public static final char TS_PAGE_COMMAND = 'P';
 	public static final char TS_PERF_TRACE_BEGIN = 'r';
 	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
@@ -1278,7 +1280,7 @@ public class Fields {
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.07.02.all.4274229142";
+	public static final String TS_SIGNATURE = "rusEFI 2020.07.06.all.4030460027";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -1312,6 +1314,8 @@ public class Fields {
 	public static final int unusedAt720_offset = 720;
 	public static final int unusedAt724_offset = 724;
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1200;
+	public static final int unusedAuxVoltage1_TODO_332_offset = 2713;
+	public static final int unusedAuxVoltage2_TODO_332_offset = 2714;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_11_offset = 976;
 	public static final int unusedBit_251_12_offset = 976;
@@ -1577,8 +1581,8 @@ public class Fields {
 	public static final Field IDLE_SOLENOIDFREQUENCY = Field.create("IDLE_SOLENOIDFREQUENCY", 600, FieldType.INT);
 	public static final String[] output_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6","PE7","PE8","PE9","PE10","PE11","PE12","PE13","PE14","PE15", "PF0","PF1","PF2","PF3","PF4","PF5","PF6","PF7","PF8","PF9","PF10","PF11","PF12","PF13","PF14","PF15", "PG0","PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10","PG11","PG12","PG13","PG14","PG15", "PH0","PH1","PH2","PH3","PH4","PH5","PH6","PH7","PH8","PH9","PH10","PH11","PH12","PH13","PH14","PH15","TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16", "MC33972_1", "MC33972_2", "MC33972_3", "MC33972_4", "MC33972_5", "MC33972_6", "MC33972_7", "MC33972_8", "MC33972_9", "MC33972_10", "MC33972_11", "MC33972_12", "MC33972_13", "MC33972_14", "MC33972_15", "MC33972_16", "MC33972_17", "MC33972_18", "MC33972_19", "MC33972_20", "MC33972_21", "MC33972_22", "TLE8888_1", "TLE8888_2", "TLE8888_3", "TLE8888_4", "TLE8888_5", "TLE8888_6", "TLE8888_7", "TLE8888_8", "TLE8888_9", "TLE8888_10", "TLE8888_11", "TLE8888_12", "TLE8888_13", "TLE8888_14", "TLE8888_15", "TLE8888_16", "TLE8888_17", "TLE8888_18", "TLE8888_19", "TLE8888_20", "TLE8888_21", "TLE8888_22", "TLE8888_23", "TLE8888_24", "TLE8888_25", "TLE8888_26", "TLE8888_27", "TLE8888_28", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
 	public static final Field IDLE_SOLENOIDPIN = Field.create("IDLE_SOLENOIDPIN", 604, FieldType.INT8, output_pin_e);
-	public static final Field IDLE_STEPPERDIRECTIONPIN = Field.create("IDLE_STEPPERDIRECTIONPIN", 605, FieldType.INT8, brain_pin_e);
-	public static final Field IDLE_STEPPERSTEPPIN = Field.create("IDLE_STEPPERSTEPPIN", 606, FieldType.INT8, brain_pin_e);
+	public static final Field IDLE_STEPPERDIRECTIONPIN = Field.create("IDLE_STEPPERDIRECTIONPIN", 605, FieldType.INT8, output_pin_e);
+	public static final Field IDLE_STEPPERSTEPPIN = Field.create("IDLE_STEPPERSTEPPIN", 606, FieldType.INT8, output_pin_e);
 	public static final Field IDLE_SOLENOIDPINMODE = Field.create("IDLE_SOLENOIDPINMODE", 607, FieldType.INT8, pin_output_mode_e);
 	public static final Field MANIDLEPOSITION = Field.create("MANIDLEPOSITION", 608, FieldType.FLOAT);
 	public static final Field MAPFREQUENCY0KPA = Field.create("MAPFREQUENCY0KPA", 612, FieldType.FLOAT);
@@ -2129,7 +2133,7 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2080, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 2084, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2088, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "Mode40"};
+	public static final String[] debug_mode_e = {"Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Mode43", "Mode44"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2092, FieldType.INT, debug_mode_e);
 	public static final Field AUXSERIALSPEED = Field.create("AUXSERIALSPEED", 2096, FieldType.INT);
 	public static final Field THROTTLEPEDALSECONDARYUPVOLTAGE = Field.create("THROTTLEPEDALSECONDARYUPVOLTAGE", 2100, FieldType.FLOAT);
@@ -2256,14 +2260,14 @@ public class Fields {
 	public static final Field OILPRESSURE_V2 = Field.create("OILPRESSURE_V2", 2704, FieldType.FLOAT);
 	public static final Field OILPRESSURE_VALUE2 = Field.create("OILPRESSURE_VALUE2", 2708, FieldType.FLOAT);
 	public static final Field ACCELEROMETERSPIDEVICE = Field.create("ACCELEROMETERSPIDEVICE", 2712, FieldType.INT8);
-	public static final Field AUXVOLTAGE1 = Field.create("AUXVOLTAGE1", 2713, FieldType.INT8, adc_channel_e);
-	public static final Field AUXVOLTAGE2 = Field.create("AUXVOLTAGE2", 2714, FieldType.INT8, adc_channel_e);
+	public static final Field UNUSEDAUXVOLTAGE1_TODO_332 = Field.create("UNUSEDAUXVOLTAGE1_TODO_332", 2713, FieldType.INT8);
+	public static final Field UNUSEDAUXVOLTAGE2_TODO_332 = Field.create("UNUSEDAUXVOLTAGE2_TODO_332", 2714, FieldType.INT8);
 	public static final Field UNUSEDSPIPADDING5 = Field.create("UNUSEDSPIPADDING5", 2715, FieldType.INT8);
 	public static final Field UNUSEDFLEXFUELSENSOR = Field.create("UNUSEDFLEXFUELSENSOR", 3100, FieldType.INT8);
 	public static final Field TEST557PIN = Field.create("TEST557PIN", 3101, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 3102, FieldType.INT8, pin_output_mode_e);
 	public static final Field EXTERNALKNOCKSENSEADC = Field.create("EXTERNALKNOCKSENSEADC", 3103, FieldType.INT8, adc_channel_e);
-	public static final Field STEPPERENABLEPIN = Field.create("STEPPERENABLEPIN", 3104, FieldType.INT8, brain_pin_e);
+	public static final Field STEPPERENABLEPIN = Field.create("STEPPERENABLEPIN", 3104, FieldType.INT8, output_pin_e);
 	public static final Field TLE8888_CS = Field.create("TLE8888_CS", 3105, FieldType.INT8, brain_pin_e);
 	public static final Field TLE8888_CSPINMODE = Field.create("TLE8888_CSPINMODE", 3106, FieldType.INT8, pin_output_mode_e);
 	public static final Field MC33816_CS = Field.create("MC33816_CS", 3107, FieldType.INT8, brain_pin_e);
@@ -3235,8 +3239,8 @@ public class Fields {
 	OILPRESSURE_V2,
 	OILPRESSURE_VALUE2,
 	ACCELEROMETERSPIDEVICE,
-	AUXVOLTAGE1,
-	AUXVOLTAGE2,
+	UNUSEDAUXVOLTAGE1_TODO_332,
+	UNUSEDAUXVOLTAGE2_TODO_332,
 	UNUSEDSPIPADDING5,
 	UNUSEDFLEXFUELSENSOR,
 	TEST557PIN,

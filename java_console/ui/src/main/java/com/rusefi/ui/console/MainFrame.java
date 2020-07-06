@@ -42,10 +42,27 @@ public class MainFrame {
         }
     };
 
+    public ConnectionStateListener listener;
+
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this.consoleUI = consoleUI;
 
         this.tabbedPane = tabbedPane;
+        listener = new ConnectionStateListener() {
+            @Override
+            public void onConnectionFailed() {
+            }
+
+            @Override
+            public void onConnectionEstablished() {
+                FileLog.MAIN.logLine("onConnectionEstablished");
+    //                tabbedPane.romEditorPane.showContent();
+                tabbedPane.settingsTab.showContent();
+                tabbedPane.logsManager.showContent();
+                tabbedPane.fuelTunePane.showContent();
+                new BinaryProtocolServer(FileLog.LOGGER).start(consoleUI.uiContext.getLinkManager());
+            }
+        };
     }
 
     private void windowOpenedHandler() {
@@ -67,7 +84,7 @@ public class MainFrame {
         });
 
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
-        linkManager.startAndConnect(consoleUI.port, new ConnectionStateListener() {
+        linkManager.getConnector().connectAndReadConfiguration(new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
             }

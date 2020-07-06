@@ -273,7 +273,7 @@ float PidIndustrial::getOutput(float target, float input, float dTime) {
 	dTerm = dTerm * ad + (error - previousError) * bd;
 
 	// calculate output and apply the limits
-	float output = pTerm + iTerm + dTerm + parameters->offset;
+	float output = pTerm + iTerm + dTerm + getOffset();
 	float limitedOutput = limitOutput(output);
 
 	// apply the integrator anti-windup

@@ -22,7 +22,7 @@ cd firmware
 date "+%a %D %T.%2S"
 
 echo "$SCRIPT_NAME: will be Erasing chip"
-[ -e flash_erase407.sh ] || { echo "NOT FOUND flash_erase.sh"; exit 1; ]
+[ -e flash_erase407.sh ] || { echo "NOT FOUND flash_erase.sh"; exit 1; }
 echo "$SCRIPT_NAME: Erasing chip"
 sh flash_erase407.sh
 
@@ -34,7 +34,7 @@ sh update_version.sh
 sh clean_compile_two_versions.sh
 [ -e deliver/rusefi_no_asserts.hex ] || { echo "Just to confirm - FAILED to compile no_asserts"; exit 1; }
 
-[ -e deliver/rusefi.hex ] { echo "Just to confirm - FAILED to compile default DEBUG"; exit 1; }
+[ -e deliver/rusefi.hex ] || { echo "Just to confirm - FAILED to compile default DEBUG"; exit 1; }
 
 echo "$SCRIPT_NAME: Building DFU"
 if uname | grep "NT"; then
@@ -71,14 +71,6 @@ export BUNDLE_FULL_NAME="rusefi_bundle"
 sh misc/jenkins/build_working_folder.sh
 [ $? -eq 0 ] || { echo "$SCRIPT_NAME: ERROR: invoking build_working_folder.sh"; exit 1; }
 
-echo "$SCRIPT_NAME: Building only console"
-pwd
-ls
-zip "$ROOT_FOLDER/temp/rusefi_console.zip" "$ROOT_FOLDER/java_console_binary/rusefi_console.jar" "$ROOT_FOLDER/java_console/rusefi.xml"
-
-[ -e "$ROOT_FOLDER/temp/rusefi_console.zip" ] || { echo "CONSOLE ZIP FAILED"; exit 1; }
-
-echo "$SCRIPT_NAME: only console ready"
 
 echo "$SCRIPT_NAME: Going back to root folder"
 cd "$ROOT_FOLDER"

@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
@@ -73,7 +74,8 @@ public class ConsoleUI {
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
         LinkManager linkManager = uiContext.getLinkManager();
-        linkManager.start(port);
+        // todo: this blocking IO operation should NOT be happening on the UI thread
+        linkManager.start(port, mainFrame.listener);
 
         engineSnifferPanel = new EngineSnifferPanel(uiContext, getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
@@ -140,6 +142,8 @@ public class ConsoleUI {
             if (tabbedPane.paneSettings.showTriggerShapePane)
                 tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
         }
+
+        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocol.COMPOSITE_OFF_RPM);
 
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 

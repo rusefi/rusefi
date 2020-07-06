@@ -26,7 +26,7 @@
 ! this is here so that rusEfi console can access it, too
 ! [IMPORTANT] every time TS_OUTPUT_SIZE is changed make sure to increment TS_SIGNATURE above
 !
-#define TS_OUTPUT_SIZE 244
+#define TS_OUTPUT_SIZE 248
 
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
@@ -152,6 +152,7 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_VOLTAGE 1000
+#define PACK_MULT_MASS_FLOW 10
 #define TPS_1_BYTE_PACKING_MULT 2
 #define LOAD_1_BYTE_PACKING_MULT 2
 #define FSIO_TABLE_8 8
@@ -240,7 +241,7 @@ float baseFuel;+Base duration of the fuel injection during cranking, this is mod
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "Mode40"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Mode43", "Mode44"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "Inactive", "Second half", "2GZ", "Miata NB2", "First half", "mode5", "mode6", "mode7"
@@ -577,8 +578,8 @@ struct idle_hardware_s
 	int solenoidFrequency;;"Hz",      1,      0,       0, 3000,      0
 
 	output_pin_e solenoidPin;
-	brain_pin_e stepperDirectionPin;
-	brain_pin_e stepperStepPin; 
+	output_pin_e stepperDirectionPin;
+	output_pin_e stepperStepPin; 
 	pin_output_mode_e solenoidPinMode;
 end_struct
 
@@ -1186,8 +1187,8 @@ tle8888_mode_e tle8888mode;
 	oil_pressure_config_s oilPressure;
 
 	spi_device_e accelerometerSpiDevice;
-	adc_channel_e auxVoltage1;
-	adc_channel_e auxVoltage2;
+	uint8_t[1] unusedAuxVoltage1_TODO_332;;"units", 1, 0, -20, 100, 0
+	uint8_t[1] unusedAuxVoltage2_TODO_332;;"units", 1, 0, -20, 100, 0
 	uint8_t[1] unusedSpiPadding5;;"units", 1, 0, -20, 100, 0
 	float[FSIO_CURVE_16] fsioCurve1Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_16] fsioCurve1;;"y",      1,     0,      -999,    1000.0,   3
@@ -1202,7 +1203,7 @@ tle8888_mode_e tle8888mode;
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
 	adc_channel_e externalKnockSenseAdc;
-	brain_pin_e stepperEnablePin;
+	output_pin_e stepperEnablePin;
 	brain_pin_e tle8888_cs;
 	pin_output_mode_e tle8888_csPinMode;
 	brain_pin_e mc33816_cs;
@@ -1490,12 +1491,17 @@ end_struct
 #define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term fuel trim"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
+#define GAUGE_NAME_FUEL_LOAD "fuel: load"
 
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_IAC "Idle Air Valve"
+
+#define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
+#define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
+#define GAUGE_NAME_IGNITION_LOAD "ign: load"
 
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
 #define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
@@ -1548,6 +1554,7 @@ end_struct
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
 #define PROTOCOL_VERSION_TAG "rusEfiVersion"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
+#define PROTOCOL_SIGNATURE_PREFIX "rusEFI "
 
 ! Engine Sniffer Protocol
 #define PROTOCOL_ES_DOWN "d"
@@ -1640,10 +1647,6 @@ end_struct
 #define ET_FRANKENSO_MIATA_NA6_VAF 57
 #define ET_BMW_M73_PROTEUS 63
 #define ET_CITROEN_TU3JP 65
-
-#define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
-
-#define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
 
 ! some board files override this value using prepend file
 #define ts_show_hip9011 true

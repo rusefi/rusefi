@@ -48,9 +48,8 @@ public class SerialAutoChecker implements Runnable {
                 return;
             String signature = new String(response, 1, response.length - 1);
             SIGNATURE = signature;
-            System.out.println("Got " + signature + " from " + serialPort);
-            String signatureWithoutMinorVersion = Fields.TS_SIGNATURE.substring(0, Fields.TS_SIGNATURE.length() - 2);
-            if (signature.startsWith(signatureWithoutMinorVersion)) {
+            System.out.println("Got signature=" + signature + " from " + serialPort);
+            if (signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {
                 if (callback != null) {
                     callback.apply(stream);
                 }

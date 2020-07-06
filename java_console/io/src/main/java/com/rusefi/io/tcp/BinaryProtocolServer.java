@@ -132,6 +132,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             } else if (command == Fields.TS_BURN_COMMAND) {
                 stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK}, logger);
             } else if (command == Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
+                System.err.println("NOT IMPLEMENTED TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY relay");
                 // todo: relay command
                 stream.sendPacket(TS_OK.getBytes(), logger);
             } else if (command == Fields.TS_OUTPUT_COMMAND) {
@@ -144,8 +145,12 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 BinaryProtocolState binaryProtocolState = linkManager.getBinaryProtocolState();
                 byte[] currentOutputs = binaryProtocolState.getCurrentOutputs();
                 if (currentOutputs != null)
-                    System.arraycopy(currentOutputs, 1 + offset , response, 1, count);
+                    System.arraycopy(currentOutputs, 1 + offset, response, 1, count);
                 stream.sendPacket(response, logger);
+            } else if (command == Fields.TS_GET_TEXT) {
+                // todo: relay command
+                System.err.println("NOT IMPLEMENTED TS_GET_TEXT relay");
+                stream.sendPacket(TS_OK.getBytes(), logger);
             } else {
                 unknownCommands.incrementAndGet();
                 new IllegalStateException().printStackTrace();

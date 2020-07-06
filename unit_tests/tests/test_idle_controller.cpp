@@ -19,8 +19,12 @@
 extern IdleController idleControllerInstance;
 extern int timeNowUs;
 
+extern Engine *unitTestEngine;
+
 TEST(idle, fsioPidParameters) {
 	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);
+
+	unitTestEngine = engine;
 
 	engineConfiguration->idleRpmPid.offset = 40;
 	engineConfiguration->idleRpmPid2.offset = 50;
@@ -39,14 +43,14 @@ TEST(idle, fsioPidParameters) {
 	ASSERT_EQ(1, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(40, ENGINE(fsioState.fsioIdleOffset));
+	ASSERT_EQ(40, getIdlePidOffset());
 	ASSERT_EQ(30, ENGINE(fsioState.fsioIdleMinValue));
 
 	setMockVoltage(engineConfiguration->acSwitchAdc, 5 PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(0, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(50, ENGINE(fsioState.fsioIdleOffset));
+	ASSERT_EQ(50, getIdlePidOffset());
 	ASSERT_EQ(60, ENGINE(fsioState.fsioIdleMinValue));
 
 
