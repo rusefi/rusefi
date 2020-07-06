@@ -23,6 +23,7 @@ import java.util.zip.ZipInputStream;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
     public static final String EOL = "\n";
+    private static final String SIGNATURE_HASH = "SIGNATURE_HASH";
     public static String MESSAGE;
 
     public static String TOOL = "(unknown script)";
@@ -155,7 +156,7 @@ public class ConfigDefinition {
                 TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
             } else if (key.equals(KEY_ROM_INPUT)) {
                 String inputFilePath = args[i + 1];
-                romRaiderInputFile  = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
+                romRaiderInputFile = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
                 inputFiles.add(romRaiderInputFile);
             }
         }
@@ -173,8 +174,7 @@ public class ConfigDefinition {
         }
         SystemOut.println("Check the input/output other files:");
         boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, cachePath, cacheZipFile);
-        if (!needToUpdateTsFiles && !needToUpdateOtherFiles)
-        {
+        if (!needToUpdateTsFiles && !needToUpdateOtherFiles) {
             SystemOut.println("All output files are up-to-date, nothing to do here!");
             return;
         }
@@ -188,7 +188,8 @@ public class ConfigDefinition {
         }
         SystemOut.println("CRC32 from all input files = " + crc32);
         // store the CRC32 as a built-in variable
-        VariableRegistry.INSTANCE.register("SIGNATURE_HASH", "" + crc32);
+        if (tsPath != null) // nasty trick - do not insert signature into live data files
+            VariableRegistry.INSTANCE.register(SIGNATURE_HASH, "" + crc32);
 
         if (firingEnumFileName != null) {
             SystemOut.println("Reading firing from " + firingEnumFileName);
@@ -221,7 +222,7 @@ public class ConfigDefinition {
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable
-            tmpRegistry.register("SIGNATURE_HASH", "" + crc32);
+            tmpRegistry.register(SIGNATURE_HASH, "" + crc32);
             readPrependValues(tmpRegistry, signaturePrependFile);
             destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
@@ -245,7 +246,6 @@ public class ConfigDefinition {
         if (destinations.isEmpty())
             throw new IllegalArgumentException("No destinations specified");
         state.readBufferedReader(definitionReader, destinations);
-
 
 
         if (destCDefinesFileName != null && needToUpdateOtherFiles)
@@ -415,7 +415,7 @@ public class ConfigDefinition {
                 } else {
                     SystemOut.println("* the file " + iFile + " is NOT changed!");
                 }
-            } catch(java.io.IOException e) {
+            } catch (java.io.IOException e) {
                 SystemOut.println("* cannot validate the file " + iFile + ", so assuming it's changed.");
                 return true;
             }
@@ -467,16 +467,16 @@ public class ConfigDefinition {
         file.delete();
     }
 
-    private static byte [] unzipFileContents(String zipFileName, String fileName) throws IOException {
+    private static byte[] unzipFileContents(String zipFileName, String fileName) throws IOException {
         ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFileName));
         ZipEntry zipEntry;
-        byte [] data = null;
+        byte[] data = null;
         while ((zipEntry = zis.getNextEntry()) != null) {
             Path zippedName = Paths.get(zipEntry.getName()).normalize();
             Path searchName = Paths.get(fileName).normalize();
             if (zippedName.equals(searchName) && zipEntry.getSize() >= 0) {
                 int offset = 0;
-                byte [] tmpData = new byte[(int)zipEntry.getSize()];
+                byte[] tmpData = new byte[(int) zipEntry.getSize()];
                 int bytesLeft = tmpData.length, bytesRead;
                 while (bytesLeft > 0 && (bytesRead = zis.read(tmpData, offset, bytesLeft)) >= 0) {
                     offset += bytesRead;
