@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# file gen_config_board.sh
+
 #set -x
 
 echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
@@ -50,7 +52,7 @@ if [ -z "${TS_PATH}" ]; then
 else
 	if [ -d "${TS_PATH}/dev_${BOARDNAME}/" ]; then
 		echo "This would automatically copy latest file to 'dev_${BOARDNAME}' TS project $TS_PATH"
-		cp -v tunerstudio/rusefi_microrusefi.ini ${TS_PATH}/dev_${BOARDNAME}/projectCfg/mainController.ini
+		cp -v tunerstudio/rusefi_${BOARDNAME}.ini ${TS_PATH}/dev_${BOARDNAME}/projectCfg/mainController.ini
 	fi
 fi
 
