@@ -11,9 +11,9 @@ java \
  -DSystemOut.name=gen_config_kinetis_board \
  -cp ../java_tools/ConfigDefinition.jar \
  com.rusefi.board_generator.BoardReader \
- -board kinetis \
+ -yaml config/boards/kinetis/mapping.yaml \
  -firmware_path . \
- -out config/boards/kinetis/config/tunerstudio \
+ -output_file tunerstudio/generated/kinetis_prefix.txt \
  -enumInputFile controllers/algo/rusefi_enums.h \
  -enumInputFile config/boards/kinetis/rusefi_hw_enums.h
 
