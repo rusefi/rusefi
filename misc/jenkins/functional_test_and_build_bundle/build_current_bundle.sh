@@ -10,6 +10,8 @@ echo "$SCRIPT_NAME Entering ROOT_FOLDER=$ROOT_FOLDER"
 echo "$SCRIPT_NAME.sh: Hello rusEfi build full bundle"
 date "+%a %D %T.%2S"
 
+export BUNDLE_NAME="default"
+
 cd firmware/bootloader
 sh clean_bootloader.sh
 sh compile_bootloader_discovery407.sh
