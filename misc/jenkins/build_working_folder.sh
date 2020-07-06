@@ -75,7 +75,7 @@ cp firmware/deliver/rusefi.dfu $FOLDER
 # just for now - DFU work in progress
 cp firmware/deliver/rusefi.hex $FOLDER
 
-if [ -n $BUNDLE_NAME ]; then
+if [ -n "$BUNDLE_NAME" ]; then
     mv $FOLDER/rusefi.dfu $FOLDER/rusefi_$BUNDLE_NAME.dfu
 fi
 
