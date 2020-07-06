@@ -20,7 +20,7 @@ java -DSystemOut.name=gen_config \
  -romraider integration \
  -ts_destination tunerstudio \
  -cache . \
- -cache_zip_file tunerstudio/cache.zip \
+ -cache_zip_file tunerstudio/generated/cache.zip \
  -with_c_defines false \
  -initialize_to_zero false \
  -tool gen_config.sh \
@@ -32,7 +32,7 @@ java -DSystemOut.name=gen_config \
  -c_fsio_names     controllers/generated/fsio_names.def \
  -c_fsio_strings   controllers/generated/fsio_strings.def \
  -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
- -signature tunerstudio/signature_all.txt \
+ -signature tunerstudio/generated/signature_all.txt \
  -signature_destination controllers/generated/signature_all.h \
  -romraider_destination ../java_console/rusefi.xml
 
