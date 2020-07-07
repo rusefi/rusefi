@@ -18,3 +18,9 @@ jobs:
     - name: Compile Simulator
       working-directory: ./simulator/
       run: sh compile.sh
+
+    - name: Upload built simulator
+      uses: actions/upload-artifact@v2
+      with:
+        name: rusefi_simulator_linux
+        path: ./simulator/build/rusefi_simulator
