@@ -44,7 +44,6 @@ public class TcpCommunicationIntegrationTest {
         assertTrue(failedCountDownLatch.await(30, TimeUnit.SECONDS));
     }
 
-    @Test
     @Ignore
     public void testConnectAndTransmitImageOverTcpIp() throws InterruptedException {
         ConfigurationImage ci = prepareImage(239);
