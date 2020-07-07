@@ -107,6 +107,18 @@ jobs:
     - name: Build Firmware
       run: sh misc/jenkins/compile_other_versions/compile_and_upload.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
 
+    - name: Upload bundle
+      uses: actions/upload-artifact@v2
+      with:
+        name: rusefi_bundle${{matrix.build-target}}.zip
+        path: ./firmware/rusefi_bundle.zip
+
+    - name: Upload autoupdate bundle
+      uses: actions/upload-artifact@v2
+      with:
+        name: rusefi_bundle${{matrix.build-target}}_autoupdate.zip
+        path: ./firmware/rusefi_bundle.zip
+
   build-primary-bundle:
     runs-on: ubuntu-latest
     steps:
@@ -138,3 +150,9 @@ jobs:
 
     - name: Build Primary Bundle
       run: OS="Windows_NT" sh misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
+
+    - name: Upload primary bundle
+      uses: actions/upload-artifact@v2
+      with:
+        name: rusefi_bundle.zip
+        path: ./simulator/build/rusefi_simulator
