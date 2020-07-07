@@ -45,6 +45,7 @@ public class TcpCommunicationIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testConnectAndTransmitImageOverTcpIp() throws InterruptedException {
         ConfigurationImage ci = prepareImage(239);
 
