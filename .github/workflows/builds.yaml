@@ -3,7 +3,6 @@ name: rusEFI build tasks
 on: [push, pull_request]
 
 env:
-  RUSEFI_SKIP_UPLOAD: ${{toJson(github.event.pusher)}}
   RUSEFI_BUILD_FTP_SERVER: ${{ secrets.RUSEFI_BUILD_FTP_SERVER  }}
   RUSEFI_BUILD_FTP_USER: ${{ secrets.RUSEFI_BUILD_FTP_USER  }}
   RUSEFI_BUILD_FTP_PASS: ${{ secrets.RUSEFI_BUILD_FTP_PASS  }}
