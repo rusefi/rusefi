@@ -10,6 +10,7 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
