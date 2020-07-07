@@ -110,14 +110,14 @@ jobs:
     - name: Upload bundle
       uses: actions/upload-artifact@v2
       with:
-        name: rusefi_bundle${{matrix.build-target}}.zip
-        path: ./firmware/rusefi_bundle.zip
+        name: rusefi_bundle_${{matrix.build-target}}.zip
+        path: ./artifacts/rusefi_bundle_${{matrix.build_target}}.zip
 
     - name: Upload autoupdate bundle
       uses: actions/upload-artifact@v2
       with:
-        name: rusefi_bundle${{matrix.build-target}}_autoupdate.zip
-        path: ./firmware/rusefi_bundle.zip
+        name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
+        path: ./artifacts/rusefi_bundle_${{matrix.build_target}}_autoupdate.zip
 
   build-primary-bundle:
     runs-on: ubuntu-latest
@@ -157,4 +157,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle.zip
-        path: ./simulator/build/rusefi_simulator
+        path: ./artifacts/rusefi_bundle.zip
