@@ -118,6 +118,7 @@ if [ -n "$RUSEFI_FTP_SERVER" ]; then
  ncftpput -u "$RUSEFI_BUILD_FTP_USER" -p "$RUSEFI_BUILD_FTP_PASS" "$RUSEFI_FTP_SERVER" autoupdate "$UPDATE_BUNDLE_FILE"
 fi
 cd ..
+mv temp/$UPDATE_BUNDLE_FILE artifacts
 
 echo "$SCRIPT_NAME: We are back in root directory"
 
