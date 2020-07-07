@@ -13,7 +13,9 @@ jobs:
         submodules: recursive
 
     - name: Install multilib
-      run: sudo apt-get install gcc-multilib g++-multilib
+      run: |
+        sudo apt-get update
+        sudo apt-get install gcc-multilib g++-multilib
 
     - name: Compile Simulator
       working-directory: ./simulator/
