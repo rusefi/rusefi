@@ -1,0 +1,20 @@
+name: Build Simulator
+
+on: [push, pull_request]
+
+jobs:
+  # This is just to ensure the simulator compiles on Linux
+  build-simulator:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
+
+    - name: Install multilib
+      run: sudo apt-get install gcc-multilib g++-multilib
+
+    - name: Compile Simulator
+      working-directory: ./simulator/
+      run: sh compile.sh

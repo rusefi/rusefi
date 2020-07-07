@@ -1,4 +1,4 @@
-name: rusEFI build tasks
+name: Build Firmware
 
 on: [push, pull_request]
 
@@ -106,7 +106,7 @@ jobs:
     # Build the firmware!
     - name: Build Firmware
       run: sh misc/jenkins/compile_other_versions/compile_and_upload.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
-      
+
   build-primary-bundle:
     runs-on: ubuntu-latest
     steps:
@@ -138,19 +138,3 @@ jobs:
 
     - name: Build Primary Bundle
       run: OS="Windows_NT" sh misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
-
-  # This is just to ensure the simulator compiles on Linux
-  build-simulator:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v1
-      with:
-        submodules: recursive
-
-    - name: Install multilib
-      run: sudo apt-get install gcc-multilib g++-multilib
-
-    - name: Compile Simulator
-      working-directory: ./simulator/
-      run: sh compile.sh
