@@ -2,11 +2,6 @@ name: Build Firmware
 
 on: [push, pull_request]
 
-env:
-  RUSEFI_FTP_SERVER: ${{ secrets.RUSEFI_FTP_SERVER  }}
-  RUSEFI_BUILD_FTP_USER: ${{ secrets.RUSEFI_BUILD_FTP_USER  }}
-  RUSEFI_BUILD_FTP_PASS: ${{ secrets.RUSEFI_BUILD_FTP_PASS  }}
-
 jobs:
   build-firmware:
     runs-on: ubuntu-latest
@@ -94,6 +89,14 @@ jobs:
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
       run: arm-none-eabi-gcc -v
+
+    - name: Set FTP variables
+      run: |
+        if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master"]; then
+          export RUSEFI_FTP_SERVER=${{secrets.RUSEFI_FTP_SERVER}};
+          export RUSEFI_BUILD_FTP_USER=${{secrets.RUSEFI_BUILD_FTP_USER}};
+          export RUSEFI_BUILD_FTP_PASS=${{secrets.RUSEFI_BUILD_FTP_PASS}};
+        fi
 
     # Build rusEFI console
     - name: Build console
