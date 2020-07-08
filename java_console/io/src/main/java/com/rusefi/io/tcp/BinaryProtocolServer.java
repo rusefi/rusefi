@@ -156,6 +156,8 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     public static Packet readPromisedBytes(DataInputStream in, int length) throws IOException {
+        if (length < 0)
+            throw new IllegalArgumentException(String.format("Negative %d %x", length, length));
         byte[] packet = new byte[length];
         int size = in.read(packet);
         if (size != packet.length)
