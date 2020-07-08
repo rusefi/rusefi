@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 08 02:20:25 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 08 03:02:21 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1314,6 +1314,7 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e throttlePedalUpPinMode;
 	/**
+	 * Additional idle PID offset while A/C is active
 	 * offset 711
 	 */
 	uint8_t acIdleExtraOffset;
@@ -1501,6 +1502,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t mc33_hvolt;
 	/**
+	 * Additional idle PID minValue while A/C is active
 	 * offset 761
 	 */
 	uint8_t acIdleExtraMin;
@@ -3524,4 +3526,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 08 02:20:25 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 08 03:02:21 UTC 2020
