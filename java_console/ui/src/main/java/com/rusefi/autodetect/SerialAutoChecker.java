@@ -39,7 +39,7 @@ public class SerialAutoChecker implements Runnable {
     public void run() {
         IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort, logger);
         Logger logger = FileLog.LOGGER;
-        IncomingDataBuffer incomingData = stream.getDataBuffer();
+        IncomingDataBuffer incomingData = IncomingDataBuffer.createDataBuffer(stream, logger);
         try {
             stream.sendPacket(new byte[]{BinaryProtocolCommands.COMMAND_HELLO}, logger);
             byte[] response = incomingData.getPacket(logger, "", false);
