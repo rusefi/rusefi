@@ -13,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
 import static com.rusefi.config.generated.Fields.*;
@@ -22,7 +23,7 @@ import static com.rusefi.config.generated.Fields.*;
  * serial port simultaneously
  *
  * @author Andrey Belomutskiy
- *         11/24/15
+ * 11/24/15
  */
 
 public class BinaryProtocolServer implements BinaryProtocolCommands {
@@ -42,6 +43,19 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     public void start(LinkManager linkManager, int port) {
         logger.info("BinaryProtocolServer on " + port);
+
+        Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
+            try {
+                runProxy(linkManager, clientSocket);
+            } catch (IOException e) {
+                logger.info("proxy connection: " + e);
+            }
+        };
+
+        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, logger);
+    }
+
+    public static void tcpServerSocket(int port, String threadName, Function<Socket, Runnable> clientSocketRunnableFactory, final Logger logger) {
         Runnable runnable = new Runnable() {
             @SuppressWarnings("InfiniteLoopStatement")
             @Override
@@ -59,23 +73,14 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                         // Wait for a connection
                         final Socket clientSocket = serverSocket.accept();
                         logger.info("Binary protocol proxy port connection");
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    runProxy(linkManager, clientSocket);
-                                } catch (IOException e) {
-                                    logger.info("proxy connection: " + e);
-                                }
-                            }
-                        }, "proxy connection").start();
+                        new Thread(clientSocketRunnableFactory.apply(clientSocket), "proxy connection").start();
                     }
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
                 }
             }
         };
-        new Thread(runnable, "BinaryProtocolServer").start();
+        new Thread(runnable, threadName).start();
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
@@ -85,14 +90,9 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         while (true) {
             byte first = in.readByte();
             if (first == COMMAND_PROTOCOL) {
-                //System.out.println("Ignoring plain F command");
-                System.out.println("Got plain F command");
-                OutputStream outputStream = clientSocket.getOutputStream();
-                outputStream.write(TS_PROTOCOL.getBytes());
-                outputStream.flush();
+                handleProtocolCommand(clientSocket);
                 continue;
             }
-
             int length = first * 256 + in.readByte();
 
             System.out.println("Got [" + length + "] length promise");
@@ -100,18 +100,11 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             if (length == 0)
                 throw new IOException("Zero length not expected");
 
-            byte[] packet = new byte[length];
-            int size = in.read(packet);
-            if (size != packet.length)
-                throw new IllegalStateException();
+            byte[] packet = readPromisedBytes(in, length).packet;
 
             DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet));
             byte command = (byte) dis.read();
             System.out.println("Got [" + (char) command + "/" + command + "] command");
-
-            int crc = in.readInt();
-            if (crc != IoHelper.getCrc32(packet))
-                throw new IllegalStateException("CRC mismatch");
 
             TcpIoStream stream = new TcpIoStream(logger, linkManager, clientSocket);
             if (command == COMMAND_HELLO) {
@@ -159,6 +152,24 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         }
     }
 
+    public static Packet readPromisedBytes(DataInputStream in, int length) throws IOException {
+        byte[] packet = new byte[length];
+        int size = in.read(packet);
+        if (size != packet.length)
+            throw new IllegalStateException();
+        int crc = in.readInt();
+        if (crc != IoHelper.getCrc32(packet))
+            throw new IllegalStateException("CRC mismatch");
+        return new Packet(packet, crc);
+    }
+
+    public static void handleProtocolCommand(Socket clientSocket) throws IOException {
+        System.out.println("Got plain F command");
+        OutputStream outputStream = clientSocket.getOutputStream();
+        outputStream.write(TS_PROTOCOL.getBytes());
+        outputStream.flush();
+    }
+
     private void handleWrite(LinkManager linkManager, byte[] packet, DataInputStream dis, TcpIoStream stream) throws IOException {
         dis.readShort(); // page
         int offset = swap16(dis.readShort());
@@ -197,5 +208,23 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         response.write(TS_OK.charAt(0));
         new DataOutputStream(response).writeInt(result);
         stream.sendPacket(response.toByteArray(), logger);
+    }
+
+    public static class Packet {
+        private final byte[] packet;
+        private final int crc;
+
+        public Packet(byte[] packet, int crc) {
+            this.packet = packet;
+            this.crc = crc;
+        }
+
+        public byte[] getPacket() {
+            return packet;
+        }
+
+        public int getCrc() {
+            return crc;
+        }
     }
 }

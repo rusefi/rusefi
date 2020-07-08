@@ -7,11 +7,14 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
+import java.io.*;
+import java.net.Socket;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -84,11 +87,31 @@ public class TcpCommunicationIntegrationTest {
     }
 
     @Test
-    public void testProxy() {
+    public void testProxy() throws InterruptedException, IOException {
         ConfigurationImage serverImage = prepareImage(239, createIniField(Fields.CYLINDERSCOUNT));
-        int port = 6102;
-        BinaryProtocolServer server = createVirtualController(serverImage, port);
+        int controllerPort = 6102;
+        BinaryProtocolServer server = createVirtualController(serverImage, controllerPort);
+        int proxyPort = 6103;
 
+        BinaryProtocolProxy.createProxy(new Socket("127.0.0.1", controllerPort), proxyPort);
+
+        CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
+
+        LinkManager clientManager = new LinkManager(LOGGER);
+        clientManager.startAndConnect(Integer.toString(proxyPort), new ConnectionStateListener() {
+            @Override
+            public void onConnectionEstablished() {
+                connectionEstablishedCountDownLatch.countDown();
+            }
+
+            @Override
+            public void onConnectionFailed() {
+                System.out.println("Failed");
+            }
+        });
+        assertTrue(connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+
+        clientManager.stop();
     }
 
     @NotNull
