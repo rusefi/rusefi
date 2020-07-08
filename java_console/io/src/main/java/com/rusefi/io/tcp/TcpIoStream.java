@@ -2,9 +2,9 @@ package com.rusefi.io.tcp;
 
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
-import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.ByteReader;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -20,27 +20,22 @@ public class TcpIoStream implements IoStream {
     private final InputStream input;
     private final OutputStream output;
     private final Logger logger;
-    private final IncomingDataBuffer dataBuffer;
+    private final LinkManager linkManager;
     private boolean isClosed;
 
-    public TcpIoStream(Logger logger, Socket socket) throws IOException {
-        this(logger, new BufferedInputStream(socket.getInputStream()), socket.getOutputStream());
+    public TcpIoStream(Logger logger, LinkManager linkManager, Socket socket) throws IOException {
+        this(logger, linkManager, new BufferedInputStream(socket.getInputStream()), socket.getOutputStream());
     }
 
-    private TcpIoStream(Logger logger, InputStream input, OutputStream output) {
+    private TcpIoStream(Logger logger, LinkManager linkManager, InputStream input, OutputStream output) {
         this.logger = logger;
+        this.linkManager = linkManager;
         if (input == null)
             throw new NullPointerException("input");
         if (output == null)
             throw new NullPointerException("output");
         this.output = output;
         this.input = input;
-        dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
-    }
-
-    @Override
-    public IncomingDataBuffer getDataBuffer() {
-        return dataBuffer;
     }
 
     @Override
