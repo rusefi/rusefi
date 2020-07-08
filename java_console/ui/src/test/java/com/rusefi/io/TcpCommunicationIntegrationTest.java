@@ -3,6 +3,7 @@ package com.rusefi.io;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
@@ -11,6 +12,7 @@ import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -46,18 +48,11 @@ public class TcpCommunicationIntegrationTest {
 
     @Test
     public void testConnectAndTransmitImageOverTcpIp() throws InterruptedException {
-        ConfigurationImage ci = prepareImage(239);
-
+        ScalarIniField iniField = createIniField(Fields.CYLINDERSCOUNT);
+        int value = 239;
+        ConfigurationImage serverImage = prepareImage(value, iniField);
         int port = 6100;
-
-        BinaryProtocolState state = new BinaryProtocolState();
-        state.setController(ci);
-        state.setCurrentOutputs(new byte[1 + Fields.TS_OUTPUT_SIZE]);
-
-        LinkManager linkManager = new LinkManager(LOGGER);
-        linkManager.setConnector(LinkConnector.getDetachedConnector(state));
-        BinaryProtocolServer server = new BinaryProtocolServer(LOGGER);
-        server.start(linkManager, port);
+        BinaryProtocolServer server = createVirtualController(serverImage, port);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
@@ -76,19 +71,49 @@ public class TcpCommunicationIntegrationTest {
             }
         });
         assertTrue(connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+
         assertEquals(0, server.unknownCommands.get());
+
+        BinaryProtocol clientStreamState = clientManager.getCurrentStreamState();
+        Objects.requireNonNull(clientStreamState, "clientStreamState");
+        ConfigurationImage clientImage = clientStreamState.getControllerConfiguration();
+        String clientValue = iniField.getValue(clientImage);
+        assertEquals(Double.toString(value), clientValue);
 
         clientManager.stop();
     }
 
+    @Test
+    public void testProxy() {
+        ConfigurationImage serverImage = prepareImage(239, createIniField(Fields.CYLINDERSCOUNT));
+        int port = 6102;
+        BinaryProtocolServer server = createVirtualController(serverImage, port);
+
+    }
+
     @NotNull
-    private ConfigurationImage prepareImage(int input) {
+    private static ScalarIniField createIniField(Field field) {
+        return new ScalarIniField(field.getName(), field.getOffset(), "", field.getType(), 1);
+    }
+
+    @NotNull
+    private BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port) {
+        BinaryProtocolState state = new BinaryProtocolState();
+        state.setController(ci);
+        state.setCurrentOutputs(new byte[1 + Fields.TS_OUTPUT_SIZE]);
+
+        LinkManager linkManager = new LinkManager(LOGGER);
+        linkManager.setConnector(LinkConnector.getDetachedConnector(state));
+        BinaryProtocolServer server = new BinaryProtocolServer(LOGGER);
+        server.start(linkManager, port);
+        return server;
+    }
+
+    @NotNull
+    private ConfigurationImage prepareImage(int input, ScalarIniField scalarIniField) {
         ConfigurationImage ci = new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE);
 
-        Field field = Fields.CYLINDERSCOUNT;
-
-        ScalarIniField scalarIniField = new ScalarIniField(field.getName(), field.getOffset(), "", field.getType(), 1);
-        scalarIniField.setValue(ci, new Constant(field.getName(), "", Integer.toString(input)));
+        scalarIniField.setValue(ci, new Constant(scalarIniField.getName(), "", Integer.toString(input)));
         return ci;
     }
 }
