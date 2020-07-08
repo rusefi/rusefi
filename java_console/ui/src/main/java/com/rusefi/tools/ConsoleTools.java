@@ -308,7 +308,7 @@ public class ConsoleTools {
         }
         IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
         Logger logger = FileLog.LOGGER;
-        IncomingDataBuffer incomingData = stream.getDataBuffer();
+        IncomingDataBuffer incomingData = IncomingDataBuffer.createDataBuffer(stream, logger);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes("hello");
         stream.sendPacket(commandBytes, logger);
         // skipping response
