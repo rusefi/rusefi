@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "TIMESTAMP $(date "+%a %D %T.%2S")"
 SCRIPT_NAME="hw_test.sh"
@@ -7,10 +7,10 @@ pwd
 
 cd firmware
 echo "$SCRIPT_NAME: erasing first"
-sh flash_erase407.sh
+bash flash_erase407.sh
 echo "$SCRIPT_NAME: trying to flash"
 # This script depends on someone else building firmware
-sh flash_openocd407.sh
+bash flash_openocd407.sh
 [ $? -eq 0 ] || { echo "ERROR invoking flash_openocd407.sh"; exit 1; }
 
 [ -e build/rusefi.bin ] || { echo "FIRMWARE NOT FOUND"; exit 1; }

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 FULL_BUNDLE_FILE="$BUNDLE_FULL_NAME.zip"
 UPDATE_BUNDLE_FILE="${BUNDLE_FULL_NAME}_autoupdate.zip"

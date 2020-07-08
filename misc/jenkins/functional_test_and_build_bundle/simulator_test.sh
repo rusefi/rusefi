@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "I am simulator_test.sh"
 pwd
