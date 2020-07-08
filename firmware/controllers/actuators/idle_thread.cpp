@@ -82,13 +82,13 @@ public:
 	Engine *engine = unitTestEngine;
 	EXPAND_Engine;
 #endif
-
+		float result = parameters->offset;
 #if EFI_FSIO
 			if (engineConfiguration->useFSIO12ForIdleOffset) {
-				return ENGINE(fsioState.fsioIdleOffset);
+				return result + ENGINE(fsioState.fsioIdleOffset);
 			}
 #endif /* EFI_FSIO */
-		return parameters->offset;
+		return result;
 	}
 
 	float getMinValue() const override {
@@ -96,21 +96,25 @@ public:
 	Engine *engine = unitTestEngine;
 	EXPAND_Engine;
 #endif
+	float result = parameters->minValue;
 #if EFI_FSIO
 			if (engineConfiguration->useFSIO13ForIdleMinValue) {
-				return ENGINE(fsioState.fsioIdleMinValue);
+				return result + ENGINE(fsioState.fsioIdleMinValue);
 			}
 #endif /* EFI_FSIO */
-		return parameters->minValue;
+		return result;
 	}
 };
 
 PidWithOverrides idlePid;
 #endif /* EFI_IDLE_PID_CIC */
 
-
 float getIdlePidOffset() {
 	return idlePid.getOffset();
+}
+
+float getIdlePidMinValue() {
+	return idlePid.getMinValue();
 }
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
