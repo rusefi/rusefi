@@ -1,9 +1,9 @@
-name: Firmware CI
+name: Build Firmware
 
-on: [push,pull_request]
+on: [push, pull_request]
 
 jobs:
-  build:
+  build-firmware:
     runs-on: ubuntu-latest
     
     strategy:
@@ -12,84 +12,54 @@ jobs:
       matrix:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
-        build-target: [frankenso, frankenso-pal, mre-f4, mre-f7, prometheus-405, prometheus-469, proteus-f4, proteus-f7, kinetis]
-        build-type: [debug, release]
+        build-target: [frankenso_na6, kinetis, mre_f4, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f7, stm32f746_nucleo, stm32f767_nucleo]
         
         include:
           # Board configurations
-          - build-target: frankenso
-            efi-cpu: ARCH_STM32F4
-            efi-board: st_stm32f4
-            target-extra-params: -DSHORT_BOARD_NAME=fra
+          - build-target: frankenso_na6
+            folder: frankenso
             
-          - build-target: frankenso-pal
-            efi-cpu: ARCH_STM32F4
-            efi-board: st_stm32f4
-            target-extra-params: -DSHORT_BOARD_NAME=fra -DHAL_TRIGGER_USE_PAL=TRUE -DEFI_ICU_INPUTS=FALSE -DEFI_VEHICLE_SPEED=FALSE -DEFI_LOGIC_ANALYZER=FALSE
-            
-          - build-target: mre-f4
-            efi-cpu: ARCH_STM32F4
-            efi-board: microrusefi
-            target-extra-params: -DSHORT_BOARD_NAME=mre
-            
-          - build-target: mre-f7
-            efi-cpu: ARCH_STM32F7
-            efi-board: microrusefi
-            target-extra-params: -DSHORT_BOARD_NAME=mre
-
-          - build-target: prometheus-405
-            efi-cpu: ARCH_STM32F4
-            efi-board: prometheus/f405
-            target-extra-params: -DSHORT_BOARD_NAME=pth
-
-          - build-target: prometheus-469
-            efi-cpu: ARCH_STM32F4
-            efi-board: prometheus/f469
-            target-extra-params: -DSHORT_BOARD_NAME=pth
-
-          - build-target: proteus-f4
-            efi-cpu: ARCH_STM32F4
-            efi-board: proteus
-            target-extra-params: -DSHORT_BOARD_NAME=pro
-
-          - build-target: proteus-f7
-            efi-cpu: ARCH_STM32F7
-            efi-board: proteus
-            target-extra-params: -DSHORT_BOARD_NAME=pro
-
           - build-target: kinetis
-            efi-cpu: kinetis
-            efi-board: kinetis
-            target-extra-params: -DSHORT_BOARD_NAME=kin -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__USE_CMSI -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
-            extra-options: USE_FATFS=no USE_BOOTLOADER=no
+            folder: kinetis
 
-          # Debug vs. release configuration
-          - build-type: debug
-            type-extra-params: -DDUMMY
-            build-debug-level-opt: -O0 -ggdb -g3
+          - build-target: mre_f4
+            folder: microrusefi
+            ini-file: rusefi_mre_f4.ini
 
-          - build-type: release
-            type-extra-params: -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_TRACE=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
-            build-debug-level-opt: -O2 -ggdb -g3
+          - build-target: mre_f4_hardware_QC_special_build
+            folder: microrusefi
+            ini-file: rusefi_microrusefi.ini
+            
+          - build-target: mre_f7
+            folder: microrusefi
+            ini-file: rusefi_mre_f7.ini
+            console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
 
-          # We don't need debug builds for every board...
-        exclude:
-          - build-target: frankenso-pal
-            build-type: debug
-          - build-target: mre-f4
-            build-type: debug
-          - build-target: mre-f7
-            build-type: debug
-          - build-target: prometheus-405
-            build-type: debug
-          - build-target: prometheus-469
-            build-type: debug
-          - build-target: proteus-f4
-            build-type: debug
-          - build-target: proteus-f7
-            build-type: debug
-          - build-target: kinetis
-            build-type: debug
+          - build-target: prometheus_405
+            folder: prometheus
+            ini-file: rusefi_prometheus_405.ini
+
+          - build-target: prometheus_469
+            folder: prometheus
+            ini-file: rusefi_prometheus_469.ini
+
+          - build-target: proteus_f4
+            folder: proteus
+            ini-file: rusefi_proteus_f4.ini
+
+          - build-target: proteus_f7
+            folder: proteus
+            ini-file: rusefi_proteus_f7.ini
+
+          - build-target: stm32f746_nucleo
+            folder: nucleo_f746
+            ini-file: no
+            console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
+
+          - build-target: stm32f767_nucleo
+            folder: nucleo_f767
+            ini-file: no
+            console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
 
     steps:
     - uses: actions/checkout@v1
@@ -111,47 +81,91 @@ jobs:
         tar -xvf compiler.tar.xz
         echo "::add-path::`pwd`/gcc-arm-none-eabi-9-2019-q4-major/bin"
   
+    - name: Install multilib, mingw, and ncftp
+      run: |
+        sudo apt-get update
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp
+
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
       run: arm-none-eabi-gcc -v
+
+    - name: Set FTP variables
+      run: |
+        if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ]; then
+          echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
+          echo "::set-env name=RUSEFI_BUILD_FTP_USER::${{secrets.RUSEFI_BUILD_FTP_USER}}";
+          echo "::set-env name=RUSEFI_BUILD_FTP_PASS::${{secrets.RUSEFI_BUILD_FTP_PASS}}";
+        fi
+
+    # Build rusEFI console
+    - name: Build console
+      run: sh misc/jenkins/build_java_console.sh
   
+    # Build the simulator
+    - name: Build simulator
+      run: OS="Windows_NT" sh misc/jenkins/build_simulator.sh
+
     # Build the firmware!
     - name: Build Firmware
+      run: sh misc/jenkins/compile_other_versions/compile_and_upload.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
+
+    - name: Upload bundle
+      uses: actions/upload-artifact@v2
+      with:
+        name: rusefi_bundle_${{matrix.build-target}}.zip
+        path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
+
+    - name: Upload autoupdate bundle
+      uses: actions/upload-artifact@v2
+      with:
+        name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
+        path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
+
+  build-primary-bundle:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
+
+    - name: Generate Configs
       working-directory: ./firmware/
-      run: make -j4 PROJECT_BOARD=${{matrix.efi-board}} PROJECT_CPU=${{matrix.efi-cpu}} EXTRA_PARAMS="${{matrix.type-extra-params}} ${{matrix.target-extra-params}}" DEBUG_LEVEL_OPT='${{matrix.build-debug-level-opt}}' ${{matrix.extra-options}}
-      
-    # Get hex2dfu
-    - name: Fetch hex2dfu
-      uses: actions/checkout@v2
-      with:
-        repository: 'rusefi/hex2dfu'
-        path: hex2dfu
+      run: sh gen_config.sh
 
-    # Build hex2dfu
-    - name: Build hex2dfu
-      working-directory: ./hex2dfu
-      run: gcc hex2dfu.c -o hex2dfu
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: sh gen_live_documentation.sh
 
-    # Convert hex to dfu
-    - name: Create DFU file
-      run: ./hex2dfu/hex2dfu -i ./firmware/build/rusefi.hex -o ./firmware/build/rusefi.dfu
-     
+    # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
+    - name: Download & Install GCC
+      run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
+        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.xz' -O compiler.tar.xz
+        tar -xvf compiler.tar.xz
+        echo "::add-path::`pwd`/gcc-arm-none-eabi-9-2019-q4-major/bin"
+  
+    - name: Install multilib, mingw, and ncftp
+      run: |
+        sudo apt-get update
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp
 
-    # The next two steps upload the bin, elf, and dfu as build artifacts
-    - name: Upload elf
+    # Make sure the compiler we just downloaded works - just print out the version
+    - name: Test Compiler
+      run: arm-none-eabi-gcc -v
+
+    - name: Set FTP variables
+      run: |
+        if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ]; then
+          echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
+          echo "::set-env name=RUSEFI_BUILD_FTP_USER::${{secrets.RUSEFI_BUILD_FTP_USER}}";
+          echo "::set-env name=RUSEFI_BUILD_FTP_PASS::${{secrets.RUSEFI_BUILD_FTP_PASS}}";
+        fi
+
+    - name: Build Primary Bundle
+      run: OS="Windows_NT" sh misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
+
+    - name: Upload primary bundle
       uses: actions/upload-artifact@v2
       with:
-        name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-elf
-        path: ./firmware/build/rusefi.elf
-        
-    - name: Upload bin
-      uses: actions/upload-artifact@v2
-      with:
-        name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-bin
-        path: ./firmware/build/rusefi.bin
-
-    - name: Upload dfu
-      uses: actions/upload-artifact@v2
-      with:
-        name: firmware-${{matrix.build-target}}-${{matrix.build-type}}-dfu
-        path: ./firmware/build/rusefi.dfu
+        name: rusefi_bundle.zip
+        path: ./artifacts/rusefi_bundle.zip
