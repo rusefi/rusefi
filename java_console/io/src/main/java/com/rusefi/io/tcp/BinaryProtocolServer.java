@@ -109,7 +109,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             byte command = (byte) dis.read();
             System.out.println("Got [" + (char) command + "/" + command + "] command");
 
-            TcpIoStream stream = new TcpIoStream(logger, clientSocket);
+            TcpIoStream stream = new TcpIoStream(logger, linkManager, clientSocket);
             if (command == COMMAND_HELLO) {
                 stream.sendPacket((TS_OK + Fields.TS_SIGNATURE).getBytes(), logger);
             } else if (command == COMMAND_PROTOCOL) {
