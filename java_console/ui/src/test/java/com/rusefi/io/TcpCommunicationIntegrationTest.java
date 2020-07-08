@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TcpCommunicationIntegrationTest {
     private static final Logger LOGGER = Logger.CONSOLE;
+    private static final String LOCALHOST = "localhost";
 
     // todo: implement & test TCP connector restart!
     @Test
@@ -62,7 +63,7 @@ public class TcpCommunicationIntegrationTest {
         // todo: remove CONFIGURATION_RUSEFI_BINARY or nicer API to disable local file load
 
         LinkManager clientManager = new LinkManager(LOGGER);
-        clientManager.startAndConnect(Integer.toString(port), new ConnectionStateListener() {
+        clientManager.startAndConnect(LOCALHOST + ":" + port, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 connectionEstablishedCountDownLatch.countDown();
@@ -93,7 +94,7 @@ public class TcpCommunicationIntegrationTest {
         BinaryProtocolServer server = createVirtualController(serverImage, controllerPort);
         int proxyPort = 6103;
 
-        BinaryProtocolProxy.createProxy(new Socket("127.0.0.1", controllerPort), proxyPort);
+        BinaryProtocolProxy.createProxy(new Socket("localhost", controllerPort), proxyPort);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
