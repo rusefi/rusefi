@@ -10,6 +10,11 @@ echo "$SCRIPT_NAME Entering ROOT_FOLDER=$ROOT_FOLDER"
 echo "$SCRIPT_NAME.sh: Hello rusEfi build full bundle"
 date "+%a %D %T.%2S"
 
+<<<<<<< HEAD
+=======
+export BUNDLE_NAME="default"
+
+>>>>>>> original/master
 cd firmware/bootloader
 sh clean_bootloader.sh
 sh compile_bootloader_discovery407.sh
@@ -22,7 +27,11 @@ cd firmware
 date "+%a %D %T.%2S"
 
 echo "$SCRIPT_NAME: will be Erasing chip"
+<<<<<<< HEAD
 [ -e flash_erase407.sh ] || { echo "NOT FOUND flash_erase.sh"; exit 1; ]
+=======
+[ -e flash_erase407.sh ] || { echo "NOT FOUND flash_erase.sh"; exit 1; }
+>>>>>>> original/master
 echo "$SCRIPT_NAME: Erasing chip"
 sh flash_erase407.sh
 
@@ -32,13 +41,20 @@ sh clean.sh
 sh update_version.sh
 
 sh clean_compile_two_versions.sh
+<<<<<<< HEAD
 [ -e deliver/rusefi_no_asserts.hex ] { echo "Just to confirm - FAILED to compile no_asserts"; exit 1; }
 
 [ -e deliver/rusefi.hex ] { echo "Just to confirm - FAILED to compile default DEBUG"; exit 1; }
+=======
+#[ -e deliver/rusefi_no_asserts.hex ] || { echo "Just to confirm - FAILED to compile no_asserts"; exit 1; }
+
+[ -e deliver/rusefi.hex ] || { echo "Just to confirm - FAILED to compile default DEBUG"; exit 1; }
+>>>>>>> original/master
 
 echo "$SCRIPT_NAME: Building DFU"
 if uname | grep "NT"; then
  chmod u+x ../misc/encedo_hex2dfu/hex2dfu.exe
+<<<<<<< HEAD
  ../misc/encedo_hex2dfu/hex2dfu.exe -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
  ../misc/encedo_hex2dfu/hex2dfu.exe -i build/rusefi.hex -o deliver/rusefi.dfu
 else
@@ -47,6 +63,17 @@ else
  ../misc/encedo_hex2dfu/hex2dfu.bin -i build/rusefi.hex -o deliver/rusefi.dfu
 fi
 
+=======
+# ../misc/encedo_hex2dfu/hex2dfu.exe -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
+ ../misc/encedo_hex2dfu/hex2dfu.exe -i deliver/rusefi.hex -o deliver/rusefi.dfu
+else
+ chmod u+x ../misc/encedo_hex2dfu/hex2dfu.bin
+# ../misc/encedo_hex2dfu/hex2dfu.bin -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
+ ../misc/encedo_hex2dfu/hex2dfu.bin -i deliver/rusefi.hex -o deliver/rusefi.dfu
+fi
+
+echo "${SCRIPT_NAME} ls -l deliver"
+>>>>>>> original/master
 ls -l deliver
 cd ..
 
@@ -59,7 +86,11 @@ sh misc/jenkins/build_simulator.sh
 [ -e simulator/build/rusefi_simulator.exe ] || { echo "rusefi_simulator.exe build FAILED"; exit -1; }
 
 STM_ARCH="stm32f407"
+<<<<<<< HEAD
 TIMESTAMP=$(date +%Y%m%d_%H%M%S')
+=======
+TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
+>>>>>>> original/master
 
 FOLDER="snapshot_${TIMESTAMP}_${STM_ARCH}_rusefi"
 echo "$SCRIPT_NAME: folder variable1=$FOLDER"
@@ -71,6 +102,7 @@ export BUNDLE_FULL_NAME="rusefi_bundle"
 sh misc/jenkins/build_working_folder.sh
 [ $? -eq 0 ] || { echo "$SCRIPT_NAME: ERROR: invoking build_working_folder.sh"; exit 1; }
 
+<<<<<<< HEAD
 echo "$SCRIPT_NAME: Building only console"
 pwd
 ls
@@ -82,6 +114,11 @@ echo "$SCRIPT_NAME: only console ready"
 
 echo "$SCRIPT_NAME: Going back to root folder"
 cd $ROOT_FOLDER
+=======
+
+echo "$SCRIPT_NAME: Going back to root folder"
+cd "$ROOT_FOLDER"
+>>>>>>> original/master
 pwd
 
 echo "TIMESTAMP $(date "+%a %D %T.%2S")"

@@ -49,6 +49,14 @@ floatms_t getCrankshaftRevolutionTimeMs(int rpm) {
 	return 360 * getOneDegreeTimeMs(rpm);
 }
 
+float getFuelingLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return ENGINE(engineState.fuelingLoad);
+}
+
+float getIgnitionLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return ENGINE(engineState.ignitionLoad);
+}
+
 /**
  * @brief Returns engine load according to selected engine_load_mode
  *

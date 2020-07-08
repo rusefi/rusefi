@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # for example 'proteus'
-COMPILE_FOLDER="$1"
+BOARD_NAME="$1"
 
 # for example 'mre-f4'
 export BUNDLE_NAME="$2"
@@ -12,7 +12,7 @@ export RUSEFI_CONSOLE_SETTINGS="$4"
 SCRIPT_NAME=compile_and_upload.sh
 echo "Entering $SCRIPT_NAME with 1=$1 2=$2 3=$3 4=$4"
 
-[ -n $COMPILE_FOLDER ] || { echo "COMPILE_FOLDER parameter expected"; exit 1; }
+[ -n $BOARD_NAME ] || { echo "BOARD_NAME parameter expected"; exit 1; }
 
 [ -n $BUNDLE_NAME ] || { echo "BUNDLE_NAME parameter expected"; exit 1; }
 
@@ -24,7 +24,7 @@ cd ..
 
 cd firmware/config/boards
 pwd
-cd $COMPILE_FOLDER
+cd $BOARD_NAME
 pwd
 echo "Invoking $COMPILE_SCRIPT"
 

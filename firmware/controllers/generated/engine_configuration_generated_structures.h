@@ -1,8 +1,7 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 01 01:01:09 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 08 03:02:21 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
-#ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
-#define CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
+#pragma once
 #include "rusefi_types.h"
 // start of stft_cell_cfg_s
 struct stft_cell_cfg_s {
@@ -589,11 +588,11 @@ struct idle_hardware_s {
 	/**
 	 * offset 5
 	 */
-	brain_pin_e stepperDirectionPin;
+	output_pin_e stepperDirectionPin;
 	/**
 	 * offset 6
 	 */
-	brain_pin_e stepperStepPin;
+	output_pin_e stepperStepPin;
 	/**
 	 * offset 7
 	 */
@@ -1315,9 +1314,10 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e throttlePedalUpPinMode;
 	/**
+	 * Additional idle PID offset while A/C is active
 	 * offset 711
 	 */
-	uint8_t unused711;
+	uint8_t acIdleExtraOffset;
 	/**
 	 * offset 712
 	 */
@@ -1502,9 +1502,14 @@ struct engine_configuration_s {
 	 */
 	uint8_t mc33_hvolt;
 	/**
+	 * Additional idle PID minValue while A/C is active
 	 * offset 761
 	 */
-	uint8_t unusedHere[3];
+	uint8_t acIdleExtraMin;
+	/**
+	 * offset 762
+	 */
+	uint8_t unusedHere[2];
 	/**
 	 * offset 764
 	 */
@@ -1808,10 +1813,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_283_30 : 1;
+	bool unusedBit_284_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_283_31 : 1;
+	bool unusedBit_284_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2854,11 +2859,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2713
 	 */
-	adc_channel_e auxVoltage1;
+	uint8_t unusedAuxVoltage1_TODO_332;
 	/**
 	 * offset 2714
 	 */
-	adc_channel_e auxVoltage2;
+	uint8_t unusedAuxVoltage2_TODO_332;
 	/**
 	 * offset 2715
 	 */
@@ -2915,7 +2920,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3104
 	 */
-	brain_pin_e stepperEnablePin;
+	output_pin_e stepperEnablePin;
 	/**
 	 * offset 3105
 	 */
@@ -3520,6 +3525,5 @@ struct persistent_config_s {
 
 typedef struct persistent_config_s persistent_config_s;
 
-#endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 01 01:01:09 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 08 03:02:21 UTC 2020

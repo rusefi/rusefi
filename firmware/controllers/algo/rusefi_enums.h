@@ -719,7 +719,7 @@ typedef enum {
 	DBG_ANALOG_INPUTS = 21,
 	
 	DBG_INSTANT_RPM = 22,
-	DBG_FSIO_EXPRESSION = 23,
+	DBG_FSIO_EXPRESSION_1_7 = 23,
 	DBG_STATUS = 24,
 	DBG_CJ125 = 25,
 	DBG_CAN = 26,
@@ -739,7 +739,11 @@ typedef enum {
 	DBG_START_STOP = 37,
 	DBG_LAUNCH = 38,
 	DBG_ETB_AUTOTUNE = 39,
-	DBG_40 = 40,
+	DBG_COMPOSITE_LOG = 40,
+	DBG_FSIO_EXPRESSION_8_14 = 41,
+	DBG_FSIO_SPECIAL = 42,
+	DBG_43 = 43,
+	DBG_44 = 44,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;

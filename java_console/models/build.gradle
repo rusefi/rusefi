@@ -1,0 +1,11 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation project(':inifile')
+    implementation project(':logging-api')
+    implementation group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
+
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
+}

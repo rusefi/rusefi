@@ -18,6 +18,7 @@
                 classpath="lib/annotations.jar"
         >
             <src path="autoupdate/src"/>
+            <src path="shared_io/src/main/java"/>
         </javac>
     </target>
 
@@ -43,14 +44,18 @@
             <src path="autoupdate/src"/>
             <src path="../java_tools/configuration_definition/src"/>
             <src path="../java_tools/enum_to_string/src"/>
-            <src path="io/src"/>
-            <src path="models/src"/>
-            <src path="inifile/src"/>
+            <src path="io/src/main/java"/>
+            <src path="io/src/test/java"/>
+            <src path="models/src/main/java"/>
+            <src path="models/src/test/java"/>
+            <src path="inifile/src/main/java"/>
+            <src path="inifile/src/test/java"/>
             <src path="shared_ui/src"/>
+            <src path="shared_io/src/main/java"/>
+            <src path="logging-api/src/main/java"/>
             <src path="ui/src/main/java"/>
             <src path="ui/src/test/java"/>
             <src path="romraider/src"/>
-            <src path="opensr5/src"/>
             <src path="logging/src"/>
             <!-- not really used at the moment but let's compile for the sake of Eclipse users -->
             <src path="tools/src"/>
@@ -75,11 +80,11 @@
             <batchtest todir="build">
                 <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="autoupdate/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="io/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="models/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="io/src/test/java" includes="**/test/**/*Test.java"/>
+                <fileset dir="inifile/src/test/java" includes="**/test/**/*Test.java"/>
+                <fileset dir="models/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="ui/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="romraider/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="opensr5/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="logging/src" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>

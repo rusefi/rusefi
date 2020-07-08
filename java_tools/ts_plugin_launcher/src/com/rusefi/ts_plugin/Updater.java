@@ -1,7 +1,8 @@
 package com.rusefi.ts_plugin;
 
 import com.rusefi.autoupdate.AutoupdateUtil;
-import com.rusefi.ui.storage.PersistentConfiguration;
+import com.rusefi.shared.ConnectionAndMeta;
+import com.rusefi.shared.FileUtil;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -20,7 +21,7 @@ import static com.rusefi.ts_plugin.TsPluginLauncher.VERSION;
 
 public class Updater {
     private static final String PLUGIN_BODY_JAR = "rusefi_plugin_body.jar";
-    public static final String LOCAL_JAR_FILE_NAME = PersistentConfiguration.RUSEFI_SETTINGS_FOLDER + File.separator + PLUGIN_BODY_JAR;
+    public static final String LOCAL_JAR_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + PLUGIN_BODY_JAR;
     private static final String TITLE = "rusEFI plugin installer " + VERSION;
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
@@ -82,9 +83,9 @@ public class Updater {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AutoupdateUtil.ConnectionAndMeta connectionAndMeta;
+                ConnectionAndMeta connectionAndMeta;
                 try {
-                    connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
+                    connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
                 } catch (Exception e) {
                     e.printStackTrace();
                     return;
@@ -138,7 +139,7 @@ public class Updater {
         });
 
         try {
-            AutoupdateUtil.ConnectionAndMeta connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
+            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
 
             AutoupdateUtil.downloadAutoupdateFile(LOCAL_JAR_FILE_NAME, connectionAndMeta,
                     TITLE);
