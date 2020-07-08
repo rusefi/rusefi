@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "Compiling for Kinetis MKE16F512"
 # TODO: somehow this -DDUMMY is helping us to not mess up the parameters, why?!
@@ -22,4 +22,4 @@ cd ../../..
 
 # make -r -j4
 
-sh config/boards/common_make.sh
+bash config/boards/common_make.sh

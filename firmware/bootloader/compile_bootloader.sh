@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 SCRIPT_NAME="compile_bootloader.sh"
 echo "Entering $SCRIPT_NAME"
@@ -26,4 +26,4 @@ cd ..
 touch bootloader_storage.c
 
 pwd
-sh ../config/boards/clean_env_variables.sh
+bash ../config/boards/clean_env_variables.sh
