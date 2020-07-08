@@ -6,7 +6,9 @@ if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
  exit 0
 fi
 
+pwd
 echo -e "\nUploading .ini files"
+ls -l .
 
 for f in *.ini; do if [[ -f "$f" ]]; then
   echo "Processing file $f:"

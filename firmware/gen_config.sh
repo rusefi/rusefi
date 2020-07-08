@@ -19,6 +19,7 @@ java -DSystemOut.name=gen_config \
  -definition integration/rusefi_config.txt \
  -romraider integration \
  -ts_destination tunerstudio \
+ -ts_output_name generated/rusefi.ini \
  -cache . \
  -cache_zip_file tunerstudio/generated/cache.zip \
  -with_c_defines false \
@@ -42,7 +43,7 @@ if [ -z "${TS_PATH}" ]; then
  echo "TS_PATH not defined"
 else
  echo "This would automatically copy latest file to 'dev' TS project at ${TS_PATH}"
- cp -v tunerstudio/rusefi.ini $TS_PATH/dev/projectCfg/mainController.ini
+ cp -v tunerstudio/generated/rusefi.ini $TS_PATH/dev/projectCfg/mainController.ini
  cp -v tunerstudio/generated/rusefi_microrusefi.ini $TS_PATH/dev_mre/projectCfg/mainController.ini
 fi
 
