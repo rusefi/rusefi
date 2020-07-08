@@ -53,7 +53,7 @@ public class PortHolder {
             // error already reported
             return false;
         }
-        IncomingDataBuffer dataBuffer = stream.getDataBuffer();
+        IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(stream, logger);
         synchronized (portLock) {
             bp = new BinaryProtocol(linkManager, logger, stream, dataBuffer);
             portLock.notifyAll();
