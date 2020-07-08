@@ -57,7 +57,10 @@ public class TcpCommunicationIntegrationTest {
         int value = 239;
         ConfigurationImage serverImage = prepareImage(value, iniField);
         int port = 6100;
-        BinaryProtocolServer server = createVirtualController(serverImage, port, null);
+
+        CountDownLatch serverCreated = new CountDownLatch(1);
+        BinaryProtocolServer server = createVirtualController(serverImage, port, parameter -> serverCreated.countDown());
+        assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
@@ -94,12 +97,7 @@ public class TcpCommunicationIntegrationTest {
         int controllerPort = 6102;
 
         CountDownLatch serverCreated = new CountDownLatch(1);
-        BinaryProtocolServer server = createVirtualController(serverImage, controllerPort, new Listener() {
-            @Override
-            public void onResult(Object parameter) {
-                serverCreated.countDown();
-            }
-        });
+        BinaryProtocolServer server = createVirtualController(serverImage, controllerPort, parameter -> serverCreated.countDown());
         assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
         int proxyPort = 6103;
 
