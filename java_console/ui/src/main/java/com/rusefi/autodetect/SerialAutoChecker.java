@@ -2,7 +2,6 @@ package com.rusefi.autodetect;
 
 import com.opensr5.Logger;
 import com.rusefi.FileLog;
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
@@ -40,7 +39,7 @@ public class SerialAutoChecker implements Runnable {
     public void run() {
         IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort, logger);
         Logger logger = FileLog.LOGGER;
-        IncomingDataBuffer incomingData = BinaryProtocol.createDataBuffer(stream, logger);
+        IncomingDataBuffer incomingData = IncomingDataBuffer.createDataBuffer(stream, logger);
         try {
             stream.sendPacket(new byte[]{BinaryProtocolCommands.COMMAND_HELLO}, logger);
             byte[] response = incomingData.getPacket(logger, "", false);
