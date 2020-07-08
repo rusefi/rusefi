@@ -9,6 +9,7 @@ import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.dfu.DfuLogic;
 import com.rusefi.io.ByteReader;
 import com.rusefi.io.IoStream;
@@ -32,6 +33,16 @@ public class AndroidSerial implements IoStream {
 
     public AndroidSerial(UsbSerialPort usbSerialPort) {
         this.usbSerialPort = usbSerialPort;
+    }
+
+    @Override
+    public void setDataBuffer(IncomingDataBuffer dataBuffer) {
+
+    }
+
+    @Override
+    public IncomingDataBuffer getDataBuffer() {
+        return null;
     }
 
     @Override
