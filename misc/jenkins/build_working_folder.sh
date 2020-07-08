@@ -88,15 +88,17 @@ cd temp
 echo "Building bundle"
 pwd
 zip -r $FULL_BUNDLE_FILE *
-[ $? == 0 ] || (echo "$SCRIPT_NAME: ERROR INVOKING zip"; exit 1)
+[ $? -eq 0 ] || (echo "$SCRIPT_NAME: ERROR INVOKING zip"; exit 1)
 
 echo "$SCRIPT_FILE: Bundle $FULL_BUNDLE_FILE ready"
 ls -l $FULL_BUNDLE_FILE
 
 [ -e $FULL_BUNDLE_FILE ] || { echo "$SCRIPT_NAME: ERROR not found $FULL_BUNDLE_FILE"; exit 1; }
 
-echo "$SCRIPT_NAME: Uploading full bundle"
-ncftpput -u $RUSEFI_BUILD_FTP_USER -p $RUSEFI_BUILD_FTP_PASS $RUSEFI_FTP_SERVER . $FULL_BUNDLE_FILE
+if [ -n "$RUSEFI_FTP_SERVER" ]; then
+ echo "$SCRIPT_NAME: Uploading full bundle"
+ ncftpput -u $RUSEFI_BUILD_FTP_USER -p $RUSEFI_BUILD_FTP_PASS $RUSEFI_FTP_SERVER . $FULL_BUNDLE_FILE
+fi
 
 cd ..
 
@@ -112,8 +114,11 @@ cd $FOLDER
 zip -r ../$UPDATE_BUNDLE_FILE *
 cd ..
 ls -l $UPDATE_BUNDLE_FILE
-ncftpput -u "$RUSEFI_BUILD_FTP_USER" -p "$RUSEFI_BUILD_FTP_PASS" "$RUSEFI_FTP_SERVER" autoupdate "$UPDATE_BUNDLE_FILE"
+if [ -n "$RUSEFI_FTP_SERVER" ]; then
+ ncftpput -u "$RUSEFI_BUILD_FTP_USER" -p "$RUSEFI_BUILD_FTP_PASS" "$RUSEFI_FTP_SERVER" autoupdate "$UPDATE_BUNDLE_FILE"
+fi
 cd ..
+mv temp/$UPDATE_BUNDLE_FILE artifacts
 
 echo "$SCRIPT_NAME: We are back in root directory"
 
