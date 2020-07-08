@@ -3,6 +3,7 @@ package com.rusefi.binaryprotocol;
 import com.opensr5.Logger;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.IoStream;
 import etch.util.CircularByteBuffer;
 import net.jcip.annotations.ThreadSafe;
 
@@ -29,6 +30,12 @@ public class IncomingDataBuffer {
     public IncomingDataBuffer(Logger logger) {
         this.cbb = new CircularByteBuffer(BUFFER_SIZE);
         this.logger = logger;
+    }
+
+    public static IncomingDataBuffer createDataBuffer(IoStream stream, Logger logger) {
+        IncomingDataBuffer incomingData = new IncomingDataBuffer(logger);
+        stream.setInputListener(incomingData::addData);
+        return incomingData;
     }
 
     public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
