@@ -4,6 +4,7 @@ import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.opensr5.io.WriteStream;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 
 import java.io.IOException;
@@ -48,4 +49,8 @@ public interface IoStream extends WriteStream {
     boolean isClosed();
 
     void close();
+
+    void setDataBuffer(IncomingDataBuffer dataBuffer);
+
+    IncomingDataBuffer getDataBuffer();
 }

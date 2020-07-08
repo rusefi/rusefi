@@ -54,8 +54,9 @@ public class PortHolder {
             return false;
         }
         IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(stream, logger);
+        stream.setDataBuffer(dataBuffer);
         synchronized (portLock) {
-            bp = new BinaryProtocol(linkManager, logger, stream, dataBuffer);
+            bp = new BinaryProtocol(linkManager, logger, stream, stream.getDataBuffer());
             portLock.notifyAll();
         }
 
