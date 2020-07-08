@@ -5,6 +5,7 @@ import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
 
 /**
@@ -18,6 +19,7 @@ public class SerialIoStreamJSerialComm implements IoStream {
     private SerialPort sp;
     private final String port;
     private final Logger logger;
+    private final IncomingDataBuffer dataBuffer;
 
     /**
      * @see #openPort(String, Logger)
@@ -26,6 +28,12 @@ public class SerialIoStreamJSerialComm implements IoStream {
         this.sp = sp;
         this.port = port;
         this.logger = logger;
+        dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
+    }
+
+    @Override
+    public IncomingDataBuffer getDataBuffer() {
+        return dataBuffer;
     }
 
     @Override

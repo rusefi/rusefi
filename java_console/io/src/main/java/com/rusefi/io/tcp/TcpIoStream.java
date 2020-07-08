@@ -2,6 +2,7 @@ package com.rusefi.io.tcp;
 
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.ByteReader;
 import com.rusefi.io.IoStream;
 
@@ -20,6 +21,7 @@ public class TcpIoStream implements IoStream {
     private final OutputStream output;
     private final Logger logger;
     private boolean isClosed;
+    private final IncomingDataBuffer dataBuffer;
 
     public TcpIoStream(Logger logger, Socket socket) throws IOException {
         this(logger, new BufferedInputStream(socket.getInputStream()), socket.getOutputStream());
@@ -33,6 +35,12 @@ public class TcpIoStream implements IoStream {
             throw new NullPointerException("output");
         this.output = output;
         this.input = input;
+        dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
+    }
+
+    @Override
+    public IncomingDataBuffer getDataBuffer() {
+        return dataBuffer;
     }
 
     @Override
