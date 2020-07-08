@@ -12,10 +12,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install ncftp and doxygen
+    - name: Install ncftp, kicad, and doxygen
       run: |
         sudo apt-get update
-        sudo apt-get install ncftp doxygen
+        sudo apt-get install ncftp kicad doxygen
 
     - name: Set FTP variables
       run: |
