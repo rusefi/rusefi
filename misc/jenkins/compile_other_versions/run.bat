@@ -14,12 +14,21 @@ rem #
 rem # see gen_config.sh where short<>long name dictionary is hard-coded
 rem #
 
+call misc\jenkins\compile_other_versions\compile_and_upload.bat frankenso frankenso_na6
+IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
+IF %ERRORLEVEL% NEQ 0 EXIT /B 1
+pwd
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat kinetis kinetis
+IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
+IF %ERRORLEVEL% NEQ 0 EXIT /B 1
+
 call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre_f4 rusefi_mre_f4.ini
 IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 IF %ERRORLEVEL% NEQ 0 EXIT /B 1
 pwd
 
-rem call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre_f4_slave rusefi_microrusefi.ini
+rem call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre_f4_slave rusefi_mre_f7.ini
 rem IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 rem IF %ERRORLEVEL% NEQ 0 EXIT /B 1
 rem pwd
@@ -29,18 +38,30 @@ IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 IF %ERRORLEVEL% NEQ 0 EXIT /B 1
 pwd
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat kinetis kinetis
-IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
-IF %ERRORLEVEL% NEQ 0 EXIT /B 1
+set f7_console_setting=firmware\config\boards\nucleo_f767\rusefi_console_properties.xml
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat frankenso frankenso_na6
+rem                     folter_name configuration_name [optional .ini file name]
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre_f7 rusefi_microrusefi.ini %f7_console_setting%
 IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 IF %ERRORLEVEL% NEQ 0 EXIT /B 1
 pwd
 
-set f7_console_setting=firmware\config\boards\nucleo_f767\rusefi_console_properties.xml
+rem call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre_f7_test rusefi_microrusefi.ini %f7_console_setting%
+rem IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
+rem IF %ERRORLEVEL% NEQ 0 EXIT /B 1
+rem pwd
 
-rem                     folter_name configuration_name [optional .ini file name]
+call misc\jenkins\compile_other_versions\compile_and_upload.bat prometheus prometheus_405 prometheus_405.ini
+IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
+IF %ERRORLEVEL% NEQ 0 EXIT /B 1
+pwd
+
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat prometheus prometheus_469 prometheus_469.ini
+IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
+IF %ERRORLEVEL% NEQ 0 EXIT /B 1
+pwd
 
 call misc\jenkins\compile_other_versions\compile_and_upload.bat proteus     proteus_f4 rusefi_proteus_f4.ini
 IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
@@ -51,16 +72,6 @@ call misc\jenkins\compile_other_versions\compile_and_upload.bat proteus     prot
 IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 IF %ERRORLEVEL% NEQ 0 EXIT /B 1
 pwd
-
-call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre_f7 rusefi_mre_f7.ini %f7_console_setting%
-IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
-IF %ERRORLEVEL% NEQ 0 EXIT /B 1
-pwd
-
-rem call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre_f7_test rusefi_microrusefi.ini %f7_console_setting%
-rem IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
-rem IF %ERRORLEVEL% NEQ 0 EXIT /B 1
-rem pwd
 
 call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f746 stm32f746_nucleo no %f7_console_setting%
 IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
@@ -79,7 +90,6 @@ rem IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 rem IF %ERRORLEVEL% NEQ 0 EXIT /B 1
 rem pwd
 
-
 call misc\jenkins\compile_other_versions\compile_and_upload.bat prometheus prometheus_405 rusefi_prometheus_405.ini
 IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 IF %ERRORLEVEL% NEQ 0 EXIT /B 1
@@ -90,4 +100,3 @@ call misc\jenkins\compile_other_versions\compile_and_upload.bat prometheus prome
 IF %ERRORLEVEL% NEQ 0 echo ERROR invoking compile_and_upload.bat
 IF %ERRORLEVEL% NEQ 0 EXIT /B 1
 pwd
-

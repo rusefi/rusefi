@@ -106,7 +106,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     private final Thread hook = new Thread(() -> closeComposites());
 
-    public BinaryProtocol(LinkManager linkManager, final Logger logger, IoStream stream) {
+    public BinaryProtocol(LinkManager linkManager, final Logger logger, IoStream stream, IncomingDataBuffer dataBuffer) {
         this.linkManager = linkManager;
         this.logger = logger;
         this.stream = stream;
@@ -118,7 +118,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             }
         };
 
-        incomingData = createDataBuffer(stream, logger);
+        incomingData = dataBuffer;
         Runtime.getRuntime().addShutdownHook(hook);
         rpmListener = value -> {
             if (value <= COMPOSITE_OFF_RPM) {
@@ -129,12 +129,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 needCompositeLogger = false;
             }
         };
-    }
-
-    public static IncomingDataBuffer createDataBuffer(IoStream stream, Logger logger) {
-        IncomingDataBuffer incomingData = new IncomingDataBuffer(logger);
-        stream.setInputListener(incomingData::addData);
-        return incomingData;
     }
 
     public static void sleep(int millis) {

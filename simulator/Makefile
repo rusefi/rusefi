@@ -100,7 +100,11 @@ endif
 #
 
 # Define project name here
-PROJECT = rusefi_simulator
+ifeq ($(OS),Windows_NT)
+  PROJECT = rusefi_simulator.exe
+else
+  PROJECT = rusefi_simulator
+endif
 PROJECT_DIR = ../firmware
 
 # Imported source files and paths
@@ -213,6 +217,8 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 ##############################################################################
 # Compiler settings
 #
+
+$(info OS is [${OS}])
 
 ifeq ($(OS),Windows_NT)
   # ChibiOS seem to require 32 bit compiler at least on Windows
