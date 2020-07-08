@@ -109,7 +109,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             byte command = (byte) dis.read();
             System.out.println("Got [" + (char) command + "/" + command + "] command");
 
-            TcpIoStream stream = new TcpIoStream(logger, linkManager, clientSocket);
+            TcpIoStream stream = new TcpIoStream(logger, clientSocket);
             if (command == COMMAND_HELLO) {
                 stream.sendPacket((TS_OK + Fields.TS_SIGNATURE).getBytes(), logger);
             } else if (command == COMMAND_PROTOCOL) {
@@ -156,10 +156,12 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     public static Packet readPromisedBytes(DataInputStream in, int length) throws IOException {
+        if (length < 0)
+            throw new IllegalArgumentException(String.format("Negative %d %x", length, length));
         byte[] packet = new byte[length];
         int size = in.read(packet);
         if (size != packet.length)
-            throw new IllegalStateException();
+            throw new IllegalStateException(size + " promised but " + packet.length + " arrived");
         int crc = in.readInt();
         if (crc != IoHelper.getCrc32(packet))
             throw new IllegalStateException("CRC mismatch");

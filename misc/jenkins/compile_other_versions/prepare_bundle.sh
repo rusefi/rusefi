@@ -4,11 +4,6 @@ SCRIPT_NAME="prepare_bundle.sh"
 echo "Entering $SCRIPT_NAME with $BUNDLE_NAME"
 echo "RUSEFI_BUILD_FTP_USER=$RUSEFI_BUILD_FTP_USER"
 
-if [ -z $RUSEFI_BUILD_FTP_USER ]; then
-    echo "RUSEFI_BUILD_FTP_USER not set - not packaging"
-    exit 0
-fi
-
 TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
 
 export FOLDER="temp/snapshot_${TIMESTAMP}_${BUNDLE_NAME}_rusefi"

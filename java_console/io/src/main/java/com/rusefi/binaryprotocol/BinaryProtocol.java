@@ -118,7 +118,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             }
         };
 
-        incomingData = createDataBuffer(stream, logger);
+        incomingData = stream.getDataBuffer();
         Runtime.getRuntime().addShutdownHook(hook);
         rpmListener = value -> {
             if (value <= COMPOSITE_OFF_RPM) {
@@ -129,12 +129,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 needCompositeLogger = false;
             }
         };
-    }
-
-    public static IncomingDataBuffer createDataBuffer(IoStream stream, Logger logger) {
-        IncomingDataBuffer incomingData = new IncomingDataBuffer(logger);
-        stream.setInputListener(incomingData::addData);
-        return incomingData;
     }
 
     public static void sleep(int millis) {
