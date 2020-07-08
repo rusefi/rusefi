@@ -26,4 +26,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: console junit
-          path: ./rusefi/java_console/build/*.txt
+          path: ./java_console/build/*.txt
