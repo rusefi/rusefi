@@ -27,16 +27,16 @@ TEST(idle, fsioPidParameters) {
 	unitTestEngine = engine;
 
 	engineConfiguration->idleRpmPid.offset = 40;
-	engineConfiguration->idleRpmPid2.offset = 50;
+	engineConfiguration->acIdleExtraOffset = 10;
 
 	engineConfiguration->idleRpmPid.minValue = 30;
-	engineConfiguration->idleRpmPid2.minValue = 60;
+	engineConfiguration->acIdleExtraMin = 30;
 
 	engineConfiguration->useFSIO12ForIdleOffset = true;
-	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch cfg_idleRpmPid_offset cfg_idleRpmPid2_offset if" PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch 0 cfg_acIdleExtraOffset if" PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->useFSIO13ForIdleMinValue = true;
-	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch cfg_idleRpmPid_minValue cfg_idleRpmPid2_minValue if" PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch 0 cfg_acIdleExtraMin if" PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_EQ(1, hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 	setMockVoltage(engineConfiguration->acSwitchAdc, 0 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -44,14 +44,14 @@ TEST(idle, fsioPidParameters) {
 
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ(40, getIdlePidOffset());
-	ASSERT_EQ(30, ENGINE(fsioState.fsioIdleMinValue));
+	ASSERT_EQ(30, getIdlePidMinValue());
 
 	setMockVoltage(engineConfiguration->acSwitchAdc, 5 PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(0, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ(50, getIdlePidOffset());
-	ASSERT_EQ(60, ENGINE(fsioState.fsioIdleMinValue));
+	ASSERT_EQ(60, getIdlePidMinValue());
 
 
 	// todo finish this unit test!

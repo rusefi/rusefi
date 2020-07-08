@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 06 06:07:02 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 08 03:02:21 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -10,6 +10,8 @@ public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2712;
 	public static final int acCutoffHighRpm_offset = 1494;
 	public static final int acCutoffLowRpm_offset = 1492;
+	public static final int acIdleExtraMin_offset = 761;
+	public static final int acIdleExtraOffset_offset = 711;
 	public static final int acIdleRpmBump_offset = 1496;
 	public static final int acRelayPin_offset = 830;
 	public static final int acRelayPinMode_offset = 831;
@@ -1042,7 +1044,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 877441627;
+	public static final int SIGNATURE_HASH = 35698347;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1281,7 +1283,7 @@ public class Fields {
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.07.06.all.877441627";
+	public static final String TS_SIGNATURE = "rusEFI 2020.07.08.all.35698347";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -1297,7 +1299,6 @@ public class Fields {
 	public static final int unused2516_offset = 2516;
 	public static final int unused6312_offset = 6312;
 	public static final int unused696_offset = 696;
-	public static final int unused711_offset = 711;
 	public static final int unused806_offset = 806;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
@@ -1337,11 +1338,11 @@ public class Fields {
 	public static final int unusedBit_251_27_offset = 976;
 	public static final int unusedBit_251_28_offset = 976;
 	public static final int unusedBit_251_29_offset = 976;
-	public static final int unusedBit_283_30_offset = 976;
-	public static final int unusedBit_283_31_offset = 976;
+	public static final int unusedBit_284_30_offset = 976;
+	public static final int unusedBit_284_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
 	public static final int unusedFlexFuelSensor_offset = 3100;
-	public static final int unusedHere_offset = 761;
+	public static final int unusedHere_offset = 762;
 	public static final int unusedHereWeHave_offset = 1464;
 	public static final int unusedOldBiquad_offset = 2332;
 	public static final int unusedSomethingWasHere_offset = 2417;
@@ -1665,7 +1666,7 @@ public class Fields {
 	public static final Field CANTXPIN = Field.create("CANTXPIN", 708, FieldType.INT8, brain_pin_e);
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 709, FieldType.INT8, brain_pin_e);
 	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 710, FieldType.INT8);
-	public static final Field UNUSED711 = Field.create("UNUSED711", 711, FieldType.INT8);
+	public static final Field ACIDLEEXTRAOFFSET = Field.create("ACIDLEEXTRAOFFSET", 711, FieldType.INT8);
 	public static final Field UNUSEDAT712 = Field.create("UNUSEDAT712", 712, FieldType.INT);
 	public static final Field UNUSEDAT716 = Field.create("UNUSEDAT716", 716, FieldType.INT);
 	public static final Field UNUSEDAT720 = Field.create("UNUSEDAT720", 720, FieldType.INT);
@@ -1722,6 +1723,7 @@ public class Fields {
 	public static final Field HIP9011INTHOLDPINMODE = Field.create("HIP9011INTHOLDPINMODE", 755, FieldType.INT8, pin_output_mode_e);
 	public static final Field VERBOSECANBASEADDRESS = Field.create("VERBOSECANBASEADDRESS", 756, FieldType.INT);
 	public static final Field MC33_HVOLT = Field.create("MC33_HVOLT", 760, FieldType.INT8);
+	public static final Field ACIDLEEXTRAMIN = Field.create("ACIDLEEXTRAMIN", 761, FieldType.INT8);
 	public static final Field GPIOPINMODES1 = Field.create("GPIOPINMODES1", 764, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES2 = Field.create("GPIOPINMODES2", 765, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES3 = Field.create("GPIOPINMODES3", 766, FieldType.INT8, pin_output_mode_e);
@@ -1885,8 +1887,8 @@ public class Fields {
 	public static final Field UNUSEDBIT_251_27 = Field.create("UNUSEDBIT_251_27", 976, FieldType.BIT, 27);
 	public static final Field UNUSEDBIT_251_28 = Field.create("UNUSEDBIT_251_28", 976, FieldType.BIT, 28);
 	public static final Field UNUSEDBIT_251_29 = Field.create("UNUSEDBIT_251_29", 976, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_283_30 = Field.create("UNUSEDBIT_283_30", 976, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_283_31 = Field.create("UNUSEDBIT_283_31", 976, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_284_30 = Field.create("UNUSEDBIT_284_30", 976, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_284_31 = Field.create("UNUSEDBIT_284_31", 976, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN1 = Field.create("ETBIO1_CONTROLPIN1", 982, FieldType.INT8, brain_pin_e);
@@ -2653,7 +2655,7 @@ public class Fields {
 	CANTXPIN,
 	CANRXPIN,
 	THROTTLEPEDALUPPINMODE,
-	UNUSED711,
+	ACIDLEEXTRAOFFSET,
 	UNUSEDAT712,
 	UNUSEDAT716,
 	UNUSEDAT720,
@@ -2710,6 +2712,7 @@ public class Fields {
 	HIP9011INTHOLDPINMODE,
 	VERBOSECANBASEADDRESS,
 	MC33_HVOLT,
+	ACIDLEEXTRAMIN,
 	GPIOPINMODES1,
 	GPIOPINMODES2,
 	GPIOPINMODES3,
@@ -2871,8 +2874,8 @@ public class Fields {
 	UNUSEDBIT_251_27,
 	UNUSEDBIT_251_28,
 	UNUSEDBIT_251_29,
-	UNUSEDBIT_283_30,
-	UNUSEDBIT_283_31,
+	UNUSEDBIT_284_30,
+	UNUSEDBIT_284_31,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN1,

@@ -82,13 +82,13 @@ public:
 	Engine *engine = unitTestEngine;
 	EXPAND_Engine;
 #endif
-
+		float result = parameters->offset;
 #if EFI_FSIO
 			if (engineConfiguration->useFSIO12ForIdleOffset) {
-				return ENGINE(fsioState.fsioIdleOffset);
+				return result + ENGINE(fsioState.fsioIdleOffset);
 			}
 #endif /* EFI_FSIO */
-		return parameters->offset;
+		return result;
 	}
 
 	float getMinValue() const override {
@@ -96,21 +96,25 @@ public:
 	Engine *engine = unitTestEngine;
 	EXPAND_Engine;
 #endif
+	float result = parameters->minValue;
 #if EFI_FSIO
 			if (engineConfiguration->useFSIO13ForIdleMinValue) {
-				return ENGINE(fsioState.fsioIdleMinValue);
+				return result + ENGINE(fsioState.fsioIdleMinValue);
 			}
 #endif /* EFI_FSIO */
-		return parameters->minValue;
+		return result;
 	}
 };
 
 PidWithOverrides idlePid;
 #endif /* EFI_IDLE_PID_CIC */
 
-
 float getIdlePidOffset() {
 	return idlePid.getOffset();
+}
+
+float getIdlePidMinValue() {
+	return idlePid.getMinValue();
 }
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
@@ -315,8 +319,11 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		rpm = GET_RPM();
 	}
 
+
+	// #1553 we need to give FSIO variable offset or minValue a chance
+	bool acToggleJustTouched = (getTimeNowUs() - engine->acSwitchLastChangeTime) < MS2US(500);
 	// check if within the dead zone
-	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
+	if (!acToggleJustTouched && absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
 		engine->engineState.idle.idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything
 		return engine->engineState.idle.baseIdlePosition;

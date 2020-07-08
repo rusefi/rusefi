@@ -1,0 +1,29 @@
+name: rusEFI console
+
+on: [push,pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '8'
+
+      - name: Test Compiler
+        run: javac -version
+
+      - name: Build console
+        working-directory: ./java_console
+        run: ant
+
+      - name: Upload junit results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: console junit
+          path: ./java_console/build/*.txt

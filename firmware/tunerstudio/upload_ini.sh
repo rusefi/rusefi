@@ -6,14 +6,16 @@ if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
  exit 0
 fi
 
+pwd
 echo -e "\nUploading .ini files"
+ls -l .
 
 for f in *.ini; do if [[ -f "$f" ]]; then
   echo "Processing file $f:"
   sig=$(grep "^ *signature *=" $f | cut -f2 -d "=")
   if [ ! -z "$sig" -a "$sig" != " " ]; then
     echo "* found signature: $sig"
-    if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-z0-9]+)\.([0-9]+) ]]; then
+    if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-z0-9_]+)\.([0-9]+) ]]; then
       year=${BASH_REMATCH[1]}
       month=${BASH_REMATCH[2]}
       day=${BASH_REMATCH[3]}
