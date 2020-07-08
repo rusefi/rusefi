@@ -3,6 +3,7 @@ package com.rusefi.io.serial;
 import com.opensr5.Logger;
 import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStateListener;
 import com.opensr5.io.DataListener;
@@ -53,7 +54,7 @@ public class PortHolder {
             return false;
         }
         synchronized (portLock) {
-            bp = new BinaryProtocol(linkManager, logger, stream);
+            bp = new BinaryProtocol(linkManager, logger, stream, IncomingDataBuffer.createDataBuffer(stream, logger));
             portLock.notifyAll();
         }
 
