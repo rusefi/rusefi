@@ -35,6 +35,7 @@ lcov --capture --directory . --output-file coverage.info
 echo -e "\nGenerating HTML"
 genhtml coverage.info --output-directory gcov
 
-echo -e "\nUploading HTML"
-
-ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
+if [ -n "$RUSEFI_FTP_SERVER" ]; then
+ echo -e "\nUploading HTML"
+ ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
+fi
