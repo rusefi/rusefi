@@ -159,7 +159,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         byte[] packet = new byte[length];
         int size = in.read(packet);
         if (size != packet.length)
-            throw new IllegalStateException();
+            throw new IllegalStateException(size + " promised but " + packet.length + " arrived");
         int crc = in.readInt();
         if (crc != IoHelper.getCrc32(packet))
             throw new IllegalStateException("CRC mismatch");
