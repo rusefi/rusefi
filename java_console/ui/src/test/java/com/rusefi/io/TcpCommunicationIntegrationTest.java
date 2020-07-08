@@ -13,7 +13,6 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
-import org.junit.Ignore;
 
 import java.io.*;
 import java.net.Socket;
@@ -52,7 +51,7 @@ public class TcpCommunicationIntegrationTest {
         assertTrue(failedCountDownLatch.await(30, TimeUnit.SECONDS));
     }
 
-    @Ignore
+    @Test
     public void testConnectAndTransmitImageOverTcpIp() throws InterruptedException {
         ScalarIniField iniField = createIniField(Fields.CYLINDERSCOUNT);
         int value = 239;
