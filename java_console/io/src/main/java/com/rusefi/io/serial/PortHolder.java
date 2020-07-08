@@ -49,11 +49,11 @@ public class PortHolder {
         MessagesCentral.getInstance().postMessage(logger, getClass(), "Opening port: " + port);
 
         stream = streamFactory.call();
-        IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(stream, logger);
         if (stream == null) {
             // error already reported
             return false;
         }
+        IncomingDataBuffer dataBuffer = stream.getDataBuffer();
         synchronized (portLock) {
             bp = new BinaryProtocol(linkManager, logger, stream, dataBuffer);
             portLock.notifyAll();
