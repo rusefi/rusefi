@@ -78,7 +78,7 @@ public class TcpCommunicationIntegrationTest {
                 System.out.println("Failed");
             }
         });
-        assertTrue(connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+        assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
 
         assertEquals(0, server.unknownCommands.get());
 
@@ -112,7 +112,7 @@ public class TcpCommunicationIntegrationTest {
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
         LinkManager clientManager = new LinkManager(LOGGER);
-        clientManager.startAndConnect(Integer.toString(proxyPort), new ConnectionStateListener() {
+        clientManager.startAndConnect(LOCALHOST + ":" + proxyPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 connectionEstablishedCountDownLatch.countDown();
@@ -123,7 +123,7 @@ public class TcpCommunicationIntegrationTest {
                 System.out.println("Failed");
             }
         });
-        assertTrue(connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+        assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
 
         clientManager.stop();
     }
