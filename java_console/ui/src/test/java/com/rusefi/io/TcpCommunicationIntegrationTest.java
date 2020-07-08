@@ -3,6 +3,7 @@ package com.rusefi.io;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.Listener;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
@@ -56,7 +57,7 @@ public class TcpCommunicationIntegrationTest {
         int value = 239;
         ConfigurationImage serverImage = prepareImage(value, iniField);
         int port = 6100;
-        BinaryProtocolServer server = createVirtualController(serverImage, port);
+        BinaryProtocolServer server = createVirtualController(serverImage, port, null);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
@@ -88,13 +89,27 @@ public class TcpCommunicationIntegrationTest {
     }
 
     @Test
-    public void testProxy() throws InterruptedException, IOException {
+    public void testProxy() throws InterruptedException {
         ConfigurationImage serverImage = prepareImage(239, createIniField(Fields.CYLINDERSCOUNT));
         int controllerPort = 6102;
-        BinaryProtocolServer server = createVirtualController(serverImage, controllerPort);
+
+        CountDownLatch serverCreated = new CountDownLatch(1);
+        BinaryProtocolServer server = createVirtualController(serverImage, controllerPort, new Listener() {
+            @Override
+            public void onResult(Object parameter) {
+                serverCreated.countDown();
+            }
+        });
+        assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
         int proxyPort = 6103;
 
-        BinaryProtocolProxy.createProxy(new Socket("localhost", controllerPort), proxyPort);
+        Socket targetEcuSocket;
+        try {
+            targetEcuSocket = new Socket(LOCALHOST, controllerPort);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to connect to controller " + LOCALHOST + ":" + controllerPort);
+        }
+        BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
@@ -121,7 +136,7 @@ public class TcpCommunicationIntegrationTest {
     }
 
     @NotNull
-    private BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port) {
+    private BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port, Listener serverSocketCreationCallback) {
         BinaryProtocolState state = new BinaryProtocolState();
         state.setController(ci);
         state.setCurrentOutputs(new byte[1 + Fields.TS_OUTPUT_SIZE]);
@@ -129,7 +144,7 @@ public class TcpCommunicationIntegrationTest {
         LinkManager linkManager = new LinkManager(LOGGER);
         linkManager.setConnector(LinkConnector.getDetachedConnector(state));
         BinaryProtocolServer server = new BinaryProtocolServer(LOGGER);
-        server.start(linkManager, port);
+        server.start(linkManager, port, serverSocketCreationCallback);
         return server;
     }
 

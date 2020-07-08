@@ -2,6 +2,7 @@ package com.rusefi.io.tcp;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
+import com.rusefi.Listener;
 import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.binaryprotocol.IoHelper;
@@ -38,10 +39,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     public void start(LinkManager linkManager) {
-        start(linkManager, DEFAULT_PROXY_PORT);
+        start(linkManager, DEFAULT_PROXY_PORT, null);
     }
 
-    public void start(LinkManager linkManager, int port) {
+    public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback) {
         logger.info("BinaryProtocolServer on " + port);
 
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
@@ -52,10 +53,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             }
         };
 
-        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, logger);
+        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, logger, serverSocketCreationCallback);
     }
 
-    public static void tcpServerSocket(int port, String threadName, Function<Socket, Runnable> clientSocketRunnableFactory, final Logger logger) {
+    public static void tcpServerSocket(int port, String threadName, Function<Socket, Runnable> clientSocketRunnableFactory, final Logger logger, Listener serverSocketCreationCallback) {
         Runnable runnable = new Runnable() {
             @SuppressWarnings("InfiniteLoopStatement")
             @Override
@@ -67,6 +68,8 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                     logger.error("Error binding server socket" + e);
                     return;
                 }
+                if (serverSocketCreationCallback!=null)
+                    serverSocketCreationCallback.onResult(null);
 
                 try {
                     while (true) {

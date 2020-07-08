@@ -24,7 +24,7 @@ public class BinaryProtocolProxy {
                 };
             }
         };
-        BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Logger.CONSOLE);
+        BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Logger.CONSOLE, null);
     }
 
     private static void runProxy(Socket targetEcuSocket, Socket clientSocket) {
