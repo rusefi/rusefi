@@ -664,7 +664,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e canRxPin;set_can_rx_pin X
 
 pin_input_mode_e throttlePedalUpPinMode;
-		uint8_t acIdleExtraOffset;;"Percent", 1, 0, 0, 255, 0
+		uint8_t fsio_visible acIdleExtraOffset;+Additional idle PID offset while A/C is active;"Percent", 1, 0, 0, 255, 0
 
 	int unusedAt712;;"units", 1, 0, -20, 100, 0
 	int unusedAt716;;"units", 1, 0, -20, 100, 0
@@ -726,7 +726,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
 	uint8_t mc33_hvolt;;"v",        1,     0,  0,    100,  0
-	uint8_t acIdleExtraMin;;"Percent", 1, 0, 0, 255, 0
+	uint8_t fsio_visible acIdleExtraMin;+Additional idle PID minValue while A/C is active;"Percent", 1, 0, 0, 255, 0
 
 	uint8_t[2] unusedHere;;"units", 1, 0, -20, 100, 0
 

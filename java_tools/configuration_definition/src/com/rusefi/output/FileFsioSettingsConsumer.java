@@ -5,7 +5,6 @@ import com.rusefi.ReaderState;
 import com.rusefi.util.LazyFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.rusefi.ConfigDefinition.EOL;

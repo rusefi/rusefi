@@ -41,11 +41,13 @@ java -DSystemOut.name=gen_config \
 
 if [ -z "${TS_PATH}" ]; then
  echo "TS_PATH not defined"
-else
- echo "This would automatically copy latest file to 'dev' TS project at ${TS_PATH}"
- cp -v tunerstudio/generated/rusefi.ini $TS_PATH/dev/projectCfg/mainController.ini
- cp -v tunerstudio/generated/rusefi_microrusefi.ini $TS_PATH/dev_mre/projectCfg/mainController.ini
+ # it's nice to have default location
+ TS_PATH="${HOMEDRIVE}${HOMEPATH}\Documents\TunerStudioProjects"
 fi
+
+echo "This would automatically copy latest file to 'dev' TS projects to ${TS_PATH}"
+cp -v tunerstudio/generated/rusefi.ini $TS_PATH/dev/projectCfg/mainController.ini
+cp -v tunerstudio/generated/rusefi_mre_f4.ini $TS_PATH/mre_f4/projectCfg/mainController.ini
 
 for BOARD in "microrusefi mre_f7" "microrusefi mre_f4" "frankenso frankenso_na6" "prometheus prometheus_469" "prometheus prometheus_405" "proteus proteus_f7" "proteus proteus_f4"; do
  BOARD_NAME="${BOARD% *}"
