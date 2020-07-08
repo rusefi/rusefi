@@ -1,9 +1,9 @@
 package com.rusefi.ui;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -37,13 +37,16 @@ public class FormulasPane {
      */
     private final JPanel content = new JPanel(new BorderLayout());
     private final JPanel formulaProxy = new JPanel(new BorderLayout());
+    private final UIContext uiContext;
     private boolean isPaused;
 
-    private JPanel liveDocs = LiveDocPanel.createLiveDocumentationPanel();
+    private JPanel liveDocs;
 
-    public FormulasPane() {
+    public FormulasPane(UIContext uiContext) {
+        this.uiContext = uiContext;
 
         JPanel vertical = new JPanel(new VerticalFlowLayout());
+        liveDocs = LiveDocPanel.createLiveDocumentationPanel(uiContext);
         vertical.add(liveDocs);
         vertical.add(formulaProxy);
 
@@ -56,7 +59,7 @@ public class FormulasPane {
         saveImage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fileName = FileLog.getDate() + "_formulas.png";
+                String fileName = Logger.getDate() + "_formulas.png";
 
                 UiUtils.saveImageWithPrompt(fileName, formulaProxy, formulaProxy);
             }
@@ -107,7 +110,7 @@ public class FormulasPane {
     }
 
     private void updateFormula() {
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
         if (bp == null)
             return;
         ConfigurationImage ci = bp.getControllerConfiguration();

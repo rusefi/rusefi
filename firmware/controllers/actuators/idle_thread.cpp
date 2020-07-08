@@ -57,6 +57,12 @@ static Logging *logger;
 
 EXTERN_ENGINE;
 
+#if EFI_UNIT_TEST
+	Engine *unitTestEngine;
+#endif
+
+static bool prettyClose = false;
+
 static bool shouldResetPid = false;
 // The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.
 // The throttle pedal can be pressed for a long time, making the PID data obsolete (thus the reset is required).
@@ -72,7 +78,12 @@ PidCic idlePid;
 class PidWithOverrides : public Pid {
 public:
 	float getOffset() const override {
-#if EFI_FSIO && ! EFI_UNIT_TEST
+#if EFI_UNIT_TEST
+	Engine *engine = unitTestEngine;
+	EXPAND_Engine;
+#endif
+
+#if EFI_FSIO
 			if (engineConfiguration->useFSIO12ForIdleOffset) {
 				return ENGINE(fsioState.fsioIdleOffset);
 			}
@@ -81,7 +92,11 @@ public:
 	}
 
 	float getMinValue() const override {
-#if EFI_FSIO && ! EFI_UNIT_TEST
+#if EFI_UNIT_TEST
+	Engine *engine = unitTestEngine;
+	EXPAND_Engine;
+#endif
+#if EFI_FSIO
 			if (engineConfiguration->useFSIO13ForIdleMinValue) {
 				return ENGINE(fsioState.fsioIdleMinValue);
 			}
@@ -92,6 +107,11 @@ public:
 
 PidWithOverrides idlePid;
 #endif /* EFI_IDLE_PID_CIC */
+
+
+float getIdlePidOffset() {
+	return idlePid.getOffset();
+}
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
 static SimplePwm idleSolenoidOpen("idle open");
@@ -318,7 +338,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 
 	// Apply PID Multiplier if used
 	if (CONFIG(useIacPidMultTable)) {
-		float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
+		float engineLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 		float multCoef = iacPidMultMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, engineLoad);
 		// PID can be completely disabled of multCoef==0, or it just works as usual if multCoef==1
 		newValue = interpolateClamped(0.0f, engine->engineState.idle.baseIdlePosition, 1.0f, newValue, multCoef);
@@ -369,8 +389,8 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
 		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
-			// todo: print each bit using 'getIdle_state_e' method
-			scheduleMsg(logger, "state %d", engine->engineState.idle.idleState);
+			scheduleMsg(logger, "Idle state %s%s", getIdle_state_e(engine->engineState.idle.idleState),
+					(prettyClose ? " pretty close" : ""));
 			idlePid.showPidStatus(logger, "idle");
 		}
 
@@ -483,14 +503,13 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 			}
 		}
 
+		prettyClose = absF(iacPosition - engine->engineState.idle.currentIdlePosition) < idlePositionSensitivityThreshold;
 		// The threshold is dependent on IAC type (see initIdleHardware())
-		if (absF(iacPosition - engine->engineState.idle.currentIdlePosition) < idlePositionSensitivityThreshold) {
-			engine->engineState.idle.idleState = (idle_state_e)(engine->engineState.idle.idleState | PWM_PRETTY_CLOSE);
+		if (prettyClose) {
 			return; // value is pretty close, let's leave the poor valve alone
 		}
 
 		engine->engineState.idle.currentIdlePosition = iacPosition;
-		engine->engineState.idle.idleState = (idle_state_e)(engine->engineState.idle.idleState | ADJUSTING);
 #if ! EFI_UNIT_TEST
 		applyIACposition(engine->engineState.idle.currentIdlePosition);
 #endif /* EFI_UNIT_TEST */

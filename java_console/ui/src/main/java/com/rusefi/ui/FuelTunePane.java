@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.Logger;
 import com.romraider.Settings;
 import com.romraider.maps.Scale;
 import com.romraider.maps.Table;
@@ -13,7 +14,6 @@ import com.rusefi.autotune.FuelAutoTune;
 import com.rusefi.autotune.Result;
 import com.rusefi.autotune.AfrDataPoint;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
@@ -51,10 +51,12 @@ public class FuelTunePane {
     private final JButton upload = new JButton("Upload");
     private final JCheckBox collect = new JCheckBox("enable");
     private final JButton clean = new JButton("clear");
+    private final UIContext uiContext;
     private byte[] newVeMap;
     private DataOutputStream dos;
 
-    public FuelTunePane(Node config) {
+    public FuelTunePane(UIContext uiContext, Node config) {
+        this.uiContext = uiContext;
         final JLabel incomingBufferSize = new JLabel();
 
         JButton runLogic = new JButton("one iteration");
@@ -122,8 +124,8 @@ public class FuelTunePane {
         GaugesGrid grid = new GaugesGrid(1, 3);
         rightPanel.add(grid.panel);
 
-        grid.panel.add(GaugesGridElement.read(config.getChild("1"), Sensor.RPM));
-        grid.panel.add(GaugesGridElement.read(config.getChild("2"), Sensor.AFR));
+        grid.panel.add(GaugesGridElement.read(uiContext, config.getChild("1"), Sensor.RPM));
+        grid.panel.add(GaugesGridElement.read(uiContext, config.getChild("2"), Sensor.AFR));
 
         JPanel middlePanel = new JPanel(new GridLayout(1, 2));
         middlePanel.add(veTable);
@@ -136,7 +138,7 @@ public class FuelTunePane {
 
     private void uploadCurrentResult() {
         byte[] newVeMap = FuelTunePane.this.newVeMap;
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
         if (newVeMap == null || bp == null)
             return;
         ConfigurationImage ci = bp.getControllerConfiguration().clone();
@@ -154,7 +156,7 @@ public class FuelTunePane {
                 });
             }
         };
-        UploadChanges.scheduleUpload(ci, afterBurn);
+        UploadChanges.scheduleUpload(uiContext, ci, afterBurn);
     }
 
     private void doClean() {
@@ -256,7 +258,7 @@ public class FuelTunePane {
 
     private DataOutputStream getTuneLogStream() {
         if (dos == null) {
-            String fileName = FileLog.DIR + "tune_" + FileLog.getDate() + ".txt";
+            String fileName = Logger.DIR + "tune_" + Logger.getDate() + ".txt";
             try {
                 dos = new DataOutputStream(new FileOutputStream(fileName));
             } catch (FileNotFoundException e) {
@@ -313,7 +315,7 @@ public class FuelTunePane {
     }
 
     private byte[] reloadVeTable() {
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
 
         byte[] content = bp.getControllerConfiguration().getContent();
         loadData(veTable.getXAxis(), content, veRpmOffset);
@@ -329,7 +331,7 @@ public class FuelTunePane {
     }
 
     private void loadArray(double[] array, int offset) {
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
         if (bp == null) {
             FileLog.MAIN.logLine("bp not ready");
             return;

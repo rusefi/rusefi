@@ -19,34 +19,46 @@
 extern IdleController idleControllerInstance;
 extern int timeNowUs;
 
-#define Q(x) #x
-#define QUOTE(x) Q(x)
+extern Engine *unitTestEngine;
 
 TEST(idle, fsioPidParameters) {
 	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);
 
-	// todo finish this unit test!
+	unitTestEngine = engine;
+
+	engineConfiguration->idleRpmPid.offset = 40;
+	engineConfiguration->idleRpmPid2.offset = 50;
+
+	engineConfiguration->idleRpmPid.minValue = 30;
+	engineConfiguration->idleRpmPid2.minValue = 60;
+
 	engineConfiguration->useFSIO12ForIdleOffset = true;
 	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch cfg_idleRpmPid_offset cfg_idleRpmPid2_offset if" PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->useFSIO13ForIdleMinValue = true;
 	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch cfg_idleRpmPid_minValue cfg_idleRpmPid2_minValue if" PASS_ENGINE_PARAMETER_SUFFIX);
 
-	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	ASSERT_EQ(1, hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
-//	ASSERT_EQ(0, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	setMockVoltage(engineConfiguration->acSwitchAdc, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ(1, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-//	setMockVoltage(engineConfiguration->acSwitchAdc, 5 PASS_ENGINE_PARAMETER_SUFFIX);
-//	ASSERT_EQ(1, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	ASSERT_EQ(40, getIdlePidOffset());
+	ASSERT_EQ(30, ENGINE(fsioState.fsioIdleMinValue));
 
+	setMockVoltage(engineConfiguration->acSwitchAdc, 5 PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ(0, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
+
+	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	ASSERT_EQ(50, getIdlePidOffset());
+	ASSERT_EQ(60, ENGINE(fsioState.fsioIdleMinValue));
+
+
+	// todo finish this unit test!
 //	timeNowUs = MS2US(700);
-
 	idleControllerInstance.PeriodicTask();
-
 //	ASSERT_EQ(0, engine->acSwitchLastChangeTime);
 //	ASSERT_EQ(1, engine->acSwitchState);
-
 }
 
 // see also util.pid test

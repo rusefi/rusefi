@@ -10,7 +10,7 @@
             <ecuid>RUSEFI</ecuid>
             <make>rusEfi</make>
             <model>rusEfi</model>
-            <filesize>@@total_config_size@@</filesize>
+            <filesize>@@TOTAL_CONFIG_SIZE@@</filesize>
         </romid>
 
         <table type="3D" name="Ignition Advance"

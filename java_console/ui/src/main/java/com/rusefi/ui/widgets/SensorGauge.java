@@ -4,6 +4,7 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.GaugesPanel;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 import eu.hansolo.steelseries.gauges.Radial;
 import eu.hansolo.steelseries.tools.BackgroundColor;
@@ -27,10 +28,10 @@ public class SensorGauge {
     private static final String HINT_LINE_1 = "Double-click to detach";
     private static final String HINT_LINE_2 = "Right-click to change";
 
-    public static Component createGauge(Sensor sensor, GaugeChangeListener listener, JMenuItem extraMenuItem) {
+    public static Component createGauge(UIContext uiContext, Sensor sensor, GaugeChangeListener listener, JMenuItem extraMenuItem) {
         JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
 
-        createGaugeBody(sensor, wrapper, listener, extraMenuItem);
+        createGaugeBody(uiContext, sensor, wrapper, listener, extraMenuItem);
 
         return wrapper;
     }
@@ -45,8 +46,8 @@ public class SensorGauge {
         void onSensorChange(Sensor sensor);
     }
 
-    public static void createGaugeBody(final Sensor sensor, final JPanelWithListener wrapper, final GaugeChangeListener listener,
-                                        final JMenuItem extraMenuItem) {
+    public static void createGaugeBody(UIContext uiContext, final Sensor sensor, final JPanelWithListener wrapper, final GaugeChangeListener listener,
+                                       final JMenuItem extraMenuItem) {
         final Radial gauge = createRadial(sensor.getName(), sensor.getUnits(), sensor.getMaxValue(), sensor.getMinValue());
 
         UiUtils.setToolTip(gauge, HINT_LINE_1, HINT_LINE_2);
@@ -68,9 +69,9 @@ public class SensorGauge {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
-                    showPopupMenu(e, wrapper, listener, extraMenuItem);
+                    showPopupMenu(uiContext, e, wrapper, listener, extraMenuItem);
                 } else if (e.getClickCount() == 2) {
-                    handleDoubleClick(e, gauge, sensor);
+                    handleDoubleClick(uiContext, e, gauge, sensor);
                 }
             }
         };
@@ -81,16 +82,16 @@ public class SensorGauge {
         UiUtils.trueLayout(wrapper.getParent());
     }
 
-    private static void showPopupMenu(MouseEvent e, JPanelWithListener wrapper, GaugeChangeListener listener,
+    private static void showPopupMenu(UIContext uiContext, MouseEvent e, JPanelWithListener wrapper, GaugeChangeListener listener,
                                       JMenuItem extraMenuItem) {
         JPopupMenu pm = new JPopupMenu();
-        fillGaugeMenuItems(pm, wrapper, listener, extraMenuItem);
+        fillGaugeMenuItems(uiContext, pm, wrapper, listener, extraMenuItem);
         if (extraMenuItem != null)
             pm.add(extraMenuItem);
         pm.show(e.getComponent(), e.getX(), e.getY());
     }
 
-    private static void fillGaugeMenuItems(JPopupMenu popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener, final JMenuItem extraMenuItem) {
+    private static void fillGaugeMenuItems(UIContext uiContext, JPopupMenu popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener, final JMenuItem extraMenuItem) {
         for (final SensorCategory sc : SensorCategory.values()) {
             JMenuItem cmi = new JMenu(sc.getName());
             popupMenu.add(cmi);
@@ -100,7 +101,7 @@ public class SensorGauge {
                 mi.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        createGaugeBody(s, wrapper, listener, extraMenuItem);
+                        createGaugeBody(uiContext, s, wrapper, listener, extraMenuItem);
                         listener.onSensorChange(s);
                     }
                 });
@@ -109,9 +110,9 @@ public class SensorGauge {
         }
     }
 
-    private static void handleDoubleClick(MouseEvent e, Radial gauge, Sensor sensor) {
+    private static void handleDoubleClick(UIContext uiContext, MouseEvent e, Radial gauge, Sensor sensor) {
         int width = gauge.getSize().width;
-        final DetachedSensor ds = new DetachedSensor(sensor, width);
+        final DetachedSensor ds = new DetachedSensor(uiContext, sensor, width);
 
         ds.show(e);
     }

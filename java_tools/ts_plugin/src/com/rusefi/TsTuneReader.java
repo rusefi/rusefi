@@ -9,24 +9,20 @@ import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 
 public class TsTuneReader {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         String ecuName = "dev";
 
         Msq tune = readTsTune(ecuName);
         System.out.println(tune);
     }
 
-    public static Msq readTsTune(String ecuName) {
+    public static Msq readTsTune(String ecuName) throws Exception {
         String fileName = getTsTuneFileName(ecuName);
-        try {
-            return XmlUtil.readModel(Msq.class, fileName);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
+        return XmlUtil.readModel(Msq.class, fileName);
     }
 
     @NotNull
-    private static String getTsTuneFileName(String ecuName) {
+    public static String getTsTuneFileName(String ecuName) {
         JFileChooser fr = new JFileChooser();
         FileSystemView fw = fr.getFileSystemView();
         File defaultDirectory = fw.getDefaultDirectory();

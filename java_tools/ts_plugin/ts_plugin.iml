@@ -11,5 +11,9 @@
     <orderEntry type="module" module-name="shared_ui" />
     <orderEntry type="library" name="TunerStudioPluginAPI" level="project" />
     <orderEntry type="module" module-name="ts_plugin_launcher" />
+    <orderEntry type="library" name="org.mockito:mockito-all:1.10.19" level="project" />
+    <orderEntry type="library" name="json-simple" level="project" />
+    <orderEntry type="library" name="httpclient" level="project" />
+    <orderEntry type="module" module-name="models" />
   </component>
 </module>

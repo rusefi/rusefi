@@ -49,6 +49,14 @@ floatms_t getCrankshaftRevolutionTimeMs(int rpm) {
 	return 360 * getOneDegreeTimeMs(rpm);
 }
 
+float getFuelingLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return ENGINE(engineState.fuelingLoad);
+}
+
+float getIgnitionLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return ENGINE(engineState.ignitionLoad);
+}
+
 /**
  * @brief Returns engine load according to selected engine_load_mode
  *
@@ -269,6 +277,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 static const int order_1_2[] = {1, 2};
 
 static const int order_1_2_3[] = {1, 2, 3};
+static const int order_1_3_2[] = {1, 3, 2};
 // 4 cylinder
 
 static const int order_1_THEN_3_THEN_4_THEN2[] = { 1, 3, 4, 2 };
@@ -317,6 +326,7 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return 2;
 // 3 cylinder
 	case FO_1_2_3:
+	case FO_1_3_2:
 		return 3;
 // 4 cylinder
 	case FO_1_3_4_2:
@@ -401,6 +411,8 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 // 3 cylinder
 	case FO_1_2_3:
 		return order_1_2_3[index];
+	case FO_1_3_2:
+		return order_1_3_2[index];
 // 4 cylinder
 	case FO_1_3_4_2:
 		return order_1_THEN_3_THEN_4_THEN2[index];

@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets;
 
+import com.rusefi.FileLog;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -84,12 +85,13 @@ public class PotCommand {
     public static void requestPotChange(int channel, int resistance) {
         if (resistance < 0 || resistance > 10000)
             throw new IllegalArgumentException("resistance: " + resistance);
-        CommandQueue.getInstance().write("pot " + channel + " " + resistance);
+        CommandQueue commandQueue = null;
+        commandQueue.write("pot " + channel + " " + resistance);
     }
 
     public static int getPotResistance(double vout, double vRef) {
         double r = getR1InVoltageDivider3(vout, vRef, EcuStimulator.getInstance().getInputs().getEngineLoadR2Resistance());
-        MessagesCentral.getInstance().postMessage(PotCommand.class, "VRef=" + vRef + ", needed resistance: " + r);
+        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, PotCommand.class, "VRef=" + vRef + ", needed resistance: " + r);
         // pot command accept resistance and does the conversion itself
         return (int) r;
     }

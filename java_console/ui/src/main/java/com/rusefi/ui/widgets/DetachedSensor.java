@@ -6,7 +6,7 @@ import com.rusefi.io.CommandQueue;
 import com.rusefi.io.IMethodInvocation;
 import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;
-import com.rusefi.ui.GaugesPanel;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 
@@ -62,20 +62,23 @@ public class DetachedSensor {
     private final JFrame frame;
     private final JPanel mockControlPanel = new JPanel(new BorderLayout());
     private Sensor sensor;
+    @org.jetbrains.annotations.NotNull
+    private final UIContext uiContext;
     private int width;
 
-    public DetachedSensor(Sensor sensor, int width) {
+    public DetachedSensor(UIContext uiContext, Sensor sensor, int width) {
+        this.uiContext = uiContext;
         this.width = width;
         frame = new JFrame();
         frame.setAlwaysOnTop(true);
         onChange(sensor);
 
-        GaugesPanel.DetachedRepository.INSTANCE.add(this);
+        uiContext.DetachedRepositoryINSTANCE.add(this);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                GaugesPanel.DetachedRepository.INSTANCE.remove(DetachedSensor.this);
+                uiContext.DetachedRepositoryINSTANCE.remove(DetachedSensor.this);
                 frame.dispose();
             }
         });
@@ -84,7 +87,7 @@ public class DetachedSensor {
 
     void create() {
         SensorGauge.GaugeChangeListener listener = this::onChange;
-        content.add(SensorGauge.createGauge(sensor, listener, null), BorderLayout.CENTER);
+        content.add(SensorGauge.createGauge(uiContext, sensor, listener, null), BorderLayout.CENTER);
         content.add(mockControlPanel, BorderLayout.SOUTH);
 
         frame.add(content);
@@ -105,7 +108,7 @@ public class DetachedSensor {
         mockControlPanel.removeAll();
         boolean isMockable = isMockable();
         if (isMockable) {
-            Component mockComponent = createMockVoltageSlider(sensor);
+            Component mockComponent = createMockVoltageSlider(uiContext.getCommandQueue(), sensor);
             mockControlPanel.add(mockComponent);
         }
         UiUtils.trueLayout(content);
@@ -118,7 +121,7 @@ public class DetachedSensor {
         return MOCKABLE.contains(sensor) && LinkManager.isSimulationMode;
     }
 
-    public static Component createMockVoltageSlider(final Sensor sensor) {
+    public static Component createMockVoltageSlider(CommandQueue commandQueue, final Sensor sensor) {
         final JSlider slider = new JSlider(0, _5_VOLTS_WITH_DECIMAL);
         slider.setLabelTable(SLIDER_LABELS);
         slider.setPaintLabels(true);
@@ -153,7 +156,6 @@ public class DetachedSensor {
 
         slider.addChangeListener(e -> {
             double value = slider.getValue() / 10.0;
-            CommandQueue commandQueue = CommandQueue.getInstance();
             pendingValue.set(value);
 
             /*
@@ -173,12 +175,12 @@ public class DetachedSensor {
         child.setProperty(YPOS, frame.getLocation().y);
     }
 
-    public static void create(Node child) {
+    public static void create(UIContext uiContext, Node child) {
         Sensor sensor = Sensor.lookup(child.getProperty(NAME, Sensor.RPM.name()), Sensor.RPM);
         int width = child.getIntProperty(WIDTH, 256);
         int xpos = child.getIntProperty(XPOS, 0);
         int ypos = child.getIntProperty(YPOS, 0);
-        DetachedSensor ds = new DetachedSensor(sensor, width);
+        DetachedSensor ds = new DetachedSensor(uiContext, sensor, width);
         ds.frame.setLocation(xpos, ypos);
         ds.frame.setVisible(true);
     }

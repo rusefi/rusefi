@@ -86,7 +86,8 @@ public class ECUEditorToolBar extends JToolBar {
                 Rom lastSelectedRom = ECUEditorManager.getECUEditor().getLastSelectedRom();
                 byte[] newVersion = ConfigurationImage.extractContent(lastSelectedRom.saveFile());
                 System.out.println("new version size: " + newVersion.length);
-                UploadChanges.scheduleUpload(new ConfigurationImage(newVersion));
+                throw new UnsupportedOperationException("disabled");
+                //UploadChanges.scheduleUpload(new ConfigurationImage(newVersion));
             }
         });
         downloadImage.addActionListener(new ActionListener() {
@@ -98,7 +99,8 @@ public class ECUEditorToolBar extends JToolBar {
         burnImage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CommandQueue.getInstance().write(Fields.CMD_WRITECONFIG);
+                throw new UnsupportedOperationException("Disabled");
+                //CommandQueue.getInstance().write(Fields.CMD_WRITECONFIG);
             }
         });
     }

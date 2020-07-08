@@ -2,6 +2,7 @@ package com.rusefi.etb;
 
 import com.rusefi.FileLog;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.ui.UIContext;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -39,14 +40,14 @@ public abstract class TestSequenceStep {
                 next.execute(executor);
             }
         } else {
-            MessagesCentral.getInstance().postMessage(TestSequenceStep.class, "ETB test sequence done!");
+            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, TestSequenceStep.class, "ETB test sequence done!");
         }
     }
 
     protected abstract void doJob();
 
-    public TestSequenceStep addNext(long duration, double position, Runnable onEachStep, Condition condition) {
-        return addNext(new EtbTarget(duration, position, onEachStep, condition));
+    public TestSequenceStep addNext(UIContext uiContext, long duration, double position, Runnable onEachStep, Condition condition) {
+        return addNext(new EtbTarget(uiContext, duration, position, onEachStep, condition));
     }
 
     public TestSequenceStep addNext(TestSequenceStep step) {

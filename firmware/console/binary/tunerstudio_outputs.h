@@ -95,7 +95,7 @@ typedef struct {
 
 	// air flow/mass measurment
 	scaled_voltage massAirFlowVoltage; // 26
-	scaled_channel<uint16_t, 100> massAirFlow; // 28
+	scaled_channel<uint16_t, PACK_MULT_MASS_FLOW> massAirFlow; // 28
 	scaled_pressure manifoldAirPressure; // 30
 	scaled_pressure baroPressure; // 32
 
@@ -181,17 +181,22 @@ typedef struct {
 	TsCalMode calibrationMode; // 132
 	uint8_t padding[1]; // 133
 
+	// Values used for load axes for fuel/ign tables
+	// These may or may not be the same value, depending on mode
+	scaled_channel<uint16_t, 100> fuelingLoad; // 134
+	scaled_channel<uint16_t, 100> ignitionLoad; // 136
+
 	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
-	int16_t engineMakeCodeNameCrc16; // 134
+	int16_t engineMakeCodeNameCrc16; // 138
 	// Errors
-	int totalTriggerErrorCounter; // 136
-	int orderingErrorCounter; // 140
-	int16_t warningCounter; // 144
-	int16_t lastErrorCode; // 146
-	int16_t recentErrorCodes[8]; // 148-162
+	int totalTriggerErrorCounter; // 140
+	int orderingErrorCounter; // 144
+	int16_t warningCounter; // 148
+	int16_t lastErrorCode; // 150
+	int16_t recentErrorCodes[8]; // 152-166
 
 	// Debug
-	float debugFloatField1; // 164
+	float debugFloatField1; // 168
 	float debugFloatField2;
 	float debugFloatField3;
 	float debugFloatField4;
@@ -202,24 +207,24 @@ typedef struct {
 	int debugIntField2;
 	int debugIntField3;
 	int16_t debugIntField4;
-	int16_t debugIntField5; // 206
+	int16_t debugIntField5; // 210
 
 	// accelerometer
-	int16_t accelerationX; // 208
-	int16_t accelerationY; // 210
+	int16_t accelerationX; // 212
+	int16_t accelerationY; // 214
 
 	// EGT
-	egt_values_s egtValues; // 212
+	egt_values_s egtValues; // 216
 
-	scaled_percent throttle2Position;    // 228
+	scaled_percent throttle2Position;    // 232
 
-	scaled_voltage rawTps1Primary;		// 230
-	scaled_voltage rawPpsPrimary;		// 232
-	scaled_voltage rawClt;				// 234
-	scaled_voltage rawIat;				// 236
-	scaled_voltage rawOilPressure;		// 238
+	scaled_voltage rawTps1Primary;		// 234
+	scaled_voltage rawPpsPrimary;		// 236
+	scaled_voltage rawClt;				// 238
+	scaled_voltage rawIat;				// 240
+	scaled_voltage rawOilPressure;		// 242
 
-	int16_t tuneCrc16; // 240
+	int16_t tuneCrc16; // 244
 	uint8_t unusedAtTheEnd[2]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon

@@ -2,13 +2,11 @@ package com.rusefi.ui.console;
 
 import com.rusefi.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.*;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
-import com.rusefi.ui.GaugesPanel;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
@@ -44,10 +42,27 @@ public class MainFrame {
         }
     };
 
+    public ConnectionStateListener listener;
+
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this.consoleUI = consoleUI;
 
         this.tabbedPane = tabbedPane;
+        listener = new ConnectionStateListener() {
+            @Override
+            public void onConnectionFailed() {
+            }
+
+            @Override
+            public void onConnectionEstablished() {
+                FileLog.MAIN.logLine("onConnectionEstablished");
+    //                tabbedPane.romEditorPane.showContent();
+                tabbedPane.settingsTab.showContent();
+                tabbedPane.logsManager.showContent();
+                tabbedPane.fuelTunePane.showContent();
+                new BinaryProtocolServer(FileLog.LOGGER).start(consoleUI.uiContext.getLinkManager());
+            }
+        };
     }
 
     private void windowOpenedHandler() {
@@ -60,7 +75,7 @@ public class MainFrame {
                 if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
                     long unixGmtTime = System.currentTimeMillis() / 1000L;
                     long withOffset = unixGmtTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
-                    CommandQueue.getInstance().write("set " +
+                    consoleUI.uiContext.getCommandQueue().write("set " +
                                     Fields.CMD_DATE +
                                     " " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
                             InvocationConfirmationListener.VOID, false);
@@ -68,7 +83,8 @@ public class MainFrame {
             }
         });
 
-        LinkManager.startAndConnect(consoleUI.port, new ConnectionStateListener() {
+        final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
+        linkManager.getConnector().connectAndReadConfiguration(new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
             }
@@ -76,15 +92,15 @@ public class MainFrame {
             @Override
             public void onConnectionEstablished() {
                 FileLog.MAIN.logLine("onConnectionEstablished");
-                tabbedPane.tableEditor.showContent();
+//                tabbedPane.romEditorPane.showContent();
                 tabbedPane.settingsTab.showContent();
                 tabbedPane.logsManager.showContent();
                 tabbedPane.fuelTunePane.showContent();
-                BinaryProtocolServer.start();
+                new BinaryProtocolServer(FileLog.LOGGER).start(linkManager);
             }
         });
 
-        LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, new EngineState.ValueCallback<String>() {
+        consoleUI.uiContext.getLinkManager().getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String firmwareVersion) {
                 Launcher.firmwareVersion.set(firmwareVersion);
@@ -111,9 +127,9 @@ public class MainFrame {
         Node root = getConfig().getRoot();
         root.setProperty("version", Launcher.CONSOLE_VERSION);
         root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
-        GaugesPanel.DetachedRepository.INSTANCE.saveConfig();
+        consoleUI.uiContext.DetachedRepositoryINSTANCE.saveConfig();
         getConfig().save();
-        BinaryProtocol bp = BinaryProtocolHolder.getInstance().getCurrentStreamState();
+        BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
         if (bp != null && !bp.isClosed)
             bp.close(); // it could be that serial driver wants to be closed explicitly
         System.exit(0);
