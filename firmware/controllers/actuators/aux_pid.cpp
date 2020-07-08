@@ -83,7 +83,7 @@ public:
 
 
 			float value = engine->triggerCentral.getVVTPosition();
-			float targetValue = table->getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
+			float targetValue = table->getValue(rpm, getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 			percent_t pwm = auxPid.getOutput(targetValue, value);
 			if (engineConfiguration->isVerboseAuxPid1) {

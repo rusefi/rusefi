@@ -5,6 +5,7 @@ import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
 import com.rusefi.TsTuneReader;
+import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
@@ -15,10 +16,11 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
+import com.rusefi.config.generated.Fields;
 
 public class TuneUploder {
     static Msq writeCurrentTune(ControllerAccess controllerAccess, String configurationName) {
-        Msq msq = Msq.create();
+        Msq msq = Msq.create(Fields.TOTAL_CONFIG_SIZE, Fields.TS_SIGNATURE);
         ControllerParameterServer controllerParameterServer = controllerAccess.getControllerParameterServer();
 
         Map<String, Constant> fileSystemValues = getFileSystemValues(configurationName);
@@ -29,7 +31,7 @@ public class TuneUploder {
                 handleParameter(configurationName, msq, controllerParameterServer, fileSystemValues, parameterName);
             }
 
-            String fileName = Msq.outputXmlFileName;
+            String fileName = Online.outputXmlFileName;
             msq.writeXmlFile(fileName);
             return msq;
         } catch (JAXBException | IOException | ControllerException e) {

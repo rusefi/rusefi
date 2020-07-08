@@ -6,6 +6,8 @@
 #define accelerometerSpiDevice_offset 2712
 #define acCutoffHighRpm_offset 1494
 #define acCutoffLowRpm_offset 1492
+#define acIdleExtraMin_offset 761
+#define acIdleExtraOffset_offset 711
 #define acIdleRpmBump_offset 1496
 #define acRelayPin_offset 830
 #define acRelayPinMode_offset 831
@@ -130,8 +132,6 @@
 #define auxTempSensor2_tempC_3_offset 2484
 #define auxValves1_offset 1816
 #define auxValves2_offset 1817
-#define auxVoltage1_offset 2713
-#define auxVoltage2_offset 2714
 #define BARO_CORR_SIZE 4
 #define baroCorrPressureBins_offset 1544
 #define baroCorrRpmBins_offset 1560
@@ -273,7 +273,7 @@
 #define cutSparkOnHardLimit_offset 1464
 #define cylinderBore_offset 408
 #define cylindersCount_offset 400
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "Mode40"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Mode43", "Mode44"
 #define debugMapAveraging_offset 807
 #define debugMode_offset 2092
 #define debugTriggerSync_offset 676
@@ -561,6 +561,7 @@
 #define GAUGE_NAME_FUEL_IAT_CORR "fuel: IAT correction"
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: Last injection"
+#define GAUGE_NAME_FUEL_LOAD "fuel: load"
 #define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term fuel trim"
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel ms"
@@ -570,6 +571,7 @@
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
 #define GAUGE_NAME_IAC "Idle Air Valve"
 #define GAUGE_NAME_IAT "IAT"
+#define GAUGE_NAME_IGNITION_LOAD "ign: load"
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
@@ -990,6 +992,7 @@
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_ANGLE 50
+#define PACK_MULT_MASS_FLOW 10
 #define PACK_MULT_MS 300
 #define PACK_MULT_PERCENT 100
 #define PACK_MULT_PRESSURE 30
@@ -1021,6 +1024,7 @@
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
 #define PROTOCOL_MSG "msg"
 #define PROTOCOL_OUTPIN "outpin"
+#define PROTOCOL_SIGNATURE_PREFIX "rusEFI "
 #define PROTOCOL_TACH_NAME "tach"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
 #define PROTOCOL_VERSION_TAG "rusEfiVersion"
@@ -1058,8 +1062,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.07.01
-#define SIGNATURE_HASH 129680412
+#define SIGNATURE_DATE 2020.07.08
+#define SIGNATURE_HASH 35698347
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1291,7 +1295,7 @@
 #define TS_HELLO_COMMAND 'S'
 #define TS_IO_TEST_COMMAND 'w'
 #define TS_OUTPUT_COMMAND 'O'
-#define TS_OUTPUT_SIZE 244
+#define TS_OUTPUT_SIZE 248
 #define TS_PAGE_COMMAND 'P'
 #define TS_PERF_TRACE_BEGIN 'r'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
@@ -1319,7 +1323,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.07.01.all.129680412"
+#define TS_SIGNATURE "rusEFI 2020.07.08.all.35698347"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
@@ -1335,7 +1339,6 @@
 #define unused2516_offset 2516
 #define unused6312_offset 6312
 #define unused696_offset 696
-#define unused711_offset 711
 #define unused806_offset 806
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_25_offset 1476
@@ -1353,6 +1356,8 @@
 #define unusedAt720_offset 720
 #define unusedAt724_offset 724
 #define unusedAtOldBoardConfigurationEnd_offset 1200
+#define unusedAuxVoltage1_TODO_332_offset 2713
+#define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_11_offset 976
 #define unusedBit_251_12_offset 976
@@ -1373,11 +1378,11 @@
 #define unusedBit_251_27_offset 976
 #define unusedBit_251_28_offset 976
 #define unusedBit_251_29_offset 976
-#define unusedBit_283_30_offset 976
-#define unusedBit_283_31_offset 976
+#define unusedBit_284_30_offset 976
+#define unusedBit_284_31_offset 976
 #define unusedBit_34_31_offset 76
 #define unusedFlexFuelSensor_offset 3100
-#define unusedHere_offset 761
+#define unusedHere_offset 762
 #define unusedHereWeHave_offset 1464
 #define unusedOldBiquad_offset 2332
 #define unusedSomethingWasHere_offset 2417

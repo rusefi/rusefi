@@ -1,5 +1,6 @@
 package com.rusefi.tools.online;
 
+import com.rusefi.shared.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import org.apache.http.HttpEntity;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Online {
+    public static final String outputXmlFileName = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
     private static final String url = "https://rusefi.com/online/upload.php";
 
     public static JSONArray upload(File fileName, String authTokenValue) throws IOException {
@@ -84,9 +86,9 @@ public class Online {
 
     private static JSONArray doUpload(String authToken, Msq tune) {
         try {
-            tune.writeXmlFile(Msq.outputXmlFileName);
+            tune.writeXmlFile(outputXmlFileName);
             // todo: network upload should not happen on UI thread
-            return upload(new File(Msq.outputXmlFileName), authToken);
+            return upload(new File(outputXmlFileName), authToken);
         } catch (JAXBException | IOException ex) {
             throw new IllegalStateException(ex);
         }

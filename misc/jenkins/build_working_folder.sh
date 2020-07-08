@@ -1,7 +1,7 @@
 #!/bin/sh
 
 FULL_BUNDLE_FILE="$BUNDLE_FULL_NAME.zip"
-UPDATE_BUNDLE_FILE="$BUNDLE_FULL_NAME_autoupdate.zip"
+UPDATE_BUNDLE_FILE="${BUNDLE_FULL_NAME}_autoupdate.zip"
 
 echo "Packaging temp/$FULL_BUNDLE_FILE file"
 
@@ -15,7 +15,7 @@ pwd
 # This working folder name starts with 'temp/'
 echo "$SCRIPT_NAME: Working folder: $FOLDER"
 mkdir $FOLDER
-echo $BUNDLE_FULL_NAME > $FOLDER/bundle_name.ini
+echo $BUNDLE_FULL_NAME > $FOLDER/bundle_name.txt
 
 CONSOLE_FOLDER="$FOLDER/console"
 DRIVERS_FOLDER="$FOLDER/drivers"
@@ -53,26 +53,29 @@ cp java_console/rusefi.xml                $CONSOLE_FOLDER
 
 cp misc/console_launcher/readme.html $FOLDER
 
-cp firmware/tunerstudio/$INI_FILE_OVERRIDE $FOLDER
+cp firmware/tunerstudio/generated/$INI_FILE_OVERRIDE $FOLDER
 # Unsetting since would not be used anywhere else
 INI_FILE_OVERRIDE=""
 RUSEFI_CONSOLE_SETTINGS=""
 
 # users probably do not really care for this file
-# cp firmware/svnversion.h %folder%
+# cp firmware/svnversion.h $FOLDER
 
 cp -r misc/install/openocd $CONSOLE_FOLDER
 cp -r misc/install/DfuSe $CONSOLE_FOLDER
 # 407 has additional version of firmware
-cp firmware/deliver/rusefi_no_asserts.bin $FOLDER
-cp firmware/deliver/rusefi_no_asserts.dfu $FOLDER
-# 746 builds one version at the moment
-# probably not needed cp firmware/build/rusefi.hex %folder%
-cp firmware/deliver/rusefi.bin $FOLDER
-# probably not needed cp firmware/build/rusefi.elf %folder%
-cp firmware/deliver/rusefi.dfu $FOLDER
+#cp firmware/deliver/rusefi_no_asserts.bin $FOLDER
+#cp firmware/deliver/rusefi_no_asserts.dfu $FOLDER
+# just for now - DFU work in progress
+#cp firmware/deliver/rusefi_no_asserts.hex $FOLDER
 
-if [ -n $BUNDLE_NAME ]; then
+cp firmware/deliver/rusefi.bin $FOLDER
+# probably not needed cp firmware/build/rusefi.elf $FOLDER
+cp firmware/deliver/rusefi.dfu $FOLDER
+# just for now - DFU work in progress
+cp firmware/deliver/rusefi.hex $FOLDER
+
+if [ -n "$BUNDLE_NAME" ]; then
     mv $FOLDER/rusefi.dfu $FOLDER/rusefi_$BUNDLE_NAME.dfu
 fi
 
@@ -100,12 +103,9 @@ cd ..
 mkdir -p artifacts
 mv temp/$FULL_BUNDLE_FILE artifacts
 
-echo "Removing more static content"
-rm -rf $CONSOLE_FOLDER/openocd
-rm -rf $CONSOLE_FOLDER/DfuSe
-rm -rf $CONSOLE_FOLDER/rusefi_simulator.exe
-
+echo "Removing static content from ${CONSOLE_FOLDER} and $DRIVERS_FOLDER"
 rm -rf $CONSOLE_FOLDER
+rm -rf $DRIVERS_FOLDER
 
 # for autoupdate we do not want the unique folder name with timestamp
 cd $FOLDER

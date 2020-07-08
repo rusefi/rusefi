@@ -38,6 +38,7 @@
 #include "memstreams.h"
 #include "console_io.h"
 #include "os_util.h"
+#endif // EFI_UNIT_TEST
 
 static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
 
@@ -47,17 +48,23 @@ public:
 	 * Class constructors are a great way to have simple initialization sequence
 	 */
 	IntermediateLogging() {
+#if ! EFI_UNIT_TEST
 		msObjectInit(&intermediateLoggingBuffer, intermediateLoggingBufferData, INTERMEDIATE_LOGGING_BUFFER_SIZE, 0);
+#endif // EFI_UNIT_TEST
 	}
+#if ! EFI_UNIT_TEST
 	MemoryStream intermediateLoggingBuffer;
+#endif // EFI_UNIT_TEST
 
 	// todo: look into chsnprintf once on Chibios 3
 	void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
+#if ! EFI_UNIT_TEST
 		intermediateLoggingBuffer.eos = 0; // reset
 		efiAssertVoid(CUSTOM_ERR_6603, getCurrentRemainingStack() > 128, "lowstck#1b");
 		chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
 		intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
 		logging->append((char *)intermediateLoggingBuffer.buffer);
+#endif // EFI_UNIT_TEST
 	}
 };
 
@@ -116,12 +123,14 @@ void appendFast(Logging *logging, const char *text) {
  * this method acquires system lock to guard the shared intermediateLoggingBuffer memory stream
  */
 void Logging::vappendPrintf(const char *fmt, va_list arg) {
+#if ! EFI_UNIT_TEST
 	efiAssertVoid(CUSTOM_ERR_6604, getCurrentRemainingStack() > 128, "lowstck#5b");
 	int wasLocked = lockAnyContext();
 	intermediateLogging.vappendPrintfI(this, fmt, arg);
 	if (!wasLocked) {
 		unlockAnyContext();
 	}
+#endif // EFI_UNIT_TEST
 }
 
 // todo: replace with logging->appendPrintf
@@ -134,11 +143,18 @@ void appendPrintf(Logging *logging, const char *fmt, ...) {
 }
 
 void Logging::appendPrintf(const char *fmt, ...) {
+#if EFI_UNIT_TEST
+	va_list ap;
+	va_start(ap, fmt);
+	vsprintf(buffer, fmt, ap);
+	va_end(ap);
+#else
 	efiAssertVoid(CUSTOM_APPEND_STACK, getCurrentRemainingStack() > 128, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
 	vappendPrintf(fmt, ap);
 	va_end(ap);
+#endif // EFI_UNIT_TEST
 }
 
 void Logging::initLoggingExt(const char *name, char *buffer, int bufferSize) {
@@ -190,6 +206,7 @@ static char header[16];
  * this method should invoked on the main thread only
  */
 void printWithLength(char *line) {
+#if ! EFI_UNIT_TEST
 	int len;
 	char *p;
 
@@ -222,6 +239,7 @@ void printWithLength(char *line) {
 
 	consoleOutputBuffer((const uint8_t *) header, strlen(header));
 	consoleOutputBuffer((const uint8_t *) line, p - line);
+#endif // EFI_UNIT_TEST
 }
 
 void appendMsgPrefix(Logging *logging) {
@@ -264,21 +282,6 @@ void printMsg(Logging *logger, const char *fmt, ...) {
 uint32_t remainingSize(Logging *logging) {
 	return logging->bufferSize - loggingSize(logging);
 }
-
-#else
-/* unit test implementations */
-void Logging::vappendPrintf(const char *fmt, va_list arg) {
-
-}
-
-void Logging::appendPrintf(const char *fmt, ...) {
-	va_list ap;
-	va_start(ap, fmt);
-	vsprintf(buffer, fmt, ap);
-	va_end(ap);
-}
-
-#endif /* ! EFI_UNIT_TEST */
 
 Logging::Logging() {
 }

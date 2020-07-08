@@ -6,21 +6,21 @@ arm-none-eabi-gcc -v
 rm -rf deliver
 mkdir deliver
 
-sh clean.sh
-echo "TIMESTAMP $(date "+%D %T.%2N")"
+#sh clean.sh
+#echo "TIMESTAMP $(date "+%D %T.%2N")"
 
-EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default_no_assert\\\" -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE"
-make -j4 DEBUG_LEVEL_OPT='-O2'
-EXTRA_PARAMS=""
+#EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default_no_assert\\\" -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE"
+#make -j4 DEBUG_LEVEL_OPT='-O2'
+#EXTRA_PARAMS=""
 
 # mv build/rusefi.elf deliver/rusefi_no_asserts.elf
-mv build/rusefi.bin deliver/rusefi_no_asserts.bin
+#mv build/rusefi.bin deliver/rusefi_no_asserts.bin
 # this file is needed for DFU generation
-mv build/rusefi.hex deliver/rusefi_no_asserts.hex
-echo "Release compilation results 1/2"
-echo "TIMESTAMP $(date "+%D %T.%2N")"
-ls -l build
-[ -e deliver/rusefi_no_asserts.hex ] || { echo "FAILED to compile NO ASSERTS version"; exit 1; }
+#mv build/rusefi.hex deliver/rusefi_no_asserts.hex
+#echo "Release compilation results 1/2"
+#echo "TIMESTAMP $(date "+%D %T.%2N")"
+#ls -l build
+#[ -e deliver/rusefi_no_asserts.hex ] || { echo "FAILED to compile NO ASSERTS version"; exit 1; }
 
 sh clean.sh
 echo "TIMESTAMP $(date "+%D %T.%2N")"

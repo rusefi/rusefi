@@ -4,6 +4,9 @@
  * The NXP MC33816 is a programmable gate driver IC for precision solenoid control applications.
  *
  *
+ * Useful wires:
+ * 5v, 3(3.3v), Gnd, 12v, VccIO(3v) SPI, DRVEN, RSTB
+ *
  * For MC33816 vs PT2000 differences see
  * https://www.nxp.com/docs/en/application-note/AN5203.pdf
  *

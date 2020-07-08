@@ -293,7 +293,7 @@ public class RecentCommands {
                     } catch (IOException e) {
                         throw new IllegalStateException(e);
                     }
-                    MessagesCentral.getInstance().postMessage(AverageAnglesUtil.class, report);
+                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AverageAnglesUtil.class, report);
                 }
             }
         });

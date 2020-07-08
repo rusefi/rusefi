@@ -12,5 +12,6 @@
     <orderEntry type="module" module-name="inifile" />
     <orderEntry type="library" name="httpclient" level="project" />
     <orderEntry type="library" name="json-simple" level="project" />
+    <orderEntry type="module" module-name="shared_io" />
   </component>
 </module>

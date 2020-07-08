@@ -6,6 +6,7 @@ import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +34,7 @@ public class PortDetector {
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<String> result = new AtomicReference<>();
         for (String serialPort : serialPorts) {
-            Thread thread = new Thread(new SerialAutoChecker(serialPort, portFound, result, callback));
+            Thread thread = new Thread(new SerialAutoChecker(FileLog.LOGGER, serialPort, portFound, result, callback));
             serialFinder.add(thread);
             thread.start();
         }

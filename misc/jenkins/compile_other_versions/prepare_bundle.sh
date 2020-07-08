@@ -11,7 +11,7 @@ fi
 
 TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
 
-export FOLDER="temp/snapshot_$TIMESTAMP_$BUNDLE_NAME_rusefi"
+export FOLDER="temp/snapshot_${TIMESTAMP}_${BUNDLE_NAME}_rusefi"
 
 export BUNDLE_FULL_NAME="rusefi_bundle_$BUNDLE_NAME"
 
