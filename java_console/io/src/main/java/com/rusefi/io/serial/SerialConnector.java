@@ -3,6 +3,7 @@ package com.rusefi.io.serial;
 import com.opensr5.Logger;
 import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
@@ -23,7 +24,21 @@ public class SerialConnector implements LinkConnector {
         this.linkManager = linkManager;
         this.logger = logger;
 
-        portHolder = new PortHolder(portName, linkManager, logger, streamFactory);
+        Callable<IoStream> ioStreamCallable = new Callable<IoStream>() {
+            @Override
+            public IoStream call() {
+                IoStream stream = streamFactory.call();
+                if (stream == null) {
+                    // error already reported
+                    return null;
+                }
+                IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(stream, logger);
+                stream.setDataBuffer(dataBuffer);
+                return stream;
+            }
+        };
+
+        portHolder = new PortHolder(portName, linkManager, logger, streamFactory, ioStreamCallable);
     }
 
     @Override
