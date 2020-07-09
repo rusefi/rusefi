@@ -89,6 +89,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     @SuppressWarnings("InfiniteLoopStatement")
     private void runProxy(LinkManager linkManager, Socket clientSocket) throws IOException {
         DataInputStream in = new DataInputStream(clientSocket.getInputStream());
+        TcpIoStream stream = new TcpIoStream(logger, clientSocket);
 
         while (true) {
             byte first = in.readByte();
@@ -109,7 +110,6 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             byte command = (byte) dis.read();
             System.out.println("Got [" + (char) command + "/" + command + "] command");
 
-            TcpIoStream stream = new TcpIoStream(logger, clientSocket);
             if (command == COMMAND_HELLO) {
                 stream.sendPacket((TS_OK + Fields.TS_SIGNATURE).getBytes(), logger);
             } else if (command == COMMAND_PROTOCOL) {
