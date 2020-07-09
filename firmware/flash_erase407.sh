@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # st-link_cli -c SWD ur -ME
 # 0x100000 would erase both code and configuration

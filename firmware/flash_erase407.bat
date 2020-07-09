@@ -1,2 +1,2 @@
 @echo off
-sh.exe flash_erase407.sh
+bash.exe flash_erase407.sh

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #set -x
 #TS_PATH="/home/<user>/TunerStudioProjects/"
@@ -11,7 +11,7 @@ rm gen_config_board.log
 
 mkdir build
 
-sh gen_signature.sh all
+bash gen_signature.sh all
 
 java -DSystemOut.name=gen_config \
  -Drusefi.generator.lazyfile.enabled=true \
@@ -52,11 +52,11 @@ cp -v tunerstudio/generated/rusefi_mre_f4.ini $TS_PATH/mre_f4/projectCfg/mainCon
 for BOARD in "microrusefi mre_f7" "microrusefi mre_f4" "frankenso frankenso_na6" "prometheus prometheus_469" "prometheus prometheus_405" "proteus proteus_f7" "proteus proteus_f4"; do
  BOARD_NAME="${BOARD% *}"
  BOARD_SHORT_NAME="${BOARD#* }"
- sh gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME
+ bash gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME
  [ $? -eq 0 ] || { echo "ERROR generating board $BOARD_NAME $BOARD_SHORT_NAME"; exit 1; }
 done
 
 cd config/boards/kinetis/config
-sh gen_config.sh
+bash gen_config.sh
 
 exit 0

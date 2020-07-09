@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # STM32F767 version of the firmware for Nucleo-F767ZI board
 
@@ -18,4 +18,4 @@ export EXTRA_PARAMS="-DDUMMY -DSTM32F767xx \
  -DCH_DBG_ENABLE_CHECKS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE"
 export DEBUG_LEVEL_OPT="-O2"
 
-sh config/boards/common_make.sh
+bash config/boards/common_make.sh

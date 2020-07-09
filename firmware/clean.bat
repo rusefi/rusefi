@@ -1,2 +1,2 @@
 @echo off
-sh.exe clean.sh
+bash.exe clean.sh
