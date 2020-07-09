@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "I am flash_openocd.sh"
 

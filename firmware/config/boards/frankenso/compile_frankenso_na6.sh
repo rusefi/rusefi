@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 cd ../../..
 
@@ -11,5 +11,5 @@ export EXTRA_PARAMS="-DDUMMY \
  \
  -DFIRMWARE_ID=\\\"frankensoNA6\\\""
 
-sh config/boards/common_make.sh
+bash config/boards/common_make.sh
 

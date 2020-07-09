@@ -1,5 +1,5 @@
 @echo off
-sh.exe gen_config.sh
+bash.exe gen_config.sh
 
 rem This would automatically copy latest file to 'dev' TS project
 set ts_path="%HOMEDRIVE%%HOMEPATH%\Documents\TunerStudioProjects"

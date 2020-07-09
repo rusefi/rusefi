@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 rm gen_live_documentation.log
 

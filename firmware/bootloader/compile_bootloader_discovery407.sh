@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "Starting compilation for Discovery-407"
 
@@ -14,4 +14,4 @@ export BOOTLOADER_CODE_DESTINATION_PATH=".."
 export BOOTLOADER_COMMENT="/*F4discovery*/"
 # set DEBUG_LEVEL_OPT="-O2"
 
-sh compile_bootloader.sh
+bash compile_bootloader.sh
