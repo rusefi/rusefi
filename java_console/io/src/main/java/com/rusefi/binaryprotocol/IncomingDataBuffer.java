@@ -117,6 +117,12 @@ public class IncomingDataBuffer {
         }
     }
 
+    public int getByte() throws EOFException {
+        synchronized (cbb) {
+            return cbb.getByte();
+        }
+    }
+
     public int getShort() throws EOFException {
         synchronized (cbb) {
             return cbb.getShort();
