@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # for example 'proteus'
 BOARD_NAME="$1"
@@ -19,7 +19,7 @@ echo "Entering $SCRIPT_NAME with 1=$1 2=$2 3=$3 4=$4"
 COMPILE_SCRIPT="compile_$BUNDLE_NAME.sh"
 
 cd firmware
-sh clean.sh
+bash clean.sh
 cd ..
 
 cd firmware/config/boards
@@ -28,7 +28,7 @@ cd $BOARD_NAME
 pwd
 echo "Invoking $COMPILE_SCRIPT"
 
-sh $COMPILE_SCRIPT
+bash $COMPILE_SCRIPT
 
 [ -e ../../../build/rusefi.hex ] || { echo "Just to confirm - FAILED to compile with $COMPILE_SCRIPT"; exit 1; }
 
@@ -36,6 +36,6 @@ cd ../../../..
 # We are back at root rusEfi folder
 pwd
 
-sh misc/jenkins/compile_other_versions/prepare_bundle.sh
+bash misc/jenkins/compile_other_versions/prepare_bundle.sh
 
 echo "exiting $SCRIPT_NAME"

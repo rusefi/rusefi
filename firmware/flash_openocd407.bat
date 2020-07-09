@@ -1,2 +1,2 @@
 @echo off
-sh.exe flash_openocd407.sh
+bash.exe flash_openocd407.sh

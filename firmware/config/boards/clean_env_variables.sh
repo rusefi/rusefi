@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "clean_env_variables.sh: Cleaning up so that no one inherits any of these values"
 export DEBUG_LEVEL_OPT=""

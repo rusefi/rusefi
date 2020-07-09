@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # This is a Linux/Unix script to do USB DFU (Device Firmware Update).
 #
 # The STM32 has multiple ways to write an application into the MCU.  One is

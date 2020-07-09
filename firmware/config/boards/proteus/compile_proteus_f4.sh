@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 cd ../../..
 
@@ -8,4 +8,4 @@ export EXTRA_PARAMS=-DSHORT_BOARD_NAME=proteus_f4
 
 
 
-sh config/boards/common_make.sh
+bash config/boards/common_make.sh

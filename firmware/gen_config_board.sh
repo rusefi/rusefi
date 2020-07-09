@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # file gen_config_board.sh
 
@@ -17,7 +17,7 @@ SHORT_BOARDNAME=$2
 
 echo "BOARDNAME=${BOARDNAME} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
 
-sh gen_signature.sh ${SHORT_BOARDNAME}
+bash gen_signature.sh ${SHORT_BOARDNAME}
 
 java -DSystemOut.name=gen_config_board \
 	-Drusefi.generator.lazyfile.enabled=true \

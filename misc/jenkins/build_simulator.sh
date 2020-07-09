@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "TIMESTAMP $(date "+%D %T.%2N") Building rusefi simulator"
 pwd
@@ -8,7 +8,7 @@ make -v
 mkdir -p out
 rm -rf build
 rm -rf .dep
-sh compile.sh
+bash compile.sh
 ls build
 cd ..
 [ -e simulator/build/rusefi_simulator.exe ] || { echo "SIMULATOR COMPILATION FAILED"; exit 1; }
