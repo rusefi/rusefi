@@ -14,13 +14,13 @@ import com.rusefi.io.LinkManager;
  * @author Andrey Belomutskiy
  *         3/3/14
  */
-public class SerialConnector implements LinkConnector {
+public class StreamConnector implements LinkConnector {
 
     private final PortHolder portHolder;
     private final Logger logger;
     private final LinkManager linkManager;
 
-    public SerialConnector(LinkManager linkManager, String portName, Logger logger, Callable<IoStream> streamFactory) {
+    public StreamConnector(LinkManager linkManager, String portName, Logger logger, Callable<IoStream> streamFactory) {
         this.linkManager = linkManager;
         this.logger = logger;
 
@@ -43,7 +43,7 @@ public class SerialConnector implements LinkConnector {
 
     @Override
     public void connectAndReadConfiguration(ConnectionStateListener listener) {
-        logger.info("SerialConnector: connecting");
+        logger.info("StreamConnector: connecting");
         portHolder.listener = listener;
         logger.info("scheduleOpening");
         linkManager.execute(new Runnable() {
@@ -70,7 +70,7 @@ public class SerialConnector implements LinkConnector {
         linkManager.execute(new Runnable() {
             @Override
             public void run() {
-                MessagesCentral.getInstance().postMessage(logger, SerialConnector.this.getClass(), "Restarting serial IO");
+                MessagesCentral.getInstance().postMessage(logger, StreamConnector.this.getClass(), "Restarting serial IO");
                 portHolder.close();
                 portHolder.connectAndReadConfiguration();
             }
