@@ -38,7 +38,7 @@ public class SerialConnector implements LinkConnector {
             }
         };
 
-        portHolder = new PortHolder(portName, linkManager, logger, streamFactory, ioStreamCallable);
+        portHolder = new PortHolder(portName, linkManager, logger, ioStreamCallable);
     }
 
     @Override

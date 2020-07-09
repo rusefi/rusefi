@@ -3,7 +3,6 @@ package com.rusefi.io.serial;
 import com.opensr5.Logger;
 import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStateListener;
 import com.opensr5.io.DataListener;
@@ -23,24 +22,21 @@ import java.awt.*;
 public class PortHolder {
     private final DataListener dataListener;
     private final Logger logger;
-    private final Callable<IoStream> streamFactory;
     private final Callable<IoStream> ioStreamCallable;
     private final LinkManager linkManager;
 
     public ConnectionStateListener listener;
     private final Object portLock = new Object();
     private final String port;
-    private IoStream stream;
 
     @Nullable
     private BinaryProtocol bp;
 
-    protected PortHolder(String port, LinkManager linkManager, Logger logger, Callable<IoStream> streamFactory, Callable<IoStream> ioStreamCallable) {
+    protected PortHolder(String port, LinkManager linkManager, Logger logger, Callable<IoStream> ioStreamCallable) {
         this.port = port;
         this.linkManager = linkManager;
         dataListener = freshData -> linkManager.getEngineState().processNewData(new String(freshData), LinkManager.ENCODER);
         this.logger = logger;
-        this.streamFactory = streamFactory;
         this.ioStreamCallable = ioStreamCallable;
     }
 
@@ -50,7 +46,7 @@ public class PortHolder {
 
         MessagesCentral.getInstance().postMessage(logger, getClass(), "Opening port: " + port);
 
-        stream = ioStreamCallable.call();
+        IoStream stream = ioStreamCallable.call();
         if (stream == null) {
             // error already reported
             return false;
