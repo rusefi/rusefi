@@ -140,4 +140,20 @@ public class IncomingDataBuffer {
             cbb.get(packet);
         }
     }
+
+    public byte readByte() throws EOFException {
+        return (byte) getByte();
+    }
+
+    public int readInt() throws EOFException {
+        return getInt();
+    }
+
+    public int read(byte[] packet) throws InterruptedException {
+        boolean timeout = waitForBytes("read", System.currentTimeMillis(), packet.length);
+        if (timeout)
+            throw new IllegalStateException("Timeout while waiting " + packet.length);
+        getData(packet);
+        return packet.length;
+    }
 }
