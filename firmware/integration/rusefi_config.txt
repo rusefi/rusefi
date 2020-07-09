@@ -684,7 +684,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 bit is_enabled_spi_1
 bit is_enabled_spi_2
 	bit is_enabled_spi_3
-	bit isSdCardEnabled
+	bit isSdCardEnabled;enable sd/disable sd
 	bit isFastAdcEnabled
 	bit isEngineControlEnabled
 	bit isHip9011Enabled
