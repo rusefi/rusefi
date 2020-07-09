@@ -50,7 +50,5 @@ public interface IoStream extends WriteStream {
 
     void close();
 
-    void setDataBuffer(IncomingDataBuffer dataBuffer);
-
     IncomingDataBuffer getDataBuffer();
 }
