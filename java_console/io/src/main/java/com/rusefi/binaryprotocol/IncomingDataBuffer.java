@@ -141,12 +141,18 @@ public class IncomingDataBuffer {
         }
     }
 
-    public byte readByte() throws EOFException {
+    public byte readByte() throws EOFException, InterruptedException {
+        boolean timeout = waitForBytes("readByte", System.currentTimeMillis(), 1);
+        if (timeout)
+            throw new IllegalStateException("Timeout in readByte");
         return (byte) getByte();
     }
 
-    public int readInt() throws EOFException {
-        return getInt();
+    public int readInt() throws EOFException, InterruptedException {
+        boolean timeout = waitForBytes("readInt", System.currentTimeMillis(), 4);
+        if (timeout)
+            throw new IllegalStateException("Timeout in readByte");
+        return swap32(getInt());
     }
 
     public int read(byte[] packet) throws InterruptedException {
