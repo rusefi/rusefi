@@ -19,6 +19,7 @@ import java.util.List;
 
 public class AndroidSerial implements IoStream {
     private static final int ST_CDC = 0x5740;
+    private final IncomingDataBuffer dataBuffer;
 
     private boolean isClosed;
     private UsbSerialPort usbSerialPort;
@@ -31,18 +32,14 @@ public class AndroidSerial implements IoStream {
         return prober.findAllDrivers(usbManager);
     }
 
-    public AndroidSerial(UsbSerialPort usbSerialPort) {
+    public AndroidSerial(UsbSerialPort usbSerialPort, Logger logger) {
         this.usbSerialPort = usbSerialPort;
-    }
-
-    @Override
-    public void setDataBuffer(IncomingDataBuffer dataBuffer) {
-
+        dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
     }
 
     @Override
     public IncomingDataBuffer getDataBuffer() {
-        return null;
+        return dataBuffer;
     }
 
     @Override

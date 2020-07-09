@@ -233,7 +233,7 @@ public class rusEFI extends Activity {
             port.open(connection);
             port.setParameters(115200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
 
-            AndroidSerial serial = new AndroidSerial(port);
+            AndroidSerial serial = new AndroidSerial(port, Logger.CONSOLE);
             mResultView.append("Switching to DFU\n");
             DfuHelper.sendDfuRebootCommand(serial, new StringBuilder(), Logger.CONSOLE);
 
