@@ -33,8 +33,7 @@ public class TcpIoStream implements IoStream {
             throw new NullPointerException("output");
         this.output = output;
         this.input = input;
-        IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
-        this.dataBuffer = dataBuffer;
+        this.dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
     }
 
     @Override
