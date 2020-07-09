@@ -2,5 +2,5 @@ rem This batch files reads rusefi_enums.h and produses auto_generated_enums.* fi
 
 rm gen_enum_to_string.log
 
-sh.exe gen_enum_to_string.sh
+bash.exe gen_enum_to_string.sh
 

@@ -1,3 +1,4 @@
+#!/bin/bash
 # Let's regenerate 'svnversion.h'
 # TODO: handle std err - for example, in case svn needs upgrade
 

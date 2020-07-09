@@ -1,2 +1,2 @@
 @echo off
-sh.exe compile_kinetis.sh
+bash.exe compile_kinetis.sh

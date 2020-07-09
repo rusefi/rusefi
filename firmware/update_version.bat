@@ -1,2 +1,2 @@
 @echo off
-sh.exe update_version.sh
+bash.exe update_version.sh

@@ -1,2 +1,2 @@
 @echo off
-sh.exe compile_frankenso_na6.sh
+bash.exe compile_frankenso_na6.sh
