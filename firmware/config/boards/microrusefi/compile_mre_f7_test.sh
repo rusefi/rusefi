@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 cd ../../..
 
@@ -8,4 +8,4 @@ export EXTRA_PARAMS=-DSHORT_BOARD_NAME=mre_f7
 export DEFAULT_ENGINE_TYPE="-DDEFAULT_ENGINE_TYPE=MRE_BOARD_TEST"
 export LDSCRIPT="config/boards/NUCLEO_F767/STM32F76xxI.ld"
 
-sh config/boards/common_make.sh
+bash config/boards/common_make.sh

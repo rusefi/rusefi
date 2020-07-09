@@ -1,2 +1,2 @@
 @echo off
-sh.exe compile_proteus_f7.sh
+bash.exe compile_proteus_f7.sh

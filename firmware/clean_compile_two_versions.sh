@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "Compiler gcc version"
 arm-none-eabi-gcc -v
@@ -6,7 +6,7 @@ arm-none-eabi-gcc -v
 rm -rf deliver
 mkdir deliver
 
-#sh clean.sh
+#bash clean.sh
 #echo "TIMESTAMP $(date "+%D %T.%2N")"
 
 #EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default_no_assert\\\" -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE"
@@ -22,7 +22,7 @@ mkdir deliver
 #ls -l build
 #[ -e deliver/rusefi_no_asserts.hex ] || { echo "FAILED to compile NO ASSERTS version"; exit 1; }
 
-sh clean.sh
+bash clean.sh
 echo "TIMESTAMP $(date "+%D %T.%2N")"
 EXTRA_PARAMS="-DDUMMY -DFIRMWARE_ID=\\\"default\\\""
 make -j4

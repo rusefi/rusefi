@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # STM32F767 version of the firmware for F767ZI chip NOT on Nucleo board, with a real oscilattor
 
@@ -17,5 +17,5 @@ export EXTRA_PARAMS="-DDUMMY -DSTM32F767xx \
 # Do not forget to comment out following line if looking to debug!
 export DEBUG_LEVEL_OPT="-O2"
 
-sh config/boards/common_make.sh
+bash config/boards/common_make.sh
 
