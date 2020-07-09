@@ -5,6 +5,7 @@ import com.opensr5.Logger;
 import com.rusefi.Listener;
 import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
@@ -48,7 +49,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             try {
                 runProxy(linkManager, clientSocket);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 logger.info("proxy connection: " + e);
             }
         };
@@ -87,9 +88,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
-    private void runProxy(LinkManager linkManager, Socket clientSocket) throws IOException {
-        DataInputStream in = new DataInputStream(clientSocket.getInputStream());
+    private void runProxy(LinkManager linkManager, Socket clientSocket) throws IOException, InterruptedException {
         TcpIoStream stream = new TcpIoStream(logger, clientSocket);
+        IncomingDataBuffer in = IncomingDataBuffer.createDataBuffer(stream, logger);
+        stream.setDataBuffer(in);
 
         while (true) {
             byte first = in.readByte();
@@ -165,6 +167,20 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         int crc = in.readInt();
         if (crc != IoHelper.getCrc32(packet))
             throw new IllegalStateException("CRC mismatch");
+        return new Packet(packet, crc);
+    }
+
+    public static Packet readPromisedBytes(IncomingDataBuffer in, int length) throws IOException, InterruptedException {
+        if (length < 0)
+            throw new IllegalArgumentException(String.format("Negative %d %x", length, length));
+        byte[] packet = new byte[length];
+        int size = in.read(packet);
+        if (size != packet.length)
+            throw new IllegalStateException(size + " promised but " + packet.length + " arrived");
+        int crc = in.readInt();
+        int fromPacket = IoHelper.getCrc32(packet);
+        if (crc != fromPacket)
+            throw new IllegalStateException("CRC mismatch " + crc + " vs " + fromPacket);
         return new Packet(packet, crc);
     }
 
