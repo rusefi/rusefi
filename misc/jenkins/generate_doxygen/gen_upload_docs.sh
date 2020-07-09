@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Should be executed from project root folder. Will try to upload to $RUSEFI_FTP_SERVER"
-
+pwd
 # ibom is part of Doxygen job simply in order to reduce workspace HDD usage on my tiny build server
 bash misc/jenkins/InteractiveHtmlBom/run.sh
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
