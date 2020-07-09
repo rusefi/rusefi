@@ -188,7 +188,11 @@ public class LinkManager {
                         int portPart = TcpConnector.getTcpPort(port);
                         String hostname = TcpConnector.getHostname(port);
                         socket = new Socket(hostname, portPart);
-                        return new TcpIoStream(logger, socket);
+                        TcpIoStream tcpIoStream = new TcpIoStream(logger, socket);
+                        IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(tcpIoStream, logger);
+                        tcpIoStream.setDataBuffer(dataBuffer);
+
+                        return tcpIoStream;
                     } catch (Throwable e) {
                         stateListener.onConnectionFailed();
                         return null;
@@ -196,20 +200,7 @@ public class LinkManager {
                 }
             };
 
-            Callable<IoStream> ioStreamCallable = new Callable<IoStream>() {
-                @Override
-                public IoStream call() {
-                    IoStream stream = streamFactory.call();
-                    if (stream == null) {
-                        // error already reported
-                        return null;
-                    }
-                    IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(stream, logger);
-                    stream.setDataBuffer(dataBuffer);
-                    return stream;
-                }
-            };
-            setConnector(new StreamConnector(this, port, logger, ioStreamCallable));
+            setConnector(new StreamConnector(this, port, logger, streamFactory));
             isSimulationMode = true;
         } else {
             Callable<IoStream> ioStreamCallable = () -> SerialIoStreamJSerialComm.openPort(port, logger);
