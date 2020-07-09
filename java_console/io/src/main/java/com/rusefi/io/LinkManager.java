@@ -6,6 +6,7 @@ import com.rusefi.Callable;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
@@ -195,15 +196,38 @@ public class LinkManager {
                 }
             };
 
-            
-
-            setConnector(new StreamConnector(this, port, logger, streamFactory));
+            Callable<IoStream> ioStreamCallable = new Callable<IoStream>() {
+                @Override
+                public IoStream call() {
+                    IoStream stream = streamFactory.call();
+                    if (stream == null) {
+                        // error already reported
+                        return null;
+                    }
+                    IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(stream, logger);
+                    stream.setDataBuffer(dataBuffer);
+                    return stream;
+                }
+            };
+            setConnector(new StreamConnector(this, port, logger, ioStreamCallable));
             isSimulationMode = true;
         } else {
             Callable<IoStream> ioStreamCallable = () -> SerialIoStreamJSerialComm.openPort(port, logger);
 
-
-            setConnector(new StreamConnector(this, port, logger, ioStreamCallable));
+            Callable<IoStream> ioStreamCallable1 = new Callable<IoStream>() {
+                @Override
+                public IoStream call() {
+                    IoStream stream = ioStreamCallable.call();
+                    if (stream == null) {
+                        // error already reported
+                        return null;
+                    }
+                    IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(stream, logger);
+                    stream.setDataBuffer(dataBuffer);
+                    return stream;
+                }
+            };
+            setConnector(new StreamConnector(this, port, logger, ioStreamCallable1));
         }
     }
 
