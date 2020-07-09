@@ -7,7 +7,7 @@ import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
-import com.rusefi.io.serial.SerialConnector;
+import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
@@ -179,7 +179,7 @@ public class LinkManager {
         if (isLogViewerMode(port)) {
             setConnector(LinkConnector.VOID);
         } else if (TcpConnector.isTcpPort(port)) {
-            setConnector(new SerialConnector(this, port, logger, new Callable<IoStream>() {
+            setConnector(new StreamConnector(this, port, logger, new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
                     Socket socket;
@@ -196,7 +196,7 @@ public class LinkManager {
             }));
             isSimulationMode = true;
         } else {
-            setConnector(new SerialConnector(this, port, logger, () -> SerialIoStreamJSerialComm.openPort(port, logger)));
+            setConnector(new StreamConnector(this, port, logger, () -> SerialIoStreamJSerialComm.openPort(port, logger)));
         }
     }
 
