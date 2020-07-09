@@ -24,15 +24,15 @@ public class TcpIoStream implements IoStream {
     private IncomingDataBuffer dataBuffer;
 
     public TcpIoStream(Logger logger, Socket socket) throws IOException {
-        InputStream input1 = new BufferedInputStream(socket.getInputStream());
+        InputStream input = new BufferedInputStream(socket.getInputStream());
         OutputStream output = socket.getOutputStream();
         this.logger = logger;
-        if (input1 == null)
+        if (input == null)
             throw new NullPointerException("input");
         if (output == null)
             throw new NullPointerException("output");
         this.output = output;
-        this.input = input1;
+        this.input = input;
     }
 
     private TcpIoStream(Logger logger, InputStream input, OutputStream output) {
