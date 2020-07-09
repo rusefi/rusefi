@@ -21,7 +21,7 @@ public class TcpIoStream implements IoStream {
     private final OutputStream output;
     private final Logger logger;
     private boolean isClosed;
-    private IncomingDataBuffer dataBuffer;
+    private final IncomingDataBuffer dataBuffer;
 
     public TcpIoStream(Logger logger, Socket socket) throws IOException {
         InputStream input = new BufferedInputStream(socket.getInputStream());
@@ -34,11 +34,6 @@ public class TcpIoStream implements IoStream {
         this.output = output;
         this.input = input;
         IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
-        setDataBuffer(dataBuffer);
-    }
-
-    @Override
-    public void setDataBuffer(IncomingDataBuffer dataBuffer) {
         this.dataBuffer = dataBuffer;
     }
 

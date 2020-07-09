@@ -211,8 +211,6 @@ public class LinkManager {
                         // error already reported
                         return null;
                     }
-                    IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(stream, logger);
-                    stream.setDataBuffer(dataBuffer);
                     return stream;
                 }
             };
