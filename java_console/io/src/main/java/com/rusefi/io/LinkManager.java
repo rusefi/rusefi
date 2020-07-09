@@ -189,8 +189,6 @@ public class LinkManager {
                         String hostname = TcpConnector.getHostname(port);
                         socket = new Socket(hostname, portPart);
                         TcpIoStream tcpIoStream = new TcpIoStream(logger, socket);
-                        IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(tcpIoStream, logger);
-                        tcpIoStream.setDataBuffer(dataBuffer);
 
                         return tcpIoStream;
                     } catch (Throwable e) {
