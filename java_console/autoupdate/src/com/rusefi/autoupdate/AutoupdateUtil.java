@@ -72,6 +72,10 @@ public class AutoupdateUtil {
         if (imgURL != null) {
             return new ImageIcon(imgURL);
         } else {
+            imgURL = AutoupdateUtil.class.getResource("/com/rusefi/" + strPath);
+            if (imgURL != null) {
+                return new ImageIcon(imgURL);
+            }
             return null;
         }
     }
