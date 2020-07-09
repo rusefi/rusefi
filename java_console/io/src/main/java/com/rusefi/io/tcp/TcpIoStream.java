@@ -35,18 +35,6 @@ public class TcpIoStream implements IoStream {
         this.input = input;
     }
 
-    private TcpIoStream(Logger logger, InputStream input, OutputStream output) {
-        this.logger = logger;
-        if (input == null)
-            throw new NullPointerException("input");
-        if (output == null)
-            throw new NullPointerException("output");
-        this.output = output;
-        this.input = input;
-        IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
-        setDataBuffer(dataBuffer);
-    }
-
     @Override
     public void setDataBuffer(IncomingDataBuffer dataBuffer) {
         this.dataBuffer = dataBuffer;
