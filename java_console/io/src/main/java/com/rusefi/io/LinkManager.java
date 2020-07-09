@@ -179,7 +179,7 @@ public class LinkManager {
         if (isLogViewerMode(port)) {
             setConnector(LinkConnector.VOID);
         } else if (TcpConnector.isTcpPort(port)) {
-            setConnector(new StreamConnector(this, port, logger, new Callable<IoStream>() {
+            Callable<IoStream> streamFactory = new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
                     Socket socket;
@@ -193,10 +193,17 @@ public class LinkManager {
                         return null;
                     }
                 }
-            }));
+            };
+
+            
+
+            setConnector(new StreamConnector(this, port, logger, streamFactory));
             isSimulationMode = true;
         } else {
-            setConnector(new StreamConnector(this, port, logger, () -> SerialIoStreamJSerialComm.openPort(port, logger)));
+            Callable<IoStream> ioStreamCallable = () -> SerialIoStreamJSerialComm.openPort(port, logger);
+
+
+            setConnector(new StreamConnector(this, port, logger, ioStreamCallable));
         }
     }
 
