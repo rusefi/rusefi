@@ -188,7 +188,11 @@ public class LinkManager {
                         int portPart = TcpConnector.getTcpPort(port);
                         String hostname = TcpConnector.getHostname(port);
                         socket = new Socket(hostname, portPart);
-                        return new TcpIoStream(logger, socket);
+                        TcpIoStream tcpIoStream = new TcpIoStream(logger, socket);
+                        IncomingDataBuffer dataBuffer = IncomingDataBuffer.createDataBuffer(tcpIoStream, logger);
+                        tcpIoStream.setDataBuffer(dataBuffer);
+
+                        return tcpIoStream;
                     } catch (Throwable e) {
                         stateListener.onConnectionFailed();
                         return null;
