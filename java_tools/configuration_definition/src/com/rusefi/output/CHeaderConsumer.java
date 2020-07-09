@@ -24,8 +24,7 @@ public class CHeaderConsumer implements ConfigurationConsumer {
         cHeader.write("// by " + getClass() + EOL);
         cHeader.write("// begin" + EOL);
         String id = destCHeader.replaceAll("[\\\\\\.\\/]", "_").toUpperCase();
-        cHeader.write("#ifndef " + id + EOL);
-        cHeader.write("#define " + id + EOL);
+        cHeader.write("#pragma once" + EOL);
         cHeader.write("#include \"rusefi_types.h\"" + EOL);
     }
 
@@ -91,7 +90,6 @@ public class CHeaderConsumer implements ConfigurationConsumer {
         if (withC_Defines)
             cHeader.write(VariableRegistry.INSTANCE.getDefinesSection());
         cHeader.write(content.toString());
-        cHeader.write("#endif" + EOL);
         cHeader.write("// end" + EOL);
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);
         cHeader.close();

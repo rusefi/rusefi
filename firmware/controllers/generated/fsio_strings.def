@@ -1,10 +1,14 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.bat integration\rusefi_config.txt Mon Jun 01 07:18:30 EDT 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 08 03:02:21 UTC 2020
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 	case FSIO_SETTING_FANONTEMPERATURE:
 		return "cfg_fanOnTemperature";
 	case FSIO_SETTING_FANOFFTEMPERATURE:
 		return "cfg_fanOffTemperature";
+	case FSIO_SETTING_ACIDLEEXTRAOFFSET:
+		return "cfg_acIdleExtraOffset";
+	case FSIO_SETTING_ACIDLEEXTRAMIN:
+		return "cfg_acIdleExtraMin";
 	case FSIO_SETTING_BOOSTPID_OFFSET:
 		return "cfg_boostPid_offset";
 	case FSIO_SETTING_BOOSTPID_MINVALUE:

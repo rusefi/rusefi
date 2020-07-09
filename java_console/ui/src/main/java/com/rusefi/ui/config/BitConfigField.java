@@ -5,6 +5,7 @@ import com.rusefi.config.Field;
 import com.rusefi.config.FieldCommandResponse;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,8 +15,8 @@ public class BitConfigField extends BaseConfigField {
     private final JCheckBox view = new JCheckBox();
     private boolean ec;
 
-    public BitConfigField(final Field field, String caption) {
-        super(field);
+    public BitConfigField(UIContext uiContext, final Field field, String caption) {
+        super(uiContext, field);
         createUi(caption, view);
         requestInitialValue(field); // this is not in base constructor so that view is created by the time we invoke it
 

@@ -6,14 +6,15 @@ import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.math.BigInteger;
+import java.net.URI;
+import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.zip.CRC32;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -22,6 +23,7 @@ import java.util.List;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
     public static final String EOL = "\n";
+    private static final String SIGNATURE_HASH = "SIGNATURE_HASH";
     public static String MESSAGE;
 
     public static String TOOL = "(unknown script)";
@@ -40,6 +42,10 @@ public class ConfigDefinition {
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     private static final String KEY_FIRING = "-firing_order";
     public static final String KEY_PREPEND = "-prepend";
+    public static final String KEY_SIGNATURE = "-signature";
+    public static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
+    public static final String KEY_CACHE = "-cache";
+    public static final String KEY_CACHE_ZIP_FILE = "-cache_zip_file";
     private static final String KEY_SKIP = "-skip";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     public static boolean needZeroInit = true;
@@ -86,7 +92,17 @@ public class ConfigDefinition {
         List<String> prependFiles = new ArrayList<>();
         String skipRebuildFile = null;
         String romRaiderInputFile = null;
+        String firingEnumFileName = null;
+        String cachePath = null;
+        String cacheZipFile = null;
+        String signatureDestination = null;
+        String signaturePrependFile = null;
         CHeaderConsumer.withC_Defines = true;
+
+        // used to update other files
+        List<String> inputFiles = new ArrayList<>();
+        // disable the lazy checks because we use timestamps to detect changes
+        LazyFile.setLazyFileEnabled(false);
 
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
@@ -94,6 +110,7 @@ public class ConfigDefinition {
                 ConfigDefinition.TOOL = args[i + 1];
             } else if (key.equals(KEY_DEFINITION)) {
                 definitionInputFile = args[i + 1];
+                inputFiles.add(definitionInputFile);
             } else if (key.equals(KEY_TS_DESTINATION)) {
                 tsPath = args[i + 1];
             } else if (key.equals(KEY_C_DESTINATION)) {
@@ -115,23 +132,69 @@ public class ConfigDefinition {
             } else if (key.equals(KEY_JAVA_DESTINATION)) {
                 javaDestinationFileName = args[i + 1];
             } else if (key.equals(KEY_FIRING)) {
-                String firingEnumFileName = args[i + 1];
-                SystemOut.println("Reading firing from " + firingEnumFileName);
-                VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
+                firingEnumFileName = args[i + 1];
+                inputFiles.add(firingEnumFileName);
             } else if (key.equals(KEY_ROMRAIDER_DESTINATION)) {
                 romRaiderDestination = args[i + 1];
             } else if (key.equals(KEY_PREPEND)) {
                 prependFiles.add(args[i + 1]);
+                inputFiles.add(args[i + 1]);
+            } else if (key.equals(KEY_SIGNATURE)) {
+                signaturePrependFile = args[i + 1];
+                prependFiles.add(args[i + 1]);
+                // don't add this file to the 'inputFiles'
+            } else if (key.equals(KEY_SIGNATURE_DESTINATION)) {
+                signatureDestination = args[i + 1];
+            } else if (key.equals(KEY_CACHE)) {
+                cachePath = args[i + 1];
+            } else if (key.equals(KEY_CACHE_ZIP_FILE)) {
+                cacheZipFile = args[i + 1];
             } else if (key.equals(KEY_SKIP)) {
                 // is this now not needed in light if LazyFile surving the same goal of not changing output unless needed?
                 skipRebuildFile = args[i + 1];
             } else if (key.equals("-ts_output_name")) {
                 TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
             } else if (key.equals(KEY_ROM_INPUT)) {
-                romRaiderInputFile = args[i + 1];
+                String inputFilePath = args[i + 1];
+                romRaiderInputFile = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
+                inputFiles.add(romRaiderInputFile);
             }
         }
 
+        // used to update .ini files
+        List<String> inputAllFiles = new ArrayList<>(inputFiles);
+        boolean needToUpdateTsFiles = false;
+        if (tsPath != null) {
+            inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
+        }
+
+        if (tsPath != null) {
+            SystemOut.println("Check the input/output TS files:");
+            needToUpdateTsFiles = checkIfOutputFilesAreOutdated(inputAllFiles, cachePath, cacheZipFile);
+        }
+        SystemOut.println("Check the input/output other files:");
+        boolean needToUpdateOtherFiles = checkIfOutputFilesAreOutdated(inputFiles, cachePath, cacheZipFile);
+        if (!needToUpdateTsFiles && !needToUpdateOtherFiles) {
+            SystemOut.println("All output files are up-to-date, nothing to do here!");
+            return;
+        }
+
+        // get CRC32 of given input files
+        long crc32 = 0;
+        for (String iFile : inputAllFiles) {
+            long c = getCrc32(iFile) & 0xffffffffL;
+            SystemOut.println("CRC32 from " + iFile + " = " + c);
+            crc32 ^= c;
+        }
+        SystemOut.println("CRC32 from all input files = " + crc32);
+        // store the CRC32 as a built-in variable
+        if (tsPath != null) // nasty trick - do not insert signature into live data files
+            VariableRegistry.INSTANCE.register(SIGNATURE_HASH, "" + crc32);
+
+        if (firingEnumFileName != null) {
+            SystemOut.println("Reading firing from " + firingEnumFileName);
+            VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
+        }
         MESSAGE = getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
         SystemOut.println("Reading definition from " + definitionInputFile);
@@ -147,29 +210,37 @@ public class ConfigDefinition {
         }
 
         for (String prependFile : prependFiles)
-            readPrependValues(prependFile);
+            readPrependValues(VariableRegistry.INSTANCE, prependFile);
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
         ReaderState state = new ReaderState();
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
-        if (destCHeaderFileName != null) {
-            destinations.add(new CHeaderConsumer(destCHeaderFileName));
-        }
-        if (tsPath != null) {
+        if (tsPath != null && needToUpdateTsFiles) {
             CharArrayWriter tsWriter = new CharArrayWriter();
             destinations.add(new TSProjectConsumer(tsWriter, tsPath, state));
-        }
-        if (javaDestinationFileName != null) {
-            destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
-        }
 
-        if (destCFsioConstantsFileName != null || destCFsioGettersFileName != null) {
-            destinations.add(new FileFsioSettingsConsumer(state,
-                    destCFsioConstantsFileName,
-                    destCFsioGettersFileName,
-                    namesCFileName,
-                    stringsCFileName));
+            VariableRegistry tmpRegistry = new VariableRegistry();
+            // store the CRC32 as a built-in variable
+            tmpRegistry.register(SIGNATURE_HASH, "" + crc32);
+            readPrependValues(tmpRegistry, signaturePrependFile);
+            destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
+        }
+        if (needToUpdateOtherFiles) {
+            if (destCHeaderFileName != null) {
+                destinations.add(new CHeaderConsumer(destCHeaderFileName));
+            }
+            if (javaDestinationFileName != null) {
+                destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
+            }
+
+            if (destCFsioConstantsFileName != null || destCFsioGettersFileName != null) {
+                destinations.add(new FileFsioSettingsConsumer(state,
+                        destCFsioConstantsFileName,
+                        destCFsioGettersFileName,
+                        namesCFileName,
+                        stringsCFileName));
+            }
         }
 
         if (destinations.isEmpty())
@@ -177,13 +248,11 @@ public class ConfigDefinition {
         state.readBufferedReader(definitionReader, destinations);
 
 
-
-        if (destCDefinesFileName != null)
+        if (destCDefinesFileName != null && needToUpdateOtherFiles)
             VariableRegistry.INSTANCE.writeDefinesToFile(destCDefinesFileName);
 
-        if (romRaiderDestination != null && romRaiderInputFile != null) {
-            String inputFileName = romRaiderInputFile + File.separator + ROM_RAIDER_XML_TEMPLATE;
-            processTextTemplate(inputFileName, romRaiderDestination);
+        if (romRaiderDestination != null && romRaiderInputFile != null && needToUpdateOtherFiles) {
+            processTextTemplate(romRaiderInputFile, romRaiderDestination);
         }
         if (skipRebuildFile != null) {
             SystemOut.println("Writing " + currentMD5 + " to " + skipRebuildFile);
@@ -191,6 +260,8 @@ public class ConfigDefinition {
             writer.write(currentMD5);
             writer.close();
         }
+
+        saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
     }
 
     private static boolean needToSkipRebuild(String skipRebuildFile, String currentMD5) throws IOException {
@@ -209,7 +280,7 @@ public class ConfigDefinition {
         return getMd5(content);
     }
 
-    private static void readPrependValues(String prependFile) throws IOException {
+    private static void readPrependValues(VariableRegistry registry, String prependFile) throws IOException {
         BufferedReader definitionReader = new BufferedReader(new FileReader(prependFile));
         String line;
         while ((line = definitionReader.readLine()) != null) {
@@ -220,7 +291,7 @@ public class ConfigDefinition {
             if (ReaderState.isEmptyDefinitionLine(line))
                 continue;
             if (startsWithToken(line, ReaderState.DEFINE)) {
-                processDefine(line.substring(ReaderState.DEFINE.length()).trim());
+                processDefine(registry, line.substring(ReaderState.DEFINE.length()).trim());
             }
 
         }
@@ -279,7 +350,7 @@ public class ConfigDefinition {
         return Integer.parseInt(s);
     }
 
-    static void processDefine(String line) {
+    static void processDefine(VariableRegistry registry, String line) {
         int index = line.indexOf(' ');
         String name;
         if (index == -1) {
@@ -291,9 +362,9 @@ public class ConfigDefinition {
         }
         if (VariableRegistry.isNumeric(line)) {
             Integer v = Integer.valueOf(line);
-            VariableRegistry.INSTANCE.register(name, v);
+            registry.register(name, v);
         } else {
-            VariableRegistry.INSTANCE.register(name, line);
+            registry.register(name, line);
         }
     }
 
@@ -319,5 +390,128 @@ public class ConfigDefinition {
             // For specifying wrong message digest algorithms
             throw new RuntimeException(e);
         }
+    }
+
+    private static boolean checkIfOutputFilesAreOutdated(List<String> inputFiles, String cachePath, String cacheZipFile) {
+        if (cachePath == null)
+            return true;
+        // find if any input file was changed from the cached version
+        for (String iFile : inputFiles) {
+            File newFile = new File(iFile);
+            try {
+                byte[] f1 = Files.readAllBytes(newFile.toPath());
+                byte[] f2;
+                if (cacheZipFile != null) {
+                    f2 = unzipFileContents(cacheZipFile, cachePath + File.separator + iFile);
+                } else {
+                    String cachedFileName = getCachedInputFileName(newFile.getName(), cachePath);
+                    File cachedFile = new File(cachedFileName);
+                    f2 = Files.readAllBytes(cachedFile.toPath());
+                }
+                boolean isEqual = Arrays.equals(f1, f2);
+                if (!isEqual) {
+                    SystemOut.println("* the file " + iFile + " is changed!");
+                    return true;
+                } else {
+                    SystemOut.println("* the file " + iFile + " is NOT changed!");
+                }
+            } catch (java.io.IOException e) {
+                SystemOut.println("* cannot validate the file " + iFile + ", so assuming it's changed.");
+                return true;
+            }
+        }
+        SystemOut.println("* all the files are up-to-date!");
+        return false;
+    }
+
+    private static boolean saveCachedInputFiles(List<String> inputFiles, String cachePath, String cacheZipFile) throws IOException {
+        if (cachePath == null) {
+            SystemOut.println("* cache storage is disabled.");
+            return false;
+        }
+        // copy all input files to the cache
+        if (cacheZipFile != null) {
+            zipAddFiles(cacheZipFile, inputFiles, cachePath);
+        } else {
+            for (String iFile : inputFiles) {
+                File newFile = new File(iFile);
+                File cachedFile = new File(getCachedInputFileName(newFile.getName(), cachePath));
+                cachedFile.mkdirs();
+                try {
+                    Files.copy(newFile.toPath(), cachedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (java.io.IOException e) {
+                    SystemOut.println("* cannot store the cached file for " + iFile);
+                    throw e;
+                }
+            }
+        }
+        SystemOut.println("* input files copied to the cached folder");
+        return true;
+    }
+
+    private static String getCachedInputFileName(String inputFile, String cachePath) {
+        return cachePath + File.separator + inputFile;
+    }
+
+    private static long getCrc32(String fileName) throws IOException {
+        File file = new File(fileName);
+        byte[] f1 = Files.readAllBytes(file.toPath());
+        CRC32 c = new CRC32();
+        c.update(f1, 0, f1.length);
+        return c.getValue();
+    }
+
+    private static void deleteFile(String fileName) throws IOException {
+        File file = new File(fileName);
+        // todo: validate?
+        file.delete();
+    }
+
+    private static byte[] unzipFileContents(String zipFileName, String fileName) throws IOException {
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFileName));
+        ZipEntry zipEntry;
+        byte[] data = null;
+        while ((zipEntry = zis.getNextEntry()) != null) {
+            Path zippedName = Paths.get(zipEntry.getName()).normalize();
+            Path searchName = Paths.get(fileName).normalize();
+            if (zippedName.equals(searchName) && zipEntry.getSize() >= 0) {
+                int offset = 0;
+                byte[] tmpData = new byte[(int) zipEntry.getSize()];
+                int bytesLeft = tmpData.length, bytesRead;
+                while (bytesLeft > 0 && (bytesRead = zis.read(tmpData, offset, bytesLeft)) >= 0) {
+                    offset += bytesRead;
+                    bytesLeft -= bytesRead;
+                }
+                if (bytesLeft == 0) {
+                    data = tmpData;
+                } else {
+                    System.out.println("Unzip: error extracting file " + fileName);
+                }
+                break;
+            }
+        }
+        zis.closeEntry();
+        zis.close();
+        System.out.println("Unzip " + zipFileName + ": " + fileName + (data != null ? " extracted!" : " failed!"));
+        return data;
+    }
+
+    private static boolean zipAddFiles(String zipFileName, List<String> fileNames, String zipPath) throws IOException {
+        // requires Java7+
+        Map<String, String> env = new HashMap<>();
+        env.put("create", "true");
+        Path path = Paths.get(zipFileName);
+        URI uri = URI.create("jar:" + path.toUri());
+        FileSystem fs = FileSystems.newFileSystem(uri, env);
+        for (String fileName : fileNames) {
+            String fileNameInZip = zipPath + File.separator + fileName;
+            Path extFile = Paths.get(fileName);
+            Path zippedFile = fs.getPath(fileNameInZip);
+            Files.createDirectories(zippedFile.getParent());
+            //fs.provider().checkAccess(zippedFile, AccessMode.READ);
+            Files.copy(extFile, zippedFile, StandardCopyOption.REPLACE_EXISTING);
+        }
+        fs.close();
+        return true;
     }
 }

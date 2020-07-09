@@ -12,7 +12,8 @@
     <orderEntry type="library" name="jep" level="project" />
     <orderEntry type="library" name="swing-layout" level="project" />
     <orderEntry type="module" module-name="ui" />
-    <orderEntry type="module" module-name="io" />
-    <orderEntry type="module" module-name="models" />
+    <orderEntry type="module" module-name="io" exported="" />
+    <orderEntry type="module" module-name="models" exported="" />
+    <orderEntry type="module" module-name="inifile" exported="" />
   </component>
 </module>

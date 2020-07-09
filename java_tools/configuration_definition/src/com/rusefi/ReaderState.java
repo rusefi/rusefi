@@ -167,7 +167,7 @@ public class ReaderState {
                  * for example
                  * #define CLT_CURVE_SIZE 16
                  */
-                ConfigDefinition.processDefine(line.substring(DEFINE.length()).trim());
+                ConfigDefinition.processDefine(VariableRegistry.INSTANCE, line.substring(DEFINE.length()).trim());
             } else {
                 if (stack.isEmpty())
                     throw new IllegalStateException("Expected to be within structure at line " + lineIndex + ": " + line);

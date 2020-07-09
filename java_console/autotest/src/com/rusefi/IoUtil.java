@@ -26,8 +26,8 @@ public class IoUtil {
      *
      * @throws IllegalStateException if command was not confirmed
      */
-    static void sendCommand(String command) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
+    static void sendCommand(String command, CommandQueue commandQueue) {
+        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT, commandQueue);
     }
 
     public static String getEnableCommand(String settingName) {
@@ -41,12 +41,12 @@ public class IoUtil {
     /**
      * blocking method which would for confirmation from rusEfi
      */
-    static void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
+    static void sendCommand(String command, int retryTimeoutMs, int timeoutMs, CommandQueue commandQueue) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
         FileLog.MAIN.logLine("Sending command [" + command + "]");
         final long begin = System.currentTimeMillis();
-        CommandQueue.getInstance().write(command, retryTimeoutMs, new InvocationConfirmationListener() {
+        commandQueue.write(command, retryTimeoutMs, new InvocationConfirmationListener() {
             @Override
             public void onCommandConfirmation() {
                 responseLatch.countDown();
@@ -67,9 +67,9 @@ public class IoUtil {
         }
     }
 
-    static void changeRpm(final int rpm) {
+    static void changeRpm(CommandQueue commandQueue, final int rpm) {
         FileLog.MAIN.logLine("AUTOTEST rpm EN " + rpm);
-        sendCommand("rpm " + rpm);
+        sendCommand("rpm " + rpm, commandQueue);
         long time = System.currentTimeMillis();
 
         final CountDownLatch rpmLatch = new CountDownLatch(1);
@@ -108,7 +108,7 @@ public class IoUtil {
         FileLog.MAIN.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart));
     }
 
-    static void connectToSimulator(boolean startProcess) throws InterruptedException {
+    static void connectToSimulator(LinkManager linkManager, boolean startProcess) throws InterruptedException {
         if (startProcess) {
             if (!TcpConnector.getAvailablePorts().isEmpty())
                 throw new IllegalStateException("Port already binded on startup?");
@@ -136,8 +136,8 @@ public class IoUtil {
         /**
          * TCP connector is blocking
          */
-        LinkManager.startAndConnect("" + TcpConnector.DEFAULT_PORT, ConnectionStateListener.VOID);
-        LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        linkManager.startAndConnect("" + TcpConnector.DEFAULT_PORT, ConnectionStateListener.VOID);
+        linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         waitForFirstResponse();
     }
 
@@ -151,12 +151,12 @@ public class IoUtil {
         }
     }
 
-    static void realHardwareConnect(String port) {
-        LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
-        LinkManager.engineState.registerStringValueAction(Fields.PROTOCOL_OUTPIN, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
-        LinkManager.engineState.registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+    static void realHardwareConnect(LinkManager linkManager, String port) {
+        linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_OUTPIN, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        linkManager.getEngineState().registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
 
-        final CountDownLatch connected = LinkManager.connect(port);
+        final CountDownLatch connected = linkManager.connect(port);
         if (connected.getCount() > 0)
             throw new IllegalStateException("Not connected in time");
     }

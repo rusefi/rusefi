@@ -10,6 +10,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.ResponseBuffer;
@@ -18,6 +19,7 @@ import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
@@ -82,7 +84,7 @@ public class ConsoleTools {
     private static void calcXmlImageTuneCrc(String... args) throws Exception {
         String fileName = args[1];
         Msq msq = Msq.readTune(fileName);
-        ConfigurationImage image = msq.asImage(IniFileModel.getInstance());
+        ConfigurationImage image = msq.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
         printCrc(image);
     }
 
@@ -133,7 +135,7 @@ public class ConsoleTools {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes, FileLog.LOGGER);
     }
@@ -194,7 +196,18 @@ public class ConsoleTools {
             System.err.println("rusEFI not detected");
             return;
         }
-        LinkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
+        LinkManager linkManager = new LinkManager(FileLog.LOGGER);
+        linkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
+            @Override
+            public void onConnectionEstablished() {
+                new BinaryProtocolServer(FileLog.LOGGER).start(linkManager);
+            }
+
+            @Override
+            public void onConnectionFailed() {
+
+            }
+        });
     }
 
     private static void invokeCallback(String callback) {
@@ -260,11 +273,11 @@ public class ConsoleTools {
         ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName);
         System.out.println("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
 
-        Msq tune = Msq.valueOf(image);
-        tune.writeXmlFile(Msq.outputXmlFileName);
+        Msq tune = MsqFactory.valueOf(image);
+        tune.writeXmlFile(Online.outputXmlFileName);
         String authToken = AuthTokenPanel.getAuthToken();
         System.out.println("Using " + authToken);
-        Online.upload(new File(Msq.outputXmlFileName), authToken);
+        Online.upload(new File(Online.outputXmlFileName), authToken);
     }
 
     public static long classBuildTimeMillis() throws URISyntaxException, IllegalStateException, IllegalArgumentException {
@@ -293,9 +306,9 @@ public class ConsoleTools {
             System.out.println("rusEFI not detected");
             return;
         }
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
         Logger logger = FileLog.LOGGER;
-        IncomingDataBuffer incomingData = BinaryProtocol.createDataBuffer(stream, logger);
+        IncomingDataBuffer incomingData = stream.getDataBuffer();
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes("hello");
         stream.sendPacket(commandBytes, logger);
         // skipping response

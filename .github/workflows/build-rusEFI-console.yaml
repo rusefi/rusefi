@@ -20,3 +20,10 @@ jobs:
       - name: Build console
         working-directory: ./java_console
         run: ant
+
+      - name: Upload console junit results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: console junit
+          path: ./java_console/build/*.txt

@@ -6,6 +6,7 @@ import com.rusefi.config.FieldCommandResponse;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
+import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -19,8 +20,8 @@ public class EnumConfigField extends BaseConfigField {
     private final Map<String, Integer> ordinals = new HashMap<>();
     private final String[] options = field.getOptions();
 
-    public EnumConfigField(final Field field, String caption) {
-        super(field);
+    public EnumConfigField(UIContext uiContext, final Field field, String caption) {
+        super(uiContext, field);
         if (options == null)
             throw new NullPointerException("options for " + field);
         createUi(caption, view);

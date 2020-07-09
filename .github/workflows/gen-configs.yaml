@@ -14,9 +14,17 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Install Tools
+      run: sudo apt-get install ncftp sshpass
+
     - name: Generate Configs
       working-directory: ./firmware/
       run: sh gen_config.sh
+
+    - name: Upload .ini files
+      working-directory: ./firmware/tunerstudio/generated
+#      run: ./upload.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+      run: ../upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
@@ -27,6 +35,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-firmware Action"
+        git status
         git commit -am "Auto-generated configs and docs" 2>&1 | grep -E '(nothing to commit|changed)'
 
     # We need to know what branch this is in order to push to the correct branch

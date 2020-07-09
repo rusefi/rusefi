@@ -42,6 +42,9 @@ void setFlatInjectorLag(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 floatms_t getCrankshaftRevolutionTimeMs(int rpm);
 floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+float getFuelingLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getIgnitionLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+// getEngineLoadT is deprecated - please use one of the above functions, getFuelingLoad or getIgnitionMode
 float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);

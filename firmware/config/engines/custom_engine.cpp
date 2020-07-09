@@ -533,8 +533,8 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[7 - 1] = TLE8888_PIN_11;
 	engineConfiguration->ignitionPins[8 - 1] = TLE8888_PIN_12;
 
-	engineConfiguration->ignitionPins[9 - 1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[10 - 1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[9 - 1] = GPIOB_0;
+	engineConfiguration->ignitionPins[10 - 1] = GPIOB_1;
 	engineConfiguration->ignitionPins[11 - 1] = GPIO_UNASSIGNED;
 	engineConfiguration->ignitionPins[12 - 1] = GPIO_UNASSIGNED;
 

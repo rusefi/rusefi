@@ -1,0 +1,29 @@
+name: Generate documentation
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install ncftp, kicad, and doxygen
+      run: |
+        sudo apt-get update
+        sudo apt-get install ncftp kicad doxygen
+
+    - name: Set FTP variables
+      run: |
+        if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ]; then
+          echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
+          echo "::set-env name=RUSEFI_DOXYGEN_FTP_USER::${{secrets.RUSEFI_DOXYGEN_FTP_USER}}";
+          echo "::set-env name=RUSEFI_DOXYGEN_FTP_PASS::${{secrets.RUSEFI_DOXYGEN_FTP_PASS}}";
+        fi
+
+    - name: Generate documentation
+      run: bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh

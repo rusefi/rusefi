@@ -166,6 +166,31 @@ void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 extern LoggingWithStorage sharedLogger;
 
+static void wipeString(char *string, int size) {
+	// we have to reset bytes after \0 symbol in order to calculate correct tune CRC from MSQ file
+	for (int i = strlen(string) + 1; i < size; i++) {
+		// todo: open question if it's worth replacing for loop with a memset. would a memset be much faster?
+		// do we care about performance here?
+		string[i] = 0;
+	}
+}
+
+void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	wipeString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
+	wipeString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
+	wipeString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));
+
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
+		wipeString(config->fsioFormulas[i], sizeof(le_formula_t));
+	}
+}
+
+void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	wipeStrings(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does

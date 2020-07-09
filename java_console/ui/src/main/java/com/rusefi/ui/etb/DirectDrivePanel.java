@@ -2,6 +2,7 @@ package com.rusefi.ui.etb;
 
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.ui.UIContext;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -24,10 +25,10 @@ public class DirectDrivePanel {
     private final JButton reset = new JButton("Cancel Direct Drive");
     private double directDriverValue;
 
-    public DirectDrivePanel() {
+    public DirectDrivePanel(UIContext uiContext) {
         content.setBorder(BorderFactory.createTitledBorder("Direct Drive"));
 
-        CommandQueue.getInstance().addListener(command -> {
+        uiContext.getCommandQueue().addListener(command -> {
             if (command.startsWith(CMD_ETB_DUTY + " ")) {
                 command = command.substring((CMD_ETB_DUTY + " ").length());
                 directDriverValue = parseDouble(command, Double.NaN);
@@ -43,7 +44,7 @@ public class DirectDrivePanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 double newValue = getCurrent() + getIncrement();
-                CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + newValue);
+                uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + newValue);
             }
         });
         upDownPanel.add(more);
@@ -53,7 +54,7 @@ public class DirectDrivePanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 double newValue = getCurrent() - getIncrement();
-                CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + newValue);
+                uiContext.getCommandQueue().write(CMD_ETB_DUTY + " " + newValue);
             }
         });
 
@@ -61,7 +62,7 @@ public class DirectDrivePanel {
         reset.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CommandQueue.getInstance().write(CANCEL_DIRECT_DRIVE_COMMAND);
+                uiContext.getCommandQueue().write(CANCEL_DIRECT_DRIVE_COMMAND);
             }
         });
 
