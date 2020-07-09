@@ -90,8 +90,8 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     @SuppressWarnings("InfiniteLoopStatement")
     private void runProxy(LinkManager linkManager, Socket clientSocket) throws IOException, InterruptedException {
         TcpIoStream stream = new TcpIoStream(logger, clientSocket);
-        IncomingDataBuffer in = IncomingDataBuffer.createDataBuffer(stream, logger);
-        stream.setDataBuffer(in);
+
+        IncomingDataBuffer in = stream.getDataBuffer();
 
         while (true) {
             byte first = in.readByte();
