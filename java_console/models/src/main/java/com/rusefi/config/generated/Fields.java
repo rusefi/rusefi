@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 09 20:02:17 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 10 18:04:35 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -696,6 +696,8 @@ public class Fields {
 	public static final int iatFuelCorr_offset = 10464;
 	public static final int iatFuelCorrBins_offset = 10400;
 	public static final int IDLE_ADVANCE_CURVE_SIZE = 8;
+	public static final int idle_antiwindupFreq_offset = 696;
+	public static final int idle_derivativeFilterLoss_offset = 516;
 	public static final int idle_offset = 600;
 	public static final int idle_solenoidFrequency_offset = 600;
 	public static final int idle_solenoidPin_offset = 604;
@@ -1282,7 +1284,7 @@ public class Fields {
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.07.09.all.3499007089";
+	public static final String TS_SIGNATURE = "rusEFI 2020.07.10.all.2784966979";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -1297,7 +1299,6 @@ public class Fields {
 	public static final int unused2508_offset = 2508;
 	public static final int unused2516_offset = 2516;
 	public static final int unused6312_offset = 6312;
-	public static final int unused696_offset = 696;
 	public static final int unused806_offset = 806;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
@@ -1309,7 +1310,6 @@ public class Fields {
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_alFIn_offset = 4024;
 	public static final int unused_former_warmup_target_afr_offset = 2112;
-	public static final int unusedAt516_offset = 516;
 	public static final int unusedAt712_offset = 712;
 	public static final int unusedAt716_offset = 716;
 	public static final int unusedAt720_offset = 720;
@@ -1513,7 +1513,7 @@ public class Fields {
 	public static final Field VBATTADCCHANNEL = Field.create("VBATTADCCHANNEL", 513, FieldType.INT8, adc_channel_e);
 	public static final Field FUELLEVELSENSOR = Field.create("FUELLEVELSENSOR", 514, FieldType.INT8, adc_channel_e);
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 515, FieldType.INT8, adc_channel_e);
-	public static final Field UNUSEDAT516 = Field.create("UNUSEDAT516", 516, FieldType.INT);
+	public static final Field IDLE_DERIVATIVEFILTERLOSS = Field.create("IDLE_DERIVATIVEFILTERLOSS", 516, FieldType.FLOAT);
 	public static final Field SENSORCHARTFREQUENCY = Field.create("SENSORCHARTFREQUENCY", 520, FieldType.INT);
 	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "trg50", "INVALID"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 524, FieldType.INT, trigger_type_e);
@@ -1653,7 +1653,7 @@ public class Fields {
 	public static final Field FUELLEVELFULLTANKVOLTAGE = Field.create("FUELLEVELFULLTANKVOLTAGE", 688, FieldType.FLOAT);
 	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"};
 	public static final Field AFR_TYPE = Field.create("AFR_TYPE", 692, FieldType.INT, ego_sensor_e);
-	public static final Field UNUSED696 = Field.create("UNUSED696", 696, FieldType.INT);
+	public static final Field IDLE_ANTIWINDUPFREQ = Field.create("IDLE_ANTIWINDUPFREQ", 696, FieldType.FLOAT);
 	public static final Field TRIGGERINPUTPINS1 = Field.create("TRIGGERINPUTPINS1", 700, FieldType.INT8, brain_input_pin_e);
 	public static final Field TRIGGERINPUTPINS2 = Field.create("TRIGGERINPUTPINS2", 701, FieldType.INT8, brain_input_pin_e);
 	public static final Field TRIGGERINPUTPINS3 = Field.create("TRIGGERINPUTPINS3", 702, FieldType.INT8, brain_input_pin_e);
@@ -2509,7 +2509,7 @@ public class Fields {
 	VBATTADCCHANNEL,
 	FUELLEVELSENSOR,
 	TPS2_1ADCCHANNEL,
-	UNUSEDAT516,
+	IDLE_DERIVATIVEFILTERLOSS,
 	SENSORCHARTFREQUENCY,
 	TRIGGER_TYPE,
 	TRIGGER_TODOREMOVEMEONEDAY0,
@@ -2642,7 +2642,7 @@ public class Fields {
 	FUELLEVELEMPTYTANKVOLTAGE,
 	FUELLEVELFULLTANKVOLTAGE,
 	AFR_TYPE,
-	UNUSED696,
+	IDLE_ANTIWINDUPFREQ,
 	TRIGGERINPUTPINS1,
 	TRIGGERINPUTPINS2,
 	TRIGGERINPUTPINS3,

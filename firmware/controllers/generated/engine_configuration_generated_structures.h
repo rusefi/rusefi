@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 09 20:02:17 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 10 18:04:35 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1005,7 +1005,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 516
 	 */
-	int unusedAt516;
+	float idle_derivativeFilterLoss;
 	/**
 	 * offset 520
 	 */
@@ -1273,7 +1273,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 696
 	 */
-	uint32_t unused696;
+	float idle_antiwindupFreq;
 	/**
 	 * offset 700
 	 */
@@ -3527,4 +3527,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 09 20:02:17 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 10 18:04:35 UTC 2020
