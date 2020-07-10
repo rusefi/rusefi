@@ -10,6 +10,7 @@ import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -78,7 +79,7 @@ public class TcpCommunicationIntegrationTest {
                 System.out.println("Failed");
             }
         });
-        assertTrue(connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+        assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
 
         assertEquals(0, server.unknownCommands.get());
 
@@ -101,9 +102,10 @@ public class TcpCommunicationIntegrationTest {
         assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
         int proxyPort = 6103;
 
-        Socket targetEcuSocket;
+
+        IoStream targetEcuSocket;
         try {
-            targetEcuSocket = new Socket(LOCALHOST, controllerPort);
+            targetEcuSocket = new TcpIoStream(LOGGER, new Socket(LOCALHOST, controllerPort));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to connect to controller " + LOCALHOST + ":" + controllerPort);
         }
@@ -112,7 +114,7 @@ public class TcpCommunicationIntegrationTest {
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
         LinkManager clientManager = new LinkManager(LOGGER);
-        clientManager.startAndConnect(Integer.toString(proxyPort), new ConnectionStateListener() {
+        clientManager.startAndConnect(LOCALHOST + ":" + proxyPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 connectionEstablishedCountDownLatch.countDown();
@@ -123,7 +125,7 @@ public class TcpCommunicationIntegrationTest {
                 System.out.println("Failed");
             }
         });
-        assertTrue(connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+        assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
 
         clientManager.stop();
     }

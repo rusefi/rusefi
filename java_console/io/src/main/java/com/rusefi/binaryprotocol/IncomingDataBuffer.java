@@ -117,6 +117,12 @@ public class IncomingDataBuffer {
         }
     }
 
+    public int getByte() throws EOFException {
+        synchronized (cbb) {
+            return cbb.getByte();
+        }
+    }
+
     public int getShort() throws EOFException {
         synchronized (cbb) {
             return cbb.getShort();
@@ -133,5 +139,34 @@ public class IncomingDataBuffer {
         synchronized (cbb) {
             cbb.get(packet);
         }
+    }
+
+    public byte readByte() throws EOFException, InterruptedException {
+        boolean timeout = waitForBytes("readByte", System.currentTimeMillis(), 1);
+        if (timeout)
+            throw new IllegalStateException("Timeout in readByte");
+        return (byte) getByte();
+    }
+
+    public int readInt() throws EOFException, InterruptedException {
+        boolean timeout = waitForBytes("readInt", System.currentTimeMillis(), 4);
+        if (timeout)
+            throw new IllegalStateException("Timeout in readByte");
+        return swap32(getInt());
+    }
+
+    public short readShort() throws EOFException, InterruptedException {
+        boolean timeout = waitForBytes("readShort", System.currentTimeMillis(), 2);
+        if (timeout)
+            throw new IllegalStateException("Timeout in readShort");
+        return (short) swap16(getShort());
+    }
+
+    public int read(byte[] packet) throws InterruptedException {
+        boolean timeout = waitForBytes("read", System.currentTimeMillis(), packet.length);
+        if (timeout)
+            throw new IllegalStateException("Timeout while waiting " + packet.length);
+        getData(packet);
+        return packet.length;
     }
 }

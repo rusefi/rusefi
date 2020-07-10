@@ -7,6 +7,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 
+import java.io.EOFException;
 import java.io.IOException;
 
 /**
@@ -41,8 +42,6 @@ public interface IoStream extends WriteStream {
         write(packet);
     }
 
-    IncomingDataBuffer getDataBuffer();
-
     /**
      * @param listener would be invoked from unknown implementation-dependent thread
      */
@@ -51,4 +50,10 @@ public interface IoStream extends WriteStream {
     boolean isClosed();
 
     void close();
+
+    IncomingDataBuffer getDataBuffer();
+
+    default short readShort() throws EOFException, InterruptedException {
+        return getDataBuffer().readShort();
+    }
 }

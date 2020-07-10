@@ -20,7 +20,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class Autoupdate {
     private static final String TITLE = "rusEFI Bundle Updater 20200607";
-    private static final String BUNDLE_NAME_FILE = "../bundle_name.ini";
+    private static final String BUNDLE_NAME_FILE = "../bundle_name.txt";
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
@@ -99,7 +99,6 @@ public class Autoupdate {
     }
 
     private static boolean askUserIfUpdateIsDesired() {
-        AtomicBoolean doUpdate = new AtomicBoolean();
         CountDownLatch frameClosed = new CountDownLatch(1);
 
         if (AutoupdateUtil.runHeadless) {
@@ -107,10 +106,12 @@ public class Autoupdate {
             return true;
         }
 
-        return askUserIfUpdateIsDesiredWithGUI(doUpdate, frameClosed);
+        return askUserIfUpdateIsDesiredWithGUI(frameClosed);
     }
 
-    private static boolean askUserIfUpdateIsDesiredWithGUI(AtomicBoolean doUpdate, CountDownLatch frameClosed) {
+    private static boolean askUserIfUpdateIsDesiredWithGUI(CountDownLatch frameClosed) {
+        AtomicBoolean doUpdate = new AtomicBoolean();
+
         FrameHelper frameHelper = new FrameHelper() {
             @Override
             protected void onWindowClosed() {

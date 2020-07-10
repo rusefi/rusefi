@@ -1,2 +1,2 @@
 @echo off
-sh.exe compile_frankenso_pal.sh
+bash.exe compile_frankenso_pal.sh

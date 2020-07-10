@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 08 03:02:21 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 09 20:02:17 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1373,6 +1373,7 @@ struct engine_configuration_s {
 	offset 744 bit 2 */
 	bool is_enabled_spi_3 : 1;
 	/**
+	 * enable sd/disable sd
 	offset 744 bit 3 */
 	bool isSdCardEnabled : 1;
 	/**
@@ -3526,4 +3527,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 08 03:02:21 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 09 20:02:17 UTC 2020

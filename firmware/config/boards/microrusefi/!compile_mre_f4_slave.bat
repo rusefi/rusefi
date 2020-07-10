@@ -1,2 +1,2 @@
 @echo off
-sh.exe compile_mre_f4_slave.sh
+bash.exe compile_mre_f4_slave.sh

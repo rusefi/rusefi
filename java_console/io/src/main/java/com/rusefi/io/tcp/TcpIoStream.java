@@ -20,14 +20,12 @@ public class TcpIoStream implements IoStream {
     private final InputStream input;
     private final OutputStream output;
     private final Logger logger;
-    private final IncomingDataBuffer dataBuffer;
     private boolean isClosed;
+    private final IncomingDataBuffer dataBuffer;
 
     public TcpIoStream(Logger logger, Socket socket) throws IOException {
-        this(logger, new BufferedInputStream(socket.getInputStream()), socket.getOutputStream());
-    }
-
-    private TcpIoStream(Logger logger, InputStream input, OutputStream output) {
+        InputStream input = new BufferedInputStream(socket.getInputStream());
+        OutputStream output = socket.getOutputStream();
         this.logger = logger;
         if (input == null)
             throw new NullPointerException("input");
@@ -35,7 +33,7 @@ public class TcpIoStream implements IoStream {
             throw new NullPointerException("output");
         this.output = output;
         this.input = input;
-        dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
+        this.dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
     }
 
     @Override
@@ -56,9 +54,8 @@ public class TcpIoStream implements IoStream {
 
     @Override
     public void setInputListener(final DataListener listener) {
-        ByteReader reader = buffer -> input.read(buffer);
 
-        ByteReader.runReaderLoop(listener, reader, logger);
+        ByteReader.runReaderLoop(listener, input::read, logger);
     }
 
     @Override

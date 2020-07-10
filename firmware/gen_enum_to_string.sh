@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "This batch files reads rusefi_enums.h and produses auto_generated_enums.* files"
 
 rm gen_enum_to_string.log
@@ -11,4 +13,4 @@ java -DSystemOut.name=gen_enum_to_string \
 
 pwd
 cd config/boards/kinetis/config
-sh kinetis_gen_enum_to_string.sh
+bash kinetis_gen_enum_to_string.sh

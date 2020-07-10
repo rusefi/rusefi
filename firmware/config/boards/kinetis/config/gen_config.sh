@@ -1,3 +1,4 @@
+#!/bin/bash
 # This batch files reads rusefi_config.txt and produses firmware persistent configuration headers
 # the storage section of rusefi.ini is updated as well
 
@@ -5,7 +6,7 @@ cd ../../../..
 
 pwd
 
-sh gen_signature.sh kin
+bash gen_signature.sh kin
 
 java \
  -DSystemOut.name=gen_config_kinetis_board \
