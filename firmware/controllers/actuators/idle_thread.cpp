@@ -75,7 +75,7 @@ static bool mightResetPid = false;
 PidCic idlePid;
 #else
 
-class PidWithOverrides : public Pid {
+class PidWithOverrides : public PidIndustrial {
 public:
 	float getOffset() const override {
 #if EFI_UNIT_TEST
