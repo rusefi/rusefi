@@ -1124,6 +1124,12 @@ static void getValue(const char *paramStr) {
 		scheduleMsg(&logger, "tps_max=%d", engineConfiguration->tpsMax);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		scheduleMsg(&logger, "global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
+	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_1")) {
+		scheduleMsg(&logger, "is_enabled_spi_1=%s", boolToString(engineConfiguration->is_enabled_spi_1));
+	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_2")) {
+		scheduleMsg(&logger, "is_enabled_spi_2=%s", boolToString(engineConfiguration->is_enabled_spi_2));
+	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_3")) {
+		scheduleMsg(&logger, "is_enabled_spi_3=%s", boolToString(engineConfiguration->is_enabled_spi_3));
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
 		scheduleMsg(&logger, "isHip9011Enabled=%d", engineConfiguration->isHip9011Enabled);
 	}
