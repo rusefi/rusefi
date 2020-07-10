@@ -20,9 +20,9 @@ public interface WriteStream {
         byte[] array = new byte[4];
 
         array[0] = (byte) ((v >>> 24) & 0xFF);
-        array[0] = (byte) ((v >>> 16) & 0xFF);
-        array[0] = (byte) ((v >>> 8) & 0xFF);
-        array[0] = (byte) ((v >>> 0) & 0xFF);
+        array[1] = (byte) ((v >>> 16) & 0xFF);
+        array[2] = (byte) ((v >>> 8) & 0xFF);
+        array[3] = (byte) ((v >>> 0) & 0xFF);
         write(array);
     }
 }
