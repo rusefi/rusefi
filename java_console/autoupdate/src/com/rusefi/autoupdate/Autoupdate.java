@@ -99,7 +99,6 @@ public class Autoupdate {
     }
 
     private static boolean askUserIfUpdateIsDesired() {
-        AtomicBoolean doUpdate = new AtomicBoolean();
         CountDownLatch frameClosed = new CountDownLatch(1);
 
         if (AutoupdateUtil.runHeadless) {
@@ -107,10 +106,12 @@ public class Autoupdate {
             return true;
         }
 
-        return askUserIfUpdateIsDesiredWithGUI(doUpdate, frameClosed);
+        return askUserIfUpdateIsDesiredWithGUI(frameClosed);
     }
 
-    private static boolean askUserIfUpdateIsDesiredWithGUI(AtomicBoolean doUpdate, CountDownLatch frameClosed) {
+    private static boolean askUserIfUpdateIsDesiredWithGUI(CountDownLatch frameClosed) {
+        AtomicBoolean doUpdate = new AtomicBoolean();
+
         FrameHelper frameHelper = new FrameHelper() {
             @Override
             protected void onWindowClosed() {
