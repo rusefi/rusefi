@@ -155,6 +155,13 @@ public class IncomingDataBuffer {
         return swap32(getInt());
     }
 
+    public short readShort() throws EOFException, InterruptedException {
+        boolean timeout = waitForBytes("readShort", System.currentTimeMillis(), 2);
+        if (timeout)
+            throw new IllegalStateException("Timeout in readShort");
+        return (short) swap16(getShort());
+    }
+
     public int read(byte[] packet) throws InterruptedException {
         boolean timeout = waitForBytes("read", System.currentTimeMillis(), packet.length);
         if (timeout)
