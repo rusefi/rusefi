@@ -29,4 +29,4 @@ jobs:
         fi
 
     - name: Generate documentation
-      run: DISPLAY=:0 bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh
+      run: xvfb-run bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh
