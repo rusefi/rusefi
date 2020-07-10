@@ -20,7 +20,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class Autoupdate {
     private static final String TITLE = "rusEFI Bundle Updater 20200607";
-    private static final String BUNDLE_NAME_FILE = "../bundle_name.ini";
+    private static final String BUNDLE_NAME_FILE = "../bundle_name.txt";
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
