@@ -519,7 +519,7 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far\nset_analog_input_pin tps2 X
 
 
-	int unusedAt516;;"units", 1, 0, -20, 100, 0
+	float idle_derivativeFilterLoss;+0.1 is a good default value;    "x",    1,      0.0,       -1000000,  1000000,        4
 	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
@@ -651,7 +651,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	float fuelLevelFullTankVoltage;;"V",      1,      0,       0,10,      2
 
 	ego_sensor_e afr_type;AFR, WBO, EGO - whatever you like to call it;
-	uint32_t unused696;;"units", 1, 0, -20, 100, 0
+	float idle_antiwindupFreq;+0.1 is a good default value;    "x",    1,      0.0,       -1000000,  1000000,        4
 
 	brain_input_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputPins;
 	pin_output_mode_e hip9011CsPinMode;
@@ -1594,6 +1594,7 @@ end_struct
 #define TS_GET_TEXT 'G'
 // 0x45
 #define TS_EXECUTE 'E'
+#define TS_ONLINE_PROTOCOL 'z'
 // 0x39
 #define TS_GET_STRUCT '9'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'

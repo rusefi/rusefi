@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 09 20:02:17 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 11 02:21:57 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1003,9 +1003,10 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e tps2_1AdcChannel;
 	/**
+	 * 0.1 is a good default value
 	 * offset 516
 	 */
-	int unusedAt516;
+	float idle_derivativeFilterLoss;
 	/**
 	 * offset 520
 	 */
@@ -1271,9 +1272,10 @@ struct engine_configuration_s {
 	 */
 	ego_sensor_e afr_type;
 	/**
+	 * 0.1 is a good default value
 	 * offset 696
 	 */
-	uint32_t unused696;
+	float idle_antiwindupFreq;
 	/**
 	 * offset 700
 	 */
@@ -3527,4 +3529,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 09 20:02:17 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 11 02:21:57 UTC 2020
