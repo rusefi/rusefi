@@ -37,7 +37,7 @@ public class ProgramSelector {
             mode.setSelectedItem(persistedMode);
 
         JButton updateFirmware = new JButton("Update Firmware",
-                AutoupdateUtil.loadIcon("/com/rusefi/upload48.jpg"));
+                AutoupdateUtil.loadIcon("upload48.jpg"));
         controls.add(updateFirmware);
         JButton updateHelp = new JButton("?");
         updateHelp.addActionListener(e -> URLLabel.open(HELP));

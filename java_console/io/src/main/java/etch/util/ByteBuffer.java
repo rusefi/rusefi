@@ -178,6 +178,11 @@ abstract public class ByteBuffer {
         return (b0 | (b1 << 8));
     }
 
+    public int getByte() throws EOFException {
+        int b0 = get() & 255;
+        return b0;
+    }
+
     /**
      * Puts a little-endian 32-bit integer into the buffer.
      *

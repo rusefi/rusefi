@@ -24,10 +24,8 @@ public class TcpIoStream implements IoStream {
     private final IncomingDataBuffer dataBuffer;
 
     public TcpIoStream(Logger logger, Socket socket) throws IOException {
-        this(logger, new BufferedInputStream(socket.getInputStream()), socket.getOutputStream());
-    }
-
-    private TcpIoStream(Logger logger, InputStream input, OutputStream output) {
+        InputStream input = new BufferedInputStream(socket.getInputStream());
+        OutputStream output = socket.getOutputStream();
         this.logger = logger;
         if (input == null)
             throw new NullPointerException("input");
@@ -35,7 +33,7 @@ public class TcpIoStream implements IoStream {
             throw new NullPointerException("output");
         this.output = output;
         this.input = input;
-        dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
+        this.dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
     }
 
     @Override

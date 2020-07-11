@@ -75,7 +75,7 @@ static bool mightResetPid = false;
 PidCic idlePid;
 #else
 
-class PidWithOverrides : public Pid {
+class PidWithOverrides : public PidIndustrial {
 public:
 	float getOffset() const override {
 #if EFI_UNIT_TEST
@@ -294,6 +294,13 @@ static bool isOutOfAutomaticIdleCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return idle valve position percentage for automatic closed loop mode
  */
 static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_SUFFIX) {
+
+#if !EFI_IDLE_PID_CIC
+	// todo: move this to pid_s one day
+	idlePid.antiwindupFreq = engineConfiguration->idle_antiwindupFreq;
+	idlePid.derivativeFilterLoss = engineConfiguration->idle_derivativeFilterLoss;
+#endif
+
 	if (isOutOfAutomaticIdleCondition(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
