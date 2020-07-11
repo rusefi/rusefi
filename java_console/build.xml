@@ -120,6 +120,7 @@
             <zipfileset src="lib/log4j.jar" includes="**/*.class"/>
             <zipfileset src="lib/jep.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpclient.jar" includes="**/*.class"/>
+            <zipfileset src="lib/commons-logging.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpcore.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpmime.jar" includes="**/*.class"/>
             <zipfileset src="lib/jaxb-api.jar" includes="**/*.class"/>
