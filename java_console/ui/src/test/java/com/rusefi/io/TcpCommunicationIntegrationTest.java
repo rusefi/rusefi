@@ -10,6 +10,7 @@ import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -101,9 +102,10 @@ public class TcpCommunicationIntegrationTest {
         assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
         int proxyPort = 6103;
 
-        Socket targetEcuSocket;
+
+        IoStream targetEcuSocket;
         try {
-            targetEcuSocket = new Socket(LOCALHOST, controllerPort);
+            targetEcuSocket = new TcpIoStream(LOGGER, new Socket(LOCALHOST, controllerPort));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to connect to controller " + LOCALHOST + ":" + controllerPort);
         }

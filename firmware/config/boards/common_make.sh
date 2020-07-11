@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SCRIPT_NAME="common_make.sh"
 echo "Entering $SCRIPT_NAME"
 
@@ -22,4 +24,4 @@ cp build/rusefi.bin deliver/
 echo "$SCRIPT_NAME: deliver folder"
 ls -l deliver
 
-sh config/boards/clean_env_variables.sh
+bash config/boards/clean_env_variables.sh
