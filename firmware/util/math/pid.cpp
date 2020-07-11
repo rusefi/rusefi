@@ -269,8 +269,7 @@ float PidIndustrial::getOutput(float target, float input, float dTime) {
 	// (error - previousError) = (target-input) - (target-prevousInput) = -(input - prevousInput)
 	dTerm = dTerm * ad + (error - previousError) * bd;
 
-	// update the I-term
-	iTerm += parameters->iFactor * dTime * error;
+	updateITerm(parameters->iFactor * dTime * error);
 
 	// calculate output and apply the limits
 	float output = pTerm + iTerm + dTerm + getOffset();

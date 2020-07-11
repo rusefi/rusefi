@@ -101,8 +101,7 @@ TEST(util, industrialPidLimits) {
 	commonPidTestParameters(&pidS);
 
 	PidIndustrial pid(&pidS);
-// todo: #1599
-//	commonPidTest(&pid);
+	commonPidTest(&pid);
 }
 
 TEST(util, pidIndustrial) {
