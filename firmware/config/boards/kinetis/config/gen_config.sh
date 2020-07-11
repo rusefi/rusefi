@@ -17,6 +17,8 @@ java \
  -enumInputFile controllers/algo/rusefi_enums.h \
  -enumInputFile config/boards/kinetis/rusefi_hw_enums.h
 
+[ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
+
 java \
  -DSystemOut.name=gen_config_kinetis \
  -Drusefi.generator.lazyfile.enabled=true \
@@ -37,3 +39,4 @@ java \
  -prepend config/boards/kinetis/config/rusefi_config_kinetis.txt \
  -prepend config/boards/kinetis/config/tunerstudio/generated/kinetis_prefix.txt
 
+[ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
