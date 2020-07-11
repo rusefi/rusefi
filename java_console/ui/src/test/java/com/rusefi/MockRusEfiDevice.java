@@ -2,6 +2,8 @@ package com.rusefi;
 
 import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.config.generated.Fields;
+import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 
@@ -33,7 +35,15 @@ public class MockRusEfiDevice {
                     int length = getPacketLength(in, () -> {
                         throw new UnsupportedOperationException();
                     });
-                    byte[] packet = readPromisedBytes(in, length).getPacket();
+                    BinaryProtocolServer.Packet packet = readPromisedBytes(in, length);
+                    byte[] payload = packet.getPacket();
+
+                    byte command = payload[0];
+
+
+                    if (command == Fields.TS_HELLO_COMMAND) {
+                        new HelloCommand(logger, signature).handle(packet, stream);
+                    }
 
 
                 }

@@ -12,6 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -24,7 +25,6 @@ public class ServerTest {
     @Test
     public void testSessionTimeout() throws InterruptedException, IOException {
         int serverPort = 7000;
-
 
         CountDownLatch serverCreated = new CountDownLatch(1);
 
@@ -53,5 +53,9 @@ public class ServerTest {
 
         new MockRusEfiDevice("rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPort);
         new MockRusEfiDevice("rusEFI 2020.07.11.proteus_f4.1986715563", logger).connect(serverPort);
+
+
+        sleep(Timeouts.SECOND);
+
     }
 }
