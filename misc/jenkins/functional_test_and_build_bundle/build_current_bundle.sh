@@ -77,7 +77,7 @@ bash misc/jenkins/build_working_folder.sh
 [ $? -eq 0 ] || { echo "$SCRIPT_NAME: ERROR: invoking build_working_folder.sh"; exit 1; }
 
 echo "$SCRIPT_NAME: Going back to root folder"
-cd $ROOT_FOLDER
+cd "$ROOT_FOLDER"
 pwd
 
 echo "TIMESTAMP $(date "+%a %D %T.%2S")"
