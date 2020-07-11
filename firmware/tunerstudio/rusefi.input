@@ -2304,6 +2304,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Extra IAC if Throttle Pressed",						iacByTpsTaper;
 		field = "Detailed status in console",						isVerboseIAC
 		field = "#See Warmup idle multiplier"
+		field = "! Solenoid Idle control requires above zero RPM"
 		slider = "Manual IAC Position",				manIdlePosition, horizontal
 
 	dialog = idleTimingPidCorrDialog, "", yAxis
