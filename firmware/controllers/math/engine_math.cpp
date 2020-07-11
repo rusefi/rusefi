@@ -157,17 +157,12 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
 		injectorIndex = 0;
-	} else if (mode == IM_SEQUENTIAL) {
+	} else if (mode == IM_SEQUENTIAL || mode == IM_BATCH) {
 		injectorIndex = getCylinderId(i PASS_ENGINE_PARAMETER_SUFFIX) - 1;
-	} else if (mode == IM_BATCH) {
-		// does not look exactly right, not too consistent with IM_SEQUENTIAL
-		injectorIndex = i % (engineConfiguration->specs.cylindersCount / 2);
 	} else {
 		firmwareError(CUSTOM_OBD_UNEXPECTED_INJECTION_MODE, "Unexpected injection mode %d", mode);
 		injectorIndex = 0;
 	}
-
-	bool isSimultanious = mode == IM_SIMULTANEOUS;
 
 	assertAngleRange(baseAngle, "addFbaseAngle", CUSTOM_ADD_BASE);
 
@@ -186,13 +181,16 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		/**
 		 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 		 */
-		int secondIndex = injectorIndex + (CONFIG(specs.cylindersCount) / 2);
+		// Compute the position of this cylinder's twin in the firing order
+		int secondOrder = (i + (CONFIG(specs.cylindersCount) / 2)) % CONFIG(specs.cylindersCount);
+		int secondIndex = getCylinderId(secondOrder) - 1;
 		secondOutput = &enginePins.injectors[secondIndex];
 	} else {
-		secondOutput = NULL;
+		secondOutput = nullptr;
 	}
 
 	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
+	bool isSimultanious = mode == IM_SIMULTANEOUS;
 
 	if (!isSimultanious && !output->isInitialized()) {
 		// todo: extract method for this index math
