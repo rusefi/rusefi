@@ -9,6 +9,7 @@ import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.commands.HelloCommand;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -31,7 +32,7 @@ import static com.rusefi.config.generated.Fields.*;
 
 public class BinaryProtocolServer implements BinaryProtocolCommands {
     private static final int DEFAULT_PROXY_PORT = 2390;
-    private static final String TS_OK = "\0";
+    public static final String TS_OK = "\0";
     private final Logger logger;
 
     public AtomicInteger unknownCommands = new AtomicInteger();
@@ -117,17 +118,18 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
             System.out.println("Got [" + length + "] length promise");
 
-            byte[] packet = readPromisedBytes(in, length).getPacket();
+            Packet packet = readPromisedBytes(in, length);
+            byte[] payload = packet.getPacket();
 
-            if (packet.length == 0)
+            if (payload.length == 0)
                 throw new IOException("Empty packet");
 
-            byte command = packet[0];
+            byte command = payload[0];
 
             System.out.println("Got [" + (char) command + "/" + command + "] command");
 
-            if (command == COMMAND_HELLO) {
-                stream.sendPacket((TS_OK + Fields.TS_SIGNATURE).getBytes(), logger);
+            if (command == Fields.TS_HELLO_COMMAND) {
+                new HelloCommand(logger, Fields.TS_SIGNATURE).handle(packet, stream);
             } else if (command == COMMAND_PROTOCOL) {
 //                System.out.println("Ignoring crc F command");
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes(), logger);
@@ -138,11 +140,11 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             } else if (command == COMMAND_PAGE) {
                 stream.sendPacket(TS_OK.getBytes(), logger);
             } else if (command == COMMAND_READ) {
-                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet, 1, packet.length - 1));
+                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 handleRead(linkManager, dis, stream);
             } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
-                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet, 1, packet.length - 1));
-                handleWrite(linkManager, packet, dis, stream);
+                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
+                handleWrite(linkManager, payload, dis, stream);
             } else if (command == Fields.TS_BURN_COMMAND) {
                 stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK}, logger);
             } else if (command == Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
@@ -150,7 +152,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 // todo: relay command
                 stream.sendPacket(TS_OK.getBytes(), logger);
             } else if (command == Fields.TS_OUTPUT_COMMAND) {
-                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet, 1, packet.length - 1));
+                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 int offset = swap16(dis.readShort());
                 int count = swap16(dis.readShort());
                 System.out.println("TS_OUTPUT_COMMAND offset=" + offset + "/count=" + count);

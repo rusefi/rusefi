@@ -41,7 +41,7 @@ public class SerialAutoChecker implements Runnable {
         Logger logger = FileLog.LOGGER;
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         try {
-            stream.sendPacket(new byte[]{BinaryProtocolCommands.COMMAND_HELLO}, logger);
+            stream.sendPacket(new byte[]{Fields.TS_HELLO_COMMAND}, logger);
             byte[] response = incomingData.getPacket(logger, "", false);
             if (!checkResponseCode(response, BinaryProtocolCommands.RESPONSE_OK))
                 return;
