@@ -1,8 +1,7 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Jul 06 05:07:49 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jul 11 02:30:06 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
-#ifndef CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
-#define CONFIG_BOARDS_KINETIS_CONFIG_CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
+#pragma once
 #include "rusefi_types.h"
 // start of stft_cell_cfg_s
 struct stft_cell_cfg_s {
@@ -1004,9 +1003,10 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e tps2_1AdcChannel;
 	/**
+	 * 0.1 is a good default value
 	 * offset 516
 	 */
-	int unusedAt516;
+	float idle_derivativeFilterLoss;
 	/**
 	 * offset 520
 	 */
@@ -1272,9 +1272,10 @@ struct engine_configuration_s {
 	 */
 	ego_sensor_e afr_type;
 	/**
+	 * 0.1 is a good default value
 	 * offset 696
 	 */
-	uint32_t unused696;
+	float idle_antiwindupFreq;
 	/**
 	 * offset 700
 	 */
@@ -1315,9 +1316,10 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e throttlePedalUpPinMode;
 	/**
+	 * Additional idle PID offset while A/C is active
 	 * offset 711
 	 */
-	uint8_t unused711;
+	uint8_t acIdleExtraOffset;
 	/**
 	 * offset 712
 	 */
@@ -1373,6 +1375,7 @@ struct engine_configuration_s {
 	offset 744 bit 2 */
 	bool is_enabled_spi_3 : 1;
 	/**
+	 * enable sd/disable sd
 	offset 744 bit 3 */
 	bool isSdCardEnabled : 1;
 	/**
@@ -1502,9 +1505,14 @@ struct engine_configuration_s {
 	 */
 	uint8_t mc33_hvolt;
 	/**
+	 * Additional idle PID minValue while A/C is active
 	 * offset 761
 	 */
-	uint8_t unusedHere[3];
+	uint8_t acIdleExtraMin;
+	/**
+	 * offset 762
+	 */
+	uint8_t unusedHere[2];
 	/**
 	 * offset 764
 	 */
@@ -1808,10 +1816,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_283_30 : 1;
+	bool unusedBit_284_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_283_31 : 1;
+	bool unusedBit_284_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -3520,6 +3528,5 @@ struct persistent_config_s {
 
 typedef struct persistent_config_s persistent_config_s;
 
-#endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Jul 06 05:07:49 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jul 11 02:30:06 UTC 2020
