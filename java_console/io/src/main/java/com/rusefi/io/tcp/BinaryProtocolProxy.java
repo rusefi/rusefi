@@ -1,6 +1,7 @@
 package com.rusefi.io.tcp;
 
 import com.opensr5.Logger;
+import com.rusefi.io.IoStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -12,7 +13,7 @@ import java.util.function.Function;
 import static com.rusefi.binaryprotocol.BinaryProtocolCommands.COMMAND_PROTOCOL;
 
 public class BinaryProtocolProxy {
-    public static void createProxy(Socket targetEcuSocket, int serverProxyPort) {
+    public static void createProxy(IoStream targetEcuSocket, int serverProxyPort) {
         Function<Socket, Runnable> clientSocketRunnableFactory = new Function<Socket, Runnable>() {
             @Override
             public Runnable apply(Socket clientSocket) {
@@ -27,14 +28,11 @@ public class BinaryProtocolProxy {
         BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Logger.CONSOLE, null);
     }
 
-    private static void runProxy(Socket targetEcuSocket, Socket clientSocket) {
+    private static void runProxy(IoStream targetEcu, Socket clientSocket) {
         /*
          * Each client socket is running on it's own thread
          */
         try {
-            DataInputStream targetInputStream = new DataInputStream(targetEcuSocket.getInputStream());
-            DataOutputStream targetOutputStream = new DataOutputStream(targetEcuSocket.getOutputStream());
-
             DataInputStream clientInputStream = new DataInputStream(clientSocket.getInputStream());
             DataOutputStream clientOutputStream = new DataOutputStream(clientSocket.getOutputStream());
 
@@ -44,18 +42,18 @@ public class BinaryProtocolProxy {
                     BinaryProtocolServer.handleProtocolCommand(clientSocket);
                     continue;
                 }
-                proxyClientRequestToController(clientInputStream, firstByte, targetOutputStream);
+                proxyClientRequestToController(clientInputStream, firstByte, targetEcu);
 
-                proxyControllerResponseToClient(targetInputStream, clientOutputStream);
+                proxyControllerResponseToClient(targetEcu, clientOutputStream);
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    private static void proxyControllerResponseToClient(DataInputStream targetInputStream, DataOutputStream clientOutputStream) throws IOException {
+    private static void proxyControllerResponseToClient(IoStream targetInputStream, DataOutputStream clientOutputStream) throws IOException, InterruptedException {
         short length = targetInputStream.readShort();
-        BinaryProtocolServer.Packet packet = BinaryProtocolServer.readPromisedBytes(targetInputStream, length);
+        BinaryProtocolServer.Packet packet = BinaryProtocolServer.readPromisedBytes(targetInputStream.getDataBuffer(), length);
 
         System.out.println("Relaying controller response length=" + length);
         clientOutputStream.writeShort(length);
@@ -64,7 +62,7 @@ public class BinaryProtocolProxy {
         clientOutputStream.flush();
     }
 
-    private static void proxyClientRequestToController(DataInputStream in, byte firstByte, DataOutputStream targetOutputStream) throws IOException {
+    private static void proxyClientRequestToController(DataInputStream in, byte firstByte, IoStream targetOutputStream) throws IOException {
         byte secondByte = in.readByte();
         int length = firstByte * 256 + secondByte;
 
@@ -79,6 +77,5 @@ public class BinaryProtocolProxy {
         targetOutputStream.write(secondByte);
         targetOutputStream.write(packet.getPacket());
         targetOutputStream.writeInt(packet.getCrc());
-        targetOutputStream.flush();
     }
 }

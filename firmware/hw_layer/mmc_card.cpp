@@ -138,6 +138,7 @@ static void sdStatistics(void) {
 	printMmcPinout();
 	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
 			sdStatus);
+	printSpiConfig(&logger, "SD", engineConfiguration->sdCardSpiDevice);
 	if (isSdCardAlive()) {
 		scheduleMsg(&logger, "filename=%s size=%d", logName, totalLoggedBytes);
 	}

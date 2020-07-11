@@ -702,6 +702,8 @@
 #define iatFuelCorr_offset 10464
 #define iatFuelCorrBins_offset 10400
 #define IDLE_ADVANCE_CURVE_SIZE 8
+#define idle_antiwindupFreq_offset 696
+#define idle_derivativeFilterLoss_offset 516
 #define idle_offset 600
 #define idle_solenoidFrequency_offset 600
 #define idle_solenoidPin_offset 604
@@ -1062,8 +1064,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.07.08
-#define SIGNATURE_HASH 35698347
+#define SIGNATURE_DATE 2020.07.10
+#define SIGNATURE_HASH 345981352
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1323,7 +1325,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.07.08.all.35698347"
+#define TS_SIGNATURE "rusEFI 2020.07.10.all.345981352"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
@@ -1338,7 +1340,6 @@
 #define unused2508_offset 2508
 #define unused2516_offset 2516
 #define unused6312_offset 6312
-#define unused696_offset 696
 #define unused806_offset 806
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_25_offset 1476
@@ -1350,7 +1351,6 @@
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
 #define unused_former_warmup_target_afr_offset 2112
-#define unusedAt516_offset 516
 #define unusedAt712_offset 712
 #define unusedAt716_offset 716
 #define unusedAt720_offset 720

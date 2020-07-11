@@ -28,12 +28,7 @@ public class SerialIoStreamJSerialComm implements IoStream {
         this.sp = sp;
         this.port = port;
         this.logger = logger;
-        dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
-    }
-
-    @Override
-    public IncomingDataBuffer getDataBuffer() {
-        return dataBuffer;
+        this.dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
     }
 
     @Override
@@ -65,6 +60,11 @@ public class SerialIoStreamJSerialComm implements IoStream {
     @Override
     public boolean isClosed() {
         return isClosed;
+    }
+
+    @Override
+    public IncomingDataBuffer getDataBuffer() {
+        return dataBuffer;
     }
 
     @Override

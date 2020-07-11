@@ -6,8 +6,9 @@ import com.rusefi.Callable;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.core.EngineState;
-import com.rusefi.io.serial.SerialConnector;
+import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
@@ -179,7 +180,7 @@ public class LinkManager {
         if (isLogViewerMode(port)) {
             setConnector(LinkConnector.VOID);
         } else if (TcpConnector.isTcpPort(port)) {
-            setConnector(new SerialConnector(this, port, logger, new Callable<IoStream>() {
+            Callable<IoStream> streamFactory = new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
                     Socket socket;
@@ -187,16 +188,33 @@ public class LinkManager {
                         int portPart = TcpConnector.getTcpPort(port);
                         String hostname = TcpConnector.getHostname(port);
                         socket = new Socket(hostname, portPart);
-                        return new TcpIoStream(logger, socket);
+                        TcpIoStream tcpIoStream = new TcpIoStream(logger, socket);
+
+                        return tcpIoStream;
                     } catch (Throwable e) {
                         stateListener.onConnectionFailed();
                         return null;
                     }
                 }
-            }));
+            };
+
+            setConnector(new StreamConnector(this, port, logger, streamFactory));
             isSimulationMode = true;
         } else {
-            setConnector(new SerialConnector(this, port, logger, () -> SerialIoStreamJSerialComm.openPort(port, logger)));
+            Callable<IoStream> ioStreamCallable = () -> SerialIoStreamJSerialComm.openPort(port, logger);
+
+            Callable<IoStream> ioStreamCallable1 = new Callable<IoStream>() {
+                @Override
+                public IoStream call() {
+                    IoStream stream = ioStreamCallable.call();
+                    if (stream == null) {
+                        // error already reported
+                        return null;
+                    }
+                    return stream;
+                }
+            };
+            setConnector(new StreamConnector(this, port, logger, ioStreamCallable1));
         }
     }
 

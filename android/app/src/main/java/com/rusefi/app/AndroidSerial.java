@@ -9,6 +9,7 @@ import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.dfu.DfuLogic;
 import com.rusefi.io.ByteReader;
 import com.rusefi.io.IoStream;
@@ -18,6 +19,7 @@ import java.util.List;
 
 public class AndroidSerial implements IoStream {
     private static final int ST_CDC = 0x5740;
+    private final IncomingDataBuffer dataBuffer;
 
     private boolean isClosed;
     private UsbSerialPort usbSerialPort;
@@ -30,8 +32,14 @@ public class AndroidSerial implements IoStream {
         return prober.findAllDrivers(usbManager);
     }
 
-    public AndroidSerial(UsbSerialPort usbSerialPort) {
+    public AndroidSerial(UsbSerialPort usbSerialPort, Logger logger) {
         this.usbSerialPort = usbSerialPort;
+        dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
+    }
+
+    @Override
+    public IncomingDataBuffer getDataBuffer() {
+        return dataBuffer;
     }
 
     @Override

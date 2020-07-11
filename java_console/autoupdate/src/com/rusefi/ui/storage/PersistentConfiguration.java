@@ -46,6 +46,10 @@ public class PersistentConfiguration {
 
     @SuppressWarnings("unchecked")
     public void load() {
+        if (!config.isEmpty()) {
+            System.out.println("Configuration already loaded");
+            return;
+        }
         try {
             BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(CONFIG_FILE_NAME));
             /**
