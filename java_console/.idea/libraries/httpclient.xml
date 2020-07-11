@@ -4,6 +4,7 @@
       <root url="jar://$PROJECT_DIR$/lib/httpclient.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/httpmime.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/httpcore.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$PROJECT_DIR$/lib/httpclient-javadoc.jar!/" />
