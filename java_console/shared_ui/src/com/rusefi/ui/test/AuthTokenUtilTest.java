@@ -1,6 +1,6 @@
 package com.rusefi.ui.test;
 
-import com.rusefi.ui.AutoTokenUtil;
+import com.rusefi.auth.AutoTokenUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

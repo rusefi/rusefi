@@ -111,6 +111,7 @@ public class IncomingDataBuffer {
     }
 
     public void dropPending() {
+        // todo: when exactly do we need this logic?
         synchronized (cbb) {
             int pending = cbb.length();
             if (pending > 0) {

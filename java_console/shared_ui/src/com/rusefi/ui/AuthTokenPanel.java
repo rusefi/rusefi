@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.URLLabel;
 import org.jetbrains.annotations.NotNull;
