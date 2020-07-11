@@ -183,7 +183,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		 */
 		// Compute the position of this cylinder's twin in the firing order
 		int secondOrder = (i + (CONFIG(specs.cylindersCount) / 2)) % CONFIG(specs.cylindersCount);
-		int secondIndex = getCylinderId(secondOrder) - 1;
+		int secondIndex = getCylinderId(secondOrder PASS_ENGINE_PARAMETER_SUFFIX) - 1;
 		secondOutput = &enginePins.injectors[secondIndex];
 	} else {
 		secondOutput = nullptr;
