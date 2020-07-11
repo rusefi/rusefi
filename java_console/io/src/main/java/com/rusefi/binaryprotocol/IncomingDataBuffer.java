@@ -8,13 +8,14 @@ import etch.util.CircularByteBuffer;
 import net.jcip.annotations.ThreadSafe;
 
 import java.io.EOFException;
+import java.io.IOException;
 import java.util.Arrays;
 
 import static com.rusefi.binaryprotocol.IoHelper.*;
 
 /**
  * Thread-safe byte queue with blocking {@link #waitForBytes} method
- *
+ * <p>
  * Andrey Belomutskiy, (c) 2013-2020
  * 6/20/2015.
  */
@@ -38,11 +39,11 @@ public class IncomingDataBuffer {
         return incomingData;
     }
 
-    public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
+    public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse) throws EOFException {
         return getPacket(logger, msg, allowLongResponse, System.currentTimeMillis());
     }
 
-    public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse, long start) throws InterruptedException, EOFException {
+    public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse, long start) throws EOFException {
         boolean isTimeout = waitForBytes(msg + " header", start, 2);
         if (isTimeout)
             return null;
@@ -90,7 +91,7 @@ public class IncomingDataBuffer {
      *
      * @return true in case of timeout, false if everything is fine
      */
-    public boolean waitForBytes(String loggingMessage, long startTimestamp, int count) throws InterruptedException {
+    public boolean waitForBytes(String loggingMessage, long startTimestamp, int count) {
         logger.info(loggingMessage + ": waiting for " + count + " byte(s)");
         synchronized (cbb) {
             while (cbb.length() < count) {
@@ -99,7 +100,11 @@ public class IncomingDataBuffer {
                     logger.info(loggingMessage + ": timeout. Got only " + cbb.length());
                     return true; // timeout. Sad face.
                 }
-                cbb.wait(timeout);
+                try {
+                    cbb.wait(timeout);
+                } catch (InterruptedException e) {
+                    throw new IllegalStateException(e);
+                }
             }
         }
         return false; // looks good!
@@ -141,28 +146,28 @@ public class IncomingDataBuffer {
         }
     }
 
-    public byte readByte() throws EOFException, InterruptedException {
+    public byte readByte() throws IOException {
         boolean timeout = waitForBytes("readByte", System.currentTimeMillis(), 1);
         if (timeout)
-            throw new IllegalStateException("Timeout in readByte");
+            throw new IOException("Timeout in readByte");
         return (byte) getByte();
     }
 
-    public int readInt() throws EOFException, InterruptedException {
+    public int readInt() throws EOFException {
         boolean timeout = waitForBytes("readInt", System.currentTimeMillis(), 4);
         if (timeout)
             throw new IllegalStateException("Timeout in readByte");
         return swap32(getInt());
     }
 
-    public short readShort() throws EOFException, InterruptedException {
+    public short readShort() throws EOFException {
         boolean timeout = waitForBytes("readShort", System.currentTimeMillis(), 2);
         if (timeout)
             throw new IllegalStateException("Timeout in readShort");
         return (short) swap16(getShort());
     }
 
-    public int read(byte[] packet) throws InterruptedException {
+    public int read(byte[] packet) {
         boolean timeout = waitForBytes("read", System.currentTimeMillis(), packet.length);
         if (timeout)
             throw new IllegalStateException("Timeout while waiting " + packet.length);
