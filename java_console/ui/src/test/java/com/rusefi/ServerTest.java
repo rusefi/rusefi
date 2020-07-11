@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -29,7 +30,7 @@ public class ServerTest {
         CountDownLatch serverCreated = new CountDownLatch(1);
 
 
-        Backend backend = new Backend(3 * Timeouts.SECOND);
+        Backend backend = new Backend(5 * Timeouts.SECOND);
 
 
         BinaryProtocolServer.tcpServerSocket(serverPort, "Server", new Function<Socket, Runnable>() {
@@ -42,6 +43,10 @@ public class ServerTest {
                         clientConnectionState.sayHello();
                         backend.register(clientConnectionState);
 
+                        while(true) {
+
+                        }
+
                     }
                 };
             }
@@ -51,11 +56,16 @@ public class ServerTest {
         assertEquals(0, backend.getCount());
 
 
-        new MockRusEfiDevice("rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPort);
-        new MockRusEfiDevice("rusEFI 2020.07.11.proteus_f4.1986715563", logger).connect(serverPort);
+        new MockRusEfiDevice("00000000-1234-1234-1234-123456789012", "rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPort);
+        new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", "rusEFI 2020.07.11.proteus_f4.1986715563", logger).connect(serverPort);
 
 
+        // todo: technically we should have callbacks for 'connect', will make this better if this would be failing
         sleep(Timeouts.SECOND);
+
+        List<ClientConnectionState> clients = backend.getClients();
+        assertEquals(2, clients.size());
+
 
     }
 }

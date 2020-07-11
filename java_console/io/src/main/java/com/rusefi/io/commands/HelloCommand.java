@@ -16,6 +16,10 @@ public class HelloCommand implements Command {
         this.tsSignature = tsSignature;
     }
 
+    public static void send(IoStream stream, Logger logger) throws IOException {
+        stream.sendPacket(new byte[]{Fields.TS_HELLO_COMMAND}, logger);
+    }
+
     @Override
     public byte getCommand() {
         return Fields.TS_HELLO_COMMAND;

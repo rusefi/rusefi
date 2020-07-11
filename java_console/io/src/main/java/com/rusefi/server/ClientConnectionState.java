@@ -1,10 +1,11 @@
 package com.rusefi.server;
 
 import com.opensr5.Logger;
+import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.TcpIoStream;
 
 import java.io.Closeable;
@@ -44,12 +45,17 @@ public class ClientConnectionState {
 
     public void sayHello() {
         try {
-            stream.sendPacket(new byte[]{Fields.TS_HELLO_COMMAND}, logger);
+            HelloCommand.send(stream, logger);
             byte[] response = incomingData.getPacket(logger, "", false);
             if (!checkResponseCode(response, BinaryProtocolCommands.RESPONSE_OK))
                 return;
-            String signature = new String(response, 1, response.length - 1);
-            logger.info("New client: " + signature);
+            String tokenAndSignature = new String(response, 1, response.length - 1);
+            String token = tokenAndSignature.length() > AutoTokenUtil.TOKEN_LENGTH ? tokenAndSignature.substring(0, AutoTokenUtil.TOKEN_LENGTH) : null;
+            if (!AutoTokenUtil.isToken(token))
+                throw new IOException("Invalid token");
+            String signature = tokenAndSignature.substring(AutoTokenUtil.TOKEN_LENGTH);
+
+            logger.info(token + " New client: " + signature);
 
         } catch (IOException e) {
             close();

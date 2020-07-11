@@ -6,6 +6,7 @@ import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class SerialAutoChecker implements Runnable {
         Logger logger = FileLog.LOGGER;
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         try {
-            stream.sendPacket(new byte[]{Fields.TS_HELLO_COMMAND}, logger);
+            HelloCommand.send(stream, logger);
             byte[] response = incomingData.getPacket(logger, "", false);
             if (!checkResponseCode(response, BinaryProtocolCommands.RESPONSE_OK))
                 return;

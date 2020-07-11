@@ -43,6 +43,12 @@ public class Backend {
 
     }
 
+    public void register(ClientConnectionState clientConnectionState) {
+        synchronized (clients) {
+            clients.add(clientConnectionState);
+        }
+    }
+
     private void close(ClientConnectionState inactiveClient) {
         inactiveClient.close();
         synchronized (clients) {
@@ -50,9 +56,9 @@ public class Backend {
         }
     }
 
-    public void register(ClientConnectionState clientConnectionState) {
+    public List<ClientConnectionState> getClients() {
         synchronized (clients) {
-            clients.add(clientConnectionState);
+            return new ArrayList<>(clients);
         }
     }
 
