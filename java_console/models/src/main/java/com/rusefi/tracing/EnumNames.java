@@ -48,5 +48,7 @@ public class EnumNames {
 	"EngineSniffer",
 	"PrepareIgnitionSchedule",
 	"Hip9011IntHoldCallback",
+	"GlobalLock",
+	"GlobalUnlock",
 	};
 }
