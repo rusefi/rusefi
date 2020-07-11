@@ -209,7 +209,9 @@ uint32_t maxLockedDuration = 0;
 #endif /* EFI_CLOCK_LOCKS */
 
 void onLockHook(void) {
+#if ENABLE_PERF_TRACE
 	perfEventInstantGlobal(PE::GlobalLock);
+#endif /* ENABLE_PERF_TRACE */
 
 #if EFI_CLOCK_LOCKS
 	lastLockTime = getTimeNowLowerNt();
@@ -228,7 +230,9 @@ void onUnlockHook(void) {
 //	}
 #endif /* EFI_CLOCK_LOCKS */
 
+#if ENABLE_PERF_TRACE
 	perfEventInstantGlobal(PE::GlobalUnlock);
+#endif /* ENABLE_PERF_TRACE */
 }
 
 void firmwareError(obd_code_e code, const char *fmt, ...) {
