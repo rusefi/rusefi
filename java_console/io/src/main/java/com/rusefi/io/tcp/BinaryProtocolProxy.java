@@ -46,12 +46,12 @@ public class BinaryProtocolProxy {
 
                 proxyControllerResponseToClient(targetEcu, clientOutputStream);
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void proxyControllerResponseToClient(IoStream targetInputStream, DataOutputStream clientOutputStream) throws IOException, InterruptedException {
+    private static void proxyControllerResponseToClient(IoStream targetInputStream, DataOutputStream clientOutputStream) throws IOException {
         short length = targetInputStream.readShort();
         BinaryProtocolServer.Packet packet = BinaryProtocolServer.readPromisedBytes(targetInputStream.getDataBuffer(), length);
 

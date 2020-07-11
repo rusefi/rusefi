@@ -55,7 +55,7 @@ public class SerialAutoChecker implements Runnable {
                 result.set(serialPort);
                 portFound.countDown();
             }
-        } catch (IOException | InterruptedException ignore) {
+        } catch (IOException ignore) {
             return;
         } finally {
             stream.close();
