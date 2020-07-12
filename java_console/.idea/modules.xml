@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/logging/logging.iml" filepath="$PROJECT_DIR$/logging/logging.iml" />
       <module fileurl="file://$PROJECT_DIR$/logging-api/logging-api.iml" filepath="$PROJECT_DIR$/logging-api/logging-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/models/models.iml" filepath="$PROJECT_DIR$/models/models.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../java_tools/proxy_server/proxy_server.iml" filepath="$PROJECT_DIR$/../java_tools/proxy_server/proxy_server.iml" />
       <module fileurl="file://$PROJECT_DIR$/romraider/romraider.iml" filepath="$PROJECT_DIR$/romraider/romraider.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared_io/shared_io.iml" filepath="$PROJECT_DIR$/shared_io/shared_io.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared_ui/shared_ui.iml" filepath="$PROJECT_DIR$/shared_ui/shared_ui.iml" />
