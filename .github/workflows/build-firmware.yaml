@@ -131,6 +131,7 @@ jobs:
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
 
   build-primary-bundle:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
