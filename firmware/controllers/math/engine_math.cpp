@@ -157,8 +157,12 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
 		injectorIndex = 0;
-	} else if (mode == IM_SEQUENTIAL || mode == IM_BATCH) {
+	} else if (mode == IM_SEQUENTIAL || (mode == IM_BATCH && CONFIG(twoWireBatchInjection))) {
+		// Map order index -> cylinder index (firing order)
 		injectorIndex = getCylinderId(i PASS_ENGINE_PARAMETER_SUFFIX) - 1;
+	} else if (mode == IM_BATCH) {
+		// Loop over the first half of the firing order twice
+		injectorIndex = i % (engineConfiguration->specs.cylindersCount / 2);
 	} else {
 		firmwareError(CUSTOM_OBD_UNEXPECTED_INJECTION_MODE, "Unexpected injection mode %d", mode);
 		injectorIndex = 0;
