@@ -286,8 +286,8 @@ float PidIndustrial::getOutput(float target, float input, float dTime) {
 }
 
 float PidIndustrial::limitOutput(float v) const {
-	if (v < parameters->minValue)
-		v = parameters->minValue;
+	if (v < getMinValue())
+		v = getMinValue();
 	if (v > parameters->maxValue)
 		v = parameters->maxValue;
 	return v;
