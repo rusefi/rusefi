@@ -836,7 +836,6 @@
 #define issue_294_29_offset 76
 #define issue_294_30_offset 76
 #define issue_294_31_offset 76
-#define issue_294_unused_offset 76
 #define isTunerStudioEnabled_offset 1476
 #define isVerboseAlternator_offset 744
 #define isVerboseAuxPid1_offset 76
@@ -1064,8 +1063,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.07.11
-#define SIGNATURE_HASH 4227575396
+#define SIGNATURE_DATE 2020.07.12
+#define SIGNATURE_HASH 3557987126
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1326,7 +1325,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.07.11.all.4227575396"
+#define TS_SIGNATURE "rusEFI 2020.07.12.all.3557987126"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
@@ -1394,6 +1393,7 @@
 #define unusedsw_offset 4020
 #define unusedvref_offset 4016
 #define useAdvanceCorrectionsForCranking_offset 1476
+#define useCicPidForIdle_offset 76
 #define useConstantDwellDuringCranking_offset 1464
 #define useETBforIdleControl_offset 744
 #define useFixedBaroCorrFromMap_offset 1476
