@@ -140,7 +140,7 @@ jobs:
 
     - name: Generate Configs
       working-directory: ./firmware/
-      run: bash gen_config.sh
+      run: bash gen_config.sh default default
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
@@ -172,6 +172,9 @@ jobs:
 
     - name: Build Primary Bundle
       run: OS="Windows_NT" bash misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
+
+    - name: Package Bundle
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh default
 
     - name: Upload primary bundle
       uses: actions/upload-artifact@v2
