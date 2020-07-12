@@ -10,7 +10,6 @@ import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.TcpIoStream;
 
 import java.io.Closeable;
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.function.Function;
@@ -22,12 +21,17 @@ public class ClientConnectionState {
     private final Logger logger;
     private final Function<String, UserDetails> userDetailsResolver;
 
-    private long lastActivityTimestamp;
     private boolean isClosed;
     private IoStream stream;
     private IncomingDataBuffer incomingData;
+    /**
+     * Data from controller
+     */
+    private SessionDetails sessionDetails;
+    /**
+     * user info from rusEFI database based on auth token
+     */
     private UserDetails userDetails;
-    private String signature;
 
     public ClientConnectionState(Socket clientSocket, Logger logger, Function<String, UserDetails> userDetailsResolver) {
         this.clientSocket = clientSocket;
@@ -55,19 +59,18 @@ public class ClientConnectionState {
         close(clientSocket);
     }
 
-    public void sayHello() throws IOException {
+    public void requestControllerInfo() throws IOException {
         HelloCommand.send(stream, logger);
         byte[] response = incomingData.getPacket(logger, "", false);
         if (!checkResponseCode(response, BinaryProtocolCommands.RESPONSE_OK))
             return;
-        String tokenAndSignature = new String(response, 1, response.length - 1);
-        String authToken = tokenAndSignature.length() > AutoTokenUtil.TOKEN_LENGTH ? tokenAndSignature.substring(0, AutoTokenUtil.TOKEN_LENGTH) : null;
-        if (!AutoTokenUtil.isToken(authToken))
-            throw new IOException("Invalid token");
-        signature = tokenAndSignature.substring(AutoTokenUtil.TOKEN_LENGTH);
+        String jsonString = new String(response, 1, response.length - 1);
+        sessionDetails = SessionDetails.valueOf(jsonString);
+        if (!AutoTokenUtil.isToken(sessionDetails.getAuthToken()))
+            throw new IOException("Invalid token in " + jsonString);
 
-        logger.info(authToken + " New client: " + signature);
-        userDetails = userDetailsResolver.apply(authToken);
+        logger.info(sessionDetails.getAuthToken() + " New client: " + sessionDetails.getControllerInfo());
+        userDetails = userDetailsResolver.apply(sessionDetails.getAuthToken());
         logger.info("User " + userDetails);
     }
 
@@ -75,8 +78,8 @@ public class ClientConnectionState {
         return userDetails;
     }
 
-    public String getSignature() {
-        return signature;
+    public SessionDetails getSessionDetails() {
+        return sessionDetails;
     }
 
     private static void close(Closeable closeable) {

@@ -6,6 +6,8 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.server.ControllerInfo;
+import com.rusefi.server.SessionDetails;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -15,13 +17,14 @@ import static com.rusefi.io.tcp.BinaryProtocolServer.getPacketLength;
 import static com.rusefi.io.tcp.BinaryProtocolServer.readPromisedBytes;
 
 public class MockRusEfiDevice {
-    private final String authToken;
-    private final String signature;
+    private SessionDetails sessionDetails;
     private final Logger logger;
 
     public MockRusEfiDevice(String authToken, String signature, Logger logger) {
-        this.authToken = authToken;
-        this.signature = signature;
+        ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", signature);
+
+        sessionDetails = new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
+
         this.logger = logger;
     }
 
@@ -40,9 +43,8 @@ public class MockRusEfiDevice {
 
                     byte command = payload[0];
 
-
                     if (command == Fields.TS_HELLO_COMMAND) {
-                        new HelloCommand(logger, authToken + signature).handle(packet, stream);
+                        new HelloCommand(logger, sessionDetails.toJson()).handle(packet, stream);
                     } else {
                         handleCommand();
                     }

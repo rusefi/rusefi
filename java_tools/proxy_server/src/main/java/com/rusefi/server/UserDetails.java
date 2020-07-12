@@ -8,11 +8,11 @@ public class UserDetails {
     public static final String USER_ID = "user_id";
     public static final String USERNAME = "username";
     private final String userName;
-    private final int id;
+    private final int userId;
 
-    public UserDetails(String userName, int id) {
+    public UserDetails(String userName, int userId) {
         this.userName = userName;
-        this.id = id;
+        this.userId = userId;
     }
 
     public static UserDetails valueOf(JSONObject element) {
@@ -25,15 +25,15 @@ public class UserDetails {
         return userName;
     }
 
-    public int getId() {
-        return id;
+    public int getUserId() {
+        return userId;
     }
 
     @Override
     public String toString() {
         return "UserDetails{" +
                 "userName='" + userName + '\'' +
-                ", id=" + id +
+                ", id=" + userId +
                 '}';
     }
 }
