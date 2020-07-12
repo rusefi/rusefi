@@ -112,13 +112,19 @@ jobs:
     - name: Build Firmware
       run: sh misc/jenkins/compile_other_versions/compile_and_upload.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
 
+    - name: Package Bundle
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh
+
     - name: Upload bundle
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
 
     - name: Upload autoupdate bundle
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
