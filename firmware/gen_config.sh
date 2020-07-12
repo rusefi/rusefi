@@ -49,15 +49,13 @@ echo "This would automatically copy latest file to 'dev' TS projects to ${TS_PAT
 cp -v tunerstudio/generated/rusefi.ini $TS_PATH/dev/projectCfg/mainController.ini
 cp -v tunerstudio/generated/rusefi_mre_f4.ini $TS_PATH/mre_f4/projectCfg/mainController.ini
 
-for BOARD in "microrusefi mre_f7" "microrusefi mre_f4" "frankenso frankenso_na6" "prometheus prometheus_469" "prometheus prometheus_405" "proteus proteus_f7" "proteus proteus_f4"; do
- BOARD_NAME="${BOARD% *}"
- BOARD_SHORT_NAME="${BOARD#* }"
- bash gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME
- [ $? -eq 0 ] || { echo "ERROR generating board $BOARD_NAME $BOARD_SHORT_NAME"; exit 1; }
-done
-
-cd config/boards/kinetis/config
-bash gen_config.sh
-[ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
+if [ "$1" = "kinetis" ]; then
+  cd config/boards/kinetis/config
+  bash gen_config.sh
+  [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
+else
+  bash gen_config_board.sh $1 $2
+  [ $? -eq 0 ] || { echo "ERROR generating board $BOARD_NAME $BOARD_SHORT_NAME"; exit 1; }
+fi
 
 exit 0

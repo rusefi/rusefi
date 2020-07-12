@@ -68,7 +68,7 @@ jobs:
   
     - name: Generate Configs
       working-directory: ./firmware/
-      run: sh gen_config.sh
+      run: sh gen_config.sh ${{matrix.folder}} ${{matrix.build-target}}
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
