@@ -11,6 +11,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -26,7 +27,6 @@ import static org.junit.Assert.assertTrue;
 
 public class TcpCommunicationIntegrationTest {
     private static final Logger LOGGER = Logger.CONSOLE;
-    public static final String LOCALHOST = "localhost";
 
     // todo: implement & test TCP connector restart!
     @Test
@@ -68,7 +68,7 @@ public class TcpCommunicationIntegrationTest {
         // todo: remove CONFIGURATION_RUSEFI_BINARY or nicer API to disable local file load
 
         LinkManager clientManager = new LinkManager(LOGGER);
-        clientManager.startAndConnect(LOCALHOST + ":" + port, new ConnectionStateListener() {
+        clientManager.startAndConnect(ProxyClient.LOCALHOST + ":" + port, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 connectionEstablishedCountDownLatch.countDown();
@@ -105,16 +105,16 @@ public class TcpCommunicationIntegrationTest {
 
         IoStream targetEcuSocket;
         try {
-            targetEcuSocket = new TcpIoStream(LOGGER, new Socket(LOCALHOST, controllerPort));
+            targetEcuSocket = new TcpIoStream(LOGGER, new Socket(ProxyClient.LOCALHOST, controllerPort));
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to connect to controller " + LOCALHOST + ":" + controllerPort);
+            throw new IllegalStateException("Failed to connect to controller " + ProxyClient.LOCALHOST + ":" + controllerPort);
         }
         BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
         LinkManager clientManager = new LinkManager(LOGGER);
-        clientManager.startAndConnect(LOCALHOST + ":" + proxyPort, new ConnectionStateListener() {
+        clientManager.startAndConnect(ProxyClient.LOCALHOST + ":" + proxyPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 connectionEstablishedCountDownLatch.countDown();

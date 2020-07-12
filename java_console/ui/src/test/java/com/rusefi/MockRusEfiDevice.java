@@ -12,7 +12,7 @@ import com.rusefi.server.SessionDetails;
 import java.io.IOException;
 import java.net.Socket;
 
-import static com.rusefi.io.TcpCommunicationIntegrationTest.LOCALHOST;
+import static com.rusefi.tools.online.ProxyClient.LOCALHOST;
 import static com.rusefi.io.tcp.BinaryProtocolServer.getPacketLength;
 import static com.rusefi.io.tcp.BinaryProtocolServer.readPromisedBytes;
 
