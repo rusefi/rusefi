@@ -100,10 +100,12 @@ jobs:
 
     # Build rusEFI console
     - name: Build console
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       run: sh misc/jenkins/build_java_console.sh
   
     # Build the simulator
     - name: Build simulator
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       run: OS="Windows_NT" sh misc/jenkins/build_simulator.sh
 
     # Build the firmware!
