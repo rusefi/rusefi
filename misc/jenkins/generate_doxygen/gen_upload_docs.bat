@@ -1,2 +1,2 @@
 @echo off
-sh.exe misc\jenkins\generate_doxygen\gen_upload_docs.sh
+bash.exe misc\jenkins\generate_doxygen\gen_upload_docs.sh
