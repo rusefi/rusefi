@@ -1,5 +1,8 @@
 package com.rusefi.server;
 
+import com.opensr5.Logger;
+import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.tools.online.ProxyClient;
 import org.jetbrains.annotations.NotNull;
 import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
@@ -12,20 +15,43 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Function;
 
 public class Backend {
-    public static final String LIST_PATH = "/list_online";
     public static final String VERSION_PATH = "/version";
     public static final String BACKEND_VERSION = "0.0001";
 
-    private final FkRegex showOnlineUsers = new FkRegex(LIST_PATH,
+    private final FkRegex showOnlineUsers = new FkRegex(ProxyClient.LIST_PATH,
             (Take) req -> getUsersOnline()
     );
+
+    public static void runProxy(int serverPort, CountDownLatch serverCreated, Backend backend) {
+        BinaryProtocolServer.tcpServerSocket(serverPort, "Server", new Function<Socket, Runnable>() {
+            @Override
+            public Runnable apply(Socket clientSocket) {
+                return new Runnable() {
+                    @Override
+                    public void run() {
+                        ClientConnectionState clientConnectionState = new ClientConnectionState(clientSocket, backend.logger, backend.getUserDetailsResolver());
+                        try {
+                            clientConnectionState.requestControllerInfo();
+
+                            backend.register(clientConnectionState);
+                            clientConnectionState.runEndlessLoop();
+                        } catch (IOException e) {
+                            backend.close(clientConnectionState);
+                        }
+                    }
+                };
+            }
+        }, backend.logger, parameter -> serverCreated.countDown());
+    }
 
     @NotNull
     private RsJson getUsersOnline() throws IOException {
@@ -47,10 +73,12 @@ public class Backend {
     private final Set<ClientConnectionState> clients = new HashSet<>();
     //    private final int clientTimeout;
     private final Function<String, UserDetails> userDetailsResolver;
+    private final Logger logger;
 
-    public Backend(Function<String, UserDetails> userDetailsResolver, int httpPort) {
+    public Backend(Function<String, UserDetails> userDetailsResolver, int httpPort, Logger logger) {
 //        this.clientTimeout = clientTimeout;
         this.userDetailsResolver = userDetailsResolver;
+        this.logger = logger;
 
 
         new Thread(new Runnable() {

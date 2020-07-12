@@ -3,8 +3,6 @@ package com.rusefi.server;
 import org.json.simple.JSONObject;
 
 public class UserDetails {
-
-
     public static final String USER_ID = "user_id";
     public static final String USERNAME = "username";
     private final String userName;
