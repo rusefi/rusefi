@@ -19,8 +19,9 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class Backend {
-
     public static final String LIST_PATH = "/list_online";
+    public static final String VERSION_PATH = "/version";
+    public static final String BACKEND_VERSION = "0.0001";
 
     private final FkRegex showOnlineUsers = new FkRegex(LIST_PATH,
             (Take) req -> getUsersOnline()
@@ -33,9 +34,9 @@ public class Backend {
         for (ClientConnectionState client : clients) {
 
             JsonObject clientObject = Json.createObjectBuilder()
-                    .add(UserDetails.USER_ID, client.getUserDetails().getId())
+                    .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
-                    .add("signature", client.getSignature())
+                    .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
                     .build();
             builder.add(clientObject);
         }
@@ -58,6 +59,7 @@ public class Backend {
                 try {
                     new FtBasic(
                             new TkFork(showOnlineUsers,
+                                    new FkRegex(VERSION_PATH, BACKEND_VERSION),
                                     new FkRegex("/", "<a href='https://rusefi.com/online/'>rusEFI Online</a>")
                             ), httpPort
                     ).start(Exit.NEVER);

@@ -27,7 +27,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.server.Backend.LIST_PATH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -49,9 +48,16 @@ public class ServerTest {
         Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
 
         CountDownLatch allClientsDisconnected = new CountDownLatch(1);
+        CountDownLatch onConnected = new CountDownLatch(2);
 
         int httpPort = 8000;
         Backend backend = new Backend(userDetailsResolver, httpPort) {
+            @Override
+            public void register(ClientConnectionState clientConnectionState) {
+                super.register(clientConnectionState);
+                onConnected.countDown();
+            }
+
             @Override
             public void close(ClientConnectionState inactiveClient) {
                 super.close(inactiveClient);
@@ -68,7 +74,7 @@ public class ServerTest {
                     public void run() {
                         ClientConnectionState clientConnectionState = new ClientConnectionState(clientSocket, logger, backend.getUserDetailsResolver());
                         try {
-                            clientConnectionState.sayHello();
+                            clientConnectionState.requestControllerInfo();
 
                             backend.register(clientConnectionState);
                             clientConnectionState.runEndlessLoop();
@@ -87,9 +93,7 @@ public class ServerTest {
         new MockRusEfiDevice("00000000-1234-1234-1234-123456789012", "rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPort);
         new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", "rusEFI 2020.07.11.proteus_f4.1986715563", logger).connect(serverPort);
 
-
-        // todo: technically we should have callbacks for 'connect', will make this better if this would be failing
-        sleep(Timeouts.SECOND);
+        assertTrue(onConnected.await(30, TimeUnit.SECONDS));
 
         List<ClientConnectionState> clients = backend.getClients();
         assertEquals(2, clients.size());
