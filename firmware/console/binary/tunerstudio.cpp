@@ -95,16 +95,6 @@
 
 #if EFI_TUNER_STUDIO
 
-
-#ifndef EFI_IDLE_CONTROL
- #if EFI_IDLE_PID_CIC
-  extern PidCic idlePid;
- #else
-  extern Pid idlePid;
- #endif /* EFI_IDLE_PID_CIC */
-#endif /* EFI_IDLE_CONTROL */
-
-
 EXTERN_ENGINE;
 
 extern persistent_config_container_s persistentState;
@@ -298,7 +288,7 @@ static const void * getStructAddr(int structId) {
 
 #ifndef EFI_IDLE_CONTROL
 	case LDS_IDLE_PID_STATE_INDEX:
-		return static_cast<pid_state_s*>(&idlePid);
+		return static_cast<pid_state_s*>(getIdlePid());
 #endif /* EFI_IDLE_CONTROL */
 
 	default:
