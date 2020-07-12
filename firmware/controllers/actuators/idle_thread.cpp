@@ -114,11 +114,11 @@ Pid * getIdlePid() {
 	return &idlePid;
 }
 
-float getIdlePidOffset() {
+float getIdlePidOffset(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return getIdlePid()->getOffset();
 }
 
-float getIdlePidMinValue() {
+float getIdlePidMinValue(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return getIdlePid()->getMinValue();
 }
 

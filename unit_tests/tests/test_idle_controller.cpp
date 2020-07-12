@@ -43,15 +43,15 @@ TEST(idle, fsioPidParameters) {
 	ASSERT_EQ(1, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(40, getIdlePidOffset());
-	ASSERT_EQ(30, getIdlePidMinValue());
+	ASSERT_EQ(40, getIdlePidOffset(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(30, getIdlePidMinValue(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	setMockVoltage(engineConfiguration->acSwitchAdc, 5 PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ(0, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(50, getIdlePidOffset());
-	ASSERT_EQ(60, getIdlePidMinValue());
+	ASSERT_EQ(50, getIdlePidOffset(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(60, getIdlePidMinValue(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 
 	// todo finish this unit test!

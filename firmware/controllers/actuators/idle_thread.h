@@ -36,6 +36,6 @@ void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isIdleHardwareRestartNeeded();
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration);
-float getIdlePidOffset();
+float getIdlePidOffset(DECLARE_ENGINE_PARAMETER_SUFFIX);
 Pid * getIdlePid();
-float getIdlePidMinValue();
+float getIdlePidMinValue(DECLARE_ENGINE_PARAMETER_SUFFIX);
