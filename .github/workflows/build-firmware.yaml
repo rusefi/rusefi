@@ -114,7 +114,7 @@ jobs:
 
     - name: Package Bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}}
 
     - name: Upload bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
