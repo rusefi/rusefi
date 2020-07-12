@@ -15,6 +15,3 @@
 [submodule "hardware/InteractiveHtmlBom"]
 	path = hardware/InteractiveHtmlBom
 	url = https://github.com/openscopeproject/InteractiveHtmlBom.git
-[submodule "misc/InteractiveHtmlBom"]
-	path = misc/InteractiveHtmlBom
-	url = https://github.com/openscopeproject/InteractiveHtmlBom
