@@ -3,7 +3,7 @@ plugins {
 }
 
 configurations {
-    compile.exclude group: "org.hamcrest", module: "hamcrest-core"
+//    compile.exclude group: "org.hamcrest", module: "hamcrest-core"
 }
 
 dependencies {
@@ -17,5 +17,5 @@ dependencies {
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
 
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    testImplementation group: 'junit', name: 'junit', version: '4.8.2'
 }
