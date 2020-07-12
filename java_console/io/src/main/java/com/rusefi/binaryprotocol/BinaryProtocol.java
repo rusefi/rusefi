@@ -288,7 +288,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         setController(newVersion);
     }
 
-    private byte[] receivePacket(String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
+    private byte[] receivePacket(String msg, boolean allowLongResponse) throws EOFException {
         long start = System.currentTimeMillis();
         synchronized (ioLock) {
             return incomingData.getPacket(logger, msg, allowLongResponse, start);
@@ -408,7 +408,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
             sendPacket(packet);
             return receivePacket(msg, allowLongResponse);
-        } catch (InterruptedException | IOException e) {
+        } catch (IOException e) {
             logger.error(msg + ": executeCommand failed: " + e);
             close();
             return null;
