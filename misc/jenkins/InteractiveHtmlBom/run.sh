@@ -1,6 +1,7 @@
 #!/bin/bash
 
-IBOM_CMD="python misc/InteractiveHtmlBom/generate_interactive_bom.py --no-browser --name-format \"%f_latest\" --dest-dir ../ibom"
+INTERACTIVE_HTML_BOM_NO_DISPLAY="true"
+IBOM_CMD="python3 hardware/InteractiveHtmlBom/InteractiveHtmlBom/generate_interactive_bom.py --no-browser --name-format \"%f_latest\" --dest-dir ../ibom"
 echo "IBOM_CMD=$IBOM_CMD"
 
 pwd

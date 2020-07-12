@@ -24,6 +24,7 @@ cd firmware
 date "+%a %D %T.%2S"
 
 echo "$SCRIPT_NAME: will be Erasing chip"
+
 [ -e flash_erase407.sh ] || { echo "NOT FOUND flash_erase.sh"; exit 1; }
 echo "$SCRIPT_NAME: Erasing chip"
 bash flash_erase407.sh
@@ -41,6 +42,7 @@ bash clean_compile_two_versions.sh
 echo "$SCRIPT_NAME: Building DFU"
 if uname | grep "NT"; then
  chmod u+x ../misc/encedo_hex2dfu/hex2dfu.exe
+
 # ../misc/encedo_hex2dfu/hex2dfu.exe -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
  ../misc/encedo_hex2dfu/hex2dfu.exe -i deliver/rusefi.hex -o deliver/rusefi.dfu
 else
@@ -73,7 +75,6 @@ pwd
 export BUNDLE_FULL_NAME="rusefi_bundle"
 bash misc/jenkins/build_working_folder.sh
 [ $? -eq 0 ] || { echo "$SCRIPT_NAME: ERROR: invoking build_working_folder.sh"; exit 1; }
-
 
 echo "$SCRIPT_NAME: Going back to root folder"
 cd "$ROOT_FOLDER"
