@@ -2,7 +2,6 @@ package com.rusefi.server;
 
 import com.opensr5.Logger;
 import com.rusefi.auth.AutoTokenUtil;
-import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
@@ -13,8 +12,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.function.Function;
-
-import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
 public class ClientConnectionState {
     private final Socket clientSocket;
@@ -61,10 +58,9 @@ public class ClientConnectionState {
 
     public void requestControllerInfo() throws IOException {
         HelloCommand.send(stream, logger);
-        byte[] response = incomingData.getPacket(logger, "", false);
-        if (!checkResponseCode(response, BinaryProtocolCommands.RESPONSE_OK))
+        String jsonString = HelloCommand.getHelloResponse(incomingData, logger);
+        if (jsonString == null)
             return;
-        String jsonString = new String(response, 1, response.length - 1);
         sessionDetails = SessionDetails.valueOf(jsonString);
         if (!AutoTokenUtil.isToken(sessionDetails.getAuthToken()))
             throw new IOException("Invalid token in " + jsonString);
