@@ -13,7 +13,7 @@ jobs:
       
     - name: Generate Configs
       working-directory: ./firmware/
-      run: sh gen_config.sh
+      run: sh gen_config.sh default default
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
