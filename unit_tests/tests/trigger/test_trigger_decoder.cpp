@@ -566,17 +566,25 @@ TEST(misc, testTriggerDecoder) {
 
 extern fuel_Map3D_t fuelMap;
 
-static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
+static void assertInjectionEventBase(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
 	ASSERT_EQ(injectorIndex, ev->outputs[0]->injectorIndex) << msg << "inj index";
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.triggerEventIndex);
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffsetFromTriggerEvent);
 }
 
-static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int injectorIndex, int secondInjectorIndex, int eventIndex, angle_t angleOffset) {
-	assertInjectionEvent(msg, ev, injectorIndex, eventIndex, angleOffset);
+static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
+	assertInjectionEventBase(msg, ev, injectorIndex, eventIndex, angleOffset);
 
-	// Test the second injector as well
-	ASSERT_EQ(secondInjectorIndex, ev->outputs[1]->injectorIndex);
+	// There should NOT be a second injector configured
+	EXPECT_EQ(nullptr, ev->outputs[1]);
+}
+
+static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int injectorIndex, int secondInjectorIndex, int eventIndex, angle_t angleOffset) {
+	assertInjectionEventBase(msg, ev, injectorIndex, eventIndex, angleOffset);
+
+	// There should be a second injector - confirm it's the correct one
+	ASSERT_NE(nullptr, ev->outputs[1]);
+	EXPECT_EQ(secondInjectorIndex, ev->outputs[1]->injectorIndex);
 }
 
 static void setTestBug299(EngineTestHelper *eth) {
