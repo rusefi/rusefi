@@ -151,11 +151,11 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseAngle), "NaN baseAngle", false);
 	assertAngleRange(baseAngle, "baseAngle_r", CUSTOM_ERR_6554);
 
-	int injectorIndex;
-
 	injection_mode_e mode = engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	int injectorIndex;
 	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
+		// These modes only have one injector
 		injectorIndex = 0;
 	} else if (mode == IM_SEQUENTIAL || (mode == IM_BATCH && CONFIG(twoWireBatchInjection))) {
 		// Map order index -> cylinder index (firing order)
@@ -186,6 +186,8 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 		 */
 		// Compute the position of this cylinder's twin in the firing order
+		// Each injector gets fired as a primary (the same as sequential), but also
+		// fires the injector 360 degrees later in the firing order.
 		int secondOrder = (i + (CONFIG(specs.cylindersCount) / 2)) % CONFIG(specs.cylindersCount);
 		int secondIndex = getCylinderId(secondOrder PASS_ENGINE_PARAMETER_SUFFIX) - 1;
 		secondOutput = &enginePins.injectors[secondIndex];
