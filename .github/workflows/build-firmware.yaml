@@ -55,11 +55,13 @@ jobs:
             folder: nucleo_f746
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
+            skip-config: yes
 
           - build-target: stm32f767_nucleo
             folder: nucleo_f767
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
+            skip-config: yes
 
     steps:
     - uses: actions/checkout@v1
@@ -67,7 +69,7 @@ jobs:
         submodules: recursive
   
     - name: Generate Configs
-      if: ${{ matrix.ini-file != "no" }}
+      if: ${{ matrix.skip-config != 'yes' }}
       working-directory: ./firmware/
       run: bash gen_config.sh ${{matrix.folder}} ${{matrix.build-target}}
 
