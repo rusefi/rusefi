@@ -120,7 +120,7 @@ jobs:
 
     # Build the firmware!
     - name: Build Firmware
-      run: bash misc/jenkins/compile_other_versions/compile_and_upload.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
+      run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
 
     - name: Package Bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
