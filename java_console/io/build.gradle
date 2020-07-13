@@ -2,6 +2,8 @@ plugins {
     id 'java'
 }
 
+apply from: '../../android/dependencies.gradle'
+
 configurations {
     all*.exclude group: 'org.hamcrest', module: 'hamcrest-core'
 }
@@ -17,5 +19,5 @@ dependencies {
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
 
-    testImplementation group: 'junit', name: 'junit', version: '4.8.2'
+    testImplementation libs.junit
 }
