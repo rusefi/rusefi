@@ -19,5 +19,6 @@ dependencies {
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
 
-    testImplementation libs.junit
+    // junit 4.13 does not mix well with httpclient :(
+    testImplementation group: 'junit', name: 'junit', version: '4.8.2'
 }
