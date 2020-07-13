@@ -67,6 +67,7 @@ jobs:
         submodules: recursive
   
     - name: Generate Configs
+      if: ${{ matrix.ini-file != "no" }}
       working-directory: ./firmware/
       run: bash gen_config.sh ${{matrix.folder}} ${{matrix.build-target}}
 
