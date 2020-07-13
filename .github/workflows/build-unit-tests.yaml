@@ -13,11 +13,11 @@ jobs:
       
     - name: Generate Configs
       working-directory: ./firmware/
-      run: sh gen_config.sh default default
+      run: bash gen_config.sh default default
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
-      run: sh gen_live_documentation.sh
+      run: bash gen_live_documentation.sh
 
     - name: Build Tests
       working-directory: ./unit_tests/
