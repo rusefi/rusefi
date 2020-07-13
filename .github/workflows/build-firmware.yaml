@@ -134,7 +134,6 @@ jobs:
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
 
   build-primary-bundle:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -177,9 +176,11 @@ jobs:
       run: OS="Windows_NT" bash misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
 
     - name: Package Bundle
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh default
 
     - name: Upload primary bundle
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle.zip
