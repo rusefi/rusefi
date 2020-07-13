@@ -13,7 +13,7 @@ dependencies {
     implementation project(':models')
     implementation project(':logging-api')
 
-    implementation group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
+    implementation libs.annotations
     implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.6.2'
     implementation group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
