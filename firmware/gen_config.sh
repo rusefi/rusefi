@@ -16,4 +16,8 @@ for BOARD in "microrusefi mre_f7" "microrusefi mre_f4" "frankenso frankenso_na6"
  [ $? -eq 0 ] || { echo "ERROR generating board $BOARD_NAME $BOARD_SHORT_NAME"; exit 1; }
 done
 
+cd config/boards/kinetis/config
+bash gen_config.sh
+[ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
+
 exit 0
