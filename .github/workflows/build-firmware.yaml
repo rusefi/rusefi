@@ -55,11 +55,13 @@ jobs:
             folder: nucleo_f746
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
+            skip-config: yes
 
           - build-target: stm32f767_nucleo
             folder: nucleo_f767
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
+            skip-config: yes
 
     steps:
     - uses: actions/checkout@v1
@@ -67,12 +69,13 @@ jobs:
         submodules: recursive
   
     - name: Generate Configs
+      if: ${{ matrix.skip-config != 'yes' }}
       working-directory: ./firmware/
-      run: sh gen_config.sh
+      run: bash gen_config.sh ${{matrix.folder}} ${{matrix.build-target}}
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
-      run: sh gen_live_documentation.sh
+      run: bash gen_live_documentation.sh
 
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     - name: Download & Install GCC
@@ -100,23 +103,31 @@ jobs:
 
     # Build rusEFI console
     - name: Build console
-      run: sh misc/jenkins/build_java_console.sh
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      run: bash misc/jenkins/build_java_console.sh
   
     # Build the simulator
     - name: Build simulator
-      run: OS="Windows_NT" sh misc/jenkins/build_simulator.sh
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
     # Build the firmware!
     - name: Build Firmware
-      run: sh misc/jenkins/compile_other_versions/compile_and_upload.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
+      run: bash misc/jenkins/compile_other_versions/compile_and_upload.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
+
+    - name: Package Bundle
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}}
 
     - name: Upload bundle
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
 
     - name: Upload autoupdate bundle
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
@@ -131,11 +142,11 @@ jobs:
 
     - name: Generate Configs
       working-directory: ./firmware/
-      run: sh gen_config.sh
+      run: bash gen_config_default.sh
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
-      run: sh gen_live_documentation.sh
+      run: bash gen_live_documentation.sh
 
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     - name: Download & Install GCC
@@ -162,9 +173,14 @@ jobs:
         fi
 
     - name: Build Primary Bundle
-      run: OS="Windows_NT" sh misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
+      run: OS="Windows_NT" bash misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
+
+    - name: Package Bundle
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh default
 
     - name: Upload primary bundle
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle.zip

@@ -9,11 +9,13 @@ import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.commands.HelloCommand;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -30,7 +32,7 @@ import static com.rusefi.config.generated.Fields.*;
 
 public class BinaryProtocolServer implements BinaryProtocolCommands {
     private static final int DEFAULT_PROXY_PORT = 2390;
-    private static final String TS_OK = "\0";
+    public static final String TS_OK = "\0";
     private final Logger logger;
 
     public AtomicInteger unknownCommands = new AtomicInteger();
@@ -49,7 +51,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             try {
                 runProxy(linkManager, clientSocket);
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 logger.info("proxy connection: " + e);
             }
         };
@@ -57,6 +59,15 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, logger, serverSocketCreationCallback);
     }
 
+    /**
+     * Starts a new thread
+     *
+     * @param port                         server port to accept connections
+     * @param threadName
+     * @param clientSocketRunnableFactory  method to invoke on a new thread for each new client connection
+     * @param logger
+     * @param serverSocketCreationCallback this callback is invoked once we open the server socket
+     */
     public static void tcpServerSocket(int port, String threadName, Function<Socket, Runnable> clientSocketRunnableFactory, final Logger logger, Listener serverSocketCreationCallback) {
         Runnable runnable = new Runnable() {
             @SuppressWarnings("InfiniteLoopStatement")
@@ -69,7 +80,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                     logger.error("Error binding server socket" + e);
                     return;
                 }
-                if (serverSocketCreationCallback!=null)
+                if (serverSocketCreationCallback != null)
                     serverSocketCreationCallback.onResult(null);
 
                 try {
@@ -88,32 +99,37 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
-    private void runProxy(LinkManager linkManager, Socket clientSocket) throws IOException, InterruptedException {
+    private void runProxy(LinkManager linkManager, Socket clientSocket) throws IOException {
         TcpIoStream stream = new TcpIoStream(logger, clientSocket);
 
         IncomingDataBuffer in = stream.getDataBuffer();
 
         while (true) {
-            byte first = in.readByte();
-            if (first == COMMAND_PROTOCOL) {
+            AtomicBoolean handled = new AtomicBoolean();
+            Handler protocolCommandHandler = () -> {
                 handleProtocolCommand(clientSocket);
+                handled.set(true);
+            };
+
+            int length = getPacketLength(in, protocolCommandHandler);
+            if (handled.get()) {
                 continue;
             }
-            int length = first * 256 + in.readByte();
 
             System.out.println("Got [" + length + "] length promise");
 
-            if (length == 0)
-                throw new IOException("Zero length not expected");
+            Packet packet = readPromisedBytes(in, length);
+            byte[] payload = packet.getPacket();
 
-            byte[] packet = readPromisedBytes(in, length).packet;
+            if (payload.length == 0)
+                throw new IOException("Empty packet");
 
-            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet));
-            byte command = (byte) dis.read();
+            byte command = payload[0];
+
             System.out.println("Got [" + (char) command + "/" + command + "] command");
 
-            if (command == COMMAND_HELLO) {
-                stream.sendPacket((TS_OK + Fields.TS_SIGNATURE).getBytes(), logger);
+            if (command == Fields.TS_HELLO_COMMAND) {
+                new HelloCommand(logger, Fields.TS_SIGNATURE).handle(packet, stream);
             } else if (command == COMMAND_PROTOCOL) {
 //                System.out.println("Ignoring crc F command");
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes(), logger);
@@ -124,9 +140,11 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             } else if (command == COMMAND_PAGE) {
                 stream.sendPacket(TS_OK.getBytes(), logger);
             } else if (command == COMMAND_READ) {
+                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 handleRead(linkManager, dis, stream);
             } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
-                handleWrite(linkManager, packet, dis, stream);
+                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
+                handleWrite(linkManager, payload, dis, stream);
             } else if (command == Fields.TS_BURN_COMMAND) {
                 stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK}, logger);
             } else if (command == Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
@@ -134,6 +152,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 // todo: relay command
                 stream.sendPacket(TS_OK.getBytes(), logger);
             } else if (command == Fields.TS_OUTPUT_COMMAND) {
+                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 int offset = swap16(dis.readShort());
                 int count = swap16(dis.readShort());
                 System.out.println("TS_OUTPUT_COMMAND offset=" + offset + "/count=" + count);
@@ -157,22 +176,30 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         }
     }
 
+    public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler) throws IOException {
+        byte first = in.readByte();
+        if (first == COMMAND_PROTOCOL) {
+            protocolCommandHandler.handle();
+        }
+        return first * 256 + in.readByte();
+    }
+
     public static Packet readPromisedBytes(DataInputStream in, int length) throws IOException {
         if (length < 0)
             throw new IllegalArgumentException(String.format("Negative %d %x", length, length));
         byte[] packet = new byte[length];
         int size = in.read(packet);
         if (size != packet.length)
-            throw new IllegalStateException(size + " promised but " + packet.length + " arrived");
+            throw new IOException(size + " promised but " + packet.length + " arrived");
         int crc = in.readInt();
         if (crc != IoHelper.getCrc32(packet))
-            throw new IllegalStateException("CRC mismatch");
+            throw new IOException("CRC mismatch");
         return new Packet(packet, crc);
     }
 
-    public static Packet readPromisedBytes(IncomingDataBuffer in, int length) throws IOException, InterruptedException {
-        if (length < 0)
-            throw new IllegalArgumentException(String.format("Negative %d %x", length, length));
+    public static Packet readPromisedBytes(IncomingDataBuffer in, int length) throws IOException {
+        if (length <= 0)
+            throw new IOException("Unexpected packed length " + length);
         byte[] packet = new byte[length];
         int size = in.read(packet);
         if (size != packet.length)
@@ -182,6 +209,11 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         if (crc != fromPacket)
             throw new IllegalStateException("CRC mismatch " + crc + " vs " + fromPacket);
         return new Packet(packet, crc);
+    }
+
+
+    public interface Handler {
+        void handle() throws IOException;
     }
 
     public static void handleProtocolCommand(Socket clientSocket) throws IOException {

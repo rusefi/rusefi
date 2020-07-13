@@ -1064,8 +1064,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.07.10
-#define SIGNATURE_HASH 345981352
+#define SIGNATURE_DATE 2020.07.11
+#define SIGNATURE_HASH 4227575396
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1296,6 +1296,7 @@
 #define TS_GET_TEXT 'G'
 #define TS_HELLO_COMMAND 'S'
 #define TS_IO_TEST_COMMAND 'w'
+#define TS_ONLINE_PROTOCOL 'z'
 #define TS_OUTPUT_COMMAND 'O'
 #define TS_OUTPUT_SIZE 248
 #define TS_PAGE_COMMAND 'P'
@@ -1325,7 +1326,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.07.10.all.345981352"
+#define TS_SIGNATURE "rusEFI 2020.07.11.all.4227575396"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476

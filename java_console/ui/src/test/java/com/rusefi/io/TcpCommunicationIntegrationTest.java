@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TcpCommunicationIntegrationTest {
     private static final Logger LOGGER = Logger.CONSOLE;
-    private static final String LOCALHOST = "localhost";
+    public static final String LOCALHOST = "localhost";
 
     // todo: implement & test TCP connector restart!
     @Test

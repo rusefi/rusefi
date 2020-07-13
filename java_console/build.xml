@@ -1,6 +1,7 @@
 <project default="jar">
     <property name="jar_file_folder" value="../java_console_binary"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
+    <property name="lib_list" value="../java_tools/configuration_definition/lib/snakeyaml.jar:lib/json-simple-1.1.1.jar:lib/server/javax.json.jar:lib/server/cactoos.jar:lib/server/takes.jar:lib/json-simple-1.1.1.jar:lib/jaxb-api.jar:lib/httpclient.jar:lib/httpmime.jar:lib/httpcore.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar"/>
 
     <target name="clean">
         <delete dir="build"/>
@@ -39,11 +40,13 @@
     <target name="compile">
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
-               classpath="../java_tools/configuration_definition/lib/snakeyaml.jar:lib/json-simple-1.1.1.jar:lib/jaxb-api.jar:lib/httpclient.jar:lib/httpmime.jar:lib/httpcore.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar">
+               classpath="${lib_list}">
             <src path="autotest/src"/>
             <src path="autoupdate/src"/>
             <src path="../java_tools/configuration_definition/src"/>
             <src path="../java_tools/enum_to_string/src"/>
+            <src path="../java_tools/proxy_server/src/main/java"/>
+            <src path="../java_tools/proxy_server/src/test/java"/>
             <src path="io/src/main/java"/>
             <src path="io/src/test/java"/>
             <src path="models/src/main/java"/>
@@ -76,7 +79,7 @@
             <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
             <formatter type="brief"/>
             <classpath
-                    path="build/classes:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/miglayout-4.0.jar"/>
+                    path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="build">
                 <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="autoupdate/src" includes="**/test/**/*Test.java"/>
@@ -120,6 +123,7 @@
             <zipfileset src="lib/log4j.jar" includes="**/*.class"/>
             <zipfileset src="lib/jep.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpclient.jar" includes="**/*.class"/>
+            <zipfileset src="lib/commons-logging.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpcore.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpmime.jar" includes="**/*.class"/>
             <zipfileset src="lib/jaxb-api.jar" includes="**/*.class"/>

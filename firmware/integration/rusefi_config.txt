@@ -1594,6 +1594,7 @@ end_struct
 #define TS_GET_TEXT 'G'
 // 0x45
 #define TS_EXECUTE 'E'
+#define TS_ONLINE_PROTOCOL 'z'
 // 0x39
 #define TS_GET_STRUCT '9'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'

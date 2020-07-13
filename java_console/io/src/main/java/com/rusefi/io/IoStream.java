@@ -53,7 +53,7 @@ public interface IoStream extends WriteStream {
 
     IncomingDataBuffer getDataBuffer();
 
-    default short readShort() throws EOFException, InterruptedException {
+    default short readShort() throws EOFException {
         return getDataBuffer().readShort();
     }
 }

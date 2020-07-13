@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="takes">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/server/cactoos.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/server/takes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/server/takes-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

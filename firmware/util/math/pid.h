@@ -73,8 +73,6 @@ public:
 	float iTermMax =  1000000.0;
 protected:
 	pid_s *parameters;
-
-private:
 	virtual void updateITerm(float value);
 };
 

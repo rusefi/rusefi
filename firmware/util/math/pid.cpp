@@ -251,9 +251,6 @@ float PidIndustrial::getOutput(float target, float input, float dTime) {
 	float error = (target - input) * errorAmplificationCoef;
 	float pTerm = parameters->pFactor * error;
 
-	// update the I-term
-	iTerm += parameters->iFactor * dTime * error;
-	
 	// calculate dTerm coefficients
 	if (fabsf(derivativeFilterLoss) > DBL_EPSILON) {
 		// restore Td in the Standard form from the Parallel form: Td = Kd / Kc
@@ -272,11 +269,13 @@ float PidIndustrial::getOutput(float target, float input, float dTime) {
 	// (error - previousError) = (target-input) - (target-prevousInput) = -(input - prevousInput)
 	dTerm = dTerm * ad + (error - previousError) * bd;
 
+	updateITerm(parameters->iFactor * dTime * error);
+
 	// calculate output and apply the limits
 	float output = pTerm + iTerm + dTerm + getOffset();
 	float limitedOutput = limitOutput(output);
 
-	// apply the integrator anti-windup
+	// apply the integrator anti-windup on top of the "normal" iTerm change above
 	// If p.antiwindupFreq = 0, then iTerm is equal to PidParallelController's
 	iTerm += dTime * antiwindupFreq * (limitedOutput - output);
 	

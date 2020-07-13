@@ -330,9 +330,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #if EFI_SHAFT_POSITION_INPUT
 	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
-	injection_mode_e mode = isCranking ?
-			engineConfiguration->crankingInjectionMode :
-			engineConfiguration->injectionMode;
+	injection_mode_e mode = ENGINE(getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	int numberOfInjections = getNumberOfInjections(mode PASS_ENGINE_PARAMETER_SUFFIX);
 	if (numberOfInjections == 0) {
 		warning(CUSTOM_CONFIG_NOT_READY, "config not ready");

@@ -10,5 +10,6 @@
     <orderEntry type="module" module-name="io" />
     <orderEntry type="module" module-name="models" />
     <orderEntry type="module" module-name="logging" />
+    <orderEntry type="library" name="javax.json" level="project" />
   </component>
 </module>

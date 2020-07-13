@@ -14,6 +14,7 @@ import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
+import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.stream.LogicdataStreamFile;
 import com.rusefi.stream.StreamFile;
 import com.rusefi.stream.TSHighSpeedLog;
@@ -287,7 +288,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         setController(newVersion);
     }
 
-    private byte[] receivePacket(String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
+    private byte[] receivePacket(String msg, boolean allowLongResponse) throws EOFException {
         long start = System.currentTimeMillis();
         synchronized (ioLock) {
             return incomingData.getPacket(logger, msg, allowLongResponse, start);
@@ -407,7 +408,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
             sendPacket(packet);
             return receivePacket(msg, allowLongResponse);
-        } catch (InterruptedException | IOException e) {
+        } catch (IOException e) {
             logger.error(msg + ": executeCommand failed: " + e);
             close();
             return null;
@@ -550,10 +551,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         if (isClosed)
             return false;
 
-        byte packet[] = new byte[5];
-        packet[0] = Fields.TS_OUTPUT_COMMAND;
-        putShort(packet, 1, 0); // offset
-        putShort(packet, 3, swap16(Fields.TS_OUTPUT_SIZE));
+        byte[] packet = GetOutputsCommand.createRequest();
 
         byte[] response = executeCommand(packet, "output channels", false);
         if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != RESPONSE_OK)
