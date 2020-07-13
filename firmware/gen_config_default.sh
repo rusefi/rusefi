@@ -41,3 +41,4 @@ echo "This would automatically copy latest file to 'dev' TS projects to ${TS_PAT
 cp -v tunerstudio/generated/rusefi.ini $TS_PATH/dev/projectCfg/mainController.ini
 cp -v tunerstudio/generated/rusefi_mre_f4.ini $TS_PATH/mre_f4/projectCfg/mainController.ini
 
+exit 0
