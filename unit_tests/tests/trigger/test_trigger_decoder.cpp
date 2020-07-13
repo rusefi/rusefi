@@ -572,6 +572,13 @@ static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int inject
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffsetFromTriggerEvent);
 }
 
+static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int injectorIndex, int secondInjectorIndex, int eventIndex, angle_t angleOffset) {
+	assertInjectionEvent(msg, ev, injectorIndex, eventIndex, angleOffset);
+
+	// Test the second injector as well
+	ASSERT_EQ(secondInjectorIndex, ev->outputs[1]->injectorIndex);
+}
+
 static void setTestBug299(EngineTestHelper *eth) {
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(eth);
 	Engine *engine = &eth->engine;
@@ -959,9 +966,57 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 	doTestFuelSchedulerBug299smallAndMedium(1000);
 }
 
-TEST(big, testDifferentInjectionModes) {
-	printf("*************************************************** testDifferentInjectionModes\r\n");
+TEST(big, testTwoWireBatch) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
+	engineConfiguration->injectionMode = IM_BATCH;
+	engineConfiguration->twoWireBatchInjection = true;
+
+	eth.fireTriggerEventsWithDuration(20);
+	// still no RPM since need to cycles measure cycle duration
+	eth.fireTriggerEventsWithDuration(20);
+	eth.clearQueue();
+
+	/**
+	 * Trigger up - scheduling fuel for full engine cycle
+	 */
+	eth.fireRise(20);
+
+	FuelSchedule * t = &ENGINE(injectionEvents);
+
+	assertInjectionEventBatch("#0", &t->elements[0],		0, 3, 1, 153);	// Cyl 1 and 4
+	assertInjectionEventBatch("#1_i_@", &t->elements[1],	2, 1, 1, 153 + 180);	// Cyl 3 and 2
+	assertInjectionEventBatch("#2@", &t->elements[2],		3, 0, 0, 153);	// Cyl 4 and 1
+	assertInjectionEventBatch("inj#3@", &t->elements[3],	1, 2, 0, 153 + 180);	// Cyl 2 and 3
+}
+
+
+TEST(big, testSequential) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+	eth.fireTriggerEventsWithDuration(20);
+	// still no RPM since need to cycles measure cycle duration
+	eth.fireTriggerEventsWithDuration(20);
+	eth.clearQueue();
+
+	/**
+	 * Trigger up - scheduling fuel for full engine cycle
+	 */
+	eth.fireRise(20);
+
+	FuelSchedule * t = &ENGINE(injectionEvents);
+
+	assertInjectionEvent("#0", &t->elements[0],		0, 1, 126);	// Cyl 1
+	assertInjectionEvent("#1_i_@", &t->elements[1],	2, 1, 126 + 180);	// Cyl 3
+	assertInjectionEvent("#2@", &t->elements[2],	3, 0, 126);	// Cyl 4
+	assertInjectionEvent("inj#3@", &t->elements[3],	1, 0, 126 + 180);	// Cyl 2
+}
+
+TEST(big, testDifferentInjectionModes) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
