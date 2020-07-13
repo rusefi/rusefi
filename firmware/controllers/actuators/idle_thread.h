@@ -29,7 +29,7 @@ void setIdleOffset(float value);
 void setIdlePFactor(float value);
 void setIdleIFactor(float value);
 void setIdleDFactor(float value);
-void setIdleMode(idle_mode_e value);
+void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setTargetIdleRpm(int value);
 void setIdleDT(int value);
 void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);

@@ -144,7 +144,7 @@ void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%.2f", msg, value);
 }
 
-static void showIdleInfo(void) {
+static void showIdleInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
 	scheduleMsg(logger, "useStepperIdle=%s useHbridges=%s",
 			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridges)));
@@ -185,7 +185,7 @@ static void showIdleInfo(void) {
 	}
 }
 
-void setIdleMode(idle_mode_e value) {
+void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
 	showIdleInfo();
 }
