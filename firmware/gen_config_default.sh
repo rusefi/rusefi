@@ -1,7 +1,7 @@
 mkdir build
 
-rm gen_config.log
-rm gen_config_board.log
+rm -f gen_config.log
+rm -f gen_config_board.log
 
 bash gen_signature.sh all
 
@@ -30,15 +30,5 @@ java -DSystemOut.name=gen_config \
  -romraider_destination ../java_console/rusefi.xml
 
 [ $? -eq 0 ] || { echo "ERROR generating default"; exit 1; }
-
-if [ -z "${TS_PATH}" ]; then
- echo "TS_PATH not defined"
- # it's nice to have default location
- TS_PATH="${HOMEDRIVE}${HOMEPATH}\Documents\TunerStudioProjects"
-fi
-
-echo "This would automatically copy latest file to 'dev' TS projects to ${TS_PATH}"
-cp -v tunerstudio/generated/rusefi.ini $TS_PATH/dev/projectCfg/mainController.ini
-cp -v tunerstudio/generated/rusefi_mre_f4.ini $TS_PATH/mre_f4/projectCfg/mainController.ini
 
 exit 0
