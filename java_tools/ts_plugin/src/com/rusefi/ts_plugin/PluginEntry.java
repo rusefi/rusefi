@@ -91,7 +91,7 @@ public class PluginEntry implements TsPluginBody {
                     return;
                 }
 
-                Msq tune = TuneUploder.writeCurrentTune(ControllerAccess.getInstance(), configurationName);
+                Msq tune = TuneUploder.writeCurrentTune(controllerAccessSupplier.get(), configurationName);
                 Online.uploadTune(tune, tokenPanel, content, new FutureCallback<JSONArray>() {
                     @Override
                     public void completed(JSONArray array) {
