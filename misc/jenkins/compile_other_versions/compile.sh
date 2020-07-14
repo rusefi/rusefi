@@ -36,6 +36,4 @@ cd ../../../..
 # We are back at root rusEfi folder
 pwd
 
-bash misc/jenkins/compile_other_versions/prepare_bundle.sh
-
 echo "exiting $SCRIPT_NAME"

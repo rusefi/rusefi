@@ -48,13 +48,4 @@ java -DSystemOut.name=gen_config_board \
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
-if [ -z "${TS_PATH}" ]; then
-	echo "TS_PATH not defined"
-else
-	if [ -d "${TS_PATH}/dev_${BOARDNAME}/" ]; then
-		echo "This would automatically copy latest file to 'dev_${BOARDNAME}' TS project $TS_PATH"
-		cp -v tunerstudio/generated/rusefi_${BOARDNAME}.ini ${TS_PATH}/dev_${BOARDNAME}/projectCfg/mainController.ini
-	fi
-fi
-
 exit 0
