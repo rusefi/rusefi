@@ -15,13 +15,16 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import com.rusefi.config.generated.Fields;
 
 public class TuneUploder {
     static Msq writeCurrentTune(ControllerAccess controllerAccess, String configurationName) {
+        Objects.requireNonNull(controllerAccess, "controllerAccess");
         Msq msq = Msq.create(Fields.TOTAL_CONFIG_SIZE, Fields.TS_SIGNATURE);
         ControllerParameterServer controllerParameterServer = controllerAccess.getControllerParameterServer();
+        Objects.requireNonNull(controllerParameterServer, "controllerParameterServer");
 
         Map<String, Constant> fileSystemValues = getFileSystemValues(configurationName);
 
@@ -59,6 +62,7 @@ public class TuneUploder {
 
     private static void handleParameter(String configurationName, Msq msq, ControllerParameterServer controllerParameterServer, Map<String, Constant> byName, String parameterName) throws ControllerException {
         ControllerParameter cp = controllerParameterServer.getControllerParameter(configurationName, parameterName);
+        Objects.requireNonNull(cp, "ControllerParameter");
         String type = cp.getParamClass();
         String value;
         if (ControllerParameter.PARAM_CLASS_BITS.equals(type)) {
