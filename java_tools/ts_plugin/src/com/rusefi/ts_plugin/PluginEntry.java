@@ -1,7 +1,6 @@
 package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
-import com.rusefi.TsTuneReader;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.ts_plugin.util.ManifestHelper;
@@ -17,8 +16,6 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -26,14 +23,13 @@ import java.util.function.Supplier;
  */
 public class PluginEntry implements TsPluginBody {
     private static final String REO_URL = "https://rusefi.com/online/";
-    private static final String NO_PROJECT = "Please open project";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
     private final JComponent content = new JPanel(new VerticalFlowLayout());
 
+
+    private final UploadView uploadView = new UploadView();
+
     private final JButton upload = new JButton("Upload Current Tune");
-    private final JLabel uploadState = new JLabel();
-    private final JLabel projectWarning = new JLabel(NO_PROJECT);
-    private final JLabel tuneInfo = new JLabel();
     private final Supplier<ControllerAccess> controllerAccessSupplier;
 
     private String currentConfiguration;
@@ -63,16 +59,11 @@ public class PluginEntry implements TsPluginBody {
                     }
 
                     boolean isProjectActive = configurationName != null;
+                    uploaderStatus.updateProjectStatus(configurationName, isProjectActive);
+
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            if (!isProjectActive) {
-                                uploaderStatus.projectWarning = NO_PROJECT;
-                            } else if (!new File(TsTuneReader.getTsTuneFileName(configurationName)).exists()) {
-                                uploaderStatus.projectWarning = "Tune not found " + configurationName;
-                            } else {
-                                uploaderStatus.projectWarning = null;
-                            }
 
                             updateUploadEnabled();
                         }
@@ -107,8 +98,7 @@ public class PluginEntry implements TsPluginBody {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                uploadState.setText(array.get(0).toString());
-                                uploadState.setVisible(true);
+                                uploadView.setResult(array);
                             }
                         });
                     }
@@ -127,12 +117,10 @@ public class PluginEntry implements TsPluginBody {
         content.add(new JLabel(ManifestHelper.getBuildTimestamp()));
 //        content.add(new JLabel("Active project: " + getConfigurationName()));
 
-        uploadState.setVisible(false);
 
-        content.add(projectWarning);
-        content.add(tuneInfo);
+        content.add(uploadView.getContent());
         content.add(upload);
-        content.add(uploadState);
+
         ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
         content.add(new JLabel(LOGO));
         content.add(tokenPanel.getContent());
@@ -143,53 +131,20 @@ public class PluginEntry implements TsPluginBody {
      * This method is invoked every time we defect a switch between projects
      */
     private void handleConfigurationChange(String configurationName) {
-        Map<String, Constant> fileSystemValues = TuneUploder.getFileSystemValues(configurationName);
-        Constant engineMake = fileSystemValues.get("enginemake");
-        Constant engineCode = fileSystemValues.get("enginecode");
-        Constant vehicleName = fileSystemValues.get("VEHICLENAME");
-        String warning = "";
-        if (isEmpty(engineMake)) {
-            warning += " engine make";
-        }
-        if (isEmpty(engineCode)) {
-            warning += " engine code";
-        }
-        if (isEmpty(vehicleName)) {
-            warning += " vehicle name";
-        }
-        if (warning.isEmpty()) {
-            uploaderStatus.tuneInfo = engineMake.getValue() + " " + engineCode.getValue() + " " + vehicleName.getValue();
-            uploaderStatus.tuneWarning = null;
-        } else {
-            uploaderStatus.tuneInfo = null;
-            uploaderStatus.tuneWarning = "<html>Please set " + warning + " on Base Settings tab<br>and reopen Project";
-        }
+        uploaderStatus.readTuneState(configurationName);
         updateUploadEnabled();
 
         currentConfiguration = configurationName;
     }
 
-    private boolean isEmpty(Constant constant) {
+    public static boolean isEmpty(Constant constant) {
         if (constant == null)
             return true;
         return isEmpty(constant.getValue());
     }
 
     private void updateUploadEnabled() {
-        if (uploaderStatus.isTuneOk()) {
-            tuneInfo.setText(uploaderStatus.tuneInfo);
-            tuneInfo.setForeground(Color.black);
-        } else {
-            tuneInfo.setText(uploaderStatus.tuneWarning);
-            tuneInfo.setForeground(Color.red);
-        }
-
-        if (uploaderStatus.isProjectIsOk()) {
-            projectWarning.setVisible(false);
-        } else {
-            projectWarning.setVisible(true);
-            projectWarning.setText(uploaderStatus.projectWarning);
-        }
+        uploadView.update(uploaderStatus);
 
         upload.setEnabled(uploaderStatus.isTuneOk() && uploaderStatus.isProjectIsOk());
     }
