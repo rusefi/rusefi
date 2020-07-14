@@ -1352,6 +1352,9 @@ menuDialog = main
 		subMenu = fsioCurve3,			    "FSIO Curve #3"
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
 
+		subMenu = std_separator
+		subMenu = tcuControls,			"TCU Manual Controls"
+
 	menu = "&Sensors"
 		# Base analog input settings
 		subMenu = otherSensorInputs,		"Misc sensors"

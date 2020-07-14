@@ -21,3 +21,5 @@ err.txt
 log.txt
 *.rusefi_binary
 *.msq
+misc/TunerStudioAppDebug.txt
+rusefi_tool.log
