@@ -4,13 +4,13 @@ import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.TsTuneReader;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.tools.online.Online;
+import com.rusefi.ts_plugin.util.ManifestHelper;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.URLLabel;
 import org.apache.http.concurrent.FutureCallback;
-import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.putgemin.VerticalFlowLayout;
 
@@ -18,24 +18,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 /**
  * TsPlugin launcher creates an instance of this class via reflection.
  */
 public class PluginEntry implements TsPluginBody {
-    private static final String BUILT_DATE = "Built-Date";
-    private static final String BUILT_TIMESTAMP = "Built-Timestamp";
-    public static final String REO = "https://rusefi.com/online/";
+    private static final String REO_URL = "https://rusefi.com/online/";
     private static final String NO_PROJECT = "Please open project";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
     private final JComponent content = new JPanel(new VerticalFlowLayout());
-    private final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
 
     private final JButton upload = new JButton("Upload Current Tune");
     private final JLabel uploadState = new JLabel();
@@ -44,8 +37,9 @@ public class PluginEntry implements TsPluginBody {
     private final Supplier<ControllerAccess> controllerAccessSupplier;
 
     private String currentConfiguration;
-    private boolean tuneIsOk;
-    private boolean projectIsOk;
+
+    private UploaderStatus uploaderStatus = new UploaderStatus();
+
 
     /**
      * the real constructor - this one is invoked via reflection
@@ -73,15 +67,13 @@ public class PluginEntry implements TsPluginBody {
                         @Override
                         public void run() {
                             if (!isProjectActive) {
-                                projectWarning.setText(NO_PROJECT);
-                                projectIsOk = false;
+                                uploaderStatus.projectWarning = NO_PROJECT;
                             } else if (!new File(TsTuneReader.getTsTuneFileName(configurationName)).exists()) {
-                                projectWarning.setText("Tune not found " + configurationName);
-                                projectIsOk = false;
+                                uploaderStatus.projectWarning = "Tune not found " + configurationName;
                             } else {
-                                projectIsOk = true;
+                                uploaderStatus.projectWarning = null;
                             }
-                            projectWarning.setVisible(!projectIsOk);
+
                             updateUploadEnabled();
                         }
                     });
@@ -132,7 +124,7 @@ public class PluginEntry implements TsPluginBody {
             }
         });
 
-        content.add(new JLabel(getAttribute(BUILT_TIMESTAMP)));
+        content.add(new JLabel(ManifestHelper.getBuildTimestamp()));
 //        content.add(new JLabel("Active project: " + getConfigurationName()));
 
         uploadState.setVisible(false);
@@ -141,9 +133,10 @@ public class PluginEntry implements TsPluginBody {
         content.add(tuneInfo);
         content.add(upload);
         content.add(uploadState);
+        ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
         content.add(new JLabel(LOGO));
         content.add(tokenPanel.getContent());
-        content.add(new URLLabel(REO));
+        content.add(new URLLabel(REO_URL));
     }
 
     /**
@@ -165,15 +158,14 @@ public class PluginEntry implements TsPluginBody {
             warning += " vehicle name";
         }
         if (warning.isEmpty()) {
-            tuneInfo.setText(engineMake.getValue() + " " + engineCode.getValue() + " " + vehicleName.getValue());
-            tuneIsOk = true;
-            updateUploadEnabled();
+            uploaderStatus.tuneInfo = engineMake.getValue() + " " + engineCode.getValue() + " " + vehicleName.getValue();
+            uploaderStatus.tuneWarning = null;
         } else {
-            tuneInfo.setText("<html>Please set " + warning + " on Base Settings tab<br>and reopen Project");
-            tuneInfo.setForeground(Color.red);
-            tuneIsOk = false;
-            updateUploadEnabled();
+            uploaderStatus.tuneInfo = null;
+            uploaderStatus.tuneWarning = "<html>Please set " + warning + " on Base Settings tab<br>and reopen Project";
         }
+        updateUploadEnabled();
+
         currentConfiguration = configurationName;
     }
 
@@ -184,10 +176,25 @@ public class PluginEntry implements TsPluginBody {
     }
 
     private void updateUploadEnabled() {
-        upload.setEnabled(tuneIsOk && projectIsOk);
+        if (uploaderStatus.isTuneOk()) {
+            tuneInfo.setText(uploaderStatus.tuneInfo);
+            tuneInfo.setForeground(Color.black);
+        } else {
+            tuneInfo.setText(uploaderStatus.tuneWarning);
+            tuneInfo.setForeground(Color.red);
+        }
+
+        if (uploaderStatus.isProjectIsOk()) {
+            projectWarning.setVisible(false);
+        } else {
+            projectWarning.setVisible(true);
+            projectWarning.setText(uploaderStatus.projectWarning);
+        }
+
+        upload.setEnabled(uploaderStatus.isTuneOk() && uploaderStatus.isProjectIsOk());
     }
 
-    private boolean isEmpty(String value) {
+    private static boolean isEmpty(String value) {
         return value == null || value.trim().length() == 0;
     }
 
@@ -198,12 +205,6 @@ public class PluginEntry implements TsPluginBody {
 
     public void close() {
         PersistentConfiguration.getConfig().save();
-    }
-
-    private void printEcuConfigurationNames(ControllerAccess controllerAccess) {
-        for (String config : controllerAccess.getEcuConfigurationNames()) {
-            System.out.println("EcuConfigurationName " + config);
-        }
     }
 
     private String getConfigurationName() {
@@ -225,31 +226,6 @@ public class PluginEntry implements TsPluginBody {
      */
     @SuppressWarnings("unused")
     public static String getVersion() {
-        return getAttribute(BUILT_DATE);
-    }
-
-    @NotNull
-    private static String getAttribute(String attributeName) {
-        // all this magic below to make sure we are reading manifest of the *our* jar file not TS main jar file
-        Class clazz = PluginEntry.class;
-        String className = clazz.getSimpleName() + ".class";
-        String classPath = clazz.getResource(className).toString();
-        if (!classPath.startsWith("jar")) {
-            // Class not from JAR
-            return "Local Run";
-        }
-        String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +
-                "/META-INF/MANIFEST.MF";
-        try {
-            Manifest manifest = new Manifest(new URL(manifestPath).openStream());
-            Attributes attributes = manifest.getMainAttributes();
-
-            String result = attributes.getValue(attributeName);
-            System.out.println(BUILT_DATE + " " + result);
-            return result == null ? "Unknown version" : result;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Unknown version";
-        }
+        return ManifestHelper.getVersion();
     }
 }
