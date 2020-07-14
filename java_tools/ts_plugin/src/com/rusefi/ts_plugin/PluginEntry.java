@@ -146,6 +146,9 @@ public class PluginEntry implements TsPluginBody {
         content.add(new URLLabel(REO));
     }
 
+    /**
+     * This method is invoked every time we defect a switch between projects
+     */
     private void handleConfigurationChange(String configurationName) {
         Map<String, Constant> fileSystemValues = TuneUploder.getFileSystemValues(configurationName);
         Constant engineMake = fileSystemValues.get("enginemake");
