@@ -19,7 +19,7 @@ jobs:
 
     - name: Generate Configs
       working-directory: ./firmware/
-      run: sh gen_config.sh
+      run: bash gen_config.sh
 
     - name: Upload .ini files
       working-directory: ./firmware/tunerstudio/generated
@@ -28,7 +28,7 @@ jobs:
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
-      run: sh gen_live_documentation.sh
+      run: bash gen_live_documentation.sh
 
     # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit changes
