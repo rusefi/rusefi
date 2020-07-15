@@ -28,7 +28,7 @@ public class Online {
     public static final String outputXmlFileName = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
     private static final String url = "https://rusefi.com/online/upload.php";
 
-    public static JSONArray upload(File fileName, String authTokenValue) throws IOException {
+    public static UploadResult upload(File fileName, String authTokenValue) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(url);
 
@@ -55,20 +55,19 @@ public class Online {
             JSONArray error = (JSONArray) object.get("error");
             if (error != null) {
                 System.out.println("error " + error);
-                return error;
+                return new UploadResult(true, error);
             } else {
                 System.out.println("info " + info);
-                return info;
+                return new UploadResult(false, info);
             }
 
         } catch (ParseException e) {
-            e.printStackTrace();
+            return new UploadResult(true, "Error " + e);
         }
-        return null;
     }
 
-    public static BasicFuture<JSONArray> uploadTune(Msq tune, AuthTokenPanel authTokenPanel, JComponent parent, FutureCallback<JSONArray> callback) {
-        BasicFuture<JSONArray> result = new BasicFuture<>(callback);
+    public static BasicFuture<UploadResult> uploadTune(Msq tune, AuthTokenPanel authTokenPanel, JComponent parent, FutureCallback<UploadResult> callback) {
+        BasicFuture<UploadResult> result = new BasicFuture<>(callback);
         String authToken = authTokenPanel.getToken();
         if (!authTokenPanel.hasToken()) {
             authTokenPanel.showError(parent);
@@ -77,20 +76,20 @@ public class Online {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                JSONArray array = doUpload(authToken, tune);
+                UploadResult array = doUpload(authToken, tune);
                 result.completed(array);
             }
         }).start();
         return result;
     }
 
-    private static JSONArray doUpload(String authToken, Msq tune) {
+    private static UploadResult doUpload(String authToken, Msq tune) {
         try {
             tune.writeXmlFile(outputXmlFileName);
             // todo: network upload should not happen on UI thread
             return upload(new File(outputXmlFileName), authToken);
         } catch (JAXBException | IOException ex) {
-            throw new IllegalStateException(ex);
+            return new UploadResult(true, "IO error " + ex);
         }
     }
 }
