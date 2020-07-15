@@ -2,7 +2,6 @@ package com.rusefi.ts_plugin;
 
 import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ui.storage.PersistentConfiguration;
-import org.json.simple.JSONArray;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -34,7 +33,7 @@ public class UploadView {
         uploadState.setVisible(false);
     }
 
-    private static boolean isAutoUpload() {
+    public static boolean isAutoUpload() {
         return PersistentConfiguration.getConfig().getRoot().getBoolProperty(AUTO_UPLOAD, false);
     }
 
