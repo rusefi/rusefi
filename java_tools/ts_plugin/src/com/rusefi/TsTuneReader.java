@@ -48,4 +48,12 @@ public class TsTuneReader {
             return defaultDirectory + File.separator + "TunerStudioProjects";
         }
     }
+
+    @NotNull
+    public static String getProjectModeFileName(String projectName) {
+        return getProjectsDir() +
+                    File.separator + projectName +
+                    File.separator + "projectCfg" +
+                    File.separator + "mainController.ini";
+    }
 }
