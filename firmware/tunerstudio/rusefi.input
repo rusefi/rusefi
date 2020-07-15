@@ -2852,6 +2852,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = tcuControls, "TCU Manual Controls"
 		field = "Upshift Pin"		tcuUpshiftButtonPin
 		field = "Downshift Pin"		tcuDownshiftButtonPin
+		field = "Gear Change Cooldown"	tcuCooldown
 
 ;Boost Open Loop
 
