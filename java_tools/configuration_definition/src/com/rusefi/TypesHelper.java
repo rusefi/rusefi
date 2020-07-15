@@ -21,7 +21,7 @@ public class TypesHelper {
         if (type == null)
             return 0;
         if (state != null && state.structures.containsKey(type))
-            return state.structures.get(type).totalSize;
+            return state.structures.get(type).getTotalSize();
         if (state != null && state.tsCustomSize.containsKey(type))
             return state.tsCustomSize.get(type);
         Integer primitiveSize = getPrimitiveSize(type);
