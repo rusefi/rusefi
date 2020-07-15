@@ -14,7 +14,6 @@ import com.rusefi.ts_plugin.util.ManifestHelper;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
-import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.URLLabel;
 import org.apache.http.concurrent.FutureCallback;
 import org.putgemin.VerticalFlowLayout;
@@ -50,13 +49,7 @@ public class PluginEntry implements TsPluginBody {
         }
     });
 
-    ControllerParameterChangeListener listener = new ControllerParameterChangeListener() {
-        @Override
-        public void parameterValueChanged(String parameterName) {
-            System.out.println("Parameter value changed " + parameterName);
-            timer.restart();
-        }
-    };
+    private final ControllerParameterChangeListener listener;
 
     /**
      * the real constructor - this one is invoked via reflection
@@ -70,6 +63,13 @@ public class PluginEntry implements TsPluginBody {
         timer.stop();
         timer.setRepeats(false);
         this.controllerAccessSupplier = controllerAccessSupplier;
+        listener = parameterName -> {
+            //            System.out.println("Parameter value changed " + parameterName);
+            timer.restart();
+            if (UploadView.isAutoUpload()) {
+                UploadQueue.enqueue(controllerAccessSupplier.get(), currentConfiguration);
+            }
+        };
         upload.setBackground(new Color(0x90EE90));
 
         new Thread(new Runnable() {
@@ -205,11 +205,11 @@ public class PluginEntry implements TsPluginBody {
     public JComponent getContent() {
         return content;
     }
-
+/*
     public void close() {
         PersistentConfiguration.getConfig().save();
     }
-
+*/
     private String getConfigurationName() {
         ControllerAccess controllerAccess = controllerAccessSupplier.get();
         if (controllerAccess == null) {
