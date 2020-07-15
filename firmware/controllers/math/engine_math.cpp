@@ -117,6 +117,12 @@ void FuelSchedule::clear() {
 	isReady = false;
 }
 
+void FuelSchedule::resetOverlapping() {
+	for (size_t i = 0; i < efi::size(enginePins.injectors); i++) {
+		enginePins.injectors[i].reset();
+	}
+}
+
 /**
  * @returns false in case of error, true if success
  */
