@@ -19,7 +19,7 @@ public class IniFileMetaInfo {
     /**
      * read maximum chunk size
      */
-    private final int blockingFactor; // todo: this is probably an optional propery, come up with some default
+    private final int blockingFactor; // todo: this is probably an optional property, come up with some default
 
     public IniFileMetaInfo(RawIniFile file) {
 
