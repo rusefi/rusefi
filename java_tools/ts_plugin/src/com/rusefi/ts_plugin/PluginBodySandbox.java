@@ -6,7 +6,6 @@ import com.opensr5.ini.IniFileModel;
 import com.rusefi.TsTuneReader;
 import com.rusefi.ui.util.FrameHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -22,10 +21,7 @@ public class PluginBodySandbox {
     private static final String PROJECT_NAME = "dev";
 
     public static void main(String[] args) {
-        String iniFile = TsTuneReader.getProjectsDir() +
-                File.separator + PROJECT_NAME +
-                File.separator + "projectCfg" +
-                File.separator + "mainController.ini";
+        String iniFile = TsTuneReader.getProjectModeFileName(PROJECT_NAME);
         IniFileModel model = new IniFileModel().readIniFile(iniFile);
         Objects.requireNonNull(model, "model");
         java.util.List<String> fieldNamesList = new ArrayList<>(model.allIniFields.keySet());
@@ -44,4 +40,5 @@ public class PluginBodySandbox {
             return controllerAccess;
         }).getContent());
     }
+
 }

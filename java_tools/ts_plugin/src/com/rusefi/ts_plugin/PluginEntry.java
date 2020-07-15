@@ -1,7 +1,13 @@
 package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
+import com.efiAnalytics.plugin.ecu.ControllerException;
+import com.efiAnalytics.plugin.ecu.ControllerParameterChangeListener;
+import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.IniField;
+import com.rusefi.TsTuneReader;
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ts_plugin.util.ManifestHelper;
@@ -16,6 +22,7 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -36,6 +43,20 @@ public class PluginEntry implements TsPluginBody {
 
     private UploaderStatus uploaderStatus = new UploaderStatus();
 
+    private final Timer timer = new Timer(1000 /* one second */, new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Timer! " + System.currentTimeMillis() + " " + timer + " " + e);
+        }
+    });
+
+    ControllerParameterChangeListener listener = new ControllerParameterChangeListener() {
+        @Override
+        public void parameterValueChanged(String parameterName) {
+            System.out.println("Parameter value changed " + parameterName);
+            timer.restart();
+        }
+    };
 
     /**
      * the real constructor - this one is invoked via reflection
@@ -45,6 +66,9 @@ public class PluginEntry implements TsPluginBody {
     }
 
     public PluginEntry(Supplier<ControllerAccess> controllerAccessSupplier) {
+        System.out.println("PluginEntry init " + this);
+        timer.stop();
+        timer.setRepeats(false);
         this.controllerAccessSupplier = controllerAccessSupplier;
         upload.setBackground(new Color(0x90EE90));
 
@@ -55,7 +79,7 @@ public class PluginEntry implements TsPluginBody {
                     String configurationName = getConfigurationName();
                     if ((currentConfiguration == null && configurationName != null)
                             || !currentConfiguration.equals(configurationName)) {
-                        handleConfigurationChange(configurationName);
+                        handleConfigurationChange(configurationName, controllerAccessSupplier.get());
                     }
 
                     boolean isProjectActive = configurationName != null;
@@ -132,11 +156,33 @@ public class PluginEntry implements TsPluginBody {
     /**
      * This method is invoked every time we defect a switch between projects
      */
-    private void handleConfigurationChange(String configurationName) {
+    private void handleConfigurationChange(String configurationName, ControllerAccess controllerAccess) {
         uploaderStatus.readTuneState(configurationName);
+
+        if (configurationName != null) {
+            subscribeToUpdates(configurationName, controllerAccess);
+        }
+
         updateUploadEnabled();
 
         currentConfiguration = configurationName;
+    }
+
+    private void subscribeToUpdates(String configurationName, ControllerAccess controllerAccess) {
+        IniFileModel model = new IniFileModel().readIniFile(TsTuneReader.getProjectModeFileName(configurationName));
+        Map<String, IniField> allIniFields = model.allIniFields;
+        if (model.allIniFields == null)
+            return;
+        for (Map.Entry<String, IniField> field : allIniFields.entrySet()) {
+            boolean isOnlineTuneField = field.getValue().getOffset() >= Fields.engine_configuration_s_size;
+            if (!isOnlineTuneField) {
+                try {
+                    controllerAccess.getControllerParameterServer().subscribe(configurationName, field.getKey(), listener);
+                } catch (ControllerException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
     }
 
     public static boolean isEmpty(Constant constant) {
