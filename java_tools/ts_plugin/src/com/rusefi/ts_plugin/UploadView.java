@@ -1,5 +1,6 @@
 package com.rusefi.ts_plugin;
 
+import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import org.json.simple.JSONArray;
 import org.putgemin.VerticalFlowLayout;
@@ -13,7 +14,7 @@ public class UploadView {
 
     private static final String AUTO_UPLOAD = "AUTO_UPLOAD";
 
-    private final JLabel uploadState = new JLabel();
+    public final JLabel uploadState = new JLabel();
     private final JLabel projectWarning = new JLabel(UploaderStatus.NO_PROJECT);
     private final JLabel tuneInfo = new JLabel();
     private final JCheckBox autoUpload = new JCheckBox("Continuous auto-upload");
@@ -37,8 +38,8 @@ public class UploadView {
         return PersistentConfiguration.getConfig().getRoot().getBoolProperty(AUTO_UPLOAD, false);
     }
 
-    public void setResult(JSONArray array) {
-        uploadState.setText(array.get(0).toString());
+    public void setResult(UploadResult result) {
+        uploadState.setText(result.getMessage().get(0).toString());
         uploadState.setVisible(true);
     }
 

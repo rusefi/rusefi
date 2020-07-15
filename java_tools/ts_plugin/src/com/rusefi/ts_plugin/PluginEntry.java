@@ -3,6 +3,7 @@ package com.rusefi.ts_plugin;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.tools.online.Online;
+import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ts_plugin.util.ManifestHelper;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
@@ -10,7 +11,6 @@ import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.URLLabel;
 import org.apache.http.concurrent.FutureCallback;
-import org.json.simple.JSONArray;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -90,11 +90,13 @@ public class PluginEntry implements TsPluginBody {
                     JOptionPane.showMessageDialog(content, "No project opened");
                     return;
                 }
+                uploadView.uploadState.setVisible(true);
+                uploadView.uploadState.setText("Uploading...");
 
                 Msq tune = TuneUploder.writeCurrentTune(controllerAccessSupplier.get(), configurationName);
-                Online.uploadTune(tune, tokenPanel, content, new FutureCallback<JSONArray>() {
+                Online.uploadTune(tune, tokenPanel, content, new FutureCallback<UploadResult>() {
                     @Override
-                    public void completed(JSONArray array) {
+                    public void completed(UploadResult array) {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
