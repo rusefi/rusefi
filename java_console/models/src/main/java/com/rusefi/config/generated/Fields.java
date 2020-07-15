@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 12 21:35:28 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 15 01:37:00 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -25,6 +25,7 @@ public class Fields {
 	public static final int afr_alignmentFill_afr_offset = 561;
 	public static final int afr_hwChannel_offset = 560;
 	public static final int afr_offset = 560;
+	public static final int afr_sensor_s_size = 20;
 	public static final int afr_type_offset = 692;
 	public static final int afr_v1_offset = 564;
 	public static final int afr_v2_offset = 572;
@@ -41,6 +42,7 @@ public class Fields {
 	public static final int afterstartDecayTime_offset = 6216;
 	public static final int afterstartEnrich_offset = 6184;
 	public static final int afterstartHoldTime_offset = 6152;
+	public static final int air_pressure_sensor_config_s_size = 16;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
 	public static final int alignmentFill_at_2109_offset = 2109;
 	public static final int alignmentFill_at_4514_offset = 4514;
@@ -253,6 +255,7 @@ public class Fields {
 	public static final int CRANKING_CLT_IDLE_CURVE_SIZE = 8;
 	public static final int CRANKING_CURVE_SIZE = 8;
 	public static final int cranking_offset = 88;
+	public static final int cranking_parameters_s_size = 8;
 	public static final int cranking_rpm_offset = 92;
 	public static final int crankingAdvance_offset = 3124;
 	public static final int crankingAdvanceBins_offset = 3108;
@@ -296,6 +299,7 @@ public class Fields {
 	public static final int enableLaunchBoost_offset = 976;
 	public static final int enableLaunchRetard_offset = 976;
 	public static final int enableVerboseCanTx_offset = 744;
+	public static final int engine_configuration_s_size = 6000;
 	public static final String ENGINE_MAKE_BMW = "BMW";
 	public static final String ENGINE_MAKE_GM = "GM";
 	public static final String ENGINE_MAKE_LADA = "Lada";
@@ -331,6 +335,7 @@ public class Fields {
 	public static final int ETB_COUNT = 2;
 	public static final int etb_dFactor_offset = 1744;
 	public static final int etb_iFactor_offset = 1740;
+	public static final int etb_io_size = 4;
 	public static final int etb_iTermMax_offset = 3958;
 	public static final int etb_iTermMin_offset = 3956;
 	public static final int etb_maxValue_offset = 1754;
@@ -648,6 +653,7 @@ public class Fields {
 	public static final int gppwm4_pwmFrequency_offset = 4410;
 	public static final int gppwm4_rpmBins_offset = 4424;
 	public static final int gppwm4_table_offset = 4432;
+	public static final int gppwm_channel_size = 88;
 	public static final int GPPWM_CHANNELS = 4;
 	public static final int GPPWM_LOAD_COUNT = 8;
 	public static final int GPPWM_RPM_COUNT = 8;
@@ -698,6 +704,7 @@ public class Fields {
 	public static final int IDLE_ADVANCE_CURVE_SIZE = 8;
 	public static final int idle_antiwindupFreq_offset = 696;
 	public static final int idle_derivativeFilterLoss_offset = 516;
+	public static final int idle_hardware_s_size = 8;
 	public static final int idle_offset = 600;
 	public static final int idle_solenoidFrequency_offset = 600;
 	public static final int idle_solenoidPin_offset = 604;
@@ -799,6 +806,7 @@ public class Fields {
 	public static final int injector_battLagCorrBins_offset = 12;
 	public static final int injector_flow_offset = 8;
 	public static final int injector_offset = 8;
+	public static final int injector_s_size = 68;
 	public static final int injPhaseLoadBins_offset = 15008;
 	public static final int injPhaseRpmBins_offset = 15072;
 	public static final int invertPrimaryTriggerSignal_offset = 1464;
@@ -905,6 +913,7 @@ public class Fields {
 	public static final int map_samplingWindow_offset = 204;
 	public static final int map_samplingWindowBins_offset = 172;
 	public static final int map_sensor_alignmentFill_offset = 249;
+	public static final int MAP_sensor_config_s_size = 144;
 	public static final int map_sensor_highValue_offset = 240;
 	public static final int map_sensor_hwChannel_offset = 248;
 	public static final int map_sensor_lowValue_offset = 236;
@@ -971,6 +980,7 @@ public class Fields {
 	public static final int noAccelAfterHardLimitPeriodSecs_offset = 1536;
 	public static final int o2heaterPin_offset = 742;
 	public static final int o2heaterPinModeTodO_offset = 743;
+	public static final int oil_pressure_config_s_size = 20;
 	public static final int oilPressure_alignmentFill_offset = 2693;
 	public static final int oilPressure_hwChannel_offset = 2692;
 	public static final int oilPressure_offset = 2692;
@@ -994,6 +1004,8 @@ public class Fields {
 	public static final int pedalToTpsPedalBins_offset = 6464;
 	public static final int pedalToTpsRpmBins_offset = 6472;
 	public static final int pedalToTpsTable_offset = 6400;
+	public static final int persistent_config_s_size = 20000;
+	public static final int pid_s_size = 20;
 	public static final int pidExtraForLowRpm_offset = 3156;
 	public static final int postCrankingDurationSec_offset = 2440;
 	public static final int postCrankingFactor_offset = 2436;
@@ -1050,6 +1062,7 @@ public class Fields {
 	public static final int sparkDwellRpmBins_offset = 332;
 	public static final int sparkDwellValues_offset = 364;
 	public static final int specs_offset = 396;
+	public static final int specs_s_size = 12;
 	public static final int spi1MisoMode_offset = 2598;
 	public static final int spi1misoPin_offset = 929;
 	public static final int spi1MosiMode_offset = 2597;
@@ -1068,6 +1081,7 @@ public class Fields {
 	public static final int spi3mosiPin_offset = 934;
 	public static final int spi3SckMode_offset = 2602;
 	public static final int spi3sckPin_offset = 936;
+	public static final int spi_pins_size = 4;
 	public static final int startCrankingDuration_offset = 826;
 	public static final int starterControlPin_offset = 1772;
 	public static final int starterRelayDisableMode_offset = 809;
@@ -1081,6 +1095,7 @@ public class Fields {
 	public static final int stepperEnablePinMode_offset = 2605;
 	public static final int stepperForceParkingEveryRestart_offset = 744;
 	public static final int stepperParkingExtraSteps_offset = 818;
+	public static final int stft_cell_cfg_s_size = 4;
 	public static final int STFT_CELL_COUNT = 4;
 	public static final int stft_cellCfgs1_maxAdd_offset = 1072;
 	public static final int stft_cellCfgs1_maxRemove_offset = 1073;
@@ -1106,6 +1121,7 @@ public class Fields {
 	public static final int stft_minClt_offset = 1068;
 	public static final int stft_minPowerLoad_offset = 1066;
 	public static final int stft_offset = 1064;
+	public static final int stft_s_size = 24;
 	public static final int stft_startupDelay_offset = 1071;
 	public static final int stftIgnoreErrorMagnitude_offset = 976;
 	public static final int storageMode_offset = 2260;
@@ -1138,6 +1154,8 @@ public class Fields {
 	public static final int tcuDownshiftButtonPin_offset = 1819;
 	public static final int tcuUpshiftButtonPin_offset = 1818;
 	public static final int test557pin_offset = 3101;
+	public static final int thermistor_conf_s_size = 28;
+	public static final int ThermistorConf_size = 32;
 	public static final int throttlePedalPositionAdcChannel_offset = 580;
 	public static final int throttlePedalPositionSecondAdcChannel_offset = 683;
 	public static final int throttlePedalSecondaryUpVoltage_offset = 2100;
@@ -1200,6 +1218,7 @@ public class Fields {
 	public static final int tpsTpsAccelFromRpmBins_offset = 19232;
 	public static final int tpsTpsAccelTable_offset = 18976;
 	public static final int tpsTpsAccelToRpmBins_offset = 19264;
+	public static final int trigger_config_s_size = 16;
 	public static final int trigger_customSkippedToothCount_offset = 536;
 	public static final int trigger_customTotalToothCount_offset = 532;
 	public static final int TRIGGER_INPUT_PIN_COUNT = 3;
@@ -1284,7 +1303,7 @@ public class Fields {
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.07.12.all.3557987126";
+	public static final String TS_SIGNATURE = "rusEFI 2020.07.15.all.3884096862";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
