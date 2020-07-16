@@ -28,27 +28,30 @@ public class Online {
     public static final String outputXmlFileName = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
     private static final String url = "https://rusefi.com/online/upload.php";
 
-    public static UploadResult upload(File fileName, String authTokenValue) throws IOException {
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(url);
-
-        FileBody uploadFilePart = new FileBody(fileName);
-        MultipartEntity reqEntity = new MultipartEntity();
-        reqEntity.addPart("upload-file", uploadFilePart);
-        reqEntity.addPart("rusefi_token", new StringBody(authTokenValue));
-
-        httpPost.setEntity(reqEntity);
-
-        HttpResponse response = httpclient.execute(httpPost);
-        System.out.println("response=" + response);
-        System.out.println("code " + response.getStatusLine().getStatusCode());
-
-        HttpEntity entity = response.getEntity();
-        String responseString = EntityUtils.toString(entity, "UTF-8");
-        System.out.println("responseString=" + responseString);
-
-        JSONParser parser = new JSONParser();
+    /**
+     * blocking call for http file upload
+     */
+    public static UploadResult upload(File fileName, String authTokenValue) {
         try {
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(url);
+
+            FileBody uploadFilePart = new FileBody(fileName);
+            MultipartEntity reqEntity = new MultipartEntity();
+            reqEntity.addPart("upload-file", uploadFilePart);
+            reqEntity.addPart("rusefi_token", new StringBody(authTokenValue));
+
+            httpPost.setEntity(reqEntity);
+
+            HttpResponse response = httpclient.execute(httpPost);
+            System.out.println("response=" + response);
+            System.out.println("code " + response.getStatusLine().getStatusCode());
+
+            HttpEntity entity = response.getEntity();
+            String responseString = EntityUtils.toString(entity, "UTF-8");
+            System.out.println("responseString=" + responseString);
+
+            JSONParser parser = new JSONParser();
             JSONObject object = (JSONObject) parser.parse(responseString);
             System.out.println("object=" + object);
             JSONArray info = (JSONArray) object.get("info");
@@ -61,7 +64,7 @@ public class Online {
                 return new UploadResult(false, info);
             }
 
-        } catch (ParseException e) {
+        } catch (IOException | ParseException e) {
             return new UploadResult(true, "Error " + e);
         }
     }
