@@ -67,6 +67,7 @@ public class PluginEntry implements TsPluginBody {
             //            System.out.println("Parameter value changed " + parameterName);
             timer.restart();
             if (UploadView.isAutoUpload()) {
+                System.out.println("enqueue tune");
                 UploadQueue.enqueue(controllerAccessSupplier.get(), currentConfiguration);
             }
         };

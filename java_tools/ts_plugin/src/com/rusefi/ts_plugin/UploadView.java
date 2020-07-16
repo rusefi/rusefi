@@ -22,6 +22,7 @@ public class UploadView {
         content.add(projectWarning);
         content.add(tuneInfo);
         content.add(uploadState);
+        content.add(autoUpload);
 
         autoUpload.setSelected(isAutoUpload());
         autoUpload.addActionListener(new AbstractAction() {
