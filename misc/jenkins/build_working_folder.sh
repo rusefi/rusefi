@@ -1,9 +1,13 @@
 #!/bin/bash
 
-FULL_BUNDLE_FILE="$BUNDLE_FULL_NAME.zip"
+#
+# file build_working_folder.sh
+#
+
+FULL_BUNDLE_FILE="${BUNDLE_FULL_NAME}.zip"
 UPDATE_BUNDLE_FILE="${BUNDLE_FULL_NAME}_autoupdate.zip"
 
-echo "Packaging temp/$FULL_BUNDLE_FILE file"
+echo "${BUNDLE_FULL_NAME}: Packaging temp/$FULL_BUNDLE_FILE file"
 
 rm -rf temp
 mkdir temp
