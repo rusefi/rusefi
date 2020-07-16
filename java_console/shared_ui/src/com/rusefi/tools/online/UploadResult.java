@@ -21,7 +21,11 @@ public class UploadResult {
         return isError;
     }
 
-    public JSONArray getMessage() {
+    public JSONArray getMessageArray() {
         return message;
+    }
+
+    public String getFirstMessage() {
+        return message.get(0).toString();
     }
 }
