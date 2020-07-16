@@ -1,6 +1,7 @@
 package com.rusefi.tune.xml;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import java.util.Objects;
 
 public class VersionInfo {
     private String firmwareInfo;
@@ -39,5 +40,9 @@ public class VersionInfo {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public void validate() {
+        Objects.requireNonNull(signature, "signature");
     }
 }
