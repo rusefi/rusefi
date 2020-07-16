@@ -18,7 +18,7 @@ public class Msq {
 
     public List<Page> page = new ArrayList<>();
 
-    private final VersionInfo versionInfo;
+    public final VersionInfo versionInfo;
 
     public Msq() {
         versionInfo = new VersionInfo("rusEFI+2020");
@@ -36,7 +36,7 @@ public class Msq {
     @NotNull
     public static Msq create(int totalConfigSize, String tsSignature) {
         Msq tune = new Msq();
-        tune.versionInfo.setTsSignature(tsSignature);
+        tune.versionInfo.setSignature(tsSignature);
         tune.page.add(new Page(null, null));
         tune.page.add(new Page(0, totalConfigSize));
         return tune;
@@ -84,7 +84,6 @@ public class Msq {
         return new Bibliography();
     }
 
-    @XmlElement
     public VersionInfo getVersionInfo() {
         return versionInfo;
     }
