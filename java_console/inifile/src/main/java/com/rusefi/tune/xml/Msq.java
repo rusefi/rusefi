@@ -65,6 +65,8 @@ public class Msq {
     }
 
     public void writeXmlFile(String outputXmlFileName) throws JAXBException, IOException {
+        Objects.requireNonNull(versionInfo, "versionInfo");
+        versionInfo.validate();
         XmlUtil.writeXml(this, Msq.class, outputXmlFileName);
     }
 
