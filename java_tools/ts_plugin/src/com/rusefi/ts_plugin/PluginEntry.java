@@ -63,6 +63,7 @@ public class PluginEntry implements TsPluginBody {
         timer.stop();
         timer.setRepeats(false);
         this.controllerAccessSupplier = controllerAccessSupplier;
+        UploadQueue.start();
         listener = parameterName -> {
             //            System.out.println("Parameter value changed " + parameterName);
             timer.restart();

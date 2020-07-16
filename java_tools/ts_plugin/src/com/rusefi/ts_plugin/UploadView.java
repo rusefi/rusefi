@@ -29,6 +29,7 @@ public class UploadView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PersistentConfiguration.getConfig().getRoot().setProperty(AUTO_UPLOAD, autoUpload.isSelected());
+                PersistentConfiguration.getConfig().save();
             }
         });
         uploadState.setVisible(false);
@@ -39,7 +40,7 @@ public class UploadView {
     }
 
     public void setResult(UploadResult result) {
-        uploadState.setText(result.getMessage().get(0).toString());
+        uploadState.setText(result.getFirstMessage());
         uploadState.setVisible(true);
     }
 
