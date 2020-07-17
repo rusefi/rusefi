@@ -1365,7 +1365,7 @@ menuDialog = main
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
 
 		subMenu = std_separator
-		subMenu = tcuControls,			"TCU Manual Controls"
+		subMenu = tcuControls,			"Transmission Settings"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -2848,11 +2848,15 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "ADC #3",								fsioAdc3
 		field = "ADC #4",								fsioAdc4
 
+	dialog = shiftInputPanel
+		field = "TCU Enabled"		tcuEnabled
+		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
+		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
+		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
+		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled }
 
-	dialog = tcuControls, "TCU Manual Controls"
-		field = "Upshift Pin"		tcuUpshiftButtonPin
-		field = "Downshift Pin"		tcuDownshiftButtonPin
-		field = "Gear Change Cooldown"	tcuCooldown
+	dialog = tcuControls, "Transmission Settings"
+		panel = shiftInputPanel
 
 ;Boost Open Loop
 

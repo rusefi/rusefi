@@ -1,16 +1,18 @@
 include "tcu.h"
 
-TransmissionControllerBase::TransmissionControllerBase () {
-	desiredGear = NEUTRAL;
-	currentGear = NEUTRAL:
+void GearControllerBase::update() {
+    transmissionController(desiredGear);
 }
 
-void TransmissionControllerBase::update() {
-	auto shiftRequest = GetShiftRequest();
-	desiredGear = shiftRequest;
+gear_e GearControllerBase::getDesiredGear() {
+    return desiredgear;
 }
 
-gear_e TransmissionControllerBase::GetShiftRequest() {
-	// TODO check pins and if a button is pressed, return updated desiredGear
-	//      and update currentGear
+gear_e GearControllerBase::setDesiredGear(gear_e gear) {
+    desiredGear = gear;
+    return desiredGear;
+}
+
+void TransmissionControllerBase::update(gear_e gear) {
+    currentGear = gear;
 }
