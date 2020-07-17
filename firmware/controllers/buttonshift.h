@@ -1,3 +1,3 @@
 include "tcu.h"
 
-class ButtonShiftController: public GearControllerBase
+class ButtonShiftController: public GearControllerBase {}
