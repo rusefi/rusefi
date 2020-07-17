@@ -81,6 +81,25 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     private List<StreamFile> compositeLogs = new ArrayList<>();
 
+    public static String findCommand(byte command) {
+        switch (command) {
+            case Fields.TS_CRC_CHECK_COMMAND:
+                return "CRC_CHECK";
+            case Fields.TS_BURN_COMMAND:
+                return "BURN";
+            case Fields.TS_HELLO_COMMAND:
+                return "HELLO";
+            case Fields.TS_READ_COMMAND:
+                return "READ";
+            case Fields.TS_GET_FIRMWARE_VERSION:
+                return "GET_FW_VERSION";
+            case Fields.TS_CHUNK_WRITE_COMMAND:
+                return "WRITE_CHUNK";
+            default:
+                return "command " + (char) + command + "/" + command;
+        }
+    }
+
     private void createCompositesIfNeeded() {
         if (!compositeLogs.isEmpty())
             return;

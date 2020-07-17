@@ -1,6 +1,7 @@
 package com.rusefi.io.tcp;
 
 import com.opensr5.Logger;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.IoStream;
 
 import java.io.ByteArrayInputStream;
@@ -71,10 +72,9 @@ public class BinaryProtocolProxy {
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet.getPacket()));
         byte command = (byte) dis.read();
 
-        System.out.println("Relaying client command" + (char) command + "/" + command + " length=" + length);
+        System.out.println("Relaying client command " + BinaryProtocol.findCommand(command));
         // sending proxies packet to controller
-        targetOutputStream.write(firstByte);
-        targetOutputStream.write(secondByte);
+        targetOutputStream.writeShort(length);
         targetOutputStream.write(packet.getPacket());
         targetOutputStream.writeInt(packet.getCrc());
     }

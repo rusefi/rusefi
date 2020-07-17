@@ -3,10 +3,7 @@ package com.rusefi.io.tcp;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.Listener;
-import com.rusefi.binaryprotocol.BinaryProtocolCommands;
-import com.rusefi.binaryprotocol.BinaryProtocolState;
-import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.binaryprotocol.IoHelper;
+import com.rusefi.binaryprotocol.*;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
@@ -126,7 +123,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
             byte command = payload[0];
 
-            System.out.println("Got [" + (char) command + "/" + command + "] command");
+            System.out.println("Got [" + BinaryProtocol.findCommand(command));
 
             if (command == Fields.TS_HELLO_COMMAND) {
                 new HelloCommand(logger, Fields.TS_SIGNATURE).handle(packet, stream);
@@ -171,7 +168,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             } else {
                 unknownCommands.incrementAndGet();
                 new IllegalStateException().printStackTrace();
-                logger.info("Error: unknown command " + (char) command + "/" + command);
+                logger.info("Error: unexpected " + BinaryProtocol.findCommand(command));
             }
         }
     }
