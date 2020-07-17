@@ -10,11 +10,14 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
+import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.server.Backend;
 import com.rusefi.server.ClientConnectionState;
 import com.rusefi.server.SessionDetails;
 import com.rusefi.server.UserDetails;
 import com.rusefi.tools.online.ProxyClient;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -27,6 +30,7 @@ import java.util.function.Function;
 
 import static com.rusefi.TestHelper.createIniField;
 import static com.rusefi.TestHelper.prepareImage;
+import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
 import static com.rusefi.tools.online.ProxyClient.LOCALHOST;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -63,7 +67,7 @@ public class ServerTest {
             }
         };
 
-        Backend.runProxy(serverPort, serverCreated, backend);
+        backend.runControllerConnector(serverPort, serverCreated);
         assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
         assertEquals(0, backend.getCount());
 
@@ -84,6 +88,7 @@ public class ServerTest {
     }
 
     @Test
+    @Ignore
     public void testRelayWorkflow() throws InterruptedException, IOException {
         ScalarIniField iniField = TestHelper.createIniField(Fields.CYLINDERSCOUNT);
         int value = 241;
@@ -91,12 +96,18 @@ public class ServerTest {
         Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
         int httpPort = 8001;
         Backend backend = new Backend(userDetailsResolver, httpPort, logger);
-        int serverPort = 7001;
-        CountDownLatch serverCreated = new CountDownLatch(1);
+        int serverPortForControllers = 7001;
+        int serverPortForRemoteUsers = 7003;
+
 
         // first start backend server
-        Backend.runProxy(serverPort, serverCreated, backend);
-        assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
+        CountDownLatch controllerServerCreated = new CountDownLatch(1);
+        backend.runControllerConnector(serverPortForControllers, controllerServerCreated);
+        assertTrue(controllerServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+
+        CountDownLatch applicationServerCreated = new CountDownLatch(1);
+        backend.runApplicationConnector(serverPortForRemoteUsers, applicationServerCreated);
+        assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
 
         // create virtual controller
@@ -104,7 +115,7 @@ public class ServerTest {
         ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
         CountDownLatch controllerCreated = new CountDownLatch(1);
         TestHelper.createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown(), logger);
-        assertTrue(controllerCreated.await(30, TimeUnit.SECONDS));
+        assertTrue(controllerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
 
         // start network broadcaster to connect controller with backend since in real life controller has only local serial port it does not have network
@@ -112,30 +123,39 @@ public class ServerTest {
         HelloCommand.send(targetEcuSocket, logger);
         String controllerSignature = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer(), logger);
 
-        SessionDetails sessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, controllerSignature);
+        SessionDetails deviceSessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, controllerSignature);
 
-        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(new Socket(LOCALHOST, serverPort),
-                sessionDetails,
+        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(new Socket(LOCALHOST, serverPortForControllers),
+                deviceSessionDetails,
                 logger) {
             @Override
-            protected void handleCommand() {
-                super.handleCommand();
+            protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
+                super.handleCommand(packet, stream);
+                targetEcuSocket.sendPacket(packet);
+
+                BinaryProtocolServer.Packet response = targetEcuSocket.readPacket();
+                stream.sendPacket(response);
             }
-            // todo
         };
         baseBroadcastingThread.start();
 
+        SessionDetails authenticatorSessionDetails = new SessionDetails(deviceSessionDetails.getControllerInfo(), MockRusEfiDevice.TEST_TOKEN_3, deviceSessionDetails.getOneTimeToken());
+
 
         // start authenticator
-        IoStream authenticatorToProxyStream = TestHelper.createTestStream(serverPort, logger);
+        IoStream authenticatorToProxyStream = TestHelper.createTestStream(serverPortForControllers, logger);
+        // right from connection push session authentication data
+        new HelloCommand(logger, authenticatorSessionDetails.toJson()).handle(authenticatorToProxyStream);
 
+
+        // local port on which authenticator accepts connections from Tuner Studio
         int authenticatorPort = 7004;
         BinaryProtocolProxy.createProxy(authenticatorToProxyStream, authenticatorPort);
 
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
-/*
+
         // connect to proxy and read virtual controller through it
         LinkManager clientManager = new LinkManager(logger);
         clientManager.startAndConnect(ProxyClient.LOCALHOST + ":" + authenticatorPort, new ConnectionStateListener() {
@@ -156,7 +176,7 @@ public class ServerTest {
         ConfigurationImage clientImage = clientStreamState.getControllerConfiguration();
         String clientValue = iniField.getValue(clientImage);
         assertEquals(Double.toString(value), clientValue);
-*/
+
     }
 
 

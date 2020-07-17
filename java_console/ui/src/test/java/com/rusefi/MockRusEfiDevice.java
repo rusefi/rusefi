@@ -11,6 +11,7 @@ import static com.rusefi.tools.online.ProxyClient.LOCALHOST;
 
 public class MockRusEfiDevice {
     public static final String TEST_TOKEN_1 = "00000000-1234-1234-1234-123456789012";
+    public static final String TEST_TOKEN_3 = "33333333-3333-1234-1234-123456789012";
     private SessionDetails sessionDetails;
     private final Logger logger;
 

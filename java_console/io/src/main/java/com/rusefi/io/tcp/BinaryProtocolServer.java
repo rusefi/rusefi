@@ -74,8 +74,8 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 try {
                     serverSocket = new ServerSocket(port, 1);
                 } catch (IOException e) {
-                    logger.error("Error binding server socket" + e);
-                    return;
+                    logger.error(threadName + ": Error binding server socket " + port + ": " + e);
+                    throw new IllegalStateException(e);
                 }
                 if (serverSocketCreationCallback != null)
                     serverSocketCreationCallback.onResult(null);
@@ -126,7 +126,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             System.out.println("Got [" + BinaryProtocol.findCommand(command));
 
             if (command == Fields.TS_HELLO_COMMAND) {
-                new HelloCommand(logger, Fields.TS_SIGNATURE).handle(packet, stream);
+                new HelloCommand(logger, Fields.TS_SIGNATURE).handle(stream);
             } else if (command == COMMAND_PROTOCOL) {
 //                System.out.println("Ignoring crc F command");
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes(), logger);
