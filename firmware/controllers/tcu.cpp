@@ -1,5 +1,9 @@
 include "tcu.h"
 
+GearControllerBase::GearControllerBase() {
+    desiredGear = PARK;
+}
+
 void GearControllerBase::update() {
     transmissionController(desiredGear);
 }
@@ -11,6 +15,10 @@ gear_e GearControllerBase::getDesiredGear() {
 gear_e GearControllerBase::setDesiredGear(gear_e gear) {
     desiredGear = gear;
     return desiredGear;
+}
+
+TransmissionControllerBase::TransmissionControllerBase() {
+    currentGear = PARK;
 }
 
 void TransmissionControllerBase::update(gear_e gear) {
