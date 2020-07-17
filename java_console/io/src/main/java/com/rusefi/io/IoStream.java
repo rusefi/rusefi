@@ -6,6 +6,8 @@ import com.opensr5.io.WriteStream;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
+import com.rusefi.io.tcp.BinaryProtocolServer;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -29,6 +31,18 @@ public interface IoStream extends WriteStream {
             r.append(' ');
         }
         return r.toString();
+    }
+
+    @NotNull
+    default BinaryProtocolServer.Packet readPacket() throws IOException {
+        short length = readShort();
+        return BinaryProtocolServer.readPromisedBytes(getDataBuffer(), length);
+    }
+
+    default void sendPacket(BinaryProtocolServer.Packet packet) throws IOException {
+        writeShort(packet.getPacket().length);
+        write(packet.getPacket());
+        writeInt(packet.getCrc());
     }
 
     default void sendPacket(byte[] plainPacket, Logger logger) throws IOException {

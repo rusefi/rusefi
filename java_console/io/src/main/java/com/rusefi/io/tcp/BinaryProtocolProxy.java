@@ -52,12 +52,12 @@ public class BinaryProtocolProxy {
         }
     }
 
-    private static void proxyControllerResponseToClient(IoStream targetInputStream, DataOutputStream clientOutputStream) throws IOException {
-        short length = targetInputStream.readShort();
-        BinaryProtocolServer.Packet packet = BinaryProtocolServer.readPromisedBytes(targetInputStream.getDataBuffer(), length);
+    public static void proxyControllerResponseToClient(IoStream targetInputStream, DataOutputStream clientOutputStream) throws IOException {
+        BinaryProtocolServer.Packet packet = targetInputStream.readPacket();
 
-        System.out.println("Relaying controller response length=" + length);
-        clientOutputStream.writeShort(length);
+        System.out.println("Relaying controller response length=" + packet.getPacket().length);
+        // todo: replace with IoStream#sendPacket?
+        clientOutputStream.writeShort(packet.getPacket().length);
         clientOutputStream.write(packet.getPacket());
         clientOutputStream.writeInt(packet.getCrc());
         clientOutputStream.flush();
@@ -73,9 +73,7 @@ public class BinaryProtocolProxy {
         byte command = (byte) dis.read();
 
         System.out.println("Relaying client command " + BinaryProtocol.findCommand(command));
-        // sending proxies packet to controller
-        targetOutputStream.writeShort(length);
-        targetOutputStream.write(packet.getPacket());
-        targetOutputStream.writeInt(packet.getCrc());
+        // sending proxied packet to controller
+        targetOutputStream.sendPacket(packet);
     }
 }
