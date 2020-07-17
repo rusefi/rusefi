@@ -12,10 +12,7 @@ import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.server.Backend;
-import com.rusefi.server.ClientConnectionState;
-import com.rusefi.server.SessionDetails;
-import com.rusefi.server.UserDetails;
+import com.rusefi.server.*;
 import com.rusefi.tools.online.ProxyClient;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,7 +40,7 @@ public class ServerTest {
     private final static Logger logger = Logger.CONSOLE;
 
     @Test
-    public void testSessionTimeout() throws InterruptedException, IOException {
+    public void testControllerSessionTimeout() throws InterruptedException, IOException {
         int serverPort = 7000;
         int httpPort = 8000;
         Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
@@ -54,13 +51,13 @@ public class ServerTest {
 
         Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
             @Override
-            public void register(ClientConnectionState clientConnectionState) {
+            public void register(ControllerConnectionState clientConnectionState) {
                 super.register(clientConnectionState);
                 onConnected.countDown();
             }
 
             @Override
-            public void close(ClientConnectionState inactiveClient) {
+            public void close(ControllerConnectionState inactiveClient) {
                 super.close(inactiveClient);
                 if (getCount() == 0)
                     allClientsDisconnected.countDown();
@@ -77,14 +74,72 @@ public class ServerTest {
 
         assertTrue(onConnected.await(30, TimeUnit.SECONDS));
 
-        List<ClientConnectionState> clients = backend.getClients();
+        List<ControllerConnectionState> clients = backend.getClients();
         assertEquals(2, clients.size());
 
         List<UserDetails> onlineUsers = ProxyClient.getOnlineUsers(httpPort);
         assertEquals(2, onlineUsers.size());
 
         assertTrue(allClientsDisconnected.await(30, TimeUnit.SECONDS));
+    }
 
+    @Test
+    public void testInvalidApplicationRequest() throws InterruptedException, IOException {
+        Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
+        int httpPort = 8001;
+        int serverPortForRemoteUsers = 6801;
+        CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
+        Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+            @Override
+            public void onDisconnectApplication() {
+                super.onDisconnectApplication();
+                disconnectedCountDownLatch.countDown();;
+            }
+        };
+
+        CountDownLatch applicationServerCreated = new CountDownLatch(1);
+        backend.runApplicationConnector(serverPortForRemoteUsers, applicationServerCreated);
+        assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+
+        // start authenticator
+        IoStream authenticatorToProxyStream = TestHelper.connectToLocalhost(serverPortForRemoteUsers, logger);
+        new HelloCommand(logger, "hello").handle(authenticatorToProxyStream);
+
+        assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
+        backend.close();
+    }
+
+    @Test
+    public void testAuthenticatorConnect() throws InterruptedException, IOException {
+        int serverPortForRemoteUsers = 6800;
+
+        Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
+        int httpPort = 8001;
+
+        CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
+
+        Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+            @Override
+            public void onDisconnectApplication() {
+                super.onDisconnectApplication();
+                disconnectedCountDownLatch.countDown();;
+            }
+        };
+
+        CountDownLatch applicationServerCreated = new CountDownLatch(1);
+        backend.runApplicationConnector(serverPortForRemoteUsers, applicationServerCreated);
+        assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+
+        SessionDetails sessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, Fields.TS_SIGNATURE);
+        ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, 123);
+
+        // start authenticator
+        IoStream authenticatorToProxyStream = TestHelper.connectToLocalhost(serverPortForRemoteUsers, logger);
+        LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
+        localApplicationProxy.run(authenticatorToProxyStream);
+
+        assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
+        backend.close();
     }
 
     @Test
@@ -119,7 +174,7 @@ public class ServerTest {
 
 
         // start network broadcaster to connect controller with backend since in real life controller has only local serial port it does not have network
-        IoStream targetEcuSocket = TestHelper.createTestStream(controllerPort, logger);
+        IoStream targetEcuSocket = TestHelper.connectToLocalhost(controllerPort, logger);
         HelloCommand.send(targetEcuSocket, logger);
         String controllerSignature = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer(), logger);
 
@@ -140,12 +195,13 @@ public class ServerTest {
         baseBroadcastingThread.start();
 
         SessionDetails authenticatorSessionDetails = new SessionDetails(deviceSessionDetails.getControllerInfo(), MockRusEfiDevice.TEST_TOKEN_3, deviceSessionDetails.getOneTimeToken());
+        ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, 123);
 
 
         // start authenticator
-        IoStream authenticatorToProxyStream = TestHelper.createTestStream(serverPortForControllers, logger);
-        // right from connection push session authentication data
-        new HelloCommand(logger, authenticatorSessionDetails.toJson()).handle(authenticatorToProxyStream);
+        IoStream authenticatorToProxyStream = TestHelper.connectToLocalhost(serverPortForRemoteUsers, logger);
+        LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
+        localApplicationProxy.run(authenticatorToProxyStream);
 
 
         // local port on which authenticator accepts connections from Tuner Studio
@@ -177,6 +233,7 @@ public class ServerTest {
         String clientValue = iniField.getValue(clientImage);
         assertEquals(Double.toString(value), clientValue);
 
+        backend.close();
     }
 
 

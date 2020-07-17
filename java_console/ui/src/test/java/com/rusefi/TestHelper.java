@@ -46,7 +46,7 @@ public class TestHelper {
     }
 
     @NotNull
-    public static IoStream createTestStream(int controllerPort, Logger logger) {
+    public static IoStream connectToLocalhost(int controllerPort, Logger logger) {
         IoStream targetEcuSocket;
         try {
             targetEcuSocket = new TcpIoStream(logger, new Socket(ProxyClient.LOCALHOST, controllerPort));
