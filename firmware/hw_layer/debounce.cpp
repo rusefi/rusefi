@@ -7,8 +7,8 @@ ButtonDebounce::ButtonDebounce (int t) {
 
 bool ButtonDebounce::readPin(brain_pin_e pin) {
     efitimems_t timeNow = currentTimeMilllis();
-    if ((timeNow - time) > threshold) {
-        return efiReadPin(pin);
+    if ((timeNow - time) < threshold) {
+        return false;
     }
-    return false;
+    return efiReadPin(pin);
 }
