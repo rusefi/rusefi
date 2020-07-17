@@ -5,7 +5,7 @@ GearControllerBase::GearControllerBase() {
 }
 
 void GearControllerBase::update() {
-    transmissionController(desiredGear);
+    transmissionController.update(desiredGear);
 }
 
 gear_e GearControllerBase::getDesiredGear() {
