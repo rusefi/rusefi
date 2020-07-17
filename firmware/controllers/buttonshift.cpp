@@ -1,8 +1,13 @@
 include "buttonshift.h"
+include "debounce.h"
+
+ButtonShiftController::ButtonShiftController () {
+    buttonDebounce = new ButtonDebounce(10);
+}
 
 ButtonShiftController::update() {
-    bool upPinState = efiReadPin(CONFIG(tcuUpshiftButtonPin))
-    bool downPinState = efiReadPin(CONFIG(tcuDownshiftButtonPin))
+    bool upPinState = buttonDebounce.readPin(CONFIG(tcuUpshiftButtonPin))
+    bool downPinState = buttonDebounce.readPin(CONFIG(tcuDownshiftButtonPin))
     gear_e gear = getDesiredGear()
     if (upPinState) {
         switch (gear) {
