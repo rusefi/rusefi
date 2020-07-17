@@ -142,7 +142,7 @@ public class PluginEntry implements TsPluginBody {
             }
         });
 
-        content.add(new JLabel(ManifestHelper.getBuildTimestamp()));
+        content.add(new JLabel("Version " + ManifestHelper.getBuildTimestamp()));
 //        content.add(new JLabel("Active project: " + getConfigurationName()));
 
 
