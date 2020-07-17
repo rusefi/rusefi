@@ -24,3 +24,7 @@ TransmissionControllerBase::TransmissionControllerBase() {
 void TransmissionControllerBase::update(gear_e gear) {
     currentGear = gear;
 }
+
+gear_e TransmissionController::getCurrentGear() {
+    return currentGear;
+}

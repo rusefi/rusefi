@@ -13,6 +13,7 @@ private:
 class TransmissionControllerBase {
 public:
     void update(gear_e);
+    gear_e getCurrentGear();
 private:
     gear_e currentGear;
 }
