@@ -277,7 +277,12 @@ bool NamedOutputPin::stop() {
 }
 
 void InjectorOutputPin::reset() {
-	overlappingCounter = 0;
+	// If this injector was open, close it and reset state
+	if (overlappingCounter != 0) {
+		overlappingCounter = 0;
+		setValue(0);
+	}
+
 	// todo: this could be refactored by calling some super-reset method
 	currentLogicValue = INITIAL_PIN_STATE;
 }
