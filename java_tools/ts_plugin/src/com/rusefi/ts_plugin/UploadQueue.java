@@ -15,7 +15,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class UploadQueue {
     public static final String OUTBOX_FOLDER = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "outbox";
-    private static LinkedBlockingDeque<Msq> queue = new LinkedBlockingDeque<>(128);
+    private static LinkedBlockingDeque<String> queue = new LinkedBlockingDeque<>(128);
 
     private static boolean isStarted;
 
@@ -39,8 +39,8 @@ public class UploadQueue {
                 return;
             System.out.println(UploadQueue.class.getSimpleName() + " readOutbox " + file);
             try {
-                Msq msg = Msq.readTune(OUTBOX_FOLDER + File.separator + file);
-                queue.put(msg);
+                String fileName = OUTBOX_FOLDER + File.separator + file;
+                queue.put(fileName);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -50,30 +50,23 @@ public class UploadQueue {
 
     private static void uploadLoop() throws InterruptedException {
         while (true) {
-            Msq msq = queue.take();
+            String fileName = queue.take();
 
-            new File(OUTBOX_FOLDER).mkdirs();
-            String fileName = OUTBOX_FOLDER + File.separator + System.currentTimeMillis() + ".msq";
-            try {
-                msq.writeXmlFile(fileName);
-                UploadResult result = Online.upload(new File(fileName), AuthTokenPanel.getAuthToken());
-                System.out.println("isError " + result.isError());
-                System.out.println("first " + result.getFirstMessage());
-                if (result.isError() && result.getFirstMessage().contains("This file already exists")) {
-                    System.out.println(UploadQueue.class.getSimpleName() + " No need to re-try this one");
-                    delete(fileName);
-                    // do not retry this error
-                    continue;
-                }
-                if (result.isError()) {
-                    System.out.println(UploadQueue.class.getSimpleName() + " Re-queueing " + msq);
-                    queue.put(msq);
-                    continue;
-                }
+            UploadResult result = Online.upload(new File(fileName), AuthTokenPanel.getAuthToken());
+            System.out.println("isError " + result.isError());
+            System.out.println("first " + result.getFirstMessage());
+            if (result.isError() && result.getFirstMessage().contains("This file already exists")) {
+                System.out.println(UploadQueue.class.getSimpleName() + " No need to re-try this one");
                 delete(fileName);
-            } catch (JAXBException | IOException e) {
-                e.printStackTrace();
+                // do not retry this error
+                continue;
             }
+            if (result.isError()) {
+                System.out.println(UploadQueue.class.getSimpleName() + " Re-queueing " + fileName);
+                queue.put(fileName);
+                continue;
+            }
+            delete(fileName);
         }
     }
 
@@ -89,9 +82,13 @@ public class UploadQueue {
             return;
         }
         Msq msq = TuneUploder.grabTune(controllerAccess, configurationName);
+        msq.bibliography.setTuneComment("Auto-saved");
         try {
-            queue.put(msq);
-        } catch (InterruptedException e) {
+            new File(OUTBOX_FOLDER).mkdirs();
+            String fileName = OUTBOX_FOLDER + File.separator + System.currentTimeMillis() + ".msq";
+            msq.writeXmlFile(fileName);
+            queue.put(fileName);
+        } catch (InterruptedException | JAXBException | IOException e) {
             throw new IllegalStateException(e);
         }
     }
