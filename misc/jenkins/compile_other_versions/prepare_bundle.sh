@@ -1,14 +1,15 @@
 #!/bin/bash
 
+BUNDLE_NAME="$BUNDLE_NAME"
 SCRIPT_NAME="prepare_bundle.sh"
-echo "Entering $SCRIPT_NAME with ${1}"
+echo "Entering $SCRIPT_NAME with ${BUNDLE_NAME}"
 echo "RUSEFI_BUILD_FTP_USER=$RUSEFI_BUILD_FTP_USER"
 
 TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
 
-export FOLDER="temp/snapshot_${TIMESTAMP}_${1}_rusefi"
+export FOLDER="temp/snapshot_${TIMESTAMP}_${BUNDLE_NAME}_rusefi"
 
-export BUNDLE_FULL_NAME="rusefi_bundle_${1}"
+export BUNDLE_FULL_NAME="rusefi_bundle_${BUNDLE_NAME}"
 
 bash misc/jenkins/build_working_folder.sh
 
