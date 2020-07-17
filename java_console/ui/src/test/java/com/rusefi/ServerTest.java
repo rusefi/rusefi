@@ -2,9 +2,14 @@ package com.rusefi;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
+import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.server.Backend;
 import com.rusefi.server.ClientConnectionState;
 import com.rusefi.server.SessionDetails;
@@ -15,6 +20,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -79,6 +85,9 @@ public class ServerTest {
 
     @Test
     public void testRelayWorkflow() throws InterruptedException, IOException {
+        ScalarIniField iniField = TestHelper.createIniField(Fields.CYLINDERSCOUNT);
+        int value = 241;
+
         Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
         int httpPort = 8001;
         Backend backend = new Backend(userDetailsResolver, httpPort, logger);
@@ -92,7 +101,7 @@ public class ServerTest {
 
         // create virtual controller
         int controllerPort = 7002;
-        ConfigurationImage controllerImage = prepareImage(240, createIniField(Fields.CYLINDERSCOUNT));
+        ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
         CountDownLatch controllerCreated = new CountDownLatch(1);
         TestHelper.createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown(), logger);
         assertTrue(controllerCreated.await(30, TimeUnit.SECONDS));
@@ -108,10 +117,46 @@ public class ServerTest {
         BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(new Socket(LOCALHOST, serverPort),
                 sessionDetails,
                 logger) {
+            @Override
+            protected void handleCommand() {
+                super.handleCommand();
+            }
             // todo
         };
         baseBroadcastingThread.start();
 
+
+        // start authenticator
+        IoStream authenticatorToProxyStream = TestHelper.createTestStream(serverPort, logger);
+
+        int authenticatorPort = 7004;
+        BinaryProtocolProxy.createProxy(authenticatorToProxyStream, authenticatorPort);
+
+
+        CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
+
+/*
+        // connect to proxy and read virtual controller through it
+        LinkManager clientManager = new LinkManager(logger);
+        clientManager.startAndConnect(ProxyClient.LOCALHOST + ":" + authenticatorPort, new ConnectionStateListener() {
+            @Override
+            public void onConnectionEstablished() {
+                connectionEstablishedCountDownLatch.countDown();
+            }
+
+            @Override
+            public void onConnectionFailed() {
+                System.out.println("Failed");
+            }
+        });
+        assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+
+        BinaryProtocol clientStreamState = clientManager.getCurrentStreamState();
+        Objects.requireNonNull(clientStreamState, "clientStreamState");
+        ConfigurationImage clientImage = clientStreamState.getControllerConfiguration();
+        String clientValue = iniField.getValue(clientImage);
+        assertEquals(Double.toString(value), clientValue);
+*/
     }
 
 
