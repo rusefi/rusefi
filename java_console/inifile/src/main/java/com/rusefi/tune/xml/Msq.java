@@ -20,6 +20,8 @@ public class Msq {
 
     public final VersionInfo versionInfo;
 
+    public Bibliography bibliography = new Bibliography();
+
     public Msq() {
         versionInfo = new VersionInfo("rusEFI+2020");
     }
@@ -79,15 +81,6 @@ public class Msq {
             return;
         }
         page.constant.add(new Constant(field.getName(), field.getUnits(), value));
-    }
-
-    @XmlElement
-    public Bibliography getBibliography() {
-        return new Bibliography();
-    }
-
-    public VersionInfo getVersionInfo() {
-        return versionInfo;
     }
 
     public Page findPage() {
