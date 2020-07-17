@@ -21,6 +21,7 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Date;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -28,6 +29,9 @@ import java.util.function.Supplier;
  * TsPlugin launcher creates an instance of this class via reflection.
  */
 public class PluginEntry implements TsPluginBody {
+    // 2 seconds aggregation by default
+    private static final int AUTO_UPDATE_AGGREGATION = Integer.parseInt(System.getProperty("autoupload.aggregation", "2000"));
+
     private static final String REO_URL = "https://rusefi.com/online/";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
     private final JComponent content = new JPanel(new VerticalFlowLayout());
@@ -42,10 +46,14 @@ public class PluginEntry implements TsPluginBody {
 
     private UploaderStatus uploaderStatus = new UploaderStatus();
 
-    private final Timer timer = new Timer(1000 /* one second */, new AbstractAction() {
+    private final Timer timer = new Timer(AUTO_UPDATE_AGGREGATION, new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Timer! " + System.currentTimeMillis() + " " + timer + " " + e);
+//            System.out.println("Timer! " + System.currentTimeMillis() + " " + timer + " " + e);
+            if (UploadView.isAutoUpload()) {
+                System.out.println(new Date() + ": enqueue tune");
+                UploadQueue.enqueue(controllerAccessSupplier.get(), currentConfiguration);
+            }
         }
     });
 
@@ -67,10 +75,6 @@ public class PluginEntry implements TsPluginBody {
         listener = parameterName -> {
             //            System.out.println("Parameter value changed " + parameterName);
             timer.restart();
-            if (UploadView.isAutoUpload()) {
-                System.out.println("enqueue tune");
-                UploadQueue.enqueue(controllerAccessSupplier.get(), currentConfiguration);
-            }
         };
         upload.setBackground(new Color(0x90EE90));
 
