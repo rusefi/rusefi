@@ -38,24 +38,25 @@ public class IniFileModel {
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
 
-    public void findAndReadIniFile(String iniFilePath) {
+    public IniFileModel findAndReadIniFile(String iniFilePath) {
         String fileName = findMetaInfoFile(iniFilePath);
-        readIniFile(fileName);
+        return readIniFile(fileName);
     }
 
-    public void readIniFile(String fileName) {
+    public IniFileModel readIniFile(String fileName) {
         File input = null;
         if (fileName != null)
             input = new File(fileName);
         if (fileName == null || !input.exists()) {
-            System.out.println("No such file: " + RUSEFI_INI_PREFIX + "*" + RUSEFI_INI_SUFFIX);
-            return;
+            System.out.println("No such file: " + fileName);
+            return null;
         }
 
         System.out.println("Reading " + fileName);
         RawIniFile content = IniFileReader.read(input);
 
         readIniFile(content);
+        return this;
     }
 
     public IniFileModel readIniFile(RawIniFile content) {

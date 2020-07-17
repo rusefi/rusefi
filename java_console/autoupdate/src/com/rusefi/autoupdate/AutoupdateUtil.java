@@ -88,8 +88,8 @@ public class AutoupdateUtil {
 
     public static void pack(Window window) {
         trueLayout(window);
-        window.pack();
+        if (window != null)
+            window.pack();
         trueLayout(window);
     }
-
 }

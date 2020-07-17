@@ -29,6 +29,8 @@ static void setPrometheusDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
+	CONFIG(useCicPidForIdle) = true;
+
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 

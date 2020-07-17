@@ -1,34 +1,27 @@
 package com.rusefi;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
-import com.rusefi.io.TcpCommunicationIntegrationTest;
-import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.config.generated.Fields;
+import com.rusefi.io.IoStream;
+import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.server.Backend;
 import com.rusefi.server.ClientConnectionState;
+import com.rusefi.server.SessionDetails;
 import com.rusefi.server.UserDetails;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.rusefi.tools.online.ProxyClient;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
-import static com.rusefi.server.Backend.LIST_PATH;
+import static com.rusefi.TestHelper.createIniField;
+import static com.rusefi.TestHelper.prepareImage;
+import static com.rusefi.tools.online.ProxyClient.LOCALHOST;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -42,16 +35,20 @@ public class ServerTest {
     @Test
     public void testSessionTimeout() throws InterruptedException, IOException {
         int serverPort = 7000;
-
-        CountDownLatch serverCreated = new CountDownLatch(1);
-
-
+        int httpPort = 8000;
         Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
 
+        CountDownLatch serverCreated = new CountDownLatch(1);
         CountDownLatch allClientsDisconnected = new CountDownLatch(1);
+        CountDownLatch onConnected = new CountDownLatch(2);
 
-        int httpPort = 8000;
-        Backend backend = new Backend(userDetailsResolver, httpPort) {
+        Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+            @Override
+            public void register(ClientConnectionState clientConnectionState) {
+                super.register(clientConnectionState);
+                onConnected.countDown();
+            }
+
             @Override
             public void close(ClientConnectionState inactiveClient) {
                 super.close(inactiveClient);
@@ -60,72 +57,62 @@ public class ServerTest {
             }
         };
 
-        BinaryProtocolServer.tcpServerSocket(serverPort, "Server", new Function<Socket, Runnable>() {
-            @Override
-            public Runnable apply(Socket clientSocket) {
-                return new Runnable() {
-                    @Override
-                    public void run() {
-                        ClientConnectionState clientConnectionState = new ClientConnectionState(clientSocket, logger, backend.getUserDetailsResolver());
-                        try {
-                            clientConnectionState.sayHello();
-
-                            backend.register(clientConnectionState);
-                            clientConnectionState.runEndlessLoop();
-                        } catch (IOException e) {
-                            backend.close(clientConnectionState);
-                        }
-                    }
-                };
-            }
-        }, logger, parameter -> serverCreated.countDown());
-
+        Backend.runProxy(serverPort, serverCreated, backend);
         assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
         assertEquals(0, backend.getCount());
 
 
-        new MockRusEfiDevice("00000000-1234-1234-1234-123456789012", "rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPort);
+        new MockRusEfiDevice(MockRusEfiDevice.TEST_TOKEN_1, "rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPort);
         new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", "rusEFI 2020.07.11.proteus_f4.1986715563", logger).connect(serverPort);
 
-
-        // todo: technically we should have callbacks for 'connect', will make this better if this would be failing
-        sleep(Timeouts.SECOND);
+        assertTrue(onConnected.await(30, TimeUnit.SECONDS));
 
         List<ClientConnectionState> clients = backend.getClients();
         assertEquals(2, clients.size());
 
-        List<UserDetails> onlineUsers = getOnlineUsers(httpPort);
+        List<UserDetails> onlineUsers = ProxyClient.getOnlineUsers(httpPort);
         assertEquals(2, onlineUsers.size());
 
         assertTrue(allClientsDisconnected.await(30, TimeUnit.SECONDS));
 
     }
 
-    @NotNull
-    private List<UserDetails> getOnlineUsers(int httpPort) throws IOException {
-        HttpClient httpclient = new DefaultHttpClient();
-        String url = "http://" + TcpCommunicationIntegrationTest.LOCALHOST + ":" + httpPort + LIST_PATH;
-        System.out.println("Connecting to " + url);
-        HttpGet httpget = new HttpGet(url);
-        HttpResponse httpResponse = httpclient.execute(httpget);
+    @Test
+    public void testRelayWorkflow() throws InterruptedException, IOException {
+        Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
+        int httpPort = 8001;
+        Backend backend = new Backend(userDetailsResolver, httpPort, logger);
+        int serverPort = 7001;
+        CountDownLatch serverCreated = new CountDownLatch(1);
 
-        HttpEntity entity = httpResponse.getEntity();
-        String responseString = EntityUtils.toString(entity, "UTF-8");
-        JSONParser parser = new JSONParser();
-        List<UserDetails> userLists = new ArrayList<>();
-        try {
-            JSONArray array = (JSONArray) parser.parse(responseString);
+        // first start backend server
+        Backend.runProxy(serverPort, serverCreated, backend);
+        assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
 
-            for (int i = 0; i < array.size(); i++) {
-                JSONObject element = (JSONObject) array.get(i);
 
-                userLists.add(UserDetails.valueOf(element));
-            }
+        // create virtual controller
+        int controllerPort = 7002;
+        ConfigurationImage controllerImage = prepareImage(240, createIniField(Fields.CYLINDERSCOUNT));
+        CountDownLatch controllerCreated = new CountDownLatch(1);
+        TestHelper.createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown(), logger);
+        assertTrue(controllerCreated.await(30, TimeUnit.SECONDS));
 
-            System.out.println("object=" + array);
-        } catch (ParseException e) {
-            throw new IllegalStateException(e);
-        }
-        return userLists;
+
+        // start network broadcaster to connect controller with backend since in real life controller has only local serial port it does not have network
+        IoStream targetEcuSocket = TestHelper.createTestStream(controllerPort, logger);
+        HelloCommand.send(targetEcuSocket, logger);
+        String controllerSignature = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer(), logger);
+
+        SessionDetails sessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, controllerSignature);
+
+        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(new Socket(LOCALHOST, serverPort),
+                sessionDetails,
+                logger) {
+            // todo
+        };
+        baseBroadcastingThread.start();
+
     }
+
+
 }

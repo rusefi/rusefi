@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * from IDEA this unit test needs to be executed with "empty" working directory
@@ -32,6 +33,7 @@ public class TuneReadWriteTest {
     public void testCompareBinaryToTSTune() throws Exception {
         Msq tsTune = Msq.readTune(PATH + "CurrentTune.msq");
         System.out.println(tsTune);
+        assertNotNull("signature", tsTune.getVersionInfo().getSignature());
 
         ConfigurationImage tsBinaryData = tsTune.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
 
@@ -55,6 +57,7 @@ public class TuneReadWriteTest {
 
         // and now reading that XML back
         Msq tuneFromFile = Msq.readTune(fileName);
+        assertNotNull(tuneFromFile.getVersionInfo().getSignature());
 
         ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
 

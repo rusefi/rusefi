@@ -2271,6 +2271,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 	dialog = idlePidSettings, "PID IAC Control"	
 		field = "#See Idle Target RPM Curve"
+		field = "use Cic Pid",							useCicPidForIdle
 		field = "P-factor",								idleRpmPid_pFactor
 		field = "I-factor",								idleRpmPid_iFactor
 		field = "derivativeFilterLoss",					idle_derivativeFilterLoss

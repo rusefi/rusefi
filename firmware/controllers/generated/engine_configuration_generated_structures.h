@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 11 02:21:57 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 15 01:37:00 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -699,8 +699,9 @@ struct engine_configuration_s {
 	offset 76 bit 15 */
 	bool cj125isUrDivided : 1;
 	/**
+	 * Switch between Industrial and Cic PID implementation
 	offset 76 bit 16 */
-	bool issue_294_unused : 1;
+	bool useCicPidForIdle : 1;
 	/**
 	offset 76 bit 17 */
 	bool useTLE8888_cranking_hack : 1;
@@ -3529,4 +3530,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 11 02:21:57 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 15 01:37:00 UTC 2020

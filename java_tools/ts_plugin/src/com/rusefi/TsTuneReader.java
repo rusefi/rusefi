@@ -7,8 +7,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 public class TsTuneReader {
+    private static final String TS_USER_FILE = System.getProperty("user.home") + File.separator + ".efiAnalytics" + File.separator + "tsUser.properties";
+
     public static void main(String[] args) throws Exception {
         String ecuName = "dev";
 
@@ -23,11 +28,32 @@ public class TsTuneReader {
 
     @NotNull
     public static String getTsTuneFileName(String ecuName) {
-        JFileChooser fr = new JFileChooser();
-        FileSystemView fw = fr.getFileSystemView();
-        File defaultDirectory = fw.getDefaultDirectory();
-        System.out.println(defaultDirectory);
+        String projectsDir = getProjectsDir();
 
-        return defaultDirectory + File.separator + "TunerStudioProjects" + File.separator + ecuName + File.separator + "CurrentTune.msq";
+        return projectsDir + File.separator + ecuName + File.separator + "CurrentTune.msq";
+    }
+
+    public static String getProjectsDir() {
+        try {
+            Properties tsUser = new Properties();
+            tsUser.load(new FileInputStream(TS_USER_FILE));
+            // reading TS properties
+            return tsUser.getProperty("projectsDir");
+        } catch (IOException e) {
+            JFileChooser fr = new JFileChooser();
+            FileSystemView fw = fr.getFileSystemView();
+            File defaultDirectory = fw.getDefaultDirectory();
+
+            // fallback mechanism just in case
+            return defaultDirectory + File.separator + "TunerStudioProjects";
+        }
+    }
+
+    @NotNull
+    public static String getProjectModeFileName(String projectName) {
+        return getProjectsDir() +
+                    File.separator + projectName +
+                    File.separator + "projectCfg" +
+                    File.separator + "mainController.ini";
     }
 }

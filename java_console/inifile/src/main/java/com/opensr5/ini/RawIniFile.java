@@ -3,6 +3,8 @@ package com.opensr5.ini;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -30,6 +32,9 @@ public class RawIniFile {
         }
     }
 
+    public static RawIniFile read(String fileName) throws FileNotFoundException {
+        return IniFileReader.read(new FileInputStream(fileName));
+    }
 
     @NotNull
     public Line getMandatoryLine(String key) {

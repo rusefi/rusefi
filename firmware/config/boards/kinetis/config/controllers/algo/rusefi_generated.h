@@ -22,6 +22,7 @@
 #define afr_alignmentFill_afr_offset 561
 #define afr_hwChannel_offset 560
 #define afr_offset 560
+#define afr_sensor_s_size 20
 #define afr_type_offset 692
 #define afr_v1_offset 564
 #define afr_v2_offset 572
@@ -38,6 +39,7 @@
 #define afterstartDecayTime_offset 6216
 #define afterstartEnrich_offset 6184
 #define afterstartHoldTime_offset 6152
+#define air_pressure_sensor_config_s_size 16
 #define alignEngineSnifferAtTDC_offset 744
 #define alignmentFill_at_2109_offset 2109
 #define alignmentFill_at_4514_offset 4514
@@ -255,6 +257,7 @@
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define CRANKING_CURVE_SIZE 8
 #define cranking_offset 88
+#define cranking_parameters_s_size 8
 #define cranking_rpm_offset 92
 #define crankingAdvance_offset 3124
 #define crankingAdvanceBins_offset 3108
@@ -300,6 +303,7 @@
 #define enableLaunchBoost_offset 976
 #define enableLaunchRetard_offset 976
 #define enableVerboseCanTx_offset 744
+#define engine_configuration_s_size 6000
 #define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge", "INVALID", "INVALID"
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_GM "GM"
@@ -336,6 +340,7 @@
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
 #define etb_iFactor_offset 1740
+#define etb_io_size 4
 #define etb_iTermMax_offset 3958
 #define etb_iTermMin_offset 3956
 #define etb_maxValue_offset 1754
@@ -654,6 +659,7 @@
 #define gppwm4_rpmBins_offset 4424
 #define gppwm4_table_offset 4432
 #define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT"
+#define gppwm_channel_size 88
 #define GPPWM_CHANNELS 4
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_RPM_COUNT 8
@@ -704,6 +710,7 @@
 #define IDLE_ADVANCE_CURVE_SIZE 8
 #define idle_antiwindupFreq_offset 696
 #define idle_derivativeFilterLoss_offset 516
+#define idle_hardware_s_size 8
 #define idle_offset 600
 #define idle_solenoidFrequency_offset 600
 #define idle_solenoidPin_offset 604
@@ -805,6 +812,7 @@
 #define injector_battLagCorrBins_offset 12
 #define injector_flow_offset 8
 #define injector_offset 8
+#define injector_s_size 68
 #define injPhaseLoadBins_offset 15008
 #define injPhaseRpmBins_offset 15072
 #define invertPrimaryTriggerSignal_offset 1464
@@ -836,7 +844,6 @@
 #define issue_294_29_offset 76
 #define issue_294_30_offset 76
 #define issue_294_31_offset 76
-#define issue_294_unused_offset 76
 #define isTunerStudioEnabled_offset 1476
 #define isVerboseAlternator_offset 744
 #define isVerboseAuxPid1_offset 76
@@ -914,6 +921,7 @@
 #define map_samplingWindow_offset 204
 #define map_samplingWindowBins_offset 172
 #define map_sensor_alignmentFill_offset 249
+#define MAP_sensor_config_s_size 144
 #define map_sensor_highValue_offset 240
 #define map_sensor_hwChannel_offset 248
 #define map_sensor_lowValue_offset 236
@@ -981,6 +989,7 @@
 #define noAccelAfterHardLimitPeriodSecs_offset 1536
 #define o2heaterPin_offset 742
 #define o2heaterPinModeTodO_offset 743
+#define oil_pressure_config_s_size 20
 #define oilPressure_alignmentFill_offset 2693
 #define oilPressure_hwChannel_offset 2692
 #define oilPressure_offset 2692
@@ -1005,6 +1014,8 @@
 #define pedalToTpsPedalBins_offset 6464
 #define pedalToTpsRpmBins_offset 6472
 #define pedalToTpsTable_offset 6400
+#define persistent_config_s_size 20000
+#define pid_s_size 20
 #define pidExtraForLowRpm_offset 3156
 #define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"
 #define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
@@ -1064,13 +1075,14 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.07.11
-#define SIGNATURE_HASH 918909694
+#define SIGNATURE_DATE 2020.07.15
+#define SIGNATURE_HASH 716980676
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
 #define sparkDwellValues_offset 364
 #define specs_offset 396
+#define specs_s_size 12
 #define spi1MisoMode_offset 2598
 #define spi1misoPin_offset 929
 #define spi1MosiMode_offset 2597
@@ -1089,6 +1101,7 @@
 #define spi3mosiPin_offset 934
 #define spi3SckMode_offset 2602
 #define spi3sckPin_offset 936
+#define spi_pins_size 4
 #define startCrankingDuration_offset 826
 #define starterControlPin_offset 1772
 #define starterRelayDisableMode_offset 809
@@ -1102,6 +1115,7 @@
 #define stepperEnablePinMode_offset 2605
 #define stepperForceParkingEveryRestart_offset 744
 #define stepperParkingExtraSteps_offset 818
+#define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_cellCfgs1_maxAdd_offset 1072
 #define stft_cellCfgs1_maxRemove_offset 1073
@@ -1127,6 +1141,7 @@
 #define stft_minClt_offset 1068
 #define stft_minPowerLoad_offset 1066
 #define stft_offset 1064
+#define stft_s_size 24
 #define stft_startupDelay_offset 1071
 #define stftIgnoreErrorMagnitude_offset 976
 #define storageMode_offset 2260
@@ -1161,6 +1176,8 @@
 #define tcuDownshiftButtonPin_offset 1819
 #define tcuUpshiftButtonPin_offset 1818
 #define test557pin_offset 3101
+#define thermistor_conf_s_size 28
+#define ThermistorConf_size 32
 #define throttlePedalPositionAdcChannel_offset 580
 #define throttlePedalPositionSecondAdcChannel_offset 683
 #define throttlePedalSecondaryUpVoltage_offset 2100
@@ -1223,6 +1240,7 @@
 #define tpsTpsAccelFromRpmBins_offset 19232
 #define tpsTpsAccelTable_offset 18976
 #define tpsTpsAccelToRpmBins_offset 19264
+#define trigger_config_s_size 16
 #define trigger_customSkippedToothCount_offset 536
 #define trigger_customTotalToothCount_offset 532
 #define TRIGGER_INPUT_PIN_COUNT 3
@@ -1326,7 +1344,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.07.11.kin.918909694"
+#define TS_SIGNATURE "rusEFI 2020.07.15.kin.716980676"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
@@ -1394,6 +1412,7 @@
 #define unusedsw_offset 4020
 #define unusedvref_offset 4016
 #define useAdvanceCorrectionsForCranking_offset 1476
+#define useCicPidForIdle_offset 76
 #define useConstantDwellDuringCranking_offset 1464
 #define useETBforIdleControl_offset 744
 #define useFixedBaroCorrFromMap_offset 1476

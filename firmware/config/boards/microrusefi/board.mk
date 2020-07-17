@@ -32,7 +32,7 @@ endif
 
 # *TEMPORARY* breaking TTL thus breaking Bluetooth for microRusEFI in order to enable SPI3 for SD card
 # *TODO* need to give people the horrible choice between Bluetooth via TTL or SD card via SPI :( horrible choice 
-EFI_CONSOLE_TTL_PINS = -DEFI_CONSOLE_TX_BRAIN_PIN=GPIOG_14 -DEFI_CONSOLE_RX_BRAIN_PIN=GPIOG_15
+EFI_CONSOLE_TTL_PINS = -DEFI_CONSOLE_TX_BRAIN_PIN=GPIOB_10 -DEFI_CONSOLE_RX_BRAIN_PIN=GPIOB_11
 
 
 # Add them all together

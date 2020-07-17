@@ -10,13 +10,13 @@ import javax.swing.*;
  * by the way TS installs stuff into %user%\.efianalytics\TunerStudio\plugins folder
  */
 public class TsPluginLauncher implements ApplicationPlugin {
-    static final String VERSION = "alpha2_2020";
+    static final String VERSION = "alpha3_2020";
     private static final String HELP_URL = "https://github.com/rusefi/rusefi/wiki/TS-Plugin";
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
     public TsPluginLauncher() {
-        content.add(new Updater().getContent());
+        System.out.println("TsPluginLauncher " + this);
     }
 
     @Override
@@ -61,6 +61,14 @@ public class TsPluginLauncher implements ApplicationPlugin {
 
     @Override
     public JComponent getPluginPanel() {
+        synchronized (this) {
+            // only create content if TS is actually planning to display this plugin instance
+            if (content.getComponents().length == 0) {
+                System.out.println("Create Updater " + this);
+                Updater updater = new Updater();
+                content.add(updater.getContent());
+            }
+        }
         return content;
     }
 

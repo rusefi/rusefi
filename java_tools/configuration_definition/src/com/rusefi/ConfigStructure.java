@@ -25,7 +25,7 @@ public class ConfigStructure {
     public final List<ConfigField> cFields = new ArrayList<>();
     public final List<ConfigField> tsFields = new ArrayList<>();
 
-    public int totalSize;
+    private int totalSize;
 
     public final BitState readingBitState = new BitState();
 
@@ -96,5 +96,9 @@ public class ConfigStructure {
             addBitField(bitField);
         }
         readingBitState.reset();
+    }
+
+    public int getTotalSize() {
+        return totalSize;
     }
 }

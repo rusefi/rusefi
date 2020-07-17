@@ -1,25 +1,24 @@
 package com.rusefi.ts_plugin;
 
+import com.rusefi.TsTuneReader;
 import com.rusefi.ui.util.FrameHelper;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 
-public class LogUplodSelector {
+public class LogUploadSelector {
     private JPanel content = new JPanel(new VerticalFlowLayout());
 
     public static void main(String[] args) {
-        new FrameHelper().showFrame(new LogUplodSelector().getContent());
+        new FrameHelper().showFrame(new LogUploadSelector().getContent());
     }
 
 
-    public LogUplodSelector() {
+    public LogUploadSelector() {
 
-        // https://stackoverflow.com/questions/9677692/getting-my-documents-path-in-java
         String projectName = "dev";
-        String folder = FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + File.separator + "TunerStudioProjects"
+        String folder = TsTuneReader.getProjectsDir()
                 + File.separator + projectName + File.separator + "DataLogs";
 
 

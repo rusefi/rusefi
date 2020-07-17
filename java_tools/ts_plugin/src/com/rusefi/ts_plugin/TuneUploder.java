@@ -4,40 +4,59 @@ import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
+import com.opensr5.ini.IniFileMetaInfo;
 import com.rusefi.TsTuneReader;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
-import com.rusefi.config.generated.Fields;
 
 public class TuneUploder {
     static Msq writeCurrentTune(ControllerAccess controllerAccess, String configurationName) {
-        Msq msq = Msq.create(Fields.TOTAL_CONFIG_SIZE, Fields.TS_SIGNATURE);
+        Msq msq = grabTune(controllerAccess, configurationName);
+        if (msq == null)
+            return null;
+        try {
+            String fileName = Online.outputXmlFileName;
+            msq.writeXmlFile(fileName);
+            return msq;
+        } catch (JAXBException | IOException e) {
+            System.out.println("Error writing XML: " + e);
+            return null;
+        }
+    }
+
+    @Nullable
+    public static Msq grabTune(ControllerAccess controllerAccess, String configurationName) {
+        Objects.requireNonNull(controllerAccess, "controllerAccess");
+        IniFileMetaInfo meta = MetaDataCache.getModel(configurationName);
+        if (meta == null)
+            return null;
+        Msq msq = Msq.create(meta.getTotalSize(), meta.getSignature());
         ControllerParameterServer controllerParameterServer = controllerAccess.getControllerParameterServer();
+        Objects.requireNonNull(controllerParameterServer, "controllerParameterServer");
 
         Map<String, Constant> fileSystemValues = getFileSystemValues(configurationName);
 
         try {
             String[] parameterNames = controllerParameterServer.getParameterNames(configurationName);
             for (String parameterName : parameterNames) {
-                handleParameter(configurationName, msq, controllerParameterServer, fileSystemValues, parameterName);
+                applyParameterValue(configurationName, msq, controllerParameterServer, fileSystemValues, parameterName);
             }
-
-            String fileName = Online.outputXmlFileName;
-            msq.writeXmlFile(fileName);
-            return msq;
-        } catch (JAXBException | IOException | ControllerException e) {
-            System.out.println("Error writing XML: " + e);
+        } catch (ControllerException e) {
+            System.out.println("Error saving configuration: " + e);
             return null;
         }
+        return msq;
     }
 
     @NotNull
@@ -57,8 +76,9 @@ public class TuneUploder {
         return byName;
     }
 
-    private static void handleParameter(String configurationName, Msq msq, ControllerParameterServer controllerParameterServer, Map<String, Constant> byName, String parameterName) throws ControllerException {
+    private static void applyParameterValue(String configurationName, Msq msq, ControllerParameterServer controllerParameterServer, Map<String, Constant> byName, String parameterName) throws ControllerException {
         ControllerParameter cp = controllerParameterServer.getControllerParameter(configurationName, parameterName);
+        Objects.requireNonNull(cp, "ControllerParameter");
         String type = cp.getParamClass();
         String value;
         if (ControllerParameter.PARAM_CLASS_BITS.equals(type)) {

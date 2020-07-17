@@ -70,11 +70,6 @@ static bool shouldResetPid = false;
 // See automaticIdleController().
 static bool mightResetPid = false;
 
-#if EFI_IDLE_PID_CIC
-// Use new PID with CIC integrator
-PidCic idlePid;
-#else
-
 class PidWithOverrides : public PidIndustrial {
 public:
 	float getOffset() const override {
@@ -106,15 +101,28 @@ public:
 	}
 };
 
-PidWithOverrides idlePid;
-#endif /* EFI_IDLE_PID_CIC */
+static PidWithOverrides industrialWithOverrideIdlePid;
 
-float getIdlePidOffset() {
-	return idlePid.getOffset();
+#if EFI_IDLE_PID_CIC
+// Use PID with CIC integrator
+static PidCic idleCicPid;
+#endif //EFI_IDLE_PID_CIC
+
+Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_IDLE_PID_CIC
+	if (CONFIG(useCicPidForIdle)) {
+		return &idleCicPid;
+	}
+#endif /* EFI_IDLE_PID_CIC */
+	return &industrialWithOverrideIdlePid;
 }
 
-float getIdlePidMinValue() {
-	return idlePid.getMinValue();
+float getIdlePidOffset(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getOffset();
+}
+
+float getIdlePidMinValue(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getMinValue();
 }
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
@@ -139,7 +147,7 @@ void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%.2f", msg, value);
 }
 
-static void showIdleInfo(void) {
+static void showIdleInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
 	scheduleMsg(logger, "useStepperIdle=%s useHbridges=%s",
 			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridges)));
@@ -176,11 +184,11 @@ static void showIdleInfo(void) {
 	}
 
 	if (engineConfiguration->idleMode == IM_AUTO) {
-		idlePid.showPidStatus(logger, "idle");
+		getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->showPidStatus(logger, "idle");
 	}
 }
 
-void setIdleMode(idle_mode_e value) {
+void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
 	showIdleInfo();
 }
@@ -295,11 +303,9 @@ static bool isOutOfAutomaticIdleCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
-#if !EFI_IDLE_PID_CIC
 	// todo: move this to pid_s one day
-	idlePid.antiwindupFreq = engineConfiguration->idle_antiwindupFreq;
-	idlePid.derivativeFilterLoss = engineConfiguration->idle_derivativeFilterLoss;
-#endif
+	industrialWithOverrideIdlePid.antiwindupFreq = engineConfiguration->idle_antiwindupFreq;
+	industrialWithOverrideIdlePid.derivativeFilterLoss = engineConfiguration->idle_derivativeFilterLoss;
 
 	if (isOutOfAutomaticIdleCondition(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		// Don't store old I and D terms if PID doesn't work anymore.
@@ -342,9 +348,9 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 	if (rpm < targetRpm)
 		errorAmpCoef += (float)CONFIG(pidExtraForLowRpm) / PERCENT_MULT;
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
-	idlePid.setErrorAmplification(errorAmpCoef);
+	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->setErrorAmplification(errorAmpCoef);
 
-	percent_t newValue = idlePid.getOutput(targetRpm, rpm);
+	percent_t newValue = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getOutput(targetRpm, rpm);
 	engine->engineState.idle.idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
@@ -395,8 +401,8 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 	 * @see stepper.cpp
 	 */
 
-		idlePid.iTermMin = engineConfiguration->idlerpmpid_iTermMin;
-		idlePid.iTermMax = engineConfiguration->idlerpmpid_iTermMax;
+		getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->iTermMin = engineConfiguration->idlerpmpid_iTermMin;
+		getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->iTermMax = engineConfiguration->idlerpmpid_iTermMax;
 
 		SensorResult tps = Sensor::get(SensorType::DriverThrottleIntent);
 
@@ -405,11 +411,11 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
 			scheduleMsg(logger, "Idle state %s%s", getIdle_state_e(engine->engineState.idle.idleState),
 					(prettyClose ? " pretty close" : ""));
-			idlePid.showPidStatus(logger, "idle");
+			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->showPidStatus(logger, "idle");
 		}
 
 		if (shouldResetPid) {
-			idlePid.reset();
+			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->reset();
 //			alternatorPidResetCounter++;
 			shouldResetPid = false;
 		}
@@ -506,7 +512,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 			if (engineConfiguration->idleMode == IM_AUTO) {
 #if EFI_TUNER_STUDIO
 				// see also tsOutputChannels->idlePosition
-				idlePid.postState(&tsOutputChannels, 1000000);
+				getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->postState(&tsOutputChannels, 1000000);
 				tsOutputChannels.debugIntField4 = engine->engineState.idle.idleState;
 #endif /* EFI_TUNER_STUDIO */
 			} else {
@@ -533,7 +539,7 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 IdleController idleControllerInstance;
 
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	idlePid.updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
+	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
 	iacPidMultMap.init(CONFIG(iacPidMultTable), CONFIG(iacPidMultLoadBins), CONFIG(iacPidMultRpmBins));
 }
 
@@ -550,7 +556,7 @@ void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if ! EFI_UNIT_TEST
 
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !idlePid.isSame(&previousConfiguration->idleRpmPid);
+	shouldResetPid = !getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->isSame(&previousConfiguration->idleRpmPid);
 	idleSolenoidOpen.setFrequency(CONFIG(idle).solenoidFrequency);
 	idleSolenoidClose.setFrequency(CONFIG(idle).solenoidFrequency);
 }
@@ -706,7 +712,7 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	INJECT_ENGINE_REFERENCE(&idleControllerInstance);
 
-	idlePid.initPidClass(&engineConfiguration->idleRpmPid);
+	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->initPidClass(&engineConfiguration->idleRpmPid);
 
 #if ! EFI_UNIT_TEST
 	// todo: we still have to explicitly init all hardware on start in addition to handling configuration change via
