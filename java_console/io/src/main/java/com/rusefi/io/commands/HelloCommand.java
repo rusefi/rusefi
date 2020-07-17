@@ -40,7 +40,7 @@ public class HelloCommand implements Command {
     }
 
     @Override
-    public void handle(BinaryProtocolServer.Packet packet, IoStream stream) throws IOException {
+    public void handle(IoStream stream) throws IOException {
         stream.sendPacket((BinaryProtocolServer.TS_OK + tsSignature).getBytes(), logger);
     }
 }
