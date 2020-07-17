@@ -1,7 +1,10 @@
 package com.rusefi.server;
 
 import com.opensr5.Logger;
+import com.rusefi.io.IoStream;
+import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.tools.online.ProxyClient;
 import org.jetbrains.annotations.NotNull;
 import org.takes.Take;
@@ -31,26 +34,54 @@ public class Backend {
             (Take) req -> getUsersOnline()
     );
 
-    public static void runProxy(int serverPort, CountDownLatch serverCreated, Backend backend) {
-        BinaryProtocolServer.tcpServerSocket(serverPort, "Server", new Function<Socket, Runnable>() {
+    public void runApplicationConnector(int serverPortForApplications, CountDownLatch serverCreated) {
+        BinaryProtocolServer.tcpServerSocket(serverPortForApplications, "ApplicationServer", new Function<Socket, Runnable>() {
             @Override
-            public Runnable apply(Socket clientSocket) {
+            public Runnable apply(Socket applicationSocket) {
                 return new Runnable() {
                     @Override
                     public void run() {
-                        ClientConnectionState clientConnectionState = new ClientConnectionState(clientSocket, backend.logger, backend.getUserDetailsResolver());
+                        IoStream stream = null;
                         try {
-                            clientConnectionState.requestControllerInfo();
+                            stream = new TcpIoStream(logger, applicationSocket);
 
-                            backend.register(clientConnectionState);
-                            clientConnectionState.runEndlessLoop();
+                            // authenticator pushed hello packet on connect
+                            String jsonString = HelloCommand.getHelloResponse(stream.getDataBuffer(), logger);
+                            if (jsonString == null)
+                                return;
+                            SessionDetails applicationSession = SessionDetails.valueOf(jsonString);
+                            logger.info("Application Connected: " + applicationSession);
+
                         } catch (IOException e) {
-                            backend.close(clientConnectionState);
+                            if (stream != null)
+                                stream.close();
                         }
                     }
                 };
             }
-        }, backend.logger, parameter -> serverCreated.countDown());
+        }, logger, parameter -> serverCreated.countDown());
+    }
+
+    public void runControllerConnector(int serverPortForControllers, CountDownLatch serverCreated) {
+        BinaryProtocolServer.tcpServerSocket(serverPortForControllers, "ControllerServer", new Function<Socket, Runnable>() {
+            @Override
+            public Runnable apply(Socket controllerSocket) {
+                return new Runnable() {
+                    @Override
+                    public void run() {
+                        ClientConnectionState clientConnectionState = new ClientConnectionState(controllerSocket, logger, getUserDetailsResolver());
+                        try {
+                            clientConnectionState.requestControllerInfo();
+
+                            register(clientConnectionState);
+                            clientConnectionState.runEndlessLoop();
+                        } catch (IOException e) {
+                            close(clientConnectionState);
+                        }
+                    }
+                };
+            }
+        }, logger, parameter -> serverCreated.countDown());
     }
 
     @NotNull

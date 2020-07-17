@@ -33,9 +33,10 @@ public class BaseBroadcastingThread {
                     byte command = payload[0];
 
                     if (command == Fields.TS_HELLO_COMMAND) {
-                        new HelloCommand(logger, sessionDetails.toJson()).handle(packet, stream);
+                        // respond on hello request with information about session
+                        new HelloCommand(logger, sessionDetails.toJson()).handle(stream);
                     } else {
-                        handleCommand();
+                        handleCommand(packet, stream);
                     }
                 }
             } catch (IOException e) {
@@ -44,7 +45,7 @@ public class BaseBroadcastingThread {
         });
     }
 
-    protected void handleCommand() {
+    protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
     }
 
     public void start() {
