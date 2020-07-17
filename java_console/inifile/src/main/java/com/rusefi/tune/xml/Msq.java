@@ -102,4 +102,8 @@ public class Msq {
     public UserComments getUserComments() {
         return new UserComments();
     }
+
+    public VersionInfo getVersionInfo() {
+        return versionInfo;
+    }
 }
