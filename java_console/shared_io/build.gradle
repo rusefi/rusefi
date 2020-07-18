@@ -5,6 +5,5 @@ plugins {
 apply from: '../../android/dependencies.gradle'
 
 dependencies {
-    implementation libs.javaxJson
     testImplementation libs.junit
 }
