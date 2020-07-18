@@ -21,8 +21,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.ExecHelper;
-import com.rusefi.proxy.NetworkConnector;
-import com.rusefi.server.Backend;
+import com.rusefi.server.BackendLauncher;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
@@ -62,7 +61,7 @@ public class ConsoleTools {
         registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
         registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
-        registerTool("proxy_server", Backend::start, "NOT A USER TOOL");
+        registerTool("proxy_server", BackendLauncher::start, "NOT A USER TOOL");
         registerTool("network_connector", NetworkConnectorStartup::start, "Connect your rusEFI ECU to rusEFI Online");
         registerTool("network_authenticator", LocalApplicationProxy::start, "rusEFI Online Authenticator");
 
@@ -70,6 +69,7 @@ public class ConsoleTools {
         registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI authentication token.");
         registerTool("upload_tune", ConsoleTools::uploadTune, "Upload specified tune file using auth token from settings");
 
+        registerTool("version", ConsoleTools::version, "Only print version");
 
         registerTool("lightui", ConsoleTools::lightUI, "Start lightweight GUI for tiny screens");
 
@@ -77,6 +77,10 @@ public class ConsoleTools {
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
         registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
         registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+    }
+
+    private static void version(String[] strings) {
+        // version is printed by already, all we need is to do nothing
     }
 
     public static void main(String[] args) throws Exception {
