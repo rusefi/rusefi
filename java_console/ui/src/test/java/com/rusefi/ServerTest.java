@@ -15,7 +15,6 @@ import com.rusefi.tools.online.ProxyClient;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
@@ -43,8 +42,7 @@ public class ServerTest {
     public void setTestCertificate() throws MalformedURLException {
         NetworkConnector.RUSEFI_PROXY_HOSTNAME = ProxyClient.LOCALHOST;
 
-        File certificate = new File("certificate/test_pkcs12.jks");
-        Backend.setupCertificates(certificate, "password");
+        rusEFISSLContext.init("certificate/test_pkcs12.jks", "password");
     }
 
     @Test
