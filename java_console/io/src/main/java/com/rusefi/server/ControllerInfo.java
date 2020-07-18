@@ -1,9 +1,9 @@
 package com.rusefi.server;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import java.io.StringReader;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.util.Objects;
 
 /**
@@ -58,25 +58,28 @@ public class ControllerInfo {
     }
 
     public static ControllerInfo valueOf(String jsonString) {
-        JsonReader reader = Json.createReader(new StringReader(jsonString));
-
-        JsonObject jsonObject = reader.readObject();
-        String vehicleName = jsonObject.getString(VEHICLE_NAME);
-        String engineMake = jsonObject.getString(ENGINE_MAKE);
-        String engineCode = jsonObject.getString(ENGINE_CODE);
-        String signature = jsonObject.getString(SIGNATURE);
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject;
+        try {
+            jsonObject = (JSONObject) parser.parse(jsonString);
+        } catch (ParseException e) {
+            throw new IllegalStateException(e);
+        }
+        String vehicleName = (String) jsonObject.get(VEHICLE_NAME);
+        String engineMake = (String) jsonObject.get(ENGINE_MAKE);
+        String engineCode = (String) jsonObject.get(ENGINE_CODE);
+        String signature = (String) jsonObject.get(SIGNATURE);
 
         return new ControllerInfo(vehicleName, engineCode, engineMake, signature);
     }
 
     public String toJson() {
-        JsonObject jsonObject = Json.createObjectBuilder()
-                .add(ENGINE_MAKE, engineMake)
-                .add(ENGINE_CODE, engineCode)
-                .add(VEHICLE_NAME, vehicleName)
-                .add(SIGNATURE, signature)
-                .build();
-        return jsonObject.toString();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(ENGINE_MAKE, engineMake);
+        jsonObject.put(ENGINE_CODE, engineCode);
+        jsonObject.put(VEHICLE_NAME, vehicleName);
+        jsonObject.put(SIGNATURE, signature);
+        return jsonObject.toJSONString();
     }
 
     @Override
