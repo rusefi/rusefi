@@ -21,12 +21,12 @@ public class LocalApplicationProxy {
     }
 
     /**
+     * @param serverPortForRemoteUsers port on which rusEFI proxy accepts authenticator connections
      * @param applicationRequest remote session we want to connect to
      * @param authenticatorPort local port we would bind for TunerStudio to connect to
-     * @param authenticatorToProxyStream
      */
-    static void startAndRun(Logger logger, int controllerPort, ApplicationRequest applicationRequest, int authenticatorPort) throws IOException {
-        IoStream authenticatorToProxyStream = new TcpIoStream(logger, SSLSocketFactory.getDefault().createSocket(NetworkConnector.RUSEFI_PROXY_HOSTNAME, controllerPort));
+    static void startAndRun(Logger logger, int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int authenticatorPort) throws IOException {
+        IoStream authenticatorToProxyStream = new TcpIoStream(logger, SSLSocketFactory.getDefault().createSocket(NetworkConnector.RUSEFI_PROXY_HOSTNAME, serverPortForRemoteUsers));
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
         localApplicationProxy.run(authenticatorToProxyStream);
 
