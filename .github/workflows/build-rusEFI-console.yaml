@@ -19,11 +19,15 @@ jobs:
 
       - name: Build console
         working-directory: ./java_console
-        run: ant
+        run: ant server_jar
 
-      - name: Upload console junit results
+      - name: Attach console junit results
         if: always()
         uses: actions/upload-artifact@v2
         with:
           name: console junit
           path: ./java_console/build/*.txt
+
+      - name: Upload plugin body
+        working-directory: ./java_console
+        run: ./upload_server.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
