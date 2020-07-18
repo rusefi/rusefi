@@ -147,7 +147,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         needCompositeLogger = linkManager.getCompositeLogicEnabled();
         rpmListener = value -> {
             if (value <= COMPOSITE_OFF_RPM) {
-                needCompositeLogger = true;
+                needCompositeLogger = linkManager.getCompositeLogicEnabled();
                 lastLowRpmTime = System.currentTimeMillis();
             } else if (System.currentTimeMillis() - lastLowRpmTime > HIGH_RPM_DELAY * Timeouts.SECOND) {
                 logger.info("Time to turn off composite logging");
