@@ -1,4 +1,4 @@
-package com.rusefi;
+package com.rusefi.proxy;
 
 import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;

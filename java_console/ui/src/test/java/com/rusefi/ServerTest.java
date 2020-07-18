@@ -9,6 +9,7 @@ import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.ProxyClient;
 import org.junit.Before;
@@ -40,6 +41,8 @@ public class ServerTest {
 
     @Before
     public void setTestCertificate() throws MalformedURLException {
+        NetworkConnector.RUSEFI_PROXY_HOSTNAME = ProxyClient.LOCALHOST;
+
         File certificate = new File("certificate/test.jks");
         Backend.setupCertificates(certificate, "password");
     }
@@ -200,8 +203,7 @@ public class ServerTest {
         // start authenticator
 
         int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
-        IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
-        LocalApplicationProxy.startAndRun(logger, applicationRequest, authenticatorPort, authenticatorToProxyStream);
+        LocalApplicationProxy.startAndRun(logger, controllerPort, applicationRequest, authenticatorPort);
 
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
