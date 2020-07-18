@@ -1,6 +1,7 @@
 #!/bin/bash
 
 BUNDLE_NAME="$1"
+export INI_FILE_OVERRIDE="$2"
 SCRIPT_NAME="prepare_bundle.sh"
 echo "Entering $SCRIPT_NAME with ${BUNDLE_NAME}"
 echo "RUSEFI_BUILD_FTP_USER=$RUSEFI_BUILD_FTP_USER"
