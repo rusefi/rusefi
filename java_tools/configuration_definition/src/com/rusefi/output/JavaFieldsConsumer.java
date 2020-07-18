@@ -79,7 +79,10 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
             writeJavaFieldName(nameWithPrefix, tsPosition);
             if (isStringField(configField)) {
-                javaFieldsWriter.write("FieldType.STRING");
+                String custom = state.tsCustomLine.get(configField.getType());
+                String[] tokens = custom.split(",");
+                String stringSize = tokens[3].trim();
+                javaFieldsWriter.write(stringSize + ", FieldType.STRING");
             } else  if (configField.getElementSize() == 1) {
                 javaFieldsWriter.write("FieldType.INT8");
             } else if (configField.getElementSize() == 2) {
