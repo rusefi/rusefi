@@ -18,7 +18,9 @@ import org.takes.rs.RsJson;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.Socket;
 import java.util.*;
 import java.util.function.Function;
@@ -70,6 +72,17 @@ public class Backend {
 //        }, "rusEFI Server Cleanup").start();
     }
 
+    public static void setupCertificates(File certificate, String password) throws MalformedURLException {
+        if (!certificate.exists())
+            throw new IllegalStateException("Certificate not found " + certificate);
+        Objects.requireNonNull(password, "password");
+
+        String file = certificate.toURI().toURL().getFile();
+        System.setProperty("javax.net.ssl.keyStore", file);
+        System.setProperty("javax.net.ssl.keyStorePassword", password);
+        System.setProperty("javax.net.ssl.trustStore", file);
+        System.setProperty("javax.net.ssl.trustStorePassword", password);
+    }
 
     public void runApplicationConnector(int serverPortForApplications, Listener serverSocketCreationCallback) {
         // connection from authenticator app which proxies for Tuner Studio
@@ -218,5 +231,18 @@ public class Backend {
         synchronized (clients) {
             return clients.size();
         }
+    }
+
+    public static void start(String[] args) throws MalformedURLException {
+        setupCertificates(new File("keystore.jks"), System.getProperty("RUSEFI_PROXY_PASSWORD"));
+
+        Function<String, UserDetails> userDetailsFunction = new JsonUserDetailsResolver();
+
+        Backend backend = new Backend(userDetailsFunction, 8001, Logger.CONSOLE);
+        backend.runApplicationConnector(8002, parameter -> {
+        });
+        backend.runControllerConnector(8003, parameter -> {
+        });
+
     }
 }
