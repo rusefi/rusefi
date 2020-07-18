@@ -122,7 +122,7 @@ public class Backend {
     }
 
     public void runControllerConnector(int serverPortForControllers, Listener serverSocketCreationCallback) {
-        BinaryProtocolServer.tcpServerSocket(serverPortForControllers, "ControllerServer", new Function<Socket, Runnable>() {
+        BinaryProtocolServer.tcpServerSocket(logger, new Function<Socket, Runnable>() {
             @Override
             public Runnable apply(Socket controllerSocket) {
                 return new Runnable() {
@@ -141,7 +141,7 @@ public class Backend {
                     }
                 };
             }
-        }, logger, serverSocketCreationCallback);
+        }, serverPortForControllers, "ControllerServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
     }
 
     @NotNull

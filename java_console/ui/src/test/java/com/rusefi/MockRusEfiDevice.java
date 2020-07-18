@@ -4,6 +4,7 @@ import com.opensr5.Logger;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -27,7 +28,8 @@ public class MockRusEfiDevice {
     }
 
     public void connect(int serverPort) throws IOException {
-        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(new Socket(LOCALHOST, serverPort),
+        Socket socket = SSLSocketFactory.getDefault().createSocket(LOCALHOST, serverPort);
+        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(socket,
                 sessionDetails,
                 logger);
         baseBroadcastingThread.start();

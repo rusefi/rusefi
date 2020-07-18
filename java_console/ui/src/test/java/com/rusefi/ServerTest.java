@@ -54,7 +54,7 @@ public class ServerTest {
 
     @Test
     public void testControllerSessionTimeout() throws InterruptedException, IOException {
-        int serverPort = 7000;
+        int serverPortForControllers = 7000;
         int httpPort = 8000;
         Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
 
@@ -77,15 +77,15 @@ public class ServerTest {
             }
         };
 
-        backend.runControllerConnector(serverPort, parameter -> serverCreated.countDown());
+        backend.runControllerConnector(serverPortForControllers, parameter -> serverCreated.countDown());
         assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
         assertEquals(0, backend.getCount());
 
 
-        new MockRusEfiDevice(MockRusEfiDevice.TEST_TOKEN_1, "rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPort);
-        new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", "rusEFI 2020.07.11.proteus_f4.1986715563", logger).connect(serverPort);
+        new MockRusEfiDevice(MockRusEfiDevice.TEST_TOKEN_1, "rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPortForControllers);
+        new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", "rusEFI 2020.07.11.proteus_f4.1986715563", logger).connect(serverPortForControllers);
 
-        assertTrue(onConnected.await(30, TimeUnit.SECONDS));
+        assertTrue("onConnected", onConnected.await(30, TimeUnit.SECONDS));
 
         List<ControllerConnectionState> clients = backend.getClients();
         assertEquals(2, clients.size());
@@ -93,7 +93,7 @@ public class ServerTest {
         List<UserDetails> onlineUsers = ProxyClient.getOnlineUsers(httpPort);
         assertEquals(2, onlineUsers.size());
 
-        assertTrue(allClientsDisconnected.await(30, TimeUnit.SECONDS));
+        assertTrue("allClientsDisconnected", allClientsDisconnected.await(30, TimeUnit.SECONDS));
     }
 
     @Test

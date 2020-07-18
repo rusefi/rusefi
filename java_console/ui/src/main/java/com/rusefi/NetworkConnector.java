@@ -9,6 +9,7 @@ import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 import org.jetbrains.annotations.NotNull;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -28,7 +29,7 @@ public class NetworkConnector {
 
         SessionDetails deviceSessionDetails = new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
 
-        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(new Socket(LOCALHOST, serverPortForControllers),
+        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(SSLSocketFactory.getDefault().createSocket(LOCALHOST, serverPortForControllers),
                 deviceSessionDetails,
                 logger) {
             @Override
