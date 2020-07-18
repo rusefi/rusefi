@@ -88,11 +88,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     public static void tcpServerSocket(Logger logger, Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
+        ServerSocket serverSocket = nonSecureSocketFunction.apply(port);
+        if (serverSocketCreationCallback != null)
+            serverSocketCreationCallback.onResult(null);
         Runnable runnable = () -> {
-            ServerSocket serverSocket = nonSecureSocketFunction.apply(port);
-            if (serverSocketCreationCallback != null)
-                serverSocketCreationCallback.onResult(null);
-
             try {
                 while (true) {
                     // Wait for a connection

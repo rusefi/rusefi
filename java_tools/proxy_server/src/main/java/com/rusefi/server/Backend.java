@@ -82,6 +82,7 @@ public class Backend {
         System.setProperty("javax.net.ssl.keyStorePassword", password);
         System.setProperty("javax.net.ssl.trustStore", file);
         System.setProperty("javax.net.ssl.trustStorePassword", password);
+        System.setProperty("javax.net.ssl.keyStoreType", "PKCS12");
     }
 
     public void runApplicationConnector(int serverPortForApplications, Listener serverSocketCreationCallback) {
