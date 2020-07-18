@@ -6,7 +6,6 @@ import com.rusefi.Callable;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
-import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
@@ -201,12 +200,10 @@ public class LinkManager {
             setConnector(new StreamConnector(this, port, logger, streamFactory));
             isSimulationMode = true;
         } else {
-            Callable<IoStream> ioStreamCallable = () -> SerialIoStreamJSerialComm.openPort(port, logger);
-
-            Callable<IoStream> ioStreamCallable1 = new Callable<IoStream>() {
+            Callable<IoStream> ioStreamCallable = new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
-                    IoStream stream = ioStreamCallable.call();
+                    IoStream stream = ((Callable<IoStream>) () -> SerialIoStreamJSerialComm.openPort(port, logger)).call();
                     if (stream == null) {
                         // error already reported
                         return null;
@@ -214,7 +211,7 @@ public class LinkManager {
                     return stream;
                 }
             };
-            setConnector(new StreamConnector(this, port, logger, ioStreamCallable1));
+            setConnector(new StreamConnector(this, port, logger, ioStreamCallable));
         }
     }
 
