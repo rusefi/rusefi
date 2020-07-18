@@ -54,7 +54,7 @@ cp java_tools/ts_plugin_launcher/build/jar/rusefi_plugin_launcher.jar $CONSOLE_F
 cp simulator/build/rusefi_simulator.exe   $CONSOLE_FOLDER
 cp misc/console_launcher/rusefi_*.exe     $CONSOLE_FOLDER
 cp java_console/rusefi.xml                $CONSOLE_FOLDER
-cp java_console/bin                       $FOLDER
+cp -r java_console/bin                    $FOLDER
 
 cp misc/console_launcher/readme.html      $FOLDER
 
