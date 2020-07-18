@@ -203,7 +203,7 @@ public class ServerTest {
         // start authenticator
 
         int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
-        LocalApplicationProxy.startAndRun(logger, controllerPort, applicationRequest, authenticatorPort);
+        LocalApplicationProxy.startAndRun(logger, serverPortForRemoteUsers, applicationRequest, authenticatorPort);
 
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
