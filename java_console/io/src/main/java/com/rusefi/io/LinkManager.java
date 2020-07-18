@@ -42,6 +42,7 @@ public class LinkManager {
     private LinkConnector connector;
     private boolean isStarted;
     private boolean compositeLogicEnabled = true;
+    private boolean needPullData = true;
 
     public LinkManager(Logger logger) {
         this.logger = logger;
@@ -107,12 +108,22 @@ public class LinkManager {
         return commandQueue;
     }
 
-    public void setCompositeLogicEnabled(boolean compositeLogicEnabled) {
+    public LinkManager setCompositeLogicEnabled(boolean compositeLogicEnabled) {
         this.compositeLogicEnabled = compositeLogicEnabled;
+        return this;
     }
 
     public boolean getCompositeLogicEnabled() {
         return compositeLogicEnabled;
+    }
+
+    public boolean getNeedPullData() {
+        return needPullData;
+    }
+
+    public LinkManager setNeedPullData(boolean needPullData) {
+        this.needPullData = needPullData;
+        return this;
     }
 
     public enum LogLevel {

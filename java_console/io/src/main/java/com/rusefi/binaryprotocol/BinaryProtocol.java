@@ -231,7 +231,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             public void run() {
                 while (!isClosed) {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
-                    if (linkManager.COMMUNICATION_QUEUE.isEmpty()) {
+                    if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
                         linkManager.submit(new Runnable() {
                             @Override
                             public void run() {
