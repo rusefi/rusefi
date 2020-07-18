@@ -4,8 +4,11 @@ import com.opensr5.Logger;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
+import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ApplicationRequest;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 
 public class LocalApplicationProxy {
@@ -22,7 +25,8 @@ public class LocalApplicationProxy {
      * @param authenticatorPort local port we would bind for TunerStudio to connect to
      * @param authenticatorToProxyStream
      */
-    static void startAndRun(Logger logger, ApplicationRequest applicationRequest, int authenticatorPort, IoStream authenticatorToProxyStream) throws IOException {
+    static void startAndRun(Logger logger, int controllerPort, ApplicationRequest applicationRequest, int authenticatorPort) throws IOException {
+        IoStream authenticatorToProxyStream = new TcpIoStream(logger, SSLSocketFactory.getDefault().createSocket(NetworkConnector.RUSEFI_PROXY_HOSTNAME, controllerPort));
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
         localApplicationProxy.run(authenticatorToProxyStream);
 
@@ -32,5 +36,8 @@ public class LocalApplicationProxy {
     public void run(IoStream authenticatorToProxyStream) throws IOException {
         // right from connection push session authentication data
         new HelloCommand(logger, applicationRequest.toJson()).handle(authenticatorToProxyStream);
+    }
+
+    public static void start(String[] strings) {
     }
 }

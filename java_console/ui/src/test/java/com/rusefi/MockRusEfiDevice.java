@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.opensr5.Logger;
+import com.rusefi.proxy.BaseBroadcastingThread;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 
