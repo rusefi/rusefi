@@ -42,10 +42,10 @@ public class Backend {
     // guarded by clients
     private HashMap<ControllerKey, ControllerConnectionState> byId = new HashMap<>();
     //    private final int clientTimeout;
-    private final Function<String, UserDetails> userDetailsResolver;
+    private final UserDetailsResolver userDetailsResolver;
     private final Logger logger;
 
-    public Backend(Function<String, UserDetails> userDetailsResolver, int httpPort, Logger logger) {
+    public Backend(UserDetailsResolver userDetailsResolver, int httpPort, Logger logger) {
 //        this.clientTimeout = clientTimeout;
         this.userDetailsResolver = userDetailsResolver;
         this.logger = logger;
@@ -166,7 +166,7 @@ public class Backend {
         return new RsJson(builder.build());
     }
 
-    public Function<String, UserDetails> getUserDetailsResolver() {
+    public UserDetailsResolver getUserDetailsResolver() {
         return userDetailsResolver;
     }
 
