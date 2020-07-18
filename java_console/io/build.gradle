@@ -9,6 +9,7 @@ configurations {
 }
 
 dependencies {
+    implementation libs.javaxJson
     implementation project(':inifile')
     implementation project(':models')
     implementation project(':logging-api')
