@@ -7,9 +7,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-import java.util.function.Function;
 
-public class JsonUserDetailsResolver implements Function<String, UserDetails> {
+public class JsonUserDetailsResolver implements UserDetailsResolver {
     @Override
     @Nullable
     public UserDetails apply(String authToken) {

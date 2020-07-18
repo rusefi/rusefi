@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 import static com.rusefi.TestHelper.createIniField;
 import static com.rusefi.TestHelper.prepareImage;
@@ -50,7 +49,7 @@ public class ServerTest {
     public void testControllerSessionTimeout() throws InterruptedException, IOException {
         int serverPortForControllers = 7000;
         int httpPort = 8000;
-        Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
+        UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
 
         CountDownLatch serverCreated = new CountDownLatch(1);
         CountDownLatch allClientsDisconnected = new CountDownLatch(1);
@@ -92,7 +91,7 @@ public class ServerTest {
 
     @Test
     public void testInvalidApplicationRequest() throws InterruptedException, IOException {
-        Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
+        UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
         int httpPort = 8001;
         int serverPortForRemoteUsers = 6801;
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
@@ -120,7 +119,7 @@ public class ServerTest {
     public void testAuthenticatorRequestUnknownSession() throws InterruptedException, IOException {
         int serverPortForRemoteUsers = 6800;
 
-        Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
+        UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
         int httpPort = 8001;
 
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
@@ -157,7 +156,7 @@ public class ServerTest {
 
         CountDownLatch controllerRegistered = new CountDownLatch(1);
 
-        Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), userId);
+        UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), userId);
         int httpPort = 8001;
         Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
             @Override

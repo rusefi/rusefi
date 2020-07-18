@@ -11,12 +11,11 @@ import com.rusefi.io.tcp.TcpIoStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.function.Function;
 
 public class ControllerConnectionState {
     private final Socket clientSocket;
     private final Logger logger;
-    private final Function<String, UserDetails> userDetailsResolver;
+    private final UserDetailsResolver userDetailsResolver;
 
     private boolean isClosed;
     private IoStream stream;
@@ -31,7 +30,7 @@ public class ControllerConnectionState {
     private UserDetails userDetails;
     private ControllerKey controllerKey;
 
-    public ControllerConnectionState(Socket clientSocket, Logger logger, Function<String, UserDetails> userDetailsResolver) {
+    public ControllerConnectionState(Socket clientSocket, Logger logger, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
         this.logger = logger;
         this.userDetailsResolver = userDetailsResolver;
@@ -71,6 +70,9 @@ public class ControllerConnectionState {
 
         logger.info(sessionDetails.getAuthToken() + " New client: " + sessionDetails.getControllerInfo());
         userDetails = userDetailsResolver.apply(sessionDetails.getAuthToken());
+        if (userDetails == null) {
+            throw new IOException("Unable to resolve " + sessionDetails.getAuthToken());
+        }
         controllerKey = new ControllerKey(userDetails.getUserId(), sessionDetails.getControllerInfo());
         logger.info("User " + userDetails);
     }

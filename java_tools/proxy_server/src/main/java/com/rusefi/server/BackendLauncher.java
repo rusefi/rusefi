@@ -4,7 +4,6 @@ import com.opensr5.Logger;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.function.Function;
 
 public class BackendLauncher {
     /**
@@ -13,7 +12,7 @@ public class BackendLauncher {
     public static void start(String[] args) throws MalformedURLException {
         rusEFISSLContext.setupCertificates(new File("keystore.jks"), System.getProperty("RUSEFI_PROXY_PASSWORD"));
 
-        Function<String, UserDetails> userDetailsFunction = new JsonUserDetailsResolver();
+        UserDetailsResolver userDetailsFunction = new JsonUserDetailsResolver();
 
         Backend backend = new Backend(userDetailsFunction, Backend.HTTP_PORT, Logger.CONSOLE);
         backend.runApplicationConnector(Backend.SERVER_PORT_FOR_APPLICATIONS, parameter -> {
