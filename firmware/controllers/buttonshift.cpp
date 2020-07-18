@@ -1,5 +1,5 @@
-include "buttonshift.h"
-include "debounce.h"
+#include "buttonshift.h"
+#include "debounce.h"
 
 ButtonShiftController::ButtonShiftController () {
     buttonDebounce = new ButtonDebounce(10);

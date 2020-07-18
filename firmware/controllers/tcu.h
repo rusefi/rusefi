@@ -1,5 +1,5 @@
-include "global.h"
-inclued "io_pins.cpp"
+#include "global.h"
+#inclued "io_pins.cpp"
 
 class GearControllerBase {
 public:
