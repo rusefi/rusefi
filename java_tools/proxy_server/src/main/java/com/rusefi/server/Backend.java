@@ -18,9 +18,7 @@ import org.takes.rs.RsJson;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.Socket;
 import java.util.*;
 import java.util.function.Function;
@@ -53,8 +51,10 @@ public class Backend {
 
         new Thread(() -> {
             try {
+                System.out.println("Starting http backend on " + httpPort);
                 new FtBasic(
                         new TkFork(showOnlineUsers,
+                                Monitoring.showStatistics,
                                 new FkRegex(VERSION_PATH, BACKEND_VERSION),
                                 new FkRegex("/", "<a href='https://rusefi.com/online/'>rusEFI Online</a>")
                         ), httpPort
@@ -78,6 +78,7 @@ public class Backend {
     public void runApplicationConnector(int serverPortForApplications, Listener serverSocketCreationCallback) {
         // connection from authenticator app which proxies for Tuner Studio
         // authenticator pushed hello packet on connect
+        System.out.println("Starting application connector at " + serverPortForApplications);
         BinaryProtocolServer.tcpServerSocket(logger, new Function<Socket, Runnable>() {
             @Override
             public Runnable apply(Socket applicationSocket) {
@@ -128,6 +129,7 @@ public class Backend {
     }
 
     public void runControllerConnector(int serverPortForControllers, Listener serverSocketCreationCallback) {
+        System.out.println("Starting controller connector at " + serverPortForControllers);
         BinaryProtocolServer.tcpServerSocket(logger, new Function<Socket, Runnable>() {
             @Override
             public Runnable apply(Socket controllerSocket) {
