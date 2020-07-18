@@ -1,6 +1,7 @@
 package com.rusefi.server;
 
 import com.opensr5.Logger;
+import com.rusefi.Listener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
@@ -20,7 +21,6 @@ import javax.json.JsonObject;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 import java.util.function.Function;
 
 public class Backend {
@@ -71,7 +71,7 @@ public class Backend {
     }
 
 
-    public void runApplicationConnector(int serverPortForApplications, CountDownLatch serverCreated) {
+    public void runApplicationConnector(int serverPortForApplications, Listener serverSocketCreationCallback) {
         BinaryProtocolServer.tcpServerSocket(serverPortForApplications, "ApplicationServer", new Function<Socket, Runnable>() {
             @Override
             public Runnable apply(Socket applicationSocket) {
@@ -114,14 +114,14 @@ public class Backend {
                     }
                 };
             }
-        }, logger, parameter -> serverCreated.countDown());
+        }, logger, serverSocketCreationCallback);
     }
 
     protected void onDisconnectApplication() {
         logger.info("Disconnecting application");
     }
 
-    public void runControllerConnector(int serverPortForControllers, CountDownLatch serverCreated) {
+    public void runControllerConnector(int serverPortForControllers, Listener serverSocketCreationCallback) {
         BinaryProtocolServer.tcpServerSocket(serverPortForControllers, "ControllerServer", new Function<Socket, Runnable>() {
             @Override
             public Runnable apply(Socket controllerSocket) {
@@ -133,14 +133,15 @@ public class Backend {
                             controllerConnectionState.requestControllerInfo();
 
                             register(controllerConnectionState);
-//                            controllerConnectionState.runEndlessLoop();
+
+                            controllerConnectionState.getOutputs();
                         } catch (IOException e) {
                             close(controllerConnectionState);
                         }
                     }
                 };
             }
-        }, logger, parameter -> serverCreated.countDown());
+        }, logger, serverSocketCreationCallback);
     }
 
     @NotNull

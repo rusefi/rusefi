@@ -60,7 +60,7 @@ public class ServerTest {
             }
         };
 
-        backend.runControllerConnector(serverPort, serverCreated);
+        backend.runControllerConnector(serverPort, parameter -> serverCreated.countDown());
         assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
         assertEquals(0, backend.getCount());
 
@@ -94,7 +94,7 @@ public class ServerTest {
         };
 
         CountDownLatch applicationServerCreated = new CountDownLatch(1);
-        backend.runApplicationConnector(serverPortForRemoteUsers, applicationServerCreated);
+        backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
         assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
         // start authenticator
@@ -123,7 +123,7 @@ public class ServerTest {
         };
 
         CountDownLatch applicationServerCreated = new CountDownLatch(1);
-        backend.runApplicationConnector(serverPortForRemoteUsers, applicationServerCreated);
+        backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
         assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
         SessionDetails sessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, Fields.TS_SIGNATURE);
@@ -161,11 +161,13 @@ public class ServerTest {
 
         // first start backend server
         CountDownLatch controllerServerCreated = new CountDownLatch(1);
-        backend.runControllerConnector(serverPortForControllers, controllerServerCreated);
-        assertTrue(controllerServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
-
         CountDownLatch applicationServerCreated = new CountDownLatch(1);
-        backend.runApplicationConnector(serverPortForRemoteUsers, applicationServerCreated);
+
+        backend.runControllerConnector(serverPortForControllers, parameter -> controllerServerCreated.countDown());
+
+        backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
+
+        assertTrue(controllerServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
         assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
 

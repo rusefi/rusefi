@@ -96,14 +96,18 @@ public class ControllerConnectionState {
     public void runEndlessLoop() throws IOException {
 
         while (true) {
-            byte[] commandPacket = GetOutputsCommand.createRequest();
-
-            stream.sendPacket(commandPacket, logger);
-
-            byte[] packet = incomingData.getPacket(logger, "msg", true);
-            if (packet == null)
-                throw new IOException("No response");
+            getOutputs();
 
         }
+    }
+
+    public void getOutputs() throws IOException {
+        byte[] commandPacket = GetOutputsCommand.createRequest();
+
+        stream.sendPacket(commandPacket, logger);
+
+        byte[] packet = incomingData.getPacket(logger, "msg", true);
+        if (packet == null)
+            throw new IOException("No response");
     }
 }
