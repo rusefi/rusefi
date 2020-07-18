@@ -11,6 +11,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.*;
+import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class ServerTest {
 
     @Before
     public void setTestCertificate() throws MalformedURLException {
-        NetworkConnector.RUSEFI_PROXY_HOSTNAME = ProxyClient.LOCALHOST;
+        HttpUtil.RUSEFI_PROXY_HOSTNAME = ProxyClient.LOCALHOST;
 
         rusEFISSLContext.init("certificate/test_pkcs12.jks", "password");
     }

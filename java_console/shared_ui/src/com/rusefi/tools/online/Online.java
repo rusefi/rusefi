@@ -3,7 +3,6 @@ package com.rusefi.tools.online;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -13,10 +12,8 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
@@ -47,12 +44,8 @@ public class Online {
             System.out.println("response=" + response);
             System.out.println("code " + response.getStatusLine().getStatusCode());
 
-            HttpEntity entity = response.getEntity();
-            String responseString = EntityUtils.toString(entity, "UTF-8");
-            System.out.println("responseString=" + responseString);
+            JSONObject object = HttpUtil.getJsonResponse(response);
 
-            JSONParser parser = new JSONParser();
-            JSONObject object = (JSONObject) parser.parse(responseString);
             System.out.println("object=" + object);
             JSONArray info = (JSONArray) object.get("info");
             JSONArray error = (JSONArray) object.get("error");

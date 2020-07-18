@@ -1,16 +1,10 @@
 package com.rusefi.tools.online;
 
 import com.rusefi.server.UserDetails;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -23,18 +17,11 @@ public class ProxyClient {
 
     @NotNull
     public static List<UserDetails> getOnlineUsers(int httpPort) throws IOException {
-        HttpClient httpclient = new DefaultHttpClient();
-        String url = "http://" + LOCALHOST + ":" + httpPort + LIST_PATH;
-        System.out.println("Connecting to " + url);
-        HttpGet httpget = new HttpGet(url);
-        HttpResponse httpResponse = httpclient.execute(httpget);
+        HttpResponse httpResponse = HttpUtil.executeGet(HttpUtil.RUSEFI_PROXY_JSON_PROTOCOL + HttpUtil.RUSEFI_PROXY_HOSTNAME + ":" + httpPort + LIST_PATH);
 
-        HttpEntity entity = httpResponse.getEntity();
-        String responseString = EntityUtils.toString(entity, "UTF-8");
-        JSONParser parser = new JSONParser();
         List<UserDetails> userLists = new ArrayList<>();
         try {
-            JSONArray array = (JSONArray) parser.parse(responseString);
+            JSONArray array = HttpUtil.getJsonResponse(httpResponse);
 
             for (int i = 0; i < array.size(); i++) {
                 JSONObject element = (JSONObject) array.get(i);
@@ -48,4 +35,5 @@ public class ProxyClient {
         }
         return userLists;
     }
+
 }
