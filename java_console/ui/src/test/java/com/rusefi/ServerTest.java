@@ -43,7 +43,7 @@ public class ServerTest {
     public void setTestCertificate() throws MalformedURLException {
         NetworkConnector.RUSEFI_PROXY_HOSTNAME = ProxyClient.LOCALHOST;
 
-        File certificate = new File("certificate/test.jks");
+        File certificate = new File("certificate/test_pkcs12.jks");
         Backend.setupCertificates(certificate, "password");
     }
 
