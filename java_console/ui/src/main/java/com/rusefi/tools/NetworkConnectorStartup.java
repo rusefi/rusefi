@@ -19,8 +19,9 @@ public class NetworkConnectorStartup {
         }
 
 
-        LinkManager linkManager = new LinkManager(Logger.CONSOLE);
-        linkManager.setCompositeLogicEnabled(false);
+        LinkManager linkManager = new LinkManager(Logger.CONSOLE)
+                .setCompositeLogicEnabled(false)
+                .setNeedPullData(false);
         linkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
 
         String authToken = AuthTokenPanel.getAuthToken();
