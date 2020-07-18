@@ -72,19 +72,6 @@ public class Backend {
 //        }, "rusEFI Server Cleanup").start();
     }
 
-    public static void setupCertificates(File certificate, String password) throws MalformedURLException {
-        if (!certificate.exists())
-            throw new IllegalStateException("Certificate not found " + certificate);
-        Objects.requireNonNull(password, "password");
-
-        String file = certificate.toURI().toURL().getFile();
-        System.setProperty("javax.net.ssl.keyStore", file);
-        System.setProperty("javax.net.ssl.keyStorePassword", password);
-        System.setProperty("javax.net.ssl.trustStore", file);
-        System.setProperty("javax.net.ssl.trustStorePassword", password);
-        System.setProperty("javax.net.ssl.keyStoreType", "PKCS12");
-    }
-
     public void runApplicationConnector(int serverPortForApplications, Listener serverSocketCreationCallback) {
         // connection from authenticator app which proxies for Tuner Studio
         // authenticator pushed hello packet on connect
@@ -235,7 +222,7 @@ public class Backend {
     }
 
     public static void start(String[] args) throws MalformedURLException {
-        setupCertificates(new File("keystore.jks"), System.getProperty("RUSEFI_PROXY_PASSWORD"));
+        rusEFISSLContext.setupCertificates(new File("keystore.jks"), System.getProperty("RUSEFI_PROXY_PASSWORD"));
 
         Function<String, UserDetails> userDetailsFunction = new JsonUserDetailsResolver();
 

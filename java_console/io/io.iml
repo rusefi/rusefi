@@ -16,6 +16,5 @@
     <orderEntry type="library" exported="" name="annotations" level="project" />
     <orderEntry type="module" module-name="inifile" exported="" />
     <orderEntry type="library" exported="" name="javax.json" level="project" />
-    <orderEntry type="module" module-name="proxy_server" />
   </component>
 </module>

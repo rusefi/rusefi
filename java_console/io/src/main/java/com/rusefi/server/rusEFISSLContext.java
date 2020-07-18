@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
+import java.util.Objects;
 
 public class rusEFISSLContext {
     private static final String TLS = "TLS";
@@ -32,7 +33,7 @@ public class rusEFISSLContext {
 
     public static void init(String fileName, String password) throws MalformedURLException {
         // system property setup does not work under Jenkins?
-        Backend.setupCertificates(new File(fileName), password);
+        setupCertificates(new File(fileName), password);
 
         //key = getFromPath(fileName, "PKCS12", password);
     }
@@ -85,6 +86,19 @@ public class rusEFISSLContext {
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public static void setupCertificates(File certificate, String password) throws MalformedURLException {
+        if (!certificate.exists())
+            throw new IllegalStateException("Certificate not found " + certificate);
+        Objects.requireNonNull(password, "password");
+
+        String file = certificate.toURI().toURL().getFile();
+        System.setProperty("javax.net.ssl.keyStore", file);
+        System.setProperty("javax.net.ssl.keyStorePassword", password);
+        System.setProperty("javax.net.ssl.trustStore", file);
+        System.setProperty("javax.net.ssl.trustStorePassword", password);
+        System.setProperty("javax.net.ssl.keyStoreType", "PKCS12");
     }
 /*
     private static KeyStore getFromPath(String path, String algorithm, String filePassword) {
