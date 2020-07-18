@@ -41,6 +41,7 @@ public class LinkManager {
 
     private LinkConnector connector;
     private boolean isStarted;
+    private boolean compositeLogicEnabled = true;
 
     public LinkManager(Logger logger) {
         this.logger = logger;
@@ -104,6 +105,14 @@ public class LinkManager {
 
     public CommandQueue getCommandQueue() {
         return commandQueue;
+    }
+
+    public void setCompositeLogicEnabled(boolean compositeLogicEnabled) {
+        this.compositeLogicEnabled = compositeLogicEnabled;
+    }
+
+    public boolean getCompositeLogicEnabled() {
+        return compositeLogicEnabled;
     }
 
     public enum LogLevel {

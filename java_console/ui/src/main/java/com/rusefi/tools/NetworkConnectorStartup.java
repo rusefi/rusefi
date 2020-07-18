@@ -14,12 +14,13 @@ public class NetworkConnectorStartup {
     public static void start(String[] strings) throws IOException {
         String autoDetectedPort = PortDetector.autoDetectSerial(null);
         if (autoDetectedPort == null) {
-            System.err.println("rusEFI not detected");
+            System.err.println(ConsoleTools.RUS_EFI_NOT_DETECTED);
             return;
         }
 
 
         LinkManager linkManager = new LinkManager(Logger.CONSOLE);
+        linkManager.setCompositeLogicEnabled(false);
         linkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
 
         String authToken = AuthTokenPanel.getAuthToken();

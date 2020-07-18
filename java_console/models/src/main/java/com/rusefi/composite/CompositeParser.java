@@ -13,7 +13,7 @@ public class CompositeParser {
     public static List<CompositeEvent> parse(byte[] response) {
         ByteBuffer byteBuffer = ByteBuffer.wrap(response);
         byteBuffer.order(ByteOrder.BIG_ENDIAN);
-        System.out.println("Got composite " + response.length);
+        System.out.println("Got composite length=" + response.length);
         int ptr = 1;
 
         List<CompositeEvent> events = new ArrayList<>();
