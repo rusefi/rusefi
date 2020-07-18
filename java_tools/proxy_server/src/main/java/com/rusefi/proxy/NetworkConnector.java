@@ -8,6 +8,7 @@ import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 import com.rusefi.server.rusEFISSLContext;
+import com.rusefi.tools.online.HttpUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -16,7 +17,6 @@ import java.io.IOException;
  * Connector between rusEFI ECU and rusEFI server
  */
 public class NetworkConnector {
-    public static String RUSEFI_PROXY_HOSTNAME = System.getProperty("RUSEFI_PROXY_URL", "proxy.rusefi.com");
 
     @NotNull
     public static SessionDetails runNetworkConnector(int serverPortForControllers, IoStream targetEcuSocket, final Logger logger, String authToken) throws IOException {
@@ -28,7 +28,7 @@ public class NetworkConnector {
 
         SessionDetails deviceSessionDetails = new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
 
-        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(rusEFISSLContext.getSSLSocket(RUSEFI_PROXY_HOSTNAME, serverPortForControllers),
+        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForControllers),
                 deviceSessionDetails,
                 logger) {
             @Override

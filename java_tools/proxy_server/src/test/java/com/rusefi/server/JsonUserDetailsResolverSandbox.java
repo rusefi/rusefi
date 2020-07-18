@@ -4,6 +4,6 @@ public class JsonUserDetailsResolverSandbox {
     public static void main(String[] args) {
         JsonUserDetailsResolver resolver = new JsonUserDetailsResolver();
 
-        System.out.println(resolver.apply("haba-haba"));
+        System.out.println("UserDetails result: " + resolver.apply("haba-haba"));
     }
 }
