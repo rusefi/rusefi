@@ -224,16 +224,4 @@ public class Backend {
         }
     }
 
-    public static void start(String[] args) throws MalformedURLException {
-        rusEFISSLContext.setupCertificates(new File("keystore.jks"), System.getProperty("RUSEFI_PROXY_PASSWORD"));
-
-        Function<String, UserDetails> userDetailsFunction = new JsonUserDetailsResolver();
-
-        Backend backend = new Backend(userDetailsFunction, HTTP_PORT, Logger.CONSOLE);
-        backend.runApplicationConnector(SERVER_PORT_FOR_APPLICATIONS, parameter -> {
-        });
-        backend.runControllerConnector(SERVER_PORT_FOR_CONTROLLERS, parameter -> {
-        });
-
-    }
 }
