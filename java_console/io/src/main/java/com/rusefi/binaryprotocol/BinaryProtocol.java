@@ -75,7 +75,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     /**
      * Composite logging turns off after 10 seconds of RPM above 300
      */
-    private boolean needCompositeLogger = true;
+    private boolean needCompositeLogger;
     private boolean isCompositeLoggerEnabled;
     private long lastLowRpmTime = System.currentTimeMillis();
 
@@ -144,6 +144,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
         incomingData = dataBuffer;
         Runtime.getRuntime().addShutdownHook(hook);
+        needCompositeLogger = linkManager.getCompositeLogicEnabled();
         rpmListener = value -> {
             if (value <= COMPOSITE_OFF_RPM) {
                 needCompositeLogger = true;

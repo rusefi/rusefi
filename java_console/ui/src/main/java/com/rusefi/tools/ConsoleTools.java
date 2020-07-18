@@ -42,6 +42,7 @@ import static com.rusefi.binaryprotocol.IoHelper.getCrc32;
 
 public class ConsoleTools {
     public static final String SET_AUTH_TOKEN = "set_auth_token";
+    public static final String RUS_EFI_NOT_DETECTED = "rusEFI not detected";
     private static Map<String, ConsoleTool> TOOLS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     private static Map<String, String> toolsHelp = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -203,7 +204,7 @@ public class ConsoleTools {
 
         String autoDetectedPort = PortDetector.autoDetectSerial(null);
         if (autoDetectedPort == null) {
-            System.err.println("rusEFI not detected");
+            System.err.println(RUS_EFI_NOT_DETECTED);
             return;
         }
         LinkManager linkManager = new LinkManager(FileLog.LOGGER);
@@ -268,7 +269,7 @@ public class ConsoleTools {
     private static String autoDetectPort() {
         String autoDetectedPort = PortDetector.autoDetectSerial(null);
         if (autoDetectedPort == null) {
-            System.err.println("rusEFI not detected");
+            System.err.println(RUS_EFI_NOT_DETECTED);
             return null;
         }
         return autoDetectedPort;
@@ -313,7 +314,7 @@ public class ConsoleTools {
     static void detect(String[] strings) throws IOException, InterruptedException {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null) {
-            System.out.println("rusEFI not detected");
+            System.out.println(RUS_EFI_NOT_DETECTED);
             return;
         }
         IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
