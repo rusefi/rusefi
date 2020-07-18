@@ -115,7 +115,7 @@ public class ServerTest {
         assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
         // start authenticator
-        IoStream authenticatorToProxyStream = TestHelper.connectToLocalhost(serverPortForRemoteUsers, logger);
+        IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
         new HelloCommand(logger, "hello").handle(authenticatorToProxyStream);
 
         assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
@@ -147,7 +147,7 @@ public class ServerTest {
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, 123);
 
         // start authenticator
-        IoStream authenticatorToProxyStream = TestHelper.connectToLocalhost(serverPortForRemoteUsers, logger);
+        IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
         localApplicationProxy.run(authenticatorToProxyStream);
 
@@ -208,7 +208,7 @@ public class ServerTest {
         // start authenticator
 
         int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
-        IoStream authenticatorToProxyStream = TestHelper.connectToLocalhost(serverPortForRemoteUsers, logger);
+        IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
         LocalApplicationProxy.startAndRun(logger, applicationRequest, authenticatorPort, authenticatorToProxyStream);
 
 

@@ -72,7 +72,9 @@ public class Backend {
 
 
     public void runApplicationConnector(int serverPortForApplications, Listener serverSocketCreationCallback) {
-        BinaryProtocolServer.tcpServerSocket(serverPortForApplications, "ApplicationServer", new Function<Socket, Runnable>() {
+        // connection from authenticator app which proxies for Tuner Studio
+        // authenticator pushed hello packet on connect
+        BinaryProtocolServer.tcpServerSocket(logger, new Function<Socket, Runnable>() {
             @Override
             public Runnable apply(Socket applicationSocket) {
                 return new Runnable() {
@@ -114,7 +116,7 @@ public class Backend {
                     }
                 };
             }
-        }, logger, serverSocketCreationCallback);
+        }, serverPortForApplications, "ApplicationServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
     }
 
     protected void onDisconnectApplication() {
