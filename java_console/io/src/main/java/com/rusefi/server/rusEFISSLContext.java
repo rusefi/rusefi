@@ -59,14 +59,10 @@ public class rusEFISSLContext {
 //        }
     }
 
-    public static Socket getSSLSocket(String host, int port) {
-        try {
-            if (isJenkins)
-                return new Socket(host, port);
-            return getSSLSocketFactory(null /*key*/, TLS).createSocket(host, port);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
+    public static Socket getSSLSocket(String host, int port) throws IOException {
+        if (isJenkins)
+            return new Socket(host, port);
+        return getSSLSocketFactory(null /*key*/, TLS).createSocket(host, port);
     }
 
     /*
