@@ -38,7 +38,8 @@ public class rusEFISSLContext {
 
     public static void init(String fileName, String password) throws MalformedURLException {
         // system property setup does not work under Jenkins?
-        setupCertificates(new File(fileName), password);
+        if (!isJenkins)
+            setupCertificates(new File(fileName), password);
 
         //key = getFromPath(fileName, "PKCS12", password);
     }
