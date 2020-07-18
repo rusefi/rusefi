@@ -15,7 +15,7 @@ public class rusEFISSLContext {
 
     // I assume that jenkins own setup is interfering with our attempts to change system properties :(
     // also open question to get SSL context adjusted without touching system properties
-    private static boolean isJenkins = System.getProperty("JENKINS_URL") != null;
+    private static boolean isJenkins = true;//System.getProperty("JENKINS_URL") != null;
 
 //    private static KeyStore key;
 
