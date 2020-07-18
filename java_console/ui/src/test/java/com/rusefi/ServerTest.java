@@ -41,15 +41,7 @@ public class ServerTest {
     @Before
     public void setTestCertificate() throws MalformedURLException {
         File certificate = new File("certificate/test.jks");
-        if (!certificate.exists())
-            throw new IllegalStateException("Certificate not found " + certificate);
-
-        String file = certificate.toURI().toURL().getFile();
-        String password = "password";
-        System.setProperty("javax.net.ssl.keyStore", file);
-        System.setProperty("javax.net.ssl.keyStorePassword", password);
-        System.setProperty("javax.net.ssl.trustStore", file);
-        System.setProperty("javax.net.ssl.trustStorePassword", password);
+        Backend.setupCertificates(certificate, "password");
     }
 
     @Test
