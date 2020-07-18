@@ -4,6 +4,7 @@ import com.opensr5.Logger;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -11,6 +12,7 @@ import static com.rusefi.tools.online.ProxyClient.LOCALHOST;
 
 public class MockRusEfiDevice {
     public static final String TEST_TOKEN_1 = "00000000-1234-1234-1234-123456789012";
+    public static final String TEST_TOKEN_3 = "33333333-3333-1234-1234-123456789012";
     private SessionDetails sessionDetails;
     private final Logger logger;
 
@@ -26,7 +28,8 @@ public class MockRusEfiDevice {
     }
 
     public void connect(int serverPort) throws IOException {
-        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(new Socket(LOCALHOST, serverPort),
+        Socket socket = SSLSocketFactory.getDefault().createSocket(LOCALHOST, serverPort);
+        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(socket,
                 sessionDetails,
                 logger);
         baseBroadcastingThread.start();

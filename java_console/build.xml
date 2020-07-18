@@ -1,6 +1,7 @@
 <project default="jar">
     <property name="jar_file_folder" value="../java_console_binary"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
+    <property name="server_jar_file" value="${jar_file_folder}/rusefi_server.jar"/>
     <property name="lib_list" value="../java_tools/configuration_definition/lib/snakeyaml.jar:lib/json-simple-1.1.1.jar:lib/server/javax.json.jar:lib/server/cactoos.jar:lib/server/takes.jar:lib/json-simple-1.1.1.jar:lib/jaxb-api.jar:lib/httpclient.jar:lib/httpmime.jar:lib/httpcore.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar"/>
 
     <target name="clean">
@@ -93,6 +94,18 @@
             </batchtest>
         </junit>
 
+    </target>
+
+    <target name="server_jar" depends="jar">
+        <delete file="${server_jar_file}"/>
+        <echo message="Building ${server_jar_file}"/>
+
+        <jar destfile="${server_jar_file}">
+            <zipfileset src="${jar_file}" includes="**/*.class"/>
+            <zipfileset src="lib/server/cactoos.jar" includes="**/*.class"/>
+            <zipfileset src="lib/server/javax.json.jar" includes="**/*.class"/>
+            <zipfileset src="lib/server/takes.jar" includes="**/*.class"/>
+        </jar>
     </target>
 
     <target name="jar" depends="compile, autoupdate_jar">

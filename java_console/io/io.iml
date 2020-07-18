@@ -10,10 +10,11 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="jcip-annotations" level="project" />
-    <orderEntry type="library" name="jSerialComm" level="project" />
+    <orderEntry type="library" exported="" name="jSerialComm" level="project" />
     <orderEntry type="module" module-name="logging-api" exported="" />
-    <orderEntry type="module" module-name="models" />
+    <orderEntry type="module" module-name="models" exported="" />
     <orderEntry type="library" exported="" name="annotations" level="project" />
-    <orderEntry type="module" module-name="inifile" />
+    <orderEntry type="module" module-name="inifile" exported="" />
+    <orderEntry type="library" exported="" name="javax.json" level="project" />
   </component>
 </module>

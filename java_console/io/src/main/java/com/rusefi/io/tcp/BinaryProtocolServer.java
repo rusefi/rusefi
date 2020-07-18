@@ -3,14 +3,12 @@ package com.rusefi.io.tcp;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.Listener;
-import com.rusefi.binaryprotocol.BinaryProtocolCommands;
-import com.rusefi.binaryprotocol.BinaryProtocolState;
-import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.binaryprotocol.IoHelper;
+import com.rusefi.binaryprotocol.*;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 
+import javax.net.ssl.SSLServerSocketFactory;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -36,6 +34,23 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     private final Logger logger;
 
     public AtomicInteger unknownCommands = new AtomicInteger();
+
+    public static final Function<Integer, ServerSocket> SECURE_SOCKET_FACTORY = port -> {
+        try {
+            return SSLServerSocketFactory.getDefault().createServerSocket(port);
+        } catch (IOException e) {
+            throw new IllegalStateException("Error binding secure server socket " + port, e);
+        }
+    };
+
+    public static final Function<Integer, ServerSocket> PLAIN_SOCKET_FACTORY = port -> {
+        try {
+            return new ServerSocket(port);
+        } catch (IOException e) {
+            throw new IllegalStateException("Error binding server socket " + port, e);
+        }
+    };
+
 
     public BinaryProtocolServer(Logger logger) {
         this.logger = logger;
@@ -64,35 +79,29 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
      *
      * @param port                         server port to accept connections
      * @param threadName
-     * @param clientSocketRunnableFactory  method to invoke on a new thread for each new client connection
+     * @param socketRunnableFactory  method to invoke on a new thread for each new client connection
      * @param logger
      * @param serverSocketCreationCallback this callback is invoked once we open the server socket
      */
-    public static void tcpServerSocket(int port, String threadName, Function<Socket, Runnable> clientSocketRunnableFactory, final Logger logger, Listener serverSocketCreationCallback) {
-        Runnable runnable = new Runnable() {
-            @SuppressWarnings("InfiniteLoopStatement")
-            @Override
-            public void run() {
-                ServerSocket serverSocket;
-                try {
-                    serverSocket = new ServerSocket(port, 1);
-                } catch (IOException e) {
-                    logger.error("Error binding server socket" + e);
-                    return;
-                }
-                if (serverSocketCreationCallback != null)
-                    serverSocketCreationCallback.onResult(null);
+    public static void tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, final Logger logger, Listener serverSocketCreationCallback) {
+        tcpServerSocket(logger, socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
+    }
 
-                try {
-                    while (true) {
-                        // Wait for a connection
-                        final Socket clientSocket = serverSocket.accept();
-                        logger.info("Binary protocol proxy port connection");
-                        new Thread(clientSocketRunnableFactory.apply(clientSocket), "proxy connection").start();
-                    }
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
+    public static void tcpServerSocket(Logger logger, Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
+        Runnable runnable = () -> {
+            ServerSocket serverSocket = nonSecureSocketFunction.apply(port);
+            if (serverSocketCreationCallback != null)
+                serverSocketCreationCallback.onResult(null);
+
+            try {
+                while (true) {
+                    // Wait for a connection
+                    final Socket clientSocket = serverSocket.accept();
+                    logger.info("Binary protocol proxy port connection");
+                    new Thread(clientSocketRunnableFactory.apply(clientSocket), "proxy connection").start();
                 }
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
             }
         };
         new Thread(runnable, threadName).start();
@@ -126,10 +135,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
             byte command = payload[0];
 
-            System.out.println("Got [" + (char) command + "/" + command + "] command");
+            System.out.println("Got [" + BinaryProtocol.findCommand(command));
 
             if (command == Fields.TS_HELLO_COMMAND) {
-                new HelloCommand(logger, Fields.TS_SIGNATURE).handle(packet, stream);
+                new HelloCommand(logger, Fields.TS_SIGNATURE).handle(stream);
             } else if (command == COMMAND_PROTOCOL) {
 //                System.out.println("Ignoring crc F command");
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes(), logger);
@@ -171,7 +180,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             } else {
                 unknownCommands.incrementAndGet();
                 new IllegalStateException().printStackTrace();
-                logger.info("Error: unknown command " + (char) command + "/" + command);
+                logger.info("Error: unexpected " + BinaryProtocol.findCommand(command));
             }
         }
     }

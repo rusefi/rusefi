@@ -25,8 +25,10 @@ public class XmlUtil {
         System.out.println(xmlWriter.toString());
 
         System.out.println("Writing " + fileName);
-        marshaller.marshal(instance, new FileWriter(fileName));
+        FileWriter writer = new FileWriter(fileName);
+        marshaller.marshal(instance, writer);
         System.out.println("Marshalling finished " + fileName);
+        writer.close();
     }
 
     public static <T> T readModel(Class<?> modelClass, String fileName) throws Exception {

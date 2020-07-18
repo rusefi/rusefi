@@ -1,13 +1,17 @@
 package com.rusefi.server;
 
 import com.opensr5.Logger;
+import com.rusefi.Listener;
+import com.rusefi.io.IoStream;
+import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.tools.online.ProxyClient;
 import org.jetbrains.annotations.NotNull;
 import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
 import org.takes.facets.fork.TkFork;
-import org.takes.http.Exit;
 import org.takes.http.FtBasic;
 import org.takes.rs.RsJson;
 
@@ -16,11 +20,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
+import java.util.*;
 import java.util.function.Function;
 
 public class Backend {
@@ -30,47 +30,12 @@ public class Backend {
     private final FkRegex showOnlineUsers = new FkRegex(ProxyClient.LIST_PATH,
             (Take) req -> getUsersOnline()
     );
-
-    public static void runProxy(int serverPort, CountDownLatch serverCreated, Backend backend) {
-        BinaryProtocolServer.tcpServerSocket(serverPort, "Server", new Function<Socket, Runnable>() {
-            @Override
-            public Runnable apply(Socket clientSocket) {
-                return new Runnable() {
-                    @Override
-                    public void run() {
-                        ClientConnectionState clientConnectionState = new ClientConnectionState(clientSocket, backend.logger, backend.getUserDetailsResolver());
-                        try {
-                            clientConnectionState.requestControllerInfo();
-
-                            backend.register(clientConnectionState);
-                            clientConnectionState.runEndlessLoop();
-                        } catch (IOException e) {
-                            backend.close(clientConnectionState);
-                        }
-                    }
-                };
-            }
-        }, backend.logger, parameter -> serverCreated.countDown());
-    }
-
-    @NotNull
-    private RsJson getUsersOnline() throws IOException {
-        JsonArrayBuilder builder = Json.createArrayBuilder();
-        List<ClientConnectionState> clients = getClients();
-        for (ClientConnectionState client : clients) {
-
-            JsonObject clientObject = Json.createObjectBuilder()
-                    .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
-                    .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
-                    .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
-                    .build();
-            builder.add(clientObject);
-        }
-        return new RsJson(builder.build());
-    }
+    private boolean isClosed;
 
     // guarded by own monitor
-    private final Set<ClientConnectionState> clients = new HashSet<>();
+    private final Set<ControllerConnectionState> clients = new HashSet<>();
+    // guarded by clients
+    private HashMap<ControllerKey, ControllerConnectionState> byId = new HashMap<>();
     //    private final int clientTimeout;
     private final Function<String, UserDetails> userDetailsResolver;
     private final Logger logger;
@@ -81,22 +46,20 @@ public class Backend {
         this.logger = logger;
 
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new FtBasic(
-                            new TkFork(showOnlineUsers,
-                                    new FkRegex(VERSION_PATH, BACKEND_VERSION),
-                                    new FkRegex("/", "<a href='https://rusefi.com/online/'>rusEFI Online</a>")
-                            ), httpPort
-                    ).start(Exit.NEVER);
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                }
-
+        new Thread(() -> {
+            try {
+                new FtBasic(
+                        new TkFork(showOnlineUsers,
+                                new FkRegex(VERSION_PATH, BACKEND_VERSION),
+                                new FkRegex("/", "<a href='https://rusefi.com/online/'>rusEFI Online</a>")
+                        ), httpPort
+                ).start(() -> isClosed);
+                logger.info("Shutting down backend on port " + httpPort);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
             }
-        }).start();
+
+        }, "Http Server Thread").start();
 
 
 //        new Thread(() -> {
@@ -105,6 +68,98 @@ public class Backend {
 //                sleep(clientTimeout);
 //            }
 //        }, "rusEFI Server Cleanup").start();
+    }
+
+
+    public void runApplicationConnector(int serverPortForApplications, Listener serverSocketCreationCallback) {
+        // connection from authenticator app which proxies for Tuner Studio
+        // authenticator pushed hello packet on connect
+        BinaryProtocolServer.tcpServerSocket(logger, new Function<Socket, Runnable>() {
+            @Override
+            public Runnable apply(Socket applicationSocket) {
+                return new Runnable() {
+                    @Override
+                    public void run() {
+                        // connection from authenticator app which proxies for Tuner Studio
+                        IoStream applicationClientStream = null;
+                        try {
+                            applicationClientStream = new TcpIoStream(logger, applicationSocket);
+
+                            // authenticator pushed hello packet on connect
+                            String jsonString = HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer(), logger);
+                            if (jsonString == null)
+                                return;
+                            ApplicationRequest applicationRequest = ApplicationRequest.valueOf(jsonString);
+                            logger.info("Application Connected: " + applicationRequest);
+
+                            ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUserId(), applicationRequest.getSessionDetails().getControllerInfo());
+                            ControllerConnectionState state;
+                            synchronized (clients) {
+                                state = byId.get(controllerKey);
+                            }
+                            if (state == null) {
+                                applicationClientStream.close();
+                                onDisconnectApplication();
+                                logger.info("No controller for " + controllerKey);
+                                return;
+                            }
+
+                            BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream);
+
+                        } catch (Throwable e) {
+                            if (applicationClientStream != null)
+                                applicationClientStream.close();
+                            e.printStackTrace();
+                            logger.error("Got error " + e);
+                            onDisconnectApplication();
+                        }
+                    }
+                };
+            }
+        }, serverPortForApplications, "ApplicationServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
+    }
+
+    protected void onDisconnectApplication() {
+        logger.info("Disconnecting application");
+    }
+
+    public void runControllerConnector(int serverPortForControllers, Listener serverSocketCreationCallback) {
+        BinaryProtocolServer.tcpServerSocket(logger, new Function<Socket, Runnable>() {
+            @Override
+            public Runnable apply(Socket controllerSocket) {
+                return new Runnable() {
+                    @Override
+                    public void run() {
+                        ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, logger, getUserDetailsResolver());
+                        try {
+                            controllerConnectionState.requestControllerInfo();
+
+                            register(controllerConnectionState);
+
+                            controllerConnectionState.getOutputs();
+                        } catch (IOException e) {
+                            close(controllerConnectionState);
+                        }
+                    }
+                };
+            }
+        }, serverPortForControllers, "ControllerServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
+    }
+
+    @NotNull
+    private RsJson getUsersOnline() throws IOException {
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        List<ControllerConnectionState> clients = getClients();
+        for (ControllerConnectionState client : clients) {
+
+            JsonObject clientObject = Json.createObjectBuilder()
+                    .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
+                    .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
+                    .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
+                    .build();
+            builder.add(clientObject);
+        }
+        return new RsJson(builder.build());
     }
 
     public Function<String, UserDetails> getUserDetailsResolver() {
@@ -128,21 +183,32 @@ public class Backend {
 //
 //    }
 
-    public void register(ClientConnectionState clientConnectionState) {
+    public void register(ControllerConnectionState controllerConnectionState) {
+        Objects.requireNonNull(controllerConnectionState.getControllerKey(), "ControllerKey");
         synchronized (clients) {
-            clients.add(clientConnectionState);
+            clients.add(controllerConnectionState);
+            byId.put(controllerConnectionState.getControllerKey(), controllerConnectionState);
         }
+        onRegister(controllerConnectionState);
     }
 
-    public void close(ClientConnectionState inactiveClient) {
+    protected void onRegister(ControllerConnectionState controllerConnectionState) {
+    }
+
+    public void close(ControllerConnectionState inactiveClient) {
         inactiveClient.close();
         synchronized (clients) {
             // in case of exception in the initialization phase we do not even add client into the the collection
             clients.remove(inactiveClient);
+            byId.remove(inactiveClient.getControllerKey());
         }
     }
 
-    public List<ClientConnectionState> getClients() {
+    public void close() {
+        isClosed = true;
+    }
+
+    public List<ControllerConnectionState> getClients() {
         synchronized (clients) {
             return new ArrayList<>(clients);
         }

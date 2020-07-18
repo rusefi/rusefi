@@ -15,6 +15,7 @@ import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -46,7 +47,18 @@ public class TestHelper {
     }
 
     @NotNull
-    public static IoStream createTestStream(int controllerPort, Logger logger) {
+    public static IoStream secureConnectToLocalhost(int controllerPort, Logger logger) {
+        IoStream targetEcuSocket;
+        try {
+            targetEcuSocket = new TcpIoStream(logger, SSLSocketFactory.getDefault().createSocket(ProxyClient.LOCALHOST, controllerPort));
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to connect to controller " + ProxyClient.LOCALHOST + ":" + controllerPort);
+        }
+        return targetEcuSocket;
+    }
+
+    @NotNull
+    public static IoStream connectToLocalhost(int controllerPort, Logger logger) {
         IoStream targetEcuSocket;
         try {
             targetEcuSocket = new TcpIoStream(logger, new Socket(ProxyClient.LOCALHOST, controllerPort));

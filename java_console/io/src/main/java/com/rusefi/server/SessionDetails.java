@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.Random;
 
 public class SessionDetails {
-    public static final String ONE_TIME_TOKEN = "oneTime";
-    public static final String AUTH_TOKEN = "authToken";
-    public static final String CONTROLLER = "controller";
+    private static final String ONE_TIME_TOKEN = "oneTime";
+    private static final String AUTH_TOKEN = "authToken";
+    private static final String CONTROLLER = "controller";
 
     private final ControllerInfo controllerInfo;
 
@@ -61,7 +61,6 @@ public class SessionDetails {
 
         return new SessionDetails(controllerInfo, authToken, oneTimeCode);
     }
-
 
     @Override
     public boolean equals(Object o) {
