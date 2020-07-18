@@ -11,9 +11,12 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.ProxyClient;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
@@ -29,11 +32,25 @@ import static org.junit.Assert.assertTrue;
 /**
  * integration test of the rusEFI online backend process
  * At the moment this test is very loose with timing it must be unreliable?
- *
+ * <p>
  * https://github.com/rusefi/web_backend/blob/master/documentation/rusEFI%20remote.png
  */
 public class ServerTest {
     private final static Logger logger = Logger.CONSOLE;
+
+    @Before
+    public void setTestCertificate() throws MalformedURLException {
+        File certificate = new File("certificate/test.jks");
+        if (!certificate.exists())
+            throw new IllegalStateException("Certificate not found " + certificate);
+
+        String file = certificate.toURI().toURL().getFile();
+        String password = "password";
+        System.setProperty("javax.net.ssl.keyStore", file);
+        System.setProperty("javax.net.ssl.keyStorePassword", password);
+        System.setProperty("javax.net.ssl.trustStore", file);
+        System.setProperty("javax.net.ssl.trustStorePassword", password);
+    }
 
     @Test
     public void testControllerSessionTimeout() throws InterruptedException, IOException {
@@ -219,7 +236,6 @@ public class ServerTest {
         assertEquals(Double.toString(value), clientValue);
 
         backend.close();
+        clientManager.stop();
     }
-
-
 }
