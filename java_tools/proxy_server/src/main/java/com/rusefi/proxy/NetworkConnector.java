@@ -16,7 +16,7 @@ import java.io.IOException;
  * Connector between rusEFI ECU and rusEFI server
  */
 public class NetworkConnector {
-    public static String RUSEFI_PROXY_HOSTNAME = "proxy.rusefi.com";
+    public static String RUSEFI_PROXY_HOSTNAME = System.getProperty("RUSEFI_PROXY_URL", "proxy.rusefi.com");
 
     @NotNull
     public static SessionDetails runNetworkConnector(int serverPortForControllers, IoStream targetEcuSocket, final Logger logger, String authToken) throws IOException {
@@ -42,8 +42,5 @@ public class NetworkConnector {
         };
         baseBroadcastingThread.start();
         return deviceSessionDetails;
-    }
-
-    public static void start(String[] strings) {
     }
 }

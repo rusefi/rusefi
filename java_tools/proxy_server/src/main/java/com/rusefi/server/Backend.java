@@ -28,6 +28,9 @@ import java.util.function.Function;
 public class Backend {
     public static final String VERSION_PATH = "/version";
     public static final String BACKEND_VERSION = "0.0001";
+    public static final int SERVER_PORT_FOR_APPLICATIONS = 8002;
+    public static final int SERVER_PORT_FOR_CONTROLLERS = 8003;
+    public static final int HTTP_PORT = 8001;
 
     private final FkRegex showOnlineUsers = new FkRegex(ProxyClient.LIST_PATH,
             (Take) req -> getUsersOnline()
@@ -226,10 +229,10 @@ public class Backend {
 
         Function<String, UserDetails> userDetailsFunction = new JsonUserDetailsResolver();
 
-        Backend backend = new Backend(userDetailsFunction, 8001, Logger.CONSOLE);
-        backend.runApplicationConnector(8002, parameter -> {
+        Backend backend = new Backend(userDetailsFunction, HTTP_PORT, Logger.CONSOLE);
+        backend.runApplicationConnector(SERVER_PORT_FOR_APPLICATIONS, parameter -> {
         });
-        backend.runControllerConnector(8003, parameter -> {
+        backend.runControllerConnector(SERVER_PORT_FOR_CONTROLLERS, parameter -> {
         });
 
     }

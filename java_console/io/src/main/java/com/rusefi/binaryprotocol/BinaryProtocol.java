@@ -110,6 +110,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         ));
     }
 
+    public IoStream getStream() {
+        return stream;
+    }
+
     public boolean isClosed;
 
     public CommunicationLoggingListener communicationLoggingListener = CommunicationLoggingListener.VOID;
