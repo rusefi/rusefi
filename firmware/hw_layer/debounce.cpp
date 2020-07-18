@@ -10,5 +10,6 @@ bool ButtonDebounce::readPin(brain_pin_e pin) {
     if ((timeNow - time) < threshold) {
         return false;
     }
+    time = timeNow;
     return efiReadPin(pin);
 }
