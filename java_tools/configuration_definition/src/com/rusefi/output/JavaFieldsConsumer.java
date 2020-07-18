@@ -1,5 +1,6 @@
 package com.rusefi.output;
 
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 
 import java.io.CharArrayWriter;
@@ -75,8 +76,11 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 javaFieldsWriter.write("\tpublic static final String[] " + configField.getType() + " = {" + enumOptions + "};" + EOL);
             }
 
+
             writeJavaFieldName(nameWithPrefix, tsPosition);
-            if (configField.getElementSize() == 1) {
+            if (isStringField(configField)) {
+                javaFieldsWriter.write("FieldType.STRING");
+            } else  if (configField.getElementSize() == 1) {
                 javaFieldsWriter.write("FieldType.INT8");
             } else if (configField.getElementSize() == 2) {
                 javaFieldsWriter.write("FieldType.INT16");
@@ -92,6 +96,11 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         tsPosition += configField.getArraySize() * configField.getElementSize();
 
         return tsPosition;
+    }
+
+    private boolean isStringField(ConfigField configField) {
+        String custom = state.tsCustomLine.get(configField.getType());
+        return custom != null && custom.toLowerCase().startsWith(IniFileModel.FIELD_TYPE_STRING);
     }
 
     public void handleEndStruct(ConfigStructure structure) throws IOException {
