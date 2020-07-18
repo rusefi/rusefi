@@ -18,6 +18,7 @@ public class Field {
 
     private final String name;
     private final int offset;
+    private final int stringSize;
     private final FieldType type;
     private final int bitOffset;
     private final String[] options;
@@ -36,8 +37,13 @@ public class Field {
     }
 
     public Field(String name, int offset, FieldType type, int bitOffset, String[] options) {
+        this(name, offset, 0, type, bitOffset, options);
+    }
+
+    public Field(String name, int offset, int stringSize, FieldType type, int bitOffset, String[] options) {
         this.name = name;
         this.offset = offset;
+        this.stringSize = stringSize;
         this.type = type;
         this.bitOffset = bitOffset;
         this.options = options;

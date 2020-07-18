@@ -115,7 +115,7 @@ public class ConfigFieldParserTest {
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
 
-        assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, FieldType.STRING);\n" +
+        assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING);\n" +
                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16);\n",
                 javaFieldsConsumer.getJavaFieldsWriter());
 
