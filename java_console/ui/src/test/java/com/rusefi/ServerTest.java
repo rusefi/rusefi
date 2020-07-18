@@ -190,8 +190,7 @@ public class ServerTest {
 
 
         // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-        IoStream targetEcuSocket = TestHelper.connectToLocalhost(controllerPort, logger);
-        SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(serverPortForControllers, targetEcuSocket, logger, MockRusEfiDevice.TEST_TOKEN_1);
+        SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, ProxyClient.LOCALHOST + ":" + controllerPort, serverPortForControllers);
 
         assertTrue(controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
