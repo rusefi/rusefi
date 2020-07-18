@@ -9,7 +9,6 @@ import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.rusEFISSLContext;
 
-import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 
 public class LocalApplicationProxy {

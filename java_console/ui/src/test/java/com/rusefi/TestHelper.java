@@ -11,11 +11,11 @@ import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 
-import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -50,7 +50,7 @@ public class TestHelper {
     public static IoStream secureConnectToLocalhost(int controllerPort, Logger logger) {
         IoStream targetEcuSocket;
         try {
-            targetEcuSocket = new TcpIoStream(logger, SSLSocketFactory.getDefault().createSocket(ProxyClient.LOCALHOST, controllerPort));
+            targetEcuSocket = new TcpIoStream(logger, rusEFISSLContext.getSSLSocket(ProxyClient.LOCALHOST, controllerPort));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to connect to controller " + ProxyClient.LOCALHOST + ":" + controllerPort);
         }
