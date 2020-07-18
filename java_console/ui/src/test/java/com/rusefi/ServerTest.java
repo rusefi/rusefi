@@ -9,16 +9,11 @@ import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.io.tcp.BinaryProtocolProxy;
-import com.rusefi.io.tcp.BinaryProtocolServer;
-import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.ProxyClient;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
@@ -28,13 +23,14 @@ import java.util.function.Function;
 import static com.rusefi.TestHelper.createIniField;
 import static com.rusefi.TestHelper.prepareImage;
 import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
-import static com.rusefi.tools.online.ProxyClient.LOCALHOST;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
  * integration test of the rusEFI online backend process
  * At the moment this test is very loose with timing it must be unreliable?
+ *
+ * https://github.com/rusefi/web_backend/blob/master/documentation/rusEFI%20remote.png
  */
 public class ServerTest {
     private final static Logger logger = Logger.CONSOLE;
@@ -91,9 +87,9 @@ public class ServerTest {
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
         Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
             @Override
-            public void onDisconnectApplication() {
+            protected void onDisconnectApplication() {
                 super.onDisconnectApplication();
-                disconnectedCountDownLatch.countDown();;
+                disconnectedCountDownLatch.countDown();
             }
         };
 
@@ -110,7 +106,7 @@ public class ServerTest {
     }
 
     @Test
-    public void testAuthenticatorConnect() throws InterruptedException, IOException {
+    public void testAuthenticatorRequestUnknownSession() throws InterruptedException, IOException {
         int serverPortForRemoteUsers = 6800;
 
         Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
@@ -120,9 +116,9 @@ public class ServerTest {
 
         Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
             @Override
-            public void onDisconnectApplication() {
+            protected void onDisconnectApplication() {
                 super.onDisconnectApplication();
-                disconnectedCountDownLatch.countDown();;
+                disconnectedCountDownLatch.countDown();
             }
         };
 
@@ -143,14 +139,22 @@ public class ServerTest {
     }
 
     @Test
-    @Ignore
     public void testRelayWorkflow() throws InterruptedException, IOException {
         ScalarIniField iniField = TestHelper.createIniField(Fields.CYLINDERSCOUNT);
         int value = 241;
+        int userId = 7;
 
-        Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
+        CountDownLatch controllerRegistered = new CountDownLatch(1);
+
+        Function<String, UserDetails> userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), userId);
         int httpPort = 8001;
-        Backend backend = new Backend(userDetailsResolver, httpPort, logger);
+        Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+            @Override
+            protected void onRegister(ControllerConnectionState controllerConnectionState) {
+                super.onRegister(controllerConnectionState);
+                controllerRegistered.countDown();
+            }
+        };
         int serverPortForControllers = 7001;
         int serverPortForRemoteUsers = 7003;
 
@@ -165,7 +169,7 @@ public class ServerTest {
         assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
 
-        // create virtual controller
+        // create virtual controller to which "rusEFI network connector" connects to
         int controllerPort = 7002;
         ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
         CountDownLatch controllerCreated = new CountDownLatch(1);
@@ -173,44 +177,23 @@ public class ServerTest {
         assertTrue(controllerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
 
-        // start network broadcaster to connect controller with backend since in real life controller has only local serial port it does not have network
+        // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
         IoStream targetEcuSocket = TestHelper.connectToLocalhost(controllerPort, logger);
-        HelloCommand.send(targetEcuSocket, logger);
-        String controllerSignature = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer(), logger);
+        SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(serverPortForControllers, targetEcuSocket, logger, MockRusEfiDevice.TEST_TOKEN_1);
 
-        SessionDetails deviceSessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, controllerSignature);
-
-        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(new Socket(LOCALHOST, serverPortForControllers),
-                deviceSessionDetails,
-                logger) {
-            @Override
-            protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
-                super.handleCommand(packet, stream);
-                targetEcuSocket.sendPacket(packet);
-
-                BinaryProtocolServer.Packet response = targetEcuSocket.readPacket();
-                stream.sendPacket(response);
-            }
-        };
-        baseBroadcastingThread.start();
+        assertTrue(controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
         SessionDetails authenticatorSessionDetails = new SessionDetails(deviceSessionDetails.getControllerInfo(), MockRusEfiDevice.TEST_TOKEN_3, deviceSessionDetails.getOneTimeToken());
-        ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, 123);
-
+        ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userId);
 
         // start authenticator
+
+        int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
         IoStream authenticatorToProxyStream = TestHelper.connectToLocalhost(serverPortForRemoteUsers, logger);
-        LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
-        localApplicationProxy.run(authenticatorToProxyStream);
-
-
-        // local port on which authenticator accepts connections from Tuner Studio
-        int authenticatorPort = 7004;
-        BinaryProtocolProxy.createProxy(authenticatorToProxyStream, authenticatorPort);
+        LocalApplicationProxy.startAndRun(logger, applicationRequest, authenticatorPort, authenticatorToProxyStream);
 
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
-
 
         // connect to proxy and read virtual controller through it
         LinkManager clientManager = new LinkManager(logger);

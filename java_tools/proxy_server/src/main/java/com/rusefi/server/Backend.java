@@ -3,6 +3,7 @@ package com.rusefi.server;
 import com.opensr5.Logger;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.tools.online.ProxyClient;
@@ -77,12 +78,13 @@ public class Backend {
                 return new Runnable() {
                     @Override
                     public void run() {
-                        IoStream stream = null;
+                        // connection from authenticator app which proxies for Tuner Studio
+                        IoStream applicationClientStream = null;
                         try {
-                            stream = new TcpIoStream(logger, applicationSocket);
+                            applicationClientStream = new TcpIoStream(logger, applicationSocket);
 
                             // authenticator pushed hello packet on connect
-                            String jsonString = HelloCommand.getHelloResponse(stream.getDataBuffer(), logger);
+                            String jsonString = HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer(), logger);
                             if (jsonString == null)
                                 return;
                             ApplicationRequest applicationRequest = ApplicationRequest.valueOf(jsonString);
@@ -94,13 +96,18 @@ public class Backend {
                                 state = byId.get(controllerKey);
                             }
                             if (state == null) {
-                                stream.close();
+                                applicationClientStream.close();
                                 onDisconnectApplication();
                                 logger.info("No controller for " + controllerKey);
+                                return;
                             }
+
+                            BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream);
+
                         } catch (Throwable e) {
-                            if (stream != null)
-                                stream.close();
+                            if (applicationClientStream != null)
+                                applicationClientStream.close();
+                            e.printStackTrace();
                             logger.error("Got error " + e);
                             onDisconnectApplication();
                         }
@@ -110,7 +117,7 @@ public class Backend {
         }, logger, parameter -> serverCreated.countDown());
     }
 
-    public void onDisconnectApplication() {
+    protected void onDisconnectApplication() {
         logger.info("Disconnecting application");
     }
 
@@ -126,7 +133,7 @@ public class Backend {
                             controllerConnectionState.requestControllerInfo();
 
                             register(controllerConnectionState);
-                            controllerConnectionState.runEndlessLoop();
+//                            controllerConnectionState.runEndlessLoop();
                         } catch (IOException e) {
                             close(controllerConnectionState);
                         }
@@ -179,6 +186,10 @@ public class Backend {
             clients.add(controllerConnectionState);
             byId.put(controllerConnectionState.getControllerKey(), controllerConnectionState);
         }
+        onRegister(controllerConnectionState);
+    }
+
+    protected void onRegister(ControllerConnectionState controllerConnectionState) {
     }
 
     public void close(ControllerConnectionState inactiveClient) {

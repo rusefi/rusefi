@@ -99,7 +99,7 @@ public class TcpCommunicationIntegrationTest {
 
         // connect proxy to virtual controller
         IoStream targetEcuSocket = TestHelper.connectToLocalhost(controllerPort, LOGGER);
-        BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort);
+        BinaryProtocolProxy.createProxy(LOGGER, targetEcuSocket, proxyPort);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 

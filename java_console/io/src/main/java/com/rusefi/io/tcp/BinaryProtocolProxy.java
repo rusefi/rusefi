@@ -2,26 +2,32 @@ package com.rusefi.io.tcp;
 
 import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.function.Function;
 
 import static com.rusefi.binaryprotocol.BinaryProtocolCommands.COMMAND_PROTOCOL;
+import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
 
 public class BinaryProtocolProxy {
-    public static void createProxy(IoStream targetEcuSocket, int serverProxyPort) {
+    public static void createProxy(Logger logger, IoStream targetEcuSocket, int serverProxyPort) {
         Function<Socket, Runnable> clientSocketRunnableFactory = new Function<Socket, Runnable>() {
             @Override
             public Runnable apply(Socket clientSocket) {
                 return new Runnable() {
                     @Override
                     public void run() {
-                        runProxy(targetEcuSocket, clientSocket);
+                        try {
+                            TcpIoStream clientStream = new TcpIoStream(logger, clientSocket);
+                            runProxy(targetEcuSocket, clientStream);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 };
             }
@@ -29,41 +35,31 @@ public class BinaryProtocolProxy {
         BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Logger.CONSOLE, null);
     }
 
-    private static void runProxy(IoStream targetEcu, Socket clientSocket) {
+    public static void runProxy(IoStream targetEcu, IoStream clientStream) throws IOException {
         /*
          * Each client socket is running on it's own thread
          */
-        try {
-            DataInputStream clientInputStream = new DataInputStream(clientSocket.getInputStream());
-            DataOutputStream clientOutputStream = new DataOutputStream(clientSocket.getOutputStream());
 
-            while (true) {
-                byte firstByte = clientInputStream.readByte();
-                if (firstByte == COMMAND_PROTOCOL) {
-                    BinaryProtocolServer.handleProtocolCommand(clientSocket);
-                    continue;
-                }
-                proxyClientRequestToController(clientInputStream, firstByte, targetEcu);
-
-                proxyControllerResponseToClient(targetEcu, clientOutputStream);
+        while (true) {
+            byte firstByte = clientStream.getDataBuffer().readByte();
+            if (firstByte == COMMAND_PROTOCOL) {
+                clientStream.write(TS_PROTOCOL.getBytes());
+                continue;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            proxyClientRequestToController(clientStream.getDataBuffer(), firstByte, targetEcu);
+
+            proxyControllerResponseToClient(targetEcu, clientStream);
         }
     }
 
-    public static void proxyControllerResponseToClient(IoStream targetInputStream, DataOutputStream clientOutputStream) throws IOException {
+    public static void proxyControllerResponseToClient(IoStream targetInputStream, IoStream clientOutputStream) throws IOException {
         BinaryProtocolServer.Packet packet = targetInputStream.readPacket();
 
         System.out.println("Relaying controller response length=" + packet.getPacket().length);
-        // todo: replace with IoStream#sendPacket?
-        clientOutputStream.writeShort(packet.getPacket().length);
-        clientOutputStream.write(packet.getPacket());
-        clientOutputStream.writeInt(packet.getCrc());
-        clientOutputStream.flush();
+        clientOutputStream.sendPacket(packet);
     }
 
-    private static void proxyClientRequestToController(DataInputStream in, byte firstByte, IoStream targetOutputStream) throws IOException {
+    private static void proxyClientRequestToController(IncomingDataBuffer in, byte firstByte, IoStream targetOutputStream) throws IOException {
         byte secondByte = in.readByte();
         int length = firstByte * 256 + secondByte;
 

@@ -43,6 +43,10 @@ public class ControllerConnectionState {
         }
     }
 
+    public IoStream getStream() {
+        return stream;
+    }
+
     public ControllerKey getControllerKey() {
         return controllerKey;
     }
