@@ -6,4 +6,4 @@ Test certificate generated with the following command
 
 Converted using
 
-keytool -importkeystore -srckeystore keystore.jks -destkeystore keystore.jks -deststoretype pkcs12
+keytool -importkeystore -srckeystore test.jks -destkeystore test_pkcs12.jks -deststoretype pkcs12
