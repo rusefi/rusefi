@@ -40,7 +40,7 @@ public class Field {
         this(name, offset, 0, type, bitOffset, options);
     }
 
-    public Field(String name, int offset, int stringSize, FieldType type, int bitOffset, String[] options) {
+    public Field(String name, int offset, int stringSize, FieldType type, int bitOffset, String... options) {
         this.name = name;
         this.offset = offset;
         this.stringSize = stringSize;
@@ -196,6 +196,10 @@ public class Field {
     public static Field create(String name, int offset, FieldType type, String... options) {
         Field field = new Field(name, offset, type, options);
         return field;
+    }
+
+    public static Field create(String name, int offset, int stringSize, FieldType type) {
+        return new Field(name, offset, stringSize, type, 0);
     }
 
     public static Field create(String name, int offset, FieldType type) {
