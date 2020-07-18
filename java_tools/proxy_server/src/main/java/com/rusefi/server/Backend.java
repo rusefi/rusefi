@@ -13,6 +13,7 @@ import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
 import org.takes.facets.fork.TkFork;
 import org.takes.http.FtBasic;
+import org.takes.rs.RsHtml;
 import org.takes.rs.RsJson;
 
 import javax.json.Json;
@@ -21,6 +22,7 @@ import javax.json.JsonObject;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 public class Backend {
@@ -42,6 +44,7 @@ public class Backend {
     //    private final int clientTimeout;
     private final UserDetailsResolver userDetailsResolver;
     private final Logger logger;
+    public final static AtomicLong totalSessions = new AtomicLong();
 
     public Backend(UserDetailsResolver userDetailsResolver, int httpPort, Logger logger) {
 //        this.clientTimeout = clientTimeout;
@@ -56,7 +59,11 @@ public class Backend {
                         new TkFork(showOnlineUsers,
                                 Monitoring.showStatistics,
                                 new FkRegex(VERSION_PATH, BACKEND_VERSION),
-                                new FkRegex("/", "<a href='https://rusefi.com/online/'>rusEFI Online</a>")
+                                new FkRegex("/", new RsHtml("<html><body>\n" +
+                                        "<a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
+                                        "<br/>\n" +
+                                        "<a href='/status'>Status</a>\n" +
+                                        "</body></html>\n"))
                         ), httpPort
                 ).start(() -> isClosed);
                 logger.info("Shutting down backend on port " + httpPort);
@@ -85,6 +92,7 @@ public class Backend {
                 return new Runnable() {
                     @Override
                     public void run() {
+                        totalSessions.incrementAndGet();
                         // connection from authenticator app which proxies for Tuner Studio
                         IoStream applicationClientStream = null;
                         try {
@@ -136,6 +144,7 @@ public class Backend {
                 return new Runnable() {
                     @Override
                     public void run() {
+                        totalSessions.incrementAndGet();
                         ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, logger, getUserDetailsResolver());
                         try {
                             controllerConnectionState.requestControllerInfo();

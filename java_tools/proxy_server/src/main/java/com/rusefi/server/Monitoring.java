@@ -27,6 +27,8 @@ public class Monitoring {
         builder.add("CPU_Load", operatingSystemMXBean.getSystemLoadAverage());
         builder.add("free_ram", formatSize(Runtime.getRuntime().freeMemory()));
         builder.add("max_ram", formatSize(Runtime.getRuntime().maxMemory()));
+        builder.add("threads", Thread.getAllStackTraces().size());
+        builder.add("sessions", Backend.totalSessions.get());
 
         return new RsJson(builder.build());
     }
