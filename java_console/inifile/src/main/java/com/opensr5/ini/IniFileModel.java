@@ -16,7 +16,7 @@ public class IniFileModel {
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     private static final String SECTION_PAGE = "page";
     private static final String FIELD_TYPE_SCALAR = "scalar";
-    private static final String FIELD_TYPE_STRING = "string";
+    public static final String FIELD_TYPE_STRING = "string";
     private static final String FIELD_TYPE_ARRAY = "array";
     private static final String FIELD_TYPE_BITS = "bits";
 
