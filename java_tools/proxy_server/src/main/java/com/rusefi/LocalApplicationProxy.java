@@ -7,6 +7,7 @@ import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ApplicationRequest;
+import com.rusefi.server.rusEFISSLContext;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class LocalApplicationProxy {
      * @param authenticatorPort local port we would bind for TunerStudio to connect to
      */
     static void startAndRun(Logger logger, int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int authenticatorPort) throws IOException {
-        IoStream authenticatorToProxyStream = new TcpIoStream(logger, SSLSocketFactory.getDefault().createSocket(NetworkConnector.RUSEFI_PROXY_HOSTNAME, serverPortForRemoteUsers));
+        IoStream authenticatorToProxyStream = new TcpIoStream(logger, rusEFISSLContext.getSSLSocket(NetworkConnector.RUSEFI_PROXY_HOSTNAME, serverPortForRemoteUsers));
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
         localApplicationProxy.run(authenticatorToProxyStream);
 

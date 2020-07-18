@@ -7,8 +7,8 @@ import com.rusefi.binaryprotocol.*;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.server.rusEFISSLContext;
 
-import javax.net.ssl.SSLServerSocketFactory;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,7 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
-import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
+import static com.rusefi.config.generated.Fields.TS_RESPONSE_BURN_OK;
 
 /**
  * This class makes rusEfi console a proxy for other tuning software, this way we can have two tools connected via same
@@ -35,13 +36,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     public AtomicInteger unknownCommands = new AtomicInteger();
 
-    public static final Function<Integer, ServerSocket> SECURE_SOCKET_FACTORY = port -> {
-        try {
-            return SSLServerSocketFactory.getDefault().createServerSocket(port);
-        } catch (IOException e) {
-            throw new IllegalStateException("Error binding secure server socket " + port, e);
-        }
-    };
+    public static final Function<Integer, ServerSocket> SECURE_SOCKET_FACTORY = rusEFISSLContext::getSSLServerSocket;
 
     public static final Function<Integer, ServerSocket> PLAIN_SOCKET_FACTORY = port -> {
         try {
@@ -79,7 +74,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
      *
      * @param port                         server port to accept connections
      * @param threadName
-     * @param socketRunnableFactory  method to invoke on a new thread for each new client connection
+     * @param socketRunnableFactory        method to invoke on a new thread for each new client connection
      * @param logger
      * @param serverSocketCreationCallback this callback is invoked once we open the server socket
      */

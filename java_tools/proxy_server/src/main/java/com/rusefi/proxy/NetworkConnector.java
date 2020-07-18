@@ -5,12 +5,11 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.proxy.BaseBroadcastingThread;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
+import com.rusefi.server.rusEFISSLContext;
 import org.jetbrains.annotations.NotNull;
 
-import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 
 /**
@@ -29,7 +28,7 @@ public class NetworkConnector {
 
         SessionDetails deviceSessionDetails = new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
 
-        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(SSLSocketFactory.getDefault().createSocket(RUSEFI_PROXY_HOSTNAME, serverPortForControllers),
+        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(rusEFISSLContext.getSSLSocket(RUSEFI_PROXY_HOSTNAME, serverPortForControllers),
                 deviceSessionDetails,
                 logger) {
             @Override
