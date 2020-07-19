@@ -240,7 +240,7 @@ void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 		if (prevOutputName == outputName
 				&& engineConfiguration->injectionMode != IM_SIMULTANEOUS
 				&& engineConfiguration->injectionMode != IM_SINGLE_POINT) {
-			warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event %d %s", getRevolutionCounter(), outputName);
+			warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event revCounter=%d %s", getRevolutionCounter(), outputName);
 		}
 		prevOutputName = outputName;
 	}
@@ -248,8 +248,8 @@ void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		InjectorOutputPin *output = event->outputs[0];
-		printf("handleFuelInjectionEvent fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
-				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM_VALUE)));
+		printf("handleFuelInjectionEvent fuelout %s injection_duration %dus engineCycleDuration=%.1fms\t\n", output->name, (int)durationUs,
+				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM_VALUE)) / 1000.0);
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
@@ -257,7 +257,7 @@ void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 #if EFI_PRINTF_FUEL_DETAILS
 		if (printFuelDebug) {
 			InjectorOutputPin *output = event->outputs[0];
-			printf("handleFuelInjectionEvent still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
+			printf("handleFuelInjectionEvent still used %s now=%.1fms\r\n", output->name, (int)getTimeNowUs() / 1000.0);
 		}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 		return; // this InjectionEvent is still needed for an extremely long injection scheduled previously

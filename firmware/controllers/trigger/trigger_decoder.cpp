@@ -108,6 +108,7 @@ EXTERN_ENGINE;
 
 #if ! EFI_PROD_CODE
 bool printTriggerDebug = false;
+bool printTriggerTrace = false;
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
@@ -281,7 +282,7 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 	(isFirstEvent ? 0 : (nowNt) - toothed_previous_time)
 
 #if EFI_UNIT_TEST
-#define PRINT_INC_INDEX 		if (printTriggerDebug) {\
+#define PRINT_INC_INDEX 		if (printTriggerTrace) {\
 		printf("nextTriggerEvent index=%d\r\n", currentCycle.current_index); \
 		}
 #else
@@ -430,7 +431,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 
 	if (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap())) {
 #if EFI_UNIT_TEST
-		if (printTriggerDebug) {
+		if (printTriggerTrace) {
 			printf("%s isLessImportant %s now=%d index=%d\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
 					getTrigger_event_e(signal),
@@ -447,7 +448,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 	} else {
 
 #if EFI_UNIT_TEST
-		if (printTriggerDebug) {
+		if (printTriggerTrace) {
 			printf("%s event %s %d\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
 					getTrigger_event_e(signal),
@@ -462,7 +463,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 //	scheduleMsg(&logger, "from %.2f to %.2f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, toothDurations[0], shaftPositionState->toothDurations[1]);
 //	scheduleMsg(&logger, "ratio %.2f", 1.0 * toothDurations[0]/ shaftPositionState->toothDurations[1]);
 #else
-		if (printTriggerDebug) {
+		if (printTriggerTrace) {
 			printf("decodeTriggerEvent ratio %.2f: current=%d previous=%d\r\n", 1.0 * toothDurations[0] / toothDurations[1],
 					toothDurations[0], toothDurations[1]);
 		}
@@ -559,7 +560,7 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 				}
 			}
 #else
-			if (printTriggerDebug) {
+			if (printTriggerTrace) {
 				float gap = 1.0 * toothDurations[0] / toothDurations[1];
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
@@ -585,8 +586,8 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 			 */
 
 #if EFI_UNIT_TEST
-			if (printTriggerDebug) {
-				printf("sync=%d index=%d size=%d\r\n",
+			if (printTriggerTrace) {
+				printf("decodeTriggerEvent sync=%d index=%d size=%d\r\n",
 					shaft_is_synchronized,
 					currentCycle.current_index,
 					triggerShape->getSize());
@@ -598,8 +599,8 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex);
 
 #if EFI_UNIT_TEST
-			if (printTriggerDebug) {
-				printf("decodeTriggerEvent isSynchronizationPoint=%d index=%d size=%d\r\n",
+			if (printTriggerTrace) {
+				printf("decodeTriggerEvent decodeTriggerEvent isSynchronizationPoint=%d index=%d size=%d\r\n",
 						isSynchronizationPoint,
 						currentCycle.current_index,
 						triggerShape->getSize());
@@ -609,8 +610,8 @@ void TriggerState::decodeTriggerEvent(TriggerWaveform *triggerShape, const Trigg
 		}
 
 #if EFI_UNIT_TEST
-		if (printTriggerDebug) {
-			printf("%s isSynchronizationPoint=%d index=%d %s\r\n",
+		if (printTriggerTrace) {
+			printf("decodeTriggerEvent %s isSynchronizationPoint=%d index=%d %s\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
 					isSynchronizationPoint, currentCycle.current_index,
 					getTrigger_event_e(signal));
