@@ -3,13 +3,12 @@ package com.rusefi.io.tcp;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.Listener;
-import com.rusefi.binaryprotocol.BinaryProtocolCommands;
-import com.rusefi.binaryprotocol.BinaryProtocolState;
-import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.binaryprotocol.IoHelper;
+import com.rusefi.binaryprotocol.*;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.server.rusEFISSLContext;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -20,7 +19,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
-import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
+import static com.rusefi.config.generated.Fields.TS_RESPONSE_BURN_OK;
 
 /**
  * This class makes rusEfi console a proxy for other tuning software, this way we can have two tools connected via same
@@ -36,6 +36,17 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     private final Logger logger;
 
     public AtomicInteger unknownCommands = new AtomicInteger();
+
+    public static final Function<Integer, ServerSocket> SECURE_SOCKET_FACTORY = rusEFISSLContext::getSSLServerSocket;
+
+    public static final Function<Integer, ServerSocket> PLAIN_SOCKET_FACTORY = port -> {
+        try {
+            return new ServerSocket(port);
+        } catch (IOException e) {
+            throw new IllegalStateException("Error binding server socket " + port, e);
+        }
+    };
+
 
     public BinaryProtocolServer(Logger logger) {
         this.logger = logger;
@@ -64,35 +75,28 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
      *
      * @param port                         server port to accept connections
      * @param threadName
-     * @param clientSocketRunnableFactory  method to invoke on a new thread for each new client connection
+     * @param socketRunnableFactory        method to invoke on a new thread for each new client connection
      * @param logger
      * @param serverSocketCreationCallback this callback is invoked once we open the server socket
      */
-    public static void tcpServerSocket(int port, String threadName, Function<Socket, Runnable> clientSocketRunnableFactory, final Logger logger, Listener serverSocketCreationCallback) {
-        Runnable runnable = new Runnable() {
-            @SuppressWarnings("InfiniteLoopStatement")
-            @Override
-            public void run() {
-                ServerSocket serverSocket;
-                try {
-                    serverSocket = new ServerSocket(port, 1);
-                } catch (IOException e) {
-                    logger.error("Error binding server socket" + e);
-                    return;
-                }
-                if (serverSocketCreationCallback != null)
-                    serverSocketCreationCallback.onResult(null);
+    public static void tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, final Logger logger, Listener serverSocketCreationCallback) {
+        tcpServerSocket(logger, socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
+    }
 
-                try {
-                    while (true) {
-                        // Wait for a connection
-                        final Socket clientSocket = serverSocket.accept();
-                        logger.info("Binary protocol proxy port connection");
-                        new Thread(clientSocketRunnableFactory.apply(clientSocket), "proxy connection").start();
-                    }
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
+    public static void tcpServerSocket(Logger logger, Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
+        ServerSocket serverSocket = nonSecureSocketFunction.apply(port);
+        if (serverSocketCreationCallback != null)
+            serverSocketCreationCallback.onResult(null);
+        Runnable runnable = () -> {
+            try {
+                while (true) {
+                    // Wait for a connection
+                    final Socket clientSocket = serverSocket.accept();
+                    logger.info("Binary protocol proxy port connection");
+                    new Thread(clientSocketRunnableFactory.apply(clientSocket), "proxy connection").start();
                 }
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
             }
         };
         new Thread(runnable, threadName).start();
@@ -100,7 +104,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     @SuppressWarnings("InfiniteLoopStatement")
     private void runProxy(LinkManager linkManager, Socket clientSocket) throws IOException {
-        TcpIoStream stream = new TcpIoStream(logger, clientSocket);
+        TcpIoStream stream = new TcpIoStream("[proxy] ", logger, clientSocket);
 
         IncomingDataBuffer in = stream.getDataBuffer();
 
@@ -126,10 +130,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
             byte command = payload[0];
 
-            System.out.println("Got [" + (char) command + "/" + command + "] command");
+            System.out.println("Got command " + BinaryProtocol.findCommand(command));
 
             if (command == Fields.TS_HELLO_COMMAND) {
-                new HelloCommand(logger, Fields.TS_SIGNATURE).handle(packet, stream);
+                new HelloCommand(logger, Fields.TS_SIGNATURE).handle(stream);
             } else if (command == COMMAND_PROTOCOL) {
 //                System.out.println("Ignoring crc F command");
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes(), logger);
@@ -155,7 +159,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 int offset = swap16(dis.readShort());
                 int count = swap16(dis.readShort());
-                System.out.println("TS_OUTPUT_COMMAND offset=" + offset + "/count=" + count);
+                logger.info("TS_OUTPUT_COMMAND offset=" + offset + "/count=" + count);
 
                 byte[] response = new byte[1 + count];
                 response[0] = (byte) TS_OK.charAt(0);
@@ -171,7 +175,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             } else {
                 unknownCommands.incrementAndGet();
                 new IllegalStateException().printStackTrace();
-                logger.info("Error: unknown command " + (char) command + "/" + command);
+                logger.info("Error: unexpected " + BinaryProtocol.findCommand(command));
             }
         }
     }
@@ -207,10 +211,9 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         int crc = in.readInt();
         int fromPacket = IoHelper.getCrc32(packet);
         if (crc != fromPacket)
-            throw new IllegalStateException("CRC mismatch " + crc + " vs " + fromPacket);
+            throw new IllegalStateException("CRC mismatch crc=" + Integer.toString(crc, 16) + " vs packet=" + Integer.toString(fromPacket, 16) + " len=" + packet.length + " data: " + IoStream.printHexBinary(packet));
         return new Packet(packet, crc);
     }
-
 
     public interface Handler {
         void handle() throws IOException;

@@ -22,6 +22,7 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
 @ThreadSafe
 public class IncomingDataBuffer {
     private static final int BUFFER_SIZE = 32768;
+    private static String loggingPrefix;
     /**
      * buffer for response bytes from controller
      */
@@ -33,7 +34,8 @@ public class IncomingDataBuffer {
         this.logger = logger;
     }
 
-    public static IncomingDataBuffer createDataBuffer(IoStream stream, Logger logger) {
+    public static IncomingDataBuffer createDataBuffer(String loggingPrefix, IoStream stream, Logger logger) {
+        IncomingDataBuffer.loggingPrefix = loggingPrefix;
         IncomingDataBuffer incomingData = new IncomingDataBuffer(logger);
         stream.setInputListener(incomingData::addData);
         return incomingData;
@@ -49,13 +51,13 @@ public class IncomingDataBuffer {
             return null;
 
         int packetSize = swap16(getShort());
-        logger.trace("Got packet size " + packetSize);
+        logger.trace( loggingPrefix + "Got packet size " + packetSize);
         if (packetSize < 0)
             return null;
         if (!allowLongResponse && packetSize > Math.max(BinaryProtocolCommands.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
             return null;
 
-        isTimeout = waitForBytes(msg + " body", start, packetSize + 4);
+        isTimeout = waitForBytes(loggingPrefix + msg + " body", start, packetSize + 4);
         if (isTimeout)
             return null;
 
@@ -148,28 +150,28 @@ public class IncomingDataBuffer {
     }
 
     public byte readByte() throws IOException {
-        boolean timeout = waitForBytes("readByte", System.currentTimeMillis(), 1);
+        boolean timeout = waitForBytes(loggingPrefix + "readByte", System.currentTimeMillis(), 1);
         if (timeout)
             throw new IOException("Timeout in readByte");
         return (byte) getByte();
     }
 
     public int readInt() throws EOFException {
-        boolean timeout = waitForBytes("readInt", System.currentTimeMillis(), 4);
+        boolean timeout = waitForBytes(loggingPrefix + "readInt", System.currentTimeMillis(), 4);
         if (timeout)
             throw new IllegalStateException("Timeout in readByte");
         return swap32(getInt());
     }
 
     public short readShort() throws EOFException {
-        boolean timeout = waitForBytes("readShort", System.currentTimeMillis(), 2);
+        boolean timeout = waitForBytes(loggingPrefix + "readShort", System.currentTimeMillis(), 2);
         if (timeout)
             throw new IllegalStateException("Timeout in readShort");
         return (short) swap16(getShort());
     }
 
     public int read(byte[] packet) {
-        boolean timeout = waitForBytes("read", System.currentTimeMillis(), packet.length);
+        boolean timeout = waitForBytes(loggingPrefix + "read", System.currentTimeMillis(), packet.length);
         if (timeout)
             throw new IllegalStateException("Timeout while waiting " + packet.length);
         getData(packet);

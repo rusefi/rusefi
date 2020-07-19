@@ -108,7 +108,7 @@ public class TuneUploder {
         }
 
         Page page = msq.findPage();
-        page.constant.add(new Constant(parameterName, cp.getUnits(), value));
+        page.constant.add(new Constant(parameterName, cp.getUnits(), value, Integer.toString(cp.getDecimalPlaces())));
     }
 
     private static String getArrayValue(double[][] arrayValues) {

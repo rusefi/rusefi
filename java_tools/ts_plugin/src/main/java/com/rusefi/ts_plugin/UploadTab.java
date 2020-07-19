@@ -11,7 +11,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ts_plugin.util.ManifestHelper;
-import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.util.URLLabel;
@@ -21,54 +20,50 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Date;
 import java.util.Map;
 import java.util.function.Supplier;
 
-/**
- * TsPlugin launcher creates an instance of this class via reflection.
- */
-public class PluginEntry implements TsPluginBody {
+public class UploadTab {
+    private final JComponent content = new JPanel(new VerticalFlowLayout());
+    // 2 seconds aggregation by default
+    private static final int AUTO_UPDATE_AGGREGATION = Integer.parseInt(System.getProperty("autoupload.aggregation", "2000"));
+
     private static final String REO_URL = "https://rusefi.com/online/";
     private final AuthTokenPanel tokenPanel = new AuthTokenPanel();
-    private final JComponent content = new JPanel(new VerticalFlowLayout());
 
+    private final Supplier<ControllerAccess> controllerAccessSupplier;
 
     private final UploadView uploadView = new UploadView();
 
     private final JButton upload = new JButton("Upload Current Tune");
-    private final Supplier<ControllerAccess> controllerAccessSupplier;
 
     private String currentConfiguration;
 
     private UploaderStatus uploaderStatus = new UploaderStatus();
 
-    private final Timer timer = new Timer(1000 /* one second */, new AbstractAction() {
+    private final Timer timer = new Timer(AUTO_UPDATE_AGGREGATION, new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Timer! " + System.currentTimeMillis() + " " + timer + " " + e);
+//            System.out.println("Timer! " + System.currentTimeMillis() + " " + timer + " " + e);
+            if (UploadView.isAutoUpload()) {
+                System.out.println(new Date() + ": enqueue tune");
+                UploadQueue.enqueue(controllerAccessSupplier.get(), currentConfiguration);
+            }
         }
     });
 
     private final ControllerParameterChangeListener listener;
 
-    /**
-     * the real constructor - this one is invoked via reflection
-     */
-    public PluginEntry() {
-        this(ControllerAccess::getInstance);
-    }
+    public UploadTab(Supplier<ControllerAccess> controllerAccessSupplier) {
+        this.controllerAccessSupplier = controllerAccessSupplier;
 
-    public PluginEntry(Supplier<ControllerAccess> controllerAccessSupplier) {
-        System.out.println("PluginEntry init " + this);
         timer.stop();
         timer.setRepeats(false);
-        this.controllerAccessSupplier = controllerAccessSupplier;
+        UploadQueue.start();
         listener = parameterName -> {
             //            System.out.println("Parameter value changed " + parameterName);
             timer.restart();
-            if (UploadView.isAutoUpload()) {
-                UploadQueue.enqueue(controllerAccessSupplier.get(), currentConfiguration);
-            }
         };
         upload.setBackground(new Color(0x90EE90));
 
@@ -140,7 +135,7 @@ public class PluginEntry implements TsPluginBody {
             }
         });
 
-        content.add(new JLabel(ManifestHelper.getBuildTimestamp()));
+        content.add(new JLabel("Version " + ManifestHelper.getBuildTimestamp()));
 //        content.add(new JLabel("Active project: " + getConfigurationName()));
 
 
@@ -151,6 +146,7 @@ public class PluginEntry implements TsPluginBody {
         content.add(new JLabel(LOGO));
         content.add(tokenPanel.getContent());
         content.add(new URLLabel(REO_URL));
+
     }
 
     /**
@@ -166,6 +162,12 @@ public class PluginEntry implements TsPluginBody {
         updateUploadEnabled();
 
         currentConfiguration = configurationName;
+    }
+
+    private void updateUploadEnabled() {
+        uploadView.update(uploaderStatus);
+
+        upload.setEnabled(uploaderStatus.isTuneOk() && uploaderStatus.isProjectIsOk());
     }
 
     private void subscribeToUpdates(String configurationName, ControllerAccess controllerAccess) {
@@ -185,31 +187,6 @@ public class PluginEntry implements TsPluginBody {
         }
     }
 
-    public static boolean isEmpty(Constant constant) {
-        if (constant == null)
-            return true;
-        return isEmpty(constant.getValue());
-    }
-
-    private void updateUploadEnabled() {
-        uploadView.update(uploaderStatus);
-
-        upload.setEnabled(uploaderStatus.isTuneOk() && uploaderStatus.isProjectIsOk());
-    }
-
-    private static boolean isEmpty(String value) {
-        return value == null || value.trim().length() == 0;
-    }
-
-    @Override
-    public JComponent getContent() {
-        return content;
-    }
-/*
-    public void close() {
-        PersistentConfiguration.getConfig().save();
-    }
-*/
     private String getConfigurationName() {
         ControllerAccess controllerAccess = controllerAccessSupplier.get();
         if (controllerAccess == null) {
@@ -222,13 +199,7 @@ public class PluginEntry implements TsPluginBody {
         return configurationNames[0];
     }
 
-    /**
-     * this method is invoked by refection
-     *
-     * @see TsPluginBody#GET_VERSION
-     */
-    @SuppressWarnings("unused")
-    public static String getVersion() {
-        return ManifestHelper.getVersion();
+    public JComponent getContent() {
+        return content;
     }
 }

@@ -16,6 +16,14 @@ public interface WriteStream {
         write(new byte[]{value});
     }
 
+    default void writeShort(int v) throws IOException {
+        byte[] array = new byte[2];
+
+        array[0] = (byte) ((v >>> 8) & 0xFF);
+        array[1] = (byte) ((v >>> 0) & 0xFF);
+        write(array);
+    }
+
     default void writeInt(int v) throws IOException {
         byte[] array = new byte[4];
 

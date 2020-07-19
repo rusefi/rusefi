@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../../java_console/autoupdate/autoupdate.iml" filepath="$PROJECT_DIR$/../../java_console/autoupdate/autoupdate.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../java_console/inifile/inifile.iml" filepath="$PROJECT_DIR$/../../java_console/inifile/inifile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../java_console/io/io.iml" filepath="$PROJECT_DIR$/../../java_console/io/io.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../java_console/logging/logging.iml" filepath="$PROJECT_DIR$/../../java_console/logging/logging.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../java_console/logging-api/logging-api.iml" filepath="$PROJECT_DIR$/../../java_console/logging-api/logging-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../java_console/models/models.iml" filepath="$PROJECT_DIR$/../../java_console/models/models.iml" />

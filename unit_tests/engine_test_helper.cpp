@@ -19,6 +19,8 @@
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
+extern bool printTriggerDebug;
+extern bool printFuelDebug;
 
 EngineTestHelperBase::EngineTestHelperBase() { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
@@ -138,6 +140,9 @@ void EngineTestHelper::moveTimeForwardMs(float deltaTimeMs) {
 }
 
 void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
+	if (printTriggerDebug || printFuelDebug) {
+		printf("moveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
+	}
 	timeNowUs += deltaTimeUs;
 }
 

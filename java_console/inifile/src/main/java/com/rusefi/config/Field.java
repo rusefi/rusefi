@@ -18,6 +18,7 @@ public class Field {
 
     private final String name;
     private final int offset;
+    private final int stringSize;
     private final FieldType type;
     private final int bitOffset;
     private final String[] options;
@@ -36,8 +37,13 @@ public class Field {
     }
 
     public Field(String name, int offset, FieldType type, int bitOffset, String[] options) {
+        this(name, offset, 0, type, bitOffset, options);
+    }
+
+    public Field(String name, int offset, int stringSize, FieldType type, int bitOffset, String... options) {
         this.name = name;
         this.offset = offset;
+        this.stringSize = stringSize;
         this.type = type;
         this.bitOffset = bitOffset;
         this.options = options;
@@ -192,8 +198,21 @@ public class Field {
         return field;
     }
 
+    public static Field create(String name, int offset, int stringSize, FieldType type) {
+        return new Field(name, offset, stringSize, type, 0);
+    }
+
     public static Field create(String name, int offset, FieldType type) {
         Field field = new Field(name, offset, type);
         return field;
+    }
+
+    public String getStringValue(ConfigurationImage image) {
+        if (type != STRING)
+            throw new IllegalStateException("Not a string parameter " + name);
+        ByteBuffer bb = image.getByteBuffer(offset, stringSize);
+        byte[] bytes = new byte[stringSize];
+        bb.get(bytes);
+        return new String(bytes).trim();
     }
 }

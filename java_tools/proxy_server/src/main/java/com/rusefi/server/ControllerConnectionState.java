@@ -11,12 +11,11 @@ import com.rusefi.io.tcp.TcpIoStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.function.Function;
 
-public class ClientConnectionState {
+public class ControllerConnectionState {
     private final Socket clientSocket;
     private final Logger logger;
-    private final Function<String, UserDetails> userDetailsResolver;
+    private final UserDetailsResolver userDetailsResolver;
 
     private boolean isClosed;
     private IoStream stream;
@@ -29,23 +28,27 @@ public class ClientConnectionState {
      * user info from rusEFI database based on auth token
      */
     private UserDetails userDetails;
+    private ControllerKey controllerKey;
 
-    public ClientConnectionState(Socket clientSocket, Logger logger, Function<String, UserDetails> userDetailsResolver) {
+    public ControllerConnectionState(Socket clientSocket, Logger logger, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
         this.logger = logger;
         this.userDetailsResolver = userDetailsResolver;
         try {
-            stream = new TcpIoStream(logger, clientSocket);
+            stream = new TcpIoStream("[controller] ", logger, clientSocket);
             incomingData = stream.getDataBuffer();
         } catch (IOException e) {
             close();
         }
     }
 
-//    public long getLastActivityTimestamp() {
-//        return lastActivityTimestamp;
-//    }
+    public IoStream getStream() {
+        return stream;
+    }
 
+    public ControllerKey getControllerKey() {
+        return controllerKey;
+    }
 
     public boolean isClosed() {
         return isClosed;
@@ -67,6 +70,10 @@ public class ClientConnectionState {
 
         logger.info(sessionDetails.getAuthToken() + " New client: " + sessionDetails.getControllerInfo());
         userDetails = userDetailsResolver.apply(sessionDetails.getAuthToken());
+        if (userDetails == null) {
+            throw new IOException("Unable to resolve " + sessionDetails.getAuthToken());
+        }
+        controllerKey = new ControllerKey(userDetails.getUserId(), sessionDetails.getControllerInfo());
         logger.info("User " + userDetails);
     }
 
@@ -91,14 +98,18 @@ public class ClientConnectionState {
     public void runEndlessLoop() throws IOException {
 
         while (true) {
-            byte[] commandPacket = GetOutputsCommand.createRequest();
-
-            stream.sendPacket(commandPacket, logger);
-
-            byte[] packet = incomingData.getPacket(logger, "msg", true);
-            if (packet == null)
-                throw new IOException("No response");
+            getOutputs();
 
         }
+    }
+
+    public void getOutputs() throws IOException {
+        byte[] commandPacket = GetOutputsCommand.createRequest();
+
+        stream.sendPacket(commandPacket, logger);
+
+        byte[] packet = incomingData.getPacket(logger, "msg", true);
+        if (packet == null)
+            throw new IOException("No response");
     }
 }

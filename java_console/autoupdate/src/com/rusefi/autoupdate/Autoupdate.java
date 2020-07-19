@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -42,7 +43,7 @@ public class Autoupdate {
     private static void startConsole(String[] args) {
         try {
             // we want to make sure that files are available to write so we use reflection to get lazy class initialization
-            System.out.println("Running rusEFI console");
+            System.out.println("Running rusEFI console with " + Arrays.toString(args));
             // since we are overriding file we cannot just use static java classpath while launching
             URLClassLoader jarClassLoader = AutoupdateUtil.getClassLoaderByJar(RUSEFI_CONSOLE_JAR);
 

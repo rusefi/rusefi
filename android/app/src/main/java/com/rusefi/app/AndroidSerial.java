@@ -34,7 +34,12 @@ public class AndroidSerial implements IoStream {
 
     public AndroidSerial(UsbSerialPort usbSerialPort, Logger logger) {
         this.usbSerialPort = usbSerialPort;
-        dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
+        dataBuffer = IncomingDataBuffer.createDataBuffer("", this, logger);
+    }
+
+    @Override
+    public String getLoggingPrefix() {
+        return "";
     }
 
     @Override
@@ -45,7 +50,7 @@ public class AndroidSerial implements IoStream {
     @Override
     public void setInputListener(DataListener listener) {
         ByteReader reader = buffer -> usbSerialPort.read(buffer, 5000);
-        ByteReader.runReaderLoop(listener, reader, Logger.CONSOLE);
+        ByteReader.runReaderLoop("", listener, reader, Logger.CONSOLE);
     }
 
     @Override

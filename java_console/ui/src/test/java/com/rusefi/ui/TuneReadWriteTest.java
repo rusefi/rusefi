@@ -6,6 +6,7 @@ import com.opensr5.ini.field.IniField;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * from IDEA this unit test needs to be executed with "empty" working directory
@@ -32,6 +34,11 @@ public class TuneReadWriteTest {
     public void testCompareBinaryToTSTune() throws Exception {
         Msq tsTune = Msq.readTune(PATH + "CurrentTune.msq");
         System.out.println(tsTune);
+        assertNotNull("signature", tsTune.getVersionInfo().getSignature());
+
+        Constant flow = tsTune.findPage().findParameter("injector_flow");
+        assertNotNull(flow);
+        assertEquals("2", flow.getDigits());
 
         ConfigurationImage tsBinaryData = tsTune.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
 
@@ -53,8 +60,17 @@ public class TuneReadWriteTest {
         Msq tuneFromBinary = MsqFactory.valueOf(fileBinaryData);
         tuneFromBinary.writeXmlFile(fileName);
 
+        Constant batteryCorrection = tuneFromBinary.findPage().findParameter("injector_battLagCorrBins");
+        assertNotNull(batteryCorrection);
+        assertEquals("2", batteryCorrection.getDigits());
+
+        Constant flow = tuneFromBinary.findPage().findParameter("injector_flow");
+        assertNotNull(flow);
+        assertEquals("2", flow.getDigits());
+
         // and now reading that XML back
         Msq tuneFromFile = Msq.readTune(fileName);
+        assertNotNull(tuneFromFile.getVersionInfo().getSignature());
 
         ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
 

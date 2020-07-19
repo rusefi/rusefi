@@ -21,6 +21,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.ExecHelper;
+import com.rusefi.server.BackendLauncher;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
@@ -41,6 +42,7 @@ import static com.rusefi.binaryprotocol.IoHelper.getCrc32;
 
 public class ConsoleTools {
     public static final String SET_AUTH_TOKEN = "set_auth_token";
+    public static final String RUS_EFI_NOT_DETECTED = "rusEFI not detected";
     private static Map<String, ConsoleTool> TOOLS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     private static Map<String, String> toolsHelp = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -60,10 +62,15 @@ public class ConsoleTools {
         registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
         registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
+        registerTool("proxy_server", BackendLauncher::start, "NOT A USER TOOL");
+        registerTool("network_connector", NetworkConnectorStartup::start, "Connect your rusEFI ECU to rusEFI Online");
+        registerTool("network_authenticator", LocalApplicationProxy::start, "rusEFI Online Authenticator");
+
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
         registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI authentication token.");
         registerTool("upload_tune", ConsoleTools::uploadTune, "Upload specified tune file using auth token from settings");
 
+        registerTool("version", ConsoleTools::version, "Only print version");
 
         registerTool("lightui", ConsoleTools::lightUI, "Start lightweight GUI for tiny screens");
 
@@ -71,6 +78,10 @@ public class ConsoleTools {
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
         registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
         registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+    }
+
+    private static void version(String[] strings) {
+        // version is printed by already, all we need is to do nothing
     }
 
     public static void main(String[] args) throws Exception {
@@ -193,7 +204,7 @@ public class ConsoleTools {
 
         String autoDetectedPort = PortDetector.autoDetectSerial(null);
         if (autoDetectedPort == null) {
-            System.err.println("rusEFI not detected");
+            System.err.println(RUS_EFI_NOT_DETECTED);
             return;
         }
         LinkManager linkManager = new LinkManager(FileLog.LOGGER);
@@ -258,7 +269,7 @@ public class ConsoleTools {
     private static String autoDetectPort() {
         String autoDetectedPort = PortDetector.autoDetectSerial(null);
         if (autoDetectedPort == null) {
-            System.err.println("rusEFI not detected");
+            System.err.println(RUS_EFI_NOT_DETECTED);
             return null;
         }
         return autoDetectedPort;
@@ -303,7 +314,7 @@ public class ConsoleTools {
     static void detect(String[] strings) throws IOException, InterruptedException {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null) {
-            System.out.println("rusEFI not detected");
+            System.out.println(RUS_EFI_NOT_DETECTED);
             return;
         }
         IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
