@@ -2,13 +2,14 @@
 #include "debounce.h"
 
 ButtonShiftController::ButtonShiftController () {
-    buttonDebounce = new ButtonDebounce(10);
+    debounceUp = new ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), PAL_MODE_INPUT_PULLDOWN);
+    debounceUp = new ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), PAL_MODE_INPUT_PULLDOWN):
 }
 
 ButtonShiftController::update() {
-    bool upPinState = buttonDebounce.readPin(CONFIG(tcuUpshiftButtonPin))
-    bool downPinState = buttonDebounce.readPin(CONFIG(tcuDownshiftButtonPin))
-    gear_e gear = getDesiredGear()
+    bool upPinState = debounceUp.readPin();
+    bool downPinState = debounceUp.readPin();
+    gear_e gear = getDesiredGear();
     if (upPinState) {
         switch (gear) {
             case GEAR_1:
@@ -21,8 +22,7 @@ ButtonShiftController::update() {
                 setDesiredGear(GEAR_4);
                 break;
         }
-    }
-    else if (downPinState) {
+    } else if (downPinState) {
             case GEAR_2:
                 setDesiredGear(GEAR_1);
                 break;
