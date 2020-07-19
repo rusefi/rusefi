@@ -80,7 +80,7 @@ public class Msq {
             System.out.println("Msq: No page");
             return;
         }
-        page.constant.add(new Constant(field.getName(), field.getUnits(), value));
+        page.constant.add(new Constant(field.getName(), field.getUnits(), value, field.getDigits()));
     }
 
     public Page findPage() {

@@ -20,6 +20,10 @@ public abstract class IniField {
         return null;
     }
 
+    public String getDigits() {
+        return null;
+    }
+
     public int getOffset() {
         return offset;
     }
