@@ -19,6 +19,14 @@ TEST(fuelControl, transitionIssue1592) {
 	ASSERT_EQ(CRANKING, engine->rpmCalculator.getState());
 	ASSERT_EQ( 100,  GET_RPM()) << "spinning-RPM#1";
 
+	ASSERT_EQ(IM_SIMULTANEOUS, ENGINE(getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE)));
+
+
+	eth.fireTriggerEvents2(4 /* count */ , 150 /* ms */);
+	ASSERT_EQ( 400,  GET_RPM()) << "running-RPM#1";
+
+	ASSERT_EQ(IM_SIMULTANEOUS, ENGINE(getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE)));
+
 }
 
 
