@@ -186,11 +186,11 @@ public class LogicdataStreamFile extends StreamFile {
 		write(ch);
 		write(channelNames[ch]);
 		write(0, 2);
-		write(1.0);
+		writeDouble(1.0);
 		write(0);
-		write(0.0);
+		writeDouble(0.0);
 		write(1);	// or 2
-		write(0.0);	// or 1.0
+		writeDouble(0.0);	// or 1.0
 
 		// this part sounds like the 'next' pointer?
 		if (ch == numChannels - 1) {
@@ -411,7 +411,7 @@ public class LogicdataStreamFile extends StreamFile {
 
         write(BLOCK);
         write(0);
-        write(1.0);
+        writeDouble(1.0);
         write(SUB);
 		write(0, 6);
 		write(1);
@@ -485,7 +485,7 @@ public class LogicdataStreamFile extends StreamFile {
 		}
 	}
 
-    private void write(double value) throws IOException {
+    private void writeDouble(double value) throws IOException {
 		if (value == 0.0) {
 			writeByte(0);
 		} else {
