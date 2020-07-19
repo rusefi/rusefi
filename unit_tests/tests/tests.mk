@@ -10,6 +10,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \
 	tests/ignition_injection/test_miata_na6_real_cranking.cpp \
 	tests/ignition_injection/test_ignition_scheduling.cpp \
+	tests/ignition_injection/test_fuelCut.cpp \
 	tests/test_util.cpp \
 	tests/test_ion.cpp \
 	tests/test_aux_valves.cpp \
@@ -25,7 +26,6 @@ TESTS_SRC_CPP = \
 	tests/test_fuel_map.cpp \
 	tests/test_fuel_wall_wetting.cpp \
 	tests/test_one_cylinder_logic.cpp \
-	tests/ignition_injection/test_fuelCut.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_logic_expression.cpp \
 	tests/test_speed_density.cpp \
