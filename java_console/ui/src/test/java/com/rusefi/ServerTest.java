@@ -218,7 +218,7 @@ public class ServerTest {
                     System.out.println("Failed");
                 }
             });
-            assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+            assertTrue("Proxied ECU Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
 
             BinaryProtocol clientStreamState = clientManager.getCurrentStreamState();
             Objects.requireNonNull(clientStreamState, "clientStreamState");
