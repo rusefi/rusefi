@@ -208,7 +208,7 @@ public class LinkManager implements Closeable {
                         int portPart = TcpConnector.getTcpPort(port);
                         String hostname = TcpConnector.getHostname(port);
                         socket = new Socket(hostname, portPart);
-                        TcpIoStream tcpIoStream = new TcpIoStream(logger, socket);
+                        TcpIoStream tcpIoStream = new TcpIoStream("[start] ", logger, socket);
 
                         return tcpIoStream;
                     } catch (Throwable e) {

@@ -133,7 +133,7 @@ public class Backend implements Closeable {
                             if (applicationClientStream != null)
                                 applicationClientStream.close();
                             e.printStackTrace();
-                            logger.error("Got error " + e);
+                            logger.info("Got error " + e);
                             onDisconnectApplication();
                         }
                     }

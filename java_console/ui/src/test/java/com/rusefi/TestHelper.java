@@ -50,7 +50,7 @@ public class TestHelper {
     public static IoStream secureConnectToLocalhost(int controllerPort, Logger logger) {
         IoStream targetEcuSocket;
         try {
-            targetEcuSocket = new TcpIoStream(logger, rusEFISSLContext.getSSLSocket(ProxyClient.LOCALHOST, controllerPort));
+            targetEcuSocket = new TcpIoStream("[local]", logger, rusEFISSLContext.getSSLSocket(ProxyClient.LOCALHOST, controllerPort));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to connect to controller " + ProxyClient.LOCALHOST + ":" + controllerPort);
         }
@@ -61,7 +61,7 @@ public class TestHelper {
     public static IoStream connectToLocalhost(int controllerPort, Logger logger) {
         IoStream targetEcuSocket;
         try {
-            targetEcuSocket = new TcpIoStream(logger, new Socket(ProxyClient.LOCALHOST, controllerPort));
+            targetEcuSocket = new TcpIoStream("[local]", logger, new Socket(ProxyClient.LOCALHOST, controllerPort));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to connect to controller " + ProxyClient.LOCALHOST + ":" + controllerPort);
         }
