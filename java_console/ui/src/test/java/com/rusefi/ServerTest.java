@@ -121,7 +121,7 @@ public class ServerTest {
         int serverPortForRemoteUsers = 6800;
 
         UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
-        int httpPort = 8001;
+        int httpPort = 8002;
 
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
 
@@ -158,7 +158,7 @@ public class ServerTest {
         CountDownLatch controllerRegistered = new CountDownLatch(1);
 
         UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), userId);
-        int httpPort = 8001;
+        int httpPort = 8003;
         try (Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
             @Override
             protected void onRegister(ControllerConnectionState controllerConnectionState) {
