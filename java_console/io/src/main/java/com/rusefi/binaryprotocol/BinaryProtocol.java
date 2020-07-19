@@ -96,6 +96,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 return "GET_FW_VERSION";
             case Fields.TS_CHUNK_WRITE_COMMAND:
                 return "WRITE_CHUNK";
+            case Fields.TS_OUTPUT_COMMAND:
+                return "TS_OUTPUT_COMMAND";
             default:
                 return "command " + (char) + command + "/" + command;
         }
