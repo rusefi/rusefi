@@ -55,7 +55,7 @@ public class ServerTest {
         CountDownLatch allClientsDisconnected = new CountDownLatch(1);
         CountDownLatch onConnected = new CountDownLatch(2);
 
-        Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+        try (Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
             @Override
             public void register(ControllerConnectionState clientConnectionState) {
                 super.register(clientConnectionState);
@@ -68,25 +68,26 @@ public class ServerTest {
                 if (getCount() == 0)
                     allClientsDisconnected.countDown();
             }
-        };
+        }) {
 
-        backend.runControllerConnector(serverPortForControllers, parameter -> serverCreated.countDown());
-        assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
-        assertEquals(0, backend.getCount());
+            backend.runControllerConnector(serverPortForControllers, parameter -> serverCreated.countDown());
+            assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
+            assertEquals(0, backend.getCount());
 
 
-        new MockRusEfiDevice(MockRusEfiDevice.TEST_TOKEN_1, "rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPortForControllers);
-        new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", "rusEFI 2020.07.11.proteus_f4.1986715563", logger).connect(serverPortForControllers);
+            new MockRusEfiDevice(MockRusEfiDevice.TEST_TOKEN_1, "rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPortForControllers);
+            new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", "rusEFI 2020.07.11.proteus_f4.1986715563", logger).connect(serverPortForControllers);
 
-        assertTrue("onConnected", onConnected.await(30, TimeUnit.SECONDS));
+            assertTrue("onConnected", onConnected.await(30, TimeUnit.SECONDS));
 
-        List<ControllerConnectionState> clients = backend.getClients();
-        assertEquals(2, clients.size());
+            List<ControllerConnectionState> clients = backend.getClients();
+            assertEquals(2, clients.size());
 
-        List<UserDetails> onlineUsers = ProxyClient.getOnlineUsers(httpPort);
-        assertEquals(2, onlineUsers.size());
+            List<UserDetails> onlineUsers = ProxyClient.getOnlineUsers(httpPort);
+            assertEquals(2, onlineUsers.size());
 
-        assertTrue("allClientsDisconnected", allClientsDisconnected.await(30, TimeUnit.SECONDS));
+            assertTrue("allClientsDisconnected", allClientsDisconnected.await(30, TimeUnit.SECONDS));
+        }
     }
 
     @Test
@@ -95,24 +96,24 @@ public class ServerTest {
         int httpPort = 8001;
         int serverPortForRemoteUsers = 6801;
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
-        Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+        try (Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
             @Override
             protected void onDisconnectApplication() {
                 super.onDisconnectApplication();
                 disconnectedCountDownLatch.countDown();
             }
-        };
+        }) {
 
-        CountDownLatch applicationServerCreated = new CountDownLatch(1);
-        backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
-        assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+            CountDownLatch applicationServerCreated = new CountDownLatch(1);
+            backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
+            assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
-        // start authenticator
-        IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
-        new HelloCommand(logger, "hello").handle(authenticatorToProxyStream);
+            // start authenticator
+            IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
+            new HelloCommand(logger, "hello").handle(authenticatorToProxyStream);
 
-        assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
-        backend.close();
+            assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
+        }
     }
 
     @Test
@@ -124,28 +125,28 @@ public class ServerTest {
 
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
 
-        Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+        try (Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
             @Override
             protected void onDisconnectApplication() {
                 super.onDisconnectApplication();
                 disconnectedCountDownLatch.countDown();
             }
-        };
+        }) {
 
-        CountDownLatch applicationServerCreated = new CountDownLatch(1);
-        backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
-        assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+            CountDownLatch applicationServerCreated = new CountDownLatch(1);
+            backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
+            assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
-        SessionDetails sessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, Fields.TS_SIGNATURE);
-        ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, 123);
+            SessionDetails sessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, Fields.TS_SIGNATURE);
+            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, 123);
 
-        // start authenticator
-        IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
-        LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
-        localApplicationProxy.run(authenticatorToProxyStream);
+            // start authenticator
+            IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
+            LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
+            localApplicationProxy.run(authenticatorToProxyStream);
 
-        assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
-        backend.close();
+            assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
+        }
     }
 
     @Test
@@ -158,75 +159,72 @@ public class ServerTest {
 
         UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), userId);
         int httpPort = 8001;
-        Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+        try (Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
             @Override
             protected void onRegister(ControllerConnectionState controllerConnectionState) {
                 super.onRegister(controllerConnectionState);
                 controllerRegistered.countDown();
             }
-        };
-        int serverPortForControllers = 7001;
-        int serverPortForRemoteUsers = 7003;
+        }; LinkManager clientManager = new LinkManager(logger)) {
+            int serverPortForControllers = 7001;
+            int serverPortForRemoteUsers = 7003;
 
 
-        // first start backend server
-        CountDownLatch controllerServerCreated = new CountDownLatch(1);
-        CountDownLatch applicationServerCreated = new CountDownLatch(1);
+            // first start backend server
+            CountDownLatch controllerServerCreated = new CountDownLatch(1);
+            CountDownLatch applicationServerCreated = new CountDownLatch(1);
 
-        backend.runControllerConnector(serverPortForControllers, parameter -> controllerServerCreated.countDown());
+            backend.runControllerConnector(serverPortForControllers, parameter -> controllerServerCreated.countDown());
 
-        backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
+            backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
 
-        assertTrue(controllerServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
-        assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
-
-
-        // create virtual controller to which "rusEFI network connector" connects to
-        int controllerPort = 7002;
-        ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
-        CountDownLatch controllerCreated = new CountDownLatch(1);
-        TestHelper.createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown(), logger);
-        assertTrue(controllerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+            assertTrue(controllerServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+            assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
 
-        // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-        SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, ProxyClient.LOCALHOST + ":" + controllerPort, serverPortForControllers);
-
-        assertTrue(controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
-
-        SessionDetails authenticatorSessionDetails = new SessionDetails(deviceSessionDetails.getControllerInfo(), MockRusEfiDevice.TEST_TOKEN_3, deviceSessionDetails.getOneTimeToken());
-        ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userId);
-
-        // start authenticator
-
-        int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
-        LocalApplicationProxy.startAndRun(logger, serverPortForRemoteUsers, applicationRequest, authenticatorPort);
+            // create virtual controller to which "rusEFI network connector" connects to
+            int controllerPort = 7002;
+            ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
+            CountDownLatch controllerCreated = new CountDownLatch(1);
+            TestHelper.createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown(), logger);
+            assertTrue(controllerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
 
-        CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
+            // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
+            SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, ProxyClient.LOCALHOST + ":" + controllerPort, serverPortForControllers);
 
-        // connect to proxy and read virtual controller through it
-        LinkManager clientManager = new LinkManager(logger);
-        clientManager.startAndConnect(ProxyClient.LOCALHOST + ":" + authenticatorPort, new ConnectionStateListener() {
-            @Override
-            public void onConnectionEstablished() {
-                connectionEstablishedCountDownLatch.countDown();
-            }
+            assertTrue(controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
-            @Override
-            public void onConnectionFailed() {
-                System.out.println("Failed");
-            }
-        });
-        assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+            SessionDetails authenticatorSessionDetails = new SessionDetails(deviceSessionDetails.getControllerInfo(), MockRusEfiDevice.TEST_TOKEN_3, deviceSessionDetails.getOneTimeToken());
+            ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userId);
 
-        BinaryProtocol clientStreamState = clientManager.getCurrentStreamState();
-        Objects.requireNonNull(clientStreamState, "clientStreamState");
-        ConfigurationImage clientImage = clientStreamState.getControllerConfiguration();
-        String clientValue = iniField.getValue(clientImage);
-        assertEquals(Double.toString(value), clientValue);
+            // start authenticator
 
-        backend.close();
-        clientManager.stop();
+            int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
+            LocalApplicationProxy.startAndRun(logger, serverPortForRemoteUsers, applicationRequest, authenticatorPort);
+
+
+            CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
+
+            // connect to proxy and read virtual controller through it
+            clientManager.startAndConnect(ProxyClient.LOCALHOST + ":" + authenticatorPort, new ConnectionStateListener() {
+                @Override
+                public void onConnectionEstablished() {
+                    connectionEstablishedCountDownLatch.countDown();
+                }
+
+                @Override
+                public void onConnectionFailed() {
+                    System.out.println("Failed");
+                }
+            });
+            assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+
+            BinaryProtocol clientStreamState = clientManager.getCurrentStreamState();
+            Objects.requireNonNull(clientStreamState, "clientStreamState");
+            ConfigurationImage clientImage = clientStreamState.getControllerConfiguration();
+            String clientValue = iniField.getValue(clientImage);
+            assertEquals(Double.toString(value), clientValue);
+        }
     }
 }

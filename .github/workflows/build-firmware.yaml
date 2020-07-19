@@ -197,7 +197,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v2
       with:
-        name: primary console junit
+        name: console primary junit
         path: ./java_console/build/*.txt
 
     - name: Upload primary bundle

@@ -82,7 +82,7 @@ public class TcpCommunicationIntegrationTest {
         String clientValue = iniField.getValue(clientImage);
         assertEquals(Double.toString(value), clientValue);
 
-        clientManager.stop();
+        clientManager.close();
     }
 
     @Test
@@ -118,7 +118,7 @@ public class TcpCommunicationIntegrationTest {
         });
         assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
 
-        clientManager.stop();
+        clientManager.close();
     }
 
 }

@@ -11,6 +11,7 @@ public class SessionDetails {
     private static final String ONE_TIME_TOKEN = "oneTime";
     private static final String AUTH_TOKEN = "authToken";
     private static final String CONTROLLER = "controller";
+    private static final String HARDCODED_ONE_TIME_CODE = System.getProperty("ONE_TIME_CODE");
 
     private final ControllerInfo controllerInfo;
 
@@ -26,7 +27,7 @@ public class SessionDetails {
     }
 
     public static int createOneTimeCode() {
-        return new Random().nextInt(60000);
+        return HARDCODED_ONE_TIME_CODE == null ? new Random().nextInt(100000) : Integer.parseInt(HARDCODED_ONE_TIME_CODE);
     }
 
     public int getOneTimeToken() {

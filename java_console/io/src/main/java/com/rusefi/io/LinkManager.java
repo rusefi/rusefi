@@ -13,6 +13,7 @@ import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Closeable;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.Objects;
@@ -24,7 +25,7 @@ import java.util.concurrent.*;
  * @author Andrey Belomutskiy
  * 3/3/14
  */
-public class LinkManager {
+public class LinkManager implements Closeable {
     @NotNull
     public static LogLevel LOG_LEVEL = LogLevel.INFO;
 
@@ -263,7 +264,8 @@ public class LinkManager {
         connector.restart();
     }
 
-    public void stop() {
+    @Override
+    public void close() {
         connector.stop();
     }
 
