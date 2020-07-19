@@ -66,7 +66,7 @@ public class TcpIoStream implements IoStream {
     @Override
     public void setInputListener(final DataListener listener) {
 
-        ByteReader.runReaderLoop(listener, input::read, logger);
+        ByteReader.runReaderLoop(loggingPrefix, listener, input::read, logger);
     }
 
     @Override

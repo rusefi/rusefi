@@ -9,7 +9,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public interface ByteReader {
-    static void runReaderLoop(DataListener listener, ByteReader reader, Logger logger) {
+    static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, Logger logger) {
         /**
          * Threading of the whole input/output does not look healthy at all!
          *
@@ -24,7 +24,7 @@ public interface ByteReader {
 
         threadExecutor.execute(() -> {
             Thread.currentThread().setName("TCP connector loop");
-            logger.info("Running TCP connection loop");
+            logger.info(loggingPrefix + "Running TCP connection loop");
 
             byte inputBuffer[] = new byte[256];
             while (true) {
