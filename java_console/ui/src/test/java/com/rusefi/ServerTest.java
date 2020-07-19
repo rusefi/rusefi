@@ -87,7 +87,7 @@ public class ServerTest {
             List<ControllerConnectionState> clients = backend.getClients();
             assertEquals(2, clients.size());
 
-            List<UserDetails> onlineUsers = ProxyClient.getOnlineUsers(httpPort);
+            List<UserDetails> onlineUsers = ProxyClient.getOnlineUsers(HttpUtil.RUSEFI_PROXY_JSON_PROTOCOL + TestHelper.LOCALHOST + ":" + httpPort + ProxyClient.LIST_PATH);
             assertEquals(2, onlineUsers.size());
 
             allConnected.countDown();

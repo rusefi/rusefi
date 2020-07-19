@@ -14,9 +14,13 @@ import java.util.List;
 public class ProxyClient {
     public static final String LIST_PATH = "/list_online";
 
-    @NotNull
     public static List<UserDetails> getOnlineUsers(int httpPort) throws IOException {
-        HttpResponse httpResponse = HttpUtil.executeGet(HttpUtil.RUSEFI_PROXY_JSON_API_PREFIX + ":" + httpPort + LIST_PATH);
+        return getOnlineUsers(HttpUtil.RUSEFI_PROXY_JSON_API_PREFIX + ":" + httpPort + LIST_PATH);
+    }
+
+    @NotNull
+    public static List<UserDetails> getOnlineUsers(String url) throws IOException {
+        HttpResponse httpResponse = HttpUtil.executeGet(url);
 
         List<UserDetails> userLists = new ArrayList<>();
         try {
