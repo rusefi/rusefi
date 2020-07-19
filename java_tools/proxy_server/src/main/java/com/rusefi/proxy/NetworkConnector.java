@@ -1,6 +1,8 @@
 package com.rusefi.proxy;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
@@ -55,9 +57,11 @@ public class NetworkConnector {
         HelloCommand.send(targetEcuSocket, logger);
         String controllerSignature = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer(), logger);
 
-//        Fields.VEHICLENAME.getAnyValue()
-        // todo: request vehicle info from controller
-        ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", controllerSignature);
+        ConfigurationImage image = linkManager.getConnector().getBinaryProtocol().getControllerConfiguration();
+        String vehicleName = Fields.VEHICLENAME.getStringValue(image);
+        String engineMake = Fields.ENGINEMAKE.getStringValue(image);
+        String engineCode = Fields.ENGINECODE.getStringValue(image);
+        ControllerInfo ci = new ControllerInfo(vehicleName, engineMake, engineCode, controllerSignature);
 
         SessionDetails deviceSessionDetails = new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
 
