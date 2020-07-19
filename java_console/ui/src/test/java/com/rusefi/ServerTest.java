@@ -50,11 +50,20 @@ public class ServerTest {
         CountDownLatch allClientsDisconnected = new CountDownLatch(1);
         CountDownLatch onConnected = new CountDownLatch(2);
 
+        CountDownLatch allConnected = new CountDownLatch(1);
+
+
         try (Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
             @Override
             public void register(ControllerConnectionState clientConnectionState) {
                 super.register(clientConnectionState);
                 onConnected.countDown();
+                try {
+                    allConnected.await();
+                } catch (InterruptedException e) {
+                    throw new IllegalStateException(e);
+                }
+                throw new IllegalStateException();
             }
 
             @Override
@@ -80,6 +89,8 @@ public class ServerTest {
 
             List<UserDetails> onlineUsers = ProxyClient.getOnlineUsers(httpPort);
             assertEquals(2, onlineUsers.size());
+
+            allConnected.countDown();
 
             assertTrue("allClientsDisconnected", allClientsDisconnected.await(30, TimeUnit.SECONDS));
         }
