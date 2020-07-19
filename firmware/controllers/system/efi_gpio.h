@@ -103,12 +103,18 @@ public:
 	const char *shortName = NULL;
 };
 
-class InjectorOutputPin : public NamedOutputPin {
+class InjectorOutputPin final : public NamedOutputPin {
 public:
 	InjectorOutputPin();
 	void reset();
+
+	void open();
+	void close();
+
 	// todo: re-implement this injectorIndex via address manipulation to reduce memory usage?
 	int8_t injectorIndex;
+
+private:
 	int8_t overlappingCounter;
 };
 

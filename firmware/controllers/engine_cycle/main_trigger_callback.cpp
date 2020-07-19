@@ -68,13 +68,13 @@ static Logging *logger;
 
 void startSimultaniousInjection(Engine *engine) {
 	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
-		enginePins.injectors[i].setHigh();
+		enginePins.injectors[i].open();
 	}
 }
 
 static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
 	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
-		enginePins.injectors[i].setLow();
+		enginePins.injectors[i].close();
 	}
 }
 
@@ -89,29 +89,29 @@ void endSimultaniousInjection(InjectionEvent *event) {
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-static inline void turnInjectionPinHigh(InjectorOutputPin *output) {
-	output->overlappingCounter++;
+void InjectorOutputPin::open() {
+	overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("turnInjectionPinHigh %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
+	printf("turnInjectionPinHigh %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	if (output->overlappingCounter > 1) {
+	if (overlappingCounter > 1) {
 //		/**
 //		 * #299
 //		 * this is another kind of overlap which happens in case of a small duty cycle after a large duty cycle
 //		 */
 #if FUEL_MATH_EXTREME_LOGGING
-		printf("overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
+		printf("overlapping, no need to touch pin %s %d\r\n", name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
 #if FUEL_MATH_EXTREME_LOGGING
-		const char * w = output->currentLogicValue == true ? "err" : "";
+		const char * w = currentLogicValue == true ? "err" : "";
 //	scheduleMsg(&sharedLogger, "^ %spin=%s eventIndex %d %d", w, output->name,
 //			getRevolutionCounter(), getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-		output->setHigh();
+		setHigh();
 	}
 }
 
@@ -126,33 +126,29 @@ void turnInjectionPinHigh(InjectionEvent *event) {
 		InjectorOutputPin *output = event->outputs[i];
 
 		if (output) {
-			turnInjectionPinHigh(output);
+			output->open();
 		}
 	}
 }
 
-static inline void turnInjectionPinLow(InjectorOutputPin *output) {
+void InjectorOutputPin::close() {
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("turnInjectionPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
+	printf("turnInjectionPinLow %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-
+	overlappingCounter--;
+	if (overlappingCounter > 0) {
 #if FUEL_MATH_EXTREME_LOGGING
-		const char * w = output->currentLogicValue == false ? "err" : "";
-
-//	scheduleMsg(&sharedLogger, "- %spin=%s eventIndex %d %d", w, output->name,
-//			getRevolutionCounter(), getTimeNowUs());
+		printf("was overlapping, no need to touch pin %s %d\r\n", name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
+	} else {
+		setLow();
+	}
 
-		output->overlappingCounter--;
-		if (output->overlappingCounter > 0) {
-#if FUEL_MATH_EXTREME_LOGGING
-			printf("was overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-		} else {
-			output->setLow();
-		}
-
+	// Don't allow negative overlap count
+	if (overlappingCounter < 0) {
+		overlappingCounter = 0;
+	}
 }
 
 void turnInjectionPinLow(InjectionEvent *event) {
@@ -166,7 +162,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
 		if (output != NULL) {
-			turnInjectionPinLow(output);
+			output->close();
 		}
 	}
 #if EFI_UNIT_TEST
