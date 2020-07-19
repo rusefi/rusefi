@@ -31,6 +31,7 @@ public class FullServerTest {
     @Before
     public void setTestCertificate() throws MalformedURLException {
         ServerTest.commonServerTest();
+        BinaryProtocol.DISABLE_LOCAL_CACHE = true;
     }
 
     @Test
