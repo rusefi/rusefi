@@ -35,7 +35,7 @@ public class ControllerConnectionState {
         this.logger = logger;
         this.userDetailsResolver = userDetailsResolver;
         try {
-            stream = new TcpIoStream(logger, clientSocket);
+            stream = new TcpIoStream("[controller] ", logger, clientSocket);
             incomingData = stream.getDataBuffer();
         } catch (IOException e) {
             close();

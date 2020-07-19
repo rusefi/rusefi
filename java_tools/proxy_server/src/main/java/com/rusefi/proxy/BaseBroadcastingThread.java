@@ -18,7 +18,7 @@ public class BaseBroadcastingThread {
     private final Thread thread;
 
     public BaseBroadcastingThread(Socket socket, SessionDetails sessionDetails, Logger logger) throws IOException {
-        TcpIoStream stream = new TcpIoStream(logger, socket);
+        TcpIoStream stream = new TcpIoStream("[broadcast] ", logger, socket);
         IncomingDataBuffer in = stream.getDataBuffer();
 
         thread = new Thread(() -> {
