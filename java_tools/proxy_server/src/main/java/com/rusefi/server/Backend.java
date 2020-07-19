@@ -159,9 +159,10 @@ public class Backend implements Closeable {
                         try {
                             controllerConnectionState.requestControllerInfo();
 
-                            register(controllerConnectionState);
-
+                            
                             controllerConnectionState.getOutputs();
+
+                            register(controllerConnectionState);
                         } catch (IOException e) {
                             close(controllerConnectionState);
                         }
