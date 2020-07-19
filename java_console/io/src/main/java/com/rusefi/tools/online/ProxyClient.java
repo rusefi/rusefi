@@ -12,12 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProxyClient {
-    public static final String LOCALHOST = "localhost";
     public static final String LIST_PATH = "/list_online";
 
     @NotNull
     public static List<UserDetails> getOnlineUsers(int httpPort) throws IOException {
-        HttpResponse httpResponse = HttpUtil.executeGet(HttpUtil.RUSEFI_PROXY_JSON_PROTOCOL + HttpUtil.RUSEFI_PROXY_HOSTNAME + ":" + httpPort + LIST_PATH);
+        HttpResponse httpResponse = HttpUtil.executeGet(HttpUtil.RUSEFI_PROXY_JSON_API_PREFIX + ":" + httpPort + LIST_PATH);
 
         List<UserDetails> userLists = new ArrayList<>();
         try {
@@ -31,7 +30,7 @@ public class ProxyClient {
 
             System.out.println("object=" + array);
         } catch (ParseException e) {
-            throw new IllegalStateException(e);
+            throw new IOException(e);
         }
         return userLists;
     }

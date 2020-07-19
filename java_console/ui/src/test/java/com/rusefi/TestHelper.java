@@ -12,7 +12,6 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.server.rusEFISSLContext;
-import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,6 +19,8 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class TestHelper {
+    public static final String LOCALHOST = "localhost";
+
     @NotNull
     public static ScalarIniField createIniField(Field field) {
         return new ScalarIniField(field.getName(), field.getOffset(), "", field.getType(), 1);
@@ -50,9 +51,9 @@ public class TestHelper {
     public static IoStream secureConnectToLocalhost(int controllerPort, Logger logger) {
         IoStream targetEcuSocket;
         try {
-            targetEcuSocket = new TcpIoStream("[local]", logger, rusEFISSLContext.getSSLSocket(ProxyClient.LOCALHOST, controllerPort));
+            targetEcuSocket = new TcpIoStream("[local]", logger, rusEFISSLContext.getSSLSocket(LOCALHOST, controllerPort));
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to connect to controller " + ProxyClient.LOCALHOST + ":" + controllerPort);
+            throw new IllegalStateException("Failed to connect to controller " + LOCALHOST + ":" + controllerPort);
         }
         return targetEcuSocket;
     }
@@ -61,9 +62,9 @@ public class TestHelper {
     public static IoStream connectToLocalhost(int controllerPort, Logger logger) {
         IoStream targetEcuSocket;
         try {
-            targetEcuSocket = new TcpIoStream("[local]", logger, new Socket(ProxyClient.LOCALHOST, controllerPort));
+            targetEcuSocket = new TcpIoStream("[local]", logger, new Socket(LOCALHOST, controllerPort));
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to connect to controller " + ProxyClient.LOCALHOST + ":" + controllerPort);
+            throw new IllegalStateException("Failed to connect to controller " + LOCALHOST + ":" + controllerPort);
         }
         return targetEcuSocket;
     }

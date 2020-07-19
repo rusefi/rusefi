@@ -32,7 +32,6 @@ public class Backend implements Closeable {
     public static final String BACKEND_VERSION = "0.0001";
     public static final int SERVER_PORT_FOR_APPLICATIONS = 8002;
     public static final int SERVER_PORT_FOR_CONTROLLERS = 8003;
-    public static final int HTTP_PORT = 8001;
 
     private final FkRegex showOnlineUsers = new FkRegex(ProxyClient.LIST_PATH,
             (Take) req -> getUsersOnline()

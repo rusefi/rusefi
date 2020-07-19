@@ -35,7 +35,7 @@ public class ServerTest {
     }
 
     static void commonServerTest() throws MalformedURLException {
-        HttpUtil.RUSEFI_PROXY_HOSTNAME = ProxyClient.LOCALHOST;
+        HttpUtil.RUSEFI_PROXY_HOSTNAME = TestHelper.LOCALHOST;
 
         rusEFISSLContext.init("certificate/test_pkcs12.jks", "password");
     }

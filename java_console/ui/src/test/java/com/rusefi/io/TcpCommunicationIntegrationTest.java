@@ -8,7 +8,6 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
-import com.rusefi.tools.online.ProxyClient;
 import org.junit.Test;
 
 import java.util.Objects;
@@ -61,7 +60,7 @@ public class TcpCommunicationIntegrationTest {
         // todo: remove CONFIGURATION_RUSEFI_BINARY or nicer API to disable local file load
 
         LinkManager clientManager = new LinkManager(LOGGER);
-        clientManager.startAndConnect(ProxyClient.LOCALHOST + ":" + port, new ConnectionStateListener() {
+        clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + port, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 connectionEstablishedCountDownLatch.countDown();
@@ -105,7 +104,7 @@ public class TcpCommunicationIntegrationTest {
 
         // connect to proxy and read virtual controller through it
         LinkManager clientManager = new LinkManager(LOGGER);
-        clientManager.startAndConnect(ProxyClient.LOCALHOST + ":" + proxyPort, new ConnectionStateListener() {
+        clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + proxyPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 connectionEstablishedCountDownLatch.countDown();

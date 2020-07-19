@@ -12,7 +12,7 @@ import com.rusefi.server.rusEFISSLContext;
 import java.io.IOException;
 import java.net.Socket;
 
-import static com.rusefi.tools.online.ProxyClient.LOCALHOST;
+import static com.rusefi.TestHelper.LOCALHOST;
 
 public class MockRusEfiDevice {
     public static final String TEST_TOKEN_1 = "00000000-1234-1234-1234-123456789012";

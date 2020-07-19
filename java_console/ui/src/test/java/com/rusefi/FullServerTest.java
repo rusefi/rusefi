@@ -9,7 +9,6 @@ import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.*;
-import com.rusefi.tools.online.ProxyClient;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -76,7 +75,7 @@ public class FullServerTest {
 
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-            SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, ProxyClient.LOCALHOST + ":" + controllerPort, serverPortForControllers);
+            SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers);
 
             assertTrue(controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
@@ -92,7 +91,7 @@ public class FullServerTest {
             CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
             // connect to proxy and read virtual controller through it
-            clientManager.startAndConnect(ProxyClient.LOCALHOST + ":" + authenticatorPort, new ConnectionStateListener() {
+            clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + authenticatorPort, new ConnectionStateListener() {
                 @Override
                 public void onConnectionEstablished() {
                     connectionEstablishedCountDownLatch.countDown();
