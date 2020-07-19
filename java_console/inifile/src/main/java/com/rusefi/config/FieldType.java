@@ -11,7 +11,9 @@ public enum FieldType {
     UINT16(2),
 
     BIT(/*bits are stored in 4 byte packs */4),
-    FLOAT(4);
+    FLOAT(4),
+
+    STRING(0);
 
     // todo: this is used for text protocol parsing - constant should be reused between firmware and console
     public static final String INT_TYPE_STRING = "int";
@@ -70,6 +72,8 @@ public enum FieldType {
     }
 
     public int getStorageSize() {
+        if (this == STRING)
+            throw new UnsupportedOperationException("storage size is unclear on " + this);
         return storageSize;
     }
 }

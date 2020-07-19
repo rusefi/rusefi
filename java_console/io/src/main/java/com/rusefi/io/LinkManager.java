@@ -6,7 +6,6 @@ import com.rusefi.Callable;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
-import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
@@ -14,6 +13,7 @@ import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Closeable;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.Objects;
@@ -25,7 +25,7 @@ import java.util.concurrent.*;
  * @author Andrey Belomutskiy
  * 3/3/14
  */
-public class LinkManager {
+public class LinkManager implements Closeable {
     @NotNull
     public static LogLevel LOG_LEVEL = LogLevel.INFO;
 
@@ -42,6 +42,8 @@ public class LinkManager {
 
     private LinkConnector connector;
     private boolean isStarted;
+    private boolean compositeLogicEnabled = true;
+    private boolean needPullData = true;
 
     public LinkManager(Logger logger) {
         this.logger = logger;
@@ -105,6 +107,24 @@ public class LinkManager {
 
     public CommandQueue getCommandQueue() {
         return commandQueue;
+    }
+
+    public LinkManager setCompositeLogicEnabled(boolean compositeLogicEnabled) {
+        this.compositeLogicEnabled = compositeLogicEnabled;
+        return this;
+    }
+
+    public boolean getCompositeLogicEnabled() {
+        return compositeLogicEnabled;
+    }
+
+    public boolean getNeedPullData() {
+        return needPullData;
+    }
+
+    public LinkManager setNeedPullData(boolean needPullData) {
+        this.needPullData = needPullData;
+        return this;
     }
 
     public enum LogLevel {
@@ -188,7 +208,7 @@ public class LinkManager {
                         int portPart = TcpConnector.getTcpPort(port);
                         String hostname = TcpConnector.getHostname(port);
                         socket = new Socket(hostname, portPart);
-                        TcpIoStream tcpIoStream = new TcpIoStream(logger, socket);
+                        TcpIoStream tcpIoStream = new TcpIoStream("[start] ", logger, socket);
 
                         return tcpIoStream;
                     } catch (Throwable e) {
@@ -201,12 +221,10 @@ public class LinkManager {
             setConnector(new StreamConnector(this, port, logger, streamFactory));
             isSimulationMode = true;
         } else {
-            Callable<IoStream> ioStreamCallable = () -> SerialIoStreamJSerialComm.openPort(port, logger);
-
-            Callable<IoStream> ioStreamCallable1 = new Callable<IoStream>() {
+            Callable<IoStream> ioStreamCallable = new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
-                    IoStream stream = ioStreamCallable.call();
+                    IoStream stream = ((Callable<IoStream>) () -> SerialIoStreamJSerialComm.openPort(port, logger)).call();
                     if (stream == null) {
                         // error already reported
                         return null;
@@ -214,7 +232,7 @@ public class LinkManager {
                     return stream;
                 }
             };
-            setConnector(new StreamConnector(this, port, logger, ioStreamCallable1));
+            setConnector(new StreamConnector(this, port, logger, ioStreamCallable));
         }
     }
 
@@ -246,7 +264,8 @@ public class LinkManager {
         connector.restart();
     }
 
-    public void stop() {
+    @Override
+    public void close() {
         connector.stop();
     }
 

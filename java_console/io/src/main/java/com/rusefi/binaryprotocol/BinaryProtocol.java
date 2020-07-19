@@ -75,11 +75,33 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     /**
      * Composite logging turns off after 10 seconds of RPM above 300
      */
-    private boolean needCompositeLogger = true;
+    private boolean needCompositeLogger;
     private boolean isCompositeLoggerEnabled;
     private long lastLowRpmTime = System.currentTimeMillis();
 
     private List<StreamFile> compositeLogs = new ArrayList<>();
+    public static boolean DISABLE_LOCAL_CACHE;
+
+    public static String findCommand(byte command) {
+        switch (command) {
+            case Fields.TS_CRC_CHECK_COMMAND:
+                return "CRC_CHECK";
+            case Fields.TS_BURN_COMMAND:
+                return "BURN";
+            case Fields.TS_HELLO_COMMAND:
+                return "HELLO";
+            case Fields.TS_READ_COMMAND:
+                return "READ";
+            case Fields.TS_GET_FIRMWARE_VERSION:
+                return "GET_FW_VERSION";
+            case Fields.TS_CHUNK_WRITE_COMMAND:
+                return "WRITE_CHUNK";
+            case Fields.TS_OUTPUT_COMMAND:
+                return "TS_OUTPUT_COMMAND";
+            default:
+                return "command " + (char) + command + "/" + command;
+        }
+    }
 
     private void createCompositesIfNeeded() {
         if (!compositeLogs.isEmpty())
@@ -89,6 +111,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 new LogicdataStreamFile(getFileName("rusEFI_trigger_log_", ".logicdata")),
                 new TSHighSpeedLog(getFileName("rusEFI_trigger_log_"))
         ));
+    }
+
+    public IoStream getStream() {
+        return stream;
     }
 
     public boolean isClosed;
@@ -121,9 +147,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
         incomingData = dataBuffer;
         Runtime.getRuntime().addShutdownHook(hook);
+        needCompositeLogger = linkManager.getCompositeLogicEnabled();
         rpmListener = value -> {
             if (value <= COMPOSITE_OFF_RPM) {
-                needCompositeLogger = true;
+                needCompositeLogger = linkManager.getCompositeLogicEnabled();
                 lastLowRpmTime = System.currentTimeMillis();
             } else if (System.currentTimeMillis() - lastLowRpmTime > HIGH_RPM_DELAY * Timeouts.SECOND) {
                 logger.info("Time to turn off composite logging");
@@ -207,7 +234,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             public void run() {
                 while (!isClosed) {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
-                    if (linkManager.COMMUNICATION_QUEUE.isEmpty()) {
+                    if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
                         linkManager.submit(new Runnable() {
                             @Override
                             public void run() {
@@ -339,7 +366,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
                 String code = (response == null || response.length == 0) ? "empty" : "code " + response[0];
                 String info = response == null ? "NO RESPONSE" : (code + " size " + response.length);
-                logger.error("readImage: Something is wrong, retrying... " + info);
+                logger.info("readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
                 continue;
             }
 
@@ -360,6 +387,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     private ConfigurationImage getAndValidateLocallyCached() {
+        if (DISABLE_LOCAL_CACHE)
+            return null;
         ConfigurationImage localCached;
         try {
             localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY);
@@ -370,7 +399,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
         if (localCached != null) {
             int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
-            System.out.printf("Local cache CRC %x\n", crcOfLocallyCachedConfiguration);
+            System.out.printf(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration);
 
             byte packet[] = new byte[7];
             packet[0] = COMMAND_CRC_CHECK_COMMAND;
