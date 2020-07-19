@@ -36,7 +36,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-firmware Action"
         git status
-        OUT=$(git commit -am "Auto-generated configs and docs" 2>&1)
+        OUT=$(git commit -am "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "::set-env name=NOCOMMIT::true"
           exit 0
