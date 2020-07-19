@@ -11,7 +11,8 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
 public class Monitoring {
-    static final FkRegex showStatistics = new FkRegex("/status",
+    public static final String STATUS = "/status";
+    static final FkRegex showStatistics = new FkRegex(STATUS,
             (Take) req -> Monitoring.getStatus());
 
 

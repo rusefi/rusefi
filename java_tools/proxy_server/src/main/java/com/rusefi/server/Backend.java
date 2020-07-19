@@ -19,13 +19,14 @@ import org.takes.rs.RsJson;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
-public class Backend {
+public class Backend implements Closeable {
     public static final String VERSION_PATH = "/version";
     public static final String BACKEND_VERSION = "0.0001";
     public static final int SERVER_PORT_FOR_APPLICATIONS = 8002;
@@ -62,7 +63,11 @@ public class Backend {
                                 new FkRegex("/", new RsHtml("<html><body>\n" +
                                         "<a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
                                         "<br/>\n" +
-                                        "<a href='/status'>Status</a>\n" +
+                                        "<a href='" + Monitoring.STATUS + "'>Status</a>\n" +
+                                        "<br/>\n" +
+                                        "<a href='" + ProxyClient.LIST_PATH + "'>List</a>\n" +
+                                        "<br/>\n" +
+                                        "<br/>\n" +
                                         "</body></html>\n"))
                         ), httpPort
                 ).start(() -> isClosed);
@@ -171,6 +176,9 @@ public class Backend {
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
                     .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
+                    .add(ControllerInfo.VEHICLE_NAME, client.getSessionDetails().getControllerInfo().getVehicleName())
+                    .add(ControllerInfo.ENGINE_MAKE, client.getSessionDetails().getControllerInfo().getEngineMake())
+                    .add(ControllerInfo.ENGINE_CODE, client.getSessionDetails().getControllerInfo().getEngineCode())
                     .build();
             builder.add(clientObject);
         }
@@ -219,6 +227,7 @@ public class Backend {
         }
     }
 
+    @Override
     public void close() {
         isClosed = true;
     }
