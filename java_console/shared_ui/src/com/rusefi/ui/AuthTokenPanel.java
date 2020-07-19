@@ -129,7 +129,7 @@ public class AuthTokenPanel {
     }
 
     public boolean hasToken() {
-        return textField.getText().trim().length() > 0 && !textField.getText().contains(TOKEN_SUBSTRING);
+        return AutoTokenUtil.isToken(textField.getText());
     }
 
     public String getToken() {

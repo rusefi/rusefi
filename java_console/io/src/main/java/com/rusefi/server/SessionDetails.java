@@ -1,9 +1,9 @@
 package com.rusefi.server;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import java.io.StringReader;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.util.Objects;
 import java.util.Random;
 
@@ -11,6 +11,7 @@ public class SessionDetails {
     private static final String ONE_TIME_TOKEN = "oneTime";
     private static final String AUTH_TOKEN = "authToken";
     private static final String CONTROLLER = "controller";
+    private static final String HARDCODED_ONE_TIME_CODE = System.getProperty("ONE_TIME_CODE");
 
     private final ControllerInfo controllerInfo;
 
@@ -26,7 +27,7 @@ public class SessionDetails {
     }
 
     public static int createOneTimeCode() {
-        return new Random().nextInt(60000);
+        return HARDCODED_ONE_TIME_CODE == null ? new Random().nextInt(100000) : Integer.parseInt(HARDCODED_ONE_TIME_CODE);
     }
 
     public int getOneTimeToken() {
@@ -42,24 +43,28 @@ public class SessionDetails {
     }
 
     public String toJson() {
-        JsonObject jsonObject = Json.createObjectBuilder()
-                .add(CONTROLLER, controllerInfo.toJson())
-                .add(ONE_TIME_TOKEN, oneTimeToken)
-                .add(AUTH_TOKEN, authToken)
-                .build();
-        return jsonObject.toString();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(CONTROLLER, controllerInfo.toJson());
+        jsonObject.put(ONE_TIME_TOKEN, oneTimeToken);
+        jsonObject.put(AUTH_TOKEN, authToken);
+        return jsonObject.toJSONString();
     }
 
     public static SessionDetails valueOf(String jsonString) {
-        JsonReader reader = Json.createReader(new StringReader(jsonString));
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject;
+        try {
+            jsonObject = (JSONObject) parser.parse(jsonString);
+        } catch (ParseException e) {
+            throw new IllegalStateException(e);
+        }
 
-        JsonObject jsonObject = reader.readObject();
-        String authToken = jsonObject.getString(AUTH_TOKEN);
-        int oneTimeCode = jsonObject.getInt(ONE_TIME_TOKEN);
+        String authToken = (String) jsonObject.get(AUTH_TOKEN);
+        long oneTimeCode = (Long)jsonObject.get(ONE_TIME_TOKEN);
 
-        ControllerInfo controllerInfo = ControllerInfo.valueOf(jsonObject.getString(CONTROLLER));
+        ControllerInfo controllerInfo = ControllerInfo.valueOf((String) jsonObject.get(CONTROLLER));
 
-        return new SessionDetails(controllerInfo, authToken, oneTimeCode);
+        return new SessionDetails(controllerInfo, authToken, (int) oneTimeCode);
     }
 
     @Override

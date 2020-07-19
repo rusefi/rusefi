@@ -52,7 +52,8 @@ public interface IoStream extends WriteStream {
         } else {
             packet = IoHelper.makeCrc32Packet(plainPacket);
         }
-        logger.info("Sending packet " + printHexBinary(plainPacket));
+        // todo: verbose mode printHexBinary(plainPacket))
+        logger.info(getLoggingPrefix() + "Sending packet " + BinaryProtocol.findCommand(plainPacket[0]) + " length=" + plainPacket.length);
         write(packet);
     }
 
@@ -64,6 +65,8 @@ public interface IoStream extends WriteStream {
     boolean isClosed();
 
     void close();
+
+    String getLoggingPrefix();
 
     IncomingDataBuffer getDataBuffer();
 

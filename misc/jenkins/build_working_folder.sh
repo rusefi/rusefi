@@ -54,8 +54,9 @@ cp java_tools/ts_plugin_launcher/build/jar/rusefi_plugin_launcher.jar $CONSOLE_F
 cp simulator/build/rusefi_simulator.exe   $CONSOLE_FOLDER
 cp misc/console_launcher/rusefi_*.exe     $CONSOLE_FOLDER
 cp java_console/rusefi.xml                $CONSOLE_FOLDER
+cp -r java_console/bin                    $FOLDER
 
-cp misc/console_launcher/readme.html $FOLDER
+cp misc/console_launcher/readme.html      $FOLDER
 
 cp firmware/tunerstudio/generated/$INI_FILE_OVERRIDE $FOLDER
 # Unsetting since would not be used anywhere else
@@ -110,7 +111,10 @@ mkdir -p artifacts
 mv temp/$FULL_BUNDLE_FILE artifacts
 
 echo "Removing static content from ${CONSOLE_FOLDER} and $DRIVERS_FOLDER"
-rm -rf $CONSOLE_FOLDER
+rm -rf $CONSOLE_FOLDER/*.exe
+rm -rf $CONSOLE_FOLDER/DfuSe
+rm -rf $CONSOLE_FOLDER/openocd
+rm -rf $CONSOLE_FOLDER/rusefi_autoupdate.jar
 rm -rf $DRIVERS_FOLDER
 
 # for autoupdate we do not want the unique folder name with timestamp

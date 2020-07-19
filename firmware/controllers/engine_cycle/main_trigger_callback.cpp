@@ -24,6 +24,10 @@
 #include "global.h"
 #include "os_access.h"
 
+#if EFI_PRINTF_FUEL_DETAILS
+	bool printFuelDebug = false;
+#endif // EFI_PRINTF_FUEL_DETAILS
+
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
 #include "main_trigger_callback.h"
@@ -176,6 +180,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
+// todo: rename to 'scheduleInjectorOpenAndClose'?
 void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 		int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
@@ -188,7 +193,9 @@ void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 	size_t injectorIndex = event->outputs[0]->injectorIndex;
 	const floatms_t injectionDuration = ENGINE(wallFuel[injectorIndex]).adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_PRINTF_FUEL_DETAILS
-	printf("fuel injectionDuration=%.2f adjusted=%.2f\t\n", ENGINE(injectionDuration), injectionDuration);
+	if (printFuelDebug) {
+		printf("fuel injectionDuration=%.2f adjusted=%.2f\t\n", ENGINE(injectionDuration), injectionDuration);
+	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -233,21 +240,26 @@ void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 		if (prevOutputName == outputName
 				&& engineConfiguration->injectionMode != IM_SIMULTANEOUS
 				&& engineConfiguration->injectionMode != IM_SINGLE_POINT) {
-			warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event %d %s", getRevolutionCounter(), outputName);
+			warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event revCounter=%d %s", getRevolutionCounter(), outputName);
 		}
 		prevOutputName = outputName;
 	}
 
-#if EFI_UNIT_TEST || EFI_SIMULATOR || EFI_PRINTF_FUEL_DETAILS
-	InjectorOutputPin *output = event->outputs[0];
-	printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
-			(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM_VALUE)));
+#if EFI_PRINTF_FUEL_DETAILS
+	if (printFuelDebug) {
+		InjectorOutputPin *output = event->outputs[0];
+		printf("handleFuelInjectionEvent fuelout %s injection_duration %dus engineCycleDuration=%.1fms\t\n", output->name, (int)durationUs,
+				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM_VALUE)) / 1000.0);
+	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	if (event->isScheduled) {
-#if EFI_UNIT_TEST || EFI_SIMULATOR
-	printf("still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
+#if EFI_PRINTF_FUEL_DETAILS
+		if (printFuelDebug) {
+			InjectorOutputPin *output = event->outputs[0];
+			printf("handleFuelInjectionEvent still used %s now=%.1fms\r\n", output->name, (int)getTimeNowUs() / 1000.0);
+		}
+#endif /*EFI_PRINTF_FUEL_DETAILS */
 		return; // this InjectionEvent is still needed for an extremely long injection scheduled previously
 	}
 

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 15 01:37:00 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 19 16:19:31 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1303,7 +1303,7 @@ public class Fields {
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.07.15.all.3884096862";
+	public static final String TS_SIGNATURE = "rusEFI 2020.07.19.all.2760614588";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -1970,9 +1970,9 @@ public class Fields {
 	public static final Field ETBIO22_DIRECTIONPIN2 = Field.create("ETBIO22_DIRECTIONPIN2", 1093, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO22_CONTROLPIN1 = Field.create("ETBIO22_CONTROLPIN1", 1094, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO22_DISABLEPIN = Field.create("ETBIO22_DISABLEPIN", 1095, FieldType.INT8, brain_pin_e);
-	public static final Field ENGINEMAKE = Field.create("ENGINEMAKE", 1096, FieldType.INT);
-	public static final Field ENGINECODE = Field.create("ENGINECODE", 1128, FieldType.INT);
-	public static final Field VEHICLENAME = Field.create("VEHICLENAME", 1160, FieldType.INT);
+	public static final Field ENGINEMAKE = Field.create("ENGINEMAKE", 1096, 32, FieldType.STRING);
+	public static final Field ENGINECODE = Field.create("ENGINECODE", 1128, 32, FieldType.STRING);
+	public static final Field VEHICLENAME = Field.create("VEHICLENAME", 1160, 32, FieldType.STRING);
 	public static final Field TCU_SOLENOID1 = Field.create("TCU_SOLENOID1", 1192, FieldType.INT8, output_pin_e);
 	public static final Field TCU_SOLENOID2 = Field.create("TCU_SOLENOID2", 1193, FieldType.INT8, output_pin_e);
 	public static final Field TCU_SOLENOID3 = Field.create("TCU_SOLENOID3", 1194, FieldType.INT8, output_pin_e);
@@ -2394,28 +2394,28 @@ public class Fields {
 	public static final Field MC33_T_BYPASS = Field.create("MC33_T_BYPASS", 4508, FieldType.INT16);
 	public static final Field MC33_T_HOLD_OFF = Field.create("MC33_T_HOLD_OFF", 4510, FieldType.INT16);
 	public static final Field MC33_T_HOLD_TOT = Field.create("MC33_T_HOLD_TOT", 4512, FieldType.INT16);
-	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 6000, FieldType.INT);
+	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 6000, 120, FieldType.STRING);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT);
 	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 6400, FieldType.INT);
-	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
-	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
-	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);
-	public static final Field FSIOFORMULAS4 = Field.create("FSIOFORMULAS4", 7272, FieldType.INT);
-	public static final Field FSIOFORMULAS5 = Field.create("FSIOFORMULAS5", 7472, FieldType.INT);
-	public static final Field FSIOFORMULAS6 = Field.create("FSIOFORMULAS6", 7672, FieldType.INT);
-	public static final Field FSIOFORMULAS7 = Field.create("FSIOFORMULAS7", 7872, FieldType.INT);
-	public static final Field FSIOFORMULAS8 = Field.create("FSIOFORMULAS8", 8072, FieldType.INT);
-	public static final Field FSIOFORMULAS9 = Field.create("FSIOFORMULAS9", 8272, FieldType.INT);
-	public static final Field FSIOFORMULAS10 = Field.create("FSIOFORMULAS10", 8472, FieldType.INT);
-	public static final Field FSIOFORMULAS11 = Field.create("FSIOFORMULAS11", 8672, FieldType.INT);
-	public static final Field FSIOFORMULAS12 = Field.create("FSIOFORMULAS12", 8872, FieldType.INT);
-	public static final Field FSIOFORMULAS13 = Field.create("FSIOFORMULAS13", 9072, FieldType.INT);
-	public static final Field FSIOFORMULAS14 = Field.create("FSIOFORMULAS14", 9272, FieldType.INT);
-	public static final Field FSIOFORMULAS15 = Field.create("FSIOFORMULAS15", 9472, FieldType.INT);
-	public static final Field FSIOFORMULAS16 = Field.create("FSIOFORMULAS16", 9672, FieldType.INT);
-	public static final Field TIMINGMULTIPLIER = Field.create("TIMINGMULTIPLIER", 9872, FieldType.INT);
-	public static final Field TIMINGADDITIVE = Field.create("TIMINGADDITIVE", 10072, FieldType.INT);
+	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS4 = Field.create("FSIOFORMULAS4", 7272, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS5 = Field.create("FSIOFORMULAS5", 7472, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS6 = Field.create("FSIOFORMULAS6", 7672, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS7 = Field.create("FSIOFORMULAS7", 7872, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS8 = Field.create("FSIOFORMULAS8", 8072, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS9 = Field.create("FSIOFORMULAS9", 8272, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS10 = Field.create("FSIOFORMULAS10", 8472, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS11 = Field.create("FSIOFORMULAS11", 8672, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS12 = Field.create("FSIOFORMULAS12", 8872, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS13 = Field.create("FSIOFORMULAS13", 9072, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS14 = Field.create("FSIOFORMULAS14", 9272, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS15 = Field.create("FSIOFORMULAS15", 9472, 200, FieldType.STRING);
+	public static final Field FSIOFORMULAS16 = Field.create("FSIOFORMULAS16", 9672, 200, FieldType.STRING);
+	public static final Field TIMINGMULTIPLIER = Field.create("TIMINGMULTIPLIER", 9872, 200, FieldType.STRING);
+	public static final Field TIMINGADDITIVE = Field.create("TIMINGADDITIVE", 10072, 200, FieldType.STRING);
 	public static final Field IGNITIONIATCORRTABLE = Field.create("IGNITIONIATCORRTABLE", 12832, FieldType.INT);
 	public static final Field INJECTIONPHASE = Field.create("INJECTIONPHASE", 13984, FieldType.INT);
 	public static final Field FUELTABLE = Field.create("FUELTABLE", 15136, FieldType.INT);

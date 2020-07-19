@@ -3,6 +3,7 @@ package com.rusefi.server;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.stream.JsonParsingException;
 import java.io.StringReader;
 import java.util.Objects;
 
@@ -37,7 +38,12 @@ public class ApplicationRequest {
     public static ApplicationRequest valueOf(String jsonString) {
         JsonReader reader = Json.createReader(new StringReader(jsonString));
 
-        JsonObject jsonObject = reader.readObject();
+        JsonObject jsonObject;
+        try {
+            jsonObject = reader.readObject();
+        } catch (JsonParsingException e) {
+            throw new IllegalStateException("While parsing [" + jsonString + "]", e);
+        }
         int targetUserId = jsonObject.getInt(USER_ID);
 
         SessionDetails session = SessionDetails.valueOf(jsonObject.getString(SESSION));

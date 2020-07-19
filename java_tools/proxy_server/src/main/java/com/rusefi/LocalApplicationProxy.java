@@ -4,7 +4,10 @@ import com.opensr5.Logger;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.server.ApplicationRequest;
+import com.rusefi.server.rusEFISSLContext;
+import com.rusefi.tools.online.HttpUtil;
 
 import java.io.IOException;
 
@@ -18,11 +21,12 @@ public class LocalApplicationProxy {
     }
 
     /**
+     * @param serverPortForRemoteUsers port on which rusEFI proxy accepts authenticator connections
      * @param applicationRequest remote session we want to connect to
      * @param authenticatorPort local port we would bind for TunerStudio to connect to
-     * @param authenticatorToProxyStream
      */
-    static void startAndRun(Logger logger, ApplicationRequest applicationRequest, int authenticatorPort, IoStream authenticatorToProxyStream) throws IOException {
+    static void startAndRun(Logger logger, int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int authenticatorPort) throws IOException {
+        IoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", logger, rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForRemoteUsers));
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
         localApplicationProxy.run(authenticatorToProxyStream);
 
@@ -32,5 +36,8 @@ public class LocalApplicationProxy {
     public void run(IoStream authenticatorToProxyStream) throws IOException {
         // right from connection push session authentication data
         new HelloCommand(logger, applicationRequest.toJson()).handle(authenticatorToProxyStream);
+    }
+
+    public static void start(String[] strings) {
     }
 }

@@ -23,7 +23,7 @@ public class BinaryProtocolProxy {
                     @Override
                     public void run() {
                         try {
-                            TcpIoStream clientStream = new TcpIoStream(logger, clientSocket);
+                            TcpIoStream clientStream = new TcpIoStream("[[proxy]] ", logger, clientSocket);
                             runProxy(targetEcuSocket, clientStream);
                         } catch (IOException e) {
                             e.printStackTrace();
