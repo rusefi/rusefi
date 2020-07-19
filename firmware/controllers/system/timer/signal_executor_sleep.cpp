@@ -33,7 +33,7 @@
 
 #if EFI_PRINTF_FUEL_DETAILS
 bool printSchedulerDebug = true;
-#endif EFI_PRINTF_FUEL_DETAILS
+#endif // EFI_PRINTF_FUEL_DETAILS
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
