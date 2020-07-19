@@ -11,12 +11,13 @@ ButtonDebounce::ButtonDebounce (int t, brain_pin_e p, iomode_t m) {
 bool ButtonDebounce::readPin(brain_pin_e pin) {
     efitimems_t timeNow = currentTimeMilllis();
     if ((timeNow - time) < threshold) {
-        if (mode == PAL_MODE_INPUT_PULLDOWN) {
-            return false;
-        } else {
-            return true;
-        }
+        return false;
     }
     time = timeNow;
-    return efiReadPin(pin);
+    bool read = efiReadPin(pin);
+    if (mode == PAL_MODE_INPUT_PULLDOWN) {
+        return read;
+    } else {
+        return !read;
+    }
 }

@@ -2,8 +2,8 @@
 #include "debounce.h"
 
 ButtonShiftController::ButtonShiftController () {
-    debounceUp = new ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), PAL_MODE_INPUT_PULLDOWN);
-    debounceUp = new ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), PAL_MODE_INPUT_PULLDOWN):
+    debounceUp = new ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
+    debounceUp = new ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode)):
 }
 
 ButtonShiftController::update() {
