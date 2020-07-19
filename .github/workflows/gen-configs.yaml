@@ -40,7 +40,7 @@ jobs:
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "::set-env name=NOCOMMIT::true"
           exit 0
-        elsif echo "$OUT" | grep 'changed'; then
+        elif echo "$OUT" | grep 'changed'
           exit 0
         else
           exit 1
