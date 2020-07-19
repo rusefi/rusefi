@@ -255,6 +255,7 @@ void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 	if (event->isScheduled) {
 #if EFI_PRINTF_FUEL_DETAILS
 		if (printFuelDebug) {
+			InjectorOutputPin *output = event->outputs[0];
 			printf("handleFuelInjectionEvent still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
 		}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
