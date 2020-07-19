@@ -80,6 +80,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private long lastLowRpmTime = System.currentTimeMillis();
 
     private List<StreamFile> compositeLogs = new ArrayList<>();
+    public static boolean DISABLE_LOCAL_CACHE;
 
     public static String findCommand(byte command) {
         switch (command) {
@@ -384,6 +385,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     private ConfigurationImage getAndValidateLocallyCached() {
+        if (DISABLE_LOCAL_CACHE)
+            return null;
         ConfigurationImage localCached;
         try {
             localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY);
