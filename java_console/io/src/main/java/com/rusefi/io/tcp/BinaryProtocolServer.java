@@ -5,6 +5,7 @@ import com.opensr5.Logger;
 import com.rusefi.Listener;
 import com.rusefi.binaryprotocol.*;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.server.rusEFISSLContext;
@@ -210,10 +211,9 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         int crc = in.readInt();
         int fromPacket = IoHelper.getCrc32(packet);
         if (crc != fromPacket)
-            throw new IllegalStateException("CRC mismatch " + crc + " vs " + fromPacket);
+            throw new IllegalStateException("CRC mismatch " + crc + " vs " + fromPacket + " " + IoStream.printHexBinary(packet));
         return new Packet(packet, crc);
     }
-
 
     public interface Handler {
         void handle() throws IOException;
