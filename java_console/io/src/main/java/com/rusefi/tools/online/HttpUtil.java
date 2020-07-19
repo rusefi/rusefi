@@ -12,14 +12,16 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 public class HttpUtil {
-    public static String RUSEFI_ONLINE_JSON_API_PREFIX = "https://rusefi.com/online/api.php?method=";
-
-    // todo: migrate proxy http jscon API server to TLS
+    // todo: migrate proxy http json API server to TLS
     public static final String RUSEFI_PROXY_JSON_PROTOCOL = "http://";
+    public static final int HTTP_PORT = 8001;
     /**
      * hostname of PROXY server, not primary rusEFI web server - those are two separate hosts at the moment
      */
     public static String RUSEFI_PROXY_HOSTNAME = System.getProperty("RUSEFI_PROXY_URL", "proxy.rusefi.com");
+
+    public static String RUSEFI_ONLINE_JSON_API_PREFIX = "https://rusefi.com/online/api.php?method=";
+    public static final String RUSEFI_PROXY_JSON_API_PREFIX = RUSEFI_PROXY_JSON_PROTOCOL + RUSEFI_PROXY_HOSTNAME;
 
     public static <T> T getJsonResponse(HttpResponse response) throws IOException, ParseException {
         HttpEntity entity = response.getEntity();

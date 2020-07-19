@@ -24,7 +24,8 @@
             <src path="${console_path}/logging-api/src/main/java"/>
             <src path="${console_path}/models/src"/>
             <src path="${launcher_path}/src"/>
-            <src path="src"/>
+            <src path="src/main/java"/>
+            <src path="src/test/java"/>
             <exclude name="**/*Sandbox.java"/>
         </javac>
 
