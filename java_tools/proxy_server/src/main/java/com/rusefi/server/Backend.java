@@ -106,7 +106,7 @@ public class Backend implements Closeable {
                         // connection from authenticator app which proxies for Tuner Studio
                         IoStream applicationClientStream = null;
                         try {
-                            applicationClientStream = new TcpIoStream(logger, applicationSocket);
+                            applicationClientStream = new TcpIoStream("[app] ", logger, applicationSocket);
 
                             // authenticator pushed hello packet on connect
                             String jsonString = HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer(), logger);

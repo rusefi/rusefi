@@ -28,7 +28,12 @@ public class SerialIoStreamJSerialComm implements IoStream {
         this.sp = sp;
         this.port = port;
         this.logger = logger;
-        this.dataBuffer = IncomingDataBuffer.createDataBuffer(this, logger);
+        this.dataBuffer = IncomingDataBuffer.createDataBuffer("[serial] ", this, logger);
+    }
+
+    @Override
+    public String getLoggingPrefix() {
+        return "";
     }
 
     @Override
