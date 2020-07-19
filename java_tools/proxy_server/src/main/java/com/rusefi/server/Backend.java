@@ -159,11 +159,11 @@ public class Backend implements Closeable {
                         try {
                             controllerConnectionState.requestControllerInfo();
 
-                            
+                            // IMPORTANT: has to happen before we register controller while we still have exclusive access
                             controllerConnectionState.getOutputs();
 
                             register(controllerConnectionState);
-                        } catch (IOException e) {
+                        } catch (Throwable e) {
                             close(controllerConnectionState);
                         }
                     }

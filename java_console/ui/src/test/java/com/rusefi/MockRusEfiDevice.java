@@ -1,6 +1,9 @@
 package com.rusefi;
 
 import com.opensr5.Logger;
+import com.rusefi.config.generated.Fields;
+import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.BaseBroadcastingThread;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
@@ -32,7 +35,18 @@ public class MockRusEfiDevice {
         Socket socket = rusEFISSLContext.getSSLSocket(LOCALHOST, serverPort);
         BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(socket,
                 sessionDetails,
-                logger);
+                logger) {
+            @Override
+            protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
+                super.handleCommand(packet, stream);
+
+                if (packet.getPacket()[0] == Fields.TS_OUTPUT_COMMAND) {
+                    byte[] response = new byte[1 + Fields.TS_OUTPUT_SIZE];
+                    response[0] = (byte) BinaryProtocolServer.TS_OK.charAt(0);
+                    stream.sendPacket(response, logger);
+                }
+            }
+        };
         baseBroadcastingThread.start();
     }
 }
