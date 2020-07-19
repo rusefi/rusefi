@@ -21,6 +21,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.Closeable;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -56,21 +57,25 @@ public class Backend implements Closeable {
         new Thread(() -> {
             try {
                 System.out.println("Starting http backend on " + httpPort);
-                new FtBasic(
-                        new TkFork(showOnlineUsers,
-                                Monitoring.showStatistics,
-                                new FkRegex(VERSION_PATH, BACKEND_VERSION),
-                                new FkRegex("/", new RsHtml("<html><body>\n" +
-                                        "<a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
-                                        "<br/>\n" +
-                                        "<a href='" + Monitoring.STATUS + "'>Status</a>\n" +
-                                        "<br/>\n" +
-                                        "<a href='" + ProxyClient.LIST_PATH + "'>List</a>\n" +
-                                        "<br/>\n" +
-                                        "<br/>\n" +
-                                        "</body></html>\n"))
-                        ), httpPort
-                ).start(() -> isClosed);
+                try {
+                    new FtBasic(
+                            new TkFork(showOnlineUsers,
+                                    Monitoring.showStatistics,
+                                    new FkRegex(VERSION_PATH, BACKEND_VERSION),
+                                    new FkRegex("/", new RsHtml("<html><body>\n" +
+                                            "<a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
+                                            "<br/>\n" +
+                                            "<a href='" + Monitoring.STATUS + "'>Status</a>\n" +
+                                            "<br/>\n" +
+                                            "<a href='" + ProxyClient.LIST_PATH + "'>List</a>\n" +
+                                            "<br/>\n" +
+                                            "<br/>\n" +
+                                            "</body></html>\n"))
+                            ), httpPort
+                    ).start(() -> isClosed);
+                } catch (BindException e) {
+                    throw new IllegalStateException("While binding " + httpPort, e);
+                }
                 logger.info("Shutting down backend on port " + httpPort);
             } catch (IOException e) {
                 throw new IllegalStateException(e);
