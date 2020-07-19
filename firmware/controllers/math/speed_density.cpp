@@ -155,7 +155,7 @@ AirmassResult getSpeedDensityAirmass(float map DECLARE_ENGINE_PARAMETER_SUFFIX) 
 		return {};
 	}
 #if EFI_PRINTF_FUEL_DETAILS
-	printf("map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
+	printf("getSpeedDensityAirmass map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
 			map, adjustedMap, engine->engineState.sd.adjustedManifoldAirPressure);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
