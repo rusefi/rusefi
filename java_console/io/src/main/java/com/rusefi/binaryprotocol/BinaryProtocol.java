@@ -363,7 +363,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
                 String code = (response == null || response.length == 0) ? "empty" : "code " + response[0];
                 String info = response == null ? "NO RESPONSE" : (code + " size " + response.length);
-                logger.error("readImage: Something is wrong, retrying... " + info);
+                logger.info("readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
                 continue;
             }
 
@@ -394,7 +394,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
         if (localCached != null) {
             int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
-            System.out.printf("Local cache CRC %x\n", crcOfLocallyCachedConfiguration);
+            System.out.printf(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration);
 
             byte packet[] = new byte[7];
             packet[0] = COMMAND_CRC_CHECK_COMMAND;
