@@ -40,8 +40,8 @@ public class LogicdataStreamFile extends StreamFile {
 
 	private static final long SIGN_FLAG = 0x80000000L;
 
-    private static int numChannels = 6;
-    private static int reservedDurationInSamples = 10;
+    private static final int numChannels = 6;
+    private static final int reservedDurationInSamples = 10;
     private static int realDurationInSamples = 0;
     private static int scaledDurationInSamples = 0;
 
