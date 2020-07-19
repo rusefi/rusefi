@@ -7,6 +7,8 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_2jz_vvt.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
 	tests/ignition_injection/injection_mode_transition.cpp \
+	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \
+	tests/ignition_injection/test_miata_na6_real_cranking.cpp \
 	tests/test_util.cpp \
 	tests/test_ion.cpp \
 	tests/test_aux_valves.cpp \
@@ -14,8 +16,6 @@ TESTS_SRC_CPP = \
 	tests/test_hip9011.cpp \
 	tests/test_cj125.cpp \
 	tests/test_engine_math.cpp \
-	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \
-	tests/ignition_injection/test_miata_na6_real_cranking.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_dwell_corner_case_issue_796.cpp \
 	tests/test_idle_controller.cpp \
