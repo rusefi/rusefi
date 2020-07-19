@@ -12,6 +12,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_ignition_scheduling.cpp \
 	tests/ignition_injection/test_multispark.cpp \
 	tests/ignition_injection/test_fuelCut.cpp \
+	tests/ignition_injection/injection_mode_transition.cpp \
 	tests/test_util.cpp \
 	tests/test_ion.cpp \
 	tests/test_aux_valves.cpp \
