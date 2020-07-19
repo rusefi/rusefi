@@ -37,6 +37,15 @@ public class Page {
         this.size = size;
     }
 
+    public Constant findParameter(String name) {
+        for (Constant parameter : constant) {
+            if (parameter.getName().equals(name)) {
+                return parameter;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return "Page{" +

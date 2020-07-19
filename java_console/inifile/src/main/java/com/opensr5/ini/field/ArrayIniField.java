@@ -13,13 +13,15 @@ public class ArrayIniField extends IniField {
     private final int cols;
     private final int rows;
     private final double multiplier;
+    private final String digits;
 
-    public ArrayIniField(String name, int offset, FieldType type, int cols, int rows, String unit, double multiplier) {
+    public ArrayIniField(String name, int offset, FieldType type, int cols, int rows, String unit, double multiplier, String digits) {
         super(name, offset);
         this.type = type;
         this.cols = cols;
         this.rows = rows;
         this.multiplier = multiplier;
+        this.digits = digits;
     }
 
     public FieldType getType() {
@@ -32,6 +34,11 @@ public class ArrayIniField extends IniField {
 
     public int getRows() {
         return rows;
+    }
+
+    @Override
+    public String getDigits() {
+        return digits;
     }
 
     @Override
@@ -90,6 +97,7 @@ public class ArrayIniField extends IniField {
         int offset = Integer.parseInt(list.get(3));
         String size = list.get(4);
         String unit = list.get(5);
+        String digits = list.get(10);
         double multiplier = Double.parseDouble(list.get(6));
 
         size = size.replaceAll("[\\]\\[x]", " ").trim();
@@ -106,6 +114,6 @@ public class ArrayIniField extends IniField {
             throw new IllegalStateException("Unexpected " + size);
         }
 
-        return new ArrayIniField(name, offset, type, cols, rows, unit, multiplier);
+        return new ArrayIniField(name, offset, type, cols, rows, unit, multiplier, digits);
     }
 }

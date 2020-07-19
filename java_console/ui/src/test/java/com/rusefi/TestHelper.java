@@ -23,14 +23,14 @@ public class TestHelper {
 
     @NotNull
     public static ScalarIniField createIniField(Field field) {
-        return new ScalarIniField(field.getName(), field.getOffset(), "", field.getType(), 1);
+        return new ScalarIniField(field.getName(), field.getOffset(), "", field.getType(), 1, "0");
     }
 
     @NotNull
     public static ConfigurationImage prepareImage(int input, ScalarIniField scalarIniField) {
         ConfigurationImage ci = new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE);
 
-        scalarIniField.setValue(ci, new Constant(scalarIniField.getName(), "", Integer.toString(input)));
+        scalarIniField.setValue(ci, new Constant(scalarIniField.getName(), "", Integer.toString(input), scalarIniField.getDigits()));
         return ci;
     }
 

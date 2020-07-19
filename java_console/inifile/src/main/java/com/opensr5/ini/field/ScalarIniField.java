@@ -13,15 +13,22 @@ import static com.rusefi.config.FieldType.*;
 public class ScalarIniField extends IniField {
     private final String unit;
     private final FieldType type;
+    private final String digits;
     private final double multiplier;
 
-    public ScalarIniField(String name, int offset, String unit, FieldType type, double multiplier) {
+    public ScalarIniField(String name, int offset, String unit, FieldType type, double multiplier, String digits) {
         super(name, offset);
         this.unit = unit;
         this.type = type;
+        this.digits = digits;
         if (multiplier == 0)
             throw new IllegalArgumentException("Multiplier should not be zero");
         this.multiplier = multiplier;
+    }
+
+    @Override
+    public String getDigits() {
+        return digits;
     }
 
     @Override
@@ -86,10 +93,11 @@ public class ScalarIniField extends IniField {
         String name = list.get(0);
         FieldType type = FieldType.parseTs(list.get(2));
         int offset = Integer.parseInt(list.get(3));
+        String digits = list.get(9);
 
         String unit = list.get(4);
         double multiplier = Double.parseDouble(list.get(5));
 
-        return new ScalarIniField(name, offset, unit, type, multiplier);
+        return new ScalarIniField(name, offset, unit, type, multiplier, digits);
     }
 }
