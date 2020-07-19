@@ -26,7 +26,7 @@
 
 #if EFI_PRINTF_FUEL_DETAILS
 	bool printFuelDebug = false;
-#endif
+#endif // EFI_PRINTF_FUEL_DETAILS
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
