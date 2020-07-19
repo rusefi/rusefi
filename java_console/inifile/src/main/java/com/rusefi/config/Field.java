@@ -206,4 +206,13 @@ public class Field {
         Field field = new Field(name, offset, type);
         return field;
     }
+
+    public String getStringValue(ConfigurationImage image) {
+        if (type != STRING)
+            throw new IllegalStateException("Not a string parameter " + name);
+        ByteBuffer bb = image.getByteBuffer(offset, stringSize);
+        byte[] bytes = new byte[stringSize];
+        bb.get(bytes);
+        return new String(bytes).trim();
+    }
 }
