@@ -35,6 +35,10 @@ int TestExecutor::size() {
 	return schedulingQueue.size();
 }
 
+scheduling_s* TestExecutor::getHead() {
+	return schedulingQueue.getHead();
+}
+
 scheduling_s* TestExecutor::getForUnitTest(int index) {
 	return schedulingQueue.getElementAtIndexForUnitText(index);
 }
