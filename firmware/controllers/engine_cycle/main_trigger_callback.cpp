@@ -117,6 +117,10 @@ void turnInjectionPinHigh(InjectionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
 #if EFI_TOOTH_LOGGER
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+	EXPAND_Engine;
+#endif // EFI_UNIT_TEST
 	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_TOOTH_LOGGER
 
@@ -131,7 +135,7 @@ void turnInjectionPinHigh(InjectionEvent *event) {
 
 void InjectorOutputPin::close() {
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("turnInjectionPinLow %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
+	printf("InjectorOutputPin::close %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	overlappingCounter--;
@@ -147,7 +151,12 @@ void InjectorOutputPin::close() {
 void turnInjectionPinLow(InjectionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
-#if EFI_TOOTH_LOGGER
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+	EXPAND_Engine;
+#endif
+
+	#if EFI_TOOTH_LOGGER
 	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_TOOTH_LOGGER
 
@@ -158,10 +167,6 @@ void turnInjectionPinLow(InjectionEvent *event) {
 			output->close();
 		}
 	}
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
-#endif
 	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
