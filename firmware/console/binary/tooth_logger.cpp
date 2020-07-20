@@ -55,6 +55,25 @@ int getCompositeRecordCount() {
 	return NextIdx;
 }
 
+
+#if EFI_UNIT_TEST
+#include "logicdata.h"
+int copyCompositeEvents(CompositeEvent *events) {
+	for (int i = 0;i < NextIdx;i++) {
+		CompositeEvent *event = &events[i];
+		event->timestamp = buffer[i].timestamp;
+		event->primaryTrigger = buffer[i].priLevel;
+		event->secondaryTrigger = buffer[i].secLevel;
+		event->trg = buffer[i].trigger;
+		event->sync = buffer[i].sync;
+		event->coil = buffer[i].coil;
+		event->injector = buffer[i].injector;
+	}
+	return NextIdx;
+}
+
+#endif // EFI_UNIT_TEST
+
 static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigger2,
 		bool isTDC DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	uint32_t nowUs = NT2US(timestamp);
@@ -156,11 +175,13 @@ void EnableToothLogger() {
 	// Enable logging of edges as they come
 	ToothLoggerEnabled = true;
 
+#if EFI_TUNER_STUDIO
 	// Tell TS that we're ready for it to read out the log
 	// nb: this is a lie, as we may not have written anything
 	// yet.  However, we can let it continuously read out the buffer
 	// as we update it, which looks pretty nice.
 	tsOutputChannels.toothLogReady = true;
+#endif // EFI_TUNER_STUDIO
 }
 
 void EnableToothLoggerIfNotEnabled() {
@@ -171,7 +192,9 @@ void EnableToothLoggerIfNotEnabled() {
 
 void DisableToothLogger() {
 	ToothLoggerEnabled = false;
+#if EFI_TUNER_STUDIO
 	tsOutputChannels.toothLogReady = false;
+#endif // EFI_TUNER_STUDIO
 }
 
 ToothLoggerBuffer GetToothLoggerBuffer() {

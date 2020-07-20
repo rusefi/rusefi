@@ -58,16 +58,8 @@ static void writeAs(int64_t value, int numBytes) {
 	} else {
 		writeByte(numBytes);
 		for (int i = 0; i < numBytes; i++) {
-			writeByte((uint8_t)((value >> (i * 8)) & 0xff));
+			writeByte((uint8_t) ((value >> (i * 8)) & 0xff));
 		}
-	}
-}
-
-static void writeString(const char *value) {
-	int len = strlen(value);
-	writeByte(len);
-	for (int i = 0; i < len; i++) {
-		writeByte(value[i]);
 	}
 }
 
@@ -85,6 +77,14 @@ static void write(int64_t value) {
 		writeAs(value, 3);
 	} else {
 		writeAs(value, 4);
+	}
+}
+
+static void writeString(const char *value) {
+	int len = strlen(value);
+	write(len);
+	for (int i = 0; i < len; i++) {
+		writeByte(value[i]);
 	}
 }
 
@@ -138,16 +138,31 @@ static void writeHeader() {
 
 }
 
+static void writeDouble(double value) {
+	static_assert(sizeof(double) == 8);
+
+	if (value == 0.0) {
+		writeByte(0);
+	} else {
+		writeByte(8);
+		char *ptr = (char*) (void*) &value;
+
+		for (int i = 0; i < 8; i++) {
+			writeByte(ptr[i]);
+		}
+	}
+}
+
 static void writeChannelHeader(int ch) {
 	write(0xff);
 	write(ch);
 	writeString(channelNames[ch]);
 	write(0, 2);
-	write(1.0);
+	writeDouble(1.0);
 	write(0);
-	write(0.0);
+	writeDouble(0.0);
 	write(1);	// or 2
-	write(0.0);	// or 1.0
+	writeDouble(0.0);	// or 1.0
 
 	// this part sounds like the 'next' pointer?
 	if (ch == numChannels - 1) {
@@ -167,11 +182,11 @@ static void writeEdges(int64_t *chDeltas, bool useLongDeltas, int numEdges) {
 		// set 16-bit 'sign' flag
 		if (!useLongDeltas && (d & SIGN_FLAG) == SIGN_FLAG)
 			d = (d & 0x7fff) | (SIGN_FLAG >> 16);
-		writeByte((uint8_t)(d & 0xff));
-		writeByte((uint8_t)((d >> 8) & 0xff));
+		writeByte((uint8_t) (d & 0xff));
+		writeByte((uint8_t) ((d >> 8) & 0xff));
 		if (useLongDeltas) {
-			writeByte((uint8_t)((d >> 16) & 0xff));
-			writeByte((uint8_t)((d >> 24) & 0xff));
+			writeByte((uint8_t) ((d >> 16) & 0xff));
+			writeByte((uint8_t) ((d >> 24) & 0xff));
 		}
 	}
 	writeByte(0x00);
@@ -387,12 +402,12 @@ static void writeEvents(CompositeEvent *events, int count) {
 	writeChannelDataHeader();
 
 	int64_t *chDeltas = (int64_t*) malloc(sizeof(int64_t) * count);
-	int deltaCount = 0;
 
 	bool useLongDeltas = false;
 	for (int ch = 0; ch < numChannels; ch++) {
 		int chPrevState = -1;
 		int prevTs = 0;
+		int deltaCount = 0;
 
 		for (int i = 0; i < count; i++) {
 			CompositeEvent *event = &events[i];
@@ -417,9 +432,9 @@ static void writeEvents(CompositeEvent *events, int count) {
 				prevTs = ts;
 				chPrevState = chState;
 			}
-			writeChannelData(ch, chDeltas, chPrevState, prevTs, useLongDeltas,
-					deltaCount);
 		}
+		writeChannelData(ch, chDeltas, chPrevState, prevTs, useLongDeltas,
+				deltaCount);
 	}
 
 	free(chDeltas);
@@ -458,7 +473,7 @@ static void writeFooter() {
 
 	write(BLOCK);
 	write(0);
-	write(1.0);
+	writeDouble(1.0);
 	write(SUB);
 	write(0, 6);
 	write(1);
@@ -471,9 +486,9 @@ static void writeFooter() {
 	writeTimingMarker();
 }
 
-void writeFile(CompositeEvent *events, int count) {
+void writeFile(const char * fileName, CompositeEvent *events, int count) {
 
-	ptr = fopen("test.logicdata", "wb");
+	ptr = fopen(fileName, "wb");
 
 	writeHeader();
 	writeEvents(events, count);

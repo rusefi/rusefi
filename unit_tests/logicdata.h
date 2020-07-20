@@ -17,4 +17,4 @@ struct CompositeEvent {
     bool injector;
 };
 
-void writeFile(CompositeEvent *events, int count);
+void writeFile(const char * fileName, CompositeEvent *events, int count);

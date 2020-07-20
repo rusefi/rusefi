@@ -47,6 +47,7 @@ public class LogicdataStreamFile extends StreamFile {
 
 	private final String fileName;
 	private final List<CompositeEvent> eventsBuffer = new ArrayList<>();
+	private int totalBytes = 0;
 
 	private static final String [] channelNames = { "Primary", "Secondary", "Trg", "Sync", "Coil", "Injector", "Channel 6", "Channel 7" };
 
@@ -149,7 +150,7 @@ public class LogicdataStreamFile extends StreamFile {
     ////////////////////////////////////////////////////////////////////
 
     private void writeHeader() throws IOException {
-        stream.write(magic);
+        writeByte(magic);
 
         write(title.length());
         write(title);
@@ -185,11 +186,11 @@ public class LogicdataStreamFile extends StreamFile {
 		write(ch);
 		write(channelNames[ch]);
 		write(0, 2);
-		write(1.0);
+		writeDouble(1.0);
 		write(0);
-		write(0.0);
+		writeDouble(0.0);
 		write(1);	// or 2
-		write(0.0);	// or 1.0
+		writeDouble(0.0);	// or 1.0
 
 		// this part sounds like the 'next' pointer?
 		if (ch == numChannels - 1) {
@@ -352,17 +353,22 @@ public class LogicdataStreamFile extends StreamFile {
 			// set 16-bit 'sign' flag
 			if (!useLongDeltas && (d & SIGN_FLAG) == SIGN_FLAG)
 				d = (d & 0x7fff) | (SIGN_FLAG >> 16);
-			stream.write((byte)(d & 0xff));
-			stream.write((byte)((d >> 8) & 0xff));
+			writeByte((byte)(d & 0xff));
+			writeByte((byte)((d >> 8) & 0xff));
 			if (useLongDeltas) {
-				stream.write((byte)((d >> 16) & 0xff));
-				stream.write((byte)((d >> 24) & 0xff));
+				writeByte((byte)((d >> 16) & 0xff));
+				writeByte((byte)((d >> 24) & 0xff));
 			}
 		}
-		stream.write(0x00);
+		writeByte(0x00);
 	}
 
-    private void writeChannelDataFooter() throws IOException {
+	private void writeByte(int i) throws IOException {
+		stream.write(i);
+		totalBytes++;
+	}
+
+	private void writeChannelDataFooter() throws IOException {
     	write(0, 3);
     	write(1);
     	write(1);
@@ -405,7 +411,7 @@ public class LogicdataStreamFile extends StreamFile {
 
         write(BLOCK);
         write(0);
-        write(1.0);
+        writeDouble(1.0);
         write(SUB);
 		write(0, 6);
 		write(1);
@@ -453,11 +459,11 @@ public class LogicdataStreamFile extends StreamFile {
 
     private void writeAs(long value, int numBytes) throws IOException {
     	if (value == 0) {
-   			stream.write(0);
+   			writeByte(0);
    		} else {
-			stream.write(numBytes);
+			writeByte(numBytes);
 			for (int i = 0; i < numBytes; i++) {
-				stream.write((byte)((value >> (i * 8)) & 0xff));
+				writeByte((byte)((value >> (i * 8)) & 0xff));
 			}
 		}
     }
@@ -467,7 +473,7 @@ public class LogicdataStreamFile extends StreamFile {
     	if (value < 0 || value > 0xFFFFFFFFL) {
     		writeAs(value, 8);
     	} else if (value == 0) {
-    		stream.write(0);
+    		writeByte(0);
 		} else if (value <= 0xff) {
 			writeAs(value, 1);
 		} else if (value <= 0xffff) {
@@ -479,18 +485,18 @@ public class LogicdataStreamFile extends StreamFile {
 		}
 	}
 
-    private void write(double value) throws IOException {
+    private void writeDouble(double value) throws IOException {
 		if (value == 0.0) {
-			stream.write(0);
+			writeByte(0);
 		} else {
-			stream.write(8);
+			writeByte(8);
 			// doubles are saved little-endian, sorry Java :)
 			ByteBuffer bb = ByteBuffer.allocate(8);
 			bb.order(ByteOrder.LITTLE_ENDIAN);
 	        bb.putDouble(value);
 	        bb.rewind();
 	        for (int i = 0; i < 8; i++) {
-	        	stream.write(bb.get());
+	        	writeByte(bb.get());
 	        }
 		}
     }
@@ -498,13 +504,13 @@ public class LogicdataStreamFile extends StreamFile {
     private void write(String str) throws IOException {
    		write(str.length());
     	for (char c : str.toCharArray()) {
-    		stream.write(c);
+    		writeByte(c);
     	}
 	}
 
 	private void writeRaw(int value, int num) throws IOException {
     	for (int i = 0; i < num; i++) {
-    		stream.write(value);
+    		writeByte(value);
     	}
     }
 }

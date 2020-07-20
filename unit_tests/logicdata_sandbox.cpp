@@ -1,3 +1,7 @@
+/**
+ * @file logicdata_sandbox.cpp
+ *
+ */
 
 #include <cstdio>
 #include "logicdata.h"
@@ -9,9 +13,14 @@ void setEvent(CompositeEvent *events, int index,
 		int timestamp, bool primaryTrigger, bool secondaryTrigger, bool trg, bool sync, bool coil, bool injector) {
 	events[index].timestamp = timestamp;
 	events[index].primaryTrigger = primaryTrigger;
+	events[index].secondaryTrigger = secondaryTrigger;
+	events[index].trg = trg;
+	events[index].sync = sync;
+	events[index].coil = coil;
+	events[index].injector = injector;
 }
 
-int main(int argc, char **argv) {
+void runLogicdataSandbox() {
 	printf(".logicdata Sandbox 20200719\n");
 
 
@@ -22,7 +31,11 @@ int main(int argc, char **argv) {
     setEvent(events, index++, 1000030, false, false, false, false, true, false);
     setEvent(events, index++, 2000030, false, false, true, false, false, true);
 
-	writeFile(events, index);
+	writeFile("test.logicdata", events, index);
 
 	printf("Done!\n");
+}
+
+int main(int argc, char **argv) {
+	runLogicdataSandbox();
 }
