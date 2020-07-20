@@ -486,9 +486,9 @@ static void writeFooter() {
 	writeTimingMarker();
 }
 
-void writeFile(CompositeEvent *events, int count) {
+void writeFile(const char * fileName, CompositeEvent *events, int count) {
 
-	ptr = fopen("test.logicdata", "wb");
+	ptr = fopen(fileName, "wb");
 
 	writeHeader();
 	writeEvents(events, count);

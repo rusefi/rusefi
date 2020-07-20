@@ -27,7 +27,7 @@ void runLogicdataSandbox() {
     setEvent(events, index++, 1000030, false, false, false, false, true, false);
     setEvent(events, index++, 2000030, false, false, true, false, false, true);
 
-	writeFile(events, index);
+	writeFile("test.logicdata", events, index);
 
 	printf("Done!\n");
 }
