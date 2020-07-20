@@ -55,6 +55,25 @@ int getCompositeRecordCount() {
 	return NextIdx;
 }
 
+
+#if EFI_UNIT_TEST
+#include "logicdata.h"
+int copyCompositeEvents(CompositeEvent *events) {
+	for (int i = 0;i < NextIdx;i++) {
+		CompositeEvent *event = &events[i];
+		event->timestamp = buffer[i].timestamp;
+		event->primaryTrigger = buffer[i].priLevel;
+		event->secondaryTrigger = buffer[i].secLevel;
+		event->trg = buffer[i].trigger;
+		event->sync = buffer[i].sync;
+		event->coil = buffer[i].coil;
+		event->injector = buffer[i].injector;
+	}
+	return NextIdx;
+}
+
+#endif // EFI_UNIT_TEST
+
 static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigger2,
 		bool isTDC DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	uint32_t nowUs = NT2US(timestamp);

@@ -13,6 +13,11 @@
 #include "rusefi_enums.h"
 #include "engine.h"
 
+#if EFI_UNIT_TEST
+#include "logicdata.h"
+int copyCompositeEvents(CompositeEvent *events);
+#endif // EFI_UNIT_TEST
+
 int getCompositeRecordCount();
 
 void EnableToothLoggerIfNotEnabled();
