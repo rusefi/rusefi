@@ -111,7 +111,7 @@ void EngineTestHelper::fireRise(float delayMs) {
 }
 
 void EngineTestHelper::smartFireRise(float delayMs) {
-	moveTimeForwardUs(MS2US(delayMs));
+	smartMoveTimeForwardUs(MS2US(delayMs));
 	firePrimaryTriggerRise();
 }
 
@@ -121,7 +121,7 @@ void EngineTestHelper::fireFall(float delayMs) {
 }
 
 void EngineTestHelper::smartFireFall(float delayMs) {
-	moveTimeForwardUs(MS2US(delayMs));
+	smartMoveTimeForwardUs(MS2US(delayMs));
 	firePrimaryTriggerFall();
 }
 
@@ -187,11 +187,31 @@ void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
 	timeNowUs += deltaTimeUs;
 }
 
+/**
+ * this method executed all pending events wile
+ */
 void EngineTestHelper::smartMoveTimeForwardUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
-		printf("moveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
+		printf("smartMoveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
 	}
-	timeNowUs += deltaTimeUs;
+	int targetTime = timeNowUs + deltaTimeUs;
+
+	while (true) {
+		scheduling_s* nextScheduledEvent = engine.executor.getHead();
+		if (nextScheduledEvent == nullptr) {
+			// nothing pending - we are done here
+			break;
+		}
+		int nextEventTime = nextScheduledEvent->momentX;
+		if (nextEventTime > targetTime) {
+			// next event is too far in the future
+			break;
+		}
+		timeNowUs = nextEventTime;
+		engine.executor.executeAll(timeNowUs);
+	}
+
+	timeNowUs = targetTime;
 }
 
 efitimeus_t EngineTestHelper::getTimeNowUs(void) {
@@ -233,9 +253,9 @@ static AngleBasedEvent * getElementAtIndexForUnitText(int index, Engine *engine)
 		index--;
 	}
 #if EFI_UNIT_TEST
-	firmwareError(OBD_PCM_Processor_Fault, "getForUnitText: null");
+	firmwareError(OBD_PCM_Processor_Fault, "getElementAtIndexForUnitText: null");
 #endif /* EFI_UNIT_TEST */
-	return NULL;
+	return nullptr;
 }
 
 AngleBasedEvent * EngineTestHelper::assertTriggerEvent(const char *msg,

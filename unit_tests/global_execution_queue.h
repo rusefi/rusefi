@@ -18,7 +18,8 @@ public:
 	void clear();
 	int executeAll(efitime_t now);
 	int size();
-	scheduling_s* getForUnitTest(int index);
+	scheduling_s * getHead();
+	scheduling_s * getForUnitTest(int index);
 
 	void setMockExecutor(ExecutorInterface* exec);
 private:
