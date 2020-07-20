@@ -17,9 +17,11 @@ TEST(fuel, testWallWettingEnrichmentMath) {
 
 	engine->rpmCalculator.setRpmValue(3000 PASS_ENGINE_PARAMETER_SUFFIX);
 
+	WallFuel wallFuel;
+
 	// each invocation of 'adjust' changes WallWetting internal state
-	ASSERT_NEAR(16.6666, ENGINE(wallFuel[0]).adjust(10.0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
-	ASSERT_NEAR(16.198, ENGINE(wallFuel[0]).adjust(10.0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	ASSERT_NEAR(16.6666, wallFuel.adjust(10.0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	ASSERT_NEAR(16.198, wallFuel.adjust(10.0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 }
 
 TEST(fuel, testWallWettingEnrichmentScheduling) {
@@ -38,11 +40,11 @@ TEST(fuel, testWallWettingEnrichmentScheduling) {
 	int expectedInvocationCounter = 1;
 
 	for	(int i = 0; i < 4; i++) {
-		ASSERT_EQ(expectedInvocationCounter, ENGINE(wallFuel[i]).invocationCounter);
+		ASSERT_EQ(expectedInvocationCounter, ENGINE(injectionEvents.elements[i]).wallFuel.invocationCounter);
 	}
 
 	// Cylinder 5 doesn't exist - shouldn't have been called!
-	ASSERT_EQ(0, ENGINE(wallFuel[5]).invocationCounter);
+	ASSERT_EQ(0, ENGINE(injectionEvents.elements[5]).wallFuel.invocationCounter);
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -50,9 +52,9 @@ TEST(fuel, testWallWettingEnrichmentScheduling) {
 
 	// still same 1 per cylinder - wall wetting is NOT invoked from 'periodicFastCallback'
 	for	(int i = 0; i < 4; i++) {
-		ASSERT_EQ(expectedInvocationCounter, ENGINE(wallFuel[i]).invocationCounter);
+		ASSERT_EQ(expectedInvocationCounter, ENGINE(injectionEvents.elements[i]).wallFuel.invocationCounter);
 	}
 
 	// Cylinder 5 doesn't exist - shouldn't have been called!
-	ASSERT_EQ(0, ENGINE(wallFuel[5]).invocationCounter);
+	ASSERT_EQ(0, ENGINE(injectionEvents.elements[5]).wallFuel.invocationCounter);
 }
