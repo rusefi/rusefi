@@ -36,8 +36,22 @@ public:
 
 	void applyTriggerWaveform();
 	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
+	/**
+	 * DEPRECATED these methods do not execute events on the queue
+	 */
 	void fireRise(float delayMs);
 	void fireFall(float delayMs);
+	void moveTimeForwardUs(int deltaTimeUs);
+	void fireTriggerEvents2(int count, float delayMs);
+
+	/**
+	 * these methods execute events while moving time forward
+	 * todo: better naming convention?
+	 */
+	void smartFireRise(float delayMs);
+	void smartFireFall(float delayMs);
+	void smartMoveTimeForwardUs(int deltaTimeUs);
+	void smartFireTriggerEvents2(int count, float delayMs);
 
 	/**
 	 * See also #fireRise() which would also move time forward
@@ -49,7 +63,6 @@ public:
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
 	void fireTriggerEventsWithDuration(float delayMs);
-	void fireTriggerEvents2(int count, float delayMs);
 	void clearQueue();
 
 	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp);
@@ -65,7 +78,6 @@ public:
 
 	int executeActions();
 	void moveTimeForwardMs(float deltaTimeMs);
-	void moveTimeForwardUs(int deltaTimeUs);
 	efitimeus_t getTimeNowUs(void);
 
 	void writeEvents(const char *fileName);
