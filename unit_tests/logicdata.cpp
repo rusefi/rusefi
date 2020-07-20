@@ -212,7 +212,6 @@ static void writeChannelData(int ch, int64_t *chDeltas, int chLastState,
 	write(ch + 1);
 	write(0);
 	write(realDurationInSamples);
-	printf("realDurationInSamples=%d\n", realDurationInSamples);
 	write(1);
 	write(lastRecord);
 
@@ -403,12 +402,12 @@ static void writeEvents(CompositeEvent *events, int count) {
 	writeChannelDataHeader();
 
 	int64_t *chDeltas = (int64_t*) malloc(sizeof(int64_t) * count);
-	int deltaCount = 0;
 
 	bool useLongDeltas = false;
 	for (int ch = 0; ch < numChannels; ch++) {
 		int chPrevState = -1;
 		int prevTs = 0;
+		int deltaCount = 0;
 
 		for (int i = 0; i < count; i++) {
 			CompositeEvent *event = &events[i];
