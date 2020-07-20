@@ -564,10 +564,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 160
 	const auto& wallFuel = ENGINE(injectionEvents.elements[0].wallFuel);
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel();
-	// 164
-	tsOutputChannels->iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
 	// 168
 	tsOutputChannels->wallFuelCorrection = wallFuel.wallFuelCorrection;
+
+	// 164
+	tsOutputChannels->iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
 	// 184
 	tsOutputChannels->cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
 	// 188
