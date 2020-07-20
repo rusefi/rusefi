@@ -480,7 +480,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 #if TRIGGER_EXTREME_LOGGING
 	scheduleMsg(logger, "trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
+#endif /* TRIGGER_EXTREME_LOGGING */
 
 		/**
 		 * Here we invoke all the listeners - the main engine control logic is inside these listeners

@@ -21,11 +21,12 @@ TEST(scheduler, dwellIssue796) {
 	ASSERT_EQ(300000, ENGINE(rpmCalculator.oneDegreeUs) * 180);
 
 	// with just a bit much time between events integer RPM goes down one full percent
-	eth.fireRise(601);
-	eth.fireFall(600);
+	eth.smartFireRise(601);
+	eth.smartFireFall(600);
 	ASSERT_NEAR( 99,  GET_RPM(), EPS3D) << "spinning-RPM#2";
 	// while integer RPM value is 1% away from rpm=100, below oneDegreeUs is much closer to RPM=100 value
 	ASSERT_EQ(300250, (int)(ENGINE(rpmCalculator.oneDegreeUs) * 180));
 
+	eth.writeEvents("dwell_issue_1592.logicdata");
 
 }

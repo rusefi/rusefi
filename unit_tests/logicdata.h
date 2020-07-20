@@ -11,7 +11,7 @@ struct CompositeEvent {
     int timestamp;
     bool primaryTrigger;
     bool secondaryTrigger;
-    bool trg;
+    bool isTDC;
     bool sync;
     bool coil;
     bool injector;
