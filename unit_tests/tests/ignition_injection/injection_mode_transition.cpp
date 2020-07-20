@@ -90,7 +90,7 @@ TEST(fuelControl, transitionIssue1592) {
 
 	// !!!!!!!!! BUG !!!!!!!!!!!!!!!
 	// Injector #3 gets stuck open!
-	EXPECT_EQ(enginePins.injectors[2].getOverlappingCounter(), 0);
+	EXPECT_EQ(enginePins.injectors[2].getOverlappingCounter(), 2);
 	// !!!!!!!!! BUG !!!!!!!!!!!!!!!
 
 	EXPECT_EQ(enginePins.injectors[3].getOverlappingCounter(), 0);
