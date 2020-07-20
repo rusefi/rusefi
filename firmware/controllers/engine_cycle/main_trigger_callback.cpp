@@ -188,8 +188,7 @@ void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 	 * x2 or /2?
 	 */
 
-	size_t injectorIndex = event->outputs[0]->injectorIndex;
-	const floatms_t injectionDuration = ENGINE(wallFuel[injectorIndex]).adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
+	const floatms_t injectionDuration = event->wallFuel.adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		printf("fuel index=%d injectionDuration=%.2fms adjusted=%.2fms\n",
