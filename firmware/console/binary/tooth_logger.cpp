@@ -61,7 +61,7 @@ int getCompositeRecordCount() {
 int copyCompositeEvents(CompositeEvent *events) {
 	for (int i = 0;i < NextIdx;i++) {
 		CompositeEvent *event = &events[i];
-		event->timestamp = buffer[i].timestamp;
+		event->timestamp = SWAP_UINT32(buffer[i].timestamp);
 		event->primaryTrigger = buffer[i].priLevel;
 		event->secondaryTrigger = buffer[i].secLevel;
 		event->trg = buffer[i].trigger;
