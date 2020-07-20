@@ -71,12 +71,27 @@ static Logging *logger;
 //#endif
 
 void startSimultaniousInjection(Engine *engine) {
+#if EFI_TOOTH_LOGGER
+	efitick_t nowNt = getTimeNowNt();
+#if EFI_UNIT_TEST
+	EXPAND_Engine;
+#endif // EFI_UNIT_TEST
+	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
 	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
 		enginePins.injectors[i].open();
 	}
 }
 
 static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
+#if EFI_UNIT_TEST
+	EXPAND_Engine;
+#endif
+
+#if EFI_TOOTH_LOGGER
+	efitick_t nowNt = getTimeNowNt();
+	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
 	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
 		enginePins.injectors[i].close();
 	}
@@ -88,6 +103,10 @@ void endSimultaniousInjection(InjectionEvent *event) {
 	EXPAND_Engine;
 #endif
 	event->isScheduled = false;
+#if EFI_TOOTH_LOGGER
+	efitick_t nowNt = getTimeNowNt();
+	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
 
 	endSimultaniousInjectionOnlyTogglePins(engine);
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
@@ -98,7 +117,7 @@ void InjectorOutputPin::open() {
 
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
-		printf("turnInjectionPinHigh %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
+		printf("InjectorOutputPin::open %s %d now=%0.1fms\r\n", name, overlappingCounter, (int)getTimeNowUs() / 1000.0);
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
@@ -118,9 +137,9 @@ void InjectorOutputPin::open() {
 }
 
 void turnInjectionPinHigh(InjectionEvent *event) {
-	efitick_t nowNt = getTimeNowNt();
 
 #if EFI_TOOTH_LOGGER
+	efitick_t nowNt = getTimeNowNt();
 #if EFI_UNIT_TEST
 	Engine *engine = event->engine;
 	EXPAND_Engine;
@@ -169,7 +188,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	EXPAND_Engine;
 #endif
 
-	#if EFI_TOOTH_LOGGER
+#if EFI_TOOTH_LOGGER
 	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_TOOTH_LOGGER
 
