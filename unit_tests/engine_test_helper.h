@@ -68,6 +68,8 @@ public:
 	void moveTimeForwardUs(int deltaTimeUs);
 	efitimeus_t getTimeNowUs(void);
 
+	void writeEvents(const char *fileName);
+
 	Engine engine;
 	persistent_config_s persistentConfig;
 };

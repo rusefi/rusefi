@@ -35,6 +35,9 @@ TEST(fuelControl, transitionIssue1592) {
 
 	ASSERT_EQ(IM_SIMULTANEOUS, ENGINE(getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE)));
 
+
+	eth.writeEvents("transitionIssue1592.logicdata");
+
 }
 
 

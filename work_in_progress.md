@@ -1,3 +1,10 @@
+July, 19 2020 status
+* Stefan and AndreiKA are looking to improve miata idle (again!)
+* AndreiKA and AndreyB are focuses on rusEFI Online
+* Matt is dealing with a number of different scheduling defects
+* Miata NA base tune is getting closer
+* GDI is a bit on hold
+
 Apr, 20 2020 status:
 * Nick and Chris are focusing on GDI progress
 * Matt is focusing on ETB https://github.com/rusefi/rusefi/issues/1240 https://github.com/rusefi/rusefi/issues/1336

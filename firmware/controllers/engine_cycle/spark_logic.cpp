@@ -127,6 +127,11 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+	EXPAND_Engine;
+#endif // EFI_UNIT_TEST
+
 #if EFI_TOOTH_LOGGER
 	LogTriggerCoilState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_TOOTH_LOGGER
@@ -165,10 +170,6 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 #endif
 
 	}
-#endif /* EFI_UNIT_TEST */
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
 #endif /* EFI_UNIT_TEST */
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
 
@@ -246,6 +247,10 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
 #if EFI_TOOTH_LOGGER
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+	EXPAND_Engine;
+#endif // EFI_UNIT_TEST
 	LogTriggerCoilState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_TOOTH_LOGGER
 

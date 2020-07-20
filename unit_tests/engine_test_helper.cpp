@@ -15,6 +15,8 @@
 #include "engine_controller.h"
 #include "advance_map.h"
 #include "sensor.h"
+#include "tooth_logger.h"
+#include "logicdata.h"
 
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
@@ -25,6 +27,7 @@ extern bool printFuelDebug;
 EngineTestHelperBase::EngineTestHelperBase() { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
+	EnableToothLogger();
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback)
@@ -86,6 +89,18 @@ EngineTestHelper::~EngineTestHelper() {
 	Sensor::resetRegistry();
 }
 
+static CompositeEvent compositeEvents[COMPOSITE_PACKET_COUNT];
+
+void EngineTestHelper::writeEvents(const char *fileName) {
+	int count = copyCompositeEvents(compositeEvents);
+	if (count < 2) {
+		printf("Not enough data for %s\n", fileName);
+		return;
+	}
+	printf("Writing %d records to %s\n", count, fileName);
+	writeFile(fileName, compositeEvents, count);
+}
+
 /**
  * mock a change of time and fire single RISE front event
  */
@@ -98,7 +113,11 @@ void EngineTestHelper::fireRise(float delayMs) {
  * fire single RISE front event
  */
 void EngineTestHelper::firePrimaryTriggerRise() {
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, getTimeNowNt(), &engine, engine.engineConfigurationPtr, &persistentConfig);
+	efitick_t nowNt = getTimeNowNt();
+	Engine *engine = &this->engine;
+	EXPAND_Engine;
+	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, nowNt, engine, engine->engineConfigurationPtr, &persistentConfig);
 }
 
 void EngineTestHelper::fireFall(float delayMs) {
@@ -107,7 +126,11 @@ void EngineTestHelper::fireFall(float delayMs) {
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, getTimeNowNt(), &engine, engine.engineConfigurationPtr, &persistentConfig);
+	efitick_t nowNt = getTimeNowNt();
+	Engine *engine = &this->engine;
+	EXPAND_Engine;
+	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, nowNt, engine, engine->engineConfigurationPtr, &persistentConfig);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {
