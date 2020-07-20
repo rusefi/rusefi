@@ -10,19 +10,19 @@
 static void doRevolution(EngineTestHelper& eth, int periodMs) {
 	float halfToothTime = (periodMs / 6.0f) / 2;
 
-	eth.fireRise(halfToothTime);
+	eth.smartFireRise(halfToothTime);
 	eth.fireFall(halfToothTime);
-	eth.fireRise(halfToothTime);
+	eth.smartFireRise(halfToothTime);
 	eth.fireFall(halfToothTime);
-	eth.fireRise(halfToothTime);
+	eth.smartFireRise(halfToothTime);
 	eth.fireFall(halfToothTime);
 
 	// now missing tooth
-	eth.fireRise(halfToothTime);
+	eth.smartFireRise(halfToothTime);
 	eth.fireFall(3 * halfToothTime);
 
 	// This tooth is the sync point!
-	eth.fireRise(halfToothTime);
+	eth.smartFireRise(halfToothTime);
 	eth.fireFall(halfToothTime);
 }
 
@@ -44,6 +44,8 @@ TEST(fuelControl, transitionIssue1592) {
 	fuelMap.setAll(13);
 	extern fuel_Map3D_t fuelPhaseMap;
 	fuelPhaseMap.setAll(0);
+	setArrayValues(config->crankingFuelCoef, 1.0f);
+	setArrayValues(config->crankingCycleCoef, 1.0f);
 
 	engineConfiguration->globalTriggerAngleOffset = 20;
 
@@ -76,37 +78,22 @@ TEST(fuelControl, transitionIssue1592) {
 		ASSERT_EQ(sched_close->action.getCallback(), &turnInjectionPinLow);
 	}
 
-	// Execute the first of those two events - the injector opens, but doesn't yet close.
-	engine->executor.executeAll(getTimeNowUs() + MS2US(35));
-
-	// Check that queue got shorter, and overlap counters were incremented on injectors 2/3 (batch mode, remember?)
-	{
-		// Check that it was exec'd
-		ASSERT_EQ(engine->executor.size(), 1);
-
-		// Injectors 2/3 should currently be open
-		EXPECT_EQ(enginePins.injectors[0].getOverlappingCounter(), 0);
-		EXPECT_EQ(enginePins.injectors[1].getOverlappingCounter(), 1);
-		EXPECT_EQ(enginePins.injectors[2].getOverlappingCounter(), 1);
-		EXPECT_EQ(enginePins.injectors[3].getOverlappingCounter(), 0);
+	// Run the engine for some revs
+	for (size_t i = 0; i < 10; i++) {
+		doRevolution(eth, 150);
 	}
 
-	// Second sync point will transition to running
-	// This needs to reset overlapping state as it may reschedule injector openings
-	doRevolution(eth, 150);
-
-	// Injectors should all be closed immediately after mode change
-	EXPECT_EQ(enginePins.injectors[0].getOverlappingCounter(), 0);
+	// Check that no injectors are stuck open
+	// Only injector 1 should currently be open
+	EXPECT_EQ(enginePins.injectors[0].getOverlappingCounter(), 1);
+	EXPECT_EQ(enginePins.injectors[1].getOverlappingCounter(), 0);
 
 	// !!!!!!!!! BUG !!!!!!!!!!!!!!!
-	// These next two should be equal to 0, not 1
-	EXPECT_EQ(enginePins.injectors[1].getOverlappingCounter(), 1);
-	EXPECT_EQ(enginePins.injectors[2].getOverlappingCounter(), 1);
+	// Injector #3 gets stuck open!
+	EXPECT_EQ(enginePins.injectors[2].getOverlappingCounter(), 0);
 	// !!!!!!!!! BUG !!!!!!!!!!!!!!!
 
 	EXPECT_EQ(enginePins.injectors[3].getOverlappingCounter(), 0);
-
-
 
 	eth.writeEvents("fuel_schedule_transition_issue_1592.logicdata");
 }
