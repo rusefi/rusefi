@@ -37,7 +37,7 @@
 
 #define MAX_STRING_SIZE 40
 
-static char channelNames[][MAX_STRING_SIZE] = { "Primary", "Secondary", "Trg",
+static char channelNames[][MAX_STRING_SIZE] = { "Primary", "Secondary", "TDC",
 		"Sync", "Coil", "Injector", "Channel 6", "Channel 7" };
 
 static int CHANNEL_FLAGS[] = { 0x13458b, 0x0000ff, 0x00a0f9, 0x00ffff, 0x00ff00,
@@ -378,7 +378,7 @@ static int getChannelState(int ch, CompositeEvent *event) {
 	case 1:
 		return event->secondaryTrigger;
 	case 2:
-		return event->trg;
+		return event->isTDC;
 	case 3:
 		return event->sync;
 	case 4:

@@ -28,7 +28,7 @@ typedef struct __attribute__ ((packed)) {
 	// unfortunately all these fields are required by TS...
 	bool priLevel : 1;
 	bool secLevel : 1;
-	bool trigger : 1;
+	bool isTDC : 1;
 	bool sync : 1;
 	bool coil : 1;
 	bool injector : 1;
@@ -64,7 +64,7 @@ int copyCompositeEvents(CompositeEvent *events) {
 		event->timestamp = SWAP_UINT32(buffer[i].timestamp);
 		event->primaryTrigger = buffer[i].priLevel;
 		event->secondaryTrigger = buffer[i].secLevel;
-		event->trg = buffer[i].trigger;
+		event->isTDC = buffer[i].isTDC;
 		event->sync = buffer[i].sync;
 		event->coil = buffer[i].coil;
 		event->injector = buffer[i].injector;
@@ -81,7 +81,7 @@ static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigg
 	buffer[NextIdx].timestamp = SWAP_UINT32(nowUs);
 	buffer[NextIdx].priLevel = trigger1;
 	buffer[NextIdx].secLevel = trigger2;
-	buffer[NextIdx].trigger = isTDC;
+	buffer[NextIdx].isTDC = isTDC;
 	buffer[NextIdx].sync = engine->triggerCentral.triggerState.shaft_is_synchronized;
 	buffer[NextIdx].coil = coil;
 	buffer[NextIdx].injector = injector;
@@ -144,6 +144,7 @@ void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX
 		return;
 	}
 	SetNextCompositeEntry(timestamp, trigger1, trigger2, true PASS_ENGINE_PARAMETER_SUFFIX);
+	SetNextCompositeEntry(timestamp + 10, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
