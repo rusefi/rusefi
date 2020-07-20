@@ -103,10 +103,26 @@ void EngineTestHelper::writeEvents(const char *fileName) {
 
 /**
  * mock a change of time and fire single RISE front event
+ * DEPRECATED many usages should be migrated to
  */
 void EngineTestHelper::fireRise(float delayMs) {
 	moveTimeForwardUs(MS2US(delayMs));
 	firePrimaryTriggerRise();
+}
+
+void EngineTestHelper::smartFireRise(float delayMs) {
+	moveTimeForwardUs(MS2US(delayMs));
+	firePrimaryTriggerRise();
+}
+
+void EngineTestHelper::fireFall(float delayMs) {
+	moveTimeForwardUs(MS2US(delayMs));
+	firePrimaryTriggerFall();
+}
+
+void EngineTestHelper::smartFireFall(float delayMs) {
+	moveTimeForwardUs(MS2US(delayMs));
+	firePrimaryTriggerFall();
 }
 
 /**
@@ -118,11 +134,6 @@ void EngineTestHelper::firePrimaryTriggerRise() {
 	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, nowNt, engine, engine->engineConfigurationPtr, &persistentConfig);
-}
-
-void EngineTestHelper::fireFall(float delayMs) {
-	moveTimeForwardUs(MS2US(delayMs));
-	firePrimaryTriggerFall();
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
@@ -149,6 +160,13 @@ void EngineTestHelper::fireTriggerEvents2(int count, float durationMs) {
 	}
 }
 
+void EngineTestHelper::smartFireTriggerEvents2(int count, float durationMs) {
+	for (int i = 0; i < count; i++) {
+		smartFireRise(durationMs);
+		smartFireFall(durationMs);
+	}
+}
+
 void EngineTestHelper::clearQueue() {
 	engine.executor.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	ASSERT_EQ( 0,  engine.executor.size()) << "Failed to clearQueue";
@@ -163,6 +181,13 @@ void EngineTestHelper::moveTimeForwardMs(float deltaTimeMs) {
 }
 
 void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
+	if (printTriggerDebug || printFuelDebug) {
+		printf("moveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
+	}
+	timeNowUs += deltaTimeUs;
+}
+
+void EngineTestHelper::smartMoveTimeForwardUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
 		printf("moveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
 	}
