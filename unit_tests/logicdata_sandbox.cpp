@@ -8,13 +8,12 @@
 
 static CompositeEvent events[100];
 
-
-void setEvent(CompositeEvent *events, int index,
-		int timestamp, bool primaryTrigger, bool secondaryTrigger, bool trg, bool sync, bool coil, bool injector) {
+static void setEvent(CompositeEvent *events, int index,
+		int timestamp, bool primaryTrigger, bool secondaryTrigger, bool isTDC, bool sync, bool coil, bool injector) {
 	events[index].timestamp = timestamp;
 	events[index].primaryTrigger = primaryTrigger;
 	events[index].secondaryTrigger = secondaryTrigger;
-	events[index].trg = trg;
+	events[index].isTDC = isTDC;
 	events[index].sync = sync;
 	events[index].coil = coil;
 	events[index].injector = injector;
@@ -22,7 +21,6 @@ void setEvent(CompositeEvent *events, int index,
 
 void runLogicdataSandbox() {
 	printf(".logicdata Sandbox 20200719\n");
-
 
 	int index = 0;
     setEvent(events, index++, 10, false, false, false, false, false, false);
