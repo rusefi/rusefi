@@ -97,7 +97,9 @@ void InjectorOutputPin::open() {
 	overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("turnInjectionPinHigh %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
+	if (printFuelDebug) {
+		printf("turnInjectionPinHigh %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
+	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	if (overlappingCounter > 1) {
@@ -106,7 +108,9 @@ void InjectorOutputPin::open() {
 //		 * this is another kind of overlap which happens in case of a small duty cycle after a large duty cycle
 //		 */
 #if FUEL_MATH_EXTREME_LOGGING
-		printf("overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
+		if (printFuelDebug) {
+			printf("overlapping, no need to touch pin %s %d\r\n", name, (int)getTimeNowUs());
+		}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
 		setHigh();
@@ -135,13 +139,17 @@ void turnInjectionPinHigh(InjectionEvent *event) {
 
 void InjectorOutputPin::close() {
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("InjectorOutputPin::close %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
+	if (printFuelDebug) {
+		printf("InjectorOutputPin::close %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
+	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	overlappingCounter--;
 	if (overlappingCounter > 0) {
 #if FUEL_MATH_EXTREME_LOGGING
+		if (printFuelDebug) {
 			printf("was overlapping, no need to touch pin %s %d\r\n", name, (int)getTimeNowUs());
+		}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
 		setLow();
@@ -315,7 +323,9 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	}
 
 #if FUEL_MATH_EXTREME_LOGGING
-	scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
+	if (printFuelDebug) {
+		scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
+	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::get(SensorType::Tps1).value_or(0) PASS_ENGINE_PARAMETER_SUFFIX));
