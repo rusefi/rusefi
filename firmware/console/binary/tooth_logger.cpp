@@ -156,11 +156,13 @@ void EnableToothLogger() {
 	// Enable logging of edges as they come
 	ToothLoggerEnabled = true;
 
+#if EFI_TUNER_STUDIO
 	// Tell TS that we're ready for it to read out the log
 	// nb: this is a lie, as we may not have written anything
 	// yet.  However, we can let it continuously read out the buffer
 	// as we update it, which looks pretty nice.
 	tsOutputChannels.toothLogReady = true;
+#endif // EFI_TUNER_STUDIO
 }
 
 void EnableToothLoggerIfNotEnabled() {
@@ -171,7 +173,9 @@ void EnableToothLoggerIfNotEnabled() {
 
 void DisableToothLogger() {
 	ToothLoggerEnabled = false;
+#if EFI_TUNER_STUDIO
 	tsOutputChannels.toothLogReady = false;
+#endif // EFI_TUNER_STUDIO
 }
 
 ToothLoggerBuffer GetToothLoggerBuffer() {
