@@ -105,8 +105,4 @@ TEST(fuelControl, transitionIssue1592) {
 	// !!!!!!!!! BUG !!!!!!!!!!!!!!!
 
 	EXPECT_EQ(enginePins.injectors[3].getOverlappingCounter(), 0);
-
-
-
-	eth.writeEvents("fuel_schedule_transition_issue_1592.logicdata");
 }
