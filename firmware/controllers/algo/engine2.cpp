@@ -199,7 +199,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 		currentBaroCorrectedVE = baroCorrection * currentRawVE * PERCENT_DIV;
 	} else {
-		baseTableFuel = getBaseTableFuel(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
+		baseTableFuel = getBaseTableFuel(rpm, getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE));
 	}
 
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
