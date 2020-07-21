@@ -43,6 +43,8 @@ static const LogField fields[] = {
 	{tsOutputChannels.etb1DutyCycle, "ETB Duty", "%", 1},
 	{tsOutputChannels.etb1Error, "ETB Error", "%", 3},
 	{tsOutputChannels.fuelTankLevel, "fuel level", "%", 0},
+	{tsOutputChannels.fuelingLoad, GAUGE_NAME_FUEL_LOAD, "%", 1},
+	{tsOutputChannels.ignitionLoad, GAUGE_NAME_IGNITION_LOAD, "%", 1},
 };
 
 void writeHeader(char* buffer) {
