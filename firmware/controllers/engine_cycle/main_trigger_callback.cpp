@@ -162,6 +162,11 @@ void InjectorOutputPin::close(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif // EFI_TOOTH_LOGGER
 		setLow();
 	}
+
+	// Don't allow negative overlap count
+	if (overlappingCounter < 0) {
+		overlappingCounter = 0;
+	}
 }
 
 void turnInjectionPinLow(InjectionEvent *event) {

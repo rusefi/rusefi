@@ -103,7 +103,7 @@ public:
 	const char *shortName = NULL;
 };
 
-class InjectorOutputPin : public NamedOutputPin {
+class InjectorOutputPin final : public NamedOutputPin {
 public:
 	InjectorOutputPin();
 	void reset();
