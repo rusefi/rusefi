@@ -33,4 +33,5 @@ ButtonShiftController::update() {
                 setDesiredGear(GEAR_3);
                 break;        
     }
+    postState(&tsOutputChannels)
 }
