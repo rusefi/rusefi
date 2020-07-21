@@ -251,7 +251,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		// TODO: independently selectable ignition load mode
 		ENGINE(engineState.ignitionLoad) = tps;
 
-		baseFuel = engine->engineState.baseTableFuel;
+		baseFuel = getBaseTableFuel(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN bt baseFuel", 0);
 	}
 
