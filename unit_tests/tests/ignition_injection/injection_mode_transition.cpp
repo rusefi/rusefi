@@ -84,15 +84,10 @@ TEST(fuelControl, transitionIssue1592) {
 	}
 
 	// Check that no injectors are stuck open
-	// Only injector 1 should currently be open
+	// Injectors 1/3 should be open
 	EXPECT_EQ(enginePins.injectors[0].getOverlappingCounter(), 1);
 	EXPECT_EQ(enginePins.injectors[1].getOverlappingCounter(), 0);
-
-	// !!!!!!!!! BUG !!!!!!!!!!!!!!!
-	// Injector #3 gets stuck open!
-	EXPECT_EQ(enginePins.injectors[2].getOverlappingCounter(), 2);
-	// !!!!!!!!! BUG !!!!!!!!!!!!!!!
-
+	EXPECT_EQ(enginePins.injectors[2].getOverlappingCounter(), 1);
 	EXPECT_EQ(enginePins.injectors[3].getOverlappingCounter(), 0);
 
 	eth.writeEvents("fuel_schedule_transition_issue_1592.logicdata");
