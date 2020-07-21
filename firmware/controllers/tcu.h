@@ -16,4 +16,5 @@ public:
     gear_e getCurrentGear();
 private:
     gear_e currentGear;
+    void postState(TunerStudioOutputChannels);
 }
