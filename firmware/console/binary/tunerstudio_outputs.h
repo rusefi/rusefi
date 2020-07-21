@@ -226,8 +226,8 @@ typedef struct {
 
 	int16_t tuneCrc16; // 244
 
-	int desiredGear; // 246
-	int currentGear; // 250
+	int16_t desiredGear; // 246
+	int16_t currentGear; // 248
 
 	uint8_t unusedAtTheEnd[2]; // we have some unused bytes to allow compatible TS changes
 
