@@ -24,24 +24,12 @@
 ; this should stop TS from looking for the CAN ID in the 2nd byte location and allow the page reads to work correctly.
 enable2ndByteCanID = false
 
-;#unset tuneByMAF
-
 [SettingGroups]
    ; the referenceName will over-ride previous, so if you are creating a 
    ; settingGroup with a reference name of lambdaSensor, it will replace the 
    ; setting group defined in the settingGroups.xml of the TunerStudio config
    ; folder. If is is an undefined referenceName, it will be added.
    ; keyword    =  referenceName,  DisplayName
-
-    settingGroup = tuneVeMode, "VE Autotune Mode"
-      settingOption = tuneByTPS, "TPS-Based (See Injection -> Inj.Settings)"
-      settingOption = tuneByMAF, "MAF-Based"
-      settingOption = tuneByLoad, "Load-Based (Default)"
-
-;    settingGroup = fAlgorithmSetting, "Fuel Logic / Tables"  
-;    settingOption = FA_PLAIN_MAF, "Plain MAF"
-;    settingOption = FA_TPS, "AlphaN/TPS"
-;    settingOption = DEFAULT, "Speed Density" ; DEFAULT will be over looked and this will fall into the #else block of the statement.
 
 [MegaTune]
  ; https://rusefi.com/forum/viewtopic.php?p=36201#p36201
@@ -146,11 +134,7 @@ enable2ndByteCanID = false
 [VeAnalyze]
 
         ;    tableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition
-#if tuneByMAF
-       veAnalyzeMap = fuelTableMAFTbl, afrTableTbl, AFRValue, egoCorrection, { 1 }
-#else
        veAnalyzeMap = veTableTbl, afrTableTbl, AFRValue, egoCorrection, { 1 }
-#endif
        lambdaTargetTables = afrTableTbl, afrTSCustom
 
        ; filter =  Name,        "DisplayName", outputChannel, operator, defaultVal, userAdjustable
@@ -802,14 +786,7 @@ enable2ndByteCanID = false
    table = ignitionTableTbl,  ignitionTableMap,  "Ignition Table",   1
       ;       constant, variable
       xBins       = ignitionRpmBins,  RPMValue
-#if   FA_PLAIN_MAF
-      yBins       = ignitionLoadBins,  MAFValue
-#elif FA_TPS
-      yBins       = ignitionLoadBins,  TPSValue
-#else
-      yBins       = ignitionLoadBins,  engineLoad
-#endif
-
+      yBins       = ignitionLoadBins,  ignitionLoad
       zBins       = ignitionTable
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
@@ -837,11 +814,7 @@ enable2ndByteCanID = false
    table = veTableTbl,  veTableMap,  "VE Table",   1
       ;       constant, variable
       xBins       = veRpmBins,  RPMValue
-#if tuneByTPS
-      yBins       = ignitionTpsBins,  TPSValue
-#else
       yBins       = veLoadBins,  fuelingLoad
-#endif
       zBins       = veTable
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
@@ -1600,12 +1573,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Mode",							injectionMode, {isInjectionEnabled == 1}
 		field = "#Batch injection with individual wiring"
 		field = "Two wire batch emulation",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == 2}
-#if tuneByTPS
 		field = "Use TPS instead of Load for VE table",	useTPSBasedVeTable, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-#else
 		field = "#Enabled for TPS-Based 'VE Autotune Mode' in Project Settings"
 		field = "Use TPS instead of Load for VE table",	useTPSBasedVeTable, {0}
-#endif
 
 	dialog = ignitionOutputs, "Ignition Outputs"
 		field = "Ignition Pin Mode",         	        ignitionPinMode, {isIgnitionEnabled == 1}
