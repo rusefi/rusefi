@@ -297,7 +297,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
-	scheduleMsg(&logger2, "injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm), engineConfiguration->globalFuelCorrection);
+	scheduleMsg(&logger2, "injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm, getFuelingLoad()), engineConfiguration->globalFuelCorrection);
 
 	scheduleMsg(&logger2, "baro correction=%.2f", engine->engineState.baroCorrection);
 
