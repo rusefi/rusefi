@@ -80,10 +80,11 @@ public:
 	void moveTimeForwardMs(float deltaTimeMs);
 	efitimeus_t getTimeNowUs(void);
 
-	void writeEvents(const char *fileName);
-
 	Engine engine;
 	persistent_config_s persistentConfig;
+
+private:
+	void writeEvents(const char *fileName);
 };
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode = IM_BATCH);
