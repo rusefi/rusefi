@@ -225,6 +225,10 @@ typedef struct {
 	scaled_voltage rawOilPressure;		// 242
 
 	int16_t tuneCrc16; // 244
+
+	int desiredGear; // 246
+	int currentGear; // 250
+
 	uint8_t unusedAtTheEnd[2]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
