@@ -287,6 +287,10 @@ enable2ndByteCanID = false
       etb1DutyCycle   = scalar,  S16,     94,      "%",{1/@@PACK_MULT_PERCENT@@},         0
       etb1Error       = scalar,  S16,     96,      "%",{1/@@PACK_MULT_PERCENT@@},         0
 
+; Transmission
+      tcuDesiredGear  = scalar,  U16,     100,   "gear",    1,         0
+      tcuCurrentGear  = scalar,  U16,     100,   "gear",    1,         0
+
 ; Fuel system
       fuelTankLevel   = scalar,  S16,     98, "amount",{1/@@PACK_MULT_PERCENT@@},         0
       fuelConsumptionPerHour=scalar,F32, 100,    "kPa",      1,      0.0
@@ -1027,6 +1031,11 @@ gaugeCategory = Sensors - Raw
    rawIatGauge          = rawIat        , "Raw IAT",           "volts", 0, 5, 0, 0, 5, 5, 3, 0
    rawOilPressureGauge  = rawOilPressure, "Raw Oil Pressure",  "volts", 0, 5, 0, 0, 5, 5, 3, 0
 
+gaugeCategory = Transmission
+   desiredGearGauge = tcuDesiredGear, "Desired", "gear", 0, 10, 0, 0, 10, 10, 0, 0
+   currentGearGauge = tcuCurrentGear, "Current", "gear", 0, 10, 0, 0, 10, 10, 0, 0
+
+
 [WueAnalyze]
     
 ;                    wueCurveName, afrTempCompensationCurve, lambdaTargetTableName, lambdaChannel, coolantTempChannel, egoCorrectionChannel, wueChannel, activeCondition
@@ -1094,7 +1103,7 @@ gaugeCategory = Sensors - Raw
     indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
     indicator = { acSwitchIndicator }, "AC off",   "AC on",   white, black, blue,   white
-    
+
     ; error codes
     indicator = { ind_tps_error}, "tps",   "tps error",   white, black, red,   black
     indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
@@ -1222,6 +1231,9 @@ gaugeCategory = Sensors - Raw
    entry = etb1DutyCycle,  @@GAUGE_NAME_ETB_DUTY@@, float, "%.3f"
    entry = etbTarget,      "ETB Target", float, "%.3f"
    
+; Transmission
+   entry = tcuDesiredGear,  "Desired Gear", int, "%d"
+   entry = tcuCurrentGear,  "Desired Gear", int, "%d"
    
 ;     tpsADC          = U16,    "ADC",
 ;     alignmet        = U16,    "al",
@@ -1351,6 +1363,9 @@ menuDialog = main
 		subMenu = fsioCurve2,			    "FSIO Curve #2"
 		subMenu = fsioCurve3,			    "FSIO Curve #3"
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
+
+		subMenu = std_separator
+		subMenu = tcuControls,			"Transmission Settings"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -2832,6 +2847,16 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "ADC #2",								fsioAdc2
 		field = "ADC #3",								fsioAdc3
 		field = "ADC #4",								fsioAdc4
+
+	dialog = shiftInputPanel
+		field = "TCU Enabled"		tcuEnabled
+		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
+		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
+		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
+		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled }
+
+	dialog = tcuControls, "Transmission Settings"
+		panel = shiftInputPanel
 
 ;Boost Open Loop
 
