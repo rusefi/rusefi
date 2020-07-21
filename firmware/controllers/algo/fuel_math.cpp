@@ -260,18 +260,16 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return tpsAccelEnrich + baseFuel;
 }
 
-angle_t getInjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+angle_t getInjectionOffset(float rpm, float load DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(rpm)) {
 		return 0; // error already reported
 	}
 
-	float engineLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	if (cisnan(engineLoad)) {
+	if (cisnan(load)) {
 		return 0; // error already reported
 	}
 
-	angle_t value = fuelPhaseMap.getValue(rpm, engineLoad);
+	angle_t value = fuelPhaseMap.getValue(rpm, load);
 
 	if (cisnan(value)) {
 		// we could be here while resetting configuration for example
