@@ -1042,11 +1042,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	brain_pin_e binarySerialRxPin;	
 	
 	brain_pin_e[AUX_DIGITAL_VALVE_COUNT iterate] auxValves
-	bit tcuEnabled
 	switch_input_pin_e tcuUpshiftButtonPin
-	pin_input_mode_e tcuUpshiftButtonPinMode
 	switch_input_pin_e tcuDownshiftButtonPin
-	pin_input_mode_e tcuDownshiftButtonPinMode
 
 
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;"v",      1,     0,   0.0,    10,   2
@@ -1303,8 +1300,12 @@ uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
 	uint16_t mc33_t_hold_off;;"X",   1,   0.0,        0,  64000,   0
 	uint16_t mc33_t_hold_tot;;"X",   1,   0.0,        0,  64000,   0
 
+	bit tcuEnabled
+	pin_input_mode_e tcuUpshiftButtonPinMode
+	pin_input_mode_e tcuDownshiftButtonPinMode
+
 ! just a reminder that 'int' and 'float' are 4 bytes each
-	int[371] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	int[368] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
