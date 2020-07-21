@@ -71,15 +71,12 @@ static Logging *logger;
 //#endif
 
 void startSimultaniousInjection(Engine *engine) {
-#if EFI_TOOTH_LOGGER
-	efitick_t nowNt = getTimeNowNt();
 #if EFI_UNIT_TEST
 	EXPAND_Engine;
 #endif // EFI_UNIT_TEST
-	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
-#endif // EFI_TOOTH_LOGGER
+	efitick_t nowNt = getTimeNowNt();
 	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
-		enginePins.injectors[i].open();
+		enginePins.injectors[i].open(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -87,13 +84,9 @@ static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
 #if EFI_UNIT_TEST
 	EXPAND_Engine;
 #endif
-
-#if EFI_TOOTH_LOGGER
 	efitick_t nowNt = getTimeNowNt();
-	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
-#endif // EFI_TOOTH_LOGGER
 	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
-		enginePins.injectors[i].close();
+		enginePins.injectors[i].close(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -103,16 +96,11 @@ void endSimultaniousInjection(InjectionEvent *event) {
 	EXPAND_Engine;
 #endif
 	event->isScheduled = false;
-#if EFI_TOOTH_LOGGER
-	efitick_t nowNt = getTimeNowNt();
-	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
-#endif // EFI_TOOTH_LOGGER
-
 	endSimultaniousInjectionOnlyTogglePins(engine);
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void InjectorOutputPin::open() {
+void InjectorOutputPin::open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
@@ -132,31 +120,29 @@ void InjectorOutputPin::open() {
 		}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
+#if EFI_TOOTH_LOGGER
+	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
 		setHigh();
 	}
 }
 
 void turnInjectionPinHigh(InjectionEvent *event) {
-
-#if EFI_TOOTH_LOGGER
-	efitick_t nowNt = getTimeNowNt();
 #if EFI_UNIT_TEST
 	Engine *engine = event->engine;
 	EXPAND_Engine;
 #endif // EFI_UNIT_TEST
-	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
-#endif // EFI_TOOTH_LOGGER
-
+	efitick_t nowNt = getTimeNowNt();
 	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
 
 		if (output) {
-			output->open();
+			output->open(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 }
 
-void InjectorOutputPin::close() {
+void InjectorOutputPin::close(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
 		printf("InjectorOutputPin::close %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
@@ -171,6 +157,9 @@ void InjectorOutputPin::close() {
 		}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
+#if EFI_TOOTH_LOGGER
+	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
 		setLow();
 	}
 
@@ -188,15 +177,11 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	EXPAND_Engine;
 #endif
 
-#if EFI_TOOTH_LOGGER
-	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
-#endif // EFI_TOOTH_LOGGER
-
 	event->isScheduled = false;
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
 		if (output) {
-			output->close();
+			output->close(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
