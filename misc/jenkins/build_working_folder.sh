@@ -50,7 +50,7 @@ fi
 
 cp java_console/rusefi_autoupdate.jar     $CONSOLE_FOLDER
 cp java_console_binary/rusefi_console.jar $CONSOLE_FOLDER
-cp java_tools/ts_plugin_launcher/build/jar/rusefi_plugin_launcher.jar $CONSOLE_FOLDER
+cp java_tools/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar $FOLDER
 cp simulator/build/rusefi_simulator.exe   $CONSOLE_FOLDER
 cp misc/console_launcher/rusefi_*.exe     $CONSOLE_FOLDER
 cp java_console/rusefi.xml                $CONSOLE_FOLDER

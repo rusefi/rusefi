@@ -1,6 +1,6 @@
 <project default="jar">
     <property name="jar_file_folder" value="build/jar"/>
-    <property name="jar_file" value="${jar_file_folder}/rusefi_plugin_launcher.jar"/>
+    <property name="jar_file" value="${jar_file_folder}/rusefi_ts_plugin_launcher.jar"/>
     <property name="console_path" value="../../java_console"/>
 
     <target name="clean">
