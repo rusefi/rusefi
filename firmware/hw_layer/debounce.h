@@ -11,4 +11,4 @@ private:
     brain_pin_e pin;
     iomode_t mode;
     bool readValue;
-}
+};

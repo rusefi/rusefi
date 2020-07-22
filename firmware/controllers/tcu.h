@@ -9,7 +9,7 @@ private:
     gear_e setDesiredGear(gear_e);
     gear_e desiredGear;
     void postState(TunerStudioOutputChannels);
-}
+};
 
 class TransmissionControllerBase {
 public:
@@ -18,4 +18,4 @@ public:
 private:
     gear_e currentGear;
     void postState(TunerStudioOutputChannels);
-}
+};

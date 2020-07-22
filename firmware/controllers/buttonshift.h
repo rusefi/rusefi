@@ -3,4 +3,4 @@
 class ButtonShiftController: public GearControllerBase {
 private:
     ButtonDebounce buttonDebounce;
-}
+};
