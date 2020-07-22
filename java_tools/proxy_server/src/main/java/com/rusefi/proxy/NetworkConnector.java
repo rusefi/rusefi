@@ -57,6 +57,8 @@ public class NetworkConnector {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
         HelloCommand.send(targetEcuSocket, logger);
         String helloResponse = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer(), logger);
+        if (helloResponse == null)
+            throw new IOException("Error getting hello response");
         String controllerSignature = helloResponse.trim();
 
         ConfigurationImage image = linkManager.getConnector().getBinaryProtocol().getControllerConfiguration();
