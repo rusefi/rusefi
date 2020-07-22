@@ -2,6 +2,7 @@ package com.rusefi.proxy;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
@@ -71,9 +72,11 @@ public class NetworkConnector {
             @Override
             protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
                 super.handleCommand(packet, stream);
+                logger.info("Relaying request to controller " + BinaryProtocol.findCommand(packet.getPacket()[0]));
                 targetEcuSocket.sendPacket(packet);
 
                 BinaryProtocolServer.Packet response = targetEcuSocket.readPacket();
+                logger.info("Relaying response to proxy size=" + response.getPacket().length);
                 stream.sendPacket(response);
             }
         };
