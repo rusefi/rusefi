@@ -16,7 +16,7 @@ public class SessionDetailsTest {
     }
 
     @Test
-    public void testApplcationRequest() {
+    public void testApplicationRequest() {
         ControllerInfo ci = new ControllerInfo("name", "make", "code", "sign");
         SessionDetails sd = new SessionDetails(ci, "auth", 123);
         ApplicationRequest ar = new ApplicationRequest(sd, 321);
