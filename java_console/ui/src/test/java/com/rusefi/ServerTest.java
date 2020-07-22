@@ -8,6 +8,7 @@ import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tools.online.PublicSession;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -42,10 +42,9 @@ public class ServerTest {
     }
 
     @Test
-    public void testControllerSessionTimeout() throws InterruptedException, IOException {
+    public void testControllerSessionStartupTimeTimeout() throws InterruptedException, IOException {
         int serverPortForControllers = 7000;
         int httpPort = 8000;
-        UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
 
         CountDownLatch serverCreated = new CountDownLatch(1);
         CountDownLatch allClientsDisconnected = new CountDownLatch(1);
@@ -54,7 +53,7 @@ public class ServerTest {
         CountDownLatch allConnected = new CountDownLatch(1);
 
 
-        try (Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+        try (Backend backend = new Backend(createTestUserResolver(), httpPort, logger) {
             @Override
             public void register(ControllerConnectionState clientConnectionState) {
                 super.register(clientConnectionState);
@@ -98,12 +97,26 @@ public class ServerTest {
     }
 
     @Test
+    public void testApplicationTimeout() throws InterruptedException {
+        int serverPortForRemoteUsers = 6999;
+        int serverPortForControllers = 6997;
+        int httpPort = 6998;
+
+        try (Backend backend = new Backend(createTestUserResolver(), httpPort, logger)) {
+
+            TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
+
+            TestHelper.runControllerConnectorBlocking(backend, serverPortForControllers);
+
+        }
+    }
+
+    @Test
     public void testInvalidApplicationRequest() throws InterruptedException, IOException {
-        UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
         int httpPort = 8001;
         int serverPortForRemoteUsers = 6801;
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
-        try (Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+        try (Backend backend = new Backend(createTestUserResolver(), httpPort, logger) {
             @Override
             protected void onDisconnectApplication() {
                 super.onDisconnectApplication();
@@ -111,9 +124,7 @@ public class ServerTest {
             }
         }) {
 
-            CountDownLatch applicationServerCreated = new CountDownLatch(1);
-            backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
-            assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+            TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
             // start authenticator
             IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
@@ -123,16 +134,20 @@ public class ServerTest {
         }
     }
 
+    @NotNull
+    private static UserDetailsResolver createTestUserResolver() {
+        return authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
+    }
+
     @Test
     public void testAuthenticatorRequestUnknownSession() throws InterruptedException, IOException {
         int serverPortForRemoteUsers = 6800;
 
-        UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
         int httpPort = 8002;
 
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
 
-        try (Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+        try (Backend backend = new Backend(createTestUserResolver(), httpPort, logger) {
             @Override
             protected void onDisconnectApplication() {
                 super.onDisconnectApplication();
@@ -140,9 +155,7 @@ public class ServerTest {
             }
         }) {
 
-            CountDownLatch applicationServerCreated = new CountDownLatch(1);
-            backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
-            assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+            TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
             SessionDetails sessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, Fields.TS_SIGNATURE);
             ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, 123);
