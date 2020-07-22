@@ -7,6 +7,7 @@ import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
+import com.rusefi.tools.online.PublicSession;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -87,7 +88,7 @@ public class ServerTest {
             List<ControllerConnectionState> clients = backend.getClients();
             assertEquals(2, clients.size());
 
-            List<UserDetails> onlineUsers = ProxyClient.getOnlineUsers(HttpUtil.RUSEFI_PROXY_JSON_PROTOCOL + TestHelper.LOCALHOST + ":" + httpPort + ProxyClient.LIST_PATH);
+            List<PublicSession> onlineUsers = ProxyClient.getOnlineUsers(HttpUtil.RUSEFI_PROXY_JSON_PROTOCOL + TestHelper.LOCALHOST + ":" + httpPort + ProxyClient.LIST_PATH);
             assertEquals(2, onlineUsers.size());
 
             allConnected.countDown();

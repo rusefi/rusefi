@@ -12,6 +12,7 @@ import com.rusefi.tools.online.HttpUtil;
 import java.io.IOException;
 
 public class LocalApplicationProxy {
+    public static final int SERVER_PORT_FOR_APPLICATIONS = 8002;
     private final Logger logger;
     private final ApplicationRequest applicationRequest;
 
