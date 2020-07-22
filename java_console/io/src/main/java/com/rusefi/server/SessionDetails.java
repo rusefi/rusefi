@@ -81,4 +81,12 @@ public class SessionDetails {
     public int hashCode() {
         return Objects.hash(controllerInfo, oneTimeToken, authToken);
     }
+
+    @Override
+    public String toString() {
+        return "SessionDetails{" +
+                "controllerInfo=" + controllerInfo +
+                ", authToken='" + authToken + '\'' +
+                '}';
+    }
 }
