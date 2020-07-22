@@ -26,6 +26,10 @@ public abstract class AbstractIoStream implements IoStream {
         private long previousPacketArrivalTime;
         private int maxPacketGap;
 
+        public long getPreviousPacketArrivalTime() {
+            return previousPacketArrivalTime;
+        }
+
         /**
          * @return maximum time in MS between full valid packets received via this stream
          */
