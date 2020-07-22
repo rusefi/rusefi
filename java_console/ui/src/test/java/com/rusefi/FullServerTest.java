@@ -69,9 +69,7 @@ public class FullServerTest {
             // create virtual controller to which "rusEFI network connector" connects to
             int controllerPort = 7002;
             ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
-            CountDownLatch controllerCreated = new CountDownLatch(1);
-            TestHelper.createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown(), logger);
-            assertTrue(controllerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+            TestHelper.createVirtualController(controllerPort, controllerImage, logger);
 
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network

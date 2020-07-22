@@ -51,9 +51,7 @@ public class TcpCommunicationIntegrationTest {
         ConfigurationImage serverImage = TestHelper.prepareImage(value, iniField);
         int port = 6100;
 
-        CountDownLatch serverCreated = new CountDownLatch(1);
-        BinaryProtocolServer server = TestHelper.createVirtualController(serverImage, port, parameter -> serverCreated.countDown(), LOGGER);
-        assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
+        BinaryProtocolServer server = TestHelper.createVirtualController(port, serverImage, LOGGER);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
@@ -90,9 +88,7 @@ public class TcpCommunicationIntegrationTest {
         int controllerPort = 6102;
 
         // create virtual controller
-        CountDownLatch serverCreated = new CountDownLatch(1);
-        BinaryProtocolServer server = TestHelper.createVirtualController(serverImage, controllerPort, parameter -> serverCreated.countDown(), LOGGER);
-        assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
+        TestHelper.createVirtualController(controllerPort, serverImage, LOGGER);
         int proxyPort = 6103;
 
 
