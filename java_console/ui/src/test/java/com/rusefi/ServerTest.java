@@ -72,14 +72,14 @@ public class ServerTest {
             @Override
             public void close(ControllerConnectionState inactiveClient) {
                 super.close(inactiveClient);
-                if (getCount() == 0)
+                if (getControllersCount() == 0)
                     allClientsDisconnected.countDown();
             }
         }) {
 
             backend.runControllerConnector(serverPortForControllers, parameter -> serverCreated.countDown());
             assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
-            assertEquals(0, backend.getCount());
+            assertEquals(0, backend.getControllersCount());
 
 
             new MockRusEfiDevice(MockRusEfiDevice.TEST_TOKEN_1, "rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPortForControllers);
@@ -145,8 +145,8 @@ public class ServerTest {
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
         try (Backend backend = new Backend(createTestUserResolver(), httpPort, logger) {
             @Override
-            protected void onDisconnectApplication() {
-                super.onDisconnectApplication();
+            protected void onDisconnectApplication(ApplicationConnectionState applicationConnectionState) {
+                super.onDisconnectApplication(applicationConnectionState);
                 disconnectedCountDownLatch.countDown();
             }
         }) {
@@ -176,8 +176,8 @@ public class ServerTest {
 
         try (Backend backend = new Backend(createTestUserResolver(), httpPort, logger) {
             @Override
-            protected void onDisconnectApplication() {
-                super.onDisconnectApplication();
+            protected void onDisconnectApplication(ApplicationConnectionState applicationConnectionState) {
+                super.onDisconnectApplication(applicationConnectionState);
                 disconnectedCountDownLatch.countDown();
             }
         }) {
