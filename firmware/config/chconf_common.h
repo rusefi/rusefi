@@ -22,29 +22,15 @@ extern "C"
  void irqExitHook(void);
  void contextSwitchHook(void);
  void threadInitHook(void* tp);
+ void onLockHook(void);
+ void onUnlockHook(void);
  #endif /* __ASSEMBLER__ */
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#if EFI_CLOCK_LOCKS
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-#ifndef __ASSEMBLER__
-  void onLockHook(void);
-  void onUnlockHook(void);
-#endif /* __ASSEMBLER__ */
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-  #define ON_LOCK_HOOK onLockHook()
-  #define ON_UNLOCK_HOOK onUnlockHook()
-#else /* EFI_CLOCK_LOCKS */
-  #define ON_LOCK_HOOK
-  #define ON_UNLOCK_HOOK
-#endif /* EFI_CLOCK_LOCKS */
+#define ON_LOCK_HOOK onLockHook()
+#define ON_UNLOCK_HOOK onUnlockHook()
 
 #if !defined(_FROM_ASM_)
 #ifdef __cplusplus

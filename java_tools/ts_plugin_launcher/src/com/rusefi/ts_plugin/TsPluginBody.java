@@ -6,6 +6,7 @@ public interface TsPluginBody {
     String GET_VERSION = "getVersion";
 
     JComponent getContent();
-
+/*
     void close();
+ */
 }

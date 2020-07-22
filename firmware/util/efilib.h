@@ -33,6 +33,9 @@
 
 #define ERROR_CODE 311223344
 
+#define Q(x) #x
+#define QUOTE(x) Q(x)
+
 #ifdef __cplusplus
 extern "C"
 {

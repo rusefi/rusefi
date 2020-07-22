@@ -70,8 +70,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
             tsPosition += size;
         } else if (configField.getTsInfo() == null) {
-            tsHeader.write(";no TS info - skipping " + prefix + configField.getName() + " offset " + tsPosition);
-            tsPosition += configField.getArraySize() * configField.getElementSize();
+            throw new IllegalArgumentException("Need TS info for " + configField.getName() + " at "+ prefix);
         } else if (configField.getArraySize() != 1) {
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH) + "\t\t= array, ");
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
@@ -211,6 +210,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
+        VariableRegistry.INSTANCE.register(structure.name + "_size", structure.getTotalSize());
         if (state.stack.isEmpty()) {
             totalTsSize = writeTunerStudio(structure, "", tsWriter, 0);
             tsWriter.write("; total TS size = " + totalTsSize + EOL);

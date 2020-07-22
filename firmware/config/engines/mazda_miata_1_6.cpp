@@ -345,7 +345,7 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	engineConfiguration->isHip9011Enabled = false;
-	engineConfiguration->isSdCardEnabled = false;
+	engineConfiguration->isSdCardEnabled = true;
 
 	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);

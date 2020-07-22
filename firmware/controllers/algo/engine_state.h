@@ -63,6 +63,8 @@ public:
 
 	int vssEventCounter = 0;
 
+	float fuelingLoad = 0;
+	float ignitionLoad = 0;
 
 	/**
 	 * pre-calculated value from simple fuel lookup

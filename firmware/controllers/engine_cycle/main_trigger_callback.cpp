@@ -24,6 +24,10 @@
 #include "global.h"
 #include "os_access.h"
 
+#if EFI_PRINTF_FUEL_DETAILS
+	bool printFuelDebug = false;
+#endif // EFI_PRINTF_FUEL_DETAILS
+
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
 #include "main_trigger_callback.h"
@@ -67,14 +71,22 @@ static Logging *logger;
 //#endif
 
 void startSimultaniousInjection(Engine *engine) {
+#if EFI_UNIT_TEST
+	EXPAND_Engine;
+#endif // EFI_UNIT_TEST
+	efitick_t nowNt = getTimeNowNt();
 	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
-		enginePins.injectors[i].setHigh();
+		enginePins.injectors[i].open(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
 static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
+#if EFI_UNIT_TEST
+	EXPAND_Engine;
+#endif
+	efitick_t nowNt = getTimeNowNt();
 	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
-		enginePins.injectors[i].setLow();
+		enginePins.injectors[i].close(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -84,98 +96,98 @@ void endSimultaniousInjection(InjectionEvent *event) {
 	EXPAND_Engine;
 #endif
 	event->isScheduled = false;
-
 	endSimultaniousInjectionOnlyTogglePins(engine);
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-static inline void turnInjectionPinHigh(InjectorOutputPin *output) {
-	output->overlappingCounter++;
+void InjectorOutputPin::open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("turnInjectionPinHigh %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
+	if (printFuelDebug) {
+		printf("InjectorOutputPin::open %s %d now=%0.1fms\r\n", name, overlappingCounter, (int)getTimeNowUs() / 1000.0);
+	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	if (output->overlappingCounter > 1) {
+	if (overlappingCounter > 1) {
 //		/**
 //		 * #299
 //		 * this is another kind of overlap which happens in case of a small duty cycle after a large duty cycle
 //		 */
 #if FUEL_MATH_EXTREME_LOGGING
-		printf("overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
+		if (printFuelDebug) {
+			printf("overlapping, no need to touch pin %s %d\r\n", name, (int)getTimeNowUs());
+		}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
-#if FUEL_MATH_EXTREME_LOGGING
-		const char * w = output->currentLogicValue == true ? "err" : "";
-//	scheduleMsg(&sharedLogger, "^ %spin=%s eventIndex %d %d", w, output->name,
-//			getRevolutionCounter(), getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-		output->setHigh();
+#if EFI_TOOTH_LOGGER
+	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
+		setHigh();
 	}
 }
 
 void turnInjectionPinHigh(InjectionEvent *event) {
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+	EXPAND_Engine;
+#endif // EFI_UNIT_TEST
 	efitick_t nowNt = getTimeNowNt();
-
-#if EFI_TOOTH_LOGGER
-	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
-#endif // EFI_TOOTH_LOGGER
-
 	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
 
 		if (output) {
-			turnInjectionPinHigh(output);
+			output->open(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 }
 
-static inline void turnInjectionPinLow(InjectorOutputPin *output) {
+void InjectorOutputPin::close(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("turnInjectionPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
+	if (printFuelDebug) {
+		printf("InjectorOutputPin::close %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
+	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-
+	overlappingCounter--;
+	if (overlappingCounter > 0) {
 #if FUEL_MATH_EXTREME_LOGGING
-		const char * w = output->currentLogicValue == false ? "err" : "";
-
-//	scheduleMsg(&sharedLogger, "- %spin=%s eventIndex %d %d", w, output->name,
-//			getRevolutionCounter(), getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-		output->overlappingCounter--;
-		if (output->overlappingCounter > 0) {
-#if FUEL_MATH_EXTREME_LOGGING
-			printf("was overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-		} else {
-			output->setLow();
+		if (printFuelDebug) {
+			printf("was overlapping, no need to touch pin %s %d\r\n", name, (int)getTimeNowUs());
 		}
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+	} else {
+#if EFI_TOOTH_LOGGER
+	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_TOOTH_LOGGER
+		setLow();
+	}
 
+	// Don't allow negative overlap count
+	if (overlappingCounter < 0) {
+		overlappingCounter = 0;
+	}
 }
 
 void turnInjectionPinLow(InjectionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
-#if EFI_TOOTH_LOGGER
-	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
-#endif // EFI_TOOTH_LOGGER
-
-	event->isScheduled = false;
-	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
-		InjectorOutputPin *output = event->outputs[i];
-		if (output != NULL) {
-			turnInjectionPinLow(output);
-		}
-	}
 #if EFI_UNIT_TEST
 	Engine *engine = event->engine;
 	EXPAND_Engine;
 #endif
+
+	event->isScheduled = false;
+	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
+		InjectorOutputPin *output = event->outputs[i];
+		if (output) {
+			output->close(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		}
+	}
 	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
+// todo: rename to 'scheduleInjectorOpenAndClose'?
 void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 		int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
@@ -185,10 +197,14 @@ void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 	 * x2 or /2?
 	 */
 
-	size_t injectorIndex = event->outputs[0]->injectorIndex;
-	const floatms_t injectionDuration = ENGINE(wallFuel[injectorIndex]).adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
+	const floatms_t injectionDuration = event->wallFuel.adjust(ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_PRINTF_FUEL_DETAILS
-	printf("fuel injectionDuration=%.2f adjusted=%.2f\t\n", ENGINE(injectionDuration), injectionDuration);
+	if (printFuelDebug) {
+		printf("fuel index=%d injectionDuration=%.2fms adjusted=%.2fms\n",
+		  injEventIndex,
+		  ENGINE(injectionDuration),
+		  injectionDuration);
+	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -233,21 +249,26 @@ void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 		if (prevOutputName == outputName
 				&& engineConfiguration->injectionMode != IM_SIMULTANEOUS
 				&& engineConfiguration->injectionMode != IM_SINGLE_POINT) {
-			warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event %d %s", getRevolutionCounter(), outputName);
+			warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event revCounter=%d %s", getRevolutionCounter(), outputName);
 		}
 		prevOutputName = outputName;
 	}
 
-#if EFI_UNIT_TEST || EFI_SIMULATOR || EFI_PRINTF_FUEL_DETAILS
-	InjectorOutputPin *output = event->outputs[0];
-	printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
-			(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM_VALUE)));
+#if EFI_PRINTF_FUEL_DETAILS
+	if (printFuelDebug) {
+		InjectorOutputPin *output = event->outputs[0];
+		printf("handleFuelInjectionEvent fuelout %s injection_duration %dus engineCycleDuration=%.1fms\t\n", output->name, (int)durationUs,
+				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM_VALUE)) / 1000.0);
+	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	if (event->isScheduled) {
-#if EFI_UNIT_TEST || EFI_SIMULATOR
-	printf("still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
+#if EFI_PRINTF_FUEL_DETAILS
+		if (printFuelDebug) {
+			InjectorOutputPin *output = event->outputs[0];
+			printf("handleFuelInjectionEvent still used %s now=%.1fms\r\n", output->name, (int)getTimeNowUs() / 1000.0);
+		}
+#endif /*EFI_PRINTF_FUEL_DETAILS */
 		return; // this InjectionEvent is still needed for an extremely long injection scheduled previously
 	}
 
@@ -310,7 +331,9 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	}
 
 #if FUEL_MATH_EXTREME_LOGGING
-	scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
+	if (printFuelDebug) {
+		scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
+	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::get(SensorType::Tps1).value_or(0) PASS_ENGINE_PARAMETER_SUFFIX));

@@ -1,7 +1,9 @@
 package com.rusefi.ts_plugin;
 
 import com.rusefi.autoupdate.AutoupdateUtil;
-import com.rusefi.ui.storage.PersistentConfiguration;
+import com.rusefi.shared.ConnectionAndMeta;
+import com.rusefi.shared.FileUtil;
+import org.jetbrains.annotations.Nullable;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -20,13 +22,14 @@ import static com.rusefi.ts_plugin.TsPluginLauncher.VERSION;
 
 public class Updater {
     private static final String PLUGIN_BODY_JAR = "rusefi_plugin_body.jar";
-    public static final String LOCAL_JAR_FILE_NAME = PersistentConfiguration.RUSEFI_SETTINGS_FOLDER + File.separator + PLUGIN_BODY_JAR;
+    public static final String LOCAL_JAR_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + PLUGIN_BODY_JAR;
     private static final String TITLE = "rusEFI plugin installer " + VERSION;
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
     private static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
     private final JLabel countDownLabel = new JLabel();
     private final AtomicInteger autoStartCounter = new AtomicInteger(4);
+    private TsPluginBody instance;
     private final Timer timer = new Timer(1000, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -34,9 +37,12 @@ public class Updater {
                 timer.stop();
                 try {
                     if (shouldAutoStart) {
+                        shouldAutoStart = false;
+                        System.out.println("Auto-starting startPlugin");
                         startPlugin();
                     }
                 } catch (IllegalAccessException | MalformedURLException | ClassNotFoundException | InstantiationException ex) {
+                    ex.printStackTrace();
                     JOptionPane.showMessageDialog(content, "Error " + ex);
                 }
             } else {
@@ -45,7 +51,7 @@ public class Updater {
         }
     });
 
-    private boolean shouldAutoStart = true;
+    private volatile boolean shouldAutoStart = true;
 
     public Updater() {
         content.add(new JLabel("" + VERSION));
@@ -59,32 +65,14 @@ public class Updater {
         }
 
         JButton download = new JButton("Update plugin");
-        if (version != null) {
-            JButton run = new JButton("Run Version " + version);
-            run.setBackground(new Color(0x90EE90));
-            run.addActionListener(new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        startPlugin();
-                    } catch (IllegalAccessException | MalformedURLException | ClassNotFoundException | InstantiationException ex) {
-                        run.setText(e.toString());
-                    }
-                }
-            });
-
-            content.add(run);
-
-            content.add(countDownLabel);
-            timer.start();
-        }
+        JButton run = createRunThisVersionButton(version);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AutoupdateUtil.ConnectionAndMeta connectionAndMeta;
+                ConnectionAndMeta connectionAndMeta;
                 try {
-                    connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
+                    connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
                 } catch (Exception e) {
                     e.printStackTrace();
                     return;
@@ -106,12 +94,39 @@ public class Updater {
         download.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (run != null)
+                    run.setEnabled(false);
                 cancelAutoStart();
                 new Thread(() -> startDownload(download)).start();
             }
         });
 
         content.add(download);
+    }
+
+    @Nullable
+    private JButton createRunThisVersionButton(String version) {
+        if (version == null)
+            return null;
+        JButton run = new JButton("Run Version " + version);
+        run.setBackground(new Color(0x90EE90));
+        run.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    cancelAutoStart();
+                    System.out.println("run startPlugin");
+                    startPlugin();
+                } catch (IllegalAccessException | MalformedURLException | ClassNotFoundException | InstantiationException ex) {
+                    run.setText(e.toString());
+                }
+            }
+        });
+        content.add(run);
+
+        content.add(countDownLabel);
+        timer.start();
+        return run;
     }
 
     private void cancelAutoStart() {
@@ -130,6 +145,7 @@ public class Updater {
     }
 
     private void startDownload(JButton download) {
+        System.out.println("startDownload");
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -138,11 +154,11 @@ public class Updater {
         });
 
         try {
-            AutoupdateUtil.ConnectionAndMeta connectionAndMeta = new AutoupdateUtil.ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
+            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke();
 
             AutoupdateUtil.downloadAutoupdateFile(LOCAL_JAR_FILE_NAME, connectionAndMeta,
                     TITLE);
-
+            System.out.println("Downloaded, now startPlugin");
             startPlugin();
 
         } catch (Exception e) {
@@ -152,8 +168,15 @@ public class Updater {
     }
 
     private void startPlugin() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        System.out.println("Starting plugin " + this);
         Class clazz = getPluginClass();
-        TsPluginBody instance = (TsPluginBody) clazz.newInstance();
+        synchronized (this) {
+            if (instance != null) {
+                System.out.println("Not starting second instance");
+                return; // avoid having two instances running
+            }
+            instance = (TsPluginBody) clazz.newInstance();
+        }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

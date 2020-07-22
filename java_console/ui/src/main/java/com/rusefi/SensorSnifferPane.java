@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.RpmLabel;
 import com.rusefi.ui.RpmModel;
@@ -77,7 +78,7 @@ public class SensorSnifferPane {
                                           @Override
                                           public void actionPerformed(ActionEvent e) {
                                               int rpm = RpmModel.getInstance().getValue();
-                                              String fileName = FileLog.getDate() + "_rpm_" + rpm + "_sensor" + ".png";
+                                              String fileName = Logger.getDate() + "_rpm_" + rpm + "_sensor" + ".png";
 
                                               UiUtils.saveImageWithPrompt(fileName, upperPanel, canvas);
                                           }

@@ -1,5 +1,7 @@
 package com.rusefi.ui.storage;
 
+import com.rusefi.shared.FileUtil;
+
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
@@ -9,14 +11,13 @@ import java.util.Map;
 public class PersistentConfiguration {
     private static final PersistentConfiguration INSTANCE = new PersistentConfiguration();
 
-    public static final String RUSEFI_SETTINGS_FOLDER = System.getProperty("user.home") + File.separator + ".rusEFI";
     private static boolean hookRegistered;
 
     static {
-        new File(RUSEFI_SETTINGS_FOLDER).mkdirs();
+        new File(FileUtil.RUSEFI_SETTINGS_FOLDER).mkdirs();
     }
 
-    private static final String CONFIG_FILE_NAME = RUSEFI_SETTINGS_FOLDER + File.separator + "console_properties.xml";
+    private static final String CONFIG_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "console_properties.xml";
 
     private Map<String, Object> config = new HashMap<>();
     private boolean isLoaded;
@@ -45,6 +46,10 @@ public class PersistentConfiguration {
 
     @SuppressWarnings("unchecked")
     public void load() {
+        if (!config.isEmpty()) {
+            System.out.println("Configuration already loaded");
+            return;
+        }
         try {
             BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(CONFIG_FILE_NAME));
             /**

@@ -3,7 +3,6 @@ package com.rusefi;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;
@@ -107,7 +106,7 @@ public class TestingUtils {
 
     static EngineChart nextChart(CommandQueue commandQueue) {
         long start = System.currentTimeMillis();
-        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(commandQueue));
+        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(commandQueue), FileLog.LOGGER);
         FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
         return chart;
     }

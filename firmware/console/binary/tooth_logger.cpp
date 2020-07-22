@@ -28,7 +28,7 @@ typedef struct __attribute__ ((packed)) {
 	// unfortunately all these fields are required by TS...
 	bool priLevel : 1;
 	bool secLevel : 1;
-	bool trigger : 1;
+	bool isTDC : 1;
 	bool sync : 1;
 	bool coil : 1;
 	bool injector : 1;
@@ -55,6 +55,25 @@ int getCompositeRecordCount() {
 	return NextIdx;
 }
 
+
+#if EFI_UNIT_TEST
+#include "logicdata.h"
+int copyCompositeEvents(CompositeEvent *events) {
+	for (int i = 0;i < NextIdx;i++) {
+		CompositeEvent *event = &events[i];
+		event->timestamp = SWAP_UINT32(buffer[i].timestamp);
+		event->primaryTrigger = buffer[i].priLevel;
+		event->secondaryTrigger = buffer[i].secLevel;
+		event->isTDC = buffer[i].isTDC;
+		event->sync = buffer[i].sync;
+		event->coil = buffer[i].coil;
+		event->injector = buffer[i].injector;
+	}
+	return NextIdx;
+}
+
+#endif // EFI_UNIT_TEST
+
 static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigger2,
 		bool isTDC DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	uint32_t nowUs = NT2US(timestamp);
@@ -62,7 +81,7 @@ static void SetNextCompositeEntry(efitick_t timestamp, bool trigger1, bool trigg
 	buffer[NextIdx].timestamp = SWAP_UINT32(nowUs);
 	buffer[NextIdx].priLevel = trigger1;
 	buffer[NextIdx].secLevel = trigger2;
-	buffer[NextIdx].trigger = isTDC;
+	buffer[NextIdx].isTDC = isTDC;
 	buffer[NextIdx].sync = engine->triggerCentral.triggerState.shaft_is_synchronized;
 	buffer[NextIdx].coil = coil;
 	buffer[NextIdx].injector = injector;
@@ -125,6 +144,7 @@ void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX
 		return;
 	}
 	SetNextCompositeEntry(timestamp, trigger1, trigger2, true PASS_ENGINE_PARAMETER_SUFFIX);
+	SetNextCompositeEntry(timestamp + 10, trigger1, trigger2, false PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -156,11 +176,13 @@ void EnableToothLogger() {
 	// Enable logging of edges as they come
 	ToothLoggerEnabled = true;
 
+#if EFI_TUNER_STUDIO
 	// Tell TS that we're ready for it to read out the log
 	// nb: this is a lie, as we may not have written anything
 	// yet.  However, we can let it continuously read out the buffer
 	// as we update it, which looks pretty nice.
 	tsOutputChannels.toothLogReady = true;
+#endif // EFI_TUNER_STUDIO
 }
 
 void EnableToothLoggerIfNotEnabled() {
@@ -171,7 +193,9 @@ void EnableToothLoggerIfNotEnabled() {
 
 void DisableToothLogger() {
 	ToothLoggerEnabled = false;
+#if EFI_TUNER_STUDIO
 	tsOutputChannels.toothLogReady = false;
+#endif // EFI_TUNER_STUDIO
 }
 
 ToothLoggerBuffer GetToothLoggerBuffer() {

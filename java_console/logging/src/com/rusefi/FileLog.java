@@ -6,8 +6,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * what the hell is this anyway? todo: migrate to log4j2
@@ -18,16 +16,18 @@ public enum FileLog {
     MAIN,
     SIMULATOR_CONSOLE;
 
-    public static final String DIR = "logs/";
-    public static final String LOG_INFO_TEXT = "Writing logs to '" + DIR + "'";
+    public static final String LOG_INFO_TEXT = "Writing logs to '" + Logger.DIR + "'";
     public static final String OS_VERSION = "os.version";
-    public static final String DATE_PATTERN = "yyyy-MM-dd_HH_mm_ss_SSS";
     private static final String WIKI_URL = "https://github.com/rusefi/rusefi/wiki/rusEFI-logs-folder";
     public static String currentLogName;
-    public static final String END_OF_TIMESTAND_TAG = "<EOT>: ";
     public static final Logger LOGGER = new Logger() {
         @Override
         public void trace(String msg) {
+        }
+
+        @Override
+        public boolean isTradeEnabled() {
+            return false;
         }
 
         @Override
@@ -62,7 +62,7 @@ public enum FileLog {
     }
 
     private static void writeReadmeFile() {
-        LazyFile file = new LazyFile(DIR + "README.html");
+        LazyFile file = new LazyFile(Logger.DIR + "README.html");
         file.write("<center>" + "<a href='" + WIKI_URL + "'>More info online<br/><img src=https://raw.githubusercontent.com/wiki/rusefi/rusefi/logo.gif></a>");
         try {
             file.close();
@@ -85,29 +85,25 @@ public enum FileLog {
     }
 
     private FileOutputStream openLog() throws FileNotFoundException {
-        String date = getDate();
+        String date = Logger.getDate();
         createFolderIfNeeded();
         currentLogName = name() + "_rfi_report_" + date + ".csv";
-        String fileName = DIR + currentLogName;
+        String fileName = Logger.DIR + currentLogName;
         rlog("Writing to " + fileName);
         return new FileOutputStream(fileName, true);
     }
 
     public static void createFolderIfNeeded() {
-        File dir = new File(DIR);
+        File dir = new File(Logger.DIR);
         if (dir.exists())
             return;
         boolean created = dir.mkdirs();
         if (!created)
-            throw new IllegalStateException("Failed to create " + DIR + " folder");
-    }
-
-    public static String getDate() {
-        return new SimpleDateFormat(DATE_PATTERN).format(new Date());
+            throw new IllegalStateException("Failed to create " + Logger.DIR + " folder");
     }
 
     public synchronized void logLine(String fullLine) {
-        String withDate = getDate() + END_OF_TIMESTAND_TAG + fullLine;
+        String withDate = Logger.getDate() + Logger.END_OF_TIMESTAND_TAG + fullLine;
         System.out.println(withDate);
         if (suspendLogging)
             return;

@@ -12,6 +12,7 @@
 #include "scheduler.h"
 #include "fl_stack.h"
 #include "trigger_structure.h"
+#include "accel_enrichment.h"
 
 #define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
 #define MAX_WIRES_COUNT 2
@@ -42,6 +43,8 @@ public:
 	 * TODO: make watchdog decrement relevant counter
 	 */
 	bool isScheduled = false;
+
+	WallFuel wallFuel;
 };
 
 
@@ -56,6 +59,8 @@ public:
 	 */
 	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	void resetOverlapping();
 
 	/**
 	 * injection events, per cylinder

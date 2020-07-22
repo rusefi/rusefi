@@ -1,6 +1,6 @@
 <project default="jar">
     <property name="jar_file_folder" value="build/jar"/>
-    <property name="jar_file" value="${jar_file_folder}/rusefi_plugin_launcher.jar"/>
+    <property name="jar_file" value="${jar_file_folder}/rusefi_ts_plugin_launcher.jar"/>
     <property name="console_path" value="../../java_console"/>
 
     <target name="clean">
@@ -15,6 +15,7 @@
                classpath="${console_path}/lib/junit.jar:${console_path}/lib/annotations.jar:lib/TunerStudioPluginAPI.jar:${console_path}/lib/httpclient.jar:${console_path}/lib/httpmime.jar:${console_path}/lib/httpcore.jar"
         >
             <src path="${console_path}/autoupdate/src"/>
+            <src path="${console_path}/shared_io/src/main/java"/>
             <src path="src"/>
         </javac>
 

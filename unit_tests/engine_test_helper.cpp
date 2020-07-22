@@ -15,14 +15,19 @@
 #include "engine_controller.h"
 #include "advance_map.h"
 #include "sensor.h"
+#include "tooth_logger.h"
+#include "logicdata.h"
 
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
+extern bool printTriggerDebug;
+extern bool printFuelDebug;
 
 EngineTestHelperBase::EngineTestHelperBase() { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
+	EnableToothLogger();
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback)
@@ -81,22 +86,39 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 }
 
 EngineTestHelper::~EngineTestHelper() {
+	// Write history to file
+	std::stringstream filePath;
+	filePath << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
+	writeEvents(filePath.str().c_str());
+
+	// Cleanup
 	Sensor::resetRegistry();
+}
+
+static CompositeEvent compositeEvents[COMPOSITE_PACKET_COUNT];
+
+void EngineTestHelper::writeEvents(const char *fileName) {
+	int count = copyCompositeEvents(compositeEvents);
+	if (count < 2) {
+		printf("Not enough data for %s\n", fileName);
+		return;
+	}
+	printf("Writing %d records to %s\n", count, fileName);
+	writeFile(fileName, compositeEvents, count);
 }
 
 /**
  * mock a change of time and fire single RISE front event
+ * DEPRECATED many usages should be migrated to
  */
 void EngineTestHelper::fireRise(float delayMs) {
 	moveTimeForwardUs(MS2US(delayMs));
 	firePrimaryTriggerRise();
 }
 
-/**
- * fire single RISE front event
- */
-void EngineTestHelper::firePrimaryTriggerRise() {
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, getTimeNowNt(), &engine, engine.engineConfigurationPtr, &persistentConfig);
+void EngineTestHelper::smartFireRise(float delayMs) {
+	smartMoveTimeForwardUs(MS2US(delayMs));
+	firePrimaryTriggerRise();
 }
 
 void EngineTestHelper::fireFall(float delayMs) {
@@ -104,8 +126,28 @@ void EngineTestHelper::fireFall(float delayMs) {
 	firePrimaryTriggerFall();
 }
 
+void EngineTestHelper::smartFireFall(float delayMs) {
+	smartMoveTimeForwardUs(MS2US(delayMs));
+	firePrimaryTriggerFall();
+}
+
+/**
+ * fire single RISE front event
+ */
+void EngineTestHelper::firePrimaryTriggerRise() {
+	efitick_t nowNt = getTimeNowNt();
+	Engine *engine = &this->engine;
+	EXPAND_Engine;
+	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, nowNt, engine, engine->engineConfigurationPtr, &persistentConfig);
+}
+
 void EngineTestHelper::firePrimaryTriggerFall() {
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, getTimeNowNt(), &engine, engine.engineConfigurationPtr, &persistentConfig);
+	efitick_t nowNt = getTimeNowNt();
+	Engine *engine = &this->engine;
+	EXPAND_Engine;
+	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, nowNt, engine, engine->engineConfigurationPtr, &persistentConfig);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {
@@ -124,6 +166,13 @@ void EngineTestHelper::fireTriggerEvents2(int count, float durationMs) {
 	}
 }
 
+void EngineTestHelper::smartFireTriggerEvents2(int count, float durationMs) {
+	for (int i = 0; i < count; i++) {
+		smartFireRise(durationMs);
+		smartFireFall(durationMs);
+	}
+}
+
 void EngineTestHelper::clearQueue() {
 	engine.executor.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	ASSERT_EQ( 0,  engine.executor.size()) << "Failed to clearQueue";
@@ -138,7 +187,37 @@ void EngineTestHelper::moveTimeForwardMs(float deltaTimeMs) {
 }
 
 void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
+	if (printTriggerDebug || printFuelDebug) {
+		printf("moveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
+	}
 	timeNowUs += deltaTimeUs;
+}
+
+/**
+ * this method executed all pending events wile
+ */
+void EngineTestHelper::smartMoveTimeForwardUs(int deltaTimeUs) {
+	if (printTriggerDebug || printFuelDebug) {
+		printf("smartMoveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
+	}
+	int targetTime = timeNowUs + deltaTimeUs;
+
+	while (true) {
+		scheduling_s* nextScheduledEvent = engine.executor.getHead();
+		if (nextScheduledEvent == nullptr) {
+			// nothing pending - we are done here
+			break;
+		}
+		int nextEventTime = nextScheduledEvent->momentX;
+		if (nextEventTime > targetTime) {
+			// next event is too far in the future
+			break;
+		}
+		timeNowUs = nextEventTime;
+		engine.executor.executeAll(timeNowUs);
+	}
+
+	timeNowUs = targetTime;
 }
 
 efitimeus_t EngineTestHelper::getTimeNowUs(void) {
@@ -180,9 +259,9 @@ static AngleBasedEvent * getElementAtIndexForUnitText(int index, Engine *engine)
 		index--;
 	}
 #if EFI_UNIT_TEST
-	firmwareError(OBD_PCM_Processor_Fault, "getForUnitText: null");
+	firmwareError(OBD_PCM_Processor_Fault, "getElementAtIndexForUnitText: null");
 #endif /* EFI_UNIT_TEST */
-	return NULL;
+	return nullptr;
 }
 
 AngleBasedEvent * EngineTestHelper::assertTriggerEvent(const char *msg,

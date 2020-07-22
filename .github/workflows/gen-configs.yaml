@@ -19,16 +19,16 @@ jobs:
 
     - name: Generate Configs
       working-directory: ./firmware/
-      run: sh gen_config.sh
+      run: bash gen_config.sh
 
     - name: Upload .ini files
-      working-directory: ./firmware/tunerstudio
+      working-directory: ./firmware/tunerstudio/generated
 #      run: ./upload.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
-      run: ./upload.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+      run: ../upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
-      run: sh gen_live_documentation.sh
+      run: bash gen_live_documentation.sh
 
     # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit changes
@@ -36,7 +36,15 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub build-firmware Action"
         git status
-        git commit -am "Auto-generated configs and docs" 2>&1 | grep -E '(nothing to commit|changed)'
+        OUT=$(git commit -am "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
+        if echo "$OUT" | grep 'nothing to commit'; then
+          echo "::set-env name=NOCOMMIT::true"
+          exit 0
+        elif echo "$OUT" | grep 'changed'; then
+          exit 0
+        else
+          exit 1
+        fi
 
     # We need to know what branch this is in order to push to the correct branch
     - name: Extract branch name
@@ -45,6 +53,7 @@ jobs:
       id: extract_branch
 
     - name: Push configs
+      if: ${{env.NOCOMMIT != 'true'}}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}

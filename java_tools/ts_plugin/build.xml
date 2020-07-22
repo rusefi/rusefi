@@ -13,15 +13,19 @@
 
         <javac debug="yes"
                destdir="build/classes"
-               classpath="${console_path}/lib/junit.jar:${console_path}/lib/json-simple-1.1.1.jar:${console_path}/lib/annotations.jar:${launcher_path}/lib/TunerStudioPluginAPI.jar:${console_path}/lib/httpclient.jar:${console_path}/lib/httpmime.jar:${console_path}/lib/httpcore.jar"
+               classpath="${console_path}/lib/jcip-annotations-1.0.jar:${console_path}/lib/annotations.jar:${console_path}/lib/jSerialComm.jar:${console_path}/lib/junit.jar:${console_path}/lib/json-simple-1.1.1.jar:${console_path}/lib/annotations.jar:${launcher_path}/lib/TunerStudioPluginAPI.jar:${console_path}/lib/httpclient.jar:${console_path}/lib/httpmime.jar:${console_path}/lib/httpcore.jar"
         >
             <src path="${console_path}/shared_ui/src"/>
             <src path="${console_path}/autoupdate/src"/>
+            <src path="${console_path}/shared_io/src/main/java"/>
             <src path="${console_path}/inifile/src"/>
             <src path="${console_path}/logging/src"/>
+            <src path="${console_path}/io/src/main/java"/>
+            <src path="${console_path}/logging-api/src/main/java"/>
             <src path="${console_path}/models/src"/>
             <src path="${launcher_path}/src"/>
-            <src path="src"/>
+            <src path="src/main/java"/>
+            <src path="src/test/java"/>
             <exclude name="**/*Sandbox.java"/>
         </javac>
 

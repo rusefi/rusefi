@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TuneReadWriteTest.testCompareBinaryToTSTune" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
+    <module name="ui" />
+    <useClassPathOnly />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.rusefi.ui.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <option name="PACKAGE_NAME" value="com.rusefi.ui" />
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.ui.TuneReadWriteTest" />
+    <option name="METHOD_NAME" value="testCompareBinaryToTSTune" />
+    <option name="TEST_OBJECT" value="method" />
+    <option name="PARAMETERS" value="" />
+    <option name="WORKING_DIRECTORY" value="" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

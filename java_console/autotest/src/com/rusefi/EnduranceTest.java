@@ -12,7 +12,7 @@ public class EnduranceTest {
     private static final int DEFAULT_COUNT = 2000;
 
     public static void main(String[] args) {
-        LinkManager linkManager = new LinkManager();
+        LinkManager linkManager = new LinkManager(FileLog.LOGGER);
         CommandQueue commandQueue = linkManager.getCommandQueue();
         long start = System.currentTimeMillis();
         int count = parseCount(args);

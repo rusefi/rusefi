@@ -6,6 +6,12 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_cam_vvt_input.cpp \
 	tests/trigger/test_2jz_vvt.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
+	tests/ignition_injection/injection_mode_transition.cpp \
+	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \
+	tests/ignition_injection/test_miata_na6_real_cranking.cpp \
+	tests/ignition_injection/test_multispark.cpp \
+	tests/ignition_injection/test_ignition_scheduling.cpp \
+	tests/ignition_injection/test_fuelCut.cpp \
 	tests/test_util.cpp \
 	tests/test_ion.cpp \
 	tests/test_aux_valves.cpp \
@@ -13,18 +19,14 @@ TESTS_SRC_CPP = \
 	tests/test_hip9011.cpp \
 	tests/test_cj125.cpp \
 	tests/test_engine_math.cpp \
-	tests/test_startOfCrankingPrimingPulse.cpp \
-	tests/test_miata_na6_real_cranking.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_dwell_corner_case_issue_796.cpp \
 	tests/test_idle_controller.cpp \
 	tests/test_issue_898.cpp \
 	tests/test_etb.cpp \
-	tests/test_ignition_scheduling.cpp \
 	tests/test_fuel_map.cpp \
 	tests/test_fuel_wall_wetting.cpp \
 	tests/test_one_cylinder_logic.cpp \
-	tests/test_fuelCut.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_logic_expression.cpp \
 	tests/test_speed_density.cpp \
@@ -36,7 +38,6 @@ TESTS_SRC_CPP = \
 	tests/test_accel_enrichment.cpp \
 	tests/test_tacho.cpp \
 	tests/test_gpiochip.cpp \
-	tests/test_multispark.cpp \
 	tests/test_deadband.cpp \
 	tests/sensor/basic_sensor.cpp \
 	tests/sensor/func_sensor.cpp \

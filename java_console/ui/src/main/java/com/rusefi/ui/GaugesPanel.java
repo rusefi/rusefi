@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.PaneSettings;
 import com.rusefi.core.Sensor;
@@ -236,7 +237,7 @@ public class GaugesPanel {
         saveImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fileName = FileLog.getDate() + "_gauges.png";
+                String fileName = Logger.getDate() + "_gauges.png";
 
                 UiUtils.saveImageWithPrompt(fileName, content, gauges.panel);
             }

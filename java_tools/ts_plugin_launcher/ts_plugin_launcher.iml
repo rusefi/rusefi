@@ -10,5 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="TunerStudioPluginAPI" level="project" />
     <orderEntry type="module" module-name="autoupdate" />
+    <orderEntry type="module" module-name="shared_io" />
   </component>
 </module>

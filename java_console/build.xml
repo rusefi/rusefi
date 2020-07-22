@@ -1,6 +1,8 @@
 <project default="jar">
     <property name="jar_file_folder" value="../java_console_binary"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
+    <property name="server_jar_file" value="${jar_file_folder}/rusefi_server.jar"/>
+    <property name="lib_list" value="../java_tools/configuration_definition/lib/snakeyaml.jar:lib/json-simple-1.1.1.jar:lib/server/javax.json.jar:lib/server/cactoos.jar:lib/server/takes.jar:lib/json-simple-1.1.1.jar:lib/jaxb-api.jar:lib/httpclient.jar:lib/httpmime.jar:lib/httpcore.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar"/>
 
     <target name="clean">
         <delete dir="build"/>
@@ -18,6 +20,7 @@
                 classpath="lib/annotations.jar"
         >
             <src path="autoupdate/src"/>
+            <src path="shared_io/src/main/java"/>
         </javac>
     </target>
 
@@ -38,19 +41,26 @@
     <target name="compile">
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
-               classpath="../java_tools/configuration_definition/lib/snakeyaml.jar:lib/json-simple-1.1.1.jar:lib/jaxb-api.jar:lib/httpclient.jar:lib/httpmime.jar:lib/httpcore.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar">
+               classpath="${lib_list}">
             <src path="autotest/src"/>
             <src path="autoupdate/src"/>
             <src path="../java_tools/configuration_definition/src"/>
             <src path="../java_tools/enum_to_string/src"/>
-            <src path="io/src"/>
-            <src path="models/src"/>
-            <src path="inifile/src"/>
+            <src path="../java_tools/proxy_server/src/main/java"/>
+            <src path="../java_tools/proxy_server/src/test/java"/>
+            <src path="io/src/main/java"/>
+            <src path="io/src/test/java"/>
+            <src path="models/src/main/java"/>
+            <src path="models/src/test/java"/>
+            <src path="inifile/src/main/java"/>
+            <src path="inifile/src/test/java"/>
             <src path="shared_ui/src"/>
+            <src path="shared_io/src/main/java"/>
+            <src path="shared_io/src/test/java"/>
+            <src path="logging-api/src/main/java"/>
             <src path="ui/src/main/java"/>
             <src path="ui/src/test/java"/>
             <src path="romraider/src"/>
-            <src path="opensr5/src"/>
             <src path="logging/src"/>
             <!-- not really used at the moment but let's compile for the sake of Eclipse users -->
             <src path="tools/src"/>
@@ -71,19 +81,37 @@
             <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
             <formatter type="brief"/>
             <classpath
-                    path="build/classes:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/miglayout-4.0.jar"/>
+                    path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="build">
                 <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="autoupdate/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="io/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="models/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="io/src/test/java" includes="**/test/**/*Test.java"/>
+                <fileset dir="inifile/src/test/java" includes="**/test/**/*Test.java"/>
+                <fileset dir="models/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="ui/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="romraider/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="opensr5/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="logging/src" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
 
+    </target>
+
+    <target name="server_jar" depends="jar">
+        <delete file="${server_jar_file}"/>
+        <echo message="Building ${server_jar_file}"/>
+
+        <jar destfile="${server_jar_file}">
+            <manifest>
+                <attribute name="Main-Class" value="com.rusefi.Launcher"/>
+                <attribute name="Built-Date" value="${TODAY}"/>
+                <attribute name="Signature-Vendor" value="rusEFI LLC"/>
+            </manifest>
+
+            <zipfileset src="${jar_file}" includes="**/*.class"/>
+            <zipfileset src="lib/server/cactoos.jar" includes="**/*.class"/>
+            <zipfileset src="lib/server/javax.json.jar" includes="**/*.class"/>
+            <zipfileset src="lib/server/takes.jar" includes="**/*.class"/>
+        </jar>
     </target>
 
     <target name="jar" depends="compile, autoupdate_jar">
@@ -115,6 +143,7 @@
             <zipfileset src="lib/log4j.jar" includes="**/*.class"/>
             <zipfileset src="lib/jep.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpclient.jar" includes="**/*.class"/>
+            <zipfileset src="lib/commons-logging.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpcore.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpmime.jar" includes="**/*.class"/>
             <zipfileset src="lib/jaxb-api.jar" includes="**/*.class"/>

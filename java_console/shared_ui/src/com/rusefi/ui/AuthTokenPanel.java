@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.URLLabel;
 import org.jetbrains.annotations.NotNull;
@@ -16,12 +17,11 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class AuthTokenPanel {
     private static final String TOKEN_WARNING = "Please copy token from your forum profile";
-    private static final String TOKEN_SUBSTRING = "token";
     private static final String AUTH_TOKEN = "auth_token";
     private static final String TOKEN_PROFILE_URL = "https://rusefi.com/forum/ucp.php?i=254";
 
-    private JPanel content = new JPanel(new BorderLayout());
-    private JTextField textField = new JTextField();
+    private final JPanel content = new JPanel(new BorderLayout());
+    private final JTextField authTokenTestField = new JTextField();
 
     public AuthTokenPanel() {
 
@@ -29,12 +29,12 @@ public class AuthTokenPanel {
 
         content.setBorder(BorderFactory.createTitledBorder("rusEFI Online Authentication Token"));
 
-        textField.setPreferredSize(new Dimension(200, 24));
+        authTokenTestField.setPreferredSize(new Dimension(200, 24));
 
         String authToken = getAuthToken();
         System.out.println("Got from settings: " + authToken);
 
-        textField.getDocument().addDocumentListener(new DocumentListener() {
+        authTokenTestField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 onTextChange();
@@ -60,7 +60,7 @@ public class AuthTokenPanel {
                 try {
                     String data = (String) clipboard.getData(DataFlavor.stringFlavor);
                     if (AutoTokenUtil.isToken(data)) {
-                        textField.setText(data);
+                        authTokenTestField.setText(data);
                     }
                 } catch (IOException | UnsupportedFlavorException ex) {
                     // ignoring this exception
@@ -74,7 +74,7 @@ public class AuthTokenPanel {
 
         setPasteButtonEnabledBasedOnClipboardContent(clipboard, paste);
 
-        top.add(textField);
+        top.add(authTokenTestField);
         top.add(paste);
 /*
         JButton save = new JButton("Save");
@@ -89,9 +89,9 @@ public class AuthTokenPanel {
         content.add(top);
         if (authToken.trim().isEmpty()) {
             authToken = TOKEN_WARNING;
-            content.add(new URLLabel("Get your token from your forum profile", TOKEN_PROFILE_URL), BorderLayout.SOUTH);
         }
-        textField.setText(authToken);
+        content.add(new URLLabel("Manage authentication token at your forum profile", TOKEN_PROFILE_URL), BorderLayout.SOUTH);
+        authTokenTestField.setText(authToken);
     }
 
     private void setPasteButtonEnabledBasedOnClipboardContent(Clipboard clipboard, JButton paste) {
@@ -104,12 +104,12 @@ public class AuthTokenPanel {
     }
 
     private void grabText() {
-        setAuthToken(AuthTokenPanel.this.textField.getText());
+        setAuthToken(AuthTokenPanel.this.authTokenTestField.getText());
         PersistentConfiguration.getConfig().save();
     }
 
     private void onTextChange() {
-        if (AutoTokenUtil.isToken(textField.getText())) {
+        if (AutoTokenUtil.isToken(authTokenTestField.getText())) {
             grabText();
         }
     }
@@ -128,11 +128,11 @@ public class AuthTokenPanel {
     }
 
     public boolean hasToken() {
-        return textField.getText().trim().length() > 0 && !textField.getText().contains(TOKEN_SUBSTRING);
+        return AutoTokenUtil.isToken(authTokenTestField.getText());
     }
 
     public String getToken() {
-        return textField.getText();
+        return authTokenTestField.getText();
     }
 
     public void showError(JComponent parent) {

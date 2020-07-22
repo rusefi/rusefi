@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
@@ -28,6 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.rusEFIVersion.CONSOLE_VERSION;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
@@ -63,6 +65,7 @@ public class ConsoleUI {
         this.port = port;
         mainFrame = new MainFrame(this, tabbedPane);
         ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
+        setFrameIcon(ConsoleUI.staticFrame);
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
 
         FileLog.MAIN.logLine("Hardware: " + FirmwareFlasher.getHardwareKind());
@@ -71,7 +74,8 @@ public class ConsoleUI {
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
         LinkManager linkManager = uiContext.getLinkManager();
-        linkManager.start(port);
+        // todo: this blocking IO operation should NOT be happening on the UI thread
+        linkManager.start(port, mainFrame.listener);
 
         engineSnifferPanel = new EngineSnifferPanel(uiContext, getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
@@ -138,6 +142,8 @@ public class ConsoleUI {
             if (tabbedPane.paneSettings.showTriggerShapePane)
                 tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
         }
+
+        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocol.COMPOSITE_OFF_RPM);
 
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 
@@ -229,7 +235,7 @@ public class ConsoleUI {
                 new ConsoleUI(port);
             } else {
                 for (String p : LinkManager.getCommPorts())
-                    MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
+                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, Launcher.class, "Available port: " + p);
                 new StartupFrame().chooseSerialPort();
             }
 

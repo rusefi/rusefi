@@ -1,8 +1,7 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 28 17:41:28 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 19 16:19:31 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
-#ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
-#define CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
+#pragma once
 #include "rusefi_types.h"
 // start of stft_cell_cfg_s
 struct stft_cell_cfg_s {
@@ -197,7 +196,7 @@ struct gppwm_channel {
 	/**
 	 * offset 7
 	 */
-	uint8_t pad;
+	uint8_t alignmentFill_map;
 	/**
 	 * offset 8
 	 */
@@ -238,7 +237,7 @@ struct air_pressure_sensor_config_s {
 	/**
 	 * offset 13
 	 */
-	uint8_t align[3];
+	uint8_t alignmentFill[3];
 	/** total size 16*/
 };
 
@@ -331,7 +330,7 @@ struct oil_pressure_config_s {
 	/**
 	 * offset 1
 	 */
-	uint8_t align[3];
+	uint8_t alignmentFill[3];
 	/**
 	 * offset 4
 	 */
@@ -554,7 +553,7 @@ struct afr_sensor_s {
 	/**
 	 * offset 1
 	 */
-	uint8_t alignAf[3];
+	uint8_t alignmentFill_afr[3];
 	/**
 	 * offset 4
 	 */
@@ -589,11 +588,11 @@ struct idle_hardware_s {
 	/**
 	 * offset 5
 	 */
-	brain_pin_e stepperDirectionPin;
+	output_pin_e stepperDirectionPin;
 	/**
 	 * offset 6
 	 */
-	brain_pin_e stepperStepPin;
+	output_pin_e stepperStepPin;
 	/**
 	 * offset 7
 	 */
@@ -700,8 +699,9 @@ struct engine_configuration_s {
 	offset 76 bit 15 */
 	bool cj125isUrDivided : 1;
 	/**
+	 * Switch between Industrial and Cic PID implementation
 	offset 76 bit 16 */
-	bool issue_294_unused : 1;
+	bool useCicPidForIdle : 1;
 	/**
 	offset 76 bit 17 */
 	bool useTLE8888_cranking_hack : 1;
@@ -1004,9 +1004,10 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e tps2_1AdcChannel;
 	/**
+	 * 0.1 is a good default value
 	 * offset 516
 	 */
-	int unusedAt516;
+	float idle_derivativeFilterLoss;
 	/**
 	 * offset 520
 	 */
@@ -1272,9 +1273,10 @@ struct engine_configuration_s {
 	 */
 	ego_sensor_e afr_type;
 	/**
+	 * 0.1 is a good default value
 	 * offset 696
 	 */
-	uint32_t unused696;
+	float idle_antiwindupFreq;
 	/**
 	 * offset 700
 	 */
@@ -1315,9 +1317,10 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e throttlePedalUpPinMode;
 	/**
+	 * Additional idle PID offset while A/C is active
 	 * offset 711
 	 */
-	uint8_t unused711;
+	uint8_t acIdleExtraOffset;
 	/**
 	 * offset 712
 	 */
@@ -1373,6 +1376,7 @@ struct engine_configuration_s {
 	offset 744 bit 2 */
 	bool is_enabled_spi_3 : 1;
 	/**
+	 * enable sd/disable sd
 	offset 744 bit 3 */
 	bool isSdCardEnabled : 1;
 	/**
@@ -1502,9 +1506,14 @@ struct engine_configuration_s {
 	 */
 	uint8_t mc33_hvolt;
 	/**
+	 * Additional idle PID minValue while A/C is active
 	 * offset 761
 	 */
-	uint8_t unusedHere[3];
+	uint8_t acIdleExtraMin;
+	/**
+	 * offset 762
+	 */
+	uint8_t unusedHere[2];
 	/**
 	 * offset 764
 	 */
@@ -1808,10 +1817,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_283_30 : 1;
+	bool unusedBit_284_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_283_31 : 1;
+	bool unusedBit_284_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2708,15 +2717,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 2420
 	 */
-	float autoTuneCltThreshold;
+	float unused244_1;
 	/**
 	 * offset 2424
 	 */
-	float autoTuneTpsRocThreshold;
+	float unused244_2;
 	/**
 	 * offset 2428
 	 */
-	float autoTuneTpsQuietPeriod;
+	float unused244_3;
 	/**
 	 * offset 2432
 	 */
@@ -2854,11 +2863,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2713
 	 */
-	adc_channel_e auxVoltage1;
+	uint8_t unusedAuxVoltage1_TODO_332;
 	/**
 	 * offset 2714
 	 */
-	adc_channel_e auxVoltage2;
+	uint8_t unusedAuxVoltage2_TODO_332;
 	/**
 	 * offset 2715
 	 */
@@ -2915,7 +2924,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3104
 	 */
-	brain_pin_e stepperEnablePin;
+	output_pin_e stepperEnablePin;
 	/**
 	 * offset 3105
 	 */
@@ -3120,15 +3129,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 4016
 	 */
-	uint8_t unusuedvref[4];
+	uint8_t unusedvref[4];
 	/**
 	 * offset 4020
 	 */
-	uint8_t unusuedsw[4];
+	uint8_t unusedsw[4];
 	/**
 	 * offset 4024
 	 */
-	int alFIn[3];
+	int unused_alFIn[3];
 	/**
 	 * Trigger comparator center point voltage
 	 * offset 4036
@@ -3520,6 +3529,5 @@ struct persistent_config_s {
 
 typedef struct persistent_config_s persistent_config_s;
 
-#endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 28 17:41:28 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 19 16:19:31 UTC 2020

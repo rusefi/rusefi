@@ -1,0 +1,9 @@
+plugins {
+    id 'java'
+}
+
+apply from: '../../android/dependencies.gradle'
+
+dependencies {
+    testImplementation libs.junit
+}

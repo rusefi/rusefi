@@ -25,6 +25,10 @@ EXTERN_ENGINE;
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
+#if EFI_PRINTF_FUEL_DETAILS || FUEL_MATH_EXTREME_LOGGING
+	extern bool printFuelDebug;
+#endif // EFI_PRINTF_FUEL_DETAILS
+
 static cyclic_buffer<int> ignitionErrorDetection;
 static Logging *logger;
 
@@ -47,7 +51,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 #if SPARK_EXTREME_LOGGING
 	scheduleMsg(logger, "spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkId);
-#endif /* FUEL_MATH_EXTREME_LOGGING */
+#endif /* SPARK_EXTREME_LOGGING */
 
 	/**
 	 * there are two kinds of 'out-of-order'
@@ -119,13 +123,20 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	event->dwellPosition.setAngle(dwellStartAngle PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("addIgnitionEvent %s ind=%d\n", output->name, event->dwellPosition.triggerEventIndex);
+	if (printFuelDebug) {
+		printf("addIgnitionEvent %s ind=%d\n", output->name, event->dwellPosition.triggerEventIndex);
+	}
 	//	scheduleMsg(logger, "addIgnitionEvent %s ind=%d", output->name, event->dwellPosition->eventIndex);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 }
 
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
+
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+	EXPAND_Engine;
+#endif // EFI_UNIT_TEST
 
 #if EFI_TOOTH_LOGGER
 	LogTriggerCoilState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
@@ -165,10 +176,6 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 #endif
 
 	}
-#endif /* EFI_UNIT_TEST */
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
 #endif /* EFI_UNIT_TEST */
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
 
@@ -222,7 +229,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 #if SPARK_EXTREME_LOGGING
 	scheduleMsg(logger, "spark goes high %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkId);
-#endif /* FUEL_MATH_EXTREME_LOGGING */
+#endif /* SPARK_EXTREME_LOGGING */
 
 	if (output->outOfOrder) {
 		output->outOfOrder = false;
@@ -246,6 +253,10 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
 #if EFI_TOOTH_LOGGER
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+	EXPAND_Engine;
+#endif // EFI_UNIT_TEST
 	LogTriggerCoilState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_TOOTH_LOGGER
 
@@ -303,7 +314,7 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 		if (isPending) {
 #if SPARK_EXTREME_LOGGING
 			scheduleMsg(logger, "isPending thus not adding to queue index=%d rev=%d now=%d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
+#endif /* SPARK_EXTREME_LOGGING */
 		} else {
 			LL_APPEND2(ENGINE(angleBasedEventsHead), event, nextToothEvent);
 		}
@@ -345,7 +356,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 #if SPARK_EXTREME_LOGGING
 		scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)chargeDelayUs,
 				event->sparkId);
-#endif /* FUEL_MATH_EXTREME_LOGGING */
+#endif /* SPARK_EXTREME_LOGGING */
 
 
 	/**
@@ -377,7 +388,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	} else {
 #if SPARK_EXTREME_LOGGING
 		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s now=%d for id=%d", trgEventIndex, getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), event->sparkEvent.position.triggerEventIndex);
-#endif /* FUEL_MATH_EXTREME_LOGGING */
+#endif /* SPARK_EXTREME_LOGGING */
 	}
 
 
@@ -456,7 +467,7 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, 
 
 #if SPARK_EXTREME_LOGGING
 	scheduleMsg(logger, "time to invoke ind=%d %d %d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
+#endif /* SPARK_EXTREME_LOGGING */
 
 			scheduleByAngle(
 				sDown,

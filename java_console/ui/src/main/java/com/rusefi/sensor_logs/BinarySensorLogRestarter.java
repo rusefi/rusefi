@@ -5,10 +5,10 @@ import com.rusefi.Timeouts;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.tools.online.Online;
+import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ui.AuthTokenPanel;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -57,11 +57,8 @@ public class BinarySensorLogRestarter implements SensorLog {
         UPLOAD_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Online.upload(new File(fileName), AuthTokenPanel.getAuthToken());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                UploadResult result = Online.upload(new File(fileName), AuthTokenPanel.getAuthToken());
+                System.out.println(result.toString());
             }
         });
     }
