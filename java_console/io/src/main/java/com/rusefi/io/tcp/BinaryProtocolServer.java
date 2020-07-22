@@ -3,6 +3,7 @@ package com.rusefi.io.tcp;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.Listener;
+import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.*;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
@@ -183,11 +184,15 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler) throws IOException {
-        byte first = in.readByte();
+        return getPacketLength(in, protocolCommandHandler, Timeouts.BINARY_IO_TIMEOUT);
+    }
+
+    public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler, int ioTimeout) throws IOException {
+        byte first = in.readByte(ioTimeout);
         if (first == COMMAND_PROTOCOL) {
             protocolCommandHandler.handle();
         }
-        return first * 256 + in.readByte();
+        return first * 256 + in.readByte(ioTimeout);
     }
 
     public static Packet readPromisedBytes(DataInputStream in, int length) throws IOException {
