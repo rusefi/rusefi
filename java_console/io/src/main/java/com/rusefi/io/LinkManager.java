@@ -266,7 +266,8 @@ public class LinkManager implements Closeable {
 
     @Override
     public void close() {
-        connector.stop();
+        if (connector != null)
+            connector.stop();
     }
 
     public static String unpackConfirmation(String message) {
