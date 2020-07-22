@@ -1,12 +1,12 @@
 package com.rusefi.autodetect;
 
 import com.rusefi.FileLog;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +19,8 @@ import java.util.function.Function;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class PortDetector {
+    private static final NamedThreadFactory AUTO_DETECT_PORT = new NamedThreadFactory("AutoDetectPort");
+
     /**
      * Connect to all serial ports and find out which one respond first
      * @param callback
@@ -34,7 +36,7 @@ public class PortDetector {
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<String> result = new AtomicReference<>();
         for (String serialPort : serialPorts) {
-            Thread thread = new Thread(new SerialAutoChecker(FileLog.LOGGER, serialPort, portFound, result, callback));
+            Thread thread = AUTO_DETECT_PORT.newThread(new SerialAutoChecker(FileLog.LOGGER, serialPort, portFound, result, callback));
             serialFinder.add(thread);
             thread.start();
         }

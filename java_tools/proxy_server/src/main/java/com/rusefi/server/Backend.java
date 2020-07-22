@@ -37,6 +37,7 @@ public class Backend implements Closeable {
     public static final String VERSION_PATH = "/version";
     public static final String BACKEND_VERSION = "0.0001";
     public static final int SERVER_PORT_FOR_CONTROLLERS = 8003;
+    public static final String MAX_PACKET_GAP = "MAX_PACKET_GAP";
 
     private final FkRegex showOnlineControllers = new FkRegex(ProxyClient.LIST_CONTROLLERS_PATH,
             (Take) req -> getControllersOnline()
@@ -166,8 +167,7 @@ public class Backend implements Closeable {
                             BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream);
 
                         } catch (Throwable e) {
-                            e.printStackTrace();
-                            logger.info("Got error " + e);
+                            logger.info("Application Connector: Got error " + e);
                         } finally {
                             close(applicationConnectionState);
                         }
@@ -224,9 +224,12 @@ public class Backend implements Closeable {
         JsonArrayBuilder builder = Json.createArrayBuilder();
         List<ApplicationConnectionState> applications = getApplications();
         for (ApplicationConnectionState application : applications) {
-            JsonObject clientObject = Json.createObjectBuilder()
+            JsonObject applicationObject = Json.createObjectBuilder()
+                    .add(UserDetails.USER_ID, application.getUserDetails().getUserId())
+                    .add(UserDetails.USERNAME, application.getUserDetails().getUserName())
+                    .add(MAX_PACKET_GAP, application.getClientStream().getStreamStats().getMaxPacketGap())
                     .build();
-            builder.add(clientObject);
+            builder.add(applicationObject);
         }
         return new RsJson(builder.build());
     }
@@ -236,17 +239,16 @@ public class Backend implements Closeable {
         JsonArrayBuilder builder = Json.createArrayBuilder();
         List<ControllerConnectionState> clients = getControllers();
         for (ControllerConnectionState client : clients) {
-
-            JsonObject clientObject = Json.createObjectBuilder()
+            JsonObject controllerObject = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
                     .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
                     .add(ControllerInfo.VEHICLE_NAME, client.getSessionDetails().getControllerInfo().getVehicleName())
                     .add(ControllerInfo.ENGINE_MAKE, client.getSessionDetails().getControllerInfo().getEngineMake())
                     .add(ControllerInfo.ENGINE_CODE, client.getSessionDetails().getControllerInfo().getEngineCode())
-                    .add("MAX_PACKET_GAP", client.getStream().getStreamStats().getMaxPacketGap())
+                    .add(MAX_PACKET_GAP, client.getStream().getStreamStats().getMaxPacketGap())
                     .build();
-            builder.add(clientObject);
+            builder.add(controllerObject);
         }
         return new RsJson(builder.build());
     }
