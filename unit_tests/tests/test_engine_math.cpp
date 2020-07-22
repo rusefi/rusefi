@@ -58,7 +58,7 @@ TEST(misc, testEngineMath) {
 	engineConfiguration->tChargeAirCoefMax = 0.902f;
 	engineConfiguration->tChargeAirFlowMax = 153.6f;
 	// calc. some airMass given the engine displacement=1.839 and 4 cylinders (FORD_ESCORT_GT)
-	engine->engineState.sd.airMassInOneCylinder = getCylinderAirMass(/*VE*/1.0f, /*MAP*/100.0f, /*tChargeK*/273.15f + 20.0f PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->engineState.sd.airMassInOneCylinder = SpeedDensityBase::getAirmassImpl(/*VE*/1.0f, /*MAP*/100.0f, /*tChargeK*/273.15f + 20.0f PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_NEAR(0.5464f, engine->engineState.sd.airMassInOneCylinder, EPS4D);
 
 	Sensor::setMockValue(SensorType::Clt, 90);
