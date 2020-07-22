@@ -8,10 +8,11 @@ import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.shared.FileUtil;
-import net.jcip.annotations.GuardedBy;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 public class ControllerConnectionState {
     private final Socket clientSocket;
@@ -30,8 +31,8 @@ public class ControllerConnectionState {
      */
     private UserDetails userDetails;
     private ControllerKey controllerKey;
-    @GuardedBy("this")
-    private boolean isUsed;
+
+    private final TwoKindSemaphore twoKindSemaphore = new TwoKindSemaphore();
 
     public ControllerConnectionState(Socket clientSocket, Logger logger, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
@@ -104,23 +105,7 @@ public class ControllerConnectionState {
             throw new IOException("getOutputs: No response");
     }
 
-    /**
-     * @return true if acquired successfully, false if not
-     */
-    public synchronized boolean acquire() {
-        if (isUsed)
-            return false;
-        isUsed = true;
-        return true;
-    }
-
-    public synchronized boolean isUsed() {
-        return isUsed;
-    }
-
-    public synchronized void release() {
-        if (!isUsed)
-            throw new IllegalStateException("Not acquired by anyone");
-        isUsed = false;
+    public TwoKindSemaphore getTwoKindSemaphore() {
+        return twoKindSemaphore;
     }
 }

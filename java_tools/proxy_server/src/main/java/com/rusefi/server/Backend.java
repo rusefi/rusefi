@@ -28,6 +28,8 @@ import java.net.BindException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.rusefi.Timeouts.SECOND;
+
 /**
  * See NetworkConnectorStartup
  */
@@ -107,10 +109,31 @@ public class Backend implements Closeable {
 
         new Thread(() -> {
             while (true) {
-                runCleanup();
+                runApplicationConnectionsCleanup();
                 BinaryProtocol.sleep(applicationTimeout);
             }
         }, "rusEFI Application connections Cleanup").start();
+
+        new Thread(() -> {
+            while (true) {
+                grabOutputs();
+                BinaryProtocol.sleep(SECOND);
+            }
+        }, "rusEFI gauge poker").start();
+    }
+
+    private void grabOutputs() {
+        List<ControllerConnectionState> controllers = getControllers();
+        for (ControllerConnectionState controller : controllers) {
+            if (System.currentTimeMillis() - controller.getStream().getStreamStats().getPreviousPacketArrivalTime() > 20 * SECOND) {
+                if (controller.getTwoKindSemaphore().acquireForShortTermUsage()) {
+                    try {
+                    } finally {
+                        controller.getTwoKindSemaphore().releaseFromShortTermUsage();
+                    }
+                }
+            }
+        }
     }
 
     public void runApplicationConnector(int serverPortForApplications, Listener<?> serverSocketCreationCallback) {
@@ -172,7 +195,7 @@ public class Backend implements Closeable {
                 // no such controller
                 return null;
             }
-            if (!state.acquire()) {
+            if (!state.getTwoKindSemaphore().acquireForLongTermUsage()) {
                 // someone is already talking to this controller
                 return null;
             }
@@ -237,7 +260,7 @@ public class Backend implements Closeable {
             JsonObject controllerObject = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
-                    .add(IS_USED, client.isUsed())
+                    .add(IS_USED, client.getTwoKindSemaphore().isUsed())
                     .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
                     .add(ControllerInfo.VEHICLE_NAME, client.getSessionDetails().getControllerInfo().getVehicleName())
                     .add(ControllerInfo.ENGINE_MAKE, client.getSessionDetails().getControllerInfo().getEngineMake())
@@ -257,7 +280,7 @@ public class Backend implements Closeable {
      * we do not push anything into connected applications so we have to run a clean-up loop
      * that's different from controllers since we periodically pull outputs from controllers which allows us to detect disconnects
      */
-    private void runCleanup() {
+    private void runApplicationConnectionsCleanup() {
         List<ApplicationConnectionState> inactiveApplications = new ArrayList<>();
 
         synchronized (lock) {
