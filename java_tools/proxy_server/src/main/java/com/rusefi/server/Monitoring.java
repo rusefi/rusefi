@@ -12,9 +12,14 @@ import java.lang.management.OperatingSystemMXBean;
 
 public class Monitoring {
     public static final String STATUS = "/status";
-    static final FkRegex showStatistics = new FkRegex(STATUS,
-            (Take) req -> Monitoring.getStatus());
+    final FkRegex showStatistics;
+    private final Backend backend;
 
+    public Monitoring(Backend backend) {
+        this.backend = backend;
+        showStatistics = new FkRegex(STATUS,
+                (Take) req -> getStatus());
+    }
 
     private static String formatSize(long v) {
         if (v < 1024) return v + " B";
@@ -22,7 +27,7 @@ public class Monitoring {
         return String.format("%.1f %sB", (double) v / (1L << (z * 10)), " KMGTPE".charAt(z));
     }
 
-    private static RsJson getStatus() throws IOException {
+    private RsJson getStatus() throws IOException {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
         builder.add("CPU_Load", operatingSystemMXBean.getSystemLoadAverage());
@@ -30,6 +35,8 @@ public class Monitoring {
         builder.add("max_ram", formatSize(Runtime.getRuntime().maxMemory()));
         builder.add("threads", Thread.getAllStackTraces().size());
         builder.add("sessions", Backend.totalSessions.get());
+        builder.add("serverPortForApplications", backend.serverPortForApplications);
+        builder.add("serverPortForControllers", backend.serverPortForControllers);
 
         return new RsJson(builder.build());
     }

@@ -1,5 +1,6 @@
 package com.rusefi.server;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -57,6 +58,7 @@ public class ControllerInfo {
         return signature;
     }
 
+    @NotNull
     public static ControllerInfo valueOf(String jsonString) {
         JSONParser parser = new JSONParser();
         JSONObject jsonObject;
@@ -65,6 +67,11 @@ public class ControllerInfo {
         } catch (ParseException e) {
             throw new IllegalStateException(e);
         }
+        return valueOf(jsonObject);
+    }
+
+    @NotNull
+    public static ControllerInfo valueOf(JSONObject jsonObject) {
         String vehicleName = (String) jsonObject.get(VEHICLE_NAME);
         String engineMake = (String) jsonObject.get(ENGINE_MAKE);
         String engineCode = (String) jsonObject.get(ENGINE_CODE);

@@ -1,10 +1,9 @@
 package com.rusefi.server;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.stream.JsonParsingException;
-import java.io.StringReader;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.util.Objects;
 
 public class ApplicationRequest {
@@ -28,26 +27,25 @@ public class ApplicationRequest {
     }
 
     public String toJson() {
-        JsonObject jsonObject = Json.createObjectBuilder()
-                .add(SESSION, sessionDetails.toJson())
-                .add(USER_ID, targetUserId)
-                .build();
-        return jsonObject.toString();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(SESSION, sessionDetails.toJson());
+        jsonObject.put(USER_ID, targetUserId);
+        return jsonObject.toJSONString();
     }
 
     public static ApplicationRequest valueOf(String jsonString) {
-        JsonReader reader = Json.createReader(new StringReader(jsonString));
-
-        JsonObject jsonObject;
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject;
         try {
-            jsonObject = reader.readObject();
-        } catch (JsonParsingException e) {
-            throw new IllegalStateException("While parsing [" + jsonString + "]", e);
+            jsonObject = (JSONObject) parser.parse(jsonString);
+        } catch (ParseException e) {
+            throw new IllegalStateException(e);
         }
-        int targetUserId = jsonObject.getInt(USER_ID);
 
-        SessionDetails session = SessionDetails.valueOf(jsonObject.getString(SESSION));
-        return new ApplicationRequest(session, targetUserId);
+        long targetUserId = (Long) jsonObject.get(USER_ID);
+
+        SessionDetails session = SessionDetails.valueOf((String) jsonObject.get(SESSION));
+        return new ApplicationRequest(session, (int)targetUserId);
     }
 
     @Override

@@ -27,6 +27,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
+/**
+ * See NetworkConnectorStartup
+ */
 public class Backend implements Closeable {
     public static final String VERSION_PATH = "/version";
     public static final String BACKEND_VERSION = "0.0001";
@@ -46,6 +49,8 @@ public class Backend implements Closeable {
     private final UserDetailsResolver userDetailsResolver;
     private final Logger logger;
     public final static AtomicLong totalSessions = new AtomicLong();
+    public int serverPortForApplications;
+    public int serverPortForControllers;
 
     public Backend(UserDetailsResolver userDetailsResolver, int httpPort, Logger logger) {
 //        this.clientTimeout = clientTimeout;
@@ -59,7 +64,7 @@ public class Backend implements Closeable {
                 try {
                     new FtBasic(
                             new TkFork(showOnlineUsers,
-                                    Monitoring.showStatistics,
+                                    new Monitoring(this).showStatistics,
                                     new FkRegex(VERSION_PATH, BACKEND_VERSION),
                                     new FkRegex("/", new RsHtml("<html><body>\n" +
                                             "<a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
@@ -92,6 +97,7 @@ public class Backend implements Closeable {
     }
 
     public void runApplicationConnector(int serverPortForApplications, Listener serverSocketCreationCallback) {
+        this.serverPortForApplications = serverPortForApplications;
         // connection from authenticator app which proxies for Tuner Studio
         // authenticator pushed hello packet on connect
         System.out.println("Starting application connector at " + serverPortForApplications);
@@ -146,6 +152,7 @@ public class Backend implements Closeable {
     }
 
     public void runControllerConnector(int serverPortForControllers, Listener serverSocketCreationCallback) {
+        this.serverPortForControllers = serverPortForControllers;
         System.out.println("Starting controller connector at " + serverPortForControllers);
         BinaryProtocolServer.tcpServerSocket(logger, new Function<Socket, Runnable>() {
             @Override
