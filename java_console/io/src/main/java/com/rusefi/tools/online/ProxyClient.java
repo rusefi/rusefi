@@ -15,6 +15,8 @@ import java.util.List;
 public class ProxyClient {
     public static final String LIST_CONTROLLERS_PATH = "/list_controllers";
     public static final String LIST_APPLICATIONS_PATH = "/list_applications";
+    public static final String VERSION_PATH = "/version";
+    public static final String BACKEND_VERSION = "0.0001";
 
     public static List<PublicSession> getOnlineApplications(int httpPort) throws IOException {
         return getOnlineApplications(HttpUtil.RUSEFI_PROXY_JSON_API_PREFIX + ":" + httpPort + LIST_CONTROLLERS_PATH);
