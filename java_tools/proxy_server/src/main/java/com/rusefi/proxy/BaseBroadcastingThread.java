@@ -1,6 +1,7 @@
 package com.rusefi.proxy;
 
 import com.opensr5.Logger;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.commands.HelloCommand;
@@ -34,13 +35,14 @@ public class BaseBroadcastingThread {
 
                     if (command == Fields.TS_HELLO_COMMAND) {
                         // respond on hello request with information about session
+                        logger.info("Sending out " + sessionDetails);
                         new HelloCommand(logger, sessionDetails.toJson()).handle(stream);
                     } else {
                         handleCommand(packet, stream);
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("exiting thread " + e);
             }
         });
     }
