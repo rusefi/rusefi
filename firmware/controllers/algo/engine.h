@@ -16,6 +16,7 @@
 #include "accel_enrichment.h"
 #include "trigger_central.h"
 #include "local_version_holder.h"
+#include "tcu.h"
 #include "buttonshift.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
