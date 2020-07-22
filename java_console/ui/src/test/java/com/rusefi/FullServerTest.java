@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import static com.rusefi.TestHelper.createIniField;
 import static com.rusefi.TestHelper.prepareImage;
 import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
+import static com.rusefi.Timeouts.SECOND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -40,14 +41,22 @@ public class FullServerTest {
         int userId = 7;
 
         CountDownLatch controllerRegistered = new CountDownLatch(1);
+        CountDownLatch applicationClosed = new CountDownLatch(1);
 
         UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), userId);
         int httpPort = 8003;
-        try (Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+        int applicationTimeout = 7 * SECOND;
+        try (Backend backend = new Backend(userDetailsResolver, httpPort, logger, applicationTimeout) {
             @Override
             protected void onRegister(ControllerConnectionState controllerConnectionState) {
                 super.onRegister(controllerConnectionState);
                 controllerRegistered.countDown();
+            }
+
+            @Override
+            protected void close(ApplicationConnectionState applicationConnectionState) {
+                super.close(applicationConnectionState);
+                applicationClosed.countDown();
             }
         }; LinkManager clientManager = new LinkManager(logger)) {
             int serverPortForControllers = 7001;
@@ -100,7 +109,14 @@ public class FullServerTest {
             String clientValue = iniField.getValue(clientImage);
             assertEquals(Double.toString(value), clientValue);
 
+            assertEquals(1, backend.getApplications().size());
+            assertEquals(1, applicationClosed.getCount());
+
             // now let's test that application connector would be terminated by server due to inactivity
+            System.out.println("Sleeping twice the application timeout");
+            assertTrue(applicationClosed.await(2 * applicationTimeout, TimeUnit.MILLISECONDS));
+
+            assertEquals("applications size", 0, backend.getApplications().size());
         }
     }
 

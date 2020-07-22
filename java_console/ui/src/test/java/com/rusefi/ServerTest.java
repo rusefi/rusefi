@@ -1,11 +1,9 @@
 package com.rusefi;
 
-import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
@@ -20,7 +18,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -99,6 +96,8 @@ public class ServerTest {
         }
     }
 
+/*
+covered by FullServerTest
     @Test
     public void testApplicationTimeout() throws InterruptedException, IOException {
         int serverPortForRemoteUsers = 6999;
@@ -137,6 +136,7 @@ public class ServerTest {
 
         }
     }
+ */
 
     @Test
     public void testInvalidApplicationRequest() throws InterruptedException, IOException {
