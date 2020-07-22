@@ -4,6 +4,7 @@ import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.Backend;
+import com.rusefi.server.SessionDetails;
 import com.rusefi.ui.AuthTokenPanel;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class NetworkConnectorStartup {
             return;
         }
 
-        NetworkConnector.runNetworkConnector(authToken, autoDetectedPort, Backend.SERVER_PORT_FOR_CONTROLLERS);
+        SessionDetails sessionDetails = NetworkConnector.runNetworkConnector(authToken, autoDetectedPort, Backend.SERVER_PORT_FOR_CONTROLLERS);
+        System.out.println("Running with " + sessionDetails.getOneTimeToken());
     }
-
 }
