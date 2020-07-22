@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 19 16:19:31 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 22 19:40:59 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2995,7 +2995,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3288
 	 */
-	ignition_tps_table_t ignitionTpsTable;
+	uint8_t unused3288[512];
 	/**
 	 * offset 3800
 	 */
@@ -3530,4 +3530,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 19 16:19:31 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 22 19:40:59 UTC 2020

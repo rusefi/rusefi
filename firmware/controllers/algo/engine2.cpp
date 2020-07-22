@@ -174,10 +174,6 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	injectionOffset = getInjectionOffset(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
-	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
-
 	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
@@ -202,11 +198,15 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			currentRawVE = interpolateClamped(0.0f, idleVe, CONFIG(idlePidDeactivationTpsThreshold), currentRawVE, tps.Value);
 		}
 		currentBaroCorrectedVE = baroCorrection * currentRawVE * PERCENT_DIV;
-	} else {
-		baseTableFuel = getBaseTableFuel(rpm, engineLoad);
 	}
 
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
+	float fuelLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	injectionOffset = getInjectionOffset(rpm, fuelLoad PASS_ENGINE_PARAMETER_SUFFIX);
+
+	float ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_ENGINE_CONTROL
 }
 
