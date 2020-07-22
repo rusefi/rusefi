@@ -178,7 +178,8 @@ public class Backend implements Closeable {
     }
 
     private void close(ApplicationConnectionState applicationConnectionState) {
-        applicationConnectionState.close();
+        if (applicationConnectionState != null)
+            applicationConnectionState.close();
         onDisconnectApplication(applicationConnectionState);
     }
 
