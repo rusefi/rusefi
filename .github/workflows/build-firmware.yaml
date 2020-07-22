@@ -55,13 +55,13 @@ jobs:
             folder: nucleo_f746
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
-            skip-config: yes
+            default-config: yes
 
           - build-target: stm32f767_nucleo
             folder: nucleo_f767
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
-            skip-config: yes
+            default-config: yes
 
     steps:
     - uses: actions/checkout@v1
@@ -69,7 +69,7 @@ jobs:
         submodules: recursive
   
     - name: Generate Configs
-      if: ${{ matrix.skip-config != 'yes' }}
+      if: ${{ matrix.default-config != 'yes' }}
       working-directory: ./firmware/
       run: |
         if [ "${{ matrix.build-target }}" = "kinetis" ]; then
@@ -79,6 +79,11 @@ jobs:
         else
           bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}}
         fi
+
+    - name: Generate Default config
+      if: ${{ matrix.default-config == 'yes' }}
+      working-directory: ./firmware/
+      run: bash gen_config_default.sh
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
