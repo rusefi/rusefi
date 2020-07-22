@@ -177,7 +177,7 @@ public class Backend implements Closeable {
         }, serverPortForApplications, "ApplicationServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
     }
 
-    private void close(ApplicationConnectionState applicationConnectionState) {
+    protected void close(ApplicationConnectionState applicationConnectionState) {
         if (applicationConnectionState != null)
             applicationConnectionState.close();
         onDisconnectApplication(applicationConnectionState);
@@ -186,7 +186,7 @@ public class Backend implements Closeable {
     protected void onDisconnectApplication(ApplicationConnectionState applicationConnectionState) {
         if (applicationConnectionState != null) {
             synchronized (lock) {
-                applications.add(applicationConnectionState);
+                applications.remove(applicationConnectionState);
             }
         }
         logger.info("Disconnecting application");
@@ -255,6 +255,10 @@ public class Backend implements Closeable {
         return userDetailsResolver;
     }
 
+    /**
+     * we do not push anything into connected applications so we have to run a clean-up loop
+     * that's different from controllers since we periodically pull outputs from controllers which allows us to detect disconnects
+     */
     private void runCleanup() {
         List<ApplicationConnectionState> inactiveApplications = new ArrayList<>();
 
