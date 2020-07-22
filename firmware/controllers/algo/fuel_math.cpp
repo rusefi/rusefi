@@ -32,6 +32,7 @@
 #include "speed_density.h"
 #include "perf_trace.h"
 #include "sensor.h"
+#include "speed_density_base.h"
 
 EXTERN_ENGINE;
 
@@ -204,7 +205,7 @@ float getInjectionDurationForAirmass(float airMass, float afr DECLARE_ENGINE_PAR
 AirmassResult getAirmass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (CONFIG(fuelAlgorithm)) {
 	case LM_SPEED_DENSITY:
-		return getSpeedDensityAirmass(getMap(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+		return getSpeedDensityAirmass(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_REAL_MAF: {
 		float maf = getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 		return getRealMafAirmass(maf, rpm PASS_ENGINE_PARAMETER_SUFFIX);
@@ -513,8 +514,9 @@ float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float totalDisplacement = CONFIG(specs.displacement);
 	float cylDisplacement = totalDisplacement / CONFIG(specs.cylindersCount);
 
-	// Calculation of 100% VE air mass in g/cyl - 1 cylinder filling at 1.204/L - air density at 20C
-	return cylDisplacement * 1.204f;
+	// Calculation of 100% VE air mass in g/cyl - 1 cylinder filling at 1.204/L
+	// 101.325kpa, 20C
+	return idealGasLaw(cylDisplacement, 101.325f, 273.15f + 20.0f);
 }
 
 #endif
