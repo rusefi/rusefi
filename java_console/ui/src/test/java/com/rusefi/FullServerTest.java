@@ -55,16 +55,8 @@ public class FullServerTest {
 
 
             // first start backend server
-            CountDownLatch controllerServerCreated = new CountDownLatch(1);
-            CountDownLatch applicationServerCreated = new CountDownLatch(1);
-
-            backend.runControllerConnector(serverPortForControllers, parameter -> controllerServerCreated.countDown());
-
-            backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
-
-            assertTrue(controllerServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
-            assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
-
+            TestHelper.runControllerConnectorBlocking(backend, serverPortForControllers);
+            TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
             // create virtual controller to which "rusEFI network connector" connects to
             int controllerPort = 7002;

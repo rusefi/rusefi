@@ -11,6 +11,7 @@ import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.server.Backend;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
@@ -79,5 +80,17 @@ public class TestHelper {
         BinaryProtocolServer server = createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown(), logger);
         assertTrue(controllerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
         return server;
+    }
+
+    public static void runApplicationConnectorBlocking(Backend backend, int serverPortForRemoteUsers) throws InterruptedException {
+        CountDownLatch applicationServerCreated = new CountDownLatch(1);
+        backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
+        assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+    }
+
+    public static void runControllerConnectorBlocking(Backend backend, int serverPortForControllers) throws InterruptedException {
+        CountDownLatch controllerServerCreated = new CountDownLatch(1);
+        backend.runControllerConnector(serverPortForControllers, parameter -> controllerServerCreated.countDown());
+        assertTrue(controllerServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
     }
 }
