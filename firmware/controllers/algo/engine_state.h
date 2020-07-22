@@ -67,10 +67,6 @@ public:
 	float ignitionLoad = 0;
 
 	/**
-	 * pre-calculated value from simple fuel lookup
-	 */
-	floatms_t baseTableFuel = 0;
-	/**
 	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
 	 */
 	floatms_t baseFuel = 0;

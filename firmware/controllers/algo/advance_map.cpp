@@ -35,7 +35,6 @@ EXTERN_ENGINE;
 
 static ign_Map3D_t advanceMap("advance");
 // This coeff in ctor parameter is sufficient for int16<->float conversion!
-static ign_tps_Map3D_t advanceTpsMap("advanceTps", 1.0 / ADVANCE_TPS_STORAGE_MULT);
 static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
 
 // Init PID later (make it compatible with unit-tests)
@@ -84,14 +83,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
 
-	float advanceAngle;
-	if (CONFIG(useTPSAdvanceTable)) {
-		// TODO: what do we do about multi-TPS?
-		float tps = Sensor::get(SensorType::Tps1).value_or(0);
-		advanceAngle = advanceTpsMap.getValue(rpm, tps);
-	} else {
-		advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
-	}
+	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 
 	// get advance from the separate table for Idle
 	if (CONFIG(useSeparateAdvanceForIdle)) {
@@ -296,8 +288,6 @@ void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// We init both tables in RAM because here we're at a very early stage, with no config settings loaded.
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
-			config->ignitionRpmBins);
-	advanceTpsMap.init(CONFIG(ignitionTpsTable), CONFIG(ignitionTpsBins),
 			config->ignitionRpmBins);
 	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
 			config->ignitionIatCorrRpmBins);
