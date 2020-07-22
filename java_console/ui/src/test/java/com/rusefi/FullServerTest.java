@@ -44,7 +44,7 @@ public class FullServerTest {
         CountDownLatch applicationClosed = new CountDownLatch(1);
 
         UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), userId);
-        int httpPort = 8003;
+        int httpPort = 8103;
         int applicationTimeout = 7 * SECOND;
         try (Backend backend = new Backend(userDetailsResolver, httpPort, logger, applicationTimeout) {
             @Override

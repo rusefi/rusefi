@@ -18,7 +18,7 @@ public class ApplicationConnectionState {
 
         if (clientStream.getStreamStats().getPreviousPacketArrivalTime() == 0)
             throw new IllegalStateException("Invalid state - no packets on " + this);
-        if (!state.isUsed())
+        if (!state.getTwoKindSemaphore().isUsed())
             throw new IllegalArgumentException("state is supposed to be used by us");
     }
 
@@ -35,7 +35,7 @@ public class ApplicationConnectionState {
         try {
             clientStream.close();
         } finally {
-            state.release();
+            state.getTwoKindSemaphore().releaseFromLongTermUsage();
         }
     }
 
