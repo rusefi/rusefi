@@ -42,10 +42,10 @@ public class NetworkConnector {
             }
         });
 
-        System.out.println("Connecting to controller...");
+        Logger.CONSOLE.info("Connecting to controller...");
         onConnected.await(1, TimeUnit.MINUTES);
         if (onConnected.getCount() != 0) {
-            System.out.println("Connection to controller failed");
+            Logger.CONSOLE.info("Connection to controller failed");
             return null;
         }
 

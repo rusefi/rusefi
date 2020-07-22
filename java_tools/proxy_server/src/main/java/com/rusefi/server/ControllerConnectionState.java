@@ -7,8 +7,9 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.shared.FileUtil;
+import net.jcip.annotations.GuardedBy;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -29,6 +30,8 @@ public class ControllerConnectionState {
      */
     private UserDetails userDetails;
     private ControllerKey controllerKey;
+    @GuardedBy("this")
+    private boolean isUsed;
 
     public ControllerConnectionState(Socket clientSocket, Logger logger, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
@@ -56,7 +59,7 @@ public class ControllerConnectionState {
 
     public void close() {
         isClosed = true;
-        close(clientSocket);
+        FileUtil.close(clientSocket);
     }
 
     public void requestControllerInfo() throws IOException {
@@ -85,21 +88,9 @@ public class ControllerConnectionState {
         return sessionDetails;
     }
 
-    private static void close(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException ignored) {
-                // ignored
-            }
-        }
-    }
-
     public void runEndlessLoop() throws IOException {
-
         while (true) {
             getOutputs();
-
         }
     }
 
@@ -111,5 +102,25 @@ public class ControllerConnectionState {
         byte[] packet = incomingData.getPacket(logger, "msg", true);
         if (packet == null)
             throw new IOException("No response");
+    }
+
+    /**
+     * @return true if acquired successfully, false if not
+     */
+    public synchronized boolean acquire() {
+        if (isUsed)
+            return false;
+        isUsed = true;
+        return true;
+    }
+
+    public synchronized boolean isUsed() {
+        return isUsed;
+    }
+
+    public synchronized void release() {
+        if (!isUsed)
+            throw new IllegalStateException("Not acquired by anyone");
+        isUsed = false;
     }
 }

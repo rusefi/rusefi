@@ -41,7 +41,9 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     public static final Function<Integer, ServerSocket> PLAIN_SOCKET_FACTORY = port -> {
         try {
-            return new ServerSocket(port);
+            ServerSocket serverSocket = new ServerSocket(port);
+            Logger.CONSOLE.info("ServerSocket " + port + " created");
+            return serverSocket;
         } catch (IOException e) {
             throw new IllegalStateException("Error binding server socket " + port, e);
         }

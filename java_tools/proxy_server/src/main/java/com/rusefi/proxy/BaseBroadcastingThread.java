@@ -37,7 +37,7 @@ public class BaseBroadcastingThread {
 
                     if (command == Fields.TS_HELLO_COMMAND) {
                         // respond on hello request with information about session
-                        logger.info("Sending out " + sessionDetails);
+                        logger.info("Sending to controller connector@proxy: " + sessionDetails);
                         new HelloCommand(logger, sessionDetails.toJson()).handle(stream);
                     } else {
                         handleCommand(packet, stream);
