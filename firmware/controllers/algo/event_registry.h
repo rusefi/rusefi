@@ -60,6 +60,8 @@ public:
 	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+	void resetOverlapping();
+
 	/**
 	 * injection events, per cylinder
 	 */
