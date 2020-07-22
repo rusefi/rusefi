@@ -82,9 +82,8 @@ public class FullServerTest {
             ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userId);
 
             // start authenticator
-
             int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
-            LocalApplicationProxy.startAndRun(logger, serverPortForRemoteUsers, applicationRequest, authenticatorPort);
+            LocalApplicationProxy.startAndRun(logger, serverPortForRemoteUsers, applicationRequest, authenticatorPort, httpPort);
 
 
             CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
