@@ -61,10 +61,8 @@ public class NetworkConnector {
         String vehicleName = Fields.VEHICLENAME.getStringValue(image);
         String engineMake = Fields.ENGINEMAKE.getStringValue(image);
         String engineCode = Fields.ENGINECODE.getStringValue(image);
-        //ControllerInfo ci = new ControllerInfo(vehicleName, engineMake, engineCode, controllerSignature);
+        ControllerInfo ci = new ControllerInfo(vehicleName, engineMake, engineCode, controllerSignature);
 
-        // todo: request vehicle info from controller
-        ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", controllerSignature);
         SessionDetails deviceSessionDetails = new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
 
         BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForControllers),
