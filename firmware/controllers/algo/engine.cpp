@@ -26,7 +26,6 @@
 #include "perf_trace.h"
 #include "sensor.h"
 #include "gppwm.h"
-#include "buttonshift.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_outputs.h"
