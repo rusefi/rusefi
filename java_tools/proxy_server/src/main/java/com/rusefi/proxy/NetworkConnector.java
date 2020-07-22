@@ -2,6 +2,7 @@ package com.rusefi.proxy;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
@@ -61,10 +62,8 @@ public class NetworkConnector {
         String vehicleName = Fields.VEHICLENAME.getStringValue(image);
         String engineMake = Fields.ENGINEMAKE.getStringValue(image);
         String engineCode = Fields.ENGINECODE.getStringValue(image);
-        //ControllerInfo ci = new ControllerInfo(vehicleName, engineMake, engineCode, controllerSignature);
+        ControllerInfo ci = new ControllerInfo(vehicleName, engineMake, engineCode, controllerSignature);
 
-        // todo: request vehicle info from controller
-        ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", controllerSignature);
         SessionDetails deviceSessionDetails = new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
 
         BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForControllers),
@@ -73,9 +72,11 @@ public class NetworkConnector {
             @Override
             protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
                 super.handleCommand(packet, stream);
+                logger.info("Relaying request to controller " + BinaryProtocol.findCommand(packet.getPacket()[0]));
                 targetEcuSocket.sendPacket(packet);
 
                 BinaryProtocolServer.Packet response = targetEcuSocket.readPacket();
+                logger.info("Relaying response to proxy size=" + response.getPacket().length);
                 stream.sendPacket(response);
             }
         };

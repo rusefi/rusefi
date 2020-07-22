@@ -1,6 +1,7 @@
 package com.rusefi.server;
 
 import com.opensr5.Logger;
+import com.rusefi.LocalApplicationProxy;
 import com.rusefi.tools.online.HttpUtil;
 
 import java.net.MalformedURLException;
@@ -17,7 +18,7 @@ public class BackendLauncher {
         UserDetailsResolver userDetailsFunction = new JsonUserDetailsResolver();
 
         Backend backend = new Backend(userDetailsFunction, HttpUtil.HTTP_PORT, Logger.CONSOLE);
-        backend.runApplicationConnector(Backend.SERVER_PORT_FOR_APPLICATIONS, parameter -> {
+        backend.runApplicationConnector(LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS, parameter -> {
         });
         backend.runControllerConnector(Backend.SERVER_PORT_FOR_CONTROLLERS, parameter -> {
         });

@@ -4,7 +4,7 @@ public class SignatureHelper {
 
     public static final String PREFIX = "rusEFI ";
 
-    static String getUrl(String signature) {
+    public static String getUrl(String signature) {
         if (!signature.startsWith(PREFIX))
             return null;
         signature = signature.substring(PREFIX.length()).trim();
