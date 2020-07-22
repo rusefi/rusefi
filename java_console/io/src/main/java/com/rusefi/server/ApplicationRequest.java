@@ -61,4 +61,12 @@ public class ApplicationRequest {
     public int hashCode() {
         return Objects.hash(sessionDetails, targetUserId);
     }
+
+    @Override
+    public String toString() {
+        return "ApplicationRequest{" +
+                "sessionDetails=" + sessionDetails +
+                ", targetUserId=" + targetUserId +
+                '}';
+    }
 }
