@@ -99,10 +99,14 @@ public class IncomingDataBuffer {
      * @return true in case of timeout, false if everything is fine
      */
     public boolean waitForBytes(String loggingMessage, long startTimestamp, int count) {
+        return waitForBytes(Timeouts.BINARY_IO_TIMEOUT, loggingMessage, startTimestamp, count);
+    }
+
+    public boolean waitForBytes(int timeoutMs, String loggingMessage, long startTimestamp, int count) {
         logger.info(loggingMessage + ": waiting for " + count + " byte(s)");
         synchronized (cbb) {
             while (cbb.length() < count) {
-                int timeout = (int) (startTimestamp + Timeouts.BINARY_IO_TIMEOUT - System.currentTimeMillis());
+                int timeout = (int) (startTimestamp + timeoutMs - System.currentTimeMillis());
                 if (timeout <= 0) {
                     logger.info(loggingMessage + ": timeout. Got only " + cbb.length());
                     return true; // timeout. Sad face.
@@ -155,29 +159,33 @@ public class IncomingDataBuffer {
     }
 
     public byte readByte() throws IOException {
-        boolean timeout = waitForBytes(loggingPrefix + "readByte", System.currentTimeMillis(), 1);
-        if (timeout)
+        return readByte(Timeouts.BINARY_IO_TIMEOUT);
+    }
+
+    public byte readByte(int timeoutMs) throws IOException {
+        boolean isTimeout = waitForBytes(timeoutMs,loggingPrefix + "readByte", System.currentTimeMillis(), 1);
+        if (isTimeout)
             throw new IOException("Timeout in readByte");
         return (byte) getByte();
     }
 
     public int readInt() throws EOFException {
-        boolean timeout = waitForBytes(loggingPrefix + "readInt", System.currentTimeMillis(), 4);
-        if (timeout)
+        boolean isTimeout = waitForBytes(loggingPrefix + "readInt", System.currentTimeMillis(), 4);
+        if (isTimeout)
             throw new IllegalStateException("Timeout in readByte");
         return swap32(getInt());
     }
 
     public short readShort() throws EOFException {
-        boolean timeout = waitForBytes(loggingPrefix + "readShort", System.currentTimeMillis(), 2);
-        if (timeout)
+        boolean isTimeout = waitForBytes(loggingPrefix + "readShort", System.currentTimeMillis(), 2);
+        if (isTimeout)
             throw new IllegalStateException("Timeout in readShort");
         return (short) swap16(getShort());
     }
 
     public int read(byte[] packet) {
-        boolean timeout = waitForBytes(loggingPrefix + "read", System.currentTimeMillis(), packet.length);
-        if (timeout)
+        boolean isTimeout = waitForBytes(loggingPrefix + "read", System.currentTimeMillis(), packet.length);
+        if (isTimeout)
             throw new IllegalStateException("Timeout while waiting " + packet.length);
         getData(packet);
         return packet.length;
