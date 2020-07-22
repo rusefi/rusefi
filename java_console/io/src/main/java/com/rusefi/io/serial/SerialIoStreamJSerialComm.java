@@ -14,8 +14,7 @@ import com.rusefi.io.IoStream;
  * Andrey Belomutskiy, (c) 2013-2020
  * 06/03/2019
  */
-public class SerialIoStreamJSerialComm implements IoStream {
-    private boolean isClosed;
+public class SerialIoStreamJSerialComm extends AbstractIoStream {
     private SerialPort sp;
     private final String port;
     private final Logger logger;
@@ -63,11 +62,6 @@ public class SerialIoStreamJSerialComm implements IoStream {
     }
 
     @Override
-    public boolean isClosed() {
-        return isClosed;
-    }
-
-    @Override
     public IncomingDataBuffer getDataBuffer() {
         return dataBuffer;
     }
@@ -75,7 +69,7 @@ public class SerialIoStreamJSerialComm implements IoStream {
     @Override
     public void close() {
         logger.info(port + ": Closing port...");
-        isClosed = true;
+        super.close();
         sp.closePort();
         logger.info(port + ": Closed port.");
     }

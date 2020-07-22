@@ -4,7 +4,7 @@ import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.ByteReader;
-import com.rusefi.io.IoStream;
+import com.rusefi.io.serial.AbstractIoStream;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -16,12 +16,11 @@ import java.net.Socket;
  * Andrey Belomutskiy, (c) 2013-2020
  * 5/11/2015.
  */
-public class TcpIoStream implements IoStream {
+public class TcpIoStream extends AbstractIoStream {
     private final InputStream input;
     private final OutputStream output;
     private final Logger logger;
     private final String loggingPrefix;
-    private boolean isClosed;
     private final IncomingDataBuffer dataBuffer;
 
     public TcpIoStream(Logger logger, Socket socket) throws IOException {
@@ -53,11 +52,6 @@ public class TcpIoStream implements IoStream {
     }
 
     @Override
-    public void close() {
-        isClosed = true;
-    }
-
-    @Override
     public void write(byte[] bytes) throws IOException {
         output.write(bytes);
         output.flush();
@@ -67,10 +61,5 @@ public class TcpIoStream implements IoStream {
     public void setInputListener(final DataListener listener) {
 
         ByteReader.runReaderLoop(loggingPrefix, listener, input::read, logger);
-    }
-
-    @Override
-    public boolean isClosed() {
-        return isClosed;
     }
 }
