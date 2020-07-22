@@ -101,7 +101,7 @@ public class ControllerConnectionState {
 
         byte[] packet = incomingData.getPacket(logger, "msg", true);
         if (packet == null)
-            throw new IOException("No response");
+            throw new IOException("getOutputs: No response");
     }
 
     /**

@@ -25,10 +25,8 @@ import javax.json.JsonObject;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.BindException;
-import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
 
 /**
  * See NetworkConnectorStartup
@@ -81,6 +79,7 @@ public class Backend implements Closeable {
                 try {
                     new FtBasic(
                             new TkFork(showOnlineControllers,
+                                    showOnlineApplications,
                                     new Monitoring(this).showStatistics,
                                     new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
                                     new FkRegex("/", new RsHtml("<html><body>\n" +
@@ -114,61 +113,54 @@ public class Backend implements Closeable {
         }, "rusEFI Application connections Cleanup").start();
     }
 
-    public void runApplicationConnector(int serverPortForApplications, Listener serverSocketCreationCallback) {
+    public void runApplicationConnector(int serverPortForApplications, Listener<?> serverSocketCreationCallback) {
         this.serverPortForApplications = serverPortForApplications;
         // connection from authenticator app which proxies for Tuner Studio
         // authenticator pushed hello packet on connect
         System.out.println("Starting application connector at " + serverPortForApplications);
-        BinaryProtocolServer.tcpServerSocket(logger, new Function<Socket, Runnable>() {
-            @Override
-            public Runnable apply(Socket applicationSocket) {
-                return new Runnable() {
-                    @Override
-                    public void run() {
-                        totalSessions.incrementAndGet();
-                        // connection from authenticator app which proxies for Tuner Studio
-                        IoStream applicationClientStream = null;
-                        ApplicationConnectionState applicationConnectionState = null;
-                        try {
-                            applicationClientStream = new TcpIoStream("[app] ", logger, applicationSocket);
+        BinaryProtocolServer.tcpServerSocket(logger, applicationSocket -> () -> {
+            totalSessions.incrementAndGet();
+            // connection from authenticator app which proxies for Tuner Studio
+            IoStream applicationClientStream = null;
+            ApplicationConnectionState applicationConnectionState = null;
+            try {
+                applicationClientStream = new TcpIoStream("[app] ", logger, applicationSocket);
 
-                            // authenticator pushed hello packet on connect
-                            String jsonString = HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer(), logger);
-                            if (jsonString == null)
-                                return;
-                            ApplicationRequest applicationRequest = ApplicationRequest.valueOf(jsonString);
-                            logger.info("Application Connected: " + applicationRequest);
-                            String authToken = applicationRequest.getSessionDetails().getAuthToken();
-                            UserDetails userDetails = userDetailsResolver.apply(authToken);
-                            if (userDetails == null) {
-                                logger.info("Authentication failed for application " + authToken);
-                                return;
-                            }
+                // authenticator pushed hello packet on connect
+                String jsonString = HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer(), logger);
+                if (jsonString == null)
+                    return;
+                ApplicationRequest applicationRequest = ApplicationRequest.valueOf(jsonString);
+                logger.info("Application Connected: " + applicationRequest);
+                String authToken = applicationRequest.getSessionDetails().getAuthToken();
+                UserDetails userDetails = userDetailsResolver.apply(authToken);
+                if (userDetails == null) {
+                    logger.info("Authentication failed for application " + authToken);
+                    return;
+                }
 
-                            ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUserId(), applicationRequest.getSessionDetails().getControllerInfo());
-                            ControllerConnectionState state;
-                            synchronized (lock) {
-                                state = acquire(controllerKey);
-                            }
-                            if (state == null) {
-                                logger.info("No controller for " + controllerKey);
-                                return;
-                            }
-                            applicationConnectionState = new ApplicationConnectionState(userDetails, applicationRequest, applicationClientStream, state);
-                            synchronized (lock) {
-                                applications.add(applicationConnectionState);
-                            }
+                ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUserId(), applicationRequest.getSessionDetails().getControllerInfo());
+                ControllerConnectionState state;
+                synchronized (lock) {
+                    state = acquire(controllerKey);
+                }
+                if (state == null) {
+                    logger.info("No controller for " + controllerKey);
+                    return;
+                }
+                applicationConnectionState = new ApplicationConnectionState(userDetails, applicationClientStream, state);
+                synchronized (lock) {
+                    applications.add(applicationConnectionState);
+                }
 
-                            BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream);
+                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream);
 
-                        } catch (Throwable e) {
-                            logger.info("Application Connector: Got error " + e);
-                        } finally {
-                            applicationClientStream.close();
-                            close(applicationConnectionState);
-                        }
-                    }
-                };
+            } catch (Throwable e) {
+                logger.info("Application Connector: Got error " + e);
+            } finally {
+                if (applicationClientStream != null)
+                    applicationClientStream.close();
+                close(applicationConnectionState);
             }
         }, serverPortForApplications, "ApplicationServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
     }
@@ -203,29 +195,21 @@ public class Backend implements Closeable {
         logger.info("Disconnecting application");
     }
 
-    public void runControllerConnector(int serverPortForControllers, Listener serverSocketCreationCallback) {
+    public void runControllerConnector(int serverPortForControllers, Listener<?> serverSocketCreationCallback) {
         this.serverPortForControllers = serverPortForControllers;
         logger.info("Starting controller connector at " + serverPortForControllers);
-        BinaryProtocolServer.tcpServerSocket(logger, new Function<Socket, Runnable>() {
-            @Override
-            public Runnable apply(Socket controllerSocket) {
-                return new Runnable() {
-                    @Override
-                    public void run() {
-                        totalSessions.incrementAndGet();
-                        ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, logger, getUserDetailsResolver());
-                        try {
-                            controllerConnectionState.requestControllerInfo();
+        BinaryProtocolServer.tcpServerSocket(logger, controllerSocket -> () -> {
+            totalSessions.incrementAndGet();
+            ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, logger, getUserDetailsResolver());
+            try {
+                controllerConnectionState.requestControllerInfo();
 
-                            // IMPORTANT: has to happen before we register controller while we still have exclusive access
-                            controllerConnectionState.getOutputs();
+                // IMPORTANT: has to happen before we register controller while we still have exclusive access
+                controllerConnectionState.getOutputs();
 
-                            register(controllerConnectionState);
-                        } catch (Throwable e) {
-                            close(controllerConnectionState);
-                        }
-                    }
-                };
+                register(controllerConnectionState);
+            } catch (Throwable e) {
+                close(controllerConnectionState);
             }
         }, serverPortForControllers, "ControllerServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
     }

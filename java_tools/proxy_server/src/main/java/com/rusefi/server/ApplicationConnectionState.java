@@ -11,7 +11,7 @@ public class ApplicationConnectionState {
     private final IoStream clientStream;
     private final ControllerConnectionState state;
 
-    public ApplicationConnectionState(UserDetails userDetails, ApplicationRequest applicationRequest, IoStream clientStream, ControllerConnectionState state) {
+    public ApplicationConnectionState(UserDetails userDetails, IoStream clientStream, ControllerConnectionState state) {
         this.userDetails = Objects.requireNonNull(userDetails, "userDetails");
         this.clientStream = Objects.requireNonNull(clientStream, "clientStream");
         this.state = Objects.requireNonNull(state, "state");
