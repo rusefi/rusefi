@@ -131,7 +131,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     private SensorCentral.SensorListener rpmListener;
 
-    private final Thread hook = new Thread(() -> closeComposites());
+    private final Thread hook = new Thread(() -> closeComposites(), "BinaryProtocol::hook");
 
     public BinaryProtocol(LinkManager linkManager, final Logger logger, IoStream stream, IncomingDataBuffer dataBuffer) {
         this.linkManager = linkManager;

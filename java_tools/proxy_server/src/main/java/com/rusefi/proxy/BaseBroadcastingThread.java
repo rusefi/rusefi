@@ -1,6 +1,7 @@
 package com.rusefi.proxy;
 
 import com.opensr5.Logger;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
@@ -16,13 +17,14 @@ import static com.rusefi.io.tcp.BinaryProtocolServer.getPacketLength;
 import static com.rusefi.io.tcp.BinaryProtocolServer.readPromisedBytes;
 
 public class BaseBroadcastingThread {
+    private static final NamedThreadFactory BASE_BROADCASTING_THREAD = new NamedThreadFactory("BaseBroadcastingThread");
     private final Thread thread;
 
     public BaseBroadcastingThread(Socket socket, SessionDetails sessionDetails, Logger logger) throws IOException {
         TcpIoStream stream = new TcpIoStream("[broadcast] ", logger, socket);
         IncomingDataBuffer in = stream.getDataBuffer();
 
-        thread = new Thread(() -> {
+        thread = BASE_BROADCASTING_THREAD.newThread(() -> {
             try {
                 while (true) {
                     int length = getPacketLength(in, () -> {

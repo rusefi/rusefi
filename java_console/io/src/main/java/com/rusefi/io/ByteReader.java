@@ -16,8 +16,7 @@ public interface ByteReader {
          * @see #COMMUNICATION_EXECUTOR
          */
         Executor threadExecutor = Executors.newSingleThreadExecutor(r -> {
-            Thread t = new Thread(r);
-            t.setName("IO executor thread");
+            Thread t = new Thread(r, "IO executor thread");
             t.setDaemon(true);  // need daemon thread so that COM thread is also daemon
             return t;
         });

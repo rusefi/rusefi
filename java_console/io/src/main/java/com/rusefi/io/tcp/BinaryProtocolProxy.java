@@ -26,7 +26,7 @@ public class BinaryProtocolProxy {
                             TcpIoStream clientStream = new TcpIoStream("[[proxy]] ", logger, clientSocket);
                             runProxy(targetEcuSocket, clientStream);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            logger.error("BinaryProtocolProxy::run" + e);
                         }
                     }
                 };
@@ -39,7 +39,6 @@ public class BinaryProtocolProxy {
         /*
          * Each client socket is running on it's own thread
          */
-
         while (true) {
             byte firstByte = clientStream.getDataBuffer().readByte();
             if (firstByte == COMMAND_PROTOCOL) {
