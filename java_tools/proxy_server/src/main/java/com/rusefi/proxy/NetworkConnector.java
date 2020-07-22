@@ -56,7 +56,8 @@ public class NetworkConnector {
     private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, final Logger logger, String authToken) throws IOException {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
         HelloCommand.send(targetEcuSocket, logger);
-        String controllerSignature = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer(), logger).trim();
+        String helloResponse = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer(), logger);
+        String controllerSignature = helloResponse.trim();
 
         ConfigurationImage image = linkManager.getConnector().getBinaryProtocol().getControllerConfiguration();
         String vehicleName = Fields.VEHICLENAME.getStringValue(image);

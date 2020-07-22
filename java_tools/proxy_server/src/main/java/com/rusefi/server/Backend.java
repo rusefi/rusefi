@@ -34,10 +34,9 @@ import java.util.function.Function;
  * See NetworkConnectorStartup
  */
 public class Backend implements Closeable {
-    public static final String VERSION_PATH = "/version";
-    public static final String BACKEND_VERSION = "0.0001";
     public static final int SERVER_PORT_FOR_CONTROLLERS = 8003;
-    public static final String MAX_PACKET_GAP = "MAX_PACKET_GAP";
+    private static final String MAX_PACKET_GAP = "MAX_PACKET_GAP";
+    private static final String IS_USED = "isUsed";
 
     private final FkRegex showOnlineControllers = new FkRegex(ProxyClient.LIST_CONTROLLERS_PATH,
             (Take) req -> getControllersOnline()
@@ -83,12 +82,13 @@ public class Backend implements Closeable {
                     new FtBasic(
                             new TkFork(showOnlineControllers,
                                     new Monitoring(this).showStatistics,
-                                    new FkRegex(VERSION_PATH, BACKEND_VERSION),
+                                    new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
                                     new FkRegex("/", new RsHtml("<html><body>\n" +
                                             "<a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
                                             "<br/>\n" +
                                             "<a href='" + Monitoring.STATUS + "'>Status</a>\n" +
                                             "<br/>\n" +
+                                            "<a href='" + ProxyClient.VERSION_PATH + "'>Version</a>\n" +
                                             "<a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
                                             "<a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
                                             "<br/>\n" +
@@ -127,7 +127,7 @@ public class Backend implements Closeable {
                     public void run() {
                         totalSessions.incrementAndGet();
                         // connection from authenticator app which proxies for Tuner Studio
-                        IoStream applicationClientStream;
+                        IoStream applicationClientStream = null;
                         ApplicationConnectionState applicationConnectionState = null;
                         try {
                             applicationClientStream = new TcpIoStream("[app] ", logger, applicationSocket);
@@ -142,24 +142,19 @@ public class Backend implements Closeable {
                             UserDetails userDetails = userDetailsResolver.apply(authToken);
                             if (userDetails == null) {
                                 logger.info("Authentication failed for application " + authToken);
-                                applicationClientStream.close();
                                 return;
                             }
-
-                            applicationConnectionState = new ApplicationConnectionState(userDetails, applicationRequest, applicationClientStream);
 
                             ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUserId(), applicationRequest.getSessionDetails().getControllerInfo());
                             ControllerConnectionState state;
                             synchronized (lock) {
-                                state = controllersByKey.get(controllerKey);
+                                state = acquire(controllerKey);
                             }
                             if (state == null) {
-                                close(applicationConnectionState);
                                 logger.info("No controller for " + controllerKey);
                                 return;
                             }
-                            if (applicationConnectionState.getClientStream().getStreamStats().getPreviousPacketArrivalTime() == 0)
-                                throw new IllegalStateException("Invalid state - no packets on " + applicationConnectionState);
+                            applicationConnectionState = new ApplicationConnectionState(userDetails, applicationRequest, applicationClientStream, state);
                             synchronized (lock) {
                                 applications.add(applicationConnectionState);
                             }
@@ -169,12 +164,28 @@ public class Backend implements Closeable {
                         } catch (Throwable e) {
                             logger.info("Application Connector: Got error " + e);
                         } finally {
+                            applicationClientStream.close();
                             close(applicationConnectionState);
                         }
                     }
                 };
             }
         }, serverPortForApplications, "ApplicationServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
+    }
+
+    private ControllerConnectionState acquire(ControllerKey controllerKey) {
+        synchronized (lock) {
+            ControllerConnectionState state = controllersByKey.get(controllerKey);
+            if (state == null) {
+                // no such controller
+                return null;
+            }
+            if (!state.acquire()) {
+                // someone is already talking to this controller
+                return null;
+            }
+            return state;
+        }
     }
 
     protected void close(ApplicationConnectionState applicationConnectionState) {
@@ -194,7 +205,7 @@ public class Backend implements Closeable {
 
     public void runControllerConnector(int serverPortForControllers, Listener serverSocketCreationCallback) {
         this.serverPortForControllers = serverPortForControllers;
-        System.out.println("Starting controller connector at " + serverPortForControllers);
+        logger.info("Starting controller connector at " + serverPortForControllers);
         BinaryProtocolServer.tcpServerSocket(logger, new Function<Socket, Runnable>() {
             @Override
             public Runnable apply(Socket controllerSocket) {
@@ -242,6 +253,7 @@ public class Backend implements Closeable {
             JsonObject controllerObject = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
+                    .add(IS_USED, client.isUsed())
                     .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
                     .add(ControllerInfo.VEHICLE_NAME, client.getSessionDetails().getControllerInfo().getVehicleName())
                     .add(ControllerInfo.ENGINE_MAKE, client.getSessionDetails().getControllerInfo().getEngineMake())
