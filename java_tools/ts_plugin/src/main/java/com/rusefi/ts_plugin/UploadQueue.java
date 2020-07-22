@@ -9,8 +9,8 @@ import com.rusefi.ui.AuthTokenPanel;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class UploadQueue {
@@ -34,7 +34,19 @@ public class UploadQueue {
     }
 
     private static void readOutbox() {
-        for (String file : Objects.requireNonNull(new File(OUTBOX_FOLDER).list((dir, name) -> name.endsWith(".msq")))) {
+        File folder = new File(OUTBOX_FOLDER);
+        if (!folder.exists())
+            return;
+        String[] files = folder.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".msq");
+            }
+        });
+        if (files == null)
+            return;
+
+        for (String file : files) {
             if (queue.size() > 90)
                 return;
             System.out.println(UploadQueue.class.getSimpleName() + " readOutbox " + file);
