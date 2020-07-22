@@ -15,7 +15,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class UploadQueue {
     public static final String OUTBOX_FOLDER = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "outbox";
-    private static LinkedBlockingDeque<String> queue = new LinkedBlockingDeque<>(128);
+    private static final LinkedBlockingDeque<String> queue = new LinkedBlockingDeque<>(128);
 
     private static boolean isStarted;
 

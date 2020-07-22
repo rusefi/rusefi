@@ -17,6 +17,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
+import static org.junit.Assert.assertTrue;
 
 public class TestHelper {
     public static final String LOCALHOST = "localhost";
@@ -67,5 +72,12 @@ public class TestHelper {
             throw new IllegalStateException("Failed to connect to controller " + LOCALHOST + ":" + controllerPort);
         }
         return targetEcuSocket;
+    }
+
+    public static BinaryProtocolServer createVirtualController(int controllerPort, ConfigurationImage controllerImage, Logger logger) throws InterruptedException {
+        CountDownLatch controllerCreated = new CountDownLatch(1);
+        BinaryProtocolServer server = createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown(), logger);
+        assertTrue(controllerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+        return server;
     }
 }
