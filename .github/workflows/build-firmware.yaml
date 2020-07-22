@@ -81,7 +81,6 @@ jobs:
         fi
 
     - name: Generate Default config
-      if: ${{ matrix.default-config == 'yes' }}
       working-directory: ./firmware/
       run: bash gen_config_default.sh
 
