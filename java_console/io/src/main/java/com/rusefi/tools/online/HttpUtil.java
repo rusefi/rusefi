@@ -21,15 +21,19 @@ public class HttpUtil {
     public static String RUSEFI_PROXY_HOSTNAME = System.getProperty("RUSEFI_PROXY_URL", "proxy.rusefi.com");
 
     public static String RUSEFI_ONLINE_JSON_API_PREFIX = "https://rusefi.com/online/api.php?method=";
-    public static final String RUSEFI_PROXY_JSON_API_PREFIX = RUSEFI_PROXY_JSON_PROTOCOL + RUSEFI_PROXY_HOSTNAME;
 
     public static <T> T getJsonResponse(HttpResponse response) throws IOException, ParseException {
-        HttpEntity entity = response.getEntity();
-        String responseString = EntityUtils.toString(entity, "UTF-8");
-        System.out.println("responseString=" + responseString);
+        String responseString = getResponse(response);
 
         JSONParser parser = new JSONParser();
         return (T) parser.parse(responseString);
+    }
+
+    public static String getResponse(HttpResponse response) throws IOException {
+        HttpEntity entity = response.getEntity();
+        String responseString = EntityUtils.toString(entity, "UTF-8");
+        System.out.println("responseString=" + responseString);
+        return responseString;
     }
 
     public static HttpResponse executeGet(String url) throws IOException {

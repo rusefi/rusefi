@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rusefi.tools.online.HttpUtil.RUSEFI_PROXY_HOSTNAME;
+
 public class ProxyClient {
     public static final String LIST_CONTROLLERS_PATH = "/list_controllers";
     public static final String LIST_APPLICATIONS_PATH = "/list_applications";
@@ -19,7 +21,12 @@ public class ProxyClient {
     public static final String BACKEND_VERSION = "0.0001";
 
     public static List<PublicSession> getOnlineApplications(int httpPort) throws IOException {
-        return getOnlineApplications(HttpUtil.RUSEFI_PROXY_JSON_API_PREFIX + ":" + httpPort + LIST_CONTROLLERS_PATH);
+        return getOnlineApplications(getHttpAddress(httpPort) + LIST_CONTROLLERS_PATH);
+    }
+
+    @NotNull
+    public static String getHttpAddress(int httpPort) {
+        return HttpUtil.RUSEFI_PROXY_JSON_PROTOCOL + RUSEFI_PROXY_HOSTNAME + ":" + httpPort;
     }
 
     @NotNull
