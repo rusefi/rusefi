@@ -1,9 +1,11 @@
 package com.rusefi;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -84,10 +87,10 @@ public class ServerTest {
 
             assertTrue("onConnected", onConnected.await(30, TimeUnit.SECONDS));
 
-            List<ControllerConnectionState> clients = backend.getClients();
+            List<ControllerConnectionState> clients = backend.getControllers();
             assertEquals(2, clients.size());
 
-            List<PublicSession> onlineUsers = ProxyClient.getOnlineUsers(HttpUtil.RUSEFI_PROXY_JSON_PROTOCOL + TestHelper.LOCALHOST + ":" + httpPort + ProxyClient.LIST_PATH);
+            List<PublicSession> onlineUsers = ProxyClient.getOnlineApplications(HttpUtil.RUSEFI_PROXY_JSON_PROTOCOL + TestHelper.LOCALHOST + ":" + httpPort + ProxyClient.LIST_CONTROLLERS_PATH);
             assertEquals(2, onlineUsers.size());
 
             allConnected.countDown();
@@ -97,16 +100,40 @@ public class ServerTest {
     }
 
     @Test
-    public void testApplicationTimeout() throws InterruptedException {
+    public void testApplicationTimeout() throws InterruptedException, IOException {
         int serverPortForRemoteUsers = 6999;
-        int serverPortForControllers = 6997;
         int httpPort = 6998;
+        int serverPortForControllers = 6997;
+        int controllerPort = 6996;
+        int userId = 7;
 
-        try (Backend backend = new Backend(createTestUserResolver(), httpPort, logger)) {
+
+        UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), userId);
+
+        CountDownLatch controllerRegistered = new CountDownLatch(1);
+        try (Backend backend = new Backend(userDetailsResolver, httpPort, logger) {
+            @Override
+            protected void onRegister(ControllerConnectionState controllerConnectionState) {
+                super.onRegister(controllerConnectionState);
+                controllerRegistered.countDown();
+            }
+        }) {
 
             TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
             TestHelper.runControllerConnectorBlocking(backend, serverPortForControllers);
+
+            // create virtual controller to which "rusEFI network connector" connects to
+            TestHelper.createVirtualController(controllerPort, new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE), logger);
+
+            // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
+            SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers);
+
+            assertTrue(controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+
+            SessionDetails authenticatorSessionDetails = new SessionDetails(deviceSessionDetails.getControllerInfo(), MockRusEfiDevice.TEST_TOKEN_3, deviceSessionDetails.getOneTimeToken());
+            ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userId);
+
 
         }
     }

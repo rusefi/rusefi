@@ -53,11 +53,9 @@ public class RemoteTab {
         listDownloadExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                String url = HttpUtil.RUSEFI_PROXY_JSON_API_PREFIX + "/list_online";
-
                 List<PublicSession> userDetails;
                 try {
-                    userDetails = ProxyClient.getOnlineUsers(HttpUtil.HTTP_PORT);
+                    userDetails = ProxyClient.getOnlineApplications(HttpUtil.HTTP_PORT);
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {

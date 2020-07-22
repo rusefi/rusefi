@@ -4,12 +4,14 @@ import com.opensr5.Logger;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.serial.AbstractIoStream;
 import etch.util.CircularByteBuffer;
 import net.jcip.annotations.ThreadSafe;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import static com.rusefi.binaryprotocol.IoHelper.*;
 
@@ -28,15 +30,17 @@ public class IncomingDataBuffer {
      */
     private final CircularByteBuffer cbb;
     private final Logger logger;
+    private final AbstractIoStream.StreamStats streamStats;
 
-    public IncomingDataBuffer(Logger logger) {
+    public IncomingDataBuffer(Logger logger, AbstractIoStream.StreamStats streamStats) {
+        this.streamStats = Objects.requireNonNull(streamStats, "streamStats");
         this.cbb = new CircularByteBuffer(BUFFER_SIZE);
         this.logger = logger;
     }
 
     public static IncomingDataBuffer createDataBuffer(String loggingPrefix, IoStream stream, Logger logger) {
         IncomingDataBuffer.loggingPrefix = loggingPrefix;
-        IncomingDataBuffer incomingData = new IncomingDataBuffer(logger);
+        IncomingDataBuffer incomingData = new IncomingDataBuffer(logger, stream.getStreamStats());
         stream.setInputListener(incomingData::addData);
         return incomingData;
     }
@@ -71,6 +75,7 @@ public class IncomingDataBuffer {
             logger.trace(String.format("%x", actualCrc) + " vs " + String.format("%x", packetCrc));
             return null;
         }
+        streamStats.onPacketArrived();
         logger.trace("packet " + Arrays.toString(packet) + ": crc OK");
 
         return packet;

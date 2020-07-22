@@ -99,6 +99,8 @@ public class FullServerTest {
             ConfigurationImage clientImage = clientStreamState.getControllerConfiguration();
             String clientValue = iniField.getValue(clientImage);
             assertEquals(Double.toString(value), clientValue);
+
+            // now let's test that application connector would be terminated by server due to inactivity
         }
     }
 

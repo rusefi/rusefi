@@ -6,6 +6,7 @@ import com.opensr5.io.WriteStream;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
+import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,6 +64,8 @@ public interface IoStream extends WriteStream {
     void setInputListener(DataListener listener);
 
     boolean isClosed();
+
+    AbstractIoStream.StreamStats getStreamStats();
 
     void close();
 

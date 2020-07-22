@@ -13,14 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProxyClient {
-    public static final String LIST_PATH = "/list_online";
+    public static final String LIST_CONTROLLERS_PATH = "/list_controllers";
+    public static final String LIST_APPLICATIONS_PATH = "/list_applications";
 
-    public static List<PublicSession> getOnlineUsers(int httpPort) throws IOException {
-        return getOnlineUsers(HttpUtil.RUSEFI_PROXY_JSON_API_PREFIX + ":" + httpPort + LIST_PATH);
+    public static List<PublicSession> getOnlineApplications(int httpPort) throws IOException {
+        return getOnlineApplications(HttpUtil.RUSEFI_PROXY_JSON_API_PREFIX + ":" + httpPort + LIST_CONTROLLERS_PATH);
     }
 
     @NotNull
-    public static List<PublicSession> getOnlineUsers(String url) throws IOException {
+    public static List<PublicSession> getOnlineApplications(String url) throws IOException {
         HttpResponse httpResponse = HttpUtil.executeGet(url);
 
         List<PublicSession> userLists = new ArrayList<>();

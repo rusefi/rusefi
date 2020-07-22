@@ -35,13 +35,16 @@ public class Backend implements Closeable {
     public static final String BACKEND_VERSION = "0.0001";
     public static final int SERVER_PORT_FOR_CONTROLLERS = 8003;
 
-    private final FkRegex showOnlineUsers = new FkRegex(ProxyClient.LIST_PATH,
-            (Take) req -> getUsersOnline()
+    private final FkRegex showOnlineControllers = new FkRegex(ProxyClient.LIST_CONTROLLERS_PATH,
+            (Take) req -> getControllersOnline()
+    );
+    private final FkRegex showOnlineApplications = new FkRegex(ProxyClient.LIST_CONTROLLERS_PATH,
+            (Take) req -> getControllersOnline()
     );
     private boolean isClosed;
 
     // guarded by own monitor
-    private final Set<ControllerConnectionState> clients = new HashSet<>();
+    private final Set<ControllerConnectionState> controllers = new HashSet<>();
     // guarded by clients
     private HashMap<ControllerKey, ControllerConnectionState> byId = new HashMap<>();
     //    private final int clientTimeout;
@@ -62,7 +65,7 @@ public class Backend implements Closeable {
                 System.out.println("Starting http backend on " + httpPort);
                 try {
                     new FtBasic(
-                            new TkFork(showOnlineUsers,
+                            new TkFork(showOnlineControllers,
                                     new Monitoring(this).showStatistics,
                                     new FkRegex(VERSION_PATH, BACKEND_VERSION),
                                     new FkRegex("/", new RsHtml("<html><body>\n" +
@@ -70,7 +73,8 @@ public class Backend implements Closeable {
                                             "<br/>\n" +
                                             "<a href='" + Monitoring.STATUS + "'>Status</a>\n" +
                                             "<br/>\n" +
-                                            "<a href='" + ProxyClient.LIST_PATH + "'>List</a>\n" +
+                                            "<a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
+                                            "<a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
                                             "<br/>\n" +
                                             "<br/>\n" +
                                             "</body></html>\n"))
@@ -121,7 +125,7 @@ public class Backend implements Closeable {
 
                             ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUserId(), applicationRequest.getSessionDetails().getControllerInfo());
                             ControllerConnectionState state;
-                            synchronized (clients) {
+                            synchronized (controllers) {
                                 state = byId.get(controllerKey);
                             }
                             if (state == null) {
@@ -178,9 +182,9 @@ public class Backend implements Closeable {
     }
 
     @NotNull
-    private RsJson getUsersOnline() throws IOException {
+    private RsJson getControllersOnline() throws IOException {
         JsonArrayBuilder builder = Json.createArrayBuilder();
-        List<ControllerConnectionState> clients = getClients();
+        List<ControllerConnectionState> clients = getControllers();
         for (ControllerConnectionState client : clients) {
 
             JsonObject clientObject = Json.createObjectBuilder()
@@ -190,6 +194,7 @@ public class Backend implements Closeable {
                     .add(ControllerInfo.VEHICLE_NAME, client.getSessionDetails().getControllerInfo().getVehicleName())
                     .add(ControllerInfo.ENGINE_MAKE, client.getSessionDetails().getControllerInfo().getEngineMake())
                     .add(ControllerInfo.ENGINE_CODE, client.getSessionDetails().getControllerInfo().getEngineCode())
+                    .add("MAX_PACKET_GAP", client.getStream().getStreamStats().getMaxPacketGap())
                     .build();
             builder.add(clientObject);
         }
@@ -219,8 +224,8 @@ public class Backend implements Closeable {
 
     public void register(ControllerConnectionState controllerConnectionState) {
         Objects.requireNonNull(controllerConnectionState.getControllerKey(), "ControllerKey");
-        synchronized (clients) {
-            clients.add(controllerConnectionState);
+        synchronized (controllers) {
+            controllers.add(controllerConnectionState);
             byId.put(controllerConnectionState.getControllerKey(), controllerConnectionState);
         }
         onRegister(controllerConnectionState);
@@ -231,9 +236,9 @@ public class Backend implements Closeable {
 
     public void close(ControllerConnectionState inactiveClient) {
         inactiveClient.close();
-        synchronized (clients) {
+        synchronized (controllers) {
             // in case of exception in the initialization phase we do not even add client into the the collection
-            clients.remove(inactiveClient);
+            controllers.remove(inactiveClient);
             byId.remove(inactiveClient.getControllerKey());
         }
     }
@@ -243,15 +248,15 @@ public class Backend implements Closeable {
         isClosed = true;
     }
 
-    public List<ControllerConnectionState> getClients() {
-        synchronized (clients) {
-            return new ArrayList<>(clients);
+    public List<ControllerConnectionState> getControllers() {
+        synchronized (controllers) {
+            return new ArrayList<>(controllers);
         }
     }
 
     public int getCount() {
-        synchronized (clients) {
-            return clients.size();
+        synchronized (controllers) {
+            return controllers.size();
         }
     }
 
