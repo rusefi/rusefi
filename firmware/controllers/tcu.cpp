@@ -1,4 +1,5 @@
 #include "tcu.h"
+#include "tunerstudio.h"
 
 GearControllerBase::GearControllerBase() {
     desiredGear = PARK;
