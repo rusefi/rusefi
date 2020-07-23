@@ -37,6 +37,8 @@ public class Monitoring {
         builder.add("sessions", Backend.totalSessions.get());
         builder.add("serverPortForApplications", backend.serverPortForApplications);
         builder.add("serverPortForControllers", backend.serverPortForControllers);
+        builder.add("applicationsCount", backend.getApplicationsCount());
+        builder.add("controllersCount", backend.getControllersCount());
 
         return new RsJson(builder.build());
     }

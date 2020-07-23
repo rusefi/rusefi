@@ -111,11 +111,12 @@ public class ControllerConnectionState {
         return sensorsHolder;
     }
 
-    public void grabOutputs() {
+    public void grabOutputs(Backend backend) {
         try {
             getOutputs();
         } catch (IOException e) {
-            close();
+            // todo: this is currently not covered by a unit test
+            backend.close(this);
         }
     }
 }
