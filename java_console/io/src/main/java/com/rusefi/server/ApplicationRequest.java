@@ -1,5 +1,6 @@
 package com.rusefi.server;
 
+import com.rusefi.tools.online.HttpUtil;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -34,13 +35,7 @@ public class ApplicationRequest {
     }
 
     public static ApplicationRequest valueOf(String jsonString) {
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject;
-        try {
-            jsonObject = (JSONObject) parser.parse(jsonString);
-        } catch (ParseException e) {
-            throw new IllegalStateException(e);
-        }
+        JSONObject jsonObject = HttpUtil.parse(jsonString);
 
         long targetUserId = (Long) jsonObject.get(USER_ID);
 

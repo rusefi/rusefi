@@ -1,12 +1,14 @@
 package com.rusefi.server;
 
+import com.rusefi.tools.online.HttpUtil;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * A session from Controller, including some sensitive information
+ */
 public class SessionDetails {
     private static final String ONE_TIME_TOKEN = "oneTime";
     private static final String AUTH_TOKEN = "authToken";
@@ -51,13 +53,7 @@ public class SessionDetails {
     }
 
     public static SessionDetails valueOf(String jsonString) {
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject;
-        try {
-            jsonObject = (JSONObject) parser.parse(jsonString);
-        } catch (ParseException e) {
-            throw new IllegalStateException(e);
-        }
+        JSONObject jsonObject = HttpUtil.parse(jsonString);
 
         String authToken = (String) jsonObject.get(AUTH_TOKEN);
         long oneTimeCode = (Long)jsonObject.get(ONE_TIME_TOKEN);
