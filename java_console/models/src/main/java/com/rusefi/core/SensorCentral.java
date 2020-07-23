@@ -16,7 +16,7 @@ public class SensorCentral implements ISensorCentral {
     public static final String RPM_KEY = "rpm";
     private static final SensorCentral INSTANCE = new SensorCentral();
 
-    private final Map<Sensor, Double> values = new EnumMap<>(Sensor.class);
+    private final SensorsHolder sensorsHolder = new SensorsHolder();
 
     private final Map<Sensor, List<SensorListener>> allListeners = new EnumMap<>(Sensor.class);
     private SensorListener2 anySensorListener;
@@ -30,17 +30,12 @@ public class SensorCentral implements ISensorCentral {
 
     @Override
     public double getValue(Sensor sensor) {
-        Double value = values.get(sensor);
-        if (value == null)
-            return Double.NaN;
-        return value;
+        return sensorsHolder.getValue(sensor);
     }
 
     @Override
-    public void setValue(double value, final Sensor sensor) {
-        Double oldValue = values.get(sensor);
-        boolean isUpdated = oldValue == null || !oldValue.equals(value);
-        values.put(sensor, value);
+    public boolean setValue(double value, final Sensor sensor) {
+        boolean isUpdated = sensorsHolder.setValue(value, sensor);
         List<SensorListener> listeners;
         synchronized (allListeners) {
             listeners = allListeners.get(sensor);
@@ -50,9 +45,10 @@ public class SensorCentral implements ISensorCentral {
         applyValueToTables(value, sensor, isUpdated);
 
         if (listeners == null)
-            return;
+            return isUpdated;
         for (SensorListener listener : listeners)
             listener.onSensorUpdate(value);
+        return isUpdated;
     }
 
     private void applyValueToTables(double value, final Sensor sensor, boolean isUpdated) {

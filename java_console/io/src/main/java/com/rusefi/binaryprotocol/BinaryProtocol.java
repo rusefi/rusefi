@@ -9,10 +9,7 @@ import com.rusefi.Timeouts;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.MessagesCentral;
-import com.rusefi.core.Pair;
-import com.rusefi.core.Sensor;
-import com.rusefi.core.SensorCentral;
+import com.rusefi.core.*;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.stream.LogicdataStreamFile;
@@ -588,43 +585,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
         state.setCurrentOutputs(response);
 
-        for (Sensor sensor : Sensor.values()) {
-            if (sensor.getType() == null) {
-                // for example ETB_CONTROL_QUALITY, weird use-case
-                continue;
-            }
-
-            ByteBuffer bb = ByteBuffer.wrap(response, 1 + sensor.getOffset(), 4);
-            bb.order(ByteOrder.LITTLE_ENDIAN);
-
-            double rawValue = getValueForChannel(bb, sensor);
-            double scaledValue = rawValue * sensor.getScale();
-            SensorCentral.getInstance().setValue(scaledValue, sensor);
-        }
+        SensorCentral.getInstance().grabSensorValues(response);
         return true;
-    }
-
-    private static double getValueForChannel(ByteBuffer bb, Sensor sensor) {
-        switch (sensor.getType()) {
-            case FLOAT:
-                return bb.getFloat();
-            case INT:
-                return bb.getInt();
-            case UINT16:
-                // no cast - we want to discard sign
-                return bb.getInt() & 0xFFFF;
-            case INT16:
-                // cast - we want to retain sign
-                return  (short)(bb.getInt() & 0xFFFF);
-            case UINT8:
-                // no cast - discard sign
-                return bb.getInt() & 0xFF;
-            case INT8:
-                // cast - retain sign
-                return (byte)(bb.getInt() & 0xFF);
-            default:
-                throw new UnsupportedOperationException("type " + sensor.getType());
-        }
     }
 
     public void setRange(byte[] src, int scrPos, int offset, int count) {

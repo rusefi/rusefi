@@ -4,6 +4,7 @@ import com.opensr5.Logger;
 import com.rusefi.Listener;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.Sensor;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
@@ -128,6 +129,7 @@ public class Backend implements Closeable {
             if (System.currentTimeMillis() - controller.getStream().getStreamStats().getPreviousPacketArrivalTime() > 20 * SECOND) {
                 if (controller.getTwoKindSemaphore().acquireForShortTermUsage()) {
                     try {
+                        controller.grabOutputs();
                     } finally {
                         controller.getTwoKindSemaphore().releaseFromShortTermUsage();
                     }
@@ -257,10 +259,16 @@ public class Backend implements Closeable {
         JsonArrayBuilder builder = Json.createArrayBuilder();
         List<ControllerConnectionState> clients = getControllers();
         for (ControllerConnectionState client : clients) {
+            // todo: at the moment we use current OutputChannel layout - a better way would be to take
+            // todo: OutputChannel from .ini file based on controller signature
+            int rpm = (int) client.getSensorsHolder().getValue(Sensor.RPM);
+            double clt = client.getSensorsHolder().getValue(Sensor.CLT);
             JsonObject controllerObject = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
                     .add(IS_USED, client.getTwoKindSemaphore().isUsed())
+                    .add("RPM", rpm)
+                    .add("CLT", clt)
                     .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
                     .add(ControllerInfo.VEHICLE_NAME, client.getSessionDetails().getControllerInfo().getVehicleName())
                     .add(ControllerInfo.ENGINE_MAKE, client.getSessionDetails().getControllerInfo().getEngineMake())
