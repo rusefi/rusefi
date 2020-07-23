@@ -1,5 +1,6 @@
 #include "tcu.h"
 #include "debounce.h"
+#include "globalaccess.h"
 
 EXTERN_ENGINE_CONFIGURATION;
 

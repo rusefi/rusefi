@@ -1,6 +1,7 @@
 #include "global.h"
 #include "io_pins.h"
-#include "tunerstudio.h"
+#include "tunerstudio_outputs.h"
+#include "globalaccess.h"
 
 class TransmissionControllerBase {
 public:
