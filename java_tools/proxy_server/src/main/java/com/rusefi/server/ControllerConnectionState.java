@@ -3,16 +3,16 @@ package com.rusefi.server;
 import com.opensr5.Logger;
 import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.core.SensorsHolder;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.shared.FileUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
 public class ControllerConnectionState {
     private final Socket clientSocket;
@@ -33,6 +33,7 @@ public class ControllerConnectionState {
     private ControllerKey controllerKey;
 
     private final TwoKindSemaphore twoKindSemaphore = new TwoKindSemaphore();
+    private final SensorsHolder sensorsHolder = new SensorsHolder();
 
     public ControllerConnectionState(Socket clientSocket, Logger logger, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
@@ -89,12 +90,6 @@ public class ControllerConnectionState {
         return sessionDetails;
     }
 
-    public void runEndlessLoop() throws IOException {
-        while (true) {
-            getOutputs();
-        }
-    }
-
     public void getOutputs() throws IOException {
         byte[] commandPacket = GetOutputsCommand.createRequest();
 
@@ -103,9 +98,24 @@ public class ControllerConnectionState {
         byte[] packet = incomingData.getPacket(logger, "msg", true);
         if (packet == null)
             throw new IOException("getOutputs: No response");
+        sensorsHolder.grabSensorValues(packet);
     }
 
+    @NotNull
     public TwoKindSemaphore getTwoKindSemaphore() {
         return twoKindSemaphore;
+    }
+
+    @NotNull
+    public SensorsHolder getSensorsHolder() {
+        return sensorsHolder;
+    }
+
+    public void grabOutputs() {
+        try {
+            getOutputs();
+        } catch (IOException e) {
+            close();
+        }
     }
 }
