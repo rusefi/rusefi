@@ -425,10 +425,6 @@ typedef enum {
  */
 typedef enum {
 	/**
-	 * raw Mass Air Flow sensor value algorithm. http://en.wikipedia.org/wiki/Mass_flow_sensor
-	 */
-	LM_PLAIN_MAF = 0,
-	/**
 	 * Throttle Position Sensor value is used as engine load. http://en.wikipedia.org/wiki/Throttle_position_sensor
 	 */
 	LM_ALPHA_N = 1,

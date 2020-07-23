@@ -65,13 +65,6 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine 2NULL", NAN);
 	efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
 	switch (engineConfiguration->fuelAlgorithm) {
-	case LM_PLAIN_MAF:
-		if (!hasMafSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		    // todo: make this not happen during hardware CI
-			warning(CUSTOM_MAF_NEEDED, "MAF sensor needed for current fuel algorithm");
-			return NAN;
-		}
-		return getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_SPEED_DENSITY:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_ALPHA_N:
@@ -80,7 +73,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
 	default:
 		firmwareError(CUSTOM_UNKNOWN_ALGORITHM, "Unexpected engine load parameter: %d", engineConfiguration->fuelAlgorithm);
-		return -1;
+		return 0;
 	}
 }
 

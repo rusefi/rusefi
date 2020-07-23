@@ -589,8 +589,6 @@ case Force_4_bytes_size_engine_load_mode:
   return "Force_4_bytes_size_engine_load_mode";
 case LM_ALPHA_N:
   return "LM_ALPHA_N";
-case LM_PLAIN_MAF:
-  return "LM_PLAIN_MAF";
 case LM_REAL_MAF:
   return "LM_REAL_MAF";
 case LM_SPEED_DENSITY:

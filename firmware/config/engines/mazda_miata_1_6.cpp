@@ -291,7 +291,6 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
-	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 
 	/**
 	 * Stage 0 we only have OEM TPS switch
@@ -349,6 +348,5 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
-	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 #endif /* BOARD_TLE8888_COUNT */
 }
