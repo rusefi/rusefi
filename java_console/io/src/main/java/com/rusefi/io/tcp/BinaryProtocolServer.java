@@ -10,6 +10,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.server.rusEFISSLContext;
+import com.rusefi.shared.FileUtil;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -75,24 +76,33 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     /**
      * Starts a new thread
-     *
-     * @param port                         server port to accept connections
+     *  @param port                         server port to accept connections
      * @param threadName
      * @param socketRunnableFactory        method to invoke on a new thread for each new client connection
      * @param logger
      * @param serverSocketCreationCallback this callback is invoked once we open the server socket
+     * @return
      */
-    public static void tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, final Logger logger, Listener serverSocketCreationCallback) {
-        tcpServerSocket(logger, socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
+    public static ServerHolder tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, final Logger logger, Listener serverSocketCreationCallback) {
+        return tcpServerSocket(logger, socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
     }
 
-    public static void tcpServerSocket(Logger logger, Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
+    public static ServerHolder tcpServerSocket(Logger logger, Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
         ServerSocket serverSocket = nonSecureSocketFunction.apply(port);
+
+        ServerHolder holder = new ServerHolder() {
+            @Override
+            public void close() {
+                super.close();
+                FileUtil.close(serverSocket);
+            }
+        };
+
         if (serverSocketCreationCallback != null)
             serverSocketCreationCallback.onResult(null);
         Runnable runnable = () -> {
             try {
-                while (true) {
+                while (!holder.isClosed()) {
                     // Wait for a connection
                     final Socket clientSocket = serverSocket.accept();
                     logger.info("Binary protocol proxy port connection");
@@ -103,6 +113,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             }
         };
         new Thread(runnable, threadName).start();
+        return holder;
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
