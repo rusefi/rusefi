@@ -22,8 +22,6 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
  */
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-AirmassResult getRealMafAirmass(float airMass, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
-
 floatms_t getBaseTableFuel(int rpm, float engineLoad);
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
