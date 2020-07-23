@@ -110,6 +110,7 @@ public class Backend implements Closeable {
 
         new Thread(() -> {
             while (true) {
+                logger.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
                 runApplicationConnectionsCleanup();
                 BinaryProtocol.sleep(applicationTimeout);
             }
@@ -129,7 +130,7 @@ public class Backend implements Closeable {
             if (System.currentTimeMillis() - controller.getStream().getStreamStats().getPreviousPacketArrivalTime() > 20 * SECOND) {
                 if (controller.getTwoKindSemaphore().acquireForShortTermUsage()) {
                     try {
-                        controller.grabOutputs();
+                        controller.grabOutputs(this);
                     } finally {
                         controller.getTwoKindSemaphore().releaseFromShortTermUsage();
                     }
@@ -348,4 +349,9 @@ public class Backend implements Closeable {
         }
     }
 
+    public int getApplicationsCount() {
+        synchronized (lock) {
+            return applications.size();
+        }
+    }
 }
