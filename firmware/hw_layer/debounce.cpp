@@ -16,11 +16,12 @@ bool ButtonDebounce::readPin() {
     }
     timeLast = timeNow;
     readValue = efiReadPin(pin);
-    if (mode == PAL_MODE_INPUT_PULLDOWN) {
-        return readValue;
-    } else {
+#ifdef PAL_MODE_INPUT_PULLDOWN
+    if (mode != PAL_MODE_INPUT_PULLDOWN) {
         return !readValue;
     }
+#endif
+    return readValue;
 }
 
 bool ButtonDebounce::readEvent() {
@@ -30,9 +31,10 @@ bool ButtonDebounce::readEvent() {
     }
     timeLast = timeNow;
     readValue = efiReadPin(pin);
-    if (mode == PAL_MODE_INPUT_PULLDOWN) {
-        return readValue;
-    } else {
+#ifdef PAL_MODE_INPUT_PULLDOWN
+    if (mode != PAL_MODE_INPUT_PULLDOWN) {
         return !readValue;
     }
+#endif
+    return !readValue;
 }
