@@ -80,9 +80,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->globalFuelCorrection = 0.75;
 	engineConfiguration->specs.displacement = 1.839;
-//	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
-//	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 
 	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
