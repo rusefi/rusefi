@@ -1,6 +1,7 @@
 #include "global.h"
 #include "io_pins.h"
 #include "tunerstudio_outputs.h"
+#include "persistent_configuration.h"
 #include "engine_configuration_generated_structures.h"
 #include "globalaccess.h"
 
