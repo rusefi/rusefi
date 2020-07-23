@@ -7,6 +7,7 @@
 #include "expected.h"
 #include "sensor.h"
 #include "map.h"
+#include "engine_math.h"
 
 EXTERN_ENGINE;
 
@@ -27,6 +28,10 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 		return Sensor::get(SensorType::Clt);
 	case GPPWM_Iat:
 		return Sensor::get(SensorType::Iat);
+	case GPPWM_FuelLoad:
+		return getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	case GPPWM_IgnLoad:
+		return getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	default:
 		return unexpected;
 	}
