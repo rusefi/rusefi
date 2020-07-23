@@ -1,12 +1,6 @@
 #include "buttonshift.h"
-#include "debounce.h"
 
-ButtonShiftController::ButtonShiftController () {
-    debounceUp = new ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
-    debounceUp = new ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode)):
-}
-
-ButtonShiftController::update() {
+void ButtonShiftController::update() {
     bool upPinState = debounceUp.readPin();
     bool downPinState = debounceUp.readPin();
     gear_e gear = getDesiredGear();
@@ -21,8 +15,11 @@ ButtonShiftController::update() {
             case GEAR_3:
                 setDesiredGear(GEAR_4);
                 break;
+            default:
+                break;
         }
     } else if (downPinState) {
+        switch (gear) {
             case GEAR_2:
                 setDesiredGear(GEAR_1);
                 break;
@@ -31,7 +28,10 @@ ButtonShiftController::update() {
                 break;
             case GEAR_4:
                 setDesiredGear(GEAR_3);
-                break;        
+                break;
+            default:
+                break;
+        }
     }
-    postState(&tsOutputChannels)
+    postState(&tsOutputChannels);
 }

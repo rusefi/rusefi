@@ -1,15 +1,17 @@
 #include "debounce.h"
+#include "io_pins.h"
 
 ButtonDebounce::ButtonDebounce (int t, brain_pin_e p, iomode_t m) {
     threshold = t;
     timeLast = 0;
     pin = p;
     mode = m;
-    efiSetPadMode(m);
+    efiSetPadMode("Button", p, m);
 }
 
 bool ButtonDebounce::readPin() {
-    if (!checkThreshold()) {
+    efitimems_t timeNow = currentTimeMillis();
+    if ((timeNow - timeLast) < threshold) {
         return readValue;
     }
     timeLast = timeNow;
@@ -22,9 +24,10 @@ bool ButtonDebounce::readPin() {
 }
 
 bool ButtonDebounce::readEvent() {
-    if (!checkThreshold()) {
+    efitimems_t timeNow = currentTimeMillis();
+    if ((timeNow - timeLast) < threshold) {
         return false;
-    }    
+    }
     timeLast = timeNow;
     readValue = efiReadPin(pin);
     if (mode == PAL_MODE_INPUT_PULLDOWN) {
@@ -32,12 +35,4 @@ bool ButtonDebounce::readEvent() {
     } else {
         return !readValue;
     }
-}
-
-bool ButtonDebounce::checkThreshold() {
-    efitimems_t timeNow = currentTimeMilllis();
-    if ((timeNow - timeLast) < threshold) {
-        return false;
-    }
-    return true;
 }

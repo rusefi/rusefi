@@ -1,17 +1,12 @@
 #include "tcu.h"
-#include "tunerstudio.h"
-
-GearControllerBase::GearControllerBase() {
-    desiredGear = PARK;
-}
 
 void GearControllerBase::update() {
     transmissionController.update(desiredGear);
-    postState(&tsOutputChannels)
+    postState(&tsOutputChannels);
 }
 
 gear_e GearControllerBase::getDesiredGear() {
-    return desiredgear;
+    return desiredGear;
 }
 
 gear_e GearControllerBase::setDesiredGear(gear_e gear) {
@@ -23,16 +18,12 @@ void GearControllerBase::postState(TunerStudioOutputChannels *tsOutputChannels) 
     tsOutputChannels->desiredGear = desiredGear;
 }
 
-TransmissionControllerBase::TransmissionControllerBase() {
-    currentGear = PARK;
-}
-
 void TransmissionControllerBase::update(gear_e gear) {
     currentGear = gear;
     postState(&tsOutputChannels);
 }
 
-gear_e TransmissionController::getCurrentGear() {
+gear_e TransmissionControllerBase::getCurrentGear() {
     return currentGear;
 }
 

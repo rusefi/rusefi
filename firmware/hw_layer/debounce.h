@@ -2,6 +2,7 @@
 
 class ButtonDebounce {
 public:
+    ButtonDebounce(int, brain_pin_e, iomode_t);
     bool readPin();
     bool readEvent();
 private:
