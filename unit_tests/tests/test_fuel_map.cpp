@@ -29,7 +29,7 @@ TEST(misc, testMafFuelMath) {
 
 	// Check results
 	EXPECT_NEAR(0.277777f * 0.75f, airmass.CylinderAirmass, EPS4D);
-	EXPECT_NEAR(70.9884, airmass.EngineLoadPercent, EPS4D);
+	EXPECT_NEAR(70.9814f, airmass.EngineLoadPercent, EPS4D);
 }
 
 TEST(misc, testFuelMap) {
