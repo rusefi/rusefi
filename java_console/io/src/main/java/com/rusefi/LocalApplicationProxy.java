@@ -4,6 +4,7 @@ import com.opensr5.Logger;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
+import com.rusefi.io.tcp.ServerHolder;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.rusEFISSLContext;
@@ -29,7 +30,7 @@ public class LocalApplicationProxy {
      * @param authenticatorPort        local port we would bind for TunerStudio to connect to
      * @param httpPort
      */
-    static void startAndRun(Logger logger, int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int authenticatorPort, int httpPort) throws IOException {
+    public static ServerHolder startAndRun(Logger logger, int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int authenticatorPort, int httpPort) throws IOException {
         HttpResponse httpResponse = HttpUtil.executeGet(ProxyClient.getHttpAddress(httpPort) + ProxyClient.VERSION_PATH);
         String version = HttpUtil.getResponse(httpResponse);
         logger.info("Version=" + version);
@@ -40,7 +41,7 @@ public class LocalApplicationProxy {
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
         localApplicationProxy.run(authenticatorToProxyStream);
 
-        BinaryProtocolProxy.createProxy(logger, authenticatorToProxyStream, authenticatorPort);
+        return BinaryProtocolProxy.createProxy(logger, authenticatorToProxyStream, authenticatorPort);
     }
 
     public void run(IoStream authenticatorToProxyStream) throws IOException {

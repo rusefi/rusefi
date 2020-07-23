@@ -15,30 +15,23 @@ import static com.rusefi.binaryprotocol.BinaryProtocolCommands.COMMAND_PROTOCOL;
 import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
 
 public class BinaryProtocolProxy {
-    public static void createProxy(Logger logger, IoStream targetEcuSocket, int serverProxyPort) {
-        Function<Socket, Runnable> clientSocketRunnableFactory = new Function<Socket, Runnable>() {
-            @Override
-            public Runnable apply(Socket clientSocket) {
-                return new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            TcpIoStream clientStream = new TcpIoStream("[[proxy]] ", logger, clientSocket);
-                            runProxy(targetEcuSocket, clientStream);
-                        } catch (IOException e) {
-                            logger.error("BinaryProtocolProxy::run" + e);
-                        }
-                    }
-                };
+    public static ServerHolder createProxy(Logger logger, IoStream targetEcuSocket, int serverProxyPort) {
+        Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
+            try {
+                TcpIoStream clientStream = new TcpIoStream("[[proxy]] ", logger, clientSocket);
+                runProxy(targetEcuSocket, clientStream);
+            } catch (IOException e) {
+                logger.error("BinaryProtocolProxy::run" + e);
             }
         };
-        BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Logger.CONSOLE, null);
+        return BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Logger.CONSOLE, null);
     }
 
     public static void runProxy(IoStream targetEcu, IoStream clientStream) throws IOException {
         /*
          * Each client socket is running on it's own thread
          */
+        //noinspection InfiniteLoopStatement
         while (true) {
             byte firstByte = clientStream.getDataBuffer().readByte();
             if (firstByte == COMMAND_PROTOCOL) {

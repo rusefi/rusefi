@@ -1,18 +1,24 @@
 package com.rusefi.ts_plugin;
 
+import com.opensr5.Logger;
 import com.rusefi.LocalApplicationProxy;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.SignatureHelper;
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.ControllerInfo;
+import com.rusefi.server.SessionDetails;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tools.online.PublicSession;
+import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.util.URLLabel;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -37,7 +43,7 @@ public class RemoteTab {
         refresh.addActionListener(e -> requestListDownload());
 
         JTextField applicationPort = new JTextField();
-        String portProperty = getConfig().getRoot().getProperty(APPLICATION_PORT, Integer.toString(LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS));
+        String portProperty = getLocalPort();
         applicationPort.setText(portProperty);
 
 
@@ -52,25 +58,19 @@ public class RemoteTab {
         requestListDownload();
     }
 
-    private void requestListDownload() {
-        listDownloadExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                List<PublicSession> userDetails;
-                try {
-                    userDetails = ProxyClient.getOnlineApplications(HttpUtil.HTTP_PORT);
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            showList(userDetails);
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                System.out.println(userDetails);
+    private String getLocalPort() {
+        return getConfig().getRoot().getProperty(APPLICATION_PORT, Integer.toString(LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS));
+    }
 
+    private void requestListDownload() {
+        listDownloadExecutor.execute(() -> {
+            List<PublicSession> userDetails;
+            try {
+                userDetails = ProxyClient.getOnlineApplications(HttpUtil.RUSEFI_PROXY_JSON_PROTOCOL);
+                SwingUtilities.invokeLater(() -> showList(userDetails));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
             }
         });
     }
@@ -92,7 +92,27 @@ public class RemoteTab {
         userPanel.add(new URLLabel(SignatureHelper.getUrl(controllerInfo.getSignature())));
 
 
-        userPanel.add(new JButton("Connect"));
+        JButton connect = new JButton("Connect");
+        connect.addActionListener(event -> {
+
+            SessionDetails sessionDetails = new SessionDetails(controllerInfo, AuthTokenPanel.getAuthToken(),
+                    Integer.parseInt(oneTimePasswordControl.getText()));
+
+            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getUserDetails().getUserId());
+
+            try {
+                LocalApplicationProxy.startAndRun(Logger.CONSOLE,
+                        LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS,
+                        applicationRequest,
+                        HttpUtil.PROXY_JSON_API_HTTP_PORT,
+                        Integer.parseInt(getLocalPort()));
+            } catch (IOException e) {
+                // todo: proper handling
+                e.printStackTrace();
+            }
+
+        });
+        userPanel.add(connect);
 
         return userPanel;
     }

@@ -62,7 +62,7 @@ public class ConsoleTools {
         registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
         registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
-        registerTool("proxy_server", BackendLauncher::start, "NOT A USER TOOL");
+        registerTool("proxy_server", a -> BackendLauncher.start(), "NOT A USER TOOL");
         registerTool("network_connector", NetworkConnectorStartup::start, "Connect your rusEFI ECU to rusEFI Online");
         registerTool("network_authenticator", LocalApplicationProxy::start, "rusEFI Online Authenticator");
 
