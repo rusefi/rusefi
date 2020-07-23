@@ -28,6 +28,7 @@ public class RemoteTab {
     private final JComponent content = new JPanel(new BorderLayout());
 
     private final JPanel list = new JPanel(new VerticalFlowLayout());
+    private final JTextField oneTimePasswordControl = new JTextField();
 
     private final Executor listDownloadExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("online list downloader"));
 
@@ -42,8 +43,10 @@ public class RemoteTab {
 
         JPanel topPanel = new JPanel(new FlowLayout());
         topPanel.add(refresh);
-        topPanel.add(new JLabel("Local Port"));
+        topPanel.add(new JLabel("    Local Port: "));
         topPanel.add(applicationPort);
+        topPanel.add(new JLabel("   One time password:"));
+        topPanel.add(oneTimePasswordControl);
         content.add(topPanel, BorderLayout.NORTH);
         content.add(list, BorderLayout.CENTER);
         requestListDownload();
@@ -89,7 +92,7 @@ public class RemoteTab {
         userPanel.add(new URLLabel(SignatureHelper.getUrl(controllerInfo.getSignature())));
 
 
-
+        userPanel.add(new JButton("Connect"));
 
         return userPanel;
     }

@@ -6,6 +6,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -41,5 +42,16 @@ public class HttpUtil {
         System.out.println("Connecting to " + url);
         HttpGet httpget = new HttpGet(url);
         return httpclient.execute(httpget);
+    }
+
+    public static JSONObject parse(String jsonString) {
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject;
+        try {
+            jsonObject = (JSONObject) parser.parse(jsonString);
+        } catch (ParseException e) {
+            throw new IllegalStateException(e);
+        }
+        return jsonObject;
     }
 }
