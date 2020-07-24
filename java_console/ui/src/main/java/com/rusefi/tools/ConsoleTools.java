@@ -72,7 +72,8 @@ public class ConsoleTools {
 
         registerTool("version", ConsoleTools::version, "Only print version");
 
-        registerTool("lightui", ConsoleTools::lightUI, "Start lightweight GUI for tiny screens");
+        registerTool("lightui", strings -> lightUI(), "Start lightweight GUI for tiny screens");
+        registerTool("dfu", DfuTool::run, "Program specified file into ECU via DFU");
 
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
@@ -115,7 +116,7 @@ public class ConsoleTools {
         System.out.println("tune_CRC16=" + crc16);
     }
 
-    private static void lightUI(String[] strings) {
+    private static void lightUI() {
         LightweightGUI.start();
     }
 
