@@ -146,6 +146,7 @@ public class Backend implements Closeable {
         // authenticator pushed hello packet on connect
         System.out.println("Starting application connector at " + serverPortForApplications);
         BinaryProtocolServer.tcpServerSocket(logger, applicationSocket -> () -> {
+            logger.info("new application connection!");
             totalSessions.incrementAndGet();
             // connection from authenticator app which proxies for Tuner Studio
             IoStream applicationClientStream = null;
@@ -155,8 +156,10 @@ public class Backend implements Closeable {
 
                 // authenticator pushed hello packet on connect
                 String jsonString = HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer(), logger);
-                if (jsonString == null)
+                if (jsonString == null) {
+                    logger.info("ERROR: null HELLO");
                     return;
+                }
                 ApplicationRequest applicationRequest = ApplicationRequest.valueOf(jsonString);
                 logger.info("Application Connected: " + applicationRequest);
                 String authToken = applicationRequest.getSessionDetails().getAuthToken();

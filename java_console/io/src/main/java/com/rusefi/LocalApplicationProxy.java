@@ -27,21 +27,22 @@ public class LocalApplicationProxy {
     /**
      * @param serverPortForRemoteUsers port on which rusEFI proxy accepts authenticator connections
      * @param applicationRequest       remote session we want to connect to
-     * @param authenticatorPort        local port we would bind for TunerStudio to connect to
-     * @param httpPort
+     * @param localApplicationPort        local port we would bind for TunerStudio to connect to
+     * @param jsonHttpPort
      */
-    public static ServerHolder startAndRun(Logger logger, int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int authenticatorPort, int httpPort) throws IOException {
-        HttpResponse httpResponse = HttpUtil.executeGet(ProxyClient.getHttpAddress(httpPort) + ProxyClient.VERSION_PATH);
+    public static ServerHolder startAndRun(Logger logger, int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int localApplicationPort, int jsonHttpPort) throws IOException {
+        HttpResponse httpResponse = HttpUtil.executeGet(logger,ProxyClient.getHttpAddress(jsonHttpPort) + ProxyClient.VERSION_PATH);
         String version = HttpUtil.getResponse(httpResponse);
-        logger.info("Version=" + version);
+        logger.info("Server says version=" + version);
         if (!version.contains(ProxyClient.BACKEND_VERSION))
             throw new IOException("Unexpected backend version " + version + " while we want " + ProxyClient.BACKEND_VERSION);
 
         IoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", logger, rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForRemoteUsers));
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
+        logger.info("Pushing " + applicationRequest);
         localApplicationProxy.run(authenticatorToProxyStream);
 
-        return BinaryProtocolProxy.createProxy(logger, authenticatorToProxyStream, authenticatorPort);
+        return BinaryProtocolProxy.createProxy(logger, authenticatorToProxyStream, localApplicationPort);
     }
 
     public void run(IoStream authenticatorToProxyStream) throws IOException {
