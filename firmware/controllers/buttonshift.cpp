@@ -7,6 +7,7 @@ EXTERN_ENGINE;
 ButtonShiftController::ButtonShiftController (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     debounceUp = new ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
     debounceDown = new ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
+    engine->buttonShiftController = this;
 }
 
 void ButtonShiftController::update() {
