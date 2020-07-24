@@ -5,6 +5,8 @@ import com.rusefi.LocalApplicationProxy;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.SignatureHelper;
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.io.tcp.ServerHolder;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
@@ -72,7 +75,7 @@ public class RemoteTab {
     }
 
     private String getLocalPort() {
-        return getConfig().getRoot().getProperty(APPLICATION_PORT, "8100");
+        return getConfig().getRoot().getProperty(APPLICATION_PORT, "29001");
     }
 
     private void requestListDownload() {
@@ -142,11 +145,21 @@ public class RemoteTab {
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getUserDetails().getUserId());
 
         try {
-            LocalApplicationProxy.startAndRun(Logger.CONSOLE,
+            AtomicReference<ServerHolder> serverHolderAtomicReference = new AtomicReference<>();
+
+            TcpIoStream.DisconnectListener disconnectListener = () -> SwingUtilities.invokeLater(() -> {
+                setStatus("Disconnected");
+                ServerHolder serverHolder = serverHolderAtomicReference.get();
+                if (serverHolder != null)
+                    serverHolder.close();
+            });
+
+            ServerHolder serverHolder = LocalApplicationProxy.startAndRun(Logger.CONSOLE,
                     LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS,
                     applicationRequest,
                     Integer.parseInt(getLocalPort()),
-                    HttpUtil.PROXY_JSON_API_HTTP_PORT, () -> SwingUtilities.invokeLater(() -> setStatus("Disconnected")));
+                    HttpUtil.PROXY_JSON_API_HTTP_PORT, disconnectListener);
+            serverHolderAtomicReference.set(serverHolder);
         } catch (IOException e) {
             setStatus("IO error: " + e);
         }
