@@ -41,7 +41,6 @@ public class Backend implements Closeable {
 
     public static final int SERVER_PORT_FOR_CONTROLLERS = 8003;
     private static final String MAX_PACKET_GAP = "MAX_PACKET_GAP";
-    private static final String IS_USED = "isUsed";
 
     /**
      * Application with exclusive access should connect tuning application within 3 minutes
@@ -180,7 +179,7 @@ public class Backend implements Closeable {
                 ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUserId(), applicationRequest.getSessionDetails().getControllerInfo());
                 ControllerConnectionState state;
                 synchronized (lock) {
-                    state = acquire(controllerKey);
+                    state = acquire(controllerKey, userDetails);
                 }
                 if (state == null) {
                     log.info("No controller for " + controllerKey);
@@ -203,14 +202,14 @@ public class Backend implements Closeable {
         }, serverPortForApplications, "ApplicationServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
     }
 
-    private ControllerConnectionState acquire(ControllerKey controllerKey) {
+    private ControllerConnectionState acquire(ControllerKey controllerKey, UserDetails userDetails) {
         synchronized (lock) {
             ControllerConnectionState state = controllersByKey.get(controllerKey);
             if (state == null) {
                 // no such controller
                 return null;
             }
-            if (!state.getTwoKindSemaphore().acquireForLongTermUsage()) {
+            if (!state.getTwoKindSemaphore().acquireForLongTermUsage(userDetails)) {
                 // someone is already talking to this controller
                 return null;
             }
@@ -279,7 +278,8 @@ public class Backend implements Closeable {
             JsonObject controllerObject = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
-                    .add(IS_USED, client.getTwoKindSemaphore().isUsed())
+                    .add(ProxyClient.IS_USED, client.getTwoKindSemaphore().isUsed())
+                    .add(ProxyClient.OWNER, client.getTwoKindSemaphore().getOwner().getUserName())
                     .add(ControllerStateDetails.RPM, rpm)
                     .add(ControllerStateDetails.CLT, clt)
                     .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
