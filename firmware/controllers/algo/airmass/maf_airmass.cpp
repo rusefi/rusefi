@@ -6,8 +6,8 @@
 EXTERN_ENGINE;
 
 AirmassResult MafAirmass::getAirmass(int rpm) {
-		float maf = getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
-		return getAirmassImpl(maf, rpm);
+	float maf = getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
+	return getAirmassImpl(maf, rpm);
 }
 
 /**
