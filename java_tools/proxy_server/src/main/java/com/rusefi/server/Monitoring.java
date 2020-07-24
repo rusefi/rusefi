@@ -1,5 +1,7 @@
 package com.rusefi.server;
 
+import com.rusefi.rusEFIVersion;
+import com.rusefi.tools.online.ProxyClient;
 import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
 import org.takes.rs.RsJson;
@@ -9,6 +11,7 @@ import javax.json.JsonObjectBuilder;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.util.Date;
 
 public class Monitoring {
     public static final String STATUS = "/status";
@@ -39,6 +42,9 @@ public class Monitoring {
         builder.add("serverPortForControllers", backend.serverPortForControllers);
         builder.add("applicationsCount", backend.getApplicationsCount());
         builder.add("controllersCount", backend.getControllersCount());
+        builder.add("backend version", ProxyClient.BACKEND_VERSION);
+        builder.add("framework version", rusEFIVersion.CONSOLE_VERSION);
+        builder.add("compiled", new Date(rusEFIVersion.classBuildTimeMillis()).toString());
 
         return new RsJson(builder.build());
     }
