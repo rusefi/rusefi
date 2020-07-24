@@ -15,8 +15,8 @@ bool ButtonDebounce::readPin() {
         return readValue;
     }
     timeLast = timeNow;
+#if EFI_GPIO_HARDWARE
     readValue = efiReadPin(pin);
-#ifdef PAL_MODE_INPUT_PULLDOWN
     if (mode != PAL_MODE_INPUT_PULLDOWN) {
         return !readValue;
     }
@@ -30,8 +30,8 @@ bool ButtonDebounce::readEvent() {
         return false;
     }
     timeLast = timeNow;
+#if EFI_GPIO_HARDWARE
     readValue = efiReadPin(pin);
-#ifdef PAL_MODE_INPUT_PULLDOWN
     if (mode != PAL_MODE_INPUT_PULLDOWN) {
         return !readValue;
     }
