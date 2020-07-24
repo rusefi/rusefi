@@ -44,6 +44,7 @@ public interface IoStream extends WriteStream {
         writeShort(packet.getPacket().length);
         write(packet.getPacket());
         writeInt(packet.getCrc());
+        flush();
     }
 
     default void sendPacket(byte[] plainPacket, Logger logger) throws IOException {
@@ -56,6 +57,7 @@ public interface IoStream extends WriteStream {
         // todo: verbose mode printHexBinary(plainPacket))
         logger.info(getLoggingPrefix() + "Sending packet " + BinaryProtocol.findCommand(plainPacket[0]) + " length=" + plainPacket.length);
         write(packet);
+        flush();
     }
 
     /**
