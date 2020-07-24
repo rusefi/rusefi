@@ -67,6 +67,7 @@ public class RemoteTab {
         topPanel.add(oneTimePasswordControl);
         content.add(topPanel, BorderLayout.NORTH);
         content.add(list, BorderLayout.CENTER);
+        list.add(new JLabel("Requesting list of ECUs"));
         requestListDownload();
     }
 
@@ -89,8 +90,12 @@ public class RemoteTab {
 
     private void showList(List<PublicSession> userDetails) {
         list.removeAll();
-        for (PublicSession user : userDetails) {
-            list.add(createPanel(user));
+        if (userDetails.isEmpty()) {
+            list.add(new JLabel("No ECUs are broadcasting at the moment :("));
+        } else {
+            for (PublicSession user : userDetails) {
+                list.add(createPanel(user));
+            }
         }
         AutoupdateUtil.trueLayout(list);
     }

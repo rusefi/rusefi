@@ -1,6 +1,7 @@
 package com.rusefi.io.tcp;
 
 import com.opensr5.Logger;
+import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
@@ -15,6 +16,12 @@ import static com.rusefi.binaryprotocol.BinaryProtocolCommands.COMMAND_PROTOCOL;
 import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
 
 public class BinaryProtocolProxy {
+    /**
+     * we expect server to at least request output channels once in a while
+     * it could be a while between user connecting authenticator and actually connecting application to authenticator
+     */
+    public static final int USER_IO_TIMEOUT = 600 * Timeouts.SECOND;
+
     public static ServerHolder createProxy(Logger logger, IoStream targetEcuSocket, int serverProxyPort) {
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             try {
@@ -33,7 +40,7 @@ public class BinaryProtocolProxy {
          */
         //noinspection InfiniteLoopStatement
         while (true) {
-            byte firstByte = clientStream.getDataBuffer().readByte();
+            byte firstByte = clientStream.getDataBuffer().readByte(USER_IO_TIMEOUT);
             if (firstByte == COMMAND_PROTOCOL) {
                 clientStream.write(TS_PROTOCOL.getBytes());
                 continue;
