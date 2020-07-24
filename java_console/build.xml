@@ -152,6 +152,7 @@
             <zipfileset src="lib/dfu/libusb4java-1.3.0-linux-arm.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
             <zipfileset src="lib/dfu/libusb4java-1.3.0-linux-x86.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
             <zipfileset src="lib/dfu/libusb4java-1.3.0-linux-x86-64.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
+            <zipfileset src="lib/dfu/libusb4java-1.3.0-darwin-x86-64.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
             <zipfileset src="lib/dfu/usb4java-1.3.0.jar" includes="**/*.class"/>
             <zipfileset src="lib/dfu/IntelHexParser.jar" includes="**/*.class"/>
             <zipfileset src="lib/dfu/dfu_java.jar" includes="**/*.class"/>
