@@ -9,7 +9,7 @@ public class BackendLauncher {
      */
     public static void start() {
         /* todo
-        rusEFISSLContext.setupCertificates(new File("keystore.jks"), System.getProperty("RUSEFI_PROXY_PASSWORD"));
+        rusEFISSLContext.setupCertificates(new File("keystore.jks"), System.getProperty("RUSEFI_KEYSTORE_PASSWORD"));
          */
 
         UserDetailsResolver userDetailsFunction = new JsonUserDetailsResolver();

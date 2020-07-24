@@ -1,6 +1,5 @@
 package com.rusefi.ts_plugin;
 
-import com.opensr5.Logger;
 import com.rusefi.LocalApplicationProxy;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.SignatureHelper;
@@ -154,7 +153,7 @@ public class RemoteTab {
                     serverHolder.close();
             });
 
-            ServerHolder serverHolder = LocalApplicationProxy.startAndRun(Logger.CONSOLE,
+            ServerHolder serverHolder = LocalApplicationProxy.startAndRun(
                     LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS,
                     applicationRequest,
                     Integer.parseInt(getLocalPort()),
