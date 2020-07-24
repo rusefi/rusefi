@@ -21,8 +21,9 @@ public class BinaryProtocolProxy {
     /**
      * we expect server to at least request output channels once in a while
      * it could be a while between user connecting authenticator and actually connecting application to authenticator
+     * See Backend#APPLICATION_INACTIVITY_TIMEOUT
      */
-    public static final int USER_IO_TIMEOUT = 600 * Timeouts.SECOND;
+    public static final int USER_IO_TIMEOUT = 10 * Timeouts.MINUTE;
 
     public static ServerHolder createProxy(IoStream targetEcuSocket, int serverProxyPort) {
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {

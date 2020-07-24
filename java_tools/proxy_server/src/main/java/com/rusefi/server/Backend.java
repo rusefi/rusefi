@@ -2,6 +2,7 @@ package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.Listener;
+import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
 import com.rusefi.io.IoStream;
@@ -42,6 +43,14 @@ public class Backend implements Closeable {
     private static final String MAX_PACKET_GAP = "MAX_PACKET_GAP";
     private static final String IS_USED = "isUsed";
 
+    /**
+     * Application with exclusive access should connect tuning application within 3 minutes
+     * Should be at least twice less than USER_IO_TIMEOUT to prevent controller disconnect
+     *
+     * @see BinaryProtocolProxy#USER_IO_TIMEOUT
+     */
+    private static final int APPLICATION_INACTIVITY_TIMEOUT = 3 * Timeouts.MINUTE;
+
     private final FkRegex showOnlineControllers = new FkRegex(ProxyClient.LIST_CONTROLLERS_PATH,
             (Take) req -> getControllersOnline()
     );
@@ -69,7 +78,7 @@ public class Backend implements Closeable {
     public int serverPortForControllers;
 
     public Backend(UserDetailsResolver userDetailsResolver, int httpPort) {
-        this(userDetailsResolver, httpPort, 600 * SECOND);
+        this(userDetailsResolver, httpPort, APPLICATION_INACTIVITY_TIMEOUT);
     }
 
     public Backend(UserDetailsResolver userDetailsResolver, int httpPort, int applicationTimeout) {
