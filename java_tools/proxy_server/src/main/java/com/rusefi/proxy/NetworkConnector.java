@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Connector between rusEFI ECU and rusEFI server
+ * see NetworkConnectorStartup
  */
 public class NetworkConnector {
     public static SessionDetails runNetworkConnector(String authToken, String controllerPort, int serverPortForControllers, TcpIoStream.DisconnectListener disconnectListener) throws InterruptedException, IOException {

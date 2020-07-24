@@ -24,12 +24,9 @@ public class NetworkConnectorStartup {
             return;
         }
 
-        SessionDetails sessionDetails = NetworkConnector.runNetworkConnector(authToken, autoDetectedPort, Backend.SERVER_PORT_FOR_CONTROLLERS, new TcpIoStream.DisconnectListener() {
-            @Override
-            public void onDisconnect() {
-                System.err.println("Disconnect detected");
-                System.exit(-1);
-            }
+        SessionDetails sessionDetails = NetworkConnector.runNetworkConnector(authToken, autoDetectedPort, Backend.SERVER_PORT_FOR_CONTROLLERS, () -> {
+            System.err.println("Disconnect detected");
+            System.exit(-1);
         });
         System.out.println("Running with " + sessionDetails.getOneTimeToken());
     }
