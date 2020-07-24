@@ -76,7 +76,8 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     /**
      * Starts a new thread
-     *  @param port                         server port to accept connections
+     *
+     * @param port                         server port to accept connections
      * @param threadName
      * @param socketRunnableFactory        method to invoke on a new thread for each new client connection
      * @param logger
@@ -101,15 +102,17 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         if (serverSocketCreationCallback != null)
             serverSocketCreationCallback.onResult(null);
         Runnable runnable = () -> {
-            try {
-                while (!holder.isClosed()) {
-                    // Wait for a connection
-                    final Socket clientSocket = serverSocket.accept();
-                    logger.info("Binary protocol proxy port connection");
-                    new Thread(clientSocketRunnableFactory.apply(clientSocket), "proxy connection").start();
+            while (!holder.isClosed()) {
+                // Wait for a connection
+                final Socket clientSocket;
+                try {
+                    clientSocket = serverSocket.accept();
+                } catch (IOException e) {
+                    logger.info("Client socket closed right away" + e);
+                    continue;
                 }
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
+                logger.info("Binary protocol proxy port connection");
+                new Thread(clientSocketRunnableFactory.apply(clientSocket), "proxy connection").start();
             }
         };
         new Thread(runnable, threadName).start();
