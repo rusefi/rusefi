@@ -15,8 +15,8 @@ public class JsonUserDetailsResolver implements UserDetailsResolver {
     public UserDetails apply(String authToken) {
 
         try {
-            HttpResponse response = HttpUtil.executeGet(Logger.CONSOLE,HttpUtil.RUSEFI_ONLINE_JSON_API_PREFIX + "getUserByToken&rusefi_token=" + authToken);
-            JSONObject json = HttpUtil.getJsonResponse(response);
+            String responseString = HttpUtil.executeGet(Logger.CONSOLE,HttpUtil.RUSEFI_ONLINE_JSON_API_PREFIX + "getUserByToken&rusefi_token=" + authToken);
+            JSONObject json = HttpUtil.getJsonResponse(responseString);
             System.out.println("String " + json);
             Object getUserByToken = json.get("getUserByToken");
             if (getUserByToken instanceof String) {

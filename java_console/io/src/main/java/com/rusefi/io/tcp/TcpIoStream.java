@@ -23,6 +23,7 @@ public class TcpIoStream extends AbstractIoStream {
     private final OutputStream output;
     private final Logger logger;
     private final String loggingPrefix;
+    private final DisconnectListener disconnectListener;
     @NotNull
     private final Socket socket;
     private final IncomingDataBuffer dataBuffer;
@@ -32,7 +33,12 @@ public class TcpIoStream extends AbstractIoStream {
     }
 
     public TcpIoStream(String loggingPrefix, Logger logger, Socket socket) throws IOException {
+        this(loggingPrefix, logger, socket, DisconnectListener.VOID);
+    }
+
+    public TcpIoStream(String loggingPrefix, Logger logger, Socket socket, DisconnectListener disconnectListener) throws IOException {
         this.loggingPrefix = loggingPrefix;
+        this.disconnectListener = disconnectListener;
         if (socket == null)
             throw new NullPointerException("socket");
         this.socket = socket;
@@ -75,7 +81,13 @@ public class TcpIoStream extends AbstractIoStream {
 
     @Override
     public void setInputListener(final DataListener listener) {
+        ByteReader.runReaderLoop(loggingPrefix, listener, input::read, logger, disconnectListener);
+    }
 
-        ByteReader.runReaderLoop(loggingPrefix, listener, input::read, logger);
+    public interface DisconnectListener {
+        DisconnectListener VOID = () -> {
+
+        };
+        void onDisconnect();
     }
 }

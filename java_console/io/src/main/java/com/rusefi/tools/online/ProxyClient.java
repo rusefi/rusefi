@@ -32,11 +32,11 @@ public class ProxyClient {
 
     @NotNull
     public static List<PublicSession> getOnlineApplications(String url) throws IOException {
-        HttpResponse httpResponse = HttpUtil.executeGet(Logger.CONSOLE, url);
+        String responseString = HttpUtil.executeGet(Logger.CONSOLE, url);
 
         List<PublicSession> userLists = new ArrayList<>();
         try {
-            JSONArray array = HttpUtil.getJsonResponse(httpResponse);
+            JSONArray array = HttpUtil.getJsonResponse(responseString);
 
             for (int i = 0; i < array.size(); i++) {
                 JSONObject element = (JSONObject) array.get(i);

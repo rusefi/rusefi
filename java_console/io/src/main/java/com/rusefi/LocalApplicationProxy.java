@@ -31,8 +31,7 @@ public class LocalApplicationProxy {
      * @param jsonHttpPort
      */
     public static ServerHolder startAndRun(Logger logger, int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int localApplicationPort, int jsonHttpPort) throws IOException {
-        HttpResponse httpResponse = HttpUtil.executeGet(logger,ProxyClient.getHttpAddress(jsonHttpPort) + ProxyClient.VERSION_PATH);
-        String version = HttpUtil.getResponse(httpResponse);
+        String version = HttpUtil.executeGet(logger,ProxyClient.getHttpAddress(jsonHttpPort) + ProxyClient.VERSION_PATH);
         logger.info("Server says version=" + version);
         if (!version.contains(ProxyClient.BACKEND_VERSION))
             throw new IOException("Unexpected backend version " + version + " while we want " + ProxyClient.BACKEND_VERSION);
