@@ -111,6 +111,9 @@
             <zipfileset src="lib/server/cactoos.jar" includes="**/*.class"/>
             <zipfileset src="lib/server/javax.json.jar" includes="**/*.class"/>
             <zipfileset src="lib/server/takes.jar" includes="**/*.class"/>
+            <zipfileset src="lib/log4j-api-2.13.3.jar"/>
+            <zipfileset src="lib/log4j-core-2.13.3.jar"/>
+            <fileset dir="../java_tools/proxy_server/src/main/resources" includes="**/*.*"/>
         </jar>
     </target>
 
