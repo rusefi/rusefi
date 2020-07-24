@@ -1,6 +1,6 @@
 package com.rusefi.io.serial;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.Logging;
 import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.MessagesCentral;
@@ -9,34 +9,32 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * @author Andrey Belomutskiy
  *         3/3/14
  */
 public class StreamConnector implements LinkConnector {
+    private static final Logging log = getLogging(StreamConnector.class);
 
     private final PortHolder portHolder;
-    private final Logger logger;
     private final LinkManager linkManager;
 
-    public StreamConnector(LinkManager linkManager, String portName, Logger logger, Callable<IoStream> ioStreamCallable) {
+    public StreamConnector(LinkManager linkManager, String portName, Callable<IoStream> ioStreamCallable) {
         this.linkManager = linkManager;
-        this.logger = logger;
 
-        portHolder = new PortHolder(portName, linkManager, logger, ioStreamCallable);
+        portHolder = new PortHolder(portName, linkManager, ioStreamCallable);
     }
 
     @Override
     public void connectAndReadConfiguration(ConnectionStateListener listener) {
-        logger.info("StreamConnector: connecting");
+        log.info("StreamConnector: connecting");
         portHolder.listener = listener;
-        logger.info("scheduleOpening");
-        linkManager.execute(new Runnable() {
-            @Override
-            public void run() {
-                logger.info("scheduleOpening>openPort");
-                portHolder.connectAndReadConfiguration();
-            }
+        log.info("scheduleOpening");
+        linkManager.execute(() -> {
+            log.info("scheduleOpening>openPort");
+            portHolder.connectAndReadConfiguration();
         });
     }
 
@@ -52,13 +50,10 @@ public class StreamConnector implements LinkConnector {
 
     @Override
     public void restart() {
-        linkManager.execute(new Runnable() {
-            @Override
-            public void run() {
-                MessagesCentral.getInstance().postMessage(logger, StreamConnector.this.getClass(), "Restarting serial IO");
-                portHolder.close();
-                portHolder.connectAndReadConfiguration();
-            }
+        linkManager.execute(() -> {
+            MessagesCentral.getInstance().postMessage(StreamConnector.this.getClass(), "Restarting serial IO");
+            portHolder.close();
+            portHolder.connectAndReadConfiguration();
         });
     }
 

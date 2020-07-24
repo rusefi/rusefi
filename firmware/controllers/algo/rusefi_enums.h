@@ -952,6 +952,8 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_Map = 1,
 	GPPWM_Clt = 2,
 	GPPWM_Iat = 3,
+	GPPWM_FuelLoad = 4,
+	GPPWM_IgnLoad = 5,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {

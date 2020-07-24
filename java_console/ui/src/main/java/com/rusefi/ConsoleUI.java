@@ -143,7 +143,7 @@ public class ConsoleUI {
                 tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
         }
 
-        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocol.COMPOSITE_OFF_RPM);
+        MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocol.COMPOSITE_OFF_RPM);
 
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 
@@ -235,7 +235,7 @@ public class ConsoleUI {
                 new ConsoleUI(port);
             } else {
                 for (String p : LinkManager.getCommPorts())
-                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, Launcher.class, "Available port: " + p);
+                    MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
                 new StartupFrame().chooseSerialPort();
             }
 

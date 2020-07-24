@@ -1,6 +1,5 @@
 package com.irnems.file;
 
-import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
 import com.rusefi.file.FileUtils;
 
@@ -42,7 +41,7 @@ public class FrequencyDivider {
                 lineCounter++;
             }
         };
-        FileUtils.readFile(filename, listener, FileLog.LOGGER);
+        FileUtils.readFile(filename, listener);
         fos.close();
     }
 }

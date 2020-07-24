@@ -53,7 +53,7 @@ public class ServerTest {
         CountDownLatch allConnected = new CountDownLatch(1);
 
 
-        try (Backend backend = new Backend(createTestUserResolver(), httpPort, logger) {
+        try (Backend backend = new Backend(createTestUserResolver(), httpPort) {
             @Override
             public void register(ControllerConnectionState clientConnectionState) {
                 super.register(clientConnectionState);
@@ -143,7 +143,7 @@ covered by FullServerTest
         int httpPort = 8001;
         int serverPortForRemoteUsers = 6801;
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
-        try (Backend backend = new Backend(createTestUserResolver(), httpPort, logger) {
+        try (Backend backend = new Backend(createTestUserResolver(), httpPort) {
             @Override
             protected void onDisconnectApplication(ApplicationConnectionState applicationConnectionState) {
                 super.onDisconnectApplication(applicationConnectionState);
@@ -155,7 +155,7 @@ covered by FullServerTest
 
             // start authenticator
             IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
-            new HelloCommand(logger, "hello").handle(authenticatorToProxyStream);
+            new HelloCommand("hello").handle(authenticatorToProxyStream);
 
             assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
         }
@@ -174,7 +174,7 @@ covered by FullServerTest
 
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
 
-        try (Backend backend = new Backend(createTestUserResolver(), httpPort, logger) {
+        try (Backend backend = new Backend(createTestUserResolver(), httpPort) {
             @Override
             protected void onDisconnectApplication(ApplicationConnectionState applicationConnectionState) {
                 super.onDisconnectApplication(applicationConnectionState);
@@ -189,7 +189,7 @@ covered by FullServerTest
 
             // start authenticator
             IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
-            LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
+            LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(applicationRequest);
             localApplicationProxy.run(authenticatorToProxyStream);
 
             assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));

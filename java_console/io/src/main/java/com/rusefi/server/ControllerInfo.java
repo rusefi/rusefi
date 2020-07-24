@@ -3,8 +3,6 @@ package com.rusefi.server;
 import com.rusefi.tools.online.HttpUtil;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.util.Objects;
 

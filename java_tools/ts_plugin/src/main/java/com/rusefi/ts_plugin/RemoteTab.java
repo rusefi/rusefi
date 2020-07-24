@@ -4,10 +4,15 @@ import com.rusefi.LocalApplicationProxy;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.SignatureHelper;
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.io.tcp.ServerHolder;
+import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.ControllerInfo;
+import com.rusefi.server.SessionDetails;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tools.online.PublicSession;
+import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.util.URLLabel;
 import org.putgemin.VerticalFlowLayout;
 
@@ -17,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
@@ -28,7 +34,14 @@ public class RemoteTab {
     private final JComponent content = new JPanel(new BorderLayout());
 
     private final JPanel list = new JPanel(new VerticalFlowLayout());
-    private final JTextField oneTimePasswordControl = new JTextField();
+    private final JTextField oneTimePasswordControl = new JTextField("0") {
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            // todo: dynamic calculation of desired with based on String width?
+            return new Dimension(100, size.height);
+        }
+    };
 
     private final Executor listDownloadExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("online list downloader"));
 
@@ -36,8 +49,15 @@ public class RemoteTab {
         JButton refresh = new JButton("Refresh List");
         refresh.addActionListener(e -> requestListDownload());
 
-        JTextField applicationPort = new JTextField();
-        String portProperty = getConfig().getRoot().getProperty(APPLICATION_PORT, Integer.toString(LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS));
+        JTextField applicationPort = new JTextField() {
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension size = super.getPreferredSize();
+                // todo: dynamic calculation of desired with based on String width?
+                return new Dimension(100, size.height);
+            }
+        };
+        String portProperty = getLocalPort();
         applicationPort.setText(portProperty);
 
 
@@ -49,36 +69,35 @@ public class RemoteTab {
         topPanel.add(oneTimePasswordControl);
         content.add(topPanel, BorderLayout.NORTH);
         content.add(list, BorderLayout.CENTER);
+        list.add(new JLabel("Requesting list of ECUs"));
         requestListDownload();
     }
 
-    private void requestListDownload() {
-        listDownloadExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                List<PublicSession> userDetails;
-                try {
-                    userDetails = ProxyClient.getOnlineApplications(HttpUtil.HTTP_PORT);
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            showList(userDetails);
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                System.out.println(userDetails);
+    private String getLocalPort() {
+        return getConfig().getRoot().getProperty(APPLICATION_PORT, "29001");
+    }
 
+    private void requestListDownload() {
+        listDownloadExecutor.execute(() -> {
+            List<PublicSession> userDetails;
+            try {
+                userDetails = ProxyClient.getOnlineApplications(HttpUtil.PROXY_JSON_API_HTTP_PORT);
+                SwingUtilities.invokeLater(() -> showList(userDetails));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
             }
         });
     }
 
     private void showList(List<PublicSession> userDetails) {
         list.removeAll();
-        for (PublicSession user : userDetails) {
-            list.add(createPanel(user));
+        if (userDetails.isEmpty()) {
+            list.add(new JLabel("No ECUs are broadcasting at the moment :("));
+        } else {
+            for (PublicSession user : userDetails) {
+                list.add(createPanel(user));
+            }
         }
         AutoupdateUtil.trueLayout(list);
     }
@@ -92,9 +111,57 @@ public class RemoteTab {
         userPanel.add(new URLLabel(SignatureHelper.getUrl(controllerInfo.getSignature())));
 
 
-        userPanel.add(new JButton("Connect"));
+        JButton connect = new JButton("Connect");
+        connect.addActionListener(event -> {
+
+            setStatus("Connecting to " + publicSession.getUserDetails().getUserName());
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    runAuthenticator(publicSession, controllerInfo);
+
+                }
+            }, "Authenticator").start();
+
+
+        });
+        userPanel.add(connect);
 
         return userPanel;
+    }
+
+    private void setStatus(String text) {
+        list.removeAll();
+        list.add(new JLabel(text));
+        AutoupdateUtil.trueLayout(list);
+    }
+
+    private void runAuthenticator(PublicSession publicSession, ControllerInfo controllerInfo) {
+        SessionDetails sessionDetails = new SessionDetails(controllerInfo, AuthTokenPanel.getAuthToken(),
+                Integer.parseInt(oneTimePasswordControl.getText()));
+
+        ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getUserDetails().getUserId());
+
+        try {
+            AtomicReference<ServerHolder> serverHolderAtomicReference = new AtomicReference<>();
+
+            TcpIoStream.DisconnectListener disconnectListener = () -> SwingUtilities.invokeLater(() -> {
+                setStatus("Disconnected");
+                ServerHolder serverHolder = serverHolderAtomicReference.get();
+                if (serverHolder != null)
+                    serverHolder.close();
+            });
+
+            ServerHolder serverHolder = LocalApplicationProxy.startAndRun(
+                    LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS,
+                    applicationRequest,
+                    Integer.parseInt(getLocalPort()),
+                    HttpUtil.PROXY_JSON_API_HTTP_PORT, disconnectListener);
+            serverHolderAtomicReference.set(serverHolder);
+        } catch (IOException e) {
+            setStatus("IO error: " + e);
+        }
     }
 
     public JComponent getContent() {
