@@ -46,7 +46,7 @@ public class Logging {
 	public static final String DEFAULT_MAX_FILE_SIZE = "900M";
 
 	private static final ConcurrentMap<String, Logging> INSTANCES = new ConcurrentHashMap<>();
-	private static final DefaultLogging IMPL = configure(DefaultLogging.getProperty(LOG_CLASS_NAME, ""));
+	private static final DefaultLogging IMPL = configure(DefaultLogging.getProperty(LOG_CLASS_NAME, "com.devexperts.logging.Log4j2Logging"));
 
 	public static Logging getLogging(Class<?> clazz) {
 		return getLogging(clazz.getName());
