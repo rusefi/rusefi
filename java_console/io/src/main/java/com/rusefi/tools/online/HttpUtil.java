@@ -1,5 +1,6 @@
 package com.rusefi.tools.online;
 
+import com.opensr5.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -33,13 +34,13 @@ public class HttpUtil {
     public static String getResponse(HttpResponse response) throws IOException {
         HttpEntity entity = response.getEntity();
         String responseString = EntityUtils.toString(entity, "UTF-8");
-        System.out.println("responseString=" + responseString);
+        Logger.CONSOLE.info("responseString=" + responseString);
         return responseString;
     }
 
-    public static HttpResponse executeGet(String url) throws IOException {
+    public static HttpResponse executeGet(Logger logger, String url) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
-        System.out.println("Connecting to " + url);
+        logger.info("GET " + url);
         HttpGet httpget = new HttpGet(url);
         return httpclient.execute(httpget);
     }

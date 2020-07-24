@@ -33,7 +33,7 @@ public interface ByteReader {
                         throw new IOException("TcpIoStream: End of input?");
                     listener.onDataArrived(Arrays.copyOf(inputBuffer, result));
                 } catch (IOException e) {
-                    System.err.println("TcpIoStream: End of connection");
+                    logger.error("TcpIoStream: End of connection " + e);
                     return;
                 }
             }

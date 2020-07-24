@@ -1,5 +1,6 @@
 package com.rusefi.server;
 
+import com.opensr5.Logger;
 import com.rusefi.tools.online.HttpUtil;
 import org.apache.http.HttpResponse;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,7 @@ public class JsonUserDetailsResolver implements UserDetailsResolver {
     public UserDetails apply(String authToken) {
 
         try {
-            HttpResponse response = HttpUtil.executeGet(HttpUtil.RUSEFI_ONLINE_JSON_API_PREFIX + "getUserByToken&rusefi_token=" + authToken);
+            HttpResponse response = HttpUtil.executeGet(Logger.CONSOLE,HttpUtil.RUSEFI_ONLINE_JSON_API_PREFIX + "getUserByToken&rusefi_token=" + authToken);
             JSONObject json = HttpUtil.getJsonResponse(response);
             System.out.println("String " + json);
             Object getUserByToken = json.get("getUserByToken");
