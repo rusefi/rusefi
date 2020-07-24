@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -83,7 +82,7 @@ public class RealHwTest {
     }
 
     private static void runRealHardwareTest(String port) throws Exception {
-        LinkManager linkManager = new LinkManager(FileLog.LOGGER);
+        LinkManager linkManager = new LinkManager();
         IoUtil.realHardwareConnect(linkManager, port);
         new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
     }

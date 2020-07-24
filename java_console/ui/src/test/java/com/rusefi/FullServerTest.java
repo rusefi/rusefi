@@ -1,12 +1,12 @@
 package com.rusefi;
 
 import com.opensr5.ConfigurationImage;
-import com.opensr5.Logger;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.*;
 import org.junit.Before;
@@ -26,8 +26,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class FullServerTest {
-    private final static Logger logger = Logger.CONSOLE;
-
     @Before
     public void setTestCertificate() throws MalformedURLException {
         ServerTest.commonServerTest();
@@ -46,7 +44,7 @@ public class FullServerTest {
         UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), userId);
         int httpPort = 8103;
         int applicationTimeout = 7 * SECOND;
-        try (Backend backend = new Backend(userDetailsResolver, httpPort, logger, applicationTimeout) {
+        try (Backend backend = new Backend(userDetailsResolver, httpPort, applicationTimeout) {
             @Override
             protected void onRegister(ControllerConnectionState controllerConnectionState) {
                 super.onRegister(controllerConnectionState);
@@ -58,7 +56,7 @@ public class FullServerTest {
                 super.close(applicationConnectionState);
                 applicationClosed.countDown();
             }
-        }; LinkManager clientManager = new LinkManager(logger)) {
+        }; LinkManager clientManager = new LinkManager()) {
             int serverPortForControllers = 7001;
             int serverPortForRemoteUsers = 7003;
 
@@ -70,11 +68,11 @@ public class FullServerTest {
             // create virtual controller to which "rusEFI network connector" connects to
             int controllerPort = 7002;
             ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
-            TestHelper.createVirtualController(controllerPort, controllerImage, logger);
+            TestHelper.createVirtualController(controllerPort, controllerImage);
 
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-            SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers);
+            SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers, TcpIoStream.DisconnectListener.VOID);
 
             assertTrue("controllerRegistered", controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
@@ -83,7 +81,7 @@ public class FullServerTest {
 
             // start authenticator
             int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
-            LocalApplicationProxy.startAndRun(logger, serverPortForRemoteUsers, applicationRequest, authenticatorPort, httpPort);
+            LocalApplicationProxy.startAndRun(serverPortForRemoteUsers, applicationRequest, authenticatorPort, httpPort, TcpIoStream.DisconnectListener.VOID);
 
 
             CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);

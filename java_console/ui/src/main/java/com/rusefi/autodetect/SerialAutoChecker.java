@@ -38,12 +38,12 @@ public class SerialAutoChecker implements Runnable {
 
     @Override
     public void run() {
-        IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort, logger);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort);
         Logger logger = FileLog.LOGGER;
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         try {
-            HelloCommand.send(stream, logger);
-            byte[] response = incomingData.getPacket(logger, "", false);
+            HelloCommand.send(stream);
+            byte[] response = incomingData.getPacket("", false);
             if (!checkResponseCode(response, BinaryProtocolCommands.RESPONSE_OK))
                 return;
             String signature = new String(response, 1, response.length - 1);

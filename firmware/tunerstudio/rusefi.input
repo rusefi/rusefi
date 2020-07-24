@@ -347,7 +347,7 @@ enable2ndByteCanID = false
       rawOilPressure  = scalar,	 U16,    242, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 
 	; we use this to match logs to tunes
-	tuneCrc16= scalar,  U16,    244,  "crc16",           1,         0
+	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -363,10 +363,10 @@ enable2ndByteCanID = false
       time            = { timeNow }
 
 	; These "synthetic" channels provide the Y-axis (load) value for gen purp PWM table's Y axes
-	gppwm1_load = {(gppwm1_loadAxis == 0) ? TPSValue : ((gppwm1_loadAxis == 1) ? MAPValue : ((gppwm1_loadAxis == 2) ? coolant : intake))}
-	gppwm2_load = {(gppwm2_loadAxis == 0) ? TPSValue : ((gppwm2_loadAxis == 1) ? MAPValue : ((gppwm2_loadAxis == 2) ? coolant : intake))}
-	gppwm3_load = {(gppwm3_loadAxis == 0) ? TPSValue : ((gppwm3_loadAxis == 1) ? MAPValue : ((gppwm3_loadAxis == 2) ? coolant : intake))}
-	gppwm4_load = {(gppwm4_loadAxis == 0) ? TPSValue : ((gppwm4_loadAxis == 1) ? MAPValue : ((gppwm4_loadAxis == 2) ? coolant : intake))}
+	gppwm1_load = {(gppwm1_loadAxis == 0) ? TPSValue : ((gppwm1_loadAxis == 1) ? MAPValue : ((gppwm1_loadAxis == 2) ? coolant : ((gppwm1_loadAxis == 3) ? intake : ((gppwm1_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
+	gppwm2_load = {(gppwm2_loadAxis == 0) ? TPSValue : ((gppwm2_loadAxis == 1) ? MAPValue : ((gppwm2_loadAxis == 2) ? coolant : ((gppwm2_loadAxis == 3) ? intake : ((gppwm2_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
+	gppwm3_load = {(gppwm3_loadAxis == 0) ? TPSValue : ((gppwm3_loadAxis == 1) ? MAPValue : ((gppwm3_loadAxis == 2) ? coolant : ((gppwm3_loadAxis == 3) ? intake : ((gppwm3_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
+	gppwm4_load = {(gppwm4_loadAxis == 0) ? TPSValue : ((gppwm4_loadAxis == 1) ? MAPValue : ((gppwm4_loadAxis == 2) ? coolant : ((gppwm4_loadAxis == 3) ? intake : ((gppwm4_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
 
 [PcVariables]
 	tuneCrcPcVariable = continuousChannelValue, tuneCrc16

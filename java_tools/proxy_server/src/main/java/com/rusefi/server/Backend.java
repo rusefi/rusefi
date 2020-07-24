@@ -1,8 +1,7 @@
 package com.rusefi.server;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.Logging;
 import com.rusefi.Listener;
-import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
 import com.rusefi.io.IoStream;
@@ -29,12 +28,16 @@ import java.net.BindException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.SECOND;
 
 /**
  * See NetworkConnectorStartup
+ * @see BackendLauncher
  */
 public class Backend implements Closeable {
+    private static final Logging log = getLogging(Backend.class);
+
     public static final int SERVER_PORT_FOR_CONTROLLERS = 8003;
     private static final String MAX_PACKET_GAP = "MAX_PACKET_GAP";
     private static final String IS_USED = "isUsed";
@@ -61,24 +64,22 @@ public class Backend implements Closeable {
 
     private final int applicationTimeout;
     private final UserDetailsResolver userDetailsResolver;
-    private final Logger logger;
     public final static AtomicLong totalSessions = new AtomicLong();
     public int serverPortForApplications;
     public int serverPortForControllers;
 
-    public Backend(UserDetailsResolver userDetailsResolver, int httpPort, Logger logger) {
-        this(userDetailsResolver, httpPort, logger, Timeouts.READ_IMAGE_TIMEOUT);
+    public Backend(UserDetailsResolver userDetailsResolver, int httpPort) {
+        this(userDetailsResolver, httpPort, 600 * SECOND);
     }
 
-    public Backend(UserDetailsResolver userDetailsResolver, int httpPort, Logger logger, int applicationTimeout) {
+    public Backend(UserDetailsResolver userDetailsResolver, int httpPort, int applicationTimeout) {
         this.applicationTimeout = applicationTimeout;
         this.userDetailsResolver = userDetailsResolver;
-        this.logger = logger;
 
 
         new Thread(() -> {
             try {
-                System.out.println("Starting http backend on " + httpPort);
+                log.info("Starting http backend on " + httpPort);
                 try {
                     new FtBasic(
                             new TkFork(showOnlineControllers,
@@ -101,7 +102,7 @@ public class Backend implements Closeable {
                 } catch (BindException e) {
                     throw new IllegalStateException("While binding " + httpPort, e);
                 }
-                logger.info("Shutting down backend on port " + httpPort);
+                log.info("Shutting down backend on port " + httpPort);
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
@@ -110,7 +111,7 @@ public class Backend implements Closeable {
 
         new Thread(() -> {
             while (true) {
-                logger.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
+                log.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
                 runApplicationConnectionsCleanup();
                 BinaryProtocol.sleep(applicationTimeout);
             }
@@ -143,25 +144,28 @@ public class Backend implements Closeable {
         this.serverPortForApplications = serverPortForApplications;
         // connection from authenticator app which proxies for Tuner Studio
         // authenticator pushed hello packet on connect
-        System.out.println("Starting application connector at " + serverPortForApplications);
-        BinaryProtocolServer.tcpServerSocket(logger, applicationSocket -> () -> {
+        log.info("Starting application connector at " + serverPortForApplications);
+        BinaryProtocolServer.tcpServerSocket(applicationSocket -> () -> {
+            log.info("new application connection!");
             totalSessions.incrementAndGet();
             // connection from authenticator app which proxies for Tuner Studio
             IoStream applicationClientStream = null;
             ApplicationConnectionState applicationConnectionState = null;
             try {
-                applicationClientStream = new TcpIoStream("[app] ", logger, applicationSocket);
+                applicationClientStream = new TcpIoStream("[app] ", applicationSocket);
 
                 // authenticator pushed hello packet on connect
-                String jsonString = HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer(), logger);
-                if (jsonString == null)
+                String jsonString = HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer());
+                if (jsonString == null) {
+                    log.error("ERROR: null HELLO");
                     return;
+                }
                 ApplicationRequest applicationRequest = ApplicationRequest.valueOf(jsonString);
-                logger.info("Application Connected: " + applicationRequest);
+                log.info("Application Connected: " + applicationRequest);
                 String authToken = applicationRequest.getSessionDetails().getAuthToken();
                 UserDetails userDetails = userDetailsResolver.apply(authToken);
                 if (userDetails == null) {
-                    logger.info("Authentication failed for application " + authToken);
+                    log.info("Authentication failed for application " + authToken);
                     return;
                 }
 
@@ -171,7 +175,7 @@ public class Backend implements Closeable {
                     state = acquire(controllerKey);
                 }
                 if (state == null) {
-                    logger.info("No controller for " + controllerKey);
+                    log.info("No controller for " + controllerKey);
                     return;
                 }
                 applicationConnectionState = new ApplicationConnectionState(userDetails, applicationClientStream, state);
@@ -182,7 +186,7 @@ public class Backend implements Closeable {
                 BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream);
 
             } catch (Throwable e) {
-                logger.info("Application Connector: Got error " + e);
+                log.info("Application Connector: Got error " + e);
             } finally {
                 if (applicationClientStream != null)
                     applicationClientStream.close();
@@ -218,15 +222,15 @@ public class Backend implements Closeable {
                 applications.remove(applicationConnectionState);
             }
         }
-        logger.info("Disconnecting application");
+        log.info("Disconnecting application " + applicationConnectionState);
     }
 
     public void runControllerConnector(int serverPortForControllers, Listener<?> serverSocketCreationCallback) {
         this.serverPortForControllers = serverPortForControllers;
-        logger.info("Starting controller connector at " + serverPortForControllers);
-        BinaryProtocolServer.tcpServerSocket(logger, controllerSocket -> () -> {
+        log.info("Starting controller connector at " + serverPortForControllers);
+        BinaryProtocolServer.tcpServerSocket(controllerSocket -> () -> {
             totalSessions.incrementAndGet();
-            ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, logger, getUserDetailsResolver());
+            ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, getUserDetailsResolver());
             try {
                 controllerConnectionState.requestControllerInfo();
 
@@ -301,6 +305,7 @@ public class Backend implements Closeable {
         }
 
         for (ApplicationConnectionState inactiveClient : inactiveApplications) {
+            log.error("Kicking out application " + inactiveClient);
             close(inactiveClient);
         }
     }
