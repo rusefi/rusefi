@@ -8,9 +8,12 @@ public class TwoKindSemaphore {
     private final static int LONG_TERM = 2;
     private final static int SHORT_TERM = 1;
     private final Semaphore semaphore = new Semaphore(LONG_TERM);
+    private UserDetails owner;
 
     public void releaseFromLongTermUsage() {
         semaphore.release(LONG_TERM);
+        // not atomic but that's fine, isUsed is the source of truth
+        owner = null;
     }
 
     public boolean acquireForShortTermUsage() {
@@ -28,16 +31,25 @@ public class TwoKindSemaphore {
 
     /**
      * @return true if acquired successfully, false if not
+     * @param userDetails
      */
-    public boolean acquireForLongTermUsage() {
-        return acquireForLongTermUsage(10);
+    public boolean acquireForLongTermUsage(UserDetails userDetails) {
+        return acquireForLongTermUsage(userDetails, 10);
     }
 
-    public boolean acquireForLongTermUsage(int timeout) {
+    public boolean acquireForLongTermUsage(UserDetails userDetails, int timeout) {
         try {
-            return semaphore.tryAcquire(LONG_TERM, timeout, TimeUnit.SECONDS);
+            boolean isAcquired = semaphore.tryAcquire(LONG_TERM, timeout, TimeUnit.SECONDS);
+            if (isAcquired) {
+                owner = userDetails;
+            }
+            return isAcquired;
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public UserDetails getOwner() {
+        return owner;
     }
 }

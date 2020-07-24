@@ -18,6 +18,8 @@ public class ProxyClient {
     public static final String LIST_APPLICATIONS_PATH = "/list_applications";
     public static final String VERSION_PATH = "/version";
     public static final String BACKEND_VERSION = "0.0001";
+    public static final String IS_USED = "isUsed";
+    public static final String OWNER = "owner";
 
     public static List<PublicSession> getOnlineApplications(int httpPort) throws IOException {
         return getOnlineApplications(getHttpAddress(httpPort) + LIST_CONTROLLERS_PATH);
