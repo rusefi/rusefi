@@ -1,15 +1,17 @@
 #include "buttonshift.h"
+#include "globalaccess.h"
+#include "engine.h"
 
-EXTERN_ENGINE_CONFIGURATION;
+EXTERN_ENGINE;
 
-ButtonShiftController::ButtonShiftController(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-    debounceUp = ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
-    debounceDown = ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
+ButtonShiftController::ButtonShiftController (DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+    debounceUp = new ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
+    debounceDown = new ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
 }
 
 void ButtonShiftController::update() {
-    bool upPinState = debounceUp.readPin();
-    bool downPinState = debounceUp.readPin();
+    bool upPinState = debounceUp->readPin();
+    bool downPinState = debounceUp->readPin();
     gear_e gear = getDesiredGear();
     if (upPinState) {
         switch (gear) {

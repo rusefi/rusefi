@@ -1,12 +1,12 @@
 #include "tcu.h"
-#include "debounce.h"
 #include "globalaccess.h"
+#include "debounce.h"
 
 class ButtonShiftController: public GearControllerBase {
 public:
     void update();
-    ButtonShiftController (DECLARE_CONFIG_PARAMETER_SIGNATURE);
+    ButtonShiftController (DECLARE_ENGINE_PARAMETER_SIGNATURE);
 private:
-    ButtonDebounce debounceUp;
-    ButtonDebounce debounceDown;
+    ButtonDebounce *debounceUp;
+    ButtonDebounce *debounceDown;
 };

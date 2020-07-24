@@ -57,6 +57,7 @@
 #include "tachometer.h"
 #include "gppwm.h"
 #include "date_stamp.h"
+#include "buttonshift.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -578,6 +579,8 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 #if EFI_IDLE_CONTROL
 	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_IDLE_CONTROL */
+
+	ButtonShiftController buttonShiftController(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);

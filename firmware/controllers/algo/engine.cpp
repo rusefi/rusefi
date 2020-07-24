@@ -163,8 +163,6 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif
 
-	buttonShiftController.update();
-
 	slowCallBackWasInvoked = TRUE;
 }
 

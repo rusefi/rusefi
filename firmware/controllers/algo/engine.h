@@ -16,7 +16,6 @@
 #include "accel_enrichment.h"
 #include "trigger_central.h"
 #include "local_version_holder.h"
-#include "buttonshift.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -58,8 +57,6 @@ public:
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 
 	cyclic_buffer<int> triggerErrorDetection;
-
-	ButtonShiftController buttonShiftController(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();

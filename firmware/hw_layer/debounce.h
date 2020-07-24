@@ -1,8 +1,9 @@
 #include "global.h"
+#include "globalaccess.h"
 
 class ButtonDebounce {
 public:
-    ButtonDebounce(int, brain_pin_e, iomode_t);
+    ButtonDebounce(int t, brain_pin_e p, iomode_t m);
     bool readPin();
     bool readEvent();
 private:
