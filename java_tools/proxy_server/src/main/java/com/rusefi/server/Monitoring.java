@@ -45,6 +45,7 @@ public class Monitoring {
         builder.add("backend version", ProxyClient.BACKEND_VERSION);
         builder.add("framework version", rusEFIVersion.CONSOLE_VERSION);
         builder.add("compiled", new Date(rusEFIVersion.classBuildTimeMillis()).toString());
+        builder.add("now", System.currentTimeMillis());
 
         return new RsJson(builder.build());
     }
