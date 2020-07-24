@@ -3,7 +3,7 @@
     <Appenders>
         <RollingFile name="R" fileName="log/proxy.log"
                      filePattern="log/proxy.log.%i.zip">
-            <DetailedLogLayout2/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-1level [%t] %logger{36} - %msg%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="500M"/>
             </Policies>
@@ -12,7 +12,7 @@
         <RollingFile name="E" fileName="log/proxy.err"
                      filePattern="log/proxy.err.%i.zip">
             <ThresholdFilter level="WARN"/>
-            <DetailedLogLayout2/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-1level [%t] %logger{36} - %msg%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="500M"/>
             </Policies>
