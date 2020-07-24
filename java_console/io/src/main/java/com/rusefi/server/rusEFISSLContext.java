@@ -60,8 +60,12 @@ public class rusEFISSLContext {
     }
 
     public static Socket getSSLSocket(String host, int port) throws IOException {
-        if (isJenkins)
-            return new Socket(host, port);
+        if (isJenkins) {
+            Socket socket = new Socket(host, port);
+            // responsiveness matters (getting a byte sent to be received as promptly as possible)
+            socket.setTcpNoDelay(true);
+            return socket;
+        }
         return getSSLSocketFactory(null /*key*/, TLS).createSocket(host, port);
     }
 
