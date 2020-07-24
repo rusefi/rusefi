@@ -6,6 +6,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -40,6 +42,11 @@ public class HttpUtil {
 
     public static HttpResponse executeGet(Logger logger, String url) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
+        HttpParams httpParameters = httpclient.getParams();
+//        HttpConnectionParams.setConnectionTimeout(httpParameters, CONNECTION_TIMEOUT);
+//        HttpConnectionParams.setSoTimeout(httpParameters, WAIT_RESPONSE_TIMEOUT);
+        // without this magic http response is pretty slow
+        HttpConnectionParams.setTcpNoDelay(httpParameters, true);
         logger.info("GET " + url);
         HttpGet httpget = new HttpGet(url);
         return httpclient.execute(httpget);

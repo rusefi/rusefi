@@ -112,26 +112,41 @@ public class RemoteTab {
         JButton connect = new JButton("Connect");
         connect.addActionListener(event -> {
 
-            SessionDetails sessionDetails = new SessionDetails(controllerInfo, AuthTokenPanel.getAuthToken(),
-                    Integer.parseInt(oneTimePasswordControl.getText()));
+            list.removeAll();
+            list.add(new JLabel("Connecting to " + publicSession.getUserDetails().getUserName()));
+            AutoupdateUtil.trueLayout(list);
 
-            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getUserDetails().getUserId());
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    runAuthenticator(publicSession, controllerInfo);
 
-            try {
-                LocalApplicationProxy.startAndRun(Logger.CONSOLE,
-                        LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS,
-                        applicationRequest,
-                        Integer.parseInt(getLocalPort()),
-                        HttpUtil.PROXY_JSON_API_HTTP_PORT);
-            } catch (IOException e) {
-                // todo: proper handling
-                e.printStackTrace();
-            }
+                }
+            }, "Authenticator").start();
+
 
         });
         userPanel.add(connect);
 
         return userPanel;
+    }
+
+    private void runAuthenticator(PublicSession publicSession, ControllerInfo controllerInfo) {
+        SessionDetails sessionDetails = new SessionDetails(controllerInfo, AuthTokenPanel.getAuthToken(),
+                Integer.parseInt(oneTimePasswordControl.getText()));
+
+        ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getUserDetails().getUserId());
+
+        try {
+            LocalApplicationProxy.startAndRun(Logger.CONSOLE,
+                    LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS,
+                    applicationRequest,
+                    Integer.parseInt(getLocalPort()),
+                    HttpUtil.PROXY_JSON_API_HTTP_PORT);
+        } catch (IOException e) {
+            // todo: proper handling
+            e.printStackTrace();
+        }
     }
 
     public JComponent getContent() {

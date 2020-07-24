@@ -2,6 +2,7 @@ package com.rusefi.io;
 
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
+import com.rusefi.config.generated.Fields;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -25,7 +26,7 @@ public interface ByteReader {
             Thread.currentThread().setName("TCP connector loop");
             logger.info(loggingPrefix + "Running TCP connection loop");
 
-            byte inputBuffer[] = new byte[256];
+            byte inputBuffer[] = new byte[Fields.BLOCKING_FACTOR * 2];
             while (true) {
                 try {
                     int result = reader.read(inputBuffer);
