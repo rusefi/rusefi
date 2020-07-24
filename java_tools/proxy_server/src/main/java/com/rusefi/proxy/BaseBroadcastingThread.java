@@ -1,6 +1,6 @@
 package com.rusefi.proxy;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
@@ -13,16 +13,18 @@ import com.rusefi.server.SessionDetails;
 import java.io.IOException;
 import java.net.Socket;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.io.tcp.BinaryProtocolServer.getPacketLength;
 import static com.rusefi.io.tcp.BinaryProtocolServer.readPromisedBytes;
 
 public class BaseBroadcastingThread {
+    private static final Logging log = getLogging(BaseBroadcastingThread.class);
     private static final NamedThreadFactory BASE_BROADCASTING_THREAD = new NamedThreadFactory("BaseBroadcastingThread");
     private final Thread thread;
 
     @SuppressWarnings("InfiniteLoopStatement")
-    public BaseBroadcastingThread(Socket socket, SessionDetails sessionDetails, Logger logger, TcpIoStream.DisconnectListener disconnectListener) throws IOException {
-        TcpIoStream stream = new TcpIoStream("[broadcast] ", logger, socket, disconnectListener);
+    public BaseBroadcastingThread(Socket socket, SessionDetails sessionDetails, TcpIoStream.DisconnectListener disconnectListener) throws IOException {
+        TcpIoStream stream = new TcpIoStream("[broadcast] ", socket, disconnectListener);
         IncomingDataBuffer in = stream.getDataBuffer();
 
         thread = BASE_BROADCASTING_THREAD.newThread(() -> {
@@ -41,14 +43,14 @@ public class BaseBroadcastingThread {
                         // first TS_HELLO_COMMAND is PROXY request, consecutive TS_HELLO_COMMAND would be real deal from user desktop application
                         isFirstHello = false;
                         // respond on hello request with information about session
-                        logger.info("Replying to controller connector@proxy: " + sessionDetails);
-                        new HelloCommand(logger, sessionDetails.toJson()).handle(stream);
+                        log.info("Replying to controller connector@proxy: " + sessionDetails);
+                        new HelloCommand(sessionDetails.toJson()).handle(stream);
                     } else {
                         handleCommand(packet, stream);
                     }
                 }
             } catch (IOException e) {
-                logger.error("exiting thread " + e);
+                log.error("exiting thread " + e);
             }
         });
     }

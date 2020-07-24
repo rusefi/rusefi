@@ -179,7 +179,7 @@ public class LogViewer extends JPanel {
         EngineState.EngineStateListener listener = new EngineState.EngineStateListenerImpl();
 
         ChartRepository.getInstance().clear();
-        EngineState engineState = new EngineState(listener, FileLog.LOGGER);
+        EngineState engineState = new EngineState(listener);
         // this is pretty dirty, better OOP desperately needed
         ConsoleUI.engineSnifferPanel.setOutpinListener(engineState);
         engineState.registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {

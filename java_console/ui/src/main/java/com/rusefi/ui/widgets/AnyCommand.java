@@ -136,9 +136,9 @@ public class AnyCommand {
                 String result = prepareEvalCommand(rawCommand);
                 if (result.equals(rawCommand)) {
                     // result was not translated
-                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Not valid expression");
-                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Please try eval \"2 + 2\"");
-                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "For RPN use rpn_eval \"2 2 +\"");
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Not valid expression");
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Please try eval \"2 + 2\"");
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "For RPN use rpn_eval \"2 2 +\"");
                 }
                 return result;
             } else if (rawCommand.toLowerCase().startsWith("stim_check" + " ")) {
@@ -165,7 +165,7 @@ public class AnyCommand {
     private static void handleStimulationSelfCheck(String rawCommand, LinkManager linkManager) {
         String[] parts = rawCommand.split(" ", 4);
         if (parts.length != 4) {
-            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Invalid command length " + parts);
+            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Invalid command length " + parts);
             return; // let's ignore invalid command
         }
         int rpm = Integer.parseInt(parts[1]);
@@ -174,14 +174,14 @@ public class AnyCommand {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Will test with RPM " + rpm + ", settle time" + settleTime + "s and duration" + durationTime + "s");
+                MessagesCentral.getInstance().postMessage(AnyCommand.class, "Will test with RPM " + rpm + ", settle time" + settleTime + "s and duration" + durationTime + "s");
                 Function<String, Object> callback = new Function<String, Object>() {
                     @Override
                     public Object apply(String status) {
                         if (status == null) {
-                            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, rpm + " worked!");
+                            MessagesCentral.getInstance().postMessage(AnyCommand.class, rpm + " worked!");
                         } else {
-                            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, rpm + " failed " + status);
+                            MessagesCentral.getInstance().postMessage(AnyCommand.class, rpm + " failed " + status);
                         }
                         return null;
                     }
@@ -201,12 +201,12 @@ public class AnyCommand {
     private static void handleDecodeRpn(String rawCommand) {
         String[] parts = rawCommand.split(" ", 2);
         if (parts.length != 2) {
-            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Failed to parse, one argument expected");
+            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Failed to parse, one argument expected");
             return;
         }
         String argument = unquote(parts[1]);
         String humanForm = InfixConverter.getHumanInfixFormOrError(argument);
-        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Human form is \"" + humanForm + "\"");
+        MessagesCentral.getInstance().postMessage(AnyCommand.class, "Human form is \"" + humanForm + "\"");
     }
 
     public static String prepareEvalCommand(String rawCommand) {

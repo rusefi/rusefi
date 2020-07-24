@@ -1,8 +1,10 @@
 package com.rusefi.io;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 
 import java.io.IOException;
@@ -10,8 +12,12 @@ import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public interface ByteReader {
-    static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, Logger logger, TcpIoStream.DisconnectListener disconnectListener) {
+    Logging log = getLogging(ByteReader.class);
+
+    static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, TcpIoStream.DisconnectListener disconnectListener) {
         /**
          * Threading of the whole input/output does not look healthy at all!
          *
@@ -25,7 +31,7 @@ public interface ByteReader {
 
         threadExecutor.execute(() -> {
             Thread.currentThread().setName("TCP connector loop");
-            logger.info(loggingPrefix + "Running TCP connection loop");
+            log.info(loggingPrefix + "Running TCP connection loop");
 
             byte inputBuffer[] = new byte[Fields.BLOCKING_FACTOR * 2];
             while (true) {
@@ -35,7 +41,7 @@ public interface ByteReader {
                         throw new IOException("TcpIoStream: End of input?");
                     listener.onDataArrived(Arrays.copyOf(inputBuffer, result));
                 } catch (IOException e) {
-                    logger.error("TcpIoStream: End of connection " + e);
+                    log.error("TcpIoStream: End of connection " + e);
                     disconnectListener.onDisconnect();
                     return;
                 }
