@@ -110,23 +110,18 @@ public class RemoteTab {
 
         userPanel.add(new URLLabel(SignatureHelper.getUrl(controllerInfo.getSignature())));
 
+        if (publicSession.isUsed()) {
+            userPanel.add(new JLabel(" used by " + publicSession.getOwnerName()));
+        } else {
+            JButton connect = new JButton("Connect");
+            connect.addActionListener(event -> {
 
-        JButton connect = new JButton("Connect");
-        connect.addActionListener(event -> {
+                setStatus("Connecting to " + publicSession.getUserDetails().getUserName());
 
-            setStatus("Connecting to " + publicSession.getUserDetails().getUserName());
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    runAuthenticator(publicSession, controllerInfo);
-
-                }
-            }, "Authenticator").start();
-
-
-        });
-        userPanel.add(connect);
+                new Thread(() -> runAuthenticator(publicSession, controllerInfo), "Authenticator").start();
+            });
+            userPanel.add(connect);
+        }
 
         return userPanel;
     }

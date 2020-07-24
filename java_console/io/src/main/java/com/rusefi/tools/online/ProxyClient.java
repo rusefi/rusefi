@@ -43,7 +43,9 @@ public class ProxyClient {
 
                 ControllerInfo ci = ControllerInfo.valueOf(element);
                 UserDetails userDetails = UserDetails.valueOf(element);
-                userLists.add(new PublicSession(userDetails, ci));
+                boolean isUsed = (Boolean) element.get(IS_USED);
+                String ownerName = (String) element.get(OWNER);
+                userLists.add(new PublicSession(userDetails, ci, isUsed, ownerName));
             }
 
             System.out.println("object=" + array);
