@@ -35,7 +35,7 @@ public class MockRusEfiDevice {
         Socket socket = rusEFISSLContext.getSSLSocket(LOCALHOST, serverPort);
         BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(socket,
                 sessionDetails,
-                logger) {
+                logger, TcpIoStream.DisconnectListener.VOID) {
             @Override
             protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
                 super.handleCommand(packet, stream);

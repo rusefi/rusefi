@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * Connector between rusEFI ECU and rusEFI server
  */
 public class NetworkConnector {
-    public static SessionDetails runNetworkConnector(String authToken, String controllerPort, int serverPortForControllers) throws InterruptedException, IOException {
+    public static SessionDetails runNetworkConnector(String authToken, String controllerPort, int serverPortForControllers, TcpIoStream.DisconnectListener disconnectListener) throws InterruptedException, IOException {
         LinkManager linkManager = new LinkManager(Logger.CONSOLE)
                 .setCompositeLogicEnabled(false)
                 .setNeedPullData(false);
@@ -49,11 +49,11 @@ public class NetworkConnector {
             return null;
         }
 
-        return runNetworkConnector(serverPortForControllers, linkManager, Logger.CONSOLE, authToken);
+        return runNetworkConnector(serverPortForControllers, linkManager, Logger.CONSOLE, authToken, disconnectListener);
     }
 
     @NotNull
-    private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, final Logger logger, String authToken) throws IOException {
+    private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, final Logger logger, String authToken, final TcpIoStream.DisconnectListener disconnectListener) throws IOException {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
         HelloCommand.send(targetEcuSocket, logger);
         String helloResponse = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer(), logger);
@@ -71,7 +71,7 @@ public class NetworkConnector {
 
         BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForControllers),
                 deviceSessionDetails,
-                logger) {
+                logger, disconnectListener) {
             @Override
             protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
                 super.handleCommand(packet, stream);
