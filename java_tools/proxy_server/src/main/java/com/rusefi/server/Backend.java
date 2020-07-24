@@ -68,7 +68,7 @@ public class Backend implements Closeable {
     public int serverPortForControllers;
 
     public Backend(UserDetailsResolver userDetailsResolver, int httpPort, Logger logger) {
-        this(userDetailsResolver, httpPort, logger, Timeouts.READ_IMAGE_TIMEOUT);
+        this(userDetailsResolver, httpPort, logger, 600 * SECOND);
     }
 
     public Backend(UserDetailsResolver userDetailsResolver, int httpPort, Logger logger, int applicationTimeout) {
@@ -305,6 +305,7 @@ public class Backend implements Closeable {
         }
 
         for (ApplicationConnectionState inactiveClient : inactiveApplications) {
+            logger.error("Kicking out application " + inactiveClient);
             close(inactiveClient);
         }
     }

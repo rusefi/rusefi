@@ -26,8 +26,7 @@ public class HttpUtil {
 
     public static String RUSEFI_ONLINE_JSON_API_PREFIX = "https://rusefi.com/online/api.php?method=";
 
-    public static <T> T getJsonResponse(HttpResponse response) throws IOException, ParseException {
-        String responseString = getResponse(response);
+    public static <T> T getJsonResponse(String responseString) throws ParseException {
 
         JSONParser parser = new JSONParser();
         return (T) parser.parse(responseString);
@@ -40,7 +39,7 @@ public class HttpUtil {
         return responseString;
     }
 
-    public static HttpResponse executeGet(Logger logger, String url) throws IOException {
+    public static String executeGet(Logger logger, String url) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
         HttpParams httpParameters = httpclient.getParams();
 //        HttpConnectionParams.setConnectionTimeout(httpParameters, CONNECTION_TIMEOUT);
@@ -49,7 +48,15 @@ public class HttpUtil {
         HttpConnectionParams.setTcpNoDelay(httpParameters, true);
         logger.info("GET " + url);
         HttpGet httpget = new HttpGet(url);
-        return httpclient.execute(httpget);
+
+        // in case of emergency
+        //  -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog -Dorg.apache.commons.logging.simplelog.showdatetime=true -Dorg.apache.commons.logging.simplelog.log.org.apache.http=DEBUG -Dorg.apache.commons.logging.simplelog.log.org.apache.http.wire=ERROR
+        try {
+            HttpResponse httpResponse = httpclient.execute(httpget);
+            return HttpUtil.getResponse(httpResponse);
+        } finally {
+            httpget.releaseConnection();
+        }
     }
 
     public static JSONObject parse(String jsonString) {

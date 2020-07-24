@@ -3,6 +3,7 @@ package com.rusefi.io;
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.tcp.TcpIoStream;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -10,7 +11,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public interface ByteReader {
-    static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, Logger logger) {
+    static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, Logger logger, TcpIoStream.DisconnectListener disconnectListener) {
         /**
          * Threading of the whole input/output does not look healthy at all!
          *
@@ -35,6 +36,7 @@ public interface ByteReader {
                     listener.onDataArrived(Arrays.copyOf(inputBuffer, result));
                 } catch (IOException e) {
                     logger.error("TcpIoStream: End of connection " + e);
+                    disconnectListener.onDisconnect();
                     return;
                 }
             }
