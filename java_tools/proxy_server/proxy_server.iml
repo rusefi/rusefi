@@ -15,5 +15,6 @@
     <orderEntry type="library" name="javax.json" level="project" />
     <orderEntry type="library" name="json-simple" level="project" />
     <orderEntry type="library" scope="TEST" name="junit" level="project" />
+    <orderEntry type="library" name="log4j-api-2.13.3" level="project" />
   </component>
 </module>
