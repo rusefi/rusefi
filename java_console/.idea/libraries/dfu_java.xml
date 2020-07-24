@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="dfu_java">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/dfu/dfu_java.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/dfu/IntelHexParser.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/dfu/usb4java-1.3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
