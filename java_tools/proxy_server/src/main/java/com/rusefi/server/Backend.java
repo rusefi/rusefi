@@ -23,6 +23,7 @@ import org.takes.rs.RsJson;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.BindException;
@@ -34,6 +35,7 @@ import static com.rusefi.Timeouts.SECOND;
 
 /**
  * See NetworkConnectorStartup
+ *
  * @see BackendLauncher
  */
 public class Backend implements Closeable {
@@ -275,18 +277,23 @@ public class Backend implements Closeable {
             // todo: OutputChannel from .ini file based on controller signature
             int rpm = (int) client.getSensorsHolder().getValue(Sensor.RPM);
             double clt = client.getSensorsHolder().getValue(Sensor.CLT);
-            JsonObject controllerObject = Json.createObjectBuilder()
+            UserDetails owner = client.getTwoKindSemaphore().getOwner();
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
                     .add(ProxyClient.IS_USED, client.getTwoKindSemaphore().isUsed())
-                    .add(ProxyClient.OWNER, client.getTwoKindSemaphore().getOwner().getUserName())
                     .add(ControllerStateDetails.RPM, rpm)
                     .add(ControllerStateDetails.CLT, clt)
                     .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
                     .add(ControllerInfo.VEHICLE_NAME, client.getSessionDetails().getControllerInfo().getVehicleName())
                     .add(ControllerInfo.ENGINE_MAKE, client.getSessionDetails().getControllerInfo().getEngineMake())
                     .add(ControllerInfo.ENGINE_CODE, client.getSessionDetails().getControllerInfo().getEngineCode())
-                    .add(MAX_PACKET_GAP, client.getStream().getStreamStats().getMaxPacketGap())
+                    .add(MAX_PACKET_GAP, client.getStream().getStreamStats().getMaxPacketGap());
+            if (owner != null) {
+                objectBuilder = objectBuilder.add(ProxyClient.OWNER, owner.getUserName());
+            }
+
+            JsonObject controllerObject = objectBuilder
                     .build();
             builder.add(controllerObject);
         }
