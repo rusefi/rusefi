@@ -11,5 +11,6 @@
     <orderEntry type="library" name="TunerStudioPluginAPI" level="project" />
     <orderEntry type="module" module-name="autoupdate" />
     <orderEntry type="module" module-name="shared_io" />
+    <orderEntry type="library" name="jsr305-2.0.1" level="project" />
   </component>
 </module>
