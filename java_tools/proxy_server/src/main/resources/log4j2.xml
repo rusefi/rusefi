@@ -21,10 +21,10 @@
         <File name="S1_Logger" fileName="log/proxy.xxx"/>
     </Appenders>
     <Loggers>
-        <AsyncRoot level="DEBUG">
+        <Root level="DEBUG">
             <AppenderRef ref="R"/>
             <AppenderRef ref="E"/>
-        </AsyncRoot>
+        </Root>
         <Logger name="com.rusefi.x" level="DEBUG" additivity="true">
             <AppenderRef ref="S1_Logger"/>
         </Logger>
