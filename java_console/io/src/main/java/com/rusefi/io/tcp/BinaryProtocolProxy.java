@@ -26,15 +26,15 @@ public class BinaryProtocolProxy {
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             try {
                 TcpIoStream clientStream = new TcpIoStream("[[proxy]] ", logger, clientSocket);
-                runProxy(targetEcuSocket, clientStream);
+                runProxy(logger, targetEcuSocket, clientStream);
             } catch (IOException e) {
-                logger.error("BinaryProtocolProxy::run" + e);
+                logger.error("BinaryProtocolProxy::run " + e);
             }
         };
         return BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Logger.CONSOLE, null);
     }
 
-    public static void runProxy(IoStream targetEcu, IoStream clientStream) throws IOException {
+    public static void runProxy(Logger logger, IoStream targetEcu, IoStream clientStream) throws IOException {
         /*
          * Each client socket is running on it's own thread
          */
@@ -45,7 +45,7 @@ public class BinaryProtocolProxy {
                 clientStream.write(TS_PROTOCOL.getBytes());
                 continue;
             }
-            proxyClientRequestToController(clientStream.getDataBuffer(), firstByte, targetEcu);
+            proxyClientRequestToController(logger, clientStream.getDataBuffer(), firstByte, targetEcu);
 
             proxyControllerResponseToClient(targetEcu, clientStream);
         }
@@ -58,7 +58,7 @@ public class BinaryProtocolProxy {
         clientOutputStream.sendPacket(packet);
     }
 
-    private static void proxyClientRequestToController(IncomingDataBuffer in, byte firstByte, IoStream targetOutputStream) throws IOException {
+    private static void proxyClientRequestToController(Logger logger, IncomingDataBuffer in, byte firstByte, IoStream targetOutputStream) throws IOException {
         byte secondByte = in.readByte();
         int length = firstByte * 256 + secondByte;
 
@@ -67,7 +67,7 @@ public class BinaryProtocolProxy {
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet.getPacket()));
         byte command = (byte) dis.read();
 
-        System.out.println("Relaying client command " + BinaryProtocol.findCommand(command));
+        logger.info("Relaying client command " + BinaryProtocol.findCommand(command));
         // sending proxied packet to controller
         targetOutputStream.sendPacket(packet);
     }
