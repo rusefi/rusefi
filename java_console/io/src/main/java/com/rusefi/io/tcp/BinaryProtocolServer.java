@@ -1,5 +1,6 @@
 package com.rusefi.io.tcp;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.Listener;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
 import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
 import static com.rusefi.config.generated.Fields.TS_RESPONSE_BURN_OK;
@@ -33,9 +35,9 @@ import static com.rusefi.config.generated.Fields.TS_RESPONSE_BURN_OK;
  */
 
 public class BinaryProtocolServer implements BinaryProtocolCommands {
+    private static final Logging log = getLogging(BinaryProtocolServer.class);
     private static final int DEFAULT_PROXY_PORT = 2390;
     public static final String TS_OK = "\0";
-    private final Logger logger;
 
     public AtomicInteger unknownCommands = new AtomicInteger();
 
@@ -51,27 +53,22 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         }
     };
 
-
-    public BinaryProtocolServer(Logger logger) {
-        this.logger = logger;
-    }
-
     public void start(LinkManager linkManager) {
         start(linkManager, DEFAULT_PROXY_PORT, null);
     }
 
     public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback) {
-        logger.info("BinaryProtocolServer on " + port);
+        log.info("BinaryProtocolServer on " + port);
 
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             try {
                 runProxy(linkManager, clientSocket);
             } catch (IOException e) {
-                logger.info("proxy connection: " + e);
+                log.info("proxy connection: " + e);
             }
         };
 
-        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, logger, serverSocketCreationCallback);
+        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, serverSocketCreationCallback);
     }
 
     /**
@@ -80,15 +77,14 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
      * @param port                         server port to accept connections
      * @param threadName
      * @param socketRunnableFactory        method to invoke on a new thread for each new client connection
-     * @param logger
      * @param serverSocketCreationCallback this callback is invoked once we open the server socket
      * @return
      */
-    public static ServerHolder tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, final Logger logger, Listener serverSocketCreationCallback) {
-        return tcpServerSocket(logger, socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
+    public static ServerHolder tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback) {
+        return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
     }
 
-    public static ServerHolder tcpServerSocket(Logger logger, Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
+    public static ServerHolder tcpServerSocket(Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
         ServerSocket serverSocket = nonSecureSocketFunction.apply(port);
 
         ServerHolder holder = new ServerHolder() {
@@ -108,10 +104,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 try {
                     clientSocket = serverSocket.accept();
                 } catch (IOException e) {
-                    logger.info("Client socket closed right away" + e);
+                    log.info("Client socket closed right away" + e);
                     continue;
                 }
-                logger.info("Binary protocol proxy port connection");
+                log.info("Binary protocol proxy port connection");
                 new Thread(clientSocketRunnableFactory.apply(clientSocket), "proxy connection").start();
             }
         };
@@ -121,7 +117,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     @SuppressWarnings("InfiniteLoopStatement")
     private void runProxy(LinkManager linkManager, Socket clientSocket) throws IOException {
-        TcpIoStream stream = new TcpIoStream("[proxy] ", logger, clientSocket);
+        TcpIoStream stream = new TcpIoStream("[proxy] ", clientSocket);
 
         IncomingDataBuffer in = stream.getDataBuffer();
 
@@ -137,7 +133,8 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 continue;
             }
 
-            System.out.println("Got [" + length + "] length promise");
+            if (log.debugEnabled())
+                log.debug("Got [" + length + "] length promise");
 
             Packet packet = readPromisedBytes(in, length);
             byte[] payload = packet.getPacket();
@@ -147,19 +144,18 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
             byte command = payload[0];
 
-            System.out.println("Got command " + BinaryProtocol.findCommand(command));
+            log.info("Got command " + BinaryProtocol.findCommand(command));
 
             if (command == Fields.TS_HELLO_COMMAND) {
-                new HelloCommand(logger, Fields.TS_SIGNATURE).handle(stream);
+                new HelloCommand(Fields.TS_SIGNATURE).handle(stream);
             } else if (command == COMMAND_PROTOCOL) {
-//                System.out.println("Ignoring crc F command");
-                stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes(), logger);
+                stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes());
             } else if (command == Fields.TS_GET_FIRMWARE_VERSION) {
-                stream.sendPacket((TS_OK + "rusEFI proxy").getBytes(), logger);
+                stream.sendPacket((TS_OK + "rusEFI proxy").getBytes());
             } else if (command == COMMAND_CRC_CHECK_COMMAND) {
                 handleCrc(linkManager, stream);
             } else if (command == COMMAND_PAGE) {
-                stream.sendPacket(TS_OK.getBytes(), logger);
+                stream.sendPacket(TS_OK.getBytes());
             } else if (command == COMMAND_READ) {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 handleRead(linkManager, dis, stream);
@@ -167,16 +163,16 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 handleWrite(linkManager, payload, dis, stream);
             } else if (command == Fields.TS_BURN_COMMAND) {
-                stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK}, logger);
+                stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK});
             } else if (command == Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
                 System.err.println("NOT IMPLEMENTED TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY relay");
                 // todo: relay command
-                stream.sendPacket(TS_OK.getBytes(), logger);
+                stream.sendPacket(TS_OK.getBytes());
             } else if (command == Fields.TS_OUTPUT_COMMAND) {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 int offset = swap16(dis.readShort());
                 int count = swap16(dis.readShort());
-                logger.info("TS_OUTPUT_COMMAND offset=" + offset + "/count=" + count);
+                log.info("TS_OUTPUT_COMMAND offset=" + offset + "/count=" + count);
 
                 byte[] response = new byte[1 + count];
                 response[0] = (byte) TS_OK.charAt(0);
@@ -184,15 +180,15 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 byte[] currentOutputs = binaryProtocolState.getCurrentOutputs();
                 if (currentOutputs != null)
                     System.arraycopy(currentOutputs, 1 + offset, response, 1, count);
-                stream.sendPacket(response, logger);
+                stream.sendPacket(response);
             } else if (command == Fields.TS_GET_TEXT) {
                 // todo: relay command
                 System.err.println("NOT IMPLEMENTED TS_GET_TEXT relay");
-                stream.sendPacket(TS_OK.getBytes(), logger);
+                stream.sendPacket(TS_OK.getBytes());
             } else {
                 unknownCommands.incrementAndGet();
                 new IllegalStateException().printStackTrace();
-                logger.info("Error: unexpected " + BinaryProtocol.findCommand(command));
+                log.info("Error: unexpected " + BinaryProtocol.findCommand(command));
             }
         }
     }
@@ -241,7 +237,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     public static void handleProtocolCommand(Socket clientSocket) throws IOException {
-        System.out.println("Got plain F command");
+        log.info("Got plain F command");
         OutputStream outputStream = clientSocket.getOutputStream();
         outputStream.write(TS_PROTOCOL.getBytes());
         outputStream.flush();
@@ -251,10 +247,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         dis.readShort(); // page
         int offset = swap16(dis.readShort());
         int count = swap16(dis.readShort());
-        logger.info("TS_CHUNK_WRITE_COMMAND: offset=" + offset + " count=" + count);
+        log.info("TS_CHUNK_WRITE_COMMAND: offset=" + offset + " count=" + count);
         BinaryProtocolState bp = linkManager.getBinaryProtocolState();
         bp.setRange(packet, 7, offset, count);
-        stream.sendPacket(TS_OK.getBytes(), logger);
+        stream.sendPacket(TS_OK.getBytes());
     }
 
     private void handleRead(LinkManager linkManager, DataInputStream dis, TcpIoStream stream) throws IOException {
@@ -262,9 +258,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         int offset = swap16(dis.readShort());
         int count = swap16(dis.readShort());
         if (count <= 0) {
-            logger.info("Error: negative read request " + offset + "/" + count);
+            log.info("Error: negative read request " + offset + "/" + count);
         } else {
-            System.out.println("read " + page + "/" + offset + "/" + count);
+            if (log.debugEnabled())
+                log.debug("read " + page + "/" + offset + "/" + count);
             BinaryProtocolState bp = linkManager.getBinaryProtocolState();
             byte[] response = new byte[1 + count];
             response[0] = (byte) TS_OK.charAt(0);
@@ -272,19 +269,19 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             ConfigurationImage configurationImage = bp.getControllerConfiguration();
             Objects.requireNonNull(configurationImage, "configurationImage");
             System.arraycopy(configurationImage.getContent(), offset, response, 1, count);
-            stream.sendPacket(response, logger);
+            stream.sendPacket(response);
         }
     }
 
     private void handleCrc(LinkManager linkManager, TcpIoStream stream) throws IOException {
-        System.out.println("CRC check");
+        log.info("CRC check");
         BinaryProtocolState bp = linkManager.getBinaryProtocolState();
         byte[] content = bp.getControllerConfiguration().getContent();
         int result = IoHelper.getCrc32(content);
         ByteArrayOutputStream response = new ByteArrayOutputStream();
         response.write(TS_OK.charAt(0));
         new DataOutputStream(response).writeInt(result);
-        stream.sendPacket(response.toByteArray(), logger);
+        stream.sendPacket(response.toByteArray());
     }
 
     public static class Packet {

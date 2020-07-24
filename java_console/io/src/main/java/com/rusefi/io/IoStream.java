@@ -1,5 +1,6 @@
 package com.rusefi.io;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.opensr5.io.WriteStream;
@@ -13,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.EOFException;
 import java.io.IOException;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * Physical bi-directional controller communication level
  * <p>
@@ -21,6 +24,7 @@ import java.io.IOException;
  * 5/11/2015.
  */
 public interface IoStream extends WriteStream {
+    Logging log = getLogging(IoStream.class);
 
     static String printHexBinary(byte[] data) {
         char[] hexCode = "0123456789ABCDEF".toCharArray();
@@ -47,7 +51,7 @@ public interface IoStream extends WriteStream {
         flush();
     }
 
-    default void sendPacket(byte[] plainPacket, Logger logger) throws IOException {
+    default void sendPacket(byte[] plainPacket) throws IOException {
         byte[] packet;
         if (BinaryProtocol.PLAIN_PROTOCOL) {
             packet = plainPacket;
@@ -55,7 +59,7 @@ public interface IoStream extends WriteStream {
             packet = IoHelper.makeCrc32Packet(plainPacket);
         }
         // todo: verbose mode printHexBinary(plainPacket))
-        logger.info(getLoggingPrefix() + "Sending packet " + BinaryProtocol.findCommand(plainPacket[0]) + " length=" + plainPacket.length);
+        log.debug(getLoggingPrefix() + "Sending packet " + BinaryProtocol.findCommand(plainPacket[0]) + " length=" + plainPacket.length);
         write(packet);
         flush();
     }

@@ -1,5 +1,6 @@
 package com.rusefi.tools.online;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,7 +16,11 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class HttpUtil {
+    private static final Logging log = getLogging(Logging.class);
+
     // todo: migrate proxy http json API server to TLS
     public static final String RUSEFI_PROXY_JSON_PROTOCOL = "http://";
     public static final int PROXY_JSON_API_HTTP_PORT = 8001;
@@ -35,18 +40,18 @@ public class HttpUtil {
     public static String getResponse(HttpResponse response) throws IOException {
         HttpEntity entity = response.getEntity();
         String responseString = EntityUtils.toString(entity, "UTF-8");
-        Logger.CONSOLE.info("responseString=" + responseString);
+        log.info("responseString=" + responseString);
         return responseString;
     }
 
-    public static String executeGet(Logger logger, String url) throws IOException {
+    public static String executeGet(String url) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
         HttpParams httpParameters = httpclient.getParams();
 //        HttpConnectionParams.setConnectionTimeout(httpParameters, CONNECTION_TIMEOUT);
 //        HttpConnectionParams.setSoTimeout(httpParameters, WAIT_RESPONSE_TIMEOUT);
         // without this magic http response is pretty slow
         HttpConnectionParams.setTcpNoDelay(httpParameters, true);
-        logger.info("GET " + url);
+        log.info("GET " + url);
         HttpGet httpget = new HttpGet(url);
 
         // in case of emergency

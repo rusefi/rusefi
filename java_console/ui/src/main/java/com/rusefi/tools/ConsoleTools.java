@@ -147,9 +147,9 @@ public class ConsoleTools {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
-        stream.sendPacket(commandBytes, FileLog.LOGGER);
+        stream.sendPacket(commandBytes);
     }
 
 
@@ -208,11 +208,11 @@ public class ConsoleTools {
             System.err.println(RUS_EFI_NOT_DETECTED);
             return;
         }
-        LinkManager linkManager = new LinkManager(FileLog.LOGGER);
+        LinkManager linkManager = new LinkManager();
         linkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
-                new BinaryProtocolServer(FileLog.LOGGER).start(linkManager);
+                new BinaryProtocolServer().start(linkManager);
             }
 
             @Override
@@ -318,19 +318,19 @@ public class ConsoleTools {
             System.out.println(RUS_EFI_NOT_DETECTED);
             return;
         }
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
         Logger logger = FileLog.LOGGER;
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes("hello");
-        stream.sendPacket(commandBytes, logger);
+        stream.sendPacket(commandBytes);
         // skipping response
-        incomingData.getPacket(logger, "", true);
+        incomingData.getPacket("", true);
 
         sleep(300);
-        stream.sendPacket(new byte[]{Fields.TS_GET_TEXT}, logger);
+        stream.sendPacket(new byte[]{Fields.TS_GET_TEXT});
         sleep(300);
 
-        byte[] response = incomingData.getPacket(logger, "", true);
+        byte[] response = incomingData.getPacket("", true);
         if (response == null) {
             System.out.println("No response");
             return;

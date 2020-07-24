@@ -1,9 +1,7 @@
 package com.rusefi.tools.online;
 
-import com.opensr5.Logger;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.UserDetails;
-import org.apache.http.HttpResponse;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -32,7 +30,7 @@ public class ProxyClient {
 
     @NotNull
     public static List<PublicSession> getOnlineApplications(String url) throws IOException {
-        String responseString = HttpUtil.executeGet(Logger.CONSOLE, url);
+        String responseString = HttpUtil.executeGet(url);
 
         List<PublicSession> userLists = new ArrayList<>();
         try {

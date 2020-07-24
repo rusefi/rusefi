@@ -7,7 +7,6 @@ import com.hoho.android.usbserial.driver.ProbeTable;
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
-import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.dfu.DfuLogic;
@@ -32,9 +31,9 @@ public class AndroidSerial extends AbstractIoStream {
         return prober.findAllDrivers(usbManager);
     }
 
-    public AndroidSerial(UsbSerialPort usbSerialPort, Logger logger) {
+    public AndroidSerial(UsbSerialPort usbSerialPort) {
         this.usbSerialPort = usbSerialPort;
-        dataBuffer = IncomingDataBuffer.createDataBuffer("", this, logger);
+        dataBuffer = IncomingDataBuffer.createDataBuffer("", this);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class AndroidSerial extends AbstractIoStream {
     @Override
     public void setInputListener(DataListener listener) {
         ByteReader reader = buffer -> usbSerialPort.read(buffer, 5000);
-        ByteReader.runReaderLoop("", listener, reader, Logger.CONSOLE, TcpIoStream.DisconnectListener.VOID);
+        ByteReader.runReaderLoop("", listener, reader, TcpIoStream.DisconnectListener.VOID);
     }
 
     @Override

@@ -1,10 +1,8 @@
 package com.rusefi.ui.etb;
 
-import com.rusefi.FileLog;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
@@ -82,7 +80,7 @@ public class EtbReturnToNeutral {
 
         uiContext.getCommandQueue().write(ZERO_DUTY_CYCLE_COMMAND);
 //        CommandQueue.getInstance().write(DirectDrivePanel.CANCEL_DIRECT_DRIVE_COMMAND);
-        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), "Cycles = " + CYCLES_COUNT + ", errors = " + errorCount);
+        MessagesCentral.getInstance().postMessage(getClass(), "Cycles = " + CYCLES_COUNT + ", errors = " + errorCount);
     }
 
     /**
@@ -90,10 +88,10 @@ public class EtbReturnToNeutral {
      */
     private boolean assertPosition(String msg, float expectedPosition) {
         double tps = SensorCentral.getInstance().getValue(Sensor.TPS);
-        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), msg + " TPS=" + tps);
+        MessagesCentral.getInstance().postMessage(getClass(), msg + " TPS=" + tps);
         boolean isError = Math.abs(tps - expectedPosition) > ACCEPTABLE_ERROR;
         if (isError)
-            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, getClass(), msg + " NOT GREAT " + tps + " while expected " + expectedPosition);
+            MessagesCentral.getInstance().postMessage(getClass(), msg + " NOT GREAT " + tps + " while expected " + expectedPosition);
         return isError;
     }
 

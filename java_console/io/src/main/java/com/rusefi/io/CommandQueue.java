@@ -1,6 +1,6 @@
 package com.rusefi.io;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import org.jetbrains.annotations.NotNull;
@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * This singleton keeps re-sending commands till a proper confirmation is received
@@ -18,6 +20,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class CommandQueue {
+    private static final Logging log = getLogging(LinkManager.class);
     public static final String CONFIRMATION_PREFIX = "confirmation_";
     public static final int DEFAULT_TIMEOUT = 500;
     private static final int COMMAND_CONFIRMATION_TIMEOUT = 1000;
@@ -36,7 +39,6 @@ public class CommandQueue {
     private final List<CommandQueueListener> commandListeners = new ArrayList<>();
 
     private final Runnable runnable;
-    private final Logger logger;
 
     private static boolean isSlowCommand(String cmd) {
         String lc = cmd.toLowerCase();
@@ -98,27 +100,26 @@ public class CommandQueue {
         }
 
         if (counter != 1)
-            MessagesCentral.getInstance().postMessage(logger, CommandQueue.class, "Took " + counter + " attempts");
+            MessagesCentral.getInstance().postMessage(CommandQueue.class, "Took " + counter + " attempts");
     }
 
-    public CommandQueue(LinkManager linkManager, Logger logger) {
+    public CommandQueue(LinkManager linkManager) {
         this.linkManager = linkManager;
         runnable = new Runnable() {
             @SuppressWarnings("InfiniteLoopStatement")
             @Override
             public void run() {
-                MessagesCentral.getInstance().postMessage(logger, COMMAND_QUEUE_CLASS, "SerialIO started");
+                MessagesCentral.getInstance().postMessage(COMMAND_QUEUE_CLASS, "SerialIO started");
                 while (true) {
                     try {
                         sendPendingCommand();
                     } catch (Throwable e) {
-                        logger.error("CommandQueue error" + e);
+                        log.error("CommandQueue error" + e);
                         System.exit(-2);
                     }
                 }
             }
         };
-        this.logger = logger;
         Thread thread = new Thread(runnable, "Commands Queue");
         thread.setDaemon(true);
         thread.start();
@@ -136,10 +137,10 @@ public class CommandQueue {
         MessagesCentral mc = MessagesCentral.getInstance();
         String confirmation = LinkManager.unpackConfirmation(message);
         if (confirmation == null)
-            mc.postMessage(logger, CommandQueue.class, "Broken confirmation length: " + message);
+            mc.postMessage(CommandQueue.class, "Broken confirmation length: " + message);
         pendingConfirmations.add(confirmation);
         if (LinkManager.LOG_LEVEL.isDebugEnabled())
-            mc.postMessage(logger, CommandQueue.class, "got valid conf! " + confirmation + ", still pending: " + pendingCommands.size());
+            mc.postMessage(CommandQueue.class, "got valid conf! " + confirmation + ", still pending: " + pendingCommands.size());
 
 //        FileLog.MAIN.logLine("templog got valid conf " + confirmation + " " + System.currentTimeMillis() + " " + new Date());
 

@@ -1,6 +1,5 @@
 package com.rusefi.server;
 
-import com.opensr5.Logger;
 import com.rusefi.LocalApplicationProxy;
 import com.rusefi.tools.online.HttpUtil;
 
@@ -15,7 +14,7 @@ public class BackendLauncher {
 
         UserDetailsResolver userDetailsFunction = new JsonUserDetailsResolver();
 
-        Backend backend = new Backend(userDetailsFunction, HttpUtil.PROXY_JSON_API_HTTP_PORT, Logger.CONSOLE);
+        Backend backend = new Backend(userDetailsFunction, HttpUtil.PROXY_JSON_API_HTTP_PORT);
         backend.runApplicationConnector(LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS, parameter -> {
         });
         backend.runControllerConnector(Backend.SERVER_PORT_FOR_CONTROLLERS, parameter -> {

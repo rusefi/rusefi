@@ -34,7 +34,6 @@ import android.widget.TextView;
 
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
-import com.opensr5.Logger;
 import com.rusefi.Listener;
 import com.rusefi.dfu.DfuConnection;
 import com.rusefi.dfu.DfuImage;
@@ -233,9 +232,9 @@ public class rusEFI extends Activity {
             port.open(connection);
             port.setParameters(115200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
 
-            AndroidSerial serial = new AndroidSerial(port, Logger.CONSOLE);
+            AndroidSerial serial = new AndroidSerial(port);
             mResultView.append("Switching to DFU\n");
-            DfuHelper.sendDfuRebootCommand(serial, new StringBuilder(), Logger.CONSOLE);
+            DfuHelper.sendDfuRebootCommand(serial, new StringBuilder());
 
         } catch (IOException e) {
             throw new IllegalStateException(e);
