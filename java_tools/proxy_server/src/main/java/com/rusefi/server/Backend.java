@@ -183,7 +183,7 @@ public class Backend implements Closeable {
                     applications.add(applicationConnectionState);
                 }
 
-                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream);
+                BinaryProtocolProxy.runProxy(logger, state.getStream(), applicationClientStream);
 
             } catch (Throwable e) {
                 logger.info("Application Connector: Got error " + e);
