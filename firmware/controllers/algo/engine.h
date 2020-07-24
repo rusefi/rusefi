@@ -59,7 +59,7 @@ public:
 
 	cyclic_buffer<int> triggerErrorDetection;
 
-	ButtonShiftController buttonShiftController;
+	ButtonShiftController buttonShiftController(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();

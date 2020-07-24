@@ -1,5 +1,12 @@
 #include "buttonshift.h"
 
+EXTERN_ENGINE_CONFIGURATION;
+
+ButtonShiftController::ButtonShiftController(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+    debounceUp = ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
+    debounceDown = ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
+}
+
 void ButtonShiftController::update() {
     bool upPinState = debounceUp.readPin();
     bool downPinState = debounceUp.readPin();

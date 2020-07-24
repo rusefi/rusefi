@@ -2,12 +2,11 @@
 #include "debounce.h"
 #include "globalaccess.h"
 
-EXTERN_ENGINE_CONFIGURATION;
-
 class ButtonShiftController: public GearControllerBase {
 public:
     void update();
+    ButtonShiftController (DECLARE_CONFIG_PARAMETER_SIGNATURE);
 private:
-    ButtonDebounce debounceUp = ButtonDebounce(10, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
-    ButtonDebounce debounceDown = ButtonDebounce(10, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
+    ButtonDebounce debounceUp;
+    ButtonDebounce debounceDown;
 };
