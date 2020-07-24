@@ -56,7 +56,7 @@
             <src path="inifile/src/test/java"/>
             <src path="shared_ui/src"/>
             <src path="shared_io/src/main/java"/>
-            <src path="shared_io/src/test/java"/>
+<!--            <src path="shared_io/src/test/java"/>-->
             <src path="logging-api/src/main/java"/>
             <src path="ui/src/main/java"/>
             <src path="ui/src/test/java"/>
