@@ -31,7 +31,7 @@ public class Launcher extends rusEFIVersion {
      */
     public static void main(final String[] args) throws Exception {
         log.info("rusEFI UI console " + CONSOLE_VERSION);
-        log.info("Compiled " + new Date(ConsoleTools.classBuildTimeMillis()));
+        log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis()));
         log.info("\n\n");
         PersistentConfiguration.registerShutdownHook();
 

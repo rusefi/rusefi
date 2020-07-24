@@ -96,15 +96,14 @@ public class Backend implements Closeable {
                                     new Monitoring(this).showStatistics,
                                     new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
                                     new FkRegex("/", new RsHtml("<html><body>\n" +
-                                            "<a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
-                                            "<br/>\n" +
-                                            "<a href='" + Monitoring.STATUS + "'>Status</a>\n" +
-                                            "<br/>\n" +
-                                            "<a href='" + ProxyClient.VERSION_PATH + "'>Version</a>\n" +
-                                            "<a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
-                                            "<a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
-                                            "<br/>\n" +
-                                            "<br/>\n" +
+                                            "<br/><a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
+                                            "<br/><br/><br/>\n" +
+                                            "<img src='https://rusefi.com/style/rusefi_online_color.png'/>" +
+                                            "<br/><br/><br/>\n" +
+                                            "<br/><br/><br/><a href='" + Monitoring.STATUS + "'>Status</a>\n" +
+                                            "<br/><br/><br/><a href='" + ProxyClient.VERSION_PATH + "'>Version</a>\n" +
+                                            "<br/><br/><br/><a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
+                                            "<br/><br/><br/><a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
                                             "</body></html>\n"))
                             ), httpPort
                     ).start(() -> isClosed);

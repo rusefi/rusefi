@@ -292,26 +292,6 @@ public class ConsoleTools {
         Online.upload(new File(Online.outputXmlFileName), authToken);
     }
 
-    public static long classBuildTimeMillis() throws URISyntaxException, IllegalStateException, IllegalArgumentException {
-        Class<?> clazz = ConsoleTools.class;
-        URL resource = clazz.getResource(clazz.getSimpleName() + ".class");
-        if (resource == null) {
-            throw new IllegalStateException("Failed to find class file for class: " +
-                    clazz.getName());
-        }
-
-        if (resource.getProtocol().equals("file")) {
-            return new File(resource.toURI()).lastModified();
-        } else if (resource.getProtocol().equals("jar")) {
-            String path = resource.getPath();
-            return new File(path.substring(5, path.indexOf("!"))).lastModified();
-        } else {
-            throw new IllegalArgumentException("Unhandled url protocol: " +
-                    resource.getProtocol() + " for class: " +
-                    clazz.getName() + " resource: " + resource.toString());
-        }
-    }
-
     static void detect(String[] strings) throws IOException, InterruptedException {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null) {
