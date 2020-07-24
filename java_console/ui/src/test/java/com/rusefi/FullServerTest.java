@@ -7,6 +7,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.*;
 import org.junit.Before;
@@ -74,7 +75,7 @@ public class FullServerTest {
 
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-            SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers);
+            SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers, TcpIoStream.DisconnectListener.VOID);
 
             assertTrue("controllerRegistered", controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 

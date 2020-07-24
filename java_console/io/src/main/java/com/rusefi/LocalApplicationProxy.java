@@ -10,7 +10,6 @@ import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
-import org.apache.http.HttpResponse;
 
 import java.io.IOException;
 
@@ -29,14 +28,15 @@ public class LocalApplicationProxy {
      * @param applicationRequest       remote session we want to connect to
      * @param localApplicationPort        local port we would bind for TunerStudio to connect to
      * @param jsonHttpPort
+     * @param disconnectListener
      */
-    public static ServerHolder startAndRun(Logger logger, int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int localApplicationPort, int jsonHttpPort) throws IOException {
+    public static ServerHolder startAndRun(Logger logger, int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int localApplicationPort, int jsonHttpPort, TcpIoStream.DisconnectListener disconnectListener) throws IOException {
         String version = HttpUtil.executeGet(logger,ProxyClient.getHttpAddress(jsonHttpPort) + ProxyClient.VERSION_PATH);
         logger.info("Server says version=" + version);
         if (!version.contains(ProxyClient.BACKEND_VERSION))
             throw new IOException("Unexpected backend version " + version + " while we want " + ProxyClient.BACKEND_VERSION);
 
-        IoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", logger, rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForRemoteUsers));
+        IoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", logger, rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForRemoteUsers), disconnectListener);
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(logger, applicationRequest);
         logger.info("Pushing " + applicationRequest);
         localApplicationProxy.run(authenticatorToProxyStream);

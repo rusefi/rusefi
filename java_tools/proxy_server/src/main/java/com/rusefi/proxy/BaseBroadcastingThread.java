@@ -21,8 +21,8 @@ public class BaseBroadcastingThread {
     private final Thread thread;
 
     @SuppressWarnings("InfiniteLoopStatement")
-    public BaseBroadcastingThread(Socket socket, SessionDetails sessionDetails, Logger logger) throws IOException {
-        TcpIoStream stream = new TcpIoStream("[broadcast] ", logger, socket);
+    public BaseBroadcastingThread(Socket socket, SessionDetails sessionDetails, Logger logger, TcpIoStream.DisconnectListener disconnectListener) throws IOException {
+        TcpIoStream stream = new TcpIoStream("[broadcast] ", logger, socket, disconnectListener);
         IncomingDataBuffer in = stream.getDataBuffer();
 
         thread = BASE_BROADCASTING_THREAD.newThread(() -> {

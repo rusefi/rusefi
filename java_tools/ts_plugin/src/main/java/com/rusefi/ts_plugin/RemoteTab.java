@@ -112,9 +112,7 @@ public class RemoteTab {
         JButton connect = new JButton("Connect");
         connect.addActionListener(event -> {
 
-            list.removeAll();
-            list.add(new JLabel("Connecting to " + publicSession.getUserDetails().getUserName()));
-            AutoupdateUtil.trueLayout(list);
+            setStatus("Connecting to " + publicSession.getUserDetails().getUserName());
 
             new Thread(new Runnable() {
                 @Override
@@ -131,6 +129,12 @@ public class RemoteTab {
         return userPanel;
     }
 
+    private void setStatus(String text) {
+        list.removeAll();
+        list.add(new JLabel(text));
+        AutoupdateUtil.trueLayout(list);
+    }
+
     private void runAuthenticator(PublicSession publicSession, ControllerInfo controllerInfo) {
         SessionDetails sessionDetails = new SessionDetails(controllerInfo, AuthTokenPanel.getAuthToken(),
                 Integer.parseInt(oneTimePasswordControl.getText()));
@@ -142,10 +146,9 @@ public class RemoteTab {
                     LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS,
                     applicationRequest,
                     Integer.parseInt(getLocalPort()),
-                    HttpUtil.PROXY_JSON_API_HTTP_PORT);
+                    HttpUtil.PROXY_JSON_API_HTTP_PORT, () -> SwingUtilities.invokeLater(() -> setStatus("Disconnected")));
         } catch (IOException e) {
-            // todo: proper handling
-            e.printStackTrace();
+            setStatus("IO error: " + e);
         }
     }
 
