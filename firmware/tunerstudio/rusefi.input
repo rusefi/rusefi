@@ -347,7 +347,7 @@ enable2ndByteCanID = false
       rawOilPressure  = scalar,	 U16,    242, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 
 	; we use this to match logs to tunes
-	tuneCrc16= scalar,  U16,    244,  "crc16",           1,         0
+	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
 
 ;
 ; see TunerStudioOutputChannels struct
