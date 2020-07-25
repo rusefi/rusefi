@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.tcp.TcpIoStream;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ public interface ByteReader {
 
     Logging log = getLogging(ByteReader.class);
 
-    static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, TcpIoStream.DisconnectListener disconnectListener, TcpIoStream tcpIoStream) {
+    static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, TcpIoStream.DisconnectListener disconnectListener, AbstractIoStream ioStream) {
         /**
          * Threading of the whole input/output does not look healthy at all!
          *
@@ -31,7 +32,7 @@ public interface ByteReader {
             log.info(loggingPrefix + "Running TCP connection loop");
 
             byte inputBuffer[] = new byte[Fields.BLOCKING_FACTOR * 2];
-            while (!tcpIoStream.isClosed()) {
+            while (!ioStream.isClosed()) {
                 try {
                     int result = reader.read(inputBuffer);
                     if (result == -1)

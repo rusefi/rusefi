@@ -49,7 +49,7 @@ public class AndroidSerial extends AbstractIoStream {
     @Override
     public void setInputListener(DataListener listener) {
         ByteReader reader = buffer -> usbSerialPort.read(buffer, 5000);
-        ByteReader.runReaderLoop("", listener, reader, TcpIoStream.DisconnectListener.VOID);
+        ByteReader.runReaderLoop("", listener, reader, TcpIoStream.DisconnectListener.VOID, this);
     }
 
     @Override
