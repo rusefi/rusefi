@@ -24,6 +24,7 @@
 #include "global.h"
 #include "airmass.h"
 #include "maf_airmass.h"
+#include "speed_density_airmass.h"
 #include "fuel_math.h"
 #include "interpolation.h"
 #include "engine_configuration.h"
@@ -168,17 +169,14 @@ float getInjectionDurationForAirmass(float airMass, float afr DECLARE_ENGINE_PAR
 	return airMass / (afr * gPerSec);
 }
 
+static SpeedDensityAirmass sdAirmass(veMap);
 static MafAirmass mafAirmass(veMap);
 
-AirmassResult getAirmass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+AirmassModelBase* getAirmassModel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	switch (CONFIG(fuelAlgorithm)) {
-	case LM_SPEED_DENSITY:
-		return getSpeedDensityAirmass(PASS_ENGINE_PARAMETER_SIGNATURE);
-	case LM_REAL_MAF: {
-		return mafAirmass.getAirmass(rpm);
-	} default:
-		firmwareError(CUSTOM_ERR_ASSERT, "Fuel mode %d is not airmass mode", CONFIG(fuelAlgorithm));
-		return {};
+		case LM_SPEED_DENSITY: return &sdAirmass;
+		case LM_REAL_MAF: return &mafAirmass;
+		default: return nullptr;
 	}
 }
 
@@ -197,12 +195,13 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	if ((CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) || (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)) {
 		// airmass modes - get airmass first, then convert to fuel
-		auto airmass = getAirmass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		auto model = getAirmassModel(PASS_ENGINE_PARAMETER_SIGNATURE);
+		efiAssert(CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
+
+		auto airmass = model->getAirmass(rpm);
 
 		// The airmass mode will tell us how to look up AFR - use the provided Y axis value
 		float targetAfr = afrMap.getValue(rpm, airmass.EngineLoadPercent);
-
-		// TODO: surface airmass.EngineLoadPercent to tunerstudio for proper display
 
 		// Plop some state for others to read
 		ENGINE(engineState.targetAFR) = targetAfr;
@@ -351,6 +350,7 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * is to prepare the fuel map data structure for 3d interpolation
  */
 void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	INJECT_ENGINE_REFERENCE(&sdAirmass);
 	INJECT_ENGINE_REFERENCE(&mafAirmass);
 
 	fuelMap.init(config->fuelTable, config->fuelLoadBins, config->fuelRpmBins);
