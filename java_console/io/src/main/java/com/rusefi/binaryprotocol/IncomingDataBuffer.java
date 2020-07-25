@@ -172,14 +172,14 @@ public class IncomingDataBuffer {
     public byte readByte(int timeoutMs) throws IOException {
         boolean isTimeout = waitForBytes(timeoutMs, loggingPrefix + "readByte", System.currentTimeMillis(), 1);
         if (isTimeout)
-            throw new EOFException("Timeout in readByte");
+            throw new EOFException("Timeout in readByte " + timeoutMs);
         return (byte) getByte();
     }
 
     public int readInt() throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "readInt", System.currentTimeMillis(), 4);
         if (isTimeout)
-            throw new EOFException("Timeout in readByte");
+            throw new EOFException("Timeout in readInt ");
         return swap32(getInt());
     }
 
