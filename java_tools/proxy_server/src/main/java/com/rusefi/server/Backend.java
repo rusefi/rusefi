@@ -2,6 +2,7 @@ package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.Listener;
+import com.rusefi.LocalApplicationProxy;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
@@ -10,6 +11,7 @@ import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import net.jcip.annotations.GuardedBy;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +45,10 @@ import static com.rusefi.Timeouts.SECOND;
 public class Backend implements Closeable {
     private static final Logging log = getLogging(Backend.class);
 
+    /**
+     * @see HttpUtil#PROXY_JSON_API_HTTP_PORT
+     * @see LocalApplicationProxy#SERVER_PORT_FOR_APPLICATIONS
+     */
     public static final int SERVER_PORT_FOR_CONTROLLERS = 8003;
     private static final String MAX_PACKET_GAP = "MAX_PACKET_GAP";
 
