@@ -24,6 +24,7 @@
 #include "global.h"
 #include "airmass.h"
 #include "maf_airmass.h"
+#include "speed_density_airmass.h"
 #include "fuel_math.h"
 #include "interpolation.h"
 #include "engine_configuration.h"
@@ -168,12 +169,14 @@ float getInjectionDurationForAirmass(float airMass, float afr DECLARE_ENGINE_PAR
 	return airMass / (afr * gPerSec);
 }
 
+static SpeedDensityAirmass sdAirmass(veMap);
 static MafAirmass mafAirmass(veMap);
 
 AirmassResult getAirmass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (CONFIG(fuelAlgorithm)) {
 	case LM_SPEED_DENSITY:
-		return getSpeedDensityAirmass(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return sdAirmass.getAirmass(rpm);
+		//return getSpeedDensityAirmass(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_REAL_MAF: {
 		return mafAirmass.getAirmass(rpm);
 	} default:
@@ -351,6 +354,7 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * is to prepare the fuel map data structure for 3d interpolation
  */
 void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	INJECT_ENGINE_REFERENCE(&sdAirmass);
 	INJECT_ENGINE_REFERENCE(&mafAirmass);
 
 	fuelMap.init(config->fuelTable, config->fuelLoadBins, config->fuelRpmBins);

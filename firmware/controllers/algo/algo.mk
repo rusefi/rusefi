@@ -13,4 +13,5 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(PROJECT_DIR)/controllers/algo/event_registry.cpp \
 	$(PROJECT_DIR)/controllers/algo/airmass/airmass.cpp \
 	$(PROJECT_DIR)/controllers/algo/airmass/maf_airmass.cpp \
+	$(PROJECT_DIR)/controllers/algo/airmass/speed_density_airmass.cpp \
 	$(PROJECT_DIR)/controllers/algo/airmass/speed_density_base.cpp \
