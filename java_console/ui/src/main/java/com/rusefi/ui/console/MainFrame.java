@@ -48,11 +48,7 @@ public class MainFrame {
         this.consoleUI = consoleUI;
 
         this.tabbedPane = tabbedPane;
-        listener = new ConnectionStateListener() {
-            @Override
-            public void onConnectionFailed() {
-            }
-
+        listener = new AbstractConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 FileLog.MAIN.logLine("onConnectionEstablished");
