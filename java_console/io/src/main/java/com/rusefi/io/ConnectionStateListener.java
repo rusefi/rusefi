@@ -5,15 +5,7 @@ package com.rusefi.io;
  *         3/1/2017
  */
 public interface ConnectionStateListener {
-    ConnectionStateListener VOID = new ConnectionStateListener() {
-        @Override
-        public void onConnectionEstablished() {
-        }
-
-        @Override
-        public void onConnectionFailed() {
-        }
-    };
+    ConnectionStateListener VOID = new AbstractConnectionStateListener();
 
     /**
      * This method is invoked once we have connection & configuration from controller

@@ -4,7 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.AbstractConnectionStateListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
@@ -32,15 +32,10 @@ public class NetworkConnector {
                 .setNeedPullData(false);
 
         CountDownLatch onConnected = new CountDownLatch(1);
-        controllerConnector.startAndConnect(controllerPort, new ConnectionStateListener() {
+        controllerConnector.startAndConnect(controllerPort, new AbstractConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 onConnected.countDown();
-            }
-
-            @Override
-            public void onConnectionFailed() {
-
             }
         });
 
