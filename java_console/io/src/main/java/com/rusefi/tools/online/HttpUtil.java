@@ -1,7 +1,6 @@
 package com.rusefi.tools.online;
 
 import com.devexperts.logging.Logging;
-import com.opensr5.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -23,7 +22,8 @@ public class HttpUtil {
 
     // todo: migrate proxy http json API server to TLS
     public static final String RUSEFI_PROXY_JSON_PROTOCOL = "http://";
-    public static final int PROXY_JSON_API_HTTP_PORT = Integer.parseInt(System.getProperty("http.port", "8001"));
+    public static final int PROXY_JSON_API_HTTP_PORT = getIntProperty("http.port", 8001);
+
     /**
      * hostname of PROXY server, not primary rusEFI web server - those are two separate hosts at the moment
      */
@@ -73,5 +73,9 @@ public class HttpUtil {
             throw new IllegalStateException(e);
         }
         return jsonObject;
+    }
+
+    public static int getIntProperty(String propertyName, int defaultValue) {
+        return Integer.parseInt(System.getProperty(propertyName, Integer.toString(defaultValue)));
     }
 }
