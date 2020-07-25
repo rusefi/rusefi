@@ -23,6 +23,7 @@
 
 #include "global.h"
 #include "airmass.h"
+#include "alphan_airmass.h"
 #include "maf_airmass.h"
 #include "speed_density_airmass.h"
 #include "fuel_math.h"
@@ -171,11 +172,13 @@ float getInjectionDurationForAirmass(float airMass, float afr DECLARE_ENGINE_PAR
 
 static SpeedDensityAirmass sdAirmass(veMap);
 static MafAirmass mafAirmass(veMap);
+static AlphaNAirmass alphaNAirmass(veMap);
 
 AirmassModelBase* getAirmassModel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	switch (CONFIG(fuelAlgorithm)) {
 		case LM_SPEED_DENSITY: return &sdAirmass;
 		case LM_REAL_MAF: return &mafAirmass;
+		case LM_ALPHA_N_2: return &alphaNAirmass;
 		default: return nullptr;
 	}
 }
@@ -193,7 +196,9 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	floatms_t baseFuel;
 
-	if ((CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) || (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)) {
+	if ((CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) ||
+			(engineConfiguration->fuelAlgorithm == LM_REAL_MAF) ||
+			(engineConfiguration->fuelAlgorithm == LM_ALPHA_N_2)) {
 		// airmass modes - get airmass first, then convert to fuel
 		auto model = getAirmassModel(PASS_ENGINE_PARAMETER_SIGNATURE);
 		efiAssert(CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);

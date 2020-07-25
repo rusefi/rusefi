@@ -75,6 +75,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case LM_SPEED_DENSITY:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_ALPHA_N:
+	case LM_ALPHA_N_2:
 		return Sensor::get(SensorType::Tps1).value_or(0);
 	case LM_REAL_MAF:
 		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
