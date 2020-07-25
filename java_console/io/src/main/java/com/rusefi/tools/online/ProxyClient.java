@@ -1,5 +1,6 @@
 package com.rusefi.tools.online;
 
+import com.rusefi.LocalApplicationProxy;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.UserDetails;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.rusefi.tools.online.HttpUtil.RUSEFI_PROXY_HOSTNAME;
+import static com.rusefi.tools.online.HttpUtil.getIntProperty;
 
 public class ProxyClient {
     public static final String LIST_CONTROLLERS_PATH = "/list_controllers";
@@ -20,6 +22,11 @@ public class ProxyClient {
     public static final String BACKEND_VERSION = "0.0001";
     public static final String IS_USED = "isUsed";
     public static final String OWNER = "owner";
+    /**
+     * @see HttpUtil#PROXY_JSON_API_HTTP_PORT
+     * @see LocalApplicationProxy#SERVER_PORT_FOR_APPLICATIONS
+     */
+    public static final int SERVER_PORT_FOR_CONTROLLERS = getIntProperty("controllers.port", 8003);
 
     public static List<PublicSession> getOnlineApplications(int httpPort) throws IOException {
         return getOnlineApplications(getHttpAddress(httpPort) + LIST_CONTROLLERS_PATH);
