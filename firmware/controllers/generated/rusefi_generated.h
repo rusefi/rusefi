@@ -304,7 +304,7 @@
 #define enableLaunchRetard_offset 976
 #define enableVerboseCanTx_offset 744
 #define engine_configuration_s_size 6000
-#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge", "INVALID", "INVALID"
+#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge", "Alpha-N", "INVALID"
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_GM "GM"
 #define ENGINE_MAKE_LADA "Lada"
@@ -1074,8 +1074,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.07.23
-#define SIGNATURE_HASH 1241418013
+#define SIGNATURE_DATE 2020.07.25
+#define SIGNATURE_HASH 2111232539
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1343,7 +1343,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.07.23.all.1241418013"
+#define TS_SIGNATURE "rusEFI 2020.07.25.all.2111232539"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
