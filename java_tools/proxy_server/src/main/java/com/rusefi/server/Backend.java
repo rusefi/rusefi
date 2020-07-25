@@ -18,8 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
 import org.takes.facets.fork.TkFork;
-import org.takes.http.Front;
-import org.takes.http.FtBasic;
+import org.takes.http.*;
 import org.takes.rs.RsHtml;
 import org.takes.rs.RsJson;
 
@@ -117,7 +116,7 @@ public class Backend implements Closeable {
                                     "<br/><br/><br/><a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
                                     "</body></html>\n"))
                     );
-                    Front frontEnd = new FtBasic(forkTake, httpPort);
+                    Front frontEnd = new FtBasic(new BkParallel(new BkSafe(new BkBasic(forkTake)), 4), httpPort);
                     frontEnd.start(() -> isClosed);
                 } catch (BindException e) {
                     throw new IllegalStateException("While binding " + httpPort, e);
