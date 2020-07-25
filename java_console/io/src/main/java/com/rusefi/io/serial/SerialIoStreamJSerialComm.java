@@ -39,6 +39,8 @@ public class SerialIoStreamJSerialComm extends AbstractIoStream {
     @Override
     public void setInputListener(DataListener listener) {
         sp.addDataListener(new SerialPortDataListener() {
+            private boolean isFirstEvent = true;
+
             @Override
             public int getListeningEvents() {
                 return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
@@ -48,6 +50,11 @@ public class SerialIoStreamJSerialComm extends AbstractIoStream {
             public void serialEvent(SerialPortEvent event) {
                 if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
                     return;
+                if (isFirstEvent) {
+                    // a hack to have explicit thread name, see https://github.com/Fazecast/jSerialComm/issues/308
+                    Thread.currentThread().setName("Serial Port Event Thread");
+                    isFirstEvent = false;
+                }
                 int bytesAvailable = sp.bytesAvailable();
                 if (bytesAvailable <= 0)
                     return; // sometimes negative value is returned at least on Mac
