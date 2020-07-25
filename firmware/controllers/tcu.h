@@ -1,3 +1,5 @@
+#pragma once
+
 #include "global.h"
 #include "io_pins.h"
 #include "tunerstudio_outputs.h"

@@ -13,7 +13,4 @@ private:
     ButtonDebounce *debounceDown;
 };
 
-ButtonShiftController *buttonShiftController;
-
 void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void updateButtonShift();
