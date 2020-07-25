@@ -17,6 +17,7 @@ TEST(injectionScheduling, NormalDutyCycle) {
 	efitick_t nowNt = 1000000;
 
 	InjectionEvent event;
+	INJECT_ENGINE_REFERENCE(&event);
 	InjectorOutputPin pin;
 	pin.injectorIndex = 0;
 	event.outputs[0] = &pin;
@@ -36,5 +37,5 @@ TEST(injectionScheduling, NormalDutyCycle) {
 
 	engine->rpmCalculator.oneDegreeUs = 100;
 
-	handleFuelInjectionEvent(0, &event, 1000, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	event.onTriggerTooth(0, 1000, nowNt);
 }
