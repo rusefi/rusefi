@@ -106,6 +106,9 @@ public class IncomingDataBuffer {
         return waitForBytes(Timeouts.BINARY_IO_TIMEOUT, loggingMessage, startTimestamp, count);
     }
 
+    /**
+     * @return true in case of timeout, false if we have received count of bytes
+     */
     public boolean waitForBytes(int timeoutMs, String loggingMessage, long startTimestamp, int count) {
         log.info(loggingMessage + ": waiting for " + count + " byte(s)");
         synchronized (cbb) {
@@ -118,7 +121,7 @@ public class IncomingDataBuffer {
                 try {
                     cbb.wait(timeout);
                 } catch (InterruptedException e) {
-                    throw new IllegalStateException(e);
+                    return true; // thread thrown away, handling like a timeout
                 }
             }
         }
