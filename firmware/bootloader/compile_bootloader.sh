@@ -13,7 +13,7 @@ make -j4 -f src/Makefile $1 $2 $3
 
 rm -f blbuild/$BOOTLOADER_CODE_DESTINATION_FILE
 
-[ $? -eq 0 ] || { echo "bootloader compilation failed"; exit 1; }
+[ $? -eq 0 ] || { echo "ERROR: bootloader compilation failed"; exit 1; }
  
 echo "$SCRIPT_NAME: Bootloader build success."
 
