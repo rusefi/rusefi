@@ -57,8 +57,12 @@ public class RemoteTab {
                 return new Dimension(100, size.height);
             }
         };
+        IntegerDocumentFilter.install(applicationPort);
+        IntegerDocumentFilter.install(oneTimePasswordControl);
         String portProperty = getLocalPort();
         applicationPort.setText(portProperty);
+
+        JPanel topLines = new JPanel(new VerticalFlowLayout());
 
 
         JPanel topPanel = new JPanel(new FlowLayout());
@@ -67,7 +71,11 @@ public class RemoteTab {
         topPanel.add(applicationPort);
         topPanel.add(new JLabel("   One time password:"));
         topPanel.add(oneTimePasswordControl);
-        content.add(topPanel, BorderLayout.NORTH);
+
+        topLines.add(topPanel);
+        topLines.add(new URLLabel("https://github.com/rusefi/rusefi/wiki/HOWTO-Remote-Tuning"));
+
+        content.add(topLines, BorderLayout.NORTH);
         content.add(list, BorderLayout.CENTER);
         list.add(new JLabel("Requesting list of ECUs"));
         requestListDownload();
