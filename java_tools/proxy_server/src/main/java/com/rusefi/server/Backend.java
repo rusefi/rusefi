@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
 import org.takes.facets.fork.TkFork;
+import org.takes.http.Front;
 import org.takes.http.FtBasic;
 import org.takes.rs.RsHtml;
 import org.takes.rs.RsJson;
@@ -101,23 +102,23 @@ public class Backend implements Closeable {
             try {
                 log.info("Starting http backend on " + httpPort);
                 try {
-                    new FtBasic(
-                            new TkFork(showOnlineControllers,
-                                    showOnlineApplications,
-                                    new Monitoring(this).showStatistics,
-                                    new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
-                                    new FkRegex("/", new RsHtml("<html><body>\n" +
-                                            "<br/><a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
-                                            "<br/><br/><br/>\n" +
-                                            "<img src='https://rusefi.com/style/rusefi_online_color.png'/>" +
-                                            "<br/><br/><br/>\n" +
-                                            "<br/><br/><br/><a href='" + Monitoring.STATUS + "'>Status</a>\n" +
-                                            "<br/><br/><br/><a href='" + ProxyClient.VERSION_PATH + "'>Version</a>\n" +
-                                            "<br/><br/><br/><a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
-                                            "<br/><br/><br/><a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
-                                            "</body></html>\n"))
-                            ), httpPort
-                    ).start(() -> isClosed);
+                    Take forkTake = new TkFork(showOnlineControllers,
+                            showOnlineApplications,
+                            new Monitoring(this).showStatistics,
+                            new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
+                            new FkRegex("/", new RsHtml("<html><body>\n" +
+                                    "<br/><a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
+                                    "<br/><br/><br/>\n" +
+                                    "<img src='https://rusefi.com/style/rusefi_online_color.png'/>" +
+                                    "<br/><br/><br/>\n" +
+                                    "<br/><br/><br/><a href='" + Monitoring.STATUS + "'>Status</a>\n" +
+                                    "<br/><br/><br/><a href='" + ProxyClient.VERSION_PATH + "'>Version</a>\n" +
+                                    "<br/><br/><br/><a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
+                                    "<br/><br/><br/><a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
+                                    "</body></html>\n"))
+                    );
+                    Front frontEnd = new FtBasic(forkTake, httpPort);
+                    frontEnd.start(() -> isClosed);
                 } catch (BindException e) {
                     throw new IllegalStateException("While binding " + httpPort, e);
                 }
