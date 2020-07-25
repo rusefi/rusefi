@@ -324,7 +324,8 @@ bool OutputPin::getAndSet(int logicValue) {
 
 void OutputPin::setValue(int logicValue) {
 #if ENABLE_PERF_TRACE
-	ScopePerf perf(PE::OutputPinSetValue);
+// todo: https://github.com/rusefi/rusefi/issues/1638
+//	ScopePerf perf(PE::OutputPinSetValue);
 #endif // ENABLE_PERF_TRACE
 
 #if EFI_PROD_CODE
