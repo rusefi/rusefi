@@ -17,6 +17,7 @@ AirmassResult AlphaNAirmass::getAirmass(int rpm) {
 		ve / 100.0f,
 		101.325f,		// std atmosphere pressure
 		273.0f + 20.0f	// std atmosphere pressure
+		PASS_ENGINE_PARAMETER_SUFFIX
 	);
 
 	return {
