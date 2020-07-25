@@ -37,6 +37,7 @@ public class ControllerConnectionState {
     private final TwoKindSemaphore twoKindSemaphore = new TwoKindSemaphore();
     private final SensorsHolder sensorsHolder = new SensorsHolder();
     private final Birthday birthday = new Birthday();
+    private int outputRoundAroundDuration;
 
     public ControllerConnectionState(Socket clientSocket, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
@@ -51,6 +52,10 @@ public class ControllerConnectionState {
 
     public Birthday getBirthday() {
         return birthday;
+    }
+
+    public int getOutputRoundAroundDuration() {
+        return outputRoundAroundDuration;
     }
 
     public IoStream getStream() {
@@ -98,10 +103,11 @@ public class ControllerConnectionState {
 
     public void getOutputs() throws IOException {
         byte[] commandPacket = GetOutputsCommand.createRequest();
-
+        long start = System.currentTimeMillis();
         stream.sendPacket(commandPacket);
 
         byte[] packet = incomingData.getPacket("msg", true);
+        outputRoundAroundDuration = (int) (System.currentTimeMillis() - start);
         if (packet == null)
             throw new IOException("getOutputs: No response");
         sensorsHolder.grabSensorValues(packet);

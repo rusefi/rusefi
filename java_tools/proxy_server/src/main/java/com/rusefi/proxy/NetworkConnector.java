@@ -26,12 +26,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class NetworkConnector {
     public static SessionDetails runNetworkConnector(String authToken, String controllerPort, int serverPortForControllers, TcpIoStream.DisconnectListener disconnectListener) throws InterruptedException, IOException {
-        LinkManager linkManager = new LinkManager()
+        LinkManager controllerConnector = new LinkManager()
                 .setCompositeLogicEnabled(false)
                 .setNeedPullData(false);
 
         CountDownLatch onConnected = new CountDownLatch(1);
-        linkManager.startAndConnect(controllerPort, new ConnectionStateListener() {
+        controllerConnector.startAndConnect(controllerPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 onConnected.countDown();
@@ -50,7 +50,7 @@ public class NetworkConnector {
             return null;
         }
 
-        return runNetworkConnector(serverPortForControllers, linkManager, Logger.CONSOLE, authToken, disconnectListener);
+        return runNetworkConnector(serverPortForControllers, controllerConnector, Logger.CONSOLE, authToken, disconnectListener);
     }
 
     @NotNull

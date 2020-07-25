@@ -293,6 +293,7 @@ public class Backend implements Closeable {
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
                     .add(AGE, client.getBirthday().getDuration())
+                    .add("OUTPUT_ROUND_TRIP", client.getOutputRoundAroundDuration())
                     .add(ProxyClient.IS_USED, client.getTwoKindSemaphore().isUsed())
                     .add(ControllerStateDetails.RPM, rpm)
                     .add(ControllerStateDetails.CLT, clt)
