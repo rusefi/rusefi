@@ -23,7 +23,7 @@ public class HttpUtil {
 
     // todo: migrate proxy http json API server to TLS
     public static final String RUSEFI_PROXY_JSON_PROTOCOL = "http://";
-    public static final int PROXY_JSON_API_HTTP_PORT = Integer.parseInt("http.port", 8001);
+    public static final int PROXY_JSON_API_HTTP_PORT = Integer.parseInt(System.getProperty("http.port", "8001"));
     /**
      * hostname of PROXY server, not primary rusEFI web server - those are two separate hosts at the moment
      */
