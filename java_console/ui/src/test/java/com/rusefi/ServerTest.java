@@ -185,12 +185,11 @@ covered by FullServerTest
             TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
             SessionDetails sessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, Fields.TS_SIGNATURE);
-            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, 123);
+            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(MockRusEfiDevice.TEST_TOKEN_1));
 
             // start authenticator
             IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
-            LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(applicationRequest);
-            localApplicationProxy.run(authenticatorToProxyStream);
+            LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);
 
             assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
         }

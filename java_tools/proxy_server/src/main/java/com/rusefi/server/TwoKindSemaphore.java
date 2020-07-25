@@ -52,4 +52,12 @@ public class TwoKindSemaphore {
     public UserDetails getOwner() {
         return owner;
     }
+
+    @Override
+    public String toString() {
+        return "TwoKindSemaphore{" +
+                "semaphore=" + semaphore +
+                ", owner=" + owner +
+                '}';
+    }
 }

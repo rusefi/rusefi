@@ -75,6 +75,15 @@ public class ControllerConnectionState {
         FileUtil.close(clientSocket);
     }
 
+    @Override
+    public String toString() {
+        return "ControllerConnectionState{" +
+                "userDetails=" + userDetails +
+                ", isClosed=" + isClosed +
+                ", twoKindSemaphore=" + twoKindSemaphore +
+                '}';
+    }
+
     public void requestControllerInfo() throws IOException {
         HelloCommand.send(stream);
         String jsonString = HelloCommand.getHelloResponse(incomingData);

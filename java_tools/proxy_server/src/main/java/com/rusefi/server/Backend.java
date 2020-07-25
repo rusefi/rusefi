@@ -184,7 +184,7 @@ public class Backend implements Closeable {
                     return;
                 }
 
-                ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUserId(), applicationRequest.getSessionDetails().getControllerInfo());
+                ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUser().getUserId(), applicationRequest.getSessionDetails().getControllerInfo());
                 ControllerConnectionState state;
                 synchronized (lock) {
                     state = acquire(controllerKey, userDetails);
@@ -318,19 +318,28 @@ public class Backend implements Closeable {
      * that's different from controllers since we periodically pull outputs from controllers which allows us to detect disconnects
      */
     private void runApplicationConnectionsCleanup() {
-        List<ApplicationConnectionState> inactiveApplications = new ArrayList<>();
-
+        List<ApplicationConnectionState> applications;
         synchronized (lock) {
-            long now = System.currentTimeMillis();
-            for (ApplicationConnectionState client : applications) {
-                if (now - client.getClientStream().getStreamStats().getPreviousPacketArrivalTime() > applicationTimeout)
-                    inactiveApplications.add(client);
+            applications = new ArrayList<>(this.applications);
+        }
+
+        long now = System.currentTimeMillis();
+        for (ApplicationConnectionState client : applications) {
+            if (now - client.getClientStream().getStreamStats().getPreviousPacketArrivalTime() > applicationTimeout) {
+                log.error("Kicking out application " + client);
+                close(client);
+            } else {
+                log.info("Looks alive " + client);
             }
         }
 
-        for (ApplicationConnectionState inactiveClient : inactiveApplications) {
-            log.error("Kicking out application " + inactiveClient);
-            close(inactiveClient);
+        List<ControllerConnectionState> controllers;
+        synchronized (lock) {
+            controllers = new ArrayList<>(this.controllers);
+        }
+
+        for (ControllerConnectionState controllerConnectionState : controllers) {
+            log.info("State: " + controllerConnectionState);
         }
     }
 

@@ -78,11 +78,13 @@ public class FullServerTest {
             assertTrue("controllerRegistered", controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
             SessionDetails authenticatorSessionDetails = new SessionDetails(controllerInfo, MockRusEfiDevice.TEST_TOKEN_3, networkConnectorResult.getOneTimeToken());
-            ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userId);
+            ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userDetailsResolver.apply(MockRusEfiDevice.TEST_TOKEN_1));
 
             // start authenticator
             int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
-            LocalApplicationProxy.startAndRun(serverPortForRemoteUsers, applicationRequest, authenticatorPort, httpPort, TcpIoStream.DisconnectListener.VOID);
+            LocalApplicationProxy.startAndRun(serverPortForRemoteUsers, applicationRequest, authenticatorPort, httpPort,
+                    TcpIoStream.DisconnectListener.VOID,
+                    LocalApplicationProxy.ConnectionListener.VOID);
 
 
             CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);

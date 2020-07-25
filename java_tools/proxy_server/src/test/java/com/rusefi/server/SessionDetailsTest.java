@@ -19,7 +19,7 @@ public class SessionDetailsTest {
     public void testApplicationRequest() {
         ControllerInfo ci = new ControllerInfo("name", "make", "code", "sign");
         SessionDetails sd = new SessionDetails(ci, "auth", 123);
-        ApplicationRequest ar = new ApplicationRequest(sd, 321);
+        ApplicationRequest ar = new ApplicationRequest(sd, new UserDetails("", 321));
 
         String json = ar.toJson();
         ApplicationRequest fromJson = ApplicationRequest.valueOf(json);

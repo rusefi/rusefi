@@ -19,6 +19,11 @@ public class UserDetails {
         return new UserDetails(userName, (int) userId);
     }
 
+    void put(JSONObject jsonObject) {
+        jsonObject.put(USER_ID, getUserId());
+        jsonObject.put(USERNAME, getUserName());
+    }
+
     public String getUserName() {
         return userName;
     }
