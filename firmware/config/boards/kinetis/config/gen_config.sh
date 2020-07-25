@@ -1,6 +1,12 @@
 #!/bin/bash
-# This batch files reads rusefi_config.txt and produses firmware persistent configuration headers
+# This script files reads rusefi_config.txt and produces firmware persistent configuration headers
 # the storage section of rusefi.ini is updated as well
+#
+# many of the files generated here require time consuming full compilation thus we have an aggressive caching mechanism
+# to make sure that we do not regenerate for no reason
+# the primary input files are rusefi_config.txt and rusefi.input, also mapping.yaml etc
+# see inside cache.zip for all input files
+#
 
 cd ../../../..
 

@@ -35,7 +35,7 @@ public class MockRusEfiDevice {
         Socket socket = rusEFISSLContext.getSSLSocket(LOCALHOST, serverPort);
         BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(socket,
                 sessionDetails,
-                logger) {
+                TcpIoStream.DisconnectListener.VOID) {
             @Override
             protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
                 super.handleCommand(packet, stream);
@@ -43,7 +43,7 @@ public class MockRusEfiDevice {
                 if (packet.getPacket()[0] == Fields.TS_OUTPUT_COMMAND) {
                     byte[] response = new byte[1 + Fields.TS_OUTPUT_SIZE];
                     response[0] = (byte) BinaryProtocolServer.TS_OK.charAt(0);
-                    stream.sendPacket(response, logger);
+                    stream.sendPacket(response);
                 }
             }
         };

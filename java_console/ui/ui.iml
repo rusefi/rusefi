@@ -30,5 +30,6 @@
     <orderEntry type="module" module-name="models" />
     <orderEntry type="module" module-name="proxy_server" />
     <orderEntry type="library" scope="TEST" name="takes" level="project" />
+    <orderEntry type="library" name="dfu_java" level="project" />
   </component>
 </module>

@@ -916,6 +916,10 @@ case GPPWM_Map:
   return "GPPWM_Map";
 case GPPWM_Tps:
   return "GPPWM_Tps";
+case GPPWM_FuelLoad:
+  return "GPPWM_FuelLoad";
+case GPPWM_IgnLoad:
+  return "GPPWM_IgnLoad";
   }
  return NULL;
 }

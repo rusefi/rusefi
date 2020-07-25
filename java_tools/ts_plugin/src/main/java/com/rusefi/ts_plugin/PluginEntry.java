@@ -5,12 +5,15 @@ import com.rusefi.ts_plugin.util.ManifestHelper;
 import com.rusefi.tune.xml.Constant;
 
 import javax.swing.*;
+import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
 /**
  * TsPlugin launcher creates an instance of this class via reflection.
  */
 public class PluginEntry implements TsPluginBody {
+    private final JPanel content = new JPanel(new BorderLayout());
     private final JTabbedPane tabbedPane = new JTabbedPane();
 
     /**
@@ -23,6 +26,11 @@ public class PluginEntry implements TsPluginBody {
     public PluginEntry(Supplier<ControllerAccess> controllerAccessSupplier) {
         System.out.println("PluginEntry init " + this);
 
+        if (isLauncherTooOld()) {
+            content.add(new JLabel("Please manually install latest plugin version"));
+            return;
+        }
+
         UploadTab uploadTab = new UploadTab(controllerAccessSupplier);
         BroadcastTab broadcastTab = new BroadcastTab();
         RemoteTab remoteTab = new RemoteTab();
@@ -30,6 +38,19 @@ public class PluginEntry implements TsPluginBody {
         tabbedPane.addTab("Upload", uploadTab.getContent());
         tabbedPane.addTab("Broadcast", broadcastTab.getContent());
         tabbedPane.addTab("Remote ECU", remoteTab.getContent());
+        content.add(tabbedPane);
+    }
+
+    private boolean isLauncherTooOld() {
+        try {
+            // at some point we did not have this field so using reflection for the next couple of months
+            Field field = TsPluginLauncher.class.getField("BUILD_VERSION");
+            int launcherVersion = (int) field.get(null);
+            System.out.println("Launcher version " + launcherVersion + " detected");
+            return false;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            return true;
+        }
     }
 
     public static boolean isEmpty(Constant constant) {
@@ -44,7 +65,7 @@ public class PluginEntry implements TsPluginBody {
 
     @Override
     public JComponent getContent() {
-        return tabbedPane;
+        return content;
     }
 /*
     public void close() {

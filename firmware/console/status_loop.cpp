@@ -288,7 +288,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 	float baseFuelMs = getBaseTableFuel((int) rpm, engineLoad);
 
-	float magicAir = getCylinderAirMass(1, 100, convertCelsiusToKelvin(20) PASS_ENGINE_PARAMETER_SUFFIX);
+	float magicAir = SpeedDensityBase::getAirmassImpl(1, 100, convertCelsiusToKelvin(20) PASS_ENGINE_PARAMETER_SUFFIX);
 
 	scheduleMsg(&logger, "SD magic fuel %.2f", getInjectionDurationForAirmass(magicAir, 14.7 PASS_ENGINE_PARAMETER_SUFFIX));
 	scheduleMsg(&logger, "inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
@@ -297,7 +297,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
-	scheduleMsg(&logger2, "injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm), engineConfiguration->globalFuelCorrection);
+	scheduleMsg(&logger2, "injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm, getFuelingLoad()), engineConfiguration->globalFuelCorrection);
 
 	scheduleMsg(&logger2, "baro correction=%.2f", engine->engineState.baroCorrection);
 

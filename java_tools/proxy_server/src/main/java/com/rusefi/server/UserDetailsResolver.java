@@ -1,6 +1,12 @@
 package com.rusefi.server;
 
-import java.util.function.Function;
+import org.jetbrains.annotations.Nullable;
 
-public interface UserDetailsResolver extends Function<String, UserDetails> {
+public interface UserDetailsResolver {
+    /***
+     * @param authToken
+     * @return null in case authentication issues
+     */
+    @Nullable
+    UserDetails apply(String authToken);
 }

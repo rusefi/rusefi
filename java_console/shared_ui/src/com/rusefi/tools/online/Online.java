@@ -44,7 +44,7 @@ public class Online {
             System.out.println("response=" + response);
             System.out.println("code " + response.getStatusLine().getStatusCode());
 
-            JSONObject object = HttpUtil.getJsonResponse(response);
+            JSONObject object = HttpUtil.getJsonResponse(HttpUtil.getResponse(response));
 
             System.out.println("object=" + object);
             JSONArray info = (JSONArray) object.get("info");

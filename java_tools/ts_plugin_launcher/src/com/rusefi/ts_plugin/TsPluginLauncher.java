@@ -10,7 +10,8 @@ import javax.swing.*;
  * by the way TS installs stuff into %user%\.efianalytics\TunerStudio\plugins folder
  */
 public class TsPluginLauncher implements ApplicationPlugin {
-    static final String VERSION = "alpha3_2020";
+    public static final int BUILD_VERSION = 3;
+    static final String VERSION = "2020.alpha." + BUILD_VERSION;
     private static final String HELP_URL = "https://github.com/rusefi/rusefi/wiki/TS-Plugin";
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());

@@ -22,10 +22,11 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Connector between rusEFI ECU and rusEFI server
+ * see NetworkConnectorStartup
  */
 public class NetworkConnector {
-    public static SessionDetails runNetworkConnector(String authToken, String controllerPort, int serverPortForControllers) throws InterruptedException, IOException {
-        LinkManager linkManager = new LinkManager(Logger.CONSOLE)
+    public static SessionDetails runNetworkConnector(String authToken, String controllerPort, int serverPortForControllers, TcpIoStream.DisconnectListener disconnectListener) throws InterruptedException, IOException {
+        LinkManager linkManager = new LinkManager()
                 .setCompositeLogicEnabled(false)
                 .setNeedPullData(false);
 
@@ -42,21 +43,24 @@ public class NetworkConnector {
             }
         });
 
-        System.out.println("Connecting to controller...");
+        Logger.CONSOLE.info("Connecting to controller...");
         onConnected.await(1, TimeUnit.MINUTES);
         if (onConnected.getCount() != 0) {
-            System.out.println("Connection to controller failed");
+            Logger.CONSOLE.info("Connection to controller failed");
             return null;
         }
 
-        return runNetworkConnector(serverPortForControllers, linkManager, Logger.CONSOLE, authToken);
+        return runNetworkConnector(serverPortForControllers, linkManager, Logger.CONSOLE, authToken, disconnectListener);
     }
 
     @NotNull
-    private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, final Logger logger, String authToken) throws IOException {
+    private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, final Logger logger, String authToken, final TcpIoStream.DisconnectListener disconnectListener) throws IOException {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
-        HelloCommand.send(targetEcuSocket, logger);
-        String controllerSignature = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer(), logger).trim();
+        HelloCommand.send(targetEcuSocket);
+        String helloResponse = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer());
+        if (helloResponse == null)
+            throw new IOException("Error getting hello response");
+        String controllerSignature = helloResponse.trim();
 
         ConfigurationImage image = linkManager.getConnector().getBinaryProtocol().getControllerConfiguration();
         String vehicleName = Fields.VEHICLENAME.getStringValue(image);
@@ -68,7 +72,7 @@ public class NetworkConnector {
 
         BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForControllers),
                 deviceSessionDetails,
-                logger) {
+                disconnectListener) {
             @Override
             protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
                 super.handleCommand(packet, stream);

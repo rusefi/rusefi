@@ -27,7 +27,7 @@ public class TcpCommunicationIntegrationTest {
 
         CountDownLatch failedCountDownLatch = new CountDownLatch(1);
 
-        LinkManager clientManager = new LinkManager(LOGGER);
+        LinkManager clientManager = new LinkManager();
         clientManager.startAndConnect(Integer.toString(port), new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
@@ -51,15 +51,13 @@ public class TcpCommunicationIntegrationTest {
         ConfigurationImage serverImage = TestHelper.prepareImage(value, iniField);
         int port = 6100;
 
-        CountDownLatch serverCreated = new CountDownLatch(1);
-        BinaryProtocolServer server = TestHelper.createVirtualController(serverImage, port, parameter -> serverCreated.countDown(), LOGGER);
-        assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
+        BinaryProtocolServer server = TestHelper.createVirtualController(port, serverImage);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
         // todo: remove CONFIGURATION_RUSEFI_BINARY or nicer API to disable local file load
 
-        LinkManager clientManager = new LinkManager(LOGGER);
+        LinkManager clientManager = new LinkManager();
         clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + port, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
@@ -90,20 +88,18 @@ public class TcpCommunicationIntegrationTest {
         int controllerPort = 6102;
 
         // create virtual controller
-        CountDownLatch serverCreated = new CountDownLatch(1);
-        BinaryProtocolServer server = TestHelper.createVirtualController(serverImage, controllerPort, parameter -> serverCreated.countDown(), LOGGER);
-        assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
+        TestHelper.createVirtualController(controllerPort, serverImage);
         int proxyPort = 6103;
 
 
         // connect proxy to virtual controller
         IoStream targetEcuSocket = TestHelper.connectToLocalhost(controllerPort, LOGGER);
-        BinaryProtocolProxy.createProxy(LOGGER, targetEcuSocket, proxyPort);
+        BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
         // connect to proxy and read virtual controller through it
-        LinkManager clientManager = new LinkManager(LOGGER);
+        LinkManager clientManager = new LinkManager();
         clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + proxyPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {

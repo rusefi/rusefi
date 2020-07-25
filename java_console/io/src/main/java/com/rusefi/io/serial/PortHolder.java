@@ -1,6 +1,6 @@
 package com.rusefi.io.serial;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.Logging;
 import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.MessagesCentral;
@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * This class holds the reference to the actual Serial port object
  * <p/>
@@ -20,8 +22,9 @@ import java.awt.*;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class PortHolder {
+    private static final Logging log = getLogging(PortHolder.class);
+
     private final DataListener dataListener;
-    private final Logger logger;
     private final Callable<IoStream> ioStreamCallable;
     private final LinkManager linkManager;
 
@@ -32,11 +35,10 @@ public class PortHolder {
     @Nullable
     private BinaryProtocol bp;
 
-    protected PortHolder(String port, LinkManager linkManager, Logger logger, Callable<IoStream> ioStreamCallable) {
+    protected PortHolder(String port, LinkManager linkManager, Callable<IoStream> ioStreamCallable) {
         this.port = port;
         this.linkManager = linkManager;
         dataListener = freshData -> linkManager.getEngineState().processNewData(new String(freshData), LinkManager.ENCODER);
-        this.logger = logger;
         this.ioStreamCallable = ioStreamCallable;
     }
 
@@ -44,7 +46,7 @@ public class PortHolder {
         if (port == null)
             return false;
 
-        MessagesCentral.getInstance().postMessage(logger, getClass(), "Opening port: " + port);
+        MessagesCentral.getInstance().postMessage(getClass(), "Opening port: " + port);
 
         IoStream stream = ioStreamCallable.call();
         if (stream == null) {
@@ -52,7 +54,7 @@ public class PortHolder {
             return false;
         }
         synchronized (portLock) {
-            bp = new BinaryProtocol(linkManager, logger, stream, stream.getDataBuffer());
+            bp = new BinaryProtocol(linkManager, stream, stream.getDataBuffer());
             portLock.notifyAll();
         }
 

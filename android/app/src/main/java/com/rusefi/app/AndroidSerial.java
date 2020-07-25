@@ -7,21 +7,20 @@ import com.hoho.android.usbserial.driver.ProbeTable;
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
-import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.dfu.DfuLogic;
 import com.rusefi.io.ByteReader;
-import com.rusefi.io.IoStream;
+import com.rusefi.io.serial.AbstractIoStream;
+import com.rusefi.io.tcp.TcpIoStream;
 
 import java.io.IOException;
 import java.util.List;
 
-public class AndroidSerial implements IoStream {
+public class AndroidSerial extends AbstractIoStream {
     private static final int ST_CDC = 0x5740;
     private final IncomingDataBuffer dataBuffer;
 
-    private boolean isClosed;
     private UsbSerialPort usbSerialPort;
 
     static List<UsbSerialDriver> findUsbSerial(UsbManager usbManager) {
@@ -32,9 +31,9 @@ public class AndroidSerial implements IoStream {
         return prober.findAllDrivers(usbManager);
     }
 
-    public AndroidSerial(UsbSerialPort usbSerialPort, Logger logger) {
+    public AndroidSerial(UsbSerialPort usbSerialPort) {
         this.usbSerialPort = usbSerialPort;
-        dataBuffer = IncomingDataBuffer.createDataBuffer("", this, logger);
+        dataBuffer = IncomingDataBuffer.createDataBuffer("", this);
     }
 
     @Override
@@ -50,17 +49,7 @@ public class AndroidSerial implements IoStream {
     @Override
     public void setInputListener(DataListener listener) {
         ByteReader reader = buffer -> usbSerialPort.read(buffer, 5000);
-        ByteReader.runReaderLoop("", listener, reader, Logger.CONSOLE);
-    }
-
-    @Override
-    public boolean isClosed() {
-        return isClosed;
-    }
-
-    @Override
-    public void close() {
-        isClosed = true;
+        ByteReader.runReaderLoop("", listener, reader, TcpIoStream.DisconnectListener.VOID);
     }
 
     @Override

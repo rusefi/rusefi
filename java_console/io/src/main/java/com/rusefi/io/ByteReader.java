@@ -1,32 +1,39 @@
 package com.rusefi.io;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
+import com.rusefi.config.generated.Fields;
+import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpIoStream;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public interface ByteReader {
-    static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, Logger logger) {
+    Logging log = getLogging(ByteReader.class);
+
+    static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, TcpIoStream.DisconnectListener disconnectListener) {
         /**
          * Threading of the whole input/output does not look healthy at all!
          *
          * @see #COMMUNICATION_EXECUTOR
          */
         Executor threadExecutor = Executors.newSingleThreadExecutor(r -> {
-            Thread t = new Thread(r);
-            t.setName("IO executor thread");
+            Thread t = new Thread(r, "IO executor thread");
             t.setDaemon(true);  // need daemon thread so that COM thread is also daemon
             return t;
         });
 
         threadExecutor.execute(() -> {
             Thread.currentThread().setName("TCP connector loop");
-            logger.info(loggingPrefix + "Running TCP connection loop");
+            log.info(loggingPrefix + "Running TCP connection loop");
 
-            byte inputBuffer[] = new byte[256];
+            byte inputBuffer[] = new byte[Fields.BLOCKING_FACTOR * 2];
             while (true) {
                 try {
                     int result = reader.read(inputBuffer);
@@ -34,7 +41,8 @@ public interface ByteReader {
                         throw new IOException("TcpIoStream: End of input?");
                     listener.onDataArrived(Arrays.copyOf(inputBuffer, result));
                 } catch (IOException e) {
-                    System.err.println("TcpIoStream: End of connection");
+                    log.error("TcpIoStream: End of connection " + e);
+                    disconnectListener.onDisconnect();
                     return;
                 }
             }

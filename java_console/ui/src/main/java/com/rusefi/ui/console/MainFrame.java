@@ -60,7 +60,7 @@ public class MainFrame {
                 tabbedPane.settingsTab.showContent();
                 tabbedPane.logsManager.showContent();
                 tabbedPane.fuelTunePane.showContent();
-                new BinaryProtocolServer(FileLog.LOGGER).start(consoleUI.uiContext.getLinkManager());
+                new BinaryProtocolServer().start(consoleUI.uiContext.getLinkManager());
             }
         };
     }
@@ -96,7 +96,7 @@ public class MainFrame {
                 tabbedPane.settingsTab.showContent();
                 tabbedPane.logsManager.showContent();
                 tabbedPane.fuelTunePane.showContent();
-                new BinaryProtocolServer(FileLog.LOGGER).start(linkManager);
+                new BinaryProtocolServer().start(linkManager);
             }
         });
 

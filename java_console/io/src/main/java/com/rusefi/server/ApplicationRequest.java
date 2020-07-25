@@ -1,8 +1,7 @@
 package com.rusefi.server;
 
+import com.rusefi.tools.online.HttpUtil;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.util.Objects;
 
@@ -34,13 +33,7 @@ public class ApplicationRequest {
     }
 
     public static ApplicationRequest valueOf(String jsonString) {
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject;
-        try {
-            jsonObject = (JSONObject) parser.parse(jsonString);
-        } catch (ParseException e) {
-            throw new IllegalStateException(e);
-        }
+        JSONObject jsonObject = HttpUtil.parse(jsonString);
 
         long targetUserId = (Long) jsonObject.get(USER_ID);
 
@@ -60,5 +53,13 @@ public class ApplicationRequest {
     @Override
     public int hashCode() {
         return Objects.hash(sessionDetails, targetUserId);
+    }
+
+    @Override
+    public String toString() {
+        return "ApplicationRequest{" +
+                "sessionDetails=" + sessionDetails +
+                ", targetUserId=" + targetUserId +
+                '}';
     }
 }

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Set;
@@ -199,6 +200,29 @@ public enum Sensor {
             if (s.name.equals(value) || s.name().equals(value))
                 return s;
         throw new IllegalStateException("Sensor not found: " + value);
+    }
+
+    public double getValueForChannel(ByteBuffer bb) {
+        switch (getType()) {
+            case FLOAT:
+                return bb.getFloat();
+            case INT:
+                return bb.getInt();
+            case UINT16:
+                // no cast - we want to discard sign
+                return bb.getInt() & 0xFFFF;
+            case INT16:
+                // cast - we want to retain sign
+                return  (short)(bb.getInt() & 0xFFFF);
+            case UINT8:
+                // no cast - discard sign
+                return bb.getInt() & 0xFF;
+            case INT8:
+                // cast - retain sign
+                return (byte)(bb.getInt() & 0xFF);
+            default:
+                throw new UnsupportedOperationException("type " + getType());
+        }
     }
 
     public String getName() {
