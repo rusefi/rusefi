@@ -2,6 +2,7 @@ package com.rusefi.proxy;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.AbstractConnectionStateListener;
@@ -18,7 +19,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+
+import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 /**
  * Connector between rusEFI ECU and rusEFI server
@@ -26,7 +30,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class NetworkConnector {
     private final static Logging log = Logging.getLogging(NetworkConnector.class);
-    public static SessionDetails runNetworkConnector(String authToken, String controllerPort, int serverPortForControllers, TcpIoStream.DisconnectListener disconnectListener) throws InterruptedException, IOException {
+    public static final int RECONNECT_DELAY = 15;
+
+    public static NetworkConnectorResult runNetworkConnector(String authToken, String controllerPort, int serverPortForControllers) {
         LinkManager controllerConnector = new LinkManager()
                 .setCompositeLogicEnabled(false)
                 .setNeedPullData(false);
@@ -40,31 +46,55 @@ public class NetworkConnector {
         });
 
         log.info("Connecting to controller...");
-        onConnected.await(1, TimeUnit.MINUTES);
+        try {
+            onConnected.await(1, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
         if (onConnected.getCount() != 0) {
             log.info("Connection to controller failed");
-            return null;
+            return NetworkConnectorResult.ERROR;
         }
 
-        return runNetworkConnector(serverPortForControllers, controllerConnector, authToken, disconnectListener);
+        ControllerInfo controllerInfo;
+        try {
+            controllerInfo = getControllerInfo(controllerConnector, controllerConnector.getConnector().getBinaryProtocol().getStream());
+        } catch (IOException e) {
+            return NetworkConnectorResult.ERROR;
+        }
+
+        int oneTimeToken = SessionDetails.createOneTimeCode();
+
+        new Thread(() -> {
+            Semaphore proxyReconnectSemaphore = new Semaphore(1);
+            try {
+                while (true) {
+                    log.info("Connecting to proxy server");
+                    proxyReconnectSemaphore.acquire();
+
+                    try {
+                        runNetworkConnector(serverPortForControllers, controllerConnector, authToken, () -> {
+                            log.error("Disconnect from proxy server detected, now sleeping " + RECONNECT_DELAY + " seconds");
+                            sleep(RECONNECT_DELAY * Timeouts.SECOND);
+                            proxyReconnectSemaphore.release();
+                        }, oneTimeToken, controllerInfo);
+                    } catch (IOException e) {
+                        log.error("IO error", e);
+                    }
+                }
+            } catch (InterruptedException e) {
+                throw new IllegalStateException(e);
+            }
+        }, "Proxy Reconnect").start();
+
+        return new NetworkConnectorResult(controllerInfo, oneTimeToken);
     }
 
     @NotNull
-    private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener) throws IOException {
+    private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener, int oneTimeToken, ControllerInfo controllerInfo) throws IOException {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
-        HelloCommand.send(targetEcuSocket);
-        String helloResponse = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer());
-        if (helloResponse == null)
-            throw new IOException("Error getting hello response");
-        String controllerSignature = helloResponse.trim();
 
-        ConfigurationImage image = linkManager.getConnector().getBinaryProtocol().getControllerConfiguration();
-        String vehicleName = Fields.VEHICLENAME.getStringValue(image);
-        String engineMake = Fields.ENGINEMAKE.getStringValue(image);
-        String engineCode = Fields.ENGINECODE.getStringValue(image);
-        ControllerInfo ci = new ControllerInfo(vehicleName, engineMake, engineCode, controllerSignature);
-
-        SessionDetails deviceSessionDetails = new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
+        SessionDetails deviceSessionDetails = new SessionDetails(controllerInfo, authToken, oneTimeToken);
 
         BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForControllers),
                 deviceSessionDetails,
@@ -83,4 +113,39 @@ public class NetworkConnector {
         baseBroadcastingThread.start();
         return deviceSessionDetails;
     }
+
+    @NotNull
+    private static ControllerInfo getControllerInfo(LinkManager linkManager, IoStream targetEcuSocket) throws IOException {
+        HelloCommand.send(targetEcuSocket);
+        String helloResponse = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer());
+        if (helloResponse == null)
+            throw new IOException("Error getting hello response");
+        String controllerSignature = helloResponse.trim();
+
+        ConfigurationImage image = linkManager.getConnector().getBinaryProtocol().getControllerConfiguration();
+        String vehicleName = Fields.VEHICLENAME.getStringValue(image);
+        String engineMake = Fields.ENGINEMAKE.getStringValue(image);
+        String engineCode = Fields.ENGINECODE.getStringValue(image);
+        return new ControllerInfo(vehicleName, engineMake, engineCode, controllerSignature);
+    }
+
+    public static class NetworkConnectorResult {
+        static NetworkConnectorResult ERROR = new NetworkConnectorResult(null, 0);
+        private final ControllerInfo controllerInfo;
+        private final int oneTimeToken;
+
+        public NetworkConnectorResult(ControllerInfo controllerInfo, int oneTimeToken) {
+            this.controllerInfo = controllerInfo;
+            this.oneTimeToken = oneTimeToken;
+        }
+
+        public ControllerInfo getControllerInfo() {
+            return controllerInfo;
+        }
+
+        public int getOneTimeToken() {
+            return oneTimeToken;
+        }
+    }
+
 }

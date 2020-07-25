@@ -2,6 +2,7 @@ package com.rusefi.proxy;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
+import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.commands.HelloCommand;
@@ -31,9 +32,16 @@ public class BaseBroadcastingThread {
             try {
                 boolean isFirstHello = true;
                 while (true) {
+                    int ioTimeout;
+                    if (isFirstHello) {
+                        log.info("Waiting for proxy server to request session details");
+                        ioTimeout = Timeouts.CMD_TIMEOUT;
+                    } else {
+                        ioTimeout = BinaryProtocolProxy.USER_IO_TIMEOUT;
+                    }
                     int length = getPacketLength(in, () -> {
                         throw new UnsupportedOperationException();
-                    }, BinaryProtocolProxy.USER_IO_TIMEOUT);
+                    }, ioTimeout);
                     BinaryProtocolServer.Packet packet = readPromisedBytes(in, length);
                     byte[] payload = packet.getPacket();
 
