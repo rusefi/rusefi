@@ -1,7 +1,7 @@
 package com.rusefi.proxy;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  * see NetworkConnectorStartup
  */
 public class NetworkConnector {
+    private final static Logging log = Logging.getLogging(NetworkConnector.class);
     public static SessionDetails runNetworkConnector(String authToken, String controllerPort, int serverPortForControllers, TcpIoStream.DisconnectListener disconnectListener) throws InterruptedException, IOException {
         LinkManager controllerConnector = new LinkManager()
                 .setCompositeLogicEnabled(false)
@@ -43,18 +44,18 @@ public class NetworkConnector {
             }
         });
 
-        Logger.CONSOLE.info("Connecting to controller...");
+        log.info("Connecting to controller...");
         onConnected.await(1, TimeUnit.MINUTES);
         if (onConnected.getCount() != 0) {
-            Logger.CONSOLE.info("Connection to controller failed");
+            log.info("Connection to controller failed");
             return null;
         }
 
-        return runNetworkConnector(serverPortForControllers, controllerConnector, Logger.CONSOLE, authToken, disconnectListener);
+        return runNetworkConnector(serverPortForControllers, controllerConnector, authToken, disconnectListener);
     }
 
     @NotNull
-    private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, final Logger logger, String authToken, final TcpIoStream.DisconnectListener disconnectListener) throws IOException {
+    private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener) throws IOException {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
         HelloCommand.send(targetEcuSocket);
         String helloResponse = HelloCommand.getHelloResponse(targetEcuSocket.getDataBuffer());
@@ -76,11 +77,11 @@ public class NetworkConnector {
             @Override
             protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
                 super.handleCommand(packet, stream);
-                logger.info("Relaying request to controller " + BinaryProtocol.findCommand(packet.getPacket()[0]));
+                log.info("Relaying request to controller " + BinaryProtocol.findCommand(packet.getPacket()[0]));
                 targetEcuSocket.sendPacket(packet);
 
                 BinaryProtocolServer.Packet response = targetEcuSocket.readPacket();
-                logger.info("Relaying response to proxy size=" + response.getPacket().length);
+                log.info("Relaying response to proxy size=" + response.getPacket().length);
                 stream.sendPacket(response);
             }
         };
