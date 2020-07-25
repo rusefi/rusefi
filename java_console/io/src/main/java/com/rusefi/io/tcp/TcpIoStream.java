@@ -78,7 +78,7 @@ public class TcpIoStream extends AbstractIoStream {
 
     @Override
     public void setInputListener(final DataListener listener) {
-        ByteReader.runReaderLoop(loggingPrefix, listener, input::read, disconnectListener);
+        ByteReader.runReaderLoop(loggingPrefix, listener, input::read, disconnectListener, this);
     }
 
     public interface DisconnectListener {

@@ -2,6 +2,7 @@ package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.Listener;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
@@ -28,6 +29,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.BindException;
 import java.util.*;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -53,6 +55,8 @@ public class Backend implements Closeable {
      */
     private static final int APPLICATION_INACTIVITY_TIMEOUT = 3 * Timeouts.MINUTE;
     static final String AGE = "age";
+    private static final ThreadFactory APPLLICATION_CONNECTION_CLEANUP = new NamedThreadFactory("rusEFI Application connections Cleanup");
+    private static final ThreadFactory GAUGE_POKER = new NamedThreadFactory("rusEFI gauge poker");
 
     private final FkRegex showOnlineControllers = new FkRegex(ProxyClient.LIST_CONTROLLERS_PATH,
             (Take) req -> getControllersOnline()
@@ -109,7 +113,7 @@ public class Backend implements Closeable {
                                     "</body></html>\n"))
                     );
                     Front frontEnd = new FtBasic(new BkParallel(new BkSafe(new BkBasic(forkTake)), 4), httpPort);
-                    frontEnd.start(() -> isClosed);
+                    frontEnd.start(() -> isClosed());
                 } catch (BindException e) {
                     throw new IllegalStateException("While binding " + httpPort, e);
                 }
@@ -120,20 +124,20 @@ public class Backend implements Closeable {
 
         }, "Http Server Thread").start();
 
-        new Thread(() -> {
-            while (true) {
+        APPLLICATION_CONNECTION_CLEANUP.newThread(() -> {
+            while (!isClosed()) {
                 log.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
                 runApplicationConnectionsCleanup();
                 BinaryProtocol.sleep(applicationTimeout);
             }
-        }, "rusEFI Application connections Cleanup").start();
+        }).start();
 
-        new Thread(() -> {
-            while (true) {
+        GAUGE_POKER.newThread(() -> {
+            while (!isClosed()) {
                 grabOutputs();
                 BinaryProtocol.sleep(SECOND);
             }
-        }, "rusEFI gauge poker").start();
+        }).start();
     }
 
     private void grabOutputs() {
