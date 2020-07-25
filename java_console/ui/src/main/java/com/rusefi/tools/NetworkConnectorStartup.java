@@ -2,16 +2,12 @@ package com.rusefi.tools;
 
 import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.autodetect.PortDetector;
-import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.Backend;
-import com.rusefi.server.SessionDetails;
 import com.rusefi.ui.AuthTokenPanel;
 
-import java.io.IOException;
-
 public class NetworkConnectorStartup {
-    public static void start() throws IOException, InterruptedException {
+    public static void start() {
         String authToken = AuthTokenPanel.getAuthToken();
         if (!AutoTokenUtil.isToken(authToken)) {
             System.err.println("Please configure authentication token using 'set_auth_token' command");
@@ -24,10 +20,7 @@ public class NetworkConnectorStartup {
             return;
         }
 
-        SessionDetails sessionDetails = NetworkConnector.runNetworkConnector(authToken, autoDetectedPort, Backend.SERVER_PORT_FOR_CONTROLLERS, () -> {
-            System.err.println("Disconnect detected");
-            System.exit(-1);
-        });
-        System.out.println("Running with " + sessionDetails.getOneTimeToken());
+        NetworkConnector.NetworkConnectorResult networkConnectorResult = NetworkConnector.runNetworkConnector(authToken, autoDetectedPort, Backend.SERVER_PORT_FOR_CONTROLLERS);
+        System.out.println("Running with " + networkConnectorResult.getOneTimeToken());
     }
 }
