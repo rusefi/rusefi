@@ -443,6 +443,9 @@ typedef enum {
 	 */
 	LM_REAL_MAF = 4,
 
+	// todo: rename after LM_ALPHA_N is removed
+	LM_ALPHA_N_2 = 5,
+
 	Force_4_bytes_size_engine_load_mode = ENUM_32_BITS,
 } engine_load_mode_e;
 
