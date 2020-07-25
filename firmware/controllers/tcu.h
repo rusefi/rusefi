@@ -2,7 +2,6 @@
 
 #include "global.h"
 #include "io_pins.h"
-#include "tunerstudio_outputs.h"
 #include "persistent_configuration.h"
 #include "engine_configuration_generated_structures.h"
 #include "globalaccess.h"
@@ -14,7 +13,7 @@ public:
 private:
     gear_e currentGear = NEUTRAL;
 protected:
-    void postState(TunerStudioOutputChannels*);
+    void postState();
 };
 
 class GearControllerBase {
@@ -25,6 +24,6 @@ private:
     gear_e desiredGear = NEUTRAL;
 protected:
     gear_e setDesiredGear(gear_e);
-    void postState(TunerStudioOutputChannels*);
+    void postState();
     TransmissionControllerBase transmissionController;
 };

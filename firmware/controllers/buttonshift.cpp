@@ -44,7 +44,7 @@ void ButtonShiftController::update() {
                 break;
         }
     }
-    postState(&tsOutputChannels);
+    postState();
 }
 
 void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
