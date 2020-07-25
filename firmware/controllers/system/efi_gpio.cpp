@@ -323,7 +323,9 @@ bool OutputPin::getAndSet(int logicValue) {
 }
 
 void OutputPin::setValue(int logicValue) {
+#if ENABLE_PERF_TRACE
 	ScopePerf perf(PE::OutputPinSetValue);
+#endif // ENABLE_PERF_TRACE
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
