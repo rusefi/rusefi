@@ -595,6 +595,8 @@ case LM_REAL_MAF:
   return "LM_REAL_MAF";
 case LM_SPEED_DENSITY:
   return "LM_SPEED_DENSITY";
+case LM_ALPHA_N_2:
+  return "LM_ALPHA_N_2";
   }
  return NULL;
 }
