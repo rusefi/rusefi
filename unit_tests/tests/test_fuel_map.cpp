@@ -6,7 +6,6 @@
  */
 
 #include "fuel_math.h"
-#include "maf_airmass.h"
 #include "trigger_structure.h"
 #include "allsensors.h"
 #include "engine_math.h"
@@ -18,27 +17,6 @@
 #include "mocks.h"
 
 using ::testing::FloatNear;
-
-TEST(misc, testMafFuelMath) {
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
-	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
-	engineConfiguration->injector.flow = 200;
-	setAfrMap(config->afrTable, 13);
-
-	MockVp3d veTable;
-	// Ensure that the correct cell is read from the VE table
-	EXPECT_CALL(veTable, getValue(6000, FloatNear(70.9814f, EPS4D)))
-		.WillOnce(Return(75.0f));
-
-	MafAirmass dut(veTable);
-	INJECT_ENGINE_REFERENCE(&dut);
-
-	auto airmass = dut.getAirmassImpl(200, 6000);
-
-	// Check results
-	EXPECT_NEAR(0.277777f * 0.75f, airmass.CylinderAirmass, EPS4D);
-	EXPECT_NEAR(70.9814f, airmass.EngineLoadPercent, EPS4D);
-}
 
 TEST(misc, testFuelMap) {
 	printf("Setting up FORD_ASPIRE_1996\r\n");
