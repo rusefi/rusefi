@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
@@ -11,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -18,6 +20,7 @@ import java.util.LinkedList;
  */
 @SuppressWarnings("InfiniteLoopStatement")
 public class SensorLiveGraph extends JPanel {
+    private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("SensorLiveGraph", true);
     private static final int COUNT = 30;
     private static final String SENSOR_TYPE = "sensor";
     private static final String PERIOD = "period";
@@ -41,8 +44,7 @@ public class SensorLiveGraph extends JPanel {
         String gaugeName = config.getProperty(SENSOR_TYPE, defaultSensor.name());
         this.sensor = Sensor.lookup(gaugeName, defaultSensor);
 
-        Thread thread = new Thread(createRunnable());
-        thread.setDaemon(true);
+        Thread thread = THREAD_FACTORY.newThread(createRunnable());
         thread.start();
         period = ChangePeriod.lookup(config.getProperty(PERIOD));
         autoScale = config.getBoolProperty(USE_AUTO_SCALE);

@@ -4,6 +4,7 @@ import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.rusefi.AutoTest;
 import com.rusefi.FileLog;
 import com.rusefi.InfixConverter;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
@@ -21,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -29,6 +31,7 @@ import java.util.function.Function;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class AnyCommand {
+    private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("AnyCommand");
     public static final String KEY = "last_value";
     private static final String DECODE_RPN = "decode_rpn";
 
@@ -171,7 +174,7 @@ public class AnyCommand {
         int rpm = Integer.parseInt(parts[1]);
         int settleTime = Integer.parseInt(parts[2]);
         int durationTime = Integer.parseInt(parts[3]);
-        new Thread(new Runnable() {
+        THREAD_FACTORY.newThread(new Runnable() {
             @Override
             public void run() {
                 MessagesCentral.getInstance().postMessage(AnyCommand.class, "Will test with RPM " + rpm + ", settle time" + settleTime + "s and duration" + durationTime + "s");

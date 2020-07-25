@@ -6,6 +6,7 @@ import com.opensr5.Logger;
 import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
@@ -32,25 +33,23 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
 
 /**
  * This object represents logical state of physical connection.
- *
+ * <p>
  * Instance is connected until we experience issues. Once we decide to close the connection there is no restart -
  * new instance of this class would need to be created once we establish a new physical connection.
- *
+ * <p>
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
  */
 public class BinaryProtocol implements BinaryProtocolCommands {
     private static final Logging log = getLogging(BinaryProtocol.class);
+    private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("text pull");
 
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.rusefi_binary";
@@ -101,7 +100,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             case Fields.TS_OUTPUT_COMMAND:
                 return "TS_OUTPUT_COMMAND";
             default:
-                return "command " + (char) + command + "/" + command;
+                return "command " + (char) +command + "/" + command;
         }
     }
 
@@ -228,7 +227,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     private void startTextPullThread(final DataListener listener) {
         if (!linkManager.COMMUNICATION_QUEUE.isEmpty()) {
-            System.out.println("Current queue: " + linkManager.COMMUNICATION_QUEUE.size());
+            log.info("Current queue: " + linkManager.COMMUNICATION_QUEUE.size());
         }
         Runnable textPull = new Runnable() {
             @Override
@@ -254,8 +253,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 log.info("Stopping text pull");
             }
         };
-        Thread tr = new Thread(textPull);
-        tr.setName("text pull");
+        Thread tr = THREAD_FACTORY.newThread(textPull);
         tr.start();
     }
 
@@ -396,7 +394,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
         if (localCached != null) {
             int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
-            System.out.printf(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration);
+            log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
             byte packet[] = new byte[7];
             packet[0] = COMMAND_CRC_CHECK_COMMAND;
@@ -407,7 +405,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 // that's unusual - most of the protocol is LITTLE_ENDIAN
                 bb.order(ByteOrder.BIG_ENDIAN);
                 int crcFromController = bb.getInt();
-                System.out.printf("From rusEFI CRC %x\n", crcFromController);
+                log.info(String.format("From rusEFI CRC %x\n", crcFromController));
                 if (crcOfLocallyCachedConfiguration == crcFromController) {
                     return localCached;
                 }
