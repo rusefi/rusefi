@@ -102,7 +102,7 @@
 
         <jar destfile="${server_jar_file}">
             <manifest>
-                <attribute name="Main-Class" value="com.rusefi.Launcher"/>
+                <attribute name="Main-Class" value="com.rusefi.server.BackendLauncher"/>
                 <attribute name="Built-Date" value="${TODAY}"/>
                 <attribute name="Signature-Vendor" value="rusEFI LLC"/>
             </manifest>

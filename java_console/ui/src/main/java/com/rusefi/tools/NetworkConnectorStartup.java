@@ -3,7 +3,7 @@ package com.rusefi.tools;
 import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.proxy.NetworkConnector;
-import com.rusefi.server.Backend;
+import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.ui.AuthTokenPanel;
 
 public class NetworkConnectorStartup {
@@ -20,7 +20,7 @@ public class NetworkConnectorStartup {
             return;
         }
 
-        NetworkConnector.NetworkConnectorResult networkConnectorResult = NetworkConnector.runNetworkConnector(authToken, autoDetectedPort, Backend.SERVER_PORT_FOR_CONTROLLERS);
+        NetworkConnector.NetworkConnectorResult networkConnectorResult = NetworkConnector.runNetworkConnector(authToken, autoDetectedPort, ProxyClient.SERVER_PORT_FOR_CONTROLLERS);
         System.out.println("Running with " + networkConnectorResult.getOneTimeToken());
     }
 }

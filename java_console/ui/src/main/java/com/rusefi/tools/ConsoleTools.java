@@ -21,7 +21,6 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.ExecHelper;
-import com.rusefi.server.BackendLauncher;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
@@ -31,8 +30,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
@@ -62,7 +59,6 @@ public class ConsoleTools {
         registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
         registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
-        registerTool("proxy_server", a -> BackendLauncher.start(), "NOT A USER TOOL");
         registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
         registerTool("network_authenticator", LocalApplicationProxy::start, "rusEFI Online Authenticator");
 
