@@ -172,28 +172,28 @@ public class IncomingDataBuffer {
     public byte readByte(int timeoutMs) throws IOException {
         boolean isTimeout = waitForBytes(timeoutMs, loggingPrefix + "readByte", System.currentTimeMillis(), 1);
         if (isTimeout)
-            throw new IOException("Timeout in readByte");
+            throw new EOFException("Timeout in readByte");
         return (byte) getByte();
     }
 
     public int readInt() throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "readInt", System.currentTimeMillis(), 4);
         if (isTimeout)
-            throw new IllegalStateException("Timeout in readByte");
+            throw new EOFException("Timeout in readByte");
         return swap32(getInt());
     }
 
     public short readShort() throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "readShort", System.currentTimeMillis(), 2);
         if (isTimeout)
-            throw new IllegalStateException("Timeout in readShort");
+            throw new EOFException("Timeout in readShort");
         return (short) swap16(getShort());
     }
 
-    public int read(byte[] packet) {
+    public int read(byte[] packet) throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "read", System.currentTimeMillis(), packet.length);
         if (isTimeout)
-            throw new IllegalStateException("Timeout while waiting " + packet.length);
+            throw new EOFException("Timeout while waiting " + packet.length);
         getData(packet);
         return packet.length;
     }
