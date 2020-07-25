@@ -1,7 +1,6 @@
 package com.rusefi.autodetect;
 
-import com.opensr5.Logger;
-import com.rusefi.FileLog;
+import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
@@ -17,29 +16,27 @@ import java.util.function.Function;
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
 public class SerialAutoChecker implements Runnable {
-    private final Logger logger;
+    private final static Logging log = Logging.getLogging(SerialAutoChecker.class);
     private final String serialPort;
     private final CountDownLatch portFound;
     private final AtomicReference<String> result;
     private final Function<IoStream, Void> callback;
     public static String SIGNATURE;
 
-    public SerialAutoChecker(Logger logger, String serialPort, CountDownLatch portFound, AtomicReference<String> result, Function<IoStream, Void> callback) {
-        this.logger = logger;
+    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<String> result, Function<IoStream, Void> callback) {
         this.serialPort = serialPort;
         this.portFound = portFound;
         this.result = result;
         this.callback = callback;
     }
 
-    public SerialAutoChecker(Logger logger, String serialPort, CountDownLatch portFound, AtomicReference<String> result) {
-        this(logger, serialPort, portFound, result, null);
+    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<String> result) {
+        this(serialPort, portFound, result, null);
     }
 
     @Override
     public void run() {
         IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort);
-        Logger logger = FileLog.LOGGER;
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         try {
             HelloCommand.send(stream);
@@ -48,7 +45,7 @@ public class SerialAutoChecker implements Runnable {
                 return;
             String signature = new String(response, 1, response.length - 1);
             SIGNATURE = signature;
-            System.out.println("Got signature=" + signature + " from " + serialPort);
+            log.info("Got signature=" + signature + " from " + serialPort);
             if (signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {
                 if (callback != null) {
                     callback.apply(stream);
