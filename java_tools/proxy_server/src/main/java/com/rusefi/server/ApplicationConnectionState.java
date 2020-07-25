@@ -10,6 +10,7 @@ public class ApplicationConnectionState {
     @NotNull
     private final IoStream clientStream;
     private final ControllerConnectionState state;
+    private final Birthday birthday = new Birthday();
 
     public ApplicationConnectionState(UserDetails userDetails, IoStream clientStream, ControllerConnectionState state) {
         this.userDetails = Objects.requireNonNull(userDetails, "userDetails");
@@ -29,6 +30,10 @@ public class ApplicationConnectionState {
 
     public UserDetails getUserDetails() {
         return userDetails;
+    }
+
+    public Birthday getBirthday() {
+        return birthday;
     }
 
     public void close() {

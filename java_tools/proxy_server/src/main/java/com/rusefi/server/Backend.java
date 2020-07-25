@@ -34,8 +34,10 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.SECOND;
 
 /**
- * See NetworkConnectorStartup
+ * See NetworkConnectorStartup - NetworkConnector connects an ECU to this backend
  *
+ * @see ControllerConnectionState ECU session
+ * @see ApplicationConnectionState tuning application session
  * @see BackendLauncher
  */
 public class Backend implements Closeable {
@@ -51,6 +53,7 @@ public class Backend implements Closeable {
      * @see BinaryProtocolProxy#USER_IO_TIMEOUT
      */
     private static final int APPLICATION_INACTIVITY_TIMEOUT = 3 * Timeouts.MINUTE;
+    static final String AGE = "age";
 
     private final FkRegex showOnlineControllers = new FkRegex(ProxyClient.LIST_CONTROLLERS_PATH,
             (Take) req -> getControllersOnline()
@@ -261,6 +264,7 @@ public class Backend implements Closeable {
             JsonObject applicationObject = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, application.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, application.getUserDetails().getUserName())
+                    .add(AGE, application.getBirthday().getDuration())
                     .add(MAX_PACKET_GAP, application.getClientStream().getStreamStats().getMaxPacketGap())
                     .build();
             builder.add(applicationObject);
@@ -281,6 +285,7 @@ public class Backend implements Closeable {
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
+                    .add(AGE, client.getBirthday().getDuration())
                     .add(ProxyClient.IS_USED, client.getTwoKindSemaphore().isUsed())
                     .add(ControllerStateDetails.RPM, rpm)
                     .add(ControllerStateDetails.CLT, clt)
@@ -349,6 +354,10 @@ public class Backend implements Closeable {
     @Override
     public void close() {
         isClosed = true;
+    }
+
+    public boolean isClosed() {
+        return isClosed;
     }
 
     public List<ControllerConnectionState> getControllers() {

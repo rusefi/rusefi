@@ -36,6 +36,7 @@ public class ControllerConnectionState {
 
     private final TwoKindSemaphore twoKindSemaphore = new TwoKindSemaphore();
     private final SensorsHolder sensorsHolder = new SensorsHolder();
+    private final Birthday birthday = new Birthday();
 
     public ControllerConnectionState(Socket clientSocket, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
@@ -46,6 +47,10 @@ public class ControllerConnectionState {
         } catch (IOException e) {
             close();
         }
+    }
+
+    public Birthday getBirthday() {
+        return birthday;
     }
 
     public IoStream getStream() {
