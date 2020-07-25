@@ -19,7 +19,7 @@ import static com.devexperts.logging.Logging.getLogging;
 
 public class LocalApplicationProxy {
     private static final Logging log = getLogging(LocalApplicationProxy.class);
-    public static final int SERVER_PORT_FOR_APPLICATIONS = 8002;
+    public static final int SERVER_PORT_FOR_APPLICATIONS = HttpUtil.getIntProperty("applications.port", 8002);
     private final ApplicationRequest applicationRequest;
 
     public LocalApplicationProxy(ApplicationRequest applicationRequest) {

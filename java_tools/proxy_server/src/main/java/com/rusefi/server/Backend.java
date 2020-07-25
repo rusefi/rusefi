@@ -34,6 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.SECOND;
+import static com.rusefi.tools.online.HttpUtil.getIntProperty;
 
 /**
  * See NetworkConnectorStartup - NetworkConnector connects an ECU to this backend
@@ -49,7 +50,7 @@ public class Backend implements Closeable {
      * @see HttpUtil#PROXY_JSON_API_HTTP_PORT
      * @see LocalApplicationProxy#SERVER_PORT_FOR_APPLICATIONS
      */
-    public static final int SERVER_PORT_FOR_CONTROLLERS = 8003;
+    public static final int SERVER_PORT_FOR_CONTROLLERS = getIntProperty("controllers.port", 8003);
     private static final String MAX_PACKET_GAP = "MAX_PACKET_GAP";
 
     /**
