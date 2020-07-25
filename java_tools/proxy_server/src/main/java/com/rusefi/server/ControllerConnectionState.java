@@ -137,6 +137,7 @@ public class ControllerConnectionState {
             getOutputs();
         } catch (IOException e) {
             // todo: this is currently not covered by a unit test
+            log.error("grabOutputs " + this, e);
             backend.close(this);
         }
     }

@@ -1,9 +1,13 @@
 package com.rusefi.server;
 
+import com.devexperts.logging.Logging;
+
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class TwoKindSemaphore {
+    private final static Logging log = Logging.getLogging(TwoKindSemaphore.class);
+
     // we have to distinguish between long-term usage by application and short-term usage just to refresh gauges
     private final static int LONG_TERM = 2;
     private final static int SHORT_TERM = 1;
@@ -11,6 +15,7 @@ public class TwoKindSemaphore {
     private UserDetails owner;
 
     public void releaseFromLongTermUsage() {
+        log.info("release " + owner);
         semaphore.release(LONG_TERM);
         // not atomic but that's fine, isUsed is the source of truth
         owner = null;

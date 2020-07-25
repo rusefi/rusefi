@@ -34,6 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.SECOND;
+import static com.rusefi.server.Birthday.humanReadableFormat;
 
 /**
  * See NetworkConnectorStartup - NetworkConnector connects an ECU to this backend
@@ -254,6 +255,7 @@ public class Backend implements Closeable {
 
                 register(controllerConnectionState);
             } catch (Throwable e) {
+                log.error("runControllerConnector close " + controllerConnectionState, e);
                 close(controllerConnectionState);
             }
         }, serverPortForControllers, "ControllerServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
@@ -323,13 +325,13 @@ public class Backend implements Closeable {
             applications = new ArrayList<>(this.applications);
         }
 
-        long now = System.currentTimeMillis();
         for (ApplicationConnectionState client : applications) {
-            if (now - client.getClientStream().getStreamStats().getPreviousPacketArrivalTime() > applicationTimeout) {
+            long timeSinceLastActivity = System.currentTimeMillis() - client.getClientStream().getStreamStats().getPreviousPacketArrivalTime();
+            if (timeSinceLastActivity > applicationTimeout) {
                 log.error("Kicking out application " + client);
                 close(client);
             } else {
-                log.info("Looks alive " + client);
+                log.info("Looks alive " + client + " time since last activity: " + humanReadableFormat(timeSinceLastActivity));
             }
         }
 
@@ -339,7 +341,8 @@ public class Backend implements Closeable {
         }
 
         for (ControllerConnectionState controllerConnectionState : controllers) {
-            log.info("State: " + controllerConnectionState);
+            long timeSinceLastActivity = System.currentTimeMillis() - controllerConnectionState.getStream().getStreamStats().getPreviousPacketArrivalTime();
+            log.info("State: " + controllerConnectionState + " time since last activity: " + humanReadableFormat(timeSinceLastActivity));
         }
     }
 
