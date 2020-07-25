@@ -1,3 +1,5 @@
+#pragma once
+
 #include "tcu.h"
 #include "globalaccess.h"
 #include "debounce.h"
@@ -10,3 +12,8 @@ private:
     ButtonDebounce *debounceUp;
     ButtonDebounce *debounceDown;
 };
+
+ButtonShiftController *buttonShiftController;
+
+void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void updateButtonShift();

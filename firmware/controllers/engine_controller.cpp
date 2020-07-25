@@ -265,7 +265,7 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 
-	buttonShiftController.update();
+	updateButtonShift();
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -582,7 +582,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_IDLE_CONTROL */
 
-	ButtonShiftController buttonShiftController(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initButtonShift(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
