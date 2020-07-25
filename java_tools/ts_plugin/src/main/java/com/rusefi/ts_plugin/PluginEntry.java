@@ -10,15 +10,15 @@ import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
 /**
- * TsPlugin launcher creates an instance of this class via reflection.
+ * {@link TsPluginLauncher} creates an instance of this class via reflection.
  */
 public class PluginEntry implements TsPluginBody {
     private final JPanel content = new JPanel(new BorderLayout());
-    private final JTabbedPane tabbedPane = new JTabbedPane();
 
     /**
      * the real constructor - this one is invoked via reflection
      */
+    @SuppressWarnings("unused")
     public PluginEntry() {
         this(ControllerAccess::getInstance);
     }
@@ -35,6 +35,7 @@ public class PluginEntry implements TsPluginBody {
         BroadcastTab broadcastTab = new BroadcastTab();
         RemoteTab remoteTab = new RemoteTab();
 
+        JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Upload", uploadTab.getContent());
         tabbedPane.addTab("Broadcast", broadcastTab.getContent());
         tabbedPane.addTab("Remote ECU", remoteTab.getContent());

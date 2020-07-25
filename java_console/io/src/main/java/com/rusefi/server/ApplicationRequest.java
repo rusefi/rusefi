@@ -7,38 +7,37 @@ import java.util.Objects;
 
 public class ApplicationRequest {
     private static final String SESSION = "session";
-    private static final String USER_ID = "user_id";
 
     private final SessionDetails sessionDetails;
-    private final int targetUserId;
+    private final UserDetails targetUser;
 
-    public ApplicationRequest(SessionDetails sessionDetails, int targetUserId) {
+    public ApplicationRequest(SessionDetails sessionDetails, UserDetails targetUser) {
         this.sessionDetails = sessionDetails;
-        this.targetUserId = targetUserId;
+        this.targetUser = targetUser;
     }
 
     public SessionDetails getSessionDetails() {
         return sessionDetails;
     }
 
-    public int getTargetUserId() {
-        return targetUserId;
+    public UserDetails getTargetUser() {
+        return targetUser;
     }
 
     public String toJson() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(SESSION, sessionDetails.toJson());
-        jsonObject.put(USER_ID, targetUserId);
+        targetUser.put(jsonObject);
         return jsonObject.toJSONString();
     }
 
     public static ApplicationRequest valueOf(String jsonString) {
         JSONObject jsonObject = HttpUtil.parse(jsonString);
 
-        long targetUserId = (Long) jsonObject.get(USER_ID);
+        UserDetails userDetails = UserDetails.valueOf(jsonObject);
 
         SessionDetails session = SessionDetails.valueOf((String) jsonObject.get(SESSION));
-        return new ApplicationRequest(session, (int)targetUserId);
+        return new ApplicationRequest(session, userDetails);
     }
 
     @Override
@@ -46,20 +45,20 @@ public class ApplicationRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ApplicationRequest that = (ApplicationRequest) o;
-        return targetUserId == that.targetUserId &&
+        return targetUser == that.targetUser &&
                 sessionDetails.equals(that.sessionDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sessionDetails, targetUserId);
+        return Objects.hash(sessionDetails, targetUser);
     }
 
     @Override
     public String toString() {
         return "ApplicationRequest{" +
                 "sessionDetails=" + sessionDetails +
-                ", targetUserId=" + targetUserId +
+                ", targetUserId=" + targetUser +
                 '}';
     }
 }

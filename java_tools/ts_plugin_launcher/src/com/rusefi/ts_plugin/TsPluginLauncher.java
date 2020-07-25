@@ -17,7 +17,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
     public TsPluginLauncher() {
-        System.out.println("TsPluginLauncher " + this);
+        System.out.println("init " + this);
     }
 
     @Override
@@ -46,6 +46,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
 
     @Override
     public boolean displayPlugin(String signature) {
+        System.out.println("displayPlugin " + signature);
         // todo: smarter implementation one day
         return true;
     }
@@ -63,7 +64,8 @@ public class TsPluginLauncher implements ApplicationPlugin {
     @Override
     public JComponent getPluginPanel() {
         synchronized (this) {
-            // only create content if TS is actually planning to display this plugin instance
+            // lazy initialization since TunerStudio creates one instance only to get version information without any
+            // intentions to display the UI
             if (content.getComponents().length == 0) {
                 System.out.println("Create Updater " + this);
                 Updater updater = new Updater();
@@ -75,7 +77,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
 
     @Override
     public void close() {
-        System.out.printf("TsPlugin#close");
+        System.out.println("close " + this);
     }
 
     @Override

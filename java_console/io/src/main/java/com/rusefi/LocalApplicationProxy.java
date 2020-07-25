@@ -1,8 +1,6 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
-import com.opensr5.Logger;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
@@ -13,45 +11,70 @@ import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-public class LocalApplicationProxy {
+public class LocalApplicationProxy implements Closeable {
     private static final Logging log = getLogging(LocalApplicationProxy.class);
     public static final int SERVER_PORT_FOR_APPLICATIONS = HttpUtil.getIntProperty("applications.port", 8002);
     private final ApplicationRequest applicationRequest;
+    private final ServerHolder serverHolder;
+    private final IoStream authenticatorToProxyStream;
 
-    public LocalApplicationProxy(ApplicationRequest applicationRequest) {
+    public LocalApplicationProxy(ApplicationRequest applicationRequest, ServerHolder serverHolder, IoStream authenticatorToProxyStream) {
         this.applicationRequest = applicationRequest;
+        this.serverHolder = serverHolder;
+        this.authenticatorToProxyStream = authenticatorToProxyStream;
+    }
+
+    public ApplicationRequest getApplicationRequest() {
+        return applicationRequest;
     }
 
     /**
      * @param serverPortForRemoteUsers port on which rusEFI proxy accepts authenticator connections
      * @param applicationRequest       remote session we want to connect to
-     * @param localApplicationPort        local port we would bind for TunerStudio to connect to
+     * @param localApplicationPort     local port we would bind for TunerStudio to connect to
      * @param jsonHttpPort
      * @param disconnectListener
+     * @param connectionListener
      */
-    public static ServerHolder startAndRun(int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int localApplicationPort, int jsonHttpPort, TcpIoStream.DisconnectListener disconnectListener) throws IOException {
+    public static ServerHolder startAndRun(int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int localApplicationPort, int jsonHttpPort, TcpIoStream.DisconnectListener disconnectListener, ConnectionListener connectionListener) throws IOException {
         String version = HttpUtil.executeGet(ProxyClient.getHttpAddress(jsonHttpPort) + ProxyClient.VERSION_PATH);
         log.info("Server says version=" + version);
         if (!version.contains(ProxyClient.BACKEND_VERSION))
             throw new IOException("Unexpected backend version " + version + " while we want " + ProxyClient.BACKEND_VERSION);
 
         IoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForRemoteUsers), disconnectListener);
-        LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(applicationRequest);
-        log.info("Pushing " + applicationRequest);
-        localApplicationProxy.run(authenticatorToProxyStream);
+        LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);
 
-        return BinaryProtocolProxy.createProxy(authenticatorToProxyStream, localApplicationPort);
+        ServerHolder serverHolder = BinaryProtocolProxy.createProxy(authenticatorToProxyStream, localApplicationPort);
+        LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(applicationRequest, serverHolder, authenticatorToProxyStream);
+        connectionListener.onConnected(localApplicationProxy);
+        return serverHolder;
     }
 
-    public void run(IoStream authenticatorToProxyStream) throws IOException {
+    public static void sendHello(IoStream authenticatorToProxyStream, ApplicationRequest applicationRequest) throws IOException {
+        log.info("Pushing " + applicationRequest);
         // right from connection push session authentication data
         new HelloCommand(applicationRequest.toJson()).handle(authenticatorToProxyStream);
     }
 
     public static void start(String[] strings) {
+    }
+
+    @Override
+    public void close() {
+        serverHolder.close();
+        authenticatorToProxyStream.close();
+    }
+
+    public interface ConnectionListener {
+        ConnectionListener VOID = localApplicationProxy -> {
+        };
+
+        void onConnected(LocalApplicationProxy localApplicationProxy);
     }
 }
