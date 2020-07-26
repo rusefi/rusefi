@@ -83,13 +83,13 @@ TEST(etb, initializationDualThrottle) {
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-TEST(etb, initializationVolkswagenEtbIdleMode) {
+TEST(etb, initializationDcMotorIdleValveMode) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// Enable VW idle mode
-	engineConfiguration->volkswagenEtbIdle = true;
+	engineConfiguration->dcMotorIdleValve = true;
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
@@ -231,7 +231,7 @@ TEST(etb, idleVolkswagenMode) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// In this mode the idle position should be passed thru as the setpoint directly
-	engineConfiguration->volkswagenEtbIdle = true;
+	engineConfiguration->dcMotorIdleValve = true;
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
