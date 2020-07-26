@@ -1,6 +1,7 @@
 package com.rusefi.io.tcp;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.Listener;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
@@ -27,7 +28,7 @@ public class BinaryProtocolProxy {
      */
     public static final int USER_IO_TIMEOUT = 10 * Timeouts.MINUTE;
 
-    public static ServerHolder createProxy(IoStream targetEcuSocket, int serverProxyPort) {
+    public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort) {
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             TcpIoStream clientStream = null;
             try {
@@ -38,7 +39,7 @@ public class BinaryProtocolProxy {
                 close(clientStream);
             }
         };
-        return BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, null);
+        return BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Listener.empty());
     }
 
     public static void runProxy(IoStream targetEcu, IoStream clientStream) throws IOException {

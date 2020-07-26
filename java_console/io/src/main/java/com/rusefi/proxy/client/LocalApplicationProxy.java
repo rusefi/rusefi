@@ -4,7 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
-import com.rusefi.io.tcp.ServerHolder;
+import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.rusEFISSLContext;
@@ -20,10 +20,10 @@ public class LocalApplicationProxy implements Closeable {
     private static final Logging log = getLogging(LocalApplicationProxy.class);
     public static final int SERVER_PORT_FOR_APPLICATIONS = HttpUtil.getIntProperty("applications.port", 8002);
     private final ApplicationRequest applicationRequest;
-    private final ServerHolder serverHolder;
+    private final ServerSocketReference serverHolder;
     private final IoStream authenticatorToProxyStream;
 
-    public LocalApplicationProxy(ApplicationRequest applicationRequest, ServerHolder serverHolder, IoStream authenticatorToProxyStream) {
+    public LocalApplicationProxy(ApplicationRequest applicationRequest, ServerSocketReference serverHolder, IoStream authenticatorToProxyStream) {
         this.applicationRequest = applicationRequest;
         this.serverHolder = serverHolder;
         this.authenticatorToProxyStream = authenticatorToProxyStream;
@@ -34,6 +34,7 @@ public class LocalApplicationProxy implements Closeable {
     }
 
     /**
+     * @param context
      * @param serverPortForRemoteUsers port on which rusEFI proxy accepts authenticator connections
      * @param applicationRequest       remote session we want to connect to
      * @param localApplicationPort     local port we would bind for TunerStudio to connect to
@@ -41,8 +42,8 @@ public class LocalApplicationProxy implements Closeable {
      * @param disconnectListener
      * @param connectionListener
      */
-    public static ServerHolder startAndRun(int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int localApplicationPort, int jsonHttpPort, TcpIoStream.DisconnectListener disconnectListener, ConnectionListener connectionListener) throws IOException {
-        String version = HttpUtil.executeGet(ProxyClient.getHttpAddress(jsonHttpPort) + ProxyClient.VERSION_PATH);
+    public static ServerSocketReference startAndRun(LocalApplicationProxyContext context, int serverPortForRemoteUsers, ApplicationRequest applicationRequest, int localApplicationPort, int jsonHttpPort, TcpIoStream.DisconnectListener disconnectListener, ConnectionListener connectionListener) throws IOException {
+        String version = context.executeGet(ProxyClient.getHttpAddress(jsonHttpPort) + ProxyClient.VERSION_PATH);
         log.info("Server says version=" + version);
         if (!version.contains(ProxyClient.BACKEND_VERSION))
             throw new IOException("Unexpected backend version " + version + " while we want " + ProxyClient.BACKEND_VERSION);
@@ -50,7 +51,7 @@ public class LocalApplicationProxy implements Closeable {
         IoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForRemoteUsers), disconnectListener);
         LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);
 
-        ServerHolder serverHolder = BinaryProtocolProxy.createProxy(authenticatorToProxyStream, localApplicationPort);
+        ServerSocketReference serverHolder = BinaryProtocolProxy.createProxy(authenticatorToProxyStream, localApplicationPort);
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(applicationRequest, serverHolder, authenticatorToProxyStream);
         connectionListener.onConnected(localApplicationProxy);
         return serverHolder;

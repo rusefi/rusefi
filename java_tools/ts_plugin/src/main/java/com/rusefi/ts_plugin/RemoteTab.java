@@ -3,9 +3,10 @@ package com.rusefi.ts_plugin;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.SignatureHelper;
 import com.rusefi.autoupdate.AutoupdateUtil;
-import com.rusefi.io.tcp.ServerHolder;
+import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.client.LocalApplicationProxy;
+import com.rusefi.proxy.client.LocalApplicationProxyContextImpl;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
@@ -211,17 +212,18 @@ public class RemoteTab {
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, publicSession.getUserDetails());
 
         try {
-            AtomicReference<ServerHolder> serverHolderAtomicReference = new AtomicReference<>();
+            AtomicReference<ServerSocketReference> serverHolderAtomicReference = new AtomicReference<>();
 
             TcpIoStream.DisconnectListener disconnectListener = () -> SwingUtilities.invokeLater(() -> {
                 setStatus("Disconnected");
                 RemoteTabController.INSTANCE.setState(RemoteTabController.State.NOT_CONNECTED);
-                ServerHolder serverHolder = serverHolderAtomicReference.get();
+                ServerSocketReference serverHolder = serverHolderAtomicReference.get();
                 if (serverHolder != null)
                     serverHolder.close();
             });
 
-            ServerHolder serverHolder = LocalApplicationProxy.startAndRun(
+            ServerSocketReference serverHolder = LocalApplicationProxy.startAndRun(
+                    new LocalApplicationProxyContextImpl(),
                     LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS,
                     applicationRequest,
                     Integer.parseInt(getLocalPort()),
