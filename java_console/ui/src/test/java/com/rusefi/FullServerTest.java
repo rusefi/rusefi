@@ -8,6 +8,7 @@ import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
+import com.rusefi.proxy.NetworkConnectorContext;
 import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.proxy.client.LocalApplicationProxyContext;
 import com.rusefi.server.*;
@@ -89,9 +90,15 @@ public class FullServerTest {
             ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
             TestHelper.createVirtualController(controllerPort, controllerImage);
 
+            NetworkConnectorContext networkConnectorContext = new NetworkConnectorContext() {
+                @Override
+                public int serverPortForControllers() {
+                    return serverPortForControllers;
+                }
+            };
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-            NetworkConnector.NetworkConnectorResult networkConnectorResult = NetworkConnector.runNetworkConnector(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers);
+            NetworkConnector.NetworkConnectorResult networkConnectorResult = NetworkConnector.runNetworkConnector(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, networkConnectorContext);
             ControllerInfo controllerInfo = networkConnectorResult.getControllerInfo();
 
             assertTrue("controllerRegistered", controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));

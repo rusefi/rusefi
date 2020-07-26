@@ -2,7 +2,6 @@ package com.rusefi.io.tcp;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.Logger;
 import com.rusefi.Listener;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
@@ -48,7 +47,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     public static final Function<Integer, ServerSocket> PLAIN_SOCKET_FACTORY = port -> {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            Logger.CONSOLE.info("ServerSocket " + port + " created");
+            log.info("ServerSocket " + port + " created");
             return serverSocket;
         } catch (IOException e) {
             throw new IllegalStateException("Error binding server socket " + port, e);
