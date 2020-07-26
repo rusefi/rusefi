@@ -20,8 +20,6 @@ import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -56,15 +54,12 @@ public class RemoteTab {
         JButton refresh = new JButton("Refresh List");
         refresh.addActionListener(e -> requestListDownload());
 
-        disconnect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LocalApplicationProxy localApplicationProxy = RemoteTabController.INSTANCE.getLocalApplicationProxy();
-                if (localApplicationProxy != null)
-                    localApplicationProxy.close();
-                RemoteTabController.INSTANCE.setState(RemoteTabController.State.NOT_CONNECTED);
-                requestListDownload();
-            }
+        disconnect.addActionListener(e -> {
+            LocalApplicationProxy localApplicationProxy = RemoteTabController.INSTANCE.getLocalApplicationProxy();
+            if (localApplicationProxy != null)
+                localApplicationProxy.close();
+            RemoteTabController.INSTANCE.setState(RemoteTabController.State.NOT_CONNECTED);
+            requestListDownload();
         });
 
 
@@ -173,17 +168,14 @@ public class RemoteTab {
         RemoteTabController.INSTANCE.setState(RemoteTabController.State.CONNECTING);
         setStatus("Connecting to " + publicSession.getUserDetails().getUserName());
 
-        LocalApplicationProxy.ConnectionListener connectionListener = new LocalApplicationProxy.ConnectionListener() {
-            @Override
-            public void onConnected(LocalApplicationProxy localApplicationProxy) {
-                RemoteTabController.INSTANCE.setConnected(localApplicationProxy);
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        setConnectedStatus(publicSession.getUserDetails());
-                    }
-                });
-            }
+        LocalApplicationProxy.ConnectionListener connectionListener = localApplicationProxy -> {
+            RemoteTabController.INSTANCE.setConnected(localApplicationProxy);
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    setConnectedStatus(publicSession.getUserDetails());
+                }
+            });
         };
 
         new Thread(() -> {
@@ -214,7 +206,7 @@ public class RemoteTab {
         try {
             AtomicReference<ServerSocketReference> serverHolderAtomicReference = new AtomicReference<>();
 
-            TcpIoStream.DisconnectListener disconnectListener = () -> SwingUtilities.invokeLater(() -> {
+            TcpIoStream.DisconnectListener disconnectListener = message -> SwingUtilities.invokeLater(() -> {
                 setStatus("Disconnected");
                 RemoteTabController.INSTANCE.setState(RemoteTabController.State.NOT_CONNECTED);
                 ServerSocketReference serverHolder = serverHolderAtomicReference.get();
