@@ -93,6 +93,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 return "HELLO";
             case Fields.TS_READ_COMMAND:
                 return "READ";
+            case Fields.TS_GET_TEXT:
+                return "TS_GET_TEXT";
             case Fields.TS_GET_FIRMWARE_VERSION:
                 return "GET_FW_VERSION";
             case Fields.TS_CHUNK_WRITE_COMMAND:

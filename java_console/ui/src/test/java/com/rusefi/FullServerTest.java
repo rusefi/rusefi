@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -23,12 +24,15 @@ import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.TestHelper.*;
 import static com.rusefi.Timeouts.SECOND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class FullServerTest {
+    private static final Logging log = getLogging(FullServerTest.class);
+
     @Before
     public void setup() throws MalformedURLException {
         BackendTestHelper.commonServerTest();
@@ -76,7 +80,7 @@ public class FullServerTest {
                 super.close(applicationConnectionState);
                 applicationClosed.countDown();
             }
-        }; LinkManager clientManager = new LinkManager()) {
+        }; LinkManager clientManager = new LinkManager().setNeedPullData(false)) {
             int serverPortForControllers = 7001;
 
 
@@ -137,11 +141,10 @@ public class FullServerTest {
             assertEquals(1, applicationClosed.getCount());
 
             // now let's test that application connector would be terminated by server due to inactivity
-            System.out.println("Sleeping twice the application timeout");
+            log.info("Sleeping twice the application timeout");
             assertTrue(applicationClosed.await(2 * applicationTimeout, TimeUnit.MILLISECONDS));
 
             assertEquals("applications size", 0, backend.getApplications().size());
         }
     }
-
 }
