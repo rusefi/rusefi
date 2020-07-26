@@ -8,6 +8,7 @@ import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
+import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.server.*;
 import org.junit.Before;
 import org.junit.Test;

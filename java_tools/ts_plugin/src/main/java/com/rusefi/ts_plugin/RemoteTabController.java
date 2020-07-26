@@ -1,6 +1,6 @@
 package com.rusefi.ts_plugin;
 
-import com.rusefi.LocalApplicationProxy;
+import com.rusefi.proxy.client.LocalApplicationProxy;
 
 public enum RemoteTabController {
     /**

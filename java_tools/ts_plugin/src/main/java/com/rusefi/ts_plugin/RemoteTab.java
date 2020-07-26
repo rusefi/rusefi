@@ -1,11 +1,11 @@
 package com.rusefi.ts_plugin;
 
-import com.rusefi.LocalApplicationProxy;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.SignatureHelper;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.tcp.ServerHolder;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
