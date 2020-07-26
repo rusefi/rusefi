@@ -747,8 +747,8 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
-	// If you don't have a pedal, we have no business here.
-	if (!Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
+	// If you don't have a pedal (or VW idle valve mode), we have no business here.
+	if (!CONFIG(volkswagenEtbIdle) && !Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
 		return;
 	}
 
