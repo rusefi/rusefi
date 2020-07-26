@@ -40,6 +40,7 @@
 #include "electronic_throttle.h"
 #include "cj125.h"
 #include "malfunction_central.h"
+#include "tunerstudio_outputs.h"
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
