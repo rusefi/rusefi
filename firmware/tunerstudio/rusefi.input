@@ -2143,9 +2143,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = baroSettings, "Baro sensor"
 		field = "Baro ADC input",						baroSensor_hwChannel
-		field = baroSensor_lowValue,					baroSensor_lowValue, {baroSensor_hwChannel != 16}
-		field = baroSensor_highValue,					baroSensor_highValue, {baroSensor_hwChannel != 16}
-		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != 16}
+		field = baroSensor_lowValue,					baroSensor_lowValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = baroSensor_highValue,					baroSensor_highValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = mapCurves, "MAP sampling", yAxis
 		field = "isMapAveragingEnabled",				isMapAveragingEnabled
@@ -2171,7 +2171,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = egoSettings, "", yAxis
 		panel = egoSettings_IO
-		panel = egoSettings_sensor,	{afr_hwChannel != 16 && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
+		panel = egoSettings_sensor,	{afr_hwChannel != @@ADC_CHANNEL_NONE@@ && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
 		field = "Enable AEM X-Series CANbus",			enableAemXSeries, { canReadEnabled }
 		field = "Enable Innovate LC-2 Serial",			enableInnovateLC2, { auxSerialRxPin && auxSerialTxPin }
 
@@ -2854,13 +2854,13 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = veTableMap, South
 
 	dialog = etbPidDialog, "PID settings"
-		field = "pFactor",								etb_pFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "iFactor",								etb_iFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "dFactor",								etb_dFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "pid min",								etb_minValue, {throttlePedalPositionAdcChannel != 16}
-		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
-		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}
-		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
+		field = "pFactor",								etb_pFactor, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "iFactor",								etb_iFactor, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "dFactor",								etb_dFactor, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "pid min",								etb_minValue, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = etbIdleDialog, "ETB Idle"
 		field = "use ETB for idle",						useETBforIdleControl
@@ -2873,7 +2873,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Disable ETB Motor",					pauseEtbControl
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
-		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != 16 || (useStepperIdle && useHbridges) || dcMotorIdleValve  }
+		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) || dcMotorIdleValve  }
 
 	dialog = etbAutotune, "PID Autotune"
 		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
