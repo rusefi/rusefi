@@ -11,6 +11,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.server.rusEFISSLContext;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -88,7 +89,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     public static ServerSocketReference tcpServerSocket(Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
-        ThreadFactory threadFactory = THREAD_FACTORIES_BY_NAME.computeIfAbsent(threadName, NamedThreadFactory::new);
+        ThreadFactory threadFactory = getThreadFactory(threadName);
 
         Objects.requireNonNull(serverSocketCreationCallback, "serverSocketCreationCallback");
         ServerSocket serverSocket = nonSecureSocketFunction.apply(port);
@@ -112,6 +113,11 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         };
         threadFactory.newThread(runnable).start();
         return holder;
+    }
+
+    @NotNull
+    public static ThreadFactory getThreadFactory(String threadName) {
+        return THREAD_FACTORIES_BY_NAME.computeIfAbsent(threadName, NamedThreadFactory::new);
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
