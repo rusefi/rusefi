@@ -229,7 +229,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         int fromPacket = IoHelper.getCrc32(packet);
         if (crc != fromPacket)
             throw new IllegalStateException("CRC mismatch crc=" + Integer.toString(crc, 16) + " vs packet=" + Integer.toString(fromPacket, 16) + " len=" + packet.length + " data: " + IoStream.printHexBinary(packet));
-        in.onPacketArrived();
+// todo?!        in.onPacketArrived();
         return new Packet(packet, crc);
     }
 
