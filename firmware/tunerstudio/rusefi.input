@@ -2854,13 +2854,13 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = veTableMap, South
 
 	dialog = etbPidDialog, "PID settings"
-		field = "pFactor",								etb_pFactor, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
-		field = "iFactor",								etb_iFactor, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
-		field = "dFactor",								etb_dFactor, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
-		field = "pid min",								etb_minValue, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
-		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
-		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
-		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "pFactor",								etb_pFactor
+		field = "iFactor",								etb_iFactor
+		field = "dFactor",								etb_dFactor
+		field = "pid min",								etb_minValue
+		field = "pid max",								etb_maxValue
+		field = "iTermMin",								etb_iTermMin
+		field = "iTermMax",								etb_iTermMax
 
 	dialog = etbIdleDialog, "ETB Idle"
 		field = "use ETB for idle",						useETBforIdleControl
@@ -2868,12 +2868,12 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = etbDialogLeft
 		field = "https://rusefi.com/s/etb"
-		field = "Late 90s German DC Motor idle",		dcMotorIdleValve
+		field = "Late 90s German DC Motor idle",		dcMotorIdleValve, { throttlePedalPositionAdcChannel == @@ADC_CHANNEL_NONE@@ }
 		field = "Detailed status in console",			isVerboseETB
 		field = "Disable ETB Motor",					pauseEtbControl
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
-		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) || dcMotorIdleValve  }
+		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) || dcMotorIdleValve }
 
 	dialog = etbAutotune, "PID Autotune"
 		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
@@ -2885,8 +2885,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Debug mode",							debugMode
 
 	dialog = etbDialogRight
-		panel = etbIdleDialog
-		panel = etbPidDialog
+		panel = etbIdleDialog, {  throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@  }
+		panel = etbPidDialog,  { (throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@) || dcMotorIdleValve }
 		panel = etbAutotune
 
 		; Neutral position handling not yet implemented!
