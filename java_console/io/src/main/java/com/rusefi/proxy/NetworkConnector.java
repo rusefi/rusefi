@@ -30,9 +30,8 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
  */
 public class NetworkConnector {
     private final static Logging log = Logging.getLogging(NetworkConnector.class);
-    public static final int RECONNECT_DELAY = 15;
 
-    public static NetworkConnectorResult runNetworkConnector(String authToken, String controllerPort, int serverPortForControllers) {
+    public static NetworkConnectorResult runNetworkConnector(String authToken, String controllerPort, NetworkConnectorContext context) {
         LinkManager controllerConnector = new LinkManager()
                 .setCompositeLogicEnabled(false)
                 .setNeedPullData(false);
@@ -73,9 +72,9 @@ public class NetworkConnector {
                     proxyReconnectSemaphore.acquire();
 
                     try {
-                        runNetworkConnector(serverPortForControllers, controllerConnector, authToken, () -> {
-                            log.error("Disconnect from proxy server detected, now sleeping " + RECONNECT_DELAY + " seconds");
-                            sleep(RECONNECT_DELAY * Timeouts.SECOND);
+                        runNetworkConnector(context.serverPortForControllers(), controllerConnector, authToken, () -> {
+                            log.error("Disconnect from proxy server detected, now sleeping " + context.reconnectDelay() + " seconds");
+                            sleep(context.reconnectDelay() * Timeouts.SECOND);
                             proxyReconnectSemaphore.release();
                         }, oneTimeToken, controllerInfo);
                     } catch (IOException e) {
