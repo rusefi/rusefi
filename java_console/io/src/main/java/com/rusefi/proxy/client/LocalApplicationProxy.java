@@ -63,7 +63,7 @@ public class LocalApplicationProxy implements Closeable {
         THREAD_FACTORY.newThread(() -> {
             long start = System.currentTimeMillis();
             try {
-                while (relayCommandCounter.get() < 4) {
+                while (relayCommandCounter.get() < 4 && !isTimeForApplicationToConnect(context, start)) {
                     sleep(context.gaugePokingPeriod());
                     byte[] commandPacket = GetOutputsCommand.createRequest();
 
@@ -73,6 +73,12 @@ public class LocalApplicationProxy implements Closeable {
                         authenticatorToProxyStream.readPacket();
                     }
                 }
+
+                if (isTimeForApplicationToConnect(context, start) && relayCommandCounter.get() < 4) {
+                    // we should not keep controller blocker, time to auto-disconnect
+                    authenticatorToProxyStream.close();
+                }
+
             } catch (IOException e) {
                 log.error("Gauge poker", e);
             }
@@ -83,6 +89,10 @@ public class LocalApplicationProxy implements Closeable {
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(applicationRequest, serverHolder, authenticatorToProxyStream);
         connectionListener.onConnected(localApplicationProxy);
         return serverHolder;
+    }
+
+    private static boolean isTimeForApplicationToConnect(LocalApplicationProxyContext context, long start) {
+        return System.currentTimeMillis() - start > context.startUpIdle();
     }
 
     public static void sendHello(IoStream authenticatorToProxyStream, ApplicationRequest applicationRequest) throws IOException {
