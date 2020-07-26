@@ -198,11 +198,10 @@ public class IncomingDataBuffer {
         return (short) swap16(getShort());
     }
 
-    public int read(byte[] packet) throws EOFException {
+    public void read(byte[] packet) throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "read", System.currentTimeMillis(), packet.length);
         if (isTimeout)
             throw new EOFException("Timeout while waiting " + packet.length);
         getData(packet);
-        return packet.length;
     }
 }
