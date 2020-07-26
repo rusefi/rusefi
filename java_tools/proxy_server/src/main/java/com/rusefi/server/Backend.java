@@ -10,7 +10,9 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.shared.FileUtil;
 import com.rusefi.tools.online.ProxyClient;
 import net.jcip.annotations.GuardedBy;
 import org.jetbrains.annotations.NotNull;
@@ -85,6 +87,8 @@ public class Backend implements Closeable {
     public final static AtomicLong totalSessions = new AtomicLong();
     public int serverPortForApplications;
     public int serverPortForControllers;
+    private ServerSocketReference applicationConnector;
+    private ServerSocketReference controllerConnector;
 
     public Backend(UserDetailsResolver userDetailsResolver, int httpPort) {
         this(userDetailsResolver, httpPort, APPLICATION_INACTIVITY_TIMEOUT);
@@ -162,7 +166,7 @@ public class Backend implements Closeable {
         // connection from authenticator app which proxies for Tuner Studio
         // authenticator pushed hello packet on connect
         log.info("Starting application connector at " + serverPortForApplications);
-        BinaryProtocolServer.tcpServerSocket(applicationSocket -> () -> {
+        applicationConnector = BinaryProtocolServer.tcpServerSocket(applicationSocket -> () -> {
             log.info("new application connection!");
             totalSessions.incrementAndGet();
             // connection from authenticator app which proxies for Tuner Studio
@@ -245,7 +249,7 @@ public class Backend implements Closeable {
     public void runControllerConnector(int serverPortForControllers, Listener<?> serverSocketCreationCallback) {
         this.serverPortForControllers = serverPortForControllers;
         log.info("Starting controller connector at " + serverPortForControllers);
-        BinaryProtocolServer.tcpServerSocket(controllerSocket -> () -> {
+        controllerConnector = BinaryProtocolServer.tcpServerSocket(controllerSocket -> () -> {
             totalSessions.incrementAndGet();
             ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, getUserDetailsResolver());
             try {
@@ -367,6 +371,8 @@ public class Backend implements Closeable {
     @Override
     public void close() {
         isClosed = true;
+        FileUtil.close(applicationConnector);
+        FileUtil.close(controllerConnector);
     }
 
     public boolean isClosed() {
