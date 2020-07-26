@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 26 14:57:37 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 26 19:08:53 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1460,8 +1460,8 @@ struct engine_configuration_s {
 	offset 744 bit 26 */
 	bool is_enabled_spi_4 : 1;
 	/**
-	 * Disable the electronic throttle motor for testing.
-	 * This mode is for testing ETB position sensors, etc without actually driving the throttle.
+	 * Disable the electronic throttle motor and DC idle motor for testing.
+	 * This mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 	offset 744 bit 27 */
 	bool pauseEtbControl : 1;
 	/**
@@ -3533,4 +3533,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 26 14:57:37 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 26 19:08:53 UTC 2020
