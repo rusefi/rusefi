@@ -50,6 +50,10 @@ public class IncomingDataBuffer {
         return getPacket(msg, allowLongResponse, System.currentTimeMillis());
     }
 
+    /**
+     * why does this method return NULL in case of timeout?!
+     * todo: there is a very similar BinaryProtocolServer#readPromisedBytes which throws exception in case of timeout
+     */
     public byte[] getPacket(String msg, boolean allowLongResponse, long start) throws EOFException {
         boolean isTimeout = waitForBytes(msg + " header", start, 2);
         if (isTimeout)
@@ -78,11 +82,15 @@ public class IncomingDataBuffer {
                 log.debug(String.format("%x", actualCrc) + " vs " + String.format("%x", packetCrc));
             return null;
         }
-        streamStats.onPacketArrived();
+        onPacketArrived();
         if (log.debugEnabled())
             log.debug("packet " + Arrays.toString(packet) + ": crc OK");
 
         return packet;
+    }
+
+    public void onPacketArrived() {
+        streamStats.onPacketArrived();
     }
 
     public void addData(byte[] freshData) {
