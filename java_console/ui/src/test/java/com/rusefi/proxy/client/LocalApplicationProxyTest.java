@@ -54,7 +54,7 @@ public class LocalApplicationProxyTest {
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(TEST_TOKEN_1));
 
         CountDownLatch disconnected = new CountDownLatch(1);
-        LocalApplicationProxy.startAndRun(context, applicationRequest, -1, () -> disconnected.countDown(), LocalApplicationProxy.ConnectionListener.VOID);
+        LocalApplicationProxy.startAndRun(context, applicationRequest, -1, disconnected::countDown, LocalApplicationProxy.ConnectionListener.VOID);
 
         assertTrue(disconnected.await(30, TimeUnit.SECONDS));
         mockBackend.close();
@@ -73,7 +73,7 @@ public class LocalApplicationProxyTest {
 
                 HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer());
 
-                while (gaugePokes.getCount() > 0) {
+                while (!socket.isClosed()) {
                     BinaryProtocolServer.Packet packet = applicationClientStream.readPacket();
                     System.out.println("Got packet " + findCommand(packet.getPacket()[0]));
 
@@ -94,14 +94,14 @@ public class LocalApplicationProxyTest {
         SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, Fields.TS_SIGNATURE);
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(TEST_TOKEN_1));
 
-        LocalApplicationProxy.startAndRun(context, applicationRequest, -1, TcpIoStream.DisconnectListener.VOID, LocalApplicationProxy.ConnectionListener.VOID);
+        CountDownLatch disconnected = new CountDownLatch(1);
+        LocalApplicationProxy.startAndRun(context, applicationRequest, -1, disconnected::countDown, LocalApplicationProxy.ConnectionListener.VOID);
 
         // wait for three output requests to take place
-        assertTrue(gaugePokes.await(30, TimeUnit.SECONDS));
+        assertTrue("gaugePokes", gaugePokes.await(30, TimeUnit.SECONDS));
 
-
-
-
+        // but there must be a disconnect after some time
+        assertTrue("disconnected", disconnected.await(30, TimeUnit.SECONDS));
 
         mockBackend.close();
     }
