@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jul 26 14:49:43 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jul 26 14:57:46 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1759,8 +1759,11 @@ struct engine_configuration_s {
 	offset 976 bit 10 */
 	bool stftIgnoreErrorMagnitude : 1;
 	/**
+	 * Used on some German vehicles around late 90s: cable-operated throttle and DC motor idle air valve.
+	 * Set the primary TPS to the cable-operated throttle's sensor
+	 * Set the secondary TPS to the mini ETB's position sensor(s).
 	offset 976 bit 11 */
-	bool volkswagenEtbIdle : 1;
+	bool dcMotorIdleValve : 1;
 	/**
 	offset 976 bit 12 */
 	bool unusedBit_251_12 : 1;
@@ -3530,4 +3533,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jul 26 14:49:43 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Jul 26 14:57:46 UTC 2020

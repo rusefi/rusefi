@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 26 14:49:32 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 26 14:57:37 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -274,6 +274,7 @@ public class Fields {
 	public static final int cutSparkOnHardLimit_offset = 1464;
 	public static final int cylinderBore_offset = 408;
 	public static final int cylindersCount_offset = 400;
+	public static final int dcMotorIdleValve_offset = 976;
 	public static final int debugMapAveraging_offset = 807;
 	public static final int debugMode_offset = 2092;
 	public static final int debugTriggerSync_offset = 676;
@@ -1056,7 +1057,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 777282534;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1303,7 +1303,7 @@ public class Fields {
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.07.26.all.777282534";
+	public static final String TS_SIGNATURE = "rusEFI 2020.07.26.all.4158533130";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -1420,7 +1420,6 @@ public class Fields {
 	public static final int verboseTriggerSynchDetails_offset = 1476;
 	public static final int veRpmBins_offset = 18528;
 	public static final int veTable_offset = 17440;
-	public static final int volkswagenEtbIdle_offset = 976;
 	public static final int vRefAdcChannel_offset = 1470;
 	public static final int vvtCamSensorUseRise_offset = 744;
 	public static final int vvtMode_offset = 2328;
@@ -1888,7 +1887,7 @@ public class Fields {
 	public static final Field ENABLEINNOVATELC2 = Field.create("ENABLEINNOVATELC2", 976, FieldType.BIT, 8);
 	public static final Field SHOWHUMANREADABLEWARNING = Field.create("SHOWHUMANREADABLEWARNING", 976, FieldType.BIT, 9);
 	public static final Field STFTIGNOREERRORMAGNITUDE = Field.create("STFTIGNOREERRORMAGNITUDE", 976, FieldType.BIT, 10);
-	public static final Field VOLKSWAGENETBIDLE = Field.create("VOLKSWAGENETBIDLE", 976, FieldType.BIT, 11);
+	public static final Field DCMOTORIDLEVALVE = Field.create("DCMOTORIDLEVALVE", 976, FieldType.BIT, 11);
 	public static final Field UNUSEDBIT_251_12 = Field.create("UNUSEDBIT_251_12", 976, FieldType.BIT, 12);
 	public static final Field UNUSEDBIT_251_13 = Field.create("UNUSEDBIT_251_13", 976, FieldType.BIT, 13);
 	public static final Field UNUSEDBIT_251_14 = Field.create("UNUSEDBIT_251_14", 976, FieldType.BIT, 14);
@@ -2874,7 +2873,7 @@ public class Fields {
 	ENABLEINNOVATELC2,
 	SHOWHUMANREADABLEWARNING,
 	STFTIGNOREERRORMAGNITUDE,
-	VOLKSWAGENETBIDLE,
+	DCMOTORIDLEVALVE,
 	UNUSEDBIT_251_12,
 	UNUSEDBIT_251_13,
 	UNUSEDBIT_251_14,
