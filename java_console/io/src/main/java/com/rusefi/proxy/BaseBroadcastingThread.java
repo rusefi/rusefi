@@ -17,6 +17,7 @@ import java.net.Socket;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.io.tcp.BinaryProtocolServer.getPacketLength;
 import static com.rusefi.io.tcp.BinaryProtocolServer.readPromisedBytes;
+import static com.rusefi.shared.FileUtil.close;
 
 public class BaseBroadcastingThread {
     private static final Logging log = getLogging(BaseBroadcastingThread.class);
@@ -25,11 +26,12 @@ public class BaseBroadcastingThread {
 
     @SuppressWarnings("InfiniteLoopStatement")
     public BaseBroadcastingThread(Socket socket, SessionDetails sessionDetails, TcpIoStream.DisconnectListener disconnectListener) throws IOException {
-        TcpIoStream stream = new TcpIoStream("[broadcast] ", socket, disconnectListener);
-        IncomingDataBuffer in = stream.getDataBuffer();
 
         thread = BASE_BROADCASTING_THREAD.newThread(() -> {
+            TcpIoStream stream = null;
             try {
+                stream = new TcpIoStream("[broadcast] ", socket, disconnectListener);
+                IncomingDataBuffer in = stream.getDataBuffer();
                 boolean isFirstHello = true;
                 while (true) {
                     int ioTimeout;
@@ -59,7 +61,7 @@ public class BaseBroadcastingThread {
                 }
             } catch (IOException e) {
                 log.error("exiting thread " + e);
-                stream.close();
+                close(stream);
             }
         });
     }

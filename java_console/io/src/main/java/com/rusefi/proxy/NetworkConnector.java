@@ -18,6 +18,7 @@ import com.rusefi.tools.online.HttpUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,7 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 public class NetworkConnector {
     private final static Logging log = Logging.getLogging(NetworkConnector.class);
 
-    public static NetworkConnectorResult runNetworkConnector(String authToken, String controllerPort, NetworkConnectorContext context) {
+    public static NetworkConnectorResult runNetworkConnector(String authToken, String controllerPort, NetworkConnectorContext context, ReconnectListener reconnectListener) {
         LinkManager controllerConnector = new LinkManager()
                 .setCompositeLogicEnabled(false)
                 .setNeedPullData(false);
@@ -76,6 +77,7 @@ public class NetworkConnector {
                             log.error("Disconnect from proxy server detected, now sleeping " + context.reconnectDelay() + " seconds");
                             sleep(context.reconnectDelay() * Timeouts.SECOND);
                             proxyReconnectSemaphore.release();
+                            reconnectListener.onReconnect();
                         }, oneTimeToken, controllerInfo);
                     } catch (IOException e) {
                         log.error("IO error", e);
@@ -95,7 +97,15 @@ public class NetworkConnector {
 
         SessionDetails deviceSessionDetails = new SessionDetails(controllerInfo, authToken, oneTimeToken);
 
-        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForControllers),
+        Socket socket;
+        try {
+            socket = rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForControllers);
+        } catch (IOException e) {
+            // socket open exception is a special case and should be handled separately
+            disconnectListener.onDisconnect();
+            return deviceSessionDetails;
+        }
+        BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(socket,
                 deviceSessionDetails,
                 disconnectListener) {
             @Override
@@ -145,6 +155,16 @@ public class NetworkConnector {
         public int getOneTimeToken() {
             return oneTimeToken;
         }
+    }
+
+    public interface ReconnectListener {
+        ReconnectListener VOID = new ReconnectListener() {
+            @Override
+            public void onReconnect() {
+
+            }
+        };
+        void onReconnect();
     }
 
 }
