@@ -9,8 +9,9 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.client.LocalApplicationProxy;
-import com.rusefi.proxy.client.LocalApplicationProxyContextImpl;
+import com.rusefi.proxy.client.LocalApplicationProxyContext;
 import com.rusefi.server.*;
+import com.rusefi.tools.online.HttpUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,6 +41,24 @@ public class FullServerTest {
         int value = 241;
         int userId = 7;
 
+
+        LocalApplicationProxyContext localApplicationProxyContext = new LocalApplicationProxyContext() {
+            @Override
+            public String executeGet(String url) throws IOException {
+                return HttpUtil.executeGet(url);
+            }
+
+            @Override
+            public int serverPortForRemoteApplications() {
+                return 7003;
+            }
+
+            @Override
+            public int authenticatorPort() {
+                return 7004;
+            }
+        };
+
         CountDownLatch controllerRegistered = new CountDownLatch(1);
         CountDownLatch applicationClosed = new CountDownLatch(1);
 
@@ -60,12 +79,11 @@ public class FullServerTest {
             }
         }; LinkManager clientManager = new LinkManager()) {
             int serverPortForControllers = 7001;
-            int serverPortForRemoteUsers = 7003;
 
 
             // first start backend server
             BackendTestHelper.runControllerConnectorBlocking(backend, serverPortForControllers);
-            BackendTestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
+            BackendTestHelper.runApplicationConnectorBlocking(backend, localApplicationProxyContext.serverPortForRemoteApplications());
 
             // create virtual controller to which "rusEFI network connector" connects to
             int controllerPort = 7002;
@@ -83,8 +101,7 @@ public class FullServerTest {
             ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userDetailsResolver.apply(MockRusEfiDevice.TEST_TOKEN_1));
 
             // start authenticator
-            int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
-            LocalApplicationProxy.startAndRun(new LocalApplicationProxyContextImpl(), serverPortForRemoteUsers, applicationRequest, authenticatorPort, httpPort,
+            LocalApplicationProxy.startAndRun(localApplicationProxyContext, applicationRequest, httpPort,
                     TcpIoStream.DisconnectListener.VOID,
                     LocalApplicationProxy.ConnectionListener.VOID);
 
@@ -92,7 +109,7 @@ public class FullServerTest {
             CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
             // connect to proxy and read virtual controller through it
-            clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + authenticatorPort, new ConnectionStateListener() {
+            clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + localApplicationProxyContext.authenticatorPort(), new ConnectionStateListener() {
                 @Override
                 public void onConnectionEstablished() {
                     connectionEstablishedCountDownLatch.countDown();
