@@ -2,10 +2,9 @@ package com.rusefi.io;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
-import com.rusefi.NamedThreadFactory;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.serial.AbstractIoStream;
-import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.io.tcp.BinaryProtocolServer;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -15,9 +14,6 @@ import java.util.concurrent.Executors;
 import static com.devexperts.logging.Logging.getLogging;
 
 public interface ByteReader {
-    NamedThreadFactory THREAD_FACTORY = new NamedThreadFactory("TCP connector loop", true);
-
-
     Logging log = getLogging(ByteReader.class);
 
     static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, AbstractIoStream ioStream) {
@@ -26,7 +22,7 @@ public interface ByteReader {
          *
          * @see #COMMUNICATION_EXECUTOR
          */
-        Executor threadExecutor = Executors.newSingleThreadExecutor(THREAD_FACTORY);
+        Executor threadExecutor = Executors.newSingleThreadExecutor(BinaryProtocolServer.getThreadFactory(loggingPrefix + "TCP reader"));
 
         threadExecutor.execute(() -> {
             log.info(loggingPrefix + "Running TCP connection loop");

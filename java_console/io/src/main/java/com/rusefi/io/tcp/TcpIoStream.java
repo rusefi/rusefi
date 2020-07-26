@@ -26,10 +26,6 @@ public class TcpIoStream extends AbstractIoStream {
     private final Socket socket;
     private final IncomingDataBuffer dataBuffer;
 
-    public TcpIoStream(Socket socket) throws IOException {
-        this("", socket);
-    }
-
     public TcpIoStream(String loggingPrefix, Socket socket) throws IOException {
         this(loggingPrefix, socket, DisconnectListener.VOID);
     }
