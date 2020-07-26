@@ -353,10 +353,6 @@ public class Backend implements Closeable {
             controllers.add(controllerConnectionState);
             controllersByKey.put(controllerConnectionState.getControllerKey(), controllerConnectionState);
         }
-        onRegister(controllerConnectionState);
-    }
-
-    protected void onRegister(ControllerConnectionState controllerConnectionState) {
     }
 
     public void close(ControllerConnectionState inactiveClient) {

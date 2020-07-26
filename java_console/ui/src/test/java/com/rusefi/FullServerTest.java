@@ -67,8 +67,8 @@ public class FullServerTest {
         int applicationTimeout = 7 * SECOND;
         try (Backend backend = new Backend(userDetailsResolver, httpPort, applicationTimeout) {
             @Override
-            protected void onRegister(ControllerConnectionState controllerConnectionState) {
-                super.onRegister(controllerConnectionState);
+            public void register(ControllerConnectionState controllerConnectionState) {
+                super.register(controllerConnectionState);
                 controllerRegistered.countDown();
             }
 
