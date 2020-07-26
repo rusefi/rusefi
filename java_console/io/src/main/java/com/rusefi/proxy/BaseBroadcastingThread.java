@@ -38,11 +38,9 @@ public class BaseBroadcastingThread {
                     } else {
                         ioTimeout = context.consecutivePacketTimeout();
                     }
-                    log.info("TEMPLOG READ " + ioTimeout);
                     int length = getPacketLength(in, () -> {
                         throw new UnsupportedOperationException();
                     }, ioTimeout);
-                    log.info("TEMPLOG len " + 0);
                     BinaryProtocolServer.Packet packet = readPromisedBytes(in, length);
                     byte[] payload = packet.getPacket();
 
