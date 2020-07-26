@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.BaseBroadcastingThread;
@@ -30,12 +31,11 @@ public class MockRusEfiDevice {
                 super.handleCommand(packet, stream);
 
                 if (packet.getPacket()[0] == Fields.TS_OUTPUT_COMMAND) {
-                    byte[] response = new byte[1 + Fields.TS_OUTPUT_SIZE];
-                    response[0] = (byte) BinaryProtocolServer.TS_OK.charAt(0);
-                    stream.sendPacket(response);
+                    GetOutputsCommand.sendOutput(stream);
                 }
             }
         };
         baseBroadcastingThread.start();
     }
+
 }

@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.net.BindException;
 import java.util.*;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -199,7 +200,7 @@ public class Backend implements Closeable {
                     applications.add(applicationConnectionState);
                 }
 
-                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream);
+                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream, new AtomicInteger());
 
             } catch (Throwable e) {
                 log.info("Application Connector: Got error " + e);
