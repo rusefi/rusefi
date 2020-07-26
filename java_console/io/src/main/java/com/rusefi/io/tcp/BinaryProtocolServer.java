@@ -11,7 +11,6 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.server.rusEFISSLContext;
-import com.rusefi.shared.FileUtil;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -54,7 +53,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     };
 
     public void start(LinkManager linkManager) {
-        start(linkManager, DEFAULT_PROXY_PORT, null);
+        start(linkManager, DEFAULT_PROXY_PORT, Listener.empty());
     }
 
     public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback) {
@@ -80,23 +79,17 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
      * @param serverSocketCreationCallback this callback is invoked once we open the server socket
      * @return
      */
-    public static ServerHolder tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback) {
+    public static ServerSocketReference tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback) {
         return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
     }
 
-    public static ServerHolder tcpServerSocket(Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
+    public static ServerSocketReference tcpServerSocket(Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
+        Objects.requireNonNull(serverSocketCreationCallback, "serverSocketCreationCallback");
         ServerSocket serverSocket = nonSecureSocketFunction.apply(port);
 
-        ServerHolder holder = new ServerHolder() {
-            @Override
-            public void close() {
-                super.close();
-                FileUtil.close(serverSocket);
-            }
-        };
+        ServerSocketReference holder = new ServerSocketReference(serverSocket);
 
-        if (serverSocketCreationCallback != null)
-            serverSocketCreationCallback.onResult(null);
+        serverSocketCreationCallback.onResult(null);
         Runnable runnable = () -> {
             while (!holder.isClosed()) {
                 // Wait for a connection

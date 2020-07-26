@@ -11,7 +11,7 @@ import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.server.Backend;
+import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +26,9 @@ import static org.junit.Assert.assertTrue;
 
 public class TestHelper {
     public static final String LOCALHOST = "localhost";
+    public static final String TEST_SIGNATURE_1 = "rusEFI 2020.07.06.frankenso_na6.2468827536";
+    public static final String TEST_SIGNATURE_2 = "rusEFI 2020.07.11.proteus_f4.1986715563";
+    public static final ControllerInfo CONTROLLER_INFO = new ControllerInfo("name", "make", "code", Fields.TS_SIGNATURE);
 
     @NotNull
     public static ScalarIniField createIniField(Field field) {
@@ -80,17 +83,5 @@ public class TestHelper {
         BinaryProtocolServer server = createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown());
         assertTrue(controllerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
         return server;
-    }
-
-    public static void runApplicationConnectorBlocking(Backend backend, int serverPortForRemoteUsers) throws InterruptedException {
-        CountDownLatch applicationServerCreated = new CountDownLatch(1);
-        backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
-        assertTrue(applicationServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
-    }
-
-    public static void runControllerConnectorBlocking(Backend backend, int serverPortForControllers) throws InterruptedException {
-        CountDownLatch controllerServerCreated = new CountDownLatch(1);
-        backend.runControllerConnector(serverPortForControllers, parameter -> controllerServerCreated.countDown());
-        assertTrue(controllerServerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
     }
 }

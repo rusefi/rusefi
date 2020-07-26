@@ -9,6 +9,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.client.LocalApplicationProxy;
+import com.rusefi.proxy.client.LocalApplicationProxyContextImpl;
 import com.rusefi.server.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,8 +64,8 @@ public class FullServerTest {
 
 
             // first start backend server
-            TestHelper.runControllerConnectorBlocking(backend, serverPortForControllers);
-            TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
+            BackendTestHelper.runControllerConnectorBlocking(backend, serverPortForControllers);
+            BackendTestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
             // create virtual controller to which "rusEFI network connector" connects to
             int controllerPort = 7002;
@@ -83,7 +84,7 @@ public class FullServerTest {
 
             // start authenticator
             int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
-            LocalApplicationProxy.startAndRun(serverPortForRemoteUsers, applicationRequest, authenticatorPort, httpPort,
+            LocalApplicationProxy.startAndRun(new LocalApplicationProxyContextImpl(), serverPortForRemoteUsers, applicationRequest, authenticatorPort, httpPort,
                     TcpIoStream.DisconnectListener.VOID,
                     LocalApplicationProxy.ConnectionListener.VOID);
 

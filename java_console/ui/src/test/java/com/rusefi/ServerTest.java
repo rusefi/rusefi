@@ -80,8 +80,8 @@ public class ServerTest {
             assertEquals(0, backend.getControllersCount());
 
 
-            new MockRusEfiDevice(MockRusEfiDevice.TEST_TOKEN_1, "rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPortForControllers);
-            new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", "rusEFI 2020.07.11.proteus_f4.1986715563", logger).connect(serverPortForControllers);
+            new MockRusEfiDevice(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.TEST_SIGNATURE_1, logger).connect(serverPortForControllers);
+            new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", TestHelper.TEST_SIGNATURE_2, logger).connect(serverPortForControllers);
 
             assertTrue("onConnected", onConnected.await(30, TimeUnit.SECONDS));
 
@@ -152,7 +152,7 @@ covered by FullServerTest
             }
         }) {
 
-            TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
+            BackendTestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
             // start authenticator
             IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
@@ -183,7 +183,7 @@ covered by FullServerTest
             }
         }) {
 
-            TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
+            BackendTestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
             SessionDetails sessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, Fields.TS_SIGNATURE);
             ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(MockRusEfiDevice.TEST_TOKEN_1));
