@@ -10,6 +10,7 @@
 #include "dc_motor.h"
 #include "engine_controller.h"
 #include "sensor.h"
+#include "idle_thread.h"
 
 #include "mocks.h"
 
@@ -101,16 +102,23 @@ TEST(etb, initializationDcMotorIdleValveMode) {
 	EXPECT_CALL(mocks[0], init(SensorType::Tps2, _, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
 	EXPECT_CALL(mocks[0], start);
+// todo: make this work!	EXPECT_CALL(mocks[0], setIdlePosition(33.0f));
 
 	// We do not expect throttle #2 to be initialized
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+
+	applyIACposition(33.0f PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 TEST(etb, idlePlumbing) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	engineConfiguration->useETBforIdleControl = true;
+
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
@@ -118,7 +126,7 @@ TEST(etb, idlePlumbing) {
 		EXPECT_CALL(mocks[i], setIdlePosition(33.0f));
 	}
 
-	setEtbIdlePosition(33.0f PASS_ENGINE_PARAMETER_SUFFIX);
+	applyIACposition(33.0f PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 TEST(etb, testSetpointOnlyPedal) {

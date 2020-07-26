@@ -1261,7 +1261,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"can_vss", setCanVss},
 #endif /* EFI_CAN_SUPPORT */
 #if EFI_IDLE_CONTROL
-		{"idle_position", setIdleValvePosition},
+		{"idle_position", setManualIdleValvePosition},
 		{"idle_rpm", setTargetIdleRpm},
 		{"idle_dt", setIdleDT},
 #endif /* EFI_IDLE_CONTROL */
