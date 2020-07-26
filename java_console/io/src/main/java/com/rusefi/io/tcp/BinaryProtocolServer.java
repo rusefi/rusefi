@@ -222,9 +222,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         if (length <= 0)
             throw new IOException("Unexpected packed length " + length);
         byte[] packet = new byte[length];
-        int size = in.read(packet);
-        if (size != packet.length)
-            throw new IllegalStateException(size + " promised but " + packet.length + " arrived");
+        in.read(packet);
         int crc = in.readInt();
         int fromPacket = IoHelper.getCrc32(packet);
         if (crc != fromPacket)
