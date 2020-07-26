@@ -40,6 +40,7 @@
 #include "electronic_throttle.h"
 #include "cj125.h"
 #include "malfunction_central.h"
+#include "tunerstudio_outputs.h"
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
@@ -271,7 +272,9 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case 0x10:
 		engine->etbAutoTune = false;
+#if EFI_TUNER_STUDIO
 		tsOutputChannels.calibrationMode = TsCalMode::None;
+#endif // EFI_TUNER_STUDIO
 		return;
 #endif
 	case 0xF:
