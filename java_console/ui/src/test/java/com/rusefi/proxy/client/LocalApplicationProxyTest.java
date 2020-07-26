@@ -32,7 +32,7 @@ import static com.rusefi.shared.FileUtil.close;
 import static org.junit.Assert.assertTrue;
 
 public class LocalApplicationProxyTest {
-    private static AtomicInteger portNumber = new AtomicInteger();
+    private static final AtomicInteger portNumber = new AtomicInteger(4000);
 
     @Before
     public void setup() throws MalformedURLException {
