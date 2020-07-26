@@ -20,16 +20,15 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.rusefi.BackendTestHelper.createTestUserResolver;
 import static com.rusefi.TestHelper.TEST_TOKEN_1;
+import static com.rusefi.TestHelper.assertLatch;
 import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.binaryprotocol.BinaryProtocol.findCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.shared.FileUtil.close;
-import static org.junit.Assert.assertTrue;
 
 public class LocalApplicationProxyTest {
     private static final AtomicInteger portNumber = new AtomicInteger(4000);
@@ -48,7 +47,7 @@ public class LocalApplicationProxyTest {
             sleep(Timeouts.SECOND);
             close(socket);
         }, parameter -> backendCreated.countDown());
-        assertTrue(backendCreated.await(30, TimeUnit.SECONDS));
+        assertLatch(backendCreated);
 
         SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, Fields.TS_SIGNATURE);
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(TEST_TOKEN_1));
@@ -56,7 +55,7 @@ public class LocalApplicationProxyTest {
         CountDownLatch disconnected = new CountDownLatch(1);
         LocalApplicationProxy.startAndRun(context, applicationRequest, -1, disconnected::countDown, LocalApplicationProxy.ConnectionListener.VOID);
 
-        assertTrue(disconnected.await(30, TimeUnit.SECONDS));
+        assertLatch(disconnected);
         mockBackend.close();
     }
 
@@ -89,7 +88,7 @@ public class LocalApplicationProxyTest {
 
         }, parameter -> backendCreated.countDown());
 
-        assertTrue(backendCreated.await(30, TimeUnit.SECONDS));
+        assertLatch(backendCreated);
 
         SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, Fields.TS_SIGNATURE);
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(TEST_TOKEN_1));
@@ -98,10 +97,10 @@ public class LocalApplicationProxyTest {
         LocalApplicationProxy.startAndRun(context, applicationRequest, -1, disconnected::countDown, LocalApplicationProxy.ConnectionListener.VOID);
 
         // wait for three output requests to take place
-        assertTrue("gaugePokes", gaugePokes.await(30, TimeUnit.SECONDS));
+        assertLatch("gaugePokes", gaugePokes);
 
         // but there must be a disconnect after some time
-        assertTrue("disconnected", disconnected.await(30, TimeUnit.SECONDS));
+        assertLatch("disconnected", disconnected);
 
         mockBackend.close();
     }

@@ -83,7 +83,7 @@ public class TestHelper {
     public static BinaryProtocolServer createVirtualController(int controllerPort, ConfigurationImage controllerImage) throws InterruptedException {
         CountDownLatch controllerCreated = new CountDownLatch(1);
         BinaryProtocolServer server = createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown());
-        assertTrue(controllerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+        assertLatch(controllerCreated);
         return server;
     }
 
@@ -91,5 +91,13 @@ public class TestHelper {
         ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", signature);
 
         return new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
+    }
+
+    public static void assertLatch(String message, CountDownLatch reconnectCounter) throws InterruptedException {
+        assertTrue(message, reconnectCounter.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+    }
+
+    public static void assertLatch(CountDownLatch reconnectCounter) throws InterruptedException {
+        assertTrue(reconnectCounter.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
     }
 }
