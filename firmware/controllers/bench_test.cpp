@@ -271,7 +271,9 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case 0x10:
 		engine->etbAutoTune = false;
+#if EFI_TUNER_STUDIO
 		tsOutputChannels.calibrationMode = TsCalmode::None;
+#endif // EFI_TUNER_STUDIO
 		return;
 #endif
 	case 0xF:
