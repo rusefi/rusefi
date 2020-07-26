@@ -1074,8 +1074,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.07.25
-#define SIGNATURE_HASH 2967996033
+#define SIGNATURE_DATE 2020.07.26
+#define SIGNATURE_HASH 3815423868
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1343,7 +1343,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.07.25.kin.2967996033"
+#define TS_SIGNATURE "rusEFI 2020.07.26.kin.3815423868"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
@@ -1378,7 +1378,6 @@
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
-#define unusedBit_251_11_offset 976
 #define unusedBit_251_12_offset 976
 #define unusedBit_251_13_offset 976
 #define unusedBit_251_14_offset 976
@@ -1461,6 +1460,7 @@
 #define verboseTriggerSynchDetails_offset 1476
 #define veRpmBins_offset 18528
 #define veTable_offset 17440
+#define volkswagenEtbIdle_offset 976
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define vRefAdcChannel_offset 1470
 #define vvt_mode_e_enum "Inactive", "Second half", "2GZ", "Miata NB2", "First half", "mode5", "mode6", "mode7"
