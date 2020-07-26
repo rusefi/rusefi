@@ -1,6 +1,6 @@
 package com.rusefi.tools.online;
 
-import com.rusefi.LocalApplicationProxy;
+import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.UserDetails;
 import org.jetbrains.annotations.NotNull;

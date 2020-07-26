@@ -1,4 +1,4 @@
-package com.rusefi;
+package com.rusefi.proxy.client;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.io.IoStream;
