@@ -12,6 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -28,12 +29,12 @@ public class BinaryProtocolProxy {
      */
     public static final int USER_IO_TIMEOUT = 10 * Timeouts.MINUTE;
 
-    public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort) {
+    public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort, AtomicInteger relayCommandCounter) {
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             TcpIoStream clientStream = null;
             try {
                 clientStream = new TcpIoStream("[[proxy]] ", clientSocket);
-                runProxy(targetEcuSocket, clientStream);
+                runProxy(targetEcuSocket, clientStream, relayCommandCounter);
             } catch (IOException e) {
                 log.error("BinaryProtocolProxy::run " + e);
                 close(clientStream);
@@ -42,12 +43,11 @@ public class BinaryProtocolProxy {
         return BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Listener.empty());
     }
 
-    public static void runProxy(IoStream targetEcu, IoStream clientStream) throws IOException {
+    public static void runProxy(IoStream targetEcu, IoStream clientStream, AtomicInteger relayCommandCounter) throws IOException {
         /*
          * Each client socket is running on it's own thread
          */
-        //noinspection InfiniteLoopStatement
-        while (true) {
+        while (!targetEcu.isClosed()) {
             byte firstByte = clientStream.getDataBuffer().readByte(USER_IO_TIMEOUT);
             if (firstByte == COMMAND_PROTOCOL) {
                 clientStream.write(TS_PROTOCOL.getBytes());
@@ -55,8 +55,17 @@ public class BinaryProtocolProxy {
             }
             BinaryProtocolServer.Packet clientRequest = readClientRequest(clientStream.getDataBuffer(), firstByte);
 
-            sendToTarget(targetEcu, clientRequest);
-            BinaryProtocolServer.Packet controllerResponse = targetEcu.readPacket();
+            /**
+             * Two reasons for synchronization:
+             * - we run gauge poking thread until TunerStudio connects
+             * - technically there could be two parallel connections to local application port
+             */
+            BinaryProtocolServer.Packet controllerResponse;
+            synchronized (targetEcu) {
+                sendToTarget(targetEcu, clientRequest);
+                controllerResponse = targetEcu.readPacket();
+                relayCommandCounter.incrementAndGet();
+            }
 
             log.info("Relaying controller response length=" + controllerResponse.getPacket().length);
             clientStream.sendPacket(controllerResponse);

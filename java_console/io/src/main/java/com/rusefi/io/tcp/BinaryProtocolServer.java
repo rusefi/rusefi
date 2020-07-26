@@ -104,7 +104,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 try {
                     clientSocket = serverSocket.accept();
                 } catch (IOException e) {
-                    log.info("Client socket closed right away" + e);
+                    log.info("Client socket closed right away " + e);
                     continue;
                 }
                 log.info("Binary protocol proxy port connection");
