@@ -94,6 +94,7 @@ TEST(etb, initializationDcMotorIdleValveMode) {
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
+		EXPECT_CALL(mocks[i], setIdlePosition(33.0f));
 	}
 
 	// No accelerator pedal configured - this mode doesn't use it
@@ -102,7 +103,6 @@ TEST(etb, initializationDcMotorIdleValveMode) {
 	EXPECT_CALL(mocks[0], init(SensorType::Tps2, _, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
 	EXPECT_CALL(mocks[0], start);
-// todo: make this work!	EXPECT_CALL(mocks[0], setIdlePosition(33.0f));
 
 	// We do not expect throttle #2 to be initialized
 
