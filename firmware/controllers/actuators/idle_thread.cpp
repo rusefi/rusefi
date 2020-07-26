@@ -579,11 +579,8 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		}
 
 		engine->engineState.idle.currentIdlePosition = iacPosition;
-#if ! EFI_UNIT_TEST
-		applyIACposition(engine->engineState.idle.currentIdlePosition);
-#endif /* EFI_UNIT_TEST */
-	}
-
+		applyIACposition(engine->engineState.idle.currentIdlePosition PASS_ENGINE_PARAMETER_SUFFIX);
+}
 
 IdleController idleControllerInstance;
 
