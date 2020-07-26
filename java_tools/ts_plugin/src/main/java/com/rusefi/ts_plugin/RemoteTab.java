@@ -222,11 +222,15 @@ public class RemoteTab {
                     serverHolder.close();
             });
 
+            LocalApplicationProxyContextImpl context = new LocalApplicationProxyContextImpl() {
+                @Override
+                public int authenticatorPort() {
+                    return Integer.parseInt(getLocalPort());
+                }
+            };
             ServerSocketReference serverHolder = LocalApplicationProxy.startAndRun(
-                    new LocalApplicationProxyContextImpl(),
-                    LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS,
+                    context,
                     applicationRequest,
-                    Integer.parseInt(getLocalPort()),
                     HttpUtil.PROXY_JSON_API_HTTP_PORT, disconnectListener, connectionListener);
             serverHolderAtomicReference.set(serverHolder);
         } catch (IOException e) {
