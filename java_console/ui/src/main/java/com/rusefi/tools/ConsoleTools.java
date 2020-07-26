@@ -61,7 +61,7 @@ public class ConsoleTools {
         registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
         registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
-        registerTool("network_authenticator", LocalApplicationProxy::start, "rusEFI Online Authenticator");
+        registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
 
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
         registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI authentication token.");

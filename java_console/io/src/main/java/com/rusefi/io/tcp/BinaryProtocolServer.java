@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.Listener;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.*;
 import com.rusefi.config.generated.Fields;
@@ -16,6 +17,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -52,6 +55,8 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         }
     };
 
+    private static ConcurrentHashMap<String, ThreadFactory> THREAD_FACTORIES_BY_NAME = new ConcurrentHashMap<>();
+
     public void start(LinkManager linkManager) {
         start(linkManager, DEFAULT_PROXY_PORT, Listener.empty());
     }
@@ -84,6 +89,8 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     public static ServerSocketReference tcpServerSocket(Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
+        ThreadFactory threadFactory = THREAD_FACTORIES_BY_NAME.computeIfAbsent(threadName, NamedThreadFactory::new);
+
         Objects.requireNonNull(serverSocketCreationCallback, "serverSocketCreationCallback");
         ServerSocket serverSocket = nonSecureSocketFunction.apply(port);
 
@@ -101,10 +108,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                     continue;
                 }
                 log.info("Binary protocol proxy port connection");
-                new Thread(clientSocketRunnableFactory.apply(clientSocket), "proxy connection").start();
+                threadFactory.newThread(clientSocketRunnableFactory.apply(clientSocket)).start();
             }
         };
-        new Thread(runnable, threadName).start();
+        threadFactory.newThread(runnable).start();
         return holder;
     }
 

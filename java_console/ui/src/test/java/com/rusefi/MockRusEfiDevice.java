@@ -1,11 +1,9 @@
 package com.rusefi;
 
-import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.BaseBroadcastingThread;
-import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 import com.rusefi.server.rusEFISSLContext;
 
@@ -15,20 +13,11 @@ import java.net.Socket;
 import static com.rusefi.TestHelper.LOCALHOST;
 
 public class MockRusEfiDevice {
-    public static final String TEST_TOKEN_1 = "00000000-1234-1234-1234-123456789012";
     public static final String TEST_TOKEN_3 = "33333333-3333-1234-1234-123456789012";
-    private SessionDetails sessionDetails;
-    private final Logger logger;
+    private final SessionDetails sessionDetails;
 
-    public MockRusEfiDevice(String authToken, String signature, Logger logger) {
-        sessionDetails = createTestSession(authToken, signature);
-        this.logger = logger;
-    }
-
-    public static SessionDetails createTestSession(String authToken, String signature) {
-        ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", signature);
-
-        return new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
+    public MockRusEfiDevice(String authToken, String signature) {
+        sessionDetails = TestHelper.createTestSession(authToken, signature);
     }
 
     public void connect(int serverPort) throws IOException {

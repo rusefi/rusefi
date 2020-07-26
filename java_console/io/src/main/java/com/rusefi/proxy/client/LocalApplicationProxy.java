@@ -61,7 +61,8 @@ public class LocalApplicationProxy implements Closeable {
         new HelloCommand(applicationRequest.toJson()).handle(authenticatorToProxyStream);
     }
 
-    public static void start(String[] strings) {
+    public static void start() {
+        throw new UnsupportedOperationException("TODO");
     }
 
     @Override

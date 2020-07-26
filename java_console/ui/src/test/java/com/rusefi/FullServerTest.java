@@ -30,9 +30,8 @@ import static org.junit.Assert.assertTrue;
 
 public class FullServerTest {
     @Before
-    public void setTestCertificate() throws MalformedURLException {
-        ServerTest.commonServerTest();
-        BinaryProtocol.DISABLE_LOCAL_CACHE = true;
+    public void setup() throws MalformedURLException {
+        BackendTestHelper.commonServerTest();
     }
 
     @Test
@@ -92,13 +91,13 @@ public class FullServerTest {
 
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-            NetworkConnector.NetworkConnectorResult networkConnectorResult = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers);
+            NetworkConnector.NetworkConnectorResult networkConnectorResult = NetworkConnector.runNetworkConnector(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers);
             ControllerInfo controllerInfo = networkConnectorResult.getControllerInfo();
 
             assertTrue("controllerRegistered", controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
             SessionDetails authenticatorSessionDetails = new SessionDetails(controllerInfo, MockRusEfiDevice.TEST_TOKEN_3, networkConnectorResult.getOneTimeToken());
-            ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userDetailsResolver.apply(MockRusEfiDevice.TEST_TOKEN_1));
+            ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userDetailsResolver.apply(TestHelper.TEST_TOKEN_1));
 
             // start authenticator
             LocalApplicationProxy.startAndRun(localApplicationProxyContext, applicationRequest, httpPort,

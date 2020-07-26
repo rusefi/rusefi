@@ -12,6 +12,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.server.ControllerInfo;
+import com.rusefi.server.SessionDetails;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +30,7 @@ public class TestHelper {
     public static final String TEST_SIGNATURE_1 = "rusEFI 2020.07.06.frankenso_na6.2468827536";
     public static final String TEST_SIGNATURE_2 = "rusEFI 2020.07.11.proteus_f4.1986715563";
     public static final ControllerInfo CONTROLLER_INFO = new ControllerInfo("name", "make", "code", Fields.TS_SIGNATURE);
+    public static final String TEST_TOKEN_1 = "00000000-1234-1234-1234-123456789012";
 
     @NotNull
     public static ScalarIniField createIniField(Field field) {
@@ -83,5 +85,11 @@ public class TestHelper {
         BinaryProtocolServer server = createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown());
         assertTrue(controllerCreated.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
         return server;
+    }
+
+    public static SessionDetails createTestSession(String authToken, String signature) {
+        ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", signature);
+
+        return new SessionDetails(ci, authToken, SessionDetails.createOneTimeCode());
     }
 }
