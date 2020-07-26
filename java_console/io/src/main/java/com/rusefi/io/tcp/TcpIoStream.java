@@ -53,6 +53,7 @@ public class TcpIoStream extends AbstractIoStream {
     public void close() {
         super.close();
         FileUtil.close(socket);
+        disconnectListener.onDisconnect();
     }
 
     @Override
@@ -78,7 +79,7 @@ public class TcpIoStream extends AbstractIoStream {
 
     @Override
     public void setInputListener(final DataListener listener) {
-        ByteReader.runReaderLoop(loggingPrefix, listener, input::read, disconnectListener, this);
+        ByteReader.runReaderLoop(loggingPrefix, listener, input::read, this);
     }
 
     public interface DisconnectListener {

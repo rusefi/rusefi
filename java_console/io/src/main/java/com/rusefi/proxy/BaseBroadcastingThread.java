@@ -59,6 +59,7 @@ public class BaseBroadcastingThread {
                 }
             } catch (IOException e) {
                 log.error("exiting thread " + e);
+                stream.close();
             }
         });
     }

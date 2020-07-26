@@ -20,7 +20,7 @@ public interface ByteReader {
 
     Logging log = getLogging(ByteReader.class);
 
-    static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, TcpIoStream.DisconnectListener disconnectListener, AbstractIoStream ioStream) {
+    static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, AbstractIoStream ioStream) {
         /**
          * Threading of the whole input/output does not look healthy at all!
          *
@@ -40,7 +40,7 @@ public interface ByteReader {
                     listener.onDataArrived(Arrays.copyOf(inputBuffer, result));
                 } catch (IOException e) {
                     log.error("TcpIoStream: End of connection " + e);
-                    disconnectListener.onDisconnect();
+                    ioStream.close();
                     return;
                 }
             }
