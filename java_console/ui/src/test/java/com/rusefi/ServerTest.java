@@ -16,10 +16,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
+import static com.rusefi.TestHelper.assertLatch;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * integration test of the rusEFI online backend process
@@ -69,14 +68,14 @@ public class ServerTest {
         }) {
 
             backend.runControllerConnector(serverPortForControllers, parameter -> serverCreated.countDown());
-            assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
+            assertLatch(serverCreated);
             assertEquals(0, backend.getControllersCount());
 
 
             new MockRusEfiDevice(TestHelper.TEST_TOKEN_1, TestHelper.TEST_SIGNATURE_1).connect(serverPortForControllers);
             new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", TestHelper.TEST_SIGNATURE_2).connect(serverPortForControllers);
 
-            assertTrue("onConnected", onConnected.await(30, TimeUnit.SECONDS));
+            assertLatch("onConnected", onConnected);
 
             List<ControllerConnectionState> clients = backend.getControllers();
             assertEquals(2, clients.size());
@@ -86,7 +85,7 @@ public class ServerTest {
 
             allConnected.countDown();
 
-            assertTrue("allClientsDisconnected", allClientsDisconnected.await(30, TimeUnit.SECONDS));
+            assertLatch("allClientsDisconnected", allClientsDisconnected);
         }
     }
 
@@ -151,7 +150,7 @@ covered by FullServerTest
             IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
             new HelloCommand("hello").handle(authenticatorToProxyStream);
 
-            assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
+            assertLatch(disconnectedCountDownLatch);
         }
     }
 
@@ -180,7 +179,7 @@ covered by FullServerTest
             IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
             LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);
 
-            assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
+            assertLatch(disconnectedCountDownLatch);
         }
     }
 }

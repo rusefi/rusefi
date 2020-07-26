@@ -22,9 +22,7 @@ import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static com.rusefi.TestHelper.createIniField;
-import static com.rusefi.TestHelper.prepareImage;
-import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
+import static com.rusefi.TestHelper.*;
 import static com.rusefi.Timeouts.SECOND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -101,7 +99,7 @@ public class FullServerTest {
             NetworkConnector.NetworkConnectorResult networkConnectorResult = NetworkConnector.runNetworkConnector(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
             ControllerInfo controllerInfo = networkConnectorResult.getControllerInfo();
 
-            assertTrue("controllerRegistered", controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+            TestHelper.assertLatch("controllerRegistered", controllerRegistered);
 
             SessionDetails authenticatorSessionDetails = new SessionDetails(controllerInfo, MockRusEfiDevice.TEST_TOKEN_3, networkConnectorResult.getOneTimeToken());
             ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userDetailsResolver.apply(TestHelper.TEST_TOKEN_1));
@@ -126,7 +124,7 @@ public class FullServerTest {
                     System.out.println("Failed");
                 }
             });
-            assertTrue("Proxied ECU Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+            assertLatch("Proxied ECU Connection established", connectionEstablishedCountDownLatch);
 
             BinaryProtocol clientStreamState = clientManager.getCurrentStreamState();
             Objects.requireNonNull(clientStreamState, "clientStreamState");

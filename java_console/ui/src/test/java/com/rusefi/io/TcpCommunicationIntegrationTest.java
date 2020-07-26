@@ -12,11 +12,10 @@ import org.junit.Test;
 
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.rusefi.TestHelper.assertLatch;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class TcpCommunicationIntegrationTest {
     private static final Logger LOGGER = Logger.CONSOLE;
@@ -42,7 +41,7 @@ public class TcpCommunicationIntegrationTest {
             }
         });
 
-        assertTrue(failedCountDownLatch.await(30, TimeUnit.SECONDS));
+        assertLatch(failedCountDownLatch);
     }
 
     @Test
@@ -70,7 +69,7 @@ public class TcpCommunicationIntegrationTest {
                 System.out.println("Failed");
             }
         });
-        assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+        assertLatch("Connection established", connectionEstablishedCountDownLatch);
 
         assertEquals(0, server.unknownCommands.get());
 
@@ -112,7 +111,7 @@ public class TcpCommunicationIntegrationTest {
                 System.out.println("Failed");
             }
         });
-        assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+        assertLatch("Connection established", connectionEstablishedCountDownLatch);
 
         clientManager.close();
     }
