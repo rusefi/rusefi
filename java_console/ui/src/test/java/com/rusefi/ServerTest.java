@@ -9,7 +9,6 @@ import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tools.online.PublicSession;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,14 +31,8 @@ public class ServerTest {
     private final static Logger logger = Logger.CONSOLE;
 
     @Before
-    public void setTestCertificate() throws MalformedURLException {
-        commonServerTest();
-    }
-
-    static void commonServerTest() throws MalformedURLException {
-        HttpUtil.RUSEFI_PROXY_HOSTNAME = TestHelper.LOCALHOST;
-
-        rusEFISSLContext.init("certificate/test_pkcs12.jks", "password");
+    public void setup() throws MalformedURLException {
+        BackendTestHelper.commonServerTest();
     }
 
     @Test
@@ -54,7 +47,7 @@ public class ServerTest {
         CountDownLatch allConnected = new CountDownLatch(1);
 
 
-        try (Backend backend = new Backend(createTestUserResolver(), httpPort) {
+        try (Backend backend = new Backend(BackendTestHelper.createTestUserResolver(), httpPort) {
             @Override
             public void register(ControllerConnectionState clientConnectionState) {
                 super.register(clientConnectionState);
@@ -80,8 +73,8 @@ public class ServerTest {
             assertEquals(0, backend.getControllersCount());
 
 
-            new MockRusEfiDevice(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.TEST_SIGNATURE_1, logger).connect(serverPortForControllers);
-            new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", TestHelper.TEST_SIGNATURE_2, logger).connect(serverPortForControllers);
+            new MockRusEfiDevice(TestHelper.TEST_TOKEN_1, TestHelper.TEST_SIGNATURE_1).connect(serverPortForControllers);
+            new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", TestHelper.TEST_SIGNATURE_2).connect(serverPortForControllers);
 
             assertTrue("onConnected", onConnected.await(30, TimeUnit.SECONDS));
 
@@ -144,7 +137,7 @@ covered by FullServerTest
         int httpPort = 8001;
         int serverPortForRemoteUsers = 6801;
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
-        try (Backend backend = new Backend(createTestUserResolver(), httpPort) {
+        try (Backend backend = new Backend(BackendTestHelper.createTestUserResolver(), httpPort) {
             @Override
             protected void onDisconnectApplication(ApplicationConnectionState applicationConnectionState) {
                 super.onDisconnectApplication(applicationConnectionState);
@@ -162,11 +155,6 @@ covered by FullServerTest
         }
     }
 
-    @NotNull
-    private static UserDetailsResolver createTestUserResolver() {
-        return authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
-    }
-
     @Test
     public void testAuthenticatorRequestUnknownSession() throws InterruptedException, IOException {
         int serverPortForRemoteUsers = 6800;
@@ -175,7 +163,7 @@ covered by FullServerTest
 
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
 
-        try (Backend backend = new Backend(createTestUserResolver(), httpPort) {
+        try (Backend backend = new Backend(BackendTestHelper.createTestUserResolver(), httpPort) {
             @Override
             protected void onDisconnectApplication(ApplicationConnectionState applicationConnectionState) {
                 super.onDisconnectApplication(applicationConnectionState);
@@ -185,8 +173,8 @@ covered by FullServerTest
 
             BackendTestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
-            SessionDetails sessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, Fields.TS_SIGNATURE);
-            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(MockRusEfiDevice.TEST_TOKEN_1));
+            SessionDetails sessionDetails = TestHelper.createTestSession(TestHelper.TEST_TOKEN_1, Fields.TS_SIGNATURE);
+            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, BackendTestHelper.createTestUserResolver().apply(TestHelper.TEST_TOKEN_1));
 
             // start authenticator
             IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
