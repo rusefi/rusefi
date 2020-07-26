@@ -31,6 +31,7 @@ public class TestHelper {
     public static final String TEST_SIGNATURE_2 = "rusEFI 2020.07.11.proteus_f4.1986715563";
     public static final ControllerInfo CONTROLLER_INFO = new ControllerInfo("name", "make", "code", Fields.TS_SIGNATURE);
     public static final String TEST_TOKEN_1 = "00000000-1234-1234-1234-123456789012";
+    public static final String TEST_TOKEN_3 = "33333333-3333-1234-1234-123456789012";
 
     @NotNull
     public static ScalarIniField createIniField(Field field) {
@@ -46,7 +47,7 @@ public class TestHelper {
     }
 
     @NotNull
-    public static BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port, Listener serverSocketCreationCallback) {
+    public static BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port, Listener serverSocketCreationCallback, BinaryProtocolServer.Context context) {
         BinaryProtocolState state = new BinaryProtocolState();
         state.setController(ci);
         state.setCurrentOutputs(new byte[1 + Fields.TS_OUTPUT_SIZE]);
@@ -54,12 +55,12 @@ public class TestHelper {
         LinkManager linkManager = new LinkManager();
         linkManager.setConnector(LinkConnector.getDetachedConnector(state));
         BinaryProtocolServer server = new BinaryProtocolServer();
-        server.start(linkManager, port, serverSocketCreationCallback);
+        server.start(linkManager, port, serverSocketCreationCallback, context);
         return server;
     }
 
     @NotNull
-    public static IoStream secureConnectToLocalhost(int controllerPort, Logger logger) {
+    public static IoStream secureConnectToLocalhost(int controllerPort) {
         IoStream targetEcuSocket;
         try {
             targetEcuSocket = new TcpIoStream("[local]", rusEFISSLContext.getSSLSocket(LOCALHOST, controllerPort));
@@ -80,9 +81,9 @@ public class TestHelper {
         return targetEcuSocket;
     }
 
-    public static BinaryProtocolServer createVirtualController(int controllerPort, ConfigurationImage controllerImage) throws InterruptedException {
+    public static BinaryProtocolServer createVirtualController(int controllerPort, ConfigurationImage controllerImage, BinaryProtocolServer.Context context) throws InterruptedException {
         CountDownLatch controllerCreated = new CountDownLatch(1);
-        BinaryProtocolServer server = createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown());
+        BinaryProtocolServer server = createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown(), context);
         assertLatch(controllerCreated);
         return server;
     }

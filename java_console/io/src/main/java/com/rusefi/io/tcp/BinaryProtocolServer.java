@@ -58,15 +58,15 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     private static ConcurrentHashMap<String, ThreadFactory> THREAD_FACTORIES_BY_NAME = new ConcurrentHashMap<>();
 
     public void start(LinkManager linkManager) {
-        start(linkManager, DEFAULT_PROXY_PORT, Listener.empty());
+        start(linkManager, DEFAULT_PROXY_PORT, Listener.empty(), new Context());
     }
 
-    public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback) {
+    public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback, Context context) {
         log.info("BinaryProtocolServer on " + port);
 
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             try {
-                runProxy(linkManager, clientSocket);
+                runProxy(linkManager, clientSocket, context);
             } catch (IOException e) {
                 log.info("proxy connection: " + e);
             }
@@ -107,7 +107,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                     log.info("Client socket closed right away " + e);
                     continue;
                 }
-                log.info("Binary protocol proxy port connection");
+                log.info("Accepting binary protocol proxy port connection on " + port);
                 threadFactory.newThread(clientSocketRunnableFactory.apply(clientSocket)).start();
             }
         };
@@ -121,7 +121,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
-    private void runProxy(LinkManager linkManager, Socket clientSocket) throws IOException {
+    private void runProxy(LinkManager linkManager, Socket clientSocket, Context context) throws IOException {
         TcpIoStream stream = new TcpIoStream("[proxy] ", clientSocket);
 
         IncomingDataBuffer in = stream.getDataBuffer();
@@ -133,7 +133,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 handled.set(true);
             };
 
-            int length = getPacketLength(in, protocolCommandHandler);
+            int length = getPacketLength(in, protocolCommandHandler, context.getTimeout());
             if (handled.get()) {
                 continue;
             }
@@ -303,6 +303,12 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
         public int getCrc() {
             return crc;
+        }
+    }
+
+    public static class Context {
+        public int getTimeout() {
+            return Timeouts.BINARY_IO_TIMEOUT;
         }
     }
 }

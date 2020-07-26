@@ -3,7 +3,12 @@ package com.rusefi;
 import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.proxy.BaseBroadcastingThread;
+import com.rusefi.proxy.NetworkConnectorContext;
 import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
@@ -14,9 +19,11 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import static com.rusefi.TestHelper.LOCALHOST;
 import static com.rusefi.TestHelper.assertLatch;
 import static org.junit.Assert.assertEquals;
 
@@ -72,8 +79,8 @@ public class ServerTest {
             assertEquals(0, backend.getControllersCount());
 
 
-            new MockRusEfiDevice(TestHelper.TEST_TOKEN_1, TestHelper.TEST_SIGNATURE_1).connect(serverPortForControllers);
-            new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", TestHelper.TEST_SIGNATURE_2).connect(serverPortForControllers);
+            new MockNetworkConnector(TestHelper.TEST_TOKEN_1, TestHelper.TEST_SIGNATURE_1).connect(serverPortForControllers);
+            new MockNetworkConnector("12345678-1234-1234-1234-123456789012", TestHelper.TEST_SIGNATURE_2).connect(serverPortForControllers);
 
             assertLatch("onConnected", onConnected);
 
@@ -147,7 +154,7 @@ covered by FullServerTest
             BackendTestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
             // start authenticator
-            IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
+            IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers);
             new HelloCommand("hello").handle(authenticatorToProxyStream);
 
             assertLatch(disconnectedCountDownLatch);
@@ -176,10 +183,36 @@ covered by FullServerTest
             ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, BackendTestHelper.createTestUserResolver().apply(TestHelper.TEST_TOKEN_1));
 
             // start authenticator
-            IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
+            IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers);
             LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);
 
             assertLatch(disconnectedCountDownLatch);
         }
+    }
+
+    private static class MockNetworkConnector {
+        private final SessionDetails sessionDetails;
+
+        private MockNetworkConnector(String authToken, String signature) {
+            sessionDetails = TestHelper.createTestSession(authToken, signature);
+        }
+
+        public void connect(int serverPort) throws IOException {
+            Socket socket = rusEFISSLContext.getSSLSocket(LOCALHOST, serverPort);
+            BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(socket,
+                    sessionDetails,
+                    TcpIoStream.DisconnectListener.VOID, new NetworkConnectorContext()) {
+                @Override
+                protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
+                    super.handleCommand(packet, stream);
+
+                    if (packet.getPacket()[0] == Fields.TS_OUTPUT_COMMAND) {
+                        GetOutputsCommand.sendOutput(stream);
+                    }
+                }
+            };
+            baseBroadcastingThread.start();
+        }
+
     }
 }
