@@ -43,7 +43,7 @@ public class ControllerConnectionState {
         this.clientSocket = clientSocket;
         this.userDetailsResolver = userDetailsResolver;
         try {
-            stream = new TcpIoStream("[controller] ", clientSocket);
+            stream = new TcpIoStream("[backend-controller connector] ", clientSocket);
             incomingData = stream.getDataBuffer();
         } catch (IOException e) {
             close();

@@ -2,11 +2,9 @@ package com.rusefi.proxy;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
-import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.server.SessionDetails;
@@ -21,29 +19,30 @@ import static com.rusefi.shared.FileUtil.close;
 
 public class BaseBroadcastingThread {
     private static final Logging log = getLogging(BaseBroadcastingThread.class);
-    private static final NamedThreadFactory BASE_BROADCASTING_THREAD = new NamedThreadFactory("BaseBroadcastingThread");
+    private static final NamedThreadFactory BASE_BROADCASTING_THREAD = new NamedThreadFactory("network connector");
     private final Thread thread;
 
     @SuppressWarnings("InfiniteLoopStatement")
-    public BaseBroadcastingThread(Socket socket, SessionDetails sessionDetails, TcpIoStream.DisconnectListener disconnectListener) throws IOException {
-
+    public BaseBroadcastingThread(Socket socket, SessionDetails sessionDetails, TcpIoStream.DisconnectListener disconnectListener, NetworkConnectorContext context) {
         thread = BASE_BROADCASTING_THREAD.newThread(() -> {
             TcpIoStream stream = null;
             try {
-                stream = new TcpIoStream("[broadcast] ", socket, disconnectListener);
+                stream = new TcpIoStream("[network connector] ", socket, disconnectListener);
                 IncomingDataBuffer in = stream.getDataBuffer();
                 boolean isFirstHello = true;
                 while (true) {
                     int ioTimeout;
                     if (isFirstHello) {
                         log.info("Waiting for proxy server to request session details");
-                        ioTimeout = Timeouts.CMD_TIMEOUT;
+                        ioTimeout = context.firstPacketTimeout();
                     } else {
-                        ioTimeout = BinaryProtocolProxy.USER_IO_TIMEOUT;
+                        ioTimeout = context.consecutivePacketTimeout();
                     }
+                    log.info("TEMPLOG READ " + ioTimeout);
                     int length = getPacketLength(in, () -> {
                         throw new UnsupportedOperationException();
                     }, ioTimeout);
+                    log.info("TEMPLOG len " + 0);
                     BinaryProtocolServer.Packet packet = readPromisedBytes(in, length);
                     byte[] payload = packet.getPacket();
 

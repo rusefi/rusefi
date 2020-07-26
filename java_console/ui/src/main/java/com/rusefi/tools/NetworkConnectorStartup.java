@@ -25,7 +25,7 @@ public class NetworkConnectorStartup {
 
         NetworkConnectorContext connectorContext = new NetworkConnectorContext();
 
-        NetworkConnector.NetworkConnectorResult networkConnectorResult = NetworkConnector.runNetworkConnector(authToken, autoDetectedPort, connectorContext, NetworkConnector.ReconnectListener.VOID);
+        NetworkConnector.NetworkConnectorResult networkConnectorResult = new NetworkConnector().runNetworkConnector(authToken, autoDetectedPort, connectorContext, NetworkConnector.ReconnectListener.VOID);
         log.info("Running with oneTimeToken=" + networkConnectorResult.getOneTimeToken());
     }
 }

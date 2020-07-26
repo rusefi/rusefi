@@ -173,7 +173,7 @@ public class Backend implements Closeable {
             IoStream applicationClientStream = null;
             ApplicationConnectionState applicationConnectionState = null;
             try {
-                applicationClientStream = new TcpIoStream("[app] ", applicationSocket);
+                applicationClientStream = new TcpIoStream("[backend-application connector] ", applicationSocket);
 
                 // authenticator pushed hello packet on connect
                 String jsonString = HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer());
@@ -370,6 +370,7 @@ public class Backend implements Closeable {
 
     @Override
     public void close() {
+        log.info("Closing...");
         isClosed = true;
         FileUtil.close(applicationConnector);
         FileUtil.close(controllerConnector);

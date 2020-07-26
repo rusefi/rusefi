@@ -47,9 +47,14 @@ public class TcpIoStream extends AbstractIoStream {
 
     @Override
     public void close() {
-        super.close();
+        // we need to guarantee only one onDisconnect invocation for retry logic to be healthy
+        synchronized (this) {
+            if (!isClosed()) {
+                super.close();
+                disconnectListener.onDisconnect("on close");
+            }
+        }
         FileUtil.close(socket);
-        disconnectListener.onDisconnect();
     }
 
     @Override
@@ -79,9 +84,9 @@ public class TcpIoStream extends AbstractIoStream {
     }
 
     public interface DisconnectListener {
-        DisconnectListener VOID = () -> {
+        DisconnectListener VOID = (String message) -> {
 
         };
-        void onDisconnect();
+        void onDisconnect(String message);
     }
 }

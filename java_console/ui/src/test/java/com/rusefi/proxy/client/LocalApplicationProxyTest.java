@@ -53,7 +53,7 @@ public class LocalApplicationProxyTest {
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(TEST_TOKEN_1));
 
         CountDownLatch disconnected = new CountDownLatch(1);
-        LocalApplicationProxy.startAndRun(context, applicationRequest, -1, disconnected::countDown, LocalApplicationProxy.ConnectionListener.VOID);
+        LocalApplicationProxy.startAndRun(context, applicationRequest, -1, (String message) -> disconnected.countDown(), LocalApplicationProxy.ConnectionListener.VOID);
 
         assertLatch(disconnected);
         mockBackend.close();
@@ -94,7 +94,7 @@ public class LocalApplicationProxyTest {
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(TEST_TOKEN_1));
 
         CountDownLatch disconnected = new CountDownLatch(1);
-        LocalApplicationProxy.startAndRun(context, applicationRequest, -1, disconnected::countDown, LocalApplicationProxy.ConnectionListener.VOID);
+        LocalApplicationProxy.startAndRun(context, applicationRequest, -1, (String message) -> disconnected.countDown(), LocalApplicationProxy.ConnectionListener.VOID);
 
         // wait for three output requests to take place
         assertLatch("gaugePokes", gaugePokes);

@@ -17,6 +17,7 @@ import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.HttpUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
@@ -29,10 +30,11 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
  * Connector between rusEFI ECU and rusEFI server
  * see NetworkConnectorStartup
  */
-public class NetworkConnector {
+public class NetworkConnector implements Closeable {
     private final static Logging log = Logging.getLogging(NetworkConnector.class);
+    private boolean isClosed;
 
-    public static NetworkConnectorResult runNetworkConnector(String authToken, String controllerPort, NetworkConnectorContext context, ReconnectListener reconnectListener) {
+    public NetworkConnectorResult runNetworkConnector(String authToken, String controllerPort, NetworkConnectorContext context, ReconnectListener reconnectListener) {
         LinkManager controllerConnector = new LinkManager()
                 .setCompositeLogicEnabled(false)
                 .setNeedPullData(false);
@@ -65,19 +67,20 @@ public class NetworkConnector {
 
         int oneTimeToken = SessionDetails.createOneTimeCode();
 
-        new Thread(() -> {
+        BinaryProtocolServer.getThreadFactory("Proxy Reconnect").newThread(() -> {
             Semaphore proxyReconnectSemaphore = new Semaphore(1);
             try {
-                while (true) {
+                while (!isClosed) {
                     proxyReconnectSemaphore.acquire();
 
                     try {
-                        runNetworkConnector(context.serverPortForControllers(), controllerConnector, authToken, () -> {
-                            log.error("Disconnect from proxy server detected, now sleeping " + context.reconnectDelay() + " seconds");
+                        runNetworkConnector(context.serverPortForControllers(), controllerConnector, authToken, (String message) -> {
+                            log.error(message + " Disconnect from proxy server detected, now sleeping " + context.reconnectDelay() + " seconds");
                             sleep(context.reconnectDelay() * Timeouts.SECOND);
+                            log.debug("Releasing semaphore");
                             proxyReconnectSemaphore.release();
                             reconnectListener.onReconnect();
-                        }, oneTimeToken, controllerInfo);
+                        }, oneTimeToken, controllerInfo, context);
                     } catch (IOException e) {
                         log.error("IO error", e);
                     }
@@ -85,13 +88,13 @@ public class NetworkConnector {
             } catch (InterruptedException e) {
                 throw new IllegalStateException(e);
             }
-        }, "Proxy Reconnect").start();
+        }).start();
 
         return new NetworkConnectorResult(controllerInfo, oneTimeToken);
     }
 
     @NotNull
-    private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener, int oneTimeToken, ControllerInfo controllerInfo) throws IOException {
+    private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener, int oneTimeToken, ControllerInfo controllerInfo, final NetworkConnectorContext context) throws IOException {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
 
         SessionDetails deviceSessionDetails = new SessionDetails(controllerInfo, authToken, oneTimeToken);
@@ -102,12 +105,12 @@ public class NetworkConnector {
             socket = rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForControllers);
         } catch (IOException e) {
             // socket open exception is a special case and should be handled separately
-            disconnectListener.onDisconnect();
+            disconnectListener.onDisconnect("on socket open");
             return deviceSessionDetails;
         }
         BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(socket,
                 deviceSessionDetails,
-                disconnectListener) {
+                disconnectListener, context) {
             @Override
             protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
                 super.handleCommand(packet, stream);
@@ -136,6 +139,11 @@ public class NetworkConnector {
         String engineMake = Fields.ENGINEMAKE.getStringValue(image);
         String engineCode = Fields.ENGINECODE.getStringValue(image);
         return new ControllerInfo(vehicleName, engineMake, engineCode, controllerSignature);
+    }
+
+    @Override
+    public void close() {
+        isClosed = true;
     }
 
     public static class NetworkConnectorResult {

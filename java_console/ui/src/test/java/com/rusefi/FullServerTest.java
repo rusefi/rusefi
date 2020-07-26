@@ -6,6 +6,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
@@ -86,7 +87,7 @@ public class FullServerTest {
             // create virtual controller to which "rusEFI network connector" connects to
             int controllerPort = 7002;
             ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
-            TestHelper.createVirtualController(controllerPort, controllerImage);
+            TestHelper.createVirtualController(controllerPort, controllerImage, new BinaryProtocolServer.Context());
 
             NetworkConnectorContext networkConnectorContext = new NetworkConnectorContext() {
                 @Override
@@ -96,12 +97,12 @@ public class FullServerTest {
             };
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-            NetworkConnector.NetworkConnectorResult networkConnectorResult = NetworkConnector.runNetworkConnector(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
+            NetworkConnector.NetworkConnectorResult networkConnectorResult = new NetworkConnector().runNetworkConnector(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
             ControllerInfo controllerInfo = networkConnectorResult.getControllerInfo();
 
             TestHelper.assertLatch("controllerRegistered", controllerRegistered);
 
-            SessionDetails authenticatorSessionDetails = new SessionDetails(controllerInfo, MockRusEfiDevice.TEST_TOKEN_3, networkConnectorResult.getOneTimeToken());
+            SessionDetails authenticatorSessionDetails = new SessionDetails(controllerInfo, TEST_TOKEN_3, networkConnectorResult.getOneTimeToken());
             ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userDetailsResolver.apply(TestHelper.TEST_TOKEN_1));
 
             // start authenticator
