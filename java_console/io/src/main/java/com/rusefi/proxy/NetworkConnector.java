@@ -69,7 +69,6 @@ public class NetworkConnector {
             Semaphore proxyReconnectSemaphore = new Semaphore(1);
             try {
                 while (true) {
-                    log.info("Connecting to proxy server");
                     proxyReconnectSemaphore.acquire();
 
                     try {
@@ -99,6 +98,7 @@ public class NetworkConnector {
 
         Socket socket;
         try {
+            log.info("Connecting to proxy server " + HttpUtil.RUSEFI_PROXY_HOSTNAME + " " + serverPortForControllers);
             socket = rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, serverPortForControllers);
         } catch (IOException e) {
             // socket open exception is a special case and should be handled separately
