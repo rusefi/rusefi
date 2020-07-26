@@ -99,8 +99,8 @@ static bool startupPositionError = false;
 
 #define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
 
-static SensorType indexToTpsSensor(size_t index, bool volkswagenEtbIdle) {
-	if (volkswagenEtbIdle) {
+static SensorType indexToTpsSensor(size_t index, bool dcMotorIdleValve) {
+	if (dcMotorIdleValve) {
 		return SensorType::Tps2;
 	}
 
@@ -169,7 +169,7 @@ expected<percent_t> EtbController::getSetpoint() const {
 
 	// VW ETB idle mode uses an ETB only for idle (a mini-ETB sets the lower stop, and a normal cable
 	// can pull the throttle up off the stop.), so we directly control the throttle with the idle position.
-	if (CONFIG(volkswagenEtbIdle)) {
+	if (CONFIG(dcMotorIdleValve)) {
 		return clampF(0, m_idlePosition, 100);
 	}
 
@@ -748,13 +748,13 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	// If you don't have a pedal (or VW idle valve mode), we have no business here.
-	if (!CONFIG(volkswagenEtbIdle) && !Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
+	if (!CONFIG(dcMotorIdleValve) && !Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
 		return;
 	}
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
-	if (CONFIG(volkswagenEtbIdle)) {
+	if (CONFIG(dcMotorIdleValve)) {
 		engine->etbActualCount = 1;
 	} else {
 		engine->etbActualCount = Sensor::hasSensor(SensorType::Tps2) ? 2 : 1;
@@ -766,7 +766,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// If this motor is actually set up, init the etb
 		if (motor)
 		{
-			auto positionSensor = indexToTpsSensor(i, CONFIG(volkswagenEtbIdle));
+			auto positionSensor = indexToTpsSensor(i, CONFIG(dcMotorIdleValve));
 			engine->etbControllers[i]->init(positionSensor, motor, i, &engineConfiguration->etb, &pedal2tpsMap);
 			INJECT_ENGINE_REFERENCE(engine->etbControllers[i]);
 		}
