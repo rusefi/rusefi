@@ -170,6 +170,9 @@ expected<percent_t> EtbController::getSetpoint() const {
 	// VW ETB idle mode uses an ETB only for idle (a mini-ETB sets the lower stop, and a normal cable
 	// can pull the throttle up off the stop.), so we directly control the throttle with the idle position.
 	if (CONFIG(dcMotorIdleValve)) {
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.etbTarget = m_idlePosition;
+#endif // EFI_TUNER_STUDIO
 		return clampF(0, m_idlePosition, 100);
 	}
 
@@ -206,7 +209,7 @@ expected<percent_t> EtbController::getSetpoint() const {
 	if (m_myIndex == 0) {
 		tsOutputChannels.etbTarget = targetPosition;
 	}
-#endif
+#endif // EFI_TUNER_STUDIO
 
 	return targetPosition;
 }
