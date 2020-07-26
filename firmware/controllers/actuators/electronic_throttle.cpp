@@ -170,7 +170,7 @@ expected<percent_t> EtbController::getSetpoint() const {
 	// VW ETB idle mode uses an ETB only for idle (a mini-ETB sets the lower stop, and a normal cable
 	// can pull the throttle up off the stop.), so we directly control the throttle with the idle position.
 	if (CONFIG(volkswagenEtbIdle)) {
-		return m_idlePosition;
+		return clampF(0, m_idlePosition, 100);
 	}
 
 	// If the pedal map hasn't been set, we can't provide a setpoint.
