@@ -1,7 +1,6 @@
 package com.rusefi.io;
 
 import com.devexperts.logging.Logging;
-import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.opensr5.io.WriteStream;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -11,6 +10,7 @@ import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Closeable;
 import java.io.EOFException;
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ import static com.devexperts.logging.Logging.getLogging;
  * <p>
  * 5/11/2015.
  */
-public interface IoStream extends WriteStream {
+public interface IoStream extends WriteStream, Closeable {
     Logging log = getLogging(IoStream.class);
 
     static String printHexBinary(byte[] data) {
