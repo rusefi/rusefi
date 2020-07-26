@@ -75,7 +75,7 @@ public class LocalApplicationProxy implements Closeable {
                 }
 
                 if (isTimeForApplicationToConnect(context, start) && relayCommandCounter.get() < 4) {
-                    // we should not keep controller blocker, time to auto-disconnect
+                    // we should not keep controller blocked since we are not connecting application, time to auto-disconnect
                     authenticatorToProxyStream.close();
                 }
 
