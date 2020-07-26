@@ -202,7 +202,9 @@ void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	showIdleInfo();
 }
 
-static void applyIACposition(percent_t position) {
+#endif // EFI_UNIT_TEST
+
+void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	/**
 	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
 	 * todo: unify?
@@ -216,8 +218,8 @@ static void applyIACposition(percent_t position) {
 		}
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
-		setEtbIdlePosition(position);
-#endif
+		setEtbIdlePosition(position PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 #if ! EFI_UNIT_TEST
 	} if (CONFIG(useStepperIdle)) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
@@ -239,11 +241,13 @@ static void applyIACposition(percent_t position) {
 	}
 }
 
+#if ! EFI_UNIT_TEST
+
 percent_t getIdlePosition(void) {
 	return engine->engineState.idle.currentIdlePosition;
 }
 
-void setIdleValvePosition(int positionPercent) {
+void setManualIdleValvePosition(int positionPercent) {
 	if (positionPercent < 1 || positionPercent > 99)
 		return;
 	scheduleMsg(logger, "setting idle valve position %d", positionPercent);
