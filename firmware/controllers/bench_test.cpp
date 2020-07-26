@@ -271,7 +271,7 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case 0x10:
 		engine->etbAutoTune = false;
-		tsOutputChannels->calibrationMode = TsCalmode::None;
+		tsOutputChannels.calibrationMode = TsCalmode::None;
 		return;
 #endif
 	case 0xF:
