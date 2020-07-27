@@ -5,7 +5,6 @@ import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
-import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.ui.AuthTokenPanel;
 
 public class NetworkConnectorStartup {
@@ -25,7 +24,7 @@ public class NetworkConnectorStartup {
 
         NetworkConnectorContext connectorContext = new NetworkConnectorContext();
 
-        NetworkConnector.NetworkConnectorResult networkConnectorResult = new NetworkConnector().runNetworkConnector(authToken, autoDetectedPort, connectorContext, NetworkConnector.ReconnectListener.VOID);
+        NetworkConnector.NetworkConnectorResult networkConnectorResult = new NetworkConnector().start(authToken, autoDetectedPort, connectorContext);
         log.info("Running with oneTimeToken=" + networkConnectorResult.getOneTimeToken());
     }
 }

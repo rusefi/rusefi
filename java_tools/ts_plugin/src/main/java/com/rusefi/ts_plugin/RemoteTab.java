@@ -29,10 +29,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 /**
- * see RemoteTabSandbox
+ * remote ECU access & control
+ *
+ * @see RemoteTabSandbox
+ * @see PluginEntry
  */
 public class RemoteTab {
     private static final String APPLICATION_PORT = "application_port";
+    public static final String HOWTO_REMOTE_TUNING = "https://github.com/rusefi/rusefi/wiki/HOWTO-Remote-Tuning";
     private final JComponent content = new JPanel(new BorderLayout());
 
     private final JPanel list = new JPanel(new VerticalFlowLayout());
@@ -87,7 +91,7 @@ public class RemoteTab {
         topPanel.add(oneTimePasswordControl);
 
         topLines.add(topPanel);
-        topLines.add(new URLLabel("https://github.com/rusefi/rusefi/wiki/HOWTO-Remote-Tuning"));
+        topLines.add(new URLLabel(HOWTO_REMOTE_TUNING));
 
         content.add(topLines, BorderLayout.NORTH);
         content.add(list, BorderLayout.CENTER);
