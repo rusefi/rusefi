@@ -446,6 +446,9 @@ typedef enum {
 	// todo: rename after LM_ALPHA_N is removed
 	LM_ALPHA_N_2 = 5,
 
+	// This mode is for unit testing only, so that tests don't have to rely on a particular real airmass mode
+	LM_MOCK = 100,
+
 	Force_4_bytes_size_engine_load_mode = ENUM_32_BITS,
 } engine_load_mode_e;
 

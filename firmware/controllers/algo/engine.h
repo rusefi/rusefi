@@ -16,6 +16,7 @@
 #include "accel_enrichment.h"
 #include "trigger_central.h"
 #include "local_version_holder.h"
+#include "airmass.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -333,6 +334,10 @@ public:
 
 	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void printKnockState(void);
+
+#if EFI_UNIT_TEST
+	AirmassModelBase* mockAirmassModel = nullptr;
+#endif
 
 private:
 	/**

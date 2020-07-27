@@ -179,6 +179,9 @@ AirmassModelBase* getAirmassModel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		case LM_SPEED_DENSITY: return &sdAirmass;
 		case LM_REAL_MAF: return &mafAirmass;
 		case LM_ALPHA_N_2: return &alphaNAirmass;
+#if EFI_UNIT_TEST
+		case LM_MOCK: return engine->mockAirmassModel;
+#endif
 		default: return nullptr;
 	}
 }
