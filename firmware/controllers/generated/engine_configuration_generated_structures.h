@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 26 19:08:53 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 27 05:00:16 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -832,7 +832,7 @@ struct engine_configuration_s {
 	 */
 	float knockBandCustom;
 	/**
-	 * On single-coil or wasted spark setups you have to lower dwell at high RPM
+	 * On Single-Coil or Wasted Spark setups you have to lower dwell at high RPM
 	 * offset 332
 	 */
 	float sparkDwellRpmBins[DWELL_CURVE_SIZE];
@@ -892,7 +892,7 @@ struct engine_configuration_s {
 	 */
 	angle_t crankingTimingAngle;
 	/**
-	 * "One Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle
+	 * "Single Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted Spark" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle
 	 * set ignition_mode X
 	 * offset 440
 	 */
@@ -2143,7 +2143,7 @@ struct engine_configuration_s {
 	offset 1476 bit 14 */
 	bool useOnlyRisingEdgeForTrigger : 1;
 	/**
-	 * This is needed if your coils are individually wired (COP) and you wish to use batch ignition (wasted spark).
+	 * This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 	offset 1476 bit 15 */
 	bool twoWireBatchIgnition : 1;
 	/**
@@ -3533,4 +3533,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jul 26 19:08:53 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 27 05:00:16 UTC 2020
