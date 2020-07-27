@@ -335,9 +335,7 @@ public:
 	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void printKnockState(void);
 
-#if EFI_UNIT_TEST
 	AirmassModelBase* mockAirmassModel = nullptr;
-#endif
 
 private:
 	/**
