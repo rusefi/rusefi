@@ -18,6 +18,9 @@
 !    rename the bit or substitute unused integer with any new fields of the same size
 !    invoke gen_config.bat to apply the tools which would generate .h and .ini files
 !
+! Q: Which files to include into Pull Requests?
+! A: Please only include source files (.txt and .input) into a PR, we have amazing GitHub Actions which would do the rest really
+!    really nicely!  
 !
 ! each field is declared as
 ! type name;comment
