@@ -34,6 +34,10 @@ public class NetworkConnector implements Closeable {
     private final static Logging log = Logging.getLogging(NetworkConnector.class);
     private boolean isClosed;
 
+    public NetworkConnectorResult runNetworkConnector(String authToken, String controllerPort, NetworkConnectorContext context) {
+        return runNetworkConnector(authToken, controllerPort, context, ReconnectListener.VOID);
+    }
+
     public NetworkConnectorResult runNetworkConnector(String authToken, String controllerPort, NetworkConnectorContext context, ReconnectListener reconnectListener) {
         LinkManager controllerConnector = new LinkManager()
                 .setCompositeLogicEnabled(false)
