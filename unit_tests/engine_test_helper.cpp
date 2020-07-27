@@ -83,6 +83,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	// this is needed to have valid CLT and IAT.
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// Setup running in mock airmass mode
+	engineConfiguration->injectionMode = LM_MOCK;
+	engine->mockAirmassModel = &mockAirmass;
 }
 
 EngineTestHelper::~EngineTestHelper() {
