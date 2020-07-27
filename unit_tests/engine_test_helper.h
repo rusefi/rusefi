@@ -83,6 +83,8 @@ public:
 	Engine engine;
 	persistent_config_s persistentConfig;
 
+	MockAirmass mockAirmass;
+
 private:
 	void writeEvents(const char *fileName);
 };
