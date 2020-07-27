@@ -52,3 +52,8 @@ public:
 	MOCK_METHOD(void, scheduleByTimestampNt, (scheduling_s *scheduling, efitime_t timeUs, action_s action), (override));
 	MOCK_METHOD(void, scheduleForLater, (scheduling_s *scheduling, int delayUs, action_s action), (override));
 };
+
+class MockAirmass : public AirmassModelBase {
+public:
+	MOCK_METHOD(AirmassResult, getAirmass, (int rpm), (override));
+};
