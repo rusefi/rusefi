@@ -1,6 +1,6 @@
 package com.rusefi.autodetect;
 
-import com.rusefi.FileLog;
+import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
@@ -19,19 +19,23 @@ import java.util.function.Function;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class PortDetector {
+    private final static Logging log = Logging.getLogging(PortDetector.class);
+
     private static final NamedThreadFactory AUTO_DETECT_PORT = new NamedThreadFactory("AutoDetectPort");
 
     /**
      * Connect to all serial ports and find out which one respond first
      * @param callback
+     * @return port name on which rusEFI was detected or null if none
      */
+    @Nullable
     public static String autoDetectSerial(Function<IoStream, Void> callback) {
         String[] serialPorts = getPortNames();
         if (serialPorts.length == 0) {
-            System.err.println("No serial ports detected");
+            log.error("No serial ports detected");
             return null;
         }
-        FileLog.MAIN.logLine("Trying " + Arrays.toString(serialPorts));
+        log.info("Trying " + Arrays.toString(serialPorts));
         List<Thread> serialFinder = new ArrayList<>();
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<String> result = new AtomicReference<>();
