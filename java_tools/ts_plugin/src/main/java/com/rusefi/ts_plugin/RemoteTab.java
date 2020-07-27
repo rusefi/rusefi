@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 /**
- * see RemoteTabSandbox
+ * @see RemoteTabSandbox
  */
 public class RemoteTab {
     private static final String APPLICATION_PORT = "application_port";

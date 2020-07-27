@@ -14,7 +14,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * @see PluginLauncherSandbox
+ * Sandbox for plugin body
+ *
+ * @see PluginLauncherSandbox for plugin auto-update launcher
  */
 public class PluginBodySandbox {
 
