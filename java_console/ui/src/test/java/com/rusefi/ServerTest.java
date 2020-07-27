@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
@@ -34,8 +33,6 @@ import static org.junit.Assert.assertEquals;
  * https://github.com/rusefi/web_backend/blob/master/documentation/rusEFI%20remote.png
  */
 public class ServerTest {
-    private final static Logger logger = Logger.CONSOLE;
-
     @Before
     public void setup() throws MalformedURLException {
         BackendTestHelper.commonServerTest();
@@ -126,7 +123,7 @@ covered by FullServerTest
             TestHelper.createVirtualController(controllerPort, new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE), logger);
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-            SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers);
+            SessionDetails deviceSessionDetails = NetworkConnector.start(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers);
 
             assertTrue(controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 

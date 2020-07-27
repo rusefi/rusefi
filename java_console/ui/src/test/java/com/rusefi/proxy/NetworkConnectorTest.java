@@ -75,7 +75,7 @@ public class NetworkConnectorTest {
                 reconnectCounter.countDown();
             }
         };
-        new NetworkConnector().runNetworkConnector(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, connectorContext, reconnectListener);
+        new NetworkConnector().start(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, connectorContext, reconnectListener);
 
         assertLatch(reconnectCounter);
 

@@ -10,6 +10,8 @@ import com.rusefi.ui.util.URLLabel;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @see PluginEntry
@@ -17,12 +19,13 @@ import javax.swing.*;
 public class BroadcastTab {
     private final JComponent content = new JPanel(new VerticalFlowLayout());
 
-    private final JLabel help = new URLLabel(RemoteTab.HOWTO_REMOTE_TUNING);
-
     private final JLabel status = new JLabel();
+    private final JButton disconnect = new JButton("Disconnect");
+    private NetworkConnector networkConnector;
 
     public BroadcastTab() {
         JButton broadcast = new JButton("Broadcast");
+        disconnect.setEnabled(false);
 
         broadcast.addActionListener(e -> {
             String authToken = AuthTokenPanel.getAuthToken();
@@ -40,9 +43,18 @@ public class BroadcastTab {
             }).start();
         });
 
+        disconnect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                networkConnector.close();
+                disconnect.setEnabled(false);
+            }
+        });
+
         content.add(broadcast);
         content.add(status);
-        content.add(help);
+        content.add(disconnect);
+        content.add(new URLLabel(RemoteTab.HOWTO_REMOTE_TUNING));
         content.add(new JLabel(PluginEntry.LOGO));
 
         AutoupdateUtil.trueLayout(content);
@@ -53,11 +65,14 @@ public class BroadcastTab {
             status.setText("<html>rusEFI ECU not detected.<br/>Please make sure that TunerStudio is currently not connected to ECU.</html>");
         } else {
             status.setText("rusEFI detected at " + autoDetectedPort);
+            disconnect.setEnabled(true);
 
             NetworkConnectorContext connectorContext = new NetworkConnectorContext();
 
             new Thread(() -> {
-                NetworkConnector.NetworkConnectorResult networkConnectorResult = new NetworkConnector().runNetworkConnector(authToken, autoDetectedPort, connectorContext);
+                networkConnector = new NetworkConnector();
+
+                NetworkConnector.NetworkConnectorResult networkConnectorResult = networkConnector.start(authToken, autoDetectedPort, connectorContext);
 
                 SwingUtilities.invokeLater(() -> status.setText("One time password to connect to this ECU: " + networkConnectorResult.getOneTimeToken()));
 

@@ -34,11 +34,11 @@ public class NetworkConnector implements Closeable {
     private final static Logging log = Logging.getLogging(NetworkConnector.class);
     private boolean isClosed;
 
-    public NetworkConnectorResult runNetworkConnector(String authToken, String controllerPort, NetworkConnectorContext context) {
-        return runNetworkConnector(authToken, controllerPort, context, ReconnectListener.VOID);
+    public NetworkConnectorResult start(String authToken, String controllerPort, NetworkConnectorContext context) {
+        return start(authToken, controllerPort, context, ReconnectListener.VOID);
     }
 
-    public NetworkConnectorResult runNetworkConnector(String authToken, String controllerPort, NetworkConnectorContext context, ReconnectListener reconnectListener) {
+    public NetworkConnectorResult start(String authToken, String controllerPort, NetworkConnectorContext context, ReconnectListener reconnectListener) {
         LinkManager controllerConnector = new LinkManager()
                 .setCompositeLogicEnabled(false)
                 .setNeedPullData(false);
@@ -78,7 +78,7 @@ public class NetworkConnector implements Closeable {
                     proxyReconnectSemaphore.acquire();
 
                     try {
-                        runNetworkConnector(context.serverPortForControllers(), controllerConnector, authToken, (String message) -> {
+                        start(context.serverPortForControllers(), controllerConnector, authToken, (String message) -> {
                             log.error(message + " Disconnect from proxy server detected, now sleeping " + context.reconnectDelay() + " seconds");
                             sleep(context.reconnectDelay() * Timeouts.SECOND);
                             log.debug("Releasing semaphore");
@@ -98,7 +98,7 @@ public class NetworkConnector implements Closeable {
     }
 
     @NotNull
-    private static SessionDetails runNetworkConnector(int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener, int oneTimeToken, ControllerInfo controllerInfo, final NetworkConnectorContext context) throws IOException {
+    private static SessionDetails start(int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener, int oneTimeToken, ControllerInfo controllerInfo, final NetworkConnectorContext context) throws IOException {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
 
         SessionDetails deviceSessionDetails = new SessionDetails(controllerInfo, authToken, oneTimeToken);
