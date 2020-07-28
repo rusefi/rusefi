@@ -23,6 +23,8 @@
 #include "trigger_universal.h"
 #include "sensor.h"
 
+using ::testing::_;
+
 extern WarningCodeState unitTestWarningCodeState;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
@@ -295,9 +297,10 @@ static void assertREqualsM(const char *msg, void *expected, void *actual) {
 extern bool_t debugSignalExecutor;
 
 TEST(misc, testRpmCalculator) {
-	printf("*************************************************** testRpmCalculator\r\n");
-
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
 	IgnitionEventList *ilist = &engine->ignitionEvents;
 	ASSERT_EQ( 0,  ilist->isReady) << "size #1";
 
@@ -588,6 +591,8 @@ static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int i
 }
 
 static void setTestBug299(EngineTestHelper *eth) {
+	// TODO: switch to mock airmass
+	eth->persistentConfig.engineConfiguration.fuelAlgorithm = LM_PLAIN_MAF;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(eth);
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
@@ -977,6 +982,8 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 TEST(big, testTwoWireBatch) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->twoWireBatchInjection = true;
@@ -1002,6 +1009,9 @@ TEST(big, testTwoWireBatch) {
 
 TEST(big, testSequential) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
