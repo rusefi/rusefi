@@ -85,7 +85,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Setup running in mock airmass mode
-	engineConfiguration->injectionMode = LM_MOCK;
+	engineConfiguration->fuelAlgorithm = LM_MOCK;
 	engine->mockAirmassModel = &mockAirmass;
 }
 
