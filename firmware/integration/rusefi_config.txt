@@ -935,7 +935,7 @@ bit useFSIO6ForRevLimiter;
 	adc_channel_e vRefAdcChannel;
 	uint8_t etbNeutralPosition;+Expected neutral position;"%",      1,      0,       0, 100,      0
 
-custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Closed Loop", "Open Loop"
+custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	idle_mode_e idleMode;See also idleRpmPid;
 
 	bit isInjectionEnabled;+Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
