@@ -166,6 +166,12 @@ static void setupDefaultSensorInputs() {
 	// iat = "23 - AN temp 2"
 	engineConfiguration->iat.adcChannel = EFI_ADC_1;
 	engineConfiguration->iat.config.bias_resistor = 2700;
+
+
+#if HW_CHECK_MODE
+	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_2;
+	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_3;
+#endif // HW_CHECK_MODE
 }
 
 void setPinConfigurationOverrides(void) {
