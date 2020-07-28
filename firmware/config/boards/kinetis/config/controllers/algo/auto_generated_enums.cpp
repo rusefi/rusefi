@@ -597,6 +597,8 @@ case LM_SPEED_DENSITY:
   return "LM_SPEED_DENSITY";
 case LM_ALPHA_N_2:
   return "LM_ALPHA_N_2";
+case LM_MOCK:
+  return "LM_MOCK";
   }
  return NULL;
 }
