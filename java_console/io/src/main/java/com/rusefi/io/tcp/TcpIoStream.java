@@ -7,10 +7,7 @@ import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.shared.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -37,10 +34,7 @@ public class TcpIoStream extends AbstractIoStream {
             throw new NullPointerException("socket");
         this.socket = socket;
         InputStream input = new BufferedInputStream(socket.getInputStream());
-        OutputStream output = socket.getOutputStream();
-        if (output == null)
-            throw new NullPointerException("output");
-        this.output = output;
+        this.output = new BufferedOutputStream(socket.getOutputStream());
         this.input = input;
         this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this);
     }

@@ -20,9 +20,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.rusefi.ts_plugin.TsPluginLauncher.VERSION;
 
+/**
+ * Download fresh copy of {@link #PLUGIN_BODY_JAR} and launch {@link #PLUGIN_ENTRY_CLASS} via reflection.
+ */
 public class Updater {
+    private static final String PLUGIN_ENTRY_CLASS = "com.rusefi.ts_plugin.PluginEntry";
     private static final String PLUGIN_BODY_JAR = "rusefi_plugin_body.jar";
-    public static final String LOCAL_JAR_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + PLUGIN_BODY_JAR;
+    private static final String LOCAL_JAR_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + PLUGIN_BODY_JAR;
     private static final String TITLE = "rusEFI plugin installer " + VERSION;
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
@@ -187,7 +191,7 @@ public class Updater {
 
     private static Class getPluginClass() throws MalformedURLException, ClassNotFoundException {
         URLClassLoader jarClassLoader = AutoupdateUtil.getClassLoaderByJar(LOCAL_JAR_FILE_NAME);
-        return Class.forName("com.rusefi.ts_plugin.PluginEntry", true, jarClassLoader);
+        return Class.forName(PLUGIN_ENTRY_CLASS, true, jarClassLoader);
     }
 
     private void replaceWith(TsPluginBody instance) {

@@ -29,7 +29,7 @@ public class BinaryProtocolProxy {
      */
     public static final int USER_IO_TIMEOUT = 10 * Timeouts.MINUTE;
 
-    public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort, AtomicInteger relayCommandCounter) {
+    public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort, AtomicInteger relayCommandCounter) throws IOException {
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             TcpIoStream clientStream = null;
             try {

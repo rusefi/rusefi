@@ -7,7 +7,12 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 
 /**
+ * This class is the more permanent part of the plug, it's responsible for refreshing and launcher PluginEntry via reflections.
+ * which downloads the main more volatile UI part (PluginEntry)
+ *
  * by the way TS installs stuff into %user%\.efianalytics\TunerStudio\plugins folder
+ * @see PluginLauncherSandbox sandbox for this
+ * see PluginEntry
  */
 public class TsPluginLauncher implements ApplicationPlugin {
     public static final int BUILD_VERSION = 3;
