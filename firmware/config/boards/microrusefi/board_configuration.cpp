@@ -167,6 +167,8 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = EFI_ADC_1;
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
+	setCommonNTCSensor(&engineConfiguration->auxTempSensor1, 2700);
+	setCommonNTCSensor(&engineConfiguration->auxTempSensor2, 2700);
 
 #if HW_CHECK_MODE
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_2;
