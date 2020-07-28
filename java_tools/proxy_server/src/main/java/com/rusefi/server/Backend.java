@@ -161,7 +161,7 @@ public class Backend implements Closeable {
         }
     }
 
-    public void runApplicationConnector(int serverPortForApplications, Listener<?> serverSocketCreationCallback) {
+    public void runApplicationConnector(int serverPortForApplications, Listener<?> serverSocketCreationCallback) throws IOException {
         this.serverPortForApplications = serverPortForApplications;
         // connection from authenticator app which proxies for Tuner Studio
         // authenticator pushed hello packet on connect
@@ -246,7 +246,7 @@ public class Backend implements Closeable {
         log.info("Disconnecting application " + applicationConnectionState);
     }
 
-    public void runControllerConnector(int serverPortForControllers, Listener<?> serverSocketCreationCallback) {
+    public void runControllerConnector(int serverPortForControllers, Listener<?> serverSocketCreationCallback) throws IOException {
         this.serverPortForControllers = serverPortForControllers;
         log.info("Starting controller connector at " + serverPortForControllers);
         controllerConnector = BinaryProtocolServer.tcpServerSocket(controllerSocket -> () -> {

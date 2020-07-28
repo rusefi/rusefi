@@ -196,7 +196,7 @@ public class LinkManager implements Closeable {
         return connector;
     }
 
-    public void start(String port, ConnectionStateListener stateListener) {
+    public void start(String port, ConnectionFailedListener stateListener) {
         Objects.requireNonNull(port, "port");
         log.info("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
