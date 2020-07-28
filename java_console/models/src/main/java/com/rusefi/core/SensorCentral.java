@@ -11,9 +11,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * <p/>
  * Date: 1/6/13
  * Andrey Belomutskiy, (c) 2013-2020
+ * @see SensorLog
  */
 public class SensorCentral implements ISensorCentral {
-    public static final String RPM_KEY = "rpm";
     private static final SensorCentral INSTANCE = new SensorCentral();
 
     private final SensorsHolder sensorsHolder = new SensorsHolder();

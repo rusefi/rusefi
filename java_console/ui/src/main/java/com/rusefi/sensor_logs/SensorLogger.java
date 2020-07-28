@@ -82,14 +82,12 @@ public class SensorLogger {
             Sensor.engineMakeCodeNameCrc16,
             Sensor.tuneCrc16,
     };
-    private final UIContext uiContext;
 
-    private List<SensorLog> sensorLogs;
+    private final List<SensorLog> sensorLogs;
 
     private boolean isInitialized;
 
     public SensorLogger(UIContext uiContext) {
-        this.uiContext = uiContext;
         sensorLogs = Arrays.asList(new PlainTextSensorLog(uiContext), new BinarySensorLogRestarter());
     }
 
