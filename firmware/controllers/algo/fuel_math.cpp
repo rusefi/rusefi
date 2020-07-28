@@ -201,7 +201,8 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	if ((CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) ||
 			(engineConfiguration->fuelAlgorithm == LM_REAL_MAF) ||
-			(engineConfiguration->fuelAlgorithm == LM_ALPHA_N_2)) {
+			(engineConfiguration->fuelAlgorithm == LM_ALPHA_N_2) ||
+			(engineConfiguration->fuelAlgorithm == LM_MOCK)) {
 		// airmass modes - get airmass first, then convert to fuel
 		auto model = getAirmassModel(PASS_ENGINE_PARAMETER_SIGNATURE);
 		efiAssert(CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);

@@ -1,7 +1,10 @@
+#pragma once
+
 #include "electronic_throttle.h"
 #include "dc_motor.h"
 #include "table_helper.h"
 #include "pwm_generator_logic.h"
+#include "airmass.h"
 
 #include "gmock/gmock.h"
 
@@ -55,5 +58,9 @@ public:
 
 class MockAirmass : public AirmassModelBase {
 public:
+	MockAirmass() : AirmassModelBase(veTable) {}
+
+	MockVp3d veTable;
+
 	MOCK_METHOD(AirmassResult, getAirmass, (int rpm), (override));
 };
