@@ -43,25 +43,25 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     public AtomicInteger unknownCommands = new AtomicInteger();
 
-    public static final Function<Integer, ServerSocket> SECURE_SOCKET_FACTORY = rusEFISSLContext::getSSLServerSocket;
+    public static final ServerSocketFunction SECURE_SOCKET_FACTORY = rusEFISSLContext::getSSLServerSocket;
 
-    public static final Function<Integer, ServerSocket> PLAIN_SOCKET_FACTORY = port -> {
-        try {
-            ServerSocket serverSocket = new ServerSocket(port);
-            log.info("ServerSocket " + port + " created");
-            return serverSocket;
-        } catch (IOException e) {
-            throw new IllegalStateException("Error binding server socket " + port, e);
-        }
+    public static final ServerSocketFunction PLAIN_SOCKET_FACTORY = port -> {
+        ServerSocket serverSocket = new ServerSocket(port);
+        log.info("ServerSocket " + port + " created");
+        return serverSocket;
     };
 
     private static ConcurrentHashMap<String, ThreadFactory> THREAD_FACTORIES_BY_NAME = new ConcurrentHashMap<>();
 
     public void start(LinkManager linkManager) {
+        try {
         start(linkManager, DEFAULT_PROXY_PORT, Listener.empty(), new Context());
+        } catch (IOException e) {
+            log.error("Error starting local proxy", e);
+        }
     }
 
-    public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback, Context context) {
+    public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback, Context context) throws IOException {
         log.info("BinaryProtocolServer on " + port);
 
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
@@ -84,11 +84,11 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
      * @param serverSocketCreationCallback this callback is invoked once we open the server socket
      * @return
      */
-    public static ServerSocketReference tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback) {
+    public static ServerSocketReference tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback) throws IOException {
         return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
     }
 
-    public static ServerSocketReference tcpServerSocket(Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
+    public static ServerSocketReference tcpServerSocket(Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, ServerSocketFunction nonSecureSocketFunction) throws IOException {
         ThreadFactory threadFactory = getThreadFactory(threadName);
 
         Objects.requireNonNull(serverSocketCreationCallback, "serverSocketCreationCallback");

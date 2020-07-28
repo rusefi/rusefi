@@ -10,6 +10,7 @@ import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -83,7 +84,7 @@ public class TcpCommunicationIntegrationTest {
     }
 
     @Test
-    public void testProxy() throws InterruptedException {
+    public void testProxy() throws InterruptedException, IOException {
         ConfigurationImage serverImage = TestHelper.prepareImage(239, TestHelper.createIniField(Fields.CYLINDERSCOUNT));
         int controllerPort = 6102;
 

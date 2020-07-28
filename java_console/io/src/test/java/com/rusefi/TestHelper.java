@@ -47,7 +47,7 @@ public class TestHelper {
     }
 
     @NotNull
-    public static BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port, Listener serverSocketCreationCallback, BinaryProtocolServer.Context context) {
+    public static BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port, Listener serverSocketCreationCallback, BinaryProtocolServer.Context context) throws IOException {
         BinaryProtocolState state = new BinaryProtocolState();
         state.setController(ci);
         state.setCurrentOutputs(new byte[1 + Fields.TS_OUTPUT_SIZE]);
@@ -83,9 +83,13 @@ public class TestHelper {
 
     public static BinaryProtocolServer createVirtualController(int controllerPort, ConfigurationImage controllerImage, BinaryProtocolServer.Context context) throws InterruptedException {
         CountDownLatch controllerCreated = new CountDownLatch(1);
-        BinaryProtocolServer server = createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown(), context);
-        assertLatch(controllerCreated);
-        return server;
+        try {
+            BinaryProtocolServer server = createVirtualController(controllerImage, controllerPort, parameter -> controllerCreated.countDown(), context);
+            assertLatch(controllerCreated);
+            return server;
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public static SessionDetails createTestSession(String authToken, String signature) {
