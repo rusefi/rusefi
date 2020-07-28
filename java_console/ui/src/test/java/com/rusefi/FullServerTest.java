@@ -101,7 +101,7 @@ public class FullServerTest {
             };
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-            NetworkConnector.NetworkConnectorResult networkConnectorResult = new NetworkConnector().runNetworkConnector(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
+            NetworkConnector.NetworkConnectorResult networkConnectorResult = new NetworkConnector().start(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
             ControllerInfo controllerInfo = networkConnectorResult.getControllerInfo();
 
             TestHelper.assertLatch("controllerRegistered", controllerRegistered);

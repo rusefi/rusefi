@@ -324,6 +324,8 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
 	printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
+	printAnalogChannelInfo("AuxT1", engineConfiguration->auxTempSensor1.adcChannel);
+	printAnalogChannelInfo("AuxT2", engineConfiguration->auxTempSensor2.adcChannel);
 	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		adc_channel_e ch = engineConfiguration->fsioAdc[i];
