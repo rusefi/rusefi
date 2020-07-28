@@ -13,6 +13,7 @@
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
 #include "sensor.h"
+#include "mocks.h"
 
 extern EnginePins enginePins;
 
