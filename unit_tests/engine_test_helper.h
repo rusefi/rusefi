@@ -84,7 +84,7 @@ public:
 	Engine engine;
 	persistent_config_s persistentConfig;
 
-	MockAirmass mockAirmass;
+	::testing::NiceMock<MockAirmass> mockAirmass;
 
 private:
 	void writeEvents(const char *fileName);
