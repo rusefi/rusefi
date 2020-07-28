@@ -142,8 +142,7 @@ public class UploadTab {
         content.add(uploadView.getContent());
         content.add(upload);
 
-        ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
-        content.add(new JLabel(LOGO));
+        content.add(new JLabel(PluginEntry.LOGO));
         content.add(tokenPanel.getContent());
         content.add(new URLLabel(REO_URL));
 

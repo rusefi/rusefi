@@ -8,6 +8,7 @@ import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.HttpUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.concurrent.CountDownLatch;
 
@@ -16,13 +17,21 @@ import static com.rusefi.TestHelper.assertLatch;
 public class BackendTestHelper {
     public static void runApplicationConnectorBlocking(Backend backend, int serverPortForRemoteUsers) throws InterruptedException {
         CountDownLatch applicationServerCreated = new CountDownLatch(1);
-        backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
+        try {
+            backend.runApplicationConnector(serverPortForRemoteUsers, parameter -> applicationServerCreated.countDown());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
         assertLatch(applicationServerCreated);
     }
 
     public static void runControllerConnectorBlocking(Backend backend, int serverPortForControllers) throws InterruptedException {
         CountDownLatch controllerServerCreated = new CountDownLatch(1);
-        backend.runControllerConnector(serverPortForControllers, parameter -> controllerServerCreated.countDown());
+        try {
+            backend.runControllerConnector(serverPortForControllers, parameter -> controllerServerCreated.countDown());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
         assertLatch(controllerServerCreated);
     }
 
