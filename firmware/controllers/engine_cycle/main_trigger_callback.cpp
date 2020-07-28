@@ -528,7 +528,7 @@ void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE
 	int rpm = GET_RPM();
-	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float el = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	scheduleMsg(logger, "rpm %d engine_load %.2f", rpm, el);
 	scheduleMsg(logger, "fuel %.2fms timing %.2f", getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX), engine->engineState.timingAdvance);
 #endif /* EFI_PROD_CODE */
