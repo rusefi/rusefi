@@ -206,8 +206,8 @@ enable2ndByteCanID = false
      internalMcuTemperature = scalar,S08, 11,    "deg C",    1,         0
       coolant         = scalar,  S16,     12,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
       intake          = scalar,  S16,     14,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-; todo: aux1
-; todo: aux2
+      auxt1           = scalar,  S16,     16,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
+      auxt2           = scalar,  S16,     18,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
       
 
 ; throttle, pedal
@@ -942,6 +942,8 @@ gaugeCategory = Sensors - Extra 1
    internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    75,  100,   0,   0
    OilPressGauge   	 = oilPressure,   "Oil Pressure",       "kPa",        0,    750,      35,     75,     550,   700,   0,   0	
    idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
+   AuxT1Gauge        = auxt1,     "Aux temp 1",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   AuxT2Gauge        = auxt2,     "Aux temp 2",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
 
 gaugeCategory = Ignition
    ignadvGauge = ignitionAdvance,       "Ignition timing",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1

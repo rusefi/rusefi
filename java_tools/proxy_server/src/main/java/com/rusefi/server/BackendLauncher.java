@@ -4,8 +4,10 @@ import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 
+import java.io.IOException;
+
 public class BackendLauncher {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         /* todo
         rusEFISSLContext.setupCertificates(new File("keystore.jks"), System.getProperty("RUSEFI_KEYSTORE_PASSWORD"));
          */
