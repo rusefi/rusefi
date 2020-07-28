@@ -16,7 +16,6 @@
 #include "accel_enrichment.h"
 #include "trigger_central.h"
 #include "local_version_holder.h"
-#include "airmass.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -32,6 +31,7 @@
 #define FAST_CALLBACK_PERIOD_MS 5
 
 class RpmCalculator;
+class AirmassModelBase;
 
 #define MAF_DECODING_CACHE_SIZE 256
 
