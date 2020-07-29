@@ -11,8 +11,12 @@
 #include "sensor.h"
 #include "fsio_impl.h"
 
+using ::testing::_;
+
 TEST(fuelCut, coasting) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	// configure coastingFuelCut
 	engineConfiguration->coastingFuelCutEnabled = true;
