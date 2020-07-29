@@ -39,7 +39,6 @@ void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeTimingTable_d(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX);
 #define setWholeTimingTable(x) setWholeTimingTable_d(x PASS_CONFIG_PARAMETER_SUFFIX);
 void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX);
-void printFloatArray(const char *prefix, float array[], int size);
 
 // needed by bootloader
 void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE);

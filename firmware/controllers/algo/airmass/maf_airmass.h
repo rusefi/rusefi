@@ -4,7 +4,7 @@
 
 class MafAirmass final : public AirmassModelBase {
 public:
-	MafAirmass(const ValueProvider3D& veTable) : AirmassModelBase(veTable) {}
+	explicit MafAirmass(const ValueProvider3D& veTable) : AirmassModelBase(veTable) {}
 
 	AirmassResult getAirmass(int rpm) override;
 
