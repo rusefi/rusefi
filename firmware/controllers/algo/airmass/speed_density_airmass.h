@@ -4,6 +4,6 @@
 
 class SpeedDensityAirmass : public SpeedDensityBase {
 public:
-	SpeedDensityAirmass(const ValueProvider3D& veTable) : SpeedDensityBase(veTable) {}
+	explicit SpeedDensityAirmass(const ValueProvider3D& veTable) : SpeedDensityBase(veTable) {}
 	AirmassResult getAirmass(int rpm) override;
 };
