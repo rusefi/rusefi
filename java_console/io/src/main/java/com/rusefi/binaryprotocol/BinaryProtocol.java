@@ -287,7 +287,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
-    public void uploadChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException {
+    public void uploadChanges(ConfigurationImage newVersion) {
         ConfigurationImage current = getControllerConfiguration();
         // let's have our own copy which no one would be able to change
         newVersion = newVersion.clone();
@@ -297,18 +297,18 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             if (range == null)
                 break;
             int size = range.second - range.first;
-            logger.info("Need to patch: " + range + ", size=" + size);
+            log.info("Need to patch: " + range + ", size=" + size);
             byte[] oldBytes = current.getRange(range.first, size);
-            logger.info("old " + Arrays.toString(oldBytes));
+            log.info("old " + Arrays.toString(oldBytes));
 
             byte[] newBytes = newVersion.getRange(range.first, size);
-            logger.info("new " + Arrays.toString(newBytes));
+            log.info("new " + Arrays.toString(newBytes));
 
-            writeData(newVersion.getContent(), range.first, size, logger);
+            writeData(newVersion.getContent(), range.first, size);
 
             offset = range.second;
         }
-        burn(logger);
+        burn();
         setController(newVersion);
     }
 
@@ -451,10 +451,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         Runtime.getRuntime().removeShutdownHook(hook);
     }
 
-    public void writeData(byte[] content, Integer offset, int size, Logger logger) {
+    public void writeData(byte[] content, Integer offset, int size) {
         if (size > BLOCKING_FACTOR) {
-            writeData(content, offset, BLOCKING_FACTOR, logger);
-            writeData(content, offset + BLOCKING_FACTOR, size - BLOCKING_FACTOR, logger);
+            writeData(content, offset, BLOCKING_FACTOR);
+            writeData(content, offset + BLOCKING_FACTOR, size - BLOCKING_FACTOR);
             return;
         }
 
@@ -472,17 +472,17 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = executeCommand(packet, "writeImage");
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != 1) {
-                logger.error("writeData: Something is wrong, retrying...");
+                log.error("writeData: Something is wrong, retrying...");
                 continue;
             }
             break;
         }
     }
 
-    public void burn(Logger logger) {
+    public void burn() {
         if (!isBurnPending)
             return;
-        logger.info("Need to burn");
+        log.info("Need to burn");
 
         while (true) {
             if (isClosed)
@@ -493,7 +493,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             }
             break;
         }
-        logger.info("DONE");
+        log.info("DONE");
         isBurnPending = false;
     }
 
