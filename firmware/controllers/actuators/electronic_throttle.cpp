@@ -323,7 +323,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t actualThrottl
 	return autotuneAmplitude * (isPositive ? -1 : 1);
 }
 
-expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t actualThrottlePosition) {
+expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t observation) {
 	if (m_shouldResetPid) {
 		m_pid.reset();
 		m_shouldResetPid = false;
@@ -333,16 +333,16 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t act
 	if (m_myIndex == 0) {
 #if EFI_TUNER_STUDIO
 		// Error is positive if the throttle needs to open further
-		tsOutputChannels.etb1Error = target - actualThrottlePosition;
+		tsOutputChannels.etb1Error = target - observation;
 #endif /* EFI_TUNER_STUDIO */
 	}
 
 	// Only allow autotune with stopped engine
 	if (GET_RPM() == 0 && engine->etbAutoTune) {
-		return getClosedLoopAutotune(actualThrottlePosition);
+		return getClosedLoopAutotune(observation);
 	} else {
 		// Normal case - use PID to compute closed loop part
-		return m_pid.getOutput(target, actualThrottlePosition, 1.0f / ETB_LOOP_FREQUENCY);
+		return m_pid.getOutput(target, observation, 1.0f / ETB_LOOP_FREQUENCY);
 	}
 }
 
