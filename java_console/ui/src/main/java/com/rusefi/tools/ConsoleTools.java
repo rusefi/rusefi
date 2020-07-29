@@ -68,7 +68,8 @@ public class ConsoleTools {
         registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI authentication token.");
         registerTool("upload_tune", ConsoleTools::uploadTune, "Upload specified tune file to rusEFI Online using auth token from settings");
 
-        registerTool("read_tune", strings1 -> readTune(), "Read tune from controller");
+        registerTool("read_tune", args -> readTune(), "Read tune from controller");
+        registerTool("write_tune", ConsoleTools::writeTune, "Write specified XML tune into controller");
 
         registerTool("version", ConsoleTools::version, "Only print version");
 
@@ -236,6 +237,25 @@ public class ConsoleTools {
             System.exit(0);
             return null;
         });
+    }
+
+    private static void writeTune(String[] args) throws Exception {
+        if (args.length < 2) {
+            System.out.println("No tune file name specified");
+            return;
+        }
+
+        String fileName = args[1];
+        Msq msq = Msq.readTune(fileName);
+
+        startAndConnect(linkManager -> {
+            ConfigurationImage ci = msq.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
+            linkManager.getConnector().getBinaryProtocol().uploadChanges(ci);
+
+            //System.exit(0);
+            return null;
+        });
+
     }
 
     private static void invokeCallback(String callback) {

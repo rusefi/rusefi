@@ -1,5 +1,6 @@
 package com.rusefi.tune.xml;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 @XmlRootElement
 public class Msq {
+    private static final Logging log = Logging.getLogging(Msq.class);
 
     public List<Page> page = new ArrayList<>();
 
@@ -56,7 +58,7 @@ public class Msq {
             }
             IniField field = instance.allIniFields.get(constant.getName());
             Objects.requireNonNull(field, "Field for " + constant.getName());
-            System.out.println("Setting " + field);
+            log.debug("Setting " + field);
             field.setValue(ci, constant);
         }
         return ci;

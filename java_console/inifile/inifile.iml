@@ -13,5 +13,6 @@
     <orderEntry type="module" module-name="autoupdate" exported="" />
     <orderEntry type="library" exported="" name="annotations" level="project" />
     <orderEntry type="module" module-name="shared_io" exported="" />
+    <orderEntry type="module" module-name="logging-api" />
   </component>
 </module>
