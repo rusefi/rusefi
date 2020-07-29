@@ -28,7 +28,7 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	CanTxMessage(uint32_t eid, uint8_t dlc = 8);
+	explicit CanTxMessage(uint32_t eid, uint8_t dlc = 8);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
@@ -71,7 +71,7 @@ class CanTxTyped final : public CanTxMessage
 	static_assert(sizeof(TData) == sizeof(CANTxFrame::data8));
 
 public:
-	CanTxTyped(uint32_t eid) : CanTxMessage(eid) { }
+	explicit CanTxTyped(uint32_t eid) : CanTxMessage(eid) { }
 
 	/**
 	 * Access members of the templated type.  
