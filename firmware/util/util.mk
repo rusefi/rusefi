@@ -13,7 +13,6 @@ UTILSRC_CPP = \
 	$(UTIL_DIR)/containers/local_version_holder.cpp \
 	$(UTIL_DIR)/containers/table_helper.cpp \
 	$(UTIL_DIR)/math/pid.cpp \
-	$(UTIL_DIR)/math/avg_values.cpp \
 	$(UTIL_DIR)/math/interpolation.cpp \
 	$(PROJECT_DIR)/util/datalogging.cpp \
 	$(PROJECT_DIR)/util/loggingcentral.cpp \
