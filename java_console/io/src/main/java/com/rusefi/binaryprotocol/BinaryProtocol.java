@@ -479,7 +479,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
-    public void burn(Logger logger) throws InterruptedException, EOFException {
+    public void burn(Logger logger) {
         if (!isBurnPending)
             return;
         logger.info("Need to burn");

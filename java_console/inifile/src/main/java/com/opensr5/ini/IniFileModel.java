@@ -1,5 +1,6 @@
 package com.opensr5.ini;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,6 +12,7 @@ import java.util.*;
  * 12/23/2015.
  */
 public class IniFileModel {
+    private static final Logging log = Logging.getLogging(IniFileModel.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
     public static final String RUSEFI_INI_SUFFIX = ".ini";
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
@@ -32,7 +34,7 @@ public class IniFileModel {
     public Map<String, String> tooltips = new TreeMap<>();
 
     public static void main(String[] args) {
-        System.out.println(IniFileModel.getInstance().dialogs);
+        log.info("Dialogs: " + IniFileModel.getInstance().dialogs);
     }
 
     private boolean isInSettingContextHelp = false;
@@ -48,11 +50,11 @@ public class IniFileModel {
         if (fileName != null)
             input = new File(fileName);
         if (fileName == null || !input.exists()) {
-            System.out.println("No such file: " + fileName);
+            log.error("No such file: " + fileName);
             return null;
         }
 
-        System.out.println("Reading " + fileName);
+        log.info("Reading " + fileName);
         RawIniFile content = IniFileReader.read(input);
 
         readIniFile(content);
@@ -76,6 +78,7 @@ public class IniFileModel {
         File dir = new File(fileDirectory);
         if (!dir.isDirectory())
             return null;
+        log.info("Searching for " + prefix + "*" + suffix + " in " + fileDirectory);
         for (String file : dir.list()) {
             if (file.startsWith(prefix) && file.endsWith(suffix))
                 return fileDirectory + File.separator + file;
@@ -176,7 +179,7 @@ public class IniFileModel {
             allFields.put(key, field);
         }
         fieldsOfCurrentDialog.add(field);
-        System.out.println("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
+        log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 
     public Map<String, DialogModel.Field> getAllFields() {
@@ -198,7 +201,7 @@ public class IniFileModel {
 
         dialogId = keyword;
         dialogUiName = name;
-        System.out.println("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "]");
+        log.debug("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "]");
     }
 
     private void trim(LinkedList<String> list) {

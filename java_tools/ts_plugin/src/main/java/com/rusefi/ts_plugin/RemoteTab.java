@@ -211,6 +211,7 @@ public class RemoteTab {
             AtomicReference<ServerSocketReference> serverHolderAtomicReference = new AtomicReference<>();
 
             TcpIoStream.DisconnectListener disconnectListener = message -> SwingUtilities.invokeLater(() -> {
+                System.out.println("Disconnected " + message);
                 setStatus("Disconnected");
                 RemoteTabController.INSTANCE.setState(RemoteTabController.State.NOT_CONNECTED);
                 ServerSocketReference serverHolder = serverHolderAtomicReference.get();

@@ -5,6 +5,9 @@ import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 
+/**
+ * Starts a fake device with TCP connector at {@link BinaryProtocolServer#DEFAULT_PROXY_PORT} port
+ */
 class BinaryProtocolServerSandbox {
     public static void main(String[] args) {
         BinaryProtocolState state = new BinaryProtocolState();
