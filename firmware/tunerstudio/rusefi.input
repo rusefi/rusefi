@@ -355,7 +355,6 @@ enable2ndByteCanID = false
 
 ; todo: generate this section programatically
 	LM_PLAIN_MAF = {0},
-	LM_ALPHA_N = {1},
 	LM_SPEED_DENSITY = {3},
 	LM_REAL_MAF = {4}
 
@@ -1517,7 +1516,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 [UserDefined]
 	dialog = fuelTableBottomDialog, "", card
 		panel = fuelTableMAFTbl, Center, {fuelAlgorithm==LM_PLAIN_MAF}
-		panel = fuelTableTPSTbl, Center, {fuelAlgorithm==LM_ALPHA_N}
 		panel = fuelTableELTbl, Center
 
 	dialog = fuelTableRight, "", yAxis
