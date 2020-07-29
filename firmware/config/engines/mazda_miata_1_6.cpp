@@ -305,6 +305,9 @@ void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * set engine_type 12
  */
 void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 #if (BOARD_TLE8888_COUNT > 0)
 	// idle.solenoidPin output is inherited from boards/microrusefi/board_configuration.cpp
 	// CLT: "18 - AN temp 1"
@@ -347,13 +350,13 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->isHip9011Enabled = false;
 	engineConfiguration->isSdCardEnabled = true;
 
-	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
-	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 #endif /* BOARD_TLE8888_COUNT */
 }
 
 void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 #if (BOARD_TLE8888_COUNT > 0)
 #endif /* BOARD_TLE8888_COUNT */
 }
