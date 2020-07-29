@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.binaryprotocol.IoHelper.getCrc32;
@@ -49,7 +50,7 @@ public class ConsoleTools {
         registerTool("help", args -> printTools(), "Print this help.");
         registerTool("headless", ConsoleTools::runHeadless, "Connect to rusEFI controller and start saving logs.");
 
-        registerTool("ptrace_enums", ConsoleTools::runPerfTraceTool, "NOT A USER TOOL. Development tool to process pefrormance trace enums");
+        registerTool("ptrace_enums", ConsoleTools::runPerfTraceTool, "NOT A USER TOOL. Development tool to process performance trace enums");
         registerTool("firing_order", ConsoleTools::runFiringOrderTool, "NOT A USER TOOL. Development tool relating to adding new firing order into rusEFI firmware.");
         registerTool("functional_test", ConsoleTools::runFunctionalTest, "NOT A USER TOOL. Development tool related to functional testing");
         registerTool("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");
@@ -65,7 +66,9 @@ public class ConsoleTools {
 
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
         registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI authentication token.");
-        registerTool("upload_tune", ConsoleTools::uploadTune, "Upload specified tune file using auth token from settings");
+        registerTool("upload_tune", ConsoleTools::uploadTune, "Upload specified tune file to rusEFI Online using auth token from settings");
+
+        registerTool("read_tune", strings1 -> readTune(), "Read tune from controller");
 
         registerTool("version", ConsoleTools::version, "Only print version");
 
@@ -117,7 +120,7 @@ public class ConsoleTools {
         LightweightGUI.start();
     }
 
-    private static void uploadTune(String[] args) throws IOException {
+    private static void uploadTune(String[] args) {
         String fileName = args[1];
         String authToken = AuthTokenPanel.getAuthToken();
         System.out.println("Trying to upload " + fileName + " using " + authToken);
@@ -200,6 +203,14 @@ public class ConsoleTools {
             }
         });
 
+        startAndConnect(linkManager -> {
+            new BinaryProtocolServer().start(linkManager);
+            return null;
+        });
+    }
+
+    private static void startAndConnect(final Function<LinkManager, Void> onConnectionEstablished) {
+
         String autoDetectedPort = PortDetector.autoDetectSerial(null);
         if (autoDetectedPort == null) {
             System.err.println(RUS_EFI_NOT_DETECTED);
@@ -209,13 +220,21 @@ public class ConsoleTools {
         linkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
-                new BinaryProtocolServer().start(linkManager);
+                onConnectionEstablished.apply(linkManager);
             }
 
             @Override
             public void onConnectionFailed() {
 
             }
+        });
+    }
+
+    private static void readTune() {
+        startAndConnect(linkManager -> {
+            System.out.println("Loaded! Exiting");;
+            System.exit(0);
+            return null;
         });
     }
 

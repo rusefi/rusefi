@@ -69,6 +69,9 @@ public class Msq {
     public void writeXmlFile(String outputXmlFileName) throws JAXBException, IOException {
         Objects.requireNonNull(versionInfo, "versionInfo");
         versionInfo.validate();
+        Page page = findPage();
+        if (page.constant.isEmpty())
+            throw new IllegalStateException("No data?");
         XmlUtil.writeXml(this, Msq.class, outputXmlFileName);
     }
 
