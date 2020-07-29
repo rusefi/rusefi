@@ -1,12 +1,14 @@
 package com.rusefi.io.serial;
 
+import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
-import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * https://github.com/Fazecast/jSerialComm looks to be alive as of 2020
@@ -15,19 +17,18 @@ import com.rusefi.io.IoStream;
  * 06/03/2019
  */
 public class SerialIoStreamJSerialComm extends AbstractIoStream {
+    private static final Logging log = getLogging(SerialIoStreamJSerialComm.class);
     private SerialPort sp;
     private final String port;
-    private final Logger logger;
     private final IncomingDataBuffer dataBuffer;
 
     /**
-     * @see #openPort(String, Logger)
+     * @see #openPort(String)
      */
-    private SerialIoStreamJSerialComm(SerialPort sp, String port, Logger logger) {
+    private SerialIoStreamJSerialComm(SerialPort sp, String port) {
         this.sp = sp;
         this.port = port;
-        this.logger = logger;
-        this.dataBuffer = IncomingDataBuffer.createDataBuffer("[serial] ", this, logger);
+        this.dataBuffer = IncomingDataBuffer.createDataBuffer("[serial] ", this);
     }
 
     @Override
@@ -38,6 +39,8 @@ public class SerialIoStreamJSerialComm extends AbstractIoStream {
     @Override
     public void setInputListener(DataListener listener) {
         sp.addDataListener(new SerialPortDataListener() {
+            private boolean isFirstEvent = true;
+
             @Override
             public int getListeningEvents() {
                 return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
@@ -47,6 +50,11 @@ public class SerialIoStreamJSerialComm extends AbstractIoStream {
             public void serialEvent(SerialPortEvent event) {
                 if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
                     return;
+                if (isFirstEvent) {
+                    // a hack to have explicit thread name, see https://github.com/Fazecast/jSerialComm/issues/308
+                    Thread.currentThread().setName("Serial Port Event Thread");
+                    isFirstEvent = false;
+                }
                 int bytesAvailable = sp.bytesAvailable();
                 if (bytesAvailable <= 0)
                     return; // sometimes negative value is returned at least on Mac
@@ -68,10 +76,10 @@ public class SerialIoStreamJSerialComm extends AbstractIoStream {
 
     @Override
     public void close() {
-        logger.info(port + ": Closing port...");
+        log.info(port + ": Closing port...");
         super.close();
         sp.closePort();
-        logger.info(port + ": Closed port.");
+        log.info(port + ": Closed port.");
     }
 
     @Override
@@ -83,12 +91,12 @@ public class SerialIoStreamJSerialComm extends AbstractIoStream {
      * Just open physical serial and not much more
      * @see PortHolder#connectAndReadConfiguration()
      */
-    public static IoStream openPort(String port, Logger logger) {
-        logger.info("[SerialIoStreamJSerialComm] openPort " + port);
+    public static IoStream openPort(String port) {
+        log.info("[SerialIoStreamJSerialComm] openPort " + port);
         SerialPort serialPort = SerialPort.getCommPort(port);
         serialPort.setBaudRate(BaudRateHolder.INSTANCE.baudRate);
         serialPort.openPort(0);
 //        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] opened " + port);
-        return new SerialIoStreamJSerialComm(serialPort, port, logger);
+        return new SerialIoStreamJSerialComm(serialPort, port);
     }
 }

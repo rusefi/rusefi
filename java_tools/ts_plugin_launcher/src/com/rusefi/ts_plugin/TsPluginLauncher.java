@@ -7,16 +7,22 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 
 /**
+ * This class is the more permanent part of the plug, it's responsible for refreshing and launcher PluginEntry via reflections.
+ * which downloads the main more volatile UI part (PluginEntry)
+ *
  * by the way TS installs stuff into %user%\.efianalytics\TunerStudio\plugins folder
+ * @see PluginLauncherSandbox sandbox for this
+ * see PluginEntry
  */
 public class TsPluginLauncher implements ApplicationPlugin {
-    static final String VERSION = "alpha3_2020";
+    public static final int BUILD_VERSION = 3;
+    static final String VERSION = "2020.alpha." + BUILD_VERSION;
     private static final String HELP_URL = "https://github.com/rusefi/rusefi/wiki/TS-Plugin";
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
     public TsPluginLauncher() {
-        System.out.println("TsPluginLauncher " + this);
+        System.out.println("init " + this);
     }
 
     @Override
@@ -45,6 +51,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
 
     @Override
     public boolean displayPlugin(String signature) {
+        System.out.println("displayPlugin " + signature);
         // todo: smarter implementation one day
         return true;
     }
@@ -62,7 +69,8 @@ public class TsPluginLauncher implements ApplicationPlugin {
     @Override
     public JComponent getPluginPanel() {
         synchronized (this) {
-            // only create content if TS is actually planning to display this plugin instance
+            // lazy initialization since TunerStudio creates one instance only to get version information without any
+            // intentions to display the UI
             if (content.getComponents().length == 0) {
                 System.out.println("Create Updater " + this);
                 Updater updater = new Updater();
@@ -74,7 +82,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
 
     @Override
     public void close() {
-        System.out.printf("TsPlugin#close");
+        System.out.println("close " + this);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.rusefi.binaryprotocol;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.Logging;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
 
 /**
@@ -23,39 +24,44 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  */
 @ThreadSafe
 public class IncomingDataBuffer {
+    private static final Logging log = getLogging(IoStream.class);
+
     private static final int BUFFER_SIZE = 32768;
     private static String loggingPrefix;
     /**
      * buffer for response bytes from controller
      */
     private final CircularByteBuffer cbb;
-    private final Logger logger;
     private final AbstractIoStream.StreamStats streamStats;
 
-    public IncomingDataBuffer(Logger logger, AbstractIoStream.StreamStats streamStats) {
+    public IncomingDataBuffer(AbstractIoStream.StreamStats streamStats) {
         this.streamStats = Objects.requireNonNull(streamStats, "streamStats");
         this.cbb = new CircularByteBuffer(BUFFER_SIZE);
-        this.logger = logger;
     }
 
-    public static IncomingDataBuffer createDataBuffer(String loggingPrefix, IoStream stream, Logger logger) {
+    public static IncomingDataBuffer createDataBuffer(String loggingPrefix, IoStream stream) {
         IncomingDataBuffer.loggingPrefix = loggingPrefix;
-        IncomingDataBuffer incomingData = new IncomingDataBuffer(logger, stream.getStreamStats());
+        IncomingDataBuffer incomingData = new IncomingDataBuffer(stream.getStreamStats());
         stream.setInputListener(incomingData::addData);
         return incomingData;
     }
 
-    public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse) throws EOFException {
-        return getPacket(logger, msg, allowLongResponse, System.currentTimeMillis());
+    public byte[] getPacket(String msg, boolean allowLongResponse) throws EOFException {
+        return getPacket(msg, allowLongResponse, System.currentTimeMillis());
     }
 
-    public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse, long start) throws EOFException {
+    /**
+     * why does this method return NULL in case of timeout?!
+     * todo: there is a very similar BinaryProtocolServer#readPromisedBytes which throws exception in case of timeout
+     */
+    public byte[] getPacket(String msg, boolean allowLongResponse, long start) throws EOFException {
         boolean isTimeout = waitForBytes(msg + " header", start, 2);
         if (isTimeout)
             return null;
 
         int packetSize = swap16(getShort());
-        logger.trace( loggingPrefix + "Got packet size " + packetSize);
+        if (log.debugEnabled())
+            log.debug(loggingPrefix + "Got packet size " + packetSize);
         if (packetSize < 0)
             return null;
         if (!allowLongResponse && packetSize > Math.max(BinaryProtocolCommands.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
@@ -72,20 +78,26 @@ public class IncomingDataBuffer {
 
         boolean isCrcOk = actualCrc == packetCrc;
         if (!isCrcOk) {
-            logger.trace(String.format("%x", actualCrc) + " vs " + String.format("%x", packetCrc));
+            if (log.debugEnabled())
+                log.debug(String.format("%x", actualCrc) + " vs " + String.format("%x", packetCrc));
             return null;
         }
-        streamStats.onPacketArrived();
-        logger.trace("packet " + Arrays.toString(packet) + ": crc OK");
+        onPacketArrived();
+        if (log.debugEnabled())
+            log.debug("packet " + Arrays.toString(packet) + ": crc OK");
 
         return packet;
     }
 
+    public void onPacketArrived() {
+        streamStats.onPacketArrived();
+    }
+
     public void addData(byte[] freshData) {
-        logger.info("IncomingDataBuffer: " + freshData.length + " byte(s) arrived");
+        log.info("IncomingDataBuffer: " + freshData.length + " byte(s) arrived");
         synchronized (cbb) {
             if (cbb.size() - cbb.length() < freshData.length) {
-                logger.error("IncomingDataBuffer: buffer overflow not expected");
+                log.error("IncomingDataBuffer: buffer overflow not expected");
                 cbb.clear();
             }
             cbb.put(freshData);
@@ -102,19 +114,22 @@ public class IncomingDataBuffer {
         return waitForBytes(Timeouts.BINARY_IO_TIMEOUT, loggingMessage, startTimestamp, count);
     }
 
+    /**
+     * @return true in case of timeout, false if we have received count of bytes
+     */
     public boolean waitForBytes(int timeoutMs, String loggingMessage, long startTimestamp, int count) {
-        logger.info(loggingMessage + ": waiting for " + count + " byte(s)");
+        log.info(loggingMessage + ": waiting for " + count + " byte(s)");
         synchronized (cbb) {
             while (cbb.length() < count) {
                 int timeout = (int) (startTimestamp + timeoutMs - System.currentTimeMillis());
                 if (timeout <= 0) {
-                    logger.info(loggingMessage + ": timeout. Got only " + cbb.length());
+                    log.info(loggingMessage + ": timeout. Got only " + cbb.length());
                     return true; // timeout. Sad face.
                 }
                 try {
                     cbb.wait(timeout);
                 } catch (InterruptedException e) {
-                    throw new IllegalStateException(e);
+                    return true; // thread thrown away, handling like a timeout
                 }
             }
         }
@@ -126,10 +141,10 @@ public class IncomingDataBuffer {
         synchronized (cbb) {
             int pending = cbb.length();
             if (pending > 0) {
-                logger.error("dropPending: Unexpected pending data: " + pending + " byte(s)");
+                log.error("dropPending: Unexpected pending data: " + pending + " byte(s)");
                 byte[] bytes = new byte[pending];
                 cbb.get(bytes);
-                logger.error("data: " + Arrays.toString(bytes));
+                log.error("data: " + Arrays.toString(bytes));
             }
         }
     }
@@ -163,31 +178,30 @@ public class IncomingDataBuffer {
     }
 
     public byte readByte(int timeoutMs) throws IOException {
-        boolean isTimeout = waitForBytes(timeoutMs,loggingPrefix + "readByte", System.currentTimeMillis(), 1);
+        boolean isTimeout = waitForBytes(timeoutMs, loggingPrefix + "readByte", System.currentTimeMillis(), 1);
         if (isTimeout)
-            throw new IOException("Timeout in readByte");
+            throw new EOFException("Timeout in readByte " + timeoutMs);
         return (byte) getByte();
     }
 
     public int readInt() throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "readInt", System.currentTimeMillis(), 4);
         if (isTimeout)
-            throw new IllegalStateException("Timeout in readByte");
+            throw new EOFException("Timeout in readInt ");
         return swap32(getInt());
     }
 
     public short readShort() throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "readShort", System.currentTimeMillis(), 2);
         if (isTimeout)
-            throw new IllegalStateException("Timeout in readShort");
+            throw new EOFException("Timeout in readShort");
         return (short) swap16(getShort());
     }
 
-    public int read(byte[] packet) {
+    public void read(byte[] packet) throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "read", System.currentTimeMillis(), packet.length);
         if (isTimeout)
-            throw new IllegalStateException("Timeout while waiting " + packet.length);
+            throw new EOFException("Timeout while waiting " + packet.length);
         getData(packet);
-        return packet.length;
     }
 }

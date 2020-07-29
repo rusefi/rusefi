@@ -593,6 +593,10 @@ case LM_REAL_MAF:
   return "LM_REAL_MAF";
 case LM_SPEED_DENSITY:
   return "LM_SPEED_DENSITY";
+case LM_ALPHA_N_2:
+  return "LM_ALPHA_N_2";
+case LM_MOCK:
+  return "LM_MOCK";
   }
  return NULL;
 }
@@ -776,6 +780,10 @@ case GPPWM_Map:
   return "GPPWM_Map";
 case GPPWM_Tps:
   return "GPPWM_Tps";
+case GPPWM_FuelLoad:
+  return "GPPWM_FuelLoad";
+case GPPWM_IgnLoad:
+  return "GPPWM_IgnLoad";
   }
  return NULL;
 }

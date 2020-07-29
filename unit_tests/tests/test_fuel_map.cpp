@@ -14,27 +14,14 @@
 #include "efi_gpio.h"
 #include "advance_map.h"
 #include "sensor.h"
+#include "mocks.h"
 
-TEST(misc, testMafFuelMath) {
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
-	extern fuel_Map3D_t veMap;
-	veMap.setAll(75);
-
-	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
-	engineConfiguration->injector.flow = 200;
-
-	setAfrMap(config->afrTable, 13);
-
-	auto airmass = getRealMafAirmass(200, 6000 PASS_ENGINE_PARAMETER_SUFFIX);
-
-	// Check results
-	EXPECT_NEAR(0.277777f * 0.75f, airmass.CylinderAirmass, EPS4D);
-	EXPECT_NEAR(70.9814f, airmass.EngineLoadPercent, EPS4D);
-}
+using ::testing::FloatNear;
 
 TEST(misc, testFuelMap) {
 	printf("Setting up FORD_ASPIRE_1996\r\n");
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 
 	printf("Filling fuel map\r\n");
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {

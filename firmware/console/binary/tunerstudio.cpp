@@ -898,10 +898,12 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
-#if HW_CHECK_MODE
-  #define configError "FACTORY_MODE_PLEASE_CONTACT_SUPPORT"
-#else
 		char * configError = getFirmwareError();
+#if HW_CHECK_MODE
+		// analog input errors are returned as firmware error in QC mode
+		if (!hasFirmwareError()) {
+			strcpy(configError, "FACTORY_MODE_PLEASE_CONTACT_SUPPORT");
+		}
 #endif // HW_CHECK_MODE
 		sr5SendResponse(tsChannel, TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
 		break;

@@ -23,6 +23,9 @@
 
 #include "global.h"
 #include "airmass.h"
+#include "alphan_airmass.h"
+#include "maf_airmass.h"
+#include "speed_density_airmass.h"
 #include "fuel_math.h"
 #include "interpolation.h"
 #include "engine_configuration.h"
@@ -153,41 +156,6 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 /* DISPLAY_ENDIF */
 
-/**
- * Function block now works to create a standardised load from the cylinder filling as well as tune fuel via VE table. 
- * @return total duration of fuel injection per engine cycle, in milliseconds
- */
-AirmassResult getRealMafAirmass(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	// If the engine is stopped, MAF is meaningless
-	if (rpm == 0) {
-		return {};
-	}
-
-	// kg/hr -> g/s
-	float gramPerSecond = airSpeed * 1000 / 3600;
-
-	// 1/min -> 1/s
-	float revsPerSecond = rpm / 60.0f;
-	float airPerRevolution = gramPerSecond / revsPerSecond;
-
-	// Now we have to divide among cylinders - on a 4 stroke, half of the cylinders happen every rev
-	// This math is floating point to work properly on engines with odd cyl count
-	float halfCylCount = CONFIG(specs.cylindersCount) / 2.0f;
-
-	float cylinderAirmass = airPerRevolution / halfCylCount;
-
-	//Create % load for fuel table using relative naturally aspiratedcylinder filling
-	float airChargeLoad = 100 * cylinderAirmass / ENGINE(standardAirCharge);
-	
-	//Correct air mass by VE table
-	float correctedAirmass = cylinderAirmass * veMap.getValue(rpm, airChargeLoad) / 100;
-
-	return {
-		correctedAirmass,
-		airChargeLoad, // AFR/VE table Y axis
-	};
-}
-
 constexpr float convertToGramsPerSecond(float ccPerMinute) {
 	float ccPerSecond = ccPerMinute / 60;
 	return ccPerSecond * 0.72f;	// 0.72g/cc fuel density
@@ -202,16 +170,19 @@ float getInjectionDurationForAirmass(float airMass, float afr DECLARE_ENGINE_PAR
 	return airMass / (afr * gPerSec);
 }
 
-AirmassResult getAirmass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static SpeedDensityAirmass sdAirmass(veMap);
+static MafAirmass mafAirmass(veMap);
+static AlphaNAirmass alphaNAirmass(veMap);
+
+AirmassModelBase* getAirmassModel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	switch (CONFIG(fuelAlgorithm)) {
-	case LM_SPEED_DENSITY:
-		return getSpeedDensityAirmass(PASS_ENGINE_PARAMETER_SIGNATURE);
-	case LM_REAL_MAF: {
-		float maf = getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
-		return getRealMafAirmass(maf, rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	} default:
-		firmwareError(CUSTOM_ERR_ASSERT, "Fuel mode %d is not airmass mode", CONFIG(fuelAlgorithm));
-		return {};
+		case LM_SPEED_DENSITY: return &sdAirmass;
+		case LM_REAL_MAF: return &mafAirmass;
+		case LM_ALPHA_N_2: return &alphaNAirmass;
+#if EFI_UNIT_TEST
+		case LM_MOCK: return engine->mockAirmassModel;
+#endif
+		default: return nullptr;
 	}
 }
 
@@ -228,14 +199,18 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	floatms_t baseFuel;
 
-	if ((CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) || (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)) {
+	if ((CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) ||
+			(engineConfiguration->fuelAlgorithm == LM_REAL_MAF) ||
+			(engineConfiguration->fuelAlgorithm == LM_ALPHA_N_2) ||
+			(engineConfiguration->fuelAlgorithm == LM_MOCK)) {
 		// airmass modes - get airmass first, then convert to fuel
-		auto airmass = getAirmass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		auto model = getAirmassModel(PASS_ENGINE_PARAMETER_SIGNATURE);
+		efiAssert(CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
+
+		auto airmass = model->getAirmass(rpm);
 
 		// The airmass mode will tell us how to look up AFR - use the provided Y axis value
 		float targetAfr = afrMap.getValue(rpm, airmass.EngineLoadPercent);
-
-		// TODO: surface airmass.EngineLoadPercent to tunerstudio for proper display
 
 		// Plop some state for others to read
 		ENGINE(engineState.targetAFR) = targetAfr;
@@ -384,6 +359,9 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * is to prepare the fuel map data structure for 3d interpolation
  */
 void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	INJECT_ENGINE_REFERENCE(&sdAirmass);
+	INJECT_ENGINE_REFERENCE(&mafAirmass);
+
 	fuelMap.init(config->fuelTable, config->fuelLoadBins, config->fuelRpmBins);
 #if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
 	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);

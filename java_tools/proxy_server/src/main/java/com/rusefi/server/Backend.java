@@ -1,7 +1,8 @@
 package com.rusefi.server;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.Logging;
 import com.rusefi.Listener;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
@@ -9,35 +10,57 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.shared.FileUtil;
 import com.rusefi.tools.online.ProxyClient;
 import net.jcip.annotations.GuardedBy;
 import org.jetbrains.annotations.NotNull;
 import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
 import org.takes.facets.fork.TkFork;
-import org.takes.http.FtBasic;
+import org.takes.http.*;
 import org.takes.rs.RsHtml;
 import org.takes.rs.RsJson;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.BindException;
 import java.util.*;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.SECOND;
+import static com.rusefi.server.Birthday.humanReadableFormat;
 
 /**
- * See NetworkConnectorStartup
+ * See NetworkConnectorStartup - NetworkConnector connects an ECU to this backend
+ *
+ * @see ControllerConnectionState ECU session
+ * @see ApplicationConnectionState tuning application session
+ * @see BackendLauncher
  */
 public class Backend implements Closeable {
-    public static final int SERVER_PORT_FOR_CONTROLLERS = 8003;
+    private static final Logging log = getLogging(Backend.class);
+
     private static final String MAX_PACKET_GAP = "MAX_PACKET_GAP";
-    private static final String IS_USED = "isUsed";
+
+    /**
+     * Application with exclusive access should connect tuning application within 3 minutes
+     * Should be at least twice less than USER_IO_TIMEOUT to prevent controller disconnect
+     *
+     * @see BinaryProtocolProxy#USER_IO_TIMEOUT
+     */
+    private static final int APPLICATION_INACTIVITY_TIMEOUT = 3 * Timeouts.MINUTE;
+    static final String AGE = "age";
+    private static final ThreadFactory APPLLICATION_CONNECTION_CLEANUP = new NamedThreadFactory("rusEFI Application connections Cleanup");
+    private static final ThreadFactory GAUGE_POKER = new NamedThreadFactory("rusEFI gauge poker");
 
     private final FkRegex showOnlineControllers = new FkRegex(ProxyClient.LIST_CONTROLLERS_PATH,
             (Take) req -> getControllersOnline()
@@ -61,67 +84,66 @@ public class Backend implements Closeable {
 
     private final int applicationTimeout;
     private final UserDetailsResolver userDetailsResolver;
-    private final Logger logger;
     public final static AtomicLong totalSessions = new AtomicLong();
     public int serverPortForApplications;
     public int serverPortForControllers;
+    private ServerSocketReference applicationConnector;
+    private ServerSocketReference controllerConnector;
 
-    public Backend(UserDetailsResolver userDetailsResolver, int httpPort, Logger logger) {
-        this(userDetailsResolver, httpPort, logger, Timeouts.READ_IMAGE_TIMEOUT);
+    public Backend(UserDetailsResolver userDetailsResolver, int httpPort) {
+        this(userDetailsResolver, httpPort, APPLICATION_INACTIVITY_TIMEOUT);
     }
 
-    public Backend(UserDetailsResolver userDetailsResolver, int httpPort, Logger logger, int applicationTimeout) {
+    public Backend(UserDetailsResolver userDetailsResolver, int httpPort, int applicationTimeout) {
         this.applicationTimeout = applicationTimeout;
         this.userDetailsResolver = userDetailsResolver;
-        this.logger = logger;
 
 
         new Thread(() -> {
             try {
-                System.out.println("Starting http backend on " + httpPort);
+                log.info("Starting http backend on " + httpPort);
                 try {
-                    new FtBasic(
-                            new TkFork(showOnlineControllers,
-                                    showOnlineApplications,
-                                    new Monitoring(this).showStatistics,
-                                    new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
-                                    new FkRegex("/", new RsHtml("<html><body>\n" +
-                                            "<a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
-                                            "<br/>\n" +
-                                            "<a href='" + Monitoring.STATUS + "'>Status</a>\n" +
-                                            "<br/>\n" +
-                                            "<a href='" + ProxyClient.VERSION_PATH + "'>Version</a>\n" +
-                                            "<a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
-                                            "<a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
-                                            "<br/>\n" +
-                                            "<br/>\n" +
-                                            "</body></html>\n"))
-                            ), httpPort
-                    ).start(() -> isClosed);
+                    Take forkTake = new TkFork(showOnlineControllers,
+                            showOnlineApplications,
+                            new Monitoring(this).showStatistics,
+                            new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
+                            new FkRegex("/", new RsHtml("<html><body>\n" +
+                                    "<br/><a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
+                                    "<br/><br/><br/>\n" +
+                                    "<img src='https://rusefi.com/style/rusefi_online_color.png'/>" +
+                                    "<br/><br/><br/>\n" +
+                                    "<br/><br/><br/><a href='" + Monitoring.STATUS + "'>Status</a>\n" +
+                                    "<br/><br/><br/><a href='" + ProxyClient.VERSION_PATH + "'>Version</a>\n" +
+                                    "<br/><br/><br/><a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
+                                    "<br/><br/><br/><a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
+                                    "</body></html>\n"))
+                    );
+                    Front frontEnd = new FtBasic(new BkParallel(new BkSafe(new BkBasic(forkTake)), 4), httpPort);
+                    frontEnd.start(() -> isClosed());
                 } catch (BindException e) {
                     throw new IllegalStateException("While binding " + httpPort, e);
                 }
-                logger.info("Shutting down backend on port " + httpPort);
+                log.info("Shutting down backend on port " + httpPort);
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
 
         }, "Http Server Thread").start();
 
-        new Thread(() -> {
-            while (true) {
-                logger.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
+        APPLLICATION_CONNECTION_CLEANUP.newThread(() -> {
+            while (!isClosed()) {
+                log.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
                 runApplicationConnectionsCleanup();
                 BinaryProtocol.sleep(applicationTimeout);
             }
-        }, "rusEFI Application connections Cleanup").start();
+        }).start();
 
-        new Thread(() -> {
-            while (true) {
+        GAUGE_POKER.newThread(() -> {
+            while (!isClosed()) {
                 grabOutputs();
                 BinaryProtocol.sleep(SECOND);
             }
-        }, "rusEFI gauge poker").start();
+        }).start();
     }
 
     private void grabOutputs() {
@@ -139,39 +161,42 @@ public class Backend implements Closeable {
         }
     }
 
-    public void runApplicationConnector(int serverPortForApplications, Listener<?> serverSocketCreationCallback) {
+    public void runApplicationConnector(int serverPortForApplications, Listener<?> serverSocketCreationCallback) throws IOException {
         this.serverPortForApplications = serverPortForApplications;
         // connection from authenticator app which proxies for Tuner Studio
         // authenticator pushed hello packet on connect
-        System.out.println("Starting application connector at " + serverPortForApplications);
-        BinaryProtocolServer.tcpServerSocket(logger, applicationSocket -> () -> {
+        log.info("Starting application connector at " + serverPortForApplications);
+        applicationConnector = BinaryProtocolServer.tcpServerSocket(applicationSocket -> () -> {
+            log.info("new application connection!");
             totalSessions.incrementAndGet();
             // connection from authenticator app which proxies for Tuner Studio
             IoStream applicationClientStream = null;
             ApplicationConnectionState applicationConnectionState = null;
             try {
-                applicationClientStream = new TcpIoStream("[app] ", logger, applicationSocket);
+                applicationClientStream = new TcpIoStream("[backend-application connector] ", applicationSocket);
 
                 // authenticator pushed hello packet on connect
-                String jsonString = HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer(), logger);
-                if (jsonString == null)
+                String jsonString = HelloCommand.getHelloResponse(applicationClientStream.getDataBuffer());
+                if (jsonString == null) {
+                    log.error("ERROR: null HELLO");
                     return;
+                }
                 ApplicationRequest applicationRequest = ApplicationRequest.valueOf(jsonString);
-                logger.info("Application Connected: " + applicationRequest);
+                log.info("Application Connected: " + applicationRequest);
                 String authToken = applicationRequest.getSessionDetails().getAuthToken();
                 UserDetails userDetails = userDetailsResolver.apply(authToken);
                 if (userDetails == null) {
-                    logger.info("Authentication failed for application " + authToken);
+                    log.info("Authentication failed for application " + authToken);
                     return;
                 }
 
-                ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUserId(), applicationRequest.getSessionDetails().getControllerInfo());
+                ControllerKey controllerKey = new ControllerKey(applicationRequest.getTargetUser().getUserId(), applicationRequest.getSessionDetails().getControllerInfo());
                 ControllerConnectionState state;
                 synchronized (lock) {
-                    state = acquire(controllerKey);
+                    state = acquire(controllerKey, userDetails);
                 }
                 if (state == null) {
-                    logger.info("No controller for " + controllerKey);
+                    log.info("No controller for " + controllerKey);
                     return;
                 }
                 applicationConnectionState = new ApplicationConnectionState(userDetails, applicationClientStream, state);
@@ -179,10 +204,10 @@ public class Backend implements Closeable {
                     applications.add(applicationConnectionState);
                 }
 
-                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream);
+                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream, new AtomicInteger());
 
             } catch (Throwable e) {
-                logger.info("Application Connector: Got error " + e);
+                log.info("Application Connector: Got error " + e);
             } finally {
                 if (applicationClientStream != null)
                     applicationClientStream.close();
@@ -191,14 +216,14 @@ public class Backend implements Closeable {
         }, serverPortForApplications, "ApplicationServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
     }
 
-    private ControllerConnectionState acquire(ControllerKey controllerKey) {
+    private ControllerConnectionState acquire(ControllerKey controllerKey, UserDetails userDetails) {
         synchronized (lock) {
             ControllerConnectionState state = controllersByKey.get(controllerKey);
             if (state == null) {
                 // no such controller
                 return null;
             }
-            if (!state.getTwoKindSemaphore().acquireForLongTermUsage()) {
+            if (!state.getTwoKindSemaphore().acquireForLongTermUsage(userDetails)) {
                 // someone is already talking to this controller
                 return null;
             }
@@ -218,15 +243,15 @@ public class Backend implements Closeable {
                 applications.remove(applicationConnectionState);
             }
         }
-        logger.info("Disconnecting application");
+        log.info("Disconnecting application " + applicationConnectionState);
     }
 
-    public void runControllerConnector(int serverPortForControllers, Listener<?> serverSocketCreationCallback) {
+    public void runControllerConnector(int serverPortForControllers, Listener<?> serverSocketCreationCallback) throws IOException {
         this.serverPortForControllers = serverPortForControllers;
-        logger.info("Starting controller connector at " + serverPortForControllers);
-        BinaryProtocolServer.tcpServerSocket(logger, controllerSocket -> () -> {
+        log.info("Starting controller connector at " + serverPortForControllers);
+        controllerConnector = BinaryProtocolServer.tcpServerSocket(controllerSocket -> () -> {
             totalSessions.incrementAndGet();
-            ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, logger, getUserDetailsResolver());
+            ControllerConnectionState controllerConnectionState = new ControllerConnectionState(controllerSocket, getUserDetailsResolver());
             try {
                 controllerConnectionState.requestControllerInfo();
 
@@ -235,6 +260,7 @@ public class Backend implements Closeable {
 
                 register(controllerConnectionState);
             } catch (Throwable e) {
+                log.error("runControllerConnector close " + controllerConnectionState, e);
                 close(controllerConnectionState);
             }
         }, serverPortForControllers, "ControllerServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
@@ -248,6 +274,7 @@ public class Backend implements Closeable {
             JsonObject applicationObject = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, application.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, application.getUserDetails().getUserName())
+                    .add(AGE, application.getBirthday().getDuration())
                     .add(MAX_PACKET_GAP, application.getClientStream().getStreamStats().getMaxPacketGap())
                     .build();
             builder.add(applicationObject);
@@ -264,17 +291,25 @@ public class Backend implements Closeable {
             // todo: OutputChannel from .ini file based on controller signature
             int rpm = (int) client.getSensorsHolder().getValue(Sensor.RPM);
             double clt = client.getSensorsHolder().getValue(Sensor.CLT);
-            JsonObject controllerObject = Json.createObjectBuilder()
+            UserDetails owner = client.getTwoKindSemaphore().getOwner();
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, client.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, client.getUserDetails().getUserName())
-                    .add(IS_USED, client.getTwoKindSemaphore().isUsed())
+                    .add(AGE, client.getBirthday().getDuration())
+                    .add("OUTPUT_ROUND_TRIP", client.getOutputRoundAroundDuration())
+                    .add(ProxyClient.IS_USED, client.getTwoKindSemaphore().isUsed())
                     .add(ControllerStateDetails.RPM, rpm)
                     .add(ControllerStateDetails.CLT, clt)
                     .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
                     .add(ControllerInfo.VEHICLE_NAME, client.getSessionDetails().getControllerInfo().getVehicleName())
                     .add(ControllerInfo.ENGINE_MAKE, client.getSessionDetails().getControllerInfo().getEngineMake())
                     .add(ControllerInfo.ENGINE_CODE, client.getSessionDetails().getControllerInfo().getEngineCode())
-                    .add(MAX_PACKET_GAP, client.getStream().getStreamStats().getMaxPacketGap())
+                    .add(MAX_PACKET_GAP, client.getStream().getStreamStats().getMaxPacketGap());
+            if (owner != null) {
+                objectBuilder = objectBuilder.add(ProxyClient.OWNER, owner.getUserName());
+            }
+
+            JsonObject controllerObject = objectBuilder
                     .build();
             builder.add(controllerObject);
         }
@@ -290,18 +325,29 @@ public class Backend implements Closeable {
      * that's different from controllers since we periodically pull outputs from controllers which allows us to detect disconnects
      */
     private void runApplicationConnectionsCleanup() {
-        List<ApplicationConnectionState> inactiveApplications = new ArrayList<>();
-
+        List<ApplicationConnectionState> applications;
         synchronized (lock) {
-            long now = System.currentTimeMillis();
-            for (ApplicationConnectionState client : applications) {
-                if (now - client.getClientStream().getStreamStats().getPreviousPacketArrivalTime() > applicationTimeout)
-                    inactiveApplications.add(client);
+            applications = new ArrayList<>(this.applications);
+        }
+
+        for (ApplicationConnectionState client : applications) {
+            long timeSinceLastActivity = System.currentTimeMillis() - client.getClientStream().getStreamStats().getPreviousPacketArrivalTime();
+            if (timeSinceLastActivity > applicationTimeout) {
+                log.error("Kicking out application " + client);
+                close(client);
+            } else {
+                log.info("Looks alive " + client + " time since last activity: " + humanReadableFormat(timeSinceLastActivity));
             }
         }
 
-        for (ApplicationConnectionState inactiveClient : inactiveApplications) {
-            close(inactiveClient);
+        List<ControllerConnectionState> controllers;
+        synchronized (lock) {
+            controllers = new ArrayList<>(this.controllers);
+        }
+
+        for (ControllerConnectionState controllerConnectionState : controllers) {
+            long timeSinceLastActivity = System.currentTimeMillis() - controllerConnectionState.getStream().getStreamStats().getPreviousPacketArrivalTime();
+            log.info("State: " + controllerConnectionState + " time since last activity: " + humanReadableFormat(timeSinceLastActivity));
         }
     }
 
@@ -311,10 +357,6 @@ public class Backend implements Closeable {
             controllers.add(controllerConnectionState);
             controllersByKey.put(controllerConnectionState.getControllerKey(), controllerConnectionState);
         }
-        onRegister(controllerConnectionState);
-    }
-
-    protected void onRegister(ControllerConnectionState controllerConnectionState) {
     }
 
     public void close(ControllerConnectionState inactiveClient) {
@@ -328,7 +370,14 @@ public class Backend implements Closeable {
 
     @Override
     public void close() {
+        log.info("Closing...");
         isClosed = true;
+        FileUtil.close(applicationConnector);
+        FileUtil.close(controllerConnector);
+    }
+
+    public boolean isClosed() {
+        return isClosed;
     }
 
     public List<ControllerConnectionState> getControllers() {

@@ -8,10 +8,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ThreadFactory;
 
 import static com.rusefi.ui.util.UiUtils.setToolTip;
 
 public class SimulatorHelper {
+    private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("SimulatorHelper");
     public static final String BINARY = "rusefi_simulator.exe";
     private static Process process;
 
@@ -27,7 +29,7 @@ public class SimulatorHelper {
         LinkManager.isSimulationMode = true;
 
         FileLog.MAIN.logLine("Executing " + BINARY);
-        new Thread(new Runnable() {
+        THREAD_FACTORY.newThread(new Runnable() {
             @Override
             public void run() {
                 try {

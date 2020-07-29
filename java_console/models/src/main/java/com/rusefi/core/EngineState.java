@@ -1,5 +1,6 @@
 package com.rusefi.core;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkDecoder;
@@ -8,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.*;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * Date: 12/25/12
  * Andrey Belomutskiy, (c) 2013-2020
@@ -15,6 +18,8 @@ import java.util.*;
  * @see #registerStringValueAction
  */
 public class EngineState {
+    private static final Logging log = getLogging(EngineState.class);
+
     public static final String SEPARATOR = ",";
     public static final String PACKING_DELIMITER = ":";
     public static final Class<EngineState> ENGINE_STATE_CLASS = EngineState.class;
@@ -43,11 +48,10 @@ public class EngineState {
     }
 
     private final ResponseBuffer buffer;
-    private final Logger logger;
     private final List<StringActionPair> actions = new ArrayList<>();
     private final Set<String> keys = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
-    public EngineState(@NotNull final EngineStateListener listener, Logger logger) {
+    public EngineState(@NotNull final EngineStateListener listener) {
         buffer = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
             public void onResponse(String response) {
                 if (response != null) {
@@ -64,9 +68,8 @@ public class EngineState {
             }
         }
         );
-        this.logger = logger;
 
-        registerStringValueAction(Fields.PROTOCOL_MSG, value -> MessagesCentral.getInstance().postMessage(logger, ENGINE_STATE_CLASS, value));
+        registerStringValueAction(Fields.PROTOCOL_MSG, value -> MessagesCentral.getInstance().postMessage(ENGINE_STATE_CLASS, value));
     }
 
     /**
@@ -133,7 +136,7 @@ public class EngineState {
                 response = handleStringActionPair(response, pair, listener);
         }
         if (originalResponse.length() == response.length()) {
-            logger.info("EngineState.unknown: " + response);
+            log.info("EngineState.unknown: " + response);
             int keyEnd = response.indexOf(SEPARATOR);
             if (keyEnd == -1) {
                 // discarding invalid line
@@ -146,7 +149,7 @@ public class EngineState {
                 return "";
             }
             String value = response.substring(keyEnd, valueEnd);
-            logger.info("Invalid key [" + unknownKey + "] value [" + value + "]");
+            log.info("Invalid key [" + unknownKey + "] value [" + value + "]");
             // trying to process the rest of the line
             response = response.substring(valueEnd + SEPARATOR.length());
         }

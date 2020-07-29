@@ -1,6 +1,6 @@
 package com.rusefi.server;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.Logging;
 import com.rusefi.auth.AutoTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.core.SensorsHolder;
@@ -14,9 +14,11 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.net.Socket;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class ControllerConnectionState {
+    private static final Logging log = getLogging(ControllerConnectionState.class);
     private final Socket clientSocket;
-    private final Logger logger;
     private final UserDetailsResolver userDetailsResolver;
 
     private boolean isClosed;
@@ -34,17 +36,26 @@ public class ControllerConnectionState {
 
     private final TwoKindSemaphore twoKindSemaphore = new TwoKindSemaphore();
     private final SensorsHolder sensorsHolder = new SensorsHolder();
+    private final Birthday birthday = new Birthday();
+    private int outputRoundAroundDuration;
 
-    public ControllerConnectionState(Socket clientSocket, Logger logger, UserDetailsResolver userDetailsResolver) {
+    public ControllerConnectionState(Socket clientSocket, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
-        this.logger = logger;
         this.userDetailsResolver = userDetailsResolver;
         try {
-            stream = new TcpIoStream("[controller] ", logger, clientSocket);
+            stream = new TcpIoStream("[backend-controller connector] ", clientSocket);
             incomingData = stream.getDataBuffer();
         } catch (IOException e) {
             close();
         }
+    }
+
+    public Birthday getBirthday() {
+        return birthday;
+    }
+
+    public int getOutputRoundAroundDuration() {
+        return outputRoundAroundDuration;
     }
 
     public IoStream getStream() {
@@ -64,22 +75,32 @@ public class ControllerConnectionState {
         FileUtil.close(clientSocket);
     }
 
+    @Override
+    public String toString() {
+        return "ControllerConnectionState{" +
+                "userDetails=" + userDetails +
+                ", controllerKey=" + controllerKey +
+                ", isClosed=" + isClosed +
+                ", twoKindSemaphore=" + twoKindSemaphore +
+                '}';
+    }
+
     public void requestControllerInfo() throws IOException {
-        HelloCommand.send(stream, logger);
-        String jsonString = HelloCommand.getHelloResponse(incomingData, logger);
+        HelloCommand.send(stream);
+        String jsonString = HelloCommand.getHelloResponse(incomingData);
         if (jsonString == null)
             return;
         sessionDetails = SessionDetails.valueOf(jsonString);
         if (!AutoTokenUtil.isToken(sessionDetails.getAuthToken()))
             throw new IOException("Invalid token in " + jsonString);
 
-        logger.info(sessionDetails.getAuthToken() + " New client: " + sessionDetails.getControllerInfo());
+        log.info(sessionDetails.getAuthToken() + " New client: " + sessionDetails.getControllerInfo());
         userDetails = userDetailsResolver.apply(sessionDetails.getAuthToken());
         if (userDetails == null) {
             throw new IOException("Unable to resolve " + sessionDetails.getAuthToken());
         }
         controllerKey = new ControllerKey(userDetails.getUserId(), sessionDetails.getControllerInfo());
-        logger.info("User " + userDetails);
+        log.info("User " + userDetails);
     }
 
     public UserDetails getUserDetails() {
@@ -92,10 +113,11 @@ public class ControllerConnectionState {
 
     public void getOutputs() throws IOException {
         byte[] commandPacket = GetOutputsCommand.createRequest();
+        long start = System.currentTimeMillis();
+        stream.sendPacket(commandPacket);
 
-        stream.sendPacket(commandPacket, logger);
-
-        byte[] packet = incomingData.getPacket(logger, "msg", true);
+        byte[] packet = incomingData.getPacket("msg", true);
+        outputRoundAroundDuration = (int) (System.currentTimeMillis() - start);
         if (packet == null)
             throw new IOException("getOutputs: No response");
         sensorsHolder.grabSensorValues(packet);
@@ -116,6 +138,7 @@ public class ControllerConnectionState {
             getOutputs();
         } catch (IOException e) {
             // todo: this is currently not covered by a unit test
+            log.error("grabOutputs " + this, e);
             backend.close(this);
         }
     }

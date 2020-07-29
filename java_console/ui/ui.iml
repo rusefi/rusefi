@@ -28,7 +28,8 @@
     <orderEntry type="library" name="jSerialComm" level="project" />
     <orderEntry type="library" name="json-simple" level="project" />
     <orderEntry type="module" module-name="models" />
-    <orderEntry type="module" module-name="proxy_server" />
     <orderEntry type="library" scope="TEST" name="takes" level="project" />
+    <orderEntry type="library" name="dfu_java" level="project" />
+    <orderEntry type="module" module-name="proxy_server" scope="TEST" />
   </component>
 </module>

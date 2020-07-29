@@ -1,6 +1,5 @@
 package com.rusefi.io.tcp;
 
-import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.ByteReader;
@@ -8,10 +7,7 @@ import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.shared.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -21,34 +17,37 @@ import java.net.Socket;
 public class TcpIoStream extends AbstractIoStream {
     private final InputStream input;
     private final OutputStream output;
-    private final Logger logger;
     private final String loggingPrefix;
+    private final DisconnectListener disconnectListener;
     @NotNull
     private final Socket socket;
     private final IncomingDataBuffer dataBuffer;
 
-    public TcpIoStream(Logger logger, Socket socket) throws IOException {
-        this("", logger, socket);
+    public TcpIoStream(String loggingPrefix, Socket socket) throws IOException {
+        this(loggingPrefix, socket, DisconnectListener.VOID);
     }
 
-    public TcpIoStream(String loggingPrefix, Logger logger, Socket socket) throws IOException {
+    public TcpIoStream(String loggingPrefix, Socket socket, DisconnectListener disconnectListener) throws IOException {
         this.loggingPrefix = loggingPrefix;
+        this.disconnectListener = disconnectListener;
         if (socket == null)
             throw new NullPointerException("socket");
         this.socket = socket;
         InputStream input = new BufferedInputStream(socket.getInputStream());
-        OutputStream output = socket.getOutputStream();
-        this.logger = logger;
-        if (output == null)
-            throw new NullPointerException("output");
-        this.output = output;
+        this.output = new BufferedOutputStream(socket.getOutputStream());
         this.input = input;
-        this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this, logger);
+        this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this);
     }
 
     @Override
     public void close() {
-        super.close();
+        // we need to guarantee only one onDisconnect invocation for retry logic to be healthy
+        synchronized (this) {
+            if (!isClosed()) {
+                super.close();
+                disconnectListener.onDisconnect("on close");
+            }
+        }
         FileUtil.close(socket);
     }
 
@@ -65,12 +64,23 @@ public class TcpIoStream extends AbstractIoStream {
     @Override
     public void write(byte[] bytes) throws IOException {
         output.write(bytes);
+    }
+
+    @Override
+    public void flush() throws IOException {
+        super.flush();
         output.flush();
     }
 
     @Override
     public void setInputListener(final DataListener listener) {
+        ByteReader.runReaderLoop(loggingPrefix, listener, input::read, this);
+    }
 
-        ByteReader.runReaderLoop(loggingPrefix, listener, input::read, logger);
+    public interface DisconnectListener {
+        DisconnectListener VOID = (String message) -> {
+
+        };
+        void onDisconnect(String message);
     }
 }

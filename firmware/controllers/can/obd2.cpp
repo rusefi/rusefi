@@ -123,7 +123,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(1, pid, 2, (2<<8)|(0));	// 2 = "Closed loop, using oxygen sensor feedback to determine fuel mix"
 		break;
 	case PID_ENGINE_LOAD:
-		obdSendValue(1, pid, 1, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE) * 2.55f);
+		obdSendValue(1, pid, 1, getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE) * 2.55f);
 		break;
 	case PID_COOLANT_TEMP:
 		obdSendValue(1, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + 40.0f);

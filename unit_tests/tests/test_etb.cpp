@@ -10,6 +10,7 @@
 #include "dc_motor.h"
 #include "engine_controller.h"
 #include "sensor.h"
+#include "idle_thread.h"
 
 #include "mocks.h"
 
@@ -32,7 +33,6 @@ TEST(etb, initializationNoPedal) {
 }
 
 TEST(etb, initializationSingleThrottle) {
-
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
@@ -45,8 +45,8 @@ TEST(etb, initializationSingleThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0);
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
-	// Expect mock0 to be init with index 0, and PID params
-	EXPECT_CALL(mocks[0], init(_, 0, &engineConfiguration->etb, Ne(nullptr)));
+	// Expect mock0 to be init with TPS 1, index 0, and PID params
+	EXPECT_CALL(mocks[0], init(SensorType::Tps1, _, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
 	EXPECT_CALL(mocks[0], start);
 
@@ -71,23 +71,54 @@ TEST(etb, initializationDualThrottle) {
 	// The presence of a second TPS indicates dual throttle
 	Sensor::setMockValue(SensorType::Tps2, 25.0f);
 
-	// Expect mock0 to be init with index 0, and PID params
-	EXPECT_CALL(mocks[0], init(_, 0, &engineConfiguration->etb, Ne(nullptr)));
+	// Expect mock0 to be init with TPS 1, index 0, and PID params
+	EXPECT_CALL(mocks[0], init(SensorType::Tps1, _, 0, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[0], reset);
 	EXPECT_CALL(mocks[0], start);
 
-	// Expect mock1 to be init with index 2, and PID params
-	EXPECT_CALL(mocks[1], init(_, 1, &engineConfiguration->etb, Ne(nullptr)));
+	// Expect mock1 to be init with TPS 2, index 1, and PID params
+	EXPECT_CALL(mocks[1], init(SensorType::Tps2, _, 1, &engineConfiguration->etb, Ne(nullptr)));
 	EXPECT_CALL(mocks[1], reset);
 	EXPECT_CALL(mocks[1], start);
 
 	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+TEST(etb, initializationDcMotorIdleValveMode) {
+	StrictMock<MockEtb> mocks[ETB_COUNT];
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// Enable VW idle mode
+	engineConfiguration->dcMotorIdleValve = true;
+
+	for (int i = 0; i < ETB_COUNT; i++) {
+		engine->etbControllers[i] = &mocks[i];
+		EXPECT_CALL(mocks[i], setIdlePosition(33.0f));
+	}
+
+	// No accelerator pedal configured - this mode doesn't use it
+
+	// Expect mock0 to be init with TPS 2, index 0, and PID params
+	EXPECT_CALL(mocks[0], init(SensorType::Tps2, _, 0, &engineConfiguration->etb, Ne(nullptr)));
+	EXPECT_CALL(mocks[0], reset);
+	EXPECT_CALL(mocks[0], start);
+
+	// We do not expect throttle #2 to be initialized
+
+	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+
+	applyIACposition(33.0f PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
 TEST(etb, idlePlumbing) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	engineConfiguration->useETBforIdleControl = true;
+
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
@@ -95,7 +126,7 @@ TEST(etb, idlePlumbing) {
 		EXPECT_CALL(mocks[i], setIdlePosition(33.0f));
 	}
 
-	setEtbIdlePosition(33.0f PASS_ENGINE_PARAMETER_SUFFIX);
+	applyIACposition(33.0f PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 TEST(etb, testSetpointOnlyPedal) {
@@ -117,7 +148,7 @@ TEST(etb, testSetpointOnlyPedal) {
 	// Uninitialized ETB must return unexpected (and not deference a null pointer)
 	EXPECT_EQ(etb.getSetpoint(), unexpected);
 
-	etb.init(nullptr, 0, nullptr, &pedalMap);
+	etb.init(SensorType::Invalid, nullptr, 0, nullptr, &pedalMap);
 
 	// Check endpoints and midpoint
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
@@ -167,7 +198,7 @@ TEST(etb, setpointIdle) {
 		.WillRepeatedly([](float xRpm, float y) {
 			return y;
 		});
-	etb.init(nullptr, 0, nullptr, &pedalMap);
+	etb.init(SensorType::Invalid, nullptr, 0, nullptr, &pedalMap);
 
 	// No idle range, should just pass pedal
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f);
@@ -204,6 +235,29 @@ TEST(etb, setpointIdle) {
 	EXPECT_FLOAT_EQ(55, etb.getSetpoint().value_or(-1));
 }
 
+TEST(etb, idleVolkswagenMode) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// In this mode the idle position should be passed thru as the setpoint directly
+	engineConfiguration->dcMotorIdleValve = true;
+
+	EtbController etb;
+	INJECT_ENGINE_REFERENCE(&etb);
+
+	etb.setIdlePosition(0);
+	EXPECT_FLOAT_EQ(0, etb.getSetpoint().value_or(-1));
+	etb.setIdlePosition(50);
+	EXPECT_FLOAT_EQ(50, etb.getSetpoint().value_or(-1));
+	etb.setIdlePosition(100);
+	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
+
+	// Out of range should be clamped
+	etb.setIdlePosition(-10);
+	EXPECT_FLOAT_EQ(0, etb.getSetpoint().value_or(-1));
+	etb.setIdlePosition(110);
+	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
+}
+
 TEST(etb, etbTpsSensor) {
 	// Throw some distinct values on the TPS sensors so we can identify that we're getting the correct one
 	Sensor::setMockValue(SensorType::Tps1, 25.0f);
@@ -212,14 +266,14 @@ TEST(etb, etbTpsSensor) {
 	// Test first throttle
 	{
 		EtbController etb;
-		etb.init(nullptr, 0, nullptr, nullptr);
+		etb.init(SensorType::Tps1, nullptr, 0, nullptr, nullptr);
 		EXPECT_EQ(etb.observePlant().Value, 25.0f);
 	}
 
 	// Test second throttle
 	{
 		EtbController etb;
-		etb.init(nullptr, 1, nullptr, nullptr);
+		etb.init(SensorType::Tps2, nullptr, 1, nullptr, nullptr);
 		EXPECT_EQ(etb.observePlant().Value, 75.0f);
 	}
 }
@@ -231,7 +285,7 @@ TEST(etb, setOutputInvalid) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(&motor, 0, nullptr, nullptr);
+	etb.init(SensorType::Invalid, &motor, 0, nullptr, nullptr);
 
 	// Should be disabled in case of unexpected
 	EXPECT_CALL(motor, disable());
@@ -245,7 +299,7 @@ TEST(etb, setOutputValid) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(&motor, 0, nullptr, nullptr);
+	etb.init(SensorType::Invalid, &motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -261,7 +315,7 @@ TEST(etb, setOutputValid2) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(&motor, 0, nullptr, nullptr);
+	etb.init(SensorType::Invalid, &motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -277,7 +331,7 @@ TEST(etb, setOutputOutOfRangeHigh) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(&motor, 0, nullptr, nullptr);
+	etb.init(SensorType::Invalid, &motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -293,7 +347,7 @@ TEST(etb, setOutputOutOfRangeLow) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(&motor, 0, nullptr, nullptr);
+	etb.init(SensorType::Invalid, &motor, 0, nullptr, nullptr);
 
 	// Should be enabled and value set
 	EXPECT_CALL(motor, enable());
@@ -309,7 +363,7 @@ TEST(etb, setOutputPauseControl) {
 
 	EtbController etb;
 	INJECT_ENGINE_REFERENCE(&etb);
-	etb.init(&motor, 0, nullptr, nullptr);
+	etb.init(SensorType::Invalid, &motor, 0, nullptr, nullptr);
 
 	// Pause control - should get no output
 	engineConfiguration->pauseEtbControl = true;
@@ -327,7 +381,7 @@ TEST(etb, closedLoopPid) {
 	pid.minValue = -60;
 
 	EtbController etb;
-	etb.init(nullptr, 0, &pid, nullptr);
+	etb.init(SensorType::Invalid, nullptr, 0, &pid, nullptr);
 
 	// Disable autotune for now
 	Engine e;

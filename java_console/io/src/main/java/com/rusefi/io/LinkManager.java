@@ -1,7 +1,7 @@
 package com.rusefi.io;
 
+import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
-import com.opensr5.Logger;
 import com.rusefi.Callable;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.*;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * See TcpCommunicationIntegrationTest
  *
@@ -26,6 +28,8 @@ import java.util.concurrent.*;
  * 3/3/14
  */
 public class LinkManager implements Closeable {
+    private static final Logging log = getLogging(LinkManager.class);
+
     @NotNull
     public static LogLevel LOG_LEVEL = LogLevel.INFO;
 
@@ -38,23 +42,21 @@ public class LinkManager implements Closeable {
 
     public static final String LOG_VIEWER = "log viewer";
     private final CommandQueue commandQueue;
-    private final Logger logger;
 
     private LinkConnector connector;
     private boolean isStarted;
     private boolean compositeLogicEnabled = true;
     private boolean needPullData = true;
 
-    public LinkManager(Logger logger) {
-        this.logger = logger;
+    public LinkManager() {
         engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
             @Override
             public void beforeLine(String fullLine) {
-                logger.info(fullLine);
+                log.info(fullLine);
                 HeartBeatListeners.onDataArrived();
             }
-        }, logger);
-        commandQueue = new CommandQueue(this, logger);
+        });
+        commandQueue = new CommandQueue(this);
     }
 
     @NotNull
@@ -194,9 +196,9 @@ public class LinkManager implements Closeable {
         return connector;
     }
 
-    public void start(String port, ConnectionStateListener stateListener) {
+    public void start(String port, ConnectionFailedListener stateListener) {
         Objects.requireNonNull(port, "port");
-        logger.info("LinkManager: Starting " + port);
+        log.info("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
             setConnector(LinkConnector.VOID);
         } else if (TcpConnector.isTcpPort(port)) {
@@ -208,7 +210,7 @@ public class LinkManager implements Closeable {
                         int portPart = TcpConnector.getTcpPort(port);
                         String hostname = TcpConnector.getHostname(port);
                         socket = new Socket(hostname, portPart);
-                        TcpIoStream tcpIoStream = new TcpIoStream("[start] ", logger, socket);
+                        TcpIoStream tcpIoStream = new TcpIoStream("[start] ", socket);
 
                         return tcpIoStream;
                     } catch (Throwable e) {
@@ -218,13 +220,13 @@ public class LinkManager implements Closeable {
                 }
             };
 
-            setConnector(new StreamConnector(this, port, logger, streamFactory));
+            setConnector(new StreamConnector(this, port, streamFactory));
             isSimulationMode = true;
         } else {
             Callable<IoStream> ioStreamCallable = new Callable<IoStream>() {
                 @Override
                 public IoStream call() {
-                    IoStream stream = ((Callable<IoStream>) () -> SerialIoStreamJSerialComm.openPort(port, logger)).call();
+                    IoStream stream = ((Callable<IoStream>) () -> SerialIoStreamJSerialComm.openPort(port)).call();
                     if (stream == null) {
                         // error already reported
                         return null;
@@ -232,7 +234,7 @@ public class LinkManager implements Closeable {
                     return stream;
                 }
             };
-            setConnector(new StreamConnector(this, port, logger, ioStreamCallable));
+            setConnector(new StreamConnector(this, port, ioStreamCallable));
         }
     }
 

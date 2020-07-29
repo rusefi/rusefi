@@ -439,6 +439,12 @@ typedef enum {
 	 */
 	LM_REAL_MAF = 4,
 
+	// todo: rename after LM_ALPHA_N is removed
+	LM_ALPHA_N_2 = 5,
+
+	// This mode is for unit testing only, so that tests don't have to rely on a particular real airmass mode
+	LM_MOCK = 100,
+
 	Force_4_bytes_size_engine_load_mode = ENUM_32_BITS,
 } engine_load_mode_e;
 
@@ -948,6 +954,8 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_Map = 1,
 	GPPWM_Clt = 2,
 	GPPWM_Iat = 3,
+	GPPWM_FuelLoad = 4,
+	GPPWM_IgnLoad = 5,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
