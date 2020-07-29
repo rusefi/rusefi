@@ -62,7 +62,7 @@ typedef enum {
 
 	MRE_MIATA_NB2_MAP = 11,
 
-	MRE_MIATA_NA6 = ET_MRE_MIATA_NA6,
+	MRE_MIATA_NA6_VAF = ET_MRE_MIATA_NA6_VAF,
 
 	MRE_MIATA_NB2_ETB = 13,
 
@@ -188,6 +188,9 @@ typedef enum {
 
 	DODGE_RAM = 64,
 	CITROEN_TU3JP = ET_CITROEN_TU3JP,
+
+	MRE_MIATA_NA6_MAP = ET_MRE_MIATA_NA6_MAP,
+
 
 	/**
 	 * this configuration has as few pins configured as possible
