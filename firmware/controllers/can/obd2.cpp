@@ -132,7 +132,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(1, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + 40.0f);
 		break;
 	case PID_STFT_BANK1:
-		obdSendValue(1, pid, 1, 128 * (ENGINE(engineState.running.pidCorrection));
+		obdSendValue(1, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
 		break;
 	case PID_INTAKE_MAP:
 		obdSendValue(1, pid, 1, getMap(PASS_ENGINE_PARAMETER_SIGNATURE));
