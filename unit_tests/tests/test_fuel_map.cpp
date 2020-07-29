@@ -21,6 +21,7 @@ using ::testing::FloatNear;
 TEST(misc, testFuelMap) {
 	printf("Setting up FORD_ASPIRE_1996\r\n");
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 
 	printf("Filling fuel map\r\n");
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {

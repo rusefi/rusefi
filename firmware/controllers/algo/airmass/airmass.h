@@ -2,6 +2,8 @@
 
 #include "engine.h"
 
+class ValueProvider3D;
+
 struct AirmassResult {
 	float CylinderAirmass = 0;
 	float EngineLoadPercent = 100;
