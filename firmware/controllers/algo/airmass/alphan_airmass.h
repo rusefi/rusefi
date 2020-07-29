@@ -4,7 +4,7 @@
 
 class AlphaNAirmass : public SpeedDensityBase {
 public:
-	AlphaNAirmass(const ValueProvider3D& veTable) : SpeedDensityBase(veTable) {}
+	explicit AlphaNAirmass(const ValueProvider3D& veTable) : SpeedDensityBase(veTable) {}
 
 	AirmassResult getAirmass(int rpm) override;
 };
