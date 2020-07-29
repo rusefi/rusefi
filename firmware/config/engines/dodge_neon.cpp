@@ -147,7 +147,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
 
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N_2;
 
 //	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
@@ -298,8 +298,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * or is it 225 as mentioned at http://turbobazar.ru/showpost.php?p=750815&postcount=796 ?
 	 */
 	engineConfiguration->injector.flow = 199;
-
-	//engineConfiguration->fuelAlgorithm = LM_ALPHA_N; // I want to start with a simple Alpha-N
 
 	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setLinearCurve(config->ignitionLoadBins, 20, 120, 1);

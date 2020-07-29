@@ -429,10 +429,6 @@ typedef enum {
 	 */
 	LM_PLAIN_MAF = 0,
 	/**
-	 * Throttle Position Sensor value is used as engine load. http://en.wikipedia.org/wiki/Throttle_position_sensor
-	 */
-	LM_ALPHA_N = 1,
-	/**
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
 	 */
