@@ -3,8 +3,7 @@ UTIL_DIR=$(PROJECT_DIR)/util
 UTILSRC = \
 	$(UTIL_DIR)/math/crc.c \
 	$(UTIL_DIR)/os_util.c \
-	$(UTIL_DIR)/histogram.c \
-	$(UTIL_DIR)/unaligned.c
+	$(UTIL_DIR)/histogram.c
 
 UTILSRC_CPP = \
     $(UTIL_DIR)/containers/cyclic_buffer.cpp \
