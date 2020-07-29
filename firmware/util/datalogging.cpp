@@ -112,7 +112,7 @@ void append(Logging *logging, const char *text) {
  * @note This method if fast because it does not validate much, be sure what you are doing
  */
 void appendFast(Logging *logging, const char *text) {
-	register char *s;
+	char *s;
 	s = logging->linePointer;
 	while ((*s++ = *text++) != 0)
 		;

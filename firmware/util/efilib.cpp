@@ -64,7 +64,7 @@ float clampF(float min, float clamp, float max) {
 }
 
 uint32_t efiStrlen(const char *param) {
-	register const char *s;
+	const char *s;
 	for (s = param; *s; ++s)
 		;
 	return (s - param);

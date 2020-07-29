@@ -25,9 +25,6 @@ extern bool verboseMode;
 
 uint32_t maxSchedulingPrecisionLoss = 0;
 
-bool EventQueue::checkIfPending(scheduling_s *scheduling) {
-	assertNotInListMethodBody(scheduling_s, head, scheduling, nextScheduling_s);
-}
 
 /**
  * @return true if inserted into the head of the list
