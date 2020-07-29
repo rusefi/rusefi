@@ -2,6 +2,8 @@ package com.rusefi.io.serial;
 
 import com.rusefi.io.IoStream;
 
+import java.io.IOException;
+
 public abstract class AbstractIoStream implements IoStream {
     private boolean isClosed;
 
@@ -15,6 +17,10 @@ public abstract class AbstractIoStream implements IoStream {
     @Override
     public void close() {
         isClosed = true;
+    }
+
+    @Override
+    public void flush() throws IOException {
     }
 
     @Override

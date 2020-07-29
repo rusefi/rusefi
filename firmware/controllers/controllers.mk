@@ -34,6 +34,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/engine_cycle/spark_logic.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/main_trigger_callback.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/aux_valves.cpp \
+	$(CONTROLLERS_DIR)/engine_cycle/fuel_schedule.cpp \
 	$(CONTROLLERS_DIR)/flash_main.cpp \
 	$(CONTROLLERS_DIR)/bench_test.cpp \
 	$(CONTROLLERS_DIR)/can/obd2.cpp \

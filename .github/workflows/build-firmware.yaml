@@ -18,6 +18,7 @@ jobs:
           # Board configurations
           - build-target: frankenso_na6
             folder: frankenso
+            ini-file: rusefi_frankenso_na6.ini
             
           - build-target: kinetis
             folder: kinetis
@@ -28,7 +29,7 @@ jobs:
 
           - build-target: mre_f4_hardware_QC_special_build
             folder: microrusefi
-            ini-file: rusefi_microrusefi.ini
+            ini-file: rusefi_mre_f4.ini
             
           - build-target: mre_f7
             folder: microrusefi

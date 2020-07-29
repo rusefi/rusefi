@@ -84,7 +84,7 @@ float fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return 1.0f;
 	}
 
-	size_t binIdx = computeStftBin(GET_RPM(), getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE), CONFIG(stft));
+	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE), CONFIG(stft));
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {

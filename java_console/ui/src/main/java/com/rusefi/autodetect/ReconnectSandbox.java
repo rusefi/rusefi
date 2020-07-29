@@ -1,6 +1,5 @@
 package com.rusefi.autodetect;
 
-import com.rusefi.FileLog;
 import com.rusefi.IoUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
@@ -11,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ReconnectSandbox {
     public static void main(String[] args) {
 
-        LinkManager linkManager = new LinkManager(FileLog.LOGGER);
+        LinkManager linkManager = new LinkManager();
 
         LightweightGUI.waitForDeviceAndStart(linkManager);
 

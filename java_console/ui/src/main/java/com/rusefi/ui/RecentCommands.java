@@ -6,7 +6,6 @@ import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.io.LinkManager;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
@@ -293,7 +292,7 @@ public class RecentCommands {
                     } catch (IOException e) {
                         throw new IllegalStateException(e);
                     }
-                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AverageAnglesUtil.class, report);
+                    MessagesCentral.getInstance().postMessage(AverageAnglesUtil.class, report);
                 }
             }
         });

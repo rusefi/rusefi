@@ -1,6 +1,5 @@
 package com.irnems;
 
-import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
 import com.rusefi.file.FileUtils;
 
@@ -41,7 +40,7 @@ public class AdcFilter {
             }
         };
 
-        EngineState engineState = new EngineState(listener, FileLog.LOGGER);
+        EngineState engineState = new EngineState(listener);
 
         FileUtils.readFile2(filename, engineState);
 

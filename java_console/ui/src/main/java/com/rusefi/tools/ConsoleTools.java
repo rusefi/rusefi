@@ -21,7 +21,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.ExecHelper;
-import com.rusefi.server.BackendLauncher;
+import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
@@ -31,8 +31,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
@@ -62,9 +60,8 @@ public class ConsoleTools {
         registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
         registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
-        registerTool("proxy_server", BackendLauncher::start, "NOT A USER TOOL");
-        registerTool("network_connector", NetworkConnectorStartup::start, "Connect your rusEFI ECU to rusEFI Online");
-        registerTool("network_authenticator", LocalApplicationProxy::start, "rusEFI Online Authenticator");
+        registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
+        registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
 
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
         registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI authentication token.");
@@ -72,7 +69,8 @@ public class ConsoleTools {
 
         registerTool("version", ConsoleTools::version, "Only print version");
 
-        registerTool("lightui", ConsoleTools::lightUI, "Start lightweight GUI for tiny screens");
+        registerTool("lightui", strings -> lightUI(), "Start lightweight GUI for tiny screens");
+        registerTool("dfu", DfuTool::run, "Program specified file into ECU via DFU");
 
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
@@ -115,7 +113,7 @@ public class ConsoleTools {
         System.out.println("tune_CRC16=" + crc16);
     }
 
-    private static void lightUI(String[] strings) {
+    private static void lightUI() {
         LightweightGUI.start();
     }
 
@@ -146,9 +144,9 @@ public class ConsoleTools {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
-        stream.sendPacket(commandBytes, FileLog.LOGGER);
+        stream.sendPacket(commandBytes);
     }
 
 
@@ -207,11 +205,11 @@ public class ConsoleTools {
             System.err.println(RUS_EFI_NOT_DETECTED);
             return;
         }
-        LinkManager linkManager = new LinkManager(FileLog.LOGGER);
+        LinkManager linkManager = new LinkManager();
         linkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
-                new BinaryProtocolServer(FileLog.LOGGER).start(linkManager);
+                new BinaryProtocolServer().start(linkManager);
             }
 
             @Override
@@ -291,45 +289,25 @@ public class ConsoleTools {
         Online.upload(new File(Online.outputXmlFileName), authToken);
     }
 
-    public static long classBuildTimeMillis() throws URISyntaxException, IllegalStateException, IllegalArgumentException {
-        Class<?> clazz = ConsoleTools.class;
-        URL resource = clazz.getResource(clazz.getSimpleName() + ".class");
-        if (resource == null) {
-            throw new IllegalStateException("Failed to find class file for class: " +
-                    clazz.getName());
-        }
-
-        if (resource.getProtocol().equals("file")) {
-            return new File(resource.toURI()).lastModified();
-        } else if (resource.getProtocol().equals("jar")) {
-            String path = resource.getPath();
-            return new File(path.substring(5, path.indexOf("!"))).lastModified();
-        } else {
-            throw new IllegalArgumentException("Unhandled url protocol: " +
-                    resource.getProtocol() + " for class: " +
-                    clazz.getName() + " resource: " + resource.toString());
-        }
-    }
-
     static void detect(String[] strings) throws IOException, InterruptedException {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null) {
             System.out.println(RUS_EFI_NOT_DETECTED);
             return;
         }
-        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort, FileLog.LOGGER);
+        IoStream stream = SerialIoStreamJSerialComm.openPort(autoDetectedPort);
         Logger logger = FileLog.LOGGER;
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes("hello");
-        stream.sendPacket(commandBytes, logger);
+        stream.sendPacket(commandBytes);
         // skipping response
-        incomingData.getPacket(logger, "", true);
+        incomingData.getPacket("", true);
 
         sleep(300);
-        stream.sendPacket(new byte[]{Fields.TS_GET_TEXT}, logger);
+        stream.sendPacket(new byte[]{Fields.TS_GET_TEXT});
         sleep(300);
 
-        byte[] response = incomingData.getPacket(logger, "", true);
+        byte[] response = incomingData.getPacket("", true);
         if (response == null) {
             System.out.println("No response");
             return;

@@ -1,6 +1,5 @@
 package com.rusefi.ui.etb;
 
-import com.rusefi.FileLog;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -62,14 +61,14 @@ public class EtbMonteCarloSequence {
                 ":pFactor:" + pFactor +
                 ":iFactor:" + iFactor +
                 ":dFactor:" + dFactor;
-        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EtbMonteCarloSequence.class, stats);
+        MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class, stats);
         uiContext.getCommandQueue().write("etbreset");
         uiContext.getCommandQueue().write("set etb_o " + offset);
         uiContext.getCommandQueue().write("set etb_p " + pFactor);
         uiContext.getCommandQueue().write("set etb_i " + iFactor);
         uiContext.getCommandQueue().write("set etb_d " + dFactor);
 
-        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EtbMonteCarloSequence.class,
+        MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
                 uiContext.sensorLogger.getSecondsSinceFileStart() + " running " + stats);
 
         TestSequenceStep firstStep = new EtbTarget(uiContext, 10 * SECOND, DEFAULT_POSITION, null, TestSequenceStep.Condition.YES);
@@ -79,7 +78,7 @@ public class EtbMonteCarloSequence {
                 double currentValue = StandardTestSequence.metric.getStandardDeviation();
                 boolean shouldRun = currentValue < bestResultSoFar;
                 if (!shouldRun) {
-                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EtbMonteCarloSequence.class,
+                    MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
                             "Two much error accumulated, aborting! " + currentValue + " > " + bestResultSoFar);
 
                 }
@@ -93,7 +92,7 @@ public class EtbMonteCarloSequence {
         Runnable onEachStep = () -> SwingUtilities.invokeLater(() -> {
             String state = stepCounter.incrementAndGet() + "/" + totalSteps.get();
             double value = StandardTestSequence.metric.getStandardDeviation();
-            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EtbMonteCarloSequence.class,"Running " + state + ", current=" + value);
+            MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,"Running " + state + ", current=" + value);
         });
 
         TestSequenceStep last = StandardTestSequence.addSequence(uiContext, firstStep, onEachStep, condition);
@@ -109,18 +108,18 @@ public class EtbMonteCarloSequence {
                 double cycleResult = SensorCentral.getInstance().getValue(Sensor.ETB_CONTROL_QUALITY);
                 if (cycleResult < bestResultSoFar) {
                     bestResultSoFar = cycleResult;
-                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EtbMonteCarloSequence.class,
+                    MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
                             uiContext.sensorLogger.getSecondsSinceFileStart() + ":" + stats + ":new_record:" + bestResultSoFar);
                 }
-                MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EtbMonteCarloSequence.class,
+                MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
                         uiContext.sensorLogger.getSecondsSinceFileStart() + ":" + stats + ":result:" + cycleResult);
                 if (counter == TOTAL_CYCLES_COUNT) {
                     stopETB();
-                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EtbTestSequence.class, "ETB MC sequence done!");
+                    MessagesCentral.getInstance().postMessage(EtbTestSequence.class, "ETB MC sequence done!");
                     return;
                 }
                 counter++;
-                MessagesCentral.getInstance().postMessage(FileLog.LOGGER, EtbTestSequence.class, "Starting " + counter + " of " + TOTAL_CYCLES_COUNT);
+                MessagesCentral.getInstance().postMessage(EtbTestSequence.class, "Starting " + counter + " of " + TOTAL_CYCLES_COUNT);
                 runRandomCycle();
             }
 

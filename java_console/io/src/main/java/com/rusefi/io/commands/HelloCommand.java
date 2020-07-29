@@ -1,6 +1,5 @@
 package com.rusefi.io.commands;
 
-import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
@@ -14,21 +13,19 @@ import java.io.IOException;
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
 public class HelloCommand implements Command {
-    private final Logger logger;
     private final String tsSignature;
 
-    public HelloCommand(Logger logger, String tsSignature) {
-        this.logger = logger;
+    public HelloCommand(String tsSignature) {
         this.tsSignature = tsSignature;
     }
 
-    public static void send(IoStream stream, Logger logger) throws IOException {
-        stream.sendPacket(new byte[]{Fields.TS_HELLO_COMMAND}, logger);
+    public static void send(IoStream stream) throws IOException {
+        stream.sendPacket(new byte[]{Fields.TS_HELLO_COMMAND});
     }
 
     @Nullable
-    public static String getHelloResponse(IncomingDataBuffer incomingData, Logger logger) throws EOFException {
-        byte[] response = incomingData.getPacket(logger, "[hello]", false);
+    public static String getHelloResponse(IncomingDataBuffer incomingData) throws EOFException {
+        byte[] response = incomingData.getPacket("[hello]", false);
         if (!checkResponseCode(response, BinaryProtocolCommands.RESPONSE_OK))
             return null;
         return new String(response, 1, response.length - 1);
@@ -41,6 +38,6 @@ public class HelloCommand implements Command {
 
     @Override
     public void handle(IoStream stream) throws IOException {
-        stream.sendPacket((BinaryProtocolServer.TS_OK + tsSignature).getBytes(), logger);
+        stream.sendPacket((BinaryProtocolServer.TS_OK + tsSignature).getBytes());
     }
 }

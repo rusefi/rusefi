@@ -2,7 +2,6 @@ package com.rusefi.maintenance;
 
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.ConsoleUI;
-import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
@@ -45,14 +44,14 @@ public class DfuFlasher {
 
         if (!PortDetector.isAutoPort(port)) {
             messages.append("Using selected " + port + "\n");
-            IoStream stream = SerialIoStreamJSerialComm.openPort(port, FileLog.LOGGER);
-            DfuHelper.sendDfuRebootCommand(stream, messages, FileLog.LOGGER);
+            IoStream stream = SerialIoStreamJSerialComm.openPort(port);
+            DfuHelper.sendDfuRebootCommand(stream, messages);
         } else {
             messages.append("Auto-detecting port...\n");
             // instead of opening the just-detected port we execute the command using the same stream we used to discover port
             // it's more reliable this way
             port = PortDetector.autoDetectSerial(stream -> {
-                DfuHelper.sendDfuRebootCommand(stream, messages, FileLog.LOGGER);
+                DfuHelper.sendDfuRebootCommand(stream, messages);
                 return null;
             });
             if (port == null) {

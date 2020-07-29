@@ -13,6 +13,7 @@
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
 #include "sensor.h"
+#include "mocks.h"
 
 extern EnginePins enginePins;
 
@@ -82,6 +83,8 @@ public:
 
 	Engine engine;
 	persistent_config_s persistentConfig;
+
+	::testing::NiceMock<MockAirmass> mockAirmass;
 
 private:
 	void writeEvents(const char *fileName);

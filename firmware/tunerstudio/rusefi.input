@@ -206,8 +206,8 @@ enable2ndByteCanID = false
      internalMcuTemperature = scalar,S08, 11,    "deg C",    1,         0
       coolant         = scalar,  S16,     12,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
       intake          = scalar,  S16,     14,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-; todo: aux1
-; todo: aux2
+      auxt1           = scalar,  S16,     16,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
+      auxt2           = scalar,  S16,     18,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
       
 
 ; throttle, pedal
@@ -347,7 +347,7 @@ enable2ndByteCanID = false
       rawOilPressure  = scalar,	 U16,    242, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 
 	; we use this to match logs to tunes
-	tuneCrc16= scalar,  U16,    244,  "crc16",           1,         0
+	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -362,10 +362,10 @@ enable2ndByteCanID = false
       time            = { timeNow }
 
 	; These "synthetic" channels provide the Y-axis (load) value for gen purp PWM table's Y axes
-	gppwm1_load = {(gppwm1_loadAxis == 0) ? TPSValue : ((gppwm1_loadAxis == 1) ? MAPValue : ((gppwm1_loadAxis == 2) ? coolant : intake))}
-	gppwm2_load = {(gppwm2_loadAxis == 0) ? TPSValue : ((gppwm2_loadAxis == 1) ? MAPValue : ((gppwm2_loadAxis == 2) ? coolant : intake))}
-	gppwm3_load = {(gppwm3_loadAxis == 0) ? TPSValue : ((gppwm3_loadAxis == 1) ? MAPValue : ((gppwm3_loadAxis == 2) ? coolant : intake))}
-	gppwm4_load = {(gppwm4_loadAxis == 0) ? TPSValue : ((gppwm4_loadAxis == 1) ? MAPValue : ((gppwm4_loadAxis == 2) ? coolant : intake))}
+	gppwm1_load = {(gppwm1_loadAxis == 0) ? TPSValue : ((gppwm1_loadAxis == 1) ? MAPValue : ((gppwm1_loadAxis == 2) ? coolant : ((gppwm1_loadAxis == 3) ? intake : ((gppwm1_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
+	gppwm2_load = {(gppwm2_loadAxis == 0) ? TPSValue : ((gppwm2_loadAxis == 1) ? MAPValue : ((gppwm2_loadAxis == 2) ? coolant : ((gppwm2_loadAxis == 3) ? intake : ((gppwm2_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
+	gppwm3_load = {(gppwm3_loadAxis == 0) ? TPSValue : ((gppwm3_loadAxis == 1) ? MAPValue : ((gppwm3_loadAxis == 2) ? coolant : ((gppwm3_loadAxis == 3) ? intake : ((gppwm3_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
+	gppwm4_load = {(gppwm4_loadAxis == 0) ? TPSValue : ((gppwm4_loadAxis == 1) ? MAPValue : ((gppwm4_loadAxis == 2) ? coolant : ((gppwm4_loadAxis == 3) ? intake : ((gppwm4_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
 
 [PcVariables]
 	tuneCrcPcVariable = continuousChannelValue, tuneCrc16
@@ -931,6 +931,8 @@ gaugeCategory = Sensors - Extra 1
    internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    75,  100,   0,   0
    OilPressGauge   	 = oilPressure,   "Oil Pressure",       "kPa",        0,    750,      35,     75,     550,   700,   0,   0	
    idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
+   AuxT1Gauge        = auxt1,     "Aux temp 1",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   AuxT2Gauge        = auxt2,     "Aux temp 2",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
 
 gaugeCategory = Ignition
    ignadvGauge = ignitionAdvance,       "Ignition timing",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
@@ -2131,9 +2133,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = baroSettings, "Baro sensor"
 		field = "Baro ADC input",						baroSensor_hwChannel
-		field = baroSensor_lowValue,					baroSensor_lowValue, {baroSensor_hwChannel != 16}
-		field = baroSensor_highValue,					baroSensor_highValue, {baroSensor_hwChannel != 16}
-		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != 16}
+		field = baroSensor_lowValue,					baroSensor_lowValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = baroSensor_highValue,					baroSensor_highValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = mapCurves, "MAP sampling", yAxis
 		field = "isMapAveragingEnabled",				isMapAveragingEnabled
@@ -2159,7 +2161,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = egoSettings, "", yAxis
 		panel = egoSettings_IO
-		panel = egoSettings_sensor,	{afr_hwChannel != 16 && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
+		panel = egoSettings_sensor,	{afr_hwChannel != @@ADC_CHANNEL_NONE@@ && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
 		field = "Enable AEM X-Series CANbus",			enableAemXSeries, { canReadEnabled }
 		field = "Enable Innovate LC-2 Serial",			enableInnovateLC2, { auxSerialRxPin && auxSerialTxPin }
 
@@ -2244,7 +2246,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = idleSettings, "", yAxis
 		field = "Idle IAC control mode",					idleMode
 		field = useInstantRpmForIdle,					useInstantRpmForIdle
-		field = "use ETB for idle",						useETBforIdleControl
+		field = "use ETB for idle",						useETBforIdleControl, { throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ }
 		field = "ETB Idle range",						etbIdleThrottleRange, {useETBforIdleControl == 1}
 		field = "Use separate Ignition Table for idle",	useSeparateAdvanceForIdle
 		field = "Use separate VE Table for idle",		useSeparateVeForIdle
@@ -2842,13 +2844,13 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = veTableMap, South
 
 	dialog = etbPidDialog, "PID settings"
-		field = "pFactor",								etb_pFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "iFactor",								etb_iFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "dFactor",								etb_dFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "pid min",								etb_minValue, {throttlePedalPositionAdcChannel != 16}
-		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
-		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}
-		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
+		field = "pFactor",								etb_pFactor
+		field = "iFactor",								etb_iFactor
+		field = "dFactor",								etb_dFactor
+		field = "pid min",								etb_minValue
+		field = "pid max",								etb_maxValue
+		field = "iTermMin",								etb_iTermMin
+		field = "iTermMax",								etb_iTermMax
 
 	dialog = etbIdleDialog, "ETB Idle"
 		field = "use ETB for idle",						useETBforIdleControl
@@ -2856,11 +2858,12 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = etbDialogLeft
 		field = "https://rusefi.com/s/etb"
+		field = "Late 90s German DC Motor idle",		dcMotorIdleValve, { throttlePedalPositionAdcChannel == @@ADC_CHANNEL_NONE@@ }
 		field = "Detailed status in console",			isVerboseETB
 		field = "Disable ETB Motor",					pauseEtbControl
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
-		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != 16 || useStepperIdle && useHbridges  }
+		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) || dcMotorIdleValve }
 
 	dialog = etbAutotune, "PID Autotune"
 		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
@@ -2872,8 +2875,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Debug mode",							debugMode
 
 	dialog = etbDialogRight
-		panel = etbIdleDialog
-		panel = etbPidDialog
+		panel = etbIdleDialog, {  throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@  }
+		panel = etbPidDialog,  { (throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@) || dcMotorIdleValve }
 		panel = etbAutotune
 
 		; Neutral position handling not yet implemented!

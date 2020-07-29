@@ -10,12 +10,13 @@ import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.rusefi.TestHelper.assertLatch;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class TcpCommunicationIntegrationTest {
     private static final Logger LOGGER = Logger.CONSOLE;
@@ -27,7 +28,7 @@ public class TcpCommunicationIntegrationTest {
 
         CountDownLatch failedCountDownLatch = new CountDownLatch(1);
 
-        LinkManager clientManager = new LinkManager(LOGGER);
+        LinkManager clientManager = new LinkManager();
         clientManager.startAndConnect(Integer.toString(port), new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
@@ -41,7 +42,7 @@ public class TcpCommunicationIntegrationTest {
             }
         });
 
-        assertTrue(failedCountDownLatch.await(30, TimeUnit.SECONDS));
+        assertLatch(failedCountDownLatch);
     }
 
     @Test
@@ -51,13 +52,13 @@ public class TcpCommunicationIntegrationTest {
         ConfigurationImage serverImage = TestHelper.prepareImage(value, iniField);
         int port = 6100;
 
-        BinaryProtocolServer server = TestHelper.createVirtualController(port, serverImage, LOGGER);
+        BinaryProtocolServer server = TestHelper.createVirtualController(port, serverImage, new BinaryProtocolServer.Context());
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
         // todo: remove CONFIGURATION_RUSEFI_BINARY or nicer API to disable local file load
 
-        LinkManager clientManager = new LinkManager(LOGGER);
+        LinkManager clientManager = new LinkManager();
         clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + port, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
@@ -69,7 +70,7 @@ public class TcpCommunicationIntegrationTest {
                 System.out.println("Failed");
             }
         });
-        assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+        assertLatch("Connection established", connectionEstablishedCountDownLatch);
 
         assertEquals(0, server.unknownCommands.get());
 
@@ -83,23 +84,23 @@ public class TcpCommunicationIntegrationTest {
     }
 
     @Test
-    public void testProxy() throws InterruptedException {
+    public void testProxy() throws InterruptedException, IOException {
         ConfigurationImage serverImage = TestHelper.prepareImage(239, TestHelper.createIniField(Fields.CYLINDERSCOUNT));
         int controllerPort = 6102;
 
         // create virtual controller
-        TestHelper.createVirtualController(controllerPort, serverImage, LOGGER);
+        TestHelper.createVirtualController(controllerPort, serverImage, new BinaryProtocolServer.Context());
         int proxyPort = 6103;
 
 
         // connect proxy to virtual controller
         IoStream targetEcuSocket = TestHelper.connectToLocalhost(controllerPort, LOGGER);
-        BinaryProtocolProxy.createProxy(LOGGER, targetEcuSocket, proxyPort);
+        BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort, new AtomicInteger());
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
         // connect to proxy and read virtual controller through it
-        LinkManager clientManager = new LinkManager(LOGGER);
+        LinkManager clientManager = new LinkManager();
         clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + proxyPort, new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
@@ -111,7 +112,7 @@ public class TcpCommunicationIntegrationTest {
                 System.out.println("Failed");
             }
         });
-        assertTrue("Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+        assertLatch("Connection established", connectionEstablishedCountDownLatch);
 
         clientManager.close();
     }

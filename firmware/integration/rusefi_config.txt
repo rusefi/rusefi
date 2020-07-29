@@ -18,6 +18,9 @@
 !    rename the bit or substitute unused integer with any new fields of the same size
 !    invoke gen_config.bat to apply the tools which would generate .h and .ini files
 !
+! Q: Which files to include into Pull Requests?
+! A: Please only include source files (.txt and .input) into a PR, we have amazing GitHub Actions which would do the rest really
+!    really nicely!  
 !
 ! each field is declared as
 ! type name;comment
@@ -289,8 +292,8 @@ struct spi_pins
 end_struct
 
 
-#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT"
-custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:1], @@gppwm_channel_e_enum@@
+#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "INVALID", "INVALID"
+custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:2], @@gppwm_channel_e_enum@@
 
 struct gppwm_channel
 	output_pin_e pin;+Select a pin to use for PWM or on-off output.;
@@ -432,7 +435,7 @@ ThermistorConf iat;
 	float knockBandCustom;+We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override;"kHz", 1, 0.0, 0.0, 10.0, 2
 
 
-float[DWELL_CURVE_SIZE] sparkDwellRpmBins;On single-coil or wasted spark setups you have to lower dwell at high RPM;"RPM",     1,   0.0,      0.0,  18000,   2
+float[DWELL_CURVE_SIZE] sparkDwellRpmBins;On Single Coil or Wasted Spark setups you have to lower dwell at high RPM;"RPM",     1,   0.0,      0.0,  18000,   2
 	float[DWELL_CURVE_SIZE] sparkDwellValues;;"ms",	   1,   0.0,      0.0,  30.0,    2
 
 struct_no_prefix specs_s
@@ -456,8 +459,7 @@ end_struct
 int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM",      1,     0,    0,30000,      0
 	int rpmHardLimit;set rpm_hard_limit X;"rpm",    1,      0,       0, 20000.0,        2
 
-
-#define engine_load_mode_e_enum "INVALID", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge", "INVALID", "INVALID" 
+#define engine_load_mode_e_enum "INVALID", "Alpha-N/TPS", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "INVALID"
 
 
 custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
@@ -470,8 +472,8 @@ injection_mode_e injectionMode;+This is where the fuel injection type is defined
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
 angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
 
-custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "Two distributors"
-ignition_mode_e ignitionMode;+"One Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
+custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
+ignition_mode_e ignitionMode;+"Single Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted Spark" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
 
 angle_t ignitionOffset;+this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
 
@@ -707,7 +709,7 @@ bit is_enabled_spi_2
 	bit useIdleTimingPidControl
 	bit useTPSBasedVeTable
 	bit is_enabled_spi_4
-	bit pauseEtbControl;+Disable the electronic throttle motor for testing.\nThis mode is for testing ETB position sensors, etc without actually driving the throttle.
+	bit pauseEtbControl;+Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 	bit alignEngineSnifferAtTDC
 	bit useETBforIdleControl;+This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
 	bit idleIncrementalPidCic
@@ -826,7 +828,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
 	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error.  This mode may be easier to tune, and more tolerant of sensor noise.  Use of this mode is required if you have a narrowband O2 sensor.;
-	bit unusedBit_251_11
+	bit dcMotorIdleValve;+Used on some German vehicles around late 90s: cable-operated throttle and DC motor idle air valve.\nSet the primary TPS to the cable-operated throttle's sensor\nSet the secondary TPS to the mini ETB's position sensor(s). 
 	bit unusedBit_251_12
 	bit unusedBit_251_13
 	bit unusedBit_251_14
@@ -950,7 +952,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	bit isManualSpinningMode;Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
 	bit twoWireBatchInjection;+This is needed if your coils are individually wired and you wish to use batch injection.\nenable two_wire_batch_injection
 	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front\nenable trigger_only_front
-	bit twoWireBatchIgnition;+This is needed if your coils are individually wired (COP) and you wish to use batch ignition (wasted spark).
+	bit twoWireBatchIgnition;+This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 bit useFixedBaroCorrFromMap
 bit useSeparateAdvanceForCranking;+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
 bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
