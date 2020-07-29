@@ -58,6 +58,7 @@ static const int16_t supportedPids0120[] = {
 };
 
 static const int16_t supportedPids2140[] = {
+	PID_FUEL_AIR_RATIO_1,
 	-1
 };
 
