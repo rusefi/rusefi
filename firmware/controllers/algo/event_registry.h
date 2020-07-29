@@ -107,12 +107,12 @@ public:
 	 * Desired timing advance
 	 */
 	angle_t sparkAngle = NAN;
-	floatms_t sparkDwell;
+	floatms_t sparkDwell = 0;
 	/**
 	 * this timestamp allows us to measure actual dwell time
 	 */
-	uint32_t actualStartOfDwellNt;
-	event_trigger_position_s dwellPosition;
+	uint32_t actualStartOfDwellNt = 0;
+	event_trigger_position_s dwellPosition{};
 	/**
 	 * Sequential number of currently processed spark event
 	 * @see globalSparkIdCounter
