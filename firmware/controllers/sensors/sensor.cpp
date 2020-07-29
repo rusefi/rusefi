@@ -51,7 +51,7 @@ bool Sensor::Register() {
 		return false;
 	} else {
 		// put ourselves in the registry
-		s_sensorRegistry[getIndex()].sensor = this;
+		entry.sensor = this;
 		return true;
 	}
 }
