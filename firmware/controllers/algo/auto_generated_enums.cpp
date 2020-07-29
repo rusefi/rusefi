@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Sat Jul 04 21:11:32 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Jul 29 15:37:22 EDT 2020
 // see also gen_config_and_enums.bat
 
 
@@ -725,16 +725,16 @@ const char *getEngine_load_mode_e(engine_load_mode_e value){
 switch(value) {
 case Force_4_bytes_size_engine_load_mode:
   return "Force_4_bytes_size_engine_load_mode";
+case LM_ALPHA_N_2:
+  return "LM_ALPHA_N_2";
+case LM_MOCK:
+  return "LM_MOCK";
 case LM_PLAIN_MAF:
   return "LM_PLAIN_MAF";
 case LM_REAL_MAF:
   return "LM_REAL_MAF";
 case LM_SPEED_DENSITY:
   return "LM_SPEED_DENSITY";
-case LM_ALPHA_N_2:
-  return "LM_ALPHA_N_2";
-case LM_MOCK:
-  return "LM_MOCK";
   }
  return NULL;
 }
@@ -836,8 +836,10 @@ case MRE_BOARD_NEW_TEST:
   return "MRE_BOARD_NEW_TEST";
 case MRE_BOARD_OLD_TEST:
   return "MRE_BOARD_OLD_TEST";
-case MRE_MIATA_NA6:
-  return "MRE_MIATA_NA6";
+case MRE_MIATA_NA6_MAP:
+  return "MRE_MIATA_NA6_MAP";
+case MRE_MIATA_NA6_VAF:
+  return "MRE_MIATA_NA6_VAF";
 case MRE_MIATA_NB2_ETB:
   return "MRE_MIATA_NB2_ETB";
 case MRE_MIATA_NB2_MAF:
@@ -912,16 +914,16 @@ const char *getGppwm_channel_e(gppwm_channel_e value){
 switch(value) {
 case GPPWM_Clt:
   return "GPPWM_Clt";
+case GPPWM_FuelLoad:
+  return "GPPWM_FuelLoad";
 case GPPWM_Iat:
   return "GPPWM_Iat";
+case GPPWM_IgnLoad:
+  return "GPPWM_IgnLoad";
 case GPPWM_Map:
   return "GPPWM_Map";
 case GPPWM_Tps:
   return "GPPWM_Tps";
-case GPPWM_FuelLoad:
-  return "GPPWM_FuelLoad";
-case GPPWM_IgnLoad:
-  return "GPPWM_IgnLoad";
   }
  return NULL;
 }
