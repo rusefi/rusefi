@@ -182,11 +182,9 @@ void canDashboardVAG(void) {
 }
 
 void canDashboardW202(void) {
-	
-	uint16_t tmp;
 	{
 		CanTxMessage msg(W202_STAT_1);
-		tmp = GET_RPM();
+		uint16_t tmp = GET_RPM();
 		msg[0] = 0x08; // Unknown
 		msg[1] = (tmp >> 8); //RPM
 		msg[2] = (tmp & 0xff); //RPM

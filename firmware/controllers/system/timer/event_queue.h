@@ -64,7 +64,6 @@ public:
 	scheduling_s * getHead();
 	void assertListIsSorted() const;
 private:
-	bool checkIfPending(scheduling_s *scheduling);
 	/**
 	 * this list is sorted
 	 */
