@@ -385,6 +385,12 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idlePidRpmUpperLimit = 100;
 
 
+	engineConfiguration->useFSIO12ForIdleOffset = true;
+	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch 0 cfg_acIdleExtraOffset if" PASS_ENGINE_PARAMETER_SUFFIX);
+
+	engineConfiguration->useFSIO13ForIdleMinValue = true;
+	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch 0 cfg_acIdleExtraMin if" PASS_ENGINE_PARAMETER_SUFFIX);
+
 
 	engineConfiguration->useIdleTimingPidControl = true;
 	engineConfiguration->idleTimingPid.pFactor = 0.05;
@@ -406,6 +412,14 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->warningLedPin = GPIOD_13;
 	engineConfiguration->triggerErrorPin = GPIOE_1;
 
+	// todo: ask Stefan to clarify this
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_6; // "26 - AN volt 2"
+	engineConfiguration->tpsMin = 0;
+	engineConfiguration->tpsMax = 982;
+
+	engineConfiguration->map_sensor_hwChannel = EFI_ADC_13; // "20 - AN volt 5"
+
+	engineConfiguration->mafAdcChannel = EFI_ADC_10;// "27 - AN volt 1"
 
 #if (BOARD_TLE8888_COUNT > 0)
 
