@@ -33,10 +33,10 @@ TEST(idle, fsioPidParameters) {
 	engineConfiguration->acIdleExtraMin = 30;
 
 	engineConfiguration->useFSIO12ForIdleOffset = true;
-	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch 0 cfg_acIdleExtraOffset if" PASS_ENGINE_PARAMETER_SUFFIX);
+	applyFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch 0 cfg_acIdleExtraOffset if" PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->useFSIO13ForIdleMinValue = true;
-	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch 0 cfg_acIdleExtraMin if" PASS_ENGINE_PARAMETER_SUFFIX);
+	applyFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch 0 cfg_acIdleExtraMin if" PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_EQ(1, hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 	setMockVoltage(engineConfiguration->acSwitchAdc, 0 PASS_ENGINE_PARAMETER_SUFFIX);

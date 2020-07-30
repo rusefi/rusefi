@@ -112,7 +112,7 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(mapBased16IgnitionTable, config->ignitionTable);
+	MEMCPY(config->ignitionTable, mapBased16IgnitionTable);
 #endif
 
 	engineConfiguration->idle.solenoidFrequency = 160;
@@ -134,10 +134,10 @@ void miataNAcommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 static void setMiataNA6_settings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
-	memcpy(config->veRpmBins, ve16RpmBins, sizeof(ve16RpmBins));
-	memcpy(config->veLoadBins, ve16LoadBins, sizeof(ve16LoadBins));
+	MEMCPY(config->veRpmBins, ve16RpmBins);
+	MEMCPY(config->veLoadBins, ve16LoadBins);
 #if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
-	copyFuelTable(mapBased16VeTable, config->veTable);
+	MEMCPY(config->veTable, mapBased16VeTable);
 #endif
 
 	setWholeFuelMap(6 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -194,7 +194,7 @@ static void setMiataNA6_settings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMax = 656; // convert 12to10 bit (ADC/4)
 
 	engineConfiguration->injectionMode = IM_BATCH;
-	copyFuelTable(miataNA6_maf_fuel_table, config->fuelTable);
+	MEMCPY(config->fuelTable, miataNA6_maf_fuel_table);
 }
 
 /**
@@ -386,10 +386,10 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	engineConfiguration->useFSIO12ForIdleOffset = true;
-	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch 0 cfg_acIdleExtraOffset if" PASS_ENGINE_PARAMETER_SUFFIX);
+    setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch 0 cfg_acIdleExtraOffset if" PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->useFSIO13ForIdleMinValue = true;
-	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch 0 cfg_acIdleExtraMin if" PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch 0 cfg_acIdleExtraMin if" PASS_CONFIG_PARAMETER_SUFFIX);
 
 
 	engineConfiguration->useIdleTimingPidControl = true;
