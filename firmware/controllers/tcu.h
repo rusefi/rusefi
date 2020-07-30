@@ -13,6 +13,7 @@ public:
 private:
     gear_e currentGear = NEUTRAL;
 protected:
+    gear_e setCurrentGear(gear_e);
     void postState();
 };
 

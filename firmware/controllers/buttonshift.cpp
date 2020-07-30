@@ -44,10 +44,12 @@ void ButtonShiftController::update() {
                 break;
         }
     }
+    transmissionController.update(getDesiredGear());
     postState();
 }
 
+
 void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    ButtonShiftController b = ButtonShiftController(PASS_ENGINE_PARAMETER_SIGNATURE);
-    engine->gearController = &b;
+    ButtonShiftController buttonShiftController(PASS_ENGINE_PARAMETER_SIGNATURE);
+    engine->gearController = &buttonShiftController;
 }
