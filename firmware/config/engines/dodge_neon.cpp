@@ -276,15 +276,15 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * set_whole_fuel_map 12
 	 */
 	//setWholeFuelMap(12 PASS_CONFIG_PARAMETER_SUFFIX);
-//	copyFuelTable(alphaNfuel, config->fuelTable);
+//	MEMCPY(config->fuelTable, alphaNfuel);
 	//setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(fromODB, config->ignitionTable);
+	MEMCPY(config->ignitionTable, fromODB);
 #endif
 
 	copy2DTable<FSIO_TABLE_8, FSIO_TABLE_8, float, float>(vBattTarget, config->fsioTable1);
 
-	copyFuelTable(veDodgeNeon2003Table, config->veTable);
+	MEMCPY(config->veTable, veDodgeNeon2003Table);
 	//setMap(config->veTable, 50);
 
 	// set cranking_charge_angle 70
