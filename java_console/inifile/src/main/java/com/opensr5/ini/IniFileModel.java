@@ -32,6 +32,8 @@ public class IniFileModel {
     public Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public Map<String, String> tooltips = new TreeMap<>();
+    private boolean isConstantsSection;
+    private String currentSection;
 
     public static void main(String[] args) {
         log.info("Dialogs: " + IniFileModel.getInstance().dialogs);
@@ -131,12 +133,20 @@ public class IniFileModel {
             if (list.isEmpty())
                 return;
 
-            if (isInsidePageDefinition) {
-                handleFieldDefinition(list);
+            String first = list.getFirst();
+
+            if (first.startsWith("[") && first.endsWith("]")) {
+                log.info("Section " + first);
+                currentSection = first;
+                isConstantsSection = first.equals("[Constants]");
+            }
+
+            if (isInsidePageDefinition && isConstantsSection) {
+                if (list.size() > 1)
+                    handleFieldDefinition(list);
                 return;
             }
 
-            String first = list.getFirst();
 
             if ("dialog".equals(first)) {
                 handleDialog(list);
