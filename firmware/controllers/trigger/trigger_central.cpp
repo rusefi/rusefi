@@ -292,6 +292,9 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIG(useNoiselessTriggerDecoder)) {
 		if (!isUsefulSignal(signal PASS_CONFIG_PARAMETER_SUFFIX)) {
+			/**
+			 * no need to process VR falls further
+			 */
 			return;
 		}
 	}
@@ -413,6 +416,9 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	return false;
 }
 
+/**
+ * This method is NOT invoked for VR falls.
+ */
 void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_CONF_NULL, engine!=NULL, "configuration");
 
