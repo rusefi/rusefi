@@ -227,11 +227,6 @@ public class IniFileModel {
         return null;
     }
 
-    enum State {
-        SKIPPING,
-        DIALOG
-    }
-
     public static synchronized IniFileModel getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new IniFileModel();
