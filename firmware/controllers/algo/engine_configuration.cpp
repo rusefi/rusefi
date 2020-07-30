@@ -1258,8 +1258,10 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NA6_VAF:
-	case MRE_MIATA_NA6_MAP:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_MIATA_NA6_MAP:
+		setMiataNA6_MAP_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NB2_MAP:
 		setMiataNB2_MRE_MAP(PASS_CONFIG_PARAMETER_SIGNATURE);
