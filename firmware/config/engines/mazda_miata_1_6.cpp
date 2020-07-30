@@ -415,7 +415,7 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMin = 0;
 	engineConfiguration->tpsMax = 982;
 
-	engineConfiguration->map_sensor_hwChannel = EFI_ADC_13; // "20 - AN volt 5"
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_13; // "20 - AN volt 5"
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;// "27 - AN volt 1"
 
