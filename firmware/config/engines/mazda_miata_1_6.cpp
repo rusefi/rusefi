@@ -404,8 +404,6 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleTimingPidDeadZone = 10;
 
 
-	// GPIOG_1: "Clutch Switch"
-	engineConfiguration->clutchDownPin = GPIOG_1;
 	// EFI_ADC_3: "22 - AN temp 4"
 	engineConfiguration->acSwitchAdc = EFI_ADC_3;
 
@@ -422,6 +420,8 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;// "27 - AN volt 1"
 
 #if (BOARD_TLE8888_COUNT > 0)
+	// GPIOG_1: "Clutch Switch"
+	engineConfiguration->clutchDownPin = GPIOG_1;
 
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
