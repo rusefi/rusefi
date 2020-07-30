@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TS2CRunner" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="com.rusefi.TS2CRunner" />
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.tools.tune.TS2CRunner" />
     <module name="models" />
     <option name="VM_PARAMETERS" value="-Dini_file_path=." />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="com.rusefi.*" />
+        <option name="PATTERN" value="com.rusefi.tools.tune.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
