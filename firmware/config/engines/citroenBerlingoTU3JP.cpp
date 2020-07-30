@@ -208,11 +208,11 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->mafAdcChannel = GPIO_UNASSIGNED;
 
 #if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
-	copyFuelTable(tps_fuel_table, config->fuelTable);
+	MEMCPY(config->fuelTable, tps_fuel_table);
 #endif
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(default_tps_advance_table, config->ignitionTable);
+	MEMCPY(config->ignitionTable, default_tps_advance_table);
 #endif
 
 	engineConfiguration->dizzySparkOutputPin = GPIOE_3;

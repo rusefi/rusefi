@@ -56,10 +56,9 @@ static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(0,7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	copyFuelTable(default_custom_fuel_table, config->fuelTable);
-	copyFuelTable(default_custom_fuel_table, config->veTable);
+	MEMCPY(config->fuelTable, default_custom_fuel_table);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(default_custom_timing_table, config->ignitionTable);
+	MEMCPY(config->ignitionTable, default_custom_timing_table);
 #endif
 }
 
