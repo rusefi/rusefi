@@ -1087,6 +1087,7 @@ gaugeCategory = Sensors - Raw
    entry = intake,          @@GAUGE_NAME_IAT@@,         float,  "%.2f"
    entry = oilPressure,		"Oil Press",   float,  "%.1f"
    entry = TPSValue,        @@GAUGE_NAME_TPS@@,         float,  "%.2f"
+   entry = TPS2Value,       @@GAUGE_NAME_TPS2@@,        float, "%.2f"
    entry = MAFValue,        @@GAUGE_NAME_MAF@@,         float,  "%.2f"
    entry = MAPValue,        @@GAUGE_NAME_MAP@@,         float,  "%.1f"
    entry = AFRValue,        @@GAUGE_NAME_AFR@@,         float,  "%.2f"
