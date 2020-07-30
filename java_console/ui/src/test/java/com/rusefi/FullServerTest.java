@@ -142,7 +142,7 @@ public class FullServerTest {
 
             // now let's test that application connector would be terminated by server due to inactivity
             log.info("Sleeping twice the application timeout");
-            assertTrue(applicationClosed.await(2 * applicationTimeout, TimeUnit.MILLISECONDS));
+            assertTrue("applicationClosed", applicationClosed.await(3 * applicationTimeout, TimeUnit.MILLISECONDS));
 
             assertEquals("applications size", 0, backend.getApplications().size());
         }
