@@ -386,14 +386,40 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 
+	engineConfiguration->useIdleTimingPidControl = true;
+	engineConfiguration->idleTimingPid.pFactor = 0.05;
+	engineConfiguration->idleTimingPid.iFactor = 0.0;
+	engineConfiguration->idleTimingPid.dFactor = 0.0;
+	engineConfiguration->idleTimingPid.minValue = -13;
+	engineConfiguration->idleTimingPid.maxValue = 13;
+	engineConfiguration->idleTimingPid.periodMs = 8;
+	engineConfiguration->idleTimingPidWorkZone = 150;
+	engineConfiguration->idlePidFalloffDeltaRpm = 50;
+	engineConfiguration->idleTimingPidDeadZone = 10;
+
+
+	// GPIOG_1: "Clutch Switch"
+	engineConfiguration->clutchDownPin = GPIOG_1;
+	// EFI_ADC_3: "22 - AN temp 4"
+	engineConfiguration->acSwitchAdc = EFI_ADC_3;
+
+	engineConfiguration->warningLedPin = GPIOD_13;
+	engineConfiguration->triggerErrorPin = GPIOE_1;
+
+
 #if (BOARD_TLE8888_COUNT > 0)
 
-	// TLE8888_PIN_22: "34 - GP Out 2"
-	engineConfiguration->fanPin = TLE8888_PIN_22;
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 
+	// TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
+
+	// GPIOA_15: "AUX J2 PA15"
+	engineConfiguration->fsioOutputPins[0] = GPIOA_15;
 	// TLE8888_PIN_24: "43 - GP Out 4"
-	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_24;
+	engineConfiguration->fsioOutputPins[1] = TLE8888_PIN_24;
+
 
 #endif /* BOARD_TLE8888_COUNT */
 }
