@@ -17,6 +17,7 @@ static const LogField fields[] = {
 	{tsOutputChannels.coolantTemperature, GAUGE_NAME_CLT, "C", 1},
 	{tsOutputChannels.intakeAirTemperature, GAUGE_NAME_IAT, "C", 1},
 	{tsOutputChannels.throttlePosition, GAUGE_NAME_TPS, "%", 2},
+	{tsOutputChannels.throttle2Position, GAUGE_NAME_TPS2, "%", 2},
 	{tsOutputChannels.pedalPosition, GAUGE_NAME_THROTTLE_PEDAL, "%", 2},
 	{tsOutputChannels.manifoldAirPressure, GAUGE_NAME_MAP, "kPa", 1},
 	{tsOutputChannels.airFuelRatio, GAUGE_NAME_AFR, "afr", 2},
