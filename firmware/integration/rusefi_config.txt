@@ -1445,6 +1445,7 @@ end_struct
 #define GAUGE_NAME_CLT "CLT"
 #define GAUGE_NAME_IAT "IAT"
 #define GAUGE_NAME_TPS "TPS"
+#define GAUGE_NAME_TPS2 "TPS2"
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_MAF "MAF"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
