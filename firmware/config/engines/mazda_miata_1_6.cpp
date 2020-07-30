@@ -104,6 +104,7 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->compressionRatio = 9.1;
 
 	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
 
@@ -357,6 +358,42 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	engineConfiguration->triggerInputPins[0] = GPIOA_5;
+	engineConfiguration->triggerInputPins[1] = GPIOC_6;
+	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
+
+	engineConfiguration->silentTriggerError = true;
+	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+
+
+	engineConfiguration->useIacTableForCoasting = true;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 90;
+
+	engineConfiguration->isVerboseIAC = true;
+
+	engineConfiguration->idleRpmPid.minValue = 20;
+	engineConfiguration->idleRpmPid.pFactor = 0.01;
+	engineConfiguration->idleRpmPid.iFactor = 0.02;
+	engineConfiguration->idleRpmPid.dFactor = 0.002;
+	engineConfiguration->idleRpmPid.offset = 37;
+	engineConfiguration->idleRpmPid.periodMs = 40;
+	engineConfiguration->idlerpmpid_iTermMin = -6;
+	engineConfiguration->idlerpmpid_iTermMax = 30;
+	engineConfiguration->pidExtraForLowRpm = 25;
+	engineConfiguration->idlePidRpmDeadZone = 25;
+	engineConfiguration->idlePidRpmUpperLimit = 100;
+
+
+
 #if (BOARD_TLE8888_COUNT > 0)
+
+	// TLE8888_PIN_22: "34 - GP Out 2"
+	engineConfiguration->fanPin = TLE8888_PIN_22;
+
+
+	// TLE8888_PIN_24: "43 - GP Out 4"
+	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_24;
+
 #endif /* BOARD_TLE8888_COUNT */
 }
