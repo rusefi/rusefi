@@ -3,6 +3,7 @@ package com.rusefi.tune.xml;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
@@ -82,10 +83,20 @@ public class Msq {
         String value = field.getValue(image);
         Page page = findPage();
         if (page == null) {
-            System.out.println("Msq: No page");
+            log.error("Msq: No page");
             return;
         }
-        page.constant.add(new Constant(field.getName(), field.getUnits(), value, field.getDigits()));
+        if (value.isEmpty()) {
+            log.debug("Skipping " + field.getName());
+            return;
+        }
+        Constant constant = new Constant(field.getName(), field.getUnits(), value, field.getDigits());
+        page.constant.add(constant);
+        if (field instanceof ArrayIniField) {
+            ArrayIniField arrayIniField = (ArrayIniField) field;
+            constant.setCols(Integer.toString(arrayIniField.getCols()));
+            constant.setRows(Integer.toString(arrayIniField.getRows()));
+        }
     }
 
     public Page findPage() {
