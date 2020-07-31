@@ -414,8 +414,6 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->isHip9011Enabled = false;
 	engineConfiguration->isSdCardEnabled = true;
-
-	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 #endif /* BOARD_TLE8888_COUNT */
 }
 
