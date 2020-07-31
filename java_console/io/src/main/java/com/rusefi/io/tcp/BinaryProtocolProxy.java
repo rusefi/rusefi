@@ -34,7 +34,7 @@ public class BinaryProtocolProxy {
             TcpIoStream clientStream = null;
             try {
                 clientStream = new TcpIoStream("[[proxy]] ", clientSocket);
-                runProxy(targetEcuSocket, clientStream, relayCommandCounter);
+                runProxy(targetEcuSocket, clientStream, relayCommandCounter, USER_IO_TIMEOUT);
             } catch (IOException e) {
                 log.error("BinaryProtocolProxy::run " + e);
                 close(clientStream);
@@ -43,12 +43,12 @@ public class BinaryProtocolProxy {
         return BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Listener.empty());
     }
 
-    public static void runProxy(IoStream targetEcu, IoStream clientStream, AtomicInteger relayCommandCounter) throws IOException {
+    public static void runProxy(IoStream targetEcu, IoStream clientStream, AtomicInteger relayCommandCounter, int timeoutMs) throws IOException {
         /*
          * Each client socket is running on it's own thread
          */
         while (!targetEcu.isClosed()) {
-            byte firstByte = clientStream.getDataBuffer().readByte(USER_IO_TIMEOUT);
+            byte firstByte = clientStream.getDataBuffer().readByte(timeoutMs);
             if (firstByte == COMMAND_PROTOCOL) {
                 clientStream.write(TS_PROTOCOL.getBytes());
                 continue;
