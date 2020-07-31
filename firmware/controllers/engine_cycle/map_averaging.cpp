@@ -350,11 +350,11 @@ float getMap(void) {
 void initMapAveraging(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 
+#if !EFI_UNIT_TEST
 #if EFI_SHAFT_POSITION_INPUT
 	addTriggerEventListener(&mapAveragingTriggerCallback, "MAP averaging", engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-#if !EFI_UNIT_TEST
 	addConsoleAction("faststat", showMapStats);
 #endif /* EFI_UNIT_TEST */
 

@@ -209,5 +209,18 @@ scheduling_s *EventQueue::getElementAtIndexForUnitText(int index) {
 }
 
 void EventQueue::clear(void) {
+	// Flush the queue, resetting all scheduling_s as though we'd executed them
+	while(head) {
+		auto x = head;
+		// link next element to head
+		head = x->nextScheduling_s;
+
+		// Reset this element
+		x->momentX = 0;
+		x->isScheduled = false;
+		x->nextScheduling_s = nullptr;
+		x->action = {};
+	}
+
 	head = nullptr;
 }
