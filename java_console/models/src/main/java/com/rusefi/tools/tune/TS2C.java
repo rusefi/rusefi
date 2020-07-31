@@ -31,9 +31,9 @@ public class TS2C {
 
     private TS2C(String[] args) throws IOException {
         System.out.println("This tool reads TS tune file and produces some C code for hardcoded base tunes");
-        if (args.length != 4 && args.length != 5) {
-            System.out.println("Four parameters expected: ");
-            System.out.println("  INPUT_MSQ_FILE NAME LOAD_SECTION_NAME RPM_SECTION_NAME TABLE_NAME");
+        if (args.length != 3 && args.length != 4 && args.length != 5) {
+            System.out.println("Three parameters expected: ");
+            System.out.println("  INPUT_MSQ_FILE NAME LOAD_SECTION_NAME RPM_SECTION_NAME [TABLE_NAME]");
             System.out.println("for example");
             // section names are needed in order to generate comments about cell content
             System.out.println("  currenttune.msq veLoadBins veRpmBins veTable");
@@ -42,7 +42,7 @@ public class TS2C {
         String msqFileName = args[0];
         String loadSectionName = args[1];
         String rpmSectionName = args[2];
-        String tableName = args[3];
+        String tableName = args.length == 3 ? "none" : args[3];
 
         IniFileModel model = IniFileModel.getInstance();
 
