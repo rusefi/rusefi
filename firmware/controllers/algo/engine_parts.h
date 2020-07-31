@@ -37,7 +37,7 @@ public:
 	Accelerometer accelerometer;
 
 	float vBatt = 0;
-	float currentAfr;
+	float currentAfr = 0;
 	/**
 	 * that's fuel in tank - just a gauge
 	 */
@@ -131,7 +131,7 @@ private:
 
 struct multispark_state
 {
-	efitick_t delay;
-	efitick_t dwell;
-	uint8_t count;
+	efitick_t delay = 0;
+	efitick_t dwell = 0;
+	uint8_t count = 0;
 };

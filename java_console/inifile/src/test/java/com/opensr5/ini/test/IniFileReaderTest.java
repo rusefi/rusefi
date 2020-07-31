@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -105,6 +106,7 @@ public class IniFileReaderTest {
     @Test
     public void testEasyFields() {
         String string = "page = 1\n" +
+                "[Constants]\n" +
                 "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
                 "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\", \"PA5\", \"PA6\", \"PA7\", \"PB0\", \"PB1\", \"PC0\", \"PC1\", \"PC2\", \"PC3\", \"PC4\", \"PC5\", \"Disabled\", \"PB12\", \"PB13\", \"PC14\", \"PC15\", \"PC16\", \"PC17\", \"PD3\", \"PD4\", \"PE2\", \"PE6\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\"\n";
 
@@ -143,6 +145,7 @@ public class IniFileReaderTest {
     @Test
     public void testBitField() {
         String string = "page = 1\n" +
+                "[Constants]\n" +
                 "\tname\t= bits,    U32,   \t744, [3:5], \"false\", \"true\"";
 
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
@@ -159,13 +162,19 @@ public class IniFileReaderTest {
     @Test
     public void testCurveField() {
         String string = "page = 1\n" +
-                " \tname\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n";
+                " \tname2\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n" +
+                "[Constants]\n" +
+                " \tname\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n" +
+                        "[PcVariables]\n" +
+        " \tname3\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n"
+                ;
 
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = new IniFileModel().readIniFile(lines);
 
         assertEquals(1, model.allIniFields.size());
         ArrayIniField field = (ArrayIniField) model.allIniFields.get("name");
+        assertNotNull(field);
         assertEquals(1, field.getCols());
         assertEquals(8, field.getRows());
     }

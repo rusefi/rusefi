@@ -67,7 +67,6 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	switch (engineConfiguration->fuelAlgorithm) {
 	case LM_SPEED_DENSITY:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-	case LM_ALPHA_N:
 	case LM_ALPHA_N_2:
 		return Sensor::get(SensorType::Tps1).value_or(0);
 	case LM_REAL_MAF:
@@ -439,9 +438,7 @@ void setTimingLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
  */
 void setAlgorithm(engine_load_mode_e algo DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	engineConfiguration->fuelAlgorithm = algo;
-	if (algo == LM_ALPHA_N) {
-		setTimingLoadBin(20, 120 PASS_CONFIG_PARAMETER_SUFFIX);
-	} else if (algo == LM_SPEED_DENSITY) {
+	if (algo == LM_SPEED_DENSITY) {
 		setLinearCurve(config->ignitionLoadBins, 20, 120, 3);
 		buildTimingMap(35 PASS_CONFIG_PARAMETER_SUFFIX);
 	}

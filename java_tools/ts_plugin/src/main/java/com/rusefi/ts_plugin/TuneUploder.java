@@ -1,5 +1,6 @@
 package com.rusefi.ts_plugin;
 
+import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameter;
@@ -21,6 +22,8 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 public class TuneUploder {
+    private final static Logging log = Logging.getLogging(TuneUploder.class);
+
     static Msq writeCurrentTune(ControllerAccess controllerAccess, String configurationName) {
         Msq msq = grabTune(controllerAccess, configurationName);
         if (msq == null)
@@ -50,6 +53,10 @@ public class TuneUploder {
         try {
             String[] parameterNames = controllerParameterServer.getParameterNames(configurationName);
             for (String parameterName : parameterNames) {
+                if (!fileSystemValues.containsKey(parameterName)) {
+                    System.out.println("Skipping " + parameterName + " since not in model, maybe pcVariable?");
+                    continue;
+                }
                 applyParameterValue(configurationName, msq, controllerParameterServer, fileSystemValues, parameterName);
             }
         } catch (ControllerException e) {
@@ -83,7 +90,7 @@ public class TuneUploder {
         String value;
         if (ControllerParameter.PARAM_CLASS_BITS.equals(type)) {
             value = cp.getStringValue();
-            System.out.println("TsPlugin bits " + parameterName + ": " + value);
+            log.info("bits " + parameterName + ": " + value);
         } else if (ControllerParameter.PARAM_CLASS_SCALAR.equals(type)) {
             value = toString(cp.getScalarValue(), cp.getDecimalPlaces());
             System.out.println("TsPlugin scalar " + parameterName + ": " + cp.getScalarValue() + "/" + cp.getStringValue());

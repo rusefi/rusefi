@@ -78,10 +78,10 @@ static void setDefaultAspireMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 #if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
-	copyFuelTable(default_aspire_fuel_table, config->fuelTable);
+	MEMCPY(config->fuelTable, default_aspire_fuel_table);
 #endif
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(default_aspire_timing_table, config->ignitionTable);
+	MEMCPY(config->ignitionTable, default_aspire_timing_table);
 #endif
 }
 

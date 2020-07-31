@@ -17,7 +17,10 @@ EXTERN_ENGINE;
 // this is not the only place where we have 'isUpEvent'. todo: reuse
 static const bool isRisingEdge[HW_EVENT_TYPES] = { false, true, false, true, false, true };
 
-// todo: should this method be invoked somewhere deeper? at the moment we have too many usages too high
+/**
+ * todo: should this method be invoked somewhere deeper? at the moment we have too many usages too high
+ * @return true if front should be decoded further, false if we are not interested
+ */
 bool isUsefulSignal(trigger_event_e signal DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	return !engineConfiguration->useOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal];
 }

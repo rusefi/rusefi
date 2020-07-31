@@ -63,6 +63,7 @@ public class TcpIoStream extends AbstractIoStream {
 
     @Override
     public void write(byte[] bytes) throws IOException {
+        super.write(bytes);
         output.write(bytes);
     }
 

@@ -60,25 +60,6 @@ static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER)
 
 EXTERN_ENGINE;
 
-/*
- static void printIntArray(int array[], int size) {
- for (int j = 0; j < size; j++) {
- print("%d ", array[j]);
- }
- print("\r\n");
- }
- */
-
-void printFloatArray(const char *prefix, float array[], int size) {
-	appendMsgPrefix(&logger);
-	appendPrintf(&logger, prefix);
-	for (int j = 0; j < size; j++) {
-		appendPrintf(&logger, "%.2f ", array[j]);
-	}
-	appendMsgPostfix(&logger);
-	scheduleLogging(&logger);
-}
-
 void printSpiState(Logging *logger, const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(logger, "spi 1=%s/2=%s/3=%s/4=%s",
 		boolToString(engineConfiguration->is_enabled_spi_1),
@@ -210,19 +191,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 //		}
 //		print("\r\n");
 	}
-
-//	printFloatArray("RPM bin: ", config->fuelRpmBins, FUEL_RPM_COUNT);
-//
-//	printFloatArray("Y bin: ", config->fuelLoadBins, FUEL_LOAD_COUNT);
-//
-//	printFloatArray("CLT: ", config->cltFuelCorr, CLT_CURVE_SIZE);
-//	printFloatArray("CLT bins: ", config->cltFuelCorrBins, CLT_CURVE_SIZE);
-//
-//	printFloatArray("IAT: ", config->iatFuelCorr, IAT_CURVE_SIZE);
-//	printFloatArray("IAT bins: ", config->iatFuelCorrBins, IAT_CURVE_SIZE);
-//
-//	printFloatArray("vBatt: ", engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE);
-//	printFloatArray("vBatt bins: ", engineConfiguration->injector.battLagCorrBins, VBAT_INJECTOR_CURVE_SIZE);
 
 	scheduleMsg(&logger, "rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
 			engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));

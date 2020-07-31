@@ -12,7 +12,7 @@ struct AirmassResult {
 struct AirmassModelBase {
 	DECLARE_ENGINE_PTR;
 
-	AirmassModelBase(const ValueProvider3D& veTable);
+	explicit AirmassModelBase(const ValueProvider3D& veTable);
 	virtual AirmassResult getAirmass(int rpm) = 0;
 
 protected:

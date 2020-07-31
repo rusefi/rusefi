@@ -108,7 +108,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyArray(config->veRpmBins, veRpmBins);
 
 
-	copyFuelTable(racingFestivaVeTable, config->veTable);
+	MEMCPY(config->veTable, racingFestivaVeTable);
 
 //	engineConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
 //	engineConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
@@ -279,7 +279,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyArray(config->ignitionRpmBins, ignitionRpmBins);
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(racingFestivaIgnitionTable, config->ignitionTable);
+	MEMCPY(config->ignitionTable, racingFestivaIgnitionTable);
 #endif
 
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40;

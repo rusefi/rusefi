@@ -1,7 +1,9 @@
 package com.rusefi.tune.xml;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +17,7 @@ import java.util.Objects;
 
 @XmlRootElement
 public class Msq {
+    private static final Logging log = Logging.getLogging(Msq.class);
 
     public List<Page> page = new ArrayList<>();
 
@@ -56,7 +59,7 @@ public class Msq {
             }
             IniField field = instance.allIniFields.get(constant.getName());
             Objects.requireNonNull(field, "Field for " + constant.getName());
-            System.out.println("Setting " + field);
+            log.debug("Setting " + field);
             field.setValue(ci, constant);
         }
         return ci;
@@ -69,6 +72,9 @@ public class Msq {
     public void writeXmlFile(String outputXmlFileName) throws JAXBException, IOException {
         Objects.requireNonNull(versionInfo, "versionInfo");
         versionInfo.validate();
+        Page page = findPage();
+        if (page.constant.isEmpty())
+            throw new IllegalStateException("No data?");
         XmlUtil.writeXml(this, Msq.class, outputXmlFileName);
     }
 
@@ -77,10 +83,20 @@ public class Msq {
         String value = field.getValue(image);
         Page page = findPage();
         if (page == null) {
-            System.out.println("Msq: No page");
+            log.error("Msq: No page");
             return;
         }
-        page.constant.add(new Constant(field.getName(), field.getUnits(), value, field.getDigits()));
+        if (value.isEmpty()) {
+            log.debug("Skipping " + field.getName());
+            return;
+        }
+        Constant constant = new Constant(field.getName(), field.getUnits(), value, field.getDigits());
+        page.constant.add(constant);
+        if (field instanceof ArrayIniField) {
+            ArrayIniField arrayIniField = (ArrayIniField) field;
+            constant.setCols(Integer.toString(arrayIniField.getCols()));
+            constant.setRows(Integer.toString(arrayIniField.getRows()));
+        }
     }
 
     public Page findPage() {

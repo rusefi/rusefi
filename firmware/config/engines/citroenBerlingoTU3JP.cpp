@@ -95,7 +95,7 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	/**
 	 * Algorithm Alpha-N setting
 	 */
-	setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_ALPHA_N_2 PASS_CONFIG_PARAMETER_SUFFIX);
 	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -208,11 +208,11 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->mafAdcChannel = GPIO_UNASSIGNED;
 
 #if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
-	copyFuelTable(tps_fuel_table, config->fuelTable);
+	MEMCPY(config->fuelTable, tps_fuel_table);
 #endif
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(default_tps_advance_table, config->ignitionTable);
+	MEMCPY(config->ignitionTable, default_tps_advance_table);
 #endif
 
 	engineConfiguration->dizzySparkOutputPin = GPIOE_3;

@@ -85,6 +85,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     public static String findCommand(byte command) {
         switch (command) {
+            case Fields.TS_COMMAND_F:
+                return "PROTOCOL";
             case Fields.TS_CRC_CHECK_COMMAND:
                 return "CRC_CHECK";
             case Fields.TS_BURN_COMMAND:
@@ -101,8 +103,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 return "WRITE_CHUNK";
             case Fields.TS_OUTPUT_COMMAND:
                 return "TS_OUTPUT_COMMAND";
+            case Fields.TS_RESPONSE_OK:
+                return "TS_RESPONSE_OK";
             default:
-                return "command " + (char) +command + "/" + command;
+                return "command " + (char) command + "/" + command;
         }
     }
 
@@ -287,7 +291,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
-    public void uploadChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException {
+    public void uploadChanges(ConfigurationImage newVersion) {
         ConfigurationImage current = getControllerConfiguration();
         // let's have our own copy which no one would be able to change
         newVersion = newVersion.clone();
@@ -297,18 +301,18 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             if (range == null)
                 break;
             int size = range.second - range.first;
-            logger.info("Need to patch: " + range + ", size=" + size);
+            log.info("Need to patch: " + range + ", size=" + size);
             byte[] oldBytes = current.getRange(range.first, size);
-            logger.info("old " + Arrays.toString(oldBytes));
+            log.info("old " + Arrays.toString(oldBytes));
 
             byte[] newBytes = newVersion.getRange(range.first, size);
-            logger.info("new " + Arrays.toString(newBytes));
+            log.info("new " + Arrays.toString(newBytes));
 
-            writeData(newVersion.getContent(), range.first, size, logger);
+            writeData(newVersion.getContent(), range.first, size);
 
             offset = range.second;
         }
-        burn(logger);
+        burn();
         setController(newVersion);
     }
 
@@ -350,10 +354,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 return null;
 
             int remainingSize = image.getSize() - offset;
-            int requestSize = Math.min(remainingSize, BLOCKING_FACTOR);
+            int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
 
             byte packet[] = new byte[7];
-            packet[0] = COMMAND_READ;
+            packet[0] = Fields.TS_READ_COMMAND;
             putShort(packet, 1, 0); // page
             putShort(packet, 3, swap16(offset));
             putShort(packet, 5, swap16(requestSize));
@@ -451,10 +455,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         Runtime.getRuntime().removeShutdownHook(hook);
     }
 
-    public void writeData(byte[] content, Integer offset, int size, Logger logger) {
-        if (size > BLOCKING_FACTOR) {
-            writeData(content, offset, BLOCKING_FACTOR, logger);
-            writeData(content, offset + BLOCKING_FACTOR, size - BLOCKING_FACTOR, logger);
+    public void writeData(byte[] content, Integer offset, int size) {
+        if (size > Fields.BLOCKING_FACTOR) {
+            writeData(content, offset, Fields.BLOCKING_FACTOR);
+            writeData(content, offset + Fields.BLOCKING_FACTOR, size - Fields.BLOCKING_FACTOR);
             return;
         }
 
@@ -472,17 +476,17 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = executeCommand(packet, "writeImage");
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != 1) {
-                logger.error("writeData: Something is wrong, retrying...");
+                log.error("writeData: Something is wrong, retrying...");
                 continue;
             }
             break;
         }
     }
 
-    public void burn(Logger logger) throws InterruptedException, EOFException {
+    public void burn() {
         if (!isBurnPending)
             return;
-        logger.info("Need to burn");
+        log.info("Need to burn");
 
         while (true) {
             if (isClosed)
@@ -493,7 +497,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             }
             break;
         }
-        logger.info("DONE");
+        log.info("DONE");
         isBurnPending = false;
     }
 

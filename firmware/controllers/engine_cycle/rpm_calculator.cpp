@@ -358,7 +358,9 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 
+#if !EFI_UNIT_TEST
 	addTriggerEventListener(tdcMarkCallback, "chart TDC mark", engine);
+#endif
 
 	addTriggerEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 }
