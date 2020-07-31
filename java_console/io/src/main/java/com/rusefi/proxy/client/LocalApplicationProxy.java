@@ -5,6 +5,8 @@ import com.rusefi.NamedThreadFactory;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.io.serial.AbstractIoStream;
+import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
@@ -52,7 +54,7 @@ public class LocalApplicationProxy implements Closeable {
         if (!version.contains(ProxyClient.BACKEND_VERSION))
             throw new IOException("Unexpected backend version " + version + " while we want " + ProxyClient.BACKEND_VERSION);
 
-        IoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, context.serverPortForRemoteApplications()), disconnectListener);
+        AbstractIoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, context.serverPortForRemoteApplications()), disconnectListener);
         LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);
 
         AtomicInteger relayCommandCounter = new AtomicInteger();
@@ -87,7 +89,7 @@ public class LocalApplicationProxy implements Closeable {
 
         ServerSocketReference serverHolder = BinaryProtocolProxy.createProxy(authenticatorToProxyStream, context.authenticatorPort(), relayCommandCounter);
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(applicationRequest, serverHolder, authenticatorToProxyStream);
-        connectionListener.onConnected(localApplicationProxy);
+        connectionListener.onConnected(localApplicationProxy, authenticatorToProxyStream);
         return serverHolder;
     }
 
@@ -112,9 +114,9 @@ public class LocalApplicationProxy implements Closeable {
     }
 
     public interface ConnectionListener {
-        ConnectionListener VOID = localApplicationProxy -> {
+        ConnectionListener VOID = (localApplicationProxy, authenticatorToProxyStream) -> {
         };
 
-        void onConnected(LocalApplicationProxy localApplicationProxy);
+        void onConnected(LocalApplicationProxy localApplicationProxy, StreamStatistics authenticatorToProxyStream);
     }
 }

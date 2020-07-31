@@ -2,7 +2,9 @@ package com.rusefi.ts_plugin;
 
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.SignatureHelper;
+import com.rusefi.Timeouts;
 import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.client.LocalApplicationProxy;
@@ -20,6 +22,8 @@ import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -50,6 +54,8 @@ public class RemoteTab {
     };
 
 
+    private StreamStatusControl streamStatusControl = null;
+
     private final JButton disconnect = new JButton("Disconnect");
 
     private final Executor listDownloadExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("online list downloader"));
@@ -66,6 +72,15 @@ public class RemoteTab {
             requestListDownload();
         });
 
+
+        Timer timer = new Timer(Timeouts.SECOND, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (streamStatusControl != null)
+                    streamStatusControl.update();
+            }
+        });
+        timer.start();
 
         JTextField applicationPort = new JTextField() {
             @Override
@@ -101,7 +116,7 @@ public class RemoteTab {
         if (currentState == null) {
             requestListDownload();
         } else {
-            setConnectedStatus(currentState.getApplicationRequest().getTargetUser());
+            setConnectedStatus(currentState.getApplicationRequest().getTargetUser(), null);
         }
     }
 
@@ -172,12 +187,12 @@ public class RemoteTab {
         RemoteTabController.INSTANCE.setState(RemoteTabController.State.CONNECTING);
         setStatus("Connecting to " + publicSession.getUserDetails().getUserName());
 
-        LocalApplicationProxy.ConnectionListener connectionListener = localApplicationProxy -> {
+        LocalApplicationProxy.ConnectionListener connectionListener = (localApplicationProxy, authenticatorToProxyStream) -> {
             RemoteTabController.INSTANCE.setConnected(localApplicationProxy);
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    setConnectedStatus(publicSession.getUserDetails());
+                    setConnectedStatus(publicSession.getUserDetails(), authenticatorToProxyStream);
                 }
             });
         };
@@ -187,17 +202,24 @@ public class RemoteTab {
         }, "Authenticator").start();
     }
 
-    private void setConnectedStatus(UserDetails userDetails) {
+    private void setConnectedStatus(UserDetails userDetails, StreamStatistics authenticatorToProxyStream) {
+        if (authenticatorToProxyStream != null) {
+            streamStatusControl = new StreamStatusControl(authenticatorToProxyStream);
+        }
+
         setStatus("Connected to " + userDetails.getUserName(),
                 new JLabel("You can now connect your TunerStudio to IP address localhost and port " + getLocalPort()),
-                disconnect);
+                disconnect, streamStatusControl == null ? null : streamStatusControl.getContent());
     }
 
     private void setStatus(String text, JComponent... extra) {
         list.removeAll();
         list.add(new JLabel(text));
-        for (JComponent component : extra)
-            list.add(component);
+        for (JComponent component : extra) {
+            if (component != null) {
+                list.add(component);
+            }
+        }
         AutoupdateUtil.trueLayout(list);
     }
 
