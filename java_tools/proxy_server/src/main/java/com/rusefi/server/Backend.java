@@ -204,7 +204,7 @@ public class Backend implements Closeable {
                     applications.add(applicationConnectionState);
                 }
 
-                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream, new AtomicInteger());
+                BinaryProtocolProxy.runProxy(state.getStream(), applicationClientStream, new AtomicInteger(), BinaryProtocolProxy.USER_IO_TIMEOUT);
 
             } catch (Throwable e) {
                 log.info("Application Connector: Got error " + e);

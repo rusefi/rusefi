@@ -153,7 +153,7 @@ public class RemoteTab {
             bottomPanel.add(new JLabel(" Used by " + publicSession.getOwnerName()));
         } else {
             JButton connect = new JButton("Connect to " + publicSession.getUserDetails().getUserName());
-            connect.addActionListener(event -> connecToToProxy(publicSession, controllerInfo));
+            connect.addActionListener(event -> connectToProxy(publicSession, controllerInfo));
             bottomPanel.add(connect);
         }
 
@@ -168,7 +168,7 @@ public class RemoteTab {
         return userPanel;
     }
 
-    private void connecToToProxy(PublicSession publicSession, ControllerInfo controllerInfo) {
+    private void connectToProxy(PublicSession publicSession, ControllerInfo controllerInfo) {
         RemoteTabController.INSTANCE.setState(RemoteTabController.State.CONNECTING);
         setStatus("Connecting to " + publicSession.getUserDetails().getUserName());
 
