@@ -62,7 +62,7 @@ typedef enum {
 
 	MRE_MIATA_NB2_MAP = 11,
 
-	MRE_MIATA_NA6 = ET_MRE_MIATA_NA6,
+	MRE_MIATA_NA6_VAF = ET_MRE_MIATA_NA6_VAF,
 
 	MRE_MIATA_NB2_ETB = 13,
 
@@ -188,6 +188,9 @@ typedef enum {
 
 	DODGE_RAM = 64,
 	CITROEN_TU3JP = ET_CITROEN_TU3JP,
+
+	MRE_MIATA_NA6_MAP = ET_MRE_MIATA_NA6_MAP,
+
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -424,10 +427,6 @@ typedef enum {
  * This enum is used to select your desired Engine Load calculation algorithm
  */
 typedef enum {
-	/**
-	 * Throttle Position Sensor value is used as engine load. http://en.wikipedia.org/wiki/Throttle_position_sensor
-	 */
-	LM_ALPHA_N = 1,
 	/**
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/

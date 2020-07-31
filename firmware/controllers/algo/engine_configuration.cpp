@@ -1257,8 +1257,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case BMW_M73_PROTEUS:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MRE_MIATA_NA6:
+	case MRE_MIATA_NA6_VAF:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_MIATA_NA6_MAP:
+		setMiataNA6_MAP_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NB2_MAP:
 		setMiataNB2_MRE_MAP(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1510,33 +1513,6 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->joystickBPin = GPIO_UNASSIGNED;
 	engineConfiguration->joystickCPin = GPIO_UNASSIGNED;
 	engineConfiguration->joystickDPin = GPIOD_11;
-}
-
-void copyTargetAfrTable(fuel_table_t const source, afr_table_t destination) {
-	// todo: extract a template!
-	for (int loadIndex = 0; loadIndex < FUEL_LOAD_COUNT; loadIndex++) {
-		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
-			destination[loadIndex][rpmIndex] = AFR_STORAGE_MULT * source[loadIndex][rpmIndex];
-		}
-	}
-}
-
-void copyFuelTable(fuel_table_t const source, fuel_table_t destination) {
-	// todo: extract a template!
-	for (int loadIndex = 0; loadIndex < FUEL_LOAD_COUNT; loadIndex++) {
-		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
-			destination[loadIndex][rpmIndex] = source[loadIndex][rpmIndex];
-		}
-	}
-}
-
-void copyTimingTable(ignition_table_t const source, ignition_table_t destination) {
-	// todo: extract a template!
-	for (int k = 0; k < IGN_LOAD_COUNT; k++) {
-		for (int rpmIndex = 0; rpmIndex < IGN_RPM_COUNT; rpmIndex++) {
-			destination[k][rpmIndex] = source[k][rpmIndex];
-		}
-	}
 }
 
 static const ConfigOverrides defaultConfigOverrides{};

@@ -376,7 +376,8 @@ void TriggerState::onShaftSynchronization(const TriggerStateCallback triggerCycl
 
 /**
  * @brief Trigger decoding happens here
- * This method is invoked every time we have a fall or rise on one of the trigger sensors.
+ * VR falls are filtered out and some VR noise detection happens prior to invoking this method, for
+ * Hall this method is invoked every time we have a fall or rise on one of the trigger sensors.
  * This method changes the state of trigger_state_s data structure according to the trigger event
  * @param signal type of event which just happened
  * @param nowNt current time

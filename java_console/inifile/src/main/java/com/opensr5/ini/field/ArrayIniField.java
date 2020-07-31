@@ -50,7 +50,7 @@ public class ArrayIniField extends IniField {
     public String getValue(ConfigurationImage image) {
         StringBuilder sb = new StringBuilder();
         for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
-            sb.append("\n\t");
+            sb.append("\n        ");
             for (int colIndex = 0; colIndex < cols; colIndex++) {
                 Field f = new Field("", getOffset(rowIndex, colIndex), getType());
                 sb.append(' ');

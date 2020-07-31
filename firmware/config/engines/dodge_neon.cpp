@@ -147,7 +147,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
 
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N_2;
 
 //	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
@@ -276,15 +276,15 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * set_whole_fuel_map 12
 	 */
 	//setWholeFuelMap(12 PASS_CONFIG_PARAMETER_SUFFIX);
-//	copyFuelTable(alphaNfuel, config->fuelTable);
+//	MEMCPY(config->fuelTable, alphaNfuel);
 	//setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(fromODB, config->ignitionTable);
+	MEMCPY(config->ignitionTable, fromODB);
 #endif
 
 	copy2DTable<FSIO_TABLE_8, FSIO_TABLE_8, float, float>(vBattTarget, config->fsioTable1);
 
-	copyFuelTable(veDodgeNeon2003Table, config->veTable);
+	MEMCPY(config->veTable, veDodgeNeon2003Table);
 	//setMap(config->veTable, 50);
 
 	// set cranking_charge_angle 70
@@ -298,8 +298,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * or is it 225 as mentioned at http://turbobazar.ru/showpost.php?p=750815&postcount=796 ?
 	 */
 	engineConfiguration->injector.flow = 199;
-
-	//engineConfiguration->fuelAlgorithm = LM_ALPHA_N; // I want to start with a simple Alpha-N
 
 	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setLinearCurve(config->ignitionLoadBins, 20, 120, 1);

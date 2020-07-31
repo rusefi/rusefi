@@ -64,7 +64,7 @@ public class IncomingDataBuffer {
             log.debug(loggingPrefix + "Got packet size " + packetSize);
         if (packetSize < 0)
             return null;
-        if (!allowLongResponse && packetSize > Math.max(BinaryProtocolCommands.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
+        if (!allowLongResponse && packetSize > Math.max(Fields.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
             return null;
 
         isTimeout = waitForBytes(loggingPrefix + msg + " body", start, packetSize + 4);
@@ -150,18 +150,21 @@ public class IncomingDataBuffer {
     }
 
     public int getByte() throws EOFException {
+        streamStats.onArrived(1);
         synchronized (cbb) {
             return cbb.getByte();
         }
     }
 
     public int getShort() throws EOFException {
+        streamStats.onArrived(2);
         synchronized (cbb) {
             return cbb.getShort();
         }
     }
 
     public int getInt() throws EOFException {
+        streamStats.onArrived(4);
         synchronized (cbb) {
             return cbb.getInt();
         }
@@ -171,6 +174,7 @@ public class IncomingDataBuffer {
         synchronized (cbb) {
             cbb.get(packet);
         }
+        streamStats.onArrived(packet.length);
     }
 
     public byte readByte() throws IOException {
@@ -201,7 +205,7 @@ public class IncomingDataBuffer {
     public void read(byte[] packet) throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "read", System.currentTimeMillis(), packet.length);
         if (isTimeout)
-            throw new EOFException("Timeout while waiting " + packet.length);
+            throw new EOFException("Timeout while waiting for " + packet.length + " byte(s)");
         getData(packet);
     }
 }

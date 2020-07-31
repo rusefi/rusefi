@@ -49,8 +49,8 @@ public:
     void step(bool positive) override;
 
 private:
-    DcMotor* m_motorPhaseA;
-    DcMotor* m_motorPhaseB;
+    DcMotor* m_motorPhaseA = nullptr;
+    DcMotor* m_motorPhaseB = nullptr;
 
     uint8_t m_phase = 0;
 };

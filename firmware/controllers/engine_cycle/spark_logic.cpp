@@ -191,8 +191,6 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	{
 		event->sparksRemaining--;
 
-		efitick_t nowNt = getTimeNowNt();
-
 		efitick_t nextDwellStart = nowNt + engine->engineState.multispark.delay;
 		efitick_t nextFiring = nextDwellStart + engine->engineState.multispark.dwell;
 

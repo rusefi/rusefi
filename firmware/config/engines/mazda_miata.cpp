@@ -243,11 +243,11 @@ static void setMiata1994_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->crankingChargeAngle = 70;
 
 #if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
-	copyFuelTable(miataNA8_maf_fuel_table, config->fuelTable);
+	MEMCPY(config->fuelTable, miataNA8_maf_fuel_table);
 #endif
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(miataNA8_maf_advance_table, config->ignitionTable);
+	MEMCPY(config->ignitionTable, miataNA8_maf_advance_table);
 #endif
 
 //	engineConfiguration->triggerSimulatorPins[0] = GPIOD_2; // 2G - YEL/BLU
@@ -335,10 +335,10 @@ void setMiata1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 1.839;
 
 #if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
-	copyFuelTable(miataNA8_maf_fuel_table, config->fuelTable);
+	MEMCPY(config->fuelTable, miataNA8_maf_fuel_table);
 #endif
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(miataNA8_maf_advance_table, config->ignitionTable);
+	MEMCPY(config->ignitionTable, miataNA8_maf_advance_table);
 #endif
 
 	// upside down

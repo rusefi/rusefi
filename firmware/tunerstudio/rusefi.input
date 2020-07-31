@@ -354,7 +354,6 @@ enable2ndByteCanID = false
 ;
 
 ; todo: generate this section programatically
-	LM_ALPHA_N = {1},
 	LM_SPEED_DENSITY = {3},
 	LM_REAL_MAF = {4}
 
@@ -1077,6 +1076,7 @@ gaugeCategory = Sensors - Raw
    entry = intake,          @@GAUGE_NAME_IAT@@,         float,  "%.2f"
    entry = oilPressure,		"Oil Press",   float,  "%.1f"
    entry = TPSValue,        @@GAUGE_NAME_TPS@@,         float,  "%.2f"
+   entry = TPS2Value,       @@GAUGE_NAME_TPS2@@,        float, "%.2f"
    entry = MAFValue,        @@GAUGE_NAME_MAF@@,         float,  "%.2f"
    entry = MAPValue,        @@GAUGE_NAME_MAP@@,         float,  "%.1f"
    entry = AFRValue,        @@GAUGE_NAME_AFR@@,         float,  "%.2f"
@@ -1480,7 +1480,10 @@ cmd_dfu         			 = "w\x00\xba\x00\x00"
 cmd_set_engine_type_microRusEFI_Miata_NB2_MAP		= "w\x00\x30@@ET_MRE_MIATA_NB2_MAP_16_hex@@"
 
 ; MRE_MIATA_NA6 12
-cmd_set_engine_type_microRusEFI_Miata_NA6			= "w\x00\x30@@ET_MRE_MIATA_NA6_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NA6_VAF			= "w\x00\x30@@ET_MRE_MIATA_NA6_VAF_16_hex@@"
+
+cmd_set_engine_type_microRusEFI_Miata_NA6_MAP			= "w\x00\x30@@ET_MRE_MIATA_NA6_MAP_16_hex@@"
+
 
 ; MRE_MIATA_NB2_MAF = 15
 cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "w\x00\x30@@ET_MRE_MIATA_NB2_MAF_16_hex@@"
@@ -1505,7 +1508,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 [UserDefined]
 	dialog = fuelTableBottomDialog, "", card
-		panel = fuelTableTPSTbl, Center, {fuelAlgorithm==LM_ALPHA_N}
 		panel = fuelTableELTbl, Center
 
 	dialog = fuelTableRight, "", yAxis
@@ -2934,6 +2936,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",     cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
 
+		commandButton = "microRusEFI Miata NA6 VAF",   cmd_set_engine_type_microRusEFI_Miata_NA6_VAF@@if_show_microRusEFI_presets
+		commandButton = "microRusEFI Miata NA6 MAP",   cmd_set_engine_type_microRusEFI_Miata_NA6_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEfi Miata NB2 MAP",   cmd_set_engine_type_microRusEFI_Miata_NB2_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NB2 MAF",   cmd_set_engine_type_microRusEFI_Miata_NB2_MAF@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Defaults",		   cmd_set_engine_type_microRusEFI_Defaults@@if_show_microRusEFI_presets
