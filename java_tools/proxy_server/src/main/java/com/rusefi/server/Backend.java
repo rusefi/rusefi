@@ -271,15 +271,23 @@ public class Backend implements Closeable {
         JsonArrayBuilder builder = Json.createArrayBuilder();
         List<ApplicationConnectionState> applications = getApplications();
         for (ApplicationConnectionState application : applications) {
-            JsonObject applicationObject = Json.createObjectBuilder()
+            JsonObjectBuilder b = Json.createObjectBuilder()
                     .add(UserDetails.USER_ID, application.getUserDetails().getUserId())
                     .add(UserDetails.USERNAME, application.getUserDetails().getUserName())
                     .add(AGE, application.getBirthday().getDuration())
-                    .add(MAX_PACKET_GAP, application.getClientStream().getStreamStats().getMaxPacketGap())
+                    ;
+            JsonObject applicationObject = addStreamStats(b, application.getClientStream())
                     .build();
             builder.add(applicationObject);
         }
         return new RsJson(builder.build());
+    }
+
+    private static JsonObjectBuilder addStreamStats(JsonObjectBuilder builder, IoStream stream) {
+        return builder
+                .add(MAX_PACKET_GAP, stream.getStreamStats().getMaxPacketGap())
+                .add("in", stream.getBytesIn())
+                .add("out", stream.getBytesOut());
     }
 
     @NotNull
@@ -303,8 +311,8 @@ public class Backend implements Closeable {
                     .add(ControllerInfo.SIGNATURE, client.getSessionDetails().getControllerInfo().getSignature())
                     .add(ControllerInfo.VEHICLE_NAME, client.getSessionDetails().getControllerInfo().getVehicleName())
                     .add(ControllerInfo.ENGINE_MAKE, client.getSessionDetails().getControllerInfo().getEngineMake())
-                    .add(ControllerInfo.ENGINE_CODE, client.getSessionDetails().getControllerInfo().getEngineCode())
-                    .add(MAX_PACKET_GAP, client.getStream().getStreamStats().getMaxPacketGap());
+                    .add(ControllerInfo.ENGINE_CODE, client.getSessionDetails().getControllerInfo().getEngineCode());
+            objectBuilder = addStreamStats(objectBuilder, client.getStream());
             if (owner != null) {
                 objectBuilder = objectBuilder.add(ProxyClient.OWNER, owner.getUserName());
             }

@@ -7,6 +7,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.io.serial.AbstractIoStream;
+import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ import static com.devexperts.logging.Logging.getLogging;
  * <p>
  * 5/11/2015.
  */
-public interface IoStream extends WriteStream, Closeable {
+public interface IoStream extends WriteStream, Closeable, StreamStatistics {
     Logging log = getLogging(IoStream.class);
 
     static String printHexBinary(byte[] data) {
