@@ -14,8 +14,7 @@ import org.junit.Test;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * from IDEA this unit test needs to be executed with "empty" working directory
@@ -67,6 +66,19 @@ public class TuneReadWriteTest {
         Constant flow = tuneFromBinary.findPage().findParameter("injector_flow");
         assertNotNull(flow);
         assertEquals("2", flow.getDigits());
+
+        Constant nonEmptyFormula = tuneFromBinary.findPage().findParameter("fsioFormulas1");
+        assertNotNull(nonEmptyFormula);;
+
+        /**
+         * Empty strings values should be omitted from the tune
+         */
+        Constant emptyFormula = tuneFromBinary.findPage().findParameter("fsioFormulas2");
+        assertNull(emptyFormula);;
+
+        Constant enumField = tuneFromBinary.findPage().findParameter("acRelayPin");
+        // quotes are expected
+        assertEquals("\"NONE\"", enumField.getValue());
 
         // and now reading that XML back
         Msq tuneFromFile = Msq.readTune(fileName);
