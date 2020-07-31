@@ -591,15 +591,16 @@ static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int i
 }
 
 static void setTestBug299(EngineTestHelper *eth) {
-	// TODO: switch to mock airmass
-	//eth->persistentConfig.engineConfiguration.fuelAlgorithm = LM_PLAIN_MAF;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(eth);
+	EXPECT_CALL(eth->mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
 
 
 	eth->assertRpm(0, "RPM=0");
-	ASSERT_EQ( 0,  getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE)) << "setTestBug299 EL";
+
 	eth->fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth->assertRpm(0, "setTestBug299: RPM#1");
