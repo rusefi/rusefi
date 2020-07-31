@@ -150,18 +150,21 @@ public class IncomingDataBuffer {
     }
 
     public int getByte() throws EOFException {
+        streamStats.onArrived(1);
         synchronized (cbb) {
             return cbb.getByte();
         }
     }
 
     public int getShort() throws EOFException {
+        streamStats.onArrived(2);
         synchronized (cbb) {
             return cbb.getShort();
         }
     }
 
     public int getInt() throws EOFException {
+        streamStats.onArrived(4);
         synchronized (cbb) {
             return cbb.getInt();
         }
@@ -171,6 +174,7 @@ public class IncomingDataBuffer {
         synchronized (cbb) {
             cbb.get(packet);
         }
+        streamStats.onArrived(packet.length);
     }
 
     public byte readByte() throws IOException {

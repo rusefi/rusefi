@@ -3,11 +3,13 @@ package com.rusefi.io.serial;
 import com.rusefi.io.IoStream;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AbstractIoStream implements IoStream {
     private boolean isClosed;
 
     protected StreamStats streamStats = new StreamStats();
+    private final AtomicInteger bytesOut = new AtomicInteger();
 
     @Override
     public StreamStats getStreamStats() {
@@ -17,6 +19,11 @@ public abstract class AbstractIoStream implements IoStream {
     @Override
     public void close() {
         isClosed = true;
+    }
+
+    @Override
+    public void write(byte[] bytes) throws IOException {
+        bytesOut.addAndGet(bytes.length);
     }
 
     @Override
@@ -31,6 +38,7 @@ public abstract class AbstractIoStream implements IoStream {
     public class StreamStats {
         private long previousPacketArrivalTime;
         private int maxPacketGap;
+        private final AtomicInteger totalBytesArrived = new AtomicInteger();
 
         public long getPreviousPacketArrivalTime() {
             return previousPacketArrivalTime;
@@ -50,5 +58,17 @@ public abstract class AbstractIoStream implements IoStream {
             }
             previousPacketArrivalTime = now;
         }
+
+        public void onArrived(int length) {
+            totalBytesArrived.addAndGet(length);
+        }
+    }
+
+    public int getBytesIn() {
+        return streamStats.totalBytesArrived.get();
+    }
+    
+    public int getBytesOut() {
+        return bytesOut.get();
     }
 }
