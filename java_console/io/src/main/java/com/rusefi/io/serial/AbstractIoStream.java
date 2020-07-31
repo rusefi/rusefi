@@ -5,7 +5,7 @@ import com.rusefi.io.IoStream;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class AbstractIoStream implements IoStream, StreamStatistics {
+public abstract class AbstractIoStream implements IoStream {
     private boolean isClosed;
 
     protected StreamStats streamStats = new StreamStats();
