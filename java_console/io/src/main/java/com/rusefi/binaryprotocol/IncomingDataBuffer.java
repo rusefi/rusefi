@@ -64,7 +64,7 @@ public class IncomingDataBuffer {
             log.debug(loggingPrefix + "Got packet size " + packetSize);
         if (packetSize < 0)
             return null;
-        if (!allowLongResponse && packetSize > Math.max(BinaryProtocolCommands.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
+        if (!allowLongResponse && packetSize > Math.max(Fields.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
             return null;
 
         isTimeout = waitForBytes(loggingPrefix + msg + " body", start, packetSize + 4);

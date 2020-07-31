@@ -85,6 +85,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     public static String findCommand(byte command) {
         switch (command) {
+            case Fields.TS_COMMAND_F:
+                return "PROTOCOL";
             case Fields.TS_CRC_CHECK_COMMAND:
                 return "CRC_CHECK";
             case Fields.TS_BURN_COMMAND:
@@ -352,10 +354,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 return null;
 
             int remainingSize = image.getSize() - offset;
-            int requestSize = Math.min(remainingSize, BLOCKING_FACTOR);
+            int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
 
             byte packet[] = new byte[7];
-            packet[0] = COMMAND_READ;
+            packet[0] = Fields.TS_READ_COMMAND;
             putShort(packet, 1, 0); // page
             putShort(packet, 3, swap16(offset));
             putShort(packet, 5, swap16(requestSize));
@@ -454,9 +456,9 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     public void writeData(byte[] content, Integer offset, int size) {
-        if (size > BLOCKING_FACTOR) {
-            writeData(content, offset, BLOCKING_FACTOR);
-            writeData(content, offset + BLOCKING_FACTOR, size - BLOCKING_FACTOR);
+        if (size > Fields.BLOCKING_FACTOR) {
+            writeData(content, offset, Fields.BLOCKING_FACTOR);
+            writeData(content, offset + Fields.BLOCKING_FACTOR, size - Fields.BLOCKING_FACTOR);
             return;
         }
 

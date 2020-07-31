@@ -159,9 +159,9 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 stream.sendPacket((TS_OK + "rusEFI proxy").getBytes());
             } else if (command == COMMAND_CRC_CHECK_COMMAND) {
                 handleCrc(linkManager, stream);
-            } else if (command == COMMAND_PAGE) {
+            } else if (command == Fields.TS_PAGE_COMMAND) {
                 stream.sendPacket(TS_OK.getBytes());
-            } else if (command == COMMAND_READ) {
+            } else if (command == Fields.TS_READ_COMMAND) {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 handleRead(linkManager, dis, stream);
             } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
