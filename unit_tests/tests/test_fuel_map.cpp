@@ -38,9 +38,7 @@ TEST(misc, testFuelMap) {
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel 1\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	//float baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
-	float baseFuel = 1234;
-	ASSERT_NEAR(5.3679, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX), EPS4D) << "base fuel";
+	ASSERT_NEAR(5.3679, getRunningFuel(5 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D) << "base fuel";
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
@@ -74,9 +72,6 @@ TEST(misc, testFuelMap) {
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel 2\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	//baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
-	baseFuel = 1234;
-	EXPECT_EQ(baseFuel, 1005);
 
 	// Check that runningFuel corrects appropriately
 	EXPECT_EQ( 42,  getRunningFuel(1 PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
