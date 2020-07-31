@@ -55,7 +55,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     public void start(LinkManager linkManager) {
         try {
-        start(linkManager, DEFAULT_PROXY_PORT, Listener.empty(), new Context());
+            start(linkManager, DEFAULT_PROXY_PORT, Listener.empty(), new Context());
         } catch (IOException e) {
             log.error("Error starting local proxy", e);
         }
@@ -184,7 +184,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 BinaryProtocolState binaryProtocolState = linkManager.getBinaryProtocolState();
                 byte[] currentOutputs = binaryProtocolState.getCurrentOutputs();
                 if (currentOutputs != null)
-                    System.arraycopy(currentOutputs, 1 + offset, response, 1, count);
+                    System.arraycopy(currentOutputs, offset, response, 1, count);
                 stream.sendPacket(response);
             } else if (command == Fields.TS_GET_TEXT) {
                 // todo: relay command
