@@ -53,7 +53,7 @@ public class EnumIniField extends IniField {
 
         if (ordinal >= enums.size())
             throw new IllegalStateException(ordinal + " in " + getName());
-        return enums.get(ordinal);
+        return "\"" + enums.get(ordinal) + "\"";
     }
 
     @NotNull
