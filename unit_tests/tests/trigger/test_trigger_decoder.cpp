@@ -592,7 +592,7 @@ static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int i
 
 static void setTestBug299(EngineTestHelper *eth) {
 	// TODO: switch to mock airmass
-	eth->persistentConfig.engineConfiguration.fuelAlgorithm = LM_PLAIN_MAF;
+	//eth->persistentConfig.engineConfiguration.fuelAlgorithm = LM_PLAIN_MAF;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(eth);
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
