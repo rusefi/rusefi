@@ -206,6 +206,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         byte first = in.readByte(ioTimeout);
         if (first == COMMAND_PROTOCOL) {
             protocolCommandHandler.handle();
+            return 0;
         }
         return first * 256 + in.readByte(ioTimeout);
     }

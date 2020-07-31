@@ -51,6 +51,7 @@ public class BinaryProtocolProxy {
             byte firstByte = clientStream.getDataBuffer().readByte(timeoutMs);
             if (firstByte == COMMAND_PROTOCOL) {
                 clientStream.write(TS_PROTOCOL.getBytes());
+                clientStream.flush();
                 continue;
             }
             BinaryProtocolServer.Packet clientRequest = readClientRequest(clientStream.getDataBuffer(), firstByte);

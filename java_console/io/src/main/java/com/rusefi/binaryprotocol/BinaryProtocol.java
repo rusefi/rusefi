@@ -101,8 +101,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 return "WRITE_CHUNK";
             case Fields.TS_OUTPUT_COMMAND:
                 return "TS_OUTPUT_COMMAND";
+            case Fields.TS_RESPONSE_OK:
+                return "TS_RESPONSE_OK";
             default:
-                return "command " + (char) +command + "/" + command;
+                return "command " + (char) command + "/" + command;
         }
     }
 

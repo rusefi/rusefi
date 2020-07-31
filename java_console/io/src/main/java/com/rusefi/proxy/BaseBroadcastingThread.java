@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.net.Socket;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.io.tcp.BinaryProtocolServer.getPacketLength;
-import static com.rusefi.io.tcp.BinaryProtocolServer.readPromisedBytes;
 import static com.rusefi.shared.FileUtil.close;
 
 public class BaseBroadcastingThread {
@@ -38,10 +36,10 @@ public class BaseBroadcastingThread {
                     } else {
                         ioTimeout = context.consecutivePacketTimeout();
                     }
-                    int length = getPacketLength(in, () -> {
+                    int length = BinaryProtocolServer.getPacketLength(in, () -> {
                         throw new UnsupportedOperationException();
                     }, ioTimeout);
-                    BinaryProtocolServer.Packet packet = readPromisedBytes(in, length);
+                    BinaryProtocolServer.Packet packet = BinaryProtocolServer.readPromisedBytes(in, length);
                     byte[] payload = packet.getPacket();
 
                     byte command = payload[0];
