@@ -205,7 +205,7 @@ public class IncomingDataBuffer {
     public void read(byte[] packet) throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "read", System.currentTimeMillis(), packet.length);
         if (isTimeout)
-            throw new EOFException("Timeout while waiting " + packet.length);
+            throw new EOFException("Timeout while waiting for " + packet.length + " byte(s)");
         getData(packet);
     }
 }
