@@ -357,7 +357,6 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
-	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 
 	/**
 	 * Stage 0 we only have OEM TPS switch
@@ -415,8 +414,6 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->isHip9011Enabled = false;
 	engineConfiguration->isSdCardEnabled = true;
-
-	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 #endif /* BOARD_TLE8888_COUNT */
 }
 
@@ -502,7 +499,6 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fsioOutputPins[0] = GPIOA_15;
 	// TLE8888_PIN_24: "43 - GP Out 4"
 	engineConfiguration->fsioOutputPins[1] = TLE8888_PIN_24;
-
 
 #endif /* BOARD_TLE8888_COUNT */
 }

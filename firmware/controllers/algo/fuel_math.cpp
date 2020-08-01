@@ -197,39 +197,24 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	ENGINE(engineState.tpsAccelEnrich) = tpsAccelEnrich;
 
-	floatms_t baseFuel;
+	// airmass modes - get airmass first, then convert to fuel
+	auto model = getAirmassModel(PASS_ENGINE_PARAMETER_SIGNATURE);
+	efiAssert(CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
 
-	if ((CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) ||
-			(engineConfiguration->fuelAlgorithm == LM_REAL_MAF) ||
-			(engineConfiguration->fuelAlgorithm == LM_ALPHA_N_2) ||
-			(engineConfiguration->fuelAlgorithm == LM_MOCK)) {
-		// airmass modes - get airmass first, then convert to fuel
-		auto model = getAirmassModel(PASS_ENGINE_PARAMETER_SIGNATURE);
-		efiAssert(CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
+	auto airmass = model->getAirmass(rpm);
 
-		auto airmass = model->getAirmass(rpm);
+	// The airmass mode will tell us how to look up AFR - use the provided Y axis value
+	float targetAfr = afrMap.getValue(rpm, airmass.EngineLoadPercent);
 
-		// The airmass mode will tell us how to look up AFR - use the provided Y axis value
-		float targetAfr = afrMap.getValue(rpm, airmass.EngineLoadPercent);
+	// Plop some state for others to read
+	ENGINE(engineState.targetAFR) = targetAfr;
+	ENGINE(engineState.sd.airMassInOneCylinder) = airmass.CylinderAirmass;
+	ENGINE(engineState.fuelingLoad) = airmass.EngineLoadPercent;
+	// TODO: independently selectable ignition load mode
+	ENGINE(engineState.ignitionLoad) = airmass.EngineLoadPercent;
 
-		// Plop some state for others to read
-		ENGINE(engineState.targetAFR) = targetAfr;
-		ENGINE(engineState.sd.airMassInOneCylinder) = airmass.CylinderAirmass;
-		ENGINE(engineState.fuelingLoad) = airmass.EngineLoadPercent;
-		// TODO: independently selectable ignition load mode
-		ENGINE(engineState.ignitionLoad) = airmass.EngineLoadPercent;
-
-		baseFuel = getInjectionDurationForAirmass(airmass.CylinderAirmass, targetAfr PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN baseFuel", 0);
-	} else {
-		float tps = Sensor::get(SensorType::Tps1).value_or(0);
-		ENGINE(engineState.fuelingLoad) = tps;
-		// TODO: independently selectable ignition load mode
-		ENGINE(engineState.ignitionLoad) = tps;
-
-		baseFuel = getBaseTableFuel(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN bt baseFuel", 0);
-	}
+	float baseFuel = getInjectionDurationForAirmass(airmass.CylinderAirmass, targetAfr PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN baseFuel", 0);
 
 	engine->engineState.baseFuel = baseFuel;
 
@@ -444,27 +429,6 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 	
 	// todo: add other fuel cut-off checks here (possibly cutFuelOnHardLimit?)
 	return fuelCorr;
-}
-
-/**
- * @return Fuel injection duration injection as specified in the fuel map, in milliseconds
- */
-floatms_t getBaseTableFuel(int rpm, float engineLoad) {
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	if (cisnan(engineLoad)) {
-		warning(CUSTOM_NAN_ENGINE_LOAD_2, "NaN engine load");
-		return 0;
-	}
-	floatms_t result = fuelMap.getValue(rpm, engineLoad);
-	if (cisnan(result)) {
-		// result could be NaN in case of invalid table, like during initialization
-		result = 0;
-		warning(CUSTOM_ERR_FUEL_TABLE_NOT_READY, "baseFuel table not ready");
-	}
-	return result;
-#else
-	return 0;
-#endif
 }
 
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

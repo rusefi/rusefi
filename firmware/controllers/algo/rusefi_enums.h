@@ -428,10 +428,6 @@ typedef enum {
  */
 typedef enum {
 	/**
-	 * raw Mass Air Flow sensor value algorithm. http://en.wikipedia.org/wiki/Mass_flow_sensor
-	 */
-	LM_PLAIN_MAF = 0,
-	/**
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
 	 */

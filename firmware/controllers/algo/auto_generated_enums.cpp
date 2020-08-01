@@ -729,8 +729,6 @@ case LM_ALPHA_N_2:
   return "LM_ALPHA_N_2";
 case LM_MOCK:
   return "LM_MOCK";
-case LM_PLAIN_MAF:
-  return "LM_PLAIN_MAF";
 case LM_REAL_MAF:
   return "LM_REAL_MAF";
 case LM_SPEED_DENSITY:

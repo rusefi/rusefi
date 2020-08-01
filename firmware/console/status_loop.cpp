@@ -286,7 +286,7 @@ void updateDevConsoleState(void) {
 
 static void showFuelInfo2(float rpm, float engineLoad) {
 
-	float baseFuelMs = getBaseTableFuel((int) rpm, engineLoad);
+	float baseFuelMs = 0; // TODO 
 
 	float magicAir = SpeedDensityBase::getAirmassImpl(1, 100, convertCelsiusToKelvin(20) PASS_ENGINE_PARAMETER_SUFFIX);
 
