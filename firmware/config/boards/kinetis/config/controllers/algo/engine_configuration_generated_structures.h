@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Aug 01 01:20:16 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Jul 28 04:53:44 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -832,7 +832,7 @@ struct engine_configuration_s {
 	 */
 	float knockBandCustom;
 	/**
-	 * On Single Coil or Wasted Spark setups you have to lower dwell at high RPM
+	 * On Single-Coil or Wasted Spark setups you have to lower dwell at high RPM
 	 * offset 332
 	 */
 	float sparkDwellRpmBins[DWELL_CURVE_SIZE];
@@ -3533,4 +3533,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Aug 01 01:20:16 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Jul 28 04:53:44 UTC 2020
