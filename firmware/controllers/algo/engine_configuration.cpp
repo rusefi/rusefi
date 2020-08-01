@@ -979,7 +979,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionOffset = 0;
 	engineConfiguration->sensorChartFrequency = 20;
 
-	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
+	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 
 	engineConfiguration->vbattDividerCoeff = ((float) (15 + 65)) / 15;
 

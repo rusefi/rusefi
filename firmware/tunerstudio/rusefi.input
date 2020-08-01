@@ -355,7 +355,6 @@ enable2ndByteCanID = false
 ;
 
 ; todo: generate this section programatically
-	LM_PLAIN_MAF = {0},
 	LM_SPEED_DENSITY = {3},
 	LM_REAL_MAF = {4}
 
@@ -705,16 +704,6 @@ enable2ndByteCanID = false
 
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
-
-   table = fuelTableMAFTbl,  fuelTableMAFMap,  "Fuel Table",   1
-   	  topicHelp = "fuelHelp"
-      ;       constant, variable
-      xBins       = fuelRpmBins,  RPMValue
-      yBins       = fuelLoadBins,  MAFValue
-      zBins       = fuelTable
-;      gridHeight  = 2.0
-      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
-      upDownLabel = "(RICHER)", "(LEANER)"
 
    table = fuelTableTPSTbl,  fuelTableTPSMap,  "Fuel Table",   1
    		topicHelp = "fuelHelp"
@@ -1528,7 +1517,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 [UserDefined]
 	dialog = fuelTableBottomDialog, "", card
-		panel = fuelTableMAFTbl, Center, {fuelAlgorithm==LM_PLAIN_MAF}
 		panel = fuelTableELTbl, Center
 
 	dialog = fuelTableRight, "", yAxis
