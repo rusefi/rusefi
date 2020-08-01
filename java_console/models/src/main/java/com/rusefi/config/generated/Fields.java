@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 30 19:34:58 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 01 00:10:06 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1295,7 +1295,7 @@ public class Fields {
 	public static final char TS_IO_TEST_COMMAND = 'w';
 	public static final char TS_ONLINE_PROTOCOL = 'z';
 	public static final char TS_OUTPUT_COMMAND = 'O';
-	public static final int TS_OUTPUT_SIZE = 248;
+	public static final int TS_OUTPUT_SIZE = 288;
 	public static final char TS_PAGE_COMMAND = 'P';
 	public static final char TS_PERF_TRACE_BEGIN = 'r';
 	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
@@ -1305,7 +1305,7 @@ public class Fields {
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_OK = 0;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.07.30.all.3740911119";
+	public static final String TS_SIGNATURE = "rusEFI 2020.08.01.all.3141033230";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
