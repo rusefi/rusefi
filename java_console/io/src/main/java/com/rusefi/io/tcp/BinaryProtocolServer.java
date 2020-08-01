@@ -210,38 +210,43 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
     }
 
     private void handleSD_W_command(TcpIoStream stream, Packet packet, byte[] payload) throws IOException {
+        log.info("TS_SD: 'w' " + IoStream.printHexBinary(packet.packet));
         if (payload[1] == 0 && payload[2] == 0x11) {
 
             if (payload[6] == 1) {
-                log.info("TS_SD: do command " + payload[payload.length - 1]);
-                byte[] response = new byte[1];
-                stream.sendPacket(response);
-                return;
-            }
-
-            if (payload[6] == 2) {
+                log.info("TS_SD: do command, command=" + payload[payload.length - 1]);
+                sendOkResponse(stream);
+            } else if (payload[6] == 2) {
                 log.info("TS_SD: read directory command " + payload[payload.length - 1]);
-                byte[] response = new byte[1];
-                stream.sendPacket(response);
-                return;
+                sendOkResponse(stream);
+            } else if (payload[6] == 6) {
+                log.info("TS_SD: remove file command " + Arrays.toString(packet.packet));
+                sendOkResponse(stream);
+            } else if (payload[6] == 8) {
+                log.info("TS_SD: read compressed file command " + Arrays.toString(packet.packet));
+                ByteBuffer bb = ByteBuffer.wrap(payload, 7, 8);
+                bb.order(ByteOrder.BIG_ENDIAN);
+                int sectorNumber = bb.getInt();
+                int sectorCount = bb.getInt();
+                log.info("TS_SD: sectorNumber=" + sectorNumber + ", sectorCount=" + sectorCount);
+                sendOkResponse(stream);
             }
+        } else {
+            log.info("TS_SD: Got unexpected w " + IoStream.printHexBinary(packet.packet));
         }
-        log.info("TS_SD: Got unexpected w " + Arrays.toString(packet.packet));
     }
 
     private void handleSD_R_command(TcpIoStream stream, Packet packet, byte[] payload) throws IOException {
+        log.info("TS_SD: 'r' " + IoStream.printHexBinary(packet.packet));
         if (payload[1] == 0 && payload[2] == 7) {
             log.info("TS_SD: RTC read command");
             byte[] response = new byte[9];
             stream.sendPacket(response);
-            return;
-        }
-        if (payload[1] == 0 && payload[2] == 0x11) {
+        } else if (payload[1] == 0 && payload[2] == 0x11) {
             ByteBuffer bb = ByteBuffer.wrap(payload, 5, 2);
             bb.order(ByteOrder.BIG_ENDIAN);
             int bufferLength = bb.getShort();
-            log.info("TS_SD: fetch buffer command " + bufferLength);
-
+            log.info("TS_SD: fetch buffer command, length=" + bufferLength);
 
             byte[] response = new byte[1 + bufferLength];
 
@@ -261,10 +266,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
                 response[9] = 0;
                 response[10] = 1; // number of files
-
-
             } else {
-
                 System.arraycopy("hello123mlq".getBytes(), 0, response, 1, 11);
                 response[1 + 11] = 1; // file
 
@@ -273,15 +275,37 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 response[1 + 24] = (byte) 0; // size
                 response[1 + 25] = (byte) 0; // size
 
-                response[1 + 30] = (byte) 128;
-                response[1 + 31] = (byte) 4; // size
+                response[1 + 29] = (byte) 128;
+                response[1 + 30] = (byte) 1;
+                response[1 + 31] = (byte) 0; // size
 
             }
             stream.sendPacket(response);
-            return;
-        }
+        } else if (payload[1] == 0 && payload[2] == 0x14) {
+            ByteBuffer bb = ByteBuffer.wrap(payload, 3, 4);
+            bb.order(ByteOrder.BIG_ENDIAN);
+            int blockNumber = bb.getShort();
+            int suffix = bb.getShort();
+            log.info("TS_SD: fetch data command blockNumber=" + blockNumber + ", requesting=" + suffix);
 
-        log.info("TS_SD: Got unexpected r " + Arrays.toString(packet.packet));
+            byte[] response = new byte[1 + 2 + 2048];
+            response[0] = TS_RESPONSE_OK;
+            response[1] = payload[3];
+            response[2] = payload[4];
+
+            // fake data
+            response[3] = payload[3];
+            response[4] = payload[4];
+            stream.sendPacket(response);
+        } else {
+            log.info("TS_SD: Got unexpected r " + IoStream.printHexBinary(packet.packet));
+        }
+    }
+
+    private static void sendOkResponse(TcpIoStream stream) throws IOException {
+        byte[] response = new byte[1];
+        response[0] = TS_RESPONSE_OK;
+        stream.sendPacket(response);
     }
 
     public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler) throws IOException {
