@@ -184,14 +184,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 
 	scheduleMsg(&logger, "configurationVersion=%d", engine->getGlobalConfigurationVersion());
 
-	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
-//		print("line %d (%.2f): ", k, engineConfiguration->fuelKeyBins[k]);
-//		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-//			print("%.2f ", engineConfiguration->fuelTable[k][r]);
-//		}
-//		print("\r\n");
-	}
-
 	scheduleMsg(&logger, "rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
 			engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 
