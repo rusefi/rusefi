@@ -593,7 +593,7 @@ static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int i
 static void setTestBug299(EngineTestHelper *eth) {
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(eth);
 	EXPECT_CALL(eth->mockAirmass, getAirmass(_))
-		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+		.WillRepeatedly(Return(AirmassResult{0.1008001f, 50.0f}));
 
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
@@ -1037,36 +1037,30 @@ TEST(big, testSequential) {
 
 TEST(big, testDifferentInjectionModes) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	setTestBug299(&eth);
-	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
-	// set fuel map values - extract method?
-	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(8, engineLoadIndex);
-	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 40);
-	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 40);
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
 
+	setInjectionMode((int)IM_BATCH PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("injectionMode IM_BATCH", (int)IM_BATCH, (int)engineConfiguration->injectionMode);
-	ASSERT_EQ( 20,  engine->injectionDuration) << "injection while batch";
+	EXPECT_FLOAT_EQ( 20,  engine->injectionDuration) << "injection while batch";
 
 	setInjectionMode((int)IM_SIMULTANEOUS PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 10,  engine->injectionDuration) << "injection while simultaneous";
+	EXPECT_FLOAT_EQ( 10,  engine->injectionDuration) << "injection while simultaneous";
 
 	setInjectionMode((int)IM_SEQUENTIAL PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 40,  engine->injectionDuration) << "injection while IM_SEQUENTIAL";
+	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SEQUENTIAL";
 
 	setInjectionMode((int)IM_SINGLE_POINT PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 40,  engine->injectionDuration) << "injection while IM_SINGLE_POINT";
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testDifferentInjectionModes";
+	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SINGLE_POINT";
+	EXPECT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testDifferentInjectionModes";
 }
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
-	printf("*************************************************** testFuelSchedulerBug299 small to large\r\n");
-
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
