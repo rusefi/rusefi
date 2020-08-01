@@ -360,7 +360,7 @@ static void hipStartupCode(void) {
 	instance.state = READY_TO_INTEGRATE;
 }
 
-static THD_WORKING_AREA(hipTreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(hipThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t hipThread(void *arg) {
 	(void)arg;
@@ -438,7 +438,7 @@ void initHip9011(Logging *sharedLogger) {
 	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
     addConsoleActionF("set_knock_threshold", setKnockThresh);
     addConsoleActionI("set_max_knock_sub_deg", setMaxKnockSubDeg);
-	chThdCreateStatic(hipTreadStack, sizeof(hipTreadStack), NORMALPRIO, (tfunc_t)(void*) hipThread, NULL);
+	chThdCreateStatic(hipThreadStack, sizeof(hipThreadStack), NORMALPRIO, (tfunc_t)(void*) hipThread, NULL);
 }
 
 #endif /* EFI_HIP_9011 */
