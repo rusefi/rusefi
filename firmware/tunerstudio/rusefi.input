@@ -348,6 +348,7 @@ enable2ndByteCanID = false
 
 	; we use this to match logs to tunes
 	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
+    sd_status         = scalar,  U08,    246,  "", 1.0, 0.0
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -1043,6 +1044,11 @@ gaugeCategory = Sensors - Raw
     indicator = { isIgnitionEnabledIndicator}, "no ignition",   "ignition",   yellow, black, white,   black
     indicator = { ind_injection_enabled}, "no injection",   "injection",   yellow, black, white,   black
     indicator = { ind_isTriggerError}, "trigger ok",      "trigger err",       white,  black,  red, black
+
+   indicator = { sd_status & 1}, "No SD", "SD in",             white, black, green, black
+   indicator = { sd_status & 4}, "SD ready", "SD ready",       white, black, green, black
+   indicator = { sd_status & 8}, "SD Log", "SD Log",           white, black, green, black
+   indicator = { sd_status & 16}, "SD Err", "SD Err",           white, black, red, black
     
 	; this is required so that the "config error" feature works in TS 
 	; don't change this line - TS is looking for an indicator with particular text/styling
@@ -1202,6 +1208,9 @@ gaugeCategory = Sensors - Raw
 [Menu]
 
 menuDialog = main
+	menu = "Data Logging"
+		subMenu = std_ms3SdConsole, "Browse / Import SD Card"
+
 	menu = "&Base &Engine"
 		subMenu = engineChars,				"Base engine"
 		subMenu = triggerConfiguration,		"Trigger"
