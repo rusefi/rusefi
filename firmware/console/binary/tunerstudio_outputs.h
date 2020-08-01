@@ -225,7 +225,7 @@ typedef struct {
 	scaled_voltage rawOilPressure;		// 242
 
 	int16_t tuneCrc16; // 244
-	uint8_t unusedAtTheEnd[2]; // we have some unused bytes to allow compatible TS changes
+	uint8_t unusedAtTheEnd[42]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
@@ -233,6 +233,8 @@ typedef struct {
 	}
 
 	/* see also [OutputChannels] in rusefi.input */
+	/* see also TS_OUTPUT_SIZE in rusefi_config.txt */
+
 } TunerStudioOutputChannels;
 
 extern TunerStudioOutputChannels tsOutputChannels;
