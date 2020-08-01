@@ -428,7 +428,6 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->triggerInputPins[1] = GPIOC_6;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
-	engineConfiguration->silentTriggerError = true;
 	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 
 
@@ -446,7 +445,7 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->acIdleExtraOffset = 14;
 	engineConfiguration->idleRpmPid.minValue = 30;
 	engineConfiguration->acIdleExtraMin = 14;
-	engineConfiguration->idleRpmPid.minValue = 70;
+	engineConfiguration->idleRpmPid.maxValue = 70;
 	engineConfiguration->idleRpmPid.periodMs = 40;
 	engineConfiguration->idlerpmpid_iTermMin = -6;
 	engineConfiguration->idlerpmpid_iTermMax = 30;
