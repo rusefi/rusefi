@@ -39,6 +39,7 @@ import static com.rusefi.config.generated.Fields.*;
  */
 
 public class BinaryProtocolServer implements BinaryProtocolCommands {
+    public static final String TEST_FILE = "test_log.mlg.Z";
     private static final Logging log = getLogging(BinaryProtocolServer.class);
     private static final int DEFAULT_PROXY_PORT = 2390;
     public static final String TS_OK = "\0";
@@ -267,6 +268,9 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 response[9] = 0;
                 response[10] = 1; // number of files
             } else {
+                // SD read directory command
+                //
+
                 System.arraycopy("hello123mlq".getBytes(), 0, response, 1, 11);
                 response[1 + 11] = 1; // file
 
@@ -275,9 +279,14 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 response[1 + 24] = (byte) 0; // size
                 response[1 + 25] = (byte) 0; // size
 
-                response[1 + 29] = (byte) 128;
-                response[1 + 30] = (byte) 1;
-                response[1 + 31] = (byte) 0; // size
+                File f = new File(TEST_FILE);
+                int size = (int) f.length();
+
+                IoHelper.putInt(response, 29, IoHelper.swap32(size));
+
+//                response[1 + 29] = (byte) 128;
+//                response[1 + 30] = (byte) 1;
+//                response[1 + 31] = (byte) 0; // size
 
             }
             stream.sendPacket(response);
@@ -296,6 +305,21 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             // fake data
             response[3] = payload[3];
             response[4] = payload[4];
+
+            File f = new File(BinaryProtocolServer.TEST_FILE);
+            FileInputStream fis = new FileInputStream(f);
+            int size = (int) f.length();
+
+
+            int offset = blockNumber * 2048;
+            int len = Math.min(size - offset, 2048);
+
+            if (len > 0) {
+                fis.skip(offset);
+                log.info("TS_SD reading " + offset + " " + len + " of " + size);
+                fis.read(response, 3, len);
+            }
+
             stream.sendPacket(response);
         } else {
             log.info("TS_SD: Got unexpected r " + IoStream.printHexBinary(packet.packet));
