@@ -85,6 +85,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     public static String findCommand(byte command) {
         switch (command) {
+            case Fields.TS_SD_R_COMMAND:
+                return "SD_R_COMMAND";
+            case Fields.TS_SD_W_COMMAND:
+                return "SD_W_COMMAND";
             case Fields.TS_PAGE_COMMAND:
                 return "PAGE";
             case Fields.TS_COMMAND_F:
