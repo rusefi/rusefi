@@ -16,19 +16,6 @@
 #if EFI_PROD_CODE
 #include "can_hw.h"
 #endif
-static const fuel_table_t default_custom_fuel_table = {
-  {1.8,  1.8,  1.65, 1.65, 1.65, 1.65, 1.5,  1.5,   2.025, 1.5,  1.5,  1.5,  1.5},
-  {1.8,  1.8,  1.65, 1.65, 1.65, 1.65, 1.5,  1.5,   2.025, 1.5,  1.5,  1.5,  1.5},
-  {1.95, 1.95, 1.95, 1.8,  2.1,  2.25, 2.34, 2.25,	2.7,   2.7,  2.7,  2.7,  2.7},
-  {2.55, 2.55, 2.55, 2.55, 2.55, 2.55, 2.55, 2.55,	2.4,   2.55, 3,    3,    2.7},
-  {3,    3,    3,    3,    3,    3.3,  3.3,  3.45,	3,     3.3,  3.6,  3.6,  3.3},
-  {3,    3,    3,    3,    3,    3,    3.6,	 4.305,	3.6,   3.6,  3.9,  3.9,  3.3},
-  {3,    3,    3,    3,    3,    3,    3.6,	 3.75 , 3.9,   3.9,  4.2,  4.2,  3.9},
-  {3,    3,    3,    3,    3,    3,    3.6,	 3.9,   4.2,   4.5,  4.5,  4.5,  4.5},
-  {3,    3,    3,    3,    3,    3,    3,    3,     3,     3,    3,    3,    3},
-  {3,    3,    3,    3,    3,    3,    3,    3,     3,     3,    3,    3,    3},
-  {3,    3,    3,    3,    3,    3,    3,    3,     3,     3,    3,    3,    3}
-};
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const ignition_table_t default_custom_timing_table = {
@@ -56,7 +43,6 @@ static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(0,7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	MEMCPY(config->fuelTable, default_custom_fuel_table);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	MEMCPY(config->ignitionTable, default_custom_timing_table);
 #endif
