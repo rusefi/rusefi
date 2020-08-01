@@ -39,7 +39,6 @@
 
 EXTERN_ENGINE;
 
-fuel_Map3D_t fuelMap("fuel");
 fuel_Map3D_t fuelPhaseMap("fl ph");
 extern fuel_Map3D_t veMap;
 extern afr_Map3D_t afrMap;
@@ -347,7 +346,6 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&sdAirmass);
 	INJECT_ENGINE_REFERENCE(&mafAirmass);
 
-	fuelMap.init(config->fuelTable, config->fuelLoadBins, config->fuelRpmBins);
 #if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
 	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
 #endif /* (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT) */
