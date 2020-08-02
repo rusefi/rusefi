@@ -24,12 +24,4 @@ extern "C"
 
 #include "io_pins.h"
 
-/*
- * Stack debugging
- * See also getMaxUsedStack()
- */
-EXTERNC int getRemainingStack(thread_t *otp);
-int CountFreeStackSpace(const void* wabase);
-void validateStack(const char*msg, obd_code_e code, int stackUnusedSize);
-
 #define HAS_OS_ACCESS
