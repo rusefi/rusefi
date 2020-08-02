@@ -1795,20 +1795,24 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = pedalGauges, East
 
     dialog = mc33Dialog, "GDI Dreams" 
-    	field = mc33816_cs,								mc33816_cs
-		field = mc33816_rstb,							mc33816_rstb
-		field = mc33816_flag0,							mc33816_flag0
-		field = "mc33972 SPI",							mc33972spiDevice
-		field = mc33_hvolt,								mc33_hvolt
-		field = mc33_i_boost,							mc33_i_boost
-		field = mc33_i_peak,							mc33_i_peak
-		field = mc33_i_hold,							mc33_i_hold
-		field = mc33_t_max_boost,						mc33_t_max_boost
-		field = mc33_t_peak_off,						mc33_t_peak_off
-		field = mc33_t_peak_tot,						mc33_t_peak_tot
-		field = mc33_t_bypass,							mc33_t_bypass
-		field = mc33_t_hold_off,						mc33_t_hold_off
-		field = mc33_t_hold_tot,						mc33_t_hold_tot
+    	field = "MC33816 cs",							mc33816_cs
+		field = "MC33816 rstb",							mc33816_rstb
+		field = "MC33816 flag0",						mc33816_flag0
+		field = "MC33816 SPI Device",					mc33972spiDevice
+
+		field = "Boost voltage",						mc33_hvolt
+
+		field = "Boost current target",					mc33_i_boost
+		field = "Max boost time (timeout)",				mc33_t_max_boost
+		field = "Boost -> Peak Bypass Time",			mc33_t_peak_off
+
+		field = "Peak current target",					mc33_i_peak
+		field = "Peak time",							mc33_t_peak_tot
+		field = "Peak -> Hold Bypass Time",				mc33_t_bypass
+
+		field = "Hold current target",					mc33_i_hold
+		field = "mc33_t_hold_off ?????",				mc33_t_hold_off
+		field = "Maximum injection duration",			mc33_t_hold_tot
     
 
 ;			Sensor Inputs
