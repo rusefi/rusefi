@@ -24,6 +24,22 @@
 !
 ! each field is declared as
 ! type name;comment
+!
+! Q: how does 'custom' work?
+! A: let's look at
+!  #define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
+!   custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@
+!   can_baudrate_e canBaudRate; set can_baudrate
+!
+! here #define XXX_enum defines enum options in a reusable way
+! @@XXX_e_enum@@ is using the enum options defined above
+!
+! "custom NEW_TYPE_NAME 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@" defines NEW_TYPE_NAME
+! and "can_baudrate_e canBaudRate; set can_baudrate" creates a parameter of that custom type "can_baudrate_e"
+!
+!
+
+
 
 !
 ! this is here so that rusEfi console can access it, too
