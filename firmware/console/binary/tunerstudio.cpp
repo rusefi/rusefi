@@ -119,7 +119,7 @@ static efitimems_t previousWriteReportMs = 0;
 static ts_channel_s tsChannel;
 
 // this thread wants a bit extra stack
-static THD_WORKING_AREA(tunerstudioThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(tunerstudioThreadStack, CONNECTIVITY_THREAD_STACK);
 
 static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
@@ -490,6 +490,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 	int wasReady = false;
 
 	while (true) {
+		validateStack("communication", STACK_USAGE_COMMUNICATION, 128);
+
 		int isReady = sr5IsReady(tsChannel);
 		if (!isReady) {
 			chThdSleepMilliseconds(10);

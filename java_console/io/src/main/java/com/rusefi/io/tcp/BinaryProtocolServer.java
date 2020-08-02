@@ -46,6 +46,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     private final static boolean MOCK_SD_CARD = true;
     private static final int SD_STATUS_OFFSET = 246;
+    private static final int FAST_TRANSFER_PACKET_SIZE = 2048;
 
     public AtomicInteger unknownCommands = new AtomicInteger();
 
@@ -297,22 +298,20 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             int suffix = bb.getShort();
             log.info("TS_SD: fetch data command blockNumber=" + blockNumber + ", requesting=" + suffix);
 
-            byte[] response = new byte[1 + 2 + 2048];
-            response[0] = TS_RESPONSE_OK;
-            response[1] = payload[3];
-            response[2] = payload[4];
 
-            // fake data
-            response[3] = payload[3];
-            response[4] = payload[4];
 
             File f = new File(BinaryProtocolServer.TEST_FILE);
             FileInputStream fis = new FileInputStream(f);
             int size = (int) f.length();
 
 
-            int offset = blockNumber * 2048;
-            int len = Math.min(size - offset, 2048);
+            int offset = blockNumber * FAST_TRANSFER_PACKET_SIZE;
+            int len = Math.max(0, Math.min(size - offset, FAST_TRANSFER_PACKET_SIZE));
+
+            byte[] response = new byte[1 + 2 + len];
+            response[0] = TS_RESPONSE_OK;
+            response[1] = payload[3];
+            response[2] = payload[4];
 
             if (len > 0) {
                 fis.skip(offset);
