@@ -75,8 +75,10 @@ public class TS2C {
             BufferedReader r = readAndScroll(msqFileName, tableName);
             readTable(table, r);
 
+            w.write("static const float hardCoded" + tableName + "[" + size + "][" + size + "] = {\n");
+
             writeTable(w, (loadIndex, rpmIndex) -> table[loadIndex][rpmIndex]);
-            w.write("\r\n\r\n");
+            w.write("};\n\n");
         }
 
         w.write(FINGER_PRINT);
@@ -85,7 +87,7 @@ public class TS2C {
         w.write("\tMEMCPY(config->" + rpmSectionName + ", hardCoded" + rpmSectionName + ");\n");
 
         if (!tableName.equalsIgnoreCase("none")) {
-
+            w.write("\tMEMCPY(config->" + tableName + ", hardCoded" + tableName + ");\n");
         }
 
 

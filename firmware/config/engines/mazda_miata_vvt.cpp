@@ -51,6 +51,7 @@
 #include "fsio_impl.h"
 #include "ego.h"
 #include "thermistors.h"
+#include "mazda_miata_base_maps.h"
 
 EXTERN_CONFIG;
 
@@ -366,6 +367,14 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.iFactor = 0.0001;
 	engineConfiguration->idleRpmPid.dFactor = 5;
 	engineConfiguration->idleRpmPid.periodMs = 10;
+
+	miataNA_setCrankingCycleBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNA_setCrankingFuelBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	miataNA_setCltIdleCorrBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNA_setCltIdleRpmBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNA_setIacCoastingBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 } // end of setMazdaMiataEngineNB2Defaults
 
 // MAZDA_MIATA_2003
