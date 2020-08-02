@@ -741,7 +741,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
-	uint8_t mc33_hvolt;;"v",        1,     0,  0,    100,  0
+	uint8_t mc33_hvolt;;"v",        1,     0,  40,    70,  0
 	uint8_t fsio_visible acIdleExtraMin;+Additional idle PID minValue while A/C is active;"Percent", 1, 0, 0, 255, 0
 
 	uint8_t[2] unusedHere;;"units", 1, 0, -20, 100, 0
