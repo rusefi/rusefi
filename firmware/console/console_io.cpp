@@ -252,7 +252,7 @@ bool isCommandLineConsoleReady(void) {
 
 #if !defined(EFI_CONSOLE_NO_THREAD)
 
-static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(consoleThreadStack, CONNECTIVITY_THREAD_STACK);
 static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("console thread");

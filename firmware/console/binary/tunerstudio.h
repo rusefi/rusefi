@@ -29,6 +29,8 @@ typedef struct {
 
 extern tunerstudio_counters_s tsState;
 
+#define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
+
 /**
  * handle non CRC wrapped command
  */

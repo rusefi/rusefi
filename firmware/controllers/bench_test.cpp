@@ -26,6 +26,7 @@
 #if EFI_ENGINE_CONTROL
 #if !EFI_UNIT_TEST
 
+#include "os_access.h"
 #include "flash_main.h"
 #include "bench_test.h"
 #include "io_pins.h"
@@ -212,6 +213,8 @@ private:
 	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
 		setPeriod(50 /* ms */);
+
+		validateStack("Bench", STACK_USAGE_BENCH, 128);
 
 		// naive inter-thread communication - waiting for a flag
 		if (isBenchTestPending) {
