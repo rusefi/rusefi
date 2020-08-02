@@ -57,6 +57,8 @@ typedef unsigned int time_t;
 #define UTILITY_THREAD_STACK_SIZE 400
 #endif /* UTILITY_THREAD_STACK_SIZE */
 
+#define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
+
 #define EFI_ERROR_CODE 0xffffffff
 
 #if EFI_USE_CCM && defined __GNUC__
@@ -93,9 +95,6 @@ typedef unsigned int time_t;
 #else /* !EFI_USE_CCM */
 #define CCM_OPTIONAL
 #endif /* EFI_USE_CCM */
-
-#define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
-
 
 // 168 ticks in microsecond in case of 168MHz 407
 #define US_TO_NT_MULTIPLIER (CORE_CLOCK / 1000000)
