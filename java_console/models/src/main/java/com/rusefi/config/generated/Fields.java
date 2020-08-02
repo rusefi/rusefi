@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 02 17:27:00 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 02 17:45:38 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -44,7 +44,7 @@ public class Fields {
 	public static final int afterstartHoldTime_offset = 6152;
 	public static final int air_pressure_sensor_config_s_size = 16;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
-	public static final int alignmentFill_at_2109_offset = 2109;
+	public static final int alignmentFill_at_2129_offset = 2129;
 	public static final int alignmentFill_at_4514_offset = 4514;
 	public static final int alternator_antiwindupFreq_offset = 1764;
 	public static final int alternator_derivativeFilterLoss_offset = 1760;
@@ -176,6 +176,7 @@ public class Fields {
 	public static final int camInputs2_offset = 557;
 	public static final int camInputs3_offset = 558;
 	public static final int camInputs4_offset = 559;
+	public static final int can2BaudRate_offset = 2110;
 	public static final int canBaudRate_offset = 2108;
 	public static final int canNbcType_offset = 480;
 	public static final int canReadEnabled_offset = 1464;
@@ -1059,7 +1060,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 91838477;
+	public static final int SIGNATURE_HASH = 785059244;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1308,12 +1309,13 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.08.02.all.91838477";
+	public static final String TS_SIGNATURE = "rusEFI 2020.08.02.all.785059244";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
+	public static final int un1used_former_warmup_target_afr_offset = 2109;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused2432_offset = 2432;
@@ -1334,7 +1336,7 @@ public class Fields {
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_alFIn_offset = 4024;
-	public static final int unused_former_warmup_target_afr_offset = 2112;
+	public static final int unused_former_warmup_target_afr_offset = 2111;
 	public static final int unusedAt712_offset = 712;
 	public static final int unusedAt716_offset = 716;
 	public static final int unusedAt720_offset = 720;
@@ -2167,6 +2169,8 @@ public class Fields {
 	public static final Field THROTTLEPEDALSECONDARYWOTVOLTAGE = Field.create("THROTTLEPEDALSECONDARYWOTVOLTAGE", 2104, FieldType.FLOAT);
 	public static final String[] can_baudrate_e = {"100kbps", "250kbps" , "500kbps", "1Mbps"};
 	public static final Field CANBAUDRATE = Field.create("CANBAUDRATE", 2108, FieldType.INT8, can_baudrate_e);
+	public static final Field UN1USED_FORMER_WARMUP_TARGET_AFR = Field.create("UN1USED_FORMER_WARMUP_TARGET_AFR", 2109, FieldType.INT8);
+	public static final Field CAN2BAUDRATE = Field.create("CAN2BAUDRATE", 2110, FieldType.INT8, can_baudrate_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
 	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2200, FieldType.INT8, adc_channel_e);
 	public static final Field FSIOADC2 = Field.create("FSIOADC2", 2201, FieldType.INT8, adc_channel_e);
@@ -3149,6 +3153,8 @@ public class Fields {
 	THROTTLEPEDALSECONDARYUPVOLTAGE,
 	THROTTLEPEDALSECONDARYWOTVOLTAGE,
 	CANBAUDRATE,
+	UN1USED_FORMER_WARMUP_TARGET_AFR,
+	CAN2BAUDRATE,
 	BOOSTCUTPRESSURE,
 	FSIOADC1,
 	FSIOADC2,

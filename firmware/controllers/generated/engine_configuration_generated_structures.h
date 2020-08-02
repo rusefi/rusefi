@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 02 17:27:00 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 02 17:45:38 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2582,14 +2582,22 @@ struct engine_configuration_s {
 	 */
 	can_baudrate_e canBaudRate;
 	/**
-	 * need 4 byte alignment
 	 * offset 2109
 	 */
-	uint8_t alignmentFill_at_2109[3];
+	uint8_t un1used_former_warmup_target_afr;
 	/**
-	 * offset 2112
+	 * offset 2110
 	 */
-	uint32_t unused_former_warmup_target_afr[5];
+	can_baudrate_e can2BaudRate;
+	/**
+	 * offset 2111
+	 */
+	uint8_t unused_former_warmup_target_afr[18];
+	/**
+	 * need 4 byte alignment
+	 * offset 2129
+	 */
+	uint8_t alignmentFill_at_2129[3];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -3533,4 +3541,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 02 17:27:00 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 02 17:45:38 UTC 2020

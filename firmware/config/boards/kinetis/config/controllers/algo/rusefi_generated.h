@@ -41,7 +41,7 @@
 #define afterstartHoldTime_offset 6152
 #define air_pressure_sensor_config_s_size 16
 #define alignEngineSnifferAtTDC_offset 744
-#define alignmentFill_at_2109_offset 2109
+#define alignmentFill_at_2129_offset 2129
 #define alignmentFill_at_4514_offset 4514
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
@@ -176,6 +176,7 @@
 #define camInputs2_offset 557
 #define camInputs3_offset 558
 #define camInputs4_offset 559
+#define can2BaudRate_offset 2110
 #define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
 #define canBaudRate_offset 2108
@@ -1078,7 +1079,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.08.02
-#define SIGNATURE_HASH 3360130199
+#define SIGNATURE_HASH 3824537910
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1348,12 +1349,13 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.08.02.kin.3360130199"
+#define TS_SIGNATURE "rusEFI 2020.08.02.kin.3824537910"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
 #define twoWireBatchInjection_offset 1476
 #define uartConsoleSerialSpeed_offset 2076
+#define un1used_former_warmup_target_afr_offset 2109
 #define unused1059_offset 3964
 #define unused1476b20_offset 1476
 #define unused2432_offset 2432
@@ -1374,7 +1376,7 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr_offset 2112
+#define unused_former_warmup_target_afr_offset 2111
 #define unusedAt712_offset 712
 #define unusedAt716_offset 716
 #define unusedAt720_offset 720
