@@ -1117,9 +1117,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	#define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@
 	can_baudrate_e canBaudRate; set can_baudrate
+	uint8_t un1used_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
 	can_baudrate_e can2BaudRate;
 
-	uint32_t[5] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
+	uint8_t[18] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
