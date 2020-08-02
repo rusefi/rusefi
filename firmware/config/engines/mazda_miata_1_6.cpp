@@ -101,6 +101,10 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	MEMCPY(config->ignitionTable, mapBased16IgnitionTable);
 #endif
 
+	engineConfiguration->silentTriggerError = false;
+
+	engineConfiguration->manIdlePosition = 34;
+
 	miataNA_setCrankingCycleBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNA_setCrankingFuelBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -108,6 +112,7 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	miataNA_setCltIdleRpmBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNA_setIacCoastingBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setMafDecodingBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNA_setIgnitionTable(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->idle.solenoidFrequency = 160;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
