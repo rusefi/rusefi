@@ -74,7 +74,7 @@ static void sendToPot(Mcp42010Driver *driver, int channel, int value) {
 	spiSend(driver->spi, 1, &word);
 	spiUnselect(driver->spi);
 	spiStop(driver->spi);
-	unlockSpi();
+	unlockSpi(SPI_NONE);
 }
 
 void setPotResistance(Mcp42010Driver *driver, int channel, int resistance) {
