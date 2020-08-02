@@ -52,8 +52,10 @@ static int totalSyncCounter = 0;
 
 #define LOG_INDEX_FILENAME "index.txt"
 
-#define RUSEFI_LOG_PREFIX "rusefi_"
-#define PREFIX_LEN 7
+#define DOT_MLG ".mlg"
+
+#define RUSEFI_LOG_PREFIX "re_"
+#define PREFIX_LEN 3
 #define SHORT_TIME_LEN 13
 
 #define LS_RESPONSE "ls_result"
@@ -69,6 +71,8 @@ static int totalSyncCounter = 0;
 extern const USBConfig msdusbcfg;
 #endif /* HAL_USE_USB_MSD */
 
+#define LOCK_SD_SPI lockSpi(engineConfiguration->sdCardSpiDevice)
+#define UNLOCK_SD_SPI unlockSpi(engineConfiguration->sdCardSpiDevice)
 
 static THD_WORKING_AREA(mmcThreadStack,3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
@@ -145,7 +149,7 @@ static void sdStatistics(void) {
 }
 
 static void incLogFileName(void) {
-	lockSpi(SPI_NONE);
+	LOCK_SD_SPI;
 	memset(&FDCurrFile, 0, sizeof(FIL));						// clear the memory
 	FRESULT err = f_open(&FDCurrFile, LOG_INDEX_FILENAME, FA_READ);				// This file has the index for next log file name
 
@@ -177,20 +181,22 @@ static void incLogFileName(void) {
 	f_write(&FDCurrFile, (void*)data, strlen(data), &result);
 	f_close(&FDCurrFile);
 	scheduleMsg(&logger, "Done %d", logFileIndex);
-	unlockSpi();
+	UNLOCK_SD_SPI;
 }
 
 static void prepareLogFileName(void) {
 	strcpy(logName, RUSEFI_LOG_PREFIX);
-	bool result = dateToStringShort(&logName[PREFIX_LEN]);
 	char *ptr;
+/* TS SD protocol supports only short 8 symbol file names :(
+
+	bool result = dateToStringShort(&logName[PREFIX_LEN]);
 	if (result) {
 		ptr = &logName[PREFIX_LEN + SHORT_TIME_LEN];
 	} else {
+ */
 		ptr = itoa10(&logName[PREFIX_LEN], logFileIndex);
-	}
-	strcat(ptr, ".mlg");
-
+//	}
+	strcat(ptr, DOT_MLG);
 }
 
 /**
@@ -200,13 +206,13 @@ static void prepareLogFileName(void) {
  * so that we can later append to that file
  */
 static void createLogFile(void) {
-	lockSpi(SPI_NONE);
+	LOCK_SD_SPI;
 	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
 	prepareLogFileName();
 
 	FRESULT err = f_open(&FDLogFile, logName, FA_OPEN_ALWAYS | FA_WRITE);				// Create new file
 	if (err != FR_OK && err != FR_EXIST) {
-		unlockSpi();
+		UNLOCK_SD_SPI;
 		sdStatus = SD_STATE_OPEN_FAILED;
 		warning(CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
 		printError("FS mount failed", err);	// else - show error
@@ -215,7 +221,7 @@ static void createLogFile(void) {
 
 	err = f_lseek(&FDLogFile, f_size(&FDLogFile)); // Move to end of the file to append data
 	if (err) {
-		unlockSpi();
+		UNLOCK_SD_SPI;
 		sdStatus = SD_STATE_SEEK_FAILED;
 		warning(CUSTOM_ERR_SD_SEEK_FAILED, "SD: seek failed");
 		printError("Seek error", err);
@@ -223,7 +229,7 @@ static void createLogFile(void) {
 	}
 	f_sync(&FDLogFile);
 	setSdCardReady(true);						// everything Ok
-	unlockSpi();
+	UNLOCK_SD_SPI;
 }
 
 static void removeFile(const char *pathx) {
@@ -231,10 +237,10 @@ static void removeFile(const char *pathx) {
 		scheduleMsg(&logger, "Error: No File system is mounted");
 		return;
 	}
-	lockSpi(SPI_NONE);
+	LOCK_SD_SPI;
 	f_unlink(pathx);
 
-	unlockSpi();
+	UNLOCK_SD_SPI;
 }
 
 int
@@ -262,14 +268,14 @@ static void listDirectory(const char *path) {
 		scheduleMsg(&logger, "Error: No File system is mounted");
 		return;
 	}
-	lockSpi(SPI_NONE);
+	LOCK_SD_SPI;
 
 	DIR dir;
 	FRESULT res = f_opendir(&dir, path);
 
 	if (res != FR_OK) {
 		scheduleMsg(&logger, "Error opening directory %s", path);
-		unlockSpi();
+		UNLOCK_SD_SPI;
 		return;
 	}
 
@@ -295,7 +301,7 @@ static void listDirectory(const char *path) {
 //					(fno.fdate >> 5) & 15, fno.fdate & 31, (fno.ftime >> 11), (fno.ftime >> 5) & 63, fno.fsize,
 //					fno.fname);
 	}
-	unlockSpi();
+	UNLOCK_SD_SPI;
 }
 
 static int errorReported = FALSE; // this is used to report the error only once
@@ -319,7 +325,7 @@ void appendToLog(const char *line, size_t lineLength) {
 	}
 
 	totalLoggedBytes += lineLength;
-	lockSpi(SPI_NONE);
+	LOCK_SD_SPI;
 	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWritten);
 	if (bytesWritten < lineLength) {
 		printError("write error or disk full", err); // error or disk full
@@ -338,7 +344,7 @@ void appendToLog(const char *line, size_t lineLength) {
 		}
 	}
 
-	unlockSpi();
+	UNLOCK_SD_SPI;
 }
 
 /*
@@ -382,12 +388,12 @@ static void MMCmount(void) {
 	}
 
 	// Performs the initialization procedure on the inserted card.
-	lockSpi(SPI_NONE);
+	LOCK_SD_SPI;
 	sdStatus = SD_STATE_CONNECTING;
 	if (mmcConnect(&MMCD1) != HAL_SUCCESS) {
 		sdStatus = SD_STATE_NOT_CONNECTED;
 		warning(CUSTOM_OBD_MMC_ERROR, "Can't connect or mount MMC/SD");
-		unlockSpi();
+		UNLOCK_SD_SPI;
 		return;
 	}
 
@@ -415,7 +421,7 @@ static void MMCmount(void) {
 	//}
 
 
-	unlockSpi();
+	UNLOCK_SD_SPI;
 #if HAL_USE_USB_MSD
 	sdStatus = SD_STATE_MOUNTED;
 	return;
