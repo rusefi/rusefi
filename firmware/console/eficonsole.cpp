@@ -119,18 +119,17 @@ static void sayHello(void) {
 }
 
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
-static uintptr_t CountFreeStackSpace(const void* wabase)
-{
+int CountFreeStackSpace(const void* wabase) {
 	const uint8_t* stackBase = reinterpret_cast<const uint8_t*>(wabase);
 	const uint8_t* stackUsage = stackBase;
 
-	// thread stacks are filled with 0x55
+	// thread stacks are filled with CH_DBG_STACK_FILL_VALUE
 	// find out where that ends - that's the last thing we needed on the stack
-	while(*stackUsage == 0x55) {
+	while (*stackUsage == CH_DBG_STACK_FILL_VALUE) {
 		stackUsage++;
 	}
 
-	return stackUsage - stackBase;
+	return (int)(stackUsage - stackBase);
 }
 #endif
 
@@ -144,15 +143,15 @@ static void cmd_threads(void) {
 
 	scheduleMsg(&logger, "name\twabase\ttime\tfree stack");
 
-	while(tp) {
-		uintptr_t freeBytes = CountFreeStackSpace(tp->wabase);
-		scheduleMsg(&logger, "%s\t%08x\t%lu\t%lu", tp->name, tp->wabase, tp->time, freeBytes);
+	while (tp) {
+		int freeBytes = CountFreeStackSpace(tp->wabase);
+		scheduleMsg(&logger, "%s\t%08x\t%lu\t%d", tp->name, tp->wabase, tp->time, freeBytes);
 
 		tp = chRegNextThread(tp);
 	}
 
-	uintptr_t isrSpace = CountFreeStackSpace(reinterpret_cast<void*>(0x20000000));
-	scheduleMsg(&logger, "isr\t0\t0\t%lu", isrSpace);
+	int isrSpace = CountFreeStackSpace(reinterpret_cast<void*>(0x20000000));
+	scheduleMsg(&logger, "isr\t0\t0\t%d", isrSpace);
 
 #else // CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 
