@@ -1,5 +1,5 @@
 /*
- * os_access.h
+ * @file os_access.h
  *
  * OS access is not part of global.h in order to help separate synchronous code from asynchronous
  *
