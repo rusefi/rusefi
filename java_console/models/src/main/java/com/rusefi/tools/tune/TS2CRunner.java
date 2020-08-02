@@ -16,8 +16,10 @@ public class TS2CRunner {
         TS2C.main(new String[]{tuneFileName, "crankingFuelBins", "crankingFuelCoef"});
 
         TS2C.main(new String[]{tuneFileName, "iacCoastingBins", "iacCoasting"});
+        TS2C.main(new String[]{tuneFileName, "cltFuelCorrBins", "cltFuelCorr"});
 
         TS2C.main(new String[]{tuneFileName, "veLoadBins", "veRpmBins", "veTable"});
+        TS2C.main(new String[]{tuneFileName, "ignitionLoadBins", "ignitionRpmBins", "ignitionTable"});
 
 //        TS2C.main(new String[]{tuneFileName, "afrLoadBins", "afrRpmBins", "afrTable"});
 //        TS2C.main(new String[]{tuneFileName, "fuelLoadBins", "fuelRpmBins", "fuelTable"});
