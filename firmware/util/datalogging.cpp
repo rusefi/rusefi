@@ -30,7 +30,7 @@
  *
  */
 
-#include "global.h"
+#include "globalaccess.h"
 
 #if ! EFI_UNIT_TEST
 #include "os_access.h"
