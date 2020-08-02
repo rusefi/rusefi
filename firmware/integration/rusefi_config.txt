@@ -1102,7 +1102,6 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float engineLoadAccelEnrichmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 
 
-
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs",      1,      0,       0,1000000,      0
 	float tpsDecelEnleanmentThreshold;;"roc",        1,     0,    0, 200,     3
 	float tpsDecelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
@@ -1117,20 +1116,22 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	#define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@
 	can_baudrate_e canBaudRate; set can_baudrate
+	uint8_t un1used_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
 	can_baudrate_e can2BaudRate;
 
 	uint32_t verboseCan2BaseAddress;;"", 1, 0, 0, 536870911, 0
-	can_baudrate_e can2BaudRate; set can2_baudrate
 	bit enableVerboseCan2Tx;+CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
 	bit can2ReadEnabled;enable can_read/disable can_read
 	bit can2WriteEnabled;enable can_write/disable can_write
 	can_nbc_e can2NbcType;set can_mode X
 	brain_pin_e can2TxPin;set_can2_tx_pin X
-	brain_pin_e can2RxPin;set_can2_rx_pin X
-	uint8_t unused1108;;"units", 1, 0, -20, 100, 0
-	bit[5] unused1116
-	uint8_t[3] unused117;;"units", 1, 0, -20, 100, 0
-	uint32_t[1] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
+	brain_pin_e can2RxPin;set_can2_rx_pin X	
+	bit unused1130
+	bit unused1131
+	bit unused1132
+	bit unused1133
+	bit unused1134
+	uint8_t[7] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
