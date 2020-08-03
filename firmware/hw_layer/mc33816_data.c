@@ -50,7 +50,7 @@ const unsigned short MC33816_data_RAM[128] =
 };
 
 // 0x1CE
-// if set to �1� Driver_status register is reset on read.
+// if set to '1' Driver_status register is reset on read.
 #define Rsetbr 1
 
 // Data to be loaded into the Main register memory space
