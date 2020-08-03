@@ -136,8 +136,6 @@ static void setMiataNA6_settings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setVeTable(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	setWholeFuelMap(6 PASS_CONFIG_PARAMETER_SUFFIX);
-
 	engineConfiguration->idleMode = IM_AUTO;
 	// below 20% this valve seems to be opening for fail-safe idle air
 	engineConfiguration->idleRpmPid.minValue = 20;
