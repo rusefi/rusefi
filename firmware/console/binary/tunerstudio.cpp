@@ -777,6 +777,14 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	case TS_GET_FIRMWARE_VERSION:
 		handleGetVersion(tsChannel, TS_CRC);
 		break;
+#if EFI_FILE_LOGGING
+	case TS_SD_R_COMMAND:
+		handleTsR(data);
+		break;
+	case TS_SD_W_COMMAND:
+		handleTsW(data);
+		break;
+#endif //EFI_FILE_LOGGING
 	case TS_GET_TEXT:
 		handleGetText(tsChannel);
 		break;
