@@ -145,21 +145,6 @@ void printTsStats(void) {
 #endif /* EFI_PROD_CODE */
 
 	printErrorCounters();
-
-//	scheduleMsg(logger, "analogChartFrequency %d",
-//			(int) (&engineConfiguration->analogChartFrequency) - (int) engineConfiguration);
-//
-//	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
-//	scheduleMsg(logger, "fuelTable %d", fuelMapOffset);
-//
-//	int offset = (int) (&CONFIG(hip9011Gain)) - (int) engineConfiguration;
-//	scheduleMsg(&tsLogger, "hip9011Gain %d", offset);
-//
-//	offset = (int) (&engineConfiguration->crankingCycleBins) - (int) engineConfiguration;
-//	scheduleMsg(&tsLogger, "crankingCycleBins %d", offset);
-//
-//	offset = (int) (&engineConfiguration->engineCycle) - (int) engineConfiguration;
-//	scheduleMsg(&tsLogger, "engineCycle %d", offset);
 }
 
 static void setTsSpeed(int value) {

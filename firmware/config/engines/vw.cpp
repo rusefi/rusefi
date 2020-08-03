@@ -25,9 +25,6 @@ void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->isCylinderCleanupEnabled = true;
 
-	// set_whole_fuel_map 12
-	setWholeFuelMap(12 PASS_CONFIG_PARAMETER_SUFFIX);
-
 	// set global_trigger_offset_angle 93
 	engineConfiguration->globalTriggerAngleOffset = 93;
 

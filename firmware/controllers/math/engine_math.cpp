@@ -417,14 +417,6 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	TRIGGER_WAVEFORM(prepareShape());
 }
 
-void setFuelRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setLinearCurve(config->fuelRpmBins, from, to);
-}
-
-void setFuelLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setLinearCurve(config->fuelLoadBins, from, to);
-}
-
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setRpmBin(config->ignitionRpmBins, IGN_RPM_COUNT, from, to);
 }
