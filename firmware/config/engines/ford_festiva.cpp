@@ -82,9 +82,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 1.839;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
-	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
-
 	static const float veRpmBins[] = 
 	{
 		800,
