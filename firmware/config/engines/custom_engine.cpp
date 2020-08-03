@@ -630,7 +630,17 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	CONFIG(isSdCardEnabled) = false;
 
-	CONFIG(mc33_hvolt) = 63;
-
 	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
+
+	// This is the configuration for bosch HDEV 5 injectors
+	CONFIG(mc33_hvolt) = 65;
+	CONFIG(mc33_i_boost) = 13000;
+	CONFIG(mc33_i_peak) = 9400;
+	CONFIG(mc33_i_hold) = 3700;
+	CONFIG(mc33_t_max_boost) = 470;
+	CONFIG(mc33_t_peak_off) = 10;
+	CONFIG(mc33_t_peak_tot) = 700;
+	CONFIG(mc33_t_bypass) = 15;
+	CONFIG(mc33_t_hold_off) = 60;
+	CONFIG(mc33_t_hold_tot) = 10000;
 }

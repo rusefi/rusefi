@@ -30,6 +30,9 @@ public abstract class IniField {
 
     public abstract int getSize();
 
+    /**
+     * @see com.rusefi.config.Field#getValue
+     */
     public String getValue(ConfigurationImage image) {
         return null;
     }

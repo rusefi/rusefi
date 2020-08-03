@@ -88,7 +88,7 @@ void lockSpi(spi_device_e device) {
 	chMtxLock(&spiMtx);
 }
 
-void unlockSpi(void) {
+void unlockSpi(spi_device_e device) {
 	chMtxUnlock(&spiMtx);
 }
 

@@ -24,12 +24,28 @@
 !
 ! each field is declared as
 ! type name;comment
+!
+! Q: how does 'custom' work?
+! A: let's look at
+!  #define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
+!   custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@
+!   can_baudrate_e canBaudRate; set can_baudrate
+!
+! here #define XXX_enum defines enum options in a reusable way
+! @@XXX_e_enum@@ is using the enum options defined above
+!
+! "custom NEW_TYPE_NAME 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@" defines NEW_TYPE_NAME
+! and "can_baudrate_e canBaudRate; set can_baudrate" creates a parameter of that custom type "can_baudrate_e"
+!
+!
+
+
 
 !
 ! this is here so that rusEfi console can access it, too
 ! [IMPORTANT] every time TS_OUTPUT_SIZE is changed make sure to increment TS_SIGNATURE above
 !
-#define TS_OUTPUT_SIZE 248
+#define TS_OUTPUT_SIZE 288
 
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
@@ -725,7 +741,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
-	uint8_t mc33_hvolt;;"v",        1,     0,  0,    100,  0
+	uint8_t mc33_hvolt;;"v",        1,     0,  40,    70,  0
 	uint8_t fsio_visible acIdleExtraMin;+Additional idle PID minValue while A/C is active;"Percent", 1, 0, 0, 255, 0
 
 	uint8_t[2] unusedHere;;"units", 1, 0, -20, 100, 0
@@ -1086,7 +1102,6 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float engineLoadAccelEnrichmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 
 
-
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs",      1,      0,       0,1000000,      0
 	float tpsDecelEnleanmentThreshold;;"roc",        1,     0,    0, 200,     3
 	float tpsDecelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
@@ -1101,8 +1116,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	#define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@
 	can_baudrate_e canBaudRate; set can_baudrate
+	uint8_t un1used_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
+	can_baudrate_e can2BaudRate;
 
-	uint32_t[5] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
+	uint8_t[18] unused_former_warmup_target_afr;;"units", 1, 0, -20, 100, 0
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
@@ -1292,15 +1309,15 @@ uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
 
-	uint16_t mc33_i_boost;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_i_peak;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_i_hold;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_max_boost;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_peak_off;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_peak_tot;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_bypass;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_hold_off;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_hold_tot;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_i_boost;;"mA",      1,   0.0,     1000,  25000,   0
+	uint16_t mc33_i_peak;;"mA",       1,   0.0,     1000,  20000,   0
+	uint16_t mc33_i_hold;;"mA",       1,   0.0,     1000,  20000,   0
+	uint16_t mc33_t_max_boost;;"us",  1,   0.0,        0,  10000,   0
+	uint16_t mc33_t_peak_off;;"us",   1,   0.0,        0,  10000,   0
+	uint16_t mc33_t_peak_tot;;"us",   1,   0.0,        0,  10000,   0
+	uint16_t mc33_t_bypass;;"us",     1,   0.0,        0,  10000,   0
+	uint16_t mc33_t_hold_off;;"us",   1,   0.0,        0,  10000,   0
+	uint16_t mc33_t_hold_tot;;"us",   1,   0.0,        0,  10000,   0
 
 ! just a reminder that 'int' and 'float' are 4 bytes each
 	int[371] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
@@ -1602,7 +1619,7 @@ end_struct
 #define TS_COMPOSITE_DISABLE 2
 
 // Performance tracing
-#define TS_PERF_TRACE_BEGIN 'r'
+#define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
 
 // 0x50
@@ -1622,7 +1639,7 @@ end_struct
 // 0x42 burnCommand
 #define TS_BURN_COMMAND 'B' 
 // 0x77
-#define TS_IO_TEST_COMMAND 'w'
+#define TS_IO_TEST_COMMAND 'Z'
 
 #define TS_RESPONSE_OK 0
 #define TS_RESPONSE_BURN_OK 4
@@ -1630,6 +1647,9 @@ end_struct
 
 // Engine Sniffer time stamp unit, in microseconds
 #define ENGINE_SNIFFER_UNIT_US 10
+
+#define TS_SD_R_COMMAND 'r'
+#define TS_SD_W_COMMAND 'w'
 
 // High speed logger commands
 #define TS_SET_LOGGER_SWITCH   'l'

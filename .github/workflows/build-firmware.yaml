@@ -81,6 +81,10 @@ jobs:
           bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}}
         fi
 
+    - name: Generate Enum Strings
+      working-directory: ./firmware/
+      run: bash gen_enum_to_string.sh
+
     - name: Generate Default config
       working-directory: ./firmware/
       run: bash gen_config_default.sh

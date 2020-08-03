@@ -16,6 +16,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadFactory;
@@ -25,8 +28,7 @@ import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
-import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
-import static com.rusefi.config.generated.Fields.TS_RESPONSE_BURN_OK;
+import static com.rusefi.config.generated.Fields.*;
 
 /**
  * This class makes rusEfi console a proxy for other tuning software, this way we can have two tools connected via same
@@ -37,9 +39,14 @@ import static com.rusefi.config.generated.Fields.TS_RESPONSE_BURN_OK;
  */
 
 public class BinaryProtocolServer implements BinaryProtocolCommands {
+    public static final String TEST_FILE = "test_log.mlg.Z";
     private static final Logging log = getLogging(BinaryProtocolServer.class);
     private static final int DEFAULT_PROXY_PORT = 2390;
     public static final String TS_OK = "\0";
+
+    private final static boolean MOCK_SD_CARD = true;
+    private static final int SD_STATUS_OFFSET = 246;
+    private static final int FAST_TRANSFER_PACKET_SIZE = 2048;
 
     public AtomicInteger unknownCommands = new AtomicInteger();
 
@@ -55,7 +62,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     public void start(LinkManager linkManager) {
         try {
-        start(linkManager, DEFAULT_PROXY_PORT, Listener.empty(), new Context());
+            start(linkManager, DEFAULT_PROXY_PORT, Listener.empty(), new Context());
         } catch (IOException e) {
             log.error("Error starting local proxy", e);
         }
@@ -173,6 +180,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 System.err.println("NOT IMPLEMENTED TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY relay");
                 // todo: relay command
                 stream.sendPacket(TS_OK.getBytes());
+            } else if (command == TS_SD_R_COMMAND) {
+                handleSD_R_command(stream, packet, payload);
+            } else if (command == TS_SD_W_COMMAND) {
+                handleSD_W_command(stream, packet, payload);
             } else if (command == Fields.TS_OUTPUT_COMMAND) {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 int offset = swap16(dis.readShort());
@@ -183,8 +194,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 response[0] = (byte) TS_OK.charAt(0);
                 BinaryProtocolState binaryProtocolState = linkManager.getBinaryProtocolState();
                 byte[] currentOutputs = binaryProtocolState.getCurrentOutputs();
+                if (MOCK_SD_CARD)
+                    currentOutputs[SD_STATUS_OFFSET] = 1 + 4;
                 if (currentOutputs != null)
-                    System.arraycopy(currentOutputs, 1 + offset, response, 1, count);
+                    System.arraycopy(currentOutputs, offset, response, 1, count);
                 stream.sendPacket(response);
             } else if (command == Fields.TS_GET_TEXT) {
                 // todo: relay command
@@ -196,6 +209,126 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 log.info("Error: unexpected " + BinaryProtocol.findCommand(command));
             }
         }
+    }
+
+    private void handleSD_W_command(TcpIoStream stream, Packet packet, byte[] payload) throws IOException {
+        log.info("TS_SD: 'w' " + IoStream.printHexBinary(packet.packet));
+        if (payload[1] == 0 && payload[2] == 0x11) {
+
+            if (payload[6] == 1) {
+                log.info("TS_SD: do command, command=" + payload[payload.length - 1]);
+                sendOkResponse(stream);
+            } else if (payload[6] == 2) {
+                log.info("TS_SD: read directory command " + payload[payload.length - 1]);
+                sendOkResponse(stream);
+            } else if (payload[6] == 6) {
+                log.info("TS_SD: remove file command " + Arrays.toString(packet.packet));
+                sendOkResponse(stream);
+            } else if (payload[6] == 8) {
+                log.info("TS_SD: read compressed file command " + Arrays.toString(packet.packet));
+                ByteBuffer bb = ByteBuffer.wrap(payload, 7, 8);
+                bb.order(ByteOrder.BIG_ENDIAN);
+                int sectorNumber = bb.getInt();
+                int sectorCount = bb.getInt();
+                log.info("TS_SD: sectorNumber=" + sectorNumber + ", sectorCount=" + sectorCount);
+                sendOkResponse(stream);
+            }
+        } else {
+            log.info("TS_SD: Got unexpected w " + IoStream.printHexBinary(packet.packet));
+        }
+    }
+
+    private void handleSD_R_command(TcpIoStream stream, Packet packet, byte[] payload) throws IOException {
+        log.info("TS_SD: 'r' " + IoStream.printHexBinary(packet.packet));
+        if (payload[1] == 0 && payload[2] == 7) {
+            log.info("TS_SD: RTC read command");
+            byte[] response = new byte[9];
+            stream.sendPacket(response);
+        } else if (payload[1] == 0 && payload[2] == 0x11) {
+            ByteBuffer bb = ByteBuffer.wrap(payload, 5, 2);
+            bb.order(ByteOrder.BIG_ENDIAN);
+            int bufferLength = bb.getShort();
+            log.info("TS_SD: fetch buffer command, length=" + bufferLength);
+
+            byte[] response = new byte[1 + bufferLength];
+
+            response[0] = TS_RESPONSE_OK;
+
+            if (bufferLength == 16) {
+                response[1] = 1 + 4; // Card present + Ready
+                response[2] = 0; // Y - error code
+
+                response[3] = 2; // higher byte of '512' sector size
+                response[4] = 0; // lower byte
+
+                response[5] = 0;
+                response[6] = 0x20; // 0x20 00 00 of 512 is 1G virtual card
+                response[7] = 0;
+                response[8] = 0;
+
+                response[9] = 0;
+                response[10] = 1; // number of files
+            } else {
+                // SD read directory command
+                //
+
+                System.arraycopy("hello123mlq".getBytes(), 0, response, 1, 11);
+                response[1 + 11] = 1; // file
+
+                response[1 + 23] = 3; // sector number
+
+                response[1 + 24] = (byte) 0; // size
+                response[1 + 25] = (byte) 0; // size
+
+                File f = new File(TEST_FILE);
+                int size = (int) f.length();
+
+                IoHelper.putInt(response, 29, IoHelper.swap32(size));
+
+//                response[1 + 29] = (byte) 128;
+//                response[1 + 30] = (byte) 1;
+//                response[1 + 31] = (byte) 0; // size
+
+            }
+            stream.sendPacket(response);
+        } else if (payload[1] == 0 && payload[2] == 0x14) {
+            ByteBuffer bb = ByteBuffer.wrap(payload, 3, 4);
+            bb.order(ByteOrder.BIG_ENDIAN);
+            int blockNumber = bb.getShort();
+            int suffix = bb.getShort();
+            log.info("TS_SD: fetch data command blockNumber=" + blockNumber + ", requesting=" + suffix);
+
+
+
+            File f = new File(BinaryProtocolServer.TEST_FILE);
+            FileInputStream fis = new FileInputStream(f);
+            int size = (int) f.length();
+
+
+            int offset = blockNumber * FAST_TRANSFER_PACKET_SIZE;
+            int len = Math.max(0, Math.min(size - offset, FAST_TRANSFER_PACKET_SIZE));
+
+            byte[] response = new byte[1 + 2 + len];
+            response[0] = TS_RESPONSE_OK;
+            response[1] = payload[3];
+            response[2] = payload[4];
+
+            if (len > 0) {
+                fis.skip(offset);
+                log.info("TS_SD reading " + offset + " " + len + " of " + size);
+                fis.read(response, 3, len);
+            }
+
+            stream.sendPacket(response);
+        } else {
+            log.info("TS_SD: Got unexpected r " + IoStream.printHexBinary(packet.packet));
+        }
+    }
+
+    private static void sendOkResponse(TcpIoStream stream) throws IOException {
+        byte[] response = new byte[1];
+        response[0] = TS_RESPONSE_OK;
+        stream.sendPacket(response);
     }
 
     public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler) throws IOException {

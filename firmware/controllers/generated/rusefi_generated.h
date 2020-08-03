@@ -41,7 +41,7 @@
 #define afterstartHoldTime_offset 6152
 #define air_pressure_sensor_config_s_size 16
 #define alignEngineSnifferAtTDC_offset 744
-#define alignmentFill_at_2109_offset 2109
+#define alignmentFill_at_2129_offset 2129
 #define alignmentFill_at_4514_offset 4514
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
@@ -176,6 +176,7 @@
 #define camInputs2_offset 557
 #define camInputs3_offset 558
 #define camInputs4_offset 559
+#define can2BaudRate_offset 2110
 #define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
 #define canBaudRate_offset 2108
@@ -305,7 +306,7 @@
 #define enableLaunchRetard_offset 976
 #define enableVerboseCanTx_offset 744
 #define engine_configuration_s_size 6000
-#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "INVALID"
+#define engine_load_mode_e_enum "INVALID", "Alpha-N/TPS", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "INVALID"
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_GM "GM"
 #define ENGINE_MAKE_LADA "Lada"
@@ -1077,8 +1078,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2020.07.30
-#define SIGNATURE_HASH 3740911119
+#define SIGNATURE_DATE 2020.08.03
+#define SIGNATURE_HASH 3223547782
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1315,18 +1316,20 @@
 #define TS_GET_STRUCT '9'
 #define TS_GET_TEXT 'G'
 #define TS_HELLO_COMMAND 'S'
-#define TS_IO_TEST_COMMAND 'w'
+#define TS_IO_TEST_COMMAND 'Z'
 #define TS_ONLINE_PROTOCOL 'z'
 #define TS_OUTPUT_COMMAND 'O'
-#define TS_OUTPUT_SIZE 248
+#define TS_OUTPUT_SIZE 288
 #define TS_PAGE_COMMAND 'P'
-#define TS_PERF_TRACE_BEGIN 'r'
+#define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
 #define TS_PROTOCOL "001"
 #define TS_READ_COMMAND 'R'
 #define TS_RESPONSE_BURN_OK 4
 #define TS_RESPONSE_COMMAND_OK 7
 #define TS_RESPONSE_OK 0
+#define TS_SD_R_COMMAND 'r'
+#define TS_SD_W_COMMAND 'w'
 #define TS_SET_LOGGER_SWITCH 'l'
 #define ts_show_analog_divider true
 #define ts_show_auxserial_pins true
@@ -1346,12 +1349,13 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.07.30.all.3740911119"
+#define TS_SIGNATURE "rusEFI 2020.08.03.all.3223547782"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
 #define twoWireBatchInjection_offset 1476
 #define uartConsoleSerialSpeed_offset 2076
+#define un1used_former_warmup_target_afr_offset 2109
 #define unused1059_offset 3964
 #define unused1476b20_offset 1476
 #define unused2432_offset 2432
@@ -1372,7 +1376,7 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr_offset 2112
+#define unused_former_warmup_target_afr_offset 2111
 #define unusedAt712_offset 712
 #define unusedAt716_offset 716
 #define unusedAt720_offset 720

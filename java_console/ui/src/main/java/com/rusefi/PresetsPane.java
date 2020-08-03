@@ -18,7 +18,7 @@ public class PresetsPane {
     private static final int MINIMAL_PINS = 99;
     private final UIContext uiContext;
 
-    private JPanel content = new JPanel(new GridLayout(2, 4));
+    private final JPanel content = new JPanel(new GridLayout(4, 5));
 
     public PresetsPane(UIContext uiContext) {
         this.uiContext = uiContext;

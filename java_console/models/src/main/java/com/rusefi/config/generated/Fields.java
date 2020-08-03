@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 30 19:34:58 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Aug 03 02:06:23 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -44,7 +44,7 @@ public class Fields {
 	public static final int afterstartHoldTime_offset = 6152;
 	public static final int air_pressure_sensor_config_s_size = 16;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
-	public static final int alignmentFill_at_2109_offset = 2109;
+	public static final int alignmentFill_at_2129_offset = 2129;
 	public static final int alignmentFill_at_4514_offset = 4514;
 	public static final int alternator_antiwindupFreq_offset = 1764;
 	public static final int alternator_derivativeFilterLoss_offset = 1760;
@@ -176,6 +176,7 @@ public class Fields {
 	public static final int camInputs2_offset = 557;
 	public static final int camInputs3_offset = 558;
 	public static final int camInputs4_offset = 559;
+	public static final int can2BaudRate_offset = 2110;
 	public static final int canBaudRate_offset = 2108;
 	public static final int canNbcType_offset = 480;
 	public static final int canReadEnabled_offset = 1464;
@@ -1292,25 +1293,28 @@ public class Fields {
 	public static final char TS_GET_STRUCT = '9';
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
-	public static final char TS_IO_TEST_COMMAND = 'w';
+	public static final char TS_IO_TEST_COMMAND = 'Z';
 	public static final char TS_ONLINE_PROTOCOL = 'z';
 	public static final char TS_OUTPUT_COMMAND = 'O';
-	public static final int TS_OUTPUT_SIZE = 248;
+	public static final int TS_OUTPUT_SIZE = 288;
 	public static final char TS_PAGE_COMMAND = 'P';
-	public static final char TS_PERF_TRACE_BEGIN = 'r';
+	public static final char TS_PERF_TRACE_BEGIN = '_';
 	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
 	public static final String TS_PROTOCOL = "001";
 	public static final char TS_READ_COMMAND = 'R';
 	public static final int TS_RESPONSE_BURN_OK = 4;
 	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_OK = 0;
+	public static final char TS_SD_R_COMMAND = 'r';
+	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.07.30.all.3740911119";
+	public static final String TS_SIGNATURE = "rusEFI 2020.08.03.all.3223547782";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
+	public static final int un1used_former_warmup_target_afr_offset = 2109;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused2432_offset = 2432;
@@ -1331,7 +1335,7 @@ public class Fields {
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_alFIn_offset = 4024;
-	public static final int unused_former_warmup_target_afr_offset = 2112;
+	public static final int unused_former_warmup_target_afr_offset = 2111;
 	public static final int unusedAt712_offset = 712;
 	public static final int unusedAt716_offset = 716;
 	public static final int unusedAt720_offset = 720;
@@ -1507,7 +1511,7 @@ public class Fields {
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 408, FieldType.FLOAT);
 	public static final Field SENSORSNIFFERRPMTHRESHOLD = Field.create("SENSORSNIFFERRPMTHRESHOLD", 412, FieldType.INT);
 	public static final Field RPMHARDLIMIT = Field.create("RPMHARDLIMIT", 416, FieldType.INT);
-	public static final String[] engine_load_mode_e = {"MAF", "Alpha-N/TPS", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "INVALID"};
+	public static final String[] engine_load_mode_e = {"INVALID", "Alpha-N/TPS", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "INVALID"};
 	public static final Field FUELALGORITHM = Field.create("FUELALGORITHM", 420, FieldType.INT, engine_load_mode_e);
 	public static final Field CRANKINGINJECTIONMODE = Field.create("CRANKINGINJECTIONMODE", 424, FieldType.INT);
 	public static final Field INJECTIONMODE = Field.create("INJECTIONMODE", 428, FieldType.INT);
@@ -2164,6 +2168,8 @@ public class Fields {
 	public static final Field THROTTLEPEDALSECONDARYWOTVOLTAGE = Field.create("THROTTLEPEDALSECONDARYWOTVOLTAGE", 2104, FieldType.FLOAT);
 	public static final String[] can_baudrate_e = {"100kbps", "250kbps" , "500kbps", "1Mbps"};
 	public static final Field CANBAUDRATE = Field.create("CANBAUDRATE", 2108, FieldType.INT8, can_baudrate_e);
+	public static final Field UN1USED_FORMER_WARMUP_TARGET_AFR = Field.create("UN1USED_FORMER_WARMUP_TARGET_AFR", 2109, FieldType.INT8);
+	public static final Field CAN2BAUDRATE = Field.create("CAN2BAUDRATE", 2110, FieldType.INT8, can_baudrate_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
 	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2200, FieldType.INT8, adc_channel_e);
 	public static final Field FSIOADC2 = Field.create("FSIOADC2", 2201, FieldType.INT8, adc_channel_e);
@@ -3146,6 +3152,8 @@ public class Fields {
 	THROTTLEPEDALSECONDARYUPVOLTAGE,
 	THROTTLEPEDALSECONDARYWOTVOLTAGE,
 	CANBAUDRATE,
+	UN1USED_FORMER_WARMUP_TARGET_AFR,
+	CAN2BAUDRATE,
 	BOOSTCUTPRESSURE,
 	FSIOADC1,
 	FSIOADC2,
