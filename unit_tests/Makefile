@@ -178,6 +178,8 @@ INCDIR = . \
 	$(CONTROLLERS_INC) \
 	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \
+	$(PROJECT_DIR)/ext_algo \
+	$(PROJECT_DIR)/init/ \
 	$(PROJECT_DIR)/hw_layer/algo \
 	$(HW_LAYER_INC) \
 	$(HW_SENSORS_INC) \
