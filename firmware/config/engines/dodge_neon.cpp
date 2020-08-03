@@ -134,8 +134,6 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * that's 1995 config
 	 */
 
-	// set_whole_fuel_map 9
-	setWholeFuelMap(9 PASS_CONFIG_PARAMETER_SUFFIX);
 	setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// set cranking_injection_mode 0
@@ -234,9 +232,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * 88C
 	 * fuel 2.8
 	 *
-	 * set_whole_fuel_map 12
 	 */
-	//setWholeFuelMap(12 PASS_CONFIG_PARAMETER_SUFFIX);
 	//setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	MEMCPY(config->ignitionTable, fromODB);

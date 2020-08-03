@@ -541,15 +541,6 @@ static void setWholeVeCmd(float value) {
 	engine->resetEngineSnifferIfInTestMode();
 }
 
-static void setWholeFuelMapCmd(float value) {
-	scheduleMsg(&logger, "Setting whole fuel map to %.2f", value);
-	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
-		scheduleMsg(&logger, "WARNING: setting fuel map in SD mode is pointless");
-	}
-	setWholeFuelMap(value PASS_CONFIG_PARAMETER_SUFFIX);
-	engine->resetEngineSnifferIfInTestMode();
-}
-
 #if EFI_PROD_CODE
 
 static void setEgtSpi(int spi) {
@@ -1329,7 +1320,6 @@ void initSettings(void) {
 
 	addConsoleActionF("set_whole_phase_map", setWholePhaseMapCmd);
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
-	addConsoleActionF("set_whole_fuel_map", setWholeFuelMapCmd);
 	addConsoleActionF("set_whole_ve_map", setWholeVeCmd);
 	addConsoleActionF("set_whole_ign_corr_map", setWholeIgnitionIatCorr);
 

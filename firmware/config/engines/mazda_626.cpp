@@ -64,9 +64,6 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	// set_whole_fuel_map 9
-	setWholeFuelMap(9 PASS_CONFIG_PARAMETER_SUFFIX);
-
 // set_whole_timing_map 10
 	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
 
