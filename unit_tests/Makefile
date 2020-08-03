@@ -179,9 +179,8 @@ INCDIR = . \
 	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \
 	$(PROJECT_DIR)/ext_algo \
-	$(PROJECT_DIR)/hw_layer \
+	$(HW_LAYER_INC) \
 	$(PROJECT_DIR)/hw_layer/algo \
-	$(PROJECT_DIR)/hw_layer/sensors/ \
 	$(PROJECT_DIR)/init/ \
 	$(HW_LAYER_DRIVERS_INC) \
 	test_data_structures \
