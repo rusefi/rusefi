@@ -255,7 +255,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->injector.flow = 199;
 
-	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setLinearCurve(config->ignitionLoadBins, 20, 120, 1);
 
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
