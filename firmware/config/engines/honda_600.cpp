@@ -37,9 +37,6 @@ static const ignition_table_t default_custom_timing_table = {
 EXTERN_CONFIG;
 
 static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-
-	setFuelLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelRpmBin(0, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(0,7000 PASS_CONFIG_PARAMETER_SUFFIX);
 

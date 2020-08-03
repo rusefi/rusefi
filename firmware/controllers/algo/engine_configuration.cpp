@@ -267,16 +267,6 @@ void setMap(fuel_table_t table, float value) {
 	}
 }
 
-#if 0
-static void setWholeVEMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setMap(config->veTable, value);
-}
-#endif
-
-void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setMap(config->fuelTable, value);
-}
-
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 #if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
 	// todo: make setMap a template
@@ -836,8 +826,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 
-	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -846,8 +834,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindowBins, 800, 7000, 1);
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
-	// set_whole_timing_map 3
-	setWholeFuelMap(3 PASS_CONFIG_PARAMETER_SUFFIX);
 	setAfrMap(config->afrTable, 14.7);
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);

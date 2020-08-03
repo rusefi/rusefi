@@ -184,14 +184,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 
 	scheduleMsg(&logger, "configurationVersion=%d", engine->getGlobalConfigurationVersion());
 
-	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
-//		print("line %d (%.2f): ", k, engineConfiguration->fuelKeyBins[k]);
-//		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-//			print("%.2f ", engineConfiguration->fuelTable[k][r]);
-//		}
-//		print("\r\n");
-	}
-
 	scheduleMsg(&logger, "rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
 			engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 
@@ -549,15 +541,6 @@ static void setWholeVeCmd(float value) {
 	engine->resetEngineSnifferIfInTestMode();
 }
 
-static void setWholeFuelMapCmd(float value) {
-	scheduleMsg(&logger, "Setting whole fuel map to %.2f", value);
-	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
-		scheduleMsg(&logger, "WARNING: setting fuel map in SD mode is pointless");
-	}
-	setWholeFuelMap(value PASS_CONFIG_PARAMETER_SUFFIX);
-	engine->resetEngineSnifferIfInTestMode();
-}
-
 #if EFI_PROD_CODE
 
 static void setEgtSpi(int spi) {
@@ -806,21 +789,6 @@ static void setTimingMap(const char * rpmStr, const char *loadStr, const char *v
 
 	config->ignitionTable[loadIndex][rpmIndex] = value;
 	scheduleMsg(&logger, "Setting timing map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
-}
-
-static void setFuelMap(const char * rpmStr, const char *loadStr, const char *valueStr) {
-	float rpm = atoff(rpmStr);
-	float engineLoad = atoff(loadStr);
-	float value = atoff(valueStr);
-
-	int rpmIndex = findIndexMsg("setFM", config->fuelRpmBins, FUEL_RPM_COUNT, rpm);
-	rpmIndex = rpmIndex < 0 ? 0 : rpmIndex;
-	int loadIndex = findIndexMsg("setTM", config->fuelLoadBins, FUEL_LOAD_COUNT, engineLoad);
-	loadIndex = loadIndex < 0 ? 0 : loadIndex;
-
-	config->fuelTable[loadIndex][rpmIndex] = value;
-	scheduleMsg(&logger, "Setting fuel map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
-	engine->resetEngineSnifferIfInTestMode();
 }
 
 static void setSpiMode(int index, bool mode) {
@@ -1352,10 +1320,8 @@ void initSettings(void) {
 
 	addConsoleActionF("set_whole_phase_map", setWholePhaseMapCmd);
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
-	addConsoleActionF("set_whole_fuel_map", setWholeFuelMapCmd);
 	addConsoleActionF("set_whole_ve_map", setWholeVeCmd);
 	addConsoleActionF("set_whole_ign_corr_map", setWholeIgnitionIatCorr);
-	addConsoleActionSSS("set_fuel_map", setFuelMap);
 
 	addConsoleActionSSS("set_timing_map", setTimingMap);
 

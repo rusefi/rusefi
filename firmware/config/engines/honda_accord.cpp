@@ -57,7 +57,6 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	engineConfiguration->injector.flow = 248;
 
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	buildTimingMap(35 PASS_CONFIG_PARAMETER_SUFFIX);
 
