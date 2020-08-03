@@ -50,11 +50,14 @@ typedef unsigned int time_t;
  * project-wide default thread stack size
  * See also PORT_INT_REQUIRED_STACK
  * See getRemainingStack()
- * See getMaxUsedStack()
+ * See getMaxUsedStack() and CountFreeStackSpace()
+ * See "threadsinfo" command cmd_threads
  */
 #ifndef UTILITY_THREAD_STACK_SIZE
 #define UTILITY_THREAD_STACK_SIZE 400
 #endif /* UTILITY_THREAD_STACK_SIZE */
+
+#define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
 
 #define EFI_ERROR_CODE 0xffffffff
 
@@ -92,9 +95,6 @@ typedef unsigned int time_t;
 #else /* !EFI_USE_CCM */
 #define CCM_OPTIONAL
 #endif /* EFI_USE_CCM */
-
-#define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
-
 
 // 168 ticks in microsecond in case of 168MHz 407
 #define US_TO_NT_MULTIPLIER (CORE_CLOCK / 1000000)

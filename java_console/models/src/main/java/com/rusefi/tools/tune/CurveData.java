@@ -27,7 +27,7 @@ public class CurveData {
     static CurveData processCurve(String msqFileName, String loadSectionName, IniFileModel model, BufferedWriter w) throws IOException {
         ArrayIniField field = (ArrayIniField) model.allIniFields.get(loadSectionName);
         int curveSize = field.getRows();
-        BufferedReader r = TS2C.readAndScroll(msqFileName, loadSectionName);
+        BufferedReader r = TS2C.readAndScroll(msqFileName, loadSectionName + "\"");
         float[] curve = new float[curveSize];
         readAxle(curve, r);
 

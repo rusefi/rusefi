@@ -119,7 +119,7 @@ static efitimems_t previousWriteReportMs = 0;
 static ts_channel_s tsChannel;
 
 // this thread wants a bit extra stack
-static THD_WORKING_AREA(tunerstudioThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(tunerstudioThreadStack, CONNECTIVITY_THREAD_STACK);
 
 static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
@@ -482,6 +482,8 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_FIRMWARE_VERSION
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
+			|| command == TS_SD_R_COMMAND
+			|| command == TS_SD_W_COMMAND
 			|| command == TS_GET_CONFIG_ERROR;
 }
 
@@ -490,6 +492,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 	int wasReady = false;
 
 	while (true) {
+		validateStack("communication", STACK_USAGE_COMMUNICATION, 128);
+
 		int isReady = sr5IsReady(tsChannel);
 		if (!isReady) {
 			chThdSleepMilliseconds(10);
@@ -773,6 +777,14 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	case TS_GET_FIRMWARE_VERSION:
 		handleGetVersion(tsChannel, TS_CRC);
 		break;
+#if EFI_FILE_LOGGING
+	case TS_SD_R_COMMAND:
+		handleTsR(data);
+		break;
+	case TS_SD_W_COMMAND:
+		handleTsW(data);
+		break;
+#endif //EFI_FILE_LOGGING
 	case TS_GET_TEXT:
 		handleGetText(tsChannel);
 		break;

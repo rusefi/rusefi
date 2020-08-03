@@ -53,6 +53,8 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
     }
 
     default void sendPacket(byte[] plainPacket) throws IOException {
+        if (plainPacket.length == 0)
+            throw new IllegalArgumentException("Empty packets are not valid.");
         byte[] packet;
         if (BinaryProtocol.PLAIN_PROTOCOL) {
             packet = plainPacket;
