@@ -210,9 +210,6 @@ TEST(misc, testFordAspire) {
 
 	ASSERT_EQ( 4,  TRIGGER_WAVEFORM(getTriggerWaveformSynchPointIndex())) << "getTriggerWaveformSynchPointIndex";
 
-	ASSERT_EQ(800, config->fuelRpmBins[0]);
-	ASSERT_EQ(7000, config->fuelRpmBins[15]);
-
 	engineConfiguration->crankingChargeAngle = 65;
 	engineConfiguration->crankingTimingAngle = 31;
 	engineConfiguration->useConstantDwellDuringCranking = false;
@@ -732,13 +729,6 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	assertInjectors("#0_inj", 0, 0);
 
-
-	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(8, engineLoadIndex);
-	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 25);
-	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 25);
-	
-
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->injectionDuration = 12.5f;
 	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
@@ -1047,12 +1037,6 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
 
-	// set fuel map values - extract method?
-	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(8, engineLoadIndex);
-	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
-	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
-
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->injectionDuration = 17.5f;
 	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
@@ -1113,9 +1097,6 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
 	ASSERT_EQ( 0,  engine->executor.size()) << "Lqs#04";
-
-	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 4);
-	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 4);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->injectionDuration = 2.0f;
