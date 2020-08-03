@@ -247,7 +247,8 @@ INCDIR = .. $(CHIBIOS)/os/license \
 	$(PROJECT_DIR)/console/binary_log \
 	$(PROJECT_DIR)/console/fl_binary \
 	$(PROJECT_DIR)/hw_layer \
-	$(PROJECT_DIR)/mass_storage \
+	$(PROJECT_DIR)/hw_layer/adc \
+	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb \
 	$(PROJECT_DIR)/hw_layer/algo \
 	$(PROJECT_DIR)/hw_layer/lcd \
