@@ -741,7 +741,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
-	uint8_t mc33_hvolt;;"v",        1,     0,  0,    100,  0
+	uint8_t mc33_hvolt;;"v",        1,     0,  40,    70,  0
 	uint8_t fsio_visible acIdleExtraMin;+Additional idle PID minValue while A/C is active;"Percent", 1, 0, 0, 255, 0
 
 	uint8_t[2] unusedHere;;"units", 1, 0, -20, 100, 0
@@ -1321,15 +1321,15 @@ uint8_t[4] unusedsw;;"units", 1, 0, -20, 100, 0
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
 
-	uint16_t mc33_i_boost;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_i_peak;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_i_hold;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_max_boost;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_peak_off;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_peak_tot;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_bypass;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_hold_off;;"X",   1,   0.0,        0,  64000,   0
-	uint16_t mc33_t_hold_tot;;"X",   1,   0.0,        0,  64000,   0
+	uint16_t mc33_i_boost;;"mA",      1,   0.0,     1000,  25000,   0
+	uint16_t mc33_i_peak;;"mA",       1,   0.0,     1000,  20000,   0
+	uint16_t mc33_i_hold;;"mA",       1,   0.0,     1000,  20000,   0
+	uint16_t mc33_t_max_boost;;"us",  1,   0.0,        0,  10000,   0
+	uint16_t mc33_t_peak_off;;"us",   1,   0.0,        0,  10000,   0
+	uint16_t mc33_t_peak_tot;;"us",   1,   0.0,        0,  10000,   0
+	uint16_t mc33_t_bypass;;"us",     1,   0.0,        0,  10000,   0
+	uint16_t mc33_t_hold_off;;"us",   1,   0.0,        0,  10000,   0
+	uint16_t mc33_t_hold_tot;;"us",   1,   0.0,        0,  10000,   0
 
 ! just a reminder that 'int' and 'float' are 4 bytes each
 	int[371] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
@@ -1633,7 +1633,7 @@ end_struct
 #define TS_COMPOSITE_DISABLE 2
 
 // Performance tracing
-#define TS_PERF_TRACE_BEGIN 'r'
+#define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
 
 // 0x50
@@ -1653,7 +1653,7 @@ end_struct
 // 0x42 burnCommand
 #define TS_BURN_COMMAND 'B' 
 // 0x77
-#define TS_IO_TEST_COMMAND 'w'
+#define TS_IO_TEST_COMMAND 'Z'
 
 #define TS_RESPONSE_OK 0
 #define TS_RESPONSE_BURN_OK 4

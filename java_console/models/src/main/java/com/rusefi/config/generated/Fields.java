@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 02 17:45:38 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Aug 03 02:06:23 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1060,7 +1060,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 785059244;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1294,12 +1293,12 @@ public class Fields {
 	public static final char TS_GET_STRUCT = '9';
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
-	public static final char TS_IO_TEST_COMMAND = 'w';
+	public static final char TS_IO_TEST_COMMAND = 'Z';
 	public static final char TS_ONLINE_PROTOCOL = 'z';
 	public static final char TS_OUTPUT_COMMAND = 'O';
 	public static final int TS_OUTPUT_SIZE = 288;
 	public static final char TS_PAGE_COMMAND = 'P';
-	public static final char TS_PERF_TRACE_BEGIN = 'r';
+	public static final char TS_PERF_TRACE_BEGIN = '_';
 	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
 	public static final String TS_PROTOCOL = "001";
 	public static final char TS_READ_COMMAND = 'R';
@@ -1309,7 +1308,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.08.02.all.785059244";
+	public static final String TS_SIGNATURE = "rusEFI 2020.08.03.all.3223547782";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
