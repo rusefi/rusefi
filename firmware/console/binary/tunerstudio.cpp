@@ -482,6 +482,8 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_FIRMWARE_VERSION
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
+			|| command == TS_SD_R_COMMAND
+			|| command == TS_SD_W_COMMAND
 			|| command == TS_GET_CONFIG_ERROR;
 }
 
