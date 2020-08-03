@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Aug 03 02:06:34 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Aug 03 20:50:06 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3424,16 +3424,7 @@ struct persistent_config_s {
 	/**
 	 * offset 15136
 	 */
-	fuel_table_t fuelTable;
-	/**
-	 * offset 16160
-	 */
-	float fuelLoadBins[FUEL_LOAD_COUNT];
-	/**
-	 * RPM is float and not integer in order to use unified methods for interpolation
-	 * offset 16224
-	 */
-	float fuelRpmBins[FUEL_RPM_COUNT];
+	uint8_t unused15136[1152];
 	/**
 	 * offset 16288
 	 */
@@ -3541,4 +3532,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Aug 03 02:06:34 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Aug 03 20:50:06 UTC 2020

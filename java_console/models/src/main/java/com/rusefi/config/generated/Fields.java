@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Aug 03 02:06:23 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Aug 03 20:49:50 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -521,12 +521,9 @@ public class Fields {
 	public static final int fuelLevelEmptyTankVoltage_offset = 684;
 	public static final int fuelLevelFullTankVoltage_offset = 688;
 	public static final int fuelLevelSensor_offset = 514;
-	public static final int fuelLoadBins_offset = 16160;
 	public static final int fuelPumpPin_offset = 658;
 	public static final int fuelPumpPinMode_offset = 659;
 	public static final int fuelRailPressure_offset = 1756;
-	public static final int fuelRpmBins_offset = 16224;
-	public static final int fuelTable_offset = 15136;
 	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
 	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
@@ -1060,6 +1057,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1319574552;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1308,7 +1306,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.08.03.all.3223547782";
+	public static final String TS_SIGNATURE = "rusEFI 2020.08.03.all.1319574552";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -1317,6 +1315,7 @@ public class Fields {
 	public static final int un1used_former_warmup_target_afr_offset = 2109;
 	public static final int unused1059_offset = 3964;
 	public static final int unused1476b20_offset = 1476;
+	public static final int unused15136_offset = 15136;
 	public static final int unused2432_offset = 2432;
 	public static final int unused244_1_offset = 2420;
 	public static final int unused244_2_offset = 2424;
@@ -2425,7 +2424,6 @@ public class Fields {
 	public static final Field TIMINGADDITIVE = Field.create("TIMINGADDITIVE", 10072, 200, FieldType.STRING);
 	public static final Field IGNITIONIATCORRTABLE = Field.create("IGNITIONIATCORRTABLE", 12832, FieldType.INT);
 	public static final Field INJECTIONPHASE = Field.create("INJECTIONPHASE", 13984, FieldType.INT);
-	public static final Field FUELTABLE = Field.create("FUELTABLE", 15136, FieldType.INT);
 	public static final Field IGNITIONTABLE = Field.create("IGNITIONTABLE", 16288, FieldType.INT);
 	public static final Field VETABLE = Field.create("VETABLE", 17440, FieldType.INT);
 	public static final Field AFRTABLE = Field.create("AFRTABLE", 18592, FieldType.INT);
@@ -3404,7 +3402,6 @@ public class Fields {
 	TIMINGADDITIVE,
 	IGNITIONIATCORRTABLE,
 	INJECTIONPHASE,
-	FUELTABLE,
 	IGNITIONTABLE,
 	VETABLE,
 	AFRTABLE,

@@ -1,6 +1,6 @@
 <roms>
 
-<!-- was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh Mon Aug 03 02:06:24 UTC 2020 -->
+<!-- was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh Mon Aug 03 20:49:51 UTC 2020 -->
 
     <rom>
         <romid>
@@ -61,23 +61,6 @@
                    logparam="engine_load">
                 <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
-            </table>
-        </table>
-
-        <table type="3D" name="Fuel Table" 
-        category="Fuel"
-        storageaddress="3b20" sizex="16"
-               sizey="16" storagetype="float" endian="big">
-            <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
-                     coarseincrement="1"/>
-            <table type="X Axis" storageaddress="3f60" storagetype="float" endian="big"
-                   logparam="engine_load">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
-                         coarseincrement="1"/>
-            </table>
-            <table type="Y Axis" storageaddress="3f20" storagetype="float" endian="big"
-                   logparam="rpm">
-                <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
