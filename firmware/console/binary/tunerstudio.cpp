@@ -482,6 +482,8 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_FIRMWARE_VERSION
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
+			|| command == TS_SD_R_COMMAND
+			|| command == TS_SD_W_COMMAND
 			|| command == TS_GET_CONFIG_ERROR;
 }
 
@@ -775,6 +777,14 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	case TS_GET_FIRMWARE_VERSION:
 		handleGetVersion(tsChannel, TS_CRC);
 		break;
+#if EFI_FILE_LOGGING
+	case TS_SD_R_COMMAND:
+		handleTsR(data);
+		break;
+	case TS_SD_W_COMMAND:
+		handleTsW(data);
+		break;
+#endif //EFI_FILE_LOGGING
 	case TS_GET_TEXT:
 		handleGetText(tsChannel);
 		break;

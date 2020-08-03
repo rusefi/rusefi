@@ -179,10 +179,10 @@ INCDIR = . \
 	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \
 	$(PROJECT_DIR)/ext_algo \
-	$(PROJECT_DIR)/hw_layer \
-	$(PROJECT_DIR)/hw_layer/algo \
-	$(PROJECT_DIR)/hw_layer/sensors/ \
 	$(PROJECT_DIR)/init/ \
+	$(PROJECT_DIR)/hw_layer/algo \
+	$(HW_LAYER_INC) \
+	$(HW_SENSORS_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	test_data_structures \
 	googletest/googlemock/include \
