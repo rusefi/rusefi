@@ -34,6 +34,7 @@ import static com.rusefi.config.generated.Fields.*;
  * This class makes rusEfi console a proxy for other tuning software, this way we can have two tools connected via same
  * serial port simultaneously
  *
+ * See BinaryProtocolServerSandbox
  * @author Andrey Belomutskiy
  * 11/24/15
  */
