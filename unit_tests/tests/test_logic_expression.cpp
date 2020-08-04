@@ -111,6 +111,39 @@ TEST(fsio, testIfFunction) {
 	testExpression("1 22 33 if", 22);
 }
 
+TEST(fsio, testHysteresisSelf) {
+	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+
+	LEElement thepool[TEST_POOL_SIZE];
+	LEElementPool pool(thepool, TEST_POOL_SIZE);
+	// value ON: 450
+	// value OFF: 400
+	// Human formula: (self and (rpm > 400)) | (rpm > 450)
+	LEElement * element = pool.parseExpression("self rpm 400 > and rpm 450 > |");
+	ASSERT_TRUE(element != NULL) << "Not NULL expected";
+
+	LECalculator c;
+	double selfValue = 0;
+
+	engine->fsioState.mockRpm = 0;
+	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ(0, selfValue);
+
+	engine->fsioState.mockRpm = 430;
+	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	// OFF since not ON yet
+	ASSERT_EQ(0, selfValue);
+
+	engine->fsioState.mockRpm = 460;
+	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ(1, selfValue);
+
+	engine->fsioState.mockRpm = 430;
+	selfValue = c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	// OFF since was ON yet
+	ASSERT_EQ(1, selfValue);
+}
+
 TEST(fsio, testLogicExpressions) {
 	testParsing();
 	{
