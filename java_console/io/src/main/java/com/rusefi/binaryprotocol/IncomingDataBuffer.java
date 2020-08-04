@@ -46,6 +46,10 @@ public class IncomingDataBuffer {
         return incomingData;
     }
 
+    public byte[] getPacket(String msg) throws EOFException {
+        return getPacket(msg, false, System.currentTimeMillis());
+    }
+
     public byte[] getPacket(String msg, boolean allowLongResponse) throws EOFException {
         return getPacket(msg, allowLongResponse, System.currentTimeMillis());
     }

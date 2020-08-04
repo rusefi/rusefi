@@ -40,7 +40,7 @@ public class SerialAutoChecker implements Runnable {
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         try {
             HelloCommand.send(stream);
-            byte[] response = incomingData.getPacket("", false);
+            byte[] response = incomingData.getPacket("");
             if (!checkResponseCode(response, BinaryProtocolCommands.RESPONSE_OK))
                 return;
             String signature = new String(response, 1, response.length - 1);
