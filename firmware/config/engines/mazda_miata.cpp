@@ -92,8 +92,6 @@ static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->idle.solenoidFrequency = 160;
 
