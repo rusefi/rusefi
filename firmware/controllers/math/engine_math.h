@@ -59,8 +59,6 @@ void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAM
 
 int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void setFuelRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setFuelLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setTimingLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
 

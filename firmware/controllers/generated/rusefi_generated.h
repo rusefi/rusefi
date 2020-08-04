@@ -526,12 +526,9 @@
 #define fuelLevelEmptyTankVoltage_offset 684
 #define fuelLevelFullTankVoltage_offset 688
 #define fuelLevelSensor_offset 514
-#define fuelLoadBins_offset 16160
 #define fuelPumpPin_offset 658
 #define fuelPumpPinMode_offset 659
 #define fuelRailPressure_offset 1756
-#define fuelRpmBins_offset 16224
-#define fuelTable_offset 15136
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -1079,7 +1076,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2020.08.03
-#define SIGNATURE_HASH 3223547782
+#define SIGNATURE_HASH 1319574552
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1349,7 +1346,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.08.03.all.3223547782"
+#define TS_SIGNATURE "rusEFI 2020.08.03.all.1319574552"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
@@ -1358,6 +1355,7 @@
 #define un1used_former_warmup_target_afr_offset 2109
 #define unused1059_offset 3964
 #define unused1476b20_offset 1476
+#define unused15136_offset 15136
 #define unused2432_offset 2432
 #define unused244_1_offset 2420
 #define unused244_2_offset 2424

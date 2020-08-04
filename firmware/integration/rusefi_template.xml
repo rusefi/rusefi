@@ -64,23 +64,6 @@
             </table>
         </table>
 
-        <table type="3D" name="Fuel Table" 
-        category="Fuel"
-        storageaddress="@@fuelTable_offset_hex@@" sizex="@@FUEL_RPM_COUNT@@"
-               sizey="@@FUEL_LOAD_COUNT@@" storagetype="float" endian="big">
-            <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
-                     coarseincrement="1"/>
-            <table type="X Axis" storageaddress="@@fuelRpmBins_offset_hex@@" storagetype="float" endian="big"
-                   logparam="engine_load">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
-                         coarseincrement="1"/>
-            </table>
-            <table type="Y Axis" storageaddress="@@fuelLoadBins_offset_hex@@" storagetype="float" endian="big"
-                   logparam="rpm">
-                <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
-            </table>
-        </table>
-
         <table type="3D" name="FSIO Table #1" 
         category="FSIO"
         storageaddress="@@fsioTable1_offset_hex@@" sizex="@@FSIO_TABLE_8@@"

@@ -82,9 +82,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 1.839;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
-	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
-
 	static const float veRpmBins[] = 
 	{
 		800,
@@ -155,8 +152,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setLinearCurve(config->ignitionLoadBins, 20, 105, 5);
 	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
-	// set_whole_fuel_map 5
-	setWholeFuelMap(5 PASS_CONFIG_PARAMETER_SUFFIX);
 	setAfrMap(config->afrTable, 13.5);
 
 	setSingleCoilDwell(PASS_CONFIG_PARAMETER_SIGNATURE);
