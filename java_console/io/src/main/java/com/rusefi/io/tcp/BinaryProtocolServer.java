@@ -219,13 +219,13 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
             if (payload[6] == 1) {
                 log.info("TS_SD: do command, command=" + payload[payload.length - 1]);
                 sendOkResponse(stream);
-            } else if (payload[6] == 2) {
+            } else if (payload[6] == TS_SD_PROTOCOL_READ_DIR) {
                 log.info("TS_SD: read directory command " + payload[payload.length - 1]);
                 sendOkResponse(stream);
-            } else if (payload[6] == 6) {
+            } else if (payload[6] == TS_SD_PROTOCOL_REMOVE_FILE) {
                 log.info("TS_SD: remove file command " + Arrays.toString(packet.packet));
                 sendOkResponse(stream);
-            } else if (payload[6] == 8) {
+            } else if (payload[6] == TS_SD_PROTOCOL_FETCH_COMPRESSED) {
                 log.info("TS_SD: read compressed file command " + Arrays.toString(packet.packet));
                 ByteBuffer bb = ByteBuffer.wrap(payload, 7, 8);
                 bb.order(ByteOrder.BIG_ENDIAN);
@@ -241,7 +241,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     private void handleSD_R_command(TcpIoStream stream, Packet packet, byte[] payload) throws IOException {
         log.info("TS_SD: 'r' " + IoStream.printHexBinary(packet.packet));
-        if (payload[1] == 0 && payload[2] == 7) {
+        if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_RTC) {
             log.info("TS_SD: RTC read command");
             byte[] response = new byte[9];
             stream.sendPacket(response);
