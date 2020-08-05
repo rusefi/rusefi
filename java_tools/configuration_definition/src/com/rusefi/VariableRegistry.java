@@ -89,7 +89,7 @@ public class VariableRegistry  {
         if (value.trim().startsWith(HEX_PREFIX)) {
             int intValue = Integer.parseInt(value.trim().substring(HEX_PREFIX.length()), 16);
             intValues.put(var, intValue);
-            javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + EOL);
+            javaDefinitions.put(var, "\tpublic static final int " + var + " = " + value + ";" + EOL);
             return;
         }
 
