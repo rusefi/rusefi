@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;
@@ -17,6 +18,7 @@ import static com.rusefi.ReaderState.MULT_TOKEN;
 public class VariableRegistry  {
     public static final String _16_HEX_SUFFIX = "_16_hex";
     public static final String _HEX_SUFFIX = "_hex";
+    public static final String CHAR_SUFFIX = "_char";
     private static final String HEX_PREFIX = "0x";
     private final TreeMap<String, String> data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final VariableRegistry INSTANCE = new VariableRegistry();
@@ -51,9 +53,17 @@ public class VariableRegistry  {
     }
 
     public void register(String var, String value) {
+        value = doRegister(var, value);
+        if (value == null)
+            return;
+        tryToRegisterAsInteger(var, value);
+    }
+
+    @Nullable
+    private String doRegister(String var, String value) {
         if (data.containsKey(var)) {
             SystemOut.println("Not redefining " + var);
-            return;
+            return null;
         }
         value = applyVariables(value);
         int multPosition = value.indexOf(MULT_TOKEN);
@@ -72,7 +82,7 @@ public class VariableRegistry  {
                 cAllDefinitions.put(var, "#define " + var + " " + value + EOL);
             }
         }
-        tryToRegisterAsInteger(var, value);
+        return value;
     }
 
     public static boolean isNumeric(String str) {
@@ -110,6 +120,9 @@ public class VariableRegistry  {
                 } else if (isQuoted(value, '\'')) {
                     // quoted and not with enum suffix means plain string define statement
                     javaDefinitions.put(var, "\tpublic static final char " + var + " = " + value + ";" + EOL);
+                    char charValue = value.charAt(1);
+                    registerHex(var + CHAR_SUFFIX, charValue);
+                    doRegister(var + CHAR_SUFFIX, Character.toString(charValue));
                 }
             }
         }
@@ -133,6 +146,10 @@ public class VariableRegistry  {
      */
     public void register(String name, int value) {
         register(name, Integer.toString(value));
+        registerHex(name, value);
+    }
+
+    private void registerHex(String name, int value) {
         register(name + _HEX_SUFFIX, Integer.toString(value, 16));
         String _16_hex = String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF);
         register(name + _16_HEX_SUFFIX, _16_hex);
@@ -166,6 +183,10 @@ public class VariableRegistry  {
         data.clear();
         cAllDefinitions.clear();
         javaDefinitions.clear();
+    }
+
+    public int size() {
+        return data.size();
     }
 
     public void put(String key, String value) {
