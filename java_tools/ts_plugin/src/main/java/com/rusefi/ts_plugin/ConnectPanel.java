@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import static com.rusefi.config.generated.Fields.TS_SD_PROTOCOL_FETCH_INFO;
 
@@ -72,6 +74,21 @@ public class ConnectPanel {
                     stream.sendPacket(packet);
                     response = stream.getDataBuffer().getPacket("read command", true);
                     System.out.println("read command " + IoStream.printHexBinary(response));
+
+                    int fileIndex = 0;
+
+                    int offset = 32 * fileIndex;
+                    String fileNamePart = new String(response, 1 + offset, 8).trim();
+                    String fileExt =  new String(response, 1 + offset + 8, 3).trim();
+                    String fileName = fileNamePart + "." + fileExt;
+
+                    ByteBuffer bb = ByteBuffer.wrap(response, 1 + offset + 28, 4);
+                    bb.order(ByteOrder.LITTLE_ENDIAN);
+                    int size = bb.getInt();
+
+                    System.out.println("Filename " + fileName + " size " + size);
+
+
 
 
                 } catch (IOException ioException) {
