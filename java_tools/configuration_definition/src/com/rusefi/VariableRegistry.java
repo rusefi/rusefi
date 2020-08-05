@@ -17,7 +17,8 @@ import static com.rusefi.ReaderState.MULT_TOKEN;
 public class VariableRegistry  {
     private static final String _16_HEX_SUFFIX = "_16_hex";
     private static final String _HEX_SUFFIX = "_hex";
-    private TreeMap<String, String> data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private static final String HEX_PREFIX = "0x";
+    private final TreeMap<String, String> data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final VariableRegistry INSTANCE = new VariableRegistry();
 
     private final Pattern VAR = Pattern.compile("(@@(.*?)@@)");
@@ -85,6 +86,13 @@ public class VariableRegistry  {
 
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     private void tryToRegisterAsInteger(String var, String value) {
+        if (value.trim().startsWith(HEX_PREFIX)) {
+            int intValue = Integer.parseInt(value.trim().substring(HEX_PREFIX.length()), 16);
+            intValues.put(var, intValue);
+            javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + EOL);
+            return;
+        }
+
         try {
             int intValue = Integer.parseInt(value);
             SystemOut.println("key [" + var + "] value: " + intValue);
