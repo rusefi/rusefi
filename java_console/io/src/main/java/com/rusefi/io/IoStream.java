@@ -28,6 +28,8 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
     Logging log = getLogging(IoStream.class);
 
     static String printHexBinary(byte[] data) {
+        if (data == null)
+            return "(null)";
         char[] hexCode = "0123456789ABCDEF".toCharArray();
 
         StringBuilder r = new StringBuilder(data.length * 2);

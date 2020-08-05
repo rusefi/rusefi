@@ -122,6 +122,25 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void testDefine() throws IOException {
+        VariableRegistry.INSTANCE.clear();
+        ReaderState state = new ReaderState();
+        String test =
+                "#define ERROR_BUFFER_SIZE 120\n" +
+                        "#define ERROR_BUFFER_SIZE_H 0x120\n" +
+                "";
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+
+        assertEquals("\tpublic static final int ERROR_BUFFER_SIZE = 120;\n" +
+                        "\tpublic static final int ERROR_BUFFER_SIZE_H = 0x120;\n" +
+                        "",
+                VariableRegistry.INSTANCE.getJavaConstants());
+    }
+
+    @Test
     public void testFsioVisible() throws IOException {
         {
             ReaderState state = new ReaderState();

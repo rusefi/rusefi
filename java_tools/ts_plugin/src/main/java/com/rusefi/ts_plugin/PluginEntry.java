@@ -47,6 +47,7 @@ public class PluginEntry implements TsPluginBody {
         tabbedPane.addTab("Upload", uploadTab.getContent());
         tabbedPane.addTab("Broadcast", broadcastTab.getContent());
         tabbedPane.addTab("Remote ECU", remoteTab.getContent());
+        tabbedPane.addTab("Read SD Card", new SdCardReader().getContent());
         content.add(tabbedPane);
     }
 
