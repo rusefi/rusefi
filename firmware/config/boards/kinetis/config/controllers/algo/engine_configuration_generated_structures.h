@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Aug 05 03:19:46 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Aug 05 11:59:25 UTC 2020
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1322,9 +1322,10 @@ struct engine_configuration_s {
 	 */
 	uint8_t acIdleExtraOffset;
 	/**
+	 * CANbus thread period, ms
 	 * offset 712
 	 */
-	int unusedAt712;
+	int can2SleepPeriodMs;
 	/**
 	 * offset 716
 	 */
@@ -2592,12 +2593,130 @@ struct engine_configuration_s {
 	/**
 	 * offset 2111
 	 */
-	uint8_t unused_former_warmup_target_afr[18];
+	uint8_t unused_former_warmup_target_afr2;
 	/**
-	 * need 4 byte alignment
-	 * offset 2129
+	 * offset 2112
 	 */
-	uint8_t alignmentFill_at_2129[3];
+	uint32_t verboseCan2BaseAddress;
+	/**
+	 * CAN broadcast using custom rusEFI protocol
+	 * enable can_broadcast/disable can_broadcast
+	offset 2116 bit 0 */
+	bool enableVerboseCan2Tx : 1;
+	/**
+	 * enable can_read/disable can_read
+	offset 2116 bit 1 */
+	bool can2ReadEnabled : 1;
+	/**
+	 * enable can_write/disable can_write
+	offset 2116 bit 2 */
+	bool can2WriteEnabled : 1;
+	/**
+	offset 2116 bit 3 */
+	bool unused1126 : 1;
+	/**
+	offset 2116 bit 4 */
+	bool unused1127 : 1;
+	/**
+	offset 2116 bit 5 */
+	bool unused1128 : 1;
+	/**
+	offset 2116 bit 6 */
+	bool unused1129 : 1;
+	/**
+	offset 2116 bit 7 */
+	bool unused1130 : 1;
+	/**
+	offset 2116 bit 8 */
+	bool unusedBit_477_8 : 1;
+	/**
+	offset 2116 bit 9 */
+	bool unusedBit_477_9 : 1;
+	/**
+	offset 2116 bit 10 */
+	bool unusedBit_477_10 : 1;
+	/**
+	offset 2116 bit 11 */
+	bool unusedBit_477_11 : 1;
+	/**
+	offset 2116 bit 12 */
+	bool unusedBit_477_12 : 1;
+	/**
+	offset 2116 bit 13 */
+	bool unusedBit_477_13 : 1;
+	/**
+	offset 2116 bit 14 */
+	bool unusedBit_477_14 : 1;
+	/**
+	offset 2116 bit 15 */
+	bool unusedBit_477_15 : 1;
+	/**
+	offset 2116 bit 16 */
+	bool unusedBit_477_16 : 1;
+	/**
+	offset 2116 bit 17 */
+	bool unusedBit_477_17 : 1;
+	/**
+	offset 2116 bit 18 */
+	bool unusedBit_477_18 : 1;
+	/**
+	offset 2116 bit 19 */
+	bool unusedBit_477_19 : 1;
+	/**
+	offset 2116 bit 20 */
+	bool unusedBit_477_20 : 1;
+	/**
+	offset 2116 bit 21 */
+	bool unusedBit_477_21 : 1;
+	/**
+	offset 2116 bit 22 */
+	bool unusedBit_477_22 : 1;
+	/**
+	offset 2116 bit 23 */
+	bool unusedBit_477_23 : 1;
+	/**
+	offset 2116 bit 24 */
+	bool unusedBit_477_24 : 1;
+	/**
+	offset 2116 bit 25 */
+	bool unusedBit_477_25 : 1;
+	/**
+	offset 2116 bit 26 */
+	bool unusedBit_477_26 : 1;
+	/**
+	offset 2116 bit 27 */
+	bool unusedBit_477_27 : 1;
+	/**
+	offset 2116 bit 28 */
+	bool unusedBit_477_28 : 1;
+	/**
+	offset 2116 bit 29 */
+	bool unusedBit_477_29 : 1;
+	/**
+	offset 2116 bit 30 */
+	bool unusedBit_477_30 : 1;
+	/**
+	offset 2116 bit 31 */
+	bool unusedBit_477_31 : 1;
+	/**
+	 * set can_mode X
+	 * offset 2120
+	 */
+	can_nbc_e can2NbcType;
+	/**
+	 * set_can2_tx_pin X
+	 * offset 2124
+	 */
+	brain_pin_e can2TxPin;
+	/**
+	 * set_can2_rx_pin X
+	 * offset 2125
+	 */
+	brain_pin_e can2RxPin;
+	/**
+	 * offset 2126
+	 */
+	uint8_t unused_former_warmup_target_afr[6];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -3532,4 +3651,4 @@ struct persistent_config_s {
 typedef struct persistent_config_s persistent_config_s;
 
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Aug 05 03:19:46 UTC 2020
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Aug 05 11:59:25 UTC 2020
