@@ -134,7 +134,9 @@ public class ConfigFieldParserTest {
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
 
-        assertEquals("\tpublic static final int ERROR_BUFFER_SIZE = 120;\n",
+        assertEquals("\tpublic static final int ERROR_BUFFER_SIZE = 120;\n" +
+                        "\tpublic static final int ERROR_BUFFER_SIZE_H = 288;\n" +
+                        "",
                 VariableRegistry.INSTANCE.getJavaConstants());
     }
 
