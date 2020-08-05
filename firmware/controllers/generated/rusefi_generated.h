@@ -41,7 +41,6 @@
 #define afterstartHoldTime_offset 6152
 #define air_pressure_sensor_config_s_size 16
 #define alignEngineSnifferAtTDC_offset 744
-#define alignmentFill_at_2129_offset 2129
 #define alignmentFill_at_4514_offset 4514
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
@@ -177,6 +176,12 @@
 #define camInputs3_offset 558
 #define camInputs4_offset 559
 #define can2BaudRate_offset 2110
+#define can2NbcType_offset 2120
+#define can2ReadEnabled_offset 2116
+#define can2RxPin_offset 2125
+#define can2SleepPeriodMs_offset 712
+#define can2TxPin_offset 2124
+#define can2WriteEnabled_offset 2116
 #define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
 #define canBaudRate_offset 2108
@@ -304,6 +309,7 @@
 #define enableInnovateLC2_offset 976
 #define enableLaunchBoost_offset 976
 #define enableLaunchRetard_offset 976
+#define enableVerboseCan2Tx_offset 2116
 #define enableVerboseCanTx_offset 744
 #define engine_configuration_s_size 6000
 #define engine_load_mode_e_enum "INVALID", "Alpha-N/TPS", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "INVALID"
@@ -1076,7 +1082,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
 #define SIGNATURE_DATE 2020.08.05
-#define SIGNATURE_HASH 4227757186
+#define SIGNATURE_HASH 1481545352
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1337,6 +1343,7 @@
 #define TS_SET_LOGGER_SWITCH 'l'
 #define ts_show_analog_divider true
 #define ts_show_auxserial_pins true
+#define ts_show_can2 true
 #define ts_show_can_pins true
 #define ts_show_cj125 true
 #define ts_show_egt true
@@ -1353,7 +1360,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.08.05.all.4227757186"
+#define TS_SIGNATURE "rusEFI 2020.08.05.all.1481545352"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
@@ -1361,6 +1368,11 @@
 #define uartConsoleSerialSpeed_offset 2076
 #define un1used_former_warmup_target_afr_offset 2109
 #define unused1059_offset 3964
+#define unused1126_offset 2116
+#define unused1127_offset 2116
+#define unused1128_offset 2116
+#define unused1129_offset 2116
+#define unused1130_offset 2116
 #define unused1476b20_offset 1476
 #define unused15136_offset 15136
 #define unused2432_offset 2432
@@ -1381,8 +1393,8 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr_offset 2111
-#define unusedAt712_offset 712
+#define unused_former_warmup_target_afr2_offset 2111
+#define unused_former_warmup_target_afr_offset 2126
 #define unusedAt716_offset 716
 #define unusedAt720_offset 720
 #define unusedAt724_offset 724
@@ -1411,6 +1423,30 @@
 #define unusedBit_284_30_offset 976
 #define unusedBit_284_31_offset 976
 #define unusedBit_34_31_offset 76
+#define unusedBit_477_10_offset 2116
+#define unusedBit_477_11_offset 2116
+#define unusedBit_477_12_offset 2116
+#define unusedBit_477_13_offset 2116
+#define unusedBit_477_14_offset 2116
+#define unusedBit_477_15_offset 2116
+#define unusedBit_477_16_offset 2116
+#define unusedBit_477_17_offset 2116
+#define unusedBit_477_18_offset 2116
+#define unusedBit_477_19_offset 2116
+#define unusedBit_477_20_offset 2116
+#define unusedBit_477_21_offset 2116
+#define unusedBit_477_22_offset 2116
+#define unusedBit_477_23_offset 2116
+#define unusedBit_477_24_offset 2116
+#define unusedBit_477_25_offset 2116
+#define unusedBit_477_26_offset 2116
+#define unusedBit_477_27_offset 2116
+#define unusedBit_477_28_offset 2116
+#define unusedBit_477_29_offset 2116
+#define unusedBit_477_30_offset 2116
+#define unusedBit_477_31_offset 2116
+#define unusedBit_477_8_offset 2116
+#define unusedBit_477_9_offset 2116
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHere_offset 762
 #define unusedHereWeHave_offset 1464
@@ -1467,6 +1503,7 @@
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedSensorInputPin_offset 968
 #define veLoadBins_offset 18464
+#define verboseCan2BaseAddress_offset 2112
 #define verboseCanBaseAddress_offset 756
 #define verboseTLE8888_offset 744
 #define verboseTriggerSynchDetails_offset 1476

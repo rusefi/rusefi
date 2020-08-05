@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Aug 05 03:19:35 UTC 2020
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Aug 05 11:59:13 UTC 2020
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -44,7 +44,6 @@ public class Fields {
 	public static final int afterstartHoldTime_offset = 6152;
 	public static final int air_pressure_sensor_config_s_size = 16;
 	public static final int alignEngineSnifferAtTDC_offset = 744;
-	public static final int alignmentFill_at_2129_offset = 2129;
 	public static final int alignmentFill_at_4514_offset = 4514;
 	public static final int alternator_antiwindupFreq_offset = 1764;
 	public static final int alternator_derivativeFilterLoss_offset = 1760;
@@ -177,6 +176,12 @@ public class Fields {
 	public static final int camInputs3_offset = 558;
 	public static final int camInputs4_offset = 559;
 	public static final int can2BaudRate_offset = 2110;
+	public static final int can2NbcType_offset = 2120;
+	public static final int can2ReadEnabled_offset = 2116;
+	public static final int can2RxPin_offset = 2125;
+	public static final int can2SleepPeriodMs_offset = 712;
+	public static final int can2TxPin_offset = 2124;
+	public static final int can2WriteEnabled_offset = 2116;
 	public static final int CAN_DEFAULT_BASE = 0x200;
 	public static final int canBaudRate_offset = 2108;
 	public static final int canNbcType_offset = 480;
@@ -301,6 +306,7 @@ public class Fields {
 	public static final int enableInnovateLC2_offset = 976;
 	public static final int enableLaunchBoost_offset = 976;
 	public static final int enableLaunchRetard_offset = 976;
+	public static final int enableVerboseCan2Tx_offset = 2116;
 	public static final int enableVerboseCanTx_offset = 744;
 	public static final int engine_configuration_s_size = 6000;
 	public static final String ENGINE_MAKE_BMW = "BMW";
@@ -1058,6 +1064,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1481545352;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1313,7 +1320,7 @@ public class Fields {
 	public static final char TS_SD_R_COMMAND = 'r';
 	public static final char TS_SD_W_COMMAND = 'w';
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2020.08.05.all.4227757186";
+	public static final String TS_SIGNATURE = "rusEFI 2020.08.05.all.1481545352";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
@@ -1321,6 +1328,11 @@ public class Fields {
 	public static final int uartConsoleSerialSpeed_offset = 2076;
 	public static final int un1used_former_warmup_target_afr_offset = 2109;
 	public static final int unused1059_offset = 3964;
+	public static final int unused1126_offset = 2116;
+	public static final int unused1127_offset = 2116;
+	public static final int unused1128_offset = 2116;
+	public static final int unused1129_offset = 2116;
+	public static final int unused1130_offset = 2116;
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused15136_offset = 15136;
 	public static final int unused2432_offset = 2432;
@@ -1341,8 +1353,8 @@ public class Fields {
 	public static final int unused_1484_bit_30_offset = 1476;
 	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_alFIn_offset = 4024;
-	public static final int unused_former_warmup_target_afr_offset = 2111;
-	public static final int unusedAt712_offset = 712;
+	public static final int unused_former_warmup_target_afr2_offset = 2111;
+	public static final int unused_former_warmup_target_afr_offset = 2126;
 	public static final int unusedAt716_offset = 716;
 	public static final int unusedAt720_offset = 720;
 	public static final int unusedAt724_offset = 724;
@@ -1371,6 +1383,30 @@ public class Fields {
 	public static final int unusedBit_284_30_offset = 976;
 	public static final int unusedBit_284_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
+	public static final int unusedBit_477_10_offset = 2116;
+	public static final int unusedBit_477_11_offset = 2116;
+	public static final int unusedBit_477_12_offset = 2116;
+	public static final int unusedBit_477_13_offset = 2116;
+	public static final int unusedBit_477_14_offset = 2116;
+	public static final int unusedBit_477_15_offset = 2116;
+	public static final int unusedBit_477_16_offset = 2116;
+	public static final int unusedBit_477_17_offset = 2116;
+	public static final int unusedBit_477_18_offset = 2116;
+	public static final int unusedBit_477_19_offset = 2116;
+	public static final int unusedBit_477_20_offset = 2116;
+	public static final int unusedBit_477_21_offset = 2116;
+	public static final int unusedBit_477_22_offset = 2116;
+	public static final int unusedBit_477_23_offset = 2116;
+	public static final int unusedBit_477_24_offset = 2116;
+	public static final int unusedBit_477_25_offset = 2116;
+	public static final int unusedBit_477_26_offset = 2116;
+	public static final int unusedBit_477_27_offset = 2116;
+	public static final int unusedBit_477_28_offset = 2116;
+	public static final int unusedBit_477_29_offset = 2116;
+	public static final int unusedBit_477_30_offset = 2116;
+	public static final int unusedBit_477_31_offset = 2116;
+	public static final int unusedBit_477_8_offset = 2116;
+	public static final int unusedBit_477_9_offset = 2116;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedHere_offset = 762;
 	public static final int unusedHereWeHave_offset = 1464;
@@ -1427,6 +1463,7 @@ public class Fields {
 	public static final int vehicleSpeedCoef_offset = 476;
 	public static final int vehicleSpeedSensorInputPin_offset = 968;
 	public static final int veLoadBins_offset = 18464;
+	public static final int verboseCan2BaseAddress_offset = 2112;
 	public static final int verboseCanBaseAddress_offset = 756;
 	public static final int verboseTLE8888_offset = 744;
 	public static final int verboseTriggerSynchDetails_offset = 1476;
@@ -1698,7 +1735,7 @@ public class Fields {
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 709, FieldType.INT8, brain_pin_e);
 	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 710, FieldType.INT8);
 	public static final Field ACIDLEEXTRAOFFSET = Field.create("ACIDLEEXTRAOFFSET", 711, FieldType.INT8);
-	public static final Field UNUSEDAT712 = Field.create("UNUSEDAT712", 712, FieldType.INT);
+	public static final Field CAN2SLEEPPERIODMS = Field.create("CAN2SLEEPPERIODMS", 712, FieldType.INT);
 	public static final Field UNUSEDAT716 = Field.create("UNUSEDAT716", 716, FieldType.INT);
 	public static final Field UNUSEDAT720 = Field.create("UNUSEDAT720", 720, FieldType.INT);
 	public static final Field UNUSEDAT724 = Field.create("UNUSEDAT724", 724, FieldType.INT);
@@ -2176,6 +2213,43 @@ public class Fields {
 	public static final Field CANBAUDRATE = Field.create("CANBAUDRATE", 2108, FieldType.INT8, can_baudrate_e);
 	public static final Field UN1USED_FORMER_WARMUP_TARGET_AFR = Field.create("UN1USED_FORMER_WARMUP_TARGET_AFR", 2109, FieldType.INT8);
 	public static final Field CAN2BAUDRATE = Field.create("CAN2BAUDRATE", 2110, FieldType.INT8, can_baudrate_e);
+	public static final Field UNUSED_FORMER_WARMUP_TARGET_AFR2 = Field.create("UNUSED_FORMER_WARMUP_TARGET_AFR2", 2111, FieldType.INT8);
+	public static final Field VERBOSECAN2BASEADDRESS = Field.create("VERBOSECAN2BASEADDRESS", 2112, FieldType.INT);
+	public static final Field ENABLEVERBOSECAN2TX = Field.create("ENABLEVERBOSECAN2TX", 2116, FieldType.BIT, 0);
+	public static final Field CAN2READENABLED = Field.create("CAN2READENABLED", 2116, FieldType.BIT, 1);
+	public static final Field CAN2WRITEENABLED = Field.create("CAN2WRITEENABLED", 2116, FieldType.BIT, 2);
+	public static final Field UNUSED1126 = Field.create("UNUSED1126", 2116, FieldType.BIT, 3);
+	public static final Field UNUSED1127 = Field.create("UNUSED1127", 2116, FieldType.BIT, 4);
+	public static final Field UNUSED1128 = Field.create("UNUSED1128", 2116, FieldType.BIT, 5);
+	public static final Field UNUSED1129 = Field.create("UNUSED1129", 2116, FieldType.BIT, 6);
+	public static final Field UNUSED1130 = Field.create("UNUSED1130", 2116, FieldType.BIT, 7);
+	public static final Field UNUSEDBIT_477_8 = Field.create("UNUSEDBIT_477_8", 2116, FieldType.BIT, 8);
+	public static final Field UNUSEDBIT_477_9 = Field.create("UNUSEDBIT_477_9", 2116, FieldType.BIT, 9);
+	public static final Field UNUSEDBIT_477_10 = Field.create("UNUSEDBIT_477_10", 2116, FieldType.BIT, 10);
+	public static final Field UNUSEDBIT_477_11 = Field.create("UNUSEDBIT_477_11", 2116, FieldType.BIT, 11);
+	public static final Field UNUSEDBIT_477_12 = Field.create("UNUSEDBIT_477_12", 2116, FieldType.BIT, 12);
+	public static final Field UNUSEDBIT_477_13 = Field.create("UNUSEDBIT_477_13", 2116, FieldType.BIT, 13);
+	public static final Field UNUSEDBIT_477_14 = Field.create("UNUSEDBIT_477_14", 2116, FieldType.BIT, 14);
+	public static final Field UNUSEDBIT_477_15 = Field.create("UNUSEDBIT_477_15", 2116, FieldType.BIT, 15);
+	public static final Field UNUSEDBIT_477_16 = Field.create("UNUSEDBIT_477_16", 2116, FieldType.BIT, 16);
+	public static final Field UNUSEDBIT_477_17 = Field.create("UNUSEDBIT_477_17", 2116, FieldType.BIT, 17);
+	public static final Field UNUSEDBIT_477_18 = Field.create("UNUSEDBIT_477_18", 2116, FieldType.BIT, 18);
+	public static final Field UNUSEDBIT_477_19 = Field.create("UNUSEDBIT_477_19", 2116, FieldType.BIT, 19);
+	public static final Field UNUSEDBIT_477_20 = Field.create("UNUSEDBIT_477_20", 2116, FieldType.BIT, 20);
+	public static final Field UNUSEDBIT_477_21 = Field.create("UNUSEDBIT_477_21", 2116, FieldType.BIT, 21);
+	public static final Field UNUSEDBIT_477_22 = Field.create("UNUSEDBIT_477_22", 2116, FieldType.BIT, 22);
+	public static final Field UNUSEDBIT_477_23 = Field.create("UNUSEDBIT_477_23", 2116, FieldType.BIT, 23);
+	public static final Field UNUSEDBIT_477_24 = Field.create("UNUSEDBIT_477_24", 2116, FieldType.BIT, 24);
+	public static final Field UNUSEDBIT_477_25 = Field.create("UNUSEDBIT_477_25", 2116, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_477_26 = Field.create("UNUSEDBIT_477_26", 2116, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_477_27 = Field.create("UNUSEDBIT_477_27", 2116, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_477_28 = Field.create("UNUSEDBIT_477_28", 2116, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_477_29 = Field.create("UNUSEDBIT_477_29", 2116, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_477_30 = Field.create("UNUSEDBIT_477_30", 2116, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_477_31 = Field.create("UNUSEDBIT_477_31", 2116, FieldType.BIT, 31);
+	public static final Field CAN2NBCTYPE = Field.create("CAN2NBCTYPE", 2120, FieldType.INT);
+	public static final Field CAN2TXPIN = Field.create("CAN2TXPIN", 2124, FieldType.INT8, brain_pin_e);
+	public static final Field CAN2RXPIN = Field.create("CAN2RXPIN", 2125, FieldType.INT8, brain_pin_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
 	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2200, FieldType.INT8, adc_channel_e);
 	public static final Field FSIOADC2 = Field.create("FSIOADC2", 2201, FieldType.INT8, adc_channel_e);
@@ -2687,7 +2761,7 @@ public class Fields {
 	CANRXPIN,
 	THROTTLEPEDALUPPINMODE,
 	ACIDLEEXTRAOFFSET,
-	UNUSEDAT712,
+	CAN2SLEEPPERIODMS,
 	UNUSEDAT716,
 	UNUSEDAT720,
 	UNUSEDAT724,
@@ -3159,6 +3233,43 @@ public class Fields {
 	CANBAUDRATE,
 	UN1USED_FORMER_WARMUP_TARGET_AFR,
 	CAN2BAUDRATE,
+	UNUSED_FORMER_WARMUP_TARGET_AFR2,
+	VERBOSECAN2BASEADDRESS,
+	ENABLEVERBOSECAN2TX,
+	CAN2READENABLED,
+	CAN2WRITEENABLED,
+	UNUSED1126,
+	UNUSED1127,
+	UNUSED1128,
+	UNUSED1129,
+	UNUSED1130,
+	UNUSEDBIT_477_8,
+	UNUSEDBIT_477_9,
+	UNUSEDBIT_477_10,
+	UNUSEDBIT_477_11,
+	UNUSEDBIT_477_12,
+	UNUSEDBIT_477_13,
+	UNUSEDBIT_477_14,
+	UNUSEDBIT_477_15,
+	UNUSEDBIT_477_16,
+	UNUSEDBIT_477_17,
+	UNUSEDBIT_477_18,
+	UNUSEDBIT_477_19,
+	UNUSEDBIT_477_20,
+	UNUSEDBIT_477_21,
+	UNUSEDBIT_477_22,
+	UNUSEDBIT_477_23,
+	UNUSEDBIT_477_24,
+	UNUSEDBIT_477_25,
+	UNUSEDBIT_477_26,
+	UNUSEDBIT_477_27,
+	UNUSEDBIT_477_28,
+	UNUSEDBIT_477_29,
+	UNUSEDBIT_477_30,
+	UNUSEDBIT_477_31,
+	CAN2NBCTYPE,
+	CAN2TXPIN,
+	CAN2RXPIN,
 	BOOSTCUTPRESSURE,
 	FSIOADC1,
 	FSIOADC2,
