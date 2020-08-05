@@ -102,6 +102,7 @@ public class ConfigFieldParserTest {
 
     @Test
     public void useCustomType() throws IOException {
+        VariableRegistry.INSTANCE.clear();
         ReaderState state = new ReaderState();
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
@@ -118,7 +119,23 @@ public class ConfigFieldParserTest {
         assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING);\n" +
                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16);\n",
                 javaFieldsConsumer.getJavaFieldsWriter());
+    }
 
+    @Test
+    public void testDefineChar() throws IOException {
+        VariableRegistry.INSTANCE.clear();
+        ReaderState state = new ReaderState();
+        String test =
+                "#define SD_r 'r'\n" +
+                        "";
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+
+        assertEquals("\tpublic static final char SD_r = 'r';\n" +
+                        "",
+                VariableRegistry.INSTANCE.getJavaConstants());
     }
 
     @Test

@@ -15,8 +15,8 @@ import static com.rusefi.ReaderState.MULT_TOKEN;
  * 3/30/2015
  */
 public class VariableRegistry  {
-    private static final String _16_HEX_SUFFIX = "_16_hex";
-    private static final String _HEX_SUFFIX = "_hex";
+    public static final String _16_HEX_SUFFIX = "_16_hex";
+    public static final String _HEX_SUFFIX = "_hex";
     private static final String HEX_PREFIX = "0x";
     private final TreeMap<String, String> data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final VariableRegistry INSTANCE = new VariableRegistry();
