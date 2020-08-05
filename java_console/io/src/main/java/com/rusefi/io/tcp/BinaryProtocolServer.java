@@ -34,6 +34,7 @@ import static com.rusefi.config.generated.Fields.*;
  * This class makes rusEfi console a proxy for other tuning software, this way we can have two tools connected via same
  * serial port simultaneously
  *
+ * See BinaryProtocolServerSandbox
  * @author Andrey Belomutskiy
  * 11/24/15
  */
@@ -213,18 +214,18 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     private void handleSD_W_command(TcpIoStream stream, Packet packet, byte[] payload) throws IOException {
         log.info("TS_SD: 'w' " + IoStream.printHexBinary(packet.packet));
-        if (payload[1] == 0 && payload[2] == 0x11) {
+        if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_FETCH_INFO) {
 
-            if (payload[6] == 1) {
+            if (payload[6] == TS_SD_PROTOCOL_DO) {
                 log.info("TS_SD: do command, command=" + payload[payload.length - 1]);
                 sendOkResponse(stream);
-            } else if (payload[6] == 2) {
+            } else if (payload[6] == TS_SD_PROTOCOL_READ_DIR) {
                 log.info("TS_SD: read directory command " + payload[payload.length - 1]);
                 sendOkResponse(stream);
-            } else if (payload[6] == 6) {
+            } else if (payload[6] == TS_SD_PROTOCOL_REMOVE_FILE) {
                 log.info("TS_SD: remove file command " + Arrays.toString(packet.packet));
                 sendOkResponse(stream);
-            } else if (payload[6] == 8) {
+            } else if (payload[6] == TS_SD_PROTOCOL_FETCH_COMPRESSED) {
                 log.info("TS_SD: read compressed file command " + Arrays.toString(packet.packet));
                 ByteBuffer bb = ByteBuffer.wrap(payload, 7, 8);
                 bb.order(ByteOrder.BIG_ENDIAN);
@@ -232,6 +233,8 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 int sectorCount = bb.getInt();
                 log.info("TS_SD: sectorNumber=" + sectorNumber + ", sectorCount=" + sectorCount);
                 sendOkResponse(stream);
+            } else {
+                log.info("TS_SD: Got unexpected w fetch " + IoStream.printHexBinary(packet.packet));
             }
         } else {
             log.info("TS_SD: Got unexpected w " + IoStream.printHexBinary(packet.packet));
@@ -240,11 +243,11 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
     private void handleSD_R_command(TcpIoStream stream, Packet packet, byte[] payload) throws IOException {
         log.info("TS_SD: 'r' " + IoStream.printHexBinary(packet.packet));
-        if (payload[1] == 0 && payload[2] == 7) {
+        if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_RTC) {
             log.info("TS_SD: RTC read command");
             byte[] response = new byte[9];
             stream.sendPacket(response);
-        } else if (payload[1] == 0 && payload[2] == 0x11) {
+        } else if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_FETCH_INFO) {
             ByteBuffer bb = ByteBuffer.wrap(payload, 5, 2);
             bb.order(ByteOrder.BIG_ENDIAN);
             int bufferLength = bb.getShort();
@@ -268,7 +271,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
                 response[9] = 0;
                 response[10] = 1; // number of files
-            } else {
+            } else if (bufferLength == 0x202){
                 // SD read directory command
                 //
 
@@ -289,9 +292,12 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 //                response[1 + 30] = (byte) 1;
 //                response[1 + 31] = (byte) 0; // size
 
+            } else {
+                log.info("TS_SD: Got unexpected r fetch " + IoStream.printHexBinary(packet.packet));
+                return;
             }
             stream.sendPacket(response);
-        } else if (payload[1] == 0 && payload[2] == 0x14) {
+        } else if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_FETCH_DATA) {
             ByteBuffer bb = ByteBuffer.wrap(payload, 3, 4);
             bb.order(ByteOrder.BIG_ENDIAN);
             int blockNumber = bb.getShort();
