@@ -223,7 +223,9 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 log.info("TS_SD: read directory command " + payload[payload.length - 1]);
                 sendOkResponse(stream);
             } else if (payload[6] == TS_SD_PROTOCOL_REMOVE_FILE) {
-                log.info("TS_SD: remove file command " + Arrays.toString(packet.packet));
+                String pattern = new String(payload, 7, 4);
+                log.info("TS_SD: remove file command " + Arrays.toString(packet.packet) + " " + pattern);
+
                 sendOkResponse(stream);
             } else if (payload[6] == TS_SD_PROTOCOL_FETCH_COMPRESSED) {
                 log.info("TS_SD: read compressed file command " + Arrays.toString(packet.packet));
@@ -275,22 +277,9 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 // SD read directory command
                 //
 
-                System.arraycopy("hello123mlq".getBytes(), 0, response, 1, 11);
-                response[1 + 11] = 1; // file
-
-                response[1 + 23] = 3; // sector number
-
-                response[1 + 24] = (byte) 0; // size
-                response[1 + 25] = (byte) 0; // size
-
-                File f = new File(TEST_FILE);
-                int size = (int) f.length();
-
-                IoHelper.putInt(response, 29, IoHelper.swap32(size));
-
-//                response[1 + 29] = (byte) 128;
-//                response[1 + 30] = (byte) 1;
-//                response[1 + 31] = (byte) 0; // size
+                setFileEntry(response, 0, "hello123mlq", (int) new File(TEST_FILE).length());
+                setFileEntry(response, 1, "he      mlq", 1024);
+                setFileEntry(response, 2, "_333o123mlq", 1000000);
 
             } else {
                 log.info("TS_SD: Got unexpected r fetch " + IoStream.printHexBinary(packet.packet));
@@ -329,6 +318,19 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         } else {
             log.info("TS_SD: Got unexpected r " + IoStream.printHexBinary(packet.packet));
         }
+    }
+
+    private static void setFileEntry(byte[] response, int index, String fileName, int fileSize) {
+        int offset = 1 + 32 * index;
+        System.arraycopy(fileName.getBytes(), 0, response, offset, 11);
+        response[offset + 11] = 1; // file
+
+        response[offset + 23] = (byte) index; // sector number
+
+        response[offset + 24] = (byte) 0; // size
+        response[offset + 25] = (byte) 0; // size
+
+        IoHelper.putInt(response, offset + 28, IoHelper.swap32(fileSize));
     }
 
     private static void sendOkResponse(TcpIoStream stream) throws IOException {
