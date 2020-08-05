@@ -135,7 +135,7 @@ public class ConfigFieldParserTest {
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
 
         assertEquals("\tpublic static final int ERROR_BUFFER_SIZE = 120;\n" +
-                        "\tpublic static final int ERROR_BUFFER_SIZE_H = 288;\n" +
+                        "\tpublic static final int ERROR_BUFFER_SIZE_H = 0x120;\n" +
                         "",
                 VariableRegistry.INSTANCE.getJavaConstants());
     }
