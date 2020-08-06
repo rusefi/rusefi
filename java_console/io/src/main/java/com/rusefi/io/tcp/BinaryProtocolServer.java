@@ -285,6 +285,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 log.info("TS_SD: Got unexpected r fetch " + IoStream.printHexBinary(packet.packet));
                 return;
             }
+            log.info("TS_SD: sending " + IoStream.printHexBinary(response));
             stream.sendPacket(response);
         } else if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_FETCH_DATA) {
             ByteBuffer bb = ByteBuffer.wrap(payload, 3, 4);
@@ -324,11 +325,14 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         int offset = 1 + 32 * index;
         System.arraycopy(fileName.getBytes(), 0, response, offset, 11);
         response[offset + 11] = 1; // file
+        //  12-15 = undefined
 
-        response[offset + 23] = (byte) index; // sector number
+        for (int i = 18; i < 22; i++)
+            response[offset + i] = (byte) (i + 10 * index); // sector number
 
-        response[offset + 24] = (byte) 0; // size
-        response[offset + 25] = (byte) 0; // size
+        for (int i = 24; i < 28; i++) {
+            response[offset + i] = (byte) (i + index);
+        }
 
         IoHelper.putInt(response, offset + 28, IoHelper.swap32(fileSize));
     }
