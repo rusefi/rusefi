@@ -9,11 +9,13 @@
 
 #pragma once
 
+#include "tunerstudio_io.h"
+
 void initMmcCard(void);
 bool isSdCardAlive(void);
 void appendToLog(const char *line, size_t length);
 
 void readLogFileContent(char *buffer, short fileId, short offset, short length);
 
-void handleTsR(char *input);
-void handleTsW(char *input);
+void handleTsR(ts_channel_s *tsChannel, char *input);
+void handleTsW(ts_channel_s *tsChannel, char *input);

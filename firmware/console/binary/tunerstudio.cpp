@@ -202,7 +202,7 @@ static constexpr size_t getTunerStudioPageSize() {
 	return TOTAL_CONFIG_SIZE;
 }
 
-static void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
+void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	sr5SendResponse(tsChannel, mode, NULL, 0);
 }
 
@@ -308,17 +308,6 @@ static bool validateOffsetCount(size_t offset, size_t count, ts_channel_s *tsCha
 	}
 
 	return false;
-}
-
-/**
- * read log file content for rusEfi console
- */
-static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, uint16_t offset, uint16_t length) {
-//#if EFI_FILE_LOGGING
-//	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
-//#else
-	UNUSED(tsChannel); UNUSED(fileId); UNUSED(offset); UNUSED(length);
-//#endif /* EFI_FILE_LOGGING */
 }
 
 /**
@@ -458,7 +447,6 @@ static bool isKnownCommand(char command) {
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_STRUCT
-			|| command == TS_GET_FILE_RANGE
 			|| command == TS_SET_LOGGER_SWITCH
 			|| command == TS_GET_LOGGER_GET_BUFFER
 			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
@@ -762,12 +750,12 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	case TS_GET_FIRMWARE_VERSION:
 		handleGetVersion(tsChannel, TS_CRC);
 		break;
-#if EFI_FILE_LOGGING
+#if EFI_FILE_LOGGING || EFI_SIMULATOR
 	case TS_SD_R_COMMAND:
-		handleTsR(data);
+		handleTsR(tsChannel, data);
 		break;
 	case TS_SD_W_COMMAND:
-		handleTsW(data);
+		handleTsW(tsChannel, data);
 		break;
 #endif //EFI_FILE_LOGGING
 	case TS_GET_TEXT:
@@ -781,9 +769,6 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		break;
 	case TS_GET_STRUCT:
 		handleGetStructContent(tsChannel, data16[0], data16[1]);
-		break;
-	case TS_GET_FILE_RANGE:
-		handleReadFileContent(tsChannel, data16[0], data16[1], data16[2]);
 		break;
 	case TS_CHUNK_WRITE_COMMAND:
 		handleWriteChunkCommand(tsChannel, TS_CRC, data16[1], data16[2], data + sizeof(TunerStudioWriteChunkRequest));

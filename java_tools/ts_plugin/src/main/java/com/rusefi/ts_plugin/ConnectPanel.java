@@ -1,5 +1,6 @@
 package com.rusefi.ts_plugin;
 
+import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
@@ -35,7 +36,8 @@ public class ConnectPanel {
                         .setCompositeLogicEnabled(false)
                         .setNeedPullData(false);
 
-                controllerConnector.startAndConnect(":2390", ConnectionStateListener.VOID);
+                //controllerConnector.startAndConnect(":2390", ConnectionStateListener.VOID);
+                controllerConnector.startAndConnect(":29001", ConnectionStateListener.VOID);
 
             }
         });
@@ -86,6 +88,8 @@ public class ConnectPanel {
                     for (int fileIndex = 0; fileIndex < 512 / 32; fileIndex++) {
                         int offset = 32 * fileIndex;
                         String fileNamePart = new String(response, 1 + offset, 8).trim();
+                        if (fileNamePart.trim().isEmpty())
+                            break;
                         String fileExt = new String(response, 1 + offset + 8, 3).trim();
                         String fileName = fileNamePart + "." + fileExt;
 
@@ -118,7 +122,12 @@ public class ConnectPanel {
                         });
                         filePanel.add(delete);
 
+                        fileList.add(filePanel);
+
                         System.out.println("Filename " + fileName + " size " + size);
+
+
+                        AutoupdateUtil.trueLayout(fileList.getParent());
                     }
 
                 } catch (IOException ioException) {
@@ -126,6 +135,7 @@ public class ConnectPanel {
                 }
             }
         });
+
 
         flow.add(connect);
         flow.add(poke);
