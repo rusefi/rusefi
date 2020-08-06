@@ -87,21 +87,13 @@
 #include "mmc_card.h"
 #include "perf_trace.h"
 
+#include "signature.h"
+
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif /* EFI_SIMULATOR */
 
 #if EFI_TUNER_STUDIO
-
-
-#ifndef EFI_IDLE_CONTROL
- #if EFI_IDLE_PID_CIC
-  extern PidCic idlePid;
- #else
-  extern Pid idlePid;
- #endif /* EFI_IDLE_PID_CIC */
-#endif /* EFI_IDLE_CONTROL */
-
 
 EXTERN_ENGINE;
 
@@ -127,7 +119,7 @@ static efitimems_t previousWriteReportMs = 0;
 static ts_channel_s tsChannel;
 
 // this thread wants a bit extra stack
-static THD_WORKING_AREA(tunerstudioThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(tunerstudioThreadStack, CONNECTIVITY_THREAD_STACK);
 
 static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
@@ -153,21 +145,6 @@ void printTsStats(void) {
 #endif /* EFI_PROD_CODE */
 
 	printErrorCounters();
-
-//	scheduleMsg(logger, "analogChartFrequency %d",
-//			(int) (&engineConfiguration->analogChartFrequency) - (int) engineConfiguration);
-//
-//	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
-//	scheduleMsg(logger, "fuelTable %d", fuelMapOffset);
-//
-//	int offset = (int) (&CONFIG(hip9011Gain)) - (int) engineConfiguration;
-//	scheduleMsg(&tsLogger, "hip9011Gain %d", offset);
-//
-//	offset = (int) (&engineConfiguration->crankingCycleBins) - (int) engineConfiguration;
-//	scheduleMsg(&tsLogger, "crankingCycleBins %d", offset);
-//
-//	offset = (int) (&engineConfiguration->engineCycle) - (int) engineConfiguration;
-//	scheduleMsg(&tsLogger, "engineCycle %d", offset);
 }
 
 static void setTsSpeed(int value) {
@@ -269,19 +246,22 @@ static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 		memcpy(((char*) &persistentState.persistentConfiguration) + offset, ((char*) &configWorkingCopy) + offset,
 				count);
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
+
 	}
+	// todo: ECU does not burn while engine is running yet tune CRC
+	// tune CRC is calculated based on the latest online part (FSIO formulas are in online region of the tune)
+	// open question what's the best strategy to balance coding efforts, performance matters and tune crc functionality
+	// open question what is the runtime cost of wiping 2K of bytes on each IO communication, could be that 2K of byte memset
+	// is negligable comparing with the IO costs?
+	//		wipeStrings(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static const void * getStructAddr(int structId) {
 	switch (structId) {
-	case LDS_CLT_STATE_INDEX:
-		return static_cast<thermistor_state_s*>(&engine->engineState.cltCurve);
-	case LDS_IAT_STATE_INDEX:
-		return static_cast<thermistor_state_s*>(&engine->engineState.iatCurve);
 	case LDS_ENGINE_STATE_INDEX:
 		return static_cast<engine_state2_s*>(&engine->engineState);
 	case LDS_FUEL_TRIM_STATE_INDEX:
-		return static_cast<wall_fuel_state*>(&engine->wallFuel[0]);
+		return static_cast<wall_fuel_state*>(&engine->injectionEvents.elements[0].wallFuel);
 	case LDS_TRIGGER_CENTRAL_STATE_INDEX:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
 	case LDS_TRIGGER_STATE_STATE_INDEX:
@@ -293,7 +273,7 @@ static const void * getStructAddr(int structId) {
 
 #ifndef EFI_IDLE_CONTROL
 	case LDS_IDLE_PID_STATE_INDEX:
-		return static_cast<pid_state_s*>(&idlePid);
+		return static_cast<pid_state_s*>(getIdlePid());
 #endif /* EFI_IDLE_CONTROL */
 
 	default:
@@ -321,7 +301,7 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
 // Returns true if an overrun would occur.
 static bool validateOffsetCount(size_t offset, size_t count, ts_channel_s *tsChannel) {
 	if (offset + count > getTunerStudioPageSize()) {
-		scheduleMsg(&tsLogger, "TS: Project mismatch? Too much data requested %d/%d", offset, count);
+		scheduleMsg(&tsLogger, "TS: Project mismatch? Too much configuration requested %d/%d", offset, count);
 		tunerStudioError("ERROR: out of range");
 		sendErrorCode(tsChannel);
 		return true;
@@ -371,7 +351,9 @@ static void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	uint32_t crc = SWAP_UINT32(crc32((void * ) getWorkingPageAddr(), count));
 
-	scheduleMsg(&tsLogger, "CRC32 response: %x", crc);
+#if 0
+	scheduleMsg(&tsLogger, "Sending CRC32 response: %x", crc);
+#endif
 
 	sr5SendResponse(tsChannel, mode, (const uint8_t *) &crc, 4);
 }
@@ -437,10 +419,11 @@ static void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e 
 }
 
 void requestBurn(void) {
+	onBurnRequest(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_INTERNAL_FLASH
 	setNeedToWriteConfiguration();
 #endif
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel, const uint8_t responseCode) {
@@ -478,11 +461,14 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_FILE_RANGE
 			|| command == TS_SET_LOGGER_SWITCH
 			|| command == TS_GET_LOGGER_GET_BUFFER
+			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
+			|| command == TS_SD_R_COMMAND
+			|| command == TS_SD_W_COMMAND
 			|| command == TS_GET_CONFIG_ERROR;
 }
 
@@ -491,6 +477,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 	int wasReady = false;
 
 	while (true) {
+		validateStack("communication", STACK_USAGE_COMMUNICATION, 128);
+
 		int isReady = sr5IsReady(tsChannel);
 		if (!isReady) {
 			chThdSleepMilliseconds(10);
@@ -637,7 +625,8 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	scheduleMsg(&tsLogger, "got S/H (queryCommand) mode=%d", mode);
 	printTsStats();
 #endif
-	sr5SendResponse(tsChannel, mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
+	const char *signature = getTsSignature();
+	sr5SendResponse(tsChannel, mode, (const uint8_t *)signature, strlen(signature) + 1);
 }
 
 /**
@@ -646,7 +635,8 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
  */
 static void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	if (offset + count > sizeof(TunerStudioOutputChannels)) {
-		scheduleMsg(&tsLogger, "TS: Version Mismatch? Too much data requested %d+%d", offset, count);
+		scheduleMsg(&tsLogger, "TS: Version Mismatch? Too much outputs requested %d/%d/%d", offset, count,
+				sizeof(TunerStudioOutputChannels));
 		sendErrorCode(tsChannel);
 		return;
 	}
@@ -741,7 +731,7 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		 */
 
 		tunerStudioDebug("not ignoring F");
-		sr5WriteData(tsChannel, (const uint8_t *) PROTOCOL, strlen(PROTOCOL));
+		sr5WriteData(tsChannel, (const uint8_t *) TS_PROTOCOL, strlen(TS_PROTOCOL));
 		return true;
 	} else {
 		// This wasn't a valid command
@@ -772,6 +762,14 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	case TS_GET_FIRMWARE_VERSION:
 		handleGetVersion(tsChannel, TS_CRC);
 		break;
+#if EFI_FILE_LOGGING
+	case TS_SD_R_COMMAND:
+		handleTsR(data);
+		break;
+	case TS_SD_W_COMMAND:
+		handleTsW(data);
+		break;
+#endif //EFI_FILE_LOGGING
 	case TS_GET_TEXT:
 		handleGetText(tsChannel);
 		break;
@@ -830,10 +828,10 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 #if EFI_TOOTH_LOGGER
 	case TS_SET_LOGGER_SWITCH:
 		switch(data[0]) {
-		case 0x01:
+		case TS_COMPOSITE_ENABLE:
 			EnableToothLogger();
 			break;
-		case 0x02:
+		case TS_COMPOSITE_DISABLE:
 			DisableToothLogger();
 			break;
 		default:
@@ -845,17 +843,28 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 		break;
 		case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
+
 		{
+			EnableToothLoggerIfNotEnabled();
 			const uint8_t* const buffer = GetToothLoggerBuffer().Buffer;
 
 			const uint8_t* const start = buffer + COMPOSITE_PACKET_SIZE * transmitted;
 
 			int currentEnd = getCompositeRecordCount();
 
+			// set debug_mode 40
+			if (engineConfiguration->debugMode == DBG_COMPOSITE_LOG) {
+				tsOutputChannels.debugIntField1 = currentEnd;
+				tsOutputChannels.debugIntField2 = transmitted;
+
+			}
+
 			if (currentEnd > transmitted) {
 				// more normal case - tail after head
 				sr5SendResponse(tsChannel, TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted));
 				transmitted = currentEnd;
+			} else if (currentEnd == transmitted) {
+				sr5SendResponse(tsChannel, TS_CRC, start, 0);
 			} else {
 				// we are here if tail of buffer has reached the end of buffer and re-started from the start of buffer
 				// sending end of the buffer, next transmission would take care of the rest
@@ -886,10 +895,12 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
-#if HW_CHECK_MODE
-  #define configError "FACTORY_MODE_PLEASE_CONTACT_SUPPORT"
-#else
 		char * configError = getFirmwareError();
+#if HW_CHECK_MODE
+		// analog input errors are returned as firmware error in QC mode
+		if (!hasFirmwareError()) {
+			strcpy(configError, "FACTORY_MODE_PLEASE_CONTACT_SUPPORT");
+		}
 #endif // HW_CHECK_MODE
 		sr5SendResponse(tsChannel, TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
 		break;

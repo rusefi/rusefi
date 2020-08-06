@@ -4,7 +4,6 @@ on: [push,pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     
     steps:
@@ -12,9 +11,24 @@ jobs:
       with:
         submodules: recursive
       
+    - name: Generate Configs
+      working-directory: ./firmware/
+      run: bash gen_config_default.sh
+
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: bash gen_live_documentation.sh
+
     - name: Build Tests
       working-directory: ./unit_tests/
       run: make -j4
       
     - name: Run Tests
       run: ./unit_tests/build/rusefi_test
+
+    - name: Install Coverage Tools
+      run: sudo apt-get install ncftp lcov
+
+    - name: Generate Code Coverage
+      working-directory: ./unit_tests/
+      run: ./ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}

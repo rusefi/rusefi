@@ -7,6 +7,7 @@
 
 #include "engine_test_helper.h"
 #include "speed_density.h"
+#include "fuel_math.h"
 
 TEST(big, testSpeedDensity) {
 	printf("*************************************************** testSpeedDensity\r\n");
@@ -24,10 +25,10 @@ TEST(big, testSpeedDensity) {
 
 	engineConfiguration->injector.flow = gramm_second_to_cc_minute(5.303);
 
-	float airMass = getCylinderAirMass(0.92, 98, 293.16 PASS_ENGINE_PARAMETER_SUFFIX);
+	float airMass = SpeedDensityBase::getAirmassImpl(0.92, 98, 293.16 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_FLOAT_EQ(0.9371106624, airMass);
 
 	// 0.01414 sec or 14.14 ms
-	ASSERT_FLOAT_EQ(0.014137065038, sdMath(airMass, 12.5 PASS_ENGINE_PARAMETER_SUFFIX));
+	EXPECT_NEAR(0.014137, getInjectionDurationForAirmass(airMass, 12.5 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 }

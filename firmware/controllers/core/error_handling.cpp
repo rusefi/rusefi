@@ -7,6 +7,7 @@
 
 #include "engine.h"
 #include "os_access.h"
+#include "perf_trace.h"
 
 static char warningBuffer[ERROR_BUFFER_SIZE];
 static critical_msg_t criticalErrorMessageBuffer;
@@ -205,11 +206,20 @@ uint32_t maxLockedDuration = 0;
 +#define _dbg_leave_lock() {ON_UNLOCK_HOOK;(ch.dbg.lock_cnt = (cnt_t)0);}
  #endif
  */
+#endif /* EFI_CLOCK_LOCKS */
+
 void onLockHook(void) {
+#if ENABLE_PERF_TRACE
+	perfEventInstantGlobal(PE::GlobalLock);
+#endif /* ENABLE_PERF_TRACE */
+
+#if EFI_CLOCK_LOCKS
 	lastLockTime = getTimeNowLowerNt();
+#endif /* EFI_CLOCK_LOCKS */
 }
 
 void onUnlockHook(void) {
+#if EFI_CLOCK_LOCKS
 	uint32_t lockedDuration = getTimeNowLowerNt() - lastLockTime;
 	if (lockedDuration > maxLockedDuration) {
 		maxLockedDuration = lockedDuration;
@@ -218,9 +228,12 @@ void onUnlockHook(void) {
 //		// un-comment this if you want a nice stop for a breakpoint
 //		maxLockedDuration = lockedDuration + 1;
 //	}
-}
-
 #endif /* EFI_CLOCK_LOCKS */
+
+#if ENABLE_PERF_TRACE
+	perfEventInstantGlobal(PE::GlobalUnlock);
+#endif /* ENABLE_PERF_TRACE */
+}
 
 void firmwareError(obd_code_e code, const char *fmt, ...) {
 #if EFI_PROD_CODE

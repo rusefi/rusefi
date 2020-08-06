@@ -5,7 +5,7 @@ import java.util.Objects;
 import static com.rusefi.ConfigDefinition.EOL;
 
 /**
- * (c) Andrey Belomutskiy 2013-2019
+ * Andrey Belomutskiy, (c) 2013-2020
  */
 public class FieldRequest extends Request implements FieldReference  {
     private final String stateContext;

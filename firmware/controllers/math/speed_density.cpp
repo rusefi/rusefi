@@ -8,15 +8,14 @@
  */
 
 #include "global.h"
-#include "globalaccess.h"
 #include "speed_density.h"
+#include "fuel_math.h"
 #include "interpolation.h"
 #include "engine.h"
 #include "engine_math.h"
-#include "maf2map.h"
-#include "config_engine_specs.h"
 #include "perf_trace.h"
 #include "sensor.h"
+#include "map.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -113,79 +112,6 @@ temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return Tcharge;
 }
 
-/**
- * is J/g*K
- */
-#define GAS_R 0.28705
-
-/**
- * @return air mass in grams
- */
-static float getCycleAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_GLOBAL_SUFFIX) {
-	return (get_specs_displacement * volumetricEfficiency * MAP) / (GAS_R * tempK);
-}
-
-float getCylinderAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_GLOBAL_SUFFIX) {
-	return getCycleAirMass(volumetricEfficiency, MAP, tempK PASS_GLOBAL_SUFFIX)
-			/ get_specs_cylindersCount;
-}
-
-/**
- * @return per cylinder injection time, in seconds
- */
-float sdMath(float airMass, float AFR DECLARE_GLOBAL_SUFFIX) {
-
-	/**
-	 * todo: pre-calculate gramm/second injector flow to save one multiplication
-	 * open question if that's needed since that's just a multiplication
-	 */
-	float injectorFlowRate = cc_minute_to_gramm_second(get_injector_flow);
-	/**
-	 * injection_pulse_duration = fuel_mass / injector_flow
-	 * fuel_mass = air_mass / target_afr
-	 *
-	 * injection_pulse_duration = (air_mass / target_afr) / injector_flow
-	 */
-	return airMass / (AFR * injectorFlowRate);
-}
-
-EXTERN_ENGINE;
-
-/**
- * @return per cylinder injection time, in Milliseconds
- */
-floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
-	ScopePerf perf(PE::GetSpeedDensityFuel);
-
-	/**
-	 * most of the values are pre-calculated for performance reasons
-	 */
-	float tChargeK = ENGINE(engineState.sd.tChargeK);
-	if (cisnan(tChargeK)) {
-		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "tChargeK not ready"); // this would happen before we have CLT reading for example
-		return 0;
-	}
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(map), "NaN map", 0);
-
-	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_GLOBAL_SIGNATURE);
-
-	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", 0);
-
-	float airMass = getCylinderAirMass(ENGINE(engineState.currentBaroCorrectedVE), adjustedMap, tChargeK PASS_GLOBAL_SUFFIX);
-	if (cisnan(airMass)) {
-		warning(CUSTOM_ERR_6685, "NaN airMass");
-		return 0;
-	}
-#if EFI_PRINTF_FUEL_DETAILS
-	printf("map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
-			map, adjustedMap, engine->engineState.sd.adjustedManifoldAirPressure);
-#endif /*EFI_PRINTF_FUEL_DETAILS */
-
-	engine->engineState.sd.airMassInOneCylinder = airMass;
-	return sdMath(airMass, ENGINE(engineState.targetAFR) PASS_GLOBAL_SUFFIX) * 1000;
-}
-
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setRpmTableBin(config->veRpmBins, FUEL_RPM_COUNT);
 	veMap.setAll(80);
@@ -212,5 +138,4 @@ void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
 	afrMap.init(config->afrTable, config->afrLoadBins, config->afrRpmBins);
 	baroCorrMap.init(engineConfiguration->baroCorrTable, engineConfiguration->baroCorrPressureBins, engineConfiguration->baroCorrRpmBins);
-	initMaf2Map();
 }

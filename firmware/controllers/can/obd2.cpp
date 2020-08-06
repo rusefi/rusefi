@@ -41,8 +41,6 @@
 
 EXTERN_ENGINE;
 
-static LoggingWithStorage logger("obd2");
-
 static const int16_t supportedPids0120[] = { 
 	PID_MONITOR_STATUS,
 	PID_FUEL_SYSTEM_STATUS,
@@ -102,7 +100,6 @@ static void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *support
 	value = MOCK_SUPPORTED_PIDS;
 #endif
 
-	scheduleMsg(&logger, "Write bitfields 0x%08x", value);
 	obdSendPacket(1, PID, 4, value);
 }
 
@@ -110,73 +107,58 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 	int pid = rx.data8[2];
 	switch (pid) {
 	case PID_SUPPORTED_PIDS_REQUEST_01_20:
-		scheduleMsg(&logger, "Got lookup request 01-20");
 		obdWriteSupportedPids(pid, 1, supportedPids0120);
 		break;
 	case PID_SUPPORTED_PIDS_REQUEST_21_40:
-		scheduleMsg(&logger, "Got lookup request 21-40");
 		obdWriteSupportedPids(pid, 21, supportedPids2140);
 		break;
 	case PID_SUPPORTED_PIDS_REQUEST_41_60:
-		scheduleMsg(&logger, "Got lookup request 41-60");
 		obdWriteSupportedPids(pid, 41, supportedPids4160);
 		break;
 	case PID_MONITOR_STATUS:
-		scheduleMsg(&logger, "Got monitor status request");
 		obdSendPacket(1, pid, 4, 0);	// todo: add statuses
 		break;
 	case PID_FUEL_SYSTEM_STATUS:
-		scheduleMsg(&logger, "Got fuel system status request");
 		// todo: add statuses
 		obdSendValue(1, pid, 2, (2<<8)|(0));	// 2 = "Closed loop, using oxygen sensor feedback to determine fuel mix"
 		break;
 	case PID_ENGINE_LOAD:
-		scheduleMsg(&logger, "Got engine load request");
-		obdSendValue(1, pid, 1, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE) * 2.55f);
+		obdSendValue(1, pid, 1, getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE) * 2.55f);
 		break;
 	case PID_COOLANT_TEMP:
-		scheduleMsg(&logger, "Got CLT request");
 		obdSendValue(1, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + 40.0f);
 		break;
 	case PID_INTAKE_MAP:
-		scheduleMsg(&logger, "Got MAP request");
 		obdSendValue(1, pid, 1, getMap(PASS_ENGINE_PARAMETER_SIGNATURE));
 		break;
 	case PID_RPM:
-		scheduleMsg(&logger, "Got RPM request");
 		obdSendValue(1, pid, 2, GET_RPM() * 4.0f);	//	rotation/min.	(A*256+B)/4
 		break;
 	case PID_SPEED:
-		scheduleMsg(&logger, "Got speed request");
 		obdSendValue(1, pid, 1, getVehicleSpeed());
 		break;
 	case PID_TIMING_ADVANCE: {
-		scheduleMsg(&logger, "Got timing request");
 		float timing = engine->engineState.timingAdvance;
 		timing = (timing > 360.0f) ? (timing - 720.0f) : timing;
 		obdSendValue(1, pid, 1, (timing + 64.0f) * 2.0f);		// angle before TDC.	(A/2)-64
 		break;
 		}
 	case PID_INTAKE_TEMP:
-		scheduleMsg(&logger, "Got IAT request");
 		obdSendValue(1, pid, 1, Sensor::get(SensorType::Iat).value_or(0) + 40.0f);
 		break;
 	case PID_INTAKE_MAF:
-		scheduleMsg(&logger, "Got MAF request");
 		obdSendValue(1, pid, 2, getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) * 100.0f);	// grams/sec	(A*256+B)/100
 		break;
 	case PID_THROTTLE:
-		scheduleMsg(&logger, "Got throttle request");
 		obdSendValue(1, pid, 1, Sensor::get(SensorType::Tps1).value_or(0) * 2.55f);	// (A*100/255)
 		break;
 	case PID_FUEL_RATE:
-		scheduleMsg(&logger, "Got fuel rate request");
 		obdSendValue(1, pid, 2, engine->engineState.fuelConsumption.perSecondConsumption * 20.0f);	//	L/h.	(A*256+B)/20
 		break;
 	default:
-		scheduleMsg(&logger, "Got unhandled request (PID 0x%02x)", pid);
+		// ignore unhandled PIDs
+		break;
 	}
-	
 }
 
 static void handleDtcRequest(int numCodes, int *dtcCode) {
@@ -198,18 +180,15 @@ void obdOnCanPacketRx(const CANRxFrame& rx) {
 	if (rx.SID != OBD_TEST_REQUEST) {
 		return;
 	}
+
 	if (rx.data8[0] == 2 && rx.data8[1] == OBD_CURRENT_DATA) {
 		handleGetDataRequest(rx);
 	} else if (rx.data8[0] == 1 && rx.data8[1] == OBD_STORED_DIAGNOSTIC_TROUBLE_CODES) {
-		scheduleMsg(&logger, "Got stored DTC request");
 		// todo: implement stored/pending difference?
 		handleDtcRequest(1, &engine->engineState.warnings.lastErrorCode);
 	} else if (rx.data8[0] == 1 && rx.data8[1] == OBD_PENDING_DIAGNOSTIC_TROUBLE_CODES) {
-		scheduleMsg(&logger, "Got pending DTC request");
 		// todo: implement stored/pending difference?
 		handleDtcRequest(1, &engine->engineState.warnings.lastErrorCode);
-	} else {
-		scheduleMsg(&logger, "Got unhandled OBD message");
 	}
 }
 #endif /* HAL_USE_CAN */

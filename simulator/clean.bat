@@ -1,3 +1,2 @@
-echo Entering simulator\clean.bat
-rm -rf .dep
-rm -rf build
+@echo off
+sh.exe compile.sh

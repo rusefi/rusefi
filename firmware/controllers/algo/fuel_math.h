@@ -8,6 +8,7 @@
 #pragma once
 
 #include "engine.h"
+#include "airmass.h"
 
 void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -21,19 +22,16 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
  */
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-floatms_t getRealMafFuel(float airMass, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
-
-floatms_t getBaseTableFuel(int rpm, float engineLoad);
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
-angle_t getInjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+angle_t getInjectionOffset(float rpm, float load DECLARE_ENGINE_PARAMETER_SUFFIX);
 float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX);
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-floatms_t getCrankingFuel3(float coolantTemperature, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX);
+floatms_t getCrankingFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
+floatms_t getCrankingFuel3(floatms_t baseFuel, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX);
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
@@ -41,3 +39,4 @@ float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // convert injection duration (Ms/Nt) to fuel rate (L/h)
 float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getInjectionDurationForAirmass(float airMass, float afr DECLARE_ENGINE_PARAMETER_SUFFIX); 

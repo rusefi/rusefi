@@ -8,10 +8,11 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
 /**
  * Mutable representation of a list of related {@link ConfigField}
  * <p>
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/15/15
  */
 public class ConfigStructure {
+    private static final String ALIGNMENT_FILL_AT = "alignmentFill_at_";
 
     public final String name;
     public final String comment;
@@ -24,7 +25,7 @@ public class ConfigStructure {
     public final List<ConfigField> cFields = new ArrayList<>();
     public final List<ConfigField> tsFields = new ArrayList<>();
 
-    public int totalSize;
+    private int totalSize;
 
     public final BitState readingBitState = new BitState();
 
@@ -65,9 +66,9 @@ public class ConfigStructure {
         int fillSize = totalSize % 4 == 0 ? 0 : 4 - (totalSize % 4);
 
         if (fillSize != 0) {
-            ConfigField fill = new ConfigField(state, "alignmentFill_at_" + totalSize, "need 4 byte alignment",
+            ConfigField fill = new ConfigField(state, ALIGNMENT_FILL_AT + totalSize, "need 4 byte alignment",
                     "" + fillSize,
-                    TypesHelper.UINT8_T, fillSize, null, false, false, null, -1, null, null);
+                    TypesHelper.UINT8_T, fillSize, "\"units\", 1, 0, -20, 100, 0", false, false, null, -1, null, null);
             addBoth(fill);
         }
         totalSize += fillSize;
@@ -95,5 +96,9 @@ public class ConfigStructure {
             addBitField(bitField);
         }
         readingBitState.reset();
+    }
+
+    public int getTotalSize() {
+        return totalSize;
     }
 }

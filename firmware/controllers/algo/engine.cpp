@@ -131,6 +131,14 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
+#if HW_CHECK_MODE
+static void assertCloseTo(const char * msg, float actual, float expected) {
+	if (actual < 0.9 * expected || actual > 1.1 * expected) {
+		firmwareError(OBD_PCM_Processor_Fault, "%s analog input validation failed %f vs %f", msg, actual, expected);
+	}
+}
+#endif // HW_CHECK_MODE
+
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 	
@@ -164,7 +172,14 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif
 
-	slowCallBackWasInvoked = TRUE;
+	slowCallBackWasInvoked = true;
+
+#if HW_CHECK_MODE
+	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3);
+	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
+	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
+	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 6.2);
+#endif // HW_CHECK_MODE
 }
 
 
@@ -254,6 +269,10 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// we take 2 bytes of crc32, no idea if it's right to call it crc16 or not
 	// we have a hack here - we rely on the fact that engineMake is the first of three relevant fields
 	tsOutputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
+
+	// we need and can empty warning message for CRC purposes
+	memset(engine->config->warning_message, 0, sizeof(error_message_t));
+	tsOutputChannels.tuneCrc16 = crc32(engine->config, sizeof(persistent_config_s));
 #endif /* EFI_TUNER_STUDIO */
 }
 
@@ -482,6 +501,13 @@ operation_mode_e Engine::getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : engineConfiguration->ambiguousOperationMode;
 }
 
+int Engine::getRpmHardLimit(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engineConfiguration->useFSIO6ForRevLimiter) {
+		return fsioState.fsioRpmHardLimit;
+	}
+	return CONFIG(rpmHardLimit);
+}
+
 /**
  * The idea of this method is to execute all heavy calculations in a lower-priority thread,
  * so that trigger event handler/IO scheduler tasks are faster.
@@ -497,12 +523,6 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_SOFTWARE_KNOCK
 	processLastKnockEvent();
-#endif
-
-#if EFI_ENGINE_CONTROL
-	int rpm = GET_RPM();
-
-	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 }
 

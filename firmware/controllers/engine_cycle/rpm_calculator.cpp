@@ -165,7 +165,14 @@ void RpmCalculator::setRpmValue(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL
 	// This presumably fixes injection mode change for cranking-to-running transition.
 	// 'isSimultanious' flag should be updated for events if injection modes differ for cranking and running.
-	if (state != oldState) {
+	if (state != oldState && CONFIG(crankingInjectionMode) != CONFIG(injectionMode)) {
+		// Reset the state of all injectors: when we change fueling modes, we could
+		// immediately reschedule an injection that's currently underway.  That will cause
+		// the injector's overlappingCounter to get out of sync with reality.  As the fix,
+		// every injector's state is forcibly reset just before we could cause that to happen.
+		engine->injectionEvents.resetOverlapping();
+
+		// reschedule all injection events now that we've reset them
 		engine->injectionEvents.addFuelEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif
@@ -351,7 +358,9 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 
+#if !EFI_UNIT_TEST
 	addTriggerEventListener(tdcMarkCallback, "chart TDC mark", engine);
+#endif
 
 	addTriggerEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 }

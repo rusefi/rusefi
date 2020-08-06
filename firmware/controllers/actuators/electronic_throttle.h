@@ -19,6 +19,7 @@
 #include "engine.h"
 #include "closed_loop_controller.h"
 #include "expected.h"
+#include "sensor.h"
 
 class DcMotor;
 class Logging;
@@ -26,7 +27,7 @@ class Logging;
 class IEtbController : public ClosedLoopController<percent_t, percent_t> {
 public:
 	DECLARE_ENGINE_PTR;
-	virtual void init(DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
+	virtual void init(SensorType positionSensor, DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
 	virtual void reset() = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
 	virtual void start() = 0;
@@ -35,7 +36,7 @@ public:
 
 class EtbController : public IEtbController {
 public:
-	void init(DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
+	void init(SensorType positionSensor, DcMotor *motor, int ownIndex, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
 	void setIdlePosition(percent_t pos) override;
 	void reset() override;
 	void start() override {}
@@ -54,7 +55,7 @@ public:
 	expected<percent_t> getSetpoint() const override;
 
 	expected<percent_t> getOpenLoop(percent_t target) const override;
-	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t target) override;
+	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t observation) override;
 	expected<percent_t> getClosedLoopAutotune(percent_t actualThrottlePosition);
 
 	void setOutput(expected<percent_t> outputValue) override;
@@ -74,6 +75,7 @@ protected:
 
 private:
 	int m_myIndex = 0;
+	SensorType m_positionSensor = SensorType::Invalid;
 	DcMotor *m_motor = nullptr;
 	Pid m_pid;
 	bool m_shouldResetPid = false;

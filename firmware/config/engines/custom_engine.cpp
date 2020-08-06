@@ -533,8 +533,8 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[7 - 1] = TLE8888_PIN_11;
 	engineConfiguration->ignitionPins[8 - 1] = TLE8888_PIN_12;
 
-	engineConfiguration->ignitionPins[9 - 1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[10 - 1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[9 - 1] = GPIOB_0;
+	engineConfiguration->ignitionPins[10 - 1] = GPIOB_1;
 	engineConfiguration->ignitionPins[11 - 1] = GPIO_UNASSIGNED;
 	engineConfiguration->ignitionPins[12 - 1] = GPIO_UNASSIGNED;
 
@@ -630,7 +630,17 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	CONFIG(isSdCardEnabled) = false;
 
-	CONFIG(mc33_hvolt) = 63;
-
 	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
+
+	// This is the configuration for bosch HDEV 5 injectors
+	CONFIG(mc33_hvolt) = 65;
+	CONFIG(mc33_i_boost) = 13000;
+	CONFIG(mc33_i_peak) = 9400;
+	CONFIG(mc33_i_hold) = 3700;
+	CONFIG(mc33_t_max_boost) = 470;
+	CONFIG(mc33_t_peak_off) = 10;
+	CONFIG(mc33_t_peak_tot) = 700;
+	CONFIG(mc33_t_bypass) = 15;
+	CONFIG(mc33_t_hold_off) = 60;
+	CONFIG(mc33_t_hold_tot) = 10000;
 }

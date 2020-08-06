@@ -165,7 +165,7 @@
 #define EFI_IDLE_CONTROL TRUE
 #endif
 
-#define EFI_IDLE_PID_CIC FALSE
+#define EFI_IDLE_PID_CIC TRUE
 
 /**
  * Control the main power relay based on measured ignition voltage (Vbatt)
@@ -307,6 +307,8 @@
  * in mcuconf.h
  */
 #define TS_UART_DMA_MODE FALSE
+
+#define PRIMARY_UART_DMA_MODE FALSE
 
 //#define TS_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_DEVICE (&SD3)

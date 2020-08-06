@@ -44,6 +44,9 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 07/26/2020    | r24635    | improvement #1637: DC motor idle air valve for late 90s German vehicles |
+| 07/21/2020    |           | bugfix #1592 injectors could stay open on transition from cranking to running under certain conditions | 
+| 06/17/2020    | r23656    | bugfix #1491 major performance/scheduling improvement |
 | 05/21/2020    | r22961    | rusEFI console start-up time improvements |
 | 04/18/2020    | r22231    | Renix 44-2-2 trigger support added |
 | 04/02/2020    |           | Start button feature |

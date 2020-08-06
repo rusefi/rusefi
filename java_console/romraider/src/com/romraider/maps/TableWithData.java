@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.KeyListener;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 6/20/2015.
  */
 public abstract class TableWithData extends Table {

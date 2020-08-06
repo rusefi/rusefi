@@ -54,11 +54,11 @@ private:
 	/**
 	 * Used for Fractional TPS enrichment. 
 	 */
-	floatms_t accumulatedValue;
-	floatms_t maxExtraPerCycle;
-	floatms_t maxExtraPerPeriod;
-	floatms_t maxInjectedPerPeriod;
-	int cycleCnt;
+	floatms_t accumulatedValue = 0;
+	floatms_t maxExtraPerCycle = 0;
+	floatms_t maxExtraPerPeriod = 0;
+	floatms_t maxInjectedPerPeriod = 0;
+	int cycleCnt = 0;
 };
 
 /**

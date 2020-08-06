@@ -142,7 +142,9 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TRIGGER_SRC_CPP) \
 	$(INIT_SRC_CPP) \
+	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
 	$(PROJECT_DIR)/../unit_tests/main.cpp \
+	$(PROJECT_DIR)/console/binary/tooth_logger.cpp \
 	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
 
 
@@ -177,10 +179,10 @@ INCDIR = . \
 	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \
 	$(PROJECT_DIR)/ext_algo \
-	$(PROJECT_DIR)/hw_layer \
-	$(PROJECT_DIR)/hw_layer/algo \
-	$(PROJECT_DIR)/hw_layer/sensors/ \
 	$(PROJECT_DIR)/init/ \
+	$(PROJECT_DIR)/hw_layer/algo \
+	$(HW_LAYER_INC) \
+	$(HW_SENSORS_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	test_data_structures \
 	googletest/googlemock/include \

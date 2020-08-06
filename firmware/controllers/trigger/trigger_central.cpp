@@ -14,7 +14,6 @@
 #include "main_trigger_callback.h"
 #include "engine_configuration.h"
 #include "listener_array.h"
-#include "data_buffer.h"
 #include "pwm_generator_logic.h"
 #include "tooth_logger.h"
 
@@ -293,6 +292,9 @@ void hwHandleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIG(useNoiselessTriggerDecoder)) {
 		if (!isUsefulSignal(signal PASS_CONFIG_PARAMETER_SUFFIX)) {
+			/**
+			 * no need to process VR falls further
+			 */
 			return;
 		}
 	}
@@ -414,6 +416,9 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	return false;
 }
 
+/**
+ * This method is NOT invoked for VR falls.
+ */
 void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_CONF_NULL, engine!=NULL, "configuration");
 
@@ -480,7 +485,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 #if TRIGGER_EXTREME_LOGGING
 	scheduleMsg(logger, "trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
+#endif /* TRIGGER_EXTREME_LOGGING */
 
 		/**
 		 * Here we invoke all the listeners - the main engine control logic is inside these listeners

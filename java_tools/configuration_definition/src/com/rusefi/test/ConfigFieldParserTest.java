@@ -9,6 +9,7 @@ import com.rusefi.output.JavaFieldsConsumer;
 import org.junit.Test;
 
 import java.io.BufferedReader;
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
@@ -17,7 +18,7 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 
 /**
- * (c) Andrey Belomutskiy
+ * Andrey Belomutskiy, (c) 2013-2020
  * 1/15/15
  */
 public class ConfigFieldParserTest {
@@ -32,6 +33,23 @@ public class ConfigFieldParserTest {
             assertEquals(cf.getSize(null), 8);
             assertFalse("isIterate", cf.isIterate());
         }
+    }
+
+    @Test
+    public void testCustomEnum() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
+                "custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
+                "ego_sensor_e afr_type;\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        CharArrayWriter writer = new CharArrayWriter();
+        TestTSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        assertEquals("\tafr_type\t\t\t\t\t = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+                "; total TS size = 4\n", new String(writer.toCharArray()));
     }
 
     @Test
@@ -50,6 +68,17 @@ public class ConfigFieldParserTest {
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
 
         assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
+    }
+
+    @Test
+    public void manyStartAreNotMultiplication() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ERROR_BUFFER_SIZE \"***\"\n" +
+                "end_struct\n" +
+                "";
+        VariableRegistry.INSTANCE.clear();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+        new ReaderState().readBufferedReader(reader, Collections.emptyList());
     }
 
     @Test
@@ -73,6 +102,7 @@ public class ConfigFieldParserTest {
 
     @Test
     public void useCustomType() throws IOException {
+        VariableRegistry.INSTANCE.clear();
         ReaderState state = new ReaderState();
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
@@ -86,10 +116,45 @@ public class ConfigFieldParserTest {
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
 
-        assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, FieldType.INT);\n" +
+        assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING);\n" +
                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16);\n",
                 javaFieldsConsumer.getJavaFieldsWriter());
+    }
 
+    @Test
+    public void testDefineChar() throws IOException {
+        VariableRegistry.INSTANCE.clear();
+        ReaderState state = new ReaderState();
+        String test =
+                "#define SD_r 'r'\n" +
+                        "";
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+
+        assertEquals("\tpublic static final char SD_r = 'r';\n" +
+                        "",
+                VariableRegistry.INSTANCE.getJavaConstants());
+    }
+
+    @Test
+    public void testDefine() throws IOException {
+        VariableRegistry.INSTANCE.clear();
+        ReaderState state = new ReaderState();
+        String test =
+                "#define ERROR_BUFFER_SIZE 120\n" +
+                        "#define ERROR_BUFFER_SIZE_H 0x120\n" +
+                "";
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+
+        assertEquals("\tpublic static final int ERROR_BUFFER_SIZE = 120;\n" +
+                        "\tpublic static final int ERROR_BUFFER_SIZE_H = 0x120;\n" +
+                        "",
+                VariableRegistry.INSTANCE.getJavaConstants());
     }
 
     @Test

@@ -56,6 +56,8 @@
 
 extern BaseChannel serialAdapterInstance;
 
+#define UNIT_TEST_BUSY_WAIT_CALLBACK() {}
+
 #ifdef __cplusplus
 extern "C"
 {

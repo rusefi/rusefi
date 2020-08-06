@@ -89,7 +89,7 @@ void lockSpi(spi_device_e device) {
 	chMtxLock(&spiMtx);
 }
 
-void unlockSpi(void) {
+void unlockSpi(spi_device_e device) {
 	chMtxUnlock(&spiMtx);
 }
 
@@ -149,15 +149,6 @@ static I2CConfig i2cfg = { HAL_I2C_F7_100_TIMINGR, 0, 0 };	// todo: does it work
 #else /* defined(STM32F4XX) */
 static I2CConfig i2cfg = { OPMODE_I2C, 100000, STD_DUTY_CYCLE, };
 #endif /* defined(STM32F4XX) */
-
-void initI2Cmodule(void) {
-	print("Starting I2C module\r\n");
-	i2cInit();
-	i2cStart(&I2CD1, &i2cfg);
-
-	efiSetPadMode("I2C clock", EFI_I2C_SCL_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
-	efiSetPadMode("I2C data", EFI_I2C_SDA_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
-}
 
 //static char txbuf[1];
 
@@ -442,6 +433,13 @@ void initHardware(Logging *l) {
 #if EFI_INTERNAL_FLASH
 
 #ifdef CONFIG_RESET_SWITCH_PORT
+// this pin is not configurable at runtime so that we have a reliable way to reset configuration
+#define SHOULD_INGORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
+#else
+#define SHOULD_INGORE_FLASH() (false)
+#endif // CONFIG_RESET_SWITCH_PORT
+
+#ifdef CONFIG_RESET_SWITCH_PORT
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
 #endif /* CONFIG_RESET_SWITCH_PORT */
 
@@ -468,7 +466,6 @@ void initHardware(Logging *l) {
 	initSingleTimerExecutorHardware();
 
 #if EFI_HD44780_LCD
-//	initI2Cmodule();
 	lcd_HD44780_init(sharedLogger);
 	if (hasFirmwareError())
 		return;

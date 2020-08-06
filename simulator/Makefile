@@ -100,7 +100,11 @@ endif
 #
 
 # Define project name here
-PROJECT = rusefi_simulator
+ifeq ($(OS),Windows_NT)
+  PROJECT = rusefi_simulator.exe
+else
+  PROJECT = rusefi_simulator
+endif
 PROJECT_DIR = ../firmware
 
 # Imported source files and paths
@@ -192,7 +196,7 @@ INCDIR = . \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \
          $(HW_LAYER_DRIVERS_INC) \
-          $(PROJECT_DIR)/hw_layer \
+          $(HW_LAYER_INC) $(HW_SENSORS_INC) \
           $(PROJECT_DIR)/hw_layer/algo \
           $(PROJECT_DIR)/hw_layer/drivers/can \
           $(HW_SENSORS_INC) \
@@ -213,6 +217,8 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 ##############################################################################
 # Compiler settings
 #
+
+$(info OS is [${OS}])
 
 ifeq ($(OS),Windows_NT)
   # ChibiOS seem to require 32 bit compiler at least on Windows

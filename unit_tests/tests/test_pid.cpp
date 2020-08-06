@@ -62,31 +62,46 @@ TEST(util, pid) {
 
 	ASSERT_EQ( 0,  pid.getOutput(/*target*/50, /*input*/50)) << "target=50, input=50";
 	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=50 iTerm";
-
 }
 
-TEST(util, pidLimits) {
+static void commonPidTestParameters(pid_s * pidS) {
+	pidS->pFactor = 0;
+	pidS->iFactor = 50;
+	pidS->dFactor = 0;
+	pidS->offset = 0;
+	pidS->minValue = 10;
+	pidS->maxValue = 40;
+	pidS->periodMs = 1;
+}
 
+static void commonPidTest(Pid *pid) {
+	pid->iTermMax = 45;
+
+	ASSERT_EQ( 12.5,  pid->getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #0";
+	ASSERT_EQ( 12.5,  pid->getIntegration());
+	ASSERT_EQ( 25  ,  pid->getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #1";
+
+	ASSERT_EQ( 37.5,  pid->getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #2";
+	ASSERT_EQ( 37.5,  pid->getIntegration());
+
+	ASSERT_EQ( 40.0,  pid->getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #3";
+	ASSERT_EQ( 45,    pid->getIntegration());
+}
+
+TEST(util, parallelPidLimits) {
 	pid_s pidS;
-	pidS.pFactor = 0;
-	pidS.iFactor = 50;
-	pidS.dFactor = 0;
-	pidS.offset = 0;
-	pidS.minValue = 10;
-	pidS.maxValue = 40;
-	pidS.periodMs = 1;
+	commonPidTestParameters(&pidS);
 
 	Pid pid(&pidS);
+	commonPidTest(&pid);
+}
 
-	pid.iTermMax = 45;
+TEST(util, industrialPidLimits) {
+	pid_s pidS;
+	commonPidTestParameters(&pidS);
 
-	ASSERT_EQ( 12.5,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #0";
-	ASSERT_EQ( 25  ,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #1";
-
-	ASSERT_EQ( 37.5,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #2";
-
-	ASSERT_EQ( 40.0,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #3";
-
+	PidIndustrial pid(&pidS);
+	commonPidTest(&pid);
 }
 
 TEST(util, pidIndustrial) {

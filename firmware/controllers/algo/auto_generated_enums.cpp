@@ -1,7 +1,7 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Thu May 21 20:39:10 EDT 2020
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h // was generated automatically by rusEfi tool  from rusefi_enums.h // by enum2string.jar tool on Wed Jul 29 15:37:22 EDT 2020
 // see also gen_config_and_enums.bat
 
 
@@ -521,8 +521,23 @@ case TLE8888_PIN_9:
   }
  return NULL;
 }
+const char *getCan_baudrate_e(can_baudrate_e value){
+switch(value) {
+case B100KBPS:
+  return "B100KBPS";
+case B1MBPS:
+  return "B1MBPS";
+case B250KBPS:
+  return "B250KBPS";
+case B500KBPS:
+  return "B500KBPS";
+  }
+ return NULL;
+}
 const char *getCan_nbc_e(can_nbc_e value){
 switch(value) {
+case CAN_BUS_BMW_E90:
+  return "CAN_BUS_BMW_E90";
 case CAN_BUS_MAZDA_RX8:
   return "CAN_BUS_MAZDA_RX8";
 case CAN_BUS_NBC_BMW:
@@ -583,8 +598,10 @@ case DBG_2:
   return "DBG_2";
 case DBG_34:
   return "DBG_34";
-case DBG_40:
-  return "DBG_40";
+case DBG_43:
+  return "DBG_43";
+case DBG_44:
+  return "DBG_44";
 case DBG_ALTERNATOR_PID:
   return "DBG_ALTERNATOR_PID";
 case DBG_ANALOG_INPUTS:
@@ -603,6 +620,8 @@ case DBG_CAN:
   return "DBG_CAN";
 case DBG_CJ125:
   return "DBG_CJ125";
+case DBG_COMPOSITE_LOG:
+  return "DBG_COMPOSITE_LOG";
 case DBG_CRANKING_DETAILS:
   return "DBG_CRANKING_DETAILS";
 case DBG_DWELL_METRIC:
@@ -621,8 +640,12 @@ case DBG_EXECUTOR:
   return "DBG_EXECUTOR";
 case DBG_FSIO_ADC:
   return "DBG_FSIO_ADC";
-case DBG_FSIO_EXPRESSION:
-  return "DBG_FSIO_EXPRESSION";
+case DBG_FSIO_EXPRESSION_1_7:
+  return "DBG_FSIO_EXPRESSION_1_7";
+case DBG_FSIO_EXPRESSION_8_14:
+  return "DBG_FSIO_EXPRESSION_8_14";
+case DBG_FSIO_SPECIAL:
+  return "DBG_FSIO_SPECIAL";
 case DBG_FUEL_PID_CORRECTION:
   return "DBG_FUEL_PID_CORRECTION";
 case DBG_IDLE_CONTROL:
@@ -702,10 +725,10 @@ const char *getEngine_load_mode_e(engine_load_mode_e value){
 switch(value) {
 case Force_4_bytes_size_engine_load_mode:
   return "Force_4_bytes_size_engine_load_mode";
-case LM_ALPHA_N:
-  return "LM_ALPHA_N";
-case LM_PLAIN_MAF:
-  return "LM_PLAIN_MAF";
+case LM_ALPHA_N_2:
+  return "LM_ALPHA_N_2";
+case LM_MOCK:
+  return "LM_MOCK";
 case LM_REAL_MAF:
   return "LM_REAL_MAF";
 case LM_SPEED_DENSITY:
@@ -811,8 +834,10 @@ case MRE_BOARD_NEW_TEST:
   return "MRE_BOARD_NEW_TEST";
 case MRE_BOARD_OLD_TEST:
   return "MRE_BOARD_OLD_TEST";
-case MRE_MIATA_NA6:
-  return "MRE_MIATA_NA6";
+case MRE_MIATA_NA6_MAP:
+  return "MRE_MIATA_NA6_MAP";
+case MRE_MIATA_NA6_VAF:
+  return "MRE_MIATA_NA6_VAF";
 case MRE_MIATA_NB2_ETB:
   return "MRE_MIATA_NB2_ETB";
 case MRE_MIATA_NB2_MAF:
@@ -887,8 +912,12 @@ const char *getGppwm_channel_e(gppwm_channel_e value){
 switch(value) {
 case GPPWM_Clt:
   return "GPPWM_Clt";
+case GPPWM_FuelLoad:
+  return "GPPWM_FuelLoad";
 case GPPWM_Iat:
   return "GPPWM_Iat";
+case GPPWM_IgnLoad:
+  return "GPPWM_IgnLoad";
 case GPPWM_Map:
   return "GPPWM_Map";
 case GPPWM_Tps:
@@ -935,8 +964,6 @@ case IM_MANUAL:
 }
 const char *getIdle_state_e(idle_state_e value){
 switch(value) {
-case ADJUSTING:
-  return "ADJUSTING";
 case BLIP:
   return "BLIP";
 case Force_4bytes_size_idle_state_e:
@@ -947,8 +974,6 @@ case PID_UPPER:
   return "PID_UPPER";
 case PID_VALUE:
   return "PID_VALUE";
-case PWM_PRETTY_CLOSE:
-  return "PWM_PRETTY_CLOSE";
 case RPM_DEAD_ZONE:
   return "RPM_DEAD_ZONE";
 case TPS_THRESHOLD:

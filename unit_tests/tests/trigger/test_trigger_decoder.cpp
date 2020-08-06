@@ -23,6 +23,8 @@
 #include "trigger_universal.h"
 #include "sensor.h"
 
+using ::testing::_;
+
 extern WarningCodeState unitTestWarningCodeState;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
@@ -208,9 +210,6 @@ TEST(misc, testFordAspire) {
 
 	ASSERT_EQ( 4,  TRIGGER_WAVEFORM(getTriggerWaveformSynchPointIndex())) << "getTriggerWaveformSynchPointIndex";
 
-	ASSERT_EQ(800, config->fuelRpmBins[0]);
-	ASSERT_EQ(7000, config->fuelRpmBins[15]);
-
 	engineConfiguration->crankingChargeAngle = 65;
 	engineConfiguration->crankingTimingAngle = 31;
 	engineConfiguration->useConstantDwellDuringCranking = false;
@@ -295,9 +294,10 @@ static void assertREqualsM(const char *msg, void *expected, void *actual) {
 extern bool_t debugSignalExecutor;
 
 TEST(misc, testRpmCalculator) {
-	printf("*************************************************** testRpmCalculator\r\n");
-
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
 	IgnitionEventList *ilist = &engine->ignitionEvents;
 	ASSERT_EQ( 0,  ilist->isReady) << "size #1";
 
@@ -312,8 +312,6 @@ TEST(misc, testRpmCalculator) {
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-	engine->sensors.clt = 70; // 'testCltValue' does not give us exact number so we have to hack here. todo: migrate test
-	engine->sensors.iat = 30; // 'testIatValue' does not give us exact number so we have to hack here. todo: migrate test
 
 	ASSERT_EQ(0, GET_RPM());
 
@@ -568,21 +566,38 @@ TEST(misc, testTriggerDecoder) {
 
 extern fuel_Map3D_t fuelMap;
 
-static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
+static void assertInjectionEventBase(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
 	ASSERT_EQ(injectorIndex, ev->outputs[0]->injectorIndex) << msg << "inj index";
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.triggerEventIndex);
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffsetFromTriggerEvent);
 }
 
+static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
+	assertInjectionEventBase(msg, ev, injectorIndex, eventIndex, angleOffset);
+
+	// There should NOT be a second injector configured
+	EXPECT_EQ(nullptr, ev->outputs[1]);
+}
+
+static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int injectorIndex, int secondInjectorIndex, int eventIndex, angle_t angleOffset) {
+	assertInjectionEventBase(msg, ev, injectorIndex, eventIndex, angleOffset);
+
+	// There should be a second injector - confirm it's the correct one
+	ASSERT_NE(nullptr, ev->outputs[1]);
+	EXPECT_EQ(secondInjectorIndex, ev->outputs[1]->injectorIndex);
+}
+
 static void setTestBug299(EngineTestHelper *eth) {
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(eth);
+	EXPECT_CALL(eth->mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{0.1008001f, 50.0f}));
+
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
 
 
 	eth->assertRpm(0, "RPM=0");
-	ASSERT_EQ( 0,  getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE)) << "setTestBug299 EL";
-	ASSERT_NEAR( 30,  engine->sensors.iat, EPS4D) << "setTestBug299 IAT";
+
 	eth->fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth->assertRpm(0, "setTestBug299: RPM#1");
@@ -714,15 +729,8 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	assertInjectors("#0_inj", 0, 0);
 
-
-	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(8, engineLoadIndex);
-	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 25);
-	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 25);
-	
-
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_FLOAT_EQ(12.5, engine->injectionDuration) << "fuel#2_0";
+	engine->injectionDuration = 12.5f;
 	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#1";
@@ -781,8 +789,6 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	/**
 	 * one more revolution
 	 */
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 
 	t = &ENGINE(injectionEvents);
 
@@ -857,7 +863,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ( 5,  engine->executor.size()) << "Queue.size#03";
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	eth.assertInjectorUpEvent("07@0", 0, MS2US(7.5), 1);
 	eth.assertInjectorDownEvent("07@1", 1, MS2US(10), 0);
 	eth.assertInjectorUpEvent("07@2", 2, MS2US(17.5), 0);
@@ -879,17 +885,12 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 315);
 	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 45 + 90);
 
-	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
-	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("fuel#3", 17.5, engine->injectionDuration);
+	engine->injectionDuration = 17.5;
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 
 	assertInjectionEvent("#03", &t->elements[0], 0, 0, 315);
-
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
 	ASSERT_EQ( 1,  enginePins.injectors[0].currentLogicValue) << "inj#0";
@@ -905,9 +906,6 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 
 	eth.executeActions();
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-
 	eth.fireRise(20);
 	ASSERT_EQ( 7,  engine->executor.size()) << "Queue.size#05";
 	eth.executeActions();
@@ -919,8 +917,6 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
 	eth.firePrimaryTriggerRise();
-
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	t = &ENGINE(injectionEvents);
 
@@ -942,12 +938,6 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 ////	assertInjectorDownEvent("8@8", 8, MS2US(45), 1);
 ////	assertInjectorDownEvent("8@9", 9, MS2US(55), 0);
 
-	eth.executeActions();
-
-	engine->mockMapValue = 0;
-
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
 	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
 }
@@ -962,52 +952,93 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 	doTestFuelSchedulerBug299smallAndMedium(1000);
 }
 
-TEST(big, testDifferentInjectionModes) {
-	printf("*************************************************** testDifferentInjectionModes\r\n");
-
+TEST(big, testTwoWireBatch) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	setTestBug299(&eth);
-	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
-	// set fuel map values - extract method?
-	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(8, engineLoadIndex);
-	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 40);
-	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 40);
+	engineConfiguration->injectionMode = IM_BATCH;
+	engineConfiguration->twoWireBatchInjection = true;
 
+	eth.fireTriggerEventsWithDuration(20);
+	// still no RPM since need to cycles measure cycle duration
+	eth.fireTriggerEventsWithDuration(20);
+	eth.clearQueue();
+
+	/**
+	 * Trigger up - scheduling fuel for full engine cycle
+	 */
+	eth.fireRise(20);
+
+	FuelSchedule * t = &ENGINE(injectionEvents);
+
+	assertInjectionEventBatch("#0", &t->elements[0],		0, 3, 1, 153);	// Cyl 1 and 4
+	assertInjectionEventBatch("#1_i_@", &t->elements[1],	2, 1, 1, 153 + 180);	// Cyl 3 and 2
+	assertInjectionEventBatch("#2@", &t->elements[2],		3, 0, 0, 153);	// Cyl 4 and 1
+	assertInjectionEventBatch("inj#3@", &t->elements[3],	1, 2, 0, 153 + 180);	// Cyl 2 and 3
+}
+
+
+TEST(big, testSequential) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+	eth.fireTriggerEventsWithDuration(20);
+	// still no RPM since need to cycles measure cycle duration
+	eth.fireTriggerEventsWithDuration(20);
+	eth.clearQueue();
+
+	/**
+	 * Trigger up - scheduling fuel for full engine cycle
+	 */
+	eth.fireRise(20);
+
+	FuelSchedule * t = &ENGINE(injectionEvents);
+
+	assertInjectionEvent("#0", &t->elements[0],		0, 1, 126);	// Cyl 1
+	assertInjectionEvent("#1_i_@", &t->elements[1],	2, 1, 126 + 180);	// Cyl 3
+	assertInjectionEvent("#2@", &t->elements[2],	3, 0, 126);	// Cyl 4
+	assertInjectionEvent("inj#3@", &t->elements[3],	1, 0, 126 + 180);	// Cyl 2
+}
+
+TEST(big, testDifferentInjectionModes) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
+
+	setInjectionMode((int)IM_BATCH PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("injectionMode IM_BATCH", (int)IM_BATCH, (int)engineConfiguration->injectionMode);
-	ASSERT_EQ( 20,  engine->injectionDuration) << "injection while batch";
+	EXPECT_FLOAT_EQ( 20,  engine->injectionDuration) << "injection while batch";
 
 	setInjectionMode((int)IM_SIMULTANEOUS PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 10,  engine->injectionDuration) << "injection while simultaneous";
+	EXPECT_FLOAT_EQ( 10,  engine->injectionDuration) << "injection while simultaneous";
 
 	setInjectionMode((int)IM_SEQUENTIAL PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 40,  engine->injectionDuration) << "injection while IM_SEQUENTIAL";
+	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SEQUENTIAL";
 
 	setInjectionMode((int)IM_SINGLE_POINT PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 40,  engine->injectionDuration) << "injection while IM_SINGLE_POINT";
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testDifferentInjectionModes";
+	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SINGLE_POINT";
+	EXPECT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testDifferentInjectionModes";
 }
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
-	printf("*************************************************** testFuelSchedulerBug299 small to large\r\n");
-
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
 
-	// set fuel map values - extract method?
-	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(8, engineLoadIndex);
-	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
-	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
-
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_FLOAT_EQ(17.5, engine->injectionDuration) << "Lfuel#2_1";
+	engine->injectionDuration = 17.5f;
 	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 
@@ -1067,11 +1098,8 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	eth.executeActions();
 	ASSERT_EQ( 0,  engine->executor.size()) << "Lqs#04";
 
-	setArray(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 4);
-	setArray(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 4);
-
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 2,  engine->injectionDuration) << "Lfuel#4";
+	engine->injectionDuration = 2.0f;
 	ASSERT_EQ( 10,  getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX)) << "Lduty for maf=3";
 
 
@@ -1118,8 +1146,6 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT";
 
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);

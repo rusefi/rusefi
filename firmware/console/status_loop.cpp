@@ -228,6 +228,7 @@ static systime_t timeOfPreviousReport = (systime_t) -1;
  * @brief Sends all pending data to rusEfi console
  *
  * This method is periodically invoked by the main loop
+ * todo: is this mostly dead code?
  */
 void updateDevConsoleState(void) {
 	// todo: make SWO work
@@ -285,24 +286,24 @@ void updateDevConsoleState(void) {
 
 static void showFuelInfo2(float rpm, float engineLoad) {
 
-	float baseFuelMs = getBaseTableFuel((int) rpm, engineLoad);
+	float baseFuelMs = 0; // TODO 
 
-	float magicAir = getCylinderAirMass(1, 100, convertCelsiusToKelvin(20) PASS_ENGINE_PARAMETER_SUFFIX);
+	float magicAir = SpeedDensityBase::getAirmassImpl(1, 100, convertCelsiusToKelvin(20) PASS_ENGINE_PARAMETER_SUFFIX);
 
-	scheduleMsg(&logger, "SD magic fuel %.2f", sdMath(magicAir, 14.7 PASS_ENGINE_PARAMETER_SUFFIX));
+	scheduleMsg(&logger, "SD magic fuel %.2f", getInjectionDurationForAirmass(magicAir, 14.7 PASS_ENGINE_PARAMETER_SUFFIX));
 	scheduleMsg(&logger, "inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
 			engineConfiguration->specs.displacement);
 
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
-	scheduleMsg(&logger2, "injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm), engineConfiguration->globalFuelCorrection);
+	scheduleMsg(&logger2, "injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm, getFuelingLoad()), engineConfiguration->globalFuelCorrection);
 
 	scheduleMsg(&logger2, "baro correction=%.2f", engine->engineState.baroCorrection);
 
 #if EFI_ENGINE_CONTROL
 	scheduleMsg(&logger, "base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
-	scheduleMsg(&logger2, "cranking fuel: %.2f", getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE));
+	scheduleMsg(&logger2, "cranking fuel: %.2f", ENGINE(engineState.cranking.fuel));
 
 	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
@@ -322,7 +323,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 #if EFI_ENGINE_CONTROL
 static void showFuelInfo(void) {
-	showFuelInfo2((float) GET_RPM(), getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
+	showFuelInfo2((float) GET_RPM(), getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE));
 }
 #endif
 
@@ -339,8 +340,6 @@ static void initStatusLeds(void) {
 
 	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
 }
-
-#define BLINKING_PERIOD_MS 33
 
 #if EFI_PROD_CODE
 
@@ -391,20 +390,25 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 				enginePins.warningLedPin.setValue(0);
 			}
 		} else {
+#define BLINKING_PERIOD_MS 33
+
 			if (hasFirmwareError()) {
 				// special behavior in case of critical error - not equal on/off time
 				// this special behaviour helps to notice that something is not right, also
 				// differentiates software firmware error from critical interrupt error with CPU halt.
 				offTimeMs = 50;
 				onTimeMs = 450;
+			} else if (consoleByteArrived) {
+				consoleByteArrived = false;
+				offTimeMs = 100;
+				onTimeMs = 33;
+#if EFI_INTERNAL_FLASH
+			} else if (getNeedToWriteConfiguration()) {
+				offTimeMs = onTimeMs = 500;
+#endif // EFI_INTERNAL_FLASH
 			} else {
 				onTimeMs = is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS : BLINKING_PERIOD_MS;
-#if EFI_INTERNAL_FLASH
-				if (getNeedToWriteConfiguration()) {
-					onTimeMs = 2 * onTimeMs;
-				}
-#endif
-				offTimeMs = onTimeMs;
+				offTimeMs = 0.6 * onTimeMs;
 			}
 
 			enginePins.communicationLedPin.setValue(1);
@@ -415,8 +419,8 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 #endif // HW_CHECK_MODE
 
 	#if EFI_ENGINE_CONTROL
-			if (lowVBatt || isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
-				consoleByteArrived = false;
+			if (lowVBatt || isTriggerErrorNow() || isIgnitionTimingError()) {
+				// todo: at the moment warning codes do not affect warning LED?!
 				enginePins.warningLedPin.setValue(1);
 			}
 	#endif /* EFI_ENGINE_CONTROL */
@@ -440,7 +444,7 @@ public:
 private:
 	void PeriodicTask(efitick_t nowNt) override	{
 		UNUSED(nowNt);
-		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->lcdThreadPeriodMs));
+		setPeriod(NOT_TOO_OFTEN(10 /* ms */, 300));
 		if (engineConfiguration->useLcdScreen) {
 #if EFI_HD44780_LCD
 			updateHD44780lcd();
@@ -470,8 +474,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
 
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 
@@ -495,7 +497,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	SensorResult tps1 = Sensor::get(SensorType::Tps1);
 	tsOutputChannels->throttlePosition = tps1.Value;
 	tsOutputChannels->isTpsError = !tps1.Valid;
-	tsOutputChannels->tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1));
+	tsOutputChannels->tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1Primary));
 
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	tsOutputChannels->throttle2Position = tps2.Value;
@@ -503,11 +505,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	tsOutputChannels->pedalPosition = pedal.Value;
 	// Only report fail if you have one (many people don't)
-	tsOutputChannels->isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedal);
+	tsOutputChannels->isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 
 	// Set raw sensors
-	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1);
-	tsOutputChannels->rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedal);
+	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1Primary);
+	tsOutputChannels->rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
 	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
 	tsOutputChannels->rawIat = Sensor::getRaw(SensorType::Iat);
 	tsOutputChannels->rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
@@ -520,7 +522,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->airFuelRatio = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 	// offset 24
-	tsOutputChannels->engineLoad = engineLoad;
+	tsOutputChannels->engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	tsOutputChannels->fuelingLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// KLUDGE? we always show VBatt because Proteus board has VBatt input sensor hardcoded
 	// offset 28
@@ -557,11 +562,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 148
 	tsOutputChannels->fuelTankLevel = engine->sensors.fuelTankLevel;
 	// 160
-	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel[0]).getWallFuel();
+	const auto& wallFuel = ENGINE(injectionEvents.elements[0].wallFuel);
+	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel();
+	// 168
+	tsOutputChannels->wallFuelCorrection = wallFuel.wallFuelCorrection;
+
 	// 164
 	tsOutputChannels->iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
-	// 168
-	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuel[0]).wallFuelCorrection;
 	// 184
 	tsOutputChannels->cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
 	// 188
@@ -582,7 +589,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 120
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 	// 268
-	tsOutputChannels->fuelPidCorrection = ENGINE(engineState.running.pidCorrection);
+	tsOutputChannels->shortTermFuelTrim = 100.0f * (ENGINE(engineState.running.pidCorrection) - 1.0f);
 	// 276
 	tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
 	// 278
@@ -692,7 +699,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	// 60
 	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
-	tsOutputChannels->crankingFuelMs = engine->isCylinderCleanupMode ? 0 : getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->crankingFuelMs = ENGINE(engineState.cranking.fuel);
 	tsOutputChannels->chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
 
 	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
@@ -752,8 +759,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0] PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 		break;
-	case DBG_FSIO_EXPRESSION:
-#if EFI_PROD_CODE && EFI_FSIO
+	case DBG_FSIO_EXPRESSION_1_7:
+#if EFI_FSIO
 		tsOutputChannels->debugFloatField1 = getFsioOutputValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
 		tsOutputChannels->debugFloatField2 = getFsioOutputValue(1 PASS_ENGINE_PARAMETER_SUFFIX);
 		tsOutputChannels->debugFloatField3 = getFsioOutputValue(2 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -761,8 +768,21 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField5 = getFsioOutputValue(4 PASS_ENGINE_PARAMETER_SUFFIX);
 		tsOutputChannels->debugFloatField6 = getFsioOutputValue(5 PASS_ENGINE_PARAMETER_SUFFIX);
 		tsOutputChannels->debugFloatField7 = getFsioOutputValue(6 PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
 		break;
+	case DBG_FSIO_EXPRESSION_8_14:
+		tsOutputChannels->debugFloatField1 = getFsioOutputValue(7 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField2 = getFsioOutputValue(8 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField3 = getFsioOutputValue(9 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField4 = getFsioOutputValue(10 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField5 = getFsioOutputValue(11 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField6 = getFsioOutputValue(12 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField7 = getFsioOutputValue(13 PASS_ENGINE_PARAMETER_SUFFIX);
+		break;
+	case DBG_FSIO_SPECIAL:
+		tsOutputChannels->debugFloatField1 = ENGINE(fsioState.fsioIdleOffset);
+		tsOutputChannels->debugFloatField2 = ENGINE(fsioState.fsioIdleMinValue);
+		break;
+#endif /* EFI_FSIO */
 	case DBG_VEHICLE_SPEED_SENSOR:
 		tsOutputChannels->debugIntField1 = engine->engineState.vssEventCounter;
 		break;

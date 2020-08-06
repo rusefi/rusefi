@@ -36,7 +36,7 @@ float efiFloor(float value, float precision) {
 float efiRound(float value, float precision) {
 	efiAssert(CUSTOM_ERR_ASSERT, precision != 0, "zero precision", NAN);
 	float a = rintf (value / precision);
-	return a * precision;
+	return fixNegativeZero(a * precision);
 }
 
 float absF(float value) {
@@ -64,7 +64,7 @@ float clampF(float min, float clamp, float max) {
 }
 
 uint32_t efiStrlen(const char *param) {
-	register const char *s;
+	const char *s;
 	for (s = param; *s; ++s)
 		;
 	return (s - param);

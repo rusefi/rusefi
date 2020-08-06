@@ -21,7 +21,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
+#include "globalaccess.h"
 #include "os_access.h"
 #include "eficonsole.h"
 #include "console_io.h"
@@ -46,11 +46,11 @@ static void sayNothing(void) {
 }
 
 static void sayHello(void) {
-	scheduleMsg(&logger, "*** rusEFI LLC (c) 2012-2020. All rights reserved.");
-	scheduleMsg(&logger, "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
-	scheduleMsg(&logger, "*** Chibios Kernel:       %s", CH_KERNEL_VERSION);
-	scheduleMsg(&logger, "*** Compiled:     " __DATE__ " - " __TIME__ "");
-	scheduleMsg(&logger, "COMPILER=%s", __VERSION__);
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2020. All rights reserved.");
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
+	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " COMPILER=%s", __VERSION__);
 
 #if defined(STM32F4) || defined(STM32F7)
 	uint32_t *uid = ((uint32_t *)UID_BASE);
@@ -118,19 +118,28 @@ static void sayHello(void) {
 	chThdSleepMilliseconds(5);
 }
 
+void validateStack(const char*msg, obd_code_e code, int desiredStackUnusedSize) {
+
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
-static uintptr_t CountFreeStackSpace(const void* wabase)
-{
+	int unusedStack = CountFreeStackSpace(chThdGetSelfX()->wabase);
+	if (unusedStack < desiredStackUnusedSize) {
+		warning(code, "Stack low on %s: %d", msg, unusedStack);
+	}
+#endif
+}
+
+#if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
+int CountFreeStackSpace(const void* wabase) {
 	const uint8_t* stackBase = reinterpret_cast<const uint8_t*>(wabase);
 	const uint8_t* stackUsage = stackBase;
 
-	// thread stacks are filled with 0x55
+	// thread stacks are filled with CH_DBG_STACK_FILL_VALUE
 	// find out where that ends - that's the last thing we needed on the stack
-	while(*stackUsage == 0x55) {
+	while (*stackUsage == CH_DBG_STACK_FILL_VALUE) {
 		stackUsage++;
 	}
 
-	return stackUsage - stackBase;
+	return (int)(stackUsage - stackBase);
 }
 #endif
 
@@ -144,15 +153,15 @@ static void cmd_threads(void) {
 
 	scheduleMsg(&logger, "name\twabase\ttime\tfree stack");
 
-	while(tp) {
-		uintptr_t freeBytes = CountFreeStackSpace(tp->wabase);
-		scheduleMsg(&logger, "%s\t%08x\t%lu\t%lu", tp->name, tp->wabase, tp->time, freeBytes);
+	while (tp) {
+		int freeBytes = CountFreeStackSpace(tp->wabase);
+		scheduleMsg(&logger, "%s\t%08x\t%lu\t%d", tp->name, tp->wabase, tp->time, freeBytes);
 
 		tp = chRegNextThread(tp);
 	}
 
-	uintptr_t isrSpace = CountFreeStackSpace(reinterpret_cast<void*>(0x20000000));
-	scheduleMsg(&logger, "isr\t0\t0\t%lu", isrSpace);
+	int isrSpace = CountFreeStackSpace(reinterpret_cast<void*>(0x20000000));
+	scheduleMsg(&logger, "isr\t0\t0\t%d", isrSpace);
 
 #else // CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 
@@ -169,9 +178,13 @@ void print(const char *format, ...) {
 	if (!isCommandLineConsoleReady()) {
 		return;
 	}
+	BaseSequentialStream * channel = (BaseSequentialStream*) getConsoleChannel();
+	if (channel == nullptr) {
+		return;
+	}
 	va_list ap;
 	va_start(ap, format);
-	chvprintf((BaseSequentialStream*) getConsoleChannel(), format, ap);
+	chvprintf(channel, format, ap);
 	va_end(ap);
 #else
 	UNUSED(format);

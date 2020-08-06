@@ -20,7 +20,7 @@ size_t LogField::writeHeader(char* buffer) const {
 	// Offset 0, length 1 = type
 	buffer[0] = static_cast<char>(m_type);
 
-	// Offset 0, length 34 = name
+	// Offset 1, length 34 = name
 	strncpy(&buffer[1], m_name, 34);
 
 	// Offset 35, length 10 = units
@@ -40,7 +40,7 @@ size_t LogField::writeHeader(char* buffer) const {
 	buffer[54] = m_digits;
 
 	// Total size = 55
-	return 55;
+	return MLQ_FIELD_HEADER_SIZE;
 }
 
 size_t LogField::writeData(char* buffer) const {

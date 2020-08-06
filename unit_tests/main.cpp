@@ -12,7 +12,6 @@
 
 #include "engine_configuration.h"
 
-#include "afm2mapConverter.h"
 #include "test_signal_executor.h"
 #include "trigger_central.h"
 #include "map_resize.h"
@@ -41,7 +40,7 @@ GTEST_API_ int main(int argc, char **argv) {
 	//	resizeMap();
 	printf("Success 20200510\r\n");
 	printAllTriggers();
-//	printConvertedTable();
+
 	testing::InitGoogleTest(&argc, argv);
 	// uncomment if you only want to run selected tests
 	//::testing::GTEST_FLAG(filter) = "*testFasterEngineSpinningUp*";
@@ -58,14 +57,4 @@ void print(const char *format, ...) {
 }
 
 void initLogging(LoggingWithStorage *logging, const char *name) {
-}
-
-void scheduleMsg(Logging *logging, const char *format, ...) {
-	if (verboseMode) {
-		va_list ap;
-		va_start(ap, format);
-		vprintf(format, ap);
-		va_end(ap);
-		printf("\r\n");
-	}
 }

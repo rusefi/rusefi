@@ -32,11 +32,6 @@ EXTERN_ENGINE;
  */
 #define NO_PWM 0
 
-// see useFSIO15ForIdleRpmAdjustment
-#define MAGIC_OFFSET_FOR_IDLE_TARGET_RPM 14
-// see useFSIO16ForTimingAdjustment
-#define MAGIC_OFFSET_FOR_TIMING_FSIO 15
-
 fsio8_Map3D_f32t fsioTable1("fsio#1");
 fsio8_Map3D_u8t fsioTable2("fsio#2");
 fsio8_Map3D_u8t fsioTable3("fsio#3");
@@ -151,6 +146,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_TPS:
 		return Sensor::get(SensorType::DriverThrottleIntent).value_or(0);
+	// cfg_xxx references are code generated
 #include "fsio_getters.def"
 	default:
 		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO ERROR no data for action=%d", action);
@@ -260,9 +256,9 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	userPool.reset();
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		const char *formula = config->fsioFormulas[i];
+		int len = strlen(formula);
 		LEElement *logic = userPool.parseExpression(formula);
-		brain_pin_e brainPin = CONFIG(fsioOutputPins)[i];
-		if (brainPin != GPIO_UNASSIGNED && logic == NULL) {
+		if (len > 0 && logic == NULL) {
 			warning(CUSTOM_FSIO_PARSING, "parsing [%s]", formula);
 		}
 
@@ -332,8 +328,8 @@ float getFsioOutputValue(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * @param index from zero for (FSIO_COMMAND_COUNT - 1)
  */
-static void handleFsio(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (CONFIG(fsioOutputPins)[index] == GPIO_UNASSIGNED) {
+static void runFsioCalculation(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (strlen(config->fsioFormulas[index]) == 0) {
 		engine->fsioState.fsioLastValue[index] = NAN;
 		return;
 	}
@@ -424,7 +420,8 @@ static void setFsioFrequency(int index, int frequency) {
  * @param out param! current and new value as long as element is not NULL
  * @return 'true' if value has changed
  */
-static bool updateValueOrWarning(int fsioIndex, const char *msg, float *value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static bool updateValueOrWarning(int humanIndex, const char *msg, float *value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	int fsioIndex = humanIndex - 1;
 	LEElement * element = state.fsioLogics[fsioIndex];
 	if (element == NULL) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
@@ -438,7 +435,7 @@ static bool updateValueOrWarning(int fsioIndex, const char *msg, float *value DE
 }
 
 static void useFsioForServo(int servoIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	updateValueOrWarning(8 - 1 + servoIndex, "servo", &engine->fsioState.servoValues[servoIndex] PASS_ENGINE_PARAMETER_SUFFIX);
+	updateValueOrWarning(8 + servoIndex, "servo", &engine->fsioState.servoValues[servoIndex] PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 /**
@@ -446,7 +443,7 @@ static void useFsioForServo(int servoIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
  */
 void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int index = 0; index < FSIO_COMMAND_COUNT; index++) {
-		handleFsio(index PASS_ENGINE_PARAMETER_SUFFIX);
+		runFsioCalculation(index PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 #if EFI_FUEL_PUMP
@@ -514,6 +511,10 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &ENGINE(fsioState.fsioTimingAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+
+	if (engineConfiguration->useFSIO6ForRevLimiter) {
+		updateValueOrWarning(6, "rpm limit", &ENGINE(fsioState.fsioRpmHardLimit) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	if (engineConfiguration->useFSIO8ForServo1) {
@@ -613,7 +614,7 @@ static void setFsioSetting(float humanIndexF, float value) {
 #endif
 }
 
-void setFsioExpression(const char *indexStr, const char *quotedLine DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setFsioExpression(const char *indexStr, const char *quotedLine DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", index);
@@ -627,6 +628,11 @@ void setFsioExpression(const char *indexStr, const char *quotedLine DECLARE_ENGI
 
 	scheduleMsg(logger, "setting user out #%d to [%s]", index + 1, l);
 	strcpy(config->fsioFormulas[index], l);
+}
+
+void applyFsioExpression(const char *indexStr, const char *quotedLine DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	setFsioExpression(indexStr, quotedLine PASS_CONFIG_PARAMETER_SUFFIX);
+
 	// this would apply the changes
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	showFsioInfo();
@@ -717,7 +723,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif /* EFI_PROD_CODE */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	addConsoleActionSS("set_rpn_expression", setFsioExpression);
+	addConsoleActionSS("set_rpn_expression", applyFsioExpression);
 	addConsoleActionFF("set_fsio_setting", setFsioSetting);
 	addConsoleAction("fsioinfo", showFsioInfo);
 	addConsoleActionS("rpn_eval", (VoidCharPtr) rpnEval);

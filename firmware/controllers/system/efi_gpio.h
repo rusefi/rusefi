@@ -23,6 +23,13 @@ void turnAllPinsOff(void);
 #define turnAllPinsOff() {}
 #endif /* EFI_GPIO_HARDWARE */
 
+// Used if you want a function to be virtual only for unit testing purposes
+#if EFI_UNIT_TEST
+#define TEST_VIRTUAL virtual
+#else
+#define TEST_VIRTUAL
+#endif
+
 #ifdef __cplusplus
 /**
  * @brief   Single output pin reference and state
@@ -48,7 +55,7 @@ public:
 	bool isInitialized();
 
 	bool getAndSet(int logicValue);
-	void setValue(int logicValue);
+	TEST_VIRTUAL void setValue(int logicValue);
 	void toggle();
 	bool getLogicValue() const;
 
@@ -96,12 +103,20 @@ public:
 	const char *shortName = NULL;
 };
 
-class InjectorOutputPin : public NamedOutputPin {
+class InjectorOutputPin final : public NamedOutputPin {
 public:
 	InjectorOutputPin();
 	void reset();
+
+	void open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void close(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	int8_t getOverlappingCounter() const { return overlappingCounter; }
+
 	// todo: re-implement this injectorIndex via address manipulation to reduce memory usage?
 	int8_t injectorIndex;
+
+private:
 	int8_t overlappingCounter;
 };
 

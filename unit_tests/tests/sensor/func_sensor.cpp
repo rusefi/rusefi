@@ -40,7 +40,7 @@ TEST_F(SensorConverted, TestValid) {
 		EXPECT_FALSE(s.Valid);
 	}
 
-	dut.postRawValue(25, 0);
+	dut.postRawValue(25, getTimeNowNt());
 
 	// Should be valid, with a value of 25*2 = 50
 	{

@@ -10,7 +10,6 @@
 #include "global.h"
 #include "engine_configuration_generated_structures.h"
 #include "cyclic_buffer.h"
-#include "thermistor_generated.h"
 
 #define MOCK_ADC_SIZE 26
 
@@ -24,19 +23,6 @@ public:
 	int getMockAdcValue(int hwChannel) const;
 };
 
-class ThermistorMath : public thermistor_state_s {
-public:
-	void setConfig(thermistor_conf_s *config);
-	void prepareThermistorCurve(thermistor_conf_s *tc);
-	float getKelvinTemperatureByResistance(float resistance) const;
-	float s_h_a = 0;
-	float s_h_b = 0;
-	float s_h_c = 0;
-	bool isLinear;
-private:
-	thermistor_conf_s currentConfig = {0,0,0,0,0,0,0};
-};
-
 class Accelerometer {
 public:
 	float x = 0; // G value
@@ -47,24 +33,11 @@ public:
 class SensorsState {
 public:
 	SensorsState();
-	/**
-	 * Performance optimization:
-	 * log() function needed for thermistor logic is relatively heavy, to avoid it we have these
-	 * pre-calculated values
-	 * Access to these two fields is not synchronized in any way - that should work since float read/write are atomic.
-	 *
-	 * values are in Celsius
-	 */
-	float iat = NAN;
-#if EFI_UNIT_TEST
-	float mockClt = NAN;
-#endif
-	float clt = NAN;
 
 	Accelerometer accelerometer;
 
 	float vBatt = 0;
-	float currentAfr;
+	float currentAfr = 0;
 	/**
 	 * that's fuel in tank - just a gauge
 	 */
@@ -114,6 +87,8 @@ public:
 	float fsioIdleOffset = 0;
 	float fsioIdleMinValue = 0;
 
+	float fsioRpmHardLimit;
+
 #if EFI_UNIT_TEST
 	float mockFan = 0;
 	float mockRpm = 0;
@@ -156,7 +131,7 @@ private:
 
 struct multispark_state
 {
-	efitick_t delay;
-	efitick_t dwell;
-	uint8_t count;
+	efitick_t delay = 0;
+	efitick_t dwell = 0;
+	uint8_t count = 0;
 };

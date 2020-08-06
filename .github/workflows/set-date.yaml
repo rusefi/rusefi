@@ -1,0 +1,35 @@
+name: Set Date
+
+# Run once every day
+# If we run it on schedule, but only change the date stamp if the repo has changed, The date could be behind by up to a day.
+# We can't really try to change it with every push the way workflows are set up now,
+#  because there is no way to control which workflows run first, so some builds will not have the updated date and will lag behind by one build.
+# https://help.github.com/en/actions/reference/events-that-trigger-workflows#triggering-new-workflows-using-a-personal-access-token
+#  "When you use the repository's GITHUB_TOKEN to perform tasks on behalf of the GitHub Actions app,
+#  events triggered by the GITHUB_TOKEN will not create a new workflow run."
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  update-date:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'rusefi/rusefi' }}
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Write Date File
+      run: |
+        echo -e -n "#pragma once\n#define VCS_DATE $(date "+%Y%m%d")\n" > ./firmware/controllers/date_stamp.h
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub set-date Action"
+        git commit -m "Update date" -a 2>&1 | grep -E '(nothing to commit|changed)'
+
+    - name: Push changed date file
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ github.token }}
+        branch: master

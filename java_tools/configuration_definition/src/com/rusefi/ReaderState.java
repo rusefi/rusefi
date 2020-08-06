@@ -1,21 +1,20 @@
 package com.rusefi;
 
+import com.opensr5.ini.RawIniFile;
+import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.output.ConfigurationConsumer;
 import com.rusefi.util.SystemOut;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 import static com.rusefi.ConfigField.BOOLEAN_T;
 
 /**
  * We keep state here as we read configuration definition
- *
- * (c) Andrey Belomutskiy
+ * <p>
+ * Andrey Belomutskiy, (c) 2013-2020
  * 12/19/18
  */
 public class ReaderState {
@@ -77,6 +76,24 @@ public class ReaderState {
         tunerStudioLine = VariableRegistry.INSTANCE.applyVariables(tunerStudioLine);
         int size = parseSize(customSize, line);
         state.tsCustomSize.put(name, size);
+
+        RawIniFile.Line rawLine = new RawIniFile.Line(tunerStudioLine);
+        if (rawLine.getTokens()[0].equals("bits")) {
+            EnumIniField.ParseBitRange bitRange = new EnumIniField.ParseBitRange().invoke(rawLine.getTokens()[3]);
+            int totalCount = 1 << (bitRange.getBitSize0() + 1);
+            List<String> enums = Arrays.asList(rawLine.getTokens()).subList(4, rawLine.getTokens().length);
+            if (enums.size() > totalCount)
+                throw new IllegalStateException(name + ": Too many options in " + tunerStudioLine + " capacity=" + totalCount + "/size=" + enums.size());
+/*
+    this does not work right now since smt32 and kinetis enum sizes could be different but same .txt file
+    todo: identify relevant bitsizes and use variables for bitsizes?
+            if (enums.size() <= totalCount / 2)
+                throw new IllegalStateException("Too many bits allocated for " + enums + " capacity=" + totalCount + "/size=" + enums.size());
+*/
+            for (int i = enums.size(); i < totalCount; i++)
+                tunerStudioLine += ", \"INVALID\"";
+        }
+
         state.tsCustomLine.put(name, tunerStudioLine);
     }
 
@@ -150,7 +167,7 @@ public class ReaderState {
                  * for example
                  * #define CLT_CURVE_SIZE 16
                  */
-                ConfigDefinition.processDefine(line.substring(DEFINE.length()).trim());
+                ConfigDefinition.processDefine(VariableRegistry.INSTANCE, line.substring(DEFINE.length()).trim());
             } else {
                 if (stack.isEmpty())
                     throw new IllegalStateException("Expected to be within structure at line " + lineIndex + ": " + line);
@@ -214,7 +231,7 @@ public class ReaderState {
             structure.addAlignmentFill(state);
         } else {
             // adding a structure instance - had to be aligned
- // todo?           structure.addAlignmentFill(state);
+            // todo?           structure.addAlignmentFill(state);
         }
 
         if (cf.isIterate()) {

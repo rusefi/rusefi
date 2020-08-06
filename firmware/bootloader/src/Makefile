@@ -21,6 +21,8 @@ DDEFS += -DHAL_USE_ADC=FALSE -DHAL_USE_CAN=FALSE -DHAL_USE_EXT=FALSE -DHAL_USE_G
 #disable ChibiOS flsah driver and prevent header from include
 DDEFS += -DHAL_USE_FLASH=FALSE
 
+DDEFS += -DPRIMARY_UART_DMA_MODE=FALSE
+
 # disable USB (The bootloader has currently UART support only)
 DDEFS += -DEFI_USB_SERIAL=FALSE -DHAL_USE_SERIAL_USB=FALSE -DHAL_USE_USB=FALSE -DHAL_USE_USB_MSD=FALSE
 # disable CAN
@@ -245,7 +247,8 @@ INCDIR = .. $(CHIBIOS)/os/license \
 	$(PROJECT_DIR)/console/binary_log \
 	$(PROJECT_DIR)/console/fl_binary \
 	$(PROJECT_DIR)/hw_layer \
-	$(PROJECT_DIR)/mass_storage \
+	$(PROJECT_DIR)/hw_layer/adc \
+	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb \
 	$(PROJECT_DIR)/hw_layer/algo \
 	$(PROJECT_DIR)/hw_layer/lcd \

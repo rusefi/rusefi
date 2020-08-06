@@ -56,6 +56,7 @@
 #include "launch_control.h"
 #include "tachometer.h"
 #include "gppwm.h"
+#include "date_stamp.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -152,9 +153,8 @@ class PeriodicSlowController : public PeriodicTimerController {
 	}
 
 	int getPeriodMs() override {
-		// we need at least protection from zero value while resetting configuration
-		int periodMs = maxI(50, CONFIG(generalPeriodicThreadPeriodMs));
-		return periodMs;
+		// no reason to have this configurable, looks like everyone is happy with 20Hz
+		return 50;
 	}
 };
 
@@ -208,9 +208,9 @@ static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.resetAE();
 	engine->tpsAccelEnrichment.resetAE();
 
-	for (unsigned int i = 0; i < sizeof(engine->wallFuel) / sizeof(engine->wallFuel[0]); i++)
+	for (unsigned int i = 0; i < efi::size(engine->injectionEvents.elements); i++)
 	{
-		engine->wallFuel[i].resetWF();
+		engine->injectionEvents.elements[i].wallFuel.resetWF();
 	}
 }
 
@@ -324,6 +324,8 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
 	printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
+	printAnalogChannelInfo("AuxT1", engineConfiguration->auxTempSensor1.adcChannel);
+	printAnalogChannelInfo("AuxT2", engineConfiguration->auxTempSensor2.adcChannel);
 	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		adc_channel_e ch = engineConfiguration->fsioAdc[i];
@@ -693,10 +695,10 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * linking process which is the way to raise the alarm
  *
  * You get "cannot move location counter backwards" linker error when you run out of RAM. When you run out of RAM you shall reduce these
- * UNUSED_SIZE contants.
+ * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 8800
+#define RAM_UNUSED_SIZE 9600
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 2900
@@ -717,6 +719,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20200525;
+	return VCS_DATE;
 }
 #endif /* EFI_UNIT_TEST */

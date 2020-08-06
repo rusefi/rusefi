@@ -6,12 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static com.rusefi.AutoTest.mainTestBody;
 import static com.rusefi.Timeouts.SECOND;
 
 /**
  * this test connects to real hardware via serial port
- * (c) Andrey Belomutskiy 2013-2019
+ * Andrey Belomutskiy, (c) 2013-2020
  * 2/22/2015
  */
 public class RealHwTest {
@@ -83,7 +82,8 @@ public class RealHwTest {
     }
 
     private static void runRealHardwareTest(String port) throws Exception {
-        IoUtil.realHardwareConnect(port);
-        mainTestBody();
+        LinkManager linkManager = new LinkManager();
+        IoUtil.realHardwareConnect(linkManager, port);
+        new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
     }
 }

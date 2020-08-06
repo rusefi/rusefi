@@ -16,6 +16,7 @@
 #include "advance_map.h"
 #include "aux_valves.h"
 #include "perf_trace.h"
+#include "closed_loop_fuel.h"
 #include "sensor.h"
 
 #if EFI_PROD_CODE
@@ -116,18 +117,6 @@ EngineState::EngineState() {
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// this feeds rusEfi console Live Data
 	engine->engineState.isCrankingState = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-
-	engine->sensors.iat = getIntakeAirTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
-#if !EFI_CANBUS_SLAVE
-	engine->sensors.clt = getCoolantTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_CANBUS_SLAVE */
-
-#if EFI_UNIT_TEST
-	if (!cisnan(engine->sensors.mockClt)) {
-		engine->sensors.clt = engine->sensors.mockClt;
-	}
-#endif
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -158,6 +147,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	running.coolantTemperatureCoefficient = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	running.pidCorrection = fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	// update fuel consumption states
 	fuelConsumption.update(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -183,10 +174,6 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	injectionOffset = getInjectionOffset(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
-	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
-
 	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
@@ -211,11 +198,16 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			currentRawVE = interpolateClamped(0.0f, idleVe, CONFIG(idlePidDeactivationTpsThreshold), currentRawVE, tps.Value);
 		}
 		currentBaroCorrectedVE = baroCorrection * currentRawVE * PERCENT_DIV;
-		targetAFR = afrMap.getValue(rpm, map);
-	} else {
-		baseTableFuel = getBaseTableFuel(rpm, engineLoad);
 	}
-#endif
+
+	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
+	float fuelLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	injectionOffset = getInjectionOffset(rpm, fuelLoad PASS_ENGINE_PARAMETER_SUFFIX);
+
+	float ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_ENGINE_CONTROL
 }
 
 void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {

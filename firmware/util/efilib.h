@@ -33,6 +33,9 @@
 
 #define ERROR_CODE 311223344
 
+#define Q(x) #x
+#define QUOTE(x) Q(x)
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -85,6 +88,9 @@ float expf_taylor(float x);
 }
 
 #include <cstddef>
+
+#define IS_NEGATIVE_ZERO(value) (std::signbit(value) && value==0)
+#define fixNegativeZero(value) (IS_NEGATIVE_ZERO(value) ? 0 : value)
 
 // C++ helpers go here
 namespace efi

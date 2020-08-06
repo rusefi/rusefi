@@ -166,11 +166,37 @@ void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 extern LoggingWithStorage sharedLogger;
 
+static void wipeString(char *string, int size) {
+	// we have to reset bytes after \0 symbol in order to calculate correct tune CRC from MSQ file
+	for (int i = strlen(string) + 1; i < size; i++) {
+		// todo: open question if it's worth replacing for loop with a memset. would a memset be much faster?
+		// do we care about performance here?
+		string[i] = 0;
+	}
+}
+
+void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	wipeString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
+	wipeString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
+	wipeString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));
+
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
+		wipeString(config->fsioFormulas[i], sizeof(le_formula_t));
+	}
+}
+
+void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	wipeStrings(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
  *
  * this method is NOT currently invoked on ECU start - actual user input has to happen!
+ * See preCalculate which is invoked BOTH on start and configuration change
  */
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ENGINE(globalConfigurationVersion++);
@@ -239,16 +265,6 @@ void setMap(fuel_table_t table, float value) {
 			table[l][rpmIndex] = value;
 		}
 	}
-}
-
-#if 0
-static void setWholeVEMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setMap(config->veTable, value);
-}
-#endif
-
-void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setMap(config->fuelTable, value);
 }
 
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
@@ -810,8 +826,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 
-	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -820,8 +834,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindowBins, 800, 7000, 1);
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
-	// set_whole_timing_map 3
-	setWholeFuelMap(3 PASS_CONFIG_PARAMETER_SUFFIX);
 	setAfrMap(config->afrTable, 14.7);
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -951,10 +963,9 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->globalTriggerAngleOffset = 0;
 	engineConfiguration->extraInjectionOffset = 0;
 	engineConfiguration->ignitionOffset = 0;
-	engineConfiguration->overrideCrankingIgnition = true;
 	engineConfiguration->sensorChartFrequency = 20;
 
-	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
+	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 
 	engineConfiguration->vbattDividerCoeff = ((float) (15 + 65)) / 15;
 
@@ -1062,10 +1073,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->mapErrorDetectionTooLow = 5;
 	engineConfiguration->mapErrorDetectionTooHigh = 250;
 
-	engineConfiguration->idleThreadPeriodMs = 100;
-	engineConfiguration->consoleLoopPeriodMs = 200;
-	engineConfiguration->lcdThreadPeriodMs = 300;
-	engineConfiguration->generalPeriodicThreadPeriodMs = 50;
 	engineConfiguration->useLcdScreen = true;
 
 	engineConfiguration->hip9011Gain = 1;
@@ -1236,8 +1243,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case BMW_M73_PROTEUS:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MRE_MIATA_NA6:
+	case MRE_MIATA_NA6_VAF:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case MRE_MIATA_NA6_MAP:
+		setMiataNA6_MAP_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NB2_MAP:
 		setMiataNB2_MRE_MAP(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1420,6 +1430,14 @@ void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engineConfiguration->adcVcc = 3.0f;
 	}
 	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	/**
+	 * TunerStudio text tune files convert negative zero into positive zero so to keep things consistent we should avoid
+	 * negative zeros altogether. Unfortunately default configuration had one and here we are mitigating that.
+	 */
+	for (int i = 0;i < CLT_CURVE_SIZE;i++) {
+		engineConfiguration->cltIdleRpmBins[i] = fixNegativeZero(engineConfiguration->cltIdleRpmBins[i]);
+	}
 }
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -1476,33 +1494,6 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->joystickBPin = GPIO_UNASSIGNED;
 	engineConfiguration->joystickCPin = GPIO_UNASSIGNED;
 	engineConfiguration->joystickDPin = GPIOD_11;
-}
-
-void copyTargetAfrTable(fuel_table_t const source, afr_table_t destination) {
-	// todo: extract a template!
-	for (int loadIndex = 0; loadIndex < FUEL_LOAD_COUNT; loadIndex++) {
-		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
-			destination[loadIndex][rpmIndex] = AFR_STORAGE_MULT * source[loadIndex][rpmIndex];
-		}
-	}
-}
-
-void copyFuelTable(fuel_table_t const source, fuel_table_t destination) {
-	// todo: extract a template!
-	for (int loadIndex = 0; loadIndex < FUEL_LOAD_COUNT; loadIndex++) {
-		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
-			destination[loadIndex][rpmIndex] = source[loadIndex][rpmIndex];
-		}
-	}
-}
-
-void copyTimingTable(ignition_table_t const source, ignition_table_t destination) {
-	// todo: extract a template!
-	for (int k = 0; k < IGN_LOAD_COUNT; k++) {
-		for (int rpmIndex = 0; rpmIndex < IGN_RPM_COUNT; rpmIndex++) {
-			destination[k][rpmIndex] = source[k][rpmIndex];
-		}
-	}
 }
 
 static const ConfigOverrides defaultConfigOverrides{};

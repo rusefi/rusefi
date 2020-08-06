@@ -9,7 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="models" />
     <orderEntry type="module" module-name="io" />
-    <orderEntry type="library" name="jssc" level="project" />
+    <orderEntry type="module" module-name="logging" />
   </component>
 </module>
-

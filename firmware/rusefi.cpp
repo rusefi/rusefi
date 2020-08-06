@@ -246,10 +246,11 @@ void runRusEfi(void) {
 
 #if EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE
 		// sensor state + all pending messages for our own rusEfi console
+		// todo: is this mostly dead code?
 		updateDevConsoleState();
 #endif /* EFI_CLI_SUPPORT */
 
-		chThdSleepMilliseconds(CONFIG(consoleLoopPeriodMs));
+		chThdSleepMilliseconds(200);
 	}
 }
 

@@ -60,6 +60,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
         if (configField.getState().tsCustomLine.containsKey(configField.getType())) {
             String bits = configField.getState().tsCustomLine.get(configField.getType());
+
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH));
             int size = configField.getState().tsCustomSize.get(configField.getType());
 //            tsHeader.headerWrite("\t" + size + ",");
@@ -69,8 +70,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
             tsPosition += size;
         } else if (configField.getTsInfo() == null) {
-            tsHeader.write(";no TS info - skipping " + prefix + configField.getName() + " offset " + tsPosition);
-            tsPosition += configField.getArraySize() * configField.getElementSize();
+            throw new IllegalArgumentException("Need TS info for " + configField.getName() + " at "+ prefix);
         } else if (configField.getArraySize() != 1) {
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH) + "\t\t= array, ");
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
@@ -107,7 +107,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         SystemOut.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
 
         // File.getPath() would eliminate potential separator at the end of the path
-        String fileName = new File(tsPath).getPath() + File.separator + TS_FILE_OUTPUT_NAME;
+        String fileName = getTsFileOutputName(new File(tsPath).getPath());
         Output tsHeader = new LazyFile(fileName);
         writeContent(fieldsSection, tsContent, tsHeader);
     }
@@ -131,7 +131,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     private static TsFileContent readTsFile(String tsPath) throws IOException {
-        String fileName = tsPath + File.separator + TS_FILE_INPUT_NAME;
+        String fileName = getTsFileInputName(tsPath);
         BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), CHARSET.name()));
 
         StringBuilder prefix = new StringBuilder();
@@ -191,6 +191,14 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         return token;
     }
 
+    public static String getTsFileOutputName(String tsPath) {
+        return tsPath + File.separator + TS_FILE_OUTPUT_NAME;
+    }
+
+    public static String getTsFileInputName(String tsPath) {
+        return tsPath + File.separator + TS_FILE_INPUT_NAME;
+    }
+
     @Override
     public void startFile() {
     }
@@ -202,6 +210,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
+        VariableRegistry.INSTANCE.register(structure.name + "_size", structure.getTotalSize());
         if (state.stack.isEmpty()) {
             totalTsSize = writeTunerStudio(structure, "", tsWriter, 0);
             tsWriter.write("; total TS size = " + totalTsSize + EOL);

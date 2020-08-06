@@ -9,13 +9,11 @@ struct MockSensor final : public StoredValueSensor
 	{
 	}
 
-	void set(float value)
-	{
-		setValidValue(value, 0);
+	void set(float value) {
+		setValidValue(value, getTimeNowNt());
 	}
 
-	void invalidate()
-	{
+	void invalidate() {
 		StoredValueSensor::invalidate();
 	}
 

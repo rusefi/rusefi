@@ -29,7 +29,6 @@
 #include "efi_gpio.h"
 #include "fuel_math.h"
 #include "advance_map.h"
-#include "config_engine_specs.h"
 
 EXTERN_ENGINE;
 #if EFI_UNIT_TEST
@@ -50,6 +49,14 @@ floatms_t getCrankshaftRevolutionTimeMs(int rpm) {
 	return 360 * getOneDegreeTimeMs(rpm);
 }
 
+float getFuelingLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return ENGINE(engineState.fuelingLoad);
+}
+
+float getIgnitionLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return ENGINE(engineState.ignitionLoad);
+}
+
 /**
  * @brief Returns engine load according to selected engine_load_mode
  *
@@ -58,22 +65,15 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine 2NULL", NAN);
 	efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
 	switch (engineConfiguration->fuelAlgorithm) {
-	case LM_PLAIN_MAF:
-		if (!hasMafSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		    // todo: make this not happen during hardware CI
-			warning(CUSTOM_MAF_NEEDED, "MAF sensor needed for current fuel algorithm");
-			return NAN;
-		}
-		return getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_SPEED_DENSITY:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-	case LM_ALPHA_N:
+	case LM_ALPHA_N_2:
 		return Sensor::get(SensorType::Tps1).value_or(0);
 	case LM_REAL_MAF:
 		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
 	default:
 		firmwareError(CUSTOM_UNKNOWN_ALGORITHM, "Unexpected engine load parameter: %d", engineConfiguration->fuelAlgorithm);
-		return -1;
+		return 0;
 	}
 }
 
@@ -95,141 +95,6 @@ void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->sparkDwellRpmBins[7] = 12500;
 	engineConfiguration->sparkDwellValues[7] = 0;
 }
-
-#if EFI_ENGINE_CONTROL
-
-FuelSchedule::FuelSchedule() {
-	clear();
-	for (int cylinderIndex = 0; cylinderIndex < MAX_INJECTION_OUTPUT_COUNT; cylinderIndex++) {
-		InjectionEvent *ev = &elements[cylinderIndex];
-		ev->ownIndex = cylinderIndex;
-	}
-}
-
-void FuelSchedule::clear() {
-	isReady = false;
-}
-
-/**
- * @returns false in case of error, true if success
- */
-bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine is NULL", false);
-
-	floatus_t oneDegreeUs = ENGINE(rpmCalculator.oneDegreeUs); // local copy
-	if (cisnan(oneDegreeUs)) {
-		// in order to have fuel schedule we need to have current RPM
-		// wonder if this line slows engine startup?
-		return false;
-	}
-
-	/**
-	 * injection phase is scheduled by injection end, so we need to step the angle back
-	 * for the duration of the injection
-	 *
-	 * todo: since this method is not invoked within trigger event handler and
-	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
-	 */
-	floatms_t fuelMs = ENGINE(injectionDuration);
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs", false);
-	angle_t injectionDuration = MS2US(fuelMs) / oneDegreeUs;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(injectionDuration), "NaN injectionDuration", false);
-	assertAngleRange(injectionDuration, "injectionDuration_r", CUSTOM_INJ_DURATION);
-	floatus_t injectionOffset = ENGINE(engineState.injectionOffset);
-	if (cisnan(injectionOffset)) {
-		// injection offset map not ready - we are not ready to schedule fuel events
-		return false;
-	}
-	angle_t baseAngle = injectionOffset - injectionDuration;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseAngle), "NaN baseAngle", false);
-	assertAngleRange(baseAngle, "baseAngle_r", CUSTOM_ERR_6554);
-
-	int injectorIndex;
-
-	injection_mode_e mode = engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
-		injectorIndex = 0;
-	} else if (mode == IM_SEQUENTIAL) {
-		injectorIndex = getCylinderId(i PASS_ENGINE_PARAMETER_SUFFIX) - 1;
-	} else if (mode == IM_BATCH) {
-		// does not look exactly right, not too consistent with IM_SEQUENTIAL
-		injectorIndex = i % (engineConfiguration->specs.cylindersCount / 2);
-	} else {
-		firmwareError(CUSTOM_OBD_UNEXPECTED_INJECTION_MODE, "Unexpected injection mode %d", mode);
-		injectorIndex = 0;
-	}
-
-	bool isSimultanious = mode == IM_SIMULTANEOUS;
-
-	assertAngleRange(baseAngle, "addFbaseAngle", CUSTOM_ADD_BASE);
-
-	int cylindersCount = CONFIG(specs.cylindersCount);
-	if (cylindersCount < 1) {
-	    // May 2020 this somehow still happens with functional tests, maybe race condition?
-		warning(CUSTOM_OBD_ZERO_CYLINDER_COUNT, "Invalid cylinder count: %d", cylindersCount);
-		return false;
-	}
-
-	float angle = baseAngle
-			+ i * ENGINE(engineCycle) / cylindersCount;
-
-	InjectorOutputPin *secondOutput;
-	if (mode == IM_BATCH && CONFIG(twoWireBatchInjection)) {
-		/**
-		 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
-		 */
-		int secondIndex = injectorIndex + (CONFIG(specs.cylindersCount) / 2);
-		secondOutput = &enginePins.injectors[secondIndex];
-	} else {
-		secondOutput = NULL;
-	}
-
-	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
-
-	if (!isSimultanious && !output->isInitialized()) {
-		// todo: extract method for this index math
-		warning(CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
-	}
-
-	InjectionEvent *ev = &elements[i];
-	ev->ownIndex = i;
-	INJECT_ENGINE_REFERENCE(ev);
-	fixAngle(angle, "addFuel#1", CUSTOM_ERR_6554);
-
-	ev->outputs[0] = output;
-	ev->outputs[1] = secondOutput;
-
-	ev->isSimultanious = isSimultanious;
-
-	if (TRIGGER_WAVEFORM(getSize()) < 1) {
-		warning(CUSTOM_ERR_NOT_INITIALIZED_TRIGGER, "uninitialized TriggerWaveform");
-		return false;
-	}
-
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "findAngle#3", false);
-	assertAngleRange(angle, "findAngle#a33", CUSTOM_ERR_6544);
-	ev->injectionStart.setAngle(angle PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_UNIT_TEST
-	printf("registerInjectionEvent angle=%.2f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.triggerEventIndex, injectorIndex);
-#endif
-	return true;
-}
-
-void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	clear();
-
-	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
-		InjectionEvent *ev = &elements[cylinderIndex];
-		ev->ownIndex = cylinderIndex;  // todo: is this assignment needed here? we now initialize in constructor
-		bool result = addFuelEventsForCylinder(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
-		if (!result)
-			return;
-	}
-	isReady = true;
-}
-
-#endif
 
 static floatms_t getCrankingSparkDwell(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->useConstantDwellDuringCranking) {
@@ -270,6 +135,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 static const int order_1_2[] = {1, 2};
 
 static const int order_1_2_3[] = {1, 2, 3};
+static const int order_1_3_2[] = {1, 3, 2};
 // 4 cylinder
 
 static const int order_1_THEN_3_THEN_4_THEN2[] = { 1, 3, 4, 2 };
@@ -318,6 +184,7 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return 2;
 // 3 cylinder
 	case FO_1_2_3:
+	case FO_1_3_2:
 		return 3;
 // 4 cylinder
 	case FO_1_3_4_2:
@@ -402,6 +269,8 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 // 3 cylinder
 	case FO_1_2_3:
 		return order_1_2_3[index];
+	case FO_1_3_2:
+		return order_1_3_2[index];
 // 4 cylinder
 	case FO_1_3_4_2:
 		return order_1_THEN_3_THEN_4_THEN2[index];
@@ -548,14 +417,6 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	TRIGGER_WAVEFORM(prepareShape());
 }
 
-void setFuelRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setLinearCurve(config->fuelRpmBins, from, to);
-}
-
-void setFuelLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setLinearCurve(config->fuelLoadBins, from, to);
-}
-
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setRpmBin(config->ignitionRpmBins, IGN_RPM_COUNT, from, to);
 }
@@ -569,9 +430,7 @@ void setTimingLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
  */
 void setAlgorithm(engine_load_mode_e algo DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	engineConfiguration->fuelAlgorithm = algo;
-	if (algo == LM_ALPHA_N) {
-		setTimingLoadBin(20, 120 PASS_CONFIG_PARAMETER_SUFFIX);
-	} else if (algo == LM_SPEED_DENSITY) {
+	if (algo == LM_SPEED_DENSITY) {
 		setLinearCurve(config->ignitionLoadBins, 20, 120, 3);
 		buildTimingMap(35 PASS_CONFIG_PARAMETER_SUFFIX);
 	}

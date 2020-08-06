@@ -31,6 +31,7 @@
 #define FAST_CALLBACK_PERIOD_MS 5
 
 class RpmCalculator;
+class AirmassModelBase;
 
 #define MAF_DECODING_CACHE_SIZE 256
 
@@ -49,6 +50,11 @@ class RpmCalculator;
 
 class IEtbController;
 
+class TCU {
+public:
+	gear_e currentGear = NEUTRAL;
+};
+
 class Engine : public TriggerStateListener {
 public:
 	explicit Engine(persistent_config_s *config);
@@ -57,6 +63,8 @@ public:
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 
 	cyclic_buffer<int> triggerErrorDetection;
+
+	TCU tcu;
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();
@@ -133,7 +141,6 @@ public:
 	IgnitionEventList ignitionEvents;
 #endif /* EFI_ENGINE_CONTROL */
 
-	WallFuel wallFuel[INJECTION_PIN_COUNT];
 	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**
@@ -234,6 +241,7 @@ public:
 
 	bool isRunningPwmTest = false;
 
+	int getRpmHardLimit(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	FsioState fsioState;
 
@@ -326,6 +334,8 @@ public:
 
 	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void printKnockState(void);
+
+	AirmassModelBase* mockAirmassModel = nullptr;
 
 private:
 	/**

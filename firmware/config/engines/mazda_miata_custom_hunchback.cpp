@@ -112,15 +112,15 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIG
 				config->fsioTable1[loadIndex][rpmIndex] = fsio_table_dyno[loadIndex][rpmIndex];
 			}
 		}
-	memcpy(config->veRpmBins, mazda_miata_nb2_RpmBins, sizeof(mazda_miata_nb2_RpmBins));
-	memcpy(config->veLoadBins, mazda_miata_nb2_LoadBins, sizeof(mazda_miata_nb2_LoadBins));
-	copyFuelTable(mapBased18vvtVeTable_NA_fuel_rail, config->veTable);
+	MEMCPY(config->veRpmBins, mazda_miata_nb2_RpmBins);
+	MEMCPY(config->veLoadBins, mazda_miata_nb2_LoadBins);
+	MEMCPY(config->veTable, mapBased18vvtVeTable_NA_fuel_rail);
 
 	engineConfiguration->vvtOffset = 83; // 2002 green car value
 
-	memcpy(config->afrRpmBins, mazda_miata_nb2_targetAfrRpmBins, sizeof(mazda_miata_nb2_targetAfrRpmBins));
-	memcpy(config->afrLoadBins, mazda_miata_nb2_targetAfrLoadBins, sizeof(mazda_miata_nb2_targetAfrLoadBins));
-	copyTargetAfrTable(target_AFR_hunchback, config->afrTable);
+	MEMCPY(config->afrRpmBins, mazda_miata_nb2_targetAfrRpmBins);
+	MEMCPY(config->afrLoadBins, mazda_miata_nb2_targetAfrLoadBins);
+	MEMCPY(config->afrTable, target_AFR_hunchback);
 
 	engineConfiguration->ignitionPins[2] = GPIOC_7;
 

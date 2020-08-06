@@ -30,6 +30,9 @@
 struct pid_s;
 class Logging;
 
+/**
+ * default basic implementation also known as PidParallelController
+ */
 class Pid : public pid_state_s {
 
 public:
@@ -70,8 +73,6 @@ public:
 	float iTermMax =  1000000.0;
 protected:
 	pid_s *parameters;
-
-private:
 	virtual void updateITerm(float value);
 };
 
@@ -110,6 +111,8 @@ private:
  * See: Wittenmark B., Astrom K., Arzen K. IFAC Professional Brief. Computer Control: An Overview. 
  * Two additional parameters used: derivativeFilterLoss and antiwindupFreq
  * (If both are 0, then this controller is identical to PidParallelController)
+ *
+ * TODO: should PidIndustrial replace all usages of Pid/PidParallelController?
  */
 class PidIndustrial : public Pid {
 public:
