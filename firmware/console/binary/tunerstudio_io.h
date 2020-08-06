@@ -36,7 +36,6 @@ struct ts_channel_s {
 };
 
 // These commands are used exclusively by the rusEfi console
-#define TS_TEST_COMMAND 't' // 0x74
 #define TS_GET_FILE_RANGE '2' // 0x32
 
 
