@@ -474,6 +474,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
 
+#if EFI_SIMULATOR
+	tsOutputChannels->sd_status = 1 + 4;
+#endif
+
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 

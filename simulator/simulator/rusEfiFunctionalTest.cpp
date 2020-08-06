@@ -37,7 +37,7 @@ EXTERN_ENGINE;
 
 extern WaveChart waveChart;
 
-static LoggingWithStorage sharedLogger("simulator");
+LoggingWithStorage sharedLogger("simulator");
 
 int getRemainingStack(thread_t *otp) {
 	return 99999;
