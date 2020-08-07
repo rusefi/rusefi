@@ -327,6 +327,12 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         response[offset + 11] = 1; // file
         //  12-15 = undefined
 
+        response[offset + 14] = 0x11;
+        response[offset + 15] = 0x13; // time
+
+        response[offset + 16] = 0x24;
+        response[offset + 17] = 0x25; // 0x2425 = FAT16 date format September 4, 1998
+
         for (int i = 18; i < 22; i++)
             response[offset + i] = (byte) (i + 10 * index); // sector number
 

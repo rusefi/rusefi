@@ -5,6 +5,28 @@
 
 #include "global.h"
 
+#if EFI_FILE_LOGGING || EFI_SIMULATOR || EFI_UNIT_TEST
+
+#include "mmc_card.h"
+#include "efilib.h"
+
+/**
+ * for funny reasons file name has to be at least 4 symbols before the dot
+ */
+bool isLogFile(const char *fileName) {
+	int dotIndex = indexOf(fileName, '.');
+	if (dotIndex == -1) {
+		return false;
+	}
+	if (dotIndex < 4) {
+		return false;
+	}
+	return 0 == strncmp(fileName + dotIndex, DOT_MLG, 4);
+}
+
+#endif
+
+
 #if EFI_FILE_LOGGING || EFI_SIMULATOR
 #include "mmc_card.h"
 
