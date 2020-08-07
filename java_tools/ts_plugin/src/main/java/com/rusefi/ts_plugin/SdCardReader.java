@@ -165,6 +165,8 @@ public class SdCardReader {
 
             int totalSize = 0;
 
+            long start = System.currentTimeMillis();
+
             while (true) {
                 packet = new byte[17];
                 packet[0] = Fields.TS_SD_R_COMMAND;
@@ -180,17 +182,17 @@ public class SdCardReader {
                     break;
                 }
 
-                System.out.println("Got content package size "  + response.length);
-
-
                 int dataBytes = response.length - TRANSFER_HEADER_SIZE;
-                fos.write(response, TRANSFER_HEADER_SIZE, dataBytes);
-
                 totalSize += dataBytes;
+
+                System.out.println("Got content package size "  + response.length + "/total=" + totalSize);
+
+                fos.write(response, TRANSFER_HEADER_SIZE, dataBytes);
 
                 if (dataBytes != 2048) {
                     System.out.println(response.length + " must be the last packet");
-                    status.setText(fileName + " downloaded " + totalSize + " byte(s)");
+                    long duration = System.currentTimeMillis() - start;
+                    status.setText(fileName + " downloaded " + totalSize + " byte(s) in " + duration);
                     break;
                 }
                 chunk++;
