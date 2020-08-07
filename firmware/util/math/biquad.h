@@ -11,8 +11,6 @@ class Biquad {
 public:
 	Biquad();
 
-	void reset();
-
     float filter(float input);
 
 	void configureBandpass(float samplingFrequency, float centerFrequency, float Q);
