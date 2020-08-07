@@ -8,6 +8,9 @@
 #if EFI_SIMULATOR
 #include <stdio.h>
 #include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #endif
 
 #define DIR_RESPONSE_SIZE 512
@@ -37,7 +40,6 @@ bool isLogFile(const char *fileName) {
 
 #endif
 
-
 #if EFI_FILE_LOGGING || EFI_SIMULATOR
 #include "mmc_card.h"
 
@@ -60,10 +62,18 @@ static void setFileEntry(uint8_t *buffer, int index, const char *fileName, int f
 
 	buffer[offset + 11] = 1;
 
+	for (int i = 0; i < 4; i++) {
+		buffer[offset + 18 + i] = fileName[dotIndex + i - 4];
+	}
+
 	*(uint32_t *) (&buffer[offset + 28]) = fileSize;
 }
 
 void handleTsR(ts_channel_s *tsChannel, char *input) {
+#if EFI_SIMULATOR
+	printf("TS_SD r %d\n", input[1]);
+#endif // EFI_SIMULATOR
+
 	const uint16_t* data16 = reinterpret_cast<uint16_t*>(input);
 
 	if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_RTC) {
@@ -72,7 +82,7 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 		sr5SendResponse(tsChannel, TS_CRC, buffer, 9);
 
 	} else if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_INFO) {
-		int length = data16[2];
+		uint16_t length = SWAP_UINT16(data16[2]);
 		scheduleMsg(&sharedLogger, "TS_SD: fetch buffer command, length=%d", length);
 
 
@@ -109,20 +119,27 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
         	int index = 0;
         	struct dirent *de;  // Pointer for directory entry
         	while ((de = readdir(dr)) != NULL) {
-        	    printf("%s\n", de->d_name);
+        		const char * fileName = de->d_name;
+        	    printf("%s\n", fileName);
         	    if (index >= DIR_RESPONSE_SIZE / 32) {
         	    	break;
         	    }
-        	    if (isLogFile(de->d_name)) {
-        	    	setFileEntry(buffer, index, de->d_name, 239);
+        	    if (isLogFile(fileName)) {
+        	    	struct stat statBuffer;
+        	    	int         status;
+
+        	    	int fileSize = 0;
+        	    	status = stat(fileName, &statBuffer);
+        	    	if (status == 0) {
+        	    	   fileSize = statBuffer.st_size;
+        	    	}
+
+        	    	setFileEntry(buffer, index, fileName, fileSize);
         	    	index++;
         	    }
         	}
 
         	closedir(dr);
-
-//        	setFileEntry(buffer, 0, "hello123.msq", 123123);
-//        	setFileEntry(buffer, 1, "hello222.msq", 123123);
 
 #endif // EFI_SIMULATOR
         	sr5SendResponse(tsChannel, TS_CRC, buffer, 0x202);
@@ -141,20 +158,74 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 void handleTsW(ts_channel_s *tsChannel, char *input) {
 	const uint16_t* data16 = reinterpret_cast<uint16_t*>(input);
 
+#if EFI_SIMULATOR
+	printf("TS_SD w %d\n", input[1]);
+#endif // EFI_SIMULATOR
+
     if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_INFO) {
 		int code = data16[2];
 		scheduleMsg(&sharedLogger, "TS_SD: w, code=%d", code);
 
 
 		if (input[5] == TS_SD_PROTOCOL_DO) {
+			scheduleMsg(&sharedLogger, "TS_SD_PROTOCOL_DO");
 			sendOkResponse(tsChannel, TS_CRC);
 		} else if (input[5] == TS_SD_PROTOCOL_READ_DIR) {
+			scheduleMsg(&sharedLogger, "TS_SD_PROTOCOL_READ_DIR");
 			sendOkResponse(tsChannel, TS_CRC);
 		} else if (input[5] == TS_SD_PROTOCOL_REMOVE_FILE) {
-			// todo
+#if EFI_SIMULATOR
+        	DIR *dr = opendir(".");
+
+        	if (dr == NULL) {
+        		// opendir returns NULL if couldn't open directory
+        	    printf("Could not open current directory" );
+        	    return;
+        	}
+
+        	struct dirent *de;  // Pointer for directory entry
+        	while ((de = readdir(dr)) != NULL) {
+        		const char * fileName = de->d_name;
+        	    printf("%s\n", fileName);
+        	    if (isLogFile(fileName)) {
+        	    	int dotIndex = indexOf(fileName, DOT);
+        	    	if (0 == strncmp(input + 6, &fileName[dotIndex - 4], 4)) {
+                	    printf("Removing %s\n", fileName);
+                	    remove(fileName);
+                	    break;
+        	    	}
+        	    }
+        	}
+        	closedir(dr);
+
+#endif // EFI_SIMULATOR
+			sendOkResponse(tsChannel, TS_CRC);
 
 		} else if (input[5] == TS_SD_PROTOCOL_FETCH_COMPRESSED) {
-		}
+#if EFI_SIMULATOR
+        	DIR *dr = opendir(".");
+
+        	if (dr == NULL) {
+        		// opendir returns NULL if couldn't open directory
+        	    printf("Could not open current directory" );
+        	    return;
+        	}
+
+        	struct dirent *de;  // Pointer for directory entry
+        	while ((de = readdir(dr)) != NULL) {
+        		const char * fileName = de->d_name;
+        	    printf("%s\n", fileName);
+        	    if (isLogFile(fileName)) {
+        	    	int dotIndex = indexOf(fileName, DOT);
+        	    	if (0 == strncmp(input + 6, &fileName[dotIndex - 4], 4)) {
+                	    printf("Will be uploading %s\n", fileName);
+                	    break;
+        	    	}
+        	    }
+        	}
+        	closedir(dr);
+#endif // EFI_SIMULATOR
+        }
 
 
     } else {

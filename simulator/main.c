@@ -130,6 +130,8 @@ static void sd2_handler(eventid_t id) {
 
 static evhandler_t fhandlers[] = { termination_handler, sd1_handler, sd2_handler };
 
+bool verboseMode = true;
+
 /*------------------------------------------------------------------------*
  * Simulator main.                                                        *
  *------------------------------------------------------------------------*/
