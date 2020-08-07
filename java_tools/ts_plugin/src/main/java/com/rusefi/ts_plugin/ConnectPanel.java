@@ -100,7 +100,7 @@ public class ConnectPanel {
                         JPanel filePanel = new JPanel(new FlowLayout());
 
 
-                        filePanel.add(new JLabel(fileName + " " + size + " byte(0)"));
+                        filePanel.add(new JLabel(fileName + " " + size + " byte(s)"));
 
                         JButton download = new JButton("Download");
                         download.addActionListener(new ActionListener() {
@@ -127,7 +127,7 @@ public class ConnectPanel {
                         System.out.println("Filename " + fileName + " size " + size);
 
 
-                        AutoupdateUtil.trueLayout(fileList.getParent());
+                        AutoupdateUtil.trueLayout(content.getParent());
                     }
 
                 } catch (IOException ioException) {
