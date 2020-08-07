@@ -1,6 +1,11 @@
 /**
  * @file	mmc_card_access.cpp
  *
+ *
+ * Here we have code related to file transfer from rusEFI ECU to desktop
+ * We are mostly compatible with TS MS3 transder protocol as described at Megasquirt_Serial_Protocol-2014-10-28.pdf
+ * rusEFI simulator reads local files.
+ *
  */
 
 #include "engine.h"
@@ -45,16 +50,18 @@ bool isLogFile(const char *fileName) {
 	}
 	return 0 == strncmp(fileName + dotIndex, DOT_MLG, 4);
 }
-
-#endif
+#endif // EFI_FILE_LOGGING || EFI_SIMULATOR || EFI_UNIT_TEST
 
 #if EFI_FILE_LOGGING || EFI_SIMULATOR
 #include "mmc_card.h"
 
-
 #if EFI_SIMULATOR
 static FILE *uploading;
 #endif // EFI_SIMULATOR
+
+#if EFI_FILE_LOGGING
+static FIL uploading NO_CACHE;
+#endif // EFI_FILE_LOGGING
 
 extern LoggingWithStorage sharedLogger;
 
@@ -122,7 +129,6 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 
 #if EFI_SIMULATOR
         	DIR *dr = opendir(".");
-
         	if (dr == NULL) {
         		// opendir returns NULL if couldn't open directory
         	    printf("Could not open current directory" );
@@ -146,23 +152,19 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
         	    	if (status == 0) {
         	    	   fileSize = statBuffer.st_size;
         	    	}
-
         	    	setFileEntry(buffer, index, fileName, fileSize);
         	    	index++;
         	    }
         	}
-
         	closedir(dr);
 
 #endif // EFI_SIMULATOR
 
 
 #if EFI_FILE_LOGGING
-
         	LOCK_SD_SPI;
         	DIR dir;
         	FRESULT res = f_opendir(&dir, "/");
-
         	if (res != FR_OK) {
         		scheduleMsg(&sharedLogger, "Error opening directory");
         		UNLOCK_SD_SPI;
@@ -172,7 +174,6 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
             	    if (index >= DIR_RESPONSE_SIZE / DIR_ENTRY_SIZE) {
             	    	break;
             	    }
-
         			FILINFO fno;
       				res = f_readdir(&dir, &fno);
       				char *fileName = fno.fname;
@@ -212,14 +213,19 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 		buffer[0] = input[2];
 		buffer[1] = input[3];
 
+		int got;
 #if EFI_SIMULATOR
-		int got = fread(&buffer[2], 1, TRANSFER_SIZE, uploading);
-		sr5SendResponse(tsChannel, TS_CRC, buffer, 2 + got);
+		got = fread(&buffer[2], 1, TRANSFER_SIZE, uploading);
 #endif // EFI_SIMULATOR
 
 #if EFI_FILE_LOGGING
+		LOCK_SD_SPI;
+		got = 0;
+		f_read(&uploading, (void*)&buffer[2], TRANSFER_SIZE, (UINT*)&got);
+		UNLOCK_SD_SPI;
 #endif // EFI_FILE_LOGGING
 
+		sr5SendResponse(tsChannel, TS_CRC, buffer, 2 + got);
 	} else {
 		scheduleMsg(&sharedLogger, "TS_SD: unexpected r");
 	}
@@ -300,6 +306,40 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
         	}
         	closedir(dr);
 #endif // EFI_SIMULATOR
+
+#if EFI_FILE_LOGGING
+		LOCK_SD_SPI;
+
+		DIR dir;
+		FRESULT res = f_opendir(&dir, "/");
+
+		if (res != FR_OK) {
+		      scheduleMsg(&sharedLogger, "Error opening directory");
+		      UNLOCK_SD_SPI;
+		} else {
+    		memset(&uploading, 0, sizeof(FIL));						// clear the memory
+      		while (true) {
+      			FILINFO fno;
+      			res = f_readdir(&dir, &fno);
+      			char *fileName = fno.fname;
+      			if (res != FR_OK || fileName[0] == 0) {
+      				break;
+      			}
+      			if (isLogFile(fileName)) {
+      			    int dotIndex = indexOf(fileName, DOT);
+   			    	if (0 == strncmp(input + 6, &fileName[dotIndex - 4], 4)) {
+   			 		    FRESULT err = f_open(&uploading, fileName, FA_READ);				// This file has the index for next log file name
+   			 		    break;
+   			 	    }
+      			}
+      		}
+    		UNLOCK_SD_SPI;
+		}
+
+
+#endif // EFI_FILE_LOGGING
+
+
         	sendOkResponse(tsChannel, TS_CRC);
         }
 
