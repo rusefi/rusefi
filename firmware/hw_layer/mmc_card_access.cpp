@@ -20,6 +20,7 @@
 
 #if EFI_FILE_LOGGING
 #include "ff.h"
+#define ROOT_DIR "/"
 #endif // EFI_FILE_LOGGING
 
 #define DIR_RESPONSE_SIZE 512
@@ -35,7 +36,8 @@
 #include "efilib.h"
 #include "hardware.h"
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 /**
  * for funny reasons file name has to be at least 4 symbols before the dot
@@ -69,13 +71,14 @@ extern LoggingWithStorage sharedLogger;
 
 static uint8_t buffer[TRANSFER_SIZE + 2];
 
-static void setFileEntry(uint8_t *buffer, int index, const char *fileName, int fileSize) {
+static void setFileEntry(uint8_t *buffer, int index, const char *fileName,
+		int fileSize) {
 	int offset = 32 * index;
 
 	int dotIndex = indexOf(fileName, DOT);
 	// assert dotIndex != -1
 	memcpy(buffer + offset, fileName, dotIndex);
-	for (int i = dotIndex; i < 8 ; i++) {
+	for (int i = dotIndex; i < 8; i++) {
 		buffer[offset + i] = 0;
 	}
 	memcpy(buffer + offset + 8, &fileName[dotIndex + 1], 3);
@@ -86,7 +89,7 @@ static void setFileEntry(uint8_t *buffer, int index, const char *fileName, int f
 		buffer[offset + 18 + i] = fileName[dotIndex + i - 4];
 	}
 
-	*(uint32_t *) (&buffer[offset + 28]) = fileSize;
+	*(uint32_t*) (&buffer[offset + 28]) = fileSize;
 }
 
 void handleTsR(ts_channel_s *tsChannel, char *input) {
@@ -94,7 +97,7 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 	printf("TS_SD r %d\n", input[1]);
 #endif // EFI_SIMULATOR
 
-	const uint16_t* data16 = reinterpret_cast<uint16_t*>(input);
+	const uint16_t *data16 = reinterpret_cast<uint16_t*>(input);
 
 	if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_RTC) {
 		scheduleMsg(&sharedLogger, "TS_SD: RTC read command");
@@ -103,8 +106,8 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 
 	} else if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_INFO) {
 		uint16_t length = SWAP_UINT16(data16[2]);
-		scheduleMsg(&sharedLogger, "TS_SD: fetch buffer command, length=%d", length);
-
+		scheduleMsg(&sharedLogger, "TS_SD: fetch buffer command, length=%d",
+				length);
 
 		if (length == 16) {
 			buffer[0] = 1 + 4; // Card present + Ready
@@ -115,73 +118,71 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 
 			buffer[4] = 0;
 			buffer[5] = 0x20; // 0x20 00 00 of 512 is 1G virtual card
-            buffer[6] = 0;
-            buffer[7] = 0;
+			buffer[6] = 0;
+			buffer[7] = 0;
 
-            buffer[8] = 0;
-            buffer[9] = 1; // number of files
+			buffer[8] = 0;
+			buffer[9] = 1; // number of files
 
 			sr5SendResponse(tsChannel, TS_CRC, buffer, 16);
-        } else if (length == DIR_RESPONSE_BUFFER_SIZE) {
-            // SD read directory command
-        	memset(buffer, 0, DIR_RESPONSE_BUFFER_SIZE);
-
+		} else if (length == DIR_RESPONSE_BUFFER_SIZE) {
+			// SD read directory command
+			memset(buffer, 0, DIR_RESPONSE_BUFFER_SIZE);
 
 #if EFI_SIMULATOR
-        	DIR *dr = opendir(".");
-        	if (dr == NULL) {
-        		// opendir returns NULL if couldn't open directory
-        	    printf("Could not open current directory" );
-        	    return;
-        	}
+			DIR *dr = opendir(".");
+			if (dr == NULL) {
+				// opendir returns NULL if couldn't open directory
+				printf("Could not open current directory" );
+				return;
+			}
 
-        	int index = 0;
-        	struct dirent *de;  // Pointer for directory entry
-        	while ((de = readdir(dr)) != NULL) {
-        		const char * fileName = de->d_name;
-        	    printf("%s\n", fileName);
-        	    if (index >= DIR_RESPONSE_SIZE / DIR_ENTRY_SIZE) {
-        	    	break;
-        	    }
-        	    if (isLogFile(fileName)) {
-        	    	struct stat statBuffer;
-        	    	int         status;
+			int index = 0;
+			struct dirent *de;  // Pointer for directory entry
+			while ((de = readdir(dr)) != NULL) {
+				const char * fileName = de->d_name;
+				printf("%s\n", fileName);
+				if (index >= DIR_RESPONSE_SIZE / DIR_ENTRY_SIZE) {
+					break;
+				}
+				if (isLogFile(fileName)) {
+					struct stat statBuffer;
+					int status;
 
-        	    	int fileSize = 0;
-        	    	status = stat(fileName, &statBuffer);
-        	    	if (status == 0) {
-        	    	   fileSize = statBuffer.st_size;
-        	    	}
-        	    	setFileEntry(buffer, index, fileName, fileSize);
-        	    	index++;
-        	    }
-        	}
-        	closedir(dr);
+					int fileSize = 0;
+					status = stat(fileName, &statBuffer);
+					if (status == 0) {
+						fileSize = statBuffer.st_size;
+					}
+					setFileEntry(buffer, index, fileName, fileSize);
+					index++;
+				}
+			}
+			closedir(dr);
 
 #endif // EFI_SIMULATOR
 
-
 #if EFI_FILE_LOGGING
-        	LOCK_SD_SPI;
-        	DIR dir;
-        	FRESULT res = f_opendir(&dir, "/");
-        	if (res != FR_OK) {
-        		scheduleMsg(&sharedLogger, "Error opening directory");
-        		UNLOCK_SD_SPI;
-        	} else {
-        		int index = 0;
-        		while (true) {
-            	    if (index >= DIR_RESPONSE_SIZE / DIR_ENTRY_SIZE) {
-            	    	break;
-            	    }
-        			FILINFO fno;
-      				res = f_readdir(&dir, &fno);
-      				char *fileName = fno.fname;
-        			if (res != FR_OK || fileName[0] == 0) {
-        				break;
-        			}
+			LOCK_SD_SPI;
+			DIR dir;
+			FRESULT res = f_opendir(&dir, ROOT_DIR);
+			if (res != FR_OK) {
+				scheduleMsg(&sharedLogger, "Error opening directory");
+				UNLOCK_SD_SPI;
+			} else {
+				int index = 0;
+				while (true) {
+					if (index >= DIR_RESPONSE_SIZE / DIR_ENTRY_SIZE) {
+						break;
+					}
+					FILINFO fno;
+					res = f_readdir(&dir, &fno);
+					char *fileName = fno.fname;
+					if (res != FR_OK || fileName[0] == 0) {
+						break;
+					}
 
-      				if (isLogFile(fileName)) {
+					if (isLogFile(fileName)) {
 //      				        	    	struct stat statBuffer;
 //      				        	    	int         status;
 //
@@ -191,22 +192,28 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 //      				        	    	   fileSize = statBuffer.st_size;
 //      				        	    	}
 
-      				     setFileEntry(buffer, index, fileName, 1);
-      				        	    	index++;
-      				}
+						FILINFO fileInfo;
+						// todo: handle return value?
+						f_stat(fileName, &fileInfo);
 
+						setFileEntry(buffer, index, fileName,
+								(int) fileInfo.fsize);
+						index++;
+					}
 
-        		}
-        		UNLOCK_SD_SPI;
-        	}
+				}
+				UNLOCK_SD_SPI;
+			}
 
 #endif // EFI_FILE_LOGGING
 
-        	sr5SendResponse(tsChannel, TS_CRC, buffer, DIR_RESPONSE_BUFFER_SIZE);
+			sr5SendResponse(tsChannel, TS_CRC, buffer,
+					DIR_RESPONSE_BUFFER_SIZE);
 		}
 	} else if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_DATA) {
 		uint16_t blockNumber = SWAP_UINT16(data16[1]);
-		scheduleMsg(&sharedLogger, "TS_SD: fetch data command blockNumber=%d", blockNumber);
+		scheduleMsg(&sharedLogger, "TS_SD: fetch data command blockNumber=%d",
+				blockNumber);
 
 //		int offset = blockNumber * TRANSFER_SIZE;
 
@@ -221,7 +228,7 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 #if EFI_FILE_LOGGING
 		LOCK_SD_SPI;
 		got = 0;
-		f_read(&uploading, (void*)&buffer[2], TRANSFER_SIZE, (UINT*)&got);
+		f_read(&uploading, (void*) &buffer[2], TRANSFER_SIZE, (UINT*) &got);
 		UNLOCK_SD_SPI;
 #endif // EFI_FILE_LOGGING
 
@@ -232,16 +239,15 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 }
 
 void handleTsW(ts_channel_s *tsChannel, char *input) {
-	const uint16_t* data16 = reinterpret_cast<uint16_t*>(input);
+	const uint16_t *data16 = reinterpret_cast<uint16_t*>(input);
 
 #if EFI_SIMULATOR
 	printf("TS_SD w %d\n", input[1]);
 #endif // EFI_SIMULATOR
 
-    if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_INFO) {
+	if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_INFO) {
 		int code = data16[2];
 		scheduleMsg(&sharedLogger, "TS_SD: w, code=%d", code);
-
 
 		if (input[5] == TS_SD_PROTOCOL_DO) {
 			scheduleMsg(&sharedLogger, "TS_SD_PROTOCOL_DO");
@@ -252,13 +258,11 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
 		} else if (input[5] == TS_SD_PROTOCOL_REMOVE_FILE) {
 #if EFI_SIMULATOR
         	DIR *dr = opendir(".");
-
         	if (dr == NULL) {
         		// opendir returns NULL if couldn't open directory
         	    printf("Could not open current directory" );
         	    return;
         	}
-
         	struct dirent *de;  // Pointer for directory entry
         	while ((de = readdir(dr)) != NULL) {
         		const char * fileName = de->d_name;
@@ -273,8 +277,35 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
         	    }
         	}
         	closedir(dr);
-
 #endif // EFI_SIMULATOR
+
+#if EFI_FILE_LOGGING
+			LOCK_SD_SPI;
+			DIR dir;
+			FRESULT res = f_opendir(&dir, ROOT_DIR);
+			if (res != FR_OK) {
+				scheduleMsg(&sharedLogger, "Error opening directory");
+			} else {
+				while (true) {
+					FILINFO fno;
+					res = f_readdir(&dir, &fno);
+					char *fileName = fno.fname;
+					if (res != FR_OK || fileName[0] == 0) {
+						break;
+					}
+					if (isLogFile(fileName)) {
+						int dotIndex = indexOf(fileName, DOT);
+						if (0 == strncmp(input + 6, &fileName[dotIndex - 4], 4)) {
+							scheduleMsg(&sharedLogger, "Removing %s", fileName);
+							f_unlink(fileName);
+							break;
+						}
+					}
+				}
+			}
+			UNLOCK_SD_SPI;
+#endif // EFI_FILE_LOGGING
+
 			sendOkResponse(tsChannel, TS_CRC);
 
 		} else if (input[5] == TS_SD_PROTOCOL_FETCH_COMPRESSED) {
@@ -308,45 +339,42 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
 #endif // EFI_SIMULATOR
 
 #if EFI_FILE_LOGGING
-		LOCK_SD_SPI;
+			LOCK_SD_SPI;
 
-		DIR dir;
-		FRESULT res = f_opendir(&dir, "/");
+			DIR dir;
+			FRESULT res = f_opendir(&dir, ROOT_DIR);
 
-		if (res != FR_OK) {
-		      scheduleMsg(&sharedLogger, "Error opening directory");
-		      UNLOCK_SD_SPI;
-		} else {
-    		memset(&uploading, 0, sizeof(FIL));						// clear the memory
-      		while (true) {
-      			FILINFO fno;
-      			res = f_readdir(&dir, &fno);
-      			char *fileName = fno.fname;
-      			if (res != FR_OK || fileName[0] == 0) {
-      				break;
-      			}
-      			if (isLogFile(fileName)) {
-      			    int dotIndex = indexOf(fileName, DOT);
-   			    	if (0 == strncmp(input + 6, &fileName[dotIndex - 4], 4)) {
-   			 		    FRESULT err = f_open(&uploading, fileName, FA_READ);				// This file has the index for next log file name
-   			 		    break;
-   			 	    }
-      			}
-      		}
-    		UNLOCK_SD_SPI;
-		}
-
+			if (res != FR_OK) {
+				scheduleMsg(&sharedLogger, "Error opening directory");
+				UNLOCK_SD_SPI;
+			} else {
+				memset(&uploading, 0, sizeof(FIL));			// clear the memory
+				while (true) {
+					FILINFO fno;
+					res = f_readdir(&dir, &fno);
+					char *fileName = fno.fname;
+					if (res != FR_OK || fileName[0] == 0) {
+						break;
+					}
+					if (isLogFile(fileName)) {
+						int dotIndex = indexOf(fileName, DOT);
+						if (0 == strncmp(input + 6, &fileName[dotIndex - 4], 4)) {
+							FRESULT err = f_open(&uploading, fileName, FA_READ);// This file has the index for next log file name
+							break;
+						}
+					}
+				}
+				UNLOCK_SD_SPI;
+			}
 
 #endif // EFI_FILE_LOGGING
 
+			sendOkResponse(tsChannel, TS_CRC);
+		}
 
-        	sendOkResponse(tsChannel, TS_CRC);
-        }
-
-    } else {
+	} else {
 		scheduleMsg(&sharedLogger, "TS_SD: unexpected w");
-    }
+	}
 }
-
 
 #endif // EFI_FILE_LOGGING
