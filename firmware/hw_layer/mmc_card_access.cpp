@@ -208,7 +208,7 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 		uint16_t blockNumber = SWAP_UINT16(data16[1]);
 		scheduleMsg(&sharedLogger, "TS_SD: fetch data command blockNumber=%d", blockNumber);
 
-		int offset = blockNumber * TRANSFER_SIZE;
+//		int offset = blockNumber * TRANSFER_SIZE;
 
 		buffer[0] = input[2];
 		buffer[1] = input[3];

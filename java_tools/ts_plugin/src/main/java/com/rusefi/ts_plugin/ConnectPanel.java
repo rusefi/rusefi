@@ -1,5 +1,6 @@
 package com.rusefi.ts_plugin;
 
+import com.rusefi.autodetect.PortDetector;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;
 
@@ -40,8 +41,15 @@ public class ConnectPanel {
                     .setCompositeLogicEnabled(false)
                     .setNeedPullData(false);
 
-            //controllerConnector.startAndConnect(":2390", ConnectionStateListener.VOID);
-            controllerConnector.startAndConnect(":29001", new ConnectionStateListener() {
+            String autoDetectedPort = PortDetector.autoDetectSerial(null);
+            if (autoDetectedPort == null) {
+                status.setText("rusEFI not detected");
+                return;
+            }
+
+            //":2390"
+            //String port = ":29001";
+            controllerConnector.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
                 public void onConnectionEstablished() {
                     status.setText("Connected to rusEFI");
                     disconnect.setEnabled(true);
