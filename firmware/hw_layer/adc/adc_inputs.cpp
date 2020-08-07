@@ -399,7 +399,7 @@ int getSlowAdcCounter() {
 class SlowAdcController : public PeriodicController<256> {
 public:
 	SlowAdcController() 
-		: PeriodicController("ADC", NORMALPRIO + 5, 500)
+		: PeriodicController("ADC", NORMALPRIO + 5, SLOW_ADC_RATE)
 	{
 	}
 
