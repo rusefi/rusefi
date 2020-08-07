@@ -51,11 +51,12 @@ public class ConnectPanel {
             //String port = ":29001";
             controllerConnector.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
                 public void onConnectionEstablished() {
-                    status.setText("Connected to rusEFI");
-                    disconnect.setEnabled(true);
-                    connectionStateListener.onConnectionEstablished();
+                    SwingUtilities.invokeLater(() -> {
+                        status.setText("Connected to rusEFI");
+                        disconnect.setEnabled(true);
+                        connectionStateListener.onConnectionEstablished();
+                    });
                 }
-
 
                 public void onConnectionFailed() {
                 }
