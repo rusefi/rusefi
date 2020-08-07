@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Set;
@@ -31,6 +32,8 @@ public enum Sensor {
     INT_TEMP(GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 10, 1, 0, 5, "C"),
     CLT(GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 12, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
     IAT(GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 14, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
+    AuxT1("AuxT1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
+    AuxT2("AuxT2", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 18, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
 
     // throttle, pedal
     TPS(GAUGE_NAME_TPS, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 20, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // throttle position sensor
@@ -199,6 +202,29 @@ public enum Sensor {
             if (s.name.equals(value) || s.name().equals(value))
                 return s;
         throw new IllegalStateException("Sensor not found: " + value);
+    }
+
+    public double getValueForChannel(ByteBuffer bb) {
+        switch (getType()) {
+            case FLOAT:
+                return bb.getFloat();
+            case INT:
+                return bb.getInt();
+            case UINT16:
+                // no cast - we want to discard sign
+                return bb.getInt() & 0xFFFF;
+            case INT16:
+                // cast - we want to retain sign
+                return  (short)(bb.getInt() & 0xFFFF);
+            case UINT8:
+                // no cast - discard sign
+                return bb.getInt() & 0xFF;
+            case INT8:
+                // cast - retain sign
+                return (byte)(bb.getInt() & 0xFF);
+            default:
+                throw new UnsupportedOperationException("type " + getType());
+        }
     }
 
     public String getName() {

@@ -61,6 +61,8 @@ EXTERN_ENGINE;
 	Engine *unitTestEngine;
 #endif
 
+// todo: move all static vars to engine->engineState.idle?
+
 static bool prettyClose = false;
 
 static bool shouldResetPid = false;
@@ -69,6 +71,13 @@ static bool shouldResetPid = false;
 // We set 'mightResetPid' to true only if PID was actually used (i.e. idlePid.getOutput() was called) to save some CPU resources.
 // See automaticIdleController().
 static bool mightResetPid = false;
+
+// This is needed to slowly turn on the PID back after it was reset.
+static bool wasResetPid = false;
+// This is used when the PID configuration is changed, to guarantee the reset
+static bool mustResetPid = false;
+static efitimeus_t restoreAfterPidResetTimeUs = 0;
+
 
 class PidWithOverrides : public PidIndustrial {
 public:
@@ -193,7 +202,9 @@ void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	showIdleInfo();
 }
 
-static void applyIACposition(percent_t position) {
+#endif // EFI_UNIT_TEST
+
+void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	/**
 	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
 	 * todo: unify?
@@ -207,12 +218,16 @@ static void applyIACposition(percent_t position) {
 		}
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
-		setEtbIdlePosition(position);
-#endif
+		setEtbIdlePosition(position PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 #if ! EFI_UNIT_TEST
-	} if (CONFIG(useStepperIdle)) {
+	} else if (CONFIG(useStepperIdle)) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
 #endif /* EFI_UNIT_TEST */
+	} else if (CONFIG(dcMotorIdleValve)) {
+#if EFI_ELECTRONIC_THROTTLE_BODY
+		setEtbIdlePosition(position PASS_ENGINE_PARAMETER_SUFFIX);
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 	} else {
 		if (!CONFIG(isDoubleSolenoidIdle)) {
 			idleSolenoidOpen.setSimplePwmDutyCycle(duty);
@@ -230,11 +245,13 @@ static void applyIACposition(percent_t position) {
 	}
 }
 
+#if ! EFI_UNIT_TEST
+
 percent_t getIdlePosition(void) {
 	return engine->engineState.idle.currentIdlePosition;
 }
 
-void setIdleValvePosition(int positionPercent) {
+void setManualIdleValvePosition(int positionPercent) {
 	if (positionPercent < 1 || positionPercent > 99)
 		return;
 	scheduleMsg(logger, "setting idle valve position %d", positionPercent);
@@ -283,19 +300,34 @@ static void undoIdleBlipIfNeeded() {
 	}
 }
 
-static bool isOutOfAutomaticIdleCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static bool isOutOfAutomaticIdleCondition(float rpm, int targetRpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// first, check the pedal threshold
 	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
-		return !engine->engineState.idle.throttlePedalUpState;
+		if (!engine->engineState.idle.throttlePedalUpState) {
+			return true;
+		}
+	} else {
+		const auto [valid, pos] = Sensor::get(SensorType::DriverThrottleIntent);
+
+		// Disable auto idle in case of TPS/Pedal failure
+		if (!valid) {
+			return true;
+		}
+
+		if (pos > CONFIG(idlePidDeactivationTpsThreshold))
+			return true;
 	}
 
-	const auto [valid, pos] = Sensor::get(SensorType::DriverThrottleIntent);
-
-	// Disable auto idle in case of TPS/Pedal failure
-	if (!valid) {
-		return true;
+	// then, check the RPM threshold (if in coasting mode)
+	if (CONFIG(idlePidRpmUpperLimit) > 0) {
+		int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);	
+		int upperRpmLimit = idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit);
+		if (rpm > upperRpmLimit) {
+			return true;
+		}
 	}
 
-	return pos > CONFIG(idlePidDeactivationTpsThreshold);
+	return false;
 }
 
 /**
@@ -307,7 +339,21 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 	industrialWithOverrideIdlePid.antiwindupFreq = engineConfiguration->idle_antiwindupFreq;
 	industrialWithOverrideIdlePid.derivativeFilterLoss = engineConfiguration->idle_derivativeFilterLoss;
 
-	if (isOutOfAutomaticIdleCondition(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	// get Target RPM for Auto-PID from a separate table
+	int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	efitick_t nowNt = getTimeNowNt();
+	efitimeus_t nowUs = getTimeNowUs();
+
+	float rpm;
+	if (CONFIG(useInstantRpmForIdle)) {
+		rpm = engine->triggerCentral.triggerState.calculateInstantRpm(NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	} else {
+		rpm = GET_RPM();
+	}
+
+
+	if (isOutOfAutomaticIdleCondition(rpm, targetRpm PASS_ENGINE_PARAMETER_SUFFIX)) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
 		if (mightResetPid) {
@@ -320,21 +366,8 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		return engine->engineState.idle.baseIdlePosition;
 	}
 
-	// get Target RPM for Auto-PID from a separate table
-	int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	efitick_t nowNt = getTimeNowNt();
-
-	float rpm;
-	if (CONFIG(useInstantRpmForIdle)) {
-		rpm = engine->triggerCentral.triggerState.calculateInstantRpm(NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	} else {
-		rpm = GET_RPM();
-	}
-
-
 	// #1553 we need to give FSIO variable offset or minValue a chance
-	bool acToggleJustTouched = (getTimeNowUs() - engine->acSwitchLastChangeTime) < MS2US(500);
+	bool acToggleJustTouched = (nowUs - engine->acSwitchLastChangeTime) < MS2US(500);
 	// check if within the dead zone
 	if (!acToggleJustTouched && absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
 		engine->engineState.idle.idleState = RPM_DEAD_ZONE;
@@ -347,6 +380,17 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 	percent_t errorAmpCoef = 1.0f;
 	if (rpm < targetRpm)
 		errorAmpCoef += (float)CONFIG(pidExtraForLowRpm) / PERCENT_MULT;
+	
+	// if PID was previously reset, we store the time when it turned on back (see errorAmpCoef correction below)
+	if (wasResetPid) {
+		restoreAfterPidResetTimeUs = nowUs;
+		wasResetPid = false;
+	}
+	// increase the errorAmpCoef slowly to restore the process correctly after the PID reset
+	// todo: move restoreAfterPidResetTimeUs to engineState.idle?
+	efitimeus_t timeSincePidResetUs = nowUs - /*engine->engineState.idle.*/restoreAfterPidResetTimeUs;
+	// todo: add 'pidAfterResetDampingPeriodMs' setting
+	errorAmpCoef = interpolateClamped(0.0f, 0.0f, MS2US(/*CONFIG(pidAfterResetDampingPeriodMs)*/1000), errorAmpCoef, timeSincePidResetUs);
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
 	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->setErrorAmplification(errorAmpCoef);
 
@@ -415,9 +459,14 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		}
 
 		if (shouldResetPid) {
-			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->reset();
+			// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
+			if (getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getIntegration() <= 0 || mustResetPid) {
+				getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->reset();
+				mustResetPid = false;
+			}
 //			alternatorPidResetCounter++;
 			shouldResetPid = false;
+			wasResetPid = true;
 		}
 
 
@@ -530,11 +579,8 @@ static percent_t automaticIdleController(float tpsPos DECLARE_ENGINE_PARAMETER_S
 		}
 
 		engine->engineState.idle.currentIdlePosition = iacPosition;
-#if ! EFI_UNIT_TEST
-		applyIACposition(engine->engineState.idle.currentIdlePosition);
-#endif /* EFI_UNIT_TEST */
-	}
-
+		applyIACposition(engine->engineState.idle.currentIdlePosition PASS_ENGINE_PARAMETER_SUFFIX);
+}
 
 IdleController idleControllerInstance;
 
@@ -557,6 +603,7 @@ void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
 	shouldResetPid = !getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->isSame(&previousConfiguration->idleRpmPid);
+	mustResetPid = shouldResetPid;
 	idleSolenoidOpen.setFrequency(CONFIG(idle).solenoidFrequency);
 	idleSolenoidClose.setFrequency(CONFIG(idle).solenoidFrequency);
 }

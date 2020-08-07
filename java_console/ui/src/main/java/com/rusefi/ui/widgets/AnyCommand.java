@@ -4,6 +4,7 @@ import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.rusefi.AutoTest;
 import com.rusefi.FileLog;
 import com.rusefi.InfixConverter;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
@@ -21,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -29,6 +31,7 @@ import java.util.function.Function;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class AnyCommand {
+    private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("AnyCommand");
     public static final String KEY = "last_value";
     private static final String DECODE_RPN = "decode_rpn";
 
@@ -136,9 +139,9 @@ public class AnyCommand {
                 String result = prepareEvalCommand(rawCommand);
                 if (result.equals(rawCommand)) {
                     // result was not translated
-                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Not valid expression");
-                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Please try eval \"2 + 2\"");
-                    MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "For RPN use rpn_eval \"2 2 +\"");
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Not valid expression");
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Please try eval \"2 + 2\"");
+                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "For RPN use rpn_eval \"2 2 +\"");
                 }
                 return result;
             } else if (rawCommand.toLowerCase().startsWith("stim_check" + " ")) {
@@ -165,23 +168,23 @@ public class AnyCommand {
     private static void handleStimulationSelfCheck(String rawCommand, LinkManager linkManager) {
         String[] parts = rawCommand.split(" ", 4);
         if (parts.length != 4) {
-            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Invalid command length " + parts);
+            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Invalid command length " + parts);
             return; // let's ignore invalid command
         }
         int rpm = Integer.parseInt(parts[1]);
         int settleTime = Integer.parseInt(parts[2]);
         int durationTime = Integer.parseInt(parts[3]);
-        new Thread(new Runnable() {
+        THREAD_FACTORY.newThread(new Runnable() {
             @Override
             public void run() {
-                MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Will test with RPM " + rpm + ", settle time" + settleTime + "s and duration" + durationTime + "s");
+                MessagesCentral.getInstance().postMessage(AnyCommand.class, "Will test with RPM " + rpm + ", settle time" + settleTime + "s and duration" + durationTime + "s");
                 Function<String, Object> callback = new Function<String, Object>() {
                     @Override
                     public Object apply(String status) {
                         if (status == null) {
-                            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, rpm + " worked!");
+                            MessagesCentral.getInstance().postMessage(AnyCommand.class, rpm + " worked!");
                         } else {
-                            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, rpm + " failed " + status);
+                            MessagesCentral.getInstance().postMessage(AnyCommand.class, rpm + " failed " + status);
                         }
                         return null;
                     }
@@ -201,12 +204,12 @@ public class AnyCommand {
     private static void handleDecodeRpn(String rawCommand) {
         String[] parts = rawCommand.split(" ", 2);
         if (parts.length != 2) {
-            MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Failed to parse, one argument expected");
+            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Failed to parse, one argument expected");
             return;
         }
         String argument = unquote(parts[1]);
         String humanForm = InfixConverter.getHumanInfixFormOrError(argument);
-        MessagesCentral.getInstance().postMessage(FileLog.LOGGER, AnyCommand.class, "Human form is \"" + humanForm + "\"");
+        MessagesCentral.getInstance().postMessage(AnyCommand.class, "Human form is \"" + humanForm + "\"");
     }
 
     public static String prepareEvalCommand(String rawCommand) {

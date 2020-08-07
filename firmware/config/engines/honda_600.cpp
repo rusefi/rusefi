@@ -16,19 +16,6 @@
 #if EFI_PROD_CODE
 #include "can_hw.h"
 #endif
-static const fuel_table_t default_custom_fuel_table = {
-  {1.8,  1.8,  1.65, 1.65, 1.65, 1.65, 1.5,  1.5,   2.025, 1.5,  1.5,  1.5,  1.5},
-  {1.8,  1.8,  1.65, 1.65, 1.65, 1.65, 1.5,  1.5,   2.025, 1.5,  1.5,  1.5,  1.5},
-  {1.95, 1.95, 1.95, 1.8,  2.1,  2.25, 2.34, 2.25,	2.7,   2.7,  2.7,  2.7,  2.7},
-  {2.55, 2.55, 2.55, 2.55, 2.55, 2.55, 2.55, 2.55,	2.4,   2.55, 3,    3,    2.7},
-  {3,    3,    3,    3,    3,    3.3,  3.3,  3.45,	3,     3.3,  3.6,  3.6,  3.3},
-  {3,    3,    3,    3,    3,    3,    3.6,	 4.305,	3.6,   3.6,  3.9,  3.9,  3.3},
-  {3,    3,    3,    3,    3,    3,    3.6,	 3.75 , 3.9,   3.9,  4.2,  4.2,  3.9},
-  {3,    3,    3,    3,    3,    3,    3.6,	 3.9,   4.2,   4.5,  4.5,  4.5,  4.5},
-  {3,    3,    3,    3,    3,    3,    3,    3,     3,     3,    3,    3,    3},
-  {3,    3,    3,    3,    3,    3,    3,    3,     3,     3,    3,    3,    3},
-  {3,    3,    3,    3,    3,    3,    3,    3,     3,     3,    3,    3,    3}
-};
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const ignition_table_t default_custom_timing_table = {
@@ -50,23 +37,18 @@ static const ignition_table_t default_custom_timing_table = {
 EXTERN_CONFIG;
 
 static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-
-	setFuelLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelRpmBin(0, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(0,7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	copyFuelTable(default_custom_fuel_table, config->fuelTable);
-	copyFuelTable(default_custom_fuel_table, config->veTable);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(default_custom_timing_table, config->ignitionTable);
+	MEMCPY(config->ignitionTable, default_custom_timing_table);
 #endif
 }
 
 void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->trigger.type = TT_HONDA_CBR_600_CUSTOM;
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N_2;
 
 	// upside down wiring
 	engineConfiguration->triggerInputPins[0] = GPIOA_5;
@@ -150,7 +132,7 @@ void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[3] = GPIOB_8; // #4
 
 	setDefaultCustomMaps(PASS_CONFIG_PARAMETER_SIGNATURE);
-	setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_ALPHA_N_2 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
 	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;

@@ -1,13 +1,11 @@
 package com.rusefi;
 
 import com.opensr5.ConfigurationImage;
-import com.opensr5.Logger;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.EOFException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -80,20 +78,14 @@ public class UploadChanges {
     public static void scheduleUpload(UIContext uiContext, final ConfigurationImage newVersion, final Runnable afterUpload) {
         if (1 == 1)
             throw new UnsupportedOperationException("disabled");
-        Logger logger = null;
         JFrame frame = null;//wnd.getFrame();
         frame.setVisible(true);
         uiContext.getLinkManager().execute(new Runnable() {
             @Override
             public void run() {
-                try {
-                    uiContext.getLinkManager().getCurrentStreamState().uploadChanges(newVersion, logger);
-                    if (afterUpload != null)
-                        afterUpload.run();
-                } catch (InterruptedException | EOFException e) {
-                    logger.error("Error: " + e);
-                    throw new IllegalStateException(e);
-                }
+                uiContext.getLinkManager().getCurrentStreamState().uploadChanges(newVersion);
+                if (afterUpload != null)
+                    afterUpload.run();
             }
 
             @Override

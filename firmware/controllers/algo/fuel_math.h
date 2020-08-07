@@ -22,12 +22,9 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
  */
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-AirmassResult getRealMafAirmass(float airMass, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
-
-floatms_t getBaseTableFuel(int rpm, float engineLoad);
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
-angle_t getInjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+angle_t getInjectionOffset(float rpm, float load DECLARE_ENGINE_PARAMETER_SUFFIX);
 float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX);
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);

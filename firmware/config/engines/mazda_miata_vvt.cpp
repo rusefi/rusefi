@@ -51,6 +51,7 @@
 #include "fsio_impl.h"
 #include "ego.h"
 #include "thermistors.h"
+#include "mazda_miata_base_maps.h"
 
 EXTERN_CONFIG;
 
@@ -335,14 +336,14 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vvtMode = MIATA_NB2;
 	engineConfiguration->vvtOffset = 98; // 2003 red car value
 
-	memcpy(config->veRpmBins, mazda_miata_nb2_RpmBins, sizeof(mazda_miata_nb2_RpmBins));
-	memcpy(config->veLoadBins, mazda_miata_nb2_LoadBins, sizeof(mazda_miata_nb2_LoadBins));
-	copyFuelTable(mapBased18vvtVeTable_NB_fuel_rail, config->veTable);
+	MEMCPY(config->veRpmBins, mazda_miata_nb2_RpmBins);
+	MEMCPY(config->veLoadBins, mazda_miata_nb2_LoadBins);
+	MEMCPY(config->veTable, mapBased18vvtVeTable_NB_fuel_rail);
 
-	memcpy(config->ignitionRpmBins, ignition18vvtRpmBins, sizeof(ignition18vvtRpmBins));
-	memcpy(config->ignitionLoadBins, ignition18vvtLoadBins, sizeof(ignition18vvtLoadBins));
+	MEMCPY(config->ignitionRpmBins, ignition18vvtRpmBins);
+	MEMCPY(config->ignitionLoadBins, ignition18vvtLoadBins);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(mapBased18vvtTimingTable, config->ignitionTable);
+	MEMCPY(config->ignitionTable, mapBased18vvtTimingTable);
 #endif
 
 	setMazdaNB2VVTSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -366,6 +367,14 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.iFactor = 0.0001;
 	engineConfiguration->idleRpmPid.dFactor = 5;
 	engineConfiguration->idleRpmPid.periodMs = 10;
+
+	miataNA_setCrankingCycleBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNA_setCrankingFuelBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	miataNA_setCltIdleCorrBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNA_setCltIdleRpmBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNA_setIacCoastingBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 } // end of setMazdaMiataEngineNB2Defaults
 
 // MAZDA_MIATA_2003

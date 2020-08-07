@@ -119,7 +119,7 @@ static efitimems_t previousWriteReportMs = 0;
 static ts_channel_s tsChannel;
 
 // this thread wants a bit extra stack
-static THD_WORKING_AREA(tunerstudioThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(tunerstudioThreadStack, CONNECTIVITY_THREAD_STACK);
 
 static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
@@ -145,21 +145,6 @@ void printTsStats(void) {
 #endif /* EFI_PROD_CODE */
 
 	printErrorCounters();
-
-//	scheduleMsg(logger, "analogChartFrequency %d",
-//			(int) (&engineConfiguration->analogChartFrequency) - (int) engineConfiguration);
-//
-//	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
-//	scheduleMsg(logger, "fuelTable %d", fuelMapOffset);
-//
-//	int offset = (int) (&CONFIG(hip9011Gain)) - (int) engineConfiguration;
-//	scheduleMsg(&tsLogger, "hip9011Gain %d", offset);
-//
-//	offset = (int) (&engineConfiguration->crankingCycleBins) - (int) engineConfiguration;
-//	scheduleMsg(&tsLogger, "crankingCycleBins %d", offset);
-//
-//	offset = (int) (&engineConfiguration->engineCycle) - (int) engineConfiguration;
-//	scheduleMsg(&tsLogger, "engineCycle %d", offset);
 }
 
 static void setTsSpeed(int value) {
@@ -217,7 +202,7 @@ static constexpr size_t getTunerStudioPageSize() {
 	return TOTAL_CONFIG_SIZE;
 }
 
-static void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
+void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	sr5SendResponse(tsChannel, mode, NULL, 0);
 }
 
@@ -323,17 +308,6 @@ static bool validateOffsetCount(size_t offset, size_t count, ts_channel_s *tsCha
 	}
 
 	return false;
-}
-
-/**
- * read log file content for rusEfi console
- */
-static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, uint16_t offset, uint16_t length) {
-//#if EFI_FILE_LOGGING
-//	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
-//#else
-	UNUSED(tsChannel); UNUSED(fileId); UNUSED(offset); UNUSED(length);
-//#endif /* EFI_FILE_LOGGING */
 }
 
 /**
@@ -473,7 +447,6 @@ static bool isKnownCommand(char command) {
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_STRUCT
-			|| command == TS_GET_FILE_RANGE
 			|| command == TS_SET_LOGGER_SWITCH
 			|| command == TS_GET_LOGGER_GET_BUFFER
 			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
@@ -482,6 +455,8 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_FIRMWARE_VERSION
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
+			|| command == TS_SD_R_COMMAND
+			|| command == TS_SD_W_COMMAND
 			|| command == TS_GET_CONFIG_ERROR;
 }
 
@@ -490,6 +465,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 	int wasReady = false;
 
 	while (true) {
+		validateStack("communication", STACK_USAGE_COMMUNICATION, 128);
+
 		int isReady = sr5IsReady(tsChannel);
 		if (!isReady) {
 			chThdSleepMilliseconds(10);
@@ -773,6 +750,14 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	case TS_GET_FIRMWARE_VERSION:
 		handleGetVersion(tsChannel, TS_CRC);
 		break;
+#if EFI_FILE_LOGGING || EFI_SIMULATOR
+	case TS_SD_R_COMMAND:
+		handleTsR(tsChannel, data);
+		break;
+	case TS_SD_W_COMMAND:
+		handleTsW(tsChannel, data);
+		break;
+#endif //EFI_FILE_LOGGING
 	case TS_GET_TEXT:
 		handleGetText(tsChannel);
 		break;
@@ -784,9 +769,6 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		break;
 	case TS_GET_STRUCT:
 		handleGetStructContent(tsChannel, data16[0], data16[1]);
-		break;
-	case TS_GET_FILE_RANGE:
-		handleReadFileContent(tsChannel, data16[0], data16[1], data16[2]);
 		break;
 	case TS_CHUNK_WRITE_COMMAND:
 		handleWriteChunkCommand(tsChannel, TS_CRC, data16[1], data16[2], data + sizeof(TunerStudioWriteChunkRequest));
@@ -898,10 +880,12 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
-#if HW_CHECK_MODE
-  #define configError "FACTORY_MODE_PLEASE_CONTACT_SUPPORT"
-#else
 		char * configError = getFirmwareError();
+#if HW_CHECK_MODE
+		// analog input errors are returned as firmware error in QC mode
+		if (!hasFirmwareError()) {
+			strcpy(configError, "FACTORY_MODE_PLEASE_CONTACT_SUPPORT");
+		}
 #endif // HW_CHECK_MODE
 		sr5SendResponse(tsChannel, TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
 		break;

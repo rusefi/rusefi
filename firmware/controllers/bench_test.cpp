@@ -26,6 +26,7 @@
 #if EFI_ENGINE_CONTROL
 #if !EFI_UNIT_TEST
 
+#include "os_access.h"
 #include "flash_main.h"
 #include "bench_test.h"
 #include "io_pins.h"
@@ -40,6 +41,7 @@
 #include "electronic_throttle.h"
 #include "cj125.h"
 #include "malfunction_central.h"
+#include "tunerstudio_outputs.h"
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
@@ -212,6 +214,8 @@ private:
 		UNUSED(nowNt);
 		setPeriod(50 /* ms */);
 
+		validateStack("Bench", STACK_USAGE_BENCH, 128);
+
 		// naive inter-thread communication - waiting for a flag
 		if (isBenchTestPending) {
 			isBenchTestPending = false;
@@ -271,6 +275,9 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case 0x10:
 		engine->etbAutoTune = false;
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.calibrationMode = TsCalMode::None;
+#endif // EFI_TUNER_STUDIO
 		return;
 #endif
 	case 0xF:

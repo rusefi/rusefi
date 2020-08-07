@@ -13,6 +13,7 @@ import com.rusefi.ui.util.UiUtils;
 
 import java.util.TimeZone;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class MainFrame {
@@ -21,7 +22,7 @@ public class MainFrame {
     /**
      * @see StartupFrame
      */
-    private FrameHelper frame = new FrameHelper() {
+    private final FrameHelper frame = new FrameHelper() {
         @Override
         protected void onWindowOpened() {
             FileLog.MAIN.logLine("onWindowOpened");
@@ -42,26 +43,13 @@ public class MainFrame {
         }
     };
 
-    public ConnectionStateListener listener;
+    public ConnectionFailedListener listener;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this.consoleUI = consoleUI;
 
         this.tabbedPane = tabbedPane;
-        listener = new ConnectionStateListener() {
-            @Override
-            public void onConnectionFailed() {
-            }
-
-            @Override
-            public void onConnectionEstablished() {
-                FileLog.MAIN.logLine("onConnectionEstablished");
-    //                tabbedPane.romEditorPane.showContent();
-                tabbedPane.settingsTab.showContent();
-                tabbedPane.logsManager.showContent();
-                tabbedPane.fuelTunePane.showContent();
-                new BinaryProtocolServer(FileLog.LOGGER).start(consoleUI.uiContext.getLinkManager());
-            }
+        listener = () -> {
         };
     }
 
@@ -91,12 +79,10 @@ public class MainFrame {
 
             @Override
             public void onConnectionEstablished() {
-                FileLog.MAIN.logLine("onConnectionEstablished");
-//                tabbedPane.romEditorPane.showContent();
                 tabbedPane.settingsTab.showContent();
                 tabbedPane.logsManager.showContent();
                 tabbedPane.fuelTunePane.showContent();
-                new BinaryProtocolServer(FileLog.LOGGER).start(linkManager);
+                new BinaryProtocolServer().start(linkManager);
             }
         });
 

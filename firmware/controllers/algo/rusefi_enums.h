@@ -62,7 +62,7 @@ typedef enum {
 
 	MRE_MIATA_NB2_MAP = 11,
 
-	MRE_MIATA_NA6 = ET_MRE_MIATA_NA6,
+	MRE_MIATA_NA6_VAF = ET_MRE_MIATA_NA6_VAF,
 
 	MRE_MIATA_NB2_ETB = 13,
 
@@ -188,6 +188,9 @@ typedef enum {
 
 	DODGE_RAM = 64,
 	CITROEN_TU3JP = ET_CITROEN_TU3JP,
+
+	MRE_MIATA_NA6_MAP = ET_MRE_MIATA_NA6_MAP,
+
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -425,14 +428,6 @@ typedef enum {
  */
 typedef enum {
 	/**
-	 * raw Mass Air Flow sensor value algorithm. http://en.wikipedia.org/wiki/Mass_flow_sensor
-	 */
-	LM_PLAIN_MAF = 0,
-	/**
-	 * Throttle Position Sensor value is used as engine load. http://en.wikipedia.org/wiki/Throttle_position_sensor
-	 */
-	LM_ALPHA_N = 1,
-	/**
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
 	 */
@@ -442,6 +437,12 @@ typedef enum {
 	 * MAF with a known kg/hour function
 	 */
 	LM_REAL_MAF = 4,
+
+	// todo: rename after LM_ALPHA_N is removed
+	LM_ALPHA_N_2 = 5,
+
+	// This mode is for unit testing only, so that tests don't have to rely on a particular real airmass mode
+	LM_MOCK = 100,
 
 	Force_4_bytes_size_engine_load_mode = ENUM_32_BITS,
 } engine_load_mode_e;
@@ -952,6 +953,8 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_Map = 1,
 	GPPWM_Clt = 2,
 	GPPWM_Iat = 3,
+	GPPWM_FuelLoad = 4,
+	GPPWM_IgnLoad = 5,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {

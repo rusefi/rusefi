@@ -83,6 +83,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	// this is needed to have valid CLT and IAT.
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// Setup running in mock airmass mode
+	engineConfiguration->fuelAlgorithm = LM_MOCK;
+	engine->mockAirmassModel = &mockAirmass;
 }
 
 EngineTestHelper::~EngineTestHelper() {
@@ -315,7 +319,6 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 
 	eth->clearQueue();
 
-	ASSERT_EQ(LM_PLAIN_MAF, engineConfiguration->fuelAlgorithm);
 	engineConfiguration->isIgnitionEnabled = false; // let's focus on injection
 	engineConfiguration->specs.cylindersCount = 4;
 	// a bit of flexibility - the mode may be changed by some tests

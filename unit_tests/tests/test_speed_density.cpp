@@ -25,7 +25,7 @@ TEST(big, testSpeedDensity) {
 
 	engineConfiguration->injector.flow = gramm_second_to_cc_minute(5.303);
 
-	float airMass = getCylinderAirMass(0.92, 98, 293.16 PASS_ENGINE_PARAMETER_SUFFIX);
+	float airMass = SpeedDensityBase::getAirmassImpl(0.92, 98, 293.16 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_FLOAT_EQ(0.9371106624, airMass);
 

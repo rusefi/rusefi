@@ -237,6 +237,8 @@ typedef struct {
 	}
 
 	/* see also [OutputChannels] in rusefi.input */
+	/* see also TS_OUTPUT_SIZE in rusefi_config.txt */
+
 } TunerStudioOutputChannels;
 
 extern TunerStudioOutputChannels tsOutputChannels;

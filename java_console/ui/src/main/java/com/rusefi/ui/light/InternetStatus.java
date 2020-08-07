@@ -1,5 +1,6 @@
 package com.rusefi.ui.light;
 
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 
 import javax.swing.*;
@@ -8,8 +9,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ThreadFactory;
 
 public class InternetStatus {
+    private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("InternetStatus");
     private static final String GOOGLE = "http://google.com";
     private final JPanel panel = new JPanel();
     private final JLabel status = new JLabel();
@@ -19,7 +22,7 @@ public class InternetStatus {
         Font defaultFont = status.getFont();
         status.setFont(new Font(defaultFont.getName(), defaultFont.getStyle(), 2 * defaultFont.getSize()));
 
-        new Thread(() -> {
+        THREAD_FACTORY.newThread(() -> {
             while (true) {
                 boolean isConnected = isServerReachable();
                 try {

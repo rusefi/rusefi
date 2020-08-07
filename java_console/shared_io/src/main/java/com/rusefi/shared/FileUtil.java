@@ -1,9 +1,6 @@
 package com.rusefi.shared;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -53,5 +50,15 @@ public class FileUtil {
         }
 
         return destFile;
+    }
+
+    public static void close(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException ignored) {
+                // ignored
+            }
+        }
     }
 }

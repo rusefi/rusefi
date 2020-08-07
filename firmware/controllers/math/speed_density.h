@@ -9,13 +9,12 @@
 
 #include "engine.h"
 #include "airmass.h"
+#include "speed_density_base.h"
 
 #define gramm_second_to_cc_minute(gs) ((gs) / 0.0119997981)
 #define cc_minute_to_gramm_second(ccm) ((ccm) * 0.0119997981)
 
 temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX);
-float getCylinderAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-AirmassResult getSpeedDensityAirmass(float map DECLARE_ENGINE_PARAMETER_SUFFIX);

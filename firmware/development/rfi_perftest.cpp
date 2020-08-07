@@ -75,8 +75,6 @@ static void testRusefiMethods(const int count) {
 
 	start = currentTimeMillis();
 
-	for (int i = 0; i < count; i++)
-		tempi += getBaseTableFuel(testEngine.engineConfiguration, 4020, 2.21111);
 	time = currentTimeMillis() - start;
 	if (tempi != 0)
 		scheduleMsg(logger, "Finished %d iterations of getBaseFuel in %dms", count, time);

@@ -1,6 +1,7 @@
 package com.rusefi.sensor_logs;
 
 import com.rusefi.FileLog;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -13,7 +14,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class BinarySensorLogRestarter implements SensorLog {
-    private final static Executor UPLOAD_EXECUTOR = Executors.newSingleThreadExecutor();
+    private final static Executor UPLOAD_EXECUTOR = Executors.newSingleThreadExecutor(new NamedThreadFactory("BinarySensorLogRestarter"));
 
     private BinarySensorLog logger;
 

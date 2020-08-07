@@ -10,3 +10,4 @@
 #define ts_show_sd_card false
 #define ts_show_can_pins false
 #define ts_show_tunerstudio_port false
+#define ts_show_can2 false

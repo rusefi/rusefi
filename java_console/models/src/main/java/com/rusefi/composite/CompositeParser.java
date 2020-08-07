@@ -1,5 +1,6 @@
 package com.rusefi.composite;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.config.generated.Fields;
 
@@ -9,11 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompositeParser {
+    private static final Logging log = Logging.getLogging(CompositeParser.class);
 
     public static List<CompositeEvent> parse(byte[] response) {
         ByteBuffer byteBuffer = ByteBuffer.wrap(response);
         byteBuffer.order(ByteOrder.BIG_ENDIAN);
-        System.out.println("Got composite length=" + response.length);
+        log.info("Got composite length=" + response.length);
         int ptr = 1;
 
         List<CompositeEvent> events = new ArrayList<>();
@@ -22,7 +24,7 @@ public class CompositeParser {
 
             int timestamp = byteBuffer.getInt(ptr);
             byte flags = byteBuffer.get(ptr + 4);
-            System.out.println(timestamp + " " + flags);
+//            log.debug(timestamp + " " + flags);
 
             boolean primaryTrigger = EnumIniField.getBit(flags, 0);
             boolean secondaryTrigger = EnumIniField.getBit(flags, 1);

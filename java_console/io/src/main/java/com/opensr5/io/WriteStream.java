@@ -12,6 +12,8 @@ public interface WriteStream {
      */
     void write(byte[] bytes) throws IOException;
 
+    void flush() throws IOException;
+
     default void write(byte value) throws IOException {
         write(new byte[]{value});
     }

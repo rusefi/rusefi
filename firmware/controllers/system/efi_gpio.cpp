@@ -323,7 +323,10 @@ bool OutputPin::getAndSet(int logicValue) {
 }
 
 void OutputPin::setValue(int logicValue) {
-	ScopePerf perf(PE::OutputPinSetValue);
+#if ENABLE_PERF_TRACE
+// todo: https://github.com/rusefi/rusefi/issues/1638
+//	ScopePerf perf(PE::OutputPinSetValue);
+#endif // ENABLE_PERF_TRACE
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");

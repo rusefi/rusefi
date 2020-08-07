@@ -1,10 +1,12 @@
 package com.rusefi.core;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.Logging;
 
 import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * Messages from the firmware and UI panels which want to display them
@@ -13,6 +15,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class MessagesCentral {
+    private static final Logging log = getLogging(MessagesCentral.class);
+
     private static final MessagesCentral INSTANCE = new MessagesCentral();
     private final List<MessageListener> listeners = new CopyOnWriteArrayList<>();
 
@@ -27,8 +31,8 @@ public class MessagesCentral {
         listeners.add(listener);
     }
 
-    public void postMessage(Logger logger, final Class clazz, final String message) {
-        logger.info("postMessage " + clazz.getSimpleName() + ": " + message);
+    public void postMessage(final Class clazz, final String message) {
+        log.info("postMessage " + clazz.getSimpleName() + ": " + message);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

@@ -196,7 +196,7 @@ INCDIR = . \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \
          $(HW_LAYER_DRIVERS_INC) \
-          $(PROJECT_DIR)/hw_layer \
+          $(HW_LAYER_INC) $(HW_SENSORS_INC) \
           $(PROJECT_DIR)/hw_layer/algo \
           $(PROJECT_DIR)/hw_layer/drivers/can \
           $(HW_SENSORS_INC) \

@@ -94,9 +94,11 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->is_enabled_spi_3 = false;
 
+#if EFI_CJ125
 	cj125defaultPinout(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->cj125ur = EFI_ADC_11; // PC3
 	engineConfiguration->cj125CsPin = GPIOB_11;
+#endif
 
 	engineConfiguration->debugMode = DBG_CJ125;
 

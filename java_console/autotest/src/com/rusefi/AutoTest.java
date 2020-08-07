@@ -1,7 +1,6 @@
 package com.rusefi;
 
 
-import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
@@ -55,7 +54,7 @@ public class AutoTest {
 
         BinaryProtocol bp = linkManager.getCurrentStreamState();
         // let's make sure 'burn' command works since sometimes it does not
-        bp.burn(Logger.CONSOLE);
+        bp.burn();
 
         sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
         sendCommand(getEnableCommand(Fields.CMD_FUNCTIONAL_TEST_MODE));
@@ -555,7 +554,7 @@ public class AutoTest {
 
         boolean failed = false;
         try {
-            LinkManager linkManager = new LinkManager(FileLog.LOGGER);
+            LinkManager linkManager = new LinkManager();
             IoUtil.connectToSimulator(linkManager, startSimulator);
             new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
         } catch (Throwable e) {

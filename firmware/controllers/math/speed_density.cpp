@@ -15,6 +15,7 @@
 #include "engine_math.h"
 #include "perf_trace.h"
 #include "sensor.h"
+#include "map.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -109,60 +110,6 @@ temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	return Tcharge;
-}
-
-/**
- * is J/g*K
- */
-#define GAS_R 0.28705
-
-/**
- * @return air mass in grams
- */
-static float getCycleAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return (CONFIG(specs.displacement) * volumetricEfficiency * MAP) / (GAS_R * tempK);
-}
-
-float getCylinderAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return getCycleAirMass(volumetricEfficiency, MAP, tempK PASS_ENGINE_PARAMETER_SUFFIX)
-			/ CONFIG(specs.cylindersCount);
-}
-
-/**
- * @return per cylinder injection time, in Milliseconds
- */
-AirmassResult getSpeedDensityAirmass(float map DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	ScopePerf perf(PE::GetSpeedDensityFuel);
-
-	/**
-	 * most of the values are pre-calculated for performance reasons
-	 */
-	float tChargeK = ENGINE(engineState.sd.tChargeK);
-	if (cisnan(tChargeK)) {
-		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "tChargeK not ready"); // this would happen before we have CLT reading for example
-		return {};
-	}
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(map), "NaN map", {});
-
-	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", {});
-
-	float airMass = getCylinderAirMass(ENGINE(engineState.currentBaroCorrectedVE), adjustedMap, tChargeK PASS_ENGINE_PARAMETER_SUFFIX);
-	if (cisnan(airMass)) {
-		warning(CUSTOM_ERR_6685, "NaN airMass");
-		return {};
-	}
-#if EFI_PRINTF_FUEL_DETAILS
-	printf("getSpeedDensityAirmass map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
-			map, adjustedMap, engine->engineState.sd.adjustedManifoldAirPressure);
-#endif /*EFI_PRINTF_FUEL_DETAILS */
-
-	return {
-		airMass,
-		map,	// AFR/VE table Y axis
-	};
 }
 
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

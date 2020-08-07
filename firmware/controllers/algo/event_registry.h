@@ -22,13 +22,17 @@ class Engine;
 class InjectionEvent {
 public:
 	InjectionEvent();
+
+	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
+	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt);
+
 	/**
 	 * This is a performance optimization for IM_SIMULTANEOUS fuel strategy.
 	 * It's more efficient to handle all injectors together if that's the case
 	 */
-	bool isSimultanious;
+	bool isSimultanious = false;
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
-	int ownIndex;
+	int ownIndex = 0;
 	DECLARE_ENGINE_PTR;
 	event_trigger_position_s injectionStart;
 
@@ -47,13 +51,16 @@ public:
 	WallFuel wallFuel;
 };
 
-
 /**
  * This class knows about when to inject fuel
  */
 class FuelSchedule {
 public:
 	FuelSchedule();
+
+	// Call this every trigger tooth.  It will schedule all required injector events.
+	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 	/**
 	 * this method schedules all fuel events for an engine cycle
 	 */
@@ -100,12 +107,12 @@ public:
 	 * Desired timing advance
 	 */
 	angle_t sparkAngle = NAN;
-	floatms_t sparkDwell;
+	floatms_t sparkDwell = 0;
 	/**
 	 * this timestamp allows us to measure actual dwell time
 	 */
-	uint32_t actualStartOfDwellNt;
-	event_trigger_position_s dwellPosition;
+	uint32_t actualStartOfDwellNt = 0;
+	event_trigger_position_s dwellPosition{};
 	/**
 	 * Sequential number of currently processed spark event
 	 * @see globalSparkIdCounter

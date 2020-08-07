@@ -20,7 +20,10 @@ public:
 };
 
 percent_t getIdlePosition(void);
-void setIdleValvePosition(int positionPercent);
+
+void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setManualIdleValvePosition(int positionPercent);
+
 void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void startIdleBench(void);

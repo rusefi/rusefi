@@ -5,6 +5,7 @@ package com.rusefi;
  */
 public interface Timeouts {
     int SECOND = 1000;
+    int MINUTE = 60 * SECOND;
     int COMMAND_TIMEOUT_SEC = 10; // seconds
 
     /**
