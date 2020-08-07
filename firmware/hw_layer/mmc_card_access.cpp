@@ -5,6 +5,17 @@
 
 #include "global.h"
 
+#if EFI_SIMULATOR
+#include <stdio.h>
+#include <dirent.h>
+#endif
+
+#define DIR_RESPONSE_SIZE 512
+
+#define DIR_RESPONSE_BUFFER_SIZE (DIR_RESPONSE_SIZE + 2)
+
+#define DOT '.'
+
 #if EFI_FILE_LOGGING || EFI_SIMULATOR || EFI_UNIT_TEST
 
 #include "mmc_card.h"
@@ -14,7 +25,7 @@
  * for funny reasons file name has to be at least 4 symbols before the dot
  */
 bool isLogFile(const char *fileName) {
-	int dotIndex = indexOf(fileName, '.');
+	int dotIndex = indexOf(fileName, DOT);
 	if (dotIndex == -1) {
 		return false;
 	}
@@ -38,7 +49,15 @@ static uint8_t buffer[TRANSFER_SIZE + 2];
 
 static void setFileEntry(uint8_t *buffer, int index, const char *fileName, int fileSize) {
 	int offset = 32 * index;
-	memcpy(buffer + offset, fileName, 11);
+
+	int dotIndex = indexOf(fileName, DOT);
+	// assert dotIndex != -1
+	memcpy(buffer + offset, fileName, dotIndex);
+	for (int i = dotIndex; i < 8 ; i++) {
+		buffer[offset + i] = 0;
+	}
+	memcpy(buffer + offset + 8, &fileName[dotIndex + 1], 3);
+
 	buffer[offset + 11] = 1;
 
 	*(uint32_t *) (&buffer[offset + 28]) = fileSize;
@@ -73,15 +92,37 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
             buffer[9] = 1; // number of files
 
 			sr5SendResponse(tsChannel, TS_CRC, buffer, 16);
-        } else if (length == 0x202) {
+        } else if (length == DIR_RESPONSE_BUFFER_SIZE) {
             // SD read directory command
-        	memset(buffer, 0, 512);
+        	memset(buffer, 0, DIR_RESPONSE_BUFFER_SIZE);
 
 
 #if EFI_SIMULATOR
+        	DIR *dr = opendir(".");
 
-        	setFileEntry(buffer, 0, "hello123.msq", 123123);
-        	setFileEntry(buffer, 1, "hello222.msq", 123123);
+        	if (dr == NULL) {
+        		// opendir returns NULL if couldn't open directory
+        	    printf("Could not open current directory" );
+        	    return;
+        	}
+
+        	int index = 0;
+        	struct dirent *de;  // Pointer for directory entry
+        	while ((de = readdir(dr)) != NULL) {
+        	    printf("%s\n", de->d_name);
+        	    if (index >= DIR_RESPONSE_SIZE / 32) {
+        	    	break;
+        	    }
+        	    if (isLogFile(de->d_name)) {
+        	    	setFileEntry(buffer, index, de->d_name, 239);
+        	    	index++;
+        	    }
+        	}
+
+        	closedir(dr);
+
+//        	setFileEntry(buffer, 0, "hello123.msq", 123123);
+//        	setFileEntry(buffer, 1, "hello222.msq", 123123);
 
 #endif // EFI_SIMULATOR
         	sr5SendResponse(tsChannel, TS_CRC, buffer, 0x202);
