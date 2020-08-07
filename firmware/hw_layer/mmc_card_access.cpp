@@ -43,6 +43,11 @@ bool isLogFile(const char *fileName) {
 #if EFI_FILE_LOGGING || EFI_SIMULATOR
 #include "mmc_card.h"
 
+
+#if EFI_SIMULATOR
+static FILE *uploading;
+#endif // EFI_SIMULATOR
+
 extern LoggingWithStorage sharedLogger;
 
 #define TRANSFER_SIZE 2048
@@ -142,13 +147,19 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
         	closedir(dr);
 
 #endif // EFI_SIMULATOR
-        	sr5SendResponse(tsChannel, TS_CRC, buffer, 0x202);
+        	sr5SendResponse(tsChannel, TS_CRC, buffer, DIR_RESPONSE_BUFFER_SIZE);
 		}
 	} else if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_DATA) {
-		int blockNumber = data16[1];
+		uint16_t blockNumber = SWAP_UINT16(data16[1]);
 		scheduleMsg(&sharedLogger, "TS_SD: fetch data command blockNumber=%d", blockNumber);
 
 		int offset = blockNumber * TRANSFER_SIZE;
+
+		buffer[0] = input[2];
+		buffer[1] = input[3];
+
+		int got = fread(&buffer[2], 1, TRANSFER_SIZE, uploading);
+		sr5SendResponse(tsChannel, TS_CRC, buffer, 2 + got);
 
 	} else {
 		scheduleMsg(&sharedLogger, "TS_SD: unexpected r");
@@ -219,14 +230,19 @@ void handleTsW(ts_channel_s *tsChannel, char *input) {
         	    	int dotIndex = indexOf(fileName, DOT);
         	    	if (0 == strncmp(input + 6, &fileName[dotIndex - 4], 4)) {
                 	    printf("Will be uploading %s\n", fileName);
+                	    uploading = fopen(fileName, "rb");
+                	    if (uploading == NULL) {
+                	          printf("Error opening %s\n", fileName);
+                	          exit(1);
+                	    }
                 	    break;
         	    	}
         	    }
         	}
         	closedir(dr);
 #endif // EFI_SIMULATOR
+        	sendOkResponse(tsChannel, TS_CRC);
         }
-
 
     } else {
 		scheduleMsg(&sharedLogger, "TS_SD: unexpected w");
