@@ -11,6 +11,9 @@
 
 #include "tunerstudio_io.h"
 
+#define DOT_MLG ".mlg"
+
+bool isLogFile(const char *fileName);
 void initMmcCard(void);
 bool isSdCardAlive(void);
 void appendToLog(const char *line, size_t length);

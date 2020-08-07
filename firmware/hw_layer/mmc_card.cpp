@@ -52,8 +52,6 @@ static int totalSyncCounter = 0;
 
 #define LOG_INDEX_FILENAME "index.txt"
 
-#define DOT_MLG ".mlg"
-
 #define RUSEFI_LOG_PREFIX "re_"
 #define PREFIX_LEN 3
 #define SHORT_TIME_LEN 13
