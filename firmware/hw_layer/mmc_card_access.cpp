@@ -3,7 +3,7 @@
  *
  */
 
-#include "global.h"
+#include "engine.h"
 
 #if EFI_SIMULATOR
 #include <stdio.h>
@@ -13,7 +13,12 @@
 #include <fcntl.h>
 #endif
 
+#if EFI_FILE_LOGGING
+#include "ff.h"
+#endif // EFI_FILE_LOGGING
+
 #define DIR_RESPONSE_SIZE 512
+#define DIR_ENTRY_SIZE 32
 
 #define DIR_RESPONSE_BUFFER_SIZE (DIR_RESPONSE_SIZE + 2)
 
@@ -23,6 +28,9 @@
 
 #include "mmc_card.h"
 #include "efilib.h"
+#include "hardware.h"
+
+EXTERN_ENGINE;
 
 /**
  * for funny reasons file name has to be at least 4 symbols before the dot
@@ -126,7 +134,7 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
         	while ((de = readdir(dr)) != NULL) {
         		const char * fileName = de->d_name;
         	    printf("%s\n", fileName);
-        	    if (index >= DIR_RESPONSE_SIZE / 32) {
+        	    if (index >= DIR_RESPONSE_SIZE / DIR_ENTRY_SIZE) {
         	    	break;
         	    }
         	    if (isLogFile(fileName)) {
@@ -147,6 +155,52 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
         	closedir(dr);
 
 #endif // EFI_SIMULATOR
+
+
+#if EFI_FILE_LOGGING
+
+        	LOCK_SD_SPI;
+        	DIR dir;
+        	FRESULT res = f_opendir(&dir, "/");
+
+        	if (res != FR_OK) {
+        		scheduleMsg(&sharedLogger, "Error opening directory");
+        		UNLOCK_SD_SPI;
+        	} else {
+        		int index = 0;
+        		while (true) {
+            	    if (index >= DIR_RESPONSE_SIZE / DIR_ENTRY_SIZE) {
+            	    	break;
+            	    }
+
+        			FILINFO fno;
+      				res = f_readdir(&dir, &fno);
+      				char *fileName = fno.fname;
+        			if (res != FR_OK || fileName[0] == 0) {
+        				break;
+        			}
+
+      				if (isLogFile(fileName)) {
+//      				        	    	struct stat statBuffer;
+//      				        	    	int         status;
+//
+//      				        	    	int fileSize = 0;
+//      				        	    	status = stat(fileName, &statBuffer);
+//      				        	    	if (status == 0) {
+//      				        	    	   fileSize = statBuffer.st_size;
+//      				        	    	}
+
+      				     setFileEntry(buffer, index, fileName, 1);
+      				        	    	index++;
+      				}
+
+
+        		}
+        		UNLOCK_SD_SPI;
+        	}
+
+#endif // EFI_FILE_LOGGING
+
         	sr5SendResponse(tsChannel, TS_CRC, buffer, DIR_RESPONSE_BUFFER_SIZE);
 		}
 	} else if (input[0] == 0 && input[1] == TS_SD_PROTOCOL_FETCH_DATA) {
@@ -158,8 +212,13 @@ void handleTsR(ts_channel_s *tsChannel, char *input) {
 		buffer[0] = input[2];
 		buffer[1] = input[3];
 
+#if EFI_SIMULATOR
 		int got = fread(&buffer[2], 1, TRANSFER_SIZE, uploading);
 		sr5SendResponse(tsChannel, TS_CRC, buffer, 2 + got);
+#endif // EFI_SIMULATOR
+
+#if EFI_FILE_LOGGING
+#endif // EFI_FILE_LOGGING
 
 	} else {
 		scheduleMsg(&sharedLogger, "TS_SD: unexpected r");
