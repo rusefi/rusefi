@@ -81,9 +81,13 @@ public class RealHwTest {
         return port;
     }
 
-    private static void runRealHardwareTest(String port) throws Exception {
+    private static void runRealHardwareTest(String port) {
         LinkManager linkManager = new LinkManager();
         IoUtil.realHardwareConnect(linkManager, port);
+        // first run tests which require real hardware
+        new HardwareTests(linkManager.getCommandQueue()).runRealHardwareTests();
+
+        // now run common part of the test which should be same on real hardware and simulator
         new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
     }
 }

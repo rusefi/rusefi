@@ -6,6 +6,8 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.functional_tests.BaseTest;
+import com.rusefi.functional_tests.TestHelper;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineChart;
@@ -29,32 +31,24 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  * @author Andrey Belomutskiy
  * 3/5/14
  */
-public class AutoTest {
+public class AutoTest extends BaseTest {
     public static final int COMPLEX_COMMAND_RETRY = 10000;
     static int currentEngineType;
-    private static String criticalError;
 
     private final LinkManager linkManager;
-    private final CommandQueue commandQueue;
 
     public AutoTest(LinkManager linkManager, CommandQueue commandQueue) {
+        super(commandQueue);
         this.linkManager = linkManager;
-        this.commandQueue = commandQueue;
     }
 
     void mainTestBody() {
-        MessagesCentral.getInstance().addListener((clazz, message) -> {
-            if (message.startsWith(Fields.CRITICAL_PREFIX))
-                criticalError = message;
-        });
-
-
         BinaryProtocol bp = linkManager.getCurrentStreamState();
         // let's make sure 'burn' command works since sometimes it does not
         bp.burn();
 
         sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
-        sendCommand(getEnableCommand(Fields.CMD_FUNCTIONAL_TEST_MODE));
+        enableFunctionalMode();
         testCustomEngine();
         testVW_60_2();
         testV12();
@@ -86,14 +80,14 @@ public class AutoTest {
         setEngineType(32);
         changeRpm(900);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(20000, 15, 30, FAIL, linkManager.getCommandQueue());
+        assertRpmDoesNotJump(20000, 15, 30, FAIL, commandQueue);
     }
 
     private void testV12() {
         setEngineType(40);
         changeRpm(700);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(15000, 15, 30, FAIL, linkManager.getCommandQueue());
+        assertRpmDoesNotJump(15000, 15, 30, FAIL, commandQueue);
     }
 
     public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback, CommandQueue commandQueue) {
@@ -162,10 +156,6 @@ public class AutoTest {
         assertWave(msg, chart, EngineChart.MAP_AVERAGING, 0.139, x, x + 120, x + 240, x + 360, x + 480, x + 600);
     }
 
-    void changeRpm(final int rpm) {
-        IoUtil.changeRpm(linkManager.getCommandQueue(), rpm);
-    }
-
     private void testMitsu() {
         setEngineType(16);
         sendCommand("disable cylinder_cleanup");
@@ -205,7 +195,7 @@ public class AutoTest {
     }
 
     private EngineChart nextChart() {
-        return TestingUtils.nextChart(linkManager.getCommandQueue());
+        return TestingUtils.nextChart(commandQueue);
     }
 
     private void test2003DodgeNeon() {
@@ -490,15 +480,6 @@ public class AutoTest {
         changeRpm(10000);
         chart = nextChart();
         assertWaveNull("hard limit check", chart, EngineChart.INJECTOR_1);
-    }
-
-    private void sendCommand(String command) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
-    }
-
-    private void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
-        assertNull("Fatal not expected", criticalError);
-        IoUtil.sendCommand(command, retryTimeoutMs, timeoutMs, commandQueue);
     }
 
     private static void assertEquals(double expected, double actual) {

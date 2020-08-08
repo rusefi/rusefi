@@ -41,17 +41,14 @@ public class IoUtil {
     /**
      * blocking method which would for confirmation from rusEfi
      */
-    static void sendCommand(String command, int retryTimeoutMs, int timeoutMs, CommandQueue commandQueue) {
+    public static void sendCommand(String command, int retryTimeoutMs, int timeoutMs, CommandQueue commandQueue) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
         FileLog.MAIN.logLine("Sending command [" + command + "]");
         final long begin = System.currentTimeMillis();
-        commandQueue.write(command, retryTimeoutMs, new InvocationConfirmationListener() {
-            @Override
-            public void onCommandConfirmation() {
-                responseLatch.countDown();
-                FileLog.MAIN.logLine("Got confirmation in " + (System.currentTimeMillis() - begin) + "ms");
-            }
+        commandQueue.write(command, retryTimeoutMs, () -> {
+            responseLatch.countDown();
+            FileLog.MAIN.logLine("Got confirmation in " + (System.currentTimeMillis() - begin) + "ms");
         });
         wait(responseLatch, timeoutMs);
         if (responseLatch.getCount() > 0)
@@ -67,19 +64,16 @@ public class IoUtil {
         }
     }
 
-    static void changeRpm(CommandQueue commandQueue, final int rpm) {
+    public static void changeRpm(CommandQueue commandQueue, final int rpm) {
         FileLog.MAIN.logLine("AUTOTEST rpm EN " + rpm);
         sendCommand("rpm " + rpm, commandQueue);
         long time = System.currentTimeMillis();
 
         final CountDownLatch rpmLatch = new CountDownLatch(1);
-        SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
-                double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
-                if (isCloseEnough(rpm, actualRpm))
-                    rpmLatch.countDown();
-            }
+        SensorCentral.SensorListener listener = value -> {
+            double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+            if (isCloseEnough(rpm, actualRpm))
+                rpmLatch.countDown();
         };
         SensorCentral.getInstance().addListener(Sensor.RPM, listener);
         try {
