@@ -75,7 +75,8 @@ public class NetworkConnectorTest {
                 reconnectCounter.countDown();
             }
         };
-        new NetworkConnector().start(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, connectorContext, reconnectListener);
+        NetworkConnector networkConnector = new NetworkConnector();
+        networkConnector.start(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, connectorContext, reconnectListener);
 
         assertLatch(reconnectCounter);
 
@@ -89,6 +90,7 @@ public class NetworkConnectorTest {
         // now let's do this again with a new backend instance
         log.info("Second backend instance");
         assertWouldConnect(serverPortForControllers, httpPort);
+        networkConnector.close();
     }
 
     private void assertWouldConnect(int serverPortForControllers, int httpPort) throws InterruptedException {
