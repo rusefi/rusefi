@@ -244,7 +244,9 @@
 #define CMD_RPM "rpm"
 #define CMD_SELF_STIMULATION "self_stimulation"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
+#define CMD_TRIGGER_PIN "set_trigger_input_pin"
 #define CMD_TRIGGERINFO "triggerinfo"
+#define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
 #define coastingFuelCutClt_offset 3154
 #define coastingFuelCutEnabled_offset 744
@@ -1091,7 +1093,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2020.08.08
-#define SIGNATURE_HASH 1352920504
+#define SIGNATURE_HASH 702334611
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1391,7 +1393,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.08.08.kin.1352920504"
+#define TS_SIGNATURE "rusEFI 2020.08.08.kin.702334611"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't' // 0x74
