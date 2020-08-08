@@ -879,7 +879,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "sd")) {
 		engineConfiguration->isSdCardEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_FUNCTIONAL_TEST_MODE)) {
-		engine->isTestMode = isEnabled;
+		engine->isFunctionalTestMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_read")) {
 		engineConfiguration->canReadEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_write")) {

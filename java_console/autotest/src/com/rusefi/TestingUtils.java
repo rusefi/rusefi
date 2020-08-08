@@ -100,7 +100,7 @@ public class TestingUtils {
         }
     }
 
-    static void assertNull(String msg, Object value) {
+    public static void assertNull(String msg, Object value) {
         assertTrue(msg, value == null);
     }
 
