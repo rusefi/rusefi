@@ -35,20 +35,17 @@ public class AutoTest {
     private static String criticalError;
 
     private final LinkManager linkManager;
-    private CommandQueue commandQueue;
+    private final CommandQueue commandQueue;
 
     public AutoTest(LinkManager linkManager, CommandQueue commandQueue) {
         this.linkManager = linkManager;
         this.commandQueue = commandQueue;
     }
 
-    void mainTestBody() throws Exception {
-        MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
-            @Override
-            public void onMessage(Class clazz, String message) {
-                if (message.startsWith(Fields.CRITICAL_PREFIX))
-                    criticalError = message;
-            }
+    void mainTestBody() {
+        MessagesCentral.getInstance().addListener((clazz, message) -> {
+            if (message.startsWith(Fields.CRITICAL_PREFIX))
+                criticalError = message;
         });
 
 
@@ -79,13 +76,10 @@ public class AutoTest {
         testFordFiesta();
     }
 
-    private static Function<String, Object> FAIL = new Function<String, Object>() {
-        @Override
-        public Object apply(String errorCode) {
-            if (errorCode != null)
-                throw new IllegalStateException("Failed " + errorCode);
-            return null;
-        }
+    private static final Function<String, Object> FAIL = errorCode -> {
+        if (errorCode != null)
+            throw new IllegalStateException("Failed " + errorCode);
+        return null;
     };
 
     private void testVW_60_2() {
@@ -106,13 +100,10 @@ public class AutoTest {
         IoUtil.changeRpm(commandQueue, rpm);
         sleepSeconds(settleTime);
         AtomicReference<String> result = new AtomicReference<>();
-        SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
-                double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
-                if (!isCloseEnough(rpm, actualRpm))
-                    result.set("Got " + actualRpm + " while trying to stay at " + rpm);
-            }
+        SensorCentral.SensorListener listener = value -> {
+            double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+            if (!isCloseEnough(rpm, actualRpm))
+                result.set("Got " + actualRpm + " while trying to stay at " + rpm);
         };
         SensorCentral.getInstance().addListener(Sensor.RPM, listener);
         sleepSeconds(testDuration);
@@ -143,7 +134,7 @@ public class AutoTest {
 
     private void testSachs() {
         setEngineType(29);
-        String msg = "BMW";
+//        String msg = "BMW";
         changeRpm(1200);
         // todo: add more content
     }
@@ -178,7 +169,7 @@ public class AutoTest {
     private void testMitsu() {
         setEngineType(16);
         sendCommand("disable cylinder_cleanup");
-        String msg = "Mitsubishi";
+//        String msg = "Mitsubishi";
         changeRpm(200);
 
         changeRpm(1200);
@@ -187,7 +178,7 @@ public class AutoTest {
 
     private void testCitroenBerlingo() {
         setEngineType(ET_CITROEN_TU3JP);
-        String msg = "Citroen";
+//        String msg = "Citroen";
         changeRpm(1200);
         // todo: add more content
     }
@@ -536,40 +527,5 @@ public class AutoTest {
 
     private static void assertWaveNull(String msg, EngineChart chart, String key) {
         assertNull(msg + "chart for " + key, chart.get(key));
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                e.printStackTrace();
-                System.exit(-1);
-            }
-        });
-        boolean startSimulator = args.length == 1 && args[0].equalsIgnoreCase("start");
-
-        long start = System.currentTimeMillis();
-        FileLog.SIMULATOR_CONSOLE.start();
-        FileLog.MAIN.start();
-
-        boolean failed = false;
-        try {
-            LinkManager linkManager = new LinkManager();
-            IoUtil.connectToSimulator(linkManager, startSimulator);
-            new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
-        } catch (Throwable e) {
-            e.printStackTrace();
-            failed = true;
-        } finally {
-            SimulatorExecHelper.destroy();
-        }
-        if (failed)
-            System.exit(-1);
-        FileLog.MAIN.logLine("*******************************************************************************");
-        FileLog.MAIN.logLine("************************************  Looks good! *****************************");
-        FileLog.MAIN.logLine("*******************************************************************************");
-        long time = (System.currentTimeMillis() - start) / 1000;
-        FileLog.MAIN.logLine("Done in " + time + "secs");
-        System.exit(0); // this is a safer method eliminating the issue of non-daemon threads
     }
 }

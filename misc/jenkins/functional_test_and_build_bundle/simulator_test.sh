@@ -8,7 +8,7 @@ cd java_console
 echo "Running simulator functional test"
 which java
 which javac
-ant simlator_test
+ant simulator_test
 [ $? -eq 0 ] || { echo "ERROR DETECTED"; exit 1; }
 
 echo "TIMESTAMP $(date "+%a %D %T.%2S")"
