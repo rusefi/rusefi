@@ -583,6 +583,11 @@ static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+// set vss_pin
+static void setVssPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->vehicleSpeedSensorInputPin, "VSS");
+}
+
 // set_idle_pin none
 static void setIdlePin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->idle.solenoidPin, "idle");
@@ -1287,6 +1292,8 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->wwaeBeta = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, CMD_VSS_PIN)) {
+		setVssPin(valueStr);
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
 #if EFI_RTC
@@ -1347,7 +1354,7 @@ void initSettings(void) {
 	addConsoleActionS("showpin", showPinFunction);
 	addConsoleActionSS("set_injection_pin", setInjectionPin);
 	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
-	addConsoleActionSS("set_trigger_input_pin", setTriggerInputPin);
+	addConsoleActionSS(CMD_TRIGGER_PIN, setTriggerInputPin);
 	addConsoleActionSS("set_trigger_simulator_pin", setTriggerSimulatorPin);
 
 	addConsoleActionSS("set_egt_cs_pin", (VoidCharPtrCharPtr) setEgtCSPin);
