@@ -73,8 +73,7 @@ public class SdCardReader {
 
         content.add(topPanel, BorderLayout.NORTH);
 
-        JScrollPane fileListScroll = new JScrollPane(fileList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        content.add(fileListScroll, BorderLayout.CENTER);
+        content.add(fileList, BorderLayout.CENTER);
 
         content.add(new JLabel("<html>This tab allows direct access to SD card<br/>Please be sure to disconnect Tuner Studio from ECU while downloading files using this tab"), BorderLayout.SOUTH);
     }
@@ -85,7 +84,7 @@ public class SdCardReader {
     }
 
     public Component getContent() {
-        return content;
+        return new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
 
     private void requestFileList() {
