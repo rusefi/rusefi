@@ -64,7 +64,6 @@ static void speedInfo(void) {
 			engine->engineState.vssEventCounter,
 			getVehicleSpeed());
 	scheduleMsg(logger, "vss diff %d", vssDiff);
-
 }
 
 bool hasVehicleSpeedSensor() {

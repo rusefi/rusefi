@@ -5,10 +5,12 @@ import com.rusefi.IoUtil;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.waves.EngineReport;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.IoUtil.sleepSeconds;
+import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 public class BaseTest {
     private static final Logging log = getLogging(BaseTest.class);
@@ -19,6 +21,19 @@ public class BaseTest {
 
     public BaseTest(CommandQueue commandQueue) {
         this.commandQueue = commandQueue;
+    }
+
+    protected static void assertEquals(double expected, double actual) {
+        BaseTest.assertEquals("", expected, actual);
+    }
+
+    protected static void assertEquals(String msg, double expected, double actual) {
+        BaseTest.assertEquals(msg, expected, actual, EngineReport.RATIO);
+    }
+
+    protected static void assertEquals(String msg, double expected, double actual, double ratio) {
+        if (!isCloseEnough(expected, actual, ratio))
+            throw new IllegalStateException(msg + " Expected " + expected + " but got " + actual);
     }
 
     protected void sendCommand(String command) {
@@ -47,7 +62,7 @@ public class BaseTest {
 //        sendCommand(CMD_PINS);
         sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
         // TODO: document the reason for this sleep?!
-        sleepSeconds(1);
+        sleepSeconds(3);
         sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
     }
 }

@@ -466,19 +466,6 @@ public class AutoTest extends BaseTest {
         assertWaveNull("hard limit check", chart, EngineChart.INJECTOR_1);
     }
 
-    private static void assertEquals(double expected, double actual) {
-        assertEquals("", expected, actual);
-    }
-
-    private static void assertEquals(String msg, double expected, double actual) {
-        assertEquals(msg, expected, actual, EngineReport.RATIO);
-    }
-
-    private static void assertEquals(String msg, double expected, double actual, double ratio) {
-        if (!isCloseEnough(expected, actual, ratio))
-            throw new IllegalStateException(msg + " Expected " + expected + " but got " + actual);
-    }
-
     /**
      * This method waits for longer then usual.
      */
