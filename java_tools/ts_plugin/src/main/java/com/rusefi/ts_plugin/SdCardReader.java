@@ -19,8 +19,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -35,11 +33,9 @@ public class SdCardReader {
     private final JPanel fileList = new JPanel(new VerticalFlowLayout());
     private final JLabel status = new JLabel();
 
-    private static final Executor IO_THREAD = Executors.newSingleThreadExecutor();
-
     private final ConnectPanel connectPanel = new ConnectPanel(new ConnectionStateListener() {
         public void onConnectionEstablished() {
-            IO_THREAD.execute(() -> requestFileList());
+            ConnectPanel.IO_THREAD.execute(() -> requestFileList());
         }
 
         public void onConnectionFailed() {
@@ -50,7 +46,7 @@ public class SdCardReader {
     public SdCardReader(Supplier<ControllerAccess> controllerAccessSupplier) {
         this.controllerAccessSupplier = controllerAccessSupplier;
         JButton refresh = new JButton("Refresh");
-        refresh.addActionListener(e -> IO_THREAD.execute(this::requestFileList));
+        refresh.addActionListener(e -> ConnectPanel.IO_THREAD.execute(this::requestFileList));
 
         JPanel topPanel = new JPanel(new BorderLayout());
         JPanel lowPanel = new JPanel(new FlowLayout());
@@ -118,7 +114,7 @@ public class SdCardReader {
                 filePanel.add(new JLabel(fileName + " " + humanReadableByteCountBin(fileSize)));
 
                 JButton download = new JButton("Download");
-                download.addActionListener(e -> IO_THREAD.execute(() -> downloadFile(fileName)));
+                download.addActionListener(e -> ConnectPanel.IO_THREAD.execute(() -> downloadFile(fileName)));
 
                 filePanel.add(download);
                 JButton delete = new JButton("Delete");
@@ -127,7 +123,7 @@ public class SdCardReader {
                             "rusEfi", JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
 
-                        IO_THREAD.execute(() -> {
+                        ConnectPanel.IO_THREAD.execute(() -> {
                             deleteFile(fileName);
                             setStatus("Deleted " + fileName);
                             requestFileList();

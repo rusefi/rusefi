@@ -1,5 +1,6 @@
 package com.rusefi.ts_plugin;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;
@@ -7,11 +8,17 @@ import com.rusefi.io.LinkManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * todo: move IO away from AWT thread
  */
 public class ConnectPanel {
+    private static final Logging log = getLogging(ConnectPanel.class);
+    static final Executor IO_THREAD = Executors.newSingleThreadExecutor();
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel status = new JLabel();
 
@@ -36,30 +43,37 @@ public class ConnectPanel {
 
         connect.addActionListener(e -> {
             connect.setEnabled(false);
+            status.setText("Looking for rusEFI...");
 
-            controllerConnector = new LinkManager()
-                    .setCompositeLogicEnabled(false)
-                    .setNeedPullData(false);
+            IO_THREAD.execute(() -> {
+                controllerConnector = new LinkManager()
+                        .setCompositeLogicEnabled(false)
+                        .setNeedPullData(false);
 
-            String autoDetectedPort = PortDetector.autoDetectSerial(null);
-            if (autoDetectedPort == null) {
-                connect.setEnabled(true);
-                status.setText("rusEFI not detected");
-                return;
-            }
+                String autoDetectedPort = null;
+                try {
+                    autoDetectedPort = PortDetector.autoDetectSerial(null);
+                    controllerConnector.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
+                        public void onConnectionEstablished() {
+                            SwingUtilities.invokeLater(() -> {
+                                status.setText("Connected to rusEFI");
+                                disconnect.setEnabled(true);
+                                connectionStateListener.onConnectionEstablished();
+                            });
+                        }
 
-            //":2390"
-            //String port = ":29001";
-            controllerConnector.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
-                public void onConnectionEstablished() {
-                    SwingUtilities.invokeLater(() -> {
-                        status.setText("Connected to rusEFI");
-                        disconnect.setEnabled(true);
-                        connectionStateListener.onConnectionEstablished();
+                        public void onConnectionFailed() {
+                        }
                     });
-                }
 
-                public void onConnectionFailed() {
+                } catch (Throwable er) {
+                    log.error("Error connecting", er);
+
+                    SwingUtilities.invokeLater(() -> {
+                        status.setText("Not found or error, see logs.");
+                        connect.setEnabled(true);
+                    });
+
                 }
             });
         });
