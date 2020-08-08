@@ -35,17 +35,17 @@ typedef enum {
 	 * 1995 Dodge Neon
 	 * http://rusefi.com/forum/viewtopic.php?t=360
 	 */
-	DODGE_NEON_1995 = 2,
+	DODGE_NEON_1995 = ET_DODGE_NEON_1995,
 	/**
 	 * 1996 1.3 Ford Aspire
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
-	FORD_ASPIRE_1996 = 3,
+	FORD_ASPIRE_1996 = ET_FORD_ASPIRE,
 	/**
 	 * 36-1 toothed wheel engine
 	 * http://rusefi.com/forum/viewtopic.php?t=282
 	 */
-	FORD_FIESTA = 4,
+	FORD_FIESTA = ET_FORD_FIESTA,
 	NISSAN_PRIMERA = 5,
 	HONDA_ACCORD_CD = 6,
 	FORD_INLINE_6_1995 = 7,
@@ -58,7 +58,7 @@ typedef enum {
 
 	MAZDA_MIATA_NB1 = 9,
 
-	ROVER_V8 = 10,
+	ROVER_V8 = ET_ROVER_V8,
 
 	MRE_MIATA_NB2_MAP = 11,
 
@@ -89,7 +89,7 @@ typedef enum {
 	DODGE_NEON_2003_CAM = 23,
 	BMW_M73_M = 24,
 
-	BMW_E34 = 25,
+	BMW_E34 = ET_BMW_E34,
 
 	TEST_ENGINE = 26,
 
@@ -113,7 +113,7 @@ typedef enum {
 
 	DAIHATSU = 34,
 
-	CAMARO_4 = 35,
+	CAMARO_4 = ET_CAMARO,
 
 	SUZUKI_VITARA = 36,
 
