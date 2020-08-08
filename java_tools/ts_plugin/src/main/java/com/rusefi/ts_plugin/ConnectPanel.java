@@ -110,7 +110,7 @@ public class ConnectPanel {
             controllerConnector.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
                 public void onConnectionEstablished() {
                     SwingUtilities.invokeLater(() -> {
-                        status.setText("Connected to rusEFI");
+                        status.setText("Connected to rusEFI " + autoDetectedPort);
                         disconnect.setEnabled(true);
                         connectionStateListener.onConnectionEstablished();
                     });
