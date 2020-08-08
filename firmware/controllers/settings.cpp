@@ -890,7 +890,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->verboseTriggerSynchDetails = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "ignition")) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "self_stimulation")) {
+	} else if (strEqualCaseInsensitive(param, CMD_SELF_STIMULATION)) {
 		engine->directSelfStimulation = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
@@ -1272,7 +1272,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		engineConfiguration->tpsMin = valueI;
 #if EFI_EMULATE_POSITION_SENSORS
-	} else if (strEqualCaseInsensitive(paramStr, "rpm")) {
+	} else if (strEqualCaseInsensitive(paramStr, CMD_RPM)) {
 		setTriggerEmulatorRPM(valueI);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
