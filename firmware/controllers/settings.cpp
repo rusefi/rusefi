@@ -1292,8 +1292,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->wwaeBeta = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
+#if EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, CMD_VSS_PIN)) {
 		setVssPin(valueStr);
+#endif // EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
 #if EFI_RTC
