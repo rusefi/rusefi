@@ -1344,6 +1344,8 @@ menuDialog = main
 		subMenu = monitoringSettings,		"rusEfi console"
 		subMenu = std_separator
 		
+		subMenu = canBusMain,				"CAN Bus Communication"
+		subMenu = sdCard,					"SD Card Logger" @@if_ts_show_sd_card
 		subMenu = connection,            	"Connection"
 		subMenu = tle8888,					"TLE8888"
 		
@@ -2509,6 +2511,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "RX pin",								can2RxPin @@if_ts_show_can_pins
 		field = "TX pin",								can2TxPin @@if_ts_show_can_pins
 
+	dialog = canBusMain, "CAN Bus Communication", yAxis
+		panel = canBus
+		panel = canBus2							@@if_ts_show_can2
+
 	dialog = auxSerial, "AUX Serial"
 		field = "RX pin",								auxSerialRxPin @@if_ts_show_auxserial_pins
 		field = "TX pin",								auxSerialTxPin @@if_ts_show_auxserial_pins
@@ -2548,10 +2554,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = connection, "", 	yAxis
 		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort							@@if_ts_show_tunerstudio_port
-		panel = canBus
-		panel = canBus2							@@if_ts_show_can2
 		panel = auxSerial
-		panel = sdCard							@@if_ts_show_sd_card
 		panel = gpsReceiver                       @@if_ts_show_gps
 
 				
