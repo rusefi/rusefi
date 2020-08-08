@@ -515,6 +515,10 @@ typedef enum __attribute__ ((__packed__)) {
 
 #define CRANK_MODE_MULTIPLIER 2.0f
 
+/**
+ * @see getCycleDuration
+ * @see getEngineCycle
+ */
 // todo: better enum name
 typedef enum {
 	OM_NONE = 0,
@@ -535,7 +539,7 @@ typedef enum {
 
 	/**
 	 * 720 degree engine cycle but trigger is defined using a 180 cycle which is when repeated three more times
-	 * In other words, same pattern is repeatet on the crank wheel twice.
+	 * In other words, same pattern is repeated on the crank wheel twice.
 	 */
 	FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR = 4,
 
