@@ -7,7 +7,7 @@ import com.rusefi.io.LinkManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -25,6 +25,7 @@ public class ConnectPanel {
     private LinkManager controllerConnector;
     private final JButton connect = new JButton("Connect");
     private final JButton disconnect = new JButton("Disconnect");
+    private boolean isFirstAttempt = true;
 
     public ConnectPanel(final ConnectionStateListener connectionStateListener) {
         JPanel flow = new JPanel(new FlowLayout());
@@ -41,6 +42,39 @@ public class ConnectPanel {
         });
 
         connect.addActionListener(e -> {
+            if (isFirstAttempt) {
+                isFirstAttempt = false;
+                Window topFrame = SwingUtilities.getWindowAncestor(connect);
+                log.info("Adding Window Listener to " + topFrame);
+                topFrame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowDeactivated(WindowEvent e) {
+                        log.info("topFrame windowDeactivated " + topFrame);
+                    }
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        log.info("windowClosing " + topFrame);
+                        if (controllerConnector != null)
+                            controllerConnector.close();
+                        // I am super confused about the life cycle of parent Window
+                        connect.setEnabled(true);
+                        disconnect.setEnabled(false);
+                    }
+
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        log.info("windowClosed " + topFrame);
+                    }
+                });
+                topFrame.addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentHidden(ComponentEvent e) {
+                        log.info("componentHidden " + topFrame);
+                    }
+                });
+            }
+
             connect.setEnabled(false);
             status.setText("Looking for rusEFI...");
 
