@@ -56,6 +56,7 @@
             <zipfileset src="../../java_console/lib/httpcore.jar" includes="**/*.class"/>
             <zipfileset src="../../java_console/lib/httpmime.jar" includes="**/*.class"/>
             <zipfileset src="../../java_console/lib/json-simple-1.1.1.jar" includes="**/*.class"/>
+            <zipfileset src="../../java_console/lib/jSerialComm.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
 <!--            <zipfileset src="lib/commons-logging.jar" includes="**/*.class"/>-->
         </jar>
 
