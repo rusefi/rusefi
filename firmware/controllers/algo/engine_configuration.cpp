@@ -43,7 +43,6 @@
 
 #include "dodge_neon.h"
 #include "dodge_ram.h"
-#include "dodge_stratus.h"
 
 #include "ford_aspire.h"
 #include "ford_fiesta.h"
@@ -69,9 +68,7 @@
 #include "vw.h"
 #include "me7pnp.h"
 #include "vw_b6.h"
-#include "daihatsu.h"
 #include "chevrolet_camaro_4.h"
-#include "suzuki_vitara.h"
 #include "chevrolet_c20_1973.h"
 #include "toyota_jzs147.h"
 #include "ford_festiva.h"
@@ -1199,6 +1196,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS:
 	case PROMETHEUS_DEFAULTS:
+	case DAIHATSU:
+	case DODGE_STRATUS:
+	case SUZUKI_VITARA:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardConfigurationOverrides
@@ -1331,9 +1331,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MAZDA_626:
 		setMazda626EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case SUZUKI_VITARA:
-		setSuzukiVitara(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case FORD_ESCORT_GT:
 		setFordEscortGt(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1361,9 +1358,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case DODGE_RAM:
 		setDodgeRam1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case DODGE_STRATUS:
-		setDodgeStratus(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case VW_ABA:
 		setVwAba(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1384,9 +1378,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 	case SACHS:
 		setSachs(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case DAIHATSU:
-		setDaihatsu(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CAMARO_4:
 		setCamaro4(PASS_CONFIG_PARAMETER_SIGNATURE);
