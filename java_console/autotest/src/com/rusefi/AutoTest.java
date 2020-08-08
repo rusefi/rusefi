@@ -3,11 +3,9 @@ package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.functional_tests.BaseTest;
-import com.rusefi.functional_tests.TestHelper;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineChart;
@@ -17,10 +15,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 import static com.rusefi.IoUtil.*;
-import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.*;
-import static com.rusefi.config.generated.Fields.ET_CITROEN_TU3JP;
-import static com.rusefi.config.generated.Fields.MOCK_MAF_COMMAND;
+import static com.rusefi.config.generated.Fields.*;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
@@ -32,8 +28,6 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  * 3/5/14
  */
 public class AutoTest extends BaseTest {
-    public static final int COMPLEX_COMMAND_RETRY = 10000;
-    static int currentEngineType;
 
     private final LinkManager linkManager;
 
@@ -117,13 +111,13 @@ public class AutoTest extends BaseTest {
     }
 
     private void testMazdaMiata2003() {
-        setEngineType(47);
+        setEngineType(ET_FRANKENSO_MIATA_NB2);
         sendCommand("get cranking_dwell"); // just test coverage
 //        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
     }
 
     private void testCamaro() {
-        setEngineType(35);
+        setEngineType(ET_CAMARO);
     }
 
     private void testSachs() {
@@ -134,7 +128,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void testBmwE34() {
-        setEngineType(25);
+        setEngineType(ET_BMW_E34);
         sendCommand("chart 1");
         String msg = "BMW";
         EngineChart chart;
@@ -171,16 +165,6 @@ public class AutoTest extends BaseTest {
 //        String msg = "Citroen";
         changeRpm(1200);
         // todo: add more content
-    }
-
-    private void setEngineType(int type) {
-        FileLog.MAIN.logLine("AUTOTEST setEngineType " + type);
-//        sendCommand(CMD_PINS);
-        currentEngineType = type;
-        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
-        // TODO: document the reason for this sleep?!
-        sleepSeconds(1);
-        sendCommand(getEnableCommand("self_stimulation"));
     }
 
     private void testMazda626() {
@@ -326,11 +310,11 @@ public class AutoTest extends BaseTest {
     }
 
     private void testRoverV8() {
-        setEngineType(10);
+        setEngineType(ET_ROVER_V8);
     }
 
     private void testFordFiesta() {
-        setEngineType(4);
+        setEngineType(ET_FORD_FIESTA);
         EngineChart chart;
         changeRpm(2000);
         chart = nextChart();
@@ -344,7 +328,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void testFord6() {
-        setEngineType(7);
+        setEngineType(ET_FORD_INLINE_6);
         EngineChart chart;
         changeRpm(2000);
         chart = nextChart();
@@ -361,7 +345,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void testFordAspire() {
-        setEngineType(3);
+        setEngineType(ET_FORD_ASPIRE);
         sendCommand("disable cylinder_cleanup");
         sendCommand("set mock_map_voltage 1");
         sendCommand("set mock_vbatt_voltage 2.2");

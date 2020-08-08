@@ -1,13 +1,20 @@
 package com.rusefi.functional_tests;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.IoUtil;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.IoUtil.getEnableCommand;
+import static com.rusefi.IoUtil.sleepSeconds;
 
 public class BaseTest {
+    private static final Logging log = getLogging(BaseTest.class);
+
+    public static final int COMPLEX_COMMAND_RETRY = 10000;
+    public static int currentEngineType;
     protected final CommandQueue commandQueue;
 
     public BaseTest(CommandQueue commandQueue) {
@@ -32,5 +39,15 @@ public class BaseTest {
 
     protected void changeRpm(final int rpm) {
         IoUtil.changeRpm(commandQueue, rpm);
+    }
+
+    protected void setEngineType(int type) {
+        log.info("AUTOTEST setEngineType " + type);
+        currentEngineType = type;
+//        sendCommand(CMD_PINS);
+        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
+        // TODO: document the reason for this sleep?!
+        sleepSeconds(1);
+        sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
     }
 }
