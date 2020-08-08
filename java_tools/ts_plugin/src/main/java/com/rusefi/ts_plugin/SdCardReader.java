@@ -1,6 +1,7 @@
 package com.rusefi.ts_plugin;
 
 import com.devexperts.logging.Logging;
+import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
@@ -10,6 +11,8 @@ import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -18,6 +21,7 @@ import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.function.Supplier;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.config.generated.Fields.TS_SD_PROTOCOL_FETCH_INFO;
@@ -41,20 +45,46 @@ public class SdCardReader {
         public void onConnectionFailed() {
         }
     });
+    private final Supplier<ControllerAccess> controllerAccessSupplier;
 
-    public SdCardReader() {
+    public SdCardReader(Supplier<ControllerAccess> controllerAccessSupplier) {
+        this.controllerAccessSupplier = controllerAccessSupplier;
         JButton refresh = new JButton("Refresh");
         refresh.addActionListener(e -> IO_THREAD.execute(this::requestFileList));
 
         JPanel topPanel = new JPanel(new BorderLayout());
+        JPanel lowPanel = new JPanel(new FlowLayout());
+
+        JButton open = new JButton("Open Destination Folder");
+        lowPanel.add(refresh);
+        lowPanel.add(open);
+
+        open.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String folder = getDestinationFolder(controllerAccessSupplier);
+                    Runtime.getRuntime().exec("explorer.exe /select," + folder + File.separator);
+                } catch (IOException ex) {
+                    log.error("Error", ex);
+                }
+            }
+        });
+
         topPanel.add(connectPanel.getContent(), BorderLayout.NORTH);
         topPanel.add(status, BorderLayout.CENTER);
-        topPanel.add(AutoupdateUtil.wrap(refresh), BorderLayout.SOUTH);
+        topPanel.add(lowPanel, BorderLayout.SOUTH);
 
         content.add(topPanel, BorderLayout.NORTH);
         content.add(fileList, BorderLayout.CENTER);
 
         content.add(new JLabel("<html>This tab allows direct access to SD card<br/>Please be sure to disconnect Tuner Studio from ECU while downloading files using this tab"), BorderLayout.SOUTH);
+    }
+
+    @NotNull
+    private String getDestinationFolder(Supplier<ControllerAccess> controllerAccessSupplier) {
+        String folder = LogUploadSelector.getLogsFolderDir(controllerAccessSupplier.get().getEcuConfigurationNames()[0]);
+        return folder;
     }
 
     public Component getContent() {
@@ -178,7 +208,7 @@ public class SdCardReader {
             log.info("Download file " + IoStream.printHexBinary(response));
             setStatus("Downloading " + fileName);
 
-            fos = new FileOutputStream("downloaded_" + fileName, false);
+            fos = new FileOutputStream(getDestinationFolder(controllerAccessSupplier) + File.separator + fileName, false);
             int chunk = 0;
             int totalSize = 0;
             long start = System.currentTimeMillis();
