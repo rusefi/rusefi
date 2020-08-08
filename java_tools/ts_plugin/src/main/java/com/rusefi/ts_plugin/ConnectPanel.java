@@ -23,12 +23,11 @@ public class ConnectPanel {
     private final JLabel status = new JLabel();
 
     private LinkManager controllerConnector;
+    private final JButton connect = new JButton("Connect");
+    private final JButton disconnect = new JButton("Disconnect");
 
     public ConnectPanel(final ConnectionStateListener connectionStateListener) {
         JPanel flow = new JPanel(new FlowLayout());
-
-        JButton connect = new JButton("Connect");
-        JButton disconnect = new JButton("Disconnect");
 
         disconnect.setEnabled(false);
         disconnect.addActionListener(new AbstractAction() {
@@ -49,31 +48,14 @@ public class ConnectPanel {
                 controllerConnector = new LinkManager()
                         .setCompositeLogicEnabled(false)
                         .setNeedPullData(false);
-
-                String autoDetectedPort = null;
                 try {
-                    autoDetectedPort = PortDetector.autoDetectSerial(null);
-                    controllerConnector.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
-                        public void onConnectionEstablished() {
-                            SwingUtilities.invokeLater(() -> {
-                                status.setText("Connected to rusEFI");
-                                disconnect.setEnabled(true);
-                                connectionStateListener.onConnectionEstablished();
-                            });
-                        }
-
-                        public void onConnectionFailed() {
-                        }
-                    });
-
+                    tryToConnect(connectionStateListener);
                 } catch (Throwable er) {
                     log.error("Error connecting", er);
-
                     SwingUtilities.invokeLater(() -> {
-                        status.setText("Not found or error, see logs.");
+                        status.setText("Some error, see logs.");
                         connect.setEnabled(true);
                     });
-
                 }
             });
         });
@@ -83,6 +65,27 @@ public class ConnectPanel {
 
         content.add(flow, BorderLayout.NORTH);
         content.add(status, BorderLayout.SOUTH);
+    }
+
+    private void tryToConnect(ConnectionStateListener connectionStateListener) {
+        String autoDetectedPort = PortDetector.autoDetectSerial(null);
+        if (autoDetectedPort == null) {
+            status.setText("rusEFI not found");
+            connect.setEnabled(true);
+        } else {
+            controllerConnector.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
+                public void onConnectionEstablished() {
+                    SwingUtilities.invokeLater(() -> {
+                        status.setText("Connected to rusEFI");
+                        disconnect.setEnabled(true);
+                        connectionStateListener.onConnectionEstablished();
+                    });
+                }
+
+                public void onConnectionFailed() {
+                }
+            });
+        }
     }
 
     public LinkManager getControllerConnector() {
