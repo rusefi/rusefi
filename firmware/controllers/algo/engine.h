@@ -58,7 +58,7 @@ public:
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 
-	GearControllerBase *gearController;
+	GearControllerBase gearController;
 
 	cyclic_buffer<int> triggerErrorDetection;
 

@@ -265,7 +265,7 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 
-	engine->gearController->update();
+	engine->gearController.update();
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

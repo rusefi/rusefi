@@ -229,7 +229,7 @@ typedef struct {
 	int16_t desiredGear; // 246
 	int16_t currentGear; // 248
 
-	uint8_t unusedAtTheEnd[2]; // we have some unused bytes to allow compatible TS changes
+	uint8_t unusedAtTheEnd[38]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

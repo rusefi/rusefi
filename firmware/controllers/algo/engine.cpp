@@ -518,7 +518,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	refreshMapAveragingPreCalc(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
-	gearController->update();
+	gearController.update();
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
