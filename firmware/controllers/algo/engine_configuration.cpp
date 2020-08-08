@@ -1459,7 +1459,9 @@ void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 float getRpmMultiplier(operation_mode_e mode) {
-	if (mode == FOUR_STROKE_CAM_SENSOR) {
+	if (mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR) {
+		return 2;
+	} else if (mode == FOUR_STROKE_CAM_SENSOR) {
 		return 0.5;
 	} else if (mode == FOUR_STROKE_CRANK_SENSOR) {
 		return 1;
