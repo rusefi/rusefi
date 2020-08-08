@@ -76,15 +76,16 @@ public class SdCardReader {
         topPanel.add(lowPanel, BorderLayout.SOUTH);
 
         content.add(topPanel, BorderLayout.NORTH);
-        content.add(fileList, BorderLayout.CENTER);
+
+        JScrollPane fileListScroll = new JScrollPane(fileList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        content.add(fileListScroll, BorderLayout.CENTER);
 
         content.add(new JLabel("<html>This tab allows direct access to SD card<br/>Please be sure to disconnect Tuner Studio from ECU while downloading files using this tab"), BorderLayout.SOUTH);
     }
 
     @NotNull
     private String getDestinationFolder(Supplier<ControllerAccess> controllerAccessSupplier) {
-        String folder = LogUploadSelector.getLogsFolderDir(controllerAccessSupplier.get().getEcuConfigurationNames()[0]);
-        return folder;
+        return LogUploadSelector.getLogsFolderDir(controllerAccessSupplier.get().getEcuConfigurationNames()[0]);
     }
 
     public Component getContent() {

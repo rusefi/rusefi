@@ -43,6 +43,7 @@ public class ConnectPanel {
 
             String autoDetectedPort = PortDetector.autoDetectSerial(null);
             if (autoDetectedPort == null) {
+                connect.setEnabled(true);
                 status.setText("rusEFI not detected");
                 return;
             }
