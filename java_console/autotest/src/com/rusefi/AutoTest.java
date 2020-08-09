@@ -76,20 +76,10 @@ public class AutoTest extends BaseTest {
         changeRpm(900);
         // first let's get to expected RPM
         assertRpmDoesNotJump(20000, 15, 30, FAIL, commandQueue);
-        // important to reduce RPM since high RPM and set engine type do not go well due to DECLARE_ENGINE_PTR
-        // memset 0?
-        // todo: safer 'set engine_type' implementation which
-        changeRpm(120);
     }
 
     private void testV12() {
-        sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
-        sendCommand("get " + Fields.CMD_TRIGGER_HW_INPUT);
-        sleep(3 * Timeouts.SECOND);
         setEngineType(40);
-        sendCommand("get " + Fields.CMD_TRIGGER_HW_INPUT);
-        sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
-        sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
         changeRpm(700);
         // first let's get to expected RPM
         assertRpmDoesNotJump(15000, 15, 30, FAIL, commandQueue);
