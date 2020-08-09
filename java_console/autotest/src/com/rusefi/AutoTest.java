@@ -46,7 +46,7 @@ public class AutoTest extends BaseTest {
         enableFunctionalMode();
         testCustomEngine();
         testVW_60_2();
-        testV12();
+//#1684        testV12();
         testMazdaMiata2003();
         test2003DodgeNeon();
         testFordAspire();
