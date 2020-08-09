@@ -49,7 +49,7 @@ public class PortDetector {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
-//        FileLog.MAIN.logLine("Found " + result.get());
+        log.debug("Found " + result.get() + " now stopping threads");
         for (Thread thread : serialFinder)
             thread.interrupt();
 //        FileLog.MAIN.logLine("Returning " + result.get());

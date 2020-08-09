@@ -1563,6 +1563,10 @@ end_struct
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
 #define CMD_ETB_DUTY "set_etb_duty"
+#define CMD_SELF_STIMULATION "self_stimulation"
+#define CMD_RPM "rpm"
+#define CMD_VSS_PIN "vss_pin"
+#define CMD_TRIGGER_PIN "set_trigger_input_pin"
 
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
@@ -1683,6 +1687,14 @@ end_struct
 
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
+
+#define ET_DODGE_NEON_1995 2
+#define ET_FORD_ASPIRE 3
+#define ET_FORD_FIESTA 4
+#define ET_FORD_INLINE_6 7
+#define ET_ROVER_V8 10
+#define ET_BMW_E34 25
+#define ET_CAMARO 35
 
 #define ET_MRE_MIATA_NA6_VAF 12
 #define ET_MRE_MIATA_NB2_MAP 11

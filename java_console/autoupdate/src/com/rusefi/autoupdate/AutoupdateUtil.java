@@ -19,6 +19,12 @@ public class AutoupdateUtil {
     // todo: figure out a better way to work with absolute path
     private static final String APPICON = "/appicon.png";
 
+    public static JComponent wrap(JComponent component) {
+        JPanel result = new JPanel();
+        result.add(component);
+        return result;
+    }
+
     public static void downloadAutoupdateFile(String localZipFileName, ConnectionAndMeta connectionAndMeta, String title) throws IOException {
         FrameHelper frameHelper = null;
         final AtomicReference<JProgressBar> jProgressBarAtomicReference = new AtomicReference<>();

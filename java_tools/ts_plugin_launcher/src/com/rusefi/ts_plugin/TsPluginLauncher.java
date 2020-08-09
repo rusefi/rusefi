@@ -82,7 +82,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
 
     @Override
     public void close() {
-        System.out.println("close " + this);
+        System.out.println("TsPluginLauncher.close " + this);
     }
 
     @Override

@@ -1,18 +1,20 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.ConnectionStateListener;
-import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.config.generated.Fields.CMD_RPM;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
@@ -20,6 +22,7 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  *         3/19/14.
  */
 public class IoUtil {
+    private static final Logging log = getLogging(IoUtil.class);
 
     /**
      * Send a command and wait for the confirmation
@@ -41,22 +44,19 @@ public class IoUtil {
     /**
      * blocking method which would for confirmation from rusEfi
      */
-    static void sendCommand(String command, int retryTimeoutMs, int timeoutMs, CommandQueue commandQueue) {
+    public static void sendCommand(String command, int retryTimeoutMs, int timeoutMs, CommandQueue commandQueue) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
-        FileLog.MAIN.logLine("Sending command [" + command + "]");
+        log.info("Sending command [" + command + "]");
         final long begin = System.currentTimeMillis();
-        commandQueue.write(command, retryTimeoutMs, new InvocationConfirmationListener() {
-            @Override
-            public void onCommandConfirmation() {
-                responseLatch.countDown();
-                FileLog.MAIN.logLine("Got confirmation in " + (System.currentTimeMillis() - begin) + "ms");
-            }
+        commandQueue.write(command, retryTimeoutMs, () -> {
+            responseLatch.countDown();
+            log.info("Got confirmation in " + (System.currentTimeMillis() - begin) + "ms");
         });
         wait(responseLatch, timeoutMs);
         if (responseLatch.getCount() > 0)
-            FileLog.MAIN.logLine("No confirmation in " + retryTimeoutMs);
-        FileLog.MAIN.logLine("Command [" + command + "] executed in " + (System.currentTimeMillis() - time));
+            log.info("No confirmation in " + retryTimeoutMs);
+        log.info("Command [" + command + "] executed in " + (System.currentTimeMillis() - time));
     }
 
     static void wait(CountDownLatch responseLatch, int milliseconds) {
@@ -67,19 +67,16 @@ public class IoUtil {
         }
     }
 
-    static void changeRpm(CommandQueue commandQueue, final int rpm) {
-        FileLog.MAIN.logLine("AUTOTEST rpm EN " + rpm);
-        sendCommand("rpm " + rpm, commandQueue);
+    public static void changeRpm(CommandQueue commandQueue, final int rpm) {
+        log.info("AUTOTEST rpm EN " + rpm);
+        sendCommand(CMD_RPM + " " + rpm, commandQueue);
         long time = System.currentTimeMillis();
 
         final CountDownLatch rpmLatch = new CountDownLatch(1);
-        SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
-                double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
-                if (isCloseEnough(rpm, actualRpm))
-                    rpmLatch.countDown();
-            }
+        SensorCentral.SensorListener listener = value -> {
+            double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+            if (isCloseEnough(rpm, actualRpm))
+                rpmLatch.countDown();
         };
         SensorCentral.getInstance().addListener(Sensor.RPM, listener);
         try {
@@ -94,11 +91,11 @@ public class IoUtil {
         if (!isCloseEnough(rpm, actualRpm))
             throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
 //        sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER);
-        FileLog.MAIN.logLine("AUTOTEST RPM change [" + rpm + "] executed in " + (System.currentTimeMillis() - time));
+        log.info("AUTOTEST RPM change [" + rpm + "] executed in " + (System.currentTimeMillis() - time));
     }
 
     static void waitForFirstResponse() throws InterruptedException {
-        FileLog.MAIN.logLine("Let's give it some time to start...");
+        log.info("Let's give it some time to start...");
         final CountDownLatch startup = new CountDownLatch(1);
         SensorCentral.SensorListener listener = value -> startup.countDown();
         long waitStart = System.currentTimeMillis();

@@ -265,7 +265,7 @@ public:
 	 * are we running any kind of functional test? this affect
 	 * some areas
 	 */
-	bool isTestMode = false;
+	bool isFunctionalTestMode = false;
 
 	bool directSelfStimulation = false;
 
