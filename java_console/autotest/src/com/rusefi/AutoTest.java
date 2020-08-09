@@ -284,7 +284,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void test1995DodgeNeon() {
-        setEngineType(2);
+        setEngineType(ET_DODGE_NEON_1995);
         EngineChart chart;
         sendComplexCommand("set_whole_fuel_map 3");
         sendComplexCommand("set_individual_coils_ignition");
