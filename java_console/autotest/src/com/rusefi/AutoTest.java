@@ -84,8 +84,10 @@ public class AutoTest extends BaseTest {
 
     private void testV12() {
         sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
+        sendCommand("get " + Fields.CMD_TRIGGER_HW_INPUT);
         sleep(3 * Timeouts.SECOND);
         setEngineType(40);
+        sendCommand("get " + Fields.CMD_TRIGGER_HW_INPUT);
         sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
         sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
         changeRpm(700);
