@@ -1066,7 +1066,7 @@ static void getValue(const char *paramStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		scheduleMsg(&logger, "global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 	} else if (strEqualCaseInsensitive(paramStr, "trigger_hw_input")) {
-		scheduleMsg(&logger, "trigger_hw_input=%s", boolToString(engineConfiguration->trigger_hw_input));
+		scheduleMsg(&logger, "trigger_hw_input=%s", boolToString(engine->hwTriggerInputEnabled));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_1")) {
 		scheduleMsg(&logger, "is_enabled_spi_1=%s", boolToString(engineConfiguration->is_enabled_spi_1));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_2")) {
