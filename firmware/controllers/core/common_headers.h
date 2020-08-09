@@ -73,6 +73,8 @@
 #define DISPLAY_SENSOR(x) {}
 #define DISPLAY_IF(x) x
 
+#if EFI_UNIT_TEST
+
 #define DECLARE_ENGINE_PTR                                 \
 	Engine *engine = nullptr;                              \
 	engine_configuration_s *engineConfiguration = nullptr; \
@@ -83,6 +85,14 @@
 	(x)->engine = engine;                           \
 	(x)->engineConfiguration = engineConfiguration; \
 	(x)->config = config;
+
+#else // EFI_UNIT_TEST
+
+#define DECLARE_ENGINE_PTR
+
+#define INJECT_ENGINE_REFERENCE(x) {}
+
+#endif // EFI_UNIT_TEST
 
 #define EXPAND_Engine \
 	    engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr; \
