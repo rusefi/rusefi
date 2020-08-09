@@ -46,7 +46,7 @@ public class AutoTest extends BaseTest {
         enableFunctionalMode();
         testCustomEngine();
         testVW_60_2();
-//#1684        testV12();
+        testV12();
         testMazdaMiata2003();
         test2003DodgeNeon();
         testFordAspire();
@@ -86,6 +86,7 @@ public class AutoTest extends BaseTest {
         sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
         sleep(3 * Timeouts.SECOND);
         setEngineType(40);
+        sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
         sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
         changeRpm(700);
         // first let's get to expected RPM
