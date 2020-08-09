@@ -286,7 +286,7 @@ void updateDevConsoleState(void) {
 
 static void showFuelInfo2(float rpm, float engineLoad) {
 
-	float baseFuelMs = getBaseTableFuel((int) rpm, engineLoad);
+	float baseFuelMs = 0; // TODO 
 
 	float magicAir = SpeedDensityBase::getAirmassImpl(1, 100, convertCelsiusToKelvin(20) PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -323,7 +323,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 #if EFI_ENGINE_CONTROL
 static void showFuelInfo(void) {
-	showFuelInfo2((float) GET_RPM(), getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
+	showFuelInfo2((float) GET_RPM(), getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE));
 }
 #endif
 
@@ -473,6 +473,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_PROD_CODE
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
+
+#if EFI_SIMULATOR
+	tsOutputChannels->sd_status = 1 + 4;
+#endif
 
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;

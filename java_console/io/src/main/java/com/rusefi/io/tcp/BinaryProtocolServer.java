@@ -2,8 +2,8 @@ package com.rusefi.io.tcp;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.Logger;
 import com.rusefi.Listener;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.*;
 import com.rusefi.config.generated.Fields;
@@ -11,58 +11,70 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.server.rusEFISSLContext;
-import com.rusefi.shared.FileUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
-import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
-import static com.rusefi.config.generated.Fields.TS_RESPONSE_BURN_OK;
+import static com.rusefi.config.generated.Fields.*;
 
 /**
  * This class makes rusEfi console a proxy for other tuning software, this way we can have two tools connected via same
  * serial port simultaneously
  *
+ * See BinaryProtocolServerSandbox
  * @author Andrey Belomutskiy
  * 11/24/15
  */
 
 public class BinaryProtocolServer implements BinaryProtocolCommands {
+    public static final String TEST_FILE = "test_log.mlg.Z";
     private static final Logging log = getLogging(BinaryProtocolServer.class);
     private static final int DEFAULT_PROXY_PORT = 2390;
     public static final String TS_OK = "\0";
 
+    private final static boolean MOCK_SD_CARD = true;
+    private static final int SD_STATUS_OFFSET = 246;
+    private static final int FAST_TRANSFER_PACKET_SIZE = 2048;
+
     public AtomicInteger unknownCommands = new AtomicInteger();
 
-    public static final Function<Integer, ServerSocket> SECURE_SOCKET_FACTORY = rusEFISSLContext::getSSLServerSocket;
+    public static final ServerSocketFunction SECURE_SOCKET_FACTORY = rusEFISSLContext::getSSLServerSocket;
 
-    public static final Function<Integer, ServerSocket> PLAIN_SOCKET_FACTORY = port -> {
-        try {
-            ServerSocket serverSocket = new ServerSocket(port);
-            Logger.CONSOLE.info("ServerSocket " + port + " created");
-            return serverSocket;
-        } catch (IOException e) {
-            throw new IllegalStateException("Error binding server socket " + port, e);
-        }
+    public static final ServerSocketFunction PLAIN_SOCKET_FACTORY = port -> {
+        ServerSocket serverSocket = new ServerSocket(port);
+        log.info("ServerSocket " + port + " created");
+        return serverSocket;
     };
 
+    private static ConcurrentHashMap<String, ThreadFactory> THREAD_FACTORIES_BY_NAME = new ConcurrentHashMap<>();
+
     public void start(LinkManager linkManager) {
-        start(linkManager, DEFAULT_PROXY_PORT, null);
+        try {
+            start(linkManager, DEFAULT_PROXY_PORT, Listener.empty(), new Context());
+        } catch (IOException e) {
+            log.error("Error starting local proxy", e);
+        }
     }
 
-    public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback) {
+    public void start(LinkManager linkManager, int port, Listener serverSocketCreationCallback, Context context) throws IOException {
         log.info("BinaryProtocolServer on " + port);
 
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             try {
-                runProxy(linkManager, clientSocket);
+                runProxy(linkManager, clientSocket, context);
             } catch (IOException e) {
                 log.info("proxy connection: " + e);
             }
@@ -80,23 +92,19 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
      * @param serverSocketCreationCallback this callback is invoked once we open the server socket
      * @return
      */
-    public static ServerHolder tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback) {
+    public static ServerSocketReference tcpServerSocket(int port, String threadName, Function<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback) throws IOException {
         return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
     }
 
-    public static ServerHolder tcpServerSocket(Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, Function<Integer, ServerSocket> nonSecureSocketFunction) {
+    public static ServerSocketReference tcpServerSocket(Function<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, ServerSocketFunction nonSecureSocketFunction) throws IOException {
+        ThreadFactory threadFactory = getThreadFactory(threadName);
+
+        Objects.requireNonNull(serverSocketCreationCallback, "serverSocketCreationCallback");
         ServerSocket serverSocket = nonSecureSocketFunction.apply(port);
 
-        ServerHolder holder = new ServerHolder() {
-            @Override
-            public void close() {
-                super.close();
-                FileUtil.close(serverSocket);
-            }
-        };
+        ServerSocketReference holder = new ServerSocketReference(serverSocket);
 
-        if (serverSocketCreationCallback != null)
-            serverSocketCreationCallback.onResult(null);
+        serverSocketCreationCallback.onResult(null);
         Runnable runnable = () -> {
             while (!holder.isClosed()) {
                 // Wait for a connection
@@ -104,19 +112,24 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 try {
                     clientSocket = serverSocket.accept();
                 } catch (IOException e) {
-                    log.info("Client socket closed right away" + e);
+                    log.info("Client socket closed right away " + e);
                     continue;
                 }
-                log.info("Binary protocol proxy port connection");
-                new Thread(clientSocketRunnableFactory.apply(clientSocket), "proxy connection").start();
+                log.info("Accepting binary protocol proxy port connection on " + port);
+                threadFactory.newThread(clientSocketRunnableFactory.apply(clientSocket)).start();
             }
         };
-        new Thread(runnable, threadName).start();
+        threadFactory.newThread(runnable).start();
         return holder;
     }
 
+    @NotNull
+    public static ThreadFactory getThreadFactory(String threadName) {
+        return THREAD_FACTORIES_BY_NAME.computeIfAbsent(threadName, NamedThreadFactory::new);
+    }
+
     @SuppressWarnings("InfiniteLoopStatement")
-    private void runProxy(LinkManager linkManager, Socket clientSocket) throws IOException {
+    private void runProxy(LinkManager linkManager, Socket clientSocket, Context context) throws IOException {
         TcpIoStream stream = new TcpIoStream("[proxy] ", clientSocket);
 
         IncomingDataBuffer in = stream.getDataBuffer();
@@ -128,7 +141,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 handled.set(true);
             };
 
-            int length = getPacketLength(in, protocolCommandHandler);
+            int length = getPacketLength(in, protocolCommandHandler, context.getTimeout());
             if (handled.get()) {
                 continue;
             }
@@ -154,9 +167,9 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 stream.sendPacket((TS_OK + "rusEFI proxy").getBytes());
             } else if (command == COMMAND_CRC_CHECK_COMMAND) {
                 handleCrc(linkManager, stream);
-            } else if (command == COMMAND_PAGE) {
+            } else if (command == Fields.TS_PAGE_COMMAND) {
                 stream.sendPacket(TS_OK.getBytes());
-            } else if (command == COMMAND_READ) {
+            } else if (command == Fields.TS_READ_COMMAND) {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 handleRead(linkManager, dis, stream);
             } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
@@ -168,6 +181,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 System.err.println("NOT IMPLEMENTED TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY relay");
                 // todo: relay command
                 stream.sendPacket(TS_OK.getBytes());
+            } else if (command == TS_SD_R_COMMAND) {
+                handleSD_R_command(stream, packet, payload);
+            } else if (command == TS_SD_W_COMMAND) {
+                handleSD_W_command(stream, packet, payload);
             } else if (command == Fields.TS_OUTPUT_COMMAND) {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 int offset = swap16(dis.readShort());
@@ -178,8 +195,10 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 response[0] = (byte) TS_OK.charAt(0);
                 BinaryProtocolState binaryProtocolState = linkManager.getBinaryProtocolState();
                 byte[] currentOutputs = binaryProtocolState.getCurrentOutputs();
+                if (MOCK_SD_CARD)
+                    currentOutputs[SD_STATUS_OFFSET] = 1 + 4;
                 if (currentOutputs != null)
-                    System.arraycopy(currentOutputs, 1 + offset, response, 1, count);
+                    System.arraycopy(currentOutputs, offset, response, 1, count);
                 stream.sendPacket(response);
             } else if (command == Fields.TS_GET_TEXT) {
                 // todo: relay command
@@ -193,6 +212,143 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         }
     }
 
+    private void handleSD_W_command(TcpIoStream stream, Packet packet, byte[] payload) throws IOException {
+        log.info("TS_SD: 'w' " + IoStream.printHexBinary(packet.packet));
+        if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_FETCH_INFO) {
+
+            if (payload[6] == TS_SD_PROTOCOL_DO) {
+                log.info("TS_SD: do command, command=" + payload[payload.length - 1]);
+                sendOkResponse(stream);
+            } else if (payload[6] == TS_SD_PROTOCOL_READ_DIR) {
+                log.info("TS_SD: read directory command " + payload[payload.length - 1]);
+                sendOkResponse(stream);
+            } else if (payload[6] == TS_SD_PROTOCOL_REMOVE_FILE) {
+                String pattern = new String(payload, 7, 4);
+                log.info("TS_SD: remove file command " + Arrays.toString(packet.packet) + " " + pattern);
+
+                sendOkResponse(stream);
+            } else if (payload[6] == TS_SD_PROTOCOL_FETCH_COMPRESSED) {
+                log.info("TS_SD: read compressed file command " + Arrays.toString(packet.packet));
+                ByteBuffer bb = ByteBuffer.wrap(payload, 7, 8);
+                bb.order(ByteOrder.BIG_ENDIAN);
+                int sectorNumber = bb.getInt();
+                int sectorCount = bb.getInt();
+                log.info("TS_SD: sectorNumber=" + sectorNumber + ", sectorCount=" + sectorCount);
+                sendOkResponse(stream);
+            } else {
+                log.info("TS_SD: Got unexpected w fetch " + IoStream.printHexBinary(packet.packet));
+            }
+        } else {
+            log.info("TS_SD: Got unexpected w " + IoStream.printHexBinary(packet.packet));
+        }
+    }
+
+    private void handleSD_R_command(TcpIoStream stream, Packet packet, byte[] payload) throws IOException {
+        log.info("TS_SD: 'r' " + IoStream.printHexBinary(packet.packet));
+        if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_RTC) {
+            log.info("TS_SD: RTC read command");
+            byte[] response = new byte[9];
+            stream.sendPacket(response);
+        } else if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_FETCH_INFO) {
+            ByteBuffer bb = ByteBuffer.wrap(payload, 5, 2);
+            bb.order(ByteOrder.BIG_ENDIAN);
+            int bufferLength = bb.getShort();
+            log.info("TS_SD: fetch buffer command, length=" + bufferLength);
+
+            byte[] response = new byte[1 + bufferLength];
+
+            response[0] = TS_RESPONSE_OK;
+
+            if (bufferLength == 16) {
+                response[1] = 1 + 4; // Card present + Ready
+                response[2] = 0; // Y - error code
+
+                response[3] = 2; // higher byte of '512' sector size
+                response[4] = 0; // lower byte
+
+                response[5] = 0;
+                response[6] = 0x20; // 0x20 00 00 of 512 is 1G virtual card
+                response[7] = 0;
+                response[8] = 0;
+
+                response[9] = 0;
+                response[10] = 1; // number of files
+            } else if (bufferLength == 0x202){
+                // SD read directory command
+                //
+
+                setFileEntry(response, 0, "hello123mlq", (int) new File(TEST_FILE).length());
+                setFileEntry(response, 1, "he      mlq", 1024);
+                setFileEntry(response, 2, "_333o123mlq", 1000000);
+
+            } else {
+                log.info("TS_SD: Got unexpected r fetch " + IoStream.printHexBinary(packet.packet));
+                return;
+            }
+            log.info("TS_SD: sending " + IoStream.printHexBinary(response));
+            stream.sendPacket(response);
+        } else if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_FETCH_DATA) {
+            ByteBuffer bb = ByteBuffer.wrap(payload, 3, 4);
+            bb.order(ByteOrder.BIG_ENDIAN);
+            int blockNumber = bb.getShort();
+            int suffix = bb.getShort();
+            log.info("TS_SD: fetch data command blockNumber=" + blockNumber + ", requesting=" + suffix);
+
+
+
+            File f = new File(BinaryProtocolServer.TEST_FILE);
+            FileInputStream fis = new FileInputStream(f);
+            int size = (int) f.length();
+
+
+            int offset = blockNumber * FAST_TRANSFER_PACKET_SIZE;
+            int len = Math.max(0, Math.min(size - offset, FAST_TRANSFER_PACKET_SIZE));
+
+            byte[] response = new byte[1 + 2 + len];
+            response[0] = TS_RESPONSE_OK;
+            response[1] = payload[3];
+            response[2] = payload[4];
+
+            if (len > 0) {
+                fis.skip(offset);
+                log.info("TS_SD reading " + offset + " " + len + " of " + size);
+                fis.read(response, 3, len);
+            }
+
+            stream.sendPacket(response);
+        } else {
+            log.info("TS_SD: Got unexpected r " + IoStream.printHexBinary(packet.packet));
+        }
+    }
+
+    private static void setFileEntry(byte[] response, int index, String fileName, int fileSize) {
+        int offset = 1 + 32 * index;
+        System.arraycopy(fileName.getBytes(), 0, response, offset, 11);
+        response[offset + 11] = 1; // file
+        //  12-15 = undefined
+
+        response[offset + 14] = 0x11;
+        response[offset + 15] = 0x13; // time
+
+        response[offset + 16] = 0x24;
+        response[offset + 17] = 0x25; // 0x2425 = FAT16 date format September 4, 1998
+
+        for (int i = 18; i < 22; i++)
+            response[offset + i] = (byte) (i + 10 * index); // sector number
+
+        for (int i = 24; i < 28; i++) {
+            response[offset + i] = (byte) (i + index);
+        }
+
+        IoHelper.putInt(response, offset + 28, IoHelper.swap32(fileSize));
+    }
+
+    private static void sendOkResponse(TcpIoStream stream) throws IOException {
+        byte[] response = new byte[1];
+        response[0] = TS_RESPONSE_OK;
+        stream.sendPacket(response);
+    }
+
     public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler) throws IOException {
         return getPacketLength(in, protocolCommandHandler, Timeouts.BINARY_IO_TIMEOUT);
     }
@@ -201,6 +357,7 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         byte first = in.readByte(ioTimeout);
         if (first == COMMAND_PROTOCOL) {
             protocolCommandHandler.handle();
+            return 0;
         }
         return first * 256 + in.readByte(ioTimeout);
     }
@@ -222,13 +379,12 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
         if (length <= 0)
             throw new IOException("Unexpected packed length " + length);
         byte[] packet = new byte[length];
-        int size = in.read(packet);
-        if (size != packet.length)
-            throw new IllegalStateException(size + " promised but " + packet.length + " arrived");
+        in.read(packet);
         int crc = in.readInt();
         int fromPacket = IoHelper.getCrc32(packet);
         if (crc != fromPacket)
             throw new IllegalStateException("CRC mismatch crc=" + Integer.toString(crc, 16) + " vs packet=" + Integer.toString(fromPacket, 16) + " len=" + packet.length + " data: " + IoStream.printHexBinary(packet));
+        in.onPacketArrived();
         return new Packet(packet, crc);
     }
 
@@ -299,6 +455,12 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
 
         public int getCrc() {
             return crc;
+        }
+    }
+
+    public static class Context {
+        public int getTimeout() {
+            return Timeouts.BINARY_IO_TIMEOUT;
         }
     }
 }

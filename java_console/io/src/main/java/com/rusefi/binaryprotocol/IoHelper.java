@@ -39,11 +39,11 @@ public class IoHelper {
         return (((x & 0xff) << 8) | ((x >> 8) & 0xff));
     }
 
-    static int swap32(int x) {
+    public static int swap32(int x) {
         return (((x) >> 24) & 0xff) | (((x) << 8) & 0xff0000) | (((x) >> 8) & 0xff00) | (((x) << 24) & 0xff000000);
     }
 
-    private static void putInt(byte[] packet, int offset, int value) {
+    public static void putInt(byte[] packet, int offset, int value) {
         int index = offset + 3;
         for (int i = 0; i < 4; i++) {
             packet[index--] = (byte) value;

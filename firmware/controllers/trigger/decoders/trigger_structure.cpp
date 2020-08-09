@@ -113,6 +113,7 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
 
 /**
  * physical primary trigger duration
+ * @see getEngineCycle
  */
 angle_t TriggerWaveform::getCycleDuration() const {
 	switch (operationMode) {

@@ -1,12 +1,11 @@
 package com.rusefi;
 
 
-import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.functional_tests.BaseTest;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineChart;
@@ -16,10 +15,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 import static com.rusefi.IoUtil.*;
-import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.*;
-import static com.rusefi.config.generated.Fields.ET_CITROEN_TU3JP;
-import static com.rusefi.config.generated.Fields.MOCK_MAF_COMMAND;
+import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
+import static com.rusefi.config.generated.Fields.*;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
@@ -30,35 +28,22 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  * @author Andrey Belomutskiy
  * 3/5/14
  */
-public class AutoTest {
-    public static final int COMPLEX_COMMAND_RETRY = 10000;
-    static int currentEngineType;
-    private static String criticalError;
+public class AutoTest extends BaseTest {
 
     private final LinkManager linkManager;
-    private CommandQueue commandQueue;
 
     public AutoTest(LinkManager linkManager, CommandQueue commandQueue) {
+        super(commandQueue);
         this.linkManager = linkManager;
-        this.commandQueue = commandQueue;
     }
 
-    void mainTestBody() throws Exception {
-        MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
-            @Override
-            public void onMessage(Class clazz, String message) {
-                if (message.startsWith(Fields.CRITICAL_PREFIX))
-                    criticalError = message;
-            }
-        });
-
-
+    void mainTestBody() {
         BinaryProtocol bp = linkManager.getCurrentStreamState();
         // let's make sure 'burn' command works since sometimes it does not
-        bp.burn(Logger.CONSOLE);
+        bp.burn();
 
         sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
-        sendCommand(getEnableCommand(Fields.CMD_FUNCTIONAL_TEST_MODE));
+        enableFunctionalMode();
         testCustomEngine();
         testVW_60_2();
         testV12();
@@ -80,40 +65,34 @@ public class AutoTest {
         testFordFiesta();
     }
 
-    private static Function<String, Object> FAIL = new Function<String, Object>() {
-        @Override
-        public Object apply(String errorCode) {
-            if (errorCode != null)
-                throw new IllegalStateException("Failed " + errorCode);
-            return null;
-        }
+    private static final Function<String, Object> FAIL = errorCode -> {
+        if (errorCode != null)
+            throw new IllegalStateException("Failed " + errorCode);
+        return null;
     };
 
     private void testVW_60_2() {
         setEngineType(32);
         changeRpm(900);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(20000, 15, 30, FAIL, linkManager.getCommandQueue());
+        assertRpmDoesNotJump(20000, 15, 30, FAIL, commandQueue);
     }
 
     private void testV12() {
         setEngineType(40);
         changeRpm(700);
         // first let's get to expected RPM
-        assertRpmDoesNotJump(15000, 15, 30, FAIL, linkManager.getCommandQueue());
+        assertRpmDoesNotJump(15000, 15, 30, FAIL, commandQueue);
     }
 
     public static void assertRpmDoesNotJump(int rpm, int settleTime, int testDuration, Function<String, Object> callback, CommandQueue commandQueue) {
         IoUtil.changeRpm(commandQueue, rpm);
         sleepSeconds(settleTime);
         AtomicReference<String> result = new AtomicReference<>();
-        SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
-                double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
-                if (!isCloseEnough(rpm, actualRpm))
-                    result.set("Got " + actualRpm + " while trying to stay at " + rpm);
-            }
+        SensorCentral.SensorListener listener = value -> {
+            double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+            if (!isCloseEnough(rpm, actualRpm))
+                result.set("Got " + actualRpm + " while trying to stay at " + rpm);
         };
         SensorCentral.getInstance().addListener(Sensor.RPM, listener);
         sleepSeconds(testDuration);
@@ -133,24 +112,24 @@ public class AutoTest {
     }
 
     private void testMazdaMiata2003() {
-        setEngineType(47);
+        setEngineType(ET_FRANKENSO_MIATA_NB2);
         sendCommand("get cranking_dwell"); // just test coverage
 //        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
     }
 
     private void testCamaro() {
-        setEngineType(35);
+        setEngineType(ET_CAMARO);
     }
 
     private void testSachs() {
         setEngineType(29);
-        String msg = "BMW";
+//        String msg = "BMW";
         changeRpm(1200);
         // todo: add more content
     }
 
     private void testBmwE34() {
-        setEngineType(25);
+        setEngineType(ET_BMW_E34);
         sendCommand("chart 1");
         String msg = "BMW";
         EngineChart chart;
@@ -172,14 +151,10 @@ public class AutoTest {
         assertWave(msg, chart, EngineChart.MAP_AVERAGING, 0.139, x, x + 120, x + 240, x + 360, x + 480, x + 600);
     }
 
-    void changeRpm(final int rpm) {
-        IoUtil.changeRpm(linkManager.getCommandQueue(), rpm);
-    }
-
     private void testMitsu() {
         setEngineType(16);
         sendCommand("disable cylinder_cleanup");
-        String msg = "Mitsubishi";
+//        String msg = "Mitsubishi";
         changeRpm(200);
 
         changeRpm(1200);
@@ -188,19 +163,9 @@ public class AutoTest {
 
     private void testCitroenBerlingo() {
         setEngineType(ET_CITROEN_TU3JP);
-        String msg = "Citroen";
+//        String msg = "Citroen";
         changeRpm(1200);
         // todo: add more content
-    }
-
-    private void setEngineType(int type) {
-        FileLog.MAIN.logLine("AUTOTEST setEngineType " + type);
-//        sendCommand(CMD_PINS);
-        currentEngineType = type;
-        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
-        // TODO: document the reason for this sleep?!
-        sleepSeconds(1);
-        sendCommand(getEnableCommand("self_stimulation"));
     }
 
     private void testMazda626() {
@@ -215,7 +180,7 @@ public class AutoTest {
     }
 
     private EngineChart nextChart() {
-        return TestingUtils.nextChart(linkManager.getCommandQueue());
+        return TestingUtils.nextChart(commandQueue);
     }
 
     private void test2003DodgeNeon() {
@@ -312,7 +277,7 @@ public class AutoTest {
     }
 
     private void test1995DodgeNeon() {
-        setEngineType(2);
+        setEngineType(ET_DODGE_NEON_1995);
         EngineChart chart;
         sendComplexCommand("set_whole_fuel_map 3");
         sendComplexCommand("set_individual_coils_ignition");
@@ -346,11 +311,11 @@ public class AutoTest {
     }
 
     private void testRoverV8() {
-        setEngineType(10);
+        setEngineType(ET_ROVER_V8);
     }
 
     private void testFordFiesta() {
-        setEngineType(4);
+        setEngineType(ET_FORD_FIESTA);
         EngineChart chart;
         changeRpm(2000);
         chart = nextChart();
@@ -364,7 +329,7 @@ public class AutoTest {
     }
 
     private void testFord6() {
-        setEngineType(7);
+        setEngineType(ET_FORD_INLINE_6);
         EngineChart chart;
         changeRpm(2000);
         chart = nextChart();
@@ -381,7 +346,7 @@ public class AutoTest {
     }
 
     private void testFordAspire() {
-        setEngineType(3);
+        setEngineType(ET_FORD_ASPIRE);
         sendCommand("disable cylinder_cleanup");
         sendCommand("set mock_map_voltage 1");
         sendCommand("set mock_vbatt_voltage 2.2");
@@ -502,28 +467,6 @@ public class AutoTest {
         assertWaveNull("hard limit check", chart, EngineChart.INJECTOR_1);
     }
 
-    private void sendCommand(String command) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
-    }
-
-    private void sendCommand(String command, int retryTimeoutMs, int timeoutMs) {
-        assertNull("Fatal not expected", criticalError);
-        IoUtil.sendCommand(command, retryTimeoutMs, timeoutMs, commandQueue);
-    }
-
-    private static void assertEquals(double expected, double actual) {
-        assertEquals("", expected, actual);
-    }
-
-    private static void assertEquals(String msg, double expected, double actual) {
-        assertEquals(msg, expected, actual, EngineReport.RATIO);
-    }
-
-    private static void assertEquals(String msg, double expected, double actual, double ratio) {
-        if (!isCloseEnough(expected, actual, ratio))
-            throw new IllegalStateException(msg + " Expected " + expected + " but got " + actual);
-    }
-
     /**
      * This method waits for longer then usual.
      */
@@ -537,40 +480,5 @@ public class AutoTest {
 
     private static void assertWaveNull(String msg, EngineChart chart, String key) {
         assertNull(msg + "chart for " + key, chart.get(key));
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                e.printStackTrace();
-                System.exit(-1);
-            }
-        });
-        boolean startSimulator = args.length == 1 && args[0].equalsIgnoreCase("start");
-
-        long start = System.currentTimeMillis();
-        FileLog.SIMULATOR_CONSOLE.start();
-        FileLog.MAIN.start();
-
-        boolean failed = false;
-        try {
-            LinkManager linkManager = new LinkManager();
-            IoUtil.connectToSimulator(linkManager, startSimulator);
-            new AutoTest(linkManager, linkManager.getCommandQueue()).mainTestBody();
-        } catch (Throwable e) {
-            e.printStackTrace();
-            failed = true;
-        } finally {
-            SimulatorExecHelper.destroy();
-        }
-        if (failed)
-            System.exit(-1);
-        FileLog.MAIN.logLine("*******************************************************************************");
-        FileLog.MAIN.logLine("************************************  Looks good! *****************************");
-        FileLog.MAIN.logLine("*******************************************************************************");
-        long time = (System.currentTimeMillis() - start) / 1000;
-        FileLog.MAIN.logLine("Done in " + time + "secs");
-        System.exit(0); // this is a safer method eliminating the issue of non-daemon threads
     }
 }

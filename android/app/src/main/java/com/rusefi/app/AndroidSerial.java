@@ -12,7 +12,6 @@ import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.dfu.DfuLogic;
 import com.rusefi.io.ByteReader;
 import com.rusefi.io.serial.AbstractIoStream;
-import com.rusefi.io.tcp.TcpIoStream;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,7 +48,7 @@ public class AndroidSerial extends AbstractIoStream {
     @Override
     public void setInputListener(DataListener listener) {
         ByteReader reader = buffer -> usbSerialPort.read(buffer, 5000);
-        ByteReader.runReaderLoop("", listener, reader, TcpIoStream.DisconnectListener.VOID);
+        ByteReader.runReaderLoop("", listener, reader, this);
     }
 
     @Override

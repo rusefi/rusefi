@@ -102,7 +102,7 @@
 
         <jar destfile="${server_jar_file}">
             <manifest>
-                <attribute name="Main-Class" value="com.rusefi.Launcher"/>
+                <attribute name="Main-Class" value="com.rusefi.server.BackendLauncher"/>
                 <attribute name="Built-Date" value="${TODAY}"/>
                 <attribute name="Signature-Vendor" value="rusEFI LLC"/>
             </manifest>
@@ -174,8 +174,8 @@
         <java jar="${jar_file}" fork="true"/>
     </target>
 
-    <target name="simlator_test" depends="jar">
-        <java classpath="${jar_file}" classname="com.rusefi.AutoTest" failonerror="true" args="start">
+    <target name="simulator_test" depends="jar">
+        <java classpath="${jar_file}" classname="com.rusefi.SimulatorFunctionalTest" failonerror="true" args="start">
         </java>
 
     </target>

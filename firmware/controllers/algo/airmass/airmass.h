@@ -2,6 +2,8 @@
 
 #include "engine.h"
 
+class ValueProvider3D;
+
 struct AirmassResult {
 	float CylinderAirmass = 0;
 	float EngineLoadPercent = 100;
@@ -10,7 +12,7 @@ struct AirmassResult {
 struct AirmassModelBase {
 	DECLARE_ENGINE_PTR;
 
-	AirmassModelBase(const ValueProvider3D& veTable);
+	explicit AirmassModelBase(const ValueProvider3D& veTable);
 	virtual AirmassResult getAirmass(int rpm) = 0;
 
 protected:

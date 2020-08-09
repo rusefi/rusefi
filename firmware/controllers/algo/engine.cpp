@@ -64,7 +64,7 @@ FsioState::FsioState() {
 
 void Engine::resetEngineSnifferIfInTestMode() {
 #if EFI_ENGINE_SNIFFER
-	if (isTestMode) {
+	if (isFunctionalTestMode) {
 		// TODO: what is the exact reasoning for the exact engine sniffer pause time I wonder
 		waveChart.pauseEngineSnifferUntilNt = getTimeNowNt() + MS2NT(300);
 		waveChart.reset();
@@ -130,6 +130,14 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
+#if HW_CHECK_MODE
+static void assertCloseTo(const char * msg, float actual, float expected) {
+	if (actual < 0.9 * expected || actual > 1.1 * expected) {
+		firmwareError(OBD_PCM_Processor_Fault, "%s analog input validation failed %f vs %f", msg, actual, expected);
+	}
+}
+#endif // HW_CHECK_MODE
+
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 	
@@ -163,7 +171,14 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif
 
-	slowCallBackWasInvoked = TRUE;
+	slowCallBackWasInvoked = true;
+
+#if HW_CHECK_MODE
+	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3);
+	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
+	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
+	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 6.2);
+#endif // HW_CHECK_MODE
 }
 
 

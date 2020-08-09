@@ -46,10 +46,18 @@ public class IncomingDataBuffer {
         return incomingData;
     }
 
+    public byte[] getPacket(String msg) throws EOFException {
+        return getPacket(msg, false, System.currentTimeMillis());
+    }
+
     public byte[] getPacket(String msg, boolean allowLongResponse) throws EOFException {
         return getPacket(msg, allowLongResponse, System.currentTimeMillis());
     }
 
+    /**
+     * why does this method return NULL in case of timeout?!
+     * todo: there is a very similar BinaryProtocolServer#readPromisedBytes which throws exception in case of timeout
+     */
     public byte[] getPacket(String msg, boolean allowLongResponse, long start) throws EOFException {
         boolean isTimeout = waitForBytes(msg + " header", start, 2);
         if (isTimeout)
@@ -60,7 +68,7 @@ public class IncomingDataBuffer {
             log.debug(loggingPrefix + "Got packet size " + packetSize);
         if (packetSize < 0)
             return null;
-        if (!allowLongResponse && packetSize > Math.max(BinaryProtocolCommands.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
+        if (!allowLongResponse && packetSize > Math.max(Fields.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
             return null;
 
         isTimeout = waitForBytes(loggingPrefix + msg + " body", start, packetSize + 4);
@@ -78,11 +86,15 @@ public class IncomingDataBuffer {
                 log.debug(String.format("%x", actualCrc) + " vs " + String.format("%x", packetCrc));
             return null;
         }
-        streamStats.onPacketArrived();
+        onPacketArrived();
         if (log.debugEnabled())
             log.debug("packet " + Arrays.toString(packet) + ": crc OK");
 
         return packet;
+    }
+
+    public void onPacketArrived() {
+        streamStats.onPacketArrived();
     }
 
     public void addData(byte[] freshData) {
@@ -106,6 +118,9 @@ public class IncomingDataBuffer {
         return waitForBytes(Timeouts.BINARY_IO_TIMEOUT, loggingMessage, startTimestamp, count);
     }
 
+    /**
+     * @return true in case of timeout, false if we have received count of bytes
+     */
     public boolean waitForBytes(int timeoutMs, String loggingMessage, long startTimestamp, int count) {
         log.info(loggingMessage + ": waiting for " + count + " byte(s)");
         synchronized (cbb) {
@@ -118,7 +133,7 @@ public class IncomingDataBuffer {
                 try {
                     cbb.wait(timeout);
                 } catch (InterruptedException e) {
-                    throw new IllegalStateException(e);
+                    return true; // thread thrown away, handling like a timeout
                 }
             }
         }
@@ -139,18 +154,21 @@ public class IncomingDataBuffer {
     }
 
     public int getByte() throws EOFException {
+        streamStats.onArrived(1);
         synchronized (cbb) {
             return cbb.getByte();
         }
     }
 
     public int getShort() throws EOFException {
+        streamStats.onArrived(2);
         synchronized (cbb) {
             return cbb.getShort();
         }
     }
 
     public int getInt() throws EOFException {
+        streamStats.onArrived(4);
         synchronized (cbb) {
             return cbb.getInt();
         }
@@ -160,6 +178,7 @@ public class IncomingDataBuffer {
         synchronized (cbb) {
             cbb.get(packet);
         }
+        streamStats.onArrived(packet.length);
     }
 
     public byte readByte() throws IOException {
@@ -169,29 +188,28 @@ public class IncomingDataBuffer {
     public byte readByte(int timeoutMs) throws IOException {
         boolean isTimeout = waitForBytes(timeoutMs, loggingPrefix + "readByte", System.currentTimeMillis(), 1);
         if (isTimeout)
-            throw new IOException("Timeout in readByte");
+            throw new EOFException("Timeout in readByte " + timeoutMs);
         return (byte) getByte();
     }
 
     public int readInt() throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "readInt", System.currentTimeMillis(), 4);
         if (isTimeout)
-            throw new IllegalStateException("Timeout in readByte");
+            throw new EOFException("Timeout in readInt ");
         return swap32(getInt());
     }
 
     public short readShort() throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "readShort", System.currentTimeMillis(), 2);
         if (isTimeout)
-            throw new IllegalStateException("Timeout in readShort");
+            throw new EOFException("Timeout in readShort");
         return (short) swap16(getShort());
     }
 
-    public int read(byte[] packet) {
+    public void read(byte[] packet) throws EOFException {
         boolean isTimeout = waitForBytes(loggingPrefix + "read", System.currentTimeMillis(), packet.length);
         if (isTimeout)
-            throw new IllegalStateException("Timeout while waiting " + packet.length);
+            throw new EOFException("Timeout while waiting for " + packet.length + " byte(s)");
         getData(packet);
-        return packet.length;
     }
 }

@@ -65,22 +65,15 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine 2NULL", NAN);
 	efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
 	switch (engineConfiguration->fuelAlgorithm) {
-	case LM_PLAIN_MAF:
-		if (!hasMafSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		    // todo: make this not happen during hardware CI
-			warning(CUSTOM_MAF_NEEDED, "MAF sensor needed for current fuel algorithm");
-			return NAN;
-		}
-		return getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_SPEED_DENSITY:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-	case LM_ALPHA_N:
+	case LM_ALPHA_N_2:
 		return Sensor::get(SensorType::Tps1).value_or(0);
 	case LM_REAL_MAF:
 		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
 	default:
 		firmwareError(CUSTOM_UNKNOWN_ALGORITHM, "Unexpected engine load parameter: %d", engineConfiguration->fuelAlgorithm);
-		return -1;
+		return 0;
 	}
 }
 
@@ -424,14 +417,6 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	TRIGGER_WAVEFORM(prepareShape());
 }
 
-void setFuelRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setLinearCurve(config->fuelRpmBins, from, to);
-}
-
-void setFuelLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setLinearCurve(config->fuelLoadBins, from, to);
-}
-
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setRpmBin(config->ignitionRpmBins, IGN_RPM_COUNT, from, to);
 }
@@ -445,9 +430,7 @@ void setTimingLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
  */
 void setAlgorithm(engine_load_mode_e algo DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	engineConfiguration->fuelAlgorithm = algo;
-	if (algo == LM_ALPHA_N) {
-		setTimingLoadBin(20, 120 PASS_CONFIG_PARAMETER_SUFFIX);
-	} else if (algo == LM_SPEED_DENSITY) {
+	if (algo == LM_SPEED_DENSITY) {
 		setLinearCurve(config->ignitionLoadBins, 20, 120, 3);
 		buildTimingMap(35 PASS_CONFIG_PARAMETER_SUFFIX);
 	}

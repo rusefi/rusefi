@@ -60,25 +60,6 @@ static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER)
 
 EXTERN_ENGINE;
 
-/*
- static void printIntArray(int array[], int size) {
- for (int j = 0; j < size; j++) {
- print("%d ", array[j]);
- }
- print("\r\n");
- }
- */
-
-void printFloatArray(const char *prefix, float array[], int size) {
-	appendMsgPrefix(&logger);
-	appendPrintf(&logger, prefix);
-	for (int j = 0; j < size; j++) {
-		appendPrintf(&logger, "%.2f ", array[j]);
-	}
-	appendMsgPostfix(&logger);
-	scheduleLogging(&logger);
-}
-
 void printSpiState(Logging *logger, const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(logger, "spi 1=%s/2=%s/3=%s/4=%s",
 		boolToString(engineConfiguration->is_enabled_spi_1),
@@ -202,27 +183,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 
 
 	scheduleMsg(&logger, "configurationVersion=%d", engine->getGlobalConfigurationVersion());
-
-	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
-//		print("line %d (%.2f): ", k, engineConfiguration->fuelKeyBins[k]);
-//		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-//			print("%.2f ", engineConfiguration->fuelTable[k][r]);
-//		}
-//		print("\r\n");
-	}
-
-//	printFloatArray("RPM bin: ", config->fuelRpmBins, FUEL_RPM_COUNT);
-//
-//	printFloatArray("Y bin: ", config->fuelLoadBins, FUEL_LOAD_COUNT);
-//
-//	printFloatArray("CLT: ", config->cltFuelCorr, CLT_CURVE_SIZE);
-//	printFloatArray("CLT bins: ", config->cltFuelCorrBins, CLT_CURVE_SIZE);
-//
-//	printFloatArray("IAT: ", config->iatFuelCorr, IAT_CURVE_SIZE);
-//	printFloatArray("IAT bins: ", config->iatFuelCorrBins, IAT_CURVE_SIZE);
-//
-//	printFloatArray("vBatt: ", engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE);
-//	printFloatArray("vBatt bins: ", engineConfiguration->injector.battLagCorrBins, VBAT_INJECTOR_CURVE_SIZE);
 
 	scheduleMsg(&logger, "rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
 			engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -581,15 +541,6 @@ static void setWholeVeCmd(float value) {
 	engine->resetEngineSnifferIfInTestMode();
 }
 
-static void setWholeFuelMapCmd(float value) {
-	scheduleMsg(&logger, "Setting whole fuel map to %.2f", value);
-	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
-		scheduleMsg(&logger, "WARNING: setting fuel map in SD mode is pointless");
-	}
-	setWholeFuelMap(value PASS_CONFIG_PARAMETER_SUFFIX);
-	engine->resetEngineSnifferIfInTestMode();
-}
-
 #if EFI_PROD_CODE
 
 static void setEgtSpi(int spi) {
@@ -630,6 +581,11 @@ static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const 
 	scheduleMsg(&logger, "setting %s pin to %s please save&restart", name, hwPortname(pin));
 	*targetPin = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+// set vss_pin
+static void setVssPin(const char *pinName) {
+	setIndividualPin(pinName, &engineConfiguration->vehicleSpeedSensorInputPin, "VSS");
 }
 
 // set_idle_pin none
@@ -840,21 +796,6 @@ static void setTimingMap(const char * rpmStr, const char *loadStr, const char *v
 	scheduleMsg(&logger, "Setting timing map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
 }
 
-static void setFuelMap(const char * rpmStr, const char *loadStr, const char *valueStr) {
-	float rpm = atoff(rpmStr);
-	float engineLoad = atoff(loadStr);
-	float value = atoff(valueStr);
-
-	int rpmIndex = findIndexMsg("setFM", config->fuelRpmBins, FUEL_RPM_COUNT, rpm);
-	rpmIndex = rpmIndex < 0 ? 0 : rpmIndex;
-	int loadIndex = findIndexMsg("setTM", config->fuelLoadBins, FUEL_LOAD_COUNT, engineLoad);
-	loadIndex = loadIndex < 0 ? 0 : loadIndex;
-
-	config->fuelTable[loadIndex][rpmIndex] = value;
-	scheduleMsg(&logger, "Setting fuel map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
-	engine->resetEngineSnifferIfInTestMode();
-}
-
 static void setSpiMode(int index, bool mode) {
 	switch (index) {
 	case 1:
@@ -943,7 +884,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "sd")) {
 		engineConfiguration->isSdCardEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_FUNCTIONAL_TEST_MODE)) {
-		engine->isTestMode = isEnabled;
+		engine->isFunctionalTestMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_read")) {
 		engineConfiguration->canReadEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_write")) {
@@ -954,7 +895,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->verboseTriggerSynchDetails = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "ignition")) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "self_stimulation")) {
+	} else if (strEqualCaseInsensitive(param, CMD_SELF_STIMULATION)) {
 		engine->directSelfStimulation = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
@@ -1124,6 +1065,8 @@ static void getValue(const char *paramStr) {
 		scheduleMsg(&logger, "tps_max=%d", engineConfiguration->tpsMax);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		scheduleMsg(&logger, "global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
+	} else if (strEqualCaseInsensitive(paramStr, "trigger_hw_input")) {
+		scheduleMsg(&logger, "trigger_hw_input=%s", boolToString(engine->hwTriggerInputEnabled));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_1")) {
 		scheduleMsg(&logger, "is_enabled_spi_1=%s", boolToString(engineConfiguration->is_enabled_spi_1));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_2")) {
@@ -1261,7 +1204,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"can_vss", setCanVss},
 #endif /* EFI_CAN_SUPPORT */
 #if EFI_IDLE_CONTROL
-		{"idle_position", setIdleValvePosition},
+		{"idle_position", setManualIdleValvePosition},
 		{"idle_rpm", setTargetIdleRpm},
 		{"idle_dt", setIdleDT},
 #endif /* EFI_IDLE_CONTROL */
@@ -1336,7 +1279,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		engineConfiguration->tpsMin = valueI;
 #if EFI_EMULATE_POSITION_SENSORS
-	} else if (strEqualCaseInsensitive(paramStr, "rpm")) {
+	} else if (strEqualCaseInsensitive(paramStr, CMD_RPM)) {
 		setTriggerEmulatorRPM(valueI);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
@@ -1351,6 +1294,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->wwaeBeta = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
+#if EFI_PROD_CODE
+	} else if (strEqualCaseInsensitive(paramStr, CMD_VSS_PIN)) {
+		setVssPin(valueStr);
+#endif // EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
 #if EFI_RTC
@@ -1384,10 +1331,8 @@ void initSettings(void) {
 
 	addConsoleActionF("set_whole_phase_map", setWholePhaseMapCmd);
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
-	addConsoleActionF("set_whole_fuel_map", setWholeFuelMapCmd);
 	addConsoleActionF("set_whole_ve_map", setWholeVeCmd);
 	addConsoleActionF("set_whole_ign_corr_map", setWholeIgnitionIatCorr);
-	addConsoleActionSSS("set_fuel_map", setFuelMap);
 
 	addConsoleActionSSS("set_timing_map", setTimingMap);
 
@@ -1413,7 +1358,7 @@ void initSettings(void) {
 	addConsoleActionS("showpin", showPinFunction);
 	addConsoleActionSS("set_injection_pin", setInjectionPin);
 	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
-	addConsoleActionSS("set_trigger_input_pin", setTriggerInputPin);
+	addConsoleActionSS(CMD_TRIGGER_PIN, setTriggerInputPin);
 	addConsoleActionSS("set_trigger_simulator_pin", setTriggerSimulatorPin);
 
 	addConsoleActionSS("set_egt_cs_pin", (VoidCharPtrCharPtr) setEgtCSPin);

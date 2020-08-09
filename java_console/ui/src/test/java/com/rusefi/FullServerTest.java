@@ -1,14 +1,20 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
+import com.rusefi.proxy.NetworkConnectorContext;
+import com.rusefi.proxy.client.LocalApplicationProxy;
+import com.rusefi.proxy.client.LocalApplicationProxyContext;
 import com.rusefi.server.*;
+import com.rusefi.tools.online.HttpUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,18 +24,18 @@ import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static com.rusefi.TestHelper.createIniField;
-import static com.rusefi.TestHelper.prepareImage;
-import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
+import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.TestHelper.*;
 import static com.rusefi.Timeouts.SECOND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class FullServerTest {
+    private static final Logging log = getLogging(FullServerTest.class);
+
     @Before
-    public void setTestCertificate() throws MalformedURLException {
-        ServerTest.commonServerTest();
-        BinaryProtocol.DISABLE_LOCAL_CACHE = true;
+    public void setup() throws MalformedURLException {
+        BackendTestHelper.commonServerTest();
     }
 
     @Test
@@ -37,6 +43,24 @@ public class FullServerTest {
         ScalarIniField iniField = TestHelper.createIniField(Fields.CYLINDERSCOUNT);
         int value = 241;
         int userId = 7;
+
+
+        LocalApplicationProxyContext localApplicationProxyContext = new LocalApplicationProxyContext() {
+            @Override
+            public String executeGet(String url) throws IOException {
+                return HttpUtil.executeGet(url);
+            }
+
+            @Override
+            public int serverPortForRemoteApplications() {
+                return 7003;
+            }
+
+            @Override
+            public int authenticatorPort() {
+                return 7004;
+            }
+        };
 
         CountDownLatch controllerRegistered = new CountDownLatch(1);
         CountDownLatch applicationClosed = new CountDownLatch(1);
@@ -46,8 +70,8 @@ public class FullServerTest {
         int applicationTimeout = 7 * SECOND;
         try (Backend backend = new Backend(userDetailsResolver, httpPort, applicationTimeout) {
             @Override
-            protected void onRegister(ControllerConnectionState controllerConnectionState) {
-                super.onRegister(controllerConnectionState);
+            public void register(ControllerConnectionState controllerConnectionState) {
+                super.register(controllerConnectionState);
                 controllerRegistered.countDown();
             }
 
@@ -56,38 +80,46 @@ public class FullServerTest {
                 super.close(applicationConnectionState);
                 applicationClosed.countDown();
             }
-        }; LinkManager clientManager = new LinkManager()) {
+        }; LinkManager clientManager = new LinkManager().setNeedPullData(false);
+             NetworkConnector networkConnector = new NetworkConnector()) {
             int serverPortForControllers = 7001;
-            int serverPortForRemoteUsers = 7003;
 
 
             // first start backend server
-            TestHelper.runControllerConnectorBlocking(backend, serverPortForControllers);
-            TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
+            BackendTestHelper.runControllerConnectorBlocking(backend, serverPortForControllers);
+            BackendTestHelper.runApplicationConnectorBlocking(backend, localApplicationProxyContext.serverPortForRemoteApplications());
 
             // create virtual controller to which "rusEFI network connector" connects to
             int controllerPort = 7002;
             ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
-            TestHelper.createVirtualController(controllerPort, controllerImage);
+            TestHelper.createVirtualController(controllerPort, controllerImage, new BinaryProtocolServer.Context());
 
+            NetworkConnectorContext networkConnectorContext = new NetworkConnectorContext() {
+                @Override
+                public int serverPortForControllers() {
+                    return serverPortForControllers;
+                }
+            };
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-            SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers, TcpIoStream.DisconnectListener.VOID);
+            NetworkConnector.NetworkConnectorResult networkConnectorResult = networkConnector.start(TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
+            ControllerInfo controllerInfo = networkConnectorResult.getControllerInfo();
 
-            assertTrue("controllerRegistered", controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+            TestHelper.assertLatch("controllerRegistered", controllerRegistered);
 
-            SessionDetails authenticatorSessionDetails = new SessionDetails(deviceSessionDetails.getControllerInfo(), MockRusEfiDevice.TEST_TOKEN_3, deviceSessionDetails.getOneTimeToken());
-            ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userId);
+            SessionDetails authenticatorSessionDetails = new SessionDetails(controllerInfo, TEST_TOKEN_3, networkConnectorResult.getOneTimeToken());
+            ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userDetailsResolver.apply(TestHelper.TEST_TOKEN_1));
 
             // start authenticator
-            int authenticatorPort = 7004; // local port on which authenticator accepts connections from Tuner Studio
-            LocalApplicationProxy.startAndRun(serverPortForRemoteUsers, applicationRequest, authenticatorPort, httpPort, TcpIoStream.DisconnectListener.VOID);
+            LocalApplicationProxy.startAndRun(localApplicationProxyContext, applicationRequest, httpPort,
+                    TcpIoStream.DisconnectListener.VOID,
+                    LocalApplicationProxy.ConnectionListener.VOID);
 
 
             CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
             // connect to proxy and read virtual controller through it
-            clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + authenticatorPort, new ConnectionStateListener() {
+            clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + localApplicationProxyContext.authenticatorPort(), new ConnectionStateListener() {
                 @Override
                 public void onConnectionEstablished() {
                     connectionEstablishedCountDownLatch.countDown();
@@ -98,7 +130,7 @@ public class FullServerTest {
                     System.out.println("Failed");
                 }
             });
-            assertTrue("Proxied ECU Connection established", connectionEstablishedCountDownLatch.await(30, TimeUnit.SECONDS));
+            assertLatch("Proxied ECU Connection established", connectionEstablishedCountDownLatch);
 
             BinaryProtocol clientStreamState = clientManager.getCurrentStreamState();
             Objects.requireNonNull(clientStreamState, "clientStreamState");
@@ -110,11 +142,10 @@ public class FullServerTest {
             assertEquals(1, applicationClosed.getCount());
 
             // now let's test that application connector would be terminated by server due to inactivity
-            System.out.println("Sleeping twice the application timeout");
-            assertTrue(applicationClosed.await(2 * applicationTimeout, TimeUnit.MILLISECONDS));
+            log.info("Sleeping twice the application timeout");
+            assertTrue("applicationClosed", applicationClosed.await(3 * applicationTimeout, TimeUnit.MILLISECONDS));
 
             assertEquals("applications size", 0, backend.getApplications().size());
         }
     }
-
 }

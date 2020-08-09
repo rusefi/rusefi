@@ -6,14 +6,17 @@ import com.opensr5.Logger;
 import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.*;
+import com.rusefi.core.MessagesCentral;
+import com.rusefi.core.Pair;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.GetOutputsCommand;
-import com.rusefi.io.serial.PortHolder;
 import com.rusefi.stream.LogicdataStreamFile;
 import com.rusefi.stream.StreamFile;
 import com.rusefi.stream.TSHighSpeedLog;
@@ -30,25 +33,23 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
 
 /**
  * This object represents logical state of physical connection.
- *
+ * <p>
  * Instance is connected until we experience issues. Once we decide to close the connection there is no restart -
  * new instance of this class would need to be created once we establish a new physical connection.
- *
+ * <p>
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
  */
 public class BinaryProtocol implements BinaryProtocolCommands {
     private static final Logging log = getLogging(BinaryProtocol.class);
+    private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("text pull");
 
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.rusefi_binary";
@@ -84,6 +85,14 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     public static String findCommand(byte command) {
         switch (command) {
+            case Fields.TS_SD_R_COMMAND:
+                return "SD_R_COMMAND";
+            case Fields.TS_SD_W_COMMAND:
+                return "SD_W_COMMAND";
+            case Fields.TS_PAGE_COMMAND:
+                return "PAGE";
+            case Fields.TS_COMMAND_F:
+                return "PROTOCOL";
             case Fields.TS_CRC_CHECK_COMMAND:
                 return "CRC_CHECK";
             case Fields.TS_BURN_COMMAND:
@@ -92,14 +101,18 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 return "HELLO";
             case Fields.TS_READ_COMMAND:
                 return "READ";
+            case Fields.TS_GET_TEXT:
+                return "TS_GET_TEXT";
             case Fields.TS_GET_FIRMWARE_VERSION:
                 return "GET_FW_VERSION";
             case Fields.TS_CHUNK_WRITE_COMMAND:
                 return "WRITE_CHUNK";
             case Fields.TS_OUTPUT_COMMAND:
                 return "TS_OUTPUT_COMMAND";
+            case Fields.TS_RESPONSE_OK:
+                return "TS_RESPONSE_OK";
             default:
-                return "command " + (char) + command + "/" + command;
+                return "command " + (char) command + "/" + command;
         }
     }
 
@@ -158,7 +171,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         };
     }
 
-    public static void sleep(int millis) {
+    public static void sleep(long millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
@@ -226,7 +239,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
     private void startTextPullThread(final DataListener listener) {
         if (!linkManager.COMMUNICATION_QUEUE.isEmpty()) {
-            System.out.println("Current queue: " + linkManager.COMMUNICATION_QUEUE.size());
+            log.info("Current queue: " + linkManager.COMMUNICATION_QUEUE.size());
         }
         Runnable textPull = new Runnable() {
             @Override
@@ -252,8 +265,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 log.info("Stopping text pull");
             }
         };
-        Thread tr = new Thread(textPull);
-        tr.setName("text pull");
+        Thread tr = THREAD_FACTORY.newThread(textPull);
         tr.start();
     }
 
@@ -285,7 +297,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
-    public void uploadChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException {
+    public void uploadChanges(ConfigurationImage newVersion) {
         ConfigurationImage current = getControllerConfiguration();
         // let's have our own copy which no one would be able to change
         newVersion = newVersion.clone();
@@ -295,18 +307,18 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             if (range == null)
                 break;
             int size = range.second - range.first;
-            logger.info("Need to patch: " + range + ", size=" + size);
+            log.info("Need to patch: " + range + ", size=" + size);
             byte[] oldBytes = current.getRange(range.first, size);
-            logger.info("old " + Arrays.toString(oldBytes));
+            log.info("old " + Arrays.toString(oldBytes));
 
             byte[] newBytes = newVersion.getRange(range.first, size);
-            logger.info("new " + Arrays.toString(newBytes));
+            log.info("new " + Arrays.toString(newBytes));
 
-            writeData(newVersion.getContent(), range.first, size, logger);
+            writeData(newVersion.getContent(), range.first, size);
 
             offset = range.second;
         }
-        burn(logger);
+        burn();
         setController(newVersion);
     }
 
@@ -348,10 +360,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 return null;
 
             int remainingSize = image.getSize() - offset;
-            int requestSize = Math.min(remainingSize, BLOCKING_FACTOR);
+            int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
 
             byte packet[] = new byte[7];
-            packet[0] = COMMAND_READ;
+            packet[0] = Fields.TS_READ_COMMAND;
             putShort(packet, 1, 0); // page
             putShort(packet, 3, swap16(offset));
             putShort(packet, 5, swap16(requestSize));
@@ -394,7 +406,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
         if (localCached != null) {
             int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
-            System.out.printf(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration);
+            log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
             byte packet[] = new byte[7];
             packet[0] = COMMAND_CRC_CHECK_COMMAND;
@@ -405,7 +417,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 // that's unusual - most of the protocol is LITTLE_ENDIAN
                 bb.order(ByteOrder.BIG_ENDIAN);
                 int crcFromController = bb.getInt();
-                System.out.printf("From rusEFI CRC %x\n", crcFromController);
+                log.info(String.format("From rusEFI CRC %x\n", crcFromController));
                 if (crcOfLocallyCachedConfiguration == crcFromController) {
                     return localCached;
                 }
@@ -449,10 +461,10 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         Runtime.getRuntime().removeShutdownHook(hook);
     }
 
-    public void writeData(byte[] content, Integer offset, int size, Logger logger) {
-        if (size > BLOCKING_FACTOR) {
-            writeData(content, offset, BLOCKING_FACTOR, logger);
-            writeData(content, offset + BLOCKING_FACTOR, size - BLOCKING_FACTOR, logger);
+    public void writeData(byte[] content, Integer offset, int size) {
+        if (size > Fields.BLOCKING_FACTOR) {
+            writeData(content, offset, Fields.BLOCKING_FACTOR);
+            writeData(content, offset + Fields.BLOCKING_FACTOR, size - Fields.BLOCKING_FACTOR);
             return;
         }
 
@@ -470,17 +482,17 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = executeCommand(packet, "writeImage");
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != 1) {
-                logger.error("writeData: Something is wrong, retrying...");
+                log.error("writeData: Something is wrong, retrying...");
                 continue;
             }
             break;
         }
     }
 
-    public void burn(Logger logger) throws InterruptedException, EOFException {
+    public void burn() {
         if (!isBurnPending)
             return;
-        logger.info("Need to burn");
+        log.info("Need to burn");
 
         while (true) {
             if (isClosed)
@@ -491,7 +503,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             }
             break;
         }
-        logger.info("DONE");
+        log.info("DONE");
         isBurnPending = false;
     }
 

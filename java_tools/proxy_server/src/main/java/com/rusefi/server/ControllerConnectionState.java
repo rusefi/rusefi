@@ -37,12 +37,13 @@ public class ControllerConnectionState {
     private final TwoKindSemaphore twoKindSemaphore = new TwoKindSemaphore();
     private final SensorsHolder sensorsHolder = new SensorsHolder();
     private final Birthday birthday = new Birthday();
+    private int outputRoundAroundDuration;
 
     public ControllerConnectionState(Socket clientSocket, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
         this.userDetailsResolver = userDetailsResolver;
         try {
-            stream = new TcpIoStream("[controller] ", clientSocket);
+            stream = new TcpIoStream("[backend-controller connector] ", clientSocket);
             incomingData = stream.getDataBuffer();
         } catch (IOException e) {
             close();
@@ -51,6 +52,10 @@ public class ControllerConnectionState {
 
     public Birthday getBirthday() {
         return birthday;
+    }
+
+    public int getOutputRoundAroundDuration() {
+        return outputRoundAroundDuration;
     }
 
     public IoStream getStream() {
@@ -68,6 +73,16 @@ public class ControllerConnectionState {
     public void close() {
         isClosed = true;
         FileUtil.close(clientSocket);
+    }
+
+    @Override
+    public String toString() {
+        return "ControllerConnectionState{" +
+                "userDetails=" + userDetails +
+                ", controllerKey=" + controllerKey +
+                ", isClosed=" + isClosed +
+                ", twoKindSemaphore=" + twoKindSemaphore +
+                '}';
     }
 
     public void requestControllerInfo() throws IOException {
@@ -98,10 +113,11 @@ public class ControllerConnectionState {
 
     public void getOutputs() throws IOException {
         byte[] commandPacket = GetOutputsCommand.createRequest();
-
+        long start = System.currentTimeMillis();
         stream.sendPacket(commandPacket);
 
         byte[] packet = incomingData.getPacket("msg", true);
+        outputRoundAroundDuration = (int) (System.currentTimeMillis() - start);
         if (packet == null)
             throw new IOException("getOutputs: No response");
         sensorsHolder.grabSensorValues(packet);
@@ -122,6 +138,7 @@ public class ControllerConnectionState {
             getOutputs();
         } catch (IOException e) {
             // todo: this is currently not covered by a unit test
+            log.error("grabOutputs " + this, e);
             backend.close(this);
         }
     }

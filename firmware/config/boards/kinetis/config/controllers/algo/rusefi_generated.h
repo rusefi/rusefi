@@ -41,7 +41,6 @@
 #define afterstartHoldTime_offset 6152
 #define air_pressure_sensor_config_s_size 16
 #define alignEngineSnifferAtTDC_offset 744
-#define alignmentFill_at_2109_offset 2109
 #define alignmentFill_at_4514_offset 4514
 #define alternator_antiwindupFreq_offset 1764
 #define alternator_derivativeFilterLoss_offset 1760
@@ -176,6 +175,13 @@
 #define camInputs2_offset 557
 #define camInputs3_offset 558
 #define camInputs4_offset 559
+#define can2BaudRate_offset 2110
+#define can2NbcType_offset 2120
+#define can2ReadEnabled_offset 2116
+#define can2RxPin_offset 2125
+#define can2SleepPeriodMs_offset 712
+#define can2TxPin_offset 2124
+#define can2WriteEnabled_offset 2116
 #define can_baudrate_e_enum "100kbps", "250kbps" , "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
 #define canBaudRate_offset 2108
@@ -235,8 +241,12 @@
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
+#define CMD_RPM "rpm"
+#define CMD_SELF_STIMULATION "self_stimulation"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
+#define CMD_TRIGGER_PIN "set_trigger_input_pin"
 #define CMD_TRIGGERINFO "triggerinfo"
+#define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
 #define coastingFuelCutClt_offset 3154
 #define coastingFuelCutEnabled_offset 744
@@ -276,6 +286,7 @@
 #define cutSparkOnHardLimit_offset 1464
 #define cylinderBore_offset 408
 #define cylindersCount_offset 400
+#define dcMotorIdleValve_offset 976
 #define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Mode43", "Mode44"
 #define debugMapAveraging_offset 807
 #define debugMode_offset 2092
@@ -302,9 +313,10 @@
 #define enableInnovateLC2_offset 976
 #define enableLaunchBoost_offset 976
 #define enableLaunchRetard_offset 976
+#define enableVerboseCan2Tx_offset 2116
 #define enableVerboseCanTx_offset 744
 #define engine_configuration_s_size 6000
-#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "INVALID", "SPEED DENSITY", "MAF Air Charge", "INVALID", "INVALID"
+#define engine_load_mode_e_enum "INVALID", "Alpha-N/TPS", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "INVALID"
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_GM "GM"
 #define ENGINE_MAKE_LADA "Lada"
@@ -325,17 +337,25 @@
 #define engineSnifferRpmThreshold_offset 4
 #define engineType_offset 0
 #define ERROR_BUFFER_SIZE 120
+#define ET_BMW_E34 25
 #define ET_BMW_M73_PROTEUS 63
+#define ET_CAMARO 35
 #define ET_CITROEN_TU3JP 65
+#define ET_DODGE_NEON_1995 2
+#define ET_FORD_ASPIRE 3
+#define ET_FORD_FIESTA 4
+#define ET_FORD_INLINE_6 7
 #define ET_FRANKENSO_MIATA_NA6 41
 #define ET_FRANKENSO_MIATA_NA6_VAF 57
 #define ET_FRANKENSO_MIATA_NB2 47
 #define ET_MRE_DEFAULTS 60
-#define ET_MRE_MIATA_NA6 12
+#define ET_MRE_MIATA_NA6_MAP 66
+#define ET_MRE_MIATA_NA6_VAF 12
 #define ET_MRE_MIATA_NB2_MAF 15
 #define ET_MRE_MIATA_NB2_MAP 11
 #define ET_MRE_NEW_TEST_BOARD 31
 #define ET_MRE_OLD_TEST_BOARD 30
+#define ET_ROVER_V8 10
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define etb_dFactor_offset 1744
@@ -523,12 +543,9 @@
 #define fuelLevelEmptyTankVoltage_offset 684
 #define fuelLevelFullTankVoltage_offset 688
 #define fuelLevelSensor_offset 514
-#define fuelLoadBins_offset 16160
 #define fuelPumpPin_offset 658
 #define fuelPumpPinMode_offset 659
 #define fuelRailPressure_offset 1756
-#define fuelRpmBins_offset 16224
-#define fuelTable_offset 15136
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -589,6 +606,7 @@
 #define GAUGE_NAME_TIME "Time"
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_TPS "TPS"
+#define GAUGE_NAME_TPS2 "TPS2"
 #define GAUGE_NAME_TRG_ERR "trg err"
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_VERSION "firmware"
@@ -1074,8 +1092,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2020.07.23
-#define SIGNATURE_HASH 2227197319
+#define SIGNATURE_DATE 2020.08.08
+#define SIGNATURE_HASH 702334611
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1298,35 +1316,67 @@
 #define triggerSimulatorPins2_offset 737
 #define triggerSimulatorPins3_offset 738
 #define TS_BURN_COMMAND 'B'
+#define TS_BURN_COMMAND_char B
 #define TS_CHUNK_WRITE_COMMAND 'C'
+#define TS_CHUNK_WRITE_COMMAND_char C
 #define TS_COMMAND_F 'F'
+#define TS_COMMAND_F_char F
 #define TS_COMPOSITE_DISABLE 2
 #define TS_COMPOSITE_ENABLE 1
 #define TS_CRC_CHECK_COMMAND 'k'
+#define TS_CRC_CHECK_COMMAND_char k
 #define TS_EXECUTE 'E'
+#define TS_EXECUTE_char E
 #define TS_FILE_VERSION 20200310
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
+#define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY_char 8
 #define TS_GET_CONFIG_ERROR 'e'
+#define TS_GET_CONFIG_ERROR_char e
 #define TS_GET_FIRMWARE_VERSION 'V'
+#define TS_GET_FIRMWARE_VERSION_char V
 #define TS_GET_LOGGER_GET_BUFFER 'L'
+#define TS_GET_LOGGER_GET_BUFFER_char L
 #define TS_GET_STRUCT '9'
+#define TS_GET_STRUCT_char 9
 #define TS_GET_TEXT 'G'
+#define TS_GET_TEXT_char G
 #define TS_HELLO_COMMAND 'S'
-#define TS_IO_TEST_COMMAND 'w'
+#define TS_HELLO_COMMAND_char S
+#define TS_IO_TEST_COMMAND 'Z'
+#define TS_IO_TEST_COMMAND_char Z
 #define TS_ONLINE_PROTOCOL 'z'
+#define TS_ONLINE_PROTOCOL_char z
 #define TS_OUTPUT_COMMAND 'O'
-#define TS_OUTPUT_SIZE 248
+#define TS_OUTPUT_COMMAND_char O
+#define TS_OUTPUT_SIZE 288
 #define TS_PAGE_COMMAND 'P'
-#define TS_PERF_TRACE_BEGIN 'r'
+#define TS_PAGE_COMMAND_char P
+#define TS_PERF_TRACE_BEGIN '_'
+#define TS_PERF_TRACE_BEGIN_char _
 #define TS_PERF_TRACE_GET_BUFFER 'b'
+#define TS_PERF_TRACE_GET_BUFFER_char b
 #define TS_PROTOCOL "001"
 #define TS_READ_COMMAND 'R'
+#define TS_READ_COMMAND_char R
 #define TS_RESPONSE_BURN_OK 4
 #define TS_RESPONSE_COMMAND_OK 7
 #define TS_RESPONSE_OK 0
+#define TS_SD_PROTOCOL_DO 1
+#define TS_SD_PROTOCOL_FETCH_COMPRESSED 8
+#define TS_SD_PROTOCOL_FETCH_DATA 0x14
+#define TS_SD_PROTOCOL_FETCH_INFO 0x11
+#define TS_SD_PROTOCOL_READ_DIR 2
+#define TS_SD_PROTOCOL_REMOVE_FILE 6
+#define TS_SD_PROTOCOL_RTC 7
+#define TS_SD_R_COMMAND 'r'
+#define TS_SD_R_COMMAND_char r
+#define TS_SD_W_COMMAND 'w'
+#define TS_SD_W_COMMAND_char w
 #define TS_SET_LOGGER_SWITCH 'l'
+#define TS_SET_LOGGER_SWITCH_char l
 #define ts_show_analog_divider true
 #define ts_show_auxserial_pins true
+#define ts_show_can2 true
 #define ts_show_can_pins true
 #define ts_show_cj125 true
 #define ts_show_egt true
@@ -1343,14 +1393,23 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2020.07.23.kin.2227197319"
+#define TS_SIGNATURE "rusEFI 2020.08.08.kin.702334611"
 #define TS_SINGLE_WRITE_COMMAND 'W'
+#define TS_SINGLE_WRITE_COMMAND_char W
+#define TS_TEST_COMMAND 't' // 0x74
 #define tunerStudioSerialSpeed_offset 728
 #define twoWireBatchIgnition_offset 1476
 #define twoWireBatchInjection_offset 1476
 #define uartConsoleSerialSpeed_offset 2076
+#define un1used_former_warmup_target_afr_offset 2109
 #define unused1059_offset 3964
+#define unused1126_offset 2116
+#define unused1127_offset 2116
+#define unused1128_offset 2116
+#define unused1129_offset 2116
+#define unused1130_offset 2116
 #define unused1476b20_offset 1476
+#define unused15136_offset 15136
 #define unused2432_offset 2432
 #define unused244_1_offset 2420
 #define unused244_2_offset 2424
@@ -1369,8 +1428,8 @@
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
 #define unused_alFIn_offset 4024
-#define unused_former_warmup_target_afr_offset 2112
-#define unusedAt712_offset 712
+#define unused_former_warmup_target_afr2_offset 2111
+#define unused_former_warmup_target_afr_offset 2126
 #define unusedAt716_offset 716
 #define unusedAt720_offset 720
 #define unusedAt724_offset 724
@@ -1378,7 +1437,6 @@
 #define unusedAuxVoltage1_TODO_332_offset 2713
 #define unusedAuxVoltage2_TODO_332_offset 2714
 #define unusedBit4_1476_offset 1476
-#define unusedBit_251_11_offset 976
 #define unusedBit_251_12_offset 976
 #define unusedBit_251_13_offset 976
 #define unusedBit_251_14_offset 976
@@ -1400,6 +1458,30 @@
 #define unusedBit_284_30_offset 976
 #define unusedBit_284_31_offset 976
 #define unusedBit_34_31_offset 76
+#define unusedBit_477_10_offset 2116
+#define unusedBit_477_11_offset 2116
+#define unusedBit_477_12_offset 2116
+#define unusedBit_477_13_offset 2116
+#define unusedBit_477_14_offset 2116
+#define unusedBit_477_15_offset 2116
+#define unusedBit_477_16_offset 2116
+#define unusedBit_477_17_offset 2116
+#define unusedBit_477_18_offset 2116
+#define unusedBit_477_19_offset 2116
+#define unusedBit_477_20_offset 2116
+#define unusedBit_477_21_offset 2116
+#define unusedBit_477_22_offset 2116
+#define unusedBit_477_23_offset 2116
+#define unusedBit_477_24_offset 2116
+#define unusedBit_477_25_offset 2116
+#define unusedBit_477_26_offset 2116
+#define unusedBit_477_27_offset 2116
+#define unusedBit_477_28_offset 2116
+#define unusedBit_477_29_offset 2116
+#define unusedBit_477_30_offset 2116
+#define unusedBit_477_31_offset 2116
+#define unusedBit_477_8_offset 2116
+#define unusedBit_477_9_offset 2116
 #define unusedFlexFuelSensor_offset 3100
 #define unusedHere_offset 762
 #define unusedHereWeHave_offset 1464
@@ -1456,6 +1538,7 @@
 #define vehicleSpeedCoef_offset 476
 #define vehicleSpeedSensorInputPin_offset 968
 #define veLoadBins_offset 18464
+#define verboseCan2BaseAddress_offset 2112
 #define verboseCanBaseAddress_offset 756
 #define verboseTLE8888_offset 744
 #define verboseTriggerSynchDetails_offset 1476

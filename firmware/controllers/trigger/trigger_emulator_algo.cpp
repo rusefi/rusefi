@@ -179,7 +179,7 @@ void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUF
 			s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
-	addConsoleActionI("rpm", setTriggerEmulatorRPM);
+	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
 	addConsoleActionI("stop_stimulator_at_index", setEmulatorAtIndex);
 	addConsoleAction("resume_stimulator", resumeStimulator);
 }

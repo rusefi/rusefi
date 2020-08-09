@@ -64,7 +64,7 @@ float clampF(float min, float clamp, float max) {
 }
 
 uint32_t efiStrlen(const char *param) {
-	register const char *s;
+	const char *s;
 	for (s = param; *s; ++s)
 		;
 	return (s - param);
@@ -96,7 +96,7 @@ bool startsWith(const char *line, const char *prefix) {
 }
 
 int indexOf(const char *string, char ch) {
-	// todo: there should be a standard function for this
+	// a standard function for this is strnchr?
 	// todo: on the other hand MISRA wants us not to use standard headers
 	int len = efiStrlen(string);
 	for (int i = 0; i < len; i++) {

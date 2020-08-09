@@ -324,6 +324,8 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
 	printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
+	printAnalogChannelInfo("AuxT1", engineConfiguration->auxTempSensor1.adcChannel);
+	printAnalogChannelInfo("AuxT2", engineConfiguration->auxTempSensor2.adcChannel);
 	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		adc_channel_e ch = engineConfiguration->fsioAdc[i];
@@ -693,7 +695,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * linking process which is the way to raise the alarm
  *
  * You get "cannot move location counter backwards" linker error when you run out of RAM. When you run out of RAM you shall reduce these
- * UNUSED_SIZE contants.
+ * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
 #define RAM_UNUSED_SIZE 8600

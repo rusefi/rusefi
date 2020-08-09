@@ -1,25 +1,30 @@
 package com.rusefi;
 
-import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.proxy.BaseBroadcastingThread;
+import com.rusefi.proxy.NetworkConnectorContext;
+import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.tools.online.PublicSession;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
+import static com.rusefi.TestHelper.LOCALHOST;
+import static com.rusefi.TestHelper.assertLatch;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * integration test of the rusEFI online backend process
@@ -28,17 +33,9 @@ import static org.junit.Assert.assertTrue;
  * https://github.com/rusefi/web_backend/blob/master/documentation/rusEFI%20remote.png
  */
 public class ServerTest {
-    private final static Logger logger = Logger.CONSOLE;
-
     @Before
-    public void setTestCertificate() throws MalformedURLException {
-        commonServerTest();
-    }
-
-    static void commonServerTest() throws MalformedURLException {
-        HttpUtil.RUSEFI_PROXY_HOSTNAME = TestHelper.LOCALHOST;
-
-        rusEFISSLContext.init("certificate/test_pkcs12.jks", "password");
+    public void setup() throws MalformedURLException {
+        BackendTestHelper.commonServerTest();
     }
 
     @Test
@@ -53,7 +50,7 @@ public class ServerTest {
         CountDownLatch allConnected = new CountDownLatch(1);
 
 
-        try (Backend backend = new Backend(createTestUserResolver(), httpPort) {
+        try (Backend backend = new Backend(BackendTestHelper.createTestUserResolver(), httpPort) {
             @Override
             public void register(ControllerConnectionState clientConnectionState) {
                 super.register(clientConnectionState);
@@ -75,14 +72,14 @@ public class ServerTest {
         }) {
 
             backend.runControllerConnector(serverPortForControllers, parameter -> serverCreated.countDown());
-            assertTrue(serverCreated.await(30, TimeUnit.SECONDS));
+            assertLatch(serverCreated);
             assertEquals(0, backend.getControllersCount());
 
 
-            new MockRusEfiDevice(MockRusEfiDevice.TEST_TOKEN_1, "rusEFI 2020.07.06.frankenso_na6.2468827536", logger).connect(serverPortForControllers);
-            new MockRusEfiDevice("12345678-1234-1234-1234-123456789012", "rusEFI 2020.07.11.proteus_f4.1986715563", logger).connect(serverPortForControllers);
+            new MockNetworkConnector(TestHelper.TEST_TOKEN_1, TestHelper.TEST_SIGNATURE_1).connect(serverPortForControllers);
+            new MockNetworkConnector("12345678-1234-1234-1234-123456789012", TestHelper.TEST_SIGNATURE_2).connect(serverPortForControllers);
 
-            assertTrue("onConnected", onConnected.await(30, TimeUnit.SECONDS));
+            assertLatch("onConnected", onConnected);
 
             List<ControllerConnectionState> clients = backend.getControllers();
             assertEquals(2, clients.size());
@@ -92,7 +89,7 @@ public class ServerTest {
 
             allConnected.countDown();
 
-            assertTrue("allClientsDisconnected", allClientsDisconnected.await(30, TimeUnit.SECONDS));
+            assertLatch("allClientsDisconnected", allClientsDisconnected);
         }
     }
 
@@ -126,7 +123,7 @@ covered by FullServerTest
             TestHelper.createVirtualController(controllerPort, new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE), logger);
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
-            SessionDetails deviceSessionDetails = NetworkConnector.runNetworkConnector(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers);
+            SessionDetails deviceSessionDetails = NetworkConnector.start(MockRusEfiDevice.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, serverPortForControllers);
 
             assertTrue(controllerRegistered.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
 
@@ -143,7 +140,7 @@ covered by FullServerTest
         int httpPort = 8001;
         int serverPortForRemoteUsers = 6801;
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
-        try (Backend backend = new Backend(createTestUserResolver(), httpPort) {
+        try (Backend backend = new Backend(BackendTestHelper.createTestUserResolver(), httpPort) {
             @Override
             protected void onDisconnectApplication(ApplicationConnectionState applicationConnectionState) {
                 super.onDisconnectApplication(applicationConnectionState);
@@ -151,19 +148,14 @@ covered by FullServerTest
             }
         }) {
 
-            TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
+            BackendTestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
             // start authenticator
-            IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
+            IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers);
             new HelloCommand("hello").handle(authenticatorToProxyStream);
 
-            assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
+            assertLatch(disconnectedCountDownLatch);
         }
-    }
-
-    @NotNull
-    private static UserDetailsResolver createTestUserResolver() {
-        return authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));
     }
 
     @Test
@@ -174,7 +166,7 @@ covered by FullServerTest
 
         CountDownLatch disconnectedCountDownLatch = new CountDownLatch(1);
 
-        try (Backend backend = new Backend(createTestUserResolver(), httpPort) {
+        try (Backend backend = new Backend(BackendTestHelper.createTestUserResolver(), httpPort) {
             @Override
             protected void onDisconnectApplication(ApplicationConnectionState applicationConnectionState) {
                 super.onDisconnectApplication(applicationConnectionState);
@@ -182,17 +174,42 @@ covered by FullServerTest
             }
         }) {
 
-            TestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
+            BackendTestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
-            SessionDetails sessionDetails = MockRusEfiDevice.createTestSession(MockRusEfiDevice.TEST_TOKEN_1, Fields.TS_SIGNATURE);
-            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, 123);
+            SessionDetails sessionDetails = TestHelper.createTestSession(TestHelper.TEST_TOKEN_1, Fields.TS_SIGNATURE);
+            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, BackendTestHelper.createTestUserResolver().apply(TestHelper.TEST_TOKEN_1));
 
             // start authenticator
-            IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers, logger);
-            LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(applicationRequest);
-            localApplicationProxy.run(authenticatorToProxyStream);
+            IoStream authenticatorToProxyStream = TestHelper.secureConnectToLocalhost(serverPortForRemoteUsers);
+            LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);
 
-            assertTrue(disconnectedCountDownLatch.await(30, TimeUnit.SECONDS));
+            assertLatch(disconnectedCountDownLatch);
         }
+    }
+
+    private static class MockNetworkConnector {
+        private final SessionDetails sessionDetails;
+
+        private MockNetworkConnector(String authToken, String signature) {
+            sessionDetails = TestHelper.createTestSession(authToken, signature);
+        }
+
+        public void connect(int serverPort) throws IOException {
+            Socket socket = rusEFISSLContext.getSSLSocket(LOCALHOST, serverPort);
+            BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(socket,
+                    sessionDetails,
+                    TcpIoStream.DisconnectListener.VOID, new NetworkConnectorContext()) {
+                @Override
+                protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
+                    super.handleCommand(packet, stream);
+
+                    if (packet.getPacket()[0] == Fields.TS_OUTPUT_COMMAND) {
+                        GetOutputsCommand.sendOutput(stream);
+                    }
+                }
+            };
+            baseBroadcastingThread.start();
+        }
+
     }
 }

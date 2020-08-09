@@ -83,7 +83,6 @@ void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelPumpPin = GPIOE_6;
 
 	// todo: extract a method? figure out something smarter
-	setFuelRpmBin(800, 15000 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 15000 PASS_CONFIG_PARAMETER_SUFFIX);
 	setLinearCurve(config->veRpmBins, 15000, 7000, 1);
 	setLinearCurve(config->afrRpmBins, 15000, 7000, 1);

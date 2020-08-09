@@ -7,10 +7,7 @@ import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.shared.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -26,10 +23,6 @@ public class TcpIoStream extends AbstractIoStream {
     private final Socket socket;
     private final IncomingDataBuffer dataBuffer;
 
-    public TcpIoStream(Socket socket) throws IOException {
-        this("", socket);
-    }
-
     public TcpIoStream(String loggingPrefix, Socket socket) throws IOException {
         this(loggingPrefix, socket, DisconnectListener.VOID);
     }
@@ -41,17 +34,20 @@ public class TcpIoStream extends AbstractIoStream {
             throw new NullPointerException("socket");
         this.socket = socket;
         InputStream input = new BufferedInputStream(socket.getInputStream());
-        OutputStream output = socket.getOutputStream();
-        if (output == null)
-            throw new NullPointerException("output");
-        this.output = output;
+        this.output = new BufferedOutputStream(socket.getOutputStream());
         this.input = input;
         this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this);
     }
 
     @Override
     public void close() {
-        super.close();
+        // we need to guarantee only one onDisconnect invocation for retry logic to be healthy
+        synchronized (this) {
+            if (!isClosed()) {
+                super.close();
+                disconnectListener.onDisconnect("on close");
+            }
+        }
         FileUtil.close(socket);
     }
 
@@ -67,6 +63,7 @@ public class TcpIoStream extends AbstractIoStream {
 
     @Override
     public void write(byte[] bytes) throws IOException {
+        super.write(bytes);
         output.write(bytes);
     }
 
@@ -78,13 +75,13 @@ public class TcpIoStream extends AbstractIoStream {
 
     @Override
     public void setInputListener(final DataListener listener) {
-        ByteReader.runReaderLoop(loggingPrefix, listener, input::read, disconnectListener);
+        ByteReader.runReaderLoop(loggingPrefix, listener, input::read, this);
     }
 
     public interface DisconnectListener {
-        DisconnectListener VOID = () -> {
+        DisconnectListener VOID = (String message) -> {
 
         };
-        void onDisconnect();
+        void onDisconnect(String message);
     }
 }

@@ -11,13 +11,13 @@ BOOTLOADER_CODE_DESTINATION_FILE=$BOOTLOADER_CODE_DESTINATION_PATH/bootloader_ge
 echo "$SCRIPT_NAME: Starting bootloader compilation..."
 make -j4 -f src/Makefile $1 $2 $3
 
-[ $? -eq 0 ] || { echo "make compilation failed"; exit 1; }
+# downstream scripts detect error condition by checking if the output file exists so we need to make sure we remove it
+[ $? -eq 0 ] || { echo "ERROR: bootloader compilation failed"; rm -f blbuild/$BOOTLOADER_CODE_DESTINATION_FILE ; exit 1; }
  
 echo "$SCRIPT_NAME: Bootloader build success."
 
 cd blbuild
 # Generate a header file with binary bootloader code
-rm -f $BOOTLOADER_CODE_DESTINATION_FILE
 java -jar ../../../java_tools/bin2header.jar bootloader.bin "$BOOTLOADER_CODE_DESTINATION_FILE" "$BOOTLOADER_COMMENT static const volatile uint8_t bootloader_code[] BOOTLOADER_SECTION"
 [ $? -eq 0 ] || { echo "$SCRIPT_NAME: error generating header file"; exit 1; }
 cd ..

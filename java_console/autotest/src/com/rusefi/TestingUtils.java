@@ -1,7 +1,9 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
+import com.rusefi.functional_tests.BaseTest;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
@@ -20,6 +23,8 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  *         3/19/14.
  */
 public class TestingUtils {
+    private static final Logging log = getLogging(TestingUtils.class);
+
     static boolean isRealHardware;
 
     static void assertTrue(String msg, boolean b) {
@@ -48,7 +53,7 @@ public class TestingUtils {
     }
 
     private static void fail(String message) {
-        FileLog.MAIN.logLine("FAILURE: " + message);
+        log.info("FAILURE: " + message);
         IllegalStateException exception = new IllegalStateException(message);
         FileLog.MAIN.log(exception);
         throw exception;
@@ -100,7 +105,7 @@ public class TestingUtils {
         }
     }
 
-    static void assertNull(String msg, Object value) {
+    public static void assertNull(String msg, Object value) {
         assertTrue(msg, value == null);
     }
 
@@ -140,7 +145,7 @@ public class TestingUtils {
         int timeoutMs = 60 * Timeouts.SECOND;
         long waitStartTime = System.currentTimeMillis();
         IoUtil.wait(engineChartLatch, timeoutMs);
-        FileLog.MAIN.logLine("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + AutoTest.currentEngineType);
+        log.info("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + BaseTest.currentEngineType);
         commandQueue.getLinkManager().getEngineState().replaceStringValueAction(EngineReport.ENGINE_CHART, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         if (result.get() == null)
             throw new IllegalStateException("Chart timeout: " + timeoutMs);

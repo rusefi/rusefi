@@ -20,7 +20,7 @@ public:
 
 private:
 	// Steinhart-Hart coefficients
-	float m_a;
-	float m_b;
-	float m_c;
+	float m_a = 0;
+	float m_b = 0;
+	float m_c = 0;
 };

@@ -182,16 +182,4 @@ abstract public class ByteBuffer {
         int b0 = get() & 255;
         return b0;
     }
-
-    /**
-     * Puts a little-endian 32-bit integer into the buffer.
-     *
-     * @param x
-     */
-    public void putInt(int x) {
-        put((byte) x);
-        put((byte) (x >>> 8));
-        put((byte) (x >>> 16));
-        put((byte) (x >>> 24));
-    }
 }

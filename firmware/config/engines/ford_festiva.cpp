@@ -80,12 +80,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->globalFuelCorrection = 0.75;
 	engineConfiguration->specs.displacement = 1.839;
-//	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
-//	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
-
-	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	static const float veRpmBins[] = 
 	{
@@ -110,7 +105,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyArray(config->veRpmBins, veRpmBins);
 
 
-	copyFuelTable(racingFestivaVeTable, config->veTable);
+	MEMCPY(config->veTable, racingFestivaVeTable);
 
 //	engineConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
 //	engineConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
@@ -157,8 +152,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setLinearCurve(config->ignitionLoadBins, 20, 105, 5);
 	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
-	// set_whole_fuel_map 5
-	setWholeFuelMap(5 PASS_CONFIG_PARAMETER_SUFFIX);
 	setAfrMap(config->afrTable, 13.5);
 
 	setSingleCoilDwell(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -281,7 +274,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyArray(config->ignitionRpmBins, ignitionRpmBins);
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTimingTable(racingFestivaIgnitionTable, config->ignitionTable);
+	MEMCPY(config->ignitionTable, racingFestivaIgnitionTable);
 #endif
 
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40;

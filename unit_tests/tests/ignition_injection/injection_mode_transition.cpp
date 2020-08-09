@@ -31,6 +31,9 @@ TEST(fuelControl, transitionIssue1592) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
+	EXPECT_CALL(eth.mockAirmass, getAirmass(400))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
 	// This is easiest to trip on a wheel that requires sync
 	engineConfiguration->trigger.customTotalToothCount = 6;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
@@ -38,10 +41,6 @@ TEST(fuelControl, transitionIssue1592) {
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
-
-	extern fuel_Map3D_t fuelMap;
-	fuelMap.setAll(13);
 	extern fuel_Map3D_t fuelPhaseMap;
 	fuelPhaseMap.setAll(0);
 	setArrayValues(config->crankingFuelCoef, 1.0f);

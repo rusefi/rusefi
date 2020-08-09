@@ -40,9 +40,6 @@ void setMitsubishiConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set cranking_timing_angle 715
 	engineConfiguration->crankingTimingAngle = -715;
 
-	// set_whole_fuel_map 3
-	setWholeFuelMap(3 PASS_CONFIG_PARAMETER_SUFFIX);
-
 //	/**
 //	 * 29150 Ohm @ 40C
 //	 * 10160 Ohm @ 70C

@@ -49,11 +49,11 @@ enable2ndByteCanID = false
   
 
    pageIdentifier      = "\x00\x00"
-   pageReadCommand     = "R\x00\x00%2o%2c"
-   burnCommand         = "B\x00\x00"
-   pageActivate        = "P\x00\x00"
-   pageValueWrite      = "W\x00\x00%2o%v"
-   pageChunkWrite      = "C\x00\x00%2o%2c%v"
+   pageReadCommand     = "@@TS_READ_COMMAND_char@@\x00\x00%2o%2c"
+   burnCommand         = "@@TS_BURN_COMMAND_char@@\x00\x00"
+   pageActivate        = "@@TS_PAGE_COMMAND_char@@\x00\x00"
+   pageValueWrite      = "@@TS_SINGLE_WRITE_COMMAND_char@@\x00\x00%2o%v"
+   pageChunkWrite      = "@@TS_CHUNK_WRITE_COMMAND_char@@\x00\x00%2o%2c%v"
    ; todo: make this command shorter one day, no need to have all these zeros
    crc32CheckCommand   = "k\x00\x00\x00\x00\x00\x00"
    retrieveConfigError = "e"
@@ -149,12 +149,6 @@ enable2ndByteCanID = false
          filter = minTps, "Minimum TPS", TPSValue,       <       , 1,       , true
 
 
-;[VeAnalyze]
-;       fuelAnalyzeMap = fuelTableTbl, afrTableTbl, AFRValue, egoCorrection , { 1 }
-;        filter = minRPMFilter, "Minimum RPM", RPMValue,           <       , 500,      , true
-
-
-
 [OutputChannels]
 
    ochGetCommand    = "O%2o%2c"
@@ -206,8 +200,8 @@ enable2ndByteCanID = false
      internalMcuTemperature = scalar,S08, 11,    "deg C",    1,         0
       coolant         = scalar,  S16,     12,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
       intake          = scalar,  S16,     14,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-; todo: aux1
-; todo: aux2
+      auxt1           = scalar,  S16,     16,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
+      auxt2           = scalar,  S16,     18,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
       
 
 ; throttle, pedal
@@ -348,14 +342,13 @@ enable2ndByteCanID = false
 
 	; we use this to match logs to tunes
 	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
+    sd_status         = scalar,  U08,    246,  "", 1.0, 0.0
 
 ;
 ; see TunerStudioOutputChannels struct
 ;
 
 ; todo: generate this section programatically
-	LM_PLAIN_MAF = {0},
-	LM_ALPHA_N = {1},
 	LM_SPEED_DENSITY = {3},
 	LM_REAL_MAF = {4}
 
@@ -706,36 +699,6 @@ enable2ndByteCanID = false
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
-   table = fuelTableMAFTbl,  fuelTableMAFMap,  "Fuel Table",   1
-   	  topicHelp = "fuelHelp"
-      ;       constant, variable
-      xBins       = fuelRpmBins,  RPMValue
-      yBins       = fuelLoadBins,  MAFValue
-      zBins       = fuelTable
-;      gridHeight  = 2.0
-      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
-      upDownLabel = "(RICHER)", "(LEANER)"
-
-   table = fuelTableTPSTbl,  fuelTableTPSMap,  "Fuel Table",   1
-   		topicHelp = "fuelHelp"
-      ;       constant, variable
-      xBins       = fuelRpmBins,  RPMValue
-      yBins       = fuelLoadBins,  TPSValue
-      zBins       = fuelTable
-;      gridHeight  = 2.0
-      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
-      upDownLabel = "(RICHER)", "(LEANER)"
-
-   table = fuelTableELTbl,  fuelTableELMap,  "Fuel Table",   1
-   topicHelp = "fuelHelp"
-      ;       constant, variable
-      xBins       = fuelRpmBins,  RPMValue
-      yBins       = fuelLoadBins,  engineLoad
-      zBins       = fuelTable
-;      gridHeight  = 2.0
-      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
-      upDownLabel = "(RICHER)", "(LEANER)"
-
 ; move table into a panel? or find a way to add a link to https://rusefi.com//wiki/index.php?title=Manual:Software:TPSTPS
    table = tpsTpsAccelTbl,  tpsTpsAccelMap,  "TPS/TPS Acceleration Extra Fuel(ms)",   1
    	topicHelp = "tpstpsHelp"
@@ -942,6 +905,8 @@ gaugeCategory = Sensors - Extra 1
    internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    75,  100,   0,   0
    OilPressGauge   	 = oilPressure,   "Oil Pressure",       "kPa",        0,    750,      35,     75,     550,   700,   0,   0	
    idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
+   AuxT1Gauge        = auxt1,     "Aux temp 1",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   AuxT2Gauge        = auxt2,     "Aux temp 2",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
 
 gaugeCategory = Ignition
    ignadvGauge = ignitionAdvance,       "Ignition timing",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
@@ -1042,6 +1007,11 @@ gaugeCategory = Sensors - Raw
     indicator = { isIgnitionEnabledIndicator}, "no ignition",   "ignition",   yellow, black, white,   black
     indicator = { ind_injection_enabled}, "no injection",   "injection",   yellow, black, white,   black
     indicator = { ind_isTriggerError}, "trigger ok",      "trigger err",       white,  black,  red, black
+
+   indicator = { sd_status & 1}, "No SD", "SD in",             white, black, green, black
+   indicator = { sd_status & 4}, "SD ready", "SD ready",       white, black, green, black
+   indicator = { sd_status & 8}, "SD Log", "SD Log",           white, black, green, black
+   indicator = { sd_status & 16}, "SD Err", "SD Err",           white, black, red, black
     
 	; this is required so that the "config error" feature works in TS 
 	; don't change this line - TS is looking for an indicator with particular text/styling
@@ -1086,6 +1056,7 @@ gaugeCategory = Sensors - Raw
    entry = intake,          @@GAUGE_NAME_IAT@@,         float,  "%.2f"
    entry = oilPressure,		"Oil Press",   float,  "%.1f"
    entry = TPSValue,        @@GAUGE_NAME_TPS@@,         float,  "%.2f"
+   entry = TPS2Value,       @@GAUGE_NAME_TPS2@@,        float, "%.2f"
    entry = MAFValue,        @@GAUGE_NAME_MAF@@,         float,  "%.2f"
    entry = MAPValue,        @@GAUGE_NAME_MAP@@,         float,  "%.1f"
    entry = AFRValue,        @@GAUGE_NAME_AFR@@,         float,  "%.2f"
@@ -1200,6 +1171,10 @@ gaugeCategory = Sensors - Raw
 [Menu]
 
 menuDialog = main
+; see #1653
+;	menu = "Data Logging"
+;		subMenu = std_ms3SdConsole, "Browse / Import SD Card"
+
 	menu = "&Base &Engine"
 		subMenu = engineChars,				"Base engine"
 		subMenu = triggerConfiguration,		"Trigger"
@@ -1230,7 +1205,6 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Fuel table/VE
-		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY && fuelAlgorithm != LM_REAL_MAF}
 		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1}
 		subMenu = injPhaseTableTbl,         "Injection phase", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
@@ -1370,6 +1344,8 @@ menuDialog = main
 		subMenu = monitoringSettings,		"rusEfi console"
 		subMenu = std_separator
 		
+		subMenu = canBusMain,				"CAN Bus Communication"
+		subMenu = sdCard,					"SD Card Logger" @@if_ts_show_sd_card
 		subMenu = connection,            	"Connection"
 		subMenu = tle8888,					"TLE8888"
 		
@@ -1418,124 +1394,104 @@ menuDialog = main
 ; see TS_IO_TEST_COMMAND in firmware code
 ;
 
-cmd_test_spk1  = "w\x00\x12\x00\x01"
-cmd_test_spk2  = "w\x00\x12\x00\x02"
-cmd_test_spk3  = "w\x00\x12\x00\x03"
-cmd_test_spk4  = "w\x00\x12\x00\x04"
-cmd_test_spk5  = "w\x00\x12\x00\x05"
-cmd_test_spk6  = "w\x00\x12\x00\x06"
-cmd_test_spk7  = "w\x00\x12\x00\x07"
-cmd_test_spk8  = "w\x00\x12\x00\x08"
-cmd_test_spk9  = "w\x00\x12\x00\x09"
-cmd_test_spk10 = "w\x00\x12\x00\x0a"
-cmd_test_spk11 = "w\x00\x12\x00\x0b"
-cmd_test_spk12 = "w\x00\x12\x00\x0c"
-cmd_test_spk13 = "w\x00\x12\x00\x0d"
-cmd_test_spk14 = "w\x00\x12\x00\x0e"
-cmd_test_spk15 = "w\x00\x12\x00\x0f"
-cmd_test_spk16 = "w\x00\x12\x00\x10"
+cmd_test_spk1  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x01"
+cmd_test_spk2  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x02"
+cmd_test_spk3  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x03"
+cmd_test_spk4  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x04"
+cmd_test_spk5  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x05"
+cmd_test_spk6  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x06"
+cmd_test_spk7  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x07"
+cmd_test_spk8  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x08"
+cmd_test_spk9  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x09"
+cmd_test_spk10 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0a"
+cmd_test_spk11 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0b"
+cmd_test_spk12 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0c"
+cmd_test_spk13 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0d"
+cmd_test_spk14 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0e"
+cmd_test_spk15 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0f"
+cmd_test_spk16 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x10"
 		
 		
-cmd_test_inj1  = "w\x00\x13\x00\x01"
-cmd_test_inj2  = "w\x00\x13\x00\x02"
-cmd_test_inj3  = "w\x00\x13\x00\x03"
-cmd_test_inj4  = "w\x00\x13\x00\x04"
-cmd_test_inj5  = "w\x00\x13\x00\x05"
-cmd_test_inj6  = "w\x00\x13\x00\x06"
-cmd_test_inj7  = "w\x00\x13\x00\x07"
-cmd_test_inj8  = "w\x00\x13\x00\x08"
-cmd_test_inj9  = "w\x00\x13\x00\x09"
-cmd_test_inj10 = "w\x00\x13\x00\x0a"
-cmd_test_inj11 = "w\x00\x13\x00\x0b"
-cmd_test_inj12 = "w\x00\x13\x00\x0c"
-cmd_test_inj13 = "w\x00\x13\x00\x0d"
-cmd_test_inj14 = "w\x00\x13\x00\x0e"
-cmd_test_inj15 = "w\x00\x13\x00\x0f"
-cmd_test_inj16 = "w\x00\x13\x00\x10"
+cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x01"
+cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x02"
+cmd_test_inj3  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x03"
+cmd_test_inj4  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x04"
+cmd_test_inj5  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x05"
+cmd_test_inj6  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x06"
+cmd_test_inj7  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x07"
+cmd_test_inj8  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x08"
+cmd_test_inj9  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x09"
+cmd_test_inj10 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0a"
+cmd_test_inj11 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0b"
+cmd_test_inj12 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0c"
+cmd_test_inj13 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0d"
+cmd_test_inj14 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0e"
+cmd_test_inj15 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0f"
+cmd_test_inj16 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x10"
 
-cmd_test_fuel_pump           = "w\x00\x14\x00\x01"
-cmd_calibrate_tps_1_closed   = "w\x00\x14\x00\x02"
-cmd_calibrate_tps_1_wot      = "w\x00\x14\x00\x03"
-cmd_calibrate_tps_2_closed   = "w\x00\x14\x00\x04"
-cmd_calibrate_tps_2_wot      = "w\x00\x14\x00\x05"
-cmd_calibrate_pedal_up       = "w\x00\x14\x00\x06"
-cmd_calibrate_pedal_down     = "w\x00\x14\x00\x07"
-cmd_tle8888_init     		 = "w\x00\x14\x00\x08"
-cmd_test_ac_relay     		 = "w\x00\x14\x00\x09"
-cmd_write_config     		 = "w\x00\x14\x00\x0A"
-cmd_test_starter_relay     	 = "w\x00\x14\x00\x0B"
-cmd_etb_autotune             = "w\x00\x14\x00\x0C"
-cmd_enable_self_stim         = "w\x00\x14\x00\x0D"
-cmb_etb_auto_calibrate       = "w\x00\x14\x00\x0E"
-cmd_disable_self_stim        = "w\x00\x14\x00\x0F"
-cmd_etb_autotune_stop        = "w\x00\x14\x00\x10"
+cmd_test_fuel_pump           = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x01"
+cmd_calibrate_tps_1_closed   = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x02"
+cmd_calibrate_tps_1_wot      = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x03"
+cmd_calibrate_tps_2_closed   = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x04"
+cmd_calibrate_tps_2_wot      = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x05"
+cmd_calibrate_pedal_up       = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x06"
+cmd_calibrate_pedal_down     = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x07"
+cmd_tle8888_init     		 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x08"
+cmd_test_ac_relay     		 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x09"
+cmd_write_config     		 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0A"
+cmd_test_starter_relay     	 = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0B"
+cmd_etb_autotune             = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0C"
+cmd_enable_self_stim         = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0D"
+cmb_etb_auto_calibrate       = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0E"
+cmd_disable_self_stim        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x0F"
+cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@\x00\x14\x00\x10"
 
-cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
-cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
-cmd_test_idle_valve          = "w\x00\x17\x00\x01"
-cmd_cj125_calibrate          = "w\x00\x18\x00\x00"
-cmd_call_from_pit            = "w\x00\x20\x34\x56"
-cmd_stop_engine              = "w\x00\x79\x00\x00"
+cmd_test_radiator_fan        = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x01"
+cmd_test_check_engine_light  = "@@TS_IO_TEST_COMMAND_char@@\x00\x16\x00\x01"
+cmd_test_idle_valve          = "@@TS_IO_TEST_COMMAND_char@@\x00\x17\x00\x01"
+cmd_cj125_calibrate          = "@@TS_IO_TEST_COMMAND_char@@\x00\x18\x00\x00"
+cmd_call_from_pit            = "@@TS_IO_TEST_COMMAND_char@@\x00\x20\x34\x56"
+cmd_stop_engine              = "@@TS_IO_TEST_COMMAND_char@@\x00\x79\x00\x00"
 
 ; reboot ECU
-cmd_reset_controller         = "w\x00\xbb\x00\x00"
+cmd_reset_controller         = "@@TS_IO_TEST_COMMAND_char@@\x00\xbb\x00\x00"
 ; jump to DFU mode
-cmd_dfu         			 = "w\x00\xba\x00\x00"
+cmd_dfu         			 = "@@TS_IO_TEST_COMMAND_char@@\x00\xba\x00\x00"
 
 ; See 'executeTSCommand' in firmware source code
 
 
 ; MRE_MIATA_NB2_MAP = 11
-cmd_set_engine_type_microRusEFI_Miata_NB2_MAP		= "w\x00\x30@@ET_MRE_MIATA_NB2_MAP_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NB2_MAP		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NB2_MAP_16_hex@@"
 
 ; MRE_MIATA_NA6 12
-cmd_set_engine_type_microRusEFI_Miata_NA6			= "w\x00\x30@@ET_MRE_MIATA_NA6_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NA6_VAF_16_hex@@"
+
+cmd_set_engine_type_microRusEFI_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NA6_MAP_16_hex@@"
+
 
 ; MRE_MIATA_NB2_MAF = 15
-cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "w\x00\x30@@ET_MRE_MIATA_NB2_MAF_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NB2_MAF_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_Defaults			= "w\x00\x30@@ET_MRE_DEFAULTS_16_hex@@"
+cmd_set_engine_type_microRusEFI_Defaults			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_DEFAULTS_16_hex@@"
 
 ; MIATA_NA6_MAP = 41
-cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "w\x00\x30@@ET_FRANKENSO_MIATA_NA6_16_hex@@"
+cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_FRANKENSO_MIATA_NA6_16_hex@@"
 ; MIATA_NA6_VAF = 57
-cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "w\x00\x30@@ET_FRANKENSO_MIATA_NA6_VAF_16_hex@@"
+cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_FRANKENSO_MIATA_NA6_VAF_16_hex@@"
 ; MAZDA_MIATA_2003 = 47
-cmd_set_engine_type_Frankenso_Miata_NB2 			= "w\x00\x30@@ET_FRANKENSO_MIATA_NB2_16_hex@@"
+cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_FRANKENSO_MIATA_NB2_16_hex@@"
 
-cmd_set_engine_type_Proteus_M73   					= "w\x00\x30@@ET_BMW_M73_PROTEUS_16_hex@@"
+cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_BMW_M73_PROTEUS_16_hex@@"
 
 
 ; ETB_BENCH_ENGINE = 58
-cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
+cmd_set_engine_type_etb_test				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30\x00\x3A"
 ; ETB_BENCH_ENGINE = 59
-cmd_set_engine_type_8888_test				= "w\x00\x30\x00\x3B"
-cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
+cmd_set_engine_type_8888_test				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30\x00\x3B"
+cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		
 [UserDefined]
-	dialog = fuelTableBottomDialog, "", card
-		panel = fuelTableMAFTbl, Center, {fuelAlgorithm==LM_PLAIN_MAF}
-		panel = fuelTableTPSTbl, Center, {fuelAlgorithm==LM_ALPHA_N}
-		panel = fuelTableELTbl, Center
-
-	dialog = fuelTableRight, "", yAxis
-	 	topicHelp = "https://rusefi.com/s/fuel"
-		displayOnlyField = "Fuel Algorithm",						fuelAlgorithm
-		panel = fuelTableBottomDialog, Center
-		liveGraph = fuelLive, "Fuel", South
-			graphLine = AFRValue
-		    graphLine = RPMValue
-
-	dialog = fuelTableGaugesPanel, yAxis
-		gauge = TPSGauge
-		gauge = MAFGauge
-		gauge = MAPGauge
-
-	dialog = fuelTableDialog, "Fuel Table", xAxis
-		topicHelp = "fuelHelp"
-		panel = fuelTableGaugesPanel
-		panel = fuelTableRight
-
 	dialog = tChargeRpmTpsSettings, "RPM+TPS Mode Settings"
 	    field = "We use these coefficients to approximate air/fuel charge temperate"
 	    field = "based on CLT and IAT, depending on RPM and TPM"
@@ -1794,20 +1750,24 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = pedalGauges, East
 
     dialog = mc33Dialog, "GDI Dreams" 
-    	field = mc33816_cs,								mc33816_cs
-		field = mc33816_rstb,							mc33816_rstb
-		field = mc33816_flag0,							mc33816_flag0
-		field = "mc33972 SPI",							mc33972spiDevice
-		field = mc33_hvolt,								mc33_hvolt
-		field = mc33_i_boost,							mc33_i_boost
-		field = mc33_i_peak,							mc33_i_peak
-		field = mc33_i_hold,							mc33_i_hold
-		field = mc33_t_max_boost,						mc33_t_max_boost
-		field = mc33_t_peak_off,						mc33_t_peak_off
-		field = mc33_t_peak_tot,						mc33_t_peak_tot
-		field = mc33_t_bypass,							mc33_t_bypass
-		field = mc33_t_hold_off,						mc33_t_hold_off
-		field = mc33_t_hold_tot,						mc33_t_hold_tot
+    	field = "MC33816 cs",							mc33816_cs
+		field = "MC33816 rstb",							mc33816_rstb
+		field = "MC33816 flag0",						mc33816_flag0
+		field = "MC33816 SPI Device",					mc33972spiDevice
+
+		field = "Boost voltage",						mc33_hvolt
+
+		field = "Boost current target",					mc33_i_boost
+		field = "Max boost time (timeout)",				mc33_t_max_boost
+		field = "Boost -> Peak Bypass Time",			mc33_t_peak_off
+
+		field = "Peak current target",					mc33_i_peak
+		field = "Peak time",							mc33_t_peak_tot
+		field = "Peak -> Hold Bypass Time",				mc33_t_bypass
+
+		field = "Hold current target",					mc33_i_hold
+		field = "mc33_t_hold_off ?????",				mc33_t_hold_off
+		field = "Maximum injection duration",			mc33_t_hold_tot
     
 
 ;			Sensor Inputs
@@ -2143,9 +2103,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = baroSettings, "Baro sensor"
 		field = "Baro ADC input",						baroSensor_hwChannel
-		field = baroSensor_lowValue,					baroSensor_lowValue, {baroSensor_hwChannel != 16}
-		field = baroSensor_highValue,					baroSensor_highValue, {baroSensor_hwChannel != 16}
-		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != 16}
+		field = baroSensor_lowValue,					baroSensor_lowValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = baroSensor_highValue,					baroSensor_highValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
 
 	dialog = mapCurves, "MAP sampling", yAxis
 		field = "isMapAveragingEnabled",				isMapAveragingEnabled
@@ -2171,7 +2131,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = egoSettings, "", yAxis
 		panel = egoSettings_IO
-		panel = egoSettings_sensor,	{afr_hwChannel != 16 && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
+		panel = egoSettings_sensor,	{afr_hwChannel != @@ADC_CHANNEL_NONE@@ && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
 		field = "Enable AEM X-Series CANbus",			enableAemXSeries, { canReadEnabled }
 		field = "Enable Innovate LC-2 Serial",			enableInnovateLC2, { auxSerialRxPin && auxSerialTxPin }
 
@@ -2256,7 +2216,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = idleSettings, "", yAxis
 		field = "Idle IAC control mode",					idleMode
 		field = useInstantRpmForIdle,					useInstantRpmForIdle
-		field = "use ETB for idle",						useETBforIdleControl
+		field = "use ETB for idle",						useETBforIdleControl, { throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ }
 		field = "ETB Idle range",						etbIdleThrottleRange, {useETBforIdleControl == 1}
 		field = "Use separate Ignition Table for idle",	useSeparateAdvanceForIdle
 		field = "Use separate VE Table for idle",		useSeparateVeForIdle
@@ -2540,13 +2500,28 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "RX pin",								canRxPin @@if_ts_show_can_pins
 		field = "TX pin",								canTxPin @@if_ts_show_can_pins
 
+	dialog = canBus2, "Secondary CAN Bus"
+		field = "Can Read Enabled",						can2ReadEnabled
+		field = "Can Write Enabled",					can2WriteEnabled
+		field = "Can Nbc Type",							can2NbcType
+		field = "Can Baud Rate",						can2BaudRate
+		field = "Enable rusEFI CAN broadcast",			enableVerboseCan2Tx
+		field = "rusEfi CAN data base address",			verboseCan2BaseAddress
+		field = "Can Sleep Period",						can2SleepPeriodMs
+		field = "RX pin",								can2RxPin @@if_ts_show_can_pins
+		field = "TX pin",								can2TxPin @@if_ts_show_can_pins
+
+	dialog = canBusMain, "CAN Bus Communication", yAxis
+		panel = canBus
+		panel = canBus2							@@if_ts_show_can2
+
 	dialog = auxSerial, "AUX Serial"
 		field = "RX pin",								auxSerialRxPin @@if_ts_show_auxserial_pins
 		field = "TX pin",								auxSerialTxPin @@if_ts_show_auxserial_pins
 		field = "Serial Baud Rate",						auxSerialSpeed @@if_ts_show_auxserial_pins
 	
 	dialog = sdCard, "SD Card Logger"
-		field = "SdCard", 								isSdCardEnabled
+		field = "Enable SD Card",						isSdCardEnabled
 		field = "showSdCardWarning",					showSdCardWarning
 		field = "CS Pin",								sdCardCsPin
 		field = "SPI",									sdCardSpiDevice
@@ -2579,9 +2554,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = connection, "", 	yAxis
 		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort							@@if_ts_show_tunerstudio_port
-		panel = canBus
 		panel = auxSerial
-		panel = sdCard							@@if_ts_show_sd_card
 		panel = gpsReceiver                       @@if_ts_show_gps
 
 				
@@ -2854,13 +2827,13 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = veTableMap, South
 
 	dialog = etbPidDialog, "PID settings"
-		field = "pFactor",								etb_pFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "iFactor",								etb_iFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "dFactor",								etb_dFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "pid min",								etb_minValue, {throttlePedalPositionAdcChannel != 16}
-		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
-		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}
-		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
+		field = "pFactor",								etb_pFactor
+		field = "iFactor",								etb_iFactor
+		field = "dFactor",								etb_dFactor
+		field = "pid min",								etb_minValue
+		field = "pid max",								etb_maxValue
+		field = "iTermMin",								etb_iTermMin
+		field = "iTermMax",								etb_iTermMax
 
 	dialog = etbIdleDialog, "ETB Idle"
 		field = "use ETB for idle",						useETBforIdleControl
@@ -2868,11 +2841,12 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = etbDialogLeft
 		field = "https://rusefi.com/s/etb"
+		field = "Late 90s German DC Motor idle",		dcMotorIdleValve, { throttlePedalPositionAdcChannel == @@ADC_CHANNEL_NONE@@ }
 		field = "Detailed status in console",			isVerboseETB
 		field = "Disable ETB Motor",					pauseEtbControl
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
-		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != 16 || useStepperIdle && useHbridges  }
+		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) || dcMotorIdleValve }
 
 	dialog = etbAutotune, "PID Autotune"
 		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
@@ -2884,8 +2858,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Debug mode",							debugMode
 
 	dialog = etbDialogRight
-		panel = etbIdleDialog
-		panel = etbPidDialog
+		panel = etbIdleDialog, {  throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@  }
+		panel = etbPidDialog,  { (throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@) || dcMotorIdleValve }
 		panel = etbAutotune
 
 		; Neutral position handling not yet implemented!
@@ -2943,6 +2917,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",     cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
 
+		commandButton = "microRusEFI Miata NA6 VAF",   cmd_set_engine_type_microRusEFI_Miata_NA6_VAF@@if_show_microRusEFI_presets
+		commandButton = "microRusEFI Miata NA6 MAP",   cmd_set_engine_type_microRusEFI_Miata_NA6_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEfi Miata NB2 MAP",   cmd_set_engine_type_microRusEFI_Miata_NB2_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NB2 MAF",   cmd_set_engine_type_microRusEFI_Miata_NB2_MAF@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Defaults",		   cmd_set_engine_type_microRusEFI_Defaults@@if_show_microRusEFI_presets

@@ -31,6 +31,7 @@
 #define FAST_CALLBACK_PERIOD_MS 5
 
 class RpmCalculator;
+class AirmassModelBase;
 
 #define MAF_DECODING_CACHE_SIZE 256
 
@@ -268,7 +269,7 @@ public:
 	 * are we running any kind of functional test? this affect
 	 * some areas
 	 */
-	bool isTestMode = false;
+	bool isFunctionalTestMode = false;
 
 	bool directSelfStimulation = false;
 
@@ -333,6 +334,8 @@ public:
 
 	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void printKnockState(void);
+
+	AirmassModelBase* mockAirmassModel = nullptr;
 
 private:
 	/**

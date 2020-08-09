@@ -8,6 +8,8 @@ public class Constant {
     private String units;
     private String value;
     private String digits;
+    private String rows;
+    private String cols;
 
     public Constant() {
     }
@@ -37,6 +39,24 @@ public class Constant {
     @XmlAttribute
     public String getDigits() {
         return digits;
+    }
+
+    @XmlAttribute
+    public String getRows() {
+        return rows;
+    }
+
+    @XmlAttribute
+    public String getCols() {
+        return cols;
+    }
+
+    public void setCols(String cols) {
+        this.cols = cols;
+    }
+
+    public void setRows(String rows) {
+        this.rows = rows;
     }
 
     public void setDigits(String digits) {

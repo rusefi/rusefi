@@ -1,20 +1,24 @@
 package com.rusefi.io.tcp;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.Listener;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocolCommands.COMMAND_PROTOCOL;
 import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
+import static com.rusefi.shared.FileUtil.close;
 
 public class BinaryProtocolProxy {
     private static final Logging log = getLogging(BinaryProtocolProxy.class);
@@ -25,48 +29,59 @@ public class BinaryProtocolProxy {
      */
     public static final int USER_IO_TIMEOUT = 10 * Timeouts.MINUTE;
 
-    public static ServerHolder createProxy(IoStream targetEcuSocket, int serverProxyPort) {
+    public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort, AtomicInteger relayCommandCounter) throws IOException {
         Function<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
+            TcpIoStream clientStream = null;
             try {
-                TcpIoStream clientStream = new TcpIoStream("[[proxy]] ", clientSocket);
-                runProxy(targetEcuSocket, clientStream);
+                clientStream = new TcpIoStream("[[proxy]] ", clientSocket);
+                runProxy(targetEcuSocket, clientStream, relayCommandCounter, USER_IO_TIMEOUT);
             } catch (IOException e) {
                 log.error("BinaryProtocolProxy::run " + e);
+                close(clientStream);
             }
         };
-        return BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, null);
+        return BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Listener.empty());
     }
 
-    public static void runProxy(IoStream targetEcu, IoStream clientStream) throws IOException {
+    public static void runProxy(IoStream targetEcu, IoStream clientStream, AtomicInteger relayCommandCounter, int timeoutMs) throws IOException {
         /*
          * Each client socket is running on it's own thread
          */
-        //noinspection InfiniteLoopStatement
-        while (true) {
-            byte firstByte = clientStream.getDataBuffer().readByte(USER_IO_TIMEOUT);
+        while (!targetEcu.isClosed()) {
+            byte firstByte = clientStream.getDataBuffer().readByte(timeoutMs);
             if (firstByte == COMMAND_PROTOCOL) {
                 clientStream.write(TS_PROTOCOL.getBytes());
+                clientStream.flush();
                 continue;
             }
-            proxyClientRequestToController(clientStream.getDataBuffer(), firstByte, targetEcu);
+            BinaryProtocolServer.Packet clientRequest = readClientRequest(clientStream.getDataBuffer(), firstByte);
 
-            proxyControllerResponseToClient(targetEcu, clientStream);
+            /**
+             * Two reasons for synchronization:
+             * - we run gauge poking thread until TunerStudio connects
+             * - technically there could be two parallel connections to local application port
+             */
+            BinaryProtocolServer.Packet controllerResponse;
+            synchronized (targetEcu) {
+                sendToTarget(targetEcu, clientRequest);
+                controllerResponse = targetEcu.readPacket();
+                relayCommandCounter.incrementAndGet();
+            }
+
+            log.info("Relaying controller response length=" + controllerResponse.getPacket().length);
+            clientStream.sendPacket(controllerResponse);
         }
     }
 
-    public static void proxyControllerResponseToClient(IoStream targetInputStream, IoStream clientOutputStream) throws IOException {
-        BinaryProtocolServer.Packet packet = targetInputStream.readPacket();
-
-        log.info("Relaying controller response length=" + packet.getPacket().length);
-        clientOutputStream.sendPacket(packet);
-    }
-
-    private static void proxyClientRequestToController(IncomingDataBuffer in, byte firstByte, IoStream targetOutputStream) throws IOException {
+    @NotNull
+    private static BinaryProtocolServer.Packet readClientRequest(IncomingDataBuffer in, byte firstByte) throws IOException {
         byte secondByte = in.readByte();
         int length = firstByte * 256 + secondByte;
 
-        BinaryProtocolServer.Packet packet = BinaryProtocolServer.readPromisedBytes(in, length);
+        return BinaryProtocolServer.readPromisedBytes(in, length);
+    }
 
+    private static void sendToTarget(IoStream targetOutputStream, BinaryProtocolServer.Packet packet) throws IOException {
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet.getPacket()));
         byte command = (byte) dis.read();
 

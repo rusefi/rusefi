@@ -7,6 +7,9 @@
 
 #include "trigger_universal.h"
 
+/**
+ * @see getCycleDuration
+ */
 angle_t getEngineCycle(operation_mode_e operationMode) {
 	return operationMode == TWO_STROKE ? 360 : FOUR_STROKE_ENGINE_CYCLE;
 }
