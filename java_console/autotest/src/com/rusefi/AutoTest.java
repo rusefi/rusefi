@@ -75,6 +75,10 @@ public class AutoTest extends BaseTest {
         changeRpm(900);
         // first let's get to expected RPM
         assertRpmDoesNotJump(20000, 15, 30, FAIL, commandQueue);
+        // important to reduce RPM since high RPM and set engine type do not go well due to DECLARE_ENGINE_PTR
+        // memset 0?
+        // todo: safer 'set engine_type' implementation which
+        changeRpm(120);
     }
 
     private void testV12() {
