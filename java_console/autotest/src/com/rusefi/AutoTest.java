@@ -16,6 +16,7 @@ import java.util.function.Function;
 
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.TestingUtils.*;
+import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Fields.*;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
@@ -82,7 +83,10 @@ public class AutoTest extends BaseTest {
     }
 
     private void testV12() {
+        sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
+        sleep(3 * Timeouts.SECOND);
         setEngineType(40);
+        sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
         changeRpm(700);
         // first let's get to expected RPM
         assertRpmDoesNotJump(15000, 15, 30, FAIL, commandQueue);
