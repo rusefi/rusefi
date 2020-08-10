@@ -76,17 +76,10 @@ public class AutoTest extends BaseTest {
         changeRpm(900);
         // first let's get to expected RPM
         assertRpmDoesNotJump(20000, 15, 30, FAIL, commandQueue);
-        // important to reduce RPM since high RPM and set engine type do not go well due to DECLARE_ENGINE_PTR
-        // memset 0?
-        // todo: safer 'set engine_type' implementation which
-        changeRpm(120);
     }
 
     private void testV12() {
-        sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
-        sleep(3 * Timeouts.SECOND);
         setEngineType(40);
-        sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
         changeRpm(700);
         // first let's get to expected RPM
         assertRpmDoesNotJump(15000, 15, 30, FAIL, commandQueue);
@@ -284,7 +277,7 @@ public class AutoTest extends BaseTest {
     }
 
     private void test1995DodgeNeon() {
-        setEngineType(2);
+        setEngineType(ET_DODGE_NEON_1995);
         EngineChart chart;
         sendComplexCommand("set_whole_fuel_map 3");
         sendComplexCommand("set_individual_coils_ignition");
