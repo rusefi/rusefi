@@ -1,5 +1,4 @@
 #include "buttonshift.h"
-#include "globalaccess.h"
 #include "engine.h"
 
 EXTERN_ENGINE;
