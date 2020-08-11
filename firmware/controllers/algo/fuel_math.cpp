@@ -345,6 +345,8 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&sdAirmass);
 	INJECT_ENGINE_REFERENCE(&mafAirmass);
+	INJECT_ENGINE_REFERENCE(&alphaNAirmass);
+	INJECT_ENGINE_REFERENCE(&fuelComputer);
 
 #if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
 	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
