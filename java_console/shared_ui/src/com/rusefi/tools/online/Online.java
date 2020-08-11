@@ -29,10 +29,11 @@ public class Online {
      * blocking call for http file upload
      */
     public static UploadResult upload(File fileName, String authTokenValue) {
-        try {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(url);
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(url);
 
+        String responseString;
+        try {
             FileBody uploadFilePart = new FileBody(fileName);
             MultipartEntity reqEntity = new MultipartEntity();
             reqEntity.addPart("upload-file", uploadFilePart);
@@ -43,8 +44,14 @@ public class Online {
             HttpResponse response = httpclient.execute(httpPost);
             System.out.println("response=" + response);
             System.out.println("code " + response.getStatusLine().getStatusCode());
+            responseString = HttpUtil.getResponse(response);
 
-            JSONObject object = HttpUtil.getJsonResponse(HttpUtil.getResponse(response));
+        } catch (IOException e) {
+            return new UploadResult(true, "Upload io ERROR " + e);
+        }
+
+        try {
+            JSONObject object = HttpUtil.getJsonResponse(responseString);
 
             System.out.println("object=" + object);
             JSONArray info = (JSONArray) object.get("info");
@@ -57,8 +64,8 @@ public class Online {
                 return new UploadResult(false, info);
             }
 
-        } catch (IOException | ParseException e) {
-            return new UploadResult(true, "Error " + e);
+        } catch (ParseException e) {
+            return new UploadResult(true, "Upload Error " + responseString);
         }
     }
 
