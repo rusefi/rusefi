@@ -27,6 +27,7 @@
 #include "maf_airmass.h"
 #include "speed_density_airmass.h"
 #include "fuel_math.h"
+#include "fuel_computer.h"
 #include "interpolation.h"
 #include "engine_configuration.h"
 #include "allsensors.h"
@@ -163,10 +164,10 @@ constexpr float convertToGramsPerSecond(float ccPerMinute) {
 /**
  * @return per cylinder injection time, in seconds
  */
-float getInjectionDurationForAirmass(float airMass, float afr DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static float getInjectionDurationForFuelMass(float fuelMass DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float gPerSec = convertToGramsPerSecond(CONFIG(injector.flow));
 
-	return airMass / (afr * gPerSec);
+	return fuelMass / gPerSec;
 }
 
 static SpeedDensityAirmass sdAirmass(veMap);
@@ -185,6 +186,8 @@ AirmassModelBase* getAirmassModel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+static FuelComputer fuelComputer(afrMap);
+
 /**
  * per-cylinder fuel amount
  * todo: rename this method since it's now base+TPSaccel
@@ -202,17 +205,14 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	auto airmass = model->getAirmass(rpm);
 
-	// The airmass mode will tell us how to look up AFR - use the provided Y axis value
-	float targetAfr = afrMap.getValue(rpm, airmass.EngineLoadPercent);
-
 	// Plop some state for others to read
-	ENGINE(engineState.targetAFR) = targetAfr;
 	ENGINE(engineState.sd.airMassInOneCylinder) = airmass.CylinderAirmass;
 	ENGINE(engineState.fuelingLoad) = airmass.EngineLoadPercent;
 	// TODO: independently selectable ignition load mode
 	ENGINE(engineState.ignitionLoad) = airmass.EngineLoadPercent;
 
-	float baseFuel = getInjectionDurationForAirmass(airmass.CylinderAirmass, targetAfr PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
+	float baseFuelMass = fuelComputer.getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
+	float baseFuel = getInjectionDurationForFuelMass(baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX) * 1000;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN baseFuel", 0);
 
 	engine->engineState.baseFuel = baseFuel;
