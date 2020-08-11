@@ -78,7 +78,7 @@ TEST(AirmassModes, AlphaNFailedTps) {
 	EXPECT_EQ(result.CylinderAirmass, 0);
 }
 
-TEST(misc, MafNormal) {
+TEST(AirmassModes, MafNormal) {
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
