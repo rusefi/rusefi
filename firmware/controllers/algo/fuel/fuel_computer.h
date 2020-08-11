@@ -13,6 +13,8 @@ struct IFuelComputer {
 // This contains the math of the fuel model, but doesn't actually read any configuration
 class FuelComputerBase : public IFuelComputer {
 public:
+	DECLARE_ENGINE_PTR;
+
 	mass_t getCycleFuel(mass_t airmass, int rpm, float load) const override;
 
 protected:
@@ -22,8 +24,6 @@ protected:
 
 // This class is a usable implemenation of a fuel model that reads real configuration
 class FuelComputer final : public FuelComputerBase {
-	DECLARE_ENGINE_PTR;
-
 public:
 	FuelComputer(const ValueProvider3D& afrTable);
 
