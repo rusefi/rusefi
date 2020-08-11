@@ -29,7 +29,6 @@ TESTS_SRC_CPP = \
 	tests/test_one_cylinder_logic.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_logic_expression.cpp \
-	tests/test_speed_density.cpp \
 	tests/test_signal_executor.cpp \
 	tests/test_cpp_memory_layout.cpp \
 	tests/test_sensors.cpp \
