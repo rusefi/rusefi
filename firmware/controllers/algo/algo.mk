@@ -17,3 +17,4 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(PROJECT_DIR)/controllers/algo/airmass/speed_density_airmass.cpp \
 	$(PROJECT_DIR)/controllers/algo/airmass/speed_density_base.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel/fuel_computer.cpp \
+	$(PROJECT_DIR)/controllers/algo/fuel/injector_model.cpp \
