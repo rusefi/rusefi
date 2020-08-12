@@ -13,24 +13,23 @@ constexpr float convertToGramsPerSecond(float ccPerMinute) {
 }
 
 float InjectorModel::getInjectorMassFlowRate() const {
+	// TODO: injector flow dependent upon rail pressure (and temperature/ethanol content?)
 	auto injectorVolumeFlow = CONFIG(injector.flow);
-
 	return convertToGramsPerSecond(injectorVolumeFlow);
 }
 
 float InjectorModel::getDeadtime() const {
-	float vbatt = ENGINE(sensors.vbatt);
-
-	return interpolate2d("lag", vbatt, engineConfiguration->injector.battLagCorrBins, engineConfiguration->injector.battLagCorr);
+	return interpolate2d(
+		"lag",
+		ENGINE(sensors.vBatt),
+		engineConfiguration->injector.battLagCorrBins,
+		engineConfiguration->injector.battLagCorr
+	);
 }
 
 float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
-	floatms_t baseDuration = fuelMassGram / m_massFlowRate;
-
 	// TODO: support injector nonlinearity correction
 
+	floatms_t baseDuration = fuelMassGram / m_massFlowRate * 1000;
 	return baseDuration + m_deadtime;
 }
-
-
-
