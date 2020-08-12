@@ -1,5 +1,6 @@
 package com.rusefi.tools.online;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
@@ -22,6 +23,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Online {
+    private final static Logging log = Logging.getLogging(Online.class);
+
     public static final String outputXmlFileName = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
     private static final String url = "https://rusefi.com/online/upload.php";
 
@@ -42,8 +45,8 @@ public class Online {
             httpPost.setEntity(reqEntity);
 
             HttpResponse response = httpclient.execute(httpPost);
-            System.out.println("response=" + response);
-            System.out.println("code " + response.getStatusLine().getStatusCode());
+            log.debug("response=" + response);
+            log.debug("code " + response.getStatusLine().getStatusCode());
             responseString = HttpUtil.getResponse(response);
 
         } catch (IOException e) {
@@ -53,14 +56,14 @@ public class Online {
         try {
             JSONObject object = HttpUtil.getJsonResponse(responseString);
 
-            System.out.println("object=" + object);
+            log.debug("object=" + object);
             JSONArray info = (JSONArray) object.get("info");
             JSONArray error = (JSONArray) object.get("error");
             if (error != null) {
-                System.out.println("error " + error);
+                log.error("error " + error);
                 return new UploadResult(true, error);
             } else {
-                System.out.println("info " + info);
+                log.debug("info " + info);
                 return new UploadResult(false, info);
             }
 
@@ -69,6 +72,9 @@ public class Online {
         }
     }
 
+    /**
+     * we are here in case of individual tune upload 
+     */
     public static BasicFuture<UploadResult> uploadTune(Msq tune, AuthTokenPanel authTokenPanel, JComponent parent, FutureCallback<UploadResult> callback) {
         BasicFuture<UploadResult> result = new BasicFuture<>(callback);
         String authToken = authTokenPanel.getToken();
