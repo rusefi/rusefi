@@ -1,5 +1,6 @@
 package com.rusefi.ts_plugin;
 
+import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.tools.online.Online;
@@ -9,11 +10,12 @@ import com.rusefi.ui.AuthTokenPanel;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class UploadQueue {
+    private final static Logging log = Logging.getLogging(UploadQueue.class);
+
     public static final String OUTBOX_FOLDER = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "outbox";
     private static final LinkedBlockingDeque<FileAndFolder> queue = new LinkedBlockingDeque<>(128);
 
@@ -37,12 +39,7 @@ public class UploadQueue {
         File folder = new File(OUTBOX_FOLDER);
         if (!folder.exists())
             return;
-        String[] files = folder.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".msq");
-            }
-        });
+        String[] files = folder.list((dir, name) -> name.endsWith(".msq"));
         if (files == null)
             return;
 
@@ -59,6 +56,7 @@ public class UploadQueue {
         System.out.println(UploadQueue.class.getSimpleName() + " readOutbox got " + queue.size());
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     private static void uploadLoop() throws InterruptedException {
         while (true) {
             FileAndFolder file = queue.take();
@@ -81,11 +79,13 @@ public class UploadQueue {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static void delete(String fileName) {
         System.out.println(UploadQueue.class.getSimpleName() + " Deleting " + fileName);
         new File(fileName).delete();
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void enqueue(ControllerAccess controllerAccess, String configurationName) {
         start();
         if (queue.size() > 100) {
@@ -93,6 +93,10 @@ public class UploadQueue {
             return;
         }
         Msq msq = TuneUploder.grabTune(controllerAccess, configurationName);
+        if (msq == null) {
+            log.error("Error saving tune");
+            return;
+        }
         msq.bibliography.setTuneComment("Auto-saved");
         try {
             new File(OUTBOX_FOLDER).mkdirs();
@@ -115,20 +119,14 @@ public class UploadQueue {
             this.file = file;
         }
 
-        public String getFolder() {
-            return folder;
-        }
-
-        public String getFile() {
-            return file;
-        }
-
         public String getFullName() {
             return folder + File.separator + file;
         }
 
+        @SuppressWarnings("ResultOfMethodCallIgnored")
         public void postUpload() {
             if (DEBUG_SAVE_UPLOADED) {
+                log.info("Renaming file " + file);
                 String uploadedDir = folder + File.separator + "uploaded";
                 new File(uploadedDir).mkdirs();
                 new File(getFullName()).renameTo(new File(uploadedDir + File.separator + file));
