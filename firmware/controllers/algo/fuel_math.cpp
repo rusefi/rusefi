@@ -261,6 +261,23 @@ int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX)
 	}
 }
 
+float getInjectionModeDurationMultiplier(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	injection_mode_e mode = ENGINE(getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+
+	switch (mode) {
+	case IM_SIMULTANEOUS:
+		return 1.0f / engineConfiguration->specs.cylindersCount;
+	case IM_SEQUENTIAL:
+	case IM_SINGLE_POINT:
+		return 1;
+	case IM_BATCH:
+		return 0.5f;
+	default:
+		firmwareError(CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
+		return 0;
+	}
+}
+
 /**
  * This is more like MOSFET duty cycle since durations include injector lag
  * @see getCoilDutyCycle
@@ -287,31 +304,20 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::GetInjectionDuration);
 
 #if EFI_SHAFT_POSITION_INPUT
-	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
-	injection_mode_e mode = ENGINE(getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
-	int numberOfInjections = getNumberOfInjections(mode PASS_ENGINE_PARAMETER_SUFFIX);
-	if (numberOfInjections == 0) {
-		warning(CUSTOM_CONFIG_NOT_READY, "config not ready");
-		return 0; // we can end up here during configuration reset
-	}
-
 	// Always update base fuel - some cranking modes use it
 	floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
+	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 	floatms_t fuelPerCycle = getFuel(isCranking, baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelPerCycle), "NaN fuelPerCycle", 0);
 
-	if (mode == IM_SINGLE_POINT) {
-		// here we convert per-cylinder fuel amount into total engine amount since the single injector serves all cylinders
-		fuelPerCycle *= engineConfiguration->specs.cylindersCount;
-	}
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
 	fuelPerCycle *= ENGINE(engineState.fuelCutoffCorrection);
 	// If no fuel, don't add injector lag
 	if (fuelPerCycle == 0.0f)
 		return 0;
 
-	floatms_t theoreticalInjectionLength = fuelPerCycle / numberOfInjections;
+	floatms_t theoreticalInjectionLength = fuelPerCycle * getInjectionModeDurationMultiplier(PASS_ENGINE_PARAMETER_SIGNATURE);
 	floatms_t injectorLag = ENGINE(engineState.running.injectorLag);
 	if (cisnan(injectorLag)) {
 		warning(CUSTOM_ERR_INJECTOR_LAG, "injectorLag not ready");
