@@ -5,10 +5,8 @@ import com.rusefi.TsTuneReader;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
-import com.rusefi.ui.util.FrameHelper;
 import org.apache.http.concurrent.FutureCallback;
 import org.jetbrains.annotations.NotNull;
-import org.mockito.stubbing.Answer;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -18,26 +16,13 @@ import java.io.File;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import static org.mockito.Mockito.*;
-
 public class LogUploadSelector {
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel uploadState = new JLabel();
 
     private final JPanel fileList = new JPanel(new VerticalFlowLayout());
 
-    public static final Answer<?> NEGATIVE_ANSWER = invocation -> {
-        throw new UnsupportedOperationException("Not mocked " + invocation);
-    };
     private final Supplier<ControllerAccess> controllerAccessSupplier;
-
-    public static void main(String[] args) {
-        String projectName = "mre_f4";
-        ControllerAccess controllerAccess = mock(ControllerAccess.class, NEGATIVE_ANSWER);
-        doReturn(new String[]{projectName}).when(controllerAccess).getEcuConfigurationNames();
-
-        new FrameHelper().showFrame(new LogUploadSelector(() -> controllerAccess).getContent());
-    }
 
     public LogUploadSelector(Supplier<ControllerAccess> controllerAccessSupplier) {
         this.controllerAccessSupplier = controllerAccessSupplier;
