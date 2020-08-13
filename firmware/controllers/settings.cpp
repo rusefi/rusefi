@@ -889,11 +889,11 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->canReadEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_write")) {
 		engineConfiguration->canWriteEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "injection")) {
+	} else if (strEqualCaseInsensitive(param, CMD_INJECTION)) {
 		engineConfiguration->isInjectionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_details")) {
 		engineConfiguration->verboseTriggerSynchDetails = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "ignition")) {
+	} else if (strEqualCaseInsensitive(param, CMD_IGNITION)) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_SELF_STIMULATION)) {
 		engine->directSelfStimulation = isEnabled;
