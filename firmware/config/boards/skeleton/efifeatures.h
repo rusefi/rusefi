@@ -110,6 +110,10 @@
 #define HAL_TRIGGER_USE_PAL FALSE
 #endif /* HAL_TRIGGER_USE_PAL */
 
+#ifndef HAL_TRIGGER_USE_PAL
+#define HAL_TRIGGER_USE_PAL FALSE
+#endif /* HAL_TRIGGER_USE_PAL */
+
 // TunerStudio support.
 #define EFI_TUNER_STUDIO TRUE
 #define EFI_TUNER_STUDIO_VERBOSE TRUE		// Debugging output

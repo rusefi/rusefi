@@ -8,8 +8,7 @@ import com.rusefi.io.CommandQueue;
 import com.rusefi.waves.EngineReport;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.IoUtil.getEnableCommand;
-import static com.rusefi.IoUtil.sleepSeconds;
+import static com.rusefi.IoUtil.*;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 public class BaseTest {
@@ -60,6 +59,12 @@ public class BaseTest {
         log.info("AUTOTEST setEngineType " + type);
         currentEngineType = type;
 //        sendCommand(CMD_PINS);
+        sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
+        sendCommand(getDisableCommand(Fields.CMD_INJECTION));
+        sendCommand(getDisableCommand(Fields.CMD_IGNITION));
+        // changing engine type while engine is running does not work well - we rightfully
+        // get invalid configuration critical errors
+        sleepSeconds(2);
         sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, COMPLEX_COMMAND_RETRY, Timeouts.SET_ENGINE_TIMEOUT);
         // TODO: document the reason for this sleep?!
         sleepSeconds(3);

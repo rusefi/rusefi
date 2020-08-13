@@ -11,6 +11,7 @@
 
 #include "engine.h"
 #include "digital_input_icu.h"
+#include "digital_input_exti.h"
 #include "pin_repository.h"
 #include "can_vss.h"
 
@@ -70,17 +71,34 @@ bool hasVehicleSpeedSensor() {
 	return CONFIG(vehicleSpeedSensorInputPin) != GPIO_UNASSIGNED;
 }
 
+#if HAL_VSS_USE_PAL
+static void vsExtiCallback(void *) {
+	vsAnaWidthCallback();
+}
+#endif /* HAL_VSS_USE_PAL */
+
 void stopVSSPins(void) {
+#if HAL_VSS_USE_PAL
+	efiExtiDisablePin(activeConfiguration.vehicleSpeedSensorInputPin);
+#elif HAL_USE_ICU
 	stopDigitalCapture("VSS", activeConfiguration.vehicleSpeedSensorInputPin);
+#endif /* HAL_VSS_USE_PAL, HAL_USE_ICU */
 }
 
 void startVSSPins(void) {
 	if (!hasVehicleSpeedSensor())
 		return;
 
+#if HAL_VSS_USE_PAL
+	ioline_t pal_line = PAL_LINE(getHwPort("vss", CONFIG(vehicleSpeedSensorInputPin)), getHwPin("vss", CONFIG(vehicleSpeedSensorInputPin)));
+	efiExtiEnablePin("VSS", CONFIG(vehicleSpeedSensorInputPin), PAL_EVENT_MODE_BOTH_EDGES, vsExtiCallback, (void *)pal_line);
+#elif HAL_USE_ICU
 	digital_input_s* vehicleSpeedInput = startDigitalCapture("VSS", CONFIG(vehicleSpeedSensorInputPin));
 
 	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
+#else
+	#error "HAL_USE_ICU or HAL_VSS_USE_PAL should be enabled to use EFI_VEHICLE_SPEED"
+#endif /* HAL_VSS_USE_PAL, HAL_USE_ICU */
 }
 
 void initVehicleSpeed(Logging *l) {
