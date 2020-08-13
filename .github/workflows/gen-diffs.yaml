@@ -32,7 +32,6 @@ jobs:
           echo "::set-env name=RUSEFI_DOXYGEN_FTP_PASS::${{secrets.RUSEFI_DOXYGEN_FTP_PASS}}";
         fi
 
-    - name: Generate documentation
-      run: |
-        xvfb-run ./KiCad-Diff/kidiff_linux.py -w -a $(git rev-parse --short HEAD~1) -b $(git rev-parse --short HEAD) -d :99 -s git /usr/bin/kicad 
-
+    - name: Generate diffs
+      working-directory: ./hardware
+      run: bash generate_diffs.sh
