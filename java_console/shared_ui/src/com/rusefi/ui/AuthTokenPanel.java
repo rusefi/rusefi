@@ -127,15 +127,15 @@ public class AuthTokenPanel {
         return content;
     }
 
-    public boolean hasToken() {
-        return AutoTokenUtil.isToken(authTokenTestField.getText());
+    public static boolean hasToken() {
+        return AutoTokenUtil.isToken(getAuthToken());
     }
 
     public String getToken() {
         return authTokenTestField.getText();
     }
 
-    public void showError(JComponent parent) {
+    public static void showError(JComponent parent) {
         JOptionPane.showMessageDialog(parent, "Does not work without auth token, see below.");
     }
 }
