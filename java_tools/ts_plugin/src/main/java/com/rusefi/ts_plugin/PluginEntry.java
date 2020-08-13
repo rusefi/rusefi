@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 /**
  * {@link TsPluginLauncher} creates an instance of this class via reflection.
- * @see UploadTab upload tune & TODO upload logs
+ * @see TuneUploadTab upload tune & TODO upload logs
  * @see RemoteTab remote ECU access & control
  * @see BroadcastTab offer your ECU for remove access & control
  * @see PluginBodySandbox
@@ -35,16 +35,19 @@ public class PluginEntry implements TsPluginBody {
         System.out.println("PluginEntry init " + this);
 
         if (isLauncherTooOld()) {
-            content.add(new JLabel("Please manually install latest plugin version"));
+            content.add(new JLabel("<html>Please manually install latest plugin version<br/>Usually we can update to latest version but this time there was a major change.<br/>" +
+                    "Please use TunerStudio controls to update to plugin from recent rusEFI bundle."));
             return;
         }
 
-        UploadTab uploadTab = new UploadTab(controllerAccessSupplier);
+        TuneUploadTab tuneUploadTab = new TuneUploadTab(controllerAccessSupplier);
+        LogUploadSelector logUploadTab = new LogUploadSelector(controllerAccessSupplier);
         BroadcastTab broadcastTab = new BroadcastTab();
         RemoteTab remoteTab = new RemoteTab();
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Upload", uploadTab.getContent());
+        tabbedPane.addTab("Tune Upload", tuneUploadTab.getContent());
+        tabbedPane.addTab("Log Upload", logUploadTab.getContent());
         tabbedPane.addTab("Broadcast", broadcastTab.getContent());
         tabbedPane.addTab("Remote ECU", remoteTab.getContent());
         tabbedPane.addTab("Read SD Card", new SdCardReader(controllerAccessSupplier).getContent());

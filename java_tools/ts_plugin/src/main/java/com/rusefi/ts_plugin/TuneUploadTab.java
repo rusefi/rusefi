@@ -6,7 +6,6 @@ import com.efiAnalytics.plugin.ecu.ControllerParameterChangeListener;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.TsTuneReader;
-import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
@@ -24,7 +23,10 @@ import java.util.Date;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class UploadTab {
+/**
+ * 
+ */
+public class TuneUploadTab {
     private final JComponent content = new JPanel(new VerticalFlowLayout());
     // 2 seconds aggregation by default
     private static final int AUTO_UPDATE_AGGREGATION = Integer.parseInt(System.getProperty("autoupload.aggregation", "2000"));
@@ -38,9 +40,9 @@ public class UploadTab {
 
     private final JButton upload = new JButton("Upload Current Tune");
 
-    private String currentConfiguration;
+    private String projectName;
 
-    private UploaderStatus uploaderStatus = new UploaderStatus();
+    private final UploaderStatus uploaderStatus = new UploaderStatus();
 
     private final Timer timer = new Timer(AUTO_UPDATE_AGGREGATION, new AbstractAction() {
         @Override
@@ -48,14 +50,14 @@ public class UploadTab {
 //            System.out.println("Timer! " + System.currentTimeMillis() + " " + timer + " " + e);
             if (UploadView.isAutoUpload()) {
                 System.out.println(new Date() + ": enqueue tune");
-                UploadQueue.enqueue(controllerAccessSupplier.get(), currentConfiguration);
+                UploadQueue.enqueue(controllerAccessSupplier.get(), projectName);
             }
         }
     });
 
     private final ControllerParameterChangeListener listener;
 
-    public UploadTab(Supplier<ControllerAccess> controllerAccessSupplier) {
+    public TuneUploadTab(Supplier<ControllerAccess> controllerAccessSupplier) {
         this.controllerAccessSupplier = controllerAccessSupplier;
 
         timer.stop();
@@ -72,8 +74,8 @@ public class UploadTab {
             public void run() {
                 while (true) {
                     String configurationName = getConfigurationName();
-                    if ((currentConfiguration == null && configurationName != null)
-                            || !currentConfiguration.equals(configurationName)) {
+                    if ((projectName == null && configurationName != null)
+                            || !projectName.equals(configurationName)) {
                         handleConfigurationChange(configurationName, controllerAccessSupplier.get());
                     }
 
@@ -119,7 +121,7 @@ public class UploadTab {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                uploadView.setResult(array);
+                                UploadView.setResult(array, uploadView.uploadState);
                             }
                         });
                     }
@@ -151,16 +153,16 @@ public class UploadTab {
     /**
      * This method is invoked every time we defect a switch between projects
      */
-    private void handleConfigurationChange(String configurationName, ControllerAccess controllerAccess) {
-        uploaderStatus.readTuneState(configurationName);
+    private void handleConfigurationChange(String projectName, ControllerAccess controllerAccess) {
+        uploaderStatus.readTuneState(projectName);
 
-        if (configurationName != null) {
-            subscribeToUpdates(configurationName, controllerAccess);
+        if (projectName != null) {
+            subscribeToUpdates(projectName, controllerAccess);
         }
 
         updateUploadEnabled();
 
-        currentConfiguration = configurationName;
+        this.projectName = projectName;
     }
 
     private void updateUploadEnabled() {
