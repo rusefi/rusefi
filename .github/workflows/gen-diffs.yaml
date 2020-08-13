@@ -21,6 +21,9 @@ jobs:
         sudo apt-get update
         sudo apt-get install ncftp kicad xvfb python3-tk
 
+    - name: Get KiCad-Diff
+      run: git clone https://github.com/Gasman2014/KiCad-Diff.git
+
     - name: Set FTP variables
       run: |
         if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ]; then
@@ -31,5 +34,5 @@ jobs:
 
     - name: Generate documentation
       run: |
-        xvfb-run ../KiCad-Diff/kidiff_linux.py -w -a "git rev-parse --short HEAD~1" -b "git rev-parse --short HEAD" -d :99 -s Git /usr/bin/kicad 
+        xvfb-run ./KiCad-Diff/kidiff_linux.py -w -a "git rev-parse --short HEAD~1" -b "git rev-parse --short HEAD" -d :99 -s Git /usr/bin/kicad 
 
