@@ -23,7 +23,10 @@ import java.util.Date;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class UploadTab {
+/**
+ * 
+ */
+public class TuneUploadTab {
     private final JComponent content = new JPanel(new VerticalFlowLayout());
     // 2 seconds aggregation by default
     private static final int AUTO_UPDATE_AGGREGATION = Integer.parseInt(System.getProperty("autoupload.aggregation", "2000"));
@@ -54,7 +57,7 @@ public class UploadTab {
 
     private final ControllerParameterChangeListener listener;
 
-    public UploadTab(Supplier<ControllerAccess> controllerAccessSupplier) {
+    public TuneUploadTab(Supplier<ControllerAccess> controllerAccessSupplier) {
         this.controllerAccessSupplier = controllerAccessSupplier;
 
         timer.stop();
@@ -118,7 +121,7 @@ public class UploadTab {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                uploadView.setResult(array);
+                                UploadView.setResult(array, uploadView.uploadState);
                             }
                         });
                     }

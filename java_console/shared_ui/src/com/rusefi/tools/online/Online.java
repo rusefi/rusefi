@@ -13,6 +13,7 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -73,32 +74,33 @@ public class Online {
     }
 
     /**
-     * we are here in case of individual tune upload 
+     * we are here in case of individual tune upload
      */
     public static BasicFuture<UploadResult> uploadTune(Msq tune, AuthTokenPanel authTokenPanel, JComponent parent, FutureCallback<UploadResult> callback) {
+        try {
+            tune.writeXmlFile(outputXmlFileName);
+        } catch (JAXBException | IOException e) {
+            throw new IllegalStateException("While writing tune", e);
+        }
+
+        return uploadFile(parent, callback, outputXmlFileName);
+    }
+
+    @Nullable
+    public static BasicFuture<UploadResult> uploadFile(JComponent parent, FutureCallback<UploadResult> callback, final String fileName) {
         BasicFuture<UploadResult> result = new BasicFuture<>(callback);
-        String authToken = authTokenPanel.getToken();
-        if (!authTokenPanel.hasToken()) {
-            authTokenPanel.showError(parent);
+        String authToken = AuthTokenPanel.getAuthToken();
+        if (!AuthTokenPanel.hasToken()) {
+            AuthTokenPanel.showError(parent);
             return null;
         }
         new Thread(new Runnable() {
             @Override
             public void run() {
-                UploadResult array = doUpload(authToken, tune);
+                UploadResult array = upload(new File(fileName), authToken);
                 result.completed(array);
             }
         }).start();
         return result;
-    }
-
-    private static UploadResult doUpload(String authToken, Msq tune) {
-        try {
-            tune.writeXmlFile(outputXmlFileName);
-            // todo: network upload should not happen on UI thread
-            return upload(new File(outputXmlFileName), authToken);
-        } catch (JAXBException | IOException ex) {
-            return new UploadResult(true, "IO error " + ex);
-        }
     }
 }
