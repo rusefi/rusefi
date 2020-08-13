@@ -39,4 +39,3 @@ float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // convert injection duration (Ms/Nt) to fuel rate (L/h)
 float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX);
-float getInjectionDurationForAirmass(float airMass, float afr DECLARE_ENGINE_PARAMETER_SUFFIX); 
