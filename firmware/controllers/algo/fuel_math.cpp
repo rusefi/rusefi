@@ -182,7 +182,13 @@ AirmassModelBase* getAirmassModel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_UNIT_TEST
 		case LM_MOCK: return engine->mockAirmassModel;
 #endif
-		default: return nullptr;
+		default:
+			// this is a bad work-around for https://github.com/rusefi/rusefi/issues/1690 issue
+			warning(CUSTOM_ERR_ASSERT, "Invalid airmass mode %d", CONFIG(fuelAlgorithm));
+			return &sdAirmass;
+/* todo: this should be the implementation
+			return nullptr;
+*/
 	}
 }
 
