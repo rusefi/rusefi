@@ -7,5 +7,6 @@ function gendiffs() {
     ncftpput -R -v -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" /diffs/plots_$(basename "$1" .kicad_pcb) $(dirname "$1")/plots
   fi
 }
+export -f gendiffs
 
-find . -name "*.kicad_pcb" -exec gendiffs {} \;
+find . -name "*.kicad_pcb" -exec 'bash -c gendiffs "$0"' {} \;
