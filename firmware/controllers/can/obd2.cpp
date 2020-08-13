@@ -38,6 +38,7 @@
 #include "engine_math.h"
 #include "fuel_math.h"
 #include "thermistors.h"
+#include "ego.h"
 
 EXTERN_ENGINE;
 
@@ -46,6 +47,7 @@ static const int16_t supportedPids0120[] = {
 	PID_FUEL_SYSTEM_STATUS,
 	PID_ENGINE_LOAD,
 	PID_COOLANT_TEMP,
+	PID_STFT_BANK1,
 	PID_INTAKE_MAP,
 	PID_RPM,
 	PID_SPEED,
@@ -56,6 +58,7 @@ static const int16_t supportedPids0120[] = {
 };
 
 static const int16_t supportedPids2140[] = {
+	PID_FUEL_AIR_RATIO_1,
 	-1
 };
 
@@ -128,6 +131,9 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 	case PID_COOLANT_TEMP:
 		obdSendValue(1, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + 40.0f);
 		break;
+	case PID_STFT_BANK1:
+		obdSendValue(1, pid, 1, 128 * ENGINE(engineState.running.pidCorrection));
+		break;
 	case PID_INTAKE_MAP:
 		obdSendValue(1, pid, 1, getMap(PASS_ENGINE_PARAMETER_SIGNATURE));
 		break;
@@ -152,7 +158,16 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 	case PID_THROTTLE:
 		obdSendValue(1, pid, 1, Sensor::get(SensorType::Tps1).value_or(0) * 2.55f);	// (A*100/255)
 		break;
-	case PID_FUEL_RATE:
+	case PID_FUEL_AIR_RATIO_1: {
+		float afr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
+		// phi = 1 / lambda
+		float phi = clampF(0, 14.7f / afr, 1.99f);
+
+		uint16_t scaled = phi * 32768;
+
+		obdSendPacket(1, pid, 4, scaled << 16);
+		break;
+	} case PID_FUEL_RATE:
 		obdSendValue(1, pid, 2, engine->engineState.fuelConsumption.perSecondConsumption * 20.0f);	//	L/h.	(A*256+B)/20
 		break;
 	default:

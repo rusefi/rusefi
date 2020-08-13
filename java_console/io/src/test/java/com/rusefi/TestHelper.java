@@ -16,6 +16,7 @@ import com.rusefi.server.SessionDetails;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
+import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -32,6 +33,9 @@ public class TestHelper {
     public static final ControllerInfo CONTROLLER_INFO = new ControllerInfo("name", "make", "code", Fields.TS_SIGNATURE);
     public static final String TEST_TOKEN_1 = "00000000-1234-1234-1234-123456789012";
     public static final String TEST_TOKEN_3 = "33333333-3333-1234-1234-123456789012";
+    public static final Answer<?> NEGATIVE_ANSWER = invocation -> {
+        throw new UnsupportedOperationException("Not mocked " + invocation);
+    };
 
     @NotNull
     public static ScalarIniField createIniField(Field field) {
