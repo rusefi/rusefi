@@ -34,5 +34,5 @@ jobs:
 
     - name: Generate documentation
       run: |
-        xvfb-run ./KiCad-Diff/kidiff_linux.py -w -a $(git rev-parse --short HEAD~1) -b $(git rev-parse --short HEAD) -d :99 -s Git /usr/bin/kicad 
+        xvfb-run ./KiCad-Diff/kidiff_linux.py -w -a $(git rev-parse --short HEAD~1) -b $(git rev-parse --short HEAD) -d :99 -s git /usr/bin/kicad 
 
