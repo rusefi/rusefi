@@ -27,7 +27,7 @@ public class EnumToString {
     private final static StringBuilder headerFileContent = new StringBuilder();
 
     private final static String KEY_INPUT_PATH = "-enumInputPath";
-    private final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
+    public final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
     private final static String KEY_OUTPUT = "-outputPath";
 
     public static void main(String[] args) throws IOException {

@@ -1,5 +1,6 @@
 package com.rusefi.board_generator;
 
+import com.rusefi.EnumToString;
 import com.rusefi.EnumsReader;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.LazyFile;
@@ -19,13 +20,12 @@ import java.util.Objects;
  * the primary generation to avoid the intermediate file.
  */
 public class BoardReader {
-    private static final String INVALID = "INVALID";
+    public static final String INVALID = "INVALID";
 
     private static final String KEY_BOARD_NAME = "-board";
     private static final String YAML_INPUT_NAME = "-yaml";
     private static final String OUTPUT_FILE_NAME = "-output_file";
     private static final String KEY_FIRMWARE_PATH = "-firmware_path";
-    private final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
 
     private static final String MAPPING_YAML = "mapping.yaml";
 
@@ -52,9 +52,9 @@ public class BoardReader {
                 yamlInputFile = args[i + 1];
             } else if (key.equals(KEY_FIRMWARE_PATH)) {
                 firmwarePath = args[i + 1];
-            } else if (key.equals(KEY_ENUM_INPUT_FILE)) {
+            } else if (key.equals(EnumToString.KEY_ENUM_INPUT_FILE)) {
                 String inputFile = args[i + 1];
-                enumsReader.process(new FileReader(firmwarePath + File.separator + inputFile));
+                enumsReader.process(firmwarePath, inputFile);
             }
         }
 
@@ -118,15 +118,18 @@ public class BoardReader {
 
     private static int getMaxValue(Collection<Value> values) {
         int result = -1;
-        for (Value v : values)
+        for (Value v : values) {
             result = Math.max(result, v.getIntValue());
+        }
         return result;
     }
 
     private static Value findByOrdinal(int ordinal, Collection<Value> values) {
-        for (Value v : values)
-            if (v.getValue().equals(String.valueOf(ordinal)))
+        for (Value v : values) {
+            if (v.getValue().equals(String.valueOf(ordinal))) {
                 return v;
+            }
+        }
         return null;
     }
 }
